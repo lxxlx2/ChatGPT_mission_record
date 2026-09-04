@@ -1,0 +1,274 @@
+name: Mission Dashboard Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crypto-daily/runs/**'
+      - 'us-stock-daily/runs/**'
+      - 'airdrop-tge-monitor/runs/**'
+      - '.github/workflows/mission-dashboard-sync.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mission-dashboard-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+      PROJECT_NUMBER: '2'
+      PROJECT_TITLE: 'ChatGPT Mission Control'
+      OWNER: 'lxxlx2'
+      REPO: 'ChatGPT_mission_record'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Build dashboard state
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 <<'PY'
+          import json
+          import re
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          root = Path('.')
+          bkk = timezone(timedelta(hours=7))
+          now = datetime.now(bkk)
+          base = 'https://github.com/lxxlx2/ChatGPT_mission_record/blob/main/'
+
+          def files(pattern):
+              return sorted(root.glob(pattern))
+
+          def latest(pattern):
+              xs = files(pattern)
+              return xs[-1] if xs else None
+
+          def parse_kv(path):
+              if not path or not path.exists():
+                  return {}
+              data = {}
+              for line in path.read_text(encoding='utf-8', errors='replace').splitlines():
+                  m = re.match(r'^\s*([A-Za-z0-9_]+)\s*:\s*(.*?)\s*$', line)
+                  if not m:
+                      continue
+                  key, value = m.group(1), m.group(2).strip()
+                  if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
+                      value = value[1:-1]
+                  if value.startswith('`') and value.endswith('`'):
+                      value = value[1:-1]
+                  data[key] = value
+              return data
+
+          def url(path):
+              return base + path.as_posix() if path else 'N/A'
+
+          def run_time(path, kv):
+              value = kv.get('run_time_bangkok') or kv.get('run_time')
+              if value:
+                  return value.replace('T', ' ')
+              if path:
+                  day = path.parent.name
+                  t = path.stem
+                  if re.fullmatch(r'\d{6}', t):
+                      return f'{day} {t[0:2]}:{t[2:4]}:{t[4:6]} Asia/Bangkok'
+              return 'N/A'
+
+          def bad_status(raw):
+              s = (raw or '').strip().lower()
+              return any(x in s for x in ('partial', 'fail', 'error', 'degrad'))
+
+          def latest_bad_run(system):
+              for p in reversed(files(f'{system}/runs/*/*.md')):
+                  s = parse_kv(p).get('run_status', '')
+                  if bad_status(s):
+                      return p
+              return None
+
+          def previous_month(dt):
+              first = dt.replace(day=1)
+              prev = first - timedelta(days=1)
+              return prev.strftime('%Y-%m')
+
+          def daily_system(system, issue):
+              run = latest(f'{system}/runs/*/*.md')
+              daily = latest(f'{system}/reports/daily/*/*/*.md')
+              monthly = latest(f'{system}/reports/monthly/*/*.md')
+              kv = parse_kv(run)
+              raw = kv.get('run_status', '').lower()
+              run_day = run.parent.name if run else ''
+              report_day = daily.stem if daily else ''
+              gmail = kv.get('gmail_sent', '').lower()
+
+              if not run:
+                  daily_status, health = 'Failed', 'Red'
+              elif 'fail' in raw or 'error' in raw:
+                  daily_status, health = 'Failed', 'Red'
+              elif 'partial' in raw or 'degrad' in raw:
+                  daily_status, health = 'Partial', 'Yellow'
+              elif not daily or (run_day and report_day < run_day):
+                  daily_status, health = 'Failed', 'Red'
+              elif gmail in {'false', '0', 'no'}:
+                  daily_status, health = 'Failed', 'Red'
+              else:
+                  daily_status, health = 'OK', 'Green'
+
+              expected_month = previous_month(now)
+              expected_month_file = root / system / 'reports' / 'monthly' / expected_month[:4] / f'{expected_month}.md'
+              if expected_month_file.exists():
+                  monthly_status = 'OK'
+              elif now.day == 1 and now.hour < 12:
+                  monthly_status = 'Pending'
+                  if health == 'Green':
+                      health = 'Yellow'
+              else:
+                  monthly_status = 'Failed'
+                  health = 'Red'
+
+              bad = latest_bad_run(system)
+              if health == 'Red' and not bad and run:
+                  bad = run
+
+              return {
+                  'issue': issue,
+                  'Daily': daily_status,
+                  'Monthly': monthly_status,
+                  'Latest Daily': url(daily),
+                  'Latest Monthly': url(monthly),
+                  'Last Run': run_time(run, kv),
+                  'Last Failure': url(bad) if bad else 'None',
+                  'Health': health,
+              }
+
+          def tge_system():
+              system = 'airdrop-tge-monitor'
+              run = latest(f'{system}/runs/*/*.md')
+              daily = latest(f'{system}/reports/daily/*/*/*.md')
+              kv = parse_kv(run)
+              raw = kv.get('run_status', '').lower()
+
+              if not run:
+                  daily_status, health = 'Failed', 'Red'
+              elif 'fail' in raw or 'error' in raw:
+                  daily_status, health = 'Failed', 'Red'
+              elif 'partial' in raw or 'degrad' in raw:
+                  daily_status, health = 'Partial', 'Yellow'
+              else:
+                  daily_status, health = 'OK', 'Green'
+
+              expected_daily = (now - timedelta(days=1)).strftime('%Y-%m-%d')
+              latest_daily_day = daily.stem if daily else ''
+              if not daily or latest_daily_day < expected_daily:
+                  daily_status, health = 'Failed', 'Red'
+
+              bad = latest_bad_run(system)
+              if health == 'Red' and not bad and run:
+                  bad = run
+
+              return {
+                  'issue': 6,
+                  'Daily': daily_status,
+                  'Monthly': 'N/A',
+                  'Latest Daily': url(daily),
+                  'Latest Monthly': 'N/A',
+                  'Last Run': run_time(run, kv),
+                  'Last Failure': url(bad) if bad else 'None',
+                  'Health': health,
+              }
+
+          state = [
+              daily_system('crypto-daily', 4),
+              daily_system('us-stock-daily', 5),
+              tge_system(),
+          ]
+          Path('/tmp/mission-dashboard.json').write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding='utf-8')
+          print(json.dumps(state, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Sync Project fields
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ -n "${GH_TOKEN:-}" ]] || { echo 'PROJECTS_TOKEN is missing'; exit 1; }
+
+          PROJECTS="$(gh api graphql -f query='query { viewer { login projectsV2(first:100) { nodes { id number title } } } }')"
+          LOGIN="$(jq -r '.data.viewer.login // empty' <<<"$PROJECTS")"
+          [[ "$LOGIN" == "$OWNER" ]] || { echo "Token owner mismatch: $LOGIN"; exit 1; }
+          PROJECT_ID="$(jq -r --argjson n "$PROJECT_NUMBER" --arg t "$PROJECT_TITLE" 'first(.data.viewer.projectsV2.nodes[] | select(.number == $n and .title == $t) | .id) // empty' <<<"$PROJECTS")"
+          [[ -n "$PROJECT_ID" ]] || { echo 'Project #2 not found'; exit 1; }
+
+          SNAPSHOT="$(gh api graphql -F project="$PROJECT_ID" -f query='query($project:ID!){ node(id:$project){ ... on ProjectV2 { fields(first:100){ nodes { ... on ProjectV2Field { id name } ... on ProjectV2SingleSelectField { id name options { id name } } } } items(first:100){ nodes { id content { ... on Issue { number url } } } pageInfo { hasNextPage } } } } }')"
+          MORE="$(jq -r '.data.node.items.pageInfo.hasNextPage // false' <<<"$SNAPSHOT")"
+          [[ "$MORE" == false ]] || { echo 'Project item pagination required'; exit 1; }
+
+          field_id() {
+            jq -r --arg n "$1" 'first(.data.node.fields.nodes[] | select((.name // "") == $n) | .id) // empty' <<<"$SNAPSHOT"
+          }
+
+          option_id() {
+            jq -r --arg f "$1" --arg o "$2" 'first(.data.node.fields.nodes[] | select((.name // "") == $f) | .options[]? | select(.name == $o) | .id) // empty' <<<"$SNAPSHOT"
+          }
+
+          item_id() {
+            jq -r --argjson n "$1" 'first(.data.node.items.nodes[] | select(.content.number == $n) | .id) // empty' <<<"$SNAPSHOT"
+          }
+
+          set_text() {
+            local item="$1" field="$2" value="$3" fid
+            fid="$(field_id "$field")"
+            [[ -n "$fid" ]] || { echo "Missing field: $field"; exit 1; }
+            gh api graphql -F project="$PROJECT_ID" -F item="$item" -F field="$fid" -f value="$value" -f query='mutation($project:ID!,$item:ID!,$field:ID!,$value:String!){ updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{text:$value}}){ projectV2Item { id } } }' >/dev/null
+          }
+
+          set_select() {
+            local item="$1" field="$2" value="$3" fid oid
+            fid="$(field_id "$field")"
+            [[ -n "$fid" ]] || { echo "Missing field: $field"; exit 1; }
+            oid="$(option_id "$field" "$value")"
+            [[ -n "$oid" ]] || { echo "Missing option: $field=$value"; exit 1; }
+            gh api graphql -F project="$PROJECT_ID" -F item="$item" -F field="$fid" -f option="$oid" -f query='mutation($project:ID!,$item:ID!,$field:ID!,$option:String!){ updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{singleSelectOptionId:$option}}){ projectV2Item { id } } }' >/dev/null
+          }
+
+          jq -c '.[]' /tmp/mission-dashboard.json | while IFS= read -r row; do
+            issue="$(jq -r '.issue' <<<"$row")"
+            item="$(item_id "$issue")"
+            [[ -n "$item" ]] || { echo "Project row issue #$issue not found"; exit 1; }
+
+            daily="$(jq -r '.Daily' <<<"$row")"
+            monthly="$(jq -r '.Monthly' <<<"$row")"
+            latest_daily="$(jq -r '."Latest Daily"' <<<"$row")"
+            latest_monthly="$(jq -r '."Latest Monthly"' <<<"$row")"
+            last_run="$(jq -r '."Last Run"' <<<"$row")"
+            last_failure="$(jq -r '."Last Failure"' <<<"$row")"
+            health="$(jq -r '.Health' <<<"$row")"
+
+            set_select "$item" 'Daily' "$daily"
+            set_select "$item" 'Monthly' "$monthly"
+            set_text "$item" 'Latest Daily' "$latest_daily"
+            set_text "$item" 'Latest Monthly' "$latest_monthly"
+            set_text "$item" 'Last Run' "$last_run"
+            set_text "$item" 'Last Failure' "$last_failure"
+            set_select "$item" 'Health' "$health"
+            echo "SYNCED issue=#$issue daily=$daily monthly=$monthly health=$health last_run=$last_run"
+          done
+
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          echo '### Mission Dashboard Sync' >> "$GITHUB_STEP_SUMMARY"
+          if [[ -f /tmp/mission-dashboard.json ]]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/mission-dashboard.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
