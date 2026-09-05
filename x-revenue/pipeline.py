@@ -24,7 +24,6 @@ from typing import Any
 
 from config import load_config
 from triggers import evaluate_triggers
-from telegram_approval import poll_and_process_callbacks, send_approval_message
 
 
 ROOT = Path(__file__).resolve().parent
@@ -426,12 +425,6 @@ def _write_run_locked(output_root: Path, state_file: Path, cfg: dict[str, Any] |
     now = utc_now()
     output_root.mkdir(parents=True, exist_ok=True)
 
-    # 1. Drain pending Telegram callbacks before generating new runs
-    try:
-        poll_and_process_callbacks(output_root, state_file.parent, cfg)
-    except Exception:
-        pass
-
     staging = output_root / f".tmp-{uuid.uuid4().hex}"
     target: Path | None = None
     temp_state: Path | None = None
@@ -620,13 +613,9 @@ def _write_run_locked(output_root: Path, state_file: Path, cfg: dict[str, Any] |
         temp_state.write_bytes(canonical_bytes(new_state))
         temp_state.replace(state_file)
 
-        # Telegram delivery
-        trade_date = str(next(iter(stocks.values()))["trade_date"])
-        delivery = send_approval_message(target, candidate, trigger_result["trigger_summary"], trade_date, candidate_digest, cfg)
-        approval["delivery_state"] = delivery.get("delivery_state", "FAILED")
-        if delivery.get("sent"):
-            approval["telegram_message_id"] = delivery.get("telegram_message_id")
-            approval["telegram_chat_id"] = delivery.get("telegram_chat_id")
+        # Unified @Jersonliu_bot owns Telegram delivery and callbacks.
+        # X only persists/enqueues the approval artifact.
+        approval["delivery_state"] = "ENQUEUED_FOR_BOT"
 
         # Persist updated approval state atomically
         approval_file = target / "approval.json"
@@ -723,9 +712,6 @@ def main() -> int:
     check.add_argument("--artifact", type=Path, required=True)
     verify = sub.add_parser("verify")
     verify.add_argument("--artifact", type=Path, required=True)
-    poll = sub.add_parser("poll-callbacks")
-    poll.add_argument("--output-root", type=Path, default=DEFAULT_ARTIFACTS)
-    poll.add_argument("--state-file", type=Path, default=DEFAULT_STATE)
     args = parser.parse_args()
     try:
         if args.command == "run":
@@ -738,10 +724,6 @@ def main() -> int:
             result = publish_check(args.artifact)
             print(json.dumps(result, indent=2))
             return 0 if result["ready"] else 3
-        elif args.command == "poll-callbacks":
-            cfg = load_config()
-            decisions = poll_and_process_callbacks(args.output_root, args.state_file.parent, cfg)
-            print(json.dumps({"status": "CALLBACKS_POLLED", "count": len(decisions), "decisions": decisions}, indent=2))
         else:
             result = load_validated_artifact(args.artifact)
             print(json.dumps({"status": "VALID", "artifact": str(result["artifact"]), "checks": result["checks"]}, indent=2))

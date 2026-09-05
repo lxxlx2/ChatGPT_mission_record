@@ -8,19 +8,13 @@ import datetime as dt
 import fcntl
 import hashlib
 import json
-import os
 from pathlib import Path
 import re
-import urllib.error
-import urllib.parse
-import urllib.request
 import uuid
 from typing import Any
 
-from config import get_telegram_token, load_config
 
 MAX_CALLBACK_DATA_LEN = 64
-TELEGRAM_API_BASE = "https://api.telegram.org"
 
 
 def utc_now_iso() -> str:
@@ -58,88 +52,6 @@ def decode_callback_data(data: str) -> tuple[str, str]:
     if encode_callback_data(action, sha_hex) != data:
         raise ValueError("MALFORMED_CALLBACK")
     return action, sha_hex
-
-
-def _telegram_api_call(token: str, method: str, payload: dict[str, Any], timeout: int = 20) -> dict[str, Any]:
-    url = f"{TELEGRAM_API_BASE}/bot{token}/{method}"
-    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    req = urllib.request.Request(
-        url,
-        data=body,
-        headers={"Content-Type": "application/json"},
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            data = resp.read(1_000_000)
-            parsed = json.loads(data.decode("utf-8"))
-            if not parsed.get("ok"):
-                desc = parsed.get("description", "Unknown Telegram error")
-                raise RuntimeError(f"TELEGRAM_API_ERROR: {desc}")
-            return parsed.get("result", {})
-    except urllib.error.HTTPError as err:
-        err_msg = err.read(4096).decode("utf-8", errors="replace")
-        raise RuntimeError(f"TELEGRAM_HTTP_ERROR_{err.code}: {err_msg}")
-
-
-def send_approval_message(
-    artifact_dir: Path,
-    candidate_text: str,
-    trigger_summary: str,
-    source_timestamp: str,
-    candidate_sha256: str,
-    config: dict[str, Any],
-) -> dict[str, Any]:
-    """Send approval request message with Approve/Reject inline keyboard to Telegram."""
-    token = get_telegram_token()
-    chat_id = config.get("telegram_chat_id")
-    if not token or not chat_id:
-        return {
-            "sent": False,
-            "delivery_state": "CREDENTIALS_MISSING",
-            "reason": "Telegram bot token or chat ID is not configured",
-        }
-
-    approve_cb = encode_callback_data("A", candidate_sha256)
-    reject_cb = encode_callback_data("R", candidate_sha256)
-
-    text = (
-        "X candidate (approval only; publishing OFF)\n\n"
-        f"{candidate_text}\n\n"
-        f"Trigger: {trigger_summary}\n"
-        f"Session: {source_timestamp}\n"
-        f"SHA256: {candidate_sha256}"
-    )
-
-    markup = {
-        "inline_keyboard": [
-            [
-                {"text": "Approve", "callback_data": approve_cb},
-                {"text": "Reject", "callback_data": reject_cb},
-            ]
-        ]
-    }
-
-    payload = {
-        "chat_id": chat_id,
-        "text": text,
-        "reply_markup": markup,
-    }
-
-    try:
-        result = _telegram_api_call(token, "sendMessage", payload)
-        message_id = result.get("message_id")
-        return {
-            "sent": True,
-            "delivery_state": "SENT",
-            "telegram_message_id": message_id,
-            "telegram_chat_id": str(chat_id),
-        }
-    except Exception as exc:
-        return {
-            "sent": False,
-            "delivery_state": "FAILED",
-            "reason": f"Telegram delivery failed: {type(exc).__name__}",
-        }
 
 
 def find_artifact_by_sha256(artifacts_root: Path, sha256_hex: str) -> Path | None:
@@ -271,63 +183,3 @@ def _atomic_write_json(path: Path, data: dict[str, Any]) -> None:
         tmp.replace(path)
     finally:
         tmp.unlink(missing_ok=True)
-
-
-def poll_and_process_callbacks(
-    artifacts_root: Path,
-    state_dir: Path,
-    config: dict[str, Any],
-) -> list[dict[str, Any]]:
-    """Poll Telegram Bot getUpdates for inline callbacks and process them."""
-    token = get_telegram_token()
-    if not token:
-        return []
-
-    state_dir.mkdir(parents=True, exist_ok=True)
-    offset_file = state_dir / "telegram-offset.json"
-    offset = 0
-    if offset_file.is_file():
-        try:
-            offset = json.loads(offset_file.read_text(encoding="utf-8")).get("offset", 0)
-        except Exception:
-            offset = 0
-
-    try:
-        updates = _telegram_api_call(
-            token,
-            "getUpdates",
-            {"offset": offset, "limit": 100, "timeout": 0, "allowed_updates": ["callback_query"]},
-        )
-    except Exception:
-        return []
-
-    results: list[dict[str, Any]] = []
-    if not isinstance(updates, list):
-        return results
-
-    for update in updates:
-        update_id = update.get("update_id", 0)
-        query = update.get("callback_query")
-        if query:
-            res = handle_single_callback(query, artifacts_root, config)
-            results.append(res)
-            # Answer callback query to stop loading spinner on client
-            query_id = query.get("id")
-            if query_id:
-                if res.get("status") == "DECIDED":
-                    answer_text = f"Candidate {res['decision']}; publishing remains OFF."
-                else:
-                    answer_text = f"Rejected: {res.get('reason', 'INVALID')}"
-                try:
-                    _telegram_api_call(
-                        token,
-                        "answerCallbackQuery",
-                        {"callback_query_id": query_id, "text": answer_text},
-                    )
-                except Exception:
-                    pass
-
-        offset = max(offset, update_id + 1)
-        _atomic_write_json(offset_file, {"offset": offset})
-
-    return results
