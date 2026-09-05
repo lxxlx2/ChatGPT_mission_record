@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+state/run.lock
+state/.*.tmp
+artifacts/.tmp-*
+artifacts/*/approval.lock
+artifacts/*/.approval.json.*.tmp

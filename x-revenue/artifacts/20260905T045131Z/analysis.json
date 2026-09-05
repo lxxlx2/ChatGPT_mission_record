@@ -1,0 +1,13 @@
+{
+  "crypto_breadth_up": 0,
+  "crypto_dispersion_percentage_points": 0.12,
+  "interpretation": "US stocks and crypto diverge; conviction is limited",
+  "signal": "cross_asset_divergence",
+  "stock_breadth_up": 2,
+  "stock_dispersion_percentage_points": 3.66,
+  "top_official_trend": {
+    "source": "SEC",
+    "title": "SEC Proposes Rescission of Political Contribution Rule for Investment Advisers",
+    "trend_score": 6.652
+  }
+}

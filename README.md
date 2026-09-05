@@ -1,12 +1,13 @@
 # ChatGPT Mission Record
 
-本仓库记录 ChatGPT 三个长期任务的实际执行情况。
+本仓库记录 ChatGPT 长期任务的实际执行情况。
 
 目录：
 
 - `airdrop-tge-monitor/`：空投、TGE、投资者分发、Claim 与 Clay Shares 监控
 - `us-stock-daily/`：美股每日晨报
 - `crypto-daily/`：Crypto 每日情报
+- `x-revenue/`：从实时公开市场数据与官方监管动态生成 X 候选内容，并保留人工审批与发布锁
 
 ## 记录要求
 

@@ -1,0 +1,9 @@
+{
+  "actor": null,
+  "candidate_sha256": "097ec9a62e55081d4ca56ec218d43c3bcfd15d3880f52c7e38aa141f61b8e2f0",
+  "decided_at": null,
+  "decision": null,
+  "external_publish_allowed": false,
+  "note": null,
+  "status": "PENDING_HUMAN_APPROVAL"
+}
