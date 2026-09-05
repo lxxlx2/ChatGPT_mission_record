@@ -1,7 +1,12 @@
 __pycache__/
 *.pyc
+runtime/
+config.json
 state/run.lock
+state/scheduler.lock
+state/*.lock
 state/.*.tmp
+state/telegram-offset.json
 artifacts/.tmp-*
 artifacts/*/approval.lock
 artifacts/*/.approval.json.*.tmp

@@ -1,29 +1,39 @@
 # X revenue workflow
 
-This vertical slice converts current public market data and official regulator feeds into an X-ready candidate while keeping publication locked behind human approval.
+This workflow converts real public market data and official regulator feeds into X-ready candidates while keeping publication locked behind human owner approval via Telegram or local CLI.
 
-Pipeline branches:
+Pipeline flow:
 
-- `Nasdaq US equity-index session + Kraken live ticker -> cross-asset analysis -> market candidate`
-- `Federal Reserve RSS + SEC RSS -> title deduplication -> recency/keyword trend scoring -> approval context`
-- `candidate + context -> quality and integrity checks -> human approval queue`
+- `Real market feeds (Nasdaq, Kraken, Fed/SEC RSS) -> Deterministic triggers`
+- `If market quiet / unchanged -> NO_ACTION (no candidate, no Telegram notification)`
+- `If triggered -> Deterministic cross-asset analysis -> Candidate (<= 280 chars)`
+- `Quality and integrity checks -> Persisted artifact directory`
+- `Telegram Owner approval request with cryptographically bound callback query buttons`
+- `Owner decision (Approved / Rejected / Expired) persisted atomically`
+- `External publish gate: LOCKED (external_publish_allowed=false, external_publish_performed=false)`
 
-Run it from the repository root:
+## Commands
+
+Run the workflow once against live sources:
 
 ```sh
 python3 x-revenue/pipeline.py run
 ```
 
-The command creates one immutable timestamped directory under `x-revenue/artifacts/`. Review `candidate.txt`, `approval-packet.md`, `quality-check.json`, and the source receipts before making a decision.
+Poll Telegram for pending approval callbacks:
 
-Verify that all required files and immutable hashes still match before approval:
+```sh
+python3 x-revenue/pipeline.py poll-callbacks
+```
+
+Verify an artifact's integrity and immutable SHA-256 hashes:
 
 ```sh
 python3 x-revenue/pipeline.py verify \
   --artifact x-revenue/artifacts/<run-id>
 ```
 
-Record a local human decision without publishing:
+Record a local human decision without Telegram:
 
 ```sh
 python3 x-revenue/pipeline.py approve \
@@ -32,30 +42,50 @@ python3 x-revenue/pipeline.py approve \
   --actor owner
 ```
 
-Check whether the external publish boundary is open:
+Verify that the external publish gate remains locked:
 
 ```sh
 python3 x-revenue/pipeline.py publish-check \
   --artifact x-revenue/artifacts/<run-id>
 ```
 
-The publish check currently fails closed. It never sends a network request. A real X publisher requires an approved account, an `X_BEARER_TOKEN`, an approved candidate whose digest still matches, and separate explicit authorization to publish.
+Run the workflow verification test suite:
 
-## Source and failure behavior
+```sh
+python3 -m unittest discover -s x-revenue/tests -p "test_*.py" -v
+```
 
-- Only HTTPS requests to the fixed Nasdaq, Kraken, Federal Reserve, and SEC hosts are allowed.
-- Responses are size-limited and their SHA-256 digests are stored in the artifact.
-- The Nasdaq Composite, Nasdaq-100, and PHLX Semiconductor index quotes must all resolve to one recent US trading session; a mixed or stale basket fails closed.
-- Regulator-feed items older than seven days are excluded from trend scoring.
-- Each run is written to a staging directory and renamed only after every required file exists.
-- Existing run directories are never overwritten.
-- Candidate deduplication excludes the display timestamp, so an unchanged substantive post is not queued again a minute later.
-- A process lock serializes runs; the deduplication state uses a unique temporary file and atomic replace only after artifact verification.
-- If post-rename validation or state persistence fails, the new run directory is removed and the prior state remains in place.
-- A source error, schema change, stale receipt, duplicate candidate, or quality failure stops the run before approval.
+## Telegram Approval Configuration
 
-No model, credential, Telegram message, X post, payment, or analytics mutation is invoked by this slice.
+To enable Telegram approval notifications:
 
-## Current boundary
+1. Store the Telegram bot token safely in macOS Keychain (never committed to Git):
+   ```sh
+   security add-generic-password -a x-revenue -s x-revenue.telegram-bot -w "<YOUR_BOT_TOKEN>" -U
+   ```
+2. Set your Telegram Chat ID in `x-revenue/config.json` (or via `TELEGRAM_CHAT_ID` environment variable):
+   ```json
+   {
+     "telegram_chat_id": "YOUR_CHAT_ID",
+     "telegram_allowed_user_ids": ["YOUR_USER_ID"]
+   }
+   ```
 
-This milestone is a runnable source-to-approval vertical slice. It does not yet schedule itself, deliver approval requests to Telegram, call the X API, or collect post analytics. Those stages remain explicit follow-up work; the included publish check stays closed even if a credential happens to be present.
+If credentials are not yet configured, runs continue cleanly and record `delivery_state: CREDENTIALS_MISSING` in `approval.json`.
+
+## Scheduler & launchd
+
+A 15-minute runner is provided in `x-revenue/scheduler.py` with bounded logging and single-instance locking.
+
+To activate the persistent user launchd agent:
+
+```sh
+cp x-revenue/com.jerson.x-revenue.plist ~/Library/LaunchAgents/
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.jerson.x-revenue.plist
+```
+
+To deactivate:
+
+```sh
+launchctl bootout gui/$(id -u)/com.jerson.x-revenue
+```

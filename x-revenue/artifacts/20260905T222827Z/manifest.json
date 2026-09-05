@@ -1,0 +1,55 @@
+{
+  "analysis_method": "deterministic cross-asset breadth and dispersion",
+  "candidate_sha256": "ccec2d1a97a28028420c046b04d95250c76911c23669804d78708441303bcf8b",
+  "content_ready_for_human_approval": true,
+  "deduplication_fingerprint_sha256": "2a53be6b675e77e0ccaab48cfcd91a863154e6c4f85a4f1747e0e83dec113749",
+  "external_publish_performed": false,
+  "file_sha256": {
+    "analysis.json": "43a5b5a68fe1b1406f296191351cf58164aee7582cbfc6dc72a065cbba273cd5",
+    "approval-packet.md": "6a01c457c0fed7326c289a65bea9b49f6f738014ab9415d1bc052e6100a151fa",
+    "candidate.txt": "392f20d46ec51d04af3435926627fae6412bc3b738b802fdb3552485a9d420cc",
+    "detected-trends.json": "0053a8c27bc0903eb3d60ca3177065ab3ccefae14e90a7b831493f53679b3d87",
+    "quality-check.json": "136ecd59d35320214923df1aeea61e5ce71733b5580376f61d043fc901764c63",
+    "source-snapshot.json": "6c521444ce180de41499feded67450dfef8c8f04d63ad14f88ddc17aa17aba29"
+  },
+  "generated_at_asia_bangkok": "2026-09-06T05:28:27.557727+07:00",
+  "generated_at_utc": "2026-09-05T22:28:27.557727Z",
+  "model_used": null,
+  "pipeline": [
+    "SOURCE",
+    "DETECTION",
+    "ANALYSIS",
+    "DRAFT",
+    "QUALITY_CHECK",
+    "HUMAN_APPROVAL",
+    "PUBLISH",
+    "ANALYTICS"
+  ],
+  "pipeline_branches": {
+    "market_candidate": [
+      "Nasdaq session selection",
+      "Kraken live ticker",
+      "cross-asset analysis",
+      "candidate"
+    ],
+    "official_trend_context": [
+      "Federal Reserve and SEC RSS",
+      "title deduplication",
+      "recency and keyword scoring",
+      "approval packet"
+    ]
+  },
+  "quality_checked_at_utc": "2026-09-05T22:28:35.076840Z",
+  "run_id": "20260905T222827Z",
+  "schema_version": 1,
+  "stage_status": {
+    "ANALYSIS": "COMPLETE",
+    "ANALYTICS": "NOT_APPLICABLE_BEFORE_PUBLISH",
+    "DETECTION": "COMPLETE",
+    "DRAFT": "COMPLETE",
+    "HUMAN_APPROVAL": "PENDING",
+    "PUBLISH": "LOCKED",
+    "QUALITY_CHECK": "PASS",
+    "SOURCE": "COMPLETE"
+  }
+}

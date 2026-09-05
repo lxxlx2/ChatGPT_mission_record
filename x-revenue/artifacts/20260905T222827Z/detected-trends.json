@@ -1,0 +1,94 @@
+{
+  "breaking_detection": {
+    "action": "queue_for_human_review",
+    "largest_move": {
+      "change_percent": 3.37,
+      "symbol": "SOX"
+    },
+    "threshold_percent": 3.0,
+    "triggered": true
+  },
+  "items": [
+    {
+      "age_hours": 49.97,
+      "published_at": "2026-09-03T20:30:00Z",
+      "source": "SEC",
+      "title": "SEC Proposes Rescission of Political Contribution Rule for Investment Advisers",
+      "trend_score": 5.918,
+      "url": "https://www.sec.gov/newsroom/press-releases/2026-85-sec-proposes-rescission-political-contribution-rule-investment-advisers"
+    },
+    {
+      "age_hours": 31.47,
+      "published_at": "2026-09-04T15:00:00Z",
+      "source": "Federal Reserve",
+      "title": "Federal Reserve Board announces termination of enforcement actions with United Texas Bank, Quontic Bank Acquisition Corp., and Quontic Bank Holdings Corp.",
+      "trend_score": 4.689,
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260904a.htm"
+    },
+    {
+      "age_hours": 99.18,
+      "published_at": "2026-09-01T19:17:39Z",
+      "source": "SEC",
+      "title": "SEC Announces Agenda and Panelists for Roundtable on Preparations for 24-Hour Trading",
+      "trend_score": 4.0,
+      "url": "https://www.sec.gov/newsroom/press-releases/2026-83-sec-announces-agenda-panelists-roundtable-preparations-24-hour-trading"
+    },
+    {
+      "age_hours": 124.07,
+      "published_at": "2026-08-31T18:24:32Z",
+      "source": "SEC",
+      "title": "SEC and FDA Announce MOU to Bolster Cooperation and Ensure Market Integrity",
+      "trend_score": 4.0,
+      "url": "https://www.sec.gov/newsroom/press-releases/2026-80-sec-fda-announce-mou-bolster-cooperation-ensure-market-integrity"
+    },
+    {
+      "age_hours": 56.01,
+      "published_at": "2026-09-03T14:27:49Z",
+      "source": "SEC",
+      "title": "SEC Investor Advisory Committee to Host Sept. 10 Meeting",
+      "trend_score": 1.666,
+      "url": "https://www.sec.gov/newsroom/press-releases/2026-84-sec-investor-advisory-committee-host-sept-10-meeting"
+    },
+    {
+      "age_hours": 100.6,
+      "published_at": "2026-09-01T17:52:32Z",
+      "source": "SEC",
+      "title": "SEC Charges San Francisco Bay Area Private Fund Executives with Multimillion Dollar Ponzi-Like Scheme",
+      "trend_score": 1.0,
+      "url": "https://www.sec.gov/newsroom/press-releases/2026-82-sec-charges-san-francisco-bay-area-private-fund-executives-multimillion-dollar-ponzi-scheme"
+    },
+    {
+      "age_hours": 103.52,
+      "published_at": "2026-09-01T14:57:00Z",
+      "source": "SEC",
+      "title": "SEC Proposes to Modernize Rules for Registered Transfer Agents",
+      "trend_score": 1.0,
+      "url": "https://www.sec.gov/newsroom/press-releases/2026-81-sec-proposes-modernize-rules-registered-transfer-agents"
+    }
+  ],
+  "trigger_evaluation": {
+    "action": "GENERATE_CANDIDATE",
+    "active_triggers": [
+      {
+        "breaking": true,
+        "change_percent": 3.37,
+        "display_name": "Semis",
+        "source_id": "Nasdaq:SOX:2026-09-04",
+        "symbol": "SOX",
+        "threshold_percent": 1.0,
+        "type": "STOCK_INDEX_MOVE"
+      }
+    ],
+    "current_event_values": {
+      "Kraken:BTC:2026-09-05": 0.16,
+      "Kraken:ETH:2026-09-05": 0.94,
+      "Kraken:SOL:2026-09-05": 1.37,
+      "Nasdaq:COMP:2026-09-04": -0.29,
+      "Nasdaq:NDX:2026-09-04": 0.21,
+      "Nasdaq:SOX:2026-09-04": 3.37
+    },
+    "reason": "Triggered by 1 active events: Semis +3.37%",
+    "trigger_summary": "Semis +3.37%",
+    "triggered": true
+  }
+}

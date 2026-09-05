@@ -20,6 +20,11 @@ import urllib.request
 import uuid
 import xml.etree.ElementTree as ET
 from zoneinfo import ZoneInfo
+from typing import Any
+
+from config import load_config
+from triggers import evaluate_triggers
+from telegram_approval import poll_and_process_callbacks, send_approval_message
 
 
 ROOT = Path(__file__).resolve().parent
@@ -115,9 +120,6 @@ def fetch_nasdaq(now: dt.datetime) -> tuple[dict[str, object], list[dict[str, ob
         data = payload.get("data")
         if not isinstance(data, dict):
             raise PipelineError(f"Nasdaq returned no data for {symbol}")
-        # Nasdaq normally exposes the regular-session close as secondaryData
-        # after hours, but on weekends it can omit secondaryData and put the
-        # latest completed session in primaryData instead.
         market_status = str(data.get("marketStatus") or "")
         primary = data.get("primaryData")
         secondary = data.get("secondaryData")
@@ -404,7 +406,7 @@ def load_validated_artifact(artifact: Path) -> dict[str, object]:
         and stock_selection.get("selected_trade_date") == next(iter(stock_dates), None),
         "stock_session_recent_at_generation": 0 <= stock_session_age <= 4,
         "external_publish_not_recorded": manifest.get("external_publish_performed") is False,
-        "approval_status_valid": approval.get("status") in {"PENDING_HUMAN_APPROVAL", "APPROVED", "REJECTED"},
+        "approval_status_valid": approval.get("status") in {"PENDING", "PENDING_HUMAN_APPROVAL", "APPROVED", "REJECTED", "EXPIRED"},
     }
     failed = [name for name, passed in checks.items() if not passed]
     if failed:
@@ -419,40 +421,117 @@ def load_validated_artifact(artifact: Path) -> dict[str, object]:
     }
 
 
-def _write_run_locked(output_root: Path, state_file: Path) -> Path:
+def _write_run_locked(output_root: Path, state_file: Path, cfg: dict[str, Any] | None = None) -> dict[str, Any]:
+    cfg = cfg or load_config()
     now = utc_now()
     output_root.mkdir(parents=True, exist_ok=True)
+
+    # 1. Drain pending Telegram callbacks before generating new runs
+    try:
+        poll_and_process_callbacks(output_root, state_file.parent, cfg)
+    except Exception:
+        pass
+
     staging = output_root / f".tmp-{uuid.uuid4().hex}"
-    staging.mkdir(exist_ok=False)
     target: Path | None = None
     temp_state: Path | None = None
     renamed = False
+
     try:
         stocks, receipts_a, stock_selection = fetch_nasdaq(now)
         crypto, receipts_b = fetch_kraken(now)
         trends, receipts_c = fetch_rss(now)
         receipts = receipts_a + receipts_b + receipts_c
         analysis = analyze(stocks, crypto, trends)
+
+        state = json.loads(state_file.read_text()) if state_file.exists() else {"candidate_fingerprints": [], "last_event_values": {}}
+        last_event_values = state.get("last_event_values", {})
+
+        # Priority 1: Deterministic trigger evaluation
+        trigger_result = evaluate_triggers(stocks, crypto, trends, analysis, last_event_values, cfg, now)
+
+        if not trigger_result["triggered"]:
+            # NO_ACTION path: preserve lightweight run metadata, no artifact directory, no Telegram notification
+            runs_dir = output_root.parent / "runs" / now.strftime("%Y-%m-%d")
+            runs_dir.mkdir(parents=True, exist_ok=True)
+            no_action_record = {
+                "timestamp": iso(now),
+                "status": "NO_ACTION",
+                "reason": trigger_result["reason"],
+                "trigger_summary": trigger_result["trigger_summary"],
+            }
+            record_path = runs_dir / f"{now.strftime('%H%M%S')}_no_action.json"
+            record_path.write_text(json.dumps(no_action_record, indent=2) + "\n", encoding="utf-8")
+
+            # Update state without creating candidates
+            new_state = {
+                "candidate_fingerprints": state.get("candidate_fingerprints", []),
+                "last_event_values": {**last_event_values, **trigger_result.get("current_event_values", {})},
+                "last_run": now.strftime("%Y%m%dT%H%M%SZ"),
+                "last_run_status": "NO_ACTION",
+            }
+            temp_state = state_file.with_name(f".{state_file.name}.{uuid.uuid4().hex}.tmp")
+            temp_state.write_bytes(canonical_bytes(new_state))
+            temp_state.replace(state_file)
+
+            return {
+                "status": "NO_ACTION",
+                "reason": trigger_result["reason"],
+                "trigger_summary": trigger_result["trigger_summary"],
+                "evaluated_at": iso(now),
+                "telegram_delivery": "SKIPPED_NO_ACTION",
+                "external_publish_allowed": False,
+                "external_publish_performed": False,
+            }
+
+        # Triggered: generate candidate
         candidate = make_candidate(now, stocks, crypto, analysis)
         checked_at = utc_now()
         qa = quality(candidate, receipts, checked_at)
         candidate_digest = sha256(candidate.encode())
         substantive_candidate = re.sub(r", \d{2}:\d{2} UTC\.$", ".", candidate)
         fingerprint = sha256(substantive_candidate.encode())
-        state = json.loads(state_file.read_text()) if state_file.exists() else {"candidate_fingerprints": []}
+
+        # Duplicate candidate check
         duplicate = fingerprint in state.get("candidate_fingerprints", [])
-        qa["checks"]["not_previously_generated"] = not duplicate
+        if duplicate:
+            return {
+                "status": "NO_ACTION",
+                "reason": "duplicate_candidate_fingerprint",
+                "trigger_summary": trigger_result["trigger_summary"],
+                "candidate_sha256": candidate_digest,
+                "evaluated_at": iso(now),
+                "telegram_delivery": "SKIPPED_DUPLICATE",
+                "external_publish_allowed": False,
+                "external_publish_performed": False,
+            }
+
+        qa["checks"]["not_previously_generated"] = True
         qa["passed"] = all(qa["checks"].values())
         if not qa["passed"]:
             failed = [name for name, passed in qa["checks"].items() if not passed]
             raise PipelineError(f"quality gate failed: {', '.join(failed)}")
+
         breaking_values = {
             **{symbol: float(value["change_percent"]) for symbol, value in stocks.items()},
             **{symbol: float(crypto[symbol]["change_percent_vs_utc_open"]) for symbol in ("BTC", "ETH", "SOL")},
         }
         mover, move = max(breaking_values.items(), key=lambda item: abs(item[1]))
-        breaking = {"triggered": abs(move) >= 3.0, "threshold_percent": 3.0, "largest_move": {"symbol": mover, "change_percent": round(move, 2)}, "action": "queue_for_human_review" if abs(move) >= 3.0 else "none"}
-        source_snapshot = {"generated_at": iso(checked_at), "stock_selection": stock_selection, "stocks": stocks, "crypto": crypto, "receipts": receipts}
+        breaking = {
+            "triggered": abs(move) >= float(cfg.get("breaking_threshold_percent", 3.0)),
+            "threshold_percent": float(cfg.get("breaking_threshold_percent", 3.0)),
+            "largest_move": {"symbol": mover, "change_percent": round(move, 2)},
+            "action": "queue_for_human_review" if abs(move) >= float(cfg.get("breaking_threshold_percent", 3.0)) else "none",
+        }
+
+        source_snapshot = {
+            "generated_at": iso(checked_at),
+            "stock_selection": stock_selection,
+            "stocks": stocks,
+            "crypto": crypto,
+            "receipts": receipts,
+        }
+
         manifest = {
             "schema_version": 1,
             "run_id": now.strftime("%Y%m%dT%H%M%SZ"),
@@ -464,7 +543,16 @@ def _write_run_locked(output_root: Path, state_file: Path) -> Path:
                 "market_candidate": ["Nasdaq session selection", "Kraken live ticker", "cross-asset analysis", "candidate"],
                 "official_trend_context": ["Federal Reserve and SEC RSS", "title deduplication", "recency and keyword scoring", "approval packet"],
             },
-            "stage_status": {"SOURCE": "COMPLETE", "DETECTION": "COMPLETE", "ANALYSIS": "COMPLETE", "DRAFT": "COMPLETE", "QUALITY_CHECK": "PASS" if qa["passed"] else "FAIL", "HUMAN_APPROVAL": "PENDING", "PUBLISH": "LOCKED", "ANALYTICS": "NOT_APPLICABLE_BEFORE_PUBLISH"},
+            "stage_status": {
+                "SOURCE": "COMPLETE",
+                "DETECTION": "COMPLETE",
+                "ANALYSIS": "COMPLETE",
+                "DRAFT": "COMPLETE",
+                "QUALITY_CHECK": "PASS" if qa["passed"] else "FAIL",
+                "HUMAN_APPROVAL": "PENDING",
+                "PUBLISH": "LOCKED",
+                "ANALYTICS": "NOT_APPLICABLE_BEFORE_PUBLISH",
+            },
             "candidate_sha256": candidate_digest,
             "deduplication_fingerprint_sha256": fingerprint,
             "content_ready_for_human_approval": qa["passed"],
@@ -472,35 +560,91 @@ def _write_run_locked(output_root: Path, state_file: Path) -> Path:
             "model_used": None,
             "analysis_method": "deterministic cross-asset breadth and dispersion",
         }
-        approval = {"status": "PENDING_HUMAN_APPROVAL", "candidate_sha256": candidate_digest, "decision": None, "actor": None, "decided_at": None, "note": None, "external_publish_allowed": False}
-        brief = ["# X revenue candidate approval packet", "", f"Generated: {iso(now)}", "", "## Candidate", "", candidate, "", "## Detected official-source trends", ""]
+
+        approval = {
+            "status": "PENDING",
+            "candidate_sha256": candidate_digest,
+            "created_at": iso(now),
+            "expires_at": iso(now + dt.timedelta(hours=int(cfg.get("approval_ttl_hours", 24)))),
+            "decision": "PENDING",
+            "decision_at": None,
+            "actor": None,
+            "note": None,
+            "telegram_message_id": None,
+            "telegram_chat_id": None,
+            "delivery_state": "NOT_SENT",
+            "trigger_summary": trigger_result["trigger_summary"],
+            "external_publish_allowed": False,
+            "future_publish_id": None,
+            "future_publish_at": None,
+            "future_metrics": None,
+        }
+
+        brief = ["# X revenue candidate approval packet", "", f"Generated: {iso(now)}", "", "## Candidate", "", candidate, "", "## Trigger Summary", "", trigger_result["trigger_summary"], "", "## Detected official-source trends", ""]
         for item in trends[:5]:
             brief.append(f"- [{item['source']}] [{item['title']}]({item['url']}) — score {item['trend_score']}, published {item['published_at']}")
         brief.extend(["", "## Safety state", "", "Pending human approval. No external publish call was made.", ""])
+
+        staging.mkdir(exist_ok=False)
         files: dict[str, bytes] = {
             "candidate.txt": (candidate + "\n").encode(),
             "approval-packet.md": ("\n".join(brief)).encode(),
             "source-snapshot.json": canonical_bytes(source_snapshot),
-            "detected-trends.json": canonical_bytes({"items": trends, "breaking_detection": breaking}),
+            "detected-trends.json": canonical_bytes({"items": trends, "breaking_detection": breaking, "trigger_evaluation": trigger_result}),
             "analysis.json": canonical_bytes(analysis),
             "quality-check.json": canonical_bytes(qa),
             "approval.json": canonical_bytes(approval),
         }
         manifest["file_sha256"] = {name: sha256(files[name]) for name in IMMUTABLE_ARTIFACT_FILES}
         files["manifest.json"] = canonical_bytes(manifest)
+
         for name, raw in files.items():
             (staging / name).write_bytes(raw)
+
         target = output_root / manifest["run_id"]
         if target.exists():
             raise PipelineError(f"refusing to overwrite existing run: {target}")
         staging.rename(target)
         renamed = True
+
         load_validated_artifact(target)
-        new_state = {"candidate_fingerprints": (state.get("candidate_fingerprints", []) + [fingerprint])[-200:], "last_run": manifest["run_id"]}
+
+        # Update persistent seen state
+        new_state = {
+            "candidate_fingerprints": (state.get("candidate_fingerprints", []) + [fingerprint])[-200:],
+            "last_event_values": {**last_event_values, **trigger_result.get("current_event_values", {})},
+            "last_run": manifest["run_id"],
+            "last_run_status": "READY_FOR_HUMAN_APPROVAL",
+        }
         temp_state = state_file.with_name(f".{state_file.name}.{uuid.uuid4().hex}.tmp")
         temp_state.write_bytes(canonical_bytes(new_state))
         temp_state.replace(state_file)
-        return target
+
+        # Telegram delivery
+        trade_date = str(next(iter(stocks.values()))["trade_date"])
+        delivery = send_approval_message(target, candidate, trigger_result["trigger_summary"], trade_date, candidate_digest, cfg)
+        approval["delivery_state"] = delivery.get("delivery_state", "FAILED")
+        if delivery.get("sent"):
+            approval["telegram_message_id"] = delivery.get("telegram_message_id")
+            approval["telegram_chat_id"] = delivery.get("telegram_chat_id")
+
+        # Persist updated approval state atomically
+        approval_file = target / "approval.json"
+        temp_app = approval_file.with_name(f".approval.json.{uuid.uuid4().hex}.tmp")
+        temp_app.write_bytes(canonical_bytes(approval))
+        temp_app.replace(approval_file)
+
+        return {
+            "status": "READY_FOR_HUMAN_APPROVAL",
+            "artifact": str(target),
+            "candidate": str(target / "candidate.txt"),
+            "candidate_sha256": candidate_digest,
+            "telegram_delivery": approval["delivery_state"],
+            "trigger_summary": trigger_result["trigger_summary"],
+            "external_publish_allowed": False,
+            "external_publish_performed": False,
+        }
+
     except Exception:
         shutil.rmtree(staging, ignore_errors=True)
         if renamed and target is not None:
@@ -510,11 +654,11 @@ def _write_run_locked(output_root: Path, state_file: Path) -> Path:
         raise
 
 
-def write_run(output_root: Path, state_file: Path) -> Path:
+def write_run(output_root: Path, state_file: Path, cfg: dict[str, Any] | None = None) -> dict[str, Any]:
     output_root = safe_root(output_root)
     state_file = safe_state_file(state_file)
     with exclusive_run_lock(state_file):
-        return _write_run_locked(output_root, state_file)
+        return _write_run_locked(output_root, state_file, cfg)
 
 
 def approve(artifact: Path, decision: str, actor: str, note: str | None) -> None:
@@ -529,11 +673,19 @@ def approve(artifact: Path, decision: str, actor: str, note: str | None) -> None
         approval_path = artifact / "approval.json"
         candidate = validated["candidate"]
         approval = validated["approval"]
-        if approval.get("status") != "PENDING_HUMAN_APPROVAL":
+        if approval.get("status") not in {"PENDING", "PENDING_HUMAN_APPROVAL"}:
             raise PipelineError("approval has already been decided")
         if sha256(candidate) != approval.get("candidate_sha256"):
             raise PipelineError("candidate changed after generation")
-        approval.update({"status": "APPROVED" if decision == "approve" else "REJECTED", "decision": decision, "actor": actor, "decided_at": iso(utc_now()), "note": note, "external_publish_allowed": False})
+        dec = "APPROVED" if decision == "approve" else "REJECTED"
+        approval.update({
+            "status": dec,
+            "decision": dec,
+            "actor": actor,
+            "decided_at": iso(utc_now()),
+            "note": note,
+            "external_publish_allowed": False,
+        })
         temp = approval_path.with_name(f".approval.json.{uuid.uuid4().hex}.tmp")
         try:
             temp.write_bytes(canonical_bytes(approval))
@@ -571,11 +723,14 @@ def main() -> int:
     check.add_argument("--artifact", type=Path, required=True)
     verify = sub.add_parser("verify")
     verify.add_argument("--artifact", type=Path, required=True)
+    poll = sub.add_parser("poll-callbacks")
+    poll.add_argument("--output-root", type=Path, default=DEFAULT_ARTIFACTS)
+    poll.add_argument("--state-file", type=Path, default=DEFAULT_STATE)
     args = parser.parse_args()
     try:
         if args.command == "run":
-            target = write_run(args.output_root, args.state_file)
-            print(json.dumps({"status": "READY_FOR_HUMAN_APPROVAL", "artifact": str(target), "candidate": str(target / "candidate.txt")}, indent=2))
+            result = write_run(args.output_root, args.state_file)
+            print(json.dumps(result, indent=2))
         elif args.command == "approve":
             approve(args.artifact, args.decision, args.actor, args.note)
             print(json.dumps({"status": args.decision.upper(), "artifact": str(args.artifact)}))
@@ -583,6 +738,10 @@ def main() -> int:
             result = publish_check(args.artifact)
             print(json.dumps(result, indent=2))
             return 0 if result["ready"] else 3
+        elif args.command == "poll-callbacks":
+            cfg = load_config()
+            decisions = poll_and_process_callbacks(args.output_root, args.state_file.parent, cfg)
+            print(json.dumps({"status": "CALLBACKS_POLLED", "count": len(decisions), "decisions": decisions}, indent=2))
         else:
             result = load_validated_artifact(args.artifact)
             print(json.dumps({"status": "VALID", "artifact": str(result["artifact"]), "checks": result["checks"]}, indent=2))

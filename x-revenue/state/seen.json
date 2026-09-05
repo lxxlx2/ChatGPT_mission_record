@@ -1,6 +1,16 @@
 {
   "candidate_fingerprints": [
-    "309be0d8e3e95b2c021482985cbf300640aa4d4d3a39d88e48e59203639e19c1"
+    "309be0d8e3e95b2c021482985cbf300640aa4d4d3a39d88e48e59203639e19c1",
+    "2a53be6b675e77e0ccaab48cfcd91a863154e6c4f85a4f1747e0e83dec113749"
   ],
-  "last_run": "20260905T045131Z"
+  "last_event_values": {
+    "Kraken:BTC:2026-09-05": 0.15,
+    "Kraken:ETH:2026-09-05": 0.94,
+    "Kraken:SOL:2026-09-05": 1.35,
+    "Nasdaq:COMP:2026-09-04": -0.29,
+    "Nasdaq:NDX:2026-09-04": 0.21,
+    "Nasdaq:SOX:2026-09-04": 3.37
+  },
+  "last_run": "20260905T222857Z",
+  "last_run_status": "NO_ACTION"
 }
