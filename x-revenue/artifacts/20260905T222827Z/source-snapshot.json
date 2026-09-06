@@ -1,0 +1,110 @@
+{
+  "crypto": {
+    "BTC": {
+      "change_percent_vs_utc_open": 0.16127716453409047,
+      "price_usd": 79805.0,
+      "resolved_pair": "XXBTZUSD",
+      "utc_open_usd": 79676.5
+    },
+    "ETH": {
+      "change_percent_vs_utc_open": 0.9363105294225349,
+      "price_usd": 2479.45,
+      "resolved_pair": "XETHZUSD",
+      "utc_open_usd": 2456.45
+    },
+    "SOL": {
+      "change_percent_vs_utc_open": 1.3733568765940785,
+      "price_usd": 103.34,
+      "resolved_pair": "SOLUSD",
+      "utc_open_usd": 101.94
+    }
+  },
+  "generated_at": "2026-09-05T22:28:35.076840Z",
+  "receipts": [
+    {
+      "fetched_at": "2026-09-05T22:28:29.290159Z",
+      "final_url": "https://api.nasdaq.com/api/quote/COMP/info?assetclass=index",
+      "response_sha256": "4b72cae3460a9aaa68a0e8534d493763e686eae702c007c8bb87bb04080e0f31",
+      "source": "Nasdaq",
+      "url": "https://api.nasdaq.com/api/quote/COMP/info?assetclass=index"
+    },
+    {
+      "fetched_at": "2026-09-05T22:28:31.466321Z",
+      "final_url": "https://api.nasdaq.com/api/quote/NDX/info?assetclass=index",
+      "response_sha256": "d47f101671f925a94b4b97db21222ed8e9f6e87097aa030d4dd43425acf0356e",
+      "source": "Nasdaq",
+      "url": "https://api.nasdaq.com/api/quote/NDX/info?assetclass=index"
+    },
+    {
+      "fetched_at": "2026-09-05T22:28:33.328124Z",
+      "final_url": "https://api.nasdaq.com/api/quote/SOX/info?assetclass=index",
+      "response_sha256": "71be1db122528c451cfded65cfe89f4cd90f0c9c3ec0bffa3098b00584c7a126",
+      "source": "Nasdaq",
+      "url": "https://api.nasdaq.com/api/quote/SOX/info?assetclass=index"
+    },
+    {
+      "fetched_at": "2026-09-05T22:28:34.048640Z",
+      "final_url": "https://api.kraken.com/0/public/Ticker?pair=XBTUSD,ETHUSD,SOLUSD",
+      "response_sha256": "31eefdf6df43b72134c5e372a94843c5b2457aa6666f93e220b0e62b8a45e21e",
+      "source": "Kraken",
+      "url": "https://api.kraken.com/0/public/Ticker?pair=XBTUSD,ETHUSD,SOLUSD"
+    },
+    {
+      "fetched_at": "2026-09-05T22:28:34.491384Z",
+      "final_url": "https://www.federalreserve.gov/feeds/press_all.xml",
+      "response_sha256": "3869c9fecda14e034f5955155404f31f0f1608dd08aaa29dd915204dbc6d5605",
+      "source": "Federal Reserve",
+      "url": "https://www.federalreserve.gov/feeds/press_all.xml"
+    },
+    {
+      "fetched_at": "2026-09-05T22:28:35.075760Z",
+      "final_url": "https://www.sec.gov/news/pressreleases.rss",
+      "response_sha256": "0b3cef44fc4a035f2b73ab27ec467843876aa641d18d7580718dafb0f33f0caf",
+      "source": "SEC",
+      "url": "https://www.sec.gov/news/pressreleases.rss"
+    }
+  ],
+  "stock_selection": {
+    "observed_trade_dates": {
+      "COMP": "2026-09-04",
+      "NDX": "2026-09-04",
+      "SOX": "2026-09-04"
+    },
+    "policy": "fixed US equity index basket sharing one recent Nasdaq session",
+    "selected_symbols": [
+      "COMP",
+      "NDX",
+      "SOX"
+    ],
+    "selected_trade_date": "2026-09-04"
+  },
+  "stocks": {
+    "COMP": {
+      "change_percent": -0.29,
+      "display_name": "Nasdaq Comp",
+      "market_status": "Closed",
+      "price_basis": "latest_session_primary",
+      "price_usd": 26506.99,
+      "trade_date": "2026-09-04",
+      "trade_timestamp": "Sep 4, 2026"
+    },
+    "NDX": {
+      "change_percent": 0.21,
+      "display_name": "Nasdaq-100",
+      "market_status": "Closed",
+      "price_basis": "latest_session_primary",
+      "price_usd": 29544.15,
+      "trade_date": "2026-09-04",
+      "trade_timestamp": "Sep 4, 2026"
+    },
+    "SOX": {
+      "change_percent": 3.37,
+      "display_name": "Semis",
+      "market_status": "Closed",
+      "price_basis": "latest_session_primary",
+      "price_usd": 11735.26,
+      "trade_date": "2026-09-04",
+      "trade_timestamp": "Sep 4, 2026"
+    }
+  }
+}

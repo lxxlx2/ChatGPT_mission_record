@@ -1,0 +1,18 @@
+{
+  "actor": null,
+  "candidate_sha256": "ccec2d1a97a28028420c046b04d95250c76911c23669804d78708441303bcf8b",
+  "created_at": "2026-09-05T22:28:27.557727Z",
+  "decision": "PENDING",
+  "decision_at": null,
+  "delivery_state": "CREDENTIALS_MISSING",
+  "expires_at": "2026-09-06T22:28:27.557727Z",
+  "external_publish_allowed": false,
+  "future_metrics": null,
+  "future_publish_at": null,
+  "future_publish_id": null,
+  "note": null,
+  "status": "PENDING",
+  "telegram_chat_id": null,
+  "telegram_message_id": null,
+  "trigger_summary": "Semis +3.37%"
+}

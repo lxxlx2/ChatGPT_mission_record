@@ -1,0 +1,15 @@
+{
+  "character_count": 239,
+  "checks": {
+    "external_publish_not_called": true,
+    "human_approval_required": true,
+    "length_at_most_280": true,
+    "no_guarantee_or_trade_directive": true,
+    "not_previously_generated": true,
+    "source_receipts_present": true,
+    "sources_fresh_at_generation": true,
+    "uses_only_constructed_source_values": true
+  },
+  "forbidden_matches": [],
+  "passed": true
+}
