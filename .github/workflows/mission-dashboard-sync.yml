@@ -5,8 +5,11 @@ on:
     branches: [main]
     paths:
       - 'crypto-daily/runs/**'
+      - 'crypto-daily/reports/**'
       - 'us-stock-daily/runs/**'
+      - 'us-stock-daily/reports/**'
       - 'airdrop-tge-monitor/runs/**'
+      - 'airdrop-tge-monitor/reports/**'
       - '.github/workflows/mission-dashboard-sync.yml'
   workflow_dispatch:
 
@@ -90,15 +93,13 @@ jobs:
 
           def latest_bad_run(system):
               for p in reversed(files(f'{system}/runs/*/*.md')):
-                  s = parse_kv(p).get('run_status', '')
-                  if bad_status(s):
+                  if bad_status(parse_kv(p).get('run_status', '')):
                       return p
               return None
 
           def previous_month(dt):
               first = dt.replace(day=1)
-              prev = first - timedelta(days=1)
-              return prev.strftime('%Y-%m')
+              return (first - timedelta(days=1)).strftime('%Y-%m')
 
           def daily_system(system, issue):
               run = latest(f'{system}/runs/*/*.md')
@@ -201,13 +202,36 @@ jobs:
           set -Eeuo pipefail
           [[ -n "${GH_TOKEN:-}" ]] || { echo 'PROJECTS_TOKEN is missing'; exit 1; }
 
-          PROJECTS="$(gh api graphql -f query='query { viewer { login projectsV2(first:100) { nodes { id number title } } } }')"
+          gh_graphql() {
+            local attempt=1 max_attempts=5 delay=2 output rc errfile
+            errfile="$(mktemp)"
+            while (( attempt <= max_attempts )); do
+              if output="$(gh api graphql "$@" 2>"$errfile")"; then
+                rm -f "$errfile"
+                printf '%s' "$output"
+                return 0
+              fi
+              rc=$?
+              if (( attempt == max_attempts )); then
+                cat "$errfile" >&2
+                rm -f "$errfile"
+                return "$rc"
+              fi
+              echo "::warning::GitHub GraphQL attempt ${attempt}/${max_attempts} failed; retrying in ${delay}s" >&2
+              cat "$errfile" >&2
+              sleep "$delay"
+              delay=$((delay * 2))
+              attempt=$((attempt + 1))
+            done
+          }
+
+          PROJECTS="$(gh_graphql -f query='query { viewer { login projectsV2(first:100) { nodes { id number title } } } }')"
           LOGIN="$(jq -r '.data.viewer.login // empty' <<<"$PROJECTS")"
           [[ "$LOGIN" == "$OWNER" ]] || { echo "Token owner mismatch: $LOGIN"; exit 1; }
           PROJECT_ID="$(jq -r --argjson n "$PROJECT_NUMBER" --arg t "$PROJECT_TITLE" 'first(.data.viewer.projectsV2.nodes[] | select(.number == $n and .title == $t) | .id) // empty' <<<"$PROJECTS")"
           [[ -n "$PROJECT_ID" ]] || { echo 'Project #2 not found'; exit 1; }
 
-          SNAPSHOT="$(gh api graphql -F project="$PROJECT_ID" -f query='query($project:ID!){ node(id:$project){ ... on ProjectV2 { fields(first:100){ nodes { ... on ProjectV2Field { id name } ... on ProjectV2SingleSelectField { id name options { id name } } } } items(first:100){ nodes { id content { ... on Issue { number url } } } pageInfo { hasNextPage } } } } }')"
+          SNAPSHOT="$(gh_graphql -F project="$PROJECT_ID" -f query='query($project:ID!){ node(id:$project){ ... on ProjectV2 { fields(first:100){ nodes { ... on ProjectV2Field { id name } ... on ProjectV2SingleSelectField { id name options { id name } } } } items(first:100){ nodes { id content { ... on Issue { number url } } } pageInfo { hasNextPage } } } } }')"
           MORE="$(jq -r '.data.node.items.pageInfo.hasNextPage // false' <<<"$SNAPSHOT")"
           [[ "$MORE" == false ]] || { echo 'Project item pagination required'; exit 1; }
 
@@ -227,7 +251,7 @@ jobs:
             local item="$1" field="$2" value="$3" fid
             fid="$(field_id "$field")"
             [[ -n "$fid" ]] || { echo "Missing field: $field"; exit 1; }
-            gh api graphql -F project="$PROJECT_ID" -F item="$item" -F field="$fid" -f value="$value" -f query='mutation($project:ID!,$item:ID!,$field:ID!,$value:String!){ updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{text:$value}}){ projectV2Item { id } } }' >/dev/null
+            gh_graphql -F project="$PROJECT_ID" -F item="$item" -F field="$fid" -f value="$value" -f query='mutation($project:ID!,$item:ID!,$field:ID!,$value:String!){ updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{text:$value}}){ projectV2Item { id } } }' >/dev/null
           }
 
           set_select() {
@@ -236,7 +260,7 @@ jobs:
             [[ -n "$fid" ]] || { echo "Missing field: $field"; exit 1; }
             oid="$(option_id "$field" "$value")"
             [[ -n "$oid" ]] || { echo "Missing option: $field=$value"; exit 1; }
-            gh api graphql -F project="$PROJECT_ID" -F item="$item" -F field="$fid" -f option="$oid" -f query='mutation($project:ID!,$item:ID!,$field:ID!,$option:String!){ updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{singleSelectOptionId:$option}}){ projectV2Item { id } } }' >/dev/null
+            gh_graphql -F project="$PROJECT_ID" -F item="$item" -F field="$fid" -f option="$oid" -f query='mutation($project:ID!,$item:ID!,$field:ID!,$option:String!){ updateProjectV2ItemFieldValue(input:{projectId:$project,itemId:$item,fieldId:$field,value:{singleSelectOptionId:$option}}){ projectV2Item { id } } }' >/dev/null
           }
 
           jq -c '.[]' /tmp/mission-dashboard.json | while IFS= read -r row; do
