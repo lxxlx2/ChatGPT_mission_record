@@ -1,43 +1,42 @@
 # ETH Trading Monitor Latest
 
-Timestamp (Asia/Bangkok): 2026-09-18 06:20
+Timestamp (Asia/Bangkok): 2026-09-18 06:52
 
 Primary status: `NO_ACTION`
 
 ## Market snapshot
 
-- ETHUSDT Binance mark price: $2,447.50
-- Binance perpetual funding: +0.003719% per funding interval, positive but lower than earlier overnight readings.
-- Binance ETHUSDT OI: latest hourly observation 2,285,154.455 ETH, approximately $5.587B. This is down from 2,307,460 ETH roughly 23 hours earlier and from about 2,316k ETH around the recent local peak, indicating continued leverage reduction.
-- Binance top-trader position long/short ratio: 1.3641, with 57.70% long and 42.30% short. This has risen from about 1.33–1.35 overnight, showing a modest increase in long bias, though not an acute leverage expansion because aggregate OI is falling.
-- Latest completed 4h candle: O 2469.47 / H 2476.40 / L 2443.62 / C 2447.95. Current 4h has traded roughly 2436.09–2457.92 and remains far below the $2,555 breakout trigger.
-- Hyperliquid live ETH funding/OI: unavailable from a sufficiently reliable live structured source in this run. Do not infer values.
+- ETHUSDT Binance mark price: $2,447.06; index price $2,448.25.
+- Binance perpetual funding: +0.003696% per funding interval. Funding remains positive but has continued easing from earlier overnight readings.
+- Binance ETHUSDT OI: current 2,287,763.412 ETH. Latest completed hourly observation was 2,285,154.455 ETH, approximately $5.587B, down from 2,307,460 ETH about 23 hours earlier. Aggregate leverage remains in contraction rather than expansion.
+- Binance top-trader position long/short ratio: 1.3641 at the latest completed hourly sample, with 57.70% long and 42.30% short. Long bias has risen modestly, but OI contraction reduces the evidence for acute leveraged-long crowding.
+- Latest completed 4h candle: O 2469.47 / H 2476.40 / L 2443.62 / C 2447.95. Current 4h has traded about 2436.09–2457.92 and remains far below the $2,555 breakout trigger.
+- Hyperliquid live ETH funding/OI: unavailable from a sufficiently reliable live structured source in this run. No values inferred.
 
 ## Polymarket
 
-Fresh indexed year-end ETH touch snapshot:
-- Reach $2,750 before 2027: about 69.5%
-- Reach $3,000 before 2027: about 49.5%
-- Dip to $2,250 before 2027: about 58%
-- Dip to $2,000 before 2027: about 32.5%
+Latest directly indexed year-end ETH market snapshot available to this run is not live to the minute and was crawled roughly three days ago:
+- Reach $2,750 before 2027: about 79%.
+- Reach $3,000 before 2027: about 61%.
+- Dip to $2,250 before 2027: about 51%.
+- Dip to $2,000 before 2027: about 28%.
 
-The market continues to price substantial two-sided volatility. Compared with the prior monitor, indexed downside probabilities have eased somewhat, which does not invalidate the pullback-long setup and does not itself justify chasing price.
+Because the index snapshot is several days old, it is treated as context only and is not used as a standalone trigger. More recent September-specific indexed Polymarket pages continue to imply substantial two-sided volatility, with roughly 61–68% odds of touching $2,300 and about 45–47% odds of reaching $2,600 during September in the latest available pages.
 
 Sources:
-- https://cryptoslate.com/predictions/market/what-price-will-ethereum-hit-before-2027/
-- https://polymarket.com/event/what-price-will-ethereum-hit-before-2027/
+- https://polymarket.com/event/what-price-will-ethereum-hit-before-2027
+- https://polymarket.com/event/what-price-will-ethereum-hit-in-september-2026
 
 ## Macro
 
-The Sep 16 Fed 25 bp hike to 3.75%–4.00% remains a material headwind, with 16 of 18 policymakers projecting at least one additional 2026 hike. The Sep 15 U.S. Senate failure to advance the crypto market-structure bill remains a sector headwind. No newer verified macro shock was found in this check that independently requires cancelling or pausing the setup.
+The Sep 16 Fed 25 bp hike to 3.75%–4.00% remains a material headwind, and the Sep 15 U.S. Senate failure to advance the crypto market-structure bill remains a sector headwind. A fresh Reuters search did not surface a newer verified macro event in this check that independently requires cancelling or pausing the ETH setup.
 
-Sources:
-- https://www.reuters.com/business/view-markets-steady-after-fed-raises-rates-points-another-hike-this-year-2026-09-16/
-- https://www.reuters.com/business/bitcoin-crypto-stocks-remain-down-after-us-senate-fails-advance-regulatory-bill-2026-09-15/
+Source:
+- https://www.reuters.com/world/china/global-markets-flows-graphic-2026-09-11/
 
 ## Decision
 
-ETH remains approximately $27.50 above the first planned pullback entry at $2,420. Funding is positive but easing, OI continues to contract, and the increase in top-trader long bias is not accompanied by expanding aggregate leverage. Price has not reached $2,420 / $2,390 / $2,365, has not completed a 4h close above $2,555, and remains above the $2,350 daily invalidation level.
+ETH remains about $27 above the first planned pullback entry at $2,420. Funding is positive but easing, OI is lower over the last day, and the modest increase in top-trader long bias is not accompanied by expanding aggregate leverage. Price has not reached $2,420 / $2,390 / $2,365, has not completed a 4h close above $2,555, and remains above the $2,350 daily invalidation level.
 
 Action: wait. Keep the existing $2,420 / $2,390 / $2,365 pullback plan unchanged. No order, reduction, stop movement, cancellation, or reversal is required now.
 
