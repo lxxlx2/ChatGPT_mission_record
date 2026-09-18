@@ -1,47 +1,47 @@
 # ETH Trading Monitor Latest
 
-Timestamp (Asia/Bangkok): 2026-09-18 17:05
+Timestamp (Asia/Bangkok): 2026-09-18 18:28
 
 Primary status: `NO_ACTION`
 
 ## Market snapshot
 
-- ETHUSDT Binance mark price: $2,513.17; index price: $2,513.78.
-- Binance perpetual funding: +0.009504% per funding interval. Longs continue paying; funding is higher than the +0.008314% recorded at 16:39.
-- Binance ETHUSDT OI: latest hourly observation 2,306,409.202 ETH, about $5.783B. This is down from 2,336,384.555 ETH one hour earlier and well below the 2,338,565.966 ETH local reading earlier in the day, while price is higher.
-- Binance top-trader position long/short ratio: 1.5543, with 60.85% long and 39.15% short. This jumped from 1.4112 in the previous hourly observation and represents a material increase in long-side crowding.
-- Latest completed 4h candle: O 2478.19 / H 2497.77 / L 2469.00 / C 2488.99. Current 4h candle: O 2488.99 / H 2521.83 / L 2484.35 / current about 2513. The current candle has not closed and there is still no completed 4h close above the $2,555 breakout-confirmation threshold.
+- ETHUSDT Binance mark price: $2,504.58; index price: $2,505.06.
+- Binance perpetual funding: +0.010000% per funding interval. Longs continue paying and funding remains elevated.
+- Binance current OI: 2,298,131.557 ETH. Latest completed 4h OI sequence moved from 2,307,379 to 2,315,962 to 2,295,320 to 2,285,408 to 2,321,455 to 2,338,566 ETH, showing a rebound in leverage before the current reading eased again.
+- Binance top-trader position L/S ratio latest completed 4h: 1.4017, 58.36% long / 41.64% short. Recent sequence rose from 1.3051 to a local 1.4182 and then eased slightly.
+- Latest completed 4h candle: O 2478.19 / H 2497.77 / L 2469.00 / C 2488.99. Current 4h candle: O 2488.99 / H 2521.83 / L 2484.35 / current about 2504. The current candle is not complete and there is still no completed 4h close above the $2,555 breakout-confirmation threshold.
 - Hyperliquid live ETH funding/OI: unavailable from a sufficiently reliable fresh structured source in this run. No value is inferred.
 
 ## Polymarket
 
-Fresh year-end ETH prediction-market snapshot synced Sep 18 around 09:33 UTC:
-- Reach $2,750 before 2027: about 72%.
+Fresh year-end ETH prediction-market snapshot synced Sep 18 around 10:42 UTC:
+- Reach $2,750 before 2027: about 73%.
 - Reach $3,000 before 2027: about 50.5%.
-- Dip to $2,250 before 2027: about 53.5%.
-- Dip to $2,000 before 2027: about 29.5%.
+- Dip to $2,250 before 2027: about 51.5%.
+- Dip to $2,000 before 2027: about 28.5%.
 
-Compared with the 16:39 record, upside odds are roughly stable to slightly firmer and downside-touch odds have eased. The market still prices substantial two-sided volatility.
+Compared with the 17:05 record, upside-touch odds are slightly firmer and downside-touch odds have eased further. The market still prices meaningful two-sided volatility.
 
 Source: https://cryptoslate.com/predictions/market/what-price-will-ethereum-hit-before-2027/
 
 ## Macro
 
-The Sep 16 Fed 25 bp hike to 3.75%-4.00% and the signal that 16 of 18 policymakers expect at least one additional 2026 hike remain material risk-asset headwinds. On Sep 18, global stocks and bonds remained pressured by broad central-bank tightening, while oil eased but remained around $100+, keeping inflation risk elevated. No newly verified macro event in this check independently invalidates the existing ETH setup.
+Risk-asset conditions remain constrained by global monetary tightening. On Sep 18, Reuters reported the Bank of Japan raised its policy rate 25 bp to 1.25%, the highest in 31 years. Global equity funds recorded their largest weekly outflow in nine months amid inflation and rate concerns. Oil eased on Friday but remained above $100/bbl, so inflation pressure remains relevant. No newly verified event in this check independently invalidates the existing ETH setup.
 
 Sources:
-- https://www.reuters.com/commentary/reuters-open-interest/global-markets-view-usa-2026-09-17/
-- https://www.reuters.com/world/china/global-markets-wrapup-1-2026-09-18/
+- https://www.reuters.com/world/asia-pacific/view-investors-react-boj-raising-interest-rates-31-year-high-2026-09-18/
+- https://www.reuters.com/world/china/global-markets-flows-graphic-pix-2026-09-18/
 - https://www.reuters.com/business/energy/oil-prices-fall-1-hopes-limited-supply-disruptions-2026-09-18/
 
 ## Decision
 
-ETH is about $93 above the first planned pullback entry at $2,420. Price has traded above $2,500, but the breakout rule still requires a completed 4h close above $2,555 followed by a successful $2,520-$2,540 retest. That condition has not occurred.
+ETH is about $85 above the first planned pullback entry at $2,420. Price has traded above $2,500 and briefly reached $2,521.83, but the breakout rule requires a completed 4h close above $2,555 followed by a successful $2,520-$2,540 retest. That confirmation has not occurred.
 
-Funding has risen and the Binance top-trader position ratio jumped to 1.5543, so long-side crowding is materially higher. OI simultaneously fell while price rose, which reduces evidence of broad leverage expansion but does not offset the crowding signal enough to justify chasing. Polymarket year-end odds have improved modestly, without producing a trade trigger.
+Funding is elevated at +0.0100%, and top-trader positioning remains long-biased around 1.40. Current OI has eased from the latest completed 4h peak. Polymarket odds have become modestly more constructive, but this does not override the price-confirmation rule.
 
-No planned pullback entry has been reached. There is no completed 4h close above $2,555, no confirmed breakout retest, and price remains well above the $2,350 daily invalidation level.
+No pullback entry has been reached. There is no completed 4h close above $2,555, no confirmed breakout retest, and price remains well above the $2,350 daily invalidation level.
 
-Action: wait. Keep the $2,420 / $2,390 / $2,365 pullback plan unchanged. Do not chase around $2,513. If price approaches $2,520-$2,540 before a completed 4h close above $2,555, that alone is not a breakout entry.
+Action: wait. Keep the $2,420 / $2,390 / $2,365 pullback plan unchanged. Do not treat the current $2,500-$2,520 area as a breakout entry without the required 4h close above $2,555 and subsequent retest.
 
 Primary status: `NO_ACTION`
