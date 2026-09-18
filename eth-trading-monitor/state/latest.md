@@ -1,23 +1,24 @@
 # ETH Trading Monitor Latest
 
-Timestamp (Asia/Bangkok): 2026-09-19 05:34
+Timestamp (Asia/Bangkok): 2026-09-19 06:10
 
 Primary status: `NO_ACTION`
 
 ## Market snapshot
 
-- ETHUSDT Binance mark price: $2,626.46; index price: $2,627.92.
+- ETHUSDT Binance mark price: $2,617.18; index price: $2,617.73.
 - Binance perpetual funding: +0.010000% per funding interval. Longs are paying.
-- Binance current OI: 2,356,121.984 ETH. This is essentially flat versus the 2,355,809.656 ETH observed in the prior run, after the material OI expansion through the breakout.
-- Binance top-trader position L/S latest 1h observation: 1.5783, 61.22% long / 38.78% short. Long crowding remains elevated versus the roughly 1.34 pre-breakout area.
-- Confirmed 4h breakout candle closed at $2,583.25 above the $2,555 trigger. The next completed 4h candle closed at $2,635.36 after a $2,577.75 low. The required $2,520-$2,540 retest-and-hold still has not occurred.
-- Current 4h candle is around $2,626 and has traded roughly $2,623-$2,639 so far.
+- Latest Binance 4h OI: 2,355,809.656 ETH, approximately $6.210B. OI has expanded from about 2.30M ETH around the breakout impulse and remains elevated.
+- Binance top-trader position L/S latest 4h observation: 1.5749, 61.16% long / 38.84% short. Long crowding remains elevated versus roughly 1.34 before the breakout.
+- Confirmed 4h breakout candle closed at $2,583.25 above the $2,555 trigger. The next completed 4h candle closed at $2,635.36 after a $2,577.75 low. The required $2,520-$2,540 retest-and-hold has still not occurred.
+- Current 4h candle is around $2,617 and has traded $2,611.69-$2,639.31 so far.
 - Hyperliquid exact same-minute ETH funding/OI: unavailable in this run. No value is inferred.
 
 ## Polymarket
 
-- Exact live year-end probabilities were unavailable from a same-minute feed in this run. The most recent indexed year-end page available to search was crawled four days ago and showed reach $2,750 about 79%, reach $3,000 about 61%, reach $3,500 about 30%, dip to $2,250 about 51%, and dip to $2,000 about 28%; these stale values are not treated as a fresh signal.
-- A Polymarket September page crawled today shows reach $2,700 around 65%-67%, reach $3,000 around 13%-15%, dip to $2,400 around 35%-36%, and dip to $2,300 around 17%. These are touch probabilities and can coexist.
+- Latest indexed year-end market snapshot, synced Sep 18 2026 22:52 UTC: reach $2,750 85.5%, reach $3,000 62.5%, dip to $2,250 43%, reach $3,500 32.5%. Market volume about $14.57M, liquidity $1.69M, OI $4.66M.
+- September market indexed today: reach $2,700 about 65%-67%, reach $2,800 about 40%, reach $3,000 about 13%-15%, dip to $2,400 about 35%-36%, dip to $2,300 about 17%.
+- These are touch probabilities and can coexist; they support continued two-way volatility rather than a clean one-way move.
 
 Sources:
 - https://polymarket.com/event/what-price-will-ethereum-hit-before-2027
@@ -25,18 +26,14 @@ Sources:
 
 ## Macro
 
-- The latest Reuters context remains restrictive after the Fed hike, with elevated rates/yields and recent U.S. crypto-regulation uncertainty after the Senate failed to advance the Clarity Act. No newer macro event found in this run invalidates the existing setup.
-
-Sources:
-- https://www.reuters.com/business/bitcoin-crypto-stocks-remain-down-after-us-senate-fails-advance-regulatory-bill-2026-09-15/
-- https://www.reuters.com/legal/transactional/crypto-bills-defeat-shows-limits-industrys-political-machine-2026-09-16/
+- No fresh macro development found in this run that invalidates the existing setup. Restrictive post-Fed-hike conditions and recent U.S. crypto-regulation uncertainty remain relevant background risks.
 
 ## Decision
 
-ETH remains above the confirmed $2,555 breakout, but the strategy requires a controlled $2,520-$2,540 retest-and-hold before opening the breakout long. That retest has not occurred. Funding is positive, OI remains elevated after the breakout expansion, and top-trader longs remain crowded around a 1.58 position ratio. Chasing around $2,626 does not satisfy the existing entry rule.
+ETH remains above the confirmed $2,555 breakout, but the strategy requires a controlled $2,520-$2,540 retest-and-hold before opening the breakout long. That retest has not occurred. Funding is positive, OI remains elevated after the breakout expansion, and top-trader longs remain crowded around a 1.57 position ratio. Chasing around $2,617 does not satisfy the existing entry rule.
 
-The $2,615 take-profit level has been crossed, but TAKE_PROFIT remains conditional on a confirmed already-open position. Position state remains unavailable, so no reduction is inferred or instructed.
+The $2,615 take-profit level is currently around spot, but TAKE_PROFIT is conditional on a confirmed already-open position. Position state remains unavailable, so no reduction is inferred or instructed.
 
-Action: no new order. Keep the breakout-long setup armed only for a controlled $2,520-$2,540 retest and hold. Do not chase around $2,626 under the existing plan.
+Action: no new order. Keep the breakout-long setup armed only for a controlled $2,520-$2,540 retest and hold. Do not chase around $2,617 under the existing plan.
 
 Primary status: `NO_ACTION`
