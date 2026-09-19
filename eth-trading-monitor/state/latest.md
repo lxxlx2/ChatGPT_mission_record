@@ -1,44 +1,40 @@
 # ETH Trading Monitor Latest
 
-Timestamp (Asia/Bangkok): 2026-09-19 18:51
+Timestamp (Asia/Bangkok): 2026-09-19 20:01
 
 Primary status: `NO_ACTION`
 
 ## Market snapshot
 
-- ETHUSDT Binance mark price: $2,639.44; index price: $2,640.32.
-- Binance perpetual funding: +0.010000% per funding interval. Longs are paying.
-- Latest completed Binance 4h OI sample: 2,388,338 ETH, about $6.272B. Across the sampled 4h sequence OI rose from 2,307,379 ETH to 2,388,338 ETH, so leverage expanded materially with the rally.
-- Latest completed Binance top-trader position L/S sample: 1.5943, 61.45% long / 38.55% short. The ratio was about 1.31 at the start of the sampled sequence, so top-trader positioning has become more long-biased.
-- Completed 4h closes after the breakout include $2,583.25, $2,635.36, $2,611.15, $2,619.08 and $2,626.24. The current 4h candle traded as high as $2,662.00 and is around $2,639. The required post-breakout $2,520-$2,540 retest-and-hold has not occurred.
+- ETHUSDT Binance mark price: $2,639.24; index price: $2,640.82.
+- Binance perpetual funding: +0.009965% per funding interval. Longs are paying.
+- Latest completed Binance 4h OI sample: 2,387,359 ETH, about $6.299B. Across the latest 12 samples OI rose from 2,315,962 ETH, indicating leverage expansion during the rally.
+- Latest completed Binance top-trader position L/S: 1.5644, 61.00% long / 39.00% short. Positioning remains long-biased, though below the recent 1.60 peak.
+- Completed 4h closes after the breakout include $2,583.25, $2,635.36, $2,611.15, $2,619.08, $2,626.24 and $2,638.49. The required post-breakout $2,520-$2,540 retest-and-hold has not occurred.
 
 ## Hyperliquid / perpetual context
 
-- Exact current Hyperliquid ETH funding/OI: unavailable in this run. No stale Hyperliquid value is used as a trigger.
-- Binance derivatives are increasingly long-biased: positive funding, rising OI and top-trader L/S near 1.59. This raises chase risk at current prices.
+- Exact current Hyperliquid ETH funding/OI: unavailable in this run. Coinalyze confirms Hyperliquid ETH perpetual is included in its ETH OI universe, but the accessible page did not expose a fresh contract-level value.
+- Binance derivatives remain long-biased: positive funding, higher OI and top-trader L/S above 1.5. Chasing at current price remains unattractive.
 
 ## Polymarket
 
-- Exact fresh year-end ETH threshold probabilities: unavailable in this run; no stale year-end probability is treated as current.
-- Fresh Polymarket September market snapshot on 2026-09-19: touch $2,700 by Sep 30 about 74%, $2,800 about 44-46%, $3,000 about 15%; dip to $2,500 about 56%, $2,400 about 29-30%, $2,300 about 13%.
-- Fresh Sep 19 close-range market favors $2,600-$2,700 at roughly 76-81%, consistent with current spot/mark price near $2,640.
+- Exact fresh year-end ETH threshold probabilities: unavailable in this run because the Polymarket event page could not be fetched directly. No stale probability is used as a trigger.
 
 ## Macro
 
-- Reuters Sep 15 reporting on the Senate failure to advance comprehensive crypto legislation remains a regulatory headwind.
-- No newer verified macro development found in this run independently invalidates the existing ETH setup.
+- No fresh verified macro development found in this run that independently invalidates the existing setup.
 
 ## Decision
 
-ETH remains above the confirmed $2,555 breakout and above the planned $2,615 profit threshold, but monitor state still has no confirmed OPEN_LONG execution. The original $2,420/$2,390/$2,365 entries were not reached in the monitored sequence, and the required breakout retest at $2,520-$2,540 has not occurred. Therefore no TAKE_PROFIT action is inferred.
+ETH remains well above the confirmed $2,555 breakout, but monitor state still has no confirmed OPEN_LONG execution. The original $2,420/$2,390/$2,365 entries were not reached in the monitored sequence, and the required breakout retest at $2,520-$2,540 has not occurred. Therefore the prior $2,615 take-profit threshold does not imply a TAKE_PROFIT action.
 
-At about $2,639, a fresh leveraged long would chase after OI expansion while funding is positive and top traders have become more long-biased. Keep the controlled $2,520-$2,540 retest-and-hold setup armed. If price never retests, remain flat.
+At about $2,639, funding is positive and OI has expanded while top traders remain net long. Keep the controlled $2,520-$2,540 retest-and-hold setup armed. Do not chase.
 
-Action: no new order. Do not chase around $2,639.
+Action: no new order.
 
 Primary status: `NO_ACTION`
 
 Sources:
-- Binance connected market data, 2026-09-19 18:51 Asia/Bangkok
-- Polymarket live Ethereum/September markets, accessed 2026-09-19
-- Reuters, 2026-09-15 crypto regulatory coverage
+- Binance connected market data, 2026-09-19 20:01 Asia/Bangkok
+- Coinalyze ETH open-interest market coverage, accessed 2026-09-19
