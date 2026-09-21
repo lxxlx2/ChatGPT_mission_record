@@ -11,7 +11,7 @@ numbering_self_check: "passed: no line begins with digit+）; section item numbe
 structure_self_check: "passed: all 13 fixed Crypto sections present in required order"
 secondary_market_scan_correction: "ZEC live Binance recheck about $1,511.16, 24h +4.29%, 7d +34.29%, 24h quote volume about $330.0M; HYPE rechecked after recent ATH above $90 and manual-borrowing catalyst."
 gmail_readback_verification: "passed for message_id 1a0c235d17c3f44c; recipient, subject, 13 headings, ZEC/HYPE content and visible numbering checked"
-github_readback_verification: "pending immediately after write; see post-write verification below"
+github_readback_verification: "passed: official report re-read after write; YAML Gmail id/subject/status, required section structure and fullwidth （n） numbering verified"
 daily_report_status: official_corrected_sent_and_archived
 github_report_path: "crypto-daily/reports/daily/2026/2026-09/2026-09-21.md"
 gmail_attempted: true
