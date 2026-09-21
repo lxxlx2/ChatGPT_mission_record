@@ -10,7 +10,7 @@ qa_corrections: "Restored the fixed 12-section structure; restored fullwidth （
 numbering_self_check: "passed: no line begins with digit+）; ordered items use fullwidth （n）"
 structure_self_check: "passed: all 12 required US-stock sections present in required order"
 gmail_readback_verification: "passed for message_id 1a0c2368a8a9d690; recipient, subject, 12 headings and visible numbering checked"
-github_readback_verification: "pending immediately after write; see post-write verification below"
+github_readback_verification: "passed: official report re-read after write; YAML Gmail id/subject/status, required section structure and fullwidth （n） numbering verified"
 daily_report_status: official_corrected_sent_and_archived
 github_report_path: "us-stock-daily/reports/daily/2026/2026-09/2026-09-21.md"
 gmail_attempted: true
