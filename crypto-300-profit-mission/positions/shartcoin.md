@@ -107,3 +107,13 @@ Downside protection from the current ~6.47x state:
 - If price then loses the 3x reference (~USD 0.000793) with deteriorating liquidity/volume or concentrated large-wallet distribution, exit most of what remains; keep at most about 5,000 SHART as a lottery runner.
 - If 8x is reached first, execute the 15,000-token tranche and then do not let the remaining position round-trip below 5x without a fresh structure review.
 - Do not add new USDC to SHART after the 5x+ run unless a new consolidation and fresh on-chain/liquidity thesis is independently established.
+
+
+## User instruction / market update — 2026-09-25 00:16 Asia/Bangkok
+- User has cancelled the previously staged SHARTCOIN sell orders and intends to leave the remaining SHARTCOIN untouched for now.
+- Current authoritative balance remains the last user wallet snapshot: 44,982.986297 SHARTCOIN, pending direct Solana RPC re-verification.
+- Public live reference near this update: about USD 0.00386-0.00399, 24h high about USD 0.005138, market cap roughly USD 3.8M, about 3.47K holders and about USD 6.7M 24h volume.
+- This is already about 14-15x the fixed participation reference (~USD 0.000264), and the price has already pulled back materially from the intraday high.
+- Decision: NO NEW CAPITAL. The current holding remains a profit runner. Do not interpret a price decline alone as a buy signal.
+- A future add requires a genuinely new thesis, such as verified new official catalyst plus sustained liquidity/holder growth and constructive consolidation. Price-only averaging down is prohibited.
+- Because the user cancelled orders, the old staged limit/stop quantities are no longer active orders. Keep downside monitoring and alert if the rapid-drawdown or structural-risk rules trigger.
