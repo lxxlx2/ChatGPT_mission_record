@@ -130,3 +130,25 @@ Actionable alerts should also create:
 `crypto-300-profit-mission/signals/YYYY/YYYY-MM/YYYY-MM-DDTHHMM-nft-radar-<slug>.md`
 
 Never store private keys, seed phrases, wallet secrets, or authentication tokens in GitHub.
+
+
+## Source priority after live usability check — 2026-09-25
+
+Use these discovery sources with different weights:
+
+Tier 1:
+- MintGo. Primary discovery feed because its public page exposes Trending, New Mints, Market, Upcoming Mints, time windows, search by collection/address, and project detail fields such as mint progress, creator, market data and contract analysis. Prefer it for early candidate generation across the chains it currently exposes.
+- Direct chain / official issuer / official marketplace data. Always the final verification layer before an alert.
+
+Tier 2:
+- Waypoint MintScan. Strong signal design for live mint volume, percentage minted, wallet activity and momentum, and official docs describe real-time Ethereum mainnet scanning. Use when live/public data is retrievable, but do not rely on it as the only hourly source because the public page can block automated fetches and full Mint Scanner access may require Waypoint Red Premium.
+- MCT FreeMint / Launch Calendar. Useful secondary discovery source because it exposes block/pending monitoring, short-window mint rankings and a launch calendar. Treat it as candidate generation, then verify externally.
+
+Tier 3:
+- nftis.fun. Lightweight backup for New Mints / Trending / Sold Out / Coming Soon. Low weight because the public page exposes little machine-readable detail and may remain in loading/waiting states.
+- 985monitor. Optional read-only auxiliary heat scanner only. Never require it for coverage, never import a main-wallet private key/seed phrase, and never use its execution/batch-wallet capabilities as part of this Mission.
+
+Source failure handling:
+- A 403, loading state, empty dynamic page or inaccessible premium feature is not evidence that no NFT opportunity exists.
+- Failure of one source must fall through to the remaining sources plus official X, marketplaces and direct chain data.
+- Never alert based only on a scanner's ranking or scam/quality label.
