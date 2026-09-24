@@ -206,3 +206,31 @@ Verification caveat:
 
 ### SHART live-mint verification correction — 2026-09-24
 A fresh public YokaiCapital social post explicitly associates the launch with `GKpNJz7yMuhZka9izamv6sDUxCsDr58pFMUaw1TQpump`, while the public GitHub campaign plan still lists `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids`. Treat this as an unresolved canonical-identity mismatch until direct Solana chain data confirms which mint was allocated/traded. Do not use stale search results for unrelated SHART tokens. The wallet-received mint and launch transaction are authoritative once RPC access is available.
+
+
+## Capital plan update — 2026-09-24, additional 200 USDC
+
+Total liquid-plan capital is now treated as about 500 USDC, excluding the residual SHART position itself.
+
+Base commitments remain:
+- JUMP/Legion base reserve: 150 USDC.
+- PONS margin budget: 50 USDT; do not enlarge merely because more cash is available.
+- ETH initial margin budget: 50 USDT; wait for the post-expiry setup.
+- Existing general reserve: 50 USDC.
+
+New 200 USDC:
+- 100 USDC = conditional JUMP/Legion second tranche. It is NOT committed yet. Add it only if official final sale terms are strong: roughly <=100M FDV, >=50% sale-token TGE unlock, and sane initial circulation/tokenomics. If FDV is roughly 100M-125M, use only about 50 USDC of this extra tranche. If >150M FDV, poor unlock, or excessive initial circulation/insider overhang, keep all 100 USDC as cash/opportunity reserve.
+- 50 USDC = ETH second-bullet reserve. Do not add to the initial position automatically. Use only after the September 25 options-expiry setup is confirmed and either (a) the initial trade has favorable confirmation / successful retest, or (b) a separate high-quality second setup appears.
+- 50 USDC = additional general opportunity reserve. Combined with the previous 50 USDC reserve, keep at least 100 USDC uncommitted unless a clearly superior event-driven opportunity appears.
+
+Maximum planned deployment if JUMP terms are excellent:
+- JUMP up to 250 USDC application/reserve.
+- PONS 50 USDT margin budget.
+- ETH up to 100 USDT across initial + second bullet, not necessarily deployed simultaneously.
+- General reserve at least 100 USDC.
+
+If JUMP terms fail the quality gates, the extra 100 USDC remains cash; do not mechanically redirect it into PONS or ETH.
+
+Current PONS/ETH context at update:
+- PONSUSDT mark about 0.6369, funding about +0.009422% for the current funding interval, OI about 64.18M PONS, top-trader 4h position L/S about 2.21. This does not justify increasing the existing PONS budget.
+- ETHUSDT mark about 2681.7, funding about +0.009484%, OI about 2.288M ETH, top-trader 4h position L/S about 1.54. ETH remains a wait-for-expiry setup rather than a reason to deploy extra cash immediately.
