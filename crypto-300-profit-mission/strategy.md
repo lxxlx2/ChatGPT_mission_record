@@ -122,3 +122,55 @@ Material changes include:
 - official JUMP/Legion sale terms becoming available or materially changing
 
 No material change means NO_ACTION and no email.
+
+
+## SHARTCOIN / kids.fun additional position
+
+User committed 1 SOL to the first kids.fun Shartcoin campaign before the 2026-09-24 01:30 UTC close. Treat this as an additional position outside the original $300 allocation unless later reconciled otherwise.
+
+Canonical identities from YokaiCapital/kids-launchpad current campaign plan:
+- Network: Solana mainnet
+- Program: BLiaZWNQoPm4mG4cXNm4sXifFqs1Xmxx12qD9T4Y5NeN
+- Campaign / escrow: 9FjwHicbkzP17NEW94UasBa3LfWtqmsmddzstq8UqKxP
+- Canonical planned mint: UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids
+- Fartcoin parent mint: 9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump
+- Buttcoin parent mint: Cm6fNnMk7NfzStP9CZpsQA2v3jjzbcYGAxdJySmHpump
+- Funding window: 2026-09-23 23:30 UTC to 2026-09-24 01:30 UTC
+- Soft cap: 200 SOL
+- Hard cap / max accepted SOL: 1,000 SOL
+- Supply split: 43.5% participants, 43.5% liquidity, 10% parent holders, 3% dev
+- Dev: 1% at launch, 2% linear over three calendar months.
+
+The separate address GKpNJz7yMuhZka9izamv6sDUxCsDr58pFMUaw1TQpump was not found in the canonical repository campaign evidence as of the review and must not be treated as the KIDS Shartcoin mint unless new official evidence explicitly changes the canonical identity.
+
+Post-close verification gates:
+1. Confirm final total committed SOL and the exact pro-rata acceptance factor: min(1,1000/final_committed).
+2. For the user's 1 SOL commitment, estimate accepted SOL, refundable excess and token allocation. Participant pool is 435,000,000 tokens, so at a fully accepted 1,000 SOL hard cap the entitlement rate is 435,000 SHARTCOIN per accepted SOL.
+3. Confirm actual launch transaction, actual mint, pool and fee tier directly from official/on-chain evidence.
+4. Confirm mint authority and freeze authority are revoked.
+5. Confirm LP lock state and amount. Do not infer permanent lock from documentation alone.
+6. Confirm refund path is active and excess refunds are actually claimable/processed.
+7. Confirm actual mainnet pool swap fee. Current code policy indicates new mainnet pools use the 2.5% Raydium CPMM tier and no token transfer tax, but the live pool decides.
+8. Check program upgrade authority. Current launch program is upgradeable; any authority change is material.
+9. Check participant concentration, parent-claim sell pressure, top holders, pool liquidity, first-hour volume, buys/sells and large wallets after launch.
+10. Monitor official kids.fun / YokaiCapital announcements and repository changes affecting tokenomics, claims, refunds, pool, authority, fee routing or security.
+
+Initial valuation reference if hard cap is fully accepted:
+- 43.5% token liquidity paired against 1,000 SOL implies opening FDV about 2,298.85 SOL.
+- Opening token price about 0.00000229885 SOL.
+- Opening pool gross two-sided liquidity about 2,000 SOL.
+Recalculate USD figures using live SOL at launch.
+
+Profit management after live pool verification:
+- Security failure or canonical identity mismatch overrides all price targets and triggers immediate reassessment / exit.
+- If price reaches about 2x verified launch price: take about 10%.
+- At about 3x: take another 30%. Combined 2x+3x exits recover roughly 1.1x of the accepted SOL principal before fees/slippage.
+- At about 5x: take another 20%.
+- At about 10x: take another 20%.
+- Keep final 20% as runner if liquidity/volume/community remain healthy.
+- After 10x, manage the runner with a wide meme-appropriate trailing exit, roughly 25% to 30%, reassessed against liquidity.
+- Avoid adding during the first price-discovery spike. Any new buy requires a fresh structure/liquidity/holder review.
+- If after initial price discovery the token sustains below roughly 0.6x to 0.7x launch price with falling volume and no structural catalyst, reassess and consider cutting risk rather than averaging down automatically.
+
+Notification rules for SHARTCOIN:
+Email only for a material action or material risk, including launch completion, final allocation/refund becoming known if it requires a claim/action, security/authority mismatch, LP-lock failure, mint/freeze authority issue, official tokenomics/claim change, major holder/treasury movement, abnormal liquidity removal, or a defined take-profit/risk threshold. Routine price noise or unchanged status stays silent.
