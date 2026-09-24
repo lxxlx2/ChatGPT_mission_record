@@ -413,3 +413,36 @@ Separate 500 principal-preservation bucket:
 - Current public Binance USDC campaign runs through 2026-09-30 23:59:59 UTC and pays 7% on <=300 USDC during the promo (real-time account display can differ slightly).
 - Reject QQQ/stock-token LP and pPOLY LP for this bucket. QQQ LP has equity-price, range/IL, tokenization, smart-contract and activity-subsidy risk; pPOLY is highly volatile and not direct Polymarket equity.
 - Also reject >10% DeFi vaults for the strict principal-preservation bucket even when currently open. Their headline yield compensates for smart-contract, strategy, counterparty/collateral and liquidity risks and can change quickly.
+
+
+## BTC market-regime overlay and JasonLeo cross-check — added 2026-09-25
+
+Purpose: use BTC as the market-regime anchor for the Mission and track the public BTC framework of X account `@Jason60704294` as one supplementary external signal. This source is never sufficient by itself to open, close, size or reverse a trade. Every actionable conclusion must be cross-checked against live market structure.
+
+Current external framework captured from the 2026-09-25 post:
+- Medium-term bias remains constructive while the prior rebound structure holds.
+- 79,000 is the key downside decision zone. A confirmed breakdown should shift the Mission toward risk reduction and invalidate aggressive long continuation assumptions.
+- A fast vertical move into roughly 98,000 to 105,000 is a defensive-hedge candidate zone for a weekly-scale pullback.
+- A daily close holding above roughly 108,000 invalidates that defensive short/hedge thesis.
+- If BTC spends meaningful time balancing between roughly 80,000 and 100,000, with leverage/positioning cooling rather than accelerating vertically, the next continuation reference zone becomes roughly 115,000 to 125,000.
+
+Mission execution rules:
+1. This is a market-regime overlay. There is currently no dedicated BTC capital allocation and no automatic BTC order execution.
+2. A fresh BTC trade requires an explicit user-approved allocation. Do not consume the 150 USDC hard short-window opportunity reserve, JUMP reserve, ETH reserve or the separate principal-preservation bucket automatically.
+3. Downside risk-off confirmation: prefer a 4h close below 79,000 plus a failed reclaim, or a daily close below 79,000. On confirmation, do not average down BTC/ETH beta automatically; tighten review of ETH entry conditions and other high-beta Mission exposure.
+4. Fast-extension hedge candidate: price must reach 98,000 to 105,000 through a materially accelerated move, and at least two independent overheating confirmations should be present before suggesting a defensive short/hedge. Examples include unusually positive funding, rapid OI expansion with price, crowded long positioning, liquidation-driven acceleration, or an extreme short-window price extension.
+5. The 98,000 to 105,000 zone alone is not a short signal. If leverage/positioning remains healthy, do not force the hedge.
+6. Hedge invalidation: a daily close that establishes above roughly 108,000 cancels the current defensive-short thesis unless a fresh structure is documented.
+7. Consolidation continuation: if BTC develops a multi-day balance inside roughly 80,000 to 100,000, avoids a confirmed 79,000 breakdown, and funding/OI crowding cools, treat 115,000 to 125,000 as the next upside reference zone rather than an immediate take-profit requirement.
+8. New posts from `@Jason60704294` are monitored only for material framework changes: new explicit key levels, a disclosed large BTC position change, invalidation of his prior framework, or a materially different path thesis. Generic commentary, reposts, engagement bait or unchanged views remain silent.
+9. Before any notification, compare the external post with live BTC price/4h/daily structure, funding, OI, top-trader positioning and broad account long/short data. When available, also check major perpetual venues, options/expiry structure, ETF flows and material macro catalysts.
+10. If the external trader changes levels but market data does not confirm an actionable Mission change, record the update in GitHub and remain silent.
+
+BTC overlay notification conditions:
+- confirmed 79,000 breakdown / failed reclaim that changes Mission risk posture;
+- 98,000 to 105,000 fast-extension hedge conditions become qualified by market data;
+- a daily close above roughly 108,000 invalidates an active hedge thesis;
+- multi-day 80,000 to 100,000 consolidation transitions into a validated continuation setup;
+- `@Jason60704294` materially changes his public framework and the change affects an existing Mission decision.
+
+No qualifying change means NO_ACTION and no email.
