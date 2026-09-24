@@ -117,3 +117,9 @@ Downside protection from the current ~6.47x state:
 - Decision: NO NEW CAPITAL. The current holding remains a profit runner. Do not interpret a price decline alone as a buy signal.
 - A future add requires a genuinely new thesis, such as verified new official catalyst plus sustained liquidity/holder growth and constructive consolidation. Price-only averaging down is prohibited.
 - Because the user cancelled orders, the old staged limit/stop quantities are no longer active orders. Keep downside monitoring and alert if the rapid-drawdown or structural-risk rules trigger.
+
+
+## Direct Solana RPC correction — 2026-09-25
+Alchemy direct RPC confirms wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` currently holds 33,737.239723 SHART at mint `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids`.
+The alternate candidate mint `GKpNJz7yMuhZka9izamv6sDUxCsDr58pFMUaw1TQpump` has zero balance for this wallet.
+This supersedes the older 44,982.986297 wallet-balance snapshot for current monitoring. Do not infer the difference was sold until transfer/order history is checked.
