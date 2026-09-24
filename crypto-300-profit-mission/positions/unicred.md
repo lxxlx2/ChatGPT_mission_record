@@ -90,3 +90,45 @@ Monitoring rule:
 - Flag a meaningful slowdown if the rolling pace falls below roughly 50% of target for >=30 minutes (slower than about 1 mint every 20 seconds), or if there is an idle period long enough to activate repeated difficulty halving.
 - Flag a severe slowdown if pace is below roughly 25% of target for >=30 minutes (slower than about 1 mint every 40 seconds).
 - Do not alert on short 5-10 minute pauses alone, because the PoW difficulty explicitly retargets and halves after idle intervals.
+
+
+## Rent-end / breakeven model — 2026-09-24 18:46 Asia/Bangkok
+
+Clarification of protocol economics:
+- Staker rent is funded only by the 65% share of each NEW unicorn mint.
+- Once unicorn #4,444 has been minted, no further mint-funded rent is created.
+- Any rent already accrued but not yet claimed remains claimable after minting ends; sold-out does not erase accrued rent.
+- Secondary-sale royalty does not fund stakers; it belongs to the project's separate royalty/buyback flow per the current official docs.
+
+Observed mint-speed baseline:
+- 1,091 -> 1,403 minted over about 52 minutes = 312 mints / 52 min = exactly about 6.0 mints/min, or 1 mint every 10 seconds.
+- At the #1,403 snapshot, 3,041 remained. If the protocol target pace of 10 sec/mint held continuously, theoretical sold-out time from that snapshot is about 8.45 hours later, approximately 2026-09-25 02:48 Asia/Bangkok.
+- This is a theoretical target-time estimate only; PoW difficulty and miner participation can make actual completion earlier/later.
+
+User rent state:
+- NFT acquisition cost: 0.0105 ETH.
+- First confirmed claimed rent: about 0.00087 ETH after about 52 minutes.
+- Pure-rent principal still unrecovered after that claim: about 0.00963 ETH.
+- Initial realized sample pace: ~0.001004 ETH/hour.
+- Current-state instantaneous model at 1,403 minted / total weight 2,080 / mint price 0.008 ETH / target 360 mints per hour gives ~0.00090 ETH/hour for a 1x stake.
+
+Dilution matters materially:
+- From the earlier snapshot 1,091 minted / total weight 1,409 to 1,403 minted / total weight 2,080, weight increased 671 while 312 NFTs were minted, or about +2.15 staking-weight units per new mint during that interval.
+- If that unusually fast recent dilution continued all the way to sold out, projected additional rent from #1,404 to #4,444 is only about 0.00589 ETH; total rent including the first 0.00087 claim would be about 0.00676 ETH, around 64% of the 0.0105 ETH NFT cost. Pure-rent breakeven would not occur before sold out.
+- A more moderate base case of +1.3 weight per future mint projects about 0.00752 ETH additional rent and about 0.00839 ETH total including the first claim, around 80% of NFT cost. Pure-rent breakeven still would not occur before sold out.
+- Mild dilution of only +0.5 weight per mint would allow pure-rent breakeven around mint #4,223, about 7.83 target-pace hours after the #1,403 snapshot.
+- Zero further dilution is an unrealistic upper bound; it would reach pure-rent breakeven around mint #3,678, about 6.32 target-pace hours after #1,403.
+
+Therefore the current reasonable base case is:
+- RENT ALONE probably does NOT fully recover the 0.0105 ETH purchase cost before minting ends if staking dilution remains material.
+- Economic breakeven can still occur because #230 remains an NFT after the 7-day lock. Under the +1.3 weight/mint base case, projected rent shortfall is about 0.00211 ETH, so a net NFT resale value above roughly 0.00211 ETH after unlock would cover the remaining purchase cost.
+- Recompute this model hourly using actual minted progression, totalWeight, mint price and cumulative user rent rather than relying on the initial fixed assumptions.
+
+Hourly rent monitoring requirements:
+- Wallet: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`.
+- NFT token id: #230.
+- Track cumulative claimed rent plus current claimable/pending rent when chain data or the official app exposes it.
+- RENT_BREAKEVEN is reached when cumulative claimed + claimable rent >= 0.0105 ETH. Send an immediate email/action notification at that point.
+- Also calculate an economic-breakeven view when a credible executable OpenSea offer/floor is available: cumulative rent + estimated net executable NFT sale proceeds >= 0.0105 ETH.
+- Every hourly run must write a UNICRED rent line to GitHub even if there is no alert: current minted, current epoch/mint price, staked count, total weight, observed mint pace, claimed rent known to Mission, claimable rent if available, latest hourly rent delta if available, projected rent-only breakeven status and projected sold-out time.
+- If exact wallet-specific claimable rent is unavailable in a run, mark it unavailable rather than guessing. Continue to estimate protocol-level rent rate from mint price and totalWeight.
