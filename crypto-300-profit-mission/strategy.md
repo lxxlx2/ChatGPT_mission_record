@@ -388,3 +388,28 @@ On every hourly run:
 9. Routine hourly rent changes below an action threshold are written to GitHub only and do not notify.
 
 Continue the separate active-token rapid-drawdown monitoring for CRED. Large CRED downside remains actionable even though the CRED principal has already been recovered.
+
+
+## Capital and position decision refresh — 2026-09-25 00:16 Asia/Bangkok
+
+Current active liquid stablecoin pool: about 712 USDC (212 Solana + 500 Base), based on user-confirmed balances pending direct RPC re-verification.
+
+Allocation:
+- Keep 150 USDC as a hard short-window opportunity reserve.
+- JUMP: hold 250 USDC reserved now. If official Jumper/Legion terms confirm FDV <=75M, >=50% TGE unlock and sane initial float, allow application up to 300 USDC. 75-100M => max 250; 100-125M => max 150; >125M or materially worse unlock/float => re-evaluate/skip.
+- Do not hedge JUMP on Polymarket now. The launch-by-Dec-31 market can be monitored, but current No pricing is too expensive as simple timeline insurance and does not hedge post-TGE price. The one-day FDV market is currently too illiquid to use for position sizing.
+- ETH: keep up to 100 USDC reserved, 50 first bullet + 50 confirmation bullet, only after Sep-25 options-expiry review.
+- PONS budget remains 50 USDT margin, no increase.
+- CRED, SHARTCOIN, Credits and UNICRED NFT: no fresh capital.
+- Remaining liquid stablecoin after max 300 JUMP + 100 ETH + 150 opportunity reserve is about 162 USDC.
+
+JUMP hedge logic:
+- Consider a small Polymarket delay hedge only if official sale capital is meaningfully locked AND Dec-31 No trades at <=10c with adequate liquidity. Above that, hedge drag is too large relative to a 250-300 USDC sale position.
+- If a liquid JUMP premarket/perpetual appears after allocation and implies >=2x sale valuation, reassess a partial hedge of unlocked exposure rather than buying a broad timing bet.
+
+Separate 500 principal-preservation bucket:
+- Keep separate from speculative Mission capital.
+- Prefer the user's currently available Binance account offers: 300 USDT into the 5-day ~25% APR offer (only after checking final account eligibility/terms), and 200 USDC into the current flexible bonus tier.
+- Current public Binance USDC campaign runs through 2026-09-30 23:59:59 UTC and pays 7% on <=300 USDC during the promo (real-time account display can differ slightly).
+- Reject QQQ/stock-token LP and pPOLY LP for this bucket. QQQ LP has equity-price, range/IL, tokenization, smart-contract and activity-subsidy risk; pPOLY is highly volatile and not direct Polymarket equity.
+- Also reject >10% DeFi vaults for the strict principal-preservation bucket even when currently open. Their headline yield compensates for smart-contract, strategy, counterparty/collateral and liquidity risks and can change quickly.
