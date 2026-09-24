@@ -174,3 +174,31 @@ Profit management after live pool verification:
 
 Notification rules for SHARTCOIN:
 Email only for a material action or material risk, including launch completion, final allocation/refund becoming known if it requires a claim/action, security/authority mismatch, LP-lock failure, mint/freeze authority issue, official tokenomics/claim change, major holder/treasury movement, abnormal liquidity removal, or a defined take-profit/risk threshold. Routine price noise or unchanged status stays silent.
+
+
+## SHARTCOIN live execution update — 2026-09-24 09:01 Asia/Bangkok
+
+User-reported live execution:
+- Wallet: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+- Original commitment: 1 SOL.
+- Confirmed refund shown by kids.fun: 0.600039112 SOL.
+- Accepted principal inferred from refund: 0.399960888 SOL.
+- Participant entitlement rate: 435,000 SHARTCOIN per accepted SOL.
+- Estimated original allocation before integer rounding: 173,982.98628 SHARTCOIN.
+- User reports price reached about 5x the fixed participation price and executed the latest chat sell ladder through the 5x target.
+- Latest chat ladder used for accounting: 2x sell 10%, 3x sell 25%, 5x sell 20%, 8x sell 20%, 15x sell 10%, final 15% runner.
+- Assuming those three completed exits filled as intended, cumulative sold = 55% of original allocation, estimated remaining = 45% = about 78,292.34 SHARTCOIN before any rounding/slippage discrepancy.
+- Gross SOL proceeds estimated from exact target multiples: about 0.779923732 SOL. At a 2%–2.5% pool fee, approximate net proceeds are about 0.764325257–0.760425638 SOL before price impact/network fees.
+- The accepted principal has therefore already been recovered in cash if the user-reported fills occurred as specified. Do not re-risk recovered principal by averaging up automatically.
+
+Updated profit-management plan from this point:
+- Do not sell additional tokens merely because 5x was touched; the 5x tranche is already treated as completed.
+- At 8x fixed participation price: sell 20% of original allocation, about 34,796.60 SHARTCOIN.
+- At 15x fixed participation price: sell 10% of original allocation, about 17,398.30 SHARTCOIN.
+- Keep final 15% of original allocation, about 26,097.45 SHARTCOIN, as runner only while liquidity, volume, holder growth and official/project structure remain healthy.
+- For the runner, reassess a wide 25%–30% trailing exit after a major extension rather than using a tight stop during the first price-discovery hours.
+- If price loses the 3x participation level after having reached 5x, treat it as a material momentum failure and reassess immediately. If it loses 2x with declining volume/liquidity, prioritize protecting remaining profit.
+- Any LP-liquidity anomaly, canonical mint mismatch, mint/freeze authority issue, unexpected program/upgrade-authority change, or concentrated large-wallet distribution overrides the price ladder.
+
+Verification caveat:
+- The user's wallet balance and individual swap fills were not independently read from a Solana RPC in this update because the connected Alchemy authorization is currently expired and public search indexes have not yet indexed the new canonical mint reliably. The execution quantities above are therefore accounting estimates from the user's confirmed 1 SOL commitment, 0.600039112 SOL refund and user-reported completed target sells. The hourly monitor must replace these estimates with direct on-chain balances/transactions as soon as an accessible verified Solana source becomes available.
