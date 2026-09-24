@@ -48,3 +48,11 @@ Approx net proceeds after a 2%–2.5% swap fee, before slippage/network fees: 0.
 
 ## Verification status
 The quantities above are accounting estimates from the user's confirmed refund and reported target fills. Direct wallet token balance and swap transaction verification remain pending because the connected Solana RPC authorization was unavailable at this update. Do not label the estimated balance as chain-confirmed until direct RPC/explorer evidence is obtained.
+
+
+## Live identity discrepancy discovered after launch review
+- Fresh public social evidence from YokaiCapital's current profile explicitly posted: `solana:GKpNJz7yMuhZka9izamv6sDUxCsDr58pFMUaw1TQpump` alongside the kids.fun Shartcoin commitment announcement.
+- The public GitHub `deployment/mainnet/campaign-plan.json` still names `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids` as the planned mint.
+- Therefore the previous assumption that `UpBB...kids` alone was the live canonical trading mint is no longer treated as confirmed.
+- Until a direct Solana RPC/explorer read resolves the mismatch, both addresses must be tracked and the actual mint received by wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` must determine the live asset identity.
+- This discrepancy is material and must not be silently ignored in future monitoring.
