@@ -37,3 +37,21 @@ Current action preference:
 - 200 USDC: Binance USDC Flexible while the current bonus tier remains available; public Binance campaign runs through 2026-09-30 23:59:59 UTC and gives 7% APR on the <=300 USDC tier, plus/minus live real-time APR differences shown in the user's account.
 - Do not use this low-risk bucket for QQQ/stock-token LP, pPOLY LP, high-yield DeFi vaults, leveraged loops, depeg-sensitive structured products or new-protocol farms. They cannot satisfy the user's principal-preservation constraint.
 - Re-evaluate the 500 bucket when the 5-day USDT offer expires and again at the end of the USDC promotion. Do not assume current promotional APR persists long-term.
+
+
+## Alchemy RPC re-verification — 2026-09-25
+A dedicated Alchemy app `ChatGPT Crypto Monitor` was created with Ethereum, Base, Solana, Unichain and Robinhood mainnets enabled and successfully tested.
+
+Latest direct RPC balances:
+- Solana wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+  - SOL: 0.063843747 SOL.
+  - canonical USDC mint `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`: 712.106982 USDC.
+  - SHART mint actually held is `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids`: 33,737.239723 SHART.
+  - The alternate candidate mint `GKpNJz7yMuhZka9izamv6sDUxCsDr58pFMUaw1TQpump` returned zero balance for this wallet.
+- EVM wallet `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
+  - Base native ETH: 0.000791653069719195 ETH.
+  - canonical Base USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`: 0.010429 USDC.
+  - Unichain native ETH: 0.006739974356883644 ETH.
+  - Unichain CRED: 25.69507573368924 CRED.
+
+This supersedes the prior user-reported 212 Solana USDC + 500 Base USDC split for current wallet accounting. The current direct-chain state is ~712.107 USDC on Solana and ~0.0104 canonical USDC on Base. Do not infer whether the 500 was bridged/transferred without transaction-history verification.
