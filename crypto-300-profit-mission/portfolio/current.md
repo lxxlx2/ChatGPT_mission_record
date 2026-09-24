@@ -55,3 +55,11 @@ Latest direct RPC balances:
   - Unichain CRED: 25.69507573368924 CRED.
 
 This supersedes the prior user-reported 212 Solana USDC + 500 Base USDC split for current wallet accounting. The current direct-chain state is ~712.107 USDC on Solana and ~0.0104 canonical USDC on Base. Do not infer whether the 500 was bridged/transferred without transaction-history verification.
+
+
+## BTC tactical overlay
+- Dedicated BTC allocation: 0 USDC at this update.
+- BTC is monitored as a market-regime anchor under `strategy.md` and `watchlists/btc-regime-jasonleo.md`.
+- Any fresh BTC long, short or hedge requires explicit user approval before capital is reassigned.
+- Do not consume the 150 USDC hard opportunity reserve, JUMP reserve, ETH reserve or the separate 500 principal-preservation bucket automatically.
+- If a BTC trade is later approved, source it only from then-current uncommitted speculative cash unless the user explicitly changes the capital map.
