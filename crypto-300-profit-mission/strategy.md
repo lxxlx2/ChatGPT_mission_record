@@ -333,3 +333,16 @@ and actionable alerts additionally to:
 `crypto-300-profit-mission/signals/YYYY/YYYY-MM/YYYY-MM-DDTHHMM-launch-radar-<slug>.md`.
 
 Record source account, official URL, discovery time, issuer history, launch mechanics, identity check, onchain verification status, social heat, valuation/liquidity, reason accepted/rejected, and whether Gmail was sent.
+
+
+## UNICRED / Unichain position monitor — added 2026-09-24
+
+UNICRED is now an active Mission position. Read `crypto-300-profit-mission/positions/unicred.md` every run and treat it as the authoritative position file.
+
+Current position summary:
+- NFT #230 acquired at 0.0105 ETH and staked 7 days / 1x until 2026-10-01.
+- First user-confirmed rent sample: about 0.00087 ETH (~USD 2.30) after about 52 minutes.
+- CRED principal has been recovered by the user. Remaining runner: 51.390151 CRED, about 25% of the original CRED amount.
+- No automatic additional capital allocation to UNICRED.
+
+Monitor current mint progress/epoch/mint price, staking count and total weight, rent economics, CRED price/liquidity/volume/supply/buyback-burn/NFT-burn dynamics, official rule or contract changes, security, and #230 secondary value around unlock. Notify only for actionable sold-out/end-of-rent, security/mechanism changes, material CRED profit-protection decisions, or the 2026-10-01 unlock decision. Routine rent accumulation and ordinary price/mint movement remain silent and are recorded to GitHub only.
