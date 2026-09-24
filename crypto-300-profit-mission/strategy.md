@@ -245,3 +245,91 @@ Exact working allocation:
 - ETH: 50 USDT initial margin budget plus up to 50 USDT second bullet only after the post-expiry setup/confirmation. Maximum 100 USDT.
 - General/opportunity reserve: at least 106.43 USDC if JUMP receives the full conditional 100 and ETH receives the full second bullet; more remains in cash if either setup fails its gates.
 - SHART: residual position is managed independently; do not recycle new USDC into SHART automatically.
+
+
+## Famous / established-brand token-launch radar — mandatory hourly scan
+
+Purpose: discover short-window opportunities similar to SHARTCOIN, STONK and other launches where an already-known onchain builder, creator, founder, project, consumer brand or established community issues a new token or opens a new public sale/fair launch.
+
+This scan is mandatory on every hourly mission run. It is discovery-first: do not restrict the universe to the current portfolio or a static whitelist.
+
+### Primary discovery surfaces
+- English X/Twitter posts from official project/person/brand accounts and their directly linked launch accounts.
+- Official launchpads, token-sale pages, project websites, blogs and docs.
+- Onchain launch/mint/pool creation and DEX discovery where the issuer identity can be directly anchored.
+- GitHub/deployment repositories when a launch is technical/open source.
+- High-signal English onchain analysts only as leads; always return to the issuer's official account/domain or direct chain data before calling it confirmed.
+- Reddit/community discussion only as secondary heat/sentiment evidence.
+
+Seed ecosystems/entities include, but are not limited to: YokaiCapital/kids.fun, StonkFun/LaunchOnSF, pump.fun and major Solana launch ecosystems, BONK-related launch infrastructure, Believe-style social token launch systems, Jupiter/Meteora/Solana ecosystem builders, Base/Farcaster/Coinbase ecosystem launches, Hyperliquid ecosystem launches, Robinhood/Robinhood Chain, major NFT/digital-art creators, established crypto founders, and globally recognizable consumer/creator brands entering onchain markets. Expand from official quote/repost/reply networks and newly trending verified/known accounts; the seed list is not an upper bound.
+
+### Search concepts
+Actively look for: token launch, fair launch, presale/public sale, prelaunch, launchpad, commit/escrow, mint/CA/contract, TGE, claim, airdrop tied to a new token, bonding curve, LP creation, liquidity lock, buyback/burn token, creator coin, community coin, brand coin, new tokenized asset, and posts that publish a contract address or a short participation window.
+
+### Early-alert rule
+Because some windows last only 1-3 hours, do not wait for full post-launch data when an official issuer announces an actionable launch.
+Send an EARLY ALERT when all are true:
+1. The announcement is from the issuer's canonical official X/account or canonical official domain, or is directly linked by it.
+2. There is a real action window now or within 24h: commit, public sale, mint, claim, launch, deposit, whitelist/registration, or confirmed live trading.
+3. The issuer has meaningful pre-existing reputation/audience/product/community/history OR the launchpad itself has an established track record.
+4. No unresolved identity/domain/contract conflict makes participation unsafe.
+
+A contract address is not required for the first early alert if the issuer itself confirms the launch and the official launch page is live. In that case label CA/chain details as pending and follow up only when new actionable details become available.
+
+### Quality / opportunity assessment
+For each candidate, verify as much as available:
+- issuer identity and historical projects
+- chain and canonical CA/mint
+- start/end/TGE time converted to Asia/Bangkok
+- participation asset and minimum/maximum/hard cap
+- fixed price vs auction/bonding curve/pro-rata
+- initial FDV / circulating market cap / implied valuation
+- initial liquidity and LP lock/burn
+- mint/freeze/admin/upgrade authority
+- team/dev/insider allocation and vesting
+- token transfer/swap taxes and DEX fee
+- holder concentration and bundled/related wallets
+- first 5m/15m/1h volume, unique buyers, liquidity and large-wallet flow after launch
+- issuer's prior launches: initial valuation, 10m/1h/1d behavior when verifiable, ATH multiple/time-to-ATH, and drawdown
+- X attention: views/replies/reposts/known-account interaction and acceleration, not just raw follower count
+- Reddit/other community evidence
+- whether a real-money prediction market exists when relevant
+
+### Alert classes
+A) PRELAUNCH / SALE: short participation window from a recognized issuer. Send immediately with exact official link, Bangkok deadline, currency, cap/FDV, allocation mechanism, what is verified vs pending, and a suggested maximum test allocation from the general opportunity reserve.
+B) LIVE LAUNCH: canonical CA/pool becomes live at an attractive early valuation/liquidity profile. Include price, FDV, liquidity, volume, holder/buyer data and exact risk controls.
+C) MECHANISM CHANGE: an existing revenue/buyback token such as STONK/PONS materially changes buyback %, burn, fees, revenue share or supply mechanics.
+D) SOCIAL ACCELERATION: a recognized issuer's new token becomes materially viral before price discovery is mature. Require official identity plus at least one quantitative heat signal or multiple independent high-signal accounts.
+
+### Anti-spam / anti-scam rules
+- Random meme launches, anonymous deployers, copied tickers, unofficial celebrity coins, paid-KOL-only shills, and old announcements do not trigger.
+- Celebrity/brand launches require direct official-account/domain evidence; a token merely using a famous name is rejected.
+- Never use a Chinese-language website as confirmation.
+- If CA/domain/account identity conflicts remain unresolved, record the candidate but do not give a participation link.
+- Duplicate posts or no material change => NO_ACTION.
+- A later alert is allowed only when it adds an actionable change, such as CA, window opening, final valuation, pool live, allocation/refund, or a major risk/exit signal.
+
+### Notification payload
+When a qualifying new launch appears, email lxx.run688@gmail.com and notify the user with:
+- WHO / project
+- official X/source link
+- WHAT is launching
+- chain and CA if confirmed
+- exact Bangkok start/end/TGE
+- how to participate and with SOL/USDC/other
+- hard cap / implied FDV / initial liquidity
+- why this issuer is notable, including prior-launch evidence where available
+- current social/onchain heat
+- key red flags
+- one concise action: participate/watch/skip, and a maximum test size sourced only from the mission's general opportunity reserve unless the user later reallocates capital
+
+Use subject: `Crypto Mission 新发币机会｜<issuer/project>｜<event>`.
+If there is no qualifying opportunity, remain completely silent and only write the scan result to GitHub.
+
+### GitHub audit
+Write discovered candidates and rejected candidates to:
+`crypto-300-profit-mission/radar/YYYY/YYYY-MM/YYYY-MM-DD.md`
+and actionable alerts additionally to:
+`crypto-300-profit-mission/signals/YYYY/YYYY-MM/YYYY-MM-DDTHHMM-launch-radar-<slug>.md`.
+
+Record source account, official URL, discovery time, issuer history, launch mechanics, identity check, onchain verification status, social heat, valuation/liquidity, reason accepted/rejected, and whether Gmail was sent.
