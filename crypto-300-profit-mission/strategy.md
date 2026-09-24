@@ -346,3 +346,19 @@ Current position summary:
 - No automatic additional capital allocation to UNICRED.
 
 Monitor current mint progress/epoch/mint price, staking count and total weight, rent economics, CRED price/liquidity/volume/supply/buyback-burn/NFT-burn dynamics, official rule or contract changes, security, and #230 secondary value around unlock. Notify only for actionable sold-out/end-of-rent, security/mechanism changes, material CRED profit-protection decisions, or the 2026-10-01 unlock decision. Routine rent accumulation and ordinary price/mint movement remain silent and are recorded to GitHub only.
+
+
+## Active-token rapid drawdown alerts — added 2026-09-24
+
+For active Mission tokens with live market exposure, explicitly monitor rapid downside in addition to the existing strategy-specific levels.
+
+Trigger an actionable downside alert when ANY of the following is confirmed from reliable live market data:
+- price falls >=20% within approximately 1 hour;
+- price falls >=30% within approximately 4 hours;
+- price falls >=15% within approximately 30 minutes AND live liquidity also deteriorates materially;
+- live DEX/CEX liquidity falls >=25% from the recent baseline, especially when accompanied by large-holder selling;
+- a strategy-specific support/stop/exit threshold in the relevant position file is breached.
+
+For very thin meme / microcap pools such as SHARTCOIN and CRED, require either a confirmed execution-grade price plus liquidity/volume context, or two independent live market sources when possible, to avoid false alerts from bad index prints.
+
+The alert must include: current price, measured drawdown window, liquidity/volume change, large-wallet or holder evidence if available, and a concrete action (hold/reduce/exit/adjust orders). Routine volatility below these thresholds remains silent.
