@@ -167,3 +167,10 @@ CRED market update:
 - Public OpenSea token page near this update shows about USD 0.2393/CRED, FDV/market value about USD 223K, 24h volume about USD 371K, 612 holders, supply about 933.6K, ATH about USD 0.2784.
 - Remaining 51.390151 CRED is therefore roughly USD 12.3 at that reference price.
 - Because CRED is already near its young ATH, the remaining primary-mint buyback budget is finite (~6.944 ETH), and NFT burns can mint fresh CRED, there is no data-driven case to add fresh capital now. Continue as a principal-recovered profit runner.
+
+
+## Direct Unichain RPC correction — 2026-09-25
+Alchemy direct RPC confirms the primary EVM wallet currently holds:
+- 0.006739974356883644 native ETH on Unichain.
+- 25.69507573368924 CRED at `0x0FBc2Fc1366D5BA517E6ca5A304c10359F554E0D`.
+This supersedes the older 51.390151 CRED wallet snapshot for current position accounting. Treat the CRED principal as already recovered; the remaining 25.69507573368924 CRED is the current profit-runner balance.
