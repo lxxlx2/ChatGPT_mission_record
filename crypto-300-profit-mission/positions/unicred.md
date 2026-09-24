@@ -132,3 +132,38 @@ Hourly rent monitoring requirements:
 - Also calculate an economic-breakeven view when a credible executable OpenSea offer/floor is available: cumulative rent + estimated net executable NFT sale proceeds >= 0.0105 ETH.
 - Every hourly run must write a UNICRED rent line to GitHub even if there is no alert: current minted, current epoch/mint price, staked count, total weight, observed mint pace, claimed rent known to Mission, claimable rent if available, latest hourly rent delta if available, projected rent-only breakeven status and projected sold-out time.
 - If exact wallet-specific claimable rent is unavailable in a run, mark it unavailable rather than guessing. Continue to estimate protocol-level rent rate from mint price and totalWeight.
+
+
+## Live update — 2026-09-25 00:16 Asia/Bangkok
+User-provided official unicred.fun snapshot:
+- Minted: 3,011 / 4,444.
+- Epoch 8 / 11.
+- Mint price: 0.016 ETH.
+- Difficulty: 32.0 bits.
+- Unicorns staked: 1,231.
+- Total weight: 4,280.
+- User share: about 0.02%.
+- Current rent waiting after the latest claim: 0.000049 ETH.
+- User reports the latest claim was about USD 7. This exact claim amount is not direct-chain verified in this update; treat it as approximate.
+
+Observed mint-speed update:
+- Prior reliable snapshot: 1,403 minted at about 2026-09-24 18:21 Asia/Bangkok.
+- Current snapshot: 3,011 minted around 2026-09-25 00:16.
+- +1,608 mints over about 355 minutes = about 4.53 mints/minute, roughly 1 mint every 13.25 seconds.
+- This is moderately slower than the 10-second target but far above the monitor's meaningful-slowdown threshold of 20 seconds/mint.
+- 1,433 mints remain. If the latest observed 13.25 sec/mint pace persists, theoretical sold-out is about 5.27 hours after the current snapshot, around 2026-09-25 05:32 Asia/Bangkok. At exact target pace it would be about 3.98 hours.
+
+Rent economics update:
+- First confirmed claim: ~0.00087 ETH (~USD 2.30 at the time).
+- Latest user-reported claim: ~USD 7, approximately ~0.00260 ETH using ~USD 2,690/ETH only as an accounting estimate.
+- Approx cumulative claimed: ~0.00347 ETH; plus current waiting 0.000049 ETH = ~0.00352 ETH known/estimated rent, about 33.5% of the 0.0105 ETH NFT purchase cost.
+- Total weight rose from 2,080 at mint #1,403 to 4,280 at #3,011, +2,200 weight over 1,608 mints = about +1.37 weight per new mint. This validates the prior +1.3/mint base dilution model.
+- Starting from #3,011 and weight 4,280, the remaining scheduled mint revenue through #4,444 is ~27.776 ETH; staker pool share is ~18.0544 ETH and CRED buyback budget is ~6.944 ETH before future rule changes.
+- Under a +1.37 weight/mint dilution model, #230 is projected to earn only about another ~0.00343 ETH through sold-out. Estimated final rent including current claimed/waiting is about ~0.00695 ETH, roughly 66% of purchase cost.
+- Therefore rent-only breakeven is now unlikely before sold-out. Whole-position breakeven remains plausible because #230 survives as an NFT. Under the current base case, the remaining cost gap after all projected rent is roughly 0.00355 ETH before sale fees/royalty. This is the minimum residual NFT value that matters economically.
+- Do not add another UNICRED NFT or more CRED from Mission capital. Primary protocol buyback source is finite and minting is already in Epoch 8/11.
+
+CRED market update:
+- Public OpenSea token page near this update shows about USD 0.2393/CRED, FDV/market value about USD 223K, 24h volume about USD 371K, 612 holders, supply about 933.6K, ATH about USD 0.2784.
+- Remaining 51.390151 CRED is therefore roughly USD 12.3 at that reference price.
+- Because CRED is already near its young ATH, the remaining primary-mint buyback budget is finite (~6.944 ETH), and NFT burns can mint fresh CRED, there is no data-driven case to add fresh capital now. Continue as a principal-recovered profit runner.
