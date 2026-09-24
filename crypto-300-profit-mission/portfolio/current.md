@@ -1,0 +1,39 @@
+# Current Portfolio / Capital Map
+
+Updated: 2026-09-25 00:16 Asia/Bangkok
+
+## Verification policy
+Balances below are separated into: user-confirmed UI/screenshot, independently market-verified, and pending direct RPC verification. At this update Blockscout live wallet reads require a PRO API key and the connected Alchemy authorization is expired, so Base/Solana wallet balances cannot be falsely labeled direct-chain verified. Public Etherscan multichain indexing is stale/inconsistent with the user's current wallet state and is rejected as a balance source.
+
+## Wallets
+- EVM primary wallet: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
+- Solana wallet: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+
+## Current user-confirmed liquid balances
+- Solana: about 212 USDC available.
+- Base: about 500 USDC available.
+- Total active-strategy stablecoin liquidity: about 712 USDC.
+- Separate low-risk capital bucket: 500 USD-equivalent. This bucket is NOT available for speculative Mission positions.
+- PONS 50 USDT margin budget already exists separately on Binance; only the first 0.625 entry is filled, deeper orders remain open.
+
+## Active non-stable positions
+- SHARTCOIN: 44,982.986297 tokens, user intends to hold and has cancelled prior conditional/limit sell orders. Current market reference near this update about USD 0.00386, so indicative value about USD 174. Do not treat this reference as wallet valuation truth without live wallet/RPC.
+- UNICRED CRED: 51.390151 CRED profit runner after principal recovery. Current public OpenSea token reference near USD 0.2393, indicative value about USD 12.3.
+- UNICRED NFT #230: 7-day / 1x stake until 2026-10-01. Purchase cost 0.0105 ETH.
+- Credits: Credit #23042 listed 0.25 ETH; Credit #23232 listed 0.40 ETH. No planned sale-price change at this update.
+- PONSUSDT perpetual: first entry 0.625 filled; remaining 0.585 and 0.545 bids open; 3x isolated; hard stop 0.498 Mark Price.
+
+## Active 712-USDC allocation map
+- 150 USDC: hard opportunity reserve for short-window launches/memes/ICOs similar to SHARTCOIN. Prefer keeping this immediately deployable; do not consume it for ordinary averaging-down.
+- JUMP/Legion: reserve 250 USDC now. If official Legion/Jumper sale terms confirm FDV <=75M, >=50% TGE unlock, sane initial circulation and no new adverse term, raise application ceiling to 300 USDC. If 75-100M FDV, max 250; 100-125M, max 150; >125M or severe unlock/float overhang, re-evaluate/skip rather than forcing participation.
+- ETH: reserve up to 100 USDC, deployed only after the Sep-25 options-expiry review, in two bullets (50 + 50 confirmation/add-on).
+- Remaining uncommitted stablecoin cash after a max 300 JUMP + 100 ETH + 150 opportunity reserve: about 162 USDC.
+- PONS uses its existing separate 50-USDT margin budget; no increase.
+- No fresh allocation to CRED, SHARTCOIN, Credits or UNICRED NFT at this state.
+
+## Separate 500 low-risk bucket
+Current action preference:
+- 300 USDT: use the user's account-specific Binance 5-day ~25% APR offer only if the final subscription screen still shows the 300-USDT eligible tier and 5-day bonus.
+- 200 USDC: Binance USDC Flexible while the current bonus tier remains available; public Binance campaign runs through 2026-09-30 23:59:59 UTC and gives 7% APR on the <=300 USDC tier, plus/minus live real-time APR differences shown in the user's account.
+- Do not use this low-risk bucket for QQQ/stock-token LP, pPOLY LP, high-yield DeFi vaults, leveraged loops, depeg-sensitive structured products or new-protocol farms. They cannot satisfy the user's principal-preservation constraint.
+- Re-evaluate the 500 bucket when the 5-day USDT offer expires and again at the end of the USDC promotion. Do not assume current promotional APR persists long-term.
