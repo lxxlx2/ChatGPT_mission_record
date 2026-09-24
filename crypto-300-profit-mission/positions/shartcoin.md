@@ -56,3 +56,24 @@ The quantities above are accounting estimates from the user's confirmed refund a
 - Therefore the previous assumption that `UpBB...kids` alone was the live canonical trading mint is no longer treated as confirmed.
 - Until a direct Solana RPC/explorer read resolves the mismatch, both addresses must be tracked and the actual mint received by wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` must determine the live asset identity.
 - This discrepancy is material and must not be silently ignored in future monitoring.
+
+
+## Remaining SHART management refinement — 2026-09-24
+
+Based on the user-reported execution through 5x, treat about 45% of the original allocation as remaining until direct chain balance verification replaces the estimate.
+
+Primary upside ladder:
+- 8x fixed participation price, about USD 0.002115 at SOL=115: sell 20% of the ORIGINAL allocation, approximately 34,796.6 SHART. This is about 44.4% of the currently estimated remaining position.
+- 15x, about USD 0.003966: sell another 10% of ORIGINAL allocation, approximately 17,398.3 SHART.
+- Final 15% of ORIGINAL allocation, approximately 26,097.4 SHART: runner.
+
+Downside / failed-momentum rules after the 5x touch:
+- A normal pullback from 5x is not by itself a sell signal.
+- If price loses the 3x participation level (about USD 0.000793 at SOL=115), fails to reclaim it on roughly a 30-60 minute structure, AND volume/liquidity/net-new buyers deteriorate materially, reduce roughly 15% of the ORIGINAL allocation (one-third of the estimated remaining 45%) rather than waiting blindly for 8x.
+- If price subsequently loses the 2x level (about USD 0.000529) with continuing liquidity/volume deterioration or evidence of concentrated large-wallet distribution, exit most of the remaining position; at most keep about 5% of ORIGINAL allocation as a lottery runner.
+- If 8x is reached and the planned tranche is sold, do not allow the remaining 25% of original allocation to round-trip back through 3x without a fresh market-structure review.
+- After 15x, manage the final 15% runner with a wide 25%-30% trailing framework from a meaningful local/high-timeframe high, adjusted for live liquidity; do not use a tight stop during first-hour meme volatility.
+- Do not add new USDC to SHART merely because it has already run 5x. Any re-entry/add requires a new consolidation, verified live liquidity/holder data, and a fresh catalyst.
+
+Identity update:
+- YokaiCapital's fresh public post explicitly publishes `GKpNJz7yMuhZka9izamv6sDUxCsDr58pFMUaw1TQpump` for this kids.fun Shartcoin launch. Track this as the live public CA candidate while preserving the GitHub planned-mint discrepancy until direct wallet/launch-transaction chain verification resolves it.
