@@ -234,3 +234,14 @@ If JUMP terms fail the quality gates, the extra 100 USDC remains cash; do not me
 Current PONS/ETH context at update:
 - PONSUSDT mark about 0.6369, funding about +0.009422% for the current funding interval, OI about 64.18M PONS, top-trader 4h position L/S about 2.21. This does not justify increasing the existing PONS budget.
 - ETHUSDT mark about 2681.7, funding about +0.009484%, OI about 2.288M ETH, top-trader 4h position L/S about 1.54. ETH remains a wait-for-expiry setup rather than a reason to deploy extra cash immediately.
+
+
+## Liquid capital reconciliation — 2026-09-24 09:27 Asia/Bangkok
+User wallet now shows 206.43 USDC of new liquid capital. Treat the total strategy pool as about 506.43 USDC-equivalent against the prior 300 USDC plan, excluding the residual SHART mark-to-market.
+
+Exact working allocation:
+- JUMP/Legion: 150 USDC base reserve, plus up to 100 USDC conditional second tranche only if official FDV/unlock/circulation gates pass. Maximum 250 USDC.
+- PONS: 50 USDT margin budget unchanged. Do not scale up merely because liquid capital increased.
+- ETH: 50 USDT initial margin budget plus up to 50 USDT second bullet only after the post-expiry setup/confirmation. Maximum 100 USDT.
+- General/opportunity reserve: at least 106.43 USDC if JUMP receives the full conditional 100 and ETH receives the full second bullet; more remains in cash if either setup fails its gates.
+- SHART: residual position is managed independently; do not recycle new USDC into SHART automatically.
