@@ -362,3 +362,29 @@ Trigger an actionable downside alert when ANY of the following is confirmed from
 For very thin meme / microcap pools such as SHARTCOIN and CRED, require either a confirmed execution-grade price plus liquidity/volume context, or two independent live market sources when possible, to avoid false alerts from bad index prints.
 
 The alert must include: current price, measured drawdown window, liquidity/volume change, large-wallet or holder evidence if available, and a concrete action (hold/reduce/exit/adjust orders). Routine volatility below these thresholds remains silent.
+
+
+## UNICRED hourly rent / breakeven monitoring — mandatory
+
+Every hourly Mission run must explicitly evaluate UNICRED #230 rent economics, not only sold-out/security events.
+
+Authoritative identifiers:
+- Wallet `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
+- NFT contract `0xf60de24F228dc7Ca6fF025958d2eE3A956ED88E5`
+- NFT #230
+- Purchase cost 0.0105 ETH
+- 7-day / 1x stake
+- First confirmed claimed rent baseline 0.00087 ETH
+
+On every hourly run:
+1. Read current minted count, epoch, mint price, unicorns staked and totalWeight from chain/official app where available.
+2. Derive realized rolling mint speed from reliable consecutive snapshots and compare with the protocol target ~1 mint/10 sec.
+3. Read wallet-specific cumulative claimed rent and current claimable/pending rent if directly available from chain or the official app. Never fabricate wallet rent.
+4. Record hourly rent delta and effective ETH/hour when two reliable consecutive user-rent values exist.
+5. Reforecast estimated remaining rent to #4,444 using current mint-price schedule and observed totalWeight dilution, showing at least a base-case dilution assumption derived from recent data.
+6. Reforecast theoretical sold-out time using current observed rolling mint pace.
+7. Trigger an immediate notification/email if cumulative claimed + claimable rent reaches or exceeds 0.0105 ETH. Use status `UNICRED_RENT_BREAKEVEN`.
+8. If minting reaches #4,444 before rent-only breakeven, trigger `UNICRED_SOLD_OUT` and report final/known cumulative rent plus the minimum net NFT sale value needed for whole-position economic breakeven.
+9. Routine hourly rent changes below an action threshold are written to GitHub only and do not notify.
+
+Continue the separate active-token rapid-drawdown monitoring for CRED. Large CRED downside remains actionable even though the CRED principal has already been recovered.
