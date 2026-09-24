@@ -446,3 +446,19 @@ BTC overlay notification conditions:
 - `@Jason60704294` materially changes his public framework and the change affects an existing Mission decision.
 
 No qualifying change means NO_ACTION and no email.
+
+
+## NFT mint radar integration — added 2026-09-25
+
+The hourly Mission now includes a dedicated high-potential NFT mint radar.
+
+Authoritative specification:
+- `crypto-300-profit-mission/watchlists/nft-mint-radar.md`
+
+Every hourly NFT radar run must use that file's latest rules. Discovery should include MintGo, Waypoint MintScan, MCT, nftis.fun and the read-only portions of 985monitor, plus English X/Twitter, Reddit, official mint/marketplace pages and direct chain data.
+
+The radar is allowed to email only when a candidate passes both the hard issuer/project identity gate and the high-potential opportunity gate, or when a previously alerted candidate develops a material new action/risk change. Otherwise it must remain completely silent.
+
+Do not connect a main wallet or import private keys/seed phrases into third-party discovery tools. 985monitor is discovery/read-only for this Mission.
+
+Any capital suggestion must use only the Mission general opportunity reserve unless the user explicitly reallocates funds.
