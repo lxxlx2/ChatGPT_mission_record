@@ -77,3 +77,33 @@ Downside / failed-momentum rules after the 5x touch:
 
 Identity update:
 - YokaiCapital's fresh public post explicitly publishes `GKpNJz7yMuhZka9izamv6sDUxCsDr58pFMUaw1TQpump` for this kids.fun Shartcoin launch. Track this as the live public CA candidate while preserving the GitHub planned-mint discrepancy until direct wallet/launch-transaction chain verification resolves it.
+
+
+## User wallet snapshot correction — 2026-09-24 09:27 Asia/Bangkok
+Source: user-provided OKX Web3 wallet screenshot. Treat these as user-confirmed wallet UI balances, not direct RPC verification.
+
+- SHARTCOIN balance: 44,982.98 tokens.
+- SHARTCOIN UI price: USD 0.0017103.
+- SHARTCOIN UI value: USD 76.93.
+- USDC balance: 206.43.
+- SOL balance: 0.06577 SOL, about USD 7.56 in the screenshot; retain enough SOL for Solana transaction/priority fees.
+- ETH/BTC shown are small unrelated wallet dust and are not part of the SHART position accounting.
+
+Reconciliation against the inferred original allocation of 173,982.98628 SHART:
+- Actual remaining balance from wallet UI: 44,982.98 SHART = about 25.855% of original allocation.
+- Implied cumulative sold/transferred out: about 129,000.006 SHART = about 74.145% of original allocation.
+- This supersedes the earlier estimate that 45% remained. Do not use the old 78,292-token estimate in future monitoring.
+- At the fixed participation reference of about USD 0.00026437/SHART using SOL=115, the wallet UI price USD 0.0017103 is about 6.47x participation price.
+- Current remaining position value is about USD 76.93.
+
+Revised remaining-position ladder, based on the ACTUAL 44,982.98-token balance:
+- 8x participation price, about USD 0.002115: sell 15,000 SHART (about 33.35% of current balance). Remaining about 29,982.98.
+- 15x participation price, about USD 0.003966: sell 10,000 SHART (about 22.23% of current balance). Remaining runner about 19,982.98.
+- Runner: about 19,982.98 SHART (about 44.42% of current balance, about 11.49% of original allocation). After a major extension above 15x, manage with a wide 25%-30% trailing framework against meaningful local highs and live liquidity.
+
+Downside protection from the current ~6.47x state:
+- Normal pullbacks above 5x are noise; no automatic sale.
+- If price loses the 5x reference (~USD 0.001322), fails to reclaim it on a 15-30 minute structure, AND sell pressure/liquidity deterioration is visible, sell about 15,000 SHART to protect the already-realized win.
+- If price then loses the 3x reference (~USD 0.000793) with deteriorating liquidity/volume or concentrated large-wallet distribution, exit most of what remains; keep at most about 5,000 SHART as a lottery runner.
+- If 8x is reached first, execute the 15,000-token tranche and then do not let the remaining position round-trip below 5x without a fresh structure review.
+- Do not add new USDC to SHART after the 5x+ run unless a new consolidation and fresh on-chain/liquidity thesis is independently established.
