@@ -1,40 +1,40 @@
 # Crypto Mission Latest State
 
-Checked: 2026-09-24 18:38 Asia/Bangkok
+Checked: 2026-09-24 18:55 Asia/Bangkok
 
-Main status: NO_ACTION
+Main status: SHART_TAKE_PROFIT
 
 ## PONS
-- Binance PONSUSDT mark: 0.6042; index 0.60359686; current funding +0.007949%.
-- Recent 1h closes: 0.6271, 0.6385, 0.6232, 0.6110, 0.6139, current/incomplete about 0.6040. Recent local high 0.6426 to 0.6042 is about -6.0%, below rapid-drawdown alert thresholds.
-- OI latest 64.821M PONS / about 39.80M USDT. Top-trader 1h position L/S 2.2322, stable versus 2.2402 and 2.2237.
-- Binance symbol ADL risk is HIGH. Keep leverage capped at 3x and favor planned incremental profit-taking if targets trigger.
-- Existing 0.625 fill remains open. 0.585 and 0.545 bids remain below market; no 0.738 TP, 0.742 stale-order cancellation, or 0.498 hard stop. No confirmed >=20% 1h or >=30% 4h drawdown.
-- Granular Robinhood Chain treasury/distributor/exchange-flow/burn/admin and liquidation-map changes unavailable this interval; no verified official tokenomics/buyback rule change found.
+- Binance PONSUSDT mark 0.609800, index 0.609034, funding +0.007696%.
+- OI 64.893M PONS. Recent hourly OI remains roughly 64.1M-65.0M PONS. Top-trader 1h position L/S 2.2322, stable.
+- Binance symbol ADL risk remains HIGH. Existing 0.625 fill remains open; 0.585/0.545 bids remain valid. No 0.738 TP, 0.742 stale-order cancellation, 0.498 hard stop, or rapid-drawdown trigger.
+- Keep leverage capped at 3x. No add/chase action.
 
 ## ETH
-- Binance ETHUSDT mark 2643.30; index 2644.3856; funding +0.004235%.
-- OI latest about 2.276M ETH / 6.026B USDT. Top-trader 1h position L/S 1.5833.
-- Sep 25 quarterly expiry remains ahead. No pre-expiry forced entry. Planned post-expiry setup unchanged.
-- Exact Hyperliquid positioning, current ETF-flow figure, detailed options strike structure and useful Polymarket directional edge were unavailable/insufficiently verified this interval.
+- Sep 25 quarterly expiry remains ahead; strategy still prohibits forced pre-expiry entry.
+- Fresh search confirms elevated expiry-volatility attention, but no strategy-defined entry trigger is actionable yet. Exact current Hyperliquid/ETF/options/Polymarket structure was insufficiently verified in this interval.
 
 ## JUMP / Legion
-- Fresh public Jumper announcement continues to confirm a planned JUMP token sale through Legion and later TGE. Final official FDV, token price, raise size, allocation, TGE unlock, vesting and initial circulation remain unverified. No application sizing action yet.
+- Jumper's Sep 22 announcement continues to confirm a JUMP sale through Legion and later TGE.
+- Third-party current sale calendars now show Sep 29 and about $3M raise, but official final FDV, price, allocation, unlock, vesting and initial circulation were not verified from Jumper/Legion official sale documentation. Do not size from third-party parameters.
 
 ## SHARTCOIN / kids.fun
-- Authoritative position remains 44,982.98 SHART from the latest user-confirmed wallet UI snapshot.
-- Existing ladder and downside rules remain unchanged. Direct execution-grade live price/liquidity and direct Solana wallet/pool/authority verification were unavailable this interval, so no rapid-drawdown or take-profit trigger is asserted.
-- Public YokaiCapital evidence still associates the kids.fun launch with GKpNJz...pump while other public indexing has referenced UpBB...kids. Identity discrepancy remains unresolved at direct-chain level.
+- Authoritative user balance remains 44,982.98 SHART from the latest wallet UI snapshot.
+- Current contract-matched Bitget Web3 indexing for `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids` shows about USD 0.003986, 24h high USD 0.005138 and 24h volume about USD 6.68M.
+- This is approximately 15.08x the fixed participation reference USD 0.00026437 and is at/just above the Mission 15x target USD 0.003966.
+- ACTION: sell 10,000 SHART now/around the 15x target if executable price remains near or above USD 0.003966. Keep about 34,982.98 before fees/slippage if starting from the recorded balance, then manage the remaining runner under the position file rules. Do not add.
+- Identity caveat remains: UpBB...kids is the liquid market tracked by wallet/public market sources and Gate's current on-chain listing; prior Yokai social evidence also mentioned GKp...pump. Continue direct-chain identity verification when available.
 
 ## UNICRED / CRED
-- Position: NFT #230 cost 0.0105 ETH, staked 7d/1x until 2026-10-01; 51.390151 CRED profit runner.
-- Reliable user snapshots show minted 1,091 -> 1,403 over about 52 minutes, or 312 mints / 52m = 6.0 mints/minute = about one mint every 10 seconds. This matches the protocol target, so the measured window did not show a meaningful slowdown.
-- Official site states target pace is one unicorn every 10 seconds, retarget every 8 mints, and target halves after 5 idle minutes. Current server-side page indexing fails to expose live hydrated minted/staking counters, so a newer reliable mint-speed snapshot is unavailable this interval.
-- CRED contract 0x0FBc2Fc1366D5BA517E6ca5A304c10359F554E0D is currently indexed by Coinranking around USD 0.154, with reported same-day ATH about USD 0.172 and volume about USD 8.7K. Versus the user's USD 0.13755 snapshot this is higher, not a rapid downside event. Thin liquidity/young listing means execution-grade DEX confirmation remains desirable.
-- No sold-out, unlock, security/mechanism, or CRED reduce trigger.
+- Direct Unichain contract reads: totalMinted 1,631 / 4,444; stakedCount 760; totalWeight 2,709; NFT #230 claimable 0.000425543372573347 ETH.
+- Known already-claimed baseline 0.00087 ETH, so known claimed + current claimable is about 0.00129554 ETH, about 12.34% of the 0.0105 ETH NFT cost. Rent-only breakeven has NOT occurred.
+- From the user snapshot 1,403 minted / weight 2,080 around 18:21 to 1,631 / 2,709 around 18:54, minting advanced 228 in about 33 minutes, roughly 6.9 mints/minute or one mint every 8.7 seconds. Minting is not slowing materially; it is around/slightly faster than the 10-second target over this window.
+- Dilution accelerated: weight +629 over 228 mints, about +2.76 weight per new mint. If that recent dilution rate persisted, a simple remaining-rent model projects about 0.00463 ETH additional rent to sold out and about 0.00593 ETH total known+projected rent, so rent-only breakeven would not occur before sold out.
+- At the observed ~6.9 mints/min pace, 2,813 remaining mints imply roughly 6.8 hours to sold out, around 2026-09-25 01:40-01:50 Asia/Bangkok if pace persists.
+- CRED contract-matched GeckoTerminal indexing is around USD 0.19 with only about USD 3.3K pool liquidity and about USD 19.5K 24h volume. This is above the user's USD 0.13755 runner snapshot, so no downside alert; execution risk remains very high because liquidity is tiny.
 
 ## Launch radar
-- No new famous/established-brand token/NFT launch candidate passed the identity, official-source, timing and quality gates this interval. Generic anonymous meme/presale search hits were rejected.
+- No new famous/established-brand launch candidate passed the official-identity and quality gates this interval. Generic presales and anonymous microcaps rejected.
 
 ## Decision
-NO_ACTION. No new entry, take-profit, stop, stale-order cancellation, JUMP sizing decision, SHART action, UNICRED action, rapid-drawdown action or qualified launch-radar alert. No signal file and no notification.
+SHART_TAKE_PROFIT. Execute the planned 15x tranche: sell 10,000 SHART around/above USD 0.003966 if executable market remains there. No PONS/ETH/JUMP/UNICRED action this interval.
