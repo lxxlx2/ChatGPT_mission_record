@@ -202,3 +202,7 @@ Updated profit-management plan from this point:
 
 Verification caveat:
 - The user's wallet balance and individual swap fills were not independently read from a Solana RPC in this update because the connected Alchemy authorization is currently expired and public search indexes have not yet indexed the new canonical mint reliably. The execution quantities above are therefore accounting estimates from the user's confirmed 1 SOL commitment, 0.600039112 SOL refund and user-reported completed target sells. The hourly monitor must replace these estimates with direct on-chain balances/transactions as soon as an accessible verified Solana source becomes available.
+
+
+### SHART live-mint verification correction — 2026-09-24
+A fresh public YokaiCapital social post explicitly associates the launch with `GKpNJz7yMuhZka9izamv6sDUxCsDr58pFMUaw1TQpump`, while the public GitHub campaign plan still lists `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids`. Treat this as an unresolved canonical-identity mismatch until direct Solana chain data confirms which mint was allocated/traded. Do not use stale search results for unrelated SHART tokens. The wallet-received mint and launch transaction are authoritative once RPC access is available.
