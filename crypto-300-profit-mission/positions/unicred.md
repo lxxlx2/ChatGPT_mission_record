@@ -73,3 +73,20 @@ Actionable alerts:
 - CRED EXIT/REDUCE: notify only when a major price/liquidity/supply move creates a clearly actionable profit-protection or exit decision; routine volatility stays silent.
 - UNLOCK: on or after 2026-10-01, notify with exact recommendation to remain staked or unstake/list based on live economics.
 - Do not send repetitive rent updates, routine mint progress, or ordinary CRED price noise. Those go to GitHub only.
+
+
+## Mint-speed baseline — 2026-09-24
+
+User observed the project felt slower. The available user snapshots provide a useful realized baseline:
+- Earlier pre-stake snapshot: about 1,091 minted.
+- Later snapshot after about 52 minutes of staking: about 1,403 minted.
+- Increase: 312 mints in about 52 minutes.
+- Realized average rate: about 6.0 mints/minute, approximately 1 mint every 10 seconds.
+
+This matches the contract's target pace of about one unicorn every 10 seconds. Therefore, over that measured 52-minute window, minting had NOT materially slowed on average, even if the UI appeared visually stagnant for short intervals.
+
+Monitoring rule:
+- Calculate rolling mint pace whenever consecutive reliable minted/time snapshots are available.
+- Flag a meaningful slowdown if the rolling pace falls below roughly 50% of target for >=30 minutes (slower than about 1 mint every 20 seconds), or if there is an idle period long enough to activate repeated difficulty halving.
+- Flag a severe slowdown if pace is below roughly 25% of target for >=30 minutes (slower than about 1 mint every 40 seconds).
+- Do not alert on short 5-10 minute pauses alone, because the PoW difficulty explicitly retargets and halves after idle intervals.
