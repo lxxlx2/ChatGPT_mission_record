@@ -31,3 +31,11 @@ Main status: NO_ACTION
 
 ## Decision
 NO_ACTION. No new entry, take-profit, stop, stale-order cancellation, JUMP sizing decision, SHART action or fresh security escalation. No signal file and no notification.
+
+## UNICRED update — 2026-09-24 18:21 Asia/Bangkok
+- Added UNICRED as an active Mission position.
+- NFT #230 cost 0.0105 ETH; now staked for 7 days / 1x until 2026-10-01.
+- User reports about 0.00087 ETH (~USD 2.30) rent realized after ~52 minutes; first baseline about 0.001004 ETH/hour, explicitly treated as a changing baseline rather than a forecast.
+- Official UI near the sample: 1,403 / 4,444 minted, Epoch 4, 0.008 ETH mint price, 575 staked, total weight 2,080.
+- CRED principal recovered. Wallet snapshot now shows 51.390151 CRED remaining, about 25% of the initial 205.560605 CRED, valued around USD 7.06 at USD 0.13755.
+- Future UNICRED alerts limited to actionable sold-out/end-of-rent, security/mechanism changes, material CRED exit/profit-protection, or the Oct 1 unlock decision. Routine updates remain silent.
