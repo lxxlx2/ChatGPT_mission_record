@@ -33,3 +33,14 @@ Main status: NO_ACTION
 
 ## Decision
 NO_ACTION. PONS plan unchanged despite ADL HIGH because that risk state is unchanged. ETH remains pre-expiry wait. JUMP remains reserve-only. SHART post-close verification is incomplete and no action is asserted without live evidence. No signal file, Gmail or user notification.
+
+## User execution update — 2026-09-24 09:01 Asia/Bangkok
+Main status: SHART_TAKE_PROFIT
+
+- User reports SHART reached ~5x fixed participation price.
+- Wallet: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`.
+- Commitment 1 SOL; confirmed refund 0.600039112 SOL; inferred accepted principal 0.399960888 SOL.
+- User reports the latest 2x/3x/5x sell ladder was executed. Accounting estimate: 55% sold, ~78,292.34 SHARTCOIN remaining.
+- Gross target-level proceeds estimate: 0.779923732 SOL; approx 0.76043–0.76433 SOL after 2%–2.5% swap fee before slippage/network fee.
+- Next planned exits: 8x sell 20% original (~34,796.60), 15x sell 10% original (~17,398.30), retain final 15% (~26,097.45) runner.
+- Direct Solana RPC wallet/swap verification is pending due unavailable authenticated RPC; do not mark these balances/fills chain-confirmed yet.
