@@ -133,3 +133,16 @@ Direct Solana RPC shows four wallet-owned native WSOL token accounts:
 Token amount total = 0.033891318 WSOL. Full lamports recoverable by closing all four native WSOL accounts = **0.042048438 SOL** before transaction fees. With current native wallet balance 0.063112228 SOL, post-close native SOL would be about **0.105160666 SOL** before transaction fees.
 
 These accounts are auxiliary native-token accounts associated historically with Orca Whirlpool activity. Wallet swap UIs may fail to spend them because they are separate token accounts rather than a single default token account. For wrapped SOL, the protocol-level recovery operation is CloseAccount/unwrap, not a market swap. Do not treat 0.033891318 alone as the full recoverable amount because refundable rent is also present.
+
+
+## XRP / Variational internal reallocation — 2026-09-26
+This section supersedes the prior statement that approximately 141 USDC-equivalent was fully uncommitted.
+- User explicitly sourced this trade from the Mission's prior ~141 USDC-equivalent uncommitted pool.
+- About 52 USD-equivalent was moved from Solana toward Arbitrum/Variational; the Omni portfolio shows about 49.90 USDC available after the move.
+- The difference between ~52 moved and ~49.90 credited is not counted as trading loss until bridge/swap/gas/deposit costs are reconciled.
+- Remaining uncommitted Mission cash is therefore approximately 89 USD-equivalent before exact fee reconciliation.
+- Purpose of allocation:
+  1. first priority: exploit the Bitget/XRP event-driven trading setup for profit;
+  2. second priority: generate organic Variational Omni activity that may earn points.
+- Variational XRP order currently recorded as resting/pending fill: LONG 77.12 XRP at 1.5560, isolated 3x, about 120 USD notional, TP 1.6280, SL 1.5140.
+- This is an internal reallocation. Do not record it as a new external contribution.
