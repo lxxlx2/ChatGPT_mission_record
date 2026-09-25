@@ -54,3 +54,32 @@ Updated: 2026-09-26 01:30 Asia/Bangkok
 - Cancel or reassess if XRP breaks below the event support area around 1.519 before the order fills.
 - After confirmed fill, update actual fill price, actual size, liquidation price, TP/SL status, funding and realized/unrealized PnL.
 - Pending orders must never be counted as filled exposure.
+
+
+## Capital-source correction and objective — 2026-09-26
+- Capital is from the Mission's prior ~141 USDC-equivalent uncommitted pool.
+- About 52 USD-equivalent was reallocated to Arbitrum/Variational; about 49.90 USDC is visible in Omni.
+- This is an internal Mission transfer, not an external contribution.
+- Approximate remaining uncommitted Mission cash after this reallocation: ~89 USD-equivalent, pending exact bridge/swap/gas reconciliation.
+- Objective hierarchy:
+  1. seek positive event-driven P&L from the Bitget/XRP dislocation;
+  2. earn Variational Omni points through organic trading activity as a secondary benefit.
+
+## Market update — 2026-09-26 about 01:35 Asia/Bangkok
+- Public Binance XRPUSDT: about 1.5700; 24h +2.44%; 24h range 1.5191–1.6300; 24h spot volume about 343.9M XRP / 540.8M USDT.
+- BTCUSDT 24h about -0.39%; ETHUSDT about +0.43%. XRP is therefore showing material relative strength versus BTC and ETH over the same 24h window.
+- Binance XRP perpetual OI fell from about 318.31M XRP to 314.10M XRP over the latest hour, about -1.32%.
+- Aggregate latest 12 x 5m taker flow: buy/sell ratio about 0.97; the latest two 5m samples were about 0.65 / 0.65, indicating near-term active selling pressure.
+- Top-trader position accounts are still heavily long: about 71.8% long, position L/S ratio about 2.55.
+- Latest Binance funding sample is only about +0.000973% per 8h, so the long side is crowded by account ratio but not yet expensive by funding.
+- Visible Binance book snapshot shows notable bids clustered around 1.560–1.562 and notable asks around 1.574–1.579. Treat displayed depth as transient and spoofable, not durable support/resistance.
+- Latest verified hack tracking still places roughly 102.9M XRP in attacker-linked wallets. Only about 33,500 XRP had been observed routed through Bridgers in the verified follow-up, around 0.03% of the stolen XRP. This leaves very large latent supply risk but no evidence yet of a broad XRP liquidation.
+- Bitget's latest official notice located in this update still has withdrawals paused during the security review.
+
+## Current interpretation
+- The resting 1.5560 bid remains preferred over chasing around 1.57.
+- Short-term base case is consolidation/retest around 1.56–1.58 after the event spike, because price remains relatively strong while OI is contracting and current taker flow is mildly sell-heavy.
+- Bullish continuation requires acceptance back above roughly 1.58–1.59, then a retest of the 1.63 event high. A clean 1.63 break with renewed spot/taker demand would strengthen the long thesis.
+- A loss of 1.556 followed by 1.519 invalidates the event-support structure and requires cancellation/reassessment if still unfilled.
+- Main asymmetry remains event-driven: potential Bitget inventory/replenishment demand versus attacker-held ~103M XRP supply. Bitget has not publicly committed to buying 103M XRP in the open market, so the replenishment thesis must remain conditional.
+- At public price ~1.5700, a hypothetical already-filled 1.5560 position would be about +1.08 USDC gross (+2.68% on the shown ~40.35 USDC margin), but the private Variational order is still recorded as pending, so actual P&L remains 0 until fill is confirmed.
