@@ -362,3 +362,106 @@ Interpretation update:
 - Unconditional B2 copying still does not pass the promotion gate because ordinary-trade profitability remains outlier-dependent.
 - The strongest unresolved signal class remains `B2 first -> A later`; the currently confirmed 宝拉 and 星星人 examples remain exceptional winners, while reverse-order CLAIMR was near flat.
 - Do not count open positions or wallet-marked token values as realized PnL.
+
+
+## Initial execution-latency findings
+
+Updated: 2026-09-25 Asia/Bangkok
+
+Alchemy BNB RPC supports `eth_getBlockByNumber("pending", true)` and returns full pending transaction objects. Therefore a local monitor can inspect pending B2/child transactions before ERC20 receipt confirmation. This materially improves the feasibility of same-block / next-block detection.
+
+### Representative real-price deterioration
+
+The following comparisons use actual on-chain buy transaction BNB value divided by actual token output received. They measure market price deterioration after B2's entry. They do not yet include the hypothetical follower's own price impact.
+
+#### FROGE
+
+B2:
+- 0.075 BNB -> 7,097,267.143 tokens
+- average buy price = about 1.0567448e-8 BNB/token
+
+Same B2 block:
+- next 0.075 BNB buy -> 6,975,314.445 tokens
+- next -> 6,856,478.250
+- B2 child 9656 -> 6,740,653.267
+- each sequential order gets progressively worse execution.
+
+Next block:
+- 0.69 BNB -> 56,959,095.307 tokens
+- average price is about 14.63% above B2.
+
+Two blocks after B2:
+- 0.516 BNB -> 28,499,111.827 tokens
+- average price is about 71.34% above B2.
+
+FROGE's own realized B2 ROI was about +437.24%.
+If a hypothetical copy receives the same eventual exit multiple but enters at the observed delayed price:
+- +1 block price proxy: theoretical ROI about +368.7%
+- +2 block price proxy: theoretical ROI about +213.6%
+
+This remains highly profitable because FROGE was an extreme right-tail winner.
+
+#### 宝拉
+
+B2:
+- 0.5 BNB -> 57,496,903.500 tokens
+- average price about 8.69612e-9 BNB/token
+
+Next block:
+- first observed buy: 3 BNB -> 229,141,408.565 tokens
+- average price about 50.55% above B2.
+- another buy in the same block: 2 BNB -> 91,252,282.704 tokens
+- average price about 152.03% above B2.
+
+Three blocks after B2:
+- observed 1.2 BNB buy -> 36,964,851.763 tokens
+- average price about 273.31% above B2.
+
+Using only the currently confirmed lower-bound B2-cluster ROI of about +111.2%:
+- entry at the first next-block observed price would reduce the lower-bound theoretical ROI to roughly +40.3%
+- entry at the later same next-block price would reduce it to roughly -16.2%
+- entry at the +3-block observed price would reduce it to roughly -43.4%
+
+This demonstrates that transaction ordering inside the next block can decide whether the same underlying winner is profitable to copy.
+
+#### 算命
+
+B2:
+- 0.15 BNB -> 7,017,406.502 tokens
+
+B2 child in the same block:
+- 0.15 BNB -> 6,840,197.610 tokens
+- about 2.59% worse average price than B2.
+
+B2 realized ROI was about +191.15%.
+At this later same-block price proxy, the theoretical follower ROI remains about +183.8%.
+
+#### FOMOSquare
+
+B2:
+- first 0.15 BNB buy -> 5,418,538.124 tokens
+
+Next block observed buy:
+- 0.04 BNB -> 1,294,734.896 tokens
+- about 11.60% worse average price.
+
+B2 itself lost about -47.51%.
+At the next-block price proxy, a follower following the same exit would lose roughly -53.0%.
+
+### Latency conclusion
+
+The profitable copy problem is asymmetric:
+- Right-tail winners can tolerate some delay, but the delay tax can be enormous.
+- Ordinary losers become worse after delay.
+- A generic next-block follower can therefore lose expectancy even when B2's own gross backtest is positive.
+- Same-block pending detection is materially more valuable than post-confirmation alerts.
+- Pending detection alone does not solve selection quality; the trade filter still must identify which B2 attempts are worth following.
+
+### Required latency expansion
+
+Next:
+1. Repeat real-price deterioration reconstruction across at least 15-20 closed B2 samples.
+2. Compute equal-notional copy EV at same-block-later, +1 block and +2 block where observable.
+3. Include own order-size price impact for candidate copy sizes 0.01, 0.025 and 0.05 BNB.
+4. Add gas to entry/exit.
+5. Preserve right-tail exits; avoid TP rules that cap the rare large winners.
