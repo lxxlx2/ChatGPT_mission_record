@@ -98,3 +98,17 @@ Update this file on the daily full reconciliation and whenever:
 - an active position cost basis changes.
 
 Every number must be labeled direct-chain, exchange/user-confirmed, market-derived, or unresolved.
+
+
+## XRP / Variational sleeve — 2026-09-26
+- Capital source: internal reallocation from the previously ~141 USDC-equivalent uncommitted Mission pool.
+- About 52 USD-equivalent was moved toward Arbitrum/Variational; Omni shows about 49.90 USDC.
+- External net contribution impact: 0. This transfer is internal to the Mission.
+- Current order status from user-confirmed screenshot: resting/pending fill.
+- Because the order is not confirmed filled, current realized P&L = 0 and current unrealized P&L = 0.
+- If filled at 1.5560 for 77.12 XRP:
+  - TP 1.6280 gross P&L ≈ +5.55 USDC before funding/spread/slippage.
+  - SL 1.5140 gross P&L ≈ -3.24 USDC before funding/spread/slippage.
+  - With the configured 1% TP/SL max-slippage allowance, an extreme full-slippage stop near 1.49886 would imply roughly -4.41 USDC gross from the 1.5560 entry.
+- Primary objective: event-driven trading profit.
+- Secondary objective: organic Variational Omni points participation. Points are not booked as P&L until actually distributed and valuably realizable.
