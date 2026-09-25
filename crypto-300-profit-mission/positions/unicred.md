@@ -174,3 +174,34 @@ Alchemy direct RPC confirms the primary EVM wallet currently holds:
 - 0.006739974356883644 native ETH on Unichain.
 - 25.69507573368924 CRED at `0x0FBc2Fc1366D5BA517E6ca5A304c10359F554E0D`.
 This supersedes the older 51.390151 CRED wallet snapshot for current position accounting. Treat the CRED principal as already recovered; the remaining 25.69507573368924 CRED is the current profit-runner balance.
+
+
+## Live chain update / unlock instruction — 2026-09-25 08:53 Asia/Bangkok
+
+Direct Unichain contract reads for UNICRED #230:
+- totalMinted: 3,188 / 4,444.
+- Current mint price: 0.016 ETH.
+- stakedCount: 1,486.
+- totalWeight: 5,152.
+- #230 current claimable rent: 0.000006060606060606 ETH.
+- #230 on-chain unlockAt: Unix 1790850484 = 2026-10-01 10:28:04 UTC = **2026-10-01 17:28:04 Asia/Bangkok**.
+- Contract lastMintTime at the snapshot: 2026-09-25 01:53:11 UTC = 08:53:11 Asia/Bangkok.
+
+### Mint pace diagnosis
+The user snapshot around 2026-09-25 00:16 Asia/Bangkok showed 3,011 minted. Current chain state is 3,188 at about 08:53, only +177 over about 8h37m:
+- broad-window realized pace: about 1 mint every 2.9 minutes.
+- This is roughly 17.5x slower than the protocol target of 1 mint every 10 seconds.
+
+A more recent transaction sample from the contract shows 9 successful `mine` calls between 07:48:05 and 08:53:11 Asia/Bangkok, with one reverted attempt in the same page:
+- recent successful pace is about 1 mint every 8.1 minutes.
+- Therefore minting is **severely slower than target but not halted**. A successful mint occurred at 08:53:11.
+- 1,256 NFTs remain. At the broad-window ~2.9 min/mint pace this is roughly 61 hours remaining; at the recent ~8.1 min/mint pace roughly 7.1 days. These are scenario estimates only because PoW difficulty and miner participation can change.
+
+### Mandatory unlock alert
+The existing `$300 Crypto盈利监控` must send an actionable Gmail alert at the first run at or after **2026-10-01 17:28:04 Asia/Bangkok**.
+Alert should state that #230 is now legally/contractually unstakeable, read live minted/4444, mint pace, remaining mint-funded rent, current claimable rent, NFT floor/offer, and recommend one of:
+- unstake + list/sell,
+- unstake + hold,
+- remain staked at 1x,
+based on live economics.
+Do not create a separate automation for this unlock.
