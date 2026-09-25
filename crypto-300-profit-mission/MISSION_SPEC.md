@@ -99,6 +99,34 @@ Approx direct-chain stablecoin total from the canonical balances above: 791.4489
 - Use the post-expiry setup logic in `strategy.md` only if still valid under fresh market data.
 - Do not force an entry simply because capital is reserved.
 
+
+### XRP / Bitget hack event trade — added 2026-09-26
+- Venue: Variational Omni XRP perpetual.
+- Current user-confirmed order state: resting LONG limit order, not yet confirmed filled.
+- Order: buy 77.12 XRP at 1.5560, isolated 3x, about 120 USD notional.
+- Attached exit orders: take profit 1.6280, stop loss 1.5140.
+- Variational UI screenshot shows TP/SL max slippage set to 1% and entry-order max slippage 0.5%.
+- Estimated margin reserved for the order is about 40.35 USDC from an approximately 49.90 USDC Omni balance.
+- Treat this capital as externally contributed to the Mission after bridging from Solana to Arbitrum/USDC. Do not count the transfer itself as profit.
+- Do not claim the order is filled based only on an external market touching 1.5560. If private Variational order state is unavailable, label it probable-fill/check-required until user confirms or a connected source proves it.
+
+Hourly monitoring while this order or resulting position is active:
+- XRP spot/perpetual mark and 15m/1h/4h candles.
+- OI, funding, top-trader positioning and taker buy/sell imbalance.
+- Bitget hack-related XRP wallet movements and credible Bitget reserve/replenishment movements when available.
+- Track the order/position levels 1.5140, 1.5190, 1.5560, 1.6280, 1.6300 and 1.7000.
+
+XRP Gmail trigger rules. Send only on a NEW trigger or materially changed trigger:
+1. rapid price move: absolute 15m move >=2.0%, 1h move >=3.0%, or 4h move >=5.0%;
+2. public market trades through 1.5560 while order is still recorded as pending: alert that fill is probable and user should verify Variational, but do not mark filled without confirmation;
+3. price reaches or crosses 1.5140 stop, 1.6280 take-profit, or 1.6300 event-high breakout area;
+4. price falls below 1.5190 before confirmed fill, which invalidates/requires reassessment of the resting-long thesis;
+5. XRP OI changes >=10% within roughly 1h together with >=1.5% price move, or funding magnitude reaches >=0.05% per 8h, indicating leverage stress;
+6. attacker-controlled XRP moves >=5,000,000 XRP toward executable liquidity, bridges or exchange deposit routes, or credible Bitget-controlled wallets acquire/receive >=5,000,000 XRP in a replenishment pattern;
+7. any verified security/solvency development at Bitget that materially changes the XRP replenishment or attacker-sale thesis.
+
+When triggered, use connected Gmail to send to lxx.run688@gmail.com. Subject starts with `Crypto Mission 操作提醒｜XRP｜`. Body must include current XRP price, trigger, order/position status as confirmed vs probable, OI/funding when relevant, the concrete action to take, and one-line reason. No trigger means no Gmail and no ChatGPT notification.
+
 ### BTC
 - No dedicated BTC position or budget.
 - BTC is a market-regime / risk-overlay signal only.
