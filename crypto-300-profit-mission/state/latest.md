@@ -39,3 +39,11 @@ Main status: NO_ACTION
 
 ## Decision
 NO_ACTION. UNICRED rent advanced materially to ~32% of NFT cost, mint pace has softened to ~14 sec/mint but has not crossed the configured slowdown threshold, and rent-only breakeven is still not reached. Prior SHART downside instruction is not duplicated without a new confirmed downside leg.
+
+## 2026-09-25 08:53 Asia/Bangkok — wallet + UNICRED chain refresh
+- Solana wallet direct RPC: 0.063596996 SOL, 774.010034 USDC, 8,434.309931 SHART.
+- Unichain wallet direct RPC: 0.000134598028353274 ETH, 0.021286 USDC, 0 CRED.
+- UNICRED #230 still staked; on-chain unlock time = 2026-10-01 17:28:04 Bangkok.
+- UNICRED minted = 3,188 / 4,444; stakedCount = 1,486; totalWeight = 5,152; claimable #230 = 0.000006060606060606 ETH.
+- Mint pace has materially deteriorated: +177 mints in ~8h37m since the 3,011 snapshot (~1 every 2.9 min), and latest transaction sample shows ~1 successful mint every 8.1 min over ~65 minutes. Minting is not halted; latest successful mine occurred at 08:53:11 Bangkok.
+- Existing $300 Crypto盈利监控 must email at first run at/after 2026-10-01 17:28:04 Bangkok with live unstake/hold/list recommendation.
