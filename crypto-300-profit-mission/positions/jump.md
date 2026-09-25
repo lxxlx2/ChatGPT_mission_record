@@ -69,3 +69,17 @@ Do not treat the locked 50% at the TGE mark as realized. If TGE is around 150M a
 - Before application, use Legion's authenticated Show Terms/TPA as the final authority for FDV, unlock, vesting, jurisdiction, min/max allocation and dates.
 - Need Ethereum Mainnet USDC and enough ETH gas. Current primary EVM wallet has ~0.000922 ETH mainnet and 0 USDC mainnet, so bridge/fund before application. Current Solana wallet has ~782.385 USDC.
 - Keep at least the 150 opportunity reserve + 100 ETH reserve untouched.
+
+
+## Funding readiness update — 2026-09-25 evening
+Fresh direct-chain read of the primary EVM wallet:
+- Ethereum mainnet USDC: **400.308121**.
+- Ethereum mainnet native ETH: **0.001667063838788351**.
+
+The 400-USDC application reserve has therefore already been moved to Ethereum mainnet. Do not bridge the same reserve again.
+
+Remaining preflight work:
+- At the first Mission run on 2026-09-29 at or after 19:00 Asia/Bangkok, read the authenticated Legion Show Terms / TPA and re-check FDV, price, unlock, vesting, allocation limits, jurisdiction and initial circulation.
+- Check current Ethereum gas and approval/application transaction requirements.
+- Require at least 2x the estimated approval + application gas cost as native ETH buffer. If an execution-grade estimate is unavailable and ETH remains below 0.003 ETH, warn to top up gas before the 20:00 opening.
+- If final terms remain approximately 75M FDV + 50% TGE + remaining 4-month linear and no new material float issue appears, keep the 400-USDC application target.
