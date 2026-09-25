@@ -83,3 +83,19 @@ Remaining preflight work:
 - Check current Ethereum gas and approval/application transaction requirements.
 - Require at least 2x the estimated approval + application gas cost as native ETH buffer. If an execution-grade estimate is unavailable and ETH remains below 0.003 ETH, warn to top up gas before the 20:00 opening.
 - If final terms remain approximately 75M FDV + 50% TGE + remaining 4-month linear and no new material float issue appears, keep the 400-USDC application target.
+
+
+## TGE timing clarification — 2026-09-25
+Latest high-confidence guidance is **Q4 2026**, with no exact calendar date announced yet.
+
+There was a real documentation conflict on Legion/Jumper sale materials:
+- one attached sale document stated TGE expected in Q4 2026;
+- an older/conflicting round slide stated token launch 6 months after the end-of-September sale, which would imply roughly March 2027.
+
+Jumper/LI.FI team member Arjun Chand (@arjunnchand) publicly replied to the conflict: **"updated, TGE is Q4"**. His public profile is affiliated with both LI.FI and Jumper, and current Jumper/LI.FI team references corroborate that affiliation.
+
+Execution interpretation:
+- Treat **Q4 2026 (Oct 1–Dec 31, 2026)** as the current authoritative expectation.
+- Treat the "6 months later / March 2027" slide as stale/superseded unless a newer authenticated Legion TPA/Show Terms explicitly reinstates it.
+- Exact TGE day remains **TBD**.
+- The Sep-29 preflight must still re-read authenticated Legion documents. If they again conflict, do not infer; escalate the conflict and use the newest signed/dated TPA plus direct team clarification.
