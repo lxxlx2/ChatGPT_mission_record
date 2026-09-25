@@ -625,3 +625,50 @@ Current practical signal hierarchy:
 2. Same-block child co-execution is useful context but not sufficient by itself.
 3. A later overlap is a strong ex-post quality marker, not an entry trigger.
 4. B remains a late attention signal and should not be copied directly.
+
+
+## Forward validation live log — 2026-09-25 22:46 Asia/Bangkok
+
+Forward-validation cutoff uses only signals after the completed historical backtest. Historical rules are frozen; new observations must not be used to retroactively tune the 20-trade historical model.
+
+### Forward #1 — 超级智障 (OPEN)
+
+Token: `0x260bfc3b00d0f4376283d9d592fffa4452197777`
+
+Mint:
+- 2026-09-25 13:13:26 UTC / 20:13:26 Asia/Bangkok
+- 1,000,000,000 token mint to the Flap portal.
+
+Cluster entry:
+- Block `0x76396fc`
+- 2026-09-25 14:45:44 UTC / 21:45:44 Asia/Bangkok
+- B2 bought 28,770,382.35327581 tokens for 0.15 BNB.
+- Linked child `0x9656...cf34` bought 27,221,148.288568854 tokens for 0.15 BNB in the same block.
+- Cluster principal: 0.30 BNB.
+- Child executable unit price was approximately 5.69% worse than B2 in the same block.
+- Entry occurred approximately 92 minutes after mint, confirming that mint-age alone is not the signal.
+- No A `0xe1e...9407` or B `0xbf004...4903` receipt was found as of this snapshot.
+- No outgoing token transfer/sell from B2 or the linked child was found as of this snapshot.
+- Status: OPEN; do not include in realized forward PnL yet.
+
+### Same-day operational side sample — urmom (OUT OF COHORT)
+
+Token: `0x393a2fe1253bf99328fcbff6d4391d266682ffff`
+
+This token is not a `7777` contract, so it is excluded from the formal forward validation set, but it is useful for execution behavior:
+- B `0xbf004...4903` received/bought the token at 2026-09-25 14:42:18 UTC.
+- B2 + linked child entered together at 14:43:42 UTC, each with 0.25 BNB (0.50 BNB cluster principal).
+- Child same-block execution price was approximately 2.36% worse than B2.
+- Both B2 and child began reducing/redistributing the position 18 seconds later and again about 2m22s after entry.
+- This is a counterexample to assuming B2 always leads B.
+- Because this token uses a different execution path and the current Free-tier trace endpoint cannot expose full native-value call traces, do not mix its PnL into the `7777` backtest.
+
+### Same-day activity note
+
+Confirmed direct B2 Router buys already reconstructed during the 2026-09-25 Bangkok day include multiple sizes from 0.025 BNB to 0.5 BNB, including 宝拉, 星星人, KIMI, 交易人生, BINANCIEN, 杜杜, 超级智能, 超级智慧, urmom and 超级智障. Several tokens have multiple B2 buys, and linked child wallets often execute in the same block.
+
+Operational implication:
+- Forward validation should be event-driven, not daily-batch driven.
+- Every new B2/linked-child active buy should immediately create a signal record.
+- A trade only graduates into the formal `7777` forward set if it is an independent qualifying cycle and later closes with reconstructable realized output.
+- The next ten qualifying closed signals are numbered Forward #1 through #10 and remain untouched by rule tuning.
