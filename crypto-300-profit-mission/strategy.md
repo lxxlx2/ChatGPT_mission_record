@@ -504,3 +504,37 @@ Read `positions/jump.md` every run. Current target application is 400 USDC if th
 - unlock materially <50% or worse cliff/lockup => reduce.
 - no PM hedge before allocation; only reconsider delay hedge after allocation if Dec-31 No <=10c with real depth.
 - PM FDV market is directional evidence only due low liquidity.
+
+
+## BSC smart-money cluster final historical gate — 2026-09-25 22:01
+
+Canonical research record: `signals/2026-09-25-bsc-smart-money-cluster-alpha.md`
+
+Historical clean B2 `7777` universe is currently exhausted at 20 independent closed cycles. Do not inflate sample size by counting synchronized child-wallet legs as separate observations.
+
+Final historical metrics:
+- Principal 3.45 BNB.
+- Realized proceeds 4.2153836678 BNB.
+- Gross realized ROI +22.19%.
+- 10 winners / 20 trades.
+- Median ROI ~-0.10%.
+- Remove largest winner: ~+9.80%.
+- Remove top two winners: ~+1.29%.
+- Remove top three winners: ~-2.25%.
+
+Observed same-block sibling execution penalty from seven real B2/child paired buys:
+- Range +1.63% to +8.87%.
+- Median ~+6.86%.
+- Mean ~+6.58%.
+- Latency-adjusted historical aggregate ~+14.6% before gas.
+- Latency-adjusted result after removing top winner ~+2.8%.
+- After removing top two winners ~-5.2%.
+- After removing top three winners ~-8.5%.
+
+Decision:
+- Do not auto-copy B2 yet.
+- Do not wait for A as entry confirmation: in B2-first/A-later examples A's unit entry was already ~4.48x to ~13.48x B2's entry.
+- A overlap remains a research-quality label; all five observed B2/A overlap cases were profitable, but n=5 is insufficient.
+- Direct copying of B remains rejected.
+- The next 10 distinct B2 closed `7777` signals are the forward-validation set.
+- Promote only after 30 independent total samples and a positive forward set after realistic execution costs, with combined performance still positive after removing the largest winner.
