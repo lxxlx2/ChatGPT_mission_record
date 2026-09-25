@@ -123,3 +123,8 @@ Downside protection from the current ~6.47x state:
 Alchemy direct RPC confirms wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` currently holds 33,737.239723 SHART at mint `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids`.
 The alternate candidate mint `GKpNJz7yMuhZka9izamv6sDUxCsDr58pFMUaw1TQpump` has zero balance for this wallet.
 This supersedes the older 44,982.986297 wallet-balance snapshot for current monitoring. Do not infer the difference was sold until transfer/order history is checked.
+
+
+## Direct Solana RPC balance update — 2026-09-25 08:53 Asia/Bangkok
+Wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` currently holds **8,434.309931 SHARTCOIN** at mint `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids`.
+This supersedes all older wallet-balance snapshots. Do not infer that the decrease from the prior 33,737.239723 balance was a sale unless transaction history is explicitly checked.
