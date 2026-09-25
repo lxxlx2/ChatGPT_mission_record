@@ -107,7 +107,7 @@ Approx direct-chain stablecoin total from the canonical balances above: 791.4489
 - Attached exit orders: take profit 1.6280, stop loss 1.5140.
 - Variational UI screenshot shows TP/SL max slippage set to 1% and entry-order max slippage 0.5%.
 - Estimated margin reserved for the order is about 40.35 USDC from an approximately 49.90 USDC Omni balance.
-- Treat this capital as externally contributed to the Mission after bridging from Solana to Arbitrum/USDC. Do not count the transfer itself as profit.
+- Capital source is the Mission's approximately 141 USDC-equivalent previously uncommitted pool. User explicitly reallocated about 52 USD-equivalent from that pool to Arbitrum/Variational for this event trade and Variational points participation. This is an internal Mission reallocation, not an external contribution and not profit.
 - Do not claim the order is filled based only on an external market touching 1.5560. If private Variational order state is unavailable, label it probable-fill/check-required until user confirms or a connected source proves it.
 
 Hourly monitoring while this order or resulting position is active:
@@ -165,7 +165,7 @@ From the current direct-chain stablecoin pool:
 - 400 USDC: conditional JUMP reserve on Ethereum.
 - 150 USDC: hard short-window opportunity reserve, preferably kept liquid on Solana.
 - 100 USDC: ETH setup reserve.
-- approximately 141 USDC-equivalent: currently uncommitted, including Base/Unichain USDC dust.
+- approximately 89 USDC-equivalent: remains uncommitted after the user reallocated about 52 USD-equivalent from the prior ~141 uncommitted pool to the XRP/Variational sleeve. Exact residual remains subject to bridge/swap/gas reconciliation.
 - PONS uses its separate 50-USDT margin budget.
 - 500 USD-equivalent low-risk interest bucket remains outside the Mission.
 
