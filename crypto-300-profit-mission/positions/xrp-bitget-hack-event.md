@@ -14,6 +14,7 @@ Updated: 2026-09-26 Asia/Bangkok
 - Direction: LONG XRP
 - Order type: Limit
 - Entry limit: 1.5560
+- Margin mode: isolated
 - Leverage: 3x
 - Notional size: 120 USD
 - Expected initial margin: about 40 USDC
