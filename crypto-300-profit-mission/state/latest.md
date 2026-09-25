@@ -87,3 +87,15 @@ Current reserve map:
 
 ## Decision
 NO_ACTION. The main change is accounting/monitoring cleanup: JUMP funding is already on Ethereum, SHART and liquid CRED are closed, PONS exposure is only the first fill, and the separate BSC research stream has been removed from this Mission's scope.
+
+
+## WSOL auxiliary-account correction — 2026-09-25
+Direct Solana RPC shows four wallet-owned native WSOL token accounts:
+- `6FV88kiLJFmm5bprPfD4NitTHNFsfyUZZFn6wFNrLziE`: 0.019445574 WSOL + 0.002039280 SOL rent reserve = 0.021484854 SOL recoverable on close.
+- `6LbxShFopPRf56AWJvdQP57CnTNW5G9nvw8rKQhfofi1`: 0.006972803 WSOL + 0.002039280 rent = 0.009012083 SOL recoverable.
+- `8XszhZXZUKPiCLCkC7pbvhLyDwZqQQ8YV6BHHqY9X8TT`: 0.007191552 WSOL + 0.002039280 rent = 0.009230832 SOL recoverable.
+- `FuC71ndKhDJ6ngtwGfoy7o44vEjuhacg2x2KwSJiSxW8`: 0.000281389 WSOL + 0.002039280 rent = 0.002320669 SOL recoverable.
+
+Token amount total = 0.033891318 WSOL. Full lamports recoverable by closing all four native WSOL accounts = **0.042048438 SOL** before transaction fees. With current native wallet balance 0.063112228 SOL, post-close native SOL would be about **0.105160666 SOL** before transaction fees.
+
+These accounts are auxiliary native-token accounts associated historically with Orca Whirlpool activity. Wallet swap UIs may fail to spend them because they are separate token accounts rather than a single default token account. For wrapped SOL, the protocol-level recovery operation is CloseAccount/unwrap, not a market swap. Do not treat 0.033891318 alone as the full recoverable amount because refundable rent is also present.
