@@ -94,3 +94,30 @@ Active speculative-capital reservation:
 - 100 USDC ETH trading reserve.
 - ~132 USDC remains uncommitted.
 Separate 500 low-risk bucket remains isolated.
+
+
+## Authoritative live reconciliation — 2026-09-25 evening
+This section supersedes all older balance/allocation snapshots above. `MISSION_SPEC.md` is the highest-priority authority.
+
+Direct Alchemy reads:
+- Ethereum mainnet: 400.308121 USDC; 0.001667063838788351 ETH.
+- Solana: 390.866576 canonical USDC; 0.063112228 native SOL; approximately 0.033891318 WSOL across owned SPL token accounts; canonical SHART balance 0.
+- Base: 0.252982 canonical USDC; 0.000790846510479134 ETH.
+- Unichain: 0.021286 canonical USDC; 0.000231941590232335 ETH; CRED 0.
+- Robinhood Chain: approximately 0.000081643478484768 native balance. Unknown/spam token balances are excluded until verified.
+- Approx canonical on-chain stablecoin total: 791.448965 USDC.
+
+User-confirmed off-chain / exchange state:
+- PONS budget remains 50 USDT isolated; only the 0.6250 first entry is filled. The 0.5850 and 0.5450 orders remain pending. No budget increase.
+- Separate 500 USD-equivalent low-risk bucket is currently earning interest and remains outside speculative Mission capital.
+
+Current speculative allocation:
+- 400 USDC JUMP conditional reserve is already on Ethereum mainnet.
+- 150 USDC short-window launch / ICO / NFT opportunity reserve.
+- 100 USDC ETH setup reserve.
+- Approximately 141 USDC-equivalent remains uncommitted after those reservations, including Base/Unichain USDC dust.
+- SHART is closed for exposure accounting because direct wallet balance is now 0.
+- Liquid CRED is closed for exposure accounting because direct wallet balance is now 0.
+- UNICRED #230 remains active as the staked NFT position; Credits #23042 and #23232 remain active listings.
+
+Do not infer the reason for any balance change without transaction-history verification.
