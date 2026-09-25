@@ -102,13 +102,14 @@ Approx direct-chain stablecoin total from the canonical balances above: 791.4489
 
 ### XRP / Bitget hack event trade — added 2026-09-26
 - Venue: Variational Omni XRP perpetual.
-- Current user-confirmed order state: resting LONG limit order, not yet confirmed filled.
-- Order: buy 77.12 XRP at 1.5560, isolated 3x, about 120 USD notional.
-- Attached exit orders: take profit 1.6280, stop loss 1.5140.
-- Variational UI screenshot shows TP/SL max slippage set to 1% and entry-order max slippage 0.5%.
-- Estimated margin reserved for the order is about 40.35 USDC from an approximately 49.90 USDC Omni balance.
+- Current user-confirmed state: **FILLED LONG**.
+- Filled position: 77.12 XRP at **1.55589**, isolated 3x.
+- Position value at latest screenshot: about 120.96 USD; margin used about 40.99 USDC.
+- Attached exit orders remain active: take profit **1.6280**, stop loss **1.5140**.
+- Latest user screenshot shows mark 1.56844, unrealized PnL +0.97 USD (+2.42%), liquidation price 1.24430, Omni equity 50.87 USD and available balance 10.55 USD.
+- Dedicated position file: `positions/xrp-variational.md`.
 - Capital source is the Mission's approximately 141 USDC-equivalent previously uncommitted pool. User explicitly reallocated about 52 USD-equivalent from that pool to Arbitrum/Variational for this event trade and Variational points participation. This is an internal Mission reallocation, not an external contribution and not profit.
-- Do not claim the order is filled based only on an external market touching 1.5560. If private Variational order state is unavailable, label it probable-fill/check-required until user confirms or a connected source proves it.
+- Private venue position state is now user-confirmed by screenshot. Public market data must not overwrite the confirmed fill fields unless the user later updates them or a connected Variational source proves a change.
 
 Hourly monitoring while this order or resulting position is active:
 - XRP spot/perpetual mark and 15m/1h/4h candles.
@@ -118,12 +119,10 @@ Hourly monitoring while this order or resulting position is active:
 
 XRP Gmail trigger rules. Send only on a NEW trigger or materially changed trigger:
 1. rapid price move: absolute 15m move >=2.0%, 1h move >=3.0%, or 4h move >=5.0%;
-2. public market trades through 1.5560 while order is still recorded as pending: alert that fill is probable and user should verify Variational, but do not mark filled without confirmation;
-3. price reaches or crosses 1.5140 stop, 1.6280 take-profit, or 1.6300 event-high breakout area;
-4. price falls below 1.5190 before confirmed fill, which invalidates/requires reassessment of the resting-long thesis;
-5. XRP OI changes >=10% within roughly 1h together with >=1.5% price move, or funding magnitude reaches >=0.05% per 8h, indicating leverage stress;
-6. attacker-controlled XRP moves >=5,000,000 XRP toward executable liquidity, bridges or exchange deposit routes, or credible Bitget-controlled wallets acquire/receive >=5,000,000 XRP in a replenishment pattern;
-7. any verified security/solvency development at Bitget that materially changes the XRP replenishment or attacker-sale thesis.
+2. price reaches or crosses 1.5140 stop, 1.6280 take-profit, or 1.6300 event-high breakout area;
+3. XRP OI changes >=10% within roughly 1h together with >=1.5% price move, or funding magnitude reaches >=0.05% per 8h, indicating leverage stress;
+4. attacker-controlled XRP moves >=5,000,000 XRP toward executable liquidity, bridges or exchange deposit routes, or credible Bitget-controlled wallets acquire/receive >=5,000,000 XRP in a replenishment pattern;
+5. any verified security/solvency development at Bitget that materially changes the XRP replenishment or attacker-sale thesis.
 
 When triggered, use connected Gmail to send to lxx.run688@gmail.com. Subject starts with `Crypto Mission 操作提醒｜XRP｜`. Body must include current XRP price, trigger, order/position status as confirmed vs probable, OI/funding when relevant, the concrete action to take, and one-line reason. No trigger means no Gmail and no ChatGPT notification.
 
@@ -368,3 +367,10 @@ Direct Solana RPC shows four wallet-owned native WSOL token accounts:
 Token amount total = 0.033891318 WSOL. Full lamports recoverable by closing all four native WSOL accounts = **0.042048438 SOL** before transaction fees. With current native wallet balance 0.063112228 SOL, post-close native SOL would be about **0.105160666 SOL** before transaction fees.
 
 These accounts are auxiliary native-token accounts associated historically with Orca Whirlpool activity. Wallet swap UIs may fail to spend them because they are separate token accounts rather than a single default token account. For wrapped SOL, the protocol-level recovery operation is CloseAccount/unwrap, not a market swap. Do not treat 0.033891318 alone as the full recoverable amount because refundable rent is also present.
+
+
+## WSOL recovery completion — 2026-09-26
+Direct Alchemy Solana RPC after the user completed the recovery shows:
+- native SOL balance: **0.105136682 SOL**;
+- all four previously tracked auxiliary native WSOL token accounts now return `value: null`, confirming they were closed.
+The recovery is complete. Remove those WSOL accounts from active monitoring; keep the prior investigation only as audit/history.
