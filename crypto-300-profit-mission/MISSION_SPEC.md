@@ -243,3 +243,54 @@ This intentionally staggers the stack:
 
 The Mission run is the decision layer and should consume fresh information after the broader collection layers have had time to run.
 
+
+## Opportunity engine / research integration
+
+Every 3-hour medium-lane run must also read the most recent available files under `crypto-daily/research/` covering roughly the previous 3 hours and convert broad research into Mission-level candidate decisions.
+
+Candidate universe includes:
+- liquid perpetual / futures setups beyond existing PONS/ETH when there is a clearly defined catalyst, liquidity and invalidation;
+- ICO / public sale / Legion-style allocations;
+- NFT mints / secondary breakouts;
+- established-issuer meme / social-token launches;
+- event-driven cross-chain or prediction-market opportunities when execution is realistically available.
+
+For each candidate, require:
+- a concrete catalyst or structural edge,
+- verified tradable venue / participation path,
+- sufficient liquidity and realistic fees/slippage,
+- explicit invalidation / downside,
+- a plausible expected-value advantage after costs,
+- a defined capital source.
+
+Do not manufacture a candidate every cycle. If none clears the gate, record NO_CANDIDATE and remain silent.
+
+New speculative ideas may only use:
+- the ~141 USDC uncommitted pool, or
+- the 150-USDC opportunity reserve when the event is truly short-window/high-conviction.
+
+JUMP, ETH reserve, PONS budget and the 500 low-risk bucket are ring-fenced unless the user explicitly reallocates them.
+
+Any new derivatives idea outside existing PONS/ETH/BTC monitoring is recommendation-only until the user explicitly approves the capital allocation.
+
+## Performance tracking
+
+Read and maintain `performance/current.md`.
+
+The Mission must track:
+- external net contributions,
+- realized P&L,
+- unrealized P&L,
+- open exposure,
+- reserved cash,
+- closed positions awaiting reconciliation.
+
+Never use raw wallet balance growth as profit because new deposits/transfers may exist.
+
+Update `performance/current.md` on the daily full reconciliation and whenever a position opens/closes, a material take-profit happens, an ICO/NFT allocation is confirmed, or realized proceeds are reconstructed.
+
+Maintain two scorecards once sufficient history is available:
+- original-$300 sleeve performance;
+- total speculative-capital performance after later contributions.
+
+Do not publish an exact return percentage while contribution history or closed-position proceeds remain unresolved.
