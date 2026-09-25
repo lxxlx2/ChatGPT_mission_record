@@ -146,3 +146,25 @@ This section supersedes the prior statement that approximately 141 USDC-equivale
   2. second priority: generate organic Variational Omni activity that may earn points.
 - Variational XRP order currently recorded as resting/pending fill: LONG 77.12 XRP at 1.5560, isolated 3x, about 120 USD notional, TP 1.6280, SL 1.5140.
 - This is an internal reallocation. Do not record it as a new external contribution.
+
+
+## XRP / Variational position confirmation — 2026-09-26 06:08 Asia/Bangkok
+User-confirmed from Variational Omni UI:
+- XRP-PERP LONG is now **filled**.
+- Quantity: 77.12 XRP.
+- Entry: 1.55589.
+- Isolated 3x.
+- TP: 1.6280.
+- SL: 1.5140.
+- Position value at screenshot: ~120.96 USD.
+- Margin used: ~40.99 USDC.
+- Liquidation price: 1.24430.
+- Omni equity: 50.87 USD; available/tradable balance: 10.55 USD.
+- Mark at screenshot: 1.56844; unrealized PnL +0.97 USD (+2.42%).
+- Capital source remains the prior ~52 USD-equivalent internal reallocation from the Mission's uncommitted pool. No external contribution.
+
+## WSOL recovery completion — 2026-09-26
+Fresh direct Alchemy RPC after recovery:
+- native Solana balance: **0.105136682 SOL**;
+- the four auxiliary native WSOL accounts previously recorded now all return null / closed.
+This supersedes the earlier active WSOL-account balance note.
