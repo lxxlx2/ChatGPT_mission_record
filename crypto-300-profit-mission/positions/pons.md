@@ -25,3 +25,13 @@ Updated: 2026-09-24 09:46 Asia/Bangkok
 - Top-trader 1h position long/short ratio: ~2.25.
 - Compared with the prior snapshot, OI and positive funding are elevated while top-trader positioning remains clearly long-heavy.
 - Decision: no increase to the 50-USDT margin budget. Keep the existing 0.585 / 0.545 bids and 0.498 Mark Price hard stop under the existing strategy. Do not move bids upward to chase.
+
+
+## Authoritative user-confirmed execution state — 2026-09-25
+This supersedes older ambiguity about PONS sizing.
+- Total PONS margin budget remains **50 USDT**.
+- Only the first 0.6250 entry has actually filled.
+- The 0.5850 and 0.5450 entries remain pending resting orders.
+- Hard stop remains 0.4980 Mark Price unless a strategy-defined trailing/stop-management trigger is actually reached.
+- Do not count pending orders as deployed margin or as filled exposure.
+- Do not raise the 50-USDT margin budget without explicit user approval.
