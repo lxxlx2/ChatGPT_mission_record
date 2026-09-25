@@ -112,3 +112,16 @@ Every number must be labeled direct-chain, exchange/user-confirmed, market-deriv
   - With the configured 1% TP/SL max-slippage allowance, an extreme full-slippage stop near 1.49886 would imply roughly -4.41 USDC gross from the 1.5560 entry.
 - Primary objective: event-driven trading profit.
 - Secondary objective: organic Variational Omni points participation. Points are not booked as P&L until actually distributed and valuably realizable.
+
+
+## XRP / Variational fill confirmation — 2026-09-26 06:08 Asia/Bangkok
+- Status: OPEN / FILLED.
+- User-confirmed fill: 77.12 XRP long at 1.55589, isolated 3x.
+- TP: 1.6280; SL: 1.5140.
+- Latest screenshot mark: 1.56844.
+- User-confirmed unrealized PnL at snapshot: **+0.97 USD (+2.42%)**.
+- Gross TP PnL from filled entry: about +5.56 USDC before funding/spread/slippage.
+- Gross SL PnL from filled entry: about -3.23 USDC before funding/spread/slippage.
+- Reward/risk from entry to attached TP/SL: about 1.72.
+- Realized PnL remains 0 while the position is open.
+- Internal capital transfer only; external net contribution impact remains 0.
