@@ -331,3 +331,34 @@ Adding 宝拉 and 星星人 to the 29 ordinary samples using only the currently 
 - Conservative aggregate ROI lower bound: about +29.95%
 
 This is not yet a copy-strategy return because it assumes B2's own execution prices. Next required test is realistic +1 / +2 / +3 block entry latency plus token tax, protocol fee, gas and price impact.
+
+
+## Incremental backtest update — 2026-09-25 20:54 Asia/Bangkok
+
+Additional B2 closed sample:
+- `花花` `0x37f5f45774bb540b4d342ba624e0499d6a2a7777`
+- B2 active Router buy principal: 0.15 BNB
+- Full later sell actual Swap amountOut: 0.149061550586942 BNB
+- Realized ROI: about -0.63%
+- No later A or B buy was found for this token in the checked history.
+
+Updated B2 ordinary closed-trade aggregate:
+- Closed samples: 11
+- Total principal: about 1.70 BNB
+- Actual realized proceeds: about 1.91881 BNB
+- Gross realized PnL: about +0.21881 BNB
+- Gross ROI: about +12.87%
+- Winners: 4 / 11
+- Win rate: about 36.4%
+- Median trade ROI remains approximately -8.3%
+- Removing the `算命` outlier leaves the other ten trades around -4.38% combined.
+
+Open / excluded from realized-PnL aggregate:
+- `KIMI` `0xd0c2337e71835dea2d2b2823c60ffa8d81677777`: fresh B2 Router buy 0.025 BNB at 2026-09-25 05:50:41 UTC; no B2 sell found yet; no A/B follow-on buy found yet.
+- `BUFO` `0x057e599eb2d99a546773778cfe6c5275d50e7777`: B2 Router buy 0.25 BNB; no B2 sell found yet. B had historical BUFO activity earlier than this B2 entry, so it is not a B2-first -> B-later confirmation sample.
+- `超级智脑` `0x5aee960f83c18e01a46cc2a3910ad6edcf6c7777`: B2 Router buy 0.1 BNB; no B2 sell found yet; no A/B follow-on buy found in the checked history.
+
+Interpretation update:
+- Unconditional B2 copying still does not pass the promotion gate because ordinary-trade profitability remains outlier-dependent.
+- The strongest unresolved signal class remains `B2 first -> A later`; the currently confirmed 宝拉 and 星星人 examples remain exceptional winners, while reverse-order CLAIMR was near flat.
+- Do not count open positions or wallet-marked token values as realized PnL.
