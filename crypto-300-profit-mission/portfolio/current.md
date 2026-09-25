@@ -63,3 +63,24 @@ This supersedes the prior user-reported 212 Solana USDC + 500 Base USDC split fo
 - Any fresh BTC long, short or hedge requires explicit user approval before capital is reassigned.
 - Do not consume the 150 USDC hard opportunity reserve, JUMP reserve, ETH reserve or the separate 500 principal-preservation bucket automatically.
 - If a BTC trade is later approved, source it only from then-current uncommitted speculative cash unless the user explicitly changes the capital map.
+
+
+## Direct chain reconciliation — 2026-09-25 08:53 Asia/Bangkok
+
+Alchemy app `ChatGPT Crypto Monitor` direct RPC snapshot:
+
+### Solana wallet
+Wallet: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+- SOL: 0.063596996 SOL.
+- Canonical USDC (`EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`): 774.010034 USDC.
+- SHARTCOIN canonical held mint (`UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids`): 8,434.309931 SHART.
+These supersede prior Solana balance snapshots.
+
+### Unichain wallet
+Wallet: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
+- Native ETH: 0.000134598028353274 ETH.
+- USDC (`0x078d782b760474a361dda0af3839290b0ef57ad6`): 0.021286 USDC.
+- CRED (`0x0FBc2Fc1366D5BA517E6ca5A304c10359F554E0D`): 0 CRED.
+- UNICRED #230 remains staked in the protocol and is tracked separately from liquid wallet token balances.
+
+Do not infer the causes of balance changes from prior snapshots without checking transaction history. Current Mission accounting should use the direct-chain balances above.
