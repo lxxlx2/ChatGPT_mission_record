@@ -462,3 +462,36 @@ The radar is allowed to email only when a candidate passes both the hard issuer/
 Do not connect a main wallet or import private keys/seed phrases into third-party discovery tools. 985monitor is discovery/read-only for this Mission.
 
 Any capital suggestion must use only the Mission general opportunity reserve unless the user explicitly reallocates funds.
+
+
+## BSC smart-money cluster alpha — 2026-09-25
+
+Research source: `signals/2026-09-25-bsc-smart-money-cluster-alpha.md`
+
+Current priority:
+1. B2 cluster `0xb2e8c2d90ebc988fde867c1edacc24864216054c` plus strong-linked children `0x9656f3c2b2c264c4fcb506c5a9735b206787cf34` and `0xdc1e86900dc3ac30ac49ef9c3048bca52082e089`.
+2. Early sniper `0x87a028be9aefc5e04723c1a603ea2bd2290cdbf4`.
+3. A `0xe1e3252b8b2f9bf2a8335389ba8ee62e6ea29407`.
+4. B `0xbf004bff64725914ee36d03b87d6965b0ced4903`.
+
+Execution rule:
+- Do not copy B directly.
+- Do not copy A or 87a unconditionally.
+- Do not auto-trade B2 yet.
+- Highest-priority hypothesis to validate is `B2 first -> A later`.
+- Pending-calldata / one-block detection is preferred when available; post-confirmation copying must be simulated with realistic latency.
+- Any strategy must remain positive after token tax, protocol fee, gas, price impact and slippage.
+- Require at least 30 closed B2 samples, preferably 50-100, before tiny live-capital testing.
+- Backtest +1/+2/+3 block execution, outlier dependence, win rate, median ROI, net EV and max drawdown.
+- A child-wallet position split is a cluster indicator, not by itself a buy signal.
+- Deployer association remains unconfirmed until a direct funding/control relationship is demonstrated.
+
+Current evidence snapshot:
+- 87a: 18 closed recent `7777` samples, ~+12.24% gross aggregate ROI, 16.7% win rate, median ~-14.8%; highly dependent on the `无用` outlier.
+- B2 ordinary sample: 10 closed trades, 1.55 BNB principal -> ~1.76975 BNB actual proceeds, ~+14.18% gross ROI, 40% win rate, median ~-8.5%; removing the `算命` outlier leaves the other nine around -4.8%.
+- `宝拉`: B2 0.5 BNB entry before A; one synchronized B2+child reduction block returned ~1.05608 BNB, already >+111% versus initial principal before other exits.
+- `星星人`: B2 0.25 BNB entry about 17 minutes before A; already reconstructed cluster proceeds >0.6906 BNB, lower-bound ROI >+176%.
+- `CLAIMR`: A preceded B2 by ~13s; B2 only earned about +0.43%. This supports testing trade-order direction as a filter, but sample remains too small.
+
+Promotion gate:
+Only move this research into real-money execution after the expanded backtest shows positive net EV under realistic latency and after removing major outliers.
