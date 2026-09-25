@@ -205,3 +205,13 @@ Alert should state that #230 is now legally/contractually unstakeable, read live
 - remain staked at 1x,
 based on live economics.
 Do not create a separate automation for this unlock.
+
+
+## Exposure correction — 2026-09-25 evening
+Fresh direct Unichain RPC confirms the primary wallet currently holds **0 CRED**.
+
+This supersedes all older 25.69507573368924 / 51.390151 CRED runner snapshots for live exposure accounting.
+- Active Mission exposure in this project is now UNICRED NFT #230 only.
+- Stop standalone CRED price-position alerts because there is no current liquid CRED balance.
+- Continue to monitor CRED price/liquidity/buyback only when it materially affects the economics or resale value of UNICRED #230.
+- Keep the existing #230 unlock instruction for 2026-10-01 17:28:04 Asia/Bangkok.
