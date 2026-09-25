@@ -99,3 +99,17 @@ Direct Solana RPC shows four wallet-owned native WSOL token accounts:
 Token amount total = 0.033891318 WSOL. Full lamports recoverable by closing all four native WSOL accounts = **0.042048438 SOL** before transaction fees. With current native wallet balance 0.063112228 SOL, post-close native SOL would be about **0.105160666 SOL** before transaction fees.
 
 These accounts are auxiliary native-token accounts associated historically with Orca Whirlpool activity. Wallet swap UIs may fail to spend them because they are separate token accounts rather than a single default token account. For wrapped SOL, the protocol-level recovery operation is CloseAccount/unwrap, not a market swap. Do not treat 0.033891318 alone as the full recoverable amount because refundable rent is also present.
+
+
+## User-confirmed XRP update — 2026-09-26 06:08 Asia/Bangkok
+- Variational Omni XRP-PERP position is **FILLED LONG**.
+- 77.12 XRP at 1.55589, isolated 3x.
+- TP 1.6280; SL 1.5140; liquidation 1.24430.
+- Screenshot mark 1.56844; unrealized +0.97 USD (+2.42%).
+- Position value ~120.96 USD; margin ~40.99 USDC; Omni equity 50.87 USD; available 10.55 USD.
+- Use `positions/xrp-variational.md` as the position authority.
+
+## Direct-chain WSOL update — 2026-09-26
+- Solana native balance now **0.105136682 SOL** by direct Alchemy RPC.
+- The four previously tracked auxiliary native WSOL accounts are closed (all return null).
+- WSOL recovery is complete and no further recovery alert is required.
