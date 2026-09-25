@@ -258,3 +258,76 @@ Only advance to tiny live capital if net EV remains positive after fees/tax/gas/
 - Some tax-token sells emit multiple transfer legs; count the Swap output once per sell transaction.
 - Alchemy Free currently limits broad eth_getLogs ranges, so event reconstruction is performed per exact sell block.
 - Blockscout current MCP does not support BSC chain ID 56, so it is not used as a substitute for this BSC backtest.
+
+
+## Backtest expansion — 31 closed samples
+
+Updated: 2026-09-25 Asia/Bangkok
+
+### 29 ordinary closed B2 samples
+
+All figures below use reconstructed on-chain BNB principal and actual Swap-event amountOut. Open/unrealized positions are excluded.
+
+Aggregate:
+- Closed ordinary trades: 29
+- Principal: 4.4675623003 BNB
+- Actual proceeds: 5.0336856815 BNB
+- Realized gross PnL: +0.5661233812 BNB
+- Aggregate gross ROI: +12.67%
+- Winners: 12 / 29
+- Win rate: 41.38%
+- Median trade ROI: -5.39%
+
+Tail dependence:
+- Remove largest winner FROGE: remaining 28 trades are still about +2.95% aggregate ROI.
+- Remove top three winners FROGE, 算命 and FSTOCK: remaining 26 trades are about -8.00% aggregate ROI.
+- Therefore B2's observed positive expectancy is materially dependent on capturing rare large right-tail winners. A tight take-profit that truncates winners is likely harmful.
+
+New reconstructed closed samples:
+- 超级智能: total buy 0.15 BNB -> 0.1930465254 BNB, about +28.70%.
+- 杜杜: total buy 0.10 BNB -> 0.0806225235 BNB, about -19.38%.
+- BINANCIEN: 0.50 -> 0.4730723320 BNB, about -5.39%.
+- 交易人生: 0.50 -> 0.4758723039 BNB, about -4.83%.
+- 东方的神秘力量: 0.0425623003 -> 0.0419695525 BNB, about -1.39%.
+- DOG: 0.075 -> 0.0809508660 BNB, about +7.93%.
+- 华: 0.075 -> 0.0555016987 BNB, about -26.00%.
+- Kabosu: 0.125 -> 0.1371866871 BNB, about +9.75%.
+- FOMOSquare: total buy 0.20 -> 0.1049881169 BNB, about -47.51%.
+- FROGE: total buy 0.10 -> 0.5372428101 BNB, about +437.24%.
+- FSTOCK: total buy 0.30 -> 0.4555054083 BNB, about +51.84%.
+- 猴子币: 0.15 -> 0.0978659404 BNB, about -34.76%.
+- 电话猴: 0.075 -> 0.0681020243 BNB, about -9.20%.
+- TERMINAL: total buy 0.15 -> 0.1062797522 BNB, about -29.15%.
+- BFARM: 0.075 -> 0.0608755549 BNB, about -18.83%.
+- JEVCAT: 0.075 -> 0.0801613517 BNB, about +6.88%.
+- YIHE-405b: 0.075 -> 0.0776354594 BNB, about +3.51%.
+- YIHE-cfbc: 0.075 -> 0.0755162408 BNB, about +0.69%.
+- AB: 0.075 -> 0.0615417753 BNB, about -17.94%.
+
+### B2/A order-direction evidence
+
+Confirmed overlap examples now include:
+
+B2 first, A later:
+- FROGE: B2 first, A about 48 seconds later; B2 realized about +437%.
+- 宝拉: B2 first, A later; currently confirmed lower-bound cluster proceeds imply >+111% versus initial B2 principal before other exits.
+- 星星人: B2 first, A about 17 minutes later; currently reconstructed lower-bound cluster proceeds imply >+176%.
+
+A first, B2 later:
+- CLAIMR: A about 13 seconds first; B2 about +0.43%.
+- FOMOSquare: A about 19 seconds first; B2 about -47.51%.
+- FSTOCK: A about 5 seconds first; B2 about +51.84%.
+
+Conclusion:
+- `B2 first -> A later` remains a promising high-upside filter in the current sample, but order direction alone is not sufficient because FSTOCK is a strong counterexample.
+- Continue testing a multivariate rule using order direction, B2 initial size, repeat/add buys, child-wallet split, immediate reduction behavior and current price displacement.
+
+### 31-sample conservative lower bound
+
+Adding 宝拉 and 星星人 to the 29 ordinary samples using only the currently decoded lower-bound proceeds:
+- Total principal: about 5.2175623003 BNB
+- Confirmed proceeds lower bound: about 6.7804019757 BNB
+- Confirmed PnL lower bound: about +1.5628396754 BNB
+- Conservative aggregate ROI lower bound: about +29.95%
+
+This is not yet a copy-strategy return because it assumes B2's own execution prices. Next required test is realistic +1 / +2 / +3 block entry latency plus token tax, protocol fee, gas and price impact.
