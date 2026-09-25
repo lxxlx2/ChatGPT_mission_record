@@ -495,3 +495,12 @@ Current evidence snapshot:
 
 Promotion gate:
 Only move this research into real-money execution after the expanded backtest shows positive net EV under realistic latency and after removing major outliers.
+
+
+## JUMP final pre-sale sizing refresh — 2026-09-25
+Read `positions/jump.md` every run. Current target application is 400 USDC if the authenticated Legion TPA/Show Terms confirms the 75M FDV, 50% TGE unlock, remaining 50% linear over 4 months and no new material TGE-float red flag. This supersedes the older 250/300 sizing rule.
+- >100M FDV => reduce to 250 USDC.
+- >125M => re-evaluate/skip.
+- unlock materially <50% or worse cliff/lockup => reduce.
+- no PM hedge before allocation; only reconsider delay hedge after allocation if Dec-31 No <=10c with real depth.
+- PM FDV market is directional evidence only due low liquidity.
