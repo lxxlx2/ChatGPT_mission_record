@@ -465,3 +465,163 @@ Next:
 3. Include own order-size price impact for candidate copy sizes 0.01, 0.025 and 0.05 BNB.
 4. Add gas to entry/exit.
 5. Preserve right-tail exits; avoid TP rules that cap the rare large winners.
+
+
+## Final historical backtest snapshot — 2026-09-25 22:01 Asia/Bangkok
+
+### Historical-universe completion
+
+The available B2 direct `...7777` history was scanned backward through the earlier BSC block ranges. No additional `...7777` B2 activity was found in the earlier 2026-09-20/21 ranges checked. As of this cutoff, the clean historical universe that satisfies all of the following is 20 distinct closed trade cycles:
+- B2 actively paid BNB into the Flap router.
+- The token address ends in `7777`.
+- Buy principal can be reconstructed from transaction value.
+- The trade cycle is closed enough to reconstruct actual realized Swap output.
+- Old positions, open positions and duplicate child-wallet legs are excluded as separate independent samples.
+
+Do not inflate the sample to 30 by counting synchronized child-wallet legs as independent trades. The next 10 distinct closed signals must be treated as forward-validation data.
+
+### 20 clean B2 closed cycles
+
+| Token | Principal BNB | Actual realized BNB | ROI |
+| --- | ---: | ---: | ---: |
+| FROGE | 0.100 | 0.537243 | +437.24% |
+| 算命 | 0.150 | 0.436730 | +191.15% |
+| OPAI | 0.125 | 0.235697 | +88.56% |
+| 超级智能 | 0.150 | 0.193047 | +28.70% |
+| 努努 | 0.250 | 0.306119 | +22.45% |
+| ILY | 0.075 | 0.082882 | +10.51% |
+| Kabosu | 0.125 | 0.137187 | +9.75% |
+| DOG | 0.075 | 0.080951 | +7.93% |
+| 流浪狗 | 0.250 | 0.259282 | +3.71% |
+| CLAIMR | 0.025 | 0.025108 | +0.43% |
+| 花花 | 0.150 | 0.149062 | -0.63% |
+| 交易人生 | 0.500 | 0.475872 | -4.83% |
+| BINANCIEN | 0.500 | 0.473072 | -5.39% |
+| 中华 | 0.050 | 0.045850 | -8.30% |
+| 甲亢蛙 | 0.050 | 0.045648 | -8.70% |
+| 菊花 | 0.075 | 0.066915 | -10.78% |
+| LP | 0.500 | 0.418762 | -16.25% |
+| Poly | 0.150 | 0.124824 | -16.78% |
+| china | 0.050 | 0.040510 | -18.98% |
+| 杜杜 | 0.100 | 0.080623 | -19.38% |
+
+Aggregate:
+- Principal: 3.45 BNB
+- Actual realized proceeds: 4.2153836678 BNB
+- Gross realized PnL: +0.7653836678 BNB
+- Capital-weighted gross ROI: +22.19%
+- Winners: 10 / 20
+- Win rate: 50%
+- Median trade ROI: approximately -0.10%
+- Average winning-trade ROI: approximately +80.0%
+- Average losing-trade ROI: approximately -11.0%
+
+Tail dependence:
+- Full 20: +22.19% capital-weighted gross ROI.
+- Remove largest winner (FROGE): approximately +9.80%.
+- Remove top two winners (FROGE + 算命): approximately +1.29%.
+- Remove top three winners (FROGE + 算命 + OPAI): approximately -2.25%.
+
+Conclusion:
+The historical gross edge is real in the observed sample, but it is strongly dependent on a small number of convex winners. Unconditional copying does not pass a robust promotion gate.
+
+### Real same-block execution penalty
+
+A useful real-world latency proxy exists because strong-linked child wallet `0x9656...cf34` frequently bought the same token in the same block as B2.
+
+Observed child execution price premium versus B2:
+- FROGE: +5.29%
+- DOG: +8.87%
+- OPAI: +6.53%
+- ILY: +6.86%
+- CLAIMR: +1.63%
+- 星星人: +8.15%
+- 超级智能: +8.73%
+
+Observed range: approximately +1.63% to +8.87%.
+Median: approximately +6.86%.
+Mean: approximately +6.58%.
+
+This is materially better evidence than an assumed slippage percentage because it uses actual same-block sibling executions.
+
+Applying observed same-block penalties where available and the observed median to the remaining historical trades as a conservative execution proxy:
+- Adjusted aggregate ROI: approximately +14.6% before gas.
+- Remove largest winner: approximately +2.8%.
+- Remove top two winners: approximately -5.2%.
+- Remove top three winners: approximately -8.5%.
+- Adjusted median trade ROI: approximately -5.0%.
+- Adjusted winners: 7 / 20.
+
+This reinforces that execution latency substantially reduces the apparent edge and that rare winners remain essential.
+
+### B2 / A overlap
+
+A was checked against the 20 clean B2 cycles plus the two major cluster case studies.
+
+Clean historical overlap:
+- FROGE: B2 first, A later by approximately 48 seconds. B2 cycle ROI +437.24%.
+- CLAIMR: A first, B2 later by approximately 13 seconds. B2 ROI +0.43%.
+- OPAI: A first by roughly 4h55m, B2 later. B2 ROI +88.56%.
+
+Additional major cluster cases:
+- 宝拉: B2 first; A later by approximately 86 seconds. Confirmed synchronized B2/child realized output already exceeded 1.056 BNB in a single reduction block versus B2 initial 0.5 BNB principal.
+- 星星人: B2 first; A later by approximately 17 minutes. Confirmed B2-originated B2/child proceeds already exceeded 0.6906 BNB versus 0.25 BNB initial B2 principal.
+
+Thus all five observed B2/A overlap cases were profitable for B2 or the B2-originated cluster position. This is an important research signal, but n=5 is too small and discovered in a highly selected environment; it must not be treated as a guaranteed rule.
+
+### Why waiting for A is too late
+
+For the three B2-first -> A-later examples, A's first executable unit price was already materially above B2's first entry:
+- FROGE: A unit price about 6.74x B2's.
+- 宝拉: A unit price about 13.48x B2's.
+- 星星人: A unit price about 4.48x B2's.
+
+Therefore:
+- A overlap is useful as a quality label for research.
+- Waiting for A to buy before entering destroys much of the early-price edge.
+- The actionable trigger, if eventually promoted, must be B2 / linked-wallet pending or same-block activity, not A confirmation.
+
+### Final decision as of this cutoff
+
+Historical backtest status: COMPLETE FOR AVAILABLE CLEAN HISTORY.
+Live-auto-trade status: NOT PROMOTED.
+
+Reason:
+1. Gross historical edge exists.
+2. Same-block execution still leaves a positive aggregate in this sample.
+3. Median trade is approximately flat before execution penalty and negative after realistic same-block degradation.
+4. The strategy turns negative when the top 2-3 winners are removed after latency adjustment.
+5. There are only 20 independent clean closed historical cycles; counting child duplicates would be statistically invalid.
+6. The strongest B2/A overlap pattern has only five observed cases and is not large enough for a robust rule.
+
+### Forward validation gate
+
+Use the next 10 distinct closed B2 `7777` cycles as an untouched forward set.
+
+For each future signal record:
+- B2 pending tx detection time
+- actual B2 tx inclusion block
+- simulated follower inclusion block
+- B2 unit price
+- follower executable unit price
+- child-wallet same-block activity
+- A/B later participation
+- realized B2 exit path
+- copy-strategy realized exit path
+- gas
+- protocol/token tax
+- realized copy PnL
+
+Promotion criteria for tiny-capital execution:
+- At least 30 total independent closed signals (20 historical + 10 forward).
+- Forward set net positive after actual/realistically simulated execution costs.
+- Combined result remains positive after removing the single largest winner.
+- Preferably remains non-negative after removing the top two winners.
+- No reliance on waiting for A confirmation.
+- Maximum per-trade experimental risk must remain small until the forward gate passes.
+
+Current practical signal hierarchy:
+1. Detect B2 / linked-wallet active buy as early as possible.
+2. Same-block child co-execution is useful context but not sufficient by itself.
+3. A later overlap is a strong ex-post quality marker, not an entry trigger.
+4. B remains a late attention signal and should not be copied directly.
