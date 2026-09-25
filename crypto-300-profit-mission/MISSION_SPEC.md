@@ -190,6 +190,40 @@ A candidate may alert only after:
 
 Use English-language and primary sources. Do not use Chinese websites as confirmation sources.
 
+### Blast.fun / Flight 001 watch — added 2026-09-26
+
+Treat Blast.fun as a Sui launchpad opportunity source inside the existing hourly opportunity radar, not as a presumed airdrop farm or dedicated Mission position.
+
+Canonical identity:
+- Project: Blast.fun
+- Official X: `@blastdotfun`
+- Official root domain: `blast.fun`
+- Builder/operator context: Interest Labs / Interest Protocol / IPX ecosystem
+- Chain: Sui
+- Product class: memecoin/social-token launchpad and discovery platform
+
+Current baseline as of 2026-09-26:
+- Flight 001 recruiting / launch-code phase is public.
+- Mission Control is still offline.
+- No verified public launch date/time is available.
+- No verified user points program, Season Zero token allocation, platform-token distribution, user airdrop snapshot or claim flow has been established.
+- Public Blast.fun code contains creator/LP reward claiming and referral accounting, and an airdrop tool for token issuers; these are not evidence of a Blast.fun user airdrop or platform token.
+
+Hourly monitoring should check official Blast.fun / Interest Labs sources for:
+- Flight 001 / Mission Control going live and any concrete access deadline or launch time;
+- changes to launch-code / eligibility requirements that affect the user's ability to participate;
+- official user-facing points, rewards, snapshot, platform token, airdrop, claim or allocation rules;
+- unusually strong launches on Blast.fun that independently clear the Mission opportunity-radar gate, especially established issuers/builders, verified ecosystem-backed launches, or launches with measurable liquidity/attention and a plausible positive-EV entry;
+- material security, contract, migration or liquidity issues affecting participation.
+
+Stay silent for:
+- ordinary new meme launches;
+- additional invite-code marketing without a new economic benefit or deadline;
+- generic social hype, follower growth or routine platform updates;
+- launches lacking verified identity, liquidity or an explainable edge.
+
+Do not reserve dedicated capital for Blast.fun. Any candidate trade must compete for the existing 150-USDC short-window opportunity reserve and still satisfy the Mission's identity, liquidity, downside and EV gates. Execution remains manual and requires user approval.
+
 ## GitHub state / audit consistency
 
 Every Mission run must:
