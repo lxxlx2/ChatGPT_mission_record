@@ -128,3 +128,13 @@ This supersedes the older 44,982.986297 wallet-balance snapshot for current moni
 ## Direct Solana RPC balance update — 2026-09-25 08:53 Asia/Bangkok
 Wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` currently holds **8,434.309931 SHARTCOIN** at mint `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids`.
 This supersedes all older wallet-balance snapshots. Do not infer that the decrease from the prior 33,737.239723 balance was a sale unless transaction history is explicitly checked.
+
+
+## Position closed by direct RPC — 2026-09-25 evening
+Fresh Alchemy Solana RPC shows wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` holds **0 SHARTCOIN** at canonical mint `UpBBfyC75u3kxDGWmmmW2yauk9YY3CqZhdt1KUDkids`.
+
+This supersedes all prior remaining-balance estimates and snapshots.
+- Mission exposure status: CLOSED.
+- Stop hourly SHART price/liquidity monitoring.
+- Do not send further SHART alerts unless a new position is opened or the user explicitly requests transaction-history reconciliation.
+- The reason for the balance reaching zero is not inferred here; direct transaction-history analysis is required to distinguish sales, transfers or other movements.
