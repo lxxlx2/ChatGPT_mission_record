@@ -113,3 +113,12 @@ These accounts are auxiliary native-token accounts associated historically with 
 - Solana native balance now **0.105136682 SOL** by direct Alchemy RPC.
 - The four previously tracked auxiliary native WSOL accounts are closed (all return null).
 - WSOL recovery is complete and no further recovery alert is required.
+
+
+## Monitor execution repair — 2026-09-26 06:47 Asia/Bangkok
+- GitHub connector read/write path revalidated.
+- Failure handling corrected: a required GitHub write error must mark that run `partial_failure` or `failed`, but must not automatically disable the hourly Mission automation.
+- For `state/latest.md`, fetch the current blob SHA immediately before update; on SHA/conflict failure, refetch once and retry once.
+- Immutable run audit creation failure is recorded explicitly and retried once with a fresh timestamp/path if the failure is a path collision.
+- Only authentication/authorization failures that persist after retry should be surfaced for manual intervention.
+- Hourly schedule remains minute 29 Asia/Bangkok.
