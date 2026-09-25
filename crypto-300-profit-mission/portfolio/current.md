@@ -84,3 +84,13 @@ Wallet: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 - UNICRED #230 remains staked in the protocol and is tracked separately from liquid wallet token balances.
 
 Do not infer the causes of balance changes from prior snapshots without checking transaction history. Current Mission accounting should use the direct-chain balances above.
+
+
+## JUMP reserve refresh — 2026-09-25
+Latest direct-chain Solana USDC is ~782.385054.
+Active speculative-capital reservation:
+- 400 USDC conditional JUMP Legion application at 75M/50%-TGE/4mo terms.
+- 150 USDC short-window launch/meme reserve.
+- 100 USDC ETH trading reserve.
+- ~132 USDC remains uncommitted.
+Separate 500 low-risk bucket remains isolated.
