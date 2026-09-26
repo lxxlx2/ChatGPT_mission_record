@@ -1,55 +1,72 @@
 # Crypto Mission Monitor Health
 
-Updated: 2026-09-26 20:35 Asia/Bangkok
+Updated: 2026-09-27 01:26 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## $300 existing task
-- automation_id: 6ab46906a0cc8191880f1922dbef954a
-- no new automation created
-- 15:28:50 scheduler metadata advanced for the 15:29 cycle, but no automatic start/final audit persisted
-- by 16:30 the expected next cycle had not advanced last_run_time
+## Three active Crypto tasks
 
-Repair:
-- same task only
-- shorter neutral launcher
-- one append-only start write, one runtime read, one append-only final write
-- re-anchored next proof to 17:29
+### Crypto Daily
+Latest automatic run:
+- 2026-09-27 01:00
+- final artifact: `crypto-daily/runs/2026-09-27/010000-final-retry.md`
+- core_scan: success
+- rotating_shard: checked_no_update
+- research_write: failed
+- run_status: partial_failure
 
-Current status: UNHEALTHY until a genuine automatic start + final pair is observed.
+Repair applied:
+- research write retries at a retry path;
+- if research still cannot persist, compact research payload/material candidates must be embedded in final/final-retry;
+- 09:00 reads final audits when a research hour is missing;
+- critical security carry-forward is mandatory.
 
-## Crypto Daily
-- 16:00 automatic cycle persisted start + final + research
-- core scan and discovery shard completed
-- initial Binance request error recovered via supported per-symbol calls
-- initial research persistence error recovered via compact retry
-- prior final status partial_success reflected recovered attempts, not a residual coverage gap
+Current status: PARTIAL / awaiting next :00 proof.
 
-Repair:
-- recovered attempts are warnings when equivalent final coverage/write succeeds
-- only unresolved data, persistence or delivery gaps downgrade the run
-- no new task
+### TGE
+Latest automatic run:
+- 2026-09-27 00:15
+- `airdrop-tge-monitor/runs/2026-09-27/001508-final.md`
+- status: success
+- action: NO_ACTION
+- notification: false
 
-Current status: FUNCTIONING; next clean-status proof at 17:00.
+Current status: HEALTHY.
 
-## TGE
-- 15:13:59 proved append-only start/final can work
-- 16:12:38 scheduler metadata advanced again, but no automatic audit persisted through the post-run check
+### $300 Mission
+Latest scheduler metadata advanced at about 00:33, but no automatic final/final-retry persisted.
+Manual audit:
+- `crypto-300-profit-mission/runs/2026-09-27/003315-missing.md`
 
-Repair:
-- same task only
-- shorter launcher
-- state/current remains optional cache
-- re-anchored next proof to 17:14
-- no new task
+Repair applied:
+- required lanes bounded/reordered;
+- active XRP attacker flow is now a dedicated required lane;
+- Monster state/setup persistence added;
+- final/final-retry remains mandatory proof.
 
-Current status: UNHEALTHY until a fresh automatic start + final pair is observed.
+Current status: UNHEALTHY until next :29 final proof.
 
+## Material monitoring defects fixed
 
-## 20:00-20:29 validation
+### XRP / Bitget attacker flow
+The Sep-26 ~54M XRP movement from the original attacker holding wallets was not surfaced automatically.
+Dedicated authority:
+- `watchlists/xrp-bitget-hacker-flow.md`
 
-- Crypto Daily 20:00: research persisted, automatic final missing. Classification: persistence gap; runtime now has final + final-retry fallback.
-- TGE 20:14: scheduler metadata advanced, no final persisted. Classification: missing run; recovery workload was too large and has been bounded to one shard per run.
-- $300 20:29: automatic final persisted. Market/Monster lanes completed and the missed 19:29 Monster summary was recovered. Run was partial_failure because wallet telemetry was unavailable and JUMP/Alpha were treated too strictly.
-- $300 classification/runtime corrected: JUMP is sale/deadline state, Alpha is optional enrichment, wallet reads are per-chain with partial_success for residual provider gaps.
+A substantive missed alert was backfilled to Gmail and read back successfully.
+
+### Monster V2.1
+The 19:29 Sep-26 daily summary was generated in a later audit but never actually delivered.
+Recovered delivery:
+- Gmail subject `Crypto Mission｜Monster V2.1 日汇总｜2026-09-26`
+- Gmail readback verified
+- archive: `reports/daily/2026/2026-09/2026-09-26-monster-v2.1.md`
+
+### Crypto Daily / Magic Eden
+The Sep-25 23:00 research found the Magic Eden / Limit Break legacy EVM approval exposure, but the Sep-26 formal daily omitted it.
+This was an aggregation/promotion defect.
+Repairs:
+- mandatory critical-security carry-forward;
+- research-gap recovery from final audits;
+- explicit included/omitted-with-reason QA.
 
 No new automation created.
