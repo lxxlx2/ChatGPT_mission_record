@@ -209,77 +209,318 @@ HTML = r"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Close Call Dashboard</title>
+<meta name="theme-color" content="#080b12">
+<title>Close Call Control Center</title>
 <style>
-:root{color-scheme:dark;--bg:#0b0d10;--card:#151922;--muted:#8d96a8;--text:#f5f7fb;--good:#49d17d;--warn:#ffcc66;--bad:#ff6b6b;--line:#2a3040}
-*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}.title{font-size:28px;font-weight:750;margin-bottom:4px}.sub{color:var(--muted);margin-bottom:22px}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
-.label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.value{font-size:27px;font-weight:750;margin-top:6px}.small{font-size:13px;color:var(--muted);margin-top:6px}
-.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)} h2{font-size:18px;margin:26px 0 12px}
-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:600;font-size:12px}tr:last-child td{border-bottom:0}.ours{background:rgba(73,209,125,.14)}.prize{box-shadow:inset 3px 0 0 var(--warn)}
-.pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#232a38;font-size:12px}.foot{margin-top:14px;color:var(--muted);font-size:12px}
-.links a{color:#9ec1ff;text-decoration:none;margin-right:14px}
-@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}} @media(max-width:520px){.grid{grid-template-columns:1fr}}
+:root{
+  color-scheme:dark;
+  --bg:#080b12;
+  --panel:#101522;
+  --panel2:#151b2a;
+  --panel3:#0d1220;
+  --line:#222b3d;
+  --line2:#2e3950;
+  --text:#f7f9fc;
+  --muted:#8e9bb0;
+  --muted2:#657189;
+  --accent:#7c9cff;
+  --accent2:#9f7cff;
+  --good:#45d483;
+  --warn:#f5c85b;
+  --bad:#ff6f7d;
+  --cyan:#56d7e5;
+  --shadow:0 18px 60px rgba(0,0,0,.32);
+}
+*{box-sizing:border-box}
+html,body{min-height:100%;margin:0}
+body{
+  background:
+    radial-gradient(circle at 15% -10%,rgba(124,156,255,.14),transparent 34%),
+    radial-gradient(circle at 85% 0%,rgba(159,124,255,.10),transparent 30%),
+    linear-gradient(180deg,#080b12 0%,#0a0e17 52%,#080b12 100%);
+  color:var(--text);
+  font:14px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+.shell{max-width:1280px;margin:0 auto;padding:34px 24px 56px}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{
+  width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-weight:900;font-size:18px;
+  background:linear-gradient(135deg,#7c9cff,#9f7cff 58%,#56d7e5);
+  box-shadow:0 10px 30px rgba(124,156,255,.28)
+}
+.title{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:0}
+.subtitle{color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 0 5px rgba(69,212,131,.08)}
+.header-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.badge,.btn{
+  display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:rgba(16,21,34,.84);
+  border-radius:11px;padding:8px 11px;color:var(--muted);font-size:12px;text-decoration:none
+}
+.btn:hover{border-color:#43506b;color:var(--text);background:#151b2a}
+.hero{
+  display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-bottom:16px
+}
+.hero-main,.hero-side,.metric,.section{
+  background:linear-gradient(180deg,rgba(21,27,42,.96),rgba(13,18,32,.96));
+  border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)
+}
+.hero-main{padding:22px}
+.hero-side{padding:22px}
+.eyebrow{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+.rank-line{display:flex;align-items:flex-end;gap:13px;margin-top:10px;flex-wrap:wrap}
+.rank-big{font-size:46px;font-weight:900;letter-spacing:-.045em;line-height:1}
+.rank-status{font-size:13px;color:var(--muted);padding-bottom:5px}
+.rank-big.good{color:var(--good)}.rank-big.warn{color:var(--warn)}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.kpi{background:rgba(8,11,18,.48);border:1px solid var(--line);border-radius:13px;padding:13px}
+.kpi .n{font-size:21px;font-weight:800;margin-top:3px}
+.kpi .t{font-size:11px;color:var(--muted)}
+.prize-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.prize-value{font-size:34px;font-weight:850;letter-spacing:-.03em;margin-top:9px}
+.prize-sub{color:var(--muted);font-size:12px;margin-top:5px}
+.gap-box{margin-top:18px;padding:13px;border-radius:13px;background:rgba(245,200,91,.06);border:1px solid rgba(245,200,91,.18)}
+.gap-title{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+.gap-bar{height:7px;border-radius:99px;background:#1a2030;margin-top:9px;overflow:hidden}
+.gap-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--warn));width:0%}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.metric{padding:17px 18px;box-shadow:none}
+.metric .label{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.metric .value{font-size:25px;font-weight:850;letter-spacing:-.025em;margin-top:7px}
+.metric .hint{font-size:12px;color:var(--muted);margin-top:5px}
+.progress-wrap{margin-top:11px;height:7px;background:#1b2231;border-radius:99px;overflow:hidden}
+.progress{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--cyan));width:0%}
+.section{margin-top:16px;overflow:hidden;box-shadow:none}
+.section-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.section-title{font-size:15px;font-weight:800}
+.section-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th,td{padding:12px 16px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted2);font-weight:800;background:rgba(8,11,18,.28)}
+td{font-size:13px}
+tr:last-child td{border-bottom:0}
+tr:hover td{background:rgba(124,156,255,.035)}
+tr.ours td{background:rgba(69,212,131,.09)}
+tr.prize td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+.rank-cell{font-weight:800}
+.score-cell{font-variant-numeric:tabular-nums;font-weight:750}
+.did{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#c6d0e1;font-size:12px}
+.pill{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:#20293a;color:#cbd5e6;font-size:11px;border:1px solid #2d394e}
+.prize-pill{background:rgba(245,200,91,.09);border-color:rgba(245,200,91,.24);color:#f7d77d}
+.ours-pill{background:rgba(69,212,131,.1);border-color:rgba(69,212,131,.24);color:#7ce9aa}
+.table-actions{display:flex;gap:8px}
+.mini-btn{cursor:pointer;border:1px solid var(--line2);background:#121827;color:var(--muted);border-radius:9px;padding:7px 10px;font-size:11px}
+.mini-btn:hover{color:var(--text);border-color:#46536f}
+.note{padding:13px 18px 16px;color:var(--muted);font-size:11px}
+.footer-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.footer-links a{text-decoration:none;color:#a8b8d4;border:1px solid var(--line);background:#0e1420;padding:9px 11px;border-radius:10px;font-size:11px}
+.footer-links a:hover{border-color:#40506c;color:#fff}
+.hide{display:none}
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.kpi-row{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:620px){
+  .shell{padding:22px 14px 40px}.topbar{flex-direction:column}.header-actions{justify-content:flex-start}
+  .metrics{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr}.rank-big{font-size:39px}.title{font-size:24px}
+}
 </style>
 </head>
-<body><div class="wrap">
-<div class="title">Close Call 实时面板</div>
-<div class="sub" id="updated">加载中…</div>
-<div class="grid">
-  <div class="card"><div class="label">我们的公开排名</div><div class="value" id="rank">-</div><div class="small" id="rankDetail"></div></div>
-  <div class="card"><div class="label">榜首 / 奖区分数线</div><div class="value" id="scores">-</div><div class="small" id="boardSize"></div></div>
-  <div class="card"><div class="label">策略进度</div><div class="value" id="progress">-</div><div class="small" id="bracket"></div></div>
-  <div class="card"><div class="label">最佳估算 Score</div><div class="value" id="edge">-</div><div class="small" id="edgeDetail"></div></div>
-</div>
-<h2>官方公开榜</h2>
-<table><thead><tr><th>公开名次</th><th>账户</th><th>Score</th><th>我们的标签</th></tr></thead><tbody id="rows"></tbody></table>
-<div class="foot" id="note"></div>
-<h2>市场状态</h2>
-<div class="grid">
-  <div class="card"><div class="label">Sweep</div><div class="value" id="sweep">-</div></div>
-  <div class="card"><div class="label">Ref / Mark</div><div class="value" id="prices">-</div></div>
-  <div class="card"><div class="label">Ref age</div><div class="value" id="age">-</div></div>
-  <div class="card"><div class="label">已提交策略钱包</div><div class="value" id="wallets">-</div></div>
-</div>
-<div class="foot links">
-<a href="https://technocore.chat/r/d-close1-pnl" target="_blank">官方 PnL 原始房间</a>
-<a href="https://technocore.chat/r/d-close1-positions" target="_blank">官方 Positions 原始房间</a>
-<a href="https://technocore.chat/r/d-close1-price" target="_blank">官方 Price 原始房间</a>
-</div>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">CC</div>
+      <div>
+        <h1 class="title">Close Call Control Center</h1>
+        <div class="subtitle"><span class="status-dot"></span><span id="updated">正在连接 referee…</span></div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="badge" id="phaseBadge">TRADING</span>
+      <span class="badge" id="refreshBadge">30s 自动刷新</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-main">
+      <div class="eyebrow">Our best published standing</div>
+      <div class="rank-line">
+        <div class="rank-big warn" id="rank">-</div>
+        <div class="rank-status" id="rankDetail">读取中</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="t">榜首 Score</div><div class="n" id="leaderScore">-</div></div>
+        <div class="kpi"><div class="t">奖区分数线</div><div class="n" id="prizeCutoff">-</div></div>
+        <div class="kpi"><div class="t">奖区公开钱包</div><div class="n" id="prizeWallets">-</div></div>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <div class="prize-head">
+        <div>
+          <div class="eyebrow">Estimated strategy score</div>
+          <div class="prize-value" id="estScore">-</div>
+          <div class="prize-sub" id="estScoreDetail">策略观察值，非官方 Score</div>
+        </div>
+        <span class="pill prize-pill">Prize focus</span>
+      </div>
+      <div class="gap-box">
+        <div class="gap-title"><span>估算值相对奖区线</span><span id="gapText">-</span></div>
+        <div class="gap-bar"><div class="gap-fill" id="gapFill"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="label">Static progress</div>
+      <div class="value" id="staticValue">-</div>
+      <div class="progress-wrap"><div class="progress" id="staticProgress"></div></div>
+      <div class="hint" id="staticHint">等待数据</div>
+    </div>
+    <div class="metric">
+      <div class="label">Bracket</div>
+      <div class="value" id="bracketValue">-</div>
+      <div class="hint" id="bracketHint">-</div>
+    </div>
+    <div class="metric">
+      <div class="label">Ref / Mark</div>
+      <div class="value" id="prices">-</div>
+      <div class="hint" id="priceHint">-</div>
+    </div>
+    <div class="metric">
+      <div class="label">Strategy wallets</div>
+      <div class="value" id="wallets">-</div>
+      <div class="hint" id="walletHint">已提交策略交易的钱包</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">官方公开榜</div>
+        <div class="section-sub" id="boardSummary">读取 referee PnL board…</div>
+      </div>
+      <div class="table-actions">
+        <button class="mini-btn" id="toggleRows" onclick="toggleRows()">显示全部</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>公开名次</th><th>账户</th><th>Score</th><th>状态</th><th>我们的标签</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="note" id="note"></div>
+  </div>
+
+  <div class="footer-links">
+    <a href="https://technocore.chat/r/d-close1-pnl" target="_blank">PnL 原始房间 ↗</a>
+    <a href="https://technocore.chat/r/d-close1-positions" target="_blank">Positions 原始房间 ↗</a>
+    <a href="https://technocore.chat/r/d-close1-price" target="_blank">Price 原始房间 ↗</a>
+  </div>
 </div>
 <script>
+let SHOW_ALL=false;
+let LAST=null;
+
+function fmtNum(v, digits=2){
+  if(v===null || v===undefined || v==='') return '-';
+  const n=Number(v); if(!Number.isFinite(n)) return String(v);
+  return n.toLocaleString(undefined,{minimumFractionDigits:digits,maximumFractionDigits:digits});
+}
+function renderBoard(d){
+  const tbody=document.getElementById('rows'); tbody.innerHTML='';
+  const list=SHOW_ALL ? d.board : d.board.slice(0,10);
+  for(const x of list){
+    const tr=document.createElement('tr');
+    tr.className=[x.ours?'ours':'',x.prize_zone?'prize':''].filter(Boolean).join(' ');
+    const rankText=x.rank===x.index ? '#'+x.rank : '并列 #'+x.rank;
+    const status=x.ours
+      ? '<span class="pill ours-pill">我们的</span>'
+      : (x.prize_zone ? '<span class="pill prize-pill">奖区</span>' : '<span class="pill">公开榜</span>');
+    tr.innerHTML =
+      '<td class="rank-cell">'+rankText+'</td>'+
+      '<td class="did">'+x.did_short+'</td>'+
+      '<td class="score-cell">'+fmtNum(x.score)+'</td>'+
+      '<td>'+status+'</td>'+
+      '<td>'+(x.label?'<span class="pill ours-pill">'+x.label+'</span>':'')+'</td>';
+    tbody.appendChild(tr);
+  }
+  document.getElementById('toggleRows').textContent=SHOW_ALL?'收起到 Top 10':'显示全部 '+d.board.length;
+}
+function toggleRows(){SHOW_ALL=!SHOW_ALL;if(LAST)renderBoard(LAST)}
+
 async function refresh(){
   try{
-    const r=await fetch('/api/status',{cache:'no-store'}); const d=await r.json();
-    document.getElementById('updated').textContent='自动刷新 · '+new Date(d.updated_at).toLocaleString()+' · '+d.phase;
-    const rank=document.getElementById('rank'); rank.textContent=d.rank_text;
-    rank.className='value '+(d.rank_status==='ON_BOARD'?'good':'warn');
-    document.getElementById('rankDetail').textContent=d.best_ours ? (d.best_ours.label+' · score '+d.best_ours.score) : '当前没有我们的 DID 出现在官方公开 Top 列表';
-    document.getElementById('scores').textContent=(d.leader_score??'-')+' / '+(d.prize_cutoff_score??'-');
-    document.getElementById('boardSize').textContent='榜首 / 当前占据前三 prize places 的最低公开分 · '+d.prize_visible_wallets+' 个公开钱包在奖区组';
-    document.getElementById('progress').textContent='Static '+d.static_done+'/'+d.static_total;
-    document.getElementById('bracket').textContent='Bracket R'+(d.bracket_round??'-')+' · '+(d.bracket_status??'-')+' · '+d.bracket_pairs+' pairs';
-    document.getElementById('edge').textContent=d.best_gross_edge ? d.best_gross_edge.estimated_score+' POLF' : '-';
-    document.getElementById('edgeDetail').textContent=d.best_gross_edge ? d.best_gross_edge.name+' · gross '+d.best_gross_edge.edge+' · base fee≈'+d.best_gross_edge.base_fee : '暂无';
-    document.getElementById('sweep').textContent=d.sweep;
-    document.getElementById('prices').textContent=d.ref+' / '+(d.mark??'-');
-    document.getElementById('age').textContent=(d.age_s??'-')+'s';
-    document.getElementById('wallets').textContent=d.submitted_wallets;
-    const tbody=document.getElementById('rows'); tbody.innerHTML='';
-    for(const x of d.board){
-      const tr=document.createElement('tr');
-      tr.className=[x.ours?'ours':'',x.prize_zone?'prize':''].filter(Boolean).join(' ');
-      const rankText=(x.rank===x.index?'#'+x.rank:'并列 #'+x.rank)+(x.prize_zone?' · 奖区':'');
-      tr.innerHTML='<td>'+rankText+'</td><td>'+x.did_short+'</td><td>'+x.score+'</td><td>'+(x.label?'<span class="pill">'+x.label+'</span>':'')+'</td>';
-      tbody.appendChild(tr);
+    const r=await fetch('/api/status',{cache:'no-store'});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    LAST=d;
+
+    const localTime=new Date(d.updated_at).toLocaleString();
+    document.getElementById('updated').textContent='实时 · '+localTime+' · sweep '+d.sweep;
+    document.getElementById('phaseBadge').textContent=d.phase;
+    document.getElementById('refreshBadge').textContent='30s 自动刷新 · ref '+d.age_s+'s';
+
+    const rank=document.getElementById('rank');
+    rank.textContent=d.rank_text;
+    rank.className='rank-big '+(d.rank_status==='ON_BOARD'?'good':'warn');
+    document.getElementById('rankDetail').textContent=d.best_ours
+      ? d.best_ours.label+' · 官方 Score '+fmtNum(d.best_ours.score)
+      : '当前没有我们的 DID 出现在官方公开 Top '+d.board_size;
+
+    document.getElementById('leaderScore').textContent=fmtNum(d.leader_score);
+    document.getElementById('prizeCutoff').textContent=fmtNum(d.prize_cutoff_score);
+    document.getElementById('prizeWallets').textContent=d.prize_visible_wallets;
+
+    const best=d.best_gross_edge;
+    document.getElementById('estScore').textContent=best ? fmtNum(best.estimated_score)+' POLF' : '-';
+    document.getElementById('estScoreDetail').textContent=best
+      ? best.name+' · gross '+fmtNum(best.edge)+' · base fee≈'+fmtNum(best.base_fee)
+      : '暂无估算';
+
+    let gapText='-'; let pct=0;
+    const est=best?Number(best.estimated_score):NaN;
+    const cut=Number(d.prize_cutoff_score);
+    if(Number.isFinite(est)&&Number.isFinite(cut)&&cut!==0){
+      const gap=cut-est;
+      gapText=(gap>0?'距线约 ':'高于线约 ')+fmtNum(Math.abs(gap))+' POLF';
+      pct=Math.max(0,Math.min(100,(est/cut)*100));
     }
+    document.getElementById('gapText').textContent=gapText;
+    document.getElementById('gapFill').style.width=pct+'%';
+
+    document.getElementById('staticValue').textContent=d.static_done+' / '+d.static_total;
+    document.getElementById('staticProgress').style.width=((d.static_done/d.static_total)*100)+'%';
+    document.getElementById('staticHint').textContent='Static cohorts completed';
+
+    document.getElementById('bracketValue').textContent='R'+(d.bracket_round??'-');
+    document.getElementById('bracketHint').textContent=(d.bracket_status??'-')+' · '+d.bracket_pairs+' pairs';
+
+    document.getElementById('prices').textContent=fmtNum(d.ref)+' / '+fmtNum(d.mark);
+    document.getElementById('priceHint').textContent='ref age '+d.age_s+'s · sweep '+d.sweep;
+
+    document.getElementById('wallets').textContent=d.submitted_wallets;
+    document.getElementById('walletHint').textContent='已进入策略流程的钱包';
+
+    document.getElementById('boardSummary').textContent=
+      '公开 Top '+d.board_size+' · '+d.prize_visible_wallets+' 个钱包当前占据 prize-place 并列组';
     document.getElementById('note').textContent=d.notes.exact_rank+' '+d.notes.gross_edge;
-  }catch(e){document.getElementById('updated').textContent='读取失败: '+e}
+    renderBoard(d);
+  }catch(e){
+    document.getElementById('updated').textContent='读取失败 · '+e.message;
+    document.querySelector('.status-dot').style.background='var(--bad)';
+  }
 }
-refresh(); setInterval(refresh,30000);
-</script></body></html>"""
+refresh();
+setInterval(refresh,30000);
+</script>
+</body>
+</html>"""
 
 
 class Handler(BaseHTTPRequestHandler):
