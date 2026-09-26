@@ -1,7 +1,7 @@
 # Four Zero Two / GM Regiment Ink Agent 注册与每日 GM 参与记录
 
 Updated: 2026-09-27
-Status: CODEX_MCP_REGISTERED_RUNTIME_CHECK_PENDING
+Status: NPM_NPX_ENTRYPOINT_BUG_CONFIRMED
 Category: early-stage project participation
 Network: Ink mainnet
 Chain ID: 57073
@@ -243,7 +243,20 @@ Runtime anomaly observed:
 - therefore MCP runtime health is not yet considered verified
 - do not create/fund the Agent wallet until the process behavior is understood
 
-Status: REGISTERED_RUNTIME_CHECK_PENDING
+Diagnostic result:
+- direct `npx -y gm-regiment-mcp` exits immediately with exit code `0`
+- packaged `dist/server.js` contains a direct-invocation guard comparing `import.meta.url` against `pathToFileURL(process.argv[1]).href`
+- under npm/npx executable indirection, that comparison can fail, preventing `main()` from running
+- manually unpacked tarball cannot be executed directly until dependencies are installed; observed `ERR_MODULE_NOT_FOUND: @modelcontextprotocol/sdk` is consistent with an unpack-only directory
+
+Operational decision:
+- do not use the npx binary shim for Codex runtime
+- install `gm-regiment-mcp@0.1.0` into a dedicated fixed directory
+- launch the real file directly with Node:
+  `node <fixed-dir>/node_modules/gm-regiment-mcp/dist/server.js`
+- then point Codex MCP configuration at that stable path
+
+Status: DIAGNOSED_FIXED_INSTALL_REQUIRED
 
 ### Step 4: create dedicated Agent wallet
 
@@ -356,7 +369,8 @@ As of 2026-09-27:
 - npm package contents verified: YES
 - Codex MCP capability verified: YES
 - Codex MCP entry registered: YES
-- MCP runtime health verified: PENDING
+- MCP runtime health verified: FAILED_VIA_NPX
+- npx entrypoint issue diagnosed: YES
 - local installation: PENDING
 - Agent wallet created: PENDING
 - Agent funded: PENDING
