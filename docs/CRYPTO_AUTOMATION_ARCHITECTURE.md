@@ -1,121 +1,118 @@
 # Crypto Automation Architecture
 
-Updated: 2026-09-26 12:05 Asia/Bangkok
+Updated: 2026-09-26
 Timezone: Asia/Bangkok
 
-The system deliberately uses the existing automations only. Repair and QA must not create additional monitors unless the user explicitly asks.
+The system deliberately uses the three existing Crypto automations only. Repository cleanup, QA and repair do not create additional monitors unless explicitly requested.
+
+Human-facing navigation:
+- `docs/MONITORING/README.md`
+
+Repository structure / migration safety:
+- `docs/REPOSITORY_STRUCTURE.md`
 
 ## Schedule
 
-- :00 Crypto 每日情报
-- :14 全项目空投与TGE监控
-- :29 $300 Crypto盈利监控
-- 19:29 the same $300 Mission run also produces the monster daily summary
+- :00 `Crypto 每日情报`
+- :14 `全项目空投与TGE监控`
+- :29 `$300 Crypto资产状态监控`
+- 19:29 same $300 task also performs Monster factual daily summary
 
-The legacy separate monster task stays disabled.
+The legacy standalone Monster and Crypto publisher tasks stay disabled.
 
-## Reliability principle
+## Audit model
 
-Each run starts with a durable skeleton audit before expensive work.
+Current automatic runs use append-only audit files:
 
-A scheduler timestamp alone is not success.
+- `HHMMSS-start.md`
+- `HHMMSS-final.md`
 
-A run should finish as success, partial_success, partial_failure or failed. It should never intentionally remain in_progress.
+The final audit is the canonical proof of completion.
 
-Temporary tool/source/GitHub/Gmail problems must not automatically pause or disable an existing automation.
+Historical pure-time audits are preserved as immutable records.
+
+Temporary tool/source/GitHub/Gmail failures must not automatically pause or disable an existing task.
 
 ## Crypto Daily
 
-One existing hourly automation.
+Operational root:
+- `crypto-daily/`
+
+Authority:
+- `crypto-daily/AUTOMATION_RUNTIME.md`
 
 Ordinary hours:
-- core market/security scan every hour;
+- core market/security scan;
 - one rotating discovery shard;
-- compact research;
-- finalized audit;
+- compact research write;
+- final audit;
 - no Gmail.
 
 09:00:
 - delivery first;
-- use prior 24h stored research plus short fresh verification;
-- Gmail first, readback, GitHub archive;
-- optional new research only after delivery.
+- use prior stored research plus small fresh verification;
+- Gmail/readback;
+- GitHub archive/readback;
+- avoid duplicate delivery.
 
 10:00 / 11:00:
-- recovery first;
-- dedupe Gmail + GitHub;
-- repair only the missing side;
-- then ordinary collection.
+- recovery only for the missing side;
+- then ordinary collection if appropriate.
 
 ## TGE
 
-Every hour :14:
-- skeleton first;
+Operational root:
+- `airdrop-tge-monitor/`
+
+Authority:
+- `airdrop-tge-monitor/AUTOMATION_RUNTIME.md`
+
+Every :14:
 - urgent set;
 - one registry shard;
-- four-hour full registry coverage;
-- checked_no_update is healthy;
-- only real access/tool failures count as source failures;
-- ACTION only triggers Gmail + ChatGPT.
+- candidate verification only when needed;
+- fallback source for initial source_unavailable where possible;
+- ACTION only for verified user-action events;
+- NO_ACTION silent;
+- append-only final audit.
 
 ## $300 Mission
 
-Every hour :29.
+Operational root:
+- `crypto-300-profit-mission/`
 
-Phase A, always first:
-- live wallet/gas;
-- PONS;
-- XRP/Variational;
-- ETH;
-- BTC regime;
-- JUMP/deadline;
-- active-position security.
+Authority:
+- `crypto-300-profit-mission/AUTOMATION_RUNTIME.md`
 
-Phase B:
-- read at most two recent Crypto Daily research files;
-- one bulk derivatives universe screen;
-- deep-check only shortlisted monster candidates;
-- deep launch/NFT/FOMO verification only for actual candidates or stale-upstream fallback.
+Every :29:
+- direct-chain wallet state;
+- stored PONS/XRP/ETH/JUMP thresholds;
+- Token-2022 Solana holdings;
+- BNB GSTOCK;
+- Robinhood PONS;
+- recent Crypto Daily research;
+- Monster V2.1 bounded screen;
+- launch/NFT/FOMO factual candidate state;
+- slower UNICRED/Credits lane on cadence.
 
-Phase C:
-- UNICRED / Credits and slower data every 3h or when material.
+The automation is factual telemetry. It does not originate a new trade or change orders.
 
-This preserves the monitoring scope while avoiding duplicate full-web crawls in both Crypto Daily and Mission.
+## Human research layer
 
-## Repository authority
+Long-form content is organized separately:
+- `research/projects/`
+- `research/tokens/`
+- `research/memes/`
+- `research/nfts/`
 
-`crypto-daily/`
-- COLLECTOR_SPEC.md: hourly research runtime
-- REPORT_SPEC.md: formal daily content
-- DELIVERY_RUNBOOK.md: delivery/recovery
-- research/: rolling inputs
-- reports/daily/: official report
-- runs/: immutable audits
-
-`crypto-300-profit-mission/`
-- MISSION_SPEC.md: compact global policy
-- RUNBOOK.md: execution contract
-- portfolio/current.md: live capital state
-- performance/current.md: PnL accounting
-- state/latest.md: current Mission state
-- health/current.md: scheduler health
-- positions/: per-position rules
-- watchlists/: model-specific rules
-- runs/: immutable audits
-
-`airdrop-tge-monitor/`
-- REGISTRY.md
-- MONITOR_SPEC.md
-- state/current.md
-- reports/
-- runs/
+Operational `positions/` and `watchlists/` should gradually become compact machine authorities. Research migration must preserve compatibility paths until real automatic runs validate the change.
 
 ## Data truth
 
 Fresh wallet/RPC reads outrank old snapshots.
 
-Private venue state remains USER_CONFIRMED until directly connected or refreshed by the user.
+Private venue state remains USER_CONFIRMED until directly connected or refreshed.
 
-Unknown tokens are excluded from NAV until identified.
+Unknown/spam assets remain outside NAV.
 
-No successful alert/report may be claimed without the required Gmail/GitHub readback specified by its runbook.
+No successful alert/report may be claimed without the persistence/readback required by its runtime.
