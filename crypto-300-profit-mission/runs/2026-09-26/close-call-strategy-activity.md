@@ -375,3 +375,21 @@ Execution state:
 
 Follow-up safety commit:
 - `0009f71c721b17af99baeb40eff0ac097936ad80`: once dense mode is enabled, the old Static/Bracket automation remains frozen even if dense mode is later disabled. Disabling dense therefore stops new dense ticket creation without silently resuming the superseded strategy.
+
+
+## 2026-09-27 — Dense startup readiness fix
+
+Live dashboard review showed Dense mode enabled with zero submitted sets while the referee reference was stale.
+
+The original Dense loop checked trading freshness before creating the first pending batch. That was unnecessarily conservative because owner registration itself does not depend on the trading reference. It could waste the first future fresh sweep on registration instead of trading.
+
+Fix commit:
+- `1fa7a253878e71c1906588ef522ba0f4ca579d67`
+
+New behavior:
+- keep one Dense batch pre-registered even while the referee trading reference is stale;
+- continue to block the actual favored-ticket trades until effective ref age <= 120 seconds;
+- once a fresh sweep arrives and the registration has had at least one later sweep, the pending pair can submit immediately;
+- `dense-status` now prints the current ref sweep, effective age, trade-freshness boolean, pending batch index/status and ready-after sweep.
+
+This preserves the freshness safety gate while improving first-ticket readiness.
