@@ -376,3 +376,28 @@ T01 remains scheduled for 2026-09-26 16:00 Asia/Bangkok. Sweep 250 corresponds t
 
 Execution state:
 `GATE_PASS_WAITING_T01`.
+
+
+## T01 submitted — 2026-09-26 16:00 Asia/Bangkok
+
+Static cohort T01 was submitted successfully to the dedicated room.
+
+Observed submission:
+- trade id: `t01-1790413210`;
+- room seq: 65;
+- server timestamp: 2026-09-26T09:00:10.473230Z;
+- maker / long: `TIME-01-L`;
+- taker / short: `TIME-01-S`;
+- quantity: 40.70;
+- entry price: 224.42;
+- source sweep: 251;
+- expiry: sweep 253.
+
+The room returned the exact signed trade at seq 65, so the submission itself is confirmed present in the registered dedicated room.
+
+Settlement is still pending referee confirmation. Per the frozen rules, a posted trade counts only after `d-close1-flow` reports a settlement outcome. Do not start bracket round 1 until T01 is confirmed settled or its failure mode is understood.
+
+Runner commit `732e3ac23b58e9d07bee2941478de7f4717a73af` adds `check-trade`, which searches retained referee flow for a specific saved trade outcome and explicitly treats missing results as inconclusive when `omitted.settled` or `omitted.void` are present.
+
+Execution state:
+`T01_SUBMITTED_WAITING_SETTLEMENT`.
