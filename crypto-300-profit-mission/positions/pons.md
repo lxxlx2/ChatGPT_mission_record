@@ -1,6 +1,6 @@
 # PONS Position
 
-Updated: 2026-09-27 03:40 Asia/Bangkok
+Updated: 2026-09-27 03:57 Asia/Bangkok
 
 ## Binance PONSUSDT perpetual — USER_CONFIRMED
 
@@ -147,3 +147,24 @@ Binance public:
 - estimated uPnL if unchanged: **~+0.7609 USDT**
 
 Exact Binance account state, funding and fees remain private-source dependent.
+
+
+## 2026-09-27 03:57 factual refresh
+
+DIRECT_CHAIN Robinhood:
+- PONS: **54.799953441979625**
+- native ETH: **0.000825190918816326**
+- fresh Alchemy PONS reference: **0.6268828643699188 USD**
+- spot mark value: **~34.3532 USD**
+- verified acquisition cost remains **35.291194 USDG**
+- mark PnL: **~-0.9380 USD (-2.66%)**
+
+No wallet balance reduction is visible, so there is no direct-chain evidence of a spot TP/downside execution.
+
+Binance public:
+- PONSUSDT mark: **0.62924862**
+- funding reference: **0.00025802** for the current interval
+- latest private authority remains USER_CONFIRMED LONG 64 @ 0.6250
+- estimated uPnL if unchanged: **~+0.2719 USDT**
+
+User confirms Binance currently contains only the combined earn bucket plus this PONS futures position. No other Binance trading exposure should be carried forward.
