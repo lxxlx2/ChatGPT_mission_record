@@ -1,6 +1,6 @@
 # Crypto Mission Monitor Health
 
-Updated: 2026-09-26 14:12 Asia/Bangkok
+Updated: 2026-09-26 15:10 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Existing task
@@ -10,29 +10,28 @@ Timezone: Asia/Bangkok
 
 ## Current diagnosis
 
-Automatic scheduler timestamps continue to advance, but the Mission still failed to create a durable audit at 13:29 even after factual-rule wording.
+The 14:29:20 scheduler trigger produced no persisted automatic run file. This confirms the previous automatic launcher still failed before durable execution.
 
-Because no skeleton was created, the failure occurs before the detailed Mission lanes can prove execution.
+The missing run is now explicitly recorded at:
+`runs/2026-09-26/142920-missing.md`
 
 ## Repair applied now
 
-The same existing task is reduced to a minimal factual telemetry launcher:
-- first action: neutral skeleton audit
-- then read only `AUTOMATION_RUNTIME.md`
-- no personalized recommendation generation
-- no transaction creation/modification
-- no capital reallocation
-- bounded wallet / threshold / state-classification checks
-- original wallet, position, Monster, launch/NFT/FOMO factual coverage retained
-
-Task title/prompt may use "asset state monitor" wording while keeping the same automation ID and repository Mission.
+The same existing task now uses:
+- minimal neutral scheduler prompt;
+- only one runtime file: `AUTOMATION_RUNTIME.md`;
+- append-only `*-start.md` and `*-final.md` files;
+- no update-in-place requirement for audit completion;
+- factual wallet/market/threshold telemetry only;
+- original PONS/XRP/ETH/JUMP/Monster/launch/NFT/FOMO monitoring coverage retained;
+- no new automation.
 
 ## Proof requirement
 
 The next :29 run is healthy only if:
-1. a new automatic skeleton exists;
-2. it contains factual lane results;
-3. current state/health writes complete or are explicitly marked unavailable;
-4. the same audit is finalized.
+1. a new automatic `*-start.md` exists;
+2. a matching `*-final.md` exists;
+3. final audit contains factual lane results;
+4. current state/health writes complete or are explicitly marked unavailable.
 
 Scheduler last_run_time alone remains insufficient.
