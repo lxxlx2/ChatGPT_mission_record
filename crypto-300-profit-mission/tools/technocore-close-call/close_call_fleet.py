@@ -504,6 +504,18 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
             "pending_status": (dense.get("pending") or {}).get("status"),
         }
 
+    # Retry a ready pending batch on the same sweep until flow/state catch up.
+    # Only de-duplicate after the pending batch has either submitted or is not yet ready.
+    submitted = dense_submit_pending(state, pr)
+    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup"):
+        dense["last_seen_sweep"] = pr["n"]
+        save_state(state)
+        pending = dense_register_pending(state, pr["n"])
+        submitted["next_batch"] = pending["index"]
+        return submitted
+    if submitted:
+        return submitted
+
     last_seen_sweep = dense.get("last_seen_sweep")
     if last_seen_sweep == pr["n"]:
         return {
@@ -517,14 +529,6 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
 
     dense["last_seen_sweep"] = pr["n"]
     save_state(state)
-
-    submitted = dense_submit_pending(state, pr)
-    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup"):
-        pending = dense_register_pending(state, pr["n"])
-        submitted["next_batch"] = pending["index"]
-        return submitted
-    if submitted:
-        return submitted
 
     pending = dense_register_pending(state, pr["n"])
     return {
