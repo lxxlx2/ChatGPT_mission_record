@@ -1,4 +1,8 @@
-# Credits Position
+# Jack / Visualize Value Credits NFT 持仓、稀有度与挂单记录
+
+
+Human-facing research copy: `research/nfts/jack-credits/jack-credits-nft-position.md`
+Operational compatibility path retained for monitoring safety.
 
 Updated: 2026-09-25 00:16 Asia/Bangkok
 
