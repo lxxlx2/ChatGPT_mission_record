@@ -92,3 +92,33 @@ MISSION_SPEC.md 保留策略、资金与仓位权威。本文件只定义每小�
 才允许 success。
 
 其它情况使用 partial_success / partial_failure / failed。
+
+
+## Scheduler side-effect execution contract
+
+The hourly Mission scheduler is explicitly authorized to use the already-connected GitHub and Gmail connectors for the persistent side effects defined by this runbook. Do not ask for interactive confirmation for these recurring audit writes or for alert emails that already satisfy MISSION_SPEC notification gates.
+
+Use a fixed hourly exact schedule. Signal conditions control notification only; they do not control whether the hourly run executes.
+
+GitHub write protocol:
+1. Immediately after start-of-run reads, create a minimal skeleton audit with a unique second-level timestamp and `run_status: in_progress`.
+2. Use GitHub contents API connector actions directly for normal file writes.
+3. Before replacing `state/latest.md` or `health/current.md`, fetch the file in the same run and use that returned current blob SHA.
+4. On SHA/conflict error, refetch and retry exactly once.
+5. On create-file path collision, generate a new second-level timestamp and retry exactly once.
+6. If a connector call is blocked before reaching GitHub, record the exact surfaced tool/connector error when possible. Do not relabel an unknown error as a GitHub permission or safety error.
+7. A failed write never disables or pauses the automation. The next scheduled hour must still execute.
+8. If normal contents-API write is unavailable but lower-level Git object actions are available, a run may use an equivalent safe GitHub write path. Do not use shell, local git credentials, or external tokens.
+
+Gmail execution:
+- Gmail is called only when MISSION_SPEC/RUNBOOK requires ACTION, changed WATCH, health alert, or 19:29 monster summary.
+- These alerts are already user-authorized by the standing automation contract.
+- Gmail failure does not stop GitHub audit finalization or other lanes.
+
+Finalization order:
+1. state/latest.md
+2. health/current.md
+3. finalize the same run audit
+4. only then classify the scheduler run as success
+
+A scheduler trigger without a finalized audit remains missing_audit and cannot be counted as success.
