@@ -79,7 +79,14 @@ Robinhood Chain DIRECT_CHAIN:
 
 User confirms the remaining Binance order capital was withdrawn and converted to PONS spot + gas.
 
-The original PONS sleeve came from a 50-USDT budget, but current exact total PnL is **UNRESOLVED** because spot acquisition cost, withdrawal fee and swap execution cost have not yet been fully reconstructed.
+DIRECT_CHAIN transaction reconstruction for the PONS swap leg at 2026-09-26 12:58:38 Asia/Bangkok:
+- 35.291194 USDG input
+- 54.799953441979625 PONS output
+- average PONS spot acquisition rate: **~0.64400044 USDG/PONS**
+
+At the Alchemy price ~0.6448796581, the PONS spot leg is roughly **+$0.048** unrealized before any separate withdrawal/gas costs.
+
+The original PONS sleeve came from a 50-USDT budget. Exact total sleeve PnL is still **UNRESOLVED** until separate withdrawal fee and native-gas acquisition cost are reconciled.
 
 Do not count current spot market value as realized profit.
 
