@@ -18,10 +18,10 @@ from close_call_fleet import (
     STATIC_SCHEDULE_UTC,
     BRACKET_SCHEDULE_UTC,
     board_rows,
-    flow_lists_room,
     fresh_price,
-    latest_flow_and_state,
     latest_payload,
+    room_recent_activity_age_s,
+    room_registration_confirmed,
     load_state,
     local_board_matches,
 )
@@ -175,10 +175,11 @@ def snapshot() -> dict:
 
     ap = state.get("autopilot") or {}
     try:
-        latest_flow, _latest_ref_state = latest_flow_and_state()
-        room_active = flow_lists_room(latest_flow, state["room"])
+        room_registered = room_registration_confirmed(state)
+        room_activity_age_s = room_recent_activity_age_s(state["room"])
     except Exception:
-        room_active = False
+        room_registered = False
+        room_activity_age_s = None
 
     last_seen_at = ap.get("last_seen_at")
     autopilot_age_s = None
@@ -240,10 +241,10 @@ def snapshot() -> dict:
         user_action = "不用操作，后台会自动等待 fresh ref / gate 后执行"
 
     if dense.get("enabled"):
-        if not room_active:
+        if not room_registered:
             system_status = "WAITING"
-            system_text = "交易房间当前未被 referee 列出，正在自动重新注册"
-            user_action = "不用操作，程序会自动重新注册并等待确认"
+            system_text = "交易房间注册尚未确认，正在自动处理"
+            user_action = "不用操作，程序会自动注册并等待确认"
         pending = dense.get("pending") or {}
         if pending:
             if pending.get("status") == "registered":
@@ -355,7 +356,8 @@ def snapshot() -> dict:
         "bracket_pairs": len(bracket.get("pairs") or []),
         "submitted_wallets": submitted_wallets,
         "dense_enabled": bool(dense.get("enabled")),
-        "room_active": room_active,
+        "room_registered": room_registered,
+        "room_activity_age_s": room_activity_age_s,
         "dense_submitted_sets": len(dense.get("tickets") or []),
         "dense_pending": dense.get("pending"),
         "dense_last_ticket": dense.get("last_ticket"),
