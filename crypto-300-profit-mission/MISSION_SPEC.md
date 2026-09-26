@@ -337,6 +337,18 @@ Notify only for a newly actionable change, major risk, or deadline-sensitive use
 
 Do not send duplicate alerts without new information.
 
+### Alert delivery requirement
+For every event that validly passes the Mission notification gate:
+- send a real Gmail message through the connected Gmail account to `lxx.run688@gmail.com`;
+- also return a concise user-visible ChatGPT alert from the automation run;
+- Gmail subject format: `[Crypto Mission提醒][event type][asset/project]`;
+- body must contain the trigger, current verified data, concrete user action, invalidation/risk, capital source if relevant, and primary/chain evidence;
+- if Gmail sending fails, still return the ChatGPT alert and record the exact Gmail error in the run audit;
+- if ChatGPT delivery is unavailable, Gmail remains the required external alert path;
+- NO_ACTION, rejected candidates and duplicate signals remain fully silent.
+
+This general delivery rule applies to launch/NFT/ICO opportunities, active-position risk, FOMO/Robinhood execution-toxicity, wallet discrepancies, deadlines and other Mission-level actionable events. Asset-specific delivery rules such as XRP may add fields but cannot weaken this requirement.
+
 ## Schedule architecture
 
 Keep the main Mission automation hourly at minute 29 Asia/Bangkok.
