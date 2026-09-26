@@ -175,7 +175,7 @@ def snapshot() -> dict:
         system_text = "策略正在正常自动运行"
         user_action = "现在不用做任何操作"
 
-    next_events = []
+    pending_events = []
     for cohort, due_text in STATIC_SCHEDULE_UTC.items():
         key = f"{cohort:02d}"
         if key in state.get("static", {}):
@@ -184,8 +184,7 @@ def snapshot() -> dict:
             continue
         try:
             due = datetime.fromisoformat(due_text)
-            if due >= now:
-                next_events.append((due, f"Static T{key} 自动开仓"))
+            pending_events.append((due, f"Static T{key} 自动开仓"))
         except Exception:
             pass
 
@@ -195,16 +194,19 @@ def snapshot() -> dict:
     if due_text:
         try:
             due = datetime.fromisoformat(due_text)
-            if due >= now:
-                next_events.append((due, f"Bracket R{next_round} 自动轮换"))
+            pending_events.append((due, f"Bracket R{next_round} 自动轮换"))
         except Exception:
             pass
 
-    if next_events:
-        next_events.sort(key=lambda x: x[0])
-        next_event_at, next_event_text = next_events[0]
-    else:
-        next_event_at, next_event_text = None, "等待最终结算"
+    pending_events.sort(key=lambda x: x[0])
+    next_event_at, next_event_text = (pending_events[0] if pending_events else (None, "等待最终结算"))
+    next_event_due = bool(next_event_at and next_event_at <= now)
+    next_event_lag_s = max(0, int((now - next_event_at).total_seconds())) if next_event_due else 0
+
+    if next_event_due and system_status == "OK":
+        system_status = "WAITING"
+        system_text = f"{next_event_text} 已到时间，后台正在等待执行条件"
+        user_action = "不用操作，后台会自动等待 fresh ref / gate 后执行"
 
     target_to_prize = None
     if best_edge is not None and prize_cutoff is not None and mark is not None:
@@ -277,6 +279,10 @@ def snapshot() -> dict:
         "autopilot_age_s": autopilot_age_s,
         "next_event_text": next_event_text,
         "next_event_at": next_event_at.isoformat() if next_event_at else None,
+        "next_event_due": next_event_due,
+        "next_event_lag_s": next_event_lag_s,
+        "last_action": ap.get("last_action"),
+        "last_bracket_event": ap.get("last_bracket_event"),
         "best_ours": best_ours,
         "ours_on_board": ours,
         "leader_score": leader,
@@ -442,7 +448,12 @@ async function refresh(){
     document.getElementById('systemText').textContent=d.system_text;
     document.getElementById('userAction').textContent='你现在需要做什么：'+d.user_action;
     document.getElementById('nextEvent').textContent=d.next_event_text;
-    document.getElementById('nextEventTime').textContent=d.next_event_at?new Date(d.next_event_at).toLocaleString():'';
+    if(d.next_event_due){
+      const lag=Math.floor((d.next_event_lag_s||0)/60);
+      document.getElementById('nextEventTime').textContent='已到执行时间'+(lag>0?' · 等待 '+lag+' 分钟':' · 正在等待本轮检查');
+    }else{
+      document.getElementById('nextEventTime').textContent=d.next_event_at?new Date(d.next_event_at).toLocaleString():'';
+    }
 
     const prize=document.getElementById('prizeState');prize.textContent=d.prize_status_text;
     prize.className='value '+(d.in_prize_zone?'good':'warn');
