@@ -219,15 +219,17 @@ First successful Mission run after 00:00 Asia/Bangkok:
 
 Default: silent.
 
-Gmail + user-visible ChatGPT are required for a **new factual trigger**:
+Monitoring/runtime/source/audit failures are logged to GitHub only and must **not** generate Gmail or ChatGPT alerts.
+
+Gmail + user-visible ChatGPT are required only for a **new substantive crypto event** already within stored rules:
 - stored position stop/TP/event threshold crossed;
 - stored ETH setup becomes qualified;
 - new/materially changed WATCH;
 - Monster IGNITION / relevant EXHAUSTION state transition;
-- material security or deadline event;
-- MONITOR_HEALTH_GAP;
-- MONITOR_LANE_FAILURE;
-- 19:29 Monster daily summary.
+- material wallet anomaly involving real assets;
+- material security/solvency/deadline event affecting an active holding or planned participation;
+- verified launch/NFT/TGE opportunity state that materially changes timing or eligibility;
+- 19:29 Monster factual daily summary.
 
 Alert wording must be factual:
 - current value/state;
@@ -235,17 +237,15 @@ Alert wording must be factual:
 - what changed since prior state;
 - what remains unconfirmed;
 - invalidation/risk;
-- "review required" when a user decision is needed.
+- `decision_status: REVIEW_REQUIRED` when user input is needed.
 
 Do not include newly invented trade instructions, leverage, position sizing or capital allocation in an automated alert.
 
-WATCH subject:
-`[Crypto Mission提醒][WATCH][asset/project]`
-
-Unchanged WATCH, NO_ACTION, rejected/noise and ordinary volatility stay silent.
+Unchanged WATCH, NO_ACTION, rejected/noise, ordinary volatility and monitor-health plumbing stay silent.
 
 Gmail destination:
 `lxx.run688@gmail.com`
+
 
 ## Monster V2.1
 
