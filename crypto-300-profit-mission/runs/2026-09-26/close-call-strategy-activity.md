@@ -458,3 +458,21 @@ Fix:
 - the general fleet gate now treats room registration as a current-state condition rather than historical-ever-seen evidence.
 
 Important: this hardening protects future Dense batches. It does not retroactively prove batch #1 settlement. Batch #1 remains `submitted, outcome not publicly visible` until stronger evidence appears.
+
+
+## 2026-09-27 — Dense batch #2 submitted; room-health visibility corrected
+
+Observed runtime:
+- `submitted_sets: 2`;
+- Dense #2 submitted on sweep 408 with ref `224.39`, qty `42.23`;
+- Dense #3 is already registered with `ready_after_sweep: 409`;
+- current ref at the captured check was sweep 408, effective age 120 seconds, so #3 correctly waits for sweep 409 or later;
+- latest #2 long/short compact-flow outcomes remain `NOT_VISIBLE`, with large omitted settled/void counts, so public compact flow is inconclusive.
+
+Because #2 was submitted after the active-room gate was deployed, the current-room check necessarily passed at submission time.
+
+A visibility bug was also found: `room_active_in_latest_flow` had accidentally been printed from the Dense registration helper instead of `dense-status`, so the read-only status command did not show the field even though the trading gate itself was enforcing it.
+
+Fixes:
+- `1c21f29e73dec09f0ce54db45517986a3ab18781`: move active-room reporting into `dense-status`;
+- `dac977ee75d17c3b457b4efa9fe03d6159cd833b`: dashboard now explicitly surfaces room re-registration/health state.
