@@ -1,6 +1,6 @@
 # Airdrop / TGE Monitor Spec
 
-Updated: 2026-09-26
+Updated: 2026-09-26 15:10 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## 目标
@@ -16,17 +16,15 @@ Timezone: Asia/Bangkok
 - 最近 24h event / run 用于 dedupe
 
 执行：
-1. 立即创建唯一秒级时间戳的 skeleton run audit，`run_status: in_progress`。
+1. 创建 append-only start 文件：`runs/YYYY-MM-DD/HHMMSS-start.md`，状态 started。
 2. 检查 always-hourly urgent set。
 3. 检查当前 hour 对应 shard。
-4. 跟随官方公告中的 action links 到最终页面。
-5. identity gate + two-anchor。
-6. 判断是否出现新 ACTION event。
-7. 重新读取 state/current.md 最新 SHA 后更新状态。
-8. finalize 同一个 run audit。
+4. 对实际候选才跟随官方 action links 并做 identity + two-anchor。
+5. 判断是否出现 ACTION。
+6. 重新读取 state/current.md 最新 SHA 后更新；冲突仅重试一次。
+7. 无论 state update 是否成功，都创建新的 `runs/YYYY-MM-DD/HHMMSS-final.md` 记录最终状态。
 
-不得等完整扫描结束后才第一次写 GitHub。单一项目失败继续其余项目。
-
+禁止依赖“更新同一个 skeleton”作为完成条件，避免 SHA/update 冲突。
 完整 registry 四小时覆盖一次。
 
 ## Event notification
@@ -64,10 +62,11 @@ NO_ACTION：
 
 ## Run audit
 
-每轮必须写：
-`runs/YYYY-MM-DD/HHMMSS.md`
+每轮有两个 append-only 文件：
+- `HHMMSS-start.md`
+- `HHMMSS-final.md`
 
-最低字段：
+final 最低字段：
 - run_time
 - automation_id
 - run_status
@@ -81,12 +80,10 @@ NO_ACTION：
 - gmail_attempted/sent/error
 - event_paths
 - daily_summary_attempted/status
-- github_write_status
+- github/state write status
+- tool_errors
 
-如果一个项目 source 失败：
-- 记录项目级 failure；
-- 继续其余项目；
-- 只有整轮无法完成 urgent + shard 才标 failed。
+一个项目 source 失败时继续其余项目。只有整轮 urgent + shard 无法有效完成时才标 failed。
 
 ## Health
 
@@ -104,7 +101,7 @@ state/current.md 维护：
 ## Scheduler proof
 
 - scheduler trigger 不能替代 GitHub run audit。
-- 自动运行只有在 skeleton audit 已创建、urgent+shard 有 checked/failed 状态、state/current.md 更新或明确记录更新失败、同一个 audit 被 finalise 后才算 success。
+- 自动运行只有在 start audit 已创建、urgent+shard 有 checked/failed 状态、state/current.md 更新或明确记录更新失败、并存在对应 final audit 时才算完成。
 - GitHub/单一来源/Gmail 临时失败绝不允许自动 disable 或 pause 本 automation。
 
 
