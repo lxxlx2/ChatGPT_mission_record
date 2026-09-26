@@ -1616,7 +1616,31 @@ def cmd_dense_status(_args) -> None:
         print("pending_index: null")
         print("pending_status: null")
         print("pending_ready_after_sweep: null")
-    print("last_ticket:", json.dumps(dense.get("last_ticket"), ensure_ascii=False, sort_keys=True))
+    last_ticket = dense.get("last_ticket")
+    print("last_ticket:", json.dumps(last_ticket, ensure_ascii=False, sort_keys=True))
+    if isinstance(last_ticket, dict):
+        for role in ("long", "short"):
+            trade = (last_ticket.get("trades") or {}).get(role) or {}
+            trade_id = trade.get("trade_id")
+            if not trade_id:
+                continue
+            info = trade_outcome_from_flow(trade_id)
+            outcome = info.get("outcome")
+            if outcome:
+                print(
+                    f"last_{role}_outcome:",
+                    outcome.get("status"),
+                    "sweep:",
+                    outcome.get("sweep"),
+                )
+            else:
+                print(
+                    f"last_{role}_outcome: NOT_VISIBLE",
+                    "omitted_settled:",
+                    (info.get("omitted") or {}).get("settled", 0),
+                    "omitted_void:",
+                    (info.get("omitted") or {}).get("void", 0),
+                )
 
 
 def autopilot_iteration(late_minutes: int = 180) -> dict:
