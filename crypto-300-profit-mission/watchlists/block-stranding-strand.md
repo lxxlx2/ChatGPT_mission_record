@@ -258,6 +258,55 @@ Assessment:
 - The evidence does not support saying **"the team definitely sold or stole the 6,355.5 SOL."**
 - Given the long TGE delay and the public lead's prolonged inactivity, absence of treasury disclosure materially increases counterparty risk.
 
+
+## Follow-up forensic review — 2026-09-26
+
+### Exhaustive presale-wallet outbound scan
+
+The canonical presale wallet has only **29 recorded signatures** from the sale period through this review. All 29 were inspected via Solana transaction data.
+
+Confirmed direct SOL outflows where the presale wallet itself was the source:
+- 355.5 SOL on 2026-06-22
+- 1,000 SOL on 2026-06-22
+- 3,000 SOL on 2026-06-26
+- 2,000 SOL on 2026-07-06
+
+No other direct SOL outflow from the presale wallet was found in the full address history available at the time of review.
+
+Therefore **6,355.5 SOL is the complete confirmed direct withdrawal total**, not a partial sample.
+
+All four intermediary wallets forwarded essentially the full amounts to the same Solscan-labelled Kraken Hot Wallet. No evidence was found that these four intermediary wallets retained meaningful balances.
+
+### Public-lead activity / identity clues
+
+The public X lead `@nrdxhq` has materially reduced public visibility:
+- current indexed X bio: **"Building"**
+- older snapshots: **"Building @blockstranding"**
+- newest indexed original activity on the account remains clustered around the presale controversy / PRIMES period in late Oct to early Nov 2025;
+- no indexed n0rd post explaining the June-July 2026 Kraken deposits was found;
+- no verified later public project was found under the same handle in web or GitHub searches;
+- the Telegram handle `@nrdxhq` remains reachable but provides no public activity history.
+
+A useful identity clue exists in Superteam Earn: a MagicBlock Real-Time Hackathon submission lists **"Nick Nord @nrdxhq"**. Treat "Nick Nord" as a public platform identity attached to the same handle, not as independently verified legal identity. No reliable link was established from this profile to unrelated LinkedIn/music results sharing the same name.
+
+GitHub searches found no repository/account clearly tied to `nrdxhq`.
+
+### Team-change signal
+
+An indexed Block Stranding official update in 2026 said the project had been slow with updates because of **"internal improvements happening within the team"**, while also saying TGE/pre-launch planning was delayed by market instability.
+
+This is the only public evidence found that hints at an internal team transition. It does not identify who changed roles or confirm that n0rd left.
+
+Combined evidence:
+- n0rd stopped visible public communication;
+- his indexed bio dropped `@blockstranding`;
+- official account later referenced internal team improvements;
+- the project account continued publishing without n0rd;
+- 6,355.5 SOL of presale treasury later moved to Kraken with no public use-of-proceeds explanation found.
+
+Assessment: **core-team continuity is UNRESOLVED and should be treated as a material counterparty risk.**
+
+
 ## Fake STRAND warning
 
 Several unrelated / unofficial Solana tokens named STRAND or Block Stranding exist in search/indexers.
