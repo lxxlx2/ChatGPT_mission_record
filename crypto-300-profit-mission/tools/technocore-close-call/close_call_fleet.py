@@ -412,6 +412,15 @@ def fresh_price(max_age=600) -> dict:
     return {"n": n, "px": px, "age_s": age, "raw": p}
 
 
+def cmd_ids(_args) -> None:
+    state = load_state()
+    print("label,did")
+    for label in make_labels():
+        item = state["keys"].get(label)
+        if item:
+            print(f"{label},{item['did']}")
+
+
 def cmd_status(_args) -> None:
     pr = fresh_price(max_age=10**9)
     st = latest_payload("d-close1-state", "state")
@@ -1131,6 +1140,9 @@ def main() -> None:
 
     p = sp.add_parser("status")
     p.set_defaults(fn=cmd_status)
+
+    p = sp.add_parser("ids")
+    p.set_defaults(fn=cmd_ids)
 
     p = sp.add_parser("progress")
     p.set_defaults(fn=cmd_progress)
