@@ -327,14 +327,6 @@ def dense_prices(ref_px: Decimal) -> tuple[Decimal, Decimal]:
 
 def dense_register_pending(state: dict, sweep: int) -> dict:
     dense = state.setdefault("dense", {})
-    try:
-        latest_flow, _latest_state = latest_flow_and_state()
-        print("room_active_in_latest_flow:", flow_lists_room(latest_flow, state["room"]))
-        if isinstance(latest_flow, dict):
-            print("latest_flow_sweep:", latest_flow.get("n"))
-    except Exception as e:
-        print("room_status_error:", str(e))
-
     pending = dense.get("pending")
     if not isinstance(pending, dict):
         idx = int(dense.get("next_index", 1))
@@ -1647,6 +1639,15 @@ def cmd_dense_status(_args) -> None:
         print("fresh_for_trade:", pr["age_s"] is None or int(pr["age_s"]) <= 120)
     except Exception as e:
         print("ref_status_error:", str(e))
+
+    try:
+        latest_flow, _latest_state = latest_flow_and_state()
+        print("room_active_in_latest_flow:", flow_lists_room(latest_flow, state["room"]))
+        if isinstance(latest_flow, dict):
+            print("latest_flow_sweep:", latest_flow.get("n"))
+    except Exception as e:
+        print("room_status_error:", str(e))
+
     pending = dense.get("pending")
     if isinstance(pending, dict):
         print("pending_index:", pending.get("index"))
