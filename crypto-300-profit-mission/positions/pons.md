@@ -112,3 +112,20 @@ FACTUAL_RULE_MONITOR should check:
 6. PONS funding/OI/rapid-move/security/liquidity state.
 
 No automatic order creation/modification/reallocation.
+
+## 2026-09-26 16:33 factual refresh
+
+DIRECT_CHAIN Robinhood:
+- PONS balance remains **54.799953441979625**
+- Alchemy market reference: **~0.6247626394 USD**
+- mark value: **~34.2370 USD**
+- verified cost remains 35.291194 USDG
+- spot mark PnL: **~-1.0542 USD (-2.99%)**
+- no balance reduction is visible, so there is no chain evidence that a spot TP/downside order executed.
+
+Binance public market:
+- PONSUSDT mark: **0.6256**
+- latest private state remains USER_CONFIRMED LONG 64 @ 0.6250
+- the public mark path after the latest screenshot did not reach 0.668 TP or 0.498 stop
+- implied uPnL if the private position is unchanged: **~+0.0384 USDT**
+- exact private position/account state still requires Binance account readback or a newer user screenshot.
