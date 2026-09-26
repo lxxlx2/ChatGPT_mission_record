@@ -174,7 +174,7 @@ When skipped, wait for the next fresh sweep. Do not compensate by doubling size.
 The public `close1` room has experienced very high traffic. Minimize dependence on its retention window.
 
 1. Generate controller key C0 locally.
-2. Register C0 in `close1`.
+2. Use `BASE-B0` as controller C0 and register it in `close1`.
 3. Once C0 is accepted, register one unique low-traffic ordinary trading room, for example `cc-lxx-<random>`.
 4. Wait until the referee lists that room as registered.
 5. Register the remaining 51 owner keys inside that room.
@@ -276,6 +276,6 @@ Secondary:
 
 ## Execution status
 
-PLAN_LOCKED_FOR_REVIEW.
+READY_TO_BOOTSTRAP.
 
-No key generation, registration or trade submission is authorized by this file alone. Start live execution only after the user explicitly confirms this stored plan.
+The user has authorized starting this stored plan. Live secret generation and signing must occur locally on the user's Mac; do not move private seeds into GitHub or chat.
