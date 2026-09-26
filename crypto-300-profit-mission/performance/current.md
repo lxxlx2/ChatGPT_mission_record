@@ -1,50 +1,49 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-26 09:18 Asia/Bangkok
+Updated: 2026-09-26 12:21 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Rules
 
 Wallet balance alone is not P&L.
 
-- external net contributions = capital added from outside the Mission minus capital withdrawn.
-- realized P&L = verified closed proceeds minus verified cost basis and fees.
-- unrealized P&L = executable current value of open positions minus remaining cost basis.
+- external net contributions = outside capital added minus withdrawn.
+- realized P&L requires verified closed proceeds, cost basis and fees.
+- unrealized P&L requires executable current value and remaining cost basis.
 - internal chain / venue transfers do not create profit.
-- when history or current private-venue state is unavailable, use UNRESOLVED instead of estimating.
+- unresolved private venue or historical data stays UNRESOLVED.
 
-## Current capital snapshot
+## Current direct-chain capital snapshot
 
-DIRECT_CHAIN canonical stablecoins:
+Fresh DIRECT_CHAIN canonical stablecoins:
 - Ethereum: 400.308121 USDC.
-- Solana: 339.825001 USDC.
+- Solana: 330.799585 USDC.
 - Base: 0.252982 USDC.
 - Unichain: 0.021286 USDC.
-- Total: **740.407390 USDC**.
+- Total: **731.381974 USDC**.
 
-Other assets:
-- Solana native: 0.139742323 SOL.
-- Ethereum native: 0.001667063838788351 ETH.
-- Base native: 0.000790846510479134 ETH.
-- Unichain native: 0.000231941590232335 ETH.
-- Robinhood Chain native: 0.000081643478484768.
-- unidentified Solana SPL balance: 1.745552 tokens, value UNRESOLVED.
+Native assets:
+- Ethereum: 0.001667063838788351 ETH.
+- Solana: 0.135545164 SOL.
+- Base: 0.000790846510479134 ETH.
+- Unichain: 0.000231941590232335 ETH.
+- Robinhood Chain: 0.000081643478484768 native.
 
-Separate:
-- PONS margin budget: 50 USDT, private account.
-- low-risk interest bucket: 500 USD-equivalent, excluded from speculative Mission performance.
-- XRP/Variational private venue sleeve funded by internal reallocation; no external-contribution impact.
+Other:
+- unidentified Solana SPL: 1.745552 tokens, value UNRESOLVED.
+- SHART: 0.
+- CRED: 0.
 
-## Open / reserved exposure
+## Reserved / open exposure
 
 ### JUMP
-- 400 USDC reserve on Ethereum.
-- no allocation confirmed.
+- 400 USDC reserve.
+- allocation not confirmed.
 - realized P&L: 0.
 
 ### ETH
 - 100 USDC reserve.
-- no live Mission position confirmed.
+- no confirmed live Mission position.
 - realized/unrealized P&L: 0.
 
 ### Opportunity reserve
@@ -53,61 +52,58 @@ Separate:
 
 ### XRP / Variational
 USER_CONFIRMED at 2026-09-26 06:08:
-- OPEN / FILLED.
 - 77.12 XRP long at 1.55589, isolated 3x.
 - TP 1.6280; SL 1.5140.
-- screenshot unrealized PnL: +0.97 USD at mark 1.56844.
-- current public XRP mark can be monitored, but exact current private-venue PnL is UNRESOLVED without a fresh venue read.
-- realized P&L: 0 until verified close/partial close.
+- latest screenshot unrealized PnL: +0.97 USD at mark 1.56844.
+- exact current private-venue PnL: UNRESOLVED without a fresh venue read.
+- realized P&L: 0 until a close is verified.
 
 ### PONS
 USER_CONFIRMED:
-- first 0.6250 entry filled.
-- deeper 0.5850 / 0.5450 orders pending.
-- exact current private position quantity and account PnL: UNRESOLVED without account read.
-- realized P&L: 0 unless a close is confirmed.
+- 0.6250 first entry filled.
+- 0.5850 / 0.5450 pending.
+- exact current private position quantity and PnL: UNRESOLVED.
+- realized P&L: 0 unless close is verified.
 
 ### UNICRED #230
-- NFT cost basis: 0.0105 ETH.
+- acquisition cost: 0.0105 ETH.
 - still staked.
-- exact cumulative rent + current claimable + executable NFT value require live protocol/market reconciliation.
-- current economic P&L: UNRESOLVED.
+- current economic P&L: UNRESOLVED until rent + executable NFT value are reconciled.
 
 ### Credits
-- #23042 user-confirmed listing 0.25 ETH.
-- #23232 user-confirmed listing 0.40 ETH.
-- listing prices are excluded from NAV until executable value/cost basis are reconciled.
+- #23042 listed 0.25 ETH.
+- #23232 listed 0.40 ETH.
+- listing prices excluded from NAV.
 
 ## Closed exposure requiring reconciliation
 
 ### SHART
-- direct wallet balance: 0.
-- status: closed.
-- final realized P&L: UNRESOLVED until transaction history / proceeds are reconstructed.
+- direct wallet balance 0.
+- final realized P&L UNRESOLVED pending transaction-history reconstruction.
 
 ### CRED
-- direct Unichain balance: 0.
-- status: closed liquid exposure.
-- final realized P&L: UNRESOLVED until transaction history is reconciled.
+- direct wallet balance 0.
+- final realized P&L UNRESOLVED pending transaction-history reconstruction.
 
 ## Capital residual
 
-Current canonical direct-chain stablecoins 740.407390 minus:
-- 400 JUMP reserve,
-- 150 opportunity reserve,
-- 100 ETH reserve,
-leaves **90.407390 USDC** direct-chain residual.
+731.381974 canonical direct-chain stablecoins minus:
+- 400 JUMP
+- 150 opportunity reserve
+- 100 ETH reserve
 
-This residual is available-capital accounting, not profit.
+leaves **81.381974 USDC** direct-chain residual.
+
+This is available-capital accounting, not profit.
 
 ## Scorecards
 
-Do not publish an exact total return yet because:
-- the Mission received capital after the original $300 start;
-- SHART/CRED realized proceeds remain unresolved;
-- UNICRED rent/executable NFT value remain unresolved;
-- current private venue PnL for XRP/PONS is not directly readable.
+Do not publish an exact total return until:
+- later capital contributions are separated from the original-$300 sleeve;
+- SHART/CRED realized proceeds are reconciled;
+- UNICRED rent/executable NFT value is current;
+- current private venue PnL for XRP/PONS is directly verified.
 
-Maintain two eventual scorecards:
+Maintain:
 1. original-$300 sleeve;
 2. total speculative capital after later contributions.
