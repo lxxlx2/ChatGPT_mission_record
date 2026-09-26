@@ -1,93 +1,96 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-27 03:40 Asia/Bangkok
+Updated: 2026-09-27 03:57 Asia/Bangkok
 Timezone: Asia/Bangkok
+
+## Mission objective and accounting boundary
+
+Core target: grow the Mission starting asset set to **3,000 USD-equivalent net liquidation value**.
+
+Starting asset set:
+- **300 USD cash principal**
+- the original **six Jack / Visualize Value Credits NFTs**
+
+Current Credits inventory from that original six:
+- held: **#23042, #23232**
+- sold/transferred out: **#21646, #21753, #22857, #23328**
+
+Later external capital additions must not be treated as Mission profit. The combined Binance earn bucket is tracked for total-asset completeness but remains outside speculative Mission performance unless provenance is explicitly reclassified.
 
 ## Accounting policy
 
-- DIRECT_CHAIN = fresh connected chain / explorer data.
-- USER_CONFIRMED = latest user-confirmed private venue state.
-- MARKET_ESTIMATE = fresh public mark applied to a verified quantity.
-- UNRESOLVED = exclude from strict NAV until identity / execution value is verified.
-- Internal bridge / venue transfers are not PnL.
-
-## Current structure
-
-User confirms that, apart from:
-1. the Binance PONS perpetual position; and
-2. one combined **598 USD-equivalent earn bucket**,
-
-the remaining tracked capital is now on-chain.
-
-The prior separate 500 + 98 earn labels are consolidated into one **598 USD-equivalent off-chain earn bucket** for accounting.
+- DIRECT_CHAIN = fresh connected RPC/explorer read.
+- USER_CONFIRMED = latest explicit user statement/screenshot for private venues.
+- MARKET_ESTIMATE = fresh public mark applied to verified quantity.
+- UNRESOLVED = excluded from strict NAV.
+- Internal bridge/venue transfers are not PnL.
+- Historical NFT sale proceeds are provenance, not an additional current asset.
 
 ## DIRECT_CHAIN snapshot
 
 ### Ethereum
 - USDC: **400.308121**
 - native ETH: **0.001667063838788351**
-- native mark at ETH ~2683.81: **~4.47 USD**
+- ETH reference: **2676.56 USD**
+- native value: **~4.4620 USD**
+- Credits ERC-721 current ownership: **#23042, #23232**
 
 ### Solana
-Fresh finalized RPC:
+Finalized RPC:
 - USDC: **328.018516**
 - native SOL: **0.128587689**
 - PAID: **947.685473**
 - e/acc: **0**
 - KARDASHEV: **0**
 - unidentified legacy SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552**, UNRESOLVED
-- additional 1-unit / non-transferable Token-2022 receipts remain excluded from NAV unless independently identified
+- additional 1-unit/non-transferable Token-2022 receipts: excluded from NAV
 
-At SOL ~121.45:
-- native SOL mark: **~15.62 USD**
-
-The former e/acc and KARDASHEV positions are fully exited on-chain.
+SOL reference: **120.53 USD**
+- native SOL value: **~15.4987 USD**
 
 ### BNB Chain
 - canonical USDC: **0**
 - GSTOCK: **1183.5967247073113**
 - native BNB: **0.007916720924652341**
-- GSTOCK reference: **~0.02446444 USD**
-- GSTOCK mark: **~28.96 USD**
-- BNB gas mark at ~770.39: **~6.10 USD**
+- GSTOCK reference: **0.024642598080577366 USD**
+- GSTOCK value: **~29.1669 USD**
+- BNB reference: **769.01 USD**
+- native BNB value: **~6.0880 USD**
 
 ### Robinhood Chain
-- PONS: **54.799953441979624353**
+- PONS: **54.799953441979625**
 - native ETH: **0.000825190918816326**
-- PONS reference: **~0.63625280 USD**
-- PONS spot mark: **~34.87 USD**
-- native ETH mark: **~2.21 USD**
+- PONS reference: **0.6268828643699188 USD**
+- PONS spot value: **~34.3532 USD**
+- native ETH value at ETH 2676.56: **~2.2087 USD**
 
 ### Ink
-Fresh explorer state:
+Fresh Blockscout:
 - native ETH: **0.01113370814547789**
 - Tydro Ink Points: **7.665136656205785948**
-- Fresh INK commemorative NFT #372: **owned**
-- separately discussed target Ink NFT: no new confirmed mint in this snapshot
-- native ETH mark: **~29.88 USD**
+- Fresh INK commemorative NFT #372 remains tracked
+- native ETH value using Blockscout ETH reference 2667.38: **~29.6978 USD**
 
 ### Base
 - canonical USDC: **0.252982**
 - native ETH: **0.000790846510479134**
-- native ETH mark: **~2.12 USD**
+- native ETH value: **~2.1167 USD**
 
 ### Unichain
 - canonical USDC: **0.021286**
 - native ETH: **0.000231941590232335**
-- UNICRED NFT #230: tracked operationally
-- native ETH mark: **~0.62 USD**
+- UNICRED NFT #230 remains tracked
+- native ETH value: **~0.6208 USD**
 
 ### Arbitrum
 Fresh Blockscout:
 - native ETH: **0.000825005012848238**
 - canonical USDC: **0.000001**
-- native ETH mark: **~2.21 USD**
-- spoof / non-canonical tokens named USDC remain excluded
-- pRCADE and other unpriced receipts remain excluded from NAV
+- native ETH value using Blockscout reference 2672.23: **~2.2046 USD**
+- pRCADE and spoof/non-canonical USDC receipts remain excluded
 
-## Canonical stablecoins
+## Canonical on-chain stablecoins
 
-Current on-chain canonical stablecoins:
 - Ethereum: 400.308121
 - Solana: 328.018516
 - Base: 0.252982
@@ -97,48 +100,74 @@ Current on-chain canonical stablecoins:
 
 **Total canonical on-chain stablecoins: 728.600906 USDC.**
 
-## Other directly priced on-chain assets
+## Strict directly priced on-chain liquid NAV
 
-Using current connected references:
-- native gas assets across tracked chains: **~63.24 USD**
-- GSTOCK: **~28.96 USD**
-- Robinhood PONS spot: **~34.87 USD**
+Using the live references above:
+- canonical stablecoins: **728.600906**
+- tracked native gas assets: **~62.8974**
+- GSTOCK: **~29.1669**
+- Robinhood PONS spot: **~34.3532**
 
-PAID, Tydro Points, NFTs and unidentified/spam receipts are excluded from strict priced NAV here.
+**Strict directly priced on-chain liquid NAV: ~855.02 USD.**
 
-## Off-chain tracked capital
+Excluded from this strict figure:
+- PAID because the connected price endpoint has no current execution-grade price;
+- Credits #23042/#23232 because ownership is verified but current ask prices are not executable marks;
+- UNICRED / Fresh INK NFTs;
+- Tydro Points;
+- pRCADE and unidentified/spam receipts.
 
-### Binance PONSUSDT perpetual
-Latest USER_CONFIRMED position remains:
+## Binance — USER_CONFIRMED private-venue inventory
+
+The user's current Binance inventory is exactly:
+1. **combined earn bucket: 598 USD-equivalent**
+2. **PONSUSDT perpetual position**
+
+No other Binance spot balance, derivative position, reserve bucket, or tracked asset should be invented or carried forward from stale records.
+
+### PONSUSDT perpetual
+Latest user-confirmed private position:
 - LONG **64 PONS**
 - entry **0.6250**
-- isolated 3x
-- TP 0.668 / 0.704 / 0.739
-- hard stop 0.498
+- isolated **3x**
+- TP: 0.668 / 0.704 / 0.739
+- hard stop: 0.498
 
-Current public Binance mark: **~0.63688970**.
-If the private position is unchanged:
-- estimated current unrealized PnL: **~+0.76 USDT**
-- exact private margin/funding/realized state remains USER_CONFIRMED until refreshed.
+Fresh Binance public mark: **0.62924862**.
+If private position quantity is unchanged:
+- estimated uPnL: **~+0.2719 USDT**
+- exact margin, funding and realized PnL remain private-source dependent.
 
 ### Combined earn bucket
 USER_CONFIRMED:
-- **598 USD-equivalent total**
-- treat the former 500 + 98 labels as one combined off-chain earn bucket
-- do not split them in portfolio accounting unless the user later requests it
+- **598 USD-equivalent**
+- one combined accounting bucket
+- tracked in total assets
+- excluded from speculative Mission performance unless provenance is later reclassified.
+
+## Credits NFT inventory
+
+DIRECT_CHAIN:
+- #23042: owned
+- #23232: owned
+
+Historical original six:
+- #21646, #21753, #22857, #23042, #23232, #23328
+
+Current count: **2 held / 4 sold / 6 original**.
+
+The two remaining Credits are assets and must appear in every full portfolio reconciliation, while remaining outside strict liquid NAV until an execution-grade value is available.
 
 ## Closed / retired exposures
 
-- XRP / Variational: CLOSED, stop/lower bound hit.
-- e/acc: 0 on-chain.
-- KARDASHEV: 0 on-chain.
+- XRP / Variational: CLOSED.
+- e/acc: **0**.
+- KARDASHEV: **0**, fully exited.
 - SHART: 0.
-- CRED liquid: 0.
+- liquid CRED: 0.
 
-## Summary
+## Target-progress status
 
-Current tracked capital model:
-- on-chain assets = primary live portfolio;
-- Binance PONS perpetual = only tracked off-chain active derivative;
-- 598 USD-equivalent = one combined off-chain earn bucket;
-- no active Variational XRP exposure.
+The 3,000 USD objective is authoritative.
+
+A clean progress percentage is currently **UNRESOLVED** because the wallet includes later capital additions and the four sold Credits still need full proceeds/fee provenance mapping into current Mission capital. Do not label unrelated deposits as Mission profit.
