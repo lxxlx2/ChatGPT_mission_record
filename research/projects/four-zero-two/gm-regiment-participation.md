@@ -1,7 +1,7 @@
 # Four Zero Two / GM Regiment Ink Agent 注册与每日 GM 参与记录
 
 Updated: 2026-09-27
-Status: ENVIRONMENT_VERIFIED
+Status: NPM_PACKAGE_VERIFIED
 Category: early-stage project participation
 Network: Ink mainnet
 Chain ID: 57073
@@ -147,7 +147,20 @@ npm run build
 Expected build output:
 - `dist/server.js`
 
-Status: PENDING_USER_EXECUTION
+Observed npm registry state:
+- package: `gm-regiment-mcp`
+- version: `0.1.0`
+- dist-tag latest: `0.1.0`
+- engines: `node >=20`
+- binary: `gm-regiment-mcp -> dist/server.js`
+- npm metadata query for author/repository did not return those optional fields; source authority remains the verified public GitHub repository `402Protocol/gm-regiment-mcp`.
+
+Result:
+- package is published and resolvable from npm
+- local GitHub clone fallback is not currently required
+- next action is package-content verification before first execution
+
+Status: PACKAGE_AVAILABLE
 
 ### Step 3: configure MCP client
 
@@ -286,6 +299,7 @@ As of 2026-09-27:
 - live `gm()` transactions observed: YES
 - participation available now: YES
 - local runtime verified: YES
+- npm package availability verified: YES
 - local installation: PENDING
 - Agent wallet created: PENDING
 - Agent funded: PENDING
