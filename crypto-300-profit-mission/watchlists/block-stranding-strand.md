@@ -392,6 +392,183 @@ Historical-cost break-even is therefore approximately $35.6M FDV before slippage
 
 A separate opportunity-cost analysis may compare the position to simply holding the original 100 SOL, but that is not the acquisition-cost PnL basis.
 
+
+## Delivery / TGE-intent assessment — 2026-09-26
+
+### What the team can demonstrably deliver
+
+The team has demonstrated real technical execution:
+- Colosseum Gaming Track placement;
+- a functioning early onchain game;
+- real MagicBlock integration;
+- Tower Defense/mobile iteration;
+- repeated live demos and stress-testing.
+
+Therefore the technical difficulty of minting a Solana SPL token, publishing a claim page and seeding a market is below work they have already demonstrated.
+
+The unresolved question is not whether a token can technically be created. It is whether the team is willing and able to execute a **credible liquid launch** while honoring old holders and absorbing the presale overhang.
+
+### Current TGE-readiness checklist
+
+As of this review, no verified evidence was found for:
+- canonical STRAND mint;
+- finalized public allocation checker;
+- claim contract/page;
+- fixed TGE date;
+- finalized initial circulating supply;
+- announced DEX pool;
+- announced market maker;
+- confirmed CEX listing from the exchange itself;
+- disclosed launch liquidity;
+- treasury / use-of-proceeds report;
+- completion of the separately promised PRIMES pre-TGE airdrop.
+
+Official site status:
+- Season 2 is ended;
+- leaderboard is paused/locked;
+- no new live farm season is visible on the official Earn page.
+
+Indexed official X activity currently ends at 2026-08-20 with:
+- "first PvP version is almost here";
+- TGE date still unconfirmed;
+- team still waiting for the right market conditions.
+
+The supplied Grok claim that a Sep 25-26 2026 rebuild/PvP beta/final farm season was launched could not be independently verified from the official site or currently indexed official X feed. Treat that claim as unverified until an original official URL is produced.
+
+### Market-condition explanation is weakening
+
+Official Jun 29 messaging cited high fear and SOL below ~$70 as a poor TGE environment.
+
+Observed Binance SOLUSDT daily closes:
+- Jun 29: ~$75.16
+- Jul 10: ~$78.13
+- Aug 20: ~$87.66
+- Sep 25: ~$122.15
+- current Sep 26 spot during review: ~$121.54
+
+Despite a material market recovery, no fixed TGE date or launch infrastructure has been announced in accessible official evidence.
+
+This does not prove unwillingness to launch. It does show that "market conditions" has functioned as a flexible delaying criterion rather than a published objective trigger.
+
+### Treasury solvency hypothesis
+
+The hypothesis that the team already spent all presale funds is **not supported** by the canonical wallet.
+
+Visible remaining balance:
+- ~13,000.503 SOL
+- at ~$121.54/SOL ≈ **$1.58M**
+
+Confirmed Kraken deposits:
+- 6,355.5 SOL
+- transfer-time notional ≈ **$481K**
+- post-Kraken disposition unknown.
+
+Gross raise:
+- ~19,355 SOL.
+- User's own presale fills imply SOL around ~$184 weighted average; using a similar sale-period price gives roughly ~$3.5M historical USD-equivalent gross, broadly consistent with PRIMES' "$4M raised" marketing claim.
+
+Therefore the treasury's USD purchasing power has fallen materially because SOL fell after the sale. Even if the 6,355.5 SOL sent to Kraken was converted near transfer-time prices, visible remaining treasury + transfer-time notional is only roughly ~$2.06M today versus a rough ~$3.5M+ sale-time value.
+
+This provides a plausible non-fraud explanation for why the team may have delayed: launching around a $36M FDV with fully unlocked presale holders and substantially reduced treasury purchasing power is hard.
+
+It does not explain the absence of transparent treasury reporting.
+
+### $36M launch-liquidity problem
+
+Under the historical 500M supply / 10% presale model:
+- presale unlock = 50M STRAND;
+- $36M FDV => $0.072/STRAND;
+- unlocked presale notional at launch = **$3.6M**.
+
+If only:
+- 10% of presale tokens sell => ~$360K gross sell flow;
+- 20% => ~$720K;
+- 30% => ~$1.08M.
+
+With 4,400+ holders waiting roughly eleven months, meaningful launch selling is plausible.
+
+Tokenomics assigns 15% / 75M STRAND to "liquidity provision". At $0.072, those tokens have a nominal value of $5.4M, but token inventory is not quote-asset liquidity. A balanced pool containing all 75M at that price would require roughly $5.4M of quote assets, far above the ~$1.58M still visible in the presale wallet.
+
+A serious $36M-FDV launch therefore likely requires:
+- external market-maker/CEX capital;
+- much smaller token inventory deployed to LP;
+- or acceptance of thin liquidity/high volatility.
+
+No verified MM/CEX/liquidity plan has been found yet.
+
+### Incentive to eventually TGE
+
+There are real incentives for the team to issue STRAND:
+- old presale and farming liabilities remain open until distribution;
+- team/investor/ecosystem token allocations have little liquid value without TGE;
+- project reputation cannot fully reset while 4,400+ buyers remain unpaid in tokens;
+- official account continues to state that STRAND will be distributed after TGE.
+
+This supports a meaningful probability of eventual token issuance.
+
+There is much weaker evidence for a high-quality launch that sustains the original ~$36M valuation.
+
+### Scenario assessment
+
+ANALYST ESTIMATE, not a factual claim:
+
+1. **Credible/serious TGE**: ~20-30%
+   - fixed date;
+   - allocation checker;
+   - disclosed circulation;
+   - credible DEX/CEX/MM/liquidity;
+   - public PvP/product proof;
+   - reasonable treasury explanation.
+
+2. **Obligation-closing / low-quality TGE ("交代式 TGE")**: ~35-50%
+   - token is eventually minted/distributed;
+   - old obligations technically fulfilled;
+   - weak liquidity and limited exchange support;
+   - product remains shallow;
+   - team reduces activity after launch;
+   - severe unlocked-presale selling.
+
+3. **Continued long delay / eventual abandonment without near-term TGE**: ~20-30%
+   - "market conditions" continues as an undefined gate;
+   - no claim/mint/listing infrastructure appears;
+   - project social/development activity gradually decays.
+
+4. **Fresh-money extraction before honoring STRAND**: currently ~5-15%
+   - no verified new paid raise/farm/mint is live at this review;
+   - ~13,000.5 SOL remains visibly in the presale wallet.
+   - Probability rises sharply if the team asks users for new capital before distributing STRAND.
+
+Ranges overlap because future paths can transition between categories. The central risk is currently an obligation-closing TGE, not proof of a second fundraising scam.
+
+### "交代盘" warning pattern
+
+Treat the following as a major escalation:
+- renewed KOL campaign but still no mint/checker/date/liquidity disclosure;
+- new paid NFT, presale, mint, farm or deposit campaign before old STRAND obligations are delivered;
+- large new presale-wallet transfers to CEX without a simultaneous TGE/liquidity disclosure;
+- sudden TGE announcement with only a few days' notice;
+- no exact allocation checker before launch;
+- launch with no credible market maker / CEX and shallow LP;
+- tokenomics changed to increase team/marketing/unlocked circulation;
+- PvP/rebuild remains private-demo only while token marketing restarts.
+
+Evidence that would materially reduce the "交代式 TGE" risk:
+- exact allocation checker including boost;
+- canonical mint and authority configuration;
+- fixed date with reasonable notice;
+- final circulation/unlock table;
+- verified exchange announcement or disclosed DEX/MM plan;
+- launch-liquidity amount;
+- public treasury accounting including the 6,355.5 SOL Kraken flow;
+- genuinely public PvP build and active users;
+- no new fundraising before old liabilities are settled.
+
+### Working conclusion
+
+The team has enough demonstrated engineering ability to technically issue STRAND and still has substantial visible treasury funds. The strongest current risk is **willingness/quality of launch**, especially whether management will accept a launch valuation below the old $36M anchor and provide enough liquidity for a heavily unlocked presale cohort.
+
+Until concrete TGE infrastructure appears, treat public statements about "waiting for the right market" as intent signals only, not launch evidence.
+
 ## Decision state
 
 ACTIVE because the user already has a material 100-SOL exposure.
