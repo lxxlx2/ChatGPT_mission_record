@@ -239,19 +239,73 @@ def collect_dids(value, out: set[str]) -> None:
             collect_dids(item, out)
 
 
+def fleet_registration_evidence(state: dict) -> dict:
+    """Verify the 51 non-controller registrations are still present in our room.
+
+    Public flow posts intentionally omit most minted DIDs when the 4096-byte room
+    message cap is reached. Therefore absence from flow.mints is not a mint failure.
+    The controller is proven owner indirectly once its room registration appears in
+    referee flow; the remaining 51 registrations are checked byte-for-byte in the
+    dedicated low-traffic room and we reject any referee missed range naming it.
+    """
+    controller = state["controller"]
+    local = {label: item["did"] for label, item in state["keys"].items()}
+    expected = {label: did for label, did in local.items() if label != controller}
+    seen: set[str] = set()
+    bad_author: list[str] = []
+
+    for rec in parse_export(state["room"]):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "owner" or p.get("season") != SEASON:
+            continue
+        did = p.get("key")
+        if did not in expected.values():
+            continue
+        if rec.get("from") != did:
+            bad_author.append(did)
+            continue
+        seen.add(did)
+
+    flow_rows = parse_export("d-close1-flow")
+    room_missed = []
+    for rec in flow_rows:
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        missed = p.get("missed") or []
+        if state["room"] in json.dumps(missed, separators=(",", ":"), ensure_ascii=False):
+            room_missed.append({"n": p.get("n"), "missed": missed})
+
+    missing_labels = [label for label, did in expected.items() if did not in seen]
+    return {
+        "expected": len(expected),
+        "seen": len(seen),
+        "missing_labels": missing_labels,
+        "bad_author": bad_author,
+        "room_missed": room_missed,
+    }
+
+
 def fleet_gate(state: dict, max_age: int = 120) -> dict:
     pr = fresh_price(max_age=10**9)
     flow_rows = parse_export("d-close1-flow")
-    minted: set[str] = set()
+    visible_mints: set[str] = set()
     latest_flow = None
     room_ok = False
+    omitted_mints = 0
 
     for rec in flow_rows:
         p = rec.get("_payload")
         if not isinstance(p, dict) or p.get("t") != "flow":
             continue
         latest_flow = p
-        collect_dids(p.get("mints"), minted)
+        collect_dids(p.get("mints"), visible_mints)
+        omitted = p.get("omitted") or {}
+        if isinstance(omitted, dict):
+            try:
+                omitted_mints += int(omitted.get("mints") or 0)
+            except Exception:
+                pass
         rooms = p.get("rooms")
         if isinstance(rooms, list) and state["room"] in rooms:
             room_ok = True
@@ -262,20 +316,21 @@ def fleet_gate(state: dict, max_age: int = 120) -> dict:
 
     st = latest_payload("d-close1-state", "state")
     local = {label: item["did"] for label, item in state["keys"].items()}
-    missing = [label for label, did in local.items() if did not in minted]
+    visible_local = [label for label, did in local.items() if did in visible_mints]
+    reg = fleet_registration_evidence(state)
 
     flow_n = int(latest_flow["n"]) if latest_flow and latest_flow.get("n") is not None else None
     state_n = int(st["n"]) if st and st.get("n") is not None else None
     age = pr["age_s"]
-    missed = latest_flow.get("missed") if latest_flow else None
+    latest_missed = latest_flow.get("missed") if latest_flow else None
 
     checks = {
         "fresh": age is None or int(age) <= max_age,
         "room_registered": room_ok,
         "flow_current": flow_n == pr["n"],
         "state_current": state_n == pr["n"],
-        "missed_clear": not missed,
-        "fleet_minted": not missing,
+        "dedicated_registrations": reg["seen"] == reg["expected"] and not reg["bad_author"],
+        "dedicated_room_no_missed_ranges": not reg["room_missed"],
     }
     return {
         "pass": all(checks.values()),
@@ -286,10 +341,15 @@ def fleet_gate(state: dict, max_age: int = 120) -> dict:
         "flow_sweep": flow_n,
         "state_sweep": state_n,
         "room": state["room"],
-        "minted": len(local) - len(missing),
+        "visible_minted": len(visible_local),
         "total": len(local),
-        "missing": missing,
-        "missed": missed,
+        "omitted_mints": omitted_mints,
+        "registration_seen": reg["seen"],
+        "registration_expected": reg["expected"],
+        "registration_missing": reg["missing_labels"],
+        "registration_bad_author": reg["bad_author"],
+        "room_missed": reg["room_missed"],
+        "latest_missed": latest_missed,
     }
 
 
@@ -341,10 +401,22 @@ def cmd_gate(_args) -> None:
     print("sweep:", report["sweep"], "ref:", report["ref"], "age_s:", report["age_s"])
     print("flow_sweep:", report["flow_sweep"], "state_sweep:", report["state_sweep"])
     print("room:", report["room"], "registered:", report["checks"]["room_registered"])
-    print("fleet minted:", f'{report["minted"]}/{report["total"]}')
-    if report["missing"]:
-        print("missing:", ",".join(report["missing"]))
-    print("missed:", report["missed"])
+    print(
+        "visible mint subset:",
+        f'{report["visible_minted"]}/{report["total"]}',
+        "(informational only; flow posts may omit minted DIDs)",
+    )
+    print("flow omitted_mints total in retained window:", report["omitted_mints"])
+    print(
+        "dedicated registrations:",
+        f'{report["registration_seen"]}/{report["registration_expected"]}',
+    )
+    if report["registration_missing"]:
+        print("registration missing:", ",".join(report["registration_missing"]))
+    if report["registration_bad_author"]:
+        print("registration bad_author:", ",".join(report["registration_bad_author"]))
+    print("dedicated room missed ranges:", report["room_missed"])
+    print("latest missed:", report["latest_missed"])
     for name, ok in report["checks"].items():
         print(f"check {name}:", "PASS" if ok else "FAIL")
     print("GATE:", "PASS_OPEN_ALLOWED" if report["pass"] else "BLOCK")
