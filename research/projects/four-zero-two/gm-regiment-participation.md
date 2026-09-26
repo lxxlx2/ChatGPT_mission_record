@@ -1,7 +1,7 @@
 # Four Zero Two / GM Regiment Ink Agent 注册与每日 GM 参与记录
 
 Updated: 2026-09-27
-Status: CODEX_MCP_READY
+Status: CODEX_MCP_REGISTERED_RUNTIME_CHECK_PENDING
 Category: early-stage project participation
 Network: Ink mainnet
 Chain ID: 57073
@@ -232,7 +232,18 @@ Planned command:
 codex mcp add gm-regiment -- /Users/jerson/.nvm/versions/node/v24.18.0/bin/npx -y gm-regiment-mcp
 ```
 
-Status: READY_TO_ADD
+Observed configuration result:
+- `codex mcp add gm-regiment -- /Users/jerson/.nvm/versions/node/v24.18.0/bin/npx -y gm-regiment-mcp` succeeded
+- Codex reports the entry as `enabled`
+- Auth column shows `Unsupported`, which is expected for a local stdio MCP server with no OAuth flow
+
+Runtime anomaly observed:
+- direct invocation of `/Users/jerson/.nvm/versions/node/v24.18.0/bin/npx -y gm-regiment-mcp` returned immediately to the shell
+- expected stderr startup banner was not visibly emitted
+- therefore MCP runtime health is not yet considered verified
+- do not create/fund the Agent wallet until the process behavior is understood
+
+Status: REGISTERED_RUNTIME_CHECK_PENDING
 
 ### Step 4: create dedicated Agent wallet
 
@@ -344,6 +355,8 @@ As of 2026-09-27:
 - npm package availability verified: YES
 - npm package contents verified: YES
 - Codex MCP capability verified: YES
+- Codex MCP entry registered: YES
+- MCP runtime health verified: PENDING
 - local installation: PENDING
 - Agent wallet created: PENDING
 - Agent funded: PENDING
