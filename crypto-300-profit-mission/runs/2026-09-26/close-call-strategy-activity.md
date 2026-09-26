@@ -371,3 +371,7 @@ uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py
 
 Execution state:
 `DENSE_MODE_IMPLEMENTED_OPT_IN_REQUIRED`.
+
+
+Follow-up safety commit:
+- `0009f71c721b17af99baeb40eff0ac097936ad80`: once dense mode is enabled, the old Static/Bracket automation remains frozen even if dense mode is later disabled. Disabling dense therefore stops new dense ticket creation without silently resuming the superseded strategy.
