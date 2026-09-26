@@ -52,7 +52,7 @@ Status: ACTIVE_RESEARCH
 - 1000 block：实际 spend witness 已验证。
 - 2100 block：Taproot commitment 已验证，尚未进入首批成熟期。
 - 6767 block：Taproot commitment 已验证，289 个样本全部成功分类。
-- Golden Curve 精确分配函数：ACTIVE_RESEARCH。
+- Golden Curve：前端已确认 `P = m × S^1.618`，allocation cost 为 tranche integral；1 BTC=7,000 points、1 ORDI=1 point；`m`、legacy LEAF point conversion 与 quote request schema 仍为 ACTIVE_RESEARCH。
 - 鲸鱼 149 笔 / 120 卖方 / 107.813M old ICO-20 LEAF：全量复算 CONFIRMED；0.605 BTC cost 口径仍为 UNRESOLVED。
 - 鲸鱼卖方共同资金源 / 项目方关联：当前一跳 funding graph 未发现 multi-seller cluster、common parent 或 common upstream，分类为 INFERRED independent whale accumulation；更深层 ancestry 仍可继续验证。
 

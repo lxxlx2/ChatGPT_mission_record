@@ -1,0 +1,66 @@
+{
+  "observed_at": "2026-09-26",
+  "source": "local crc.garden public-page/static-bundle probe",
+  "status": "PARTIAL_FORMULA_CONFIRMED",
+  "golden_curve": {
+    "marginal_price": "P = m * S^1.618",
+    "allocation_cost": "integral over tranche",
+    "derived_integral": "m / 2.618 * (S1^2.618 - S0^2.618)",
+    "coefficient_m": "UNRESOLVED",
+    "supply_unit_normalization": "UNRESOLVED"
+  },
+  "supply": {
+    "total_leaf": 1000000000,
+    "mint_window_blocks": 9666,
+    "remaining_after_window": "burned"
+  },
+  "asset_equivalence": {
+    "BTC_points_per_unit": 7000,
+    "ORDI_points_per_unit": 1,
+    "example": "0.01 BTC == 70 ORDI for expected allocation at the same indexed state",
+    "legacy_LEAF_points": "UNRESOLVED"
+  },
+  "mint_config": {
+    "backend_mode": "production",
+    "builder_assets": [
+      "BTC",
+      "ORDI",
+      "LEAF"
+    ],
+    "enabled": true,
+    "covenant_derivation": "per_user_xonly_pubkey",
+    "lock_allocation_bps": 10000,
+    "lock_options": [
+      144,
+      1000,
+      2100,
+      6767
+    ],
+    "network": "mainnet",
+    "protocol": "crc-20",
+    "ticker": "LEAF",
+    "treasury_address": "bc1phuuulh7fs5zrm48ethfyqvt860fxsaxuq643telqn06yz4u3c70spyleaf",
+    "tusm_fee_sats": 10000,
+    "tusm_treasury_address": "bc1phuuulh7fs5zrm48ethfyqvt860fxsaxuq643telqn06yz4u3c70spyleaf"
+  },
+  "endpoints": {
+    "mint_state": "GET /api/mint/state[?address=...]",
+    "wallet_assets": "GET /api/mint/wallet-assets?paymentAddress=...&ordinalAddress=...",
+    "quote_budget": "POST /api/mint/quote-budget",
+    "btc_usd_oracle": "GET /api/oracle/btc-usd"
+  },
+  "activity_mint_fields": [
+    "amount_atoms",
+    "mint.payment_asset",
+    "mint.payment_amount_atoms",
+    "mint.csv_blocks"
+  ],
+  "unresolved": [
+    "quote request/response schema",
+    "legacy LEAF to points conversion",
+    "coefficient m",
+    "supply normalization used by backend",
+    "exact whale migration CRC-20 allocation",
+    "exact 2100/6767 unlock allocations"
+  ]
+}

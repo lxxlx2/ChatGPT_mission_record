@@ -96,31 +96,95 @@ Internal key 使用已确认 NUMS point：
 Primary source:
 https://crc.garden/activity
 
-## 前端 / indexer endpoint 调查状态
+## Golden Curve 前端与 API 探测结果
 
-已执行公开网页与公开 GitHub 检索：
+2026-09-26 本机 probe 已完成 19 个 same-origin asset 抓取，并从静态 bundle 中确认以下规则。
 
-- crc.garden 官网、Activity、Terms 可以被搜索引擎读取。
-- Terms 明确存在 quote/indexer logic。
-- 当前公开 GitHub 搜索未定位到 crc.garden 前端源码或可直接引用的 Golden Curve 实现。
-- 搜索缓存没有暴露足够的 API route / JS bundle 内容，无法在当前远端环境安全地完成 endpoint 枚举。
+### CONFIRMED：公开描述的 Golden Curve
 
-因此使用本机只读 probe 完成最后一段：
+英文前端文案直接给出：
 
-`leaf_crc20_golden_curve_probe.py`
+- marginal price: `P = m × S^1.618`
+- single allocation 的 exact cost 为该 tranche 上的积分
+- total supply: `1,000,000,000 LEAF`
+- mint window: 从 deployment block 起 `9,666` blocks，结束后剩余 supply burn
+- asset equivalence: `1 BTC = 7,000 points`，`1 ORDI = 1 point`
+- 因此官方示例 `0.01 BTC = 70 ORDI`，两者在同一 indexed state 下得到相同 expected LEAF allocation
 
-该 probe 只执行：
-- GET crc.garden public pages；
-- 下载 same-origin JS bundles；
-- 搜索 quote / allocation / indexer / Golden Curve / API 字符串；
-- 可选调用本机 Chrome headless 记录被动网络请求；
-- 只对安全的 same-origin GET candidate 做探测。
+由公开边际价格公式可直接数学推导，若 allocation 从 supply `S0` 到 `S1`，则 points cost 为：
 
-不会连接钱包、签名、POST、广播交易或执行任何写操作。
+```text
+C = ∫[S0,S1] m * S^1.618 dS
+  = m / 2.618 * (S1^2.618 - S0^2.618)
+```
 
-预期输出：
-- `leaf_crc20_golden_curve_probe_report.json`
-- `leaf_crc20_golden_curve_relevant_snippets.txt`
+该积分表达式属于 DERIVED，不把 `m` 的数值或 `S` 的内部单位当作已确认。
+
+### CONFIRMED：production mint config
+
+公开 `GET /api/mint/config` 返回：
+
+- `backend_mode = production`
+- `network = mainnet`
+- `protocol = crc-20`
+- `ticker = LEAF`
+- `builder_assets = [BTC, ORDI, LEAF]`
+- `lock_options = [144, 1000, 2100, 6767]`
+- `lock_allocation_bps = 10000`
+- `tusm_fee_sats = 10000`
+- treasury / TUSM treasury:
+  `bc1phuuulh7fs5zrm48ethfyqvt860fxsaxuq643telqn06yz4u3c70spyleaf`
+
+`builder_assets` 明确包含 `LEAF`。Activity 前端把 `payment_asset == LEAF` 显示为 `legacy LEAF`，因此 old LEAF 确实属于 mint input 类型之一。
+
+当前证据没有给出 legacy LEAF 到 Golden Curve points 的精确换算规则。
+
+### CONFIRMED：quote 与 state endpoint
+
+前端 bundle 暴露：
+
+- `GET /api/mint/state`
+- `GET /api/mint/state?address=<address>`
+- `GET /api/mint/wallet-assets?paymentAddress=...&ordinalAddress=...`
+- `POST /api/mint/quote-budget`
+
+`quoteMintBudget` 明确把请求对象 JSON serialize 后 POST 到 `/api/mint/quote-budget`。
+
+早期 probe 对 quote-budget 使用 GET，所以得到 404。这个 404 不能解释为 endpoint 不存在。
+
+### CONFIRMED：Activity 数据模型
+
+Activity 前端对每个 mint event 读取：
+
+- `mint.payment_asset`
+- `mint.payment_amount_atoms`
+- `mint.csv_blocks`
+- event `amount_atoms` 作为 CRC-20 LEAF allocation
+
+其中：
+- BTC / LEAF payment amount 以 1e8 为显示 divisor
+- ORDI payment amount 以 1e18 为显示 divisor
+- `payment_asset == LEAF` 显示为 `legacy LEAF`
+
+因此只要取得完整 812 个 mint event 的顺序数据，就具备重建 `input asset -> payment -> indexed supply -> allocation -> lock` 历史序列的字段基础。
+
+### Probe 限制
+
+Chrome headless passive network 两次均在 45 秒 timeout，因此本轮没有从 Chrome netlog 得到额外 URL。
+
+该限制没有影响静态 bundle 结论。19 个网页 asset 已成功下载，公开 config、oracle 与 bundle 中的 API wrapper 均已获取。
+
+### 当前仍然 UNRESOLVED
+
+1. Golden Curve coefficient `m` 的精确数值。
+2. supply `S` 在后端公式中的原子单位 / normalization。
+3. `POST /api/mint/quote-budget` 的完整 request schema 与 response schema。
+4. legacy LEAF 对 Golden Curve points 的换算规则。
+5. 144 / 1000 / 2100 / 6767 是否只影响 unlock timing，还是会进入 allocation pricing；`lock_allocation_bps=10000` 本身不足以证明存在 lock multiplier。
+6. 107,813,367.5647406 old ICO-20 LEAF migration 最终对应多少 CRC-20 LEAF。
+7. 全部 2100 / 6767 vault 的精确未来 unlock allocation。
+
+下一步优先读取 `/api/mint/state` 及 address-scoped state，并从本机 raw JS bundle 恢复 quote request object 的字段构造，再用 quote endpoint 的只读报价行为和历史 mint events 回放 Golden Curve。
 
 ## 完成条件
 
