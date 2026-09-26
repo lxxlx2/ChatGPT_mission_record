@@ -7,6 +7,18 @@ Timezone: Asia/Bangkok
 
 每小时生成可靠、轻量、可供 09:00 日报和 Mission 使用的增量素材。优先“持续成功”，不追求单轮穷尽全网。
 
+## Start-of-run heartbeat
+
+Before doing broad research, create a unique minimal run audit:
+
+`crypto-daily/runs/YYYY-MM-DD/HHMMSS.md`
+
+Initial status: `in_progress`.
+
+This heartbeat is mandatory. If later research or a source fails, finalize the same audit as `partial_failure` / `failed`. A scheduler trigger with no audit is a missing run.
+
+If create-file path collides, use a new second-level timestamp and retry once. If a state/file update requires SHA, fetch the latest SHA immediately before update and retry once on conflict.
+
 ## 每轮预算
 
 最多保存 8 个 material candidates。超出部分按：
@@ -63,7 +75,7 @@ unresolved
 
 若 compact write 仍失败：
 - run_status = partial_failure；
-- run audit 仍必须尝试写；
+- finalize 已创建的 skeleton run audit，记录真实 connector/tool error；
 - 不发用户通知；
 - 下一轮独立继续。
 
