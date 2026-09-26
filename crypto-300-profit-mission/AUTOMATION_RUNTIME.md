@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-27 01:20 Asia/Bangkok
+Updated: 2026-09-27 03:22 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -20,8 +20,7 @@ The final audit is the canonical proof of completion.
 - Solana USDC + SOL + Token-2022 e/acc + PAID
 - BNB USDC + BNB + GSTOCK
 - Robinhood ETH + PONS
-- stored PONS/XRP/ETH threshold-state comparisons
-- while XRP Variational event position is active: read `watchlists/xrp-bitget-hacker-flow.md` and check the stored attacker-flow baselines/triggers
+- stored PONS/ETH threshold-state comparisons
 - JUMP stored sale/deadline/gas state only; do not query a public JUMP market symbol
 - newest two Crypto Daily research files
 - Monster V2.1 factual market-state screen
@@ -61,12 +60,11 @@ If the 19:29 final audit is missing, the first later successful run on the same 
 ## Required vs optional lanes
 
 Required hourly, in this order:
-1. PONS/XRP/ETH/BTC public market facts used by stored rules;
-2. active XRP Bitget attacker-flow lane when the XRP event position is active;
-3. recent Crypto Daily research;
-4. one Binance USD-M bulk Monster screen plus bounded shortlist deep-check;
-5. active-asset wallet telemetry only: Robinhood PONS, BNB GSTOCK, Solana active Token-2022/meme balances; other chain inventory is slower cadence;
-6. persist final/final-retry immediately.
+1. PONS/ETH/BTC public market facts used by stored rules;
+2. recent Crypto Daily research;
+3. one Binance USD-M bulk Monster screen plus bounded shortlist deep-check;
+4. active-asset wallet telemetry only: Robinhood PONS, BNB GSTOCK, Solana active Token-2022/meme balances; other chain inventory is slower cadence;
+5. persist final/final-retry immediately.
 
 Do not run optional launch/NFT/FOMO fallback searches unless recent Crypto Daily research contains a plausible candidate.
 Full Ethereum/Base/Unichain/Ink inventory reconciliation is 3-hour cadence or event-driven, not an hourly blocker.
@@ -118,7 +116,6 @@ Send Gmail + ChatGPT only for substantive stored-rule events:
 - material active-position security/deadline event;
 - verified launch/NFT/TGE opportunity timing/eligibility change;
 - scheduled 19:29 Monster factual daily summary;
-- XRP Bitget ATTACKER_MAJOR_MOVE / ATTACKER_LIQUIDITY_RISK / BITGET_REPLENISHMENT / FLOW_REGIME_CHANGE from the dedicated watchlist.
 
 When no substantive alert is required, return an empty user-visible response.
 
@@ -150,3 +147,14 @@ At 19:29 the daily summary must actually be delivered by Gmail + ChatGPT, subjec
 Before sending, dedupe Gmail Sent by exact subject.
 If the 19:29 run is missed, the first later successful run must send the missed summary once and record Gmail message_id/readback plus `monster_daily_summary_recovery: true`.
 Generating a summary in the audit without sending it does not satisfy the daily-summary requirement.
+
+
+## XRP Variational closeout
+
+As of 2026-09-27 03:22 Asia/Bangkok:
+- the user confirmed the stored 1.5140 lower bound was hit;
+- the Variational XRP position is closed;
+- remaining venue funds were withdrawn and returned to Solana USDC;
+- `watchlists/xrp-bitget-hacker-flow.md` is INACTIVE.
+
+Do not query XRP/Bitget attacker flow, XRP TP/SL, or Variational state as a Mission hourly lane unless the user explicitly opens/reactivates a relevant position.
