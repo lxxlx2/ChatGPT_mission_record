@@ -412,3 +412,27 @@ Fixes:
 
 Execution state:
 `DENSE_BATCH_1_READY_FRESH_SWEEP_RETRY_HARDENED`.
+
+
+## 2026-09-27 — Dense batch #1 submitted; dashboard estimate gap fixed
+
+Observed runtime proof:
+- Dense batch #1 submitted on sweep 405;
+- long target: `DENSE-00001-L`;
+- short target: `DENSE-00001-S`;
+- feeder: `DENSE-00001-F`;
+- ref: `224.46`;
+- low/high prices: `219.97 / 228.94`;
+- qty: `42.21`;
+- batch #2 was immediately pre-registered and is waiting for a fresh tradable reference.
+
+The next observed referee state was sweep 406 with effective ref age above the 120-second trading threshold, so batch #2 correctly remained pending.
+
+A dashboard defect was found at this point: estimated best-score logic still considered only legacy Static and Bracket tickets. Dense tickets could therefore be the strongest local candidates while the dashboard continued displaying a legacy ticket such as T01.
+
+Fixes:
+- `ea6944965f6c30ccd1629954e810e71989ce8522`: include submitted Dense tickets in local best-score and prize-target estimates. Dense estimates use the ticket ref as a transparent proxy for effective entry because the exact sweep close/clawback may be omitted publicly.
+- `3941a1ebb8d0d58c2623ce8445cc607cb06f6377`: `dense-status` now also reports visible settlement/void status for the latest Dense long and short trades, or reports NOT_VISIBLE together with public omitted outcome counts.
+
+Important distinction:
+`dense_ticket_submitted` proves the signed trade messages were posted. It does not by itself prove referee settlement. Settlement status is now surfaced separately.
