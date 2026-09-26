@@ -106,3 +106,16 @@ state/current.md 维护：
 - scheduler trigger 不能替代 GitHub run audit。
 - 自动运行只有在 skeleton audit 已创建、urgent+shard 有 checked/failed 状态、state/current.md 更新或明确记录更新失败、同一个 audit 被 finalise 后才算 success。
 - GitHub/单一来源/Gmail 临时失败绝不允许自动 disable 或 pause 本 automation。
+
+
+## Source-result classification
+
+Do not confuse “no new official event found” with a source failure.
+
+Per project, classify as:
+- `checked_no_update`: official/search sources were reachable/queryable and no new ACTION evidence was found;
+- `checked_action`: new official ACTION evidence passed identity/action gates;
+- `source_unavailable`: an actual tool/request/access error prevented meaningful checking;
+- `identity_fail`: evidence existed but canonical identity could not be safely resolved.
+
+Only `source_unavailable` counts toward source_failures or partial_failure. A normal no-result / no-update check is healthy and must not downgrade the run.
