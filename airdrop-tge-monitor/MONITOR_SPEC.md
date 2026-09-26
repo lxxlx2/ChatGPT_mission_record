@@ -80,7 +80,7 @@ final 最低字段：
 - gmail_attempted/sent/error
 - event_paths
 - daily_summary_attempted/status
-- github/state write status
+- optional state-cache status
 - tool_errors
 
 一个项目 source 失败时继续其余项目。只有整轮 urgent + shard 无法有效完成时才标 failed。
