@@ -127,6 +127,26 @@ def snapshot() -> dict:
                     })
                 except Exception:
                     pass
+        for ticket in dense.get("tickets") or []:
+            try:
+                ref_px = Decimal(str(ticket["ref"]))
+                qty = Decimal(str(ticket["qty"]))
+                edge = abs(mark - ref_px) * qty
+                # Dense favored-ticket construction is designed so clawback
+                # makes the target key's effective entry approximately the
+                # sweep close. Until an official per-key score is published,
+                # use the ticket ref as a transparent proxy for that close.
+                gross_edges.append({
+                    "name": f"DENSE-{int(ticket['index']):05d}",
+                    "edge": edge,
+                    "entry": ref_px,
+                    "qty": qty,
+                    "base_fee": Decimal("0"),
+                    "estimated_score": edge,
+                    "estimate_model": "dense_ref_proxy",
+                })
+            except Exception:
+                pass
 
     gross_edges.sort(key=lambda x: x["estimated_score"], reverse=True)
     best_edge = gross_edges[0] if gross_edges else None
@@ -504,7 +524,7 @@ async function refresh(){
     const best=d.best_gross_edge;
     let ourScore='-',scoreType='策略估算 Score',gapText='暂无可比数据';
     if(d.best_ours){ourScore=fmt(d.best_ours.score);scoreType='官方 Score · '+d.best_ours.label}
-    else if(best){ourScore=fmt(best.estimated_score);scoreType='估算 Score · '+best.name}
+    else if(best){ourScore=fmt(best.estimated_score);scoreType='估算 Score · '+best.name+(best.estimate_model==='dense_ref_proxy'?' · Dense ref近似':'')}
     document.getElementById('ourScore').textContent=ourScore+' POLF';
     document.getElementById('ourScoreType').textContent=scoreType;
 
@@ -515,7 +535,7 @@ async function refresh(){
       gapText=diff>0?('按当前线估算，还差 '+fmt(diff)+' POLF'):('当前已高于奖区线约 '+fmt(Math.abs(diff))+' POLF');
     }
     document.getElementById('scoreGap').textContent=gapText;
-    document.getElementById('scoreExplain').textContent=d.best_ours?'这里显示官方 Score。':'这里显示我们当前最好候选的估算 Score，官方没上榜前只能作为参考。';
+    document.getElementById('scoreExplain').textContent=d.best_ours?'这里显示官方 Score。':(best&&best.estimate_model==='dense_ref_proxy'?'这里按 Dense ticket 的 ref 近似有效入场价估算，真实 sweep close / clawback 会造成偏差。':'这里显示我们当前最好候选的估算 Score，官方没上榜前只能作为参考。');
 
     const tp=d.target_to_prize;
     document.getElementById('downTarget').textContent=tp?fmt(tp.down_target):'-';
