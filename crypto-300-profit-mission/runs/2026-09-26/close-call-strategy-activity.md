@@ -286,3 +286,88 @@ However, the current plan for T03-T16 exact-ref static entries and later bracket
 
 Execution state:
 `STRATEGY_REVIEW_REQUIRED_BEFORE_T03`.
+
+
+## 2026-09-27 — Dense favored-ticket redesign implemented
+
+Following the live-board diagnosis, the runtime now supports an optional replacement strategy that targets the contest's actual scoring objective: maximize the best individual owner-key score.
+
+Implementation commits:
+- `f2269415f5d934050e0655a24db2e5b576030793`: dense sweep-ticket strategy;
+- `fa5b3da49a6c2d5c7d502df4e93f32a00605305f`: dashboard support for dense mode.
+
+### Dense construction
+
+When enabled, the legacy future Static schedule and Bracket rollovers are frozen. Existing T01/T02/Bracket-R1 positions are left untouched and remain valid tickets.
+
+For each fresh referee sweep the dense pipeline creates three fresh local keys:
+- one favored long target;
+- one favored short target;
+- one sacrificial feeder.
+
+Registration is pipelined one sweep before trading. Once a registration batch has had a later aligned referee sweep with no dedicated-room miss, the next ticket pair is submitted from the current fresh reference.
+
+Prices:
+- favored long target receives a buy at approximately `ref × 0.98`;
+- favored short target receives a sell at approximately `ref × 1.02`;
+- both trades remain inside the frozen ±5% price window.
+
+The same feeder is used for both trades in deterministic order:
+1. feeder sells low to the long target;
+2. short target sells high to the feeder.
+
+The feeder therefore opens and closes inside the pair while the two target keys retain the long and short tickets.
+
+Quantity:
+- calculated with a conservative funds factor of 1.05;
+- includes room for the high-side target's favorable-price clawback and a modest close-vs-reference move;
+- current formula is `0.995 × 10000 / (ref × 1.05)`, floored to 0.01.
+
+### Why this is better aligned with close-1
+
+Under the frozen fold, the favored side pays the larger of:
+- 1% base fee; or
+- its favorable price gap versus the sweep close.
+
+At a sufficiently off-market but still valid price, the gap/clawback becomes the fee. The favored target's effective economic entry approaches the sweep close without an additional 1% base-fee handicap.
+
+The feeder absorbs the unfavorable economics and is disposable.
+
+Two fresh targets are created per sweep so both final directions remain covered. Over many sweeps this converts the strategy from sparse 12-hour directional coverage into dense order-statistic coverage.
+
+### Safety / operational constraints
+
+- dense mode is opt-in;
+- hard local safety cap: 8,000 dynamic keys;
+- private seeds stay only in the existing local 0600 state file;
+- one batch is processed at most once per referee sweep;
+- registration batches are persistent and resumable;
+- public flow/state must align before using a registered batch;
+- a dedicated-room missed range pauses the batch;
+- dynamic referee freshness remains capped at 120 seconds;
+- contest lock still stops trading;
+- existing positions are never automatically closed by enabling dense mode.
+
+### Commands
+
+Enable after updating and restarting the runner:
+
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense
+bash crypto-300-profit-mission/tools/technocore-close-call/install_autopilot_macos.sh
+```
+
+Read-only status:
+
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py dense-status
+```
+
+Emergency stop for new dense ticket creation:
+
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py disable-dense
+```
+
+Execution state:
+`DENSE_MODE_IMPLEMENTED_OPT_IN_REQUIRED`.
