@@ -434,3 +434,10 @@ For the dedicated GM Regiment Agent wallet:
 - only after backup verification may ETH be sent to the Agent wallet.
 
 The MCP package itself does not persist the generated private key.
+
+
+## Node REPL note
+
+Observed during manual wallet creation:
+- `node --input-type=module` cannot be used to start an interactive REPL on the installed Node.js version and returns `Cannot specify --input-type for REPL`.
+- Use plain `node` and dynamic `await import("viem/accounts")` inside the REPL instead.
