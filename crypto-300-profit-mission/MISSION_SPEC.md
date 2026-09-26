@@ -138,6 +138,11 @@ No application/transaction is executed automatically.
 
 Medium cadence unless unlock/security/claim/executable-market change makes them urgent.
 
+### FLOP Technocore Close Call
+`positions/flop-close-call.md`
+
+This is an active zero-external-capital competition plan. The stored plan uses a fixed 52-key fleet: 16 static long/short time-layer pairs, a 16-key four-round bracket, and four baseline/reserve keys. Static keys do not reverse; bracket survivors roll only at the three scheduled rollover checkpoints. Private signing seeds must never be written to GitHub. Live execution requires explicit user confirmation and follows the freshness/room/quantity rules in the position file.
+
 ## Closed / historical exposure
 
 - SHART direct balance 0: routine monitoring closed.
