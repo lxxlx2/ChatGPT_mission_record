@@ -393,3 +393,22 @@ New behavior:
 - `dense-status` now prints the current ref sweep, effective age, trade-freshness boolean, pending batch index/status and ready-after sweep.
 
 This preserves the freshness safety gate while improving first-ticket readiness.
+
+
+## 2026-09-27 — Dense first-fresh-sweep retry hardening
+
+Live status reached:
+- `ref_sweep: 405`;
+- `effective_ref_age_s: 110`;
+- `fresh_for_trade: True`;
+- pending Dense batch #1 registered and ready;
+- `submitted_sets: 0`.
+
+Review found a retry edge case: if the first autopilot poll on a fresh sweep saw price sweep 405 before flow/state had both caught up to 405, the loop returned `dense_wait_alignment` but had already marked sweep 405 as seen. A later poll on the same sweep would then emit a heartbeat instead of retrying the ready pending batch.
+
+Fixes:
+- `8f3f7157b2638d674b16a6a3c64d9daffc33b3cf`: retry a ready Dense pending batch repeatedly within the same fresh sweep until flow/state align or the ref ages out;
+- `1e2213701d92ace43be609782ae7ce3e89dde97f`: reduce LaunchAgent polling interval from 60 seconds to 30 seconds so the 120-second freshness window gets more attempts.
+
+Execution state:
+`DENSE_BATCH_1_READY_FRESH_SWEEP_RETRY_HARDENED`.
