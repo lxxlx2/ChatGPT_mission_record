@@ -1,7 +1,7 @@
 # Four Zero Two / GM Regiment Ink Agent 注册与每日 GM 参与记录
 
 Updated: 2026-09-27
-Status: NPM_PACKAGE_VERIFIED
+Status: PACKAGE_CONTENT_VERIFIED
 Category: early-stage project participation
 Network: Ink mainnet
 Chain ID: 57073
@@ -160,7 +160,32 @@ Result:
 - local GitHub clone fallback is not currently required
 - next action is package-content verification before first execution
 
-Status: PACKAGE_AVAILABLE
+Observed package-content verification:
+- package: `gm-regiment-mcp@0.1.0`
+- tarball filename: `gm-regiment-mcp-0.1.0.tgz`
+- package size: `16.1 kB`
+- unpacked size: `53.6 kB`
+- total files: `16`
+- shasum: `9722393ebc609f35e6dbcbe5c8ec2bcd17b62f9b`
+- integrity: `sha512-CN1NKzvS9k+84KqUR1Tl+j8har638OKEG5hJAM6RURvKfgMKGiIMocMRCk0CfWEIBlTgwQjkGUu+K1cRgz6tsA==`
+- tarball: `https://registry.npmjs.org/gm-regiment-mcp/-/gm-regiment-mcp-0.1.0.tgz`
+
+Observed packaged runtime files include:
+- `dist/server.js`
+- `dist/chain.js`
+- `dist/config.js`
+- `dist/contracts.js`
+- `README.md`
+- `HUMAN_GUIDE.md`
+- `LICENSE`
+- `package.json`
+
+Result:
+- npm package metadata and tarball inspection are consistent with version `0.1.0`
+- no unexpected executable/script directories were observed in the dry-run file list
+- package has not yet been connected to the local MCP client
+
+Status: COMPLETE
 
 ### Step 3: configure MCP client
 
@@ -300,6 +325,7 @@ As of 2026-09-27:
 - participation available now: YES
 - local runtime verified: YES
 - npm package availability verified: YES
+- npm package contents verified: YES
 - local installation: PENDING
 - Agent wallet created: PENDING
 - Agent funded: PENDING
