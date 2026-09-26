@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-26 14:12 Asia/Bangkok
+Updated: 2026-09-26 14:18 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Verification policy
@@ -28,8 +28,16 @@ Labels:
 Fresh finalized RPC:
 - USDC: **248.657361**
 - native SOL: **0.133415487**
+- e/acc (Token-2022): **723.665811**
+- PAID (Token-2022): **947.685473**
 - SHART: **0**
-- unidentified SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552**, identity/value UNRESOLVED
+- unidentified legacy SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552**, identity/value UNRESOLVED
+
+Important correction:
+- the earlier Solana scan queried only the legacy SPL Token program and therefore omitted Token-2022 holdings.
+- e/acc and PAID are now included in current state and future monitoring.
+- PAID quantity is unchanged from the previously verified 947.685473 position.
+- e/acc is now 723.665811 versus the previously verified 964.887748 remainder, so **241.221937 e/acc has left the wallet** since that prior snapshot. Do not infer realized PnL without reconstructing the sale leg.
 
 Relative to the prior 330.799585-USDC snapshot:
 - USDC delta: **-82.142224**
@@ -87,6 +95,8 @@ Current Alchemy app support remains unavailable for direct wallet RPC. Do not in
 
 Ethereum + Solana + BNB Chain + Base + Unichain:
 **679.24449761 USDC**
+
+This stablecoin figure excludes non-stablecoin assets. Current Solana e/acc and PAID balances are tracked separately and are not omitted from portfolio state.
 
 This is current wallet accounting, not PnL.
 
