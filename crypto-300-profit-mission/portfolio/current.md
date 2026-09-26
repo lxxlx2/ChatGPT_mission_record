@@ -1,19 +1,17 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-26 13:00 Asia/Bangkok
+Updated: 2026-09-26 14:12 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Verification policy
 
-This file is CURRENT STATE only. Historical snapshots stay in Git history and run audits.
+CURRENT STATE only. Historical snapshots remain in Git history/run audits.
 
 Labels:
-- DIRECT_CHAIN: fresh RPC result from connected Alchemy app `ChatGPT Crypto Monitor`.
-- USER_CONFIRMED: latest user screenshot / explicit statement from a private venue that cannot currently be read directly.
-- MARKET: current public market data.
-- UNRESOLVED: identity, value, cost basis or private venue state is not independently readable.
-
-Never replace a failed live read with an older value and call it current.
+- DIRECT_CHAIN: fresh connected chain data
+- USER_CONFIRMED: latest private venue/order UI or explicit user statement
+- MARKET: fresh public market reference
+- UNRESOLVED: do not estimate
 
 ## Canonical wallets
 
@@ -22,19 +20,56 @@ Never replace a failed live read with an older value and call it current.
 
 ## DIRECT_CHAIN snapshot
 
-Fresh RPC reconciliation through about 2026-09-26 13:00 Asia/Bangkok.
-
-### Ethereum mainnet
+### Ethereum
 - USDC: **400.308121**
 - native ETH: **0.001667063838788351**
 
 ### Solana
-- canonical USDC: **330.799585**
-- native SOL: **0.135545164**
-- SHART canonical mint: **0**
-- unidentified SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552 tokens**
-  - identity/value: **UNRESOLVED**
-  - excluded from Mission NAV until verified.
+Fresh finalized RPC:
+- USDC: **248.657361**
+- native SOL: **0.133415487**
+- SHART: **0**
+- unidentified SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552**, identity/value UNRESOLVED
+
+Relative to the prior 330.799585-USDC snapshot:
+- USDC delta: **-82.142224**
+- SOL delta: **-0.002129677**
+
+User confirms the lower Solana USDC is from cross-chain capital movements used to adjust positions. Exact per-bridge allocation is not inferred unless transaction legs are fully reconciled.
+
+### BNB Chain
+Fresh Alchemy:
+- canonical USDC: **30.00474761**
+- native BNB: **0.002684170274192202** (~**2.08 USD** at BNB 773.31)
+- canonical GSTOCK: **0**
+- GSTOCK market reference: **~0.024487 USD**
+
+The USDC/BNB is associated with the user's GSTOCK pending-order plan. No chain fill is visible yet.
+
+### Robinhood Chain
+Fresh Alchemy + Blockscout:
+- native ETH: **0.000825190918816326**
+- PONS: **54.799953441979625**
+- PONS market reference: **~0.642-0.643 USD**
+
+Other ERC-20 receipts currently present but excluded from NAV because no reliable exchange rate / intentional-position verification is available:
+- Jollybot (JOLLY): **256.593895779031580672**
+- HYPERCAT: **167.675752122821869568**
+- familiars: **1833.405043146758291456**
+- Robinhood Monkey Business (RMB): **500,000**
+- 富贵: **6,500**
+- DIH: **1**
+- DGDY: **1**
+
+Blockscout currently reports no exchange rate for those non-PONS balances. Treat them as unpriced/unsolicited until independently verified as intentional positions.
+
+### Ink
+Fresh Blockscout state:
+- native ETH: **0.01113370814547789** (~**29.93 USD** at ETH 2688.52)
+- Tydro Ink Points: **7.665136656205785948**
+- existing NFT: **Fresh INK - OpenSea x Ink Commemorative NFT #372**
+
+The newly discussed target Ink NFT is still pending; no new target NFT is recorded as minted.
 
 ### Base
 - canonical USDC: **0.252982**
@@ -45,99 +80,53 @@ Fresh RPC reconciliation through about 2026-09-26 13:00 Asia/Bangkok.
 - native ETH: **0.000231941590232335**
 - CRED: **0**
 
-### Robinhood Chain
-- native ETH: **0.000826657957256326**
-- canonical PONS contract: `0x39dbed3a2bd333467115de45665cc57f813c4571`
-- PONS balance: **54.799953441979625**
-- Alchemy PONS price: **0.6448796581 USD**
-- PONS spot mark value: **~35.34 USD**
-- ETH reference price: **2684.44 USD**
-- native gas mark value: **~2.22 USD**
-- unknown/spam ERC-20 balances remain excluded unless identity/value are verified.
-
 ### Arbitrum
-- current connected Alchemy app does not support ARB_MAINNET.
-- native ETH / USDC wallet balances: **UNAVAILABLE**.
-- do not infer them from old bridge amounts or Variational UI.
+Current Alchemy app support remains unavailable for direct wallet RPC. Do not infer current balance.
 
-### Canonical direct-chain stablecoins
-- Ethereum + Solana + Base + Unichain: **731.381974 USDC**
+## Canonical direct-chain stablecoins
 
-Compared with the 09:18 snapshot, Solana canonical USDC decreased by **9.025416 USDC** and native SOL decreased by **0.004197159 SOL**. This file does not infer the cause from balance delta alone.
+Ethereum + Solana + BNB Chain + Base + Unichain:
+**679.24449761 USDC**
 
-## USER_CONFIRMED private / off-chain exposure
+This is current wallet accounting, not PnL.
 
-### XRP / Variational Omni
-Last user-confirmed screenshot: 2026-09-26 06:08 Asia/Bangkok.
-- XRP-PERP LONG
-- quantity: 77.12 XRP
-- entry: 1.55589
+## Private / order-state exposures
+
+### XRP / Variational
+Latest USER_CONFIRMED:
+- LONG 77.12 XRP @ 1.55589
 - isolated 3x
-- TP: 1.6280
-- SL: 1.5140
-- margin shown: about 40.99 USDC
-- Omni equity shown: 50.87 USD
-- available shown: 10.55 USD
+- TP 1.6280
+- SL 1.5140
 
-This is the latest confirmed private-venue state. Public XRP prices may monitor risk but must not rewrite this private state.
+### PONS
+Authority: `positions/pons.md`.
+- Binance futures state remains USER_CONFIRMED from the latest screenshots.
+- Robinhood spot balance is DIRECT_CHAIN.
+- spot/futures TP/SL order state follows the position file.
 
-### PONS sleeve
+### GSTOCK
+Authority: `positions/gstock-plan.md`.
+- BNB Chain reserve: about 30 USDC + BNB gas
+- chain GSTOCK balance: 0
+- current state: PLAN_NOT_FILLED
 
-Latest USER_CONFIRMED Binance futures state at 2026-09-26 12:58:
-- LONG PONSUSDT, isolated 3x
-- entry: **0.6250**
-- position notional shown: **41.32 USDT**
-- margin shown: **13.20 USDT**
-- mark shown: **0.6451307**
-- unrealized PnL shown: **+1.31 USDT**
-- realized PnL shown: **-0.13 USDT**
-- liquidation price shown: **0.4293629**
-- hard stop: **0.4980**
-- old 0.5850 / 0.5450 resting entries: **CANCELED**
+## Other Mission positions
 
-DIRECT_CHAIN Robinhood Chain:
-- PONS spot: **54.799953441979625 PONS** (~**35.34 USD** at the fresh Alchemy price)
-- native gas: **0.000826657957256326 ETH** (~**2.22 USD** at the current ETH reference)
+- JUMP reserve: 400 USDC on Ethereum.
+- ETH conditional reserve: 100 USDC.
+- short-window opportunity reserve: 150 USDC, now distributed across chains/plans rather than assumed to remain wholly on Solana.
+- low-risk 500 USD-equivalent interest bucket remains outside the speculative Mission.
+- UNICRED NFT #230 remains active/locked.
+- Credits #23042 / #23232 remain user-confirmed listings.
 
-User confirms the released Binance order capital was withdrawn and converted into spot PONS + gas.
-The PONS swap leg is directly reconstructed at 2026-09-26 12:58:38 Asia/Bangkok: **35.291194 USDG → 54.799953441979625 PONS**, average **~0.64400044 USDG/PONS**.
-Separate withdrawal fee and native-gas acquisition cost remain UNRESOLVED.
+## Residual accounting
 
-### Low-risk bucket
-- 500 USD-equivalent, user-confirmed as earning interest.
-- excluded from speculative Mission capital.
+Using canonical direct-chain stablecoins **679.24449761 USDC**:
+- 400 JUMP reserve
+- 150 short-window opportunity reserve
+- 100 ETH conditional reserve
 
-## Non-liquid / protocol positions
+Arithmetic residual: **29.24449761 USDC**.
 
-### UNICRED
-- NFT #230 remains active.
-- acquisition cost reference: 0.0105 ETH.
-- staked / locked until 2026-10-01 17:28:04 Asia/Bangkok.
-- liquid CRED wallet balance: 0 DIRECT_CHAIN.
-- exact current claimable rent requires a fresh protocol read.
-
-### Credits
-Latest user-confirmed listing state:
-- #23042 listed at 0.25 ETH.
-- #23232 listed at 0.40 ETH.
-Listing prices are not executable NAV.
-
-## Current capital map
-
-Based on **731.381974 USDC** canonical direct-chain stablecoins:
-- 400 USDC: JUMP conditional reserve.
-- 150 USDC: short-window opportunity reserve.
-- 100 USDC: ETH conditional reserve.
-- **81.381974 USDC**: direct-chain residual after those ring-fenced reservations.
-
-Separately:
-- PONS: original 50-USDT sleeve is now split between the remaining Binance futures position and Robinhood Chain spot PONS + gas; there are no live 0.5850/0.5450 averaging orders.
-- XRP/Variational: private venue exposure funded by prior internal reallocation.
-- 500 USD-equivalent low-risk bucket: outside speculative Mission.
-
-The 81.381974 figure is available-capital accounting, not profit.
-
-## Closed liquid exposures
-
-- SHART: 0 DIRECT_CHAIN.
-- CRED: 0 DIRECT_CHAIN.
+This residual is accounting only. The cross-chain opportunity reserve now includes the BNB/GSTOCK plan and other converted assets, so wallet-token values must not be double-counted as free capital.
