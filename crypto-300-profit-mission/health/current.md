@@ -1,6 +1,6 @@
 # Crypto Mission Monitor Health
 
-Updated: 2026-09-26 16:33 Asia/Bangkok
+Updated: 2026-09-26 20:35 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## $300 existing task
@@ -43,3 +43,13 @@ Repair:
 - no new task
 
 Current status: UNHEALTHY until a fresh automatic start + final pair is observed.
+
+
+## 20:00-20:29 validation
+
+- Crypto Daily 20:00: research persisted, automatic final missing. Classification: persistence gap; runtime now has final + final-retry fallback.
+- TGE 20:14: scheduler metadata advanced, no final persisted. Classification: missing run; recovery workload was too large and has been bounded to one shard per run.
+- $300 20:29: automatic final persisted. Market/Monster lanes completed and the missed 19:29 Monster summary was recovered. Run was partial_failure because wallet telemetry was unavailable and JUMP/Alpha were treated too strictly.
+- $300 classification/runtime corrected: JUMP is sale/deadline state, Alpha is optional enrichment, wallet reads are per-chain with partial_success for residual provider gaps.
+
+No new automation created.
