@@ -1,64 +1,27 @@
 # Airdrop / TGE Automatic Runtime
 
-Updated: 2026-09-26 15:10 Asia/Bangkok
+Updated: 2026-09-26 16:33 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-Authority for the existing hourly :14 scheduler.
+Authority for the existing :14 task.
 
-## Append-only audit
+## Audit
+Create append-only airdrop-tge-monitor/runs/YYYY-MM-DD/HHMMSS-start.md first.
+At completion create matching HHMMSS-final.md.
+Do not update the start file.
 
-At start create:
-`airdrop-tge-monitor/runs/YYYY-MM-DD/HHMMSS-start.md`
+## Hourly factual work
+1. read REGISTRY.md;
+2. read recent final audits/events for dedupe;
+3. check always-hourly urgent set;
+4. check current Bangkok hour % 4 shard;
+5. only for a real candidate, perform official identity + action verification;
+6. classify checked_no_update / checked_action / source_unavailable / identity_fail;
+7. ACTION can use the already authorized notification path; NO_ACTION remains silent;
+8. state/current.md is optional cache only;
+9. create final audit regardless of cache outcome.
 
-with run_status: started.
-
-Do not update that file.
-
-At end create:
-`airdrop-tge-monitor/runs/YYYY-MM-DD/HHMMSS-final.md`
-
-with:
-- run_time
-- automation_id
-- run_status
-- urgent_checked
-- shard_index
-- shard_projects_checked
-- candidate_count
-- triggered_events
-- identity_failures
-- source_failures
-- gmail status
-- state_cache_status
-- tool_errors
-
-A run is complete only when the final file exists. Full urgent+shard coverage with no real source/tool failure is `success` even if the optional mutable state cache cannot be updated.
-
-## Hourly work
-
-1. Read `REGISTRY.md`.
-2. Read `state/current.md`.
-3. Check always-hourly urgent set.
-4. Check current Bangkok hour % 4 shard.
-5. For an actual candidate only, follow official action links and apply canonical identity + two-anchor. Read README/MONITOR_SPEC only when needed for candidate validation.
-6. ACTION only when official evidence creates a real eligibility/deadline/claim/KYC/registration/allocation/distribution requirement.
-7. NO_ACTION stays silent.
-8. Use recent `*-final.md` run files plus `reports/events/` for dedupe/history. Do not require a mutable state file for correctness.
-9. `state/current.md` is an optional cache. Attempt at most once only when useful; a cache-write failure must not downgrade an otherwise complete run.
-10. Create final audit regardless of cache-write outcome.
-
-## Classification
-
-- checked_no_update: source worked, no new action
-- checked_action: verified action
-- source_unavailable: real access/tool error
-- identity_fail: evidence exists but identity unresolved
-
-Only source_unavailable is a source failure.
-
-## Daily summary
-
-First successful run after 00:00 summarizes the previous local day from real run files only.
-
-Temporary failures never disable/pause the existing task.
+A cache-write failure alone does not downgrade a complete run.
+Only an unresolved source/tool gap counts as a failure.
+Temporary failures never disable/pause the task.
 No Chinese-language websites as evidence.
