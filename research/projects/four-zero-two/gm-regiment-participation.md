@@ -506,3 +506,19 @@ Verified before first GM:
 Result:
 - Agent is eligible for its first DailyAgentGM call.
 - No prior GM is recorded for this wallet.
+
+
+## First DailyAgentGM broadcast
+
+Observed:
+- tx hash: `0x393dcc7aac915b6aa9797655b3a6f7880327d54e55f3e2cbcdb867d19e822f34`
+- block: `56962327`
+- receipt status: `success`
+- gas used: `53050`
+- sender was recognized as an ERC-8004 agent before broadcast
+- pre-state `lastGM(wallet)`: `0`
+
+Unexpected immediate post-read:
+- `lastGM(wallet)` still returned `0` immediately after the successful receipt.
+- Do not broadcast another GM until receipt logs and delayed state reads confirm whether the first GM was recorded.
+- This is treated as a verification issue, not as proof of failure.
