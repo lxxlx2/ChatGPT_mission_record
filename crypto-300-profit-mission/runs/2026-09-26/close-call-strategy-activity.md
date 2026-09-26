@@ -476,3 +476,31 @@ A visibility bug was also found: `room_active_in_latest_flow` had accidentally b
 Fixes:
 - `1c21f29e73dec09f0ce54db45517986a3ab18781`: move active-room reporting into `dense-status`;
 - `dac977ee75d17c3b457b4efa9fe03d6159cd833b`: dashboard now explicitly surfaces room re-registration/health state.
+
+
+## 2026-09-27 — Pending-owner recovery after room expiry
+
+Live status reached:
+- `submitted_sets: 2`;
+- Dense #3 registered and waiting;
+- latest flow sweep 409;
+- `room_active_in_latest_flow: False`;
+- current reference was fresh enough to trade.
+
+This exposed a second-order room-expiry risk. Even though the runtime already blocked trades and auto-reposted the room registration, a pending Dense batch's owner-registration messages may have been posted while the room later disappeared before the referee consumed them. Re-registering only the room would not positively guarantee those pending owner messages were read.
+
+Fix:
+- `ac3a0a8368f41d01c071370e7bf01e0786e567b0`
+
+New recovery sequence:
+1. if the dedicated trading room is absent from the latest aligned flow, mark the pending Dense batch as requiring owner re-registration and re-post the room registration in `close1`;
+2. wait until a later flow lists the room again;
+3. re-post all three pending owner registrations inside the now-active room;
+4. set `ready_after_sweep` to one sweep later;
+5. only then allow the long/short favored-ticket trades.
+
+Duplicate owner registrations are harmless under frozen rule 3, so this favors positive safety over assuming an earlier pending owner message survived room expiry.
+
+`dense-status` now also reports:
+- `pending_needs_owner_reregister`;
+- `pending_owner_reregister_count`.
