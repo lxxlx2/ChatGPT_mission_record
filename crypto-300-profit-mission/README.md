@@ -1,62 +1,74 @@
-# Crypto $300 Profit Mission
+# $300 Crypto Mission Operational Layer
 
-Crypto 资产、活动仓位与机会的决策层。
+This directory is the operational state and monitoring layer for the Crypto Mission.
 
-## 权威文件
+Long-form human research is organized separately under:
+- `research/projects/`
+- `research/tokens/`
+- `research/memes/`
+- `research/nfts/`
 
-- `MISSION_SPEC.md`：精简后的全局策略、资金、通知与数据真实性规则
-- `RUNBOOK.md`：每小时 scheduler 的分阶段执行合同
-- `portfolio/current.md`：当前资金分布
-- `performance/current.md`：收益口径
-- `state/latest.md`：当前综合状态
-- `health/current.md`：scheduler / lane 健康
-- `positions/`：各活动仓位的细则
-- `watchlists/`：BTC、NFT、Monster V2.1、SAGA、FOMO 等模型
-- `runs/`：不可变执行 audit
+Repository organization and migration safety:
+- `docs/REPOSITORY_STRUCTURE.md`
 
-## 每小时 :29
+## Scheduled authority
 
-### Phase A
-优先完成：
-- Ethereum / Solana 实时资金与 gas
-- PONS
-- XRP / Variational
-- ETH conditional
-- BTC regime
-- JUMP / deadline
-- 活动仓位安全事件
+Existing task:
+- `$300 Crypto资产状态监控`
+- hourly at :29 Asia/Bangkok
+- 19:29 same task also performs the Monster factual daily summary
 
-### Phase B
-机会发现：
-- 优先读取最近两份 Crypto Daily research
-- Monster V2.1 用一次 bulk universe screen 做全市场覆盖
-- 只对 shortlist 做 funding/OI/taker/top-trader 深查
-- launch / NFT / FOMO 只对真实候选深查
-- 上游 research 过旧时才做 compact fallback discovery
+Automatic runtime authority:
+- `AUTOMATION_RUNTIME.md`
 
-### Phase C
-每 3 小时或发生重大事件时：
-- UNICRED
-- Credits
-- 其它慢速数据
+The scheduled task should not depend on human-facing research paths unless the runtime explicitly says so.
 
-这种结构保留原有监控范围，同时避免每个小时重复跑多套完整全网搜索。
+## Operational files
 
-## Monster V2.1
+- `MISSION_SPEC.md`: global Mission policy and authority map
+- `RUNBOOK.md`: richer manual/interactive execution reference
+- `portfolio/current.md`: current capital distribution
+- `performance/current.md`: PnL/accounting state
+- `state/latest.md`: latest combined state
+- `health/current.md`: monitor health
+- `positions/`: active position/plan authorities
+- `watchlists/`: compact machine watchlists/models
+- `runs/`: immutable audit history
+- `signals/`: stored factual signals
+- `reports/`: Mission reports
 
-已经完全并入本 Mission。
+Historical/background strategy:
+- `300-profit-mission-strategy.md`
+- `strategy.md` remains a temporary compatibility copy during migration validation
 
-独立 `妖币每日汇总` automation 保持关闭。
+## Compatibility mappings
 
-19:29 的日汇总仍由本 Mission 同一轮输出。
+JUMP:
+- human-facing research: `research/projects/jump/jump-legion-sale.md`
+- operational compatibility authority: `positions/jump.md`
 
-## 成功标准
+Jack / Visualize Value Credits:
+- human-facing research: `research/nfts/jack-credits/jack-credits-nft-position.md`
+- operational compatibility authority: `positions/credits.md`
 
-自动触发后必须：
-1. 先创建 skeleton audit
-2. 留下 Phase A 状态
-3. 留下 discovery 状态
-4. 更新 state / health
-5. finalize 同一个 audit
+Keeping those operational paths during the first migration stage protects existing monitor references.
 
-只有 scheduler last_run_time，没有 finalized audit，不算成功。
+## Audit naming
+
+Current automatic convention:
+- `runs/YYYY-MM-DD/HHMMSS-start.md`
+- `runs/YYYY-MM-DD/HHMMSS-final.md`
+
+Older `HHMMSS.md`/JSON records remain immutable.
+
+A scheduler timestamp alone is not success. The final audit is the canonical proof of a completed automatic run.
+
+## Scope rule
+
+Mission operational files answer:
+- what is held now;
+- what stored threshold/order/deadline exists;
+- what the monitor should check;
+- what factual state changed.
+
+Long-form explanation, due diligence and historical research should move toward the appropriate `research/` category.
