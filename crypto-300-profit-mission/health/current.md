@@ -22,9 +22,10 @@ Timezone: Asia/Bangkok
 
 ## Runtime health
 - last_scheduler_trigger_seen_before_repair: 2026-09-26T07:12:06+07:00
+- last_scheduler_trigger_observed: 2026-09-26T09:29:58+07:00
 - last_verified_automatic_run_audit: none_after_repair
 - last_manual_integration_qa: 2026-09-26T07:59:00+07:00
-- current_status: awaiting_first_post_repair_scheduler_validation
+- current_status: scheduler_trigger_without_audit_at_09_29
 - github_write_path_test: passed manually
 - gmail_delivery_path_test: passed manually
 - note: prior health file incorrectly said WATCH was ChatGPT-only; corrected here.
@@ -61,3 +62,11 @@ Scheduler metadata alone is not proof of success.
 - run contract: skeleton audit first, lanes continue independently, state/health update, then audit finalization
 - write failure behavior: retry bounded; mark partial_failure/failed; never auto-disable monitor
 - verification_pending: next scheduled :29 run must create and finalize its own audit
+
+
+## 09:29 scheduler observation
+- scheduler metadata advanced to 2026-09-26T09:29:58+07:00.
+- no new automatic Mission run audit was present through approximately 09:35 Asia/Bangkok.
+- classification: missing_audit; this is not counted as a successful monitor run.
+- mitigation applied: automation prompt and RUNBOOK now require the skeleton audit as the first persistent action before heavy reads/searches.
+- next proof point: 10:29 Asia/Bangkok scheduled run.
