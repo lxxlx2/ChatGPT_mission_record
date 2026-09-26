@@ -1,9 +1,9 @@
 # XRP / Variational Omni Event Trade
 
-Updated: 2026-09-27 01:20 Asia/Bangkok
+Updated: 2026-09-27 03:22 Asia/Bangkok
 
 ## Status
-ACTIVE / FILLED
+CLOSED / STOP_LOSS_TRIGGERED
 
 User-confirmed from Variational Omni UI screenshot.
 
@@ -51,14 +51,17 @@ Using entry 1.55589:
 - Secondary objective: organic Variational points activity.
 
 ## Monitoring
-While this position remains active, the Mission fast lane must check:
-- XRP mark / spot reference and 15m / 1h / 4h moves;
-- OI, funding, leverage stress and taker imbalance when available;
-- Bitget-hack-related XRP wallet movements and credible Bitget replenishment flows via `watchlists/xrp-bitget-hacker-flow.md`;
-- TP 1.6280 and SL 1.5140;
-- abnormal rapid drawdown / security events.
+CLOSED.
 
-Alert only on a NEW actionable trigger. Do not send routine hourly updates.
+User confirmed on 2026-09-27 that the stored lower bound / stop at **1.5140** was hit, the remaining Variational balance was withdrawn, and the returned capital was converted back to Solana USDC.
+
+The Mission must no longer spend an hourly lane on:
+- XRP price/derivatives;
+- the Bitget attacker-flow watch;
+- XRP TP/SL thresholds;
+- Variational account state.
+
+The historical files remain for audit only.
 
 ## Exit / bookkeeping
 When TP, SL, manual close or partial close occurs:
@@ -90,3 +93,23 @@ The dedicated machine-readable authority is now:
 `watchlists/xrp-bitget-hacker-flow.md`
 
 While this position is active, its >=5M XRP movement/liquidity/replenishment triggers are required Mission lanes.
+
+
+## Close update — 2026-09-27 03:22 Asia/Bangkok
+
+USER_CONFIRMED:
+- stored stop/lower bound **1.5140** was hit;
+- the XRP event position is closed;
+- remaining private-venue funds were withdrawn;
+- returned capital was converted back to Solana USDC.
+
+Gross reference if the full 77.12 XRP closed exactly at 1.5140:
+- gross PnL ≈ **-3.23 USDC** before funding, fees, spread and stop slippage.
+
+Exact Variational realized PnL is **UNRESOLVED** until venue execution/funding/fee data is supplied. Do not replace the gross reference with a fabricated precise realized PnL.
+
+Fresh Solana chain read after the user update:
+- canonical USDC: **328.018516**
+- native SOL: **0.128587689**
+
+The Solana USDC balance is higher than the earlier 266.559188 snapshot, but the full delta is not attributed solely to Variational because other Solana activity occurred between snapshots.
