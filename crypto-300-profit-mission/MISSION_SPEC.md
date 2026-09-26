@@ -527,3 +527,12 @@ For a NEW or materially changed WATCH candidate:
 - do not repeat the same WATCH without a material state/data change.
 
 NO_ACTION, rejected candidates and unchanged WATCH states remain silent.
+
+
+## Operational runbook precedence — 2026-09-26
+
+`MISSION_SPEC.md` remains authoritative for strategy, capital, positions, thresholds and notification semantics.
+
+`RUNBOOK.md` is authoritative for scheduler execution order, heartbeat, lane accounting and failure handling.
+
+A run should read RUNBOOK first for execution flow, then MISSION_SPEC for strategy. A scheduler trigger without a finalized GitHub run audit is not counted as a successful Mission run.
