@@ -1,6 +1,6 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-26 14:12 Asia/Bangkok
+Updated: 2026-09-26 14:18 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Main status: AUTOMATION_REPAIR_IN_PROGRESS
@@ -15,7 +15,10 @@ UNAVAILABLE/UNRESOLVED = no estimate.
 ## Wallet state
 
 - Ethereum: 400.308121 USDC; 0.001667063838788351 ETH.
-- Solana: **248.657361 USDC; 0.133415487 SOL**; SHART 0.
+- Solana: **248.657361 USDC; 0.133415487 SOL; 723.665811 e/acc; 947.685473 PAID**; SHART 0.
+- e/acc and PAID are Token-2022 accounts. Earlier legacy-SPL-only enumeration omitted them; this is corrected.
+- e/acc previous verified remainder was 964.887748, so 241.221937 e/acc has left the wallet since that snapshot; realized proceeds/PnL remain UNRESOLVED until the sale transaction is reconstructed.
+- PAID remains 947.685473, unchanged from the previously verified purchase balance.
 - BNB Chain: **30.00474761 USDC; 0.002684170274192202 BNB; GSTOCK 0**.
 - Robinhood Chain: **54.799953441979625 PONS; 0.000825190918816326 ETH**.
 - Ink: **0.01113370814547789 ETH; 7.665136656205785948 Tydro Ink Points; Fresh INK NFT #372**.
