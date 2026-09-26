@@ -1,101 +1,114 @@
 # PONS Position
 
-Updated: 2026-09-26 13:00 Asia/Bangkok
+Updated: 2026-09-26 13:46 Asia/Bangkok
 
-## Authoritative current state
+## Binance PONSUSDT perpetual — USER_CONFIRMED
 
-The prior deep resting entries are canceled.
+Latest screenshots: 2026-09-26 13:45 Asia/Bangkok.
 
-### Binance PONSUSDT perpetual — USER_CONFIRMED
-
-Source: user screenshot at 2026-09-26 12:58 Asia/Bangkok.
-
-- direction: LONG
-- mode: isolated 3x
+Position:
+- LONG
+- isolated 3x
+- quantity: **64 PONS**
 - entry: **0.6250**
-- current position notional shown: **41.32 USDT**
-- margin shown: **13.20 USDT**
-- mark shown: **0.6451307**
-- unrealized PnL shown: **+1.31 USDT**
-- ROI shown: **+9.58%**
-- realized PnL shown: **-0.13 USDT**
-- liquidation price shown: **0.4293629**
-- hard stop remains: **0.4980 Mark Price**
-- take-profit: none shown
-- current-orders tab shows 1 order, consistent with the displayed 0.4980 stop
+- hard stop: **Mark Price <= 0.4980**
+- stop order: market, reduce-only, **100% position**
+- liquidation reference from prior 12:58 screenshot: **0.4293629**
 
-### Canceled orders — USER_CONFIRMED
+The prior averaging bids are canceled:
+- 0.5850: canceled
+- 0.5450: canceled
 
-The old averaging bids are no longer active:
-- **0.5850 canceled**
-- **0.5450 canceled**
+### Current futures take-profit orders
 
-Reason supplied by user: price did not retrace to those levels and the user did not want the remaining capital sitting idle.
+All are market take-profit / reduce-only:
 
-Do not reopen, recreate or treat these two orders as pending unless the user explicitly sets them again.
+| Trigger mark | Quantity | Share of 64 PONS | Screenshot est. PnL |
+| --- | ---: | ---: | ---: |
+| 0.6680 | **25 PONS** | **39.0625%** | +1.07 USDT |
+| 0.7040 | **22 PONS** | **34.3750%** | +1.73 USDT |
+| 0.7390 | **16 PONS** | **25.0000%** | +1.82 USDT |
 
-## Robinhood Chain spot sleeve — DIRECT_CHAIN
+Total TP coverage: **63 PONS = 98.4375%**.
 
-Fresh Alchemy read at about 2026-09-26 13:00 Asia/Bangkok.
+Important:
+- **1 PONS (1.5625%) is not covered by the three TP orders.**
+- the 0.4980 stop is still 100%, so it protects any residual that remains open.
+- if the intent is to fully exit the futures position through take-profits, the last TP should eventually cover the remaining 17 PONS rather than 16 PONS, or the residual must be managed separately.
+- automation must not modify the order automatically.
 
-Canonical PONS:
-- contract: `0x39dbed3a2bd333467115de45665cc57f813c4571`
-- token metadata: name Pons, symbol PONS, 18 decimals
-- wallet balance: **54.799953441979625 PONS**
-- Alchemy price: **0.6448796581 USD/PONS**
-- spot mark value: **~35.34 USD**
+## Robinhood Chain spot sleeve — DIRECT_CHAIN + USER_CONFIRMED ORDERS
 
-Robinhood Chain native gas:
-- **0.000826657957256326 ETH**
-- ETH reference price: **2684.44 USD**
-- gas-wallet mark value: **~2.22 USD**
+Canonical PONS contract:
+`0x39dbed3a2bd333467115de45665cc57f813c4571`
 
-The user confirms that the capital released by canceling the remaining Binance orders was withdrawn and converted into PONS spot plus gas.
+Fresh Alchemy wallet read around 2026-09-26 13:46:
+- wallet PONS balance: **54.799953441979625 PONS**
+- native gas: **0.000825190918816326 ETH**
+- no outgoing PONS transfer has occurred since the acquisition swap.
 
-The Robinhood Chain swap leg is now directly reconstructed from transaction logs at 2026-09-26 12:58:38 Asia/Bangkok:
+The PONS remains in the wallet while the OKX DEX conditional/limit orders are open; the order state itself is USER_CONFIRMED from screenshots.
+
+Verified acquisition leg:
+- 2026-09-26 12:58:38 Asia/Bangkok
 - input: **35.291194 USDG**
 - output: **54.799953441979625 PONS**
-- reconstructed spot acquisition rate: **~0.64400044 USDG/PONS**
+- token acquisition rate: **~0.64400044 USDG/PONS**
 
-This establishes the PONS spot token cost basis for that swap leg. Any separate withdrawal fee and the native-ETH gas acquisition cost remain outside this PONS-token cost basis unless independently reconstructed.
+### Current spot take-profit orders — USER_CONFIRMED
+
+| Trigger | PONS amount | Screenshot est. USDG received |
+| --- | ---: | ---: |
+| **0.668** | **11.0** | **7.30 USDG** |
+| **0.704** | **16.4** | **11.48 USDG** |
+| **0.739** | **16.4** | **12.06 USDG** |
+| **0.845** | **11.0** | **9.25 USDG** |
+
+Total TP quantity: **54.8 PONS**, effectively the full 54.79995344-PONS wallet balance subject to platform rounding.
+
+Estimated total USDG if all four TP orders execute as shown: **~40.09 USDG**.
+
+### Current spot downside trigger orders — USER_CONFIRMED
+
+| Trigger | PONS amount | Screenshot est. USDG received |
+| --- | ---: | ---: |
+| **0.598** | **27.39** | **16.30 USDG** |
+| **0.575** | **27.39** | **15.67 USDG** |
+
+Together they cover **54.78 PONS**, effectively the whole current spot sleeve.
+
+Operational caveat:
+- these stop quantities are fixed amounts, while the TP orders also reference the same PONS balance;
+- if one or more TP orders execute first and price later falls, the remaining stop quantities can exceed the then-current wallet balance;
+- after any spot TP execution, the remaining downside trigger quantities should be reviewed/resized to the actual remaining PONS balance;
+- do not treat an insufficient-balance failure of a later trigger as a new market signal.
+
+If price falls directly before any TP fills, the two current downside triggers are internally consistent: roughly half at 0.598 and the other half at 0.575.
 
 ## PONS sleeve accounting
 
-The original PONS sleeve began as a **50 USDT** budget. It is no longer a "50 USDT futures-margin budget."
+Original sleeve: about 50 USDT-equivalent.
 
-Current components:
-- Binance futures margin: **13.20 USDT** USER_CONFIRMED
-- Robinhood spot PONS mark value: **~35.34 USD** DIRECT_CHAIN + market price
-- Robinhood native gas mark value: **~2.22 USD** DIRECT_CHAIN + ETH price
+Current structure:
+- Binance futures: 64-PONS long, 3x isolated, entry 0.6250.
+- Robinhood Chain spot: 54.799953441979625 PONS.
+- Robinhood Chain gas: 0.000825190918816326 ETH.
 
-Gross current component value is about **50.76 USD-equivalent**, before exact fee/cost-basis reconciliation.
+Do not combine spot mark value and futures notional as profit. Exact sleeve PnL must account for:
+- futures realized/unrealized PnL;
+- funding/fees;
+- spot USDG cost basis;
+- spot execution fees/slippage;
+- withdrawal/gas acquisition costs.
 
-This figure is not PnL.
+## Monitoring
 
-## Monitoring rules
+FACTUAL_RULE_MONITOR should check:
+1. futures mark against 0.668 / 0.704 / 0.739 TP triggers and 0.498 stop;
+2. whether the futures position remains USER_CONFIRMED at 64 PONS until a newer private screenshot/source exists;
+3. Robinhood PONS wallet balance and native ETH gas;
+4. spot TP/downside trigger execution evidence through wallet balance/transfers plus user-confirmed order UI;
+5. after any spot TP fill, flag `REVIEW_REQUIRED` because downside trigger quantities may need resizing;
+6. PONS funding/OI/rapid-move/security/liquidity state.
 
-Hourly Mission monitoring must now check:
-
-1. Binance public PONS market data against the existing futures position:
-   - stored entry 0.6250
-   - hard stop 0.4980
-   - liquidation reference 0.4293629
-   - meaningful rapid-move / leverage / funding / OI changes
-
-2. Robinhood Chain DIRECT_CHAIN:
-   - canonical PONS balance
-   - PONS price/value
-   - native ETH gas balance
-   - material unexpected wallet delta
-
-3. Do **not** monitor 0.5850 or 0.5450 as live orders. They are historical canceled orders.
-
-4. Do not create a new averaging order, target, leverage change or capital reallocation automatically.
-
-5. Private Binance futures quantity/PnL/order state remains USER_CONFIRMED until a newer screenshot or connected account source is available.
-
-## Alerts
-
-Send a factual alert when a stored threshold is crossed, a material security/liquidity event occurs, or the direct-chain PONS/gas balance changes unexpectedly.
-
-Unchanged ordinary price movement stays silent.
+No automatic order creation/modification/reallocation.
