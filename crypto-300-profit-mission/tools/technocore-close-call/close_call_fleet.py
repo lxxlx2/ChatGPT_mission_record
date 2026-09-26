@@ -374,6 +374,90 @@ def dense_register_pending(state: dict, sweep: int) -> dict:
     return pending
 
 
+def dense_room_maintenance(state: dict, pr: dict) -> dict | None:
+    """Maintain the active trading-room/owner-registration prerequisites.
+
+    This intentionally runs even when the trading reference is stale. Room and
+    owner registration do not depend on price freshness, so doing this work
+    early avoids wasting the next fresh sweep on recovery.
+    """
+    dense = state.setdefault("dense", {})
+    pending = dense.get("pending")
+    if not isinstance(pending, dict):
+        return None
+
+    flow, _st = latest_flow_and_state()
+    flow_n = int(flow["n"]) if isinstance(flow, dict) and flow.get("n") is not None else pr["n"]
+
+    if not flow_lists_room(flow, state["room"]):
+        pending["needs_owner_reregister"] = True
+        pending["room_missing_observed_sweep"] = flow_n
+        dense["pending"] = pending
+
+        requested = dense.get("room_registration_requested_sweep")
+        ack = None
+        if requested != flow_n:
+            ack = post_signed(
+                state,
+                "close1",
+                state["controller"],
+                room_text(state["room"]),
+            )
+            dense["room_registration_requested_sweep"] = flow_n
+            dense["room_registration_requested_at"] = datetime.now(timezone.utc).isoformat()
+        save_state(state)
+        return {
+            "event": "dense_wait_room_registration",
+            "sweep": pr["n"],
+            "flow_sweep": flow_n,
+            "room": state["room"],
+            "registration_posted": requested != flow_n,
+            "pending_index": pending.get("index"),
+            "owner_reregister_required": True,
+            "ack": ack.strip().splitlines()[0] if isinstance(ack, str) and ack.strip() else None,
+        }
+
+    recovery_needed = (
+        bool(pending.get("needs_owner_reregister"))
+        or dense.get("room_registration_requested_sweep") is not None
+    )
+    if not recovery_needed:
+        return None
+
+    reposted = []
+    for role, label in pending["labels"].items():
+        did = state["keys"][label]["did"]
+        ack = post_signed(state, state["room"], label, owner_text(did))
+        reposted.append({
+            "role": role,
+            "label": label,
+            "did": did,
+            "posted_at": datetime.now(timezone.utc).isoformat(),
+            "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+        })
+        time.sleep(0.08)
+
+    pending.setdefault("owner_reregistrations", []).append({
+        "sweep": flow_n,
+        "records": reposted,
+    })
+    pending["needs_owner_reregister"] = False
+    pending["registered_sweep"] = flow_n
+    pending["ready_after_sweep"] = max(int(pr["n"]), flow_n) + 1
+    dense["pending"] = pending
+    dense.pop("room_registration_requested_sweep", None)
+    dense.pop("room_registration_requested_at", None)
+    save_state(state)
+    return {
+        "event": "dense_owner_registrations_reposted",
+        "sweep": pr["n"],
+        "flow_sweep": flow_n,
+        "index": pending.get("index"),
+        "ready_after_sweep": pending["ready_after_sweep"],
+        "count": len(reposted),
+    }
+
+
 def dense_submit_pending(state: dict, pr: dict) -> dict | None:
     dense = state.setdefault("dense", {})
     pending = dense.get("pending")
@@ -582,6 +666,10 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
                 "ready_after_sweep": pending["ready_after_sweep"],
                 "labels": pending["labels"],
             }
+
+    maintenance = dense_room_maintenance(state, pr)
+    if maintenance:
+        return maintenance
 
     if pr["age_s"] is not None and int(pr["age_s"]) > 120:
         return {
@@ -1681,6 +1769,7 @@ def cmd_dense_status(_args) -> None:
     print("enabled:", bool(dense.get("enabled")))
     print("submitted_sets:", len(dense.get("tickets") or []))
     print("next_index:", dense.get("next_index"))
+    print("room_registration_requested_sweep:", dense.get("room_registration_requested_sweep"))
     try:
         pr = fresh_price(max_age=10**9)
         print("ref_sweep:", pr["n"])
