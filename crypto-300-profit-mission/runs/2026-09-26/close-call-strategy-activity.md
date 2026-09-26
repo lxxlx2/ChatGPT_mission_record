@@ -541,3 +541,20 @@ Fixes:
 - `659aa1a72027839346dfe0467d6855e9beb4856a`: dashboard now uses persistent room-registration confirmation instead of the misleading latest-flow membership test.
 
 The pending Dense #3 batch had been marked for owner re-registration by the old false-positive room check. The corrected runtime keeps that harmless safety re-post path for this one pending batch, then returns to normal persistent-room semantics.
+
+
+## 2026-09-27 — Dense #3 recovery completed; waiting only on fresh reference
+
+Operator status after the room-semantics correction:
+- `submitted_sets: 2`;
+- `room_registration_confirmed: True`;
+- dedicated room recent activity age: 8 seconds;
+- latest flow sweep: 415;
+- `room_listed_in_latest_flow_registration_events: False`, which is informational only under the corrected per-sweep registration-event interpretation;
+- pending Dense #3 is registered;
+- owner re-registration recovery completed once: `pending_owner_reregister_count: 1`;
+- `pending_needs_owner_reregister: False`;
+- `pending_ready_after_sweep: 415`;
+- current reference sweep 415 had effective age 126 seconds, so `fresh_for_trade: False`.
+
+Conclusion: the administrative recovery path is complete. Dense #3 is eligible by sweep number and owner-registration state; the only active gate at this snapshot is the <=120-second reference freshness requirement. No manual intervention is required.
