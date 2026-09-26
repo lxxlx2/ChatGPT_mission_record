@@ -25,19 +25,22 @@ Timezone: Asia/Bangkok
 - 不发 Gmail。
 
 ### 09:00
-- 先完成必要的最新采集；
-- 检查当天 Gmail Sent 与 GitHub official report；
-- 缺失时按 REPORT_SPEC 生成唯一 13 章日报；
+- 先创建最小 run audit heartbeat；
+- 先检查当天 Gmail Sent 与 GitHub official report；
+- 缺失时直接使用过去24h已落盘 research，并只做最高优先级事实的短 fresh verification；
+- 按 REPORT_SPEC 生成唯一13章日报；
 - Gmail first；
 - GitHub archive second；
-- Gmail 成功而 GitHub 失败时记 partial_success。
+- 正式交付完成后才补做可选的09:00增量采集；
+- Gmail成功而GitHub失败时记 partial_success，后续只补GitHub。
 
 ### 10:00 / 11:00
-同一个任务做 missing-delivery recovery：
-- 两边都完整：只按普通小时执行；
-- Gmail 有、GitHub 缺：只补 GitHub；
-- GitHub 有、Gmail 缺：QA 后补 Gmail；
-- 两边都缺：重试当日日报。
+同一个任务优先做 missing-delivery recovery：
+- 两边都完整：再按普通小时执行；
+- Gmail 有、GitHub 缺：先补 GitHub；
+- GitHub 有、Gmail 缺：先 QA 后补 Gmail；
+- 两边都缺：先重试当日日报。
+恢复完成前不让普通小时采集阻塞交付。
 
 因此不需要额外的“Crypto 日报发布”scheduler。
 
