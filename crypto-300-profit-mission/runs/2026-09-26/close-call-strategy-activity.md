@@ -525,3 +525,19 @@ New order:
 4. only after these non-price prerequisites are healthy apply the <=120s trading freshness gate.
 
 This should let the next genuinely fresh sweep be used for trading rather than for administrative recovery.
+
+
+## 2026-09-27 — Corrected flow.rooms interpretation
+
+Live status showed:
+- `room_active_in_latest_flow: False` at sweep 413;
+- a room-registration re-post had just been issued;
+- the same room had appeared in sweep 410 and then disappeared again from later compact flow posts.
+
+Review of the frozen protocol showed the earlier health interpretation was too strong. The per-sweep `flow.rooms` field is a registration/event list for that sweep, not a durable full membership list that every later flow must repeat. Rule 5 says a room counts from the sweep that lists it; absence from a later flow post does not by itself prove deregistration. The state room count can fall when technocore.chat deletes an idle room, but our dedicated room is continuously written while the autopilot runs.
+
+Fixes:
+- `b65f85de44d349039417ee9cdca2d39770e502a2`: persist room-registration confirmation locally once observed, stop treating absence from the latest flow post as room inactivity, expose recent room activity age, and keep `flow.rooms` only as a per-sweep registration-event diagnostic.
+- `659aa1a72027839346dfe0467d6855e9beb4856a`: dashboard now uses persistent room-registration confirmation instead of the misleading latest-flow membership test.
+
+The pending Dense #3 batch had been marked for owner re-registration by the old false-positive room check. The corrected runtime keeps that harmless safety re-post path for this one pending batch, then returns to normal persistent-room semantics.
