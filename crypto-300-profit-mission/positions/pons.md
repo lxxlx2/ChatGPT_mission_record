@@ -1,37 +1,96 @@
 # PONS Position
 
-Updated: 2026-09-24 09:46 Asia/Bangkok
+Updated: 2026-09-26 13:00 Asia/Bangkok
 
-## Live user-reported position
-- Instrument: Binance PONSUSDT perpetual
-- Mode: isolated 3x
-- First resting entry filled: 0.6250
-- Current position mark value shown by user UI: about 41.46 USDT
-- Margin shown: about 13.32 USDT
-- Hard stop: 0.4980 Mark Price
-- Remaining resting entries are still open:
-  - 0.5850, about 49.73 USDT notional
-  - 0.5450, about 59.95 USDT notional
-- Current live market check around this update: mark about 0.64586, funding about +0.012682% for the current interval, OI about 64.44M PONS, top-trader 1h position L/S about 2.20.
-- Strategy status: keep the 0.585 and 0.545 bids while price remains below the confirmed breakout/stale-order threshold. Do not chase or add merely because first tranche is in profit.
-- If a valid 4h breakout/hold above 0.666 occurs, reassess the old deep bids; if a valid 4h hold above 0.742 occurs, cancel stale 0.585/0.545 bids per strategy.
-- Existing hard stop remains 0.498 until strategy-defined stop-management conditions are reached.
+## Authoritative current state
 
+The prior deep resting entries are canceled.
 
-## Live market update — 2026-09-25 00:16 Asia/Bangkok
-- Binance PONSUSDT mark: ~0.62916.
-- OI: ~66.45M PONS.
-- Current funding: ~+0.020748% for the interval.
-- Top-trader 1h position long/short ratio: ~2.25.
-- Compared with the prior snapshot, OI and positive funding are elevated while top-trader positioning remains clearly long-heavy.
-- Decision: no increase to the 50-USDT margin budget. Keep the existing 0.585 / 0.545 bids and 0.498 Mark Price hard stop under the existing strategy. Do not move bids upward to chase.
+### Binance PONSUSDT perpetual — USER_CONFIRMED
 
+Source: user screenshot at 2026-09-26 12:58 Asia/Bangkok.
 
-## Authoritative user-confirmed execution state — 2026-09-25
-This supersedes older ambiguity about PONS sizing.
-- Total PONS margin budget remains **50 USDT**.
-- Only the first 0.6250 entry has actually filled.
-- The 0.5850 and 0.5450 entries remain pending resting orders.
-- Hard stop remains 0.4980 Mark Price unless a strategy-defined trailing/stop-management trigger is actually reached.
-- Do not count pending orders as deployed margin or as filled exposure.
-- Do not raise the 50-USDT margin budget without explicit user approval.
+- direction: LONG
+- mode: isolated 3x
+- entry: **0.6250**
+- current position notional shown: **41.32 USDT**
+- margin shown: **13.20 USDT**
+- mark shown: **0.6451307**
+- unrealized PnL shown: **+1.31 USDT**
+- ROI shown: **+9.58%**
+- realized PnL shown: **-0.13 USDT**
+- liquidation price shown: **0.4293629**
+- hard stop remains: **0.4980 Mark Price**
+- take-profit: none shown
+- current-orders tab shows 1 order, consistent with the displayed 0.4980 stop
+
+### Canceled orders — USER_CONFIRMED
+
+The old averaging bids are no longer active:
+- **0.5850 canceled**
+- **0.5450 canceled**
+
+Reason supplied by user: price did not retrace to those levels and the user did not want the remaining capital sitting idle.
+
+Do not reopen, recreate or treat these two orders as pending unless the user explicitly sets them again.
+
+## Robinhood Chain spot sleeve — DIRECT_CHAIN
+
+Fresh Alchemy read at about 2026-09-26 13:00 Asia/Bangkok.
+
+Canonical PONS:
+- contract: `0x39dbed3a2bd333467115de45665cc57f813c4571`
+- token metadata: name Pons, symbol PONS, 18 decimals
+- wallet balance: **54.799953441979625 PONS**
+- Alchemy price: **0.6448796581 USD/PONS**
+- spot mark value: **~35.34 USD**
+
+Robinhood Chain native gas:
+- **0.000826657957256326 ETH**
+- ETH reference price: **2684.44 USD**
+- gas-wallet mark value: **~2.22 USD**
+
+The user confirms that the capital released by canceling the remaining Binance orders was withdrawn and converted into PONS spot plus gas.
+
+Exact spot acquisition cost, withdrawal fee and swap execution price have not yet been reconstructed from all transaction legs, so current spot PnL is **UNRESOLVED**. Do not infer cost basis from current market value.
+
+## PONS sleeve accounting
+
+The original PONS sleeve began as a **50 USDT** budget. It is no longer a "50 USDT futures-margin budget."
+
+Current components:
+- Binance futures margin: **13.20 USDT** USER_CONFIRMED
+- Robinhood spot PONS mark value: **~35.34 USD** DIRECT_CHAIN + market price
+- Robinhood native gas mark value: **~2.22 USD** DIRECT_CHAIN + ETH price
+
+Gross current component value is about **50.76 USD-equivalent**, before exact fee/cost-basis reconciliation.
+
+This figure is not PnL.
+
+## Monitoring rules
+
+Hourly Mission monitoring must now check:
+
+1. Binance public PONS market data against the existing futures position:
+   - stored entry 0.6250
+   - hard stop 0.4980
+   - liquidation reference 0.4293629
+   - meaningful rapid-move / leverage / funding / OI changes
+
+2. Robinhood Chain DIRECT_CHAIN:
+   - canonical PONS balance
+   - PONS price/value
+   - native ETH gas balance
+   - material unexpected wallet delta
+
+3. Do **not** monitor 0.5850 or 0.5450 as live orders. They are historical canceled orders.
+
+4. Do not create a new averaging order, target, leverage change or capital reallocation automatically.
+
+5. Private Binance futures quantity/PnL/order state remains USER_CONFIRMED until a newer screenshot or connected account source is available.
+
+## Alerts
+
+Send a factual alert when a stored threshold is crossed, a material security/liquidity event occurs, or the direct-chain PONS/gas balance changes unexpectedly.
+
+Unchanged ordinary price movement stays silent.
