@@ -100,6 +100,7 @@ def snapshot() -> dict:
                     "name": f"T{k}",
                     "edge": edge,
                     "entry": px,
+                    "qty": qty,
                     "base_fee": base_fee,
                     "estimated_score": edge - base_fee,
                 })
@@ -117,6 +118,7 @@ def snapshot() -> dict:
                         "name": "BR-R1",
                         "edge": edge,
                         "entry": px,
+                        "qty": qty,
                         "base_fee": base_fee,
                         "estimated_score": edge - base_fee,
                     })
@@ -143,6 +145,43 @@ def snapshot() -> dict:
     submitted_wallets = len(static_done) * 2
     if int(bracket.get("round", 0) or 0) >= 1:
         submitted_wallets += 2 * len(bracket.get("pairs") or [])
+
+    target_to_prize = None
+    if best_edge is not None and prize_cutoff is not None and mark is not None:
+        try:
+            cutoff = Decimal(str(prize_cutoff))
+            qty = Decimal(str(best_edge["qty"]))
+            entry = Decimal(str(best_edge["entry"]))
+            base_fee = Decimal(str(best_edge["base_fee"]))
+            need_move = (cutoff + base_fee) / qty
+            down_target = entry - need_move
+            up_target = entry + need_move
+            down_gap = abs(mark - down_target)
+            up_gap = abs(up_target - mark)
+            if best_edge["estimated_score"] >= cutoff:
+                nearest_side = "already_above"
+                nearest_gap = Decimal("0")
+                nearest_pct = Decimal("0")
+            elif down_gap <= up_gap:
+                nearest_side = "down"
+                nearest_gap = down_gap
+                nearest_pct = (down_gap / mark * Decimal("100")) if mark else None
+            else:
+                nearest_side = "up"
+                nearest_gap = up_gap
+                nearest_pct = (up_gap / mark * Decimal("100")) if mark else None
+            target_to_prize = {
+                "entry": str(entry),
+                "qty": str(qty),
+                "down_target": str(down_target.quantize(Decimal("0.01"))),
+                "up_target": str(up_target.quantize(Decimal("0.01"))),
+                "nearest_side": nearest_side,
+                "nearest_gap": str(nearest_gap.quantize(Decimal("0.01"))),
+                "nearest_pct": str(nearest_pct.quantize(Decimal("0.01"))) if nearest_pct is not None else None,
+                "cutoff": str(cutoff),
+            }
+        except Exception:
+            target_to_prize = None
 
     if ours:
         rank_text = f"并列第 {ours[0]['rank']} 名"
@@ -181,11 +220,13 @@ def snapshot() -> dict:
                 "name": best_edge["name"],
                 "edge": str(best_edge["edge"].quantize(Decimal("0.01"))),
                 "entry": str(best_edge["entry"]),
+                "qty": str(best_edge["qty"]),
                 "base_fee": str(best_edge["base_fee"].quantize(Decimal("0.01"))),
                 "estimated_score": str(best_edge["estimated_score"].quantize(Decimal("0.01"))),
             }
             if best_edge else None
         ),
+        "target_to_prize": target_to_prize,
         "market_positions": {
             "open": positions.get("open"),
             "longs": positions.get("longs"),
@@ -285,6 +326,11 @@ a{color:inherit}
 .gap-title{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
 .gap-bar{height:7px;border-radius:99px;background:#1a2030;margin-top:9px;overflow:hidden}
 .gap-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--warn));width:0%}
+.target-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.target-card{padding:11px 12px;border-radius:12px;background:rgba(8,11,18,.48);border:1px solid var(--line)}
+.target-card .t{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.target-card .v{font-size:18px;font-weight:850;margin-top:3px}
+.target-nearest{margin-top:9px;color:var(--muted);font-size:11px}
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
 .metric{padding:17px 18px;box-shadow:none}
 .metric .label{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
@@ -371,6 +417,11 @@ tr.prize td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
         <div class="gap-title"><span>估算值相对奖区线</span><span id="gapText">-</span></div>
         <div class="gap-bar"><div class="gap-fill" id="gapFill"></div></div>
       </div>
+      <div class="target-grid">
+        <div class="target-card"><div class="t">下行奖区目标</div><div class="v" id="downTarget">-</div></div>
+        <div class="target-card"><div class="t">上行奖区目标</div><div class="v" id="upTarget">-</div></div>
+      </div>
+      <div class="target-nearest" id="nearestTarget">按当前奖区线粗算，等待数据</div>
     </div>
   </div>
 
@@ -493,6 +544,20 @@ async function refresh(){
     }
     document.getElementById('gapText').textContent=gapText;
     document.getElementById('gapFill').style.width=pct+'%';
+
+    const tp=d.target_to_prize;
+    if(tp){
+      document.getElementById('downTarget').textContent=fmtNum(tp.down_target);
+      document.getElementById('upTarget').textContent=fmtNum(tp.up_target);
+      let nearest='当前估算已达到奖区线';
+      if(tp.nearest_side==='down') nearest='最近路径：再跌约 '+fmtNum(tp.nearest_gap)+' / '+fmtNum(tp.nearest_pct)+'%';
+      if(tp.nearest_side==='up') nearest='最近路径：再涨约 '+fmtNum(tp.nearest_gap)+' / '+fmtNum(tp.nearest_pct)+'%';
+      document.getElementById('nearestTarget').textContent=nearest+' · 基于当前奖区线 '+fmtNum(tp.cutoff);
+    }else{
+      document.getElementById('downTarget').textContent='-';
+      document.getElementById('upTarget').textContent='-';
+      document.getElementById('nearestTarget').textContent='暂无可用目标估算';
+    }
 
     document.getElementById('staticValue').textContent=d.static_done+' / '+d.static_total;
     document.getElementById('staticProgress').style.width=((d.static_done/d.static_total)*100)+'%';
