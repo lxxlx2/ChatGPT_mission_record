@@ -1,86 +1,54 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-26 14:18 Asia/Bangkok
+Updated: 2026-09-26 16:33 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-Main status: AUTOMATION_REPAIR_IN_PROGRESS
+## Wallet / position state
+- Ethereum: **400.308121 USDC; 0.001667063838788351 ETH**
+- Solana: **266.559188 USDC; 0.129098090 SOL; 542.749359 e/acc; 947.685473 PAID**
+- BNB Chain: **0 USDC; 0.002567317179192202 BNB; 1183.5967247073113 GSTOCK**
+- Robinhood Chain: **54.799953441979625 PONS; 0.000825190918816326 ETH**
+- Ink: **0.01113370814547789 ETH; 7.665136656205785948 Tydro Ink Points; Fresh INK #372**
+- Base: **0.252982 USDC; 0.000790846510479134 ETH**
+- Unichain: **0.021286 USDC; 0.000231941590232335 ETH; UNICRED NFT #230**
+- Arbitrum: **0.000827194359305186 ETH**; no canonical USDC identified in current Blockscout inventory
+- canonical direct-chain stablecoins: **667.141577 USDC**
 
-## Data truth
+BNB GSTOCK plan has filled on-chain. Canonical BNB USDC is now zero and GSTOCK is active.
 
-DIRECT_CHAIN = fresh connected chain data.
-USER_CONFIRMED = private venue/order UI or explicit user statement.
-MARKET = public market reference.
-UNAVAILABLE/UNRESOLVED = no estimate.
-
-## Wallet state
-
-- Ethereum: 400.308121 USDC; 0.001667063838788351 ETH.
-- Solana: **248.657361 USDC; 0.133415487 SOL; 723.665811 e/acc; 947.685473 PAID**; SHART 0.
-- e/acc and PAID are Token-2022 accounts. Earlier legacy-SPL-only enumeration omitted them; this is corrected.
-- e/acc previous verified remainder was 964.887748, so 241.221937 e/acc has left the wallet since that snapshot; realized proceeds/PnL remain UNRESOLVED until the sale transaction is reconstructed.
-- PAID remains 947.685473, unchanged from the previously verified purchase balance.
-- BNB Chain: **30.00474761 USDC; 0.002684170274192202 BNB; GSTOCK 0**.
-- Robinhood Chain: **54.799953441979625 PONS; 0.000825190918816326 ETH**.
-- Ink: **0.01113370814547789 ETH; 7.665136656205785948 Tydro Ink Points; Fresh INK NFT #372**.
-- Base: 0.252982 USDC; 0.000790846510479134 ETH.
-- Unichain: 0.021286 USDC; 0.000231941590232335 ETH; CRED 0.
-- unidentified Solana SPL 2MU93...dZwQ: 1.745552, UNRESOLVED.
-
-Canonical direct-chain stablecoins including BNB Chain: **679.24449761 USDC**.
-
-User confirms the Solana USDC reduction reflects cross-chain capital movements used to change current positions. Exact bridge-leg attribution remains unreconciled.
-
-## BNB / GSTOCK
-
-- canonical GSTOCK contract: `0xcAFdBCE93477261Db8250e42BdAe6E66733F9E20`
-- direct wallet GSTOCK: **0**
-- current market reference: **~0.024487 USD**
-- about 30 USDC + BNB gas remain on BNB Chain
-- status: **PLAN_NOT_FILLED**
-- user confirms this capital is for the GSTOCK pending-order plan
-- wallet state alone cannot verify whether an unfilled conditional order is active
-
-## Robinhood
-
-PONS state/order ladder: see `positions/pons.md`.
-
-Unpriced non-PONS token receipts are present and excluded from NAV until intent/value is verified:
-JOLLY, HYPERCAT, familiars, RMB, 富贵, DIH, DGDY.
-
-## Ink
-
-- existing Fresh INK commemorative NFT #372 is present
-- Tydro Ink Points 7.665136656205785948
-- native ETH 0.01113370814547789
-- newly discussed target NFT remains pending
+Solana e/acc decreased by another 180.916452 since the 14:18 snapshot. The outflow is chain-confirmed; exact proceeds remain unreconciled. PAID quantity is unchanged.
 
 ## Private positions
 
-### XRP / Variational
-Latest USER_CONFIRMED:
-- 77.12 XRP long @ 1.55589, isolated 3x
-- TP 1.6280; SL 1.5140
+### PONS Binance
+Latest USER_CONFIRMED: LONG 64 @ 0.6250, isolated 3x.
+Stored exits: TP 0.668 / 0.704 / 0.739; stop 0.498.
+Public Binance mark around 16:32: 0.6256.
+No public mark trigger crossing detected after the latest screenshot.
+Estimated current uPnL if unchanged: +0.0384 USDT.
 
-### PONS / Binance
-Latest USER_CONFIRMED order ladder is recorded in `positions/pons.md`.
+### XRP Variational
+Latest USER_CONFIRMED: LONG 77.12 @ 1.55589, isolated 3x.
+TP 1.6280; SL 1.5140.
+Public Binance XRP mark around 16:32: 1.53882547.
+No public mark trigger crossing detected after the latest screenshot.
+Estimated current uPnL if unchanged: -1.3160 USD.
 
 ## Automation health
 
 ### Crypto Daily
-The post-repair automatic run at 13:58/13:59 **did persist successfully**:
-- run audit: `crypto-daily/runs/2026-09-26/135810.md`
-- research: `crypto-daily/research/2026-09-26/135900.md`
-- core market scan completed
-- security scan completed
-- rotating shard completed
-- research write succeeded
+16:00 produced both start and final audits plus the 16:00 research file.
+Core + discovery completed. Two initial errors were recovered successfully but the run was labeled partial_success.
+Runtime/prompt now classify fully recovered attempts as recovered_warning, with success allowed when no residual coverage/write/delivery gap remains.
+Status: **FUNCTIONING; classification repair applied.**
+Next proof: 17:00.
 
-It was labeled `partial_success` only because normal "no fresh authoritative security incident" was incorrectly placed under source_failures. That classification rule is being corrected; the underlying run pipeline is now functioning.
+### $300
+15:29 scheduler metadata advanced but no automatic audit persisted. By the 16:30 check, the expected 16:29 cycle had not advanced last_run_time.
+The same existing task has been shortened and re-anchored to 17:29. No new automation was created.
+Status: **UNHEALTHY; repaired again, awaiting 17:29 proof.**
 
-### $300 Mission
-13:29 scheduler metadata advanced but no new automatic audit was persisted.
-The existing Mission task remains unhealthy.
-
-Repair now changes the same existing task to a minimal factual telemetry runtime using `AUTOMATION_RUNTIME.md`; no new automation is created.
-
-Next proof point: next :29 run must create and finalize a new automatic audit.
+### TGE
+16:12:38 scheduler metadata advanced, but no start/final audit persisted after the execution window.
+The same existing task has been shortened and re-anchored to 17:14. No new automation was created.
+Status: **UNHEALTHY; repaired again, awaiting 17:14 proof.**
