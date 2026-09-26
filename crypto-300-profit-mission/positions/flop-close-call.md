@@ -352,3 +352,27 @@ The controller's owner status is indirectly established by the referee accepting
 
 Execution state:
 `FLEET_REGISTRATION_RECHECK_PENDING`.
+
+
+## Fleet gate passed — sweep 250
+
+Observed local gate result:
+- sweep: 250;
+- reference: 224.43;
+- age_s: 45;
+- flow/state both at sweep 250;
+- dedicated room registered: yes;
+- visible mint subset: 0/52, informational only;
+- retained-window omitted mints: 1,094,123;
+- dedicated owner registrations: 51/51;
+- dedicated-room missed ranges: none;
+- latest missed: none;
+- all gate checks: PASS.
+
+Execution gate result:
+`GATE: PASS_OPEN_ALLOWED`
+
+T01 remains scheduled for 2026-09-26 16:00 Asia/Bangkok. Sweep 250 corresponds to approximately 15:50 Bangkok, so do not intentionally open T01 early. At or just after 16:00, run `open-static 1`; the command re-runs the safety gate internally and will refuse the trade if freshness or room evidence has degraded.
+
+Execution state:
+`GATE_PASS_WAITING_T01`.
