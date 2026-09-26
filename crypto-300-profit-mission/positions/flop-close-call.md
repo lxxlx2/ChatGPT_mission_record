@@ -401,3 +401,37 @@ Runner commit `732e3ac23b58e9d07bee2941478de7f4717a73af` adds `check-trade`, whi
 
 Execution state:
 `T01_SUBMITTED_WAITING_SETTLEMENT`.
+
+
+## T01 outcome visibility — sweep 254
+
+Local `check-trade --cohort 1` result:
+- current sweep: 254;
+- current reference: 224.31;
+- reference age: 2 seconds;
+- T01 submission still present at dedicated-room seq 65;
+- explicit outcome: `NOT_VISIBLE`;
+- retained referee-flow omissions: `settled=71072`, `void=61097`.
+
+Interpretation:
+- this does not establish a void;
+- the public flow surface is heavily truncated and official repository issue #8 documents `omitted.settled` in live sweeps;
+- the T01 message itself was posted correctly in the registered dedicated room;
+- the dedicated room has no reported missed range;
+- the two T01 owner registrations were part of the 51/51 retained signed registrations before the trade;
+- the trade price was the fresh referee reference and the 40.70 size was within the stored conservative funds rule.
+
+Because the public referee surface cannot positively reconcile an omitted individual outcome, T01 is classified as:
+`OUTCOME_OMITTED_HIGH_CONFIDENCE_VALID`
+
+This is an inference from protocol evidence, not a direct settlement confirmation.
+
+Before opening bracket round 1, the runner was hardened in commit
+`37b15b5d096115a3a3d06a2ab782163b655e311f`:
+- each bracket pair is written to local state immediately after submission;
+- rerunning `open-bracket` resumes missing pairs and skips already-submitted pairs;
+- a partial network/process failure can no longer cause an unsafe full re-run with duplicate fresh trade IDs;
+- bracket output stores compact submission evidence instead of the entire room dump.
+
+Execution state:
+`T01_OUTCOME_OMITTED_READY_FOR_BRACKET_R1`.
