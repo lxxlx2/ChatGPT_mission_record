@@ -1,3 +1,8 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["cryptography>=42"]
+# ///
+
 #!/usr/bin/env python3
 from __future__ import annotations
 
