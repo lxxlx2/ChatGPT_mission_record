@@ -1,6 +1,6 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-26 19:55 Asia/Bangkok
+Updated: 2026-09-26 20:35 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
@@ -35,3 +35,20 @@ Deduplicate before Gmail.
 - partial_success / partial_failure only when a real data, persistence or delivery gap remains;
 - temporary failures never disable or pause the task;
 - no Chinese-language websites as evidence.
+
+
+## Final persistence fallback
+
+The ordinary-hour research file is durable evidence that collection occurred, but the run still attempts a final audit.
+
+After research is written:
+1. try `runs/YYYY-MM-DD/HHMMSS-final.md`;
+2. if create fails, fetch that exact path;
+3. if the path exists, update it using the fresh SHA;
+4. if it does not exist or update is blocked, create one compact retry file:
+   `HHMMSS-final-retry.md`.
+
+Do not perform optional work after research write and before final persistence.
+
+A successful research write plus successful final/final-retry = success.
+If research exists but both final writes fail, the next run records the previous cycle as `audit_gap_recovered` and continues.
