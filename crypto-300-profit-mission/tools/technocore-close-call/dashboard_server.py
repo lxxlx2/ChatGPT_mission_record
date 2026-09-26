@@ -15,6 +15,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from close_call_fleet import (
     FINAL_TIME_UTC,
     LOCK_TIME_UTC,
+    STATIC_SCHEDULE_UTC,
+    BRACKET_SCHEDULE_UTC,
     board_rows,
     fresh_price,
     latest_payload,
@@ -146,6 +148,64 @@ def snapshot() -> dict:
     if int(bracket.get("round", 0) or 0) >= 1:
         submitted_wallets += 2 * len(bracket.get("pairs") or [])
 
+    ap = state.get("autopilot") or {}
+    last_seen_at = ap.get("last_seen_at")
+    autopilot_age_s = None
+    if last_seen_at:
+        try:
+            autopilot_age_s = max(0, int((now - datetime.fromisoformat(last_seen_at)).total_seconds()))
+        except Exception:
+            autopilot_age_s = None
+
+    bracket_status_text = str(bracket.get("status") or "")
+    if "blocked" in bracket_status_text.lower():
+        system_status = "NEEDS_ATTENTION"
+        system_text = "策略遇到阻塞，需要检查"
+        user_action = "需要检查后台状态"
+    elif autopilot_age_s is None or autopilot_age_s > 180:
+        system_status = "NEEDS_ATTENTION"
+        system_text = "后台心跳异常"
+        user_action = "需要检查后台是否仍在运行"
+    elif pr["age_s"] > 120:
+        system_status = "WAITING"
+        system_text = "正在等待更新的官方价格"
+        user_action = "不用操作，程序会自动等待新价格"
+    else:
+        system_status = "OK"
+        system_text = "策略正在正常自动运行"
+        user_action = "现在不用做任何操作"
+
+    next_events = []
+    for cohort, due_text in STATIC_SCHEDULE_UTC.items():
+        key = f"{cohort:02d}"
+        if key in state.get("static", {}):
+            continue
+        if key in (ap.get("missed_static") or {}):
+            continue
+        try:
+            due = datetime.fromisoformat(due_text)
+            if due >= now:
+                next_events.append((due, f"Static T{key} 自动开仓"))
+        except Exception:
+            pass
+
+    round_no_now = int(bracket.get("round", 0) or 0)
+    next_round = round_no_now + 1
+    due_text = BRACKET_SCHEDULE_UTC.get(next_round)
+    if due_text:
+        try:
+            due = datetime.fromisoformat(due_text)
+            if due >= now:
+                next_events.append((due, f"Bracket R{next_round} 自动轮换"))
+        except Exception:
+            pass
+
+    if next_events:
+        next_events.sort(key=lambda x: x[0])
+        next_event_at, next_event_text = next_events[0]
+    else:
+        next_event_at, next_event_text = None, "等待最终结算"
+
     target_to_prize = None
     if best_edge is not None and prize_cutoff is not None and mark is not None:
         try:
@@ -192,6 +252,14 @@ def snapshot() -> dict:
         rank_status = "OUTSIDE_BOARD"
         best_ours = None
 
+    in_prize_zone = any(row.get("prize_zone") for row in ours)
+    if in_prize_zone:
+        prize_status_text = "已进入奖金区"
+    elif ours:
+        prize_status_text = "已上公开榜，暂未进奖金区"
+    else:
+        prize_status_text = "暂未进入奖金区"
+
     return {
         "updated_at": now.isoformat(),
         "phase": phase,
@@ -201,6 +269,14 @@ def snapshot() -> dict:
         "mark": str(mark) if mark is not None else None,
         "rank_status": rank_status,
         "rank_text": rank_text,
+        "in_prize_zone": in_prize_zone,
+        "prize_status_text": prize_status_text,
+        "system_status": system_status,
+        "system_text": system_text,
+        "user_action": user_action,
+        "autopilot_age_s": autopilot_age_s,
+        "next_event_text": next_event_text,
+        "next_event_at": next_event_at.isoformat() if next_event_at else None,
         "best_ours": best_ours,
         "ours_on_board": ours,
         "leader_score": leader,
@@ -251,338 +327,182 @@ HTML = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#080b12">
-<title>Close Call Control Center</title>
+<title>Close Call 奖金追踪</title>
 <style>
 :root{
-  color-scheme:dark;
-  --bg:#080b12;
-  --panel:#101522;
-  --panel2:#151b2a;
-  --panel3:#0d1220;
-  --line:#222b3d;
-  --line2:#2e3950;
-  --text:#f7f9fc;
-  --muted:#8e9bb0;
-  --muted2:#657189;
-  --accent:#7c9cff;
-  --accent2:#9f7cff;
-  --good:#45d483;
-  --warn:#f5c85b;
-  --bad:#ff6f7d;
-  --cyan:#56d7e5;
-  --shadow:0 18px 60px rgba(0,0,0,.32);
+  color-scheme:dark;--bg:#080b12;--panel:#111725;--panel2:#0d1320;--line:#222c3d;
+  --text:#f6f8fb;--muted:#8d99ae;--good:#48d287;--warn:#f5c85b;--bad:#ff7080;
+  --blue:#7e9cff;--cyan:#55d4e5;--shadow:0 18px 55px rgba(0,0,0,.28)
 }
-*{box-sizing:border-box}
-html,body{min-height:100%;margin:0}
-body{
-  background:
-    radial-gradient(circle at 15% -10%,rgba(124,156,255,.14),transparent 34%),
-    radial-gradient(circle at 85% 0%,rgba(159,124,255,.10),transparent 30%),
-    linear-gradient(180deg,#080b12 0%,#0a0e17 52%,#080b12 100%);
-  color:var(--text);
-  font:14px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
-}
-a{color:inherit}
-.shell{max-width:1280px;margin:0 auto;padding:34px 24px 56px}
-.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;margin-bottom:24px}
-.brand{display:flex;align-items:center;gap:14px}
-.logo{
-  width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-weight:900;font-size:18px;
-  background:linear-gradient(135deg,#7c9cff,#9f7cff 58%,#56d7e5);
-  box-shadow:0 10px 30px rgba(124,156,255,.28)
-}
-.title{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:0}
-.subtitle{color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 0 5px rgba(69,212,131,.08)}
-.header-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.badge,.btn{
-  display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:rgba(16,21,34,.84);
-  border-radius:11px;padding:8px 11px;color:var(--muted);font-size:12px;text-decoration:none
-}
-.btn:hover{border-color:#43506b;color:var(--text);background:#151b2a}
-.hero{
-  display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-bottom:16px
-}
-.hero-main,.hero-side,.metric,.section{
-  background:linear-gradient(180deg,rgba(21,27,42,.96),rgba(13,18,32,.96));
-  border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)
-}
-.hero-main{padding:22px}
-.hero-side{padding:22px}
-.eyebrow{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
-.rank-line{display:flex;align-items:flex-end;gap:13px;margin-top:10px;flex-wrap:wrap}
-.rank-big{font-size:46px;font-weight:900;letter-spacing:-.045em;line-height:1}
-.rank-status{font-size:13px;color:var(--muted);padding-bottom:5px}
-.rank-big.good{color:var(--good)}.rank-big.warn{color:var(--warn)}
-.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
-.kpi{background:rgba(8,11,18,.48);border:1px solid var(--line);border-radius:13px;padding:13px}
-.kpi .n{font-size:21px;font-weight:800;margin-top:3px}
-.kpi .t{font-size:11px;color:var(--muted)}
-.prize-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.prize-value{font-size:34px;font-weight:850;letter-spacing:-.03em;margin-top:9px}
-.prize-sub{color:var(--muted);font-size:12px;margin-top:5px}
-.gap-box{margin-top:18px;padding:13px;border-radius:13px;background:rgba(245,200,91,.06);border:1px solid rgba(245,200,91,.18)}
-.gap-title{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
-.gap-bar{height:7px;border-radius:99px;background:#1a2030;margin-top:9px;overflow:hidden}
-.gap-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--warn));width:0%}
-.target-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
-.target-card{padding:11px 12px;border-radius:12px;background:rgba(8,11,18,.48);border:1px solid var(--line)}
-.target-card .t{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-.target-card .v{font-size:18px;font-weight:850;margin-top:3px}
-.target-nearest{margin-top:9px;color:var(--muted);font-size:11px}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
-.metric{padding:17px 18px;box-shadow:none}
-.metric .label{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-.metric .value{font-size:25px;font-weight:850;letter-spacing:-.025em;margin-top:7px}
-.metric .hint{font-size:12px;color:var(--muted);margin-top:5px}
-.progress-wrap{margin-top:11px;height:7px;background:#1b2231;border-radius:99px;overflow:hidden}
-.progress{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--cyan));width:0%}
-.section{margin-top:16px;overflow:hidden;box-shadow:none}
-.section-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
-.section-title{font-size:15px;font-weight:800}
-.section-sub{font-size:12px;color:var(--muted);margin-top:2px}
-.table-wrap{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:720px}
-th,td{padding:12px 16px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
-th{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted2);font-weight:800;background:rgba(8,11,18,.28)}
-td{font-size:13px}
-tr:last-child td{border-bottom:0}
-tr:hover td{background:rgba(124,156,255,.035)}
-tr.ours td{background:rgba(69,212,131,.09)}
-tr.prize td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
-.rank-cell{font-weight:800}
-.score-cell{font-variant-numeric:tabular-nums;font-weight:750}
-.did{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#c6d0e1;font-size:12px}
-.pill{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:#20293a;color:#cbd5e6;font-size:11px;border:1px solid #2d394e}
-.prize-pill{background:rgba(245,200,91,.09);border-color:rgba(245,200,91,.24);color:#f7d77d}
-.ours-pill{background:rgba(69,212,131,.1);border-color:rgba(69,212,131,.24);color:#7ce9aa}
-.table-actions{display:flex;gap:8px}
-.mini-btn{cursor:pointer;border:1px solid var(--line2);background:#121827;color:var(--muted);border-radius:9px;padding:7px 10px;font-size:11px}
-.mini-btn:hover{color:var(--text);border-color:#46536f}
-.note{padding:13px 18px 16px;color:var(--muted);font-size:11px}
-.footer-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.footer-links a{text-decoration:none;color:#a8b8d4;border:1px solid var(--line);background:#0e1420;padding:9px 11px;border-radius:10px;font-size:11px}
-.footer-links a:hover{border-color:#40506c;color:#fff}
-.hide{display:none}
-@media(max-width:980px){
-  .hero{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.kpi-row{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:620px){
-  .shell{padding:22px 14px 40px}.topbar{flex-direction:column}.header-actions{justify-content:flex-start}
-  .metrics{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr}.rank-big{font-size:39px}.title{font-size:24px}
-}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{background:radial-gradient(circle at 15% -10%,rgba(126,156,255,.12),transparent 35%),linear-gradient(#080b12,#0a0e17);color:var(--text);font:14px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.shell{max-width:1240px;margin:auto;padding:30px 22px 56px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:13px}
+.logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,#7e9cff,#a47fff 60%,#55d4e5)}
+h1{font-size:26px;letter-spacing:-.03em;margin:0}.sub{color:var(--muted);font-size:12px;margin-top:3px}
+.badge{border:1px solid #2d3950;background:#101725;border-radius:11px;padding:8px 10px;color:var(--muted);font-size:11px}
+.actionbar{display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(90deg,rgba(72,210,135,.10),rgba(126,156,255,.06));border:1px solid rgba(72,210,135,.22);border-radius:16px;padding:15px 17px;margin-bottom:15px}
+.actionleft{display:flex;align-items:center;gap:11px}.dot{width:10px;height:10px;border-radius:50%;background:var(--good);box-shadow:0 0 0 6px rgba(72,210,135,.08)}
+.actiontitle{font-weight:800;font-size:15px}.actionsub{color:var(--muted);font-size:12px;margin-top:2px}.next{text-align:right}.next b{display:block;font-size:13px}.next span{color:var(--muted);font-size:11px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card,.section{background:linear-gradient(180deg,#131a2a,#0e1421);border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow)}
+.card{padding:17px 18px}.label{color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.06em;text-transform:uppercase}.value{font-size:29px;font-weight:900;letter-spacing:-.035em;margin-top:7px}.hint{color:var(--muted);font-size:12px;margin-top:5px}.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+.bigrow{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-top:12px}.bigcard{padding:20px}
+.prizeStatus{font-size:34px;font-weight:900;letter-spacing:-.04em;margin-top:7px}.scoreline{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}.scoreline .main{font-size:36px;font-weight:900}.scoreline .small{color:var(--muted);font-size:12px}
+.gap{margin-top:16px;padding:13px;border:1px solid rgba(245,200,91,.22);background:rgba(245,200,91,.06);border-radius:13px}.gap strong{font-size:19px}.gap p{margin:4px 0 0;color:var(--muted);font-size:11px}
+.targets{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.target{padding:12px;background:rgba(8,11,18,.48);border:1px solid var(--line);border-radius:12px}.target b{display:block;font-size:20px;margin-top:3px}.target span{color:var(--muted);font-size:10px}
+.progress{height:7px;background:#1b2333;border-radius:99px;overflow:hidden;margin-top:11px}.fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:99px}
+.section{margin-top:14px;overflow:hidden;box-shadow:none}.sectionhead{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.sectiontitle{font-weight:850;font-size:15px}.sectionsub{font-size:11px;color:var(--muted);margin-top:2px}
+table{width:100%;border-collapse:collapse}th,td{padding:11px 16px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{font-size:10px;color:#6f7c92;text-transform:uppercase;letter-spacing:.08em}td{font-size:12px}tr:last-child td{border-bottom:0}.ours td{background:rgba(72,210,135,.09)}.prize td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+.pill{display:inline-block;border-radius:999px;padding:4px 8px;background:#20293a;border:1px solid #2d394e;color:#c9d3e2;font-size:10px}.pill.gold{background:rgba(245,200,91,.08);border-color:rgba(245,200,91,.25);color:#f5d36f}.pill.green{background:rgba(72,210,135,.09);border-color:rgba(72,210,135,.24);color:#7de9ad}
+.did{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#b9c4d5}.tablewrap{overflow:auto}.note{padding:12px 18px;color:var(--muted);font-size:11px}
+details{margin-top:14px;background:#0e1420;border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--muted)}summary{cursor:pointer;color:#b8c3d5;font-weight:700}.tech{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.tech div{padding:10px;border-radius:10px;background:#111827}.tech b{display:block;color:var(--text);font-size:15px;margin-top:2px}.links{margin-top:10px;display:flex;gap:9px;flex-wrap:wrap}.links a{color:#aab9d5;text-decoration:none;font-size:11px}
+@media(max-width:900px){.grid4{grid-template-columns:repeat(2,1fr)}.bigrow{grid-template-columns:1fr}.tech{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.shell{padding:20px 13px 40px}.top,.actionbar{align-items:flex-start;flex-direction:column}.next{text-align:left}.grid4{grid-template-columns:1fr}.targets{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="shell">
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">CC</div>
-      <div>
-        <h1 class="title">Close Call Control Center</h1>
-        <div class="subtitle"><span class="status-dot"></span><span id="updated">正在连接 referee…</span></div>
-      </div>
-    </div>
-    <div class="header-actions">
-      <span class="badge" id="phaseBadge">TRADING</span>
-      <span class="badge" id="refreshBadge">30s 自动刷新</span>
-    </div>
+  <div class="top">
+    <div class="brand"><div class="logo">CC</div><div><h1>Close Call 奖金追踪</h1><div class="sub" id="updated">正在读取比赛数据…</div></div></div>
+    <div class="badge" id="phaseBadge">TRADING</div>
   </div>
 
-  <div class="hero">
-    <div class="hero-main">
-      <div class="eyebrow">Our best published standing</div>
-      <div class="rank-line">
-        <div class="rank-big warn" id="rank">-</div>
-        <div class="rank-status" id="rankDetail">读取中</div>
-      </div>
-      <div class="kpi-row">
-        <div class="kpi"><div class="t">榜首 Score</div><div class="n" id="leaderScore">-</div></div>
-        <div class="kpi"><div class="t">奖区分数线</div><div class="n" id="prizeCutoff">-</div></div>
-        <div class="kpi"><div class="t">奖区公开钱包</div><div class="n" id="prizeWallets">-</div></div>
-      </div>
-    </div>
-
-    <div class="hero-side">
-      <div class="prize-head">
-        <div>
-          <div class="eyebrow">Estimated strategy score</div>
-          <div class="prize-value" id="estScore">-</div>
-          <div class="prize-sub" id="estScoreDetail">策略观察值，非官方 Score</div>
-        </div>
-        <span class="pill prize-pill">Prize focus</span>
-      </div>
-      <div class="gap-box">
-        <div class="gap-title"><span>估算值相对奖区线</span><span id="gapText">-</span></div>
-        <div class="gap-bar"><div class="gap-fill" id="gapFill"></div></div>
-      </div>
-      <div class="target-grid">
-        <div class="target-card"><div class="t">下行奖区目标</div><div class="v" id="downTarget">-</div></div>
-        <div class="target-card"><div class="t">上行奖区目标</div><div class="v" id="upTarget">-</div></div>
-      </div>
-      <div class="target-nearest" id="nearestTarget">按当前奖区线粗算，等待数据</div>
-    </div>
+  <div class="actionbar" id="actionbar">
+    <div class="actionleft"><span class="dot" id="statusDot"></span><div><div class="actiontitle" id="systemText">读取后台状态…</div><div class="actionsub" id="userAction">-</div></div></div>
+    <div class="next"><span>下一步自动动作</span><b id="nextEvent">-</b><span id="nextEventTime">-</span></div>
   </div>
 
-  <div class="metrics">
-    <div class="metric">
-      <div class="label">Static progress</div>
-      <div class="value" id="staticValue">-</div>
-      <div class="progress-wrap"><div class="progress" id="staticProgress"></div></div>
-      <div class="hint" id="staticHint">等待数据</div>
+  <div class="grid4">
+    <div class="card"><div class="label">现在有没有进奖金区？</div><div class="value warn" id="prizeState">-</div><div class="hint">只有最终前三个 prize places 有奖金</div></div>
+    <div class="card"><div class="label">我们当前最好公开名次</div><div class="value" id="rank">-</div><div class="hint" id="rankHint">-</div></div>
+    <div class="card"><div class="label">当前奖金区分数线</div><div class="value" id="cutoff">-</div><div class="hint">达到这个附近才进入当前奖金竞争区</div></div>
+    <div class="card"><div class="label">当前榜首</div><div class="value" id="leader">-</div><div class="hint">公开榜第一名的官方 Score</div></div>
+  </div>
+
+  <div class="bigrow">
+    <div class="card bigcard">
+      <div class="label">我们的当前最好成绩</div>
+      <div class="scoreline"><div class="main" id="ourScore">-</div><div class="small" id="ourScoreType">-</div></div>
+      <div class="gap">
+        <strong id="scoreGap">-</strong>
+        <p id="scoreExplain">这是估算值，只用来判断策略有没有接近奖区。</p>
+      </div>
+      <div class="targets">
+        <div class="target"><span>如果继续下跌，粗略到这里</span><b id="downTarget">-</b></div>
+        <div class="target"><span>如果继续上涨，粗略到这里</span><b id="upTarget">-</b></div>
+      </div>
+      <div class="hint" id="nearestTarget" style="margin-top:10px">目标会随奖区线变化，实际 clawback 也可能提高门槛。</div>
     </div>
-    <div class="metric">
-      <div class="label">Bracket</div>
-      <div class="value" id="bracketValue">-</div>
-      <div class="hint" id="bracketHint">-</div>
-    </div>
-    <div class="metric">
-      <div class="label">Ref / Mark</div>
-      <div class="value" id="prices">-</div>
-      <div class="hint" id="priceHint">-</div>
-    </div>
-    <div class="metric">
-      <div class="label">Strategy wallets</div>
-      <div class="value" id="wallets">-</div>
-      <div class="hint" id="walletHint">已提交策略交易的钱包</div>
+
+    <div class="card bigcard">
+      <div class="label">策略跑到哪一步？</div>
+      <div style="margin-top:13px">
+        <div style="display:flex;justify-content:space-between"><b id="staticTitle">Static -</b><span class="hint" id="staticRemain">-</span></div>
+        <div class="progress"><div class="fill" id="staticFill" style="width:0%"></div></div>
+      </div>
+      <div style="margin-top:18px">
+        <div style="display:flex;justify-content:space-between"><b id="bracketTitle">Bracket -</b><span class="hint" id="bracketHint">-</span></div>
+        <div class="progress"><div class="fill" id="bracketFill" style="width:0%"></div></div>
+      </div>
+      <div class="hint" id="walletText" style="margin-top:18px">-</div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-head">
-      <div>
-        <div class="section-title">官方公开榜</div>
-        <div class="section-sub" id="boardSummary">读取 referee PnL board…</div>
-      </div>
-      <div class="table-actions">
-        <button class="mini-btn" id="toggleRows" onclick="toggleRows()">显示全部</button>
-      </div>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>公开名次</th><th>账户</th><th>Score</th><th>状态</th><th>我们的标签</th></tr></thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
+    <div class="sectionhead"><div><div class="sectiontitle">官方公开榜</div><div class="sectionsub" id="boardSummary">这里只用来看竞争对手，以及我们的钱包有没有上榜。</div></div><span class="pill" id="boardCount">Top 25</span></div>
+    <div class="tablewrap"><table><thead><tr><th>名次</th><th>账户</th><th>官方 Score</th><th>状态</th><th>我们的标签</th></tr></thead><tbody id="rows"></tbody></table></div>
     <div class="note" id="note"></div>
   </div>
 
-  <div class="footer-links">
-    <a href="https://technocore.chat/r/d-close1-pnl" target="_blank">PnL 原始房间 ↗</a>
-    <a href="https://technocore.chat/r/d-close1-positions" target="_blank">Positions 原始房间 ↗</a>
-    <a href="https://technocore.chat/r/d-close1-price" target="_blank">Price 原始房间 ↗</a>
-  </div>
+  <details>
+    <summary>系统技术信息（平时不用看）</summary>
+    <div class="tech">
+      <div><span>官方计分价格 Mark</span><b id="mark">-</b></div>
+      <div><span>下单参考价 Ref</span><b id="ref">-</b></div>
+      <div><span>Ref 新鲜度</span><b id="age">-</b></div>
+      <div><span>Sweep</span><b id="sweep">-</b></div>
+    </div>
+    <div class="links">
+      <a href="https://technocore.chat/r/d-close1-pnl" target="_blank">官方 PnL 原始数据 ↗</a>
+      <a href="https://technocore.chat/r/d-close1-positions" target="_blank">官方 Positions 原始数据 ↗</a>
+      <a href="https://technocore.chat/r/d-close1-price" target="_blank">官方 Price 原始数据 ↗</a>
+    </div>
+  </details>
 </div>
 <script>
-let SHOW_ALL=false;
-let LAST=null;
-
-function fmtNum(v, digits=2){
-  if(v===null || v===undefined || v==='') return '-';
-  const n=Number(v); if(!Number.isFinite(n)) return String(v);
-  return n.toLocaleString(undefined,{minimumFractionDigits:digits,maximumFractionDigits:digits});
-}
-function renderBoard(d){
-  const tbody=document.getElementById('rows'); tbody.innerHTML='';
-  const list=SHOW_ALL ? d.board : d.board.slice(0,10);
-  for(const x of list){
-    const tr=document.createElement('tr');
-    tr.className=[x.ours?'ours':'',x.prize_zone?'prize':''].filter(Boolean).join(' ');
-    const rankText=x.rank===x.index ? '#'+x.rank : '并列 #'+x.rank;
-    const status=x.ours
-      ? '<span class="pill ours-pill">我们的</span>'
-      : (x.prize_zone ? '<span class="pill prize-pill">奖区</span>' : '<span class="pill">公开榜</span>');
-    tr.innerHTML =
-      '<td class="rank-cell">'+rankText+'</td>'+
-      '<td class="did">'+x.did_short+'</td>'+
-      '<td class="score-cell">'+fmtNum(x.score)+'</td>'+
-      '<td>'+status+'</td>'+
-      '<td>'+(x.label?'<span class="pill ours-pill">'+x.label+'</span>':'')+'</td>';
-    tbody.appendChild(tr);
-  }
-  document.getElementById('toggleRows').textContent=SHOW_ALL?'收起到 Top 10':'显示全部 '+d.board.length;
-}
-function toggleRows(){SHOW_ALL=!SHOW_ALL;if(LAST)renderBoard(LAST)}
-
+function fmt(v,d=2){if(v===null||v===undefined||v==='')return '-';const n=Number(v);return Number.isFinite(n)?n.toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d}):String(v)}
 async function refresh(){
   try{
-    const r=await fetch('/api/status',{cache:'no-store'});
-    const d=await r.json();
-    if(d.error) throw new Error(d.error);
-    LAST=d;
-
-    const localTime=new Date(d.updated_at).toLocaleString();
-    document.getElementById('updated').textContent='实时 · '+localTime+' · sweep '+d.sweep;
+    const r=await fetch('/api/status',{cache:'no-store'});const d=await r.json();if(d.error)throw new Error(d.error);
+    document.getElementById('updated').textContent='实时更新 · '+new Date(d.updated_at).toLocaleString()+' · 每30秒刷新';
     document.getElementById('phaseBadge').textContent=d.phase;
-    document.getElementById('refreshBadge').textContent='30s 自动刷新 · ref '+d.age_s+'s';
 
-    const rank=document.getElementById('rank');
-    rank.textContent=d.rank_text;
-    rank.className='rank-big '+(d.rank_status==='ON_BOARD'?'good':'warn');
-    document.getElementById('rankDetail').textContent=d.best_ours
-      ? d.best_ours.label+' · 官方 Score '+fmtNum(d.best_ours.score)
-      : '当前没有我们的 DID 出现在官方公开 Top '+d.board_size;
+    const dot=document.getElementById('statusDot');
+    dot.style.background=d.system_status==='OK'?'var(--good)':(d.system_status==='WAITING'?'var(--warn)':'var(--bad)');
+    document.getElementById('systemText').textContent=d.system_text;
+    document.getElementById('userAction').textContent='你现在需要做什么：'+d.user_action;
+    document.getElementById('nextEvent').textContent=d.next_event_text;
+    document.getElementById('nextEventTime').textContent=d.next_event_at?new Date(d.next_event_at).toLocaleString():'';
 
-    document.getElementById('leaderScore').textContent=fmtNum(d.leader_score);
-    document.getElementById('prizeCutoff').textContent=fmtNum(d.prize_cutoff_score);
-    document.getElementById('prizeWallets').textContent=d.prize_visible_wallets;
+    const prize=document.getElementById('prizeState');prize.textContent=d.prize_status_text;
+    prize.className='value '+(d.in_prize_zone?'good':'warn');
+    document.getElementById('rank').textContent=d.rank_text;
+    document.getElementById('rankHint').textContent=d.best_ours?('我们的 '+d.best_ours.label+' · 官方 '+fmt(d.best_ours.score)):'我们的钱包还没出现在官方公开 Top '+d.board_size;
+    document.getElementById('cutoff').textContent=fmt(d.prize_cutoff_score);
+    document.getElementById('leader').textContent=fmt(d.leader_score);
 
     const best=d.best_gross_edge;
-    document.getElementById('estScore').textContent=best ? fmtNum(best.estimated_score)+' POLF' : '-';
-    document.getElementById('estScoreDetail').textContent=best
-      ? best.name+' · gross '+fmtNum(best.edge)+' · base fee≈'+fmtNum(best.base_fee)
-      : '暂无估算';
+    let ourScore='-87.27',scoreType='策略估算 Score',gapText='暂无可比数据';
+    if(d.best_ours){ourScore=fmt(d.best_ours.score);scoreType='官方 Score · '+d.best_ours.label}
+    else if(best){ourScore=fmt(best.estimated_score);scoreType='估算 Score · '+best.name}
+    document.getElementById('ourScore').textContent=ourScore+' POLF';
+    document.getElementById('ourScoreType').textContent=scoreType;
 
-    let gapText='-'; let pct=0;
-    const est=best?Number(best.estimated_score):NaN;
-    const cut=Number(d.prize_cutoff_score);
-    if(Number.isFinite(est)&&Number.isFinite(cut)&&cut!==0){
-      const gap=cut-est;
-      gapText=(gap>0?'距线约 ':'高于线约 ')+fmtNum(Math.abs(gap))+' POLF';
-      pct=Math.max(0,Math.min(100,(est/cut)*100));
+    const scoreN=Number(d.best_ours?d.best_ours.score:(best?best.estimated_score:NaN));
+    const cutoffN=Number(d.prize_cutoff_score);
+    if(Number.isFinite(scoreN)&&Number.isFinite(cutoffN)){
+      const diff=cutoffN-scoreN;
+      gapText=diff>0?('按当前线估算，还差 '+fmt(diff)+' POLF'):('当前已高于奖区线约 '+fmt(Math.abs(diff))+' POLF');
     }
-    document.getElementById('gapText').textContent=gapText;
-    document.getElementById('gapFill').style.width=pct+'%';
+    document.getElementById('scoreGap').textContent=gapText;
+    document.getElementById('scoreExplain').textContent=d.best_ours?'这里显示官方 Score。':'这里显示我们当前最好候选的估算 Score，官方没上榜前只能作为参考。';
 
     const tp=d.target_to_prize;
+    document.getElementById('downTarget').textContent=tp?fmt(tp.down_target):'-';
+    document.getElementById('upTarget').textContent=tp?fmt(tp.up_target):'-';
     if(tp){
-      document.getElementById('downTarget').textContent=fmtNum(tp.down_target);
-      document.getElementById('upTarget').textContent=fmtNum(tp.up_target);
-      let nearest='当前估算已达到奖区线';
-      if(tp.nearest_side==='down') nearest='最近路径：再跌约 '+fmtNum(tp.nearest_gap)+' / '+fmtNum(tp.nearest_pct)+'%';
-      if(tp.nearest_side==='up') nearest='最近路径：再涨约 '+fmtNum(tp.nearest_gap)+' / '+fmtNum(tp.nearest_pct)+'%';
-      document.getElementById('nearestTarget').textContent=nearest+' · 基于当前奖区线 '+fmtNum(tp.cutoff);
-    }else{
-      document.getElementById('downTarget').textContent='-';
-      document.getElementById('upTarget').textContent='-';
-      document.getElementById('nearestTarget').textContent='暂无可用目标估算';
-    }
+      let near='当前估算已经达到奖区线';
+      if(tp.nearest_side==='down')near='最近路径：Mark 再跌约 '+fmt(tp.nearest_gap)+'（'+fmt(tp.nearest_pct)+'%）';
+      if(tp.nearest_side==='up')near='最近路径：Mark 再涨约 '+fmt(tp.nearest_gap)+'（'+fmt(tp.nearest_pct)+'%）';
+      document.getElementById('nearestTarget').textContent=near+'。按当前奖区线粗算，目标会动态变化，实际 clawback 可能提高门槛。';
+    }else document.getElementById('nearestTarget').textContent='暂无目标估算。';
 
-    document.getElementById('staticValue').textContent=d.static_done+' / '+d.static_total;
-    document.getElementById('staticProgress').style.width=((d.static_done/d.static_total)*100)+'%';
-    document.getElementById('staticHint').textContent='Static cohorts completed';
-
-    document.getElementById('bracketValue').textContent='R'+(d.bracket_round??'-');
+    document.getElementById('staticTitle').textContent='Static '+d.static_done+' / '+d.static_total;
+    document.getElementById('staticRemain').textContent='还剩 '+Math.max(0,d.static_total-d.static_done)+' 组';
+    document.getElementById('staticFill').style.width=(100*d.static_done/d.static_total)+'%';
+    document.getElementById('bracketTitle').textContent='Bracket R'+(d.bracket_round??'-')+' / 4';
     document.getElementById('bracketHint').textContent=(d.bracket_status??'-')+' · '+d.bracket_pairs+' pairs';
+    document.getElementById('bracketFill').style.width=(25*Number(d.bracket_round||0))+'%';
+    document.getElementById('walletText').textContent='已进入策略流程：'+d.submitted_wallets+' / 52 个钱包';
 
-    document.getElementById('prices').textContent=fmtNum(d.ref)+' / '+fmtNum(d.mark);
-    document.getElementById('priceHint').textContent='ref age '+d.age_s+'s · sweep '+d.sweep;
+    document.getElementById('boardCount').textContent='公开 Top '+d.board_size;
+    document.getElementById('boardSummary').textContent=d.ours_on_board.length?'我们的钱包已出现在公开榜，绿色行为我们的。':'当前我们的钱包还没上榜，下面主要是竞争对手。';
+    const tbody=document.getElementById('rows');tbody.innerHTML='';
+    for(const x of d.board.slice(0,8)){
+      const tr=document.createElement('tr');tr.className=[x.ours?'ours':'',x.prize_zone?'prize':''].filter(Boolean).join(' ');
+      const status=x.ours?'<span class="pill green">我们的</span>':(x.prize_zone?'<span class="pill gold">奖区</span>':'');
+      tr.innerHTML='<td><b>'+(x.rank===x.index?'#'+x.rank:'并列 #'+x.rank)+'</b></td><td class="did">'+x.did_short+'</td><td><b>'+fmt(x.score)+'</b></td><td>'+status+'</td><td>'+(x.label?'<span class="pill green">'+x.label+'</span>':'')+'</td>';
+      tbody.appendChild(tr);
+    }
+    document.getElementById('note').textContent='如果我们的 DID 进入公开 Top '+d.board_size+'，这里会自动高亮并显示 TIME / BR 标签。没上榜时无法知道精确总排名。';
 
-    document.getElementById('wallets').textContent=d.submitted_wallets;
-    document.getElementById('walletHint').textContent='已进入策略流程的钱包';
-
-    document.getElementById('boardSummary').textContent=
-      '公开 Top '+d.board_size+' · '+d.prize_visible_wallets+' 个钱包当前占据 prize-place 并列组';
-    document.getElementById('note').textContent=d.notes.exact_rank+' '+d.notes.gross_edge;
-    renderBoard(d);
-  }catch(e){
-    document.getElementById('updated').textContent='读取失败 · '+e.message;
-    document.querySelector('.status-dot').style.background='var(--bad)';
-  }
+    document.getElementById('mark').textContent=fmt(d.mark);
+    document.getElementById('ref').textContent=fmt(d.ref);
+    document.getElementById('age').textContent=d.age_s+' 秒';
+    document.getElementById('sweep').textContent=d.sweep;
+  }catch(e){document.getElementById('systemText').textContent='面板读取失败';document.getElementById('userAction').textContent=e.message;document.getElementById('statusDot').style.background='var(--bad)'}
 }
-refresh();
-setInterval(refresh,30000);
+refresh();setInterval(refresh,30000);
 </script>
 </body>
 </html>"""
