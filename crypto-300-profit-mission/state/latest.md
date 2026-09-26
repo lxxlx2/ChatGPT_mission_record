@@ -1,9 +1,9 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-26 09:18 Asia/Bangkok
+Updated: 2026-09-26 12:21 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-Main status: ACTIVE_MONITORING
+Main status: REPAIR_APPLIED_AWAITING_AUTOMATIC_VALIDATION
 
 ## Data provenance
 
@@ -14,23 +14,27 @@ UNAVAILABLE/UNRESOLVED = do not estimate.
 
 ## Wallet / capital
 
-DIRECT_CHAIN:
+Fresh DIRECT_CHAIN:
 - Ethereum: 400.308121 USDC; 0.001667063838788351 ETH.
-- Solana: 339.825001 USDC; 0.139742323 SOL; SHART 0.
-- Solana unidentified SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: 1.745552 tokens, identity/value UNRESOLVED.
+- Solana: 330.799585 USDC; 0.135545164 SOL; SHART 0.
+- unidentified Solana SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: 1.745552 tokens, identity/value UNRESOLVED.
 - Base: 0.252982 USDC; 0.000790846510479134 ETH.
 - Unichain: 0.021286 USDC; 0.000231941590232335 ETH; CRED 0.
 - Robinhood Chain native: 0.000081643478484768.
-- Canonical direct-chain stablecoin total: **740.407390 USDC**.
+- canonical direct-chain stablecoin total: **731.381974 USDC**.
 
 Accounting reserves:
 - JUMP: 400 USDC.
 - short-window opportunity reserve: 150 USDC.
 - ETH setup reserve: 100 USDC.
-- direct-chain residual after reserves: **90.407390 USDC**.
-- PONS 50 USDT and the 500 USD-equivalent low-risk bucket are tracked separately.
+- direct-chain residual after reserves: **81.381974 USDC**.
+- PONS 50 USDT and the separate 500 USD-equivalent low-risk bucket are outside this direct-chain residual calculation.
 
-Do not infer why wallet balances moved without transaction-history verification.
+Solana delta versus 09:18:
+- USDC: -9.025416
+- SOL: -0.004197159
+
+Cause is not inferred without transaction-history verification.
 
 ## Private / off-chain positions
 
@@ -38,80 +42,63 @@ Do not infer why wallet balances moved without transaction-history verification.
 USER_CONFIRMED at 2026-09-26 06:08:
 - LONG 77.12 XRP at 1.55589, isolated 3x.
 - TP 1.6280; SL 1.5140.
-- latest screenshot margin 40.99 USDC; equity 50.87 USD; available 10.55 USD.
-MARKET around 09:17:
-- Binance XRPUSDT mark ~1.57393, 24h +1.52%, OI ~311.81M XRP.
-Private venue position state remains user-confirmed until directly refreshed.
+- screenshot margin 40.99 USDC; equity 50.87 USD; available 10.55 USD.
+
+Private venue state remains user-confirmed until refreshed directly.
 
 ### PONS
 USER_CONFIRMED:
-- 50 USDT margin budget.
+- 50 USDT total margin budget.
 - 0.6250 entry filled.
 - 0.5850 and 0.5450 pending.
 - hard stop 0.4980.
-MARKET around 09:24:
-- mark ~0.65629.
-- 24h +5.96%.
-- OI ~67.62M PONS.
-- latest funding reference ~+0.0359%.
-No private account quantity is inferred.
 
-## ETH conditional lane
+No private Binance quantity/PnL is inferred.
 
-MARKET around 09:17:
-- ETHUSDT mark ~2694.43.
-- 24h -0.05%.
-- OI ~2.264M ETH.
-- funding ~+0.0097%.
-Current plan remains conditional; no live Mission ETH position is confirmed.
+## ETH / BTC / JUMP
 
-## BTC regime
-
-MARKET around 09:17:
-- BTCUSDT mark ~84,080.
-- 24h -0.83%.
-- OI ~94,963 BTC.
-BTC remains a risk overlay with no dedicated Mission allocation.
-
-## JUMP
-
-- 400.308121 USDC is DIRECT_CHAIN on Ethereum mainnet.
-- TGE current high-confidence expectation: Q4 2026, exact date TBD.
-- 2026-09-29 preflight remains required before Legion application.
-- Ethereum native gas balance is 0.001667063838788351 ETH.
+- ETH has no confirmed live Mission position; 100 USDC remains reserved for the conditional setup.
+- BTC remains a regime overlay, with no dedicated Mission allocation.
+- JUMP reserve remains 400 USDC on Ethereum. Sep-29 authenticated preflight remains required.
 
 ## UNICRED / Credits
 
 - UNICRED NFT #230 remains active and locked until 2026-10-01 17:28:04 Asia/Bangkok.
 - liquid CRED DIRECT_CHAIN = 0.
-- Credits #23042 and #23232 remain USER_CONFIRMED listings at 0.25 ETH and 0.40 ETH respectively.
-- Current executable NFT bids / current claimable UNICRED rent are UNAVAILABLE in this wallet-only reconciliation.
-
-## Closed / cleaned
-
-- SHART: direct wallet balance 0.
-- CRED liquid token: direct wallet balance 0.
-- auxiliary WSOL recovery: completed; prior accounts closed.
+- Credits #23042 / #23232 remain USER_CONFIRMED listings at 0.25 ETH / 0.40 ETH.
 
 ## Monitoring architecture
 
-- :00 Crypto Daily unified research/report task.
-- :14 Airdrop/TGE urgent + shard.
-- :29 Crypto Mission decision layer.
-- 19:29 Mission also emits the monster-squeeze daily summary.
-- Monster V2.1 is inside the Mission; no separate active monster scheduler.
-- BSC smart-money cluster remains excluded from this Mission.
+- :00 Crypto Daily
+- :14 TGE urgent + shard
+- :29 Mission phased run
+- 19:29 same Mission run includes Monster daily summary
 
-## Scheduler health
+Monster V2.1 remains inside Mission. Separate monster automation remains disabled. BSC smart-money cluster remains outside this Mission.
 
-At this snapshot:
-- Crypto Daily 09:00 scheduler showed a trigger but did not persist its expected 09:00 audit/report. The 2026-09-26 report was manually recovered, Gmail-delivered and read back at 09:20, then archived to GitHub.
-- TGE produced a 09:19:24 persisted urgent + shard-1 audit. That run was partial because its state update did not land; state was repaired from the audit. Next exact :14 run must prove the corrected path.
-- Mission scheduler metadata confirms the 09:29:58 trigger. As of 09:35 Bangkok no new automatic run audit had appeared, so that trigger is currently classified missing_audit and does not count as success. The scheduler prompt/RUNBOOK was tightened so the next run's first persistent action is the skeleton audit.
+## Runtime repair status
 
+Confirmed before the latest repair:
+- TGE: 10:16 and 11:11 automatic runs finalized successfully.
+- Crypto Daily: 10:01 automatic run finalized successfully and correctly deduplicated today's already-delivered report, but 11:00 did not leave a durable audit.
+- Mission: the 09:30 automatic run created only a skeleton and did not finalize; later triggers did not leave durable audits.
 
-## Arbitrum wallet read availability — 2026-09-26 09:36
-- A fresh Arbitrum direct-wallet check was attempted because the Variational funding path uses Arbitrum.
-- Connected Alchemy app returned RPC 403: ARB_MAINNET is not enabled for this app.
-- Arbitrum wallet native/USDC balances are therefore **UNAVAILABLE**, not estimated.
-- Variational private position remains USER_CONFIRMED from its own UI snapshot; no Arbitrum wallet value is fabricated.
+Repair applied at about 12:05:
+- compacted MISSION_SPEC;
+- phased/bounded Mission RUNBOOK;
+- critical position lanes first;
+- bulk-market screening with shortlist deep checks;
+- launch/NFT/FOMO consume recent Crypto Daily research first;
+- Crypto Daily ordinary hours now use a rotating discovery shard;
+- automation prompts shortened;
+- no new automation created.
+
+Next automatic proof points:
+- Mission: next :29 run.
+- Crypto Daily: next :00 run.
+
+Do not mark either repaired scheduler healthy until a new post-repair automatic finalized audit exists.
+
+## Arbitrum
+
+Current connected Alchemy app does not expose ARB_MAINNET. Arbitrum wallet balance remains UNAVAILABLE.
