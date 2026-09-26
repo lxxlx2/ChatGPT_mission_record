@@ -1,24 +1,48 @@
 # Famous / Established-Brand Token Launch Radar
 
-This watchlist is a discovery seed list, not a closed whitelist. Every hourly run should expand beyond it via official X quote/repost/reply networks, launchpad feeds, onchain launch data and reputable onchain analysts.
+Updated: 2026-09-26
+
+Purpose: discover short-window token, sale, mint and creator-token opportunities from recognizable issuers without turning the Mission run into a full-web crawl.
+
+## Discovery rule
+
+This is a seed list, not a closed whitelist.
+
+Primary discovery comes from:
+1. the latest Crypto Daily research;
+2. official issuer/platform feeds;
+3. one compact fallback discovery pass when upstream research is stale.
+
+Deep verification is performed only for actual candidates.
 
 ## High-priority recurring sources
+
 - YokaiCapital / kids.fun launches
-- StonkFun / LaunchOnSF ecosystem and mechanism changes
-- pump.fun and major Solana fair-launch infrastructure
+- StonkFun / LaunchOnSF
+- pump.fun and major Solana launch infrastructure
 - BONK-linked launch infrastructure
-- social-token / creator-token launch systems
-- Solana/Jupiter/Meteora ecosystem builders and founders
-- Base/Farcaster/Coinbase ecosystem builders and brands
-- Hyperliquid ecosystem projects/builders
+- Solana / Jupiter / Meteora builders
+- Base / Farcaster / Coinbase ecosystem
+- Hyperliquid ecosystem
 - Robinhood / Robinhood Chain launches
-- major NFT/digital-art creators with prior successful drops
+- major NFT / digital-art creators
 - established crypto founders, protocols and consumer brands entering onchain markets
+- Sui launch platforms including Blast.fun / @blastdotfun when a new Flight, sale or launch window appears
 
-## Trigger theme
-Recognized issuer + new token/sale/mint/claim/CA/launch window + early enough to act.
+## Candidate gate
 
-## Non-trigger
-Anonymous meme spam, copied celebrity/brand names, KOL-only shills, stale launches, or identity-conflicted contracts.
+A candidate needs:
+- recognizable/canonical issuer;
+- new token/sale/mint/claim/CA/launch window;
+- official participation path;
+- enough time left to act;
+- no unresolved chain/domain/contract/payment conflict.
 
-See `../strategy.md` for full verification, notification and sizing rules.
+Reject:
+- anonymous meme spam;
+- copied celebrity/brand names;
+- KOL-only shills;
+- stale launches;
+- identity-conflicted contracts.
+
+Action sizing comes only from the Mission opportunity reserve unless the user explicitly reallocates capital.
