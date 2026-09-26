@@ -537,3 +537,23 @@ Conclusion:
 - the first DailyAgentGM was successfully recorded onchain;
 - the earlier zero was a transient post-write read/RPC timing issue;
 - next eligible time is `2026-09-27T22:12:18.000Z` = `2026-09-28 05:12:18 Asia/Bangkok`.
+
+
+## Daily GM automation setup
+
+Local automation directory created and verified:
+- `/Users/jerson/.local/share/gm-regiment-mcp/automation`
+- owner: local macOS user
+- purpose: guarded DailyAgentGM runner and non-secret execution logs
+- private key remains in macOS Keychain service `gm-regiment-agent-private-key`; it must not be written into the automation script or logs.
+
+Automation design:
+- read the private key from Keychain at runtime;
+- verify the derived address matches the dedicated Agent wallet;
+- query `DailyAgentGM.isAgent` and `lastGM`;
+- use chain time for cooldown decisions;
+- refuse to broadcast before the 24h cooldown plus a small safety buffer;
+- simulate before broadcast;
+- send exactly one `gm()` when eligible;
+- verify receipt and post-state;
+- append only public/non-secret execution information to a local log.
