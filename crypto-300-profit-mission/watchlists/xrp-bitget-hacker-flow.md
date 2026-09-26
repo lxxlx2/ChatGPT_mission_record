@@ -1,7 +1,7 @@
 # XRP / Bitget Hacker Flow Monitor
 
-Updated: 2026-09-27 01:18 Asia/Bangkok
-Status: ACTIVE while the Variational XRP event position remains active
+Updated: 2026-09-27 03:22 Asia/Bangkok
+Status: INACTIVE / ARCHIVED — XRP Variational position closed
 
 ## Purpose
 
@@ -56,7 +56,9 @@ While the XRP position is active, every Mission run must check fresh evidence fo
 
 ## Alert policy
 
-A new trigger is substantive and should use Gmail + ChatGPT because it affects an active XRP position.
+INACTIVE.
+
+The XRP Variational position was user-confirmed closed after the stored 1.5140 lower bound was hit. This file is historical evidence only and must not be read as an hourly Mission lane unless the user explicitly reactivates an XRP/Bitget event position.
 
 Alert must distinguish:
 - attacker internal redistribution;
@@ -83,3 +85,15 @@ Chinese-language websites are not evidence sources.
 The prior `positions/xrp-variational.md` said to monitor attacker flows, but the automatic runtime lacked a dedicated address/baseline lane. As a result, the Sep-26 ~54M-XRP movement was not surfaced by the Mission monitor.
 
 This file is the operational repair.
+
+
+## Deactivation
+
+Deactivated: 2026-09-27 03:22 Asia/Bangkok.
+
+Reason:
+- Variational XRP event position closed at the stored lower bound;
+- remaining venue funds withdrawn;
+- capital returned to Solana USDC.
+
+No further attacker-flow alerts should be generated from this watchlist while status is INACTIVE.
