@@ -274,8 +274,36 @@ Secondary:
 - avoid needless fees and stale-reference fills;
 - preserve zero-score anchors as a fallback.
 
+
+## Live bootstrap state — 2026-09-26
+
+Bootstrap completed successfully.
+
+Public controller DID:
+`did:key:z6MkevKtnieM4xDeWywRH2L1k4DqV2wq5mUUo4YQSbwk9yKu`
+
+Dedicated trading room:
+`cc-lxx-a3ddd5f9de`
+
+Observed bootstrap sequence:
+- controller owner registration was posted to `close1`;
+- dedicated room registration was posted;
+- the room became visible in referee flow;
+- registration messages for the remaining 51 fleet keys were sent to the dedicated room.
+
+Private Ed25519 seeds remain local in:
+`~/.config/technocore-close-call/keys.json`
+
+Next gate:
+- wait for at least one fresh referee sweep after registration;
+- run local `status`;
+- do not open T01 or bracket round 1 until referee freshness and registration/mint state are acceptable.
+
+Execution state:
+`BOOTSTRAPPED_WAITING_FOR_FRESH_SWEEP`
+
 ## Execution status
 
-READY_TO_BOOTSTRAP.
+BOOTSTRAPPED_WAITING_FOR_FRESH_SWEEP.
 
 The user has authorized starting this stored plan. Live secret generation and signing must occur locally on the user's Mac; do not move private seeds into GitHub or chat.
