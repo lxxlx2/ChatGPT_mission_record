@@ -374,7 +374,7 @@ details{margin-top:14px;background:#0e1420;border:1px solid var(--line);border-r
   </div>
 
   <div class="actionbar" id="actionbar">
-    <div class="actionleft"><span class="dot" id="statusDot"></span><div><div class="actiontitle" id="systemText">读取后台状态…</div><div class="actionsub" id="userAction">-</div></div></div>
+    <div class="actionleft"><span class="dot" id="statusDot"></span><div><div class="actiontitle" id="systemText">读取后台状态…</div><div class="actionsub" id="userAction">-</div><div class="actionsub" id="lastAction">最近自动动作：读取中</div></div></div>
     <div class="next"><span>下一步自动动作</span><b id="nextEvent">-</b><span id="nextEventTime">-</span></div>
   </div>
 
@@ -447,6 +447,13 @@ async function refresh(){
     dot.style.background=d.system_status==='OK'?'var(--good)':(d.system_status==='WAITING'?'var(--warn)':'var(--bad)');
     document.getElementById('systemText').textContent=d.system_text;
     document.getElementById('userAction').textContent='你现在需要做什么：'+d.user_action;
+    const la=d.last_action;
+    if(la){
+      const actionName=la.action==='open_static'?('Static T'+la.cohort+' 已提交'):String(la.action||'自动动作');
+      document.getElementById('lastAction').textContent='最近自动动作：'+actionName+(la.at?' · '+new Date(la.at).toLocaleString():'');
+    }else{
+      document.getElementById('lastAction').textContent='最近自动动作：暂无记录';
+    }
     document.getElementById('nextEvent').textContent=d.next_event_text;
     if(d.next_event_due){
       const lag=Math.floor((d.next_event_lag_s||0)/60);
