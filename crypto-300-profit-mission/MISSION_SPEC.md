@@ -12,9 +12,24 @@ Precedence:
 2. `portfolio/current.md` and `state/latest.md`
 3. active `positions/*.md`
 4. active `watchlists/*.md`
-5. `strategy.md` as historical/background only
+5. `300-profit-mission-strategy.md` as the clearly named historical/background strategy record; `strategy.md` remains a temporary compatibility path
 
 Never use stale chat values to overwrite newer verified GitHub state.
+
+## Human-facing research map
+
+Repository organization rules:
+- `docs/REPOSITORY_STRUCTURE.md`
+- `research/projects/`
+- `research/tokens/`
+- `research/memes/`
+- `research/nfts/`
+
+Current compatibility mappings:
+- JUMP human-facing project record: `research/projects/jump/jump-legion-sale.md`; operational monitor path remains `positions/jump.md`.
+- Jack Credits human-facing NFT record: `research/nfts/jack-credits/jack-credits-nft-position.md`; operational monitor path remains `positions/credits.md`.
+
+Do not move an operational authority path solely for repository cosmetics. Path migration requires compatibility + a real automatic-run validation.
 
 ## Project analysis authority
 
