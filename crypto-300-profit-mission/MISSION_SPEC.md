@@ -16,6 +16,16 @@ Precedence:
 
 Never use stale chat values to overwrite newer verified GitHub state.
 
+## Project analysis authority
+
+For project due diligence, valuation and participation research, use:
+- `PROJECT_ANALYSIS_FRAMEWORK.md` as the reusable end-to-end project research process.
+- `token_trading_principles.md` for token/contract/holder/liquidity deep dives.
+
+Future conversations should read these files before performing a new deep project review. Material new lessons should be written back to the framework rather than remaining only in chat history.
+
+Project analysis does not itself authorize execution. Separate execution authority remains in active `positions/*.md` files and explicit user instructions.
+
 ## Automation mode
 
 The existing hourly automation is a **factual rule monitor**, not an autonomous trading adviser.
