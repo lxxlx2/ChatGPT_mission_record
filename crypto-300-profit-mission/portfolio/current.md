@@ -100,7 +100,8 @@ DIRECT_CHAIN Robinhood Chain:
 - native gas: **0.000826657957256326 ETH** (~**2.22 USD** at the current ETH reference)
 
 User confirms the released Binance order capital was withdrawn and converted into spot PONS + gas.
-Exact spot cost basis and withdrawal/swap fees are UNRESOLVED.
+The PONS swap leg is directly reconstructed at 2026-09-26 12:58:38 Asia/Bangkok: **35.291194 USDG → 54.799953441979625 PONS**, average **~0.64400044 USDG/PONS**.
+Separate withdrawal fee and native-gas acquisition cost remain UNRESOLVED.
 
 ### Low-risk bucket
 - 500 USD-equivalent, user-confirmed as earning interest.
