@@ -234,7 +234,7 @@ Do not send Gmail from hourly research mode.
 
 ## 7. Formal daily report
 
-Only one normal report is sent each day at 09:00 Asia/Bangkok.
+Only one normal report is sent each day. Primary delivery is 09:10 Asia/Bangkok; 10:10 and 11:10 are recovery windows and must deduplicate before sending.
 
 The report must be decision-oriented. It should prioritize:
 - what is newly important today;
@@ -393,7 +393,7 @@ At minimum record:
 - superseded_message_id when applicable;
 - tool errors.
 
-At non-09:00 hours set `daily_report_attempted: false`, `gmail_attempted: false`, and keep the user-facing run silent.
+Hourly collector runs always set `daily_report_attempted: false`, `gmail_attempted: false`, and remain user-facing silent. Publisher runs follow DELIVERY_RUNBOOK.md.
 
 ## 12. Correction policy
 
@@ -411,7 +411,7 @@ A correction must:
 
 ## 13. Monthly report
 
-On the first day of each month, the 09:00 run also prepares the previous calendar month’s long-term investment report.
+On the first day of each month, the first successful daily publisher run also prepares the previous calendar month’s long-term investment report.
 
 Archive:
 `crypto-daily/reports/monthly/YYYY/YYYY-MM.md`
