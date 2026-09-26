@@ -52,7 +52,12 @@ Robinhood Chain native gas:
 
 The user confirms that the capital released by canceling the remaining Binance orders was withdrawn and converted into PONS spot plus gas.
 
-Exact spot acquisition cost, withdrawal fee and swap execution price have not yet been reconstructed from all transaction legs, so current spot PnL is **UNRESOLVED**. Do not infer cost basis from current market value.
+The Robinhood Chain swap leg is now directly reconstructed from transaction logs at 2026-09-26 12:58:38 Asia/Bangkok:
+- input: **35.291194 USDG**
+- output: **54.799953441979625 PONS**
+- reconstructed spot acquisition rate: **~0.64400044 USDG/PONS**
+
+This establishes the PONS spot token cost basis for that swap leg. Any separate withdrawal fee and the native-ETH gas acquisition cost remain outside this PONS-token cost basis unless independently reconstructed.
 
 ## PONS sleeve accounting
 
