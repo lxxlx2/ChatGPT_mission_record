@@ -72,6 +72,10 @@ BRACKET_SCHEDULE_UTC = {
     4: "2026-10-02T09:15:00+00:00",
 }
 
+LOCK_TIME_UTC = datetime.fromisoformat("2026-10-04T09:00:00+00:00")
+FINAL_TIME_UTC = datetime.fromisoformat("2026-10-04T10:00:00+00:00")
+AUTOPILOT_STOP_TIME_UTC = datetime.fromisoformat("2026-10-04T10:15:00+00:00")
+
 
 def b58(raw: bytes) -> str:
     n = int.from_bytes(raw, "big")
@@ -766,10 +770,163 @@ def cmd_check_bracket(_args) -> None:
         print("BRACKET_CHECK: PENDING_OR_INCONCLUSIVE")
 
 
+
+def flatten_dicts(value):
+    if isinstance(value, dict):
+        yield value
+        for item in value.values():
+            yield from flatten_dicts(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from flatten_dicts(item)
+
+
+def board_rows(pnl: dict | None) -> list[dict]:
+    if not isinstance(pnl, dict):
+        return []
+    top = pnl.get("top")
+    if not isinstance(top, list):
+        return []
+    rows = []
+    for i, item in enumerate(top, 1):
+        if isinstance(item, dict):
+            row = dict(item)
+        else:
+            row = {"raw": item}
+        row["_board_index"] = i
+        rows.append(row)
+    return rows
+
+
+def local_board_matches(state: dict, rows: list[dict]) -> list[dict]:
+    did_to_label = {item["did"]: label for label, item in state["keys"].items()}
+    matches = []
+    for row in rows:
+        raw = json.dumps(row, ensure_ascii=False, separators=(",", ":"))
+        for did, label in did_to_label.items():
+            if did in raw:
+                matches.append({"label": label, "did": did, "row": row})
+                break
+    return matches
+
+
+def cmd_progress(_args) -> None:
+    state = load_state()
+    pr = fresh_price(max_age=10**9)
+    pnl = latest_payload("d-close1-pnl", "pnl")
+    positions = latest_payload("d-close1-positions", "positions")
+    rows = board_rows(pnl)
+    mine = local_board_matches(state, rows)
+
+    now = datetime.now(timezone.utc)
+    static_done = sorted(state.get("static", {}).keys())
+    bracket = state.get("bracket") or {}
+
+    print("=== CLOSE CALL PROGRESS ===")
+    print("utc_now:", now.isoformat())
+    print("sweep:", pr["n"], "ref:", pr["px"], "age_s:", pr["age_s"])
+    print("mark:", pnl.get("mark") if isinstance(pnl, dict) else None)
+    print("static:", f"{len(static_done)}/16", ",".join(static_done) if static_done else "-")
+    print(
+        "bracket:",
+        "round", bracket.get("round"),
+        "status", bracket.get("status"),
+        "pairs", len(bracket.get("pairs") or []),
+    )
+
+    if now < LOCK_TIME_UTC:
+        print("phase: TRADING")
+        print("lock_in_seconds:", int((LOCK_TIME_UTC - now).total_seconds()))
+    elif now < FINAL_TIME_UTC:
+        print("phase: LOCKED_WAITING_FINAL")
+        print("final_in_seconds:", int((FINAL_TIME_UTC - now).total_seconds()))
+    else:
+        print("phase: FINAL_WINDOW")
+
+    print("official_board_entries:", len(rows))
+    if rows:
+        print("official_board_top:")
+        for row in rows[:10]:
+            print(json.dumps(row, ensure_ascii=False, sort_keys=True))
+
+    if mine:
+        print("our_visible_board_entries:")
+        for item in mine:
+            print(item["label"], json.dumps(item["row"], ensure_ascii=False, sort_keys=True))
+    else:
+        print("our_visible_board_entries: NONE")
+        if rows:
+            print(
+                "rank_note: none of our DIDs appears in the published live-board subset; "
+                "exact overall rank is not derivable from the compact public board"
+            )
+
+    if isinstance(positions, dict):
+        print(
+            "market_positions:",
+            "open", positions.get("open"),
+            "longs", positions.get("longs"),
+            "shorts", positions.get("shorts"),
+        )
+
+    entries = []
+    for k, rec in sorted(state.get("static", {}).items()):
+        try:
+            entries.append({
+                "name": f"T{k}",
+                "px": Decimal(str(rec["px"])),
+                "qty": Decimal(str(rec["qty"])),
+            })
+        except Exception:
+            pass
+    if int(bracket.get("round", 0) or 0) == 1:
+        pairs = bracket.get("pairs") or []
+        if pairs:
+            try:
+                entries.append({
+                    "name": "BR-R1",
+                    "px": Decimal(str(pairs[0]["px"])),
+                    "qty": Decimal(str(pairs[0]["qty"])),
+                })
+            except Exception:
+                pass
+
+    mark = None
+    if isinstance(pnl, dict) and pnl.get("mark") is not None:
+        try:
+            mark = Decimal(str(pnl["mark"]))
+        except Exception:
+            mark = None
+
+    if mark is not None and entries:
+        print("strategy_gross_edge_before_fees:")
+        for item in entries:
+            edge = abs(mark - item["px"]) * item["qty"]
+            print(
+                item["name"],
+                "entry", item["px"],
+                "qty", item["qty"],
+                "gross_pair_winner_edge", edge.quantize(Decimal("0.01")),
+            )
+        print(
+            "edge_note: structural mark-to-entry movement only; this is not an official score "
+            "and excludes actual settlement/clawback fees and omitted-outcome uncertainty"
+        )
+
 def autopilot_iteration(late_minutes: int = 180) -> dict:
     state = load_state()
     now = datetime.now(timezone.utc)
     ap = state.setdefault("autopilot", {})
+
+    if now >= AUTOPILOT_STOP_TIME_UTC:
+        ap["stopped_at"] = now.isoformat()
+        ap["stop_reason"] = "contest final window complete"
+        save_state(state)
+        return {
+            "event": "contest_complete",
+            "stop": True,
+            "at": now.isoformat(),
+        }
     ap.setdefault("missed_static", {})
     ap["last_seen_at"] = now.isoformat()
 
@@ -777,6 +934,16 @@ def autopilot_iteration(late_minutes: int = 180) -> dict:
     ap["last_sweep"] = pr["n"]
     ap["last_ref"] = str(pr["px"])
     ap["last_age_s"] = pr["age_s"]
+
+    if now >= LOCK_TIME_UTC:
+        save_state(state)
+        return {
+            "event": "locked_monitoring",
+            "sweep": pr["n"],
+            "ref": str(pr["px"]),
+            "age_s": pr["age_s"],
+            "final_in_seconds": max(0, int((FINAL_TIME_UTC - now).total_seconds())),
+        }
 
     for cohort, due_text in STATIC_SCHEDULE_UTC.items():
         k = f"{cohort:02d}"
@@ -888,6 +1055,9 @@ def cmd_autopilot(args) -> None:
                     flush=True,
                 )
             last_sweep = sweep
+            if result.get("stop"):
+                print("autopilot contest complete; exiting normally", flush=True)
+                return
         except KeyboardInterrupt:
             print("autopilot stopped", flush=True)
             return
@@ -961,6 +1131,9 @@ def main() -> None:
 
     p = sp.add_parser("status")
     p.set_defaults(fn=cmd_status)
+
+    p = sp.add_parser("progress")
+    p.set_defaults(fn=cmd_progress)
 
     p = sp.add_parser("gate")
     p.set_defaults(fn=cmd_gate)
