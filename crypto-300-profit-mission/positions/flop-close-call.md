@@ -326,3 +326,29 @@ Execution state:
 FLEET_GATE_PENDING.
 
 The user has authorized starting this stored plan. Live secret generation and signing must occur locally on the user's Mac; do not move private seeds into GitHub or chat.
+
+
+## Mint-gate correction — 2026-09-26
+
+The first fleet gate reported `fleet minted: 0/52`. That result was a false negative caused by treating the visible `d-close1-flow.mints` subset as a complete owner list.
+
+Official repository issues #6 and #7 document the live behavior:
+- flow posts are constrained by technocore.chat's 4,096-character message limit;
+- most minted DIDs may be omitted from the visible `mints` array;
+- `omitted.mints` accounts for those hidden entries and reconciles with owner-count growth;
+- multiple operators confirmed keys could settle trades even though those keys never appeared in the visible `mints` subset;
+- a registration falling inside a referee `missed` range was not read and must be re-posted.
+
+Gate semantics were therefore corrected in commit `f8b0580079cb0e1fae334281597d66e62230f4e7`.
+
+The revised gate:
+- treats visible mint membership as informational only;
+- requires the controller-owned dedicated room to be registered;
+- verifies all 51 non-controller owner-registration messages are still present in the dedicated room with the expected signed DID as author;
+- scans retained referee flow for any `missed` range naming the dedicated room and blocks if one exists;
+- still requires fresh, aligned price/flow/state sweeps.
+
+The controller's owner status is indirectly established by the referee accepting/listing its room registration, because only a registered owner may register a trading room.
+
+Execution state:
+`FLEET_REGISTRATION_RECHECK_PENDING`.
