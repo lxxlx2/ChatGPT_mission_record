@@ -1,98 +1,123 @@
 # Crypto Hourly Collector Spec
 
-Updated: 2026-09-26
+Updated: 2026-09-26 12:05 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## 目标
+Goal: provide reliable rolling material for the daily report and Mission without making every hourly run an exhaustive internet crawl.
 
-每小时生成可靠、轻量、可供 09:00 日报和 Mission 使用的增量素材。优先“持续成功”，不追求单轮穷尽全网。
+## Start heartbeat
 
-## Start-of-run heartbeat
-
-Before doing broad research, create a unique minimal run audit:
-
+First persistent action:
 `crypto-daily/runs/YYYY-MM-DD/HHMMSS.md`
 
-Initial status: `in_progress`.
+Initial status:
+`run_status: in_progress`
 
-This heartbeat is mandatory. If later research or a source fails, finalize the same audit as `partial_failure` / `failed`. A scheduler trigger with no audit is a missing run.
+Create it before broad search. Path collision gets one retry with a new second-level timestamp.
 
-If create-file path collides, use a new second-level timestamp and retry once. If a state/file update requires SHA, fetch the latest SHA immediately before update and retry once on conflict.
+Every run must later finalize the same audit.
 
-## 每轮预算
+## Core scan every hour
 
-最多保存 8 个 material candidates。超出部分按：
-1. 安全/黑客；
-2. BTC/ETH/SOL 与高流动性资产；
-3. 重大监管/宏观；
-4. 一级市场/TGE/ICO；
-5. NFT/新生态；
-排序截断。
+Always collect:
+- BTC / ETH / SOL market state;
+- high-volume / high-move crypto outliers using bulk market data;
+- major exchange / security / protocol incident headlines;
+- any deadline-sensitive event already carried from recent research.
 
-## 强制扫描
+Use concise paraphrase. Do not copy long source text or exploit instructions.
 
-- BTC / ETH / SOL 与主要衍生品状态；
-- 24h/7d 异常资产；
-- 交易所/官方/监管；
-- 安全事件；
-- X 英文高信号；
-- Reddit；
-- NFT / digital art；
-- 跨链/跨平台价差线索；
-- prediction markets；
-- 主要链生态。
+## Rotating discovery shard
 
-单个 source 不可用时继续其它 source。
+To keep the hourly task reliable, run one discovery shard per hour while core risk scanning remains hourly.
 
-## Research 文件
+Using Asia/Bangkok hour modulo 3:
 
-路径：
+### Shard 0: social / NFT
+- English X discovery;
+- Reddit discovery;
+- NFT / digital art / open edition / mint / claim / drop.
+
+### Shard 1: ecosystem / primary market
+- TGE / ICO / public sale / unlock;
+- chain/ecosystem launches;
+- RWA / stablecoin / AI-Crypto / DePIN;
+- prediction-market changes.
+
+### Shard 2: flow / macro / security depth
+- whale / exchange flow;
+- derivatives / basis / liquidation anomalies;
+- cross-chain / cross-platform spread candidates;
+- regulation / macro / geopolitical crypto impact;
+- deeper security follow-up.
+
+Over any 3 consecutive successful hourly runs, all discovery categories are covered.
+
+If a critical breaking event appears outside the current shard, follow it immediately.
+
+## Candidate budget
+
+Save at most 8 material candidates.
+
+Prioritize:
+1. security / solvency;
+2. BTC/ETH/SOL and highly liquid market regime changes;
+3. deadline-sensitive opportunities;
+4. meaningful primary-market/TGE;
+5. strong NFT/new-ecosystem candidates;
+6. other research.
+
+No material update is a valid successful result.
+
+## Research file
+
+Write:
 `crypto-daily/research/YYYY-MM-DD/HHMMSS.md`
 
-要求：
-- 只写 paraphrase；
-- 不复制长段网页/X 原文；
-- 不保存 exploit 操作步骤；
-- URL 只保留必要的一手引用，不做 URL dump；
-- 每候选最多约 120-180 字；
-- 无 material update 时写极短 `no_material_update`。
+Keep it compact:
+- topic
+- why_it_matters
+- confirmed_facts
+- market_snapshot
+- source_names/domains
+- confidence
+- unresolved
+- discovery_shard
 
-## 写入降级
+If a normal write is blocked, retry once using this compact schema.
 
-第一次 research create/update 被拦截时，立即降级为 compact schema：
+If the compact write still fails:
+- do not keep expanding/rephrasing indefinitely;
+- record research_write_failed in the existing audit;
+- finalize the run partial_failure;
+- next hour continues independently.
 
-```text
-topic
-why_it_matters
-confirmed_facts
-market_snapshot
-source_names/domains
-confidence
-unresolved
-```
+## 09:00, 10:00, 11:00
 
-不包含长引文、长 URL、恶意代码、利用步骤。
+The existing automation follows `REPORT_SPEC.md` and `DELIVERY_RUNBOOK.md`.
 
-若 compact write 仍失败：
-- run_status = partial_failure；
-- finalize 已创建的 skeleton run audit，记录真实 connector/tool error；
-- 不发用户通知；
-- 下一轮独立继续。
+At 09:00 delivery is higher priority than new research.
 
-## Run audit
+At 10:00 and 11:00 missing-delivery recovery is higher priority than ordinary collection.
 
-每轮必须写：
-`crypto-daily/runs/YYYY-MM-DD/HHMMSS.md`
+At other hours, do not read the full REPORT_SPEC unless required.
 
-至少记录：
-run_time, automation_id, run_mode=hourly_research, run_status,
-research_path, candidate_count, sources_ok, source_failures,
-x_scanned, reddit_scanned, market_scanned, security_scanned,
-github_research_write, github_audit_write, tool_errors。
+## Final audit
 
-## 禁止
+Finalize the skeleton with:
+- run_status
+- core_market_scan
+- security_scan
+- discovery_shard
+- x_scanned / reddit_scanned / nft_scanned as applicable
+- candidate_count
+- research_path
+- research_write
+- source_failures
+- tool_errors
 
-- 本任务不发 Gmail。
-- 本任务不生成正式 13 章日报。
-- 本任务不做历史全量回填。
-- 本任务不因 GitHub research 写失败而继续生成超长重试内容。
+Normal no-result/no-update is not a failure.
+
+Single source failure does not abort the run.
+
+Temporary failure never disables or pauses the automation.
