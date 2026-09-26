@@ -1,6 +1,6 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-26 12:21 Asia/Bangkok
+Updated: 2026-09-26 13:00 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Main status: REPAIR_APPLIED_AWAITING_AUTOMATIC_VALIDATION
@@ -20,7 +20,9 @@ Fresh DIRECT_CHAIN:
 - unidentified Solana SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: 1.745552 tokens, identity/value UNRESOLVED.
 - Base: 0.252982 USDC; 0.000790846510479134 ETH.
 - Unichain: 0.021286 USDC; 0.000231941590232335 ETH; CRED 0.
-- Robinhood Chain native: 0.000081643478484768.
+- Robinhood Chain native ETH: **0.000826657957256326**.
+- Robinhood Chain canonical PONS: **54.799953441979625 PONS**.
+- fresh Alchemy PONS price: **0.6448796581 USD**, spot mark value **~35.34 USD**.
 - canonical direct-chain stablecoin total: **731.381974 USDC**.
 
 Accounting reserves:
@@ -47,13 +49,27 @@ USER_CONFIRMED at 2026-09-26 06:08:
 Private venue state remains user-confirmed until refreshed directly.
 
 ### PONS
-USER_CONFIRMED:
-- 50 USDT total margin budget.
-- 0.6250 entry filled.
-- 0.5850 and 0.5450 pending.
-- hard stop 0.4980.
 
-No private Binance quantity/PnL is inferred.
+USER_CONFIRMED Binance futures state at 2026-09-26 12:58:
+- LONG PONSUSDT, isolated 3x.
+- entry 0.6250.
+- position notional 41.32 USDT.
+- margin 13.20 USDT.
+- mark 0.6451307.
+- unrealized PnL +1.31 USDT.
+- realized PnL -0.13 USDT.
+- liquidation 0.4293629.
+- hard stop 0.4980.
+- 0.5850 and 0.5450 averaging orders are CANCELED.
+
+DIRECT_CHAIN Robinhood Chain:
+- 54.799953441979625 PONS.
+- current spot mark value ~35.34 USD.
+- 0.000826657957256326 ETH gas, ~2.22 USD at the current ETH reference.
+
+The user confirms released order capital was withdrawn and converted to PONS spot + gas.
+Do not treat the canceled deep bids as pending.
+Exact spot cost basis/fees remain UNRESOLVED.
 
 ## ETH / BTC / JUMP
 
