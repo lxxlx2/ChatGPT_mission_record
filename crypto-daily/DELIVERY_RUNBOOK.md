@@ -1,6 +1,6 @@
 # Crypto Daily Delivery Runbook
 
-Updated: 2026-09-26
+Updated: 2026-09-27
 Timezone: Asia/Bangkok
 
 ## Execution model
@@ -34,15 +34,16 @@ Timezone: Asia/Bangkok
 
 ## Delivery order
 
-1. 聚合过去 24h research。
-2. 对最高优先级事实做 fresh verification。
-3. 生成 REPORT_SPEC 的固定 13 章。
-4. QA。
-5. **先发 Gmail**。
-6. Gmail readback。
-7. 写 GitHub official report。
-8. GitHub readback。
-9. finalize 当前小时 run audit。
+1. 聚合过去 24h research；若某小时 research 缺失但 final/final-retry 存在，也读取 final 中的 compact research payload / material candidates。
+2. 建立 critical security carry-forward 清单，并逐项 fresh verification；任何需 revoke/patch/move/reclaim、>= $1M exposure/loss、或仍开放的钱包/approval/bridge/exchange漏洞不得静默丢失。
+3. 对其余最高优先级事实做 fresh verification。
+4. 生成 REPORT_SPEC 的固定 13 章。
+5. QA。
+6. **先发 Gmail**。
+7. Gmail readback。
+8. 写 GitHub official report。
+9. GitHub readback。
+10. finalize 当前小时 run audit，并记录 critical-security seen/included/omitted-with-reason。
 
 GitHub archive 失败不得取消已经成功的 Gmail。
 
