@@ -157,7 +157,17 @@ As of accessible indexed official posts in 2026:
 - June 29 official messaging says it would not launch into a high-fear / weak-SOL market and would give advance notice.
 - Team explicitly says no refunds and promises STRAND distribution after TGE proportional to allocation.
 
-The latest Sep 25-26 claims in the supplied Grok report about a major rebuild, PvP beta to ~100 wallets and a final farm season were not independently verified from an accessible primary source during this review. Keep them as SOURCE-REPORTED until a direct official post is archived.
+The Sep 25-26 claims are now SCREENSHOT-CONFIRMED from the official @blockstranding account:
+- "Block Stranding is entering a new era."
+- "We rebuilt major parts of the game."
+- first PvP mode is being shown;
+- beta access is available;
+- first ~100 wallets were whitelisted for PvP testing;
+- "The final farm Season before the main event is starting";
+- official follow-up explicitly says "Now imagine all of this with $STRAND in the game" and "You might want to turn notis on.";
+- in a reply to a refund request, the official account states: "There will be no refund. There will be a TGE."
+
+These posts materially increase confidence that the project is actively preparing users for a token-related event. They do not establish a date, mint, claim mechanism, exchange, MM, liquidity or final circulation.
 
 ## Product reality
 
@@ -393,6 +403,97 @@ Historical-cost break-even is therefore approximately $35.6M FDV before slippage
 A separate opportunity-cost analysis may compare the position to simply holding the original 100 SOL, but that is not the acquisition-cost PnL basis.
 
 
+
+## Sep 25-26 reactivation and comment-quality review
+
+User-provided screenshots from the official account confirm a real reactivation.
+
+### What changed positively
+
+1. **Product delivery**
+   - Major parts of the game were reportedly rebuilt.
+   - Visuals changed.
+   - First PvP mode is now shown.
+   - ~100 wallets received whitelist access.
+   - This is materially better than months of pure "market conditions" messaging.
+
+2. **Token intent**
+   - Official copy explicitly says: "Now imagine all of this with $STRAND in the game."
+   - "You might want to turn notis on."
+   - A refund reply says: "There will be a TGE."
+   - This is the strongest recent evidence that management still intends to issue STRAND.
+
+3. **Campaign reset**
+   - "final farm Season before the main event" indicates a new acquisition/reactivation cycle.
+   - The wording is deliberately event-oriented and likely designed to reactivate dormant presale/farming users.
+
+### What did NOT change
+
+No evidence in the screenshots of:
+- TGE date;
+- mint;
+- checker;
+- claim;
+- final allocation;
+- final unlock/circulation;
+- CEX;
+- market maker;
+- DEX liquidity;
+- treasury disclosure;
+- use-of-proceeds explanation;
+- Kraken-flow explanation.
+
+Therefore the update improves **delivery continuity** and **eventual-TGE intent**, but barely improves **launch quality / economic recoverability**.
+
+### Comment / engagement signal
+
+The main rebuild post shown by the user had approximately:
+- 7,209 views
+- 78 likes
+- 43 replies
+- 7 reposts
+- 7 bookmarks
+
+The follow-up post had substantially lower immediate reach (~727 views in the screenshot).
+
+The visible reply thread is dominated by:
+- refund requests;
+- TGE questions;
+- skepticism / frustration;
+- some users wanting beta access.
+
+The official response to a refund request is categorical:
+"There will be no refund. There will be a TGE."
+
+Interpretation:
+- community attention still exists;
+- trust is damaged;
+- token/liquidity outcome matters more to many old participants than the gameplay update;
+- a ~100-wallet closed beta is useful product evidence but is far too small to demonstrate product-market fit or justify a $36M launch valuation;
+- social engagement is modest relative to the historical presale/KOL campaign scale.
+
+Do not generalize sentiment percentages from the screenshot alone because it is a small visible sample.
+
+### Updated thesis
+
+The strongest interpretation is now:
+
+**The team appears to be warming the project back up for a future STRAND event, but has not yet shown the operational artifacts required for a serious TGE.**
+
+This reduces the probability of permanent abandonment, while increasing both:
+- serious-TGE probability modestly;
+- obligation-closing / "交代式" TGE probability more materially.
+
+The next decisive evidence is not another gameplay teaser. It is one of:
+- allocation checker;
+- canonical mint;
+- fixed TGE date;
+- exchange/MM/DEX liquidity disclosure;
+- final tokenomics and circulation;
+- transparent treasury explanation.
+
+Until those appear, classify Sep 25-26 as **REACTIVATION / PRE-MARKETING**, not **TGE EXECUTION**.
+
 ## Delivery / TGE-intent assessment — 2026-09-26
 
 ### What the team can demonstrably deliver
@@ -423,17 +524,16 @@ As of this review, no verified evidence was found for:
 - treasury / use-of-proceeds report;
 - completion of the separately promised PRIMES pre-TGE airdrop.
 
-Official site status:
-- Season 2 is ended;
-- leaderboard is paused/locked;
-- no new live farm season is visible on the official Earn page.
+Official site / social status:
+- historical Season 2 is ended and its old leaderboard remains locked;
+- Sep 25-26 official X screenshots confirm a new "final farm Season before the main event";
+- the project says major parts of the game were rebuilt;
+- first PvP mode is in closed beta;
+- approximately 100 wallets were whitelisted;
+- official messaging explicitly reconnects the game update to $STRAND and tells users to enable notifications;
+- the official account directly reiterated that "There will be a TGE."
 
-Indexed official X activity currently ends at 2026-08-20 with:
-- "first PvP version is almost here";
-- TGE date still unconfirmed;
-- team still waiting for the right market conditions.
-
-The supplied Grok claim that a Sep 25-26 2026 rebuild/PvP beta/final farm season was launched could not be independently verified from the official site or currently indexed official X feed. Treat that claim as unverified until an original official URL is produced.
+This is real reactivation, but still a **marketing/product-beta signal**, not a completed TGE-readiness signal.
 
 ### Market-condition explanation is weakening
 
@@ -512,31 +612,22 @@ There is much weaker evidence for a high-quality launch that sustains the origin
 
 ANALYST ESTIMATE, not a factual claim:
 
-1. **Credible/serious TGE**: ~20-30%
-   - fixed date;
-   - allocation checker;
-   - disclosed circulation;
-   - credible DEX/CEX/MM/liquidity;
-   - public PvP/product proof;
-   - reasonable treasury explanation.
+1. **Credible/serious TGE**: ~25-35%
+   - recent PvP/final-season reactivation is a positive delivery signal;
+   - still requires fixed date, checker, circulation, DEX/CEX/MM/liquidity and treasury explanation.
 
-2. **Obligation-closing / low-quality TGE ("交代式 TGE")**: ~35-50%
-   - token is eventually minted/distributed;
-   - old obligations technically fulfilled;
-   - weak liquidity and limited exchange support;
-   - product remains shallow;
-   - team reduces activity after launch;
-   - severe unlocked-presale selling.
+2. **Obligation-closing / low-quality TGE ("交代式 TGE")**: ~45-55%
+   - recent language ("$STRAND in the game", "turn notis on", "main event", "There will be a TGE") materially raises the probability of eventual issuance;
+   - absent launch infrastructure, the most likely near-term risk remains a token distribution that technically fulfills obligations but launches with weak liquidity / heavy presale selling.
 
-3. **Continued long delay / eventual abandonment without near-term TGE**: ~20-30%
-   - "market conditions" continues as an undefined gate;
-   - no claim/mint/listing infrastructure appears;
-   - project social/development activity gradually decays.
+3. **Continued long delay / eventual abandonment without near-term TGE**: ~10-20%
+   - probability reduced because the project has visibly resumed product/token-adjacent communication;
+   - still possible if concrete launch infrastructure never appears.
 
 4. **Fresh-money extraction before honoring STRAND**: currently ~5-15%
-   - no verified new paid raise/farm/mint is live at this review;
-   - ~13,000.5 SOL remains visibly in the presale wallet.
-   - Probability rises sharply if the team asks users for new capital before distributing STRAND.
+   - no new paid raise has been verified;
+   - ~13,000.5 SOL remains visibly in the original presale wallet;
+   - probability rises sharply if the "final farm" requires new money, paid mints or deposits before old STRAND obligations are settled.
 
 Ranges overlap because future paths can transition between categories. The central risk is currently an obligation-closing TGE, not proof of a second fundraising scam.
 
