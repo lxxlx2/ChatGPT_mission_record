@@ -435,3 +435,34 @@ Before opening bracket round 1, the runner was hardened in commit
 
 Execution state:
 `T01_OUTCOME_OMITTED_READY_FOR_BRACKET_R1`.
+
+
+## Bracket Round 1 submitted — 2026-09-26 16:17 Asia/Bangkok
+
+Round 1 completed with all eight planned pairs saved locally and posted to the registered dedicated room.
+
+Common execution parameters:
+- source sweep: 255;
+- entry price: 224.26;
+- quantity per pair: 40.73;
+- room sequence range: 66 through 73;
+- server timestamps: 2026-09-26T09:17:44.657126Z through 2026-09-26T09:17:48.234463Z.
+
+Pairs:
+- BR-01 / BR-02: `br1-01-1790414264`, seq 66;
+- BR-03 / BR-04: `br1-03-1790414265`, seq 67;
+- BR-05 / BR-06: `br1-05-1790414265`, seq 68;
+- BR-07 / BR-08: `br1-07-1790414266`, seq 69;
+- BR-09 / BR-10: `br1-09-1790414266`, seq 70;
+- BR-11 / BR-12: `br1-11-1790414267`, seq 71;
+- BR-13 / BR-14: `br1-13-1790414267`, seq 72;
+- BR-15 / BR-16: `br1-15-1790414268`, seq 73.
+
+All eight submissions used one fresh referee price and identical sizing, so there is no cross-pair entry skew inside round 1.
+
+Runner commit `1f069d1f93f2173a714ab15dcd5e1f1ef8485838` adds `check-bracket`, which reports visible settled/void results for all saved bracket trades and distinguishes omitted outcomes from explicit voids.
+
+No bracket rollover action is due yet. The next planned bracket rollover remains 2026-09-28 16:15 Asia/Bangkok. Until then, only settlement verification and referee-health monitoring are required.
+
+Execution state:
+`BRACKET_R1_SUBMITTED_WAITING_OUTCOME_CHECK`.
