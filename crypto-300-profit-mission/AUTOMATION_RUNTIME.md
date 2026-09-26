@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-26 21:05 Asia/Bangkok
+Updated: 2026-09-27 01:20 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -21,6 +21,7 @@ The final audit is the canonical proof of completion.
 - BNB USDC + BNB + GSTOCK
 - Robinhood ETH + PONS
 - stored PONS/XRP/ETH threshold-state comparisons
+- while XRP Variational event position is active: read `watchlists/xrp-bitget-hacker-flow.md` and check the stored attacker-flow baselines/triggers
 - JUMP stored sale/deadline/gas state only; do not query a public JUMP market symbol
 - newest two Crypto Daily research files
 - Monster V2.1 factual market-state screen
@@ -59,12 +60,16 @@ If the 19:29 final audit is missing, the first later successful run on the same 
 
 ## Required vs optional lanes
 
-Required hourly:
-- PONS/XRP/ETH/BTC public market facts used by already stored rules;
-- recent Crypto Daily research;
-- Monster Binance Futures factual state;
-- critical-wallet telemetry using fresh per-chain reads where supported;
-- final audit persistence.
+Required hourly, in this order:
+1. PONS/XRP/ETH/BTC public market facts used by stored rules;
+2. active XRP Bitget attacker-flow lane when the XRP event position is active;
+3. recent Crypto Daily research;
+4. one Binance USD-M bulk Monster screen plus bounded shortlist deep-check;
+5. active-asset wallet telemetry only: Robinhood PONS, BNB GSTOCK, Solana active Token-2022/meme balances; other chain inventory is slower cadence;
+6. persist final/final-retry immediately.
+
+Do not run optional launch/NFT/FOMO fallback searches unless recent Crypto Daily research contains a plausible candidate.
+Full Ethereum/Base/Unichain/Ink inventory reconciliation is 3-hour cadence or event-driven, not an hourly blocker.
 
 Optional enrichment:
 - Binance Alpha availability;
@@ -112,6 +117,36 @@ Send Gmail + ChatGPT only for substantive stored-rule events:
 - material real-asset wallet anomaly;
 - material active-position security/deadline event;
 - verified launch/NFT/TGE opportunity timing/eligibility change;
-- scheduled 19:29 Monster factual daily summary.
+- scheduled 19:29 Monster factual daily summary;
+- XRP Bitget ATTACKER_MAJOR_MOVE / ATTACKER_LIQUIDITY_RISK / BITGET_REPLENISHMENT / FLOW_REGIME_CHANGE from the dedicated watchlist.
 
 When no substantive alert is required, return an empty user-visible response.
+
+
+## Monster persistence and delivery
+
+Read/write `state/monster-squeeze-v2.1-current.md`.
+
+For a newly confirmed STRUCTURAL_CANDIDATE or PRESSURE candidate, persist:
+- first_seen;
+- setup_price;
+- current_state;
+- expiry at 7 days under frozen V2.1.
+
+Do not retroactively invent setup_price.
+
+Every Monster lane final must record:
+- universe count;
+- shortlist;
+- structural_count;
+- pressure_count;
+- ignition_count;
+- exhaustion_count;
+- data gaps.
+
+At 19:29 the daily summary must actually be delivered by Gmail + ChatGPT, subject:
+`Crypto Mission｜Monster V2.1 日汇总｜YYYY-MM-DD`
+
+Before sending, dedupe Gmail Sent by exact subject.
+If the 19:29 run is missed, the first later successful run must send the missed summary once and record Gmail message_id/readback plus `monster_daily_summary_recovery: true`.
+Generating a summary in the audit without sending it does not satisfy the daily-summary requirement.
