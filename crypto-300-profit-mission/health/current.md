@@ -1,62 +1,38 @@
 # Crypto Mission Monitor Health
 
-Updated: 2026-09-26 12:36 Asia/Bangkok
+Updated: 2026-09-26 14:12 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Configuration
-- main_automation_id: 6ab46906a0cc8191880f1922dbef954a
-- expected_schedule: hourly at minute 29
-- timing_mode: exact_schedule
-- automation_mode: FACTUAL_RULE_MONITOR
-- monster_lane_merged_into_main: true
-- separate_monster_daily_automation_enabled: false
-- BSC_cluster_lane: excluded
+## Existing task
+- automation_id: 6ab46906a0cc8191880f1922dbef954a
+- expected schedule: hourly :29
+- no new automation created
 
-## Notification contract
-- factual ACTION trigger: Gmail + ChatGPT
-- changed factual WATCH: Gmail + ChatGPT
-- unchanged WATCH: silent
-- NO_ACTION: silent
-- monitor health failure: Gmail + ChatGPT
-- 19:29 monster summary: factual user-visible summary
+## Current diagnosis
 
-## Failure evidence
+Automatic scheduler timestamps continue to advance, but the Mission still failed to create a durable audit at 13:29 even after factual-rule wording.
 
-Observed:
-- 09:30 automatic run created a skeleton but did not complete.
-- a later run audit explicitly recorded `required persistence update was blocked by runtime policy`.
-- after workload reduction, the 12:29 scheduler trigger again advanced scheduler metadata but did not create a durable new Mission audit.
+Because no skeleton was created, the failure occurs before the detailed Mission lanes can prove execution.
 
-Therefore the next repair narrows the automation from trade-decision language to factual rule monitoring.
+## Repair applied now
 
-## Repair applied
+The same existing task is reduced to a minimal factual telemetry launcher:
+- first action: neutral skeleton audit
+- then read only `AUTOMATION_RUNTIME.md`
+- no personalized recommendation generation
+- no transaction creation/modification
+- no capital reallocation
+- bounded wallet / threshold / state-classification checks
+- original wallet, position, Monster, launch/NFT/FOMO factual coverage retained
 
-The existing task now:
-- reads current wallet/market/official facts;
-- evaluates only thresholds already stored in GitHub;
-- classifies stored states;
-- sends factual trigger notices;
-- does not originate new trades, new leverage, new sizes or capital reallocations;
-- keeps all existing monitoring lanes and Monster V2.1 coverage;
-- retains exact schedule and existing task ID;
-- creates no new automation.
+Task title/prompt may use "asset state monitor" wording while keeping the same automation ID and repository Mission.
 
-## Validation status
+## Proof requirement
 
-- GitHub connector write path: verified manually.
-- Gmail connector path: verified manually.
-- TGE task: producing successful finalized runs.
-- Mission post-factual-mode automatic validation: pending next :29 run.
+The next :29 run is healthy only if:
+1. a new automatic skeleton exists;
+2. it contains factual lane results;
+3. current state/health writes complete or are explicitly marked unavailable;
+4. the same audit is finalized.
 
-Until a new finalized automatic Mission audit appears, Mission scheduler health remains UNVERIFIED.
-
-## Success definition
-
-A healthy automatic cycle must:
-1. create skeleton;
-2. record critical factual lane statuses;
-3. record discovery/Monster classifications;
-4. update state/health;
-5. finalize the same audit.
-
-Scheduler metadata alone is insufficient.
+Scheduler last_run_time alone remains insufficient.
