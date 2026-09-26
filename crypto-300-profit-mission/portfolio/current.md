@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-26 16:13+ Asia/Bangkok
+Updated: 2026-09-26 16:35 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Data labels
@@ -33,6 +33,9 @@ KARDASHEV authority: `positions/kardashev.md`.
 - remaining: **4,103.186501**
 - gross routed exit proceeds observed: **~0.245051759 SOL**
 - status: **PRINCIPAL_RECOVERED / PROFIT_POSITION**
+- fresh PumpSwap reserves: **35,838,316.721083 KARDASHEV / 610.290341092 SOL**
+- at SOL ~120.01, pool-implied price: **~0.00204365 USD**
+- remaining position mark value: **~8.39 USD**
 - exact transaction signatures and risk notes are in the position file.
 
 Important current-state notes:
@@ -102,10 +105,11 @@ Strict directly priced liquid NAV, excluding PAID/e/acc and unpriced NFTs/points
 - native gas: ~58.98
 - GSTOCK: ~28.55
 - Robinhood PONS spot: ~34.24
+- KARDASHEV remaining position: ~8.39
 
-**Strict directly priced on-chain NAV: ~788.91 USD.**
+**Strict directly priced on-chain NAV: ~797.29 USD.**
 
-PAID and e/acc are held and tracked, but their public price feeds currently conflict materially. They remain outside strict NAV. Recent public PAID references imply roughly **9.9-18.0 USD** for the current balance; e/acc value is small but unresolved. Including those indicative ranges gives a rough direct-chain liquid range around **799-808 USD**, excluding NFTs/points/unpriced receipts.
+PAID and e/acc are held and tracked, but their public price feeds currently conflict materially. They remain outside strict NAV. Recent public PAID references imply roughly **9.9-18.0 USD** for the current balance; e/acc value is small but unresolved. Adding current PAID public-reference ranges and the small unresolved e/acc remainder gives a rough direct-chain liquid range around **807-816 USD**, excluding NFTs/points/unpriced receipts.
 
 ## Private venue positions
 
