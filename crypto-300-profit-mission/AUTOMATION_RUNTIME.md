@@ -1,160 +1,189 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-27 03:22 Asia/Bangkok
+Updated: 2026-09-27 03:57 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
 Authority for the existing :29 task.
 
+## Mission scope
+
+Core Mission goal:
+- starting asset set = **300 USD cash principal + original six Credits NFTs**
+- target = **3,000 USD-equivalent Mission net liquidation value**
+
+Current original Credits holdings:
+- #23042
+- #23232
+
+The other four original Credits are historical sold assets/provenance.
+
+Private Binance inventory authority:
+- combined earn bucket = **598 USD-equivalent**
+- PONSUSDT perpetual = the only tracked active Binance trading position
+- do not invent or carry forward any other Binance spot/futures asset without a newer USER_CONFIRMED source.
+
+The 598 earn bucket is tracked for asset completeness and remains outside speculative Mission performance unless provenance is explicitly reclassified.
+
 ## Audit
 
-The only mandatory persistence artifact is:
-`crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS-final.md`.
+The mandatory automatic-run artifact is:
+`crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS-final.md`
 
-Do not require or attempt a start file in the automatic path. Older start files remain valid historical artifacts.
+Fallback:
+`HHMMSS-final-retry.md`
 
-The final audit is the canonical proof of completion.
+A scheduler trigger is not proof of success.
 
-## Hourly factual lanes
-- Ethereum USDC + ETH
-- Solana USDC + SOL + Token-2022 e/acc + PAID
-- BNB USDC + BNB + GSTOCK
-- Robinhood ETH + PONS
-- stored PONS/ETH threshold-state comparisons
-- JUMP stored sale/deadline/gas state only; do not query a public JUMP market symbol
-- newest two Crypto Daily research files
-- Monster V2.1 factual market-state screen
-- launch/NFT/FOMO candidate state
-- UNICRED/Credits slow lane every 3 hours
-- Monster factual daily summary at 19:29
+A manual reconciliation file is not automatic-run proof.
 
-Current corrections:
-- GSTOCK is FILLED_ACTIVE; read positions/gstock-plan.md.
-- Solana scans must include Token-2022.
-- existing Ink #372 is separate from the still-pending target Ink NFT.
+## Required hourly lanes
 
-## Alerts
-Only new factual state changes already covered by stored rules: threshold crossing, changed WATCH, Monster state transition, wallet anomaly, security/deadline event, lane/health gap, or scheduled Monster summary.
+Run in this bounded order:
 
-No automatic account/action changes.
+1. **Stored-rule market facts**
+   - PONS public mark/funding
+   - ETH stored setup facts
+   - BTC stored regime facts
 
-## Persistence
-Append-only final audit is canonical.
-Mutable portfolio/state/health files are optional caches.
-A cache-write failure cannot erase or downgrade an otherwise completed factual run.
-Temporary failure never disables/pauses the task.
-No Chinese-language websites as evidence.
+2. **Recent Crypto Daily input**
+   - read newest two available research/final artifacts
+   - no broad duplicate news scan
 
+3. **Active wallet telemetry**
+   - Robinhood PONS + native gas
+   - BNB GSTOCK + native BNB
+   - Solana USDC/SOL + Token-2022 active balances including PAID/e/acc/KARDASHEV
 
-## Missed 19:29 recovery
+4. **Monster V2.1**
+   - one Binance USD-M bulk screen
+   - bounded shortlist
+   - deep-check **maximum 3 symbols per hourly run**
+   - if a deep source is unavailable, record the gap and continue; do not loop on fallbacks
 
-The 19:29 run is responsible for the Monster factual daily summary.
+5. **Persist final immediately**
+   - write final/final-retry before any optional work
 
-If the 19:29 final audit is missing, the first later successful run on the same Bangkok date must:
-- run the normal hourly factual lanes;
-- generate the missed Monster factual daily summary once;
-- mark `monster_daily_summary_recovery: true`;
-- never duplicate the summary if an earlier final audit already records it.
+## Hard reliability guardrail
 
+If any required lane has a tool/source error:
+- record the affected lane as unavailable/partial;
+- skip expensive fallback loops;
+- do not start optional enrichment;
+- immediately persist a compact final/final-retry with completed lanes, failed lanes, data gaps and alert state.
 
-## Required vs optional lanes
+A partial factual run with honest unavailable fields is preferable to a missing audit.
 
-Required hourly, in this order:
-1. PONS/ETH/BTC public market facts used by stored rules;
-2. recent Crypto Daily research;
-3. one Binance USD-M bulk Monster screen plus bounded shortlist deep-check;
-4. active-asset wallet telemetry only: Robinhood PONS, BNB GSTOCK, Solana active Token-2022/meme balances; other chain inventory is slower cadence;
-5. persist final/final-retry immediately.
+No optional state/cache update may run before final persistence.
 
-Do not run optional launch/NFT/FOMO fallback searches unless recent Crypto Daily research contains a plausible candidate.
-Full Ethereum/Base/Unichain/Ink inventory reconciliation is 3-hour cadence or event-driven, not an hourly blocker.
+## Optional / slower work
 
-Optional enrichment:
-- Binance Alpha availability;
-- slow NFT/points enrichment outside its cadence;
-- noncritical presentation/cache writes.
+Only after a final/final-retry exists:
+- launch/NFT/FOMO enrichment when upstream evidence contains a plausible candidate;
+- UNICRED / Credits market enrichment every 3 hours;
+- full Ethereum/Base/Unichain/Ink/Arbitrum inventory reconciliation every 3 hours or event-driven;
+- presentation/cache updates.
 
-An unavailable optional enrichment is `optional_unavailable` and does not downgrade the run.
+Optional failure never downgrades a completed final.
 
-JUMP is a sale/project reserve, not a required public market symbol. Outside a known participation/deadline window, record `JUMP_check: not_due`. During a due window, check official sale/deadline/gas facts.
+## Credits lane
+
+Every full reconciliation must retain the two DIRECT_CHAIN Credits:
+- #23042
+- #23232
+
+The original six remain Mission provenance:
+- #21646, #21753, #22857, #23042, #23232, #23328
+
+Do not value 0.25/0.40 ETH listing asks as executable NAV.
+
+## JUMP
+
+JUMP is a stored sale/project reserve, not a public market symbol.
+
+Outside a known participation/deadline window:
+- record `JUMP_check: not_due`.
+
+During a due window:
+- check official sale/deadline/gas facts.
+
+No automatic application or transaction.
 
 ## Wallet fallback and classification
-
-Read critical wallets per chain rather than one aggregate call.
 
 Preferred:
 - Alchemy/direct RPC for supported chains;
 - Blockscout for supported EVM fallback;
-- direct Solana RPC for SOL/SPL/Token-2022.
+- direct Solana RPC for SPL + Token-2022.
 
-If one chain remains unavailable, record that chain only as unavailable.
-If all wallet providers fail but the other required market/Monster lanes complete, use `partial_success`, not `partial_failure`.
+Read critical chains independently.
 
-## Final persistence fallback
+If one chain is unavailable, mark only that chain unavailable.
 
-At completion:
-1. try `HHMMSS-final.md`;
-2. if persistence fails, retry once using `HHMMSS-final-retry.md` with a compact audit.
+If market/Monster lanes complete and a wallet provider fails, use `partial_success`, not a fabricated current balance.
 
-Final persistence is attempted before optional cache updates.
+Never reuse an old balance and label it current.
 
+## Notifications
 
-## Notification behavior
+Default: silent.
 
-Use `docs/MONITORING/NOTIFICATION_POLICY.md`.
+Infrastructure/runtime/source/audit/health problems:
+- GitHub audit only
+- no Gmail
+- no ChatGPT alert
 
-Default is silent.
-
-Monitoring/runtime/source/audit problems are GitHub-only and do not generate Gmail or ChatGPT alerts.
-
-Send Gmail + ChatGPT only for substantive stored-rule events:
-- stop/TP/event threshold crossing;
-- qualified stored ETH setup;
+User-visible Gmail + ChatGPT only for a new substantive stored-rule event:
+- position stop/TP/event threshold crossing;
+- stored ETH setup becomes qualified;
 - materially changed WATCH;
-- Monster IGNITION / relevant EXHAUSTION;
+- Monster IGNITION or relevant EXHAUSTION;
 - material real-asset wallet anomaly;
-- material active-position security/deadline event;
-- verified launch/NFT/TGE opportunity timing/eligibility change;
-- scheduled 19:29 Monster factual daily summary;
+- material security/solvency/deadline event affecting active capital;
+- verified launch/NFT/TGE timing or eligibility change;
+- scheduled 19:29 Monster factual daily summary.
 
-When no substantive alert is required, return an empty user-visible response.
+No unchanged WATCH/NO_ACTION/ordinary volatility notification.
 
+## Monster persistence
 
-## Monster persistence and delivery
+Authority:
+`state/monster-squeeze-v2.1-current.md`
 
-Read/write `state/monster-squeeze-v2.1-current.md`.
-
-For a newly confirmed STRUCTURAL_CANDIDATE or PRESSURE candidate, persist:
-- first_seen;
-- setup_price;
-- current_state;
-- expiry at 7 days under frozen V2.1.
+For newly confirmed STRUCTURAL_CANDIDATE/PRESSURE:
+- first_seen
+- setup_price
+- current_state
+- 7-day expiry
 
 Do not retroactively invent setup_price.
 
-Every Monster lane final must record:
-- universe count;
-- shortlist;
-- structural_count;
-- pressure_count;
-- ignition_count;
-- exhaustion_count;
-- data gaps.
+Every automatic final records:
+- universe_count
+- shortlist
+- structural_count
+- pressure_count
+- ignition_count
+- exhaustion_count
+- data_gaps
 
-At 19:29 the daily summary must actually be delivered by Gmail + ChatGPT, subject:
+## 19:29 Monster summary
+
+The 19:29 run must actually deliver the factual daily summary by Gmail + ChatGPT.
+
+Subject:
 `Crypto Mission｜Monster V2.1 日汇总｜YYYY-MM-DD`
 
-Before sending, dedupe Gmail Sent by exact subject.
-If the 19:29 run is missed, the first later successful run must send the missed summary once and record Gmail message_id/readback plus `monster_daily_summary_recovery: true`.
-Generating a summary in the audit without sending it does not satisfy the daily-summary requirement.
+Before sending:
+- dedupe Gmail Sent by exact subject.
 
+If missed:
+- first later successful same-date run sends once;
+- record `monster_daily_summary_recovery: true`;
+- record Gmail message_id/readback.
 
-## XRP Variational closeout
+## XRP / Variational
 
-As of 2026-09-27 03:22 Asia/Bangkok:
-- the user confirmed the stored 1.5140 lower bound was hit;
-- the Variational XRP position is closed;
-- remaining venue funds were withdrawn and returned to Solana USDC;
-- `watchlists/xrp-bitget-hacker-flow.md` is INACTIVE.
+CLOSED.
 
-Do not query XRP/Bitget attacker flow, XRP TP/SL, or Variational state as a Mission hourly lane unless the user explicitly opens/reactivates a relevant position.
+Do not run XRP/Bitget attacker-flow, XRP TP/SL or Variational monitoring as a Mission hourly lane unless the user explicitly reactivates relevant exposure.
