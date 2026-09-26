@@ -420,7 +420,7 @@ For each candidate, require:
 Do not manufacture a candidate every cycle. If none clears the gate, record NO_CANDIDATE and remain silent.
 
 New speculative ideas may only use:
-- the ~141 USDC uncommitted pool, or
+- the ~89 USDC-equivalent currently uncommitted pool after the XRP/Variational internal reallocation, or
 - the 150-USDC opportunity reserve when the event is truly short-window/high-conviction.
 
 JUMP, ETH reserve, PONS budget and the 500 low-risk bucket are ring-fenced unless the user explicitly reallocates them.
@@ -467,3 +467,50 @@ Direct Alchemy Solana RPC after the user completed the recovery shows:
 - native SOL balance: **0.105136682 SOL**;
 - all four previously tracked auxiliary native WSOL token accounts now return `value: null`, confirming they were closed.
 The recovery is complete. Remove those WSOL accounts from active monitoring; keep the prior investigation only as audit/history.
+
+
+## ETH post-expiry monitoring correction — 2026-09-26
+The Sep-25 one-shot ETH options-expiry task completed in the scheduler but did not persist its promised conclusion to the Mission daily report. Treat that as a monitoring QA failure, not as a valid silent conclusion.
+
+ETH is now permanently folded into the hourly Mission fast lane through `positions/eth-conditional.md`.
+Current baseline at 2026-09-26 07:52 Asia/Bangkok: no market entry around ~2685. The preferred next setup is the conditional pullback/reclaim plan in that file; breakdown-short and qualified breakout rules are also defined there. The 100-USDC ETH reserve remains ring-fenced until a setup fully qualifies.
+
+## Monster-coin squeeze V2.1 integration — 2026-09-26
+Canonical spec: `watchlists/monster-squeeze-v2.1.md`.
+
+This lane is now part of the main hourly Mission monitor and replaces the separate daily automation for execution/alerting purposes.
+
+Every hourly Mission run must:
+- scan Binance Alpha and Binance USDⓈ-M Futures plus carried candidates from the previous 7 days;
+- evaluate the frozen STRUCTURAL_CANDIDATE -> PRESSURE -> IGNITION -> EXHAUSTION state machine;
+- preserve the exact V2 IGNITION gate documented in the watchlist;
+- record state transitions and lane QA in the immutable run audit.
+
+Notification behavior:
+- STRUCTURAL_CANDIDATE and PRESSURE remain silent intraday;
+- first confirmed IGNITION sends immediate Gmail + user-visible ChatGPT alert;
+- EXHAUSTION sends immediate Gmail + ChatGPT when a prior IGNITION was alerted or the user holds the asset;
+- at 19:29 Asia/Bangkok, the main Mission run must send one concise user-visible daily 妖币 summary even if no IGNITION/EXHAUSTION occurred, showing up to five strongest STRUCTURAL/PRESSURE candidates and every state transition.
+
+The daily summary exception is intentional and overrides the general NO_ACTION silence rule only for this one 19:29 妖币 summary.
+
+## Monitoring health / self-test
+A monitor that does not prove it ran is not considered healthy.
+
+Every hourly Mission run must maintain `health/current.md` with:
+- expected_schedule;
+- current_run_time;
+- previous_successful_run_time;
+- run_gap_minutes;
+- mandatory_lanes_checked;
+- lane_failures;
+- github_write_ok;
+- alert_delivery_test/status when applicable.
+
+Health rules:
+1. If the gap between successful Mission runs exceeds 90 minutes, emit one `MONITOR_HEALTH_GAP` alert by Gmail + user-visible ChatGPT on the first recovered run.
+2. A mandatory lane skipped due tool/data failure marks the run `partial_failure`, while other lanes must continue.
+3. If the same mandatory lane fails in two consecutive hourly runs, emit one `MONITOR_LANE_FAILURE` alert naming the lane and error.
+4. Every valid action alert must attempt Gmail. Gmail failure cannot suppress the ChatGPT alert and must be written into the run audit.
+5. At least once per day, verify that the main automation is enabled and that a run audit exists for the expected schedule. Record the verification in `health/current.md`.
+6. Do not send routine health messages when all checks pass.
