@@ -1,134 +1,158 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-26 13:00 Asia/Bangkok
+Updated: 2026-09-26 14:15 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Rules
+## Accounting rules
 
 Wallet balance alone is not P&L.
 
-- external net contributions = outside capital added minus withdrawn.
-- realized P&L requires verified closed proceeds, cost basis and fees.
-- unrealized P&L requires executable current value and remaining cost basis.
-- internal chain / venue transfers do not create profit.
-- unresolved private venue or historical data stays UNRESOLVED.
+- internal bridge / chain / venue movements are not profit or loss;
+- realized P&L requires verified proceeds, cost basis and fees;
+- private venue values remain USER_CONFIRMED unless directly connected;
+- unpriced / unsolicited tokens are excluded from NAV;
+- listing / conditional-order values are not realized P&L.
 
-## Current direct-chain capital snapshot
+## Current direct-chain capital
 
-Fresh DIRECT_CHAIN canonical stablecoins:
-- Ethereum: 400.308121 USDC.
-- Solana: 330.799585 USDC.
-- Base: 0.252982 USDC.
-- Unichain: 0.021286 USDC.
-- Total: **731.381974 USDC**.
+Fresh supported-chain reconciliation:
 
-Native assets:
-- Ethereum: 0.001667063838788351 ETH.
-- Solana: 0.135545164 SOL.
-- Base: 0.000790846510479134 ETH.
-- Unichain: 0.000231941590232335 ETH.
-- Robinhood Chain: **0.000826657957256326 ETH**.
-- Robinhood Chain PONS: **54.799953441979625 PONS**, current mark value **~35.34 USD**.
+### Canonical stablecoins
+- Ethereum USDC: **400.308121**
+- Solana USDC: **248.657361**
+- BNB Chain USDC: **30.00474761**
+- Base USDC: **0.252982**
+- Unichain USDC: **0.021286**
 
-Other:
-- unidentified Solana SPL: 1.745552 tokens, value UNRESOLVED.
-- SHART: 0.
-- CRED: 0.
+Total canonical direct-chain stablecoins: **679.24449761 USDC**.
 
-## Reserved / open exposure
+### Native gas assets
+- Ethereum: **0.001667063838788351 ETH**
+- Solana: **0.133415487 SOL**
+- BNB Chain: **0.002684170274192202 BNB**
+- Robinhood Chain: **0.000825190918816326 ETH**
+- Ink: **0.01113370814547789 ETH**
+- Base: **0.000790846510479134 ETH**
+- Unichain: **0.000231941590232335 ETH**
+
+Arbitrum remains UNAVAILABLE in the current Alchemy app.
+
+## Cross-chain capital change
+
+Solana canonical USDC is now **248.657361**, down **82.142224 USDC** from the prior 330.799585 snapshot.
+
+The user confirms this reduction came from cross-chain capital movements used to adjust positions. This is treated as an internal capital movement, not P&L.
+
+BNB Chain now contains:
+- **30.00474761 USDC**
+- **0.002684170274192202 BNB**
+- GSTOCK direct-chain balance: **0**
+
+The BNB-chain funds are associated with the current GSTOCK pending-order plan. No direct-chain GSTOCK fill is visible.
+
+## Open / reserved exposure
 
 ### JUMP
-- 400 USDC reserve.
+- 400 USDC reserve on Ethereum.
 - allocation not confirmed.
 - realized P&L: 0.
 
 ### ETH
-- 100 USDC reserve.
-- no confirmed live Mission position.
-- realized/unrealized P&L: 0.
+- 100 USDC conditional reserve.
+- no confirmed live Mission ETH position.
 
 ### Opportunity reserve
-- 150 USDC ring-fenced.
-- not P&L.
+- 150 USDC accounting reserve.
+- currently distributed across chains / plans rather than assumed to remain wholly on Solana.
+- do not double-count converted assets as free USDC.
+
+### GSTOCK
+- status: **PLAN_NOT_FILLED**
+- direct-chain GSTOCK: **0**
+- BNB Chain reserve: about 30 USDC plus BNB gas
+- order UI state is not verifiable from wallet RPC.
 
 ### XRP / Variational
-USER_CONFIRMED at 2026-09-26 06:08:
-- 77.12 XRP long at 1.55589, isolated 3x.
-- TP 1.6280; SL 1.5140.
-- latest screenshot unrealized PnL: +0.97 USD at mark 1.56844.
-- exact current private-venue PnL: UNRESOLVED without a fresh venue read.
-- realized P&L: 0 until a close is verified.
+Latest USER_CONFIRMED:
+- 77.12 XRP long @ 1.55589
+- isolated 3x
+- TP 1.6280
+- SL 1.5140
 
-### PONS
+Exact current private-venue PnL remains UNRESOLVED without a new venue read/user screenshot.
 
-Binance futures USER_CONFIRMED at 2026-09-26 12:58:
-- LONG, isolated 3x.
-- entry 0.6250.
-- current notional 41.32 USDT.
-- margin 13.20 USDT.
-- unrealized PnL shown: **+1.31 USDT**.
-- realized PnL shown: **-0.13 USDT**.
-- hard stop 0.4980.
-- 0.5850 and 0.5450 resting entries: **canceled**.
+### PONS futures
+Latest USER_CONFIRMED at 2026-09-26 13:45:
+- LONG 64 PONS, isolated 3x
+- entry 0.6250
+- TP reduce-only: 25 @ 0.668; 22 @ 0.704; 16 @ 0.739
+- hard stop: Mark <= 0.4980, reduce-only 100%
+- old 0.5850 / 0.5450 averaging bids canceled
+- 1 PONS residual is not covered by the TP ladder, but remains covered by the 100% stop.
 
-Robinhood Chain DIRECT_CHAIN:
-- spot balance: **54.799953441979625 PONS**.
-- fresh token price: **0.6448796581 USD**.
-- spot mark value: **~35.34 USD**.
-- native gas: **0.000826657957256326 ETH**, mark value **~2.22 USD**.
+### PONS spot
+DIRECT_CHAIN:
+- **54.799953441979625 PONS**
+- Blockscout market reference around **0.643077 USD**
+- mark value roughly **35.24 USD**
 
-User confirms the remaining Binance order capital was withdrawn and converted to PONS spot + gas.
+Verified acquisition leg:
+- 35.291194 USDG -> 54.799953441979625 PONS
+- average acquisition rate ~0.64400044 USDG/PONS
 
-DIRECT_CHAIN transaction reconstruction for the PONS swap leg at 2026-09-26 12:58:38 Asia/Bangkok:
-- 35.291194 USDG input
-- 54.799953441979625 PONS output
-- average PONS spot acquisition rate: **~0.64400044 USDG/PONS**
+USER_CONFIRMED orders:
+- TP: 11 @ 0.668; 16.4 @ 0.704; 16.4 @ 0.739; 11 @ 0.845
+- downside triggers: 27.39 @ 0.598 and 27.39 @ 0.575
 
-At the Alchemy price ~0.6448796581, the PONS spot leg is roughly **+$0.048** unrealized before any separate withdrawal/gas costs.
+After any spot TP fill, fixed downside-trigger quantities require manual REVIEW_REQUIRED / resize against the remaining wallet balance.
 
-The original PONS sleeve came from a 50-USDT budget. Exact total sleeve PnL is still **UNRESOLVED** until separate withdrawal fee and native-gas acquisition cost are reconciled.
+## Ink
 
-Do not count current spot market value as realized profit.
+DIRECT_CHAIN / Blockscout:
+- native ETH: **0.01113370814547789**
+- Tydro Ink Points: **7.665136656205785948**
+- existing NFT: Fresh INK commemorative NFT #372
 
-### UNICRED #230
-- acquisition cost: 0.0105 ETH.
-- still staked.
-- current economic P&L: UNRESOLVED until rent + executable NFT value are reconciled.
+The newly discussed target Ink NFT is still pending. Existing Fresh INK #372 must not be confused with the target mint.
 
-### Credits
-- #23042 listed 0.25 ETH.
-- #23232 listed 0.40 ETH.
-- listing prices excluded from NAV.
+## Robinhood non-PONS receipts
 
-## Closed exposure requiring reconciliation
+Present but excluded from NAV pending intentional-position and market-value verification:
+- JOLLY
+- HYPERCAT
+- familiars
+- RMB
+- 富贵
+- DIH
+- DGDY
 
-### SHART
-- direct wallet balance 0.
-- final realized P&L UNRESOLVED pending transaction-history reconstruction.
+## UNICRED / Credits
 
-### CRED
-- direct wallet balance 0.
-- final realized P&L UNRESOLVED pending transaction-history reconstruction.
+- UNICRED NFT #230 remains active / locked; economic P&L unresolved until current rent + executable NFT value are reconciled.
+- Credits #23042 and #23232 listing prices remain excluded from NAV unless executable value is verified.
 
-## Capital residual
+## Closed exposure
 
-731.381974 canonical direct-chain stablecoins minus:
-- 400 JUMP
+- SHART direct balance: 0
+- liquid CRED direct balance: 0
+
+Final realized P&L for historical closed sleeves remains UNRESOLVED until transaction-history cost/proceeds are fully reconciled.
+
+## Residual accounting
+
+679.24449761 canonical stablecoins minus:
+- 400 JUMP reserve
 - 150 opportunity reserve
 - 100 ETH reserve
 
-leaves **81.381974 USDC** direct-chain residual.
+Arithmetic residual: **29.24449761 USDC**.
 
-This is available-capital accounting, not profit.
+This is accounting residual, not profit. The opportunity reserve already includes cross-chain / converted position capital and must not be counted twice.
 
 ## Scorecards
 
-Do not publish an exact total return until:
+Do not publish an exact total Mission return until:
 - later capital contributions are separated from the original-$300 sleeve;
-- SHART/CRED realized proceeds are reconciled;
-- UNICRED rent/executable NFT value is current;
-- current private venue PnL for XRP/PONS is directly verified.
-
-Maintain:
-1. original-$300 sleeve;
-2. total speculative capital after later contributions.
+- closed SHART/CRED proceeds are reconciled;
+- private venue XRP/PONS current PnL is refreshed;
+- UNICRED / NFT executable values are current.
