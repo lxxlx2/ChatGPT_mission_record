@@ -1,6 +1,6 @@
 # Crypto Daily Unified Pipeline Specification
 
-Last updated: 2026-09-22
+Last updated: 2026-09-27
 Status: canonical
 Timezone: Asia/Bangkok
 
@@ -285,7 +285,28 @@ For each Chapter 12 candidate include, when data exists:
 - invalidation conditions;
 - next 1 to 7 day price, on-chain or event checkpoints.
 
-### 7.3 User-visible content rules
+### 7.3 Critical security carry-forward
+
+Before drafting the formal report, enumerate all material security candidates from the previous 24h research **and final audits when research persistence failed**.
+
+A candidate is mandatory carry-forward when any is true:
+- user remediation is required, such as revoke / patch / move assets / reclaim;
+- verified or credibly reported exposure/loss is >= $1M;
+- an active wallet, approval, marketplace, bridge, exchange or protocol vulnerability remains open;
+- an hourly research record classified it as material/actionable security.
+
+Each mandatory candidate must be fresh-verified and either:
+- included in Chapter 9; or
+- explicitly excluded in the run audit with a concrete reason such as closed, false positive, outside cutoff after verification, or superseded.
+
+The 09:00 audit must include:
+- `critical_security_candidates_seen`
+- `critical_security_candidates_included`
+- `critical_security_candidates_omitted_with_reason`
+
+A security item cannot disappear merely because a later hourly scan returned no new update.
+
+### 7.4 User-visible content rules
 
 Internal rules, QA, scan methodology, classification explanations, GitHub status, missing-data process notes and correction mechanics belong only in run audits.
 
