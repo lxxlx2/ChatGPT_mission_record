@@ -922,6 +922,354 @@ def cmd_progress(_args) -> None:
             "and excludes actual settlement/clawback fees and omitted-outcome uncertainty"
         )
 
+def submit_trade_at_ref(
+    state: dict,
+    maker_label: str,
+    taker_label: str,
+    side: str,
+    qty: Decimal,
+    px: Decimal,
+    sweep: int,
+    prefix: str,
+) -> dict:
+    tid = f"{prefix}-{int(time.time())}"
+    text = build_trade(
+        state,
+        state["room"],
+        maker_label,
+        taker_label,
+        side,
+        qty,
+        px,
+        sweep + 2,
+        tid,
+    )
+    response = post_signed(state, state["room"], maker_label, text)
+    submission = None
+    for rec in reversed(parse_export(state["room"])):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "trade":
+            continue
+        if ((p.get("terms") or {}).get("id")) == tid:
+            submission = {
+                "seq": rec.get("seq"),
+                "ts": rec.get("ts"),
+                "from": rec.get("from"),
+            }
+            break
+    return {
+        "trade_id": tid,
+        "long": maker_label if side == "buy" else taker_label,
+        "short": taker_label if side == "buy" else maker_label,
+        "maker": maker_label,
+        "taker": taker_label,
+        "side": side,
+        "qty": str(qty),
+        "px": str(px),
+        "sweep": sweep,
+        "submission": submission,
+        "post_ack": response.strip().splitlines()[0] if response.strip() else "",
+    }
+
+
+def _bracket_round_record(bracket: dict, round_no: int) -> dict:
+    rounds = bracket.setdefault("rounds", {})
+    key = str(round_no)
+    if key not in rounds:
+        pairs = json.loads(json.dumps(bracket.get("pairs") or []))
+        open_px = pairs[0].get("px") if pairs else None
+        rounds[key] = {
+            "round": round_no,
+            "open_px": open_px,
+            "pairs": pairs,
+            "status": bracket.get("status") or "submitted",
+            "opened_at": bracket.get("opened_at"),
+            "submitted_at": bracket.get("submitted_at"),
+        }
+    return rounds[key]
+
+
+def _saved_trade_health(trades: list[dict]) -> dict:
+    visible_settled = 0
+    visible_void = []
+    not_visible = 0
+    omitted = {"settled": 0, "void": 0}
+    for trade in trades:
+        tid = trade.get("trade_id")
+        if not tid:
+            continue
+        info = trade_outcome_from_flow(tid)
+        omitted = info["omitted"]
+        outcome = info["outcome"]
+        if not outcome:
+            not_visible += 1
+        elif outcome["status"] == "settled":
+            visible_settled += 1
+        else:
+            visible_void.append({
+                "trade_id": tid,
+                "detail": outcome.get("detail"),
+                "sweep": outcome.get("sweep"),
+            })
+    return {
+        "visible_settled": visible_settled,
+        "visible_void": visible_void,
+        "not_visible": not_visible,
+        "omitted": omitted,
+    }
+
+
+def bracket_autopilot_step(state: dict, now: datetime) -> dict | None:
+    bracket = state.get("bracket") or {}
+    round_no = int(bracket.get("round", 0) or 0)
+    if round_no <= 0 or round_no >= 4:
+        return None
+
+    next_round = round_no + 1
+    due_text = BRACKET_SCHEDULE_UTC.get(next_round)
+    if not due_text or now < datetime.fromisoformat(due_text):
+        return None
+
+    current = _bracket_round_record(bracket, round_no)
+    pairs = current.get("pairs") or bracket.get("pairs") or []
+    if not pairs:
+        return {
+            "event": "bracket_blocked",
+            "reason": "no_current_pairs",
+            "round": round_no,
+        }
+
+    open_health = _saved_trade_health(pairs)
+    if open_health["visible_void"]:
+        bracket["status"] = "blocked_visible_void"
+        bracket["blocking_voids"] = open_health["visible_void"]
+        save_state(state)
+        return {
+            "event": "bracket_blocked",
+            "reason": "visible_open_void",
+            "round": round_no,
+            "voids": open_health["visible_void"],
+        }
+
+    reg = fleet_registration_evidence(state)
+    if reg["room_missed"]:
+        bracket["status"] = "blocked_room_missed"
+        save_state(state)
+        return {
+            "event": "bracket_blocked",
+            "reason": "dedicated_room_missed",
+            "round": round_no,
+            "missed": reg["room_missed"],
+        }
+
+    rollover = bracket.get("rollover")
+    if not isinstance(rollover, dict) or int(rollover.get("from_round", -1)) != round_no:
+        gate = fleet_gate(state)
+        if not gate["pass"]:
+            return {
+                "event": "bracket_wait_gate",
+                "round": round_no,
+                "checks": gate["checks"],
+                "sweep": gate["sweep"],
+            }
+
+        pr = fresh_price(max_age=120)
+        old_px = Decimal(str(current.get("open_px") or pairs[0]["px"]))
+        close_px = pr["px"]
+        survivors = []
+        for pair in pairs:
+            survivors.append(pair["long"] if close_px >= old_px else pair["short"])
+
+        rollover = {
+            "from_round": round_no,
+            "to_round": next_round,
+            "status": "closing",
+            "started_at": now.isoformat(),
+            "close_px": str(close_px),
+            "close_sweep": pr["n"],
+            "survivors": survivors,
+            "closes": [],
+            "opens": [],
+            "open_outcome_basis": (
+                "no visible void; omitted public outcomes accepted only with "
+                "retained signed submissions and no dedicated-room missed ranges"
+            ),
+        }
+        bracket["rollover"] = rollover
+        bracket["status"] = f"r{round_no}_closing"
+        save_state(state)
+
+    if rollover["status"] == "closing":
+        close_px = Decimal(str(rollover["close_px"]))
+        close_sweep = int(rollover["close_sweep"])
+        done = {x.get("maker") for x in rollover.get("closes", [])}
+
+        for idx, pair in enumerate(pairs, 1):
+            maker = pair["long"]
+            taker = pair["short"]
+            if maker in done:
+                continue
+            qty = Decimal(str(pair["qty"]))
+            res = submit_trade_at_ref(
+                state,
+                maker,
+                taker,
+                "sell",
+                qty,
+                close_px,
+                close_sweep,
+                f"br{round_no}c-{idx:02d}",
+            )
+            rollover["closes"].append(res)
+            bracket["rollover"] = rollover
+            save_state(state)
+
+        if len(rollover["closes"]) != len(pairs):
+            return {
+                "event": "bracket_closing_partial",
+                "round": round_no,
+                "done": len(rollover["closes"]),
+                "total": len(pairs),
+                "sweep": close_sweep,
+            }
+
+        rollover["status"] = "waiting_close_sweep"
+        bracket["status"] = f"r{round_no}_waiting_close"
+        save_state(state)
+        return {
+            "event": "bracket_close_submitted",
+            "round": round_no,
+            "next_round": next_round,
+            "pairs": len(pairs),
+            "close_px": rollover["close_px"],
+            "close_sweep": close_sweep,
+        }
+
+    if rollover["status"] == "waiting_close_sweep":
+        pr = fresh_price(max_age=10**9)
+        if pr["n"] <= int(rollover["close_sweep"]):
+            return {
+                "event": "bracket_wait_close_settlement_sweep",
+                "round": round_no,
+                "current_sweep": pr["n"],
+                "close_sweep": rollover["close_sweep"],
+            }
+
+        health = _saved_trade_health(rollover.get("closes") or [])
+        if health["visible_void"]:
+            rollover["status"] = "blocked_visible_close_void"
+            rollover["blocking_voids"] = health["visible_void"]
+            bracket["status"] = "blocked_visible_close_void"
+            save_state(state)
+            return {
+                "event": "bracket_blocked",
+                "reason": "visible_close_void",
+                "round": round_no,
+                "voids": health["visible_void"],
+            }
+
+        gate = fleet_gate(state)
+        if not gate["pass"]:
+            return {
+                "event": "bracket_wait_gate_after_close",
+                "round": round_no,
+                "checks": gate["checks"],
+                "sweep": gate["sweep"],
+            }
+
+        pr = fresh_price(max_age=120)
+        rollover["status"] = "opening_next"
+        rollover["next_open_px"] = str(pr["px"])
+        rollover["next_open_sweep"] = pr["n"]
+        bracket["status"] = f"r{next_round}_opening"
+        save_state(state)
+
+    if rollover["status"] == "opening_next":
+        survivors = list(rollover["survivors"])
+        targets = list(zip(survivors[0::2], survivors[1::2]))
+        open_px = Decimal(str(rollover["next_open_px"]))
+        open_sweep = int(rollover["next_open_sweep"])
+        existing = {x.get("maker") for x in rollover.get("opens", [])}
+
+        for idx, (maker, taker) in enumerate(targets, 1):
+            if maker in existing:
+                continue
+            qty = q_for_cash(Decimal("10000"), open_px)
+            if qty < Decimal("0.1"):
+                continue
+            res = submit_trade_at_ref(
+                state,
+                maker,
+                taker,
+                "buy",
+                qty,
+                open_px,
+                open_sweep,
+                f"br{next_round}-{idx:02d}",
+            )
+            rollover["opens"].append(res)
+            bracket["rollover"] = rollover
+            save_state(state)
+
+        if len(rollover["opens"]) != len(targets):
+            return {
+                "event": "bracket_opening_partial",
+                "round": next_round,
+                "done": len(rollover["opens"]),
+                "total": len(targets),
+                "sweep": open_sweep,
+            }
+
+        new_pairs = []
+        for res in rollover["opens"]:
+            new_pairs.append({
+                "trade_id": res["trade_id"],
+                "long": res["maker"],
+                "short": res["taker"],
+                "qty": res["qty"],
+                "px": res["px"],
+                "sweep": res["sweep"],
+                "submission": res.get("submission"),
+                "post_ack": res.get("post_ack"),
+            })
+
+        current["status"] = "closed_assumed_or_visible"
+        current["close_px"] = rollover["close_px"]
+        current["close_sweep"] = rollover["close_sweep"]
+        current["closes"] = rollover["closes"]
+        current["survivors"] = survivors
+        current["close_health"] = _saved_trade_health(rollover["closes"])
+
+        rounds = bracket.setdefault("rounds", {})
+        rounds[str(next_round)] = {
+            "round": next_round,
+            "open_px": str(open_px),
+            "pairs": json.loads(json.dumps(new_pairs)),
+            "status": "submitted",
+            "opened_at": datetime.now(timezone.utc).isoformat(),
+            "source_survivors": survivors,
+        }
+
+        bracket["round"] = next_round
+        bracket["pairs"] = new_pairs
+        bracket["status"] = "submitted"
+        bracket["opened_at"] = datetime.now(timezone.utc).isoformat()
+        bracket["submitted_at"] = datetime.now(timezone.utc).isoformat()
+        bracket.pop("rollover", None)
+        save_state(state)
+
+        return {
+            "event": "bracket_round_opened",
+            "round": next_round,
+            "pairs": len(new_pairs),
+            "open_px": str(open_px),
+            "open_sweep": open_sweep,
+            "survivors": survivors,
+        }
+
+    return None
+
+
 def autopilot_iteration(late_minutes: int = 180) -> dict:
     state = load_state()
     now = datetime.now(timezone.utc)
@@ -1018,19 +1366,18 @@ def autopilot_iteration(late_minutes: int = 180) -> dict:
             "sweep": pr["n"],
         }
 
+    bracket_event = bracket_autopilot_step(state, now)
+    if bracket_event:
+        ap = state.setdefault("autopilot", {})
+        ap["last_bracket_event"] = {
+            "at": datetime.now(timezone.utc).isoformat(),
+            **bracket_event,
+        }
+        save_state(state)
+        return bracket_event
+
     bracket = state.get("bracket") or {}
     round_no = int(bracket.get("round", 0) or 0)
-    next_round = round_no + 1
-    due_text = BRACKET_SCHEDULE_UTC.get(next_round)
-    if due_text:
-        due = datetime.fromisoformat(due_text)
-        if now >= due:
-            ap["bracket_attention"] = {
-                "round": next_round,
-                "due": due_text,
-                "observed_at": now.isoformat(),
-                "reason": "rollover logic intentionally requires explicit reviewed implementation",
-            }
 
     save_state(state)
     return {
