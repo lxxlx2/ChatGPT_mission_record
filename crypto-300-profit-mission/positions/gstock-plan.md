@@ -1,42 +1,32 @@
-# GSTOCK BNB Chain Plan
+# GSTOCK BNB Chain Position
 
-Updated: 2026-09-26 14:12 Asia/Bangkok
-Status: PLAN_NOT_FILLED
+Updated: 2026-09-26 16:33 Asia/Bangkok
+Status: FILLED_ACTIVE
 
 Canonical token:
-- name: Gstock
 - symbol: GSTOCK
-- contract: `0xcAFdBCE93477261Db8250e42BdAe6E66733F9E20`
 - network: BNB Chain
+- contract: 0xcAFdBCE93477261Db8250e42BdAe6E66733F9E20
 
-## Direct-chain state
+## Direct-chain fill
+- canonical USDC before fill snapshot: **30.00474761**
+- canonical USDC now: **0**
+- GSTOCK received: **1183.5967247073113**
+- exact canonical-USDC outflow in the fill transaction: **30.00474761**
+- effective cost before BNB gas: **~0.0253504821 USD/GSTOCK**
+- native BNB now: **0.002567317179192202**
 
-Fresh Alchemy read:
-- GSTOCK wallet balance: **0**
-- BNB Chain USDC: **30.00474761**
-- native BNB: **0.002684170274192202**
-- current Alchemy GSTOCK reference price: **~0.024487 USD**
+Market reference around 16:31:
+- GSTOCK: **~0.0241192634 USD**
+- mark value: **~28.5475 USD**
+- unrealized token PnL before gas: **~-1.4573 USD (-4.86%)**
 
-Therefore there is no direct-chain evidence of a GSTOCK fill at this snapshot.
-
-The user confirms the BNB Chain funds are reserved for a GSTOCK pending-order plan. Wallet RPC cannot prove whether an off-chain / conditional order UI is currently active, so order state is USER_CONFIRMED / UNVERIFIED_BY_CHAIN until a fill or newer UI confirmation appears.
-
-## Existing plan reference
-
-Latest previously discussed ladder:
-- 6 USD around 0.0250
-- 10 USD around 0.0220
-- 14 USD around 0.0185
-- prior hard invalidation reference: 0.0158
-
-These are stored plan references only. The automation must not create, replace, resize or submit any GSTOCK order.
+The prior PLAN_NOT_FILLED state is retired. Do not continue treating the old 0.025/0.022/0.0185 ladder as live pending orders unless a newer user-confirmed order UI shows remaining orders.
 
 ## Monitoring
+- direct GSTOCK balance
+- BNB gas
+- material price/liquidity/security changes
+- new wallet transfers / fill or exit evidence
 
-Factual monitor checks:
-- canonical GSTOCK wallet balance
-- BNB Chain USDC / BNB gas
-- whether a direct-chain fill appears
-- material security / liquidity / identity changes
-
-No fill = PLAN_NOT_FILLED.
+No automatic account/action changes.
