@@ -504,3 +504,24 @@ Duplicate owner registrations are harmless under frozen rule 3, so this favors p
 `dense-status` now also reports:
 - `pending_needs_owner_reregister`;
 - `pending_owner_reregister_count`.
+
+
+## 2026-09-27 — Room recovery moved ahead of price freshness gate
+
+Observed runtime after room recovery:
+- `room_active_in_latest_flow: True` at sweep 410;
+- pending Dense #3 still had `pending_owner_reregister_count: 0`;
+- current ref was stale (`effective_ref_age_s: 345`), so trading correctly remained blocked.
+
+This exposed an efficiency gap in the previous recovery sequence: owner re-registration after a room recovery lived inside the trade-submission path, which only ran after the ref freshness gate. A recovered room could therefore sit idle with stale price data even though owner re-registration itself does not depend on price freshness.
+
+Fix:
+- `1d8a1c5d36f78a07c013c612ee280862564655ee`
+
+New order:
+1. maintain/re-register the room if absent;
+2. if the room has returned, re-post the pending batch's owner registrations immediately, even with a stale ref;
+3. move `ready_after_sweep` to one later sweep;
+4. only after these non-price prerequisites are healthy apply the <=120s trading freshness gate.
+
+This should let the next genuinely fresh sweep be used for trading rather than for administrative recovery.
