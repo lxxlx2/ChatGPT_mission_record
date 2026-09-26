@@ -1,44 +1,29 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-27 03:22 Asia/Bangkok
+Updated: 2026-09-27 03:40 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Wallet / position state
+
+Fresh current snapshot:
 - Ethereum: **400.308121 USDC; 0.001667063838788351 ETH**
-- Solana: **328.018516 USDC; 0.128587689 SOL; 0 e/acc; 947.685473 PAID; KARDASHEV tracked separately**
-- BNB Chain: **0 USDC; 0.002567317179192202 BNB; 1183.5967247073113 GSTOCK**
-- Robinhood Chain: **54.799953441979625 PONS; 0.000825190918816326 ETH**
+- Solana: **328.018516 USDC; 0.128587689 SOL; 0 e/acc; 947.685473 PAID; 0 KARDASHEV**
+- BNB Chain: **0 USDC; 0.007916720924652341 BNB; 1183.5967247073113 GSTOCK**
+- Robinhood Chain: **54.799953441979624353 PONS; 0.000825190918816326 ETH**
 - Ink: **0.01113370814547789 ETH; 7.665136656205785948 Tydro Ink Points; Fresh INK #372**
 - Base: **0.252982 USDC; 0.000790846510479134 ETH**
-- Unichain: **0.021286 USDC; 0.000231941590232335 ETH; UNICRED NFT #230**
-- Arbitrum: **0.000827194359305186 ETH**; no canonical USDC identified in current Blockscout inventory
-- canonical direct-chain stablecoins: **728.600905 USDC**
+- Unichain: **0.021286 USDC; 0.000231941590232335 ETH; UNICRED NFT #230 tracked**
+- Arbitrum: **0.000001 canonical USDC; 0.000825005012848238 ETH**
+- canonical on-chain stablecoins: **728.600906 USDC**
 
-BNB GSTOCK plan has filled on-chain. Canonical BNB USDC is now zero and GSTOCK is active.
+Off-chain USER_CONFIRMED:
+- Binance PONS perpetual remains the only tracked active off-chain derivative.
+- combined earn bucket: **598 USD-equivalent**; former 500 + 98 labels are one accounting bucket.
+- Variational XRP: CLOSED / no active exposure.
 
-Fresh Solana finalized RPC shows e/acc fully exited at **0** and PAID unchanged at **947.685473**. Canonical Solana USDC is now **328.018516**. The user confirms the closed Variational balance was withdrawn and converted back to Solana USDC; the entire wallet delta is not assigned solely to Variational because other Solana activity occurred between snapshots.
+Public PONSUSDT mark: **0.63688970**.
+If the private Binance position remains 64 PONS long @ 0.6250, estimated current uPnL is **~+0.7609 USDT** before fresh funding/fees.
 
-KARDASHEV is a principal-recovered profit position. Fresh pool reserves imply ~0.00204365 USD/token at SOL ~120.01; remaining 4103.186501 tokens are worth ~8.39 USD and current total-position PnL reference is ~+17.64 USD after listed network fees.
-
-## Private positions
-
-### PONS Binance
-Latest USER_CONFIRMED: LONG 64 @ 0.6250, isolated 3x.
-Stored exits: TP 0.668 / 0.704 / 0.739; stop 0.498.
-Public Binance mark around 16:32: 0.6256.
-No public mark trigger crossing detected after the latest screenshot.
-Estimated current uPnL if unchanged: +0.0384 USDT.
-
-### XRP Variational — CLOSED
-USER_CONFIRMED 2026-09-27 03:22:
-- stored lower bound / SL 1.5140 was hit;
-- position closed;
-- remaining venue funds withdrawn;
-- returned capital converted to Solana USDC;
-- gross stop reference ~-3.23 USDC before funding/fees/slippage;
-- exact venue realized PnL unresolved.
-
-XRP/Variational and Bitget attacker-flow monitoring are now disabled in the hourly Mission.
 
 ## Automation health
 
