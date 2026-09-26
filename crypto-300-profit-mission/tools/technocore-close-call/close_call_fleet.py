@@ -399,17 +399,40 @@ def fresh_price(max_age=600) -> dict:
         raise RuntimeError("no price post found")
     ref = p.get("ref") or {}
     px = Decimal(str(ref.get("px")))
-    age = p.get("age_s")
-    if age is None and ref.get("time"):
+
+    reported_age = p.get("age_s")
+    derived_age = None
+    if ref.get("time"):
         try:
             ts = datetime.fromisoformat(str(ref["time"]).replace("Z", "+00:00"))
-            age = max(0, int((datetime.now(timezone.utc) - ts).total_seconds()))
+            derived_age = max(0, int((datetime.now(timezone.utc) - ts).total_seconds()))
         except Exception:
-            age = None
-    if age is not None and int(age) > max_age:
-        raise RuntimeError(f"stale referee reference: age_s={age} > {max_age}")
+            derived_age = None
+
+    ages = []
+    for value in (reported_age, derived_age):
+        if value is None:
+            continue
+        try:
+            ages.append(int(value))
+        except Exception:
+            pass
+    age = max(ages) if ages else None
+
+    if age is not None and age > max_age:
+        raise RuntimeError(
+            f"stale referee reference: effective_age_s={age} > {max_age} "
+            f"(reported_age_s={reported_age}, derived_age_s={derived_age})"
+        )
     n = int(p["n"])
-    return {"n": n, "px": px, "age_s": age, "raw": p}
+    return {
+        "n": n,
+        "px": px,
+        "age_s": age,
+        "reported_age_s": reported_age,
+        "derived_age_s": derived_age,
+        "raw": p,
+    }
 
 
 def cmd_ids(_args) -> None:
