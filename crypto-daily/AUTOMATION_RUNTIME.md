@@ -1,23 +1,19 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-26 18:34 Asia/Bangkok
+Updated: 2026-09-26 19:55 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
 Authority for the existing hourly Crypto Daily task.
 
 ## Audit
-The append-only final audit is the canonical proof of completion.
 
-At run start, make one best-effort attempt to create:
-`crypto-daily/runs/YYYY-MM-DD/HHMMSS-start.md`.
-
-If the start write is blocked or unavailable, record `start_audit_warning` internally and continue the actual collection. A missing start marker alone must never abort the run or downgrade a complete run.
-
-At completion create:
+The only mandatory persistence artifact is:
 `crypto-daily/runs/YYYY-MM-DD/HHMMSS-final.md`.
 
-The final audit is mandatory whenever the factual work can run.
+Do not require or attempt a start file in the automatic path. Older start files remain valid historical artifacts.
+
+The final audit must include run time, automation id, lane status, research path, source/tool warnings and final run status.
 
 ## Ordinary hour
 1. core BTC/ETH/SOL + liquid-outlier + major security/exchange/protocol factual scan;
