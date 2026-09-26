@@ -1,158 +1,115 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-26 14:18 Asia/Bangkok
+Updated: 2026-09-26 16:33 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Accounting rules
+- internal bridge / chain / venue movements are not PnL;
+- realized PnL needs verified cost, proceeds and fees;
+- private venue positions use latest USER_CONFIRMED state plus public marks only as an estimate;
+- spoof/unpriced tokens and NFTs without executable value are excluded;
+- the wallet contains later capital additions, so current NAV cannot be compared directly with the original $300 mission amount.
 
-Wallet balance alone is not P&L.
+## Current active-position mark-to-market
 
-- internal bridge / chain / venue movements are not profit or loss;
-- realized P&L requires verified proceeds, cost basis and fees;
-- private venue values remain USER_CONFIRMED unless directly connected;
-- unpriced / unsolicited tokens are excluded from NAV;
-- listing / conditional-order values are not realized P&L.
+### GSTOCK / BNB Chain
+- cost: **30.00474761 USDC**, before BNB gas
+- received: **1183.5967247073113 GSTOCK**
+- average cost: **~0.0253504821**
+- current Alchemy mark: **~0.0241192634**
+- current value: **~28.5475 USD**
+- unrealized PnL: **~-1.4573 USD (-4.86%)**, before BNB gas
+- status: **FILLED / ACTIVE**
 
-## Current direct-chain capital
+### PONS Robinhood spot
+- quantity: **54.799953441979625 PONS**
+- verified cost: **35.291194 USDG**
+- current Alchemy mark: **~0.6247626394**
+- current value: **~34.2370 USD**
+- unrealized mark PnL: **~-1.0542 USD (-2.99%)**
 
-Fresh supported-chain reconciliation:
+Existing TP/downside orders remain USER_CONFIRMED. No outgoing PONS transfer is reflected in the fresh balance.
 
-### Canonical stablecoins
-- Ethereum USDC: **400.308121**
-- Solana USDC: **248.657361**
-- BNB Chain USDC: **30.00474761**
-- Base USDC: **0.252982**
-- Unichain USDC: **0.021286**
+### PONS Binance futures
+Latest USER_CONFIRMED private position:
+- LONG 64 PONS @ **0.6250**
+- isolated 3x
+- TP 0.668 / 0.704 / 0.739
+- stop 0.498
 
-Total canonical direct-chain stablecoins: **679.24449761 USDC**.
+Current Binance public mark: **0.6256**.
+Assuming no manual private-account change:
+- estimated current uPnL: **~+0.0384 USDT**
+- latest screenshoted realized PnL reference: **~-0.13 USDT**
+- estimated trade-result subtotal using those two fields: **~-0.0916 USDT**, before any new funding/fees
 
-### Native gas assets
-- Ethereum: **0.001667063838788351 ETH**
-- Solana: **0.133415487 SOL**
-- BNB Chain: **0.002684170274192202 BNB**
-- Robinhood Chain: **0.000825190918816326 ETH**
-- Ink: **0.01113370814547789 ETH**
-- Base: **0.000790846510479134 ETH**
-- Unichain: **0.000231941590232335 ETH**
-
-Arbitrum remains UNAVAILABLE in the current Alchemy app.
-
-## Cross-chain capital change
-
-Solana canonical USDC is now **248.657361**, down **82.142224 USDC** from the prior 330.799585 snapshot.
-
-The user confirms this reduction came from cross-chain capital movements used to adjust positions. This is treated as an internal capital movement, not P&L.
-
-BNB Chain now contains:
-- **30.00474761 USDC**
-- **0.002684170274192202 BNB**
-- GSTOCK direct-chain balance: **0**
-
-The BNB-chain funds are associated with the current GSTOCK pending-order plan. No direct-chain GSTOCK fill is visible.
-
-## Open / reserved exposure
-
-### JUMP
-- 400 USDC reserve on Ethereum.
-- allocation not confirmed.
-- realized P&L: 0.
-
-### ETH
-- 100 USDC conditional reserve.
-- no confirmed live Mission ETH position.
-
-### Opportunity reserve
-- 150 USDC accounting reserve.
-- currently distributed across chains / plans rather than assumed to remain wholly on Solana.
-- do not double-count converted assets as free USDC.
-
-### GSTOCK
-- status: **PLAN_NOT_FILLED**
-- direct-chain GSTOCK: **0**
-- BNB Chain reserve: about 30 USDC plus BNB gas
-- order UI state is not verifiable from wallet RPC.
+No stored TP or stop was crossed in the public mark path after the latest private screenshot.
 
 ### XRP / Variational
 Latest USER_CONFIRMED:
-- 77.12 XRP long @ 1.55589
+- LONG 77.12 XRP @ **1.55589**
 - isolated 3x
 - TP 1.6280
 - SL 1.5140
 
-Exact current private-venue PnL remains UNRESOLVED without a new venue read/user screenshot.
+Current Binance public XRP mark: **1.53882547**.
+Assuming the Variational position remains unchanged:
+- estimated current uPnL: **~-1.3160 USD**
+- no public-mark crossing of 1.6280 or 1.5140 was observed after the latest private screenshot
 
-### PONS futures
-Latest USER_CONFIRMED at 2026-09-26 13:45:
-- LONG 64 PONS, isolated 3x
-- entry 0.6250
-- TP reduce-only: 25 @ 0.668; 22 @ 0.704; 16 @ 0.739
-- hard stop: Mark <= 0.4980, reduce-only 100%
-- old 0.5850 / 0.5450 averaging bids canceled
-- 1 PONS residual is not covered by the TP ladder, but remains covered by the 100% stop.
+Exact venue PnL remains private-source dependent.
 
-### PONS spot
-DIRECT_CHAIN:
-- **54.799953441979625 PONS**
-- Blockscout market reference around **0.643077 USD**
-- mark value roughly **35.24 USD**
+### PAID / Solana
+- DIRECT_CHAIN quantity: **947.685473 PAID**
+- quantity unchanged from the verified purchase
+- verified total purchase budget: **~50 USD-equivalent** including route cost from the prior execution record
 
-Verified acquisition leg:
-- 35.291194 USDG -> 54.799953441979625 PONS
-- average acquisition rate ~0.64400044 USDG/PONS
+Public PAID price references are currently inconsistent. Recent Pump results imply roughly **9.9-18.0 USD** for the current balance.
+Indicative PAID mark PnL range: **~-40.1 to -32.0 USD**.
+Keep this as MARKET_ESTIMATE until an execution-grade quote is reconciled.
 
-USER_CONFIRMED orders:
-- TP: 11 @ 0.668; 16.4 @ 0.704; 16.4 @ 0.739; 11 @ 0.845
-- downside triggers: 27.39 @ 0.598 and 27.39 @ 0.575
+### e/acc / Solana
+- DIRECT_CHAIN current balance: **542.749359 e/acc**
+- another **180.916452 e/acc** has left the wallet since the 14:18 snapshot, confirmed by finalized chain data
 
-After any spot TP fill, fixed downside-trigger quantities require manual REVIEW_REQUIRED / resize against the remaining wallet balance.
+Historical verified first-sale phase:
+- original budget: about **40 USD**
+- first major sale cash recovery: about **55.68 USD**
+- recorded first-phase network/priority fees: about **0.57 USD**
+- first-phase net cash recovery: about **55.11 USD**
+- cash recovered above original budget at that stage: about **+15.11 USD**, while residual e/acc still remained
 
-## Ink
+Later e/acc reductions, including the latest 180.916452 outflow, are not yet fully reconciled to exact proceeds/fees. Current public e/acc price feeds conflict materially, so total e/acc realized + unrealized PnL remains **UNRESOLVED**.
 
-DIRECT_CHAIN / Blockscout:
-- native ETH: **0.01113370814547789**
-- Tydro Ink Points: **7.665136656205785948**
-- existing NFT: Fresh INK commemorative NFT #372
+## Partial PnL view
+- GSTOCK: ~-1.46
+- PONS spot: ~-1.05
+- PONS futures: ~-0.09 including latest screenshoted realized reference
+- XRP Variational: ~-1.32 estimated from public mark
+- PAID: ~-40.1 to -32.0 indicative
 
-The newly discussed target Ink NFT is still pending. Existing Fresh INK #372 must not be confused with the target mint.
+Active-position subtotal: approximately **-44.0 to -35.9 USD**, excluding e/acc, gas/funding not already captured, NFTs/points, and historical closed sleeves.
 
-## Robinhood non-PONS receipts
+Adding only the already verified first-phase e/acc cash-recovery surplus of about +15.11 gives a **partial reconciled result around -28.9 to -20.8 USD**.
 
-Present but excluded from NAV pending intentional-position and market-value verification:
-- JOLLY
-- HYPERCAT
-- familiars
-- RMB
-- 富贵
-- DIH
-- DGDY
+This is not the final Mission PnL. It excludes:
+- later e/acc sale proceeds/fees;
+- current residual e/acc executable value;
+- historical SHART/CRED closed-sleeve reconciliation;
+- UNICRED/Credits/Fresh INK executable values;
+- exact current Binance/Variational funding and private account fees.
 
-## UNICRED / Credits
+## Current capital distribution
+- canonical stablecoins: **667.141577 USDC**
+- strict directly priced on-chain liquid NAV: **~788.91 USD**, excluding PAID/e/acc and unpriced NFTs/points
+- indicative direct-chain liquid NAV after adding PAID/e/acc public-reference ranges: roughly **799-808 USD**
+- Binance PONS isolated margin reference: ~13.20 USDT plus current estimated uPnL
+- Variational estimated current venue equity: ~48.58 USD from prior equity base plus current public-mark PnL estimate
 
-- UNICRED NFT #230 remains active / locked; economic P&L unresolved until current rent + executable NFT value are reconciled.
-- Credits #23042 and #23232 listing prices remain excluded from NAV unless executable value is verified.
+Rough all-tracked liquid-value range: **~861-870 USD**, excluding NFTs/points/unpriced receipts and the separate low-risk interest bucket.
 
-## Closed exposure
-
-- SHART direct balance: 0
-- liquid CRED direct balance: 0
-
-Final realized P&L for historical closed sleeves remains UNRESOLVED until transaction-history cost/proceeds are fully reconciled.
-
-## Residual accounting
-
-679.24449761 canonical stablecoins minus:
-- 400 JUMP reserve
-- 150 opportunity reserve
-- 100 ETH reserve
-
-Arithmetic residual: **29.24449761 USDC**.
-
-This is accounting residual, not profit. The opportunity reserve already includes cross-chain / converted position capital and must not be counted twice.
-
-## Scorecards
-
-Do not publish an exact total Mission return until:
-- later capital contributions are separated from the original-$300 sleeve;
-- closed SHART/CRED proceeds are reconciled;
-- private venue XRP/PONS current PnL is refreshed;
-- UNICRED / NFT executable values are current.
+## Reserved / structural capital
+- JUMP reserve: 400 USDC on Ethereum.
+- ETH conditional reserve: 100 USDC accounting target; no live ETH Mission trade confirmed.
+- opportunity capital is already distributed across Solana/BNB/Robinhood/private venues and must not be double-counted.
+- separate ~500 USD-equivalent low-risk interest bucket remains outside speculative Mission accounting.
