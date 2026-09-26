@@ -511,3 +511,33 @@ GitHub should record strategy changes and execution milestones only. Do not comm
 
 Execution state:
 `BRACKET_R1_RUNNING_AUTOPILOT_READY_FOR_INSTALL`.
+
+
+## Autopilot installed and running — 2026-09-26
+
+User-side validation completed successfully.
+
+Observed:
+- one-shot autopilot heartbeat at sweep 258;
+- reference: 224.23;
+- reference age: 116 seconds;
+- next static cohort: T02;
+- bracket round: 1;
+- LaunchAgent plist passed `plutil -lint`;
+- service `com.lxx.technocore-close-call` is `state = running`;
+- `active count = 1`;
+- current process is `/usr/bin/caffeinate` wrapping `uv run ... close_call_fleet.py autopilot --poll 60 --late-minutes 180`;
+- working directory is `~/ChatGPT_mission_record`;
+- `KeepAlive` and `RunAtLoad` are active;
+- stdout/stderr log paths are configured under `~/Library/Logs/`.
+
+The reported `last terminating signal = Terminated: 15` is consistent with the installer intentionally booting out/kicking the service during reinstall/restart and does not indicate the currently running process has failed.
+
+Operational consequence:
+- T02 at 2026-09-27 04:00 Asia/Bangkok is eligible for unattended automatic execution, subject to the same live fleet gate;
+- user presence is not required for ordinary overnight sweeps;
+- Mac must remain powered, online, logged in, and physically awake/open;
+- code updates require a service restart before the running Python process will load the new version.
+
+Execution state:
+`AUTOPILOT_RUNNING_T02_ARMED`.
