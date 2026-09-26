@@ -299,6 +299,20 @@ def flow_misses_room(flow: dict | None, room: str) -> bool:
     return room in json.dumps(missed, separators=(",", ":"), ensure_ascii=False)
 
 
+def flow_lists_room(flow: dict | None, room: str) -> bool:
+    if not isinstance(flow, dict):
+        return False
+    rooms = flow.get("rooms")
+    if isinstance(rooms, list):
+        return room in rooms
+    if isinstance(rooms, dict):
+        return room in rooms or room in rooms.values()
+    try:
+        return room in json.dumps(rooms, separators=(",", ":"), ensure_ascii=False)
+    except Exception:
+        return False
+
+
 def dense_qty(ref_px: Decimal) -> Decimal:
     q = DENSE_QTY_SAFETY * Decimal("10000") / (ref_px * DENSE_FUNDS_FACTOR)
     return q.quantize(Decimal("0.01"), rounding=ROUND_DOWN)
@@ -313,6 +327,14 @@ def dense_prices(ref_px: Decimal) -> tuple[Decimal, Decimal]:
 
 def dense_register_pending(state: dict, sweep: int) -> dict:
     dense = state.setdefault("dense", {})
+    try:
+        latest_flow, _latest_state = latest_flow_and_state()
+        print("room_active_in_latest_flow:", flow_lists_room(latest_flow, state["room"]))
+        if isinstance(latest_flow, dict):
+            print("latest_flow_sweep:", latest_flow.get("n"))
+    except Exception as e:
+        print("room_status_error:", str(e))
+
     pending = dense.get("pending")
     if not isinstance(pending, dict):
         idx = int(dense.get("next_index", 1))
@@ -378,6 +400,30 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
             "flow_sweep": flow_n,
             "state_sweep": state_n,
         }
+
+    if not flow_lists_room(flow, state["room"]):
+        requested = dense.get("room_registration_requested_sweep")
+        ack = None
+        if requested != pr["n"]:
+            ack = post_signed(
+                state,
+                "close1",
+                state["controller"],
+                room_text(state["room"]),
+            )
+            dense["room_registration_requested_sweep"] = pr["n"]
+            dense["room_registration_requested_at"] = datetime.now(timezone.utc).isoformat()
+            save_state(state)
+        return {
+            "event": "dense_wait_room_registration",
+            "sweep": pr["n"],
+            "room": state["room"],
+            "registration_posted": requested != pr["n"],
+            "ack": ack.strip().splitlines()[0] if isinstance(ack, str) and ack.strip() else None,
+        }
+
+    dense.pop("room_registration_requested_sweep", None)
+    dense.pop("room_registration_requested_at", None)
     if flow_misses_room(flow, state["room"]):
         return {
             "event": "dense_wait_room_catchup",
@@ -507,7 +553,7 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     # Retry a ready pending batch on the same sweep until flow/state catch up.
     # Only de-duplicate after the pending batch has either submitted or is not yet ready.
     submitted = dense_submit_pending(state, pr)
-    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup"):
+    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup", "dense_wait_room_registration"):
         dense["last_seen_sweep"] = pr["n"]
         save_state(state)
         pending = dense_register_pending(state, pr["n"])
@@ -592,7 +638,6 @@ def fleet_gate(state: dict, max_age: int = 120) -> dict:
     flow_rows = parse_export("d-close1-flow")
     visible_mints: set[str] = set()
     latest_flow = None
-    room_ok = False
     omitted_mints = 0
 
     for rec in flow_rows:
@@ -607,13 +652,8 @@ def fleet_gate(state: dict, max_age: int = 120) -> dict:
                 omitted_mints += int(omitted.get("mints") or 0)
             except Exception:
                 pass
-        rooms = p.get("rooms")
-        if isinstance(rooms, list) and state["room"] in rooms:
-            room_ok = True
-        elif isinstance(rooms, dict) and state["room"] in rooms:
-            room_ok = True
-        elif state["room"] in json.dumps(rooms, separators=(",", ":")):
-            room_ok = True
+
+    room_ok = flow_lists_room(latest_flow, state["room"])
 
     st = latest_payload("d-close1-state", "state")
     local = {label: item["did"] for label, item in state["keys"].items()}
