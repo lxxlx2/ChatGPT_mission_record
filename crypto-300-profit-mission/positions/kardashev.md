@@ -1,6 +1,6 @@
 # KARDASHEV position
 
-Updated: 2026-09-26 16:13+ Asia/Bangkok
+Updated: 2026-09-27 03:40 Asia/Bangkok
 
 ## Identity
 
@@ -16,7 +16,7 @@ DIRECT_CHAIN snapshot:
 - mint authority: revoked
 - freeze authority: revoked
 - metadata update authority: revoked
-- wallet KARDASHEV balance: **4,103.186501**
+- wallet KARDASHEV balance: **0**
 - wallet USDC: **266.559188**
 - wallet native SOL: **0.129098090**
 
@@ -110,7 +110,7 @@ Primary narrative is the recent Kardashev / K2 civilization theme, including ren
 
 ## Position handling
 
-Current status: **PRINCIPAL_RECOVERED / PROFIT_POSITION**
+Current status: **CLOSED / FULLY EXITED ON-CHAIN**
 
 Do not add size automatically.
 
@@ -121,3 +121,13 @@ Future decision priority:
 4. only then use price/MC levels.
 
 A sharp rise in KARDASHEV reserve together with a large drop in SOL reserve is a direct exit-risk signal.
+
+
+## 2026-09-27 close-state correction
+
+Fresh finalized Solana RPC shows:
+- KARDASHEV wallet balance: **0**
+
+Therefore the prior 4,103.186501 residual profit-position is no longer current. The position is fully exited on-chain.
+
+Exact realized proceeds for the final residual-sale leg have not been reconstructed in this update, so do not convert the prior mark value into a fabricated realized PnL.
