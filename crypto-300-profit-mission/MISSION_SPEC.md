@@ -1,6 +1,6 @@
 # Crypto Profit Mission
 
-Updated: 2026-09-26 14:12 Asia/Bangkok
+Updated: 2026-09-27 03:57 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Authority
@@ -67,11 +67,19 @@ Existing user-confirmed position rules and already-stored thresholds remain vali
 
 ## Objective
 
+Core growth target: grow the Mission starting asset set to **3,000 USD-equivalent net liquidation value**.
+
+Mission starting asset set:
+- **300 USD cash principal**
+- the original **six Credits NFTs**: #21646, #21753, #22857, #23042, #23232, #23328
+
+Current original-Credits holdings are #23042 and #23232; the other four are historical sold assets/provenance.
+
 Maintain reliable, auditable coverage of the user's speculative crypto Mission and surface material factual changes early enough for the user to decide what to do.
 
 Execution of transactions remains manual unless the user explicitly authorizes a transaction.
 
-The separate 500 USD-equivalent low-risk interest bucket remains outside the speculative Mission.
+The combined **598 USD-equivalent Binance earn bucket** is tracked for total-asset completeness but remains outside speculative Mission performance unless provenance is explicitly reclassified. Later external deposits must never be mislabeled as Mission profit.
 
 ## Canonical wallets and data truth
 
@@ -105,8 +113,11 @@ Current accounting buckets:
 - JUMP conditional reserve: 400 USDC.
 - short-window opportunity reserve: 150 USDC.
 - ETH conditional reserve: 100 USDC.
-- PONS: original 50-USDT sleeve is now split between the remaining Binance futures position and Robinhood Chain spot PONS + gas; the old 0.5850 and 0.5450 averaging orders are canceled.
-- low-risk interest bucket: excluded from Mission.
+- PONS: original 50-USDT sleeve is split between Binance futures and Robinhood Chain spot PONS + gas; prior averaging orders are canceled.
+- Credits: original six are Mission starting assets; #23042 and #23232 remain held.
+- Binance earn: one combined 598 USD-equivalent off-chain bucket, tracked but excluded from speculative Mission performance unless provenance is reclassified.
+
+Private Binance inventory authority: USER_CONFIRMED current Binance inventory is only the combined earn bucket plus the PONSUSDT perpetual. Do not carry any other Binance asset or position forward from stale state.
 
 Wallet balance changes are not PnL unless transaction history and cost basis support that conclusion.
 
@@ -129,7 +140,7 @@ No automatic order modification, averaging order, budget change or spot/futures 
 ### GSTOCK / BNB Chain
 `positions/gstock-plan.md`
 
-Track only direct wallet balances, fill evidence and stored plan state. Current state is PLAN_NOT_FILLED while canonical GSTOCK balance is zero. Do not submit or modify orders automatically.
+Track only direct wallet balances, fill evidence and stored plan state. Current state is FILLED_ACTIVE with 1183.5967247073113 GSTOCK on-chain at the latest reconciliation. Do not submit or modify orders automatically.
 
 ### XRP / Variational — CLOSED
 `positions/xrp-variational.md`
@@ -158,7 +169,7 @@ No application/transaction is executed automatically.
 - `positions/unicred.md`
 - `positions/credits.md`
 
-Medium cadence unless unlock/security/claim/executable-market change makes them urgent.
+Credits are part of the Mission starting asset set. Current direct-chain holdings are #23042 and #23232. Medium cadence unless unlock/security/claim/executable-market change makes them urgent.
 
 ### FLOP Technocore Close Call
 `positions/flop-close-call.md`
