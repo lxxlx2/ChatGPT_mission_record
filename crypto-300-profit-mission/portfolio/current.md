@@ -1,142 +1,146 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-26 14:18 Asia/Bangkok
+Updated: 2026-09-26 16:33 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Verification policy
+## Data labels
+- DIRECT_CHAIN: fresh connected chain/explorer data.
+- USER_CONFIRMED: latest private venue screenshot / explicit user update.
+- MARKET_ESTIMATE: current public market reference applied to a verified quantity.
+- UNRESOLVED: excluded from strict NAV/PnL.
 
-CURRENT STATE only. Historical snapshots remain in Git history/run audits.
-
-Labels:
-- DIRECT_CHAIN: fresh connected chain data
-- USER_CONFIRMED: latest private venue/order UI or explicit user statement
-- MARKET: fresh public market reference
-- UNRESOLVED: do not estimate
-
-## Canonical wallets
-
-- EVM primary: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
-- Solana primary: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
-
-## DIRECT_CHAIN snapshot
+## Canonical direct-chain holdings
 
 ### Ethereum
 - USDC: **400.308121**
-- native ETH: **0.001667063838788351**
+- ETH: **0.001667063838788351**
+- current ETH reference: ~2680.61 USD
 
 ### Solana
-Fresh finalized RPC:
-- USDC: **248.657361**
-- native SOL: **0.133415487**
-- e/acc (Token-2022): **723.665811**
+- USDC: **266.559188**
+- SOL: **0.129098090**
+- e/acc (Token-2022): **542.749359**
 - PAID (Token-2022): **947.685473**
 - SHART: **0**
-- unidentified legacy SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552**, identity/value UNRESOLVED
+- unidentified legacy SPL mint 2MU93...dZwQ: **1.745552**, UNRESOLVED
 
-Important correction:
-- the earlier Solana scan queried only the legacy SPL Token program and therefore omitted Token-2022 holdings.
-- e/acc and PAID are now included in current state and future monitoring.
-- PAID quantity is unchanged from the previously verified 947.685473 position.
-- e/acc is now 723.665811 versus the previously verified 964.887748 remainder, so **241.221937 e/acc has left the wallet** since that prior snapshot. Do not infer realized PnL without reconstructing the sale leg.
+Change from 14:18 snapshot:
+- USDC: +17.901827
+- SOL: -0.004317397
+- e/acc: -180.916452
+- PAID: unchanged
 
-Relative to the prior 330.799585-USDC snapshot:
-- USDC delta: **-82.142224**
-- SOL delta: **-0.002129677**
-
-User confirms the lower Solana USDC is from cross-chain capital movements used to adjust positions. Exact per-bridge allocation is not inferred unless transaction legs are fully reconciled.
+A fresh finalized Solana transaction confirms an outgoing **180.916452 e/acc** transfer. Exact sale proceeds are not inferred from the wallet-level USDC delta because several recent transactions occurred and the full route has not yet been reconciled.
 
 ### BNB Chain
-Fresh Alchemy:
-- canonical USDC: **30.00474761**
-- native BNB: **0.002684170274192202** (~**2.08 USD** at BNB 773.31)
-- canonical GSTOCK: **0**
-- GSTOCK market reference: **~0.024487 USD**
+- canonical USDC: **0**
+- BNB: **0.002567317179192202**
+- GSTOCK: **1183.5967247073113**
 
-The USDC/BNB is associated with the user's GSTOCK pending-order plan. No chain fill is visible yet.
+The former 30.00474761-USDC reserve has filled:
+- exact canonical-USDC outflow in the fill transaction: **30.00474761 USDC**
+- GSTOCK received: **1183.5967247073113**
+- effective token cost before BNB gas: **~0.0253504821 USD/GSTOCK**
+- Alchemy market reference at ~16:31: **0.0241192634 USD**
+- mark value: **~28.5475 USD**
+- token unrealized PnL before gas: **~-1.4573 USD (-4.86%)**
 
 ### Robinhood Chain
-Fresh Alchemy + Blockscout:
-- native ETH: **0.000825190918816326**
 - PONS: **54.799953441979625**
-- PONS market reference: **~0.642-0.643 USD**
+- ETH: **0.000825190918816326**
+- PONS market reference at ~16:29: **0.6247626394 USD**
+- spot mark value: **~34.2370 USD**
+- verified spot acquisition cost: **35.291194 USDG**
+- spot mark PnL: **~-1.0542 USD (-2.99%)**
 
-Other ERC-20 receipts currently present but excluded from NAV because no reliable exchange rate / intentional-position verification is available:
-- Jollybot (JOLLY): **256.593895779031580672**
-- HYPERCAT: **167.675752122821869568**
-- familiars: **1833.405043146758291456**
-- Robinhood Monkey Business (RMB): **500,000**
-- 富贵: **6,500**
-- DIH: **1**
-- DGDY: **1**
-
-Blockscout currently reports no exchange rate for those non-PONS balances. Treat them as unpriced/unsolicited until independently verified as intentional positions.
+Unpriced/non-canonical receipts such as JOLLY, HYPERCAT, familiars, RMB, 富贵, DIH and DGDY remain excluded from NAV.
 
 ### Ink
-Fresh Blockscout state:
-- native ETH: **0.01113370814547789** (~**29.93 USD** at ETH 2688.52)
+- ETH: **0.01113370814547789**
 - Tydro Ink Points: **7.665136656205785948**
-- existing NFT: **Fresh INK - OpenSea x Ink Commemorative NFT #372**
-
-The newly discussed target Ink NFT is still pending; no new target NFT is recorded as minted.
+- Fresh INK commemorative NFT #372: **owned**
+- separately discussed target Ink NFT: **still pending / no new mint evidence**
 
 ### Base
-- canonical USDC: **0.252982**
-- native ETH: **0.000790846510479134**
+- USDC: **0.252982**
+- ETH: **0.000790846510479134**
 
 ### Unichain
-- canonical USDC: **0.021286**
-- native ETH: **0.000231941590232335**
-- CRED: **0**
+- USDC: **0.021286**
+- ETH: **0.000231941590232335**
+- CRED liquid balance: **0**
+- UNICRED NFT #230: **owned**, fresh NFT inventory confirmed
 
 ### Arbitrum
-Current Alchemy app support remains unavailable for direct wallet RPC. Do not infer current balance.
+- ETH: **0.000827194359305186**
+- no canonical USDC position identified in the returned Blockscout token inventory
+- multiple tokens named USDC use non-canonical contracts and are excluded as unverified/spoof receipts
 
-## Canonical direct-chain stablecoins
+## Direct-chain capital summary
 
-Ethereum + Solana + BNB Chain + Base + Unichain:
-**679.24449761 USDC**
+Canonical stablecoins:
+- Ethereum: 400.308121
+- Solana: 266.559188
+- BNB Chain: 0
+- Base: 0.252982
+- Unichain: 0.021286
 
-This stablecoin figure excludes non-stablecoin assets. Current Solana e/acc and PAID balances are tracked separately and are not omitted from portfolio state.
+**Total canonical stablecoins: 667.141577 USDC.**
 
-This is current wallet accounting, not PnL.
+Current native-gas mark value across Ethereum, Solana, BNB Chain, Robinhood Chain, Ink, Base, Unichain and Arbitrum is approximately **58.98 USD** using the latest connected ETH/SOL/BNB references.
 
-## Private / order-state exposures
+Strict directly priced liquid NAV, excluding PAID/e/acc and unpriced NFTs/points/receipts:
+- stablecoins: ~667.14
+- native gas: ~58.98
+- GSTOCK: ~28.55
+- Robinhood PONS spot: ~34.24
 
-### XRP / Variational
-Latest USER_CONFIRMED:
-- LONG 77.12 XRP @ 1.55589
+**Strict directly priced on-chain NAV: ~788.91 USD.**
+
+PAID and e/acc are held and tracked, but their public price feeds currently conflict materially. They remain outside strict NAV. Recent public PAID references imply roughly **9.9-18.0 USD** for the current balance; e/acc value is small but unresolved. Including those indicative ranges gives a rough direct-chain liquid range around **799-808 USD**, excluding NFTs/points/unpriced receipts.
+
+## Private venue positions
+
+### Binance PONSUSDT perpetual
+Latest private USER_CONFIRMED state: 2026-09-26 13:45.
+- LONG **64 PONS**
+- entry **0.6250**
 - isolated 3x
-- TP 1.6280
-- SL 1.5140
+- TP triggers: 0.668 / 0.704 / 0.739
+- hard stop: Mark <= 0.498
 
-### PONS
-Authority: `positions/pons.md`.
-- Binance futures state remains USER_CONFIRMED from the latest screenshots.
-- Robinhood spot balance is DIRECT_CHAIN.
-- spot/futures TP/SL order state follows the position file.
+Current Binance public mark at ~16:32: **0.6256**.
+No public Binance mark crossing of 0.668 or 0.498 was observed after the last private screenshot.
+If the private position has not been manually changed:
+- estimated unrealized PnL: **~+0.0384 USDT**
+- screenshoted margin reference: **~13.20 USDT**
 
-### GSTOCK
-Authority: `positions/gstock-plan.md`.
-- BNB Chain reserve: about 30 USDC + BNB gas
-- chain GSTOCK balance: 0
-- current state: PLAN_NOT_FILLED
+Private account state remains USER_CONFIRMED until a newer Binance account screenshot/source is available.
 
-## Other Mission positions
+### Variational XRP perpetual
+Latest private USER_CONFIRMED:
+- LONG **77.12 XRP**
+- entry **1.55589**
+- isolated 3x
+- TP **1.6280**
+- SL **1.5140**
 
-- JUMP reserve: 400 USDC on Ethereum.
-- ETH conditional reserve: 100 USDC.
-- short-window opportunity reserve: 150 USDC, now distributed across chains/plans rather than assumed to remain wholly on Solana.
-- low-risk 500 USD-equivalent interest bucket remains outside the speculative Mission.
-- UNICRED NFT #230 remains active/locked.
-- Credits #23042 / #23232 remain user-confirmed listings.
+Current Binance public XRP mark at ~16:32: **1.53882547**.
+Public mark history since the user screenshot did not cross either stored exit level.
+If the private position remains unchanged:
+- estimated unrealized PnL: **~-1.3160 USD**
+- prior account equity at +0.97 uPnL was 50.87 USD; implied current venue equity is roughly **48.58 USD** using the public-mark estimate.
 
-## Residual accounting
+This is a market estimate, not a direct Variational account read.
 
-Using canonical direct-chain stablecoins **679.24449761 USDC**:
-- 400 JUMP reserve
-- 150 short-window opportunity reserve
-- 100 ETH conditional reserve
+## Non-fungible / non-priced holdings
+- UNICRED NFT #230 on Unichain
+- Credits #23042 and #23232 on Ethereum
+- Fresh INK #372 on Ink
+- Tydro Ink Points
 
-Arithmetic residual: **29.24449761 USDC**.
+These are excluded from strict liquid NAV until executable values are verified.
 
-This residual is accounting only. The cross-chain opportunity reserve now includes the BNB/GSTOCK plan and other converted assets, so wallet-token values must not be double-counted as free capital.
+## Capital-sleeve note
+The current tracked wallets contain later capital in addition to the original $300 mission sleeve. Current wallet NAV must not be compared directly with $300 to claim Mission profit.
+The separate ~500 USD-equivalent low-risk interest bucket remains outside this speculative Mission accounting.
