@@ -131,3 +131,14 @@ These accounts are auxiliary native-token accounts associated historically with 
 - Before a 30-round-trip / 10-token calibration sample is available, use this primarily as an execution-risk filter or supporting signal, not a standalone positive entry trigger.
 - Mission opportunity ingestion is now hourly from the latest approximately 2 hours of `crypto-daily/research/`, so actionable candidates do not wait for the 3-hour medium lane.
 - Every valid Mission trigger now requires both a real Gmail alert to lxx.run688@gmail.com and a concise user-visible ChatGPT alert; NO_ACTION remains silent.
+
+
+## Monitor architecture refresh — 2026-09-26 07:59 Asia/Bangkok
+- ETH one-shot persistence defect confirmed; ETH moved into mandatory hourly lane via `positions/eth-conditional.md`.
+- Current ETH decision from fresh Binance data: NO MARKET ENTRY around ~2685; wait for the conditional reclaim/breakdown/breakout criteria in the position file.
+- Monster squeeze V2.1 merged into the main hourly Mission monitor via `watchlists/monster-squeeze-v2.1.md`.
+- Separate 妖币每日汇总 automation disabled to avoid duplicate logic.
+- Main Mission at 19:29 Bangkok now produces the mandatory 妖币 daily summary.
+- Alert policy now supports ACTION (Gmail + ChatGPT) and WATCH (ChatGPT only, deduplicated).
+- Monitor health self-test enabled through `health/current.md`.
+- Gmail delivery path was tested live and read back successfully, message id `1a0db38c1fe33130`.
