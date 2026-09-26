@@ -251,6 +251,50 @@ Stay silent for:
 
 Do not reserve dedicated capital for Blast.fun. Any candidate trade must compete for the existing 150-USDC short-window opportunity reserve and still satisfy the Mission's identity, liquidity, downside and EV gates. Execution remains manual and requires user approval.
 
+### Robinhood Chain / FOMO MEV flow watch — added 2026-09-26
+
+Purpose: treat suspected FOMO MEV / front-run / sandwich activity as an order-flow sensor and execution-cost filter for the Mission. Do not copy-trade the MEV wallet after its transaction is visible; the observed round trips can complete within seconds or blocks and the edge may already be gone.
+
+Chain:
+- Robinhood Chain, chain ID 4663.
+
+Seed cluster:
+- current observed address: `0xb49deec1a52eea46f3a6a158f8f9b155809b8c44`
+- prior observed address: `0x44c0ba0b734d4b7705fcd07ddae9fbbc078d74dd`
+- common execution contract observed in both patterns: `0x68a04a63Fd1d8EAbF167EF48ed0A0EF06c2374d9`
+- cluster membership must be expanded only from on-chain evidence such as common funding/settlement paths, identical execution contract and transaction pattern, same profit collection, or repeated address rotation. Do not infer ownership from naming or social claims.
+
+Verified baseline examples from 2026-09-25 on Robinhood Chain:
+- Protocol: approximately 1,000 USDG out, the same 3,318,036.187... tokens returned, approximately 1,065.421329 USDG back within the same timestamp / a few blocks; gross spread about 65.42 USDG or 6.54% before gas.
+- EARNED: approximately 579.942580 USDG out, the same 13,523,596.391... tokens returned about one second later, approximately 609.717726 USDG back; gross spread about 29.78 USDG or 5.13% before gas.
+These examples confirm a rapid profitable round-trip pattern. They do not by themselves prove the operator identity, information source, or an internal FOMO/Relay relationship.
+
+Hourly scan requirements:
+- inspect seed addresses and newly evidenced cluster members on chain 4663;
+- detect sequences where the suspected bot buys a token and sells the same or near-identical quantity within <=5 seconds or <=3 blocks;
+- identify intervening third-party buy(s) when observable and estimate victim notional;
+- aggregate per token: attacks in 5m/15m, distinct third-party buyers, third-party buy notional, bot gross stablecoin profit, gas/fees when available, estimated extraction %, liquidity/depth, and post-bot-exit returns at 30s/1m/5m/15m;
+- track whether price repeatedly absorbs the MEV sell and continues higher or collapses after the extraction;
+- use cluster behavior as a negative execution filter when a candidate is being heavily extracted.
+
+Backtest / calibration:
+- build a rolling sample before treating this signal as a standalone positive entry edge;
+- minimum calibration target: >=30 complete MEV round trips across >=10 distinct tokens;
+- record forward returns after bot exit at 30s/1m/5m/15m and after realistic entry slippage/fees;
+- until the calibration target is met, MEV flow may strengthen or reject another Mission candidate, but must not by itself authorize a positive trade alert.
+
+Immediate risk / avoid trigger:
+- if a Mission candidate or active token shows >=3 suspected MEV extractions within 10 minutes and average extraction >=4%, or realistic entry slippage is estimated >5%, flag it as execution-toxic;
+- if the user is about to enter or already exposed, this qualifies as an actionable risk alert.
+
+Positive candidate use after calibration:
+- require repeated independent third-party buying, continued positive net flow after MEV selling, adequate executable liquidity, and positive forward-return statistics after costs;
+- any positive alert must still pass the Mission identity, venue, liquidity, downside and expected-value gates and must state the exact evidence, sample size and realistic execution cost.
+
+Logging:
+- maintain detailed baseline and methodology in `watchlists/robinhood-fomo-mev.md`;
+- every Mission run records whether this lane was checked, new cluster addresses, candidate tokens, extraction metrics and alert decision in the immutable run audit.
+
 ## GitHub state / audit consistency
 
 Every Mission run must:
@@ -307,7 +351,7 @@ The Mission run is the decision layer and should consume fresh information after
 
 ## Opportunity engine / research integration
 
-Every 3-hour medium-lane run must also read the most recent available files under `crypto-daily/research/` covering roughly the previous 3 hours and convert broad research into Mission-level candidate decisions.
+Every hourly Mission run must read the most recent available files under `crypto-daily/research/` covering roughly the previous 2 hours and convert broad research into Mission-level candidate decisions. The 3-hour medium lane performs a deeper multi-run review, but actionable opportunity discovery must not wait for the medium lane.
 
 Candidate universe includes:
 - liquid perpetual / futures setups beyond existing PONS/ETH when there is a clearly defined catalyst, liquidity and invalidation;
