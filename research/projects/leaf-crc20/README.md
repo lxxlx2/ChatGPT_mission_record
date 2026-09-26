@@ -25,6 +25,17 @@ Status: ACTIVE_RESEARCH
    - 107.813M 迁移交易
    - 卖方地址与资金来源集群调查
 
+## 只读研究脚本
+
+- `scripts/leaf-crc20-golden-curve-probe.py`
+  - 枚举 crc.garden public pages、JS bundles、只读 network requests 与 endpoint candidates。
+  - 不连接钱包、不签名、不 POST、不广播交易。
+
+- `scripts/leaf-crc20-whale-audit.py`
+  - 全量读取目标 whale 的 mempool.space 地址历史。
+  - 复算 acquisition tx count、unique sellers、ICO-20 LEAF、BTC cost 口径。
+  - 追踪 seller UTXO immediate parent 与共同 upstream funding evidence。
+
 ## 证据规则
 
 遵循：
