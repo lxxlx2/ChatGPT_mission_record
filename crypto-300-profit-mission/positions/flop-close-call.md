@@ -541,3 +541,42 @@ Operational consequence:
 
 Execution state:
 `AUTOPILOT_RUNNING_T02_ARMED`.
+
+
+## Long-running operation and progress view — 2026-09-26
+
+The system is now treated as a contest-lifetime service rather than a sequence of manual five-minute actions.
+
+User-facing progress is intentionally reduced to the metrics that matter:
+- whether the strategy has active coverage;
+- current referee mark;
+- static cohort completion;
+- current bracket round/status;
+- whether any fleet DID appears on the official live PnL board;
+- the official live-board entries themselves;
+- simple gross mark-to-entry movement for the strategy, clearly separated from official score.
+
+Runner commit `f6beb29ac87a8732b05149e79a3a3c232f20b0fc` adds:
+- `progress` command;
+- trading actions disabled automatically at the official lock;
+- post-lock monitoring until the final-price window;
+- clean autopilot exit after 2026-10-04 10:15 UTC.
+
+Installer commit `4ae3aa363fbfadd0b5ec6d339b688a47a29352bf` changes LaunchAgent restart policy:
+- crashes/non-zero exits restart;
+- a normal contest-complete exit remains stopped.
+
+Official public progress surface:
+- `d-close1-pnl`: live PnL board;
+- `d-close1-positions`: aggregate open interest and position leaderboard;
+- `d-close1-price`: current referee reference;
+- `d-close1-state`: owner/room counts.
+
+Important rank limitation:
+the official live PnL post is a compact top subset. If none of our DIDs appears there, the public room proves only that the fleet is outside that published subset. It does not expose an exact overall rank for every owner. Exact final ordering comes from the final fold/standings.
+
+Remaining strategic engineering gap:
+Bracket rounds 2-4 are not yet safe for unattended rollover. The public flow can omit individual settled/void outcomes, so blindly sending a reverse trade could accidentally open a position if the preceding open was actually void. Until a reliable per-key position/outcome proof is available, automated rollover remains intentionally blocked. Static T02-T16 is already unattended.
+
+Execution state:
+`LONG_RUNNING_PROGRESS_VIEW_READY_BRACKET_ROLLOVER_PENDING`.
