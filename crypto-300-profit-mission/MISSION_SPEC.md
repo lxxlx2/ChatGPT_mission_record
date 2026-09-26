@@ -1,11 +1,11 @@
 # Crypto Profit Mission
 
-Updated: 2026-09-26 12:05 Asia/Bangkok
+Updated: 2026-09-26 12:36 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Authority
 
-This file defines global Mission policy. Detailed execution rules live in the referenced position and watchlist files.
+This file defines global Mission policy. Detailed thresholds and state rules live in the referenced position and watchlist files.
 
 Precedence:
 1. `MISSION_SPEC.md`
@@ -16,15 +16,39 @@ Precedence:
 
 Never use stale chat values to overwrite newer verified GitHub state.
 
+## Automation mode
+
+The existing hourly automation is a **factual rule monitor**, not an autonomous trading adviser.
+
+It may automatically:
+- read connected wallet / market / official-source data;
+- calculate factual deltas and predefined indicators;
+- compare current data with thresholds already stored in GitHub;
+- classify predefined states such as WATCH / IGNITION / EXHAUSTION / setup-qualified;
+- log results;
+- send factual trigger notifications already authorized by the user.
+
+It must not automatically:
+- originate a new trade;
+- invent a new entry, stop, take-profit, leverage or position size;
+- tell the user to buy/sell/short/long a newly discovered asset;
+- reallocate capital;
+- modify an existing private-venue order or position;
+- turn a newly discovered candidate into an execution recommendation.
+
+When a factual trigger fires, the alert should say what changed, which stored rule fired, current data, missing conditions and invalidation/risk. Interactive follow-up in chat can perform deeper decision analysis if the user asks.
+
+Existing user-confirmed position rules and already-stored thresholds remain valid monitoring inputs.
+
 ## Objective
 
-Use the speculative Mission capital to pursue asymmetric crypto opportunities while preventing one trade from consuming the Mission.
+Maintain reliable, auditable coverage of the user's speculative crypto Mission and surface material factual changes early enough for the user to decide what to do.
 
-Execution of transactions remains manual unless the user explicitly authorizes the transaction. Research, monitoring, calculations, GitHub audit and already-authorized alerts may run automatically.
+Execution of transactions remains manual unless the user explicitly authorizes a transaction.
 
-The separate 500 USD-equivalent low-risk interest bucket is outside the speculative Mission and cannot be reassigned automatically.
+The separate 500 USD-equivalent low-risk interest bucket remains outside the speculative Mission.
 
-## Canonical wallets and live data
+## Canonical wallets and data truth
 
 Primary EVM wallet:
 `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
@@ -32,78 +56,88 @@ Primary EVM wallet:
 Primary Solana wallet:
 `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 
-Use the connected Alchemy app `ChatGPT Crypto Monitor` for direct-chain reads.
+Use connected Alchemy `ChatGPT Crypto Monitor` for direct-chain reads.
 
-Data labels:
-- DIRECT_CHAIN: fresh RPC result.
-- USER_CONFIRMED: latest user screenshot or explicit statement from an unconnected private venue.
+Labels:
+- DIRECT_CHAIN: fresh RPC.
+- USER_CONFIRMED: latest user screenshot / explicit statement from an unconnected private venue.
 - MARKET: fresh public market data.
 - UNAVAILABLE / UNRESOLVED: do not estimate.
 
 Rules:
-- RPC failure must be recorded as UNAVAILABLE.
+- RPC failure = UNAVAILABLE.
 - Never reuse an old wallet balance and call it current.
-- Unknown/spam assets are excluded from NAV until identity and value are verified.
+- Unknown/spam assets stay outside NAV until identity/value are verified.
 - Public market data cannot overwrite private venue fill, quantity, margin, PnL or order state.
-- `portfolio/current.md` and `state/latest.md` contain current state only. Historical snapshots belong in Git history and immutable run audits.
+- `portfolio/current.md` and `state/latest.md` contain current state only.
+- historical snapshots belong in Git history / immutable run audits.
 
-## Current capital map
+## Capital map
 
-The current authoritative balance map is `portfolio/current.md`.
+Authority: `portfolio/current.md`.
 
-At the latest verified reconciliation:
-- 400 USDC: JUMP conditional reserve on Ethereum.
-- 150 USDC: short-window opportunity reserve.
-- 100 USDC: ETH conditional reserve.
-- current direct-chain residual: 90.407390 USDC.
+Current accounting buckets:
+- JUMP conditional reserve: 400 USDC.
+- short-window opportunity reserve: 150 USDC.
+- ETH conditional reserve: 100 USDC.
 - PONS: separate 50 USDT margin budget.
-- 500 USD-equivalent low-risk bucket: excluded from this Mission.
+- low-risk interest bucket: excluded from Mission.
 
-Balance changes are not profit until transaction history and cost basis support that conclusion.
+Wallet balance changes are not PnL unless transaction history and cost basis support that conclusion.
 
-## Active positions and plans
+## Active position / plan authorities
 
 ### PONS
-Authority: `positions/pons.md`
+`positions/pons.md`
 
-Key invariant:
-- total margin budget stays 50 USDT;
-- only user-confirmed fills count;
-- pending orders do not count as deployed exposure;
-- hard stop and order changes follow the position file;
-- no automatic budget increase.
+Automation may report only:
+- current public market state;
+- whether a stored stop / breakout / stale-order threshold was crossed;
+- private order/fill state only when USER_CONFIRMED.
+
+No automatic order modification or budget change.
 
 ### XRP / Variational
-Authority: `positions/xrp-variational.md`
+`positions/xrp-variational.md`
 
-Latest private state remains USER_CONFIRMED until a fresh venue read or user update exists. Public XRP data is used only for risk/event monitoring.
+Automation may report:
+- price/derivatives changes;
+- crossing of stored TP/SL/event thresholds;
+- Bitget-event factual developments.
+
+Private Variational state remains USER_CONFIRMED until refreshed directly.
 
 ### ETH
-Authority: `positions/eth-conditional.md`
+`positions/eth-conditional.md`
 
-No live ETH Mission position is assumed. The 100 USDC reserve stays idle until the conditional setup fully qualifies.
+Automation may report whether Setup A, Setup B or stored breakout conditions are factually satisfied. It must not create a new ETH plan or new levels by itself.
 
 ### JUMP
-Authority: `positions/jump.md`
+`positions/jump.md`
 
-The Ethereum USDC reserve is conditional application capital. The 2026-09-29 preflight must verify authenticated Legion terms, allocation rules, current gas and execution readiness before any application.
+Automation monitors:
+- deadline proximity;
+- authenticated sale-term changes;
+- reserve/gas readiness;
+- the predefined Sep-29 preflight.
 
-### UNICRED and Credits
-Authorities:
+No application/transaction is executed automatically.
+
+### UNICRED / Credits
 - `positions/unicred.md`
 - `positions/credits.md`
 
-These are medium-lane positions unless an unlock, security event, executable sale/claim event or other material action makes them urgent.
+Medium cadence unless unlock/security/claim/executable-market change makes them urgent.
 
-## Closed / historical liquid exposure
+## Closed / historical exposure
 
-- SHART direct wallet balance is 0 and routine monitoring is closed.
-- liquid CRED direct wallet balance is 0; only its effect on UNICRED economics remains relevant.
-- auxiliary WSOL recovery is completed and the old accounts are closed.
+- SHART direct balance 0: routine monitoring closed.
+- liquid CRED direct balance 0: standalone token monitoring closed.
+- auxiliary WSOL recovery completed.
+- BSC smart-money cluster remains outside this Mission.
 
-## Market / opportunity watchlists
+## Active watchlists
 
-Active watchlists:
 - `watchlists/btc-regime-jasonleo.md`
 - `watchlists/famous-token-launch-radar.md`
 - `watchlists/nft-mint-radar.md`
@@ -111,106 +145,107 @@ Active watchlists:
 - `watchlists/robinhood-fomo-mev.md`
 - `watchlists/saga-squeeze-cycle.md`
 
-BSC smart-money cluster research remains outside this Mission because it is handled in a separate workflow.
+## Hourly coverage
 
-## Hourly coverage contract
+Every :29 run covers:
+- wallet/gas;
+- PONS;
+- XRP/Variational;
+- ETH conditional;
+- BTC regime;
+- JUMP;
+- launch radar;
+- NFT radar;
+- active-position security;
+- Monster V2.1;
+- Robinhood/FOMO execution-flow.
 
-The scheduler runs every hour at :29 Asia/Bangkok.
-
-Every run must cover the following logical lanes:
-- wallet/gas
-- PONS
-- XRP/Variational
-- ETH conditional
-- BTC regime
-- JUMP
-- launch radar
-- NFT radar
-- active-position security
-- monster squeeze V2.1
-- Robinhood/FOMO execution-flow
-
-"Covered" does not require a full independent internet crawl for every lane. The execution-efficient method in `RUNBOOK.md` is authoritative:
-- critical positions use fresh direct market/wallet data;
-- discovery lanes first consume the latest Crypto Daily research;
-- broad markets use bulk screening;
-- detailed work is limited to shortlisted candidates;
-- fallback direct discovery is used when upstream research is stale or a trigger appears.
-
-This keeps the functional scope while allowing the run to finish reliably.
+Coverage follows the bounded execution method in `RUNBOOK.md`.
 
 ## Medium lane
 
 Every 3 hours, or immediately when material:
-- UNICRED economics, rent, unlock and protocol health;
-- Credits floor / executable offers / volume / creator mechanics;
+- UNICRED economics / rent / unlock / protocol health;
+- Credits executable market / volume / creator mechanics;
 - slower holder/liquidity checks.
 
 ## Daily reconciliation
 
 First successful Mission run after 00:00 Asia/Bangkok:
-- direct-chain reconciliation across Ethereum, Solana, Base, Unichain and Robinhood Chain when supported;
-- reconcile `portfolio/current.md`, active positions, reserved capital and `state/latest.md`;
-- never carry stale balances forward as current if a live read fails.
+- reconcile supported canonical wallets;
+- update `portfolio/current.md`, active positions, reserves and `state/latest.md`;
+- never carry a failed live read forward as current.
 
-## Alerts
+## Notifications
 
-Default is silence.
+Default: silent.
 
-Gmail + user-visible ChatGPT are required for:
-- ACTION;
-- new or materially changed WATCH;
-- position stop/TP or other defined actionable risk;
-- material security/deadline event;
+Gmail + user-visible ChatGPT are required for a **new factual trigger**:
+- stored position stop/TP/event threshold crossed;
+- stored ETH setup becomes qualified;
+- new/materially changed WATCH;
+- Monster IGNITION / relevant EXHAUSTION state transition;
+- material security or deadline event;
 - MONITOR_HEALTH_GAP;
 - MONITOR_LANE_FAILURE;
-- 19:29 monster daily summary.
+- 19:29 Monster daily summary.
 
-WATCH email subject:
+Alert wording must be factual:
+- current value/state;
+- exact stored rule that fired;
+- what changed since prior state;
+- what remains unconfirmed;
+- invalidation/risk;
+- "review required" when a user decision is needed.
+
+Do not include newly invented trade instructions, leverage, position sizing or capital allocation in an automated alert.
+
+WATCH subject:
 `[Crypto Mission提醒][WATCH][asset/project]`
-
-A WATCH alert must state:
-- why it entered WATCH;
-- what is still missing;
-- next trigger/event/level;
-- primary invalidation/risk.
 
 Unchanged WATCH, NO_ACTION, rejected/noise and ordinary volatility stay silent.
 
-Alerts go to:
+Gmail destination:
 `lxx.run688@gmail.com`
-
-If Gmail fails, the run must still record the alert and surface ChatGPT output when the automation supports it.
 
 ## Monster V2.1
 
 Authority: `watchlists/monster-squeeze-v2.1.md`.
 
-The model parameters remain frozen. Full-market coverage must use bulk screening plus candidate deep-checks as defined in `RUNBOOK.md`; do not issue one expensive per-symbol deep query across the entire universe.
+The model remains frozen. The automation performs factual state classification only.
 
-At 19:29 Asia/Bangkok, the same existing Mission task produces the daily monster summary. The separate legacy monster automation remains disabled.
+Full-market coverage uses:
+- bulk universe screening;
+- bounded shortlist;
+- detailed checks only for shortlisted symbols.
 
-## Launch / NFT opportunities
+At 19:29 the same existing Mission task sends the factual Monster daily summary. The legacy standalone Monster automation remains disabled.
 
-Use the active watchlists. An actionable candidate requires verified canonical identity, official participation path, live/imminent window, no unresolved contract/domain/payment conflict and plausible upside.
+## Launch / NFT discovery
 
-Any proposed spend uses only the existing opportunity reserve unless the user explicitly reallocates capital.
+A candidate may be promoted to WATCH only after:
+- canonical issuer identity;
+- official participation path;
+- live/imminent window;
+- no unresolved contract/domain/payment conflict;
+- sufficient factual opportunity evidence.
+
+The automated alert must remain "candidate for review" and must not generate a new buy/mint amount or execution instruction.
 
 ## Performance
 
 Authority: `performance/current.md`.
 
-Rules:
 - wallet balance alone is not PnL;
 - internal transfers are not profit;
 - listing prices are not executable NAV;
-- unresolved closed-position cost/proceeds stay UNRESOLVED;
-- private venue unrealized PnL remains USER_CONFIRMED unless directly readable.
+- unresolved closed-position cost/proceeds remain UNRESOLVED;
+- private venue PnL remains USER_CONFIRMED unless directly readable.
 
 ## Runtime / audit
 
-`RUNBOOK.md` is authoritative for execution order, workload limits, skeleton audit, retry behavior, health checks and finalization.
+`RUNBOOK.md` is authoritative for execution order, workload limits, skeleton audit, retry and finalization.
 
-A scheduler trigger is not proof of success. A successful run requires a finalized GitHub audit.
+A scheduler trigger is not proof of success.
 
-Temporary GitHub, Gmail or source failure must never automatically disable or pause the existing automation.
+Temporary GitHub, Gmail or source failures must never automatically disable or pause the existing task.
