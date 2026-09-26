@@ -406,7 +406,7 @@ As of 2026-09-27:
 - ERC-8004 transaction status: SUCCESS
 - ERC-8004 eligibility verification: YES
 - ERC-8004 agent ID: `2251`
-- first GM: PENDING
+- first GM: CONFIRMED
 - streak active: PENDING
 
 ## Follow-up relation to Four Zero Two / TRACES
@@ -518,7 +518,22 @@ Observed:
 - sender was recognized as an ERC-8004 agent before broadcast
 - pre-state `lastGM(wallet)`: `0`
 
-Unexpected immediate post-read:
-- `lastGM(wallet)` still returned `0` immediately after the successful receipt.
-- Do not broadcast another GM until receipt logs and delayed state reads confirm whether the first GM was recorded.
-- This is treated as a verification issue, not as proof of failure.
+Initial immediate post-read:
+- `lastGM(wallet)` briefly returned `0` immediately after receipt.
+
+Independent confirmation:
+- receipt status: `success`
+- block: `56962327`
+- block timestamp: `1790460738`
+- block date: `2026-09-26T22:12:18.000Z`
+- exactly one `GM` event was emitted
+- event user: `0x87d283153A52333cFc7991f21e9AE0d067Dfa592`
+- event recipient: zero address, consistent with plain `gm()`
+- `lastGM` at transaction block: `1790460738`
+- repeated latest reads: `1790460738`
+- `isAgent`: `true`
+
+Conclusion:
+- the first DailyAgentGM was successfully recorded onchain;
+- the earlier zero was a transient post-write read/RPC timing issue;
+- next eligible time is `2026-09-27T22:12:18.000Z` = `2026-09-28 05:12:18 Asia/Bangkok`.
