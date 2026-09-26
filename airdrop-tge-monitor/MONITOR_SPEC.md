@@ -16,13 +16,16 @@ Timezone: Asia/Bangkok
 - 最近 24h event / run 用于 dedupe
 
 执行：
-1. 检查 always-hourly urgent set。
-2. 检查当前 hour 对应 shard。
-3. 跟随官方公告中的 action links 到最终页面。
-4. identity gate + two-anchor。
-5. 判断是否出现新 ACTION event。
-6. 写 run audit。
-7. 更新 state/current.md。
+1. 立即创建唯一秒级时间戳的 skeleton run audit，`run_status: in_progress`。
+2. 检查 always-hourly urgent set。
+3. 检查当前 hour 对应 shard。
+4. 跟随官方公告中的 action links 到最终页面。
+5. identity gate + two-anchor。
+6. 判断是否出现新 ACTION event。
+7. 重新读取 state/current.md 最新 SHA 后更新状态。
+8. finalize 同一个 run audit。
+
+不得等完整扫描结束后才第一次写 GitHub。单一项目失败继续其余项目。
 
 完整 registry 四小时覆盖一次。
 
@@ -96,3 +99,10 @@ state/current.md 维护：
 - open_urgent_events
 
 同一 shard 超过 6 小时未成功覆盖，在下一轮记录 HEALTH_GAP，并通知用户一次。
+
+
+## Scheduler proof
+
+- scheduler trigger 不能替代 GitHub run audit。
+- 自动运行只有在 skeleton audit 已创建、urgent+shard 有 checked/failed 状态、state/current.md 更新或明确记录更新失败、同一个 audit 被 finalise 后才算 success。
+- GitHub/单一来源/Gmail 临时失败绝不允许自动 disable 或 pause 本 automation。
