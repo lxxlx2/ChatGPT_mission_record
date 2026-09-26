@@ -170,3 +170,47 @@ Key strategy / runtime commits include:
 
 This file is an activity record. The canonical operating plan remains:
 `crypto-300-profit-mission/positions/flop-close-call.md`.
+
+
+## 2026-09-27 04:00 Asia/Bangkok — T02 unattended execution proof
+
+Local LaunchAgent status supplied by the operator:
+- autopilot: `state = running`, PID 15723;
+- dashboard: `state = running`, PID 21579;
+- dashboard previous exit code 143 is consistent with an intentional kickstart/restart;
+- autopilot stderr was empty.
+
+Autopilot log proof:
+- sweep 395 observed before the scheduled T02 action;
+- at 2026-09-26T21:00:21Z the service emitted `event=static_action`;
+- cohort: `02`;
+- result: `submitted`;
+- trade id: `t02-1790456420`;
+- long: `TIME-02-L`;
+- short: `TIME-02-S`;
+- quantity: `40.70`;
+- submitted price: `224.39`;
+- dedicated room sequence: `74`;
+- next heartbeat at 2026-09-26T21:01:21Z advanced `next_static` to `03`.
+
+This is direct proof that the unattended Static scheduler executed T02 on schedule without manual trade submission.
+
+### Freshness hardening discovered during T02 review
+
+The live log review exposed a subtle implementation issue in `fresh_price()`: the referee's posted `age_s` value was being treated as if it continued to age after the post. In practice the field is a snapshot value carried in the message, so the local gate could understate wall-clock staleness until a new price post arrived.
+
+Fix:
+- commit `ce1316dc73c5e6bc195ff89feaf61f7a76dfd538`;
+- derive wall-clock age from `ref.time` on every read;
+- effective age is now the maximum of referee-reported age and locally derived age;
+- the 120-second trading freshness gate therefore blocks stale references even when the embedded `age_s` remains small.
+
+Dashboard follow-up:
+- commit `ad61b96e5bde346e89e7ca9b0c1400cd5ddf0b2a`;
+- the user-facing status bar now shows the latest completed automatic action, so routine health checks do not require terminal log inspection.
+
+Operational conclusion:
+- T02 submission automation is proven working;
+- the process and LaunchAgents are alive;
+- no stderr error was present;
+- future scheduled trades should use the hardened dynamic freshness check after the local service is restarted onto the latest code.
