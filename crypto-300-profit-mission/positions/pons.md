@@ -1,6 +1,6 @@
 # PONS Position
 
-Updated: 2026-09-26 13:46 Asia/Bangkok
+Updated: 2026-09-27 03:40 Asia/Bangkok
 
 ## Binance PONSUSDT perpetual — USER_CONFIRMED
 
@@ -129,3 +129,21 @@ Binance public market:
 - the public mark path after the latest screenshot did not reach 0.668 TP or 0.498 stop
 - implied uPnL if the private position is unchanged: **~+0.0384 USDT**
 - exact private position/account state still requires Binance account readback or a newer user screenshot.
+
+
+## 2026-09-27 03:40 factual refresh
+
+DIRECT_CHAIN Robinhood:
+- PONS: **54.799953441979624353**
+- native ETH: **0.000825190918816326**
+- PONS market reference: **~0.63625280 USD**
+- spot mark value: **~34.87 USD**
+
+No balance reduction is visible versus the prior spot quantity, so there is still no direct-chain evidence of a spot TP/downside execution.
+
+Binance public:
+- PONSUSDT mark: **0.63688970**
+- latest private position authority remains USER_CONFIRMED 64-PONS long @ 0.6250
+- estimated uPnL if unchanged: **~+0.7609 USDT**
+
+Exact Binance account state, funding and fees remain private-source dependent.
