@@ -294,16 +294,35 @@ Observed bootstrap sequence:
 Private Ed25519 seeds remain local in:
 `~/.config/technocore-close-call/keys.json`
 
+Latest observed local referee status from 2026-09-26:
+- sweep: 249;
+- reference: 224.43;
+- reference age: 1 second;
+- owners: 1,094,535;
+- registered rooms: 13;
+- live mark: 222.50;
+- visible leader score: 172.69.
+
+This confirms the referee is currently fresh and advancing. Exact membership of our 52 local DIDs still requires fleet-specific mint verification before any position is opened.
+
+Safety gate added in runner:
+- `gate` compares all 52 local DIDs against referee mint records;
+- it also requires the dedicated room to be registered;
+- price, flow and state must be on the same sweep;
+- latest referee reference must be within the 120-second preferred freshness window;
+- latest flow must have no active missed range;
+- `open-static` and `open-bracket` now refuse to trade when this gate fails.
+
 Next gate:
-- wait for at least one fresh referee sweep after registration;
-- run local `status`;
-- do not open T01 or bracket round 1 until referee freshness and registration/mint state are acceptable.
+- pull commit `90d4f27766e83533615c4e17cb550c17f946c052`;
+- run local `gate`;
+- do not open T01 or bracket round 1 unless it prints `GATE: PASS_OPEN_ALLOWED`.
 
 Execution state:
-`BOOTSTRAPPED_WAITING_FOR_FRESH_SWEEP`
+`FLEET_GATE_PENDING`
 
 ## Execution status
 
-BOOTSTRAPPED_WAITING_FOR_FRESH_SWEEP.
+FLEET_GATE_PENDING.
 
 The user has authorized starting this stored plan. Live secret generation and signing must occur locally on the user's Mac; do not move private seeds into GitHub or chat.
