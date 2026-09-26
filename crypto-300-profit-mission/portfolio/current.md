@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-26 12:21 Asia/Bangkok
+Updated: 2026-09-26 13:00 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Verification policy
@@ -22,7 +22,7 @@ Never replace a failed live read with an older value and call it current.
 
 ## DIRECT_CHAIN snapshot
 
-Fresh RPC read around 2026-09-26 12:21 Asia/Bangkok.
+Fresh RPC reconciliation through about 2026-09-26 13:00 Asia/Bangkok.
 
 ### Ethereum mainnet
 - USDC: **400.308121**
@@ -46,8 +46,14 @@ Fresh RPC read around 2026-09-26 12:21 Asia/Bangkok.
 - CRED: **0**
 
 ### Robinhood Chain
-- native balance: **0.000081643478484768**
-- unknown/spam ERC-20 balances are excluded unless identity and value are verified.
+- native ETH: **0.000826657957256326**
+- canonical PONS contract: `0x39dbed3a2bd333467115de45665cc57f813c4571`
+- PONS balance: **54.799953441979625**
+- Alchemy PONS price: **0.6448796581 USD**
+- PONS spot mark value: **~35.34 USD**
+- ETH reference price: **2684.44 USD**
+- native gas mark value: **~2.22 USD**
+- unknown/spam ERC-20 balances remain excluded unless identity/value are verified.
 
 ### Arbitrum
 - current connected Alchemy app does not support ARB_MAINNET.
@@ -75,15 +81,26 @@ Last user-confirmed screenshot: 2026-09-26 06:08 Asia/Bangkok.
 
 This is the latest confirmed private-venue state. Public XRP prices may monitor risk but must not rewrite this private state.
 
-### PONS / Binance
-Latest user-confirmed execution state:
-- total margin budget: 50 USDT
-- only 0.6250 entry confirmed filled
-- 0.5850 and 0.5450 remain pending resting orders
-- isolated 3x
-- hard stop: 0.4980 Mark Price
+### PONS sleeve
 
-Private Binance account fill/quantity/PnL is not directly connected here.
+Latest USER_CONFIRMED Binance futures state at 2026-09-26 12:58:
+- LONG PONSUSDT, isolated 3x
+- entry: **0.6250**
+- position notional shown: **41.32 USDT**
+- margin shown: **13.20 USDT**
+- mark shown: **0.6451307**
+- unrealized PnL shown: **+1.31 USDT**
+- realized PnL shown: **-0.13 USDT**
+- liquidation price shown: **0.4293629**
+- hard stop: **0.4980**
+- old 0.5850 / 0.5450 resting entries: **CANCELED**
+
+DIRECT_CHAIN Robinhood Chain:
+- PONS spot: **54.799953441979625 PONS** (~**35.34 USD** at the fresh Alchemy price)
+- native gas: **0.000826657957256326 ETH** (~**2.22 USD** at the current ETH reference)
+
+User confirms the released Binance order capital was withdrawn and converted into spot PONS + gas.
+Exact spot cost basis and withdrawal/swap fees are UNRESOLVED.
 
 ### Low-risk bucket
 - 500 USD-equivalent, user-confirmed as earning interest.
@@ -113,7 +130,7 @@ Based on **731.381974 USDC** canonical direct-chain stablecoins:
 - **81.381974 USDC**: direct-chain residual after those ring-fenced reservations.
 
 Separately:
-- PONS: 50-USDT margin budget.
+- PONS: original 50-USDT sleeve is now split between the remaining Binance futures position and Robinhood Chain spot PONS + gas; there are no live 0.5850/0.5450 averaging orders.
 - XRP/Variational: private venue exposure funded by prior internal reallocation.
 - 500 USD-equivalent low-risk bucket: outside speculative Mission.
 
