@@ -214,3 +214,75 @@ Operational conclusion:
 - the process and LaunchAgents are alive;
 - no stderr error was present;
 - future scheduled trades should use the hardened dynamic freshness check after the local service is restarted onto the latest code.
+
+
+## 2026-09-27 — Competitive-strategy diagnosis after live-board review
+
+A material flaw was found in the initial 52-key strategy after comparing the live board shape with the official rules, official simulator and issue #8 measurements.
+
+### What the live board is showing
+
+The user observed the recurring pattern:
+- one account alone in first;
+- most or all of the remaining published Top 25 tied at one identical score;
+- our best key outside the published Top 25 despite holding both long and short tickets.
+
+This pattern closely matches the read-only measurements published in official repository issue #8. At sweep 370 the measurement reported:
+- 1,763,029 owner keys;
+- 417,304 keys holding positions;
+- one leader at 196.60;
+- 24 published keys tied at 189.14;
+- top position-size accounts at approximately the maximum size.
+
+Issue #8 explicitly notes that under the frozen identity rule, one operator can hold both sides across every sweep and therefore own the best long and best short entry; tie handling then makes fleet size and entry timing dominant.
+
+### Core mistake in our initial design
+
+The initial design optimized robust directional coverage:
+- exact-ref long/short pairs;
+- static entries every 12 hours;
+- only 52 total keys;
+- conservative quantity sizing;
+- bracket rollovers.
+
+That is sensible for a capped-player trading game, but close-1 does not cap owner keys and ranks every key independently.
+
+The actual objective is the maximum individual-key score, not combined fleet PnL.
+
+### Fee/clawback asymmetry we underused
+
+The frozen fold charges each side:
+- base fee = 1% of trade value;
+- but a side receiving a price better than the sweep close pays the favorable price gap instead when that gap is larger.
+
+This means a favored key can be paired with a sacrificial feeder at an off-market price inside the 5% band so that:
+- the favored key's nominal price advantage is exactly clawed back;
+- its economic effective entry becomes the sweep close;
+- it avoids paying an additional 1% base fee on top of that effective entry;
+- the feeder absorbs the unfavorable side/base-fee economics.
+
+This exact behavior is discussed in issue #8 comments as a way operators manufacture many identical max-size entries every sweep. The official fold test `test_the_harvest_nets_nothing` separately confirms that buying at the bottom and selling at the top cannot create net value for one flat account; the useful fleet effect is concentrating ticket quality on favored keys while sacrificing other keys, not creating value from nothing.
+
+### Why our current keys trail
+
+Our exact-ref pair starts approximately one base fee behind:
+- around 91 POLF of fee for a 40.7-contract ticket near NVDA 224;
+- a manufactured favored ticket can make its effective entry approximately the sweep close without that extra base-fee handicap;
+- our 12-hour spacing also misses many locally superior long/short entry times;
+- our quantity is conservative relative to the approximately max-sized positions observed near the top.
+
+Therefore “we have both long and short” only protects direction. It does not guarantee competitive score because the contest rewards the single best key and competitors can create long and short tickets at far more timestamps.
+
+### Current execution implication
+
+No trade is changed by this note. T01 and T02 remain valid lottery tickets.
+
+However, the current plan for T03-T16 exact-ref static entries and later bracket churn is now considered strategically under review. Before the next scheduled unused-key deployment, the preferred redesign is:
+- stop treating 52 keys as an arbitrary hard competitive cap;
+- optimize for best-key order statistics rather than total fleet robustness;
+- use fee/clawback-aware favored/feeder constructions;
+- increase timing density substantially;
+- reassess whether bracket rollovers add enough value after repeated fees.
+
+Execution state:
+`STRATEGY_REVIEW_REQUIRED_BEFORE_T03`.
