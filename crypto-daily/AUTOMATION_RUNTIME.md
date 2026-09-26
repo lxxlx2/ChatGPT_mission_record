@@ -1,6 +1,6 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-26 20:35 Asia/Bangkok
+Updated: 2026-09-26 21:05 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
@@ -52,3 +52,19 @@ Do not perform optional work after research write and before final persistence.
 
 A successful research write plus successful final/final-retry = success.
 If research exists but both final writes fail, the next run records the previous cycle as `audit_gap_recovered` and continues.
+
+
+## Notification behavior
+
+Read `docs/MONITORING/NOTIFICATION_POLICY.md` only when deciding whether a user/email notification is required.
+
+Ordinary hourly collection is internal:
+- persist research;
+- persist final audit;
+- return an empty user-visible response.
+
+Do not notify merely because Bitget, ZEC, SOL relative strength, or another already-known item remains material.
+
+A new monitor-health incident is different: send one deduplicated Gmail + ChatGPT alert according to the notification policy.
+
+09:00 formal daily delivery remains governed by REPORT_SPEC / DELIVERY_RUNBOOK.
