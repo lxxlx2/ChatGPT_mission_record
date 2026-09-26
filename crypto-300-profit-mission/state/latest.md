@@ -1,118 +1,83 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-26 13:46 Asia/Bangkok
+Updated: 2026-09-26 14:12 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-Main status: REPAIR_APPLIED_AWAITING_AUTOMATIC_VALIDATION
+Main status: AUTOMATION_REPAIR_IN_PROGRESS
 
-## Data provenance
+## Data truth
 
-DIRECT_CHAIN = fresh Alchemy RPC.
-USER_CONFIRMED = latest private-venue screenshot / explicit user statement.
-MARKET = fresh public market data.
-UNAVAILABLE/UNRESOLVED = do not estimate.
+DIRECT_CHAIN = fresh connected chain data.
+USER_CONFIRMED = private venue/order UI or explicit user statement.
+MARKET = public market reference.
+UNAVAILABLE/UNRESOLVED = no estimate.
 
-## Wallet / capital
+## Wallet state
 
-Fresh DIRECT_CHAIN:
 - Ethereum: 400.308121 USDC; 0.001667063838788351 ETH.
-- Solana: 330.799585 USDC; 0.135545164 SOL; SHART 0.
-- unidentified Solana SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: 1.745552 tokens, identity/value UNRESOLVED.
+- Solana: **248.657361 USDC; 0.133415487 SOL**; SHART 0.
+- BNB Chain: **30.00474761 USDC; 0.002684170274192202 BNB; GSTOCK 0**.
+- Robinhood Chain: **54.799953441979625 PONS; 0.000825190918816326 ETH**.
+- Ink: **0.01113370814547789 ETH; 7.665136656205785948 Tydro Ink Points; Fresh INK NFT #372**.
 - Base: 0.252982 USDC; 0.000790846510479134 ETH.
 - Unichain: 0.021286 USDC; 0.000231941590232335 ETH; CRED 0.
-- Robinhood Chain native ETH: **0.000826657957256326**.
-- Robinhood Chain canonical PONS: **54.799953441979625 PONS**.
-- fresh Alchemy PONS price: **0.6448796581 USD**, spot mark value **~35.34 USD**.
-- canonical direct-chain stablecoin total: **731.381974 USDC**.
+- unidentified Solana SPL 2MU93...dZwQ: 1.745552, UNRESOLVED.
 
-Accounting reserves:
-- JUMP: 400 USDC.
-- short-window opportunity reserve: 150 USDC.
-- ETH setup reserve: 100 USDC.
-- direct-chain residual after reserves: **81.381974 USDC**.
-- PONS 50 USDT and the separate 500 USD-equivalent low-risk bucket are outside this direct-chain residual calculation.
+Canonical direct-chain stablecoins including BNB Chain: **679.24449761 USDC**.
 
-Solana delta versus 09:18:
-- USDC: -9.025416
-- SOL: -0.004197159
+User confirms the Solana USDC reduction reflects cross-chain capital movements used to change current positions. Exact bridge-leg attribution remains unreconciled.
 
-Cause is not inferred without transaction-history verification.
+## BNB / GSTOCK
 
-## Private / off-chain positions
+- canonical GSTOCK contract: `0xcAFdBCE93477261Db8250e42BdAe6E66733F9E20`
+- direct wallet GSTOCK: **0**
+- current market reference: **~0.024487 USD**
+- about 30 USDC + BNB gas remain on BNB Chain
+- status: **PLAN_NOT_FILLED**
+- user confirms this capital is for the GSTOCK pending-order plan
+- wallet state alone cannot verify whether an unfilled conditional order is active
+
+## Robinhood
+
+PONS state/order ladder: see `positions/pons.md`.
+
+Unpriced non-PONS token receipts are present and excluded from NAV until intent/value is verified:
+JOLLY, HYPERCAT, familiars, RMB, 富贵, DIH, DGDY.
+
+## Ink
+
+- existing Fresh INK commemorative NFT #372 is present
+- Tydro Ink Points 7.665136656205785948
+- native ETH 0.01113370814547789
+- newly discussed target NFT remains pending
+
+## Private positions
 
 ### XRP / Variational
-USER_CONFIRMED at 2026-09-26 06:08:
-- LONG 77.12 XRP at 1.55589, isolated 3x.
-- TP 1.6280; SL 1.5140.
-- screenshot margin 40.99 USDC; equity 50.87 USD; available 10.55 USD.
+Latest USER_CONFIRMED:
+- 77.12 XRP long @ 1.55589, isolated 3x
+- TP 1.6280; SL 1.5140
 
-Private venue state remains user-confirmed until refreshed directly.
+### PONS / Binance
+Latest USER_CONFIRMED order ladder is recorded in `positions/pons.md`.
 
-### PONS
+## Automation health
 
-USER_CONFIRMED Binance futures state at 2026-09-26 13:45:
-- LONG 64 PONS, isolated 3x, entry 0.6250.
-- TP market/reduce-only: 25 PONS @ 0.668; 22 PONS @ 0.704; 16 PONS @ 0.739.
-- TP coverage = 63/64 PONS = 98.4375%; **1 PONS residual has no TP**.
-- hard stop: Mark <= 0.498, market/reduce-only, 100%.
-- 0.5850 and 0.5450 averaging bids remain canceled.
+### Crypto Daily
+The post-repair automatic run at 13:58/13:59 **did persist successfully**:
+- run audit: `crypto-daily/runs/2026-09-26/135810.md`
+- research: `crypto-daily/research/2026-09-26/135900.md`
+- core market scan completed
+- security scan completed
+- rotating shard completed
+- research write succeeded
 
-DIRECT_CHAIN Robinhood Chain at ~13:46:
-- wallet PONS: **54.799953441979625 PONS**.
-- native ETH gas: **0.000825190918816326 ETH**.
-- no outgoing PONS transfer since the acquisition swap.
+It was labeled `partial_success` only because normal "no fresh authoritative security incident" was incorrectly placed under source_failures. That classification rule is being corrected; the underlying run pipeline is now functioning.
 
-USER_CONFIRMED spot orders:
-- TP: 11 PONS @ 0.668; 16.4 @ 0.704; 16.4 @ 0.739; 11 @ 0.845.
-- downside triggers: 27.39 PONS @ 0.598 and 27.39 @ 0.575.
-- after any spot TP fill, downside order quantities require REVIEW_REQUIRED because their fixed amounts may exceed the reduced wallet balance.
+### $300 Mission
+13:29 scheduler metadata advanced but no new automatic audit was persisted.
+The existing Mission task remains unhealthy.
 
-Verified spot acquisition: 35.291194 USDG -> 54.799953441979625 PONS, average ~0.64400044 USDG/PONS.
+Repair now changes the same existing task to a minimal factual telemetry runtime using `AUTOMATION_RUNTIME.md`; no new automation is created.
 
-## ETH / BTC / JUMP
-
-- ETH has no confirmed live Mission position; 100 USDC remains reserved for the conditional setup.
-- BTC remains a regime overlay, with no dedicated Mission allocation.
-- JUMP reserve remains 400 USDC on Ethereum. Sep-29 authenticated preflight remains required.
-
-## UNICRED / Credits
-
-- UNICRED NFT #230 remains active and locked until 2026-10-01 17:28:04 Asia/Bangkok.
-- liquid CRED DIRECT_CHAIN = 0.
-- Credits #23042 / #23232 remain USER_CONFIRMED listings at 0.25 ETH / 0.40 ETH.
-
-## Monitoring architecture
-
-- :00 Crypto Daily
-- :14 TGE urgent + shard
-- :29 Mission phased run
-- 19:29 same Mission run includes Monster daily summary
-
-Monster V2.1 remains inside Mission. Separate monster automation remains disabled. BSC smart-money cluster remains outside this Mission.
-
-## Runtime repair status
-
-Confirmed before the latest repair:
-- TGE: 10:16 and 11:11 automatic runs finalized successfully.
-- Crypto Daily: 10:01 automatic run finalized successfully and correctly deduplicated today's already-delivered report, but 11:00 did not leave a durable audit.
-- Mission: the 09:30 automatic run created only a skeleton and did not finalize; later triggers did not leave durable audits.
-
-Repair applied at about 12:05:
-- compacted MISSION_SPEC;
-- phased/bounded Mission RUNBOOK;
-- critical position lanes first;
-- bulk-market screening with shortlist deep checks;
-- launch/NFT/FOMO consume recent Crypto Daily research first;
-- Crypto Daily ordinary hours now use a rotating discovery shard;
-- automation prompts shortened;
-- no new automation created.
-
-Next automatic proof points:
-- Mission: next :29 run.
-- Crypto Daily: next :00 run.
-
-Do not mark either repaired scheduler healthy until a new post-repair automatic finalized audit exists.
-
-## Arbitrum
-
-Current connected Alchemy app does not expose ARB_MAINNET. Arbitrum wallet balance remains UNAVAILABLE.
+Next proof point: next :29 run must create and finalize a new automatic audit.
