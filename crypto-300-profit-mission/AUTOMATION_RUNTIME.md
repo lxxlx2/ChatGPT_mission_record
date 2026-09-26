@@ -1,135 +1,77 @@
-# Existing $300 Crypto Automation Runtime
+# $300 Crypto Automatic Runtime
 
-Updated: 2026-09-26 14:18 Asia/Bangkok
-Mode: FACTUAL_PORTFOLIO_TELEMETRY
-Schedule: hourly at :29 Asia/Bangkok
+Updated: 2026-09-26 15:10 Asia/Bangkok
+Timezone: Asia/Bangkok
+Mode: FACTUAL_TELEMETRY
 
-This file is intentionally limited to factual telemetry and pre-existing alert rules. The scheduler does not originate investment recommendations or transactions.
+Authority for the existing :29 scheduler.
 
-## Start
+## Append-only audit
 
-The first persistent action of every automatic run is:
+At start create:
+`crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS-start.md`
 
-`crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS.md`
-
-Initial fields:
+with only:
 - run_time
 - automation_id
-- mode: FACTUAL_PORTFOLIO_TELEMETRY
-- run_status: in_progress
+- mode: FACTUAL_TELEMETRY
+- run_status: started
 
-Do this before external market research.
+Do not update the start file.
 
-## Wallet telemetry
+At end create:
+`crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS-final.md`
 
-Every hour read the canonical wallets using connected sources.
+with:
+- run_time
+- automation_id
+- run_status
+- wallet_reads
+- threshold_checks
+- discovery_checks
+- alerts
+- state_write_status
+- health_write_status
+- source/tool errors
 
-Required:
-- Ethereum: canonical USDC + native ETH
-- Solana: canonical USDC + native SOL + both legacy SPL Token and Token-2022 active holdings
-- BNB Chain: canonical USDC + native BNB + canonical GSTOCK balance
-- Robinhood Chain: native ETH + canonical PONS
-- supported known active liquid tokens
+A run is complete only when the final file exists.
 
-Daily / when changed:
-- Base
-- Unichain
-- Ink
-- known NFTs / points when supported
+## Factual checks
 
-Token-2022 correction:
-- the canonical Solana wallet currently holds e/acc and PAID in Token-2022 accounts;
-- every Solana wallet scan must query both the legacy SPL Token program and known Token-2022 mints/accounts;
-- never conclude that an asset is absent from a legacy-program-only scan.
+Every hour:
+- Ethereum USDC + native ETH
+- Solana USDC + SOL + Token-2022 e/acc + PAID
+- BNB Chain USDC + BNB + GSTOCK
+- Robinhood Chain ETH + PONS
+- read current PONS, XRP, ETH and JUMP state files only as needed to compare current facts with already stored thresholds
+- read at most two newest Crypto Daily research files
+- one bulk Binance futures universe screen for Monster V2.1, with at most 8 deep-check candidates
+- launch/NFT/FOMO discovery only from recent research or a compact fallback if research is stale
+- every 3 hours: UNICRED/Credits slow lane
+- 19:29: Monster factual daily summary
 
-Rules:
-- failed read = UNAVAILABLE
-- never reuse an old value as current
-- unsolicited/unpriced tokens stay outside NAV
-- private exchange/venue state remains USER_CONFIRMED
+Ink current factual context:
+- Fresh INK commemorative NFT #372 already exists
+- Tydro Ink Points are present
+- the separately discussed target NFT remains pending until a new mint/transfer or user confirmation
 
-## Current factual asset references
+## Notifications
 
-### PONS
-Read `positions/pons.md`.
-Compare public data and direct-chain balances only with thresholds/orders already stored there.
-No automatic order change.
-
-### XRP
-Read `positions/xrp-variational.md`.
-Compare public data with already stored thresholds.
-Private venue fields remain USER_CONFIRMED.
-
-### ETH
-Read `positions/eth-conditional.md`.
-Return only stored-condition status: qualified / not_qualified / unavailable.
-
-### JUMP
-Read `positions/jump.md`.
-Track authenticated term/deadline/gas changes only.
-
-### GSTOCK / BNB Chain
-Read `positions/gstock-plan.md`.
-This is currently PLAN_NOT_FILLED unless direct chain shows canonical GSTOCK > 0 or the user supplies a newer order/fill confirmation.
-
-BSC smart-money cluster research remains excluded. Direct wallet telemetry and the user's explicit GSTOCK plan are included.
-
-## Discovery telemetry
-
-Use at most the two newest Crypto Daily research files from the previous two hours as the primary discovery feed.
-
-### Monster V2.1
-Read `watchlists/monster-squeeze-v2.1.md`.
-Use one bulk Binance futures screen plus bounded shortlist.
-Only classify the frozen states:
-- STRUCTURAL_CANDIDATE
-- PRESSURE
-- IGNITION
-- EXHAUSTION
-- NO_STATE_CHANGE
-
-### Launch / NFT / Robinhood-FOMO
-Use the existing watchlists.
-Outputs are factual candidate state only:
-- checked_no_candidate
-- WATCH_CANDIDATE_REVIEW_REQUIRED
-- unavailable
-
-Do not create a new spend amount or transaction instruction.
-
-Ink-specific current context:
-- wallet already owns Fresh INK commemorative NFT #372;
-- 7.665136656205785948 Tydro Ink Points are present;
-- the newly discussed target Ink NFT is still treated as pending until a new NFT / mint transaction appears or the user confirms mint.
-
-## Alerts
-
-Only notify for a new factual state change already covered by stored rules:
-- stored threshold/order trigger crossed
+Only for a new factual change under an already stored rule:
+- stored threshold crossed
 - changed WATCH
 - Monster state transition
-- wallet balance anomaly
+- wallet anomaly
 - security/deadline event
-- monitor health failure
-- 19:29 Monster factual daily summary
+- monitor health gap/lane failure
+- 19:29 summary
 
-When a user decision is needed:
-`decision_status: REVIEW_REQUIRED`
+No new trade plan, size, leverage, order change or capital allocation is generated automatically.
 
-Do not add new investment instructions.
+## Writes
 
-## Finish
+Use fresh SHA for mutable current files.
+If a mutable write fails, record it in the final audit and still create the final audit.
 
-Best-effort update:
-- `portfolio/current.md` when wallet state materially changed
-- `state/latest.md`
-- `health/current.md`
-
-Then finalize the same run audit as:
-- success
-- partial_success
-- partial_failure
-- failed
-
-A scheduler timestamp without a finalized audit is not success.
-Temporary source/GitHub/Gmail failure never disables or pauses this existing automation.
+Temporary failures never disable/pause the task.
+No Chinese-language websites as evidence.
