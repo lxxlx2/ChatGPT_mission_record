@@ -15,6 +15,7 @@ Immediate scope:
 - read live referee status
 - verify the exact local fleet is registered/minted before trading
 - open one static time-layer pair
+- inspect a submitted trade outcome in referee flow
 - open bracket round 1
 
 Later bracket rollovers are intentionally not automated in v1. They should be
@@ -532,6 +533,105 @@ def cmd_open_static(args) -> None:
     print(json.dumps(res, indent=2))
 
 
+def contains_value(value, needle: str) -> bool:
+    if isinstance(value, str):
+        return needle in value
+    if isinstance(value, list):
+        return any(contains_value(item, needle) for item in value)
+    if isinstance(value, dict):
+        return any(contains_value(item, needle) for item in value.values())
+    return False
+
+
+def matching_fragment(value, needle: str):
+    if isinstance(value, str):
+        return value if needle in value else None
+    if isinstance(value, list):
+        out = [item for item in value if contains_value(item, needle)]
+        return out or None
+    if isinstance(value, dict):
+        out = {k: v for k, v in value.items() if contains_value(v, needle)}
+        return out or None
+    return None
+
+
+def cmd_check_trade(args) -> None:
+    state = load_state()
+
+    if args.trade_id:
+        trade_id = args.trade_id
+    elif args.cohort is not None:
+        k = f"{args.cohort:02d}"
+        rec = state.get("static", {}).get(k)
+        if not rec:
+            raise SystemExit(f"no saved static cohort {k}")
+        trade_id = rec["trade_id"]
+    else:
+        raise SystemExit("provide --trade-id or --cohort")
+
+    submission = None
+    for rec in parse_export(state["room"]):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "trade":
+            continue
+        if ((p.get("terms") or {}).get("id")) == trade_id:
+            submission = {
+                "seq": rec.get("seq"),
+                "ts": rec.get("ts"),
+                "from": rec.get("from"),
+            }
+            break
+
+    outcome = None
+    for rec in parse_export("d-close1-flow"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        if contains_value(p.get("settled"), trade_id):
+            outcome = {
+                "status": "settled",
+                "sweep": p.get("n"),
+                "detail": matching_fragment(p.get("settled"), trade_id),
+            }
+        if contains_value(p.get("void"), trade_id):
+            outcome = {
+                "status": "void",
+                "sweep": p.get("n"),
+                "detail": matching_fragment(p.get("void"), trade_id),
+            }
+
+    pr = fresh_price(max_age=10**9)
+    print("trade_id:", trade_id)
+    print("submission:", json.dumps(submission, ensure_ascii=False))
+    print("current_sweep:", pr["n"], "ref:", pr["px"], "age_s:", pr["age_s"])
+
+    if outcome:
+        print("OUTCOME:", outcome["status"].upper())
+        print("outcome_sweep:", outcome["sweep"])
+        print("detail:", json.dumps(outcome["detail"], ensure_ascii=False))
+        return
+
+    omitted = {"settled": 0, "void": 0}
+    for rec in parse_export("d-close1-flow"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        om = p.get("omitted") or {}
+        if isinstance(om, dict):
+            for name in omitted:
+                try:
+                    omitted[name] += int(om.get(name) or 0)
+                except Exception:
+                    pass
+
+    print("OUTCOME: NOT_VISIBLE")
+    print("omitted_outcomes_in_retained_window:", json.dumps(omitted))
+    print(
+        "note: NOT_VISIBLE is inconclusive when referee flow reports omitted settled/void entries; "
+        "do not resubmit the same trade id"
+    )
+
+
 def cmd_open_bracket(_args) -> None:
     state = load_state()
     require_fleet_gate(state)
@@ -575,6 +675,12 @@ def main() -> None:
     p = sp.add_parser("open-static")
     p.add_argument("cohort", type=int)
     p.set_defaults(fn=cmd_open_static)
+
+    p = sp.add_parser("check-trade")
+    g = p.add_mutually_exclusive_group(required=True)
+    g.add_argument("--trade-id")
+    g.add_argument("--cohort", type=int, choices=range(1, 17))
+    p.set_defaults(fn=cmd_check_trade)
 
     p = sp.add_parser("open-bracket")
     p.set_defaults(fn=cmd_open_bracket)
