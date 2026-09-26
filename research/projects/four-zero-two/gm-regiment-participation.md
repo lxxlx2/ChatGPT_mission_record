@@ -419,3 +419,18 @@ Observed on 2026-09-27:
 - no evidence this change modified unrelated project configuration such as web-codex-bridge
 
 The temporary backup file `~/Desktop/codex-mcp-before-gm-regiment.txt` is optional and may be deleted after this verification.
+
+
+## Local secret storage policy
+
+For the dedicated GM Regiment Agent wallet:
+
+- public wallet address may be recorded in this repository;
+- private key must never be committed to Git or stored in project files;
+- designated local secret store: macOS Keychain;
+- Keychain service name: `gm-regiment-agent-private-key`;
+- Keychain account: local macOS user;
+- after storing the key, re-read it from Keychain and re-derive the public address to prove the backup is valid before funding;
+- only after backup verification may ETH be sent to the Agent wallet.
+
+The MCP package itself does not persist the generated private key.
