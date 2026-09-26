@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-26 16:35 Asia/Bangkok
+Updated: 2026-09-27 03:22 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Data labels
@@ -18,9 +18,9 @@ Timezone: Asia/Bangkok
 
 ### Solana
 Fresh finalized RPC:
-- USDC: **266.559188**
-- native SOL: **0.129098090**
-- e/acc (Token-2022): **542.749359**
+- USDC: **328.018516**
+- native SOL: **0.128587689**
+- e/acc (Token-2022): **0**
 - PAID (Token-2022): **947.685473**
 - KARDASHEV (Token-2022): **4,103.186501**
 - SHART: **0**
@@ -39,9 +39,12 @@ KARDASHEV authority: `positions/kardashev.md`.
 - exact transaction signatures and risk notes are in the position file.
 
 Important current-state notes:
-- e/acc has declined further from the previous 723.665811 snapshot to **542.749359**. Do not infer its realized PnL here without reconstructing those sale legs.
+- fresh finalized RPC now shows **e/acc = 0**; that position is fully exited on-chain.
 - PAID remains **947.685473**.
-- Solana Token-2022 holdings must remain included in all future portfolio scans.
+- Solana canonical USDC is now **328.018516**.
+- user confirms the Variational XRP position hit its stored lower bound, was closed, and the remaining private-venue funds were withdrawn and converted back to Solana USDC.
+- do not attribute the entire Solana USDC change since the older snapshot solely to Variational because other Solana trading activity occurred between snapshots.
+- Solana Token-2022 holdings must remain included in future portfolio scans.
 
 ### BNB Chain
 - canonical USDC: **0**
@@ -91,12 +94,12 @@ Unpriced/non-canonical receipts such as JOLLY, HYPERCAT, familiars, RMB, 富贵,
 
 Canonical stablecoins:
 - Ethereum: 400.308121
-- Solana: 266.559188
+- Solana: 328.018516
 - BNB Chain: 0
 - Base: 0.252982
 - Unichain: 0.021286
 
-**Total canonical stablecoins: 667.141577 USDC.**
+**Total canonical stablecoins: 728.600905 USDC.**
 
 Current native-gas mark value across Ethereum, Solana, BNB Chain, Robinhood Chain, Ink, Base, Unichain and Arbitrum is approximately **58.98 USD** using the latest connected ETH/SOL/BNB references.
 
@@ -107,9 +110,9 @@ Strict directly priced liquid NAV, excluding PAID/e/acc and unpriced NFTs/points
 - Robinhood PONS spot: ~34.24
 - KARDASHEV remaining position: ~8.39
 
-**Strict directly priced on-chain NAV: ~797.29 USD.**
+**Prior strict directly priced on-chain NAV (~797.29 USD) is stale after the Solana USDC increase and is pending the next full cross-chain mark refresh.**
 
-PAID and e/acc are held and tracked, but their public price feeds currently conflict materially. They remain outside strict NAV. Recent public PAID references imply roughly **9.9-18.0 USD** for the current balance; e/acc value is small but unresolved. Adding current PAID public-reference ranges and the small unresolved e/acc remainder gives a rough direct-chain liquid range around **807-816 USD**, excluding NFTs/points/unpriced receipts.
+PAID and e/acc are held and tracked, but their public price feeds currently conflict materially. They remain outside strict NAV. Recent public PAID references imply roughly **9.9-18.0 USD** for the current balance; e/acc value is small but unresolved. Do not reuse the prior 807-816 USD direct-chain range after this closeout update; the Solana USDC increase and e/acc full exit require a fresh full-NAV recomputation.
 
 ## Private venue positions
 
@@ -129,21 +132,16 @@ If the private position has not been manually changed:
 
 Private account state remains USER_CONFIRMED until a newer Binance account screenshot/source is available.
 
-### Variational XRP perpetual
-Latest private USER_CONFIRMED:
-- LONG **77.12 XRP**
-- entry **1.55589**
-- isolated 3x
-- TP **1.6280**
-- SL **1.5140**
+### Variational XRP perpetual — CLOSED
+USER_CONFIRMED close update: 2026-09-27 03:22 Asia/Bangkok.
+- former LONG: **77.12 XRP @ 1.55589**
+- stored stop/lower bound: **1.5140**
+- user confirms the lower bound was hit and the position closed
+- remaining venue balance was withdrawn and converted back to Solana USDC
+- gross reference if fully closed exactly at 1.5140: **~-3.23 USDC**, before funding/fees/spread/slippage
+- exact venue realized PnL: **UNRESOLVED** without execution/funding/fee data
 
-Current Binance public XRP mark at ~16:32: **1.53882547**.
-Public mark history since the user screenshot did not cross either stored exit level.
-If the private position remains unchanged:
-- estimated unrealized PnL: **~-1.3160 USD**
-- prior account equity at +0.97 uPnL was 50.87 USD; implied current venue equity is roughly **48.58 USD** using the public-mark estimate.
-
-This is a market estimate, not a direct Variational account read.
+This position is no longer active and is removed from hourly Mission monitoring.
 
 ## Non-fungible / non-priced holdings
 - UNICRED NFT #230 on Unichain
