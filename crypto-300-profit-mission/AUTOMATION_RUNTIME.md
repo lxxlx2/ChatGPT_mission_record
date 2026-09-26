@@ -1,6 +1,6 @@
 # Existing $300 Crypto Automation Runtime
 
-Updated: 2026-09-26 14:12 Asia/Bangkok
+Updated: 2026-09-26 14:18 Asia/Bangkok
 Mode: FACTUAL_PORTFOLIO_TELEMETRY
 Schedule: hourly at :29 Asia/Bangkok
 
@@ -26,7 +26,7 @@ Every hour read the canonical wallets using connected sources.
 
 Required:
 - Ethereum: canonical USDC + native ETH
-- Solana: canonical USDC + native SOL
+- Solana: canonical USDC + native SOL + both legacy SPL Token and Token-2022 active holdings
 - BNB Chain: canonical USDC + native BNB + canonical GSTOCK balance
 - Robinhood Chain: native ETH + canonical PONS
 - supported known active liquid tokens
@@ -36,6 +36,11 @@ Daily / when changed:
 - Unichain
 - Ink
 - known NFTs / points when supported
+
+Token-2022 correction:
+- the canonical Solana wallet currently holds e/acc and PAID in Token-2022 accounts;
+- every Solana wallet scan must query both the legacy SPL Token program and known Token-2022 mints/accounts;
+- never conclude that an asset is absent from a legacy-program-only scan.
 
 Rules:
 - failed read = UNAVAILABLE
