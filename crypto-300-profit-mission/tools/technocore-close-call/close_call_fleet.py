@@ -1550,6 +1550,7 @@ def cmd_enable_dense(args) -> None:
     dense["qty_safety"] = str(DENSE_QTY_SAFETY)
     dense["legacy_static_frozen_after"] = sorted(state.get("static", {}).keys())
     dense["legacy_bracket_frozen_round"] = (state.get("bracket") or {}).get("round")
+    state["legacy_strategy_frozen"] = True
     dense.setdefault("next_index", 1)
     dense.setdefault("tickets", [])
     save_state(state)
@@ -1620,6 +1621,16 @@ def autopilot_iteration(late_minutes: int = 180) -> dict:
         }
         save_state(state)
         return result
+
+    if state.get("legacy_strategy_frozen"):
+        save_state(state)
+        return {
+            "event": "legacy_frozen_heartbeat",
+            "sweep": pr["n"],
+            "ref": str(pr["px"]),
+            "age_s": pr["age_s"],
+            "reason": "legacy static/bracket automation remains frozen",
+        }
 
     for cohort, due_text in STATIC_SCHEDULE_UTC.items():
         k = f"{cohort:02d}"
