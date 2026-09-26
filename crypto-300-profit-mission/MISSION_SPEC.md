@@ -80,7 +80,7 @@ Current accounting buckets:
 - JUMP conditional reserve: 400 USDC.
 - short-window opportunity reserve: 150 USDC.
 - ETH conditional reserve: 100 USDC.
-- PONS: separate 50 USDT margin budget.
+- PONS: original 50-USDT sleeve is now split between the remaining Binance futures position and Robinhood Chain spot PONS + gas; the old 0.5850 and 0.5450 averaging orders are canceled.
 - low-risk interest bucket: excluded from Mission.
 
 Wallet balance changes are not PnL unless transaction history and cost basis support that conclusion.
@@ -90,12 +90,16 @@ Wallet balance changes are not PnL unless transaction history and cost basis sup
 ### PONS
 `positions/pons.md`
 
-Automation may report only:
-- current public market state;
-- whether a stored stop / breakout / stale-order threshold was crossed;
-- private order/fill state only when USER_CONFIRMED.
+Automation may report:
+- current public market state for the remaining futures position;
+- crossing of the stored 0.4980 stop / material leverage-risk thresholds;
+- fresh DIRECT_CHAIN Robinhood PONS spot balance and native gas;
+- material unexpected wallet delta;
+- private futures order/fill state only when USER_CONFIRMED.
 
-No automatic order modification or budget change.
+The prior 0.5850 and 0.5450 averaging bids are canceled and must not be monitored as live orders or recreated automatically.
+
+No automatic order modification, averaging order, budget change or spot/futures reallocation.
 
 ### XRP / Variational
 `positions/xrp-variational.md`
