@@ -510,6 +510,18 @@ def submit_pair(state: dict, long_label: str, short_label: str, prefix: str) -> 
         "buy", qty, px, pr["n"] + 2, tid,
     )
     response = post_signed(state, state["room"], long_label, text)
+    submission = None
+    for rec in reversed(parse_export(state["room"])):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "trade":
+            continue
+        if ((p.get("terms") or {}).get("id")) == tid:
+            submission = {
+                "seq": rec.get("seq"),
+                "ts": rec.get("ts"),
+                "from": rec.get("from"),
+            }
+            break
     return {
         "trade_id": tid,
         "long": long_label,
@@ -517,7 +529,8 @@ def submit_pair(state: dict, long_label: str, short_label: str, prefix: str) -> 
         "qty": str(qty),
         "px": str(px),
         "sweep": pr["n"],
-        "response": response.strip(),
+        "submission": submission,
+        "post_ack": response.strip().splitlines()[0] if response.strip() else "",
     }
 
 
@@ -635,23 +648,50 @@ def cmd_check_trade(args) -> None:
 def cmd_open_bracket(_args) -> None:
     state = load_state()
     require_fleet_gate(state)
-    if int(state["bracket"].get("round", 0)) != 0:
-        raise SystemExit("bracket round 1 already initialized")
-    pairs = []
-    for i in range(1, 17, 2):
-        long_label = f"BR-{i:02d}"
-        short_label = f"BR-{i+1:02d}"
-        res = submit_pair(state, long_label, short_label, f"br1-{i:02d}")
-        pairs.append(res)
-        print(json.dumps(res))
+
+    bracket = state.setdefault("bracket", {"round": 0, "pairs": []})
+    round_no = int(bracket.get("round", 0))
+    if round_no not in (0, 1):
+        raise SystemExit(f"bracket is already beyond round 1: round={round_no}")
+
+    if round_no == 0:
+        bracket.update({
+            "round": 1,
+            "status": "opening",
+            "opened_at": datetime.now(timezone.utc).isoformat(),
+            "pairs": [],
+        })
+        save_state(state)
+
+    existing = {p.get("long"): p for p in bracket.get("pairs", []) if isinstance(p, dict)}
+    targets = [
+        (f"BR-{i:02d}", f"BR-{i+1:02d}", f"br1-{i:02d}")
+        for i in range(1, 17, 2)
+    ]
+
+    for long_label, short_label, prefix in targets:
+        if long_label in existing:
+            print("skip already submitted:", long_label, existing[long_label].get("trade_id"))
+            continue
+        res = submit_pair(state, long_label, short_label, prefix)
+        bracket["pairs"].append(res)
+        bracket["status"] = "opening"
+        bracket["last_submit_at"] = datetime.now(timezone.utc).isoformat()
+        save_state(state)
+        existing[long_label] = res
+        print(json.dumps(res, ensure_ascii=False))
         time.sleep(0.2)
-    state["bracket"] = {
-        "round": 1,
-        "opened_at": datetime.now(timezone.utc).isoformat(),
-        "pairs": pairs,
-    }
+
+    if len(bracket.get("pairs", [])) != 8:
+        raise SystemExit(
+            f"bracket round 1 partial: {len(bracket.get('pairs', []))}/8 pairs saved; "
+            "re-run open-bracket to resume without duplicating completed pairs"
+        )
+
+    bracket["status"] = "submitted"
+    bracket["submitted_at"] = datetime.now(timezone.utc).isoformat()
     save_state(state)
-    print("bracket round 1 submitted")
+    print("bracket round 1 submitted: 8/8 pairs")
 
 
 def main() -> None:
