@@ -1,6 +1,6 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-26 16:33 Asia/Bangkok
+Updated: 2026-09-26 16:35 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Accounting rules
@@ -81,16 +81,30 @@ Historical verified first-sale phase:
 
 Later e/acc reductions, including the latest 180.916452 outflow, are not yet fully reconciled to exact proceeds/fees. Current public e/acc price feeds conflict materially, so total e/acc realized + unrealized PnL remains **UNRESOLVED**.
 
+### KARDASHEV / Solana
+- DIRECT_CHAIN remaining: **4,103.186501 KARDASHEV**
+- original capital: **20.00 USDC**
+- total sold: **14,691.367277**
+- gross routed exit proceeds observed: **~0.245051759 SOL**
+- total listed network fees across entry + three exits: **~0.001318107 SOL**
+- fresh PumpSwap reserves: **35,838,316.721083 KARDASHEV / 610.290341092 SOL**
+- at SOL ~120.01, current pool-implied price: **~0.00204365 USD**
+- remaining mark value: **~8.3855 USD**
+- current total-position PnL reference: **~+17.64 USD**, after listed network fees
+- status: **PRINCIPAL_RECOVERED / PROFIT_POSITION**
+
+This mark uses current pool reserves and current SOL/USD reference. Chain quantities are authoritative; USD PnL remains a market-value estimate.
 ## Partial PnL view
 - GSTOCK: ~-1.46
 - PONS spot: ~-1.05
 - PONS futures: ~-0.09 including latest screenshoted realized reference
 - XRP Variational: ~-1.32 estimated from public mark
+- KARDASHEV: ~+17.64 current total-position estimate
 - PAID: ~-40.1 to -32.0 indicative
 
-Active-position subtotal: approximately **-44.0 to -35.9 USD**, excluding e/acc, gas/funding not already captured, NFTs/points, and historical closed sleeves.
+Active-position subtotal: approximately **-26.4 to -18.3 USD**, excluding e/acc, gas/funding not already captured, NFTs/points, and historical closed sleeves.
 
-Adding only the already verified first-phase e/acc cash-recovery surplus of about +15.11 gives a **partial reconciled result around -28.9 to -20.8 USD**.
+Adding only the already verified first-phase e/acc cash-recovery surplus of about +15.11 gives a **partial reconciled result around -11.3 to -3.2 USD**.
 
 This is not the final Mission PnL. It excludes:
 - later e/acc sale proceeds/fees;
@@ -101,12 +115,12 @@ This is not the final Mission PnL. It excludes:
 
 ## Current capital distribution
 - canonical stablecoins: **667.141577 USDC**
-- strict directly priced on-chain liquid NAV: **~788.91 USD**, excluding PAID/e/acc and unpriced NFTs/points
-- indicative direct-chain liquid NAV after adding PAID/e/acc public-reference ranges: roughly **799-808 USD**
+- strict directly priced on-chain liquid NAV: **~797.29 USD**, excluding PAID/e/acc and unpriced NFTs/points
+- indicative direct-chain liquid NAV after adding PAID/e/acc public-reference ranges: roughly **807-816 USD**
 - Binance PONS isolated margin reference: ~13.20 USDT plus current estimated uPnL
 - Variational estimated current venue equity: ~48.58 USD from prior equity base plus current public-mark PnL estimate
 
-Rough all-tracked liquid-value range: **~861-870 USD**, excluding NFTs/points/unpriced receipts and the separate low-risk interest bucket.
+Rough all-tracked liquid-value range: **~869-878 USD**, excluding NFTs/points/unpriced receipts and the separate low-risk interest bucket.
 
 ## Reserved / structural capital
 - JUMP reserve: 400 USDC on Ethereum.
