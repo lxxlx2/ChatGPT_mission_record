@@ -82,6 +82,7 @@ def snapshot() -> dict:
 
     static_done = sorted(state.get("static", {}).keys())
     bracket = state.get("bracket") or {}
+    dense = state.get("dense") or {}
 
     mark = None
     if isinstance(pnl, dict) and pnl.get("mark") is not None:
@@ -147,6 +148,8 @@ def snapshot() -> dict:
     submitted_wallets = len(static_done) * 2
     if int(bracket.get("round", 0) or 0) >= 1:
         submitted_wallets += 2 * len(bracket.get("pairs") or [])
+    dynamic_keys = [k for k in state.get("keys", {}) if k.startswith("DENSE-")]
+    submitted_wallets += len(dynamic_keys)
 
     ap = state.get("autopilot") or {}
     last_seen_at = ap.get("last_seen_at")
@@ -207,6 +210,28 @@ def snapshot() -> dict:
         system_status = "WAITING"
         system_text = f"{next_event_text} 已到时间，后台正在等待执行条件"
         user_action = "不用操作，后台会自动等待 fresh ref / gate 后执行"
+
+    if dense.get("enabled"):
+        pending = dense.get("pending") or {}
+        if pending:
+            if pending.get("status") == "registered":
+                next_event_text = f"Dense 第 {pending.get('index')} 组双向票，等待下一 fresh sweep 提交"
+                next_event_at = None
+                next_event_due = True
+                next_event_lag_s = 0
+            else:
+                next_event_text = f"Dense 第 {pending.get('index')} 组正在注册"
+                next_event_at = None
+                next_event_due = True
+                next_event_lag_s = 0
+        else:
+            next_event_text = "下一 fresh sweep 创建新一组双向 favored tickets"
+            next_event_at = None
+            next_event_due = False
+            next_event_lag_s = 0
+        if system_status == "OK":
+            system_text = "高密度双向策略正在自动运行"
+            user_action = "现在不用做任何操作"
 
     target_to_prize = None
     if best_edge is not None and prize_cutoff is not None and mark is not None:
@@ -297,6 +322,10 @@ def snapshot() -> dict:
         "bracket_status": bracket.get("status"),
         "bracket_pairs": len(bracket.get("pairs") or []),
         "submitted_wallets": submitted_wallets,
+        "dense_enabled": bool(dense.get("enabled")),
+        "dense_submitted_sets": len(dense.get("tickets") or []),
+        "dense_pending": dense.get("pending"),
+        "dense_last_ticket": dense.get("last_ticket"),
         "best_gross_edge": (
             {
                 "name": best_edge["name"],
@@ -447,8 +476,11 @@ async function refresh(){
     dot.style.background=d.system_status==='OK'?'var(--good)':(d.system_status==='WAITING'?'var(--warn)':'var(--bad)');
     document.getElementById('systemText').textContent=d.system_text;
     document.getElementById('userAction').textContent='你现在需要做什么：'+d.user_action;
+    const lt=d.dense_last_ticket;
     const la=d.last_action;
-    if(la){
+    if(d.dense_enabled && lt){
+      document.getElementById('lastAction').textContent='最近自动动作：Dense #'+lt.index+' 双向票已提交 · ref '+lt.ref+' · qty '+lt.qty;
+    }else if(la){
       const actionName=la.action==='open_static'?('Static T'+la.cohort+' 已提交'):String(la.action||'自动动作');
       document.getElementById('lastAction').textContent='最近自动动作：'+actionName+(la.at?' · '+new Date(la.at).toLocaleString():'');
     }else{
@@ -495,13 +527,23 @@ async function refresh(){
       document.getElementById('nearestTarget').textContent=near+'。按当前奖区线粗算，目标会动态变化，实际 clawback 可能提高门槛。';
     }else document.getElementById('nearestTarget').textContent='暂无目标估算。';
 
-    document.getElementById('staticTitle').textContent='Static '+d.static_done+' / '+d.static_total;
-    document.getElementById('staticRemain').textContent='还剩 '+Math.max(0,d.static_total-d.static_done)+' 组';
-    document.getElementById('staticFill').style.width=(100*d.static_done/d.static_total)+'%';
-    document.getElementById('bracketTitle').textContent='Bracket R'+(d.bracket_round??'-')+' / 4';
-    document.getElementById('bracketHint').textContent=(d.bracket_status??'-')+' · '+d.bracket_pairs+' pairs';
-    document.getElementById('bracketFill').style.width=(25*Number(d.bracket_round||0))+'%';
-    document.getElementById('walletText').textContent='已进入策略流程：'+d.submitted_wallets+' / 52 个钱包';
+    if(d.dense_enabled){
+      document.getElementById('staticTitle').textContent='Dense 双向票 '+d.dense_submitted_sets+' 组';
+      document.getElementById('staticRemain').textContent='每个 fresh sweep 自动新增 1 组';
+      document.getElementById('staticFill').style.width='100%';
+      document.getElementById('bracketTitle').textContent='旧策略已冻结';
+      document.getElementById('bracketHint').textContent='保留 Static '+d.static_done+' 组 + Bracket R'+(d.bracket_round??'-')+' 现有仓位，不再继续加仓/轮换';
+      document.getElementById('bracketFill').style.width='100%';
+      document.getElementById('walletText').textContent='本地已创建策略钱包：'+d.submitted_wallets+' 个 · Dense 会继续按 sweep 增加';
+    }else{
+      document.getElementById('staticTitle').textContent='Static '+d.static_done+' / '+d.static_total;
+      document.getElementById('staticRemain').textContent='还剩 '+Math.max(0,d.static_total-d.static_done)+' 组';
+      document.getElementById('staticFill').style.width=(100*d.static_done/d.static_total)+'%';
+      document.getElementById('bracketTitle').textContent='Bracket R'+(d.bracket_round??'-')+' / 4';
+      document.getElementById('bracketHint').textContent=(d.bracket_status??'-')+' · '+d.bracket_pairs+' pairs';
+      document.getElementById('bracketFill').style.width=(25*Number(d.bracket_round||0))+'%';
+      document.getElementById('walletText').textContent='已进入策略流程：'+d.submitted_wallets+' / 52 个钱包';
+    }
 
     document.getElementById('boardCount').textContent='公开 Top '+d.board_size;
     document.getElementById('boardSummary').textContent=d.ours_on_board.length?'我们的钱包已出现在公开榜，绿色行为我们的。':'当前我们的钱包还没上榜，下面主要是竞争对手。';
