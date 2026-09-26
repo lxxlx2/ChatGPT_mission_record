@@ -1,6 +1,6 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-27 03:22 Asia/Bangkok
+Updated: 2026-09-27 03:40 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Accounting rules
@@ -113,7 +113,7 @@ This is not the final Mission PnL. It excludes:
 - exact current Binance/Variational funding and private account fees.
 
 ## Current capital distribution
-- canonical stablecoins: **728.600905 USDC**
+- canonical on-chain stablecoins: **728.600906 USDC**
 - strict directly priced on-chain liquid NAV: **~797.29 USD**, excluding PAID/e/acc and unpriced NFTs/points
 - indicative direct-chain liquid NAV after adding PAID/e/acc public-reference ranges: roughly **807-816 USD**
 - Binance PONS isolated margin reference: ~13.20 USDT plus current estimated uPnL
@@ -125,3 +125,25 @@ Prior all-tracked liquid-value range is stale after the Variational closeout and
 - ETH conditional reserve: 100 USDC accounting target; no live ETH Mission trade confirmed.
 - opportunity capital is already distributed across Solana/BNB/Robinhood/private venues and must not be double-counted.
 - separate ~500 USD-equivalent low-risk interest bucket remains outside speculative Mission accounting.
+
+
+## Capital-location update — 2026-09-27 03:40
+
+USER_CONFIRMED:
+- apart from the Binance PONS perpetual and the combined earn bucket, tracked capital is on-chain;
+- former 500 + 98 earn labels are consolidated to **598 USD-equivalent**;
+- Variational XRP is closed and withdrawn;
+- no active Variational derivative exposure remains.
+
+Fresh DIRECT_CHAIN:
+- Solana USDC: **328.018516**
+- e/acc: **0**
+- KARDASHEV: **0**
+- PAID: **947.685473**
+- total canonical on-chain stablecoins: **728.600906 USDC**
+
+Fresh public Binance PONS mark: **0.63688970**.
+If the latest user-confirmed 64-PONS long @ 0.6250 remains unchanged:
+- estimated uPnL: **~+0.7609 USDT** before fresh funding/fees.
+
+The **598 USD-equivalent earn bucket is capital, not PnL**, and is tracked as one combined off-chain balance.
