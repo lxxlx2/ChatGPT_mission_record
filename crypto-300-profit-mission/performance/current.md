@@ -1,6 +1,6 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-26 16:35 Asia/Bangkok
+Updated: 2026-09-27 03:22 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Accounting rules
@@ -45,19 +45,18 @@ Assuming no manual private-account change:
 
 No stored TP or stop was crossed in the public mark path after the latest private screenshot.
 
-### XRP / Variational
-Latest USER_CONFIRMED:
-- LONG 77.12 XRP @ **1.55589**
-- isolated 3x
-- TP 1.6280
-- SL 1.5140
+### XRP / Variational — CLOSED
+USER_CONFIRMED:
+- former LONG: 77.12 XRP @ **1.55589**
+- stored stop/lower bound: **1.5140**
+- lower bound was hit and the position closed
+- remaining venue balance was withdrawn and converted back to Solana USDC
 
-Current Binance public XRP mark: **1.53882547**.
-Assuming the Variational position remains unchanged:
-- estimated current uPnL: **~-1.3160 USD**
-- no public-mark crossing of 1.6280 or 1.5140 was observed after the latest private screenshot
+Gross reference if the full position closed exactly at 1.5140:
+- **~-3.23 USDC** before funding, fees, spread and stop slippage
 
-Exact venue PnL remains private-source dependent.
+Exact realized venue PnL remains **UNRESOLVED** until execution/funding/fee data is available.
+Status: **CLOSED / STOP_LOSS_TRIGGERED**.
 
 ### PAID / Solana
 - DIRECT_CHAIN quantity: **947.685473 PAID**
@@ -69,7 +68,7 @@ Indicative PAID mark PnL range: **~-40.1 to -32.0 USD**.
 Keep this as MARKET_ESTIMATE until an execution-grade quote is reconciled.
 
 ### e/acc / Solana
-- DIRECT_CHAIN current balance: **542.749359 e/acc**
+- DIRECT_CHAIN current balance: **0 e/acc**
 - another **180.916452 e/acc** has left the wallet since the 14:18 snapshot, confirmed by finalized chain data
 
 Historical verified first-sale phase:
@@ -79,7 +78,7 @@ Historical verified first-sale phase:
 - first-phase net cash recovery: about **55.11 USD**
 - cash recovered above original budget at that stage: about **+15.11 USD**, while residual e/acc still remained
 
-Later e/acc reductions, including the latest 180.916452 outflow, are not yet fully reconciled to exact proceeds/fees. Current public e/acc price feeds conflict materially, so total e/acc realized + unrealized PnL remains **UNRESOLVED**.
+Fresh finalized RPC now shows the e/acc position fully exited (**0 balance**). Later sale legs are still not fully reconciled to exact proceeds/fees, so total e/acc realized PnL remains **UNRESOLVED** even though there is no residual token exposure.
 
 ### KARDASHEV / Solana
 - DIRECT_CHAIN remaining: **4,103.186501 KARDASHEV**
@@ -98,13 +97,13 @@ This mark uses current pool reserves and current SOL/USD reference. Chain quanti
 - GSTOCK: ~-1.46
 - PONS spot: ~-1.05
 - PONS futures: ~-0.09 including latest screenshoted realized reference
-- XRP Variational: ~-1.32 estimated from public mark
+- XRP Variational: **closed**, gross stop reference ~-3.23 before private venue fees/funding/slippage
 - KARDASHEV: ~+17.64 current total-position estimate
 - PAID: ~-40.1 to -32.0 indicative
 
-Active-position subtotal: approximately **-26.4 to -18.3 USD**, excluding e/acc, gas/funding not already captured, NFTs/points, and historical closed sleeves.
+The old active-position subtotal is superseded because XRP is now closed and Solana/e/acc state changed.
 
-Adding only the already verified first-phase e/acc cash-recovery surplus of about +15.11 gives a **partial reconciled result around -11.3 to -3.2 USD**.
+Using only the previous partial framework and replacing the prior XRP mark estimate (~-1.32) with the gross stop reference (~-3.23), the comparable partial reconciled range would shift by about **-1.91 USD**, to roughly **-13.2 to -5.1 USD**. This remains provisional because later e/acc proceeds and exact Variational fees/funding are not fully reconciled.
 
 This is not the final Mission PnL. It excludes:
 - later e/acc sale proceeds/fees;
@@ -114,13 +113,12 @@ This is not the final Mission PnL. It excludes:
 - exact current Binance/Variational funding and private account fees.
 
 ## Current capital distribution
-- canonical stablecoins: **667.141577 USDC**
+- canonical stablecoins: **728.600905 USDC**
 - strict directly priced on-chain liquid NAV: **~797.29 USD**, excluding PAID/e/acc and unpriced NFTs/points
 - indicative direct-chain liquid NAV after adding PAID/e/acc public-reference ranges: roughly **807-816 USD**
 - Binance PONS isolated margin reference: ~13.20 USDT plus current estimated uPnL
-- Variational estimated current venue equity: ~48.58 USD from prior equity base plus current public-mark PnL estimate
 
-Rough all-tracked liquid-value range: **~869-878 USD**, excluding NFTs/points/unpriced receipts and the separate low-risk interest bucket.
+Prior all-tracked liquid-value range is stale after the Variational closeout and Solana USDC increase; recompute on the next full cross-chain mark refresh.
 
 ## Reserved / structural capital
 - JUMP reserve: 400 USDC on Ethereum.
