@@ -452,7 +452,7 @@ async function refresh(){
     document.getElementById('leader').textContent=fmt(d.leader_score);
 
     const best=d.best_gross_edge;
-    let ourScore='-87.27',scoreType='策略估算 Score',gapText='暂无可比数据';
+    let ourScore='-',scoreType='策略估算 Score',gapText='暂无可比数据';
     if(d.best_ours){ourScore=fmt(d.best_ours.score);scoreType='官方 Score · '+d.best_ours.label}
     else if(best){ourScore=fmt(best.estimated_score);scoreType='估算 Score · '+best.name}
     document.getElementById('ourScore').textContent=ourScore+' POLF';
