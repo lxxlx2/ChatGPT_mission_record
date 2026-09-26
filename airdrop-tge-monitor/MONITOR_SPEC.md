@@ -95,7 +95,7 @@ state/current.md 维护：
 - daily_summary_last_date
 - open_urgent_events
 
-同一 shard 超过 6 小时未成功覆盖，在下一轮记录 HEALTH_GAP，并通知用户一次。
+同一 shard 超过 6 小时未成功覆盖，在下一轮记录 HEALTH_GAP 到 GitHub；不发 Gmail/ChatGPT。监控健康问题属于内部审计噪声。
 
 
 ## Scheduler proof
