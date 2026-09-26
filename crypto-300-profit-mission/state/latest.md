@@ -1,6 +1,6 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-26 13:00 Asia/Bangkok
+Updated: 2026-09-26 13:46 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Main status: REPAIR_APPLIED_AWAITING_AUTOMATIC_VALIDATION
@@ -50,26 +50,24 @@ Private venue state remains user-confirmed until refreshed directly.
 
 ### PONS
 
-USER_CONFIRMED Binance futures state at 2026-09-26 12:58:
-- LONG PONSUSDT, isolated 3x.
-- entry 0.6250.
-- position notional 41.32 USDT.
-- margin 13.20 USDT.
-- mark 0.6451307.
-- unrealized PnL +1.31 USDT.
-- realized PnL -0.13 USDT.
-- liquidation 0.4293629.
-- hard stop 0.4980.
-- 0.5850 and 0.5450 averaging orders are CANCELED.
+USER_CONFIRMED Binance futures state at 2026-09-26 13:45:
+- LONG 64 PONS, isolated 3x, entry 0.6250.
+- TP market/reduce-only: 25 PONS @ 0.668; 22 PONS @ 0.704; 16 PONS @ 0.739.
+- TP coverage = 63/64 PONS = 98.4375%; **1 PONS residual has no TP**.
+- hard stop: Mark <= 0.498, market/reduce-only, 100%.
+- 0.5850 and 0.5450 averaging bids remain canceled.
 
-DIRECT_CHAIN Robinhood Chain:
-- 54.799953441979625 PONS.
-- current spot mark value ~35.34 USD.
-- 0.000826657957256326 ETH gas, ~2.22 USD at the current ETH reference.
+DIRECT_CHAIN Robinhood Chain at ~13:46:
+- wallet PONS: **54.799953441979625 PONS**.
+- native ETH gas: **0.000825190918816326 ETH**.
+- no outgoing PONS transfer since the acquisition swap.
 
-The user confirms released order capital was withdrawn and converted to PONS spot + gas.
-Do not treat the canceled deep bids as pending.
-Exact spot cost basis/fees remain UNRESOLVED.
+USER_CONFIRMED spot orders:
+- TP: 11 PONS @ 0.668; 16.4 @ 0.704; 16.4 @ 0.739; 11 @ 0.845.
+- downside triggers: 27.39 PONS @ 0.598 and 27.39 @ 0.575.
+- after any spot TP fill, downside order quantities require REVIEW_REQUIRED because their fixed amounts may exceed the reduced wallet balance.
+
+Verified spot acquisition: 35.291194 USDG -> 54.799953441979625 PONS, average ~0.64400044 USDG/PONS.
 
 ## ETH / BTC / JUMP
 
