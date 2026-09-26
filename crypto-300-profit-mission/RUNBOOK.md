@@ -161,7 +161,7 @@ Otherwise:
 
 ## 5. Alert format
 
-Send Gmail + ChatGPT only for a new factual trigger required by MISSION_SPEC.
+Send Gmail + ChatGPT only for a new substantive crypto trigger required by MISSION_SPEC. Monitoring/runtime/source/audit failures are GitHub-only and never email the user.
 
 Alert structure:
 - trigger type;
@@ -225,8 +225,8 @@ If a discovery lane fails after critical checks completed, finalize partial rath
 ## 8. Health
 
 - scheduler trigger without finalized audit = missing_audit;
-- successful-run gap >90m = MONITOR_HEALTH_GAP on recovery;
-- same mandatory lane unavailable twice consecutively = MONITOR_LANE_FAILURE;
+- successful-run gap >90m = internal health gap recorded in GitHub only;
+- same mandatory lane unavailable twice consecutively = internal lane failure recorded in GitHub only;
 - temporary failure never pauses/disables task.
 
 ## 9. Success
