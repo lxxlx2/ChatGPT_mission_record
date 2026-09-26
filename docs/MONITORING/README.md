@@ -70,8 +70,10 @@ Primary current-state files:
 A scheduler timestamp alone is not success.
 
 Current audit convention:
-- `HHMMSS-start.md`
-- `HHMMSS-final.md`
+- mandatory: `HHMMSS-final.md`
+- historical/best-effort: `HHMMSS-start.md`
+
+The automatic path no longer requires a start marker because that write was an unnecessary failure point.
 
 A successful final audit is the canonical proof that the run completed.
 
