@@ -44,20 +44,39 @@ Official Terms dated 2025-10-22:
 
 These provisions explain the team's contractual defense but do not eliminate delivery/counterparty risk.
 
-## Raise-size conflict
+## Raise-size reconciliation: ONCHAIN CONFIRMED
 
-There is a material inconsistency that must remain explicit.
+The apparent 13,000.5 vs ~19,355 SOL conflict is now resolved from chain data.
 
-The current official presale page reports:
-- 13,000.5 SOL
-- 4,442 backers
+Canonical presale collection wallet identified directly from the user's deposits:
+`STRAnDNZFwxHHrVM54SgxsBCoFkZfajzAeVvckJvYhU`
 
-Other contemporaneous evidence reports approximately 19.3K SOL:
-- Block Stranding social post was mirrored as "19K+ SOL raised and 4,400 backers";
-- NFLUENCE, a marketing agency that lists Block Stranding as a client/campaign, reports 19,300 SOL raised and 837K impressions;
-- community copies frequently cite 19,355 SOL / 4,441 backers.
+The wallet currently holds approximately **13,000.503 SOL**, matching the current official presale page's "13,000.5 SOL" figure almost exactly.
 
-Do not silently choose one denominator for final allocation. The user's allocation dashboard / official checker is needed to resolve the exact number of STRAND owed.
+Confirmed large post-sale outflows from that same presale wallet:
+- 2026-06-22: 355.5 SOL
+- 2026-06-22: 1,000 SOL
+- 2026-06-26: 3,000 SOL
+- 2026-07-06: 2,000 SOL
+- total: **6,355.5 SOL**
+
+Each large outflow first moved to a fresh/intermediate wallet. Each intermediate wallet then forwarded essentially the full amount within minutes to:
+`6LY1JzAFVZsP2a2xKrtU6znQMQ5h4i7tocWdgrkZzkzF`
+
+Solscan publicly labels `6LY1J...` as **Kraken Hot Wallet**.
+
+Reconciliation:
+- current presale wallet balance: ~13,000.503 SOL
+- confirmed large outflows: 6,355.5 SOL
+- sum: ~19,356.003 SOL
+- there is also a confirmed 1 SOL post-sale inbound transfer plus small dust transfers
+- removing those post-sale inflows reconciles the original presale gross to approximately **19,355 SOL**
+
+Conclusion:
+- ~19,355 SOL is the gross presale raise.
+- 13,000.5 SOL is effectively the remaining balance after the later 6,355.5 SOL withdrawals, not the gross sale amount.
+- Community claims that more than 6,000 SOL left the presale wallet and reached Kraken are substantially confirmed onchain.
+- A Kraken deposit proves exchange deposit/custody. It does **not** by itself prove that the SOL was sold for fiat/stables or misappropriated.
 
 ## Presale FDV controversy
 
@@ -77,22 +96,58 @@ If total supply is 500M and final FDV is $36M:
 
 The presale site's still-visible "$0.009" field therefore must not be treated as the user's effective final unit cost unless the actual allocation checker proves otherwise.
 
-## Estimated user allocation
+## User's 100 SOL presale deposit: ONCHAIN CONFIRMED
 
-If the operative final sale denominator was 19,355 SOL and the sale pool is 50M STRAND:
+User wallet:
+`BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 
-- base allocation per SOL = about 2,583.31 STRAND;
-- 100 SOL base allocation = about 258,331 STRAND before any boost.
+Three direct transfers to the canonical presale wallet were found:
 
-If the denominator were 19,300 SOL:
-- 100 SOL = about 259,067 STRAND.
+1. **65 SOL**
+   - time: 2025-10-22 20:47:58 UTC
+   - tx: `3FxY6NQXyE2DgXAV4PCmpdPuXv5nfze27U3pJY6PWnuFRe4YCRjNpCihtkvAcSBMm51wgBjhR3UqhrRgPUyRrHpv`
+   - destination: `STRAnDNZFwxHHrVM54SgxsBCoFkZfajzAeVvckJvYhU`
+   - Binance SOLUSDT 1-minute candle around the transaction: ~$180.41 close
 
-If the official site's 13,000.5 SOL were the operative denominator:
-- 100 SOL = about 384,601 STRAND.
+2. **15 SOL**
+   - time: 2025-10-24 16:55:00 UTC
+   - tx: `2JEqA6hL6V9zUyEFwLMxkJaHCPGhnU6E5JcEjrUBpeGNgU2RYXhCwArMrs51G3DCT2Nuc6YixJaM6yzbRZvUobhh`
+   - destination: same presale wallet
+   - Binance SOLUSDT 1-minute candle: ~$190.20 close
 
-This discrepancy is too large to ignore. Exact user allocation must be taken from the official checker/dashboard or reconstructed from the sale allocation rules and wallet records.
+3. **20 SOL**
+   - time: 2025-10-24 17:12:10 UTC
+   - tx: `2MEmfs6JuUSug2vJvrNDGMfP8SfMrCXDviAAq21BUomNFWcF3SCVyvccTdWuoaKbpRzY5rogtmEzMbismZbxJXeV`
+   - destination: same presale wallet
+   - Binance SOLUSDT 1-minute candle: ~$190.65 close
 
-Any Token Boost / WL boost increases the user's actual allocation and should be recorded separately.
+Total: **100 SOL confirmed onchain**.
+
+Historical USD-equivalent cost basis using the transaction-minute SOL prices:
+- 65 × $180.41 ≈ $11,726.65
+- 15 × $190.20 ≈ $2,853.00
+- 20 × $190.65 ≈ $3,813.00
+- total ≈ **$18,392.65**
+
+Using the high/low ranges of those three one-minute candles gives approximately $18,384-$18,399, so $18.39K is a robust historical USD cost basis.
+
+This historical cost basis is the primary PnL benchmark for the presale. Current value of 100 SOL is a separate opportunity-cost benchmark and must not replace the original cost basis.
+
+## Estimated STRAND allocation
+
+With the onchain-reconciled gross raise of approximately 19,355 SOL, a 500M total supply and 10% / 50M STRAND presale pool:
+
+- base allocation per SOL ≈ 2,583.31 STRAND
+- **100 SOL base allocation ≈ 258,331 STRAND**
+
+Any WL / engagement / referral boost must be added separately after the official allocation checker is recovered.
+
+At 258,331 STRAND:
+- historical USD cost break-even token price ≈ **$0.07120**
+- with 500M supply, historical-cost break-even FDV ≈ **$35.6M**
+- at the team's stated $36M final FDV / $0.072 token price, the base allocation would be worth about **$18,600**, almost exactly the user's original ~$18.39K USD-equivalent contribution.
+
+This strongly supports the interpretation that the final $36M presale FDV was the effective pro-rata sale valuation.
 
 ## Current TGE status: CONFIRMED
 
@@ -218,34 +273,28 @@ Reasons value is not marked zero:
 
 ## 100 SOL position scenarios
 
-Using the 19,355 SOL denominator and 50M sale pool as the working allocation model:
-estimated base allocation ≈ 258,331 STRAND.
+Use the historical contribution value of approximately **$18,393** as the primary cost basis.
 
-Current SOL spot at the 2026-09-26 review: about $120.84; 100 SOL ≈ $12,084.
+Working base allocation: approximately **258,331 STRAND**.
 
-If total supply = 500M:
+If total supply remains 500M:
 
-| TGE FDV | STRAND price | 258,331 STRAND value |
-|---:|---:|---:|
-| $5M | $0.010 | ~$2,583 |
-| $10M | $0.020 | ~$5,167 |
-| $15M | $0.030 | ~$7,750 |
-| $20M | $0.040 | ~$10,333 |
-| $25M | $0.050 | ~$12,917 |
-| $36M | $0.072 | ~$18,600 |
-| $50M | $0.100 | ~$25,833 |
-| $75M | $0.150 | ~$38,750 |
-| $100M | $0.200 | ~$51,666 |
+| TGE FDV | STRAND price | 258,331 STRAND value | vs historical cost |
+|---:|---:|---:|---:|
+| $5M | $0.010 | ~$2,583 | ~0.14x |
+| $10M | $0.020 | ~$5,167 | ~0.28x |
+| $15M | $0.030 | ~$7,750 | ~0.42x |
+| $20M | $0.040 | ~$10,333 | ~0.56x |
+| $25M | $0.050 | ~$12,917 | ~0.70x |
+| $35.6M | $0.0712 | ~$18,393 | ~1.00x |
+| $36M | $0.072 | ~$18,600 | ~1.01x |
+| $50M | $0.100 | ~$25,833 | ~1.40x |
+| $75M | $0.150 | ~$38,750 | ~2.11x |
+| $100M | $0.200 | ~$51,666 | ~2.81x |
 
-Approximate break-even versus the CURRENT USD value of 100 SOL:
-- STRAND ≈ $0.04678
-- FDV ≈ $23.4M
+Historical-cost break-even is therefore approximately $35.6M FDV before slippage, fees and any boost.
 
-Break-even versus the final $36M presale valuation:
-- $0.072 / token
-- $36M FDV
-
-These calculations must be rescaled when the user's exact allocation/boost is confirmed.
+A separate opportunity-cost analysis may compare the position to simply holding the original 100 SOL, but that is not the acquisition-cost PnL basis.
 
 ## Decision state
 
