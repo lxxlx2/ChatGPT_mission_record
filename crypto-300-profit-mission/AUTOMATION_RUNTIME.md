@@ -30,8 +30,7 @@ with:
 - threshold_checks
 - discovery_checks
 - alerts
-- state_write_status
-- health_write_status
+- optional_cache_write_status
 - source/tool errors
 
 A run is complete only when the final file exists.
@@ -68,10 +67,15 @@ Only for a new factual change under an already stored rule:
 
 No new trade plan, size, leverage, order change or capital allocation is generated automatically.
 
-## Writes
+## Persistence
 
-Use fresh SHA for mutable current files.
-If a mutable write fails, record it in the final audit and still create the final audit.
+Append-only start/final audits are canonical for automatic runs.
+
+Mutable files such as `portfolio/current.md`, `state/latest.md` and `health/current.md` are optional caches during automation. Do not require or repeatedly retry them. If a material wallet change is detected:
+- record the new factual values in the final audit;
+- attempt at most one cache update when appropriate;
+- cache-write failure does not downgrade a completed factual run;
+- never lose the final audit because a mutable-file update failed.
 
 Temporary failures never disable/pause the task.
 No Chinese-language websites as evidence.
