@@ -183,33 +183,80 @@ Therefore part of the presale reach was organized growth marketing. High social 
 
 PRIMES also publicly described itself as having powered Block Stranding's social campaign.
 
-## Team / counterparty
+## Team / counterparty and communication risk
 
 Public-facing lead: n0rd / @nrdxhq.
+
+Archived X snapshots show a material change:
+- Around the presale period, his bio was **"Building @blockstranding"**.
+- Current indexed profile snapshots show only **"Building"**.
+- The newest visible original n0rd activity in the indexed profile is from approximately **2025-11-01**, shortly after the presale controversy.
+- No later n0rd posts discussing the June-July 2026 presale-wallet withdrawals, Kraken deposits, TGE delay or treasury use were found.
+
+This does not prove he left the project. It is, however, a meaningful counterparty/transparency risk because the public lead who personally defended the presale structure effectively stopped public communication while the project account continued posting.
 
 Current concerns:
 - pseudonymous / limited independently verifiable founder history;
 - no full independently verified team roster;
 - no clear legal counterparty identified in the Terms;
-- no independently verified large institutional funding round for Block Stranding itself.
+- no independently verified large institutional funding round for Block Stranding itself;
+- public lead inactivity and removal of @blockstranding from the indexed bio.
 
 MagicBlock's funding and reputation belong to MagicBlock, not Block Stranding. A technical partnership must not be reclassified as investment.
 
-## Fund-use allegation
+## Presale treasury / Kraken flow: ONCHAIN CONFIRMED
 
-Community posts allege that a presale wallet transferred thousands of SOL and that some funds reached Kraken.
+Canonical presale collection wallet:
+`STRAnDNZFwxHHrVM54SgxsBCoFkZfajzAeVvckJvYhU`
 
-This review did not establish the canonical presale collection wallet from primary evidence and therefore does NOT mark the allegation confirmed.
+The user's direct deposits prove this was the sale recipient.
 
-Required verification path:
-1. obtain user's presale transaction signature or public sending wallet;
-2. identify the exact recipient program/wallet;
-3. reconstruct all inbound presale deposits;
-4. trace recipient outflows;
-5. cluster exchange deposit addresses only using verified labels;
-6. reconcile amounts against the 13,000.5 vs 19.3K SOL raise discrepancy.
+Confirmed large withdrawals:
+- 2026-06-22: **355.5 SOL**
+- 2026-06-22: **1,000 SOL**
+- 2026-06-26: **3,000 SOL**
+- 2026-07-06: **2,000 SOL**
+- total: **6,355.5 SOL**
 
-Do not call it embezzlement/rug based on screenshots alone.
+Each withdrawal first went to a separate intermediate wallet and then, within minutes, essentially the full amount was forwarded to:
+`6LY1JzAFVZsP2a2xKrtU6znQMQ5h4i7tocWdgrkZzkzF`
+
+Solscan labels that destination as **Kraken Hot Wallet**.
+
+Approximate SOL/USD at the transfer minutes (Binance SOLUSDT 1m):
+- 355.5 SOL at ~$74.84 ≈ **$26.6K**
+- 1,000 SOL at ~$73.59 ≈ **$73.6K**
+- 3,000 SOL at ~$72.57 ≈ **$217.7K**
+- 2,000 SOL at ~$81.56 ≈ **$163.1K**
+- total transfer-time notional ≈ **$481K**
+
+The presale wallet now holds ~13,000.503 SOL. Adding the 6,355.5 SOL of confirmed large withdrawals yields ~19,356 SOL; after accounting for a confirmed later 1 SOL inbound plus dust, this reconciles closely to the ~19,355 SOL gross presale raise.
+
+Evidence boundary:
+- CONFIRMED: presale wallet sent 6,355.5 SOL through intermediate wallets to Kraken.
+- NOT CONFIRMED: what happened inside Kraken.
+- Do not claim the SOL was sold, converted to fiat/stables, or personally misappropriated without offchain exchange records or an admission.
+
+## Disclosure review around the withdrawals
+
+A review of indexed official @blockstranding communications found **no public treasury disclosure explaining these four transfers** and no indexed official statement identifying the Kraken destination as market-making, CEX-listing, payroll, operational spending, custody, hedging or any other stated use.
+
+The timing is notable:
+- Jun 22: 355.5 + 1,000 SOL reached Kraken.
+- Jun 26: another 3,000 SOL reached Kraken.
+- Jun 29: official account said TGE was delayed because of poor market conditions / SOL under $70, rejected refund demands, and warned against "baseless FUD"; the post did not disclose the prior 4,355.5 SOL Kraken transfers.
+- Jul 6: another 2,000 SOL reached Kraken.
+- Jul 10: official replies again said the team was waiting for favorable market conditions; no treasury-transfer explanation was found.
+
+Community users later publicly accused the project of transferring presale proceeds to Kraken. Indexed replies show the allegation being posted directly under/at the official account. No indexed substantive project response explaining the transfers was found during this review.
+
+The presale Terms do not contain a use-of-proceeds section and contain no explicit commitments about treasury custody, liquidity deployment or CEX funding. They give the team broad discretion over allocations/TGE timing. The tokenomics page allocates token supply to categories such as liquidity provision (15%) and CEX listings (7%), but those percentages are token-supply allocations and do not explain how raised SOL proceeds may be used.
+
+Assessment:
+- The chain movement itself is legitimate to flag as a **material transparency issue**.
+- The evidence supports saying **"6,355.5 SOL of presale proceeds was deposited to Kraken without a public explanation found in the reviewed official communications."**
+- The evidence does not support saying **"the team definitely sold or stole the 6,355.5 SOL."**
+- Given the long TGE delay and the public lead's prolonged inactivity, absence of treasury disclosure materially increases counterparty risk.
 
 ## Fake STRAND warning
 
