@@ -122,3 +122,12 @@ These accounts are auxiliary native-token accounts associated historically with 
 - Immutable run audit creation failure is recorded explicitly and retried once with a fresh timestamp/path if the failure is a path collision.
 - Only authentication/authorization failures that persist after retry should be surfaced for manual intervention.
 - Hourly schedule remains minute 29 Asia/Bangkok.
+
+
+## Robinhood / FOMO execution-flow monitoring — 2026-09-26
+- Added Robinhood Chain chain-ID 4663 execution-flow / MEV watch to the authoritative Mission spec.
+- Seed addresses: `0xb49deec1a52eea46f3a6a158f8f9b155809b8c44` and `0x44c0ba0b734d4b7705fcd07ddae9fbbc078d74dd`.
+- Common observed execution contract: `0x68a04a63Fd1d8EAbF167EF48ed0A0EF06c2374d9`.
+- Before a 30-round-trip / 10-token calibration sample is available, use this primarily as an execution-risk filter or supporting signal, not a standalone positive entry trigger.
+- Mission opportunity ingestion is now hourly from the latest approximately 2 hours of `crypto-daily/research/`, so actionable candidates do not wait for the 3-hour medium lane.
+- Every valid Mission trigger now requires both a real Gmail alert to lxx.run688@gmail.com and a concise user-visible ChatGPT alert; NO_ACTION remains silent.
