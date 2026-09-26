@@ -127,8 +127,8 @@ Automatic run audits keep machine-stable time naming.
 Historical audit files are immutable by default and are not bulk-renamed.
 
 Current automatic convention:
-- `HHMMSS-start.md`
-- `HHMMSS-final.md`
+- mandatory completion record: `HHMMSS-final.md`
+- older/best-effort start marker: `HHMMSS-start.md`
 
 Older `HHMMSS.md` / `HHMMSS.json` files remain valid historical records.
 
