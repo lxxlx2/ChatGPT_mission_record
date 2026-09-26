@@ -50,6 +50,12 @@ Fresh RPC read around 2026-09-26 09:18 Asia/Bangkok.
 - native balance: **0.000081643478484768**
 - unsolicited/unknown ERC-20 balances are excluded unless identity and value are verified.
 
+### Arbitrum
+- direct read attempted at 2026-09-26 09:36 Asia/Bangkok.
+- current Alchemy app returned RPC 403 because ARB_MAINNET is not enabled.
+- native ETH / USDC wallet balances: **UNAVAILABLE**.
+- do not estimate from prior transfers or Variational UI.
+
 ### Canonical direct-chain stablecoins
 - Total canonical USDC across Ethereum + Solana + Base + Unichain: **740.407390 USDC**
 
