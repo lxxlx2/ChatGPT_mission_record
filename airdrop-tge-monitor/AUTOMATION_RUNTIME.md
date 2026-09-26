@@ -1,6 +1,6 @@
 # Airdrop / TGE Automatic Runtime
 
-Updated: 2026-09-26 19:55 Asia/Bangkok
+Updated: 2026-09-26 20:35 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Authority for the existing :14 task.
@@ -34,15 +34,15 @@ Temporary failures never disable/pause the task.
 No Chinese-language websites as evidence.
 
 
-## Missed-run recovery
+## Coverage continuity
 
-Before choosing the current shard, inspect the newest final audit.
+Do not double the workload after a missed run.
 
-If the prior scheduled run is missing:
-- process the current shard;
-- also process the one missed shard, capped at two shards total for the recovery run;
-- record `recovered_missed_run: true` and the recovered shard index;
-- do not create a separate automation.
+If a prior final is missing:
+- record the gap in the current final;
+- process only the current urgent set + current shard;
+- rely on the normal 4-hour rotation to restore shard coverage;
+- do not add a second full shard to the same run.
 
 ## Source fallback
 
@@ -54,3 +54,22 @@ If a direct page fails:
 3. only keep `source_unavailable` when current action status still cannot be determined.
 
 Do not downgrade a run merely because one presentation surface is unavailable when equivalent current official evidence is available.
+
+
+## Bounded discovery
+
+For the urgent set and current shard:
+- use one compact/batched English search pass over canonical project names, official handles/domains and action keywords;
+- deep-open official pages only for projects with a plausible current candidate;
+- no-result on a healthy batched search is `checked_no_update`, not `source_unavailable`;
+- reserve `source_unavailable` for actual request/access failures where current action status remains unresolved.
+
+This keeps the hourly run bounded and prevents fallback work from exhausting the cycle.
+
+## Final persistence fallback
+
+At completion:
+1. try `HHMMSS-final.md`;
+2. on write failure, retry once with `HHMMSS-final-retry.md` using a compact audit.
+
+No optional cache write may occur before the final/final-retry attempt.
