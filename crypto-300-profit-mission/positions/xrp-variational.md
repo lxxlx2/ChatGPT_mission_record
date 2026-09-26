@@ -65,3 +65,16 @@ When TP, SL, manual close or partial close occurs:
 - update this file immediately;
 - update performance/current.md with realized PnL only after the close is user-confirmed or venue data is verified;
 - do not treat Variational points as PnL until distributed and economically realizable.
+
+## 2026-09-26 16:33 public-market refresh
+
+Binance public XRPUSDT mark: **1.53882547**.
+
+Since the latest user-confirmed Variational screenshot, the checked public Binance mark path did not cross:
+- TP 1.6280
+- SL 1.5140
+
+If the Variational position remains unchanged at 77.12 XRP @ 1.55589:
+- public-mark implied uPnL: **~-1.3160 USD**
+
+This does not overwrite the private venue state. Exact Variational PnL/equity remains USER_CONFIRMED until a connected/private venue read or newer screenshot is available.
