@@ -1,149 +1,129 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-27 03:40 Asia/Bangkok
+Updated: 2026-09-27 03:57 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Accounting rules
-- internal bridge / chain / venue movements are not PnL;
-- realized PnL needs verified cost, proceeds and fees;
-- private venue positions use latest USER_CONFIRMED state plus public marks only as an estimate;
-- spoof/unpriced tokens and NFTs without executable value are excluded;
-- the wallet contains later capital additions, so current NAV cannot be compared directly with the original $300 mission amount.
+## Core objective
 
-## Current active-position mark-to-market
+Target: **3,000 USD-equivalent Mission net liquidation value**.
+
+Starting asset set:
+- **300 USD cash principal**
+- **six Credits NFTs**: #21646, #21753, #22857, #23042, #23232, #23328
+
+Current original-Credits state:
+- held: **#23042, #23232**
+- sold/transferred out: **#21646, #21753, #22857, #23328**
+- gross matched sale/payment flows: **0.141165 ETH/WETH equivalent** before unresolved seller-side gas/fee reconciliation
+
+The two remaining Credits are active Mission assets. Their 0.25 ETH and 0.40 ETH asks are not executable NAV.
+
+## Performance rules
+
+- External later deposits do not count as Mission profit.
+- The 598 USD-equivalent Binance earn bucket is tracked as an off-chain asset bucket but stays outside speculative Mission performance unless provenance is explicitly reclassified.
+- Internal bridge/venue transfers are not profit.
+- Wallet balance alone is not PnL.
+- Historical NFT proceeds are not added on top of current wallet balances.
+- Private-venue state is USER_CONFIRMED.
+- Unpriced NFTs/tokens stay outside strict liquid NAV.
+- Mission target progress remains UNRESOLVED until capital provenance separates original Mission capital/proceeds from later additions.
+
+## Current active-position marks
 
 ### GSTOCK / BNB Chain
-- cost: **30.00474761 USDC**, before BNB gas
-- received: **1183.5967247073113 GSTOCK**
-- average cost: **~0.0253504821**
-- current Alchemy mark: **~0.0241192634**
-- current value: **~28.5475 USD**
-- unrealized PnL: **~-1.4573 USD (-4.86%)**, before BNB gas
-- status: **FILLED / ACTIVE**
+DIRECT_CHAIN:
+- quantity: **1183.5967247073113**
+- verified USDC cost: **30.00474761**
+- fresh price: **0.024642598080577366 USD**
+- value: **~29.1669 USD**
+- unrealized PnL: **~-0.8378 USD (-2.79%)**, before BNB gas
+- status: **FILLED_ACTIVE**
 
-### PONS Robinhood spot
+### PONS / Robinhood spot
+DIRECT_CHAIN:
 - quantity: **54.799953441979625 PONS**
 - verified cost: **35.291194 USDG**
-- current Alchemy mark: **~0.6247626394**
-- current value: **~34.2370 USD**
-- unrealized mark PnL: **~-1.0542 USD (-2.99%)**
+- fresh price: **0.6268828643699188 USD**
+- value: **~34.3532 USD**
+- mark PnL: **~-0.9380 USD (-2.66%)**
 
-Existing TP/downside orders remain USER_CONFIRMED. No outgoing PONS transfer is reflected in the fresh balance.
+No balance reduction is visible, so there is no direct-chain evidence that a stored spot TP/downside order executed.
 
-### PONS Binance futures
-Latest USER_CONFIRMED private position:
-- LONG 64 PONS @ **0.6250**
+### PONS / Binance futures
+USER_CONFIRMED private position:
+- LONG **64 PONS @ 0.6250**
 - isolated 3x
 - TP 0.668 / 0.704 / 0.739
-- stop 0.498
+- hard stop 0.498
 
-Current Binance public mark: **0.6256**.
-Assuming no manual private-account change:
-- estimated current uPnL: **~+0.0384 USDT**
-- latest screenshoted realized PnL reference: **~-0.13 USDT**
-- estimated trade-result subtotal using those two fields: **~-0.0916 USDT**, before any new funding/fees
-
-No stored TP or stop was crossed in the public mark path after the latest private screenshot.
-
-### XRP / Variational — CLOSED
-USER_CONFIRMED:
-- former LONG: 77.12 XRP @ **1.55589**
-- stored stop/lower bound: **1.5140**
-- lower bound was hit and the position closed
-- remaining venue balance was withdrawn and converted back to Solana USDC
-
-Gross reference if the full position closed exactly at 1.5140:
-- **~-3.23 USDC** before funding, fees, spread and stop slippage
-
-Exact realized venue PnL remains **UNRESOLVED** until execution/funding/fee data is available.
-Status: **CLOSED / STOP_LOSS_TRIGGERED**.
+Fresh public Binance mark: **0.62924862**.
+If the private position is unchanged:
+- estimated uPnL: **~+0.2719 USDT**
+- exact margin/funding/fees remain unresolved without private account readback.
 
 ### PAID / Solana
-- DIRECT_CHAIN quantity: **947.685473 PAID**
-- quantity unchanged from the verified purchase
-- verified total purchase budget: **~50 USD-equivalent** including route cost from the prior execution record
+DIRECT_CHAIN:
+- **947.685473 PAID**
 
-Public PAID price references are currently inconsistent. Recent Pump results imply roughly **9.9-18.0 USD** for the current balance.
-Indicative PAID mark PnL range: **~-40.1 to -32.0 USD**.
-Keep this as MARKET_ESTIMATE until an execution-grade quote is reconciled.
+Connected price endpoint currently returns no price. Current value/PnL therefore remains **UNRESOLVED** rather than using a stale public range.
 
-### e/acc / Solana
-- DIRECT_CHAIN current balance: **0 e/acc**
-- another **180.916452 e/acc** has left the wallet since the 14:18 snapshot, confirmed by finalized chain data
+### Credits NFTs
+DIRECT_CHAIN:
+- **Credit #23042 owned**
+- **Credit #23232 owned**
 
-Historical verified first-sale phase:
-- original budget: about **40 USD**
-- first major sale cash recovery: about **55.68 USD**
-- recorded first-phase network/priority fees: about **0.57 USD**
-- first-phase net cash recovery: about **55.11 USD**
-- cash recovered above original budget at that stage: about **+15.11 USD**, while residual e/acc still remained
+They are part of the Mission asset base. Current value is excluded from strict liquid NAV until an execution-grade bid/sale reference is obtained.
 
-Fresh finalized RPC now shows the e/acc position fully exited (**0 balance**). Later sale legs are still not fully reconciled to exact proceeds/fees, so total e/acc realized PnL remains **UNRESOLVED** even though there is no residual token exposure.
+## Closed exposures
 
-### KARDASHEV / Solana
-- DIRECT_CHAIN remaining: **4,103.186501 KARDASHEV**
-- original capital: **20.00 USDC**
-- total sold: **14,691.367277**
-- gross routed exit proceeds observed: **~0.245051759 SOL**
-- total listed network fees across entry + three exits: **~0.001318107 SOL**
-- fresh PumpSwap reserves: **35,838,316.721083 KARDASHEV / 610.290341092 SOL**
-- at SOL ~120.01, current pool-implied price: **~0.00204365 USD**
-- remaining mark value: **~8.3855 USD**
-- current total-position PnL reference: **~+17.64 USD**, after listed network fees
-- status: **PRINCIPAL_RECOVERED / PROFIT_POSITION**
+### XRP / Variational
+- CLOSED after stored lower bound 1.5140 was hit.
+- remaining venue funds were withdrawn to Solana.
+- exact realized PnL remains UNRESOLVED until venue fees/funding/slippage are reconciled.
 
-This mark uses current pool reserves and current SOL/USD reference. Chain quantities are authoritative; USD PnL remains a market-value estimate.
-## Partial PnL view
-- GSTOCK: ~-1.46
-- PONS spot: ~-1.05
-- PONS futures: ~-0.09 including latest screenshoted realized reference
-- XRP Variational: **closed**, gross stop reference ~-3.23 before private venue fees/funding/slippage
-- KARDASHEV: ~+17.64 current total-position estimate
-- PAID: ~-40.1 to -32.0 indicative
+### e/acc
+- DIRECT_CHAIN current balance: **0**
+- fully exited.
+- final realized PnL remains UNRESOLVED until all later sale legs are reconciled.
 
-The old active-position subtotal is superseded because XRP is now closed and Solana/e/acc state changed.
+### KARDASHEV
+- Token-2022 mint: `5wW9mhbwq1HTFh341iimpmrqBB4mfxdXiYhdYBL7hUnp`
+- DIRECT_CHAIN current balance: **0**
+- status: **CLOSED / FULLY EXITED ON-CHAIN**
 
-Using only the previous partial framework and replacing the prior XRP mark estimate (~-1.32) with the gross stop reference (~-3.23), the comparable partial reconciled range would shift by about **-1.91 USD**, to roughly **-13.2 to -5.1 USD**. This remains provisional because later e/acc proceeds and exact Variational fees/funding are not fully reconciled.
+The prior **4,103.186501 KARDASHEV** residual mark and **~+17.64 USD** marked total-position estimate are historical and must not appear in current active PnL. The final residual-sale proceeds still require reconstruction before final realized PnL is stated.
 
-This is not the final Mission PnL. It excludes:
-- later e/acc sale proceeds/fees;
-- current residual e/acc executable value;
-- historical SHART/CRED closed-sleeve reconciliation;
-- UNICRED/Credits/Fresh INK executable values;
-- exact current Binance/Variational funding and private account fees.
+## Current liquid asset view
 
-## Current capital distribution
-- canonical on-chain stablecoins: **728.600906 USDC**
-- strict directly priced on-chain liquid NAV: **~797.29 USD**, excluding PAID/e/acc and unpriced NFTs/points
-- indicative direct-chain liquid NAV after adding PAID/e/acc public-reference ranges: roughly **807-816 USD**
-- Binance PONS isolated margin reference: ~13.20 USDT plus current estimated uPnL
+Fresh strict directly priced on-chain liquid NAV:
+- canonical stablecoins: **728.600906 USD**
+- native gas assets: **~62.8974 USD**
+- GSTOCK: **~29.1669 USD**
+- Robinhood PONS spot: **~34.3532 USD**
 
-Prior all-tracked liquid-value range is stale after the Variational closeout and Solana USDC increase; recompute on the next full cross-chain mark refresh.
+**Total: ~855.02 USD.**
 
-## Reserved / structural capital
-- JUMP reserve: 400 USDC on Ethereum.
-- ETH conditional reserve: 100 USDC accounting target; no live ETH Mission trade confirmed.
-- opportunity capital is already distributed across Solana/BNB/Robinhood/private venues and must not be double-counted.
-- separate ~500 USD-equivalent low-risk interest bucket remains outside speculative Mission accounting.
+This figure excludes PAID, Credits, UNICRED, Fresh INK, Tydro Points, pRCADE and unidentified/spam assets.
 
+Binance off-chain inventory, USER_CONFIRMED:
+- combined earn bucket: **598 USD-equivalent**
+- PONS futures position only
+- no other Binance assets/positions are tracked.
 
-## Capital-location update — 2026-09-27 03:40
+## Current partial active-trade PnL
 
-USER_CONFIRMED:
-- apart from the Binance PONS perpetual and the combined earn bucket, tracked capital is on-chain;
-- former 500 + 98 earn labels are consolidated to **598 USD-equivalent**;
-- Variational XRP is closed and withdrawn;
-- no active Variational derivative exposure remains.
+Using only currently markable active positions:
+- GSTOCK: ~-0.8378 USD
+- PONS spot: ~-0.9380 USD
+- PONS futures estimated uPnL: ~+0.2719 USDT
 
-Fresh DIRECT_CHAIN:
-- Solana USDC: **328.018516**
-- e/acc: **0**
-- KARDASHEV: **0**
-- PAID: **947.685473**
-- total canonical on-chain stablecoins: **728.600906 USDC**
+Comparable subtotal: **~ -1.50 USD**, before futures funding/fees and excluding PAID/NFTs.
 
-Fresh public Binance PONS mark: **0.63688970**.
-If the latest user-confirmed 64-PONS long @ 0.6250 remains unchanged:
-- estimated uPnL: **~+0.7609 USDT** before fresh funding/fees.
+This is not total Mission PnL.
 
-The **598 USD-equivalent earn bucket is capital, not PnL**, and is tracked as one combined off-chain balance.
+## Goal progress
+
+Status: **UNRESOLVED / provenance reconciliation required**.
+
+Do not calculate “855 / 3000” or include the 598 earn bucket as progress until later capital additions are separated from the original 300 USD + six-Credits Mission capital and the four Credits sale proceeds are fully mapped.
