@@ -1,44 +1,45 @@
 # Crypto Mission Monitor Health
 
-Updated: 2026-09-26 15:16 Asia/Bangkok
+Updated: 2026-09-26 16:33 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Existing task
+## $300 existing task
 - automation_id: 6ab46906a0cc8191880f1922dbef954a
-- expected schedule: hourly :29
 - no new automation created
+- 15:28:50 scheduler metadata advanced for the 15:29 cycle, but no automatic start/final audit persisted
+- by 16:30 the expected next cycle had not advanced last_run_time
 
-## Current diagnosis
+Repair:
+- same task only
+- shorter neutral launcher
+- one append-only start write, one runtime read, one append-only final write
+- re-anchored next proof to 17:29
 
-The 14:29:20 scheduler trigger produced no persisted automatic run file. This confirms the previous automatic launcher still failed before durable execution.
+Current status: UNHEALTHY until a genuine automatic start + final pair is observed.
 
-The missing run is now explicitly recorded at:
-`runs/2026-09-26/142920-missing.md`
+## Crypto Daily
+- 16:00 automatic cycle persisted start + final + research
+- core scan and discovery shard completed
+- initial Binance request error recovered via supported per-symbol calls
+- initial research persistence error recovered via compact retry
+- prior final status partial_success reflected recovered attempts, not a residual coverage gap
 
-## Repair applied now
+Repair:
+- recovered attempts are warnings when equivalent final coverage/write succeeds
+- only unresolved data, persistence or delivery gaps downgrade the run
+- no new task
 
-The same existing task now uses:
-- minimal neutral scheduler prompt;
-- only one runtime file: `AUTOMATION_RUNTIME.md`;
-- append-only `*-start.md` and `*-final.md` files;
-- no update-in-place requirement for audit completion;
-- factual wallet/market/threshold telemetry only;
-- original PONS/XRP/ETH/JUMP/Monster/launch/NFT/FOMO monitoring coverage retained;
-- no new automation.
+Current status: FUNCTIONING; next clean-status proof at 17:00.
 
-## Proof requirement
+## TGE
+- 15:13:59 proved append-only start/final can work
+- 16:12:38 scheduler metadata advanced again, but no automatic audit persisted through the post-run check
 
-The next :29 run is healthy only if:
-1. a new automatic `*-start.md` exists;
-2. a matching `*-final.md` exists;
-3. final audit contains factual lane results;
-4. current state/health writes complete or are explicitly marked unavailable.
+Repair:
+- same task only
+- shorter launcher
+- state/current remains optional cache
+- re-anchored next proof to 17:14
+- no new task
 
-Scheduler last_run_time alone remains insufficient.
-
-
-## Persistence change
-
-From 15:16 onward, automatic correctness is based on append-only `*-start.md` + `*-final.md` files. Mutable portfolio/state/health files are caches only during automatic runs. Their write failure must be recorded but must not prevent or downgrade a completed factual run.
-
-Next proof point: 15:29 automatic run.
+Current status: UNHEALTHY until a fresh automatic start + final pair is observed.
