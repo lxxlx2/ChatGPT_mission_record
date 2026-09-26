@@ -1,4 +1,8 @@
-# $300 Crypto Profit Mission
+# $300 Crypto Profit Mission 总体资金与策略历史记录
+
+
+Clearly named canonical copy: `crypto-300-profit-mission/300-profit-mission-strategy.md`
+Legacy path retained for compatibility during monitor validation.
 
 Timezone: Asia/Bangkok
 
