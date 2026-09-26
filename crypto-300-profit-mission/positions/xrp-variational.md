@@ -1,6 +1,6 @@
 # XRP / Variational Omni Event Trade
 
-Updated: 2026-09-26 06:08 Asia/Bangkok
+Updated: 2026-09-27 01:20 Asia/Bangkok
 
 ## Status
 ACTIVE / FILLED
@@ -54,7 +54,7 @@ Using entry 1.55589:
 While this position remains active, the Mission fast lane must check:
 - XRP mark / spot reference and 15m / 1h / 4h moves;
 - OI, funding, leverage stress and taker imbalance when available;
-- Bitget-hack-related XRP wallet movements and credible Bitget replenishment flows when relevant;
+- Bitget-hack-related XRP wallet movements and credible Bitget replenishment flows via `watchlists/xrp-bitget-hacker-flow.md`;
 - TP 1.6280 and SL 1.5140;
 - abnormal rapid drawdown / security events.
 
@@ -78,3 +78,15 @@ If the Variational position remains unchanged at 77.12 XRP @ 1.55589:
 - public-mark implied uPnL: **~-1.3160 USD**
 
 This does not overwrite the private venue state. Exact Variational PnL/equity remains USER_CONFIRMED until a connected/private venue read or newer screenshot is available.
+
+
+## 2026-09-27 monitoring correction
+
+The Sep-26 attacker-flow change was not surfaced automatically even though this position file required hack-flow monitoring.
+
+Verified follow-up reporting indicates roughly 54M XRP had left the five original attacker holding accounts, leaving roughly 49M XRP there. Movement is not automatically equivalent to sale.
+
+The dedicated machine-readable authority is now:
+`watchlists/xrp-bitget-hacker-flow.md`
+
+While this position is active, its >=5M XRP movement/liquidity/replenishment triggers are required Mission lanes.
