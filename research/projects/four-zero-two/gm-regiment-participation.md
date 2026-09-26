@@ -1,7 +1,7 @@
 # Four Zero Two / GM Regiment Ink Agent 注册与每日 GM 参与记录
 
 Updated: 2026-09-27
-Status: PACKAGE_CONTENT_VERIFIED
+Status: CODEX_MCP_READY
 Category: early-stage project participation
 Network: Ink mainnet
 Chain ID: 57073
@@ -215,7 +215,24 @@ local GitHub build mode:
 }
 ```
 
-Status: PENDING_USER_EXECUTION
+Observed Codex environment:
+- Codex CLI: `0.156.0`
+- MCP configuration command available: `codex mcp add`
+- existing MCP registry is readable through `codex mcp list`
+- local npx absolute path: `/Users/jerson/.nvm/versions/node/v24.18.0/bin/npx`
+
+Configuration decision:
+- use the absolute npx path when registering GM Regiment with Codex;
+- this avoids dependence on shell-specific nvm PATH initialization when Codex is launched from another surface;
+- no existing MCP entries should be removed or modified.
+
+Planned command:
+
+```bash
+codex mcp add gm-regiment -- /Users/jerson/.nvm/versions/node/v24.18.0/bin/npx -y gm-regiment-mcp
+```
+
+Status: READY_TO_ADD
 
 ### Step 4: create dedicated Agent wallet
 
@@ -326,6 +343,7 @@ As of 2026-09-27:
 - local runtime verified: YES
 - npm package availability verified: YES
 - npm package contents verified: YES
+- Codex MCP capability verified: YES
 - local installation: PENDING
 - Agent wallet created: PENDING
 - Agent funded: PENDING
