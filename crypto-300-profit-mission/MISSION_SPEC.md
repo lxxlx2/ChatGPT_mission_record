@@ -1,553 +1,216 @@
-# Crypto Profit Mission — Authoritative Spec
+# Crypto Profit Mission
 
-Updated: 2026-09-25
+Updated: 2026-09-26 12:05 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Authority / precedence
+## Authority
 
-This file is the highest-priority execution specification for the Crypto Profit Mission.
+This file defines global Mission policy. Detailed execution rules live in the referenced position and watchlist files.
 
-Read order for every monitoring run:
+Precedence:
 1. `MISSION_SPEC.md`
-2. `portfolio/current.md`
+2. `portfolio/current.md` and `state/latest.md`
 3. active `positions/*.md`
 4. active `watchlists/*.md`
-5. `strategy.md` as legacy/background only
+5. `strategy.md` as historical/background only
 
-If any lower-priority file conflicts with this spec, this spec wins. Never use stale chat parameters when GitHub has a newer value.
+Never use stale chat values to overwrite newer verified GitHub state.
 
-## Mission objective
+## Objective
 
-Primary objective: maximize absolute profit and return on deployed speculative capital over roughly three months while avoiding a single-trade failure that consumes the Mission.
+Use the speculative Mission capital to pursue asymmetric crypto opportunities while preventing one trade from consuming the Mission.
 
-Execution remains manual unless the user explicitly authorizes a transaction. Monitoring, research, calculations, GitHub logging and actionable alerts may be automated.
+Execution of transactions remains manual unless the user explicitly authorizes the transaction. Research, monitoring, calculations, GitHub audit and already-authorized alerts may run automatically.
 
-The separate 500 USD-equivalent low-risk bucket is user-confirmed as currently earning interest. It is excluded from speculative capital and must not be reassigned without explicit approval.
+The separate 500 USD-equivalent low-risk interest bucket is outside the speculative Mission and cannot be reassigned automatically.
 
-## Canonical wallets
+## Canonical wallets and live data
 
-EVM primary wallet:
+Primary EVM wallet:
 `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 
-Solana wallet:
+Primary Solana wallet:
 `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 
-Use connected Alchemy `ChatGPT Crypto Monitor` for direct-chain reads when available. A failed RPC read must be marked unavailable; never substitute an old balance and label it current.
+Use the connected Alchemy app `ChatGPT Crypto Monitor` for direct-chain reads.
 
-## Latest direct-chain capital reconciliation
+Data labels:
+- DIRECT_CHAIN: fresh RPC result.
+- USER_CONFIRMED: latest user screenshot or explicit statement from an unconnected private venue.
+- MARKET: fresh public market data.
+- UNAVAILABLE / UNRESOLVED: do not estimate.
 
-Fresh DIRECT_CHAIN read: 2026-09-26 around 09:18 Asia/Bangkok.
+Rules:
+- RPC failure must be recorded as UNAVAILABLE.
+- Never reuse an old wallet balance and call it current.
+- Unknown/spam assets are excluded from NAV until identity and value are verified.
+- Public market data cannot overwrite private venue fill, quantity, margin, PnL or order state.
+- `portfolio/current.md` and `state/latest.md` contain current state only. Historical snapshots belong in Git history and immutable run audits.
 
-Ethereum mainnet:
-- canonical USDC: **400.308121**
-- native ETH: **0.001667063838788351**
+## Current capital map
 
-Solana:
-- canonical USDC: **339.825001**
-- native SOL: **0.139742323**
-- SHART canonical mint: **0**
-- unidentified SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552 tokens**, identity/value UNRESOLVED and excluded from NAV.
+The current authoritative balance map is `portfolio/current.md`.
 
-Base:
-- canonical USDC: **0.252982**
-- native ETH: **0.000790846510479134**
+At the latest verified reconciliation:
+- 400 USDC: JUMP conditional reserve on Ethereum.
+- 150 USDC: short-window opportunity reserve.
+- 100 USDC: ETH conditional reserve.
+- current direct-chain residual: 90.407390 USDC.
+- PONS: separate 50 USDT margin budget.
+- 500 USD-equivalent low-risk bucket: excluded from this Mission.
 
-Unichain:
-- canonical USDC: **0.021286**
-- native ETH: **0.000231941590232335**
-- CRED: **0**
+Balance changes are not profit until transaction history and cost basis support that conclusion.
 
-Robinhood Chain:
-- native balance: **0.000081643478484768**
-- unknown/spam ERC-20 balances are excluded unless identity/value is verified.
-
-Canonical direct-chain stablecoin total: **740.407390 USDC**.
-
-The previous direct-chain stablecoin snapshot was 791.448965 USDC, a delta of -51.041575 USDC. Do not infer the cause from balance delta alone; transaction-history verification is required.
-
-Private venue/exchange positions such as Variational XRP and Binance PONS are not directly readable by Alchemy. Keep their latest USER_CONFIRMED state with timestamp and never label it live unless a connected venue source verifies it.
-
-## Current active exposure
+## Active positions and plans
 
 ### PONS
-- Binance PONSUSDT perpetual.
-- Total margin budget remains 50 USDT.
-- Only the first resting entry at 0.6250 has actually filled.
-- Remaining orders stay open:
-  - 0.5850, about 49.73 USDT notional.
-  - 0.5450, about 59.95 USDT notional.
-- Hard stop: 0.4980 Mark Price.
-- Do not increase the 50-USDT margin budget.
-- Do not move the two resting bids upward just because price rises.
+Authority: `positions/pons.md`
 
-### JUMP / Legion
-- 400.308121 USDC is already on Ethereum mainnet and is the conditional application reserve.
-- Application target: 400 USDC if authenticated Legion terms remain approximately:
-  - 75M FDV,
-  - 50% TGE unlock,
-  - remaining 50% linear over 4 months,
-  - no new material TGE-float / insider-overhang problem.
-- If final sale FDV >100M: reduce application target to 250 USDC.
-- If FDV >125M: re-evaluate / normally skip.
-- If TGE unlock is materially below 50% or a worse cliff/lockup appears: reduce size.
-- Do not buy a Polymarket hedge before allocation.
-- Application open reference: 2026-09-29 20:00 Asia/Bangkok.
-- First Mission run on 2026-09-29 at or after 19:00 Asia/Bangkok must perform a full preflight: authenticated terms, jurisdiction, min/max allocation, Ethereum USDC balance, allowance/approval path and gas readiness.
-- Gas rule: current ETH must cover at least 2x the estimated approval + application transaction cost at then-current gas. If exact estimation is unavailable and native ETH remains below 0.003 ETH, issue a preflight top-up warning rather than assuming gas is sufficient.
+Key invariant:
+- total margin budget stays 50 USDT;
+- only user-confirmed fills count;
+- pending orders do not count as deployed exposure;
+- hard stop and order changes follow the position file;
+- no automatic budget increase.
+
+### XRP / Variational
+Authority: `positions/xrp-variational.md`
+
+Latest private state remains USER_CONFIRMED until a fresh venue read or user update exists. Public XRP data is used only for risk/event monitoring.
 
 ### ETH
-- No live ETH trading position is authorized by this spec.
-- Up to 100 USDC remains reserved for a high-quality ETH setup.
-- Use the post-expiry setup logic in `strategy.md` only if still valid under fresh market data.
-- Do not force an entry simply because capital is reserved.
+Authority: `positions/eth-conditional.md`
 
+No live ETH Mission position is assumed. The 100 USDC reserve stays idle until the conditional setup fully qualifies.
 
-### XRP / Bitget hack event trade — added 2026-09-26
-- Venue: Variational Omni XRP perpetual.
-- Current user-confirmed state: **FILLED LONG**.
-- Filled position: 77.12 XRP at **1.55589**, isolated 3x.
-- Position value at latest screenshot: about 120.96 USD; margin used about 40.99 USDC.
-- Attached exit orders remain active: take profit **1.6280**, stop loss **1.5140**.
-- Latest user screenshot shows mark 1.56844, unrealized PnL +0.97 USD (+2.42%), liquidation price 1.24430, Omni equity 50.87 USD and available balance 10.55 USD.
-- Dedicated position file: `positions/xrp-variational.md`.
-- Capital source is the Mission's approximately 141 USDC-equivalent previously uncommitted pool. User explicitly reallocated about 52 USD-equivalent from that pool to Arbitrum/Variational for this event trade and Variational points participation. This is an internal Mission reallocation, not an external contribution and not profit.
-- Private venue position state is now user-confirmed by screenshot. Public market data must not overwrite the confirmed fill fields unless the user later updates them or a connected Variational source proves a change.
+### JUMP
+Authority: `positions/jump.md`
 
-Hourly monitoring while this order or resulting position is active:
-- XRP spot/perpetual mark and 15m/1h/4h candles.
-- OI, funding, top-trader positioning and taker buy/sell imbalance.
-- Bitget hack-related XRP wallet movements and credible Bitget reserve/replenishment movements when available.
-- Track the order/position levels 1.5140, 1.5190, 1.5560, 1.6280, 1.6300 and 1.7000.
+The Ethereum USDC reserve is conditional application capital. The 2026-09-29 preflight must verify authenticated Legion terms, allocation rules, current gas and execution readiness before any application.
 
-XRP Gmail trigger rules. Send only on a NEW trigger or materially changed trigger:
-1. rapid price move: absolute 15m move >=2.0%, 1h move >=3.0%, or 4h move >=5.0%;
-2. price reaches or crosses 1.5140 stop, 1.6280 take-profit, or 1.6300 event-high breakout area;
-3. XRP OI changes >=10% within roughly 1h together with >=1.5% price move, or funding magnitude reaches >=0.05% per 8h, indicating leverage stress;
-4. attacker-controlled XRP moves >=5,000,000 XRP toward executable liquidity, bridges or exchange deposit routes, or credible Bitget-controlled wallets acquire/receive >=5,000,000 XRP in a replenishment pattern;
-5. any verified security/solvency development at Bitget that materially changes the XRP replenishment or attacker-sale thesis.
+### UNICRED and Credits
+Authorities:
+- `positions/unicred.md`
+- `positions/credits.md`
 
-When triggered, use connected Gmail to send to lxx.run688@gmail.com. Subject starts with `Crypto Mission 操作提醒｜XRP｜`. Body must include current XRP price, trigger, order/position status as confirmed vs probable, OI/funding when relevant, the concrete action to take, and one-line reason. No trigger means no Gmail and no ChatGPT notification.
+These are medium-lane positions unless an unlock, security event, executable sale/claim event or other material action makes them urgent.
 
-### BTC
-- No dedicated BTC position or budget.
-- BTC is a market-regime / risk-overlay signal only.
-- Any new BTC long, short or hedge requires explicit user approval.
+## Closed / historical liquid exposure
 
-### UNICRED
-- Active position is UNICRED NFT #230 staked on Unichain.
-- CRED liquid token balance is currently 0 and is no longer an active token position.
-- NFT acquisition cost reference: 0.0105 ETH.
-- On-chain unlock time: 2026-10-01 17:28:04 Asia/Bangkok.
-- At the first Mission run at or after unlock, perform a live decision check and alert with one of:
-  - remain staked,
-  - unstake + hold,
-  - unstake + list/sell.
-- Decision must use current minted/4444, remaining mint-funded rent, claimable rent, collection executable floor/offer and protocol health.
+- SHART direct wallet balance is 0 and routine monitoring is closed.
+- liquid CRED direct wallet balance is 0; only its effect on UNICRED economics remains relevant.
+- auxiliary WSOL recovery is completed and the old accounts are closed.
 
-### Credits
-- Credit #23042 listed at 0.25 ETH.
-- Credit #23232 listed at 0.40 ETH.
-- These are long-duration aspirational listings.
-- No fresh Mission capital for additional Credits.
+## Market / opportunity watchlists
 
-### SHARTCOIN
-- Canonical wallet balance is now 0.
-- Treat the SHART position as closed for Mission exposure accounting.
-- Stop hourly price/liquidity monitoring unless a new user position is opened or a transaction-history reconciliation is specifically requested.
-
-### CRED
-- Direct Unichain wallet balance is now 0.
-- Stop standalone CRED position monitoring.
-- Continue checking CRED only insofar as CRED/buyback economics materially affect UNICRED #230.
-
-## Capital map
-
-From the current direct-chain stablecoin pool:
-- 400 USDC: conditional JUMP reserve on Ethereum.
-- 150 USDC: hard short-window opportunity reserve.
-- 100 USDC: ETH setup reserve.
-- **90.407390 USDC**: current direct-chain residual after the three ring-fenced reserves. This is available-capital accounting, not profit.
-- PONS uses its separate 50-USDT margin budget.
-- 500 USD-equivalent low-risk interest bucket remains outside the Mission.
-
-Do not automatically consume the 150-USDC short-window reserve for BTC, PONS averaging, ordinary dips, or portfolio housekeeping.
-
-## Live holdings data contract
-
-Every Mission run must prefer fresh connected-wallet reads for current holdings.
-
-- Use Alchemy `ChatGPT Crypto Monitor` for canonical EVM/Solana wallet balances.
-- At minimum read Ethereum/Solana canonical USDC and native gas every run; Base/Unichain/Robinhood are mandatory on daily reconciliation and on meaningful wallet deltas.
-- Known liquid token positions must be checked by canonical mint/contract.
-- Unknown/spam assets are excluded from NAV until identity and value are verified.
-- Private venues/exchanges that are not connected must remain USER_CONFIRMED with the timestamp of the last screenshot/statement.
-- Public market prices may monitor private-position risk, but cannot overwrite fill quantity, margin, PnL or order state.
-- A failed RPC call must be written as UNAVAILABLE. Never reuse an old balance and call it current.
-- `portfolio/current.md` and `state/latest.md` are current-state files. Do not append old snapshots into them; historical states belong in Git history and immutable run audits.
-
-## Monitoring scope
-
-The BSC smart-money cluster / address-copying research is explicitly out of scope for this Mission monitor because it is being handled in a separate workflow. Historical BSC research files may remain for audit, but the main Mission must not spend scan time on BSC cluster research or generate duplicate BSC alerts.
-
-### Fast lane — every hourly run
-Check:
-- canonical wallet stablecoin/native balances for meaningful deltas,
-- PONS price/mark, funding, OI, positioning, ADL and strategy triggers,
-- ETH setup validity and BTC regime,
-- JUMP readiness / terms until allocation is completed,
-- famous/established issuer short-window launch radar,
-- NFT mint radar,
-- rapid drawdown / security conditions for actual active positions.
-
-### SAGA anomaly-cycle watch — added 2026-09-26
-
-SAGA is now part of the existing hourly $300 Mission monitor. Do not create or depend on a separate automation for this lane.
-
-Canonical watchlist:
+Active watchlists:
+- `watchlists/btc-regime-jasonleo.md`
+- `watchlists/famous-token-launch-radar.md`
+- `watchlists/nft-mint-radar.md`
+- `watchlists/monster-squeeze-v2.1.md`
+- `watchlists/robinhood-fomo-mev.md`
 - `watchlists/saga-squeeze-cycle.md`
 
-Current baseline classification:
-- STRUCTURAL CANDIDATE: yes;
-- PRESSURE under frozen squeeze-model V2.1: no;
-- IGNITION: no;
-- EXHAUSTION / post-liquidation cooldown: yes, high confidence.
+BSC smart-money cluster research remains outside this Mission because it is handled in a separate workflow.
 
-At the 2026-09-26 baseline, SAGA had completed a roughly 7.2x move from the 2026-09-09 local low to the 2026-09-25 cycle high, then retraced more than 60% from that high. Binance OI expanded into the high and subsequently contracted by roughly 58%, while recent funding remained positive around +0.005% per 4h and top-trader positioning remained net long. Treat this as a long-crowding / leveraged-momentum blow-off pattern, not a confirmed negative-funding short squeeze.
+## Hourly coverage contract
 
-Every hourly fast-lane run must read the canonical SAGA watchlist and record:
-- price and multi-timeframe returns;
-- spot/perp volume;
-- OI and OI change;
-- OI / circulating-market-cap ratio;
-- funding;
-- broad and top-trader long/short ratios;
-- taker buy/sell;
-- current V2.1 state and any state transition.
+The scheduler runs every hour at :29 Asia/Bangkok.
 
-Keep the V2.1 parameters frozen. Do not retune them around SAGA. Ordinary volatility and repeated state remain silent.
+Every run must cover the following logical lanes:
+- wallet/gas
+- PONS
+- XRP/Variational
+- ETH conditional
+- BTC regime
+- JUMP
+- launch radar
+- NFT radar
+- active-position security
+- monster squeeze V2.1
+- Robinhood/FOMO execution-flow
 
-A Mission alert is allowed only for a NEW material SAGA transition:
-- confirmed PRESSURE -> IGNITION under frozen V2.1 plus live OI confirmation;
-- a new second-cycle/re-accumulation setup that clears the existing Mission execution/EV gates;
-- fresh EXHAUSTION after a new rally;
-- a material exchange/network/security/liquidity event;
-- an extreme derivatives imbalance with a concrete executable trade, explicit invalidation, realistic slippage and a defined Mission capital source.
+"Covered" does not require a full independent internet crawl for every lane. The execution-efficient method in `RUNBOOK.md` is authoritative:
+- critical positions use fresh direct market/wallet data;
+- discovery lanes first consume the latest Crypto Daily research;
+- broad markets use bulk screening;
+- detailed work is limited to shortlisted candidates;
+- fallback direct discovery is used when upstream research is stale or a trigger appears.
 
-Any SAGA trade remains recommendation-only until the user explicitly approves allocation.
+This keeps the functional scope while allowing the run to finish reliably.
 
+## Medium lane
 
-### Medium lane — every 3 hours
-Check:
-- UNICRED protocol economics and #230 rent/unlock state,
-- Credits floor/top offer/24h volume/listing ratio and material creator/mechanic changes,
-- slower-moving holder/liquidity data that are not needed hourly.
+Every 3 hours, or immediately when material:
+- UNICRED economics, rent, unlock and protocol health;
+- Credits floor / executable offers / volume / creator mechanics;
+- slower holder/liquidity checks.
 
-If a medium-lane event is already material/actionable, it may be checked immediately outside the 3-hour cadence.
+## Daily reconciliation
 
-### Daily reconciliation — first run after 00:00 Asia/Bangkok
-Perform a full direct-chain balance reconciliation across Ethereum, Solana, Base, Unichain and Robinhood Chain for the canonical wallet set.
-Then reconcile:
-- portfolio/current.md,
-- active position files,
-- state/latest.md,
-- reserved capital,
-- closed positions.
+First successful Mission run after 00:00 Asia/Bangkok:
+- direct-chain reconciliation across Ethereum, Solana, Base, Unichain and Robinhood Chain when supported;
+- reconcile `portfolio/current.md`, active positions, reserved capital and `state/latest.md`;
+- never carry stale balances forward as current if a live read fails.
 
-Do not carry forward stale balances when a fresh direct read is available.
-
-## Opportunity radar rules
-
-Short-window launch and NFT discovery stays hourly because windows may last only 1-3 hours.
-
-A candidate may alert only after:
-- canonical issuer identity is anchored,
-- official participation/mint/sale path is verified,
-- action window is live or imminent,
-- no unresolved contract/domain/payment conflict remains,
-- expected upside has a plausible reason beyond social hype,
-- risk size comes only from the 150-USDC opportunity reserve unless the user explicitly reallocates.
-
-Use English-language and primary sources. Do not use Chinese websites as confirmation sources.
-
-### Blast.fun / Flight 001 watch — added 2026-09-26
-
-Treat Blast.fun as a Sui launchpad opportunity source inside the existing hourly opportunity radar, not as a presumed airdrop farm or dedicated Mission position.
-
-Canonical identity:
-- Project: Blast.fun
-- Official X: `@blastdotfun`
-- Official root domain: `blast.fun`
-- Builder/operator context: Interest Labs / Interest Protocol / IPX ecosystem
-- Chain: Sui
-- Product class: memecoin/social-token launchpad and discovery platform
-
-Current baseline as of 2026-09-26:
-- Flight 001 recruiting / launch-code phase is public.
-- Mission Control is still offline.
-- No verified public launch date/time is available.
-- No verified user points program, Season Zero token allocation, platform-token distribution, user airdrop snapshot or claim flow has been established.
-- Public Blast.fun code contains creator/LP reward claiming and referral accounting, and an airdrop tool for token issuers; these are not evidence of a Blast.fun user airdrop or platform token.
-
-Hourly monitoring should check official Blast.fun / Interest Labs sources for:
-- Flight 001 / Mission Control going live and any concrete access deadline or launch time;
-- changes to launch-code / eligibility requirements that affect the user's ability to participate;
-- official user-facing points, rewards, snapshot, platform token, airdrop, claim or allocation rules;
-- unusually strong launches on Blast.fun that independently clear the Mission opportunity-radar gate, especially established issuers/builders, verified ecosystem-backed launches, or launches with measurable liquidity/attention and a plausible positive-EV entry;
-- material security, contract, migration or liquidity issues affecting participation.
-
-Stay silent for:
-- ordinary new meme launches;
-- additional invite-code marketing without a new economic benefit or deadline;
-- generic social hype, follower growth or routine platform updates;
-- launches lacking verified identity, liquidity or an explainable edge.
-
-Do not reserve dedicated capital for Blast.fun. Any candidate trade must compete for the existing 150-USDC short-window opportunity reserve and still satisfy the Mission's identity, liquidity, downside and EV gates. Execution remains manual and requires user approval.
-
-### Robinhood Chain / FOMO MEV flow watch — added 2026-09-26
-
-Purpose: treat suspected FOMO MEV / front-run / sandwich activity as an order-flow sensor and execution-cost filter for the Mission. Do not copy-trade the MEV wallet after its transaction is visible; the observed round trips can complete within seconds or blocks and the edge may already be gone.
-
-Chain:
-- Robinhood Chain, chain ID 4663.
-
-Seed cluster:
-- current observed address: `0xb49deec1a52eea46f3a6a158f8f9b155809b8c44`
-- prior observed address: `0x44c0ba0b734d4b7705fcd07ddae9fbbc078d74dd`
-- common execution contract observed in both patterns: `0x68a04a63Fd1d8EAbF167EF48ed0A0EF06c2374d9`
-- cluster membership must be expanded only from on-chain evidence such as common funding/settlement paths, identical execution contract and transaction pattern, same profit collection, or repeated address rotation. Do not infer ownership from naming or social claims.
-
-Verified baseline examples from 2026-09-25 on Robinhood Chain:
-- Protocol: approximately 1,000 USDG out, the same 3,318,036.187... tokens returned, approximately 1,065.421329 USDG back within the same timestamp / a few blocks; gross spread about 65.42 USDG or 6.54% before gas.
-- EARNED: approximately 579.942580 USDG out, the same 13,523,596.391... tokens returned about one second later, approximately 609.717726 USDG back; gross spread about 29.78 USDG or 5.13% before gas.
-These examples confirm a rapid profitable round-trip pattern. They do not by themselves prove the operator identity, information source, or an internal FOMO/Relay relationship.
-
-Hourly scan requirements:
-- inspect seed addresses and newly evidenced cluster members on chain 4663;
-- detect sequences where the suspected bot buys a token and sells the same or near-identical quantity within <=5 seconds or <=3 blocks;
-- identify intervening third-party buy(s) when observable and estimate victim notional;
-- aggregate per token: attacks in 5m/15m, distinct third-party buyers, third-party buy notional, bot gross stablecoin profit, gas/fees when available, estimated extraction %, liquidity/depth, and post-bot-exit returns at 30s/1m/5m/15m;
-- track whether price repeatedly absorbs the MEV sell and continues higher or collapses after the extraction;
-- use cluster behavior as a negative execution filter when a candidate is being heavily extracted.
-
-Backtest / calibration:
-- build a rolling sample before treating this signal as a standalone positive entry edge;
-- minimum calibration target: >=30 complete MEV round trips across >=10 distinct tokens;
-- record forward returns after bot exit at 30s/1m/5m/15m and after realistic entry slippage/fees;
-- until the calibration target is met, MEV flow may strengthen or reject another Mission candidate, but must not by itself authorize a positive trade alert.
-
-Immediate risk / avoid trigger:
-- if a Mission candidate or active token shows >=3 suspected MEV extractions within 10 minutes and average extraction >=4%, or realistic entry slippage is estimated >5%, flag it as execution-toxic;
-- if the user is about to enter or already exposed, this qualifies as an actionable risk alert.
-
-Positive candidate use after calibration:
-- require repeated independent third-party buying, continued positive net flow after MEV selling, adequate executable liquidity, and positive forward-return statistics after costs;
-- any positive alert must still pass the Mission identity, venue, liquidity, downside and expected-value gates and must state the exact evidence, sample size and realistic execution cost.
-
-Logging:
-- maintain detailed baseline and methodology in `watchlists/robinhood-fomo-mev.md`;
-- every Mission run records whether this lane was checked, new cluster addresses, candidate tokens, extraction metrics and alert decision in the immutable run audit.
-
-## GitHub state / audit consistency
-
-Every Mission run must:
-1. overwrite `state/latest.md` with the latest authoritative state,
-2. create one immutable run audit under `runs/YYYY-MM-DD/HHMMSS.md`,
-3. update the daily report only for:
-   - a material/actionable change,
-   - the daily full reconciliation,
-   - a configuration/architecture change.
-
-Do not append routine NO_ACTION text to the daily report every hour.
-
-A run cannot be marked success if the required GitHub write failed. Use `partial_failure` or `failed` and record the exact tool error.
-
-Every `state/latest.md` must distinguish:
-- direct-chain current values,
-- current market values,
-- user-reported values,
-- stale last-known values,
-- unavailable values.
-
-## Notification policy
+## Alerts
 
 Default is silence.
 
-NO_ACTION:
-- GitHub only.
-- No Gmail.
-- No ChatGPT notification.
+Gmail + user-visible ChatGPT are required for:
+- ACTION;
+- new or materially changed WATCH;
+- position stop/TP or other defined actionable risk;
+- material security/deadline event;
+- MONITOR_HEALTH_GAP;
+- MONITOR_LANE_FAILURE;
+- 19:29 monster daily summary.
 
-Notify only for a newly actionable change, major risk, or deadline-sensitive user action, including:
-- PONS entry/stop/take-profit/cancel/reduce trigger,
-- valid ETH entry/stop/cancel setup,
-- JUMP application-size decision or gas/terms preflight issue,
-- UNICRED unlock / sell-stake decision,
-- Credits repricing only after a real market/mechanic trigger,
-- verified high-potential launch/NFT opportunity,
-- security event affecting an active position,
-- major wallet-balance discrepancy that changes the capital plan.
+WATCH email subject:
+`[Crypto Mission提醒][WATCH][asset/project]`
 
-Do not send duplicate alerts without new information.
+A WATCH alert must state:
+- why it entered WATCH;
+- what is still missing;
+- next trigger/event/level;
+- primary invalidation/risk.
 
-### Alert delivery requirement
-For every event that validly passes the Mission notification gate:
-- send a real Gmail message through the connected Gmail account to `lxx.run688@gmail.com`;
-- also return a concise user-visible ChatGPT alert from the automation run;
-- Gmail subject format: `[Crypto Mission提醒][event type][asset/project]`;
-- body must contain the trigger, current verified data, concrete user action, invalidation/risk, capital source if relevant, and primary/chain evidence;
-- if Gmail sending fails, still return the ChatGPT alert and record the exact Gmail error in the run audit;
-- if ChatGPT delivery is unavailable, Gmail remains the required external alert path;
-- NO_ACTION, rejected candidates and duplicate signals remain fully silent.
+Unchanged WATCH, NO_ACTION, rejected/noise and ordinary volatility stay silent.
 
-This general delivery rule applies to launch/NFT/ICO opportunities, active-position risk, FOMO/Robinhood execution-toxicity, wallet discrepancies, deadlines and other Mission-level actionable events. Asset-specific delivery rules such as XRP may add fields but cannot weaken this requirement.
+Alerts go to:
+`lxx.run688@gmail.com`
 
-## Schedule architecture
+If Gmail fails, the run must still record the alert and surface ChatGPT output when the automation supports it.
 
-Keep the main Mission automation hourly at minute 29 Asia/Bangkok.
+## Monster V2.1
 
-This intentionally staggers the stack:
-- around :00 — broad Crypto research pipeline,
-- around :14 — airdrop/TGE monitor,
-- around :29 — action-oriented Mission monitor.
+Authority: `watchlists/monster-squeeze-v2.1.md`.
 
-The Mission run is the decision layer and should consume fresh information after the broader collection layers have had time to run.
+The model parameters remain frozen. Full-market coverage must use bulk screening plus candidate deep-checks as defined in `RUNBOOK.md`; do not issue one expensive per-symbol deep query across the entire universe.
 
+At 19:29 Asia/Bangkok, the same existing Mission task produces the daily monster summary. The separate legacy monster automation remains disabled.
 
-## Opportunity engine / research integration
+## Launch / NFT opportunities
 
-Every hourly Mission run must read the most recent available files under `crypto-daily/research/` covering roughly the previous 2 hours and convert broad research into Mission-level candidate decisions. The 3-hour medium lane performs a deeper multi-run review, but actionable opportunity discovery must not wait for the medium lane.
+Use the active watchlists. An actionable candidate requires verified canonical identity, official participation path, live/imminent window, no unresolved contract/domain/payment conflict and plausible upside.
 
-Candidate universe includes:
-- liquid perpetual / futures setups beyond existing PONS/ETH when there is a clearly defined catalyst, liquidity and invalidation;
-- ICO / public sale / Legion-style allocations;
-- NFT mints / secondary breakouts;
-- established-issuer meme / social-token launches;
-- event-driven cross-chain or prediction-market opportunities when execution is realistically available.
+Any proposed spend uses only the existing opportunity reserve unless the user explicitly reallocates capital.
 
-For each candidate, require:
-- a concrete catalyst or structural edge,
-- verified tradable venue / participation path,
-- sufficient liquidity and realistic fees/slippage,
-- explicit invalidation / downside,
-- a plausible expected-value advantage after costs,
-- a defined capital source.
+## Performance
 
-Do not manufacture a candidate every cycle. If none clears the gate, record NO_CANDIDATE and remain silent.
+Authority: `performance/current.md`.
 
-New speculative ideas may only use:
-- the ~89 USDC-equivalent currently uncommitted pool after the XRP/Variational internal reallocation, or
-- the 150-USDC opportunity reserve when the event is truly short-window/high-conviction.
+Rules:
+- wallet balance alone is not PnL;
+- internal transfers are not profit;
+- listing prices are not executable NAV;
+- unresolved closed-position cost/proceeds stay UNRESOLVED;
+- private venue unrealized PnL remains USER_CONFIRMED unless directly readable.
 
-JUMP, ETH reserve, PONS budget and the 500 low-risk bucket are ring-fenced unless the user explicitly reallocates them.
+## Runtime / audit
 
-Any new derivatives idea outside existing PONS/ETH/BTC monitoring is recommendation-only until the user explicitly approves the capital allocation.
+`RUNBOOK.md` is authoritative for execution order, workload limits, skeleton audit, retry behavior, health checks and finalization.
 
-## Performance tracking
+A scheduler trigger is not proof of success. A successful run requires a finalized GitHub audit.
 
-Read and maintain `performance/current.md`.
-
-The Mission must track:
-- external net contributions,
-- realized P&L,
-- unrealized P&L,
-- open exposure,
-- reserved cash,
-- closed positions awaiting reconciliation.
-
-Never use raw wallet balance growth as profit because new deposits/transfers may exist.
-
-Update `performance/current.md` on the daily full reconciliation and whenever a position opens/closes, a material take-profit happens, an ICO/NFT allocation is confirmed, or realized proceeds are reconstructed.
-
-Maintain two scorecards once sufficient history is available:
-- original-$300 sleeve performance;
-- total speculative-capital performance after later contributions.
-
-Do not publish an exact return percentage while contribution history or closed-position proceeds remain unresolved.
-
-
-## WSOL auxiliary-account correction — 2026-09-25
-Direct Solana RPC shows four wallet-owned native WSOL token accounts:
-- `6FV88kiLJFmm5bprPfD4NitTHNFsfyUZZFn6wFNrLziE`: 0.019445574 WSOL + 0.002039280 SOL rent reserve = 0.021484854 SOL recoverable on close.
-- `6LbxShFopPRf56AWJvdQP57CnTNW5G9nvw8rKQhfofi1`: 0.006972803 WSOL + 0.002039280 rent = 0.009012083 SOL recoverable.
-- `8XszhZXZUKPiCLCkC7pbvhLyDwZqQQ8YV6BHHqY9X8TT`: 0.007191552 WSOL + 0.002039280 rent = 0.009230832 SOL recoverable.
-- `FuC71ndKhDJ6ngtwGfoy7o44vEjuhacg2x2KwSJiSxW8`: 0.000281389 WSOL + 0.002039280 rent = 0.002320669 SOL recoverable.
-
-Token amount total = 0.033891318 WSOL. Full lamports recoverable by closing all four native WSOL accounts = **0.042048438 SOL** before transaction fees. With current native wallet balance 0.063112228 SOL, post-close native SOL would be about **0.105160666 SOL** before transaction fees.
-
-These accounts are auxiliary native-token accounts associated historically with Orca Whirlpool activity. Wallet swap UIs may fail to spend them because they are separate token accounts rather than a single default token account. For wrapped SOL, the protocol-level recovery operation is CloseAccount/unwrap, not a market swap. Do not treat 0.033891318 alone as the full recoverable amount because refundable rent is also present.
-
-
-## WSOL recovery completion — 2026-09-26
-Direct Alchemy Solana RPC after the user completed the recovery shows:
-- native SOL balance: **0.105136682 SOL**;
-- all four previously tracked auxiliary native WSOL token accounts now return `value: null`, confirming they were closed.
-The recovery is complete. Remove those WSOL accounts from active monitoring; keep the prior investigation only as audit/history.
-
-
-## ETH post-expiry monitoring correction — 2026-09-26
-The Sep-25 one-shot ETH options-expiry task completed in the scheduler but did not persist its promised conclusion to the Mission daily report. Treat that as a monitoring QA failure, not as a valid silent conclusion.
-
-ETH is now permanently folded into the hourly Mission fast lane through `positions/eth-conditional.md`.
-Current baseline at 2026-09-26 07:52 Asia/Bangkok: no market entry around ~2685. The preferred next setup is the conditional pullback/reclaim plan in that file; breakdown-short and qualified breakout rules are also defined there. The 100-USDC ETH reserve remains ring-fenced until a setup fully qualifies.
-
-## Monster-coin squeeze V2.1 integration — 2026-09-26
-Canonical spec: `watchlists/monster-squeeze-v2.1.md`.
-
-This lane is now part of the main hourly Mission monitor and replaces the separate daily automation for execution/alerting purposes.
-
-Every hourly Mission run must:
-- scan Binance Alpha and Binance USDⓈ-M Futures plus carried candidates from the previous 7 days;
-- evaluate the frozen STRUCTURAL_CANDIDATE -> PRESSURE -> IGNITION -> EXHAUSTION state machine;
-- preserve the exact V2 IGNITION gate documented in the watchlist;
-- record state transitions and lane QA in the immutable run audit.
-
-Notification behavior:
-- STRUCTURAL_CANDIDATE and PRESSURE remain silent intraday;
-- first confirmed IGNITION sends immediate Gmail + user-visible ChatGPT alert;
-- EXHAUSTION sends immediate Gmail + ChatGPT when a prior IGNITION was alerted or the user holds the asset;
-- at 19:29 Asia/Bangkok, the main Mission run must send one concise user-visible daily 妖币 summary even if no IGNITION/EXHAUSTION occurred, showing up to five strongest STRUCTURAL/PRESSURE candidates and every state transition.
-
-The daily summary exception is intentional and overrides the general NO_ACTION silence rule only for this one 19:29 妖币 summary.
-
-## Monitoring health / self-test
-A monitor that does not prove it ran is not considered healthy.
-
-Every hourly Mission run must maintain `health/current.md` with:
-- expected_schedule;
-- current_run_time;
-- previous_successful_run_time;
-- run_gap_minutes;
-- mandatory_lanes_checked;
-- lane_failures;
-- github_write_ok;
-- alert_delivery_test/status when applicable.
-
-Health rules:
-1. If the gap between successful Mission runs exceeds 90 minutes, emit one `MONITOR_HEALTH_GAP` alert by Gmail + user-visible ChatGPT on the first recovered run.
-2. A mandatory lane skipped due tool/data failure marks the run `partial_failure`, while other lanes must continue.
-3. If the same mandatory lane fails in two consecutive hourly runs, emit one `MONITOR_LANE_FAILURE` alert naming the lane and error.
-4. Every valid action alert must attempt Gmail. Gmail failure cannot suppress the ChatGPT alert and must be written into the run audit.
-5. At least once per day, verify that the main automation is enabled and that a run audit exists for the expected schedule. Record the verification in `health/current.md`.
-6. Do not send routine health messages when all checks pass.
-
-
-## WATCH alert delivery correction — 2026-09-26
-User preference update: high-information WATCH candidates must use the same dual delivery path as ACTION alerts.
-
-For a NEW or materially changed WATCH candidate:
-- send Gmail to `lxx.run688@gmail.com`;
-- return a concise user-visible ChatGPT alert;
-- subject format: `[Crypto Mission提醒][WATCH][asset/project]`;
-- include why it is on WATCH, what condition is still missing, the next trigger level/event, and the relevant risk/invalidation;
-- do not repeat the same WATCH without a material state/data change.
-
-NO_ACTION, rejected candidates and unchanged WATCH states remain silent.
-
-
-## Operational runbook precedence — 2026-09-26
-
-`MISSION_SPEC.md` remains authoritative for strategy, capital, positions, thresholds and notification semantics.
-
-`RUNBOOK.md` is authoritative for scheduler execution order, heartbeat, lane accounting and failure handling.
-
-A run should read RUNBOOK first for execution flow, then MISSION_SPEC for strategy. A scheduler trigger without a finalized GitHub run audit is not counted as a successful Mission run.
+Temporary GitHub, Gmail or source failure must never automatically disable or pause the existing automation.
