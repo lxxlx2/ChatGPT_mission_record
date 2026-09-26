@@ -1,14 +1,14 @@
 # Airdrop / TGE Monitor State
 
-Updated: 2026-09-26 11:11:39 Asia/Bangkok
+Updated: 2026-09-26 12:12:53 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards
 - expected_schedule: hourly at minute 14, exact_schedule
-- last_run: 2026-09-26T11:11:39+07:00
+- last_run: 2026-09-26T12:12:53+07:00
 - last_run_status: success
-- last_success: 2026-09-26T11:11:39+07:00
-- last_shard_0: unknown_after_repair
+- last_success: 2026-09-26T12:12:53+07:00
+- last_shard_0: 2026-09-26T12:12:53+07:00
 - last_shard_1: 2026-09-26T09:19:24+07:00
 - last_shard_2: 2026-09-26T10:16:44+07:00
 - last_shard_3: 2026-09-26T11:11:39+07:00
@@ -23,4 +23,4 @@ Timezone: Asia/Bangkok
 - last_triggered_events: 0
 - last_identity_failures: 0
 - last_source_failure_projects: []
-- note: 11:11:39 run completed urgent + shard 3. Queryable official/search checks returned no new ACTION evidence; these were classified checked_no_update, not source failures.
+- note: 12:12:53 run completed urgent + shard 0. Queryable official/search checks returned no new ACTION evidence; classified checked_no_update, not source failures.
