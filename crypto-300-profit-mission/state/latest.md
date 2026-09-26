@@ -1,6 +1,6 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-26 16:35 Asia/Bangkok
+Updated: 2026-09-27 01:27 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Wallet / position state
@@ -39,18 +39,47 @@ Estimated current uPnL if unchanged: -1.3160 USD.
 ## Automation health
 
 ### Crypto Daily
-16:00 produced both start and final audits plus the 16:00 research file.
-Core + discovery completed. Two initial errors were recovered successfully but the run was labeled partial_success.
-Runtime/prompt now classify fully recovered attempts as recovered_warning, with success allowed when no residual coverage/write/delivery gap remains.
-Status: **FUNCTIONING; classification repair applied.**
-Next proof: 17:00.
+Latest automatic run: 2026-09-27 01:00.
+- core scan: success
+- rotating shard: checked_no_update
+- research write: failed
+- final-retry persisted
+- status: PARTIAL_FAILURE
 
-### $300
-15:29 scheduler metadata advanced but no automatic audit persisted. By the 16:30 check, the expected 16:29 cycle had not advanced last_run_time.
-The same existing task has been shortened and re-anchored to 17:29. No new automation was created.
-Status: **UNHEALTHY; repaired again, awaiting 17:29 proof.**
+Repair is active: research retry path + compact payload in final/final-retry + 09:00 final-audit recovery + mandatory critical-security carry-forward.
 
 ### TGE
-16:12:38 scheduler metadata advanced, but no start/final audit persisted after the execution window.
-The same existing task has been shortened and re-anchored to 17:14. No new automation was created.
-Status: **UNHEALTHY; repaired again, awaiting 17:14 proof.**
+Latest automatic run: 2026-09-27 00:15.
+- final persisted
+- status: SUCCESS
+- ACTION: NO_ACTION
+- notification: false
+
+Status: HEALTHY.
+
+### $300 Mission
+Latest scheduler trigger around 2026-09-27 00:33 produced no automatic final/final-retry.
+- recorded as missing run
+- status: UNHEALTHY pending next :29 proof
+
+Required-lane repair now includes:
+- dedicated XRP Bitget attacker-flow monitoring while the XRP event position is active;
+- bounded Monster bulk + shortlist lane;
+- durable Monster setup/state persistence;
+- active-asset wallet telemetry before final persistence.
+
+## Material event monitoring corrections
+
+### XRP / Bitget
+Sep-26 attacker movement (~54M XRP leaving the five original attacker holding accounts) was missed by automation despite being relevant to the active Variational XRP position.
+Dedicated authority: `watchlists/xrp-bitget-hacker-flow.md`.
+Missed substantive alert has been backfilled by Gmail.
+
+### Monster V2.1
+Sep-26 19:29 summary was not actually delivered. It has now been delivered and archived at:
+`reports/daily/2026/2026-09/2026-09-26-monster-v2.1.md`.
+
+### Crypto Daily / Magic Eden
+Sep-25 23:00 hourly research found the Magic Eden / Limit Break legacy EVM approval vulnerability, but the Sep-26 official daily omitted it.
+Root cause: aggregation/promotion failure.
+Critical-security carry-forward is now mandatory for 09:00 delivery.
