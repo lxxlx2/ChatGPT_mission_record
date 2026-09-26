@@ -645,6 +645,90 @@ def cmd_check_trade(args) -> None:
     )
 
 
+def trade_outcome_from_flow(trade_id: str) -> dict:
+    outcome = None
+    omitted = {"settled": 0, "void": 0}
+    for rec in parse_export("d-close1-flow"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        if contains_value(p.get("settled"), trade_id):
+            outcome = {
+                "status": "settled",
+                "sweep": p.get("n"),
+                "detail": matching_fragment(p.get("settled"), trade_id),
+            }
+        if contains_value(p.get("void"), trade_id):
+            outcome = {
+                "status": "void",
+                "sweep": p.get("n"),
+                "detail": matching_fragment(p.get("void"), trade_id),
+            }
+        om = p.get("omitted") or {}
+        if isinstance(om, dict):
+            for name in omitted:
+                try:
+                    omitted[name] += int(om.get(name) or 0)
+                except Exception:
+                    pass
+    return {"outcome": outcome, "omitted": omitted}
+
+
+def cmd_check_bracket(_args) -> None:
+    state = load_state()
+    bracket = state.get("bracket") or {}
+    pairs = bracket.get("pairs") or []
+    if not pairs:
+        raise SystemExit("no bracket pairs saved")
+
+    pr = fresh_price(max_age=10**9)
+    print("bracket_round:", bracket.get("round"), "status:", bracket.get("status"))
+    print("pairs_saved:", len(pairs))
+    print("current_sweep:", pr["n"], "ref:", pr["px"], "age_s:", pr["age_s"])
+
+    counts = {"settled": 0, "void": 0, "not_visible": 0}
+    omitted_seen = {"settled": 0, "void": 0}
+
+    for pair in pairs:
+        trade_id = pair.get("trade_id")
+        if not trade_id:
+            continue
+        info = trade_outcome_from_flow(trade_id)
+        outcome = info["outcome"]
+        omitted_seen = info["omitted"]
+        if outcome:
+            status = outcome["status"]
+            counts[status] += 1
+            print(
+                trade_id,
+                pair.get("long"),
+                pair.get("short"),
+                "OUTCOME:",
+                status.upper(),
+                "sweep:",
+                outcome.get("sweep"),
+            )
+        else:
+            counts["not_visible"] += 1
+            print(
+                trade_id,
+                pair.get("long"),
+                pair.get("short"),
+                "OUTCOME: NOT_VISIBLE",
+            )
+
+    print("summary:", json.dumps(counts, sort_keys=True))
+    print("retained_flow_omitted:", json.dumps(omitted_seen, sort_keys=True))
+    if counts["void"]:
+        print("BRACKET_CHECK: REVIEW_VOID")
+    elif counts["settled"] == len(pairs):
+        print("BRACKET_CHECK: ALL_VISIBLE_SETTLED")
+    elif counts["not_visible"] and (omitted_seen["settled"] or omitted_seen["void"]):
+        print("BRACKET_CHECK: OUTCOMES_PARTLY_OR_FULLY_OMITTED")
+    else:
+        print("BRACKET_CHECK: PENDING_OR_INCONCLUSIVE")
+
+
 def cmd_open_bracket(_args) -> None:
     state = load_state()
     require_fleet_gate(state)
@@ -724,6 +808,9 @@ def main() -> None:
 
     p = sp.add_parser("open-bracket")
     p.set_defaults(fn=cmd_open_bracket)
+
+    p = sp.add_parser("check-bracket")
+    p.set_defaults(fn=cmd_check_bracket)
 
     args = ap.parse_args()
     args.fn(args)
