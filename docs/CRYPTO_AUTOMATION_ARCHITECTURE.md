@@ -1,132 +1,121 @@
 # Crypto Automation Architecture
 
-Updated: 2026-09-26
+Updated: 2026-09-26 12:05 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## 目标
+The system deliberately uses the existing automations only. Repair and QA must not create additional monitors unless the user explicitly asks.
 
-解决此前三个共同问题：
+## Schedule
 
-1. 单轮任务负载过大，搜索完成后在 GitHub 写入或发布阶段失败。
-2. 09:00 发布失败后缺少自动恢复。
-3. scheduler 有触发记录，但缺少 GitHub heartbeat，无法确认功能真的执行。
+- :00 Crypto 每日情报
+- :14 全项目空投与TGE监控
+- :29 $300 Crypto盈利监控
+- 19:29 the same $300 Mission run also produces the monster daily summary
 
-本次修复遵循一个额外约束：**不新增监控任务，沿用已有 Crypto 自动化。**
+The legacy separate monster task stays disabled.
 
-## Layer A: Crypto 每日情报
+## Reliability principle
 
-同一个现有 automation 每小时 :00 运行，通过当前小时切换模式。
+Each run starts with a durable skeleton audit before expensive work.
 
-### 普通小时
-- 快速市场与事件扫描；
-- 最多保留 8 个 material candidates；
-- 只写简短、转述后的 research；
-- 写 run audit；
-- 不发 Gmail。
+A scheduler timestamp alone is not success.
 
-### 09:00
-- 先创建最小 run audit heartbeat；
-- 先检查当天 Gmail Sent 与 GitHub official report；
-- 缺失时直接使用过去24h已落盘 research，并只做最高优先级事实的短 fresh verification；
-- 按 REPORT_SPEC 生成唯一13章日报；
-- Gmail first；
-- GitHub archive second；
-- 正式交付完成后才补做可选的09:00增量采集；
-- Gmail成功而GitHub失败时记 partial_success，后续只补GitHub。
+A run should finish as success, partial_success, partial_failure or failed. It should never intentionally remain in_progress.
 
-### 10:00 / 11:00
-同一个任务优先做 missing-delivery recovery：
-- 两边都完整：再按普通小时执行；
-- Gmail 有、GitHub 缺：先补 GitHub；
-- GitHub 有、Gmail 缺：先 QA 后补 Gmail；
-- 两边都缺：先重试当日日报。
-恢复完成前不让普通小时采集阻塞交付。
+Temporary tool/source/GitHub/Gmail problems must not automatically pause or disable an existing automation.
 
-因此不需要额外的“Crypto 日报发布”scheduler。
+## Crypto Daily
 
-## Layer B: Specialist monitors
+One existing hourly automation.
 
-### TGE
-每小时 :14。
+Ordinary hours:
+- core market/security scan every hour;
+- one rotating discovery shard;
+- compact research;
+- finalized audit;
+- no Gmail.
 
-每轮：
-- 所有 urgent 项目；
-- REGISTRY 的一个 shard；
-- 4 小时覆盖全 registry；
-- 正式 trigger 才通知；
-- 第一次跨过 00:00 的 run 生成上一日 summary。
+09:00:
+- delivery first;
+- use prior 24h stored research plus short fresh verification;
+- Gmail first, readback, GitHub archive;
+- optional new research only after delivery.
 
-### Mission
-每小时 :29。
+10:00 / 11:00:
+- recovery first;
+- dedupe Gmail + GitHub;
+- repair only the missing side;
+- then ordinary collection.
 
-职责：
-- 真实仓位、资金、gas；
-- ETH / XRP / PONS / JUMP；
-- launch / NFT；
-- 妖币 squeeze V2.1；
-- opportunity ACTION/WATCH；
-- 风险和安全事件。
+## TGE
 
-妖币 V2.1 已并入 Mission，独立妖币任务保持关闭。
+Every hour :14:
+- skeleton first;
+- urgent set;
+- one registry shard;
+- four-hour full registry coverage;
+- checked_no_update is healthy;
+- only real access/tool failures count as source failures;
+- ACTION only triggers Gmail + ChatGPT.
 
-## GitHub 目录职责
+## $300 Mission
 
-```text
-crypto-daily/
-  REPORT_SPEC.md            正式日报内容规范
-  COLLECTOR_SPEC.md         普通小时采集规范
-  DELIVERY_RUNBOOK.md       09:00/10:00/11:00 同任务发布/恢复规则
-  research/YYYY-MM-DD/      小时素材
-  reports/daily/            正式日报
-  runs/YYYY-MM-DD/          每轮 audit
+Every hour :29.
 
-crypto-300-profit-mission/
-  MISSION_SPEC.md           策略与资金权威
-  RUNBOOK.md                每小时执行合同
-  state/latest.md           最新状态
-  health/current.md         scheduler / lane 健康
-  positions/                活动仓位
-  watchlists/               监控模型
-  runs/                     不可变 run audit
+Phase A, always first:
+- live wallet/gas;
+- PONS;
+- XRP/Variational;
+- ETH;
+- BTC regime;
+- JUMP/deadline;
+- active-position security.
 
-airdrop-tge-monitor/
-  REGISTRY.md               canonical 白名单与 shard
-  MONITOR_SPEC.md           执行规则
-  state/current.md          shard/urgent 状态
-  reports/events/           正式触发事件
-  reports/daily/            每日汇总
-  runs/                     每小时 audit
-```
+Phase B:
+- read at most two recent Crypto Daily research files;
+- one bulk derivatives universe screen;
+- deep-check only shortlisted monster candidates;
+- deep launch/NFT/FOMO verification only for actual candidates or stale-upstream fallback.
 
-## 失败降级标准
+Phase C:
+- UNICRED / Credits and slower data every 3h or when material.
 
-### GitHub research write 被 safety check 拦截
-先把 research 压缩为：
-- topic；
-- 1-3 句 paraphrase；
-- source domains / source names；
-- market numbers；
-- confidence；
-- no raw exploit steps；
-- no large copied text。
+This preserves the monitoring scope while avoiding duplicate full-web crawls in both Crypto Daily and Mission.
 
-再次写入。仍失败时：
-- run audit 记录 `research_write_failed:true`；
-- 当前轮其它部分继续；
-- 下一轮不得假称上一轮 research 已成功。
+## Repository authority
 
-### 外部数据源失败
-- 单一 source 失败：继续其它来源。
-- mandatory source 全部失败：该 lane partial_failure。
-- 其它 lane 继续。
-- 同一 mandatory lane 连续两轮失败：由对应监控触发 health alert。
+`crypto-daily/`
+- COLLECTOR_SPEC.md: hourly research runtime
+- REPORT_SPEC.md: formal daily content
+- DELIVERY_RUNBOOK.md: delivery/recovery
+- research/: rolling inputs
+- reports/daily/: official report
+- runs/: immutable audits
 
-### Gmail 失败
-- Crypto 正式日报：10:00/11:00 同一个任务继续恢复。
-- Mission/TGE action alert：ChatGPT 通知仍需产生，GitHub 记录 Gmail error。
+`crypto-300-profit-mission/`
+- MISSION_SPEC.md: compact global policy
+- RUNBOOK.md: execution contract
+- portfolio/current.md: live capital state
+- performance/current.md: PnL accounting
+- state/latest.md: current Mission state
+- health/current.md: scheduler health
+- positions/: per-position rules
+- watchlists/: model-specific rules
+- runs/: immutable audits
 
-## 成功判定
+`airdrop-tge-monitor/`
+- REGISTRY.md
+- MONITOR_SPEC.md
+- state/current.md
+- reports/
+- runs/
 
-scheduler 触发本身不等于 success。
+## Data truth
 
-只有对应 run audit 已写入，且本轮必须 lane 有可审计状态，才算真实运行。
+Fresh wallet/RPC reads outrank old snapshots.
+
+Private venue state remains USER_CONFIRMED until directly connected or refreshed by the user.
+
+Unknown tokens are excluded from NAV until identified.
+
+No successful alert/report may be claimed without the required Gmail/GitHub readback specified by its runbook.
