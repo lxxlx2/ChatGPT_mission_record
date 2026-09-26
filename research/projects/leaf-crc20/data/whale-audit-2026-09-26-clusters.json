@@ -1,0 +1,13 @@
+{
+  "recurring_infrastructure_input_addresses": [
+    {
+      "address": "bc1q54cxdsctws0uxy6lx6uar5agzm07z3a7wu0zt2",
+      "acquisition_tx_count": 149
+    }
+  ],
+  "multi_seller_clusters": [],
+  "strong_edges": [],
+  "common_parent_transactions": [],
+  "common_upstream_addresses": [],
+  "method_note": "Immediate UTXO ancestry and common-funder heuristics indicate linkage, not proof of common beneficial ownership. Recurring trade-template addresses are separated from ownership evidence."
+}

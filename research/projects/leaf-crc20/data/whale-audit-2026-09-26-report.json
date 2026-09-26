@@ -1,0 +1,37 @@
+{
+  "whale_address": "bc1pa8vrkzs2wrrh6nsu862vj50vgmsajtju5yv52atlm6xdf0nmaesqrffjrs",
+  "address_history_tx_count": 153,
+  "acquisition_tx_count": 149,
+  "unique_seller_address_count": 120,
+  "ico20_leaf_acquired_sum": 107813367.5647406,
+  "seller_net_received_btc_sum": 0.5475904,
+  "whale_net_spend_btc_sum": 0.57376186,
+  "network_fee_btc_sum": 0.00173357,
+  "recurring_infrastructure_input_addresses": [
+    {
+      "address": "bc1q54cxdsctws0uxy6lx6uar5agzm07z3a7wu0zt2",
+      "acquisition_tx_count": 149
+    }
+  ],
+  "multi_seller_cluster_count": 0,
+  "multi_seller_cluster_sizes": [],
+  "sellers_with_direct_recurring_protocol_upstream": 0,
+  "claim_checks": {
+    "claimed_acquisition_txs_149": true,
+    "claimed_unique_sellers_120": true,
+    "claimed_leaf_107813367_5647406": true,
+    "claimed_btc_0_605": {
+      "seller_net_received_btc": 0.5475904,
+      "whale_net_spend_btc": 0.57376186,
+      "note": "The post may use a different cost convention. Both seller net receipts and whale net outflow are reported."
+    }
+  },
+  "method_notes": [
+    "Acquisition requires whale input plus ICO-20 LEAF transfer plus at least one non-whale input.",
+    "Recurring non-whale input addresses are treated as protocol/coordinator infrastructure, not sellers.",
+    "Seller is inferred from non-infrastructure input address that also receives a positive output; fallbacks are flagged.",
+    "Seller net BTC equals outputs to inferred seller minus that seller's input sats.",
+    "Whale net BTC outflow equals whale input sats minus outputs returning to whale.",
+    "Immediate parent and common upstream address reuse are linkage heuristics, not proof of common ownership."
+  ]
+}

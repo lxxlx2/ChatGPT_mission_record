@@ -101,21 +101,25 @@ https://mempool.space/tx/0300a053f5a1172e67465fe9c7e68eb5cd3c8b9c5932138cdc7f202
 
 这些样本确认存在持续的 BTC 对价 ICO-20 LEAF 归集行为。
 
-## 社交媒体统计的当前证据状态
+## 社交媒体统计的全量复算结果
 
-待全量复算 claim：
+2026-09-26 本机全量脚本完成 153 笔地址历史扫描，并识别 149 笔 acquisition transaction。
 
-- 149 acquisition transactions: UNRESOLVED
-- 120 seller addresses: UNRESOLVED
-- 0.605 BTC cost: UNRESOLVED，且需要先明确 cost 口径
-- 107,813,367.5647406 old ICO-20 LEAF accumulated/migrated: migration amount CONFIRMED
+CONFIRMED：
 
-0.605 BTC 至少存在三种可能口径：
-- seller net BTC receipts
-- whale net BTC outflow
-- seller receipts + protocol/service cost + network fee
+- 149 acquisition transactions。
+- 120 unique inferred seller addresses。
+- 107,813,367.5647406 old ICO-20 LEAF acquisition sum。
+- recurring trade infrastructure address `bc1q54cxdsctws0uxy6lx6uar5agzm07z3a7wu0zt2` 出现在全部 149 笔 acquisition。
 
-因此全量脚本会同时输出这些口径，不强行让结果匹配帖子数字。
+BTC 对价按不同口径为：
+
+- seller net BTC receipts: 0.5475904 BTC。
+- whale net BTC outflow: 0.57376186 BTC。
+- Bitcoin network fee: 0.00173357 BTC。
+- whale net outflow - seller receipts - network fee = 0.02443789 BTC，目前只记为 other transaction value flow，尚未完成逐输出归因。
+
+因此社交媒体所称 0.605 BTC 暂时无法按当前三种可复算口径重现，维持 UNRESOLVED。0.605 BTC 比当前复算的 whale net outflow 高 0.03123814 BTC，后续只有在逐笔输出归因能够解释差额时才升级为 CONFIRMED。
 
 ## 卖方集群方法
 
@@ -151,11 +155,29 @@ Recurring trade-template address 单独分类。协议模板重复只能证明�
 - `leaf_crc20_whale_sellers.csv`
 - `leaf_crc20_whale_clusters.json`
 
-Final classification 在这些文件回传后更新为：
+## 全量审计后的集群结论
 
-- independent whale accumulation
-- mixed organic sellers + linked cluster
-- concentrated organized distribution
-- UNRESOLVED
+当前一跳 UTXO funding graph 结果：
+
+- multi-seller clusters: 0。
+- strong linkage edges: 0。
+- common parent transactions: 0。
+- common upstream addresses: 0。
+- sellers with direct recurring protocol upstream: 0。
+
+因此当前分类更新为：
+
+**INFERRED: independent whale accumulation**
+
+含义仅限当前可见的一跳链上证据：149 笔买入确实由同一 whale 持续提供 BTC，对手方被识别为 120 个 seller 地址，同时没有发现多个 seller 共用 immediate parent、共同 upstream funder 或直接由 recurring protocol infrastructure funding 的证据。
+
+这不能证明 120 个地址对应 120 个独立实际控制人。当前脚本只做 immediate parent / one-hop upstream linkage，若需要排除更深层地址集群，下一阶段应做 2-3 hop ancestry、地址复用、共同时间窗口和项目方已知地址标签交叉检查。
 
 只有共同资金源或其他强链上证据足够时，才会写入项目方关联判断。
+
+## 已归档机器结果
+
+- `data/whale-audit-2026-09-26-report.json`
+- `data/whale-audit-2026-09-26-clusters.json`
+
+详细 acquisitions / sellers CSV 由本机脚本生成，用于本轮统计复核；仓库当前保留汇总和集群机器结果以及可复跑脚本。
