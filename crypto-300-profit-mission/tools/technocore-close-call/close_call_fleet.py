@@ -394,6 +394,13 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
         }
 
     if not flow_lists_room(flow, state["room"]):
+        # Any owner registrations posted while the room is absent may never be
+        # read by the referee. Mark the whole pending batch for a clean owner
+        # re-registration after the room is listed again.
+        pending["needs_owner_reregister"] = True
+        pending["room_missing_observed_sweep"] = pr["n"]
+        dense["pending"] = pending
+
         requested = dense.get("room_registration_requested_sweep")
         ack = None
         if requested != pr["n"]:
@@ -405,13 +412,56 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
             )
             dense["room_registration_requested_sweep"] = pr["n"]
             dense["room_registration_requested_at"] = datetime.now(timezone.utc).isoformat()
-            save_state(state)
+        save_state(state)
         return {
             "event": "dense_wait_room_registration",
             "sweep": pr["n"],
             "room": state["room"],
             "registration_posted": requested != pr["n"],
+            "pending_index": pending.get("index"),
+            "owner_reregister_required": True,
             "ack": ack.strip().splitlines()[0] if isinstance(ack, str) and ack.strip() else None,
+        }
+
+    # If the room has just returned after an automatic room re-registration,
+    # re-post all owner registrations for the pending batch inside the active
+    # room. Then wait one more sweep before sending trades. Duplicate owner
+    # registrations are harmless under rule 3.
+    room_recovered = (
+        bool(pending.get("needs_owner_reregister"))
+        or dense.get("room_registration_requested_sweep") is not None
+    )
+    if room_recovered:
+        labels = pending["labels"]
+        reposted = []
+        for role, label in labels.items():
+            did = state["keys"][label]["did"]
+            ack = post_signed(state, state["room"], label, owner_text(did))
+            reposted.append({
+                "role": role,
+                "label": label,
+                "did": did,
+                "posted_at": datetime.now(timezone.utc).isoformat(),
+                "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+            })
+            time.sleep(0.08)
+        pending.setdefault("owner_reregistrations", []).append({
+            "sweep": pr["n"],
+            "records": reposted,
+        })
+        pending["needs_owner_reregister"] = False
+        pending["registered_sweep"] = pr["n"]
+        pending["ready_after_sweep"] = pr["n"] + 1
+        dense["pending"] = pending
+        dense.pop("room_registration_requested_sweep", None)
+        dense.pop("room_registration_requested_at", None)
+        save_state(state)
+        return {
+            "event": "dense_owner_registrations_reposted",
+            "sweep": pr["n"],
+            "index": pending.get("index"),
+            "ready_after_sweep": pending["ready_after_sweep"],
+            "count": len(reposted),
         }
 
     dense.pop("room_registration_requested_sweep", None)
@@ -545,7 +595,7 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     # Retry a ready pending batch on the same sweep until flow/state catch up.
     # Only de-duplicate after the pending batch has either submitted or is not yet ready.
     submitted = dense_submit_pending(state, pr)
-    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup", "dense_wait_room_registration"):
+    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup", "dense_wait_room_registration", "dense_owner_registrations_reposted"):
         dense["last_seen_sweep"] = pr["n"]
         save_state(state)
         pending = dense_register_pending(state, pr["n"])
@@ -1653,6 +1703,8 @@ def cmd_dense_status(_args) -> None:
         print("pending_index:", pending.get("index"))
         print("pending_status:", pending.get("status"))
         print("pending_ready_after_sweep:", pending.get("ready_after_sweep"))
+        print("pending_needs_owner_reregister:", bool(pending.get("needs_owner_reregister")))
+        print("pending_owner_reregister_count:", len(pending.get("owner_reregistrations") or []))
     else:
         print("pending_index: null")
         print("pending_status: null")
