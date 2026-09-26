@@ -102,12 +102,16 @@ Use `docs/MONITORING/NOTIFICATION_POLICY.md`.
 
 Default is silent.
 
-Send Gmail + ChatGPT only for:
-- a new stored-rule trigger;
-- a new wallet/security/deadline anomaly;
-- a new MONITOR_HEALTH_GAP / MONITOR_LANE_FAILURE;
-- the scheduled 19:29 Monster factual daily summary.
+Monitoring/runtime/source/audit problems are GitHub-only and do not generate Gmail or ChatGPT alerts.
 
-Deduplicate health incidents using the notification policy. Recovered/optional warnings stay silent.
+Send Gmail + ChatGPT only for substantive stored-rule events:
+- stop/TP/event threshold crossing;
+- qualified stored ETH setup;
+- materially changed WATCH;
+- Monster IGNITION / relevant EXHAUSTION;
+- material real-asset wallet anomaly;
+- material active-position security/deadline event;
+- verified launch/NFT/TGE opportunity timing/eligibility change;
+- scheduled 19:29 Monster factual daily summary.
 
-When no alert is required, return an empty user-visible response.
+When no substantive alert is required, return an empty user-visible response.
