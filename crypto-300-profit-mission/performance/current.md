@@ -1,6 +1,6 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-26 12:21 Asia/Bangkok
+Updated: 2026-09-26 13:00 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Rules
@@ -27,7 +27,8 @@ Native assets:
 - Solana: 0.135545164 SOL.
 - Base: 0.000790846510479134 ETH.
 - Unichain: 0.000231941590232335 ETH.
-- Robinhood Chain: 0.000081643478484768 native.
+- Robinhood Chain: **0.000826657957256326 ETH**.
+- Robinhood Chain PONS: **54.799953441979625 PONS**, current mark value **~35.34 USD**.
 
 Other:
 - unidentified Solana SPL: 1.745552 tokens, value UNRESOLVED.
@@ -59,11 +60,28 @@ USER_CONFIRMED at 2026-09-26 06:08:
 - realized P&L: 0 until a close is verified.
 
 ### PONS
-USER_CONFIRMED:
-- 0.6250 first entry filled.
-- 0.5850 / 0.5450 pending.
-- exact current private position quantity and PnL: UNRESOLVED.
-- realized P&L: 0 unless close is verified.
+
+Binance futures USER_CONFIRMED at 2026-09-26 12:58:
+- LONG, isolated 3x.
+- entry 0.6250.
+- current notional 41.32 USDT.
+- margin 13.20 USDT.
+- unrealized PnL shown: **+1.31 USDT**.
+- realized PnL shown: **-0.13 USDT**.
+- hard stop 0.4980.
+- 0.5850 and 0.5450 resting entries: **canceled**.
+
+Robinhood Chain DIRECT_CHAIN:
+- spot balance: **54.799953441979625 PONS**.
+- fresh token price: **0.6448796581 USD**.
+- spot mark value: **~35.34 USD**.
+- native gas: **0.000826657957256326 ETH**, mark value **~2.22 USD**.
+
+User confirms the remaining Binance order capital was withdrawn and converted to PONS spot + gas.
+
+The original PONS sleeve came from a 50-USDT budget, but current exact total PnL is **UNRESOLVED** because spot acquisition cost, withdrawal fee and swap execution cost have not yet been fully reconstructed.
+
+Do not count current spot market value as realized profit.
 
 ### UNICRED #230
 - acquisition cost: 0.0105 ETH.
