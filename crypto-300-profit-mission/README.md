@@ -1,32 +1,62 @@
 # Crypto $300 Profit Mission
 
-这是 Crypto 资产与机会的实际决策层。
+Crypto 资产、活动仓位与机会的决策层。
 
 ## 权威文件
 
-- `MISSION_SPEC.md`：资金、仓位、策略和通知门槛。
-- `RUNBOOK.md`：每小时 scheduler 执行合同。
-- `portfolio/current.md`：资金分布。
-- `performance/current.md`：收益口径。
-- `state/latest.md`：最新综合状态。
-- `health/current.md`：运行健康。
+- `MISSION_SPEC.md`：精简后的全局策略、资金、通知与数据真实性规则
+- `RUNBOOK.md`：每小时 scheduler 的分阶段执行合同
+- `portfolio/current.md`：当前资金分布
+- `performance/current.md`：收益口径
+- `state/latest.md`：当前综合状态
+- `health/current.md`：scheduler / lane 健康
+- `positions/`：各活动仓位的细则
+- `watchlists/`：BTC、NFT、Monster V2.1、SAGA、FOMO 等模型
+- `runs/`：不可变执行 audit
 
-## 目录
+## 每小时 :29
 
-- `positions/`：活动或历史仓位。
-- `watchlists/`：BTC regime、NFT、妖币 V2.1、FOMO flow 等模型。
-- `radar/`：机会雷达。
-- `signals/`：已确认信号。
-- `runs/`：每次 scheduler audit。
-- `reports/`：日级摘要。
-- `portfolio/`：资金。
-- `performance/`：收益。
-- `health/`：运行健康。
+### Phase A
+优先完成：
+- Ethereum / Solana 实时资金与 gas
+- PONS
+- XRP / Variational
+- ETH conditional
+- BTC regime
+- JUMP / deadline
+- 活动仓位安全事件
 
-## 调度
+### Phase B
+机会发现：
+- 优先读取最近两份 Crypto Daily research
+- Monster V2.1 用一次 bulk universe screen 做全市场覆盖
+- 只对 shortlist 做 funding/OI/taker/top-trader 深查
+- launch / NFT / FOMO 只对真实候选深查
+- 上游 research 过旧时才做 compact fallback discovery
 
-每小时 :29 Asia/Bangkok。
+### Phase C
+每 3 小时或发生重大事件时：
+- UNICRED
+- Credits
+- 其它慢速数据
 
-Crypto Daily :00 负责信息采集，TGE :14 负责权益事件，Mission :29 负责资金决策，避免三个任务抢同一时间窗口。
+这种结构保留原有监控范围，同时避免每个小时重复跑多套完整全网搜索。
 
-妖币 V2.1 已完全并入本任务，独立“妖币每日汇总”自动化保持关闭。
+## Monster V2.1
+
+已经完全并入本 Mission。
+
+独立 `妖币每日汇总` automation 保持关闭。
+
+19:29 的日汇总仍由本 Mission 同一轮输出。
+
+## 成功标准
+
+自动触发后必须：
+1. 先创建 skeleton audit
+2. 留下 Phase A 状态
+3. 留下 discovery 状态
+4. 更新 state / health
+5. finalize 同一个 audit
+
+只有 scheduler last_run_time，没有 finalized audit，不算成功。
