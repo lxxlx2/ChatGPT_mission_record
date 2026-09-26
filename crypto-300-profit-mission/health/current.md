@@ -50,3 +50,14 @@ A scheduler run is successful only after:
 5. the run audit is finalized.
 
 Scheduler metadata alone is not proof of success.
+
+
+## Scheduler repair — 2026-09-26
+- root_cause_classification: scheduler execution semantics / side-effect reliability, not repository permission
+- GitHub repository permission: admin + push confirmed
+- GitHub contents write validation: PASS
+- validation audit: runs/2026-09-26/090700-repair-validation.md
+- scheduler mode correction: condition_watch -> exact_schedule
+- run contract: skeleton audit first, lanes continue independently, state/health update, then audit finalization
+- write failure behavior: retry bounded; mark partial_failure/failed; never auto-disable monitor
+- verification_pending: next scheduled :29 run must create and finalize its own audit
