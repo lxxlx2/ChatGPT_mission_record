@@ -1,5 +1,7 @@
 # Crypto Hourly Collector Spec
 
+Mode: FACTUAL_NEWS_COLLECTOR
+
 Updated: 2026-09-26 12:05 Asia/Bangkok
 Timezone: Asia/Bangkok
 
@@ -121,3 +123,25 @@ Normal no-result/no-update is not a failure.
 Single source failure does not abort the run.
 
 Temporary failure never disables or pauses the automation.
+
+
+## Runtime-policy boundary
+
+This hourly collector is factual research only.
+
+It may:
+- retrieve public market/news/official-source facts;
+- calculate descriptive market statistics;
+- save compact research/audit files;
+- identify topics that deserve later human review.
+
+It must not:
+- recommend a personalized trade;
+- invent entry/exit/stop/leverage/position size;
+- tell the user to buy/sell/short/long;
+- execute or prepare transactions;
+- reallocate the user's capital.
+
+Candidate labels in this collector mean research priority only. Investment/action decisions belong to interactive chat or a separately authorized rule monitor.
+
+The first GitHub skeleton audit is intentionally content-neutral and must be attempted before reading other project files or starting external research.
