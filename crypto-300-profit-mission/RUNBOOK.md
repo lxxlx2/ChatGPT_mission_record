@@ -11,6 +11,11 @@ MISSION_SPEC.md 保留策略、资金与仓位权威。本文件只定义每小�
 
 ## Start-of-run
 
+**第一项持久化动作必须先写 skeleton audit，再做重研究。**
+
+1. 只获取当前 Asia/Bangkok 时间并创建唯一 `runs/YYYY-MM-DD/HHMMSS.md`，初始 `run_status: in_progress`。
+2. skeleton 成功后再读执行文件。
+
 必读：
 1. MISSION_SPEC.md
 2. state/latest.md
@@ -75,11 +80,12 @@ MISSION_SPEC.md 保留策略、资金与仓位权威。本文件只定义每小�
 先写最小 run audit，再写 state/health 的完整更新，避免整轮完成研究后没有任何 heartbeat。
 
 推荐顺序：
-1. create skeleton audit: run_status=in_progress
-2. execute lanes
-3. update state/latest
-4. update health/current
-5. finalize same run audit status
+1. create skeleton audit: run_status=in_progress，必须发生在完整文件读取、市场搜索和所有重 lane 之前
+2. read RUNBOOK/MISSION_SPEC/current files
+3. execute lanes
+4. update state/latest
+5. update health/current
+6. finalize same run audit status
 
 若最终 update 失败，至少 skeleton audit 能证明 scheduler 确实启动过。
 
