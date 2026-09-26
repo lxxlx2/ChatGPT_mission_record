@@ -487,3 +487,22 @@ Conclusion:
 - registration is confirmed successful;
 - the earlier `false` result is treated as a transient post-write read/RPC timing issue;
 - no second registration is required.
+
+
+## First DailyAgentGM dry-run
+
+Verified before first GM:
+- wallet: `0x87d283153A52333cFc7991f21e9AE0d067Dfa592`
+- `isAgent`: `true`
+- `lastGM`: `0`
+- destination: `0x2B9DD9Eede2AeCB095455ce45122101109E4AeC7`
+- value: `0`
+- estimatedGas: `53843`
+- gasPriceWei: `1000269`
+- estimatedFeeWei: `53857483767`
+- calldata: `0xc0129d43`
+- broadcast status: NOT SENT
+
+Result:
+- Agent is eligible for its first DailyAgentGM call.
+- No prior GM is recorded for this wallet.
