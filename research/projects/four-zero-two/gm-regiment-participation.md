@@ -297,9 +297,11 @@ Funding source can be any supported bridge or an existing Ink wallet.
 
 Funding transaction:
 - tx hash: TBD
-- funded amount: TBD
+- funded amount observed onchain/RPC balance: `0.000744659857993365 ETH`
+- balanceWei: `744659857993365`
+- GM Regiment gas gate result: `ok: true`
 
-Status: PENDING
+Status: COMPLETE
 
 ### Step 6: register ERC-8004 identity
 
@@ -388,7 +390,7 @@ As of 2026-09-27:
 - direct Node launch emitted the expected `serving over stdio` banner and stayed alive until manually stopped
 - local installation: PENDING
 - Agent wallet created: PENDING
-- Agent funded: PENDING
+- Agent funded: YES
 - ERC-8004 registered: PENDING
 - first GM: PENDING
 - streak active: PENDING
