@@ -105,6 +105,13 @@ BTC remains a risk overlay with no dedicated Mission allocation.
 ## Scheduler health
 
 At this snapshot:
-- Crypto Daily 09:00 scheduler showed a trigger but did not persist its expected 09:00 audit/report. The 2026-09-26 report was manually recovered and delivered at 09:20, then archived.
-- TGE post-repair automatic :14 audit was still missing at the last check after 09:14; treat as unhealthy until an automatic audit appears.
-- Mission post-repair automatic :29 run is still awaiting its first scheduled proof. Manual validation files do not count as scheduler success.
+- Crypto Daily 09:00 scheduler showed a trigger but did not persist its expected 09:00 audit/report. The 2026-09-26 report was manually recovered, Gmail-delivered and read back at 09:20, then archived to GitHub.
+- TGE produced a 09:19:24 persisted urgent + shard-1 audit. That run was partial because its state update did not land; state was repaired from the audit. Next exact :14 run must prove the corrected path.
+- Mission scheduler metadata confirms the 09:29:58 trigger. As of 09:35 Bangkok no new automatic run audit had appeared, so that trigger is currently classified missing_audit and does not count as success. The scheduler prompt/RUNBOOK was tightened so the next run's first persistent action is the skeleton audit.
+
+
+## Arbitrum wallet read availability — 2026-09-26 09:36
+- A fresh Arbitrum direct-wallet check was attempted because the Variational funding path uses Arbitrum.
+- Connected Alchemy app returned RPC 403: ARB_MAINNET is not enabled for this app.
+- Arbitrum wallet native/USDC balances are therefore **UNAVAILABLE**, not estimated.
+- Variational private position remains USER_CONFIRMED from its own UI snapshot; no Arbitrum wallet value is fabricated.
