@@ -33,7 +33,7 @@ After skeleton creation read:
 - `state/latest.md`
 - `health/current.md`
 - `positions/pons.md`
-- `positions/xrp-variational.md`
+- `positions/xrp-variational.md` — closed historical record
 - `positions/eth-conditional.md`
 - `positions/jump.md`
 - `watchlists/btc-regime-jasonleo.md`
@@ -65,16 +65,10 @@ Allowed outputs:
 
 Do not generate a new order, stop, target or size.
 
-### XRP / Variational
-Read public XRP price/derivatives/security data and compare with stored trigger rules.
+### XRP / Variational — CLOSED
+Historical authority: `positions/xrp-variational.md`.
 
-Allowed outputs:
-- stored TP/SL/event threshold crossed;
-- rapid-move / OI / funding trigger crossed;
-- relevant Bitget-event factual change;
-- no trigger.
-
-Do not infer private fill/PnL/order changes.
+The user confirmed the 1.5140 lower bound was hit and the position is closed. Do not run XRP price/derivatives/Bitget-flow checks in the hourly Mission unless the user explicitly reactivates a relevant position.
 
 ### ETH
 Evaluate only the exact stored Setup A / Setup B / breakout conditions.
