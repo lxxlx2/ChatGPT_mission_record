@@ -575,3 +575,25 @@ Verification:
 - the runner did not broadcast during cooldown;
 - the 120-second safety buffer was applied correctly;
 - the runner is ready to be scheduled through the user's macOS LaunchAgent.
+
+
+### LaunchAgent final verification
+
+Verified locally on macOS:
+- plist validation: OK
+- LaunchAgent label: `com.jerson.gm-regiment-daily`
+- schedule interval: 300 seconds
+- `RunAtLoad`: enabled
+- background runs observed: 2
+- last exit code: 0
+- stderr log: empty
+- background Keychain access: working
+- background RPC reads: working
+- cooldown guard returned `COOLDOWN_ACTIVE`
+- no unintended GM transaction was broadcast during cooldown
+
+Operational note:
+- the job is short-lived, so `state = not running` between checks is expected;
+- it will run automatically while the Mac user session is active;
+- if the Mac is asleep, powered off, or logged out, execution resumes after wake/login;
+- the wallet UI can be used as a simple user-facing check: a successful future daily `签到` entry to `0x2B9DD9Eede2AeCB095455ce45122101109E4AeC7` indicates the scheduled GM transaction was sent.
