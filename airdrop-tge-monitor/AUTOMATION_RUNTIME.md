@@ -79,9 +79,9 @@ No optional cache write may occur before the final/final-retry attempt.
 
 Use `docs/MONITORING/NOTIFICATION_POLICY.md`.
 
-- checked_no_update / NO_ACTION: empty user-visible response, no Gmail.
-- verified ACTION: Gmail + ChatGPT.
-- new monitor-health incident: one deduplicated Gmail + ChatGPT alert.
+- checked_no_update / NO_ACTION: silent.
+- source/tool/runtime/audit failure: log to GitHub only, no Gmail/ChatGPT.
+- verified substantive ACTION affecting eligibility, entitlement, claim, timing, allocation or distribution: Gmail + ChatGPT.
 - recovered_warning / optional cache failure: silent.
 
-Do not repeat the same health incident every hour.
+When no substantive ACTION exists, return an empty user-visible response.
