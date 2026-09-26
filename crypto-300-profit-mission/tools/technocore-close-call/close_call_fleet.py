@@ -313,6 +313,38 @@ def flow_lists_room(flow: dict | None, room: str) -> bool:
         return False
 
 
+def room_recent_activity_age_s(room: str) -> int | None:
+    try:
+        rows = parse_export(room)
+    except Exception:
+        return None
+    for rec in reversed(rows):
+        ts = rec.get("ts")
+        if not isinstance(ts, str):
+            continue
+        try:
+            dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+            return max(0, int((datetime.now(timezone.utc) - dt).total_seconds()))
+        except Exception:
+            continue
+    return None
+
+
+def room_registration_confirmed(state: dict) -> bool:
+    dense = state.setdefault("dense", {})
+    if dense.get("room_registration_confirmed"):
+        return True
+    try:
+        if room_seen(state["room"]):
+            dense["room_registration_confirmed"] = True
+            dense["room_registration_confirmed_at"] = datetime.now(timezone.utc).isoformat()
+            save_state(state)
+            return True
+    except Exception:
+        pass
+    return False
+
+
 def dense_qty(ref_px: Decimal) -> Decimal:
     q = DENSE_QTY_SAFETY * Decimal("10000") / (ref_px * DENSE_FUNDS_FACTOR)
     return q.quantize(Decimal("0.01"), rounding=ROUND_DOWN)
@@ -375,25 +407,23 @@ def dense_register_pending(state: dict, sweep: int) -> dict:
 
 
 def dense_room_maintenance(state: dict, pr: dict) -> dict | None:
-    """Maintain the active trading-room/owner-registration prerequisites.
+    """Maintain room/owner prerequisites independently of price freshness.
 
-    This intentionally runs even when the trading reference is stale. Room and
-    owner registration do not depend on price freshness, so doing this work
-    early avoids wasting the next fresh sweep on recovery.
+    Important: flow.rooms is a per-sweep registration record, not a durable
+    membership list. A room does not need to appear in every later flow post.
+    Once a registration is observed, keep that fact locally. The room itself is
+    kept alive by our continuing writes, so technocore's 7-day idle deletion
+    rule is not a practical risk while this autopilot is running.
     """
     dense = state.setdefault("dense", {})
     pending = dense.get("pending")
     if not isinstance(pending, dict):
         return None
 
-    flow, _st = latest_flow_and_state()
-    flow_n = int(flow["n"]) if isinstance(flow, dict) and flow.get("n") is not None else pr["n"]
+    latest_flow, _st = latest_flow_and_state()
+    flow_n = int(latest_flow["n"]) if isinstance(latest_flow, dict) and latest_flow.get("n") is not None else pr["n"]
 
-    if not flow_lists_room(flow, state["room"]):
-        pending["needs_owner_reregister"] = True
-        pending["room_missing_observed_sweep"] = flow_n
-        dense["pending"] = pending
-
+    if not room_registration_confirmed(state):
         requested = dense.get("room_registration_requested_sweep")
         ack = None
         if requested != flow_n:
@@ -405,7 +435,7 @@ def dense_room_maintenance(state: dict, pr: dict) -> dict | None:
             )
             dense["room_registration_requested_sweep"] = flow_n
             dense["room_registration_requested_at"] = datetime.now(timezone.utc).isoformat()
-        save_state(state)
+            save_state(state)
         return {
             "event": "dense_wait_room_registration",
             "sweep": pr["n"],
@@ -413,49 +443,50 @@ def dense_room_maintenance(state: dict, pr: dict) -> dict | None:
             "room": state["room"],
             "registration_posted": requested != flow_n,
             "pending_index": pending.get("index"),
-            "owner_reregister_required": True,
             "ack": ack.strip().splitlines()[0] if isinstance(ack, str) and ack.strip() else None,
         }
 
-    recovery_needed = (
-        bool(pending.get("needs_owner_reregister"))
-        or dense.get("room_registration_requested_sweep") is not None
-    )
-    if not recovery_needed:
-        return None
+    # A prior false-positive "room inactive" check may have marked the pending
+    # owners for re-registration. Re-posting is harmless and gives the pending
+    # batch a clean, post-fix registration point.
+    if pending.get("needs_owner_reregister"):
+        reposted = []
+        for role, label in pending["labels"].items():
+            did = state["keys"][label]["did"]
+            ack = post_signed(state, state["room"], label, owner_text(did))
+            reposted.append({
+                "role": role,
+                "label": label,
+                "did": did,
+                "posted_at": datetime.now(timezone.utc).isoformat(),
+                "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+            })
+            time.sleep(0.08)
 
-    reposted = []
-    for role, label in pending["labels"].items():
-        did = state["keys"][label]["did"]
-        ack = post_signed(state, state["room"], label, owner_text(did))
-        reposted.append({
-            "role": role,
-            "label": label,
-            "did": did,
-            "posted_at": datetime.now(timezone.utc).isoformat(),
-            "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+        pending.setdefault("owner_reregistrations", []).append({
+            "sweep": flow_n,
+            "records": reposted,
         })
-        time.sleep(0.08)
+        pending["needs_owner_reregister"] = False
+        pending["registered_sweep"] = flow_n
+        pending["ready_after_sweep"] = max(int(pr["n"]), flow_n) + 1
+        dense["pending"] = pending
+        dense.pop("room_registration_requested_sweep", None)
+        dense.pop("room_registration_requested_at", None)
+        save_state(state)
+        return {
+            "event": "dense_owner_registrations_reposted",
+            "sweep": pr["n"],
+            "flow_sweep": flow_n,
+            "index": pending.get("index"),
+            "ready_after_sweep": pending["ready_after_sweep"],
+            "count": len(reposted),
+        }
 
-    pending.setdefault("owner_reregistrations", []).append({
-        "sweep": flow_n,
-        "records": reposted,
-    })
-    pending["needs_owner_reregister"] = False
-    pending["registered_sweep"] = flow_n
-    pending["ready_after_sweep"] = max(int(pr["n"]), flow_n) + 1
-    dense["pending"] = pending
     dense.pop("room_registration_requested_sweep", None)
     dense.pop("room_registration_requested_at", None)
     save_state(state)
-    return {
-        "event": "dense_owner_registrations_reposted",
-        "sweep": pr["n"],
-        "flow_sweep": flow_n,
-        "index": pending.get("index"),
-        "ready_after_sweep": pending["ready_after_sweep"],
-        "count": len(reposted),
-    }
+    return None
 
 
 def dense_submit_pending(state: dict, pr: dict) -> dict | None:
@@ -477,79 +508,14 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
             "state_sweep": state_n,
         }
 
-    if not flow_lists_room(flow, state["room"]):
-        # Any owner registrations posted while the room is absent may never be
-        # read by the referee. Mark the whole pending batch for a clean owner
-        # re-registration after the room is listed again.
-        pending["needs_owner_reregister"] = True
-        pending["room_missing_observed_sweep"] = pr["n"]
-        dense["pending"] = pending
-
-        requested = dense.get("room_registration_requested_sweep")
-        ack = None
-        if requested != pr["n"]:
-            ack = post_signed(
-                state,
-                "close1",
-                state["controller"],
-                room_text(state["room"]),
-            )
-            dense["room_registration_requested_sweep"] = pr["n"]
-            dense["room_registration_requested_at"] = datetime.now(timezone.utc).isoformat()
-        save_state(state)
+    if not room_registration_confirmed(state):
         return {
             "event": "dense_wait_room_registration",
             "sweep": pr["n"],
             "room": state["room"],
-            "registration_posted": requested != pr["n"],
             "pending_index": pending.get("index"),
-            "owner_reregister_required": True,
-            "ack": ack.strip().splitlines()[0] if isinstance(ack, str) and ack.strip() else None,
         }
 
-    # If the room has just returned after an automatic room re-registration,
-    # re-post all owner registrations for the pending batch inside the active
-    # room. Then wait one more sweep before sending trades. Duplicate owner
-    # registrations are harmless under rule 3.
-    room_recovered = (
-        bool(pending.get("needs_owner_reregister"))
-        or dense.get("room_registration_requested_sweep") is not None
-    )
-    if room_recovered:
-        labels = pending["labels"]
-        reposted = []
-        for role, label in labels.items():
-            did = state["keys"][label]["did"]
-            ack = post_signed(state, state["room"], label, owner_text(did))
-            reposted.append({
-                "role": role,
-                "label": label,
-                "did": did,
-                "posted_at": datetime.now(timezone.utc).isoformat(),
-                "ack": ack.strip().splitlines()[0] if ack.strip() else "",
-            })
-            time.sleep(0.08)
-        pending.setdefault("owner_reregistrations", []).append({
-            "sweep": pr["n"],
-            "records": reposted,
-        })
-        pending["needs_owner_reregister"] = False
-        pending["registered_sweep"] = pr["n"]
-        pending["ready_after_sweep"] = pr["n"] + 1
-        dense["pending"] = pending
-        dense.pop("room_registration_requested_sweep", None)
-        dense.pop("room_registration_requested_at", None)
-        save_state(state)
-        return {
-            "event": "dense_owner_registrations_reposted",
-            "sweep": pr["n"],
-            "index": pending.get("index"),
-            "ready_after_sweep": pending["ready_after_sweep"],
-            "count": len(reposted),
-        }
-
-    dense.pop("room_registration_requested_sweep", None)
-    dense.pop("room_registration_requested_at", None)
     if flow_misses_room(flow, state["room"]):
         return {
             "event": "dense_wait_room_catchup",
@@ -783,7 +749,7 @@ def fleet_gate(state: dict, max_age: int = 120) -> dict:
             except Exception:
                 pass
 
-    room_ok = flow_lists_room(latest_flow, state["room"])
+    room_ok = room_registration_confirmed(state)
 
     st = latest_payload("d-close1-state", "state")
     local = {label: item["did"] for label, item in state["keys"].items()}
@@ -1770,6 +1736,8 @@ def cmd_dense_status(_args) -> None:
     print("submitted_sets:", len(dense.get("tickets") or []))
     print("next_index:", dense.get("next_index"))
     print("room_registration_requested_sweep:", dense.get("room_registration_requested_sweep"))
+    print("room_registration_confirmed:", room_registration_confirmed(state))
+    print("room_recent_activity_age_s:", room_recent_activity_age_s(state["room"]))
     try:
         pr = fresh_price(max_age=10**9)
         print("ref_sweep:", pr["n"])
@@ -1781,7 +1749,7 @@ def cmd_dense_status(_args) -> None:
 
     try:
         latest_flow, _latest_state = latest_flow_and_state()
-        print("room_active_in_latest_flow:", flow_lists_room(latest_flow, state["room"]))
+        print("room_listed_in_latest_flow_registration_events:", flow_lists_room(latest_flow, state["room"]))
         if isinstance(latest_flow, dict):
             print("latest_flow_sweep:", latest_flow.get("n"))
     except Exception as e:
