@@ -184,6 +184,43 @@ Check:
 - NFT mint radar,
 - rapid drawdown / security conditions for actual active positions.
 
+### SAGA anomaly-cycle watch — added 2026-09-26
+
+SAGA is now part of the existing hourly $300 Mission monitor. Do not create or depend on a separate automation for this lane.
+
+Canonical watchlist:
+- `watchlists/saga-squeeze-cycle.md`
+
+Current baseline classification:
+- STRUCTURAL CANDIDATE: yes;
+- PRESSURE under frozen squeeze-model V2.1: no;
+- IGNITION: no;
+- EXHAUSTION / post-liquidation cooldown: yes, high confidence.
+
+At the 2026-09-26 baseline, SAGA had completed a roughly 7.2x move from the 2026-09-09 local low to the 2026-09-25 cycle high, then retraced more than 60% from that high. Binance OI expanded into the high and subsequently contracted by roughly 58%, while recent funding remained positive around +0.005% per 4h and top-trader positioning remained net long. Treat this as a long-crowding / leveraged-momentum blow-off pattern, not a confirmed negative-funding short squeeze.
+
+Every hourly fast-lane run must read the canonical SAGA watchlist and record:
+- price and multi-timeframe returns;
+- spot/perp volume;
+- OI and OI change;
+- OI / circulating-market-cap ratio;
+- funding;
+- broad and top-trader long/short ratios;
+- taker buy/sell;
+- current V2.1 state and any state transition.
+
+Keep the V2.1 parameters frozen. Do not retune them around SAGA. Ordinary volatility and repeated state remain silent.
+
+A Mission alert is allowed only for a NEW material SAGA transition:
+- confirmed PRESSURE -> IGNITION under frozen V2.1 plus live OI confirmation;
+- a new second-cycle/re-accumulation setup that clears the existing Mission execution/EV gates;
+- fresh EXHAUSTION after a new rally;
+- a material exchange/network/security/liquidity event;
+- an extreme derivatives imbalance with a concrete executable trade, explicit invalidation, realistic slippage and a defined Mission capital source.
+
+Any SAGA trade remains recommendation-only until the user explicitly approves allocation.
+
+
 ### Medium lane — every 3 hours
 Check:
 - UNICRED protocol economics and #230 rent/unlock state,
