@@ -611,3 +611,38 @@ Commits:
 
 Execution state:
 `LOCAL_DASHBOARD_READY_TO_INSTALL`.
+
+
+## Full unattended bracket rollover + prize-focused dashboard — 2026-09-26
+
+The remaining bracket engineering gap has been implemented as a resumable state machine in commit
+`e372809b2cbc1361dfb68a6dc9e6c1891a660cdb`.
+
+Automatic rollover behavior for R1→R2, R2→R3 and R3→R4:
+- waits for the configured rollover time;
+- validates no explicit visible void exists for the current round;
+- blocks if the dedicated room has a referee missed range;
+- runs the normal fleet gate and requires a fresh reference;
+- submits the reverse trades that close every current pair;
+- saves each close immediately so a crash/restart resumes safely;
+- waits for a later sweep before opening the next round;
+- blocks on any explicitly visible close void;
+- when individual outcomes are omitted by the public referee feed, proceeds only under the same retained-signed-submission + no-room-miss evidence model already used for R1;
+- selects the long survivor when rollover price >= round open price, otherwise the short survivor, matching the official simulator;
+- re-pairs survivors deterministically and opens the next round;
+- saves each next-round open immediately;
+- R4 is held through final and is not rolled again.
+
+Important limitation:
+public referee truncation still prevents direct per-key proof for omitted outcomes. The automation therefore distinguishes explicit voids from omitted outcomes and stops on the former. Omitted outcomes remain an evidence-based inference.
+
+Dashboard commits:
+- `19127f7912a5e4351c23a60a7f9b4438716916a7`: replace Top-25 cutoff with the current prize-zone score line and mark rows occupying prize places 1-3;
+- `0993f7ec97bbadd38fb51f3f8206a69fc9096495`: show a base-fee estimated best strategy score instead of raw gross edge as the primary effectiveness metric.
+
+The estimated score uses current mark, entry price and a 1% base-fee assumption. It is for strategy monitoring only; actual clawback and omitted settlement outcomes can differ from the estimate.
+
+After pulling these commits and reinstalling the LaunchAgents, the intended operating model is fully unattended through the final window, with the dashboard as the primary human view.
+
+Execution state:
+`FULL_AUTOPILOT_IMPLEMENTED_RESTART_REQUIRED`.
