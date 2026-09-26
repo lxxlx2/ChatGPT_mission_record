@@ -131,15 +131,12 @@ No automatic order modification, averaging order, budget change or spot/futures 
 
 Track only direct wallet balances, fill evidence and stored plan state. Current state is PLAN_NOT_FILLED while canonical GSTOCK balance is zero. Do not submit or modify orders automatically.
 
-### XRP / Variational
+### XRP / Variational — CLOSED
 `positions/xrp-variational.md`
 
-Automation may report:
-- price/derivatives changes;
-- crossing of stored TP/SL/event thresholds;
-- Bitget-event factual developments.
+The user confirmed the stored 1.5140 lower bound was hit and the event position is closed.
 
-Private Variational state remains USER_CONFIRMED until refreshed directly.
+This is historical state only. The automation must not spend an hourly lane on XRP/Variational or Bitget attacker-flow monitoring unless the user explicitly reactivates a relevant position.
 
 ### ETH
 `positions/eth-conditional.md`
@@ -189,7 +186,6 @@ This is an active zero-external-capital competition plan. The stored plan uses a
 Every :29 run covers:
 - wallet/gas;
 - PONS;
-- XRP/Variational;
 - ETH conditional;
 - BTC regime;
 - JUMP;
