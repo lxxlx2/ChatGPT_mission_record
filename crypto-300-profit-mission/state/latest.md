@@ -1,11 +1,11 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-26 16:33 Asia/Bangkok
+Updated: 2026-09-26 16:35 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Wallet / position state
 - Ethereum: **400.308121 USDC; 0.001667063838788351 ETH**
-- Solana: **266.559188 USDC; 0.129098090 SOL; 542.749359 e/acc; 947.685473 PAID**
+- Solana: **266.559188 USDC; 0.129098090 SOL; 542.749359 e/acc; 947.685473 PAID; 4103.186501 KARDASHEV**
 - BNB Chain: **0 USDC; 0.002567317179192202 BNB; 1183.5967247073113 GSTOCK**
 - Robinhood Chain: **54.799953441979625 PONS; 0.000825190918816326 ETH**
 - Ink: **0.01113370814547789 ETH; 7.665136656205785948 Tydro Ink Points; Fresh INK #372**
@@ -17,6 +17,8 @@ Timezone: Asia/Bangkok
 BNB GSTOCK plan has filled on-chain. Canonical BNB USDC is now zero and GSTOCK is active.
 
 Solana e/acc decreased by another 180.916452 since the 14:18 snapshot. The outflow is chain-confirmed; exact proceeds remain unreconciled. PAID quantity is unchanged.
+
+KARDASHEV is a principal-recovered profit position. Fresh pool reserves imply ~0.00204365 USD/token at SOL ~120.01; remaining 4103.186501 tokens are worth ~8.39 USD and current total-position PnL reference is ~+17.64 USD after listed network fees.
 
 ## Private positions
 
