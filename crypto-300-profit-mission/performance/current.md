@@ -1,127 +1,113 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-25
+Updated: 2026-09-26 09:18 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Purpose
+## Rules
 
-Track progress toward the Mission without confusing new deposits/transfers with trading profit.
+Wallet balance alone is not P&L.
 
-Wallet balance alone is NOT P&L.
-
-Authoritative performance formula:
-- net contributions = external capital added to the Mission minus external capital withdrawn;
-- realized P&L = closed-trade / sale / claim proceeds minus attributable cost basis and fees;
-- unrealized P&L = current executable value of open positions minus remaining cost basis;
-- Mission equity = net contributions + realized P&L + unrealized P&L.
-
-When transaction history or cost basis is missing, mark the metric unresolved rather than inferring profit from current wallet balances.
+- external net contributions = capital added from outside the Mission minus capital withdrawn.
+- realized P&L = verified closed proceeds minus verified cost basis and fees.
+- unrealized P&L = executable current value of open positions minus remaining cost basis.
+- internal chain / venue transfers do not create profit.
+- when history or current private-venue state is unavailable, use UNRESOLVED instead of estimating.
 
 ## Current capital snapshot
 
-Direct-chain canonical stablecoins:
+DIRECT_CHAIN canonical stablecoins:
 - Ethereum: 400.308121 USDC.
-- Solana: 390.866576 USDC.
+- Solana: 339.825001 USDC.
 - Base: 0.252982 USDC.
 - Unichain: 0.021286 USDC.
-- Total: ~791.448965 USDC.
+- Total: **740.407390 USDC**.
+
+Other assets:
+- Solana native: 0.139742323 SOL.
+- Ethereum native: 0.001667063838788351 ETH.
+- Base native: 0.000790846510479134 ETH.
+- Unichain native: 0.000231941590232335 ETH.
+- Robinhood Chain native: 0.000081643478484768.
+- unidentified Solana SPL balance: 1.745552 tokens, value UNRESOLVED.
 
 Separate:
-- PONS margin budget: 50 USDT.
-- Low-risk interest bucket: 500 USD-equivalent, excluded from speculative Mission performance unless the user later decides to include its yield in the same scorecard.
+- PONS margin budget: 50 USDT, private account.
+- low-risk interest bucket: 500 USD-equivalent, excluded from speculative Mission performance.
+- XRP/Variational private venue sleeve funded by internal reallocation; no external-contribution impact.
 
-## Open / reserved exposures
-
-### PONS
-- First entry only: 0.6250.
-- Approx first-tranche notional: ~40 USDT.
-- Remaining 0.5850 / 0.5450 orders are pending and do not count as deployed exposure.
-- Current realized P&L: 0 unless a partial close occurs.
-- Unrealized P&L must be calculated from fresh mark and exact filled quantity.
+## Open / reserved exposure
 
 ### JUMP
-- 400 USDC reserved on Ethereum mainnet.
-- No allocation yet.
-- Current realized/unrealized P&L: 0.
+- 400 USDC reserve on Ethereum.
+- no allocation confirmed.
+- realized P&L: 0.
 
 ### ETH
-- 100 USDC reserved.
-- No live Mission position.
-- P&L: 0.
+- 100 USDC reserve.
+- no live Mission position confirmed.
+- realized/unrealized P&L: 0.
+
+### Opportunity reserve
+- 150 USDC ring-fenced.
+- not P&L.
+
+### XRP / Variational
+USER_CONFIRMED at 2026-09-26 06:08:
+- OPEN / FILLED.
+- 77.12 XRP long at 1.55589, isolated 3x.
+- TP 1.6280; SL 1.5140.
+- screenshot unrealized PnL: +0.97 USD at mark 1.56844.
+- current public XRP mark can be monitored, but exact current private-venue PnL is UNRESOLVED without a fresh venue read.
+- realized P&L: 0 until verified close/partial close.
+
+### PONS
+USER_CONFIRMED:
+- first 0.6250 entry filled.
+- deeper 0.5850 / 0.5450 orders pending.
+- exact current private position quantity and account PnL: UNRESOLVED without account read.
+- realized P&L: 0 unless a close is confirmed.
 
 ### UNICRED #230
 - NFT cost basis: 0.0105 ETH.
-- Still staked.
-- Exact cumulative realized rent and current claimable rent require live reconciliation.
-- Net economic P&L remains unresolved until cumulative rent + executable NFT value are refreshed.
+- still staked.
+- exact cumulative rent + current claimable + executable NFT value require live protocol/market reconciliation.
+- current economic P&L: UNRESOLVED.
 
 ### Credits
-- #23042 listed 0.25 ETH.
-- #23232 listed 0.40 ETH.
-- Cost basis and executable bid/value are not fully reconciled in this file.
-- Do not treat listing price as unrealized P&L.
+- #23042 user-confirmed listing 0.25 ETH.
+- #23232 user-confirmed listing 0.40 ETH.
+- listing prices are excluded from NAV until executable value/cost basis are reconciled.
 
 ## Closed exposure requiring reconciliation
 
-### SHARTCOIN
-- Current canonical wallet balance: 0.
-- Exposure status: closed.
-- Final realized P&L is unresolved until outgoing transaction history and swap proceeds are reconstructed.
-- Do not infer the close price from the last balance or old screenshots.
+### SHART
+- direct wallet balance: 0.
+- status: closed.
+- final realized P&L: UNRESOLVED until transaction history / proceeds are reconstructed.
 
 ### CRED
-- Current direct Unichain balance: 0.
-- Exposure status: closed.
-- Prior notes indicate principal had been recovered, but final realized P&L requires transaction-history reconciliation before being treated as exact.
+- direct Unichain balance: 0.
+- status: closed liquid exposure.
+- final realized P&L: UNRESOLVED until transaction history is reconciled.
 
-## Mission scorecard
+## Capital residual
 
-At the current state, an exact total-return percentage is intentionally not published because:
-1. the Mission received additional capital after the original $300 starting point;
-2. SHART and CRED final realized proceeds have not yet been fully reconstructed;
-3. UNICRED rent and Credits executable values are not fully reconciled.
+Current canonical direct-chain stablecoins 740.407390 minus:
+- 400 JUMP reserve,
+- 150 opportunity reserve,
+- 100 ETH reserve,
+leaves **90.407390 USDC** direct-chain residual.
 
-Daily reconciliation should maintain two scorecards once history is available:
-- Original-$300 sleeve performance.
-- Total speculative capital performance after later contributions.
+This residual is available-capital accounting, not profit.
 
-This prevents later deposits from being mistaken for profit.
+## Scorecards
 
-## Update rules
+Do not publish an exact total return yet because:
+- the Mission received capital after the original $300 start;
+- SHART/CRED realized proceeds remain unresolved;
+- UNICRED rent/executable NFT value remain unresolved;
+- current private venue PnL for XRP/PONS is not directly readable.
 
-Update this file on the daily full reconciliation and whenever:
-- capital is added/withdrawn,
-- a position opens/closes,
-- a material partial take-profit occurs,
-- an ICO/NFT allocation is confirmed,
-- realized proceeds are reconstructed,
-- an active position cost basis changes.
-
-Every number must be labeled direct-chain, exchange/user-confirmed, market-derived, or unresolved.
-
-
-## XRP / Variational sleeve — 2026-09-26
-- Capital source: internal reallocation from the previously ~141 USDC-equivalent uncommitted Mission pool.
-- About 52 USD-equivalent was moved toward Arbitrum/Variational; Omni shows about 49.90 USDC.
-- External net contribution impact: 0. This transfer is internal to the Mission.
-- Current order status from user-confirmed screenshot: resting/pending fill.
-- Because the order is not confirmed filled, current realized P&L = 0 and current unrealized P&L = 0.
-- If filled at 1.5560 for 77.12 XRP:
-  - TP 1.6280 gross P&L ≈ +5.55 USDC before funding/spread/slippage.
-  - SL 1.5140 gross P&L ≈ -3.24 USDC before funding/spread/slippage.
-  - With the configured 1% TP/SL max-slippage allowance, an extreme full-slippage stop near 1.49886 would imply roughly -4.41 USDC gross from the 1.5560 entry.
-- Primary objective: event-driven trading profit.
-- Secondary objective: organic Variational Omni points participation. Points are not booked as P&L until actually distributed and valuably realizable.
-
-
-## XRP / Variational fill confirmation — 2026-09-26 06:08 Asia/Bangkok
-- Status: OPEN / FILLED.
-- User-confirmed fill: 77.12 XRP long at 1.55589, isolated 3x.
-- TP: 1.6280; SL: 1.5140.
-- Latest screenshot mark: 1.56844.
-- User-confirmed unrealized PnL at snapshot: **+0.97 USD (+2.42%)**.
-- Gross TP PnL from filled entry: about +5.56 USDC before funding/spread/slippage.
-- Gross SL PnL from filled entry: about -3.23 USDC before funding/spread/slippage.
-- Reward/risk from entry to attached TP/SL: about 1.72.
-- Realized PnL remains 0 while the position is open.
-- Internal capital transfer only; external net contribution impact remains 0.
+Maintain two eventual scorecards:
+1. original-$300 sleeve;
+2. total speculative capital after later contributions.
