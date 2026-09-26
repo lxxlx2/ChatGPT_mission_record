@@ -2,22 +2,26 @@
 
 Mode: FACTUAL_NEWS_COLLECTOR
 
-Updated: 2026-09-26 14:12 Asia/Bangkok
+Updated: 2026-09-26 15:10 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Goal: provide reliable rolling material for the daily report and Mission without making every hourly run an exhaustive internet crawl.
 
-## Start heartbeat
+## Start / final audit
 
-First persistent action:
-`crypto-daily/runs/YYYY-MM-DD/HHMMSS.md`
+The automatic scheduler uses `AUTOMATION_RUNTIME.md`.
 
-Initial status:
-`run_status: in_progress`
+Each run is append-only:
 
-Create it before broad search. Path collision gets one retry with a new second-level timestamp.
+Start:
+`crypto-daily/runs/YYYY-MM-DD/HHMMSS-start.md`
+with `run_status: started`.
 
-Every run must later finalize the same audit.
+Final:
+`crypto-daily/runs/YYYY-MM-DD/HHMMSS-final.md`
+with the completed status and lane results.
+
+Do not update the start file. A final file is the proof of completion.
 
 ## Core scan every hour
 
@@ -106,7 +110,7 @@ At other hours, do not read the full REPORT_SPEC unless required.
 
 ## Final audit
 
-Finalize the skeleton with:
+Create the append-only final file with:
 - run_status
 - core_market_scan
 - security_scan
@@ -118,12 +122,11 @@ Finalize the skeleton with:
 - source_failures
 - tool_errors
 
-Normal no-result/no-update is not a failure.
+Normal no-result/no-update is healthy.
 
 Single source failure does not abort the run.
 
 Temporary failure never disables or pauses the automation.
-
 
 ## Runtime-policy boundary
 
