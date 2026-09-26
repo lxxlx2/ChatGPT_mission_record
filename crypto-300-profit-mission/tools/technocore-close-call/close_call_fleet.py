@@ -479,11 +479,29 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     dense = state.setdefault("dense", {})
     pr = fresh_price(max_age=10**9)
 
+    # Registration does not depend on a fresh trading reference. Keep one batch
+    # pre-registered so a future fresh sweep can be used immediately instead of
+    # wasting that sweep on key creation.
+    pending = dense.get("pending")
+    if not isinstance(pending, dict) or pending.get("status") == "registering":
+        pending = dense_register_pending(state, pr["n"])
+        if pr["age_s"] is not None and int(pr["age_s"]) > 120:
+            return {
+                "event": "dense_batch_registered_wait_fresh",
+                "index": pending["index"],
+                "sweep": pr["n"],
+                "age_s": pr["age_s"],
+                "ready_after_sweep": pending["ready_after_sweep"],
+                "labels": pending["labels"],
+            }
+
     if pr["age_s"] is not None and int(pr["age_s"]) > 120:
         return {
             "event": "dense_wait_fresh_ref",
             "sweep": pr["n"],
             "age_s": pr["age_s"],
+            "pending_index": (dense.get("pending") or {}).get("index"),
+            "pending_status": (dense.get("pending") or {}).get("status"),
         }
 
     last_seen_sweep = dense.get("last_seen_sweep")
@@ -494,6 +512,7 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
             "ref": str(pr["px"]),
             "age_s": pr["age_s"],
             "submitted_sets": len(dense.get("tickets") or []),
+            "pending_index": (dense.get("pending") or {}).get("index"),
         }
 
     dense["last_seen_sweep"] = pr["n"]
@@ -1576,7 +1595,23 @@ def cmd_dense_status(_args) -> None:
     print("enabled:", bool(dense.get("enabled")))
     print("submitted_sets:", len(dense.get("tickets") or []))
     print("next_index:", dense.get("next_index"))
-    print("pending:", json.dumps(dense.get("pending"), ensure_ascii=False, sort_keys=True))
+    try:
+        pr = fresh_price(max_age=10**9)
+        print("ref_sweep:", pr["n"])
+        print("ref:", pr["px"])
+        print("effective_ref_age_s:", pr["age_s"])
+        print("fresh_for_trade:", pr["age_s"] is None or int(pr["age_s"]) <= 120)
+    except Exception as e:
+        print("ref_status_error:", str(e))
+    pending = dense.get("pending")
+    if isinstance(pending, dict):
+        print("pending_index:", pending.get("index"))
+        print("pending_status:", pending.get("status"))
+        print("pending_ready_after_sweep:", pending.get("ready_after_sweep"))
+    else:
+        print("pending_index: null")
+        print("pending_status: null")
+        print("pending_ready_after_sweep: null")
     print("last_ticket:", json.dumps(dense.get("last_ticket"), ensure_ascii=False, sort_keys=True))
 
 
