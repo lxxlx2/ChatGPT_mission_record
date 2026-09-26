@@ -76,6 +76,11 @@ LOCK_TIME_UTC = datetime.fromisoformat("2026-10-04T09:00:00+00:00")
 FINAL_TIME_UTC = datetime.fromisoformat("2026-10-04T10:00:00+00:00")
 AUTOPILOT_STOP_TIME_UTC = datetime.fromisoformat("2026-10-04T10:15:00+00:00")
 
+DENSE_OFFSET = Decimal("0.02")
+DENSE_QTY_SAFETY = Decimal("0.995")
+DENSE_FUNDS_FACTOR = Decimal("1.05")
+DENSE_MAX_DYNAMIC_KEYS = 8000
+
 
 def b58(raw: bytes) -> str:
     n = int.from_bytes(raw, "big")
@@ -268,6 +273,248 @@ def collect_dids(value, out: set[str]) -> None:
     if isinstance(value, dict):
         for item in value.values():
             collect_dids(item, out)
+
+
+def add_dynamic_key(state: dict, label: str) -> dict:
+    if label in state["keys"]:
+        return state["keys"][label]
+    dynamic_count = sum(1 for k in state["keys"] if k.startswith("DENSE-"))
+    if dynamic_count >= DENSE_MAX_DYNAMIC_KEYS:
+        raise RuntimeError(f"dense dynamic key safety cap reached: {dynamic_count}")
+    seed = secrets.token_hex(32)
+    item = {"seed": seed, "did": did_from_seed(seed), "nonces": {}}
+    state["keys"][label] = item
+    save_state(state)
+    return item
+
+
+def latest_flow_and_state() -> tuple[dict | None, dict | None]:
+    return latest_payload("d-close1-flow", "flow"), latest_payload("d-close1-state", "state")
+
+
+def flow_misses_room(flow: dict | None, room: str) -> bool:
+    if not isinstance(flow, dict):
+        return True
+    missed = flow.get("missed") or []
+    return room in json.dumps(missed, separators=(",", ":"), ensure_ascii=False)
+
+
+def dense_qty(ref_px: Decimal) -> Decimal:
+    q = DENSE_QTY_SAFETY * Decimal("10000") / (ref_px * DENSE_FUNDS_FACTOR)
+    return q.quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+
+
+def dense_prices(ref_px: Decimal) -> tuple[Decimal, Decimal]:
+    cent = Decimal("0.01")
+    low = (ref_px * (Decimal("1") - DENSE_OFFSET)).quantize(cent, rounding=ROUND_DOWN)
+    high = (ref_px * (Decimal("1") + DENSE_OFFSET)).quantize(cent, rounding=ROUND_DOWN)
+    return low, high
+
+
+def dense_register_pending(state: dict, sweep: int) -> dict:
+    dense = state.setdefault("dense", {})
+    pending = dense.get("pending")
+    if not isinstance(pending, dict):
+        idx = int(dense.get("next_index", 1))
+        base = f"DENSE-{idx:05d}"
+        labels = {
+            "long": f"{base}-L",
+            "short": f"{base}-S",
+            "feeder": f"{base}-F",
+        }
+        for label in labels.values():
+            add_dynamic_key(state, label)
+        pending = {
+            "index": idx,
+            "labels": labels,
+            "status": "registering",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "created_sweep": sweep,
+            "registrations": {},
+            "trades": {},
+        }
+        dense["pending"] = pending
+        dense["next_index"] = idx + 1
+        save_state(state)
+
+    if pending.get("status") == "registering":
+        for role, label in pending["labels"].items():
+            if role in pending["registrations"]:
+                continue
+            did = state["keys"][label]["did"]
+            ack = post_signed(state, state["room"], label, owner_text(did))
+            pending["registrations"][role] = {
+                "did": did,
+                "posted_at": datetime.now(timezone.utc).isoformat(),
+                "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+            }
+            dense["pending"] = pending
+            save_state(state)
+            time.sleep(0.08)
+        pending["status"] = "registered"
+        pending["registered_sweep"] = sweep
+        pending["ready_after_sweep"] = sweep + 1
+        dense["pending"] = pending
+        save_state(state)
+
+    return pending
+
+
+def dense_submit_pending(state: dict, pr: dict) -> dict | None:
+    dense = state.setdefault("dense", {})
+    pending = dense.get("pending")
+    if not isinstance(pending, dict) or pending.get("status") != "registered":
+        return None
+    if pr["n"] < int(pending.get("ready_after_sweep", 10**9)):
+        return None
+
+    flow, st = latest_flow_and_state()
+    flow_n = int(flow["n"]) if isinstance(flow, dict) and flow.get("n") is not None else None
+    state_n = int(st["n"]) if isinstance(st, dict) and st.get("n") is not None else None
+    if flow_n != pr["n"] or state_n != pr["n"]:
+        return {
+            "event": "dense_wait_alignment",
+            "sweep": pr["n"],
+            "flow_sweep": flow_n,
+            "state_sweep": state_n,
+        }
+    if flow_misses_room(flow, state["room"]):
+        return {
+            "event": "dense_wait_room_catchup",
+            "sweep": pr["n"],
+            "reason": "dedicated room appears in referee missed ranges",
+        }
+
+    labels = pending["labels"]
+    qty = dense_qty(pr["px"])
+    low, high = dense_prices(pr["px"])
+    if qty < Decimal("0.1"):
+        raise RuntimeError("dense quantity below minimum")
+
+    trades = pending.setdefault("trades", {})
+    if "long" not in trades:
+        tid = f"d{pending['index']:05d}l-{int(time.time())}"
+        text = build_trade(
+            state,
+            state["room"],
+            labels["feeder"],
+            labels["long"],
+            "sell",
+            qty,
+            low,
+            pr["n"] + 2,
+            tid,
+        )
+        ack = post_signed(state, state["room"], labels["feeder"], text)
+        trades["long"] = {
+            "trade_id": tid,
+            "target": labels["long"],
+            "feeder": labels["feeder"],
+            "side": "long",
+            "px": str(low),
+            "qty": str(qty),
+            "sweep": pr["n"],
+            "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+        }
+        pending["trades"] = trades
+        dense["pending"] = pending
+        save_state(state)
+        time.sleep(0.08)
+
+    if "short" not in trades:
+        tid = f"d{pending['index']:05d}s-{int(time.time())}"
+        text = build_trade(
+            state,
+            state["room"],
+            labels["short"],
+            labels["feeder"],
+            "sell",
+            qty,
+            high,
+            pr["n"] + 2,
+            tid,
+        )
+        ack = post_signed(state, state["room"], labels["short"], text)
+        trades["short"] = {
+            "trade_id": tid,
+            "target": labels["short"],
+            "feeder": labels["feeder"],
+            "side": "short",
+            "px": str(high),
+            "qty": str(qty),
+            "sweep": pr["n"],
+            "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+        }
+        pending["trades"] = trades
+        dense["pending"] = pending
+        save_state(state)
+
+    pending["status"] = "submitted"
+    pending["submitted_at"] = datetime.now(timezone.utc).isoformat()
+    pending["trade_sweep"] = pr["n"]
+    pending["ref"] = str(pr["px"])
+    pending["low"] = str(low)
+    pending["high"] = str(high)
+    pending["qty"] = str(qty)
+    dense.setdefault("tickets", []).append(pending)
+    dense["last_ticket"] = pending
+    dense["pending"] = None
+    dense["submitted_sets"] = len(dense["tickets"])
+    save_state(state)
+    return {
+        "event": "dense_ticket_submitted",
+        "index": pending["index"],
+        "sweep": pr["n"],
+        "ref": str(pr["px"]),
+        "low": str(low),
+        "high": str(high),
+        "qty": str(qty),
+        "long": labels["long"],
+        "short": labels["short"],
+        "feeder": labels["feeder"],
+    }
+
+
+def dense_autopilot_step(state: dict, now: datetime) -> dict:
+    dense = state.setdefault("dense", {})
+    pr = fresh_price(max_age=10**9)
+
+    if pr["age_s"] is not None and int(pr["age_s"]) > 120:
+        return {
+            "event": "dense_wait_fresh_ref",
+            "sweep": pr["n"],
+            "age_s": pr["age_s"],
+        }
+
+    last_seen_sweep = dense.get("last_seen_sweep")
+    if last_seen_sweep == pr["n"]:
+        return {
+            "event": "dense_heartbeat",
+            "sweep": pr["n"],
+            "ref": str(pr["px"]),
+            "age_s": pr["age_s"],
+            "submitted_sets": len(dense.get("tickets") or []),
+        }
+
+    dense["last_seen_sweep"] = pr["n"]
+    save_state(state)
+
+    submitted = dense_submit_pending(state, pr)
+    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup"):
+        pending = dense_register_pending(state, pr["n"])
+        submitted["next_batch"] = pending["index"]
+        return submitted
+    if submitted:
+        return submitted
+
+    pending = dense_register_pending(state, pr["n"])
+    return {
+        "event": "dense_batch_registered",
+        "index": pending["index"],
+        "sweep": pr["n"],
+        "ready_after_sweep": pending["ready_after_sweep"],
+        "labels": pending["labels"],
+    }
 
 
 def fleet_registration_evidence(state: dict) -> dict:
@@ -1293,6 +1540,45 @@ def bracket_autopilot_step(state: dict, now: datetime) -> dict | None:
     return None
 
 
+def cmd_enable_dense(args) -> None:
+    state = load_state()
+    dense = state.setdefault("dense", {})
+    dense["enabled"] = True
+    dense["enabled_at"] = datetime.now(timezone.utc).isoformat()
+    dense["mode"] = "favored-ticket-both-sides-every-sweep"
+    dense["offset"] = str(DENSE_OFFSET)
+    dense["qty_safety"] = str(DENSE_QTY_SAFETY)
+    dense["legacy_static_frozen_after"] = sorted(state.get("static", {}).keys())
+    dense["legacy_bracket_frozen_round"] = (state.get("bracket") or {}).get("round")
+    dense.setdefault("next_index", 1)
+    dense.setdefault("tickets", [])
+    save_state(state)
+    print("dense mode ENABLED")
+    print("existing positions are left untouched")
+    print("legacy future static/bracket actions are frozen while dense mode is enabled")
+    print("new mode: one favored long + one favored short target per fresh sweep")
+    print("offset:", DENSE_OFFSET, "dynamic key safety cap:", DENSE_MAX_DYNAMIC_KEYS)
+
+
+def cmd_disable_dense(_args) -> None:
+    state = load_state()
+    dense = state.setdefault("dense", {})
+    dense["enabled"] = False
+    dense["disabled_at"] = datetime.now(timezone.utc).isoformat()
+    save_state(state)
+    print("dense mode DISABLED; no new dense batches will be created")
+
+
+def cmd_dense_status(_args) -> None:
+    state = load_state()
+    dense = state.get("dense") or {}
+    print("enabled:", bool(dense.get("enabled")))
+    print("submitted_sets:", len(dense.get("tickets") or []))
+    print("next_index:", dense.get("next_index"))
+    print("pending:", json.dumps(dense.get("pending"), ensure_ascii=False, sort_keys=True))
+    print("last_ticket:", json.dumps(dense.get("last_ticket"), ensure_ascii=False, sort_keys=True))
+
+
 def autopilot_iteration(late_minutes: int = 180) -> dict:
     state = load_state()
     now = datetime.now(timezone.utc)
@@ -1324,6 +1610,16 @@ def autopilot_iteration(late_minutes: int = 180) -> dict:
             "age_s": pr["age_s"],
             "final_in_seconds": max(0, int((FINAL_TIME_UTC - now).total_seconds())),
         }
+
+    if (state.get("dense") or {}).get("enabled"):
+        result = dense_autopilot_step(state, now)
+        ap = state.setdefault("autopilot", {})
+        ap["last_dense_event"] = {
+            "at": datetime.now(timezone.utc).isoformat(),
+            **result,
+        }
+        save_state(state)
+        return result
 
     for cohort, due_text in STATIC_SCHEDULE_UTC.items():
         k = f"{cohort:02d}"
@@ -1540,6 +1836,15 @@ def main() -> None:
 
     p = sp.add_parser("check-bracket")
     p.set_defaults(fn=cmd_check_bracket)
+
+    p = sp.add_parser("enable-dense")
+    p.set_defaults(fn=cmd_enable_dense)
+
+    p = sp.add_parser("disable-dense")
+    p.set_defaults(fn=cmd_disable_dense)
+
+    p = sp.add_parser("dense-status")
+    p.set_defaults(fn=cmd_dense_status)
 
     p = sp.add_parser("autopilot")
     p.add_argument("--poll", type=int, default=60, help="seconds between checks")
