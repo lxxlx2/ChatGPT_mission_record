@@ -466,3 +466,48 @@ No bracket rollover action is due yet. The next planned bracket rollover remains
 
 Execution state:
 `BRACKET_R1_SUBMITTED_WAITING_OUTCOME_CHECK`.
+
+
+## Unattended execution revision — 2026-09-26
+
+Manual interaction every five minutes is rejected as the operating model. The contest referee sweeps every five minutes, but the fleet only needs to act on a small number of scheduled events. Human presence at every sweep adds operational risk and makes the 04:00 Bangkok static cohorts impractical.
+
+Latest bracket visibility check at sweep 256:
+- reference: 224.14;
+- reference age: 56 seconds;
+- all 8 Round-1 trade IDs: `NOT_VISIBLE`;
+- explicit visible voids: 0;
+- retained-flow omissions: `settled=72,590`, `void=61,098`;
+- classification: `OUTCOMES_PARTLY_OR_FULLY_OMITTED`.
+
+This remains an observability limitation, not evidence that all eight trades failed.
+
+### Revised runtime model
+
+A local `autopilot` mode now runs continuously on the Mac:
+- polls every 60 seconds;
+- prints/logs a heartbeat only when the referee sweep advances;
+- automatically opens only due static cohorts;
+- runs the full fleet safety gate immediately before any automatic static trade;
+- never duplicates a static cohort already present in local state;
+- catches up a due static cohort for at most 180 minutes;
+- after that window it records the cohort as missed instead of opening many hours late;
+- bracket rollovers remain review-gated until rollover close/re-open mechanics are implemented and validated.
+
+This means the program may observe every referee sweep, but it does not place a trade every sweep.
+
+Commit `43ceb95ca08d4a9ef89b46620947f636e7fcb44d` adds the autopilot mode.
+Commit `cad3ede7ac17648d7ad2b225b3ba107c2dbcfa62` adds a macOS LaunchAgent installer using `launchd` plus `caffeinate`.
+
+The LaunchAgent:
+- starts automatically at login;
+- restarts the autopilot if it exits;
+- keeps the Mac from entering idle sleep while the agent is running;
+- writes stdout/stderr to `~/Library/Logs/technocore-close-call-autopilot.*.log`.
+
+Physical lid-close sleep is still a machine-level boundary. Closing a MacBook lid normally suspends the process. For unattended execution the Mac should remain powered, online and physically awake/open.
+
+GitHub should record strategy changes and execution milestones only. Do not commit a five-minute heartbeat to the repository.
+
+Execution state:
+`BRACKET_R1_RUNNING_AUTOPILOT_READY_FOR_INSTALL`.
