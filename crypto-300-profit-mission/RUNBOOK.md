@@ -1,130 +1,219 @@
 # Crypto Profit Mission Runbook
 
-Updated: 2026-09-26
+Updated: 2026-09-26 12:05 Asia/Bangkok
 Timezone: Asia/Bangkok
+Schedule: hourly at :29
 
-MISSION_SPEC.md 保留策略、资金与仓位权威。本文件只定义每小时运行合同，减少 scheduler prompt 负载。
+Purpose: preserve all Mission functions while guaranteeing that the hourly run reaches a durable conclusion.
 
-## Schedule
+## 0. First persistent action
 
-每小时 :29。
+Before broad reads, searches or market work:
 
-## Start-of-run
+1. get current Asia/Bangkok time;
+2. create `runs/YYYY-MM-DD/HHMMSS.md`;
+3. write:
+   - run_time
+   - automation_id
+   - run_status: in_progress
+   - phase: skeleton
 
-**第一项持久化动作必须先写 skeleton audit，再做重研究。**
+If the path collides, use a new second-level timestamp and retry once.
 
-1. 只获取当前 Asia/Bangkok 时间并创建唯一 `runs/YYYY-MM-DD/HHMMSS.md`，初始 `run_status: in_progress`。
-2. skeleton 成功后再读执行文件。
+If the skeleton cannot be created, continue only long enough to attempt a health/error record. Never disable/pause the automation.
 
-必读：
-1. MISSION_SPEC.md
-2. state/latest.md
-3. health/current.md
-4. portfolio/current.md
-5. performance/current.md
-6. active positions
-7. active watchlists
+## 1. Minimal required reads
 
-若单个非关键文件读取失败，继续其余 lane，并记 partial_failure。
+After skeleton creation read only:
+- `MISSION_SPEC.md`
+- `portfolio/current.md`
+- `state/latest.md`
+- `health/current.md`
+- `positions/pons.md`
+- `positions/xrp-variational.md`
+- `positions/eth-conditional.md`
+- `positions/jump.md`
+- `watchlists/btc-regime-jasonleo.md`
+- `watchlists/monster-squeeze-v2.1.md`
 
-## Mandatory fast lanes
+Read another position/watchlist only when its cadence or a candidate requires it.
 
-- wallet/gas delta
-- PONS
-- XRP/Variational
-- ETH conditional
-- BTC regime
-- JUMP
-- launch/NFT radar
-- active-position security
-- monster squeeze V2.1
-- Robinhood/FOMO execution flow
+Do not bulk-read closed/historical files.
 
-## Monster V2.1
+## 2. Phase A: critical risk lanes
 
-已经合并，不存在独立执行任务。
+Phase A must finish before discovery work.
 
-每小时：
-- Binance Alpha universe
-- Binance USDⓈ-M Futures universe
-- 7-day carried candidates
-- frozen STRUCTURAL → PRESSURE → IGNITION → EXHAUSTION
+### Wallet / gas
+Every hour:
+- fresh Ethereum canonical USDC + native ETH;
+- fresh Solana canonical USDC + native SOL;
+- known active liquid token balances when relevant.
 
-首次 IGNITION：Gmail + ChatGPT。
-相关 EXHAUSTION：按 watchlist 规则。
-19:29：固定用户可见日汇总。
+Daily reconciliation adds Base, Unichain and Robinhood Chain.
 
-## Opportunity
+RPC failure = UNAVAILABLE. Never substitute stale data.
 
-- ACTION：Gmail + ChatGPT。
-- WATCH：Gmail + ChatGPT。
-- unchanged WATCH：静默。
-- rejected/noise：静默。
+### PONS
+Use fresh public Binance market data and the USER_CONFIRMED private execution state. Check only strategy/stop/breakout triggers from `positions/pons.md`.
 
-## Health
+### XRP / Variational
+Use fresh XRP public market/derivatives data to evaluate the trigger rules in `positions/xrp-variational.md`. Do not fabricate private venue state.
 
-每轮必须更新 health/current.md 和 state/latest.md，并创建 run audit。
+### ETH
+Evaluate only the explicit setups in `positions/eth-conditional.md`.
 
-如果 scheduler 上次“有触发”但 GitHub 没有对应 audit：
-- 记为 missing_audit；
-- 不把 scheduler trigger 当 success。
+### BTC
+Use the BTC watchlist only as regime/risk overlay.
 
-成功 run 间隔 > 90 分钟：
-- 恢复时发送一次 MONITOR_HEALTH_GAP。
+### JUMP
+Normal hourly check is lightweight:
+- deadline proximity;
+- Ethereum reserve/gas readiness;
+- new authenticated terms only when a relevant update/deadline is detected.
 
-相同 mandatory lane 连续两轮失败：
-- 发送 MONITOR_LANE_FAILURE。
+The full Legion preflight runs on the defined Sep-29 window.
 
-## GitHub write strategy
+### Active-position security
+Check only material exchange/protocol/security developments relevant to current positions.
 
-先写最小 run audit，再写 state/health 的完整更新，避免整轮完成研究后没有任何 heartbeat。
+After Phase A, update the run audit with each lane as checked / trigger / unavailable.
 
-推荐顺序：
-1. create skeleton audit: run_status=in_progress，必须发生在完整文件读取、市场搜索和所有重 lane 之前
-2. read RUNBOOK/MISSION_SPEC/current files
-3. execute lanes
-4. update state/latest
-5. update health/current
-6. finalize same run audit status
+## 3. Phase B: opportunity discovery
 
-若最终 update 失败，至少 skeleton audit 能证明 scheduler 确实启动过。
+The objective is full functional coverage without duplicating an entire web crawl.
 
-## Success
+### Upstream research first
+Read at most the two newest `crypto-daily/research/` files from the previous 2 hours.
 
-只有：
-- mandatory lanes 有明确 checked/failed 状态；
-- state/health 更新成功；
-- run audit 最终完成；
-才允许 success。
+Use them as the first discovery feed for:
+- launch/token sale opportunities;
+- NFT/digital-art opportunities;
+- security;
+- ecosystem events;
+- unusual market moves.
 
-其它情况使用 partial_success / partial_failure / failed。
+If no fresh Crypto Daily research exists within roughly 90 minutes, perform one compact fallback discovery search.
 
+### Monster V2.1
+Maintain full-market coverage efficiently:
 
-## Scheduler side-effect execution contract
+1. obtain one bulk Binance USDⓈ-M 24h universe/ticker snapshot;
+2. obtain Binance Alpha discovery data when available;
+3. merge with 7-day carried candidates and active SAGA watch;
+4. shortlist at most 8 symbols using abnormal return, turnover, OI/liquidity structure or prior STRUCTURAL/PRESSURE state;
+5. run detailed funding/OI/taker/top-trader/klines only for the shortlist;
+6. evaluate the frozen V2.1 gate;
+7. record counts and transitions.
 
-The hourly Mission scheduler is explicitly authorized to use the already-connected GitHub and Gmail connectors for the persistent side effects defined by this runbook. Do not ask for interactive confirmation for these recurring audit writes or for alert emails that already satisfy MISSION_SPEC notification gates.
+Do not make a separate heavy per-symbol query for every perpetual in the universe.
 
-Use a fixed hourly exact schedule. Signal conditions control notification only; they do not control whether the hourly run executes.
+A lane is considered checked when the bulk universe was screened and every shortlisted candidate was evaluated or explicitly marked unavailable.
 
-GitHub write protocol:
-1. Immediately after start-of-run reads, create a minimal skeleton audit with a unique second-level timestamp and `run_status: in_progress`.
-2. Use GitHub contents API connector actions directly for normal file writes.
-3. Before replacing `state/latest.md` or `health/current.md`, fetch the file in the same run and use that returned current blob SHA.
-4. On SHA/conflict error, refetch and retry exactly once.
-5. On create-file path collision, generate a new second-level timestamp and retry exactly once.
-6. If a connector call is blocked before reaching GitHub, record the exact surfaced tool/connector error when possible. Do not relabel an unknown error as a GitHub permission or safety error.
-7. A failed write never disables or pauses the automation. The next scheduled hour must still execute.
-8. If normal contents-API write is unavailable but lower-level Git object actions are available, a run may use an equivalent safe GitHub write path. Do not use shell, local git credentials, or external tokens.
+### Launch radar
+Use `watchlists/famous-token-launch-radar.md` only when:
+- upstream research contains a candidate;
+- an official high-priority source has a new launch/sale/mint/claim;
+- fallback discovery is required because upstream research is stale.
 
-Gmail execution:
-- Gmail is called only when MISSION_SPEC/RUNBOOK requires ACTION, changed WATCH, health alert, or 19:29 monster summary.
-- These alerts are already user-authorized by the standing automation contract.
-- Gmail failure does not stop GitHub audit finalization or other lanes.
+Deep verify only actual candidates.
 
-Finalization order:
-1. state/latest.md
-2. health/current.md
-3. finalize the same run audit
-4. only then classify the scheduler run as success
+### NFT radar
+Use `watchlists/nft-mint-radar.md`.
 
-A scheduler trigger without a finalized audit remains missing_audit and cannot be counted as success.
+Do not query every scanner every hour. Use:
+- fresh upstream candidate;
+- one primary discovery surface;
+- fallback sources only if the primary source fails or yields a candidate requiring confirmation.
+
+A 403/loading page means source unavailable, not "no opportunity".
+
+### Robinhood/FOMO
+Use `watchlists/robinhood-fomo-mev.md`.
+
+Hourly work is limited to:
+- current carried candidates;
+- new relevant upstream research;
+- existing calibration state.
+
+No candidate = checked_no_candidate. Do not replay historical round trips every hour.
+
+## 4. Phase C: medium cadence
+
+Only when current Bangkok hour modulo 3 == 0, or a material event requires it:
+- read `positions/unicred.md`;
+- read `positions/credits.md`;
+- perform their defined medium checks.
+
+Otherwise record medium_lane: not_due.
+
+## 5. Alert handling
+
+Follow MISSION_SPEC and the relevant position/watchlist.
+
+ACTION and changed WATCH use Gmail + ChatGPT.
+
+No-action states remain silent except the required 19:29 monster summary.
+
+Do not let Gmail failure stop the rest of the run.
+
+## 6. Write current state
+
+Before updating a mutable current file, fetch its newest SHA in the same run.
+
+Update:
+- `state/latest.md` with fresh current data only;
+- `health/current.md` with current scheduler/run health.
+
+If no material state changed, keep the write compact. Do not append repeated historical snapshots.
+
+On SHA conflict:
+- refetch;
+- retry once;
+- if still failing, mark the write failed and continue to audit finalization.
+
+## 7. Finalize, even when partial
+
+The run must make a best-effort final update to the same skeleton audit.
+
+Allowed final status:
+- success
+- partial_success
+- partial_failure
+- failed
+
+Never leave `in_progress` intentionally.
+
+Minimum final audit:
+- phase completion;
+- wallet status;
+- each Phase A lane;
+- upstream research freshness;
+- monster universe_checked / shortlist count / states;
+- launch/NFT/FOMO status;
+- medium lane due/not_due;
+- alerts attempted/sent;
+- state write;
+- health write;
+- exact tool/source failures.
+
+If Phase A completed but a discovery lane failed, finalize as partial_success or partial_failure rather than disappearing.
+
+## 8. Health rules
+
+- no finalized audit for a scheduler trigger = missing_audit;
+- successful-run gap >90 minutes = MONITOR_HEALTH_GAP on recovery;
+- same mandatory lane unavailable for two consecutive finalized runs = MONITOR_LANE_FAILURE;
+- temporary failure never disables or pauses the task.
+
+## 9. Success definition
+
+Success requires:
+- skeleton was created;
+- all Phase A lanes have a status;
+- Monster bulk screen has a status;
+- launch/NFT/FOMO have checked / no_candidate / trigger / unavailable;
+- state and health update completed;
+- same audit finalized.
+
+Scheduler metadata alone never counts as success.
