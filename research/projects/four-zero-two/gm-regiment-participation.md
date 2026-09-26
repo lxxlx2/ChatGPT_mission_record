@@ -1,7 +1,7 @@
 # Four Zero Two / GM Regiment Ink Agent 注册与每日 GM 参与记录
 
 Updated: 2026-09-27
-Status: FIXED_LOCAL_RUNTIME_VERIFIED
+Status: CODEX_MCP_FIXED_PATH_VERIFIED
 Category: early-stage project participation
 Network: Ink mainnet
 Chain ID: 57073
@@ -379,6 +379,7 @@ As of 2026-09-27:
 - npm package contents verified: YES
 - Codex MCP capability verified: YES
 - Codex MCP entry registered: YES
+- Codex MCP fixed-path replacement verified: YES
 - MCP runtime health via fixed local install: VERIFIED
 - npx entrypoint issue diagnosed: YES
 - fixed local install path: `/Users/jerson/.local/share/gm-regiment-mcp/node_modules/gm-regiment-mcp/dist/server.js`
@@ -405,3 +406,16 @@ If TRACES mint mechanics later use any of the following, cross-reference this pa
 - Agent reputation / allowlist qualification
 
 No such eligibility linkage is confirmed at this time.
+
+
+## Codex MCP final verification
+
+Observed on 2026-09-27:
+- `gm-regiment` command: `/Users/jerson/.nvm/versions/node/v24.18.0/bin/node`
+- args: `/Users/jerson/.local/share/gm-regiment-mcp/node_modules/gm-regiment-mcp/dist/server.js`
+- status: `enabled`
+- auth: `Unsupported` (expected for local stdio MCP)
+- existing MCP entries remained intact, including `localGeminiReviewer`, `messages`, `event-stream`, `cua_repl`, and `node_repl`
+- no evidence this change modified unrelated project configuration such as web-codex-bridge
+
+The temporary backup file `~/Desktop/codex-mcp-before-gm-regiment.txt` is optional and may be deleted after this verification.
