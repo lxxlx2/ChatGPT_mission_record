@@ -46,6 +46,32 @@ STATE_PATH = Path("~/.config/technocore-close-call/keys.json").expanduser()
 MULTICODEC_ED25519 = b"\xed\x01"
 B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
+STATIC_SCHEDULE_UTC = {
+    1: "2026-09-26T09:00:00+00:00",
+    2: "2026-09-26T21:00:00+00:00",
+    3: "2026-09-27T09:00:00+00:00",
+    4: "2026-09-27T21:00:00+00:00",
+    5: "2026-09-28T09:00:00+00:00",
+    6: "2026-09-28T21:00:00+00:00",
+    7: "2026-09-29T09:00:00+00:00",
+    8: "2026-09-29T21:00:00+00:00",
+    9: "2026-09-30T09:00:00+00:00",
+    10: "2026-09-30T21:00:00+00:00",
+    11: "2026-10-01T09:00:00+00:00",
+    12: "2026-10-01T21:00:00+00:00",
+    13: "2026-10-02T09:00:00+00:00",
+    14: "2026-10-02T21:00:00+00:00",
+    15: "2026-10-03T09:00:00+00:00",
+    16: "2026-10-03T21:00:00+00:00",
+}
+
+BRACKET_SCHEDULE_UTC = {
+    1: "2026-09-26T09:15:00+00:00",
+    2: "2026-09-28T09:15:00+00:00",
+    3: "2026-09-30T09:15:00+00:00",
+    4: "2026-10-02T09:15:00+00:00",
+}
+
 
 def b58(raw: bytes) -> str:
     n = int.from_bytes(raw, "big")
@@ -534,16 +560,27 @@ def submit_pair(state: dict, long_label: str, short_label: str, prefix: str) -> 
     }
 
 
-def cmd_open_static(args) -> None:
-    if not 1 <= args.cohort <= 16:
-        raise SystemExit("cohort must be 1..16")
-    state = load_state()
+def open_static_cohort(state: dict, cohort: int) -> dict:
+    if not 1 <= cohort <= 16:
+        raise RuntimeError("cohort must be 1..16")
+    k = f"{cohort:02d}"
+    existing = state.setdefault("static", {}).get(k)
+    if existing:
+        return {"status": "already_submitted", "cohort": k, "trade": existing}
+
     require_fleet_gate(state)
-    k = f"{args.cohort:02d}"
     res = submit_pair(state, f"TIME-{k}-L", f"TIME-{k}-S", f"t{k}")
     state["static"][k] = res
     save_state(state)
-    print(json.dumps(res, indent=2))
+    return {"status": "submitted", "cohort": k, "trade": res}
+
+
+def cmd_open_static(args) -> None:
+    state = load_state()
+    result = open_static_cohort(state, args.cohort)
+    if result["status"] == "already_submitted":
+        print("static cohort already submitted; refusing duplicate:", result["cohort"])
+    print(json.dumps(result, indent=2))
 
 
 def contains_value(value, needle: str) -> bool:
@@ -729,6 +766,143 @@ def cmd_check_bracket(_args) -> None:
         print("BRACKET_CHECK: PENDING_OR_INCONCLUSIVE")
 
 
+def autopilot_iteration(late_minutes: int = 180) -> dict:
+    state = load_state()
+    now = datetime.now(timezone.utc)
+    ap = state.setdefault("autopilot", {})
+    ap.setdefault("missed_static", {})
+    ap["last_seen_at"] = now.isoformat()
+
+    pr = fresh_price(max_age=10**9)
+    ap["last_sweep"] = pr["n"]
+    ap["last_ref"] = str(pr["px"])
+    ap["last_age_s"] = pr["age_s"]
+
+    for cohort, due_text in STATIC_SCHEDULE_UTC.items():
+        k = f"{cohort:02d}"
+        if k in state.get("static", {}):
+            continue
+        if k in ap["missed_static"]:
+            continue
+
+        due = datetime.fromisoformat(due_text)
+        lag_s = (now - due).total_seconds()
+        if lag_s < 0:
+            continue
+
+        if lag_s > late_minutes * 60:
+            ap["missed_static"][k] = {
+                "due": due_text,
+                "observed_at": now.isoformat(),
+                "lag_minutes": round(lag_s / 60, 1),
+                "reason": "outside automatic catch-up window",
+            }
+            save_state(state)
+            return {
+                "event": "static_skipped_late",
+                "cohort": k,
+                "lag_minutes": round(lag_s / 60, 1),
+                "sweep": pr["n"],
+            }
+
+        try:
+            gate = fleet_gate(state)
+        except Exception as e:
+            save_state(state)
+            return {
+                "event": "wait_gate_error",
+                "cohort": k,
+                "error": str(e),
+                "sweep": pr["n"],
+            }
+
+        if not gate["pass"]:
+            save_state(state)
+            return {
+                "event": "wait_gate_block",
+                "cohort": k,
+                "checks": gate["checks"],
+                "sweep": pr["n"],
+            }
+
+        result = open_static_cohort(state, cohort)
+        ap = state.setdefault("autopilot", {})
+        ap["last_action"] = {
+            "at": datetime.now(timezone.utc).isoformat(),
+            "action": "open_static",
+            "cohort": k,
+            "result": result["status"],
+            "trade_id": (result.get("trade") or {}).get("trade_id"),
+        }
+        save_state(state)
+        return {
+            "event": "static_action",
+            "cohort": k,
+            "result": result,
+            "sweep": pr["n"],
+        }
+
+    bracket = state.get("bracket") or {}
+    round_no = int(bracket.get("round", 0) or 0)
+    next_round = round_no + 1
+    due_text = BRACKET_SCHEDULE_UTC.get(next_round)
+    if due_text:
+        due = datetime.fromisoformat(due_text)
+        if now >= due:
+            ap["bracket_attention"] = {
+                "round": next_round,
+                "due": due_text,
+                "observed_at": now.isoformat(),
+                "reason": "rollover logic intentionally requires explicit reviewed implementation",
+            }
+
+    save_state(state)
+    return {
+        "event": "heartbeat",
+        "sweep": pr["n"],
+        "ref": str(pr["px"]),
+        "age_s": pr["age_s"],
+        "next_static": next(
+            (
+                f"{cohort:02d}"
+                for cohort, due_text in STATIC_SCHEDULE_UTC.items()
+                if f"{cohort:02d}" not in state.get("static", {})
+                and f"{cohort:02d}" not in ap["missed_static"]
+            ),
+            None,
+        ),
+        "bracket_round": round_no,
+    }
+
+
+def cmd_autopilot(args) -> None:
+    last_sweep = None
+    while True:
+        try:
+            result = autopilot_iteration(late_minutes=args.late_minutes)
+            sweep = result.get("sweep")
+            if result.get("event") != "heartbeat" or sweep != last_sweep:
+                print(
+                    datetime.now(timezone.utc).isoformat(),
+                    json.dumps(result, ensure_ascii=False, sort_keys=True),
+                    flush=True,
+                )
+            last_sweep = sweep
+        except KeyboardInterrupt:
+            print("autopilot stopped", flush=True)
+            return
+        except Exception as e:
+            print(
+                datetime.now(timezone.utc).isoformat(),
+                json.dumps({"event": "error", "error": str(e)}, ensure_ascii=False),
+                flush=True,
+            )
+
+        if args.once:
+            return
+        time.sleep(max(10, args.poll))
+
+
 def cmd_open_bracket(_args) -> None:
     state = load_state()
     require_fleet_gate(state)
@@ -811,6 +985,17 @@ def main() -> None:
 
     p = sp.add_parser("check-bracket")
     p.set_defaults(fn=cmd_check_bracket)
+
+    p = sp.add_parser("autopilot")
+    p.add_argument("--poll", type=int, default=60, help="seconds between checks")
+    p.add_argument(
+        "--late-minutes",
+        type=int,
+        default=180,
+        help="maximum automatic catch-up delay for a scheduled static cohort",
+    )
+    p.add_argument("--once", action="store_true", help="run one cycle and exit")
+    p.set_defaults(fn=cmd_autopilot)
 
     args = ap.parse_args()
     args.fn(args)
