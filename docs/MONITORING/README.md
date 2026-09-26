@@ -78,3 +78,11 @@ The automatic path no longer requires a start marker because that write was an u
 A successful final audit is the canonical proof that the run completed.
 
 No repository cleanup may silently move these authority/runtime paths.
+
+
+## Notification policy
+
+Canonical notification/silence rules:
+- `docs/MONITORING/NOTIFICATION_POLICY.md`
+
+Healthy hourly runs are silent. Actual monitor-health incidents use deduplicated Gmail + ChatGPT alerts.
