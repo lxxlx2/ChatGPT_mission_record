@@ -53,7 +53,10 @@ cat > "$PLIST" <<PLIST
   <true/>
 
   <key>KeepAlive</key>
-  <true/>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
 
   <key>ProcessType</key>
   <string>Background</string>
@@ -78,6 +81,7 @@ echo "status: launchctl print gui/$(id -u)/$LABEL"
 echo "stdout: $OUT_LOG"
 echo "stderr: $ERR_LOG"
 echo
-echo "Important: caffeinate prevents idle sleep while this LaunchAgent is running."
+echo "Important: the agent restarts after crashes but stays stopped after a clean contest-complete exit."
+echo "caffeinate prevents idle sleep while this LaunchAgent is running."
 echo "Closing a MacBook lid normally still suspends the machine. Keep the Mac powered, online,"
 echo "and physically awake/open for unattended execution."
