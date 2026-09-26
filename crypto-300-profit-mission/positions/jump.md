@@ -1,4 +1,8 @@
-# JUMP / Jumper Legion Sale Plan
+# JUMP / Jumper Legion 公售参与计划与项目跟踪
+
+
+Human-facing research copy: `research/projects/jump/jump-legion-sale.md`
+Operational compatibility path retained for monitoring safety.
 
 Updated: 2026-09-25 21:00 Asia/Bangkok
 
