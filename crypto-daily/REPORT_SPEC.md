@@ -434,3 +434,25 @@ Research and reports created before 2026-09-22 remain historical records and sho
 Known legacy reports may contain older section names or internal QA text. Record such differences in migration or incident audits. Apply this specification prospectively from the unified automation migration.
 
 The current canonical operating rule from 2026-09-22 onward is one hourly unified automation with one 09:00 formal report stage.
+
+
+## 15. Reliability and delivery override — 2026-09-26
+
+This section overrides older execution coupling.
+
+### Hourly collection
+The hourly scheduler no longer generates or sends the formal report. It reads `COLLECTOR_SPEC.md`, writes compact research plus a run audit, and exits. It must favor short paraphrases over copied source text to reduce connector safety-write failures.
+
+### Formal report publisher
+Formal delivery is handled by the separate publisher defined in `DELIVERY_RUNBOOK.md`, scheduled at 09:10 with recovery attempts at 10:10 and 11:10.
+
+The publisher uses this REPORT_SPEC for the 13-section content, but delivery reliability follows DELIVERY_RUNBOOK.
+
+### Delivery-first
+A successful Gmail delivery remains valid if the later GitHub archive fails. In that case the run is `partial_success`, and a later recovery attempt restores GitHub from the sent Gmail body without sending a duplicate message.
+
+### Missing-report recovery
+Every publisher run first checks both Gmail Sent and the GitHub daily report. A missing side is repaired. An already delivered official report is never resent merely because an archive step failed.
+
+### Historical repair
+Historical backfill, exhaustive old-run integrity checks and archive cleanup are outside the critical 09:10 delivery path. They may run after delivery or in dedicated repair work.
