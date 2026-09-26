@@ -1,6 +1,6 @@
 # Crypto Profit Mission
 
-Updated: 2026-09-26 12:36 Asia/Bangkok
+Updated: 2026-09-26 14:12 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Authority
@@ -101,6 +101,11 @@ The prior 0.5850 and 0.5450 averaging bids are canceled and must not be monitore
 
 No automatic order modification, averaging order, budget change or spot/futures reallocation.
 
+### GSTOCK / BNB Chain
+`positions/gstock-plan.md`
+
+Track only direct wallet balances, fill evidence and stored plan state. Current state is PLAN_NOT_FILLED while canonical GSTOCK balance is zero. Do not submit or modify orders automatically.
+
 ### XRP / Variational
 `positions/xrp-variational.md`
 
@@ -138,7 +143,7 @@ Medium cadence unless unlock/security/claim/executable-market change makes them 
 - SHART direct balance 0: routine monitoring closed.
 - liquid CRED direct balance 0: standalone token monitoring closed.
 - auxiliary WSOL recovery completed.
-- BSC smart-money cluster remains outside this Mission.
+- BSC smart-money cluster research remains outside this Mission. Direct BNB Chain wallet telemetry and the explicit GSTOCK plan are included.
 
 ## Active watchlists
 
@@ -248,7 +253,7 @@ Authority: `performance/current.md`.
 
 ## Runtime / audit
 
-`RUNBOOK.md` is authoritative for execution order, workload limits, skeleton audit, retry and finalization.
+`AUTOMATION_RUNTIME.md` is the authority for the scheduled automatic task. `RUNBOOK.md` remains the richer interactive/manual runbook.
 
 A scheduler trigger is not proof of success.
 
