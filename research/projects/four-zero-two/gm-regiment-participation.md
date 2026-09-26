@@ -1,7 +1,7 @@
 # Four Zero Two / GM Regiment Ink Agent 注册与每日 GM 参与记录
 
 Updated: 2026-09-27
-Status: NPM_NPX_ENTRYPOINT_BUG_CONFIRMED
+Status: FIXED_LOCAL_RUNTIME_VERIFIED
 Category: early-stage project participation
 Network: Ink mainnet
 Chain ID: 57073
@@ -249,6 +249,16 @@ Diagnostic result:
 - under npm/npx executable indirection, that comparison can fail, preventing `main()` from running
 - manually unpacked tarball cannot be executed directly until dependencies are installed; observed `ERR_MODULE_NOT_FOUND: @modelcontextprotocol/sdk` is consistent with an unpack-only directory
 
+Runtime verification result:
+- dedicated install completed successfully under `/Users/jerson/.local/share/gm-regiment-mcp`
+- `gm-regiment-mcp@0.1.0` installed with dependencies
+- npm audit reported `0 vulnerabilities`
+- direct launch with Node succeeded and stayed alive over stdio until manual Ctrl+C
+- expected runtime endpoints were displayed:
+  - RPC: `https://rpc-gel.inkonchain.com`
+  - Identity Registry: `0x7274e874CA62410a93Bd8bf61c69d8045E399c02`
+  - DailyAgentGM: `0x2B9DD9Eede2AeCB095455ce45122101109E4AeC7`
+
 Operational decision:
 - do not use the npx binary shim for Codex runtime
 - install `gm-regiment-mcp@0.1.0` into a dedicated fixed directory
@@ -369,8 +379,12 @@ As of 2026-09-27:
 - npm package contents verified: YES
 - Codex MCP capability verified: YES
 - Codex MCP entry registered: YES
-- MCP runtime health verified: FAILED_VIA_NPX
+- MCP runtime health via fixed local install: VERIFIED
 - npx entrypoint issue diagnosed: YES
+- fixed local install path: `/Users/jerson/.local/share/gm-regiment-mcp/node_modules/gm-regiment-mcp/dist/server.js`
+- fixed local package version: `0.1.0`
+- npm audit result: `0 vulnerabilities`
+- direct Node launch emitted the expected `serving over stdio` banner and stayed alive until manually stopped
 - local installation: PENDING
 - Agent wallet created: PENDING
 - Agent funded: PENDING
