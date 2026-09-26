@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-26 16:33 Asia/Bangkok
+Updated: 2026-09-26 16:13+ Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Data labels
@@ -17,20 +17,28 @@ Timezone: Asia/Bangkok
 - current ETH reference: ~2680.61 USD
 
 ### Solana
+Fresh finalized RPC:
 - USDC: **266.559188**
-- SOL: **0.129098090**
+- native SOL: **0.129098090**
 - e/acc (Token-2022): **542.749359**
 - PAID (Token-2022): **947.685473**
+- KARDASHEV (Token-2022): **4,103.186501**
 - SHART: **0**
-- unidentified legacy SPL mint 2MU93...dZwQ: **1.745552**, UNRESOLVED
+- unidentified legacy SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552**, identity/value UNRESOLVED
 
-Change from 14:18 snapshot:
-- USDC: +17.901827
-- SOL: -0.004317397
-- e/acc: -180.916452
-- PAID: unchanged
+KARDASHEV authority: `positions/kardashev.md`.
+- entry capital: **20 USDC**
+- initial acquired quantity reconstructed: **18,794.553778**
+- total sold: **14,691.367277**
+- remaining: **4,103.186501**
+- gross routed exit proceeds observed: **~0.245051759 SOL**
+- status: **PRINCIPAL_RECOVERED / PROFIT_POSITION**
+- exact transaction signatures and risk notes are in the position file.
 
-A fresh finalized Solana transaction confirms an outgoing **180.916452 e/acc** transfer. Exact sale proceeds are not inferred from the wallet-level USDC delta because several recent transactions occurred and the full route has not yet been reconciled.
+Important current-state notes:
+- e/acc has declined further from the previous 723.665811 snapshot to **542.749359**. Do not infer its realized PnL here without reconstructing those sale legs.
+- PAID remains **947.685473**.
+- Solana Token-2022 holdings must remain included in all future portfolio scans.
 
 ### BNB Chain
 - canonical USDC: **0**
