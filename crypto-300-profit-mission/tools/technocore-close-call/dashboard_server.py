@@ -94,10 +94,14 @@ def snapshot() -> dict:
             try:
                 px = Decimal(str(rec["px"]))
                 qty = Decimal(str(rec["qty"]))
+                edge = abs(mark - px) * qty
+                base_fee = Decimal("0.01") * qty * px
                 gross_edges.append({
                     "name": f"T{k}",
-                    "edge": abs(mark - px) * qty,
+                    "edge": edge,
                     "entry": px,
+                    "base_fee": base_fee,
+                    "estimated_score": edge - base_fee,
                 })
             except Exception:
                 pass
@@ -107,15 +111,19 @@ def snapshot() -> dict:
                 try:
                     px = Decimal(str(pairs[0]["px"]))
                     qty = Decimal(str(pairs[0]["qty"]))
+                    edge = abs(mark - px) * qty
+                    base_fee = Decimal("0.01") * qty * px
                     gross_edges.append({
                         "name": "BR-R1",
-                        "edge": abs(mark - px) * qty,
+                        "edge": edge,
                         "entry": px,
+                        "base_fee": base_fee,
+                        "estimated_score": edge - base_fee,
                     })
                 except Exception:
                     pass
 
-    gross_edges.sort(key=lambda x: x["edge"], reverse=True)
+    gross_edges.sort(key=lambda x: x["estimated_score"], reverse=True)
     best_edge = gross_edges[0] if gross_edges else None
 
     now = datetime.now(timezone.utc)
@@ -173,6 +181,8 @@ def snapshot() -> dict:
                 "name": best_edge["name"],
                 "edge": str(best_edge["edge"].quantize(Decimal("0.01"))),
                 "entry": str(best_edge["entry"]),
+                "base_fee": str(best_edge["base_fee"].quantize(Decimal("0.01"))),
+                "estimated_score": str(best_edge["estimated_score"].quantize(Decimal("0.01"))),
             }
             if best_edge else None
         ),
@@ -187,8 +197,8 @@ def snapshot() -> dict:
                 "官方没有公开所有 owner 的实时完整排序。"
             ),
             "gross_edge": (
-                "Gross edge 只是当前 mark 相对入场价的结构性毛收益估算，"
-                "不等于官方 score，未扣真实 fee/clawback，也受 outcome 省略影响。"
+                "最佳估算 Score 使用当前 mark、入场价和 1% base fee 粗算；"
+                "它是策略观察值，非官方 Score，真实 clawback 与 outcome 省略仍会造成偏差。"
             ),
         },
     }
@@ -221,7 +231,7 @@ th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}th{c
   <div class="card"><div class="label">我们的公开排名</div><div class="value" id="rank">-</div><div class="small" id="rankDetail"></div></div>
   <div class="card"><div class="label">榜首 / 奖区分数线</div><div class="value" id="scores">-</div><div class="small" id="boardSize"></div></div>
   <div class="card"><div class="label">策略进度</div><div class="value" id="progress">-</div><div class="small" id="bracket"></div></div>
-  <div class="card"><div class="label">最佳毛 Edge</div><div class="value" id="edge">-</div><div class="small" id="edgeDetail"></div></div>
+  <div class="card"><div class="label">最佳估算 Score</div><div class="value" id="edge">-</div><div class="small" id="edgeDetail"></div></div>
 </div>
 <h2>官方公开榜</h2>
 <table><thead><tr><th>公开名次</th><th>账户</th><th>Score</th><th>我们的标签</th></tr></thead><tbody id="rows"></tbody></table>
@@ -251,8 +261,8 @@ async function refresh(){
     document.getElementById('boardSize').textContent='榜首 / 当前占据前三 prize places 的最低公开分 · '+d.prize_visible_wallets+' 个公开钱包在奖区组';
     document.getElementById('progress').textContent='Static '+d.static_done+'/'+d.static_total;
     document.getElementById('bracket').textContent='Bracket R'+(d.bracket_round??'-')+' · '+(d.bracket_status??'-')+' · '+d.bracket_pairs+' pairs';
-    document.getElementById('edge').textContent=d.best_gross_edge ? d.best_gross_edge.edge+' POLF' : '-';
-    document.getElementById('edgeDetail').textContent=d.best_gross_edge ? d.best_gross_edge.name+' · entry '+d.best_gross_edge.entry : '暂无';
+    document.getElementById('edge').textContent=d.best_gross_edge ? d.best_gross_edge.estimated_score+' POLF' : '-';
+    document.getElementById('edgeDetail').textContent=d.best_gross_edge ? d.best_gross_edge.name+' · gross '+d.best_gross_edge.edge+' · base fee≈'+d.best_gross_edge.base_fee : '暂无';
     document.getElementById('sweep').textContent=d.sweep;
     document.getElementById('prices').textContent=d.ref+' / '+(d.mark??'-');
     document.getElementById('age').textContent=(d.age_s??'-')+'s';
