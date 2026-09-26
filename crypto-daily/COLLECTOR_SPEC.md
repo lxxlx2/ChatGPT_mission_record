@@ -2,7 +2,7 @@
 
 Mode: FACTUAL_NEWS_COLLECTOR
 
-Updated: 2026-09-26 12:05 Asia/Bangkok
+Updated: 2026-09-26 14:12 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Goal: provide reliable rolling material for the daily report and Mission without making every hourly run an exhaustive internet crawl.
@@ -145,3 +145,18 @@ It must not:
 Candidate labels in this collector mean research priority only. Investment/action decisions belong to interactive chat or a separately authorized rule monitor.
 
 The first GitHub skeleton audit is intentionally content-neutral and must be attempted before reading other project files or starting external research.
+
+
+## Success classification
+
+Normal absence of news is not a source failure.
+
+Examples that are healthy:
+- no fresh authoritative security incident found
+- no material candidate found
+- a discovery category is not due in the current rotating shard
+- X/Reddit/NFT fields are not_due outside their shard
+
+Use `source_failures` / `tool_errors` only for actual request, access, parsing, provider or persistence errors.
+
+If core scan + scheduled shard + research write + audit finalization all succeed and there is no real tool/access error, final status should be `success`, even when the factual result is "no update".
