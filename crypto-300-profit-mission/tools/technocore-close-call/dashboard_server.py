@@ -72,6 +72,7 @@ def snapshot() -> dict:
             "score": score_text,
             "label": did_to_label.get(did),
             "ours": did in did_to_label,
+            "prize_zone": rank <= 3,
         })
 
     ours = [row for row in board if row["ours"]]
@@ -127,6 +128,9 @@ def snapshot() -> dict:
 
     threshold = board[-1]["score"] if board else None
     leader = board[0]["score"] if board else None
+    prize_rows = [row for row in board if row["prize_zone"]]
+    prize_cutoff = prize_rows[-1]["score"] if prize_rows else None
+    prize_visible_wallets = len(prize_rows)
 
     submitted_wallets = len(static_done) * 2
     if int(bracket.get("round", 0) or 0) >= 1:
@@ -154,6 +158,8 @@ def snapshot() -> dict:
         "ours_on_board": ours,
         "leader_score": leader,
         "top_threshold_score": threshold,
+        "prize_cutoff_score": prize_cutoff,
+        "prize_visible_wallets": prize_visible_wallets,
         "board_size": len(board),
         "board": board,
         "static_done": len(static_done),
@@ -202,7 +208,7 @@ HTML = r"""<!doctype html>
 .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.value{font-size:27px;font-weight:750;margin-top:6px}.small{font-size:13px;color:var(--muted);margin-top:6px}
 .good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)} h2{font-size:18px;margin:26px 0 12px}
 table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:600;font-size:12px}tr:last-child td{border-bottom:0}.ours{background:rgba(73,209,125,.12)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:600;font-size:12px}tr:last-child td{border-bottom:0}.ours{background:rgba(73,209,125,.14)}.prize{box-shadow:inset 3px 0 0 var(--warn)}
 .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#232a38;font-size:12px}.foot{margin-top:14px;color:var(--muted);font-size:12px}
 .links a{color:#9ec1ff;text-decoration:none;margin-right:14px}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}} @media(max-width:520px){.grid{grid-template-columns:1fr}}
@@ -213,7 +219,7 @@ th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}th{c
 <div class="sub" id="updated">加载中…</div>
 <div class="grid">
   <div class="card"><div class="label">我们的公开排名</div><div class="value" id="rank">-</div><div class="small" id="rankDetail"></div></div>
-  <div class="card"><div class="label">榜首 / Top门槛</div><div class="value" id="scores">-</div><div class="small" id="boardSize"></div></div>
+  <div class="card"><div class="label">榜首 / 奖区分数线</div><div class="value" id="scores">-</div><div class="small" id="boardSize"></div></div>
   <div class="card"><div class="label">策略进度</div><div class="value" id="progress">-</div><div class="small" id="bracket"></div></div>
   <div class="card"><div class="label">最佳毛 Edge</div><div class="value" id="edge">-</div><div class="small" id="edgeDetail"></div></div>
 </div>
@@ -241,8 +247,8 @@ async function refresh(){
     const rank=document.getElementById('rank'); rank.textContent=d.rank_text;
     rank.className='value '+(d.rank_status==='ON_BOARD'?'good':'warn');
     document.getElementById('rankDetail').textContent=d.best_ours ? (d.best_ours.label+' · score '+d.best_ours.score) : '当前没有我们的 DID 出现在官方公开 Top 列表';
-    document.getElementById('scores').textContent=(d.leader_score??'-')+' / '+(d.top_threshold_score??'-');
-    document.getElementById('boardSize').textContent='榜首 / 当前公开 Top'+d.board_size+' 最低分';
+    document.getElementById('scores').textContent=(d.leader_score??'-')+' / '+(d.prize_cutoff_score??'-');
+    document.getElementById('boardSize').textContent='榜首 / 当前占据前三 prize places 的最低公开分 · '+d.prize_visible_wallets+' 个公开钱包在奖区组';
     document.getElementById('progress').textContent='Static '+d.static_done+'/'+d.static_total;
     document.getElementById('bracket').textContent='Bracket R'+(d.bracket_round??'-')+' · '+(d.bracket_status??'-')+' · '+d.bracket_pairs+' pairs';
     document.getElementById('edge').textContent=d.best_gross_edge ? d.best_gross_edge.edge+' POLF' : '-';
@@ -253,8 +259,10 @@ async function refresh(){
     document.getElementById('wallets').textContent=d.submitted_wallets;
     const tbody=document.getElementById('rows'); tbody.innerHTML='';
     for(const x of d.board){
-      const tr=document.createElement('tr'); if(x.ours) tr.className='ours';
-      tr.innerHTML='<td>'+(x.rank===x.index?'#'+x.rank:'#'+x.rank+' 并列')+'</td><td>'+x.did_short+'</td><td>'+x.score+'</td><td>'+(x.label?'<span class="pill">'+x.label+'</span>':'')+'</td>';
+      const tr=document.createElement('tr');
+      tr.className=[x.ours?'ours':'',x.prize_zone?'prize':''].filter(Boolean).join(' ');
+      const rankText=(x.rank===x.index?'#'+x.rank:'并列 #'+x.rank)+(x.prize_zone?' · 奖区':'');
+      tr.innerHTML='<td>'+rankText+'</td><td>'+x.did_short+'</td><td>'+x.score+'</td><td>'+(x.label?'<span class="pill">'+x.label+'</span>':'')+'</td>';
       tbody.appendChild(tr);
     }
     document.getElementById('note').textContent=d.notes.exact_rank+' '+d.notes.gross_edge;
