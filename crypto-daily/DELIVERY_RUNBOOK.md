@@ -3,22 +3,25 @@
 Updated: 2026-09-26
 Timezone: Asia/Bangkok
 
-## Schedule
+## Execution model
 
-运行于每天 09:10、10:10、11:10。
+本 Runbook 由现有 `Crypto 每日情报` automation 在特定小时调用，不对应独立 scheduler。
 
-09:10 是主发布。
-10:10 与 11:10 仅负责 missing-delivery recovery。
+- 09:00：主发布。
+- 10:00：仅在当天日报不完整时恢复。
+- 11:00：最后一次当日自动恢复。
+
+其它小时不进入正式发布流程。
 
 ## Dedupe
 
-每次开始先检查：
+每次发布/恢复前检查：
 1. `crypto-daily/reports/daily/YYYY/YYYY-MM/YYYY-MM-DD.md`
 2. Gmail Sent 中 subject = `Crypto Daily Brief｜YYYY-MM-DD`
 
 若 official Gmail 已存在且 GitHub report 完整：
-- 立即静默退出；
-- 只写一个很小的 recovery-check audit，或在无必要时不重复写正文。
+- 不重复发送；
+- 当前小时继续按普通 collector 模式即可。
 
 若 Gmail 已存在而 GitHub 缺失：
 - 从 Gmail readback 恢复同一正文到 GitHub；
@@ -39,9 +42,9 @@ Timezone: Asia/Bangkok
 6. Gmail readback。
 7. 写 GitHub official report。
 8. GitHub readback。
-9. 写 publisher run audit。
+9. finalize 当前小时 run audit。
 
-GitHub archive 失败不得取消已成功的 Gmail。
+GitHub archive 失败不得取消已经成功的 Gmail。
 
 ## Graceful degradation
 
@@ -51,17 +54,17 @@ GitHub archive 失败不得取消已成功的 Gmail。
 - 继续交付。
 
 只有以下情况允许完全不发：
-- 无法获得足够信息形成基本可靠报告；
+- 无法取得足够信息形成基本可靠报告；
 - Gmail connector 不可用；
-- QA 发现重大事实冲突无法在本轮消除。
+- QA 发现重大事实冲突且本轮无法消除。
 
 ## Recovery
 
-09:10 失败后，10:10 自动检查当天是否缺报。
-10:10 仍缺则重新尝试。
-11:10 是最后一次当日自动恢复。
+09:00 失败后，10:00 自动检查当天是否缺报。
+10:00 仍缺则重新尝试。
+11:00 是最后一次当日自动恢复。
 
-任何 recovery 都必须先 dedupe，禁止同一天正常情况下重复发两封 official report。
+任何 recovery 都必须先 dedupe，正常情况下同一天只允许一封 official report。
 
 ## Success
 
