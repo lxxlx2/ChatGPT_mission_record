@@ -1,6 +1,6 @@
 # Monster-Coin Squeeze Monitor V2.1
 
-Updated: 2026-09-26 12:36 Asia/Bangkok
+Updated: 2026-09-27 01:20 Asia/Bangkok
 
 Purpose: factual squeeze/blow-off state classification across Binance Alpha and Binance USDⓈ-M Futures.
 
@@ -61,6 +61,15 @@ Primary data:
 
 English X/Reddit may support narrative discovery but cannot substitute for market facts.
 
+## Durable candidate state
+
+Authority:
+`state/monster-squeeze-v2.1-current.md`
+
+A candidate that becomes STRUCTURAL_CANDIDATE or PRESSURE must persist its `first_seen` and `setup_price`. The frozen IGNITION rule requiring price >= setup_price x1.05 cannot be evaluated from an ephemeral shortlist alone.
+
+Do not invent setup prices from past prices after the fact.
+
 ## Alerts
 
 Automation alerts are factual state-transition notices.
@@ -88,11 +97,15 @@ It must not include newly invented position sizing, leverage or buy/sell instruc
 
 ## 19:29 daily summary
 
-The same existing Mission run summarizes:
+The same existing Mission run summarizes and delivers:
+- universe size and data-source status;
 - today's state transitions;
-- up to 5 strongest STRUCTURAL/PRESSURE candidates;
+- up to 5 strongest STRUCTURAL/PRESSURE candidates with key gates;
 - all IGNITION/EXHAUSTION;
-- explicit "no confirmed IGNITION/EXHAUSTION" when applicable.
+- explicit "no confirmed IGNITION/EXHAUSTION" when applicable;
+- data gaps.
+
+The summary must be sent by Gmail + ChatGPT. Audit-only generation is incomplete delivery. Gmail exact-subject dedupe prevents duplicates.
 
 ## Functional QA
 
