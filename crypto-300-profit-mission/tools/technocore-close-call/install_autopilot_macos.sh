@@ -50,7 +50,7 @@ cat > "$PLIST" <<PLIST
     <string>$SCRIPT_PATH</string>
     <string>autopilot</string>
     <string>--poll</string>
-    <string>60</string>
+    <string>30</string>
     <string>--late-minutes</string>
     <string>180</string>
   </array>
