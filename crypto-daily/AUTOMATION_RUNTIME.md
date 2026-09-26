@@ -1,15 +1,23 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-26 16:33 Asia/Bangkok
+Updated: 2026-09-26 18:34 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
 Authority for the existing hourly Crypto Daily task.
 
 ## Audit
-Create crypto-daily/runs/YYYY-MM-DD/HHMMSS-start.md first and never update it.
-At completion create matching HHMMSS-final.md.
-A final audit is proof of completion.
+The append-only final audit is the canonical proof of completion.
+
+At run start, make one best-effort attempt to create:
+`crypto-daily/runs/YYYY-MM-DD/HHMMSS-start.md`.
+
+If the start write is blocked or unavailable, record `start_audit_warning` internally and continue the actual collection. A missing start marker alone must never abort the run or downgrade a complete run.
+
+At completion create:
+`crypto-daily/runs/YYYY-MM-DD/HHMMSS-final.md`.
+
+The final audit is mandatory whenever the factual work can run.
 
 ## Ordinary hour
 1. core BTC/ETH/SOL + liquid-outlier + major security/exchange/protocol factual scan;
