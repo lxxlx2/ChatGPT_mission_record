@@ -514,3 +514,16 @@ Health rules:
 4. Every valid action alert must attempt Gmail. Gmail failure cannot suppress the ChatGPT alert and must be written into the run audit.
 5. At least once per day, verify that the main automation is enabled and that a run audit exists for the expected schedule. Record the verification in `health/current.md`.
 6. Do not send routine health messages when all checks pass.
+
+
+## WATCH alert delivery correction — 2026-09-26
+User preference update: high-information WATCH candidates must use the same dual delivery path as ACTION alerts.
+
+For a NEW or materially changed WATCH candidate:
+- send Gmail to `lxx.run688@gmail.com`;
+- return a concise user-visible ChatGPT alert;
+- subject format: `[Crypto Mission提醒][WATCH][asset/project]`;
+- include why it is on WATCH, what condition is still missing, the next trigger level/event, and the relevant risk/invalidation;
+- do not repeat the same WATCH without a material state/data change.
+
+NO_ACTION, rejected candidates and unchanged WATCH states remain silent.
