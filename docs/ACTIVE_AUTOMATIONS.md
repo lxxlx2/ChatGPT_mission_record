@@ -3,46 +3,48 @@
 Updated: 2026-09-26
 Timezone: Asia/Bangkok
 
+This document lists actual current automation state, not historical designs.
+
 ## Active
 
-### Crypto 每小时情报采集
-- Schedule: every hour at :00
-- Purpose: lightweight rolling research only
-- GitHub: `crypto-daily/research/` + `crypto-daily/runs/`
-- Gmail: never
-
-### Crypto 09:00 日报发布
-- Schedule: 09:10 / 10:10 / 11:10
-- Purpose: formal 13-section report + recovery
-- 09:10 primary; later runs dedupe and repair only
-- Gmail-first, GitHub-second
+### Crypto 每日情报
+- automation_id: `6a8600b9d12481919bc43ebc800c9916`
+- schedule: hourly at :00
+- ordinary hours: factual rolling research
+- 09:00: formal Crypto Daily delivery
+- 10:00 / 11:00: delivery recovery if needed
+- runtime: `crypto-daily/AUTOMATION_RUNTIME.md`
 
 ### 全项目空投与TGE监控
-- Schedule: every hour at :14
-- Purpose: urgent set + one registry shard
-- Full registry refresh target: <= 4 hours
-- Daily summary: first run after 00:00 for previous natural day
+- automation_id: `6a85fff710e0819190ffcf8c1145a170`
+- schedule: hourly at :14
+- purpose: urgent set + one registry shard
+- runtime: `airdrop-tge-monitor/AUTOMATION_RUNTIME.md`
 
-### $300 Crypto盈利监控
-- Schedule: every hour at :29
-- Purpose: capital / position / opportunity decision layer
-- Monster squeeze V2.1 is embedded here
-- 19:29 run emits the monster daily summary
+### $300 Crypto资产状态监控
+- automation_id: `6ab46906a0cc8191880f1922dbef954a`
+- schedule: hourly at :29
+- purpose: factual wallet/position/threshold/opportunity-state telemetry
+- Monster V2.1 remains embedded
+- 19:29 same task performs Monster factual daily summary
+- runtime: `crypto-300-profit-mission/AUTOMATION_RUNTIME.md`
 
-## Disabled legacy / superseded
+## Disabled / superseded
 
-- 妖币每日汇总: disabled; merged into $300 Mission.
-- ETH期权到期交易检查: completed/disabled; ETH now lives in Mission.
-- Crypto 日报滚动素材池: disabled; replaced by Crypto 每小时情报采集.
-- 历史报告回填修复: disabled one-off tool.
+- `Crypto 09:00 日报发布`: disabled; publication/recovery is handled by the active Crypto 每日情报 task.
+- `妖币每日汇总`: disabled; Monster is merged into $300 Mission.
+- `ETH期权到期交易检查`: completed/disabled.
+- `Crypto 日报滚动素材池`: disabled; replaced by Crypto 每日情报.
+- `历史报告回填修复`: disabled one-off.
 
-## Health expectations
+## Health proof
 
-A scheduler trigger is not considered healthy unless the expected GitHub audit exists.
+A scheduler trigger alone is insufficient.
 
-- Collector: one run audit per hourly trigger.
-- TGE: one run audit per hourly trigger.
-- Mission: one finalized run audit + state/health updates per trigger.
-- Daily publisher: audit on every actual publish/recovery attempt.
+Current expected automatic audit pattern:
+- `HHMMSS-start.md`
+- `HHMMSS-final.md`
 
-Missing audits are operational failures even if the scheduler UI says the task ran.
+A run can still be valid if a start-marker write is blocked but the factual lanes complete and a final audit is durably written with the warning recorded.
+
+No repository cleanup may create a replacement automation merely to solve naming or organization issues.
