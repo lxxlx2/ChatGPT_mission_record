@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-26 19:55 Asia/Bangkok
+Updated: 2026-09-26 20:35 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -20,7 +20,8 @@ The final audit is the canonical proof of completion.
 - Solana USDC + SOL + Token-2022 e/acc + PAID
 - BNB USDC + BNB + GSTOCK
 - Robinhood ETH + PONS
-- stored PONS/XRP/ETH/JUMP threshold-state comparisons
+- stored PONS/XRP/ETH threshold-state comparisons
+- JUMP stored sale/deadline/gas state only; do not query a public JUMP market symbol
 - newest two Crypto Daily research files
 - Monster V2.1 factual market-state screen
 - launch/NFT/FOMO candidate state
@@ -54,3 +55,42 @@ If the 19:29 final audit is missing, the first later successful run on the same 
 - generate the missed Monster factual daily summary once;
 - mark `monster_daily_summary_recovery: true`;
 - never duplicate the summary if an earlier final audit already records it.
+
+
+## Required vs optional lanes
+
+Required hourly:
+- PONS/XRP/ETH/BTC public market facts used by already stored rules;
+- recent Crypto Daily research;
+- Monster Binance Futures factual state;
+- critical-wallet telemetry using fresh per-chain reads where supported;
+- final audit persistence.
+
+Optional enrichment:
+- Binance Alpha availability;
+- slow NFT/points enrichment outside its cadence;
+- noncritical presentation/cache writes.
+
+An unavailable optional enrichment is `optional_unavailable` and does not downgrade the run.
+
+JUMP is a sale/project reserve, not a required public market symbol. Outside a known participation/deadline window, record `JUMP_check: not_due`. During a due window, check official sale/deadline/gas facts.
+
+## Wallet fallback and classification
+
+Read critical wallets per chain rather than one aggregate call.
+
+Preferred:
+- Alchemy/direct RPC for supported chains;
+- Blockscout for supported EVM fallback;
+- direct Solana RPC for SOL/SPL/Token-2022.
+
+If one chain remains unavailable, record that chain only as unavailable.
+If all wallet providers fail but the other required market/Monster lanes complete, use `partial_success`, not `partial_failure`.
+
+## Final persistence fallback
+
+At completion:
+1. try `HHMMSS-final.md`;
+2. if persistence fails, retry once using `HHMMSS-final-retry.md` with a compact audit.
+
+Final persistence is attempted before optional cache updates.
