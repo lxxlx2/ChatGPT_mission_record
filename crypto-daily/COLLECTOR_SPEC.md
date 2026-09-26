@@ -2,7 +2,7 @@
 
 Mode: FACTUAL_NEWS_COLLECTOR
 
-Updated: 2026-09-26 15:10 Asia/Bangkok
+Updated: 2026-09-27 01:20 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Goal: provide reliable rolling material for the daily report and Mission without making every hourly run an exhaustive internet crawl.
@@ -90,13 +90,12 @@ Keep it compact:
 - unresolved
 - discovery_shard
 
-If a normal write is blocked, retry once using this compact schema.
+If the normal research write is blocked:
+1. retry once at `HHMMSS-retry.md` using the compact schema;
+2. if that also fails, embed a compact `research_payload` plus material candidates directly in the final/final-retry audit;
+3. finalize partial_failure, but preserve enough content for the 09:00 report to recover the missed hour.
 
-If the compact write still fails:
-- do not keep expanding/rephrasing indefinitely;
-- record research_write_failed in the existing audit;
-- finalize the run partial_failure;
-- next hour continues independently.
+The 09:00 report reads both research files and final audits when a research gap exists.
 
 ## 09:00, 10:00, 11:00
 
