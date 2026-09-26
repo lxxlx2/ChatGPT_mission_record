@@ -1,15 +1,20 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-26 16:33 Asia/Bangkok
+Updated: 2026-09-26 18:34 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
 Authority for the existing :29 task.
 
 ## Audit
-First persistent action: create append-only crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS-start.md.
-End by creating matching append-only HHMMSS-final.md.
-Never require an update to the start file.
+The append-only final audit is canonical.
+
+At run start, make one best-effort attempt to create:
+`crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS-start.md`.
+
+If the start write is blocked by the runtime safety layer, record `start_audit_warning` and continue all factual lanes. A missing start marker alone must not abort or downgrade an otherwise complete run.
+
+End by creating matching append-only `HHMMSS-final.md`.
 
 ## Hourly factual lanes
 - Ethereum USDC + ETH
