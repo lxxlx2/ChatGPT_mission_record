@@ -580,3 +580,34 @@ Bracket rounds 2-4 are not yet safe for unattended rollover. The public flow can
 
 Execution state:
 `LONG_RUNNING_PROGRESS_VIEW_READY_BRACKET_ROLLOVER_PENDING`.
+
+
+## Local visual dashboard — 2026-09-26
+
+The raw Technocore referee rooms are machine-oriented JSON streams and are not suitable as the primary user-facing progress view.
+
+A local read-only browser dashboard is now the preferred view:
+- URL: `http://127.0.0.1:8765`;
+- refreshes every 30 seconds;
+- reads only public referee data plus the local public DID-to-label mapping;
+- never exposes private seeds;
+- highlights any fleet DID that appears in the official live PnL board;
+- reports the published tied rank when a fleet DID is visible;
+- otherwise reports `Top N 外`, where N is the number of entries published by the referee;
+- shows leader score and the published-board cutoff score;
+- shows Static / Bracket execution progress;
+- shows the best structural gross mark-to-entry edge with an explicit warning that it is not official score.
+
+Current public observation from sweep 261:
+- official live PnL board publishes 25 entries;
+- none of the 52 fleet DIDs appeared in that published subset;
+- therefore the only defensible current rank statement is `Top 25 外`;
+- exact global live rank below the published subset is not available from the public referee room.
+
+Commits:
+- `159280fa651cca0dfd48aad77417da868fcee216`: local dashboard server;
+- `01ca49f419ad444cf88c00b07415c8ddddfea69f`: install dashboard as a companion LaunchAgent;
+- `5cb3127ffb49ecae929e05bca703385b1d7d0fec`: dashboard runtime dependency declaration.
+
+Execution state:
+`LOCAL_DASHBOARD_READY_TO_INSTALL`.
