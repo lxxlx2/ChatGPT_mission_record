@@ -1,20 +1,19 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-26 18:34 Asia/Bangkok
+Updated: 2026-09-26 19:55 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
 Authority for the existing :29 task.
 
 ## Audit
-The append-only final audit is canonical.
 
-At run start, make one best-effort attempt to create:
-`crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS-start.md`.
+The only mandatory persistence artifact is:
+`crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS-final.md`.
 
-If the start write is blocked by the runtime safety layer, record `start_audit_warning` and continue all factual lanes. A missing start marker alone must not abort or downgrade an otherwise complete run.
+Do not require or attempt a start file in the automatic path. Older start files remain valid historical artifacts.
 
-End by creating matching append-only `HHMMSS-final.md`.
+The final audit is the canonical proof of completion.
 
 ## Hourly factual lanes
 - Ethereum USDC + ETH
@@ -44,3 +43,14 @@ Mutable portfolio/state/health files are optional caches.
 A cache-write failure cannot erase or downgrade an otherwise completed factual run.
 Temporary failure never disables/pauses the task.
 No Chinese-language websites as evidence.
+
+
+## Missed 19:29 recovery
+
+The 19:29 run is responsible for the Monster factual daily summary.
+
+If the 19:29 final audit is missing, the first later successful run on the same Bangkok date must:
+- run the normal hourly factual lanes;
+- generate the missed Monster factual daily summary once;
+- mark `monster_daily_summary_recovery: true`;
+- never duplicate the summary if an earlier final audit already records it.
