@@ -56,15 +56,16 @@ If research exists but both final writes fail, the next run records the previous
 
 ## Notification behavior
 
-Read `docs/MONITORING/NOTIFICATION_POLICY.md` only when deciding whether a user/email notification is required.
+Use `docs/MONITORING/NOTIFICATION_POLICY.md`.
 
-Ordinary hourly collection is internal:
+Ordinary hourly collection is fully silent:
 - persist research;
-- persist final audit;
-- return an empty user-visible response.
+- persist final/final-retry audit;
+- return an empty user-visible response;
+- do not send Gmail.
 
-Do not notify merely because Bitget, ZEC, SOL relative strength, or another already-known item remains material.
+Monitoring/runtime/source/persistence problems are also GitHub-only and do not notify the user.
 
-A new monitor-health incident is different: send one deduplicated Gmail + ChatGPT alert according to the notification policy.
+Only the 09:00 formal daily uses Gmail under REPORT_SPEC / DELIVERY_RUNBOOK.
 
-09:00 formal daily delivery remains governed by REPORT_SPEC / DELIVERY_RUNBOOK.
+Do not notify merely because an already-known market/security item remains material.
