@@ -13,6 +13,7 @@ Immediate scope:
 - bootstrap BASE-B0 + a dedicated low-traffic room
 - register the remaining fleet
 - read live referee status
+- verify the exact local fleet is registered/minted before trading
 - open one static time-layer pair
 - open bracket round 1
 
@@ -224,6 +225,83 @@ def room_seen(room: str) -> bool:
     return False
 
 
+def collect_dids(value, out: set[str]) -> None:
+    if isinstance(value, str):
+        if value.startswith("did:key:z"):
+            out.add(value)
+        return
+    if isinstance(value, list):
+        for item in value:
+            collect_dids(item, out)
+        return
+    if isinstance(value, dict):
+        for item in value.values():
+            collect_dids(item, out)
+
+
+def fleet_gate(state: dict, max_age: int = 120) -> dict:
+    pr = fresh_price(max_age=10**9)
+    flow_rows = parse_export("d-close1-flow")
+    minted: set[str] = set()
+    latest_flow = None
+    room_ok = False
+
+    for rec in flow_rows:
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        latest_flow = p
+        collect_dids(p.get("mints"), minted)
+        rooms = p.get("rooms")
+        if isinstance(rooms, list) and state["room"] in rooms:
+            room_ok = True
+        elif isinstance(rooms, dict) and state["room"] in rooms:
+            room_ok = True
+        elif state["room"] in json.dumps(rooms, separators=(",", ":")):
+            room_ok = True
+
+    st = latest_payload("d-close1-state", "state")
+    local = {label: item["did"] for label, item in state["keys"].items()}
+    missing = [label for label, did in local.items() if did not in minted]
+
+    flow_n = int(latest_flow["n"]) if latest_flow and latest_flow.get("n") is not None else None
+    state_n = int(st["n"]) if st and st.get("n") is not None else None
+    age = pr["age_s"]
+    missed = latest_flow.get("missed") if latest_flow else None
+
+    checks = {
+        "fresh": age is None or int(age) <= max_age,
+        "room_registered": room_ok,
+        "flow_current": flow_n == pr["n"],
+        "state_current": state_n == pr["n"],
+        "missed_clear": not missed,
+        "fleet_minted": not missing,
+    }
+    return {
+        "pass": all(checks.values()),
+        "checks": checks,
+        "sweep": pr["n"],
+        "ref": str(pr["px"]),
+        "age_s": age,
+        "flow_sweep": flow_n,
+        "state_sweep": state_n,
+        "room": state["room"],
+        "minted": len(local) - len(missing),
+        "total": len(local),
+        "missing": missing,
+        "missed": missed,
+    }
+
+
+def require_fleet_gate(state: dict) -> dict:
+    report = fleet_gate(state)
+    if not report["pass"]:
+        raise SystemExit(
+            "fleet gate BLOCKED; run 'gate' and resolve failed checks before trading"
+        )
+    return report
+
+
 def fresh_price(max_age=600) -> dict:
     p = latest_payload("d-close1-price", "price")
     if not p:
@@ -255,6 +333,21 @@ def cmd_status(_args) -> None:
         top = pnl.get("top")
         if top is not None:
             print("top:", json.dumps(top, ensure_ascii=False)[:2000])
+
+
+def cmd_gate(_args) -> None:
+    state = load_state()
+    report = fleet_gate(state)
+    print("sweep:", report["sweep"], "ref:", report["ref"], "age_s:", report["age_s"])
+    print("flow_sweep:", report["flow_sweep"], "state_sweep:", report["state_sweep"])
+    print("room:", report["room"], "registered:", report["checks"]["room_registered"])
+    print("fleet minted:", f'{report["minted"]}/{report["total"]}')
+    if report["missing"]:
+        print("missing:", ",".join(report["missing"]))
+    print("missed:", report["missed"])
+    for name, ok in report["checks"].items():
+        print(f"check {name}:", "PASS" if ok else "FAIL")
+    print("GATE:", "PASS_OPEN_ALLOWED" if report["pass"] else "BLOCK")
 
 
 def cmd_bootstrap(args) -> None:
@@ -359,6 +452,7 @@ def cmd_open_static(args) -> None:
     if not 1 <= args.cohort <= 16:
         raise SystemExit("cohort must be 1..16")
     state = load_state()
+    require_fleet_gate(state)
     k = f"{args.cohort:02d}"
     res = submit_pair(state, f"TIME-{k}-L", f"TIME-{k}-S", f"t{k}")
     state["static"][k] = res
@@ -368,6 +462,7 @@ def cmd_open_static(args) -> None:
 
 def cmd_open_bracket(_args) -> None:
     state = load_state()
+    require_fleet_gate(state)
     if int(state["bracket"].get("round", 0)) != 0:
         raise SystemExit("bracket round 1 already initialized")
     pairs = []
@@ -396,6 +491,9 @@ def main() -> None:
 
     p = sp.add_parser("status")
     p.set_defaults(fn=cmd_status)
+
+    p = sp.add_parser("gate")
+    p.set_defaults(fn=cmd_gate)
 
     p = sp.add_parser("bootstrap")
     p.add_argument("--wait", type=int, default=900, help="seconds to wait for room registration")
