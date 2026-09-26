@@ -50,14 +50,24 @@ def snippets(text,source,radius=240,cap=180):
             pos=i+max(1,len(kw))
     return out
 
+def parse_url(u):
+    try:
+        return urllib.parse.urlparse(u)
+    except (ValueError, TypeError):
+        return None
+
 def interesting(u):
-    p=urllib.parse.urlparse(u); s=u.lower()
+    p=parse_url(u)
+    if p is None: return False
+    s=str(u).lower()
     if p.netloc and p.netloc!="crc.garden":
         return any(k in s for k in ["supabase","graphql","api","index","rpc"])
     return any(k in s for k in ["/api","quote","allocation","alloc","index","activity","balance","supply","mint","curve","golden","state","graphql","trpc"])
 
 def safe_get(u):
-    p=urllib.parse.urlparse(u); s=u.lower()
+    p=parse_url(u)
+    if p is None: return False
+    s=str(u).lower()
     if p.scheme not in ("http","https") or p.netloc!="crc.garden": return False
     if any(x in s for x in ["{","}","[","]","broadcast","submit","sign","claim","swap"]): return False
     if p.path.endswith((".js",".css",".png",".jpg",".svg",".woff",".ico")): return False
