@@ -557,3 +557,21 @@ Automation design:
 - send exactly one `gm()` when eligible;
 - verify receipt and post-state;
 - append only public/non-secret execution information to a local log.
+
+
+### Guarded runner manual test
+
+Manual test result:
+- event: `COOLDOWN_ACTIVE`
+- wallet: `0x87d283153A52333cFc7991f21e9AE0d067Dfa592`
+- balanceWei: `744477628533901`
+- chainNow: `1790461659`
+- lastGM: `1790460738`
+- nextEligibleUnix: `1790547258`
+- nextEligibleUTC: `2026-09-27T22:14:18.000Z`
+- secondsRemaining at test: `85599`
+
+Verification:
+- the runner did not broadcast during cooldown;
+- the 120-second safety buffer was applied correctly;
+- the runner is ready to be scheduled through the user's macOS LaunchAgent.
