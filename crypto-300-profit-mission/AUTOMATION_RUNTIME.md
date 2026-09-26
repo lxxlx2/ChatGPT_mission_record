@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-26 20:35 Asia/Bangkok
+Updated: 2026-09-26 21:05 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -94,3 +94,20 @@ At completion:
 2. if persistence fails, retry once using `HHMMSS-final-retry.md` with a compact audit.
 
 Final persistence is attempted before optional cache updates.
+
+
+## Notification behavior
+
+Use `docs/MONITORING/NOTIFICATION_POLICY.md`.
+
+Default is silent.
+
+Send Gmail + ChatGPT only for:
+- a new stored-rule trigger;
+- a new wallet/security/deadline anomaly;
+- a new MONITOR_HEALTH_GAP / MONITOR_LANE_FAILURE;
+- the scheduled 19:29 Monster factual daily summary.
+
+Deduplicate health incidents using the notification policy. Recovered/optional warnings stay silent.
+
+When no alert is required, return an empty user-visible response.
