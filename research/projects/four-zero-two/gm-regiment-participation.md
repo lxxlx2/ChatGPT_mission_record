@@ -316,11 +316,22 @@ Only after checking the prepared transaction, approve the real write with:
 - `confirm: true`
 
 Record:
-- chosen agent name: TBD
+- chosen agent name: `jerson-gm-agent`
 - registration tx hash: TBD
 - agent ID / NFT ID if returned: TBD
 
-Status: PENDING
+Dry-run verification:
+- wallet: `0x87d283153A52333cFc7991f21e9AE0d067Dfa592`
+- alreadyRegistered: `false`
+- destination: `0x7274e874CA62410a93Bd8bf61c69d8045E399c02`
+- value: `0`
+- estimatedGas: `128819`
+- gasPriceWei: `1000260`
+- estimatedFeeWei: `128852492940`
+- calldata encodes `register("jerson-gm-agent")`
+- broadcast status: NOT SENT
+
+Status: DRY_RUN_VERIFIED
 
 ### Step 7: send first GM
 
@@ -391,6 +402,7 @@ As of 2026-09-27:
 - local installation: PENDING
 - Agent wallet created: PENDING
 - Agent funded: YES
+- ERC-8004 dry-run verified: YES
 - ERC-8004 registered: PENDING
 - first GM: PENDING
 - streak active: PENDING
