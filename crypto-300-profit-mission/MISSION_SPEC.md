@@ -36,34 +36,36 @@ Use connected Alchemy `ChatGPT Crypto Monitor` for direct-chain reads when avail
 
 ## Latest direct-chain capital reconciliation
 
-Fresh direct-chain read on 2026-09-25:
+Fresh DIRECT_CHAIN read: 2026-09-26 around 09:18 Asia/Bangkok.
 
 Ethereum mainnet:
-- USDC: 400.308121
-- native ETH: 0.001667063838788351
+- canonical USDC: **400.308121**
+- native ETH: **0.001667063838788351**
 
 Solana:
-- canonical USDC: 390.866576
-- native SOL: 0.063112228
-- additional wrapped SOL held in SPL token accounts: approximately 0.033891318 WSOL
-- SHARTCOIN canonical mint balance: 0
+- canonical USDC: **339.825001**
+- native SOL: **0.139742323**
+- SHART canonical mint: **0**
+- unidentified SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552 tokens**, identity/value UNRESOLVED and excluded from NAV.
 
 Base:
-- canonical USDC: 0.252982
-- native ETH: 0.000790846510479134
+- canonical USDC: **0.252982**
+- native ETH: **0.000790846510479134**
 
 Unichain:
-- canonical USDC: 0.021286
-- native ETH: 0.000231941590232335
-- CRED: 0
+- canonical USDC: **0.021286**
+- native ETH: **0.000231941590232335**
+- CRED: **0**
 
 Robinhood Chain:
-- native balance: approximately 0.000081643478484768
-- unknown/spam ERC-20 balances must not be treated as positions without identity verification.
+- native balance: **0.000081643478484768**
+- unknown/spam ERC-20 balances are excluded unless identity/value is verified.
 
-A small unidentified Solana token balance may exist; keep it outside Mission accounting until identity and value are verified.
+Canonical direct-chain stablecoin total: **740.407390 USDC**.
 
-Approx direct-chain stablecoin total from the canonical balances above: 791.448965 USDC.
+The previous direct-chain stablecoin snapshot was 791.448965 USDC, a delta of -51.041575 USDC. Do not infer the cause from balance delta alone; transaction-history verification is required.
+
+Private venue/exchange positions such as Variational XRP and Binance PONS are not directly readable by Alchemy. Keep their latest USER_CONFIRMED state with timestamp and never label it live unless a connected venue source verifies it.
 
 ## Current active exposure
 
@@ -162,13 +164,26 @@ When triggered, use connected Gmail to send to lxx.run688@gmail.com. Subject sta
 
 From the current direct-chain stablecoin pool:
 - 400 USDC: conditional JUMP reserve on Ethereum.
-- 150 USDC: hard short-window opportunity reserve, preferably kept liquid on Solana.
+- 150 USDC: hard short-window opportunity reserve.
 - 100 USDC: ETH setup reserve.
-- approximately 89 USDC-equivalent: remains uncommitted after the user reallocated about 52 USD-equivalent from the prior ~141 uncommitted pool to the XRP/Variational sleeve. Exact residual remains subject to bridge/swap/gas reconciliation.
+- **90.407390 USDC**: current direct-chain residual after the three ring-fenced reserves. This is available-capital accounting, not profit.
 - PONS uses its separate 50-USDT margin budget.
 - 500 USD-equivalent low-risk interest bucket remains outside the Mission.
 
 Do not automatically consume the 150-USDC short-window reserve for BTC, PONS averaging, ordinary dips, or portfolio housekeeping.
+
+## Live holdings data contract
+
+Every Mission run must prefer fresh connected-wallet reads for current holdings.
+
+- Use Alchemy `ChatGPT Crypto Monitor` for canonical EVM/Solana wallet balances.
+- At minimum read Ethereum/Solana canonical USDC and native gas every run; Base/Unichain/Robinhood are mandatory on daily reconciliation and on meaningful wallet deltas.
+- Known liquid token positions must be checked by canonical mint/contract.
+- Unknown/spam assets are excluded from NAV until identity and value are verified.
+- Private venues/exchanges that are not connected must remain USER_CONFIRMED with the timestamp of the last screenshot/statement.
+- Public market prices may monitor private-position risk, but cannot overwrite fill quantity, margin, PnL or order state.
+- A failed RPC call must be written as UNAVAILABLE. Never reuse an old balance and call it current.
+- `portfolio/current.md` and `state/latest.md` are current-state files. Do not append old snapshots into them; historical states belong in Git history and immutable run audits.
 
 ## Monitoring scope
 
