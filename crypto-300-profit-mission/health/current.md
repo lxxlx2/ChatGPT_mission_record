@@ -1,6 +1,6 @@
 # Crypto Mission Monitor Health
 
-Updated: 2026-09-26 15:10 Asia/Bangkok
+Updated: 2026-09-26 15:16 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Existing task
@@ -35,3 +35,10 @@ The next :29 run is healthy only if:
 4. current state/health writes complete or are explicitly marked unavailable.
 
 Scheduler last_run_time alone remains insufficient.
+
+
+## Persistence change
+
+From 15:16 onward, automatic correctness is based on append-only `*-start.md` + `*-final.md` files. Mutable portfolio/state/health files are caches only during automatic runs. Their write failure must be recorded but must not prevent or downgrade a completed factual run.
+
+Next proof point: 15:29 automatic run.
