@@ -436,3 +436,25 @@ Fixes:
 
 Important distinction:
 `dense_ticket_submitted` proves the signed trade messages were posted. It does not by itself prove referee settlement. Settlement status is now surfaced separately.
+
+
+## 2026-09-27 — Active-room gate added after first Dense batch
+
+Runtime status after Dense batch #1:
+- `submitted_sets: 1`;
+- batch #2 registered and waiting;
+- latest Dense long/short outcomes were `NOT_VISIBLE`;
+- public flow reported very large omitted settlement and void counts, so absence from the compact flow is inconclusive.
+
+During review, official issue #8 was rechecked. Its later measurement notes that the active registered-room count fell sharply because technocore.chat rooms can disappear from the referee's current room list. Rule 5 also states that a deleted room leaves the list.
+
+The previous Dense submit path verified flow/state alignment and no missed range, but did not require the dedicated room to be present in the *latest* flow room list. A historically registered room could therefore theoretically receive locally acknowledged posts after it had ceased to be an active referee room.
+
+Fix:
+- `52eff376b31a296d4e841330d1717d63486b047f`
+- Dense submissions now require the dedicated room to be listed in the latest aligned flow;
+- if absent, the controller re-posts the room registration in `close1` once for that sweep and waits for a later sweep to list it;
+- `dense-status` now prints `room_active_in_latest_flow` and `latest_flow_sweep`;
+- the general fleet gate now treats room registration as a current-state condition rather than historical-ever-seen evidence.
+
+Important: this hardening protects future Dense batches. It does not retroactively prove batch #1 settlement. Batch #1 remains `submitted, outcome not publicly visible` until stronger evidence appears.
