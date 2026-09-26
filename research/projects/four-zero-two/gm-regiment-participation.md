@@ -318,7 +318,7 @@ Only after checking the prepared transaction, approve the real write with:
 Record:
 - chosen agent name: `jerson-gm-agent`
 - registration tx hash: `0xa4a247af91cf42abae2c94773db668f955b81f978378428477c813c8a380bd5e`
-- agent ID / NFT ID: PENDING_RECEIPT_LOG_DECODE
+- agent ID / NFT ID: `2251`
 
 Dry-run verification:
 - wallet: `0x87d283153A52333cFc7991f21e9AE0d067Dfa592`
@@ -331,7 +331,7 @@ Dry-run verification:
 - calldata encodes `register("jerson-gm-agent")`
 - broadcast status: NOT SENT
 
-Status: TX_SUCCESS_ELIGIBILITY_DIAGNOSTIC_PENDING
+Status: COMPLETE
 
 ### Step 7: send first GM
 
@@ -404,7 +404,8 @@ As of 2026-09-27:
 - Agent funded: YES
 - ERC-8004 dry-run verified: YES
 - ERC-8004 transaction status: SUCCESS
-- ERC-8004 eligibility verification: PENDING
+- ERC-8004 eligibility verification: YES
+- ERC-8004 agent ID: `2251`
 - first GM: PENDING
 - streak active: PENDING
 
@@ -468,7 +469,21 @@ Registration broadcast observed:
 - destination: `0x7274e874CA62410a93Bd8bf61c69d8045E399c02`
 - calldata: `register("jerson-gm-agent")`
 
-Unexpected post-check:
-- `gm-regiment-mcp` helper `readIsAgent()` returned `false`.
-- This helper reads `DailyAgentGM.isAgent(wallet)`, not Identity Registry `balanceOf(wallet)`.
-- Do not send the first GM until the Identity Registry NFT balance, receipt logs, and DailyAgentGM eligibility are independently checked.
+Initial immediate post-check:
+- `gm-regiment-mcp` helper `readIsAgent()` briefly returned `false`.
+
+Independent follow-up verification:
+- `DailyAgentGM.identityRegistry()` = `0x7274e874CA62410a93Bd8bf61c69d8045E399c02`
+- Identity Registry `balanceOf(wallet)` = `1`
+- `DailyAgentGM.isAgent(wallet)` = `true`
+- receipt status = `success`
+- ERC-721 Transfer event minted token ID `2251` to the Agent wallet
+- Registered event confirms:
+  - agentId: `2251`
+  - owner: `0x87d283153A52333cFc7991f21e9AE0d067Dfa592`
+  - agentURI: `jerson-gm-agent`
+
+Conclusion:
+- registration is confirmed successful;
+- the earlier `false` result is treated as a transient post-write read/RPC timing issue;
+- no second registration is required.
