@@ -1,6 +1,6 @@
 # Airdrop / TGE Automatic Runtime
 
-Updated: 2026-09-26 20:35 Asia/Bangkok
+Updated: 2026-09-26 21:05 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Authority for the existing :14 task.
@@ -73,3 +73,15 @@ At completion:
 2. on write failure, retry once with `HHMMSS-final-retry.md` using a compact audit.
 
 No optional cache write may occur before the final/final-retry attempt.
+
+
+## Notification behavior
+
+Use `docs/MONITORING/NOTIFICATION_POLICY.md`.
+
+- checked_no_update / NO_ACTION: empty user-visible response, no Gmail.
+- verified ACTION: Gmail + ChatGPT.
+- new monitor-health incident: one deduplicated Gmail + ChatGPT alert.
+- recovered_warning / optional cache failure: silent.
+
+Do not repeat the same health incident every hour.
