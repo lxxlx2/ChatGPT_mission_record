@@ -234,7 +234,7 @@ Do not send Gmail from hourly research mode.
 
 ## 7. Formal daily report
 
-Only one normal report is sent each day. Primary delivery is 09:10 Asia/Bangkok; 10:10 and 11:10 are recovery windows and must deduplicate before sending.
+Only one normal report is sent each day. The existing hourly automation attempts primary delivery in its 09:00 Asia/Bangkok run; 10:00 and 11:00 runs are recovery windows and must deduplicate before sending.
 
 The report must be decision-oriented. It should prioritize:
 - what is newly important today;
@@ -438,21 +438,35 @@ The current canonical operating rule from 2026-09-22 onward is one hourly unifie
 
 ## 15. Reliability and delivery override — 2026-09-26
 
-This section overrides older execution coupling.
+This section is the current execution authority for reliability.
 
-### Hourly collection
-The hourly scheduler no longer generates or sends the formal report. It reads `COLLECTOR_SPEC.md`, writes compact research plus a run audit, and exits. It must favor short paraphrases over copied source text to reduce connector safety-write failures.
+### One existing scheduler
+There is one active `Crypto 每日情报` automation. No separate publisher scheduler is required.
 
-### Formal report publisher
-Formal delivery is handled by the separate publisher defined in `DELIVERY_RUNBOOK.md`, scheduled at 09:10 with recovery attempts at 10:10 and 11:10.
+- ordinary hours: compact hourly collection;
+- 09:00: delivery-first formal report attempt;
+- 10:00 / 11:00: missing-delivery recovery first, then ordinary collection if the report is already complete.
 
-The publisher uses this REPORT_SPEC for the 13-section content, but delivery reliability follows DELIVERY_RUNBOOK.
+### Delivery-first at 09:00
+At 09:00, do not allow a broad fresh collection pass to block the formal report.
 
-### Delivery-first
-A successful Gmail delivery remains valid if the later GitHub archive fails. In that case the run is `partial_success`, and a later recovery attempt restores GitHub from the sent Gmail body without sending a duplicate message.
+Order:
+1. create a minimal run-audit skeleton immediately;
+2. check Gmail Sent + GitHub daily report for dedupe;
+3. if report is missing, use the previous 24h stored research plus a small fresh verification of top facts;
+4. generate and QA the fixed 13-section report;
+5. send Gmail first and read it back;
+6. archive the identical body to GitHub and read it back;
+7. only after delivery, attempt any additional 09:00 research collection if execution budget remains.
 
-### Missing-report recovery
-Every publisher run first checks both Gmail Sent and the GitHub daily report. A missing side is repaired. An already delivered official report is never resent merely because an archive step failed.
+A post-delivery research failure cannot invalidate a successfully delivered report.
 
-### Historical repair
-Historical backfill, exhaustive old-run integrity checks and archive cleanup are outside the critical 09:10 delivery path. They may run after delivery or in dedicated repair work.
+### Recovery
+At 10:00 and 11:00, repair a missing Gmail or GitHub side before doing ordinary collection.
+
+### GitHub write resilience
+Every run attempts a unique skeleton audit before expensive research. A later research-file write failure must still leave an auditable failed/partial run.
+
+A successful Gmail delivery remains valid if the later GitHub archive fails. A later recovery run repairs GitHub without sending a duplicate Gmail.
+
+Historical backfill and exhaustive archive cleanup stay outside the critical delivery path.
