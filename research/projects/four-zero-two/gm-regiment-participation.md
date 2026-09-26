@@ -1,7 +1,7 @@
 # Four Zero Two / GM Regiment Ink Agent 注册与每日 GM 参与记录
 
 Updated: 2026-09-27
-Status: READY_FOR_MANUAL_SETUP
+Status: ENVIRONMENT_VERIFIED
 Category: early-stage project participation
 Network: Ink mainnet
 Chain ID: 57073
@@ -108,7 +108,21 @@ git --version
 Requirement:
 - Node.js version must be 20 or newer.
 
-Status: PENDING_USER_EXECUTION
+Observed local environment:
+- Node.js: `v24.18.0`
+- npm: `11.16.0`
+- npx: `11.16.0`
+- Git: `2.54.0 (Apple Git-157)`
+- node path: `/Users/jerson/.nvm/versions/node/v24.18.0/bin/node`
+- npm path: `/Users/jerson/.nvm/versions/node/v24.18.0/bin/npm`
+
+Result:
+- Node requirement satisfied
+- npm/npx available
+- Node and npm resolve from the same nvm installation
+- no runtime blocker observed
+
+Status: COMPLETE
 
 ### Step 2: obtain GM Regiment
 
@@ -271,6 +285,7 @@ As of 2026-09-27:
 - Ink contracts verified: YES
 - live `gm()` transactions observed: YES
 - participation available now: YES
+- local runtime verified: YES
 - local installation: PENDING
 - Agent wallet created: PENDING
 - Agent funded: PENDING
