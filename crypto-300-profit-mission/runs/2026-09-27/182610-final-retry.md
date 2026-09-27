@@ -1,0 +1,19 @@
+run_time: 2026-09-27T18:26:10+07:00
+mode: FACTUAL_TELEMETRY
+run_status: partial_success
+attempt_path: crypto-300-profit-mission/runs/2026-09-27/182610-attempt.md
+attempt_status: unavailable
+market_lane: success
+PONSUSDT_mark: 0.62240000
+PONSUSDT_funding: 0.00010456
+PONS_rule_event: none
+BTCUSDT_mark: 84884.88589205
+ETHUSDT_mark: 2709.37000000
+wallet_lane: unavailable
+crypto_daily_lane: success
+crypto_daily_path: crypto-daily/research/2026-09-27/040000.md
+data_gaps: fresh wallet telemetry unavailable
+substantive_event: false
+notification: none
+monster_due: false
+monster_status: not_due
