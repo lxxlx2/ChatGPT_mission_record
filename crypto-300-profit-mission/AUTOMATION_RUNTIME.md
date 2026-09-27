@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-27 12:25 Asia/Bangkok
+Updated: 2026-09-27 12:41 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -53,7 +53,7 @@ Run in this bounded order:
 3. **Active wallet telemetry**
    - Robinhood PONS + native gas
    - BNB GSTOCK + native BNB
-   - Solana USDC/SOL + Token-2022 active balances including PAID/e/acc/KARDASHEV
+   - Solana USDC/SOL + non-zero active Token-2022 balance PAID; do not poll retired zero-balance SHART/KARDASHEV/e/acc as position-specific assets
 
 4. **Monster V2.1**
    - one Binance USD-M bulk screen
@@ -219,7 +219,7 @@ Core lanes are independent. Failure in one lane must never cancel the remaining 
 
 Maximum critical work before final persistence:
 1. PONS/BTC/ETH public facts, using bounded per-symbol calls;
-2. active wallet telemetry for Robinhood PONS, BNB GSTOCK, Solana USDC/SOL + known active Token-2022 balances;
+2. active wallet telemetry for Robinhood PONS, BNB GSTOCK, Solana USDC/SOL + non-zero PAID; former SHART/KARDASHEV/e/acc sleeves are retired while balances remain zero;
 3. read one newest Crypto Daily research/final artifact.
 
 For each lane:
@@ -276,3 +276,25 @@ Every core final/final-retry must contain:
 - monster_status: pending_after_core / not_due / recovered_separately
 
 This bounded architecture prioritizes durable monitoring proof while retaining Monster coverage on its own cadence.
+
+
+## Retired meme-position monitors — 2026-09-27
+
+Direct-chain reconciliation confirms:
+- SHARTCOIN = 0
+- KARDASHEV = 0
+- e/acc = 0
+
+These are historical positions only.
+
+While their wallet balances remain zero:
+- do not fetch their price, liquidity, pool reserves, holder distribution, creator wallets or dedicated social/news updates in the hourly Mission;
+- do not emit stored-rule alerts for them;
+- do not include them in active-wallet Token-2022 polling;
+- preserve historical position/research files for audit only.
+
+A fresh non-zero direct balance or explicit user instruction is required to reactivate a retired meme-position monitor.
+
+PAID remains non-zero and stays in active wallet inventory telemetry.
+
+This retirement does not disable general Monster V2.1 or launch-radar discovery for the broader market.
