@@ -581,3 +581,57 @@ A new read-only diagnostic command was added:
 - performs no signing and does not modify local strategy state.
 
 This is intended to distinguish a genuinely new competitor construction from the already-known dense/multiplicity strategy before changing live execution parameters.
+
+
+## 2026-09-27 — Competitor scan confirms historical-entry gap + live multiplicity
+
+Read-only competitor scan at sweep 460 produced a much clearer diagnosis.
+
+### Public leaderboard geometry
+
+Across sweeps 449-460 the public board repeatedly showed:
+- one leader;
+- 24 visible keys tied at the same second score;
+- the second-score group moved almost perfectly linearly against mark.
+
+Linear fit from the scan:
+- leader score slope ≈ -41.65 POLF per $1 mark move;
+- 24-way tie score slope ≈ -41.82;
+- implied effective short entry ≈ 226.65 for the leader;
+- implied effective short entry ≈ 226.45 for the tied prize-line fleet.
+
+Our current Dense quantity is about 42.21 and our best recent effective entry is around 224.46. The implied historical-entry gap is therefore about $1.99, worth roughly 82-84 POLF at ~42 contracts, matching the dashboard's observed stable ~79-83 POLF deficit.
+
+Conclusion: the stable gap is overwhelmingly explained by an older, better short entry. It is not evidence that the current Dense tickets are paying an extra hidden fee.
+
+### Quantity conclusion
+
+The top *score* group is inferred at only ~41.8 contracts, while our Dense tickets are ~42.2. Therefore the 44.87 values seen in the separate top-position-size board should not be treated as the score benchmark. Chasing 44.87 solely because it appears in d-close1-positions would be a category error.
+
+### Current competitor templates
+
+The latest 400-message close1 sample contained coordinated templates:
+- 8 makers: buy 222.25, qty 42.00, until 2556;
+- 8 makers: sell 226.75, qty 41.00, until 2556;
+- with ref 224.50 these are approximately -1% / +1%;
+- other large-quantity activity clustered near -2% and +1.3%.
+
+This is concrete evidence that at least one active fleet is currently duplicating same-sweep entries across multiple owner keys, and that ±1% constructions are actively used alongside ±2% variants.
+
+Official issue #8 independently reports:
+- 24 visible tied rows;
+- an estimated ~115 keys in the tied group at sweep 436;
+- same visible tie leaders persisting since sweep 19;
+- hundreds of identical favored entries can be manufactured per sweep under the frozen clawback rules.
+
+### Strategic implication
+
+Current Dense timing coverage is directionally correct. The remaining competitive gap has two components:
+1. historical entry advantage, which cannot be retroactively manufactured because clawback collapses favorable trade prices toward the current sweep close;
+2. multiplicity / tie-share disadvantage, which *can* still be improved by cloning future favored entries across more keys.
+
+The scan does not justify increasing qty solely to 44.87. It does justify evaluating:
+- reducing the favored offset from ±2% toward ±1% for lower feeder burden while preserving approximately sweep-close effective entry;
+- multiple copies per fresh sweep, or adaptive copies on new reference extrema, to improve prize sharing if a future sweep becomes the winning entry.
+
+No live execution parameter was changed by this note.
