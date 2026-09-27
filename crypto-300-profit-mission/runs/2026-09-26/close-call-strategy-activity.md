@@ -558,3 +558,26 @@ Operator status after the room-semantics correction:
 - current reference sweep 415 had effective age 126 seconds, so `fresh_for_trade: False`.
 
 Conclusion: the administrative recovery path is complete. Dense #3 is eligible by sweep number and owner-registration state; the only active gate at this snapshot is the <=120-second reference freshness requirement. No manual intervention is required.
+
+
+## 2026-09-27 — Stable leaderboard gap diagnosis and competitor scan added
+
+Observed dashboard snapshots repeatedly showed an almost constant gap between our best estimated Dense score and the public prize cutoff:
+- 73.45 vs 156.07 -> 82.62 POLF gap;
+- 66.69 vs 149.52 -> 82.83;
+- 54.45 vs 137.44 -> 82.99;
+- 42.21 vs 125.09 -> 82.88;
+- 6.75 vs 85.54 -> 78.79.
+
+Because Close Call score is approximately linear in mark for a fixed one-sided position, an almost parallel score gap strongly suggests the leading/prize-line tickets have similar directional exposure but a materially better historical effective entry, rather than a newly changing live tactic. At our ~42.2 contract size, an ~82 POLF intercept gap corresponds to roughly $1.9-$2.0 of effective entry advantage.
+
+Official-repo issue #8 independently measured the same structural pattern: fleets spanning both sides across every sweep, large tie groups, and near-max-size positions. It also documents that operators can manufacture many identical favored entries in one sweep, so multiplicity remains a separate prize-sharing disadvantage even if our best score eventually matches the same sweep.
+
+A new read-only diagnostic command was added:
+- commit `5bfca6f8c6f8136b4cd7acc38f6df81513d4c89d`;
+- command: `competitor-scan`;
+- reads only public referee/close1 rooms;
+- reports recent PnL tie structure, top positions, recent trade-template concentration, and large-qty price deviations;
+- performs no signing and does not modify local strategy state.
+
+This is intended to distinguish a genuinely new competitor construction from the already-known dense/multiplicity strategy before changing live execution parameters.
