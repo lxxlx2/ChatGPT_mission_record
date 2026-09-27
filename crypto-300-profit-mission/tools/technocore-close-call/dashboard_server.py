@@ -17,6 +17,7 @@ from close_call_fleet import (
     LOCK_TIME_UTC,
     STATIC_SCHEDULE_UTC,
     BRACKET_SCHEDULE_UTC,
+    DENSE_MAX_DYNAMIC_KEYS,
     board_rows,
     fresh_price,
     latest_payload,
@@ -405,6 +406,9 @@ def snapshot() -> dict:
             if x.get("status") == "registered"
             and int(x.get("ready_after_sweep", 10**9)) <= int(pr["n"])
         ),
+        "dense_dynamic_key_cap": DENSE_MAX_DYNAMIC_KEYS,
+        "dense_dynamic_keys": len(dynamic_keys),
+        "dense_dynamic_key_budget_remaining": max(0, DENSE_MAX_DYNAMIC_KEYS - len(dynamic_keys)),
         "dense_last_boost": dense.get("last_boost"),
         "room_registered": room_registered,
         "room_activity_age_s": room_activity_age_s,
@@ -629,7 +633,7 @@ async function refresh(){
         document.getElementById('bracketTitle').textContent='Extreme Boost '+d.dense_boost_tickets+' 张额外票';
         document.getElementById('bracketHint').textContent='新高加 short 到 '+d.dense_boost_total_copies+' 份 · 新低加 long 到 '+d.dense_boost_total_copies+' 份 · Ready reserve '+d.dense_boost_reserve_ready;
         document.getElementById('bracketFill').style.width='100%';
-        document.getElementById('walletText').textContent='历史 Ref 区间 '+fmt(d.dense_historical_low_ref)+' ↔ '+fmt(d.dense_historical_high_ref)+' · 本地策略钱包 '+d.submitted_wallets+' 个';
+        document.getElementById('walletText').textContent='历史 Ref 区间 '+fmt(d.dense_historical_low_ref)+' ↔ '+fmt(d.dense_historical_high_ref)+' · Dense keys '+d.dense_dynamic_keys+' / '+d.dense_dynamic_key_cap+' · 剩余预算 '+d.dense_dynamic_key_budget_remaining;
       }else{
         document.getElementById('staticTitle').textContent='Dense 双向票 '+d.dense_submitted_sets+' 组';
         document.getElementById('staticRemain').textContent='每个 fresh sweep 自动新增 1 组';
