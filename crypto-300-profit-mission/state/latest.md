@@ -1,60 +1,59 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-27 12:41 Asia/Bangkok
+Updated: 2026-09-27 12:46 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Mission definition
+## Mission
 
-Core goal: grow **300 USD cash principal + the original six Credits NFTs** into **3,000 USD-equivalent Mission net liquidation value**.
+Goal: grow **300 USD cash principal + original six Credits NFTs** into **3,000 USD-equivalent Mission net liquidation value**.
 
-Credits original batch:
-- #21646, #21753, #22857, #23042, #23232, #23328
+Current original Credits:
+- #23042: owned
+- #23232: owned
+- #21646/#21753/#22857/#23328: exited
 
-Current:
-- #23042: DIRECT_CHAIN owned
-- #23232: DIRECT_CHAIN owned
-- other four: sold/transferred out
+## Fresh wallet correction
 
-## Current portfolio state
+Fresh direct-chain reads supersede the earlier carried-forward meme balances.
 
-### On-chain core holdings
+### Solana
+- **420.472536 USDC**
+- **0.127067295 SOL**
+- PAID: **0.000473** residual dust
+- KARDASHEV: **0**
+- SHARTCOIN: **0**
+- legacy unresolved SPL: **1.745552**
 
+PAID is economically closed. No PAID position monitor.
+
+### BNB Chain
+- **0.007878625902744041 BNB**
+- canonical USDC: **0**
+- GSTOCK: **0.096724707311314713** residual dust
+
+GSTOCK is economically closed. No GSTOCK position monitor.
+
+### Robinhood Chain
+- **0.000815126815110326 ETH**
+- PONS: **0.000953441979624353** residual dust
+
+Robinhood PONS spot is economically closed. No Robinhood-PONS position monitor or old spot TP/SL monitoring.
+
+### Other chains
 Ethereum:
 - 400.308121 USDC
 - 0.001667063838788351 ETH
 - 0.000038313 WETH
-- Credits #23042 + #23232
-- small priced dust: ZRO/MORPHO/ZKP/ZAMA/USDT/cbBTC/HEX
-- unsolicited/unpriced spam receipts excluded
-
-Solana:
-- 328.018516 USDC
-- 0.128587689 SOL
-- 947.685473 PAID
-- legacy unresolved SPL 1.745552
-- e/acc 0
-- KARDASHEV 0
-- SHARTCOIN 0
-
-BNB Chain:
-- 1183.5967247073113 GSTOCK
-- 0.007916720924652341 BNB
-- 0 canonical USDC
-
-Robinhood Chain:
-- 54.799953441979625 PONS
-- 0.000825190918816326 ETH
+- Credits #23042/#23232
 
 Ink:
-- 0.01113370814547789 ETH
+- 0.010389022090321585 ETH
 - 7.665136656205785948 Tydro Ink Points
-- Fresh INK NFT #372
+- Fresh INK #372
 
 Base:
-- 0.010429 USDC
-- 0.000791653069719195 ETH
-- 0.011541 CGUSD
-- tiny priced ERC-20 dust + spam receipts excluded from core NAV
+- 0.252982 USDC
+- 0.000790846510479134 ETH
 
 Unichain:
 - 0.021286 USDC
@@ -64,72 +63,45 @@ Unichain:
 Arbitrum:
 - 0.000001 canonical USDC
 - 0.000825005012848238 ETH
-- 0.00003 BONK dust
-- pRCADE/spoof USDC excluded
+- only negligible BONK/spam/unresolved receipts beyond that
 
-Canonical on-chain stablecoins: **728.358353 USDC**.
+Canonical on-chain stablecoins: **821.054926 USDC**.
 
-Strict directly priced on-chain liquid NAV reference: **~854.87 USD**, excluding PAID/NFTs/points/unresolved receipts/dust.
+Strict directly priced on-chain liquid reference: **~882.45 USD**, excluding NFTs/points/unresolved/spam and cleared meme dust.
 
-## Binance private-venue state — USER_CONFIRMED
+## Binance — USER_CONFIRMED
 
-Current Binance inventory has only:
-1. **598 USD-equivalent combined earn bucket**
-2. **PONSUSDT perpetual**
+Only:
+- **598 USD-equivalent combined earn bucket**
+- **PONSUSDT perpetual LONG 64 @ 0.6250, isolated 3x**
 
-PONS futures latest private authority:
-- LONG 64 @ 0.6250
-- isolated 3x
+Fresh public PONS mark: **0.61669610**.
+Estimated uPnL if private quantity is unchanged: **~-0.5314 USDT** before funding/fees.
 
-Fresh public PONS mark:
-- 0.61669610
-- funding 0.00011652
-- estimated uPnL if private quantity is unchanged: **~-0.5314 USDT** before funding/fees
+No other Binance exposure is current.
 
-No other Binance asset or position is current.
+## Active-monitor scope
 
-## Meme cleanup / monitoring retirement
+Position-specific:
+- Binance PONSUSDT perpetual
 
-The user has nearly cleared prior meme exposure.
+Wallet inventory:
+- stablecoins/native gas
+- Credits / UNICRED / Fresh INK / Tydro Points
+- unknown or unsolicited receipts stay excluded unless verified
 
-Verified zero-balance former positions:
-- SHARTCOIN: 0
-- KARDASHEV: 0
-- e/acc: 0
+Retired from position-specific monitoring:
+- PAID
+- GSTOCK
+- Robinhood PONS spot
+- SHARTCOIN
+- KARDASHEV
+- e/acc
 
-Operational effect:
-- retire SHARTCOIN price/liquidity/holder/creator/pool monitoring;
-- retire KARDASHEV price/liquidity/holder/creator/pool monitoring;
-- retire e/acc position monitoring;
-- do not re-add any of these to hourly position-specific monitoring unless a fresh non-zero wallet balance or explicit user instruction reactivates them;
-- preserve their historical files only for audit/provenance;
-- PAID remains non-zero and stays in wallet inventory telemetry.
+Residual dust does not reactivate a position monitor.
 
-General Monster V2.1, launch radar and NFT radar remain Mission-wide opportunity scanners. They are not treated as legacy meme-position monitoring.
+General market-wide Monster V2.1, launch radar and NFT radar remain separate opportunity scanners.
 
-## Data freshness
+## Correction note
 
-Fresh 12:40 direct read:
-- Ethereum
-- Base
-- Arbitrum
-- Unichain
-
-Latest direct Mission read 12:20-12:25:
-- Solana
-- BNB Chain
-- Robinhood Chain
-- Ink
-
-Blockscout session authorization expired after the first four fresh EVM reads, so the latter four chains were not falsely relabeled as 12:40 reads.
-
-## Automation state
-
-$300 Mission scheduler repair remains in effect:
-- attempt proof first;
-- independent market / wallet / Crypto Daily core lanes;
-- final/final-retry before enrichment;
-- Monster on bounded cadence;
-- position-specific zero-balance meme monitoring removed.
-
-Latest automatic core final at 12:30 persisted successfully as partial_success; its wallet lane was unavailable in that bounded cycle, so this manual reconciliation is the current portfolio authority.
+The 12:41 portfolio snapshot incorrectly treated stale PAID/GSTOCK/Robinhood-PONS quantities as current. Direct Alchemy reads at this correction show the user has already cleared those meme positions. Current authoritative state is this file plus `portfolio/current.md`.
