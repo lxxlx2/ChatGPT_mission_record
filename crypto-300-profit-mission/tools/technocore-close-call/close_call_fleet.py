@@ -78,9 +78,13 @@ FINAL_TIME_UTC = datetime.fromisoformat("2026-10-04T10:00:00+00:00")
 AUTOPILOT_STOP_TIME_UTC = datetime.fromisoformat("2026-10-04T10:15:00+00:00")
 
 DENSE_OFFSET = Decimal("0.02")
+DENSE_V2_OFFSET = Decimal("0.01")
 DENSE_QTY_SAFETY = Decimal("0.995")
 DENSE_FUNDS_FACTOR = Decimal("1.05")
 DENSE_MAX_DYNAMIC_KEYS = 8000
+DENSE_V2_BOOST_TOTAL_COPIES = 8
+DENSE_V2_BOOST_EXTRA_COPIES = DENSE_V2_BOOST_TOTAL_COPIES - 1
+DENSE_V2_RESERVE_TARGET_PAIRS = 16
 
 
 def b58(raw: bytes) -> str:
@@ -351,11 +355,212 @@ def dense_qty(ref_px: Decimal) -> Decimal:
     return q.quantize(Decimal("0.01"), rounding=ROUND_DOWN)
 
 
-def dense_prices(ref_px: Decimal) -> tuple[Decimal, Decimal]:
+def dense_offset(state: dict) -> Decimal:
+    dense = state.get("dense") or {}
+    if dense.get("v2_enabled"):
+        return Decimal(str(dense.get("v2_offset") or DENSE_V2_OFFSET))
+    return Decimal(str(dense.get("offset") or DENSE_OFFSET))
+
+
+def dense_prices(ref_px: Decimal, offset: Decimal) -> tuple[Decimal, Decimal]:
     cent = Decimal("0.01")
-    low = (ref_px * (Decimal("1") - DENSE_OFFSET)).quantize(cent, rounding=ROUND_DOWN)
-    high = (ref_px * (Decimal("1") + DENSE_OFFSET)).quantize(cent, rounding=ROUND_DOWN)
+    low = (ref_px * (Decimal("1") - offset)).quantize(cent, rounding=ROUND_DOWN)
+    high = (ref_px * (Decimal("1") + offset)).quantize(cent, rounding=ROUND_DOWN)
     return low, high
+
+
+def dense_ref_bounds(dense: dict) -> tuple[Decimal | None, Decimal | None]:
+    refs = []
+    for ticket in dense.get("tickets") or []:
+        try:
+            refs.append(Decimal(str(ticket.get("ref"))))
+        except Exception:
+            pass
+    for ticket in dense.get("boost_tickets") or []:
+        try:
+            refs.append(Decimal(str(ticket.get("ref"))))
+        except Exception:
+            pass
+    if not refs:
+        return None, None
+    return min(refs), max(refs)
+
+
+def dense_v2_init_bounds(dense: dict) -> None:
+    if dense.get("historical_low_ref") is not None and dense.get("historical_high_ref") is not None:
+        return
+    low, high = dense_ref_bounds(dense)
+    if low is not None:
+        dense["historical_low_ref"] = str(low)
+    if high is not None:
+        dense["historical_high_ref"] = str(high)
+
+
+def dense_v2_extreme_sides(state: dict, ref_px: Decimal) -> list[str]:
+    dense = state.setdefault("dense", {})
+    if not dense.get("v2_enabled"):
+        return []
+    dense_v2_init_bounds(dense)
+    sides = []
+    low = dense.get("historical_low_ref")
+    high = dense.get("historical_high_ref")
+    if low is None or ref_px < Decimal(str(low)):
+        sides.append("long")
+    if high is None or ref_px > Decimal(str(high)):
+        sides.append("short")
+    return sides
+
+
+def dense_v2_update_bounds(state: dict, ref_px: Decimal) -> None:
+    dense = state.setdefault("dense", {})
+    dense_v2_init_bounds(dense)
+    low = dense.get("historical_low_ref")
+    high = dense.get("historical_high_ref")
+    if low is None or ref_px < Decimal(str(low)):
+        dense["historical_low_ref"] = str(ref_px)
+    if high is None or ref_px > Decimal(str(high)):
+        dense["historical_high_ref"] = str(ref_px)
+    save_state(state)
+
+
+def dense_v2_ready_reserve(dense: dict, sweep: int) -> list[dict]:
+    return [
+        item for item in (dense.get("boost_reserve") or [])
+        if item.get("status") == "registered"
+        and int(item.get("ready_after_sweep", 10**9)) <= int(sweep)
+    ]
+
+
+def dense_v2_maintain_reserve(state: dict, sweep: int) -> dict | None:
+    dense = state.setdefault("dense", {})
+    if not dense.get("v2_enabled") or not room_registration_confirmed(state):
+        return None
+
+    reserve = dense.setdefault("boost_reserve", [])
+    available = [x for x in reserve if x.get("status") == "registered"]
+    target = int(dense.get("v2_reserve_target_pairs") or DENSE_V2_RESERVE_TARGET_PAIRS)
+    need = max(0, target - len(available))
+    if need <= 0:
+        return None
+
+    created = []
+    for _ in range(need):
+        idx = int(dense.get("boost_next_index", 1))
+        dense["boost_next_index"] = idx + 1
+        base = f"DENSE-BOOST-{idx:05d}"
+        target_label = f"{base}-T"
+        feeder_label = f"{base}-F"
+        add_dynamic_key(state, target_label)
+        add_dynamic_key(state, feeder_label)
+
+        regs = {}
+        for role, label in (("target", target_label), ("feeder", feeder_label)):
+            did = state["keys"][label]["did"]
+            ack = post_signed(state, state["room"], label, owner_text(did))
+            regs[role] = {
+                "did": did,
+                "posted_at": datetime.now(timezone.utc).isoformat(),
+                "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+            }
+            time.sleep(0.05)
+
+        item = {
+            "index": idx,
+            "target": target_label,
+            "feeder": feeder_label,
+            "status": "registered",
+            "registered_sweep": int(sweep),
+            "ready_after_sweep": int(sweep) + 1,
+            "registrations": regs,
+        }
+        reserve.append(item)
+        created.append(idx)
+        dense["boost_reserve"] = reserve
+        save_state(state)
+
+    return {
+        "event": "dense_v2_reserve_filled",
+        "created_pairs": len(created),
+        "reserve_pairs": len([x for x in reserve if x.get("status") == "registered"]),
+        "indices": created,
+    }
+
+
+def dense_v2_submit_boost(state: dict, pr: dict, side: str, qty: Decimal, px: Decimal) -> dict:
+    dense = state.setdefault("dense", {})
+    reserve = dense_v2_ready_reserve(dense, pr["n"])
+    need = int(dense.get("v2_boost_extra_copies") or DENSE_V2_BOOST_EXTRA_COPIES)
+    selected = reserve[:need]
+    submitted = []
+    errors = []
+
+    for copy_no, item in enumerate(selected, start=2):
+        target = item["target"]
+        feeder = item["feeder"]
+        tid = f"x{item['index']:05d}{side[0]}-{int(time.time())}-{copy_no}"
+        try:
+            if side == "long":
+                text = build_trade(
+                    state, state["room"], feeder, target,
+                    "sell", qty, px, pr["n"] + 2, tid,
+                )
+                ack = post_signed(state, state["room"], feeder, text)
+            else:
+                text = build_trade(
+                    state, state["room"], target, feeder,
+                    "sell", qty, px, pr["n"] + 2, tid,
+                )
+                ack = post_signed(state, state["room"], target, text)
+
+            item["status"] = "consumed"
+            item["consumed_at"] = datetime.now(timezone.utc).isoformat()
+            item["trade_id"] = tid
+            item["side"] = side
+            item["sweep"] = pr["n"]
+            item["ref"] = str(pr["px"])
+            item["px"] = str(px)
+            item["qty"] = str(qty)
+
+            rec = {
+                "reserve_index": item["index"],
+                "copy_no": copy_no,
+                "side": side,
+                "target": target,
+                "feeder": feeder,
+                "trade_id": tid,
+                "sweep": pr["n"],
+                "ref": str(pr["px"]),
+                "px": str(px),
+                "qty": str(qty),
+                "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+            }
+            dense.setdefault("boost_tickets", []).append(rec)
+            submitted.append(rec)
+            save_state(state)
+            time.sleep(0.05)
+        except Exception as e:
+            errors.append({
+                "reserve_index": item.get("index"),
+                "side": side,
+                "error": str(e),
+            })
+
+    result = {
+        "side": side,
+        "requested_extra_copies": need,
+        "submitted_extra_copies": len(submitted),
+        "reserve_shortage": max(0, need - len(selected)),
+        "errors": errors,
+        "tickets": submitted,
+    }
+    dense["last_boost"] = {
+        "at": datetime.now(timezone.utc).isoformat(),
+        "sweep": pr["n"],
+        "ref": str(pr["px"]),
+        **result,
+    }
+    save_state(state)
+    return result
 
 
 def dense_register_pending(state: dict, sweep: int) -> dict:
@@ -526,7 +731,8 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
 
     labels = pending["labels"]
     qty = dense_qty(pr["px"])
-    low, high = dense_prices(pr["px"])
+    offset = dense_offset(state)
+    low, high = dense_prices(pr["px"], offset)
     if qty < Decimal("0.1"):
         raise RuntimeError("dense quantity below minimum")
 
@@ -588,6 +794,15 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
         dense["pending"] = pending
         save_state(state)
 
+    boost = {}
+    extreme_sides = dense_v2_extreme_sides(state, pr["px"])
+    if dense.get("v2_enabled") and extreme_sides:
+        if "long" in extreme_sides:
+            boost["long"] = dense_v2_submit_boost(state, pr, "long", qty, low)
+        if "short" in extreme_sides:
+            boost["short"] = dense_v2_submit_boost(state, pr, "short", qty, high)
+        pending["v2_boost"] = boost
+
     pending["status"] = "submitted"
     pending["submitted_at"] = datetime.now(timezone.utc).isoformat()
     pending["trade_sweep"] = pr["n"]
@@ -595,10 +810,12 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
     pending["low"] = str(low)
     pending["high"] = str(high)
     pending["qty"] = str(qty)
+    pending["offset"] = str(offset)
     dense.setdefault("tickets", []).append(pending)
     dense["last_ticket"] = pending
     dense["pending"] = None
     dense["submitted_sets"] = len(dense["tickets"])
+    dense_v2_update_bounds(state, pr["px"])
     save_state(state)
     return {
         "event": "dense_ticket_submitted",
@@ -611,6 +828,9 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
         "long": labels["long"],
         "short": labels["short"],
         "feeder": labels["feeder"],
+        "offset": str(offset),
+        "extreme_sides": extreme_sides,
+        "boost": boost,
     }
 
 
@@ -637,6 +857,14 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     maintenance = dense_room_maintenance(state, pr)
     if maintenance:
         return maintenance
+
+    reserve_event = dense_v2_maintain_reserve(state, pr["n"])
+    if reserve_event:
+        dense["last_reserve_event"] = {
+            "at": datetime.now(timezone.utc).isoformat(),
+            **reserve_event,
+        }
+        save_state(state)
 
     if pr["age_s"] is not None and int(pr["age_s"]) > 120:
         return {
@@ -1854,6 +2082,33 @@ def cmd_enable_dense(args) -> None:
     print("offset:", DENSE_OFFSET, "dynamic key safety cap:", DENSE_MAX_DYNAMIC_KEYS)
 
 
+def cmd_enable_dense_v2(_args) -> None:
+    state = load_state()
+    dense = state.setdefault("dense", {})
+    dense["enabled"] = True
+    dense["v2_enabled"] = True
+    dense["v2_enabled_at"] = datetime.now(timezone.utc).isoformat()
+    dense["mode"] = "dense-v2-baseline-plus-extreme-boost"
+    dense["v2_offset"] = str(DENSE_V2_OFFSET)
+    dense["v2_boost_total_copies"] = DENSE_V2_BOOST_TOTAL_COPIES
+    dense["v2_boost_extra_copies"] = DENSE_V2_BOOST_EXTRA_COPIES
+    dense["v2_reserve_target_pairs"] = DENSE_V2_RESERVE_TARGET_PAIRS
+    dense.setdefault("boost_next_index", 1)
+    dense.setdefault("boost_reserve", [])
+    dense.setdefault("boost_tickets", [])
+    dense_v2_init_bounds(dense)
+    state["legacy_strategy_frozen"] = True
+    save_state(state)
+    print("Dense V2 ENABLED")
+    print("baseline: one favored long + one favored short per fresh sweep")
+    print("offset:", DENSE_V2_OFFSET)
+    print("extreme boost: total", DENSE_V2_BOOST_TOTAL_COPIES, "copies on the new-extreme side")
+    print("reserve target pairs:", DENSE_V2_RESERVE_TARGET_PAIRS)
+    print("historical_low_ref:", dense.get("historical_low_ref"))
+    print("historical_high_ref:", dense.get("historical_high_ref"))
+    print("existing Dense tickets and pending batch are preserved")
+
+
 def cmd_disable_dense(_args) -> None:
     state = load_state()
     dense = state.setdefault("dense", {})
@@ -1867,7 +2122,15 @@ def cmd_dense_status(_args) -> None:
     state = load_state()
     dense = state.get("dense") or {}
     print("enabled:", bool(dense.get("enabled")))
+    print("v2_enabled:", bool(dense.get("v2_enabled")))
     print("submitted_sets:", len(dense.get("tickets") or []))
+    print("v2_offset:", dense.get("v2_offset") if dense.get("v2_enabled") else dense.get("offset"))
+    print("historical_low_ref:", dense.get("historical_low_ref"))
+    print("historical_high_ref:", dense.get("historical_high_ref"))
+    print("boost_tickets:", len(dense.get("boost_tickets") or []))
+    reserve = dense.get("boost_reserve") or []
+    print("boost_reserve_registered:", sum(1 for x in reserve if x.get("status") == "registered"))
+    print("boost_reserve_ready:", sum(1 for x in reserve if x.get("status") == "registered" and int(x.get("ready_after_sweep", 10**9)) <= int((dense.get("last_seen_sweep") or 0))))
     print("next_index:", dense.get("next_index"))
     print("room_registration_requested_sweep:", dense.get("room_registration_requested_sweep"))
     print("room_registration_confirmed:", room_registration_confirmed(state))
@@ -2202,6 +2465,9 @@ def main() -> None:
 
     p = sp.add_parser("enable-dense")
     p.set_defaults(fn=cmd_enable_dense)
+
+    p = sp.add_parser("enable-dense-v2")
+    p.set_defaults(fn=cmd_enable_dense_v2)
 
     p = sp.add_parser("disable-dense")
     p.set_defaults(fn=cmd_disable_dense)
