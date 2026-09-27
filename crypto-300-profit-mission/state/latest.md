@@ -1,6 +1,6 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-27 03:57 Asia/Bangkok
+Updated: 2026-09-27 12:25 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Mission definition
@@ -56,33 +56,55 @@ PONS futures latest private authority:
 ## Automation health
 
 ### Crypto Daily
-Latest verified final:
-- run: **2026-09-27 03:00:30**
-- status: **SUCCESS**
-- research persisted
-- no substantive new alert
+- Today 09:00 research/QA completed, but automated Gmail send was rejected.
+- 10:00/11:00 recovery path still had no delivered Gmail.
+- Manual interactive recovery delivered `Crypto Daily Brief｜2026-09-27` at 12:09.
+- Gmail message id: `1a0e14490ff201f6`.
+- Gmail readback: verified.
+- Official GitHub report: archived and read back.
+- Existing dedicated `Crypto 09:00 日报发布` fallback automation is now enabled at 09:10/10:10/11:10 with exact-subject dedupe and pending-body recovery.
+
+Status: **DELIVERED / DELIVERY_PIPELINE_REPAIRED**.
 
 ### Airdrop / TGE
-Latest verified final:
-- run: **2026-09-27 03:17:24**
-- status: **SUCCESS**
-- triggered events: 0
-- notification: false
+Latest final:
+- 2026-09-27 12:12
+- run_status: success
+- triggered_events: 0
+
+Delivery audit found one real gap:
+- Cambria RSGP Genesis Event opt-in was marked internally as previously notified;
+- Gmail Sent contained no formal Cambria alert;
+- recovery alert sent at 12:15, message id `1a0e149fa6d9718a`.
+
+Historical correction audit also found the Sep-14 erroneous Space alert had no Gmail correction. A formal correction was sent at 12:15, message id `1a0e149f1f9d03be`.
+
+Shard 1 coverage is stale from missed morning cycles. Runtime now executes the oldest >6h stale shard instead of the scheduled shard, one shard per run, until coverage is restored.
+
+Status: **HEALTHY_LATEST_RUN / STALE_SHARD_RECOVERY_ARMED**.
 
 ### $300 Mission
-Scheduler metadata advanced at the 03:29 cycle, but no matching automatic final/final-retry was found at the time of this repair.
+Automatic final/final-retry proofs today exist through 08:27, but no completion audits were found for 09:29, 10:29 or 11:29 despite scheduler activity.
 
-Status: **REPAIRED_PENDING_NEXT_AUTOMATIC_PROOF**.
+The earlier guardrail still allowed one failing/oversized required lane to stop later work before persistence.
 
-Repair applied:
-- required lane count is bounded;
-- Monster deep checks are capped;
-- active wallet telemetry is performed before persistence;
-- any required-lane error forces immediate compact final/final-retry;
-- no optional cache/enrichment work may occur before final persistence;
-- private Binance inventory is constrained to the user-confirmed earn bucket + PONS futures only.
+Repair now applied:
+- attempt audit is the first scheduled write;
+- market, wallet and Crypto Daily core lanes are independent;
+- one lane failure cannot cancel the others;
+- core final/final-retry is persisted before Monster/launch/NFT/full inventory work;
+- full Monster universe scan moves to a 3-hour cadence plus mandatory 19:29 full summary;
+- max 3 Monster deep checks.
 
-The next scheduled :29 run must create a final/final-retry to restore HEALTHY status. A manual reconciliation does not count as automatic-run proof.
+Interactive post-repair source test at 12:20 succeeded:
+- PONS/BTC/ETH public market reads: available;
+- Robinhood PONS: available;
+- BNB GSTOCK: available;
+- Solana USDC/SOL/Token-2022: available.
+
+Status: **UNHEALTHY_SCHEDULER_PERSISTENCE / REPAIR_ARMED_FOR_NEXT_:29**.
+
+The next automatic :29 cycle must produce `attempt + final/final-retry` before this monitor is promoted to HEALTHY.
 
 ## Data corrections
 
