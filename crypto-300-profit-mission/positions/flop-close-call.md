@@ -646,3 +646,43 @@ After pulling these commits and reinstalling the LaunchAgents, the intended oper
 
 Execution state:
 `FULL_AUTOPILOT_IMPLEMENTED_RESTART_REQUIRED`.
+
+
+## Dense V2 live strategy — 2026-09-27
+
+Competitive scan at sweep ~460 showed the persistent score gap is primarily historical entry quality, not current position size:
+- public leader/tie scores imply roughly 41.6-41.8 contracts;
+- prize-line effective short entry was inferred around 226.45, leader around 226.65;
+- our Dense quantities around 42.2 are already comparable;
+- same-sweep duplicate templates from multiple makers were visible in public close1 traffic;
+- ±1% constructions were actively present.
+
+Approved V2 strategy:
+- preserve one long + one short baseline ticket per eligible fresh sweep;
+- change favored offset to ±1%;
+- track all-time Dense ref low/high;
+- on a new high, target 8 total short copies for that sweep;
+- on a new low, target 8 total long copies;
+- maintain a pre-registered reserve pool of 16 generic target/feeder pairs;
+- use up to 7 reserve pairs as extra copies because the baseline target is copy #1;
+- replenish consumed reserve pairs automatically;
+- keep the 8,000 dynamic-key hard safety cap;
+- retain the <=120s effective ref freshness gate, aligned flow/state requirement, missed-room gate, lock time and clean final shutdown.
+
+Rationale:
+- historical ~80 POLF deficit cannot be recreated retroactively;
+- future new extrema can create a superior entry that overtakes the current historical leader;
+- multiplicity matters if many keys tie on the same winning sweep because prize places are shared across the tie group;
+- extra keys are therefore concentrated on new extrema instead of blindly multiplying every ordinary sweep.
+
+Operational switch:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v2
+```
+
+Implementation commits:
+- `e115a28fed7b1da020aa5e0094aaaca7d5763a8a`
+- `9da1aea0ac515bc41f5df5770d63dee393e511c1`
+
+Execution state:
+`DENSE_V2_IMPLEMENTED_ENABLE_AND_RESTART_REQUIRED`.
