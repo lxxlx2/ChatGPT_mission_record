@@ -1,6 +1,6 @@
 # Monster-Coin Squeeze Monitor V2.1
 
-Updated: 2026-09-27 01:20 Asia/Bangkok
+Updated: 2026-09-27 12:31 Asia/Bangkok
 
 Purpose: factual squeeze/blow-off state classification across Binance Alpha and Binance USDⓈ-M Futures.
 
@@ -42,13 +42,19 @@ After IGNITION / major squeeze, evidence may include:
 
 ## Universe
 
-Every Mission hourly run:
-- bulk Binance USDⓈ-M universe screen;
+Full universe cadence:
+- one bulk Binance USDⓈ-M universe screen every 3 hours;
+- one required full scan at 19:29 for the daily summary;
 - Binance Alpha discovery when available;
 - 7-day carried candidates;
 - active SAGA watch.
 
-Detailed deep-check is limited to the bounded shortlist defined by RUNBOOK.
+On non-due hourly Mission cycles:
+- do not fetch the entire futures universe;
+- cheaply refresh persisted STRUCTURAL/PRESSURE/IGNITION candidates when practical;
+- record `monster_status: not_due` when no refresh is needed.
+
+Each full scan deep-checks at most 3 new shortlist symbols before persistence. Additional candidates can roll into the next due scan.
 
 Primary data:
 - Binance official market/futures data;
@@ -120,4 +126,4 @@ Record:
 - exhaustion_count;
 - data_source_failures.
 
-Skipping this lane prevents full success.
+On a due Monster cycle, failure is recorded as a Monster data gap and must be retried on the next due/recovery opportunity. On a non-due cycle, `not_due` is healthy. Monster work occurs after the Mission core final so it cannot erase core scheduler proof.
