@@ -212,6 +212,18 @@ Security scanning must cover:
 - App Store or Play Store poisoning;
 - exchange and wallet security advisories.
 
+### 5.9 Security coverage evidence
+
+Security discovery must follow `SECURITY_SOURCE_POLICY.md`.
+
+A run-audit label such as `x_reddit: checked_no_update` or `security scan: no update` is not coverage proof by itself.
+
+Every run records source receipts for actual retrievals and explicit unavailable states. The formal daily report must derive security items from both candidate evidence and measured source-family coverage.
+
+Truth and completeness are different:
+- confirmation follows the source hierarchy and cross-verification rules;
+- completeness is never guaranteed and is reported internally as measurable coverage against the required source families.
+
 ## 6. Hourly research file format
 
 Each material candidate should include, when applicable:
@@ -394,6 +406,9 @@ At minimum record:
 - prediction_markets_scanned;
 - chain_ecosystems_scanned;
 - security_feeds_scanned;
+- security_source_receipts;
+- security_coverage_ratio;
+- security_source_families_missing;
 - whale_scan;
 - cause_research;
 - research_file_path;
