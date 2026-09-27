@@ -1,170 +1,48 @@
 # PONS Position
 
-Updated: 2026-09-27 03:57 Asia/Bangkok
+Updated: 2026-09-27 12:46 Asia/Bangkok
 
-## Binance PONSUSDT perpetual — USER_CONFIRMED
-
-Latest screenshots: 2026-09-26 13:45 Asia/Bangkok.
+## Active authority: Binance PONSUSDT perpetual — USER_CONFIRMED
 
 Position:
-- LONG
-- isolated 3x
-- quantity: **64 PONS**
-- entry: **0.6250**
-- hard stop: **Mark Price <= 0.4980**
-- stop order: market, reduce-only, **100% position**
-- liquidation reference from prior 12:58 screenshot: **0.4293629**
+- LONG **64 PONS**
+- entry **0.6250**
+- isolated **3x**
+- hard stop **0.4980**
+- take-profit triggers **0.668 / 0.704 / 0.739**
 
-The prior averaging bids are canceled:
-- 0.5850: canceled
-- 0.5450: canceled
+Fresh public Binance state:
+- mark **0.61669610**
+- funding **0.00011652**
 
-### Current futures take-profit orders
+If the private quantity is unchanged:
+- estimated mark-to-entry uPnL **~-0.5314 USDT**
+- exact private margin/funding/fees/order fills remain USER_CONFIRMED-only
 
-All are market take-profit / reduce-only:
+Prior 0.5850 and 0.5450 averaging bids remain canceled.
 
-| Trigger mark | Quantity | Share of 64 PONS | Screenshot est. PnL |
-| --- | ---: | ---: | ---: |
-| 0.6680 | **25 PONS** | **39.0625%** | +1.07 USDT |
-| 0.7040 | **22 PONS** | **34.3750%** | +1.73 USDT |
-| 0.7390 | **16 PONS** | **25.0000%** | +1.82 USDT |
-
-Total TP coverage: **63 PONS = 98.4375%**.
-
-Important:
-- **1 PONS (1.5625%) is not covered by the three TP orders.**
-- the 0.4980 stop is still 100%, so it protects any residual that remains open.
-- if the intent is to fully exit the futures position through take-profits, the last TP should eventually cover the remaining 17 PONS rather than 16 PONS, or the residual must be managed separately.
-- automation must not modify the order automatically.
-
-## Robinhood Chain spot sleeve — DIRECT_CHAIN + USER_CONFIRMED ORDERS
+## Robinhood Chain spot — CLOSED_DUST
 
 Canonical PONS contract:
 `0x39dbed3a2bd333467115de45665cc57f813c4571`
 
-Fresh Alchemy wallet read around 2026-09-26 13:46:
-- wallet PONS balance: **54.799953441979625 PONS**
-- native gas: **0.000825190918816326 ETH**
-- no outgoing PONS transfer has occurred since the acquisition swap.
+Fresh Alchemy direct-chain balance:
+- PONS **0.000953441979624353**
+- native ETH **0.000815126815110326**
 
-The PONS remains in the wallet while the OKX DEX conditional/limit orders are open; the order state itself is USER_CONFIRMED from screenshots.
+The former **54.799953441979625 PONS** spot sleeve has been cleared.
 
-Verified acquisition leg:
-- 2026-09-26 12:58:38 Asia/Bangkok
-- input: **35.291194 USDG**
-- output: **54.799953441979625 PONS**
-- token acquisition rate: **~0.64400044 USDG/PONS**
+The remaining 0.000953441979624353 PONS is residual dust and does **not** count as an active position.
 
-### Current spot take-profit orders — USER_CONFIRMED
-
-| Trigger | PONS amount | Screenshot est. USDG received |
-| --- | ---: | ---: |
-| **0.668** | **11.0** | **7.30 USDG** |
-| **0.704** | **16.4** | **11.48 USDG** |
-| **0.739** | **16.4** | **12.06 USDG** |
-| **0.845** | **11.0** | **9.25 USDG** |
-
-Total TP quantity: **54.8 PONS**, effectively the full 54.79995344-PONS wallet balance subject to platform rounding.
-
-Estimated total USDG if all four TP orders execute as shown: **~40.09 USDG**.
-
-### Current spot downside trigger orders — USER_CONFIRMED
-
-| Trigger | PONS amount | Screenshot est. USDG received |
-| --- | ---: | ---: |
-| **0.598** | **27.39** | **16.30 USDG** |
-| **0.575** | **27.39** | **15.67 USDG** |
-
-Together they cover **54.78 PONS**, effectively the whole current spot sleeve.
-
-Operational caveat:
-- these stop quantities are fixed amounts, while the TP orders also reference the same PONS balance;
-- if one or more TP orders execute first and price later falls, the remaining stop quantities can exceed the then-current wallet balance;
-- after any spot TP execution, the remaining downside trigger quantities should be reviewed/resized to the actual remaining PONS balance;
-- do not treat an insufficient-balance failure of a later trigger as a new market signal.
-
-If price falls directly before any TP fills, the two current downside triggers are internally consistent: roughly half at 0.598 and the other half at 0.575.
-
-## PONS sleeve accounting
-
-Original sleeve: about 50 USDT-equivalent.
-
-Current structure:
-- Binance futures: 64-PONS long, 3x isolated, entry 0.6250.
-- Robinhood Chain spot: 54.799953441979625 PONS.
-- Robinhood Chain gas: 0.000825190918816326 ETH.
-
-Do not combine spot mark value and futures notional as profit. Exact sleeve PnL must account for:
-- futures realized/unrealized PnL;
-- funding/fees;
-- spot USDG cost basis;
-- spot execution fees/slippage;
-- withdrawal/gas acquisition costs.
+All previously stored Robinhood spot TP/downside trigger monitoring is retired. Do not infer which order/swap produced the exit without transaction-history reconstruction.
 
 ## Monitoring
 
-FACTUAL_RULE_MONITOR should check:
-1. futures mark against 0.668 / 0.704 / 0.739 TP triggers and 0.498 stop;
-2. whether the futures position remains USER_CONFIRMED at 64 PONS until a newer private screenshot/source exists;
-3. Robinhood PONS wallet balance and native ETH gas;
-4. spot TP/downside trigger execution evidence through wallet balance/transfers plus user-confirmed order UI;
-5. after any spot TP fill, flag `REVIEW_REQUIRED` because downside trigger quantities may need resizing;
-6. PONS funding/OI/rapid-move/security/liquidity state.
+Active PONS monitoring now covers:
+1. Binance public mark/funding against the stored futures thresholds;
+2. private futures state only when newer USER_CONFIRMED evidence exists;
+3. material security/market event affecting the active Binance PONS futures exposure.
+
+Do not run dedicated Robinhood PONS spot price, TP/SL, liquidity or holder monitoring while only residual dust remains.
 
 No automatic order creation/modification/reallocation.
-
-## 2026-09-26 16:33 factual refresh
-
-DIRECT_CHAIN Robinhood:
-- PONS balance remains **54.799953441979625**
-- Alchemy market reference: **~0.6247626394 USD**
-- mark value: **~34.2370 USD**
-- verified cost remains 35.291194 USDG
-- spot mark PnL: **~-1.0542 USD (-2.99%)**
-- no balance reduction is visible, so there is no chain evidence that a spot TP/downside order executed.
-
-Binance public market:
-- PONSUSDT mark: **0.6256**
-- latest private state remains USER_CONFIRMED LONG 64 @ 0.6250
-- the public mark path after the latest screenshot did not reach 0.668 TP or 0.498 stop
-- implied uPnL if the private position is unchanged: **~+0.0384 USDT**
-- exact private position/account state still requires Binance account readback or a newer user screenshot.
-
-
-## 2026-09-27 03:40 factual refresh
-
-DIRECT_CHAIN Robinhood:
-- PONS: **54.799953441979624353**
-- native ETH: **0.000825190918816326**
-- PONS market reference: **~0.63625280 USD**
-- spot mark value: **~34.87 USD**
-
-No balance reduction is visible versus the prior spot quantity, so there is still no direct-chain evidence of a spot TP/downside execution.
-
-Binance public:
-- PONSUSDT mark: **0.63688970**
-- latest private position authority remains USER_CONFIRMED 64-PONS long @ 0.6250
-- estimated uPnL if unchanged: **~+0.7609 USDT**
-
-Exact Binance account state, funding and fees remain private-source dependent.
-
-
-## 2026-09-27 03:57 factual refresh
-
-DIRECT_CHAIN Robinhood:
-- PONS: **54.799953441979625**
-- native ETH: **0.000825190918816326**
-- fresh Alchemy PONS reference: **0.6268828643699188 USD**
-- spot mark value: **~34.3532 USD**
-- verified acquisition cost remains **35.291194 USDG**
-- mark PnL: **~-0.9380 USD (-2.66%)**
-
-No wallet balance reduction is visible, so there is no direct-chain evidence of a spot TP/downside execution.
-
-Binance public:
-- PONSUSDT mark: **0.62924862**
-- funding reference: **0.00025802** for the current interval
-- latest private authority remains USER_CONFIRMED LONG 64 @ 0.6250
-- estimated uPnL if unchanged: **~+0.2719 USDT**
-
-User confirms Binance currently contains only the combined earn bucket plus this PONS futures position. No other Binance trading exposure should be carried forward.
