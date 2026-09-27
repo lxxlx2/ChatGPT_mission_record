@@ -1,6 +1,6 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-26 21:05 Asia/Bangkok
+Updated: 2026-09-27 12:20 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
@@ -69,3 +69,25 @@ Monitoring/runtime/source/persistence problems are also GitHub-only and do not n
 Only the 09:00 formal daily uses Gmail under REPORT_SPEC / DELIVERY_RUNBOOK.
 
 Do not notify merely because an already-known market/security item remains material.
+
+
+## Delivery fallback scheduler — 2026-09-27
+
+The hourly collector remains the primary 09:00 publisher. The existing dedicated automation `Crypto 09:00 日报发布` is enabled as an idempotent delivery-only fallback at 09:10, 10:10 and 11:10 Asia/Bangkok.
+
+Reason: on 2026-09-27 the 09:00 and later hourly recovery attempts completed research and QA but Gmail send was rejected repeatedly, leaving no delivered report until manual recovery.
+
+Rules:
+1. 09:00 hourly task checks Gmail Sent + official GitHub report before any expensive work.
+2. If report is missing, build/QA the exact final body and attempt Gmail first.
+3. If Gmail send fails after one normal retry, persist the exact QA-approved body to:
+   `crypto-daily/delivery-pending/YYYY-MM-DD.md`
+   plus the failure audit. Do not repeatedly regenerate different bodies.
+4. The 09:10/10:10/11:10 fallback checks Gmail Sent and official GitHub report first.
+5. If Gmail is missing and a pending body exists, send that exact body, read it back, archive it as the official report, then remove no history; the pending file remains audit evidence.
+6. If Gmail exists but GitHub report is missing, reconstruct the official report from Gmail readback only.
+7. If both sides exist, exit silently.
+8. Never send more than one normal daily report for the same Bangkok date.
+9. A provider/tool rejection is a delivery failure, not a reason to disable either automation.
+
+At 11:10, if delivery still fails, persist a final delivery-failure audit. The next ordinary hourly collector must keep checking delivery state before normal collection until the same-date report is delivered or the date changes.
