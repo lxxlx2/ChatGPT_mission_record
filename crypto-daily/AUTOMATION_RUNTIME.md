@@ -1,6 +1,6 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-27 12:28 Asia/Bangkok
+Updated: 2026-09-27 15:12 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
@@ -143,3 +143,24 @@ At 10:00/11:00:
 - no final/final-retry: scheduler persistence failure.
 
 Never leave an ordinary scheduler trigger without at least an attempt file unless GitHub itself was unreachable.
+
+
+## Security coverage receipts — 2026-09-27
+
+Read and follow `crypto-daily/SECURITY_SOURCE_POLICY.md`.
+
+The security lane may not be summarized as `checked_no_update` from a generic bounded search alone.
+
+Every automatic run must persist source-level security receipts for the source families actually attempted. At minimum record:
+- source/account/domain;
+- query/page;
+- candidate / no_update / unavailable;
+- checked_at.
+
+If X, Reddit or a specialist feed was not actually retrieved, mark it unavailable. Never convert an unavailable source into `checked_no_update`.
+
+Run a bounded brand-impersonation query pack for currently launching/trending exchange/chain/wallet brands. Terms include scam, phishing, impersonation, fake token, fake chain, fake app and compromised.
+
+The 09:00 publisher must inspect previous-24h receipt coverage and run a fresh security verification pack before Chapter 9.
+
+No claim of global completeness is allowed. Report coverage ratio/gaps in the internal audit and state only what was found in the covered sources.
