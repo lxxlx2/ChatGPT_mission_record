@@ -635,3 +635,60 @@ The scan does not justify increasing qty solely to 44.87. It does justify evalua
 - multiple copies per fresh sweep, or adaptive copies on new reference extrema, to improve prize sharing if a future sweep becomes the winning entry.
 
 No live execution parameter was changed by this note.
+
+
+## 2026-09-27 — Dense V2 implemented after competitor-template scan
+
+The user approved the V2 redesign after the public competitor scan showed:
+- persistent ~80 POLF historical-entry disadvantage;
+- coordinated same-sweep copy templates;
+- active ±1% constructions around the current reference;
+- prize-line position slope around 41.8 contracts, so increasing quantity toward 44.87 was not justified by the score board.
+
+Implementation:
+- `e115a28fed7b1da020aa5e0094aaaca7d5763a8a`: Dense V2 runtime;
+- `9da1aea0ac515bc41f5df5770d63dee393e511c1`: Dashboard support.
+
+Dense V2 keeps the existing baseline coverage:
+- one favored long and one favored short on each eligible fresh sweep;
+- existing Dense tickets and current pending batch remain intact.
+
+Changes:
+- favored price offset changes from ±2% to ±1% after V2 is explicitly enabled;
+- historical Dense reference low/high are initialized from already-submitted Dense tickets;
+- new all-time Dense ref high => short side is boosted to 8 total copies for that sweep;
+- new all-time Dense ref low => long side is boosted to 8 total copies;
+- the baseline ticket counts as copy #1, so an extreme uses up to 7 additional target/feeder pairs;
+- a pre-registered reserve pool of 16 generic target/feeder pairs is maintained so extreme copies can be sent on the same fresh sweep;
+- consumed reserve pairs are replenished automatically;
+- the existing 8,000 dynamic-key hard safety cap remains in force;
+- boost submission is best-effort and recorded separately, so a boost shortage/error does not discard the baseline dual-direction ticket.
+
+New command:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v2
+```
+
+Dense status now includes:
+- `v2_enabled`;
+- active offset;
+- historical low/high ref;
+- extra boost-ticket count;
+- registered/ready reserve counts.
+
+Dashboard now shows:
+- Dense V2 baseline count;
+- Extreme Boost extra-ticket count;
+- reserve readiness;
+- historical ref range;
+- boost tickets in local best-score estimation;
+- side-aware prize targets for one-sided boost tickets.
+
+Migration behavior:
+- V2 is explicit opt-in;
+- the currently pending V1 batch is preserved and will use V2 pricing when submitted after enablement;
+- the first V2 extreme may have fewer than 8 copies if the reserve pool has not yet aged through one referee sweep;
+- after reserve priming, later new extrema can use the full configured multiplicity.
+
+Execution state:
+`DENSE_V2_IMPLEMENTED_ENABLE_AND_RESTART_REQUIRED`.
