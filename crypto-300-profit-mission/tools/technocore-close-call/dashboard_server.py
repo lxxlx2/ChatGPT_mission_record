@@ -126,6 +126,8 @@ def snapshot() -> dict:
                         "qty": qty,
                         "base_fee": base_fee,
                         "estimated_score": edge - base_fee,
+                        "side": "both",
+                        "estimate_model": "base_fee",
                     })
                 except Exception:
                     pass
@@ -145,6 +147,31 @@ def snapshot() -> dict:
                     "qty": qty,
                     "base_fee": Decimal("0"),
                     "estimated_score": edge,
+                    "side": "both",
+                    "estimate_model": "dense_ref_proxy",
+                })
+            except Exception:
+                pass
+
+        for ticket in dense.get("boost_tickets") or []:
+            try:
+                ref_px = Decimal(str(ticket["ref"]))
+                qty = Decimal(str(ticket["qty"]))
+                side = str(ticket.get("side") or "")
+                if side == "long":
+                    score = (mark - ref_px) * qty
+                elif side == "short":
+                    score = (ref_px - mark) * qty
+                else:
+                    continue
+                gross_edges.append({
+                    "name": f"BOOST-{side.upper()}-{int(ticket['reserve_index']):05d}",
+                    "edge": score,
+                    "entry": ref_px,
+                    "qty": qty,
+                    "base_fee": Decimal("0"),
+                    "estimated_score": score,
+                    "side": side,
                     "estimate_model": "dense_ref_proxy",
                 })
             except Exception:
@@ -263,7 +290,7 @@ def snapshot() -> dict:
             next_event_due = False
             next_event_lag_s = 0
         if system_status == "OK":
-            system_text = "高密度双向策略正在自动运行"
+            system_text = "Dense V2 正在自动运行" if dense.get("v2_enabled") else "高密度双向策略正在自动运行"
             user_action = "现在不用做任何操作"
 
     target_to_prize = None
@@ -274,14 +301,23 @@ def snapshot() -> dict:
             entry = Decimal(str(best_edge["entry"]))
             base_fee = Decimal(str(best_edge["base_fee"]))
             need_move = (cutoff + base_fee) / qty
-            down_target = entry - need_move
-            up_target = entry + need_move
-            down_gap = abs(mark - down_target)
-            up_gap = abs(up_target - mark)
+            side = best_edge.get("side", "both")
+            down_target = entry - need_move if side in ("both", "short") else None
+            up_target = entry + need_move if side in ("both", "long") else None
+            down_gap = abs(mark - down_target) if down_target is not None else None
+            up_gap = abs(up_target - mark) if up_target is not None else None
             if best_edge["estimated_score"] >= cutoff:
                 nearest_side = "already_above"
                 nearest_gap = Decimal("0")
                 nearest_pct = Decimal("0")
+            elif side == "short":
+                nearest_side = "down"
+                nearest_gap = down_gap
+                nearest_pct = (down_gap / mark * Decimal("100")) if mark else None
+            elif side == "long":
+                nearest_side = "up"
+                nearest_gap = up_gap
+                nearest_pct = (up_gap / mark * Decimal("100")) if mark else None
             elif down_gap <= up_gap:
                 nearest_side = "down"
                 nearest_gap = down_gap
@@ -293,8 +329,9 @@ def snapshot() -> dict:
             target_to_prize = {
                 "entry": str(entry),
                 "qty": str(qty),
-                "down_target": str(down_target.quantize(Decimal("0.01"))),
-                "up_target": str(up_target.quantize(Decimal("0.01"))),
+                "side": side,
+                "down_target": str(down_target.quantize(Decimal("0.01"))) if down_target is not None else None,
+                "up_target": str(up_target.quantize(Decimal("0.01"))) if up_target is not None else None,
                 "nearest_side": nearest_side,
                 "nearest_gap": str(nearest_gap.quantize(Decimal("0.01"))),
                 "nearest_pct": str(nearest_pct.quantize(Decimal("0.01"))) if nearest_pct is not None else None,
@@ -356,6 +393,19 @@ def snapshot() -> dict:
         "bracket_pairs": len(bracket.get("pairs") or []),
         "submitted_wallets": submitted_wallets,
         "dense_enabled": bool(dense.get("enabled")),
+        "dense_v2_enabled": bool(dense.get("v2_enabled")),
+        "dense_v2_offset": dense.get("v2_offset"),
+        "dense_historical_low_ref": dense.get("historical_low_ref"),
+        "dense_historical_high_ref": dense.get("historical_high_ref"),
+        "dense_boost_tickets": len(dense.get("boost_tickets") or []),
+        "dense_boost_total_copies": dense.get("v2_boost_total_copies"),
+        "dense_boost_reserve_registered": sum(1 for x in (dense.get("boost_reserve") or []) if x.get("status") == "registered"),
+        "dense_boost_reserve_ready": sum(
+            1 for x in (dense.get("boost_reserve") or [])
+            if x.get("status") == "registered"
+            and int(x.get("ready_after_sweep", 10**9)) <= int(pr["n"])
+        ),
+        "dense_last_boost": dense.get("last_boost"),
         "room_registered": room_registered,
         "room_activity_age_s": room_activity_age_s,
         "dense_submitted_sets": len(dense.get("tickets") or []),
@@ -369,6 +419,8 @@ def snapshot() -> dict:
                 "qty": str(best_edge["qty"]),
                 "base_fee": str(best_edge["base_fee"].quantize(Decimal("0.01"))),
                 "estimated_score": str(best_edge["estimated_score"].quantize(Decimal("0.01"))),
+                "side": best_edge.get("side", "both"),
+                "estimate_model": best_edge.get("estimate_model", "base_fee"),
             }
             if best_edge else None
         ),
@@ -514,7 +566,14 @@ async function refresh(){
     const lt=d.dense_last_ticket;
     const la=d.last_action;
     if(d.dense_enabled && lt){
-      document.getElementById('lastAction').textContent='最近自动动作：Dense #'+lt.index+' 双向票已提交 · ref '+lt.ref+' · qty '+lt.qty;
+      let boostText='';
+      if(lt.v2_boost){
+        const bits=[];
+        if(lt.v2_boost.long)bits.push('新低 Long×'+(1+Number(lt.v2_boost.long.submitted_extra_copies||0)));
+        if(lt.v2_boost.short)bits.push('新高 Short×'+(1+Number(lt.v2_boost.short.submitted_extra_copies||0)));
+        if(bits.length)boostText=' · '+bits.join(' / ');
+      }
+      document.getElementById('lastAction').textContent='最近自动动作：Dense #'+lt.index+' 已提交 · ref '+lt.ref+' · qty '+lt.qty+boostText;
     }else if(la){
       const actionName=la.action==='open_static'?('Static T'+la.cohort+' 已提交'):String(la.action||'自动动作');
       document.getElementById('lastAction').textContent='最近自动动作：'+actionName+(la.at?' · '+new Date(la.at).toLocaleString():'');
@@ -539,7 +598,7 @@ async function refresh(){
     const best=d.best_gross_edge;
     let ourScore='-',scoreType='策略估算 Score',gapText='暂无可比数据';
     if(d.best_ours){ourScore=fmt(d.best_ours.score);scoreType='官方 Score · '+d.best_ours.label}
-    else if(best){ourScore=fmt(best.estimated_score);scoreType='估算 Score · '+best.name+(best.estimate_model==='dense_ref_proxy'?' · Dense ref近似':'')}
+    else if(best){ourScore=fmt(best.estimated_score);scoreType='估算 Score · '+best.name+(best.estimate_model==='dense_ref_proxy'?' · Dense ref近似':'')+(best.side&&best.side!=='both'?' · '+best.side.toUpperCase():'')}
     document.getElementById('ourScore').textContent=ourScore+' POLF';
     document.getElementById('ourScoreType').textContent=scoreType;
 
@@ -553,8 +612,8 @@ async function refresh(){
     document.getElementById('scoreExplain').textContent=d.best_ours?'这里显示官方 Score。':(best&&best.estimate_model==='dense_ref_proxy'?'这里按 Dense ticket 的 ref 近似有效入场价估算，真实 sweep close / clawback 会造成偏差。':'这里显示我们当前最好候选的估算 Score，官方没上榜前只能作为参考。');
 
     const tp=d.target_to_prize;
-    document.getElementById('downTarget').textContent=tp?fmt(tp.down_target):'-';
-    document.getElementById('upTarget').textContent=tp?fmt(tp.up_target):'-';
+    document.getElementById('downTarget').textContent=tp&&tp.down_target!==null?fmt(tp.down_target):'当前候选不看下跌';
+    document.getElementById('upTarget').textContent=tp&&tp.up_target!==null?fmt(tp.up_target):'当前候选不看上涨';
     if(tp){
       let near='当前估算已经达到奖区线';
       if(tp.nearest_side==='down')near='最近路径：Mark 再跌约 '+fmt(tp.nearest_gap)+'（'+fmt(tp.nearest_pct)+'%）';
@@ -563,13 +622,23 @@ async function refresh(){
     }else document.getElementById('nearestTarget').textContent='暂无目标估算。';
 
     if(d.dense_enabled){
-      document.getElementById('staticTitle').textContent='Dense 双向票 '+d.dense_submitted_sets+' 组';
-      document.getElementById('staticRemain').textContent='每个 fresh sweep 自动新增 1 组';
-      document.getElementById('staticFill').style.width='100%';
-      document.getElementById('bracketTitle').textContent='旧策略已冻结';
-      document.getElementById('bracketHint').textContent='保留 Static '+d.static_done+' 组 + Bracket R'+(d.bracket_round??'-')+' 现有仓位，不再继续加仓/轮换';
-      document.getElementById('bracketFill').style.width='100%';
-      document.getElementById('walletText').textContent='本地已创建策略钱包：'+d.submitted_wallets+' 个 · Dense 会继续按 sweep 增加';
+      if(d.dense_v2_enabled){
+        document.getElementById('staticTitle').textContent='Dense V2 基础双向票 '+d.dense_submitted_sets+' 组';
+        document.getElementById('staticRemain').textContent='每个 fresh sweep 1L + 1S · 偏移 ±'+fmt(Number(d.dense_v2_offset||0)*100,0)+'%';
+        document.getElementById('staticFill').style.width='100%';
+        document.getElementById('bracketTitle').textContent='Extreme Boost '+d.dense_boost_tickets+' 张额外票';
+        document.getElementById('bracketHint').textContent='新高加 short 到 '+d.dense_boost_total_copies+' 份 · 新低加 long 到 '+d.dense_boost_total_copies+' 份 · Ready reserve '+d.dense_boost_reserve_ready;
+        document.getElementById('bracketFill').style.width='100%';
+        document.getElementById('walletText').textContent='历史 Ref 区间 '+fmt(d.dense_historical_low_ref)+' ↔ '+fmt(d.dense_historical_high_ref)+' · 本地策略钱包 '+d.submitted_wallets+' 个';
+      }else{
+        document.getElementById('staticTitle').textContent='Dense 双向票 '+d.dense_submitted_sets+' 组';
+        document.getElementById('staticRemain').textContent='每个 fresh sweep 自动新增 1 组';
+        document.getElementById('staticFill').style.width='100%';
+        document.getElementById('bracketTitle').textContent='旧策略已冻结';
+        document.getElementById('bracketHint').textContent='保留 Static '+d.static_done+' 组 + Bracket R'+(d.bracket_round??'-')+' 现有仓位，不再继续加仓/轮换';
+        document.getElementById('bracketFill').style.width='100%';
+        document.getElementById('walletText').textContent='本地已创建策略钱包：'+d.submitted_wallets+' 个 · Dense 会继续按 sweep 增加';
+      }
     }else{
       document.getElementById('staticTitle').textContent='Static '+d.static_done+' / '+d.static_total;
       document.getElementById('staticRemain').textContent='还剩 '+Math.max(0,d.static_total-d.static_done)+' 组';
