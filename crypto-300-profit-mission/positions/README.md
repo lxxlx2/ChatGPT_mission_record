@@ -7,9 +7,9 @@ A file belongs here only when the Mission may need current holdings, stored thre
 Long-form background research belongs under `research/`.
 
 Current examples:
-- `pons.md`: active PONS spot/futures operational state.
-- `xrp-variational.md`: active private-venue XRP state.
-- `gstock-plan.md`: GSTOCK active state / stored plan.
+- `pons.md`: active Binance PONS futures authority; Robinhood spot is CLOSED_DUST.
+- `xrp-variational.md`: closed historical XRP/Variational state.
+- `gstock-plan.md`: CLOSED_DUST historical GSTOCK state.
 - `eth-conditional.md`: stored ETH conditional setup.
 - `jump.md`: compatibility operational path for the JUMP sale until path migration is fully validated.
 - `credits.md`: compatibility operational path for Credits current listings until path migration is fully validated.
