@@ -692,3 +692,8 @@ Migration behavior:
 
 Execution state:
 `DENSE_V2_IMPLEMENTED_ENABLE_AND_RESTART_REQUIRED`.
+
+
+Dense V2 follow-up capacity hardening:
+- `5d76eadde01fced968d7614cc72b47de29d12d78`: dynamic-key hard cap raised from 8,000 to 40,000 so baseline coverage plus extreme multiplicity can continue through the remaining contest under a much larger range of price paths; `dense-status` now reports used/remaining key budget.
+- `e635ca96e1ec12c13918262387db1c6d9d558990`: dashboard shows Dense V2 key usage and remaining budget.
