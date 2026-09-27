@@ -178,8 +178,11 @@ This is an active zero-external-capital competition plan. The stored plan uses a
 
 ## Closed / historical exposure
 
-- SHART direct balance 0: routine monitoring closed.
+- SHART direct balance 0: routine position monitoring closed.
+- KARDASHEV direct balance 0: routine position monitoring closed.
+- e/acc direct balance 0: routine position monitoring closed.
 - liquid CRED direct balance 0: standalone token monitoring closed.
+- Zero-balance former meme sleeves are historical only and must not consume hourly price/liquidity/holder/creator/pool monitoring until a fresh non-zero direct balance or explicit user instruction reactivates them.
 - auxiliary WSOL recovery completed.
 - BSC smart-money cluster research remains outside this Mission. Direct BNB Chain wallet telemetry and the explicit GSTOCK plan are included.
 
@@ -195,7 +198,7 @@ This is an active zero-external-capital competition plan. The stored plan uses a
 ## Hourly coverage
 
 Every :29 run first persists bounded core coverage:
-- active wallet/gas telemetry;
+- active wallet/gas telemetry for current non-zero holdings only; former SHART/KARDASHEV/e/acc sleeves remain retired while zero;
 - PONS;
 - ETH conditional;
 - BTC regime;
