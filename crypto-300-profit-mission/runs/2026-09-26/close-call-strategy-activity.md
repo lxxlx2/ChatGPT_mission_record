@@ -697,3 +697,29 @@ Execution state:
 Dense V2 follow-up capacity hardening:
 - `5d76eadde01fced968d7614cc72b47de29d12d78`: dynamic-key hard cap raised from 8,000 to 40,000 so baseline coverage plus extreme multiplicity can continue through the remaining contest under a much larger range of price paths; `dense-status` now reports used/remaining key budget.
 - `e635ca96e1ec12c13918262387db1c6d9d558990`: dashboard shows Dense V2 key usage and remaining budget.
+
+
+## 2026-09-27 — Dense V2 enabled successfully in live runtime
+
+User-side activation proof after pulling the V2 commits and reinstalling the LaunchAgents:
+- `enabled: True`
+- `v2_enabled: True`
+- `submitted_sets: 50`
+- `v2_offset: 0.01`
+- historical Dense ref range: `224.39 .. 224.62`
+- `boost_tickets: 0`
+- `boost_reserve_registered: 16`
+- `boost_reserve_ready: 0` at referee sweep 498, as expected because the newly registered reserve pairs require one later sweep before they are eligible
+- `dynamic_keys: 185 / 40000`
+- remaining dynamic-key budget: `39815`
+- dedicated room registration remains confirmed
+- pending Dense #51 is registered with `ready_after_sweep: 499`
+- current reference at the captured check was sweep 498, ref 224.60, effective age 291s, so trading correctly remained paused by the <=120s freshness gate.
+
+The last submitted ticket (#50) still shows the old ±2% prices (220.10 / 229.09) because it was submitted before V2 was enabled. The preserved pending #51 will use the V2 ±1% offset when it is submitted.
+
+Minor observability fix:
+- `8d93c180a6bafe8c6343657f2317441cc7c5368e` makes `dense-status` calculate reserve readiness from the current referee sweep instead of the last processed sweep, eliminating a one-sweep display lag.
+
+Execution state:
+`DENSE_V2_LIVE_WAITING_FOR_SWEEP_499_AND_FRESH_REF`.
