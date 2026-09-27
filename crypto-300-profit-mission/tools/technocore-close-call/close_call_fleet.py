@@ -2130,7 +2130,17 @@ def cmd_dense_status(_args) -> None:
     print("boost_tickets:", len(dense.get("boost_tickets") or []))
     reserve = dense.get("boost_reserve") or []
     print("boost_reserve_registered:", sum(1 for x in reserve if x.get("status") == "registered"))
-    print("boost_reserve_ready:", sum(1 for x in reserve if x.get("status") == "registered" and int(x.get("ready_after_sweep", 10**9)) <= int((dense.get("last_seen_sweep") or 0))))
+    current_sweep_for_reserve = None
+    try:
+        _reserve_pr = fresh_price(max_age=10**9)
+        current_sweep_for_reserve = int(_reserve_pr["n"])
+    except Exception:
+        current_sweep_for_reserve = int(dense.get("last_seen_sweep") or 0)
+    print("boost_reserve_ready:", sum(
+        1 for x in reserve
+        if x.get("status") == "registered"
+        and int(x.get("ready_after_sweep", 10**9)) <= current_sweep_for_reserve
+    ))
     dynamic_keys = sum(1 for k in state.get("keys", {}) if k.startswith("DENSE-"))
     print("dynamic_keys:", dynamic_keys)
     print("dynamic_key_cap:", DENSE_MAX_DYNAMIC_KEYS)
