@@ -491,3 +491,19 @@ Every run attempts a unique skeleton audit before expensive research. A later re
 A successful Gmail delivery remains valid if the later GitHub archive fails. A later recovery run repairs GitHub without sending a duplicate Gmail.
 
 Historical backfill and exhaustive archive cleanup stay outside the critical delivery path.
+
+
+## 16. Delivery-proof override — 2026-09-27
+
+For formal daily delivery, the authoritative proof is the actual Gmail Sent message plus readback.
+
+A run audit saying sent/attempted/known does not satisfy delivery.
+
+To isolate research from send failures:
+- the primary hourly task may persist a QA-approved pending body at `crypto-daily/delivery-pending/YYYY-MM-DD.md` after a Gmail failure;
+- the existing dedicated publisher/recovery automation may deliver that body at 09:10, 10:10 or 11:10;
+- both automations must deduplicate using the exact Gmail subject and official report path;
+- the body eventually archived as official must equal the successfully sent Gmail body;
+- pending files remain historical audit artifacts and do not count as an official report.
+
+2026-09-27 incident: automated 09:00 and later recovery attempts had sufficient research but Gmail send was rejected. Manual interactive recovery delivered message `1a0e14490ff201f6` and the same body was archived to the official report path.
