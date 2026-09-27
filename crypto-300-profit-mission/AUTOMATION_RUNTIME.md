@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-27 12:41 Asia/Bangkok
+Updated: 2026-09-27 12:46 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -51,9 +51,9 @@ Run in this bounded order:
    - no broad duplicate news scan
 
 3. **Active wallet telemetry**
-   - Robinhood PONS + native gas
-   - BNB GSTOCK + native BNB
-   - Solana USDC/SOL + non-zero active Token-2022 balance PAID; do not poll retired zero-balance SHART/KARDASHEV/e/acc as position-specific assets
+   - canonical stablecoins + native gas on the supported wallets
+   - Solana USDC/SOL, BNB native gas, Robinhood native gas
+   - do not poll PAID/GSTOCK/Robinhood-PONS residual dust or SHART/KARDASHEV/e/acc as position-specific assets
 
 4. **Monster V2.1**
    - one Binance USD-M bulk screen
@@ -219,7 +219,7 @@ Core lanes are independent. Failure in one lane must never cancel the remaining 
 
 Maximum critical work before final persistence:
 1. PONS/BTC/ETH public facts, using bounded per-symbol calls;
-2. active wallet telemetry for Robinhood PONS, BNB GSTOCK, Solana USDC/SOL + non-zero PAID; former SHART/KARDASHEV/e/acc sleeves are retired while balances remain zero;
+2. active wallet telemetry for canonical stablecoins/native gas and verified current assets; PAID/GSTOCK/Robinhood-PONS dust plus SHART/KARDASHEV/e/acc are excluded from position-specific polling;
 3. read one newest Crypto Daily research/final artifact.
 
 For each lane:
@@ -298,3 +298,25 @@ A fresh non-zero direct balance or explicit user instruction is required to reac
 PAID remains non-zero and stays in active wallet inventory telemetry.
 
 This retirement does not disable general Monster V2.1 or launch-radar discovery for the broader market.
+
+
+## Cleared meme override — 2026-09-27 12:46
+
+Fresh direct-chain balances:
+- Solana PAID: 0.000473 residual dust
+- BNB GSTOCK: 0.096724707311314713 residual dust
+- Robinhood PONS: 0.000953441979624353 residual dust
+- SHARTCOIN: 0
+- KARDASHEV: 0
+- e/acc: 0 from prior direct verification
+
+All are treated as economically closed on-chain meme positions.
+
+Hourly Mission rules:
+- do not run dedicated price/liquidity/holder/creator/pool/order monitoring for any of these;
+- residual dust does not reactivate a position;
+- wallet reconciliation may record the raw dust balance without opening a monitoring lane;
+- the active PONS market lane refers to Binance PONSUSDT futures only;
+- general Monster V2.1 and launch discovery remain market-wide scanners.
+
+Current Solana canonical USDC is 420.472536, superseding the prior 328.018516 snapshot.
