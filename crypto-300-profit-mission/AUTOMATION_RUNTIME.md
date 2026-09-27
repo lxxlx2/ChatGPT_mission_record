@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-27 03:57 Asia/Bangkok
+Updated: 2026-09-27 12:25 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -187,3 +187,92 @@ If missed:
 CLOSED.
 
 Do not run XRP/Bitget attacker-flow, XRP TP/SL or Variational monitoring as a Mission hourly lane unless the user explicitly reactivates relevant exposure.
+
+
+## Scheduler-survival override — 2026-09-27
+
+Observed incident:
+- automatic final/final-retry exists at 08:27;
+- scheduler metadata later advanced through morning cycles;
+- no 09:29, 10:29 or 11:29 completion audit was persisted.
+
+Therefore the following rules override the earlier hourly ordering.
+
+### Phase 0: attempt proof first
+
+The first write action of every scheduled run is:
+`crypto-300-profit-mission/runs/YYYY-MM-DD/HHMMSS-attempt.md`
+
+Minimum fields:
+- run_time
+- automation_id
+- status: started
+- scheduled_cycle: :29
+
+Only after this write should market/wallet/research tools be called.
+
+The attempt file is diagnostic only. A final/final-retry remains completion proof.
+
+### Phase 1: independent core lanes
+
+Core lanes are independent. Failure in one lane must never cancel the remaining lanes.
+
+Maximum critical work before final persistence:
+1. PONS/BTC/ETH public facts, using bounded per-symbol calls;
+2. active wallet telemetry for Robinhood PONS, BNB GSTOCK, Solana USDC/SOL + known active Token-2022 balances;
+3. read one newest Crypto Daily research/final artifact.
+
+For each lane:
+- success -> record current data;
+- tool/source error -> record `unavailable`;
+- do not retry more than once;
+- never reuse stale data as current.
+
+After these three lanes, immediately create final/final-retry.
+
+A complete audit with one or more unavailable lanes is `partial_success`.
+Use `failed` only when no meaningful core lane completes or final persistence itself cannot be achieved.
+
+### Phase 2: Monster and opportunity enrichment after core final
+
+Hourly Monster scanning is enrichment and must not be able to erase core-run proof.
+
+After the core final exists:
+- every 3 hours, run one bounded Monster V2.1 universe screen;
+- deep-check at most 3 candidates;
+- persist Monster results separately to `state/monster-squeeze-v2.1-current.md` and/or a unique `HHMMSS-monster.md` audit;
+- if IGNITION / relevant EXHAUSTION is confirmed, send the stored-rule alert.
+
+At 19:29:
+- Monster full screen + factual daily summary is required;
+- if it cannot complete, the next successful run performs the existing missed-summary recovery.
+
+On non-Monster hours:
+- only refresh already persisted active Monster candidates when cheap;
+- do not fetch the whole futures universe.
+
+### Phase 3: slower enrichment
+
+Only after core final:
+- JUMP due-window checks;
+- launch/NFT/FOMO;
+- Credits/UNICRED;
+- full cross-chain inventory;
+- cache/state presentation updates.
+
+No enrichment failure changes an already persisted core final.
+
+### Final audit fields
+
+Every core final/final-retry must contain:
+- attempt_path
+- market_lane
+- wallet_lane
+- crypto_daily_lane
+- data_gaps
+- substantive_event
+- notification
+- monster_due
+- monster_status: pending_after_core / not_due / recovered_separately
+
+This bounded architecture prioritizes durable monitoring proof while retaining Monster coverage on its own cadence.
