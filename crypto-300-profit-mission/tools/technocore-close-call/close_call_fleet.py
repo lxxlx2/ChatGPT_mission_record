@@ -81,7 +81,7 @@ DENSE_OFFSET = Decimal("0.02")
 DENSE_V2_OFFSET = Decimal("0.01")
 DENSE_QTY_SAFETY = Decimal("0.995")
 DENSE_FUNDS_FACTOR = Decimal("1.05")
-DENSE_MAX_DYNAMIC_KEYS = 8000
+DENSE_MAX_DYNAMIC_KEYS = 40000
 DENSE_V2_BOOST_TOTAL_COPIES = 8
 DENSE_V2_BOOST_EXTRA_COPIES = DENSE_V2_BOOST_TOTAL_COPIES - 1
 DENSE_V2_RESERVE_TARGET_PAIRS = 16
@@ -2131,6 +2131,10 @@ def cmd_dense_status(_args) -> None:
     reserve = dense.get("boost_reserve") or []
     print("boost_reserve_registered:", sum(1 for x in reserve if x.get("status") == "registered"))
     print("boost_reserve_ready:", sum(1 for x in reserve if x.get("status") == "registered" and int(x.get("ready_after_sweep", 10**9)) <= int((dense.get("last_seen_sweep") or 0))))
+    dynamic_keys = sum(1 for k in state.get("keys", {}) if k.startswith("DENSE-"))
+    print("dynamic_keys:", dynamic_keys)
+    print("dynamic_key_cap:", DENSE_MAX_DYNAMIC_KEYS)
+    print("dynamic_key_budget_remaining:", max(0, DENSE_MAX_DYNAMIC_KEYS - dynamic_keys))
     print("next_index:", dense.get("next_index"))
     print("room_registration_requested_sweep:", dense.get("room_registration_requested_sweep"))
     print("room_registration_confirmed:", room_registration_confirmed(state))
