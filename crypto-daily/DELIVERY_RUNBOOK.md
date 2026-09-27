@@ -1,6 +1,6 @@
 # Crypto Daily Delivery Runbook
 
-Updated: 2026-09-27
+Updated: 2026-09-27 12:20 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Execution model
@@ -72,3 +72,30 @@ GitHub archive 失败不得取消已经成功的 Gmail。
 - Gmail sent + Gmail readback + GitHub archive + GitHub readback = success。
 - Gmail sent，但 GitHub archive 失败 = partial_success，日报视为已送达，后续只补 GitHub。
 - Gmail failed = failed / partial_failure，后续 recovery 可重试。
+
+
+## Dedicated fallback task — 2026-09-27
+
+The existing `Crypto 09:00 日报发布` automation is the delivery fallback for the primary hourly task.
+
+Schedule:
+- 09:10
+- 10:10
+- 11:10
+Asia/Bangkok.
+
+It is delivery-only and idempotent.
+
+Before any send:
+- search Gmail Sent for exact subject `Crypto Daily Brief｜YYYY-MM-DD`;
+- check the official GitHub report;
+- check `crypto-daily/delivery-pending/YYYY-MM-DD.md`.
+
+Recovery order:
+- Gmail + GitHub both complete: silent exit.
+- Gmail complete, GitHub missing: recover GitHub from Gmail readback.
+- GitHub complete, Gmail missing: QA and send the archived body.
+- both missing, pending body exists: send pending body, read back, archive official report.
+- all three missing: reconstruct from the prior 24h research/final audits, create the pending body first, then send.
+
+A prior automated claim of “already sent” is insufficient. Delivery proof requires an actual Gmail Sent message id and successful readback.
