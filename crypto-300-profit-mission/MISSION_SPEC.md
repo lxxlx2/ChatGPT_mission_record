@@ -1,6 +1,6 @@
 # Crypto Profit Mission
 
-Updated: 2026-09-27 03:57 Asia/Bangkok
+Updated: 2026-09-27 12:31 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Authority
@@ -194,19 +194,24 @@ This is an active zero-external-capital competition plan. The stored plan uses a
 
 ## Hourly coverage
 
-Every :29 run covers:
-- wallet/gas;
+Every :29 run first persists bounded core coverage:
+- active wallet/gas telemetry;
 - PONS;
 - ETH conditional;
 - BTC regime;
-- JUMP;
+- newest Crypto Daily input.
+
+After core final persistence, slower/event-driven enrichment may cover:
+- JUMP due-window state;
 - launch radar;
 - NFT radar;
-- active-position security;
-- Monster V2.1;
-- Robinhood/FOMO execution-flow.
+- active-position security enrichment;
+- Robinhood/FOMO execution-flow;
+- Credits/UNICRED.
 
-Coverage follows the bounded execution method in `RUNBOOK.md`.
+Monster V2.1 full-universe scanning runs every 3 hours and at the required 19:29 daily-summary cycle. Non-due hours may cheaply refresh persisted candidates. Monster enrichment cannot block the core final audit.
+
+Coverage follows the bounded execution method in `AUTOMATION_RUNTIME.md` and `RUNBOOK.md`.
 
 ## Medium lane
 
@@ -261,11 +266,12 @@ Authority: `watchlists/monster-squeeze-v2.1.md`.
 The model remains frozen. The automation performs factual state classification only.
 
 Full-market coverage uses:
-- bulk universe screening;
+- bulk universe screening every 3 hours;
 - bounded shortlist;
-- detailed checks only for shortlisted symbols.
+- detailed checks for at most 3 shortlisted symbols per scan;
+- cheap persisted-candidate refreshes on non-due hours when useful.
 
-At 19:29 the same existing Mission task sends the factual Monster daily summary. The legacy standalone Monster automation remains disabled.
+At 19:29 the same existing Mission task performs the required full scan and sends the factual Monster daily summary. The legacy standalone Monster automation remains disabled.
 
 ## Launch / NFT discovery
 
