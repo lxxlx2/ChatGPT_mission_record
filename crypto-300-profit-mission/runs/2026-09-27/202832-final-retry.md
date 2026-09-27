@@ -1,0 +1,16 @@
+run_time: 2026-09-27T20:28:32+07:00
+run_status: partial_success
+mode: FACTUAL_TELEMETRY
+attempt_status: persist_blocked
+market_lane: success
+PONSUSDT_mark: 0.61340000
+PONSUSDT_funding: 0.00014079
+BTCUSDT_mark: 84880.34041979
+ETHUSDT_mark: 2708.10533681
+wallet_lane: unavailable
+crypto_daily_lane: success
+data_gaps: live_wallet
+substantive_event: none_confirmed
+notification: none
+monster_due: false
+monster_status: not_due
