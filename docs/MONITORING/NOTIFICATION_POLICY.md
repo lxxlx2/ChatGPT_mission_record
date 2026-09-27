@@ -96,3 +96,23 @@ Do not repeatedly send the same substantive fact unless:
 When no substantive alert is required, final user-visible output must be empty.
 
 GitHub remains the audit trail for monitoring health, failures, retries and recoveries.
+
+
+## Delivery proof
+
+For any monitor that requires Gmail delivery, an alert/report counts as delivered only when:
+- Gmail Sent contains the expected message;
+- a real Gmail message id is captured;
+- readback confirms recipient and subject;
+- the corresponding GitHub event/report stores that message id.
+
+Internal text such as `sent`, `already notified`, `known event`, a ChatGPT-only mention, or an attempted send is not delivery proof.
+
+If a still-actionable event/report lacks delivery proof:
+- dedupe against Gmail Sent;
+- perform one recovery delivery;
+- read it back;
+- archive the proof;
+- then return to normal silent dedupe behavior.
+
+For a retracted prior alert with a material factual error, a correction email must also have delivery proof. Retraction in GitHub alone is insufficient when the incorrect Gmail was actually sent.
