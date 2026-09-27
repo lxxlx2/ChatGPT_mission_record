@@ -1,6 +1,6 @@
 # Airdrop / TGE Automatic Runtime
 
-Updated: 2026-09-26 21:05 Asia/Bangkok
+Updated: 2026-09-27 12:23 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Authority for the existing :14 task.
@@ -85,3 +85,49 @@ Use `docs/MONITORING/NOTIFICATION_POLICY.md`.
 - recovered_warning / optional cache failure: silent.
 
 When no substantive ACTION exists, return an empty user-visible response.
+
+
+## Delivery proof and stale-shard recovery — 2026-09-27
+
+### Event delivery proof
+
+An event is considered notified only when:
+- an event archive exists with a real Gmail message id;
+- Gmail Sent contains the expected message;
+- readback confirms recipient + subject.
+
+A run audit saying `already notified`, a prior ChatGPT message, or a candidate mention does not satisfy delivery proof.
+
+If an actionable event is still open and the deadline is within 7 days, and delivery proof is missing:
+- treat it as `delivery_recovery_action` exactly once;
+- send Gmail + ChatGPT;
+- archive the event with message id/readback;
+- then dedupe normally.
+
+2026-09-27 recovery example:
+- Cambria RSGP Genesis Event opt-in remained open;
+- prior audits claimed it had been notified;
+- Gmail Sent contained no formal Cambria alert;
+- a recovery alert was sent and archived.
+
+### Stale shard recovery
+
+Keep each run bounded to urgent set + one shard.
+
+Determine the scheduled shard from Bangkok hour modulo 4. Before executing it, read the latest successful shard timestamps.
+
+If any shard is more than 6 hours stale:
+- execute the oldest stale shard instead of the scheduled shard;
+- do not execute two shards in one run;
+- record `scheduled_shard`, `executed_shard`, and `stale_shard_recovery: true`.
+
+This restores missed coverage without doubling a run.
+
+### Attempt audit
+
+Before network/search work, create a small append-only:
+`runs/YYYY-MM-DD/HHMMSS-attempt.md`
+
+It records run_time, scheduled_shard and status=started.
+
+The final/final-retry remains the only completion proof. An attempt file only makes scheduler/runtime gaps diagnosable.
