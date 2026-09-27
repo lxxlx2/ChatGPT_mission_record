@@ -9,6 +9,9 @@ gmail_message_id: "1a09cc0fb4edb6f0"
 gmail_sent_at: "2026-09-14T04:51:27+07:00"
 automation_id: "6a85fff710e0819190ffcf8c1145a170"
 status: retracted
+correction_gmail_message_id: "1a0e149f1f9d03be"
+correction_gmail_sent_at: "2026-09-27T12:15:14+07:00"
+correction_status: delivered
 retracted_at: "2026-09-14T04:57:00+07:00"
 error_type: cross_project_misattribution
 qa_performed: true
@@ -53,3 +56,16 @@ qa_corrections: 2
 已新增项目身份锁定规则、同名项目冲突检查、跨项目 hard fail、candidate source account 记录和 identity_match 审计字段。对应事故记录见：
 
 `airdrop-tge-monitor/incidents/2026-09-14-space-cross-project-misattribution.md`
+
+
+## 6. 2026-09-27 Gmail correction delivery
+
+A formal correction email was sent because Gmail audit found the original erroneous alert but no prior correction message.
+
+Subject:
+`[更正][空投/TGE提醒][Space] 9月14日Claim提醒已撤销`
+
+Gmail message id:
+`1a0e149f1f9d03be`
+
+Readback confirmed delivery to `lxx.run688@gmail.com`.
