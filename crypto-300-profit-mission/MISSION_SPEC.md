@@ -1,6 +1,6 @@
 # Crypto Profit Mission
 
-Updated: 2026-09-27 12:31 Asia/Bangkok
+Updated: 2026-09-27 12:46 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Authority
@@ -113,7 +113,7 @@ Current accounting buckets:
 - JUMP conditional reserve: 400 USDC.
 - short-window opportunity reserve: 150 USDC.
 - ETH conditional reserve: 100 USDC.
-- PONS: original 50-USDT sleeve is split between Binance futures and Robinhood Chain spot PONS + gas; prior averaging orders are canceled.
+- PONS: only the Binance PONSUSDT perpetual remains active. Robinhood spot has been cleared to residual dust; prior averaging orders are canceled.
 - Credits: original six are Mission starting assets; #23042 and #23232 remain held.
 - Binance earn: one combined 598 USD-equivalent off-chain bucket, tracked but excluded from speculative Mission performance unless provenance is reclassified.
 
@@ -127,20 +127,21 @@ Wallet balance changes are not PnL unless transaction history and cost basis sup
 `positions/pons.md`
 
 Automation may report:
-- current public market state for the remaining futures position;
+- current public market state for the remaining Binance futures position;
 - crossing of the stored 0.4980 stop / material leverage-risk thresholds;
-- fresh DIRECT_CHAIN Robinhood PONS spot balance and native gas;
 - material unexpected wallet delta;
 - private futures order/fill state only when USER_CONFIRMED.
+
+Robinhood PONS spot is CLOSED_DUST and is not a position-specific monitoring lane.
 
 The prior 0.5850 and 0.5450 averaging bids are canceled and must not be monitored as live orders or recreated automatically.
 
 No automatic order modification, averaging order, budget change or spot/futures reallocation.
 
-### GSTOCK / BNB Chain
+### GSTOCK / BNB Chain — CLOSED_DUST
 `positions/gstock-plan.md`
 
-Track only direct wallet balances, fill evidence and stored plan state. Current state is FILLED_ACTIVE with 1183.5967247073113 GSTOCK on-chain at the latest reconciliation. Do not submit or modify orders automatically.
+Fresh direct-chain balance is 0.096724707311314713 GSTOCK residual dust. The prior position is cleared. No routine GSTOCK position-specific monitoring unless a meaningful new balance or explicit user instruction reactivates it.
 
 ### XRP / Variational — CLOSED
 `positions/xrp-variational.md`
@@ -181,6 +182,9 @@ This is an active zero-external-capital competition plan. The stored plan uses a
 - SHART direct balance 0: routine position monitoring closed.
 - KARDASHEV direct balance 0: routine position monitoring closed.
 - e/acc direct balance 0: routine position monitoring closed.
+- PAID residual 0.000473: economically closed; routine position monitoring closed.
+- Robinhood PONS residual 0.000953441979624353: spot position closed; routine spot monitoring closed.
+- GSTOCK residual 0.096724707311314713: position closed; routine GSTOCK monitoring closed.
 - liquid CRED direct balance 0: standalone token monitoring closed.
 - Zero-balance former meme sleeves are historical only and must not consume hourly price/liquidity/holder/creator/pool monitoring until a fresh non-zero direct balance or explicit user instruction reactivates them.
 - auxiliary WSOL recovery completed.
@@ -198,7 +202,7 @@ This is an active zero-external-capital competition plan. The stored plan uses a
 ## Hourly coverage
 
 Every :29 run first persists bounded core coverage:
-- active wallet/gas telemetry for current non-zero holdings only; former SHART/KARDASHEV/e/acc sleeves remain retired while zero;
+- active wallet/gas telemetry focused on stablecoins/native gas and verified current assets; PAID/GSTOCK/Robinhood-PONS residual dust plus former SHART/KARDASHEV/e/acc are not active position lanes;
 - PONS;
 - ETH conditional;
 - BTC regime;
