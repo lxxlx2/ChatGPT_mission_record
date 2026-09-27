@@ -34,6 +34,7 @@ import stat
 import time
 import urllib.error
 import urllib.request
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from decimal import Decimal, ROUND_DOWN
 from pathlib import Path
@@ -1248,6 +1249,139 @@ def local_board_matches(state: dict, rows: list[dict]) -> list[dict]:
     return matches
 
 
+def _pnl_pairs(pnl: dict | None) -> list[tuple[str, Decimal]]:
+    out = []
+    if not isinstance(pnl, dict):
+        return out
+    for item in pnl.get("top") or []:
+        try:
+            if isinstance(item, (list, tuple)) and len(item) >= 2:
+                out.append((str(item[0]), Decimal(str(item[1]))))
+            elif isinstance(item, dict):
+                did = item.get("key") or item.get("did")
+                score = item.get("score")
+                if did is not None and score is not None:
+                    out.append((str(did), Decimal(str(score))))
+        except Exception:
+            continue
+    return out
+
+
+def cmd_competitor_scan(args) -> None:
+    """Read-only live scan of public Close Call rooms.
+
+    No local keys are posted and no state is modified.
+    """
+    pr = fresh_price(max_age=10**9)
+    pnl_rows = []
+    for rec in parse_export("d-close1-pnl"):
+        p = rec.get("_payload")
+        if isinstance(p, dict) and p.get("t") == "pnl":
+            pnl_rows.append(p)
+    pnl_rows = pnl_rows[-max(1, int(args.pnl)):]
+
+    print("=== CLOSE CALL COMPETITOR SCAN ===")
+    print("ref_sweep:", pr["n"], "ref:", pr["px"], "age_s:", pr["age_s"])
+
+    if pnl_rows:
+        print("\n# recent pnl snapshots")
+        for p in pnl_rows:
+            pairs = _pnl_pairs(p)
+            scores = Counter(str(score) for _, score in pairs)
+            leader = max((score for _, score in pairs), default=None)
+            common = scores.most_common(1)[0] if scores else (None, 0)
+            print(
+                "sweep", p.get("n"),
+                "mark", p.get("mark"),
+                "leader", leader,
+                "largest_tie_score", common[0],
+                "largest_tie_count", common[1],
+                "listed", len(pairs),
+            )
+
+        latest = pnl_rows[-1]
+        pairs = _pnl_pairs(latest)
+        print("\n# latest public top")
+        for i, (did, score) in enumerate(pairs[:25], 1):
+            print(i, did, score)
+
+    positions = latest_payload("d-close1-positions", "positions")
+    if isinstance(positions, dict):
+        print("\n# latest positions summary")
+        print(
+            "sweep", positions.get("n"),
+            "open", positions.get("open"),
+            "longs", positions.get("longs"),
+            "shorts", positions.get("shorts"),
+        )
+        print("top_positions:")
+        for item in (positions.get("top") or [])[:20]:
+            print(json.dumps(item, ensure_ascii=False, separators=(",", ":")))
+
+    rows = parse_export("close1")
+    sample = rows[-max(1, int(args.sample)):]
+    kinds = Counter()
+    templates = Counter()
+    template_makers = defaultdict(set)
+    deviations = Counter()
+    large_terms = []
+
+    for rec in sample:
+        p = rec.get("_payload")
+        if not isinstance(p, dict):
+            continue
+        kind = p.get("t") or "?"
+        kinds[kind] += 1
+        if kind not in ("trade", "offer"):
+            continue
+        terms = p.get("terms")
+        if not isinstance(terms, dict):
+            continue
+        key = (
+            str(terms.get("side")),
+            str(terms.get("px")),
+            str(terms.get("qty")),
+            str(terms.get("until")),
+        )
+        templates[key] += 1
+        if terms.get("maker"):
+            template_makers[key].add(str(terms.get("maker")))
+        try:
+            px = Decimal(str(terms["px"]))
+            qty = Decimal(str(terms["qty"]))
+            dev = (px / pr["px"] - Decimal("1")) * Decimal("100")
+            if qty >= Decimal("40"):
+                bucket = dev.quantize(Decimal("0.1"))
+                deviations[str(bucket)] += 1
+                large_terms.append({
+                    "side": terms.get("side"),
+                    "px": str(px),
+                    "qty": str(qty),
+                    "dev_pct": str(dev.quantize(Decimal("0.01"))),
+                    "id": terms.get("id"),
+                })
+        except Exception:
+            pass
+
+    print("\n# recent close1 public sample")
+    print("messages:", len(sample), "kinds:", json.dumps(dict(kinds), sort_keys=True))
+    print("top_templates:")
+    for key, count in templates.most_common(10):
+        print(
+            count,
+            "makers", len(template_makers[key]),
+            "side", key[0],
+            "px", key[1],
+            "qty", key[2],
+            "until", key[3],
+        )
+
+    print("large_qty_deviation_buckets_pct:", json.dumps(dict(deviations), sort_keys=True))
+    print("recent_large_terms:")
+    for item in large_terms[-20:]:
+        print(json.dumps(item, sort_keys=True))
+
+
 def cmd_progress(_args) -> None:
     state = load_state()
     pr = fresh_price(max_age=10**9)
@@ -2036,6 +2170,11 @@ def main() -> None:
 
     p = sp.add_parser("progress")
     p.set_defaults(fn=cmd_progress)
+
+    p = sp.add_parser("competitor-scan")
+    p.add_argument("--sample", type=int, default=400, help="recent close1 messages to inspect")
+    p.add_argument("--pnl", type=int, default=12, help="recent pnl snapshots to inspect")
+    p.set_defaults(fn=cmd_competitor_scan)
 
     p = sp.add_parser("gate")
     p.set_defaults(fn=cmd_gate)
