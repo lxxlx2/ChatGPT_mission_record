@@ -1,6 +1,6 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-27 12:20 Asia/Bangkok
+Updated: 2026-09-27 12:28 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
@@ -91,3 +91,55 @@ Rules:
 9. A provider/tool rejection is a delivery failure, not a reason to disable either automation.
 
 At 11:10, if delivery still fails, persist a final delivery-failure audit. The next ordinary hourly collector must keep checking delivery state before normal collection until the same-date report is delivered or the date changes.
+
+
+## Collector-survival override — 2026-09-27
+
+Observed persistence gaps remain in ordinary collector hours, including a scheduler trigger around 12:00 with no automatic research/final artifact. Reliability therefore takes precedence over exhaustive hourly breadth.
+
+### Attempt audit first
+
+Every hourly run starts by creating:
+`crypto-daily/runs/YYYY-MM-DD/HHMMSS-attempt.md`
+
+Minimum:
+- run_time
+- automation_id
+- mode
+- status: started
+
+This is diagnostic only. Final/final-retry remains completion proof.
+
+### Bounded pre-final collector
+
+For ordinary hours, complete only these pre-final lanes:
+1. BTC/ETH/SOL and bounded liquid-outlier facts using per-symbol calls;
+2. one bounded English discovery pass covering security/exchange/protocol + the current rotating shard, with X/Reddit included when available;
+3. write one compact research file, or embed a compact research payload in final if research write fails;
+4. immediately persist final/final-retry.
+
+A source failure in one lane does not cancel the others.
+Do not retry a failed source more than once before final.
+Do not perform exhaustive multi-source cause research before final persistence.
+
+After final exists, optional deeper X/Reddit/cause/cross-chain/NFT enrichment may write additional research, but its failure cannot erase the completed core audit.
+
+### Publisher windows
+
+At 09:00:
+- attempt audit first;
+- delivery dedupe and formal delivery take priority over fresh broad collection;
+- if Gmail fails, persist the approved pending body and final audit.
+
+At 10:00/11:00:
+- recovery first;
+- ordinary collector only after delivery state is resolved or a pending body/failure audit is safely persisted.
+
+### Status
+
+- core facts + final persisted, optional gaps only: success or recovered_warning.
+- one core data lane unavailable but final persisted: partial_success.
+- no meaningful core data and final persisted: partial_failure.
+- no final/final-retry: scheduler persistence failure.
+
+Never leave an ordinary scheduler trigger without at least an attempt file unless GitHub itself was unreachable.
