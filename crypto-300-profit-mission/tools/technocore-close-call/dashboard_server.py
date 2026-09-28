@@ -940,15 +940,19 @@ async function refresh(){
     const rcExplain=document.getElementById('relativeExplain');
     if(rc&&rc.direction){
       if(rc.direction==='already_above'){
-        rcTitle.textContent='动态相对追赶线：当前估算已不低于榜首';
+        rcTitle.textContent='当前候选相对榜首：估算已不低于榜首';
       }else{
         const dir=rc.direction==='up'?'上涨':'下跌';
-        rcTitle.textContent='动态相对追赶线：Mark 再'+dir+'约 '+fmt(rc.move)+'（'+fmt(rc.move_pct)+'%）';
+        const movePct=Number(rc.move_pct);
+        const prefix=Number.isFinite(movePct)&&movePct>=20
+          ?'当前仓位结构追赶效率很低：'
+          :'当前候选相对追赶：';
+        rcTitle.textContent=prefix+'Mark 再'+dir+'约 '+fmt(rc.move)+'（'+fmt(rc.move_pct)+'%）';
       }
       const source=rc.position_source==='official_positions'
         ?'榜首仓位取自官方 Positions'
         :('榜首仓位由连续 sweep '+((rc.position_sweep_pair||[]).join('→')||'')+' 的 Score/Mark 斜率估算');
-      rcExplain.textContent='我们仓位斜率 '+fmt(rc.our_position)+' · 榜首 '+fmt(rc.leader_position)+' · 相对 '+fmt(rc.relative_slope)+' POLF/$1 · '+source+'。假设双方仓位保持不变；对手换仓后此线会自动重算。';
+      rcExplain.textContent='我们仓位斜率 '+fmt(rc.our_position)+' · 榜首 '+fmt(rc.leader_position)+' · 相对 '+fmt(rc.relative_slope)+' POLF/$1 · '+source+'。这里只比较“当前最好候选 vs 当前榜首”，不包含后续新开的 V4 票；假设双方仓位保持不变，对手或我们换仓后会自动重算。';
     }else{
       rcTitle.textContent='动态相对追赶线：暂时无法可靠计算';
       rcExplain.textContent='需要同时拿到我们当前最好候选的方向仓位，以及榜首的官方仓位或连续 sweep 斜率。';
