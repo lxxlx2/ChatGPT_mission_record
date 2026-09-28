@@ -1774,21 +1774,27 @@ def _v5b_pair_lookup(state: dict) -> dict[str, dict]:
 def _v5b_seed_candidates(state: dict) -> list[dict]:
     dense = state.setdefault("dense", {})
     pairs = _v5b_pair_lookup(state)
-    used = {
-        rec.get("source_pair_id")
-        for rec in (dense.get("v5b_cycles") or [])
-        if isinstance(rec, dict)
+    cycles = [x for x in (dense.get("v5b_cycles") or []) if isinstance(x, dict)]
+
+    used_seed_ids = {
+        rec.get("source_seed_id")
+        for rec in cycles
+        if rec.get("source_seed_id")
     }
     pending = dense.get("v5b_pending")
-    if isinstance(pending, dict):
-        used.add(pending.get("source_pair_id"))
+    if isinstance(pending, dict) and pending.get("source_seed_id"):
+        used_seed_ids.add(pending.get("source_seed_id"))
     active = dense.get("v5b_active")
-    if isinstance(active, dict):
-        used.add(active.get("source_pair_id"))
+    if isinstance(active, dict) and active.get("source_seed_id"):
+        used_seed_ids.add(active.get("source_seed_id"))
 
     out = []
+
     for pair_id, rec in (dense.get("v5a_harvested") or {}).items():
-        if pair_id in used or not isinstance(rec, dict):
+        if not isinstance(rec, dict):
+            continue
+        seed_id = f"v5a:{pair_id}"
+        if seed_id in used_seed_ids:
             continue
         try:
             locked = Decimal(str(rec["locked_score"]))
@@ -1802,16 +1808,41 @@ def _v5b_seed_candidates(state: dict) -> list[dict]:
         winner = str(rec.get("winner"))
         if winner not in ("long", "short"):
             continue
-        winner_label = pair[winner]
-        flip_side = "short" if winner == "long" else "long"
-        cash = Decimal("10000") + locked
         out.append({
+            "source_seed_id": seed_id,
             "source_pair_id": pair_id,
+            "source_cycle_index": None,
             "source_winner": winner,
-            "winner_label": winner_label,
-            "flip_side": flip_side,
+            "winner_label": pair[winner],
+            "flip_side": "short" if winner == "long" else "long",
             "locked_score": locked,
-            "cash": cash,
+            "cash": Decimal("10000") + locked,
+            "closed_at": rec.get("closed_at"),
+        })
+
+    for rec in cycles:
+        try:
+            cycle_idx = int(rec["cycle_index"])
+            locked = Decimal(str(rec["final_locked_score"]))
+        except Exception:
+            continue
+        if rec.get("close_reason") != "take_profit" or locked < V5B_MIN_SEED_SCORE:
+            continue
+        seed_id = f"v5b:{cycle_idx}"
+        if seed_id in used_seed_ids:
+            continue
+        prev_side = str(rec.get("side"))
+        if prev_side not in ("long", "short"):
+            continue
+        out.append({
+            "source_seed_id": seed_id,
+            "source_pair_id": rec.get("source_pair_id"),
+            "source_cycle_index": cycle_idx,
+            "source_winner": prev_side,
+            "winner_label": rec.get("winner_label"),
+            "flip_side": "short" if prev_side == "long" else "long",
+            "locked_score": locked,
+            "cash": Decimal(str(rec["final_cash"])),
             "closed_at": rec.get("closed_at"),
         })
 
