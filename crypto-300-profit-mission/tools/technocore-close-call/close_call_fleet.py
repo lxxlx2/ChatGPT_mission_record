@@ -2328,7 +2328,23 @@ def dense_v5b_step(state: dict, pr: dict) -> dict | None:
     if isinstance(pending, dict):
         if not dense.get("v5b_accept_new", True):
             return None
-        if int(pr["n"]) < int(pending.get("ready_after_sweep", 10**9)):
+
+        if pending.get("status") == "registering":
+            pending = _v5b_register_pending(state, pr)
+            if not isinstance(pending, dict):
+                return None
+            if pending.get("status") == "registering":
+                err = dense.get("v5b_last_error")
+                return {
+                    "event": "v5b_wait_feeder_registration",
+                    "cycle_index": pending.get("index"),
+                    "registered_count": len(pending.get("registrations") or []),
+                    "error": (err or {}).get("error") if isinstance(err, dict) else None,
+                    "sweep": pr["n"],
+                }
+
+        ready_after = pending.get("ready_after_sweep")
+        if ready_after is None or int(pr["n"]) < int(ready_after):
             return None
         flow, st = latest_flow_and_state()
         flow_n = int(flow["n"]) if isinstance(flow, dict) and flow.get("n") is not None else None
@@ -2343,6 +2359,15 @@ def dense_v5b_step(state: dict, pr: dict) -> dict | None:
         return None
     pending = _v5b_register_pending(state, pr)
     if pending:
+        if pending.get("status") == "registering":
+            err = dense.get("v5b_last_error")
+            return {
+                "event": "v5b_wait_feeder_registration",
+                "cycle_index": pending.get("index"),
+                "registered_count": len(pending.get("registrations") or []),
+                "error": (err or {}).get("error") if isinstance(err, dict) else None,
+                "sweep": pr["n"],
+            }
         return {
             "event": "v5b_seed_registered",
             "cycle_index": pending["index"],
