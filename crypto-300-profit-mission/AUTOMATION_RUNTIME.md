@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-28 15:52 Asia/Bangkok
+Updated: 2026-09-28 17:58 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -19,7 +19,7 @@ Current original Credits holdings:
 The other four original Credits are historical sold assets/provenance.
 
 Private Binance inventory authority:
-- combined earn bucket = **659.9 USD-equivalent**
+- combined earn bucket = **682.40 USDT-equivalent**
 - PONSUSDT perpetual = **CLOSED**
 - no active Binance trading position
 - do not invent or carry forward any Binance spot/futures asset without a newer USER_CONFIRMED source.
@@ -321,7 +321,7 @@ Current Solana canonical USDC is 430.483714 and SOL is 0.135926955 as of the 202
 USER_CONFIRMED:
 - Binance PONSUSDT perpetual: CLOSED
 - Robinhood PONS spot: CLOSED_DUST
-- Binance inventory: 659.9 USD-equivalent earn only
+- Binance inventory: 682.40 USDT-equivalent earn only
 
 Effective immediately:
 - remove PONS mark/funding/TP/SL from required hourly core lanes;
@@ -428,3 +428,17 @@ Refresh wallet state only:
 - when a verified event requires an ownership/balance check to determine eligibility or risk.
 
 Market/opportunity/security/TGE/Monster monitoring remains separate and may continue on its existing event/cadence rules.
+
+
+## Current portfolio materiality threshold — 2026-09-28 17:58
+
+For wallet snapshots requested by the user:
+- omit individual assets/NFTs worth < $0.10 from the current presentation;
+- keep historical provenance in Git history;
+- spam/unpriced claim-bait remains excluded regardless of nominal token count.
+
+Current USER_CONFIRMED Binance earn authority:
+- 382.27204197 USDC
+- 300 USDT
+- displayed total ~682.40 USDT-equivalent
+- no active Binance trading position.
