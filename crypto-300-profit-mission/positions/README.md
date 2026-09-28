@@ -7,7 +7,7 @@ A file belongs here only when the Mission may need current holdings, stored thre
 Long-form background research belongs under `research/`.
 
 Current examples:
-- `pons.md`: active Binance PONS futures authority; Robinhood spot is CLOSED_DUST.
+- `pons.md`: closed historical PONS state; Binance futures closed and Robinhood spot remains dust only.
 - `xrp-variational.md`: closed historical XRP/Variational state.
 - `gstock-plan.md`: CLOSED_DUST historical GSTOCK state.
 - `eth-conditional.md`: stored ETH conditional setup.
