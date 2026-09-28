@@ -1,6 +1,6 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-28 09:12 Asia/Bangkok
+Updated: 2026-09-28 09:18 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
@@ -188,6 +188,6 @@ Material events:
 - secondary/transfer/redemption window;
 - material valuation/fee/term change.
 
-Humans& / Echo is a regression case. On 2026-09-24 a direct Echo/Alpen notice gave the user a full 1,000-USDC refund into the Echo wallet. Future platform-level rights events must be surfaced even if the portfolio company itself publishes nothing.
+Closed/refunded deals are excluded from user-specific deal monitoring. humans& via Echo/Alpen Capital was fully refunded on 2026-09-24, so it is historical only and must not consume ongoing user-specific monitoring unless the user re-enters the deal.
 
 Do not treat 'company official source unchanged' as evidence that the investor's deal rights are unchanged.
