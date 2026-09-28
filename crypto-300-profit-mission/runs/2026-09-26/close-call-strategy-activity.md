@@ -1046,3 +1046,27 @@ The lack of an active V5a harvest in this snapshot is not itself a failure. The 
 
 Execution state:
 `DENSE_V5A_LIVE_WAITING_FIRST_HARVEST_SCAN`.
+
+
+## 2026-09-29 — Dense V5a first harvest completed
+
+Live status at referee sweep 944 confirms the first V5a staged harvest completed successfully.
+
+Result:
+- pair: `v4-00213`;
+- winner: long;
+- trigger score: 180.8150 POLF;
+- final locked winner score: 58.949759 POLF;
+- harvested count: 1;
+- active harvest state returned to null;
+- V4 remained healthy and continued sweep 944 with 8 long + 8 short, zero reserve shortage and zero errors;
+- next Dense batch 430 was already registered for sweep 945.
+
+Interpretation:
+- the staged close state machine worked end-to-end: bootstrap -> finish -> locked;
+- realized-PnL carry is now live in our own fleet;
+- this first lock retained only ~32.6% of the trigger score, implying a total haircut of ~121.87 POLF from close fees, staged execution and price movement between trigger and settlement;
+- therefore the 180-POLF first threshold is mechanically valid but economically too early if the goal is to create a materially useful realized-PnL carry account.
+
+Execution state:
+`DENSE_V5A_FIRST_HARVEST_LOCKED_58.949759`.
