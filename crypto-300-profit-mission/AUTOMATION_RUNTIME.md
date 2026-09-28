@@ -476,3 +476,23 @@ Manual full-universe health-check succeeded:
 - durable deferred queue now exists in Monster state.
 
 The 19:29 daily full scan remains mandatory regardless of the manual 19:22 scan.
+
+
+### 19:29 scheduler completion failure — 2026-09-28
+
+The scheduler metadata advanced at approximately 19:31, but by 19:38 there was:
+- no new attempt/final/monster GitHub artifact;
+- no Monster daily-summary Gmail.
+
+The 19:29 scheduled cycle therefore failed completion proof.
+
+A manual recovery at 19:39:
+- ran a fresh bulk Binance USD-M screen;
+- deep-checked HBAR/MARSCOIN/QNT and retained BTW context;
+- found no current IGNITION;
+- sent the required daily summary;
+- Gmail id: `1a0e80712e5441b9`.
+
+After this incident, the automation prompt was shortened further so 19:29 does only:
+core final -> one bulk screen -> max-3 deep checks -> compact summary persistence -> Gmail/readback.
+Optional Alpha/social/on-chain enrichment cannot run before delivery proof.
