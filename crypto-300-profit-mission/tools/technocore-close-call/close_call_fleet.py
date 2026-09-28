@@ -651,6 +651,9 @@ def dense_v3_submit_multiplicity(
 
     for copy_no, item in enumerate(selected, start=2):
         labels = item["labels"]
+        item["status"] = "in_progress"
+        item["started_at"] = datetime.now(timezone.utc).isoformat()
+        save_state(state)
         pair_record = {
             "reserve_index": item["index"],
             "copy_no": copy_no,
@@ -718,10 +721,16 @@ def dense_v3_submit_multiplicity(
             save_state(state)
             time.sleep(0.05)
         except Exception as e:
+            item["status"] = "partial_error"
+            item["error_at"] = datetime.now(timezone.utc).isoformat()
+            item["error"] = str(e)
+            item["partial_trades"] = pair_record.get("trades") or {}
+            save_state(state)
             errors.append({
                 "reserve_index": item.get("index"),
                 "copy_no": copy_no,
                 "error": str(e),
+                "partial_trades": pair_record.get("trades") or {},
             })
 
     result = {
@@ -2384,6 +2393,15 @@ def cmd_dense_status(_args) -> None:
         if x.get("status") == "registered"
         and int(x.get("ready_after_sweep", 10**9)) <= current_sweep_for_reserve
     ))
+    print("v3_reserve_partial_errors:", sum(1 for x in v3_reserve if x.get("status") == "partial_error"))
+    last_v3 = dense.get("last_v3_multiplicity") or {}
+    if last_v3:
+        print("last_v3_sweep:", last_v3.get("sweep"))
+        print("last_v3_ref:", last_v3.get("ref"))
+        print("last_v3_long_copies:", last_v3.get("total_long_copies"))
+        print("last_v3_short_copies:", last_v3.get("total_short_copies"))
+        print("last_v3_reserve_shortage:", last_v3.get("reserve_shortage"))
+        print("last_v3_errors:", len(last_v3.get("errors") or []))
     dynamic_keys = sum(1 for k in state.get("keys", {}) if k.startswith("DENSE-"))
     print("dynamic_keys:", dynamic_keys)
     print("dynamic_key_cap:", DENSE_MAX_DYNAMIC_KEYS)
