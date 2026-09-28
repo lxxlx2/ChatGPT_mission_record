@@ -798,3 +798,35 @@ The dashboard still displayed an overdue Static T03 message even though Dense mo
 Fix:
 - commit `73104dbb35016575ec06a68bc7e4e3bcb312c978`
 - dashboard no longer surfaces Static/Bracket pending schedules while Dense is enabled.
+
+
+## 2026-09-28 — Sweep 855 competitor scan: board regime switched to historical longs
+
+A 50-sweep / 1,000-message scan at referee sweep 855 materially changed the interpretation of the live board.
+
+Observed:
+- mark jumped from 223.83 at sweep 851 to 229.21 at sweep 855;
+- prize line moved into the 426-434 POLF area and leader reached 465.97;
+- several current Top-25 DIDs also appeared in the public top-position list with +45.10 long positions;
+- for those directly matched keys, `effective_entry = mark - score / position` gives roughly 219.60-219.70;
+- therefore the current high-price board is dominated by old low-entry longs, while the low-price board seen earlier was dominated by old high-entry shorts;
+- this is consistent with a two-sided historical frontier strategy, not evidence that V3 stopped working.
+
+The same public sample showed large coordinated fleets still active:
+- 183 distinct makers shared one sell template at 229.40 / qty 42.52;
+- 69 makers shared sell 228.61 / qty 42.22;
+- another cluster used ±2%-style large trades around the current reference.
+
+Important scanner correction:
+The original `competitor-scan` computed every sampled trade's deviation against the *current* reference, which makes historical `dev_pct` labels misleading. A trade shown as +0.35% relative to sweep 855 may have been posted under a different referee reference. Commit `db5e3dc42b826ec871ab2955a728358f58b917e6` fixes this by:
+- mapping each sampled trade timestamp to the contemporaneous referee price post;
+- reporting source sweep/source ref and true submission-time deviation;
+- cross-matching current leaderboard DIDs with public top positions;
+- estimating position from score-vs-mark slope when possible;
+- estimating effective entry from signed position;
+- listing recent public trades involving current top DIDs.
+
+Strategic implication:
+- do not change V3 solely because the current board gap widened while NVDA rallied;
+- V3 now has the correct mechanism to capture a *future* new short frontier when the market makes a new high, and a future new long frontier on a new low;
+- whether competitors are also actively locking/closing profitable historical positions is still unresolved and should be checked with the corrected scan before adding an exit/harvest layer.
