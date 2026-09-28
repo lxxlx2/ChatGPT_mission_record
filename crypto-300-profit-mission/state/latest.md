@@ -1,96 +1,162 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-28 09:32 Asia/Bangkok
+Updated: 2026-09-28 15:00 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Private venue — USER_CONFIRMED
 
 Binance:
 - earn balance: **659.9 USD-equivalent**
-- PONSUSDT perpetual: **CLOSED**
-- no other Binance trading exposure
+- no active trading position
+- PONSUSDT perpetual: CLOSED
 
-There is currently no active position-specific trade in Mission.
+## Fresh wallet baseline
 
-## Fresh on-chain core state
+Wallet provider:
+- Alchemy **ChatGPT Crypto Monitor All Chains**
+- app id `h6m5pairkgzet7vz`
+
+Canonical addresses:
+- EVM `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
+- Solana `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+
+Non-EVM Aptos/Sui/Bitcoin/Starknet/Tron require separate canonical user addresses before they can be included.
+
+### Main balances
 
 Ethereum:
 - 400.308121 USDC
 - 0.001667063838788351 ETH
 - 0.000038313 WETH
-- Credits #23042 and #23232 owned
+- Credits #23042/#23232 owned
 
 Solana:
-- 420.472536 USDC
-- 0.127067295 SOL
-- 1.745552 SPC, negligible
-- 0.000473 PAID dust
+- 430.483714 USDC
+- 0.135926955 SOL
+- PAID 0
 - KARDASHEV 0
 - SHARTCOIN 0
+- prior SPC balance no longer present
 
-BNB Chain:
-- 0.007878625902744041 BNB
-- canonical USDC 0
+Base:
+- 0.000252 USDC
+- 0.000790061852162197 ETH
+
+BNB:
+- 0.000076956401760745 BNB
+- USDC 0
 - 0.096724707311314713 GSTOCK dust
 
-Robinhood Chain:
-- 0.000815126815110326 ETH
+Robinhood:
+- 0.000080297765615110 ETH
 - 0.000953441979624353 PONS dust
-- no NFTs
+- NFTs 0
+
+Arbitrum:
+- 0.000001 USDC
+- 0.000003959328931033 ETH
 
 Ink:
 - 0.010389022090321585 ETH
 - 7.665136656205785948 Tydro Ink Points
 
-Base:
-- 0.252982 USDC
-- 0.000790846510479134 ETH
-
 Unichain:
 - 0.021286 USDC
 - 0.000231941590232335 ETH
-- CRED ERC-20 0
+- CRED 0
 - UNICRED #230 owned
 
-Arbitrum:
-- 0.000001 USDC
-- 0.000825005012848238 ETH
+### Special chains
 
-Canonical stablecoins: **821.054926 USDC**.
+Optimism:
+- 0.000065278581034767 ETH
+- 0.000449 USDT
 
-Strict directly priced on-chain liquid reference at ETH 2651.0045 / SOL 120.25 / BNB 773.23:
-**~881.55 USD**.
+Polygon:
+- 0.291295907607284273 POL
+
+Avalanche:
+- 0.000678889764814817 AVAX
+- canonical USDC/USDT 0
+
+Hyperliquid EVM:
+- 0.000234033730511199 HYPE
+- 0.00172 USDC
+- 0.004646 USD₮0
+- remaining unpriced receipts excluded
+
+Linea:
+- 0.000283128973717299 ETH
+- 0.221708425875998735 LINEA
+- 0.101880947178375346 REX
+- USDC 0
+
+Monad:
+- 0.3817997 MON
+- 0.024112 canonical USDC
+- unpriced meme/test/spoof receipts excluded
+
+World Chain:
+- 0.000106736504323280 ETH
+- 0.04 WLD
+
+MegaETH:
+- 0.000082071511230598 ETH
+
+Plasma:
+- 0.009576790735189758 XPL
+
+Sonic:
+- 0.577025845877296 S
+
+Zero native:
+- Berachain / Blast / Mantle / RISE / Scroll / Sei / zkSync
+
+Verified stable assets: **830.844301 USD-equivalent units**.
+
+Strict directly priced on-chain liquid reference: **~883.45 USD**.
 
 ## Material NFTs
 
-Credits:
-- #23042 owned
-- #23232 owned
-- current collection floor ~0.0255 ETH
-- current collection top offer ~0.0248 WETH
-- two-NFT floor mark ~135.20 USD
-- two-NFT top-offer reference ~131.49 USD
-- no rarity premium applied
+Credits #23042 + #23232:
+- direct ownership confirmed
+- floor ~0.0262 ETH each
+- top offer ~0.0252 WETH each
+- floor subtotal ~138.67 USD
+- top-offer subtotal ~133.38 USD
 
 UNICRED #230:
-- fresh direct ownership confirmed
+- direct ownership confirmed
 - floor ~0.00359 ETH
 - top offer ~0.0022 WETH
-- floor mark ~9.52 USD
-- top-offer reference ~5.83 USD
+- floor mark ~9.50 USD
+- top-offer ~5.82 USD
 
-Material-NFT floor subtotal: **~144.72 USD**.
+On-chain marked assets using material NFT floors: **~1,031.63 USD**.
 
-Current on-chain marked assets including those NFTs: **~1,026.27 USD**.
+Including Binance 659.9 earn:
+- floor-mark total reference: **~1,691.53 USD**
+- NFT top-offer-oriented reference: **~1,682.56 USD**
 
-Adding USER_CONFIRMED Binance earn gives total tracked asset reference **~1,686.17 USD**.
+Not Mission profit/progress until provenance is separated.
 
-This total is not Mission profit/progress because provenance remains unresolved.
+## Claim scan
+
+Status: **NO_NEW_VERIFIED_CLAIM**.
+
+No new legitimate claim/withdrawal entitlement was established from:
+- fresh broad-chain wallet data;
+- current material NFT ownership;
+- latest successful Airdrop/TGE monitor state.
+
+Do not interact with unsolicited claim-looking receipts. Current wallet contains multiple scam-like assets on Avalanche, Linea, Optimism, BNB, Polygon and Robinhood.
+
+Generic wallet scanning cannot prove arbitrary protocol-side reward escrow is zero when rewards live outside the wallet; a protocol-specific contract/dashboard read is required for that.
 
 ## Monitoring scope
 
-Retired / closed:
-- Binance PONSUSDT perpetual
+Closed:
+- Binance PONS futures
 - Robinhood PONS spot
 - GSTOCK
 - PAID
@@ -100,10 +166,11 @@ Retired / closed:
 - XRP / Variational
 
 Current user-asset monitoring:
-- canonical wallet stablecoins/native gas
+- verified balances across all supported EVM chains
+- Solana
 - Credits #23042/#23232
 - UNICRED #230
-- Tydro Points / Ink inventory
-- JUMP and other stored participation plans when due
+- Ink/Tydro inventory
+- due participation/claim plans
 
 General Monster V2.1, launch radar and NFT radar remain market-wide discovery scanners.
