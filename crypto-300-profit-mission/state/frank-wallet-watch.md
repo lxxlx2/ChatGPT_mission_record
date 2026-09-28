@@ -252,3 +252,118 @@ For this Frank lane only:
 - preserve the rest as reserve for another signal / invalidation response.
 
 No automatic transaction is permitted.
+
+
+## Two-stage early-alert override — 2026-09-29 04:20 Asia/Bangkok
+
+This section overrides earlier Frank notification staging where inconsistent.
+
+User priority:
+1. recall / no silent misses of qualifying Frank signals;
+2. timeliness;
+3. let the user make the final trading judgment;
+4. preserve the later conviction filter for sizing.
+
+The live notification state machine is now:
+`PRECONFIRM -> SUSPECTED_CONVICTION | PRECONFIRM_CANCELLED`
+
+A later `FORMAL_EXIT` may follow a delivered SUSPECTED_CONVICTION.
+
+### Stage 1: 预确认 / PRECONFIRM
+
+Send Gmail PRECONFIRM at the first hourly scan that verifies active Frank buying and one of these paths.
+
+Path S: large buy + verified public call
+- single active BUY >= 5,000 USD equivalent, OR active BUY aggregate >= 10,000 USD equivalent inside rolling 60 minutes; AND
+- a first-party public Frank post/call on his own X/FOMO/public profile mentions the same token/ticker/CA within the prior 2 hours.
+
+Third-party reposts, replies from other accounts, and generic market posts do not satisfy the social condition.
+
+Path C: chain-only high-conviction fallback
+- use only when first-party social source is unavailable, delayed, or not indexed;
+- single active BUY >= 15,000 USD equivalent; OR
+- active BUY aggregate >= 25,000 USD equivalent inside rolling 60 minutes with >=2 BUY swaps.
+
+Path C email must explicitly state:
+`社交喊单未核验 / 链上大额预确认`.
+
+PRECONFIRM is an awareness alert, not a conviction confirmation.
+
+Do not suppress PRECONFIRM solely because current price has moved above Frank VWAP. Show the deviation:
+- > +15%: `追价风险：高`;
+- > +25%: `仅观察，不建议追价`.
+
+Minimal safety check before PRECONFIRM:
+- exact mint/CA verified;
+- active swap confirmed, not transfer/airdrop/reward;
+- basic liquidity exists;
+- no immediately visible hard honeypot / frozen-transfer condition.
+
+Suggested PRECONFIRM capital language:
+- `观察仓 0-15 USD`;
+- never present PRECONFIRM as a reason to deploy the full ~100 USD lane.
+
+### Stage 2: 疑似观点仓 / SUSPECTED_CONVICTION
+
+This replaces the previous user-facing FORMAL_ENTRY label for Frank-lane entry alerts.
+
+Send the second Gmail once later conviction conditions are satisfied:
+- persistence Path A or B from the latency-aware override;
+- meaningful accumulation T0 established;
+- episode cumulative active BUY >=10,000 USD;
+- current token-unit inventory remains materially open under latest inventory-retention rules;
+- no recent distribution invalidation;
+- current executable price normally inside Frank VWAP * 0.92 to * 1.10;
+- liquidity, token-control and transfer-restriction checks pass;
+- no HFT_EXECUTION;
+- not a stablecoin/wrapped major/obvious execution or hedging instrument.
+
+Subject label must contain `[疑似]`, not `[确认]`.
+
+Suggested capital language:
+- if user has not acted: `可考虑 20-30 USD 初始测试仓`;
+- if a PRECONFIRM observation position was taken: `总风险仓位通常不超过 50-60 USD`;
+- no automatic trading.
+
+### PRECONFIRM cancellation / deterioration
+
+If PRECONFIRM was delivered but SUSPECTED_CONVICTION does not develop, send one `[撤销预确认]` follow-up only when a hard invalidation is observed:
+- token-unit inventory falls >35% in rolling 60 minutes with no re-accumulation;
+- Frank effectively exits;
+- liquidity collapses materially;
+- a hard token-control / transfer-restriction risk appears;
+- original first-party social call is deleted/retracted and chain behavior also fails to confirm.
+
+Do not send cancellation merely because the next scan is quiet.
+
+### Delivery labels
+
+Use exact Frank subject prefixes:
+- `[300 Mission][预确认][Frank]`
+- `[300 Mission][疑似][Frank]`
+- `[300 Mission][撤销预确认][Frank]`
+- `[300 Mission][EXIT][Frank]`
+
+Each stage for a mint/episode is delivered at most once.
+
+### Anti-miss cursor / replay rules
+
+1. Persist Solana cursor: last successfully processed signature/slot and scan timestamp.
+2. Every run scans from persisted cursor to current finalized head, with 15-minute overlap.
+3. Deduplicate by transaction signature.
+4. Never advance cursor past an unprocessed/error gap.
+5. If a run fails, next successful run resumes from old cursor and replays the gap.
+6. Persist stage event before Gmail: event_id, mint, T0, stage, trigger tx hashes, created_at, delivery_state.
+7. Gmail failure leaves event PENDING_DELIVERY and must be retried before newer Frank events.
+8. A later quiet run cannot overwrite an undelivered event.
+9. Social checking uses at least a 2-hour lookback overlap. If source is unavailable, record `social_source_unavailable`; never infer `no call`.
+10. When social data recovers, re-evaluate unresolved large-buy episodes still inside freshness window.
+
+This minimizes software/scheduler missed alerts. External provider outages can still delay delivery, so Gmail Sent + message-id readback remains mandatory proof.
+
+### Timeliness constraint
+
+The existing scheduler is hourly, so a qualifying event is sent on the next successful :29 scan.
+Practical scheduler latency is 0-59 minutes before analysis/delivery.
+Do not add another intentional full-hour wait when chain history already proves persistence.
+Historical replay must measure both `T0 -> next :29` and `T0 -> delivered stage`.
