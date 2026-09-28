@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-27 12:46 Asia/Bangkok
+Updated: 2026-09-28 09:32 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Mission objective
@@ -15,84 +15,78 @@ Current original Credits:
 - held: **#23042, #23232**
 - sold/transferred out: **#21646, #21753, #22857, #23328**
 
-## Fresh chain correction
+## Current private/off-chain state — USER_CONFIRMED
 
-This snapshot supersedes the earlier 12:41 reconciliation.
+Binance inventory is now exactly:
+- **659.9 USD-equivalent earn balance**
+- **no active futures/perpetual position**
+- **PONSUSDT perpetual: CLOSED**
 
-The earlier snapshot incorrectly carried forward old non-zero meme quantities on Solana, BNB Chain and Robinhood Chain. Fresh direct Alchemy reads now confirm the user has effectively cleared those meme positions.
+Do not carry the former 64-PONS Binance futures position forward.
 
-Economically closed residual dust is not treated as an active position.
-
-## Current on-chain holdings
+## Fresh direct-chain holdings
 
 ### Ethereum
 DIRECT_CHAIN:
-- USDC: **400.308121**
+- canonical USDC: **400.308121**
 - native ETH: **0.001667063838788351**
 - WETH: **0.000038313**
-- Credits NFTs: **#23042, #23232**
-- small priced dust including ZRO/MORPHO/ZKP/ZAMA/USDT/cbBTC/HEX remains below active-position significance
-- unsolicited/unpriced spam receipts excluded
+- Credits #23042: **owned**
+- Credits #23232: **owned**
+- other ERC-20 dust/spam remains outside core NAV
 
 ### Solana
 DIRECT_CHAIN finalized:
 - canonical USDC: **420.472536**
 - native SOL: **0.127067295**
-- PAID mint `98kfF7rmsg1QDUEoCqNE7g7M1FdrTt92TEp2CLzypump`: **0.000473 PAID**
+- Space / SPC mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552**, negligible value
+- PAID: **0.000473** residual dust
 - KARDASHEV: **0**
 - SHARTCOIN: **0**
-- legacy unresolved SPL mint `2MU93nLHhDsHzgEYBKbVbwLDd2pi71ubGp8SkEv9dZwQ`: **1.745552**
-- 1-unit/non-transferable Token-2022 receipts remain excluded
-
-**PAID 0.000473 is residual dust. The PAID meme position is economically closed and is not an active holding for monitoring purposes.**
+- non-transferable / 1-unit Token-2022 receipts excluded
 
 ### BNB Chain
 DIRECT_CHAIN:
 - native BNB: **0.007878625902744041**
 - canonical USDC: **0**
-- GSTOCK: **0.096724707311314713**
+- GSTOCK: **0.096724707311314713** residual dust
 
-GSTOCK decimals were independently confirmed as 18.
-
-**GSTOCK 0.096724707311314713 is residual dust. The prior 1183.5967247073113-GSTOCK position has been cleared and is no longer active.**
-
-The broad BNB token inventory contains many unsolicited/unverified token receipts. They are excluded from Mission NAV and position monitoring unless independently verified as user-acquired assets.
+Non-spam NFTs detected include Dungeon Delvers Profile #30 and Workers NFTs, but no reliable execution-grade market mark was obtained. They are retained as inventory only and excluded from marked NAV.
 
 ### Robinhood Chain
 DIRECT_CHAIN:
 - native ETH: **0.000815126815110326**
-- PONS: **0.000953441979624353**
+- PONS: **0.000953441979624353** residual dust
+- NFTs: **0**
 
-PONS decimals were independently confirmed as 18.
-
-**PONS 0.000953441979624353 is residual dust. The prior 54.799953441979625-PONS Robinhood spot position has been cleared and is no longer active.**
-
-Other Robinhood-chain token receipts visible in the wallet are unverified/unsolicited and are excluded from active Mission holdings unless provenance is established.
+Other unsolicited token receipts are excluded.
 
 ### Ink
-DIRECT_CHAIN cross-chain balance endpoint:
+DIRECT_CHAIN fungible inventory:
 - native ETH: **0.010389022090321585**
 - Tydro Ink Points: **7.665136656205785948**
-- Fresh INK commemorative NFT #372 remains tracked
+
+Fresh INK #372 remains a known historical/current project NFT, but the current Alchemy app does not expose Ink NFT ownership through the NFT endpoint. No current NFT value is included for it.
 
 ### Base
 DIRECT_CHAIN:
 - canonical USDC: **0.252982**
 - native ETH: **0.000790846510479134**
-- tiny ERC-20 dust/spam excluded from core NAV
+
+Most NFT/token receipts are spam or negligible. No material Base NFT value is included.
 
 ### Unichain
 DIRECT_CHAIN:
 - canonical USDC: **0.021286**
 - native ETH: **0.000231941590232335**
-- UNICRED NFT #230 remains tracked
+- canonical CRED ERC-20: **0**
+- UNICRED #230: **owned**, fresh NFT ownership valid at 2026-09-28T02:32:01Z
 
 ### Arbitrum
-DIRECT_CHAIN cross-chain balance endpoint:
+DIRECT_CHAIN:
 - canonical USDC: **0.000001**
 - native ETH: **0.000825005012848238**
-- BONK: **0.00003** dust
-- pRCADE and spoof/non-canonical USDC receipts excluded
+- other pRCADE/spoof/unverified receipts excluded
 
 ## Canonical on-chain stablecoins
 
@@ -105,72 +99,97 @@ DIRECT_CHAIN cross-chain balance endpoint:
 
 **Total canonical on-chain stablecoins: 821.054926 USDC.**
 
-## Strict directly priced liquid reference
+## Fresh market references
 
-Fresh public marks:
-- ETH: **2704.28581395 USD**
-- SOL: **121.10381149 USD**
-- BNB: **774.24840623 USD**
+Public marks around this reconciliation:
+- ETH: **2651.00451885 USD**
+- SOL: **120.25 USD**
+- BNB: **773.23 USD**
 
-Using the direct balances above:
+Using current direct balances:
 - canonical stablecoins: **821.054926 USD**
-- tracked native gas across Ethereum/Solana/BNB/Robinhood/Ink/Base/Unichain/Arbitrum: **~61.29 USD**
-- WETH: **~0.10 USD**
+- all tracked native ETH/WETH across Ethereum, Base, Robinhood, Unichain, Arbitrum and Ink: **~39.12 USD**
+- SOL: **~15.28 USD**
+- BNB: **~6.09 USD**
 
-**Strict directly priced on-chain liquid reference: ~882.45 USD.**
+**Strict directly priced on-chain liquid reference: ~881.55 USD.**
 
-Excluded:
-- meme residual dust PAID/GSTOCK/PONS;
-- Credits #23042/#23232;
-- UNICRED #230;
-- Fresh INK #372;
-- Tydro Ink Points;
-- unresolved legacy SPL;
-- unsolicited/spam receipts.
+Residual meme dust, Tydro Points, unknown receipts and NFTs are excluded from this strict liquid number.
 
-## Binance — USER_CONFIRMED
+## Valuable NFT marks
 
-Current Binance inventory is exactly:
-1. **598 USD-equivalent combined earn bucket**
-2. **PONSUSDT perpetual**
+NFT marks are kept separate from strict liquid NAV.
 
-No other Binance spot balance, derivative position or reserve bucket is carried forward.
+### Credits — Ethereum
+DIRECT_CHAIN ownership:
+- #23042
+- #23232
 
-### PONSUSDT perpetual
-Latest private authority:
-- LONG **64 PONS**
-- entry **0.6250**
-- isolated **3x**
-- TP: 0.668 / 0.704 / 0.739
-- hard stop: 0.498
+Current collection market reference:
+- floor: **~0.0255 ETH**
+- top offer: **~0.0248 WETH**
 
-Fresh public Binance mark:
-- **0.61669610**
-- latest funding: **0.00011652**
+At ETH 2651.0045:
+- two-Credits floor mark: **~135.20 USD**
+- two-Credits top-offer reference: **~131.49 USD**
 
-If private quantity is unchanged:
-- estimated mark-to-entry uPnL: **~-0.5314 USDT**
-- exact private margin, fees, realized PnL and order state remain USER_CONFIRMED-only.
+Prior rarity work:
+- #23042: about Top 7.1%
+- #23232: about Top 3.6%
 
-## Current active asset interpretation
+No rarity premium is added to the NAV mark.
 
-Position-specific active trading exposure:
-- **Binance PONSUSDT perpetual only**
+The user's old 0.25 ETH / 0.40 ETH listings are aspirational asks and are not used as NAV.
 
-On-chain:
-- stablecoins/native gas;
-- Credits #23042/#23232;
-- UNICRED #230;
-- Fresh INK #372;
-- Tydro Points;
-- unresolved/minor dust.
+### UNICRED #230 — Unichain
+DIRECT_CHAIN ownership: **confirmed**.
 
-Economically closed meme positions:
-- Solana PAID: residual **0.000473**
-- BNB GSTOCK: residual **0.096724707311314713**
-- Robinhood PONS: residual **0.000953441979624353**
+Current collection reference:
+- floor: **~0.00359 ETH**
+- top offer: **~0.0022 WETH**
+
+At current ETH:
+- floor mark: **~9.52 USD**
+- top-offer reference: **~5.83 USD**
+
+### Small NFTs
+Ethereum also holds small non-spam NFTs including:
+- Survivor Dave #9347
+- Ten Years Of Ethereum #191404
+- Adventure Cards #3052
+
+Their observed collection floors are individually sub-2 USD and are excluded from the material-NFT total for conservatism.
+
+## Portfolio reference totals
+
+Strict liquid on-chain: **~881.55 USD**.
+
+Adding only the material NFT collection-floor marks:
+- Credits: ~135.20 USD
+- UNICRED #230: ~9.52 USD
+
+**On-chain marked assets including material NFTs: ~1,026.27 USD.**
+
+Adding USER_CONFIRMED Binance earn:
+- Binance earn: **659.9 USD**
+
+**Total currently tracked asset reference: ~1,686.17 USD.**
+
+A more liquidation-oriented NFT reference using current collection top offers gives:
+- on-chain + material NFTs: **~1,018.87 USD**
+- plus Binance earn: **~1,678.77 USD**
+
+These are asset-completeness references, not Mission profit/progress, because capital provenance remains unresolved.
+
+## Closed trading exposures
+
+- Binance PONSUSDT perpetual: **CLOSED**
+- Robinhood PONS spot: closed, dust only
+- GSTOCK: closed, dust only
+- PAID: closed, dust only
 - SHARTCOIN: 0
 - KARDASHEV: 0
-- e/acc: previously verified 0
+- e/acc: 0
+- XRP / Variational: closed
 
-No dedicated meme-position monitoring should run for these closed/dust balances.
+There is currently **no active position-specific crypto trade** recorded in Mission.
