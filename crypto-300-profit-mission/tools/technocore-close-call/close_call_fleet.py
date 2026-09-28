@@ -1864,12 +1864,23 @@ def _v5b_plan_qty(seed_score: Decimal, cash: Decimal, px: Decimal) -> Decimal:
     return (notional / px).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
 
 
-def _v5b_maker_fee(side: str, qty: Decimal, px: Decimal, close: Decimal) -> Decimal:
+def _v5b_side_fees(
+    side: str,
+    qty: Decimal,
+    px: Decimal,
+    close: Decimal,
+) -> tuple[Decimal, Decimal]:
     base = Decimal("0.01") * qty * px
     gap = (close - px) * qty
     buyer = max(base, gap)
     seller = max(base, -gap)
-    return buyer if side == "long" else seller
+    if side == "long":
+        return buyer, seller
+    return seller, buyer
+
+
+def _v5b_maker_fee(side: str, qty: Decimal, px: Decimal, close: Decimal) -> Decimal:
+    return _v5b_side_fees(side, qty, px, close)[0]
 
 
 def _v5b_score(cash: Decimal, side: str, qty: Decimal, entry_px: Decimal, mark: Decimal) -> Decimal:
@@ -2077,7 +2088,20 @@ def _v5b_verify_open(state: dict, active: dict, pr: dict) -> dict | None:
         save_state(state)
         return {"event": "v5b_blocked", "reason": "simulated_open_funds"}
 
+    feeder_cash_after_open = []
+    for trade in active.get("open_trades") or []:
+        part = Decimal(str(trade["qty"]))
+        _maker_fee, taker_fee = _v5b_side_fees(active["side"], part, px, close)
+        feeder_required = part * px + taker_fee
+        if Decimal("10000") < feeder_required:
+            active["status"] = "blocked_open_feeder_funds"
+            active["feeder_required"] = str(feeder_required)
+            save_state(state)
+            return {"event": "v5b_blocked", "reason": "simulated_open_feeder_funds"}
+        feeder_cash_after_open.append(str(Decimal("10000") - feeder_required))
+
     cash_after = cash_before - required
+    active["feeder_cash_after_open"] = feeder_cash_after_open
     active["open_settlement_sweep"] = settle_sweep
     active["open_settlement_close"] = str(close)
     active["open_fee"] = str(fee)
@@ -2165,6 +2189,17 @@ def _v5b_verify_close(state: dict, active: dict, pr: dict) -> dict | None:
         active["close_fee"] = str(fee)
         save_state(state)
         return {"event": "v5b_blocked", "reason": "simulated_close_fee_funds"}
+
+    feeder_cash = [Decimal(str(x)) for x in (active.get("feeder_cash_after_open") or [])]
+    for i, trade in enumerate(active.get("close_trades") or []):
+        part = Decimal(str(trade["qty"]))
+        _maker_fee, taker_fee = _v5b_side_fees(close_side, part, close_px, close)
+        if i >= len(feeder_cash) or feeder_cash[i] < taker_fee:
+            active["status"] = "blocked_close_feeder_funds"
+            active["blocking_feeder_index"] = i
+            active["blocking_feeder_fee"] = str(taker_fee)
+            save_state(state)
+            return {"event": "v5b_blocked", "reason": "simulated_close_feeder_funds"}
 
     if active["side"] == "long":
         final_cash = cash - fee + qty * close_px
