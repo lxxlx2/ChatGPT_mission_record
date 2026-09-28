@@ -891,6 +891,13 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
         return None
     if pr["n"] < int(pending.get("ready_after_sweep", 10**9)):
         return None
+    if dense.get("v3_enabled") and pr["n"] < int(dense.get("v3_not_before_sweep", 0)):
+        return {
+            "event": "dense_v3_wait_reserve_prime",
+            "sweep": pr["n"],
+            "not_before_sweep": dense.get("v3_not_before_sweep"),
+            "pending_index": pending.get("index"),
+        }
 
     flow, st = latest_flow_and_state()
     flow_n = int(flow["n"]) if isinstance(flow, dict) and flow.get("n") is not None else None
@@ -1085,7 +1092,7 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     # Retry a ready pending batch on the same sweep until flow/state catch up.
     # Only de-duplicate after the pending batch has either submitted or is not yet ready.
     submitted = dense_submit_pending(state, pr)
-    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup", "dense_wait_room_registration", "dense_owner_registrations_reposted"):
+    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup", "dense_wait_room_registration", "dense_owner_registrations_reposted", "dense_v3_wait_reserve_prime"):
         dense["last_seen_sweep"] = pr["n"]
         save_state(state)
         pending = dense_register_pending(state, pr["n"])
@@ -2334,7 +2341,20 @@ def cmd_enable_dense_v3(_args) -> None:
     dense.setdefault("v3_tickets", [])
     dense_v2_init_bounds(dense)
     state["legacy_strategy_frozen"] = True
+
+    pr = fresh_price(max_age=10**9)
+    dense["v3_enabled_sweep"] = pr["n"]
+    dense["v3_not_before_sweep"] = pr["n"] + 1
     save_state(state)
+
+    reserve_event = dense_v3_maintain_reserve(state, pr["n"])
+    if reserve_event:
+        dense["last_reserve_event"] = {
+            "at": datetime.now(timezone.utc).isoformat(),
+            **reserve_event,
+        }
+        save_state(state)
+
     print("Dense V3 ENABLED")
     print("coverage: every aligned referee sweep")
     print("copies per side:", DENSE_V3_TOTAL_COPIES_PER_SIDE)
@@ -2342,6 +2362,8 @@ def cmd_enable_dense_v3(_args) -> None:
     print("ref age gate: DISABLED (official referee sweep/ref remains authoritative)")
     print("flow/state alignment + room/missed/lock gates: ENABLED")
     print("reserve target sets:", DENSE_V3_RESERVE_TARGET_SETS)
+    print("reserve primed on sweep:", dense.get("v3_enabled_sweep"))
+    print("first V3 trade sweep >=", dense.get("v3_not_before_sweep"))
     print("dynamic key safety cap:", DENSE_MAX_DYNAMIC_KEYS)
     print("existing Dense tickets and pending batch are preserved")
 
@@ -2386,6 +2408,8 @@ def cmd_dense_status(_args) -> None:
     ))
     v3_reserve = dense.get("v3_reserve") or []
     print("v3_total_copies_per_side:", dense.get("v3_total_copies_per_side"))
+    print("v3_enabled_sweep:", dense.get("v3_enabled_sweep"))
+    print("v3_not_before_sweep:", dense.get("v3_not_before_sweep"))
     print("v3_multiplicity_tickets:", len(dense.get("v3_tickets") or []))
     print("v3_reserve_registered:", sum(1 for x in v3_reserve if x.get("status") == "registered"))
     print("v3_reserve_ready:", sum(
