@@ -1,30 +1,22 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-29 02:28 Asia/Bangkok
+Updated: 2026-09-29 03:44 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Current allocation posture
+## Accounting rule
 
-User has intentionally reduced market risk:
-- keep Ink ETH for future NFT participation;
-- keep SUI for Sui launchpad participation;
-- convert most other liquid crypto into USDC or move it to Binance earn;
-- no active futures/perpetual position.
-
-Current display/accounting threshold:
 - include only individual chain positions / NFTs with a reliable marked value of **>= $1.00**;
-- individual chain positions worth **< $1.00** are omitted even if a wallet UI aggregates them into a larger asset total;
+- individual positions worth **< $1.00** are omitted from the displayed portfolio;
 - spam, claim-bait and unpriced unsolicited receipts are excluded;
 - unpriced known inventory can remain as a note but does not enter marked totals;
-- this threshold is for current portfolio presentation only, not historical provenance.
+- this is an asset-completeness snapshot, not Mission PnL.
 
 ## Private / off-chain — USER_CONFIRMED
 
-Binance Earn remains unchanged from the 2026-09-28 confirmed snapshot:
+Binance Earn unchanged:
 - estimated total: **682.40 USDT-equivalent**
-- USDC position: **382.27204197 USDC** (displayed ~382.40 USDT)
-- USDT position: **300 USDT**
-- PONSUSDT perpetual: **CLOSED**
+- USDC: **382.27204197**
+- USDT: **300**
 - no active Binance trading position
 
 ## Canonical wallets
@@ -33,130 +25,127 @@ Binance Earn remains unchanged from the 2026-09-28 confirmed snapshot:
 - Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 - Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
-## Current wallet UI snapshot — USER_CONFIRMED
-
-2026-09-29 02:28 Asia/Bangkok screenshot:
-- wallet total shown: **$1,078.07**
-- USDC aggregate: **919.75**
-- SUI: **40.192929** = **$46.62**
-- ETH aggregate across wallet-supported chains: **0.014307** = **$38.37**
-- SOL: **0.015349** = **$1.82**
-
-The UI aggregate is useful as a completeness cross-check. The canonical portfolio below applies the >=$1 rule per chain position, so it does not blindly carry the full aggregated ETH amount.
-
-## Fresh liquid on-chain assets >= $1.00
+## Fresh liquid on-chain assets >= $1
 
 ### USDC
 
-Fresh DIRECT_CHAIN reads:
-- Solana USDC: **506.238655**
+Fresh DIRECT_CHAIN:
+- Solana USDC: **521.349642**
 - Ethereum USDC: **400.308121**
+- directly decomposed subtotal: **921.657763 USDC**
 
-Directly decomposed subtotal:
-- **906.546776 USDC**
+Last wallet UI completeness snapshot showed an additional **~13.203224 USDC** outside the Ethereum + Solana balances. Since the only wallet activity after that snapshot was the three Solana transactions listed below, the inferred aggregate USDC completeness mark is now:
 
-The current wallet UI shows aggregate USDC **919.75**, leaving approximately **13.203224 USDC** outside the two directly decomposed balances above. Current connector coverage does not cleanly attribute this residual to one canonical chain without risking inclusion of spam/lookalike tokens. For top-level portfolio completeness, the current wallet aggregate **919.75 USDC** is used; the known direct chain balances remain recorded separately.
+- **~934.860987 USDC**
 
-Known tiny canonical USDC balances are below $1 and omitted, e.g. Base 0.000252 USDC, Arbitrum 0.000001 USDC, Unichain 0.021286 USDC.
+Known canonical USDC dust on Base / Arbitrum / Unichain etc. remains below $1 per chain and is omitted.
 
 ### Sui
 
 USER_CONFIRMED unchanged:
 - SUI: **40.192929**
-- wallet UI mark: **$46.62**
+- fresh SUIUSDT reference: **$1.1575**
+- marked value: **~$46.52**
 
-User explicitly confirmed the Sui position was not moved.
+Current connector still lacks a usable direct Sui balance RPC; quantity therefore remains the latest user-confirmed canonical amount.
 
 ### Solana
 
 DIRECT_CHAIN finalized:
-- SOL: **0.015349154**
-- current spot reference around **$118.88/SOL**
-- value: **~$1.82**
-- USDC: **506.238655**
+- SOL: **0.011130612**
+- SOLUSDT reference: **$118.79**
+- marked value: **~$1.32**
+- USDC: **521.349642**
 
-Fresh SPL / Token-2022 reads found no additional fungible token position with a reliable value >= $1.00.
+New material SPL position:
+- mint: `C1mBfBoDkwWfd6uTFZp62ARHLjeVp3bDpCDMfMZtPngE`
+- balance: **2,845.330357**
+- current Alchemy price feed has no quote for this mint.
+- latest wallet execution sold **15,000 tokens** and, using the USDC wallet balance delta across the only three intervening Solana transactions, realized approximately **40.110987 USDC**, implying an execution-derived reference price of **~$0.002674/token**.
+- residue marked at that execution-derived reference: **~$7.61**
+- this is an execution-derived mark, not an independent market-price oracle.
+
+Recent Solana sequence after the prior snapshot:
+1. tx `44fD8WaGkPF6SMCpb1sD9rCMAw22Ch26R8FFj3SWXbK5n9Gn9yK4aAxhwM9zyDQCTR5X52WEd7HFWivQdwhot88d`
+2. tx `98BUBWjGWLJKabUTq1mowhxRfLJeXRnic426jw4RWrUXeAoJ8bnbGD7TL3eRWXksiKMdLE7wiKeLx8UWvvdhj4B`
+3. tx `3JMcPqQ1i4vn99nYMh1RiWmEX27sF7TZ7pAPjtidKkdw1RhxmTAzruHPrBVbwJ3RnN4jkd1BH9ebVtV7uiornsgB`
+
+Relative to the 02:28 snapshot:
+- Solana USDC: **506.238655 -> 521.349642** (**+15.110987**)
+- SOL: **0.015349154 -> 0.011130612** (**-0.004218542**)
+- C1m... token: **0 -> 2,845.330357** remaining after the trade sequence.
+
+No other fungible SPL / Token-2022 balance with a reliable value >= $1 was identified.
 
 ### EVM native ETH-family positions
 
-User explicitly confirmed Ink was not moved.
-
-Fresh DIRECT_CHAIN native balances:
+Fresh DIRECT_CHAIN:
 - Ink ETH: **0.010389022090321585 ETH** = **~$27.85**
 - Ethereum ETH: **0.000850479068623404 ETH** = **~$2.28**
-- Base ETH: **0.000781411120038408 ETH** = **~$2.10**
+- Base ETH: **0.000781411120038408 ETH** = **~$2.09**
 
-Using ETH around $2,681, the directly confirmed >=$1 ETH-family subtotal is:
-- **~$32.23**
+ETH reference: **~$2,680.39**
 
-Individual chain ETH balances below $1 are omitted per policy, including Linea ETH, Unichain ETH, World Chain ETH, MegaETH ETH, Robinhood Chain ETH, Optimism ETH and Arbitrum ETH.
+Directly confirmed ETH-family subtotal above the $1-per-chain threshold:
+- **~$32.22**
 
-The wallet UI aggregates all ETH-family balances as **0.014307 ETH / $38.37**; that full aggregate is not used in the filtered NAV because it includes sub-$1 chain positions and possibly chains not cleanly decomposed by the current connector.
+The following remain below $1 individually and are omitted: Linea ETH, Unichain ETH, World Chain ETH, Robinhood Chain ETH, Optimism ETH, Arbitrum ETH, BNB, AVAX, POL, HYPE, MON and other gas/dust positions.
 
-Other native gas positions such as POL, BNB, AVAX, XPL, S and similar balances are also each below $1 and omitted.
-
-## Material NFTs >= $1.00
+## Material NFTs >= $1
 
 ### Credits — Ethereum
 
-Fresh DIRECT_CHAIN ownership at 2026-09-29:
+Fresh DIRECT_CHAIN ownership:
 - **Credit #23232** — owned
 - **Credit #23042** — sold / no longer owned
 
-Fresh OpenSea collection reference:
-- Credits floor: **$64.38**
-- top offer: **$63.11**
-- 24h volume: **$251.2K**
+Fresh OpenSea collection floor:
+- **~$65.37**
 
 Conservative NAV:
-- Credit #23232: **$64.38**
-- no rarity premium is added to portfolio NAV.
+- Credit #23232: **~$65.37**
+- no rarity premium added.
 
 ### UNICRED #230 — Unichain
 
 Fresh DIRECT_CHAIN ownership:
 - **UNICRED #230** — owned
 
-Fresh OpenSea Unichain reference:
-- UNICRED floor: **$7.85**
+Fresh OpenSea collection floor:
+- **~$7.85**
 
 Conservative NAV:
-- UNICRED #230: **$7.85**
+- UNICRED #230: **~$7.85**
 
-### Other NFT / position inventory
+### Other inventory
 
-Previously marked Ethereum NFTs such as Survivor Dave #9347, Ten Years Of Ethereum #191404 and Adventure Cards #3052 remain below the $1 threshold and are omitted.
-
-INK #372 remains known Ink inventory, but current tooling still lacks a reliable Ink NFT market/ownership endpoint and no reliable >=$1 mark is available in this refresh. It is excluded from marked totals.
-
-The Solstice vesting-position NFT remains relevant to the separate Season 1 rights dispute. The revoked 1,049.483713 SLX is not a liquid wallet balance and is excluded from NAV.
+- INK #372 remains known historical Ink inventory, but there is no reliable current >=$1 market mark from the available connector, so it is excluded from marked totals.
+- The Solstice vesting-position NFT remains relevant to the separate Season 1 rights dispute; revoked 1,049.483713 SLX is not treated as liquid NAV.
+- Other Ethereum NFTs below $1 are omitted.
 
 ## Current marked asset reference
 
-Filtered liquid on-chain assets / positions >= $1:
-- USDC aggregate completeness mark: **$919.75**
-- SUI: **$46.62**
-- SOL: **~$1.82**
-- directly confirmed EVM ETH-family positions >=$1: **~$32.23**
+Filtered liquid on-chain positions >= $1:
+- inferred aggregate USDC completeness mark: **~$934.86**
+- SUI: **~$46.52**
+- SOL: **~$1.32**
+- EVM ETH-family positions >=$1: **~$32.22**
+- Solana `C1m...PngE` residue: **~$7.61**
 
-**Filtered liquid subtotal: ~ $1,000.42**
+**Filtered liquid subtotal: ~ $1,022.54**
 
 Material NFTs:
-- Credit #23232: **$64.38**
-- UNICRED #230: **$7.85**
+- Credit #23232: **~$65.37**
+- UNICRED #230: **~$7.85**
 
-**Material NFT subtotal: ~ $72.23**
+**Material NFT subtotal: ~ $73.22**
 
-**Filtered on-chain + marked NFTs: ~ $1,072.65**
+**Filtered on-chain + marked NFTs: ~ $1,095.76**
 
-Wallet UI headline is **$1,078.07**; the roughly $5.4 gap is consistent with excluded sub-$1 chain dust / wallet-side marks and is intentionally not force-counted under the >=$1 rule.
-
-Add unchanged USER_CONFIRMED Binance Earn:
+Add unchanged Binance Earn:
 - **$682.40**
 
-**Total tracked asset reference under the >=$1 rule: ~ $1,755.05**
-
-This is an asset-completeness snapshot, not Mission PnL. Capital provenance remains separated from performance accounting.
+**Total tracked asset reference: ~ $1,778.16**
 
 ## Monitoring policy
 
