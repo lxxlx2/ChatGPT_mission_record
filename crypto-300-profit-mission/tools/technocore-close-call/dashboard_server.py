@@ -342,7 +342,16 @@ def snapshot() -> dict:
             next_event_due = False
             next_event_lag_s = 0
         if system_status == "OK":
-            if dense.get("v4_enabled") and dense.get("v5a_enabled"):
+            if dense.get("v4_enabled") and dense.get("v5a_enabled") and dense.get("v5b_enabled"):
+                active_h = dense.get("v5a_active") or {}
+                active_c = dense.get("v5b_active") or {}
+                if active_h:
+                    system_text = "Dense V4 持续铺票，V5a 正在分阶段锁定利润"
+                elif active_c:
+                    system_text = "Dense V4 持续铺票，V5b 正在管理复利翻转仓位"
+                else:
+                    system_text = "Dense V4 持续铺票，V5a/V5b 等待下一次锁利或复利机会"
+            elif dense.get("v4_enabled") and dense.get("v5a_enabled"):
                 active_h = dense.get("v5a_active") or {}
                 if active_h:
                     system_text = "Dense V4 持续铺票，V5a 正在分阶段锁定利润"
@@ -465,6 +474,13 @@ def snapshot() -> dict:
         "dense_v5a_active": dense.get("v5a_active"),
         "dense_v5a_last_locked": dense.get("v5a_last_locked"),
         "dense_v5a_last_skip": dense.get("v5a_last_skip"),
+        "dense_v5b_enabled": bool(dense.get("v5b_enabled")),
+        "dense_v5b_accept_new": bool(dense.get("v5b_accept_new", True)),
+        "dense_v5b_pending": dense.get("v5b_pending"),
+        "dense_v5b_active": dense.get("v5b_active"),
+        "dense_v5b_closed_cycles": len(dense.get("v5b_cycles") or []),
+        "dense_v5b_last_closed": dense.get("v5b_last_closed"),
+        "dense_v5b_last_mark": dense.get("v5b_last_mark"),
         "dense_v4_enabled": bool(dense.get("v4_enabled")),
         "dense_v4_long_offset": dense.get("v4_long_offset"),
         "dense_v4_short_offsets": dense.get("v4_short_offsets"),
@@ -665,7 +681,14 @@ async function refresh(){
     const lt=d.dense_last_ticket;
     const la=d.last_action;
     const lde=d.last_dense_event||{};
-    if(String(lde.event||'').startsWith('v5a_')){
+    if(String(lde.event||'').startsWith('v5b_')){
+      let txt='最近自动动作：'+String(lde.event);
+      if(lde.cycle_index)txt+=' · cycle '+lde.cycle_index;
+      if(lde.side)txt+=' · '+String(lde.side).toUpperCase();
+      if(lde.final_locked_score)txt+=' · 锁定 '+fmt(lde.final_locked_score)+' POLF';
+      if(lde.projected_locked_score)txt+=' · projected '+fmt(lde.projected_locked_score);
+      document.getElementById('lastAction').textContent=txt;
+    }else if(String(lde.event||'').startsWith('v5a_')){
       let txt='最近自动动作：'+String(lde.event);
       if(lde.pair_id)txt+=' · '+lde.pair_id;
       if(lde.winner)txt+=' · '+String(lde.winner).toUpperCase();
@@ -734,7 +757,8 @@ async function refresh(){
 
     if(d.dense_enabled){
       if(d.dense_v4_enabled){
-        document.getElementById('staticTitle').textContent=(d.dense_v5a_enabled?'Dense V4 + V5a':'Dense V4')+' 基础批次 '+d.dense_submitted_sets+' 组';
+        const layers=d.dense_v5b_enabled?'Dense V4 + V5a + V5b':(d.dense_v5a_enabled?'Dense V4 + V5a':'Dense V4');
+        document.getElementById('staticTitle').textContent=layers+' 基础批次 '+d.dense_submitted_sets+' 组';
         document.getElementById('staticRemain').textContent='每 referee sweep：Long×8 @ 下限≈-5% · Short 3×+1% / 2×+1.7% / 3×+2%';
         document.getElementById('staticFill').style.width='100%';
         document.getElementById('bracketTitle').textContent='V4 Ladder 额外复制 '+d.dense_v4_tickets+' 组';
@@ -743,10 +767,14 @@ async function refresh(){
         const v4Err=Number((lastV4.errors||[]).length||0);
         const h=d.dense_v5a_active||{};
         const lock=d.dense_v5a_last_locked||{};
+        const comp=d.dense_v5b_active||{};
+        const compMark=d.dense_v5b_last_mark||{};
         const htxt=d.dense_v5a_enabled?(' · V5a 已锁 '+Number(d.dense_v5a_harvested_count||0)+(h.stage?(' · active '+h.stage):'')):'';
-        document.getElementById('bracketHint').textContent='Ready reserve '+d.dense_v3_reserve_ready+' / 注册 '+d.dense_v3_reserve_registered+lastV4Copies+(v4Err?(' · errors '+v4Err):'')+htxt+' · Ref age 仅展示';
+        const ctxt=d.dense_v5b_enabled?(' · V5b cycles '+Number(d.dense_v5b_closed_cycles||0)+(comp.status?(' · '+comp.status+' '+String(comp.side||'').toUpperCase()):'')):'';
+        document.getElementById('bracketHint').textContent='Ready reserve '+d.dense_v3_reserve_ready+' / 注册 '+d.dense_v3_reserve_registered+lastV4Copies+(v4Err?(' · errors '+v4Err):'')+htxt+ctxt+' · Ref age 仅展示';
         document.getElementById('bracketFill').style.width='100%';
-        document.getElementById('walletText').textContent='Dense keys '+d.dense_dynamic_keys+' / '+d.dense_dynamic_key_cap+' · 剩余预算 '+d.dense_dynamic_key_budget_remaining+(lock.locked_score?(' · 最近锁定 '+fmt(lock.locked_score)+' POLF'): '')+' · flow/state/missed/lock 安全门仍启用';
+        const compoundScore=compMark.projected_flat_score?(' · V5b projected '+fmt(compMark.projected_flat_score)+' POLF'):'';
+        document.getElementById('walletText').textContent='Dense keys '+d.dense_dynamic_keys+' / '+d.dense_dynamic_key_cap+' · 剩余预算 '+d.dense_dynamic_key_budget_remaining+(lock.locked_score?(' · 最近锁定 '+fmt(lock.locked_score)+' POLF'): '')+compoundScore+' · flow/state/missed/lock 安全门仍启用';
       }else if(d.dense_v3_enabled){
         document.getElementById('staticTitle').textContent='Dense V3 基础批次 '+d.dense_submitted_sets+' 组';
         document.getElementById('staticRemain').textContent='每个 referee sweep：Long×'+d.dense_v3_total_copies_per_side+' + Short×'+d.dense_v3_total_copies_per_side+' · 偏移 ±'+fmt(Number(d.dense_v3_offset||0)*100,0)+'%';
