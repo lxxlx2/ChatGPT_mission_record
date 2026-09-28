@@ -1,6 +1,26 @@
 # UNICRED Position
 
-Updated: 2026-09-24 18:21 Asia/Bangkok
+Updated: 2026-09-28 09:32 Asia/Bangkok
+
+## Current direct state — 2026-09-28
+
+Fresh Alchemy direct-chain state:
+- UNICRED #230: **owned by canonical wallet**
+- ownership valid at block timestamp 2026-09-28T02:32:01Z
+- native Unichain ETH: **0.000231941590232335**
+- canonical USDC: **0.021286**
+- canonical CRED ERC-20 balance: **0**
+
+The old 51.390151-CRED residual balance is historical and must not be carried forward as current.
+
+Current collection market reference:
+- floor: **~0.00359 ETH**
+- top offer: **~0.0022 WETH**
+- ETH mark: **2651.00451885 USD**
+- floor mark for #230: **~9.52 USD**
+- top-offer reference: **~5.83 USD**
+
+The historical 0.0105 ETH acquisition cost remains provenance/cost-basis information.
 
 ## Canonical contracts
 - Chain: Unichain, chain id 130.
@@ -20,9 +40,8 @@ Updated: 2026-09-24 18:21 Asia/Bangkok
 ## CRED execution
 - User initially held about 205.560605 CRED.
 - User reports selling enough CRED to recover the CRED principal.
-- Wallet snapshot after this execution shows 51.390151 CRED remaining, about 25% of the original CRED amount.
-- Snapshot price: about USD 0.13755/CRED, retained CRED value about USD 7.06.
-- Treat the remaining 51.390151 CRED as a profit runner unless later user transactions supersede this state.
+- Historical snapshot once showed 51.390151 CRED remaining.
+- Fresh 2026-09-28 direct-chain balance is 0 CRED, so that residual has since been exited/transferred and is no longer current.
 - Do not add new capital automatically.
 
 ## Staking live baseline
