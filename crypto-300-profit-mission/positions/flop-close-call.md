@@ -820,3 +820,35 @@ At the sweep-939 prize cutoff implied by the preview (~701.58), the new threshol
 - second: 315.71 POLF.
 
 Commit: `a8331fb274179c47ef65e1ea81cf3f04f4b99dda`.
+
+
+## Dense V5b realized-profit flip engine — 2026-09-29
+
+Purpose:
+- V5a creates flat accounts with realized positive POLF;
+- V5b selectively reopens those accounts in the opposite direction to build a realized-PnL carry loop;
+- V4 and V5a remain active in parallel.
+
+Sizing:
+- seed must have at least 40 locked POLF;
+- opening notional is capped by a fee budget equal to 45% of the seed's realized score;
+- opening also respects a 3% cash-funds buffer;
+- two fresh feeders split the counterparty side.
+
+Lifecycle:
+1. register two feeder keys and wait one referee sweep;
+2. reopen the V5a winner in the opposite direction near the current referee price;
+3. verify the opening under the frozen fold at the next referee close;
+4. monitor current and projected-flat score;
+5. close at projected seed+30 POLF, or stop at projected -25 POLF;
+6. verify the close at the following referee sweep;
+7. take-profit cycles become the next compounding seed and flip direction again.
+
+Only one V5b compound position is active at a time. Stop-closed cycles are not recycled automatically. New cycles are disabled after sweep 2554.
+
+Commands:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py dense-v5b-preview
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v5b
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py pause-dense-v5b
+```
