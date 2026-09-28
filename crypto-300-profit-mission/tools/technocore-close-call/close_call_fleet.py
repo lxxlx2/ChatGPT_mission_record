@@ -1709,6 +1709,43 @@ def _pnl_pairs(pnl: dict | None) -> list[tuple[str, Decimal]]:
     return out
 
 
+def _rec_time(rec: dict) -> datetime | None:
+    ts = rec.get("ts")
+    if not isinstance(ts, str):
+        return None
+    try:
+        return datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+def _price_timeline() -> list[tuple[datetime, int, Decimal]]:
+    out = []
+    for rec in parse_export("d-close1-price"):
+        p = rec.get("_payload")
+        dt = _rec_time(rec)
+        if not isinstance(p, dict) or p.get("t") != "price" or dt is None:
+            continue
+        try:
+            out.append((dt, int(p["n"]), Decimal(str((p.get("ref") or {})["px"]))))
+        except Exception:
+            continue
+    out.sort(key=lambda x: x[0])
+    return out
+
+
+def _source_ref_for_time(
+    dt: datetime | None,
+    timeline: list[tuple[datetime, int, Decimal]],
+) -> tuple[int | None, Decimal | None]:
+    if dt is None:
+        return None, None
+    for pdt, n, px in reversed(timeline):
+        if pdt <= dt:
+            return n, px
+    return None, None
+
+
 def cmd_competitor_scan(args) -> None:
     """Read-only live scan of public Close Call rooms.
 
@@ -1720,11 +1757,13 @@ def cmd_competitor_scan(args) -> None:
         p = rec.get("_payload")
         if isinstance(p, dict) and p.get("t") == "pnl":
             pnl_rows.append(p)
-    pnl_rows = pnl_rows[-max(1, int(args.pnl)):]
+    pnl_rows = pnl_rows[-max(2, int(args.pnl)):]
 
     print("=== CLOSE CALL COMPETITOR SCAN ===")
     print("ref_sweep:", pr["n"], "ref:", pr["px"], "age_s:", pr["age_s"])
 
+    latest_pairs = []
+    latest_mark = None
     if pnl_rows:
         print("\n# recent pnl snapshots")
         for p in pnl_rows:
@@ -1742,12 +1781,18 @@ def cmd_competitor_scan(args) -> None:
             )
 
         latest = pnl_rows[-1]
-        pairs = _pnl_pairs(latest)
+        latest_pairs = _pnl_pairs(latest)
+        try:
+            latest_mark = Decimal(str(latest.get("mark")))
+        except Exception:
+            latest_mark = None
+
         print("\n# latest public top")
-        for i, (did, score) in enumerate(pairs[:25], 1):
+        for i, (did, score) in enumerate(latest_pairs[:25], 1):
             print(i, did, score)
 
     positions = latest_payload("d-close1-positions", "positions")
+    position_map = {}
     if isinstance(positions, dict):
         print("\n# latest positions summary")
         print(
@@ -1759,14 +1804,64 @@ def cmd_competitor_scan(args) -> None:
         print("top_positions:")
         for item in (positions.get("top") or [])[:20]:
             print(json.dumps(item, ensure_ascii=False, separators=(",", ":")))
+            try:
+                if isinstance(item, (list, tuple)) and len(item) >= 2:
+                    position_map[str(item[0])] = Decimal(str(item[1]))
+            except Exception:
+                pass
+
+    # Infer the current leaderboard regime from public score sensitivity and any
+    # DIDs that overlap the public top-position list.
+    if latest_pairs and latest_mark is not None:
+        history = defaultdict(list)
+        for p in pnl_rows:
+            try:
+                mark = Decimal(str(p.get("mark")))
+                n = int(p.get("n"))
+            except Exception:
+                continue
+            for did, score in _pnl_pairs(p):
+                history[did].append((n, mark, score))
+
+        print("\n# current board diagnostics")
+        for rank, (did, score) in enumerate(latest_pairs[:25], 1):
+            known_pos = position_map.get(did)
+            slope_pos = None
+            hist = history.get(did) or []
+            if len(hist) >= 2:
+                a, b = hist[-2], hist[-1]
+                dmark = b[1] - a[1]
+                if dmark != 0:
+                    slope_pos = (b[2] - a[2]) / dmark
+
+            pos = known_pos if known_pos is not None else slope_pos
+            eff = None
+            if pos is not None and abs(pos) >= Decimal("0.1"):
+                try:
+                    eff = latest_mark - score / pos
+                except Exception:
+                    eff = None
+
+            if rank <= 12 or known_pos is not None:
+                print(
+                    "rank", rank,
+                    "did", did,
+                    "score", score,
+                    "known_position", str(known_pos) if known_pos is not None else None,
+                    "slope_position_est", str(slope_pos.quantize(Decimal("0.01"))) if slope_pos is not None else None,
+                    "effective_entry_est", str(eff.quantize(Decimal("0.01"))) if eff is not None else None,
+                )
 
     rows = parse_export("close1")
     sample = rows[-max(1, int(args.sample)):]
+    price_timeline = _price_timeline()
     kinds = Counter()
     templates = Counter()
     template_makers = defaultdict(set)
     deviations = Counter()
     large_terms = []
+    top_dids = {did for did, _ in latest_pairs[:12]}
+    top_hits = defaultdict(list)
 
     for rec in sample:
         p = rec.get("_payload")
@@ -1788,22 +1883,58 @@ def cmd_competitor_scan(args) -> None:
         templates[key] += 1
         if terms.get("maker"):
             template_makers[key].add(str(terms.get("maker")))
+
+        rec_dt = _rec_time(rec)
+        source_sweep, source_ref = _source_ref_for_time(rec_dt, price_timeline)
+
         try:
             px = Decimal(str(terms["px"]))
             qty = Decimal(str(terms["qty"]))
-            dev = (px / pr["px"] - Decimal("1")) * Decimal("100")
+            dev = None
+            if source_ref is not None:
+                dev = (px / source_ref - Decimal("1")) * Decimal("100")
             if qty >= Decimal("40"):
-                bucket = dev.quantize(Decimal("0.1"))
-                deviations[str(bucket)] += 1
+                if dev is not None:
+                    bucket = dev.quantize(Decimal("0.1"))
+                    deviations[str(bucket)] += 1
                 large_terms.append({
                     "side": terms.get("side"),
                     "px": str(px),
                     "qty": str(qty),
-                    "dev_pct": str(dev.quantize(Decimal("0.01"))),
+                    "source_sweep": source_sweep,
+                    "source_ref": str(source_ref) if source_ref is not None else None,
+                    "dev_pct": str(dev.quantize(Decimal("0.01"))) if dev is not None else None,
                     "id": terms.get("id"),
                 })
         except Exception:
             pass
+
+        maker = str(terms.get("maker")) if terms.get("maker") is not None else None
+        taker = p.get("taker")
+        if maker in top_dids:
+            top_hits[maker].append({
+                "role": "maker",
+                "side": terms.get("side"),
+                "px": terms.get("px"),
+                "qty": terms.get("qty"),
+                "until": terms.get("until"),
+                "source_sweep": source_sweep,
+                "source_ref": str(source_ref) if source_ref is not None else None,
+                "ts": rec.get("ts"),
+                "id": terms.get("id"),
+            })
+        if isinstance(taker, str) and taker in top_dids:
+            top_hits[taker].append({
+                "role": "taker",
+                "maker_side": terms.get("side"),
+                "px": terms.get("px"),
+                "qty": terms.get("qty"),
+                "until": terms.get("until"),
+                "source_sweep": source_sweep,
+                "source_ref": str(source_ref) if source_ref is not None else None,
+                "ts": rec.get("ts"),
+                "id": terms.get("id"),
+            })
 
     print("\n# recent close1 public sample")
     print("messages:", len(sample), "kinds:", json.dumps(dict(kinds), sort_keys=True))
@@ -1818,10 +1949,19 @@ def cmd_competitor_scan(args) -> None:
             "until", key[3],
         )
 
-    print("large_qty_deviation_buckets_pct:", json.dumps(dict(deviations), sort_keys=True))
+    print("large_qty_actual_submission_deviation_buckets_pct:", json.dumps(dict(deviations), sort_keys=True))
     print("recent_large_terms:")
     for item in large_terms[-20:]:
         print(json.dumps(item, sort_keys=True))
+
+    if top_hits:
+        print("\n# recent trades involving current top DIDs")
+        rank_map = {did: i for i, (did, _) in enumerate(latest_pairs[:25], 1)}
+        for did in sorted(top_hits, key=lambda x: rank_map.get(x, 999)):
+            print("rank", rank_map.get(did), did)
+            for item in top_hits[did][-5:]:
+                print(json.dumps(item, ensure_ascii=False, sort_keys=True))
+
 
 
 def cmd_progress(_args) -> None:
