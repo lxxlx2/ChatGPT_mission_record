@@ -442,3 +442,25 @@ Current USER_CONFIRMED Binance earn authority:
 - 300 USDT
 - displayed total ~682.40 USDT-equivalent
 - no active Binance trading position.
+
+
+### Monster anti-starvation / due override — 2026-09-28
+
+Regression found with BTWUSDT:
+- BTW was explicitly shortlisted on 2026-09-27 12:34 at +17.39%;
+- it was deferred solely by the max-3 deep-check budget;
+- no durable deferred queue existed;
+- subsequent runs repeatedly marked Monster `not_due`, so the candidate was never revisited;
+- retrospective market gates show BTW later produced a qualifying squeeze-style breakout window.
+
+Effective immediately:
+- `max 3 deep-checks` remains a bounded runtime limit;
+- every non-checked shortlist symbol must persist to a durable `DEFERRED_SHORTLIST` queue;
+- every due full scan reserves at least one deep-check slot for the oldest deferred candidate;
+- candidate starvation is forbidden;
+- Monster full screen is due whenever >=3h elapsed since `last_successful_full_scan_at`, regardless of scheduler drift or wall-clock hour;
+- 19:29 Asia/Bangkok remains mandatory;
+- every completed full screen persists `last_successful_full_scan_at`;
+- if a due scan cannot run, record a data gap and retry at the next successful cycle.
+
+BTW is now a prospective PRESSURE watch with setup_price 1.2825. Historical IGNITION is not backfilled because the frozen model forbids reconstructing setup price after the fact.
