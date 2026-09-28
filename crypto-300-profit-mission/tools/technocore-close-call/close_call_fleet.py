@@ -122,6 +122,18 @@ V5A_MAX_HARVESTS_PER_COHORT = 2
 V5A_BOOT_FEE_BUFFER_PCT = Decimal("0.05")
 V5A_BOOT_EXTRA_SAFETY = Decimal("1.10")
 
+# V5b turns a flat, realized-profit V5a winner back into a small opposite-side
+# position. Position size is capped by the realized-profit cushion so opening
+# and closing fees do not immediately consume the original 10,000 POLF base.
+V5B_MIN_SEED_SCORE = Decimal("40")
+V5B_ENTRY_FEE_FRACTION = Decimal("0.45")
+V5B_TAKE_GAIN = Decimal("30")
+V5B_STOP_SCORE = Decimal("-25")
+V5B_FEEDERS = 2
+V5B_MAX_ACTIVE = 1
+V5B_MIN_QTY = Decimal("0.10")
+V5B_NO_NEW_AFTER_SWEEP = 2554
+
 
 def b58(raw: bytes) -> str:
     n = int.from_bytes(raw, "big")
@@ -1755,6 +1767,538 @@ def cmd_pause_dense_v5a(_args) -> None:
         print("an in-flight staged harvest will continue until it is flat or blocked")
 
 
+def _v5b_pair_lookup(state: dict) -> dict[str, dict]:
+    return {pair["pair_id"]: pair for pair in _v5a_v4_pairs(state)}
+
+
+def _v5b_seed_candidates(state: dict) -> list[dict]:
+    dense = state.setdefault("dense", {})
+    pairs = _v5b_pair_lookup(state)
+    used = {
+        rec.get("source_pair_id")
+        for rec in (dense.get("v5b_cycles") or [])
+        if isinstance(rec, dict)
+    }
+    pending = dense.get("v5b_pending")
+    if isinstance(pending, dict):
+        used.add(pending.get("source_pair_id"))
+    active = dense.get("v5b_active")
+    if isinstance(active, dict):
+        used.add(active.get("source_pair_id"))
+
+    out = []
+    for pair_id, rec in (dense.get("v5a_harvested") or {}).items():
+        if pair_id in used or not isinstance(rec, dict):
+            continue
+        try:
+            locked = Decimal(str(rec["locked_score"]))
+        except Exception:
+            continue
+        if locked < V5B_MIN_SEED_SCORE:
+            continue
+        pair = pairs.get(pair_id)
+        if not pair:
+            continue
+        winner = str(rec.get("winner"))
+        if winner not in ("long", "short"):
+            continue
+        winner_label = pair[winner]
+        flip_side = "short" if winner == "long" else "long"
+        cash = Decimal("10000") + locked
+        out.append({
+            "source_pair_id": pair_id,
+            "source_winner": winner,
+            "winner_label": winner_label,
+            "flip_side": flip_side,
+            "locked_score": locked,
+            "cash": cash,
+            "closed_at": rec.get("closed_at"),
+        })
+
+    out.sort(key=lambda x: (x["locked_score"], str(x.get("closed_at") or "")), reverse=True)
+    return out
+
+
+def _v5b_plan_qty(seed_score: Decimal, cash: Decimal, px: Decimal) -> Decimal:
+    # At close ~= trade price, each side pays 1%. Cap the opening fee to 45%
+    # of the realized cushion. This leaves room for a later close fee and keeps
+    # the 10,000 POLF principal mostly protected on a flat round trip.
+    fee_budget = max(Decimal("0"), seed_score * V5B_ENTRY_FEE_FRACTION)
+    notional_by_fee = fee_budget / Decimal("0.01")
+    # Independent cash cap with a 3% funds buffer for modest intra-sweep moves.
+    notional_by_cash = cash / Decimal("1.03")
+    notional = min(notional_by_fee, notional_by_cash)
+    if px <= 0:
+        return Decimal("0")
+    return (notional / px).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+
+
+def _v5b_maker_fee(side: str, qty: Decimal, px: Decimal, close: Decimal) -> Decimal:
+    base = Decimal("0.01") * qty * px
+    gap = (close - px) * qty
+    buyer = max(base, gap)
+    seller = max(base, -gap)
+    return buyer if side == "long" else seller
+
+
+def _v5b_score(cash: Decimal, side: str, qty: Decimal, entry_px: Decimal, mark: Decimal) -> Decimal:
+    if side == "long":
+        value = cash + qty * mark
+    else:
+        value = cash + qty * (Decimal("2") * entry_px - mark)
+    return value - Decimal("10000")
+
+
+def _v5b_project_flat_score(
+    cash: Decimal,
+    side: str,
+    qty: Decimal,
+    entry_px: Decimal,
+    close_px: Decimal,
+) -> Decimal:
+    close_side = "short" if side == "long" else "long"
+    fee = _v5b_maker_fee(close_side, qty, close_px, close_px)
+    if side == "long":
+        flat_cash = cash + qty * close_px - fee
+    else:
+        flat_cash = cash + qty * (Decimal("2") * entry_px - close_px) - fee
+    return flat_cash - Decimal("10000")
+
+
+def _v5b_register_pending(state: dict, pr: dict) -> dict | None:
+    dense = state.setdefault("dense", {})
+    if isinstance(dense.get("v5b_pending"), dict):
+        return dense["v5b_pending"]
+    if isinstance(dense.get("v5b_active"), dict):
+        return None
+    if int(pr["n"]) >= V5B_NO_NEW_AFTER_SWEEP:
+        return None
+
+    seeds = _v5b_seed_candidates(state)
+    if not seeds:
+        return None
+    seed = seeds[0]
+
+    idx = int(dense.get("v5b_next_index", 1))
+    labels = [f"DENSE-V5B-{idx:05d}-F{i}" for i in range(1, V5B_FEEDERS + 1)]
+    regs = []
+    for label in labels:
+        key = add_dynamic_key(state, label)
+        ack = post_signed(state, state["room"], label, owner_text(key["did"]))
+        regs.append({
+            "label": label,
+            "did": key["did"],
+            "posted_at": datetime.now(timezone.utc).isoformat(),
+            "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+        })
+        time.sleep(0.08)
+
+    pending = {
+        "index": idx,
+        **seed,
+        "feeder_labels": labels,
+        "registrations": regs,
+        "registered_sweep": int(pr["n"]),
+        "ready_after_sweep": int(pr["n"]) + 1,
+        "status": "registered",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    dense["v5b_pending"] = pending
+    dense["v5b_next_index"] = idx + 1
+    save_state(state)
+    return pending
+
+
+def _v5b_split_qty(total: Decimal) -> list[Decimal]:
+    cent = Decimal("0.01")
+    first = (total / Decimal(V5B_FEEDERS)).quantize(cent, rounding=ROUND_DOWN)
+    parts = [first for _ in range(V5B_FEEDERS)]
+    used = sum(parts, Decimal("0"))
+    parts[-1] += total - used
+    return parts
+
+
+def _v5b_submit_leg(
+    state: dict,
+    winner_label: str,
+    feeder_label: str,
+    side: str,
+    qty: Decimal,
+    px: Decimal,
+    sweep: int,
+    tid: str,
+) -> dict:
+    maker_side = "buy" if side == "long" else "sell"
+    text = build_trade(
+        state,
+        state["room"],
+        winner_label,
+        feeder_label,
+        maker_side,
+        qty,
+        px,
+        sweep + 2,
+        tid,
+    )
+    ack = post_signed(state, state["room"], winner_label, text)
+    return {
+        "trade_id": tid,
+        "winner": winner_label,
+        "feeder": feeder_label,
+        "side": side,
+        "maker_side": maker_side,
+        "qty": str(qty),
+        "px": str(px),
+        "submission_sweep": int(sweep),
+        "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+    }
+
+
+def _v5b_submit_open(state: dict, pending: dict, pr: dict) -> dict:
+    seed_score = Decimal(str(pending["locked_score"]))
+    cash = Decimal(str(pending["cash"]))
+    qty = _v5b_plan_qty(seed_score, cash, pr["px"])
+    if qty < V5B_MIN_QTY:
+        raise RuntimeError("V5b planned quantity below minimum")
+
+    parts = _v5b_split_qty(qty)
+    trades = []
+    for i, (label, part) in enumerate(zip(pending["feeder_labels"], parts), 1):
+        tid = f"v5b{int(pending['index']):05d}o{i}-{int(time.time())}"
+        trades.append(_v5b_submit_leg(
+            state,
+            pending["winner_label"],
+            label,
+            pending["flip_side"],
+            part,
+            pr["px"],
+            pr["n"],
+            tid,
+        ))
+        time.sleep(0.06)
+
+    active = {
+        "cycle_index": int(pending["index"]),
+        "source_pair_id": pending["source_pair_id"],
+        "source_winner": pending["source_winner"],
+        "winner_label": pending["winner_label"],
+        "side": pending["flip_side"],
+        "seed_locked_score": str(seed_score),
+        "cash_before_open": str(cash),
+        "entry_px": str(pr["px"]),
+        "qty": str(qty),
+        "parts": [str(x) for x in parts],
+        "feeder_labels": list(pending["feeder_labels"]),
+        "open_trades": trades,
+        "open_submission_sweep": int(pr["n"]),
+        "status": "opening_submitted",
+        "opened_at": datetime.now(timezone.utc).isoformat(),
+    }
+    dense = state.setdefault("dense", {})
+    dense["v5b_active"] = active
+    dense["v5b_pending"] = None
+    save_state(state)
+    return {
+        "event": "v5b_open_submitted",
+        "cycle_index": active["cycle_index"],
+        "source_pair_id": active["source_pair_id"],
+        "side": active["side"],
+        "seed_locked_score": active["seed_locked_score"],
+        "qty": active["qty"],
+        "px": active["entry_px"],
+        "sweep": pr["n"],
+    }
+
+
+def _v5b_verify_open(state: dict, active: dict, pr: dict) -> dict | None:
+    submit_sweep = int(active["open_submission_sweep"])
+    if pr["n"] <= submit_sweep:
+        return None
+    settle_sweep = submit_sweep + 1
+    refs = _price_refs_by_sweep()
+    close = refs.get(settle_sweep)
+    if close is None:
+        return None
+    if _flow_room_missed_at_sweep(state["room"], settle_sweep):
+        active["status"] = "blocked_open_missed"
+        active["blocked_at"] = datetime.now(timezone.utc).isoformat()
+        save_state(state)
+        return {"event": "v5b_blocked", "reason": "open_settlement_room_missed"}
+
+    outcomes = _v5a_visible_outcomes({x["trade_id"] for x in active.get("open_trades") or []})
+    if any(outcomes.get(x["trade_id"]) == "void" for x in active.get("open_trades") or []):
+        active["status"] = "blocked_open_void"
+        active["visible_outcomes"] = outcomes
+        save_state(state)
+        return {"event": "v5b_blocked", "reason": "visible_open_void"}
+
+    qty = Decimal(str(active["qty"]))
+    px = Decimal(str(active["entry_px"]))
+    cash_before = Decimal(str(active["cash_before_open"]))
+    fee = _v5b_maker_fee(active["side"], qty, px, close)
+    required = qty * px + fee
+    if cash_before < required:
+        active["status"] = "blocked_open_simulated_funds"
+        active["required"] = str(required)
+        save_state(state)
+        return {"event": "v5b_blocked", "reason": "simulated_open_funds"}
+
+    cash_after = cash_before - required
+    active["open_settlement_sweep"] = settle_sweep
+    active["open_settlement_close"] = str(close)
+    active["open_fee"] = str(fee)
+    active["cash_after_open"] = str(cash_after)
+    active["status"] = "open_verified"
+    active["verified_at"] = datetime.now(timezone.utc).isoformat()
+    save_state(state)
+    return {
+        "event": "v5b_open_verified",
+        "cycle_index": active["cycle_index"],
+        "side": active["side"],
+        "qty": active["qty"],
+        "cash_after_open": str(cash_after),
+        "open_fee": str(fee),
+        "settlement_close": str(close),
+    }
+
+
+def _v5b_submit_close(state: dict, active: dict, pr: dict, reason: str, projected: Decimal) -> dict:
+    close_side = "short" if active["side"] == "long" else "long"
+    parts = [Decimal(str(x)) for x in active["parts"]]
+    trades = []
+    for i, (label, part) in enumerate(zip(active["feeder_labels"], parts), 1):
+        tid = f"v5b{int(active['cycle_index']):05d}c{i}-{int(time.time())}"
+        trades.append(_v5b_submit_leg(
+            state,
+            active["winner_label"],
+            label,
+            close_side,
+            part,
+            pr["px"],
+            pr["n"],
+            tid,
+        ))
+        time.sleep(0.06)
+
+    active["close_trades"] = trades
+    active["close_submission_sweep"] = int(pr["n"])
+    active["close_px"] = str(pr["px"])
+    active["close_reason"] = reason
+    active["projected_locked_score_at_submit"] = str(projected)
+    active["status"] = "closing_submitted"
+    active["close_submitted_at"] = datetime.now(timezone.utc).isoformat()
+    save_state(state)
+    return {
+        "event": "v5b_close_submitted",
+        "cycle_index": active["cycle_index"],
+        "reason": reason,
+        "projected_locked_score": str(projected),
+        "sweep": pr["n"],
+        "px": str(pr["px"]),
+    }
+
+
+def _v5b_verify_close(state: dict, active: dict, pr: dict) -> dict | None:
+    submit_sweep = int(active["close_submission_sweep"])
+    if pr["n"] <= submit_sweep:
+        return None
+    settle_sweep = submit_sweep + 1
+    refs = _price_refs_by_sweep()
+    close = refs.get(settle_sweep)
+    if close is None:
+        return None
+    if _flow_room_missed_at_sweep(state["room"], settle_sweep):
+        active["status"] = "blocked_close_missed"
+        save_state(state)
+        return {"event": "v5b_blocked", "reason": "close_settlement_room_missed"}
+
+    outcomes = _v5a_visible_outcomes({x["trade_id"] for x in active.get("close_trades") or []})
+    if any(outcomes.get(x["trade_id"]) == "void" for x in active.get("close_trades") or []):
+        active["status"] = "blocked_close_void"
+        active["visible_outcomes"] = outcomes
+        save_state(state)
+        return {"event": "v5b_blocked", "reason": "visible_close_void"}
+
+    qty = Decimal(str(active["qty"]))
+    entry = Decimal(str(active["entry_px"]))
+    cash = Decimal(str(active["cash_after_open"]))
+    close_px = Decimal(str(active["close_px"]))
+    close_side = "short" if active["side"] == "long" else "long"
+    fee = _v5b_maker_fee(close_side, qty, close_px, close)
+
+    if cash < fee:
+        active["status"] = "blocked_close_simulated_funds"
+        active["close_fee"] = str(fee)
+        save_state(state)
+        return {"event": "v5b_blocked", "reason": "simulated_close_fee_funds"}
+
+    if active["side"] == "long":
+        final_cash = cash - fee + qty * close_px
+    else:
+        final_cash = cash - fee + qty * (Decimal("2") * entry - close_px)
+
+    final_score = final_cash - Decimal("10000")
+    record = {
+        **active,
+        "status": "closed",
+        "close_settlement_sweep": settle_sweep,
+        "close_settlement_close": str(close),
+        "close_fee": str(fee),
+        "final_cash": str(final_cash),
+        "final_locked_score": str(final_score),
+        "closed_at": datetime.now(timezone.utc).isoformat(),
+    }
+    dense = state.setdefault("dense", {})
+    dense.setdefault("v5b_cycles", []).append(record)
+    dense["v5b_last_closed"] = record
+    dense["v5b_active"] = None
+    save_state(state)
+    return {
+        "event": "v5b_cycle_closed",
+        "cycle_index": record["cycle_index"],
+        "reason": record["close_reason"],
+        "seed_locked_score": record["seed_locked_score"],
+        "final_locked_score": record["final_locked_score"],
+        "side": record["side"],
+    }
+
+
+def dense_v5b_step(state: dict, pr: dict) -> dict | None:
+    dense = state.setdefault("dense", {})
+    if not dense.get("v5b_enabled") or not dense.get("v4_enabled"):
+        return None
+    if isinstance(dense.get("v5a_active"), dict):
+        return None
+
+    active = dense.get("v5b_active")
+    if isinstance(active, dict):
+        status = active.get("status")
+        if status == "opening_submitted":
+            return _v5b_verify_open(state, active, pr)
+        if status == "open_verified":
+            pnl = latest_payload("d-close1-pnl", "pnl")
+            try:
+                mark = Decimal(str((pnl or {})["mark"]))
+            except Exception:
+                return None
+            cash = Decimal(str(active["cash_after_open"]))
+            qty = Decimal(str(active["qty"]))
+            entry = Decimal(str(active["entry_px"]))
+            current_score = _v5b_score(cash, active["side"], qty, entry, mark)
+            projected = _v5b_project_flat_score(cash, active["side"], qty, entry, pr["px"])
+            seed = Decimal(str(active["seed_locked_score"]))
+            take = seed + V5B_TAKE_GAIN
+            if projected >= take:
+                return _v5b_submit_close(state, active, pr, "take_profit", projected)
+            if projected <= V5B_STOP_SCORE:
+                return _v5b_submit_close(state, active, pr, "stop", projected)
+            dense["v5b_last_mark"] = {
+                "sweep": int(pr["n"]),
+                "mark": str(mark),
+                "current_score": str(current_score),
+                "projected_flat_score": str(projected),
+                "take_score": str(take),
+                "stop_score": str(V5B_STOP_SCORE),
+            }
+            save_state(state)
+            return None
+        if status == "closing_submitted":
+            return _v5b_verify_close(state, active, pr)
+        return None
+
+    pending = dense.get("v5b_pending")
+    if isinstance(pending, dict):
+        if not dense.get("v5b_accept_new", True):
+            return None
+        if int(pr["n"]) < int(pending.get("ready_after_sweep", 10**9)):
+            return None
+        flow, st = latest_flow_and_state()
+        flow_n = int(flow["n"]) if isinstance(flow, dict) and flow.get("n") is not None else None
+        state_n = int(st["n"]) if isinstance(st, dict) and st.get("n") is not None else None
+        if flow_n != pr["n"] or state_n != pr["n"]:
+            return None
+        if not room_registration_confirmed(state) or flow_misses_room(flow, state["room"]):
+            return None
+        return _v5b_submit_open(state, pending, pr)
+
+    if not dense.get("v5b_accept_new", True):
+        return None
+    pending = _v5b_register_pending(state, pr)
+    if pending:
+        return {
+            "event": "v5b_seed_registered",
+            "cycle_index": pending["index"],
+            "source_pair_id": pending["source_pair_id"],
+            "side": pending["flip_side"],
+            "seed_locked_score": str(pending["locked_score"]),
+            "ready_after_sweep": pending["ready_after_sweep"],
+        }
+    return None
+
+
+def cmd_dense_v5b_preview(_args) -> None:
+    state = load_state()
+    pr = fresh_price(max_age=10**9)
+    dense = state.get("dense") or {}
+    print("=== DENSE V5B COMPOUND PREVIEW ===")
+    print("sweep:", pr["n"], "ref:", pr["px"])
+    print("enabled:", bool(dense.get("v5b_enabled")))
+    print("accept_new:", bool(dense.get("v5b_accept_new", True)))
+    print("active:", json.dumps(dense.get("v5b_active"), ensure_ascii=False, default=str))
+    print("pending:", json.dumps(dense.get("v5b_pending"), ensure_ascii=False, default=str))
+    print("closed_cycles:", len(dense.get("v5b_cycles") or []))
+    seeds = _v5b_seed_candidates(state)
+    print("eligible_seeds:", len(seeds))
+    for seed in seeds[:10]:
+        qty = _v5b_plan_qty(seed["locked_score"], seed["cash"], pr["px"])
+        est_fee = Decimal("0.01") * qty * pr["px"]
+        print(
+            seed["source_pair_id"],
+            "winner", seed["source_winner"],
+            "flip", seed["flip_side"],
+            "locked", seed["locked_score"],
+            "cash", seed["cash"],
+            "planned_qty", qty,
+            "estimated_open_fee", est_fee.quantize(Decimal("0.01")),
+            "take_score", (seed["locked_score"] + V5B_TAKE_GAIN),
+            "stop_score", V5B_STOP_SCORE,
+        )
+
+
+def cmd_enable_dense_v5b(_args) -> None:
+    state = load_state()
+    dense = state.setdefault("dense", {})
+    if not dense.get("v4_enabled") or not dense.get("v5a_enabled"):
+        raise SystemExit("Dense V5b requires V4 and V5a enabled")
+    dense["v5b_enabled"] = True
+    dense["v5b_accept_new"] = True
+    dense["v5b_enabled_at"] = datetime.now(timezone.utc).isoformat()
+    dense["v5b_entry_fee_fraction"] = str(V5B_ENTRY_FEE_FRACTION)
+    dense["v5b_take_gain"] = str(V5B_TAKE_GAIN)
+    dense["v5b_stop_score"] = str(V5B_STOP_SCORE)
+    dense.setdefault("v5b_cycles", [])
+    dense.setdefault("v5b_next_index", 1)
+    save_state(state)
+    print("Dense V5b COMPOUND ENABLED")
+    print("V4 entry and V5a harvest remain enabled")
+    print("seed minimum locked score:", V5B_MIN_SEED_SCORE)
+    print("flip direction: opposite the V5a winning side")
+    print("opening base-fee budget:", V5B_ENTRY_FEE_FRACTION, "of realized seed score")
+    print("take-profit locked-score gain:", V5B_TAKE_GAIN)
+    print("stop projected locked score:", V5B_STOP_SCORE)
+    print("max active compound accounts:", V5B_MAX_ACTIVE)
+
+
+def cmd_pause_dense_v5b(_args) -> None:
+    state = load_state()
+    dense = state.setdefault("dense", {})
+    dense["v5b_accept_new"] = False
+    dense["v5b_paused_at"] = datetime.now(timezone.utc).isoformat()
+    save_state(state)
+    print("Dense V5b NEW CYCLES PAUSED")
+    print("an in-flight compound cycle is still managed to take-profit/stop/close")
+
+
 def dense_register_pending(state: dict, sweep: int) -> dict:
     dense = state.setdefault("dense", {})
     pending = dense.get("pending")
@@ -2139,6 +2683,10 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     harvest = dense_v5a_harvest_step(state, pr)
     if harvest:
         return harvest
+
+    compound = dense_v5b_step(state, pr)
+    if compound:
+        return compound
 
     last_seen_sweep = dense.get("last_seen_sweep")
     if last_seen_sweep == pr["n"]:
@@ -3812,6 +4360,40 @@ def cmd_dense_status(_args) -> None:
         print("v5a_last_skip_reason:", last_skip_v5a.get("reason"))
         print("v5a_last_skip_score:", last_skip_v5a.get("winner_score"))
 
+    print("v5b_enabled:", bool(dense.get("v5b_enabled")))
+    print("v5b_accept_new:", bool(dense.get("v5b_accept_new", True)))
+    print("v5b_closed_cycles:", len(dense.get("v5b_cycles") or []))
+    v5b_pending = dense.get("v5b_pending")
+    if isinstance(v5b_pending, dict):
+        print("v5b_pending_cycle:", v5b_pending.get("index"))
+        print("v5b_pending_source:", v5b_pending.get("source_pair_id"))
+        print("v5b_pending_side:", v5b_pending.get("flip_side"))
+        print("v5b_pending_ready_after_sweep:", v5b_pending.get("ready_after_sweep"))
+    else:
+        print("v5b_pending_cycle: null")
+    v5b_active = dense.get("v5b_active")
+    if isinstance(v5b_active, dict):
+        print("v5b_active_cycle:", v5b_active.get("cycle_index"))
+        print("v5b_active_source:", v5b_active.get("source_pair_id"))
+        print("v5b_active_side:", v5b_active.get("side"))
+        print("v5b_active_status:", v5b_active.get("status"))
+        print("v5b_active_qty:", v5b_active.get("qty"))
+        print("v5b_active_entry_px:", v5b_active.get("entry_px"))
+    else:
+        print("v5b_active_cycle: null")
+        print("v5b_active_status: null")
+    v5b_mark = dense.get("v5b_last_mark")
+    if isinstance(v5b_mark, dict):
+        print("v5b_current_score:", v5b_mark.get("current_score"))
+        print("v5b_projected_flat_score:", v5b_mark.get("projected_flat_score"))
+        print("v5b_take_score:", v5b_mark.get("take_score"))
+        print("v5b_stop_score:", v5b_mark.get("stop_score"))
+    v5b_closed = dense.get("v5b_last_closed")
+    if isinstance(v5b_closed, dict):
+        print("v5b_last_closed_cycle:", v5b_closed.get("cycle_index"))
+        print("v5b_last_closed_reason:", v5b_closed.get("close_reason"))
+        print("v5b_last_closed_score:", v5b_closed.get("final_locked_score"))
+
     dynamic_keys = sum(1 for k in state.get("keys", {}) if k.startswith("DENSE-"))
     print("dynamic_keys:", dynamic_keys)
     print("dynamic_key_cap:", DENSE_MAX_DYNAMIC_KEYS)
@@ -4173,6 +4755,15 @@ def main() -> None:
 
     p = sp.add_parser("pause-dense-v5a")
     p.set_defaults(fn=cmd_pause_dense_v5a)
+
+    p = sp.add_parser("dense-v5b-preview")
+    p.set_defaults(fn=cmd_dense_v5b_preview)
+
+    p = sp.add_parser("enable-dense-v5b")
+    p.set_defaults(fn=cmd_enable_dense_v5b)
+
+    p = sp.add_parser("pause-dense-v5b")
+    p.set_defaults(fn=cmd_pause_dense_v5b)
 
     p = sp.add_parser("enable-dense-v4")
     p.set_defaults(fn=cmd_enable_dense_v4)
