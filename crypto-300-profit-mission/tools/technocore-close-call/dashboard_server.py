@@ -255,27 +255,30 @@ def snapshot() -> dict:
         user_action = "现在不用做任何操作"
 
     pending_events = []
-    for cohort, due_text in STATIC_SCHEDULE_UTC.items():
-        key = f"{cohort:02d}"
-        if key in state.get("static", {}):
-            continue
-        if key in (ap.get("missed_static") or {}):
-            continue
-        try:
-            due = datetime.fromisoformat(due_text)
-            pending_events.append((due, f"Static T{key} 自动开仓"))
-        except Exception:
-            pass
+    # Dense mode freezes all future legacy Static/Bracket actions. Do not surface
+    # their historical schedules as pending work on the user dashboard.
+    if not dense.get("enabled"):
+        for cohort, due_text in STATIC_SCHEDULE_UTC.items():
+            key = f"{cohort:02d}"
+            if key in state.get("static", {}):
+                continue
+            if key in (ap.get("missed_static") or {}):
+                continue
+            try:
+                due = datetime.fromisoformat(due_text)
+                pending_events.append((due, f"Static T{key} 自动开仓"))
+            except Exception:
+                pass
 
-    round_no_now = int(bracket.get("round", 0) or 0)
-    next_round = round_no_now + 1
-    due_text = BRACKET_SCHEDULE_UTC.get(next_round)
-    if due_text:
-        try:
-            due = datetime.fromisoformat(due_text)
-            pending_events.append((due, f"Bracket R{next_round} 自动轮换"))
-        except Exception:
-            pass
+        round_no_now = int(bracket.get("round", 0) or 0)
+        next_round = round_no_now + 1
+        due_text = BRACKET_SCHEDULE_UTC.get(next_round)
+        if due_text:
+            try:
+                due = datetime.fromisoformat(due_text)
+                pending_events.append((due, f"Bracket R{next_round} 自动轮换"))
+            except Exception:
+                pass
 
     pending_events.sort(key=lambda x: x[0])
     next_event_at, next_event_text = (pending_events[0] if pending_events else (None, "等待最终结算"))
