@@ -1,33 +1,41 @@
 # Airdrop / TGE Monitor State
 
-Updated: 2026-09-27 12:23:00 Asia/Bangkok
+Updated: 2026-09-28 19:34:00 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 14, exact_schedule
-- last_run: 2026-09-27T12:12:00+07:00
-- last_run_status: success
-- last_success: 2026-09-27T12:12:00+07:00
-- last_shard_0: 2026-09-27T12:12:00+07:00
-- last_shard_1: stale; no current-morning final found
-- last_shard_2: 2026-09-27T10:13:11+07:00
-- last_shard_3: 2026-09-27T11:15:45+07:00
-- consecutive_full_failures: 0
+- latest_actual_scheduler_run: 2026-09-28 ~19:19 Asia/Bangkok
+- latest_actual_run_status: incomplete_provisional
+- latest_authoritative_success_before_that: 2026-09-28 17:12 Asia/Bangkok
+- clock_integrity_incident: confirmed_2026-09-28
+- invalid_future_timestamp_files:
+  - 201500-final-retry.md
+  - 221500-final.md
 - delivery_proof_policy: Gmail Sent message id + readback + event archive
-- open_urgent_events:
-  - project: Cambria
-    event: RSGP Genesis Event Opt-In
-    deadline: 2026-09-30T10:00:00+07:00
-    delivery_status: recovered_2026-09-27
-    gmail_message_id: 1a0e149fa6d9718a
-- last_candidate_count: 0
-- last_triggered_events: 0
-- last_identity_failures: 0
-- last_source_failure_projects: []
 
-## Health notes
-- Latest final audit at 12:12 is healthy.
-- Shard 1 coverage is stale because several scheduled cycles produced no final audit.
-- Runtime now substitutes the oldest >6h stale shard for the scheduled shard, one shard per run.
-- Cambria alert delivery gap was repaired at 12:15 with Gmail readback and event archive.
-- The Sep-14 Space cross-project alert remains RETRACTED. A formal correction email was delivered on 2026-09-27, message id 1a0e149f1f9d03be.
+## Open urgent events
+
+- project: Cambria
+  event: RSGP Genesis Event Opt-In
+  deadline: 2026-09-30T10:00:00+07:00
+  delivery_status: recovered_2026-09-27
+  gmail_message_id: 1a0e149fa6d9718a
+
+## Recovered rights event
+
+- project: Crusoe
+  event: Series F valuation change
+  official_date: 2026-09-17
+  financing: 3.9B USD
+  post_money_valuation: 30.9B USD
+  immediate_user_action: none_confirmed
+  delivery_status: recovered_2026-09-28
+  gmail_message_id: 1a0e801b313706a0
+
+## Health
+
+- The previous state cache was stale at 2026-09-27 and could not be used as reliable shard freshness authority.
+- The 2026-09-28 19:19 run persisted only a provisional final and did not complete.
+- Future-dated artifacts are ignored for coverage.
+- Pending ACTION delivery now survives later NO_ACTION runs until delivery proof exists.
