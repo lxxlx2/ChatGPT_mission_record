@@ -2766,9 +2766,36 @@ def cmd_enable_dense_v3(_args) -> None:
     print("existing Dense tickets and pending batch are preserved")
 
 
+def cmd_dense_v4_preview(_args) -> None:
+    pr = fresh_price(max_age=10**9)
+    print("=== DENSE V4 PREVIEW ===")
+    print("sweep:", pr["n"], "ref:", pr["px"], "age_s:", pr["age_s"])
+    lo, hi = dense_v4_limit_bounds(pr)
+    print("official_limits:", lo, hi)
+    print("copy,long_px,short_px,qty,short_offset,safety,required_per_contract")
+    for copy_no in range(1, DENSE_V4_TOTAL_COPIES_PER_SIDE + 1):
+        plan = dense_v4_plan_copy(pr, copy_no)
+        print(
+            copy_no,
+            plan["low"],
+            plan["high"],
+            plan["qty"],
+            plan["short_offset"],
+            plan["safety"],
+            plan["required_per_contract"],
+            sep=",",
+        )
+
+
 def cmd_enable_dense_v4(_args) -> None:
     state = load_state()
     dense = state.setdefault("dense", {})
+    pending = dense.get("pending")
+    if isinstance(pending, dict) and (pending.get("trades") or {}):
+        raise SystemExit(
+            "refusing V4 mode switch while the pending Dense batch has partial trades; "
+            "wait for it to finish or inspect dense-status first"
+        )
     dense["enabled"] = True
     dense["v4_enabled"] = True
     dense["v4_enabled_at"] = datetime.now(timezone.utc).isoformat()
@@ -3239,6 +3266,9 @@ def main() -> None:
 
     p = sp.add_parser("enable-dense-v3")
     p.set_defaults(fn=cmd_enable_dense_v3)
+
+    p = sp.add_parser("dense-v4-preview")
+    p.set_defaults(fn=cmd_dense_v4_preview)
 
     p = sp.add_parser("enable-dense-v4")
     p.set_defaults(fn=cmd_enable_dense_v4)
