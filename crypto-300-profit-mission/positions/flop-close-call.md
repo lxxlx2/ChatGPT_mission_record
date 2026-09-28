@@ -795,3 +795,28 @@ uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py
 uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v5a
 uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py pause-dense-v5a
 ```
+
+
+## 2026-09-29 — V5a threshold retune after live preview
+
+Live preview at sweep 939:
+- ref 230.06;
+- mark 230.16;
+- previous first threshold 561.2640;
+- previous second threshold 666.5010;
+- eligible candidates: 0.
+
+The earlier 80%/95% prize-line thresholds were too conservative for the purpose of creating realized-PnL carry. The competitor evidence only proved at least ~86.5 POLF of carried realized profit for the observed leading short cohort, while a typical full-size close costs roughly one 1% fee per side under a stable next sweep. Waiting until ~560 POLF before harvesting would miss the early carry mechanism we are trying to reproduce.
+
+V5a thresholds are therefore retuned to:
+- first harvest: max(180 POLF, 25% of live prize cutoff);
+- second harvest: max(300 POLF, 45% of live prize cutoff);
+- still at most two harvested copy-pairs from one V4 cohort;
+- still leave at least six of eight copies open;
+- all staged-close funding, missed-room, visible-void and lock gates remain unchanged.
+
+At the sweep-939 prize cutoff implied by the preview (~701.58), the new thresholds would be approximately:
+- first: 180 POLF;
+- second: 315.71 POLF.
+
+Commit: `a8331fb274179c47ef65e1ea81cf3f04f4b99dda`.
