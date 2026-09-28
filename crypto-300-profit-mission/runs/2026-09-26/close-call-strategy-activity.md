@@ -723,3 +723,51 @@ Minor observability fix:
 
 Execution state:
 `DENSE_V2_LIVE_WAITING_FOR_SWEEP_499_AND_FRESH_REF`.
+
+
+## 2026-09-28 — Dense V3 every-sweep multiplicity implemented
+
+The user approved replacing the V2 extreme-only boost after the live board showed a new short cohort overtaking the old leaders while our strategy still carried a stable ~90 POLF deficit.
+
+Diagnosis:
+- the new prize-line score implied a materially better short entry than our best historical Dense ref;
+- V2 used ±1%, which can fail to claw back a fast within-sweep move of roughly 1%;
+- V2 only multiplied *after* a new ref extreme became visible, so the first sweep that actually created the extreme could be missed;
+- the custom <=120s underlying-market trade-age gate skipped many otherwise valid referee sweeps even though the referee continued publishing authoritative sweep/ref data.
+
+Dense V3 changes:
+- participate in every aligned referee sweep;
+- remove the custom 120-second ref-age trading gate for V3 only;
+- keep referee price/flow/state alignment, room-registration, missed-range and contest-lock safety gates;
+- restore favored offset to ±2%;
+- target 8 long copies and 8 short copies on every eligible sweep;
+- baseline copy remains the existing 3-key Dense batch;
+- 7 additional paired copies each use their own long target, short target and feeder;
+- maintain 16 pre-registered V3 reserve copy-sets, each 3 keys, so same-sweep multiplicity does not wait for owner registration;
+- reserve copy-sets are replenished automatically after use;
+- partial copy failures are quarantined as `partial_error` and never reused;
+- dynamic-key hard cap raised to 60,000 for contest-lifetime coverage;
+- existing V1/V2 positions and pending baseline batch are preserved.
+
+Implementation commits:
+- `baae0165c3302f09da27cc50ed6e9f94406ef93e`: Dense V3 runtime;
+- `c4cc5d0829b87d7ff65f9222d3ec3405a1e2358a`: V3 dashboard;
+- `f48e0543d42c580459b4092ada1a152114316fb4`: partial-copy failure quarantine/status;
+- `8e35c954b646c04cec7d62a9e0d82942459391c8`: dashboard copy-health visibility.
+
+Enable command:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v3
+```
+
+Expected post-enable status:
+- `v3_enabled: True`;
+- `active_offset: 0.02`;
+- `v3_total_copies_per_side: 8`;
+- `ref_age_gate_enabled: False`;
+- `v3_reserve_registered: 16` after reserve priming;
+- `v3_reserve_ready: 16` one later referee sweep after priming;
+- each fully supplied V3 sweep records `last_v3_long_copies: 8`, `last_v3_short_copies: 8`.
+
+Execution state:
+`DENSE_V3_IMPLEMENTED_ENABLE_AND_RESTART_REQUIRED`.
