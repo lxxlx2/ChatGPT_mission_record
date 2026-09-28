@@ -25,6 +25,7 @@ from close_call_fleet import (
     room_registration_confirmed,
     load_state,
     local_board_matches,
+    parse_export,
 )
 
 
@@ -51,6 +52,123 @@ def _short_did(did: str | None) -> str:
     if not did:
         return "-"
     return did[:16] + "..." + did[-8:]
+
+
+def _pnl_pairs(pnl: dict | None) -> list[tuple[str, Decimal]]:
+    out = []
+    if not isinstance(pnl, dict):
+        return out
+    for item in pnl.get("top") or []:
+        try:
+            if isinstance(item, (list, tuple)) and len(item) >= 2:
+                out.append((str(item[0]), Decimal(str(item[1]))))
+            elif isinstance(item, dict):
+                did = item.get("key") or item.get("did")
+                score = item.get("score")
+                if did is not None and score is not None:
+                    out.append((str(did), Decimal(str(score))))
+        except Exception:
+            continue
+    return out
+
+
+def _public_position_map(positions: dict | None) -> dict[str, Decimal]:
+    out: dict[str, Decimal] = {}
+    if not isinstance(positions, dict):
+        return out
+    for item in positions.get("top") or []:
+        try:
+            if isinstance(item, (list, tuple)) and len(item) >= 2:
+                out[str(item[0])] = Decimal(str(item[1]))
+            elif isinstance(item, dict):
+                did = item.get("key") or item.get("did") or item.get("owner")
+                pos = item.get("position")
+                if pos is None:
+                    pos = item.get("pos")
+                if did is not None and pos is not None:
+                    out[str(did)] = Decimal(str(pos))
+        except Exception:
+            continue
+    return out
+
+
+def _leader_position_estimate(
+    current_board: list[dict],
+    positions: dict | None,
+    recent_limit: int = 24,
+) -> dict | None:
+    if not current_board:
+        return None
+    try:
+        leader_score = Decimal(str(current_board[0]["score"]))
+    except Exception:
+        return None
+
+    leader_dids = [
+        str(row["did"])
+        for row in current_board
+        if row.get("did") and row.get("score") is not None
+        and Decimal(str(row["score"])) == leader_score
+    ]
+    if not leader_dids:
+        return None
+
+    exact = _public_position_map(positions)
+    exact_values = [(did, exact[did]) for did in leader_dids if did in exact]
+    if exact_values:
+        # Tied leader fleets often share a position. Use the median known
+        # position so one anomalous key does not distort the relative target.
+        vals = sorted(pos for _did, pos in exact_values)
+        pos = vals[len(vals) // 2]
+        return {
+            "position": pos,
+            "source": "official_positions",
+            "sample_count": len(exact_values),
+            "did": exact_values[0][0],
+            "sweep_pair": None,
+        }
+
+    # Fall back to score-vs-mark slope from the newest pair of consecutive
+    # referee sweeps in which a current leader DID appears in both snapshots.
+    pnl_rows = []
+    try:
+        for rec in parse_export("d-close1-pnl"):
+            p = rec.get("_payload")
+            if isinstance(p, dict) and p.get("t") == "pnl":
+                try:
+                    n = int(p["n"])
+                    mark = Decimal(str(p["mark"]))
+                except Exception:
+                    continue
+                pnl_rows.append((n, mark, dict(_pnl_pairs(p))))
+    except Exception:
+        return None
+
+    pnl_rows = pnl_rows[-max(2, int(recent_limit)):]
+    candidates = []
+    for did in leader_dids:
+        for a, b in reversed(list(zip(pnl_rows, pnl_rows[1:]))):
+            if b[0] != a[0] + 1 or did not in a[2] or did not in b[2]:
+                continue
+            dmark = b[1] - a[1]
+            if dmark == 0:
+                continue
+            slope = (b[2][did] - a[2][did]) / dmark
+            candidates.append((did, slope, (a[0], b[0])))
+            break
+
+    if not candidates:
+        return None
+    vals = sorted(x[1] for x in candidates)
+    pos = vals[len(vals) // 2]
+    rep = min(candidates, key=lambda x: abs(x[1] - pos))
+    return {
+        "position": pos,
+        "source": "consecutive_pnl_slope",
+        "sample_count": len(candidates),
+        "did": rep[0],
+        "sweep_pair": rep[2],
+    }
 
 
 def snapshot() -> dict:
@@ -414,6 +532,63 @@ def snapshot() -> dict:
         except Exception:
             target_to_prize = None
 
+    relative_chase = None
+    if best_edge is not None and leader is not None and mark is not None:
+        try:
+            leader_est = _leader_position_estimate(board, positions)
+            if leader_est is not None:
+                our_qty = Decimal(str(best_edge["qty"]))
+                our_side = str(best_edge.get("side") or "both")
+                if our_side == "long":
+                    our_pos = our_qty
+                elif our_side == "short":
+                    our_pos = -our_qty
+                else:
+                    entry = Decimal(str(best_edge["entry"]))
+                    our_pos = our_qty if mark >= entry else -our_qty
+
+                leader_pos = Decimal(str(leader_est["position"]))
+                our_score = Decimal(str(best_edge["estimated_score"]))
+                leader_score_d = Decimal(str(leader))
+                gap = leader_score_d - our_score
+                rel_slope = our_pos - leader_pos
+
+                direction = None
+                delta = None
+                target_mark = None
+                pct = None
+                if gap <= 0:
+                    direction = "already_above"
+                    delta = Decimal("0")
+                    target_mark = mark
+                    pct = Decimal("0")
+                elif abs(rel_slope) >= Decimal("0.01"):
+                    delta = gap / rel_slope
+                    # A positive delta means an up move closes the gap; a
+                    # negative delta means a down move closes it.
+                    direction = "up" if delta > 0 else "down"
+                    target_mark = mark + delta
+                    pct = abs(delta) / mark * Decimal("100") if mark else None
+
+                relative_chase = {
+                    "leader_score": str(leader_score_d),
+                    "our_score": str(our_score),
+                    "score_gap": str(gap),
+                    "our_position": str(our_pos),
+                    "leader_position": str(leader_pos),
+                    "relative_slope": str(rel_slope),
+                    "direction": direction,
+                    "move": str(abs(delta).quantize(Decimal("0.01"))) if delta is not None else None,
+                    "move_pct": str(pct.quantize(Decimal("0.01"))) if pct is not None else None,
+                    "target_mark": str(target_mark.quantize(Decimal("0.01"))) if target_mark is not None else None,
+                    "position_source": leader_est.get("source"),
+                    "position_sample_count": leader_est.get("sample_count"),
+                    "position_sweep_pair": leader_est.get("sweep_pair"),
+                    "assumption": "leader_position_unchanged",
+                }
+        except Exception:
+            relative_chase = None
+
     if ours:
         rank_text = f"并列第 {ours[0]['rank']} 名"
         rank_status = "ON_BOARD"
@@ -540,6 +715,7 @@ def snapshot() -> dict:
             if best_edge else None
         ),
         "target_to_prize": target_to_prize,
+        "relative_chase": relative_chase,
         "market_positions": {
             "open": positions.get("open"),
             "longs": positions.get("longs"),
@@ -629,6 +805,10 @@ details{margin-top:14px;background:#0e1420;border:1px solid var(--line);border-r
         <div class="target"><span>如果继续上涨，粗略到这里</span><b id="upTarget">-</b></div>
       </div>
       <div class="hint" id="nearestTarget" style="margin-top:10px">目标会随奖区线变化，实际 clawback 也可能提高门槛。</div>
+      <div class="gap" id="relativeChaseBox" style="margin-top:12px">
+        <strong id="relativeChase">动态相对追赶线：计算中…</strong>
+        <p id="relativeExplain">同时考虑我们当前最好仓位与榜首仓位的价格敏感度。</p>
+      </div>
     </div>
 
     <div class="card bigcard">
@@ -754,6 +934,25 @@ async function refresh(){
       if(tp.nearest_side==='up')near='最近路径：Mark 再涨约 '+fmt(tp.nearest_gap)+'（'+fmt(tp.nearest_pct)+'%）';
       document.getElementById('nearestTarget').textContent=near+'。按当前奖区线粗算，目标会动态变化，实际 clawback 可能提高门槛。';
     }else document.getElementById('nearestTarget').textContent='暂无目标估算。';
+
+    const rc=d.relative_chase;
+    const rcTitle=document.getElementById('relativeChase');
+    const rcExplain=document.getElementById('relativeExplain');
+    if(rc&&rc.direction){
+      if(rc.direction==='already_above'){
+        rcTitle.textContent='动态相对追赶线：当前估算已不低于榜首';
+      }else{
+        const dir=rc.direction==='up'?'上涨':'下跌';
+        rcTitle.textContent='动态相对追赶线：Mark 再'+dir+'约 '+fmt(rc.move)+'（'+fmt(rc.move_pct)+'%）';
+      }
+      const source=rc.position_source==='official_positions'
+        ?'榜首仓位取自官方 Positions'
+        :('榜首仓位由连续 sweep '+((rc.position_sweep_pair||[]).join('→')||'')+' 的 Score/Mark 斜率估算');
+      rcExplain.textContent='我们仓位斜率 '+fmt(rc.our_position)+' · 榜首 '+fmt(rc.leader_position)+' · 相对 '+fmt(rc.relative_slope)+' POLF/$1 · '+source+'。假设双方仓位保持不变；对手换仓后此线会自动重算。';
+    }else{
+      rcTitle.textContent='动态相对追赶线：暂时无法可靠计算';
+      rcExplain.textContent='需要同时拿到我们当前最好候选的方向仓位，以及榜首的官方仓位或连续 sweep 斜率。';
+    }
 
     if(d.dense_enabled){
       if(d.dense_v4_enabled){
