@@ -952,3 +952,53 @@ Strategic implication:
 - realized-PnL harvesting is now directly evidenced;
 - exact same-account long->short flipping is strongly suggested but should not be considered proven solely from sparse slope transitions;
 - V4 should continue as the entry engine while a V5 harvest/flip layer is designed around confirmed settlement/cash reconstruction rather than sparse-board heuristics.
+
+
+## 2026-09-29 — Dense V5a staged profit-harvest layer implemented
+
+Evidence basis:
+- sweep-936 competitor diagnostics proved that a large current short cohort's score exceeded the maximum profit explainable by any single untouched short reachable under the visible 5% price limits;
+- therefore at least part of the leading score must be realized/cash-carried PnL from earlier trades;
+- active full-size sell management by current Top-5 accounts reinforced the case for adding a harvest layer while keeping V4 as the entry engine.
+
+V5a design:
+- V4 remains enabled and continues creating 8 long + 8 short copies every aligned referee sweep;
+- V5a never harvests more than two copy-pairs from the same V4 cohort, leaving at least six copies open;
+- first harvest allowance starts at max(300 POLF, 80% of the live prize cutoff);
+- second harvest allowance starts at max(400 POLF, 95% of the live prize cutoff);
+- candidate scores are reconstructed from the frozen fold using the next sweep's referee close, the actual V4 opening prices/qty and opening clawback fees;
+- any pair with a visible opening void or a dedicated-room missed settlement sweep is excluded;
+- visible outcome lookup and missed-sweep checks are indexed once per scan instead of rescanning the full flow for every pair;
+- scans run at most once per referee sweep when no harvest is active.
+
+Safe close mechanics:
+- a V4 long target and its paired V4 short target close directly against each other, so no new directional counterparty is created;
+- because the fold checks fee cash before releasing collateral, the close is staged;
+- the first bootstrap tranche is sized so both accounts can afford a conservative 5% close-gap fee buffer and the released collateral should fund the remaining close;
+- if one bootstrap is insufficient, additional small bootstrap tranches are submitted on later aligned sweeps;
+- once both accounts have enough fee cash, the remainder is closed;
+- at most six verified bootstrap/finish actions are allowed before blocking for review;
+- visible close voids, missed settlement sweeps, simulated funds failures and unresolvable staged funding all block the active harvest rather than blindly continuing;
+- an in-flight harvest is tracked as a state machine and is idempotent across autopilot restarts.
+
+Pause behavior:
+- `pause-dense-v5a` stops only new harvest selection;
+- an already-started staged close is allowed to finish or block safely;
+- V4 entry generation continues.
+
+Commands:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py dense-v5a-preview
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v5a
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py pause-dense-v5a
+```
+
+Implementation commits:
+- `4db64533338b06b5ae1b6e7f7397f18d643d5c99` — initial V5a staged harvest;
+- `0c3cb6e10a59f388ba5b7af56d64a7a6554ccd65` — exact settlement reconstruction and scan indexing;
+- `4805bc507b6e4a15389d9cd3978b33c46d94798f` — idempotent scan/block handling;
+- `dc57f8e3ad56eff982253c0fcb382d4bb70b08ef` — dashboard V5a state;
+- `268a4a983b745b3956a00417261e220df970c9d6` — adaptive staged close and safe pause.
+
+Execution state:
+`DENSE_V5A_IMPLEMENTED_PREVIEW_ENABLE_REQUIRED`.
