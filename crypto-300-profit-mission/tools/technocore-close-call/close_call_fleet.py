@@ -2049,6 +2049,7 @@ def cmd_competitor_scan(args) -> None:
         for i, (did, score) in enumerate(latest_pairs[:25], 1):
             print(i, did, score)
 
+    price_timeline = _price_timeline()
     positions = latest_payload("d-close1-positions", "positions")
     position_map = {}
     if isinstance(positions, dict):
@@ -2110,9 +2111,80 @@ def cmd_competitor_scan(args) -> None:
                     "effective_entry_est", str(eff.quantize(Decimal("0.01"))) if eff is not None else None,
                 )
 
+        if price_timeline:
+            refs = [px for _dt, _n, px in price_timeline]
+            min_ref = min(refs)
+            max_ref = max(refs)
+            max_single_short_quote = max_ref * Decimal("1.05")
+            min_single_long_quote = min_ref * Decimal("0.95")
+            print("\n# referee price-history reachability")
+            print(
+                "price_posts", len(price_timeline),
+                "min_ref", min_ref,
+                "max_ref", max_ref,
+                "min_5pct_buy", min_single_long_quote.quantize(Decimal("0.01")),
+                "max_5pct_sell", max_single_short_quote.quantize(Decimal("0.01")),
+            )
+
+        if latest_pairs:
+            leader_score = latest_pairs[0][1]
+            leader_cohort = [did for did, score in latest_pairs if score == leader_score]
+            rep = leader_cohort[0] if leader_cohort else latest_pairs[0][0]
+            hist = history.get(rep) or []
+            slope_series = []
+            for a, b in zip(hist, hist[1:]):
+                dmark = b[1] - a[1]
+                if dmark == 0:
+                    continue
+                slope = (b[2] - a[2]) / dmark
+                slope_series.append((a[0], b[0], slope))
+            signs = set()
+            for _a, _b, slope in slope_series:
+                if slope > Decimal("5"):
+                    signs.add("long")
+                elif slope < Decimal("-5"):
+                    signs.add("short")
+                else:
+                    signs.add("flat")
+            print("\n# current leader cohort path diagnostics")
+            print(
+                "leader_tie_count", len(leader_cohort),
+                "representative_did", rep,
+                "appearances_in_requested_pnl_window", len(hist),
+                "first_seen_sweep", hist[0][0] if hist else None,
+                "last_seen_sweep", hist[-1][0] if hist else None,
+                "observed_position_regimes", sorted(signs),
+                "flip_evidence_in_visible_top_history", ("long" in signs and "short" in signs),
+            )
+            if slope_series:
+                print("recent_position_slopes:")
+                for a_n, b_n, slope in slope_series[-12:]:
+                    print(a_n, "->", b_n, str(slope.quantize(Decimal("0.01"))))
+
+            if hist:
+                cur_score = hist[-1][2]
+                cur_mark = hist[-1][1]
+                recent_pos = slope_series[-1][2] if slope_series else None
+                if recent_pos is not None and abs(recent_pos) >= Decimal("0.1"):
+                    synthetic_entry = cur_mark - cur_score / recent_pos
+                    reachable = None
+                    if price_timeline:
+                        if recent_pos < 0:
+                            reachable = synthetic_entry <= max(px for _dt, _n, px in price_timeline) * Decimal("1.05")
+                        else:
+                            reachable = synthetic_entry >= min(px for _dt, _n, px in price_timeline) * Decimal("0.95")
+                    print(
+                        "synthetic_effective_entry", synthetic_entry.quantize(Decimal("0.01")),
+                        "single_trade_reachable_from_visible_ref_history", reachable,
+                    )
+                    print(
+                        "synthetic_entry_note:",
+                        "If reachability is False, realized PnL/cash carry is mathematically required. "
+                        "If True, a historical single entry remains possible and flip/reinvestment is not proven."
+                    )
+
     rows = parse_export("close1")
     sample = rows[-max(1, int(args.sample)):]
-    price_timeline = _price_timeline()
     kinds = Counter()
     templates = Counter()
     template_makers = defaultdict(set)
