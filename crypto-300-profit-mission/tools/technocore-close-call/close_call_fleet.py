@@ -2061,7 +2061,8 @@ def _v5b_verify_open(state: dict, active: dict, pr: dict) -> dict | None:
         return None
     settle_sweep = submit_sweep + 1
     refs = _price_refs_by_sweep()
-    close = refs.get(settle_sweep)
+    marks = _pnl_marks_by_sweep()
+    close = marks.get(settle_sweep) or refs.get(settle_sweep)
     if close is None:
         return None
     if _flow_room_missed_at_sweep(state["room"], settle_sweep):
@@ -2162,7 +2163,8 @@ def _v5b_verify_close(state: dict, active: dict, pr: dict) -> dict | None:
         return None
     settle_sweep = submit_sweep + 1
     refs = _price_refs_by_sweep()
-    close = refs.get(settle_sweep)
+    marks = _pnl_marks_by_sweep()
+    close = marks.get(settle_sweep) or refs.get(settle_sweep)
     if close is None:
         return None
     if _flow_room_missed_at_sweep(state["room"], settle_sweep):
