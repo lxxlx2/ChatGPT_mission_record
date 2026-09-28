@@ -1909,45 +1909,84 @@ def _v5b_project_flat_score(
 
 def _v5b_register_pending(state: dict, pr: dict) -> dict | None:
     dense = state.setdefault("dense", {})
-    if isinstance(dense.get("v5b_pending"), dict):
-        return dense["v5b_pending"]
+    pending = dense.get("v5b_pending")
+
     if isinstance(dense.get("v5b_active"), dict):
         return None
     if int(pr["n"]) >= V5B_NO_NEW_AFTER_SWEEP:
         return None
 
-    seeds = _v5b_seed_candidates(state)
-    if not seeds:
-        return None
-    seed = seeds[0]
+    # Persist the registration plan before any network writes. If technocore
+    # rejects or times out on one owner post, the next autopilot poll resumes
+    # the same two feeder keys instead of losing the whole V5b cycle.
+    if not isinstance(pending, dict):
+        seeds = _v5b_seed_candidates(state)
+        if not seeds:
+            return None
+        seed = seeds[0]
 
-    idx = int(dense.get("v5b_next_index", 1))
-    labels = [f"DENSE-V5B-{idx:05d}-F{i}" for i in range(1, V5B_FEEDERS + 1)]
-    regs = []
-    for label in labels:
-        key = add_dynamic_key(state, label)
-        ack = post_signed(state, state["room"], label, owner_text(key["did"]))
-        regs.append({
-            "label": label,
-            "did": key["did"],
-            "posted_at": datetime.now(timezone.utc).isoformat(),
-            "ack": ack.strip().splitlines()[0] if ack.strip() else "",
-        })
-        time.sleep(0.08)
+        idx = int(dense.get("v5b_next_index", 1))
+        labels = [f"DENSE-V5B-{idx:05d}-F{i}" for i in range(1, V5B_FEEDERS + 1)]
+        for label in labels:
+            add_dynamic_key(state, label)
 
-    pending = {
-        "index": idx,
-        **seed,
-        "feeder_labels": labels,
-        "registrations": regs,
-        "registered_sweep": int(pr["n"]),
-        "ready_after_sweep": int(pr["n"]) + 1,
-        "status": "registered",
-        "created_at": datetime.now(timezone.utc).isoformat(),
-    }
-    dense["v5b_pending"] = pending
-    dense["v5b_next_index"] = idx + 1
-    save_state(state)
+        pending = {
+            "index": idx,
+            **seed,
+            "feeder_labels": labels,
+            "registrations": [],
+            "registered_sweep": None,
+            "ready_after_sweep": None,
+            "status": "registering",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+        dense["v5b_pending"] = pending
+        dense["v5b_next_index"] = idx + 1
+        dense["v5b_last_error"] = None
+        save_state(state)
+
+    if pending.get("status") == "registering":
+        done = {
+            rec.get("label")
+            for rec in (pending.get("registrations") or [])
+            if isinstance(rec, dict)
+        }
+        try:
+            for label in pending["feeder_labels"]:
+                if label in done:
+                    continue
+                key = add_dynamic_key(state, label)
+                ack = post_signed(state, state["room"], label, owner_text(key["did"]))
+                pending.setdefault("registrations", []).append({
+                    "label": label,
+                    "did": key["did"],
+                    "posted_at": datetime.now(timezone.utc).isoformat(),
+                    "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+                })
+                dense["v5b_pending"] = pending
+                dense["v5b_last_error"] = None
+                save_state(state)
+                time.sleep(0.08)
+
+            pending["registered_sweep"] = int(pr["n"])
+            pending["ready_after_sweep"] = int(pr["n"]) + 1
+            pending["status"] = "registered"
+            dense["v5b_pending"] = pending
+            dense["v5b_last_error"] = None
+            save_state(state)
+        except Exception as e:
+            dense["v5b_pending"] = pending
+            dense["v5b_last_error"] = {
+                "at": datetime.now(timezone.utc).isoformat(),
+                "sweep": int(pr["n"]),
+                "stage": "register_feeders",
+                "cycle_index": pending.get("index"),
+                "registered_count": len(pending.get("registrations") or []),
+                "error": str(e),
+            }
+            save_state(state)
+            return pending
+
     return pending
 
 
@@ -4458,6 +4497,13 @@ def cmd_dense_status(_args) -> None:
     else:
         print("v5b_last_check_at: null")
         print("v5b_last_check_sweep: null")
+    v5b_last_error = dense.get("v5b_last_error")
+    if isinstance(v5b_last_error, dict):
+        print("v5b_last_error_stage:", v5b_last_error.get("stage"))
+        print("v5b_last_error_registered_count:", v5b_last_error.get("registered_count"))
+        print("v5b_last_error:", v5b_last_error.get("error"))
+    else:
+        print("v5b_last_error: null")
     v5b_pending = dense.get("v5b_pending")
     if isinstance(v5b_pending, dict):
         print("v5b_pending_cycle:", v5b_pending.get("index"))
