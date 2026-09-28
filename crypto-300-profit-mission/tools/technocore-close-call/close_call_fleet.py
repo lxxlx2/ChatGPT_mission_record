@@ -114,10 +114,10 @@ DENSE_V4_SHORT_SAFETIES = (
 # the every-sweep entry engine. At most two copy-pairs from the same V4 cohort
 # are harvested, leaving at least six copies open for continued frontier
 # exposure.
-V5A_MIN_SCORE = Decimal("300")
-V5A_FIRST_TRIGGER_RATIO = Decimal("0.80")
-V5A_SECOND_TRIGGER_RATIO = Decimal("0.95")
-V5A_SECOND_MIN_SCORE = Decimal("400")
+V5A_MIN_SCORE = Decimal("180")
+V5A_FIRST_TRIGGER_RATIO = Decimal("0.25")
+V5A_SECOND_TRIGGER_RATIO = Decimal("0.45")
+V5A_SECOND_MIN_SCORE = Decimal("300")
 V5A_MAX_HARVESTS_PER_COHORT = 2
 V5A_BOOT_FEE_BUFFER_PCT = Decimal("0.05")
 V5A_BOOT_EXTRA_SAFETY = Decimal("1.10")
@@ -1733,8 +1733,8 @@ def cmd_enable_dense_v5a(_args) -> None:
     save_state(state)
     print("Dense V5a HARVEST ENABLED")
     print("V4 entry engine remains enabled")
-    print("first harvest threshold: max(300, 80% of current prize cutoff)")
-    print("second harvest threshold: max(400, 95% of current prize cutoff)")
+    print("first harvest threshold: max(180, 25% of current prize cutoff)")
+    print("second harvest threshold: max(300, 45% of current prize cutoff)")
     print("max harvested copy-pairs per V4 cohort:", V5A_MAX_HARVESTS_PER_COHORT)
     print("at least 6/8 copies per cohort remain open")
     print("harvest uses staged close with a 5% fee-cash bootstrap buffer")
