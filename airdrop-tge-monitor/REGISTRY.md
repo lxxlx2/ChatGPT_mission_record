@@ -57,7 +57,6 @@ Clay Shares 作为 Claynosaurz/HEEBOO 相关权益子项持续检查。
 - Cambria / @playcambria
 - Crusoe / @CrusoeAI
 - Apptronik / @Apptronik
-- humans& / @humansand — known user deal channel: Echo (@echodotxyz) / Alpen Capital; monitor deal cancellation, allocation changes, full/partial refund, SPV/settlement/transfer changes in addition to project/TGE news
 - Thalassa Robotics / Thalassa Inc.
 - Fortytwo / @fortytwonetwork
 - Space / @intodotspace
@@ -104,7 +103,11 @@ Material rights events include:
 A platform/intermediary notice can be a valid ACTION even when the underlying project posts nothing publicly.
 
 Known mapping:
-- humans& -> Echo (@echodotxyz) / Alpen Capital.
 - 01.xyz / 01 Exchange -> preserve known Echo/intermediary deal-channel checks when user rights are affected.
 
 Do not require a public project announcement to recognize a direct platform entitlement/refund notice.
+
+
+## Closed / excluded deals
+
+- humans& / @humansand — **CLOSED**. The user's Echo/Alpen Capital allocation was fully refunded on 2026-09-24. There is no remaining user entitlement or capital at risk in this deal. Exclude humans& and its Echo/Alpen deal channel from hourly shards, urgent checks and rights monitoring. Historical records remain for audit only. Reactivate only if the user explicitly enters a new humans& exposure or asks to monitor it again.
