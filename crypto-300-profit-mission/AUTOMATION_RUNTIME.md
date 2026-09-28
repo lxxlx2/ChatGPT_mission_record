@@ -496,3 +496,30 @@ A manual recovery at 19:39:
 After this incident, the automation prompt was shortened further so 19:29 does only:
 core final -> one bulk screen -> max-3 deep checks -> compact summary persistence -> Gmail/readback.
 Optional Alpha/social/on-chain enrichment cannot run before delivery proof.
+
+
+## Frank wallet conviction lane — 2026-09-29
+
+Authority:
+`state/frank-wallet-watch.md`
+
+This is part of the existing hourly :29 $300 Mission task. Do not create a separate scheduler.
+
+Target Solana wallet:
+`498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ`
+
+Run this bounded lane once per hourly cycle after the core final has been persisted and before slower optional enrichment.
+
+Rules:
+- parse only active DEX/aggregator swaps by the target wallet;
+- ignore plain transfers, airdrops, creator-fee/reward receipts, claims and unsolicited deposits;
+- filter rapid execution/HFT patterns;
+- WATCH/HFT/NO_ACTION are state/GitHub only and must stay silent;
+- only FORMAL_ENTRY / FORMAL_EXIT defined in `state/frank-wallet-watch.md` may trigger user delivery;
+- Frank-lane formal delivery is Gmail-only, with no ChatGPT notification;
+- a formal signal is not delivered until Gmail Sent/readback is proven;
+- failed formal email delivery must persist as pending and be retried before evaluating new Frank alerts on the next run;
+- never send a test email for this lane;
+- never auto-trade.
+
+The Frank lane must not consume or replace the existing Monster V2.1 schedule or 19:29 summary.
