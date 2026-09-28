@@ -2,7 +2,7 @@
 
 Human-facing research copy: `research/nfts/jack-credits/jack-credits-nft-position.md`
 
-Updated: 2026-09-27 03:57 Asia/Bangkok
+Updated: 2026-09-28 09:32 Asia/Bangkok
 
 ## Identity
 
@@ -69,3 +69,25 @@ Prior rarity work:
 - Remaining NFTs stay outside strict liquid NAV until an execution-grade bid, accepted offer, or actual sale exists.
 - Sale proceeds from the four exited NFTs count as Mission capital provenance once reconciled, but are not double-counted as separate current assets.
 - Do not add more Credits from Mission cash automatically.
+
+
+## Current market mark — 2026-09-28
+
+Fresh direct ownership:
+- Credit #23042: canonical wallet
+- Credit #23232: canonical wallet
+
+Current collection market reference:
+- floor: ~0.0255 ETH
+- top offer: ~0.0248 WETH
+- ETH mark used: 2651.00451885 USD
+
+Portfolio reference:
+- two-NFT floor mark: ~135.20 USD
+- two-NFT top-offer reference: ~131.49 USD
+
+Prior rarity estimates remain:
+- #23042: ~Top 7.1%
+- #23232: ~Top 3.6%
+
+No rarity premium is added to current NAV. The user's prior 0.25/0.40 ETH listing asks remain aspirational and are not used as asset value.
