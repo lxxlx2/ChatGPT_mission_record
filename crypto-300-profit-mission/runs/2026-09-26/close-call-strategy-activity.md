@@ -1027,3 +1027,22 @@ At the sweep-939 prize cutoff implied by the preview (~701.58), the new threshol
 - second: 315.71 POLF.
 
 Commit: `a8331fb274179c47ef65e1ea81cf3f04f4b99dda`.
+
+
+## 2026-09-29 — Dense V5a enabled live
+
+User-side status after enabling V5a:
+- V4 remains enabled;
+- V5a enabled: true;
+- new harvest selection enabled: true;
+- harvested count: 0;
+- no active harvest yet;
+- V4 sweep 941 completed successfully with 8 long + 8 short, zero reserve shortage and zero errors;
+- next Dense batch 427 was in the transient registration phase when status was sampled;
+- V4 reserve pool showed 9 ready/registered at that instant, consistent with 7 sets having just been consumed and refill work still in progress;
+- room registration confirmed and recent room activity age was 0 seconds.
+
+The lack of an active V5a harvest in this snapshot is not itself a failure. The status was taken about 10 seconds after LaunchAgent restart. Dense autopilot first finishes the current V4 submission/next-batch registration work; V5a candidate selection runs on a subsequent poll in the same referee sweep when no V4 submission is due. With the default 60-second poll interval, the first V5a selection may therefore appear roughly one poll later. Candidate eligibility can also disappear if mark moves below the trigger before that poll.
+
+Execution state:
+`DENSE_V5A_LIVE_WAITING_FIRST_HARVEST_SCAN`.
