@@ -20,7 +20,7 @@ Canonical addresses:
 - EVM `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 - Solana `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 
-Non-EVM Aptos/Sui/Bitcoin/Starknet/Tron require separate canonical user addresses before they can be included.
+Canonical Sui address is now known: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`. Aptos/Bitcoin/Starknet/Tron still require separate canonical user addresses.
 
 ### Main balances
 
@@ -65,6 +65,12 @@ Unichain:
 - 0.000231941590232335 ETH
 - CRED 0
 - UNICRED #230 owned
+
+Sui:
+- canonical wallet: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
+- current balance status: **UNAVAILABLE_PROVIDER_METHOD**
+- SUI_MAINNET is enabled, but Alchemy's generic EVM-style portfolio endpoint rejects the 32-byte Sui address
+- do not classify as zero; next reconciliation must use a Sui-specific supported endpoint
 
 ### Special chains
 
