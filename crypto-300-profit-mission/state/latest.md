@@ -1,6 +1,6 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-28 15:00 Asia/Bangkok
+Updated: 2026-09-28 15:52 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Private venue — USER_CONFIRMED
@@ -180,3 +180,12 @@ Current user-asset monitoring:
 - due participation/claim plans
 
 General Monster V2.1, launch radar and NFT radar remain market-wide discovery scanners.
+
+
+## Wallet refresh policy
+
+Routine automatic wallet rescans are disabled.
+
+The balances above are the latest stored snapshot from the 2026-09-28 broad-chain reconciliation. They are refreshed only on explicit user request, after a user-reported material wallet change, or when a verified event requires ownership/balance confirmation.
+
+Do not interpret the absence of a later automatic scan as evidence that balances are unchanged.
