@@ -1540,34 +1540,77 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
                 "copy_no": record["copy_no"],
             }
 
-        # Bootstrap close settled. Cash has been released, so submit the
-        # remaining close on the next aligned sweep.
+        # A settled tranche releases collateral. Close the rest in one shot
+        # only when both accounts can already afford a conservative 5% fee gap.
+        # Otherwise submit another small bootstrap tranche and repeat.
         if stage == "bootstrap_submitted":
             pair = active["pair"]
-            finish = _v5a_submit_close(
-                state,
-                pair,
-                remaining,
-                pr,
-                f"h5f-{pair['cohort_sweep']}-{pair['copy_no']}",
-            )
-            active["stage"] = "finish_submitted"
-            active["action"] = finish
-            active["finish_submitted_at"] = datetime.now(timezone.utc).isoformat()
+            long_cash = Decimal(str(applied["long_cash"]))
+            short_cash = Decimal(str(applied["short_cash"]))
+            fee_buffer_total = V5A_BOOT_FEE_BUFFER_PCT * pr["px"] * remaining
+            action_count = len(active.get("verified_actions") or [])
+            if action_count >= 6:
+                active["stage"] = "blocked_too_many_bootstrap_tranches"
+                dense["v5a_active"] = active
+                save_state(state)
+                return {
+                    "event": "v5a_harvest_blocked",
+                    "reason": "too_many_bootstrap_tranches",
+                    "pair_id": active["pair_id"],
+                    "remaining": str(remaining),
+                }
+
+            if long_cash >= fee_buffer_total and short_cash >= fee_buffer_total:
+                next_qty = remaining
+                next_stage = "finish_submitted"
+                prefix = f"h5f-{pair['cohort_sweep']}-{pair['copy_no']}"
+                event = "v5a_harvest_finish_submitted"
+            else:
+                next_qty = _v5a_bootstrap_qty(
+                    remaining,
+                    long_cash,
+                    short_cash,
+                    Decimal(str(applied["short_lot_px"])),
+                    pr["px"],
+                )
+                if next_qty is None:
+                    active["stage"] = "blocked_cannot_fund_next_tranche"
+                    dense["v5a_active"] = active
+                    save_state(state)
+                    return {
+                        "event": "v5a_harvest_blocked",
+                        "reason": "cannot_fund_next_tranche",
+                        "pair_id": active["pair_id"],
+                        "remaining": str(remaining),
+                    }
+                next_stage = "bootstrap_submitted"
+                prefix = f"h5b-{pair['cohort_sweep']}-{pair['copy_no']}-{action_count+1}"
+                event = "v5a_harvest_bootstrap_resubmitted"
+
+            nxt = _v5a_submit_close(state, pair, next_qty, pr, prefix)
+            active["stage"] = next_stage
+            active["action"] = nxt
+            active["last_tranche_submitted_at"] = datetime.now(timezone.utc).isoformat()
             dense["v5a_active"] = active
             save_state(state)
             return {
-                "event": "v5a_harvest_finish_submitted",
+                "event": event,
                 "pair_id": active["pair_id"],
-                "qty": str(remaining),
+                "qty": str(next_qty),
+                "remaining_before": str(remaining),
                 "sweep": pr["n"],
                 "px": str(pr["px"]),
             }
 
         return None
 
-    # No harvest is currently in flight. PnL/mark only changes once per
-    # referee sweep, so a no-candidate scan needs to run only once per sweep.
+    # No harvest is currently in flight. A pause blocks only new harvests;
+    # any already-started staged close is allowed to finish safely.
+    if not dense.get("v5a_accept_new", True):
+        return None
+
+    # PnL/mark only changes once per referee sweep, so a no-candidate scan
+    # needs to run only once per sweep.
     if int(dense.get("v5a_last_scan_sweep", -1)) == int(pr["n"]):
         return None
     dense["v5a_last_scan_sweep"] = int(pr["n"])
@@ -1679,6 +1722,7 @@ def cmd_enable_dense_v5a(_args) -> None:
     if not dense.get("v4_enabled"):
         raise SystemExit("Dense V5a harvest requires Dense V4 to remain enabled")
     dense["v5a_enabled"] = True
+    dense["v5a_accept_new"] = True
     dense["v5a_enabled_at"] = datetime.now(timezone.utc).isoformat()
     dense["v5a_min_score"] = str(V5A_MIN_SCORE)
     dense["v5a_first_trigger_ratio"] = str(V5A_FIRST_TRIGGER_RATIO)
@@ -1694,6 +1738,21 @@ def cmd_enable_dense_v5a(_args) -> None:
     print("max harvested copy-pairs per V4 cohort:", V5A_MAX_HARVESTS_PER_COHORT)
     print("at least 6/8 copies per cohort remain open")
     print("harvest uses staged close with a 5% fee-cash bootstrap buffer")
+
+
+def cmd_pause_dense_v5a(_args) -> None:
+    state = load_state()
+    dense = state.setdefault("dense", {})
+    if not dense.get("v5a_enabled"):
+        print("Dense V5a is not enabled")
+        return
+    dense["v5a_accept_new"] = False
+    dense["v5a_paused_at"] = datetime.now(timezone.utc).isoformat()
+    save_state(state)
+    print("Dense V5a NEW HARVESTS PAUSED")
+    print("V4 entry engine remains enabled")
+    if dense.get("v5a_active"):
+        print("an in-flight staged harvest will continue until it is flat or blocked")
 
 
 def dense_register_pending(state: dict, sweep: int) -> dict:
@@ -3731,6 +3790,7 @@ def cmd_dense_status(_args) -> None:
         print("last_v3_reserve_shortage:", last_v3.get("reserve_shortage"))
         print("last_v3_errors:", len(last_v3.get("errors") or []))
     print("v5a_enabled:", bool(dense.get("v5a_enabled")))
+    print("v5a_accept_new:", bool(dense.get("v5a_accept_new", True)))
     print("v5a_harvested_count:", len(dense.get("v5a_harvested") or {}))
     active_v5a = dense.get("v5a_active")
     if isinstance(active_v5a, dict):
@@ -4110,6 +4170,9 @@ def main() -> None:
 
     p = sp.add_parser("enable-dense-v5a")
     p.set_defaults(fn=cmd_enable_dense_v5a)
+
+    p = sp.add_parser("pause-dense-v5a")
+    p.set_defaults(fn=cmd_pause_dense_v5a)
 
     p = sp.add_parser("enable-dense-v4")
     p.set_defaults(fn=cmd_enable_dense_v4)
