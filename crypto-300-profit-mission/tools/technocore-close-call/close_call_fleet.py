@@ -1030,6 +1030,39 @@ def _flow_room_missed_at_sweep(room: str, sweep: int) -> bool:
     return False
 
 
+def _v5a_missed_sweeps(room: str) -> set[int]:
+    out = set()
+    for rec in parse_export("d-close1-flow"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        if room not in json.dumps(p.get("missed") or [], separators=(",", ":"), ensure_ascii=False):
+            continue
+        try:
+            out.add(int(p["n"]))
+        except Exception:
+            pass
+    return out
+
+
+def _v5a_visible_outcomes(trade_ids: set[str]) -> dict[str, str]:
+    out = {}
+    if not trade_ids:
+        return out
+    for rec in parse_export("d-close1-flow"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        for tid in trade_ids:
+            if tid in out:
+                continue
+            if contains_value(p.get("settled"), tid):
+                out[tid] = "settled"
+            elif contains_value(p.get("void"), tid):
+                out[tid] = "void"
+    return out
+
+
 def _v5a_v4_pairs(state: dict) -> list[dict]:
     dense = state.get("dense") or {}
     out = []
@@ -1252,11 +1285,11 @@ def _v5a_apply_close(
     out = dict(account_state)
     out.update({
         "settled": True,
-        "qty": left,
-        "long_cash": long_cash,
-        "short_cash": short_cash,
-        "long_pos": left,
-        "short_pos": -left,
+        "qty": str(left),
+        "long_cash": str(long_cash),
+        "short_cash": str(short_cash),
+        "long_pos": str(left),
+        "short_pos": str(-left),
     })
     return out
 
@@ -1265,21 +1298,21 @@ def _v5a_pair_snapshot(
     state: dict,
     pair: dict,
     refs: dict[int, Decimal],
+    marks: dict[int, Decimal],
+    missed_sweeps: set[int],
+    visible_outcomes: dict[str, str],
     mark: Decimal,
 ) -> dict | None:
     submit_sweep = int(pair["cohort_sweep"])
     settlement_sweep = submit_sweep + 1
-    settlement_close = refs.get(settlement_sweep)
+    settlement_close = marks.get(settlement_sweep) or refs.get(settlement_sweep)
     if settlement_close is None:
         return None
-    if _flow_room_missed_at_sweep(state["room"], settlement_sweep):
+    if settlement_sweep in missed_sweeps:
         return None
 
-    long_info = trade_outcome_from_flow(pair.get("long_trade_id")) if pair.get("long_trade_id") else {"outcome": None}
-    short_info = trade_outcome_from_flow(pair.get("short_trade_id")) if pair.get("short_trade_id") else {"outcome": None}
-    for info in (long_info, short_info):
-        outcome = info.get("outcome")
-        if outcome and outcome.get("status") == "void":
+    for tid in (pair.get("long_trade_id"), pair.get("short_trade_id")):
+        if tid and visible_outcomes.get(tid) == "void":
             return None
 
     opening = _v5a_opening_state(pair, settlement_close)
@@ -1308,6 +1341,17 @@ def _v5a_candidates(state: dict) -> dict:
         return {"mark": None, "first_threshold": None, "second_threshold": None, "candidates": []}
 
     refs = _price_refs_by_sweep()
+    marks = _pnl_marks_by_sweep()
+    pairs = _v5a_v4_pairs(state)
+    missed_sweeps = _v5a_missed_sweeps(state["room"])
+    trade_ids = {
+        tid
+        for pair in pairs
+        for tid in (pair.get("long_trade_id"), pair.get("short_trade_id"))
+        if tid
+    }
+    visible_outcomes = _v5a_visible_outcomes(trade_ids)
+
     first_threshold, second_threshold = _v5a_harvest_thresholds()
     harvested = dense.setdefault("v5a_harvested", {})
     active = dense.get("v5a_active")
@@ -1321,10 +1365,12 @@ def _v5a_candidates(state: dict) -> dict:
             pass
 
     snaps = []
-    for pair in _v5a_v4_pairs(state):
+    for pair in pairs:
         if pair["pair_id"] in harvested or pair["pair_id"] == active_pair:
             continue
-        snap = _v5a_pair_snapshot(state, pair, refs, mark)
+        snap = _v5a_pair_snapshot(
+            state, pair, refs, marks, missed_sweeps, visible_outcomes, mark
+        )
         if not snap:
             continue
 
@@ -1397,6 +1443,7 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
         return None
 
     refs = _price_refs_by_sweep()
+    marks = _pnl_marks_by_sweep()
     active = dense.get("v5a_active")
     if isinstance(active, dict):
         stage = active.get("stage")
@@ -1405,7 +1452,7 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
         if pr["n"] <= submit_sweep:
             return None
 
-        settlement_close = refs.get(submit_sweep + 1)
+        settlement_close = marks.get(submit_sweep + 1) or refs.get(submit_sweep + 1)
         if settlement_close is None:
             return None
         if _flow_room_missed_at_sweep(state["room"], submit_sweep + 1):
@@ -1564,7 +1611,7 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
         "second_threshold": str(report["second_threshold"]),
         "stage": "bootstrap_submitted",
         "account_state": {
-            **opening,
+            "settled": True,
             "settlement_close": str(opening["settlement_close"]),
             "qty": str(opening["qty"]),
             "long_cash": str(opening["long_cash"]),
