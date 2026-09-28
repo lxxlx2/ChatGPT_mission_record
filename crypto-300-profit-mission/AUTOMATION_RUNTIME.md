@@ -352,6 +352,7 @@ Primary wallet provider:
 Known wallet authorities:
 - EVM `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 - Solana `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+- Sui `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
 Every 3 hours, after a durable core final exists, run one bounded broad-chain reconciliation:
 1. native balances on enabled EVM/EVM-compatible chains;
@@ -377,7 +378,7 @@ Current special-chain baseline includes:
 Zero-native baseline:
 - Berachain / Blast / Mantle / RISE / Scroll / Sei / zkSync.
 
-Aptos/Bitcoin/Starknet/Sui/Tron remain `UNAVAILABLE_USER_ADDRESS` until a canonical user address is explicitly stored.
+Aptos/Bitcoin/Starknet/Tron remain `UNAVAILABLE_USER_ADDRESS`. Sui is now canonicalized but currently `UNAVAILABLE_PROVIDER_METHOD` through the generic portfolio API; use a Sui-specific supported endpoint when available.
 
 ### Claim-safety rule
 
@@ -392,3 +393,21 @@ Never promote such an asset to ACTION without:
 Known scam-like examples from the 2026-09-28 scan include Avalanche fake PENDLE/claim-link receipts, Linea compensation-attestation bait, and multiple Optimism/BNB/Polygon/Robinhood claim-style receipts.
 
 Generic wallet balance scanning does not prove protocol-side reward escrow is zero. If a known active protocol position can hold rewards off-wallet, use its protocol-specific contract/dashboard read when due.
+
+
+### Sui provider rule — 2026-09-28
+
+Canonical Sui wallet:
+`0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
+
+Do not pass this 32-byte Sui address to EVM-only generic portfolio endpoints and interpret rejection as zero balance.
+
+Current Alchemy state:
+- SUI_MAINNET enabled in the broad app;
+- generic `getTokensByAddress` / `getTokenBalancesByAddress` reject the Sui address format;
+- Alchemy docs indicate Sui-specific balance methods such as `suix_getBalance` / `suix_getAllBalances`, with JSON-RPC deprecation requiring migration to supported Sui gRPC.
+
+Until a working Sui-specific tool is exposed in the runtime:
+- classify Sui wallet balance as `UNAVAILABLE_PROVIDER_METHOD`;
+- never carry a stale Sui balance as current;
+- never claim there is no Sui asset/claim based on generic EVM portfolio scans.
