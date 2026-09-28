@@ -2288,7 +2288,9 @@ def cmd_dense_v5b_preview(_args) -> None:
         qty = _v5b_plan_qty(seed["locked_score"], seed["cash"], pr["px"])
         est_fee = Decimal("0.01") * qty * pr["px"]
         print(
-            seed["source_pair_id"],
+            seed.get("source_seed_id"),
+            "pair", seed["source_pair_id"],
+            "parent_cycle", seed.get("source_cycle_index"),
             "winner", seed["source_winner"],
             "flip", seed["flip_side"],
             "locked", seed["locked_score"],
