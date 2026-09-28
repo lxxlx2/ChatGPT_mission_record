@@ -121,13 +121,79 @@ PLIST
 
 plutil -lint "$PLIST"
 plutil -lint "$DASH_PLIST"
+chmod 0644 "$PLIST" "$DASH_PLIST"
+touch "$OUT_LOG" "$ERR_LOG" \
+  "$LOG_DIR/technocore-close-call-dashboard.out.log" \
+  "$LOG_DIR/technocore-close-call-dashboard.err.log"
 
-launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || true
-launchctl bootout "gui/$(id -u)/$DASH_LABEL" 2>/dev/null || true
-launchctl bootstrap "gui/$(id -u)" "$PLIST"
-launchctl bootstrap "gui/$(id -u)" "$DASH_PLIST"
-launchctl kickstart -k "gui/$(id -u)/$LABEL"
-launchctl kickstart -k "gui/$(id -u)/$DASH_LABEL"
+GUI_DOMAIN="gui/$(id -u)"
+
+bootout_agent() {
+  local label="$1"
+  local plist="$2"
+
+  # launchd teardown can lag behind bootout by a fraction of a second. A
+  # bootstrap issued during that window commonly reports errno 5 / I/O error.
+  launchctl bootout "$GUI_DOMAIN/$label" 2>/dev/null || true
+  launchctl bootout "$GUI_DOMAIN" "$plist" 2>/dev/null || true
+
+  for _ in 1 2 3 4 5; do
+    if ! launchctl print "$GUI_DOMAIN/$label" >/dev/null 2>&1; then
+      return 0
+    fi
+    sleep 1
+  done
+}
+
+bootstrap_agent() {
+  local label="$1"
+  local plist="$2"
+  local ok=0
+
+  for attempt in 1 2 3 4 5; do
+    if launchctl bootstrap "$GUI_DOMAIN" "$plist"; then
+      ok=1
+      break
+    fi
+
+    # If launchd says bootstrap failed but the service actually exists, do not
+    # fail the installer. This covers the "already loaded" form of errno 5.
+    if launchctl print "$GUI_DOMAIN/$label" >/dev/null 2>&1; then
+      echo "$label is already loaded after bootstrap attempt $attempt"
+      ok=1
+      break
+    fi
+
+    echo "bootstrap retry $attempt/5 for $label..."
+    sleep 1
+  done
+
+  if [[ "$ok" -ne 1 ]]; then
+    echo
+    echo "ERROR: could not bootstrap $label"
+    echo "plist: $plist"
+    ls -l "$plist" || true
+    echo "program: $(/usr/libexec/PlistBuddy -c 'Print :ProgramArguments:0' "$plist" 2>/dev/null || true)"
+    echo "working directory: $(/usr/libexec/PlistBuddy -c 'Print :WorkingDirectory' "$plist" 2>/dev/null || true)"
+    echo "launchctl service state:"
+    launchctl print "$GUI_DOMAIN/$label" 2>&1 || true
+    echo "recent stderr:"
+    if [[ "$label" == "$DASH_LABEL" ]]; then
+      tail -n 30 "$LOG_DIR/technocore-close-call-dashboard.err.log" 2>/dev/null || true
+    else
+      tail -n 30 "$ERR_LOG" 2>/dev/null || true
+    fi
+    return 1
+  fi
+
+  launchctl kickstart -k "$GUI_DOMAIN/$label"
+}
+
+bootout_agent "$LABEL" "$PLIST"
+bootout_agent "$DASH_LABEL" "$DASH_PLIST"
+
+bootstrap_agent "$LABEL" "$PLIST"
+bootstrap_agent "$DASH_LABEL" "$DASH_PLIST"
 
 echo "installed: $PLIST"
 echo "status: launchctl print gui/$(id -u)/$LABEL"
