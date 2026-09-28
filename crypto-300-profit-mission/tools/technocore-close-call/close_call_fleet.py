@@ -1957,9 +1957,18 @@ def _v5b_register_pending(state: dict, pr: dict) -> dict | None:
         idx = int(dense.get("v5b_next_index", 1))
         labels = [f"DENSE-V5B-{idx:05d}-F{i}" for i in range(1, V5B_FEEDERS + 1)]
 
+        # Seed candidates use Decimal for calculations, but persistent state is
+        # JSON. Convert numeric seed fields before the first save or json.dumps
+        # will raise "Object of type Decimal is not JSON serializable".
+        persisted_seed = {
+            **seed,
+            "locked_score": str(seed["locked_score"]),
+            "cash": str(seed["cash"]),
+        }
+
         pending = {
             "index": idx,
-            **seed,
+            **persisted_seed,
             "feeder_labels": labels,
             "registrations": [],
             "registered_sweep": None,
