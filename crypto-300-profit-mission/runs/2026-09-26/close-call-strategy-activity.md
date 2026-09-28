@@ -830,3 +830,59 @@ Strategic implication:
 - do not change V3 solely because the current board gap widened while NVDA rallied;
 - V3 now has the correct mechanism to capture a *future* new short frontier when the market makes a new high, and a future new long frontier on a new low;
 - whether competitors are also actively locking/closing profitable historical positions is still unresolved and should be checked with the corrected scan before adding an exit/harvest layer.
+
+
+## 2026-09-28 — Dense V4 asymmetric clawback ladder implemented
+
+The corrected 2,000-message competitor scan at sweep 856 showed:
+- current leaders are historical long positions with effective entries around 218.5-219.7;
+- large live trade clusters at submission-time deviations near -5%, -2%, +1%, +1.7% and +2%;
+- especially heavy short-side activity around +1% with quantities near 42.2-42.8;
+- the prior scan's historical deviation labels were corrected to use each trade's contemporaneous referee ref.
+
+V4 keeps V3's every-sweep bidirectional coverage and 8 copies per side, but changes quote construction:
+
+Long side:
+- all 8 copies quote at the referee's exact lower limit, approximately -5%;
+- using the posted lower limit avoids one-cent rounding outside the official 5% window.
+
+Short side:
+- 3 copies at +1.0%;
+- 2 copies at +1.7%;
+- 3 copies at +2.0%.
+
+Sizing:
+- each paired long/short copy uses one common quantity so its feeder can open at the low quote and close at the high quote without leaving a residual directional lot;
+- quantity is derived directly from the frozen fold's cash test under a close≈ref sizing model;
+- +1.0% copies use 0.995 cash safety;
+- +1.7% copies use 0.99;
+- +2.0% copies use 0.98;
+- this intentionally creates an aggressive / balanced / robust short ladder rather than forcing one quantity on every offset;
+- the model is not a guarantee against arbitrarily large within-sweep moves, and the deeper ladder rungs reserve more free cash to reduce funds-void risk.
+
+Runtime:
+- every aligned referee sweep remains eligible;
+- the custom 120s underlying-trade-age block stays disabled;
+- price/flow/state alignment, room registration, missed-range and lock protections remain enabled;
+- V4 reuses the proven V3 3-key paired reserve pool;
+- partial copy failures remain quarantined and are never reused;
+- existing V1/V2/V3 positions are untouched;
+- a mode switch is refused if the current pending batch already contains partial trades.
+
+Implementation:
+- `eacc193b1412407c3a6c3dce8f4570b6e8c46341`: Dense V4 runtime;
+- `035839860be2b89f27527fb8b96fa717ce34ad8c`: V4 dashboard;
+- `71335a7957c1a0f90cb142ec35c10c4fd4d7c082`: V4 preview + safe mode-switch guard.
+
+Read-only preview:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py dense-v4-preview
+```
+
+Enable:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v4
+```
+
+Execution state:
+`DENSE_V4_IMPLEMENTED_PREVIEW_ENABLE_RESTART_REQUIRED`.
