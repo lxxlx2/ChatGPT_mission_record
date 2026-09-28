@@ -1,6 +1,6 @@
 # Crypto Mission Performance Tracker
 
-Updated: 2026-09-28 15:00 Asia/Bangkok
+Updated: 2026-09-28 17:58 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Core objective
@@ -20,7 +20,7 @@ Current original Credits:
 **None.**
 
 USER_CONFIRMED:
-- Binance currently holds **659.9 USD-equivalent earn only**
+- Binance currently holds **682.40 USDT-equivalent earn only**
 - PONSUSDT perpetual is fully closed
 
 ## Fresh all-chain liquid asset view
@@ -90,5 +90,20 @@ Protocol-side rewards that are held in a staking/reward contract rather than the
 - External later deposits do not count as Mission profit.
 - Wallet balance changes alone are not PnL.
 - Historical Credits sale proceeds must not be double-counted.
-- Binance 659.9 earn remains outside speculative Mission performance unless provenance is explicitly reclassified.
+- Binance 682.40 earn remains outside speculative Mission performance unless provenance is explicitly reclassified.
 - Mission target progress remains UNRESOLVED until original Mission capital/proceeds are separated from later additions.
+
+
+## 2026-09-28 de-risking snapshot
+
+User intentionally reduced market risk and moved most liquid exposure into USDC / Binance earn.
+
+Current material-asset presentation threshold: ignore individual positions below $0.10.
+
+Latest asset-completeness reference:
+- material on-chain liquid assets: ~930.30 USD
+- marked NFTs: ~144.97 USD
+- Binance earn: 682.40 USD-equivalent
+- total tracked assets: ~1,757.67 USD
+
+This change must not be interpreted as realized Mission profit. Transfers between wallet USDC and Binance earn are internal allocation changes.
