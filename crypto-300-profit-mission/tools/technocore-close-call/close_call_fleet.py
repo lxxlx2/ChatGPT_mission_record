@@ -110,6 +110,18 @@ DENSE_V4_SHORT_SAFETIES = (
     Decimal("0.98"), Decimal("0.98"), Decimal("0.98"),
 )
 
+# V5a is a conservative profit-harvest layer on top of V4. It never replaces
+# the every-sweep entry engine. At most two copy-pairs from the same V4 cohort
+# are harvested, leaving at least six copies open for continued frontier
+# exposure.
+V5A_MIN_SCORE = Decimal("300")
+V5A_FIRST_TRIGGER_RATIO = Decimal("0.80")
+V5A_SECOND_TRIGGER_RATIO = Decimal("0.95")
+V5A_SECOND_MIN_SCORE = Decimal("400")
+V5A_MAX_HARVESTS_PER_COHORT = 2
+V5A_BOOT_FEE_BUFFER_PCT = Decimal("0.05")
+V5A_BOOT_EXTRA_SAFETY = Decimal("1.10")
+
 
 def b58(raw: bytes) -> str:
     n = int.from_bytes(raw, "big")
@@ -978,6 +990,657 @@ def dense_v4_submit_multiplicity(state: dict, pr: dict) -> dict:
     return result
 
 
+def _pnl_marks_by_sweep() -> dict[int, Decimal]:
+    out = {}
+    for rec in parse_export("d-close1-pnl"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "pnl":
+            continue
+        try:
+            out[int(p["n"])] = Decimal(str(p["mark"]))
+        except Exception:
+            continue
+    return out
+
+
+def _price_refs_by_sweep() -> dict[int, Decimal]:
+    out = {}
+    for rec in parse_export("d-close1-price"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "price":
+            continue
+        try:
+            out[int(p["n"])] = Decimal(str((p.get("ref") or {})["px"]))
+        except Exception:
+            continue
+    return out
+
+
+def _flow_room_missed_at_sweep(room: str, sweep: int) -> bool:
+    for rec in parse_export("d-close1-flow"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        try:
+            if int(p.get("n")) != int(sweep):
+                continue
+        except Exception:
+            continue
+        return room in json.dumps(p.get("missed") or [], separators=(",", ":"), ensure_ascii=False)
+    return False
+
+
+def _v5a_v4_pairs(state: dict) -> list[dict]:
+    dense = state.get("dense") or {}
+    out = []
+
+    for ticket in dense.get("tickets") or []:
+        if ticket.get("mode") != "v4" or ticket.get("status") != "submitted":
+            continue
+        labels = ticket.get("labels") or {}
+        trades = ticket.get("trades") or {}
+        if not all(k in labels for k in ("long", "short")):
+            continue
+        try:
+            out.append({
+                "pair_id": f"base-{int(ticket['index']):05d}",
+                "cohort_sweep": int(ticket["trade_sweep"]),
+                "copy_no": 1,
+                "long": labels["long"],
+                "short": labels["short"],
+                "qty": Decimal(str(ticket["qty"])),
+                "low": Decimal(str(ticket["low"])),
+                "high": Decimal(str(ticket["high"])),
+                "long_trade_id": (trades.get("long") or {}).get("trade_id"),
+                "short_trade_id": (trades.get("short") or {}).get("trade_id"),
+                "source": "baseline",
+            })
+        except Exception:
+            continue
+
+    for ticket in dense.get("v4_tickets") or []:
+        try:
+            out.append({
+                "pair_id": f"v4-{int(ticket['reserve_index']):05d}",
+                "cohort_sweep": int(ticket["sweep"]),
+                "copy_no": int(ticket["copy_no"]),
+                "long": str(ticket["long"]),
+                "short": str(ticket["short"]),
+                "qty": Decimal(str(ticket["qty"])),
+                "low": Decimal(str(ticket["low"])),
+                "high": Decimal(str(ticket["high"])),
+                "long_trade_id": ((ticket.get("trades") or {}).get("long") or {}).get("trade_id"),
+                "short_trade_id": ((ticket.get("trades") or {}).get("short") or {}).get("trade_id"),
+                "source": "reserve",
+            })
+        except Exception:
+            continue
+
+    return out
+
+
+def _v5a_opening_state(pair: dict, settlement_close: Decimal) -> dict:
+    """Reconstruct a fresh V4 target pair under the frozen official fold.
+
+    V4 keys are fresh when the two opening trades are posted. The first trade is
+    feeder sell -> long target at low; the second is short target sell -> feeder
+    at high. This lets us deterministically check funds and reconstruct both
+    target accounts once the next referee close is known.
+    """
+    q = pair["qty"]
+    low = pair["low"]
+    high = pair["high"]
+    mint = Decimal("10000")
+    fee_rate = Decimal("0.01")
+
+    low_base = fee_rate * q * low
+    feeder_sell_fee = max(low_base, (low - settlement_close) * q)
+    long_buy_fee = max(low_base, (settlement_close - low) * q)
+
+    feeder_cash = mint
+    long_cash = mint
+    if feeder_cash < q * low + feeder_sell_fee:
+        return {"settled": False, "reason": "opening_feeder_low_funds"}
+    if long_cash < q * low + long_buy_fee:
+        return {"settled": False, "reason": "opening_long_funds"}
+
+    feeder_cash -= q * low + feeder_sell_fee
+    long_cash -= q * low + long_buy_fee
+
+    high_base = fee_rate * q * high
+    short_sell_fee = max(high_base, (high - settlement_close) * q)
+    feeder_buy_fee = max(high_base, (settlement_close - high) * q)
+
+    short_cash = mint
+    if short_cash < q * high + short_sell_fee:
+        return {"settled": False, "reason": "opening_short_funds"}
+    if feeder_cash < feeder_buy_fee:
+        return {"settled": False, "reason": "opening_feeder_high_fee"}
+
+    short_cash -= q * high + short_sell_fee
+    feeder_cash -= feeder_buy_fee
+    feeder_cash += q * (Decimal("2") * low - high)
+
+    return {
+        "settled": True,
+        "settlement_close": settlement_close,
+        "qty": q,
+        "long_cash": long_cash,
+        "short_cash": short_cash,
+        "feeder_cash": feeder_cash,
+        "long_pos": q,
+        "short_pos": -q,
+        "long_lot_px": low,
+        "short_lot_px": high,
+        "opening_fees": {
+            "long": long_buy_fee,
+            "short": short_sell_fee,
+            "feeder_low": feeder_sell_fee,
+            "feeder_high": feeder_buy_fee,
+        },
+    }
+
+
+def _v5a_scores(open_state: dict, mark: Decimal) -> dict:
+    q = Decimal(str(open_state["qty"]))
+    long_cash = Decimal(str(open_state["long_cash"]))
+    short_cash = Decimal(str(open_state["short_cash"]))
+    low = Decimal(str(open_state["long_lot_px"]))
+    high = Decimal(str(open_state["short_lot_px"]))
+    long_pos = Decimal(str(open_state["long_pos"]))
+    short_pos = Decimal(str(open_state["short_pos"]))
+
+    long_value = long_cash + max(long_pos, Decimal("0")) * mark
+    if long_pos < 0:
+        long_value += -long_pos * (Decimal("2") * low - mark)
+
+    short_value = short_cash
+    if short_pos < 0:
+        short_value += -short_pos * (Decimal("2") * high - mark)
+    elif short_pos > 0:
+        short_value += short_pos * mark
+
+    return {
+        "long": long_value - Decimal("10000"),
+        "short": short_value - Decimal("10000"),
+    }
+
+
+def _v5a_prize_cutoff() -> Decimal | None:
+    pnl = latest_payload("d-close1-pnl", "pnl")
+    pairs = _pnl_pairs(pnl)
+    if len(pairs) < 3:
+        return None
+    return pairs[2][1]
+
+
+def _v5a_harvest_thresholds() -> tuple[Decimal, Decimal]:
+    cutoff = _v5a_prize_cutoff()
+    if cutoff is None:
+        return V5A_MIN_SCORE, V5A_SECOND_MIN_SCORE
+    first = max(V5A_MIN_SCORE, cutoff * V5A_FIRST_TRIGGER_RATIO)
+    second = max(V5A_SECOND_MIN_SCORE, cutoff * V5A_SECOND_TRIGGER_RATIO)
+    return first, second
+
+
+def _v5a_bootstrap_qty(
+    q: Decimal,
+    long_cash: Decimal,
+    short_cash: Decimal,
+    short_lot_px: Decimal,
+    harvest_px: Decimal,
+) -> Decimal | None:
+    """Choose a small first close that self-funds the rest of the close.
+
+    The protocol checks fee cash before releasing collateral. We reserve enough
+    cash for a hypothetical 5% close-price gap on the remaining position. The
+    first tranche must itself be affordable under the same 5% fee buffer.
+    """
+    fee_buf = V5A_BOOT_FEE_BUFFER_PCT * harvest_px
+    if fee_buf <= 0:
+        return None
+
+    long_release = harvest_px
+    short_release = Decimal("2") * short_lot_px - harvest_px
+    if long_release <= 0 or short_release <= 0:
+        return None
+
+    need_long = max(Decimal("0"), (fee_buf * q - long_cash) / long_release)
+    need_short = max(Decimal("0"), (fee_buf * q - short_cash) / short_release)
+    raw = max(Decimal("0.10"), need_long, need_short) * V5A_BOOT_EXTRA_SAFETY
+    boot = raw.quantize(Decimal("0.01"), rounding=ROUND_CEILING)
+    boot = min(boot, q)
+
+    max_affordable = min(long_cash / fee_buf, short_cash / fee_buf, q)
+    max_affordable = max_affordable.quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+    if boot < Decimal("0.10") or boot > max_affordable:
+        return None
+    return boot
+
+
+def _v5a_apply_close(
+    account_state: dict,
+    qty: Decimal,
+    px: Decimal,
+    settlement_close: Decimal,
+) -> dict:
+    """Apply one long-sells-to-short close to reconstructed target accounts."""
+    q_rem = Decimal(str(account_state["qty"]))
+    if qty <= 0 or qty > q_rem:
+        return {"settled": False, "reason": "bad_close_qty"}
+
+    long_cash = Decimal(str(account_state["long_cash"]))
+    short_cash = Decimal(str(account_state["short_cash"]))
+    short_lot_px = Decimal(str(account_state["short_lot_px"]))
+
+    base = Decimal("0.01") * qty * px
+    seller_fee = max(base, (px - settlement_close) * qty)
+    buyer_fee = max(base, (settlement_close - px) * qty)
+
+    if long_cash < seller_fee:
+        return {"settled": False, "reason": "harvest_long_fee_funds"}
+    if short_cash < buyer_fee:
+        return {"settled": False, "reason": "harvest_short_fee_funds"}
+
+    long_cash -= seller_fee
+    long_cash += qty * px
+
+    short_cash -= buyer_fee
+    short_cash += qty * (Decimal("2") * short_lot_px - px)
+
+    left = q_rem - qty
+    out = dict(account_state)
+    out.update({
+        "settled": True,
+        "qty": left,
+        "long_cash": long_cash,
+        "short_cash": short_cash,
+        "long_pos": left,
+        "short_pos": -left,
+    })
+    return out
+
+
+def _v5a_pair_snapshot(
+    state: dict,
+    pair: dict,
+    refs: dict[int, Decimal],
+    mark: Decimal,
+) -> dict | None:
+    submit_sweep = int(pair["cohort_sweep"])
+    settlement_sweep = submit_sweep + 1
+    settlement_close = refs.get(settlement_sweep)
+    if settlement_close is None:
+        return None
+    if _flow_room_missed_at_sweep(state["room"], settlement_sweep):
+        return None
+
+    long_info = trade_outcome_from_flow(pair.get("long_trade_id")) if pair.get("long_trade_id") else {"outcome": None}
+    short_info = trade_outcome_from_flow(pair.get("short_trade_id")) if pair.get("short_trade_id") else {"outcome": None}
+    for info in (long_info, short_info):
+        outcome = info.get("outcome")
+        if outcome and outcome.get("status") == "void":
+            return None
+
+    opening = _v5a_opening_state(pair, settlement_close)
+    if not opening.get("settled"):
+        return None
+    scores = _v5a_scores(opening, mark)
+    winner = "long" if scores["long"] >= scores["short"] else "short"
+    return {
+        "pair": pair,
+        "opening": opening,
+        "scores": scores,
+        "winner": winner,
+        "winner_score": scores[winner],
+        "settlement_sweep": settlement_sweep,
+        "settlement_close": settlement_close,
+    }
+
+
+def _v5a_candidates(state: dict) -> dict:
+    dense = state.setdefault("dense", {})
+    pr = fresh_price(max_age=10**9)
+    pnl = latest_payload("d-close1-pnl", "pnl")
+    try:
+        mark = Decimal(str((pnl or {})["mark"]))
+    except Exception:
+        return {"mark": None, "first_threshold": None, "second_threshold": None, "candidates": []}
+
+    refs = _price_refs_by_sweep()
+    first_threshold, second_threshold = _v5a_harvest_thresholds()
+    harvested = dense.setdefault("v5a_harvested", {})
+    active = dense.get("v5a_active")
+    active_pair = active.get("pair_id") if isinstance(active, dict) else None
+
+    by_cohort_harvested = Counter()
+    for rec in harvested.values():
+        try:
+            by_cohort_harvested[int(rec["cohort_sweep"])] += 1
+        except Exception:
+            pass
+
+    snaps = []
+    for pair in _v5a_v4_pairs(state):
+        if pair["pair_id"] in harvested or pair["pair_id"] == active_pair:
+            continue
+        snap = _v5a_pair_snapshot(state, pair, refs, mark)
+        if not snap:
+            continue
+
+        already = int(by_cohort_harvested.get(pair["cohort_sweep"], 0))
+        allowed = 0
+        if snap["winner_score"] >= first_threshold:
+            allowed = 1
+        if snap["winner_score"] >= second_threshold:
+            allowed = V5A_MAX_HARVESTS_PER_COHORT
+        if already >= allowed:
+            continue
+
+        snap["harvested_in_cohort"] = already
+        snap["allowed_in_cohort"] = allowed
+        snaps.append(snap)
+
+    snaps.sort(key=lambda x: (x["winner_score"], -x["pair"]["copy_no"]), reverse=True)
+    return {
+        "sweep": pr["n"],
+        "ref": pr["px"],
+        "mark": mark,
+        "first_threshold": first_threshold,
+        "second_threshold": second_threshold,
+        "candidates": snaps,
+    }
+
+
+def _v5a_submit_close(
+    state: dict,
+    pair: dict,
+    qty: Decimal,
+    pr: dict,
+    prefix: str,
+) -> dict:
+    tid = f"{prefix}-{int(time.time())}"
+    text = build_trade(
+        state,
+        state["room"],
+        pair["long"],
+        pair["short"],
+        "sell",
+        qty,
+        pr["px"],
+        pr["n"] + 2,
+        tid,
+    )
+    ack = post_signed(state, state["room"], pair["long"], text)
+    return {
+        "trade_id": tid,
+        "qty": str(qty),
+        "px": str(pr["px"]),
+        "submission_sweep": int(pr["n"]),
+        "maker": pair["long"],
+        "taker": pair["short"],
+        "ack": ack.strip().splitlines()[0] if ack.strip() else "",
+    }
+
+
+def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
+    dense = state.setdefault("dense", {})
+    if not dense.get("v5a_enabled") or not dense.get("v4_enabled"):
+        return None
+
+    flow, st = latest_flow_and_state()
+    flow_n = int(flow["n"]) if isinstance(flow, dict) and flow.get("n") is not None else None
+    state_n = int(st["n"]) if isinstance(st, dict) and st.get("n") is not None else None
+    if flow_n != pr["n"] or state_n != pr["n"]:
+        return None
+    if not room_registration_confirmed(state) or flow_misses_room(flow, state["room"]):
+        return None
+
+    refs = _price_refs_by_sweep()
+    active = dense.get("v5a_active")
+    if isinstance(active, dict):
+        stage = active.get("stage")
+        action = active.get("action") or {}
+        submit_sweep = int(action.get("submission_sweep", -1))
+        if pr["n"] <= submit_sweep:
+            return None
+
+        settlement_close = refs.get(submit_sweep + 1)
+        if settlement_close is None:
+            return None
+        if _flow_room_missed_at_sweep(state["room"], submit_sweep + 1):
+            active["stage"] = "blocked_missed_settlement_sweep"
+            active["blocked_at"] = datetime.now(timezone.utc).isoformat()
+            dense["v5a_active"] = active
+            save_state(state)
+            return {
+                "event": "v5a_harvest_blocked",
+                "reason": "room_missed_settlement_sweep",
+                "pair_id": active.get("pair_id"),
+                "settlement_sweep": submit_sweep + 1,
+            }
+
+        outcome_info = trade_outcome_from_flow(action.get("trade_id"))
+        visible = outcome_info.get("outcome")
+        if visible and visible.get("status") == "void":
+            active["stage"] = "blocked_visible_void"
+            active["void"] = visible
+            dense["v5a_active"] = active
+            save_state(state)
+            return {
+                "event": "v5a_harvest_blocked",
+                "reason": "visible_close_void",
+                "pair_id": active.get("pair_id"),
+                "void": visible,
+            }
+
+        account_state = active.get("account_state") or {}
+        applied = _v5a_apply_close(
+            account_state,
+            Decimal(str(action["qty"])),
+            Decimal(str(action["px"])),
+            settlement_close,
+        )
+        if not applied.get("settled"):
+            active["stage"] = "blocked_simulated_void"
+            active["simulation_reason"] = applied.get("reason")
+            dense["v5a_active"] = active
+            save_state(state)
+            return {
+                "event": "v5a_harvest_blocked",
+                "reason": applied.get("reason"),
+                "pair_id": active.get("pair_id"),
+            }
+
+        active["account_state"] = applied
+        active.setdefault("verified_actions", []).append({
+            **action,
+            "settlement_sweep": submit_sweep + 1,
+            "settlement_close": str(settlement_close),
+            "visible_outcome": visible,
+        })
+
+        remaining = Decimal(str(applied["qty"]))
+        if remaining <= Decimal("0"):
+            long_locked = Decimal(str(applied["long_cash"])) - Decimal("10000")
+            short_locked = Decimal(str(applied["short_cash"])) - Decimal("10000")
+            winner = active["winner"]
+            locked_score = long_locked if winner == "long" else short_locked
+            record = {
+                "pair_id": active["pair_id"],
+                "cohort_sweep": active["pair"]["cohort_sweep"],
+                "copy_no": active["pair"]["copy_no"],
+                "winner": winner,
+                "trigger_score": active["trigger_score"],
+                "locked_score": str(locked_score),
+                "long_locked_score": str(long_locked),
+                "short_locked_score": str(short_locked),
+                "closed_at": datetime.now(timezone.utc).isoformat(),
+                "verified_actions": active.get("verified_actions") or [],
+            }
+            dense.setdefault("v5a_harvested", {})[active["pair_id"]] = record
+            dense["v5a_last_locked"] = record
+            dense["v5a_active"] = None
+            save_state(state)
+            return {
+                "event": "v5a_harvest_locked",
+                "pair_id": record["pair_id"],
+                "winner": winner,
+                "locked_score": record["locked_score"],
+                "cohort_sweep": record["cohort_sweep"],
+                "copy_no": record["copy_no"],
+            }
+
+        # Bootstrap close settled. Cash has been released, so submit the
+        # remaining close on the next aligned sweep.
+        if stage == "bootstrap_submitted":
+            pair = active["pair"]
+            finish = _v5a_submit_close(
+                state,
+                pair,
+                remaining,
+                pr,
+                f"h5f-{pair['cohort_sweep']}-{pair['copy_no']}",
+            )
+            active["stage"] = "finish_submitted"
+            active["action"] = finish
+            active["finish_submitted_at"] = datetime.now(timezone.utc).isoformat()
+            dense["v5a_active"] = active
+            save_state(state)
+            return {
+                "event": "v5a_harvest_finish_submitted",
+                "pair_id": active["pair_id"],
+                "qty": str(remaining),
+                "sweep": pr["n"],
+                "px": str(pr["px"]),
+            }
+
+        return None
+
+    # No harvest is currently in flight. Select at most one pair.
+    report = _v5a_candidates(state)
+    candidates = report.get("candidates") or []
+    if not candidates:
+        return None
+
+    snap = candidates[0]
+    pair = snap["pair"]
+    opening = snap["opening"]
+    boot = _v5a_bootstrap_qty(
+        pair["qty"],
+        Decimal(str(opening["long_cash"])),
+        Decimal(str(opening["short_cash"])),
+        Decimal(str(opening["short_lot_px"])),
+        pr["px"],
+    )
+    if boot is None:
+        dense["v5a_last_skip"] = {
+            "at": datetime.now(timezone.utc).isoformat(),
+            "pair_id": pair["pair_id"],
+            "reason": "cannot_bootstrap_close_with_5pct_fee_buffer",
+            "winner_score": str(snap["winner_score"]),
+        }
+        save_state(state)
+        return None
+
+    action = _v5a_submit_close(
+        state,
+        pair,
+        boot,
+        pr,
+        f"h5b-{pair['cohort_sweep']}-{pair['copy_no']}",
+    )
+    active = {
+        "pair_id": pair["pair_id"],
+        "pair": {
+            **pair,
+            "qty": str(pair["qty"]),
+            "low": str(pair["low"]),
+            "high": str(pair["high"]),
+        },
+        "winner": snap["winner"],
+        "trigger_score": str(snap["winner_score"]),
+        "first_threshold": str(report["first_threshold"]),
+        "second_threshold": str(report["second_threshold"]),
+        "stage": "bootstrap_submitted",
+        "account_state": {
+            **opening,
+            "settlement_close": str(opening["settlement_close"]),
+            "qty": str(opening["qty"]),
+            "long_cash": str(opening["long_cash"]),
+            "short_cash": str(opening["short_cash"]),
+            "feeder_cash": str(opening["feeder_cash"]),
+            "long_pos": str(opening["long_pos"]),
+            "short_pos": str(opening["short_pos"]),
+            "long_lot_px": str(opening["long_lot_px"]),
+            "short_lot_px": str(opening["short_lot_px"]),
+        },
+        "action": action,
+        "started_at": datetime.now(timezone.utc).isoformat(),
+    }
+    dense["v5a_active"] = active
+    save_state(state)
+    return {
+        "event": "v5a_harvest_bootstrap_submitted",
+        "pair_id": pair["pair_id"],
+        "cohort_sweep": pair["cohort_sweep"],
+        "copy_no": pair["copy_no"],
+        "winner": snap["winner"],
+        "trigger_score": str(snap["winner_score"]),
+        "bootstrap_qty": str(boot),
+        "total_qty": str(pair["qty"]),
+        "sweep": pr["n"],
+        "px": str(pr["px"]),
+    }
+
+
+def cmd_dense_v5a_preview(_args) -> None:
+    state = load_state()
+    report = _v5a_candidates(state)
+    print("=== DENSE V5A HARVEST PREVIEW ===")
+    print("sweep:", report.get("sweep"), "ref:", report.get("ref"), "mark:", report.get("mark"))
+    print("first_threshold:", report.get("first_threshold"))
+    print("second_threshold:", report.get("second_threshold"))
+    print("active:", json.dumps((state.get("dense") or {}).get("v5a_active"), ensure_ascii=False, default=str))
+    print("harvested_count:", len(((state.get("dense") or {}).get("v5a_harvested") or {})))
+    candidates = report.get("candidates") or []
+    print("eligible_candidates:", len(candidates))
+    for snap in candidates[:12]:
+        pair = snap["pair"]
+        print(
+            pair["pair_id"],
+            "sweep", pair["cohort_sweep"],
+            "copy", pair["copy_no"],
+            "winner", snap["winner"],
+            "score", snap["winner_score"].quantize(Decimal("0.01")),
+            "already", snap["harvested_in_cohort"],
+            "allowed", snap["allowed_in_cohort"],
+        )
+
+
+def cmd_enable_dense_v5a(_args) -> None:
+    state = load_state()
+    dense = state.setdefault("dense", {})
+    if not dense.get("v4_enabled"):
+        raise SystemExit("Dense V5a harvest requires Dense V4 to remain enabled")
+    dense["v5a_enabled"] = True
+    dense["v5a_enabled_at"] = datetime.now(timezone.utc).isoformat()
+    dense["v5a_min_score"] = str(V5A_MIN_SCORE)
+    dense["v5a_first_trigger_ratio"] = str(V5A_FIRST_TRIGGER_RATIO)
+    dense["v5a_second_trigger_ratio"] = str(V5A_SECOND_TRIGGER_RATIO)
+    dense["v5a_second_min_score"] = str(V5A_SECOND_MIN_SCORE)
+    dense["v5a_max_harvests_per_cohort"] = V5A_MAX_HARVESTS_PER_COHORT
+    dense.setdefault("v5a_harvested", {})
+    save_state(state)
+    print("Dense V5a HARVEST ENABLED")
+    print("V4 entry engine remains enabled")
+    print("first harvest threshold: max(300, 80% of current prize cutoff)")
+    print("second harvest threshold: max(400, 95% of current prize cutoff)")
+    print("max harvested copy-pairs per V4 cohort:", V5A_MAX_HARVESTS_PER_COHORT)
+    print("at least 6/8 copies per cohort remain open")
+    print("harvest uses staged close with a 5% fee-cash bootstrap buffer")
+
+
 def dense_register_pending(state: dict, sweep: int) -> dict:
     dense = state.setdefault("dense", {})
     pending = dense.get("pending")
@@ -1358,6 +2021,10 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
         return submitted
     if submitted:
         return submitted
+
+    harvest = dense_v5a_harvest_step(state, pr)
+    if harvest:
+        return harvest
 
     last_seen_sweep = dense.get("last_seen_sweep")
     if last_seen_sweep == pr["n"]:
@@ -3008,6 +3675,23 @@ def cmd_dense_status(_args) -> None:
         print("last_v3_short_copies:", last_v3.get("total_short_copies"))
         print("last_v3_reserve_shortage:", last_v3.get("reserve_shortage"))
         print("last_v3_errors:", len(last_v3.get("errors") or []))
+    print("v5a_enabled:", bool(dense.get("v5a_enabled")))
+    print("v5a_harvested_count:", len(dense.get("v5a_harvested") or {}))
+    active_v5a = dense.get("v5a_active")
+    if isinstance(active_v5a, dict):
+        print("v5a_active_pair:", active_v5a.get("pair_id"))
+        print("v5a_active_stage:", active_v5a.get("stage"))
+        print("v5a_active_winner:", active_v5a.get("winner"))
+        print("v5a_active_trigger_score:", active_v5a.get("trigger_score"))
+    else:
+        print("v5a_active_pair: null")
+        print("v5a_active_stage: null")
+    last_locked_v5a = dense.get("v5a_last_locked")
+    if isinstance(last_locked_v5a, dict):
+        print("v5a_last_locked_pair:", last_locked_v5a.get("pair_id"))
+        print("v5a_last_locked_winner:", last_locked_v5a.get("winner"))
+        print("v5a_last_locked_score:", last_locked_v5a.get("locked_score"))
+
     dynamic_keys = sum(1 for k in state.get("keys", {}) if k.startswith("DENSE-"))
     print("dynamic_keys:", dynamic_keys)
     print("dynamic_key_cap:", DENSE_MAX_DYNAMIC_KEYS)
@@ -3360,6 +4044,12 @@ def main() -> None:
 
     p = sp.add_parser("dense-v4-preview")
     p.set_defaults(fn=cmd_dense_v4_preview)
+
+    p = sp.add_parser("dense-v5a-preview")
+    p.set_defaults(fn=cmd_dense_v5a_preview)
+
+    p = sp.add_parser("enable-dense-v5a")
+    p.set_defaults(fn=cmd_enable_dense_v5a)
 
     p = sp.add_parser("enable-dense-v4")
     p.set_defaults(fn=cmd_enable_dense_v4)
