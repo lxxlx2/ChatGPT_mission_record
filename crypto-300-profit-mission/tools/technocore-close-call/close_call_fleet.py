@@ -2239,6 +2239,14 @@ def dense_v5b_step(state: dict, pr: dict) -> dict | None:
     if not dense.get("v5b_enabled") or not dense.get("v4_enabled"):
         return None
 
+    dense["v5b_last_check"] = {
+        "at": datetime.now(timezone.utc).isoformat(),
+        "sweep": int(pr["n"]),
+        "pending": bool(isinstance(dense.get("v5b_pending"), dict)),
+        "active": bool(isinstance(dense.get("v5b_active"), dict)),
+    }
+    save_state(state)
+
     # V5a and V5b operate on disjoint accounts. Do not pause compound risk
     # management merely because another V5a harvest is in flight.
     active = dense.get("v5b_active")
@@ -2742,6 +2750,14 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
             "pending_status": (dense.get("pending") or {}).get("status"),
         }
 
+    # V5b gets the first strategy slot on every poll. This guarantees that
+    # realized-profit seeds can register/open and active compound positions can
+    # be risk-managed even when the V4 pending batch repeatedly returns alignment
+    # or room-wait events during a sweep transition.
+    compound = dense_v5b_step(state, pr)
+    if compound:
+        return compound
+
     # Retry a ready pending batch on the same sweep until flow/state catch up.
     # Only de-duplicate after the pending batch has either submitted or is not yet ready.
     submitted = dense_submit_pending(state, pr)
@@ -2753,13 +2769,6 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
         return submitted
     if submitted:
         return submitted
-
-    # Give V5b the first post-V4 slot so a newly realized V5a seed cannot
-    # be starved by an endless stream of new V5a harvest candidates. Active V5b
-    # positions are also risk-managed every poll even while V5a is active.
-    compound = dense_v5b_step(state, pr)
-    if compound:
-        return compound
 
     harvest = dense_v5a_harvest_step(state, pr)
     if harvest:
@@ -4440,6 +4449,15 @@ def cmd_dense_status(_args) -> None:
     print("v5b_enabled:", bool(dense.get("v5b_enabled")))
     print("v5b_accept_new:", bool(dense.get("v5b_accept_new", True)))
     print("v5b_closed_cycles:", len(dense.get("v5b_cycles") or []))
+    v5b_last_check = dense.get("v5b_last_check")
+    if isinstance(v5b_last_check, dict):
+        print("v5b_last_check_at:", v5b_last_check.get("at"))
+        print("v5b_last_check_sweep:", v5b_last_check.get("sweep"))
+        print("v5b_last_check_pending:", v5b_last_check.get("pending"))
+        print("v5b_last_check_active:", v5b_last_check.get("active"))
+    else:
+        print("v5b_last_check_at: null")
+        print("v5b_last_check_sweep: null")
     v5b_pending = dense.get("v5b_pending")
     if isinstance(v5b_pending, dict):
         print("v5b_pending_cycle:", v5b_pending.get("index"))
