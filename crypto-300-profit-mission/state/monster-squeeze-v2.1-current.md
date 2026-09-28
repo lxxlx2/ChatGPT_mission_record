@@ -121,3 +121,32 @@ Retrospective objective-gate evidence:
 - 2026-09-28 14:00 Bangkok: breakout +3.97%; 6h +15.52%; volume 7.29x; 3h taker buy 53.15%.
 
 Do not invent a historical setup price or backfill IGNITION. Track BTW prospectively from the new 1.2825 setup.
+
+
+## Runtime health index — 2026-09-28 19:22
+
+last_successful_full_scan_at: **2026-09-28 19:22 Asia/Bangkok** (manual health-check)
+liquid_universe_24h_quote_volume_ge_10m: **226 symbols**
+
+Current manual deep-check:
+- RAREUSDT: rejected / post-spike; breakout -24.85%, 6h -9.63%, volume 0.63x, taker buy 48.39%, OI ~-20.20%.
+- QNTUSDT: prior PRESSURE now failed-continuation / exhaustion-like; breakout -36.82%, 6h -11.36%, volume 1.98x, taker buy 50.09%, OI ~-6.98%.
+- HBARUSDT: **PRESSURE candidate**; close 0.11739, breakout -0.63%, 6h +20.80%, volume 26.52x, taker buy 49.81%, funding -0.001788%, OI ~+74.92%. New setup_price **0.11739**.
+- MARSCOINUSDT: shortlist/deferred; close 0.15037, breakout -5.49%, 6h +17.73%, volume 3.57x, taker buy 50.15%, OI ~+27.93%.
+- BTWUSDT: forward PRESSURE remains; latest completed-hour breakout -12.06%, 6h -4.98%, volume 5.85x, taker buy 50.48%, OI ~+3.70%.
+
+No current IGNITION in this sampled health-check.
+
+### Durable DEFERRED_SHORTLIST
+
+Old carry-forward candidates from 2026-09-27 are retained until checked:
+- USUSDT — historical first_seen 2026-09-27 12:34; setup_price unavailable_historical; next_due immediate.
+- RUNEUSDT — historical first_seen 2026-09-27 12:34; setup_price unavailable_historical; next_due immediate.
+- INUSDT — historical first_seen 2026-09-27 12:34; setup_price unavailable_historical; next_due immediate.
+- WUSDT — historical first_seen 2026-09-27 12:34; setup_price unavailable_historical; next_due immediate.
+- DASHUSDT — historical first_seen 2026-09-27 12:34; setup_price unavailable_historical; next_due immediate.
+- MARSCOINUSDT — first_seen 2026-09-28 19:22; setup_price 0.15037; next_due next Monster scan.
+
+RAREUSDT has now been deep-checked and is removed from deferred state.
+
+19:29 remains a mandatory full screen even though this manual health-check occurred seven minutes earlier.
