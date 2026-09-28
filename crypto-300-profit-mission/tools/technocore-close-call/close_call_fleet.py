@@ -2034,6 +2034,7 @@ def _v5b_submit_open(state: dict, pending: dict, pr: dict) -> dict:
     return {
         "event": "v5b_open_submitted",
         "cycle_index": active["cycle_index"],
+        "source_seed_id": active.get("source_seed_id"),
         "source_pair_id": active["source_pair_id"],
         "side": active["side"],
         "seed_locked_score": active["seed_locked_score"],
