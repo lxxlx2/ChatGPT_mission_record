@@ -1,6 +1,6 @@
 # Airdrop / TGE Automatic Runtime
 
-Updated: 2026-09-28 09:12 Asia/Bangkok
+Updated: 2026-09-28 09:18 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Authority for the existing :14 task.
@@ -141,7 +141,9 @@ A whitelist project with a known investment/deal intermediary must be checked at
 
 Do not filter out a refund/cancellation/allocation/settlement event merely because the underlying project did not announce it.
 
-For humans&, explicitly include Echo (@echodotxyz) / Alpen Capital deal lifecycle. A full refund into the user's Echo wallet is a substantive ACTION because it changes entitlement and deployable capital.
+Closed/refunded deals must not consume monitoring. Once a full refund or complete exit is confirmed and no entitlement remains, remove the project/deal channel from active shards and rights checks. Preserve it only as historical audit state unless the user explicitly reactivates it.
+
+Current closed example: humans& via Echo/Alpen Capital was fully refunded on 2026-09-24 and is excluded from active monitoring.
 
 ### Persistence survival
 
