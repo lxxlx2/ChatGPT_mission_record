@@ -1447,6 +1447,8 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
     active = dense.get("v5a_active")
     if isinstance(active, dict):
         stage = active.get("stage")
+        if stage not in ("bootstrap_submitted", "finish_submitted"):
+            return None
         action = active.get("action") or {}
         submit_sweep = int(action.get("submission_sweep", -1))
         if pr["n"] <= submit_sweep:
@@ -1564,7 +1566,13 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
 
         return None
 
-    # No harvest is currently in flight. Select at most one pair.
+    # No harvest is currently in flight. PnL/mark only changes once per
+    # referee sweep, so a no-candidate scan needs to run only once per sweep.
+    if int(dense.get("v5a_last_scan_sweep", -1)) == int(pr["n"]):
+        return None
+    dense["v5a_last_scan_sweep"] = int(pr["n"])
+    save_state(state)
+
     report = _v5a_candidates(state)
     candidates = report.get("candidates") or []
     if not candidates:
@@ -3738,6 +3746,11 @@ def cmd_dense_status(_args) -> None:
         print("v5a_last_locked_pair:", last_locked_v5a.get("pair_id"))
         print("v5a_last_locked_winner:", last_locked_v5a.get("winner"))
         print("v5a_last_locked_score:", last_locked_v5a.get("locked_score"))
+    last_skip_v5a = dense.get("v5a_last_skip")
+    if isinstance(last_skip_v5a, dict):
+        print("v5a_last_skip_pair:", last_skip_v5a.get("pair_id"))
+        print("v5a_last_skip_reason:", last_skip_v5a.get("reason"))
+        print("v5a_last_skip_score:", last_skip_v5a.get("winner_score"))
 
     dynamic_keys = sum(1 for k in state.get("keys", {}) if k.startswith("DENSE-"))
     print("dynamic_keys:", dynamic_keys)
