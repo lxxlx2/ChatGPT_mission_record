@@ -77,25 +77,25 @@ WATCH must never produce Gmail or ChatGPT output.
 
 ## Formal entry signal
 
-Emit `FORMAL_ENTRY` only when all safety gates are satisfied and either persistence path A or B is satisfied.
+Emit `FORMAL_ENTRY` only after **two consecutive hourly observations**. There is no one-cycle fast path.
 
-Common safety gates:
+First qualifying hourly observation:
+- persist `WATCH`;
+- stay completely silent.
+
+Second or later hourly observation may become `FORMAL_ENTRY` only when every safety gate below is still satisfied:
 1. active swaps only, no transfer-derived false signal;
-2. current Frank exposure remains positive;
-3. sell value during the accumulation window is <=30% of gross buy value;
-4. estimated current executable price is no more than 10% above Frank VWAP;
-5. liquidity/quote reserve is adequate for a small Mission entry and is not collapsing;
-6. no obvious token-control red flag found in a bounded mint check, such as unexpected mint/freeze authority, dangerous Token-2022 fee/hook/pause control, or an obvious honeypot/transfer restriction;
-7. no HFT_EXECUTION classification.
+2. the mint was WATCH in the prior hourly run;
+3. Frank still has a materially open position and has either added exposure or retained >=70% of the WATCH-cycle peak token exposure;
+4. cumulative gross active buys since first WATCH are >=10,000 USD equivalent;
+5. sell value since first WATCH is <=30% of gross buy value;
+6. estimated current executable price is between **8% below and 10% above** Frank VWAP. Below -8% is treated as possible deterioration, above +10% as too late to copy;
+7. liquidity/quote reserve is adequate for a small Mission entry and is not collapsing;
+8. no obvious token-control red flag is found in a bounded mint check, including unexpected mint/freeze authority, dangerous Token-2022 fee/hook/pause control, or an obvious honeypot/transfer restriction;
+9. no HFT_EXECUTION classification;
+10. the asset is not a stablecoin, wrapped major, canonical BTC/ETH/SOL wrapper, or obvious execution/hedging instrument already covered by other Mission lanes.
 
-Persistence path A:
-- the mint was WATCH in the previous hourly run;
-- Frank is still holding and has added or maintained meaningful exposure in the new run.
-
-Persistence path B:
-- >=3 active BUY swaps span at least 30 minutes inside the last 3 hours;
-- cumulative gross active buys are >=10,000 USD equivalent;
-- current exposure remains materially open.
+This intentionally gives up first-hour speed to reduce false positives and copy latency.
 
 Do not alert solely because Frank made one large first buy.
 
@@ -121,7 +121,8 @@ For FORMAL_ENTRY or FORMAL_EXIT:
 - send Gmail to the existing Mission notification recipient;
 - do not send a ChatGPT notification for this lane;
 - use plain text;
-- include Bangkok timestamp, ticker/name if verified, full CA, signal type, active buy/sell counts, estimated USD flow, Frank VWAP, current executable price, price deviation, liquidity/quote reserve, relevant transaction hashes, and the 10-30 USD Mission action range or exit instruction.
+- keep the body action-oriented and include: Bangkok timestamp; ticker/name if verified; full CA; signal type; why this passed the conviction filter; active buy/sell counts; estimated USD flow; Frank VWAP; current executable price and deviation; liquidity/quote reserve; bounded token-control/holder-risk notes; relevant transaction hashes; a clear **do-not-chase price**; invalidation/exit conditions; and the 10-30 USD Mission action range or exit instruction.
+- do not include raw WATCH candidates, generic market commentary, or unrelated wallet activity.
 
 Subject format:
 `[300 Mission][ACTION][Frank] <ENTRY|EXIT> | <TICKER-or-CA-short> | YYYY-MM-DD HH:mm BKK`
