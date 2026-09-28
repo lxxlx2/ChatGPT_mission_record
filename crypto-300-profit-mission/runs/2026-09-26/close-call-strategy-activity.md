@@ -1202,3 +1202,27 @@ Commit: `e1ecf37607f2804a3a82c19cd237574badb0c010`.
 
 Execution state:
 `DENSE_V5B_PRE_PENDING_DIAGNOSTICS_HARDENED`.
+
+
+## 2026-09-29 — V5b root cause found: Decimal seed serialization
+
+At referee sweep 955:
+- V5b scheduler heartbeat was present;
+- V5b was enabled and accepting new cycles;
+- no pending/active cycle existed;
+- no seed-empty or persisted V5b error diagnostic was present.
+
+Root cause:
+- `_v5b_seed_candidates()` intentionally returns `locked_score` and `cash` as `Decimal` values for sizing math;
+- `_v5b_register_pending()` copied that seed directly into the persistent JSON state and called `save_state()`;
+- `json.dumps` cannot serialize `Decimal`, so the autopilot iteration failed after entering V5b but before the pending object could be written;
+- preview did not expose this because it performs the math without persisting the candidate.
+
+Fix:
+- convert V5b seed `locked_score` and `cash` to strings before persisting pending state;
+- downstream V5b logic already reconstructs those values via `Decimal(str(...))`, so no calculation semantics change.
+
+Commit: `62353a588336ace7cd800bfad044e39cc822b4d9`.
+
+Execution state:
+`DENSE_V5B_DECIMAL_SERIALIZATION_FIXED`.
