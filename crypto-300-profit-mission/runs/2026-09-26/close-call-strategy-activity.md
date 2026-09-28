@@ -777,3 +777,24 @@ Dense V3 startup hardening:
 - `1cef79ddb830d4d9db2cf7943ba8e6a01433918c` primes all 16 V3 reserve copy-sets synchronously when V3 is enabled and records `v3_not_before_sweep = enable_sweep + 1`.
 - This prevents the preserved pending baseline batch from firing immediately with only 1L/1S before the reserve multiplicity keys have aged through one referee sweep.
 - The first V3 trade therefore waits until the pre-registered reserve can support the intended 8L + 8S construction.
+
+
+## 2026-09-28 — Dense V3 enable verification and dashboard legacy-schedule fix
+
+User-side enable/status output verified:
+- Dense V3 enabled successfully;
+- enable sweep 830;
+- first V3-eligible sweep recorded as >=831;
+- baseline submitted sets 317;
+- pending baseline index 318, ready after sweep 831;
+- V3 reserve registered 16, ready 0 on the enable sweep as expected;
+- no V3 partial reserve errors;
+- ref-age gate disabled while referee alignment/room safety remains active;
+- local dynamic keys 1566 / 60000;
+- room registration confirmed.
+
+The dashboard still displayed an overdue Static T03 message even though Dense mode had already frozen all future legacy Static/Bracket execution. Runtime was safe because `autopilot_iteration()` returns through `dense_autopilot_step()` before legacy scheduling. The issue was display-only.
+
+Fix:
+- commit `73104dbb35016575ec06a68bc7e4e3bcb312c978`
+- dashboard no longer surfaces Static/Bracket pending schedules while Dense is enabled.
