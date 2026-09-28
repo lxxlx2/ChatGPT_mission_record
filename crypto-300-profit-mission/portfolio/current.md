@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-29 03:44 Asia/Bangkok
+Updated: 2026-09-29 after Solana meme exit
 Timezone: Asia/Bangkok
 
 ## Accounting rule
@@ -30,13 +30,13 @@ Binance Earn unchanged:
 ### USDC
 
 Fresh DIRECT_CHAIN:
-- Solana USDC: **521.349642**
+- Solana USDC: **523.709901**
 - Ethereum USDC: **400.308121**
-- directly decomposed subtotal: **921.657763 USDC**
+- directly decomposed subtotal: **924.018022 USDC**
 
-Last wallet UI completeness snapshot showed an additional **~13.203224 USDC** outside the Ethereum + Solana balances. Since the only wallet activity after that snapshot was the three Solana transactions listed below, the inferred aggregate USDC completeness mark is now:
+The latest wallet completeness snapshot had approximately **13.203224 USDC** outside the Ethereum + Solana balances. No non-Solana activity has been observed since that snapshot, so the inferred aggregate USDC completeness mark is:
 
-- **~934.860987 USDC**
+- **~937.221246 USDC**
 
 Known canonical USDC dust on Base / Arbitrum / Unichain etc. remains below $1 per chain and is omitted.
 
@@ -44,52 +44,53 @@ Known canonical USDC dust on Base / Arbitrum / Unichain etc. remains below $1 pe
 
 USER_CONFIRMED unchanged:
 - SUI: **40.192929**
-- fresh SUIUSDT reference: **$1.1575**
-- marked value: **~$46.52**
+- fresh SUIUSDT reference: **$1.1661**
+- marked value: **~$46.87**
 
 Current connector still lacks a usable direct Sui balance RPC; quantity therefore remains the latest user-confirmed canonical amount.
 
 ### Solana
 
 DIRECT_CHAIN finalized:
-- SOL: **0.011130612**
-- SOLUSDT reference: **$118.79**
-- marked value: **~$1.32**
-- USDC: **521.349642**
+- SOL: **0.023676412**
+- SOLUSDT reference: **$119.10**
+- marked value: **~$2.82**
+- USDC: **523.709901**
 
-New material SPL position:
-- mint: `C1mBfBoDkwWfd6uTFZp62ARHLjeVp3bDpCDMfMZtPngE`
-- balance: **2,845.330357**
-- current Alchemy price feed has no quote for this mint.
-- latest wallet execution sold **15,000 tokens** and, using the USDC wallet balance delta across the only three intervening Solana transactions, realized approximately **40.110987 USDC**, implying an execution-derived reference price of **~$0.002674/token**.
-- residue marked at that execution-derived reference: **~$7.61**
-- this is an execution-derived mark, not an independent market-price oracle.
+The temporary meme position with mint
+`C1mBfBoDkwWfd6uTFZp62ARHLjeVp3bDpCDMfMZtPngE`
+is now **fully closed**:
+- current balance: **0**
+- previous residue: **2,845.330357**
+- exit tx 1: `gi69QGEhAZ15ucUcUmKd5csq4EKT653b8EquhBgqDdSnqM6moj9dM3PKPKqErxNV2PTQEt6DVj413pgD45dh7Lh`
+  - sold **1,422.665178**
+  - swap leg produced **2.372119 USDC**
+- exit tx 2: `2Yu4fXVCKvRMcwmDxmBonEKc45r2YgxWWHeNJNSgdz5XAAs1gGnLMvsdrs9tcnihziiZkcpsF6M3zwjS6HML8Ekp`
+  - sold **1,422.665179**
+  - swap leg produced **0.01271088 SOL**
 
-Recent Solana sequence after the prior snapshot:
-1. tx `44fD8WaGkPF6SMCpb1sD9rCMAw22Ch26R8FFj3SWXbK5n9Gn9yK4aAxhwM9zyDQCTR5X52WEd7HFWivQdwhot88d`
-2. tx `98BUBWjGWLJKabUTq1mowhxRfLJeXRnic426jw4RWrUXeAoJ8bnbGD7TL3eRWXksiKMdLE7wiKeLx8UWvvdhj4B`
-3. tx `3JMcPqQ1i4vn99nYMh1RiWmEX27sF7TZ7pAPjtidKkdw1RhxmTAzruHPrBVbwJ3RnN4jkd1BH9ebVtV7uiornsgB`
+Net wallet change versus the immediately preceding snapshot:
+- Solana USDC: **521.349642 -> 523.709901** = **+2.360259**
+- SOL: **0.011130612 -> 0.023676412** = **+0.012545800**
+- meme token: **2,845.330357 -> 0**
 
-Relative to the 02:28 snapshot:
-- Solana USDC: **506.238655 -> 521.349642** (**+15.110987**)
-- SOL: **0.015349154 -> 0.011130612** (**-0.004218542**)
-- C1m... token: **0 -> 2,845.330357** remaining after the trade sequence.
+The meme position is removed from current holdings.
 
-No other fungible SPL / Token-2022 balance with a reliable value >= $1 was identified.
+No other fungible SPL / Token-2022 position with a reliable value >= $1 was identified.
 
 ### EVM native ETH-family positions
 
-Fresh DIRECT_CHAIN:
-- Ink ETH: **0.010389022090321585 ETH** = **~$27.85**
-- Ethereum ETH: **0.000850479068623404 ETH** = **~$2.28**
-- Base ETH: **0.000781411120038408 ETH** = **~$2.09**
+No user-reported EVM movement since the prior refresh. Canonical balances remain:
+- Ink ETH: **0.010389022090321585 ETH** = **~$27.94**
+- Ethereum ETH: **0.000850479068623404 ETH** = **~$2.29**
+- Base ETH: **0.000781411120038408 ETH** = **~$2.10**
 
-ETH reference: **~$2,680.39**
+ETH reference: **~$2,689.52**
 
 Directly confirmed ETH-family subtotal above the $1-per-chain threshold:
-- **~$32.22**
+- **~$32.33**
 
-The following remain below $1 individually and are omitted: Linea ETH, Unichain ETH, World Chain ETH, Robinhood Chain ETH, Optimism ETH, Arbitrum ETH, BNB, AVAX, POL, HYPE, MON and other gas/dust positions.
+Linea ETH, Unichain ETH, World Chain ETH, Robinhood Chain ETH, Optimism ETH, Arbitrum ETH, BNB, AVAX, POL, HYPE, MON and other gas/dust positions remain individually below $1 and are omitted.
 
 ## Material NFTs >= $1
 
@@ -99,7 +100,7 @@ Fresh DIRECT_CHAIN ownership:
 - **Credit #23232** — owned
 - **Credit #23042** — sold / no longer owned
 
-Fresh OpenSea collection floor:
+Last reliable collection floor reference:
 - **~$65.37**
 
 Conservative NAV:
@@ -111,7 +112,7 @@ Conservative NAV:
 Fresh DIRECT_CHAIN ownership:
 - **UNICRED #230** — owned
 
-Fresh OpenSea collection floor:
+Last reliable collection floor reference:
 - **~$7.85**
 
 Conservative NAV:
@@ -119,20 +120,20 @@ Conservative NAV:
 
 ### Other inventory
 
-- INK #372 remains known historical Ink inventory, but there is no reliable current >=$1 market mark from the available connector, so it is excluded from marked totals.
+- INK #372 remains known Ink inventory, but there is no reliable current >=$1 market mark from the available connector, so it is excluded from marked totals.
 - The Solstice vesting-position NFT remains relevant to the separate Season 1 rights dispute; revoked 1,049.483713 SLX is not treated as liquid NAV.
 - Other Ethereum NFTs below $1 are omitted.
 
 ## Current marked asset reference
 
 Filtered liquid on-chain positions >= $1:
-- inferred aggregate USDC completeness mark: **~$934.86**
-- SUI: **~$46.52**
-- SOL: **~$1.32**
-- EVM ETH-family positions >=$1: **~$32.22**
-- Solana `C1m...PngE` residue: **~$7.61**
+- inferred aggregate USDC completeness mark: **~$937.22**
+- SUI: **~$46.87**
+- SOL: **~$2.82**
+- EVM ETH-family positions >=$1: **~$32.33**
+- temporary Solana meme: **$0 / CLOSED**
 
-**Filtered liquid subtotal: ~ $1,022.54**
+**Filtered liquid subtotal: ~ $1,019.24**
 
 Material NFTs:
 - Credit #23232: **~$65.37**
@@ -140,12 +141,12 @@ Material NFTs:
 
 **Material NFT subtotal: ~ $73.22**
 
-**Filtered on-chain + marked NFTs: ~ $1,095.76**
+**Filtered on-chain + marked NFTs: ~ $1,092.46**
 
 Add unchanged Binance Earn:
 - **$682.40**
 
-**Total tracked asset reference: ~ $1,778.16**
+**Total tracked asset reference: ~ $1,774.86**
 
 ## Monitoring policy
 
