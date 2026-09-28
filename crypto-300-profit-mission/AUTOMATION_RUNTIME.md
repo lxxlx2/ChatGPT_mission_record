@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-28 15:00 Asia/Bangkok
+Updated: 2026-09-28 15:52 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -51,18 +51,13 @@ Run in this bounded order:
    - read newest two available research/final artifacts
    - no broad duplicate news scan
 
-3. **Active wallet telemetry**
-   - canonical stablecoins + native gas on the supported wallets
-   - Solana USDC/SOL, BNB native gas, Robinhood native gas
-   - do not poll PAID/GSTOCK/Robinhood-PONS residual dust or SHART/KARDASHEV/e/acc as position-specific assets
-
-4. **Monster V2.1**
+3. **Monster V2.1**
    - one Binance USD-M bulk screen
    - bounded shortlist
    - deep-check **maximum 3 symbols per hourly run**
    - if a deep source is unavailable, record the gap and continue; do not loop on fallbacks
 
-5. **Persist final immediately**
+4. **Persist final immediately**
    - write final/final-retry before any optional work
 
 ## Hard reliability guardrail
@@ -81,15 +76,14 @@ No optional state/cache update may run before final persistence.
 
 Only after a final/final-retry exists:
 - launch/NFT/FOMO enrichment when upstream evidence contains a plausible candidate;
-- UNICRED / Credits market enrichment every 3 hours;
-- broad EVM/EVM-compatible + Solana inventory reconciliation every 3 hours or event-driven, using `ChatGPT Crypto Monitor All Chains`;
+- UNICRED / Credits market enrichment only when a material project/market event or explicit user request makes it relevant;
 - presentation/cache updates.
 
 Optional failure never downgrades a completed final.
 
 ## Credits lane
 
-Every full reconciliation must retain the two DIRECT_CHAIN Credits:
+On explicit/manual reconciliation, retain the two DIRECT_CHAIN Credits:
 - #23042
 - #23232
 
@@ -220,8 +214,9 @@ Core lanes are independent. Failure in one lane must never cancel the remaining 
 
 Maximum critical work before final persistence:
 1. BTC/ETH public facts, using bounded per-symbol calls; PONS position facts are not queried while exposure is closed;
-2. active wallet telemetry for canonical stablecoins/native gas and verified current assets; PAID/GSTOCK/Robinhood-PONS dust plus SHART/KARDASHEV/e/acc are excluded from position-specific polling;
-3. read one newest Crypto Daily research/final artifact.
+2. read one newest Crypto Daily research/final artifact.
+
+Routine wallet balance polling is intentionally excluded from hourly core work.
 
 For each lane:
 - success -> record current data;
@@ -257,8 +252,7 @@ On non-Monster hours:
 Only after core final:
 - JUMP due-window checks;
 - launch/NFT/FOMO;
-- Credits/UNICRED;
-- full cross-chain inventory;
+- Credits/UNICRED only when a material event or explicit request makes them relevant;
 - cache/state presentation updates.
 
 No enrichment failure changes an already persisted core final.
@@ -268,7 +262,6 @@ No enrichment failure changes an already persisted core final.
 Every core final/final-retry must contain:
 - attempt_path
 - market_lane
-- wallet_lane
 - crypto_daily_lane
 - data_gaps
 - substantive_event
@@ -354,12 +347,14 @@ Known wallet authorities:
 - Solana `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 - Sui `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
-Every 3 hours, after a durable core final exists, run one bounded broad-chain reconciliation:
-1. native balances on enabled EVM/EVM-compatible chains;
-2. canonical stablecoins and known user assets;
-3. Solana SPL + Token-2022 finalized state;
-4. material NFTs where the provider endpoint is supported;
-5. claim-safety classification for unsolicited receipts.
+Do **not** run scheduled broad-chain wallet reconciliation.
+
+Wallet / NFT inventory reads are **manual or event-driven only**:
+1. when the user explicitly asks for a wallet reconciliation;
+2. when the user tells us they made a material deposit/withdrawal/trade/claim/bridge/NFT action;
+3. when another verified event specifically requires confirming ownership or balance.
+
+Do not spend hourly or 3-hour automation budget re-reading unchanged wallet balances.
 
 Do not let an unsupported enhanced token/NFT endpoint hide a native balance. Use independent native-balance RPC reads.
 
@@ -410,4 +405,26 @@ Current Alchemy state:
 Until a working Sui-specific tool is exposed in the runtime:
 - classify Sui wallet balance as `UNAVAILABLE_PROVIDER_METHOD`;
 - never carry a stale Sui balance as current;
-- never claim there is no Sui asset/claim based on generic EVM portfolio scans.
+- never claim there is no Sui asset/claim based on generic EVM portfolio scans;
+- do not periodically retry Sui; retry only on explicit user request or a material event.
+
+
+## Wallet polling policy — 2026-09-28 15:52
+
+User preference: routine periodic wallet rescans are unnecessary. The user will report material wallet changes.
+
+Effective immediately:
+- no hourly wallet-balance lane;
+- no every-3-hours full-chain reconciliation;
+- no daily automatic wallet reconciliation;
+- no periodic Sui retry;
+- no periodic Credits/UNICRED ownership recheck merely to prove unchanged ownership.
+
+Current wallet state in `portfolio/current.md` / `state/latest.md` is a snapshot, not a continuously refreshed feed.
+
+Refresh wallet state only:
+- on explicit user request;
+- after the user reports a material wallet action/change;
+- when a verified event requires an ownership/balance check to determine eligibility or risk.
+
+Market/opportunity/security/TGE/Monster monitoring remains separate and may continue on its existing event/cadence rules.
