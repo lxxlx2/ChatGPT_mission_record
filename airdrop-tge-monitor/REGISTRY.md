@@ -1,6 +1,6 @@
 # Airdrop / TGE Canonical Registry
 
-Updated: 2026-09-26
+Updated: 2026-09-28
 
 Grass 与 Backpack 明确排除。
 
@@ -57,7 +57,7 @@ Clay Shares 作为 Claynosaurz/HEEBOO 相关权益子项持续检查。
 - Cambria / @playcambria
 - Crusoe / @CrusoeAI
 - Apptronik / @Apptronik
-- humans& / @humansand
+- humans& / @humansand — known user deal channel: Echo (@echodotxyz) / Alpen Capital; monitor deal cancellation, allocation changes, full/partial refund, SPV/settlement/transfer changes in addition to project/TGE news
 - Thalassa Robotics / Thalassa Inc.
 - Fortytwo / @fortytwonetwork
 - Space / @intodotspace
@@ -81,3 +81,30 @@ Asia/Bangkok hour modulo 4:
 `project_id + canonical_name + official_x_handles + official_root_domains + known_tickers + known_chains + known_collision_names`
 
 已知 hard-fail：Space (@intodotspace) 与 Spacecoin (@spacecoin) 永久分离。
+
+
+## Deal-host / intermediary rights sources
+
+For a project the user entered through a platform, SPV, syndicate or group lead, canonical project sources alone are insufficient.
+
+Monitor both:
+1. the underlying project;
+2. the known user-facing deal host / SPV / syndicate / group lead.
+
+Material rights events include:
+- full or partial refund;
+- deal cancellation / failed close;
+- allocation increase/reduction;
+- SPV or issuer substitution;
+- SAFE/equity/token-warrant conversion changes;
+- settlement/distribution;
+- transfer or redemption window;
+- material fee/valuation/term change.
+
+A platform/intermediary notice can be a valid ACTION even when the underlying project posts nothing publicly.
+
+Known mapping:
+- humans& -> Echo (@echodotxyz) / Alpen Capital.
+- 01.xyz / 01 Exchange -> preserve known Echo/intermediary deal-channel checks when user rights are affected.
+
+Do not require a public project announcement to recognize a direct platform entitlement/refund notice.
