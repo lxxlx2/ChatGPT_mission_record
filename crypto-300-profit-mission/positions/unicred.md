@@ -1,6 +1,6 @@
 # UNICRED Position
 
-Updated: 2026-09-28 15:00 Asia/Bangkok
+Updated: 2026-09-28 17:58 Asia/Bangkok
 Status: **NFT_ACTIVE / CRED_CLOSED**
 
 ## Canonical contracts
@@ -35,9 +35,9 @@ Historical acquisition:
 Current collection market reference:
 - floor: **~0.00359 ETH**
 - top offer: **~0.0022 WETH**
-- ETH mark used: **2646.43 USD**
-- floor mark for #230: **~9.50 USD**
-- top-offer reference: **~5.82 USD**
+- ETH mark used: **2656.93 USD**
+- floor mark for #230: **~9.54 USD**
+- top-offer reference: **~5.85 USD**
 
 These collection-level references are used only as portfolio marks. They do not prove an executable offer on #230.
 
@@ -71,3 +71,6 @@ Do not add another UNICRED NFT or CRED automatically.
 
 
 Fresh ownership was reconfirmed again during the 2026-09-28 15:00 all-chain scan. Canonical CRED remains 0.
+
+
+Ownership reconfirmed at 2026-09-28 17:58 Asia/Bangkok. Canonical CRED remains 0.
