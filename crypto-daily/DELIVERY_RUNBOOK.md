@@ -1,6 +1,6 @@
 # Crypto Daily Delivery Runbook
 
-Updated: 2026-09-27 12:20 Asia/Bangkok
+Updated: 2026-09-28 19:34 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Execution model
@@ -99,3 +99,16 @@ Recovery order:
 - all three missing: reconstruct from the prior 24h research/final audits, create the pending body first, then send.
 
 A prior automated claim of “already sent” is insufficient. Delivery proof requires an actual Gmail Sent message id and successful readback.
+
+
+## Prebuild handoff
+
+The 08:00 hourly collector prepares `delivery-pending/YYYY-MM-DD.md` but does not send.
+
+The 09:00 publisher treats that pending file as the primary body:
+- refresh only facts that are materially time-sensitive;
+- preserve the body structure unless a correction is needed;
+- Gmail delivery takes priority over broader research;
+- target Gmail proof by 09:10.
+
+If a valid pending body exists, recovery jobs must send it rather than rebuilding a new long report.
