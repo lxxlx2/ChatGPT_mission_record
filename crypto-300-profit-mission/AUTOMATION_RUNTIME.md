@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-27 12:46 Asia/Bangkok
+Updated: 2026-09-28 09:32 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -19,11 +19,12 @@ Current original Credits holdings:
 The other four original Credits are historical sold assets/provenance.
 
 Private Binance inventory authority:
-- combined earn bucket = **598 USD-equivalent**
-- PONSUSDT perpetual = the only tracked active Binance trading position
-- do not invent or carry forward any other Binance spot/futures asset without a newer USER_CONFIRMED source.
+- combined earn bucket = **659.9 USD-equivalent**
+- PONSUSDT perpetual = **CLOSED**
+- no active Binance trading position
+- do not invent or carry forward any Binance spot/futures asset without a newer USER_CONFIRMED source.
 
-The 598 earn bucket is tracked for asset completeness and remains outside speculative Mission performance unless provenance is explicitly reclassified.
+The 659.9 earn bucket is tracked for asset completeness and remains outside speculative Mission performance unless provenance is explicitly reclassified.
 
 ## Audit
 
@@ -42,9 +43,9 @@ A manual reconciliation file is not automatic-run proof.
 Run in this bounded order:
 
 1. **Stored-rule market facts**
-   - PONS public mark/funding
    - ETH stored setup facts
    - BTC stored regime facts
+   - no PONS position lane while PONS exposure remains closed
 
 2. **Recent Crypto Daily input**
    - read newest two available research/final artifacts
@@ -218,7 +219,7 @@ The attempt file is diagnostic only. A final/final-retry remains completion proo
 Core lanes are independent. Failure in one lane must never cancel the remaining lanes.
 
 Maximum critical work before final persistence:
-1. PONS/BTC/ETH public facts, using bounded per-symbol calls;
+1. BTC/ETH public facts, using bounded per-symbol calls; PONS position facts are not queried while exposure is closed;
 2. active wallet telemetry for canonical stablecoins/native gas and verified current assets; PAID/GSTOCK/Robinhood-PONS dust plus SHART/KARDASHEV/e/acc are excluded from position-specific polling;
 3. read one newest Crypto Daily research/final artifact.
 
@@ -316,7 +317,27 @@ Hourly Mission rules:
 - do not run dedicated price/liquidity/holder/creator/pool/order monitoring for any of these;
 - residual dust does not reactivate a position;
 - wallet reconciliation may record the raw dust balance without opening a monitoring lane;
-- the active PONS market lane refers to Binance PONSUSDT futures only;
+- Binance PONSUSDT futures are now closed; no active PONS market lane remains;
 - general Monster V2.1 and launch discovery remain market-wide scanners.
 
 Current Solana canonical USDC is 420.472536, superseding the prior 328.018516 snapshot.
+
+
+## PONS full-close override — 2026-09-28
+
+USER_CONFIRMED:
+- Binance PONSUSDT perpetual: CLOSED
+- Robinhood PONS spot: CLOSED_DUST
+- Binance inventory: 659.9 USD-equivalent earn only
+
+Effective immediately:
+- remove PONS mark/funding/TP/SL from required hourly core lanes;
+- do not emit user-position PONS alerts;
+- do not carry old 64-PONS futures state into audits;
+- residual Robinhood PONS dust does not reactivate monitoring;
+- general Monster / launch discovery may still include PONS as a market-wide candidate.
+
+Full wallet reconciliation should include material NFTs:
+- Credits #23042 and #23232 with a current market reference;
+- UNICRED #230 with a current market reference;
+- exclude aspirational listing asks and spam NFTs from NAV.
