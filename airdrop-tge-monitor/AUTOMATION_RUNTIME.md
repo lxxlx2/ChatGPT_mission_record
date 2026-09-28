@@ -1,6 +1,6 @@
 # Airdrop / TGE Automatic Runtime
 
-Updated: 2026-09-28 09:18 Asia/Bangkok
+Updated: 2026-09-28 19:34 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Authority for the existing :14 task.
@@ -158,3 +158,40 @@ Immediately after attempt creation, create a compact provisional `HHMMSS-final.m
 Then perform only the bounded urgent set + one shard. Update that same final file to success/partial/failure. If update fails, write `final-retry.md`.
 
 Never spend the remaining run budget on optional cache or deep enrichment before a durable final artifact exists.
+
+
+## Clock integrity and pending-delivery override — 2026-09-28
+
+A timestamp integrity failure was confirmed on 2026-09-28:
+- `201500-final-retry.md` was committed at 10:13 Asia/Bangkok but claimed run_time 20:15;
+- `221500-final.md` was committed at 18:18 Asia/Bangkok but claimed run_time 22:15.
+
+These impossible future timestamps must not count as shard coverage or delivery evidence.
+
+Rules:
+- filename/run_time must use the actual current Asia/Bangkok wall clock;
+- never write a run_time more than 5 minutes in the future;
+- before using a prior final for shard freshness, reject any record whose run_time is materially later than its Git commit/current wall clock;
+- impossible-time files are historical invalid artifacts, not authoritative coverage.
+
+### Pending delivery recovery
+
+Every run first scans recent authoritative finals for:
+- `triggered_events > 0`;
+- `gmail_sent: false`, missing Gmail message id, or missing event archive.
+
+Any still-relevant undelivered event is promoted into the urgent set until one real Gmail Sent id + readback + event archive exists.
+
+A later NO_ACTION run must not erase an earlier undelivered ACTION.
+
+### State freshness
+
+`state/current.md` is a convenience index but must not remain a day behind.
+
+After a successful final, update its:
+- last successful real run time;
+- per-shard last successful real time;
+- open urgent events;
+- pending delivery events.
+
+If cache update fails, the next run derives freshness from authoritative finals and ignores invalid future timestamps.
