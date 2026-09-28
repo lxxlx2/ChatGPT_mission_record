@@ -2878,6 +2878,14 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     if compound:
         return compound
 
+    # Existing V5a closes are risk-management work and must not be starved by
+    # V4 alignment/submission returns. Only manage an already-active harvest
+    # here; new V5a candidate selection still happens after V4.
+    if isinstance(dense.get("v5a_active"), dict):
+        harvest = dense_v5a_harvest_step(state, pr)
+        if harvest:
+            return harvest
+
     # Retry a ready pending batch on the same sweep until flow/state catch up.
     # Only de-duplicate after the pending batch has either submitted or is not yet ready.
     submitted = dense_submit_pending(state, pr)
@@ -2890,9 +2898,11 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     if submitted:
         return submitted
 
-    harvest = dense_v5a_harvest_step(state, pr)
-    if harvest:
-        return harvest
+    # Start a new V5a harvest only after V4 had its chance this poll.
+    if not isinstance(dense.get("v5a_active"), dict):
+        harvest = dense_v5a_harvest_step(state, pr)
+        if harvest:
+            return harvest
 
     last_seen_sweep = dense.get("last_seen_sweep")
     if last_seen_sweep == pr["n"]:
