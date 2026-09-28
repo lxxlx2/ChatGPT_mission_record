@@ -1114,3 +1114,27 @@ Implementation commits:
 
 Execution state:
 `DENSE_V5B_IMPLEMENTED_PREVIEW_REQUIRED`.
+
+
+## 2026-09-29 — Dense V5b live preview validated
+
+Preview at sweep 947:
+- ref 229.98;
+- V5b disabled, no active/pending cycle;
+- one eligible seed: `v5a:v4-00213`;
+- parent V5a pair: `v4-00213`;
+- realized locked score: 58.949759 POLF;
+- cash: 10058.949759;
+- previous winning side: long;
+- planned V5b flip side: short;
+- planned qty: 11.53 NVDA;
+- estimated opening base fee: 26.52 POLF;
+- take score: 88.949759;
+- stop score: -25.
+
+The preview matches the intended seed lineage and sizing model. Before live enable, V5b settlement reconstruction was aligned with V5a by preferring the referee PnL mark for the next-sweep close and falling back to the next price ref only when needed.
+
+Commit: `fe89f136e78d245d6993d76474cd70953ab7d526`.
+
+Execution state:
+`DENSE_V5B_PREVIEW_VALIDATED_READY_TO_ENABLE`.
