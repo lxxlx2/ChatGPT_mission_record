@@ -2262,6 +2262,7 @@ def dense_v5b_step(state: dict, pr: dict) -> dict | None:
         return {
             "event": "v5b_seed_registered",
             "cycle_index": pending["index"],
+            "source_seed_id": pending.get("source_seed_id"),
             "source_pair_id": pending["source_pair_id"],
             "side": pending["flip_side"],
             "seed_locked_score": str(pending["locked_score"]),
