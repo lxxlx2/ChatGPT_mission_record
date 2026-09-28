@@ -1,6 +1,6 @@
 # Crypto Profit Mission
 
-Updated: 2026-09-28 15:52 Asia/Bangkok
+Updated: 2026-09-28 17:58 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Authority
@@ -79,7 +79,7 @@ Maintain reliable, auditable coverage of the user's speculative crypto Mission a
 
 Execution of transactions remains manual unless the user explicitly authorizes a transaction.
 
-The combined **659.9 USD-equivalent Binance earn bucket** is tracked for total-asset completeness but remains outside speculative Mission performance unless provenance is explicitly reclassified. Later external deposits must never be mislabeled as Mission profit.
+The combined **682.40 USDT-equivalent Binance earn bucket** is tracked for total-asset completeness but remains outside speculative Mission performance unless provenance is explicitly reclassified. Later external deposits must never be mislabeled as Mission profit.
 
 ## Canonical wallets and data truth
 
@@ -134,11 +134,13 @@ Current accounting buckets:
 - ETH conditional reserve: 100 USDC.
 - PONS: Binance perpetual is CLOSED and Robinhood spot is CLOSED_DUST. No PONS position-specific exposure remains.
 - Credits: original six are Mission starting assets; #23042 and #23232 remain held.
-- Binance earn: one combined 659.9 USD-equivalent off-chain bucket, tracked but excluded from speculative Mission performance unless provenance is reclassified.
+- Binance earn: one combined 682.40 USDT-equivalent off-chain bucket, tracked but excluded from speculative Mission performance unless provenance is reclassified.
 
-Private Binance inventory authority: USER_CONFIRMED current Binance inventory is **659.9 USD-equivalent earn only**. PONSUSDT perpetual is CLOSED. Do not carry any Binance spot/futures position forward from stale state.
+Private Binance inventory authority: USER_CONFIRMED current Binance inventory is **682.40 USDT-equivalent earn only**. PONSUSDT perpetual is CLOSED. Do not carry any Binance spot/futures position forward from stale state.
 
 Wallet balance changes are not PnL unless transaction history and cost basis support that conclusion.
+
+Current portfolio presentation ignores individual assets below $0.10. This is a display/materiality filter, not deletion of historical provenance.
 
 ## Active position / plan authorities
 
