@@ -437,6 +437,11 @@ def snapshot() -> dict:
             if x.get("status") == "registered"
             and int(x.get("ready_after_sweep", 10**9)) <= int(pr["n"])
         ),
+        "dense_v3_reserve_partial_errors": sum(
+            1 for x in (dense.get("v3_reserve") or [])
+            if x.get("status") == "partial_error"
+        ),
+        "dense_v3_last_multiplicity": dense.get("last_v3_multiplicity"),
         "dense_v3_age_gate_enabled": bool(dense.get("v3_ref_age_gate_enabled", False)),
         "dense_v2_offset": dense.get("v2_offset"),
         "dense_historical_low_ref": dense.get("historical_low_ref"),
@@ -676,7 +681,10 @@ async function refresh(){
         document.getElementById('staticRemain').textContent='每个 referee sweep：Long×'+d.dense_v3_total_copies_per_side+' + Short×'+d.dense_v3_total_copies_per_side+' · 偏移 ±'+fmt(Number(d.dense_v3_offset||0)*100,0)+'%';
         document.getElementById('staticFill').style.width='100%';
         document.getElementById('bracketTitle').textContent='V3 额外复制票 '+d.dense_v3_tickets+' 组';
-        document.getElementById('bracketHint').textContent='Ready reserve '+d.dense_v3_reserve_ready+' / 注册 '+d.dense_v3_reserve_registered+' · 不再使用 120 秒 Ref age 门槛';
+        const lastV3=d.dense_v3_last_multiplicity||{};
+        const lastCopies=(lastV3.total_long_copies&&lastV3.total_short_copies)?(' · 最近 '+lastV3.total_long_copies+'L/'+lastV3.total_short_copies+'S'):'';
+        const v3Err=Number(d.dense_v3_reserve_partial_errors||0);
+        document.getElementById('bracketHint').textContent='Ready reserve '+d.dense_v3_reserve_ready+' / 注册 '+d.dense_v3_reserve_registered+lastCopies+(v3Err?(' · partial error '+v3Err):'')+' · Ref age 仅展示';
         document.getElementById('bracketFill').style.width='100%';
         document.getElementById('walletText').textContent='Dense keys '+d.dense_dynamic_keys+' / '+d.dense_dynamic_key_cap+' · 剩余预算 '+d.dense_dynamic_key_budget_remaining+' · flow/state/missed/lock 安全门仍启用';
       }else if(d.dense_v2_enabled){
