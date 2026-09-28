@@ -1226,3 +1226,32 @@ Commit: `62353a588336ace7cd800bfad044e39cc822b4d9`.
 
 Execution state:
 `DENSE_V5B_DECIMAL_SERIALIZATION_FIXED`.
+
+
+## 2026-09-29 — V5a second lock completed; V5b cycle 1 open verified
+
+Live status at referee sweep 957:
+- V5a harvested count: 2;
+- second harvested pair: `v4-00227`;
+- second winner: long;
+- second final locked score: 50.484365 POLF;
+- no active V5a harvest remains.
+
+V5b cycle 1:
+- source: `v4-00213`;
+- direction: short;
+- entry px: 228.36;
+- qty: 11.61;
+- status: `open_verified`;
+- current mark-to-market score: 47.762363;
+- projected flat score at the current close reference: 4.400174;
+- take score: 88.949759;
+- stop score: -25.
+
+Interpretation:
+- V5b opening settlement reconstruction succeeded end-to-end;
+- current score and projected-flat score must not be conflated: the former includes the live short position, while the latter includes the cost of closing it now;
+- the second V5a lock again converted an approximately 180-POLF trigger into only about 50 POLF of realized carry, reinforcing that the 180 first-harvest threshold is economically thin after close fees and settlement movement.
+
+Execution state:
+`DENSE_V5A_TWO_LOCKS_V5B_CYCLE1_OPEN_VERIFIED`.
