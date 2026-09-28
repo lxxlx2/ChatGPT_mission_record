@@ -2238,9 +2238,9 @@ def dense_v5b_step(state: dict, pr: dict) -> dict | None:
     dense = state.setdefault("dense", {})
     if not dense.get("v5b_enabled") or not dense.get("v4_enabled"):
         return None
-    if isinstance(dense.get("v5a_active"), dict):
-        return None
 
+    # V5a and V5b operate on disjoint accounts. Do not pause compound risk
+    # management merely because another V5a harvest is in flight.
     active = dense.get("v5b_active")
     if isinstance(active, dict):
         status = active.get("status")
@@ -2754,13 +2754,16 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     if submitted:
         return submitted
 
-    harvest = dense_v5a_harvest_step(state, pr)
-    if harvest:
-        return harvest
-
+    # Give V5b the first post-V4 slot so a newly realized V5a seed cannot
+    # be starved by an endless stream of new V5a harvest candidates. Active V5b
+    # positions are also risk-managed every poll even while V5a is active.
     compound = dense_v5b_step(state, pr)
     if compound:
         return compound
+
+    harvest = dense_v5a_harvest_step(state, pr)
+    if harvest:
+        return harvest
 
     last_seen_sweep = dense.get("last_seen_sweep")
     if last_seen_sweep == pr["n"]:
