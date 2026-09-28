@@ -464,3 +464,15 @@ Effective immediately:
 - if a due scan cannot run, record a data gap and retry at the next successful cycle.
 
 BTW is now a prospective PRESSURE watch with setup_price 1.2825. Historical IGNITION is not backfilled because the frozen model forbids reconstructing setup price after the fact.
+
+
+### 19:22 health-check proof — 2026-09-28
+
+Manual full-universe health-check succeeded:
+- 226 Binance USD-M symbols with >=10M USDT 24h quote volume;
+- BTW/RARE/QNT/HBAR/MARSCOIN deep-checks completed;
+- HBAR newly qualifies as PRESSURE;
+- no sampled IGNITION at that moment;
+- durable deferred queue now exists in Monster state.
+
+The 19:29 daily full scan remains mandatory regardless of the manual 19:22 scan.
