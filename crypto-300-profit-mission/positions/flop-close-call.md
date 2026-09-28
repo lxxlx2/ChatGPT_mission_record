@@ -759,3 +759,39 @@ Implementation commits:
 - `eacc193b1412407c3a6c3dce8f4570b6e8c46341`
 - `035839860be2b89f27527fb8b96fa717ce34ad8c`
 - `71335a7957c1a0f90cb142ec35c10c4fd4d7c082`
+
+
+## Dense V5a profit harvest — 2026-09-29
+
+V5a is an overlay on V4, not a replacement.
+
+Entry engine:
+- V4 continues every aligned referee sweep;
+- 8 long + 8 short copies remain the default entry coverage.
+
+Harvest policy:
+- first copy-pair may be harvested when its reconstructed winning-side score reaches max(300 POLF, 80% of the current prize cutoff);
+- a second copy-pair from the same cohort may be harvested at max(400 POLF, 95% of the current prize cutoff);
+- maximum harvested pairs per cohort: 2;
+- minimum remaining open copies per cohort: 6.
+
+Settlement reconstruction:
+- V4 opening trades are reconstructed under the official frozen fold;
+- a trade posted after sweep n is evaluated against sweep n+1's referee close;
+- opening cash, fees and target positions are reconstructed exactly from saved V4 price/qty data;
+- visible opening voids and dedicated-room missed settlement sweeps disqualify a candidate.
+
+Closing:
+- the paired long target sells directly to the paired short target, closing both accounts symmetrically;
+- a staged close is required because fee cash is checked before collateral release;
+- bootstrap tranches reserve a 5% fee-gap buffer;
+- collateral released by each verified tranche funds later tranches;
+- close progression is verified one referee sweep at a time;
+- visible void, missed settlement sweep, simulation failure or too many tranches blocks the harvest for manual review.
+
+Operations:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py dense-v5a-preview
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v5a
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py pause-dense-v5a
+```
