@@ -1,165 +1,85 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-28 15:52 Asia/Bangkok
+Updated: 2026-09-28 17:58 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Private venue — USER_CONFIRMED
+## Current posture
 
-Binance:
-- earn balance: **659.9 USD-equivalent**
-- no active trading position
-- PONSUSDT perpetual: CLOSED
+User has de-risked:
+- most liquid crypto -> USDC or Binance earn;
+- Ink ETH retained for NFT participation;
+- SUI retained for Sui launchpad participation;
+- no active futures/perpetual trade.
 
-## Fresh wallet baseline
+Portfolio display threshold: **ignore individual positions below $0.10**.
 
-Wallet provider:
-- Alchemy **ChatGPT Crypto Monitor All Chains**
-- app id `h6m5pairkgzet7vz`
+## Binance — USER_CONFIRMED
 
-Canonical addresses:
-- EVM `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
-- Solana `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+Current earn:
+- **682.40 USDT-equivalent total**
+- 382.27204197 USDC
+- 300 USDT
 
-Canonical Sui address is now known: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`. Aptos/Bitcoin/Starknet/Tron still require separate canonical user addresses.
+No active Binance trading position.
+PONSUSDT perpetual remains CLOSED.
 
-### Main balances
+## Material current on-chain assets
 
-Ethereum:
-- 400.308121 USDC
-- 0.001667063838788351 ETH
-- 0.000038313 WETH
-- Credits #23042/#23232 owned
+Fresh market references:
+- ETH 2656.93
+- SOL 118.59
+- SUI 1.1695
 
-Solana:
-- 430.483714 USDC
-- 0.135926955 SOL
-- PAID 0
-- KARDASHEV 0
-- SHARTCOIN 0
-- prior SPC balance no longer present
+DIRECT_CHAIN:
+- Ethereum USDC **400.308121**
+- Solana USDC **444.679809**
+- Solana SOL **0.015349154**
+- Ink ETH **0.010389022090321585**
+- Ethereum ETH **0.001667063838788351**
+- Ethereum WETH **0.000038313**
+- Base ETH **0.000790061852162197**
+- Linea ETH **0.000283128973717299**
+- Unichain ETH **0.000231941590232335**
+- World Chain ETH **0.000106736504323280**
+- MegaETH ETH **0.000082071511230598**
+- Robinhood Chain ETH **0.000080297765615110**
+- Optimism ETH **0.000065278581034767**
 
-Base:
-- 0.000252 USDC
-- 0.000790061852162197 ETH
+USER_CONFIRMED Sui screenshot:
+- SUI **40.192929** = ~47.01 USD at current market reference
 
-BNB:
-- 0.000076956401760745 BNB
-- USDC 0
-- 0.096724707311314713 GSTOCK dust
+Sub-$0.10 gas/token/stablecoin dust is omitted.
 
-Robinhood:
-- 0.000080297765615110 ETH
-- 0.000953441979624353 PONS dust
-- NFTs 0
-
-Arbitrum:
-- 0.000001 USDC
-- 0.000003959328931033 ETH
-
-Ink:
-- 0.010389022090321585 ETH
-- 7.665136656205785948 Tydro Ink Points
-
-Unichain:
-- 0.021286 USDC
-- 0.000231941590232335 ETH
-- CRED 0
-- UNICRED #230 owned
-
-Sui:
-- canonical wallet: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
-- current balance status: **UNAVAILABLE_PROVIDER_METHOD**
-- SUI_MAINNET is enabled, but Alchemy's generic EVM-style portfolio endpoint rejects the 32-byte Sui address
-- do not classify as zero; next reconciliation must use a Sui-specific supported endpoint
-
-### Special chains
-
-Optimism:
-- 0.000065278581034767 ETH
-- 0.000449 USDT
-
-Polygon:
-- 0.291295907607284273 POL
-
-Avalanche:
-- 0.000678889764814817 AVAX
-- canonical USDC/USDT 0
-
-Hyperliquid EVM:
-- 0.000234033730511199 HYPE
-- 0.00172 USDC
-- 0.004646 USD₮0
-- remaining unpriced receipts excluded
-
-Linea:
-- 0.000283128973717299 ETH
-- 0.221708425875998735 LINEA
-- 0.101880947178375346 REX
-- USDC 0
-
-Monad:
-- 0.3817997 MON
-- 0.024112 canonical USDC
-- unpriced meme/test/spoof receipts excluded
-
-World Chain:
-- 0.000106736504323280 ETH
-- 0.04 WLD
-
-MegaETH:
-- 0.000082071511230598 ETH
-
-Plasma:
-- 0.009576790735189758 XPL
-
-Sonic:
-- 0.577025845877296 S
-
-Zero native:
-- Berachain / Blast / Mantle / RISE / Scroll / Sei / zkSync
-
-Verified stable assets: **830.844301 USD-equivalent units**.
-
-Strict directly priced on-chain liquid reference: **~883.45 USD**.
+The direct Ethereum + Solana material USDC subtotal is **844.987930**. The user's wallet app shows ~845.03 aggregate USDC, consistent after tiny cross-chain stablecoin dust.
 
 ## Material NFTs
 
-Credits #23042 + #23232:
-- direct ownership confirmed
-- floor ~0.0262 ETH each
-- top offer ~0.0252 WETH each
-- floor subtotal ~138.67 USD
-- top-offer subtotal ~133.38 USD
+DIRECT_CHAIN ownership:
+- Credits #23042
+- Credits #23232
+- UNICRED #230
 
-UNICRED #230:
-- direct ownership confirmed
-- floor ~0.00359 ETH
-- top offer ~0.0022 WETH
-- floor mark ~9.50 USD
-- top-offer ~5.82 USD
+Conservative/current marks:
+- Credits: recent indexed floor range ~$67-$80 each; conservative book mark **$67.13 each**, subtotal **~$134.26**
+- UNICRED #230: floor **0.00359 ETH**, ~**$9.54**
+- Survivor Dave #9347: ~**$0.13**
+- Ten Years Of Ethereum #191404: ~**$0.67**
+- Adventure Cards #3052: ~**$0.37**
 
-On-chain marked assets using material NFT floors: **~1,031.63 USD**.
+Fresh INK #372 remains known prior inventory but current Ink NFT endpoint is unavailable, so no marked value is assigned.
 
-Including Binance 659.9 earn:
-- floor-mark total reference: **~1,691.53 USD**
-- NFT top-offer-oriented reference: **~1,682.56 USD**
+## Marked snapshot
 
-Not Mission profit/progress until provenance is separated.
+Material on-chain liquid subtotal: **~$930.30**
+Material NFT subtotal: **~$144.97**
+On-chain + marked NFTs: **~$1,075.27**
+Binance earn: **$682.40**
 
-## Claim scan
+**Total tracked asset reference: ~ $1,757.67**
 
-Status: **NO_NEW_VERIFIED_CLAIM**.
+This is not Mission PnL/progress.
 
-No new legitimate claim/withdrawal entitlement was established from:
-- fresh broad-chain wallet data;
-- current material NFT ownership;
-- latest successful Airdrop/TGE monitor state.
-
-Do not interact with unsolicited claim-looking receipts. Current wallet contains multiple scam-like assets on Avalanche, Linea, Optimism, BNB, Polygon and Robinhood.
-
-Generic wallet scanning cannot prove arbitrary protocol-side reward escrow is zero when rewards live outside the wallet; a protocol-specific contract/dashboard read is required for that.
-
-## Monitoring scope
+## Closed / excluded
 
 Closed:
 - Binance PONS futures
@@ -171,21 +91,14 @@ Closed:
 - e/acc
 - XRP / Variational
 
-Current user-asset monitoring:
-- verified balances across all supported EVM chains
-- Solana
-- Credits #23042/#23232
-- UNICRED #230
-- Ink/Tydro inventory
-- due participation/claim plans
-
-General Monster V2.1, launch radar and NFT radar remain market-wide discovery scanners.
-
+Excluded from current presentation:
+- each individual asset worth < $0.10
+- unpriced unsolicited tokens/NFTs
+- claim-bait/spam
+- stale listing asks
 
 ## Wallet refresh policy
 
-Routine automatic wallet rescans are disabled.
+Routine automatic wallet rescans remain disabled.
 
-The balances above are the latest stored snapshot from the 2026-09-28 broad-chain reconciliation. They are refreshed only on explicit user request, after a user-reported material wallet change, or when a verified event requires ownership/balance confirmation.
-
-Do not interpret the absence of a later automatic scan as evidence that balances are unchanged.
+Refresh only on explicit user request, after user-reported material wallet activity, or when a verified event requires ownership/balance evidence.
