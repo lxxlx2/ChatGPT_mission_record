@@ -110,10 +110,11 @@ Rules:
 Canonical addresses currently known:
 - EVM: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 - Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+- Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
 The broad Alchemy app enables EVM/EVM-compatible coverage including Ethereum, Arbitrum, Avalanche, Base, Berachain, Blast, BNB, Hyperliquid EVM, Ink, Linea, Mantle, MegaETH, Monad, Optimism, Plasma, RISE, Robinhood Chain, Scroll, Sei, Sonic, Unichain, World Chain and zkSync.
 
-Aptos, Bitcoin, Starknet, Sui and Tron are enabled provider networks but no canonical user address for those address formats is stored in Mission. They must remain `UNAVAILABLE_USER_ADDRESS` rather than being falsely reported as checked.
+Aptos, Bitcoin, Starknet and Tron are enabled provider networks but no canonical user address for those formats is stored in Mission. They must remain `UNAVAILABLE_USER_ADDRESS`. Sui now has a canonical user address, but current generic portfolio tooling does not accept Sui's 32-byte address format, so Sui must be classified `UNAVAILABLE_PROVIDER_METHOD` until a Sui-specific supported endpoint is used.
 
 Full-chain reconciliation rules:
 - query native balances independently, because enhanced token/NFT endpoints are not supported on every chain;
