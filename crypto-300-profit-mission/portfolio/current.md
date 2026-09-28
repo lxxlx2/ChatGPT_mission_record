@@ -1,285 +1,162 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-28 15:00 Asia/Bangkok
+Updated: 2026-09-28 17:58 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Mission objective
+## Current allocation posture
 
-Core target: grow the Mission starting asset set to **3,000 USD-equivalent net liquidation value**.
+User has intentionally reduced market risk:
+- keep Ink ETH for future NFT participation;
+- keep SUI for Sui launchpad participation;
+- convert most other liquid crypto into USDC or move it to Binance earn;
+- no active futures/perpetual position.
 
-Starting asset set:
-- **300 USD cash principal**
-- original six Jack / Visualize Value Credits NFTs
+Current display/accounting threshold:
+- ignore individual assets / NFTs worth **< $0.10**;
+- spam, claim-bait and unpriced unsolicited receipts are excluded;
+- this threshold is for current portfolio presentation only, not historical provenance.
 
-Current original Credits:
-- held: **#23042, #23232**
-- sold/transferred out: **#21646, #21753, #22857, #23328**
+## Private / off-chain — USER_CONFIRMED
 
-## Current private/off-chain state — USER_CONFIRMED
-
-Binance:
-- **659.9 USD-equivalent earn balance**
-- **no active futures/perpetual position**
+Binance Earn screenshot, 2026-09-28:
+- estimated total: **682.40 USDT-equivalent**
+- USDC position: **382.27204197 USDC** (displayed ~382.40 USDT)
+- USDT position: **300 USDT**
 - PONSUSDT perpetual: **CLOSED**
+- no active Binance trading position
 
-## Wallet coverage
+This supersedes the prior 659.9 USD-equivalent earn snapshot.
 
-Fresh reads use Alchemy app:
-- **ChatGPT Crypto Monitor All Chains**
-- app id: `h6m5pairkgzet7vz`
+## Canonical wallets
 
-Canonical user addresses currently known:
 - EVM: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 - Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
-
-Non-EVM canonical addresses currently known:
 - Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
-Aptos/Bitcoin/Starknet/Tron remain unavailable until a canonical user address is recorded.
+## Fresh liquid on-chain assets >= $0.10
 
-## Fresh direct-chain holdings
+### Stablecoins
 
-### Ethereum
-- USDC: **400.308121**
-- ETH: **0.001667063838788351**
-- WETH: **0.000038313**
-- Credits #23042: **owned**
-- Credits #23232: **owned**
-- remaining ERC-20 receipts are dust/spam unless independently verified
+DIRECT_CHAIN:
+- Ethereum USDC: **400.308121**
+- Solana USDC: **444.679809**
 
-### Solana
-Finalized slot ~451261074:
-- USDC: **430.483714**
-- SOL: **0.135926955**
-- previous SPC 1.745552 is no longer present in the current SPL account inventory
-- PAID is no longer present in the current Token-2022 account inventory: treat current balance as **0**
-- KARDASHEV: **0**
-- SHARTCOIN: **0**
-- four 1-unit Token-2022 receipts remain unresolved/unvalued; DAS asset lookup was unavailable
+Material stablecoin subtotal under the $0.10-per-position filter:
+- **844.987930 USD-equivalent**
 
-### BNB Chain
-- BNB: **0.000076956401760745**
-- canonical USDC: **0**
-- GSTOCK: **0.096724707311314713** residual dust
-- large unsolicited token/NFT surface excluded
-
-### Robinhood Chain
-- ETH: **0.000080297765615110**
-- PONS: **0.000953441979624353** residual dust
-- NFTs: **0**
-- 富贵 / DIH / familiars / RMB / HYPERCAT / DOG / JOLLY and other unpriced unsolicited receipts are excluded
-
-### Ink
-- ETH: **0.010389022090321585**
-- Tydro Ink Points: **7.665136656205785948**
-- no cash market mark for points
-- Ink NFT endpoint remains unavailable in Alchemy, so Fresh INK #372 is not included in fresh marked NAV
-
-### Base
-- USDC: **0.000252**
-- ETH: **0.000790061852162197**
-- this supersedes the earlier 0.252982-USDC snapshot
-- spam/low-value tokens and NFTs excluded
-
-### Unichain
-- USDC: **0.021286**
-- ETH: **0.000231941590232335**
-- CRED: **0**
-- UNICRED #230: **owned**, fresh direct ownership reconfirmed
-
-### Arbitrum
-- USDC: **0.000001**
-- ETH: **0.000003959328931033**
-- pRCADE / spoof / unverified receipts excluded
-- this supersedes the prior 0.000825005-ETH snapshot
-
-### Optimism
-- ETH: **0.000065278581034767**
-- canonical USDC: **0**
-- DAI: **0**
-- USDT: **0.000449**
-- large spam token/NFT surface excluded
-
-### Polygon
-- POL: **0.291295907607284273**
-- canonical USDC: **0**
-- DAI: **0**
-- no verified material token/NFT value found
-
-### Avalanche
-- AVAX: **0.000678889764814817**
-- canonical USDC: **0**
-- canonical USDT: **0**
-- tiny WAVAX / COQ / ARENA dust only
-- scam-like airdrop tokens/NFTs excluded
-
-### Hyperliquid EVM
-- HYPE: **0.000234033730511199**
-- USDC: **0.00172**
-- USD₮0: **0.004646**
-- tiny USOL/NEST
-- ALT and multiple unpriced/unverified receipts excluded
-- `wrhyper.com`-named token is treated as unverified claim bait, not an asset entitlement
-
-### Linea
-- ETH: **0.000283128973717299**
-- canonical USDC: **0**
-- LINEA: **0.221708425875998735**
-- REX: **0.101880947178375346**
-- suspicious "VIP Pegged Dollar Compensation Attestation" NFT is excluded and must not be interacted with
-
-### Monad
-- MON: **0.3817997**
-- canonical USDC: **0.024112**
-- MONE 500,000 / TEST 607 / FGP 1 / CHOG 540.072811841852 / MONKA 100 / DAK 632.073406932969 are unpriced and excluded
-- Unicode-lookalike fake USDC receipt is excluded
-
-### World Chain
-- ETH: **0.000106736504323280**
-- WLD: **0.04**
-
-### MegaETH
-- native ETH: **0.000082071511230598**
-- enhanced token endpoint is not currently supported; native balance only
-
-### Plasma
-- XPL: **0.009576790735189758**
-- enhanced token endpoint is not currently supported; native balance only
-
-### Sonic
-- S: **0.577025845877296**
-- enhanced token/NFT endpoint is not currently supported; native balance only
+The user's wallet app displays aggregate USDC of about **845.03**, consistent with the direct reads after adding sub-$0.10 stablecoin dust on other chains.
 
 ### Sui
-Canonical wallet:
-- `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
-Provider state:
-- SUI_MAINNET is enabled in the broad Alchemy app.
-- the current generic Alchemy Portfolio endpoints reject 32-byte Sui addresses, so Sui balances/NFTs are **not yet verified in this reconciliation**.
-- use Sui-specific gRPC / supported Sui endpoint for the next reconciliation; do not report Sui as zero merely because the generic endpoint rejects the address.
+USER_CONFIRMED wallet screenshot:
+- SUI: **40.192929**
 
-### Zero native balance chains
-- Berachain: 0 BERA
-- Blast: 0 ETH
-- Mantle: 0 MNT
-- RISE: 0 ETH
-- Scroll: 0 ETH
-- Sei: 0 SEI
-- zkSync: 0 ETH
+Fresh market reference:
+- SUIUSDT: **1.1695**
+- marked value: **~$47.01**
 
-Berachain has a spam-heavy ERC-20 surface; no verified material asset was identified.
+Direct Sui provider method remains unavailable in the current ChatGPT Alchemy connector, so quantity is USER_CONFIRMED rather than DIRECT_CHAIN.
 
-## Verified stable assets
+### Solana
 
-- Ethereum USDC: 400.308121
-- Solana USDC: 430.483714
-- Base USDC: 0.000252
-- Unichain USDC: 0.021286
-- Arbitrum USDC: 0.000001
-- Monad USDC: 0.024112
-- HyperEVM USDC: 0.001720
-- HyperEVM USD₮0: 0.004646
-- Optimism USDT: 0.000449
+DIRECT_CHAIN finalized:
+- SOL: **0.015349154**
+- SOLUSDT: **118.59**
+- value: **~$1.82**
+- USDC: **444.679809**
 
-**Verified stable-asset total: 830.844301 USD-equivalent units.**
+No material SPL / Token-2022 token above the $0.10 threshold was identified beyond USDC/SOL.
 
-## Fresh market references
+### ETH-family native balances
 
-Around this reconciliation:
-- ETH: **2646.43 USD**
-- SOL: **118.28 USD**
-- BNB: **762 USD**
-- AVAX: **10.36 USD**
-- HYPE: **88.89 USD**
-- POL: **0.11261 USD**
-- MON: **0.028532 USD**
-- S: **0.0381164 USD**
-- XPL: **0.10208 USD**
-- WLD: **~0.513 USD**
+ETH reference: **$2,656.93**.
 
-Fresh native/gas assets across the scanned EVM chains + SOL: **~52.49 USD**.
-Ethereum WETH: **~0.10 USD**.
-Tiny priced WLD / LINEA / REX / WAVAX / COQ: **~0.02 USD**.
+DIRECT_CHAIN balances above the $0.10 value threshold:
+- Ink ETH: **0.010389022090321585** = **~$27.60**
+- Ethereum ETH: **0.001667063838788351** = **~$4.43**
+- Base ETH: **0.000790061852162197** = **~$2.10**
+- Linea ETH: **0.000283128973717299** = **~$0.75**
+- Unichain ETH: **0.000231941590232335** = **~$0.62**
+- World Chain ETH: **0.000106736504323280** = **~$0.28**
+- MegaETH ETH: **0.000082071511230598** = **~$0.22**
+- Robinhood Chain ETH: **0.000080297765615110** = **~$0.21**
+- Optimism ETH: **0.000065278581034767** = **~$0.17**
+- Ethereum WETH: **0.000038313** = **~$0.10**
 
-**Strict directly priced on-chain liquid reference: ~883.45 USD.**
+Arbitrum ETH, BNB native, POL, AVAX, HYPE, MON, WLD, XPL, S and other known gas/token dust are each below $0.10 and omitted from current presentation.
 
-## Valuable NFTs
+## Material NFTs >= $0.10
 
 ### Credits — Ethereum
+
 DIRECT_CHAIN ownership reconfirmed:
-- #23042
-- #23232
+- **Credit #23042**
+- **Credit #23232**
 
-Current indexed collection reference:
-- floor: **0.0262 ETH**
-- top offer: **0.0252 WETH**
+Fresh Alchemy floor endpoint is currently unavailable for the Credits contract.
 
-At ETH 2646.43:
-- two-Credits floor mark: **~138.67 USD**
-- two-Credits top-offer reference: **~133.38 USD**
+Recent OpenSea-indexed collection floors are roughly **$67-$80 each**. For conservative portfolio marking:
+- book mark: **$67.13 each**
+- two-Credits subtotal: **~$134.26**
 
-No rarity premium is added. Old 0.25 / 0.40 ETH user listings are not NAV.
+No rarity premium is added.
+The user's historical 0.25 / 0.40 ETH asks are not used as NAV.
 
 ### UNICRED #230 — Unichain
-DIRECT_CHAIN ownership reconfirmed.
 
-Current indexed collection reference:
+DIRECT_CHAIN ownership reconfirmed:
+- **UNICRED #230**
+
+Latest indexed collection reference:
 - floor: **0.00359 ETH**
-- top offer: **0.0022 WETH**
+- at ETH $2,656.93: **~$9.54**
 
-At ETH 2646.43:
-- floor mark: **~9.50 USD**
-- top-offer reference: **~5.82 USD**
+Canonical CRED ERC-20 balance remains 0.
 
-### Other NFTs
-Small Ethereum, Base, BNB, Avalanche, Optimism, Polygon and Monad NFTs are inventory-only unless a reliable material execution-grade market exists. Scam/claim-bait NFTs are excluded.
+### Other Ethereum NFTs with a measurable floor > $0.10
 
-## Portfolio reference totals
+DIRECT_CHAIN inventory / current indexed floor:
+- Survivor Dave #9347: floor **0.000049 ETH** = **~$0.13**
+- Ten Years Of Ethereum #191404: floor **0.000251 ETH** = **~$0.67**
+- Adventure Cards #3052: fresh OpenSea floor via Alchemy **0.00014 ETH** = **~$0.37**
 
-Strict liquid on-chain: **~883.45 USD**.
+Subtotal: **~$1.17**.
 
-Material NFT floor marks:
-- Credits: ~138.67 USD
-- UNICRED #230: ~9.50 USD
+Other NFT collections without a reliable current market mark are retained as inventory/history but excluded from current marked totals.
 
-**On-chain marked assets incl. material NFTs: ~1,031.63 USD.**
+Fresh INK #372 remains known prior Ink inventory, but the current connector does not expose a reliable Ink NFT ownership/market endpoint, so it is not given a current marked value.
 
-Adding USER_CONFIRMED Binance earn:
-**Total tracked asset reference: ~1,691.53 USD.**
+## Current marked asset reference
 
-More liquidation-oriented NFT top-offer reference:
-**~1,682.56 USD including Binance earn.**
+Material on-chain liquid assets >= $0.10:
+- stablecoins: **~$844.99**
+- SUI: **~$47.01**
+- SOL: **~$1.82**
+- qualifying ETH/WETH across chains: **~$36.49**
 
-These are asset-completeness references, not Mission profit/progress.
+**Material on-chain liquid subtotal: ~ $930.30**
 
-## Claim / recoverability scan
+Material NFT marks:
+- Credits #23042/#23232: **~$134.26**
+- UNICRED #230: **~$9.54**
+- other measurable NFTs: **~$1.17**
 
-Current result: **no new verified legitimate cash/token claim was identified**.
+**Material NFT subtotal: ~ $144.97**
 
-Cross-checks:
-- latest successful Airdrop/TGE monitor run found no new verified ACTION;
-- no new canonical-wallet claimable balance was identified in the broad chain scan;
-- Tydro Ink Points have no verified cash claim/market mark;
-- protocol-specific off-wallet reward escrow cannot be proven zero by a generic wallet scan alone.
+**On-chain + marked NFTs: ~ $1,075.27**
 
-Unsafe claim-bait examples detected and excluded:
-- Avalanche fake "1,000,000 PENDLE Airdrop" token and claim-link NFTs;
-- Linea "VIP Pegged Dollar Compensation Attestation" NFT from an unaffiliated domain;
-- Optimism malicious/spam NFTs including metadata designed to lure wallet interaction;
-- Robinhood / BNB / Polygon unsolicited airdrop-like receipts.
+Add USER_CONFIRMED Binance earn:
+- **$682.40**
 
-Do not interact with an unsolicited token/NFT claim URL unless official project identity and claim path are independently verified.
+**Total tracked asset reference: ~ $1,757.67**
 
-## Closed trading exposures
+This is an asset-completeness snapshot, not Mission profit/PnL. Capital provenance is still separated from performance accounting.
 
-- Binance PONSUSDT perpetual: CLOSED
-- Robinhood PONS spot: CLOSED_DUST
-- GSTOCK: CLOSED_DUST
-- PAID: **0 / CLOSED**
-- SHARTCOIN: 0
-- KARDASHEV: 0
-- e/acc: 0
-- XRP / Variational: CLOSED
+## Monitoring policy
 
-There is currently no active position-specific crypto trade recorded in Mission.
+No routine wallet polling.
+
+Refresh this file only:
+- on explicit user request;
+- after a user-reported material deposit/withdrawal/trade/claim/bridge/NFT action;
+- when a verified event requires balance/ownership confirmation.
