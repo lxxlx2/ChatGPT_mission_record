@@ -1,6 +1,6 @@
 # Monster Squeeze V2.1 Current State
 
-Updated: 2026-09-27 12:34 Asia/Bangkok
+Updated: 2026-09-28 Asia/Bangkok
 Model: frozen V2.1
 
 ## Durable active candidates
@@ -94,3 +94,30 @@ The 2026-09-27 01:18 manual QA also found no confirmed IGNITION among the sample
 - Setup prices are persisted at first confirmed STRUCTURAL/PRESSURE state and are never reconstructed retroactively.
 - A new candidate cannot satisfy the price >= setup_price x1.05 gate at its first_seen snapshot.
 - PRESSURE remains GitHub/daily-summary state unless another factual immediate-alert gate is met.
+
+
+## Recovered missed-candidate state
+
+### BTWUSDT — recovered current watch
+- historical first shortlist observation: **2026-09-27 12:34 Asia/Bangkok**
+- historical shortlist snapshot: **+17.39% 24h**
+- historical status: deferred by max-3 deep-check cap, then lost because no durable deferred queue existed
+- historical alert audit: **MISSED_ALERT / NOT_BACKFILLED_AS_IGNITION**
+- current reference mark: **~1.2825**
+- current 24h futures change: **+12.23%**
+- current 24h futures quote volume: **~247.2M USDT**
+- current futures OI value: **~153.8M USDT**
+- current account long/short ratio: **~0.61** (~62% short accounts)
+- current top-trader position long/short ratio: **~2.02**
+- current funding: **+0.0181% per 4h**
+- current state for forward monitoring: **PRESSURE**
+- new forward setup price: **1.2825**
+- new forward first_seen: **2026-09-28**
+- forward expiry: **2026-10-05**
+- current IGNITION: **NO**, because latest completed hour is post-spike and fails breakout / 6h momentum gates
+
+Retrospective objective-gate evidence:
+- 2026-09-28 13:00 Bangkok: breakout +1.45%; 6h +11.44%; volume 4.60x; 3h taker buy 52.45%.
+- 2026-09-28 14:00 Bangkok: breakout +3.97%; 6h +15.52%; volume 7.29x; 3h taker buy 53.15%.
+
+Do not invent a historical setup price or backfill IGNITION. Track BTW prospectively from the new 1.2825 setup.
