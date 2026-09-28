@@ -1914,21 +1914,48 @@ def _v5b_register_pending(state: dict, pr: dict) -> dict | None:
     if isinstance(dense.get("v5b_active"), dict):
         return None
     if int(pr["n"]) >= V5B_NO_NEW_AFTER_SWEEP:
+        dense["v5b_last_no_seed"] = {
+            "at": datetime.now(timezone.utc).isoformat(),
+            "sweep": int(pr["n"]),
+            "reason": "new_cycle_cutoff",
+        }
+        save_state(state)
         return None
 
-    # Persist the registration plan before any network writes. If technocore
-    # rejects or times out on one owner post, the next autopilot poll resumes
-    # the same two feeder keys instead of losing the whole V5b cycle.
+    # Persist the registration plan before generating/posting feeder keys. This
+    # makes every later failure observable and resumable.
     if not isinstance(pending, dict):
-        seeds = _v5b_seed_candidates(state)
-        if not seeds:
+        try:
+            seeds = _v5b_seed_candidates(state)
+        except Exception as e:
+            dense["v5b_last_error"] = {
+                "at": datetime.now(timezone.utc).isoformat(),
+                "sweep": int(pr["n"]),
+                "stage": "seed_scan",
+                "error": str(e),
+            }
+            save_state(state)
             return None
-        seed = seeds[0]
 
+        if not seeds:
+            harvested = dense.get("v5a_harvested") or {}
+            pair_ids = set(_v5b_pair_lookup(state))
+            dense["v5b_last_no_seed"] = {
+                "at": datetime.now(timezone.utc).isoformat(),
+                "sweep": int(pr["n"]),
+                "reason": "seed_scan_empty",
+                "harvested_count": len(harvested),
+                "harvested_ids": sorted(str(x) for x in harvested.keys())[:12],
+                "known_pair_count": len(pair_ids),
+                "v4_00213_known": "v4-00213" in pair_ids,
+                "cycle_count": len(dense.get("v5b_cycles") or []),
+            }
+            save_state(state)
+            return None
+
+        seed = seeds[0]
         idx = int(dense.get("v5b_next_index", 1))
         labels = [f"DENSE-V5B-{idx:05d}-F{i}" for i in range(1, V5B_FEEDERS + 1)]
-        for label in labels:
-            add_dynamic_key(state, label)
 
         pending = {
             "index": idx,
@@ -1937,13 +1964,33 @@ def _v5b_register_pending(state: dict, pr: dict) -> dict | None:
             "registrations": [],
             "registered_sweep": None,
             "ready_after_sweep": None,
-            "status": "registering",
+            "status": "creating_keys",
             "created_at": datetime.now(timezone.utc).isoformat(),
         }
         dense["v5b_pending"] = pending
         dense["v5b_next_index"] = idx + 1
         dense["v5b_last_error"] = None
+        dense["v5b_last_no_seed"] = None
         save_state(state)
+
+    if pending.get("status") == "creating_keys":
+        try:
+            for label in pending["feeder_labels"]:
+                add_dynamic_key(state, label)
+            pending["status"] = "registering"
+            dense["v5b_pending"] = pending
+            save_state(state)
+        except Exception as e:
+            dense["v5b_pending"] = pending
+            dense["v5b_last_error"] = {
+                "at": datetime.now(timezone.utc).isoformat(),
+                "sweep": int(pr["n"]),
+                "stage": "create_feeder_keys",
+                "cycle_index": pending.get("index"),
+                "error": str(e),
+            }
+            save_state(state)
+            return pending
 
     if pending.get("status") == "registering":
         done = {
@@ -4529,6 +4576,13 @@ def cmd_dense_status(_args) -> None:
         print("v5b_last_error:", v5b_last_error.get("error"))
     else:
         print("v5b_last_error: null")
+    v5b_last_no_seed = dense.get("v5b_last_no_seed")
+    if isinstance(v5b_last_no_seed, dict):
+        print("v5b_last_no_seed_reason:", v5b_last_no_seed.get("reason"))
+        print("v5b_last_no_seed_harvested_count:", v5b_last_no_seed.get("harvested_count"))
+        print("v5b_last_no_seed_v4_00213_known:", v5b_last_no_seed.get("v4_00213_known"))
+    else:
+        print("v5b_last_no_seed_reason: null")
     v5b_pending = dense.get("v5b_pending")
     if isinstance(v5b_pending, dict):
         print("v5b_pending_cycle:", v5b_pending.get("index"))
