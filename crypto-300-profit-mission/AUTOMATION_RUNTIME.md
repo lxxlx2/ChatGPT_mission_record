@@ -1,6 +1,6 @@
 # $300 Crypto Automatic Runtime
 
-Updated: 2026-09-28 09:32 Asia/Bangkok
+Updated: 2026-09-28 15:00 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_TELEMETRY
 
@@ -82,7 +82,7 @@ No optional state/cache update may run before final persistence.
 Only after a final/final-retry exists:
 - launch/NFT/FOMO enrichment when upstream evidence contains a plausible candidate;
 - UNICRED / Credits market enrichment every 3 hours;
-- full Ethereum/Base/Unichain/Ink/Arbitrum inventory reconciliation every 3 hours or event-driven;
+- broad EVM/EVM-compatible + Solana inventory reconciliation every 3 hours or event-driven, using `ChatGPT Crypto Monitor All Chains`;
 - presentation/cache updates.
 
 Optional failure never downgrades a completed final.
@@ -304,7 +304,7 @@ This retirement does not disable general Monster V2.1 or launch-radar discovery 
 ## Cleared meme override — 2026-09-27 12:46
 
 Fresh direct-chain balances:
-- Solana PAID: 0.000473 residual dust
+- Solana PAID: 0
 - BNB GSTOCK: 0.096724707311314713 residual dust
 - Robinhood PONS: 0.000953441979624353 residual dust
 - SHARTCOIN: 0
@@ -320,7 +320,7 @@ Hourly Mission rules:
 - Binance PONSUSDT futures are now closed; no active PONS market lane remains;
 - general Monster V2.1 and launch discovery remain market-wide scanners.
 
-Current Solana canonical USDC is 420.472536, superseding the prior 328.018516 snapshot.
+Current Solana canonical USDC is 430.483714 and SOL is 0.135926955 as of the 2026-09-28 15:00 finalized scan.
 
 
 ## PONS full-close override — 2026-09-28
@@ -341,3 +341,54 @@ Full wallet reconciliation should include material NFTs:
 - Credits #23042 and #23232 with a current market reference;
 - UNICRED #230 with a current market reference;
 - exclude aspirational listing asks and spam NFTs from NAV.
+
+
+## Broad all-chain reconciliation override — 2026-09-28 15:00
+
+Primary wallet provider:
+- Alchemy app `ChatGPT Crypto Monitor All Chains`
+- app id `h6m5pairkgzet7vz`
+
+Known wallet authorities:
+- EVM `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
+- Solana `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+
+Every 3 hours, after a durable core final exists, run one bounded broad-chain reconciliation:
+1. native balances on enabled EVM/EVM-compatible chains;
+2. canonical stablecoins and known user assets;
+3. Solana SPL + Token-2022 finalized state;
+4. material NFTs where the provider endpoint is supported;
+5. claim-safety classification for unsolicited receipts.
+
+Do not let an unsupported enhanced token/NFT endpoint hide a native balance. Use independent native-balance RPC reads.
+
+Current special-chain baseline includes:
+- Optimism ETH 0.000065278581034767 + USDT 0.000449;
+- Polygon POL 0.291295907607284273;
+- Avalanche AVAX 0.000678889764814817;
+- HyperEVM HYPE 0.000234033730511199 + USDC 0.00172 + USD₮0 0.004646;
+- Linea ETH 0.000283128973717299 + LINEA 0.221708425875998735 + REX 0.101880947178375346;
+- Monad MON 0.3817997 + canonical USDC 0.024112;
+- World Chain ETH 0.000106736504323280 + WLD 0.04;
+- MegaETH ETH 0.000082071511230598;
+- Plasma XPL 0.009576790735189758;
+- Sonic S 0.577025845877296.
+
+Zero-native baseline:
+- Berachain / Blast / Mantle / RISE / Scroll / Sei / zkSync.
+
+Aptos/Bitcoin/Starknet/Sui/Tron remain `UNAVAILABLE_USER_ADDRESS` until a canonical user address is explicitly stored.
+
+### Claim-safety rule
+
+A token/NFT received unsolicited is not "money to claim" merely because its metadata says claim/airdrop/reward/compensation.
+
+Never promote such an asset to ACTION without:
+- canonical issuer identity;
+- official claim path;
+- eligibility tied to the user;
+- no contract/domain conflict.
+
+Known scam-like examples from the 2026-09-28 scan include Avalanche fake PENDLE/claim-link receipts, Linea compensation-attestation bait, and multiple Optimism/BNB/Polygon/Robinhood claim-style receipts.
+
+Generic wallet balance scanning does not prove protocol-side reward escrow is zero. If a known active protocol position can hold rewards off-wallet, use its protocol-specific contract/dashboard read when due.
