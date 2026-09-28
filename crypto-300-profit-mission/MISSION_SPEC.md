@@ -1,6 +1,6 @@
 # Crypto Profit Mission
 
-Updated: 2026-09-28 15:00 Asia/Bangkok
+Updated: 2026-09-28 15:52 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Authority
@@ -217,10 +217,11 @@ This is an active zero-external-capital competition plan. The stored plan uses a
 ## Hourly coverage
 
 Every :29 run first persists bounded core coverage:
-- active wallet/gas telemetry focused on stablecoins/native gas and verified current assets; PAID/GSTOCK/Robinhood-PONS residual dust plus former SHART/KARDASHEV/e/acc are not active position lanes;
 - ETH conditional;
 - BTC regime;
 - newest Crypto Daily input.
+
+Routine wallet balances are not an hourly lane.
 
 After core final persistence, slower/event-driven enrichment may cover:
 - JUMP due-window state;
@@ -234,19 +235,20 @@ Monster V2.1 full-universe scanning runs every 3 hours and at the required 19:29
 
 Coverage follows the bounded execution method in `AUTOMATION_RUNTIME.md` and `RUNBOOK.md`.
 
-## Medium lane
+## Medium / event-driven lane
 
-Every 3 hours, or immediately when material:
+Run only when a material event or explicit user request makes it relevant:
 - UNICRED economics / rent / unlock / protocol health;
 - Credits executable market / volume / creator mechanics;
-- slower holder/liquidity checks.
+- wallet ownership/balance verification.
 
-## Daily reconciliation
+## Wallet reconciliation
 
-First successful Mission run after 00:00 Asia/Bangkok:
-- reconcile all supported EVM/EVM-compatible networks from the broad Alchemy app plus Solana;
-- update `portfolio/current.md`, active positions, reserves and `state/latest.md`;
-- never carry a failed live read forward as current.
+No scheduled daily or 3-hour wallet reconciliation.
+
+The user will report material wallet changes. Refresh `portfolio/current.md` and `state/latest.md` only on explicit request, after a user-reported material wallet action, or when a verified event requires an ownership/balance check.
+
+Never present an older snapshot as live/current without a fresh read.
 
 ## Notifications
 
@@ -259,7 +261,6 @@ Gmail + user-visible ChatGPT are required only for a **new substantive crypto ev
 - stored ETH setup becomes qualified;
 - new/materially changed WATCH;
 - Monster IGNITION / relevant EXHAUSTION state transition;
-- material wallet anomaly involving real assets;
 - material security/solvency/deadline event affecting an active holding or planned participation;
 - verified launch/NFT/TGE opportunity state that materially changes timing or eligibility;
 - 19:29 Monster factual daily summary.
@@ -314,6 +315,12 @@ Authority: `performance/current.md`.
 - listing prices are not executable NAV;
 - unresolved closed-position cost/proceeds remain UNRESOLVED;
 - private venue PnL remains USER_CONFIRMED unless directly readable.
+
+## Wallet monitoring preference
+
+Routine wallet polling is intentionally disabled. Do not use automation budget to repeatedly prove that balances are unchanged.
+
+The latest wallet snapshot remains useful state, but freshness must be stated when referenced.
 
 ## Runtime / audit
 
