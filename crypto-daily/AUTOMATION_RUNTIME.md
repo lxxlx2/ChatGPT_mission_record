@@ -1,6 +1,6 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-27 15:12 Asia/Bangkok
+Updated: 2026-09-28 09:12 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
@@ -164,3 +164,30 @@ Run a bounded brand-impersonation query pack for currently launching/trending ex
 The 09:00 publisher must inspect previous-24h receipt coverage and run a fresh security verification pack before Chapter 9.
 
 No claim of global completeness is allowed. Report coverage ratio/gaps in the internal audit and state only what was found in the covered sources.
+
+
+## Private-market deal lifecycle — 2026-09-28
+
+The primary-market lane must include user-relevant deal hosts, not only underlying companies.
+
+Explicit discovery sources include:
+- Echo / @echodotxyz;
+- known Echo syndicate/group-lead notices such as Alpen Capital when publicly retrievable;
+- Legion;
+- CoinList;
+- Republic / RepublicX;
+- other canonical deal platforms already represented in user-relevant research.
+
+Material events:
+- full/partial refund;
+- cancellation / failed close;
+- allocation change;
+- SPV/issuer/structure change;
+- SAFE/equity/token-warrant conversion change;
+- settlement/distribution;
+- secondary/transfer/redemption window;
+- material valuation/fee/term change.
+
+Humans& / Echo is a regression case. On 2026-09-24 a direct Echo/Alpen notice gave the user a full 1,000-USDC refund into the Echo wallet. Future platform-level rights events must be surfaced even if the portfolio company itself publishes nothing.
+
+Do not treat 'company official source unchanged' as evidence that the investor's deal rights are unchanged.
