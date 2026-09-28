@@ -771,3 +771,9 @@ Expected post-enable status:
 
 Execution state:
 `DENSE_V3_IMPLEMENTED_ENABLE_AND_RESTART_REQUIRED`.
+
+
+Dense V3 startup hardening:
+- `1cef79ddb830d4d9db2cf7943ba8e6a01433918c` primes all 16 V3 reserve copy-sets synchronously when V3 is enabled and records `v3_not_before_sweep = enable_sweep + 1`.
+- This prevents the preserved pending baseline batch from firing immediately with only 1L/1S before the reserve multiplicity keys have aged through one referee sweep.
+- The first V3 trade therefore waits until the pre-registered reserve can support the intended 8L + 8S construction.
