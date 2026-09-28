@@ -159,3 +159,95 @@ Each hourly run should record one compact Frank lane result in the existing run 
 - email_delivery_state
 
 Infrastructure/source errors are audit-only and silent.
+
+
+## Latency-aware conviction override — 2026-09-29
+
+User objective for this lane:
+- working capital reference: about **100 USD**;
+- prioritize stability over first-block speed;
+- still preserve enough entry runway to participate in a later **3x-5x price move** when one occurs;
+- a first alert that arrives only after a half-day without a fresh accumulation reason is normally too stale.
+
+### Backtest / recall requirement
+
+A delivery test with one hand-picked token is only a positive-control test. It does **not** prove there are no missed alerts.
+
+A proper historical replay must:
+1. enumerate every token with an active Frank DEX/aggregator swap in the replay window;
+2. process events in timestamp order with no future information;
+3. simulate the actual hourly :29 observation cadence;
+4. output every historical FORMAL_ENTRY / FORMAL_EXIT that the rules would have generated;
+5. report silent WATCH, HFT_EXECUTION, STALE_SIGNAL and rejected candidates separately;
+6. calculate first meaningful accumulation time `T0`, alert time, alert latency, price-vs-Frank-VWAP at alert, and forward 1h/3h/6h/24h/7d outcome when historical pricing is available.
+
+Historical replay results should be summarized in one audit/report. Do not send one Gmail per historical signal unless the user explicitly requests that.
+
+Live operation remains different: every distinct new FORMAL_ENTRY / FORMAL_EXIT that passes the rules should be delivered once.
+
+### Meaningful accumulation clock T0
+
+Do not anchor latency to a dust/probe buy.
+
+Start an accumulation episode clock `T0` when either:
+- Frank makes >=2 active BUY swaps in <=60 minutes with combined gross buy >=3,000 USD equivalent; or
+- one active BUY >=5,000 USD is followed by at least one additional active BUY within 60 minutes.
+
+A single buy, regardless of PnL later, cannot by itself create FORMAL_ENTRY.
+
+### Persistence can be proven from chain history
+
+Do not require an extra scheduler cycle when the chain itself already proves persistence.
+
+Persistence is satisfied by either:
+- Path A: the mint was WATCH in the previous hourly run and still satisfies the entry gates now; or
+- Path B: at the current run, the observed active BUY sequence already spans >=45 minutes from first to latest BUY, contains >=3 active BUY swaps, and the other FORMAL_ENTRY gates are satisfied.
+
+This keeps the scanner hourly while avoiding an unnecessary additional 1-hour wait.
+
+### Freshness guard
+
+Normal desired first-alert latency after T0:
+- target: **45 to 120 minutes**;
+- >3 hours is considered late for a fresh new entry.
+
+If `now - T0 > 3h`, a new FORMAL_ENTRY is allowed only when:
+- Frank made a fresh active BUY in the last 60 minutes;
+- the position remains materially open;
+- current executable price <= Frank VWAP * 1.05;
+- all normal safety/liquidity gates pass.
+
+Otherwise classify `STALE_SIGNAL`, keep it silent, and do not send a late chase email.
+
+### Formal-entry gates under this override
+
+For a fresh FORMAL_ENTRY:
+- persistence Path A or B above;
+- cumulative gross active buys in the episode >=10,000 USD equivalent;
+- sell value in the episode <=30% of gross buy value;
+- current exposure >=70% of episode peak exposure or Frank has added exposure since the prior observation;
+- current executable price normally between Frank VWAP * 0.92 and * 1.10;
+- liquidity / quote reserve sufficient and not collapsing;
+- bounded token-control / transfer restriction checks pass;
+- no HFT_EXECUTION;
+- stablecoins, wrapped majors and obvious execution/hedging instruments excluded.
+
+### Runway information
+
+A FORMAL_ENTRY email must also show:
+- current market cap / FDV when reliably available;
+- 3x implied market cap;
+- 5x implied market cap;
+- alert latency from T0.
+
+These are scenario arithmetic, not a forecast.
+
+### 100 USD lane sizing reference
+
+For this Frank lane only:
+- normal initial test size in a FORMAL_ENTRY: **20-30 USD**;
+- if the next observation remains qualified and price has not violated the do-not-chase level, an additional **20-30 USD** may be considered;
+- normal per-token cap from this ~100 USD lane: **50-60 USD**;
+- preserve the rest as reserve for another signal / invalidation response.
+
+No automatic transaction is permitted.
