@@ -1,6 +1,6 @@
 # Monster-Coin Squeeze Monitor V2.1
 
-Updated: 2026-09-27 12:31 Asia/Bangkok
+Updated: 2026-09-28 Asia/Bangkok
 
 Purpose: factual squeeze/blow-off state classification across Binance Alpha and Binance USDⓈ-M Futures.
 
@@ -127,3 +127,49 @@ Record:
 - data_source_failures.
 
 On a due Monster cycle, failure is recorded as a Monster data gap and must be retried on the next due/recovery opportunity. On a non-due cycle, `not_due` is healthy. Monster work occurs after the Mission core final so it cannot erase core scheduler proof.
+
+
+## Anti-starvation queue
+
+The deep-check cap of 3 is a runtime budget, not permission to forget candidates.
+
+Any full-screen symbol that qualifies for the shortlist but is not deep-checked must be persisted as `DEFERRED_SHORTLIST` with:
+- first_seen;
+- snapshot price if directly available in that scan;
+- 24h change / quote volume;
+- reason for shortlist;
+- next_due;
+- expiry.
+
+At each due Monster scan:
+1. deep-check at least **1 oldest deferred candidate** first;
+2. use remaining slots for the strongest current candidates;
+3. remove a deferred candidate only after a deep-check rejects/promotes it, it expires, or market data becomes unavailable with an explicit gap.
+
+A newly stronger mover must not indefinitely starve an older deferred candidate.
+
+## Deterministic due rule
+
+A full Monster screen is due when either:
+- elapsed time since `last_successful_full_scan_at` is >= 3 hours; or
+- it is the required 19:29 Asia/Bangkok daily-summary cycle.
+
+Do not derive `monster_due:false` only from the wall-clock hour. Scheduler drift does not cancel a due scan.
+
+Persist `last_successful_full_scan_at` after every completed full screen.
+
+## Missed-candidate regression: BTWUSDT
+
+Observed:
+- 2026-09-27 12:34 Asia/Bangkok recovery scan explicitly shortlisted **BTWUSDT +17.39%**.
+- It was not deep-checked only because QNT/Q/SOON consumed the max-3 slots.
+- No durable deferred queue entry was created.
+- Later automatic runs incorrectly reported `monster_due:false`, so BTW never received its required follow-up deep-check.
+
+Retrospective Binance hourly data shows BTW met all four objective market gates, excluding the persisted-setup gate, at:
+- 2026-09-28 13:00 Asia/Bangkok close: breakout +1.45%, 6h +11.44%, 3h volume ~4.60x, 3h taker-buy ~52.45%.
+- 2026-09-28 14:00 Asia/Bangkok close: breakout +3.97%, 6h +15.52%, 3h volume ~7.29x, 3h taker-buy ~53.15%.
+
+At the 2026-09-27 shortlist time BTW traded around 1.05-1.06, so either later close was also >5% above that observed region. However the frozen model forbids inventing a setup price after the fact, therefore this incident is recorded as `MISSED_ALERT / NOT_BACKFILLED_AS_IGNITION`, not as a fabricated historical state transition.
+
+This is a runtime coverage failure, not evidence that V2.1 market gates rejected BTW.
