@@ -719,3 +719,43 @@ Enable:
 ```bash
 uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v3
 ```
+
+
+## Dense V4 live strategy — 2026-09-28
+
+V4 supersedes V3 for new submissions.
+
+Coverage remains:
+- every aligned referee sweep;
+- 8 long copies + 8 short copies;
+- no custom <=120s ref-age block;
+- flow/state alignment, room, missed-range and lock gates remain mandatory.
+
+V4 quote ladder:
+- Long: 8 copies at the referee lower limit, approximately -5%.
+- Short: 3 copies at +1.0%, 2 copies at +1.7%, 3 copies at +2.0%.
+
+V4 sizing:
+- each long/short pair uses equal quantity so the paired feeder returns flat after the two trades;
+- quantity is calculated from the official clawback cash requirements under a close≈ref execution model;
+- +1.0% rung safety: 0.995;
+- +1.7% rung safety: 0.99;
+- +2.0% rung safety: 0.98;
+- deeper short rungs trade some size for larger adverse within-sweep cash headroom.
+
+Migration:
+- existing V1/V2/V3 positions remain untouched;
+- V4 reuses the V3 paired reserve pool;
+- current pending baseline is preserved only when it has no partial trades;
+- mode switch refuses to proceed if a pending batch already contains a partially posted trade.
+
+Commands:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py dense-v4-preview
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v4
+```
+
+Implementation commits:
+- `eacc193b1412407c3a6c3dce8f4570b6e8c46341`
+- `035839860be2b89f27527fb8b96fa717ce34ad8c`
+- `71335a7957c1a0f90cb142ec35c10c4fd4d7c082`
