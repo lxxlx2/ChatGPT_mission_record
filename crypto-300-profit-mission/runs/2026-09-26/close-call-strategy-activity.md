@@ -1157,3 +1157,27 @@ Interpretation:
 
 Execution state:
 `LAUNCHAGENTS_HEALTHY_V5B_WAITING_FIRST_REGISTRATION_POLL`.
+
+
+## 2026-09-29 — V5b scheduler starvation confirmed and hardened
+
+At sweep 951 the manual V5b preview still showed one eligible seed:
+- `v5a:v4-00213`;
+- locked score 58.949759;
+- planned short qty 11.53;
+- estimated opening fee 26.51;
+- take score 88.949759;
+- stop score -25.
+
+Yet live state still showed no V5b pending or active cycle. This confirms the seed-selection logic is healthy and the remaining fault is scheduler reachability.
+
+Hardening:
+- V5b now runs before V4 pending submission/wait handling on every autopilot poll;
+- this prevents V4 alignment/room-wait transitions from consuming every poll before V5b can register a seed;
+- active V5b risk management therefore also runs before V4 wait paths;
+- a persistent `v5b_last_check` heartbeat records the last sweep on which the scheduler actually entered V5b.
+
+Commit: `2ce6f92baa9f39ed99df79db9eb5c873b4b90c3e`.
+
+Execution state:
+`DENSE_V5B_SCHEDULER_HEARTBEAT_ADDED`.
