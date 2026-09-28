@@ -296,7 +296,7 @@ While their wallet balances remain zero:
 
 A fresh non-zero direct balance or explicit user instruction is required to reactivate a retired meme-position monitor.
 
-PAID remains non-zero and stays in active wallet inventory telemetry.
+PAID is residual dust only and does not consume an active position-specific lane.
 
 This retirement does not disable general Monster V2.1 or launch-radar discovery for the broader market.
 
