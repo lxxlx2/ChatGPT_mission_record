@@ -1,6 +1,6 @@
 # Crypto Profit Mission
 
-Updated: 2026-09-28 09:32 Asia/Bangkok
+Updated: 2026-09-28 15:00 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Authority
@@ -89,7 +89,7 @@ Primary EVM wallet:
 Primary Solana wallet:
 `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 
-Use connected Alchemy `ChatGPT Crypto Monitor` for direct-chain reads.
+Use connected Alchemy `ChatGPT Crypto Monitor All Chains` (app id `h6m5pairkgzet7vz`) for broad direct-chain reads. The older `ChatGPT Crypto Monitor` app is fallback-only.
 
 Labels:
 - DIRECT_CHAIN: fresh RPC.
@@ -104,6 +104,24 @@ Rules:
 - Public market data cannot overwrite private venue fill, quantity, margin, PnL or order state.
 - `portfolio/current.md` and `state/latest.md` contain current state only.
 - historical snapshots belong in Git history / immutable run audits.
+
+## Broad-chain wallet coverage
+
+Canonical addresses currently known:
+- EVM: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
+- Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
+
+The broad Alchemy app enables EVM/EVM-compatible coverage including Ethereum, Arbitrum, Avalanche, Base, Berachain, Blast, BNB, Hyperliquid EVM, Ink, Linea, Mantle, MegaETH, Monad, Optimism, Plasma, RISE, Robinhood Chain, Scroll, Sei, Sonic, Unichain, World Chain and zkSync.
+
+Aptos, Bitcoin, Starknet, Sui and Tron are enabled provider networks but no canonical user address for those address formats is stored in Mission. They must remain `UNAVAILABLE_USER_ADDRESS` rather than being falsely reported as checked.
+
+Full-chain reconciliation rules:
+- query native balances independently, because enhanced token/NFT endpoints are not supported on every chain;
+- verify canonical stablecoin contracts where known;
+- classify unpriced unsolicited receipts as unverified/spam until identity and market value are independently established;
+- metadata containing claim URLs, seed phrases, "airdrop is yours", "compensation", or similar inducements is never a valid entitlement by itself;
+- do not click/interact with a claim path until official project identity and claim path are independently verified;
+- protocol-side staking/reward escrow is not assumed zero merely because the wallet balance is zero.
 
 ## Capital map
 
@@ -178,7 +196,7 @@ This is an active zero-external-capital competition plan. The stored plan uses a
 - SHART direct balance 0: routine position monitoring closed.
 - KARDASHEV direct balance 0: routine position monitoring closed.
 - e/acc direct balance 0: routine position monitoring closed.
-- PAID residual 0.000473: economically closed; routine position monitoring closed.
+- PAID direct balance 0 in the 2026-09-28 15:00 finalized Solana scan; routine position monitoring closed.
 - Robinhood PONS residual 0.000953441979624353: spot position closed; routine spot monitoring closed.
 - GSTOCK residual 0.096724707311314713: position closed; routine GSTOCK monitoring closed.
 - liquid CRED direct balance 0: standalone token monitoring closed.
@@ -225,7 +243,7 @@ Every 3 hours, or immediately when material:
 ## Daily reconciliation
 
 First successful Mission run after 00:00 Asia/Bangkok:
-- reconcile supported canonical wallets;
+- reconcile all supported EVM/EVM-compatible networks from the broad Alchemy app plus Solana;
 - update `portfolio/current.md`, active positions, reserves and `state/latest.md`;
 - never carry a failed live read forward as current.
 
