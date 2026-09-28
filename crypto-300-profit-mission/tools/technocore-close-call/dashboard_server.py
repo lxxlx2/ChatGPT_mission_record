@@ -197,6 +197,25 @@ def snapshot() -> dict:
             except Exception:
                 pass
 
+        for ticket in dense.get("v4_tickets") or []:
+            try:
+                ref_px = Decimal(str(ticket["ref"]))
+                qty = Decimal(str(ticket["qty"]))
+                for side in ("long", "short"):
+                    score = (mark - ref_px) * qty if side == "long" else (ref_px - mark) * qty
+                    gross_edges.append({
+                        "name": f"V4-{side.upper()}-{int(ticket['reserve_index']):05d}",
+                        "edge": score,
+                        "entry": ref_px,
+                        "qty": qty,
+                        "base_fee": Decimal("0"),
+                        "estimated_score": score,
+                        "side": side,
+                        "estimate_model": "dense_ref_proxy",
+                    })
+            except Exception:
+                pass
+
     gross_edges.sort(key=lambda x: x["estimated_score"], reverse=True)
     best_edge = gross_edges[0] if gross_edges else None
 
@@ -245,7 +264,7 @@ def snapshot() -> dict:
         system_status = "NEEDS_ATTENTION"
         system_text = "后台心跳异常"
         user_action = "需要检查后台是否仍在运行"
-    elif pr["age_s"] > 120 and not dense.get("v3_enabled"):
+    elif pr["age_s"] > 120 and not (dense.get("v3_enabled") or dense.get("v4_enabled")):
         system_status = "WAITING"
         system_text = "正在等待更新的官方价格"
         user_action = "不用操作，程序会自动等待新价格"
@@ -298,11 +317,12 @@ def snapshot() -> dict:
         pending = dense.get("pending") or {}
         if pending:
             if pending.get("status") == "registered":
-                next_event_text = (
-                    f"Dense V3 第 {pending.get('index')} 组，等待下一 referee sweep 提交 8L + 8S"
-                    if dense.get("v3_enabled")
-                    else f"Dense 第 {pending.get('index')} 组双向票，等待下一 fresh sweep 提交"
-                )
+                if dense.get("v4_enabled"):
+                    next_event_text = f"Dense V4 第 {pending.get('index')} 组，等待下一 referee sweep 提交 8L + 8S ladder"
+                elif dense.get("v3_enabled"):
+                    next_event_text = f"Dense V3 第 {pending.get('index')} 组，等待下一 referee sweep 提交 8L + 8S"
+                else:
+                    next_event_text = f"Dense 第 {pending.get('index')} 组双向票，等待下一 fresh sweep 提交"
                 next_event_at = None
                 next_event_due = True
                 next_event_lag_s = 0
@@ -312,16 +332,19 @@ def snapshot() -> dict:
                 next_event_due = True
                 next_event_lag_s = 0
         else:
-            next_event_text = (
-                "下一 referee sweep 创建 Dense V3 8L + 8S"
-                if dense.get("v3_enabled")
-                else "下一 fresh sweep 创建新一组双向 favored tickets"
-            )
+            if dense.get("v4_enabled"):
+                next_event_text = "下一 referee sweep 创建 Dense V4 8L + 8S clawback ladder"
+            elif dense.get("v3_enabled"):
+                next_event_text = "下一 referee sweep 创建 Dense V3 8L + 8S"
+            else:
+                next_event_text = "下一 fresh sweep 创建新一组双向 favored tickets"
             next_event_at = None
             next_event_due = False
             next_event_lag_s = 0
         if system_status == "OK":
-            if dense.get("v3_enabled"):
+            if dense.get("v4_enabled"):
+                system_text = "Dense V4 正在覆盖每一个 referee sweep"
+            elif dense.get("v3_enabled"):
                 system_text = "Dense V3 正在覆盖每一个 referee sweep"
             elif dense.get("v2_enabled"):
                 system_text = "Dense V2 正在自动运行"
@@ -430,6 +453,15 @@ def snapshot() -> dict:
         "submitted_wallets": submitted_wallets,
         "dense_enabled": bool(dense.get("enabled")),
         "dense_v2_enabled": bool(dense.get("v2_enabled")),
+        "dense_v4_enabled": bool(dense.get("v4_enabled")),
+        "dense_v4_long_offset": dense.get("v4_long_offset"),
+        "dense_v4_short_offsets": dense.get("v4_short_offsets"),
+        "dense_v4_short_safeties": dense.get("v4_short_safeties"),
+        "dense_v4_total_copies_per_side": dense.get("v4_total_copies_per_side"),
+        "dense_v4_tickets": len(dense.get("v4_tickets") or []),
+        "dense_v4_last_multiplicity": dense.get("last_v4_multiplicity"),
+        "dense_v4_enabled_sweep": dense.get("v4_enabled_sweep"),
+        "dense_v4_not_before_sweep": dense.get("v4_not_before_sweep"),
         "dense_v3_enabled": bool(dense.get("v3_enabled")),
         "dense_v3_offset": dense.get("v3_offset"),
         "dense_v3_total_copies_per_side": dense.get("v3_total_copies_per_side"),
@@ -622,7 +654,9 @@ async function refresh(){
     const la=d.last_action;
     if(d.dense_enabled && lt){
       let boostText='';
-      if(lt.v3_multiplicity){
+      if(lt.v4_multiplicity){
+        boostText=' · V4 Long×'+Number(lt.v4_multiplicity.total_long_copies||1)+' / Short×'+Number(lt.v4_multiplicity.total_short_copies||1)+' ladder';
+      }else if(lt.v3_multiplicity){
         boostText=' · V3 Long×'+Number(lt.v3_multiplicity.total_long_copies||1)+' / Short×'+Number(lt.v3_multiplicity.total_short_copies||1);
       }else if(lt.v2_boost){
         const bits=[];
@@ -679,7 +713,18 @@ async function refresh(){
     }else document.getElementById('nearestTarget').textContent='暂无目标估算。';
 
     if(d.dense_enabled){
-      if(d.dense_v3_enabled){
+      if(d.dense_v4_enabled){
+        document.getElementById('staticTitle').textContent='Dense V4 基础批次 '+d.dense_submitted_sets+' 组';
+        document.getElementById('staticRemain').textContent='每 referee sweep：Long×8 @ 下限≈-5% · Short 3×+1% / 2×+1.7% / 3×+2%';
+        document.getElementById('staticFill').style.width='100%';
+        document.getElementById('bracketTitle').textContent='V4 Ladder 额外复制 '+d.dense_v4_tickets+' 组';
+        const lastV4=d.dense_v4_last_multiplicity||{};
+        const lastV4Copies=(lastV4.total_long_copies&&lastV4.total_short_copies)?(' · 最近 '+lastV4.total_long_copies+'L/'+lastV4.total_short_copies+'S'):'';
+        const v4Err=Number((lastV4.errors||[]).length||0);
+        document.getElementById('bracketHint').textContent='Ready reserve '+d.dense_v3_reserve_ready+' / 注册 '+d.dense_v3_reserve_registered+lastV4Copies+(v4Err?(' · errors '+v4Err):'')+' · Ref age 仅展示';
+        document.getElementById('bracketFill').style.width='100%';
+        document.getElementById('walletText').textContent='Dense keys '+d.dense_dynamic_keys+' / '+d.dense_dynamic_key_cap+' · 剩余预算 '+d.dense_dynamic_key_budget_remaining+' · flow/state/missed/lock 安全门仍启用';
+      }else if(d.dense_v3_enabled){
         document.getElementById('staticTitle').textContent='Dense V3 基础批次 '+d.dense_submitted_sets+' 组';
         document.getElementById('staticRemain').textContent='每个 referee sweep：Long×'+d.dense_v3_total_copies_per_side+' + Short×'+d.dense_v3_total_copies_per_side+' · 偏移 ±'+fmt(Number(d.dense_v3_offset||0)*100,0)+'%';
         document.getElementById('staticFill').style.width='100%';
@@ -730,7 +775,7 @@ async function refresh(){
 
     document.getElementById('mark').textContent=fmt(d.mark);
     document.getElementById('ref').textContent=fmt(d.ref);
-    document.getElementById('age').textContent=d.age_s+' 秒'+(d.dense_v3_enabled?'（V3仅展示，不阻止交易）':'');
+    document.getElementById('age').textContent=d.age_s+' 秒'+((d.dense_v3_enabled||d.dense_v4_enabled)?'（仅展示，不阻止交易）':'');
     document.getElementById('sweep').textContent=d.sweep;
   }catch(e){document.getElementById('systemText').textContent='面板读取失败';document.getElementById('userAction').textContent=e.message;document.getElementById('statusDot').style.background='var(--bad)'}
 }
