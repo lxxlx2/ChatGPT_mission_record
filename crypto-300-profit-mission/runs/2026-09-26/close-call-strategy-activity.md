@@ -1070,3 +1070,47 @@ Interpretation:
 
 Execution state:
 `DENSE_V5A_FIRST_HARVEST_LOCKED_58.949759`.
+
+
+## 2026-09-29 — Dense V5b realized-profit flip engine implemented
+
+V5b now sits after V5a and reuses flat V5a winners as compounding seeds.
+
+Core behavior:
+- minimum realized seed score: 40 POLF;
+- first direction is the opposite of the V5a winning side;
+- a seed never reopens at full size blindly;
+- planned opening notional is capped so the expected 1% opening fee consumes at most 45% of the realized seed score;
+- two fresh registered feeder accounts split the counterparty exposure, so the winner account is not constrained by one feeder's collateral;
+- opening and closing settlement are reconstructed against the next referee sweep's closing reference;
+- winner and feeder funds are checked under the frozen fold before a state transition is accepted;
+- visible voids or dedicated-room missed settlement sweeps block the cycle.
+
+Risk controls:
+- only one compound account can be active at a time;
+- take-profit closes when projected flat score is at least seed score + 30 POLF;
+- stop closes when projected flat score falls to -25 POLF;
+- close uses the same two feeder accounts and reverses the opening legs, returning the winner flat;
+- new cycles stop being created after sweep 2554.
+
+True compounding loop:
+- a successful V5b take-profit close becomes a new seed;
+- the same winner key can then reopen in the opposite direction again;
+- stop-closed cycles are not automatically recycled;
+- this produces flat cash -> flipped exposure -> flat cash -> flipped exposure while retaining V4/V5a as the broad entry/harvest engines.
+
+Initial seed currently available:
+- V5a pair `v4-00213`;
+- locked score 58.949759 POLF;
+- prior winner long, so the first V5b direction will be short;
+- because fee budget is tied to the realized cushion, expected position size is intentionally much smaller than a full 10k account.
+
+Implementation commits:
+- `a80aca6aaef3608fadad2c5ea283e066c9e6c6f0` initial V5b flip engine;
+- `d3d54efc51feced9ee92654dc8f5e93b4131ee17` chained realized-profit seeds;
+- `3a4972dba113eaa2edaf91cb945354f57edd1292`, `5168deb094cd325369f19d6525c4f5e6cd4b000b`, `de687681631304d874c76511dd265d8f972a2943`, `0aa5c0ee930a99e12acce30f7f91f2dbe4df1bd1` seed-lineage/status plumbing;
+- `1fed1b3012abe471fc1471ff8c6801e62e2d6be8` counterparty funds verification;
+- `96ace16f99fc4777f22993410826d1db60270832` dashboard support.
+
+Execution state:
+`DENSE_V5B_IMPLEMENTED_PREVIEW_REQUIRED`.
