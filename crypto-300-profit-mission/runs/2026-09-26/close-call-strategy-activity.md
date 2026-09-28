@@ -1255,3 +1255,26 @@ Interpretation:
 
 Execution state:
 `DENSE_V5A_TWO_LOCKS_V5B_CYCLE1_OPEN_VERIFIED`.
+
+
+## 2026-09-29 — Dashboard dynamic relative catch-up line
+
+Added a live relative catch-up estimate to the Close Call dashboard.
+
+The new metric compares:
+- our current best directional candidate's score sensitivity to NVDA mark;
+- the current public leader cohort's position sensitivity.
+
+Leader position source priority:
+1. official `d-close1-positions.top` position when a current leader DID is visible there;
+2. otherwise the most recent consecutive-sweep `Score / Mark` slope for current leader DIDs.
+
+The dashboard now reports:
+- our position slope;
+- leader position slope;
+- relative score slope in POLF per $1 NVDA move;
+- the NVDA move and percentage that would close the current leader-score gap if both positions stay unchanged.
+
+This is intentionally shown alongside, not instead of, the existing static prize-line target. The relative target is conditional and automatically recalculates if the public leader position changes.
+
+Commit: `8ca5e2608b04b127be56a85cecd12cf2a0c3ebc8`.
