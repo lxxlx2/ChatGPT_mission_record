@@ -36,7 +36,7 @@ import urllib.error
 import urllib.request
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
-from decimal import Decimal, ROUND_DOWN
+from decimal import Decimal, ROUND_CEILING, ROUND_DOWN
 from pathlib import Path
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
@@ -89,6 +89,26 @@ DENSE_V2_RESERVE_TARGET_PAIRS = 16
 DENSE_V3_TOTAL_COPIES_PER_SIDE = 8
 DENSE_V3_EXTRA_COPY_SETS = DENSE_V3_TOTAL_COPIES_PER_SIDE - 1
 DENSE_V3_RESERVE_TARGET_SETS = 16
+
+# V4 keeps the V3 "every referee sweep" coverage and 8 copies per side,
+# but changes quote construction to the live competitor regime seen in the
+# public room: deep long quote plus a short-side clawback ladder.
+DENSE_V4_TOTAL_COPIES_PER_SIDE = 8
+DENSE_V4_LONG_OFFSET = Decimal("0.05")
+DENSE_V4_SHORT_OFFSETS = (
+    Decimal("0.01"), Decimal("0.01"), Decimal("0.01"),
+    Decimal("0.017"), Decimal("0.017"),
+    Decimal("0.02"), Decimal("0.02"), Decimal("0.02"),
+)
+# These are cash-usage safety multipliers for the close≈ref sizing model.
+# Aggressive +1% copies maximize size; deeper rungs deliberately keep more
+# free cash so they tolerate a larger adverse within-sweep move before a
+# funds void.
+DENSE_V4_SHORT_SAFETIES = (
+    Decimal("0.995"), Decimal("0.995"), Decimal("0.995"),
+    Decimal("0.99"), Decimal("0.99"),
+    Decimal("0.98"), Decimal("0.98"), Decimal("0.98"),
+)
 
 
 def b58(raw: bytes) -> str:
@@ -361,6 +381,8 @@ def dense_qty(ref_px: Decimal) -> Decimal:
 
 def dense_offset(state: dict) -> Decimal:
     dense = state.get("dense") or {}
+    if dense.get("v4_enabled"):
+        return Decimal(str(dense.get("v4_reference_offset") or DENSE_V3_OFFSET))
     if dense.get("v3_enabled"):
         return Decimal(str(dense.get("v3_offset") or DENSE_V3_OFFSET))
     if dense.get("v2_enabled"):
@@ -579,7 +601,7 @@ def dense_v3_ready_reserve(dense: dict, sweep: int) -> list[dict]:
 
 def dense_v3_maintain_reserve(state: dict, sweep: int) -> dict | None:
     dense = state.setdefault("dense", {})
-    if not dense.get("v3_enabled") or not room_registration_confirmed(state):
+    if not (dense.get("v3_enabled") or dense.get("v4_enabled")) or not room_registration_confirmed(state):
         return None
 
     reserve = dense.setdefault("v3_reserve", [])
@@ -752,6 +774,210 @@ def dense_v3_submit_multiplicity(
     return result
 
 
+def dense_v4_profile(copy_no: int) -> dict:
+    if not 1 <= int(copy_no) <= DENSE_V4_TOTAL_COPIES_PER_SIDE:
+        raise ValueError("V4 copy_no must be 1..8")
+    idx = int(copy_no) - 1
+    return {
+        "copy_no": int(copy_no),
+        "long_offset": DENSE_V4_LONG_OFFSET,
+        "short_offset": DENSE_V4_SHORT_OFFSETS[idx],
+        "safety": DENSE_V4_SHORT_SAFETIES[idx],
+    }
+
+
+def dense_v4_limit_bounds(pr: dict) -> tuple[Decimal, Decimal]:
+    ref = pr["px"]
+    raw_limits = (pr.get("raw") or {}).get("limits")
+    if isinstance(raw_limits, (list, tuple)) and len(raw_limits) >= 2:
+        try:
+            return Decimal(str(raw_limits[0])), Decimal(str(raw_limits[1]))
+        except Exception:
+            pass
+    cent = Decimal("0.01")
+    low = (ref * Decimal("0.95")).quantize(cent, rounding=ROUND_CEILING)
+    high = (ref * Decimal("1.05")).quantize(cent, rounding=ROUND_DOWN)
+    return low, high
+
+
+def dense_v4_plan_copy(pr: dict, copy_no: int) -> dict:
+    """Build one paired V4 long/short copy.
+
+    The target long buys at the exact lower referee limit when available.
+    The target short sells on its ladder rung. Quantity is sized from the
+    official fold's cash test assuming sweep close ~= current referee ref,
+    then multiplied by the rung's cash safety. This is an execution sizing
+    model, not a guarantee against arbitrarily large within-sweep moves.
+    """
+    ref = pr["px"]
+    profile = dense_v4_profile(copy_no)
+    lower_limit, upper_limit = dense_v4_limit_bounds(pr)
+    cent = Decimal("0.01")
+
+    # At the 5% lower boundary, rounding down can slip outside official limits.
+    # Prefer the referee's posted lower limit; fallback uses ROUND_CEILING.
+    low = lower_limit
+    desired_high = (ref * (Decimal("1") + profile["short_offset"])).quantize(
+        cent, rounding=ROUND_DOWN
+    )
+    high = min(desired_high, upper_limit)
+
+    # Official clawback funds model at close ~= ref.
+    # Long target is the taker/buyer of the low-priced trade.
+    long_fee_per_contract = max(Decimal("0.01") * low, ref - low)
+    long_required = low + long_fee_per_contract
+
+    # Short target is the maker/seller of the high-priced trade.
+    short_fee_per_contract = max(Decimal("0.01") * high, high - ref)
+    short_required = high + short_fee_per_contract
+
+    # The feeder opens the opposite short at low, then buys it back at high.
+    # First trade collateral+fee plus the second trade's buyer fee must remain
+    # payable before the close releases the feeder lot.
+    feeder_open_fee = max(Decimal("0.01") * low, low - ref)
+    feeder_close_fee = max(Decimal("0.01") * high, ref - high)
+    feeder_required = low + feeder_open_fee + feeder_close_fee
+
+    required_per_contract = max(long_required, short_required, feeder_required)
+    qty = (
+        profile["safety"] * Decimal("10000") / required_per_contract
+    ).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+
+    return {
+        **profile,
+        "ref": ref,
+        "low": low,
+        "high": high,
+        "qty": qty,
+        "required_per_contract": required_per_contract,
+        "lower_limit": lower_limit,
+        "upper_limit": upper_limit,
+    }
+
+
+def dense_v4_submit_multiplicity(state: dict, pr: dict) -> dict:
+    dense = state.setdefault("dense", {})
+    ready = dense_v3_ready_reserve(dense, pr["n"])
+    # Baseline pending batch is V4 copy #1. Reserve sets provide copies #2..#8.
+    need = DENSE_V4_TOTAL_COPIES_PER_SIDE - 1
+    selected = ready[:need]
+    submitted = []
+    errors = []
+
+    for copy_no, item in enumerate(selected, start=2):
+        labels = item["labels"]
+        plan = dense_v4_plan_copy(pr, copy_no)
+        item["status"] = "in_progress"
+        item["started_at"] = datetime.now(timezone.utc).isoformat()
+        save_state(state)
+
+        pair_record = {
+            "reserve_index": item["index"],
+            "copy_no": copy_no,
+            "sweep": pr["n"],
+            "ref": str(pr["px"]),
+            "long_offset": str(plan["long_offset"]),
+            "short_offset": str(plan["short_offset"]),
+            "safety": str(plan["safety"]),
+            "qty": str(plan["qty"]),
+            "low": str(plan["low"]),
+            "high": str(plan["high"]),
+            "long": labels["long"],
+            "short": labels["short"],
+            "feeder": labels["feeder"],
+            "trades": {},
+        }
+        try:
+            long_tid = f"v4{item['index']:05d}l-{int(time.time())}-{copy_no}"
+            long_text = build_trade(
+                state,
+                state["room"],
+                labels["feeder"],
+                labels["long"],
+                "sell",
+                plan["qty"],
+                plan["low"],
+                pr["n"] + 2,
+                long_tid,
+            )
+            long_ack = post_signed(state, state["room"], labels["feeder"], long_text)
+            pair_record["trades"]["long"] = {
+                "trade_id": long_tid,
+                "px": str(plan["low"]),
+                "qty": str(plan["qty"]),
+                "ack": long_ack.strip().splitlines()[0] if long_ack.strip() else "",
+            }
+            save_state(state)
+            time.sleep(0.05)
+
+            short_tid = f"v4{item['index']:05d}s-{int(time.time())}-{copy_no}"
+            short_text = build_trade(
+                state,
+                state["room"],
+                labels["short"],
+                labels["feeder"],
+                "sell",
+                plan["qty"],
+                plan["high"],
+                pr["n"] + 2,
+                short_tid,
+            )
+            short_ack = post_signed(state, state["room"], labels["short"], short_text)
+            pair_record["trades"]["short"] = {
+                "trade_id": short_tid,
+                "px": str(plan["high"]),
+                "qty": str(plan["qty"]),
+                "ack": short_ack.strip().splitlines()[0] if short_ack.strip() else "",
+            }
+
+            item["status"] = "consumed"
+            item["consumed_at"] = datetime.now(timezone.utc).isoformat()
+            item["mode"] = "v4"
+            item["sweep"] = pr["n"]
+            item["ref"] = str(pr["px"])
+            item["qty"] = str(plan["qty"])
+            item["low"] = str(plan["low"])
+            item["high"] = str(plan["high"])
+            item["short_offset"] = str(plan["short_offset"])
+            item["safety"] = str(plan["safety"])
+            item["trades"] = pair_record["trades"]
+            dense.setdefault("v4_tickets", []).append(pair_record)
+            submitted.append(pair_record)
+            save_state(state)
+            time.sleep(0.05)
+        except Exception as e:
+            item["status"] = "partial_error"
+            item["error_at"] = datetime.now(timezone.utc).isoformat()
+            item["error"] = str(e)
+            item["partial_trades"] = pair_record.get("trades") or {}
+            item["mode"] = "v4"
+            save_state(state)
+            errors.append({
+                "reserve_index": item.get("index"),
+                "copy_no": copy_no,
+                "error": str(e),
+                "partial_trades": pair_record.get("trades") or {},
+            })
+
+    result = {
+        "requested_extra_copy_sets": need,
+        "submitted_extra_copy_sets": len(submitted),
+        "total_long_copies": 1 + len(submitted),
+        "total_short_copies": 1 + len(submitted),
+        "reserve_shortage": max(0, need - len(selected)),
+        "errors": errors,
+        "tickets": submitted,
+    }
+    dense["last_v4_multiplicity"] = {
+        "at": datetime.now(timezone.utc).isoformat(),
+        "sweep": pr["n"],
+        "ref": str(pr["px"]),
+        **result,
+    }
+    save_state(state)
+    return result
+
+
 def dense_register_pending(state: dict, sweep: int) -> dict:
     dense = state.setdefault("dense", {})
     pending = dense.get("pending")
@@ -891,6 +1117,13 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
         return None
     if pr["n"] < int(pending.get("ready_after_sweep", 10**9)):
         return None
+    if dense.get("v4_enabled") and pr["n"] < int(dense.get("v4_not_before_sweep", 0)):
+        return {
+            "event": "dense_v4_wait_reserve_prime",
+            "sweep": pr["n"],
+            "not_before_sweep": dense.get("v4_not_before_sweep"),
+            "pending_index": pending.get("index"),
+        }
     if dense.get("v3_enabled") and pr["n"] < int(dense.get("v3_not_before_sweep", 0)):
         return {
             "event": "dense_v3_wait_reserve_prime",
@@ -926,9 +1159,16 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
         }
 
     labels = pending["labels"]
-    qty = dense_qty(pr["px"])
-    offset = dense_offset(state)
-    low, high = dense_prices(pr["px"], offset)
+    if dense.get("v4_enabled"):
+        v4_plan = dense_v4_plan_copy(pr, 1)
+        qty = v4_plan["qty"]
+        low, high = v4_plan["low"], v4_plan["high"]
+        offset = v4_plan["short_offset"]
+    else:
+        v4_plan = None
+        qty = dense_qty(pr["px"])
+        offset = dense_offset(state)
+        low, high = dense_prices(pr["px"], offset)
     if qty < Decimal("0.1"):
         raise RuntimeError("dense quantity below minimum")
 
@@ -992,7 +1232,18 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
 
     boost = {}
     extreme_sides = []
-    if dense.get("v3_enabled"):
+    if dense.get("v4_enabled"):
+        multiplicity = dense_v4_submit_multiplicity(state, pr)
+        pending["v4_multiplicity"] = multiplicity
+        pending["v4_profile"] = {
+            "copy_no": 1,
+            "long_offset": str(v4_plan["long_offset"]),
+            "short_offset": str(v4_plan["short_offset"]),
+            "safety": str(v4_plan["safety"]),
+            "required_per_contract": str(v4_plan["required_per_contract"]),
+        }
+        boost = multiplicity
+    elif dense.get("v3_enabled"):
         multiplicity = dense_v3_submit_multiplicity(state, pr, qty, low, high)
         pending["v3_multiplicity"] = multiplicity
         boost = multiplicity
@@ -1013,6 +1264,11 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
     pending["high"] = str(high)
     pending["qty"] = str(qty)
     pending["offset"] = str(offset)
+    if v4_plan is not None:
+        pending["mode"] = "v4"
+        pending["long_offset"] = str(v4_plan["long_offset"])
+        pending["short_offset"] = str(v4_plan["short_offset"])
+        pending["safety"] = str(v4_plan["safety"])
     dense.setdefault("tickets", []).append(pending)
     dense["last_ticket"] = pending
     dense["pending"] = None
@@ -1034,6 +1290,8 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
         "extreme_sides": extreme_sides,
         "boost": boost,
         "v3_multiplicity": pending.get("v3_multiplicity"),
+        "v4_multiplicity": pending.get("v4_multiplicity"),
+        "v4_profile": pending.get("v4_profile"),
     }
 
 
@@ -1048,7 +1306,7 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     if not isinstance(pending, dict) or pending.get("status") == "registering":
         pending = dense_register_pending(state, pr["n"])
         if (
-            not dense.get("v3_enabled")
+            not (dense.get("v3_enabled") or dense.get("v4_enabled"))
             and pr["age_s"] is not None
             and int(pr["age_s"]) > 120
         ):
@@ -1065,7 +1323,7 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     if maintenance:
         return maintenance
 
-    if dense.get("v3_enabled"):
+    if dense.get("v3_enabled") or dense.get("v4_enabled"):
         reserve_event = dense_v3_maintain_reserve(state, pr["n"])
     else:
         reserve_event = dense_v2_maintain_reserve(state, pr["n"])
@@ -1077,7 +1335,7 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
         save_state(state)
 
     if (
-        not dense.get("v3_enabled")
+        not (dense.get("v3_enabled") or dense.get("v4_enabled"))
         and pr["age_s"] is not None
         and int(pr["age_s"]) > 120
     ):
@@ -1092,7 +1350,7 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     # Retry a ready pending batch on the same sweep until flow/state catch up.
     # Only de-duplicate after the pending batch has either submitted or is not yet ready.
     submitted = dense_submit_pending(state, pr)
-    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup", "dense_wait_room_registration", "dense_owner_registrations_reposted", "dense_v3_wait_reserve_prime"):
+    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup", "dense_wait_room_registration", "dense_owner_registrations_reposted", "dense_v3_wait_reserve_prime", "dense_v4_wait_reserve_prime"):
         dense["last_seen_sweep"] = pr["n"]
         save_state(state)
         pending = dense_register_pending(state, pr["n"])
@@ -2508,6 +2766,55 @@ def cmd_enable_dense_v3(_args) -> None:
     print("existing Dense tickets and pending batch are preserved")
 
 
+def cmd_enable_dense_v4(_args) -> None:
+    state = load_state()
+    dense = state.setdefault("dense", {})
+    dense["enabled"] = True
+    dense["v4_enabled"] = True
+    dense["v4_enabled_at"] = datetime.now(timezone.utc).isoformat()
+    dense["v3_enabled"] = False
+    dense["v2_enabled"] = False
+    dense["mode"] = "dense-v4-asymmetric-clawback-ladder"
+    dense["v4_long_offset"] = str(DENSE_V4_LONG_OFFSET)
+    dense["v4_short_offsets"] = [str(x) for x in DENSE_V4_SHORT_OFFSETS]
+    dense["v4_short_safeties"] = [str(x) for x in DENSE_V4_SHORT_SAFETIES]
+    dense["v4_total_copies_per_side"] = DENSE_V4_TOTAL_COPIES_PER_SIDE
+    # Compatibility field used by older displays only.
+    dense["v4_reference_offset"] = str(DENSE_V3_OFFSET)
+    dense["v4_ref_age_gate_enabled"] = False
+    dense.setdefault("v4_tickets", [])
+    dense_v2_init_bounds(dense)
+    state["legacy_strategy_frozen"] = True
+
+    pr = fresh_price(max_age=10**9)
+    dense["v4_enabled_sweep"] = pr["n"]
+    dense["v4_not_before_sweep"] = pr["n"] + 1
+    save_state(state)
+
+    # Reuse the already-proven V3 paired reserve structure. If the pool was
+    # partially consumed, replenish it before the first V4 trade sweep.
+    reserve_event = dense_v3_maintain_reserve(state, pr["n"])
+    if reserve_event:
+        dense["last_reserve_event"] = {
+            "at": datetime.now(timezone.utc).isoformat(),
+            **reserve_event,
+        }
+        save_state(state)
+
+    print("Dense V4 ENABLED")
+    print("coverage: every aligned referee sweep")
+    print("long quote: referee lower limit (~-5%)")
+    print("short ladder: 3x +1.0%, 2x +1.7%, 3x +2.0%")
+    print("copies per side:", DENSE_V4_TOTAL_COPIES_PER_SIDE)
+    print("ref age gate: DISABLED")
+    print("flow/state alignment + room/missed/lock gates: ENABLED")
+    print("paired reserve target sets:", dense.get("v3_reserve_target_sets") or DENSE_V3_RESERVE_TARGET_SETS)
+    print("enabled on sweep:", dense.get("v4_enabled_sweep"))
+    print("first V4 trade sweep >=", dense.get("v4_not_before_sweep"))
+    print("dynamic key safety cap:", DENSE_MAX_DYNAMIC_KEYS)
+    print("existing positions and current pending baseline batch are preserved")
+
+
 def cmd_disable_dense(_args) -> None:
     state = load_state()
     dense = state.setdefault("dense", {})
@@ -2523,9 +2830,11 @@ def cmd_dense_status(_args) -> None:
     print("enabled:", bool(dense.get("enabled")))
     print("v2_enabled:", bool(dense.get("v2_enabled")))
     print("v3_enabled:", bool(dense.get("v3_enabled")))
+    print("v4_enabled:", bool(dense.get("v4_enabled")))
     print("submitted_sets:", len(dense.get("tickets") or []))
     active_offset = (
-        dense.get("v3_offset") if dense.get("v3_enabled")
+        "v4-ladder" if dense.get("v4_enabled")
+        else dense.get("v3_offset") if dense.get("v3_enabled")
         else dense.get("v2_offset") if dense.get("v2_enabled")
         else dense.get("offset")
     )
@@ -2558,6 +2867,21 @@ def cmd_dense_status(_args) -> None:
         and int(x.get("ready_after_sweep", 10**9)) <= current_sweep_for_reserve
     ))
     print("v3_reserve_partial_errors:", sum(1 for x in v3_reserve if x.get("status") == "partial_error"))
+    print("v4_total_copies_per_side:", dense.get("v4_total_copies_per_side"))
+    print("v4_enabled_sweep:", dense.get("v4_enabled_sweep"))
+    print("v4_not_before_sweep:", dense.get("v4_not_before_sweep"))
+    print("v4_long_offset:", dense.get("v4_long_offset"))
+    print("v4_short_offsets:", dense.get("v4_short_offsets"))
+    print("v4_short_safeties:", dense.get("v4_short_safeties"))
+    print("v4_multiplicity_tickets:", len(dense.get("v4_tickets") or []))
+    last_v4 = dense.get("last_v4_multiplicity") or {}
+    if last_v4:
+        print("last_v4_sweep:", last_v4.get("sweep"))
+        print("last_v4_ref:", last_v4.get("ref"))
+        print("last_v4_long_copies:", last_v4.get("total_long_copies"))
+        print("last_v4_short_copies:", last_v4.get("total_short_copies"))
+        print("last_v4_reserve_shortage:", last_v4.get("reserve_shortage"))
+        print("last_v4_errors:", len(last_v4.get("errors") or []))
     last_v3 = dense.get("last_v3_multiplicity") or {}
     if last_v3:
         print("last_v3_sweep:", last_v3.get("sweep"))
@@ -2579,7 +2903,7 @@ def cmd_dense_status(_args) -> None:
         print("ref_sweep:", pr["n"])
         print("ref:", pr["px"])
         print("effective_ref_age_s:", pr["age_s"])
-        if dense.get("v3_enabled"):
+        if dense.get("v3_enabled") or dense.get("v4_enabled"):
             print("ref_age_gate_enabled: False")
             print("eligible_by_ref_age: True")
         else:
@@ -2915,6 +3239,9 @@ def main() -> None:
 
     p = sp.add_parser("enable-dense-v3")
     p.set_defaults(fn=cmd_enable_dense_v3)
+
+    p = sp.add_parser("enable-dense-v4")
+    p.set_defaults(fn=cmd_enable_dense_v4)
 
     p = sp.add_parser("disable-dense")
     p.set_defaults(fn=cmd_disable_dense)
