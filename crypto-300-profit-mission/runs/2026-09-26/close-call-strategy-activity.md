@@ -1181,3 +1181,24 @@ Commit: `2ce6f92baa9f39ed99df79db9eb5c873b4b90c3e`.
 
 Execution state:
 `DENSE_V5B_SCHEDULER_HEARTBEAT_ADDED`.
+
+
+## 2026-09-29 — V5b reached scheduler but still failed before pending creation
+
+Observed at referee sweep 954:
+- V5b scheduler heartbeat present at sweep 952/954;
+- V5b enabled and accepting new cycles;
+- no active or pending V5b cycle;
+- no persisted V5b registration error;
+- V5a seed `v4-00213` remains the last successfully locked winner at 58.949759 POLF.
+
+This narrows the fault to the interval after entering V5b but before a pending cycle was persisted. The registration state machine is hardened again:
+- persist the V5b plan before feeder key generation or owner POSTs;
+- persist `creating_keys` / `registering` stages;
+- catch and expose seed-scan, feeder-key, and owner-registration errors;
+- when seed scan returns empty, persist diagnostics including harvested count and whether `v4-00213` is still present in the V4 pair index.
+
+Commit: `e1ecf37607f2804a3a82c19cd237574badb0c010`.
+
+Execution state:
+`DENSE_V5B_PRE_PENDING_DIAGNOSTICS_HARDENED`.
