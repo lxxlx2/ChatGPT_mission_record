@@ -2010,7 +2010,9 @@ def _v5b_submit_open(state: dict, pending: dict, pr: dict) -> dict:
 
     active = {
         "cycle_index": int(pending["index"]),
+        "source_seed_id": pending["source_seed_id"],
         "source_pair_id": pending["source_pair_id"],
+        "source_cycle_index": pending.get("source_cycle_index"),
         "source_winner": pending["source_winner"],
         "winner_label": pending["winner_label"],
         "side": pending["flip_side"],
