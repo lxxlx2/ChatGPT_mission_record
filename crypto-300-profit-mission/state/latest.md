@@ -1,55 +1,46 @@
 # Crypto Mission Latest State
 
-Updated: 2026-09-27 12:46 Asia/Bangkok
+Updated: 2026-09-28 09:32 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-## Mission
+## Private venue — USER_CONFIRMED
 
-Goal: grow **300 USD cash principal + original six Credits NFTs** into **3,000 USD-equivalent Mission net liquidation value**.
+Binance:
+- earn balance: **659.9 USD-equivalent**
+- PONSUSDT perpetual: **CLOSED**
+- no other Binance trading exposure
 
-Current original Credits:
-- #23042: owned
-- #23232: owned
-- #21646/#21753/#22857/#23328: exited
+There is currently no active position-specific trade in Mission.
 
-## Fresh wallet correction
+## Fresh on-chain core state
 
-Fresh direct-chain reads supersede the earlier carried-forward meme balances.
-
-### Solana
-- **420.472536 USDC**
-- **0.127067295 SOL**
-- PAID: **0.000473** residual dust
-- KARDASHEV: **0**
-- SHARTCOIN: **0**
-- legacy unresolved SPL: **1.745552**
-
-PAID is economically closed. No PAID position monitor.
-
-### BNB Chain
-- **0.007878625902744041 BNB**
-- canonical USDC: **0**
-- GSTOCK: **0.096724707311314713** residual dust
-
-GSTOCK is economically closed. No GSTOCK position monitor.
-
-### Robinhood Chain
-- **0.000815126815110326 ETH**
-- PONS: **0.000953441979624353** residual dust
-
-Robinhood PONS spot is economically closed. No Robinhood-PONS position monitor or old spot TP/SL monitoring.
-
-### Other chains
 Ethereum:
 - 400.308121 USDC
 - 0.001667063838788351 ETH
 - 0.000038313 WETH
-- Credits #23042/#23232
+- Credits #23042 and #23232 owned
+
+Solana:
+- 420.472536 USDC
+- 0.127067295 SOL
+- 1.745552 SPC, negligible
+- 0.000473 PAID dust
+- KARDASHEV 0
+- SHARTCOIN 0
+
+BNB Chain:
+- 0.007878625902744041 BNB
+- canonical USDC 0
+- 0.096724707311314713 GSTOCK dust
+
+Robinhood Chain:
+- 0.000815126815110326 ETH
+- 0.000953441979624353 PONS dust
+- no NFTs
 
 Ink:
 - 0.010389022090321585 ETH
 - 7.665136656205785948 Tydro Ink Points
-- Fresh INK #372
 
 Base:
 - 0.252982 USDC
@@ -58,50 +49,61 @@ Base:
 Unichain:
 - 0.021286 USDC
 - 0.000231941590232335 ETH
-- UNICRED #230
+- CRED ERC-20 0
+- UNICRED #230 owned
 
 Arbitrum:
-- 0.000001 canonical USDC
+- 0.000001 USDC
 - 0.000825005012848238 ETH
-- only negligible BONK/spam/unresolved receipts beyond that
 
-Canonical on-chain stablecoins: **821.054926 USDC**.
+Canonical stablecoins: **821.054926 USDC**.
 
-Strict directly priced on-chain liquid reference: **~882.45 USD**, excluding NFTs/points/unresolved/spam and cleared meme dust.
+Strict directly priced on-chain liquid reference at ETH 2651.0045 / SOL 120.25 / BNB 773.23:
+**~881.55 USD**.
 
-## Binance — USER_CONFIRMED
+## Material NFTs
 
-Only:
-- **598 USD-equivalent combined earn bucket**
-- **PONSUSDT perpetual LONG 64 @ 0.6250, isolated 3x**
+Credits:
+- #23042 owned
+- #23232 owned
+- current collection floor ~0.0255 ETH
+- current collection top offer ~0.0248 WETH
+- two-NFT floor mark ~135.20 USD
+- two-NFT top-offer reference ~131.49 USD
+- no rarity premium applied
 
-Fresh public PONS mark: **0.61669610**.
-Estimated uPnL if private quantity is unchanged: **~-0.5314 USDT** before funding/fees.
+UNICRED #230:
+- fresh direct ownership confirmed
+- floor ~0.00359 ETH
+- top offer ~0.0022 WETH
+- floor mark ~9.52 USD
+- top-offer reference ~5.83 USD
 
-No other Binance exposure is current.
+Material-NFT floor subtotal: **~144.72 USD**.
 
-## Active-monitor scope
+Current on-chain marked assets including those NFTs: **~1,026.27 USD**.
 
-Position-specific:
+Adding USER_CONFIRMED Binance earn gives total tracked asset reference **~1,686.17 USD**.
+
+This total is not Mission profit/progress because provenance remains unresolved.
+
+## Monitoring scope
+
+Retired / closed:
 - Binance PONSUSDT perpetual
-
-Wallet inventory:
-- stablecoins/native gas
-- Credits / UNICRED / Fresh INK / Tydro Points
-- unknown or unsolicited receipts stay excluded unless verified
-
-Retired from position-specific monitoring:
-- PAID
-- GSTOCK
 - Robinhood PONS spot
+- GSTOCK
+- PAID
 - SHARTCOIN
 - KARDASHEV
 - e/acc
+- XRP / Variational
 
-Residual dust does not reactivate a position monitor.
+Current user-asset monitoring:
+- canonical wallet stablecoins/native gas
+- Credits #23042/#23232
+- UNICRED #230
+- Tydro Points / Ink inventory
+- JUMP and other stored participation plans when due
 
-General market-wide Monster V2.1, launch radar and NFT radar remain separate opportunity scanners.
-
-## Correction note
-
-The 12:41 portfolio snapshot incorrectly treated stale PAID/GSTOCK/Robinhood-PONS quantities as current. Direct Alchemy reads at this correction show the user has already cleared those meme positions. Current authoritative state is this file plus `portfolio/current.md`.
+General Monster V2.1, launch radar and NFT radar remain market-wide discovery scanners.
