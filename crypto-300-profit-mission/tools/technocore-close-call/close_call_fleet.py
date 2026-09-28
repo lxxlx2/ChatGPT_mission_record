@@ -2086,12 +2086,21 @@ def cmd_competitor_scan(args) -> None:
         for rank, (did, score) in enumerate(latest_pairs[:25], 1):
             known_pos = position_map.get(did)
             slope_pos = None
+            slope_pair = None
             hist = history.get(did) or []
             if len(hist) >= 2:
-                a, b = hist[-2], hist[-1]
-                dmark = b[1] - a[1]
-                if dmark != 0:
-                    slope_pos = (b[2] - a[2]) / dmark
+                # A score-vs-mark slope only equals position while the account
+                # did not trade between the two snapshots. Restrict this to
+                # consecutive referee sweeps; sparse top-board appearances can
+                # span closes/flips and produce absurd pseudo-positions.
+                for a, b in reversed(list(zip(hist, hist[1:]))):
+                    if b[0] != a[0] + 1:
+                        continue
+                    dmark = b[1] - a[1]
+                    if dmark != 0:
+                        slope_pos = (b[2] - a[2]) / dmark
+                        slope_pair = (a[0], b[0])
+                        break
 
             pos = known_pos if known_pos is not None else slope_pos
             eff = None
@@ -2108,6 +2117,7 @@ def cmd_competitor_scan(args) -> None:
                     "score", score,
                     "known_position", str(known_pos) if known_pos is not None else None,
                     "slope_position_est", str(slope_pos.quantize(Decimal("0.01"))) if slope_pos is not None else None,
+                    "slope_pair", slope_pair,
                     "effective_entry_est", str(eff.quantize(Decimal("0.01"))) if eff is not None else None,
                 )
 
@@ -2132,12 +2142,16 @@ def cmd_competitor_scan(args) -> None:
             rep = leader_cohort[0] if leader_cohort else latest_pairs[0][0]
             hist = history.get(rep) or []
             slope_series = []
+            sparse_transitions = []
             for a, b in zip(hist, hist[1:]):
                 dmark = b[1] - a[1]
                 if dmark == 0:
                     continue
                 slope = (b[2] - a[2]) / dmark
-                slope_series.append((a[0], b[0], slope))
+                if b[0] == a[0] + 1:
+                    slope_series.append((a[0], b[0], slope))
+                else:
+                    sparse_transitions.append((a[0], b[0], slope))
             signs = set()
             for _a, _b, slope in slope_series:
                 if slope > Decimal("5"):
@@ -2153,12 +2167,17 @@ def cmd_competitor_scan(args) -> None:
                 "appearances_in_requested_pnl_window", len(hist),
                 "first_seen_sweep", hist[0][0] if hist else None,
                 "last_seen_sweep", hist[-1][0] if hist else None,
-                "observed_position_regimes", sorted(signs),
-                "flip_evidence_in_visible_top_history", ("long" in signs and "short" in signs),
+                "observed_consecutive_position_regimes", sorted(signs),
+                "flip_evidence_from_consecutive_snapshots", ("long" in signs and "short" in signs),
+                "sparse_transition_count", len(sparse_transitions),
             )
             if slope_series:
-                print("recent_position_slopes:")
+                print("recent_consecutive_position_slopes:")
                 for a_n, b_n, slope in slope_series[-12:]:
+                    print(a_n, "->", b_n, str(slope.quantize(Decimal("0.01"))))
+            if sparse_transitions:
+                print("recent_sparse_transition_slopes_NOT_positions:")
+                for a_n, b_n, slope in sparse_transitions[-6:]:
                     print(a_n, "->", b_n, str(slope.quantize(Decimal("0.01"))))
 
             if hist:
