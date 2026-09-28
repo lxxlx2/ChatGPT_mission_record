@@ -686,3 +686,36 @@ Implementation commits:
 
 Execution state:
 `DENSE_V2_IMPLEMENTED_ENABLE_AND_RESTART_REQUIRED`.
+
+
+## Dense V3 live strategy — 2026-09-28
+
+V3 supersedes V2 for new submissions.
+
+Runtime policy:
+- every aligned referee sweep participates;
+- 8 long + 8 short target copies per eligible sweep;
+- favored prices use ±2% from the referee ref;
+- no custom <=120s ref-age block in V3;
+- price/flow/state alignment, owner/room checks, missed-range protection and contest lock remain mandatory;
+- 16 pre-registered 3-key reserve copy-sets are maintained;
+- 7 reserve sets plus the baseline batch produce 8 copies per side;
+- consumed sets are replenished automatically;
+- partial reserve-copy failures are quarantined and never reused;
+- dynamic-key hard cap: 60,000.
+
+Migration:
+- all previous Static / Bracket / Dense V1 / Dense V2 tickets remain untouched;
+- the existing pending baseline batch is preserved;
+- V2 is disabled when V3 is enabled.
+
+Implementation commits:
+- `baae0165c3302f09da27cc50ed6e9f94406ef93e`
+- `c4cc5d0829b87d7ff65f9222d3ec3405a1e2358a`
+- `f48e0543d42c580459b4092ada1a152114316fb4`
+- `8e35c954b646c04cec7d62a9e0d82942459391c8`
+
+Enable:
+```bash
+uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py enable-dense-v3
+```
