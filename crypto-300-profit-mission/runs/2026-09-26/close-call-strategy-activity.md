@@ -926,3 +926,29 @@ Expected first complete V4 post-sweep status:
 
 Execution state:
 `DENSE_V4_ENABLED_WAITING_FIRST_ELIGIBLE_SWEEP`.
+
+
+## 2026-09-29 — Sweep 936 realized-PnL carry evidence and scanner slope hardening
+
+A 300-PnL / 10,000-message competitor scan at sweep 936 produced two important findings.
+
+Strong evidence of realized-PnL carry:
+- a 14-account cohort occupied ranks 7-20 at exactly 680.27 POLF;
+- its latest consecutive-sweep score sensitivity implied a short position of about 43.12 contracts;
+- visible referee history had min ref 223.01 and max ref 232.78, so the highest legal single-trade sell price reachable under the 5% limit was about 244.42;
+- at mark 230.65, even a perfect 43.12-contract short opened at 244.42 could contribute at most about 593.76 POLF before fees;
+- the observed 680.27 score therefore requires at least about 86.51 POLF of previously realized/cash-carried profit, and actual required carry is larger after fees;
+- this proves that at least this cohort's current score cannot be explained by one untouched short opened from the original 10,000 POLF alone.
+
+Active management evidence:
+- several current leaders show earlier long-like score sensitivity and later reappear in a different regime;
+- one current Top-5 DID posted full-size sell trades around 43.62 contracts at 234.72/234.77 on sweeps 934-935, consistent with active closing or direction management.
+
+Scanner correction:
+- the prior path diagnostic treated score/mark slopes across sparse top-board appearances as if they were positions. A gap such as sweep 917 -> 936 can include trades and realized PnL, so a value such as -167.38 is not a valid literal position estimate.
+- commit `0106f663005cf4862a92012ab089adb19398fcc0` now uses only consecutive referee sweeps for position-slope estimates and labels sparse transition slopes separately as non-position diagnostics.
+
+Strategic implication:
+- realized-PnL harvesting is now directly evidenced;
+- exact same-account long->short flipping is strongly suggested but should not be considered proven solely from sparse slope transitions;
+- V4 should continue as the entry engine while a V5 harvest/flip layer is designed around confirmed settlement/cash reconstruction rather than sparse-board heuristics.
