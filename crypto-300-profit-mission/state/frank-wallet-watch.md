@@ -224,8 +224,9 @@ Otherwise classify `STALE_SIGNAL`, keep it silent, and do not send a late chase 
 For a fresh FORMAL_ENTRY:
 - persistence Path A or B above;
 - cumulative gross active buys in the episode >=10,000 USD equivalent;
-- sell value in the episode <=30% of gross buy value;
-- current exposure >=70% of episode peak exposure or Frank has added exposure since the prior observation;
+- do **not** use lifetime/gross sell-value ratio as a hard rejection gate: profitable conviction positions can recycle principal or trim while remaining materially exposed;
+- current token-unit exposure should normally remain >=50% of the episode peak token-unit exposure; alternatively, Frank must have resumed net buying in the last 60 minutes and still hold a material open position;
+- if token-unit exposure fell >35% during the last 60 minutes with no fresh re-accumulation, suppress ENTRY as distribution/exit-risk;
 - current executable price normally between Frank VWAP * 0.92 and * 1.10;
 - liquidity / quote reserve sufficient and not collapsing;
 - bounded token-control / transfer restriction checks pass;
