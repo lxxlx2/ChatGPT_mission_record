@@ -2,7 +2,7 @@
 
 Human-facing research copy: `research/nfts/jack-credits/jack-credits-nft-position.md`
 
-Updated: 2026-09-28 15:00 Asia/Bangkok
+Updated: 2026-09-28 17:58 Asia/Bangkok
 
 ## Identity
 
@@ -78,19 +78,17 @@ Fresh direct ownership:
 - Credit #23232: canonical wallet
 
 Current collection market reference:
-- floor: ~0.0262 ETH
-- top offer: ~0.0252 WETH
-- ETH mark used: 2646.43 USD
-
-Portfolio reference:
-- two-NFT floor mark: ~138.67 USD
-- two-NFT top-offer reference: ~133.38 USD
-
-Prior rarity estimates remain:
-- #23042: ~Top 7.1%
-- #23232: ~Top 3.6%
+- fresh Alchemy floor endpoint: unavailable at this reconciliation
+- recent OpenSea-indexed collection floors: roughly **$67-$80**
+- conservative portfolio book mark: **$67.13 each**
+- two-NFT subtotal: **~$134.26**
 
 No rarity premium is added to current NAV. The user's prior 0.25/0.40 ETH listing asks remain aspirational and are not used as asset value.
 
 
 Fresh ownership was reconfirmed again during the 2026-09-28 15:00 all-chain scan. Both #23042 and #23232 remain owned by the canonical wallet.
+
+
+Ownership reconfirmed at 2026-09-28 17:58 Asia/Bangkok:
+- #23042 -> canonical wallet
+- #23232 -> canonical wallet
