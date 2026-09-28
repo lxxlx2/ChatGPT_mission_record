@@ -1,6 +1,6 @@
 # Crypto Daily Automatic Runtime
 
-Updated: 2026-09-28 09:18 Asia/Bangkok
+Updated: 2026-09-28 19:34 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
 
@@ -191,3 +191,64 @@ Material events:
 Closed/refunded deals are excluded from user-specific deal monitoring. humans& via Echo/Alpen Capital was fully refunded on 2026-09-24, so it is historical only and must not consume ongoing user-specific monitoring unless the user re-enters the deal.
 
 Do not treat 'company official source unchanged' as evidence that the investor's deal rights are unchanged.
+
+
+## 09:00 on-time delivery override — 2026-09-28
+
+Observed delivery history:
+- 2026-09-26: ~09:17
+- 2026-09-27: ~12:08 manual recovery
+- 2026-09-28: ~09:16 manual recovery
+
+This is not acceptable as normal operation.
+
+### 08:00 prebuild
+
+The 08:00 hourly collector must additionally prepare:
+`crypto-daily/delivery-pending/YYYY-MM-DD.md`
+
+The pending body is a complete QA-able daily draft assembled from:
+- prior 24h research/finals;
+- current BTC/ETH/SOL facts;
+- current highest-priority security/exchange/protocol facts;
+- active private-market rights lifecycle;
+- current TGE/action carry-forward.
+
+Do not send at 08:00.
+
+The purpose is to make 09:00 a delivery operation, not a long research operation.
+
+### 09:00 delivery first
+
+At the 09:00 run:
+1. check Gmail Sent exact subject;
+2. if already delivered, do not duplicate;
+3. if not delivered, read the pending body first;
+4. refresh only time-sensitive top-line facts needed for correctness;
+5. send Gmail before optional enrichment;
+6. read back Gmail;
+7. archive identical official report;
+8. only then continue ordinary collector work.
+
+A non-critical source being unavailable is not a reason to delay the report. State the gap explicitly.
+
+Target: official Gmail sent by **09:10 Asia/Bangkok**.
+
+### Recovery
+
+The dedicated fallback remains idempotent. If 09:00 did not produce Gmail proof, its next run sends the existing QA-approved pending/report body before any new research.
+
+Do not regenerate a longer report while a valid pending body already exists.
+
+### Security source rotation
+
+Ordinary hourly runs no longer need every specialist security family in every hour.
+
+Each hour:
+- run one broad breaking-security / impersonation discovery pass;
+- check official source for any candidate;
+- rotate specialist source families so full specialist coverage is restored over a 4-hour window.
+
+At 08:00/09:00 daily preparation, aggregate the previous 24h receipts and fresh-verify all carried material candidates.
+
+This is intended to improve real coverage and reduce timeout/provider-safety failures, not lower evidence standards.
