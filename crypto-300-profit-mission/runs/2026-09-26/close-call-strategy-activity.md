@@ -1138,3 +1138,22 @@ Commit: `fe89f136e78d245d6993d76474cd70953ab7d526`.
 
 Execution state:
 `DENSE_V5B_PREVIEW_VALIDATED_READY_TO_ENABLE`.
+
+
+## 2026-09-29 — LaunchAgent reinstall recovered; V5b waiting first post-restart poll
+
+Observed after reinstall:
+- autopilot LaunchAgent: running;
+- dashboard LaunchAgent: running;
+- V4 remains enabled;
+- V5a remains enabled and its second harvest `v4-00227` advanced to `finish_submitted`;
+- V5b remains enabled/accepting new cycles, with no pending or active cycle yet;
+- referee sweep observed: 950.
+
+Interpretation:
+- installer recovery succeeded and local strategy state survived;
+- V5b still needs a post-V4, post-restart autopilot poll to register the existing `v4-00213` realized-profit seed;
+- because poll interval is 30 seconds, a null V5b state immediately after reinstall is not yet evidence of a logic failure.
+
+Execution state:
+`LAUNCHAGENTS_HEALTHY_V5B_WAITING_FIRST_REGISTRATION_POLL`.
