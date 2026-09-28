@@ -1,6 +1,6 @@
 # Airdrop / TGE Automatic Runtime
 
-Updated: 2026-09-27 12:23 Asia/Bangkok
+Updated: 2026-09-28 09:12 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 Authority for the existing :14 task.
@@ -131,3 +131,28 @@ Before network/search work, create a small append-only:
 It records run_time, scheduled_shard and status=started.
 
 The final/final-retry remains the only completion proof. An attempt file only makes scheduler/runtime gaps diagnosable.
+
+
+## Intermediary / deal-rights override — 2026-09-28
+
+A whitelist project with a known investment/deal intermediary must be checked at both layers:
+- project official source;
+- platform/SPV/syndicate/group-lead source recorded in REGISTRY.
+
+Do not filter out a refund/cancellation/allocation/settlement event merely because the underlying project did not announce it.
+
+For humans&, explicitly include Echo (@echodotxyz) / Alpen Capital deal lifecycle. A full refund into the user's Echo wallet is a substantive ACTION because it changes entitlement and deployable capital.
+
+### Persistence survival
+
+Today's attempt-only runs show that creating an attempt file is not enough.
+
+Immediately after attempt creation, create a compact provisional `HHMMSS-final.md` with:
+- run_status: started
+- scheduled/executed shard
+- urgent-set status: pending
+- notification status: pending
+
+Then perform only the bounded urgent set + one shard. Update that same final file to success/partial/failure. If update fails, write `final-retry.md`.
+
+Never spend the remaining run budget on optional cache or deep enrichment before a durable final artifact exists.
