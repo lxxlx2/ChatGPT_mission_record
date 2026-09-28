@@ -886,3 +886,43 @@ uv run crypto-300-profit-mission/tools/technocore-close-call/close_call_fleet.py
 
 Execution state:
 `DENSE_V4_IMPLEMENTED_PREVIEW_ENABLE_RESTART_REQUIRED`.
+
+
+## 2026-09-28 — Dense V4 enable verified locally
+
+User-side runtime verification after pulling through `d65dd86`:
+
+- V4 preview sweep: 861
+- referee ref: 227.10
+- official limits: 215.75 / 238.45
+- V4 long quote: 215.75 on all 8 copies
+- short ladder:
+  - copies 1-3: 229.37, qty 42.95, +1.0%
+  - copies 4-5: 230.96, qty 42.15, +1.7%
+  - copies 6-8: 231.64, qty 41.49, +2.0%
+- V4 enabled successfully on sweep 861
+- first V4-eligible sweep: >=862
+- V2 disabled
+- V3 disabled
+- V4 enabled
+- room registration confirmed
+- flow/state safety gates remain active
+- V3 paired reserve pool available: 16 registered / 16 ready
+- pending baseline index 348 already registered
+- pending ready-after sweep 861
+- no pending owner re-registration requirement
+- dynamic keys: 2,286 / 60,000
+- V4 multiplicity tickets: 0 at sweep 861, expected because V4 is intentionally gated until sweep 862
+- last submitted ticket remains V3 sweep 860, expected before the first V4 execution
+
+Expected first complete V4 post-sweep status:
+- `submitted_sets: 348`
+- `v4_multiplicity_tickets: 7`
+- `last_v4_sweep >= 862`
+- `last_v4_long_copies: 8`
+- `last_v4_short_copies: 8`
+- `last_v4_reserve_shortage: 0`
+- `last_v4_errors: 0`
+
+Execution state:
+`DENSE_V4_ENABLED_WAITING_FIRST_ELIGIBLE_SWEEP`.
