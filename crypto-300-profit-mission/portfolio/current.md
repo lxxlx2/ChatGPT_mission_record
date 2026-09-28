@@ -32,7 +32,10 @@ Canonical user addresses currently known:
 - EVM: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 - Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 
-Non-EVM Aptos/Sui/Bitcoin/Starknet/Tron networks are enabled in the app but cannot be attributed to the user until a canonical address for each network is recorded.
+Non-EVM canonical addresses currently known:
+- Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
+
+Aptos/Bitcoin/Starknet/Tron remain unavailable until a canonical user address is recorded.
 
 ## Fresh direct-chain holdings
 
@@ -146,6 +149,15 @@ Finalized slot ~451261074:
 ### Sonic
 - S: **0.577025845877296**
 - enhanced token/NFT endpoint is not currently supported; native balance only
+
+### Sui
+Canonical wallet:
+- `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
+
+Provider state:
+- SUI_MAINNET is enabled in the broad Alchemy app.
+- the current generic Alchemy Portfolio endpoints reject 32-byte Sui addresses, so Sui balances/NFTs are **not yet verified in this reconciliation**.
+- use Sui-specific gRPC / supported Sui endpoint for the next reconciliation; do not report Sui as zero merely because the generic endpoint rejects the address.
 
 ### Zero native balance chains
 - Berachain: 0 BERA
