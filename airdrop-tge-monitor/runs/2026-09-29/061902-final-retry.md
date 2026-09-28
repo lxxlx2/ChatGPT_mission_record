@@ -1,0 +1,14 @@
+run_time: 2026-09-29T06:19:02+07:00
+run_status: success
+authoritative_completion: true
+scheduled_shard: 2
+executed_shard: 2
+pending_undelivered_actions: 0
+triggered_events: 0
+gmail_attempted: false
+chatgpt_notification: false
+notification_status: NO_ACTION_silent
+urgent_set_status: checked_no_update
+shard_status: checked_no_update
+Crusoe_delivery_dedupe: 1a0e801b313706a0
+humans_and_Echo_Alpen: CLOSED_excluded
