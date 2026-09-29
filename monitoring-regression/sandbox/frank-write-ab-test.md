@@ -8,3 +8,5 @@ cursor_after: test_cursor_b
 signatures_seen: 3
 active_swaps_verified: 0
 unresolved_tx_count: 0
+wallet: 498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ
+sample_signature: 35s2Y8jayg4XjASEWmNmFTAYBqbFE1G2XAc3CmVQG5zxiCZWBRcQFDmyAtvDkQn9deNJhSaxofS6NU34mDtWYtQS
