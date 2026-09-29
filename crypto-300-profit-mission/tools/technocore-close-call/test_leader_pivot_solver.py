@@ -196,6 +196,33 @@ class LeaderPivotSolverTests(unittest.TestCase):
             places=6,
         )
 
+
+    def test_short_redeploy_bounds_raise_prior_carry_requirement(self):
+        pre = {
+            "score": Decimal("749.24"),
+            "mark": Decimal("229.07"),
+        }
+        reach = {
+            "min_legal_buy_seen": Decimal("211.8595"),
+            "max_legal_sell_seen": Decimal("244.4190"),
+        }
+        result = c._leader_short_redeploy_bounds(
+            pre,
+            Decimal("43.18068965517241379310344828"),
+            Decimal("498.3051586206896551724137932"),
+            reach,
+        )
+        self.assertTrue(result["feasible"])
+        self.assertAlmostEqual(
+            float(result["entry_ceiling_from_close_funds"]),
+            233.2331370983,
+            places=6,
+        )
+        self.assertGreater(
+            result["min_prior_realized_carry_before_short"],
+            Decimal("670"),
+        )
+
     def test_two_step_returns_observed_gap(self):
         pre = {
             "score": Decimal("749.24"),
