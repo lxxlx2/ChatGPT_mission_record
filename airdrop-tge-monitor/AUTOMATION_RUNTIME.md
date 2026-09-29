@@ -195,3 +195,44 @@ After a successful final, update its:
 - pending delivery events.
 
 If cache update fails, the next run derives freshness from authoritative finals and ignores invalid future timestamps.
+
+
+## ACTION gate is authoritative — 2026-09-29
+
+Every run MUST read:
+- `ACTION_GATE.md`
+- `state/known-events.md`
+
+Run order for each candidate:
+1. discovery;
+2. canonical identity;
+3. evidence tier;
+4. freshness;
+5. user-known / delivered / completed state;
+6. stable event-key dedupe;
+7. material delta;
+8. rights relevance;
+9. notification decision.
+
+The fallback wording elsewhere in this runtime does NOT permit secondary-only alerts. Independent English sources can keep discovery healthy or corroborate a candidate, but ACTION requires Tier A project-first-party or Tier B explicitly mapped user-rights evidence.
+
+If Tier A/B cannot be obtained:
+- write `UNVERIFIED_CANDIDATE`;
+- remain silent;
+- retry on a later scheduled run if still relevant.
+
+Search snippets without a resolvable canonical first-party URL are never ACTION proof.
+
+Expired deadline -> NO_ACTION unless a new Tier A/B update reopens or extends it.
+Undated/static page -> current-state corroboration only, not a new event by itself.
+Already user-known/delivered/completed/claimed/refunded -> NO_ACTION absent a material delta.
+CLOSED_FULLY_REFUNDED -> skip before network work when possible.
+
+For missed-delivery recovery, require:
+- still-open/current Tier A/B proof;
+- unresolved user action/right;
+- missing Gmail+event delivery proof;
+- material risk from not informing the user.
+Do not backfill stale no-deadline historical events merely because they were absent from GitHub.
+
+Generic underlying-company valuation/funding is background only unless a mapped user-rights source confirms user-level term impact.
