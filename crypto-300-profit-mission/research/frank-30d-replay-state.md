@@ -276,13 +276,13 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **42 / 7,106**
-- classification_before: `4jJDhVLMj3TbtzKfYE2u7QRV5fzUzW9Wavm6jLVQFhjQxCr21GhkjAZpYmS9Rb6KmKb5HTiYUjG3VXLaapRLt41x`
-- classification_oldest_time: **2026-09-28T20:35:46Z / 2026-09-29 03:35:46 Asia/Bangkok**
-- active_swaps_verified: **10**
-- passive_filtered: **32**
+- classified_signature_count: **50 / 7,106**
+- classification_before: `52wYN2mpCk5kgYAJHZjXUGNXQeiDB6fmz8YjRgTTbc7upgUSkB9n1Li7NJ2uBws5bkdSooABPZE7w4yCeZ4QW5YL`
+- classification_oldest_time: **2026-09-28T19:34:34Z / 2026-09-29 02:34:34 Asia/Bangkok**
+- active_swaps_verified: **16**
+- passive_filtered: **34**
 - unresolved_tx_count: **0**
-- unique_active_tokens: **1**
+- unique_active_tokens: **5**
 
 First five classifications:
 1. `5TCVznw...` 2026-09-29T05:44:13Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
@@ -381,3 +381,30 @@ Evidence summary:
 - Later PHASE 3/HFT logic will decide whether this rapid CARDS execution cluster is HFT_EXECUTION, WATCH, or eligible for any historical alert stage.
 
 No signature was skipped. Live Frank state was not modified.
+
+
+## PHASE 2 manual acceleration checkpoint — 50/7,106
+
+Processed the next 8 signatures continuously after the CARDS cluster.
+
+Results:
+- processed_this_chunk: **8**
+- active_swaps_verified_this_chunk: **6**
+- passive_filtered_this_chunk: **2**
+- unresolved_this_chunk: **0**
+- new_durable_count: **50 / 7,106**
+- cumulative_active_swaps_verified: **16**
+- cumulative_passive_filtered: **34**
+- cumulative_unique_active_tokens: **5**
+- new_classification_before: `52wYN2mpCk5kgYAJHZjXUGNXQeiDB6fmz8YjRgTTbc7upgUSkB9n1Li7NJ2uBws5bkdSooABPZE7w4yCeZ4QW5YL`
+
+New active-trade evidence:
+- `Mz7JT9un...`: Frank-authorized outflow of mint `EMBKvWhkjywZ2w3Y5wjKjZNQPY61FhUDdF5RDRPsVkfC` through a pool route with WSOL returned to a Frank-owned WSOL account => ACTIVE SELL EMBK.
+- `4EF1941G...`: Frank-authorized USDC outflow with WSOL returned to Frank-owned WSOL account => ACTIVE BUY SOL.
+- `3VoKWapq...`: Frank-authorized USDC outflow with WSOL returned to Frank-owned WSOL account => ACTIVE BUY SOL.
+- `4BZTARAk...`: Frank funds/uses his WSOL account and sends WSOL through pool routes with USDC returned to his USDC account => ACTIVE SELL SOL.
+- `36ccpsjg...`: Frank-authorized outflow of mint `9ZrGHKCdX2Bf5GWiGb9wSGGdBTMoZQqdEyzChapwE2Cx` through a CPMM route => ACTIVE SELL of that mint.
+- `52wYN2mp...`: Frank-authorized outflow of mint `taoC6xyv2v8tDLcev4uaGUgV4vdQsWJrGft2kcBRrBY` with USDC route proceeds => ACTIVE SELL of that mint.
+- `311h3F7...` and `5s6URG1...`: third-party/passive create/transfer activity without Frank active authority => PASSIVE.
+
+PHASE 3 will later exclude wrapped-major/execution assets such as SOL from user-facing conviction signals and will apply HFT filtering to rapid execution clusters. No live Frank state was modified.
