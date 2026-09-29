@@ -276,11 +276,11 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **10 / 7,106**
-- classification_before: `19Mnio8pMiLpgPPS9pNSTRnWxyErRHym7MqSxWB6geUodEkyVDKBaxV21PVnaNnPxAJ2zDmm1YkeXA7CFwpSAUL`
-- classification_oldest_time: **2026-09-28T23:14:38Z / 2026-09-29 06:14:38 Asia/Bangkok**
+- classified_signature_count: **20 / 7,106**
+- classification_before: `VHmsBs1WrJG4LUZEmFAQzyn4KPQW3246wkiXBFWg6DTJgRy3zjDGjA3nNFS3DhucmxqcH6xRNxyvw6h4VDAmGBu`
+- classification_oldest_time: **2026-09-28T22:23:30Z / 2026-09-29 05:23:30 Asia/Bangkok**
 - active_swaps_verified: **0**
-- passive_filtered: **10**
+- passive_filtered: **20**
 - unresolved_tx_count: **0**
 - unique_active_tokens: **0**
 
@@ -314,3 +314,24 @@ Classifications:
 5. `19Mnio8p...` — Frank-signed `DepositToken` USDC management action; excluded from directional BUY/SELL => PASSIVE_MANAGEMENT.
 
 No signature was skipped. No live Frank cursor or live alert state was modified by this historical replay checkpoint.
+
+
+## PHASE 2 manual acceleration checkpoint — next continuous 10
+
+Processed the next 10 signatures continuously after `19Mnio8p...`.
+
+Results:
+- processed_this_chunk: **10**
+- active_swaps_verified_this_chunk: **0**
+- passive_filtered_this_chunk: **10**
+- unresolved_this_chunk: **0**
+- new_durable_count: **20 / 7,106**
+- new_classification_before: `VHmsBs1WrJG4LUZEmFAQzyn4KPQW3246wkiXBFWg6DTJgRy3zjDGjA3nNFS3DhucmxqcH6xRNxyvw6h4VDAmGBu`
+
+Observed classes in this chunk:
+- Frank-signed `DepositToken` USDC management actions: passive management, excluded from directional BUY/SELL.
+- third-party ATA/token-account creation and token/native transfers involving Frank-owned accounts where Frank was not signer: passive.
+- third-party pump-style transfer paths that created/credited a Frank-owned token account without Frank quote-asset spend or signer authority: passive receipt, not BUY.
+- no ambiguous possible active swap remained unresolved.
+
+No signature was skipped. Live Frank state was not modified.
