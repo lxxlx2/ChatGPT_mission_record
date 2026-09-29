@@ -269,10 +269,13 @@ def post_signed(state: dict, room: str, label: str, text: str) -> str:
     key = state["keys"][label]
     nonce = next_nonce(state, label, room)
     sig = sign(key["seed"], f"{room}|{nonce}|{text}")
-    return http_post_json(
+    response = http_post_json(
         f"{BASE}/r/{room}",
         {"did": key["did"], "sig": sig, "nonce": nonce, "text": text},
     )
+    # A successful write makes any cached room export stale immediately.
+    _EXPORT_CACHE.pop(room, None)
+    return response
 
 
 def owner_text(did: str) -> str:
@@ -283,7 +286,16 @@ def room_text(room: str) -> str:
     return compact({"t": "room", "season": SEASON, "room": room})
 
 
+_EXPORT_CACHE: dict[str, tuple[float, list[dict]]] = {}
+EXPORT_CACHE_TTL_S = 5.0
+
+
 def parse_export(room: str) -> list[dict]:
+    now = time.monotonic()
+    cached = _EXPORT_CACHE.get(room)
+    if cached and now - cached[0] <= EXPORT_CACHE_TTL_S:
+        return cached[1]
+
     body = http_get(f"{BASE}/r/{room}/export")
     out = []
     for line in body.splitlines():
@@ -298,6 +310,8 @@ def parse_export(room: str) -> list[dict]:
             out.append(rec)
         except Exception:
             continue
+
+    _EXPORT_CACHE[room] = (now, out)
     return out
 
 
@@ -906,12 +920,15 @@ def dense_v4_resume_partial_errors(state: dict, pr: dict) -> list[dict]:
     """Resume only missing legs from V4 reserve copies in the same sweep."""
     dense = state.setdefault("dense", {})
     resumed = []
+    dirty = False
     for item in dense.get("v3_reserve") or []:
         if item.get("status") != "partial_error" or item.get("mode") != "v4":
             continue
         try:
             if int(item.get("sweep", -1)) != int(pr["n"]):
                 item["status"] = "partial_expired"
+                item["expired_at"] = datetime.now(timezone.utc).isoformat()
+                dirty = True
                 continue
             copy_no = int(item["copy_no"])
             qty = Decimal(str(item["qty"]))
@@ -969,12 +986,16 @@ def dense_v4_resume_partial_errors(state: dict, pr: dict) -> list[dict]:
             item["trades"] = trades
             dense.setdefault("v4_tickets", []).append(pair_record)
             resumed.append(pair_record)
+            dirty = True
             save_state(state)
         except Exception as e:
             item["status"] = "partial_error"
             item["error_at"] = datetime.now(timezone.utc).isoformat()
             item["error"] = str(e)
+            dirty = True
             save_state(state)
+    if dirty:
+        save_state(state)
     return resumed
 
 
@@ -989,7 +1010,13 @@ def dense_v4_submit_multiplicity(state: dict, pr: dict) -> dict:
     submitted = list(resumed)
     errors = []
 
-    for copy_no, item in enumerate(selected, start=2):
+    resumed_copy_nos = {int(x.get("copy_no", -1)) for x in resumed}
+    fresh_copy_nos = [
+        copy_no for copy_no in range(2, DENSE_V4_TOTAL_COPIES_PER_SIDE + 1)
+        if copy_no not in resumed_copy_nos
+    ][:len(selected)]
+
+    for copy_no, item in zip(fresh_copy_nos, selected):
         labels = item["labels"]
         plan = dense_v4_plan_copy(pr, copy_no)
         item["status"] = "in_progress"
@@ -1781,13 +1808,8 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
 
         return None
 
-    # No harvest is currently in flight. A pause blocks only new harvests;
-    # any already-started staged close is allowed to finish safely.
-    if not dense.get("v5a_accept_new", True):
-        return None
-
-    # PnL/mark only changes once per referee sweep, so a no-candidate scan
-    # needs to run only once per sweep.
+    # No harvest is currently in flight. New harvest selection is review-paused;
+    # any already-started staged close above is still managed.
     if V5A_REVIEW_PAUSE_NEW:
         return None
     if not dense.get("v5a_accept_new", True):
