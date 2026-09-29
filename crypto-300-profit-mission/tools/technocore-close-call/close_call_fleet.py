@@ -4961,10 +4961,35 @@ def _leader_open_long_candidate(
     }
 
 
+def _leader_pre_short_cash_upper_bound(
+    pre: dict,
+    reach: dict | None,
+) -> Decimal | None:
+    """Upper bound cash for an observed/inferred open short at the pre snapshot.
+
+    Every historical short lot must have entry px >= the cumulative minimum
+    legal quote. Therefore the open short's mark value has a lower bound, which
+    gives an upper bound on cash. This is especially useful because Fold.check
+    tests cash before close proceeds are released.
+    """
+    pos = pre.get("position")
+    if pos is None or Decimal(str(pos)) >= 0 or reach is None:
+        return None
+    min_entry = reach.get("min_legal_buy_seen")
+    if min_entry is None:
+        return None
+    qty = abs(Decimal(str(pos)))
+    mark = Decimal(str(pre["mark"]))
+    equity = Decimal("10000") + Decimal(str(pre["score"]))
+    min_lot_value = qty * (Decimal("2") * Decimal(str(min_entry)) - mark)
+    return equity - min_lot_value
+
+
 def _leader_direct_flip_candidate(
     price_row: dict,
     pre: dict,
     target: dict,
+    pre_cash_upper_bound: Decimal | None = None,
 ) -> dict | None:
     pre_pos = pre.get("position")
     target_pos = target.get("position")
@@ -4994,6 +5019,12 @@ def _leader_direct_flip_candidate(
     # For a one-trade flip, only the excess long_qty opens, but the buyer fee is
     # charged on the full short_qty + long_qty trade.
     cash_required_before_flip = long_qty * px + fee
+    if pre_cash_upper_bound is None:
+        funds_feasibility = "unknown"
+    elif cash_required_before_flip > pre_cash_upper_bound:
+        funds_feasibility = "impossible_from_cash_upper_bound"
+    else:
+        funds_feasibility = "not_proven_but_not_ruled_out"
 
     return {
         "sweep": price_row["sweep"],
@@ -5005,18 +5036,20 @@ def _leader_direct_flip_candidate(
         "buy_px": px,
         "buyer_fee": fee,
         "cash_required_before_flip": cash_required_before_flip,
+        "pre_cash_upper_bound": pre_cash_upper_bound,
+        "funds_feasibility": funds_feasibility,
         "modeled_target_score": modeled_target_score,
         "observed_target_score": target["score"],
         "observed_minus_modeled": gap,
         "absolute_gap": abs(gap),
     }
 
-
 def _leader_two_step_pivot_candidate(
     close_row: dict,
     open_row: dict,
     pre: dict,
     target: dict,
+    pre_cash_upper_bound: Decimal | None = None,
 ) -> dict | None:
     pre_pos = pre.get("position")
     target_pos = target.get("position")
@@ -5040,15 +5073,46 @@ def _leader_two_step_pivot_candidate(
         + short_qty * (close_row["close"] - close_px)
         - close_fee
     )
+    flat_cash = Decimal("10000") + flat_score
 
     open_px = open_row["lower_limit"]
     open_fee = _leader_buyer_fee(long_qty, open_px, open_row["close"])
+    cash_required_before_open = long_qty * open_px + open_fee
     modeled_target_score = (
         flat_score
         + long_qty * (Decimal(str(target["mark"])) - open_px)
         - open_fee
     )
     gap = Decimal(str(target["score"])) - modeled_target_score
+
+    close_funds_feasibility = "unknown"
+    if pre_cash_upper_bound is not None:
+        close_funds_feasibility = (
+            "impossible_from_cash_upper_bound"
+            if close_fee > pre_cash_upper_bound
+            else "not_proven_but_not_ruled_out"
+        )
+    open_funds_feasible_after_close = flat_cash >= cash_required_before_open
+
+    # Solve which pre-short quantity would make this exact two-step path match
+    # the observed target score while keeping the observed pre score fixed.
+    close_fee_per_qty = max(
+        Decimal("0.01") * close_px,
+        close_row["close"] - close_px,
+    )
+    qty_score_coefficient = (
+        Decimal(str(pre["mark"])) - close_px - close_fee_per_qty
+    )
+    long_score_contribution = (
+        long_qty * (Decimal(str(target["mark"])) - open_px) - open_fee
+    )
+    implied_short_qty = None
+    if qty_score_coefficient != 0:
+        implied_short_qty = (
+            Decimal(str(target["score"]))
+            - Decimal(str(pre["score"]))
+            - long_score_contribution
+        ) / qty_score_coefficient
 
     return {
         "mode": "close_then_open",
@@ -5060,17 +5124,24 @@ def _leader_two_step_pivot_candidate(
         "close_short_qty": short_qty,
         "close_buy_px": close_px,
         "close_fee": close_fee,
+        "pre_cash_upper_bound": pre_cash_upper_bound,
+        "close_funds_feasibility": close_funds_feasibility,
         "flat_score_after_close": flat_score,
+        "flat_cash_after_close": flat_cash,
         "open_long_qty": long_qty,
         "open_buy_px": open_px,
         "open_fee": open_fee,
-        "cash_required_before_open": long_qty * open_px + open_fee,
+        "cash_required_before_open": cash_required_before_open,
+        "open_funds_feasible_after_close": open_funds_feasible_after_close,
         "modeled_target_score": modeled_target_score,
         "observed_target_score": target["score"],
         "observed_minus_modeled": gap,
         "absolute_gap": abs(gap),
+        "implied_pre_short_qty_to_match_target": implied_short_qty,
+        "implied_minus_inferred_short_qty": (
+            implied_short_qty - short_qty if implied_short_qty is not None else None
+        ),
     }
-
 
 def _leader_select_pivot_subject(
     state: dict,
@@ -5185,9 +5256,15 @@ def _leader_pivot_solve_report(
         x["cash_required_before_open"],
     ))
 
+    reachability = _leader_price_reachability()
+    pre_reach = _leader_reach_at_sweep(reachability, int(pre["sweep"]))
+    pre_cash_upper_bound = _leader_pre_short_cash_upper_bound(pre, pre_reach)
+
     direct = []
     for row in price_rows:
-        candidate = _leader_direct_flip_candidate(row, pre, target)
+        candidate = _leader_direct_flip_candidate(
+            row, pre, target, pre_cash_upper_bound=pre_cash_upper_bound
+        )
         if candidate is not None:
             direct.append(candidate)
     direct.sort(key=lambda x: x["absolute_gap"])
@@ -5196,13 +5273,16 @@ def _leader_pivot_solve_report(
     for close_row in price_rows:
         for open_row in price_rows:
             candidate = _leader_two_step_pivot_candidate(
-                close_row, open_row, pre, target
+                close_row,
+                open_row,
+                pre,
+                target,
+                pre_cash_upper_bound=pre_cash_upper_bound,
             )
             if candidate is not None:
                 two_step.append(candidate)
     two_step.sort(key=lambda x: x["absolute_gap"])
 
-    reachability = _leader_price_reachability()
     target_reach = _leader_reach_at_sweep(reachability, target_sweep)
     target_fee_adjusted_carry = None
     if target_reach is not None:
@@ -5225,6 +5305,7 @@ def _leader_pivot_solve_report(
         "target_snapshot": target,
         "price_window": price_rows,
         "target_fee_adjusted_min_realized_carry": target_fee_adjusted_carry,
+        "pre_cash_upper_bound": pre_cash_upper_bound,
         "best_open_long_only": open_long[0] if open_long else None,
         "best_direct_flip": direct[0] if direct else None,
         "best_close_then_open": two_step[0] if two_step else None,
@@ -5241,7 +5322,11 @@ def _leader_pivot_solve_report(
             "use the lowest legal two-decimal quote because that minimizes the "
             "buyer's fee-adjusted effective cost. Funds requirements are shown "
             "where they can be derived, but hidden lot/cash history prevents a "
-            "full authoritative feasibility proof."
+            "full authoritative feasibility proof. Direct-flip funds are now "
+            "checked against a conservative pre-cash upper bound from the "
+            "historical legal short-entry floor. Two-step paths report exact "
+            "flat cash after closing and whether the later long-open funds check "
+            "would pass under the modeled path."
         ),
     }
 
