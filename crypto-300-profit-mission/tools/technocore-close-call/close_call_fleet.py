@@ -1076,7 +1076,11 @@ def _flow_omitted_at_sweep(sweep: int) -> dict[str, int]:
 
 
 def deterministic_trade_id(prefix: str, *parts) -> str:
-    """Stable <=64-char id for crash-safe strategy retries."""
+    """Stable <=64-char id for one logical strategy action.
+
+    This reduces accidental duplicate IDs but is not a full write-ahead
+    exactly-once protocol by itself; callers still persist submission state.
+    """
     raw = "|".join([str(prefix), *(str(x) for x in parts)])
     digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
     clean_prefix = "".join(ch for ch in str(prefix) if ch.isalnum() or ch in "_-")[:40] or "cc"
@@ -2506,16 +2510,17 @@ def dense_v5b_step(state: dict, pr: dict, allow_new: bool = True) -> dict | None
         if not dense.get("v5b_accept_new", True):
             return None
 
-        if pending.get("status") == "registering":
+        if pending.get("status") in ("creating_keys", "waiting_room", "registering"):
             pending = _v5b_register_pending(state, pr)
             if not isinstance(pending, dict):
                 return None
-            if pending.get("status") == "registering":
+            if pending.get("status") in ("creating_keys", "waiting_room", "registering"):
                 err = dense.get("v5b_last_error")
                 return {
                     "event": "v5b_wait_feeder_registration",
                     "cycle_index": pending.get("index"),
                     "registered_count": len(pending.get("registrations") or []),
+                    "pending_status": pending.get("status"),
                     "error": (err or {}).get("error") if isinstance(err, dict) else None,
                     "sweep": pr["n"],
                 }
@@ -3016,7 +3021,15 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     if submitted:
         v4_wait = submitted
 
-    v4_done_this_sweep = int(dense.get("last_seen_sweep", -1)) == int(pr["n"])
+    last_ticket = dense.get("last_ticket") or {}
+    try:
+        v4_done_this_sweep = (
+            last_ticket.get("mode") == "v4"
+            and last_ticket.get("status") == "submitted"
+            and int(last_ticket.get("trade_sweep", -1)) == int(pr["n"])
+        )
+    except Exception:
+        v4_done_this_sweep = False
 
     # Existing V5b risk may be managed, but no new cycle is allowed before V4
     # has successfully submitted for this sweep.
