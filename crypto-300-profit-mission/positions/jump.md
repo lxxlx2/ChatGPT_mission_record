@@ -114,3 +114,39 @@ Source: USER_CONFIRMED authenticated Legion application UI screenshot.
 - Legion's current general sale rules state that the amount requested is deposited up front to register the application; if the final accepted allocation is smaller, the excess becomes reclaimable after allocation.
 - No additional 600 USDC has been authorized for JUMP. Keep the existing 400-USDC reserve/accounting unchanged until the user explicitly decides whether to increase the application deposit.
 - Execution status: REVIEW_REQUIRED / DO_NOT_SUBMIT_400.
+
+
+## Application submitted / allocation and TGE status — 2026-09-29 20:50 Asia/Bangkok
+
+Evidence policy:
+- USER_CONFIRMED: authenticated Legion application screenshot supplied by the user.
+- OFFICIAL: Legion Help Center article for the JUMP sale, updated 2026-09-29.
+- OFFICIAL: Legion general sale workflow documentation.
+
+Current application state:
+- application_status: IN_REVIEW_BY_PROJECT
+- date_applied: 2026-09-29
+- deposited_capital: 1,000 USDC
+- minimum_acceptable_allocation: 400 USDC
+- vesting: 50% at TGE; remaining 50% linearly over 4 months
+- signed_agreement: yes
+
+Allocation status:
+- FINAL_ALLOCATION: UNKNOWN / NOT YET DECIDED
+- Legion's official JUMP sale page states that submitting a pledge does not guarantee an allocation or the full pledged amount. Final allocations depend on eligibility, sale terms, overall demand and the project's final allocation process.
+- Legion's official sale workflow states that after applications close, the project reviews applications and decides each participant's allocation. Outcomes can be accepted in full, accepted for less than deposited, or rejected with deposit reclaim.
+- Therefore the 1,000 USDC deposit must not be recorded as a 1,000 USDC JUMP allocation until the project finalizes it.
+- The 400 USDC field is the user's minimum acceptable allocation, not a confirmed allocation.
+
+TGE status:
+- EXACT_TGE_DATE: UNKNOWN / NOT DISCLOSED
+- Legion's official JUMP sale article, updated 2026-09-29, explicitly states: "A TGE date has not been disclosed yet."
+- The same official article confirms public-sale vesting of 50% at TGE and the remaining 50% over four months.
+- Historical Q4 2026 guidance may remain useful background, but it is not an exact TGE date. Do not present a specific TGE day or time until a newer first-party source publishes it.
+
+Operational interpretation:
+- Capital state until allocation decision: 1,000 USDC deposited/pending review.
+- JUMP token quantity: UNKNOWN.
+- Accepted investment amount: UNKNOWN.
+- Excess reclaim amount: UNKNOWN until final allocation.
+- Do not calculate realized JUMP position size or token count before allocation is finalized.
