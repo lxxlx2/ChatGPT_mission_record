@@ -5,6 +5,8 @@ timezone: Asia/Bangkok
 write_policy: existing-file update only
 history_policy: every successful update is preserved by Git commit history
 status: BOOTSTRAP
+manual_existing_file_update_probe: PASS
+manual_probe_time: 2026-09-29 17:35 Asia/Bangkok
 bootstrap_time: 2026-09-29 17:34 Asia/Bangkok
 
 ## CORE
