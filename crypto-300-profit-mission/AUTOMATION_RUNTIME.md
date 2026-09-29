@@ -523,3 +523,43 @@ Rules:
 - never auto-trade.
 
 The Frank lane must not consume or replace the existing Monster V2.1 schedule or 19:29 summary.
+
+
+## Frank mandatory completion health gate — 2026-09-29
+
+Regression confirmed:
+- Frank lane rules were integrated before 04:29 Asia/Bangkok;
+- scheduled $300 runs at 05:25, 06:26, 07:25, 08:32, 09:25 and 11:33 persisted core finals with `frank_lane_status: pending_after_core`;
+- 10:28 omitted a completed Frank result;
+- 12:33 was the first separate Frank audit and returned `unavailable_source`;
+- those runs did not prove the enabled Frank feature executed successfully.
+
+Effective immediately, the $300 run cannot be marked healthy success while Frank monitoring is enabled unless the same cycle has a durable Frank audit.
+
+Mandatory per-cycle Frank completion proof:
+- `source_selected`;
+- `cursor_before`;
+- `cursor_after`;
+- `signatures_seen`;
+- `active_swaps_verified`;
+- `passive_or_reward_filtered`;
+- `unresolved_tx_count`;
+- `cursor_advanced`;
+- stage result: WATCH / PRECONFIRM / SUSPECTED_CONVICTION / EXIT / NO_ACTION / UNRESOLVED;
+- `stage_events_persisted`;
+- `gmail_delivery_state`.
+
+Health semantics:
+- core success + Frank audit success = eligible for overall success;
+- `pending_after_core`, missing Frank audit, `unavailable_source`, or unresolved provider failure = overall `partial_failure`, never success;
+- source failure preserves the old cursor and next cycle MUST catch up before evaluating only-new activity;
+- an unresolved transaction that may be an active swap stalls cursor advancement at that gap until resolved or explicitly classified with evidence;
+- a quiet later cycle cannot erase an earlier unresolved gap or pending delivery.
+
+Primary live source is Alchemy Solana mainnet finalized via selected app `mkhr4iorbgonin56`. Current recovery baseline:
+- wallet: `498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ`
+- signature: `35s2Y8jayg4XjASEWmNmFTAYBqbFE1G2XAc3CmVQG5zxiCZWBRcQFDmyAtvDkQn9deNJhSaxofS6NU34mDtWYtQS`
+- slot: `451436899`
+- time: 2026-09-29 04:15:07 Asia/Bangkok.
+
+The recovery window must be fully replayed before the cursor is promoted to current head.
