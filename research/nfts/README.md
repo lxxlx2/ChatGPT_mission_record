@@ -10,6 +10,7 @@ Use this directory for:
 
 Current mapped material:
 - Jack / Visualize Value Credits: `research/nfts/jack-credits/jack-credits-nft-position.md`
+- Wubbushi Debits / Credits holder drop: `research/nfts/wubbushi-debits/wubbushi-debits-credits-holder-drop.md`
 - UNICRED: operational state `crypto-300-profit-mission/positions/unicred.md`
 - Fresh INK: current ownership is tracked in Mission portfolio/state; future long-form analysis belongs here.
 - Four Zero Two / OneThousand: future long-form NFT analysis belongs in its own directory here.
