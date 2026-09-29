@@ -1,3 +1,297 @@
+# REVIEWED ADDENDUM v2 — 2026-09-29
+
+This addendum supersedes conflicting parts of the original feasibility handoff below.
+
+## A. Revised product decision: CONDITIONAL GO
+
+Mac-side collection and deterministic ETL are feasible. The main risks are:
+1. GPT consumer is hourly and therefore cannot provide <=5 min GPT judgement under the free/current automation model.
+2. GitHub must not be treated as the primary queue/database.
+3. Gmail exactly-once delivery cannot be mathematically guaranteed without an idempotency primitive from the mail provider; the design must explicitly choose an at-least-once or at-most-once bias.
+4. External sources such as Solana public RPC and arbitrary NFT websites have no project-controlled SLA.
+5. A local watchdog cannot detect Mac power-off/sleep while the entire machine is unavailable; remote stale-health detection is required.
+
+## B. Security correction: current repository is PUBLIC
+
+`lxxlx2/ChatGPT_mission_record` is currently public.
+
+Therefore **runtime-v2 ingest/health/decision/delivery data MUST NOT be written to this public repository** if they contain wallet behavior, user holdings, private monitoring state, event queues, delivery state or other sensitive operational data.
+
+Preferred production design:
+- keep this public repo for specifications, model rules, non-sensitive reports and audit design;
+- create/use a separate PRIVATE GitHub repository for runtime transport;
+- do not put secrets, PATs, OAuth tokens, raw wallet archives or Gmail identifiers in Git.
+
+No repository visibility change is authorized by this document.
+
+## C. GitHub transport correction
+
+Do not write high-frequency heartbeats into GitHub every minute.
+
+Local SQLite is authoritative. GitHub only transports compact batches and external health summaries.
+
+Recommended cadence:
+- ingest candidate: event-driven, immediately when a candidate is created;
+- compact health snapshot: every 10–15 minutes OR on health state change;
+- decision/delivery receipt: event-driven;
+- no per-tick/per-minute archive commits.
+
+Because Mac git pushes and GPT Contents-API writes on the same branch can race, production runtime should use separate writer branches in the PRIVATE runtime repo:
+
+- `mac-data`: written only by Mac; read by GPT.
+- `gpt-data`: written only by GPT; read by Mac if needed.
+
+GPT input files must contain:
+- schema_version
+- batch_id
+- generated_at
+- valid_until
+- item_count
+- payload_sha256
+
+GPT decision receipts must include:
+- input_batch_id
+- input_payload_sha256
+- consumed_item_count
+- decision timestamp
+
+Mac/health reconciliation must detect stale/mismatched receipts.
+
+GitHub secondary limits currently document general content-generation limits of roughly 80 requests/minute and 500/hour, and authenticated REST commonly has a 5,000 request/hour primary limit. The proposed event-driven + 10–15 minute health cadence is far below these limits, but rate-limit headers/backoff remain mandatory.
+
+## D. SLO split: collection vs judgement
+
+Do not confuse low-latency collection with low-latency GPT decisions.
+
+### Collection SLO
+Mac-side targets:
+- BTC/ETH/SOL/BNB freshness <10s while connected
+- HYPE freshness <15s while connected
+- local PRICE_CANDIDATE write <=5s from local observation
+- Frank new-signature discovery p95 <=30s
+- Monster lightweight universe age <=60s
+
+### GPT consumer SLO under current free architecture
+- nominal consumer interval: hourly
+- target decision within next scheduled cycle
+- acceptance target: >=95% scheduled-cycle completion during shadow test
+- missed cycle must recover pending events on the next successful cycle
+- no pending event may be silently dropped
+- backlog must not grow for >2 consecutive consumer cycles
+
+**Hard product limitation:** <=5 minute GPT final judgement for Monster/NFT is NOT FEASIBLE with the current free hourly automation. If <=5 min is required, use an API/trigger mechanism or allow a non-GPT factual alert.
+
+## E. GPT dry-run Gate correction
+
+The previous requirement of 100% scheduled completion is not realistic because the scheduler is an external dependency.
+
+Revised Gate G:
+- shadow period >=48h, not 24h;
+- scheduled consumer success rate >=95%;
+- 0 silently lost pending events;
+- every missed consumer run must be recovered by a later run;
+- oldest unconsumed event age <=2 nominal cycles during normal source availability;
+- run a synthetic full-load test containing 40 normal candidates + urgent candidates + pre-existing backlog;
+- compact input <=100KB;
+- no connector response truncation;
+- decision receipt must echo batch_id + payload_sha256.
+
+If these fail, do not enable production alerts.
+
+## F. Gmail semantics correction
+
+Exactly-once external email delivery cannot be guaranteed strictly using:
+`search Sent -> send -> readback`.
+
+Required state machine:
+- stable event_id is generated before GPT and may not be rewritten by GPT;
+- one active delivery lease/fencing token per event;
+- subject/body carries stable event_id;
+- after send returns success, store provider message_id immediately when available;
+- if send outcome is ambiguous, state becomes `DELIVERY_UNCERTAIN`;
+- while uncertain, do not blind-send again;
+- repeatedly search/read Sent for the stable event_id after a cooldown window;
+- only a deliberate configured policy may resend after uncertainty.
+
+Gate H must include:
+1. send succeeds + readback succeeds;
+2. send succeeds + receipt write fails;
+3. send succeeds + immediate Sent search misses;
+4. send call times out/ambiguous;
+5. same event replayed >=3 times;
+6. two consumers attempt same event concurrently.
+
+Product owner must explicitly choose:
+- AT_LEAST_ONCE bias: rare duplicate acceptable, missing ACTION minimized; or
+- AT_MOST_ONCE bias: no automatic duplicate, but an ambiguous send may become a missed mail/manual recovery.
+
+Until chosen, email design is not IMPLEMENTATION_READY.
+
+## G. Health/watchdog correction
+
+Local watchdog alone is insufficient because Mac sleep/power-off stops both collector and watchdog.
+
+Every externally visible health snapshot must include:
+- seq
+- generated_at
+- valid_until
+- host_boot_id
+- collector_version
+- clock_offset_ms or NTP health
+- source freshness fields
+- queue depth
+- sync lag
+- last successful consumer receipt
+
+GPT must treat:
+- now > valid_until
+as `UNHEALTHY_STALE_HOST`, even if the last written status said HEALTHY.
+
+Mac deployment must explicitly decide:
+- LaunchAgent vs LaunchDaemon;
+- FileVault/reboot behavior;
+- whether unattended boot before login is required;
+- sleep policy while connected to power.
+
+If LaunchAgent is used, it cannot be described as "automatic after every reboot" until login behavior is verified.
+
+## H. Frank public RPC Gate correction
+
+Before the 500-tx Gate, run an archival-availability probe:
+- newest known Frank signature
+- 25th percentile age
+- median age
+- oldest target signature
+
+Use `getTransaction` with:
+- commitment=finalized
+- encoding suitable for deterministic parsing
+- maxSupportedTransactionVersion=1
+
+A null/not-found result must be recorded as `UNAVAILABLE_ON_PUBLIC_RPC`; it is not a parser failure.
+
+If the oldest required target history is not available from `api.mainnet.solana.com`, the "public RPC only, no fallback" product requirement means full historical replay is **NOT FEASIBLE under the chosen source constraint**. Do not silently introduce another provider.
+
+Define Frank evidence terms before implementation:
+- wallet_is_signer
+- wallet_is_fee_payer
+- wallet_token_owner
+- wallet_authority_evidence
+- inner_instruction_authority
+- SOL/token delta semantics
+
+Do not use a vague boolean `wallet_is_authority` without evidence fields.
+
+Manual validation must compare at least 50 samples against an independent explorer presentation plus raw RPC, not RPC against itself.
+
+## I. Price replay correction
+
+Live alert features must be reconstructable from the historical dataset used for Gate B.
+
+If replay uses 1m candles:
+- do not validate tick-only logic with those candles;
+- define returns/high-low/reversal/volatility from 1m OHLCV in both replay and live canonical feature code;
+- live tick/WS data may update the current 1m bar, but the alert rule must specify whether it uses completed bars or provisional bars.
+
+Before 30-day HYPE replay, probe how much official/source history can actually be retrieved.
+
+"Missed obvious move" must be defined before replay, e.g. an objective future excursion criterion, to reduce hindsight fitting.
+
+After rule freeze:
+- run a shadow period before production;
+- do not tune thresholds from individual live misses without a new version + replay.
+
+## J. Binance 2026 WebSocket correction
+
+The developer must use current USDⓈ-M Futures WebSocket endpoint/path rules.
+
+Binance's 2026 change log states a WebSocket base-URL/path migration and that the old URL was retired on 2026-04-23. Current docs must be checked at implementation time.
+
+Do not hard-code an endpoint copied from pre-migration examples.
+
+24h disconnect handling must be tested. Prefer make-before-break where the protocol/source permits:
+1. establish replacement connection;
+2. resubscribe;
+3. deduplicate overlap using event time/sequence keys;
+4. retire old connection.
+
+## K. Monster historical replay limitation
+
+Do not claim full historical replay of features that the upstream source no longer retains.
+
+Before Gate D:
+- probe actual available history for OI/funding/top-trader/taker endpoints;
+- inventory delisted symbols separately;
+- document survivor bias;
+- distinguish reconstructed candle snapshots from live stream semantics.
+
+Gate D may be split:
+- D1: historical price/volume candidate recall on available/delisted datasets;
+- D2: forward shadow collection of OI/funding/top-trader features from now onward;
+- D3: model evaluation once enough forward data exists.
+
+## L. NFT Gate correction
+
+NFT source reliability is heterogeneous and partially outside project control.
+
+Use per-source classes:
+- REQUIRED_DETERMINISTIC: sources the product promises to monitor
+- BEST_EFFORT: third-party pages/APIs with anti-bot or availability risk
+- DISCOVERY_ONLY: broad web/social sources
+
+Only REQUIRED_DETERMINISTIC sources participate in hard source-coverage gates.
+
+BEST_EFFORT/DISCOVERY_ONLY failures must appear as source gaps and must not block the whole system.
+
+Untrusted webpage/social text must never be inserted verbatim into the controlling prompt. Use structured extraction, length limits and an explicit untrusted-content field to reduce prompt-injection risk.
+
+## M. Missing engineering requirements
+
+Before implementation, add:
+- secret management: GitHub PAT / OAuth tokens / Gmail credentials in macOS Keychain or equivalent; never Git;
+- schema migration/versioning for SQLite;
+- backup/restore of SQLite;
+- disk retention policy and raw Frank archive compression;
+- rollback procedure for collector releases;
+- dual-run/shadow comparison before enabling production;
+- monotonic clock for local latency measurement;
+- UTC timestamps internally, Bangkok only for presentation;
+- disk-full failure injection;
+- payload corruption/hash mismatch injection.
+
+## N. Revised development order
+
+Do not build all collectors first.
+
+Risk-first sequence:
+1. **Minimal fake-event E2E without real collectors**:
+   Mac synthetic event -> private GitHub transport -> GPT dry decision -> delivery state -> Gmail canary -> readback -> receipt.
+2. Validate scheduler recovery, hash receipts, delivery ambiguity and duplicate behavior.
+3. CORE PRICE live + 30d replay + shadow.
+4. Frank public-RPC archival probe -> 500 tx -> history/live separation.
+5. Health/watchdog/sleep/reboot/failure injection.
+6. Monster lightweight collector + replay/forward-shadow split.
+7. NFT deterministic sources, then best-effort discovery.
+8. 48h full-stack shadow.
+9. Only then request authorization to re-enable existing `$300 Crypto资产状态监控`.
+
+## O. Go/No-Go decisions still required from product owner
+
+Implementation is not ready until these are explicitly decided:
+
+1. Is worst-case ~1 hour GPT judgement latency acceptable?
+2. For ACTION email uncertainty: AT_LEAST_ONCE or AT_MOST_ONCE?
+3. Is a separate PRIVATE GitHub runtime repository acceptable?
+4. Is Solana public RPC still the only permitted RPC even if the oldest Frank history is unavailable?
+5. Is NFT scope accepted as deterministic known sources + best-effort discovery, not full X/firehose coverage?
+6. Must the Mac recover before user login after a reboot, or is post-login LaunchAgent acceptable?
+7. What maximum local disk budget is allowed?
+8. Is 48h shadow with >=95% consumer-cycle success sufficient for production gate?
+
+Until these are answered, status is `CONDITIONAL_GO / NOT_IMPLEMENTATION_READY`.
+
+---
+
 # Mac 本地监控重构：可行性评估与开发交接
 
 > 状态：DESIGN / FEASIBILITY ONLY  
