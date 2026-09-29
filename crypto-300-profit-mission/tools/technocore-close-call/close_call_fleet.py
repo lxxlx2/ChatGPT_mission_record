@@ -4985,6 +4985,71 @@ def _leader_pre_short_cash_upper_bound(
     return equity - min_lot_value
 
 
+
+def _leader_short_redeploy_bounds(
+    pre: dict,
+    short_qty: Decimal,
+    close_fee: Decimal,
+    reach: dict | None,
+) -> dict:
+    """Conservative pre-pivot bounds implied by the official funds rule.
+
+    At the pre snapshot:
+        equity = 10000 + score
+        short lot value = qty * (2 * avg_entry - mark)
+        cash = equity - short lot value
+
+    The close trade checks cash >= close_fee before releasing short collateral.
+    Therefore avg_entry has an upper bound. Combining that with the historical
+    legal quote envelope and the minimum 1% opening fee yields a conservative
+    lower bound on realized carry that must have existed before the short was
+    opened.
+    """
+    qty = Decimal(str(short_qty))
+    if qty <= 0 or reach is None:
+        return {
+            "feasible": None,
+            "entry_ceiling_from_close_funds": None,
+            "best_feasible_avg_short_entry": None,
+            "min_prior_realized_carry_before_short": None,
+        }
+
+    score = Decimal(str(pre["score"]))
+    mark = Decimal(str(pre["mark"]))
+    equity = Decimal("10000") + score
+    entry_ceiling = (
+        mark + (equity - Decimal(str(close_fee))) / qty
+    ) / Decimal("2")
+
+    hist_min = reach.get("min_legal_buy_seen")
+    hist_max = reach.get("max_legal_sell_seen")
+    best_entry = entry_ceiling
+    if hist_max is not None:
+        best_entry = min(best_entry, Decimal(str(hist_max)))
+
+    feasible = True
+    if hist_min is not None and best_entry < Decimal(str(hist_min)):
+        feasible = False
+
+    carry_lb = None
+    if feasible:
+        min_open_fee = Decimal("0.01") * qty * best_entry
+        carry_lb = (
+            score
+            - qty * (best_entry - mark)
+            + min_open_fee
+        )
+
+    return {
+        "feasible": feasible,
+        "entry_ceiling_from_close_funds": entry_ceiling,
+        "best_feasible_avg_short_entry": best_entry if feasible else None,
+        "min_prior_realized_carry_before_short": (
+            max(carry_lb, Decimal("0")) if carry_lb is not None else None
+        ),
+    }
+
+
 def _leader_direct_flip_candidate(
     price_row: dict,
     pre: dict,
@@ -5050,6 +5115,7 @@ def _leader_two_step_pivot_candidate(
     pre: dict,
     target: dict,
     pre_cash_upper_bound: Decimal | None = None,
+    pre_reach: dict | None = None,
 ) -> dict | None:
     pre_pos = pre.get("position")
     target_pos = target.get("position")
@@ -5117,6 +5183,20 @@ def _leader_two_step_pivot_candidate(
             - long_score_contribution
         ) / qty_score_coefficient
 
+    inferred_short_bounds = _leader_short_redeploy_bounds(
+        pre, short_qty, close_fee, pre_reach
+    )
+
+    implied_short_bounds = None
+    if implied_short_qty is not None and implied_short_qty > 0:
+        implied_close_fee = _leader_buyer_fee(
+            implied_short_qty, close_px, close_row["close"]
+        )
+        implied_short_bounds = _leader_short_redeploy_bounds(
+            pre, implied_short_qty, implied_close_fee, pre_reach
+        )
+        implied_short_bounds["close_fee"] = implied_close_fee
+
     return {
         "mode": "close_then_open",
         "close_sweep": close_row["sweep"],
@@ -5145,6 +5225,8 @@ def _leader_two_step_pivot_candidate(
         "implied_minus_inferred_short_qty": (
             implied_short_qty - short_qty if implied_short_qty is not None else None
         ),
+        "inferred_short_redeploy_bounds": inferred_short_bounds,
+        "implied_short_redeploy_bounds": implied_short_bounds,
     }
 
 def _leader_select_pivot_subject(
@@ -5282,6 +5364,7 @@ def _leader_pivot_solve_report(
                 pre,
                 target,
                 pre_cash_upper_bound=pre_cash_upper_bound,
+                pre_reach=pre_reach,
             )
             if candidate is not None:
                 two_step.append(candidate)
