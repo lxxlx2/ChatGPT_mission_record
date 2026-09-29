@@ -252,3 +252,17 @@ Each hour:
 At 08:00/09:00 daily preparation, aggregate the previous 24h receipts and fresh-verify all carried material candidates.
 
 This is intended to improve real coverage and reduce timeout/provider-safety failures, not lower evidence standards.
+
+## Major-CEX security fast lane and lifecycle dedupe — 2026-09-29
+
+Read and obey the latest SECURITY_SOURCE_POLICY.md on every run.
+
+Every ordinary hourly collector must execute one bounded major-CEX account-security discovery pass before optional enrichment. This fast lane is mandatory even when X/Reddit/specialist feeds are unavailable.
+
+Coverage must include Binance, Coinbase, OKX, Bybit, MEXC, Bitget, Kraken, Gate, HTX and KuCoin with account-takeover / unauthorized-withdrawal / API / KYC-reset / deepfake / compensation / resolution terms. MEXC, Bitget and any exchange with an open incident receive a direct focused query until the incident is resolved.
+
+If a material CEX security candidate appears, verify with official support/exchange statements when available plus independent English evidence. Record incident lifecycle state and material deltas.
+
+Do not repeat unchanged security conclusions. Re-surface an incident only for a material lifecycle transition such as official acknowledgement, changed loss amount, confirmed root cause, new victims/systemic evidence, compensation/reimbursement confirmation or official resolution. Critical unresolved incidents may be carried forward as one concise ongoing/no-material-change line.
+
+Hourly freshness target is the next successful scheduled cycle after an incident becomes searchable. External indexing/provider outages can delay discovery; the audit must record source availability rather than claim real-time completeness.
