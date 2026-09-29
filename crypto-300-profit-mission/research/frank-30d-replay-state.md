@@ -276,11 +276,11 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **100 / 7,106**
-- classification_before: `2v7YNW1K8JuDawLsLgGdES33khgFMMd8UKTQPM9hqaqY6YTZ2y8bL8HrVcA5m9sVvy4YoKkmWuWGY6fXqJYcaQpo`
-- classification_oldest_time: **2026-09-28T14:59:38Z / 2026-09-28 21:59:38 Asia/Bangkok**
+- classified_signature_count: **110 / 7,106**
+- classification_before: `drF7NwRDtZLgCbCKHtZxkY9GzLRqapUNPA3BhE65B4Uxr8U7YXyU1mJr9XhExqjogjzC15ZCaPWk9tHwnXHz8UB`
+- classification_oldest_time: **2026-09-28T14:32:55Z / 2026-09-28 21:32:55 Asia/Bangkok**
 - active_swaps_verified: **26**
-- passive_filtered: **74**
+- passive_filtered: **84**
 - unresolved_tx_count: **0**
 - unique_active_tokens: **14**
 
@@ -476,3 +476,8 @@ Next 10 processed contiguously. Result: 4 active swaps, 6 passive, 0 unresolved.
 ## PHASE 2 checkpoint 100/7,106
 
 Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved. `5VgCCv8W...` is a Frank-signed USDC `DepositToken` management action. The other nine are third-party Token/Token-2022 transfer activity with no verified Frank DEX/pool value exchange. No live state modified.
+
+
+## PHASE 2 checkpoint 110/7,106
+
+Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved. All ten are third-party Token/Token-2022 transfer or ATA activity with no verified Frank signer/authority DEX value exchange. No live state modified.
