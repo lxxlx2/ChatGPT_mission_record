@@ -4231,6 +4231,558 @@ def cmd_competitor_scan(args) -> None:
 
 
 
+
+
+def _leader_registered_rooms() -> list[str]:
+    """Rooms ever listed by the referee, plus the always-listed public room."""
+    seen = {"close1"}
+    order = ["close1"]
+
+    def collect(value):
+        if isinstance(value, str):
+            if value not in seen and not value.startswith("d-close1"):
+                seen.add(value)
+                order.append(value)
+            return
+        if isinstance(value, (list, tuple, set)):
+            for item in value:
+                collect(item)
+            return
+        if isinstance(value, dict):
+            for item in value.values():
+                collect(item)
+
+    for rec in parse_export("d-close1-flow"):
+        p = rec.get("_payload")
+        if isinstance(p, dict) and p.get("t") == "flow":
+            collect(p.get("rooms"))
+    return order
+
+
+def _leader_trade_perspective(did: str, payload: dict) -> dict | None:
+    terms = payload.get("terms") or {}
+    maker = terms.get("maker")
+    taker = payload.get("taker") or terms.get("taker")
+    side = terms.get("side")
+    try:
+        qty = Decimal(str(terms["qty"]))
+        px = Decimal(str(terms["px"]))
+    except Exception:
+        return None
+
+    if did == maker:
+        role = "maker"
+        action = side
+    elif did == taker:
+        role = "taker"
+        action = "buy" if side == "sell" else "sell" if side == "buy" else None
+    else:
+        return None
+    if action not in ("buy", "sell"):
+        return None
+    signed_qty = qty if action == "buy" else -qty
+    return {
+        "role": role,
+        "action": action,
+        "signed_qty": signed_qty,
+        "qty": qty,
+        "px": px,
+        "maker": maker,
+        "taker": taker,
+    }
+
+
+def _leader_flow_outcomes(trade_ids: set[str]) -> dict[str, dict]:
+    """Visible compact-flow outcomes for selected trade ids."""
+    wanted = {str(x) for x in trade_ids if x}
+    out = {}
+    if not wanted:
+        return out
+    for rec in parse_export("d-close1-flow"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        try:
+            n = int(p["n"])
+        except Exception:
+            continue
+        settled = p.get("settled")
+        void = p.get("void")
+        for tid in wanted:
+            if tid in out:
+                continue
+            if contains_value(settled, tid):
+                out[tid] = {"status": "settled", "sweep": n}
+                continue
+            if contains_value(void, tid):
+                reason = None
+                if isinstance(void, (list, tuple)):
+                    for item in void:
+                        if isinstance(item, (list, tuple)) and item and item[0] == tid:
+                            reason = item[1] if len(item) > 1 else None
+                            break
+                        if isinstance(item, dict) and item.get("id") == tid:
+                            reason = item.get("reason") or item.get("outcome")
+                            break
+                out[tid] = {"status": "void", "sweep": n, "reason": reason}
+    return out
+
+
+def _leader_scan_trades(
+    targets: set[str],
+    room_mode: str = "registered",
+    room_limit: int = 0,
+) -> dict:
+    rooms = ["close1"] if room_mode == "public" else _leader_registered_rooms()
+    if room_limit and room_limit > 0:
+        rooms = rooms[:room_limit]
+
+    price_timeline = _price_timeline()
+    by_did = {did: [] for did in targets}
+    failed = []
+    scanned = []
+
+    for room in rooms:
+        try:
+            rows = parse_export(room)
+        except Exception as e:
+            failed.append({"room": room, "error": str(e)})
+            continue
+        scanned.append(room)
+        for rec in rows:
+            p = rec.get("_payload")
+            if not isinstance(p, dict) or p.get("t") != "trade" or p.get("season") != SEASON:
+                continue
+            terms = p.get("terms") or {}
+            tid = terms.get("id")
+            if not isinstance(tid, str):
+                continue
+            dt = _rec_time(rec)
+            source_sweep, source_ref = _source_ref_for_time(dt, price_timeline)
+            for did in targets:
+                view = _leader_trade_perspective(did, p)
+                if view is None:
+                    continue
+                by_did[did].append({
+                    "trade_id": tid,
+                    "room": room,
+                    "seq": rec.get("seq"),
+                    "ts": rec.get("ts"),
+                    "publisher": rec.get("from"),
+                    "source_sweep": source_sweep,
+                    "source_ref": source_ref,
+                    "first_possible_sweep": (
+                        source_sweep + 1 if source_sweep is not None else None
+                    ),
+                    "until": terms.get("until"),
+                    **view,
+                })
+
+    trade_ids = {
+        x["trade_id"]
+        for rows in by_did.values()
+        for x in rows
+        if x.get("trade_id")
+    }
+    outcomes = _leader_flow_outcomes(trade_ids)
+    for did, rows in by_did.items():
+        rows.sort(key=lambda x: (
+            x.get("ts") or "",
+            int(x.get("seq") or 0),
+            x.get("room") or "",
+        ))
+        for row in rows:
+            outcome = outcomes.get(row["trade_id"])
+            row["outcome"] = outcome.get("status") if outcome else "not_visible"
+            row["outcome_sweep"] = outcome.get("sweep") if outcome else None
+            row["void_reason"] = outcome.get("reason") if outcome else None
+
+    return {
+        "room_mode": room_mode,
+        "rooms_discovered": len(_leader_registered_rooms()),
+        "rooms_scanned": scanned,
+        "rooms_failed": failed,
+        "trades": by_did,
+    }
+
+
+def _leader_position_history(targets: set[str]) -> dict[str, dict[int, Decimal]]:
+    out = {did: {} for did in targets}
+    for rec in parse_export("d-close1-positions"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "positions":
+            continue
+        try:
+            n = int(p["n"])
+        except Exception:
+            continue
+        pos_map = _v42_position_map(p)
+        for did in targets:
+            if did in pos_map:
+                out[did][n] = pos_map[did]
+    return out
+
+
+def _leader_pnl_history(targets: set[str]) -> dict[str, list[dict]]:
+    out = {did: [] for did in targets}
+    for rec in parse_export("d-close1-pnl"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "pnl":
+            continue
+        try:
+            n = int(p["n"])
+            mark = Decimal(str(p["mark"]))
+        except Exception:
+            continue
+        score_map = dict(_pnl_pairs(p))
+        for did in targets:
+            if did in score_map:
+                out[did].append({
+                    "sweep": n,
+                    "mark": mark,
+                    "score": score_map[did],
+                })
+    return out
+
+
+def _leader_price_reachability() -> list[dict]:
+    """Cumulative legal quote envelope by sweep from official applied refs."""
+    out = []
+    min_buy = None
+    max_sell = None
+    for rec in parse_export("d-close1-price"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "price":
+            continue
+        try:
+            n = int(p["n"])
+        except Exception:
+            continue
+        applied = _v41_px(p.get("applied"))
+        if applied is None:
+            continue
+        lo = applied * Decimal("0.95")
+        hi = applied * Decimal("1.05")
+        min_buy = lo if min_buy is None else min(min_buy, lo)
+        max_sell = hi if max_sell is None else max(max_sell, hi)
+        out.append({
+            "sweep": n,
+            "min_legal_buy_seen": min_buy,
+            "max_legal_sell_seen": max_sell,
+        })
+    return out
+
+
+def _leader_reach_at_sweep(history: list[dict], sweep: int) -> dict | None:
+    found = None
+    for row in history:
+        if int(row["sweep"]) > int(sweep):
+            break
+        found = row
+    return found
+
+
+def _leader_min_carry_required(
+    score: Decimal,
+    mark: Decimal,
+    position: Decimal,
+    min_legal_buy: Decimal | None,
+    max_legal_sell: Decimal | None,
+) -> tuple[Decimal | None, Decimal | None]:
+    """(synthetic effective entry, conservative net-carry lower bound).
+
+    score = net_carry + open-position MTM. If the synthetic entry implied by
+    score/position is outside every legal historical quote, some positive
+    realized carry is mathematically required.
+    """
+    if position == 0:
+        return None, max(score, Decimal("0"))
+    synthetic = mark - score / position
+    required = Decimal("0")
+    if position > 0 and min_legal_buy is not None and synthetic < min_legal_buy:
+        required = position * (min_legal_buy - synthetic)
+    elif position < 0 and max_legal_sell is not None and synthetic > max_legal_sell:
+        required = abs(position) * (synthetic - max_legal_sell)
+    return synthetic, max(required, Decimal("0"))
+
+
+def _leader_transition_kind(prev_pos: Decimal, cur_pos: Decimal) -> str:
+    eps = Decimal("0.01")
+    p0 = abs(prev_pos) < eps
+    c0 = abs(cur_pos) < eps
+    if p0 and c0:
+        return "flat"
+    if p0:
+        return "open_long" if cur_pos > 0 else "open_short"
+    if c0:
+        return "flatten"
+    if prev_pos * cur_pos < 0:
+        return "flip_to_long" if cur_pos > 0 else "flip_to_short"
+    if abs(cur_pos) > abs(prev_pos) + eps:
+        return "increase_long" if cur_pos > 0 else "increase_short"
+    if abs(cur_pos) + eps < abs(prev_pos):
+        return "reduce_long" if cur_pos > 0 else "reduce_short"
+    return "hold_long" if cur_pos > 0 else "hold_short"
+
+
+def _leader_build_path(
+    did: str,
+    pnl_rows: list[dict],
+    pos_by_sweep: dict[int, Decimal],
+    reachability: list[dict],
+    trades: list[dict],
+) -> dict:
+    rows = [dict(x) for x in pnl_rows]
+
+    # Weak position fallback from consecutive PnL snapshots. Published position
+    # remains preferred because trading between snapshots can distort the slope.
+    slope = {}
+    for a, b in zip(rows, rows[1:]):
+        if b["sweep"] != a["sweep"] + 1:
+            continue
+        dmark = b["mark"] - a["mark"]
+        if dmark != 0:
+            slope[b["sweep"]] = (b["score"] - a["score"]) / dmark
+
+    for row in rows:
+        n = int(row["sweep"])
+        if n in pos_by_sweep:
+            position = pos_by_sweep[n]
+            evidence = "published_position"
+        elif n in slope:
+            position = slope[n]
+            evidence = "consecutive_pnl_slope"
+        else:
+            position = None
+            evidence = "missing"
+
+        row["position"] = position
+        row["position_evidence"] = evidence
+        reach = _leader_reach_at_sweep(reachability, n)
+        row["min_legal_buy_seen"] = reach["min_legal_buy_seen"] if reach else None
+        row["max_legal_sell_seen"] = reach["max_legal_sell_seen"] if reach else None
+        if position is not None:
+            synthetic, carry_lb = _leader_min_carry_required(
+                row["score"],
+                row["mark"],
+                position,
+                row["min_legal_buy_seen"],
+                row["max_legal_sell_seen"],
+            )
+            row["synthetic_effective_entry"] = synthetic
+            row["min_realized_carry_required"] = carry_lb
+            row["score_intercept"] = row["score"] - position * row["mark"]
+            if abs(position) < Decimal("0.01"):
+                row["flat_realized_score"] = row["score"]
+        else:
+            row["synthetic_effective_entry"] = None
+            row["min_realized_carry_required"] = None
+            row["score_intercept"] = None
+
+    transitions = []
+    for prev, cur in zip(rows, rows[1:]):
+        if prev.get("position") is None or cur.get("position") is None:
+            continue
+        if cur["sweep"] != prev["sweep"] + 1:
+            continue
+        kind = _leader_transition_kind(prev["position"], cur["position"])
+        hold_expected = (
+            prev["score"]
+            + prev["position"] * (cur["mark"] - prev["mark"])
+        )
+        impact = cur["score"] - hold_expected
+        if kind.startswith("hold") and abs(impact) < Decimal("0.01"):
+            continue
+
+        nearby = []
+        for trade in trades:
+            osweep = trade.get("outcome_sweep")
+            first = trade.get("first_possible_sweep")
+            if osweep == cur["sweep"] or (
+                osweep is None
+                and first is not None
+                and prev["sweep"] < int(first) <= cur["sweep"]
+            ):
+                nearby.append({
+                    "trade_id": trade["trade_id"],
+                    "action": trade["action"],
+                    "signed_qty": trade["signed_qty"],
+                    "px": trade["px"],
+                    "room": trade["room"],
+                    "outcome": trade["outcome"],
+                    "outcome_sweep": trade["outcome_sweep"],
+                })
+
+        transitions.append({
+            "from_sweep": prev["sweep"],
+            "to_sweep": cur["sweep"],
+            "kind": kind,
+            "position_before": prev["position"],
+            "position_after": cur["position"],
+            "delta_position": cur["position"] - prev["position"],
+            "score_before": prev["score"],
+            "score_after": cur["score"],
+            "mark_before": prev["mark"],
+            "mark_after": cur["mark"],
+            "hold_expected_score": hold_expected,
+            "trade_impact_at_current_mark": impact,
+            "min_carry_required_after": cur.get("min_realized_carry_required"),
+            "synthetic_entry_after": cur.get("synthetic_effective_entry"),
+            "nearby_trades": nearby,
+        })
+
+    visible_settled = sum(1 for x in trades if x.get("outcome") == "settled")
+    visible_void = sum(1 for x in trades if x.get("outcome") == "void")
+    not_visible = sum(1 for x in trades if x.get("outcome") == "not_visible")
+    carry_values = [
+        x["min_realized_carry_required"]
+        for x in rows
+        if x.get("min_realized_carry_required") is not None
+    ]
+    flat_values = [
+        x["flat_realized_score"]
+        for x in rows
+        if x.get("flat_realized_score") is not None
+    ]
+
+    return {
+        "did": did,
+        "first_visible_sweep": rows[0]["sweep"] if rows else None,
+        "last_visible_sweep": rows[-1]["sweep"] if rows else None,
+        "snapshot_count": len(rows),
+        "transition_count": len(transitions),
+        "trade_count_found_in_scanned_rooms": len(trades),
+        "trade_outcomes": {
+            "visible_settled": visible_settled,
+            "visible_void": visible_void,
+            "not_visible": not_visible,
+        },
+        "max_min_realized_carry_required": max(carry_values) if carry_values else None,
+        "max_flat_realized_score": max(flat_values) if flat_values else None,
+        "latest_snapshot": rows[-1] if rows else None,
+        "transitions": transitions,
+        "trades": trades,
+        "snapshots": rows,
+    }
+
+
+def cmd_leader_path_replay(args) -> None:
+    state = load_state()
+    pnl = latest_payload("d-close1-pnl", "pnl")
+    pairs = _pnl_pairs(pnl)
+    our_dids = {str(v.get("did")) for v in state.get("keys", {}).values() if v.get("did")}
+    leaders = [
+        {"rank": rank, "did": did, "score": score}
+        for rank, (did, score) in enumerate(pairs, 1)
+        if did not in our_dids
+    ][:max(1, int(args.top))]
+    if not leaders:
+        raise SystemExit("no non-local leaders in public pnl subset")
+
+    targets = {x["did"] for x in leaders}
+    pnl_hist = _leader_pnl_history(targets)
+    pos_hist = _leader_position_history(targets)
+    reachability = _leader_price_reachability()
+    trade_scan = _leader_scan_trades(
+        targets,
+        room_mode=args.rooms,
+        room_limit=max(0, int(args.room_limit)),
+    )
+
+    paths = []
+    for leader in leaders:
+        did = leader["did"]
+        path = _leader_build_path(
+            did,
+            pnl_hist.get(did) or [],
+            pos_hist.get(did) or {},
+            reachability,
+            trade_scan["trades"].get(did) or [],
+        )
+        path["current_public_rank"] = leader["rank"]
+        path["current_public_score"] = leader["score"]
+        paths.append(path)
+
+    report = {
+        "mode": "read_only_leader_path_replay",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "pnl_sweep": pnl.get("n") if isinstance(pnl, dict) else None,
+        "pnl_mark": pnl.get("mark") if isinstance(pnl, dict) else None,
+        "leaders_requested": len(leaders),
+        "room_scan": {
+            "mode": trade_scan["room_mode"],
+            "rooms_discovered": trade_scan["rooms_discovered"],
+            "rooms_scanned_count": len(trade_scan["rooms_scanned"]),
+            "rooms_failed": trade_scan["rooms_failed"],
+        },
+        "method_note": (
+            "Published PnL/positions are authoritative snapshots. "
+            "consecutive_pnl_slope is weaker position evidence. "
+            "min_realized_carry_required is a conservative mathematical lower "
+            "bound from historical legal quote limits, not a full cash-ledger replay. "
+            "Trade outcomes missing from compact flow remain not_visible."
+        ),
+        "leaders": paths,
+    }
+    print(json.dumps(report, indent=2, default=str))
+
+
+def cmd_leader_path_summary(args) -> None:
+    state = load_state()
+    pnl = latest_payload("d-close1-pnl", "pnl")
+    pairs = _pnl_pairs(pnl)
+    our_dids = {str(v.get("did")) for v in state.get("keys", {}).values() if v.get("did")}
+    leaders = [
+        {"rank": rank, "did": did, "score": score}
+        for rank, (did, score) in enumerate(pairs, 1)
+        if did not in our_dids
+    ][:max(1, int(args.top))]
+    targets = {x["did"] for x in leaders}
+    pnl_hist = _leader_pnl_history(targets)
+    pos_hist = _leader_position_history(targets)
+    reachability = _leader_price_reachability()
+    trade_scan = _leader_scan_trades(
+        targets,
+        room_mode=args.rooms,
+        room_limit=max(0, int(args.room_limit)),
+    )
+
+    print(
+        "rank,did,current_score,latest_position,latest_position_evidence,"
+        "synthetic_entry,min_realized_carry_required,max_min_carry_required,"
+        "max_flat_realized_score,transitions,trades_found,visible_settled,"
+        "visible_void,not_visible"
+    )
+    for leader in leaders:
+        did = leader["did"]
+        path = _leader_build_path(
+            did,
+            pnl_hist.get(did) or [],
+            pos_hist.get(did) or {},
+            reachability,
+            trade_scan["trades"].get(did) or [],
+        )
+        latest = path.get("latest_snapshot") or {}
+        outcomes = path["trade_outcomes"]
+        print(
+            leader["rank"],
+            did,
+            leader["score"],
+            latest.get("position"),
+            latest.get("position_evidence"),
+            latest.get("synthetic_effective_entry"),
+            latest.get("min_realized_carry_required"),
+            path.get("max_min_realized_carry_required"),
+            path.get("max_flat_realized_score"),
+            path.get("transition_count"),
+            path.get("trade_count_found_in_scanned_rooms"),
+            outcomes["visible_settled"],
+            outcomes["visible_void"],
+            outcomes["not_visible"],
+            sep=",",
+        )
+
+
 def cmd_progress(_args) -> None:
     state = load_state()
     pr = fresh_price(max_age=10**9)
@@ -6466,6 +7018,28 @@ def main() -> None:
     p.add_argument("--sample", type=int, default=400, help="recent close1 messages to inspect")
     p.add_argument("--pnl", type=int, default=12, help="recent pnl snapshots to inspect")
     p.set_defaults(fn=cmd_competitor_scan)
+
+    p = sp.add_parser("leader-path-replay")
+    p.add_argument("--top", type=int, default=8, help="current non-local leaders to reconstruct")
+    p.add_argument(
+        "--rooms",
+        choices=("public", "registered"),
+        default="registered",
+        help="scan only close1 or all rooms ever listed by the referee",
+    )
+    p.add_argument(
+        "--room-limit",
+        type=int,
+        default=0,
+        help="optional cap on registered rooms scanned; 0 means all",
+    )
+    p.set_defaults(fn=cmd_leader_path_replay)
+
+    p = sp.add_parser("leader-path-summary")
+    p.add_argument("--top", type=int, default=8)
+    p.add_argument("--rooms", choices=("public", "registered"), default="registered")
+    p.add_argument("--room-limit", type=int, default=0)
+    p.set_defaults(fn=cmd_leader_path_summary)
 
     p = sp.add_parser("gate")
     p.set_defaults(fn=cmd_gate)
