@@ -276,13 +276,13 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **30 / 7,106**
-- classification_before: `MRaCM1W9xxt3r2UGZqi5PS4y3kLL3r5Ra1FG63pAB9A6uLjCRzYcAaA9JUrkc98hRGgxEwAgcb6SjziXWzryNQo`
-- classification_oldest_time: **2026-09-28T21:37:09Z / 2026-09-29 04:37:09 Asia/Bangkok**
-- active_swaps_verified: **0**
-- passive_filtered: **30**
+- classified_signature_count: **42 / 7,106**
+- classification_before: `4jJDhVLMj3TbtzKfYE2u7QRV5fzUzW9Wavm6jLVQFhjQxCr21GhkjAZpYmS9Rb6KmKb5HTiYUjG3VXLaapRLt41x`
+- classification_oldest_time: **2026-09-28T20:35:46Z / 2026-09-29 03:35:46 Asia/Bangkok**
+- active_swaps_verified: **10**
+- passive_filtered: **32**
 - unresolved_tx_count: **0**
-- unique_active_tokens: **0**
+- unique_active_tokens: **1**
 
 First five classifications:
 1. `5TCVznw...` 2026-09-29T05:44:13Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
@@ -352,5 +352,32 @@ Classification notes:
 - several third-party token-account creations / token or native transfers credited Frank-owned accounts while Frank was not signer;
 - pump-style paths including `3bUrntKX...` and nearby signatures contained buy/transfer mechanics but payer/authority was third-party and no Frank quote-asset debit was verified, so they remain passive receipts under the frozen active-swap rule;
 - no unresolved possible Frank active swap remained in this chunk.
+
+No signature was skipped. Live Frank state was not modified.
+
+
+## PHASE 2 manual acceleration checkpoint — active CARDS cluster to 42/7,106
+
+Processed the next 12 signatures continuously after `MRaCM1W9...`.
+
+Results:
+- processed_this_chunk: **12**
+- active_swaps_verified_this_chunk: **10**
+- passive_filtered_this_chunk: **2**
+- unresolved_this_chunk: **0**
+- new_durable_count: **42 / 7,106**
+- cumulative_active_swaps_verified: **10**
+- cumulative_passive_filtered: **32**
+- cumulative_unique_active_tokens: **1**
+- active_token: `CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp`
+- new_classification_before: `4jJDhVLMj3TbtzKfYE2u7QRV5fzUzW9Wavm6jLVQFhjQxCr21GhkjAZpYmS9Rb6KmKb5HTiYUjG3VXLaapRLt41x`
+
+Evidence summary:
+- `35s2Y8...` and `31Vu4Z...`: third-party create/transfer style activity, Frank not signer => PASSIVE.
+- `4L6XLs...` and `3YD1nP...`: Frank-authorized CARDS outflow from Frank-owned CARDS account `Ha6Rm6...` into DEX/pool routes, with quote-asset pool flows => ACTIVE SELL CARDS.
+- `4T4EMT...`, `3f3GMV...`, `27Mwfi...`, `5LHrHq...`, `3UNWgz...`, `48dgv1...`, `3vcg68...`, `4jJDhV...`: Frank-authorized USDC outflow from Frank-owned USDC account `6kD22o...` through Raydium/Meteora/Jupiter pool routes with CARDS inflow/route evidence => ACTIVE BUY CARDS.
+- The Jupiter transaction `27Mwfi...` contains RouteV2 and Swap logs; the surrounding direct pool routes show the same CARDS accumulation episode.
+- These are active DEX/pool value exchanges, distinct from the earlier DepositToken management operations.
+- Later PHASE 3/HFT logic will decide whether this rapid CARDS execution cluster is HFT_EXECUTION, WATCH, or eligible for any historical alert stage.
 
 No signature was skipped. Live Frank state was not modified.
