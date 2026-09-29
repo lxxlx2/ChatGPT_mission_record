@@ -266,3 +266,20 @@ If a material CEX security candidate appears, verify with official support/excha
 Do not repeat unchanged security conclusions. Re-surface an incident only for a material lifecycle transition such as official acknowledgement, changed loss amount, confirmed root cause, new victims/systemic evidence, compensation/reimbursement confirmation or official resolution. Critical unresolved incidents may be carried forward as one concise ongoing/no-material-change line.
 
 Hourly freshness target is the next successful scheduled cycle after an incident becomes searchable. External indexing/provider outages can delay discovery; the audit must record source availability rather than claim real-time completeness.
+
+
+## Formal resend / correction completeness — 2026-09-29
+
+Any user-facing resend, recovery resend, correction, or superseding Crypto Daily edition MUST contain the complete REPORT_SPEC fixed 13-section formal report. A short patch, abbreviated digest, or security-only supplement cannot replace the final formal daily report when the user asks for a resend/correction of the daily report.
+
+For every formal resend:
+1. read the latest REPORT_SPEC and the most recent complete formal report;
+2. aggregate the same required 24h inputs as normal formal delivery, including security carry-forward and active private-market rights;
+3. refresh material time-sensitive market/security facts;
+4. render all 13 fixed sections in order;
+5. Gmail send + readback;
+6. archive the exact Gmail body to the canonical daily GitHub path;
+7. GitHub readback and body-equality check;
+8. mark earlier incomplete/superseded versions in metadata.
+
+GitHub failure must not cause an abbreviated Gmail. A short correction notice may exist only in addition to, not in place of, a complete formal resend when the user requests the full daily report again.
