@@ -1,6 +1,6 @@
 # Crypto Research Migration Map
 
-Updated: 2026-09-26
+Updated: 2026-09-29
 Status: staged migration, monitoring compatibility preserved
 
 This map decides where existing mixed Mission content belongs. It does not require immediate deletion of operational files.
@@ -32,6 +32,7 @@ This map decides where existing mixed Mission content belongs. It does not requi
 | `watchlists/nft-mint-radar.md` | Monitoring/NFT | none required | keep machine radar in watchlists |
 | `watchlists/robinhood-fomo-mev.md` | Token/model | `research/tokens/robinhood-fomo-mev/` | compact machine thresholds remain operational |
 | `watchlists/saga-squeeze-cycle.md` | Token | `research/tokens/saga/` | separate long-form token thesis from machine state later |
+| `watchlists/standx-tge.md` | Project / TGE | `research/projects/standx/standx-development-tge.md` | canonical research created; keep operational compatibility path and reduce it only after reference/monitor validation |
 
 ## Frameworks
 
