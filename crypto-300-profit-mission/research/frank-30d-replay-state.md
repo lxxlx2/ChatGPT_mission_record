@@ -276,11 +276,11 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **20 / 7,106**
-- classification_before: `VHmsBs1WrJG4LUZEmFAQzyn4KPQW3246wkiXBFWg6DTJgRy3zjDGjA3nNFS3DhucmxqcH6xRNxyvw6h4VDAmGBu`
-- classification_oldest_time: **2026-09-28T22:23:30Z / 2026-09-29 05:23:30 Asia/Bangkok**
+- classified_signature_count: **30 / 7,106**
+- classification_before: `MRaCM1W9xxt3r2UGZqi5PS4y3kLL3r5Ra1FG63pAB9A6uLjCRzYcAaA9JUrkc98hRGgxEwAgcb6SjziXWzryNQo`
+- classification_oldest_time: **2026-09-28T21:37:09Z / 2026-09-29 04:37:09 Asia/Bangkok**
 - active_swaps_verified: **0**
-- passive_filtered: **20**
+- passive_filtered: **30**
 - unresolved_tx_count: **0**
 - unique_active_tokens: **0**
 
@@ -333,5 +333,24 @@ Observed classes in this chunk:
 - third-party ATA/token-account creation and token/native transfers involving Frank-owned accounts where Frank was not signer: passive.
 - third-party pump-style transfer paths that created/credited a Frank-owned token account without Frank quote-asset spend or signer authority: passive receipt, not BUY.
 - no ambiguous possible active swap remained unresolved.
+
+No signature was skipped. Live Frank state was not modified.
+
+
+## PHASE 2 manual acceleration checkpoint — next continuous 10 to 30/7,106
+
+Results:
+- processed_this_chunk: **10**
+- active_swaps_verified_this_chunk: **0**
+- passive_filtered_this_chunk: **10**
+- unresolved_this_chunk: **0**
+- new_durable_count: **30 / 7,106**
+- new_classification_before: `MRaCM1W9xxt3r2UGZqi5PS4y3kLL3r5Ra1FG63pAB9A6uLjCRzYcAaA9JUrkc98hRGgxEwAgcb6SjziXWzryNQo`
+
+Classification notes:
+- multiple Frank-signed USDC `DepositToken` operations were passive fund-management actions;
+- several third-party token-account creations / token or native transfers credited Frank-owned accounts while Frank was not signer;
+- pump-style paths including `3bUrntKX...` and nearby signatures contained buy/transfer mechanics but payer/authority was third-party and no Frank quote-asset debit was verified, so they remain passive receipts under the frozen active-swap rule;
+- no unresolved possible Frank active swap remained in this chunk.
 
 No signature was skipped. Live Frank state was not modified.
