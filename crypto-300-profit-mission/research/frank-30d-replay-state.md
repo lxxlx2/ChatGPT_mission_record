@@ -276,11 +276,11 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **110 / 7,106**
-- classification_before: `drF7NwRDtZLgCbCKHtZxkY9GzLRqapUNPA3BhE65B4Uxr8U7YXyU1mJr9XhExqjogjzC15ZCaPWk9tHwnXHz8UB`
-- classification_oldest_time: **2026-09-28T14:32:55Z / 2026-09-28 21:32:55 Asia/Bangkok**
+- classified_signature_count: **120 / 7,106**
+- classification_before: `5r7vPatBEjgqC7p19i8G9HLWe4W22wRHqWh7XCQyBZGcaMZ2cUeYcE3YKNSnWv5ygrxLWtvQMP3LVZVQaH1DFrfR`
+- classification_oldest_time: **2026-09-28T13:16:20Z / 2026-09-28 20:16:20 Asia/Bangkok**
 - active_swaps_verified: **26**
-- passive_filtered: **84**
+- passive_filtered: **94**
 - unresolved_tx_count: **0**
 - unique_active_tokens: **14**
 
@@ -481,3 +481,8 @@ Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved
 ## PHASE 2 checkpoint 110/7,106
 
 Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved. All ten are third-party Token/Token-2022 transfer or ATA activity with no verified Frank signer/authority DEX value exchange. No live state modified.
+
+
+## PHASE 2 checkpoint 120/7,106
+
+Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved. One transaction (`4d6YujSq...`) contains a pump-style Buy instruction and creates/credits a Frank-owned token account, but Frank is not signer/authority and no Frank quote-asset debit is verified, so it remains a third-party/passive receipt under the frozen rule. The other nine are third-party transfer/ATA activity. No live state modified.
