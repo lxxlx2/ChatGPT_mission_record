@@ -24,7 +24,8 @@ last_chunk_active: 0
 last_chunk_passive: 10
 last_chunk_unresolved: 0
 last_chunk_note: checkpoint imported from frank-30d-replay-state.md at 180/7106
-updated_at_bkk: 2026-09-29 19:49
+updated_at_bkk: 2026-09-29 19:50
+existing_file_update_probe: PASS
 
 ## Persistence contract
 - This file is the only scheduled-run PHASE 2 checkpoint.
