@@ -27,6 +27,9 @@ class V41StrategyLabTests(unittest.TestCase):
         samples = self.samples()
         first = c._v41_stress_band(samples, 1)
         last = c._v41_stress_band(samples, 8)
+        self.assertEqual(first["low_q"], Decimal("0.40"))
+        self.assertEqual(first["high_q"], Decimal("0.60"))
+        self.assertLess(first["low_move"], first["high_move"])
         self.assertGreaterEqual(first["low_move"], last["low_move"])
         self.assertLessEqual(first["high_move"], last["high_move"])
 
@@ -74,6 +77,26 @@ class V41StrategyLabTests(unittest.TestCase):
         self.assertIn("proposed_v41", report)
         self.assertEqual(report["current_v4"]["samples"], 24)
         self.assertEqual(report["proposed_v41"]["samples"], 24)
+        self.assertIn(
+            "best_long_score_if_final_ref_plus_10pct",
+            report["proposed_v41"],
+        )
+        self.assertIn(
+            "best_short_score_if_final_ref_minus_10pct",
+            report["proposed_v41"],
+        )
+
+    def test_feeder_leg2_funds_check_does_not_credit_close_proceeds_early(self):
+        # Official Fold.check evaluates cash before Account.apply. When leg 2
+        # only closes the feeder's existing short, the feeder needs fee cash,
+        # not pre-credited close proceeds.
+        low = Decimal("95")
+        high = Decimal("101")
+        close = Decimal("100")
+        qty = Decimal("50")
+        sim = c._v41_simulate_pair(low, high, qty, qty, close)
+        self.assertTrue(sim["long_settled"])
+        self.assertTrue(sim["short_settled"])
 
 
 if __name__ == "__main__":
