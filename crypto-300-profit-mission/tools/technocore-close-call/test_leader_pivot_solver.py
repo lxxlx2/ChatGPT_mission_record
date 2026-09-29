@@ -130,6 +130,65 @@ class LeaderPivotSolverTests(unittest.TestCase):
             "published_position",
         )
 
+
+    def test_direct_flip_can_be_ruled_out_by_pre_cash_upper_bound(self):
+        row = self.price_row(applied="228.36", close="228.49")
+        pre = {
+            "score": Decimal("749.24"),
+            "mark": Decimal("229.07"),
+            "position": Decimal("-43.57142857142857"),
+            "position_evidence": "consecutive_pnl_slope",
+        }
+        target = {
+            "score": Decimal("790.87"),
+            "mark": Decimal("228.85"),
+            "position": Decimal("46.07"),
+            "position_evidence": "published_position",
+        }
+        result = c._leader_direct_flip_candidate(
+            row,
+            pre,
+            target,
+            pre_cash_upper_bound=Decimal("2300"),
+        )
+        self.assertEqual(
+            result["funds_feasibility"],
+            "impossible_from_cash_upper_bound",
+        )
+
+    def test_two_step_reports_open_feasibility_and_implied_short_qty(self):
+        pre = {
+            "score": Decimal("749.24"),
+            "mark": Decimal("229.07"),
+            "position": Decimal("-43.57142857142857142857142857"),
+            "position_evidence": "consecutive_pnl_slope",
+        }
+        target = {
+            "score": Decimal("790.87"),
+            "mark": Decimal("228.85"),
+            "position": Decimal("46.07"),
+            "position_evidence": "published_position",
+        }
+        close_row = self.price_row(sweep="959", applied="228.56", close="228.26")
+        open_row = self.price_row(sweep="960", applied="228.26", close="228.76")
+        result = c._leader_two_step_pivot_candidate(
+            close_row,
+            open_row,
+            pre,
+            target,
+            pre_cash_upper_bound=Decimal("2300"),
+        )
+        self.assertTrue(result["open_funds_feasible_after_close"])
+        self.assertGreater(
+            result["flat_cash_after_close"],
+            result["cash_required_before_open"],
+        )
+        self.assertAlmostEqual(
+            float(result["implied_pre_short_qty_to_match_target"]),
+            46.2761728395,
+            places=6,
+        )
+
     def test_two_step_returns_observed_gap(self):
         pre = {
             "score": Decimal("749.24"),
