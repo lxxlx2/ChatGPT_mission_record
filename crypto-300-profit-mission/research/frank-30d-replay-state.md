@@ -276,11 +276,11 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **130 / 7,106**
-- classification_before: `2u88443LrZKaGPxJz3yiT3iMTpPcU2LgrxG8AW8Y9QnisThQwkW63iUoHtxQQFQeq6TzSRDTgLZEgQmFYVHs2fyu`
-- classification_oldest_time: **2026-09-28T12:05:07Z / 2026-09-28 19:05:07 Asia/Bangkok**
+- classified_signature_count: **140 / 7,106**
+- classification_before: `nffQ6NFwD3RSsVHGv5i3EkPcX1w52DCXxvFkZDySFViBhq2n6NNUQzqN5GE5LzyD14jmof1v1Jac5PKg1kt7vqu`
+- classification_oldest_time: **2026-09-28T11:31:21Z / 2026-09-28 18:31:21 Asia/Bangkok**
 - active_swaps_verified: **26**
-- passive_filtered: **104**
+- passive_filtered: **114**
 - unresolved_tx_count: **0**
 - unique_active_tokens: **14**
 
@@ -491,3 +491,8 @@ Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved
 ## PHASE 2 checkpoint 130/7,106
 
 Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved. All ten are third-party transfer/receipt activity with no verified Frank signer/authority DEX value exchange. No live state modified.
+
+
+## PHASE 2 checkpoint 140/7,106
+
+Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved. `cdMW1e3W...` is a Frank-signed USDC `DepositToken` management action; the other nine are third-party transfer activity with no verified Frank DEX/pool value exchange. No live state modified.
