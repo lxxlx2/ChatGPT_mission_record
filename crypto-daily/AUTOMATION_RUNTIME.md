@@ -247,7 +247,7 @@ Ordinary hourly runs no longer need every specialist security family in every ho
 Each hour:
 - run one broad breaking-security / impersonation discovery pass;
 - check official source for any candidate;
-- rotate specialist source families so full specialist coverage is restored over a 4-hour window.
+- rotate specialist source families so full specialist coverage is restored within a 3-hour window; the major-CEX account-security fast lane still runs every hour.
 
 At 08:00/09:00 daily preparation, aggregate the previous 24h receipts and fresh-verify all carried material candidates.
 
