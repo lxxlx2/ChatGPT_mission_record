@@ -5072,12 +5072,13 @@ def _leader_two_step_pivot_candidate(
     }
 
 
-def _leader_pivot_solve_report(
+def _leader_select_pivot_subject(
     state: dict,
     rank: int,
-    from_sweep: int,
     target_sweep: int,
+    did_override: str | None = None,
 ) -> dict:
+    """Choose a stable historical pivot subject while live ranks keep moving."""
     pnl = latest_payload("d-close1-pnl", "pnl")
     pairs = _pnl_pairs(pnl)
     our_dids = {
@@ -5090,16 +5091,75 @@ def _leader_pivot_solve_report(
         for r, (did, score) in enumerate(pairs, 1)
         if did not in our_dids
     ]
-    if rank < 1 or rank > len(leaders):
-        raise ValueError(f"rank {rank} outside visible non-local leaders")
+    if not leaders:
+        raise ValueError("no visible non-local leaders")
 
-    leader = leaders[rank - 1]
-    did = leader["did"]
-    pnl_hist = _leader_pnl_history({did})[did]
-    pos_hist = _leader_position_history({did})[did]
+    if did_override:
+        chosen = next((x for x in leaders if x["did"] == did_override), None)
+        if chosen is None:
+            chosen = {"rank": None, "did": did_override, "score": None}
+        candidates = [chosen]
+        base_mode = "explicit_did"
+    else:
+        if rank < 1 or rank > len(leaders):
+            raise ValueError(f"rank {rank} outside visible non-local leaders")
+        primary = leaders[rank - 1]
+        candidates = [primary] + [x for x in leaders if x["did"] != primary["did"]]
+        base_mode = "current_rank"
 
+    diagnostics = []
+    for index, candidate in enumerate(candidates):
+        did = candidate["did"]
+        pnl_hist = _leader_pnl_history({did})[did]
+        pos_hist = _leader_position_history({did})[did]
+        target = _leader_pivot_snapshot(pnl_hist, pos_hist, target_sweep)
+        diag = {
+            "did": did,
+            "current_rank": candidate.get("rank"),
+            "current_score": candidate.get("score"),
+            "target_snapshot_sweep": target.get("sweep") if target else None,
+            "target_position_evidence": target.get("position_evidence") if target else None,
+            "has_target_pnl": bool(target is not None and int(target["sweep"]) == int(target_sweep)),
+            "has_target_published_position": bool(
+                target is not None
+                and int(target["sweep"]) == int(target_sweep)
+                and target.get("position_evidence") == "published_position"
+            ),
+        }
+        diagnostics.append(diag)
+        if diag["has_target_pnl"] and diag["has_target_published_position"]:
+            mode = base_mode
+            if not did_override and index > 0:
+                mode = "fallback_highest_current_rank_with_target_published_position"
+            return {
+                "leader": candidate,
+                "pnl_hist": pnl_hist,
+                "pos_hist": pos_hist,
+                "target": target,
+                "selection_mode": mode,
+                "selection_diagnostics": diagnostics,
+            }
+        if did_override:
+            break
+
+    detail = json.dumps(diagnostics[:12], default=str)
+    raise ValueError("no selected leader has a published target-sweep position; diagnostics=" + detail)
+
+def _leader_pivot_solve_report(
+    state: dict,
+    rank: int,
+    from_sweep: int,
+    target_sweep: int,
+    did_override: str | None = None,
+) -> dict:
+    subject = _leader_select_pivot_subject(
+        state, rank, target_sweep, did_override=did_override
+    )
+    leader = subject["leader"]
+    pnl_hist = subject["pnl_hist"]
+    pos_hist = subject["pos_hist"]
+    target = subject["target"]
     pre = _leader_pivot_snapshot(pnl_hist, pos_hist, from_sweep)
-    target = _leader_pivot_snapshot(pnl_hist, pos_hist, target_sweep)
     if pre is None or target is None:
         raise ValueError("missing pre or target PnL snapshot")
     if int(target["sweep"]) != int(target_sweep):
@@ -5159,6 +5219,8 @@ def _leader_pivot_solve_report(
     return {
         "mode": "read_only_leader_pivot_solver",
         "leader": leader,
+        "subject_selection_mode": subject["selection_mode"],
+        "subject_selection_diagnostics": subject["selection_diagnostics"],
         "pre_snapshot": pre,
         "target_snapshot": target,
         "price_window": price_rows,
@@ -5170,6 +5232,9 @@ def _leader_pivot_solve_report(
         "direct_flip_candidates": direct,
         "close_then_open_candidates": two_step,
         "method_note": (
+            "Current ranks can change while the contest is live. The solver may "
+            "fall back to the highest-current-ranked visible DID with a published "
+            "target-sweep position. Use --did to pin an exact DID. "
             "The pre-snapshot position may be consecutive_pnl_slope evidence and "
             "is therefore weak. Target position must be published_position. "
             "Buyer fees use the official 1%/clawback max rule. Candidate prices "
@@ -5179,7 +5244,6 @@ def _leader_pivot_solve_report(
             "full authoritative feasibility proof."
         ),
     }
-
 
 def cmd_leader_pivot_solve(args) -> None:
     report = _leader_pivot_solve_report(
