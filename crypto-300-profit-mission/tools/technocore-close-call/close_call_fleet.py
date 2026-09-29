@@ -6545,6 +6545,7 @@ def _counterparty_redeploy_scan(
     competitor = _v42_competitor_model(state, s_grid)
     podium = [competitor["podium"][x] for x in s_grid]
 
+    by_name = {a["account"]: a for a in accounts}
     baseline_by_account = {
         a["account"]: [
             _redeploy_baseline_score(a, final_s)
@@ -6660,12 +6661,8 @@ def _counterparty_redeploy_scan(
                 if len({target_name, donor_a_name, donor_b_name}) != 3:
                     continue
 
-                donor_a = next(
-                    a for a in accounts if a["account"] == donor_a_name
-                )
-                donor_b = next(
-                    a for a in accounts if a["account"] == donor_b_name
-                )
+                donor_a = by_name[donor_a_name]
+                donor_b = by_name[donor_b_name]
                 excluded = {target_name, donor_a_name, donor_b_name}
                 other_frontier = _cp_other_frontier_from_top(
                     top_rows, excluded
