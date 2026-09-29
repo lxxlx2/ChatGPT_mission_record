@@ -5055,7 +5055,10 @@ def _leader_two_step_pivot_candidate(
     target_pos = target.get("position")
     if pre_pos is None or target_pos is None or pre_pos >= 0 or target_pos <= 0:
         return None
-    if int(open_row["sweep"]) <= int(close_row["sweep"]):
+    # The official fold applies trades sequentially inside one sweep, so a
+    # close-short trade may release cash before a later open-long trade in that
+    # same sweep. Only open-before-close sweep order is invalid.
+    if int(open_row["sweep"]) < int(close_row["sweep"]):
         return None
 
     short_qty = abs(Decimal(str(pre_pos)))
@@ -5118,6 +5121,7 @@ def _leader_two_step_pivot_candidate(
         "mode": "close_then_open",
         "close_sweep": close_row["sweep"],
         "open_sweep": open_row["sweep"],
+        "same_sweep_ordered": int(open_row["sweep"]) == int(close_row["sweep"]),
         "pre_position": pre_pos,
         "pre_position_evidence": pre.get("position_evidence"),
         "target_position": target_pos,
@@ -5324,9 +5328,10 @@ def _leader_pivot_solve_report(
             "where they can be derived, but hidden lot/cash history prevents a "
             "full authoritative feasibility proof. Direct-flip funds are now "
             "checked against a conservative pre-cash upper bound from the "
-            "historical legal short-entry floor. Two-step paths report exact "
-            "flat cash after closing and whether the later long-open funds check "
-            "would pass under the modeled path."
+            "historical legal short-entry floor. Close-then-open paths may use "
+            "two sequential trades in the same sweep because the official fold "
+            "checks/applies trades in order. They report exact flat cash after "
+            "the close and whether the subsequent long-open funds check passes."
         ),
     }
 
