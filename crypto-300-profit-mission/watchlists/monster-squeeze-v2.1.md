@@ -213,3 +213,16 @@ At 19:29 persist a GitHub coverage report even when zero IGNITION/EXHAUSTION:
 `crypto-300-profit-mission/reports/monster/YYYY/YYYY-MM/YYYY-MM-DD.md`
 
 The existing 19:29 factual Gmail/ChatGPT summary remains unchanged.
+
+
+## Efficient deep-check data plan — 2026-09-29
+
+To reduce scheduler timeouts while preserving V2.1:
+- use all-symbol 24h ticker once;
+- use all-symbol mark/funding once when needed;
+- per deep-check symbol use 1h kline + OI history as the default;
+- derive 3h taker-buy share from kline total volume and taker-buy volume fields where available;
+- dedicated taker-volume/top-trader calls are late-stage confirmation calls, not mandatory for obvious early rejection.
+
+An early rejection is valid only when the already-fetched metrics prove a frozen V2.1 gate cannot pass.
+Do not label a candidate IGNITION until every required IGNITION metric has been obtained.
