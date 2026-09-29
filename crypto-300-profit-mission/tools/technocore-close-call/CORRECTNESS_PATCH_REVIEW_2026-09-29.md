@@ -62,9 +62,14 @@ Stable IDs are generated for:
 - V5a staged closes
 - V5b open/close legs
 
-Goal: if HTTP submission succeeds and the process crashes before local state is
-saved, a retry reuses the same logical ID instead of creating a second distinct
-trade.
+Goal: reduce accidental duplicate logical trades by making IDs stable for the
+same strategy action.
+
+Important limitation: this is not yet a full write-ahead exactly-once protocol.
+A retry that is recomputed as a different logical action (for example on a later
+sweep) can still receive a different ID. Reviewers should treat a durable
+pre-send intent/WAL as a separate follow-up if stronger crash guarantees are
+required.
 
 ### 5. V4 execution priority
 
