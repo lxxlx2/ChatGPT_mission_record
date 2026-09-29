@@ -4617,10 +4617,10 @@ def _leader_build_path(
         row["min_legal_buy_seen"] = reach["min_legal_buy_seen"] if reach else None
         row["max_legal_sell_seen"] = reach["max_legal_sell_seen"] if reach else None
         row["best_effective_long_cost_seen"] = (
-            reach["best_effective_long_cost_seen"] if reach else None
+            reach.get("best_effective_long_cost_seen") if reach else None
         )
         row["best_effective_short_sale_seen"] = (
-            reach["best_effective_short_sale_seen"] if reach else None
+            reach.get("best_effective_short_sale_seen") if reach else None
         )
 
         if position is not None:
