@@ -1278,3 +1278,23 @@ The dashboard now reports:
 This is intentionally shown alongside, not instead of, the existing static prize-line target. The relative target is conditional and automatically recalculates if the public leader position changes.
 
 Commit: `8ca5e2608b04b127be56a85cecd12cf2a0c3ebc8`.
+
+
+## 2026-09-29 — Dashboard heartbeat false-positive diagnosed
+
+Evidence from the local runtime/log:
+- LaunchAgent process remained running;
+- Dense V4 continued submitting batches through sweep 1090;
+- V5b scheduler heartbeat also reached sweep 1090;
+- therefore the red dashboard state was a health-display false positive, not an autopilot outage.
+
+Root cause:
+- dashboard treated `autopilot.last_seen_at > 180s` as fatal even while Dense work for the current referee sweep was still progressing;
+- long V4/V5 processing can delay persistence of that generic heartbeat field.
+
+Dashboard health logic now suppresses the false alarm whenever Dense progress is current:
+- uses `last_v4_sweep` and `v5b_last_check.sweep`;
+- if either is at current referee sweep or only one sweep behind, the dashboard remains healthy even if the generic heartbeat timestamp is older than 180s;
+- a stale generic heartbeat still raises an alarm when Dense sweep progress is also stale.
+
+Commit: `73378b040ee87d186ced942d85b9e41e8cef0c43`.
