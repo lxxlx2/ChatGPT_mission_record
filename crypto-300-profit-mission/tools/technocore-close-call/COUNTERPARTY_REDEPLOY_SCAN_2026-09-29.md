@@ -183,3 +183,32 @@ counterparty-scan full: ...
 ```
 
 so a long search should no longer look frozen.
+
+
+## Ex-ante sizing correction
+
+The first real scanner output exposed an important research flaw: the second-leg
+short quantity was being recomputed separately for each historical settlement
+close. That uses information unavailable when a real trade is submitted.
+
+The scanner now removes that lookahead.
+
+For each candidate trio it first derives one fixed second-leg quantity:
+
+```text
+fixed_leg2_qty
+  = minimum feasible leg-2 cap across the declared close stress set
+```
+
+Quick ranking uses one fixed quantity across its P10/P50/P90 close samples.
+
+Every full finalist is then re-sized again using one fixed quantity across all
+retained historical close samples, normally 576, and that same quantity is used
+for every replayed close.
+
+The exact trio replay command also uses a fixed quantity across all retained
+close samples.
+
+This correction can materially reduce the apparent coverage improvement from
+the earlier adaptive-quantity output, so earlier coverage numbers must not be
+treated as production-valid until rerun with this version.
