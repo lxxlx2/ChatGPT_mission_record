@@ -32,7 +32,7 @@ Default lookback: 576 sweeps.
 ## Eight-copy proposal
 
 \`\`\`text
-copy 1: 50.0% .. 50.0%   median point, aggressive
+copy 1: 40.0% .. 60.0%   narrow core band, aggressive
 copy 2: 25.0% .. 75.0%
 copy 3: 15.0% .. 85.0%
 copy 4:  9.0% .. 91.0%
@@ -42,7 +42,7 @@ copy 7:  0.5% .. 99.5%
 copy 8:  0.0% .. 100.0%  full observed range
 \`\`\`
 
-Copy 1 intentionally keeps an aggressive ticket. Later copies trade some quantity for wider empirical survival coverage.
+Copy 1 intentionally keeps an aggressive ticket while covering a narrow empirical core instead of a single median point. Later copies trade some quantity for wider empirical survival coverage.
 
 ## Long
 
@@ -150,3 +150,25 @@ external review
 -> compare current V4 vs V4.1
 -> only if clearly better, prepare a small production integration patch
 \`\`\`
+
+
+## External review note: feeder leg-2 cash semantics
+
+One review suggested crediting feeder close proceeds before the leg-2 funds check.
+That would diverge from the official fold.
+
+The official implementation calls `check()` before `apply()`. For a feeder
+buy that closes its existing short, `Account.opening(+1, qty)` is zero for the
+closing portion, so the pre-settlement funds check requires only the taker fee
+for that portion. The collateral/PnL release occurs later in `Account.apply()`.
+
+Therefore V4.1 intentionally does **not** add close proceeds to feeder cash before
+the leg-2 funds check. A comment and regression test now document this ordering.
+
+## External review round 1 adjustments
+
+- copy 1 changed from `50/50` to `40/60`;
+- backtest now reports standardized ±5% and ±10% final-S scenarios;
+- final-S rows now expose per-leg evidence mode:
+  `visible_settled` or `local_reconstruction`;
+- the strategy remains read-only and is still not connected to autopilot.
