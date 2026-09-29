@@ -5251,6 +5251,7 @@ def cmd_leader_pivot_solve(args) -> None:
         int(args.rank),
         int(args.from_sweep),
         int(args.target_sweep),
+        did_override=(args.did or None),
     )
     print(json.dumps(report, indent=2, default=str))
 
@@ -5261,7 +5262,9 @@ def cmd_leader_pivot_summary(args) -> None:
         int(args.rank),
         int(args.from_sweep),
         int(args.target_sweep),
+        did_override=(args.did or None),
     )
+    print("subject_selection_mode:", report["subject_selection_mode"])
     print("leader_rank:", report["leader"]["rank"])
     print("leader_did:", report["leader"]["did"])
     print("pre_snapshot:", json.dumps(report["pre_snapshot"], default=str))
@@ -7538,12 +7541,14 @@ def main() -> None:
 
     p = sp.add_parser("leader-pivot-solve")
     p.add_argument("--rank", type=int, default=1)
+    p.add_argument("--did", type=str, default="")
     p.add_argument("--from-sweep", type=int, default=956)
     p.add_argument("--target-sweep", type=int, default=960)
     p.set_defaults(fn=cmd_leader_pivot_solve)
 
     p = sp.add_parser("leader-pivot-summary")
     p.add_argument("--rank", type=int, default=1)
+    p.add_argument("--did", type=str, default="")
     p.add_argument("--from-sweep", type=int, default=956)
     p.add_argument("--target-sweep", type=int, default=960)
     p.set_defaults(fn=cmd_leader_pivot_summary)
