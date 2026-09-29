@@ -5804,6 +5804,490 @@ def cmd_realize_redeploy_summary(args) -> None:
 
 
 
+
+
+def _cp_state_from_account(account: dict) -> dict:
+    signed_qty = (
+        Decimal(str(account["qty"]))
+        if account["side"] == "long"
+        else -Decimal(str(account["qty"]))
+    )
+    return {
+        "account": account["account"],
+        "cash": Decimal(str(account["cash"])),
+        "fees": Decimal(str(account["opening_fee"])),
+        "lots": [[signed_qty, Decimal(str(account["entry"]))]],
+    }
+
+
+def _cp_clone_state(state: dict) -> dict:
+    return {
+        "account": state["account"],
+        "cash": Decimal(str(state["cash"])),
+        "fees": Decimal(str(state["fees"])),
+        "lots": [[Decimal(str(q)), Decimal(str(px))] for q, px in state["lots"]],
+    }
+
+
+def _cp_position(state: dict) -> Decimal:
+    return sum((Decimal(str(q)) for q, _ in state["lots"]), Decimal("0"))
+
+
+def _cp_opening(state: dict, side: int, qty: Decimal) -> Decimal:
+    held = _cp_position(state)
+    closing = min(qty, max(-Decimal(side) * held, Decimal("0")))
+    return qty - closing
+
+
+def _cp_apply(
+    state: dict,
+    side: int,
+    qty: Decimal,
+    px: Decimal,
+    fee: Decimal,
+) -> None:
+    """Mirror official Account.apply for a locally reconstructed account."""
+    state["cash"] -= fee
+    state["fees"] += fee
+    left = qty
+    while left > 0 and state["lots"] and state["lots"][0][0] * side < 0:
+        lot_qty, lot_px = state["lots"][0]
+        size = min(left, abs(lot_qty))
+        if side < 0:
+            state["cash"] += size * px
+        else:
+            state["cash"] += size * (Decimal("2") * lot_px - px)
+        left -= size
+        if size == abs(lot_qty):
+            state["lots"].pop(0)
+        else:
+            state["lots"][0][0] = lot_qty + Decimal(side) * size
+    if left > 0:
+        state["cash"] -= left * px
+        state["lots"].append([Decimal(side) * left, px])
+
+
+def _cp_score(state: dict, final_s: Decimal) -> Decimal:
+    value = Decimal(str(state["cash"]))
+    for q, p in state["lots"]:
+        q = Decimal(str(q))
+        p = Decimal(str(p))
+        if q > 0:
+            value += q * final_s
+        else:
+            value += -q * (Decimal("2") * p - final_s)
+    return value - Decimal("10000")
+
+
+def _cp_sell_trade(
+    maker: dict,
+    taker: dict,
+    qty: Decimal,
+    px: Decimal,
+    close: Decimal,
+) -> dict:
+    """Official-style maker sell / taker buy check then sequential apply."""
+    maker_fee, taker_fee = _v41_side_fees("sell", qty, px, close)
+    maker_need = _cp_opening(maker, -1, qty) * px + maker_fee
+    taker_need = _cp_opening(taker, +1, qty) * px + taker_fee
+    if maker["cash"] < maker_need or taker["cash"] < taker_need:
+        return {
+            "settled": False,
+            "reason": "funds",
+            "qty": qty,
+            "px": px,
+            "maker_fee": maker_fee,
+            "taker_fee": taker_fee,
+            "maker_need": maker_need,
+            "taker_need": taker_need,
+            "maker_cash_before": maker["cash"],
+            "taker_cash_before": taker["cash"],
+        }
+
+    maker_cash_before = maker["cash"]
+    taker_cash_before = taker["cash"]
+    maker_pos_before = _cp_position(maker)
+    taker_pos_before = _cp_position(taker)
+    _cp_apply(maker, -1, qty, px, maker_fee)
+    _cp_apply(taker, +1, qty, px, taker_fee)
+    return {
+        "settled": True,
+        "reason": None,
+        "qty": qty,
+        "px": px,
+        "maker_fee": maker_fee,
+        "taker_fee": taker_fee,
+        "maker_need": maker_need,
+        "taker_need": taker_need,
+        "maker_cash_before": maker_cash_before,
+        "taker_cash_before": taker_cash_before,
+        "maker_cash_after": maker["cash"],
+        "taker_cash_after": taker["cash"],
+        "maker_position_before": maker_pos_before,
+        "taker_position_before": taker_pos_before,
+        "maker_position_after": _cp_position(maker),
+        "taker_position_after": _cp_position(taker),
+    }
+
+
+def _cp_second_leg_qty(
+    target: dict,
+    donor: dict,
+    px: Decimal,
+    close: Decimal,
+) -> Decimal:
+    """Largest 0.01 sell qty target can open while donor only closes short."""
+    seller_fee_per, buyer_fee_per = _v41_side_fees(
+        "sell", Decimal("1"), px, close
+    )
+    target_cap = _redeploy_qty_from_cash(
+        target["cash"], px, seller_fee_per
+    )
+    donor_short = max(-_cp_position(donor), Decimal("0"))
+    if buyer_fee_per <= 0:
+        donor_fee_cap = donor_short
+    else:
+        donor_fee_cap = (donor["cash"] / buyer_fee_per).quantize(
+            Decimal("0.01"), rounding=ROUND_DOWN
+        )
+    qty = min(target_cap, donor_short, donor_fee_cap)
+    return max(qty.quantize(Decimal("0.01"), rounding=ROUND_DOWN), Decimal("0"))
+
+
+def _cp_simulate_trio(
+    target_account: dict,
+    donor_a_account: dict,
+    donor_b_account: dict,
+    close: Decimal,
+    upper_limit: Decimal,
+) -> dict:
+    """Replay two same-sweep trades across three existing accounts.
+
+    Leg 1: target long maker sells its full long to donor A.
+    Leg 2: after target becomes flat, target maker sells a new short to donor B.
+    """
+    target = _cp_state_from_account(target_account)
+    donor_a = _cp_state_from_account(donor_a_account)
+    donor_b = _cp_state_from_account(donor_b_account)
+
+    original_target = _cp_clone_state(target)
+    original_a = _cp_clone_state(donor_a)
+    original_b = _cp_clone_state(donor_b)
+
+    q1 = max(_cp_position(target), Decimal("0"))
+    if q1 < Decimal("0.10"):
+        return {
+            "leg1_settled": False,
+            "leg2_settled": False,
+            "reason": "target_not_long",
+            "target": original_target,
+            "donor_a": original_a,
+            "donor_b": original_b,
+        }
+
+    leg1 = _cp_sell_trade(target, donor_a, q1, upper_limit, close)
+    if not leg1["settled"]:
+        return {
+            "leg1_settled": False,
+            "leg2_settled": False,
+            "reason": "leg1_funds",
+            "leg1": leg1,
+            "target": original_target,
+            "donor_a": original_a,
+            "donor_b": original_b,
+        }
+
+    target_flat_score = _cp_score(target, close)
+    q2 = _cp_second_leg_qty(target, donor_b, upper_limit, close)
+    if q2 < Decimal("0.10"):
+        return {
+            "leg1_settled": True,
+            "leg2_settled": False,
+            "reason": "leg2_qty",
+            "leg1": leg1,
+            "leg2_qty": q2,
+            "target_flat_score": target_flat_score,
+            "target": target,
+            "donor_a": donor_a,
+            "donor_b": donor_b,
+        }
+
+    leg2 = _cp_sell_trade(target, donor_b, q2, upper_limit, close)
+    return {
+        "leg1_settled": True,
+        "leg2_settled": bool(leg2["settled"]),
+        "reason": None if leg2["settled"] else "leg2_funds",
+        "leg1": leg1,
+        "leg2": leg2,
+        "leg2_qty": q2,
+        "target_flat_score": target_flat_score,
+        "target": target,
+        "donor_a": donor_a,
+        "donor_b": donor_b,
+    }
+
+
+def _cp_frontier_excluding(
+    accounts: list[dict],
+    baseline_by_account: dict[str, list[Decimal]],
+    excluded: set[str],
+    s_grid: list[Decimal],
+) -> list[Decimal]:
+    kept = [a for a in accounts if a["account"] not in excluded]
+    if not kept:
+        return [Decimal("-1e30") for _ in s_grid]
+    return [
+        max(baseline_by_account[a["account"]][si] for a in kept)
+        for si in range(len(s_grid))
+    ]
+
+
+def _cp_grid_summary(
+    matrix: list[list[Decimal]],
+    baseline: list[Decimal],
+    podium: list[Decimal],
+    s_grid: list[Decimal],
+) -> list[dict]:
+    out = []
+    for si, final_s in enumerate(s_grid):
+        vals = [row[si] for row in matrix]
+        covered = sum(1 for v in vals if v >= podium[si])
+        out.append({
+            "S": final_s,
+            "podium": podium[si],
+            "baseline_best": baseline[si],
+            "scenario_min": min(vals),
+            "scenario_p10": _v41_quantile(vals, Decimal("0.10")),
+            "scenario_p50": _v41_quantile(vals, Decimal("0.50")),
+            "scenario_p90": _v41_quantile(vals, Decimal("0.90")),
+            "scenario_max": max(vals),
+            "coverage_rate": Decimal(covered) / Decimal(len(vals)),
+        })
+    return out
+
+
+def _counterparty_redeploy_report(
+    state: dict,
+    target_name: str,
+    donor_a_name: str,
+    donor_b_name: str,
+    start: Decimal,
+    end: Decimal,
+    step: Decimal,
+    lookback: int,
+    require_visible: bool = True,
+) -> dict:
+    s_grid = _v42_s_grid(start, end, step)
+    accounts = _redeploy_accounts(state)
+    by_name = {a["account"]: a for a in accounts}
+
+    missing = [
+        name for name in (target_name, donor_a_name, donor_b_name)
+        if name not in by_name
+    ]
+    if missing:
+        raise ValueError(f"accounts not reconstructable: {missing}")
+    if len({target_name, donor_a_name, donor_b_name}) != 3:
+        raise ValueError("target and donors must be distinct accounts")
+
+    target = by_name[target_name]
+    donor_a = by_name[donor_a_name]
+    donor_b = by_name[donor_b_name]
+    if target["side"] != "long":
+        raise ValueError("target must currently be long")
+    if donor_a["side"] != "short" or donor_b["side"] != "short":
+        raise ValueError("both donors must currently be short")
+
+    selected = [target, donor_a, donor_b]
+    if require_visible:
+        weak = [
+            a["account"] for a in selected
+            if a.get("evidence_mode") != "visible_settled"
+        ]
+        if weak:
+            raise ValueError(
+                "visible-settled evidence required; weak accounts=" + str(weak)
+            )
+
+    pr = fresh_price(max_age=10**9)
+    ref = Decimal(str(pr["px"]))
+    _lower_limit, upper_limit = dense_v4_limit_bounds(pr)
+    samples = _v41_move_samples(lookback)
+    if not samples:
+        raise ValueError("no historical settlement move samples")
+    closes = [
+        (ref * (Decimal("1") + Decimal(str(x["move"])))).quantize(
+            Decimal("0.01")
+        )
+        for x in samples
+    ]
+
+    competitor = _v42_competitor_model(state, s_grid)
+    podium = [competitor["podium"][x] for x in s_grid]
+    baseline_by_account = {
+        a["account"]: [_redeploy_baseline_score(a, final_s) for final_s in s_grid]
+        for a in accounts
+    }
+    baseline_frontier = [
+        max(baseline_by_account[a["account"]][si] for a in accounts)
+        for si in range(len(s_grid))
+    ]
+    baseline_matrix = [list(baseline_frontier) for _ in closes]
+    baseline_stats = _v42_frontier_stats(baseline_matrix, podium)
+
+    excluded = {target_name, donor_a_name, donor_b_name}
+    other_frontier = _cp_frontier_excluding(
+        accounts, baseline_by_account, excluded, s_grid
+    )
+
+    matrix = []
+    sample_rows = []
+    leg1_ok = 0
+    leg2_ok = 0
+    baseline_row_gap = sum(
+        max(podium[i] - baseline_frontier[i], Decimal("0"))
+        for i in range(len(s_grid))
+    )
+    for close in closes:
+        sim = _cp_simulate_trio(target, donor_a, donor_b, close, upper_limit)
+        if sim.get("leg1_settled"):
+            leg1_ok += 1
+        if sim.get("leg2_settled"):
+            leg2_ok += 1
+
+        trio_states = [sim["target"], sim["donor_a"], sim["donor_b"]]
+        row = []
+        for si, final_s in enumerate(s_grid):
+            trio_best = max(_cp_score(st, final_s) for st in trio_states)
+            row.append(max(other_frontier[si], trio_best))
+        matrix.append(row)
+
+        covered = sum(1 for i, score in enumerate(row) if score >= podium[i])
+        total_gap = sum(
+            max(podium[i] - row[i], Decimal("0"))
+            for i in range(len(row))
+        )
+        sample_rows.append({
+            "close": close,
+            "leg1_settled": sim.get("leg1_settled"),
+            "leg2_settled": sim.get("leg2_settled"),
+            "reason": sim.get("reason"),
+            "leg2_qty": sim.get("leg2_qty"),
+            "target_flat_score": sim.get("target_flat_score"),
+            "target_position_after": _cp_position(sim["target"]),
+            "donor_a_position_after": _cp_position(sim["donor_a"]),
+            "donor_b_position_after": _cp_position(sim["donor_b"]),
+            "target_cash_after": sim["target"]["cash"],
+            "donor_a_cash_after": sim["donor_a"]["cash"],
+            "donor_b_cash_after": sim["donor_b"]["cash"],
+            "covered_S_points": covered,
+            "total_gap": total_gap,
+            "total_gap_delta_vs_baseline_row": total_gap - baseline_row_gap,
+            "leg1": sim.get("leg1"),
+            "leg2": sim.get("leg2"),
+        })
+
+    stats = _v42_frontier_stats(matrix, podium)
+    sample_rows.sort(key=lambda x: (
+        x["total_gap"],
+        -x["covered_S_points"],
+    ))
+
+    return {
+        "mode": "read_only_counterparty_redeploy_replay",
+        "ref_sweep": pr.get("n"),
+        "ref": ref,
+        "upper_limit": upper_limit,
+        "historical_samples": len(samples),
+        "target_start": start,
+        "target_end": end,
+        "target_step": step,
+        "accounts_total": len(accounts),
+        "selected": {
+            "target": target,
+            "donor_a": donor_a,
+            "donor_b": donor_b,
+        },
+        "baseline_stats": baseline_stats,
+        "scenario_stats": stats,
+        "delta": {
+            "covered_cells": stats["covered_cells"] - baseline_stats["covered_cells"],
+            "coverage_rate": stats["coverage_rate"] - baseline_stats["coverage_rate"],
+            "total_gap": stats["total_gap"] - baseline_stats["total_gap"],
+            "mean_positive_gap": (
+                stats["mean_positive_gap"] - baseline_stats["mean_positive_gap"]
+            ),
+            "max_gap": stats["max_gap"] - baseline_stats["max_gap"],
+        },
+        "leg1_settle_rate": Decimal(leg1_ok) / Decimal(len(closes)),
+        "leg2_settle_rate": Decimal(leg2_ok) / Decimal(len(closes)),
+        "grid": _cp_grid_summary(
+            matrix, baseline_frontier, podium, s_grid
+        ),
+        "best_samples": sample_rows[:10],
+        "worst_samples": list(reversed(sample_rows[-10:])),
+        "competitor": {
+            "pnl_sweep": competitor["pnl_sweep"],
+            "mark": competitor["mark"],
+            "lines": competitor["lines"][:12],
+        },
+        "note": (
+            "Read-only exact three-account replay. Leg 1 has the target long "
+            "sell its full position to donor A. After that apply releases cash, "
+            "leg 2 has the now-flat target sell the largest feasible short to "
+            "donor B while donor B only closes existing short. Both trades use "
+            "the current upper legal quote and official maker/taker clawback "
+            "fees. The whole reconstructed portfolio frontier includes the "
+            "post-trade donor states. No trade is posted."
+        ),
+    }
+
+
+def cmd_counterparty_redeploy_replay(args) -> None:
+    report = _counterparty_redeploy_report(
+        load_state(),
+        args.target,
+        args.donor_a,
+        args.donor_b,
+        Decimal(str(args.start)),
+        Decimal(str(args.end)),
+        Decimal(str(args.step)),
+        int(args.lookback),
+        require_visible=not bool(args.allow_local),
+    )
+    print(json.dumps(report, indent=2, default=str))
+
+
+def cmd_counterparty_redeploy_summary(args) -> None:
+    report = _counterparty_redeploy_report(
+        load_state(),
+        args.target,
+        args.donor_a,
+        args.donor_b,
+        Decimal(str(args.start)),
+        Decimal(str(args.end)),
+        Decimal(str(args.step)),
+        int(args.lookback),
+        require_visible=not bool(args.allow_local),
+    )
+    print("ref_sweep:", report["ref_sweep"])
+    print("ref:", report["ref"])
+    print("upper_limit:", report["upper_limit"])
+    print("historical_samples:", report["historical_samples"])
+    print("selected:", json.dumps(report["selected"], default=str))
+    print("baseline_stats:", json.dumps(report["baseline_stats"], default=str))
+    print("scenario_stats:", json.dumps(report["scenario_stats"], default=str))
+    print("delta:", json.dumps(report["delta"], default=str))
+    print("leg1_settle_rate:", report["leg1_settle_rate"])
+    print("leg2_settle_rate:", report["leg2_settle_rate"])
+    print("best_sample:", json.dumps(report["best_samples"][0], default=str))
+    print("worst_sample:", json.dumps(report["worst_samples"][0], default=str))
+    print("grid:")
+    for row in report["grid"]:
+        print(json.dumps(row, default=str))
+
+
+
 def cmd_progress(_args) -> None:
     state = load_state()
     pr = fresh_price(max_age=10**9)
@@ -8089,6 +8573,28 @@ def main() -> None:
     p.add_argument("--step", type=str, default="0.50")
     p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
     p.set_defaults(fn=cmd_realize_redeploy_summary)
+
+    p = sp.add_parser("counterparty-redeploy-replay")
+    p.add_argument("--target", type=str, default="DENSE-V3-01619-L")
+    p.add_argument("--donor-a", type=str, default="DENSE-V3-01620-S")
+    p.add_argument("--donor-b", type=str, default="DENSE-V3-01621-S")
+    p.add_argument("--start", type=str, default="220")
+    p.add_argument("--end", type=str, default="245")
+    p.add_argument("--step", type=str, default="0.50")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.add_argument("--allow-local", action="store_true")
+    p.set_defaults(fn=cmd_counterparty_redeploy_replay)
+
+    p = sp.add_parser("counterparty-redeploy-summary")
+    p.add_argument("--target", type=str, default="DENSE-V3-01619-L")
+    p.add_argument("--donor-a", type=str, default="DENSE-V3-01620-S")
+    p.add_argument("--donor-b", type=str, default="DENSE-V3-01621-S")
+    p.add_argument("--start", type=str, default="220")
+    p.add_argument("--end", type=str, default="245")
+    p.add_argument("--step", type=str, default="0.50")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.add_argument("--allow-local", action="store_true")
+    p.set_defaults(fn=cmd_counterparty_redeploy_summary)
 
     p = sp.add_parser("gate")
     p.set_defaults(fn=cmd_gate)
