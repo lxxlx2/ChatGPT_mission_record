@@ -276,11 +276,11 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **5 / 7,106**
-- classification_before: `2VkcSJq5WWd5BJFR4nHVQsuQCrzQyCHqkCxD9WVexV3Ji1Cn3JAt7prD38fZGpLzC2WrFow1u51f3w7gEhKUDiqT`
-- classification_oldest_time: **2026-09-29T03:07:55Z / 2026-09-29 10:07:55 Asia/Bangkok**
+- classified_signature_count: **10 / 7,106**
+- classification_before: `19Mnio8pMiLpgPPS9pNSTRnWxyErRHym7MqSxWB6geUodEkyVDKBaxV21PVnaNnPxAJ2zDmm1YkeXA7CFwpSAUL`
+- classification_oldest_time: **2026-09-28T23:14:38Z / 2026-09-29 06:14:38 Asia/Bangkok**
 - active_swaps_verified: **0**
-- passive_filtered: **5**
+- passive_filtered: **10**
 - unresolved_tx_count: **0**
 - unique_active_tokens: **0**
 
@@ -292,3 +292,25 @@ First five classifications:
 5. `2VkcSJq5...` 2026-09-29T03:07:55Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
 
 This proves PHASE 2 can continue without reconstructing and persisting a full ordered signature list first.
+
+
+## PHASE 2 manual acceleration checkpoint — 2026-09-29 17:xx Asia/Bangkok
+
+Processed the next 5 signatures continuously from the prior durable `classification_before` using Alchemy Solana mainnet transaction reads.
+
+Results:
+- processed_this_chunk: **5**
+- active_swaps_verified_this_chunk: **0**
+- passive_filtered_this_chunk: **5**
+- unresolved_this_chunk: **0**
+- new_durable_count: **10 / 7,106**
+- new_classification_before: `19Mnio8pMiLpgPPS9pNSTRnWxyErRHym7MqSxWB6geUodEkyVDKBaxV21PVnaNnPxAJ2zDmm1YkeXA7CFwpSAUL`
+
+Classifications:
+1. `45f8TovJ...` — fee-holder distribution / transfer flow, no Frank active swap proof => PASSIVE.
+2. `2Ee4cHtV...` — third-party token transfer to a Frank-owned account; Frank is not signer => PASSIVE.
+3. `2T1LEUGY...` — Frank-signed `DepositToken` USDC management action; excluded from directional BUY/SELL => PASSIVE_MANAGEMENT.
+4. `6RhvfwAx...` — failed CreateTokenAccount path with `MissingAccount`; no successful Frank active swap => FAILED_PASSIVE.
+5. `19Mnio8p...` — Frank-signed `DepositToken` USDC management action; excluded from directional BUY/SELL => PASSIVE_MANAGEMENT.
+
+No signature was skipped. No live Frank cursor or live alert state was modified by this historical replay checkpoint.
