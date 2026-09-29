@@ -219,3 +219,41 @@ uv run --with "cryptography>=42" close_call_fleet.py \
   --from-sweep 956 \
   --target-sweep 960
 ```
+
+
+## Funds-feasibility refinement after first successful replay
+
+The first exact-DID replay produced a near-perfect score fit for a one-trade
+flip at sweep 957, but score fit alone is insufficient because the official
+fold checks cash before close proceeds are released.
+
+The solver now derives a conservative `pre_cash_upper_bound` for an open short
+from:
+
+```text
+equity = 10000 + score
+minimum short-lot value
+  = short_qty * (2 * historical_min_legal_entry - mark)
+
+pre_cash_upper_bound
+  = equity - minimum short-lot value
+```
+
+If a direct flip needs more cash than this upper bound, it is marked:
+
+```text
+impossible_from_cash_upper_bound
+```
+
+For close-then-open paths, the short is fully closed first. At that point:
+
+```text
+flat_cash_after_close = 10000 + flat_score_after_close
+```
+
+so the subsequent long-opening funds check can be evaluated directly.
+
+The solver also reports
+`implied_pre_short_qty_to_match_target`: the pre-short quantity that would
+make a specific close-then-open path reproduce the observed target score
+exactly, holding the observed pre-snapshot score fixed.
