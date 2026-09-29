@@ -150,3 +150,16 @@ Old carry-forward candidates from 2026-09-27 are retained until checked:
 RAREUSDT has now been deep-checked and is removed from deferred state.
 
 19:29 remains a mandatory full screen even though this manual health-check occurred seven minutes earlier.
+
+
+## Full scan 2026-09-29 12:33 Asia/Bangkok
+- last_successful_full_scan_at: **2026-09-29 12:33 Asia/Bangkok**
+- liquid_universe_24h_quote_volume_ge_10m: **233 symbols**
+- top movers included NMR +37.601%, MARSCOIN +28.882%, HBAR +23.795%, US +18.611%.
+- deep-checks: USUSDT (oldest deferred), MARSCOINUSDT, HBARUSDT.
+- USUSDT: no IGNITION; historical setup_price unavailable, so setup-price gate cannot be fabricated.
+- MARSCOINUSDT: no IGNITION; current mark 0.15880878, latest completed 1h close 0.15015 remains below prior-24h high.
+- HBARUSDT: PRESSURE retained; current mark 0.11744, latest completed 1h close 0.12042 remains below prior-24h high.
+- confirmed IGNITION: **0**
+- relevant EXHAUSTION: **0**
+- DEFERRED_SHORTLIST remains durable for unchecked carry-forward symbols; USUSDT is now checked and may be removed from oldest-deferred priority.
