@@ -276,13 +276,13 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **80 / 7,106**
-- classification_before: `5QwAjm9j8KzQ9xRYVTyeDkW7wB1Shxi2dyCLrEnA8vDDubLwENSTskMTALztEorcv5fWapuW11wxSfL4KnYn1quC`
-- classification_oldest_time: **2026-09-28T16:07:28Z / 2026-09-28 23:07:28 Asia/Bangkok**
-- active_swaps_verified: **22**
-- passive_filtered: **58**
+- classified_signature_count: **90 / 7,106**
+- classification_before: `3HBQpcBD2g5gJkAWRHwNgEL7fCtZCAvBz6w2eALYFcaXYgp1bLrfvVLhXb6vsMc1w2VXVsjXiBVZJ9p8PudSVRrS`
+- classification_oldest_time: **2026-09-28T15:34:55Z / 2026-09-28 22:34:55 Asia/Bangkok**
+- active_swaps_verified: **26**
+- passive_filtered: **64**
 - unresolved_tx_count: **0**
-- unique_active_tokens: **11**
+- unique_active_tokens: **14**
 
 First five classifications:
 1. `5TCVznw...` 2026-09-29T05:44:13Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
@@ -466,3 +466,8 @@ No signature was skipped. No live Frank cursor or live alert state was modified.
 ## PHASE 2 checkpoint 80/7,106
 
 Next 10 processed contiguously. Result: 1 active swap, 9 passive, 0 unresolved. Active: `3ntPX4Cn...` = Frank-authorized SELL of `ZesMGYmokFiEuDvNzWeMhB7jxF6eUW8c512vwSKSTNK` via Meteora/Raydium CPMM. No live state modified.
+
+
+## PHASE 2 checkpoint 90/7,106
+
+Next 10 processed contiguously. Result: 4 active swaps, 6 passive, 0 unresolved. Active sells: `3ksXHCDu...` mint `Ax5dAamJPeuaLpFUzs9FdcpoUhHDcxyjPzxCJQidjups`; `5etyUKmJ...` mint `DvdmEnztCmXwBnAbedD48XVGZJSxq31zNvnyftXdpump`; `4yuhJ5E7...` and `4usAhZ6L...` mint `7M3gDRgozcumFsiTeXwjB8cYxpg7Q9R7rH7rkw2Fpump`. Source accounts were independently verified as Frank-owned and the transactions use Meteora/CPAMM routes. Remaining six are third-party/plain transfer activity with no verified Frank DEX value exchange. No live state modified.
