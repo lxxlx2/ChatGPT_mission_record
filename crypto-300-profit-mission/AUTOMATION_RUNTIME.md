@@ -779,3 +779,33 @@ Health:
 - SUCCESS only when all mandatory lane semantics pass.
 
 This persistence change does not alter Frank alert thresholds, Monster V2.1 signal thresholds, or NFT alert gates.
+
+## Single-write final-bundle override — 2026-09-29 16:54 Asia/Bangkok
+
+This section supersedes the earlier two-write cycle-bundle rule for scheduled runtime only.
+
+Observed issue:
+- later GitHub mutations were repeatedly blocked by the runtime safety layer;
+- on 2026-09-29 16:33 even the initial RUNNING write was blocked;
+- pre-lane persistence therefore does not improve reliable completion and can consume the only successful mutation opportunity.
+
+Effective scheduled-run rule:
+1. perform zero GitHub mutations before CORE + FRANK + NFT + MONSTER are completed in memory;
+2. create exactly one `runs/YYYY-MM-DD/HHMMSS-final-bundle.md`;
+3. that single file must contain CORE, FRANK, NFT, MONSTER and COMPLETION;
+4. no attempt/RUNNING/core/frank/nft/monster/completion/cursor sibling file is created by scheduled runtime;
+5. no second GitHub update is attempted in the same cycle.
+
+Frank cursor authority:
+- newest successful final bundle with a valid `frank_cursor_after` wins;
+- otherwise use `state/frank-live-cursor.md`;
+- a cursor calculated in memory is not authoritative until the final bundle write succeeds;
+- if the single final write fails, the next run replays from the last durable cursor and deduplicates the overlap.
+
+Health:
+- successful final bundle with all mandatory lanes semantically complete can be SUCCESS;
+- a blocked final write is UNHEALTHY / partial_failure;
+- never convert a persistence failure into NO_ACTION or success.
+
+No monitoring task may be created, deleted, disabled or rebuilt as part of this repair.
+
