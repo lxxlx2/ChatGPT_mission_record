@@ -4446,10 +4446,27 @@ def _leader_pnl_history(targets: set[str]) -> dict[str, list[dict]]:
 
 
 def _leader_price_reachability() -> list[dict]:
-    """Cumulative legal quote envelope by sweep from official applied refs."""
+    """Cumulative legal quote and fee-adjusted score envelope by sweep.
+
+    For a fresh long opened at legal price p in a sweep with closing price c,
+    the buyer's score contribution at a later mark m is:
+
+        qty * (m - p) - max(1% * qty * p, qty * (c - p))
+      = qty * (m - max(1.01 * p, c))
+
+    The minimum fee-adjusted effective long cost in a sweep is therefore
+    max(1.01 * lower_limit, close).
+
+    Symmetrically, a fresh short's best fee-adjusted effective sale price is
+    min(0.99 * upper_limit, close).
+    """
     out = []
     min_buy = None
     max_sell = None
+    min_effective_long_cost = None
+    max_effective_short_sale = None
+    cent = Decimal("0.01")
+
     for rec in parse_export("d-close1-price"):
         p = rec.get("_payload")
         if not isinstance(p, dict) or p.get("t") != "price":
@@ -4458,20 +4475,42 @@ def _leader_price_reachability() -> list[dict]:
             n = int(p["n"])
         except Exception:
             continue
+
         applied = _v41_px(p.get("applied"))
-        if applied is None:
+        close = _v41_px(p.get("ref"))
+        if applied is None or close is None:
             continue
-        lo = applied * Decimal("0.95")
-        hi = applied * Decimal("1.05")
-        min_buy = lo if min_buy is None else min(min_buy, lo)
-        max_sell = hi if max_sell is None else max(max_sell, hi)
+
+        low = (applied * Decimal("0.95")).quantize(cent, rounding=ROUND_CEILING)
+        high = (applied * Decimal("1.05")).quantize(cent, rounding=ROUND_DOWN)
+        effective_long_cost = max(close, Decimal("1.01") * low)
+        effective_short_sale = min(close, Decimal("0.99") * high)
+
+        min_buy = low if min_buy is None else min(min_buy, low)
+        max_sell = high if max_sell is None else max(max_sell, high)
+        min_effective_long_cost = (
+            effective_long_cost
+            if min_effective_long_cost is None
+            else min(min_effective_long_cost, effective_long_cost)
+        )
+        max_effective_short_sale = (
+            effective_short_sale
+            if max_effective_short_sale is None
+            else max(max_effective_short_sale, effective_short_sale)
+        )
+
         out.append({
             "sweep": n,
+            "applied": applied,
+            "close": close,
+            "lower_limit": low,
+            "upper_limit": high,
             "min_legal_buy_seen": min_buy,
             "max_legal_sell_seen": max_sell,
+            "best_effective_long_cost_seen": min_effective_long_cost,
+            "best_effective_short_sale_seen": max_effective_short_sale,
         })
     return out
-
 
 def _leader_reach_at_sweep(history: list[dict], sweep: int) -> dict | None:
     found = None
@@ -4488,23 +4527,38 @@ def _leader_min_carry_required(
     position: Decimal,
     min_legal_buy: Decimal | None,
     max_legal_sell: Decimal | None,
+    best_effective_long_cost: Decimal | None = None,
+    best_effective_short_sale: Decimal | None = None,
 ) -> tuple[Decimal | None, Decimal | None]:
-    """(synthetic effective entry, conservative net-carry lower bound).
+    """(synthetic effective entry, conservative realized-carry lower bound).
 
-    score = net_carry + open-position MTM. If the synthetic entry implied by
-    score/position is outside every legal historical quote, some positive
-    realized carry is mathematically required.
+    The fee-adjusted bounds are stronger than the raw legal-price bounds because
+    every settled trade pays at least the 1% base fee and may pay clawback.
+
+    When fee-adjusted history is unavailable, fall back to the older raw-price
+    lower bound so callers/tests remain well-defined.
     """
     if position == 0:
         return None, max(score, Decimal("0"))
+
     synthetic = mark - score / position
     required = Decimal("0")
-    if position > 0 and min_legal_buy is not None and synthetic < min_legal_buy:
-        required = position * (min_legal_buy - synthetic)
-    elif position < 0 and max_legal_sell is not None and synthetic > max_legal_sell:
-        required = abs(position) * (synthetic - max_legal_sell)
-    return synthetic, max(required, Decimal("0"))
 
+    if position > 0:
+        if best_effective_long_cost is not None:
+            max_open_score = position * (mark - best_effective_long_cost)
+            required = score - max_open_score
+        elif min_legal_buy is not None and synthetic < min_legal_buy:
+            required = position * (min_legal_buy - synthetic)
+    else:
+        qty = abs(position)
+        if best_effective_short_sale is not None:
+            max_open_score = qty * (best_effective_short_sale - mark)
+            required = score - max_open_score
+        elif max_legal_sell is not None and synthetic > max_legal_sell:
+            required = qty * (synthetic - max_legal_sell)
+
+    return synthetic, max(required, Decimal("0"))
 
 def _leader_transition_kind(prev_pos: Decimal, cur_pos: Decimal) -> str:
     eps = Decimal("0.01")
@@ -4534,8 +4588,9 @@ def _leader_build_path(
 ) -> dict:
     rows = [dict(x) for x in pnl_rows]
 
-    # Weak position fallback from consecutive PnL snapshots. Published position
-    # remains preferred because trading between snapshots can distort the slope.
+    # Weak position fallback from consecutive PnL snapshots. It is useful as a
+    # directional diagnostic only. It must not be promoted to a true position
+    # transition because trading between snapshots can distort the slope.
     slope = {}
     for a, b in zip(rows, rows[1:]):
         if b["sweep"] != a["sweep"] + 1:
@@ -4561,6 +4616,13 @@ def _leader_build_path(
         reach = _leader_reach_at_sweep(reachability, n)
         row["min_legal_buy_seen"] = reach["min_legal_buy_seen"] if reach else None
         row["max_legal_sell_seen"] = reach["max_legal_sell_seen"] if reach else None
+        row["best_effective_long_cost_seen"] = (
+            reach.get("best_effective_long_cost_seen") if reach else None
+        )
+        row["best_effective_short_sale_seen"] = (
+            reach.get("best_effective_short_sale_seen") if reach else None
+        )
+
         if position is not None:
             synthetic, carry_lb = _leader_min_carry_required(
                 row["score"],
@@ -4568,6 +4630,8 @@ def _leader_build_path(
                 position,
                 row["min_legal_buy_seen"],
                 row["max_legal_sell_seen"],
+                row["best_effective_long_cost_seen"],
+                row["best_effective_short_sale_seen"],
             )
             row["synthetic_effective_entry"] = synthetic
             row["min_realized_carry_required"] = carry_lb
@@ -4580,18 +4644,49 @@ def _leader_build_path(
             row["score_intercept"] = None
 
     transitions = []
+    inferred_diagnostics = []
     for prev, cur in zip(rows, rows[1:]):
         if prev.get("position") is None or cur.get("position") is None:
             continue
         if cur["sweep"] != prev["sweep"] + 1:
             continue
+
+        both_published = (
+            prev.get("position_evidence") == "published_position"
+            and cur.get("position_evidence") == "published_position"
+        )
         kind = _leader_transition_kind(prev["position"], cur["position"])
         hold_expected = (
             prev["score"]
             + prev["position"] * (cur["mark"] - prev["mark"])
         )
         impact = cur["score"] - hold_expected
-        if kind.startswith("hold") and abs(impact) < Decimal("0.01"):
+
+        base = {
+            "from_sweep": prev["sweep"],
+            "to_sweep": cur["sweep"],
+            "kind": kind,
+            "position_before": prev["position"],
+            "position_after": cur["position"],
+            "delta_position": cur["position"] - prev["position"],
+            "score_before": prev["score"],
+            "score_after": cur["score"],
+            "mark_before": prev["mark"],
+            "mark_after": cur["mark"],
+            "hold_expected_score": hold_expected,
+            "trade_impact_at_current_mark": impact,
+            "min_carry_required_after": cur.get("min_realized_carry_required"),
+            "synthetic_entry_after": cur.get("synthetic_effective_entry"),
+            "position_evidence_before": prev.get("position_evidence"),
+            "position_evidence_after": cur.get("position_evidence"),
+        }
+
+        if not both_published:
+            if not (kind.startswith("hold") and abs(impact) < Decimal("0.01")):
+                inferred_diagnostics.append(base)
+            continue
+
+        if kind.startswith("hold"):
             continue
 
         nearby = []
@@ -4612,24 +4707,8 @@ def _leader_build_path(
                     "outcome": trade["outcome"],
                     "outcome_sweep": trade["outcome_sweep"],
                 })
-
-        transitions.append({
-            "from_sweep": prev["sweep"],
-            "to_sweep": cur["sweep"],
-            "kind": kind,
-            "position_before": prev["position"],
-            "position_after": cur["position"],
-            "delta_position": cur["position"] - prev["position"],
-            "score_before": prev["score"],
-            "score_after": cur["score"],
-            "mark_before": prev["mark"],
-            "mark_after": cur["mark"],
-            "hold_expected_score": hold_expected,
-            "trade_impact_at_current_mark": impact,
-            "min_carry_required_after": cur.get("min_realized_carry_required"),
-            "synthetic_entry_after": cur.get("synthetic_effective_entry"),
-            "nearby_trades": nearby,
-        })
+        base["nearby_trades"] = nearby
+        transitions.append(base)
 
     visible_settled = sum(1 for x in trades if x.get("outcome") == "settled")
     visible_void = sum(1 for x in trades if x.get("outcome") == "void")
@@ -4651,6 +4730,7 @@ def _leader_build_path(
         "last_visible_sweep": rows[-1]["sweep"] if rows else None,
         "snapshot_count": len(rows),
         "transition_count": len(transitions),
+        "inferred_diagnostic_count": len(inferred_diagnostics),
         "trade_count_found_in_scanned_rooms": len(trades),
         "trade_outcomes": {
             "visible_settled": visible_settled,
@@ -4661,10 +4741,10 @@ def _leader_build_path(
         "max_flat_realized_score": max(flat_values) if flat_values else None,
         "latest_snapshot": rows[-1] if rows else None,
         "transitions": transitions,
+        "inferred_position_diagnostics": inferred_diagnostics,
         "trades": trades,
         "snapshots": rows,
     }
-
 
 def cmd_leader_path_replay(args) -> None:
     state = load_state()
@@ -4781,6 +4861,597 @@ def cmd_leader_path_summary(args) -> None:
             outcomes["not_visible"],
             sep=",",
         )
+
+
+
+def _leader_price_window(start_sweep: int, end_sweep: int) -> list[dict]:
+    cent = Decimal("0.01")
+    out = []
+    for rec in parse_export("d-close1-price"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "price":
+            continue
+        try:
+            n = int(p["n"])
+        except Exception:
+            continue
+        if n < start_sweep or n > end_sweep:
+            continue
+        applied = _v41_px(p.get("applied"))
+        close = _v41_px(p.get("ref"))
+        if applied is None or close is None:
+            continue
+        low = (applied * Decimal("0.95")).quantize(cent, rounding=ROUND_CEILING)
+        high = (applied * Decimal("1.05")).quantize(cent, rounding=ROUND_DOWN)
+        out.append({
+            "sweep": n,
+            "applied": applied,
+            "close": close,
+            "lower_limit": low,
+            "upper_limit": high,
+        })
+    out.sort(key=lambda x: x["sweep"])
+    return out
+
+
+def _leader_buyer_fee(qty: Decimal, px: Decimal, close: Decimal) -> Decimal:
+    return max(
+        Decimal("0.01") * qty * px,
+        qty * (close - px),
+    )
+
+
+def _leader_pivot_snapshot(
+    pnl_rows: list[dict],
+    pos_by_sweep: dict[int, Decimal],
+    sweep: int,
+) -> dict | None:
+    rows = [x for x in pnl_rows if int(x["sweep"]) <= int(sweep)]
+    if not rows:
+        return None
+    exact = [x for x in rows if int(x["sweep"]) == int(sweep)]
+    row = dict(exact[-1] if exact else rows[-1])
+
+    if int(row["sweep"]) in pos_by_sweep:
+        row["position"] = pos_by_sweep[int(row["sweep"])]
+        row["position_evidence"] = "published_position"
+        return row
+
+    # Local slope fallback for the requested diagnostic snapshot only.
+    previous = None
+    for candidate in pnl_rows:
+        if int(candidate["sweep"]) < int(row["sweep"]):
+            previous = candidate
+        elif int(candidate["sweep"]) >= int(row["sweep"]):
+            break
+    if previous is not None and int(row["sweep"]) == int(previous["sweep"]) + 1:
+        dmark = row["mark"] - previous["mark"]
+        if dmark != 0:
+            row["position"] = (row["score"] - previous["score"]) / dmark
+            row["position_evidence"] = "consecutive_pnl_slope"
+            return row
+
+    row["position"] = None
+    row["position_evidence"] = "missing"
+    return row
+
+
+def _leader_open_long_candidate(
+    price_row: dict,
+    target_score: Decimal,
+    target_mark: Decimal,
+    target_qty: Decimal,
+) -> dict:
+    px = price_row["lower_limit"]
+    close = price_row["close"]
+    fee = _leader_buyer_fee(target_qty, px, close)
+    score_from_fresh_long = target_qty * (target_mark - px) - fee
+    carry_required = target_score - score_from_fresh_long
+    cash_required_before_open = target_qty * px + fee
+    return {
+        "sweep": price_row["sweep"],
+        "applied": price_row["applied"],
+        "close": close,
+        "buy_px": px,
+        "qty": target_qty,
+        "buyer_fee": fee,
+        "cash_required_before_open": cash_required_before_open,
+        "score_from_fresh_long_at_target": score_from_fresh_long,
+        "locked_carry_required_before_open": max(carry_required, Decimal("0")),
+    }
+
+
+def _leader_pre_short_cash_upper_bound(
+    pre: dict,
+    reach: dict | None,
+) -> Decimal | None:
+    """Upper bound cash for an observed/inferred open short at the pre snapshot.
+
+    Every historical short lot must have entry px >= the cumulative minimum
+    legal quote. Therefore the open short's mark value has a lower bound, which
+    gives an upper bound on cash. This is especially useful because Fold.check
+    tests cash before close proceeds are released.
+    """
+    pos = pre.get("position")
+    if pos is None or Decimal(str(pos)) >= 0 or reach is None:
+        return None
+    min_entry = reach.get("min_legal_buy_seen")
+    if min_entry is None:
+        return None
+    qty = abs(Decimal(str(pos)))
+    mark = Decimal(str(pre["mark"]))
+    equity = Decimal("10000") + Decimal(str(pre["score"]))
+    min_lot_value = qty * (Decimal("2") * Decimal(str(min_entry)) - mark)
+    return equity - min_lot_value
+
+
+
+def _leader_short_redeploy_bounds(
+    pre: dict,
+    short_qty: Decimal,
+    close_fee: Decimal,
+    reach: dict | None,
+) -> dict:
+    """Conservative pre-pivot bounds implied by the official funds rule.
+
+    At the pre snapshot:
+        equity = 10000 + score
+        short lot value = qty * (2 * avg_entry - mark)
+        cash = equity - short lot value
+
+    The close trade checks cash >= close_fee before releasing short collateral.
+    Therefore avg_entry has an upper bound. Combining that with the historical
+    legal quote envelope and the minimum 1% opening fee yields a conservative
+    lower bound on realized carry that must have existed before the short was
+    opened.
+    """
+    qty = Decimal(str(short_qty))
+    if qty <= 0 or reach is None:
+        return {
+            "feasible": None,
+            "entry_ceiling_from_close_funds": None,
+            "best_feasible_avg_short_entry": None,
+            "min_prior_realized_carry_before_short": None,
+        }
+
+    score = Decimal(str(pre["score"]))
+    mark = Decimal(str(pre["mark"]))
+    equity = Decimal("10000") + score
+    entry_ceiling = (
+        mark + (equity - Decimal(str(close_fee))) / qty
+    ) / Decimal("2")
+
+    hist_min = reach.get("min_legal_buy_seen")
+    hist_max = reach.get("max_legal_sell_seen")
+    best_entry = entry_ceiling
+    if hist_max is not None:
+        best_entry = min(best_entry, Decimal(str(hist_max)))
+
+    feasible = True
+    if hist_min is not None and best_entry < Decimal(str(hist_min)):
+        feasible = False
+
+    carry_lb = None
+    if feasible:
+        min_open_fee = Decimal("0.01") * qty * best_entry
+        carry_lb = (
+            score
+            - qty * (best_entry - mark)
+            + min_open_fee
+        )
+
+    return {
+        "feasible": feasible,
+        "entry_ceiling_from_close_funds": entry_ceiling,
+        "best_feasible_avg_short_entry": best_entry if feasible else None,
+        "min_prior_realized_carry_before_short": (
+            max(carry_lb, Decimal("0")) if carry_lb is not None else None
+        ),
+    }
+
+
+def _leader_direct_flip_candidate(
+    price_row: dict,
+    pre: dict,
+    target: dict,
+    pre_cash_upper_bound: Decimal | None = None,
+) -> dict | None:
+    pre_pos = pre.get("position")
+    target_pos = target.get("position")
+    if pre_pos is None or target_pos is None or pre_pos >= 0 or target_pos <= 0:
+        return None
+
+    short_qty = abs(Decimal(str(pre_pos)))
+    long_qty = Decimal(str(target_pos))
+    trade_qty = short_qty + long_qty
+    px = price_row["lower_limit"]
+    close = price_row["close"]
+    fee = _leader_buyer_fee(trade_qty, px, close)
+
+    pre_score_at_close = (
+        Decimal(str(pre["score"]))
+        + Decimal(str(pre_pos)) * (close - Decimal(str(pre["mark"])))
+    )
+    trade_value_change_at_close = trade_qty * (close - px) - fee
+    modeled_target_score = (
+        pre_score_at_close
+        + trade_value_change_at_close
+        + long_qty * (Decimal(str(target["mark"])) - close)
+    )
+    gap = Decimal(str(target["score"])) - modeled_target_score
+
+    # Official Fold.check evaluates funds before close proceeds are released.
+    # For a one-trade flip, only the excess long_qty opens, but the buyer fee is
+    # charged on the full short_qty + long_qty trade.
+    cash_required_before_flip = long_qty * px + fee
+    if pre_cash_upper_bound is None:
+        funds_feasibility = "unknown"
+    elif cash_required_before_flip > pre_cash_upper_bound:
+        funds_feasibility = "impossible_from_cash_upper_bound"
+    else:
+        funds_feasibility = "not_proven_but_not_ruled_out"
+
+    return {
+        "sweep": price_row["sweep"],
+        "mode": "single_trade_flip",
+        "pre_position": pre_pos,
+        "pre_position_evidence": pre.get("position_evidence"),
+        "target_position": target_pos,
+        "buy_qty": trade_qty,
+        "buy_px": px,
+        "buyer_fee": fee,
+        "cash_required_before_flip": cash_required_before_flip,
+        "pre_cash_upper_bound": pre_cash_upper_bound,
+        "funds_feasibility": funds_feasibility,
+        "modeled_target_score": modeled_target_score,
+        "observed_target_score": target["score"],
+        "observed_minus_modeled": gap,
+        "absolute_gap": abs(gap),
+    }
+
+def _leader_two_step_pivot_candidate(
+    close_row: dict,
+    open_row: dict,
+    pre: dict,
+    target: dict,
+    pre_cash_upper_bound: Decimal | None = None,
+    pre_reach: dict | None = None,
+) -> dict | None:
+    pre_pos = pre.get("position")
+    target_pos = target.get("position")
+    if pre_pos is None or target_pos is None or pre_pos >= 0 or target_pos <= 0:
+        return None
+    # The official fold applies trades sequentially inside one sweep, so a
+    # close-short trade may release cash before a later open-long trade in that
+    # same sweep. Only open-before-close sweep order is invalid.
+    if int(open_row["sweep"]) < int(close_row["sweep"]):
+        return None
+
+    short_qty = abs(Decimal(str(pre_pos)))
+    long_qty = Decimal(str(target_pos))
+
+    close_px = close_row["lower_limit"]
+    close_fee = _leader_buyer_fee(short_qty, close_px, close_row["close"])
+    score_at_close_sweep = (
+        Decimal(str(pre["score"]))
+        + Decimal(str(pre_pos))
+        * (close_row["close"] - Decimal(str(pre["mark"])))
+    )
+    flat_score = (
+        score_at_close_sweep
+        + short_qty * (close_row["close"] - close_px)
+        - close_fee
+    )
+    flat_cash = Decimal("10000") + flat_score
+
+    open_px = open_row["lower_limit"]
+    open_fee = _leader_buyer_fee(long_qty, open_px, open_row["close"])
+    cash_required_before_open = long_qty * open_px + open_fee
+    modeled_target_score = (
+        flat_score
+        + long_qty * (Decimal(str(target["mark"])) - open_px)
+        - open_fee
+    )
+    gap = Decimal(str(target["score"])) - modeled_target_score
+
+    close_funds_feasibility = "unknown"
+    if pre_cash_upper_bound is not None:
+        close_funds_feasibility = (
+            "impossible_from_cash_upper_bound"
+            if close_fee > pre_cash_upper_bound
+            else "not_proven_but_not_ruled_out"
+        )
+    open_funds_feasible_after_close = flat_cash >= cash_required_before_open
+
+    # Solve which pre-short quantity would make this exact two-step path match
+    # the observed target score while keeping the observed pre score fixed.
+    close_fee_per_qty = max(
+        Decimal("0.01") * close_px,
+        close_row["close"] - close_px,
+    )
+    qty_score_coefficient = (
+        Decimal(str(pre["mark"])) - close_px - close_fee_per_qty
+    )
+    long_score_contribution = (
+        long_qty * (Decimal(str(target["mark"])) - open_px) - open_fee
+    )
+    implied_short_qty = None
+    if qty_score_coefficient != 0:
+        implied_short_qty = (
+            Decimal(str(target["score"]))
+            - Decimal(str(pre["score"]))
+            - long_score_contribution
+        ) / qty_score_coefficient
+
+    inferred_short_bounds = _leader_short_redeploy_bounds(
+        pre, short_qty, close_fee, pre_reach
+    )
+
+    implied_short_bounds = None
+    if implied_short_qty is not None and implied_short_qty > 0:
+        implied_close_fee = _leader_buyer_fee(
+            implied_short_qty, close_px, close_row["close"]
+        )
+        implied_short_bounds = _leader_short_redeploy_bounds(
+            pre, implied_short_qty, implied_close_fee, pre_reach
+        )
+        implied_short_bounds["close_fee"] = implied_close_fee
+
+    return {
+        "mode": "close_then_open",
+        "close_sweep": close_row["sweep"],
+        "open_sweep": open_row["sweep"],
+        "same_sweep_ordered": int(open_row["sweep"]) == int(close_row["sweep"]),
+        "pre_position": pre_pos,
+        "pre_position_evidence": pre.get("position_evidence"),
+        "target_position": target_pos,
+        "close_short_qty": short_qty,
+        "close_buy_px": close_px,
+        "close_fee": close_fee,
+        "pre_cash_upper_bound": pre_cash_upper_bound,
+        "close_funds_feasibility": close_funds_feasibility,
+        "flat_score_after_close": flat_score,
+        "flat_cash_after_close": flat_cash,
+        "open_long_qty": long_qty,
+        "open_buy_px": open_px,
+        "open_fee": open_fee,
+        "cash_required_before_open": cash_required_before_open,
+        "open_funds_feasible_after_close": open_funds_feasible_after_close,
+        "modeled_target_score": modeled_target_score,
+        "observed_target_score": target["score"],
+        "observed_minus_modeled": gap,
+        "absolute_gap": abs(gap),
+        "implied_pre_short_qty_to_match_target": implied_short_qty,
+        "implied_minus_inferred_short_qty": (
+            implied_short_qty - short_qty if implied_short_qty is not None else None
+        ),
+        "inferred_short_redeploy_bounds": inferred_short_bounds,
+        "implied_short_redeploy_bounds": implied_short_bounds,
+    }
+
+def _leader_select_pivot_subject(
+    state: dict,
+    rank: int,
+    target_sweep: int,
+    did_override: str | None = None,
+) -> dict:
+    """Choose a stable historical pivot subject while live ranks keep moving."""
+    pnl = latest_payload("d-close1-pnl", "pnl")
+    pairs = _pnl_pairs(pnl)
+    our_dids = {
+        str(v.get("did"))
+        for v in state.get("keys", {}).values()
+        if v.get("did")
+    }
+    leaders = [
+        {"rank": r, "did": did, "score": score}
+        for r, (did, score) in enumerate(pairs, 1)
+        if did not in our_dids
+    ]
+    if not leaders:
+        raise ValueError("no visible non-local leaders")
+
+    if did_override:
+        chosen = next((x for x in leaders if x["did"] == did_override), None)
+        if chosen is None:
+            chosen = {"rank": None, "did": did_override, "score": None}
+        candidates = [chosen]
+        base_mode = "explicit_did"
+    else:
+        if rank < 1 or rank > len(leaders):
+            raise ValueError(f"rank {rank} outside visible non-local leaders")
+        primary = leaders[rank - 1]
+        candidates = [primary] + [x for x in leaders if x["did"] != primary["did"]]
+        base_mode = "current_rank"
+
+    diagnostics = []
+    for index, candidate in enumerate(candidates):
+        did = candidate["did"]
+        pnl_hist = _leader_pnl_history({did})[did]
+        pos_hist = _leader_position_history({did})[did]
+        target = _leader_pivot_snapshot(pnl_hist, pos_hist, target_sweep)
+        diag = {
+            "did": did,
+            "current_rank": candidate.get("rank"),
+            "current_score": candidate.get("score"),
+            "target_snapshot_sweep": target.get("sweep") if target else None,
+            "target_position_evidence": target.get("position_evidence") if target else None,
+            "has_target_pnl": bool(target is not None and int(target["sweep"]) == int(target_sweep)),
+            "has_target_published_position": bool(
+                target is not None
+                and int(target["sweep"]) == int(target_sweep)
+                and target.get("position_evidence") == "published_position"
+            ),
+        }
+        diagnostics.append(diag)
+        if diag["has_target_pnl"] and diag["has_target_published_position"]:
+            mode = base_mode
+            if not did_override and index > 0:
+                mode = "fallback_highest_current_rank_with_target_published_position"
+            return {
+                "leader": candidate,
+                "pnl_hist": pnl_hist,
+                "pos_hist": pos_hist,
+                "target": target,
+                "selection_mode": mode,
+                "selection_diagnostics": diagnostics,
+            }
+        if did_override:
+            break
+
+    detail = json.dumps(diagnostics[:12], default=str)
+    raise ValueError("no selected leader has a published target-sweep position; diagnostics=" + detail)
+
+def _leader_pivot_solve_report(
+    state: dict,
+    rank: int,
+    from_sweep: int,
+    target_sweep: int,
+    did_override: str | None = None,
+) -> dict:
+    subject = _leader_select_pivot_subject(
+        state, rank, target_sweep, did_override=did_override
+    )
+    leader = subject["leader"]
+    pnl_hist = subject["pnl_hist"]
+    pos_hist = subject["pos_hist"]
+    target = subject["target"]
+    pre = _leader_pivot_snapshot(pnl_hist, pos_hist, from_sweep)
+    if pre is None or target is None:
+        raise ValueError("missing pre or target PnL snapshot")
+    if int(target["sweep"]) != int(target_sweep):
+        raise ValueError("target sweep lacks a PnL snapshot")
+    if target.get("position_evidence") != "published_position":
+        raise ValueError("target sweep lacks a published position")
+
+    price_rows = _leader_price_window(int(pre["sweep"]) + 1, target_sweep)
+    if not price_rows:
+        raise ValueError("no price sweeps in pivot window")
+
+    open_long = [
+        _leader_open_long_candidate(
+            row,
+            Decimal(str(target["score"])),
+            Decimal(str(target["mark"])),
+            Decimal(str(target["position"])),
+        )
+        for row in price_rows
+    ]
+    open_long.sort(key=lambda x: (
+        x["locked_carry_required_before_open"],
+        x["cash_required_before_open"],
+    ))
+
+    reachability = _leader_price_reachability()
+    pre_reach = _leader_reach_at_sweep(reachability, int(pre["sweep"]))
+    pre_cash_upper_bound = _leader_pre_short_cash_upper_bound(pre, pre_reach)
+
+    direct = []
+    for row in price_rows:
+        candidate = _leader_direct_flip_candidate(
+            row, pre, target, pre_cash_upper_bound=pre_cash_upper_bound
+        )
+        if candidate is not None:
+            direct.append(candidate)
+    direct.sort(key=lambda x: x["absolute_gap"])
+
+    two_step = []
+    for close_row in price_rows:
+        for open_row in price_rows:
+            candidate = _leader_two_step_pivot_candidate(
+                close_row,
+                open_row,
+                pre,
+                target,
+                pre_cash_upper_bound=pre_cash_upper_bound,
+                pre_reach=pre_reach,
+            )
+            if candidate is not None:
+                two_step.append(candidate)
+    two_step.sort(key=lambda x: x["absolute_gap"])
+
+    target_reach = _leader_reach_at_sweep(reachability, target_sweep)
+    target_fee_adjusted_carry = None
+    if target_reach is not None:
+        _synthetic, target_fee_adjusted_carry = _leader_min_carry_required(
+            Decimal(str(target["score"])),
+            Decimal(str(target["mark"])),
+            Decimal(str(target["position"])),
+            target_reach["min_legal_buy_seen"],
+            target_reach["max_legal_sell_seen"],
+            target_reach["best_effective_long_cost_seen"],
+            target_reach["best_effective_short_sale_seen"],
+        )
+
+    return {
+        "mode": "read_only_leader_pivot_solver",
+        "leader": leader,
+        "subject_selection_mode": subject["selection_mode"],
+        "subject_selection_diagnostics": subject["selection_diagnostics"],
+        "pre_snapshot": pre,
+        "target_snapshot": target,
+        "price_window": price_rows,
+        "target_fee_adjusted_min_realized_carry": target_fee_adjusted_carry,
+        "pre_cash_upper_bound": pre_cash_upper_bound,
+        "best_open_long_only": open_long[0] if open_long else None,
+        "best_direct_flip": direct[0] if direct else None,
+        "best_close_then_open": two_step[0] if two_step else None,
+        "open_long_candidates": open_long,
+        "direct_flip_candidates": direct,
+        "close_then_open_candidates": two_step,
+        "method_note": (
+            "Current ranks can change while the contest is live. The solver may "
+            "fall back to the highest-current-ranked visible DID with a published "
+            "target-sweep position. Use --did to pin an exact DID. "
+            "The pre-snapshot position may be consecutive_pnl_slope evidence and "
+            "is therefore weak. Target position must be published_position. "
+            "Buyer fees use the official 1%/clawback max rule. Candidate prices "
+            "use the lowest legal two-decimal quote because that minimizes the "
+            "buyer's fee-adjusted effective cost. Funds requirements are shown "
+            "where they can be derived, but hidden lot/cash history prevents a "
+            "full authoritative feasibility proof. Direct-flip funds are now "
+            "checked against a conservative pre-cash upper bound from the "
+            "historical legal short-entry floor. Close-then-open paths may use "
+            "two sequential trades in the same sweep because the official fold "
+            "checks/applies trades in order. They report exact flat cash after "
+            "the close and whether the subsequent long-open funds check passes."
+        ),
+    }
+
+def cmd_leader_pivot_solve(args) -> None:
+    report = _leader_pivot_solve_report(
+        load_state(),
+        int(args.rank),
+        int(args.from_sweep),
+        int(args.target_sweep),
+        did_override=(args.did or None),
+    )
+    print(json.dumps(report, indent=2, default=str))
+
+
+def cmd_leader_pivot_summary(args) -> None:
+    report = _leader_pivot_solve_report(
+        load_state(),
+        int(args.rank),
+        int(args.from_sweep),
+        int(args.target_sweep),
+        did_override=(args.did or None),
+    )
+    print("subject_selection_mode:", report["subject_selection_mode"])
+    print("leader_rank:", report["leader"]["rank"])
+    print("leader_did:", report["leader"]["did"])
+    print("pre_snapshot:", json.dumps(report["pre_snapshot"], default=str))
+    print("target_snapshot:", json.dumps(report["target_snapshot"], default=str))
+    print(
+        "target_fee_adjusted_min_realized_carry:",
+        report["target_fee_adjusted_min_realized_carry"],
+    )
+    print("best_open_long_only:", json.dumps(report["best_open_long_only"], default=str))
+    print("best_direct_flip:", json.dumps(report["best_direct_flip"], default=str))
+    print(
+        "best_close_then_open:",
+        json.dumps(report["best_close_then_open"], default=str),
+    )
 
 
 def cmd_progress(_args) -> None:
@@ -7040,6 +7711,20 @@ def main() -> None:
     p.add_argument("--rooms", choices=("public", "registered"), default="registered")
     p.add_argument("--room-limit", type=int, default=0)
     p.set_defaults(fn=cmd_leader_path_summary)
+
+    p = sp.add_parser("leader-pivot-solve")
+    p.add_argument("--rank", type=int, default=1)
+    p.add_argument("--did", type=str, default="")
+    p.add_argument("--from-sweep", type=int, default=956)
+    p.add_argument("--target-sweep", type=int, default=960)
+    p.set_defaults(fn=cmd_leader_pivot_solve)
+
+    p = sp.add_parser("leader-pivot-summary")
+    p.add_argument("--rank", type=int, default=1)
+    p.add_argument("--did", type=str, default="")
+    p.add_argument("--from-sweep", type=int, default=956)
+    p.add_argument("--target-sweep", type=int, default=960)
+    p.set_defaults(fn=cmd_leader_pivot_summary)
 
     p = sp.add_parser("gate")
     p.set_defaults(fn=cmd_gate)

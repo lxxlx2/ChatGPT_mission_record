@@ -16,6 +16,27 @@ class LeaderPathReplayTests(unittest.TestCase):
         self.assertLess(synthetic, Decimal("218.50"))
         self.assertGreater(carry, Decimal("0"))
 
+    def test_fee_adjusted_long_carry_bound_includes_mandatory_fee(self):
+        score = Decimal("790.87")
+        mark = Decimal("228.85")
+        qty = Decimal("46.07")
+        raw_low = Decimal("211.8595")
+        effective = Decimal("213.978095")
+        _synthetic, raw = c._leader_min_carry_required(
+            score, mark, qty, raw_low, Decimal("244.4190")
+        )
+        _synthetic, fee_adjusted = c._leader_min_carry_required(
+            score,
+            mark,
+            qty,
+            raw_low,
+            Decimal("244.4190"),
+            effective,
+            Decimal("242"),
+        )
+        self.assertGreater(fee_adjusted, raw)
+        self.assertGreater(fee_adjusted, Decimal("100"))
+
     def test_short_synthetic_entry_above_legal_range_proves_carry(self):
         synthetic, carry = c._leader_min_carry_required(
             score=Decimal("900"),
@@ -77,6 +98,16 @@ class LeaderPathReplayTests(unittest.TestCase):
         self.assertEqual(maker["signed_qty"], Decimal("-12.50"))
         self.assertEqual(taker["action"], "buy")
         self.assertEqual(taker["signed_qty"], Decimal("12.50"))
+
+    def test_inferred_slope_positions_do_not_become_true_transitions(self):
+        pnl = [
+            {"sweep": 10, "mark": Decimal("230"), "score": Decimal("100")},
+            {"sweep": 11, "mark": Decimal("231"), "score": Decimal("140")},
+            {"sweep": 12, "mark": Decimal("232"), "score": Decimal("185")},
+        ]
+        path = c._leader_build_path("did-x", pnl, {}, [], [])
+        self.assertEqual(path["transition_count"], 0)
+        self.assertGreater(path["inferred_diagnostic_count"], 0)
 
     def test_build_path_computes_trade_impact_relative_to_hold(self):
         pnl = [
