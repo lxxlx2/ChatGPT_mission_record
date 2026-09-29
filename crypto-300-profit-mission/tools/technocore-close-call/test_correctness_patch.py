@@ -20,7 +20,7 @@ class CorrectnessPatchTests(unittest.TestCase):
         finally:
             c.parse_export = original
 
-    def test_v5a_snapshot_uses_price_ref_and_requires_visible_settlement(self):
+    def test_v5a_snapshot_uses_price_ref_and_blocks_explicit_void(self):
         pair = {
             "pair_id": "test-pair",
             "cohort_sweep": 10,
@@ -44,12 +44,43 @@ class CorrectnessPatchTests(unittest.TestCase):
         self.assertIsNotNone(snap)
         self.assertEqual(snap["settlement_close"], Decimal("100"))
 
-        unknown = c._v5a_pair_snapshot(
+        omitted_style_unknown = c._v5a_pair_snapshot(
             {}, pair, refs, marks, set(),
             {"long-id": "settled"},
             Decimal("110"),
         )
-        self.assertIsNone(unknown)
+        self.assertIsNotNone(omitted_style_unknown)
+        self.assertEqual(omitted_style_unknown["settlement_close"], Decimal("100"))
+
+        explicit_void = c._v5a_pair_snapshot(
+            {}, pair, refs, marks, set(),
+            {"long-id": "settled", "short-id": "void"},
+            Decimal("110"),
+        )
+        self.assertIsNone(explicit_void)
+
+    def test_room_seen_uses_exact_names_not_substrings(self):
+        original = c.parse_export
+        try:
+            rows = [
+                {"_payload": {"t": "flow", "n": 10, "rooms": ["cc-test-extra"]}},
+            ]
+            c.parse_export = lambda room: rows if room == "d-close1-flow" else []
+            self.assertFalse(c.room_seen("cc-test"))
+        finally:
+            c.parse_export = original
+
+    def test_compact_void_nested_array_is_detected(self):
+        self.assertTrue(c.contains_value([["trade-123", "funds"]], "trade-123"))
+        self.assertFalse(c.contains_value([["trade-999", "funds"]], "trade-123"))
+
+    def test_v5b_stop_retains_seed_cushion(self):
+        self.assertEqual(c._v5b_stop_score(Decimal("58.95")), Decimal("50.1075"))
+        self.assertEqual(c._v5b_stop_score(Decimal("10")), Decimal("20"))
+
+    def test_review_gates_pause_new_v5_work(self):
+        self.assertTrue(c.V5A_REVIEW_PAUSE_NEW)
+        self.assertTrue(c.V5B_REVIEW_PAUSE_NEW)
 
     def test_dense_registration_waits_for_room(self):
         originals = (
