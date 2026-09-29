@@ -31,6 +31,7 @@ import json
 import os
 import secrets
 import stat
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -5960,11 +5961,16 @@ def _cp_simulate_trio(
     donor_b_account: dict,
     close: Decimal,
     upper_limit: Decimal,
+    fixed_leg2_qty: Decimal | None = None,
 ) -> dict:
     """Replay two same-sweep trades across three existing accounts.
 
     Leg 1: target long maker sells its full long to donor A.
     Leg 2: after target becomes flat, target maker sells a new short to donor B.
+
+    If fixed_leg2_qty is supplied, the second trade uses that ex-ante quantity.
+    This is required for production-valid replay because the settlement close is
+    unknown when trades are submitted.
     """
     target = _cp_state_from_account(target_account)
     donor_a = _cp_state_from_account(donor_a_account)
@@ -5998,7 +6004,12 @@ def _cp_simulate_trio(
         }
 
     target_flat_score = _cp_score(target, close)
-    q2 = _cp_second_leg_qty(target, donor_b, upper_limit, close)
+    cap = _cp_second_leg_qty(target, donor_b, upper_limit, close)
+    q2 = (
+        Decimal(str(fixed_leg2_qty)).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+        if fixed_leg2_qty is not None
+        else cap
+    )
     if q2 < Decimal("0.10"):
         return {
             "leg1_settled": True,
@@ -6006,6 +6017,20 @@ def _cp_simulate_trio(
             "reason": "leg2_qty",
             "leg1": leg1,
             "leg2_qty": q2,
+            "leg2_cap": cap,
+            "target_flat_score": target_flat_score,
+            "target": target,
+            "donor_a": donor_a,
+            "donor_b": donor_b,
+        }
+    if q2 > cap:
+        return {
+            "leg1_settled": True,
+            "leg2_settled": False,
+            "reason": "leg2_fixed_qty_exceeds_cap",
+            "leg1": leg1,
+            "leg2_qty": q2,
+            "leg2_cap": cap,
             "target_flat_score": target_flat_score,
             "target": target,
             "donor_a": donor_a,
@@ -6020,11 +6045,37 @@ def _cp_simulate_trio(
         "leg1": leg1,
         "leg2": leg2,
         "leg2_qty": q2,
+        "leg2_cap": cap,
         "target_flat_score": target_flat_score,
         "target": target,
         "donor_a": donor_a,
         "donor_b": donor_b,
     }
+
+
+def _cp_robust_leg2_qty(
+    target: dict,
+    donor_a: dict,
+    donor_b: dict,
+    closes: list[Decimal],
+    upper_limit: Decimal,
+) -> Decimal | None:
+    """Largest fixed leg-2 quantity feasible for every supplied close sample."""
+    caps = []
+    for close in closes:
+        sim = _cp_simulate_trio(
+            target, donor_a, donor_b, close, upper_limit, fixed_leg2_qty=None
+        )
+        if not sim.get("leg1_settled"):
+            return None
+        cap = sim.get("leg2_cap")
+        if cap is None:
+            return None
+        caps.append(Decimal(str(cap)))
+    if not caps:
+        return None
+    qty = min(caps).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+    return qty if qty >= Decimal("0.10") else None
 
 
 def _cp_frontier_excluding(
@@ -6140,6 +6191,9 @@ def _counterparty_redeploy_report(
         accounts, baseline_by_account, excluded, s_grid
     )
 
+    fixed_q2 = _cp_robust_leg2_qty(
+        target, donor_a, donor_b, closes, upper_limit
+    )
     matrix = []
     sample_rows = []
     leg1_ok = 0
@@ -6149,7 +6203,10 @@ def _counterparty_redeploy_report(
         for i in range(len(s_grid))
     )
     for close in closes:
-        sim = _cp_simulate_trio(target, donor_a, donor_b, close, upper_limit)
+        sim = _cp_simulate_trio(
+            target, donor_a, donor_b, close, upper_limit,
+            fixed_leg2_qty=fixed_q2,
+        )
         if sim.get("leg1_settled"):
             leg1_ok += 1
         if sim.get("leg2_settled"):
@@ -6219,6 +6276,7 @@ def _counterparty_redeploy_report(
             ),
             "max_gap": stats["max_gap"] - baseline_stats["max_gap"],
         },
+        "fixed_leg2_qty": fixed_q2,
         "leg1_settle_rate": Decimal(leg1_ok) / Decimal(len(closes)),
         "leg2_settle_rate": Decimal(leg2_ok) / Decimal(len(closes)),
         "grid": _cp_grid_summary(
@@ -6237,7 +6295,10 @@ def _counterparty_redeploy_report(
             "leg 2 has the now-flat target sell the largest feasible short to "
             "donor B while donor B only closes existing short. Both trades use "
             "the current upper legal quote and official maker/taker clawback "
-            "fees. The whole reconstructed portfolio frontier includes the "
+            "fees. Leg 2 uses one fixed ex-ante quantity chosen as the minimum "
+            "feasible cap across all retained close samples, so replay does not "
+            "use the unknown future settlement close for sizing. The whole "
+            "reconstructed portfolio frontier includes the "
             "post-trade donor states. No trade is posted."
         ),
     }
@@ -6284,6 +6345,586 @@ def cmd_counterparty_redeploy_summary(args) -> None:
     print("worst_sample:", json.dumps(report["worst_samples"][0], default=str))
     print("grid:")
     for row in report["grid"]:
+        print(json.dumps(row, default=str))
+
+
+
+
+
+def _cp_account_signature(account: dict) -> tuple:
+    return (
+        account["side"],
+        Decimal(str(account["qty"])),
+        Decimal(str(account["entry"])),
+        Decimal(str(account["opening_fee"])),
+        Decimal(str(account["cash"])),
+        account.get("evidence_mode"),
+        account.get("source"),
+    )
+
+
+def _cp_group_accounts(accounts: list[dict]) -> list[dict]:
+    groups = {}
+    for account in accounts:
+        sig = _cp_account_signature(account)
+        group = groups.setdefault(sig, {
+            "signature": sig,
+            "representative": account,
+            "accounts": [],
+        })
+        group["accounts"].append(account["account"])
+    return list(groups.values())
+
+
+def _cp_top_frontier_rows(
+    accounts: list[dict],
+    baseline_by_account: dict[str, list[Decimal]],
+    s_grid: list[Decimal],
+    keep: int = 8,
+) -> list[list[tuple[Decimal, str]]]:
+    out = []
+    for si in range(len(s_grid)):
+        rows = sorted(
+            (
+                (baseline_by_account[a["account"]][si], a["account"])
+                for a in accounts
+            ),
+            reverse=True,
+        )
+        out.append(rows[:max(4, int(keep))])
+    return out
+
+
+def _cp_other_frontier_from_top(
+    top_rows: list[list[tuple[Decimal, str]]],
+    excluded: set[str],
+) -> list[Decimal]:
+    out = []
+    for rows in top_rows:
+        chosen = None
+        for score, account in rows:
+            if account not in excluded:
+                chosen = score
+                break
+        if chosen is None:
+            chosen = Decimal("-1e30")
+        out.append(chosen)
+    return out
+
+
+def _cp_quick_stats(
+    target: dict,
+    donor_a: dict,
+    donor_b: dict,
+    closes: list[Decimal],
+    upper_limit: Decimal,
+    other_frontier: list[Decimal],
+    podium: list[Decimal],
+    s_grid: list[Decimal],
+) -> dict | None:
+    fixed_q2 = _cp_robust_leg2_qty(
+        target, donor_a, donor_b, closes, upper_limit
+    )
+    if fixed_q2 is None:
+        return None
+
+    matrix = []
+    leg2_qty = []
+    for close in closes:
+        sim = _cp_simulate_trio(
+            target, donor_a, donor_b, close, upper_limit,
+            fixed_leg2_qty=fixed_q2,
+        )
+        if not sim.get("leg1_settled") or not sim.get("leg2_settled"):
+            return None
+        leg2_qty.append(Decimal(str(sim["leg2_qty"])))
+        states = [sim["target"], sim["donor_a"], sim["donor_b"]]
+        row = []
+        for si, final_s in enumerate(s_grid):
+            trio_best = max(_cp_score(st, final_s) for st in states)
+            row.append(max(other_frontier[si], trio_best))
+        matrix.append(row)
+    stats = _v42_frontier_stats(matrix, podium)
+    return {
+        "stats": stats,
+        "leg2_qty_min": min(leg2_qty),
+        "leg2_qty_p50": _v41_quantile(leg2_qty, Decimal("0.50")),
+        "leg2_qty_max": max(leg2_qty),
+        "fixed_leg2_qty": fixed_q2,
+    }
+
+
+def _cp_full_trio_eval(
+    target: dict,
+    donor_a: dict,
+    donor_b: dict,
+    closes: list[Decimal],
+    upper_limit: Decimal,
+    other_frontier: list[Decimal],
+    baseline_frontier: list[Decimal],
+    baseline_stats: dict,
+    podium: list[Decimal],
+    s_grid: list[Decimal],
+) -> dict:
+    fixed_q2 = _cp_robust_leg2_qty(
+        target, donor_a, donor_b, closes, upper_limit
+    )
+    matrix = []
+    leg1_ok = 0
+    leg2_ok = 0
+    qtys = []
+    flat_scores = []
+    best_sample = None
+    worst_sample = None
+    baseline_row_gap = sum(
+        max(podium[i] - baseline_frontier[i], Decimal("0"))
+        for i in range(len(s_grid))
+    )
+
+    for close in closes:
+        sim = _cp_simulate_trio(
+            target, donor_a, donor_b, close, upper_limit,
+            fixed_leg2_qty=fixed_q2,
+        )
+        if sim.get("leg1_settled"):
+            leg1_ok += 1
+        if sim.get("leg2_settled"):
+            leg2_ok += 1
+            qtys.append(Decimal(str(sim["leg2_qty"])))
+            flat_scores.append(Decimal(str(sim["target_flat_score"])))
+
+        states = [sim["target"], sim["donor_a"], sim["donor_b"]]
+        row = []
+        for si, final_s in enumerate(s_grid):
+            trio_best = max(_cp_score(st, final_s) for st in states)
+            row.append(max(other_frontier[si], trio_best))
+        matrix.append(row)
+
+        covered = sum(
+            1 for i, score in enumerate(row) if score >= podium[i]
+        )
+        total_gap = sum(
+            max(podium[i] - row[i], Decimal("0"))
+            for i in range(len(row))
+        )
+        sample = {
+            "close": close,
+            "leg1_settled": bool(sim.get("leg1_settled")),
+            "leg2_settled": bool(sim.get("leg2_settled")),
+            "reason": sim.get("reason"),
+            "leg2_qty": sim.get("leg2_qty"),
+            "target_flat_score": sim.get("target_flat_score"),
+            "target_position_after": _cp_position(sim["target"]),
+            "donor_a_position_after": _cp_position(sim["donor_a"]),
+            "donor_b_position_after": _cp_position(sim["donor_b"]),
+            "covered_S_points": covered,
+            "total_gap": total_gap,
+            "total_gap_delta_vs_baseline_row": total_gap - baseline_row_gap,
+        }
+        if (
+            best_sample is None
+            or (sample["total_gap"], -sample["covered_S_points"])
+            < (best_sample["total_gap"], -best_sample["covered_S_points"])
+        ):
+            best_sample = sample
+        if (
+            worst_sample is None
+            or (sample["total_gap"], -sample["covered_S_points"])
+            > (worst_sample["total_gap"], -worst_sample["covered_S_points"])
+        ):
+            worst_sample = sample
+
+    stats = _v42_frontier_stats(matrix, podium)
+    return {
+        "selected": {
+            "target": target,
+            "donor_a": donor_a,
+            "donor_b": donor_b,
+        },
+        "scenario_stats": stats,
+        "delta": {
+            "covered_cells": stats["covered_cells"] - baseline_stats["covered_cells"],
+            "coverage_rate": stats["coverage_rate"] - baseline_stats["coverage_rate"],
+            "total_gap": stats["total_gap"] - baseline_stats["total_gap"],
+            "mean_positive_gap": (
+                stats["mean_positive_gap"] - baseline_stats["mean_positive_gap"]
+            ),
+            "max_gap": stats["max_gap"] - baseline_stats["max_gap"],
+        },
+        "leg1_settle_rate": Decimal(leg1_ok) / Decimal(len(closes)),
+        "leg2_settle_rate": Decimal(leg2_ok) / Decimal(len(closes)),
+        "fixed_leg2_qty": fixed_q2,
+        "leg2_qty_min": min(qtys) if qtys else None,
+        "leg2_qty_p50": _v41_quantile(qtys, Decimal("0.50")) if qtys else None,
+        "leg2_qty_max": max(qtys) if qtys else None,
+        "target_flat_score_min": min(flat_scores) if flat_scores else None,
+        "target_flat_score_p50": (
+            _v41_quantile(flat_scores, Decimal("0.50"))
+            if flat_scores else None
+        ),
+        "target_flat_score_max": max(flat_scores) if flat_scores else None,
+        "best_sample": best_sample,
+        "worst_sample": worst_sample,
+        "matrix": matrix,
+    }
+
+
+def _counterparty_redeploy_scan(
+    state: dict,
+    start: Decimal,
+    end: Decimal,
+    step: Decimal,
+    lookback: int,
+    top_targets: int,
+    top_donors: int,
+    finalists: int,
+    require_visible: bool = True,
+) -> dict:
+    s_grid = _v42_s_grid(start, end, step)
+    portfolio_accounts = _redeploy_accounts(state)
+    eligible_accounts = portfolio_accounts
+    if require_visible:
+        eligible_accounts = [
+            a for a in portfolio_accounts
+            if a.get("evidence_mode") == "visible_settled"
+        ]
+    if not eligible_accounts:
+        raise ValueError("no eligible reconstructed accounts")
+
+    longs = [a for a in eligible_accounts if a["side"] == "long"]
+    shorts = [a for a in eligible_accounts if a["side"] == "short"]
+    if not longs or len(shorts) < 2:
+        raise ValueError("need at least one long and two short accounts")
+
+    long_groups = _cp_group_accounts(longs)
+    short_groups = _cp_group_accounts(shorts)
+
+    pr = fresh_price(max_age=10**9)
+    ref = Decimal(str(pr["px"]))
+    _lower_limit, upper_limit = dense_v4_limit_bounds(pr)
+    samples = _v41_move_samples(lookback)
+    if not samples:
+        raise ValueError("no historical settlement move samples")
+    closes = sorted(
+        (
+            ref * (Decimal("1") + Decimal(str(x["move"])))
+        ).quantize(Decimal("0.01"))
+        for x in samples
+    )
+    quick_closes = sorted(set([
+        _v41_quantile(closes, Decimal("0.10")),
+        _v41_quantile(closes, Decimal("0.50")),
+        _v41_quantile(closes, Decimal("0.90")),
+    ]))
+
+    competitor = _v42_competitor_model(state, s_grid)
+    podium = [competitor["podium"][x] for x in s_grid]
+
+    by_name = {a["account"]: a for a in portfolio_accounts}
+    baseline_by_account = {
+        a["account"]: [
+            _redeploy_baseline_score(a, final_s)
+            for final_s in s_grid
+        ]
+        for a in portfolio_accounts
+    }
+    baseline_frontier = [
+        max(
+            baseline_by_account[a["account"]][si]
+            for a in portfolio_accounts
+        )
+        for si in range(len(s_grid))
+    ]
+    baseline_matrix = [list(baseline_frontier) for _ in closes]
+    baseline_stats = _v42_frontier_stats(baseline_matrix, podium)
+    top_rows = _cp_top_frontier_rows(
+        portfolio_accounts, baseline_by_account, s_grid, keep=8
+    )
+
+    # Rank long signatures by how much realized score/capital they can unlock
+    # at the median historical close. This is a shortlist only; finalists are
+    # re-evaluated on all historical closes.
+    median_close = _v41_quantile(closes, Decimal("0.50"))
+    target_rank = []
+    for group in long_groups:
+        rep = group["representative"]
+        sim = _redeploy_simulate(
+            rep, median_close, Decimal(str(pr["px"])) * Decimal("0.95"),
+            upper_limit
+        )
+        if not sim["close_feasible"] or not sim["open_feasible"]:
+            continue
+        target_rank.append({
+            "group": group,
+            "flat_score": Decimal(str(sim["flat_score"])),
+            "new_qty": Decimal(str(sim["new_qty"])),
+        })
+    target_rank.sort(
+        key=lambda x: (x["flat_score"], x["new_qty"]),
+        reverse=True,
+    )
+    target_rank = target_rank[:max(1, int(top_targets))]
+
+    # Count how often a short signature currently supplies the local best
+    # frontier. Prefer redundant/dominated donors, then higher-entry/cash donors.
+    baseline_best_names = []
+    for si in range(len(s_grid)):
+        best = baseline_frontier[si]
+        baseline_best_names.append({
+            a["account"]
+            for a in portfolio_accounts
+            if baseline_by_account[a["account"]][si] == best
+        })
+
+    donor_meta = []
+    for group in short_groups:
+        rep = group["representative"]
+        hits = sum(
+            1 for names in baseline_best_names
+            if any(name in names for name in group["accounts"])
+        )
+        donor_meta.append({
+            "group": group,
+            "frontier_hits": hits,
+            "qty": Decimal(str(rep["qty"])),
+            "entry": Decimal(str(rep["entry"])),
+            "cash": Decimal(str(rep["cash"])),
+        })
+
+    quick_candidates = []
+    combinations_tested = 0
+    print(
+        "counterparty-scan:",
+        f"portfolio={len(portfolio_accounts)}",
+        f"eligible={len(eligible_accounts)}",
+        f"long_groups={len(long_groups)}",
+        f"short_groups={len(short_groups)}",
+        f"targets={len(target_rank)}",
+        file=sys.stderr,
+        flush=True,
+    )
+
+    for target_index, target_item in enumerate(target_rank, 1):
+        target_group = target_item["group"]
+        target = target_group["representative"]
+        target_qty = Decimal(str(target["qty"]))
+
+        donor_a_pool = [
+            x for x in donor_meta if x["qty"] >= target_qty
+        ]
+        donor_b_pool = [
+            x for x in donor_meta
+            if x["qty"] >= target_qty * Decimal("0.90")
+        ]
+        donor_a_pool.sort(key=lambda x: (
+            x["frontier_hits"],
+            abs(x["qty"] - target_qty),
+            -x["entry"],
+            -x["cash"],
+        ))
+        donor_b_pool.sort(key=lambda x: (
+            x["frontier_hits"],
+            abs(x["qty"] - target_qty),
+            -x["entry"],
+            -x["cash"],
+        ))
+        donor_a_pool = donor_a_pool[:max(2, int(top_donors))]
+        donor_b_pool = donor_b_pool[:max(2, int(top_donors))]
+
+        for ga in donor_a_pool:
+            for gb in donor_b_pool:
+                names_a = ga["group"]["accounts"]
+                names_b = gb["group"]["accounts"]
+                if ga["group"]["signature"] == gb["group"]["signature"]:
+                    if len(names_a) < 2:
+                        continue
+                    donor_a_name, donor_b_name = names_a[0], names_a[1]
+                else:
+                    donor_a_name, donor_b_name = names_a[0], names_b[0]
+
+                target_name = target_group["accounts"][0]
+                if len({target_name, donor_a_name, donor_b_name}) != 3:
+                    continue
+
+                donor_a = by_name[donor_a_name]
+                donor_b = by_name[donor_b_name]
+                excluded = {target_name, donor_a_name, donor_b_name}
+                other_frontier = _cp_other_frontier_from_top(
+                    top_rows, excluded
+                )
+                combinations_tested += 1
+                quick = _cp_quick_stats(
+                    target,
+                    donor_a,
+                    donor_b,
+                    quick_closes,
+                    upper_limit,
+                    other_frontier,
+                    podium,
+                    s_grid,
+                )
+                if quick is None:
+                    continue
+                quick_candidates.append({
+                    "target": target,
+                    "donor_a": donor_a,
+                    "donor_b": donor_b,
+                    "other_frontier": other_frontier,
+                    "quick": quick,
+                })
+        if target_index == 1 or target_index % 5 == 0 or target_index == len(target_rank):
+            print(
+                "counterparty-scan quick:",
+                f"{target_index}/{len(target_rank)} targets",
+                f"combos={combinations_tested}",
+                f"viable={len(quick_candidates)}",
+                file=sys.stderr,
+                flush=True,
+            )
+
+    quick_candidates.sort(key=lambda x: (
+        x["quick"]["stats"]["covered_cells"],
+        -x["quick"]["stats"]["total_gap"],
+        -x["quick"]["stats"]["max_gap"],
+    ), reverse=True)
+    quick_candidates = quick_candidates[:max(1, int(finalists))]
+
+    full = []
+    print(
+        "counterparty-scan full:",
+        f"finalists={len(quick_candidates)}",
+        file=sys.stderr,
+        flush=True,
+    )
+    for finalist_index, item in enumerate(quick_candidates, 1):
+        result = _cp_full_trio_eval(
+            item["target"],
+            item["donor_a"],
+            item["donor_b"],
+            closes,
+            upper_limit,
+            item["other_frontier"],
+            baseline_frontier,
+            baseline_stats,
+            podium,
+            s_grid,
+        )
+        # Drop the matrix from ranked output after using it for the best grid.
+        result["_matrix"] = result.pop("matrix")
+        full.append(result)
+        print(
+            "counterparty-scan full:",
+            f"{finalist_index}/{len(quick_candidates)}",
+            "target=" + item["target"]["account"],
+            "donorA=" + item["donor_a"]["account"],
+            "donorB=" + item["donor_b"]["account"],
+            file=sys.stderr,
+            flush=True,
+        )
+
+    full.sort(key=lambda x: (
+        x["scenario_stats"]["covered_cells"],
+        -x["scenario_stats"]["total_gap"],
+        -x["scenario_stats"]["max_gap"],
+    ), reverse=True)
+
+    best_grid = []
+    if full:
+        matrix = full[0]["_matrix"]
+        best_grid = _cp_grid_summary(
+            matrix, baseline_frontier, podium, s_grid
+        )
+    for item in full:
+        item.pop("_matrix", None)
+
+    return {
+        "mode": "read_only_counterparty_redeploy_scan",
+        "ref_sweep": pr.get("n"),
+        "ref": ref,
+        "upper_limit": upper_limit,
+        "historical_samples": len(closes),
+        "quick_closes": quick_closes,
+        "target_start": start,
+        "target_end": end,
+        "target_step": step,
+        "portfolio_accounts": len(portfolio_accounts),
+        "eligible_accounts": len(eligible_accounts),
+        "long_signature_groups": len(long_groups),
+        "short_signature_groups": len(short_groups),
+        "target_groups_scanned": len(target_rank),
+        "donor_groups_per_role": int(top_donors),
+        "quick_combinations_tested": combinations_tested,
+        "full_finalists_tested": len(full),
+        "baseline_stats": baseline_stats,
+        "ranked_trios": full,
+        "best_grid": best_grid,
+        "competitor": {
+            "pnl_sweep": competitor["pnl_sweep"],
+            "mark": competitor["mark"],
+            "lines": competitor["lines"][:12],
+        },
+        "note": (
+            "Two-stage read-only scan. Quick stage uses P10/P50/P90 historical "
+            "close samples to shortlist visible-settled account trios. Finalists "
+            "are replayed on all retained historical closes and the full local "
+            "portfolio frontier is recomputed. Donor groups are biased toward "
+            "accounts that are redundant/dominated on the current local frontier "
+            "and have compatible short quantity/cash. No trade is posted."
+        ),
+    }
+
+
+def cmd_counterparty_redeploy_scan(args) -> None:
+    report = _counterparty_redeploy_scan(
+        load_state(),
+        Decimal(str(args.start)),
+        Decimal(str(args.end)),
+        Decimal(str(args.step)),
+        int(args.lookback),
+        int(args.top_targets),
+        int(args.top_donors),
+        int(args.finalists),
+        require_visible=not bool(args.allow_local),
+    )
+    print(json.dumps(report, indent=2, default=str))
+
+
+def cmd_counterparty_redeploy_scan_summary(args) -> None:
+    report = _counterparty_redeploy_scan(
+        load_state(),
+        Decimal(str(args.start)),
+        Decimal(str(args.end)),
+        Decimal(str(args.step)),
+        int(args.lookback),
+        int(args.top_targets),
+        int(args.top_donors),
+        int(args.finalists),
+        require_visible=not bool(args.allow_local),
+    )
+    print("ref_sweep:", report["ref_sweep"])
+    print("ref:", report["ref"])
+    print("portfolio_accounts:", report["portfolio_accounts"])
+    print("eligible_accounts:", report["eligible_accounts"])
+    print("long_signature_groups:", report["long_signature_groups"])
+    print("short_signature_groups:", report["short_signature_groups"])
+    print("target_groups_scanned:", report["target_groups_scanned"])
+    print("quick_combinations_tested:", report["quick_combinations_tested"])
+    print("full_finalists_tested:", report["full_finalists_tested"])
+    print("baseline_stats:", json.dumps(report["baseline_stats"], default=str))
+    for i, item in enumerate(report["ranked_trios"][:10], 1):
+        print(
+            f"#{i}",
+            "target=", item["selected"]["target"]["account"],
+            "donor_a=", item["selected"]["donor_a"]["account"],
+            "donor_b=", item["selected"]["donor_b"]["account"],
+            "delta=", json.dumps(item["delta"], default=str),
+            "leg1_rate=", item["leg1_settle_rate"],
+            "leg2_rate=", item["leg2_settle_rate"],
+            "q2_p50=", item["leg2_qty_p50"],
+            "flat_p50=", item["target_flat_score_p50"],
+        )
+    print("best_grid:")
+    for row in report["best_grid"]:
         print(json.dumps(row, default=str))
 
 
@@ -8595,6 +9236,28 @@ def main() -> None:
     p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
     p.add_argument("--allow-local", action="store_true")
     p.set_defaults(fn=cmd_counterparty_redeploy_summary)
+
+    p = sp.add_parser("counterparty-redeploy-scan")
+    p.add_argument("--start", type=str, default="220")
+    p.add_argument("--end", type=str, default="245")
+    p.add_argument("--step", type=str, default="0.50")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.add_argument("--top-targets", type=int, default=60)
+    p.add_argument("--top-donors", type=int, default=24)
+    p.add_argument("--finalists", type=int, default=20)
+    p.add_argument("--allow-local", action="store_true")
+    p.set_defaults(fn=cmd_counterparty_redeploy_scan)
+
+    p = sp.add_parser("counterparty-redeploy-scan-summary")
+    p.add_argument("--start", type=str, default="220")
+    p.add_argument("--end", type=str, default="245")
+    p.add_argument("--step", type=str, default="0.50")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.add_argument("--top-targets", type=int, default=60)
+    p.add_argument("--top-donors", type=int, default=24)
+    p.add_argument("--finalists", type=int, default=20)
+    p.add_argument("--allow-local", action="store_true")
+    p.set_defaults(fn=cmd_counterparty_redeploy_scan_summary)
 
     p = sp.add_parser("gate")
     p.set_defaults(fn=cmd_gate)
