@@ -367,3 +367,40 @@ The existing scheduler is hourly, so a qualifying event is sent on the next succ
 Practical scheduler latency is 0-59 minutes before analysis/delivery.
 Do not add another intentional full-hour wait when chain history already proves persistence.
 Historical replay must measure both `T0 -> next :29` and `T0 -> delivered stage`.
+
+## Live source hardening — 2026-09-29 12:45 Asia/Bangkok
+
+The 12:33 scheduled Frank lane wrote `unavailable_source`, but a direct manual Alchemy read immediately afterwards successfully returned finalized signatures for the target wallet. Treat that run as a source-selection regression.
+
+Primary chain source for every Frank run:
+- select Alchemy app `mkhr4iorbgonin56` first;
+- call Solana mainnet `getSignaturesForAddress` for `498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ` from the durable cursor to finalized head;
+- use `maxSupportedTransactionVersion=1` when reading transactions;
+- keep 15-minute overlap and signature dedupe.
+
+Active-swap proof:
+- a signature merely mentioning the wallet is insufficient. Recent history contains third-party ATA creation and fee/reward transactions where Frank is not the active trader;
+- when signer status is available, require Frank to be a transaction signer;
+- if a complex transaction response is truncated before signer metadata, count it only when the same transaction contains a Frank-owned token balance delta plus a recognized DEX/aggregator/pool program or swap log and an opposing quote-asset delta consistent with a swap;
+- if active-swap proof cannot be completed, classify the transaction `UNRESOLVED_TX` and do not advance the cursor past it. Never guess BUY from balance increase alone.
+
+Fallback:
+- web/OKX/uwuu/public analytics may enrich token name, historical profile or market context;
+- they may not replace direct-chain proof of a live BUY/SELL;
+- if Alchemy signature retrieval itself fails, retain the old cursor and retry next hour. Do not write `NO_ACTION` for that gap.
+
+Cursor initialization:
+- live two-stage rules became active around 2026-09-29 04:20 Asia/Bangkok;
+- baseline signature immediately before activation: `35s2Y8jayg4XjASEWmNmFTAYBqbFE1G2XAc3CmVQG5zxiCZWBRcQFDmyAtvDkQn9deNJhSaxofS6NU34mDtWYtQS`, slot 451436899, blockTime 2026-09-29 04:15:07 Asia/Bangkok;
+- first recovery scan must process every newer finalized signature before advancing the durable cursor.
+
+Health proof required in every run audit:
+- source_selected
+- cursor_before / cursor_after
+- signatures_seen
+- active_swaps_verified
+- passive_or_reward_filtered
+- unresolved_tx_count
+- cursor_advanced
+- stage_events_persisted
+- gmail_delivery_state.
