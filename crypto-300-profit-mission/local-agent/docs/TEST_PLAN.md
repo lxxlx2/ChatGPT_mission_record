@@ -1,6 +1,6 @@
 # Crypto Opportunity Monitor — Test plan
 
-Design-only catalogue, 2026-09-30. All cases below are NOT_RUN in this round. PHASE 0 capability point probes are separate evidence and cannot be counted as these test passes. No automated suite is implemented or installed here.
+Design-only catalogue, 2026-09-30. This catalogue spans all phases. PHASE 1 execution evidence is recorded separately; future-phase cases remain NOT_RUN. PHASE 0 capability point probes are separate evidence and cannot be counted as these test passes. The PHASE 1 subset will be implemented with a project-local virtualenv; this catalogue alone is not test evidence.
 
 ## Execution rules
 
@@ -782,7 +782,7 @@ Every case uses the following explicit fields; failure_evidence and cleanup are 
 - TEST_ID: P-01
 - module: price replay
 - purpose: Frozen 30d gate all five assets
-- precondition: History verified; HYPE gate blocked until forward accumulation or approved data; no fallback bars
+- precondition: History verified; HYPE follows approved official-only B-HYPE-1/2/3; partial history does not block live shadow; no fallback bars
 - input: >=30d completed 1m +warm-up per asset, frozen formula/rule manifest
 - steps: Validate input coverage; replay shared live module; independent evaluation labels
 - expected_result: Per-asset trigger totals/day median,p95,max/rule counts/overlap/noise/objective misses; full coverage; no hindsight tuning
@@ -932,3 +932,19 @@ Every case uses the following explicit fields; failure_evidence and cleanup are 
 - pass_condition: All stated expected_result assertions proven by recorded outputs; zero unaccounted ids/unsafe side effects; no mandatory assertion skipped.
 - failure_evidence: Private C-01 log, input manifest/hash, actual-vs-expected assertions, DB/queue/cursor/state snapshots, transport hashes and mock/provider-call count as applicable; public report redacts payloads, credentials and provider ids.
 - cleanup: Release test leases, disable canary-send mode, preserve private provider receipts; do not delete real Sent evidence or change automation without authorization.
+
+## Confirmed product decisions — PHASE 1 approval
+
+Status: APPROVED_FOR_PHASE_1_ONLY, not PRODUCTION_READY. User design review approved synthetic local E2E only.
+
+- Gmail policy: AT_LEAST_ONCE (config value `at_least_once`). Stable id, lease/fencing, Sent lookup, immediate provider id persistence, readback, cooldown and DELIVERY_UNCERTAIN remain mandatory; no blind resend. Retry horizon is not implicitly approved. PHASE 1 uses mock only, real send OFF.
+- Future runtime target: `lxxlx2/crypto-monitor-runtime`, required PRIVATE; no automatic creation or runtime push in PHASE 1. Public code/design branch push is authorized; main merge is not.
+- Host policy: post-login LaunchAgent recovery accepted. Continuous collection applies only while powered on, logged in, network available and not asleep. Shutdown, prelogin, sleep or lid-induced sleep are explicit health gaps. No LaunchDaemon/pre-FileVault recovery requirement for v1; no launchd install now.
+- Total local budget: 5 GB (5,000,000,000 bytes), DB/WAL/raw/transport/logs/backups included. Usage >80% DEGRADED_DISK, >95% UNHEALTHY_DISK. Retention, compression, cleanup and measured sizes required; unresolved items cannot be silently removed.
+- HYPE official-only gate: B-HYPE-1 replays all available official 1m history; B-HYPE-2 saves canonical 1m bars from later local collector shadow; B-HYPE-3 automatically repeats complete 30d replay once enough completed history plus warm-up exists. Until then FORWARD_DATA_ACCUMULATING, never 30D_REPLAY_PASS. No third-party history. This accepted partial-history boundary does not block PHASE 1, the other four assets'30d replay, or HYPE live shadow.
+
+These four former OPEN_PRODUCT_DECISION entries are closed. Capability, integration/canary, deployment and other phase gates remain separate blockers. Stop after PHASE 1 for review; no PHASE 2 authorization.
+
+## PHASE 1 executable scope adjustment
+
+The approved minimal migration v1 uses schema_migrations, meta, candidates, outbox, batches, decisions, deliveries and health, plus batch_items, quarantine and mock-provider state where needed for crash accountability. Source cursor/raw/parser modules, actual GitHub retry/API faults, real supervisor tests and market features remain future-phase. DEV_COMPLETE for PHASE 1 now requires its executable mandatory tests in tests/, not all future transport/source cases previously grouped into the broad foundation row. Mandatory: canonical ids/hashes, migration/WAL/transactions/reopen/crash, exact-set receipt rejection, normal+urgent backlog/byte bounds, all eight delivery states and mock failure modes, concurrent consumers, health UNKNOWN and stale override, at least50 synthetic events, zero-loss metrics and synthetic benchmark. Test catalogue-to-executable mapping must be reported; no future tests counted as passed.
