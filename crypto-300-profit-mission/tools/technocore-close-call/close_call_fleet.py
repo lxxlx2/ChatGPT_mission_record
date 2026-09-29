@@ -134,6 +134,11 @@ V5B_MAX_ACTIVE = 1
 V5B_MIN_QTY = Decimal("0.10")
 V5B_NO_NEW_AFTER_SWEEP = 2554
 
+# Referee unlists a quiet private room after 12 sweeps (one hour). Refresh the
+# room registration before that deadline so an unnoticed quiet period cannot
+# make later owner registrations/trades invisible to the referee.
+DENSE_ROOM_REFRESH_SWEEPS = 8
+
 
 def b58(raw: bytes) -> str:
     n = int.from_bytes(raw, "big")
@@ -300,18 +305,30 @@ def latest_payload(room: str, kind: str | None = None) -> dict | None:
 
 
 def room_seen(room: str) -> bool:
+    """Return the latest known referee listing state for a private room.
+
+    flow.rooms lists registrations/re-listings, while flow.unlisted records the
+    opposite transition. Scanning both prevents a historical registration from
+    being treated as permanent after the referee later unlists a quiet room.
+    """
+    listed = False
+    observed = False
     for rec in parse_export("d-close1-flow"):
         p = rec.get("_payload")
-        if not isinstance(p, dict):
+        if not isinstance(p, dict) or p.get("t") != "flow":
             continue
+
         rooms = p.get("rooms")
-        if isinstance(rooms, list) and room in rooms:
-            return True
-        if isinstance(rooms, dict) and room in rooms:
-            return True
-        if room in json.dumps(rooms, separators=(",", ":")):
-            return True
-    return False
+        if room in json.dumps(rooms, separators=(",", ":"), ensure_ascii=False):
+            listed = True
+            observed = True
+
+        unlisted = p.get("unlisted")
+        if room in json.dumps(unlisted, separators=(",", ":"), ensure_ascii=False):
+            listed = False
+            observed = True
+
+    return listed if observed else False
 
 
 def collect_dids(value, out: set[str]) -> None:
@@ -385,16 +402,23 @@ def room_recent_activity_age_s(room: str) -> int | None:
 
 def room_registration_confirmed(state: dict) -> bool:
     dense = state.setdefault("dense", {})
-    if dense.get("room_registration_confirmed"):
-        return True
     try:
-        if room_seen(state["room"]):
+        listed = room_seen(state["room"])
+    except Exception:
+        # A transient read failure must not erase previously observed state.
+        return bool(dense.get("room_registration_confirmed"))
+
+    if listed:
+        if not dense.get("room_registration_confirmed"):
             dense["room_registration_confirmed"] = True
             dense["room_registration_confirmed_at"] = datetime.now(timezone.utc).isoformat()
             save_state(state)
-            return True
-    except Exception:
-        pass
+        return True
+
+    if dense.get("room_registration_confirmed"):
+        dense["room_registration_confirmed"] = False
+        dense["room_registration_lost_at"] = datetime.now(timezone.utc).isoformat()
+        save_state(state)
     return False
 
 
@@ -912,7 +936,7 @@ def dense_v4_submit_multiplicity(state: dict, pr: dict) -> dict:
             "trades": {},
         }
         try:
-            long_tid = f"v4{item['index']:05d}l-{int(time.time())}-{copy_no}"
+            long_tid = deterministic_trade_id("v4l", item["index"], pr["n"], copy_no)
             long_text = build_trade(
                 state,
                 state["room"],
@@ -934,7 +958,7 @@ def dense_v4_submit_multiplicity(state: dict, pr: dict) -> dict:
             save_state(state)
             time.sleep(0.05)
 
-            short_tid = f"v4{item['index']:05d}s-{int(time.time())}-{copy_no}"
+            short_tid = deterministic_trade_id("v4s", item["index"], pr["n"], copy_no)
             short_text = build_trade(
                 state,
                 state["room"],
@@ -1026,6 +1050,37 @@ def _price_refs_by_sweep() -> dict[int, Decimal]:
         except Exception:
             continue
     return out
+
+
+def _flow_omitted_at_sweep(sweep: int) -> dict[str, int]:
+    out = {"settled": 0, "void": 0, "mints": 0}
+    for rec in parse_export("d-close1-flow"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "flow":
+            continue
+        try:
+            if int(p.get("n")) != int(sweep):
+                continue
+        except Exception:
+            continue
+        omitted = p.get("omitted") or {}
+        if not isinstance(omitted, dict):
+            return out
+        for name in out:
+            try:
+                out[name] = int(omitted.get(name) or 0)
+            except Exception:
+                out[name] = 0
+        return out
+    return out
+
+
+def deterministic_trade_id(prefix: str, *parts) -> str:
+    """Stable <=64-char id for crash-safe strategy retries."""
+    raw = "|".join([str(prefix), *(str(x) for x in parts)])
+    digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
+    clean_prefix = "".join(ch for ch in str(prefix) if ch.isalnum() or ch in "_-")[:40] or "cc"
+    return f"{clean_prefix}-{digest}"
 
 
 def _flow_room_missed_at_sweep(room: str, sweep: int) -> bool:
@@ -1317,14 +1372,19 @@ def _v5a_pair_snapshot(
 ) -> dict | None:
     submit_sweep = int(pair["cohort_sweep"])
     settlement_sweep = submit_sweep + 1
-    settlement_close = marks.get(settlement_sweep) or refs.get(settlement_sweep)
+    # Official clawback uses the sweep close from d-close1-price.ref.px.
+    # pnl.mark is the global board mark and must never substitute for it.
+    settlement_close = refs.get(settlement_sweep)
     if settlement_close is None:
         return None
     if settlement_sweep in missed_sweeps:
         return None
 
+    # Compact flow can omit thousands of outcomes. Absence is UNKNOWN, not an
+    # implicit settlement. V5 overlays must only operate on explicitly visible
+    # settled V4 openings until an authoritative archive/reconciliation exists.
     for tid in (pair.get("long_trade_id"), pair.get("short_trade_id")):
-        if tid and visible_outcomes.get(tid) == "void":
+        if not tid or visible_outcomes.get(tid) != "settled":
             return None
 
     opening = _v5a_opening_state(pair, settlement_close)
@@ -1417,7 +1477,7 @@ def _v5a_submit_close(
     pr: dict,
     prefix: str,
 ) -> dict:
-    tid = f"{prefix}-{int(time.time())}"
+    tid = deterministic_trade_id("v5a", prefix, pair["pair_id"])
     text = build_trade(
         state,
         state["room"],
@@ -1455,7 +1515,6 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
         return None
 
     refs = _price_refs_by_sweep()
-    marks = _pnl_marks_by_sweep()
     active = dense.get("v5a_active")
     if isinstance(active, dict):
         stage = active.get("stage")
@@ -1466,7 +1525,7 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
         if pr["n"] <= submit_sweep:
             return None
 
-        settlement_close = marks.get(submit_sweep + 1) or refs.get(submit_sweep + 1)
+        settlement_close = refs.get(submit_sweep + 1)
         if settlement_close is None:
             return None
         if _flow_room_missed_at_sweep(state["room"], submit_sweep + 1):
@@ -1493,6 +1552,22 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
                 "reason": "visible_close_void",
                 "pair_id": active.get("pair_id"),
                 "void": visible,
+            }
+        if not visible or visible.get("status") != "settled":
+            active["stage"] = "blocked_outcome_not_visible"
+            active["outcome_evidence"] = {
+                "settlement_sweep": submit_sweep + 1,
+                "omitted": _flow_omitted_at_sweep(submit_sweep + 1),
+                "trade_id": action.get("trade_id"),
+            }
+            dense["v5a_active"] = active
+            save_state(state)
+            return {
+                "event": "v5a_harvest_blocked",
+                "reason": "close_outcome_not_visible",
+                "pair_id": active.get("pair_id"),
+                "settlement_sweep": submit_sweep + 1,
+                "omitted": active["outcome_evidence"]["omitted"],
             }
 
         account_state = active.get("account_state") or {}
@@ -1986,7 +2061,7 @@ def _v5b_register_pending(state: dict, pr: dict) -> dict | None:
         try:
             for label in pending["feeder_labels"]:
                 add_dynamic_key(state, label)
-            pending["status"] = "registering"
+            pending["status"] = "waiting_room"
             dense["v5b_pending"] = pending
             save_state(state)
         except Exception as e:
@@ -2001,7 +2076,16 @@ def _v5b_register_pending(state: dict, pr: dict) -> dict | None:
             save_state(state)
             return pending
 
+    if pending.get("status") == "waiting_room":
+        if not room_registration_confirmed(state):
+            return pending
+        pending["status"] = "registering"
+        dense["v5b_pending"] = pending
+        save_state(state)
+
     if pending.get("status") == "registering":
+        if not room_registration_confirmed(state):
+            return pending
         done = {
             rec.get("label")
             for rec in (pending.get("registrations") or [])
@@ -2101,7 +2185,7 @@ def _v5b_submit_open(state: dict, pending: dict, pr: dict) -> dict:
     parts = _v5b_split_qty(qty)
     trades = []
     for i, (label, part) in enumerate(zip(pending["feeder_labels"], parts), 1):
-        tid = f"v5b{int(pending['index']):05d}o{i}-{int(time.time())}"
+        tid = deterministic_trade_id("v5bo", pending["index"], i)
         trades.append(_v5b_submit_leg(
             state,
             pending["winner_label"],
@@ -2156,8 +2240,7 @@ def _v5b_verify_open(state: dict, active: dict, pr: dict) -> dict | None:
         return None
     settle_sweep = submit_sweep + 1
     refs = _price_refs_by_sweep()
-    marks = _pnl_marks_by_sweep()
-    close = marks.get(settle_sweep) or refs.get(settle_sweep)
+    close = refs.get(settle_sweep)
     if close is None:
         return None
     if _flow_room_missed_at_sweep(state["room"], settle_sweep):
@@ -2172,6 +2255,24 @@ def _v5b_verify_open(state: dict, active: dict, pr: dict) -> dict | None:
         active["visible_outcomes"] = outcomes
         save_state(state)
         return {"event": "v5b_blocked", "reason": "visible_open_void"}
+    unknown = [
+        x["trade_id"] for x in active.get("open_trades") or []
+        if outcomes.get(x["trade_id"]) != "settled"
+    ]
+    if unknown:
+        active["status"] = "blocked_open_outcome_not_visible"
+        active["visible_outcomes"] = outcomes
+        active["outcome_evidence"] = {
+            "settlement_sweep": settle_sweep,
+            "unknown_trade_ids": unknown,
+            "omitted": _flow_omitted_at_sweep(settle_sweep),
+        }
+        save_state(state)
+        return {
+            "event": "v5b_blocked",
+            "reason": "open_outcome_not_visible",
+            **active["outcome_evidence"],
+        }
 
     qty = Decimal(str(active["qty"]))
     px = Decimal(str(active["entry_px"]))
@@ -2221,7 +2322,7 @@ def _v5b_submit_close(state: dict, active: dict, pr: dict, reason: str, projecte
     parts = [Decimal(str(x)) for x in active["parts"]]
     trades = []
     for i, (label, part) in enumerate(zip(active["feeder_labels"], parts), 1):
-        tid = f"v5b{int(active['cycle_index']):05d}c{i}-{int(time.time())}"
+        tid = deterministic_trade_id("v5bc", active["cycle_index"], i)
         trades.append(_v5b_submit_leg(
             state,
             active["winner_label"],
@@ -2258,8 +2359,7 @@ def _v5b_verify_close(state: dict, active: dict, pr: dict) -> dict | None:
         return None
     settle_sweep = submit_sweep + 1
     refs = _price_refs_by_sweep()
-    marks = _pnl_marks_by_sweep()
-    close = marks.get(settle_sweep) or refs.get(settle_sweep)
+    close = refs.get(settle_sweep)
     if close is None:
         return None
     if _flow_room_missed_at_sweep(state["room"], settle_sweep):
@@ -2273,6 +2373,24 @@ def _v5b_verify_close(state: dict, active: dict, pr: dict) -> dict | None:
         active["visible_outcomes"] = outcomes
         save_state(state)
         return {"event": "v5b_blocked", "reason": "visible_close_void"}
+    unknown = [
+        x["trade_id"] for x in active.get("close_trades") or []
+        if outcomes.get(x["trade_id"]) != "settled"
+    ]
+    if unknown:
+        active["status"] = "blocked_close_outcome_not_visible"
+        active["visible_outcomes"] = outcomes
+        active["outcome_evidence"] = {
+            "settlement_sweep": settle_sweep,
+            "unknown_trade_ids": unknown,
+            "omitted": _flow_omitted_at_sweep(settle_sweep),
+        }
+        save_state(state)
+        return {
+            "event": "v5b_blocked",
+            "reason": "close_outcome_not_visible",
+            **active["outcome_evidence"],
+        }
 
     qty = Decimal(str(active["qty"]))
     entry = Decimal(str(active["entry_px"]))
@@ -2329,7 +2447,7 @@ def _v5b_verify_close(state: dict, active: dict, pr: dict) -> dict | None:
     }
 
 
-def dense_v5b_step(state: dict, pr: dict) -> dict | None:
+def dense_v5b_step(state: dict, pr: dict, allow_new: bool = True) -> dict | None:
     dense = state.setdefault("dense", {})
     if not dense.get("v5b_enabled") or not dense.get("v4_enabled"):
         return None
@@ -2378,6 +2496,9 @@ def dense_v5b_step(state: dict, pr: dict) -> dict | None:
             return None
         if status == "closing_submitted":
             return _v5b_verify_close(state, active, pr)
+        return None
+
+    if not allow_new:
         return None
 
     pending = dense.get("v5b_pending")
@@ -2517,7 +2638,7 @@ def dense_register_pending(state: dict, sweep: int) -> dict:
         pending = {
             "index": idx,
             "labels": labels,
-            "status": "registering",
+            "status": "waiting_room",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "created_sweep": sweep,
             "registrations": {},
@@ -2527,7 +2648,16 @@ def dense_register_pending(state: dict, sweep: int) -> dict:
         dense["next_index"] = idx + 1
         save_state(state)
 
+    if pending.get("status") == "waiting_room":
+        if not room_registration_confirmed(state):
+            return pending
+        pending["status"] = "registering"
+        dense["pending"] = pending
+        save_state(state)
+
     if pending.get("status") == "registering":
+        if not room_registration_confirmed(state):
+            return pending
         for role, label in pending["labels"].items():
             if role in pending["registrations"]:
                 continue
@@ -2551,25 +2681,30 @@ def dense_register_pending(state: dict, sweep: int) -> dict:
 
 
 def dense_room_maintenance(state: dict, pr: dict) -> dict | None:
-    """Maintain room/owner prerequisites independently of price freshness.
+    """Keep the dedicated room referee-listed and gate owner registration.
 
-    Important: flow.rooms is a per-sweep registration record, not a durable
-    membership list. A room does not need to appear in every later flow post.
-    Once a registration is observed, keep that fact locally. The room itself is
-    kept alive by our continuing writes, so technocore's 7-day idle deletion
-    rule is not a practical risk while this autopilot is running.
+    The referee can unlist a quiet room after 12 sweeps. We therefore refresh
+    the room registration every eight sweeps and reconstruct listing state from
+    both flow.rooms and flow.unlisted instead of treating one old registration
+    as permanent.
     """
     dense = state.setdefault("dense", {})
     pending = dense.get("pending")
-    if not isinstance(pending, dict):
-        return None
 
     latest_flow, _st = latest_flow_and_state()
     flow_n = int(latest_flow["n"]) if isinstance(latest_flow, dict) and latest_flow.get("n") is not None else pr["n"]
+    confirmed = room_registration_confirmed(state)
 
-    if not room_registration_confirmed(state):
+    try:
+        last_refresh = int(dense.get("room_registration_refresh_sweep", -10**9))
+    except Exception:
+        last_refresh = -10**9
+    refresh_due = confirmed and (flow_n - last_refresh >= DENSE_ROOM_REFRESH_SWEEPS)
+
+    if not confirmed or refresh_due:
         requested = dense.get("room_registration_requested_sweep")
         ack = None
+        posted = False
         if requested != flow_n:
             ack = post_signed(
                 state,
@@ -2577,23 +2712,35 @@ def dense_room_maintenance(state: dict, pr: dict) -> dict | None:
                 state["controller"],
                 room_text(state["room"]),
             )
+            posted = True
             dense["room_registration_requested_sweep"] = flow_n
             dense["room_registration_requested_at"] = datetime.now(timezone.utc).isoformat()
+            dense["room_registration_refresh_sweep"] = flow_n
             save_state(state)
-        return {
-            "event": "dense_wait_room_registration",
-            "sweep": pr["n"],
-            "flow_sweep": flow_n,
-            "room": state["room"],
-            "registration_posted": requested != flow_n,
-            "pending_index": pending.get("index"),
-            "ack": ack.strip().splitlines()[0] if isinstance(ack, str) and ack.strip() else None,
-        }
 
-    # A prior false-positive "room inactive" check may have marked the pending
-    # owners for re-registration. Re-posting is harmless and gives the pending
-    # batch a clean, post-fix registration point.
-    if pending.get("needs_owner_reregister"):
+        # A keepalive on an already-listed room must not steal the V4 strategy
+        # slot. Only block while the room is actually unconfirmed.
+        if not confirmed:
+            return {
+                "event": "dense_wait_room_registration",
+                "sweep": pr["n"],
+                "flow_sweep": flow_n,
+                "room": state["room"],
+                "registration_posted": posted,
+                "pending_index": pending.get("index") if isinstance(pending, dict) else None,
+                "ack": ack.strip().splitlines()[0] if isinstance(ack, str) and ack.strip() else None,
+            }
+
+    if isinstance(pending, dict) and pending.get("needs_owner_reregister"):
+        if not room_registration_confirmed(state):
+            return {
+                "event": "dense_wait_room_registration",
+                "sweep": pr["n"],
+                "flow_sweep": flow_n,
+                "room": state["room"],
+                "pending_index": pending.get("index"),
+            }
+
         reposted = []
         for role, label in pending["labels"].items():
             did = state["keys"][label]["did"]
@@ -2615,8 +2762,6 @@ def dense_room_maintenance(state: dict, pr: dict) -> dict | None:
         pending["registered_sweep"] = flow_n
         pending["ready_after_sweep"] = max(int(pr["n"]), flow_n) + 1
         dense["pending"] = pending
-        dense.pop("room_registration_requested_sweep", None)
-        dense.pop("room_registration_requested_at", None)
         save_state(state)
         return {
             "event": "dense_owner_registrations_reposted",
@@ -2627,9 +2772,6 @@ def dense_room_maintenance(state: dict, pr: dict) -> dict | None:
             "count": len(reposted),
         }
 
-    dense.pop("room_registration_requested_sweep", None)
-    dense.pop("room_registration_requested_at", None)
-    save_state(state)
     return None
 
 
@@ -2697,7 +2839,7 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
 
     trades = pending.setdefault("trades", {})
     if "long" not in trades:
-        tid = f"d{pending['index']:05d}l-{int(time.time())}"
+        tid = deterministic_trade_id("d4l", pending["index"], pr["n"])
         text = build_trade(
             state,
             state["room"],
@@ -2726,7 +2868,7 @@ def dense_submit_pending(state: dict, pr: dict) -> dict | None:
         time.sleep(0.08)
 
     if "short" not in trades:
-        tid = f"d{pending['index']:05d}s-{int(time.time())}"
+        tid = deterministic_trade_id("d4s", pending["index"], pr["n"])
         text = build_trade(
             state,
             state["room"],
@@ -2822,29 +2964,19 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
     dense = state.setdefault("dense", {})
     pr = fresh_price(max_age=10**9)
 
-    # Registration does not depend on a fresh trading reference. Keep one batch
-    # pre-registered so a future fresh sweep can be used immediately instead of
-    # wasting that sweep on key creation.
+    # Pre-stage one pending batch. Owner registration itself is gated on the
+    # private room being referee-listed.
     pending = dense.get("pending")
-    if not isinstance(pending, dict) or pending.get("status") == "registering":
+    if not isinstance(pending, dict) or pending.get("status") in ("waiting_room", "registering"):
         pending = dense_register_pending(state, pr["n"])
-        if (
-            not (dense.get("v3_enabled") or dense.get("v4_enabled"))
-            and pr["age_s"] is not None
-            and int(pr["age_s"]) > 120
-        ):
-            return {
-                "event": "dense_batch_registered_wait_fresh",
-                "index": pending["index"],
-                "sweep": pr["n"],
-                "age_s": pr["age_s"],
-                "ready_after_sweep": pending["ready_after_sweep"],
-                "labels": pending["labels"],
-            }
 
     maintenance = dense_room_maintenance(state, pr)
     if maintenance:
         return maintenance
+
+    # Room may have become confirmed during maintenance; finish owner
+    # registration before attempting this sweep's V4 entry.
+    pending = dense_register_pending(state, pr["n"])
 
     if dense.get("v3_enabled") or dense.get("v4_enabled"):
         reserve_event = dense_v3_maintain_reserve(state, pr["n"])
@@ -2870,36 +3002,38 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
             "pending_status": (dense.get("pending") or {}).get("status"),
         }
 
-    # V5b gets the first strategy slot on every poll. This guarantees that
-    # realized-profit seeds can register/open and active compound positions can
-    # be risk-managed even when the V4 pending batch repeatedly returns alignment
-    # or room-wait events during a sweep transition.
-    compound = dense_v5b_step(state, pr)
+    # Give the current sweep's V4 entry the first executable strategy slot.
+    # Alignment/wait events are remembered rather than returned immediately so
+    # existing V5 risk management still runs while referee rooms catch up.
+    v4_wait = None
+    submitted = dense_submit_pending(state, pr)
+    if submitted and submitted.get("event") == "dense_ticket_submitted":
+        dense["last_seen_sweep"] = pr["n"]
+        save_state(state)
+        next_pending = dense_register_pending(state, pr["n"])
+        submitted["next_batch"] = next_pending["index"]
+        return submitted
+    if submitted:
+        v4_wait = submitted
+
+    v4_done_this_sweep = int(dense.get("last_seen_sweep", -1)) == int(pr["n"])
+
+    # Existing V5b risk may be managed, but no new cycle is allowed before V4
+    # has successfully submitted for this sweep.
+    compound = dense_v5b_step(state, pr, allow_new=v4_done_this_sweep)
     if compound:
         return compound
 
-    # Existing V5a closes are risk-management work and must not be starved by
-    # V4 alignment/submission returns. Only manage an already-active harvest
-    # here; new V5a candidate selection still happens after V4.
     if isinstance(dense.get("v5a_active"), dict):
         harvest = dense_v5a_harvest_step(state, pr)
         if harvest:
             return harvest
 
-    # Retry a ready pending batch on the same sweep until flow/state catch up.
-    # Only de-duplicate after the pending batch has either submitted or is not yet ready.
-    submitted = dense_submit_pending(state, pr)
-    if submitted and submitted.get("event") not in ("dense_wait_alignment", "dense_wait_room_catchup", "dense_wait_room_registration", "dense_owner_registrations_reposted", "dense_v3_wait_reserve_prime", "dense_v4_wait_reserve_prime"):
-        dense["last_seen_sweep"] = pr["n"]
-        save_state(state)
-        pending = dense_register_pending(state, pr["n"])
-        submitted["next_batch"] = pending["index"]
-        return submitted
-    if submitted:
-        return submitted
+    if v4_wait:
+        return v4_wait
 
-    # Start a new V5a harvest only after V4 had its chance this poll.
-    if not isinstance(dense.get("v5a_active"), dict):
+    # New V5a work is lower priority than current-sweep V4 coverage.
+    if v4_done_this_sweep and not isinstance(dense.get("v5a_active"), dict):
         harvest = dense_v5a_harvest_step(state, pr)
         if harvest:
             return harvest
@@ -2923,7 +3057,7 @@ def dense_autopilot_step(state: dict, now: datetime) -> dict:
         "event": "dense_batch_registered",
         "index": pending["index"],
         "sweep": pr["n"],
-        "ready_after_sweep": pending["ready_after_sweep"],
+        "ready_after_sweep": pending.get("ready_after_sweep"),
         "labels": pending["labels"],
     }
 
