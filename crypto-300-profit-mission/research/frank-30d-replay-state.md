@@ -227,3 +227,40 @@ Updated oldest processed checkpoint:
 - cutoff reached: **NO**
 
 Pagination remained contiguous. No blocked/provider interval was skipped.
+
+
+## Signature enumeration completed — 2026-09-29
+
+Target cutoff:
+- 2026-08-30 14:50 Asia/Bangkok
+- 2026-08-30T07:50:00Z
+
+Final boundary verification:
+- last in-window signature:
+  `2BHu3tmeQVnE9ew5BBYoRBjkKqS54m4MotsPmv1HNGQHg7Y3hAiq1VvteajUXN8bwRrp3GZ8sxzXghoYKbo3grtb`
+- last in-window block time:
+  2026-08-30T08:12:22Z / 2026-08-30 15:12:22 Asia/Bangkok
+- first out-of-window signature:
+  `4KdprSzfSGwHwupBBAZp2eNZAFDSa1hxSFYMXyofxMLXmgachE8KNgunuDrTi6kgcB6ZjMMWFYXMBga5xQtEPxZ`
+- first out-of-window block time:
+  2026-08-30T07:40:46Z / 2026-08-30 14:40:46 Asia/Bangkok
+
+Exact in-window signature count:
+- prior cumulative through 2026-09-11 12:41:21 BKK: 5,979
+- subsequent in-window signatures: 1,127
+- **TOTAL 30D IN-WINDOW SIGNATURES: 7,106**
+
+Enumeration status:
+- cutoff reached: **YES**
+- contiguous signature pagination gap: **NONE KNOWN**
+- no blocked/429 interval was skipped; retries resumed from the same durable checkpoint.
+
+Replay phase transition:
+- PHASE 1 SIGNATURE ENUMERATION: **COMPLETED**
+- PHASE 2 TRANSACTION CLASSIFICATION / ACTIVE-SWAP RECONSTRUCTION: **RUNNING**
+- PHASE 3 HISTORICAL :29 SIGNAL SIMULATION: PENDING
+- PHASE 4 REAL REPLAY EMAILS + FINAL STRATEGY REPORT: PENDING
+
+Important:
+- 7,106 is the exact signature count for the requested replay window under the verified boundary above.
+- It is NOT the active trade count. Passive transfers, ATA activity, rewards/fees, claims, deposits/withdrawals and other non-directional events still need filtering.
