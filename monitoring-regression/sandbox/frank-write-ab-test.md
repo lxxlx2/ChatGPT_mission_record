@@ -18,3 +18,7 @@ classification_test:
 - active_swap_class: BUY
 - opposite_case: SELL
 - passive_case: TRANSFER_FILTERED
+amount_test:
+- gross_buy_usd: 7500
+- gross_sell_usd: 0
+- net_buy_usd: 7500
