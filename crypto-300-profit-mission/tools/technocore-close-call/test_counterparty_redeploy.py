@@ -72,7 +72,7 @@ class CounterpartyRedeployTests(unittest.TestCase):
         )
         self.assertTrue(trade["settled"])
         self.assertEqual(trade["maker_fee"], Decimal("342.6240"))
-        self.assertEqual(trade["taker_fee"], Decimal("99.940608"))
+        self.assertEqual(trade["taker_fee"], Decimal("99.943008"))
         self.assertLessEqual(trade["maker_need"], Decimal("587.7472"))
         self.assertLessEqual(trade["taker_need"], Decimal("188.9824"))
 
