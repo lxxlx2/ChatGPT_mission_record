@@ -276,13 +276,13 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **50 / 7,106**
-- classification_before: `52wYN2mpCk5kgYAJHZjXUGNXQeiDB6fmz8YjRgTTbc7upgUSkB9n1Li7NJ2uBws5bkdSooABPZE7w4yCeZ4QW5YL`
-- classification_oldest_time: **2026-09-28T19:34:34Z / 2026-09-29 02:34:34 Asia/Bangkok**
-- active_swaps_verified: **16**
-- passive_filtered: **34**
+- classified_signature_count: **60 / 7,106**
+- classification_before: `3Egnf68PksrA9Uk9EEhRGJ4RGpUZnLj9Xgk6Mmzobzz3Yv1zeBbjnp4AAJaxiJrLeQLSkw9qCLsEteUnrt9GARmQ`
+- classification_oldest_time: **2026-09-28T19:32:42Z / 2026-09-29 02:32:42 Asia/Bangkok**
+- active_swaps_verified: **21**
+- passive_filtered: **39**
 - unresolved_tx_count: **0**
-- unique_active_tokens: **5**
+- unique_active_tokens: **10**
 
 First five classifications:
 1. `5TCVznw...` 2026-09-29T05:44:13Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
@@ -408,3 +408,32 @@ New active-trade evidence:
 - `311h3F7...` and `5s6URG1...`: third-party/passive create/transfer activity without Frank active authority => PASSIVE.
 
 PHASE 3 will later exclude wrapped-major/execution assets such as SOL from user-facing conviction signals and will apply HFT filtering to rapid execution clusters. No live Frank state was modified.
+
+
+## PHASE 2 manual acceleration checkpoint — 60/7,106
+
+Processed the next 10 signatures continuously after `52wYN2mp...`.
+
+Results:
+- processed_this_chunk: **10**
+- active_swaps_verified_this_chunk: **5**
+- passive_filtered_this_chunk: **5**
+- unresolved_this_chunk: **0**
+- new_durable_count: **60 / 7,106**
+- cumulative_active_swaps_verified: **21**
+- cumulative_passive_filtered: **39**
+- cumulative_unique_active_tokens: **10**
+- new_classification_before: `3Egnf68PksrA9Uk9EEhRGJ4RGpUZnLj9Xgk6Mmzobzz3Yv1zeBbjnp4AAJaxiJrLeQLSkw9qCLsEteUnrt9GARmQ`
+
+Verified active sells in this chunk:
+- `2SwknQWC...`: Frank-owned source account `5swisQ2R...`, mint `bioJ9JTqW62MLz7UKHU69gtKhPpGi1BQhccj2kmSvUJ`, Frank authority, Raydium CLMM path => ACTIVE SELL.
+- `DZN7mq4a...`: Frank-owned source account `EZDcfT5N...`, mint `Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw`, Frank authority, Raydium/Meteora path => ACTIVE SELL.
+- `5FB8VSbH...`: Frank-owned source account `A85JCgpg...`, mint `pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn`, Frank authority, Meteora path => ACTIVE SELL.
+- `2ojY9pp8...`: Frank-owned source account `4FXddJwP...`, mint `Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh`, Frank authority, Raydium CLMM path => ACTIVE SELL.
+- `41YtjD8Z...`: Frank-owned source account `2VfPp2L9...`, mint `3ZLekZYq2qkZiSpnSvabjit34tUkjSwD1JFuW9as9wBG`, Frank authority, Meteora/Raydium CPMM path => ACTIVE SELL.
+
+Passive in this chunk:
+- `4eymEgaE...`, `s2bM8xhL...`, `iQhnSkrJ...`, `3Egnf68P...`: Frank-authorized/plain token-transfer style activity without a verified DEX/pool value-exchange path => PASSIVE_TRANSFER under the frozen rule.
+- `3BWQW1BR...`: Frank not signer/authority for an active swap => PASSIVE.
+
+No signature was skipped. No live Frank cursor or live alert state was modified.
