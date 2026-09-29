@@ -373,15 +373,35 @@ def snapshot() -> dict:
         except Exception:
             autopilot_age_s = None
 
+    dense_progress_sweeps = []
+    for value in (
+        dense.get("last_v4_sweep"),
+        (dense.get("v5b_last_check") or {}).get("sweep"),
+    ):
+        try:
+            dense_progress_sweeps.append(int(value))
+        except Exception:
+            pass
+    dense_progress_sweep = max(dense_progress_sweeps) if dense_progress_sweeps else None
+    dense_progress_current = bool(
+        dense.get("enabled")
+        and dense_progress_sweep is not None
+        and dense_progress_sweep >= int(pr["n"]) - 1
+    )
+
     bracket_status_text = str(bracket.get("status") or "")
     if "blocked" in bracket_status_text.lower():
         system_status = "NEEDS_ATTENTION"
         system_text = "策略遇到阻塞，需要检查"
         user_action = "需要检查后台状态"
-    elif autopilot_age_s is None or autopilot_age_s > 180:
+    elif (autopilot_age_s is None or autopilot_age_s > 180) and not dense_progress_current:
         system_status = "NEEDS_ATTENTION"
         system_text = "后台心跳异常"
         user_action = "需要检查后台是否仍在运行"
+    elif (autopilot_age_s is None or autopilot_age_s > 180) and dense_progress_current:
+        system_status = "OK"
+        system_text = "策略正在运行，状态写入较慢"
+        user_action = "不用操作，最近 referee sweep 仍有 V4/V5b 进度"
     elif pr["age_s"] > 120 and not (dense.get("v3_enabled") or dense.get("v4_enabled")):
         system_status = "WAITING"
         system_text = "正在等待更新的官方价格"
@@ -621,6 +641,8 @@ def snapshot() -> dict:
         "system_text": system_text,
         "user_action": user_action,
         "autopilot_age_s": autopilot_age_s,
+        "dense_progress_sweep": dense_progress_sweep,
+        "dense_progress_current": dense_progress_current,
         "next_event_text": next_event_text,
         "next_event_at": next_event_at.isoformat() if next_event_at else None,
         "next_event_due": next_event_due,
