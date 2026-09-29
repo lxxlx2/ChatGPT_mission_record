@@ -276,11 +276,11 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **160 / 7,106**
-- classification_before: `46KW7RNxziFAafu6gTv3wfh2MckuhZ1HgkgJPdPfRF89ztLK2s8r8pTZwUWYMqxxv7n2PHkd5oGjGkmwAtP8dmpe`
-- classification_oldest_time: **2026-09-28T10:13:58Z / 2026-09-28 17:13:58 Asia/Bangkok**
+- classified_signature_count: **170 / 7,106**
+- classification_before: `3u7T3TvQUr7Uyfnn3p6ApTV4gwAx352b6HCJ9qCVrK1WGoebhQGjcuiwvGC3Cj73PupwZhhV1F6dsq36sAh3hJmH`
+- classification_oldest_time: **2026-09-28T09:01:41Z / 2026-09-28 16:01:41 Asia/Bangkok**
 - active_swaps_verified: **26**
-- passive_filtered: **134**
+- passive_filtered: **144**
 - unresolved_tx_count: **0**
 - unique_active_tokens: **14**
 
@@ -506,3 +506,8 @@ Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved
 ## PHASE 2 checkpoint 160/7,106
 
 Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved. All are third-party Token/Token-2022 transfer or ATA activity; no verified Frank signer/authority DEX value exchange. No live state modified.
+
+
+## PHASE 2 checkpoint 170/7,106
+
+Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved. All are third-party transfer/ATA activity with no verified Frank signer/authority DEX value exchange. No live state modified.
