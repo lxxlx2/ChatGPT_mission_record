@@ -14,3 +14,7 @@ sample_token_delta:
 - mint: TEST_MINT
   token_units: +125000
   quote_units: -7500
+classification_test:
+- active_swap_class: BUY
+- opposite_case: SELL
+- passive_case: TRANSFER_FILTERED
