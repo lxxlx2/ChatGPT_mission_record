@@ -88,3 +88,40 @@ Failure classification update:
 - the scheduled-run "security check blocked" condition is currently non-deterministic and not reproduced by wallet address, exact old checkpoint, `before`, or limit=100 alone;
 - interactive Code Mode also has a separate maximum-tool-calls guard, which is a different failure class and must not be misreported as Alchemy/safety blocking;
 - provider 429s observed in earlier stress tests are another separate failure class.
+
+
+## Continued manual pagination — 2026-09-29 ~16:0x Asia/Bangkok
+
+Starting durable count/checkpoint:
+- cumulative signatures: 2,385
+- checkpoint: `qDPSuBHjFMb2z3Xhzmqt14XzRwEKfpDeMAJ23tKWBMBztaHh2VK7Fw8et3DNDNV5LcmAVLRgnUHtyELQwABmM1N`
+- oldest time: 2026-09-21 20:45:28 Asia/Bangkok
+
+New contiguous pagination:
+- batch A: +215 signatures
+- batch B: +161 signatures
+- batch C: +158 signatures
+- total newly proven contiguous signatures: **+534**
+
+Updated cumulative:
+- **2,919 signatures**
+
+Updated oldest processed checkpoint:
+- signature: `2Wic9q8rVcnqzvpfrgqmGi9afRNVxVbNYRFEUerpkYKojytYYt2ztdZShR1uirZZUCDDVzADAgMQUUxxofiBay1y`
+- block time: 2026-09-20T20:26:26Z
+- Bangkok time: **2026-09-21 03:26:26 Asia/Bangkok**
+- target cutoff: 2026-08-30 14:50 Asia/Bangkok
+- cutoff reached: **NO**
+
+Observed runtime behavior:
+- intermittent OpenAI safety-layer blocks occurred on several individual pagination attempts;
+- retrying the exact same checkpoint with the alternate Alchemy app or a later attempt succeeded;
+- no blocked interval was skipped;
+- provider/runtime errors therefore remain recoverable transient gaps, not permanent history gaps.
+
+Approximate remaining-signature estimate:
+- RPC does not expose an exact count remaining before a historical cutoff;
+- observed average density from 2026-09-21 03:26 BKK through 2026-09-29 ~14:50 BKK is about 14.4 wallet signatures/hour;
+- remaining wall-clock window to 2026-08-30 14:50 BKK is about 516.6 hours;
+- density-based rough estimate: **~7,400 additional wallet signatures remaining** if activity density is similar;
+- this is an estimate only and must not be used as a completion count.
