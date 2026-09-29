@@ -6507,17 +6507,18 @@ def _counterparty_redeploy_scan(
     require_visible: bool = True,
 ) -> dict:
     s_grid = _v42_s_grid(start, end, step)
-    accounts = _redeploy_accounts(state)
+    portfolio_accounts = _redeploy_accounts(state)
+    eligible_accounts = portfolio_accounts
     if require_visible:
-        accounts = [
-            a for a in accounts
+        eligible_accounts = [
+            a for a in portfolio_accounts
             if a.get("evidence_mode") == "visible_settled"
         ]
-    if not accounts:
+    if not eligible_accounts:
         raise ValueError("no eligible reconstructed accounts")
 
-    longs = [a for a in accounts if a["side"] == "long"]
-    shorts = [a for a in accounts if a["side"] == "short"]
+    longs = [a for a in eligible_accounts if a["side"] == "long"]
+    shorts = [a for a in eligible_accounts if a["side"] == "short"]
     if not longs or len(shorts) < 2:
         raise ValueError("need at least one long and two short accounts")
 
@@ -6545,25 +6546,25 @@ def _counterparty_redeploy_scan(
     competitor = _v42_competitor_model(state, s_grid)
     podium = [competitor["podium"][x] for x in s_grid]
 
-    by_name = {a["account"]: a for a in accounts}
+    by_name = {a["account"]: a for a in portfolio_accounts}
     baseline_by_account = {
         a["account"]: [
             _redeploy_baseline_score(a, final_s)
             for final_s in s_grid
         ]
-        for a in accounts
+        for a in portfolio_accounts
     }
     baseline_frontier = [
         max(
             baseline_by_account[a["account"]][si]
-            for a in accounts
+            for a in portfolio_accounts
         )
         for si in range(len(s_grid))
     ]
     baseline_matrix = [list(baseline_frontier) for _ in closes]
     baseline_stats = _v42_frontier_stats(baseline_matrix, podium)
     top_rows = _cp_top_frontier_rows(
-        accounts, baseline_by_account, s_grid, keep=8
+        portfolio_accounts, baseline_by_account, s_grid, keep=8
     )
 
     # Rank long signatures by how much realized score/capital they can unlock
@@ -6597,7 +6598,7 @@ def _counterparty_redeploy_scan(
         best = baseline_frontier[si]
         baseline_best_names.append({
             a["account"]
-            for a in accounts
+            for a in portfolio_accounts
             if baseline_by_account[a["account"]][si] == best
         })
 
@@ -6618,8 +6619,18 @@ def _counterparty_redeploy_scan(
 
     quick_candidates = []
     combinations_tested = 0
+    print(
+        "counterparty-scan:",
+        f"portfolio={len(portfolio_accounts)}",
+        f"eligible={len(eligible_accounts)}",
+        f"long_groups={len(long_groups)}",
+        f"short_groups={len(short_groups)}",
+        f"targets={len(target_rank)}",
+        file=sys.stderr,
+        flush=True,
+    )
 
-    for target_item in target_rank:
+    for target_index, target_item in enumerate(target_rank, 1):
         target_group = target_item["group"]
         target = target_group["representative"]
         target_qty = Decimal(str(target["qty"]))
@@ -6687,6 +6698,15 @@ def _counterparty_redeploy_scan(
                     "other_frontier": other_frontier,
                     "quick": quick,
                 })
+        if target_index == 1 or target_index % 5 == 0 or target_index == len(target_rank):
+            print(
+                "counterparty-scan quick:",
+                f"{target_index}/{len(target_rank)} targets",
+                f"combos={combinations_tested}",
+                f"viable={len(quick_candidates)}",
+                file=sys.stderr,
+                flush=True,
+            )
 
     quick_candidates.sort(key=lambda x: (
         x["quick"]["stats"]["covered_cells"],
@@ -6696,7 +6716,13 @@ def _counterparty_redeploy_scan(
     quick_candidates = quick_candidates[:max(1, int(finalists))]
 
     full = []
-    for item in quick_candidates:
+    print(
+        "counterparty-scan full:",
+        f"finalists={len(quick_candidates)}",
+        file=sys.stderr,
+        flush=True,
+    )
+    for finalist_index, item in enumerate(quick_candidates, 1):
         result = _cp_full_trio_eval(
             item["target"],
             item["donor_a"],
@@ -6712,6 +6738,15 @@ def _counterparty_redeploy_scan(
         # Drop the matrix from ranked output after using it for the best grid.
         result["_matrix"] = result.pop("matrix")
         full.append(result)
+        print(
+            "counterparty-scan full:",
+            f"{finalist_index}/{len(quick_candidates)}",
+            "target=" + item["target"]["account"],
+            "donorA=" + item["donor_a"]["account"],
+            "donorB=" + item["donor_b"]["account"],
+            file=sys.stderr,
+            flush=True,
+        )
 
     full.sort(key=lambda x: (
         x["scenario_stats"]["covered_cells"],
@@ -6738,7 +6773,8 @@ def _counterparty_redeploy_scan(
         "target_start": start,
         "target_end": end,
         "target_step": step,
-        "eligible_accounts": len(accounts),
+        "portfolio_accounts": len(portfolio_accounts),
+        "eligible_accounts": len(eligible_accounts),
         "long_signature_groups": len(long_groups),
         "short_signature_groups": len(short_groups),
         "target_groups_scanned": len(target_rank),
