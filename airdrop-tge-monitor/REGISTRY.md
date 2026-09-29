@@ -111,3 +111,14 @@ Do not require a public project announcement to recognize a direct platform enti
 ## Closed / excluded deals
 
 - humans& / @humansand — **CLOSED**. The user's Echo/Alpen Capital allocation was fully refunded on 2026-09-24. There is no remaining user entitlement or capital at risk in this deal. Exclude humans& and its Echo/Alpen deal channel from hourly shards, urgent checks and rights monitoring. Historical records remain for audit only. Reactivate only if the user explicitly enters a new humans& exposure or asks to monitor it again.
+
+
+## Rights-source mapping requirement — 2026-09-29
+
+Tier B user-rights evidence is valid only for an intermediary explicitly mapped in this registry.
+
+A generic investor, news outlet, KOL, community moderator, aggregator, or unrelated platform is never a Tier B source.
+
+When a deal is CLOSED/FULLY_REFUNDED, remove it from active discovery before network work where practical and persist the state in `state/known-events.md`.
+
+Underlying-company financing/valuation announcements do not trigger a rights alert unless an explicitly mapped deal host/SPV/syndicate/group lead confirms a user-level allocation/term/fee/conversion/transfer/redemption/settlement/distribution impact.
