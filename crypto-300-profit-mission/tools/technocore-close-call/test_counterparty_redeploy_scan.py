@@ -77,6 +77,30 @@ class CounterpartyRedeployScanTests(unittest.TestCase):
             result["leg2_qty_max"], result["leg2_qty_min"]
         )
 
+    def test_robust_leg2_qty_is_fixed_minimum_across_closes(self):
+        target, a, b = self.trio()
+        closes = [Decimal("229.56"), Decimal("230.66"), Decimal("233.87")]
+        q = c._cp_robust_leg2_qty(
+            target, a, b, closes, Decimal("242.18")
+        )
+        self.assertIsNotNone(q)
+        sims = [
+            c._cp_simulate_trio(
+                target, a, b, close, Decimal("242.18"),
+                fixed_leg2_qty=q,
+            )
+            for close in closes
+        ]
+        self.assertTrue(all(x["leg2_settled"] for x in sims))
+        self.assertTrue(all(x["leg2_qty"] == q for x in sims))
+        caps = [
+            c._cp_simulate_trio(
+                target, a, b, close, Decimal("242.18")
+            )["leg2_cap"]
+            for close in closes
+        ]
+        self.assertEqual(q, min(caps))
+
     def test_quick_stats_rejects_infeasible_counterparty(self):
         target, a, b = self.trio()
         a["cash"] = Decimal("1")
