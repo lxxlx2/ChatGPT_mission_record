@@ -165,3 +165,21 @@ The competitor podium model remains a static-current-position stress model, not
 a forecast of rival actions.
 
 No execution or deployment code is included.
+
+
+## Full-portfolio baseline and progress output
+
+Only the **search pool** is restricted to `visible_settled` accounts by
+default. Baseline and scenario frontiers still include every conservatively
+reconstructed unmodified V4 account, including locally reconstructed accounts.
+This keeps the scan comparable with the earlier portfolio-level labs.
+
+The scanner prints progress to stderr while JSON/stdout remains clean. When the
+JSON command is redirected to a file, the terminal will still show:
+
+```text
+counterparty-scan quick: ...
+counterparty-scan full: ...
+```
+
+so a long search should no longer look frozen.
