@@ -563,3 +563,11 @@ Primary live source is Alchemy Solana mainnet finalized via selected app `mkhr4i
 - time: 2026-09-29 04:15:07 Asia/Bangkok.
 
 The recovery window must be fully replayed before the cursor is promoted to current head.
+
+
+## Frank recovery completion — 2026-09-29 13:34 Asia/Bangkok
+
+Historical recovery from slot 451436899 through slot 451550987 is complete and archived at:
+`crypto-300-profit-mission/runs/2026-09-29/133400-frank-recovery.md`.
+
+Current durable cursor is authoritative in `state/frank-live-cursor.md` and is now LIVE. Future runs start from the durable cursor with the required 15-minute overlap. The old recovery baseline is fallback provenance only and must not force a full replay on every healthy cycle.
