@@ -51,3 +51,40 @@ STONK token account:
 Do not send a replay email from aggregate PnL alone. Send only after the chronological replay proves the exact historical alert stage under the current two-stage rules. Every qualifying stage is a real Gmail with message-id readback.
 
 No qualifying replay email has been sent from this new exhaustive run yet because the current work is still in pagination/classification and no stage has been fully proven in chronological order.
+
+
+## Manual repeated-pagination validation — 2026-09-29 ~15:5x Asia/Bangkok
+
+The prior scheduled-run block was re-tested interactively against the exact durable checkpoint.
+
+Exact checkpoint tested:
+- `5w9YamYr9dkcawb8RpZ1BUrsAT4kQfWuwf91WY2jGymr5KmMek8DyzWQnLrSRxbWX9rpE7az9s8foRti84ZwdSYx`
+
+Repeat matrix:
+- primary app, limits 5 / 25 / 100 / 25 / 5: 5/5 PASS
+- backup app, limits 5 / 25 / 100 / 25 / 5: 5/5 PASS
+- both apps returned the same first post-checkpoint signature.
+- limit=100 itself is therefore not a deterministic block trigger.
+
+Sequential pagination stress on primary:
+- 6 consecutive backward pages: 6/6 PASS
+- new unique signatures enumerated beyond the old checkpoint: 160
+- oldest newly enumerated signature:
+  `qDPSuBHjFMb2z3Xhzmqt14XzRwEKfpDeMAJ23tKWBMBztaHh2VK7Fw8et3DNDNV5LcmAVLRgnUHtyELQwABmM1N`
+- oldest block time:
+  2026-09-21T13:45:28Z / 2026-09-21 20:45:28 Asia/Bangkok
+
+Cumulative enumerated signature count:
+- prior durable count: 2,225
+- newly proven contiguous signatures: 160
+- new cumulative count: **2,385**
+
+Updated durable pagination checkpoint:
+- oldest processed signature: `qDPSuBHjFMb2z3Xhzmqt14XzRwEKfpDeMAJ23tKWBMBztaHh2VK7Fw8et3DNDNV5LcmAVLRgnUHtyELQwABmM1N`
+- oldest processed time: **2026-09-21 20:45:28 Asia/Bangkok**
+- cutoff reached: **NO**
+
+Failure classification update:
+- the scheduled-run "security check blocked" condition is currently non-deterministic and not reproduced by wallet address, exact old checkpoint, `before`, or limit=100 alone;
+- interactive Code Mode also has a separate maximum-tool-calls guard, which is a different failure class and must not be misreported as Alchemy/safety blocking;
+- provider 429s observed in earlier stress tests are another separate failure class.
