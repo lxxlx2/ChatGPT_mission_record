@@ -96,3 +96,20 @@ GitHub audit failure must not block Gmail delivery at 08:00/09:00.
 Provider/source failure in one lane must not abort the whole report.
 
 The scheduler trigger alone is not delivery proof. Gmail Sent message id + readback is the delivery authority.
+
+
+## Formal resend / correction completeness — 2026-09-29
+
+Any user-facing resend, recovery resend, correction, or superseding edition that serves as the official morning report MUST be a complete formal report, never a short summary.
+
+Requirements:
+- preserve the established full 12-section structure;
+- use the same quality bar as a normal on-time report;
+- re-read the latest complete historical formal report before drafting if format drift is possible;
+- refresh material time-sensitive facts;
+- send the complete body by Gmail and read it back;
+- archive the exact Gmail body to GitHub and read it back;
+- mark any earlier incomplete same-day recovery email as superseded in GitHub metadata;
+- GitHub failure may delay archive, but MUST NOT reduce the Gmail body to a summary.
+
+A short bullet digest may be sent only when the user explicitly asks for a short digest. It can never silently substitute for the formal morning report.
