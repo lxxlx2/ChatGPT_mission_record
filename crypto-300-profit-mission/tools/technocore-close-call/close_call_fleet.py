@@ -110,6 +110,21 @@ DENSE_V4_SHORT_SAFETIES = (
     Decimal("0.98"), Decimal("0.98"), Decimal("0.98"),
 )
 
+# V4.1 is a read-only research grid on this review branch. It is NOT wired into
+# dense_submit_pending/autopilot. The eight bands keep one median/aggressive
+# copy and progressively widen historical close/ref survival coverage.
+DENSE_V41_LOOKBACK = 576
+DENSE_V41_QUANTILE_BANDS = (
+    (Decimal("0.40"), Decimal("0.60")),
+    (Decimal("0.25"), Decimal("0.75")),
+    (Decimal("0.15"), Decimal("0.85")),
+    (Decimal("0.09"), Decimal("0.91")),
+    (Decimal("0.05"), Decimal("0.95")),
+    (Decimal("0.025"), Decimal("0.975")),
+    (Decimal("0.005"), Decimal("0.995")),
+    (Decimal("0.00"), Decimal("1.00")),
+)
+
 # V5a is a conservative profit-harvest layer on top of V4. It never replaces
 # the every-sweep entry engine. At most two copy-pairs from the same V4 cohort
 # are harvested, leaving at least six copies open for continued frontier
@@ -4746,6 +4761,555 @@ def cmd_enable_dense_v3(_args) -> None:
     print("existing Dense tickets and pending batch are preserved")
 
 
+
+def _v41_px(value) -> Decimal | None:
+    try:
+        if isinstance(value, dict):
+            value = value.get("px")
+        if value is None:
+            return None
+        px = Decimal(str(value))
+        return px if px > 0 else None
+    except Exception:
+        return None
+
+
+def _v41_move_samples(lookback: int = DENSE_V41_LOOKBACK) -> list[dict]:
+    """Historical within-sweep close moves: price.ref / price.applied - 1."""
+    out = []
+    for rec in parse_export("d-close1-price"):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "price":
+            continue
+        applied = _v41_px(p.get("applied"))
+        close = _v41_px(p.get("ref"))
+        if applied is None or close is None:
+            continue
+        try:
+            n = int(p["n"])
+        except Exception:
+            continue
+        out.append({
+            "n": n,
+            "applied": applied,
+            "close": close,
+            "move": close / applied - Decimal("1"),
+        })
+    out.sort(key=lambda x: x["n"])
+    if lookback and lookback > 0:
+        out = out[-lookback:]
+    return out
+
+
+def _v41_quantile(values: list[Decimal], q: Decimal, upper: bool = False) -> Decimal:
+    if not values:
+        raise ValueError("empty V4.1 sample")
+    xs = sorted(values)
+    q = max(Decimal("0"), min(Decimal("1"), q))
+    pos = q * Decimal(len(xs) - 1)
+    idx = int(pos.to_integral_value(rounding=ROUND_CEILING if upper else ROUND_DOWN))
+    idx = max(0, min(len(xs) - 1, idx))
+    return xs[idx]
+
+
+def _v41_stress_band(samples: list[dict], copy_no: int) -> dict:
+    if not 1 <= int(copy_no) <= len(DENSE_V41_QUANTILE_BANDS):
+        raise ValueError("V4.1 copy_no must be 1..8")
+    if len(samples) < 24:
+        raise ValueError("V4.1 needs at least 24 historical price samples")
+    low_q, high_q = DENSE_V41_QUANTILE_BANDS[int(copy_no) - 1]
+    moves = [Decimal(str(x["move"])) for x in samples]
+    return {
+        "low_q": low_q,
+        "high_q": high_q,
+        "coverage": high_q - low_q,
+        "low_move": _v41_quantile(moves, low_q, upper=False),
+        "high_move": _v41_quantile(moves, high_q, upper=True),
+    }
+
+
+def _v41_side_fees(
+    maker_side: str,
+    qty: Decimal,
+    px: Decimal,
+    close: Decimal,
+) -> tuple[Decimal, Decimal]:
+    """Official clawback fee pair: (maker_fee, taker_fee)."""
+    base = Decimal("0.01") * qty * px
+    gap = (close - px) * qty
+    buyer = max(base, gap)
+    seller = max(base, -gap)
+    if maker_side == "buy":
+        return buyer, seller
+    if maker_side == "sell":
+        return seller, buyer
+    raise ValueError("maker_side must be buy/sell")
+
+
+def _v41_simulate_pair(
+    low: Decimal,
+    high: Decimal,
+    long_qty: Decimal,
+    short_qty: Decimal,
+    close: Decimal,
+) -> dict:
+    """Replay the two fresh V4 legs with the official fold cash semantics."""
+    mint = Decimal("10000")
+    feeder_cash = mint
+    long_cash = mint
+    short_cash = mint
+
+    # Leg 1: feeder maker sells to the long target.
+    feeder_fee, long_fee = _v41_side_fees("sell", long_qty, low, close)
+    feeder_need = long_qty * low + feeder_fee
+    long_need = long_qty * low + long_fee
+    long_settled = feeder_cash >= feeder_need and long_cash >= long_need
+    if not long_settled:
+        return {
+            "long_settled": False,
+            "short_settled": False,
+            "long_fee": long_fee,
+            "short_fee": None,
+            "reason": "long_leg_funds",
+        }
+
+    feeder_cash -= feeder_need
+    long_cash -= long_need
+    feeder_short = long_qty
+
+    # Leg 2: short target maker sells to the feeder.
+    #
+    # Match official Fold.check semantics exactly: funds are checked BEFORE
+    # Account.apply releases collateral/proceeds from closing the feeder's
+    # existing short. Therefore a feeder buy that only closes its short needs
+    # fee cash here, while any excess quantity opening a new long additionally
+    # needs opening_long * high collateral. Do not credit close proceeds before
+    # this check.
+    short_fee, feeder_buy_fee = _v41_side_fees("sell", short_qty, high, close)
+    short_need = short_qty * high + short_fee
+    feeder_opening_long = max(Decimal("0"), short_qty - feeder_short)
+    feeder_need_2 = feeder_opening_long * high + feeder_buy_fee
+    short_settled = short_cash >= short_need and feeder_cash >= feeder_need_2
+
+    return {
+        "long_settled": True,
+        "short_settled": bool(short_settled),
+        "long_fee": long_fee,
+        "short_fee": short_fee,
+        "reason": None if short_settled else "short_leg_funds",
+    }
+
+
+def _v41_max_qty(predicate, upper_hint: Decimal) -> Decimal:
+    """Largest 0.01-contract quantity accepted by a monotone cash predicate."""
+    cent = Decimal("0.01")
+    hi = max(10, int((upper_hint / cent).to_integral_value(rounding=ROUND_DOWN)))
+    lo = 10
+    best = 0
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        qty = Decimal(mid) * cent
+        if predicate(qty):
+            best = mid
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return Decimal(best) * cent
+
+
+def dense_v41_plan_copy(
+    pr: dict,
+    copy_no: int,
+    samples: list[dict] | None = None,
+) -> dict:
+    """Read-only proposed V4.1 plan with independent long/short quantities."""
+    samples = samples if samples is not None else _v41_move_samples()
+    band = _v41_stress_band(samples, copy_no)
+    ref = Decimal(str(pr["px"]))
+    lower_limit, upper_limit = dense_v4_limit_bounds(pr)
+    cent = Decimal("0.01")
+
+    stress_low = (ref * (Decimal("1") + band["low_move"])).quantize(
+        cent, rounding=ROUND_DOWN
+    )
+    stress_high = (ref * (Decimal("1") + band["high_move"])).quantize(
+        cent, rounding=ROUND_CEILING
+    )
+    stress_closes = tuple(sorted(set([stress_low, ref.quantize(cent), stress_high])))
+
+    low = lower_limit
+
+    # Choose the short quote around the 1% clawback boundary for the upper edge
+    # of this copy's empirical band: close ~= 0.99 * quote.
+    target_close = max(ref, stress_high)
+    desired_high = (target_close / Decimal("0.99")).quantize(
+        cent, rounding=ROUND_CEILING
+    )
+    min_high = (ref / Decimal("0.99")).quantize(cent, rounding=ROUND_CEILING)
+    high = min(upper_limit, max(min_high, desired_high))
+
+    mint = Decimal("10000")
+    long_upper = (mint / min(stress_closes)).quantize(cent, rounding=ROUND_DOWN)
+
+    def long_ok(qty: Decimal) -> bool:
+        for close in stress_closes:
+            feeder_fee, long_fee = _v41_side_fees("sell", qty, low, close)
+            if mint < qty * low + feeder_fee:
+                return False
+            if mint < qty * low + long_fee:
+                return False
+        return True
+
+    long_qty = _v41_max_qty(long_ok, long_upper)
+
+    def short_ok(qty: Decimal) -> bool:
+        if qty > long_qty:
+            return False
+        return all(
+            _v41_simulate_pair(low, high, long_qty, qty, close)["short_settled"]
+            for close in stress_closes
+        )
+
+    short_qty = _v41_max_qty(short_ok, long_qty)
+
+    return {
+        **band,
+        "copy_no": int(copy_no),
+        "sample_count": len(samples),
+        "ref": ref,
+        "low": low,
+        "high": high,
+        "long_qty": long_qty,
+        "short_qty": short_qty,
+        "short_offset": high / ref - Decimal("1"),
+        "stress_closes": stress_closes,
+        "lower_limit": lower_limit,
+        "upper_limit": upper_limit,
+    }
+
+
+def _v41_summary(values: list[Decimal]) -> dict:
+    if not values:
+        return {"count": 0, "mean": None, "p10": None, "p50": None, "min": None}
+    xs = sorted(values)
+    return {
+        "count": len(xs),
+        "mean": sum(xs, Decimal("0")) / Decimal(len(xs)),
+        "p10": _v41_quantile(xs, Decimal("0.10")),
+        "p50": _v41_quantile(xs, Decimal("0.50")),
+        "min": xs[0],
+    }
+
+
+def dense_v41_backtest(pr: dict, samples: list[dict] | None = None) -> dict:
+    """Compare current V4 with the proposed eight-copy V4.1 grid."""
+    samples = samples if samples is not None else _v41_move_samples()
+    if len(samples) < 24:
+        raise ValueError("V4.1 needs at least 24 historical price samples")
+
+    current = [
+        dense_v4_plan_copy(pr, i)
+        for i in range(1, DENSE_V4_TOTAL_COPIES_PER_SIDE + 1)
+    ]
+    proposed = [
+        dense_v41_plan_copy(pr, i, samples)
+        for i in range(1, len(DENSE_V41_QUANTILE_BANDS) + 1)
+    ]
+
+    ref = Decimal(str(pr["px"]))
+    scenario_up = ref * Decimal("1.05")
+    scenario_down = ref * Decimal("0.95")
+    scenario_up_10 = ref * Decimal("1.10")
+    scenario_down_10 = ref * Decimal("0.90")
+    report = {}
+
+    for name, plans in (("current_v4", current), ("proposed_v41", proposed)):
+        long_qs, short_qs = [], []
+        long_scores, short_scores = [], []
+        long_scores_10, short_scores_10 = [], []
+        no_long = 0
+        no_short = 0
+
+        for sample in samples:
+            close = (ref * (Decimal("1") + Decimal(str(sample["move"])))).quantize(
+                Decimal("0.01")
+            )
+            surviving_long = []
+            surviving_short = []
+            scores_long = []
+            scores_short = []
+
+            for plan in plans:
+                if name == "current_v4":
+                    ql = qs = Decimal(str(plan["qty"]))
+                else:
+                    ql = Decimal(str(plan["long_qty"]))
+                    qs = Decimal(str(plan["short_qty"]))
+
+                sim = _v41_simulate_pair(
+                    Decimal(str(plan["low"])),
+                    Decimal(str(plan["high"])),
+                    ql,
+                    qs,
+                    close,
+                )
+                if sim["long_settled"]:
+                    surviving_long.append(ql)
+                    scores_long.append(
+                        ql * (scenario_up - Decimal(str(plan["low"])))
+                        - Decimal(str(sim["long_fee"]))
+                    )
+                    # Keep the same settlement fee; final S only changes final
+                    # mark-to-position value.
+                    long_scores_10.append(
+                        ql * (scenario_up_10 - Decimal(str(plan["low"])))
+                        - Decimal(str(sim["long_fee"]))
+                    )
+                if sim["short_settled"]:
+                    surviving_short.append(qs)
+                    scores_short.append(
+                        qs * (Decimal(str(plan["high"])) - scenario_down)
+                        - Decimal(str(sim["short_fee"]))
+                    )
+                    short_scores_10.append(
+                        qs * (Decimal(str(plan["high"])) - scenario_down_10)
+                        - Decimal(str(sim["short_fee"]))
+                    )
+
+            if surviving_long:
+                long_qs.append(max(surviving_long))
+                long_scores.append(max(scores_long))
+                # The tail list currently contains one value per surviving
+                # copy in this sample. Collapse the current sample's suffix.
+                k = len(scores_long)
+                if k:
+                    sample_vals = long_scores_10[-k:]
+                    del long_scores_10[-k:]
+                    long_scores_10.append(max(sample_vals))
+            else:
+                no_long += 1
+
+            if surviving_short:
+                short_qs.append(max(surviving_short))
+                short_scores.append(max(scores_short))
+                k = len(scores_short)
+                if k:
+                    sample_vals = short_scores_10[-k:]
+                    del short_scores_10[-k:]
+                    short_scores_10.append(max(sample_vals))
+            else:
+                no_short += 1
+
+        report[name] = {
+            "samples": len(samples),
+            "no_long_survivor": no_long,
+            "no_short_survivor": no_short,
+            "best_long_qty": _v41_summary(long_qs),
+            "best_short_qty": _v41_summary(short_qs),
+            "best_long_score_if_final_ref_plus_5pct": _v41_summary(long_scores),
+            "best_short_score_if_final_ref_minus_5pct": _v41_summary(short_scores),
+            "best_long_score_if_final_ref_plus_10pct": _v41_summary(long_scores_10),
+            "best_short_score_if_final_ref_minus_10pct": _v41_summary(short_scores_10),
+        }
+
+    return report
+
+
+def _v41_local_open_candidates(state: dict) -> list[dict]:
+    """Conservative reconstruction of currently unmodified V4 target pairs."""
+    pairs = _v5a_v4_pairs(state)
+    dense = state.get("dense") or {}
+    modified = set((dense.get("v5a_harvested") or {}).keys())
+    active = dense.get("v5a_active")
+    if isinstance(active, dict) and active.get("pair_id"):
+        modified.add(str(active["pair_id"]))
+
+    refs = _price_refs_by_sweep()
+    missed = _v5a_missed_sweeps(state["room"])
+    trade_ids = {
+        tid
+        for pair in pairs
+        for tid in (pair.get("long_trade_id"), pair.get("short_trade_id"))
+        if tid
+    }
+    visible = _v5a_visible_outcomes(trade_ids)
+    submissions = trade_submissions_in_room(state["room"], trade_ids)
+    out = []
+
+    for pair in pairs:
+        if pair["pair_id"] in modified:
+            continue
+        settle_sweep = int(pair["cohort_sweep"]) + 1
+        close = refs.get(settle_sweep)
+        if close is None or settle_sweep in missed:
+            continue
+
+        ltid = pair.get("long_trade_id")
+        stid = pair.get("short_trade_id")
+        if not ltid or not stid:
+            continue
+
+        omitted = _flow_omitted_at_sweep(settle_sweep)
+        compact_incomplete = bool(omitted.get("settled") or omitted.get("void"))
+        long_visible = visible.get(ltid) == "settled"
+        short_visible = visible.get(stid) == "settled"
+        long_local = (
+            visible.get(ltid) != "void"
+            and compact_incomplete
+            and ltid in submissions
+        )
+        short_local = (
+            visible.get(stid) != "void"
+            and compact_incomplete
+            and stid in submissions
+        )
+        long_evidence = long_visible or long_local
+        short_evidence = short_visible or short_local
+        long_evidence_mode = (
+            "visible_settled" if long_visible
+            else "local_reconstruction" if long_local
+            else "none"
+        )
+        short_evidence_mode = (
+            "visible_settled" if short_visible
+            else "local_reconstruction" if short_local
+            else "none"
+        )
+        if not long_evidence and not short_evidence:
+            continue
+
+        qty = Decimal(str(pair["qty"]))
+        sim = _v41_simulate_pair(
+            Decimal(str(pair["low"])),
+            Decimal(str(pair["high"])),
+            qty,
+            qty,
+            close,
+        )
+        out.append({
+            "pair": pair,
+            "close": close,
+            "long_settled": bool(long_evidence and sim["long_settled"]),
+            "short_settled": bool(short_evidence and sim["short_settled"]),
+            "long_evidence_mode": long_evidence_mode,
+            "short_evidence_mode": short_evidence_mode,
+            "long_fee": sim["long_fee"],
+            "short_fee": sim["short_fee"],
+        })
+    return out
+
+
+def _v41_candidate_score(candidate: dict, side: str, final_s: Decimal) -> Decimal | None:
+    pair = candidate["pair"]
+    qty = Decimal(str(pair["qty"]))
+    if side == "long":
+        if not candidate["long_settled"]:
+            return None
+        return (
+            qty * (final_s - Decimal(str(pair["low"])))
+            - Decimal(str(candidate["long_fee"]))
+        )
+    if side == "short":
+        if not candidate["short_settled"]:
+            return None
+        return (
+            qty * (Decimal(str(pair["high"])) - final_s)
+            - Decimal(str(candidate["short_fee"]))
+        )
+    raise ValueError("side must be long/short")
+
+
+def cmd_dense_v41_preview(args) -> None:
+    samples = _v41_move_samples(args.lookback)
+    pr = fresh_price(max_age=10**9)
+    if len(samples) < 24:
+        raise SystemExit(f"only {len(samples)} usable V4.1 samples")
+
+    moves = sorted(Decimal(str(x["move"])) for x in samples)
+    print("=== DENSE V4.1 READ-ONLY PREVIEW ===")
+    print("sweep:", pr["n"], "ref:", pr["px"], "samples:", len(samples))
+    print("move_min:", (moves[0] * 100).quantize(Decimal("0.0001")), "%")
+    print("move_p01:", (_v41_quantile(moves, Decimal("0.01")) * 100).quantize(Decimal("0.0001")), "%")
+    print("move_p50:", (_v41_quantile(moves, Decimal("0.50")) * 100).quantize(Decimal("0.0001")), "%")
+    print("move_p99:", (_v41_quantile(moves, Decimal("0.99"), upper=True) * 100).quantize(Decimal("0.0001")), "%")
+    print("move_max:", (moves[-1] * 100).quantize(Decimal("0.0001")), "%")
+    print("copy,low_q,high_q,low_move,high_move,long_px,short_px,long_qty,short_qty,short_offset")
+    for copy_no in range(1, len(DENSE_V41_QUANTILE_BANDS) + 1):
+        plan = dense_v41_plan_copy(pr, copy_no, samples)
+        print(
+            copy_no,
+            plan["low_q"],
+            plan["high_q"],
+            (plan["low_move"] * 100).quantize(Decimal("0.0001")),
+            (plan["high_move"] * 100).quantize(Decimal("0.0001")),
+            plan["low"],
+            plan["high"],
+            plan["long_qty"],
+            plan["short_qty"],
+            (plan["short_offset"] * 100).quantize(Decimal("0.0001")),
+            sep=",",
+        )
+
+
+def cmd_dense_v41_backtest(args) -> None:
+    samples = _v41_move_samples(args.lookback)
+    pr = fresh_price(max_age=10**9)
+    print(json.dumps(dense_v41_backtest(pr, samples), indent=2, default=str))
+
+
+def cmd_dense_final_s_grid(args) -> None:
+    state = load_state()
+    candidates = _v41_local_open_candidates(state)
+    start = Decimal(str(args.start))
+    end = Decimal(str(args.end))
+    step = Decimal(str(args.step))
+    if step <= 0:
+        raise SystemExit("step must be > 0")
+
+    print("S,candidate_count,rank,score,label,side,pair_id,cohort_sweep,copy_no,evidence_mode")
+    final_s = start
+    while final_s <= end:
+        scored = []
+        for candidate in candidates:
+            pair = candidate["pair"]
+            for side in ("long", "short"):
+                score = _v41_candidate_score(candidate, side, final_s)
+                if score is None:
+                    continue
+                scored.append({
+                    "score": score,
+                    "label": pair[side],
+                    "side": side,
+                    "pair_id": pair["pair_id"],
+                    "cohort_sweep": pair["cohort_sweep"],
+                    "copy_no": pair["copy_no"],
+                    "evidence_mode": candidate.get(
+                        "long_evidence_mode" if side == "long" else "short_evidence_mode",
+                        "unknown",
+                    ),
+                })
+        scored.sort(key=lambda x: x["score"], reverse=True)
+        top = scored[:3]
+        if not top:
+            print(final_s, 0, "", "", "", "", "", "", "", sep=",")
+        else:
+            for rank, item in enumerate(top, 1):
+                print(
+                    final_s,
+                    len(scored),
+                    rank,
+                    item["score"].quantize(Decimal("0.000001")),
+                    item["label"],
+                    item["side"],
+                    item["pair_id"],
+                    item["cohort_sweep"],
+                    item["copy_no"],
+                    item["evidence_mode"],
+                    sep=",",
+                )
+        final_s += step
+
+
 def cmd_dense_v4_preview(_args) -> None:
     pr = fresh_price(max_age=10**9)
     print("=== DENSE V4 PREVIEW ===")
@@ -5329,6 +5893,20 @@ def main() -> None:
 
     p = sp.add_parser("dense-v4-preview")
     p.set_defaults(fn=cmd_dense_v4_preview)
+
+    p = sp.add_parser("dense-v41-preview")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.set_defaults(fn=cmd_dense_v41_preview)
+
+    p = sp.add_parser("dense-v41-backtest")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.set_defaults(fn=cmd_dense_v41_backtest)
+
+    p = sp.add_parser("dense-final-s-grid")
+    p.add_argument("--start", type=str, default="200")
+    p.add_argument("--end", type=str, default="260")
+    p.add_argument("--step", type=str, default="0.50")
+    p.set_defaults(fn=cmd_dense_final_s_grid)
 
     p = sp.add_parser("dense-v5a-preview")
     p.set_defaults(fn=cmd_dense_v5a_preview)
