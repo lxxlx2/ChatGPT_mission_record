@@ -116,3 +116,26 @@ Per project, classify as:
 - `identity_fail`: evidence existed but canonical identity could not be safely resolved.
 
 Only `source_unavailable` counts toward source_failures or partial_failure. A normal no-result / no-update check is healthy and must not downgrade the run.
+
+
+## Mandatory ACTION gate — 2026-09-29
+
+Before any TGE/airdrop/rights notification, read and enforce `ACTION_GATE.md` and `state/known-events.md`.
+
+A candidate may notify only after all of these pass:
+- active scope / not CLOSED;
+- canonical identity;
+- Tier A project-first-party OR Tier B explicitly mapped user-rights source;
+- freshness/current-actionability;
+- user-known/delivered/completed dedupe;
+- stable event-key dedupe;
+- material delta;
+- direct relevance to the user's entitlement/action/rights.
+
+Independent English media, KOL/community posts, search summaries and aggregators are discovery/corroboration only. They cannot authorize an ACTION by themselves.
+
+Old/expired/undated material is silent unless a current Tier A/B source proves a still-open action and the missed delivery would materially risk an unresolved user right.
+
+Generic company financing/valuation news is silent unless a mapped user-facing deal source proves that the user's own allocation, terms, fees, conversion, transfer/redemption, settlement or distribution changed.
+
+Every candidate audit must record the ACTION_GATE required fields and a rejection reason when suppressed.
