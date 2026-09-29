@@ -281,3 +281,40 @@ as a valid ordered path. It is marked `same_sweep_ordered: true`.
 The first trade still requires enough pre-existing cash to pay its close fee.
 After that close settles, the solver computes exact `flat_cash_after_close`
 and evaluates the second trade's funds check from that released cash.
+
+
+## Pre-short realized-carry lower bound
+
+A successful same-sweep close-then-open path still requires enough cash to pay
+the first short-closing fee before any collateral is released.
+
+For an open short with average entry `p` at the pre snapshot:
+
+```text
+equity = 10000 + score
+cash = equity - qty * (2 * p - mark)
+```
+
+The official first-leg funds check requires:
+
+```text
+cash >= close_fee
+```
+
+which yields an upper bound on the average short entry price.
+
+The solver combines that bound with the historical legal quote envelope and
+the minimum 1% opening fee to derive:
+
+```text
+min_prior_realized_carry_before_short
+```
+
+This is a stronger constraint than the later long-only carry bound because it
+also respects the cash needed to execute the pivot's first closing trade.
+
+For each two-step candidate the solver reports this bound for both:
+
+- the inferred pre-short quantity from PnL slope;
+- the exact implied pre-short quantity that would reproduce the observed target
+  score for that candidate.
