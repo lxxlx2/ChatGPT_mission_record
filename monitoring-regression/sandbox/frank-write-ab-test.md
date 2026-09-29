@@ -22,3 +22,7 @@ amount_test:
 - gross_buy_usd: 7500
 - gross_sell_usd: 0
 - net_buy_usd: 7500
+stage_test:
+- stage_result: PRECONFIRM
+- delivery_state: TEST_ONLY_NO_EMAIL
+- subject_example: "[300 Mission][预确认][Frank] TEST"
