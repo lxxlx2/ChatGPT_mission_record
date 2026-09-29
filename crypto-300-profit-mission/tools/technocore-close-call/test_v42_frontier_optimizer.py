@@ -116,8 +116,36 @@ class V42FrontierOptimizerTests(unittest.TestCase):
             s_grid,
             2,
         )
-        self.assertEqual(len(selected), 2)
-        self.assertEqual(len(meta["rounds"]), 2)
+        self.assertLessEqual(len(selected), 2)
+        self.assertEqual(len(meta["rounds"]), len(selected))
+
+    def test_greedy_stops_when_no_candidate_improves_objective(self):
+        # Existing frontier already beats the podium everywhere, so no fresh
+        # candidate can improve covered cells or positive-gap statistics.
+        pr = {"px": Decimal("230"), "raw": {}}
+        plan = c.dense_v42_plan_pair(
+            pr,
+            self.samples(),
+            3,
+            Decimal("0.05"),
+            Decimal("0.05"),
+            Decimal("1.00"),
+        )
+        s_grid = [Decimal("220"), Decimal("230"), Decimal("240")]
+        existing = {s: Decimal("1000") for s in s_grid}
+        podium = {s: Decimal("500") for s in s_grid}
+        selected, _frontier, meta = c._v42_greedy_select(
+            [plan],
+            existing,
+            podium,
+            Decimal("230"),
+            [Decimal("0")],
+            s_grid,
+            8,
+        )
+        self.assertEqual(selected, [])
+        self.assertTrue(meta["saturated"])
+        self.assertEqual(meta["selected_count"], 0)
 
 
 if __name__ == "__main__":
