@@ -115,7 +115,7 @@ DENSE_V4_SHORT_SAFETIES = (
 # copy and progressively widen historical close/ref survival coverage.
 DENSE_V41_LOOKBACK = 576
 DENSE_V41_QUANTILE_BANDS = (
-    (Decimal("0.50"), Decimal("0.50")),
+    (Decimal("0.40"), Decimal("0.60")),
     (Decimal("0.25"), Decimal("0.75")),
     (Decimal("0.15"), Decimal("0.85")),
     (Decimal("0.09"), Decimal("0.91")),
@@ -4878,6 +4878,13 @@ def _v41_simulate_pair(
     feeder_short = long_qty
 
     # Leg 2: short target maker sells to the feeder.
+    #
+    # Match official Fold.check semantics exactly: funds are checked BEFORE
+    # Account.apply releases collateral/proceeds from closing the feeder's
+    # existing short. Therefore a feeder buy that only closes its short needs
+    # fee cash here, while any excess quantity opening a new long additionally
+    # needs opening_long * high collateral. Do not credit close proceeds before
+    # this check.
     short_fee, feeder_buy_fee = _v41_side_fees("sell", short_qty, high, close)
     short_need = short_qty * high + short_fee
     feeder_opening_long = max(Decimal("0"), short_qty - feeder_short)
@@ -5012,10 +5019,14 @@ def dense_v41_backtest(pr: dict, samples: list[dict] | None = None) -> dict:
     ref = Decimal(str(pr["px"]))
     scenario_up = ref * Decimal("1.05")
     scenario_down = ref * Decimal("0.95")
+    scenario_up_10 = ref * Decimal("1.10")
+    scenario_down_10 = ref * Decimal("0.90")
     report = {}
 
     for name, plans in (("current_v4", current), ("proposed_v41", proposed)):
-        long_qs, short_qs, long_scores, short_scores = [], [], [], []
+        long_qs, short_qs = [], []
+        long_scores, short_scores = [], []
+        long_scores_10, short_scores_10 = [], []
         no_long = 0
         no_short = 0
 
@@ -5048,22 +5059,44 @@ def dense_v41_backtest(pr: dict, samples: list[dict] | None = None) -> dict:
                         ql * (scenario_up - Decimal(str(plan["low"])))
                         - Decimal(str(sim["long_fee"]))
                     )
+                    # Keep the same settlement fee; final S only changes final
+                    # mark-to-position value.
+                    long_scores_10.append(
+                        ql * (scenario_up_10 - Decimal(str(plan["low"])))
+                        - Decimal(str(sim["long_fee"]))
+                    )
                 if sim["short_settled"]:
                     surviving_short.append(qs)
                     scores_short.append(
                         qs * (Decimal(str(plan["high"])) - scenario_down)
                         - Decimal(str(sim["short_fee"]))
                     )
+                    short_scores_10.append(
+                        qs * (Decimal(str(plan["high"])) - scenario_down_10)
+                        - Decimal(str(sim["short_fee"]))
+                    )
 
             if surviving_long:
                 long_qs.append(max(surviving_long))
                 long_scores.append(max(scores_long))
+                # The tail list currently contains one value per surviving
+                # copy in this sample. Collapse the current sample's suffix.
+                k = len(scores_long)
+                if k:
+                    sample_vals = long_scores_10[-k:]
+                    del long_scores_10[-k:]
+                    long_scores_10.append(max(sample_vals))
             else:
                 no_long += 1
 
             if surviving_short:
                 short_qs.append(max(surviving_short))
                 short_scores.append(max(scores_short))
+                k = len(scores_short)
+                if k:
+                    sample_vals = short_scores_10[-k:]
+                    del short_scores_10[-k:]
+                    short_scores_10.append(max(sample_vals))
             else:
                 no_short += 1
 
@@ -5075,6 +5108,8 @@ def dense_v41_backtest(pr: dict, samples: list[dict] | None = None) -> dict:
             "best_short_qty": _v41_summary(short_qs),
             "best_long_score_if_final_ref_plus_5pct": _v41_summary(long_scores),
             "best_short_score_if_final_ref_minus_5pct": _v41_summary(short_scores),
+            "best_long_score_if_final_ref_plus_10pct": _v41_summary(long_scores_10),
+            "best_short_score_if_final_ref_minus_10pct": _v41_summary(short_scores_10),
         }
 
     return report
@@ -5116,11 +5151,29 @@ def _v41_local_open_candidates(state: dict) -> list[dict]:
 
         omitted = _flow_omitted_at_sweep(settle_sweep)
         compact_incomplete = bool(omitted.get("settled") or omitted.get("void"))
-        long_evidence = visible.get(ltid) == "settled" or (
-            visible.get(ltid) != "void" and compact_incomplete and ltid in submissions
+        long_visible = visible.get(ltid) == "settled"
+        short_visible = visible.get(stid) == "settled"
+        long_local = (
+            visible.get(ltid) != "void"
+            and compact_incomplete
+            and ltid in submissions
         )
-        short_evidence = visible.get(stid) == "settled" or (
-            visible.get(stid) != "void" and compact_incomplete and stid in submissions
+        short_local = (
+            visible.get(stid) != "void"
+            and compact_incomplete
+            and stid in submissions
+        )
+        long_evidence = long_visible or long_local
+        short_evidence = short_visible or short_local
+        long_evidence_mode = (
+            "visible_settled" if long_visible
+            else "local_reconstruction" if long_local
+            else "none"
+        )
+        short_evidence_mode = (
+            "visible_settled" if short_visible
+            else "local_reconstruction" if short_local
+            else "none"
         )
         if not long_evidence and not short_evidence:
             continue
@@ -5138,6 +5191,8 @@ def _v41_local_open_candidates(state: dict) -> list[dict]:
             "close": close,
             "long_settled": bool(long_evidence and sim["long_settled"]),
             "short_settled": bool(short_evidence and sim["short_settled"]),
+            "long_evidence_mode": long_evidence_mode,
+            "short_evidence_mode": short_evidence_mode,
             "long_fee": sim["long_fee"],
             "short_fee": sim["short_fee"],
         })
@@ -5211,7 +5266,7 @@ def cmd_dense_final_s_grid(args) -> None:
     if step <= 0:
         raise SystemExit("step must be > 0")
 
-    print("S,candidate_count,rank,score,label,side,pair_id,cohort_sweep,copy_no")
+    print("S,candidate_count,rank,score,label,side,pair_id,cohort_sweep,copy_no,evidence_mode")
     final_s = start
     while final_s <= end:
         scored = []
@@ -5228,6 +5283,10 @@ def cmd_dense_final_s_grid(args) -> None:
                     "pair_id": pair["pair_id"],
                     "cohort_sweep": pair["cohort_sweep"],
                     "copy_no": pair["copy_no"],
+                    "evidence_mode": candidate.get(
+                        "long_evidence_mode" if side == "long" else "short_evidence_mode",
+                        "unknown",
+                    ),
                 })
         scored.sort(key=lambda x: x["score"], reverse=True)
         top = scored[:3]
@@ -5245,6 +5304,7 @@ def cmd_dense_final_s_grid(args) -> None:
                     item["pair_id"],
                     item["cohort_sweep"],
                     item["copy_no"],
+                    item["evidence_mode"],
                     sep=",",
                 )
         final_s += step
