@@ -747,3 +747,35 @@ If the external-call budget is exhausted:
 - persist completed classifications;
 - keep remaining candidates DEFERRED_SHORTLIST or DATA_GAP;
 - mark overall partial_failure only if a mandatory lane lacks its required durable receipt.
+
+
+## Two-write cycle bundle override — 2026-09-29 15:28 Asia/Bangkok
+
+This section overrides earlier per-lane multi-file persistence for the existing $300 automation.
+
+Observed failure: scheduled runs can successfully perform the first one or two GitHub contents writes, then later core/Frank/completion writes are blocked by the runtime safety layer. To keep monitoring reliable, each cycle now uses at most two GitHub contents mutations:
+
+1. create `runs/YYYY-MM-DD/HHMMSS-cycle.md` with `status: RUNNING`;
+2. after CORE + FRANK + NFT + MONSTER complete, update that same file once with the full final bundle.
+
+Do not create separate core/frank/nft/monster/completion files in scheduled runtime. The final bundle is authoritative and must contain five sections: CORE, FRANK, NFT, MONSTER, COMPLETION.
+
+Frank cursor continuity:
+- read the newest completed cycle bundle with a valid `frank_cursor_after`;
+- fall back to `state/frank-live-cursor.md` only when no newer completed bundle exists;
+- do not spend a third GitHub write updating the legacy cursor state.
+
+NFT durable receipt:
+- the NFT section of the completed bundle is the hourly durable receipt;
+- no separate `radar/nft` file is required in scheduled runtime.
+
+Monster/NFT 19:29 coverage:
+- include the Bangkok-day coverage summaries inside the 19:29 cycle bundle;
+- do not spend additional GitHub writes on separate daily files.
+
+Health:
+- RUNNING-only file = UNHEALTHY;
+- completed bundle with any missing mandatory lane = PARTIAL_FAILURE;
+- SUCCESS only when all mandatory lane semantics pass.
+
+This persistence change does not alter Frank alert thresholds, Monster V2.1 signal thresholds, or NFT alert gates.
