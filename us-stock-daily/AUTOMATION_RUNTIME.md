@@ -113,3 +113,62 @@ Requirements:
 - GitHub failure may delay archive, but MUST NOT reduce the Gmail body to a summary.
 
 A short bullet digest may be sent only when the user explicitly asks for a short digest. It can never silently substitute for the formal morning report.
+
+
+## Content acceptance and manifest gate — 2026-09-29
+
+This section overrides any older wording that allowed delivery-first recovery to reduce content quality.
+
+Every scheduled run reads:
+- `REPORT_SPEC.md`
+- `REPORT_ACCEPTANCE.md`
+
+### 07:00
+Before marking the pending report ready, create:
+`us-stock-daily/delivery-manifest/YYYY-MM-DD.md`
+
+The manifest records, at minimum:
+- latest completed US session date;
+- index/session source coverage;
+- breadth/volume coverage;
+- rates/oil/USD/macro coverage;
+- major company/sector driver coverage;
+- AI/tech/IPO/private-market coverage;
+- institutional/flow coverage;
+- policy/global coverage;
+- 24-72h catalyst coverage;
+- active user-rights coverage;
+- source gaps;
+- trailing-5 body-length median;
+- trailing-5 numbered-item median;
+- draft body length/item count;
+- acceptance checks STK-01..STK-12;
+- `qa_status: PASS|FAIL`.
+
+A pending body is `READY` only when the manifest says QA PASS.
+
+If QA fails, repair only the missing coverage/sections and rerun the acceptance gate. Do not downgrade to a digest.
+
+### 08:00
+Delivery is allowed only from a QA-PASS complete pending body.
+
+Refresh material time-sensitive facts, then rerun STK-01..STK-12 before sending.
+If refresh causes a gate failure, repair before send.
+Do not send a short fallback merely to meet the clock target.
+
+### 09:00 recovery
+Recovery uses the same QA gate.
+If the stored pending body is incomplete or below the quality-collapse threshold, rebuild the missing coverage first, then send the complete 12-section body.
+
+### Delivery success
+A run may mark the formal report fully successful only when:
+- Gmail Sent id exists;
+- Gmail readback passes;
+- GitHub canonical report exists;
+- GitHub readback passes;
+- report body equality with Gmail passes.
+
+If Gmail succeeds but GitHub fails, mark delivery as Gmail-delivered/archive-pending and perform archive-only recovery. Never resend the same report because archive failed.
+
+### Historical quality control
+The latest five complete formal reports are the rolling quality control. Length/item thresholds are a collapse detector, not a target to pad with filler. Semantic gates remain authoritative.
