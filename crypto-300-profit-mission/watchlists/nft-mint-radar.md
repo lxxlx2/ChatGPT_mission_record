@@ -152,3 +152,65 @@ Source failure handling:
 - A 403, loading state, empty dynamic page or inaccessible premium feature is not evidence that no NFT opportunity exists.
 - Failure of one source must fall through to the remaining sources plus official X, marketplaces and direct chain data.
 - Never alert based only on a scanner's ranking or scam/quality label.
+
+
+## Mandatory runtime receipt — 2026-09-29
+
+This radar is a mandatory hourly lane inside the existing $300 :29 automation.
+
+Durable per-run path:
+`crypto-300-profit-mission/radar/nft/YYYY/YYYY-MM/YYYY-MM-DD/HHMMSS.md`
+
+A receipt is required even when no candidate qualifies.
+
+Minimum receipt:
+- run_time
+- sources_attempted
+- sources_available
+- sources_unavailable
+- candidates_discovered
+- identity_verified
+- premint_candidates
+- live_mint_candidates
+- secondary_breakout_candidates
+- rejected_candidates
+- rejection_reasons
+- alerts_emitted
+- gmail_delivery_state
+- nft_status
+
+Healthy zero-candidate result requires:
+- newest Crypto Daily input actually read; AND
+- at least one independent current NFT/mint discovery surface actually retrieved.
+
+If discovery sources fail:
+- record `PARTIAL_SOURCE_GAP`;
+- do not claim there were no opportunities.
+
+### Bounded discovery budget
+
+Each hourly run should remain bounded:
+- read latest Crypto Daily material first;
+- one marketplace/mint discovery query pack;
+- one creator/project official verification pack only for candidates.
+
+Do not spend the whole Mission runtime scanning every seed account if no candidate exists.
+
+### Historical regression controls
+
+The radar must correctly distinguish:
+- PREMINT official event before contract live;
+- LIVE_MINT with identity + >=2 opportunity signals;
+- SECONDARY_BREAKOUT with real demand;
+- ended/sold-out stale mint;
+- copied/fake identity;
+- source-unavailable state.
+
+Historical test fixtures are stored under `tests/nft-historical-fixtures-2026-09.md`.
+
+### Daily coverage
+
+At 19:29 create one daily NFT coverage report even if no alert fired:
+`crypto-300-profit-mission/reports/nft/YYYY/YYYY-MM/YYYY-MM-DD.md`
+
+The report is GitHub-only unless an actual alert gate was met.
