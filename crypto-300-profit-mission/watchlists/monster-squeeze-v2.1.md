@@ -173,3 +173,43 @@ Retrospective Binance hourly data shows BTW met all four objective market gates,
 At the 2026-09-27 shortlist time BTW traded around 1.05-1.06, so either later close was also >5% above that observed region. However the frozen model forbids inventing a setup price after the fact, therefore this incident is recorded as `MISSED_ALERT / NOT_BACKFILLED_AS_IGNITION`, not as a fabricated historical state transition.
 
 This is a runtime coverage failure, not evidence that V2.1 market gates rejected BTW.
+
+
+## Coverage-completeness override — 2026-09-29
+
+Frozen V2.1 market thresholds remain unchanged. Runtime coverage is expanded.
+
+On each due full scan:
+- maximum deep-check budget = 5;
+- if at least two deferred candidates exist, the two oldest deferred candidates consume the first two slots;
+- remaining slots go to current strongest shortlist candidates;
+- if only one deferred exists, reserve one slot for it.
+
+Every shortlist symbol must end the scan in one of:
+- DEEP_CHECKED_PROMOTED;
+- DEEP_CHECKED_REJECTED;
+- DEEP_CHECKED_RETAINED;
+- DEFERRED_SHORTLIST;
+- DATA_GAP.
+
+No silent disappearance is permitted.
+
+Every due audit records:
+- universe_count
+- shortlist_count
+- shortlist_symbols
+- deep_checked_count
+- deep_checked_symbols
+- deferred_checked
+- deferred_added
+- deferred_remaining
+- promotions
+- rejections
+- ignition_count
+- exhaustion_count
+- data_gaps
+
+At 19:29 persist a GitHub coverage report even when zero IGNITION/EXHAUSTION:
+`crypto-300-profit-mission/reports/monster/YYYY/YYYY-MM/YYYY-MM-DD.md`
+
+The existing 19:29 factual Gmail/ChatGPT summary remains unchanged.
