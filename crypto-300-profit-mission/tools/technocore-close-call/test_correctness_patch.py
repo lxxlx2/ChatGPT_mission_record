@@ -39,6 +39,7 @@ class CorrectnessPatchTests(unittest.TestCase):
         snap = c._v5a_pair_snapshot(
             {}, pair, refs, marks, set(),
             {"long-id": "settled", "short-id": "settled"},
+            {},
             Decimal("110"),
         )
         self.assertIsNotNone(snap)
@@ -47,6 +48,7 @@ class CorrectnessPatchTests(unittest.TestCase):
         omitted_style_unknown = c._v5a_pair_snapshot(
             {}, pair, refs, marks, set(),
             {"long-id": "settled"},
+            {"short-id": {"seq": 12, "from": "did:key:short"}},
             Decimal("110"),
         )
         self.assertIsNotNone(omitted_style_unknown)
@@ -55,6 +57,7 @@ class CorrectnessPatchTests(unittest.TestCase):
         explicit_void = c._v5a_pair_snapshot(
             {}, pair, refs, marks, set(),
             {"long-id": "settled", "short-id": "void"},
+            {"short-id": {"seq": 12, "from": "did:key:short"}},
             Decimal("110"),
         )
         self.assertIsNone(explicit_void)
@@ -81,6 +84,71 @@ class CorrectnessPatchTests(unittest.TestCase):
     def test_review_gates_pause_new_v5_work(self):
         self.assertTrue(c.V5A_REVIEW_PAUSE_NEW)
         self.assertTrue(c.V5B_REVIEW_PAUSE_NEW)
+
+    def test_v5a_snapshot_requires_room_submission_when_outcome_omitted(self):
+        pair = {
+            "pair_id": "test-pair",
+            "cohort_sweep": 10,
+            "copy_no": 1,
+            "long": "L",
+            "short": "S",
+            "qty": Decimal("1"),
+            "low": Decimal("95"),
+            "high": Decimal("105"),
+            "long_trade_id": "long-id",
+            "short_trade_id": "short-id",
+        }
+        refs = {11: Decimal("100")}
+        marks = {11: Decimal("999")}
+        snap = c._v5a_pair_snapshot(
+            {}, pair, refs, marks, set(),
+            {"long-id": "settled"},
+            {},
+            Decimal("110"),
+        )
+        self.assertIsNone(snap)
+
+    def test_trade_submission_in_room_requires_exact_id_and_party_author(self):
+        original = c.parse_export
+        try:
+            rows = [
+                {
+                    "from": "did:key:maker",
+                    "seq": 7,
+                    "ts": "2026-09-29T00:00:00Z",
+                    "_payload": {
+                        "t": "trade",
+                        "season": c.SEASON,
+                        "terms": {
+                            "id": "trade-123",
+                            "maker": "did:key:maker",
+                            "taker": "did:key:taker",
+                        },
+                        "taker": "did:key:taker",
+                    },
+                },
+                {
+                    "from": "did:key:intruder",
+                    "seq": 8,
+                    "ts": "2026-09-29T00:00:01Z",
+                    "_payload": {
+                        "t": "trade",
+                        "season": c.SEASON,
+                        "terms": {
+                            "id": "trade-evil",
+                            "maker": "did:key:maker",
+                            "taker": "did:key:taker",
+                        },
+                        "taker": "did:key:taker",
+                    },
+                },
+            ]
+            c.parse_export = lambda room: rows
+            found = c.trade_submissions_in_room("cc-test", {"trade-123", "trade-evil"})
+            self.assertIn("trade-123", found)
+            self.assertNotIn("trade-evil", found)
+        finally:
+            c.parse_export = original
 
     def test_dense_registration_waits_for_room(self):
         originals = (
