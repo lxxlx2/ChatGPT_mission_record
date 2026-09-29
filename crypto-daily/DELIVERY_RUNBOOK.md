@@ -112,3 +112,19 @@ The 09:00 publisher treats that pending file as the primary body:
 - target Gmail proof by 09:10.
 
 If a valid pending body exists, recovery jobs must send it rather than rebuilding a new long report.
+
+
+## Full-body resend rule — 2026-09-29
+
+When the user requests a daily-report resend, correction, or reissue, recovery MUST NOT send a shortened digest as the replacement official report.
+
+The resend must:
+- contain all 13 REPORT_SPEC sections in the canonical order;
+- meet the same factual and source-quality bar as the normal 09:00 report;
+- include all material corrections discovered since the original report;
+- use Gmail Sent + readback as delivery proof;
+- write the identical body to the canonical GitHub daily-report path;
+- read back GitHub and verify body equality;
+- mark prior incomplete same-day editions as superseded.
+
+An error-specific supplement may still be sent, but it never satisfies a request to resend the full formal daily report.
