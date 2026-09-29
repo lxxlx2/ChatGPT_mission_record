@@ -257,3 +257,27 @@ The solver also reports
 `implied_pre_short_qty_to_match_target`: the pre-short quantity that would
 make a specific close-then-open path reproduce the observed target score
 exactly, holding the observed pre-snapshot score fixed.
+
+
+## Same-sweep ordered two-trade pivot
+
+The official fold checks and applies trades sequentially inside a sweep. That
+means a short can be fully closed by one buy trade, releasing cash, and a later
+buy trade in the same sweep can use that released cash to open the new long.
+
+This matters because the first successful replay showed a near-perfect score
+fit at sweep 957 for a one-trade direct flip, while that one-trade form appears
+cash-infeasible under the pre-apply funds rule.
+
+The solver now evaluates:
+
+```text
+sweep N trade 1: close short
+sweep N trade 2: open long
+```
+
+as a valid ordered path. It is marked `same_sweep_ordered: true`.
+
+The first trade still requires enough pre-existing cash to pay its close fee.
+After that close settles, the solver computes exact `flat_cash_after_close`
+and evaluates the second trade's funds check from that released cash.
