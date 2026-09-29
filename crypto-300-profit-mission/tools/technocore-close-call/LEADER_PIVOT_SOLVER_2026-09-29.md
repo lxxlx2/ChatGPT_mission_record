@@ -192,3 +192,30 @@ The long-only carry lower bound is stronger because it does not require the
 sweep-956 inferred short to be correct.
 
 No live strategy change is included in this branch.
+
+
+## Live-rank drift handling
+
+The live leaderboard can change between the leader-path run and a later pivot
+solver run. A numeric `--rank 1` therefore does not necessarily identify the
+same DID that was rank 1 when the historical 956–960 hypothesis was formed.
+
+The solver now:
+
+1. tries the requested current-rank DID;
+2. verifies that DID has both a target-sweep PnL snapshot and
+   `published_position`;
+3. if it does not, falls back to the highest-current-ranked visible DID that
+   satisfies those historical target requirements;
+4. records the choice in `subject_selection_mode` and
+   `subject_selection_diagnostics`.
+
+For exact reproducibility, pin a DID:
+
+```bash
+uv run --with "cryptography>=42" close_call_fleet.py \
+  leader-pivot-solve \
+  --did did:key:... \
+  --from-sweep 956 \
+  --target-sweep 960
+```
