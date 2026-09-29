@@ -128,3 +128,34 @@ The resend must:
 - mark prior incomplete same-day editions as superseded.
 
 An error-specific supplement may still be sent, but it never satisfies a request to resend the full formal daily report.
+
+
+## Acceptance-gated delivery — 2026-09-29
+
+Before any formal send or recovery send, read `REPORT_ACCEPTANCE.md`.
+
+A formal send requires:
+- current `delivery-manifest/YYYY-MM-DD.md`;
+- `qa_status: PASS`;
+- complete 13-section body;
+- no unresolved CR hard-gate failure.
+
+If manifest is missing/stale or QA is FAIL:
+- do not send a digest;
+- rebuild only the missing inputs/sections;
+- rerun QA;
+- then deliver.
+
+The dedicated recovery automation must never invent a smaller replacement body. It may:
+1. send the existing QA-PASS canonical body;
+2. repair GitHub from Gmail readback;
+3. rebuild missing coverage until the full body passes QA.
+
+After send:
+- read Gmail;
+- archive the exact readback body;
+- read GitHub;
+- verify body equality;
+- only then mark full delivery complete.
+
+A short correction/supplement is supplemental only and cannot become the canonical daily body.
