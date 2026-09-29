@@ -214,3 +214,13 @@ At 19:29 create one daily NFT coverage report even if no alert fired:
 `crypto-300-profit-mission/reports/nft/YYYY/YYYY-MM/YYYY-MM-DD.md`
 
 The report is GitHub-only unless an actual alert gate was met.
+
+
+## Efficient discovery query plan — 2026-09-29
+
+The mandatory hourly discovery should normally use:
+- latest stored Crypto Daily Early/NFT material;
+- one batched English search call spanning marketplace mint calendars, major NFT/mint platforms and creator/open-edition discovery terms.
+
+Separate first-party verification calls are candidate-driven only.
+This avoids spending the scheduler cycle querying every seed account independently while keeping discovery alive every hour.
