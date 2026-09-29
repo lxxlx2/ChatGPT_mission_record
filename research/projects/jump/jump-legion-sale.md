@@ -101,3 +101,61 @@ Execution interpretation:
 - Treat the "6 months later / March 2027" slide as stale/superseded unless a newer authenticated Legion TPA/Show Terms explicitly reinstates it.
 - Exact TGE day remains **TBD**.
 - The Sep-29 preflight must still re-read authenticated Legion documents. If they again conflict, do not infer; escalate the conflict and use the newest signed/dated TPA plus direct team clarification.
+
+
+## Live sale / Polymarket refresh — 2026-09-29
+
+Official Legion Help Center, updated 2026-09-29:
+- applications: Sep 29 13:00 UTC to Oct 2 13:00 UTC;
+- Ethereum Mainnet / USDC;
+- target USD 2M, hard cap USD 3M;
+- merit-based allocation, not FCFS;
+- Jumper XP holders receive priority by level;
+- top-500 Jumper waitlist users receive priority;
+- 5% of the sale allocation is reserved for The Republic;
+- public-sale vesting: 50% at TGE, remaining 50% monthly over four months;
+- fixed supply: 1B JUMP;
+- team and investor allocations are fully locked at TGE with 24-month and 12-month cliffs respectively;
+- exact TGE date remains undisclosed.
+
+The authenticated Legion investment materials already expose the allocation table:
+- Community 33.33%;
+- Investors 26.07%;
+- Treasury 21.90%;
+- Team 14.70%;
+- Public sale 4.00%.
+
+The unresolved launch-float items are the Community and Treasury TGE release schedules and the exact initial circulating supply. Do not describe the allocation table itself as unpublished.
+
+Polymarket snapshot checked 2026-09-29:
+- FDV one day after launch, total volume about USD 9.6K:
+  - >60M 94%;
+  - >75M 92%;
+  - >100M 83%;
+  - >150M 61%;
+  - >200M 44%;
+  - >300M 21%.
+- Listing within 30 days of TGE, total volume about USD 8.8K:
+  - Binance spot 41%;
+  - Bybit 80%;
+  - Coinbase 28%;
+  - Kraken 57%;
+  - OKX 56%;
+  - Upbit 26%.
+  Binance Alpha does not qualify under this market's rules.
+- Public-sale total commitments, total market volume about USD 10.4K:
+  - >1M 99%;
+  - >2M 99%;
+  - >3M 99%;
+  - >4M 93%;
+  - >5M 91%;
+  - >7M 92%;
+  - >10M 89%.
+  Threshold pricing is not perfectly monotonic, showing thin-market / spread noise. The directional signal is strong expected oversubscription relative to the USD 3M hard cap.
+- Launch by Dec 31 2026 was around the high-80% range in current recent Polymarket snapshots.
+
+Interpretation:
+- The public sale is already live and the allocation mechanics are known.
+- Current PM pricing contradicts claims that an Upbit listing probability is effectively zero; the PM price is material but still low-confidence due modest volume and spreads.
+- PM currently prices a high probability that JUMP exceeds the USD 75M sale FDV one day after launch, while odds fall materially above USD 150M.
+- Expected oversubscription improves the observed demand signal but can reduce individual allocations because Legion allocates by merit and may scale requests.
