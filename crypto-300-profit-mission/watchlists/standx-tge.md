@@ -6,8 +6,11 @@ Type: yield-bearing stablecoin + perp DEX + permissionless universal markets
 Official: https://standx.com
 X: https://x.com/StandX_Official
 Docs: https://docs.standx.com
+Canonical research: `research/projects/standx/standx-development-tge.md`
 
 ## Current conclusion
+
+2026-09-29 official-GitHub audit: the public `standx-labs` organization exposes audits/assets/integration forks but no current core Perps/SIP-5/platform-token source tree and no public TGE/tokenomics/snapshot/claim/mint artifact. Full evidence and interpretation are maintained in the canonical research file above. Public GitHub silence is not proof of no private development.
 
 StandX is a real, production-stage protocol, not a pre-product points farm.
 
