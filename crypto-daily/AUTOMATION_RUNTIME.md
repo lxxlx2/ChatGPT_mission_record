@@ -283,3 +283,77 @@ For every formal resend:
 8. mark earlier incomplete/superseded versions in metadata.
 
 GitHub failure must not cause an abbreviated Gmail. A short correction notice may exist only in addition to, not in place of, a complete formal resend when the user requests the full daily report again.
+
+
+## Daily input manifest + acceptance gate — 2026-09-29
+
+This section overrides any older survival/recovery wording that could allow a structurally complete but semantically starved report to be published.
+
+Every 08:00/09:00/10:00/11:00 daily-report path reads:
+- `REPORT_SPEC.md`
+- `REPORT_ACCEPTANCE.md`
+- `SECURITY_SOURCE_POLICY.md`
+- current TGE canonical state when relevant
+
+### 08:00 input manifest
+
+Create:
+`crypto-daily/delivery-manifest/YYYY-MM-DD.md`
+
+The manifest must enumerate the prior 24h coverage:
+- hourly research/final artifacts present;
+- missing scheduler hours;
+- BTC/ETH/SOL + liquid outlier market coverage;
+- derivatives/market-structure coverage;
+- security source receipts and carried candidates;
+- major-CEX account-security fast-lane coverage;
+- TGE/claim/rights material state;
+- institutional/ETF/whale/exchange-flow coverage;
+- protocol/infrastructure/ecosystem coverage;
+- Early/Meme/NFT discovery coverage;
+- macro/cross-market coverage;
+- active private-market rights coverage;
+- source/provider gaps;
+- trailing-5 complete report body-length median;
+- trailing-5 numbered-item median;
+- draft body length/item count;
+- CR-01..CR-18 result;
+- `qa_status: PASS|FAIL`.
+
+A missing lane is recorded as a gap. It may not be converted into “no update/no opportunity”.
+
+The full 13-section pending body is READY only after manifest QA PASS.
+
+### 09:00 primary delivery
+
+Read the QA-PASS pending body first.
+Refresh only time-sensitive facts and any material event that changed after 08:00.
+Rerun CR-01..CR-18 after refresh.
+
+If a hard gate fails:
+- repair the missing lane/section;
+- preserve the complete-report contract;
+- do not send a shortened fallback merely to hit 09:10.
+
+### Recovery windows
+
+09:10/10:00/10:10/11:00/11:10 recovery may send only a QA-PASS full 13-section canonical body.
+
+A short patch/supplement can never satisfy missing formal delivery.
+If Gmail already contains the complete official body and GitHub is missing, archive-only recovery is mandatory.
+
+### Hourly collector contract
+
+Operational survival still matters, but the hourly final must state which mandatory daily lanes were actually covered versus unavailable.
+Optional enrichment failure cannot erase completed work, but it also cannot be silently treated as successful coverage for the daily manifest.
+
+### Formal success
+
+The formal daily is fully DELIVERED only after:
+- Gmail Sent id;
+- Gmail readback;
+- canonical GitHub archive;
+- GitHub readback;
+- exact body equality after metadata stripping.
+
+Gmail-success/GitHub-failure is archive-pending, not a reason to resend.
