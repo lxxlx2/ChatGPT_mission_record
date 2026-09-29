@@ -404,3 +404,23 @@ Health proof required in every run audit:
 - cursor_advanced
 - stage_events_persisted
 - gmail_delivery_state.
+
+
+## Dual Alchemy failover — 2026-09-29
+
+Primary live app:
+`mkhr4iorbgonin56`
+
+Backup live app:
+`h6m5pairkgzet7vz`
+
+For finalized `getSignaturesForAddress` / `getTransaction` reads:
+- use primary first;
+- on 429, timeout or provider-unavailable, preserve cursor and retry the same request once on backup;
+- record which app actually supplied the successful data;
+- do not loop or fan out;
+- if both fail, cursor remains unchanged and the lane is partial_failure.
+
+Manual smoke test on 2026-09-29 confirmed both apps can independently return the same current finalized head signature for the Frank wallet.
+
+This failover is availability hardening only. Active-swap proof and alert thresholds are unchanged.
