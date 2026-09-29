@@ -125,6 +125,20 @@ DENSE_V41_QUANTILE_BANDS = (
     (Decimal("0.00"), Decimal("1.00")),
 )
 
+# V4.2 is a read-only frontier optimizer. It searches future fresh-account
+# V4-style pairs against a static current-podium scenario and historical
+# settlement-move distribution. Nothing here is wired to autopilot.
+DENSE_V42_LONG_OFFSETS = (
+    Decimal("0.01"), Decimal("0.02"), Decimal("0.03"),
+    Decimal("0.04"), Decimal("0.05"),
+)
+DENSE_V42_SHORT_OFFSETS = DENSE_V42_LONG_OFFSETS
+DENSE_V42_LONG_FRACTIONS = (Decimal("1.00"), Decimal("0.97"))
+DENSE_V42_GREEDY_MOVE_SCENARIOS = 41
+DENSE_V42_DEFAULT_START = Decimal("220")
+DENSE_V42_DEFAULT_END = Decimal("245")
+DENSE_V42_DEFAULT_STEP = Decimal("0.50")
+
 # V5a is a conservative profit-harvest layer on top of V4. It never replaces
 # the every-sweep entry engine. At most two copy-pairs from the same V4 cohort
 # are harvested, leaving at least six copies open for continued frontier
@@ -5310,6 +5324,601 @@ def cmd_dense_final_s_grid(args) -> None:
         final_s += step
 
 
+
+
+def _v42_s_grid(start: Decimal, end: Decimal, step: Decimal) -> list[Decimal]:
+    if step <= 0 or end < start:
+        raise ValueError("invalid final-S grid")
+    out = []
+    s = start
+    while s <= end:
+        out.append(s)
+        s += step
+    return out
+
+
+def _v42_position_map(positions: dict | None) -> dict[str, Decimal]:
+    out = {}
+    if not isinstance(positions, dict):
+        return out
+    for item in positions.get("top") or []:
+        try:
+            if isinstance(item, (list, tuple)) and len(item) >= 2:
+                out[str(item[0])] = Decimal(str(item[1]))
+            elif isinstance(item, dict):
+                did = item.get("key") or item.get("did")
+                pos = item.get("position")
+                if pos is None:
+                    pos = item.get("pos")
+                if did is not None and pos is not None:
+                    out[str(did)] = Decimal(str(pos))
+        except Exception:
+            continue
+    return out
+
+
+def _v42_recent_slope_positions(dids: set[str], rows: int = 16) -> dict[str, Decimal]:
+    history = defaultdict(list)
+    pnl_rows = []
+    for rec in parse_export("d-close1-pnl"):
+        p = rec.get("_payload")
+        if isinstance(p, dict) and p.get("t") == "pnl":
+            pnl_rows.append(p)
+    for p in pnl_rows[-max(2, int(rows)):]:
+        try:
+            n = int(p["n"])
+            mark = Decimal(str(p["mark"]))
+        except Exception:
+            continue
+        for did, score in _pnl_pairs(p):
+            if did in dids:
+                history[did].append((n, mark, score))
+
+    out = {}
+    for did, hist in history.items():
+        for a, b in reversed(list(zip(hist, hist[1:]))):
+            if b[0] != a[0] + 1:
+                continue
+            dmark = b[1] - a[1]
+            if dmark == 0:
+                continue
+            out[did] = (b[2] - a[2]) / dmark
+            break
+    return out
+
+
+def _v42_competitor_model(state: dict, s_grid: list[Decimal]) -> dict:
+    """Static current-position podium scenario.
+
+    Known public positions are preferred. Consecutive-score slopes are a weak
+    fallback because an account may trade between snapshots. A flat fallback is
+    used only so the diagnostic remains defined when public position coverage is
+    sparse. This model is a stress scenario, not an election-style prediction.
+    """
+    pnl = latest_payload("d-close1-pnl", "pnl")
+    pairs = _pnl_pairs(pnl)
+    if len(pairs) < 3:
+        raise ValueError("public pnl top has fewer than 3 entries")
+    mark = Decimal(str(pnl["mark"]))
+    positions = _v42_position_map(latest_payload("d-close1-positions", "positions"))
+    our_dids = {str(v.get("did")) for v in state.get("keys", {}).values() if v.get("did")}
+    competitors = [(did, score) for did, score in pairs if did not in our_dids]
+    if len(competitors) < 3:
+        raise ValueError("fewer than 3 non-local public competitors")
+
+    slope_fallback = _v42_recent_slope_positions({did for did, _ in competitors[:25]})
+    lines = []
+    for rank, (did, score) in enumerate(competitors[:25], 1):
+        if did in positions:
+            pos = positions[did]
+            evidence = "published_position"
+        elif did in slope_fallback:
+            pos = slope_fallback[did]
+            evidence = "consecutive_pnl_slope"
+        else:
+            pos = Decimal("0")
+            evidence = "flat_score_fallback"
+        lines.append({
+            "rank_at_mark": rank,
+            "did": did,
+            "score_at_mark": score,
+            "mark": mark,
+            "position": pos,
+            "evidence": evidence,
+        })
+
+    podium = {}
+    for final_s in s_grid:
+        scores = sorted(
+            (
+                line["score_at_mark"] + line["position"] * (final_s - mark)
+                for line in lines
+            ),
+            reverse=True,
+        )
+        podium[final_s] = scores[2]
+
+    return {
+        "pnl_sweep": pnl.get("n"),
+        "mark": mark,
+        "lines": lines,
+        "podium": podium,
+    }
+
+
+def _v42_existing_frontier(state: dict, s_grid: list[Decimal]) -> dict[Decimal, Decimal]:
+    candidates = _v41_local_open_candidates(state)
+    floor = Decimal("-1e30")
+    out = {s: floor for s in s_grid}
+    for candidate in candidates:
+        for final_s in s_grid:
+            for side in ("long", "short"):
+                score = _v41_candidate_score(candidate, side, final_s)
+                if score is not None and score > out[final_s]:
+                    out[final_s] = score
+    return out
+
+
+def _v42_quote(ref: Decimal, offset: Decimal, side: str, lo: Decimal, hi: Decimal) -> Decimal:
+    cent = Decimal("0.01")
+    if side == "long":
+        px = (ref * (Decimal("1") - offset)).quantize(cent, rounding=ROUND_DOWN)
+        return max(lo, px)
+    if side == "short":
+        px = (ref * (Decimal("1") + offset)).quantize(cent, rounding=ROUND_CEILING)
+        return min(hi, px)
+    raise ValueError("side must be long/short")
+
+
+def dense_v42_plan_pair(
+    pr: dict,
+    samples: list[dict],
+    band_no: int,
+    long_offset: Decimal,
+    short_offset: Decimal,
+    long_fraction: Decimal,
+    source: str = "v42_grid",
+) -> dict | None:
+    band = _v41_stress_band(samples, band_no)
+    ref = Decimal(str(pr["px"]))
+    lower_limit, upper_limit = dense_v4_limit_bounds(pr)
+    low = _v42_quote(ref, long_offset, "long", lower_limit, upper_limit)
+    high = _v42_quote(ref, short_offset, "short", lower_limit, upper_limit)
+    if low >= ref or high <= ref:
+        return None
+
+    cent = Decimal("0.01")
+    stress_low = (ref * (Decimal("1") + band["low_move"])).quantize(
+        cent, rounding=ROUND_DOWN
+    )
+    stress_high = (ref * (Decimal("1") + band["high_move"])).quantize(
+        cent, rounding=ROUND_CEILING
+    )
+    stress_closes = tuple(sorted(set([stress_low, ref.quantize(cent), stress_high])))
+    mint = Decimal("10000")
+
+    def long_ok(qty: Decimal) -> bool:
+        for close in stress_closes:
+            feeder_fee, long_fee = _v41_side_fees("sell", qty, low, close)
+            if mint < qty * low + feeder_fee:
+                return False
+            if mint < qty * low + long_fee:
+                return False
+        return True
+
+    long_upper = (mint / low).quantize(cent, rounding=ROUND_DOWN)
+    long_max = _v41_max_qty(long_ok, long_upper)
+    long_qty = (long_max * long_fraction).quantize(cent, rounding=ROUND_DOWN)
+    if long_qty < Decimal("0.10"):
+        return None
+
+    def short_ok(qty: Decimal) -> bool:
+        if qty > long_qty:
+            return False
+        return all(
+            _v41_simulate_pair(low, high, long_qty, qty, close)["short_settled"]
+            for close in stress_closes
+        )
+
+    short_qty = _v41_max_qty(short_ok, long_qty)
+    if short_qty < Decimal("0.10"):
+        return None
+
+    return {
+        "source": source,
+        "band_no": int(band_no),
+        "low_q": band["low_q"],
+        "high_q": band["high_q"],
+        "low_move": band["low_move"],
+        "high_move": band["high_move"],
+        "ref": ref,
+        "low": low,
+        "high": high,
+        "long_offset": ref and (ref - low) / ref,
+        "short_offset": ref and (high - ref) / ref,
+        "long_fraction": long_fraction,
+        "long_qty": long_qty,
+        "short_qty": short_qty,
+        "stress_closes": stress_closes,
+    }
+
+
+def _v42_current_template(pr: dict, copy_no: int) -> dict:
+    plan = dense_v4_plan_copy(pr, copy_no)
+    ref = Decimal(str(pr["px"]))
+    return {
+        "source": "current_v4_template",
+        "band_no": 0,
+        "low_q": None,
+        "high_q": None,
+        "low_move": None,
+        "high_move": None,
+        "ref": ref,
+        "low": Decimal(str(plan["low"])),
+        "high": Decimal(str(plan["high"])),
+        "long_offset": Decimal(str(plan["long_offset"])),
+        "short_offset": Decimal(str(plan["short_offset"])),
+        "long_fraction": Decimal("1"),
+        "long_qty": Decimal(str(plan["qty"])),
+        "short_qty": Decimal(str(plan["qty"])),
+        "stress_closes": (ref,),
+    }
+
+
+def _v42_candidate_pool(pr: dict, samples: list[dict]) -> list[dict]:
+    pool = []
+    for band_no in range(1, len(DENSE_V41_QUANTILE_BANDS) + 1):
+        for long_offset in DENSE_V42_LONG_OFFSETS:
+            for short_offset in DENSE_V42_SHORT_OFFSETS:
+                for long_fraction in DENSE_V42_LONG_FRACTIONS:
+                    plan = dense_v42_plan_pair(
+                        pr, samples, band_no, long_offset, short_offset, long_fraction
+                    )
+                    if plan is not None:
+                        pool.append(plan)
+    for copy_no in range(1, DENSE_V4_TOTAL_COPIES_PER_SIDE + 1):
+        pool.append(_v42_current_template(pr, copy_no))
+
+    # Deduplicate mechanically identical score/risk plans while retaining the
+    # widest empirical band metadata for review.
+    dedup = {}
+    for plan in pool:
+        key = (
+            plan["low"], plan["high"], plan["long_qty"], plan["short_qty"],
+            plan["stress_closes"],
+        )
+        prev = dedup.get(key)
+        if prev is None:
+            dedup[key] = plan
+            continue
+        prev_width = (
+            (prev.get("high_q") or Decimal("0"))
+            - (prev.get("low_q") or Decimal("0"))
+        )
+        width = (
+            (plan.get("high_q") or Decimal("0"))
+            - (plan.get("low_q") or Decimal("0"))
+        )
+        if width > prev_width:
+            dedup[key] = plan
+    return list(dedup.values())
+
+
+def _v42_eval_moves(samples: list[dict], count: int) -> list[Decimal]:
+    moves = sorted(Decimal(str(x["move"])) for x in samples)
+    if not moves:
+        return []
+    if len(moves) <= count:
+        return moves
+    out = []
+    for i in range(count):
+        idx = int(round(i * (len(moves) - 1) / max(1, count - 1)))
+        value = moves[idx]
+        if not out or value != out[-1]:
+            out.append(value)
+    return out
+
+
+def _v42_plan_lines(plan: dict, ref: Decimal, moves: list[Decimal]) -> list[dict]:
+    out = []
+    cent = Decimal("0.01")
+    for move in moves:
+        close = (ref * (Decimal("1") + move)).quantize(cent)
+        sim = _v41_simulate_pair(
+            Decimal(str(plan["low"])),
+            Decimal(str(plan["high"])),
+            Decimal(str(plan["long_qty"])),
+            Decimal(str(plan["short_qty"])),
+            close,
+        )
+        row = {"move": move, "close": close, "long": None, "short": None}
+        if sim["long_settled"]:
+            q = Decimal(str(plan["long_qty"]))
+            row["long"] = (
+                q,
+                -(q * Decimal(str(plan["low"])) + Decimal(str(sim["long_fee"]))),
+            )
+        if sim["short_settled"]:
+            q = Decimal(str(plan["short_qty"]))
+            row["short"] = (
+                -q,
+                q * Decimal(str(plan["high"])) - Decimal(str(sim["short_fee"])),
+            )
+        out.append(row)
+    return out
+
+
+def _v42_line_score(line: tuple[Decimal, Decimal] | None, final_s: Decimal) -> Decimal | None:
+    if line is None:
+        return None
+    return line[0] * final_s + line[1]
+
+
+def _v42_plan_score(lines: dict, final_s: Decimal) -> Decimal | None:
+    scores = [
+        score for score in (
+            _v42_line_score(lines.get("long"), final_s),
+            _v42_line_score(lines.get("short"), final_s),
+        )
+        if score is not None
+    ]
+    return max(scores) if scores else None
+
+
+def _v42_frontier_stats(
+    frontier: list[list[Decimal]],
+    podium: list[Decimal],
+) -> dict:
+    gaps = []
+    covered = 0
+    for row in frontier:
+        for idx, score in enumerate(row):
+            gap = podium[idx] - score
+            if gap <= 0:
+                covered += 1
+                gaps.append(Decimal("0"))
+            else:
+                gaps.append(gap)
+    total = len(gaps)
+    positive = [g for g in gaps if g > 0]
+    return {
+        "cells": total,
+        "covered_cells": covered,
+        "coverage_rate": Decimal(covered) / Decimal(total) if total else Decimal("0"),
+        "mean_positive_gap": (
+            sum(positive, Decimal("0")) / Decimal(len(positive))
+            if positive else Decimal("0")
+        ),
+        "max_gap": max(gaps) if gaps else Decimal("0"),
+        "total_gap": sum(gaps, Decimal("0")),
+    }
+
+
+def _v42_apply_candidate(
+    frontier: list[list[Decimal]],
+    lines: list[dict],
+    s_grid: list[Decimal],
+) -> list[list[Decimal]]:
+    out = [list(row) for row in frontier]
+    for mi, scenario in enumerate(lines):
+        for si, final_s in enumerate(s_grid):
+            score = _v42_plan_score(scenario, final_s)
+            if score is not None and score > out[mi][si]:
+                out[mi][si] = score
+    return out
+
+
+def _v42_greedy_select(
+    pool: list[dict],
+    existing: dict[Decimal, Decimal],
+    podium_map: dict[Decimal, Decimal],
+    ref: Decimal,
+    eval_moves: list[Decimal],
+    s_grid: list[Decimal],
+    copies: int,
+) -> tuple[list[dict], list[list[Decimal]], dict]:
+    podium = [podium_map[s] for s in s_grid]
+    frontier = [
+        [existing[s] for s in s_grid]
+        for _move in eval_moves
+    ]
+    selected = []
+    remaining = []
+    for idx, plan in enumerate(pool):
+        remaining.append({
+            "index": idx,
+            "plan": plan,
+            "lines": _v42_plan_lines(plan, ref, eval_moves),
+        })
+
+    baseline = _v42_frontier_stats(frontier, podium)
+    rounds = []
+    current_stats = baseline
+    for _round in range(max(0, int(copies))):
+        best = None
+        for item in remaining:
+            trial = _v42_apply_candidate(frontier, item["lines"], s_grid)
+            stats = _v42_frontier_stats(trial, podium)
+            key = (
+                stats["covered_cells"],
+                -stats["total_gap"],
+                -stats["max_gap"],
+            )
+            if best is None or key > best["key"]:
+                best = {
+                    "key": key,
+                    "item": item,
+                    "frontier": trial,
+                    "stats": stats,
+                }
+        if best is None:
+            break
+
+        # Stop once the candidate pool cannot improve the objective. The first
+        # real V4.2 run showed rounds 2..8 selecting mechanically different
+        # plans with exactly identical coverage/gap statistics.
+        improved = (
+            best["stats"]["covered_cells"] > current_stats["covered_cells"]
+            or best["stats"]["total_gap"] < current_stats["total_gap"]
+            or best["stats"]["max_gap"] < current_stats["max_gap"]
+        )
+        if not improved:
+            break
+
+        chosen = best["item"]
+        selected.append(chosen["plan"])
+        frontier = best["frontier"]
+        current_stats = best["stats"]
+        rounds.append(best["stats"])
+        remaining = [x for x in remaining if x["index"] != chosen["index"]]
+
+    return selected, frontier, {
+        "baseline": baseline,
+        "rounds": rounds,
+        "saturated": len(selected) < max(0, int(copies)),
+        "selected_count": len(selected),
+    }
+
+
+def _v42_full_report(
+    state: dict,
+    pr: dict,
+    samples: list[dict],
+    s_grid: list[Decimal],
+    copies: int,
+    greedy_move_scenarios: int,
+) -> dict:
+    competitor = _v42_competitor_model(state, s_grid)
+    existing = _v42_existing_frontier(state, s_grid)
+    pool = _v42_candidate_pool(pr, samples)
+    eval_moves = _v42_eval_moves(samples, greedy_move_scenarios)
+    selected, _frontier, greedy = _v42_greedy_select(
+        pool,
+        existing,
+        competitor["podium"],
+        Decimal(str(pr["px"])),
+        eval_moves,
+        s_grid,
+        copies,
+    )
+
+    # Final evaluation uses every retained historical move, not only the
+    # quantile-thinned move set used by greedy search.
+    full_moves = [Decimal(str(x["move"])) for x in samples]
+    podium_vec = [competitor["podium"][s] for s in s_grid]
+    full_frontier = [[existing[s] for s in s_grid] for _ in full_moves]
+    for plan in selected:
+        full_frontier = _v42_apply_candidate(
+            full_frontier,
+            _v42_plan_lines(plan, Decimal(str(pr["px"])), full_moves),
+            s_grid,
+        )
+    final_stats = _v42_frontier_stats(full_frontier, podium_vec)
+
+    grid = []
+    for si, final_s in enumerate(s_grid):
+        vals = sorted(row[si] for row in full_frontier)
+        beat = sum(1 for value in vals if value >= podium_vec[si])
+        grid.append({
+            "S": final_s,
+            "podium_static": podium_vec[si],
+            "existing_best": existing[final_s],
+            "optimized_min": vals[0],
+            "optimized_p10": _v41_quantile(vals, Decimal("0.10")),
+            "optimized_p50": _v41_quantile(vals, Decimal("0.50")),
+            "optimized_max": vals[-1],
+            "beat_podium_rate": Decimal(beat) / Decimal(len(vals)) if vals else Decimal("0"),
+        })
+
+    return {
+        "mode": "read_only_v42_static_podium_scenario",
+        "ref_sweep": pr["n"],
+        "ref": pr["px"],
+        "historical_samples": len(samples),
+        "candidate_pool": len(pool),
+        "greedy_move_scenarios": len(eval_moves),
+        "target_start": s_grid[0],
+        "target_end": s_grid[-1],
+        "target_step": s_grid[1] - s_grid[0] if len(s_grid) > 1 else Decimal("0"),
+        "competitor": {
+            "pnl_sweep": competitor["pnl_sweep"],
+            "mark": competitor["mark"],
+            "lines": competitor["lines"][:12],
+        },
+        "baseline_stats": greedy["baseline"],
+        "greedy_round_stats": greedy["rounds"],
+        "optimizer_saturated": greedy.get("saturated"),
+        "selected_count": greedy.get("selected_count"),
+        "final_full_history_stats": final_stats,
+        "selected": selected,
+        "grid": grid,
+        "note": (
+            "Competitor scores are static-current-position stress lines, not a "
+            "forecast. consecutive_pnl_slope and flat_score_fallback evidence "
+            "are weaker than published_position."
+        ),
+    }
+
+
+def cmd_dense_v42_optimize(args) -> None:
+    state = load_state()
+    pr = fresh_price(max_age=10**9)
+    samples = _v41_move_samples(args.lookback)
+    if len(samples) < 24:
+        raise SystemExit(f"only {len(samples)} usable V4.2 samples")
+    s_grid = _v42_s_grid(
+        Decimal(str(args.start)),
+        Decimal(str(args.end)),
+        Decimal(str(args.step)),
+    )
+    report = _v42_full_report(
+        state,
+        pr,
+        samples,
+        s_grid,
+        int(args.copies),
+        int(args.move_scenarios),
+    )
+    print(json.dumps(report, indent=2, default=str))
+
+
+def cmd_dense_v42_grid(args) -> None:
+    state = load_state()
+    pr = fresh_price(max_age=10**9)
+    samples = _v41_move_samples(args.lookback)
+    if len(samples) < 24:
+        raise SystemExit(f"only {len(samples)} usable V4.2 samples")
+    s_grid = _v42_s_grid(
+        Decimal(str(args.start)),
+        Decimal(str(args.end)),
+        Decimal(str(args.step)),
+    )
+    report = _v42_full_report(
+        state,
+        pr,
+        samples,
+        s_grid,
+        int(args.copies),
+        int(args.move_scenarios),
+    )
+    print(
+        "S,podium_static,existing_best,optimized_min,optimized_p10,"
+        "optimized_p50,optimized_max,beat_podium_rate"
+    )
+    for row in report["grid"]:
+        print(
+            row["S"],
+            row["podium_static"],
+            row["existing_best"],
+            row["optimized_min"],
+            row["optimized_p10"],
+            row["optimized_p50"],
+            row["optimized_max"],
+            row["beat_podium_rate"],
+            sep=",",
+        )
+
+
 def cmd_dense_v4_preview(_args) -> None:
     pr = fresh_price(max_age=10**9)
     print("=== DENSE V4 PREVIEW ===")
@@ -5907,6 +6516,24 @@ def main() -> None:
     p.add_argument("--end", type=str, default="260")
     p.add_argument("--step", type=str, default="0.50")
     p.set_defaults(fn=cmd_dense_final_s_grid)
+
+    p = sp.add_parser("dense-v42-optimize")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.add_argument("--start", type=str, default=str(DENSE_V42_DEFAULT_START))
+    p.add_argument("--end", type=str, default=str(DENSE_V42_DEFAULT_END))
+    p.add_argument("--step", type=str, default=str(DENSE_V42_DEFAULT_STEP))
+    p.add_argument("--copies", type=int, default=DENSE_V4_TOTAL_COPIES_PER_SIDE)
+    p.add_argument("--move-scenarios", type=int, default=DENSE_V42_GREEDY_MOVE_SCENARIOS)
+    p.set_defaults(fn=cmd_dense_v42_optimize)
+
+    p = sp.add_parser("dense-v42-grid")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.add_argument("--start", type=str, default=str(DENSE_V42_DEFAULT_START))
+    p.add_argument("--end", type=str, default=str(DENSE_V42_DEFAULT_END))
+    p.add_argument("--step", type=str, default=str(DENSE_V42_DEFAULT_STEP))
+    p.add_argument("--copies", type=int, default=DENSE_V4_TOTAL_COPIES_PER_SIDE)
+    p.add_argument("--move-scenarios", type=int, default=DENSE_V42_GREEDY_MOVE_SCENARIOS)
+    p.set_defaults(fn=cmd_dense_v42_grid)
 
     p = sp.add_parser("dense-v5a-preview")
     p.set_defaults(fn=cmd_dense_v5a_preview)
