@@ -62,7 +62,7 @@ class LeaderPivotSolverTests(unittest.TestCase):
         self.assertGreater(result["cash_required_before_flip"], Decimal("0"))
         self.assertEqual(result["pre_position_evidence"], "consecutive_pnl_slope")
 
-    def test_two_step_requires_open_after_close(self):
+    def test_two_step_allows_ordered_same_sweep_and_rejects_open_earlier(self):
         pre = {
             "score": Decimal("749.24"),
             "mark": Decimal("229.07"),
@@ -75,9 +75,16 @@ class LeaderPivotSolverTests(unittest.TestCase):
             "position": Decimal("46.07"),
             "position_evidence": "published_position",
         }
-        row = self.price_row(sweep="957")
+        close_row = self.price_row(sweep="957", applied="228.36", close="228.49")
+        same = c._leader_two_step_pivot_candidate(
+            close_row, close_row, pre, target
+        )
+        self.assertIsNotNone(same)
+        self.assertTrue(same["same_sweep_ordered"])
+
+        earlier = self.price_row(sweep="956", applied="228.20", close="228.30")
         self.assertIsNone(
-            c._leader_two_step_pivot_candidate(row, row, pre, target)
+            c._leader_two_step_pivot_candidate(close_row, earlier, pre, target)
         )
 
 
