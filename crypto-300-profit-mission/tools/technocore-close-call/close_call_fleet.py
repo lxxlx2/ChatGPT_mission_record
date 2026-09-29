@@ -6829,6 +6829,7 @@ def cmd_counterparty_redeploy_scan_summary(args) -> None:
     )
     print("ref_sweep:", report["ref_sweep"])
     print("ref:", report["ref"])
+    print("portfolio_accounts:", report["portfolio_accounts"])
     print("eligible_accounts:", report["eligible_accounts"])
     print("long_signature_groups:", report["long_signature_groups"])
     print("short_signature_groups:", report["short_signature_groups"])
