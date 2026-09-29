@@ -391,8 +391,7 @@ def latest_flow_and_state() -> tuple[dict | None, dict | None]:
 def flow_misses_room(flow: dict | None, room: str) -> bool:
     if not isinstance(flow, dict):
         return True
-    missed = flow.get("missed") or []
-    return room in json.dumps(missed, separators=(",", ":"), ensure_ascii=False)
+    return contains_exact(flow.get("missed") or [], room)
 
 
 def flow_lists_room(flow: dict | None, room: str) -> bool:
@@ -1209,7 +1208,7 @@ def _flow_room_missed_at_sweep(room: str, sweep: int) -> bool:
                 continue
         except Exception:
             continue
-        return room in json.dumps(p.get("missed") or [], separators=(",", ":"), ensure_ascii=False)
+        return contains_exact(p.get("missed") or [], room)
     return False
 
 
@@ -1219,7 +1218,7 @@ def _v5a_missed_sweeps(room: str) -> set[int]:
         p = rec.get("_payload")
         if not isinstance(p, dict) or p.get("t") != "flow":
             continue
-        if room not in json.dumps(p.get("missed") or [], separators=(",", ":"), ensure_ascii=False):
+        if not contains_exact(p.get("missed") or [], room):
             continue
         try:
             out.add(int(p["n"]))
@@ -1484,6 +1483,7 @@ def _v5a_pair_snapshot(
     marks: dict[int, Decimal],
     missed_sweeps: set[int],
     visible_outcomes: dict[str, str],
+    room_submissions: dict[str, dict],
     mark: Decimal,
 ) -> dict | None:
     submit_sweep = int(pair["cohort_sweep"])
@@ -1502,6 +1502,8 @@ def _v5a_pair_snapshot(
     # not missed; new V5a harvests are review-paused by default.
     for tid in (pair.get("long_trade_id"), pair.get("short_trade_id")):
         if not tid or visible_outcomes.get(tid) == "void":
+            return None
+        if visible_outcomes.get(tid) != "settled" and tid not in room_submissions:
             return None
 
     opening = _v5a_opening_state(pair, settlement_close)
@@ -1541,6 +1543,7 @@ def _v5a_candidates(state: dict, pr: dict | None = None) -> dict:
         if tid
     }
     visible_outcomes = _v5a_visible_outcomes(trade_ids)
+    room_submissions = trade_submissions_in_room(state["room"], trade_ids)
 
     first_threshold, second_threshold = _v5a_harvest_thresholds()
     harvested = dense.setdefault("v5a_harvested", {})
@@ -1559,7 +1562,7 @@ def _v5a_candidates(state: dict, pr: dict | None = None) -> dict:
         if pair["pair_id"] in harvested or pair["pair_id"] == active_pair:
             continue
         snap = _v5a_pair_snapshot(
-            state, pair, refs, marks, missed_sweeps, visible_outcomes, mark
+            state, pair, refs, marks, missed_sweeps, visible_outcomes, room_submissions, mark
         )
         if not snap:
             continue
@@ -1680,11 +1683,16 @@ def dense_v5a_harvest_step(state: dict, pr: dict) -> dict | None:
             # if nothing was omitted, absence is suspicious and we wait.
             if not (omitted.get("settled") or omitted.get("void")):
                 return None
+            tid = action.get("trade_id")
+            submissions = trade_submissions_in_room(state["room"], {tid} if tid else set())
+            if not tid or tid not in submissions:
+                return None
             active["outcome_evidence"] = {
                 "mode": "local_reconstruction_due_to_compact_omission",
                 "settlement_sweep": submit_sweep + 1,
                 "omitted": omitted,
-                "trade_id": action.get("trade_id"),
+                "trade_id": tid,
+                "room_submission": submissions[tid],
             }
 
         account_state = active.get("account_state") or {}
@@ -2391,11 +2399,15 @@ def _v5b_verify_open(state: dict, active: dict, pr: dict) -> dict | None:
         omitted = _flow_omitted_at_sweep(settle_sweep)
         if not (omitted.get("settled") or omitted.get("void")):
             return None
+        submissions = trade_submissions_in_room(state["room"], set(unknown))
+        if any(tid not in submissions for tid in unknown):
+            return None
         active["outcome_evidence"] = {
             "mode": "local_reconstruction_due_to_compact_omission",
             "settlement_sweep": settle_sweep,
             "unknown_trade_ids": unknown,
             "omitted": omitted,
+            "room_submissions": {tid: submissions[tid] for tid in unknown},
         }
 
     qty = Decimal(str(active["qty"]))
@@ -2505,11 +2517,15 @@ def _v5b_verify_close(state: dict, active: dict, pr: dict) -> dict | None:
         omitted = _flow_omitted_at_sweep(settle_sweep)
         if not (omitted.get("settled") or omitted.get("void")):
             return None
+        submissions = trade_submissions_in_room(state["room"], set(unknown))
+        if any(tid not in submissions for tid in unknown):
+            return None
         active["outcome_evidence"] = {
             "mode": "local_reconstruction_due_to_compact_omission",
             "settlement_sweep": settle_sweep,
             "unknown_trade_ids": unknown,
             "omitted": omitted,
+            "room_submissions": {tid: submissions[tid] for tid in unknown},
         }
 
     qty = Decimal(str(active["qty"]))
@@ -3659,6 +3675,43 @@ def cmd_check_trade(args) -> None:
         "note: NOT_VISIBLE is inconclusive when referee flow reports omitted settled/void entries; "
         "do not resubmit the same trade id"
     )
+
+
+def trade_submissions_in_room(room: str, trade_ids: set[str]) -> dict[str, dict]:
+    """Return locally observable signed trade submissions for requested IDs.
+
+    A record counts only when the room export contains the exact trade id and
+    the technocore author is one of the countersigned parties. This is used as
+    a prerequisite before local reconstruction when compact referee flow omitted
+    the authoritative settled/void entry.
+    """
+    wanted = {str(tid) for tid in trade_ids if tid}
+    if not wanted:
+        return {}
+    out: dict[str, dict] = {}
+    for rec in parse_export(room):
+        p = rec.get("_payload")
+        if not isinstance(p, dict) or p.get("t") != "trade" or p.get("season") != SEASON:
+            continue
+        terms = p.get("terms") or {}
+        tid = terms.get("id")
+        if tid not in wanted:
+            continue
+        author = rec.get("from")
+        maker = terms.get("maker")
+        taker = p.get("taker") or terms.get("taker")
+        if author not in (maker, taker):
+            continue
+        out[tid] = {
+            "seq": rec.get("seq"),
+            "ts": rec.get("ts"),
+            "from": author,
+            "maker": maker,
+            "taker": taker,
+        }
+        if len(out) == len(wanted):
+            break
+    return out
 
 
 def trade_outcome_from_flow(trade_id: str) -> dict:
