@@ -123,3 +123,107 @@ uv run close_call_fleet.py dense-v5b-preview
 ```
 
 The first two are code/test checks. The preview/status commands are read-only.
+
+
+## External review round 2 changes
+
+After DeepSeek, Grok and Gemini reviewed PR #11, the review branch was amended
+again. These changes are still review-only.
+
+### Confirmed blockers fixed
+
+1. **Compact flow omissions no longer deadlock V5**
+   - explicit visible `void` still blocks;
+   - explicit visible `settled` is accepted;
+   - when compact flow omits outcomes, active V5 verification can continue using
+     deterministic local reconstruction with an explicit
+     `local_reconstruction_due_to_compact_omission` evidence marker;
+   - when the compact post reports no omissions and the trade is absent, the
+     action waits instead of assuming success.
+
+2. **Hot-path room checks no longer rescan historical flow on every helper call**
+   - `room_registration_confirmed()` is now an O(1) cached-state read;
+   - `dense_room_maintenance()` updates that state from the latest flow once;
+   - a 5-second in-process export cache deduplicates repeated export reads within
+     one autopilot poll and is invalidated immediately after a local room write.
+
+3. **Exact room-name matching**
+   - room listing/unlisting checks use recursive exact membership;
+   - substring matches such as `cc-test` vs `cc-test-extra` no longer count.
+
+4. **V4 two-leg posting order**
+   - both V4 long and short signed trades are now posted by the feeder account.
+   - The underlying maker/taker signatures and terms are unchanged.
+   - This follows the official rule that either side may post the countersigned
+     trade and gives both legs one publisher/nonce stream.
+
+5. **V4 reserve partial-error recovery**
+   - same-sweep `partial_error` reserve copies retain plan/trade metadata;
+   - only missing legs are retried with the same logical trade IDs;
+   - stale partials from prior sweeps are expired and replaced by reserve refill.
+
+6. **V5 scheduling**
+   - V4 still gets first opportunity;
+   - already-open V5b risk is managed next;
+   - already-started V5a staged close is managed before any pending/new V5b
+     housekeeping;
+   - pending/new V5 work can no longer starve an active V5a close.
+
+### Conservative strategy guard added for review
+
+New V5 overlays are hard-paused on this review branch:
+
+```python
+V5A_REVIEW_PAUSE_NEW = True
+V5B_REVIEW_PAUSE_NEW = True
+```
+
+Already-active V5 actions remain manageable.
+
+The V5b protective stop candidate is now relative to the realized seed:
+
+```text
+stop = max(20, seed_locked_score * 0.85)
+```
+
+This is intentionally a review candidate, not a claim that 0.85 is the
+mathematically optimal value.
+
+### Outcome parsing clarification
+
+One external report claimed the code handled referee `void` rows only as
+dictionaries. That claim does not match the current PR implementation.
+`_v5a_visible_outcomes()` uses recursive `contains_value()`, which detects
+nested list forms such as:
+
+```json
+[["trade-id", "funds"]]
+```
+
+A regression test was added for this format.
+
+### PR cleanliness clarification
+
+GitHub's PR metadata currently reports **3 changed files** for PR #11:
+
+- `close_call_fleet.py`
+- `test_correctness_patch.py`
+- this review document
+
+A report of 53 changed files came from a local comparison context and does not
+match the current GitHub PR file set.
+
+## Still deliberately unresolved
+
+The following remain strategy/research work and are not claimed solved:
+
+- V4 stress sizing against the full distribution of next-sweep close moves
+- independent long/short quantity optimization
+- V4 safety ladder and 3/2/3 copy allocation
+- V5a projected locked-value/retention trigger model
+- V5b clawback-optimized entry/exit pricing
+- proof that any V5b directional flip has positive expectation
+- final-S coverage optimization versus the actual prize-line topology
+
+The next quantitative step should use the official fold to replay V4 quantity
+and price grids before changing the production ladder.
