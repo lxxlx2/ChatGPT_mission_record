@@ -159,3 +159,14 @@ Interpretation:
 - Current PM pricing contradicts claims that an Upbit listing probability is effectively zero; the PM price is material but still low-confidence due modest volume and spreads.
 - PM currently prices a high probability that JUMP exceeds the USD 75M sale FDV one day after launch, while odds fall materially above USD 150M.
 - Expected oversubscription improves the observed demand signal but can reduce individual allocations because Legion allocates by merit and may scale requests.
+
+
+## Live application minimum update — 2026-09-29 20:30 Asia/Bangkok
+Source: USER_CONFIRMED authenticated Legion application UI screenshot.
+
+- Live JUMP application UI states: "Jumper set a $1,000 USDC minimum to participate."
+- Therefore the previously stored 400-USDC requested-purchase plan cannot be submitted as-is.
+- The separate field "What's the minimum amount you would accept?" may be set to 400 USDC, but it does not reduce the required requested/deposited application amount below 1,000 USDC.
+- Legion's current general sale rules state that the amount requested is deposited up front to register the application; if the final accepted allocation is smaller, the excess becomes reclaimable after allocation.
+- No additional 600 USDC has been authorized for JUMP. Keep the existing 400-USDC reserve/accounting unchanged until the user explicitly decides whether to increase the application deposit.
+- Execution status: REVIEW_REQUIRED / DO_NOT_SUBMIT_400.
