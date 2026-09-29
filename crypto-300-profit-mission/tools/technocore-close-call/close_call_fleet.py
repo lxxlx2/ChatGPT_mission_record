@@ -5961,11 +5961,16 @@ def _cp_simulate_trio(
     donor_b_account: dict,
     close: Decimal,
     upper_limit: Decimal,
+    fixed_leg2_qty: Decimal | None = None,
 ) -> dict:
     """Replay two same-sweep trades across three existing accounts.
 
     Leg 1: target long maker sells its full long to donor A.
     Leg 2: after target becomes flat, target maker sells a new short to donor B.
+
+    If fixed_leg2_qty is supplied, the second trade uses that ex-ante quantity.
+    This is required for production-valid replay because the settlement close is
+    unknown when trades are submitted.
     """
     target = _cp_state_from_account(target_account)
     donor_a = _cp_state_from_account(donor_a_account)
@@ -5999,7 +6004,12 @@ def _cp_simulate_trio(
         }
 
     target_flat_score = _cp_score(target, close)
-    q2 = _cp_second_leg_qty(target, donor_b, upper_limit, close)
+    cap = _cp_second_leg_qty(target, donor_b, upper_limit, close)
+    q2 = (
+        Decimal(str(fixed_leg2_qty)).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+        if fixed_leg2_qty is not None
+        else cap
+    )
     if q2 < Decimal("0.10"):
         return {
             "leg1_settled": True,
@@ -6007,6 +6017,20 @@ def _cp_simulate_trio(
             "reason": "leg2_qty",
             "leg1": leg1,
             "leg2_qty": q2,
+            "leg2_cap": cap,
+            "target_flat_score": target_flat_score,
+            "target": target,
+            "donor_a": donor_a,
+            "donor_b": donor_b,
+        }
+    if q2 > cap:
+        return {
+            "leg1_settled": True,
+            "leg2_settled": False,
+            "reason": "leg2_fixed_qty_exceeds_cap",
+            "leg1": leg1,
+            "leg2_qty": q2,
+            "leg2_cap": cap,
             "target_flat_score": target_flat_score,
             "target": target,
             "donor_a": donor_a,
@@ -6021,11 +6045,37 @@ def _cp_simulate_trio(
         "leg1": leg1,
         "leg2": leg2,
         "leg2_qty": q2,
+        "leg2_cap": cap,
         "target_flat_score": target_flat_score,
         "target": target,
         "donor_a": donor_a,
         "donor_b": donor_b,
     }
+
+
+def _cp_robust_leg2_qty(
+    target: dict,
+    donor_a: dict,
+    donor_b: dict,
+    closes: list[Decimal],
+    upper_limit: Decimal,
+) -> Decimal | None:
+    """Largest fixed leg-2 quantity feasible for every supplied close sample."""
+    caps = []
+    for close in closes:
+        sim = _cp_simulate_trio(
+            target, donor_a, donor_b, close, upper_limit, fixed_leg2_qty=None
+        )
+        if not sim.get("leg1_settled"):
+            return None
+        cap = sim.get("leg2_cap")
+        if cap is None:
+            return None
+        caps.append(Decimal(str(cap)))
+    if not caps:
+        return None
+    qty = min(caps).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+    return qty if qty >= Decimal("0.10") else None
 
 
 def _cp_frontier_excluding(
@@ -6141,6 +6191,9 @@ def _counterparty_redeploy_report(
         accounts, baseline_by_account, excluded, s_grid
     )
 
+    fixed_q2 = _cp_robust_leg2_qty(
+        target, donor_a, donor_b, closes, upper_limit
+    )
     matrix = []
     sample_rows = []
     leg1_ok = 0
@@ -6150,7 +6203,10 @@ def _counterparty_redeploy_report(
         for i in range(len(s_grid))
     )
     for close in closes:
-        sim = _cp_simulate_trio(target, donor_a, donor_b, close, upper_limit)
+        sim = _cp_simulate_trio(
+            target, donor_a, donor_b, close, upper_limit,
+            fixed_leg2_qty=fixed_q2,
+        )
         if sim.get("leg1_settled"):
             leg1_ok += 1
         if sim.get("leg2_settled"):
@@ -6220,6 +6276,7 @@ def _counterparty_redeploy_report(
             ),
             "max_gap": stats["max_gap"] - baseline_stats["max_gap"],
         },
+        "fixed_leg2_qty": fixed_q2,
         "leg1_settle_rate": Decimal(leg1_ok) / Decimal(len(closes)),
         "leg2_settle_rate": Decimal(leg2_ok) / Decimal(len(closes)),
         "grid": _cp_grid_summary(
@@ -6238,7 +6295,10 @@ def _counterparty_redeploy_report(
             "leg 2 has the now-flat target sell the largest feasible short to "
             "donor B while donor B only closes existing short. Both trades use "
             "the current upper legal quote and official maker/taker clawback "
-            "fees. The whole reconstructed portfolio frontier includes the "
+            "fees. Leg 2 uses one fixed ex-ante quantity chosen as the minimum "
+            "feasible cap across all retained close samples, so replay does not "
+            "use the unknown future settlement close for sizing. The whole "
+            "reconstructed portfolio frontier includes the "
             "post-trade donor states. No trade is posted."
         ),
     }
@@ -6362,11 +6422,18 @@ def _cp_quick_stats(
     podium: list[Decimal],
     s_grid: list[Decimal],
 ) -> dict | None:
+    fixed_q2 = _cp_robust_leg2_qty(
+        target, donor_a, donor_b, closes, upper_limit
+    )
+    if fixed_q2 is None:
+        return None
+
     matrix = []
     leg2_qty = []
     for close in closes:
         sim = _cp_simulate_trio(
-            target, donor_a, donor_b, close, upper_limit
+            target, donor_a, donor_b, close, upper_limit,
+            fixed_leg2_qty=fixed_q2,
         )
         if not sim.get("leg1_settled") or not sim.get("leg2_settled"):
             return None
@@ -6383,6 +6450,7 @@ def _cp_quick_stats(
         "leg2_qty_min": min(leg2_qty),
         "leg2_qty_p50": _v41_quantile(leg2_qty, Decimal("0.50")),
         "leg2_qty_max": max(leg2_qty),
+        "fixed_leg2_qty": fixed_q2,
     }
 
 
@@ -6398,6 +6466,9 @@ def _cp_full_trio_eval(
     podium: list[Decimal],
     s_grid: list[Decimal],
 ) -> dict:
+    fixed_q2 = _cp_robust_leg2_qty(
+        target, donor_a, donor_b, closes, upper_limit
+    )
     matrix = []
     leg1_ok = 0
     leg2_ok = 0
@@ -6412,7 +6483,8 @@ def _cp_full_trio_eval(
 
     for close in closes:
         sim = _cp_simulate_trio(
-            target, donor_a, donor_b, close, upper_limit
+            target, donor_a, donor_b, close, upper_limit,
+            fixed_leg2_qty=fixed_q2,
         )
         if sim.get("leg1_settled"):
             leg1_ok += 1
@@ -6481,6 +6553,7 @@ def _cp_full_trio_eval(
         },
         "leg1_settle_rate": Decimal(leg1_ok) / Decimal(len(closes)),
         "leg2_settle_rate": Decimal(leg2_ok) / Decimal(len(closes)),
+        "fixed_leg2_qty": fixed_q2,
         "leg2_qty_min": min(qtys) if qtys else None,
         "leg2_qty_p50": _v41_quantile(qtys, Decimal("0.50")) if qtys else None,
         "leg2_qty_max": max(qtys) if qtys else None,
