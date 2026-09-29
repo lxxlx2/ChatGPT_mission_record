@@ -5733,6 +5733,7 @@ def _v42_greedy_select(
 
     baseline = _v42_frontier_stats(frontier, podium)
     rounds = []
+    current_stats = baseline
     for _round in range(max(0, int(copies))):
         best = None
         for item in remaining:
@@ -5752,13 +5753,31 @@ def _v42_greedy_select(
                 }
         if best is None:
             break
+
+        # Stop once the candidate pool cannot improve the objective. The first
+        # real V4.2 run showed rounds 2..8 selecting mechanically different
+        # plans with exactly identical coverage/gap statistics.
+        improved = (
+            best["stats"]["covered_cells"] > current_stats["covered_cells"]
+            or best["stats"]["total_gap"] < current_stats["total_gap"]
+            or best["stats"]["max_gap"] < current_stats["max_gap"]
+        )
+        if not improved:
+            break
+
         chosen = best["item"]
         selected.append(chosen["plan"])
         frontier = best["frontier"]
+        current_stats = best["stats"]
         rounds.append(best["stats"])
         remaining = [x for x in remaining if x["index"] != chosen["index"]]
 
-    return selected, frontier, {"baseline": baseline, "rounds": rounds}
+    return selected, frontier, {
+        "baseline": baseline,
+        "rounds": rounds,
+        "saturated": len(selected) < max(0, int(copies)),
+        "selected_count": len(selected),
+    }
 
 
 def _v42_full_report(
@@ -5828,6 +5847,8 @@ def _v42_full_report(
         },
         "baseline_stats": greedy["baseline"],
         "greedy_round_stats": greedy["rounds"],
+        "optimizer_saturated": greedy.get("saturated"),
+        "selected_count": greedy.get("selected_count"),
         "final_full_history_stats": final_stats,
         "selected": selected,
         "grid": grid,
