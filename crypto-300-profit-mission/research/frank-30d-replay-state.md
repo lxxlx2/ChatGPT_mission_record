@@ -276,11 +276,11 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **60 / 7,106**
-- classification_before: `3Egnf68PksrA9Uk9EEhRGJ4RGpUZnLj9Xgk6Mmzobzz3Yv1zeBbjnp4AAJaxiJrLeQLSkw9qCLsEteUnrt9GARmQ`
-- classification_oldest_time: **2026-09-28T19:32:42Z / 2026-09-29 02:32:42 Asia/Bangkok**
+- classified_signature_count: **70 / 7,106**
+- classification_before: `55dxkYS1bdep2mrhMPBPwuL8KEfwmQg5XWNPArvuJ8B578GXjz5PhL6ED463R5RZBcEkRmuUetSPeQT1jbjLzWEo`
+- classification_oldest_time: **2026-09-28T17:10:38Z / 2026-09-29 00:10:38 Asia/Bangkok**
 - active_swaps_verified: **21**
-- passive_filtered: **39**
+- passive_filtered: **49**
 - unresolved_tx_count: **0**
 - unique_active_tokens: **10**
 
@@ -435,5 +435,29 @@ Verified active sells in this chunk:
 Passive in this chunk:
 - `4eymEgaE...`, `s2bM8xhL...`, `iQhnSkrJ...`, `3Egnf68P...`: Frank-authorized/plain token-transfer style activity without a verified DEX/pool value-exchange path => PASSIVE_TRANSFER under the frozen rule.
 - `3BWQW1BR...`: Frank not signer/authority for an active swap => PASSIVE.
+
+No signature was skipped. No live Frank cursor or live alert state was modified.
+
+
+## PHASE 2 manual acceleration checkpoint — 70/7,106
+
+Processed the next 10 signatures continuously after `3Egnf68P...`.
+
+Results:
+- processed_this_chunk: **10**
+- active_swaps_verified_this_chunk: **0**
+- passive_filtered_this_chunk: **10**
+- unresolved_this_chunk: **0**
+- new_durable_count: **70 / 7,106**
+- cumulative_active_swaps_verified: **21**
+- cumulative_passive_filtered: **49**
+- cumulative_unique_active_tokens: **10**
+- new_classification_before: `55dxkYS1bdep2mrhMPBPwuL8KEfwmQg5XWNPArvuJ8B578GXjz5PhL6ED463R5RZBcEkRmuUetSPeQT1jbjLzWEo`
+
+Classification summary:
+- `2n4fr9Ei...`, `41RsC15t...`, `5Ciuc2RH...`: Frank-signed USDC `DepositToken` management operations => PASSIVE_MANAGEMENT.
+- `4LUPEKW6...`, `5wtLmr5h...`, `L23hRDpM...`, `4jARzjrr...`: third-party ATA/create/transfer activity, Frank not signer => PASSIVE.
+- `3mSuur2X...`, `2H7Dv8UD...`: third-party token activity involving Frank-owned accounts with no Frank active DEX authority => PASSIVE.
+- `55dxkYS1...`: Frank-signed non-DEX/non-directional USDC account action, no verified pool/aggregator value exchange => PASSIVE_MANAGEMENT.
 
 No signature was skipped. No live Frank cursor or live alert state was modified.
