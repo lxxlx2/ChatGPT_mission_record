@@ -138,3 +138,83 @@ Independent follow-up found a material identity contradiction that should have t
 - an unaffiliated site promotes a `$GIWA` token and future migration narrative while also disclaiming affiliation with Upbit/Dunamu/GIWA.
 
 This is recorded as a monitoring-gap example. The specific attacker/entity behind the user's reported scam is still separate and must not be inferred without matching evidence.
+
+## Major CEX account-security fast lane — 2026-09-29
+
+The 2026-09-28 MEXC user account-takeover / retained-API incident was missed by the daily report. This is a confirmed discovery-coverage regression.
+
+Every ordinary hourly collector must run one bounded English-language fast-lane search covering major centralized exchanges even when X or specialist feeds are unavailable.
+
+Mandatory exchange set:
+- Binance
+- Coinbase
+- OKX
+- Bybit
+- MEXC
+- Bitget
+- Kraken
+- Gate
+- HTX
+- KuCoin
+
+Mandatory incident terms are batched around:
+- account takeover / hacked account / unauthorized withdrawal / stolen funds;
+- API key / API withdrawal / residual API / compromised API;
+- KYC reset / security reset / deepfake / SIM swap / authenticator reset;
+- withdrawal freeze / abnormal transfer / user funds;
+- compensation / reimbursement / settlement / agreement / resolved.
+
+The fast lane is discovery-oriented. One broad query may batch multiple exchanges/terms, but MEXC, Bitget and any exchange with a current incident must also receive a direct focused query until the case is resolved.
+
+If X is unavailable, the collector must still use fresh English web/news search to discover user reports and official-support responses. X unavailable is not a reason to skip the CEX fast lane.
+
+### Candidate promotion
+
+A CEX user-account incident becomes a security candidate when any of these is found:
+- named user/victim reports a material unauthorized withdrawal with timestamps/amounts;
+- exchange support or official account acknowledges abnormal asset transfer / dedicated investigation;
+- reputable security researcher cites account/API/KYC compromise evidence;
+- reputable English news source quotes the user and exchange response.
+
+For a material candidate, verify:
+1. amount and asset(s);
+2. incident time vs disclosure time;
+3. attack path as claim vs confirmed fact;
+4. official acknowledgement;
+5. remediation / compensation / settlement status;
+6. whether the issue implies a reusable user-protection action such as API-key review or withdrawal-whitelist checks.
+
+### Incident lifecycle and no-repeat rule
+
+Persist a stable incident key and lifecycle state:
+DISCOVERED -> OFFICIAL_ACK -> REMEDIATION_PENDING -> RESOLVED
+
+A later material state may be appended, e.g. NEW_LOSS_AMOUNT, ROOT_CAUSE_CONFIRMED, COMPENSATION_CONFIRMED.
+
+Do not repeat an unchanged conclusion in hourly research, Gmail alerts, or the next daily report merely because the incident remains newsworthy.
+
+Re-emit only when there is a material delta:
+- loss estimate changes materially;
+- official acknowledgement appears;
+- root cause is confirmed/changed;
+- withdrawals/security controls materially change;
+- compensation/reimbursement is confirmed;
+- case is officially resolved;
+- new victims indicate the issue may be systemic.
+
+Daily Chapter 9 should prefer deltas. If an unresolved critical incident must be carried forward for safety, label it ongoing / no material change in one concise line rather than repeating the prior conclusion.
+
+## MEXC miss lesson — 2026-09-29
+
+Missed incident:
+- user @shuangfei8 publicly reported 322,110 USDT plus 9,133,999 ONE withdrawn after an account takeover;
+- the user alleged an attacker-created API key remained usable after account recovery;
+- MEXC support acknowledged the case and later said it had reached an agreement with the user and the matter was fully resolved;
+- public English reporting did not disclose the settlement terms or independently confirm full reimbursement amount.
+
+Why the existing policy missed it:
+- specialist/X availability gaps were recorded but the fallback discovery pack was too generic;
+- the brand-impersonation pack focused on launches/trending brands rather than a fixed major-CEX account-security set;
+- official announcement pages alone are weak for individual-account incidents because support-account replies and victim disclosures may appear first.
+
+This incident is the regression test for the CEX fast lane. A healthy hourly run should surface a comparable future event within the next successful hourly cycle after it becomes searchable.
