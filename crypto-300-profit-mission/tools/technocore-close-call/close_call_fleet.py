@@ -5678,13 +5678,15 @@ def _redeploy_report(
 
             row = []
             for si, final_s in enumerate(s_grid):
-                new_score = _redeploy_line_score(sim, final_s)
-                row.append(
-                    max(
-                        other_frontier[si],
-                        new_score if new_score is not None else Decimal("-1e30"),
-                    )
-                )
+                if not sim["close_feasible"]:
+                    # Failed first trade leaves the existing position intact.
+                    candidate_score = baseline_by_account[account["account"]][si]
+                elif not sim["open_feasible"]:
+                    # The close settled but the second trade could not open.
+                    candidate_score = Decimal(str(sim["flat_score"]))
+                else:
+                    candidate_score = _redeploy_line_score(sim, final_s)
+                row.append(max(other_frontier[si], candidate_score))
             matrix.append(row)
             sample_details.append(sim)
 
@@ -5749,8 +5751,12 @@ def _redeploy_report(
             "This lab only uses reconstructed, unmodified V4 accounts. Each "
             "candidate closes its current position first and opens the opposite "
             "side later in the same sweep, matching the leader pivot mechanism. "
-            "No trade is submitted. Competitor podium lines are static-current-"
-            "position stress lines, not forecasts."
+            "If the first close would fail its funds check, the model leaves "
+            "the existing position intact; if only the second open fails, the "
+            "model remains flat. No trade is submitted. Competitor podium lines "
+            "are static-current-position stress lines, not forecasts. Local "
+            "reconstruction still inherits the known application-sweep evidence "
+            "ambiguity for compact-omitted historical trades."
         ),
     }
 
