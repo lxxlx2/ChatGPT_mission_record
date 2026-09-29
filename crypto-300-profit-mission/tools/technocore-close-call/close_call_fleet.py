@@ -5454,6 +5454,350 @@ def cmd_leader_pivot_summary(args) -> None:
     )
 
 
+
+
+def _redeploy_fee_per_qty(action: str, px: Decimal, close: Decimal) -> Decimal:
+    base = Decimal("0.01") * px
+    if action == "buy":
+        return max(base, close - px)
+    if action == "sell":
+        return max(base, px - close)
+    raise ValueError("action must be buy/sell")
+
+
+def _redeploy_qty_from_cash(
+    cash: Decimal,
+    px: Decimal,
+    fee_per_qty: Decimal,
+) -> Decimal:
+    if cash <= 0:
+        return Decimal("0")
+    q = (cash / (px + fee_per_qty)).quantize(
+        Decimal("0.01"), rounding=ROUND_DOWN
+    )
+    return max(q, Decimal("0"))
+
+
+def _redeploy_accounts(state: dict) -> list[dict]:
+    """Reconstruct unmodified local V4 target accounts as score lines."""
+    out = []
+    for candidate in _v41_local_open_candidates(state):
+        pair = candidate["pair"]
+        qty = Decimal(str(pair["qty"]))
+
+        if candidate["long_settled"]:
+            entry = Decimal(str(pair["low"]))
+            opening_fee = Decimal(str(candidate["long_fee"]))
+            out.append({
+                "pair_id": pair["pair_id"],
+                "account": pair["long"],
+                "side": "long",
+                "qty": qty,
+                "entry": entry,
+                "opening_fee": opening_fee,
+                "cash": Decimal("10000") - qty * entry - opening_fee,
+                "evidence_mode": candidate["long_evidence_mode"],
+                "source": pair["source"],
+            })
+
+        if candidate["short_settled"]:
+            entry = Decimal(str(pair["high"]))
+            opening_fee = Decimal(str(candidate["short_fee"]))
+            out.append({
+                "pair_id": pair["pair_id"],
+                "account": pair["short"],
+                "side": "short",
+                "qty": qty,
+                "entry": entry,
+                "opening_fee": opening_fee,
+                "cash": Decimal("10000") - qty * entry - opening_fee,
+                "evidence_mode": candidate["short_evidence_mode"],
+                "source": pair["source"],
+            })
+    return out
+
+
+def _redeploy_baseline_score(account: dict, final_s: Decimal) -> Decimal:
+    q = Decimal(str(account["qty"]))
+    entry = Decimal(str(account["entry"]))
+    fee = Decimal(str(account["opening_fee"]))
+    if account["side"] == "long":
+        return q * (final_s - entry) - fee
+    return q * (entry - final_s) - fee
+
+
+def _redeploy_simulate(
+    account: dict,
+    close: Decimal,
+    lower_limit: Decimal,
+    upper_limit: Decimal,
+) -> dict:
+    """Close one existing V4 target then open the opposite side in same sweep.
+
+    The account is unmodified and therefore its current cash is reconstructable
+    exactly from the original collateral and opening fee.
+    """
+    old_q = Decimal(str(account["qty"]))
+    entry = Decimal(str(account["entry"]))
+    opening_fee = Decimal(str(account["opening_fee"]))
+    pre_cash = Decimal(str(account["cash"]))
+
+    if account["side"] == "long":
+        close_action = "sell"
+        close_px = upper_limit
+        close_fee_per = _redeploy_fee_per_qty("sell", close_px, close)
+        close_fee = old_q * close_fee_per
+        close_feasible = pre_cash >= close_fee
+        flat_score = old_q * (close_px - entry) - opening_fee - close_fee
+        flat_cash = Decimal("10000") + flat_score
+
+        open_side = "short"
+        open_px = upper_limit
+        open_fee_per = _redeploy_fee_per_qty("sell", open_px, close)
+        new_q = _redeploy_qty_from_cash(flat_cash, open_px, open_fee_per)
+        open_fee = new_q * open_fee_per
+
+        slope = -new_q
+        intercept = flat_score + new_q * open_px - open_fee
+    else:
+        close_action = "buy"
+        close_px = lower_limit
+        close_fee_per = _redeploy_fee_per_qty("buy", close_px, close)
+        close_fee = old_q * close_fee_per
+        close_feasible = pre_cash >= close_fee
+        flat_score = old_q * (entry - close_px) - opening_fee - close_fee
+        flat_cash = Decimal("10000") + flat_score
+
+        open_side = "long"
+        open_px = lower_limit
+        open_fee_per = _redeploy_fee_per_qty("buy", open_px, close)
+        new_q = _redeploy_qty_from_cash(flat_cash, open_px, open_fee_per)
+        open_fee = new_q * open_fee_per
+
+        slope = new_q
+        intercept = flat_score - new_q * open_px - open_fee
+
+    open_feasible = new_q >= Decimal("0.10")
+    return {
+        "account": account["account"],
+        "pair_id": account["pair_id"],
+        "from_side": account["side"],
+        "to_side": open_side,
+        "old_qty": old_q,
+        "pre_cash": pre_cash,
+        "close": close,
+        "close_action": close_action,
+        "close_px": close_px,
+        "close_fee": close_fee,
+        "close_feasible": close_feasible,
+        "flat_score": flat_score,
+        "flat_cash": flat_cash,
+        "open_px": open_px,
+        "new_qty": new_q,
+        "open_fee": open_fee,
+        "open_feasible": open_feasible,
+        "score_slope": slope if close_feasible and open_feasible else None,
+        "score_intercept": intercept if close_feasible and open_feasible else None,
+    }
+
+
+def _redeploy_line_score(sim: dict, final_s: Decimal) -> Decimal | None:
+    if not sim.get("close_feasible") or not sim.get("open_feasible"):
+        return None
+    return (
+        Decimal(str(sim["score_slope"])) * final_s
+        + Decimal(str(sim["score_intercept"]))
+    )
+
+
+def _redeploy_report(
+    state: dict,
+    start: Decimal,
+    end: Decimal,
+    step: Decimal,
+    lookback: int,
+) -> dict:
+    s_grid = _v42_s_grid(start, end, step)
+    accounts = _redeploy_accounts(state)
+    if not accounts:
+        raise ValueError("no reconstructed unmodified V4 accounts")
+
+    pr = fresh_price(max_age=10**9)
+    ref = Decimal(str(pr["px"]))
+    lower_limit, upper_limit = dense_v4_limit_bounds(pr)
+    samples = _v41_move_samples(lookback)
+    if not samples:
+        raise ValueError("no historical settlement move samples")
+
+    closes = [
+        (ref * (Decimal("1") + Decimal(str(x["move"])))).quantize(
+            Decimal("0.01")
+        )
+        for x in samples
+    ]
+
+    competitor = _v42_competitor_model(state, s_grid)
+    podium = [competitor["podium"][x] for x in s_grid]
+
+    baseline_by_account = {
+        a["account"]: [_redeploy_baseline_score(a, final_s) for final_s in s_grid]
+        for a in accounts
+    }
+    baseline_frontier = [
+        max(baseline_by_account[a["account"]][si] for a in accounts)
+        for si in range(len(s_grid))
+    ]
+    baseline_matrix = [list(baseline_frontier) for _ in closes]
+    baseline_stats = _v42_frontier_stats(baseline_matrix, podium)
+
+    results = []
+    for account in accounts:
+        other_accounts = [a for a in accounts if a["account"] != account["account"]]
+        if other_accounts:
+            other_frontier = [
+                max(
+                    baseline_by_account[a["account"]][si]
+                    for a in other_accounts
+                )
+                for si in range(len(s_grid))
+            ]
+        else:
+            other_frontier = [Decimal("-1e30") for _ in s_grid]
+
+        matrix = []
+        feasible_closes = 0
+        qtys = []
+        flat_scores = []
+        sample_details = []
+        for close in closes:
+            sim = _redeploy_simulate(account, close, lower_limit, upper_limit)
+            if sim["close_feasible"] and sim["open_feasible"]:
+                feasible_closes += 1
+                qtys.append(sim["new_qty"])
+                flat_scores.append(sim["flat_score"])
+
+            row = []
+            for si, final_s in enumerate(s_grid):
+                new_score = _redeploy_line_score(sim, final_s)
+                row.append(
+                    max(
+                        other_frontier[si],
+                        new_score if new_score is not None else Decimal("-1e30"),
+                    )
+                )
+            matrix.append(row)
+            sample_details.append(sim)
+
+        stats = _v42_frontier_stats(matrix, podium)
+        results.append({
+            "account": account,
+            "feasible_close_rate": (
+                Decimal(feasible_closes) / Decimal(len(closes))
+                if closes else Decimal("0")
+            ),
+            "new_qty_min": min(qtys) if qtys else None,
+            "new_qty_p50": _v41_quantile(qtys, Decimal("0.50")) if qtys else None,
+            "new_qty_max": max(qtys) if qtys else None,
+            "flat_score_min": min(flat_scores) if flat_scores else None,
+            "flat_score_p50": (
+                _v41_quantile(flat_scores, Decimal("0.50"))
+                if flat_scores else None
+            ),
+            "flat_score_max": max(flat_scores) if flat_scores else None,
+            "stats": stats,
+            "coverage_delta": stats["coverage_rate"] - baseline_stats["coverage_rate"],
+            "total_gap_delta": stats["total_gap"] - baseline_stats["total_gap"],
+            "max_gap_delta": stats["max_gap"] - baseline_stats["max_gap"],
+            "sample_best": min(
+                sample_details,
+                key=lambda x: (
+                    Decimal("0") if x["close_feasible"] and x["open_feasible"]
+                    else Decimal("1"),
+                    -Decimal(str(x["flat_score"])),
+                ),
+            ) if sample_details else None,
+        })
+
+    results.sort(
+        key=lambda x: (
+            x["stats"]["covered_cells"],
+            -x["stats"]["total_gap"],
+            -x["stats"]["max_gap"],
+        ),
+        reverse=True,
+    )
+
+    return {
+        "mode": "read_only_realize_redeploy_lab",
+        "ref_sweep": pr.get("n"),
+        "ref": ref,
+        "lower_limit": lower_limit,
+        "upper_limit": upper_limit,
+        "historical_samples": len(samples),
+        "target_start": start,
+        "target_end": end,
+        "target_step": step,
+        "account_count": len(accounts),
+        "baseline_stats": baseline_stats,
+        "competitor": {
+            "pnl_sweep": competitor["pnl_sweep"],
+            "mark": competitor["mark"],
+            "lines": competitor["lines"][:12],
+        },
+        "ranked_candidates": results,
+        "note": (
+            "This lab only uses reconstructed, unmodified V4 accounts. Each "
+            "candidate closes its current position first and opens the opposite "
+            "side later in the same sweep, matching the leader pivot mechanism. "
+            "No trade is submitted. Competitor podium lines are static-current-"
+            "position stress lines, not forecasts."
+        ),
+    }
+
+
+def cmd_realize_redeploy_lab(args) -> None:
+    report = _redeploy_report(
+        load_state(),
+        Decimal(str(args.start)),
+        Decimal(str(args.end)),
+        Decimal(str(args.step)),
+        int(args.lookback),
+    )
+    print(json.dumps(report, indent=2, default=str))
+
+
+def cmd_realize_redeploy_summary(args) -> None:
+    report = _redeploy_report(
+        load_state(),
+        Decimal(str(args.start)),
+        Decimal(str(args.end)),
+        Decimal(str(args.step)),
+        int(args.lookback),
+    )
+    print("ref_sweep:", report["ref_sweep"])
+    print("ref:", report["ref"])
+    print("account_count:", report["account_count"])
+    print("historical_samples:", report["historical_samples"])
+    print("baseline_stats:", json.dumps(report["baseline_stats"], default=str))
+    for i, item in enumerate(report["ranked_candidates"][:10], 1):
+        a = item["account"]
+        print(
+            f"#{i}",
+            a["account"],
+            a["side"],
+            "qty=", a["qty"],
+            "entry=", a["entry"],
+            "cash=", a["cash"],
+            "coverage_delta=", item["coverage_delta"],
+            "total_gap_delta=", item["total_gap_delta"],
+            "max_gap_delta=", item["max_gap_delta"],
+            "feasible_close_rate=", item["feasible_close_rate"],
+            "new_qty_p50=", item["new_qty_p50"],
+            "flat_score_p50=", item["flat_score_p50"],
+        )
+
+
+
 def cmd_progress(_args) -> None:
     state = load_state()
     pr = fresh_price(max_age=10**9)
@@ -7725,6 +8069,20 @@ def main() -> None:
     p.add_argument("--from-sweep", type=int, default=956)
     p.add_argument("--target-sweep", type=int, default=960)
     p.set_defaults(fn=cmd_leader_pivot_summary)
+
+    p = sp.add_parser("realize-redeploy-lab")
+    p.add_argument("--start", type=str, default="220")
+    p.add_argument("--end", type=str, default="245")
+    p.add_argument("--step", type=str, default="0.50")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.set_defaults(fn=cmd_realize_redeploy_lab)
+
+    p = sp.add_parser("realize-redeploy-summary")
+    p.add_argument("--start", type=str, default="220")
+    p.add_argument("--end", type=str, default="245")
+    p.add_argument("--step", type=str, default="0.50")
+    p.add_argument("--lookback", type=int, default=DENSE_V41_LOOKBACK)
+    p.set_defaults(fn=cmd_realize_redeploy_summary)
 
     p = sp.add_parser("gate")
     p.set_defaults(fn=cmd_gate)
