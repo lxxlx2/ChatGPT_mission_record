@@ -4686,7 +4686,7 @@ def _leader_build_path(
                 inferred_diagnostics.append(base)
             continue
 
-        if kind.startswith("hold") and abs(impact) < Decimal("0.01"):
+        if kind.startswith("hold"):
             continue
 
         nearby = []
@@ -4918,7 +4918,6 @@ def _leader_pivot_snapshot(
         return row
 
     # Local slope fallback for the requested diagnostic snapshot only.
-    idx = pnl_rows.index(next(x for x in pnl_rows if x is row)) if False else None
     previous = None
     for candidate in pnl_rows:
         if int(candidate["sweep"]) < int(row["sweep"]):
