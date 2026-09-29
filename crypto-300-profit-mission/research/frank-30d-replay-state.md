@@ -151,3 +151,29 @@ Updated oldest processed checkpoint:
 - cutoff reached: **NO**
 
 No pagination interval was skipped. Primary and backup apps both continued to return contiguous history.
+
+
+## Continued manual pagination — 2026-09-29 further batch
+
+Starting cumulative signatures: 3,724
+
+Additional contiguous signatures:
+- +135
+- +136
+- +144
+- +140
+- +140
+- +136
+- total new since 3,724: **+831**
+
+Updated cumulative signatures:
+- **4,555**
+
+Updated oldest processed checkpoint:
+- signature: `4idMsgraGPpjfrLZ3Nqyg9RxmTd53oqruv4TJVUqfdyny8z2ZoZxZnV1dMiquhbgqUrrBLXEM5DTtBtJQkHM7wmE`
+- UTC: 2026-09-16T13:27:25Z
+- Bangkok: **2026-09-16 20:27:25 Asia/Bangkok**
+- target cutoff: 2026-08-30 14:50 Asia/Bangkok
+- cutoff reached: **NO**
+
+Pagination remained contiguous with no skipped interval.
