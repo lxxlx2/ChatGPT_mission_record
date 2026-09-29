@@ -125,3 +125,29 @@ Approximate remaining-signature estimate:
 - remaining wall-clock window to 2026-08-30 14:50 BKK is about 516.6 hours;
 - density-based rough estimate: **~7,400 additional wallet signatures remaining** if activity density is similar;
 - this is an estimate only and must not be used as a completion count.
+
+
+## Continued manual pagination — 2026-09-29 next batch
+
+Starting cumulative signatures: 2,919
+
+New contiguous signatures proven in this batch:
+- batch 1: +134
+- batch 2: +132
+- batch 3: +136
+- batch 4: +135
+- batch 5: +134
+- batch 6: +134
+- total new: **+805**
+
+Updated cumulative signatures:
+- **3,724**
+
+Updated oldest processed checkpoint:
+- signature: `37gYCvpGFFfUw5xfTLtPKAuaKhnpgVfvA6WXSsLYonWJR7iKgJRi92L9SVHsUs7qsPtxGgpuomyRaMAd7n4JhunM`
+- UTC: 2026-09-19T21:22:55Z
+- Bangkok: **2026-09-20 04:22:55 Asia/Bangkok**
+- target cutoff: 2026-08-30 14:50 Asia/Bangkok
+- cutoff reached: **NO**
+
+No pagination interval was skipped. Primary and backup apps both continued to return contiguous history.
