@@ -6,6 +6,28 @@ Mode: FACTUAL_TELEMETRY
 
 Authority for the existing :29 task.
 
+## Highest-priority scheduler compaction override — 2026-09-29 19:52
+
+This override supersedes older multi-read / multi-file scheduler persistence rules.
+
+### $300 hourly task
+- sole GitHub startup state: `state/hourly-final-bundle.md` schema_version 2;
+- startup GitHub reads: exactly one file fetch, except one retry of the same repo/path after fetch failure;
+- scheduled cycle must not pre-read this runtime doc, Frank watchlist, Monster/NFT watchlists, portfolio, or per-lane GitHub state;
+- frozen lane rules are embedded in the automation prompt and a compact execution contract in the rolling file;
+- entire cycle permits at most one GitHub mutation: existing-file update of `state/hourly-final-bundle.md`;
+- Git commit history is the per-cycle audit trail;
+- infrastructure failure leaves the rolling state unchanged and is user-silent.
+
+### Frank 30D replay task
+- sole scheduled checkpoint: `state/frank-30d-checkpoint.md`;
+- the large `research/frank-30d-replay-state.md` is archival/manual history and must not be rewritten by scheduled runs;
+- every scheduled run processes exactly 10 contiguous signatures from the compact checkpoint;
+- 10/10 complete with zero unresolved/provider gap is required before one existing-file update;
+- compact checkpoint stores only cumulative counters/current cursor/current last_chunk; commit history preserves prior scheduled chunks;
+- PHASE 3 must merge compact checkpoint commit history with archival/manual checkpoints before historical signal simulation.
+
+
 ## Highest-priority rolling durability override — 2026-09-29 17:35
 
 Observed scheduled failure:
