@@ -177,3 +177,29 @@ Updated oldest processed checkpoint:
 - cutoff reached: **NO**
 
 Pagination remained contiguous with no skipped interval.
+
+
+## Continued manual pagination — 2026-09-29 long batch
+
+Starting cumulative signatures: 4,555
+
+Additional contiguous signatures:
+- +141
+- +137
+- +141
+- +145
+- +145
+- +145
+- total new since 4,555: **+854**
+
+Updated cumulative signatures:
+- **5,409**
+
+Updated oldest processed checkpoint:
+- signature: `5EqGX6MKQBkfpLr8H7dTvwXYUYD9XitDNancQR4SpoivzujaQjidwbWDDrARmVcfTjK9JttacWEvSiU7xxTHHrvY`
+- UTC: 2026-09-13T12:18:31Z
+- Bangkok: **2026-09-13 19:18:31 Asia/Bangkok**
+- target cutoff: 2026-08-30 14:50 Asia/Bangkok
+- cutoff reached: **NO**
+
+Pagination remained contiguous. This batch advanced approximately 2.7 calendar days in history.
