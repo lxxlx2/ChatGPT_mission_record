@@ -276,11 +276,11 @@ Recovery method:
 
 Classification checkpoint:
 - classification_status: **RUNNING**
-- classified_signature_count: **90 / 7,106**
-- classification_before: `3HBQpcBD2g5gJkAWRHwNgEL7fCtZCAvBz6w2eALYFcaXYgp1bLrfvVLhXb6vsMc1w2VXVsjXiBVZJ9p8PudSVRrS`
-- classification_oldest_time: **2026-09-28T15:34:55Z / 2026-09-28 22:34:55 Asia/Bangkok**
+- classified_signature_count: **100 / 7,106**
+- classification_before: `2v7YNW1K8JuDawLsLgGdES33khgFMMd8UKTQPM9hqaqY6YTZ2y8bL8HrVcA5m9sVvy4YoKkmWuWGY6fXqJYcaQpo`
+- classification_oldest_time: **2026-09-28T14:59:38Z / 2026-09-28 21:59:38 Asia/Bangkok**
 - active_swaps_verified: **26**
-- passive_filtered: **64**
+- passive_filtered: **74**
 - unresolved_tx_count: **0**
 - unique_active_tokens: **14**
 
@@ -471,3 +471,8 @@ Next 10 processed contiguously. Result: 1 active swap, 9 passive, 0 unresolved. 
 ## PHASE 2 checkpoint 90/7,106
 
 Next 10 processed contiguously. Result: 4 active swaps, 6 passive, 0 unresolved. Active sells: `3ksXHCDu...` mint `Ax5dAamJPeuaLpFUzs9FdcpoUhHDcxyjPzxCJQidjups`; `5etyUKmJ...` mint `DvdmEnztCmXwBnAbedD48XVGZJSxq31zNvnyftXdpump`; `4yuhJ5E7...` and `4usAhZ6L...` mint `7M3gDRgozcumFsiTeXwjB8cYxpg7Q9R7rH7rkw2Fpump`. Source accounts were independently verified as Frank-owned and the transactions use Meteora/CPAMM routes. Remaining six are third-party/plain transfer activity with no verified Frank DEX value exchange. No live state modified.
+
+
+## PHASE 2 checkpoint 100/7,106
+
+Next 10 processed contiguously. Result: 0 active swaps, 10 passive, 0 unresolved. `5VgCCv8W...` is a Frank-signed USDC `DepositToken` management action. The other nine are third-party Token/Token-2022 transfer activity with no verified Frank DEX/pool value exchange. No live state modified.
