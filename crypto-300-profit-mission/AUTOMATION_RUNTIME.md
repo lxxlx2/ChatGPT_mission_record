@@ -571,3 +571,145 @@ Historical recovery from slot 451436899 through slot 451550987 is complete and a
 `crypto-300-profit-mission/runs/2026-09-29/133400-frank-recovery.md`.
 
 Current durable cursor is authoritative in `state/frank-live-cursor.md` and is now LIVE. Future runs start from the durable cursor with the required 15-minute overlap. The old recovery baseline is fallback provenance only and must not force a full replay on every healthy cycle.
+
+
+## Priority-lane completion override — 2026-09-29
+
+User priority inside the existing $300 Mission:
+1. Frank wallet lane;
+2. Monster / meme lane;
+3. NFT mint radar.
+
+No new scheduler is created. These three lanes are mandatory health inputs for the existing :29 task.
+
+### Authoritative run phases
+
+Phase A — early durable core proof:
+- write attempt;
+- run bounded BTC/ETH + newest Crypto Daily input;
+- persist core final/final-retry with `run_status: core_persisted`.
+
+Phase B — Frank:
+- execute Frank lane every hourly cycle;
+- persist a dedicated `HHMMSS-frank.md` audit even for NO_ACTION;
+- no Frank audit means the overall cycle cannot be healthy success.
+
+Phase C — NFT:
+- execute one bounded NFT discovery pass every hourly cycle;
+- persist `radar/nft/YYYY/YYYY-MM/YYYY-MM-DD/HHMMSS.md` even when zero candidates qualify;
+- missing discovery proof means the overall cycle cannot be healthy success.
+
+Phase D — Monster:
+- evaluate deterministic due rule;
+- if due, run full Binance USD-M screen and persist `HHMMSS-monster.md`;
+- if not due, persist explicit `monster_status: NOT_DUE` with last successful full-scan timestamp;
+- 19:29 remains mandatory regardless of prior manual scan.
+
+Phase E — completion:
+- write `runs/YYYY-MM-DD/HHMMSS-completion.md`.
+- this completion file is the authoritative overall health result.
+
+### Overall health semantics
+
+`SUCCESS` requires:
+- core final/final-retry persisted;
+- Frank audit completed with no unresolved provider/cursor gap;
+- NFT discovery receipt persisted;
+- Monster PASS when due, or explicit healthy NOT_DUE when not due.
+
+`PARTIAL_FAILURE` when any priority lane is missing, unavailable without fallback recovery, or has an unresolved gap.
+
+Core persistence alone is never sufficient to call the entire $300 Mission healthy.
+
+### Completion fields
+
+Every completion file records:
+- core_final_path
+- frank_audit_path / frank_status
+- nft_receipt_path / nft_status
+- monster_audit_path / monster_status
+- monster_due
+- priority_lanes_complete
+- pending_delivery_events
+- overall_status
+- data_gaps
+
+## Frank dual-source resilience — 2026-09-29
+
+Primary:
+- Alchemy app `mkhr4iorbgonin56`
+
+Backup:
+- Alchemy app `h6m5pairkgzet7vz`
+
+If the primary finalized signature or transaction request fails with 429/timeout/provider-unavailable:
+1. preserve the current cursor;
+2. select the backup app;
+3. retry the exact request once;
+4. if backup succeeds, continue and record `source_selected: alchemy_backup`;
+5. if both fail, do not advance cursor and mark Frank partial_failure.
+
+Do not loop between providers.
+
+## Monster throughput override — 2026-09-29
+
+This changes runtime budget only. Frozen V2.1 signal thresholds remain unchanged.
+
+On each due full scan:
+- one full Binance USD-M bulk screen;
+- deep-check maximum **5** candidates;
+- if >=2 deferred candidates exist, reserve at least **2 slots for the oldest deferred**;
+- remaining slots go to strongest current shortlist candidates;
+- every unprocessed shortlist candidate must enter/remain in durable DEFERRED_SHORTLIST;
+- every checked candidate gets a terminal result for that scan: promoted / rejected / retained / data_gap.
+
+Every due Monster audit records:
+- universe_count;
+- shortlist_count;
+- deep_checked_count;
+- deferred_checked;
+- deferred_added;
+- deferred_remaining;
+- promotions;
+- rejections;
+- ignition_count;
+- exhaustion_count;
+- data_gaps.
+
+No candidate may disappear merely because it was outside the deep-check budget.
+
+## NFT mandatory bounded discovery — 2026-09-29
+
+NFT is no longer optional/slower work.
+
+Every hourly :29 run performs one bounded discovery pass after Frank and before overall completion.
+
+Inputs, bounded:
+1. latest available Crypto Daily research/final for NFT/Early candidates;
+2. one current English discovery pass across recognized marketplace/mint surfaces;
+3. one official creator/project/platform verification pass for actual candidates.
+
+Do not deep-crawl every platform when there is no candidate.
+
+Every NFT receipt records:
+- sources_attempted;
+- sources_available;
+- sources_unavailable;
+- candidates_discovered;
+- identity_verified;
+- premint_candidates;
+- live_mint_candidates;
+- secondary_breakout_candidates;
+- rejected_candidates with reason;
+- alerts_emitted;
+- gmail_delivery_state.
+
+If all external discovery surfaces fail, `nft_status: PARTIAL_SOURCE_GAP`, not `NO_CANDIDATE`.
+
+A zero-candidate result is healthy only when at least one real discovery source plus the latest Crypto Daily input were successfully checked.
+
+Daily at 19:29 also write:
+`crypto-300-profit-mission/reports/nft/YYYY/YYYY-MM/YYYY-MM-DD.md`
+summarizing discovered / verified / rejected / alerted / source gaps for that Bangkok date.
+
+No new scheduler is allowed.
