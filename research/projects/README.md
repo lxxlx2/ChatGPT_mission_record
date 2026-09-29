@@ -8,6 +8,7 @@ Reusable project-analysis framework currently remains at:
 Current mapped material:
 - JUMP / Jumper Legion sale: `research/projects/jump/jump-legion-sale.md`
 - StandX development / platform-token TGE: `research/projects/standx/standx-development-tge.md`
+- Meridian Capital / MCD due diligence: `research/projects/meridian-capital/meridian-capital-mcd-due-diligence.md`
 - Alchemists / Robinhood Chain: current machine watch file remains `crypto-300-profit-mission/watchlists/alchemists-robinhood.md`; long-form research should move here when next updated.
 - FLOP Close Call competition: active operational rules remain in Mission; long-form activity analysis should use a project directory here.
 
