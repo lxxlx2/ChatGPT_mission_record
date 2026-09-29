@@ -713,3 +713,37 @@ Daily at 19:29 also write:
 summarizing discovered / verified / rejected / alerted / source gaps for that Bangkok date.
 
 No new scheduler is allowed.
+
+
+## Priority-lane tool-budget optimization — 2026-09-29
+
+The three mandatory lanes must fit in one scheduler cycle. Preserve signal semantics while minimizing external calls.
+
+### Frank
+- one signature-page request against primary;
+- transaction fetch only for unseen/overlap signatures that need classification;
+- backup provider only after an actual primary 429/timeout/unavailable;
+- no duplicate provider fanout on healthy runs.
+
+### NFT
+- read the latest stored Crypto Daily input from GitHub;
+- use one batched English discovery search call that can contain multiple queries/surfaces;
+- perform official identity verification only for candidates returned by discovery;
+- do not enumerate every seed creator separately when there is no candidate.
+
+### Monster
+For each due full scan:
+1. one all-symbol USD-M 24h ticker call;
+2. one all-symbol mark/funding call when needed;
+3. select max 5 deep-check candidates using frozen V2.1 prefilters + deferred fairness;
+4. for each deep-check use 1h klines and OI history as the default two calls;
+5. derive taker-buy share from kline taker-buy volume fields when possible;
+6. call dedicated taker/top-trader endpoints only for a candidate that reaches the late-stage IGNITION confirmation boundary or when kline fields are insufficient.
+
+This is a call-count optimization, not a threshold change.
+A normal due cycle should aim for <= 15 external market/provider calls after core persistence.
+
+If the external-call budget is exhausted:
+- persist completed classifications;
+- keep remaining candidates DEFERRED_SHORTLIST or DATA_GAP;
+- mark overall partial_failure only if a mandatory lane lacks its required durable receipt.
