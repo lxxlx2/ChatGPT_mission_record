@@ -264,3 +264,31 @@ Replay phase transition:
 Important:
 - 7,106 is the exact signature count for the requested replay window under the verified boundary above.
 - It is NOT the active trade count. Passive transfers, ATA activity, rewards/fees, claims, deposits/withdrawals and other non-directional events still need filtering.
+
+
+## PHASE 2 classification initialized — 2026-09-29 16:31 Asia/Bangkok
+
+Recovery method:
+- no pre-saved 7,106-signature array is required;
+- PHASE 2 re-reads the already verified window as a streaming input using the lower-bound `until` signature and a durable `before` cursor;
+- each page is classified before its cursor advances;
+- this does not change the exact PHASE 1 count or boundary.
+
+Classification checkpoint:
+- classification_status: **RUNNING**
+- classified_signature_count: **5 / 7,106**
+- classification_before: `2VkcSJq5WWd5BJFR4nHVQsuQCrzQyCHqkCxD9WVexV3Ji1Cn3JAt7prD38fZGpLzC2WrFow1u51f3w7gEhKUDiqT`
+- classification_oldest_time: **2026-09-29T03:07:55Z / 2026-09-29 10:07:55 Asia/Bangkok**
+- active_swaps_verified: **0**
+- passive_filtered: **5**
+- unresolved_tx_count: **0**
+- unique_active_tokens: **0**
+
+First five classifications:
+1. `5TCVznw...` 2026-09-29T05:44:13Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
+2. `5bk1PYGA...` 2026-09-29T05:04:41Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
+3. `64pNxHNo...` 2026-09-29T04:14:32Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
+4. `3cXiHd8w...` 2026-09-29T03:30:05Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
+5. `2VkcSJq5...` 2026-09-29T03:07:55Z: Frank not signer; ATA createIdempotent; token delta 0 => PASSIVE_ATA.
+
+This proves PHASE 2 can continue without reconstructing and persisting a full ordered signature list first.
