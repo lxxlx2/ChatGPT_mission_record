@@ -357,3 +357,37 @@ The formal daily is fully DELIVERED only after:
 - exact body equality after metadata stripping.
 
 Gmail-success/GitHub-failure is archive-pending, not a reason to resend.
+
+## Single-write collector / delivery override — 2026-09-29 16:54 Asia/Bangkok
+
+This section supersedes earlier attempt-first and separate research-write wording when it conflicts.
+
+Ordinary hourly collector:
+- do not create an attempt file;
+- do not create a separate research file before final;
+- run the bounded mandatory lanes in memory;
+- make one GitHub mutation only: `runs/YYYY-MM-DD/HHMMSS-final.md`;
+- embed compact research payload, mandatory-lane coverage, source receipts, gaps and run_status in that final;
+- if the one final write is blocked, do not retry another mutation in the same cycle; the next cycle records the prior audit gap.
+
+08:00 prebuild:
+- build manifest + complete 13-section body + CR-01..CR-18 in memory;
+- after QA PASS, make at most one GitHub mutation to `delivery-pending/YYYY-MM-DD.md`;
+- the manifest summary may be embedded in the pending document;
+- pending-write failure does not authorize a shortened 09:00 report.
+
+09:00 formal delivery:
+- dedupe Gmail Sent and canonical GitHub report first;
+- produce/read a QA-PASS complete 13-section body;
+- Gmail send + readback comes before GitHub;
+- after Gmail success, make one GitHub mutation for the canonical report body;
+- do not write a separate run audit in the same delivery cycle;
+- Gmail success + GitHub failure is archive-pending; never resend solely for archive failure;
+- if Gmail send itself is blocked, stop repeated send attempts and let 10:00/11:00 recovery retry the same complete-report duty.
+
+10:00/11:00:
+- recover only the missing side;
+- no digest/patch may substitute for the complete formal report.
+
+No monitoring task may be created, deleted, disabled or rebuilt as part of this repair.
+
