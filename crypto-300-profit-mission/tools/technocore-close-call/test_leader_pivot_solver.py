@@ -1,5 +1,6 @@
 from decimal import Decimal
 import unittest
+from unittest.mock import patch
 
 import close_call_fleet as c
 
@@ -77,6 +78,56 @@ class LeaderPivotSolverTests(unittest.TestCase):
         row = self.price_row(sweep="957")
         self.assertIsNone(
             c._leader_two_step_pivot_candidate(row, row, pre, target)
+        )
+
+
+    def test_subject_selection_falls_back_when_live_rank_changed(self):
+        state = {"keys": {}}
+        pnl_histories = {
+            "did-a": [
+                {"sweep": 959, "mark": Decimal("228"), "score": Decimal("700")},
+                {"sweep": 960, "mark": Decimal("229"), "score": Decimal("740")},
+            ],
+            "did-b": [
+                {"sweep": 960, "mark": Decimal("229"), "score": Decimal("790")},
+            ],
+        }
+        pos_histories = {
+            "did-a": {},
+            "did-b": {960: Decimal("46.07")},
+        }
+
+        def fake_pnl_history(targets):
+            return {did: pnl_histories[did] for did in targets}
+
+        def fake_pos_history(targets):
+            return {did: pos_histories[did] for did in targets}
+
+        with patch.object(c, "latest_payload", return_value={"t": "pnl"}), \
+             patch.object(
+                 c,
+                 "_pnl_pairs",
+                 return_value=[
+                     ("did-a", Decimal("1000")),
+                     ("did-b", Decimal("999")),
+                 ],
+             ), \
+             patch.object(c, "_leader_pnl_history", side_effect=fake_pnl_history), \
+             patch.object(c, "_leader_position_history", side_effect=fake_pos_history):
+            subject = c._leader_select_pivot_subject(
+                state,
+                rank=1,
+                target_sweep=960,
+            )
+
+        self.assertEqual(subject["leader"]["did"], "did-b")
+        self.assertEqual(
+            subject["selection_mode"],
+            "fallback_highest_current_rank_with_target_published_position",
+        )
+        self.assertEqual(
+            subject["target"]["position_evidence"],
+            "published_position",
         )
 
     def test_two_step_returns_observed_gap(self):
