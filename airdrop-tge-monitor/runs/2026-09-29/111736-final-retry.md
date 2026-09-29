@@ -1,0 +1,21 @@
+run_time: 2026-09-29T11:17:36+07:00
+timezone: Asia/Bangkok
+run_status: success
+authoritative_completion: true
+scheduled_shard: 3
+executed_shard: 3
+clock_integrity_checked: true
+pending_delivery_scan: completed
+Crusoe_Series_F: deduped_gmail_1a0e801b313706a0_do_not_resend
+Cambria_RSGP: delivered_gmail_1a0e149fa6d9718a_existing_open
+urgent_set_status: checked_no_update
+shard_3_status: checked_no_update
+excluded_closed: humans_and_Echo_Alpen
+triggered_events: 0
+gmail_attempted: false
+chatgpt_notification: false
+notification_status: NO_ACTION_silent
+source_unavailable: 0
+chinese_language_sources_used: false
+task_mutation: none
+note: primary final update blocked; compact final-retry is authoritative completion proof.
