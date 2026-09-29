@@ -172,3 +172,28 @@ If Gmail succeeds but GitHub fails, mark delivery as Gmail-delivered/archive-pen
 
 ### Historical quality control
 The latest five complete formal reports are the rolling quality control. Length/item thresholds are a collapse detector, not a target to pad with filler. Semantic gates remain authoritative.
+
+## Single-write morning-delivery override — 2026-09-29 16:54 Asia/Bangkok
+
+This section supersedes earlier attempt-file wording when it conflicts.
+
+07:00:
+- do not create an attempt audit;
+- build manifest, complete 12-section pending body and STK-01..STK-12 QA in memory;
+- after QA PASS, make at most one GitHub mutation to `delivery-pending/YYYY-MM-DD.md`;
+- manifest summary may be embedded in the pending document.
+
+08:00:
+- dedupe Gmail Sent and canonical GitHub report first;
+- if pending is unavailable, rebuild the complete 12-section body in memory from current facts and the latest complete historical format;
+- Gmail send + readback is the first mutation/action that determines user delivery;
+- after Gmail success, make one GitHub mutation to archive the exact Gmail body to the canonical report;
+- do not create a separate run audit;
+- Gmail success with GitHub failure is archive-pending and must not cause a duplicate email;
+- if Gmail send is blocked, do not make repeated same-cycle send attempts; 09:00 performs recovery.
+
+09:00:
+- recover only the missing side with the same complete 12-section QA contract.
+
+No monitoring task may be created, deleted, disabled or rebuilt as part of this repair.
+
