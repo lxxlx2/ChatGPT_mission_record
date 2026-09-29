@@ -116,3 +116,18 @@ If a still-actionable event/report lacks delivery proof:
 - then return to normal silent dedupe behavior.
 
 For a retracted prior alert with a material factual error, a correction email must also have delivery proof. Retraction in GitHub alone is insufficient when the incorrect Gmail was actually sent.
+
+
+## TGE evidence/freshness hard gate — 2026-09-29
+
+For Airdrop/TGE notifications, `airdrop-tge-monitor/ACTION_GATE.md` is mandatory.
+
+In particular:
+- media/KOL/search-result evidence alone never authorizes an ACTION;
+- unchanged old official announcements are silent;
+- expired actions are silent unless officially reopened/extended;
+- already user-known/completed/refunded/delivered events are silent absent material delta;
+- fully refunded/closed deals are excluded;
+- generic financing/valuation news with no confirmed user-rights impact is silent.
+
+This gate overrides looser fallback wording in older monitoring documents.
