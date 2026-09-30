@@ -9,7 +9,7 @@ Status: ACTIVE_RESEARCH
 - Token: TRIA
 - Canonical Ethereum ERC-20: `0x228bEC415adE4b61D7CaF0adf8C91EAc587BA369`
 - Max supply: 10,000,000,000 TRIA
-- 当前研究目的：同时应用 `token_trading_principles.md` 与 `meme_trading_principles.md`，判断低市值、低价、Binance Alpha、浅现货流动性、高衍生品杠杆和事件催化是否形成可重复的 squeeze / repricing setup。
+- 当前研究目的：同时应用 `token_trading_principles.md` 与 `meme_trading_principles.md`，判断低市值、低价、Binance Alpha、Binance Futures、浅现货流动性、高衍生品杠杆和事件催化是否形成可重复的 squeeze / repricing setup。
 
 ## Evidence labels
 
@@ -57,7 +57,7 @@ CONFIRMED：Legion sale 存在两种结构：
 
 在 10B 总供应下，对应约 $0.01 / $0.02 每枚的估值锚。
 
-2026-09-30 TRIA 约 $0.00442，意味着价格仍显著低于两个 Legion FDV 锚。Legion 投资者不受 2028 insider lock 延长影响，因此反弹至 $0.01-$0.02 区间时应重点观察历史筹码卖压。
+2026-09-30 TRIA 约 $0.00443，意味着价格仍显著低于两个 Legion FDV 锚。Legion 投资者不受 2028 insider lock 延长影响，因此反弹至 $0.01-$0.02 区间时应重点观察历史筹码卖压。
 
 ## 4. 基本面
 
@@ -73,7 +73,7 @@ UNRESOLVED：真实产品使用增长是否会强制形成持续公开市场 TRI
 
 CoinMarketCap snapshot：
 
-- price: ~$0.00442
+- price: ~$0.00442-$0.00443
 - market cap: ~$12.62M
 - FDV: ~$44.23M
 - 24h volume: ~$3.78M
@@ -84,15 +84,48 @@ CoinMarketCap snapshot：
 
 历史 ATH 约 $0.05。因此从当前价格回到旧 ATH 本身约为 11x 级别，数学上 10x 并不需要创造全新历史高点，但对应的流通市值与供应结构已不同，不能直接把旧 ATH 当目标。
 
-近期 Coinglass snapshot 曾显示：
+### Binance 交易入口修正
 
-- futures volume ~$11.65M-$15.3M / 24h
-- spot volume ~$0.72M-$1.23M / 24h
-- open interest ~$15.3M-$16.3M
+CONFIRMED：TRIA 同时已经存在 Binance Alpha 和 Binance USDⓈ-M Futures `TRIAUSDT` 永续。此前将“尚未 Binance CEX spot listing”简化表达成“未上 Binance”会误导，正确状态是：
 
-这意味着衍生品规模接近或超过当时 spot market cap，且 futures volume 远高于 spot volume。该结构具有很强的双向 liquidation / squeeze 弹性。
+- Binance Alpha：已存在。
+- Binance Futures `TRIAUSDT` perpetual：已存在并活跃交易。
+- Binance 主板现货 spot：本研究当前仍未确认正式 listing。
 
-UNRESOLVED：当前 funding rate、exchange-level long/short concentration 和大户方向尚未取得可靠实时值，因此现在只能确认“具备 squeeze 燃料”，不能确认“向上 squeeze 已经形成”。
+2026-09-30 约 17:10 Asia/Bangkok 的 Binance Futures 实时快照：
+
+- last price: ~$0.004432
+- mark price: ~$0.004429
+- index price: ~$0.004411
+- 24h futures quote volume: ~$6.44M
+- 24h futures base volume: ~1.426B TRIA
+- 24h high / low: $0.004698 / $0.004252
+- Binance open interest: ~994.8M TRIA，按 mark price 约 $4.41M
+- funding rate: +0.005% / 当前 funding interval
+
+Binance 单交易所 OI 已约等于当前流通市值的三分之一，仍然属于高杠杆结构，但低于此前引用的跨交易所 Coinglass $15M-$16M OI 快照。跨交易所 OI 与 Binance 单交易所 OI 必须分开记录。
+
+### Binance 多空结构
+
+CONFIRMED：Binance 最近一小时级数据没有显示空头拥挤，反而显示多头账户明显占优。
+
+最新 overall account long/short：
+
+- long accounts: ~71.2%
+- short accounts: ~28.8%
+- long/short ratio: ~2.47
+
+最新 top-trader position ratio：
+
+- long: ~60.94%
+- short: ~39.06%
+- long/short ratio: ~1.56
+
+过去 24 小时 top-trader position long ratio 从约 59.5% 逐步升到约 60.9%。Funding 同时保持正值，因此当前证据不支持“空头已经高度拥挤、马上可被向上 squeeze”的说法。
+
+最近一小时 taker buy/sell ratio 一度升到约 1.53，说明短周期主动买入增强；但过去 24 小时多个小时该比值低于 1，因此只能记为近期买盘改善，不能把单小时数据当作持续现货主导趋势。
+
+当前衍生品结构更准确的表述是：高 OI 提供双向清算燃料，但账户与大户仓位当前偏多，若价格失守关键支撑，long liquidation 风险同样明显。
 
 ## 6. Spot liquidity 与 holder 结构
 
@@ -111,9 +144,11 @@ Holder concentration 当前状态：ACTIVE_RESEARCH。
 - 约 $10M 级低 circulating market cap。
 - FDV 约 $40M 级，绝对估值低。
 - 旧 ATH 距现价约一个数量级。
-- Binance Alpha 已存在，尚未 Binance CEX spot listing，保留潜在 listing narrative。
-- Bitget / MEXC 等已有 spot，Gate 等已有 perpetual，交易入口充足。
-- derivatives OI / spot market cap 比例异常高，具备挤压燃料。
+- Binance Alpha 已存在。
+- Binance `TRIAUSDT` 永续已经上线且交易活跃，说明币安体系已有稳定衍生品价格发现与流量入口。
+- Binance 主板现货当前仍未确认，因此未来若正式 spot listing，仍保留额外 listing narrative，但不能把 Alpha + Futures 当成“即将主板现货”的证据。
+- 其他 CEX 也已有 spot/perp，交易入口充足。
+- Binance 单所 OI 约 $4.4M，约为当前流通市值三分之一，杠杆参与度高。
 - 主 DEX liquidity 较浅，真实 spot inflow 对价格影响大。
 - 项目有真实产品与融资背景，叙事承载能力强于普通壳币。
 - 2026-09-29 至 10-01 KBW Seoul，Tria 为 Diamond Sponsor，当前存在亚洲线下曝光和 KOL 扩散催化。
@@ -124,24 +159,26 @@ Holder concentration 当前状态：ACTIVE_RESEARCH。
 - 2026-09-30 正好是 233,513,260 TRIA Community release 日，10-30 还有同规模一笔。
 - Legion round 历史成本约对应 $0.01 / $0.02，反弹途中存在明显成本锚和潜在供应。
 - 大量 reward / community token 的实际卖压尚未完成地址级验证。
-- OI 很高但 funding / short crowding 尚未确认，高杠杆同时支持 long squeeze 和 short squeeze。
+- Binance overall accounts 当前约 71% long，top-trader positions 约 61% long，funding 为正，当前没有确认的 short crowding；高 OI 当前同样构成 long squeeze 风险。
 - DEX liquidity 浅，提高上涨弹性的同时也放大撤退风险。
 - 产品收入到 TRIA open-market demand 的价值捕获链条仍不完整。
 - 当前 KOL 扩散属于催化线索，不能独立作为入场依据。
 
 ## 8. 当前状态
 
-Classification: WATCH -> SETUP CANDIDATE
+Classification: WATCH
 
-当前已经满足“低市值 + 深度回撤 + Binance Alpha + CEX/Perp infrastructure + 浅 spot depth + 高 OI + 真实项目叙事 + KBW/KOL catalyst”这一组典型爆拉前置条件。
+当前已经满足“低市值 + 深度回撤 + Binance Alpha + Binance Futures + 浅 spot depth + 高杠杆参与 + 真实项目叙事 + KBW/KOL catalyst”这一组典型高波动前置条件。
 
-还缺三个确认项才能升级：
+但 Binance 实时多空结构对“向上 short squeeze”假设形成直接反证：总体账户与 top traders 均明显偏多，funding 为正。因此不能因为 OI 高就自动推导为上行 squeeze setup。
 
-1. funding / long-short / liquidation map 证明杠杆真正偏向可被向上挤压的一侧；
-2. 9/30 community release 后，主要 vesting / claim / CEX deposit 地址没有形成持续现货卖压；
+升级到 SETUP 需要三个确认项：
+
+1. 9/30 community release 后，主要 vesting / claim / CEX deposit 地址没有形成持续现货卖压；
+2. 多空结构重新出现可被向上挤压的条件，例如价格上涨同时 funding 不显著变热、short share 增加或 OI 在上涨中由被动空头推动，而非多头进一步堆积；
 3. 价格突破近期 `$0.00477-$0.00515` 区间并进一步越过约 `$0.00575` swing high，同时 spot volume、quote liquidity 和独立买家同步增长。
 
-如果只有 perp volume 上升而 spot 不跟，继续维持 WATCH。
+如果只有 perp volume / OI 上升而 spot 不跟，或 long ratio 继续扩大，继续维持 WATCH，并提高多头清算风险权重。
 
 当前失效参考：跌回约 `$0.00417` 以下且 spot / CEX 净流出扩大；更强失效区在约 `$0.00374`，接近近期结构下沿。
 
@@ -151,7 +188,7 @@ Classification: WATCH -> SETUP CANDIDATE
 - 标记 MerkleVester、foundation、ecosystem、CEX、LP、bridge 地址。
 - 计算去除特殊地址后的 Top10 / Top20 free-float concentration。
 - 追踪 2026-09-30 233.513M release 的实际 recipient、claim、CEX deposit 与卖出路径。
-- 拉取 Gate/Bitget 等 TRIA perpetual 的 funding、OI、long-short 与 liquidation concentration。
+- 持续读取 Binance TRIAUSDT funding、OI、overall long-short、top-trader positions 与 taker flow，和其他交易所交叉验证。
 - 用 spot CEX volume + DEX quote reserve 判断突破是否由真实现货资金驱动。
 
 ## Primary / high-quality sources
@@ -160,7 +197,5 @@ Classification: WATCH -> SETUP CANDIDATE
 - https://blogs.tria.so/en/tria-tokenomics
 - https://blogs.tria.so/en/tria-tokenomics-update-august-2026
 - https://help.legion.cc/en/articles/12728894-tria-sale-details
-- https://www.bitget.com/news/detail/12560605180036
-- https://www.mexc.com/announcements/article/first-in-market-17827791533451
-- https://www.binance.com/en-IA/how-to-buy/tria
+- Binance USDⓈ-M Futures live market data: `TRIAUSDT`
 - Ethereum token: https://etherscan.io/token/0x228bEC415adE4b61D7CaF0adf8C91EAc587BA369
