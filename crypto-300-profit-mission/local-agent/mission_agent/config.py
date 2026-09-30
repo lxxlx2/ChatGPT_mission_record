@@ -16,6 +16,12 @@ class Config:
     cooldown_seconds: int = 60
     lease_seconds: int = 120
 
+    @classmethod
+    def for_remote(cls, runtime_root, **kwargs):
+        if "max_batch_bytes" in kwargs:
+            raise ValueError("remote ceiling is fixed by connector verification")
+        return cls(runtime_root, max_batch_bytes=75_000, **kwargs)
+
     @property
     def transport_mode(self):
         return "LOCAL_FILE"
