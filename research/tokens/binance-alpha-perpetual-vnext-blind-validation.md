@@ -1,7 +1,7 @@
 # Binance Alpha + 永续 VNext 盲样本验证记录
 
 Updated: 2026-09-30
-Status: ACTIVE_RESEARCH
+Status: PHASE_B_FAILED
 
 ## 目标
 
@@ -147,38 +147,188 @@ PRE-IGNITION 候选要求：
 - XAN
 - NAORIS
 
-接下来对三者只能执行预注册规则并记录结果，禁止在看完单个样本后再次修改阈值。
+三者均使用完全相同的预注册规则执行；在三只全部完成规则判定前没有修改 threshold / cooldown / BaseReference 定义。
 
-如果 Phase B 失败，必须把失败记录为模型证据，再建立下一阶段新 holdout；不能回头把同一批样本继续包装成盲测。
+## 8. Phase B 结果：IN
 
-## 8. APR 状态
+### 规则判定
 
-APR 已在 Phase A 过程中查看部分 post-seasoning 历史，因此不能再算 Phase B untouched holdout。
+第一 independent basis-stress cluster：2025-09-24 至 2025-09-25。
+
+第二 independent cluster：2025-10-04。
+
+两次之间存在非 stress reset，间隔超过 24h。
+
+事前 BaseReference：
+
+- first cluster 前 trailing 7d median 4h close: `0.068105`
+- second cluster 前 trailing 7d median 4h close: `0.09282`
+- base shift: 约 `+36.3%`
+
+因此 IN 按预注册规则触发 `PRE-IGNITION candidate`。
+
+第二 cluster 的确认 4h close 约 `0.11854`，作为本轮固定 SignalPrice。
+
+### 冻结规则后才查看的 forward outcome
+
+后续 90 天最高约 `0.29878`。
+
+`90d Capture Multiple ≈ 0.29878 / 0.11854 = 2.52x`
+
+本轮目标是发现 10x 级 extreme monster。IN 虽然信号后出现明显上涨，但 90d outcome 只有约 2.52x，不能记为 monster true positive。
+
+同一 90d 窗口后段价格最低已下降到约 `0.05918`，相对 SignalPrice 约 -50%。
+
+Outcome：`FALSE_POSITIVE_FOR_10X_MONSTER / MEDIUM_UPSIDE_CAPTURED`
+
+## 9. Phase B 结果：XAN
+
+### 规则判定
+
+第一 independent cluster：2025-11-18。
+
+第二 independent cluster：2026-03-15。
+
+两次之间存在长期 reset，满足独立 cluster 要求。
+
+事前 BaseReference：
+
+- first cluster 前 trailing 7d median 4h close: `0.03186`
+- second cluster 前 trailing 7d median 4h close: `0.0064975`
+- base shift: 约 `-79.6%`
+
+因此 XAN 被 higher-base condition 明确过滤，不触发 PRE-IGNITION。
+
+### 冻结规则后检查 outcome
+
+第一 cluster 后总体价格长期衰减。
+
+第二 cluster 之后虽有反弹，后续周线高点约 `0.023079`，仍低于第一 cluster 前的 0.03186 BaseReference，也没有出现 10x 级持续重估。
+
+Outcome：`TRUE_NEGATIVE_FOR_10X_MONSTER`
+
+这说明“second cluster 本身”仍可发生在长期衰减标的中；BaseReference 的方向信息确实增加了过滤能力。
+
+## 10. Phase B 结果：NAORIS
+
+### 规则判定
+
+第一 independent cluster：2025-09-09。
+
+在第一 cluster 后出现 reset；随后一组更早的再次 stress 因不足 24h cooldown 不计作独立 second cluster。
+
+满足 cooldown 的第二 independent cluster：2025-09-11。
+
+事前 BaseReference：
+
+- first cluster 前 trailing 7d median 4h close: `0.02459`
+- second cluster 前 trailing 7d median 4h close: `0.02663`
+- base shift: 约 `+8.3%`
+
+因此 NAORIS 按预注册规则触发 `PRE-IGNITION candidate`。
+
+第二 cluster 的确认 4h close 约 `0.07645`，作为本轮固定 SignalPrice。
+
+### 冻结规则后才查看的 forward outcome
+
+后续 90 天最高约 `0.15990`。
+
+`90d Capture Multiple ≈ 0.15990 / 0.07645 = 2.09x`
+
+90 天内后续最低约 `0.01950`，相对 SignalPrice 约 -74.5%。
+
+NAORIS 同样捕获到真实高波动阶段，但没有发展成 10x extreme monster。
+
+Outcome：`FALSE_POSITIVE_FOR_10X_MONSTER / MEDIUM_UPSIDE_CAPTURED`
+
+## 11. Phase B 总结
+
+固定 holdout 共 3 个：IN / XAN / NAORIS。
+
+预注册规则结果：
+
+- IN: SIGNAL，90d Capture 约 2.52x，针对 10x monster 为 false positive。
+- XAN: NO SIGNAL，后续未形成 10x monster，true negative。
+- NAORIS: SIGNAL，90d Capture 约 2.09x，针对 10x monster 为 false positive。
+
+若目标定义为 `90d >= 10x extreme monster`：
+
+- signals: 2
+- monster true positives: 0
+- false positives: 2
+- true negatives: 1
+- observed precision on signaled Phase B holdout: `0 / 2`
+
+因此 Phase B 明确判定 `FAIL`。
+
+这不代表 basis stress / higher-base 完全无价值。两只 signal 都抓到了后续约 2x 级上涨，说明这些变量可能更接近“高波动 / 可交易重估”检测器；现有证据不足以证明其能区分用户真正目标的 10x monster。
+
+## 12. 防止验证污染
+
+Phase B 完成后：
+
+- IN / XAN / NAORIS 全部转为 consumed validation / development evidence。
+- 禁止继续修改参数后再次把三者计作 holdout。
+- APR 早已在 Phase A 过程中部分查看，也不能恢复为 untouched holdout。
+- COMMON / RECALL 已用于 Phase B 规则修正，同样属于 development evidence。
+- TRIA 仍保持完全 untouched，不允许因为 Phase B 失败而打开 TRIA 调参。
+
+若继续研究，必须先提出新的、可解释的结构变量，再选择全新的 Phase C holdout 并在查看 outcome 前固定规则。
+
+## 13. 当前模型含义
+
+当前证据支持：
+
+`basis stress` 可以识别 perpetual / index / underlying liquidity 的异常压力。
+
+`repeated cluster + higher base` 能过滤部分长期衰减标的，例如 XAN。
+
+当前证据不支持：
+
+`repeated cluster + higher base` 足以把约 2x 的高波动重估与 10x extreme monster 分开。
+
+下一轮若继续堆 price / premium threshold，过拟合风险会进一步上升。更值得研究的是此前 S1 中尚未充分量化的结构变量：
+
+- executable spot depth / futures turnover ratio
+- free float 与可交易筹码集中度
+- Binance index constituents / underlying venue fragility
+- spot lead vs perp lead
+- chain / CEX inventory movement
+
+这些变量需要在新的 development set 中建立后，再进入全新的 holdout。
+
+## 14. APR 状态
+
+APR 已在 Phase A 过程中查看部分 post-seasoning 历史，因此不能再算 untouched holdout。
 
 本轮已查看的早期 post-seasoning premium 窗口没有观察到类似 COMMON 的明确连续 2-of-3 extreme cluster；该结论只覆盖已检查窗口，不宣称完整生命周期无 cluster。
 
 APR 后续可进入 development / robustness set，但不能重新包装成 untouched validation。
 
-## 9. 当前证据等级
+## 15. 当前证据等级
 
 CONFIRMED：
 
-- COMMON 与 RECALL 都能在 21d seasoning 后产生符合旧候选定义的 basis stress cluster。
-- 两者均未因此发展成持续 extreme monster cycle。
+- COMMON 与 RECALL 都能在 21d seasoning 后产生符合 Phase A 定义的 basis stress cluster，但没有发展成持续 extreme monster cycle。
 - COMMONUSDT 后续由 Binance Futures 于 2026-01-30 自动结算并下架。
 - 简单 `first cluster = PRE-IGNITION` 已被 blind data 否证。
+- Phase B 的 IN / XAN / NAORIS 在查看 outcome 前使用同一套预注册 SECOND-CLUSTER HIGHER-BASE 规则。
+- IN 与 NAORIS 触发信号，但 90d Capture 分别仅约 2.52x 与 2.09x。
+- XAN 因第二 cluster 前 BaseReference 较第一次下降约 79.6% 被过滤，后续没有出现 10x monster。
+- Phase B 针对 10x monster 的 observed signal precision 为 0/2，因此本轮验证失败。
 
 INFERRED：
 
-- repeated independent cluster + higher pre-existing base 可能比单次 cluster 更有区分度。
-- 结构压力需要配合价格中枢迁移才能更接近用户需要的 early-spot discovery。
+- basis stress 更像高波动 / 市场结构失衡检测器，目前还缺乏 extreme-monster-specific discrimination。
+- thin spot / free float / index fragility 等 S1 结构变量可能是下一轮提高 precision 的关键。
 
 UNRESOLVED：
 
-- SECOND-CLUSTER HIGHER-BASE 在 IN / XAN / NAORIS 上的盲测结果。
-- 24h cooldown 是否长期合理。
-- trailing 7d median 4h close 是否优于 14d median / VWAP。
-- 该结构在更多年份、更多 Alpha + Futures cohort 上的 precision / recall。
+- 哪一个 S1 结构变量能在不牺牲早期 recall 的前提下区分 2x repricing 与 10x monster。
+- spot-depth / futures-turnover ratio 的历史数据可获得性与稳定定义。
+- free-float / holder concentration 如何跨链统一量化。
+- 新 Phase C holdout 上的真实 precision / recall。
+- TRIA 当前是否满足任何候选规则；冻结下一阶段规则前继续禁止查看。
 
 ## Sources
 
