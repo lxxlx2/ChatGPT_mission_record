@@ -1,6 +1,6 @@
 # Binance Alpha + 永续 VNext S1 结构变量研究
 
-Updated: 2026-09-30
+Updated: 2026-10-01
 Status: ACTIVE_RESEARCH
 
 ## 目标
@@ -225,24 +225,153 @@ Binance 当前公开接口可以获取：
 
 若未来获得一手 archive 或项目仓库此前保存过快照，可补入；当前不能通过今天的 order book 倒推历史深度。
 
-## 7. Historical holder snapshot 的可行路径
+## 7. Historical holder snapshot：第一轮真实链上重建
 
-MYX / LAB / XPIN 位于 BNB Chain；RIVER / IN / NAORIS 等存在 Ethereum / multi-chain ERC-20 合约。
+用户已明确选择 Alchemy app `ChatGPT Crypto Monitor All Chains`。该 app 覆盖 BNB Mainnet 与 Ethereum Mainnet。本轮只做 read-only historical RPC、ERC-20 `Transfer` replay 与 historical `eth_call`，没有签名、广播或交易操作。
 
-要重建 signal-time holder state，最可靠的方法是：
+### 7.1 Signal-time historical block anchors
 
-1. 将 signal timestamp 映射到各链 historical block。
-2. 从 token genesis 到该 block 重放 ERC-20 `Transfer` logs。
-3. 计算每个地址在该 block 的 token balance。
-4. 标记 vesting / treasury / bridge / LP / CEX / staking 等已知地址。
-5. 生成 Effective Circulating 与 Executable Float 快照。
-6. 对每个历史 signal 只使用该 signal block 之前的数据。
+全部锚点使用当时已经冻结的 VNext signal 定义，并以真实 block timestamp 收敛：
 
-该方法成本较高，但符合项目“链上事实优先”的证据原则。
+- MYX BNB block `55,492,839`，timestamp `2025-07-27 12:00:00.500 UTC`。
+- XPIN BNB block `63,305,500`，timestamp `2025-10-03 08:00:00 UTC`。该时点是 21d seasoning 后第一组 basis `2-of-3` cluster，比此前记录的 2025-10-13 obvious price probe 提前约 10 天。
+- IN BNB block `63,459,084`，timestamp `2025-10-04 16:00:01.500 UTC`；Ethereum block `23,505,462`，timestamp `2025-10-04 15:59:59 UTC`。
+- NAORIS BNB block `60,772,022`，timestamp `2025-09-11 08:00:00 UTC`；Ethereum block `23,338,486`，timestamp `2025-09-11 07:59:59 UTC`。
 
-当前已连接的 Alchemy 账号存在 3 个 app；连接器规则要求多 app 时由用户指定 app 后才能进行 RPC / logs 查询。本轮未擅自选择，也未因此用估算数据填空。
+### 7.2 Historical total-supply and cross-chain normalization
 
-Blockscout 当前连接的可用 chain registry 未直接返回 BNB Smart Chain，因此不能假设它可替代 BSC historical RPC。
+Historical `totalSupply()` at the frozen blocks:
+
+- MYX BNB: `1,000,000,000`。
+- XPIN BNB: `100,000,000,000`。
+- IN BNB: `68,452,431.298171`。
+- IN Ethereum: `931,547,568.7018291`。
+- IN BNB + Ethereum 精确约等于 `1,000,000,000`，说明 signal-time economic supply 在两链之间拆分；单链 Top10 会受到桥接 / 跨链供应分布影响。
+- NAORIS BNB: `120,000,000`。
+- NAORIS Ethereum: `4,000,000,000`。
+- NAORIS 两链直接相加得到 4.12B，超过 canonical 4B，因此 BNB 120M 不能直接加到 Ethereum total supply；需要按 bridge representation / escrow 机制归一化。
+
+结论：任何 `Top10 >= X%` 策略在 multi-chain token 上都必须先完成 bridge normalization。直接读单链 holder leaderboard 可能把桥 escrow 或镜像供应当成真实控盘。
+
+### 7.3 MYX：强正样本的 historical concentration
+
+MYX genesis mint 为 1B，随后一笔初始分配交易把完整 1B 精确拆到 14 个 allocation 地址。
+
+初始大桶包括：
+
+- 200M
+- 175M
+- 167.184M
+- 116.64M
+- 80M
+- 79.44M
+- 64.241M
+- 40M
+- 20M
+- 19.813M
+- 17.964M
+- 13.147M
+- 3.776M
+- 2.795M
+
+在 2025-07-27 signal block 逐地址 `balanceOf()` 后：
+
+- 14 个原始 allocation 地址仍合计持有约 `862.944M`，占 total supply `86.29%`。
+- 仅这 14 个地址中余额最大的 10 个合计约 `856.530M`，占 total supply `85.65%`。
+- 200M 与 175M 两个最大初始钱包在 signal 时余额完全未变。
+- 167.184M 地址仍持有约 163.296M。
+- 116.64M 地址仍持有完整 116.64M。
+
+`85.65%` 是已知初始 allocation 地址子集形成的 raw Top10 lower bound，不是全链精确 Top10。后来接收大额转账的新地址尚未全部并入，因此真实全链 Top10 只能等于或高于该子集下界。
+
+### 7.4 XPIN：强正样本的 historical concentration
+
+XPIN genesis mint 为 100B。最初发行地址随后形成五个主要分配桶：
+
+- 40B
+- 20B
+- 16B
+- 16B
+- 8B
+
+这五项精确合计 100B。
+
+官方 tokenomics 同期类别为：Ecosystem 40%、Team 20%、Strategic 16%、Foundation 8%、Marketing & Airdrop 12% + Public 2% + Liquidity 2%。金额结构与链上五桶高度吻合，但具体 wallet-to-category 映射在没有一手地址标签前仍记为 `INFERRED`。
+
+2025-10-03 basis-only watch block 的 historical balance：
+
+- 40B 初始地址仍约 39.6B。
+- 20B 初始地址仍完整 20B。
+- 一个 16B 初始地址仍完整 16B。
+- 8B 初始地址仍完整 8B。
+- 另一个 16B 初始地址已降到约 0.435B，并存在至少两个可追踪下游地址约 0.932B 与 0.298B。
+
+这些已知地址在 signal 时合计至少约 `85.265B / 100B = 85.27%`。
+
+这同样是 lower bound，尚未覆盖所有 downstream holders。
+
+### 7.5 IN：false positive 的分配结构明显更分散
+
+IN Ethereum genesis mint 为 1B。早期发行地址随后将几乎完整供应拆到二十多个不同地址，常见单桶为 50M，另外还有 71.667M、55M、30M、25M、20M、15M、12.5M 等。
+
+按初始分配金额排序，最大的 10 个 allocation 地址合计约 `531.667M / 1B = 53.17%`。
+
+进一步追踪确认：
+
+- 71.667M 初始地址随后把完整余额转入独立合约 `0xbe83...`，signal block 该合约仍持有完整 71.667M。
+- 两个独立 55M 初始地址分别转入不同目标合约 `0xaa2d...` 与 `0x6e64...`，signal block 两个目标各自仍持有完整 55M。
+
+因此至少前三个较大 allocation 并没有在 signal 前合并到同一 holder；IN 的供应组织方式与 MYX / XPIN 少数超大桶明显不同。
+
+当前尚未完成 IN 全链 signal-time 精确 Top10 replay，因此 `53.17%` 只能描述 genesis allocation Top10，不能当作最终 historical Top10。
+
+### 7.6 NAORIS：Top10 90% 规则出现强 false-positive evidence
+
+NAORIS Ethereum genesis 将完整 4B mint 到单一发行地址。
+
+到 2025-09-11 Phase B false-positive signal：
+
+- 原发行地址仍持有约 `1,918,042,162.2222223`，占 canonical 4B 的约 `47.95%`。
+- 地址 `0xaa2a...` signal 时持有约 `1,440,934,373.335583`。
+- 一条 `0x7108... -> 0xbc88... -> 0x1fe2...` 的链上迁移最终使 `0x1fe2...` 在 signal 时持有约 `422,000,005`。
+
+仅这三个地址合计：
+
+`3,780,976,540.557805 NAORIS`
+
+占 canonical Ethereum 4B supply：
+
+`94.52%`
+
+因此 NAORIS 在 Phase B signal 时仅 Top3 已超过 `90%` concentration。
+
+该样本的 forward 90d MFE 只有约 `2.09x`，所以 `raw Top10 > 90%` 无法单独作为 10x monster 判别器。
+
+额外核对：
+
+- 当前 Binance Spot `NAORISUSDT` 返回 `Invalid symbol`，截至本轮查询仍没有 Binance 主板现货交易对。
+- NAORIS 属于预先固定的 Alpha + Futures cohort。
+- Binance official historical OI statistics 对 2025-09-11 的旧 `startTime` 请求返回 invalid parameter，signal-time `OI > $5M` 暂记 `DATA_UNAVAILABLE`，禁止用当前 OI 回填历史。
+
+因此目前可以确认 NAORIS 同时满足 `Alpha + Futures`、`无当前 Binance 主板 Spot`、`signal-time raw Top3 > 90%`，但历史 OI 门槛无法由 Binance 官方现有历史接口复原。
+
+### 7.7 对“Alpha + Futures + 高控盘”筛选法的当前判断
+
+截图中的候选规则提供了一个有用的 universe filter，但链上回测说明 `Top10 > 90%` 本身过于粗糙：
+
+- MYX / XPIN 强正样本确实具有高度集中的大额 allocation / long-term inventory。
+- NAORIS false positive 在 signal 时 Top3 已达到 94.52%，集中度甚至更极端。
+- IN false positive 的初始 distribution 明显更分散，说明 concentration 可能仍有信息量，但不能用单一 90% threshold 表达。
+
+下一步应把 raw concentration 拆为：
+
+- `Locked_or_Programmatic_Supply_Share`
+- `Top10_Executable_Float_Share`
+- `Top10_Unlocked_NonBridge_Share`
+- `Bridge_Escrow_Share`
+- `CEX_LP_MM_Inventory_Share`
+
+真正需要验证的候选机制是：少量真正可交易 float 是否被少数活跃地址 / venue 控制，同时 futures notional 足以远大于该 executable float。
 
 ## 8. 新的 Phase C 门槛
 
@@ -267,26 +396,35 @@ CONFIRMED：
 - XPIN、IN、NAORIS 都具有受限早期供应 / 锁仓结构；低 headline initial float 本身无法区分强正样本和 false positive。
 - Binance index constituents endpoint 只给当前 snapshot；当前 constituent count / weight 没有形成简单分界。
 - 本轮没有找到 Binance 官方 Alpha historical depth archive。
+- MYX / XPIN signal-time 链上历史状态均显示极高的大额 allocation concentration；已知地址 lower bound 分别约 85.65% 与 85.27%。
+- IN genesis allocation Top10 约 53.17%，且已核验的 71.667M、55M、55M 大桶在 signal 前保持分立。
+- NAORIS signal-time Top3 占 canonical Ethereum supply 约 94.52%，但其 Phase B signal 后 90d MFE 仅约 2.09x。
+- IN 与 NAORIS 的 multi-chain supply accounting 机制不同；单链 Top10 / 简单跨链求和都可能失真。
 
 INFERRED：
 
-- 真正可能增加 10x-specific discrimination 的变量是 signal-time executable float、holder concentration、active inventory 和 futures notional 相对于 executable float 的比例。
-- 文档 tokenomics 适合提供地址分类线索，但最终 supply / holder 结论应以 signal-time 链上重建为准。
+- raw holder concentration 仍可能包含有效结构信息，但必须先剥离 vesting、treasury、bridge、staking、LP / CEX / MM inventory。
+- 真正可能增加 10x-specific discrimination 的变量是 signal-time executable float、active inventory 和 futures notional 相对于 executable float 的比例。
+- XPIN 五个初始大桶与官方 tokenomics 类别在金额上高度吻合，但 wallet-to-category 的具体映射仍需一手标签或合约语义确认。
 
 UNRESOLVED：
 
-- MYX / XPIN / LAB / RIVER / IN / NAORIS 在 signal block 的 Top10/Top20 executable-float concentration。
+- MYX / XPIN 全链精确 raw Top10 / Top20，以及剥离长期 allocation 后的 executable-float concentration。
+- IN signal-time 全链精确 Top10 / Top20 与 BNB bridge-normalized holder state。
+- NAORIS `0xaa2a...`、`0x1fe2...`、发行地址等大户的 treasury / vesting / custodian 语义。
 - signal-time LP / CEX / staking / vesting inventory。
 - `futures turnover / executable-float USD` 是否真正区分 2x 与 10x。
-- 哪个链上 concentration / active-float 指标最稳定。
+- 历史 OI 超出 Binance public retention 时的可靠一手恢复方案。
 - 新 Phase C holdout 的结果。
 
 ## Sources
 
 - XPIN official tokenomics: https://docs.xpin.network/tokenomics
 - INFINIT official IN tokenomics: https://docs.infinit.tech/tokenomics/in-token
-- MYX official tokenomics: https://myxfinance.gitbook.io/myx/protocol/tokenomics
+- MYX official tokenomics / official MYX distribution materials.
 - NaoX official MiCA whitepaper: https://www.naox.org/mica-compliance-white-paper
 - Binance official USDⓈ-M index constituent API documentation.
-- Binance public Futures and Premium Index market data, queried 2026-09-30.
+- Binance public Futures, Premium Index, Spot exchange-info and OI market-data endpoints, queried 2026-09-30 / 2026-10-01.
+- Alchemy read-only BNB Mainnet and Ethereum Mainnet historical RPC through user-selected `ChatGPT Crypto Monitor All Chains` app, queried 2026-10-01.
+- Historical ERC-20 `totalSupply()`, `balanceOf()` and Transfer history at the frozen signal blocks are treated as primary chain evidence.
 - CoinMarketCap latest token supply metadata used only for current max/total-supply sanity checks; not treated as historical holder truth.
