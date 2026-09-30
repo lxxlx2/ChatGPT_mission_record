@@ -60,3 +60,7 @@ Local docs commit does not prove GitHub authenticated write or branch push. No p
 ## Cross-document design review evidence
 
 Manual review checked authority precedence, local-vs-GPT enums, public/private separation, SQLite/cursor atomicity, immutable batches, TTL-vs-durability, exact-set receipts, Gmail uncertainty/policy, stage prerequisites and four open owner decisions. Source-specific history limits remain blockers, not waivers. Script verification: five canonical docs;71 unique testcase records each with all ten required fields; all explicit acceptance TEST_ID references resolve. Staged git diff --check passed. This is structural/design consistency review, not independent design approval or runtime test PASS. Only six Markdown additions staged (five docs plus compatibility pointer). No push/send/automation/system install or legacy-state edit.
+
+## PHASE 1 capability update (historical PHASE 0 rows above retained)
+
+Reviewed docs-only branch push was explicitly authorized and executed before implementation; remote SHA matched247354d01aecccbfe193f476703d5da5cfdd8d86. GitHub authenticated code-branch write and branch push are now AVAILABLE_VERIFIED for that operation, not private runtime integration. Project-local .venv pytest8.3.5 installed with no global Python mutation; pytest capability now AVAILABLE_VERIFIED in that venv. Final executable subset90tests passed,0failed/0skipped; PHASE1_IMPLEMENTATION_REPORT.md records commands and limits. No Gmail send/cloud automation/collector capability exercised inPHASE1.

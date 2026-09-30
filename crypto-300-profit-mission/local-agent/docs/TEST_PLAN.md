@@ -783,9 +783,9 @@ Every case uses the following explicit fields; failure_evidence and cleanup are 
 - module: price replay
 - purpose: Frozen 30d gate all five assets
 - precondition: History verified; HYPE follows approved official-only B-HYPE-1/2/3; partial history does not block live shadow; no fallback bars
-- input: >=30d completed 1m +warm-up per asset, frozen formula/rule manifest
+- input: BTC/ETH/SOL/BNB >=30d completed 1m +warm-up; HYPE B-HYPE-1 official partial history then B-HYPE-2/3 forward/full replay; frozen formula/rule manifest
 - steps: Validate input coverage; replay shared live module; independent evaluation labels
-- expected_result: Per-asset trigger totals/day median,p95,max/rule counts/overlap/noise/objective misses; full coverage; no hindsight tuning
+- expected_result: Per-asset trigger totals/day median,p95,max/rule counts/overlap/noise/objective misses; full coverage for four assets; HYPE explicit partial/FORWARD_DATA_ACCUMULATING until B-HYPE-3; no hindsight tuning
 - pass_condition: All stated expected_result assertions proven by recorded outputs; zero unaccounted ids/unsafe side effects; no mandatory assertion skipped.
 - failure_evidence: Private P-01 log, input manifest/hash, actual-vs-expected assertions, DB/queue/cursor/state snapshots, transport hashes and mock/provider-call count as applicable; public report redacts payloads, credentials and provider ids.
 - cleanup: Stop isolated harness/clients; remove temporary DB and synthetic fixtures after retaining redacted evidence; restore fake clock/network hooks; leave user portfolio, legacy histories and automation unchanged.
