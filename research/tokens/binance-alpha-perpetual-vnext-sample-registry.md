@@ -8,72 +8,87 @@ Status: ACTIVE_RESEARCH
 重要约束：
 
 - TRIA 不进入规则生成。
-- 本表中的 high / multiple 是历史 outcome 标签，不允许 live model 偷看未来。
+- historical high / forward multiple 只作为 outcome label，不允许 live model 偷看未来。
 - 项目方 / 做市商 / 操盘者身份归因保持 UNRESOLVED；本表只研究 Binance venue topology 与公开市场结构。
 - 当前 Monster V2.1 / Frank / Codex runtime 不读取本表。
+- 单根极端 wick low 不能直接作为 cycle base；后续统一使用只依赖过去数据的稳定 Base Reference。
 
-## 1. 强正样本
+## 1. Extreme positive
 
 ### MYX
 
-- venue: Alpha -> Binance USDⓈ-M perpetual；极端周期时无 Binance main-board spot。
-- 第一大周期：约 0.11 区域 -> >2.17。
-- 第二大周期：约 1.31 -> 18.58。
-- 主升期间 futures taker-buy quote share 仍大多接近 50%。
-- funding 在 2025-08 主升中由小幅正值快速转为极端负值，多次接近或触及 -2% 单次 funding cap。
-- outcome: STRONG_POSITIVE / SHORT_FUEL。
+- Binance Alpha 已存在；2025-06-18 Binance Futures 上线 MYXUSDT 50x。
+- 第一大周期约 0.11 区域扩张到 >2.17。
+- 第二大周期约 1.31 扩张到 18.58。
+- 主升期间 futures taker-buy quote share 多数仍接近 50%。
+- 2025-08 主升中 funding 从小幅正快速转负，多次接近 / 触及 -2% cap。
+- 第一轮 monster expansion 距 Futures 上线约 6 周，有明显 seasoning period。
+- outcome: EXTREME / SHORT_FUEL。
 
 ### LAB
 
-- venue: Alpha -> Binance USDⓈ-M perpetual；极端周期时无 Binance main-board spot。
+- Binance Alpha 已存在；2025-10-17 Binance Futures 上线 LABUSDT 50x。
 - 2026 春季约 0.2 区域扩张至约 24.40。
 - 中间包含大量 30%-70% 级别回撤 / 反抽。
 - 主升期 taker-buy quote share 多数约 49.7%-51.7%。
-- funding 在 2026-05 早期主升阶段大部分为正，部分结算约 +0.1% 至 +0.37%。
-- outcome: STRONG_POSITIVE / POSITIVE_FUNDING_PATH。
+- 2026-05 funding 大部分为正，部分结算约 +0.1% 至 +0.37%。
+- 极端主升距 Futures 上线数月。
+- outcome: EXTREME / POSITIVE_FUNDING_PATH。
 
 ### RIVER
 
-- venue: Alpha + Binance perpetual，主升阶段缺少 Binance main-board spot 深度。
-- 用户提供完整 Binance 日线显示历史高点约 86，后续长期回落至约 1.17。
-- 2026-01 主升中 funding 长时间为负；从约 10-20 向 30、40、60、80 扩张期间，多次出现约 -1% 至 -2% 的单次 funding，部分时段触及 -2% cap。
-- outcome: STRONG_POSITIVE / SHORT_FUEL。
+- Binance Alpha 已存在；2025-10-17 Binance Futures 上线 RIVERUSDT 50x。
+- 2026-01 极端主升，历史高点约 86，后续长期回落至约 1.17。
+- 主升期间 funding 长时间极负，多次接近 / 触及 -2% cap。
+- 极端主升距 Futures 上线约 2-3 个月。
+- outcome: EXTREME / SHORT_FUEL。
 
 ### XPIN
 
-- venue: Binance Alpha + XPINUSDT perpetual；截至 2026-09-30 Binance spot API 不存在 `XPINUSDT` 主板 symbol。
-- Futures 初期约 0.001915。
-- 2025-09 后续一度下探约 0.000724；2025-10 主升最高约 0.010318。
-- launch-open -> later high 约 5.4x；post-launch cycle low -> high 约 14.3x。
-- 随后价格长期大幅衰减。
-- outcome: STRONG_POSITIVE，funding / OI regime 仍待完整回放。
+- Binance Alpha 已存在；2025-09-12 Binance Futures 上线 XPINUSDT 50x。
+- 截至 2026-09-30 Binance spot API 不存在 `XPINUSDT` 主板 symbol。
+- Futures 初期约 0.001915；随后经过较长回落 / 横盘。
+- 2025-10 主升最高约 0.010318。
+- 2025-10-13 左右从约 0.00091 向 0.00114 出现第一组明显 4h probe；2025-10-16 左右再次 probe，随后快速进入 0.002+ 主升段。
+- 第一组有效 probe 距 Futures 上线约 1 个月。
+- 若使用稳定 base 区域约 0.00085-0.0011，后续 peak 大约仍为 9x-12x 量级；精确倍数待 Base Reference 规则冻结后重算。
+- outcome: EXTREME_CANDIDATE，funding / OI regime 仍待完整回放。
 
-## 2. 进行中正候选
+## 2. Live positive candidate
 
 ### BTW
 
-- venue: Alpha -> Binance perpetual；当前无 main-board spot。
+- 2026-03-02 进入 Alpha；2026-06-04 Binance Futures 上线 BTWUSDT。
 - 2026-09 约 0.4 区域扩张到 1.4472，约 3.5x，并包含多次 25%-45% 快速回撤。
 - funding 在本轮上涨期间长期为正。
 - 历史 Mission 数据记录过普通账户偏空、top-trader positions 偏多的分歧。
-- 当前仍接近周期高位，完整 outcome 未结束。
-- outcome: LIVE_POSITIVE_CANDIDATE / POSITIVE_FUNDING_PATH。
+- 明显 mark-up 距 Futures 上线约 3 个月。
+- 当前周期尚未结束。
+- outcome: LIVE / POSITIVE_FUNDING_PATH。
 
-## 3. 中间态
+## 3. Medium / near-miss
 
 ### VELVET
 
-- 2025-07-15 Binance Futures 上线 VELVETUSDT 50x，官方公告明确其当时已在 Alpha。
+- 2025-07-15 Binance Futures 上线 VELVETUSDT 50x，官方公告明确当时已在 Alpha。
 - 截至 2026-09-30 Binance spot API 不存在 `VELVETUSDT` 主板 symbol。
-- Futures 初始周约 0.0626，早期低点约 0.0432。
-- 后续最高约 0.32494。
-- launch-open -> high 约 5.2x；early-low -> high 约 7.5x。
-- 具备明显重估，但未达到 MYX/LAB/RIVER 的极端数量级。
+- Futures 初始周约 0.0626，后续最高约 0.32494。
+- launch-open -> high 约 5.2x；若使用早期稳定低价区，约为 5x-7x 级别，精确值待 Base Reference 冻结。
+- 最大重估发生在 Futures 上线数周后，并非首日 launch spike。
 - outcome: MEDIUM_POSITIVE / BORDERLINE_MONSTER。
 
-中间态必须保留。若只训练“极端成功 vs 完全失败”，模型会过度学习极端路径，无法估计连续概率。
+### KGEN
 
-## 4. 弱表现 / 控制样本
+- 2025-10-07 Alpha 与 KGENUSDT Futures 同日开放，最高 50x。
+- 截至 2026-09-30 Binance spot API 不存在 `KGENUSDT` 主板 symbol。
+- Futures 首日约 0.35，上市后快速跌入约 0.15-0.25 区域。
+- 上线后约 10 天内出现极高波动，单次最高到约 0.6999。
+- 相对 launch open 只有约 2x；若错误地用 0.11 单根 wick low 作 base，会得到约 6.4x，这正说明 Base Reference 不能使用事后最低针。
+- 4h 数据中上市前 10 天已经出现多组 20%-50% probe / crash，属于典型 launch-noise 混淆样本。
+- 没有发展成 MYX/LAB/RIVER 式 10x+ 多阶段 monster cycle。
+- outcome: NEAR_MISS / LAUNCH_NOISE_CONTROL，不再作为纯 NEGATIVE_CONTROL。
+
+## 4. Weak / negative controls
 
 ### ZEST
 
@@ -82,102 +97,130 @@ Status: ACTIVE_RESEARCH
 - 没有形成多阶段极端重估。
 - outcome: NEGATIVE_CONTROL。
 
-### KGEN
-
-- 2025-10-07 Alpha 与 KGENUSDT Futures 同日开放，最高 50x。
-- 截至 2026-09-30 Binance spot API 不存在 `KGENUSDT` 主板 symbol。
-- Futures 初始约 0.35，历史最高约 0.6999，约 2x。
-- 后续大部分时间低于初始价，2026-09 约 0.16-0.17。
-- outcome: NEGATIVE_CONTROL。
-
 ### TAG
 
 - 2025-07-25 Futures 上线 TAGUSDT，官方公告明确当时已在 Alpha。
 - 截至 2026-09-30 Binance spot API 不存在 `TAGUSDT` 主板 symbol。
-- 初始周约 0.000663，后续最高约 0.001283，约 1.9x。
-- 随后整体衰减，未形成 monster cycle。
-- outcome: NEGATIVE_CONTROL。
+- 初始周约 0.000663，早期高点约 0.001283。
+- 后期存在深跌后反抽，因此单纯 low-to-high multiple 会被低 wick 人为放大。
+- 没有形成持续多阶段 monster cycle。
+- outcome: WEAK / NEGATIVE_CONTROL。
 
 ### ZORA
 
 - 2025-07-25 Futures 上线 ZORAUSDT，官方公告明确当时已在 Alpha。
 - 截至 2026-09-30 Binance spot API 不存在 `ZORAUSDT` 主板 symbol。
-- Futures 初始周约 0.0853，历史阶段高点约 0.1486，launch-open -> high 约 1.7x。
-- 后续从约 0.0504 反弹到约 0.1238，也只有约 2.5x。
-- 未形成持续多阶段 monster cycle。
-- outcome: NEGATIVE_CONTROL。
+- Futures 初始周约 0.0853，阶段高点约 0.1486。
+- 后续从约 0.05 区域反弹到约 0.124，但没有形成持续多阶段 extreme cycle。
+- outcome: WEAK / NEGATIVE_CONTROL。
 
-## 5. Venue-transition 控制
+## 5. Venue-transition control
 
 ### Chainbase C
 
 - 2025-07-15 Binance Futures 上线 CUSDT 50x，官方公告明确当时 C 已在 Alpha。
-- Binance 2025-07-18 又把 C 加入主板 Spot 生态，只有约 3 天 Alpha+Futures+no-Spot 窗口。
-- Futures 初始约 0.294，早期最高约 0.475，约 1.6x；之后整体衰减。
+- Binance 2025-07-18 已把 C 接入 Spot / Convert / Margin 生态，Alpha+Futures+no-Spot 窗口仅约 3 天。
+- Futures 初始约 0.294，早期最高约 0.475，之后整体衰减。
 - 截至 2026-09-30 Binance spot API 存在 `CUSDT`。
 - outcome: VENUE_TRANSITION_CONTROL。
 
-C 很重要，因为它说明“no Spot 的持续时间”可能是一个独立变量。若主板 Spot 很快上线，现货价格发现和可执行深度结构会改变。
+C 说明 `days_without_main_spot` 可能是独立预测变量。主板 Spot 很快上线以后，underlying price discovery / executable depth 结构已经改变。
 
-## 6. 当前 cohort
+## 6. 连续 outcome tier
 
-已注册：
+后续不再用简单成功 / 失败二分类。
 
-- Strong positive: MYX, LAB, RIVER, XPIN
-- Live positive candidate: BTW
-- Medium / borderline: VELVET
-- Negative controls: ZEST, KGEN, TAG, ZORA
-- Venue-transition control: C
+候选 tier：
 
-总计 11 个样本，其中 TRIA 保持完全 out-of-sample。
+- EXTREME: stable Base Reference -> forward peak >= 10x
+- STRONG: 5x-10x
+- WEAK: 2x-5x
+- NULL: <2x
+- LIVE: 周期尚未结束
 
-这个规模已经比只看 LAB/MYX/BTW 更能抵抗幸存者偏差，但仍不足以冻结最终机械阈值。
+具体边界属于研究候选。所有 multiple 必须基于 signal 前可计算的 stable Base Reference，不能用未来最低价。
 
-## 7. 从扩样得到的当前结论
+## 7. 当前 cohort
 
-### Venue topology 是高价值 prior，不是结论
+- Extreme: MYX, LAB, RIVER, XPIN candidate
+- Live: BTW
+- Medium / near-miss: VELVET, KGEN
+- Weak / negative: ZEST, TAG, ZORA
+- Venue transition: C
 
-Alpha + perpetual + no main Spot 在强正样本中频繁出现，但 KGEN / TAG / ZORA / ZEST 证明该结构可以长期存在而没有 monster cycle。
+总计 11 个注册样本，TRIA 保持完全 out-of-sample。
 
-### funding 方向不是统一条件
+## 8. 新增关键维度：SEASONING
 
-- MYX / RIVER: extreme negative funding path。
-- LAB / BTW: positive funding expansion path。
+当前极端 / 活跃正样本的有效主升普遍晚于 Futures 首日：
 
-因此 live discovery 应检测 funding 相对自身历史基线的 regime shift 及其与 price / OI / taker 的关系。
+- MYX: 约 6 周
+- XPIN: 约 1 个月
+- RIVER: 约 2-3 个月
+- LAB: 数月
+- BTW: 约 3 个月
 
-### 更稳定的候选信号是 flow mismatch
+KGEN 的大幅 probe 集中在上市后约 10 天内。
 
-当前跨样本最值得继续机械化的是：
+因此需要测试 minimum seasoning days：14 / 21 / 28 / 35d。
 
-`价格显著变化` + `futures turnover/OI 放大` + `taker-buy share 仍接近双向平衡` + `underlying spot/free-float 相对薄`
+seasoning 不能单独证明后续会爆拉，但可能有效过滤 launch-day / launch-week volatility。
 
-它说明巨大 futures turnover 并不能简单解释成同规模单向真实买盘。后续再根据 funding / positioning 将路径分成 SHORT_FUEL 与 POSITIVE_FUNDING 两类。
+## 9. 第一组 early-probe 对照
 
-### PROBE 可能是最适合用户目标的早期标签
+### MYX
 
-对 spot-only 用户，最有价值的信号不是已经确认的 S4 breakout，而是第一次或第二次：
+2025-07-26 左右，距离正式第一轮大扩张约一周：
 
-- 异常上冲
-- 大幅回撤
-- OI / turnover 没有完全回到原状态
-- 后续 floor 抬高
+- 约 0.115 附近出现 4h/8h 上冲到约 0.128。
+- turnover 相比此前数日基线显著放大。
+- 对应关键 4h taker-buy quote share 约 44%-47%，主动 futures 买盘并没有呈现单边占优。
+- 随后快速回撤，但几天后重新回到相同价格区并进入主升。
 
-VNext 回测需要优先测这种 probe 出现在最终大周期前多久，以及它在负控制中的出现频率。
+说明固定 `15%-30% probe` 门槛可能太高。MYX 更早的有效异常只有约 10%-12% 级别。
 
-## 8. 下一批工作
+### XPIN
 
-1. 给 11 个样本统一构造 minute/hour-level `probe event`。
-2. 对每个 probe 记录 price jump、retrace、OI delta、funding percentile、taker-buy share、turnover、后续 floor shift。
-3. 从控制组统计同样 probe 的假阳性率。
-4. 用 leave-one-out / walk-forward 方式选机械阈值。
-5. 固定阈值后再评估 TRIA。
+2025-10-13 左右：
+
+- 从约 0.00091 向 0.00114 上冲约 25%。
+- turnover 明显放大。
+- 后续大部分交易中枢仍高于此前约 0.0008-0.0009 base。
+
+2025-10-16 左右再次从约 0.00114 向 0.00140 probe，随后迅速进入 0.002+ 主升。
+
+### KGEN
+
+上市后几天就出现多组 20%-50% 上冲 / 回撤，甚至随后冲到 0.6999，但整个结构仍停留在 launch-noise / near-miss，没有发展成 10x+ seasoned monster cycle。
+
+因此 S2 probe 必须与 seasoning、retention、repeat、Base Reference 一起使用。
+
+## 10. 当前模型方向
+
+更稳定的候选结构为：
+
+`seasoned venue topology` + `thin underlying / free float` + `price/turnover anomaly` + `futures taker-flow mismatch` + `post-probe retention` + `repeat at higher base`
+
+然后根据 funding / positioning 分成 SHORT_FUEL 或 POSITIVE_FUNDING 两条路径。
+
+## 11. 下一批工作
+
+1. 对全部 11 个样本统一构造 4h / 8h probe event。
+2. 测试 seasoning 14/21/28/35d。
+3. 测试 probe amplitude 8%-30%。
+4. 记录 turnover multiple、taker-buy share、funding percentile、OI delta（可得时）。
+5. 测试 24h / 72h retention 与 second-probe higher-base。
+6. 使用 continuous outcome + Capture Multiple 做 leave-one-out / walk-forward。
+7. 规则冻结后才评估 TRIA。
 
 ## Sources
 
+- Binance MYX Futures 2025-06-18: https://www.binance.com/en/support/announcement/detail/9801625522154e098d73b8245ad70646
+- Binance XPIN Futures 2025-09-12: https://www.binance.com/en/support/announcement/detail/4426d75b5b7f47f89a11f622739d6186
+- Binance LAB / RIVER Futures 2025-10-17: https://www.binance.com/en/support/announcement/detail/b7c479f8dfa64156a34e8bcefc241732
 - Binance C / VELVET Futures 2025-07-15: https://www.binance.com/en/support/announcement/detail/4f59bfc195ed4484ac810a9b8869fa86
 - Binance C Spot ecosystem 2025-07-18: https://www.binance.com/en/support/announcement/detail/8b78eb7a4119436c9a8272d9a299fc32
 - Binance ZORA / TAG Futures 2025-07-25: https://www.binance.com/en/support/announcement/detail/b8d4d5be7c894e1f9bf2c5e091da85e9
 - Binance KGEN Alpha + Futures 2025-10-07: https://www.binance.com/en/support/announcement/detail/70ff0dd3181940e39bf7601f94fc1935
 - Binance ZEST / BTW Futures 2026-06-04: https://www.binance.com/en/support/announcement/detail/61e41ce0e4b74dc7a794cc6bf9c57d38
-- Historical market observations: Binance USDⓈ-M public futures market data, queried 2026-09-30.
+- Historical market observations: Binance USDⓈ-M public futures data queried 2026-09-30.
