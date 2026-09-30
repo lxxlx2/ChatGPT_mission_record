@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "crypto-mission-local-agent"
 version = "0.1.0"
-description = "Synthetic-only local E2E foundation; no collectors or real delivery"
+description = "Private test data plane and bounded canary framework"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["websockets==15.0.1"]
 
 [project.optional-dependencies]
 dev = ["pytest==8.3.5"]
