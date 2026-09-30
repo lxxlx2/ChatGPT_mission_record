@@ -211,7 +211,7 @@ def test_failed_readback_does_not_confirm(repo, config, transport):
 def test_remote_config_ceiling_is_selected_not_legacy(config):
     from mission_agent.config import Config
     remote = Config.for_remote(config.runtime_root)
-    assert remote.max_batch_bytes == 75000
+    assert remote.max_batch_bytes == 75000 and remote.transport_mode == "GITHUB_PRIVATE"
     with pytest.raises(ValueError): Config.for_remote(config.runtime_root, max_batch_bytes=100000)
 
 
