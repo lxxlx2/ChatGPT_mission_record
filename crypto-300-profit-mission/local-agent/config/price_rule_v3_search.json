@@ -1,0 +1,56 @@
+{
+  "status": "DESIGN_DRAFT_BLOCKED",
+  "rule_version": "PRICE_RULE_V3",
+  "architecture": "OPTION_B",
+  "assets": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "BNB"
+  ],
+  "configs": 1296,
+  "grid": {
+    "R1": [
+      ".02",
+      ".025",
+      ".03"
+    ],
+    "R2": [
+      ".035",
+      ".04",
+      ".045",
+      ".05"
+    ],
+    "R3": [
+      ".06",
+      ".07",
+      ".08"
+    ],
+    "R4": [
+      ".10",
+      ".12",
+      ".14"
+    ],
+    "R5": [
+      ".035",
+      ".04",
+      ".045"
+    ],
+    "R7_multiplier": [
+      "2.5",
+      "3"
+    ],
+    "R7_move": [
+      ".015",
+      ".02"
+    ]
+  },
+  "fixed": {
+    "R6": ".01",
+    "R8": ".04",
+    "R9": ".06"
+  },
+  "partitions": {},
+  "hidden_certified": false,
+  "freeze_commit": null
+}
