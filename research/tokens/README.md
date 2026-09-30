@@ -19,6 +19,8 @@ Current VNext early-spot-discovery research:
 - Design: `binance-alpha-perpetual-vnext-early-spot-discovery-design.md`
 - Sample registry: `binance-alpha-perpetual-vnext-sample-registry.md`
 - Probe / basis validation: `binance-alpha-perpetual-vnext-probe-basis-validation.md`
+- Blind validation: `binance-alpha-perpetual-vnext-blind-validation.md`
+- S1 structural features: `binance-alpha-perpetual-vnext-s1-structural-feature-study.md`
 
 These VNext files are research-only. They do not modify Monster V2.1 / Frank / Codex runtime until rules are frozen and separately implemented.
 
