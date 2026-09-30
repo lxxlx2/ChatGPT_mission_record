@@ -149,11 +149,11 @@ D3 forward shadow=0小时；真实forward candidates=0；无Monster真实candida
 
 ## SYSTEM / PROVENANCE / RESOURCE
 
-基线branch：`codex/crypto-monitor-design-20260930`；本轮开始HEAD：`ec7a2ca02c59b27ad0f344ba2d843f476301fb9b`。fetch后origin/main=`e6a2fa3c7f806f75e8d367c89b4f7fa354483bde`，没有待合并main提交；未rebase、未改main。既有freeze/winner/forensic身份和Price V1/V2/V3草稿全部保留。
+基线branch：`codex/crypto-monitor-design-20260930`；本轮开始HEAD：`ec7a2ca02c59b27ad0f344ba2d843f476301fb9b`。初始fetch时origin/main=`e6a2fa3c7f806f75e8d367c89b4f7fa354483bde`；提交前再次fetch发现8个新增main提交，仅增加6个airdrop/日报/research路径，未涉及local-agent。按已授权merge-only规则合并origin/main=`f51a6f654e2ed883f9d4bb8c6b5189231870da02`；未rebase、未改main。FM1 implementation commit=`5386df729cc41a2fe6db0047644478c71200e147`；同步merge commit=`35360e84c3d6af67ea9098fec84a9948f41ab9de`。既有freeze/winner/forensic身份和Price V1/V2/V3草稿全部保留。
 
 V2 freeze=`15753ad1092cc2b1b9bd36270dd770916c50aec0`；V2 winner=`0b3d0cff2199c2bab42d07b42d4e5b8b9259e654`；forensic freeze=`e30dd63c262d9575aec5be799de14fd6036eac09`。本轮只新增FM代码/tests/docs/report，开始时1,580 tracked repository paths（其中106 local-agent paths）均未改写。
 
-Baseline Python3.14/3.12均282 passed，0 failed、0 skipped。最终Python **3.14.6：334 passed / 2.14s；3.12.14：334 passed / 2.04s**，0 failed、0 skipped。新增52tests。compileall和pip check两版本均PASS。Credential token-boundary pattern scan=PASS，0 hits；宽泛sk子串初扫匹配两个旧文章URL内单词，边界校正后无credential-shaped token，未输出匹配内容。
+Baseline Python3.14/3.12均282 passed，0 failed、0 skipped。最终Python **3.14.6：334 passed / 2.14s；3.12.14：334 passed / 2.01s**，0 failed、0 skipped。新增52tests；merge后相同完整回归再次通过。compileall和pip check两版本均PASS。Credential token-boundary pattern scan=PASS，0 hits；宽泛sk子串初扫匹配两个旧文章URL内单词，边界校正后无credential-shaped token，未输出匹配内容。
 
 Frank覆盖429、timeout、null、duplicate/out-of-order、restart、SQLite lock、partial commit/parser metadata、legacy/0/1、unknown program、token close、SIGKILL rollback、cache atomic publication等。Monster覆盖timeout/429、partial symbol、重复symbol、新/非活跃symbol、应用错误、derivative404；**missing/duplicate candles、真实delist mid-run、collector restart/stale universe/BTC missing尚未完成**，因为replay/collector未实现。不得宣称完整Monster failure gate PASS。
 
