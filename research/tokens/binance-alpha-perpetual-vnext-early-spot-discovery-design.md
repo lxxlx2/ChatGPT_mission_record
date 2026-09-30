@@ -14,218 +14,212 @@ Status: ACTIVE_RESEARCH
 - 不修改当前 Monster V2.1 / Frank / Codex runtime、阈值、checkpoint 或历史回测。
 - 后期 SHORT-HARVEST、LONG-CROWD、SHAKEOUT、DISTRIBUTION 数据继续保留，用于给早期特征打标签和验证完整生命周期。
 
-本文件建立在 `binance-alpha-perpetual-squeeze-cross-sample-study.md` 上，作为下一版 discovery-only 候选模型设计，不替代当前运行规则。
+本文件建立在 `binance-alpha-perpetual-squeeze-cross-sample-study.md` 和 `binance-alpha-perpetual-vnext-sample-registry.md` 上，作为 discovery-only 候选模型设计，不替代当前运行规则。
 
 ## 1. 训练 / 验证隔离
 
-目标币 TRIA 不参与规则生成。
+TRIA 不参与规则生成。
 
-当前正样本研究池：
+样本必须先登记，再参与阈值选择。不能观察 TRIA 后临时挑选历史币或调整阈值。
 
-- MYX
-- LAB
-- RIVER
-- BTW
-- XPIN，可作为补充极端行情样本继续复核
+当前 cohort 已覆盖：MYX、LAB、RIVER、XPIN、BTW、VELVET、KGEN、ZEST、TAG、ZORA、C。
 
-当前负控制 / near-miss：
+后续采用 leave-one-out / walk-forward，避免某一只极端样本主导规则。
 
-- ZEST
-- KGEN
+## 2. 用户目标决定评分方式
 
-KGEN 是一个很有价值的控制：2025-10-07 同时开放 Binance Alpha 和 KGENUSDT 永续，最高 50x；截至 2026-09-30 Binance 主板没有 `KGENUSDT` spot symbol。Binance Futures 首日约 0.35，历史高点约 0.70，之后大部分时间远低于该高点，没有形成 LAB / MYX 那种多阶段数十倍主升周期。
+用户只计划早期识别后持有现货，退出由用户人工分批处理。
 
-因此 venue topology 只能负责候选池筛选，不能单独输出 monster conclusion。
+因此模型评价重点为 discovery timing：
 
-## 2. 新发现：funding 符号不能作为统一硬门槛
+- Signal Price：首次升级到人工检查级别的价格。
+- Base Reference：信号发生前、仅使用过去数据构造的稳定价格基准。
+- Peak Price：固定 forward horizon 内的最高价。
+- Pre-Signal Multiple = SignalPrice / BaseReference，越低越好。
+- Capture Multiple = PeakPrice / SignalPrice，越高越好。
+- 7d / 30d / 90d Forward MFE。
+- 7d / 30d Forward MAE。
+- Recall：历史 extreme / strong 样本在主升前被 S2/S3 捕获的比例。
+- False Alert Rate：弱样本被升级到 S2/S3 的频率。
 
-历史正样本至少存在两种明显不同的衍生品燃料形态。
+目标偏好为 Recall > Precision，但不允许把全部 Alpha+Futures 标的无差别报警。
 
-### Type S: SHORT-FUEL
+## 3. Base Reference 禁止使用事后最低针
 
-MYX 与 RIVER 是代表。
+扩样暴露出一个重要问题：如果用事后绝对最低价作为 cycle base，KGEN、TAG 等普通高波动标的也会被人为放大倍数。
 
-MYX 2025-08 第一轮主升前后，价格从约 0.10 区域进入 0.20、0.30 后，funding 从小幅正值快速转负；随后在价格向 0.4、0.8、1.0、2.0 扩张时，多次出现约 -0.5% 到 -2.0% 的单次 funding，部分时段触及 -2.0% cap。
+因此 live/backtest 的 Base Reference 必须只使用 signal 之前的数据，并优先测试：
 
-RIVER 2026-01 的主升更明显。价格从约 10-15 区域向 20、30、40、60、80 扩张期间，funding 长时间为负，并多次接近或达到 -2.0%。价格上涨与极端负 funding 同时存在，符合大量 short exposure / basis distortion 为上涨提供潜在燃料的结构。
+- trailing 7d median close
+- trailing 14d median close
+- trailing 14d 20th percentile close
+- trailing rolling VWAP
 
-### Type L: LONG-FLOW / POSITIVE-FUNDING EXPANSION
+禁止用 signal 之后才知道的最低 wick 作为分母。
 
-LAB 与 BTW 是代表。
+最终 Base Reference 规则要通过 walk-forward 冻结。
 
-LAB 2026-05 从约 0.7 向 2、3、4 扩张期间，funding 大部分时间为正，部分结算达到约 +0.1% 到 +0.37%，随后在价格继续上行时回落到较低正值。
-
-BTW 2026-09 从约 0.4 向 1.4 扩张期间，funding 同样长期为正，常见约 +0.02% 到 +0.1% 量级，部分时段更高。
-
-结论：
-
-- `funding < 0` 不是 monster 必要条件。
-- `funding > 0` 也不能自动判定顶部。
-- VNext 应识别 funding regime 与价格、OI、taker flow 的组合关系，不能用统一方向阈值过滤所有候选。
-
-## 3. 跨样本更稳定的共同结构
-
-当前更稳定的共同点是：
-
-1. Binance Alpha / 可验证链上现货路径存在。
-2. Binance USDⓈ-M perpetual 存在。
-3. Binance 主板 spot 缺失或明显晚于极端行情阶段。
-4. underlying spot / free float 相对 futures notional 很薄。
-5. futures quote turnover 可以远大于可执行现货深度。
-6. 大幅价格扩张时，futures taker-buy quote share 往往仍接近 50%，没有持续 60%-70% 单边 aggressor buy 足以解释涨幅。
-7. 主升过程中反复出现大幅上冲和大幅回撤，杠杆仓位两侧都可能在不同阶段成为清算燃料。
-8. 成功样本后期往往进入严重衰减，说明完整生命周期和早期 discovery 必须分开评价。
-
-公开数据只能证明这种 market structure，不能证明项目方、做市商或特定实体实施了协调操盘。
-
-## 4. 用户执行约束决定模型目标函数
-
-用户计划：早期发现以后只持有现货，分批退出由用户自行完成。
-
-因此 VNext 主要评价 discovery timing，而不是最终顶部判断准确率。
-
-核心指标：
-
-### Signal Price
-
-模型第一次把标的升级到可人工检查的价格。
-
-### Cycle Base Price
-
-事后定义该轮主升前的局部稳定底部，只用于回测，不允许在 live run 中偷看未来。
-
-### Peak Price
-
-固定 forward horizon 内的最高价格。
-
-### Pre-Signal Multiple
-
-`SignalPrice / CycleBasePrice`
-
-越接近 1 越好。它衡量模型在发现时已经错过了多少早期涨幅。
-
-### Capture Multiple
-
-`PeakPrice / SignalPrice`
-
-越高越好。它衡量发现以后仍然剩余多少理论价格空间。
-
-### Forward MFE
-
-分别记录信号后的：
-
-- 7d MFE
-- 30d MFE
-- 90d MFE
-
-### Forward MAE
-
-分别记录信号后 7d / 30d 的最大不利波动。现货不会被强平，但过大的早期 MAE 会降低 discovery signal 的可执行价值。
-
-### Recall
-
-历史 monster 样本中，在大行情前成功进入 Early Candidate / Pre-Ignition 的比例。
-
-### False Positive Rate
-
-ZEST、KGEN 等控制样本被错误升级的比例。
-
-目标偏好：`Recall > Precision`，但必须用控制组限制无意义的 Alpha+Futures 全量报警。
-
-## 5. Discovery Engine 候选阶段
+## 4. Venue topology 只负责 universe
 
 ### S0 VENUE CANDIDATE
 
-只负责建立 universe：
+候选条件：
 
-- Alpha / on-chain path 已确认
-- Binance perpetual 已存在
-- Binance main spot 缺失
+- Binance Alpha / 可验证 on-chain spot path 已确认。
+- Binance USDⓈ-M perpetual 已存在。
+- Binance main-board spot 缺失，或极端行情发生时尚未上线。
 
-不通知为高优先级机会。
+S0 本身不升级成 monster signal。
 
-### S1 INVENTORY / VACUUM WATCH
+C 是 venue-transition control：2025-07-15 先有 Alpha + Futures，2025-07-18 即进入 Binance Spot 生态，no-Spot 窗口仅约 3 天，后续没有形成同级极端周期。
 
-开始出现可被放大的底层条件：
+因此 `days_without_main_spot` 应作为独立变量记录。
 
-- free float 明显低于 headline circulation
-- 去除 vesting / treasury / bridge / CEX / LP 后筹码集中
-- ±1% / ±2% / ±5% 可执行现货深度很薄
-- futures OI / spot executable depth 比值异常
-- Binance index constituents 少或 underlying 现货场所本身较薄
+## 5. 新增 SEASONING / LAUNCH-NOISE 层
 
-### S2 EARLY CANDIDATE
+KGEN 暴露出一个关键混淆变量。
 
-这是用户最关心的第一类信号。
+KGEN 2025-10-07 Alpha + Futures 同日开放，上市初期极高波动，约 10 天内曾从约 0.11 低点冲到约 0.70，但没有发展成 MYX/LAB/RIVER 式多阶段 10x+ monster cycle。
 
-满足 S1 后，出现至少一组可重复的行为异常：
+强正样本的主要行情则普遍发生在 Futures 上线一段时间之后：
 
-- 价格开始抬升，同时 futures taker-buy share 仍约 48%-52%
-- price ↑ + OI ↑，但 futures aggressor flow 无法解释价格幅度
-- funding regime 快速偏离自身基线，方向可正可负
-- futures turnover 相对 spot executable liquidity 异常放大
-- 出现 PROBE / TEST-PUMP：短时 15%-30% 以上上冲后大幅回落，但 OI / turnover / subsequent floor 没有完全回到原状态
-- 同类 probe 在数日到数周内重复
+- MYX: 2025-06-18 Futures 上线，第一轮主要扩张在 2025-08 初，约 6 周后。
+- XPIN: 2025-09-12 Futures 上线，第一组有效早期 probe 出现在 2025-10 中旬，约 1 个月后。
+- LAB: 2025-10-17 Futures 上线，极端主升发生在 2026 春季，经历数月沉淀。
+- RIVER: 2025-10-17 Futures 上线，极端主升集中在 2026-01，约 2-3 个月后。
+- BTW: 2026-06-04 Futures 上线，明显 mark-up 集中在 2026-09，约 3 个月后。
 
-S2 的目标是早，不要求 breakout 已经确认。
+因此必须区分 launch volatility 与 seasoned setup。
 
-### S3 PRE-IGNITION
+当前只建立候选阈值，不冻结：
 
-S2 后出现第二确认：
+- 14d
+- 21d
+- 28d
+- 35d
 
-- 回撤未破坏 cycle base
-- OI / funding 经 reset 后再次构建
-- retail 与 top-trader positioning 出现稳定分歧，或某一侧 crowding 持续加深
-- spot / index 先动、perp 跟随的 lead-lag 重复出现
-- 第二次 probe / breakout 的价格中枢高于第一次
+回测比较这些 minimum seasoning days 对 extreme recall 与 false alert 的影响。
 
-S3 是 discovery engine 的最高优先级输出。
+第一版研究优先测试 21d 作为候选，不写进当前 runtime。
 
-### S4 IGNITION
+## 6. funding 符号不能作为统一硬门槛
 
-正式 breakout、volume / liquidation expansion、价格进入明显主升。
+历史正样本至少有两条路径。
 
-S4 主要用于验证早期模型是否正确。若模型长期到 S4 才首次发现，虽然方向判断正确，也应在 discovery score 中扣分。
-
-## 6. 两种 fuel regime 都必须支持
-
-### SHORT-FUEL PATH
+### SHORT-FUEL
 
 典型：MYX、RIVER。
 
-可观察序列：
+- price 上升
+- funding 从自身基线快速下降，甚至长期极负
+- OI / turnover 放大
+- short exposure / basis distortion 提供潜在买回燃料
 
-`price ↑ -> funding 下降/极负 -> OI / turnover 放大 -> short exposure 成为潜在买回燃料 -> squeeze / reset`
+MYX 与 RIVER 主升期间都曾多次出现接近 -2% 的单次 funding。
 
-### POSITIVE-FUNDING PATH
+### POSITIVE-FUNDING EXPANSION
 
 典型：LAB、BTW。
 
-可观察序列：
+- price 上升
+- funding 长期为正
+- futures turnover 巨大
+- taker flow 仍接近双向平衡
+- 中间出现大幅 shakeout，但价格中枢继续提高
 
-`price ↑ -> funding 保持正值 -> futures turnover 巨大且 taker flow 仍接近双向 -> 大幅 shakeout -> 价格中枢继续提高`
+因此 VNext 记录 funding percentile / regime shift，并结合 price、OI、taker、turnover 解释，禁止统一要求 funding < 0。
 
-VNext 不要求先判断幕后实体身份，只判断当前市场状态是否与历史 monster lifecycle 一致。
+## 7. S1 INVENTORY / VACUUM WATCH
 
-## 7. 控制组为什么重要
+通过 S0，并经过 launch-noise 标记后，关注底层条件：
 
-### ZEST
+- free float 明显低于 headline circulation
+- 去除 vesting / treasury / bridge / CEX / LP 后筹码集中
+- ±1% / ±2% / ±5% executable spot depth 很薄
+- futures OI / spot executable depth 比值异常
+- Binance price-index constituents 少或 underlying 现货场所本身较薄
+- project / treasury / vesting / MM token flow 没有形成显著持续卖压
 
-同样具备 Alpha + Futures + no Binance main spot，但截至当前没有形成 MYX / LAB 级多阶段重估。
+## 8. S2 EARLY CANDIDATE: PROBE
 
-### KGEN
+这是用户最需要的第一类实时信号。
 
-2025-10-07 Alpha 与 Futures 几乎同时开放，首日 0.35 附近，随后历史高点约 0.70，之后大部分时间没有走出持续 monster cycle。
+初始研究发现 15%-30% 的固定短时涨幅门槛过高，可能漏掉 MYX 第一轮更早的异常。
 
-这两个控制说明：
+MYX 在 2025-07-26 附近，距离正式大幅扩张约一周，已经出现：
 
-- venue topology 提高先验概率，但不能替代行为确认。
-- 如果 S1/S2 条件无法区分成功样本与 ZEST/KGEN，模型没有实际预测价值。
-- 任何“没涨只是项目方后来改主意”的解释不能用于回测，因为它无法被证伪。
+- 约 0.115 附近的 4h/8h 异常上冲，局部高点约 0.128
+- turnover 相比此前基线明显放大
+- 一组关键 4h candle 的 taker-buy quote share 仅约 44%-47%
+- 随后快速回撤，但数日后重新回到相同价格区并进入主升
 
-## 8. 后期生命周期数据的用途
+XPIN 在 2025-10-13 左右、距离大爆发约 3 天，也出现：
 
-用户不要求模型自动卖出，但后期数据继续保留为标签：
+- 从约 0.00091 向 0.00114 的 4h 上冲，约 25%
+- turnover 明显放大
+- 后续价格大部分保持在之前 base 之上
+- 2025-10-16 再次 probe 后迅速进入 0.002+ 主升段
+
+所以 probe 振幅候选区间应从约 8%-30% 开始回测，不能预先固定 15%。
+
+每个 probe 记录：
+
+- 4h high/open
+- 8h high / pre-window close
+- close/open
+- retrace from high
+- turnover / trailing median turnover
+- taker-buy quote share
+- funding percentile vs trailing history
+- OI delta，若历史 OI 可获得
+- 24h / 72h retention
+- days since futures launch
+- days since Alpha listing
+- days without main Spot
+
+S2 的目标是早，不要求 breakout 已确认。
+
+## 9. S3 PRE-IGNITION: RETENTION + REPEAT
+
+单次 probe 很容易被 KGEN / TAG / ZORA 一类普通高波动标的触发，所以第二层必须检查 probe 之后是否留下结构性痕迹。
+
+重点候选：
+
+- 24h / 72h median close 是否高于 pre-probe Base Reference
+- probe 后最低 close 是否守住 Base Reference 附近
+- turnover 是否完全回落到旧基线
+- OI / funding reset 后是否再次构建
+- 第二个 probe 是否出现在更高价格中枢
+- retail / top-trader positioning 是否出现持续分歧
+- spot / index lead -> perp follow 是否重复发生
+
+S3 是 discovery engine 的最高优先级输出。
+
+## 10. S4 IGNITION
+
+正式 breakout、volume / liquidation expansion、价格进入明显主升。
+
+S4 主要用于给 S2/S3 做 outcome 验证。如果模型长期到 S4 才首次发现，即使方向正确，也应降低 discovery score。
+
+## 11. Outcome 使用连续分层
+
+禁止简单二分类 monster / non-monster。
+
+建议先按不偷看未来的 Base Reference 计算 forward multiple，再划分：
+
+- EXTREME: >=10x
+- STRONG: 5x-10x
+- WEAK: 2x-5x
+- NULL: <2x
+- LIVE: 当前周期尚未结束
+
+具体边界仍属于研究候选，需要结合用户 10x 目标和样本数量验证。
+
+KGEN 应从纯 negative control 降级为 near-miss / medium-volatility control，因为其上市初期存在约 6x 的 wick-low-to-high 路径；但该倍数高度依赖瞬时最低针，使用稳定 Base Reference 后会明显降低。
+
+## 12. 后期生命周期只作为 outcome 标签
+
+继续记录：
 
 - SHORT-HARVEST
 - LONG-CROWD
@@ -234,53 +228,50 @@ VNext 不要求先判断幕后实体身份，只判断当前市场状态是否�
 - DISTRIBUTION
 - COLLAPSE
 
-用途：
+这些状态用于判断早期 signal 最终是否演化成完整 monster lifecycle，不自动触发用户卖出。
 
-1. 判断某个早期 signal 最终是否真的演化成完整 monster cycle。
-2. 区分一次性新闻冲击与可重复的反身性结构。
-3. 衡量不同 S2/S3 早期模式的最终 Capture Multiple。
-4. 给未来模型训练提供 outcome labels。
+## 13. TRIA 的 out-of-sample 约束
 
-这些后期状态不自动触发用户退出。
+只有在 seasoning、Base Reference、probe、retention、repeat 规则冻结后才评估 TRIA。
 
-## 9. TRIA 的 out-of-sample 约束
+检查：
 
-TRIA 不参与阈值生成。
+- 当前 S0/S1/S2/S3 层级
+- SHORT-FUEL 或 POSITIVE-FUNDING path
+- current long crowd 是否先需要 reset
+- unlock 对 free float / venue supply 的影响
+- 下一次 probe 是否满足冻结规则
+- probe 后是否产生 retention + repeat
 
-只有在上述规则冻结以后，才检查 TRIA：
+如果 TRIA 不符合规则，不允许立即回头改阈值。任何规则修改必须先回到训练 cohort 和控制 cohort 重新验证。
 
-- 当前处于 S0/S1/S2/S3 哪一层
-- 是否更接近 SHORT-FUEL 或 POSITIVE-FUNDING path
-- 当前 long crowd 是否需要先 reset
-- 今日 / 近期 unlock 对 free float 与场所供应的影响
-- 后续第一次和第二次 probe 是否满足冻结规则
-
-不能因为 TRIA 的走势不符合规则就回头即时修改阈值；任何修改必须先回到训练样本和控制组重新验证。
-
-## 10. 与 Codex / Monster 当前工作的隔离
+## 14. 与 Codex / Monster 当前工作的隔离
 
 本文件只属于 `research/tokens/`。
 
-当前 Monster V2.1、Frank、Codex 正在进行的历史验证继续使用原规则，保证前后样本可比。
+当前 Monster V2.1、Frank、Codex 历史验证继续使用原规则。
 
-VNext 只有在研究规则冻结、训练/控制组扩充、回测指标确定以后，才单独交给 Codex 实现新版本并与 V2.1 做 A/B 回测。
+VNext 只有在研究规则冻结、训练 / 控制 cohort 扩充、机械回测指标确定后，才单独交给 Codex 实现并与 V2.1 做 A/B backtest。
 
-禁止在当前 V2.1 中途修改 runtime 阈值来适配本研究。
+禁止在当前 V2.1 中途修改 runtime 阈值适配本研究。
 
 ## 当前下一步
 
-1. 扩大正样本与负控制到足够规模，至少覆盖 10+ Alpha+Futures+no-Spot 标的。
-2. 为每个样本回放 futures launch 后的 price / funding / OI / taker / turnover 序列。
-3. 建立不使用未来数据的 cycle-base 定义。
-4. 固定 S1/S2/S3 机械规则。
-5. 对训练集做 walk-forward / leave-one-out，防止单币过拟合。
-6. 最后只把冻结规则应用于 TRIA。
+1. 对样本注册表逐个构造 4h / 8h probe event。
+2. 测试 seasoning 14/21/28/35d。
+3. 测试 probe price threshold 8%-30%，配合 turnover multiplier 和 taker-flow mismatch。
+4. 测试 24h / 72h retention 与 second-probe higher-base 条件。
+5. 使用 continuous outcome tier 和 Capture Multiple 评分。
+6. 做 leave-one-out / walk-forward。
+7. 最后冻结规则并只对 TRIA 做 out-of-sample evaluation。
 
 ## Sources
 
-- Binance KGEN Alpha + Futures announcement: https://www.binance.com/en/support/announcement/detail/70ff0dd3181940e39bf7601f94fc1935
-- Binance ZEST + BTW Futures announcement: https://www.binance.com/en/support/announcement/detail/61e41ce0e4b74dc7a794cc6bf9c57d38
-- Binance C + VELVET Futures announcement: https://www.binance.com/en/support/announcement/detail/4f59bfc195ed4484ac810a9b8869fa86
-- Binance ZORA + TAG Futures announcement: https://www.binance.com/en/support/announcement/detail/b8d4d5be7c894e1f9bf2c5e091da85e9
-- Binance XPIN Futures announcement evidence indexed from official Binance pages
-- Raw historical price / taker / funding observations in this study use Binance USDⓈ-M public market data.
+- Binance MYX Futures 2025-06-18: https://www.binance.com/en/support/announcement/detail/9801625522154e098d73b8245ad70646
+- Binance XPIN Futures 2025-09-12: https://www.binance.com/en/support/announcement/detail/4426d75b5b7f47f89a11f622739d6186
+- Binance LAB / RIVER Futures 2025-10-17: https://www.binance.com/en/support/announcement/detail/b7c479f8dfa64156a34e8bcefc241732
+- Binance KGEN Alpha + Futures 2025-10-07: https://www.binance.com/en/support/announcement/detail/70ff0dd3181940e39bf7601f94fc1935
+- Binance C / VELVET Futures 2025-07-15: https://www.binance.com/en/support/announcement/detail/4f59bfc195ed4484ac810a9b8869fa86
+- Binance ZORA / TAG Futures 2025-07-25: https://www.binance.com/en/support/announcement/detail/b8d4d5be7c894e1f9bf2c5e091da85e9
+- Binance ZEST / BTW Futures 2026-06-04: https://www.binance.com/en/support/announcement/detail/61e41ce0e4b74dc7a794cc6bf9c57d38
+- Historical price / turnover / taker / funding observations: Binance USDⓈ-M public market data queried 2026-09-30.
