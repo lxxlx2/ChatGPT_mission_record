@@ -142,7 +142,34 @@ TAG 也会出现大 premium tail，包括约 -2.8%、+2.8%，以及后续一个�
 
 剔除上市前 10 天 launch noise 后，2025-11 的 post-seasoning 窗口也存在约 -2.4% 的单次异常，但大部分 4h premium 保持在更小区间，没有形成持续 cluster。
 
-## 4. 当前最值得回测的机械定义
+## 4. 边界样本：VELVET 与 C
+
+### VELVET
+
+VELVET 是 medium / near-monster 边界样本。
+
+2025-08 初，价格从约 0.044-0.05 区域快速重估到 0.118 高点时，4h premium 出现连续 stress：
+
+- 一根 premium high 约 +3.7%
+- 后续相邻窗口 premium low 约 -2.2%
+- 随后又出现约 +2.1% / -1.4%、约 -3.6%、约 -2.3% 的连续偏离
+
+VELVET 因此满足 basis-stress-cluster 的方向性特征，与其 MEDIUM_POSITIVE / BORDERLINE_MONSTER 标签一致。
+
+### Chainbase C
+
+C 在 2025-07-18 已很快进入 Binance Spot 生态。
+
+复核 2025-08 与 VELVET 相近时间窗口，C 的 4h premium 主要只有零点几百分比，局部极端仍远低于 2%，没有观察到 stress cluster。
+
+这支持两个当前假设：
+
+1. `basis stress cluster` 与更强的高波动重估存在关联。
+2. `days_without_main_spot` / venue transition 可能显著改变 basis 压力结构。
+
+该结论仍属于小样本 INFERRED，需要盲样本继续验证。
+
+## 5. 当前最值得回测的机械定义
 
 候选定义 A：
 
@@ -173,7 +200,7 @@ TAG 也会出现大 premium tail，包括约 -2.8%、+2.8%，以及后续一个�
 
 然后做 leave-one-out / walk-forward。
 
-## 5. 为什么 cluster 比单根 premium tail 更合理
+## 6. 为什么 cluster 比单根 premium tail 更合理
 
 Premium-index high/low 可能包含极短时 index / perp 失衡，单根极端值容易受瞬时流动性影响。
 
@@ -187,7 +214,7 @@ Premium-index high/low 可能包含极短时 index / perp 失衡，单根极端�
 
 该假设尚未冻结。
 
-## 6. Historical OI 数据边界
+## 7. Historical OI 数据边界
 
 2026-09-30 使用 Binance public `openInterestHist` 类接口回拉 MYX 2025-07 历史 4h OI 时，接口对旧 `startTime` 返回 invalid parameter / HTTP 400。
 
@@ -202,7 +229,7 @@ Premium-index high/low 可能包含极短时 index / perp 失衡，单根极端�
 - 如果后续找到已归档的一手历史快照，可再补入。
 - 第一版 VNext 必须能够在 OI 缺失时退化到 price / turnover / taker / funding / premium / venue / on-chain liquidity 特征。
 
-## 7. 对当前 VNext 的修改方向
+## 8. 对当前 VNext 的修改方向
 
 当前 S2/S3 应继续保留 price probe，但不再把它视作主要区分器。
 
@@ -222,26 +249,29 @@ Premium-index high/low 可能包含极短时 index / perp 失衡，单根极端�
 
 funding 用于识别 fuel regime，不作为统一正负过滤器。
 
-## 8. 当前证据等级
+## 9. 当前证据等级
 
 CONFIRMED：
 
 - MYX / XPIN / LAB / RIVER / BTW 的历史 Binance 4h premium 数据中均存在明显成簇 basis dislocation。
-- TAG / ZEST / KGEN 也会出现孤立 premium extreme，因此单根 premium tail 不能作为 signal。
+- VELVET 的 medium-positive 重估窗口也出现 basis stress cluster。
+- TAG / ZEST / KGEN 会出现孤立 premium extreme，因此单根 premium tail 不能作为 signal。
 - ZORA 本轮对照窗口的 premium stress 明显弱于 extreme cohort。
+- C 在进入 Binance Spot 生态后的对照窗口没有出现 2% 级 basis stress cluster。
 - Binance 当前 public OI history 无法直接补拉 MYX 2025-07 老窗口。
 
 INFERRED：
 
 - basis stress cluster 可能是比 funding sign / taker share / 单次 price probe 更稳定的 early-discovery feature。
 - 该特征可能反映 underlying spot/index 深度不足以顺畅吸收 perpetual notional 的状态。
+- venue transition / main-spot availability 可能削弱这种 basis stress。
 
 UNRESOLVED：
 
 - 2% 是否为最优 stress threshold。
 - 12h `2-of-3` 是否优于 24h `3-of-6`。
 - basis stress cluster 与 on-chain free float / executable spot depth 的因果关系。
-- VELVET、C 与更多历史 Alpha+Futures 样本上的表现。
+- 更大盲样本上的 precision / recall。
 - TRIA 是否满足该规则，冻结规则前禁止查看并调参。
 
 ## Sources
