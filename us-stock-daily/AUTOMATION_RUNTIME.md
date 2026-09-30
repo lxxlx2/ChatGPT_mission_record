@@ -197,3 +197,21 @@ This section supersedes earlier attempt-file wording when it conflicts.
 
 No monitoring task may be created, deleted, disabled or rebuilt as part of this repair.
 
+
+
+## Durable-first recovery patch — 2026-09-30
+
+Observed on 2026-09-30: the scheduler triggered around the delivery window, but no same-day pending/canonical artifact and no Gmail delivery existed. This proves trigger-time alone is not health evidence.
+
+Current phased contract for the existing task:
+- 06:00: primary bounded full-report prebuild; write a small attempt early, then QA-PASS `delivery-pending/YYYY-MM-DD.md` before optional enrichment.
+- 07:00: repair/refresh pending only; avoid broad rebuild when a complete pending body already exists.
+- 08:00: delivery first. Gmail Sent dedupe, pending read, only material freshness refresh, send/readback before archive. GitHub failure must not block an otherwise QA-PASS Gmail delivery.
+- 09:00: recovery only. If Gmail exists, archive-only; if Gmail is missing, use pending/canonical or bounded recovery and send a complete 12-section report.
+
+Reliability rules:
+- long in-memory work without a durable checkpoint is prohibited;
+- missing secondary data is recorded as unavailable and does not block a complete report;
+- Gmail Sent id + readback is delivery authority;
+- GitHub archive failure after Gmail success must never cause a resend;
+- every recovery/resend remains a full 12-section report.
