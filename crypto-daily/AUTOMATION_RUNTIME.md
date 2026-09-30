@@ -391,3 +391,20 @@ Ordinary hourly collector:
 
 No monitoring task may be created, deleted, disabled or rebuilt as part of this repair.
 
+
+
+## Durable-first daily-delivery patch — 2026-09-30
+
+Observed on 2026-09-30: durable hourly finals existed earlier in the night, but later scheduled triggers did not leave final artifacts, and the 08:00 pending file was absent. Scheduler invocation is therefore not completion proof.
+
+Current contract for the existing hourly task:
+- ordinary hours: bounded factual collection; write an attempt early and persist final immediately after core lanes, before optional enrichment;
+- 08:00: PREBUILD FIRST. Build the complete 13-section pending report from durable prior finals plus a small fresh core refresh before ordinary hourly work;
+- 09:00: DELIVERY FIRST. Gmail Sent dedupe, pending read, refresh only time-sensitive facts, then send/readback before archive;
+- 10:00/11:00: recovery only when the same-date Gmail/canonical side is missing;
+- a missing pending at 09:00 triggers bounded recovery from durable finals + fresh core, not a broad full-market scan.
+
+Completion evidence:
+- ordinary cycle: final/final-retry artifact;
+- daily delivery: Gmail Sent id + readback;
+- archive success is separate from email delivery and must not cause duplicate mail.
