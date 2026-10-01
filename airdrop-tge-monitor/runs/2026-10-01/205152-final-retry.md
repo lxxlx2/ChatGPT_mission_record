@@ -55,6 +55,7 @@ source_notes:
 - no Chinese-language websites used
 - Space and Spacecoin regression rule preserved; no cross-project candidate promoted
 
-state_current_status: pending_update
+state_current_status: updated
+state_current_path: airdrop-tge-monitor/state/current.md
 tool_errors:
 - provisional HHMMSS-final.md create blocked; final-retry persistence succeeded
