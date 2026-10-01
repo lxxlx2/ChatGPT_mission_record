@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from ..hashing import canonical,digest,verify
 from ..clock import stamp,parse_utc
 from ..db.connection import transaction
@@ -5,7 +6,7 @@ from ..storage import admit
 
 SCOPES={'RAW_FRANK_CANDIDATE':('frank:','solana_official_rpc'),'RAW_MONSTER_CANDIDATE':('monster:','binance_official')}
 
-def ingest(repo,value):
+def ingest(repo,value,*,within_transaction=False):
     verify(value)
     kind=value.get('event_type')
     if kind not in SCOPES:raise ValueError('FM_EVENT_TYPE')
@@ -14,7 +15,8 @@ def ingest(repo,value):
     observed=stamp(parse_utc(value['observed_at']));now=stamp(repo.clock.now());data=canonical(value);sha=digest(value)
     item={'schema_version':1,'event_id':value['event_id'],'event_type':kind,'source':source,'asset':value.get('asset'),'observed_at_utc':observed,'created_at_utc':now,'priority':0,'payload':value,'payload_sha256':sha}
     if len(canonical(item))>2000:raise ValueError('FM_ITEM_OVER_2KB')
-    with transaction(repo.db):
+    if within_transaction and not repo.db.in_transaction:raise ValueError('FM_ENCLOSING_TRANSACTION_REQUIRED')
+    with (nullcontext() if within_transaction else transaction(repo.db)):
         old=repo.db.execute('SELECT payload_sha256 FROM candidates WHERE event_id=?',(value['event_id'],)).fetchone()
         if old:
             if old[0]!=sha:raise ValueError('FM_EVENT_ID_CONFLICT')

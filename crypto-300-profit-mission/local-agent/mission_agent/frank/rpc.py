@@ -15,15 +15,15 @@ class RPCFailure(RuntimeError):
 
 class SolanaRPC:
     def __init__(self, request=urllib.request.urlopen, sleep=time.sleep,
-                 monotonic=time.monotonic, jitter=random.random):
+                 monotonic=time.monotonic, jitter=random.random, min_interval=.5):
         self.request, self.sleep, self.monotonic, self.jitter = request,sleep,monotonic,jitter
-        self.last=None; self.calls=0; self.retries=0
+        self.last=None; self.calls=0; self.retries=0; self.rate_limits=0; self.min_interval=min_interval
     def call(self,method,params):
         if method not in ('getHealth','getSignaturesForAddress','getTransaction'):
             raise ValueError('READ_ONLY_METHOD_ALLOWLIST')
         body=json.dumps({'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode()
         for attempt in range(3):
-            if self.last is not None:self.sleep(max(0,.5-(self.monotonic()-self.last)))
+            if self.last is not None:self.sleep(max(0,self.min_interval-(self.monotonic()-self.last)))
             self.last=self.monotonic();self.calls+=1
             try:
                 req=urllib.request.Request(RPC,data=body,headers={'Content-Type':'application/json'})
@@ -32,6 +32,7 @@ class SolanaRPC:
                 if 'result' not in value:raise RPCFailure('INCOMPLETE_RPC_ENVELOPE')
                 return value['result']
             except urllib.error.HTTPError as exc:
+                self.rate_limits+=exc.code==429
                 if exc.code not in (429,500,502,503,504) or attempt==2:raise RPCFailure(exc.code) from None
                 try:delay=float(exc.headers.get('Retry-After','0'))
                 except ValueError:delay=0

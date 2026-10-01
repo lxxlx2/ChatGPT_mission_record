@@ -38,7 +38,7 @@ def test_supported_transaction_versions(version):
     t=tx();t['version']=version;assert normalize('s',t)['version']==version
 
 def test_failed_transaction_not_swap():
-    t=tx();t['meta']['err']={'InstructionError':[0,{'Custom':4}]};assert normalize('s',t)['mechanical_classification']=='UNKNOWN'
+    t=tx();t['meta']['err']={'InstructionError':[0,{'Custom':4}]};assert normalize('s',t)['mechanical_classification']=='FAILED'
 
 def test_unknown_program_not_swap():
     t=tx();t['transaction']['message']['instructions'][0]['programId']='unknown';assert normalize('s',t)['mechanical_classification']=='UNKNOWN'
@@ -132,6 +132,13 @@ def test_rpc_timeout_bounded_and_no_write_method():
     with pytest.raises(ValueError):rpc.call('sendTransaction',[])
 from mission_agent.frank.collector import FrankCollector
 
+@pytest.fixture(autouse=True)
+def mock_manual_gate_for_collector_unit_tests(monkeypatch):
+    def check(a):
+        if a.get('processed')!=500 or a.get('manual_reviewed')!=50:raise ValueError('FRANK_500_MANUAL_ACCEPTANCE_REQUIRED')
+    monkeypatch.setattr('mission_agent.frank.collector.verify_acceptance',check)
+
+
 def test_forward_gate_refuses_before_manual_review(tmp_path):
     r=Repository(tmp_path/'db')
     with pytest.raises(ValueError,match='ACCEPTANCE'):FrankCollector(r,tmp_path/'raw',{})
@@ -215,3 +222,80 @@ def test_unknown_program_cpi_transfer_not_plain_transfer():
 def test_sol_rent_refund_cannot_establish_swap_consideration():
     t=tx();t['meta']['preTokenBalances']=t['meta']['preTokenBalances'][:1];t['meta']['postTokenBalances']=t['meta']['postTokenBalances'][:1]
     assert normalize('rent',t)['mechanical_classification']=='UNKNOWN'
+
+
+def test_unrelated_cpi_swap_log_cannot_authorize_dex():
+    t=tx();t['transaction']['message']['instructions'][0].pop('parsed')
+    t['meta']['logMessages']=[f'Program {DEX} invoke [1]','Program unrelated invoke [2]','Program log: Instruction: Swap','Program unrelated success',f'Program {DEX} success']
+    assert normalize('s',t)['mechanical_classification']=='UNKNOWN'
+
+
+def test_ephemeral_wsol_consideration_keeps_balance_vectors_exact():
+    from mission_agent.frank.parser import WSOL
+    t=tx();t['meta']['preTokenBalances']=t['meta']['preTokenBalances'][1:];t['meta']['postTokenBalances']=t['meta']['postTokenBalances'][1:]
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    t['meta']['innerInstructions']=[{'index':0,'instructions':[
+      {'programId':token,'parsed':{'type':'initializeAccount3','info':{'account':'ephemeral','owner':WALLET,'mint':WSOL}}},
+      {'programId':token,'parsed':{'type':'transferChecked','info':{'source':'vault','destination':'ephemeral','tokenAmount':{'amount':'123456','decimals':9},'authority':'vault'}}},
+      {'programId':token,'parsed':{'type':'closeAccount','info':{'account':'ephemeral','owner':WALLET,'destination':'router'}}}]}]
+    e=normalize('s',t)
+    assert e['mechanical_classification']=='ACTIVE_SWAP_LIKE'
+    assert len(e['token_balance_deltas'])==1
+    assert e['decoded_transient_token_flows'][0]['net_transfer_raw']=='123456'
+    t['meta']['innerInstructions'][0]['instructions'][0]['parsed']['info']['owner']='other'
+    assert normalize('s',t)['mechanical_classification']=='UNKNOWN'
+
+
+def test_frank_cursor_candidate_commit_rolls_back_together(tmp_path):
+    r=Repository(tmp_path/'atomic.sqlite');s=FrankStore(r);e=normalize('atomic',tx());c=build(e,e['token_balance_deltas'][0])
+    with pytest.raises(RuntimeError,match='PARTIAL'):
+        s.put(e,advance=True,candidates=[c],observation={'detected_at':'1.5','normalized_at':'2.0'},fail=True)
+    assert s.cursor() is None
+    assert not s.evidence()
+    assert r.db.execute('SELECT count(*) FROM frank_observations').fetchone()[0]==0
+    assert r.db.execute('SELECT count(*) FROM candidates').fetchone()[0]==0
+    s.put(e,advance=True,candidates=[c],observation={'detected_at':'1.5','normalized_at':'2.0'});assert s.cursor()['block_time']==e['block_time']
+    assert r.db.execute('SELECT count(*) FROM frank_observations').fetchone()[0]==1
+    assert r.db.execute('SELECT count(*) FROM candidates').fetchone()[0]==1
+    s.put(e,advance=True,candidates=[c]);assert r.db.execute('SELECT count(*) FROM candidates').fetchone()[0]==1
+    r.close()
+
+
+def test_nested_candidate_ingest_requires_real_transaction(tmp_path):
+    r=Repository(tmp_path/'atomic.sqlite');e=normalize('atomic',tx());c=build(e,e['token_balance_deltas'][0])
+    with pytest.raises(ValueError,match='ENCLOSING_TRANSACTION'):ingest(r,c,within_transaction=True)
+    r.close()
+
+
+def test_same_mint_transient_internal_transfer_never_exchange():
+    from mission_agent.frank.parser import WSOL
+    t=tx();t['meta']['preTokenBalances']=[];t['meta']['postTokenBalances']=[]
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';instructions=[]
+    for address in ['tempA','tempB']:
+        instructions.append({'programId':token,'parsed':{'type':'initializeAccount3','info':{'account':address,'owner':WALLET,'mint':WSOL}}})
+    instructions.append({'programId':token,'parsed':{'type':'transfer','info':{'source':'tempA','destination':'tempB','amount':'1000','authority':WALLET}}})
+    for address in ['tempA','tempB']:
+        instructions.append({'programId':token,'parsed':{'type':'closeAccount','info':{'account':address,'owner':WALLET,'destination':WALLET}}})
+    t['meta']['innerInstructions']=[{'index':0,'instructions':instructions}]
+    e=normalize('s',t);assert len(e['decoded_transient_token_flows'])==2
+    assert e['mechanical_classification']=='UNKNOWN'
+    # Duplicate creation/init descriptions identify one account, never two flows.
+    t['meta']['innerInstructions'][0]['instructions'].insert(0,copy.deepcopy(instructions[0]))
+    assert len(normalize('s',t)['decoded_transient_token_flows'])==2
+
+
+def test_shadow_publish_retry_preserves_batch_and_passes_cas(tmp_path):
+    from mission_agent.queue.batch import publish
+    r=Repository(tmp_path/'cas.sqlite');e=normalize('cas',tx());ingest(r,build(e,e['token_balance_deltas'][0]));batch=build_batch(r,Config(tmp_path))
+    class Fake:
+        def __init__(self):self.calls=[];self.fail=True
+        def publish_batch(self,value,expected_sha=None):
+            self.calls.append((value['batch_id'],expected_sha))
+            if self.fail:raise ValueError('CAS_CONFLICT')
+    fake=Fake()
+    with pytest.raises(ValueError,match='CAS'):publish(r,fake,batch['batch_id'],expected_sha='observed-blob')
+    assert r.db.execute('SELECT state FROM batches').fetchone()[0]=='BUILT'
+    assert r.db.execute('SELECT state FROM outbox').fetchone()[0]=='BATCHED'
+    fake.fail=False;publish(r,fake,batch['batch_id'],expected_sha='observed-blob')
+    assert fake.calls==[(batch['batch_id'],'observed-blob')]*2
+    assert r.db.execute('SELECT state FROM batches').fetchone()[0]=='PUBLISHED';r.close()

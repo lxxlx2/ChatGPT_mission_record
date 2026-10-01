@@ -51,13 +51,14 @@ def build_batch(repo, config):
         return batch
 
 
-def publish(repo,transport,batch_id):
+def publish(repo,transport,batch_id,expected_sha=None):
     row=repo.db.execute("SELECT * FROM batches WHERE batch_id=?",(batch_id,)).fetchone()
     if row is None or row['state'] in ('EXPIRED','CONSUMED'):
         raise ValueError('not publishable')
     try:
         batch=loads(row['payload_json'])
-        transport.publish_batch(batch)
+        if expected_sha is None:transport.publish_batch(batch)
+        else:transport.publish_batch(batch,expected_sha=expected_sha)
     except Exception as exc:
         with transaction(repo.db):
             repo.db.execute("UPDATE outbox SET attempt_count=attempt_count+1,last_error=? WHERE batch_id=?",(type(exc).__name__,batch_id))

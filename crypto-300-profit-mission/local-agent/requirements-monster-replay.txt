@@ -1,0 +1,2 @@
+# Optional offline replay tool only; baseline/live agent dependencies stay unchanged.
+numpy==2.2.6
