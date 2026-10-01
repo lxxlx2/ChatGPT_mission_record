@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-09-29 after Solana meme exit
+Updated: 2026-10-01 after REV exit
 Timezone: Asia/Bangkok
 
 ## Accounting rule
@@ -75,6 +75,8 @@ Net wallet change versus the immediately preceding snapshot:
 - meme token: **2,845.330357 -> 0**
 
 The meme position is removed from current holdings.
+
+- 2026-10-01: **REV temporary meme position: CLOSED**; finalized token balance **0**.
 
 No other fungible SPL / Token-2022 position with a reliable value >= $1 was identified.
 
