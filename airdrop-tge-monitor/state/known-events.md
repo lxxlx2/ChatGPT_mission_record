@@ -1,10 +1,10 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-09-29 Asia/Bangkok
+Updated: 2026-10-01 Asia/Bangkok
 
-Purpose: durable dedupe/state input for events already known, delivered, completed, refunded or explicitly closed.
+Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
-This file is an input to ACTION_GATE.md. User-confirmed state should be added here when relevant so later search results cannot re-notify the same completed fact.
+Hard scope rule: do not create a new monitor/task/file for a user-specific future action. If the user explicitly gives a date/time for an action that is already within this existing rights-monitor scope (claim, unstake, unlock, vesting, refund, settlement, opt-in or similar), record it here as an unresolved known event so the existing monitor can act on it. No new monitoring scope may be added without explicit user authorization.
 
 ## CLOSED / no remaining rights
 
@@ -15,6 +15,19 @@ This file is an input to ACTION_GATE.md. User-confirmed state should be added he
 - source_type: user_confirmed + stored deal history
 - remaining_entitlement: none known
 - monitor_action: suppress unless user explicitly re-enters a new exposure
+
+## Completed after missed reminder incident
+
+### UNICRED #230 unstake / unlock
+- event_key: unicred:230:unstake_unlock:2026-10-01
+- state: COMPLETED_BY_USER
+- completion_date: 2026-10-01
+- reminder_expected: yes
+- reminder_delivered: no
+- backfill: forbidden
+- incident_cause: user had provided the future action in conversation, but it was not persisted into this existing known-events state, so the rights monitor had no durable event to evaluate
+- remediation: future explicitly dated actions already inside this monitor's existing rights scope must be written into this file; do not create a new monitor or new monitoring mechanism
+- repeat_policy: suppress; user already completed the action
 
 ## Delivered / known event keys
 
