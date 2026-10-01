@@ -16,6 +16,16 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - remaining_entitlement: none known
 - monitor_action: suppress unless user explicitly re-enters a new exposure
 
+## Completed / suppress
+
+### UNICRED #230 unstake/unlock
+- event_key: unicred:unstake_unlock:230:2026-10-01
+- state: COMPLETED_NO_REMAINING_ACTION
+- effective_date: 2026-10-01
+- source_type: user_confirmed
+- remaining_entitlement: no unresolved unstake/unlock action known
+- monitor_action: suppress; do not send T-24h/T-2h/overdue or backfill reminders for this completed event
+
 ## Delivered / known event keys
 
 ### HEEBOO claim open
