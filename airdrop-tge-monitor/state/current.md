@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
 
-Updated: 2026-10-01 21:46:01 Asia/Bangkok
+Updated: 2026-10-01 22:48:44 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-01 21:46:01 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-01 22:48:44 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-01 21:46:01 Asia/Bangkok
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
+- latest_authoritative_success: 2026-10-01 22:48:44 Asia/Bangkok
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
 - latest_stale_shard_recovery: false
 - latest_candidate_count: 0
 - latest_triggered_events: 0
@@ -25,6 +25,7 @@ Timezone: Asia/Bangkok
 - known_events_checked: true
 - due_action_windows: 0
 - completed events remain suppressed
+- UNICRED #230 2026-10-01 unstake/unlock: COMPLETED_NO_REMAINING_ACTION, suppress reminders
 - closed_scope_skipped: humans& via Echo/Alpen Capital
 
 ## Open urgent events
@@ -33,11 +34,11 @@ Timezone: Asia/Bangkok
 
 ## Latest successful run
 
-- run_path: airdrop-tge-monitor/runs/2026-10-01/214601-final.md
-- scheduled_shard: 1
-- executed_shard: 1
+- run_path: airdrop-tge-monitor/runs/2026-10-01/224844-final-retry.md
+- scheduled_shard: 2
+- executed_shard: 2
 - urgent_checked: Concrete, MetaMask, Claynosaurz, HEEBOO, Space (@intodotspace)
-- shard_projects_checked: Surf, ForecastFDN, Hylo, OnRe, Loopscale, Reflect, Tydro, Theo, Neutrl, Concrete
+- shard_projects_checked: Relay, Titan, Abstract, Reya, 01.xyz / 01 Exchange, N1, Figure AI, Pond / JoinPond, OhBabyGames, Claynosaurz, HEEBOO
 - result: no fresh Tier A or registry-mapped Tier B material delta requiring unresolved user action
 - candidate_count: 0
 - action_count: 0
@@ -48,7 +49,7 @@ Timezone: Asia/Bangkok
 
 ## Health
 
-- 2026-10-01 21:46:01 run completed with authoritative final persisted.
+- 2026-10-01 22:48:44 run completed with authoritative final-retry persisted after provisional-final SHA conflict.
 - ACTION_GATE, known-events, REGISTRY, MONITOR_SPEC and AUTOMATION_RUNTIME were read before monitoring.
 - No source or identity failures remained unresolved.
 - NO_ACTION remains silent.
