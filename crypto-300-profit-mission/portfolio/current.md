@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-10-01 after REV exit
+Updated: 2026-10-01 after SUI exit, UNICRED exit and Legion JUMP funding
 Timezone: Asia/Bangkok
 
 ## Accounting rule
@@ -9,15 +9,8 @@ Timezone: Asia/Bangkok
 - individual positions worth **< $1.00** are omitted from the displayed portfolio;
 - spam, claim-bait and unpriced unsolicited receipts are excluded;
 - unpriced known inventory can remain as a note but does not enter marked totals;
+- committed/pending allocation capital is tracked separately from liquid available balance;
 - this is an asset-completeness snapshot, not Mission PnL.
-
-## Private / off-chain — USER_CONFIRMED
-
-Binance Earn unchanged:
-- estimated total: **682.40 USDT-equivalent**
-- USDC: **382.27204197**
-- USDT: **300**
-- no active Binance trading position
 
 ## Canonical wallets
 
@@ -25,130 +18,134 @@ Binance Earn unchanged:
 - Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 - Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
+## Private / off-chain
+
+### Binance — USER_CONFIRMED
+
+Latest available balance:
+- **$523.72**
+
+This replaces the previous Binance Earn reference of $682.40.
+
+### Legion / JUMP — USER_CONFIRMED
+
+- submitted / reserved capital: **$1,000.00**
+- state: **PENDING_ALLOCATION**
+- final allocation: **not yet known**
+- accounting: track the full $1,000 as pending capital until Legion publishes the allocation/refund result; do not treat it as liquid available balance.
+
 ## Fresh liquid on-chain assets >= $1
 
-### USDC
-
-Fresh DIRECT_CHAIN:
-- Solana USDC: **523.709901**
-- Ethereum USDC: **400.308121**
-- directly decomposed subtotal: **924.018022 USDC**
-
-The latest wallet completeness snapshot had approximately **13.203224 USDC** outside the Ethereum + Solana balances. No non-Solana activity has been observed since that snapshot, so the inferred aggregate USDC completeness mark is:
-
-- **~937.221246 USDC**
-
-Known canonical USDC dust on Base / Arbitrum / Unichain etc. remains below $1 per chain and is omitted.
-
-### Sui
-
-USER_CONFIRMED unchanged:
-- SUI: **40.192929**
-- fresh SUIUSDT reference: **$1.1661**
-- marked value: **~$46.87**
-
-Current connector still lacks a usable direct Sui balance RPC; quantity therefore remains the latest user-confirmed canonical amount.
+Chain scan reference: 2026-10-01 around 13:45–13:50 UTC.
 
 ### Solana
 
 DIRECT_CHAIN finalized:
-- SOL: **0.023676412**
-- SOLUSDT reference: **$119.10**
-- marked value: **~$2.82**
-- USDC: **523.709901**
+- USDC: **108.626548**
+- USDC reference: ~$1.0003
+- marked value: **~$108.66**
 
-The temporary meme position with mint
-`C1mBfBoDkwWfd6uTFZp62ARHLjeVp3bDpCDMfMZtPngE`
-is now **fully closed**:
-- current balance: **0**
-- previous residue: **2,845.330357**
-- exit tx 1: `gi69QGEhAZ15ucUcUmKd5csq4EKT653b8EquhBgqDdSnqM6moj9dM3PKPKqErxNV2PTQEt6DVj413pgD45dh7Lh`
-  - sold **1,422.665178**
-  - swap leg produced **2.372119 USDC**
-- exit tx 2: `2Yu4fXVCKvRMcwmDxmBonEKc45r2YgxWWHeNJNSgdz5XAAs1gGnLMvsdrs9tcnihziiZkcpsF6M3zwjS6HML8Ekp`
-  - sold **1,422.665179**
-  - swap leg produced **0.01271088 SOL**
+Native SOL:
+- SOL: **0.003093645**
+- SOL reference: ~$117.92
+- marked value: **~$0.36**
+- omitted from displayed totals because it is below $1.
 
-Net wallet change versus the immediately preceding snapshot:
-- Solana USDC: **521.349642 -> 523.709901** = **+2.360259**
-- SOL: **0.011130612 -> 0.023676412** = **+0.012545800**
-- meme token: **2,845.330357 -> 0**
+No other currently observed standard SPL balance with a reliable value >=$1 is included.
 
-The meme position is removed from current holdings.
+### Ethereum USDC
 
-- 2026-10-01: **REV temporary meme position: CLOSED**; finalized token balance **0**.
+DIRECT_CHAIN:
+- USDC: **1.006555**
+- USDC reference: ~$1.0003
+- marked value: **~$1.01**
 
-No other fungible SPL / Token-2022 position with a reliable value >= $1 was identified.
+Known Base / Arbitrum / Optimism / Unichain / Linea USDC balances checked in this refresh are each below $1 and are omitted.
 
 ### EVM native ETH-family positions
 
-No user-reported EVM movement since the prior refresh. Canonical balances remain:
-- Ink ETH: **0.010389022090321585 ETH** = **~$27.94**
-- Ethereum ETH: **0.000850479068623404 ETH** = **~$2.29**
-- Base ETH: **0.000781411120038408 ETH** = **~$2.10**
+Fresh native balances:
+- Ink ETH: **0.010389022090321585 ETH** = **~$27.97**
+- Ethereum ETH: **0.000739940008393928 ETH** = **~$1.99**
+- Base ETH: **0.000967183780184779 ETH** = **~$2.60**
 
-ETH reference: **~$2,689.52**
+ETH reference used for mark: **~$2,692.45**.
 
 Directly confirmed ETH-family subtotal above the $1-per-chain threshold:
-- **~$32.33**
+- **~$32.57**
 
-Linea ETH, Unichain ETH, World Chain ETH, Robinhood Chain ETH, Optimism ETH, Arbitrum ETH, BNB, AVAX, POL, HYPE, MON and other gas/dust positions remain individually below $1 and are omitted.
+Linea ETH, Unichain ETH, Optimism ETH, Arbitrum ETH, BNB, AVAX, POL and other native gas balances remain individually below $1 and are omitted.
+
+### Sui
+
+USER_CONFIRMED:
+- **SUI balance for portfolio accounting: 0 / position fully cleared**
+- removed from current marked holdings.
 
 ## Material NFTs >= $1
 
 ### Credits — Ethereum
 
-Fresh DIRECT_CHAIN ownership:
-- **Credit #23232** — owned
-- **Credit #23042** — sold / no longer owned
+Fresh DIRECT_CHAIN ownership check:
+- **Credit #23232** — still owned by canonical EVM wallet
 
-Last reliable collection floor reference:
+Last reliable collection floor reference remains:
 - **~$65.37**
 
-Conservative NAV:
+Current floor lookup was unavailable in this refresh, so this is a stale-but-last-reliable reference, not a new market quote.
+
+Conservative marked value:
 - Credit #23232: **~$65.37**
-- no rarity premium added.
 
-### UNICRED #230 — Unichain
+### Removed / no longer current
 
-Fresh DIRECT_CHAIN ownership:
-- **UNICRED #230** — owned
-
-Last reliable collection floor reference:
-- **~$7.85**
-
-Conservative NAV:
-- UNICRED #230: **~$7.85**
+- **UNICRED #230**: removed from current portfolio. Fresh Unichain NFT ownership query returned no currently owned NFTs for the canonical EVM wallet after the user's completed operation.
+- Credit #23042: previously sold / no longer owned.
 
 ### Other inventory
 
 - INK #372 remains known Ink inventory, but there is no reliable current >=$1 market mark from the available connector, so it is excluded from marked totals.
-- The Solstice vesting-position NFT remains relevant to the separate Season 1 rights dispute; revoked 1,049.483713 SLX is not treated as liquid NAV.
-- Other Ethereum NFTs below $1 are omitted.
+- The Solstice vesting-position NFT remains relevant only to the separate Season 1 rights dispute; revoked 1,049.483713 SLX is not treated as liquid NAV.
+- Other NFTs below $1 are omitted.
 
 ## Current marked asset reference
 
-Filtered liquid on-chain positions >= $1:
-- inferred aggregate USDC completeness mark: **~$937.22**
-- SUI: **~$46.87**
-- SOL: **~$2.82**
-- EVM ETH-family positions >=$1: **~$32.33**
-- temporary Solana meme: **$0 / CLOSED**
+### Liquid / available
 
-**Filtered liquid subtotal: ~ $1,019.24**
+- Binance available balance: **$523.72**
+- Solana USDC: **~$108.66**
+- Ethereum USDC: **~$1.01**
+- EVM ETH-family positions >=$1: **~$32.57**
 
-Material NFTs:
+**Liquid / available subtotal: ~ $665.95**
+
+### Pending allocation capital
+
+- Legion / JUMP pending allocation: **$1,000.00**
+
+### Marked NFT
+
 - Credit #23232: **~$65.37**
-- UNICRED #230: **~$7.85**
 
-**Material NFT subtotal: ~ $73.22**
+### Total tracked asset reference
 
-**Filtered on-chain + marked NFTs: ~ $1,092.46**
+**~ $1,731.32**
 
-Add unchanged Binance Earn:
-- **$682.40**
+Previous tracked asset reference:
+- **~$1,774.86**
 
-**Total tracked asset reference: ~ $1,774.86**
+Reference delta:
+- **~ -$43.54**
+
+User reported today's loss as approximately **$50**. The tracked-reference delta is broadly consistent, but it is not a precise realized-PnL calculation because Credit #23232 is still marked using the last reliable floor reference and some sub-$1 dust is intentionally excluded.
+
+## Current state notes
+
+- SUI: **cleared / 0**.
+- UNICRED #230: **removed from current holdings**.
+- Legion / JUMP: **$1,000 pending allocation; waiting for Legion allocation result**.
+- Binance: **$523.72 latest user-confirmed balance**.
+- Positions below $1 remain excluded by rule.
 
 ## Monitoring policy
 
