@@ -16,19 +16,6 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - remaining_entitlement: none known
 - monitor_action: suppress unless user explicitly re-enters a new exposure
 
-## Completed after missed reminder incident
-
-### UNICRED #230 unstake / unlock
-- event_key: unicred:230:unstake_unlock:2026-10-01
-- state: COMPLETED_BY_USER
-- completion_date: 2026-10-01
-- reminder_expected: yes
-- reminder_delivered: no
-- backfill: forbidden
-- incident_cause: user had provided the future action in conversation, but it was not persisted into this existing known-events state, so the rights monitor had no durable event to evaluate
-- remediation: future explicitly dated actions already inside this monitor's existing rights scope must be written into this file; do not create a new monitor or new monitoring mechanism
-- repeat_policy: suppress; user already completed the action
-
 ## Delivered / known event keys
 
 ### HEEBOO claim open
@@ -46,7 +33,7 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 ### Surf Season 1 referral rewards claim
 - event_key: surf:season1_referral_claim_open:2026-09-12
 - delivery_status: delivered
-- gmail_message_id: 1a09260ad0c0ca4b
+- gmail_message_id: 1a09260ad0c0ca4
 - repeat_policy: suppress unchanged claim reminders
 
 ### MetaMask Money Sweepstakes registration
