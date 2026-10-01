@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
 
-Updated: 2026-10-02 02:54:54 Asia/Bangkok
+Updated: 2026-10-02 03:48:11 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-02 02:54:54 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-02 03:48:11 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-02 02:54:54 Asia/Bangkok
-- latest_scheduled_shard: 2
-- latest_executed_shard: 2
+- latest_authoritative_success: 2026-10-02 03:48:11 Asia/Bangkok
+- latest_scheduled_shard: 3
+- latest_executed_shard: 3
 - latest_stale_shard_recovery: false
 - latest_candidate_count: 0
 - latest_triggered_events: 0
@@ -34,11 +34,11 @@ Timezone: Asia/Bangkok
 
 ## Latest successful run
 
-- run_path: airdrop-tge-monitor/runs/2026-10-02/025454-final.md
-- scheduled_shard: 2
-- executed_shard: 2
+- run_path: airdrop-tge-monitor/runs/2026-10-02/034811-final.md
+- scheduled_shard: 3
+- executed_shard: 3
 - urgent_checked: Concrete, MetaMask, Claynosaurz, HEEBOO, Space (@intodotspace)
-- shard_projects_checked: Relay, Titan, Abstract, Reya, 01.xyz / 01 Exchange, N1, Figure AI, Pond / JoinPond, OhBabyGames, Claynosaurz, HEEBOO
+- shard_projects_checked: Cambria, Crusoe, Apptronik, Thalassa Robotics, Fortytwo, Space (@intodotspace), 1X, Aalo Atomics, rTTOK / RepublicX / Republic
 - result: no fresh Tier A or registry-mapped Tier B material delta requiring unresolved user action
 - candidate_count: 0
 - action_count: 0
@@ -49,7 +49,7 @@ Timezone: Asia/Bangkok
 
 ## Health
 
-- 2026-10-02 02:54:54 run completed with authoritative final persisted.
+- 2026-10-02 03:48:11 run completed with authoritative final persisted.
 - ACTION_GATE, known-events, REGISTRY, MONITOR_SPEC and AUTOMATION_RUNTIME were read before monitoring.
 - No source or identity failures remained unresolved.
 - NO_ACTION remains silent.
