@@ -1,14 +1,15 @@
 # Airdrop / TGE Monitor State
 
-Updated: 2026-09-29 23:09:51 Asia/Bangkok
+Updated: 2026-10-01 20:51:52 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
-- expected_schedule: hourly at minute 14, exact_schedule
-- latest_actual_scheduler_run: 2026-09-29 23:09:22 Asia/Bangkok
+- expected_schedule: hourly at minute 50
+- latest_actual_scheduler_run: 2026-10-01 20:51:52 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-09-29 23:09:22 Asia/Bangkok
-- latest_scheduled_shard: 3
+- latest_authoritative_success: 2026-10-01 20:51:52 Asia/Bangkok
+- latest_scheduled_shard: 0
+- latest_executed_shard: 0
 - latest_stale_shard_recovery: false
 - latest_candidate_count: 0
 - latest_triggered_events: 0
@@ -17,43 +18,37 @@ Timezone: Asia/Bangkok
 - latest_source_failures: 0
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: silent
-- regression_baseline: 16/16 preserved
 - delivery_proof_policy: Gmail Sent message id + readback + event archive
+
+## Durable known-events
+
+- known_events_checked: true
+- due_action_windows: 0
+- closed_scope_skipped: humans& via Echo/Alpen Capital
 
 ## Open urgent events
 
-- project: Cambria
-  event: RSGP Genesis Event Opt-In
-  deadline: 2026-09-30T10:00:00+07:00
-  delivery_status: recovered_2026-09-27
-  gmail_message_id: 1a0e149fa6d9718a
-
-## Recovered rights event
-
-- project: Crusoe
-  event: Series F valuation change
-  official_date: 2026-09-17
-  financing: 3.9B USD
-  post_money_valuation: 30.9B USD
-  immediate_user_action: none_confirmed
-  delivery_status: recovered_2026-09-28
-  gmail_message_id: 1a0e801b313706a0
+- none requiring user action in this run
 
 ## Latest successful run
 
-- run_path: airdrop-tge-monitor/runs/2026-09-29/230922-final.md
-- scheduled_shard: 3
+- run_path: airdrop-tge-monitor/runs/2026-10-01/205152-final-retry.md
+- scheduled_shard: 0
+- executed_shard: 0
 - urgent_checked: Concrete, MetaMask, Claynosaurz, HEEBOO, Space (@intodotspace)
-- shard_projects_checked: Cambria, Crusoe, Apptronik, Thalassa Robotics / Thalassa Inc., Fortytwo, Space (@intodotspace), 1X, Aalo Atomics, rTTOK / RepublicX / Republic
-- closed_scope_skipped: humans& via Echo/Alpen Capital
+- shard_projects_checked: Block Stranding, Base, OpenSea, Polymarket, StandX, Perena, TurboFlow, MetaMask, Makina, Rho
 - result: no fresh Tier A or registry-mapped Tier B material delta requiring user action
+- candidate_count: 0
+- action_count: 0
+- identity_failures: 0
+- source_failures: 0
 - gmail_attempted: false
 - gmail_sent: false
 
 ## Health
 
-- 2026-09-29 23:09 run completed successfully with final state persisted.
-- ACTION_GATE, known-events, REGISTRY, MONITOR_SPEC and runtime rules were read successfully.
-- No source failures or identity failures were recorded in the latest successful run.
-- Historical future-dated invalid artifacts remain non-authoritative and are ignored for coverage.
-- Pending ACTION delivery survives later NO_ACTION runs until delivery proof exists.
+- 2026-10-01 20:51:52 run completed with authoritative final-retry persisted.
+- ACTION_GATE, known-events, REGISTRY, MONITOR_SPEC and AUTOMATION_RUNTIME were read before monitoring.
+- Initial provisional final create was blocked by a tool safety check; final-retry was created immediately and updated successfully.
+- No source or identity failures remained unresolved.
+- NO_ACTION remains silent.
