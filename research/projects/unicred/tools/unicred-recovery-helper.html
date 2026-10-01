@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UNICRED Recovery Helper</title><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:760px;margin:36px auto;padding:0 18px;line-height:1.55}button,input{font-size:15px;padding:10px 12px;margin:6px 6px 6px 0;border-radius:8px;border:1px solid #bbb}button{cursor:pointer;background:#fff}button:disabled{opacity:.5}#log{white-space:pre-wrap;background:#111;color:#eee;padding:14px;border-radius:10px;min-height:180px}.box{border:1px solid #ddd;border-radius:10px;padding:16px;margin:16px 0}.wallets{display:flex;flex-wrap:wrap;gap:8px}</style></head>
+<body>
+<h2>UNICRED NFT Recovery Helper</h2>
+<div class="box">Unichain Mainnet · Chain ID 130<br>Contract: <code>0xf60de24f228dc7ca6ff025958d2ee3a956ed88e5</code></div>
+<div class="box"><label>Token ID: <input id="tokenId" type="number" min="0" step="1"></label></div>
+<div class="box"><b>Wallet</b><div id="wallets" class="wallets">Detecting wallets…</div></div>
+<button id="check" disabled>Check owner</button><button id="claim" disabled>Claim rewards</button><button id="unstake" disabled>Unstake NFT</button>
+<div id="log">Choose wallet and enter Token ID.</div>
+<script>
+const C='0xf60de24f228dc7ca6ff025958d2ee3a956ed88e5';let p=null,a=null;const ps=new Map();
+const log=s=>document.getElementById('log').textContent+='\n'+s;const setlog=s=>document.getElementById('log').textContent=s;
+function tid(){const v=document.getElementById('tokenId').value.trim();if(v==='')throw Error('Enter Token ID');return BigInt(v)}function word(n){return n.toString(16).padStart(64,'0')}function arr(sel){return '0x'+sel+word(32n)+word(1n)+word(tid())}
+function name(x,i){if(i?.name)return i.name;if(x?.isRabby)return'Rabby';if(x?.isOkxWallet||x?.isOKExWallet)return'OKX Wallet';if(x?.isMetaMask)return'MetaMask';return'EVM Wallet'}function key(x,i){return i?.uuid||i?.rdns||(x?.isRabby?'rabby':x?.isOkxWallet?'okx':x?.isMetaMask?'metamask':'p'+ps.size)}
+function add(x,i={}){if(!x||typeof x.request!=='function')return;const k=key(x,i);if(!ps.has(k)){ps.set(k,{x,i,k});render()}}function render(){const e=document.getElementById('wallets');e.innerHTML='';for(const {x,i,k} of ps.values()){const b=document.createElement('button');b.textContent=name(x,i);b.onclick=()=>connect(k).catch(z=>log('❌ '+z.message));e.appendChild(b)}}
+window.addEventListener('eip6963:announceProvider',e=>add(e.detail.provider,e.detail.info));window.dispatchEvent(new Event('eip6963:requestProvider'));setTimeout(()=>{if(window.ethereum?.providers)for(const x of window.ethereum.providers)add(x);else if(window.ethereum)add(window.ethereum);if(window.okxwallet)add(window.okxwallet,{name:'OKX Wallet'});if(window.rabby)add(window.rabby,{name:'Rabby'})},300);
+async function chain(){const id=await p.request({method:'eth_chainId'});if(id==='0x82')return;try{await p.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x82'}]})}catch(e){if(e.code===4902)await p.request({method:'wallet_addEthereumChain',params:[{chainId:'0x82',chainName:'Unichain',nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},rpcUrls:['https://mainnet.unichain.org'],blockExplorerUrls:['https://uniscan.xyz']}]});else throw e}}
+async function connect(k){const o=ps.get(k);p=o.x;setlog('Connecting '+name(o.x,o.i)+'…');const xs=await p.request({method:'eth_requestAccounts'});a=xs[0];await chain();log('Connected: '+a);['check','claim','unstake'].forEach(id=>document.getElementById(id).disabled=false)}
+async function call(data){return p.request({method:'eth_call',params:[{from:a,to:C,data},'latest']})}async function send(data,label){await call(data);log(label+': simulation passed');const h=await p.request({method:'eth_sendTransaction',params:[{from:a,to:C,data,value:'0x0'}]});log(label+' tx: '+h)}
+async function check(){const r=await call('0x6352211e'+word(tid()));const owner='0x'+r.slice(-40);log('ownerOf('+tid()+') = '+owner);if(owner.toLowerCase()===a.toLowerCase())log('✅ NFT is in connected wallet')}
+document.getElementById('check').onclick=()=>check().catch(e=>log('❌ '+e.message));document.getElementById('claim').onclick=()=>send(arr('925489a8'),'claimMany').catch(e=>log('❌ '+e.message));document.getElementById('unstake').onclick=()=>send(arr('e449f341'),'unstake').catch(e=>log('❌ '+e.message));
+</script></body></html>
