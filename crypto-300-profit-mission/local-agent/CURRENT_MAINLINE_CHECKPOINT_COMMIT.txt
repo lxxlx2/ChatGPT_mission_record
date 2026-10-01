@@ -1,0 +1,1 @@
+Checkpoint file CURRENT_MAINLINE_CHECKPOINT.md was first created by commit 1d05a311c86dc4a83debd51a3ad35349f564688f on branch codex/crypto-monitor-design-20260930. This marker exists only to make that checkpoint commit identity durable and easy to recover. The FM3 implementation prompt has NOT been sent to Codex as of this checkpoint.

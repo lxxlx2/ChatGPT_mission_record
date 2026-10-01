@@ -1,0 +1,1 @@
+Final sync marker. Canonical content is CURRENT_MAINLINE_CHECKPOINT.md. Latest FM3 prompt remains NOT SENT / NOT EXECUTED.
