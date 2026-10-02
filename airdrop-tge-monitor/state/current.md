@@ -5,19 +5,20 @@ Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-02 13:51:03 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-02 14:45:23 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-02 13:51:03 Asia/Bangkok
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
+- latest_authoritative_success: 2026-10-02 14:45:23 Asia/Bangkok
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-02/144523-final.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
 - latest_stale_shard_recovery: false
 - latest_candidate_count: 1
-- latest_triggered_events: 1
-- latest_unverified_candidates: 0
+- latest_triggered_events: 0
+- latest_unverified_candidates: 1
 - latest_identity_failures: 0
 - latest_source_failures: 0
-- latest_notification_decision: ACTION_DELIVERED_ONCE
-- latest_notification_status: delivered_once_then_deduped
+- latest_notification_decision: NO_ACTION
+- latest_notification_status: silent
 
 ## Durable known-events
 
@@ -30,17 +31,19 @@ Timezone: Asia/Bangkok
 
 ## Open urgent events
 
-- Concrete CT claim-open was delivered once at 2026-10-02 13:51 Asia/Bangkok. It had already been open earlier; the user allows one first notification even when discovery is late, provided the event is still current/open and Tier A/B verified. Future unchanged repeats are suppressed.
+- No new ACTION passed ACTION_GATE in the latest run.
+- Concrete CT claim-open remains already delivered once and unchanged.
+- A secondary-source mention of a possible Additional USDC Allocation / future claim window was found, but no Tier A/B proof was obtained in this run; it remains UNVERIFIED_CANDIDATE and produced no notification.
 
-## Policy correction
+## Policy
 
-- The temporary hard rule `discovery lag >2h => MISSED_TIMELINESS_WINDOW => NO_ACTION` has been removed.
-- Current policy: late first discovery may notify once if the event is still current/open, relevant, and verified by Tier A/B.
-- The alert must not imply that the event just opened when it opened earlier.
-- After one delivered alert for the stable event key, unchanged reminders are suppressed; only a new material Tier A/B delta may alert again.
+- Late first discovery may notify once only when the event remains current/open, user-relevant, and Tier A/B verified.
+- Stable event keys already delivered are permanently suppressed absent a new material Tier A/B delta.
+- User-confirmed completed/closed/refunded/suppressed state outranks later discovery results.
 
 ## Health
 
-- Scheduler persistence for the 13:51 run was successful.
-- Concrete CT delivery remains valid as the one allowed first notification under current user policy.
-- Future runs must enforce stable event-key dedupe and material-delta-only re-alerting.
+- Latest final audit completed successfully.
+- Known-events were processed before discovery.
+- Urgent set and Shard 2 completed without unresolved source or identity failures.
+- No Gmail or ChatGPT notification was attempted because triggered_events=0.
