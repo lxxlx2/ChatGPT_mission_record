@@ -3,9 +3,9 @@
 Updated: 2026-10-02 Asia/Bangkok
 Status: canonical pre-notification gate
 
-Purpose: prevent secondary-source alerts, stale/expired alerts, duplicate user-known events, already-completed actions, closed/refunded deal noise, and generic company-news alerts that do not change the user's rights.
+Purpose: prevent secondary-source alerts, expired alerts, duplicate user-known events, already-completed actions, closed/refunded deal noise, and generic company-news alerts that do not change the user's rights.
 
-Every candidate must pass ALL mandatory gates before Gmail/ChatGPT notification.
+Every candidate must pass ALL mandatory gates before Gmail notification.
 
 ## Gate 0 — Active scope
 
@@ -33,7 +33,7 @@ D — discovery-only community/KOL/aggregator.
 
 A user-facing ACTION requires Tier A or Tier B. Tier C/D can discover or corroborate but cannot authorize ACTION by themselves.
 
-## Gate 3 — Event freshness and timeliness
+## Gate 3 — Event freshness and first-alert policy
 
 Persist:
 - source_published_at;
@@ -44,13 +44,13 @@ Persist:
 
 Rules:
 1. Past deadline/closed action is NO_ACTION unless a NEW Tier A/B update explicitly reopens or extends it.
-2. Old announcements resurfaced by search are NO_ACTION when no material event field changed.
-3. Undated/static pages can confirm state but cannot create a NEW ACTION event.
-4. For claim-open / registration-open / TGE-live / listing-live / unlock-live events, a plain "opened/live" alert is timely only when first discovered within 2 hours of the canonical first-party publication/effective time.
-5. If discovery lag is >2 hours, do NOT send a late "now live/open" alert merely because the action is still open. Record `MISSED_TIMELINESS_WINDOW` internally and suppress user notification.
-6. Late discovery may override rule 5 only when a NEW Tier A/B fact creates immediate entitlement risk, for example a confirmed deadline within the next 24 hours, a newly announced eligibility cutoff, a route replacement that invalidates the old route, or a user-specific allocation/settlement change. The alert must be about that new material delta, not about the stale opening event.
-7. A stale-recovery shard/run may never convert an old unchanged opening event into a fresh ACTION.
-8. Generic historical pages with no current material delta are archive-only.
+2. Old announcements resurfaced by search are NO_ACTION when the action is no longer current/open or no plausible unresolved user right remains.
+3. Undated/static pages can confirm state but cannot by themselves create a NEW ACTION event unless another Tier A/B source establishes that the action is currently open.
+4. For claim-open / registration-open / TGE-live / listing-live / unlock-live events, late discovery does NOT by itself suppress the first alert. If Tier A/B confirms the action is still current/open and the user may still have an unresolved right/action, one user-facing notification is allowed even when discovery lag exceeds 2 hours.
+5. The first alert must disclose the actual status without pretending it just opened. If source timing is known, include that it opened earlier / was announced earlier and give the source time/date where useful.
+6. After the first delivered notification for a stable event key, unchanged reminders are permanently suppressed. A second notification requires a material Tier A/B delta such as deadline/time change, eligibility change, allocation/amount change, route replacement, tokenomics change, listing venue/time change, refund/settlement status change, reopen/extension, or another user-rights change.
+7. A stale-recovery shard/run may send the one allowed first alert only if Rules 1-5 pass and no prior delivered notification exists for that stable event key.
+8. Generic historical pages with no current/open action and no unresolved user relevance are archive-only.
 
 ## Gate 4 — User-known state
 
