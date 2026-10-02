@@ -5,12 +5,12 @@ Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-02 18:45:32 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-02 19:50:36 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-02 18:45:32 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-02/184532-final.md
-- latest_scheduled_shard: 2
-- latest_executed_shard: 2
+- latest_authoritative_success: 2026-10-02 19:50:36 Asia/Bangkok
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-02/195036-final.md
+- latest_scheduled_shard: 3
+- latest_executed_shard: 3
 - latest_stale_shard_recovery: false
 - latest_candidate_count: 0
 - latest_triggered_events: 0
@@ -48,5 +48,5 @@ Timezone: Asia/Bangkok
 
 - Latest final audit completed successfully.
 - Known-events were processed before discovery.
-- Urgent set and Shard 2 completed without unresolved source or identity failures.
+- Urgent set and Shard 3 completed without unresolved source or identity failures.
 - No Gmail or ChatGPT notification was attempted because triggered_events=0.
