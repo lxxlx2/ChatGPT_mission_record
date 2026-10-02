@@ -2,6 +2,7 @@
 import argparse
 import fcntl
 import gzip
+import hashlib
 import json
 import os
 import re
@@ -12,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from mission_agent.db.repository import Repository
 from mission_agent.frank.collector import FrankCollector
-from mission_agent.frank.parser import normalize
+from mission_agent.frank.parser import normalize,PARSER_VERSION
 from mission_agent.frank.rpc import SolanaRPC
 from mission_agent.frank.archive import publish as archive
 from mission_agent.hashing import canonical, loads
@@ -79,7 +80,11 @@ def transport_once(root, run_id):
             sig=value['payload']['signature']
             row=repo.db.execute('SELECT t.evidence_json FROM frank_transactions t JOIN frank_observations o USING(signature) WHERE t.signature=?',(sig,)).fetchone()
             if row is None or loads(row[0])['mechanical_classification']!='ACTIVE_SWAP_LIKE':raise ValueError('REAL_FORWARD_ACTIVE_OBSERVATION_REQUIRED')
-            if not (root/'raw'/(sig+'.json.gz')).is_file():raise ValueError('REAL_FORWARD_RAW_REQUIRED')
+            raw_path=root/'raw'/(sig+'.json.gz')
+            if not raw_path.is_file():raise ValueError('REAL_FORWARD_RAW_REQUIRED')
+            evidence=loads(row[0])
+            if normalize(sig,json.loads(gzip.decompress(raw_path.read_bytes())))!=evidence:raise ValueError('FORWARD_RAW_NORMALIZED_BINDING_REQUIRED')
+            if value['payload']['active_evidence']['evidence_sha256']!=evidence['evidence_sha256']:raise ValueError('FORWARD_CANDIDATE_EVIDENCE_BINDING_REQUIRED')
         transport = ForwardTransport(run_id)
         try: expected = transport.read(transport.branch, transport.namespace + '/ingest/current.json').blob_sha
         except RemoteError as exc:
@@ -100,7 +105,7 @@ def transport_once(root, run_id):
             detected, normalized = map(float, row)
             created = datetime.fromisoformat(value['created_at_utc'].replace('Z', '+00:00')).timestamp()
             latencies.append({'signature': sig, 'detection_seconds': detected - payload['block_time'],
-                'normalization_seconds': normalized - detected, 'candidate_seconds': max(0, created - normalized),
+                'normalization_seconds': normalized - detected, 'candidate_seconds': created - normalized,
                 'transport_seconds': completed - created, 'total_e2e_seconds': completed - payload['block_time']})
         result = {'status': 'PASS_REAL_ACTIVE_PRIVATE_E2E', 'namespace': transport.namespace,
             'completed_at': utc(), 'batch_id': batch['batch_id'], 'items': batch['item_count'],
@@ -125,8 +130,11 @@ def history_loop(root, stopping):
     history=Path('/Users/jerson/Documents/ChatGPT/crypto-monitor-fm2-evidence-20260930/frank/backfill')
     snapshot=Path('/Users/jerson/Documents/ChatGPT/crypto-monitor-fm1-evidence-20260930/frank')
     while not stopping.is_set():
+        health_path=root/'health.json'
+        if not health_path.exists() or json.loads(health_path.read_text()).get('pid')!=os.getpid() or json.loads(health_path.read_text()).get('status')!='RUNNING':
+            stopping.wait(1);continue
         with (root/'history-worker.log').open('ab') as log:
-            proc=subprocess.Popen([str(module/'.venv/bin/python'),'-m','scripts.frank_backfill','--snapshot',str(snapshot),'--root',str(history),'--seconds','300','--forward-health',str(root/'health.json')],cwd=module,stdout=log,stderr=log,start_new_session=True)
+            proc=subprocess.Popen(['/usr/bin/nice','-n','15',str(module/'.venv/bin/python'),'-m','scripts.frank_backfill','--snapshot',str(snapshot),'--root',str(history),'--seconds','300','--forward-health',str(root/'health.json')],cwd=module,stdout=log,stderr=log,start_new_session=True)
             while proc.poll() is None and not stopping.wait(1): pass
             if proc.poll() is None:
                 proc.terminate()
@@ -161,7 +169,7 @@ def main():
     for sig in (signal.SIGTERM, signal.SIGINT): signal.signal(sig, lambda *_: stopping.set())
     old = json.loads((a.root / 'health.json').read_text()) if (a.root / 'health.json').exists() else {}
     run_id = old.get('run_id', datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ'))
-    health = {'status':'STARTING','identifier':IDENTIFIER,'run_id':run_id,'started_at':utc(),
+    health = {'status':'STARTING','service_source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'parser_version':PARSER_VERSION,'identifier':IDENTIFIER,'run_id':run_id,'started_at':utc(),
         'first_started_at':old.get('first_started_at',utc()), 'pid':os.getpid(), 'restart_count':old.get('restart_count',-1)+1,
         'poll_count':old.get('poll_count',0),'request_count':old.get('request_count',0), 'rpc_429_count':old.get('rpc_429_count',0),
         'rpc_error_count':old.get('rpc_error_count',0),'timeouts':old.get('timeouts',0),'retry':old.get('retry',0),
@@ -171,7 +179,7 @@ def main():
         'historical_network_backfill':'BOUNDED300S_IDLE_WINDOW_ONLY', 'gmail':0,'app_alert':0,'automation_mutations':0,'production_writes':0}
     totals = {k:health[k] for k in ('request_count','rpc_429_count','rpc_error_count','timeouts','retry')}
     repo = Repository(a.root / 'forward.sqlite'); rpc = ObservedRPC()
-    collector = FrankCollector(repo,a.root / 'raw', {k:str(getattr(a,k)) for k in ('manual','raw','processed')},rpc)
+    collector = FrankCollector(repo,a.root / 'raw', {k:str(getattr(a,k)) for k in ('manual','raw','processed')},rpc,durable_detection=True)
     if collector.store.cursor() is None:
         for path in sorted((a.processed / 'normalized500').glob('*.json.gz')): collector.store.put(json.loads(gzip.decompress(path.read_bytes())))
         latest = rpc.signatures(limit=1)[0]; tx = rpc.transaction(latest['signature'])
@@ -199,9 +207,10 @@ def main():
         snapshot_health(repo,health)
         transport_health = a.root / 'transport-health.json'
         if transport_health.exists(): health['private_transport_status'] = json.loads(transport_health.read_text())['status']
-        health['active_e2e_status'] = 'FRANK_ACTIVE_E2E_PASS' if health['private_transport_status']=='PASS_REAL_ACTIVE_PRIVATE_E2E' else 'FRANK_ACTIVE_E2E_WAITING_REAL_EVENT'
+        verified = any(p.name!='transport-health.json' and json.loads(p.read_text()).get('status')=='PASS_REAL_ACTIVE_PRIVATE_E2E' for p in a.root.glob('transport-*.json'))
+        health['active_e2e_status'] = 'FRANK_ACTIVE_E2E_PASS' if verified else 'FRANK_ACTIVE_E2E_WAITING_REAL_EVENT'
         health['poll_seconds'] = str(time.monotonic()-start); health['uptime_seconds'] = str(time.time()-datetime.fromisoformat(health['started_at']).timestamp()); atomic_json(a.root / 'health.json',health)
         stopping.wait(max(0,30-(time.monotonic()-start)))
-    health['status']='STOPPED';health['stopped_at']=utc();atomic_json(a.root / 'health.json',health);repo.close()
+    health['status']='STOPPED';health['stopped_at']=utc();atomic_json(a.root / 'health.json',health);history_worker.join(timeout=3);worker.join(timeout=1);repo.close()
 
 if __name__=='__main__':main()

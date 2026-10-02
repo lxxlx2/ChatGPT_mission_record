@@ -14,10 +14,13 @@ def verify_acceptance(acceptance):
     if result['FRANK_500_VALIDATED'] is not True:raise ValueError('FRANK_500_MANUAL_ACCEPTANCE_REQUIRED')
 
 class FrankCollector:
-    def __init__(self,repo,raw_root,acceptance,rpc=None):
+    def __init__(self,repo,raw_root,acceptance,rpc=None,*,durable_detection=False):
         verify_acceptance(acceptance)
         self.repo=repo
+        self.durable_detection=durable_detection
         self.store=FrankStore(repo);self.raw_root=Path(raw_root);self.raw_root.mkdir(parents=True,exist_ok=True,mode=0o700);self.rpc=rpc or SolanaRPC()
+        self.detection_root=self.raw_root.parent/'detections'
+        if durable_detection:self.detection_root.mkdir(parents=True,exist_ok=True,mode=0o700)
     def cycle(self):
         cursor=self.store.cursor();boundary=cursor['signature'] if cursor else None
         if boundary is None:raise ValueError('EXPLICIT_INITIAL_CURSOR_REQUIRED')
@@ -37,13 +40,21 @@ class FrankCollector:
             sig=row['signature']
             if sig in seen:duplicates+=1;continue
             seen.add(sig);path=self.raw_root/(sig+'.json.gz')
+            if self.durable_detection:
+                detected=self.detection_root/(sig+'.json')
+                if not detected.exists():
+                    from ..hashing import canonical
+                    publish(detected,canonical({'signature':sig,'detected_at':detection_times[sig]}))
+                receipt=json.loads(detected.read_bytes())
+                if receipt['signature']!=sig:raise ValueError('DETECTION_IDENTITY_CONFLICT')
+                detection_times[sig]=receipt['detected_at']
             if path.exists():tx=json.loads(gzip.decompress(path.read_bytes()))
             else:
                 tx=self.rpc.transaction(sig)
                 if tx is None:raise ValueError('UNAVAILABLE_ON_PUBLIC_RPC_CURSOR_NOT_ADVANCED')
                 # Durable archive before SQLite reference/cursor commit.
                 publish(path,gzip.compress(json.dumps(tx,separators=(',',':')).encode(),mtime=0))
-            evidence=normalize(sig,tx)
+            evidence=normalize(sig,tx);normalized_at=str(time.time())
             history=self.store.evidence();candidates=[];active_clusters=clusters(history+[evidence])
             owned={}
             for d in evidence['token_balance_deltas']:
@@ -55,7 +66,7 @@ class FrankCollector:
                 cluster=next((x for x in active_clusters if x['token']==mint and sig in x['signatures']),None)
                 c=build(evidence,d,cluster=cluster,recent_count=recent)
                 if c:candidates.append(c)
-            observation={'detected_at':detection_times[sig],'normalized_at':str(time.time())}
+            observation={'detected_at':detection_times[sig],'normalized_at':normalized_at}
             result=self.store.put(evidence,advance=True,candidates=candidates,observation=observation)
             if result=='INSERTED':candidate_count+=len(candidates)
             latencies.append({'signature':sig,'block_time':evidence['block_time'],**observation,'classification':evidence['mechanical_classification']})

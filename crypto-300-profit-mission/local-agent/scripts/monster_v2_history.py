@@ -61,7 +61,8 @@ def main():
   if conflicts:raise ValueError('CONFLICTING_CANDLES')
   target.parent.mkdir(parents=True,exist_ok=True);raw=gzip.compress(json.dumps([unique[t] for t in sorted(unique)],separators=(',',':')).encode(),mtime=0)
   from mission_agent.frank.archive import publish
-  publish(target,raw);rec={**p,'bars':len(unique),'bars_path':str(target),'receipts':receipts};publish(receipt,json.dumps(rec,separators=(',',':')).encode());return rec
+  from mission_agent.monster.archive import _publish_same
+  _publish_same(target,raw);rec={**p,'bars':len(unique),'bars_path':str(target),'receipts':receipts};publish(receipt,json.dumps(rec,separators=(',',':')).encode());return rec
  results=[]
  with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
   for r in pool.map(download,plans):

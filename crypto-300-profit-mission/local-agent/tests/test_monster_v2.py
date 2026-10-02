@@ -47,3 +47,28 @@ def test_chunked_replay_end_to_end_train_only(tmp_path,monkeypatch):
  assert len(reports)==243 and reports[0]['entity']['20']['events']==20
  assert reports[0]['entity']['20']['recall']==1 and reports[0]['entity']['20']['strict_before2']==0
  assert not (tmp_path/'validation-result.json').exists()
+ d2=replay.replay(tmp_path,'train',winner={'parameters':configurations()[0]},d2=True)
+ assert len(d2)==6 and all(r['entity']['20']['recall']==0 for r in d2) and all(r['median_entities_day']==0 for r in d2)
+
+def test_d2_priority_is_bounded_and_not_future_outcome():
+ from mission_agent.monster.structure_v1 import priority,choices
+ active=np.ones((2,5),bool);f=np.zeros((2,16));f[:,14]=200000;f[:,12]=1
+ score,paths=priority(active,f,np.array([0,0]),1,np.array([2]));assert score.tolist()==[85] and paths.sum()==5
+ assert len(choices())==6
+ f[:,15]=999999 # future outcomes are absent; changing price field alone cannot alter structure score.
+ score2,_=priority(active,f,np.array([0,0]),1,np.array([2]));np.testing.assert_equal(score,score2)
+
+
+def test_old_shell_uses_prior_narrow_state_and_proven_age_lower_bound():
+ bars=[[i*3600000,1,1.1,.9,1,1,1000,1] for i in range(2181)];bars[-1]=[2180*3600000,1,4,.9,3,1000,1000000,1000];btc={r[0]:1 for r in bars};f=features(bars,btc,None)
+ assert f[-1,12]==1 and f[-1,13]>=2160
+ ranks=np.full((1,5),np.nan);a=activations(f[-1:,:],ranks,configurations()[0]);assert a[0,2] and not a[0,3]
+
+def test_raw_candidate_hash_context_and_priority_contract():
+ from mission_agent.monster.candidate_v2 import build
+ from mission_agent.hashing import verify,canonical
+ f=np.zeros(16);f[13]=5000;f[14]=200000
+ p=build('BINANCE_BASE:X',['XUSDT'],['spot'],1609459200000,1609459200000,['VOLUME_IGNITION'],75,f,context='HISTORICAL_REPLAY');verify(p)
+ assert p['observation_context']=='HISTORICAL_REPLAY' and len(canonical(p))<=1500
+ assert all(k not in p for k in ['future_max','tier','buy_score','probability'])
+ with pytest.raises(ValueError,match='MECHANICAL_PRIORITY_RANGE'):build('X',[],[],0,0,[],101,f,context='FORWARD_SHADOW')

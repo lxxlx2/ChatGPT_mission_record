@@ -28,11 +28,11 @@ def features(bars,btc,verified_first=None):
     f[lag:,col]=np.where(contiguous,f[lag:,retcol]-(ref[lag:]/ref[:-lag]-1),np.nan)
   if n>4:f[4:,10]=f[4:,8]-f[:-4,8]
   high=rolling(x[:,2],168,'max');prior=np.r_[np.nan,high[:-1]];f[:,11]=close/prior-1
-  median=rolling(q,720,'median');hi=rolling(close,720,'max');lo=rolling(close,720,'min')
+  median=np.r_[np.nan,rolling(q,720,'median')[:-1]];hi=np.r_[np.nan,rolling(close,720,'max')[:-1]];lo=np.r_[np.nan,rolling(close,720,'min')[:-1]]
   f[:,12]=np.where(np.isfinite(median),(median<10000)&(hi/lo<2),np.nan)
-  if verified_first is not None:f[:,13]=(x[:,0]-verified_first)/HOUR
+  if verified_first is not None:f[:,13]=(x[:,0]+HOUR-verified_first)/HOUR
   else:
-   lower_bound=(x[:,0]-b[0,0])/HOUR
+   lower_bound=(x[:,0]+HOUR-b[0,0])/HOUR
    f[:,13]=np.where(lower_bound>=2160,lower_bound,np.nan)
   f[:,14]=q;f[:,15]=close
  return out

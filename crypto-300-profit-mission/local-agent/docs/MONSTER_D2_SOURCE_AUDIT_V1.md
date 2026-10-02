@@ -2,7 +2,7 @@
 
 Audit is source capability evidence, not a D2 performance PASS. All calls were public read-only Binance endpoints; no account or trade endpoint was used. Raw responses and official SHA256 sidecars are private.
 
-Actual probes returned data for current open interest, recent OI history, taker ratio, global ratio, top-account ratio and top-position ratio. BTCUSDT REST requests targeting January2021 returned four funding records and two mark/index bars each. A successful BTC probe does not establish coverage for every historical candidate.
+Actual probes returned data for current open interest, recent OI history, taker ratio, global ratio, top-account ratio and top-position ratio. BTCUSDT REST requests targeting January2021 returned four funding records and two mark/index bars each. A successful BTC probe does not establish coverage for every historical candidate. Five REST statistical probes explicitly targeting2021 (OI, taker, global, top-account, top-position) each returnedHTTP400; the error receipts are preserved separately from successful archive evidence.
 
 The current official REST documentation specifies short rolling retention for statistical endpoints including basis and OI statistics. These REST routes are therefore FORWARD_ONLY for the2021–2024 study; archived equivalents need separate coverage checks. [Official USD-M market-data documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data).
 
