@@ -9,9 +9,14 @@ from mission_agent.db.repository import Repository
 from mission_agent.hashing import canonical
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--root',type=Path,required=True);p.add_argument('--seconds',type=int,default=7500);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--root',type=Path,required=True);p.add_argument('--seconds',type=int,default=7500);p.add_argument('--forward-health',type=Path);a=p.parse_args()
  rows=[r for path in sorted(a.snapshot.glob('signatures-page-*.json')) for r in json.loads(path.read_text())];rows=list({r['signature']:r for r in rows}.values())
- a.root.mkdir(parents=True,exist_ok=True,mode=0o700);raw=a.root/'raw';raw.mkdir(exist_ok=True,mode=0o700);repo=Repository(a.root/('history-'+PARSER_VERSION+'.sqlite'));store=FrankStore(repo);rpc=SolanaRPC(min_interval=2);log=a.root/'progress.jsonl';seen={};stopping=False
+ a.root.mkdir(parents=True,exist_ok=True,mode=0o700)
+ import fcntl
+ lock=(a.root/'history.lock').open('a')
+ try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+ except BlockingIOError:return
+ raw=a.root/'raw';raw.mkdir(exist_ok=True,mode=0o700);repo=Repository(a.root/('history-'+PARSER_VERSION+'.sqlite'));store=FrankStore(repo);rpc=SolanaRPC(min_interval=2);log=a.root/'progress.jsonl';seen={};stopping=False
  if log.exists():
   for line in log.read_text().splitlines():
    r=json.loads(line)
@@ -31,6 +36,14 @@ def main():
    if old.exists():record=json.loads(gzip.decompress(old.read_bytes()))
    elif path.exists():record=json.loads(gzip.decompress(path.read_bytes()))
    else:
+    if a.forward_health:
+     from datetime import datetime,timezone
+     while not stopping and time.monotonic()-start<a.seconds:
+      health=json.loads(a.forward_health.read_text());last=health.get('last_poll_at');age=(datetime.now(timezone.utc)-datetime.fromisoformat(last)).total_seconds() if last else 999
+      # New requests start only just after a completed successful poll, with >=22s until next cadence.
+      if health.get('status')=='RUNNING' and 0<=age<8:break
+      time.sleep(1)
+     if stopping or time.monotonic()-start>=a.seconds:break
     tx=rpc.transaction(sig);record={'signature':sig,'status':'AVAILABLE' if tx is not None else 'UNAVAILABLE_ON_PUBLIC_RPC','transaction':tx};publish(path,gzip.compress(json.dumps(record,sort_keys=True,separators=(',',':'),allow_nan=False).encode(),mtime=0))
    if record['transaction'] is None:status='UNAVAILABLE'
    else:store.put(normalize(sig,record['transaction']));status='PARSED'
