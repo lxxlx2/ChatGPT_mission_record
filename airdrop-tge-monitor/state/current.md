@@ -5,12 +5,12 @@ Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-02 16:53:47 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-02 17:53:29 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-02 16:53:47 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-02/165347-final.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
+- latest_authoritative_success: 2026-10-02 17:53:29 Asia/Bangkok
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-02/175329-final.md
+- latest_scheduled_shard: 1
+- latest_executed_shard: 1
 - latest_stale_shard_recovery: false
 - latest_candidate_count: 0
 - latest_triggered_events: 0
@@ -28,6 +28,8 @@ Timezone: Asia/Bangkok
 - UNICRED #230 2026-10-01 unstake/unlock: COMPLETED_NO_REMAINING_ACTION
 - Concrete CT claim-open: DELIVERED_ONCE_LATE_DISCOVERY; unchanged repeats suppressed
 - HEEBOO claim-open: DELIVERED; unchanged repeats suppressed
+- Reflect USDC+ recovery claim: DELIVERED; unchanged repeats suppressed
+- Surf Season 1 referral rewards claim: DELIVERED; unchanged repeats suppressed
 - MetaMask Money Sweepstakes registration: DELIVERED; unchanged repeats suppressed
 - Cambria RSGP Genesis opt-in: DELIVERED_RECOVERY; unchanged repeats suppressed
 - closed_scope_skipped: humans& via Echo/Alpen Capital
@@ -46,5 +48,5 @@ Timezone: Asia/Bangkok
 
 - Latest final audit completed successfully.
 - Known-events were processed before discovery.
-- Urgent set and Shard 0 completed without unresolved source or identity failures.
+- Urgent set and Shard 1 completed without unresolved source or identity failures.
 - No Gmail or ChatGPT notification was attempted because triggered_events=0.
