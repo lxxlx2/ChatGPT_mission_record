@@ -26,17 +26,14 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - remaining_entitlement: no unresolved unstake/unlock action known
 - monitor_action: suppress; do not send T-24h/T-2h/overdue or backfill reminders
 
+## Delivered / known event keys
+
 ### Concrete CT claim-open
 - event_key: concrete:ct_claim_open:2026-09-30
-- state: USER_SUPPRESSED_STALE_ALERT
-- effective_date: 2026-10-02
-- source_type: user_confirmed feedback after late alert
-- delivery_status: delivered_late_then_suppressed
+- delivery_status: delivered_once_late_discovery
 - gmail_message_id: 1a0fb623103c8948
-- reason: claim had already been live for many hours before the monitor notified; user explicitly requested this stale claim-open alert be removed
-- monitor_action: suppress unchanged CT claim-open reminders permanently; only a genuinely new Tier A material delta may be evaluated under ACTION_GATE, and late discovery cannot itself become ACTION
-
-## Delivered / known event keys
+- user_policy: one notification is acceptable even if first discovery is late, provided Tier A/B confirms the action is still current/open and plausibly relevant
+- repeat_policy: suppress unchanged CT claim-open reminders after this delivery; only a genuinely new Tier A/B material delta may re-alert
 
 ### HEEBOO claim open
 - event_key: heeboo:claim_open:2026-09-10
