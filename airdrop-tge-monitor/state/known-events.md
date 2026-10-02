@@ -1,10 +1,10 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-10-01 Asia/Bangkok
+Updated: 2026-10-02 Asia/Bangkok
 
-Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
+Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
-Hard scope rule: do not create a new monitor/task/file for a user-specific future action. If the user explicitly gives a date/time for an action that is already within this existing rights-monitor scope (claim, unstake, unlock, vesting, refund, settlement, opt-in or similar), record it here as an unresolved known event so the existing monitor can act on it. No new monitoring scope may be added without explicit user authorization.
+Hard scope rule: do not create a new monitor/task/file for a user-specific future action. If the user explicitly gives a date/time for an action already within this existing rights-monitor scope, record it here as an unresolved known event so the existing monitor can act on it. No new monitoring scope may be added without explicit user authorization.
 
 ## CLOSED / no remaining rights
 
@@ -24,7 +24,17 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - effective_date: 2026-10-01
 - source_type: user_confirmed
 - remaining_entitlement: no unresolved unstake/unlock action known
-- monitor_action: suppress; do not send T-24h/T-2h/overdue or backfill reminders for this completed event
+- monitor_action: suppress; do not send T-24h/T-2h/overdue or backfill reminders
+
+### Concrete CT claim-open
+- event_key: concrete:ct_claim_open:2026-09-30
+- state: USER_SUPPRESSED_STALE_ALERT
+- effective_date: 2026-10-02
+- source_type: user_confirmed feedback after late alert
+- delivery_status: delivered_late_then_suppressed
+- gmail_message_id: 1a0fb623103c8948
+- reason: claim had already been live for many hours before the monitor notified; user explicitly requested this stale claim-open alert be removed
+- monitor_action: suppress unchanged CT claim-open reminders permanently; only a genuinely new Tier A material delta may be evaluated under ACTION_GATE, and late discovery cannot itself become ACTION
 
 ## Delivered / known event keys
 
