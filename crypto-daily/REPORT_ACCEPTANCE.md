@@ -1,6 +1,6 @@
 # Crypto Daily Acceptance Gate
 
-Updated: 2026-10-01 Asia/Bangkok
+Updated: 2026-10-02 Asia/Bangkok
 Status: canonical pre-delivery QA
 
 The official Crypto Daily can be sent only when all hard gates pass.
@@ -64,35 +64,25 @@ Compare against trailing 5 latest complete formal reports:
 ## CR-13 User-visible cleanliness
 Monitoring-health details, run failures, “QA passed”, internal classification mechanics and persistence plumbing stay out of the report body.
 
-The following belong only in the internal run audit, never in the user-visible report:
+Audit-only, never user-visible:
 - why an item was omitted;
 - why an old item is not repeated;
 - why a closed/refunded item is no longer monitored;
 - why a section was intentionally left sparse;
 - source-coverage/process explanations;
-- statements such as “不重复”“不填充”“不占用监控”“不写具体数字”“此前已提醒所以不再处理”“本报告其余类别不做填充”.
+- scheduler/Gmail/GitHub/recovery/prebuild/pending/canonical details.
 
 If there is genuinely no decision-relevant update for a section, use one short neutral line such as `无高置信新增。` and nothing more.
 
 ## CR-14 One logical event = one user-visible item
 Before delivery, every numbered item must be assigned an internal `event_key`.
-
-Rules:
-- one logical event should normally appear as one numbered item;
-- do not split one event into a factual bullet plus a second bullet whose only purpose is to qualify/caveat the first;
-- status + caveat + next checkpoint for the same event must be merged into the same item;
-- two adjacent items with the same `event_key` are an automatic QA failure unless they are truly independent actions for the user.
-
-Example of a failure: `Bitget plans USDT recovery` as item 1 and `do not treat planned recovery as completed` as item 2. These are one event and must be one item.
+Status + caveat + next checkpoint for the same event belong in the same item.
+Two adjacent items with the same `event_key` are an automatic QA failure unless they are truly independent user actions.
 
 ## CR-15 Cross-section event dedupe
 Build an internal pre-send event map: `event_key -> sections/items`.
-
-A logical event gets one primary section. Repeating it in another section is allowed only when the second occurrence adds a distinct decision dimension that cannot be expressed in the primary item, for example:
-- Section 9: the security incident itself and current remediation state;
-- Section 11: a new future dated checkpoint that materially affects user action.
-
-A repeat is forbidden when it merely restates the same status, disclaimer, or conclusion. If the same `event_key` appears more than once without a non-empty `distinct_dimension`, QA fails.
+A logical event gets one primary detail section. A second occurrence is allowed only as a short Top-5 summary or when it adds a distinct user decision dimension that cannot be expressed in the primary item.
+Repeated status, disclaimer or conclusion is forbidden.
 
 ## CR-16 Item decision-value gate
 Every numbered user-visible item must contain at least one of:
@@ -101,29 +91,41 @@ Every numbered user-visible item must contain at least one of:
 - a concrete user-relevant risk/opportunity/action;
 - a specific future checkpoint with date/time/threshold.
 
-An item fails if its primary meaning is only:
-- “nothing changed”;
-- “we chose not to repeat this”;
-- “we do not have enough data so we will not write it”;
-- “this item is closed and therefore not monitored”;
-- “we intentionally did not fill this section”.
-
-Those are audit facts, not report content.
-
 ## CR-17 Mandatory pre-send lint
 Before Gmail send, create an internal lint result and require every check to PASS:
+1. `structure_lint` — exact 13 headings/order.
+2. `meta_prose_lint` — no process/no-op filler.
+3. `same_event_item_lint` — no duplicate event within a section.
+4. `cross_section_dedupe_lint` — repeated event requires distinct decision dimension.
+5. `decision_value_lint` — every numbered item passes CR-16.
+6. `stale_rights_lint` — closed/refunded/expired/already-completed rights do not occupy user-visible bullets unless a new material change occurred.
+7. `freshness_lint` — stale future tense / already-passed times are refreshed or removed.
+8. `repetition_budget_lint` — CR-18 passes.
+9. `section_substance_lint` — CR-19 passes.
 
-1. `structure_lint`: exact 13 headings/order.
-2. `meta_prose_lint`: no user-visible process/no-op phrases from CR-13.
-3. `same_event_item_lint`: no duplicate adjacent/same-section `event_key` items.
-4. `cross_section_dedupe_lint`: repeated `event_key` requires a distinct decision dimension.
-5. `decision_value_lint`: every numbered item passes CR-16.
-6. `stale_rights_lint`: closed/refunded/expired/already-completed rights do not occupy user-visible bullets unless a new material change occurred.
-7. `freshness_lint`: stale future tense / already-passed times are refreshed or removed.
+Any FAIL means `QA_FAIL_NO_SEND`. Rewrite and rerun lint before sending.
 
-Any FAIL means `QA_FAIL_NO_SEND`. The task must rewrite and re-run lint. It is forbidden to send first and explain the defect afterward.
+## CR-18 Repetition budget
+A single event may appear at most twice in the entire email:
+- once as a one-sentence Top-5 summary; and
+- once in its primary detail section.
 
-The internal run audit must store only the PASS/FAIL result and offending item identifiers; the lint commentary itself must not appear in the email.
+A security event detailed in Section 9 must not also be restated in Sections 6, 11, 12 and 13. A future dated checkpoint or concrete user action should be merged into the Section 9 item whenever possible. Only a genuinely separate action/deadline may justify a second non-Top-5 occurrence, and then the Top-5 duplicate must be dropped.
+
+Hard fail examples:
+- the same Bitget status appears in Top 5 + Security + Catalysts + Watchlist + Action;
+- the same NEAR Intents exploit appears in Top 5 + Protocol + Security + Catalysts + Action;
+- BTC/ETH/SOL relative-strength wording is repeated unchanged in Sections 2, 3, 12 and 13.
+
+## CR-19 Section substance and breadth
+- Section 1 contains 3 to 5 genuinely important items; never pad to five.
+- Section 2 is the canonical home for BTC/ETH/SOL core tape.
+- Section 3 must focus on mature-market movers/persistent trends beyond merely restating Section 2. If a liquid asset moves roughly >=5% in 24h, >=15% in 7d, or has a major catalyst/volume shock, investigate it. If none qualifies, one short line is better than recycled BTC/ETH/SOL prose.
+- Section 5 prioritizes actual ETF/fund/exchange/whale capital movement. Analyst price targets alone do not satisfy institutional-flow coverage.
+- Section 6 is for protocol/infrastructure/ecosystem developments that are not already security items.
+- Section 11 contains only future catalysts not already fully described elsewhere.
+- Section 12 contains persistent trends/opportunities with distinct multi-period evidence or a concise no-update line; it may not simply repeat Section 2 prices.
+- Section 13 contains only concrete portfolio/risk actions that follow from the day’s evidence. It may reference an earlier item briefly but must not restate the event narrative.
 
 ## State machine
 DRAFT -> INPUT_MANIFEST_READY -> PRE_SEND_LINT_PASS -> QA_PASS -> GMAIL_SENT_READBACK -> GITHUB_ARCHIVED_READBACK -> DELIVERED
