@@ -55,14 +55,15 @@ def prepare(root):
  dump(root/'feature-manifest.json',meta);db.close()
 
 def discover(root,stage):
- meta=json.loads((root/'feature-manifest.json').read_text());module=types.ModuleType('gt_v2_frozen');exec(Path(gt.__file__).read_text(),module.__dict__);lo,hi=(START,TRAIN_END) if stage=='train' else (TRAIN_END,END);module.START=lo;module.END=hi;module.SPLITS={stage.upper():(lo,hi)};events=[]
+ meta=json.loads((root/'feature-manifest.json').read_text());module=types.ModuleType('gt_v2_frozen');exec(Path(gt.__file__).read_text(),module.__dict__);lo,hi=(START,TRAIN_END) if stage=='train' else (TRAIN_END,END);module.START=lo;module.END=hi;module.SPLITS={stage.upper():(lo,hi)};events=[];coverage=[]
  for r in meta:
-  bars=load_bars(r);es,_=module.discover(bars,r['venue'],r['symbol'],r.get('earliest_archive_month'),r.get('current_active',False))
+  bars=load_bars(r);es,stats=module.discover(bars,r['venue'],r['symbol'],r.get('earliest_archive_month'),r.get('current_active',False))
+  coverage.append({'instrument_index':r['index'],'venue':r['venue'],'symbol':r['symbol'],**stats,'events_before_split_censor':len(es),'events_split_future_complete':sum(e['split_future_complete'] for e in es),'events_split_right_censored':sum(not e['split_future_complete'] for e in es)})
   for e in es:
    if not e['split_future_complete']:continue
    e['instrument_index']=r['index'];e['monster_entity_id']=r['monster_entity_id']
    verified=r.get('verified_first_available_time');e['first_available_history_time']=verified;e['new_listing']=(e['anchor_time']-verified<168*HOUR) if verified is not None else None;e['age_status']='VERIFIED_FIRST_ARCHIVE_HISTORY' if verified is not None else 'AGE_LOWER_BOUND_OR_UNKNOWN';events.append(e)
- dump(root/(stage+'-instrument-events.json'),events);return events
+ dump(root/(stage+'-gt-coverage.json'),coverage);dump(root/(stage+'-instrument-events.json'),events);return events
 
 def entity_events(events):
  merged=[]
@@ -181,7 +182,7 @@ def verify_winner(root):
  return freeze
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--stage',choices=['prepare','train','validation','d2-train','d2-validation'],required=True);a=p.parse_args();start=time.time();verify_specs(a.root)
+ p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--stage',choices=['prepare','train','validation','d2-train','d2-validation'],required=True);a=p.parse_args();start=time.time();cpu_start=resource.getrusage(resource.RUSAGE_SELF);verify_specs(a.root)
  if a.stage=='prepare':prepare(a.root)
  elif a.stage=='train':
   assert json.loads((a.root/'prepare-resources.json').read_text())['memory_gate_pass'],'PREPARE_MEMORY_GATE_REQUIRED'
@@ -202,5 +203,5 @@ def main():
  else:
   freeze=verify_winner(a.root);winner=json.loads((a.root/'train-winner.json').read_text())['winner'];assert winner;reports=replay(a.root,'validation',winner);r=reports[0];e=r['entity'];adequate=e['5']['events']>=20;passed=adequate and e['5']['recall']>=.90 and r['ceiling_pass'] and (e['10']['events']<10 or (e['10']['recall']>=.90 and e['10']['strict_before2']>=.70)) and (e['20']['events']<5 or e['20']['recall']>=.90)
   status='D1_HIGH_RECALL_SCREEN_USABLE_FOR_D2' if passed else 'MONSTER_D1_V2_FAIL_VALIDATION' if adequate else 'INSUFFICIENT_DATA';dump(a.root/'validation-result.json',{'status':status,'result':r,'winner_frozen_commit':freeze['pushed_commit'],'10X_validated':passed and e['10']['events']>=10});print(status,flush=True)
- peak=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss;dump(a.root/(a.stage+'-resources.json'),{'seconds':time.time()-start,'peak_rss_bytes':peak,'memory_gate_pass':peak<1073741824,'single_worker':True})
+ usage=resource.getrusage(resource.RUSAGE_SELF);peak=usage.ru_maxrss;elapsed=time.time()-start;cpu_seconds=usage.ru_utime+usage.ru_stime-cpu_start.ru_utime-cpu_start.ru_stime;dump(a.root/(a.stage+'-resources.json'),{'seconds':elapsed,'cpu_seconds':cpu_seconds,'mean_cpu_percent':100*cpu_seconds/elapsed,'peak_rss_bytes':peak,'memory_gate_pass':peak<1073741824,'single_worker':True})
 if __name__=='__main__':main()

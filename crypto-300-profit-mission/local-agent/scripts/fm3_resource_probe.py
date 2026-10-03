@@ -13,8 +13,11 @@ def main():
    pid,cpu,rss,command=parts
    match=next((n for n in owned if 'scripts.'+n in command),None)
    if match:rows.append({'pid':int(pid),'script':match,'cpu_percent':float(cpu),'rss_kib':int(rss)})
-  disk=int(subprocess.check_output(['du','-sk',str(a.root),'/Users/jerson/Documents/ChatGPT/crypto-monitor-fm2-evidence-20260930'],text=True).splitlines()[0].split()[0])*1024
-  sample={'epoch':time.time(),'processes':rows,'fm3_disk_bytes':disk}
+  # Atomic cache publication can remove temporary names during du traversal.
+  measured=subprocess.run(['du','-sk',str(a.root)],text=True,capture_output=True)
+  lines=measured.stdout.splitlines()
+  disk=int(lines[-1].split()[0])*1024 if lines else None
+  sample={'epoch':time.time(),'processes':rows,'fm3_disk_bytes':disk,'disk_probe_returncode':measured.returncode}
   with (a.root/'fm3-resources.jsonl').open('a') as f:f.write(json.dumps(sample)+'\n');f.flush();os.fsync(f.fileno())
   time.sleep(30)
 if __name__=='__main__':main()
