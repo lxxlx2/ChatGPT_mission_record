@@ -13,7 +13,7 @@ Canonical monitor rules remain in `../MEME_GPT_MONITOR_SPEC.md`.
 |---|---|---|---:|---|
 | Frank | Existing accepted project source | project-established | existing project state | no change here |
 | Ethermonk | Research pass imported | OBSERVE_ONLY | 0 | none |
-| Point Farm | Separate research in progress; artifacts not yet imported | OBSERVE_ONLY | unknown | none |
+| Point Farm | Research pass imported | OBSERVE_ONLY | 0 | none |
 | TheSolstice | Research pass imported | OBSERVE_ONLY | 0 | none |
 
 ## Ethermonk current result
@@ -38,6 +38,45 @@ Three important regression fixtures are preserved in the Ethermonk handoff:
 3. STONK `2xUb -> 58c8` must not become a market `SELL`.
 
 The current Ethermonk episode CSV is a targeted key-token reconstruction, not a completed six-month person-level episode ledger. Qualification remains blocked pending wallet-graph resolution, chain-complete history, delayed replay, robustness, TRAIN/VALIDATION/HOLDOUT and real FORWARD validation.
+
+## Point Farm current result
+
+Directory: `point-farm/`
+
+Imported artifacts:
+
+- `point-farm-validation-summary.md`
+- `point-farm-episodes.csv`
+- `point-farm-patterns.json`
+- `point-farm-codex-handoff.md`
+
+Research conclusion: KEEP `OBSERVE_ONLY`.
+
+High-confidence current Solana wallet:
+
+`Beqv6dzTcjV2eodo8RRXCiCcnSYrS1vkQKhfqwHXqeit`
+
+Long-run continuity remains incomplete because Dexu currently exposes a different unresolved truncated mapping (`6cerGp…615t`). That address must not be auto-merged.
+
+Key research results:
+
+- current third-party 30-day snapshots attribute about 95.8%-96.2% of displayed PnL to STONK;
+- removing only STONK leaves a positive snapshot residual, but removing the three largest displayed winners (STONK + ZCAT + RAYCAT) gives roughly `-$232K`;
+- accumulation intensity does not currently distinguish winners robustly;
+- PURR, UBI and TOEROGAN are important negative controls showing that repeated/high-dollar buying and no-sell states can still end in large losses;
+- exact causal trigger times and historical executable replay remain blocked by incomplete transaction-level swap export.
+
+Required Point Farm regression fixtures include:
+
+- `purr_accumulation_failure`
+- `ubi_accumulation_failure`
+- `toerogan_no_sell_failure`
+- unresolved-wallet no-auto-merge
+- dynamic Top1 / Top3 robustness recomputation
+
+The repo `point-farm-episodes.csv` contains all 17 source research token-cycle fixtures in a compact canonical projection. Every row remains `PARTIAL_TOKEN_CYCLE_NOT_FULLY_SEGMENTED`; it is not a qualification-grade episode ledger. The source research originally carried a wider schema, while the Codex handoff defines the full schema that must be rebuilt from chain-complete data.
+
+`point-farm-patterns.json` remains `NO_VALIDATED_PATTERN`.
 
 ## TheSolstice current result
 
@@ -74,7 +113,7 @@ A model using only repeated buys / position growth / no-major-sell must fail thi
 
 The TheSolstice CSV currently contains a small research-grade set of key episodes and controls, not a complete six-month raw episode ledger. `thesolstice-patterns.json` remains `NO_VALIDATED_PATTERN`.
 
-## Cross-candidate architectural requirements discovered so far
+## Cross-candidate architectural requirements
 
 Codex should treat these as shared validation-pipeline requirements rather than person-specific exceptions:
 
@@ -85,7 +124,34 @@ Codex should treat these as shared validation-pipeline requirements rather than 
 5. Open episodes must keep realized and unrealized PnL separate.
 6. Threshold discovery must not use visible winners and then claim validation; preserve TRAIN / VALIDATION / HOLDOUT separation.
 7. Robustness must include dynamic Ex-Top1 / Ex-Top3 and material-token/theme exclusions where data permits.
-8. Person-specific accumulation heuristics require explicit negative controls; TheSolstice MARKET is one such regression fixture.
+8. Person-specific accumulation heuristics require explicit negative controls. TheSolstice MARKET and Point Farm PURR/UBI/TOEROGAN are mandatory examples.
+9. Do not treat profile-level lifetime history as current-wallet lifetime history unless continuity is proved.
+10. A compact third-party token-cycle snapshot is a fixture/reconciliation input, not a substitute for a chain-complete episode ledger.
+
+## Shared Codex implementation target
+
+The next engineering step is one reusable PERSON_PATTERN validation pipeline, not three person-specific scripts.
+
+Recommended order:
+
+```text
+person + candidate wallets
+-> wallet graph resolution
+-> platform/infrastructure address exclusion
+-> finalized raw event ingestion
+-> MARKET_BUY / MARKET_SELL / INTERNAL_TRANSFER classification
+-> person-level cost-basis ledger
+-> deterministic episode segmentation
+-> causal feature generation
+-> candidate T_signal generation
+-> delayed executable replay
+-> All / Ex-Top1 / Ex-Top3 / material-token/theme robustness
+-> TRAIN / VALIDATION / HOLDOUT
+-> real FORWARD
+-> qualification decision
+```
+
+The pipeline should then rerun Ethermonk, Point Farm and TheSolstice from raw/lossless data. Current handoff files provide schemas, known wallet evidence, negative controls, regression fixtures and data-quality constraints; they are not permission to enable any new production signal.
 
 ## Replay horizons
 
@@ -99,7 +165,7 @@ Canonical repo horizons remain:
 
 Candidate research may additionally use T+1m and T+2m for higher-resolution followability analysis. These extra horizons do not replace canonical qualification requirements.
 
-The TheSolstice source research handoff focuses on +1m/+2m/+5m/+15m because that was the candidate-specific research request. When Codex implements the shared pipeline, the canonical 1h/6h/24h horizons must still be supported under the current Meme spec.
+Point Farm also preserves T+0m / T+30m / T+2h as auxiliary research horizons only. They must remain tagged extras rather than canonical qualification gates.
 
 ## Safety / production state
 
@@ -112,6 +178,6 @@ The TheSolstice source research handoff focuses on +1m/+2m/+5m/+15m because that
 
 ## Import authorization note
 
-The original Ethermonk and TheSolstice research handoffs state `git_commit_authorized: false` / `commit_or_push_this_research: false` because those research conversations themselves were told not to write Git. On 2026-10-03, the user explicitly authorized this separate conversation to sync research progress and required files into `lxxlx2/ChatGPT_mission_record` so Codex can consume them later.
+The original candidate research handoffs state that their research conversations themselves were not authorized to commit/push. On 2026-10-03, the user explicitly authorized this separate conversation to sync research progress and required files into `lxxlx2/ChatGPT_mission_record` so Codex can consume them later.
 
 This import authorization is limited to research/status artifacts. It does not grant standing authorization for future production/config/task/monitor changes.
