@@ -1,3 +1,22 @@
+# CURRENT MAINLINE CHECKPOINT — FM4 local acceptance 2026-10-03
+
+**PHASE_FM4 = PASS for authorized shadow engineering; PRODUCTION_TRADING = NO_GO.**
+
+Latest report: [PHASE_FM4_MEME_SIGNAL_PIPELINE_REPORT.md](PHASE_FM4_MEME_SIGNAL_PIPELINE_REPORT.md).
+
+- Actual Mac LaunchAgent migration completed: `com.jerson.crypto-monitor-meme-shadow`, exactly one scanner, same durable SQLite/cursor, controlled restart PASS.
+- Frank is the sole verified live person; multiple wallets count as one person. New people require user confirmation; new PERSON_PATTERN defaults OBSERVE_ONLY.
+- Candidate V2 / consensus / person-pattern fact bundles / immutable private handoff / stateless renderer / transactional outbox tests PASS. Live V2 currently NO_CURRENT_SIGNALS; old Frank ACTIVE/candidates were not replayed.
+- FM3 real ACTIVE E2E remains PRESERVED_PASS. New natural post-migration V2 ACTIVE and real external GPT/Gmail path remain unobserved.
+- Historical executable-price coverage insufficient; TEMPORARY_SHADOW_TTL=900s, no strategy edge or production followability claim.
+- ChatGPT task mutations=0; real Gmail sends=0; wallet/trades=0. `$300-3000` remains external decision/delivery owner.
+- Monster DEFERRED_NOT_CANCELLED / NEEDS_REDESIGN; NFT and Core Price DEFERRED_NOT_CANCELLED. No logic/dataset/runtime changes to them.
+- Stop for FM4 review. No automatic FM5, new persons, low-latency API integration, deferred-module work or trading.
+
+The following retained FM3 snapshot is historical context; its process names, counters, portfolio and task authorization text are not a current FM4 runtime claim. The latest local request prohibits task mutations in this phase.
+
+---
+
 # CURRENT MAINLINE CHECKPOINT — 2026-10-03
 
 Status: **FRANK ACTIVE E2E PASS → MEME GENERALIZATION NEXT; MONSTER REDESIGN BLOCKED PENDING LATER WORK**
