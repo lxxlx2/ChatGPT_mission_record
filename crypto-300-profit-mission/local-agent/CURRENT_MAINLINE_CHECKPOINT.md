@@ -1,272 +1,223 @@
-# CURRENT MAINLINE CHECKPOINT — 2026-10-01
+# CURRENT MAINLINE CHECKPOINT — 2026-10-03
 
-Status: **MAINLINE = FRANK + MONSTER**
+Status: **FRANK ACTIVE E2E PASS → MEME GENERALIZATION NEXT; MONSTER REDESIGN BLOCKED PENDING LATER WORK**
 
-This checkpoint records the actual state before the next Codex prompt is sent. It exists to prevent the project from drifting back into CORE PRICE V3 or other secondary work.
+This checkpoint supersedes the 2026-10-01 FM2 checkpoint.
 
-## Priority lock
+## Latest verified development state
 
-1. **FRANK wallet monitor** — highest priority.
-2. **MONSTER / 妖币 monitor** — highest priority.
-3. Reuse existing SQLite / private GitHub / GPT consumer / delivery infrastructure only as needed for Frank and Monster.
-4. CORE PRICE V3 remains paused.
-5. NFT remains not started.
-6. `$300 Crypto资产状态监控` remains disabled.
-7. Production remains NO_GO.
+Working branch:
+- `codex/crypto-monitor-design-20260930`
 
-Do not let CORE PRICE V3, generic BTC/ETH/SOL/BNB/HYPE price calibration, hidden-holdout work, or unrelated monitoring block Frank or Monster.
+Latest completed report:
+- `crypto-300-profit-mission/local-agent/PHASE_FM3_FRANK_MONSTER_REPORT.md`
 
-## Latest verified branch state
+FM3 report status:
+- `PHASE_FM3 = PARTIAL`
+- `FRANK_SHADOW_READY = PASS`
+- `FRANK_ACTIVE_E2E = PASS`
+- `MONSTER_D1_V2 = NEEDS_REDESIGN`
+- `PRODUCTION = NO_GO`
 
-Working branch: `codex/crypto-monitor-design-20260930`
+User has explicitly chosen to finish the Frank/Meme path before resuming Monster redesign.
 
-Latest verified remote HEAD before this checkpoint: `d9312c2a2a7db2efa76f9948d7af685058b925b2`
+## FRANK — actual current result
 
-Latest completed phase: **PHASE_FM2 = PARTIAL**.
+Frank wallet:
+- `498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ`
 
-The latest FM2 report is:
+FM3 established a real forward ACTIVE E2E, not a synthetic proof:
 
-`crypto-300-profit-mission/local-agent/PHASE_FM2_FRANK_MONSTER_REPORT.md`
+- real new forward signatures observed: 5
+- real ACTIVE: 1
+- real candidates: 2, from the same real ACTIVE transaction and two mints
+- full path PASS:
+  official/finalized chain evidence → normalization → candidate → SQLite → private transport → exact remote readback
+- total measured first ACTIVE E2E: 47.297 s
+  - detection 27.010 s
+  - normalization 0.175 s
+  - candidate 0.203–0.206 s
+  - transport 19.907–19.910 s
+- RPC errors / 429 / timeout / retry: 0
+- current/unresolved gap: 0
+- candidate duplicates: 0
+- real-ACTIVE post-event restart/dedupe acceptance: PASS
+- SQLite integrity: ok
+- private transport exact readback/hash/identical-republish/restart dedupe: PASS
+- historical parser progress at FM3 report snapshot: 6,105 / 18,203
+- LaunchAgent remains one local shadow process: `com.jerson.crypto-monitor-frank-shadow`
 
-Frozen historical provenance must be preserved. Because historical commit SHAs are part of acceptance/audit contracts, future synchronization with `main` should use merge, not rebase, unless explicitly authorized otherwise.
+Therefore the unresolved problem is no longer basic Frank chain collection. The next value-critical layer is:
 
-## FRANK — actual progress
+`candidate → investment judgment → clean deduped Gmail alert → forward outcome audit`
 
-Wallet:
+## Naming / multi-person direction authorized by user
 
-`498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ`
+The system-level name should become **Meme**, because Frank is now only one tracked person/source.
 
-Canonical Solana source remains only:
+Target entity model:
 
-`https://api.mainnet.solana.com`
+- system: `Meme`
+- `person_id=frank`
+- one person may own multiple verified wallets
+- consensus counts unique people, not wallet addresses
+- additional people will be selected by the user for Frank-like style and real followability
 
-### Completed
+Do not add speculative people automatically. New people require explicit user-provided/approved identities and addresses.
 
-- Official signature snapshot discovered **18,203 unique signatures**.
-- Archival six-position probe: all 6 sampled transactions available.
-- Canonical oldest sampled snapshot time resolved to **2025-09-04T00:06:20Z**. The earlier `02:46:20` handoff time was a transcription error; raw chain evidence was not changed.
-- Final fixed 500-sample parsing completed with parser `frank-v7`, immutable output `processing-v8`.
-- Final 500 classification:
-  - ACTIVE = 45
-  - PASSIVE = 374
-  - UNKNOWN = 76
-  - FAILED = 4
-  - TRANSFER_OUT = 1
-- Final 500 raw Frank candidates = **57**.
-- Primary fixed manual review set: **50/50 reviewed** without resampling.
-- Classification agreement: **48/50 = 96%**.
-- Token delta agreement: **50/50 = 100%**.
-- Signer / fee-payer agreement: **50/50 = 100%**.
-- Authority agreement: **50/50 = 100%**.
-- Original ACTIVE13 supplemental audit: **0 false positives**.
-- Historical progress with current parser: **4,724 / 18,203** signatures durably normalized.
-- Within available history observed:
-  - 89 active mints
-  - 67 observed round trips
-  - 12 re-entries
-  These are limited to available referenced accounts; they are not lifetime-PnL or lifetime-entry claims.
-- Real forward collector ran continuously for **125.04 minutes** at 30-second polling.
-- 4 distinct real new signatures were observed across the forward workflow:
-  - PASSIVE = 1
-  - UNKNOWN = 3
-  - ACTIVE = 0
-- Real restart / recovery tests included SIGTERM, SIGKILL, and ~320 seconds downtime.
-- Verified recovery gap = 0 and candidate duplicate = 0 for observed recovery path.
-- Real forward ACTIVE transaction has **not yet occurred**, therefore active-candidate forward E2E is still **NOT_OBSERVED**.
-- Historical Frank private test transport passed for 57 v8 candidates with restart/hash/dedupe checks. Production runtime path was not used.
+## Two signal families
 
-### Frank current status
+### 1. TOKEN_CONSENSUS
 
-`MANUAL_GATE = PASS`
+Multiple independent tracked people buy the same token in a useful causal time window.
 
-`FORWARD_CAPTURE = PASS`
+Local deterministic layer must establish:
+- unique `person_id` count;
+- exact wallet/person mapping;
+- buys, amounts, signatures, timestamps and mint identity;
+- aggregation window;
+- dedupe / event identity.
 
-`ACTIVE_FORWARD_E2E = NOT_OBSERVED`
+GPT performs final value judgment, including whether the consensus remains followable after elapsed time/price movement/liquidity/current context.
 
-Frank is no longer blocked on parser/manual validation. The remaining important proof is a **real forward ACTIVE transaction** passing through:
+### 2. PERSON_PATTERN
 
-Official RPC → raw cache → parser → mechanical ACTIVE → `RAW_FRANK_CANDIDATE` → SQLite queue → private test transport → exact readback/dedupe.
+One tracked person buys a token in a historically useful and followable pattern for that person.
 
-The next intended design is to keep a local **shadow-only Frank collector** running until a real ACTIVE event occurs, rather than repeatedly launching bounded two-hour manual sessions. No investment alert should be emitted during shadow validation.
+Do not blindly apply Frank thresholds to other people. Each person's person-specific alert logic must be historically/replay evaluated before `SIGNAL_ENABLED`. New people default to `OBSERVE_ONLY` for PERSON_PATTERN, though verified people may participate in TOKEN_CONSENSUS.
 
-## MONSTER / 妖币 — actual progress
+## GPT remains the final investment-judgment layer
 
-The objective is abnormal Binance/Alpha/Futures “妖币” discovery, including old-shell reactivation and extreme 5X/10X/20X events. It is not a generic meme scanner and does not depend on CORE PRICE V3.
+The architecture has NOT changed to deterministic investment decisions only.
 
-### Universe / coverage completed
-
-FM1/FM2 established current and historical Binance universe inventory. FM2 V1 replay used a USDT union with:
-
-- instruments in union: **1,724**
-- instruments with usable historical data: **1,518**
-  - Spot = 611
-  - Futures = 907
-- without bars = 206
-- historical non-current instruments with bars = **279**
-- completely absent from current inventory = **34**
-
-The historical analysis period was nominally 2025-01-01 through 2026-09-30, with complete UTC archives through 2026-09-29.
-
-### MONSTER GT V1
-
-Ground-truth V1 was frozen before discovery at:
-
-`3a4167ee9f9953de31c96f817dce318523d98a71`
-
-It must remain preserved as a failed baseline.
-
-Discovered V1 events:
-
-- total frozen events = **1,542**
-- exact 2X = **1,485**
-- exact 3X = **41**
-- exact 5X = **12**
-- exact 10X = **2**
-- exact 20X+ = **2**
-- cumulative >=5X = **16**
-- cumulative >=10X = **4**
-- cumulative >=20X = **2**
-
-### D1 V1 result
-
-D1 V1 used 48 frozen configurations and produced **no accepted winner**.
-
-Diagnostic V1-47 only (not a deployable winner):
-
-TRAIN:
-- >=5X recall = 8/12 = 66.67%
-- >=10X recall = 1/3 = 33.33%
-
-VALIDATION:
-- >=5X recall = 3/4 = 75%
-- >=10X recall = 1/1 = 100%, but N=1 and therefore insufficient
-- >=10X before-2X rate = 0/1 = 0%
-- >=5X before-2X rate = 2/4 = 50%
-
-Noise was unacceptable:
-
-- median candidate symbols/day:
-  - TRAIN = 60
-  - VALIDATION = 78
-  - AUDIT = 91
-- p95 candidate symbols/day:
-  - TRAIN = 82
-  - VALIDATION = 96
-  - AUDIT = 115
-- non-2X candidate rate:
-  - 24h = 99.22%
-  - 72h = 97.89%
-  - 168h = 95.98%
-
-Largest known misses include:
-
-- MMT Futures ~14.951X
-- MMT Spot ~10.324X
-- AVNT ~8.261X
-- BTW ~7.744X in validation
-
-D2 and D3 were **not started** because D1 V1 failed its acceptance gates.
-
-### Important interpretation
-
-MONSTER D1 V1 should stay frozen as a failed baseline. It should not be “fixed” by editing its old thresholds/results.
-
-The next intended Monster architecture is:
-
-- **D1 V2 = high-recall screen**
-- **D2 = noise reduction / structure enrichment**
-- **GPT = final investment judgment**
-
-The V1 architecture over-constrained the first-stage screen with one AND expression while still producing excessive noise. The next design should use multiple independent causal pathways rather than forcing every candidate through the same conjunction.
-
-Planned D1 V2 pathway families:
-
-- MOMENTUM_BREAKOUT
-- VOLUME_IGNITION
-- OLD_SHELL_REACTIVATION
-- NEW_LISTING_IGNITION
-- RELATIVE_STRENGTH_ACCELERATION
-
-Any one pathway may activate a D1 screen candidate. D2 is responsible for reducing the candidate set.
-
-### Monster V2 historical expansion plan
-
-Before downloading new older history, freeze a V2 spec and search space.
-
-Proposed project-unexposed interval:
-
-- TRAIN: 2021-01-01 → 2023-12-31
-- VALIDATION: 2024-01-01 → 2024-12-31
-- 2025-01-01 → 2026-09-30 remains exposed training/diagnostic data only
-
-The goal is to increase the number of 10X/20X cases enough to make evaluation meaningful. This should be described as **project-unexposed-before-V2**, not globally unseen.
-
-### Monster entity model
-
-Future monitoring should distinguish:
-
-- instrument events (e.g. Spot vs Futures)
-- entity events (same underlying token when identity is unambiguous)
-
-This is important because cases such as MMT Spot and MMT Futures should not necessarily create duplicate user alerts for the same underlying market episode.
-
-### Resource issue to fix before expansion
-
-FM2 historical replay observed approximately:
-
-- peak CPU = 291%
-- single-process RSS = ~4.31 GiB
-- private evidence disk = ~2.13 GiB
-
-Before expanding 2021–2024 history, replay must be changed to streaming/chunked processing. Target peak RSS is <1 GiB, preferably <500 MiB. Historical replay must not degrade Frank real-time polling.
-
-## Latest next-step plan — NOT YET SENT TO CODEX
-
-The latest proposed **PHASE_FM3_FRANK_SHADOW_MONSTER_V2** prompt has **not yet been sent to Codex** as of this checkpoint.
-
-Its intended scope is:
-
-### Frank
-
-- authorize exactly one local shadow LaunchAgent, suggested identifier:
-  `com.jerson.crypto-monitor-frank-shadow`
-- keep official Solana RPC polling running locally
-- no Gmail, ChatGPT calls, app alerts, trades, wallet actions, or production runtime writes
-- real-time polling has priority over all historical work
-- continue low-priority Frank history backfill toward 18,203 signatures
-- wait for a **real ACTIVE** forward event and verify complete private-test E2E when it appears
-
-### Monster
-
-- preserve V1 forever as a failed baseline
-- freeze MONSTER GT/D1 V2 before opening new old history
-- expand historical data to 2021–2024 if official Binance archives are available
-- build conservative instrument→entity mapping
-- redesign D1 as multiple OR-style high-recall pathways
-- move strict noise reduction into D2 instead of requiring D1 to do both jobs
-- keep finite deterministic search space (target <=500 configurations)
-- one-shot validation on 2024 after TRAIN-only selection
-- allow D2 if V2 D1 has strong >=5X recall and candidate volume remains below a broad safety ceiling, even if >=10X N is still below 10
-- D2 should audit real Binance official derivatives endpoints and distinguish historical-capable vs forward-only data
-- D3, if reached, remains bounded manual shadow; no production notification
-
-## Current hard boundaries
-
-- CORE PRICE V3 = **PAUSED**
-- NFT = **NOT STARTED**
-- `$300 Crypto资产状态监控` = **DISABLED**
-- Gmail investment sends = **0 / unauthorized**
-- ChatGPT automation mutations = **unauthorized**
-- Production `runtime-v2/` writes = **NO_GO**
-- No trading / wallet mutation / portfolio mutation
-- Frank and Monster remain the only development priorities
-
-## Resume instruction
-
-When work resumes, start from this checkpoint and `PHASE_FM2_FRANK_MONSTER_REPORT.md`.
-
-Do **not** resume CORE PRICE V3.
-
-Do **not** treat the latest FM3 prompt as already executed; it has not yet been sent to Codex.
-
-Next implementation phase should be explicitly authorized from this checkpoint.
+Deterministic local/Codex layer owns facts and engineering correctness:
+- transaction truth
+- person/wallet mapping
+- behavior features
+- aggregation
+- TTL fields
+- IDs
+- SQLite/outbox
+- dedupe
+- immutable run bundle
+- stale-content isolation
+- private transport
+
+GPT task owns final investment-value judgment:
+- SEND / NO_SEND
+- whether the signal is still followable
+- current project / liquidity / market / social / on-chain enrichment where reliable
+- structured reasons / risks / evidence
+- clean email composition
+
+GPT must not own dedupe or reconstruct chain facts from prose.
+
+Canonical task contract is now on main:
+- `crypto-300-profit-mission/meme/MEME_GPT_MONITOR_SPEC.md`
+
+## Email correctness is a first-class acceptance gate
+
+User explicitly requires email testing, especially against stale-content contamination and duplicate delivery.
+
+Renderer rule:
+- every run starts from empty state;
+- current email may read only current immutable run bundle + current run GPT decisions;
+- never mutate/reuse prior email body;
+- a section with zero SEND signals must be absent;
+- if both signal families have zero SEND signals, send no email;
+- same token qualifying both families gets one full block, not duplicate blocks.
+
+Mandatory tests include:
+- previous run consensus+person; current run person-only → zero previous consensus content;
+- current run no signal → no email;
+- same run twice → max one delivered email;
+- Gmail accepted but local SENT state lost → readback prevents duplicate;
+- same person with two wallets → still one person;
+- consensus + person-pattern same token → one full token block;
+- enrichment failure / renderer crash / stale caches → no previous-run leakage;
+- expired candidate after outage → no late investment email;
+- concurrent workers → one delivery path.
+
+## Followability / strategy validity
+
+The goal is user-followable PnL, not tracked-wallet PnL.
+
+Backtest/replay must account for realistic system delay. Measure outcomes from realistic user-available time/price, not the tracked person's original fill.
+
+Per signal/person where possible measure:
+- T+5m / 15m / 1h / 6h / 24h
+- MFE / MAE
+- drawdown
+- liquidity/executable-size constraints
+- delayed-entry return
+- precision / base rate / false-positive load
+- TRAIN / VALIDATION / HOLDOUT / real FORWARD splits
+
+For TOKEN_CONSENSUS, compare against the 1-person baseline. Do not assume 2+ people is better until data proves incremental edge.
+
+## Newly authorized ChatGPT `$300` task
+
+User explicitly authorizes exactly **one new `$300` task** for the Meme/GPT judgment path.
+
+Old disabled `$300 Crypto资产状态监控` remains disabled and must not be re-enabled or repurposed.
+
+No other new ChatGPT task is authorized.
+
+Important product limitation:
+- ChatGPT task cadence cannot exceed hourly.
+- This may be too slow for 1–2 minute meme followability.
+- The hourly task must honor TTL and silently discard expired candidates rather than send stale opportunities.
+- Do not claim the hourly task is production-grade real-time follow trading.
+- Any future lower-latency GPT/API trigger requires separate explicit authorization.
+
+## Current portfolio refresh
+
+Main canonical portfolio was freshly updated on 2026-10-03:
+- `crypto-300-profit-mission/portfolio/current.md`
+
+Key current chain state:
+- Solana USDC: 142.162136
+- Solana native SOL: 0.003093645 (<$1 display threshold)
+- Ethereum USDC: 1.006555
+- Ethereum ETH: 0.000634360344095958
+- Base ETH: 0.000967183780184779
+- Ink ETH: 0.010389022090321585
+- Arbitrum / Optimism native balances below $1
+- Credits contract ownership: 0 NFTs / fully cleared
+- SUI remains 0 by latest explicit user-confirmed state; not relabeled as a fresh independent Sui scan
+- prior Relay reconciliation is closed at balance level because Solana USDC increased by 33.535588, strongly consistent with the prior Relay-sized transfer; no double count
+
+Off-chain latest known:
+- Binance: $523.72 user-confirmed
+- Legion/JUMP: $1,000 pending allocation
+
+## MONSTER
+
+FM3 V2 historical expansion and 243-config TRAIN completed, but every config exceeded candidate ceiling.
+
+- eligible winner: NONE
+- minimum median entities/day: 148 > gate 100
+- minimum p95/day: 215 > gate 150
+- 2024 validation: NOT_RUN
+- D2 shortlist: SKIPPED
+- D3: NOT_STARTED
+- status: `MONSTER_D1_V2_NEEDS_REDESIGN`
+
+Do not continue tuning the same grid or open 2024 holdout while Meme/Frank work is prioritized.
+
+## Hard boundaries
+
+- CORE PRICE V3 = PAUSED
+- NFT = NOT STARTED
+- old `$300 Crypto资产状态监控` = DISABLED
+- exactly one new `$300` Meme/GPT task = AUTHORIZED
+- Monster LaunchAgent = 0
+- wallet mutation / trading = unauthorized
+- production trading = NO_GO
+- no rebase / force-push of frozen historical provenance
+
+## Next implementation gate
+
+Next Codex phase should be **FM4: Frank → Meme generalization + deterministic signal handoff + mail correctness infrastructure**, while keeping GPT as final investment-judgment layer.
+
+Do not start Monster redesign in the same phase.
