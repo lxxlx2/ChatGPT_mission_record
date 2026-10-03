@@ -1,0 +1,75 @@
+{
+  "version": "monster-d1-v3",
+  "stage1_v2_parameters": [
+    0.9,
+    2,
+    3,
+    0.8,
+    0.9
+  ],
+  "grid": {
+    "persistence_hours": [
+      2,
+      3
+    ],
+    "quote_mean_min": [
+      50000,
+      100000,
+      250000
+    ],
+    "confirmation_mode": [
+      "QUALITY_OR_RS",
+      "QUALITY",
+      "QUALITY_AND_RS_OR_DUAL"
+    ],
+    "max_return1": [
+      0.5,
+      1.0
+    ],
+    "conditional_dual": [
+      false,
+      true
+    ]
+  },
+  "config_count": 72,
+  "stage0_quote_min": 10000,
+  "young_quote_multiplier": 0.5,
+  "young_age_hours": 168,
+  "quality_trade_mean_min": 20,
+  "quality_volume_acc_mean_min": 1.2,
+  "quality_prior7d_percentile_min": 0.8,
+  "relative4_min": 0.01,
+  "relative24_min": 0.02,
+  "relative_to_broad_alt4_min": 0.01,
+  "max_return4": 1.0,
+  "close_retention_min": 0.75,
+  "rearm_hours": 3,
+  "entity_ceiling": {
+    "median": 100,
+    "p95": 150
+  },
+  "splits": {
+    "TRAIN": [
+      "2021-01-01",
+      "2024-01-01"
+    ],
+    "VALIDATION": [
+      "2024-01-01",
+      "2025-01-01"
+    ],
+    "EXPOSED_DIAGNOSTIC": [
+      "2025-01-01",
+      "2026-10-01"
+    ]
+  },
+  "validation": {
+    "min_5x_events": 20,
+    "recall5_min": 0.9,
+    "min_10x_events": 10,
+    "recall10_min": 0.9,
+    "strict_before2_10_min": 0.7,
+    "min_20x_events": 5,
+    "recall20_min": 0.9
+  },
+  "memory_limit_bytes": 1073741824
+}
