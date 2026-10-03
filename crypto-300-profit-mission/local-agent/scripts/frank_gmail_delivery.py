@@ -5,10 +5,19 @@ from mission_agent.signals.store import Ledger
 from mission_agent.signals.gmail import GmailOutbox,CredentialBlocked
 from mission_agent.signals.gmail_api import existing_provider
 
+def delivery_flags(ledger):
+    # Read projection: explicit forbidden bit for EVERY historical signal without
+    # rewriting immutable signal bodies, hashes or the frozen state machine.
+    ledger.db.execute("""CREATE VIEW IF NOT EXISTS signal_delivery_flags AS
+        SELECT signal_id,json_extract(body,'$.delivery_mode') AS delivery_mode,
+        CASE WHEN json_extract(body,'$.delivery_mode')='LIVE'
+             AND COALESCE(json_extract(body,'$.delivery_forbidden'),0)=0
+             THEN 0 ELSE 1 END AS delivery_forbidden FROM signals""")
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--db',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
     with a.db.with_suffix('.gmail-delivery.lock').open('a') as lock:
-        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);ledger=Ledger(a.db);outbox=GmailOutbox(ledger);provider=existing_provider(a.db.parent/'gmail-existing-source.json');outbox.sync()
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);ledger=Ledger(a.db);delivery_flags(ledger);outbox=GmailOutbox(ledger);provider=existing_provider(a.db.parent/'gmail-existing-source.json');outbox.sync()
         if a.check:
             ready=False
             if provider:

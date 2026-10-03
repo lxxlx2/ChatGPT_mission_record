@@ -45,3 +45,9 @@ Old PID 23182 stopped at 00:29:00.875 Asia/Bangkok; new PID 12188 started at 00:
 Final old durable cursor was retained at slot 452991464. Restart-window catch-up signatures=0 because no new wallet signature occurred. Independent finalized baseline reconciliation: chain=35, old observations=35, new ledger=35, missing/extra/gap=0. Baseline starts 2026-10-03 05:02:49.509370 Asia/Bangkok, from durable first_started_at, not a Git commit time. Health RUNNING; raw pending=0, model unprocessed=0, consecutive_errors=0, lag_seconds=0, source_drift=false. Imported accumulation stays DRY_RUN_AUDIT; no 7Vert historical notification was backfilled.
 
 Private mac-data manifest and authority marker were marked SUPERSEDED_FOR_FRANK_SIGNAL_AUTHORITY with exact readback; old current handoff was expired. gpt-data/main were not changed. The legacy consumer configuration remains outside available task-administration capabilities and is explicitly LEGACY_GPT_CONSUMER_STILL_PRESENT.
+
+## Delivery and consumer cleanup update — 2026-10-04
+
+This update supersedes the earlier LEGACY_GPT_CONSUMER_STILL_PRESENT limitation: the existing `$300-3000` task was edited through its task editor, Frank/Meme consumer and Gmail authority removed, and the saved prompt reopened/read back. Status REMOVED_FROM_EXISTING_TASK; other deferred lanes/schedule preserved. Private mac-data manifest/marker explicitly declare old authority SUPERSEDED_FOR_FRANK_SIGNAL_AUTHORITY and local V1 as current authority; immutable run history preserved.
+
+Standalone Gmail adapter and durable Sent-recovery outbox are implemented; local daemon credentials remain CREDENTIAL_BLOCKED. One controlled delivery-module reload changed PID 12188 to 37615, restart_count=1; frozen scanner/model/policy and signal identities remain unchanged. See [FRANK_LOCAL_SIGNAL_V1_DELIVERY_FINAL.md](FRANK_LOCAL_SIGNAL_V1_DELIVERY_FINAL.md) for current acceptance.

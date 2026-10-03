@@ -115,3 +115,10 @@ def test_legacy_non_v1_signal_cannot_enter_new_gmail_authority(tmp_path):
     from mission_agent.signals.store import Ledger
     from test_frank_local_signals import put,active,MULTIPLE
     l=Ledger(tmp_path/'legacy');put(l,active(),stages=[MULTIPLE],dry_run=False);p=Provider();GmailOutbox(l).drain(p);assert not p.sent and l.db.execute('select count(*) from gmail_delivery').fetchone()[0]==0
+
+
+def test_all_historical_signals_have_explicit_forbidden_delivery_flag_without_identity_change(tmp_path):
+    from scripts.frank_gmail_delivery import delivery_flags
+    l,e,o,sid=setup(tmp_path,True);before=[tuple(r) for r in l.db.execute('select * from signals')];delivery_flags(l)
+    rows=l.db.execute('select * from signal_delivery_flags').fetchall();assert len(rows)==2 and all(r['delivery_forbidden']==1 for r in rows)
+    assert before==[tuple(r) for r in l.db.execute('select * from signals')]
