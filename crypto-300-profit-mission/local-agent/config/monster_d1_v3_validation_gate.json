@@ -1,0 +1,16 @@
+{
+  "phase_status": "MONSTER_D1_V3_TRAIN_PASS",
+  "validation_status": "INSUFFICIENT_DATA",
+  "validation_ceiling_pass": false,
+  "validation_median_entities_day": 101,
+  "validation_p95_entities_day": 152,
+  "validation_5x_entity_events": 2,
+  "validation_5x_prehit": 1,
+  "validation_10x_entity_events": 0,
+  "validation_runs": 1,
+  "validated_config": "V3-062",
+  "parameter_changes_after_validation": 0,
+  "D2": "BLOCKED_VALIDATION_NOT_PASSED",
+  "D3": "NOT_STARTED",
+  "production": "NO_GO"
+}

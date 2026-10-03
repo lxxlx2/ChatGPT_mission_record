@@ -1,3 +1,20 @@
+# MONSTER D1 V3 checkpoint — 2026-10-03
+
+**MONSTER_D1_V3_TRAIN_PASS; once-only 2024 validation = INSUFFICIENT_DATA + CEILING_FAIL.**
+
+Latest Monster report: [PHASE_MONSTER_D1_V3_REDESIGN_REPORT.md](PHASE_MONSTER_D1_V3_REDESIGN_REPORT.md).
+
+- Frozen two-stage architecture: 72 configs; 48 eligible on TRAIN; deterministic winner V3-062, median89/p95127 unique entities/day.
+- TRAIN >=5X19/20; >=10X6/7; strict-before2X19/20 and6/7. Recall and lead-time losses versus V2-237 are retained.
+- 2024 evaluated exactly once on committed winner: median101/p95152; >=5X entity1/2; higher tiers N=0. No validation PASS or retuning.
+- D2 BLOCKED_VALIDATION_NOT_PASSED; D3 NOT_STARTED; Monster LaunchAgent0; production NO_GO.
+- Meme source/runtime/plist/task/database received zero mutations. Read-only health checks: same PID, increasing polls, gap/duplicates/429=0, SQLite ok.
+- Stop for review. No automatic V4, alternative winner against exposed2024, D2/D3, task/Gmail or trades.
+
+The retained sections below are earlier stage snapshots; this Monster checkpoint supersedes their Monster next-work state.
+
+---
+
 # CURRENT MAINLINE CHECKPOINT — FM4 local acceptance 2026-10-03
 
 **PHASE_FM4 = PASS for authorized shadow engineering; PRODUCTION_TRADING = NO_GO.**
