@@ -9,3 +9,9 @@
 /dist/
 *.egg-info/
 /.venv312/
+# Never track OAuth client or authorized-user secrets.
+**/oauth-desktop-client.json
+**/authorized-user.json
+**/credentials.json
+**/client_secret*.json
+**/token.json
