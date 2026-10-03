@@ -9,6 +9,7 @@
 
 完整规则：
 - `docs/REPOSITORY_STRUCTURE.md`
+- `docs/X_TECHNICAL_POST_WRITING_GUIDE.md`：Crypto / NFT / Web3 技术推文写作与发布规范
 
 ## 五类内容导航
 

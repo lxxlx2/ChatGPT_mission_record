@@ -1,10 +1,10 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-09-29 Asia/Bangkok
+Updated: 2026-10-02 Asia/Bangkok
 
-Purpose: durable dedupe/state input for events already known, delivered, completed, refunded or explicitly closed.
+Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
-This file is an input to ACTION_GATE.md. User-confirmed state should be added here when relevant so later search results cannot re-notify the same completed fact.
+Hard scope rule: do not create a new monitor/task/file for a user-specific future action. If the user explicitly gives a date/time for an action already within this existing rights-monitor scope, record it here as an unresolved known event so the existing monitor can act on it. No new monitoring scope may be added without explicit user authorization.
 
 ## CLOSED / no remaining rights
 
@@ -16,7 +16,24 @@ This file is an input to ACTION_GATE.md. User-confirmed state should be added he
 - remaining_entitlement: none known
 - monitor_action: suppress unless user explicitly re-enters a new exposure
 
+## Completed / suppress
+
+### UNICRED #230 unstake/unlock
+- event_key: unicred:unstake_unlock:230:2026-10-01
+- state: COMPLETED_NO_REMAINING_ACTION
+- effective_date: 2026-10-01
+- source_type: user_confirmed
+- remaining_entitlement: no unresolved unstake/unlock action known
+- monitor_action: suppress; do not send T-24h/T-2h/overdue or backfill reminders
+
 ## Delivered / known event keys
+
+### Concrete CT claim-open
+- event_key: concrete:ct_claim_open:2026-09-30
+- delivery_status: delivered_once_late_discovery
+- gmail_message_id: 1a0fb623103c8948
+- user_policy: one notification is acceptable even if first discovery is late, provided Tier A/B confirms the action is still current/open and plausibly relevant
+- repeat_policy: suppress unchanged CT claim-open reminders after this delivery; only a genuinely new Tier A/B material delta may re-alert
 
 ### HEEBOO claim open
 - event_key: heeboo:claim_open:2026-09-10
@@ -33,7 +50,7 @@ This file is an input to ACTION_GATE.md. User-confirmed state should be added he
 ### Surf Season 1 referral rewards claim
 - event_key: surf:season1_referral_claim_open:2026-09-12
 - delivery_status: delivered
-- gmail_message_id: 1a09260ad0c0ca4b
+- gmail_message_id: 1a09260ad0c0ca4
 - repeat_policy: suppress unchanged claim reminders
 
 ### MetaMask Money Sweepstakes registration

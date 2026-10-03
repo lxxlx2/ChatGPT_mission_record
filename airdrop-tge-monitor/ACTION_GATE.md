@@ -1,11 +1,11 @@
 # TGE / Airdrop Action Gate
 
-Updated: 2026-09-29 Asia/Bangkok
+Updated: 2026-10-02 Asia/Bangkok
 Status: canonical pre-notification gate
 
-Purpose: prevent secondary-source alerts, stale/expired alerts, duplicate user-known events, already-completed actions, closed/refunded deal noise, and generic company-news alerts that do not change the user's rights.
+Purpose: prevent secondary-source alerts, expired alerts, duplicate user-known events, already-completed actions, closed/refunded deal noise, and generic company-news alerts that do not change the user's rights.
 
-Every candidate must pass ALL mandatory gates before Gmail/ChatGPT notification.
+Every candidate must pass ALL mandatory gates before Gmail notification.
 
 ## Gate 0 — Active scope
 
@@ -17,139 +17,70 @@ The project/deal must still have one of:
 - future TGE/listing/distribution event within monitored scope;
 - active allocation/settlement/refund process.
 
-If project/deal state is CLOSED, FULLY_REFUNDED, COMPLETED_NO_REMAINING_ACTION, or explicitly excluded, return NO_ACTION.
+If project/deal state is CLOSED, FULLY_REFUNDED, COMPLETED_NO_REMAINING_ACTION, USER_SUPPRESSED, or explicitly excluded, return NO_ACTION.
 
 ## Gate 1 — Canonical identity
 
 The candidate must match the monitored project's canonical identity tuple.
-
-Hard fail on unresolved:
-- official handle mismatch;
-- root-domain mismatch;
-- ticker mismatch;
-- chain/contract mismatch;
-- same-name project collision;
-- source account belongs to another project.
-
-Space @intodotspace vs Spacecoin @spacecoin remains the regression control.
+Hard fail on unresolved official handle/root-domain/ticker/chain/contract identity mismatch or same-name collision.
 
 ## Gate 2 — Evidence tier
 
-Evidence tiers:
+A — project first-party canonical source.
+B — mapped user-rights first-party source in REGISTRY.
+C — reputable English independent corroboration.
+D — discovery-only community/KOL/aggregator.
 
-A — project first-party:
-- canonical official X/social account;
-- canonical official root domain/docs/blog/help/app;
-- official project action page directly anchored from a canonical first-party source.
+A user-facing ACTION requires Tier A or Tier B. Tier C/D can discover or corroborate but cannot authorize ACTION by themselves.
 
-B — user-rights first-party:
-- the exact platform/SPV/syndicate/group lead through which the user's deal/right is held, but only when that source is explicitly mapped in REGISTRY.
-
-C — independent corroboration:
-- reputable English news/research source.
-
-D — discovery only:
-- KOL/community post;
-- search-engine summary without a first-party origin;
-- repost/quote from an unrelated account;
-- aggregator.
-
-A user-facing ACTION requires Tier A or Tier B evidence.
-
-Tier C and Tier D can discover or corroborate a candidate, but can NEVER by themselves authorize an ACTION.
-
-If a first-party page is unavailable and only C/D evidence exists:
-- persist candidate as UNVERIFIED_CANDIDATE;
-- do not notify;
-- retry in later scheduled runs.
-
-An official-domain search result/snippet can support discovery, but for ACTION it must resolve to a canonical official URL and preserve publication/update date plus exact event identity. A bare search snippet is insufficient.
-
-## Gate 3 — Event freshness
+## Gate 3 — Event freshness and first-alert policy
 
 Persist:
-- source_published_at when available;
-- source_updated_at when available;
-- event_effective_at / deadline when applicable;
-- first_discovered_at.
+- source_published_at;
+- source_updated_at;
+- event_effective_at/deadline;
+- first_discovered_at;
+- discovery_lag_minutes when calculable.
 
 Rules:
-1. A past deadline/closed action is NO_ACTION unless a NEW Tier A/B update explicitly reopens or extends it.
-2. An old announcement resurfaced by search is NO_ACTION when no material event field changed.
-3. An undated/static page can confirm current state but cannot by itself create a NEW ACTION event.
-4. Late-discovery recovery is allowed only when:
-   - Tier A/B proves the action is still open/current; AND
-   - the user still has a plausible unresolved right/action; AND
-   - either deadline/effective time is within the next 7 days, or missing prior delivery would materially risk entitlement.
-5. Generic historical pages with no current deadline, no new update and no unresolved user action are archived only, not notified.
+1. Past deadline/closed action is NO_ACTION unless a NEW Tier A/B update explicitly reopens or extends it.
+2. Old announcements resurfaced by search are NO_ACTION when the action is no longer current/open or no plausible unresolved user right remains.
+3. Undated/static pages can confirm state but cannot by themselves create a NEW ACTION event unless another Tier A/B source establishes that the action is currently open.
+4. For claim-open / registration-open / TGE-live / listing-live / unlock-live events, late discovery does NOT by itself suppress the first alert. If Tier A/B confirms the action is still current/open and the user may still have an unresolved right/action, one user-facing notification is allowed even when discovery lag exceeds 2 hours.
+5. The first alert must disclose the actual status without pretending it just opened. If source timing is known, include that it opened earlier / was announced earlier and give the source time/date where useful.
+6. After the first delivered notification for a stable event key, unchanged reminders are permanently suppressed. A second notification requires a material Tier A/B delta such as deadline/time change, eligibility change, allocation/amount change, route replacement, tokenomics change, listing venue/time change, refund/settlement status change, reopen/extension, or another user-rights change.
+7. A stale-recovery shard/run may send the one allowed first alert only if Rules 1-5 pass and no prior delivered notification exists for that stable event key.
+8. Generic historical pages with no current/open action and no unresolved user relevance are archive-only.
 
 ## Gate 4 — User-known state
 
-Read:
-- `state/known-events.md`;
-- recent event archives;
-- recent authoritative finals;
-- Gmail Sent when delivery proof is relevant.
-
-If the same stable event is already user-known, user-confirmed, completed, claimed, opted-in, refunded, or delivered:
-- NO_ACTION unless a material delta exists.
-
+Read `state/known-events.md`, recent event archives/finals, and Gmail Sent when delivery proof matters.
+If the stable event is already user-known, completed, claimed, opted-in, refunded, delivered, or user-suppressed: NO_ACTION unless a new material delta exists.
 User-confirmed state outranks later secondary reports.
-
-When the user tells ChatGPT that they already completed, claimed, refunded, closed, sold, or otherwise resolved an event, that state must be persisted to `state/known-events.md` before future monitoring decisions rely on it.
 
 ## Gate 5 — Stable event key and material delta
 
 Stable event key:
 `<canonical_project_id>:<event_type>:<effective_date_or_version>`
 
-Before sending, check whether the key or its superseded predecessor is already known/delivered.
-
-Material delta examples:
-- deadline/time changed;
-- eligibility changed;
-- allocation/amount changed;
-- claim/distribution route replaced;
-- tokenomics materially changed;
-- listing venue/time changed;
-- refund/settlement amount/status changed;
-- action reopened/extended;
-- project/deal changed from pending to completed/cancelled/refunded.
-
-Not material by itself:
-- another media article;
-- another KOL post;
-- unchanged webpage;
-- repeated official reminder with identical terms;
-- price/valuation commentary unrelated to user rights;
-- generic financing round/valuation announcement when the user's mapped SPV/allocation/fees/rights did not change.
+Material deltas include deadline/time, eligibility, allocation/amount, route, tokenomics, listing venue/time, refund/settlement status, reopen/extension, or user-rights change.
+Not material: another article/KOL post, unchanged webpage, repeated official reminder, price commentary, generic financing/valuation unrelated to user rights.
 
 ## Gate 6 — Rights relevance
 
-For private-company/SPV/deal monitoring, distinguish:
-- underlying-company news;
-- user-facing deal-rights changes.
-
-A company financing/valuation announcement is ACTION only when Tier B or mapped deal documentation shows a material effect on the user's own allocation, security, fees, conversion terms, transfer/redemption, settlement/distribution, or another stored right.
-
-If no user-level effect is confirmed:
-- record as research/background if useful;
-- NO_ACTION in the TGE/rights notifier.
+For private-company/SPV/deal monitoring, distinguish underlying-company news from user-facing rights changes. Company financing/valuation alone is NO_ACTION unless mapped Tier B evidence changes the user's allocation, security, fees, conversion, transfer/redemption, settlement/distribution or another stored right.
 
 ## Gate 7 — Delivery
 
 Only after Gates 0-6 PASS:
 1. persist event archive/stage state;
-2. dedupe exact event key and Gmail subject;
-3. send Gmail + ChatGPT;
+2. dedupe event key and Gmail subject;
+3. send Gmail;
 4. Gmail Sent id + readback + event archive = delivered.
 
-If delivery fails:
-- persist PENDING_DELIVERY;
-- retry delivery before evaluating a duplicate new alert;
-- later NO_ACTION cannot erase pending delivery.
+If delivery fails, persist PENDING_DELIVERY and retry delivery before evaluating a duplicate new alert.
 
-## Required audit fields for every candidate
+## Required audit fields
 
 - project_id
 - candidate_source_url
@@ -159,6 +90,8 @@ If delivery fails:
 - source_updated_at
 - event_effective_at
 - event_deadline
+- first_discovered_at
+- discovery_lag_minutes
 - identity_match
 - freshness_result
 - user_known_state_result
@@ -169,4 +102,4 @@ If delivery fails:
 - rejection_reason
 - notification_decision
 
-If a candidate cannot populate enough fields to pass safely, default is NO_ACTION / UNVERIFIED_CANDIDATE.
+If fields are insufficient to pass safely, default NO_ACTION / UNVERIFIED_CANDIDATE.

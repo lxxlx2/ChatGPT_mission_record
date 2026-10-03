@@ -1,6 +1,6 @@
 # Crypto Daily Acceptance Gate
 
-Updated: 2026-09-29 Asia/Bangkok
+Updated: 2026-10-02 Asia/Bangkok
 Status: canonical pre-delivery QA
 
 The official Crypto Daily can be sent only when all hard gates pass.
@@ -27,10 +27,7 @@ Missing hourly artifacts must be visible in the manifest. Missing data cannot be
 BTC/ETH/SOL current 24h price/range/volume when available, plus material relative-strength outliers.
 
 ## CR-04 Security carry-forward
-Every material security candidate from the prior 24h is either:
-- included in Section 9 after fresh verification; or
-- listed in the internal audit as omitted with concrete reason.
-Major-CEX account-security receipts follow SECURITY_SOURCE_POLICY.md.
+Every material security candidate from the prior 24h is either included in Section 9 after fresh verification or listed in the internal audit as omitted with concrete reason. Major-CEX account-security receipts follow SECURITY_SOURCE_POLICY.md.
 
 ## CR-05 TGE/rights freshness
 Section 7 consumes only current/actionable TGE/rights state. User-known/closed/refunded/expired events are not recycled as new information. When possible, use the canonical TGE monitor state rather than rediscovering stale events.
@@ -48,7 +45,7 @@ Material rates/oil/USD/equity/geopolitical drivers are checked when relevant.
 Unchanged prior-day conclusions are not repeated as new. Carry-forward is allowed only when still decision-relevant and clearly identified as ongoing or when a material delta exists.
 
 ## CR-10 No recovery downgrade
-09:00 primary, 09:10/10:10/11:10 recovery, manual resend and correction all use the same full 13-section content contract. A short digest/patch can never silently become the official report.
+Primary, recovery, manual resend and correction all use the same full 13-section content contract. A short digest/patch can never silently become the official report.
 
 ## CR-11 Delivery integrity
 - Gmail send + readback;
@@ -57,14 +54,54 @@ Unchanged prior-day conclusions are not repeated as new. Carry-forward is allowe
 - prior incomplete/superseded same-day versions recorded.
 
 ## CR-12 Quality-collapse guard
-Compare against trailing 5 latest complete formal reports:
-- if body length < 70% of median OR numbered-item count < 70% of median, QA fails unless a genuine low-event reason is documented and CR-01 through CR-09 all still pass;
-- provider failure, recovery mode or time pressure are never sufficient exceptions.
+Compare against trailing 5 latest complete formal reports. If body length <70% of median OR numbered-item count <70% of median, QA fails unless a genuine low-event reason is documented and CR-01 through CR-09 all still pass. Provider failure, recovery mode or time pressure are never sufficient exceptions.
 
 ## CR-13 User-visible cleanliness
-Monitoring-health details, run failures, “QA passed”, internal classification mechanics and persistence plumbing stay out of the report body unless the monitor failure itself directly changes the reliability of a substantive conclusion the user needs.
+Monitoring-health details, run failures, QA mechanics and persistence plumbing stay out of the report body. Audit-only: omission explanations, old-item suppression reasons, source-coverage/process explanations, scheduler/Gmail/GitHub/recovery/prebuild/pending/canonical details. If there is genuinely no decision-relevant update for a section, use one short neutral line such as `无高置信新增。`.
+
+## CR-14 One logical event = one user-visible item
+Before delivery, every numbered item must be assigned an internal `event_key`. Status + caveat + next checkpoint for the same event belong in the same item. Two adjacent items with the same event_key are an automatic QA failure unless they are truly independent user actions.
+
+## CR-15 Cross-section event dedupe
+Build an internal pre-send event map: `event_key -> sections/items`. A logical event gets one primary detail section. A second occurrence is allowed only as a short Top-5 summary or when it adds a distinct user decision dimension that cannot be expressed in the primary item. Repeated status, disclaimer or conclusion is forbidden.
+
+## CR-16 Item decision-value gate
+Every numbered user-visible item must contain at least one of: a new/materially changed verified fact; a current quantitative market/state observation; a concrete user-relevant risk/opportunity/action; or a specific future checkpoint with date/time/threshold.
+
+## CR-17 Mandatory pre-send lint
+Before Gmail send, require PASS for:
+1. structure_lint
+2. meta_prose_lint
+3. same_event_item_lint
+4. cross_section_dedupe_lint
+5. decision_value_lint
+6. stale_rights_lint
+7. freshness_lint
+8. repetition_budget_lint
+9. section_substance_lint
+10. top5_count_lint
+
+Any FAIL means `QA_FAIL_NO_SEND`. Rewrite and rerun lint before sending.
+
+## CR-18 Repetition budget
+A single event may appear at most twice in the entire email: once as a one-sentence Top-5 summary and once in its primary detail section. A security event detailed in Section 9 must not also be restated in Sections 6, 11, 12 and 13. A future dated checkpoint or concrete user action should be merged into the primary item whenever possible. Only a genuinely separate action/deadline may justify a second non-Top-5 occurrence, and then the Top-5 duplicate must be dropped.
+
+Hard fail examples:
+- same Bitget status in Top 5 + Security + Catalysts + Watchlist + Action;
+- same NEAR exploit in Top 5 + Protocol + Security + Catalysts + Action;
+- BTC/ETH/SOL relative-strength repeated unchanged in Sections 2, 3, 12 and 13.
+
+## CR-19 Section substance and breadth
+- Section 1 must contain exactly 5 genuinely important items because the fixed heading is `今日最重要的5件事`. Do not pad with no-op/process text; instead select the five highest-decision-value items across market, flows, regulation, security and protocol/ecosystem evidence.
+- Section 2 is the canonical home for BTC/ETH/SOL core tape.
+- Section 3 must focus on mature-market movers/persistent trends beyond merely restating Section 2. If a liquid asset moves roughly >=5% in 24h, >=15% in 7d, or has a major catalyst/volume shock, investigate it. If none qualifies, one short line is better than recycled BTC/ETH/SOL prose.
+- Section 5 prioritizes actual ETF/fund/exchange/whale capital movement. Analyst price targets alone do not satisfy institutional-flow coverage.
+- Section 6 is for protocol/infrastructure/ecosystem developments that are not already security items.
+- Section 11 contains only future catalysts not already fully described elsewhere.
+- Section 12 contains persistent trends/opportunities with distinct multi-period evidence or a concise no-update line; it may not simply repeat Section 2 prices.
+- Section 13 contains only concrete portfolio/risk actions that follow from the day’s evidence. It may reference an earlier item briefly but must not restate the event narrative.
 
 ## State machine
-DRAFT -> INPUT_MANIFEST_READY -> QA_PASS -> GMAIL_SENT_READBACK -> GITHUB_ARCHIVED_READBACK -> DELIVERED
+DRAFT -> INPUT_MANIFEST_READY -> PRE_SEND_LINT_PASS -> QA_PASS -> GMAIL_SENT_READBACK -> GITHUB_ARCHIVED_READBACK -> DELIVERED
 
 If Gmail succeeds but GitHub archive fails, repair GitHub only and do not resend.
