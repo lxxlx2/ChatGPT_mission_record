@@ -1,8 +1,8 @@
 # Frank-only local signal refactor — FRANK_LOCAL_SIGNAL_V1
 
-Target: `FRANK_ONLY`, `LOCAL_DETERMINISTIC_SIGNAL`. Deployment status before controlled cutover: `READY_FOR_CONTROLLED_CUTOVER`; historical and shadow delivery disabled.
+Target: `FRANK_ONLY`, `LOCAL_DETERMINISTIC_SIGNAL`. Deployment status: `FRANK_LOCAL_SIGNAL_V1_LIVE`, activated 2026-10-04 00:29:01 Asia/Bangkok. Historical and shadow delivery remain disabled.
 
-Only Frank is enabled. Other persons and TOKEN_CONSENSUS are DEFERRED. Production trading is NO_GO. No wallet mutation or new scheduled automation is introduced. The existing launchd scanner is replaced once after checkpoint verification.
+Only Frank is enabled. Other persons and TOKEN_CONSENSUS are DEFERRED. Production trading is NO_GO. No wallet mutation or new scheduled automation is introduced. The existing launchd scanner was replaced once after checkpoint verification.
 
 ## Frozen behavior authority
 
@@ -37,3 +37,11 @@ Private evidence and runtime databases remain outside the public repository. Que
 ## Legacy GPT authority
 
 `SUPERSEDED_FOR_FRANK_SIGNAL_AUTHORITY`: the new service imports no GPT or Git handoff worker. Old runtime facts/history are preserved; old writer is stopped at cutover. The legacy ChatGPT consumer may remain configured (`LEGACY_GPT_CONSUMER_STILL_PRESENT`) because this session has no dedicated ChatGPT scheduled-task administration capability. It has no authority to veto or send new local Frank signals. Private mac-data supersession marker records the transition; gpt-data ownership is preserved.
+
+## Controlled cutover verification — 2026-10-04
+
+Old PID 23182 stopped at 00:29:00.875 Asia/Bangkok; new PID 12188 started at 00:29:01.147. New startup implementation commit: `8f91d890913103ce2900bf97aac830a1c9aec140`. Exactly one scanner/delivery authority verified. One controlled cutover; new process restart_count=0. Old LaunchAgent was booted out and its plist preserved with a disabled suffix; history/raw/SQLite snapshots were retained.
+
+Final old durable cursor was retained at slot 452991464. Restart-window catch-up signatures=0 because no new wallet signature occurred. Independent finalized baseline reconciliation: chain=35, old observations=35, new ledger=35, missing/extra/gap=0. Baseline starts 2026-10-03 05:02:49.509370 Asia/Bangkok, from durable first_started_at, not a Git commit time. Health RUNNING; raw pending=0, model unprocessed=0, consecutive_errors=0, lag_seconds=0, source_drift=false. Imported accumulation stays DRY_RUN_AUDIT; no 7Vert historical notification was backfilled.
+
+Private mac-data manifest and authority marker were marked SUPERSEDED_FOR_FRANK_SIGNAL_AUTHORITY with exact readback; old current handoff was expired. gpt-data/main were not changed. The legacy consumer configuration remains outside available task-administration capabilities and is explicitly LEGACY_GPT_CONSUMER_STILL_PRESENT.
