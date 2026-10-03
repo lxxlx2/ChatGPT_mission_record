@@ -1,16 +1,17 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-10-03 11:13 Asia/Bangkok
+Updated: 2026-10-04
 Timezone: Asia/Bangkok
 
 ## Accounting rule
 
-- include only individual chain positions / NFTs with a reliable marked value of **>= $1.00**;
-- individual positions worth **< $1.00** are omitted from the displayed portfolio;
+- include only individual chain positions / NFTs with a reliable marked value of **>= $1.00** in the displayed subtotal;
+- individual positions worth **< $1.00** are omitted from the displayed subtotal but may be noted as dust/gas;
 - spam, claim-bait and unpriced unsolicited receipts are excluded;
 - unpriced known inventory can remain as a note but does not enter marked totals;
 - committed/pending allocation capital is tracked separately from liquid available balance;
-- this is an asset-completeness snapshot, not Mission PnL.
+- wallet balance changes are not PnL without transaction history and cost basis;
+- this file is an asset-completeness snapshot, not Mission performance.
 
 ## Canonical wallets
 
@@ -18,126 +19,142 @@ Timezone: Asia/Bangkok
 - Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 - Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
-## Fresh price references
+## Fresh mark references
 
-Connected chain-data price snapshot around 2026-10-03 11:12 Asia/Bangkok:
+Fresh connected price references around 2026-10-04 05:24 Asia/Bangkok:
+- ETH: **$2,687.63**
+- SOL: **$119.79**
+- USDC: **$1.00014**
 
-- ETH: **$2,681.38**
-- SOL: **$119.46**
-- USDC: **$1.00013**
-
-These prices are only for portfolio marking; they are not trading signals.
+These references are used only to mark known balances, not as trading signals.
 
 ## Private / off-chain
 
-### Binance — USER_CONFIRMED, not independently refreshed in this chain scan
+### Binance — USER_CONFIRMED carry-forward
 
-Latest user-confirmed available balance:
+Latest stored user-confirmed available balance:
 - **$523.72**
 
-### Legion / JUMP — USER_CONFIRMED
+This was not independently refreshed in the 2026-10-04 chain scan.
+
+### Legion / JUMP — USER_CONFIRMED carry-forward
 
 - submitted / reserved capital: **$1,000.00**
 - state: **PENDING_ALLOCATION**
-- final allocation: **not yet known**
-- accounting: track the full $1,000 as pending capital until Legion publishes allocation/refund; do not treat it as liquid available balance.
+- final allocation: not yet recorded as known in this Mission snapshot
+- accounting: track the full $1,000 as pending/committed capital until allocation/refund is verified; do not treat it as liquid available balance.
 
-## Fresh on-chain assets >= $1
+## Fresh on-chain assets
 
-### Solana — fresh finalized scan
+### Solana — DIRECT_CHAIN finalized
 
-Wallet native SOL:
-- **0.003093645 SOL** ≈ **$0.37** → below $1 display threshold, omitted from marked subtotal.
+Fresh slot range: approximately 453,066,884–453,066,912.
 
-SPL Token Program accounts:
-- USDC mint `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+Native SOL:
+- **0.003093645 SOL**
+- mark: **~$0.37** -> below $1 display threshold.
+
+Classic SPL Token Program:
+- canonical USDC mint `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
 - balance: **142.162136 USDC**
-- marked value: **~$142.18**
+- mark: **~$142.18**
 
-Other returned classic SPL accounts had zero token balance.
+Other classic SPL token accounts returned in this read had zero token balance.
 
-#### Relay reconciliation from 2026-10-02
+Coverage limitation:
+- the enhanced Solana asset endpoint was temporarily unavailable;
+- a full Token-2022 enumeration was not completed in this refresh;
+- therefore do not claim exhaustive coverage of every possible Solana asset class.
 
-Previous verified Solana USDC balance:
-- **108.626548 USDC**
-
-Current balance:
-- **142.162136 USDC**
-
-Increase:
-- **+33.535588 USDC**
-
-The increase is strongly consistent in size and timing with the prior Credit-sale Relay movement (~0.012276 ETH-equivalent / ~$33.63 source-side reference). The exact destination transaction has not been independently linked in this refresh, so this is recorded as **balance-level reconciliation**, not a proven transaction-level bridge mapping.
-
-Accounting consequence:
-- previous standalone `RELAY_RECONCILIATION` line is **closed**;
-- the value now sits inside the actual Solana USDC balance;
-- do not count the old ~$33.63 reconciliation value separately.
-
-### Ethereum — fresh scan
+### Ethereum — DIRECT_CHAIN
 
 Native ETH:
 - **0.000634360344095958 ETH**
 - mark: **~$1.70**
 
-USDC:
+Canonical USDC:
 - **1.006555 USDC**
 - mark: **~$1.01**
 
-Other returned ERC-20 balances with market data were below $1 individually or were spam/dust and are excluded under the accounting rule.
+Credits contract `0x97630aA70AB14ed9883B41dAfccBc11349723043`:
+- owned count: **0**
+- verified at block **26,114,793** / **2026-10-03T22:26:23Z**.
 
-### Base — fresh native balance
+Current Credits position: **0 / fully cleared**.
 
+### Base — DIRECT_CHAIN
+
+Native ETH:
 - **0.000967183780184779 ETH**
-- mark: **~$2.59**
+- mark: **~$2.60**
 
-No additional Base token is included without a reliable >=$1 mark; unsolicited/spam balances are excluded.
+No unknown/spam token receipt is included without verified identity and reliable value.
 
-### Ink — fresh native balance
+### Ink — DIRECT_CHAIN native balance
 
-- **0.010389022090321585 ETH**
-- mark: **~$27.86**
+Native ETH:
+- **0.011133212494942321 ETH**
+- mark: **~$29.92**
 
-### Arbitrum / Optimism — fresh native balance, below threshold
+Prior stored native balance was `0.010389022090321585 ETH`. The increase is recorded only as a balance delta; no source transaction or profit is inferred from balance alone.
 
-- Arbitrum: **0.000003959328931033 ETH** ≈ **$0.01**
-- Optimism: **0.000065278581034767 ETH** ≈ **$0.18**
+Known prior inventory:
+- **INK #372** remains prior-known inventory;
+- no supported fresh Ink NFT ownership result was obtained in this refresh;
+- no reliable current >=$1 mark is included.
 
-Both are below the $1 display threshold and excluded from marked subtotal.
+### Unichain — DIRECT_CHAIN
 
-### Sui
+Native ETH:
+- **0.000020589846025254 ETH**
+- mark: **~$0.06** -> below $1 display threshold.
 
-Latest explicit user-confirmed accounting state remains:
+UNICRED contract `0xf60de24F228dc7Ca6fF025958d2eE3A956ED88E5`:
+- owned count: **0**
+- verified at block **60,318,039** / **2026-10-03T22:26:38Z**.
+
+Current UNICRED #230 position: **not owned / closed**.
+
+### Other fresh EVM native balances
+
+Fresh reads also returned small native balances on Arbitrum, Optimism, Linea, World Chain, MegaETH, Robinhood Chain and other supported networks. These remain below the display threshold or lack a reliable material mark and are not included in the displayed subtotal.
+
+Known examples:
+- Arbitrum ETH: **0.000003959328931033**
+- Optimism ETH: **0.000065278581034767**
+- Linea ETH: **0.000283128973717299**
+- World Chain ETH: **0.000106736504323280**
+- MegaETH native balance: **0.000082071511230598**
+- Robinhood Chain ETH: **0.000080297765615110**
+
+### Sui — USER_CONFIRMED, not freshly rescanned
+
+Latest explicit user-confirmed state:
 - **SUI = 0 / position fully cleared**
 
-No fresh Sui-native connector result was obtained in this refresh; do not relabel this line as independently rescanned.
+The connected generic portfolio method did not accept the canonical Sui address format, so no fresh Sui-native result was obtained. Do not relabel this as DIRECT_CHAIN.
 
-## Credits / Visualize Value — CLOSED
+## NFT / rights inventory
 
-Credit contract:
-- `0x97630aA70AB14ed9883B41dAfccBc11349723043`
+### Credits
 
-Fresh Ethereum NFT ownership query at block 26,109,344 / 2026-10-03T04:13:23Z:
-- **owned NFTs from this contract: 0**
+- fresh Ethereum ownership: **0**
+- all original Credits are now historical provenance rather than current inventory.
 
-State:
-- Credit #23042: previously sold 2026-09-28.
-- Credit #23232: sold 2026-10-02.
-- current Credits position: **0 / fully cleared**.
+### UNICRED
 
-Credit #23232 realized lifecycle reference retained from the prior accounting entry:
-- seller receipt: 0.0124 WETH (~$33.97 at then-current reference)
-- direct acquisition basis: $8.00
-- approximate realized profit after sale transaction gas: **~+$25.83**, before later bridge/withdrawal costs.
+- fresh Unichain ownership: **0**
+- #230 is no longer current inventory.
 
-This realized result is distinct from the prior day-to-day NAV mark compression.
+### INK #372
 
-## Other NFT / rights inventory
+- prior known inventory only;
+- fresh Ink NFT ownership endpoint unavailable in this refresh;
+- no reliable market mark included.
 
-- **UNICRED #230**: removed / no longer owned.
-- **INK #372** remains known Ink inventory, but no reliable current >=$1 market mark is available in this refresh, so it is excluded from marked totals.
-- Solstice vesting-position NFT remains relevant only to the separate Season 1 rights dispute; revoked 1,049.483713 SLX is not treated as liquid NAV.
-- other NFTs below $1 or without reliable value are omitted.
+### Solstice rights dispute
+
+The historical revoked/vesting SLX rights dispute remains separate research/accounting context and is not treated as liquid NAV without a current verified entitlement.
 
 ## Current marked asset reference
 
@@ -147,10 +164,10 @@ This realized result is distinct from the prior day-to-day NAV mark compression.
 - Solana USDC: **~$142.18**
 - Ethereum USDC: **~$1.01**
 - Ethereum ETH: **~$1.70**
-- Base ETH: **~$2.59**
-- Ink ETH: **~$27.86**
+- Base ETH: **~$2.60**
+- Ink ETH: **~$29.92**
 
-**Liquid / available subtotal: ~ $699.06**
+**Liquid / available subtotal: ~ $701.13**
 
 ### Pending / committed
 
@@ -159,40 +176,34 @@ This realized result is distinct from the prior day-to-day NAV mark compression.
 ### Marked NFT
 
 - Credits: **$0 / fully cleared**
-- no other NFT currently has a reliable included mark in this snapshot.
+- UNICRED: **$0 current inventory / not owned**
+- no other NFT has a reliable included mark in this refresh.
 
 ### Total tracked asset reference
 
-Excluding sub-$1 dust and unpriced NFTs:
+Excluding sub-$1 dust and unpriced/unverified NFTs/tokens:
 
-**~ $1,699.06**
+**~ $1,701.13**
 
-Previous tracked asset reference from 2026-10-02:
-- **~$1,699.87**
-
-Reference change:
-- **~ -$0.81**
-
-Do not interpret this ~$0.81 change as trading PnL. The prior snapshot used different ETH/USDC marks and carried the Relay value as reconciliation; the current snapshot moves the Relay-sized value into actual Solana USDC and uses fresh prices.
+This is not Mission PnL. The off-chain Binance and JUMP values are carried forward from the latest user-confirmed state and were not independently refreshed by the chain scan.
 
 ## Current state notes
 
-- Credits: **fully cleared / 0**, freshly rechecked on Ethereum.
-- Solana USDC: **142.162136**, fresh finalized scan.
-- Relay reconciliation: **closed at balance level**; no longer double-counted.
-- SUI: **0 by latest explicit user-confirmed state**, not freshly rescanned here.
-- UNICRED #230: **removed from current holdings**.
-- Legion / JUMP: **$1,000 pending allocation**.
-- Binance: **$523.72 latest user-confirmed balance**.
-- positions below $1 remain excluded by rule.
+- Solana USDC remains **142.162136** on a fresh finalized read.
+- Ink native ETH is now **0.011133212494942321**.
+- Credits ownership is freshly verified at **0**.
+- UNICRED ownership is freshly verified at **0**.
+- SUI remains **0** by latest user-confirmed state, without a fresh supported Sui-native scan.
+- positions below $1 remain excluded from the displayed subtotal.
+- unknown/spam assets remain excluded until identity/value is independently verified.
 
 ## Monitoring policy
 
-No routine wallet polling unless explicitly authorized.
+Routine automatic wallet polling is not authorized.
 
 Refresh this file only:
 - on explicit user request;
 - after a user-reported material deposit/withdrawal/trade/claim/bridge/NFT action;
 - when a verified event requires balance/ownership confirmation.
 
-The newly authorized `$300` Meme/GPT monitoring task is separate from routine portfolio polling. Do not infer authorization for additional wallet-monitor automations.
+The umbrella `$300-3000` GPT task is paused as of 2026-10-04. Frank local signal monitoring remains separate and LIVE; this does not authorize routine portfolio polling.
