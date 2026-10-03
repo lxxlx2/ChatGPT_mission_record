@@ -1,0 +1,54 @@
+{
+  "BUY": {
+    "signature": "BjX9rd56PJKQLZKMRyGG5MTf3ndqoqpVcdGGHEWg9k8qvdzbbwCjhEqyCTpmnyRmaA1zm8dSXytLmp51YuGuLmN",
+    "mint": "5eLcW9sTax56Hpr45yiXu82TyuUWi5xGgLchuH3apump",
+    "block_time": 1788464171,
+    "side": "BUY",
+    "body": "{\"direction\": \"BUY\", \"episode_id\": \"00da5dc289ca798ee0e10a49f7f05c5d64324686f56e0446fa9b249a53763fbe\", \"mint\": \"5eLcW9sTax56Hpr45yiXu82TyuUWi5xGgLchuH3apump\", \"position_after_raw\": \"9959339043453\", \"position_before_raw\": \"0\", \"quote_amount_raw\": \"1000000000\", \"quote_asset\": \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", \"quote_decimals\": 6, \"referenced_post_raw\": \"9959339043453\", \"referenced_pre_raw\": \"0\", \"side\": \"BUY\", \"token_amount_raw\": \"9959339043453\", \"token_decimals\": 6}",
+    "chronology": [
+      {
+        "signature": "BjX9rd56PJKQLZKMRyGG5MTf3ndqoqpVcdGGHEWg9k8qvdzbbwCjhEqyCTpmnyRmaA1zm8dSXytLmp51YuGuLmN",
+        "file": "BjX9rd56PJKQLZKMRyGG5MTf3ndqoqpVcdGGHEWg9k8qvdzbbwCjhEqyCTpmnyRmaA1zm8dSXytLmp51YuGuLmN.json.gz",
+        "side": "BUY"
+      }
+    ]
+  },
+  "ADD": {
+    "signature": "XhieLUbYmairN4c5EnVa3FmY1GDmeTr3pN1dwQtTb55B3z1rbMphoGxwwHEdi8nfXBjxosCfatPx9sjFq5KiKio",
+    "mint": "MukLDtJ8Cx9DxLbeyLRSWPSposTMWuwHANbuaudpump",
+    "block_time": 1788640216,
+    "side": "ADD",
+    "body": "{\"direction\": \"BUY\", \"episode_id\": \"29da12ab03ccc94f4c5c6b9c4fbacd0bf8a04114a80c71d22fbb111792d24a10\", \"mint\": \"MukLDtJ8Cx9DxLbeyLRSWPSposTMWuwHANbuaudpump\", \"position_after_raw\": \"3635998024575\", \"position_before_raw\": \"2907872056952\", \"quote_amount_raw\": \"5000000000\", \"quote_asset\": \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", \"quote_decimals\": 6, \"referenced_post_raw\": \"3635998024575\", \"referenced_pre_raw\": \"2907872056952\", \"side\": \"ADD\", \"token_amount_raw\": \"728125967623\", \"token_decimals\": 6}",
+    "chronology": [
+      {
+        "signature": "2b6h3QrA6vKofBEuF6suEnRHb5119uC2z387ohcQicogCfVwCykvqA6a6Dq8gi67CndeDY35quED8oBxRB3nmQBY",
+        "file": "2b6h3QrA6vKofBEuF6suEnRHb5119uC2z387ohcQicogCfVwCykvqA6a6Dq8gi67CndeDY35quED8oBxRB3nmQBY.json.gz",
+        "side": "BUY"
+      },
+      {
+        "signature": "XhieLUbYmairN4c5EnVa3FmY1GDmeTr3pN1dwQtTb55B3z1rbMphoGxwwHEdi8nfXBjxosCfatPx9sjFq5KiKio",
+        "file": "XhieLUbYmairN4c5EnVa3FmY1GDmeTr3pN1dwQtTb55B3z1rbMphoGxwwHEdi8nfXBjxosCfatPx9sjFq5KiKio.json.gz",
+        "side": "ADD"
+      }
+    ]
+  },
+  "SELL": {
+    "signature": "2phBzqpamftmh5qmx8HJaJNMocNyoQTpWKLY89LpEBEMiT7KzxRYP36EMXrdbPTJCMGDgsJ7veBH8YtdDa5gmFXx",
+    "mint": "GtPuLjZUvEyrTXZzNAUQWBNVcgf3YNCgJDKZ7kippump",
+    "block_time": 1788466201,
+    "side": "SELL",
+    "body": "{\"direction\": \"SELL\", \"episode_id\": \"acb58da170a998430a4ce5f6878fd3e5c2b809529d5ae0f5ec6b25b0cc4673e9\", \"mint\": \"GtPuLjZUvEyrTXZzNAUQWBNVcgf3YNCgJDKZ7kippump\", \"position_after_raw\": \"5103198619962\", \"position_before_raw\": \"10206397239923\", \"quote_amount_raw\": \"3906898879\", \"quote_asset\": \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", \"quote_decimals\": 6, \"referenced_post_raw\": \"5103198619962\", \"referenced_pre_raw\": \"10206397239923\", \"side\": \"SELL\", \"token_amount_raw\": \"5103198619961\", \"token_decimals\": 6}",
+    "chronology": [
+      {
+        "signature": "48PN2YDR1AqmPN8kBEj9fsCDyWaF8uxVVgJ7YrA2t55FJFfQzDUFi8BHoUw9eBqgafdhr3NKpuU7Qjx31bueedyt",
+        "file": "48PN2YDR1AqmPN8kBEj9fsCDyWaF8uxVVgJ7YrA2t55FJFfQzDUFi8BHoUw9eBqgafdhr3NKpuU7Qjx31bueedyt.json.gz",
+        "side": "BUY"
+      },
+      {
+        "signature": "2phBzqpamftmh5qmx8HJaJNMocNyoQTpWKLY89LpEBEMiT7KzxRYP36EMXrdbPTJCMGDgsJ7veBH8YtdDa5gmFXx",
+        "file": "2phBzqpamftmh5qmx8HJaJNMocNyoQTpWKLY89LpEBEMiT7KzxRYP36EMXrdbPTJCMGDgsJ7veBH8YtdDa5gmFXx.json.gz",
+        "side": "SELL"
+      }
+    ]
+  }
+}

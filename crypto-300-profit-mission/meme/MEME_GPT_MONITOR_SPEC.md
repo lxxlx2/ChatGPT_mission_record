@@ -1,3 +1,5 @@
+> 2026-10-03 Frank scope update: this GPT decision design is superseded for the authorized Frank-only local deterministic target. The legacy service has not yet been switched. See [FRANK_LOCAL_SIGNAL_REFACTOR.md](FRANK_LOCAL_SIGNAL_REFACTOR.md) for implementation boundaries and unresolved model mapping. Historical content below is preserved.
+
 # MEME GPT MONITOR SPEC
 
 Updated: 2026-10-03
