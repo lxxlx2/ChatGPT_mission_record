@@ -50,17 +50,17 @@ class GmailOutbox:
     def wire_body(self,r):return r['body']+'\n\nFrank-Delivery-Identity: '+r['signal_id']+'\nFrank-Content-SHA256: '+r['content_hash']+'\nFrank-Delivery-Mode: '+r['delivery_mode']+'\n'
     def wire(self,r,recipient):
         if not re.fullmatch(r'[^\s<>@,;]+@[^\s<>@,;]+',recipient):raise CredentialBlocked('RECIPIENT_NOT_CONFIGURED')
-        msg=EmailMessage();msg['To']=recipient;msg['Subject']=r['subject'];msg['Message-ID']=r['wire_message_id'];msg['X-Frank-Signal-ID']=r['signal_id'];msg['X-Frank-Content-Hash']=r['content_hash'];msg['X-Frank-Delivery-Mode']=r['delivery_mode'];msg.set_content(self.wire_body(r));return msg.as_bytes()
+        msg=EmailMessage();msg['To']=recipient;msg['From']=recipient;msg['Subject']=r['subject'];msg['Message-ID']=r['wire_message_id'];msg['X-Frank-Signal-ID']=r['signal_id'];msg['X-Frank-Content-Hash']=r['content_hash'];msg['X-Frank-Delivery-Mode']=r['delivery_mode'];msg.set_content(self.wire_body(r));return msg.as_bytes()
     def verify(self,r,message):
         if not message.get('id') or 'SENT' not in message.get('labelIds',[]):raise PermanentError('NOT_A_SENT_RECEIPT')
         try:
             raw=base64.urlsafe_b64decode(message['raw']+'===' );msg=email.message_from_bytes(raw,policy=mime_policy.default);body=msg.get_content()
-            checks=[str(msg['Subject'])==r['subject'],str(msg['Message-ID'])==r['wire_message_id'],str(msg['X-Frank-Signal-ID'])==r['signal_id'],str(msg['X-Frank-Content-Hash'])==r['content_hash'],str(msg['X-Frank-Delivery-Mode'])==r['delivery_mode'],body.replace('\r\n','\n')==self.wire_body(r)]
+            checks=[str(msg['Subject'])==r['subject'],bool(re.fullmatch(r'<[^<>\s]+@[^<>\s]+>',str(msg['Message-ID']))),str(msg['X-Frank-Signal-ID'])==r['signal_id'],str(msg['X-Frank-Content-Hash'])==r['content_hash'],str(msg['X-Frank-Delivery-Mode'])==r['delivery_mode'],body.replace('\r\n','\n')==self.wire_body(r)]
         except (KeyError,ValueError,TypeError):raise PermanentError('INVALID_SENT_RECEIPT') from None
         if not all(checks):raise PermanentError('SENT_IDENTITY_OR_CONTENT_MISMATCH')
         sent_at=now()
         if message.get('internalDate'):sent_at=__import__('datetime').datetime.fromtimestamp(int(message['internalDate'])/1000,__import__('datetime').timezone.utc).isoformat()
-        receipt={'signal_id':r['signal_id'],'subject':r['subject'],'body_hash':r['body_hash'],'content_hash':r['content_hash'],'gmail_message_id':message['id'],'gmail_thread_id':message.get('threadId'),'sent_at':sent_at,'readback_verified':True}
+        receipt={'signal_id':r['signal_id'],'subject':r['subject'],'body_hash':r['body_hash'],'content_hash':r['content_hash'],'gmail_message_id':message['id'],'gmail_thread_id':message.get('threadId'),'sent_at':sent_at,'readback_verified':True,'submitted_wire_message_id':r['wire_message_id'],'observed_wire_message_id':str(msg['Message-ID'])}
         with transaction(self.db):
             self.db.execute("UPDATE gmail_delivery SET status='SENT_VERIFIED',sent_at=?,gmail_message_id=?,gmail_thread_id=?,readback_verified=1,last_error=NULL,receipt=? WHERE signal_id=?",(sent_at,message['id'],message.get('threadId'),json.dumps(receipt),r['signal_id']))
             self.db.execute("UPDATE outbox SET status='SENT_VERIFIED',receipt=?,last_error=NULL WHERE signal_id=? AND channel='gmail'",(json.dumps(receipt),r['signal_id']))
@@ -119,7 +119,13 @@ def kick(ledger):
             with database.with_suffix('.gmail-delivery.lock').open('a') as lock:
                 try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
                 except BlockingIOError:return
-                db=Ledger(database);GmailOutbox(db).drain(provider)
+                db=Ledger(database)
+                config_path=database.parent/'gmail-existing-source.json'
+                config=json.loads(config_path.read_text()) if config_path.exists() else {}
+                if config.get('require_daemon_probe'):
+                    from mission_agent.gmail_setup.probe import probe
+                    if not probe(provider,database.parent,config) or config.get('probe_only'):return
+                GmailOutbox(db).drain(provider)
         finally:
             if db:db.db.close()
             _worker_lock.release()

@@ -122,3 +122,14 @@ def test_all_historical_signals_have_explicit_forbidden_delivery_flag_without_id
     l,e,o,sid=setup(tmp_path,True);before=[tuple(r) for r in l.db.execute('select * from signals')];delivery_flags(l)
     rows=l.db.execute('select * from signal_delivery_flags').fetchall();assert len(rows)==2 and all(r['delivery_forbidden']==1 for r in rows)
     assert before==[tuple(r) for r in l.db.execute('select * from signals')]
+
+def test_provider_message_id_rewrite_retains_strict_frank_identity(tmp_path):
+    l,e,o,sid=setup(tmp_path);p=Provider();o.drain(p);r=o.row(sid)
+    message=dict(p.messages['gmail-1']);raw=base64.urlsafe_b64decode(message['raw'])
+    raw=raw.replace(r['wire_message_id'].encode(),b'<provider-generated@mail.gmail.com>')
+    message['raw']=base64.urlsafe_b64encode(raw).decode();o.verify(r,message)
+    receipt=json.loads(o.row(sid)['receipt'])
+    assert receipt['observed_wire_message_id']=='<provider-generated@mail.gmail.com>'
+    assert receipt['submitted_wire_message_id']==r['wire_message_id']
+    message['raw']=base64.urlsafe_b64encode(raw.replace(sid.encode(),b'wrong-identity')).decode()
+    with pytest.raises(PermanentError,match='SENT_IDENTITY_OR_CONTENT_MISMATCH'):o.verify(r,message)

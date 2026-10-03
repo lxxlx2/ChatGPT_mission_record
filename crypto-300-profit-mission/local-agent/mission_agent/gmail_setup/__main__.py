@@ -83,7 +83,7 @@ def verify_test(root):
     try:
         box=GmailOutbox(ledger)
         box.enqueue(dict(signal_id=sid,subject=TEST_SUBJECT,body='THIS IS A DELIVERY TEST\nNOT A LIVE INVESTMENT SIGNAL\n'+sid),mode='TEST')
-        provider=CountingProvider(credential); box.drain(provider,allow_test=True)
+        provider=CountingProvider(credential); provider.ready(); box.drain(provider,allow_test=True)
         row=box.row(sid)
         if row['status']!='SENT_VERIFIED': raise SetupError('TEST_SEND_OR_READBACK_PENDING: '+row['status'])
         ids=provider.find_sent(row['wire_message_id'],sid)

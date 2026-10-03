@@ -36,3 +36,12 @@ def test_same_identity_recovery_and_rerun_never_resend(tmp_path,monkeypatch):
     assert len(shared.sent)==1
     assert first['signal_id']==second['signal_id']
     assert second['duplicate_send_count']==0 and second['production_activated'] is False
+
+def test_daemon_probe_blocks_delivery_without_pass_receipt(tmp_path,monkeypatch):
+    from mission_agent.gmail_setup.probe import probe
+    class P:
+        last_api_result=None
+        def ready(self): raise RuntimeError('credential unavailable')
+    assert probe(P(),tmp_path,{}) is False
+    value=json.loads((tmp_path/'gmail-daemon-capability.json').read_text())
+    assert value['status']=='BLOCKED' and value['pid']==os.getpid()

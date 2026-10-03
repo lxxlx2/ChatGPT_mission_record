@@ -36,3 +36,9 @@ Return to the same Codex chat after success. Remaining activation gates:
 
 Neither this CLI nor a passing mock test establishes Gmail LIVE. Missing client,
 consent, real TEST receipt, or launchd access remains blocked.
+
+Provider RFC822 Message-ID rewriting is allowed only with exact Frank signal ID,
+subject, mode, content hash and complete body equality, plus SENT label and a
+valid observed RFC822 ID. Both submitted and observed IDs enter the receipt.
+Delivery can require a one-time capability probe executed inside the actual
+existing daemon worker; probe_only blocks all production sends until verified.
