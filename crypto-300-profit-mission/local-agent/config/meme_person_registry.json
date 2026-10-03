@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "namespace": "LIVE",
+  "persons": [{
+    "person_id": "frank",
+    "display_name": "Frank",
+    "approval": "USER_CONFIRMED_FM4",
+    "wallets": [{"chain": "solana", "address": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ", "verified": true}],
+    "person_pattern_state": "SIGNAL_ENABLED",
+    "pattern_basis": "VALIDATED_PARSER_AND_HISTORY_FEATURE_HANDOFF_NOT_STRATEGY_PASS"
+  }]
+}

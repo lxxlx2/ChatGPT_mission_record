@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "ttl": {
+    "status": "TEMPORARY_SHADOW_TTL",
+    "value_seconds": 900,
+    "anchor": "FIRST_EVENT_AT",
+    "rationale": "Bounded shadow-only experiment; no calibrated followability return data. Hourly downstream may discard all expired events.",
+    "evidence": "FM4 historical price coverage audit; no strategy or production validation",
+    "created_at": "2026-10-03T05:06:28.942910+00:00"
+  },
+  "consensus_window_seconds": 900,
+  "supported_comparison_windows_seconds": [
+    300,
+    900,
+    1800,
+    3600,
+    10800
+  ],
+  "gpt_consumer": "$300-3000",
+  "real_gmail_sender": "EXTERNAL_DOWNSTREAM_ONLY",
+  "trading_enabled": false
+}

@@ -14,10 +14,12 @@ def verify_acceptance(acceptance):
     if result['FRANK_500_VALIDATED'] is not True:raise ValueError('FRANK_500_MANUAL_ACCEPTANCE_REQUIRED')
 
 class FrankCollector:
-    def __init__(self,repo,raw_root,acceptance,rpc=None,*,durable_detection=False):
+    def __init__(self,repo,raw_root,acceptance,rpc=None,*,durable_detection=False,history_limit=None):
         verify_acceptance(acceptance)
         self.repo=repo
         self.durable_detection=durable_detection
+        if history_limit is not None and (type(history_limit) is not int or not 1<=history_limit<=10000):raise ValueError("HISTORY_LIMIT")
+        self.history_limit=history_limit
         self.store=FrankStore(repo);self.raw_root=Path(raw_root);self.raw_root.mkdir(parents=True,exist_ok=True,mode=0o700);self.rpc=rpc or SolanaRPC()
         self.detection_root=self.raw_root.parent/'detections'
         if durable_detection:self.detection_root.mkdir(parents=True,exist_ok=True,mode=0o700)
@@ -55,7 +57,7 @@ class FrankCollector:
                 # Durable archive before SQLite reference/cursor commit.
                 publish(path,gzip.compress(json.dumps(tx,separators=(',',':')).encode(),mtime=0))
             evidence=normalize(sig,tx);normalized_at=str(time.time())
-            history=self.store.evidence();candidates=[];active_clusters=clusters(history+[evidence])
+            history=self.store.evidence() if self.history_limit is None else list(reversed([json.loads(r[0]) for r in self.repo.db.execute('SELECT evidence_json FROM frank_transactions ORDER BY block_time DESC,slot DESC,signature DESC LIMIT ?',(self.history_limit,))]));candidates=[];active_clusters=clusters(history+[evidence])
             owned={}
             for d in evidence['token_balance_deltas']:
                 if not d['wallet_owned']:continue
