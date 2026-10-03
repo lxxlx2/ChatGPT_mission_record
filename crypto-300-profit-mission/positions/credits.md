@@ -1,21 +1,21 @@
 # Jack / Visualize Value Credits NFT 持仓、稀有度与 Mission 资产记录
 
-Human-facing research copy: `research/nfts/jack-credits/jack-credits-nft-position.md`
+Updated: 2026-10-04
+Timezone: Asia/Bangkok
+Status: **CLOSED / CURRENT_OWNERSHIP_ZERO**
 
-Updated: 2026-09-28 17:58 Asia/Bangkok
+Human-facing research copy: `research/nfts/jack-credits/jack-credits-nft-position.md`
 
 ## Identity
 
 - Network: Ethereum
 - Collection: Credits
-- ERC-721 contract: `0x97630aa70ab14ed9883b41dafccbc11349723043`
+- ERC-721 contract: `0x97630aA70AB14ed9883B41dAfccBc11349723043`
 - Canonical Mission EVM wallet: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 
 ## Mission starting batch
 
-The Mission starting asset set includes the user's original six Credits NFTs in addition to the 300 USD cash principal.
-
-Alchemy transfer history reconstructs the six Credits that entered the canonical wallet:
+The Mission starting asset set included the user's original six Credits NFTs in addition to the 300 USD cash principal:
 - #21646
 - #21753
 - #22857
@@ -23,72 +23,57 @@ Alchemy transfer history reconstructs the six Credits that entered the canonical
 - #23232
 - #23328
 
-This six-NFT batch is part of the Mission starting assets. It must not be forgotten when evaluating progress toward the 3,000 USD target.
+This provenance remains part of Mission performance/accounting history even though none are currently held.
 
 ## Current holdings — DIRECT_CHAIN
 
-Fresh Ethereum ownership verification confirms the wallet currently owns exactly these two tracked Credits from the original six:
-- **Credit #23042**
-- **Credit #23232**
+Fresh Ethereum ownership query at block **26,114,793** / **2026-10-03T22:26:23Z**:
+- owned NFTs from the Credits contract: **0**.
 
-Alchemy `getOwnersForNFT` independently returns the canonical wallet as owner for both token IDs.
+Current Credits inventory:
+- **0 active / 6 historical exited**.
 
-The four former Credits have left the wallet:
+Known later exits:
+- #23042: sold 2026-09-28;
+- #23232: sold 2026-10-02.
+
+Earlier four exited Credits:
 - #22857
 - #21753
 - #21646
 - #23328
 
-Gross sale/payment flows matched to the four NFT transfer transactions:
+Previously reconstructed gross sale/payment flows for the earlier four remain historical provenance:
 - #22857: **0.038700 WETH**
 - #21753: **0.037620 ETH**
 - #21646: **0.037620 ETH**
 - #23328: **0.027225 ETH**
 
-Gross observed proceeds: **0.141165 ETH/WETH equivalent before any seller-side gas/fees that still require transaction-level reconciliation**.
+Gross observed proceeds from those four: **0.141165 ETH/WETH equivalent before unresolved seller-side gas/fees**.
 
-These historical proceeds must not be added on top of current wallet NAV. They are provenance evidence for Mission capital and may already have been converted/redeployed.
+These historical proceeds must not be added on top of current wallet NAV; they may already have been converted or redeployed.
 
-## Current listings — USER_CONFIRMED
+## Historical rarity / listing context
 
-Latest user-provided OpenSea state:
-- #23042 listed at **0.25 ETH**
-- #23232 listed at **0.40 ETH**
+Historical retained rarity work:
+- #23042: 0 Eights, Even, Registered, 4 Plates, CMYK, 125 Bits; prior custom checker score ~387, about Top 7.1%.
+- #23232: 1 Eight, 4 Plates, CMYK, 135 Bits; prior custom checker score ~546, about Top 3.6%.
 
-These are aspirational asks and are **not** executable NAV marks.
-
-Prior rarity work:
-- #23042: 0 Eights, Even, Registered, 4 Plates, CMYK, 125 Bits; custom checker score ~387, about Top 7.1%.
-- #23232: 1 Eight, 4 Plates, CMYK, 135 Bits; custom checker score ~546, about Top 3.6%.
+Prior 0.25 ETH / 0.40 ETH listing asks were aspirational historical asks and are not current NAV.
 
 ## Accounting
 
-- Inventory count: **2 active / 4 sold / 6 original**.
-- Current ownership is DIRECT_CHAIN.
-- Listing asks are USER_CONFIRMED only.
-- Remaining NFTs stay outside strict liquid NAV until an execution-grade bid, accepted offer, or actual sale exists.
-- Sale proceeds from the four exited NFTs count as Mission capital provenance once reconciled, but are not double-counted as separate current assets.
-- Do not add more Credits from Mission cash automatically.
+- Current inventory count: **0**.
+- The original six remain Mission starting-asset provenance.
+- Historical sale proceeds remain subject to transaction-level/cost-basis reconciliation where unresolved.
+- Do not double-count sold NFTs and their proceeds.
+- Do not add new Credits automatically.
 
+## Monitoring state
 
-## Current market mark — 2026-09-28
+Routine Credits position monitoring is closed because direct ownership is zero.
 
-Fresh direct ownership:
-- Credit #23042: canonical wallet
-- Credit #23232: canonical wallet
-
-Current collection market reference:
-- fresh Alchemy floor endpoint: unavailable at this reconciliation
-- recent OpenSea-indexed collection floors: roughly **$67-$80**
-- conservative portfolio book mark: **$67.13 each**
-- two-NFT subtotal: **~$134.26**
-
-No rarity premium is added to current NAV. The user's prior 0.25/0.40 ETH listing asks remain aspirational and are not used as asset value.
-
-
-Fresh ownership was reconfirmed again during the 2026-09-28 15:00 all-chain scan. Both #23042 and #23232 remain owned by the canonical wallet.
-
-
-Ownership reconfirmed at 2026-09-28 17:58 Asia/Bangkok:
-- #23042 -> canonical wallet
-- #23232 -> canonical wallet
+Reopen only if:
+- the user acquires a new Credit;
+- a material unresolved historical accounting issue requires reconciliation;
+- the user explicitly requests renewed Credits research.
