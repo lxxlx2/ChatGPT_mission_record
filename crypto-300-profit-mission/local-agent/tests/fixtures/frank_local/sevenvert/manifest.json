@@ -1,0 +1,37 @@
+[
+  {
+    "buy_number": 1,
+    "time": "2026-10-03T23:17:34+07:00",
+    "signature": "5ZzsmQaCPQb5UX6TuiyytL1N89YktMcEvfLGJEzaNLggqgyKhk3UQ7JDNB3JoQQyhWh2ZcCRkBwC98GG8prfw9dN",
+    "quote_asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "raw_quote_quantity": "5000"
+  },
+  {
+    "buy_number": 2,
+    "time": "2026-10-03T23:26:43+07:00",
+    "signature": "5bBKTYWDD18QRx3ML4z19kFY3qvP1sqXSnPxHCYG3B8kqVTfPrqtJVkjPLnNNkKaFK8fm94CffGCusqPPF3MtCVg",
+    "quote_asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "raw_quote_quantity": "21442.67168"
+  },
+  {
+    "buy_number": 3,
+    "time": "2026-10-03T23:26:46+07:00",
+    "signature": "54Zp5rCQpxXsGGk2Ek9zMGCz3XpToPUfsFviTBhgD2NncjzgQEKkDnS8Yz2D2DmGGLW79xerTboKk57eZkCTUw9e",
+    "quote_asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "raw_quote_quantity": "21442.67168"
+  },
+  {
+    "buy_number": 4,
+    "time": "2026-10-03T23:27:25+07:00",
+    "signature": "5aYT9obU6HmhTJTL1djVxzKqznNFx9ijcUdoUByAvZ2FerqdUWYQtUfBthcXvHxnTPvj68kRFKvwfcBkDgXRMBj3",
+    "quote_asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "raw_quote_quantity": "20150.402656"
+  },
+  {
+    "buy_number": 5,
+    "time": "2026-10-03T23:32:11+07:00",
+    "signature": "2NLzWYrLCGL3XA1TR71HxUEtAWwAb37goWVfoiQ8Mu3RyqcweYyzbghSk23TeVGBSx7pE9o92EnYErHE2cvePfVy",
+    "quote_asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "raw_quote_quantity": "3043.646987"
+  }
+]

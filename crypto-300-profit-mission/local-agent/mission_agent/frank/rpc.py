@@ -19,7 +19,7 @@ class SolanaRPC:
         self.request, self.sleep, self.monotonic, self.jitter = request,sleep,monotonic,jitter
         self.last=None; self.calls=0; self.retries=0; self.rate_limits=0; self.min_interval=min_interval
     def call(self,method,params):
-        if method not in ('getHealth','getSignaturesForAddress','getTransaction'):
+        if method not in ('getHealth','getSignaturesForAddress','getTransaction','getSlot','getBlockTime'):
             raise ValueError('READ_ONLY_METHOD_ALLOWLIST')
         body=json.dumps({'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode()
         for attempt in range(3):

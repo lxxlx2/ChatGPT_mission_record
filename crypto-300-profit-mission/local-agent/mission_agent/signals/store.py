@@ -34,12 +34,16 @@ class Ledger:
             old=self.db.execute('SELECT raw_hash FROM signatures WHERE wallet=? AND signature=?',(wallet,sig)).fetchone()
             if old:
                 if old[0]!=raw_hash:raise ValueError('IMMUTABLE_RAW_CONFLICT')
+                if advance:
+                    current=self.cursor(wallet)
+                    if current and e['slot']<current['slot']:raise ValueError('CURSOR_BACKWARD')
+                    self.db.execute('INSERT OR REPLACE INTO cursors VALUES(?,?,?,?)',(wallet,sig,e['slot'],now()))
                 return False
             t=e.get('trade');position=None;signals=[]
             if t:
                 r=self.db.execute('SELECT body FROM positions WHERE person_id=? AND mint=?',(person,t['mint'])).fetchone()
                 p=json.loads(r[0]) if r else {'person_id':person,'mint':t['mint'],'state':'NONE','episode_id':None,'episode_number':0,'first_buy_at':None,'last_buy_at':None,'buy_count':0,'sell_count':0,'gross_token_bought':'0','gross_token_sold':'0','gross_quote_spent':{},'gross_quote_received':{},'current_token_position':'0','last_trade_signature':None,'history_complete':False}
-                before=int(p['current_token_position']);amount=int(t['token_amount_raw'])
+                before=int(p['current_token_position']) if p['current_token_position'] is not None else 0;amount=int(t['token_amount_raw'])
                 if t['direction']=='BUY':
                     side='ADD' if p['state']=='OPEN' else 'REENTRY' if p['state']=='CLOSED' else 'BUY'
                     if p['state']!='OPEN':
@@ -54,6 +58,10 @@ class Ledger:
                         e={**e,'classification_reason':'SIGNED_DEX_SWAP_POSITION_HISTORY_INCOMPLETE'}
                         unresolved={**t,'side':'SELL_POSITION_UNRESOLVED','position_before_raw':None,'position_after_raw':None,'episode_id':None,'reason':'INCOMPLETE_PREHISTORY_NO_EXIT_INFERENCE'}
                         self.db.execute('INSERT INTO trades VALUES(?,?,?,?,?,?,?)',(wallet,sig,t['mint'],None,e['block_time'],'SELL_POSITION_UNRESOLVED',json.dumps(unresolved,sort_keys=True)))
+                        if r:
+                            p.update(state='INVENTORY_UNDETERMINED',current_token_position=None,last_trade_signature=sig,sell_count=p['sell_count']+1,gross_token_sold=str(int(p['gross_token_sold'])+amount))
+                            received=p['gross_quote_received'];received[t['quote_asset']]=str(Decimal(received.get(t['quote_asset'],'0'))+Decimal(quantity(t['quote_amount_raw'],t['quote_decimals'])))
+                            self.db.execute('UPDATE positions SET body=? WHERE person_id=? AND mint=?',(json.dumps(p,sort_keys=True),person,t['mint']))
                         t=None
                     else:
                         remaining=before-amount;side='EXIT' if remaining==0 else 'SELL'

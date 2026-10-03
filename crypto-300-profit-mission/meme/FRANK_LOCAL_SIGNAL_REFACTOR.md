@@ -1,45 +1,39 @@
-# Frank-only local signal refactor — 2026-10-03
+# Frank-only local signal refactor — FRANK_LOCAL_SIGNAL_V1
 
-Authorized target: `FRANK_ONLY`, `LOCAL_DETERMINISTIC_SIGNAL`.
-Operational status: **SHADOW_ONLY / NOT_DEPLOYED**. The existing launchd scanner remains active and unchanged. This document does not certify the target as live.
+Target: `FRANK_ONLY`, `LOCAL_DETERMINISTIC_SIGNAL`. Deployment status before controlled cutover: `READY_FOR_CONTROLLED_CUTOVER`; historical and shadow delivery disabled.
 
-- Only Frank is enabled in `local-agent/config/frank_local_registry.json`; multiple wallets per person remain structurally supported.
-- Other persons = DEFERRED. TOKEN_CONSENSUS = DEFERRED.
-- GPT investment judgment and SEND/NO_SEND are removed from the target Frank critical path. The existing GPT handoff design is superseded for this requested target; its history is preserved. The old live service still uses that handoff pending cutover.
-- Production trading = NO_GO. No wallet signing, trading or mutation; no new automation.
+Only Frank is enabled. Other persons and TOKEN_CONSENSUS are DEFERRED. Production trading is NO_GO. No wallet mutation or new scheduled automation is introduced. The existing launchd scanner is replaced once after checkpoint verification.
 
-## Model identity is unresolved
+## Frozen behavior authority
 
-The canonical historical definition is `state/frank-wallet-watch.md`, particularly the 2026-09-29 two-stage override: PRECONFIRM -> SUSPECTED_CONVICTION.
+[FRANK_LOCAL_SIGNAL_V1_POLICY.md](FRANK_LOCAL_SIGNAL_V1_POLICY.md) and `local-agent/config/frank_local_signal_v1.json` contain 78 source-bound extracted predicates. Policy SHA256 is `83ebab1fbb8ec7e03950626137c5597a38b81b8a4085d9150610018cc78cedab`.
 
-PRECONFIRM Path C: single active BUY >=15,000 USD equivalent, or >=2 active buys totaling >=25,000 USD in 60 minutes. The older meaningful-accumulation clock is >=2 buys totaling >=3,000 USD in 60 minutes, or >=5,000 USD followed by another buy in 60 minutes. These describe distinct stages and must not be interchanged without an explicit mapping.
+Provenance: `DERIVED_FROM_EXISTING_FRANK_BEHAVIOR_MODEL`; `NON_BEHAVIOR_VETO_GATES_REMOVED_BY_USER_REQUIREMENT`. Canonical PRECONFIRM has S/C, not A/B. User resolved MAPPING_SEMANTIC_MISMATCH by selecting only Path C repeated buys: >=2 confirmed ACTIVE BUY in 60 minutes and >=25,000 raw USDC quote quantity. `PATH_C_SINGLE_LARGE_BUY = NOT_ACCUMULATION`; original >=15,000 branch remains provenance and has no new visible signal type. Path S is not mapped.
 
-SUSPECTED_CONVICTION includes persistence and >=10,000 USD cumulative buys, plus price, liquidity and token-control gates. The present request excludes social research, executable price/followability and GPT investment judgment. No independent frozen local multiple-model configuration was found in the audited active code. Deciding which historical stage and remaining gates define the two new signals is **BLOCKED_CANONICAL_STAGE_MAPPING_REQUIRED**. No SOL threshold or USD estimate has been invented. No deterministic-model completion is claimed.
+MULTIPLE requires accumulation, canonical T0 (>=2 buys and >=3,000 in 60 minutes OR >=5,000 followed by another buy within 60 minutes), persistence A (prior hourly :29 WATCH continuing to qualify) OR B (>=3 buys spanning >=45 minutes), cumulative >=10,000, materially open observed inventory (>=50% episode peak or resumed net buying in last 60 minutes), no >35% rolling-hour distribution without re-accumulation, and no HFT. HFT includes >=3 swaps within 60 seconds; the approximate 20-minute roundtrip reference is kept distinct from an exact source threshold. If T0 is >3 hours old, require a fresh buy within 60 minutes and open inventory. No numeric dust, relative-size percentile or additional ADD threshold is invented.
 
-## Implemented in the isolated branch
+USDC quote => direct numeric comparison. Non-USDC quote without reliable conversion => amount gate undetermined. Numbers 3,000/5,000/10,000 remain unchanged; raw USDC is not independently verified USD valuation. SOL conversions are not improvised. Other predicates, trades and chronology remain auditable.
 
-`mission_agent.signals` provides conservative classification, SQLite signature/trade/position records, supplied-stage signal identity and outbox infrastructure, finalized catch-up, and audit CLI. It imports no GPT or Git transport. Its scanner is explicitly shadow-only and does not evaluate a model or deliver signals.
+Social, current price, chase, liquidity, executability, followability and GPT decisions do not veto signals. Evaluator inputs are durable verified active chronology, observed sequence state and frozen policy only. No model recalibration uses 7Vert or STONK.
 
-The classifier requires a successful signed exchange, recognized invoked swap instruction, and opposing owned token/quote flows. Third-party ATA creation and proven inbound transfers never enter trade state. Unsupported exchange shapes and incomplete metadata remain UNKNOWN_NEEDS_REVIEW. Native SOL amounts are never inferred from rent-inclusive wallet deltas; decoded transient WSOL transfer evidence is retained.
+## Durable runtime and delivery
 
-Positions describe the observed active-trade ledger. Existing history is incomplete. Confirmed sells without a reconstructable earlier position are preserved as ACTIVE_TRADE / SELL_POSITION_UNRESOLVED; no EXIT is invented. Zero active-trade inventory closes the observed episode in tests. A canonical wallet-wide dust/close policy and complete bootstrap inventory remain unresolved, so this is not certified as full live position accounting.
+`mission_agent.signals` classifies signed, proven swaps conservatively; passive transfers/ATA creation never count as BUY. UNKNOWN fails closed. Finalized scanner stores RAW_PENDING detections before fetch, raw before classification, and advances cursor atomically. Registry supports multiple wallets per person. SQLite migration and replay remain independent of old history.
 
-All replay outbox entries are DRY_RUN_AUDIT and cannot be delivered. Supplied-stage tests exercise ledger mechanics; they do not validate a strategy model. Local notifier execution success means OS command acceptance, not proof a user saw a notification. A process crash during osascript dispatch leaves IN_FLIGHT evidence; exactly-once OS delivery recovery remains NOT_IMPLEMENTED. The environment had no terminal-notifier executable. No live test notification was sent.
+Observed positions are explicitly `LIFETIME_POSITION_UNKNOWN` / `CURRENT_ACCUMULATION_SEQUENCE_KNOWN`. Unresolvable or excess sells invalidate inventory without inventing EXIT. Exact zero observed active inventory closes an observed sequence; no dust threshold is invented.
 
-No reliable local Gmail sender/credential integration was found in the audited runtime; existing Gmail code is mock or an external connected-capability canary. Gmail outbox delivery records CREDENTIAL_BLOCKED, never a fake message id. Automatic Gmail sender/reconciliation remains NOT_IMPLEMENTED.
+Signal/model state and outboxes commit atomically. Identity includes policy, person, mint, observed episode and stage. Same-stage ADD does not redeliver. ACCUMULATION has local delivery only; MULTIPLE has local and standalone Gmail content/hash/outbox. Gmail is CREDENTIAL_BLOCKED in this environment; no fake receipt. Local notifier uses a stable OS identifier plus content-bound durable receipt for restart recovery. Command acceptance does not prove visual receipt by a user.
 
-## CLI
+Two real macOS `[TEST]` notifications (one for each stage) were accepted by osascript/AppKit. Repeated delivery reused receipts. Historical rows stay DRY_RUN_AUDIT and are never promoted for backfill delivery.
 
-Run from the isolated branch's `crypto-300-profit-mission/local-agent` with the existing Python environment:
+## Validation and replay
 
-```bash
-python -m mission_agent.signals --db /absolute/path/to/shadow-ledger.sqlite audit-frank --last 50
-python -m mission_agent.signals --db /absolute/path/to/shadow-ledger.sqlite inspect-tx SIGNATURE
-python -m mission_agent.signals --db /absolute/path/to/new-shadow-ledger.sqlite replay --source-db /absolute/path/to/old.sqlite --raw /absolute/path/to/raw --registry config/frank_local_registry.json --since UNIX_TIMESTAMP
-```
+Full tests: 462 passed, 3 skipped (unrelated Monster modules lack numpy). Available historical subset: 6,874 classified records, 634 ACTIVE_TRADE, 203 active mints, 180 observed episodes; 21 ACCUMULATION, 10 MULTIPLE, 124 duplicate-stage suppressions. UNKNOWN/incomplete blocked union: 732; undetermined predicate evaluations: 26. This is not an exhaustive 30-day wallet history. Historical notifications/mail: zero.
 
-Query commands open SQLite read-only. Replay writes only the explicitly selected independent ledger. Raw historical envelopes are signature-bound and unwrapped before classification.
+7Vert five genuine buys total 71,079.393003 USDC. First accumulation is buy #2 at 2026-10-03 23:26:43 Asia/Bangkok; buys #3–#5 remain same stage. No MULTIPLE: first-to-last span is 14m37s, below 45 minutes; buys #2–#4 also establish HFT. Identical replay inputs yield identical IDs/reasons. Thresholds remain frozen.
 
-## Cutover prerequisites
+Private evidence and runtime databases remain outside the public repository. Query CLI `python -m mission_agent.signals --db /absolute/path/forward.sqlite audit-frank --last 50` and `inspect-tx SIGNATURE` opens SQLite read-only. Replay requires an isolated new ledger.
 
-Resolve model mapping and USD evidence policy, complete model tests and historical signal replay, establish inventory/dust policy, complete crash-safe delivery recovery, then checkpoint and perform one controlled cutover with chain/local reconciliation. No cutover or legacy restart was performed during this audit.
+## Legacy GPT authority
+
+`SUPERSEDED_FOR_FRANK_SIGNAL_AUTHORITY`: the new service imports no GPT or Git handoff worker. Old runtime facts/history are preserved; old writer is stopped at cutover. The legacy ChatGPT consumer may remain configured (`LEGACY_GPT_CONSUMER_STILL_PRESENT`) because this session has no dedicated ChatGPT scheduled-task administration capability. It has no authority to veto or send new local Frank signals. Private mac-data supersession marker records the transition; gpt-data ownership is preserved.
