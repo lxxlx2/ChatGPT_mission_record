@@ -55,10 +55,15 @@ def drain(ledger,notifier=None):
     rows=db.execute("SELECT o.*,s.body,s.content_hash FROM outbox o JOIN signals s USING(signal_id) WHERE o.status IN ('PENDING','RETRY_PENDING','CREDENTIAL_BLOCKED','IN_FLIGHT') ORDER BY CAST(s.created_at AS INTEGER),o.channel").fetchall()
     for row in rows:
         if row['channel']=='gmail':
-            db.execute("UPDATE outbox SET status='CREDENTIAL_BLOCKED',last_error='NO_LOCAL_GMAIL_CREDENTIAL' WHERE signal_id=? AND channel='gmail'",(row['signal_id'],));continue
+            if json.loads(row['body']).get('policy_id')!='FRANK_LOCAL_SIGNAL_V1':
+                db.execute("UPDATE outbox SET status='CREDENTIAL_BLOCKED',last_error='LEGACY_SIGNAL_NOT_V1_GMAIL_AUTHORITY' WHERE signal_id=? AND channel='gmail'",(row['signal_id'],))
+            continue
         signal=json.loads(row['body']);db.execute("UPDATE outbox SET status='IN_FLIGHT',attempts=attempts+1 WHERE signal_id=? AND channel='local'",(row['signal_id'],))
         try:receipt=notifier(signal)
         except Exception as exc:
             db.execute("UPDATE outbox SET status='RETRY_PENDING',last_error=? WHERE signal_id=? AND channel='local'",(type(exc).__name__,row['signal_id']));continue
         receipt.update(content_hash=row['content_hash']);db.execute("UPDATE outbox SET status='COMMAND_ACCEPTED',receipt=?,last_error=NULL WHERE signal_id=? AND channel='local'",(json.dumps(receipt),row['signal_id']))
+    # Independent Gmail worker; local notifications and scanner never await mail API.
+    from .gmail import kick
+    kick(ledger)
     return [dict(r) for r in db.execute('SELECT * FROM outbox')]
