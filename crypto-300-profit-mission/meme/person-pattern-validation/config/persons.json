@@ -1,0 +1,127 @@
+{
+  "ethermonk": {
+    "person_id": "ethermonk",
+    "public_handles": [
+      "Ethermonk"
+    ],
+    "wallets": [
+      {
+        "address": "2xUbYAVq1oJGj45d6JjnaYHAke3NQecUcqWvvVbwmYw8",
+        "chain": "solana",
+        "role": "HOLDING_WALLET",
+        "ownership_confidence": "HIGH_NOT_FIRST_PARTY",
+        "ownership_conclusion": "ACCEPTED_RESEARCH",
+        "relationship_confidence": "HIGH",
+        "valid_from": null,
+        "valid_to": null,
+        "evidence_ids": [
+          "ethermonk-codex-handoff"
+        ]
+      },
+      {
+        "address": "58c8h7YHd4DW25RBroRHC3D9wyLq8xKuaC7q4K5PNbSr",
+        "chain": "solana",
+        "role": "SOURCE_WALLET",
+        "ownership_confidence": "UNRESOLVED",
+        "ownership_conclusion": "UNRESOLVED",
+        "relationship_confidence": "HIGH",
+        "valid_from": null,
+        "valid_to": null,
+        "evidence_ids": [
+          "ethermonk-codex-handoff"
+        ]
+      }
+    ],
+    "unresolved_wallets": [
+      "Gt6MM3\u2026pRqd"
+    ],
+    "platform_addresses": [
+      {
+        "address": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+        "role": "PLATFORM_FEE_PAYER"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "58c8h7YHd4DW25RBroRHC3D9wyLq8xKuaC7q4K5PNbSr",
+        "destination": "2xUbYAVq1oJGj45d6JjnaYHAke3NQecUcqWvvVbwmYw8",
+        "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
+        "evidence_id": "a8LVK2BKdwwa9US2Q3Sd4Jsq2NkHUZpMaXYzX1v4oo88dCwWWXbNjicjoUGK3q8UdLZkf2tQG1Ld3Yb2v8qMPS1",
+        "source_document": "ethermonk-codex-handoff.md",
+        "relationship_conclusion": "DIRECT_TRANSFER_REPORTED_IN_RESEARCH",
+        "ownership_conclusion": "UNRESOLVED"
+      },
+      {
+        "source": "58c8h7YHd4DW25RBroRHC3D9wyLq8xKuaC7q4K5PNbSr",
+        "destination": "2xUbYAVq1oJGj45d6JjnaYHAke3NQecUcqWvvVbwmYw8",
+        "mint": "CTPoyCwkjMvoJwU4xvZZqoD8tiYk6yDchySiN5gGpump",
+        "evidence_id": "5TikrUgW9orCCMvwFWZ1bLtvfpr7RfWqV4Y3MzZ4htmq4DUqvcM7uhkVH7WYwPKYoMH33RVWWeG4MQBrDMzzmdz",
+        "source_document": "ethermonk-codex-handoff.md",
+        "relationship_conclusion": "DIRECT_TRANSFER_REPORTED_IN_RESEARCH",
+        "ownership_conclusion": "UNRESOLVED"
+      },
+      {
+        "source": "2xUbYAVq1oJGj45d6JjnaYHAke3NQecUcqWvvVbwmYw8",
+        "destination": "58c8h7YHd4DW25RBroRHC3D9wyLq8xKuaC7q4K5PNbSr",
+        "mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+        "evidence_id": "59Wdr1ZAMkdEFFJKvzUw8TrYRQkK38iRfqgNFhqhnJRWCVW4R5hb23zNkhQ2giCjpKDxGHXYnrXWX96yVqJ4YVin",
+        "source_document": "ethermonk-codex-handoff.md",
+        "relationship_conclusion": "DIRECT_TRANSFER_REPORTED_IN_RESEARCH",
+        "ownership_conclusion": "UNRESOLVED"
+      }
+    ],
+    "continuity_resolved": false
+  },
+  "point-farm": {
+    "person_id": "point-farm",
+    "public_handles": [
+      "@pointfarmcap"
+    ],
+    "wallets": [
+      {
+        "address": "Beqv6dzTcjV2eodo8RRXCiCcnSYrS1vkQKhfqwHXqeit",
+        "chain": "solana",
+        "role": "HOLDING_WALLET",
+        "ownership_confidence": "HIGH_NOT_FIRST_PARTY",
+        "ownership_conclusion": "ACCEPTED_RESEARCH",
+        "relationship_confidence": "HIGH",
+        "valid_from": null,
+        "valid_to": null,
+        "evidence_ids": [
+          "point-farm-codex-handoff"
+        ]
+      }
+    ],
+    "unresolved_wallets": [
+      "6cerGp\u2026615t"
+    ],
+    "platform_addresses": [],
+    "relationships": [],
+    "continuity_resolved": false
+  },
+  "thesolstice": {
+    "person_id": "thesolstice",
+    "public_handles": [
+      "@The__Solstice"
+    ],
+    "wallets": [
+      {
+        "address": "4ugDhHJ8XDXAeABmrNmGffFaLbJb9BkPyiFGVSV9ocwo",
+        "chain": "solana",
+        "role": "HOLDING_WALLET",
+        "ownership_confidence": "HIGH_NOT_FIRST_PARTY",
+        "ownership_conclusion": "ACCEPTED_RESEARCH",
+        "relationship_confidence": "HIGH",
+        "valid_from": null,
+        "valid_to": null,
+        "evidence_ids": [
+          "thesolstice-codex-handoff"
+        ]
+      }
+    ],
+    "unresolved_wallets": [],
+    "platform_addresses": [],
+    "relationships": [],
+    "continuity_resolved": false
+  }
+}

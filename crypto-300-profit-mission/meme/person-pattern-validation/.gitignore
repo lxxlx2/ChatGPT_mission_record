@@ -1,0 +1,5 @@
+output/
+__pycache__/
+*.sqlite*
+.env
+*.local.json

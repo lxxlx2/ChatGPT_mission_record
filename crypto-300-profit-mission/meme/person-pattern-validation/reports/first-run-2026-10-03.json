@@ -1,0 +1,93 @@
+{
+  "date_bangkok": "2026-10-03",
+  "baseline_main": "973c1ff79871b1a92c0f3b8b4f9bfff288a7bb57",
+  "engineering": {
+    "unit_tests": "PASS",
+    "total": 61,
+    "passed": 61,
+    "failed": 0,
+    "skipped": 0,
+    "full_requested_pipeline_acceptance": "INCOMPLETE",
+    "collection_normalization_artifacts": "PASS",
+    "limitations": [
+      "No built-in DEX-specific instruction ABI swap adapters",
+      "Wallet-reference history does not prove full historical token-account coverage",
+      "No historical executable pool provider configured",
+      "CLI base-universe and numeric policy auto-acceptance not wired",
+      "TRAIN gap candidates do not split open positions without validated reset evidence"
+    ]
+  },
+  "data_source": {
+    "public_finalized_rpc": "REACHABLE",
+    "private_credentials_present": false,
+    "observed_rate_limit": "HTTP_429 during first long sequential export",
+    "first_export_interrupted": true,
+    "subsequent_bounded_exports_and_cache_readback": "SUCCESS",
+    "no_six_month_coverage_claim": true
+  },
+  "candidates": [
+    {
+      "candidate": "ethermonk",
+      "accepted_research_wallets": 1,
+      "unresolved_wallets": 2,
+      "wallet_graph_completeness_percent": null,
+      "raw_transactions": 174,
+      "normalized_events": 2777,
+      "cached_history_start_utc": "2026-09-14T13:25:31+00:00",
+      "cached_history_end_utc": "2026-10-03T10:43:36+00:00",
+      "history_span_days": 18.88755787037037,
+      "history_complete": false,
+      "valid_episodes": 0,
+      "source_fixture_rows": 5,
+      "executable_replay_samples": 0,
+      "pattern_result": "NO_VALIDATED_PATTERN",
+      "data_status": "DATA_BLOCKED",
+      "PERSON_PATTERN": "OBSERVE_ONLY",
+      "production_trading": "NO_GO",
+      "checkpoint_relative_path": "output/ethermonk/raw-events.sqlite",
+      "checkpoint_count": 2
+    },
+    {
+      "candidate": "point-farm",
+      "accepted_research_wallets": 1,
+      "unresolved_wallets": 1,
+      "wallet_graph_completeness_percent": null,
+      "raw_transactions": 26,
+      "normalized_events": 109,
+      "cached_history_start_utc": "2026-10-02T23:32:43+00:00",
+      "cached_history_end_utc": "2026-10-03T06:00:35+00:00",
+      "history_span_days": 0.26935185185185184,
+      "history_complete": false,
+      "valid_episodes": 0,
+      "source_fixture_rows": 17,
+      "executable_replay_samples": 0,
+      "pattern_result": "NO_VALIDATED_PATTERN",
+      "data_status": "DATA_BLOCKED",
+      "PERSON_PATTERN": "OBSERVE_ONLY",
+      "production_trading": "NO_GO",
+      "checkpoint_relative_path": "output/point-farm/raw-events.sqlite",
+      "checkpoint_count": 1
+    },
+    {
+      "candidate": "thesolstice",
+      "accepted_research_wallets": 1,
+      "unresolved_wallets": 0,
+      "wallet_graph_completeness_percent": null,
+      "raw_transactions": 15,
+      "normalized_events": 97,
+      "cached_history_start_utc": "2026-10-02T23:41:02+00:00",
+      "cached_history_end_utc": "2026-10-03T07:10:48+00:00",
+      "history_span_days": 0.31233796296296296,
+      "history_complete": false,
+      "valid_episodes": 0,
+      "source_fixture_rows": 6,
+      "executable_replay_samples": 0,
+      "pattern_result": "NO_VALIDATED_PATTERN",
+      "data_status": "DATA_BLOCKED",
+      "PERSON_PATTERN": "OBSERVE_ONLY",
+      "production_trading": "NO_GO",
+      "checkpoint_relative_path": "output/thesolstice/raw-events.sqlite",
+      "checkpoint_count": 1
+    }
+  ]
+}

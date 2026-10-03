@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "minimum_episode_count": 30,
+  "dust_quantity": "0",
+  "dormant_gap_seconds": null,
+  "small_user_notional_usd": 25,
+  "notional_status": "RESEARCH_ASSUMPTION_NOT_TRADING_INSTRUCTION",
+  "max_price_impact": null,
+  "split_fractions": [
+    0.6,
+    0.2,
+    0.2
+  ],
+  "profitability_policy": null,
+  "production_trading": "NO_GO",
+  "canonical_horizons": [
+    300,
+    900,
+    3600,
+    21600,
+    86400
+  ],
+  "high_resolution": [
+    60,
+    120
+  ],
+  "auxiliary": [
+    0,
+    1800,
+    7200
+  ]
+}
