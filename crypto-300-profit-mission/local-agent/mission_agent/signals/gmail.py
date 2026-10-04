@@ -110,9 +110,23 @@ class GmailOutbox:
                 uncertain=uncertain or self.row(sid)['status'] in ('SENDING','SENT_UNVERIFIED');self.update(sid,'SENT_UNVERIFIED' if uncertain else 'RETRYABLE_ERROR','GMAIL_DELIVERY_OR_READBACK_RETRY_PENDING')
             except PermanentError as exc:self.update(sid,'PERMANENT_ERROR',str(exc))
         return self.summary()
-    def summary(self):
-        rows=self.db.execute('SELECT status,count(*) FROM gmail_delivery WHERE delivery_forbidden=0 AND delivery_mode=\'LIVE\' GROUP BY status').fetchall();counts=dict(rows)
-        return {'pending':sum(counts.get(s,0) for s in ('PENDING','SENDING','RETRYABLE_ERROR')),'sent_verified':counts.get('SENT_VERIFIED',0),'sent_unverified':counts.get('SENT_UNVERIFIED',0),'blocked':counts.get('CREDENTIAL_BLOCKED',0),'failed':counts.get('PERMANENT_ERROR',0),'historical_forbidden':self.db.execute('SELECT count(*) FROM gmail_delivery WHERE delivery_forbidden=1').fetchone()[0]}
+    def summary(self):return summary_from_db(self.db)
+
+def summary_from_db(db):
+    """Read-only local telemetry; does not initialize schema or invoke delivery."""
+    has_delivery=db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='gmail_delivery'").fetchone()
+    if has_delivery:
+        rows=db.execute("SELECT status,count(*) FROM gmail_delivery WHERE delivery_forbidden=0 AND delivery_mode='LIVE' GROUP BY status").fetchall()
+        historical=db.execute('SELECT count(*) FROM gmail_delivery WHERE delivery_forbidden=1').fetchone()[0]
+    else:
+        rows=db.execute("SELECT o.status,count(*) FROM outbox o JOIN signals s USING(signal_id) WHERE o.channel='gmail' AND s.signal_type='FRANK_MULTIPLE_SIGNAL' AND json_extract(s.body,'$.delivery_mode')='LIVE' AND COALESCE(json_extract(s.body,'$.delivery_forbidden'),0)=0 GROUP BY o.status").fetchall()
+        historical=0
+    counts=dict(rows)
+    # Missing/invalid frozen presentation has no delivery row; expose its local fail-closed error.
+    missing_sql="SELECT count(*) FROM outbox o JOIN signals s USING(signal_id) WHERE o.channel='gmail' AND o.last_error IN ('MISSING_FROZEN_EMAIL_CONTENT','INVALID_FROZEN_EMAIL_CONTENT') AND json_extract(s.body,'$.delivery_mode')='LIVE' AND COALESCE(json_extract(s.body,'$.delivery_forbidden'),0)=0"
+    if has_delivery:missing_sql+=' AND NOT EXISTS(SELECT 1 FROM gmail_delivery g WHERE g.signal_id=o.signal_id)'
+    missing=db.execute(missing_sql).fetchone()[0]
+    return {'pending':sum(counts.get(s,0) for s in ('PENDING','SENDING','RETRYABLE_ERROR')),'sent_verified':counts.get('SENT_VERIFIED',0),'sent_unverified':counts.get('SENT_UNVERIFIED',0),'blocked':counts.get('CREDENTIAL_BLOCKED',0),'failed':counts.get('PERMANENT_ERROR',0)+missing,'historical_forbidden':historical}
 
 _worker_lock=threading.Lock()
 def kick(ledger):

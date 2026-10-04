@@ -8,6 +8,8 @@ from mission_agent.signals.engine import Engine
 from mission_agent.signals.scanner import Scanner
 from mission_agent.signals.delivery import LocalNotifier,drain
 from mission_agent.signals.runtime_io import atomic_json,utc
+from mission_agent.signals.gmail import summary_from_db
+from mission_agent.signals.gmail_health import health_from_summary
 
 IDENTIFIER='com.jerson.crypto-monitor-frank-local'
 
@@ -37,7 +39,8 @@ def main():
     scanner=Scanner(ledger,wallets,a.root/'raw',mode='LIVE');notifier=LocalNotifier(receipt_root=a.root/'local-receipts')
     path=a.root/'health.json';old=json.loads(path.read_text()) if path.exists() else {};before={w:ledger.cursor(w) for w in wallets};first=True
     git_root=Path(__file__).resolve().parents[3];commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=git_root,text=True).strip();source=source_hash()
-    health={'system':'FRANK_ONLY','policy':'FRANK_LOCAL_SIGNAL_V1','policy_hash':POLICY_SHA256,'identifier':IDENTIFIER,'pid':os.getpid(),'started_at':utc(),'first_started_at':old.get('first_started_at',utc()),'restart_count':old.get('restart_count',-1)+1,'code_commit':commit,'loaded_source_sha256':source,'poll_count':old.get('poll_count',0),'consecutive_errors':0,'poll_interval_seconds':30,'delivery_authority':'LOCAL_DETERMINISTIC_SIGNAL','gpt_in_critical_path':False,'production_trading':'NO_GO','other_persons':'DEFERRED','new_automation':False,'email_delivery_status':'CREDENTIAL_BLOCKED','status':'STARTING'}
+    health={'system':'FRANK_ONLY','policy':'FRANK_LOCAL_SIGNAL_V1','policy_hash':POLICY_SHA256,'identifier':IDENTIFIER,'pid':os.getpid(),'started_at':utc(),'first_started_at':old.get('first_started_at',utc()),'restart_count':old.get('restart_count',-1)+1,'code_commit':commit,'loaded_source_sha256':source,'poll_count':old.get('poll_count',0),'consecutive_errors':0,'poll_interval_seconds':30,'delivery_authority':'LOCAL_DETERMINISTIC_SIGNAL','gpt_in_critical_path':False,'production_trading':'NO_GO','other_persons':'DEFERRED','new_automation':False,'status':'STARTING'}
+    health.update(health_from_summary(summary_from_db(ledger.db)))
     atomic_json(path,health)
     while not stopped:
         started=time.monotonic();health['last_poll_at']=utc();health['poll_count']+=1
@@ -49,7 +52,8 @@ def main():
             engine.drain(until=min(c['block_time'] for c in clocks.values()))
             deliveries=drain(ledger,notifier)
             current={w:ledger.cursor(w) for w in wallets}
-            health.update(status='RUNNING',last_successful_poll=utc(),last_model_successful_eval=utc(),last_chain_signature=cycles[0]['last_chain_signature'],last_processed_signature=current[next(iter(wallets))]['signature'],last_processed_slot=current[next(iter(wallets))]['slot'],lag_seconds=cycles[0]['lag_seconds'],consecutive_errors=0,new_signatures=sum(c['new_signatures'] for c in cycles),model=engine.summary(),local_pending=sum(r['channel']=='local' and r['status']!='COMMAND_ACCEPTED' and r['status']!='DRY_RUN_AUDIT' for r in deliveries),gmail_pending=sum(r['channel']=='gmail' and r['status']=='CREDENTIAL_BLOCKED' for r in deliveries),raw_pending=ledger.db.execute("SELECT count(*) FROM signature_detections WHERE state='RAW_PENDING'").fetchone()[0],model_unprocessed=ledger.db.execute('SELECT count(*) FROM signatures s LEFT JOIN v1_seen v USING(wallet,signature) WHERE v.signature IS NULL').fetchone()[0])
+            health.update(status='RUNNING',last_successful_poll=utc(),last_model_successful_eval=utc(),last_chain_signature=cycles[0]['last_chain_signature'],last_processed_signature=current[next(iter(wallets))]['signature'],last_processed_slot=current[next(iter(wallets))]['slot'],lag_seconds=cycles[0]['lag_seconds'],consecutive_errors=0,new_signatures=sum(c['new_signatures'] for c in cycles),model=engine.summary(),local_pending=sum(r['channel']=='local' and r['status']!='COMMAND_ACCEPTED' and r['status']!='DRY_RUN_AUDIT' for r in deliveries),raw_pending=ledger.db.execute("SELECT count(*) FROM signature_detections WHERE state='RAW_PENDING'").fetchone()[0],model_unprocessed=ledger.db.execute('SELECT count(*) FROM signatures s LEFT JOIN v1_seen v USING(wallet,signature) WHERE v.signature IS NULL').fetchone()[0])
+            health.update(health_from_summary(summary_from_db(ledger.db)))
             if first:
                 atomic_json(a.root/'first-cycle.json',{'status':'PASS','cursor_before':before,'cursor_after':current,'catchup_signatures':sum(c['new_signatures'] for c in cycles),'gap':sum(c['lag_seconds']!=0 for c in cycles),'at':utc()});first=False
         except Exception as exc:
