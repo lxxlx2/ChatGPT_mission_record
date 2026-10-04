@@ -22,9 +22,15 @@ class Engine:
         if old and old[0]!=POLICY_SHA256:raise ValueError('MODEL_POLICY_HASH_DRIFT')
         self.db.execute("INSERT OR IGNORE INTO v1_meta VALUES('policy_hash',?)",(POLICY_SHA256,))
         self.db.execute("INSERT OR IGNORE INTO v1_meta VALUES('duplicates_suppressed','0')")
-        from .email import content
-        for row in self.db.execute("SELECT s.body FROM signals s LEFT JOIN email_content m USING(signal_id) WHERE s.signal_type='FRANK_MULTIPLE_SIGNAL' AND json_extract(s.body,'$.policy_id')='FRANK_LOCAL_SIGNAL_V1' AND m.signal_id IS NULL").fetchall():
-            mail=content(json.loads(row[0]));self.db.execute('INSERT INTO email_content VALUES(?,?,?,?)',(mail['signal_id'],mail['subject'],mail['body'],mail['content_hash']))
+        # Compatibility recovery may only copy an already frozen delivery.
+        # Missing historical content is not safe to reconstruct with today's template.
+        has_delivery=self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='gmail_delivery'").fetchone()
+        for row in self.db.execute("SELECT s.signal_id FROM signals s LEFT JOIN email_content m USING(signal_id) WHERE s.signal_type='FRANK_MULTIPLE_SIGNAL' AND json_extract(s.body,'$.policy_id')='FRANK_LOCAL_SIGNAL_V1' AND m.signal_id IS NULL").fetchall():
+            frozen=self.db.execute('SELECT subject,body,content_hash FROM gmail_delivery WHERE signal_id=?',(row['signal_id'],)).fetchone() if has_delivery else None
+            if frozen and digest({'subject':frozen['subject'],'body':frozen['body']})==frozen['content_hash']:
+                self.db.execute('INSERT INTO email_content VALUES(?,?,?,?)',(row['signal_id'],frozen['subject'],frozen['body'],frozen['content_hash']))
+            else:
+                self.db.execute("UPDATE outbox SET status=CASE WHEN status='DRY_RUN_AUDIT' THEN status ELSE 'CREDENTIAL_BLOCKED' END,last_error=? WHERE signal_id=? AND channel='gmail'",('INVALID_FROZEN_EMAIL_CONTENT' if frozen else 'MISSING_FROZEN_EMAIL_CONTENT',row['signal_id']))
     def _state(self,person,mint):
         r=self.db.execute('SELECT body FROM v1_states WHERE person_id=? AND mint=?',(person,mint)).fetchone()
         return json.loads(r[0]) if r else None

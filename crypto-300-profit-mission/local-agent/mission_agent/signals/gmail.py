@@ -10,7 +10,6 @@ from pathlib import Path
 from ..hashing import digest
 from ..db.connection import transaction
 from .store import now
-from .email import content
 
 TEST_SUBJECT='[TEST] Frank MULTIPLE Gmail Delivery'
 class CredentialBlocked(Exception):pass
@@ -32,9 +31,20 @@ class GmailOutbox:
         last_error TEXT,receipt TEXT);
         ''')
     def sync(self):
-        rows=self.db.execute("SELECT s.body FROM signals s JOIN outbox o USING(signal_id) WHERE o.channel='gmail' AND json_extract(s.body,'$.policy_id')='FRANK_LOCAL_SIGNAL_V1'").fetchall()
+        # gmail_delivery is authoritative once it exists. Never re-render old identities.
+        rows=self.db.execute("SELECT s.body FROM signals s JOIN outbox o USING(signal_id) WHERE o.channel='gmail' AND s.signal_type='FRANK_MULTIPLE_SIGNAL' AND json_extract(s.body,'$.policy_id')='FRANK_LOCAL_SIGNAL_V1'").fetchall()
+        has_content=self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='email_content'").fetchone()
         for row in rows:
-            signal=json.loads(row[0]);mail=content(signal);mode=signal.get('delivery_mode','DRY_RUN_AUDIT');forbidden=mode!='LIVE' or bool(signal.get('delivery_forbidden'))
+            signal=json.loads(row[0]);sid=signal['signal_id']
+            if self.db.execute('SELECT 1 FROM gmail_delivery WHERE signal_id=?',(sid,)).fetchone():continue
+            frozen=self.db.execute('SELECT subject,body,content_hash FROM email_content WHERE signal_id=?',(sid,)).fetchone() if has_content else None
+            error='MISSING_FROZEN_EMAIL_CONTENT' if frozen is None else None
+            if frozen and digest({'subject':frozen['subject'],'body':frozen['body']})!=frozen['content_hash']:error='INVALID_FROZEN_EMAIL_CONTENT'
+            if error:
+                self.db.execute("UPDATE outbox SET status=CASE WHEN status='DRY_RUN_AUDIT' THEN status ELSE 'CREDENTIAL_BLOCKED' END,last_error=? WHERE signal_id=? AND channel='gmail'",(error,sid))
+                continue
+            mail={'signal_id':sid,'subject':frozen['subject'],'body':frozen['body'],'content_hash':frozen['content_hash']}
+            mode=signal.get('delivery_mode','DRY_RUN_AUDIT');forbidden=mode!='LIVE' or bool(signal.get('delivery_forbidden'))
             self.enqueue(mail,mode=mode,forbidden=forbidden,created_at=str(signal['triggered_at']))
     def enqueue(self,mail,*,mode,forbidden=False,created_at=None):
         sid=mail['signal_id']
@@ -55,7 +65,7 @@ class GmailOutbox:
         if not message.get('id') or 'SENT' not in message.get('labelIds',[]):raise PermanentError('NOT_A_SENT_RECEIPT')
         try:
             raw=base64.urlsafe_b64decode(message['raw']+'===' );msg=email.message_from_bytes(raw,policy=mime_policy.default);body=msg.get_content()
-            checks=[str(msg['Subject'])==r['subject'],bool(re.fullmatch(r'<[^<>\s]+@[^<>\s]+>',str(msg['Message-ID']))),str(msg['X-Frank-Signal-ID'])==r['signal_id'],str(msg['X-Frank-Content-Hash'])==r['content_hash'],str(msg['X-Frank-Delivery-Mode'])==r['delivery_mode'],body.replace('\r\n','\n')==self.wire_body(r)]
+            checks=[str(msg['Subject'])==r['subject'],bool(re.fullmatch(r'<[^<>\s]+@[^<>\s]+>',str(msg['Message-ID']))),str(msg['X-Frank-Signal-ID']).strip()==r['signal_id'],str(msg['X-Frank-Content-Hash']).strip()==r['content_hash'],str(msg['X-Frank-Delivery-Mode']).strip()==r['delivery_mode'],body.replace('\r\n','\n')==self.wire_body(r)]
         except (KeyError,ValueError,TypeError):raise PermanentError('INVALID_SENT_RECEIPT') from None
         if not all(checks):raise PermanentError('SENT_IDENTITY_OR_CONTENT_MISMATCH')
         sent_at=now()

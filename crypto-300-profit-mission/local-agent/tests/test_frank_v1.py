@@ -122,7 +122,7 @@ def test_receipt_recovery_does_not_dispatch_again(tmp_path):
     l.db.execute("UPDATE outbox SET status='IN_FLIGHT' WHERE channel='local'");drain(l,n);assert len(calls)==2
 
 def test_sqlite_migration_preserves_cursor_signals_and_restarts(tmp_path):
-    l,eng=fixture_multiple(tmp_path);l.checkpoint(WALLET,'seed',1);before=l.cursor(WALLET);ids=[s['signal_id'] for s in signals(l)];l.db.execute('DROP TABLE email_content');l.db.close();l=Ledger(tmp_path/'db');eng=Engine(l,load_policy(POLICY));assert l.cursor(WALLET)==before and [s['signal_id'] for s in signals(l)]==ids and l.db.execute('select count(*) from email_content').fetchone()[0]==1
+    l,eng=fixture_multiple(tmp_path);from mission_agent.signals.gmail import GmailOutbox;GmailOutbox(l).sync();l.checkpoint(WALLET,'seed',1);before=l.cursor(WALLET);ids=[s['signal_id'] for s in signals(l)];l.db.execute('DROP TABLE email_content');l.db.close();l=Ledger(tmp_path/'db');eng=Engine(l,load_policy(POLICY));assert l.cursor(WALLET)==before and [s['signal_id'] for s in signals(l)]==ids and l.db.execute('select count(*) from email_content').fetchone()[0]==1
 
 def test_preimported_chain_transaction_advances_cursor_without_duplicate_position(tmp_path):
     l,eng=engine(tmp_path);e=active('cached');e['slot']=12;put(l,e);l.checkpoint(WALLET,'seed',11);before=l.db.execute('select body from positions').fetchone()[0]
