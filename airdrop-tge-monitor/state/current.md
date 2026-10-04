@@ -5,16 +5,16 @@ Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-05 05:52:37 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-05 06:48:26 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-05 05:52:37 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-05/055237-final.md
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
+- latest_authoritative_success: 2026-10-05 06:48:26 Asia/Bangkok
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-05/064826-final.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
 - latest_stale_shard_recovery: false
-- latest_candidate_count: 0
+- latest_candidate_count: 1
 - latest_triggered_events: 0
-- latest_unverified_candidates: 0
+- latest_unverified_candidates: 1
 - latest_identity_failures: 0
 - latest_source_failures: 0
 - latest_notification_decision: NO_ACTION
@@ -48,5 +48,6 @@ Timezone: Asia/Bangkok
 
 - Latest final audit completed successfully.
 - Known-events were processed before discovery.
-- Urgent set and Shard 1 completed without unresolved source or identity failures.
+- Urgent set and Shard 2 completed without unresolved source or identity failures.
+- One 01.xyz discovery candidate lacked Tier A/B authorization and remained UNVERIFIED_CANDIDATE / NO_ACTION.
 - No Gmail or ChatGPT notification was attempted because triggered_events=0.
