@@ -191,4 +191,3 @@ gross_quote_spent: {"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": "31000"}
 body_hash: `836480edfa7024790d2965d502d55ec946d7688ee9d195e852a99383536d6b5a`
 
 content_hash: `a8abe4725f060691481f47d81da55200450410e9427f5a25da1f7baa34c44ce8`
-
