@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "policy_id": "FOLLOW_POLICY_V1_REVIEW_CANDIDATE",
+  "status": "REVIEW_ONLY",
+  "live_delivery_approved": false,
+  "basis": "PROVISIONAL_FIXED_RULES_PENDING_EXTERNAL_AI_REVIEW",
+  "decision": {
+    "quote_usdc_amount": "30",
+    "slippage_bps": 100,
+    "quote_cache_seconds": 20,
+    "max_quote_age_seconds": 30,
+    "initial_notification_max_age_seconds": 600,
+    "hard_no_buy_position_states": ["CLOSED", "INVENTORY_UNDETERMINED"],
+    "buy": {
+      "required_pattern": "MULTIPLE",
+      "max_price_deviation_pct": "8",
+      "max_price_impact_pct": "1.5"
+    },
+    "small_buy": {
+      "allowed_patterns": ["MULTIPLE", "ACCUMULATION"],
+      "max_price_deviation_pct": "20",
+      "max_price_impact_pct": "3"
+    }
+  }
+}
