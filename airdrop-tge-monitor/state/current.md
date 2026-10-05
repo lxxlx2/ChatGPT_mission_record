@@ -5,16 +5,16 @@ Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-06 03:46:32 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-06 04:51:17 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-06 03:46:32 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-06/034632-final.md
-- latest_scheduled_shard: 3
-- latest_executed_shard: 3
+- latest_authoritative_success: 2026-10-06 04:51:17 Asia/Bangkok
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-06/045117-final.md
+- latest_scheduled_shard: 0
+- latest_executed_shard: 0
 - latest_stale_shard_recovery: false
-- latest_candidate_count: 0
+- latest_candidate_count: 1
 - latest_triggered_events: 0
-- latest_unverified_candidates: 0
+- latest_unverified_candidates: 1
 - latest_identity_failures: 0
 - latest_source_failures: 0
 - latest_notification_decision: NO_ACTION
@@ -37,6 +37,7 @@ Timezone: Asia/Bangkok
 ## Open urgent events
 
 - No new ACTION passed ACTION_GATE in the latest run.
+- Polymarket Token2049/token speculation surfaced only as Tier C discovery and remains UNVERIFIED_CANDIDATE; no Tier A/B user action established.
 
 ## Policy
 
@@ -48,6 +49,6 @@ Timezone: Asia/Bangkok
 
 - Latest final audit completed successfully.
 - Known-events were processed before discovery.
-- Urgent set and Shard 3 completed without unresolved source or identity failures.
+- Urgent set and Shard 0 completed without unresolved source or identity failures.
 - No new Tier A/B material delta affecting unresolved user rights was found.
 - No Gmail or ChatGPT notification was attempted because triggered_events=0.
