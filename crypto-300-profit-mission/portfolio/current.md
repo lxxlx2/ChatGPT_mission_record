@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-10-03 11:13 Asia/Bangkok
+Updated: 2026-10-05 14:13 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Accounting rule
@@ -136,6 +136,7 @@ This realized result is distinct from the prior day-to-day NAV mark compression.
 
 - **UNICRED #230**: removed / no longer owned.
 - **INK #372** remains known Ink inventory, but no reliable current >=$1 market mark is available in this refresh, so it is excluded from marked totals.
+- **Surf Limited Edition NFT #691**: user-provided Surf subscription page shows purchase via DaimoPay for **$228.00** on **2025-08-31 13:38**. As of 2026-10-05 the page says the NFT is still in transit / pending airdrop to the account. User expects final delivery to the canonical main wallet on **RB chain**. Delivery/ownership is **not yet independently verified on-chain**. Record $228 as historical acquisition cost only; exclude from current marked totals until delivery and a reliable market value are confirmed.
 - Solstice vesting-position NFT remains relevant only to the separate Season 1 rights dispute; revoked 1,049.483713 SLX is not treated as liquid NAV.
 - other NFTs below $1 or without reliable value are omitted.
 
@@ -159,6 +160,7 @@ This realized result is distinct from the prior day-to-day NAV mark compression.
 ### Marked NFT
 
 - Credits: **$0 / fully cleared**
+- Surf Limited Edition NFT #691: **pending delivery / unpriced**, excluded from marked subtotal; historical cost basis **$228.00**.
 - no other NFT currently has a reliable included mark in this snapshot.
 
 ### Total tracked asset reference
@@ -182,6 +184,7 @@ Do not interpret this ~$0.81 change as trading PnL. The prior snapshot used diff
 - Relay reconciliation: **closed at balance level**; no longer double-counted.
 - SUI: **0 by latest explicit user-confirmed state**, not freshly rescanned here.
 - UNICRED #230: **removed from current holdings**.
+- Surf Limited Edition NFT #691: **$228 historical cost, pending airdrop; expected on main wallet RB chain; not yet on-chain verified**.
 - Legion / JUMP: **$1,000 pending allocation**.
 - Binance: **$523.72 latest user-confirmed balance**.
 - positions below $1 remain excluded by rule.
