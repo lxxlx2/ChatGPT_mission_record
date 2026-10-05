@@ -28,7 +28,7 @@ Important limitations:
 | AR | Base | `0x3e43cB385A6925986e7ea0f0dcdAEc06673d4e10` | 20 ETH / 1.0B contributor tokens | 0.00000002 ETH | ~$0.00006830 | >= ~$0.0007794 observed 2025-01-14 | >= ~11.4x | reached by 2025-01-14, ~25d after launch; true ATH unresolved | MEDIUM for lower bound |
 | HARD | Base | `0x3de67b963766076a3e77e4bec067460523574694` | 100 ETH / 1.0B contributor tokens | 0.00000010 ETH | ~$0.0003341 | $0.001985 | ~5.94x | 2025-01-31, ~6d after launch | MEDIUM; CoinPaprika has a lower conflicting peak |
 | YT | Base | `0x387627b2bceb9ba5b476f6597727a7acf47f5b6c` | 55 ETH adjusted contributions / 900M contributor tokens | ~0.000000061111 ETH | ~$0.0001626 | $0.000398 | ~2.45x | 2025-03-05, ~15d after token mint | MEDIUM-HIGH |
-| RWOK | Base | `0x06e3685982b381ab7ecb760c8fbd7d92ac368a27` | 100 ETH raw goal; 96.52723825 ETH adjusted / 800M contributor tokens | weighted avg ~0.000000120659 HYPE-equivalent ETH | ~$0.0003162 weighted | UNRESOLVED | UNRESOLVED | historical ATH not reliably indexed | LOW for ATH |
+| RWOK | Base | `0x06e3685982b381ab7ecb760c8fbd7d92ac368a27` | 100 ETH raw goal; 96.52723825 ETH adjusted / 800M contributor tokens | weighted avg ~0.000000120659 ETH | ~$0.0003162 weighted | UNRESOLVED | UNRESOLVED | historical ATH not reliably indexed | LOW for ATH |
 | PVP | HyperEVM | `0x3Ca34A690a9622c3D191327E70e6C312b247986A` | 1,000 HYPE / 800M contributor tokens | avg 0.00000125 HYPE | approx ~$0.0000687 around launch HYPE price | UNRESOLVED | UNRESOLVED | historical ATH not reliably indexed | MEDIUM for entry / LOW for ATH |
 
 ## Chain-confirmed launch timestamps
