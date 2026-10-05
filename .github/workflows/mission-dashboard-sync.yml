@@ -4,11 +4,14 @@ on:
   push:
     branches: [main]
     paths:
-      - 'crypto-daily/runs/**'
+      - 'crypto-daily/runs/**/*-final.md'
+      - 'crypto-daily/runs/**/*-final-retry.md'
       - 'crypto-daily/reports/**'
-      - 'us-stock-daily/runs/**'
+      - 'us-stock-daily/runs/**/*-final.md'
+      - 'us-stock-daily/runs/**/*-final-retry.md'
       - 'us-stock-daily/reports/**'
-      - 'airdrop-tge-monitor/runs/**'
+      - 'airdrop-tge-monitor/runs/**/*-final.md'
+      - 'airdrop-tge-monitor/runs/**/*-final-retry.md'
       - 'airdrop-tge-monitor/reports/**'
       - '.github/workflows/mission-dashboard-sync.yml'
   workflow_dispatch:
@@ -18,7 +21,7 @@ permissions:
 
 concurrency:
   group: mission-dashboard-sync
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   sync:
