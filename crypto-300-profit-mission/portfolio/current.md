@@ -1,15 +1,17 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-10-05 14:13 Asia/Bangkok
+Updated: 2026-10-05 14:25 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 ## Accounting rule
 
-- include only individual chain positions / NFTs with a reliable marked value of **>= $1.00**;
-- individual positions worth **< $1.00** are omitted from the displayed portfolio;
+- include only individual chain positions / NFTs with a reliable marked value of **>= $1.00** in the liquid marked subtotal;
+- individual positions worth **< $1.00** are omitted from the displayed liquid portfolio;
 - spam, claim-bait and unpriced unsolicited receipts are excluded;
 - unpriced known inventory can remain as a note but does not enter marked totals;
 - committed/pending allocation capital is tracked separately from liquid available balance;
+- private/SPV/pre-TGE/points/NFT-rights inventory is tracked in a separate rights section and must not be added to liquid NAV without a reliable current mark;
+- historical acquisition cost is not the same as current value;
 - this is an asset-completeness snapshot, not Mission PnL.
 
 ## Canonical wallets
@@ -40,7 +42,64 @@ Latest user-confirmed available balance:
 - submitted / reserved capital: **$1,000.00**
 - state: **PENDING_ALLOCATION**
 - final allocation: **not yet known**
-- accounting: track the full $1,000 as pending capital until Legion publishes allocation/refund; do not treat it as liquid available balance.
+- accounting: track the full $1,000 as pending capital until Legion publishes allocation/refund; do not treat it as liquid available balance or as a final token cost basis.
+
+## Pre-TGE / private / points rights inventory
+
+Purpose: preserve current unresolved user economic rights that are easy to miss in wallet-only accounting. These entries are **not** added to liquid NAV unless a reliable current market value and ownership state are independently verified.
+
+### Confirmed capital / acquisition-cost exposures still unresolved
+
+| Project | User right / position | Historical cost / committed capital | Current state | Accounting treatment |
+|---|---|---:|---|---|
+| Reya | CoinList token-sale allocation | **$5,000** | pre-TGE / unresolved distribution | cost basis only; exclude from liquid NAV |
+| Makina | Legion / ICO token allocation | **$1,000** | pre-TGE | cost basis only; exclude from liquid NAV |
+| JUMP / Jumper | Legion public-sale application | **$1,000 submitted/reserved** | **PENDING_ALLOCATION**; final allocation unknown | pending capital only; not final token cost basis |
+| Block Stranding | presale / future token rights | **100 SOL** | pre-TGE | preserve native-unit cost; do not convert to current USD without explicit valuation refresh |
+| Fortytwo | Echo seed / token-related rights | **$250** | pre-TGE / illiquid | cost basis only |
+| OhBabyGames | Echo private / token-related rights | **$250** | unresolved liquidity / token event | cost basis only |
+| 01.xyz / N1 | Echo investment rights plus legacy 01/N1 ecosystem rights | **$1,000** | 01 acquired by N1; final user-level conversion / liquidity not confirmed | cost basis only |
+| ForecastFDN | private / token-related entitlement | **$100** | pre-TGE / unresolved | cost basis only |
+| Crusoe | Echo private equity / SPV rights | **$100** | illiquid private-market right | cost basis only; not a TGE asset |
+| Apptronik | Echo private equity / SPV rights | **$100** | illiquid private-market right | cost basis only |
+| Aalo Atomics | Echo private equity / SPV rights | **$100** | illiquid private-market right | cost basis only |
+| Thalassa | Echo private equity / SPV rights | **$500** | illiquid private-market right | cost basis only |
+| Figure | Echo private equity / SPV rights | **$1,000** | illiquid private-market right | cost basis only |
+| 1X | Echo private equity / SPV rights | **$2,000** | illiquid private-market right | cost basis only; separate from any 1X NEO consumer-order/refund history |
+| RepublicX / rTTOK / ByteDance economic exposure | **5,000 RepublicX Contingent Payout Notes**, $1 principal each | **$5,000** | illiquid contractual note exposure; tokenization may represent the Notes if RepublicX elects to issue it | not direct ByteDance stock ownership; cost basis only |
+| Surf Limited Edition NFT #691 | 1 NFT, pending delivery / airdrop | **$228** | not yet on-chain verified; expected by user to canonical main wallet on RB chain | historical acquisition cost only; exclude until delivered and reliably priced |
+
+Known dollar-denominated historical acquisition cost / capital above, **excluding JUMP pending allocation** and excluding the 100 SOL Block Stranding cost: **$16,628**.
+
+Including JUMP's currently submitted/reserved $1,000 as pending capital: **$17,628 + 100 SOL** of historical/committed exposure.
+
+These figures are cost / commitment accounting only. They are not current fair value and must not be added to the liquid marked asset subtotal below.
+
+### Points / rewards / potential token rights
+
+| Project | Known user state | Token / liquidity status |
+|---|---|---|
+| StandX | **51,129.8 Final Points** | token/TGE not yet treated as realized |
+| Surf | **28,600 Points** | pre-TGE / conversion not confirmed |
+| Pond / JoinPond | **12,000 Points** | pre-TGE / conversion not confirmed |
+| TurboFlow | **12,000 Points; 2-account participation noted** | no confirmed final token conversion in this portfolio record |
+| MetaMask Rewards | **Season 1 Level 5** | rewards exist; token allocation/TGE not treated as confirmed |
+| N1 / legacy 01 | legacy ecosystem points / rights exist; exact current quantity unresolved | conversion / token distribution unresolved |
+| OpenSea | historical rewards / activity rights exist; exact current quantity unresolved | do not assign token amount without current official/user evidence |
+| Polymarket | substantial historical user activity across prior accounts; no token amount recorded here | potential future rights only; do not value or assume token allocation |
+| Base | historical ecosystem participation | no confirmed user token allocation in this record |
+| Perena | points / activity rights recorded historically; exact quantity unresolved | pre-TGE / unresolved |
+| Rho | points / activity rights recorded historically; exact quantity unresolved | pre-TGE / unresolved |
+| Hylo | points / activity rights recorded historically; exact quantity unresolved | pre-TGE / unresolved |
+| Tydro | points exist; exact current quantity unresolved | pre-TGE / unresolved |
+
+### Explicit exclusions / closed positions
+
+- **humans& / Echo-Alpen**: **CLOSED_FULLY_REFUNDED**; $1,000 returned on 2026-09-24; current economic exposure = **0**. Do not include in current holdings.
+- Credits / Visualize Value: fully cleared.
+- UNICRED #230: removed / no longer owned.
+- SUI position: latest explicit user-confirmed state = 0 / fully cleared.
+- Already-TGE assets are not included in this pre-TGE rights table merely because residual claim/dispute history exists.
 
 ## Fresh on-chain assets >= $1
 
@@ -163,9 +222,9 @@ This realized result is distinct from the prior day-to-day NAV mark compression.
 - Surf Limited Edition NFT #691: **pending delivery / unpriced**, excluded from marked subtotal; historical cost basis **$228.00**.
 - no other NFT currently has a reliable included mark in this snapshot.
 
-### Total tracked asset reference
+### Total tracked liquid + pending reference
 
-Excluding sub-$1 dust and unpriced NFTs:
+Excluding sub-$1 dust, unpriced NFTs, and all private/pre-TGE/points rights without reliable current marks:
 
 **~ $1,699.06**
 
@@ -187,6 +246,8 @@ Do not interpret this ~$0.81 change as trading PnL. The prior snapshot used diff
 - Surf Limited Edition NFT #691: **$228 historical cost, pending airdrop; expected on main wallet RB chain; not yet on-chain verified**.
 - Legion / JUMP: **$1,000 pending allocation**.
 - Binance: **$523.72 latest user-confirmed balance**.
+- pre-TGE/private/points rights are now preserved in a dedicated section and deliberately excluded from liquid NAV unless separately marked.
+- humans& is fully refunded and excluded from current exposure.
 - positions below $1 remain excluded by rule.
 
 ## Monitoring policy
