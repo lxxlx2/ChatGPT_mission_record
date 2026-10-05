@@ -1,3 +1,5 @@
+> 2026-10-04 Frank authority override: `SUPERSEDED_FOR_FRANK_SIGNAL_AUTHORITY`. Current Frank system is `FRANK_ONLY` / `LOCAL_DETERMINISTIC_SIGNAL` under frozen `FRANK_LOCAL_SIGNAL_V1`, live since 00:29:01 Asia/Bangkok. GPT SEND/NO_SEND is not an alert authority. Private legacy manifest is superseded/expired; history below is preserved. Other persons and TOKEN_CONSENSUS are DEFERRED. See [FRANK_LOCAL_SIGNAL_REFACTOR.md](FRANK_LOCAL_SIGNAL_REFACTOR.md).
+
 # MEME GPT MONITOR SPEC
 
 Updated: 2026-10-03

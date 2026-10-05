@@ -1,3 +1,5 @@
+> 2026-10-04 Frank signal authority: `FRANK_ONLY` / `LOCAL_DETERMINISTIC_SIGNAL`; frozen `FRANK_LOCAL_SIGNAL_V1` is LIVE. Frank behavioral provenance remains `state/frank-wallet-watch.md`, but live pass/fail and delivery use [FRANK_LOCAL_SIGNAL_V1_POLICY.md](meme/FRANK_LOCAL_SIGNAL_V1_POLICY.md). Old GPT SEND/NO_SEND is `SUPERSEDED_FOR_FRANK_SIGNAL_AUTHORITY`; other persons and TOKEN_CONSENSUS are DEFERRED. This override does not change other mission lanes.
+
 # $300 Crypto Automatic Runtime
 
 Updated: 2026-09-29 17:35 Asia/Bangkok

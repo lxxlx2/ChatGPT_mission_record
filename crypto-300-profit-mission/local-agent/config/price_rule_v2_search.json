@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "rule_version": "PRICE_RULE_V2",
+  "ground_truth_version": "PRICE_GT_V2_EPISODES",
+  "assets": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "BNB"
+  ],
+  "end_ms": 1790747820000,
+  "warmup_bars": 1476,
+  "partitions": {
+    "CALIBRATION": [
+      1780379820000,
+      1785563820000
+    ],
+    "VALIDATION": [
+      1785563820000,
+      1788155820000
+    ],
+    "AUDIT": [
+      1788155820000,
+      1790747820000
+    ]
+  },
+  "grid": {
+    "R1": [
+      ".02",
+      ".025",
+      ".03"
+    ],
+    "R2": [
+      ".04",
+      ".045",
+      ".05"
+    ],
+    "R3": [
+      ".07",
+      ".075",
+      ".08"
+    ],
+    "R4": [
+      ".10",
+      ".12",
+      ".14"
+    ],
+    "R7_multiplier": [
+      "2.5",
+      "3"
+    ],
+    "R7_move": [
+      ".015",
+      ".02"
+    ]
+  },
+  "fixed": {
+    "R5": ".04",
+    "R6": ".01",
+    "R8": ".04",
+    "R9": ".06"
+  },
+  "gt": {
+    "FAST_MOVE": ".04",
+    "MEDIUM_MOVE": ".07",
+    "REVERSAL": ".05",
+    "BREAKOUT": ".015",
+    "VOL_multiplier": "4",
+    "VOL_move": ".025"
+  },
+  "reset_minutes": 30,
+  "hit_pre_minutes": 15,
+  "late_diagnostic_minutes": 5,
+  "severity_tiers": false,
+  "gates": {
+    "min_asset_episodes": 10,
+    "recall": ".90",
+    "median_day_max": 5,
+    "p95_day_max": 15,
+    "max_day_max": 30,
+    "combined_p95_max": 40
+  },
+  "configs": 324,
+  "tie_threshold_order": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R7_multiplier",
+    "R7_move"
+  ]
+}

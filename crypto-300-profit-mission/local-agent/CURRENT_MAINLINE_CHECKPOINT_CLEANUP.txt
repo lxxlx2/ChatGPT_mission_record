@@ -1,0 +1,1 @@
+Cleanup marker; redundant checkpoint marker files are being removed. Canonical file remains CURRENT_MAINLINE_CHECKPOINT.md.

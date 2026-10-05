@@ -1,72 +1,89 @@
 # Crypto Mission Monitor Health
 
-Updated: 2026-09-27 01:26 Asia/Bangkok
+Updated: 2026-10-04
 Timezone: Asia/Bangkok
+Canonical scope: `../STATUS_SCOPE_2026-10-04.md`
 
-## Three active Crypto tasks
+## Health semantics
 
-### Crypto Daily
-Latest automatic run:
-- 2026-09-27 01:00
-- final artifact: `crypto-daily/runs/2026-09-27/010000-final-retry.md`
-- core_scan: success
-- rotating_shard: checked_no_update
-- research_write: failed
-- run_status: partial_failure
+A module that is intentionally paused/frozen is **not** UNHEALTHY merely because it has no scheduler run. Health is evaluated only for runtime that is currently authorized to be live.
 
-Repair applied:
-- research write retries at a retry path;
-- if research still cannot persist, compact research payload/material candidates must be embedded in final/final-retry;
-- 09:00 reads final audits when a research hour is missing;
-- critical security carry-forward is mandatory.
+## Frank local signal runtime
 
-Current status: PARTIAL / awaiting next :00 proof.
+Status: **LIVE / latest verified acceptance PASS**
 
-### TGE
-Latest automatic run:
-- 2026-09-27 00:15
-- `airdrop-tge-monitor/runs/2026-09-27/001508-final.md`
-- status: success
-- action: NO_ACTION
-- notification: false
+Latest verified evidence:
+- `FRANK_LOCAL_SIGNAL_V1_LIVE`;
+- ACCUMULATION local notification LIVE;
+- MULTIPLE local notification LIVE;
+- MULTIPLE standalone Gmail LIVE;
+- GPT signal authority removed;
+- historical STONK MULTIPLE delivery E2E PASS;
+- Gmail Sent readback PASS;
+- duplicate suppression PASS;
+- crash recovery PASS with zero additional sends;
+- live test isolation PASS;
+- latest verified scanner PID during the STONK E2E run: `57287`;
+- latest verified live chain/local gap during that run: `0`;
+- pending raw/model at verification: `0 / 0`.
 
-Current status: HEALTHY.
+Evidence:
+- `../meme/FRANK_HISTORICAL_MULTIPLE_DELIVERY_E2E.md`
 
-### $300 Mission
-Latest scheduler metadata advanced at about 00:33, but no automatic final/final-retry persisted.
-Manual audit:
-- `crypto-300-profit-mission/runs/2026-09-27/003315-missing.md`
+The PID is the latest verified test-time runtime value, not a promise that the OS process ID can never change after a later restart.
 
-Repair applied:
-- required lanes bounded/reordered;
-- active XRP attacker flow is now a dedicated required lane;
-- Monster state/setup persistence added;
-- final/final-retry remains mandatory proof.
+## `$300-3000` GPT task
 
-Current status: UNHEALTHY until next :29 final proof.
+Status: **PAUSED intentionally on 2026-10-04**
 
-## Material monitoring defects fixed
+Reason:
+- Frank authority is local;
+- Monster is frozen;
+- NFT is paused;
+- CORE PRICE is paused;
+- other persons/consensus are deferred.
 
-### XRP / Bitget attacker flow
-The Sep-26 ~54M XRP movement from the original attacker holding wallets was not surfaced automatically.
-Dedicated authority:
-- `watchlists/xrp-bitget-hacker-flow.md`
+The task had no remaining substantive authorized lane. Its lack of future runs must not be reported as a health failure.
 
-A substantive missed alert was backfilled to Gmail and read back successfully.
+Legacy `$300 Crypto资产状态监控` also remains disabled.
 
-### Monster V2.1
-The 19:29 Sep-26 daily summary was generated in a later audit but never actually delivered.
-Recovered delivery:
-- Gmail subject `Crypto Mission｜Monster V2.1 日汇总｜2026-09-26`
-- Gmail readback verified
-- archive: `reports/daily/2026/2026-09/2026-09-26-monster-v2.1.md`
+## MONSTER / 妖币
 
-### Crypto Daily / Magic Eden
-The Sep-25 23:00 research found the Magic Eden / Limit Break legacy EVM approval exposure, but the Sep-26 formal daily omitted it.
-This was an aggregation/promotion defect.
-Repairs:
-- mandatory critical-security carry-forward;
-- research-gap recovery from final audits;
-- explicit included/omitted-with-reason QA.
+Runtime health: **N/A — NOT ACTIVE**
 
-No new automation created.
+Research state:
+- V3 TRAIN PASS;
+- once-only 2024 validation `INSUFFICIENT_DATA + CEILING_FAIL`;
+- D2 blocked;
+- D3 not started;
+- Monster LaunchAgent 0.
+
+No missing Monster scheduler run should be treated as an outage because no Monster live runtime is authorized.
+
+## NFT opportunity radar
+
+Runtime health: **N/A — PAUSED**
+
+The design/spec remains preserved, but no active Mission scheduler currently claims hourly NFT coverage.
+
+## CORE PRICE / overall-market trend
+
+Runtime health: **N/A — PAUSED**
+
+Legacy task remains disabled. No current BTC/ETH/SOL/HYPE/BNB price-alert coverage is claimed by this Mission module.
+
+## Portfolio refresh health
+
+2026-10-04 explicit wallet refresh completed with partial-provider caveats:
+- Solana classic SPL/native: fresh read succeeded;
+- Ethereum/Base/Ink and selected EVM native balances: fresh read succeeded;
+- Credits ownership: fresh 0;
+- UNICRED ownership: fresh 0;
+- Sui: fresh generic connector read unsupported, therefore latest user-confirmed 0 retained without relabeling it DIRECT_CHAIN;
+- Solana enhanced asset endpoint was unavailable and Token-2022 full enumeration was not completed, so exhaustive-all-asset coverage is not claimed.
+
+These provider limitations are data-coverage notes, not grounds to invent zero balances.
+
+## Independent tasks outside this Mission health file
+
+Crypto Daily, all-project Airdrop/TGE monitoring and the US-stock morning report are independent tasks. The `$300-3000` pause did not disable or modify them.

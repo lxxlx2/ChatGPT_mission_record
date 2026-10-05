@@ -1,0 +1,1011 @@
+{
+  "policy_id": "FRANK_LOCAL_SIGNAL_V1",
+  "schema_version": 1,
+  "status": "FROZEN",
+  "enabled": true,
+  "frozen": true,
+  "provenance": [
+    "DERIVED_FROM_EXISTING_FRANK_BEHAVIOR_MODEL",
+    "NON_BEHAVIOR_VETO_GATES_REMOVED_BY_USER_REQUIREMENT"
+  ],
+  "source": {
+    "path": "crypto-300-profit-mission/state/frank-wallet-watch.md",
+    "commit": "f36432aec00c0d91078b120758556b7413775366",
+    "sha256": "34a4e0038640d6a511c75599316ddb834b61431909fb7df5e03e52c109c57868",
+    "authority_reference": "crypto-300-profit-mission/AUTOMATION_RUNTIME.md Frank wallet conviction lane",
+    "precedence": "Two-stage 2026-09-29 04:20 override > latency-aware override > base rules"
+  },
+  "preconfirm_path_names": [
+    "S",
+    "C"
+  ],
+  "preconfirm_path_a_exists": false,
+  "preconfirm_path_b_exists": false,
+  "groups": [
+    {
+      "name": "ACTIVE_SWAP_PROOF",
+      "relationship": "All stages require proven active market exchange; passive activity does not count.",
+      "predicates": [
+        {
+          "id": "ACTIVE_SWAP_PROOF_44",
+          "line": 44,
+          "text": "Count only a transaction where the Frank wallet is the active swap participant and value is exchanged through a DEX/aggregator/pool.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "ACTIVE_SWAP_PROOF_46",
+          "line": 46,
+          "text": "Ignore:",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "SOURCE_CONTEXT"
+        },
+        {
+          "id": "ACTIVE_SWAP_PROOF_47",
+          "line": 47,
+          "text": "- plain SPL/Token-2022 transfers;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "ACTIVE_SWAP_PROOF_48",
+          "line": 48,
+          "text": "- airdrops;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "ACTIVE_SWAP_PROOF_49",
+          "line": 49,
+          "text": "- creator-fee/reward receipts;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "ACTIVE_SWAP_PROOF_50",
+          "line": 50,
+          "text": "- token mint/creation;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "ACTIVE_SWAP_PROOF_51",
+          "line": 51,
+          "text": "- claim distributions;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "ACTIVE_SWAP_PROOF_52",
+          "line": 52,
+          "text": "- unsolicited deposits;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "ACTIVE_SWAP_PROOF_53",
+          "line": 53,
+          "text": "- LP bookkeeping that is not a directional token buy/sell.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "ACTIVE_SWAP_PROOF_55",
+          "line": 55,
+          "text": "A token balance increase alone is never a BUY signal.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        }
+      ]
+    },
+    {
+      "name": "HFT_EXECUTION",
+      "relationship": "Global old no-alert filter; quantitative and unquantified execution patterns are preserved separately.",
+      "predicates": [
+        {
+          "id": "HFT_EXECUTION_59",
+          "line": 59,
+          "text": "Classify a mint as `HFT_EXECUTION` and do not alert when any strong execution pattern is present, including:",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "HFT_EXECUTION_60",
+          "line": 60,
+          "text": "- >=3 active swaps in <=60 seconds for the same mint;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "HFT_EXECUTION_61",
+          "line": 61,
+          "text": "- rapid buy/sell round trips that largely close inside ~20 minutes;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "UNQUANTIFIED_APPROXIMATE"
+        },
+        {
+          "id": "HFT_EXECUTION_62",
+          "line": 62,
+          "text": "- repeated routing/arbitrage across multiple pools where the wallet is cycling inventory rather than building a position.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "UNQUANTIFIED_PATTERN"
+        }
+      ]
+    },
+    {
+      "name": "WATCH",
+      "relationship": "Silent research state. All listed criteria apply; not a new accumulation threshold.",
+      "predicates": [
+        {
+          "id": "WATCH_71",
+          "line": 71,
+          "text": "- at least 2 distinct active BUY swaps occurred within the rolling 60 minutes;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "PERSISTENCE_A_CONTEXT"
+        },
+        {
+          "id": "WATCH_72",
+          "line": 72,
+          "text": "- gross active buys are directionally larger than sells;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "PERSISTENCE_A_CONTEXT"
+        },
+        {
+          "id": "WATCH_73",
+          "line": 73,
+          "text": "- the wallet still has positive exposure;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "PERSISTENCE_A_CONTEXT"
+        },
+        {
+          "id": "WATCH_74",
+          "line": 74,
+          "text": "- the pattern is not HFT_EXECUTION.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "PERSISTENCE_A_CONTEXT"
+        }
+      ]
+    },
+    {
+      "name": "PRECONFIRM_PATH_S",
+      "relationship": "((single >=5,000 USD) OR (rolling 60-minute aggregate >=10,000 USD)) AND first-party same-token call within prior 2 hours. Not authorized as the accumulation source.",
+      "predicates": [
+        {
+          "id": "PRECONFIRM_PATH_S_277",
+          "line": 277,
+          "text": "- single active BUY >= 5,000 USD equivalent, OR active BUY aggregate >= 10,000 USD equivalent inside rolling 60 minutes; AND",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "NOT_MAPPED"
+        },
+        {
+          "id": "PRECONFIRM_PATH_S_278",
+          "line": 278,
+          "text": "- a first-party public Frank post/call on his own X/FOMO/public profile mentions the same token/ticker/CA within the prior 2 hours.",
+          "categories": [
+            "SOCIAL",
+            "TIMING"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        },
+        {
+          "id": "PRECONFIRM_PATH_S_280",
+          "line": 280,
+          "text": "Third-party reposts, replies from other accounts, and generic market posts do not satisfy the social condition.",
+          "categories": [
+            "SOCIAL"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        }
+      ]
+    },
+    {
+      "name": "PRECONFIRM_PATH_C",
+      "relationship": "Social-unavailability fallback AND ((single active buy >=15,000 USD equivalent) OR (rolling 60-minute aggregate >=25,000 USD equivalent AND >=2 buys)). The single branch violates mandatory repeated-buy semantics.",
+      "predicates": [
+        {
+          "id": "PRECONFIRM_PATH_C_283",
+          "line": 283,
+          "text": "- use only when first-party social source is unavailable, delayed, or not indexed;",
+          "categories": [
+            "SOCIAL"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        },
+        {
+          "id": "PRECONFIRM_PATH_C_284",
+          "line": 284,
+          "text": "- single active BUY >= 15,000 USD equivalent; OR",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "PATH_C_SINGLE_LARGE_BUY_NOT_ACCUMULATION_USER_EXCLUDED"
+        },
+        {
+          "id": "PRECONFIRM_PATH_C_285",
+          "line": 285,
+          "text": "- active BUY aggregate >= 25,000 USD equivalent inside rolling 60 minutes with >=2 BUY swaps.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "USER_SELECTED_REPEATED_BRANCH_USDC_DIRECT"
+        }
+      ]
+    },
+    {
+      "name": "PRECONFIRM_COMMON",
+      "relationship": "Inherited preconfirm prerequisites and display rules, not additional buy thresholds.",
+      "predicates": [
+        {
+          "id": "PRECONFIRM_COMMON_274",
+          "line": 274,
+          "text": "Send Gmail PRECONFIRM at the first hourly scan that verifies active Frank buying and one of these paths.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "OLD_HOURLY_DELIVERY_SUPERSEDED_TARGET_LOCAL"
+        },
+        {
+          "id": "PRECONFIRM_COMMON_292",
+          "line": 292,
+          "text": "Do not suppress PRECONFIRM solely because current price has moved above Frank VWAP. Show the deviation:",
+          "categories": [
+            "PRICE"
+          ],
+          "treatment": "NO_PRICE_VETO_ALREADY_IN_OLD_STAGE"
+        },
+        {
+          "id": "PRECONFIRM_COMMON_293",
+          "line": 293,
+          "text": "- > +15%: `追价风险：高`;",
+          "categories": [
+            "PRICE"
+          ],
+          "treatment": "OPTIONAL_ENRICHMENT"
+        },
+        {
+          "id": "PRECONFIRM_COMMON_294",
+          "line": 294,
+          "text": "- > +25%: `仅观察，不建议追价`.",
+          "categories": [
+            "PRICE"
+          ],
+          "treatment": "OPTIONAL_ENRICHMENT"
+        },
+        {
+          "id": "PRECONFIRM_COMMON_297",
+          "line": 297,
+          "text": "- exact mint/CA verified;",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "CANONICAL_TOKEN_IDENTITY_RETAIN"
+        },
+        {
+          "id": "PRECONFIRM_COMMON_298",
+          "line": 298,
+          "text": "- active swap confirmed, not transfer/airdrop/reward;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "PRECONFIRM_COMMON_299",
+          "line": 299,
+          "text": "- basic liquidity exists;",
+          "categories": [
+            "LIQUIDITY"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        },
+        {
+          "id": "PRECONFIRM_COMMON_300",
+          "line": 300,
+          "text": "- no immediately visible hard honeypot / frozen-transfer condition.",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "NOT_FRANK_BEHAVIOR_EXCLUDED_FROM_TARGET_AUTHORITY"
+        }
+      ]
+    },
+    {
+      "name": "MEANINGFUL_ACCUMULATION_T0",
+      "relationship": "OR of the two exact canonical paths; never anchor on an unqualified dust/probe.",
+      "predicates": [
+        {
+          "id": "MEANINGFUL_ACCUMULATION_T0_190",
+          "line": 190,
+          "text": "Do not anchor latency to a dust/probe buy.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "MEANINGFUL_ACCUMULATION_T0_193",
+          "line": 193,
+          "text": "- Frank makes >=2 active BUY swaps in <=60 minutes with combined gross buy >=3,000 USD equivalent; or",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "MEANINGFUL_ACCUMULATION_T0_194",
+          "line": 194,
+          "text": "- one active BUY >=5,000 USD is followed by at least one additional active BUY within 60 minutes.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "MEANINGFUL_ACCUMULATION_T0_196",
+          "line": 196,
+          "text": "A single buy, regardless of PnL later, cannot by itself create FORMAL_ENTRY.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CONVICTION_CANDIDATE"
+        }
+      ]
+    },
+    {
+      "name": "PERSISTENCE_PATH_A_B",
+      "relationship": "A OR B. These are conviction persistence paths, not PRECONFIRM paths.",
+      "predicates": [
+        {
+          "id": "PERSISTENCE_PATH_A_B_203",
+          "line": 203,
+          "text": "- Path A: the mint was WATCH in the previous hourly run and still satisfies the entry gates now; or",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE_PREVIOUS_HOURLY_WATCH"
+        },
+        {
+          "id": "PERSISTENCE_PATH_A_B_204",
+          "line": 204,
+          "text": "- Path B: at the current run, the observed active BUY sequence already spans >=45 minutes from first to latest BUY, contains >=3 active BUY swaps, and the other FORMAL_ENTRY gates are satisfied.",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE_45_MINUTES_3_BUYS"
+        }
+      ]
+    },
+    {
+      "name": "FRESHNESS",
+      "relationship": "Target latency is not itself a hard buy-count predicate. Beyond 3 hours, listed gates apply.",
+      "predicates": [
+        {
+          "id": "FRESHNESS_211",
+          "line": 211,
+          "text": "- target: **45 to 120 minutes**;",
+          "categories": [
+            "TIMING"
+          ],
+          "treatment": "TARGET_NOT_NEW_HARD_THRESHOLD"
+        },
+        {
+          "id": "FRESHNESS_212",
+          "line": 212,
+          "text": "- >3 hours is considered late for a fresh new entry.",
+          "categories": [
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "FRESHNESS_214",
+          "line": 214,
+          "text": "If `now - T0 > 3h`, a new FORMAL_ENTRY is allowed only when:",
+          "categories": [
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "FRESHNESS_215",
+          "line": 215,
+          "text": "- Frank made a fresh active BUY in the last 60 minutes;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "FRESHNESS_216",
+          "line": 216,
+          "text": "- the position remains materially open;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE_UNQUANTIFIED_MATERIALITY"
+        },
+        {
+          "id": "FRESHNESS_217",
+          "line": 217,
+          "text": "- current executable price <= Frank VWAP * 1.05;",
+          "categories": [
+            "PRICE",
+            "EXECUTABILITY"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        },
+        {
+          "id": "FRESHNESS_218",
+          "line": 218,
+          "text": "- all normal safety/liquidity gates pass.",
+          "categories": [
+            "OTHER",
+            "LIQUIDITY"
+          ],
+          "treatment": "REMOVE_NON_BEHAVIOR_COMPONENTS"
+        }
+      ]
+    },
+    {
+      "name": "CONVICTION_BEHAVIOR_OVERRIDE",
+      "relationship": "These latest inventory rules are referenced by SUSPECTED_CONVICTION; older 70% retention and 30% gross sell-value cap are superseded.",
+      "predicates": [
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_225",
+          "line": 225,
+          "text": "- persistence Path A or B above;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_226",
+          "line": 226,
+          "text": "- cumulative gross active buys in the episode >=10,000 USD equivalent;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_227",
+          "line": 227,
+          "text": "- do **not** use lifetime/gross sell-value ratio as a hard rejection gate: profitable conviction positions can recycle principal or trim while remaining materially exposed;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "OLD_SELL_VALUE_VETO_EXPLICITLY_REMOVED"
+        },
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_228",
+          "line": 228,
+          "text": "- current token-unit exposure should normally remain >=50% of the episode peak token-unit exposure; alternatively, Frank must have resumed net buying in the last 60 minutes and still hold a material open position;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE_50_PERCENT_OR_NET_BUYING"
+        },
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_229",
+          "line": 229,
+          "text": "- if token-unit exposure fell >35% during the last 60 minutes with no fresh re-accumulation, suppress ENTRY as distribution/exit-risk;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE_35_PERCENT_DISTRIBUTION"
+        },
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_230",
+          "line": 230,
+          "text": "- current executable price normally between Frank VWAP * 0.92 and * 1.10;",
+          "categories": [
+            "PRICE",
+            "EXECUTABILITY"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        },
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_231",
+          "line": 231,
+          "text": "- liquidity / quote reserve sufficient and not collapsing;",
+          "categories": [
+            "LIQUIDITY"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        },
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_232",
+          "line": 232,
+          "text": "- bounded token-control / transfer restriction checks pass;",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "NOT_FRANK_BEHAVIOR_EXCLUDED_FROM_TARGET_AUTHORITY"
+        },
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_233",
+          "line": 233,
+          "text": "- no HFT_EXECUTION;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "CONVICTION_BEHAVIOR_OVERRIDE_234",
+          "line": 234,
+          "text": "- stablecoins, wrapped majors and obvious execution/hedging instruments excluded.",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "ASSET_SCOPE_NOT_FRANK_BEHAVIOR"
+        }
+      ]
+    },
+    {
+      "name": "SUSPECTED_CONVICTION",
+      "relationship": "Later-stage conjunction referencing persistence, T0 and latest inventory rules. Canonical says second Gmail; no numeric additional ADD count is specified.",
+      "predicates": [
+        {
+          "id": "SUSPECTED_CONVICTION_310",
+          "line": 310,
+          "text": "Send the second Gmail once later conviction conditions are satisfied:",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "OLD_STAGE_UPGRADE_CONTEXT"
+        },
+        {
+          "id": "SUSPECTED_CONVICTION_311",
+          "line": 311,
+          "text": "- persistence Path A or B from the latency-aware override;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "SUSPECTED_CONVICTION_312",
+          "line": 312,
+          "text": "- meaningful accumulation T0 established;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "SUSPECTED_CONVICTION_313",
+          "line": 313,
+          "text": "- episode cumulative active BUY >=10,000 USD;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "SUSPECTED_CONVICTION_314",
+          "line": 314,
+          "text": "- current token-unit inventory remains materially open under latest inventory-retention rules;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE_UNQUANTIFIED_MATERIALITY"
+        },
+        {
+          "id": "SUSPECTED_CONVICTION_315",
+          "line": 315,
+          "text": "- no recent distribution invalidation;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "SUSPECTED_CONVICTION_316",
+          "line": 316,
+          "text": "- current executable price normally inside Frank VWAP * 0.92 to * 1.10;",
+          "categories": [
+            "PRICE",
+            "EXECUTABILITY"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        },
+        {
+          "id": "SUSPECTED_CONVICTION_317",
+          "line": 317,
+          "text": "- liquidity, token-control and transfer-restriction checks pass;",
+          "categories": [
+            "LIQUIDITY",
+            "OTHER"
+          ],
+          "treatment": "NOT_FRANK_BEHAVIOR_EXCLUDED_FROM_TARGET_AUTHORITY"
+        },
+        {
+          "id": "SUSPECTED_CONVICTION_318",
+          "line": 318,
+          "text": "- no HFT_EXECUTION;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "SUSPECTED_CONVICTION_319",
+          "line": 319,
+          "text": "- not a stablecoin/wrapped major/obvious execution or hedging instrument.",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "ASSET_SCOPE_NOT_FRANK_BEHAVIOR"
+        }
+      ]
+    },
+    {
+      "name": "RESET_CANCELLATION_EXIT",
+      "relationship": "Source behaviors are preserved; V1 episode reset/dust rules are not invented.",
+      "predicates": [
+        {
+          "id": "RESET_CANCELLATION_EXIT_106",
+          "line": 106,
+          "text": "Only evaluate FORMAL_EXIT for a mint that previously generated a delivered FORMAL_ENTRY.",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "OLD_DELIVERED_STAGE_PREREQUISITE"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_109",
+          "line": 109,
+          "text": "- Frank reduces the tracked position by >=35% in a rolling hour;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_110",
+          "line": 110,
+          "text": "- Frank effectively closes the position;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "UNQUANTIFIED_EFFECTIVE_CLOSE"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_111",
+          "line": 111,
+          "text": "- repeated active sells clearly replace the prior accumulation regime;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "UNQUANTIFIED_DISTRIBUTION"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_112",
+          "line": 112,
+          "text": "- a hard token/liquidity invalidation emerges.",
+          "categories": [
+            "OTHER",
+            "LIQUIDITY"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_330",
+          "line": 330,
+          "text": "If PRECONFIRM was delivered but SUSPECTED_CONVICTION does not develop, send one `[撤销预确认]` follow-up only when a hard invalidation is observed:",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "OLD_DELIVERED_STAGE_PREREQUISITE"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_331",
+          "line": 331,
+          "text": "- token-unit inventory falls >35% in rolling 60 minutes with no re-accumulation;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR",
+            "TIMING"
+          ],
+          "treatment": "RETAIN_CANDIDATE"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_332",
+          "line": 332,
+          "text": "- Frank effectively exits;",
+          "categories": [
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "UNQUANTIFIED_EFFECTIVE_CLOSE"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_333",
+          "line": 333,
+          "text": "- liquidity collapses materially;",
+          "categories": [
+            "LIQUIDITY"
+          ],
+          "treatment": "REMOVED_NON_BEHAVIOR_AUTHORITY"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_334",
+          "line": 334,
+          "text": "- a hard token-control / transfer-restriction risk appears;",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "NOT_FRANK_BEHAVIOR_EXCLUDED_FROM_TARGET_AUTHORITY"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_335",
+          "line": 335,
+          "text": "- original first-party social call is deleted/retracted and chain behavior also fails to confirm.",
+          "categories": [
+            "SOCIAL",
+            "ONCHAIN_FRANK_BEHAVIOR"
+          ],
+          "treatment": "SOCIAL_VETO_REMOVED_BEHAVIOR_UNQUANTIFIED"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_337",
+          "line": 337,
+          "text": "Do not send cancellation merely because the next scan is quiet.",
+          "categories": [
+            "TIMING"
+          ],
+          "treatment": "QUIET_SCAN_NOT_RESET"
+        },
+        {
+          "id": "RESET_CANCELLATION_EXIT_347",
+          "line": 347,
+          "text": "Each stage for a mint/episode is delivered at most once.",
+          "categories": [
+            "OTHER"
+          ],
+          "treatment": "RETAIN_ONCE_PER_MINT_EPISODE_STAGE"
+        }
+      ]
+    }
+  ],
+  "numbers": [
+    [
+      "Path S single / aggregate / social lookback",
+      ">=5,000 USD / >=10,000 USD in 60 min / prior 2 h",
+      "NOT_MAPPED"
+    ],
+    [
+      "Path C single",
+      ">=15,000 USD equivalent",
+      "NOT_ACCUMULATION_PROVENANCE_ONLY"
+    ],
+    [
+      "Path C repeated",
+      ">=2 buys AND >=25,000 USD equivalent in 60 min",
+      "USER_SELECTED_V1_USDC_DIRECT"
+    ],
+    [
+      "T0 path 1",
+      ">=2 buys AND >=3,000 USD equivalent in <=60 min",
+      "CONVICTION_CORE"
+    ],
+    [
+      "T0 path 2",
+      ">=5,000 USD buy followed by >=1 additional buy within 60 min",
+      "CONVICTION_CORE"
+    ],
+    [
+      "Persistence A",
+      "previous hourly WATCH; no numeric extra ADD requirement",
+      "CONVICTION_CORE"
+    ],
+    [
+      "Persistence B",
+      ">=3 buys spanning >=45 min",
+      "CONVICTION_CORE"
+    ],
+    [
+      "Conviction cumulative buy",
+      ">=10,000 USD equivalent per episode",
+      "CONVICTION_CORE"
+    ],
+    [
+      "Inventory retention",
+      "normally >=50% of episode peak; OR resumed net buying in last 60 min and material open position",
+      "CONVICTION_CORE"
+    ],
+    [
+      "Distribution veto / preconfirm cancellation",
+      ">35% token inventory fall in 60 min without re-accumulation",
+      "CONVICTION_CORE"
+    ],
+    [
+      "Old FORMAL_EXIT reduction",
+      ">=35% tracked position reduction in rolling hour",
+      "OLD_EXIT_SCOPE"
+    ],
+    [
+      "HFT count",
+      ">=3 active swaps in <=60 s for same mint",
+      "BEHAVIOR_VETO"
+    ],
+    [
+      "HFT round trip",
+      "largely close inside ~20 min",
+      "APPROXIMATE_NOT_EXACT_THRESHOLD"
+    ],
+    [
+      "Freshness target / stale boundary / refreshed buying",
+      "45–120 min / >3 h / active BUY within 60 min",
+      "TIMING"
+    ],
+    [
+      "Deprecated executable price bounds",
+      "VWAP *0.92 to *1.10; stale-entry cap *1.05",
+      "REMOVED_FROM_AUTHORITY"
+    ],
+    [
+      "Old preconfirm display deviations",
+      ">15%, >25% above VWAP",
+      "ENRICHMENT_ONLY"
+    ],
+    [
+      "Superseded base entry rules",
+      "two consecutive hourly observations; >=70% retention; sell value <=30% gross buys",
+      "SUPERSEDED_BY_OVERRIDES"
+    ],
+    [
+      "Old suggested sizing",
+      "10–30 USD base; 20–30 USD initial/add; 50–60 USD cap; 0–15 USD preconfirm; ~100 USD lane",
+      "NOT_SIGNAL_PREDICATES"
+    ],
+    [
+      "Old runway scenarios",
+      "3x and 5x implied capitalization",
+      "NOT_SIGNAL_PREDICATES_NO_GUARANTEE"
+    ],
+    [
+      "Old scheduler / overlap",
+      "hourly :29; 0–59 min latency; 15 min signature overlap; 2 h social overlap",
+      "OLD_OPERATIONAL_NOT_NEW_BEHAVIOR_THRESHOLD"
+    ],
+    [
+      "Relative-size / percentile / dust / extra ADD count",
+      "NOT_SPECIFIED",
+      "DO_NOT_INVENT"
+    ]
+  ],
+  "mapping": {
+    "FRANK_ACCUMULATION_SIGNAL": {
+      "source": "PRECONFIRM_PATH_C_REPEATED_BRANCH",
+      "single_branch": "PATH_C_SINGLE_LARGE_BUY = NOT_ACCUMULATION",
+      "count_min": 2,
+      "window_seconds": 3600,
+      "quote_asset": "USDC",
+      "quote_quantity_min": "25000",
+      "hft_veto": false
+    },
+    "FRANK_MULTIPLE_SIGNAL": {
+      "source": "SUSPECTED_CONVICTION_BEHAVIOR_CORE",
+      "requires_accumulation": true,
+      "t0_repeated_buy_count": 2,
+      "t0_window_seconds": 3600,
+      "t0_repeated_amount_min": "3000",
+      "t0_large_buy_min": "5000",
+      "cumulative_amount_min": "10000",
+      "quote_asset": "USDC",
+      "persistence": {
+        "A": "PRIOR_HOURLY_29_WATCH",
+        "B": {
+          "buy_count_min": 3,
+          "buy_span_seconds_min": 2700
+        }
+      },
+      "retention_ratio_min": "0.50",
+      "net_buy_window_seconds": 3600,
+      "distribution_drop_ratio_gt": "0.35",
+      "distribution_window_seconds": 3600,
+      "hft_swaps_min": 3,
+      "hft_window_seconds": 60,
+      "rapid_roundtrip_reference_seconds": 1200,
+      "rapid_roundtrip_reference_is_approximate": true,
+      "stale_after_seconds": 10800,
+      "fresh_buy_window_seconds": 3600
+    }
+  },
+  "amount_policy": {
+    "usdc": "DIRECT_RAW_QUOTE_QUANTITY_NO_INDEPENDENT_USD_CLAIM",
+    "non_usdc_without_reliable_conversion": "UNDETERMINED",
+    "temporary_sol_conversion_allowed": false,
+    "numeric_thresholds_preserved": [
+      "3000",
+      "5000",
+      "10000"
+    ],
+    "unit_change_authorized_by": "USER_2026_10_04"
+  },
+  "observed_sequence_policy": {
+    "lifetime_first_entry_required": false,
+    "exact_zero_observed_active_inventory_closes_sequence": true,
+    "unresolvable_sell": "INVENTORY_UNDETERMINED_NO_GUESSED_EXIT"
+  },
+  "unspecified": {
+    "relative_buy_size_percentile": null,
+    "additional_add_count": null,
+    "reentry_requirement": null,
+    "numeric_dust_close_threshold": null,
+    "lifetime_zero_start_required": null,
+    "material_open_position_numeric_definition": null,
+    "reaccumulation_numeric_definition": null
+  },
+  "delivery_target": {
+    "FRANK_ACCUMULATION_SIGNAL": [
+      "LOCAL"
+    ],
+    "FRANK_MULTIPLE_SIGNAL": [
+      "LOCAL",
+      "STANDALONE_GMAIL"
+    ],
+    "gpt_required": false,
+    "historical_delivery_allowed": false
+  },
+  "production_trading": "NO_GO",
+  "other_persons": "DEFERRED",
+  "new_automation": false
+}

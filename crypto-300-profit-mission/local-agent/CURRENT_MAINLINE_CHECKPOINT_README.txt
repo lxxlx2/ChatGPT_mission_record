@@ -1,0 +1,1 @@
+Read CURRENT_MAINLINE_CHECKPOINT.md first when resuming this project. It is the canonical handoff snapshot for the Frank + Monster mainline as of 2026-10-01. The next FM3 prompt has not yet been executed.

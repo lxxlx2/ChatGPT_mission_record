@@ -1,0 +1,1 @@
+Do not send or execute the FM3 prompt until explicitly requested by the user. This checkpoint only preserves progress.

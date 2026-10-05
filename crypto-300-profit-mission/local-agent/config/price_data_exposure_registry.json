@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "status": "V3_BLOCKED_NO_VERIFIABLE_HIDDEN_INTERVAL",
+  "assets": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "BNB"
+  ],
+  "exposed_intervals": [
+    {
+      "start_ms": 1780291260000,
+      "end_ms": 1790747820000,
+      "status": "EXPOSED_INCLUDING_CAUSAL_WARMUP",
+      "purpose": "V1/V2 calibration validation and forensic reuse"
+    }
+  ],
+  "sources": [
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/BNB-canonical.json.gz.manifest.json",
+      "sha256": "812aade767a73ec2f8305c1b54997b06c87c05ffd90cfd7b5f8c0901632249b7",
+      "range": [
+        1788069060000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/BNB-raw.json.gz.manifest.json",
+      "sha256": "609c767aa8effea6db53b2cc8aff1c59de4a21b5d325d6cbf4bd25eab22962d0",
+      "range": [
+        1788069060000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/BTC-canonical.json.gz.manifest.json",
+      "sha256": "3255a356336514520f37109dac4e71264e07724c86fd5336e4d0237ed842ac7e",
+      "range": [
+        1788069060000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/BTC-raw.json.gz.manifest.json",
+      "sha256": "7558e9f9249d6c867a906c9f1649fea43e9d6452c6581f2522745f581d312adc",
+      "range": [
+        1788069060000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/ETH-canonical.json.gz.manifest.json",
+      "sha256": "c661e24a8772c0d27100cedb1da1d2b22f92bf8738d4f56e32fed372353cec21",
+      "range": [
+        1788069060000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/ETH-raw.json.gz.manifest.json",
+      "sha256": "6c4f01ff04c76d35490a88c08dab20872326d74189d0d69f8160a3525d66aa8d",
+      "range": [
+        1788069060000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/HYPE-canonical.json.gz.manifest.json",
+      "sha256": "2daee53117b9b3711d3fdc78b8cbdcd8813585b89167090b7bdee180b588de49",
+      "range": [
+        1790445360000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/HYPE-raw.json.gz.manifest.json",
+      "sha256": "103d1136762d2f5832c2167ca35900f4caf1ffdc6522f4f52c6f806fc46b703f",
+      "range": [
+        1790445360000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/SOL-canonical.json.gz.manifest.json",
+      "sha256": "e8ca1096f7a0035d63109e7047578bb0a7efe424eb7593148073d565c7939e15",
+      "range": [
+        1788069060000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3-evidence-20260930/history/SOL-raw.json.gz.manifest.json",
+      "sha256": "47975fefd0cb9070ec0f57f320da8d93abd14a2866e5a45181868098c2bb4fd7",
+      "range": [
+        1788069060000,
+        1790747820000
+      ],
+      "role": "V1",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/calibration/BNB-canonical.json.gz.manifest.json",
+      "sha256": "7725265d8b7ef9e89d4b1f410065037d3eadd6a26af5d95ac935d18a4c1c97a2",
+      "range": [
+        1780291260000,
+        1785563820000
+      ],
+      "role": "CALIBRATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/calibration/BNB-raw.json.gz.manifest.json",
+      "sha256": "3752b321967c594f3bc23b4c4f9436f912e118894bc96212403479c4b2901db1",
+      "range": [
+        1780291260000,
+        1785563820000
+      ],
+      "role": "CALIBRATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/calibration/BTC-canonical.json.gz.manifest.json",
+      "sha256": "ef440e5151e5acfb03909c2dd653ee8a300c536abd9c7bf383c9915806c1e8d7",
+      "range": [
+        1780291260000,
+        1785563820000
+      ],
+      "role": "CALIBRATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/calibration/BTC-raw.json.gz.manifest.json",
+      "sha256": "c892be89f17b175df2c21b491b9b1dc1e67e17532b8176bcfa22a9b8d9f03475",
+      "range": [
+        1780291260000,
+        1785563820000
+      ],
+      "role": "CALIBRATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/calibration/ETH-canonical.json.gz.manifest.json",
+      "sha256": "f988f61d6bb00b19ab958b5a0b5dde3155462373fc1cd6d7f69102b9ffb39803",
+      "range": [
+        1780291260000,
+        1785563820000
+      ],
+      "role": "CALIBRATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/calibration/ETH-raw.json.gz.manifest.json",
+      "sha256": "b12fab874eb3cf70995d7157aa518cf9bd77cc6cfdbf90f46475a6ff9279c8ae",
+      "range": [
+        1780291260000,
+        1785563820000
+      ],
+      "role": "CALIBRATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/calibration/SOL-canonical.json.gz.manifest.json",
+      "sha256": "f59400eadf9cde4cbbecae9f60dbf652655574e77b2e458162a81910fc1bb1f9",
+      "range": [
+        1780291260000,
+        1785563820000
+      ],
+      "role": "CALIBRATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/calibration/SOL-raw.json.gz.manifest.json",
+      "sha256": "eb878761187e9d14646414e743eaf00e0c55297e3e18a389a0f2334066a8b02f",
+      "range": [
+        1780291260000,
+        1785563820000
+      ],
+      "role": "CALIBRATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/validation/BNB-canonical.json.gz.manifest.json",
+      "sha256": "57107ce557c109ac9216233936d6fa33df8275f7f5bcf27ad1cca670fcafea7c",
+      "range": [
+        1785475260000,
+        1788155820000
+      ],
+      "role": "VALIDATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/validation/BNB-raw.json.gz.manifest.json",
+      "sha256": "dc746fdf8bc865080c896d669b0cb72b66080c1cce36c5818a267e6d442b6fa2",
+      "range": [
+        1785475260000,
+        1788155820000
+      ],
+      "role": "VALIDATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/validation/BTC-canonical.json.gz.manifest.json",
+      "sha256": "fcd6e96d656e048d6c0b7b53f5bd2ebf8c56a98bf0c569bfd7c0d288fa4698fe",
+      "range": [
+        1785475260000,
+        1788155820000
+      ],
+      "role": "VALIDATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/validation/BTC-raw.json.gz.manifest.json",
+      "sha256": "278d65032604ac6c37a0d3ce03ddc886d5ca9a6039622c4e429e2a818238d03f",
+      "range": [
+        1785475260000,
+        1788155820000
+      ],
+      "role": "VALIDATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/validation/ETH-canonical.json.gz.manifest.json",
+      "sha256": "b4d27a12114b575c0c0e25db2d522c8bf49126ed375c45e5e37963e84a1c6054",
+      "range": [
+        1785475260000,
+        1788155820000
+      ],
+      "role": "VALIDATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/validation/ETH-raw.json.gz.manifest.json",
+      "sha256": "ec06fa2b07ce6ad3b3faa2022240f1deb380355615bfb847b70f4315c14f9264",
+      "range": [
+        1785475260000,
+        1788155820000
+      ],
+      "role": "VALIDATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/validation/SOL-canonical.json.gz.manifest.json",
+      "sha256": "6ee1653d6ea2edbb211b5032b0bfd6b853f8f90ef8cf17693452ef2e1a05f465",
+      "range": [
+        1785475260000,
+        1788155820000
+      ],
+      "role": "VALIDATION",
+      "metadata_only": true
+    },
+    {
+      "path": "/Users/jerson/Documents/ChatGPT/crypto-monitor-phase3b-evidence-20260930/validation/SOL-raw.json.gz.manifest.json",
+      "sha256": "3601e68d5c54dc6f67277f48b866f69a23ee0931c0ed0f2786cc583e7c75c584",
+      "range": [
+        1785475260000,
+        1788155820000
+      ],
+      "role": "VALIDATION",
+      "metadata_only": true
+    },
+    {
+      "path": "PHASE3_PRICE_REPORT.md",
+      "sha256": "3eb4869387ec7c188a2eea2dd771f58f0fc89c4becd4f9415bd6424bfb662495",
+      "kind": "existing_contract_or_report"
+    },
+    {
+      "path": "PHASE3B_PRICE_V2_CALIBRATION_REPORT.md",
+      "sha256": "8c29cb157592dad24469628953b6338397784b4ec92c8b9975bb7cfd6c1da5a1",
+      "kind": "existing_contract_or_report"
+    },
+    {
+      "path": "PHASE3B_R_V2_FAILURE_FORENSICS_REPORT.md",
+      "sha256": "8acd95fce121b5fc24dd4415418a6d6e33dc18daf6de7ac2fc4bfc0de3272ac5",
+      "kind": "existing_contract_or_report"
+    },
+    {
+      "path": "config/price_rule_v2_search.json",
+      "sha256": "453d7152a8674ae855c8df45ceec6daad7ede730388a6bee73a09c6a9edc44af",
+      "kind": "existing_contract_or_report"
+    }
+  ],
+  "sealed_audit_metadata_opened": false,
+  "scope": [
+    "project repository reports and contracts",
+    "existing Phase3/Phase3B private manifest metadata",
+    "filename inventory under /Users/jerson/Documents/ChatGPT"
+  ],
+  "absence_limit": "No matching older cache found in inspected project evidence. Absence is scoped, not proof of all external or deleted historical use. Hidden eligibility not yet certified.",
+  "new_openings": [],
+  "repository_history_inventory": {
+    "command": "git log --all --format= --name-only -- crypto-300-profit-mission",
+    "unique_paths": 301,
+    "relevant_paths": [
+      "crypto-300-profit-mission/local-agent/PHASE3B_PRICE_V2_CALIBRATION_REPORT.md",
+      "crypto-300-profit-mission/local-agent/PHASE3B_R_V2_FAILURE_FORENSICS_REPORT.md",
+      "crypto-300-profit-mission/local-agent/PHASE3_PRICE_REPORT.md",
+      "crypto-300-profit-mission/local-agent/config/price_rule_v2_calibration_result.json",
+      "crypto-300-profit-mission/local-agent/config/price_rule_v2_candidate.json",
+      "crypto-300-profit-mission/local-agent/config/price_rule_v2_search.json",
+      "crypto-300-profit-mission/local-agent/config/price_rule_v2_validation_result.json",
+      "crypto-300-profit-mission/local-agent/docs/PRICE_FEATURE_DEFINITIONS.md",
+      "crypto-300-profit-mission/local-agent/docs/PRICE_GT_V2_EPISODES.md",
+      "crypto-300-profit-mission/local-agent/docs/PRICE_REPLAY_GROUND_TRUTH.md",
+      "crypto-300-profit-mission/local-agent/docs/PRICE_RULE_V2_CALIBRATION_PLAN.md",
+      "crypto-300-profit-mission/local-agent/docs/PRICE_RULE_V2_SEARCH_SPACE.md",
+      "crypto-300-profit-mission/local-agent/docs/PRICE_RULE_V2_WINNER_RECORD.md",
+      "crypto-300-profit-mission/local-agent/docs/PRICE_SOURCE_AUDIT.md",
+      "crypto-300-profit-mission/local-agent/docs/PRICE_V2_FAILURE_FORENSICS_PLAN.md",
+      "crypto-300-profit-mission/local-agent/mission_agent/db/price_migrations.py",
+      "crypto-300-profit-mission/local-agent/mission_agent/market/forensics/__init__.py",
+      "crypto-300-profit-mission/local-agent/mission_agent/market/forensics/analyze.py",
+      "crypto-300-profit-mission/local-agent/mission_agent/market/forensics/guard.py",
+      "crypto-300-profit-mission/local-agent/mission_agent/market/forensics/metrics.py",
+      "crypto-300-profit-mission/local-agent/mission_agent/market/forensics/policies.py",
+      "crypto-300-profit-mission/local-agent/scripts/price_history.py",
+      "crypto-300-profit-mission/local-agent/scripts/price_replay.py",
+      "crypto-300-profit-mission/local-agent/scripts/price_source_probe.py",
+      "crypto-300-profit-mission/local-agent/scripts/price_v2_calibrate.py",
+      "crypto-300-profit-mission/local-agent/scripts/price_v2_forensics.py",
+      "crypto-300-profit-mission/local-agent/scripts/price_v2_history.py",
+      "crypto-300-profit-mission/local-agent/scripts/price_v2_validate.py",
+      "crypto-300-profit-mission/local-agent/tests/test_price.py",
+      "crypto-300-profit-mission/local-agent/tests/test_price_forensics.py",
+      "crypto-300-profit-mission/local-agent/tests/test_price_v2.py"
+    ],
+    "inventory_sha256": "1f5dc34c4a08a668f9ca6f20097d5f2074c4fed919b15887b5526f01d2531cde"
+  },
+  "certified_hidden_intervals": [],
+  "certification_reason": "Existing manifests are positive evidence for known exposures, not a complete append-only record of prior downloads, deleted caches, replay, tuning, or summary inspection. Repository history and local filename inventory cannot certify an unrecorded historical interval never opened. No hidden eligibility asserted.",
+  "sync": {
+    "method": "MERGE",
+    "commit": "6973cd62d1ca980b95c7674c4191b4289314999a",
+    "main": "e6a2fa3c7f806f75e8d367c89b4f7fa354483bde",
+    "original_feature": "908aec78561c2d4b5a12440b581043e8c73f3223"
+  }
+}

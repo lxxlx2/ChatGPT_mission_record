@@ -1,0 +1,98 @@
+{
+  "version": "monster-d1-v2",
+  "configuration_count": 243,
+  "combination": "cartesian_3_to_power_5",
+  "paths": {
+    "A": [
+      {
+        "return_rank": 0.9,
+        "quote_min": 10000
+      },
+      {
+        "return_rank": 0.95,
+        "quote_min": 10000
+      },
+      {
+        "return_rank": 0.98,
+        "quote_min": 10000
+      }
+    ],
+    "B": [
+      {
+        "volume_acceleration": 2,
+        "quote_min": 10000
+      },
+      {
+        "volume_acceleration": 3,
+        "quote_min": 10000
+      },
+      {
+        "volume_acceleration": 5,
+        "quote_min": 10000
+      }
+    ],
+    "C": [
+      {
+        "volume_acceleration": 3,
+        "quote_min": 10000
+      },
+      {
+        "volume_acceleration": 5,
+        "quote_min": 10000
+      },
+      {
+        "volume_acceleration": 8,
+        "quote_min": 10000
+      }
+    ],
+    "D": [
+      {
+        "return_rank": 0.8,
+        "quote_min": 10000
+      },
+      {
+        "return_rank": 0.9,
+        "quote_min": 10000
+      },
+      {
+        "return_rank": 0.95,
+        "quote_min": 10000
+      }
+    ],
+    "E": [
+      {
+        "relative_rank": 0.9,
+        "quote_min": 10000
+      },
+      {
+        "relative_rank": 0.95,
+        "quote_min": 10000
+      },
+      {
+        "relative_rank": 0.98,
+        "quote_min": 10000
+      }
+    ]
+  },
+  "splits": {
+    "TRAIN": [
+      "2021-01-01",
+      "2024-01-01"
+    ],
+    "VALIDATION": [
+      "2024-01-01",
+      "2025-01-01"
+    ],
+    "EXPOSED_DIAGNOSTIC": [
+      "2025-01-01",
+      "2026-10-01"
+    ]
+  },
+  "fallback": "NO_YEAR_REASSIGNMENT; SAMPLE_INSUFFICIENT_DATA",
+  "entity_ceiling": {
+    "median": 100,
+    "p95": 150
+  },
+  "memory_peak_bytes_limit": 1073741824,
+  "disk_soft_budget_bytes": 5368709120
+}

@@ -1,7 +1,8 @@
 # UNICRED Position
 
-Updated: 2026-09-28 17:58 Asia/Bangkok
-Status: **NFT_ACTIVE / CRED_CLOSED**
+Updated: 2026-10-04
+Timezone: Asia/Bangkok
+Status: **CLOSED / NOT_OWNED**
 
 ## Canonical contracts
 
@@ -12,16 +13,17 @@ Status: **NFT_ACTIVE / CRED_CLOSED**
 
 ## Current direct-chain state
 
-Fresh Alchemy:
-- UNICRED #230: **owned by canonical wallet**
-- NFT ownership valid at block timestamp **2026-09-28T02:32:01Z**
-- native ETH: **0.000231941590232335**
-- canonical USDC: **0.021286**
-- canonical CRED: **0**
+Fresh Unichain ownership query at block **60,318,039** / **2026-10-03T22:26:38Z**:
+- NFTs owned from the UNICRED contract: **0**.
 
-All earlier 51.390151 / 25.69507573368924 CRED residual snapshots are historical. There is currently no liquid CRED position.
+Current state:
+- UNICRED #230: **not owned / closed**;
+- native ETH: **0.000020589846025254** (~$0.06 at the 2026-10-04 ETH mark, below display threshold);
+- no current UNICRED NFT is included in portfolio NAV.
 
-## NFT economics
+Historical CRED residuals and prior #230 ownership are provenance only and must not be carried forward as current holdings.
+
+## Historical economics / provenance
 
 Historical acquisition:
 - UNICRED #230 acquisition cost: **0.0105 ETH**
@@ -32,45 +34,26 @@ Historical acquisition:
 - Fine resolution
 - Cyan Dominant
 
-Current collection market reference:
-- floor: **~0.00359 ETH**
-- top offer: **~0.0022 WETH**
-- ETH mark used: **2656.93 USD**
-- floor mark for #230: **~9.54 USD**
-- top-offer reference: **~5.85 USD**
+Historical collection references such as the prior ~0.00359 ETH floor / ~0.0022 WETH top offer are no longer current position marks and must not be presented as current without a fresh market check.
 
-These collection-level references are used only as portfolio marks. They do not prove an executable offer on #230.
-
-## Staking / protocol history
-
-The stored user position used a 7-day / 1x stake with a previously shown unlock date of **2026-10-01**.
-
-Verified protocol mechanics from the prior contract review:
+Historical protocol mechanics retained for provenance:
 - MAX_SUPPLY = 4,444
 - epoch size = 404
-- mint price starts at 0.002 ETH and increases 0.002 ETH by epoch up to 0.022 ETH
+- mint price schedule 0.002 ETH increments up to 0.022 ETH
 - mint revenue split: 65% stakers / 25% CRED buyback / 10% builders
 - stake terms: 7d = 1x, 14d = 2x, 30d = 4x
 - NFT burn can mint CRED
 - NFT royalty 5%, routed to buyback hook
 
-Historical rent/claim samples remain useful for provenance only and must not be treated as the current rent rate without a fresh protocol read.
+## Monitoring state
 
-## Current monitoring
+Routine UNICRED position monitoring is closed because the wallet no longer owns #230.
 
-Monitor the NFT position only:
-1. fresh ownership of #230;
-2. unlock / unstake state around 2026-10-01;
-3. current collection floor and real offers;
-4. material protocol/security/buyback/staking rule changes;
-5. mint/sold-out state when it materially affects #230 resale or remaining rent economics.
+Do not spend Mission runtime on:
+- #230 floor/offer;
+- #230 staking/rent/unlock;
+- standalone CRED price/liquidity;
 
-CRED price/liquidity may be checked only as protocol-economic context for #230. There is no standalone CRED position alert while wallet CRED = 0.
+unless the user explicitly reopens the research or acquires a new related position.
 
 Do not add another UNICRED NFT or CRED automatically.
-
-
-Fresh ownership was reconfirmed again during the 2026-09-28 15:00 all-chain scan. Canonical CRED remains 0.
-
-
-Ownership reconfirmed at 2026-09-28 17:58 Asia/Bangkok. Canonical CRED remains 0.

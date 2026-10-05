@@ -1,85 +1,40 @@
 # Crypto Profit Mission
 
-Updated: 2026-09-28 17:58 Asia/Bangkok
+Updated: 2026-10-04
 Timezone: Asia/Bangkok
 
 ## Authority
 
-This file defines global Mission policy. Detailed thresholds and state rules live in the referenced position and watchlist files.
+This file defines global Mission policy and current authority boundaries.
 
-Precedence:
+Current scope/status detail:
+- `STATUS_SCOPE_2026-10-04.md`
+
+Current-state precedence:
 1. `MISSION_SPEC.md`
-2. `portfolio/current.md` and `state/latest.md`
-3. active `positions/*.md`
-4. active `watchlists/*.md`
-5. `300-profit-mission-strategy.md` as the clearly named historical/background strategy record; `strategy.md` remains a temporary compatibility path
+2. `STATUS_SCOPE_2026-10-04.md`
+3. `portfolio/current.md` and `state/latest.md`
+4. active `positions/*.md`
+5. active module policy/watchlist files
+6. historical/background strategy and immutable reports
 
-Never use stale chat values to overwrite newer verified GitHub state.
+A newer dated scope/status file supersedes older dated scope snapshots. Historical reports remain evidence for what happened but do not override a newer current-state authority.
 
-## Human-facing research map
-
-Repository organization rules:
-- `docs/REPOSITORY_STRUCTURE.md`
-- `research/projects/`
-- `research/tokens/`
-- `research/memes/`
-- `research/nfts/`
-
-Current compatibility mappings:
-- JUMP human-facing project record: `research/projects/jump/jump-legion-sale.md`; operational monitor path remains `positions/jump.md`.
-- Jack Credits human-facing NFT record: `research/nfts/jack-credits/jack-credits-nft-position.md`; operational monitor path remains `positions/credits.md`.
-
-Do not move an operational authority path solely for repository cosmetics. Path migration requires compatibility + a real automatic-run validation.
-
-## Project analysis authority
-
-For project due diligence, valuation and participation research, use:
-- `PROJECT_ANALYSIS_FRAMEWORK.md` as the reusable end-to-end project research process.
-- `token_trading_principles.md` for token/contract/holder/liquidity deep dives.
-
-Future conversations should read these files before performing a new deep project review. Material new lessons should be written back to the framework rather than remaining only in chat history.
-
-Project analysis does not itself authorize execution. Separate execution authority remains in active `positions/*.md` files and explicit user instructions.
-
-## Automation mode
-
-The existing hourly automation is a **factual rule monitor**, not an autonomous trading adviser.
-
-It may automatically:
-- read connected wallet / market / official-source data;
-- calculate factual deltas and predefined indicators;
-- compare current data with thresholds already stored in GitHub;
-- classify predefined states such as WATCH / IGNITION / EXHAUSTION / setup-qualified;
-- log results;
-- send factual trigger notifications already authorized by the user.
-
-It must not automatically:
-- originate a new trade;
-- invent a new entry, stop, take-profit, leverage or position size;
-- tell the user to buy/sell/short/long a newly discovered asset;
-- reallocate capital;
-- modify an existing private-venue order or position;
-- turn a newly discovered candidate into an execution recommendation.
-
-When a factual trigger fires, the alert should say what changed, which stored rule fired, current data, missing conditions and invalidation/risk. Interactive follow-up in chat can perform deeper decision analysis if the user asks.
-
-Existing user-confirmed position rules and already-stored thresholds remain valid monitoring inputs.
+Never use stale chat values or older Git snapshots to overwrite newer verified state.
 
 ## Objective
 
-Core growth target: grow the Mission starting asset set to **3,000 USD-equivalent net liquidation value**.
+Core objective remains to grow the Mission starting asset set toward **3,000 USD-equivalent net liquidation value** while preserving auditable provenance.
 
-Mission starting asset set:
-- **300 USD cash principal**
-- the original **six Credits NFTs**: #21646, #21753, #22857, #23042, #23232, #23328
+Starting-set provenance includes:
+- **300 USD cash principal**;
+- the original six Credits NFTs: #21646, #21753, #22857, #23042, #23232, #23328.
 
-Current original-Credits holdings are #23042 and #23232; the other four are historical sold assets/provenance.
+All six Credits are now historical exited assets; fresh current ownership is zero. Their starting-asset provenance remains relevant to Mission performance accounting.
 
-Maintain reliable, auditable coverage of the user's speculative crypto Mission and surface material factual changes early enough for the user to decide what to do.
+Execution remains manual unless the user explicitly authorizes a transaction.
 
-Execution of transactions remains manual unless the user explicitly authorizes a transaction.
-
-The combined **682.40 USDT-equivalent Binance earn bucket** is tracked for total-asset completeness but remains outside speculative Mission performance unless provenance is explicitly reclassified. Later external deposits must never be mislabeled as Mission profit.
+`PRODUCTION_TRADING = NO_GO`.
 
 ## Canonical wallets and data truth
 
@@ -89,245 +44,268 @@ Primary EVM wallet:
 Primary Solana wallet:
 `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 
-Use connected Alchemy `ChatGPT Crypto Monitor All Chains` (app id `h6m5pairkgzet7vz`) for broad direct-chain reads. The older `ChatGPT Crypto Monitor` app is fallback-only.
+Primary Sui wallet:
+`0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
+
+Preferred connected broad-chain app:
+- Alchemy `ChatGPT Crypto Monitor All Chains`, app id `h6m5pairkgzet7vz`.
 
 Labels:
-- DIRECT_CHAIN: fresh RPC.
-- USER_CONFIRMED: latest user screenshot / explicit statement from an unconnected private venue.
-- MARKET: fresh public market data.
-- UNAVAILABLE / UNRESOLVED: do not estimate.
+- `DIRECT_CHAIN`: fresh supported RPC/API result;
+- `USER_CONFIRMED`: latest explicit user statement/screenshot for a source not directly readable;
+- `MARKET`: fresh public market data;
+- `UNAVAILABLE` / `UNRESOLVED`: do not estimate.
 
 Rules:
-- RPC failure = UNAVAILABLE.
-- Never reuse an old wallet balance and call it current.
-- Unknown/spam assets stay outside NAV until identity/value are verified.
-- Public market data cannot overwrite private venue fill, quantity, margin, PnL or order state.
-- `portfolio/current.md` and `state/latest.md` contain current state only.
-- historical snapshots belong in Git history / immutable run audits.
+- provider failure = unavailable, not zero;
+- never reuse an old wallet balance and call it fresh;
+- unknown/spam assets remain outside NAV until identity/value are verified;
+- public market data cannot overwrite private-venue fill, quantity, margin, PnL or order state;
+- wallet balance changes are not PnL without transaction/cost-basis evidence;
+- historical snapshots belong in Git history or immutable reports, not `state/latest.md`.
 
-## Broad-chain wallet coverage
+Sui note:
+- current generic connected portfolio method does not accept the canonical Sui address format;
+- until a supported Sui-native endpoint is used, fresh Sui state must not be labeled `DIRECT_CHAIN`.
 
-Canonical addresses currently known:
-- EVM: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
-- Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
-- Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
+## Current Mission module map
 
-The broad Alchemy app enables EVM/EVM-compatible coverage including Ethereum, Arbitrum, Avalanche, Base, Berachain, Blast, BNB, Hyperliquid EVM, Ink, Linea, Mantle, MegaETH, Monad, Optimism, Plasma, RISE, Robinhood Chain, Scroll, Sei, Sonic, Unichain, World Chain and zkSync.
+### Frank / Meme — LIVE
 
-Aptos, Bitcoin, Starknet and Tron are enabled provider networks but no canonical user address for those formats is stored in Mission. They must remain `UNAVAILABLE_USER_ADDRESS`. Sui now has a canonical user address, but current generic portfolio tooling does not accept Sui's 32-byte address format, so Sui must be classified `UNAVAILABLE_PROVIDER_METHOD` until a Sui-specific supported endpoint is used.
+Status:
+`FRANK_LOCAL_SIGNAL_V1_LIVE`
 
-Full-chain reconciliation rules:
-- query native balances independently, because enhanced token/NFT endpoints are not supported on every chain;
-- verify canonical stablecoin contracts where known;
-- classify unpriced unsolicited receipts as unverified/spam until identity and market value are independently established;
-- metadata containing claim URLs, seed phrases, "airdrop is yours", "compensation", or similar inducements is never a valid entitlement by itself;
-- do not click/interact with a claim path until official project identity and claim path are independently verified;
-- protocol-side staking/reward escrow is not assumed zero merely because the wallet balance is zero.
+Current authority:
+- Frank only;
+- local deterministic runtime owns chain collection, classification, stage evaluation, dedupe and delivery authority;
+- GPT is not in the Frank signal critical path;
+- other persons and TOKEN_CONSENSUS are deferred.
 
-## Capital map
+Canonical policy:
+- `meme/FRANK_LOCAL_SIGNAL_V1_POLICY.md`
 
-Authority: `portfolio/current.md`.
+Signal delivery:
+- `ACCUMULATION` -> local macOS notification;
+- `MULTIPLE` -> local macOS notification + standalone Gmail;
+- same person/mint/episode/stage is deduped;
+- Gmail Sent readback and durable receipt are part of delivery correctness.
 
-Current accounting buckets:
-- JUMP conditional reserve: 400 USDC.
-- short-window opportunity reserve: 150 USDC.
-- ETH conditional reserve: 100 USDC.
-- PONS: Binance perpetual is CLOSED and Robinhood spot is CLOSED_DUST. No PONS position-specific exposure remains.
-- Credits: original six are Mission starting assets; #23042 and #23232 remain held.
-- Binance earn: one combined 682.40 USDT-equivalent off-chain bucket, tracked but excluded from speculative Mission performance unless provenance is reclassified.
+Frozen ACCUMULATION mapping:
+- within 60 minutes >=2 confirmed ACTIVE BUYs;
+- cumulative raw USDC quote >=25,000;
+- the old single-large-buy Path C branch is explicitly **not** ACCUMULATION.
 
-Private Binance inventory authority: USER_CONFIRMED current Binance inventory is **682.40 USDT-equivalent earn only**. PONSUSDT perpetual is CLOSED. Do not carry any Binance spot/futures position forward from stale state.
+MULTIPLE keeps the frozen V1 conviction/persistence/inventory/distribution/HFT/stale predicates. Do not silently change thresholds from live data.
 
-Wallet balance changes are not PnL unless transaction history and cost basis support that conclusion.
+Latest historical delivery acceptance:
+- STONK historical frozen-V1 MULTIPLE E2E passed;
+- replay -> historical-test local notification -> one historical-test Gmail -> Sent readback -> dedupe -> crash recovery;
+- live scanner remained isolated and gap-free;
+- no policy threshold was tuned against the test.
 
-Current portfolio presentation ignores individual assets below $0.10. This is a display/materiality filter, not deletion of historical provenance.
+Evidence:
+- `meme/FRANK_HISTORICAL_MULTIPLE_DELIVERY_E2E.md`
 
-## Active position / plan authorities
+### NFT opportunity radar — PAUSED
 
-### PONS — CLOSED
-`positions/pons.md`
+Status:
+`SPEC_PRESENT / RUNTIME_PAUSED`
 
-Binance PONSUSDT perpetual is USER_CONFIRMED closed. Robinhood PONS spot is CLOSED_DUST.
-
-No PONS price/funding/TP/SL position-specific monitoring is allowed unless the user opens a fresh exposure.
-
-General market-wide scanners may still encounter PONS as an ordinary market asset.
-
-### GSTOCK / BNB Chain — CLOSED_DUST
-`positions/gstock-plan.md`
-
-Fresh direct-chain balance is 0.096724707311314713 GSTOCK residual dust. The prior position is cleared. No routine GSTOCK position-specific monitoring unless a meaningful new balance or explicit user instruction reactivates it.
-
-### XRP / Variational — CLOSED
-`positions/xrp-variational.md`
-
-The user confirmed the stored 1.5140 lower bound was hit and the event position is closed.
-
-This is historical state only. The automation must not spend an hourly lane on XRP/Variational or Bitget attacker-flow monitoring unless the user explicitly reactivates a relevant position.
-
-### ETH
-`positions/eth-conditional.md`
-
-Automation may report whether Setup A, Setup B or stored breakout conditions are factually satisfied. It must not create a new ETH plan or new levels by itself.
-
-### JUMP
-`positions/jump.md`
-
-Automation monitors:
-- deadline proximity;
-- authenticated sale-term changes;
-- reserve/gas readiness;
-- the predefined Sep-29 preflight.
-
-No application/transaction is executed automatically.
-
-### UNICRED / Credits
-- `positions/unicred.md`
-- `positions/credits.md`
-
-Credits are part of the Mission starting asset set. Current direct-chain holdings are #23042 and #23232. Medium cadence unless unlock/security/claim/executable-market change makes them urgent.
-
-### FLOP Technocore Close Call
-`positions/flop-close-call.md`
-
-This is an active zero-external-capital competition plan. The stored plan uses a fixed 52-key fleet: 16 static long/short time-layer pairs, a 16-key four-round bracket, and four baseline/reserve keys. Static keys do not reverse; bracket survivors roll only at the three scheduled rollover checkpoints. Private signing seeds must never be written to GitHub. Live execution requires explicit user confirmation and follows the freshness/room/quantity rules in the position file.
-
-## Closed / historical exposure
-
-- Binance PONSUSDT perpetual closed by user on 2026-09-28; routine position monitoring closed.
-
-- SHART direct balance 0: routine position monitoring closed.
-- KARDASHEV direct balance 0: routine position monitoring closed.
-- e/acc direct balance 0: routine position monitoring closed.
-- PAID direct balance 0 in the 2026-09-28 15:00 finalized Solana scan; routine position monitoring closed.
-- Robinhood PONS residual 0.000953441979624353: spot position closed; routine spot monitoring closed.
-- GSTOCK residual 0.096724707311314713: position closed; routine GSTOCK monitoring closed.
-- liquid CRED direct balance 0: standalone token monitoring closed.
-- Zero-balance former meme sleeves are historical only and must not consume hourly price/liquidity/holder/creator/pool monitoring until a fresh non-zero direct balance or explicit user instruction reactivates them.
-- auxiliary WSOL recovery completed.
-- BSC smart-money cluster research remains outside this Mission. Direct BNB Chain wallet telemetry remains included; GSTOCK is historical CLOSED_DUST.
-
-## Active watchlists
-
-- `watchlists/btc-regime-jasonleo.md`
-- `watchlists/famous-token-launch-radar.md`
+Specification:
 - `watchlists/nft-mint-radar.md`
-- `watchlists/monster-squeeze-v2.1.md`
-- `watchlists/robinhood-fomo-mev.md`
-- `watchlists/saga-squeeze-cycle.md`
 
-## Hourly coverage
+The radar design remains preserved, including issuer identity verification, opportunity gates, security/risk checks and discovery-source policy.
 
-Every :29 run first persists bounded core coverage:
-- ETH conditional;
-- BTC regime;
-- newest Crypto Daily input.
+Current authority:
+- there is no active Mission scheduler/LaunchAgent that may claim hourly NFT opportunity coverage;
+- no automatic NFT opportunity Gmail is currently authorized through the paused Mission umbrella task;
+- NFT research may still be performed interactively on user request.
 
-Routine wallet balances are not an hourly lane.
+Current NFT holdings are separate from the radar:
+- Credits current owned count: 0;
+- UNICRED current owned count: 0;
+- INK #372 remains prior-known inventory but was not freshly ownership-verified/marked in the 2026-10-04 refresh.
 
-After core final persistence, slower/event-driven enrichment may cover:
-- JUMP due-window state;
-- launch radar;
-- NFT radar;
-- active-position security enrichment;
-- Robinhood/FOMO execution-flow;
-- Credits/UNICRED.
+### MONSTER / 妖币 — FROZEN
 
-Monster V2.1 full-universe scanning runs every 3 hours and at the required 19:29 daily-summary cycle. Non-due hours may cheaply refresh persisted candidates. Monster enrichment cannot block the core final audit.
+Status:
+`RESEARCH_FROZEN / VALIDATION_NOT_PASSED`
 
-Coverage follows the bounded execution method in `AUTOMATION_RUNTIME.md` and `RUNBOOK.md`.
+Latest authority:
+- `local-agent/PHASE_MONSTER_D1_V3_REDESIGN_REPORT.md`
 
-## Medium / event-driven lane
+Current result:
+- `MONSTER_D1_V3_TRAIN_PASS`;
+- frozen winner V3-062;
+- TRAIN median/p95 candidate entities/day: 89/127;
+- TRAIN >=5X: 19/20;
+- TRAIN >=10X: 6/7;
+- >=20X 2/2 is descriptive only;
+- once-only 2024 validation: `INSUFFICIENT_DATA + CEILING_FAIL`;
+- 2024 median/p95 101/152 exceeds unchanged 100/150 ceiling;
+- D2 `BLOCKED_VALIDATION_NOT_PASSED`;
+- D3 `NOT_STARTED`;
+- Monster LaunchAgent = 0;
+- no live Monster Gmail/scanner authority.
 
-Run only when a material event or explicit user request makes it relevant:
-- UNICRED economics / rent / unlock / protocol health;
-- Credits executable market / volume / creator mechanics;
-- wallet ownership/balance verification.
+The exposed 2024 validation set must not be reused to tune or reselect a V4 winner. No automatic V4/D2/D3 work is authorized.
 
-## Wallet reconciliation
+### CORE PRICE / overall-market trend — PAUSED
 
-No scheduled daily or 3-hour wallet reconciliation.
+Status:
+`PAUSED`
 
-The user will report material wallet changes. Refresh `portfolio/current.md` and `state/latest.md` only on explicit request, after a user-reported material wallet action, or when a verified event requires an ownership/balance check.
+This is the previously paused “整体走势” module. It refers to the old price-abnormality monitoring system, not to an ad-hoc analysis of recent BTC/ETH/SOL market movement.
 
-Never present an older snapshot as live/current without a fresh read.
+Legacy task:
+- `$300 Crypto资产状态监控`: disabled.
 
-## Notifications
+Stored intended universe if explicitly restored:
+- BTC
+- ETH
+- SOL
+- HYPE
+- BNB
 
-Default: silent.
+Prior stored threshold/model work remains historical engineering state. Current status does not authorize:
+- live CORE PRICE polling;
+- current market classification;
+- CORE PRICE Gmail;
+- new thresholds/model tuning.
 
-Monitoring/runtime/source/audit failures are logged to GitHub only and must **not** generate Gmail or ChatGPT alerts.
+Do not claim this module is providing coverage while paused.
 
-Gmail + user-visible ChatGPT are required only for a **new substantive crypto event** already within stored rules:
-- stored position stop/TP/event threshold crossed;
-- stored ETH setup becomes qualified;
-- new/materially changed WATCH;
-- Monster IGNITION / relevant EXHAUSTION state transition;
-- material security/solvency/deadline event affecting an active holding or planned participation;
-- verified launch/NFT/TGE opportunity state that materially changes timing or eligibility;
-- 19:29 Monster factual daily summary.
+## GPT Mission task state
 
-Alert wording must be factual:
-- current value/state;
-- exact stored rule that fired;
-- what changed since prior state;
-- what remains unconfirmed;
-- invalidation/risk;
-- `decision_status: REVIEW_REQUIRED` when user input is needed.
+Umbrella task:
+- `$300-3000`: **PAUSED on 2026-10-04**.
 
-Do not include newly invented trade instructions, leverage, position sizing or capital allocation in an automated alert.
+Reason:
+- Frank/Meme authority moved fully local;
+- Monster is frozen;
+- NFT runtime is paused;
+- CORE PRICE is paused;
+- other persons/consensus are deferred.
 
-Unchanged WATCH, NO_ACTION, rejected/noise, ordinary volatility and monitor-health plumbing stay silent.
+The task therefore had no substantive currently authorized lane and was paused rather than retained as a silent hourly no-op.
 
-Gmail destination:
-`lxx.run688@gmail.com`
+Rules:
+- do not create a replacement Mission task;
+- do not re-enable the legacy `$300 Crypto资产状态监控` automatically;
+- future task/module restoration requires explicit user authorization and a concrete scope.
 
+This pause does **not** modify independent tasks such as Crypto Daily, the all-project Airdrop/TGE monitor or the US-stock morning report.
 
-## Monster V2.1
+## Current portfolio authority
 
-Authority: `watchlists/monster-squeeze-v2.1.md`.
+Current holdings:
+- `portfolio/current.md`
+- `state/latest.md`
 
-The model remains frozen. The automation performs factual state classification only.
+Latest 2026-10-04 chain refresh materially confirms:
+- Solana USDC `142.162136`;
+- Solana SOL `0.003093645`;
+- Ethereum USDC `1.006555`;
+- Ethereum ETH `0.000634360344095958`;
+- Base ETH `0.000967183780184779`;
+- Ink ETH `0.011133212494942321`;
+- Credits current owned count `0`;
+- UNICRED current owned count `0`.
 
-Full-market coverage uses:
-- bulk universe screening every 3 hours;
-- bounded shortlist;
-- detailed checks for at most 3 shortlisted symbols per scan;
-- cheap persisted-candidate refreshes on non-due hours when useful.
+SUI remains 0 by latest explicit user-confirmed state but was not freshly readable through the connected generic method.
 
-At 19:29 the same existing Mission task performs the required full scan and sends the factual Monster daily summary. The legacy standalone Monster automation remains disabled.
+Latest private/off-chain values carried forward with their labels:
+- Binance available balance: `$523.72`, USER_CONFIRMED, not independently refreshed in the chain scan;
+- Legion/JUMP pending capital: `$1,000`, USER_CONFIRMED / PENDING_ALLOCATION.
 
-## Launch / NFT discovery
+Displayed current asset reference is approximately `$701.13` liquid/available plus `$1,000` pending JUMP, for approximately `$1,701.13` tracked reference, excluding sub-$1 dust and unpriced/unverified inventory. This is not Mission PnL.
 
-A candidate may be promoted to WATCH only after:
-- canonical issuer identity;
-- official participation path;
-- live/imminent window;
-- no unresolved contract/domain/payment conflict;
-- sufficient factual opportunity evidence.
+## Position state rules
 
-The automated alert must remain "candidate for review" and must not generate a new buy/mint amount or execution instruction.
+Closed/cleared current exposures must not consume routine Mission runtime merely because historical files exist.
 
-## Performance
+Currently closed/cleared examples include:
+- Credits current inventory: 0;
+- UNICRED #230: not owned;
+- PONS perpetual/spot: closed;
+- XRP / Variational: closed;
+- prior zero-balance meme sleeves: historical only;
+- SUI: 0 by latest user-confirmed state.
 
-Authority: `performance/current.md`.
+JUMP remains a pending/committed-capital item until allocation/refund is verified.
 
+Do not originate new positions, order levels, stops, leverage or allocation from an automatic monitor.
+
+## Wallet refresh policy
+
+Routine scheduled wallet polling is disabled.
+
+Refresh `portfolio/current.md` / `state/latest.md` only:
+- on explicit user request;
+- after a user-reported material wallet action;
+- when a verified event requires an ownership/balance check.
+
+A failed or unsupported chain query must stay `UNAVAILABLE`; never copy an old value forward as if freshly verified.
+
+## Notifications and delivery
+
+Default for paused/non-live modules: no claim of monitoring and no alerts.
+
+Frank is the only live Mission signal-delivery module under this spec:
+- ACCUMULATION local notification;
+- MULTIPLE local notification + standalone Gmail.
+
+Frank signal delivery is deterministic and does not require GPT SEND/NO_SEND.
+
+Historical/dry-run signals must never be mistaken for live signals. Historical delivery tests require an explicit `HISTORICAL TEST` identity/namespace.
+
+Operational/runtime failures must not be disguised as market signals.
+
+## Research organization
+
+Long-form research:
+- `research/projects/`
+- `research/tokens/`
+- `research/memes/`
+- `research/nfts/`
+
+Reusable project analysis:
+- `PROJECT_ANALYSIS_FRAMEWORK.md`
+- `token_trading_principles.md`
+
+Operational state:
+- `portfolio/`
+- `performance/`
+- `state/`
+- `positions/`
+- `watchlists/`
+- `signals/`
+- `runs/`
+- `reports/`
+
+Do not move operational authority paths solely for repository cosmetics.
+
+## Performance accounting
+
+Authority:
+- `performance/current.md`
+
+Rules:
 - wallet balance alone is not PnL;
-- internal transfers are not profit;
-- listing prices are not executable NAV;
-- unresolved closed-position cost/proceeds remain UNRESOLVED;
-- private venue PnL remains USER_CONFIRMED unless directly readable.
+- internal transfer is not profit;
+- listing ask is not executable NAV;
+- private-venue PnL stays USER_CONFIRMED unless directly readable;
+- pending committed capital is not liquid cash;
+- historical sale proceeds and current balances must not be double-counted;
+- unknown cost basis/proceeds remain unresolved rather than estimated.
 
-## Wallet monitoring preference
+## Hard boundaries
 
-Routine wallet polling is intentionally disabled. Do not use automation budget to repeatedly prove that balances are unchanged.
-
-The latest wallet snapshot remains useful state, but freshness must be stated when referenced.
-
-## Runtime / audit
-
-`AUTOMATION_RUNTIME.md` is the authority for the scheduled automatic task. `RUNBOOK.md` remains the richer interactive/manual runbook.
-
-A scheduler trigger is not proof of success.
-
-Temporary GitHub, Gmail or source failures must never automatically disable or pause the existing task.
+- no autonomous trade execution;
+- no wallet mutation/signing;
+- no new Mission automation/task without explicit user authorization;
+- no automatic restoration of NFT/Monster/CORE;
+- no automatic new tracked person;
+- no silent threshold tuning from forward outcomes;
+- no claim that a paused module is running;
+- `PRODUCTION_TRADING = NO_GO`.
