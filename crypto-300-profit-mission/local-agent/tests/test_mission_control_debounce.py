@@ -7,6 +7,12 @@ def db():
     value=sqlite3.connect(':memory:');value.row_factory=sqlite3.Row;return value
 
 
+def test_zero_grace_disables_debounce_for_legacy_fixtures():
+    conn=db();gate=TransitionDebounce(conn)
+    assert gate.allow(person_id='frank',mint='A',episode_id='e',previous_decision='BUY',target_decision='WAIT',transient=True,reason='FRANK_RUNTIME_NOT_LIVE',now=100,grace_seconds=0) is True
+    assert conn.execute('select count(*) from transition_debounce').fetchone()[0]==0
+
+
 def test_short_actionable_to_wait_is_debounced_and_recovery_clears():
     conn=db();gate=TransitionDebounce(conn)
     assert gate.allow(person_id='frank',mint='A',episode_id='e',previous_decision='BUY',target_decision='WAIT',transient=True,reason='FRANK_RUNTIME_NOT_LIVE',now=100,grace_seconds=60) is False
