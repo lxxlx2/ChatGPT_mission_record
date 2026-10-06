@@ -68,32 +68,38 @@ def metrics(samples,decision,min_samples):
     selected=[s for s in samples if s['candidate_decision']==decision]
     r15=[s['return_15m_pct'] for s in selected if s['return_15m_pct'] is not None]
     r60=[s['return_60m_pct'] for s in selected if s['return_60m_pct'] is not None]
-    censored15=[s for s in selected if s['return_15m_pct'] is None]
-    censored60=[s for s in selected if s['return_60m_pct'] is None]
-    pessimistic15=r15+[-100.0]*len(censored15)
-    pessimistic60=r60+[-100.0]*len(censored60)
+    no_route15=[s for s in selected if s['outcome_15m_status']=='NO_ROUTE']
+    no_route60=[s for s in selected if s['outcome_60m_status']=='NO_ROUTE']
+    unknown15=[s for s in selected if s['outcome_15m_status'] in {'PRICE_UNAVAILABLE','NO_OBSERVATION'}]
+    unknown60=[s for s in selected if s['outcome_60m_status'] in {'PRICE_UNAVAILABLE','NO_OBSERVATION'}]
+    route_failure_bound15=r15+[-100.0]*len(no_route15)
+    route_failure_bound60=r60+[-100.0]*len(no_route60)
     if len(selected)<min_samples:status='INSUFFICIENT_SAMPLE'
-    elif censored60:status='EVALUABLE_WITH_CENSORING'
+    elif unknown60:status='EVALUABLE_WITH_UNKNOWN_CENSORING'
+    elif no_route60:status='EVALUABLE_WITH_ROUTE_FAILURE_BOUND'
     else:status='EVALUABLE'
     return {
         'decision':decision,
         'sample_count':len(selected),
         'return_15m_count':len(r15),
         'return_60m_count':len(r60),
-        'censored_15m_count':len(censored15),
-        'censored_60m_count':len(censored60),
-        'no_route_60m_count':sum(s['outcome_60m_status']=='NO_ROUTE' for s in selected),
+        'censored_15m_count':len(no_route15)+len(unknown15),
+        'censored_60m_count':len(no_route60)+len(unknown60),
+        'no_route_15m_count':len(no_route15),
+        'no_route_60m_count':len(no_route60),
         'price_unavailable_60m_count':sum(s['outcome_60m_status']=='PRICE_UNAVAILABLE' for s in selected),
         'no_observation_60m_count':sum(s['outcome_60m_status']=='NO_OBSERVATION' for s in selected),
+        'unknown_censored_15m_count':len(unknown15),
+        'unknown_censored_60m_count':len(unknown60),
         'median_return_15m_pct':median(r15),
         'median_return_60m_pct':median(r60),
         'positive_15m_rate':sum(v>0 for v in r15)/len(r15) if r15 else None,
         'positive_60m_rate':sum(v>0 for v in r60)/len(r60) if r60 else None,
         'worst_60m_pct':min(r60) if r60 else None,
-        'pessimistic_median_15m_pct':median(pessimistic15),
-        'pessimistic_median_60m_pct':median(pessimistic60),
-        'pessimistic_positive_60m_rate':sum(v>0 for v in pessimistic60)/len(pessimistic60) if pessimistic60 else None,
-        'pessimistic_worst_60m_pct':min(pessimistic60) if pessimistic60 else None,
+        'route_failure_bound_median_15m_pct':median(route_failure_bound15),
+        'route_failure_bound_median_60m_pct':median(route_failure_bound60),
+        'route_failure_bound_positive_60m_rate':sum(v>0 for v in route_failure_bound60)/len(route_failure_bound60) if route_failure_bound60 else None,
+        'route_failure_bound_worst_60m_pct':min(route_failure_bound60) if route_failure_bound60 else None,
         'status':status,
     }
 
@@ -110,7 +116,7 @@ def replay(path:Path,min_samples=30):
                     if small_dev<buy_dev or small_impact<buy_impact:continue
                     marked=[{**s,'candidate_decision':classify(s,buy_dev,buy_impact,small_dev,small_impact)} for s in samples]
                     grid.append({'thresholds':{'buy_deviation_pct':buy_dev,'buy_impact_pct':buy_impact,'small_deviation_pct':small_dev,'small_impact_pct':small_impact},'buy':metrics(marked,'BUY',min_samples),'small_buy':metrics(marked,'SMALL_BUY',min_samples)})
-    return {'schema_version':2,'source':str(path),'sample_count':len(samples),'min_samples':min_samples,'return_basis':RETURN_BASIS,'censoring_policy':'MISSING_15M_OR_60M_EXECUTABLE_PRICE_REPORTED_EXPLICITLY; PESSIMISTIC_BOUND_TREATS_CENSORED_AS_-100_PERCENT','selection_warning':'EXPLORATORY_GRID_ONLY_NO_AUTOMATIC_WINNER_MULTIPLE_TESTING_AND_OVERFITTING_RISK','samples':samples,'grid':grid,'automatic_policy_change':False,'production_trading':'NO_GO'}
+    return {'schema_version':3,'source':str(path),'sample_count':len(samples),'min_samples':min_samples,'return_basis':RETURN_BASIS,'censoring_policy':'NO_ROUTE_IS_REPORTED_AS_A_ROUTE_FAILURE_BOUND_AT_-100_PERCENT; PRICE_UNAVAILABLE_AND_NO_OBSERVATION_REMAIN_UNKNOWN_AND_ARE_NEVER_COUNTED_AS_LOSSES','selection_warning':'EXPLORATORY_GRID_ONLY_NO_AUTOMATIC_WINNER_MULTIPLE_TESTING_AND_OVERFITTING_RISK','samples':samples,'grid':grid,'automatic_policy_change':False,'production_trading':'NO_GO'}
 
 
 def main():
