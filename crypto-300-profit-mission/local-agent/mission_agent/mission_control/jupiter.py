@@ -26,7 +26,7 @@ def _retry_after_seconds(exc: urllib.error.HTTPError) -> float:
         value = exc.headers.get("Retry-After") if exc.headers is not None else None
         if value is None:
             return 0.0
-        return max(0.0, float(value))
+        return min(60.0, max(0.0, float(value)))
     except (TypeError, ValueError, AttributeError):
         return 0.0
 
