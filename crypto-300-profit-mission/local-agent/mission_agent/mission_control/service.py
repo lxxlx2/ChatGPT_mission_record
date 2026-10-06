@@ -21,6 +21,7 @@ _TRANSIENT_WAIT_REASONS = {
     "FRANK_BUY_SIGNAL_STALE_OR_UNKNOWN",
     "QUOTE_METRICS_INVALID",
 }
+_ACTIONABLE = {"BUY", "SMALL_BUY"}
 
 
 class MissionMemeService:
@@ -97,12 +98,7 @@ class MissionMemeService:
 
     @staticmethod
     def _stable_quote_inputs(quote: dict) -> dict:
-        """Keep only decision-relevant, canonical fields in the durable input hash.
-
-        observed_at/timeTaken/routePlan are intentionally excluded. They are volatile
-        transport metadata, not policy inputs, and previously caused float hashing
-        crashes plus unbounded snapshot churn.
-        """
+        """Keep only decision-relevant, canonical fields in the durable input hash."""
         keys = (
             "status",
             "reason",
@@ -137,20 +133,22 @@ class MissionMemeService:
     def _transient_wait(result: dict) -> bool:
         return result.get("decision") == "WAIT" and bool(set(result.get("reasons") or []) & _TRANSIENT_WAIT_REASONS)
 
-    def _notification_intent(self, *, candidate: dict, result: dict, event: dict, bootstrap: bool, now: float, initial_max_age: int) -> bool:
+    def _notification_intent(self, *, candidate: dict, result: dict, event: dict, now: float, initial_max_age: int) -> bool:
         previous = event.get("previous_decision")
         notify = should_notify(previous, result["decision"])
         if previous is None:
-            notify = bool(notify and bootstrap and self._fresh_initial(candidate.get("latest_at"), now, initial_max_age))
-        if self._transient_wait(result):
-            # Data-quality/runtime WAITs are visible in dashboard/heartbeat, but do
-            # not generate N per-token notifications during a shared outage.
+            # Every newly appearing episode is eligible for its first notification
+            # when the underlying Frank activity itself is fresh. This prevents
+            # historical bootstrap mail while still notifying tokens that first
+            # appear after the service has already been running.
+            notify = bool(notify and self._fresh_initial(candidate.get("latest_at"), now, initial_max_age))
+        if self._transient_wait(result) and previous not in _ACTIONABLE:
+            # Initial/non-actionable data-quality WAITs stay dashboard-only. But a
+            # BUY/SMALL_BUY invalidated by runtime/data staleness is a meaningful
+            # state transition and must be delivered once.
             notify = False
         last_enqueued = self.control.last_enqueued_decision(candidate["person_id"], candidate["mint"], candidate.get("episode_id"))
         if last_enqueued == result["decision"]:
-            # If a transient WAIT was deliberately silent, recovery back to the
-            # last notified BUY/SMALL_BUY also stays silent. This prevents
-            # BUY->WAIT->BUY mail storms on one-off API/RPC failures.
             notify = False
         return notify
 
@@ -159,7 +157,6 @@ class MissionMemeService:
         candidates = self.frank.candidates()
         events = []
         errors = []
-        now = time.time()
         bootstrap = self.control.db.execute("SELECT count(*) FROM decision_events").fetchone()[0] == 0
         initial_max_age = int(self.policy["decision"]["initial_notification_max_age_seconds"])
         max_candidates = int(self.policy["decision"].get("max_candidates_per_cycle", 50))
@@ -169,7 +166,11 @@ class MissionMemeService:
             try:
                 candidate = {**candidate, "runtime_status": runtime.get("status")}
                 quote = self._quote(candidate)
-                result = evaluate(candidate, quote, self.policy, now=now)
+                # Quote acquisition happens inside this loop. Read the evaluation
+                # clock after the quote is returned so a freshly observed quote
+                # can never look like it came from the future.
+                evaluation_now = time.time()
+                result = evaluate(candidate, quote, self.policy, now=evaluation_now)
                 payload = {
                     "person_id":candidate["person_id"],"mint":candidate["mint"],"episode_id":candidate.get("episode_id"),
                     "source_signal_id":candidate.get("source_signal_id"),"source_signal_type":candidate.get("source_signal_type") or "NONE",
@@ -179,12 +180,15 @@ class MissionMemeService:
 
                 self.control.db.execute("BEGIN IMMEDIATE")
                 try:
+                    # Mutable latest row is refreshed every cycle so dashboard
+                    # prices/impact remain current without growing the audit trail.
+                    self.control.upsert_latest(payload,self.policy["policy_id"],self.policy_hash)
                     recorded = self.control.record(payload,self.policy["policy_id"],self.policy_hash)
                     event = recorded["event"]
                     previous = event.get("previous_decision")
                     notify = False
                     if recorded["changed"]:
-                        notify = self._notification_intent(candidate=candidate,result=result,event=event,bootstrap=bootstrap,now=now,initial_max_age=initial_max_age)
+                        notify = self._notification_intent(candidate=candidate,result=result,event=event,now=evaluation_now,initial_max_age=initial_max_age)
                     if notify:
                         forbidden = not self.delivery_allowed
                         self.local.enqueue(event,forbidden=forbidden)
