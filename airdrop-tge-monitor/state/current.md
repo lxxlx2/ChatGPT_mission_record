@@ -5,16 +5,16 @@ Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-06 16:54:00 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-06 17:52:14 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-06 16:54:00 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-06/165400-final.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
+- latest_authoritative_success: 2026-10-06 17:52:14 Asia/Bangkok
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-06/175214-final.md
+- latest_scheduled_shard: 1
+- latest_executed_shard: 1
 - latest_stale_shard_recovery: false
-- latest_candidate_count: 1
+- latest_candidate_count: 0
 - latest_triggered_events: 0
-- latest_unverified_candidates: 1
+- latest_unverified_candidates: 0
 - latest_identity_failures: 0
 - latest_source_failures: 0
 - latest_notification_decision: NO_ACTION
@@ -37,7 +37,6 @@ Timezone: Asia/Bangkok
 ## Open urgent events
 
 - No new ACTION passed ACTION_GATE in the latest run.
-- One Concrete secondary-source allocation/claim candidate remains UNVERIFIED_CANDIDATE because no Tier A/B proof was found; no user notification or durable event promotion.
 
 ## Policy
 
@@ -49,6 +48,6 @@ Timezone: Asia/Bangkok
 
 - Latest final audit completed successfully.
 - Known-events were processed before discovery.
-- Urgent set and Shard 0 completed without unresolved source or identity failures.
+- Urgent set and Shard 1 completed without unresolved source or identity failures.
 - No new Tier A/B material delta affecting unresolved user rights was found.
 - No Gmail or ChatGPT notification was attempted because triggered_events=0.
