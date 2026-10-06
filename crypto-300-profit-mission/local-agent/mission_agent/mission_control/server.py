@@ -5,6 +5,7 @@ import ipaddress
 import json
 import mimetypes
 import socket
+import sqlite3
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
@@ -60,6 +61,8 @@ class DashboardState:
         db = open_control_ro(self.control_db)
         try:
             return [dict(row) for row in db.execute(sql, params).fetchall()]
+        except sqlite3.DatabaseError:
+            return []
         finally:
             db.close()
 
@@ -76,16 +79,18 @@ class DashboardState:
 
     def candidates(self):
         candidates = self.frank.candidates()
-        snapshots = self._control_query(
-            "SELECT s.* FROM decision_snapshots s JOIN (SELECT person_id,mint,episode_id,MAX(rowid) AS rid FROM decision_snapshots GROUP BY person_id,mint,episode_id) x ON s.rowid=x.rid ORDER BY s.rowid DESC"
+        # candidate_latest is one mutable row per person/mint/episode, refreshed on
+        # every evaluation. Immutable decision_events remain transition-only.
+        latest = self._control_query(
+            "SELECT person_id,mint,episode_id,decision,evaluated_at,body FROM candidate_latest ORDER BY evaluated_at DESC"
         )
-        by_key = {(x["person_id"], x["mint"], x["episode_id"]): x for x in snapshots}
+        by_key = {(x["person_id"], x["mint"], x["episode_id"]): x for x in latest}
         for item in candidates:
-            snapshot = by_key.get((item["person_id"], item["mint"], item.get("episode_id")))
-            if snapshot:
-                body = json.loads(snapshot["body"])
+            row = by_key.get((item["person_id"], item["mint"], item.get("episode_id")))
+            if row:
+                body = json.loads(row["body"])
                 item["decision"] = body["decision"]
-                item["decision_created_at"] = body["created_at"]
+                item["decision_created_at"] = row["evaluated_at"]
                 item["metrics"] = body.get("metrics") or {}
                 item["reasons"] = body.get("reasons") or []
                 item["missing"] = body.get("missing") or []
