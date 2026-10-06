@@ -29,6 +29,16 @@ def test_persistent_transient_wait_is_allowed_after_grace():
     assert conn.execute('select count(*) from transition_debounce').fetchone()[0]==0
 
 
+def test_long_service_gap_resets_first_seen_instead_of_bypassing_grace():
+    conn=db();gate=TransitionDebounce(conn)
+    assert gate.allow(person_id='frank',mint='A',episode_id='e',previous_decision='BUY',target_decision='WAIT',transient=True,reason='FRANK_RUNTIME_NOT_LIVE',now=100,grace_seconds=60) is False
+    # Service was not observing continuously for more than the grace interval.
+    assert gate.allow(person_id='frank',mint='A',episode_id='e',previous_decision='BUY',target_decision='WAIT',transient=True,reason='FRANK_RUNTIME_NOT_LIVE',now=200,grace_seconds=60) is False
+    row=conn.execute('select first_seen_at,last_seen_at,seen_count from transition_debounce').fetchone()
+    assert row['first_seen_at']==200 and row['last_seen_at']==200 and row['seen_count']==1
+    assert gate.allow(person_id='frank',mint='A',episode_id='e',previous_decision='BUY',target_decision='WAIT',transient=True,reason='FRANK_RUNTIME_NOT_LIVE',now=260,grace_seconds=60) is True
+
+
 def test_non_actionable_or_nontransient_transition_is_not_delayed():
     conn=db();gate=TransitionDebounce(conn)
     assert gate.allow(person_id='frank',mint='A',episode_id='e',previous_decision='WAIT',target_decision='WAIT',transient=True,reason='FRANK_RUNTIME_NOT_LIVE',now=1,grace_seconds=60) is True
