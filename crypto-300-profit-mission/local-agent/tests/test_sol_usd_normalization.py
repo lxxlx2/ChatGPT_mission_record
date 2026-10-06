@@ -2,7 +2,7 @@ import io,json,urllib.error
 from decimal import Decimal
 
 from mission_agent.market.sol_usd import BinanceSolUsdcHistoryClient,USDC,normalize_classification,normalize_trade_event,reference_key
-from mission_agent.mission_control.frank import _event_price_usdc
+from mission_agent.mission_control.frank import _event_price_usdc,_quote_display
 
 
 class Response(io.BytesIO):
@@ -70,6 +70,16 @@ def test_shadow_model_conversion_preserves_original_quote_and_uses_usdc_equivale
     assert trade['quote_usdc_equivalent']=='250.0'
     assert trade['quote_usdc_reference']['trade_block_time']==180
     assert trade['quote_usdc_reference']['reference'] is ref
+
+
+def test_quote_display_never_presents_synthetic_usdc_as_frank_payment():
+    ref={'status':'VERIFIED','source':'BINANCE_OFFICIAL_SPOT_SOLUSDC','sol_usdc':'100','evidence_sha256':'h'}
+    trade=normalize_classification(_classified(),ref,for_model=True)['trade']
+    display=_quote_display(trade)
+    assert display['asset']=='SOL'
+    assert display['quantity']=='2.5'
+    assert display['normalized'] is True
+    assert display['usdc_equivalent']=='250.0'
 
 
 def test_same_candle_can_be_reused_without_reusing_first_trade_block_time():
