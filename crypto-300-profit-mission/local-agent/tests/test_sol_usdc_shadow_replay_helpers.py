@@ -54,6 +54,24 @@ def test_deterministic_missing_kline_is_cacheable():
     assert db.execute('select count(*) from sol_usdc_references').fetchone()[0]==1
 
 
+def test_external_reference_cache_reuses_verified_candle_and_copies_it_into_new_target():
+    cache=memory_db();first_target=memory_db();client=SequenceClient([verified('123')])
+    first=mod._reference(first_target,client,1000,sleep=lambda _:None,cache_db=cache)
+    assert first['sol_usdc']=='123' and client.calls==1
+    assert cache.execute('select count(*) from sol_usdc_references').fetchone()[0]==1
+
+    second_target=memory_db();offline=SequenceClient([{'status':'UNAVAILABLE','reason':'SHOULD_NOT_CALL','retryable':False}])
+    second=mod._reference(second_target,offline,1019,sleep=lambda _:None,cache_db=cache)
+    assert second['sol_usdc']=='123'
+    assert offline.calls==0
+    assert second_target.execute('select count(*) from sol_usdc_references').fetchone()[0]==1
+
+
+def test_missing_quote_decimals_is_input_failure_not_reference_failure():
+    assert mod._input_failure_reason({'quote_asset':'SOL','quote_amount_raw':'1','quote_decimals':None})=='QUOTE_DECIMALS_MISSING'
+    assert mod._input_failure_reason({'quote_asset':'SOL','quote_amount_raw':None,'quote_decimals':9})=='QUOTE_AMOUNT_MISSING'
+
+
 def sig(mint='A',trigger='u1'):
     return {'person_id':'frank','mint':mint,'episode_id':'e','signal_type':'FRANK_ACCUMULATION_SIGNAL','stage':'PRECONFIRM','triggering_signature':trigger}
 
@@ -71,3 +89,8 @@ def test_strict_regression_passes_when_all_old_signals_survive_and_allows_additi
     assert result['pass'] is True
     assert result['missing']==[]
     assert result['added']==[shadow[1]]
+
+
+def test_fatal_binance_access_reasons_are_explicit_and_bounded():
+    assert {'BINANCE_HTTP_403','BINANCE_HTTP_418','BINANCE_HTTP_451'} <= mod.FATAL_ACCESS_REASONS
+    assert mod.FATAL_ACCESS_STREAK_LIMIT==3
