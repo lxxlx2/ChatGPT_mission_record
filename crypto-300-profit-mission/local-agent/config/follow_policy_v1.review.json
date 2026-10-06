@@ -9,7 +9,9 @@
     "slippage_bps": 100,
     "quote_cache_seconds": 20,
     "max_quote_age_seconds": 30,
+    "max_frank_buy_age_seconds": 600,
     "initial_notification_max_age_seconds": 600,
+    "max_candidates_per_cycle": 50,
     "hard_no_buy_position_states": ["CLOSED", "INVENTORY_UNDETERMINED"],
     "buy": {
       "required_pattern": "MULTIPLE",
