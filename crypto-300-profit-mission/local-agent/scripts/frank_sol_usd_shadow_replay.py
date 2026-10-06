@@ -107,14 +107,28 @@ def _reference_valid(record: dict, value: dict, block_time: int, *, reusable: bo
         try:
             open_ms = int(value["candle_open_ms"])
             close_ms = int(value["candle_close_ms"])
-            price = Decimal(str(value["sol_usdc"]))
+            open_price = Decimal(str(value["open"]))
+            high_price = Decimal(str(value["high"]))
+            low_price = Decimal(str(value["low"]))
+            close_price = Decimal(str(value["close"]))
+            selected_price = Decimal(str(value["sol_usdc"]))
         except (KeyError, ValueError, TypeError, InvalidOperation):
             return False
         if open_ms != expected_epoch * 1000:
             return False
         if not (open_ms <= close_ms <= open_ms + 59999):
             return False
-        if close_ms >= int(block_time) * 1000 or price <= 0:
+        if close_ms >= int(block_time) * 1000:
+            return False
+        if min(open_price, high_price, low_price, close_price, selected_price) <= 0:
+            return False
+        if high_price < low_price:
+            return False
+        if not (low_price <= open_price <= high_price):
+            return False
+        if not (low_price <= close_price <= high_price):
+            return False
+        if close_price != selected_price:
             return False
         if value.get("evidence_sha256") != _evidence_hash(value):
             return False
@@ -125,7 +139,7 @@ def _reference_valid(record: dict, value: dict, block_time: int, *, reusable: bo
     return value.get("reason") == "BINANCE_KLINE_NOT_FOUND" and value.get("retryable") is False
 
 
-def _load_reference(db, key: str, block_time: int, *, reusable: bool):
+def _load_reference(db, key: str, block_time: int, *, reusable: bool, cache_stats: Counter | None = None):
     columns = (
         "reference_key",
         "source",
@@ -145,8 +159,16 @@ def _load_reference(db, key: str, block_time: int, *, reusable: bool):
     try:
         value = json.loads(record["body"])
     except (TypeError, ValueError):
+        if cache_stats is not None:
+            cache_stats["rejected"] += 1
         return None
-    return value if _reference_valid(record, value, block_time, reusable=reusable) else None
+    if not _reference_valid(record, value, block_time, reusable=reusable):
+        if cache_stats is not None:
+            cache_stats["rejected"] += 1
+        return None
+    if cache_stats is not None:
+        cache_stats["hits"] += 1
+    return value
 
 
 def _store_reference(db, key: str, block_time: int, value: dict) -> None:
@@ -165,19 +187,35 @@ def _store_reference(db, key: str, block_time: int, value: dict) -> None:
     )
 
 
-def _reference(db, client, block_time: int, *, attempts: int = 3, sleep=time.sleep, cache_db=None):
+def _reference(
+    db,
+    client,
+    block_time: int,
+    *,
+    attempts: int = 3,
+    sleep=time.sleep,
+    cache_db=None,
+    cache_stats: Counter | None = None,
+):
     """Return one validated candle reference without caching transient failures.
 
     The replay target receives a copy of every durable reference it consumes.
     The optional reusable cache accepts VERIFIED candles only and revalidates both
-    database content_hash and the evidence_sha256 before a cache hit is trusted.
+    database content_hash and evidence_sha256 plus internal OHLC consistency before
+    a cache hit is trusted.
     """
     key = reference_key(block_time)
     value = _load_reference(db, key, block_time, reusable=False)
     if value:
         return value
     if cache_db is not None:
-        value = _load_reference(cache_db, key, block_time, reusable=True)
+        value = _load_reference(
+            cache_db,
+            key,
+            block_time,
+            reusable=True,
+            cache_stats=cache_stats,
+        )
         if value:
             _store_reference(db, key, block_time, value)
             return value
@@ -265,6 +303,7 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None,
     }
     reference_failures = Counter()
     normalization_failures = Counter()
+    cache_stats = Counter()
     fatal_access_streak = 0
 
     try:
@@ -293,6 +332,7 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None,
                                 client,
                                 int(row["block_time"]),
                                 cache_db=reference_cache_db,
+                                cache_stats=cache_stats,
                             )
 
                         reason = ref.get("reason")
@@ -335,7 +375,7 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None,
         sol_resolution_pass = counters["sol_trades"] > 0 and counters["sol_unresolved"] == 0
         replay_gate_pass = comparison["pass"] and sol_resolution_pass
         report = {
-            "schema_version": 4,
+            "schema_version": 5,
             "mode": "SHADOW_REPLAY_ONLY",
             "reference_source": "BINANCE_OFFICIAL_SPOT_SOLUSDC",
             "source_db": str(source_path),
@@ -344,6 +384,8 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None,
             "counters": counters,
             "reference_failure_counts": dict(sorted(reference_failures.items())),
             "normalization_failure_counts": dict(sorted(normalization_failures.items())),
+            "reference_cache_hit_count": int(cache_stats["hits"]),
+            "reference_cache_rejected_count": int(cache_stats["rejected"]),
             "source_signal_count": len(source_signals),
             "shadow_signal_count": len(shadow_signals),
             "sol_added_signals": comparison["added"],
@@ -368,7 +410,7 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None,
         }
         target.db.commit()
         return report
-    except Exception:
+    except BaseException:
         target.db.rollback()
         raise
     finally:
@@ -385,6 +427,10 @@ def _cleanup_sqlite(path: Path) -> None:
             pass
 
 
+def _target_artifacts_exist(path: Path) -> bool:
+    return any(Path(str(path) + suffix).exists() for suffix in ("", "-wal", "-shm", "-journal"))
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--source", type=Path, required=True)
@@ -393,8 +439,12 @@ def main():
     p.add_argument("--policy", type=Path, default=DEFAULT_POLICY)
     p.add_argument("--reference-cache", type=Path)
     a = p.parse_args()
-    if a.target.exists():
+    if _target_artifacts_exist(a.target):
         raise SystemExit("TARGET_MUST_NOT_EXIST")
+    if a.report.exists():
+        raise SystemExit("REPORT_MUST_NOT_EXIST")
+    if a.target.resolve() == a.report.resolve():
+        raise SystemExit("TARGET_AND_REPORT_MUST_DIFFER")
     a.target.parent.mkdir(parents=True, exist_ok=True)
     a.report.parent.mkdir(parents=True, exist_ok=True)
     cache_db = None
@@ -409,18 +459,23 @@ def main():
             cache_db.commit()
         a.report.write_text(json.dumps(result, indent=2, sort_keys=True))
         print(json.dumps(result, sort_keys=True))
-    except Exception as exc:
+    except BaseException as exc:
         _cleanup_sqlite(a.target)
         failure = {
-            "schema_version": 4,
+            "schema_version": 5,
             "mode": "SHADOW_REPLAY_ONLY",
             "status": "ABORTED",
             "error_type": type(exc).__name__,
             "error": str(exc)[:500],
-            "target_cleaned": not a.target.exists(),
+            "target_cleaned": not _target_artifacts_exist(a.target),
             "production_trading": "NO_GO",
         }
-        a.report.write_text(json.dumps(failure, indent=2, sort_keys=True))
+        # The report path was preflighted as absent. Never overwrite a report that
+        # appeared concurrently while replay was running.
+        if not a.report.exists():
+            a.report.write_text(json.dumps(failure, indent=2, sort_keys=True))
+        if isinstance(exc, KeyboardInterrupt):
+            raise
         raise SystemExit("SHADOW_REPLAY_ABORTED:" + str(exc)) from exc
     finally:
         if cache_db is not None:
