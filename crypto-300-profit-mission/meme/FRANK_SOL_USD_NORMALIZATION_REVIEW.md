@@ -53,16 +53,31 @@ It deliberately does **not** contain a Frank transaction `block_time`. Each norm
 
 ### Cache, retry and access-block policy
 
-Only these results are durable-cacheable:
+The replay target may persist:
 
-- `VERIFIED` exact candle;
-- deterministic `BINANCE_KLINE_NOT_FOUND`.
+- `VERIFIED` exact candles;
+- replay-local deterministic `BINANCE_KLINE_NOT_FOUND` results.
 
-Transient failures such as HTTP 429, 5xx, timeout, network failure or malformed/transient response are retried with bounded backoff and are **not persisted** in `sol_usdc_references`.
+The optional reusable `--reference-cache` is stricter: it stores **VERIFIED candles only**. `BINANCE_KLINE_NOT_FOUND` is intentionally not propagated into reusable cache because a temporary provider-side data gap must not become a permanent cross-run assertion that a historical candle does not exist.
+
+Every reusable-cache hit is revalidated before use. Validation requires all of the following:
+
+- database `content_hash` matches the decoded body;
+- `evidence_sha256` recomputes correctly;
+- source is `BINANCE_OFFICIAL_SPOT_SOLUSDC`;
+- symbol is `SOLUSDC`;
+- interval is `1m`;
+- selection rule is `PREVIOUS_CLOSED_1M_CLOSE`;
+- `reference_epoch` matches the requested trade minute;
+- `candle_open_ms == reference_epoch * 1000`;
+- candle close is within the same minute and before the Frank trade;
+- selected SOL/USDC price is positive.
+
+A corrupted, stale-schema or tampered reusable row is treated as a cache miss and is refetched from the official source. A successful verified refetch replaces the invalid cache row.
+
+Transient failures such as HTTP 429, 5xx, timeout, network failure or malformed/transient response are retried with bounded backoff and are **not persisted** as reusable evidence.
 
 Non-retryable access-denial responses `403 / 418 / 451` are treated as a likely environment/region access problem. Three consecutive SOL-reference failures with one of these reasons abort the replay instead of continuing to request every Frank trade.
-
-The replay target always stores every durable reference it actually uses. An optional separate `--reference-cache` SQLite file can be reused across fresh replay targets so verified minute candles do not have to be downloaded again.
 
 Input/normalization failures are reported separately from reference failures. Examples:
 
@@ -71,6 +86,19 @@ Input/normalization failures are reported separately from reference failures. Ex
 - `NORMALIZATION_FAILED_WITH_VERIFIED_REFERENCE`.
 
 These must not be mislabeled as Binance reference failures.
+
+### Abort cleanup
+
+A failed/aborted CLI replay must not leave a stale target that blocks the next run.
+
+On an exception the CLI:
+
+1. rolls back and closes the replay DB;
+2. removes target SQLite plus `-wal`, `-shm` and `-journal` sidecars;
+3. writes the requested report path with `status = ABORTED`, error type/message and `target_cleaned`;
+4. exits non-zero.
+
+Verified entries already committed to an optional reusable reference cache may remain because each future hit is independently revalidated.
 
 ## Shadow conversion
 
@@ -122,7 +150,9 @@ sol_resolution_gate_pass == true
 shadow_replay_gate_pass == true
 ```
 
-This prevents the empty-pass failure mode where Binance is inaccessible, every SOL trade remains unresolved, the shadow output equals source output, and regression comparison alone would incorrectly look green.
+`usdc_regression_pass` remains only as a deprecated compatibility field. It is deliberately conservative and now mirrors the final `shadow_replay_gate_pass`, so an old consumer cannot see `true` when SOL normalization is unresolved.
+
+This prevents the empty-pass failure mode where Binance is inaccessible, every SOL trade remains unresolved, the shadow output equals source output, and a signal-only regression comparison would otherwise look green.
 
 `BINANCE_KLINE_NOT_FOUND`, missing block time, missing quote decimals/amount, HTTP access denial, timeout or any other unresolved SOL trade keeps `shadow_replay_gate_pass = false` until explicitly resolved or separately redesigned and re-reviewed.
 
@@ -144,7 +174,7 @@ Review policy uses:
 
 ```text
 transient_wait_grace_seconds = 60
-transient_wait_reset_gap_seconds = 300
+transient_wait_reset_gap_seconds = 600
 ```
 
 Only an existing `BUY / SMALL_BUY -> transient WAIT` is delayed. During grace:
@@ -155,7 +185,9 @@ Only an existing `BUY / SMALL_BUY -> transient WAIT` is delayed. During grace:
 
 Recovery before 60 seconds clears the pending transition silently.
 
-The downtime reset threshold is deliberately independent from the grace period. A slow candidate cycle lasting more than 60 seconds must not continuously restart the timer. Only an observation gap longer than 300 seconds restarts debounce evidence.
+The downtime reset threshold is deliberately independent from the grace period and is set above the current theoretical sequential worst case of roughly `50 candidates * 8s Jupiter timeout ~= 400s`. A slow full cycle must not continuously restart the timer. Only an observation gap longer than 600 seconds restarts debounce evidence.
+
+This is a review-candidate bound, not a latency target. If real REVIEW_ONLY runs approach this worst case, candidate evaluation concurrency/overall cycle deadline should be reviewed separately rather than increasing the gap indefinitely.
 
 Non-transient `NO_BUY`, SELL/EXIT and structural invalidations remain immediate.
 
@@ -204,7 +236,7 @@ Verify `priceImpactPct`, route/no-route behavior and current real error shape ag
 
 ## Dashboard/API quote semantics
 
-Public/legacy candidate fields now describe Frank's **original payment evidence**:
+Public/legacy candidate fields describe Frank's **original payment evidence**:
 
 - `latest_buy_quote_asset`;
 - `latest_buy_quote_quantity`;
@@ -232,15 +264,19 @@ Coverage includes:
 - candle evidence contains no transaction block time;
 - same candle reused by two trades retains separate transaction times;
 - retryable 429 is not persisted;
-- deterministic missing K line is cacheable;
-- reusable external reference cache copies evidence into a fresh replay target without a network call;
+- deterministic missing K line is cacheable only in the current replay target;
+- reusable external cache stores VERIFIED candles only;
+- reusable-cache hits revalidate DB content hash, evidence SHA and candle metadata;
+- a tampered reusable cache row is rejected and refetched;
+- reusable external reference cache copies valid evidence into a fresh replay target without a network call;
+- aborted replay target/SQLite sidecars are removable by cleanup path;
 - strict regression does not exclude mixed SOL/USDC mints;
 - missing quote decimals/amount are input failures, not reference failures;
 - frozen Frank V1 can recover ACCUMULATION/MULTIPLE from verified shadow input;
 - unresolved SOL remains fail-closed;
 - transient WAIT debounce/recovery;
-- a 90-second slow evaluation cycle does not reset a 60-second grace timer;
-- only a >300-second gap resets debounce;
+- a ~400-second worst-case sequential evaluation cycle does not reset debounce;
+- only a >600-second observation gap resets debounce;
 - no-route threshold outcome gets a -100% stress bound;
 - no-observation remains unknown and is not converted to -100%;
 - exact Decimal Jupiter fixture amount conversion.
