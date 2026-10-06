@@ -1,6 +1,8 @@
 """Official Jupiter quote adapter used only for followability checks.
 
 No swap transaction is built or signed. This module requests read-only quotes.
+API-key access is optional: current Jupiter keyless quote access is supported,
+with a more conservative default request interval when no key is configured.
 """
 from __future__ import annotations
 
@@ -26,12 +28,17 @@ class JupiterQuoteClient:
         *,
         endpoint: str = "https://api.jup.ag/swap/v1/quote",
         open_url=urllib.request.urlopen,
-        minimum_interval_seconds: float = 1.05,
+        minimum_interval_seconds: float | None = None,
     ):
-        self.api_key = api_key
+        self.api_key = api_key or None
         self.endpoint = endpoint
         self.open_url = open_url
-        self.minimum_interval_seconds = minimum_interval_seconds
+        # Real local fixture capture on 2026-10-06 verified keyless access on the
+        # official endpoint. Stay below the observed keyless limit by default;
+        # keyed callers keep the previous cadence. Tests may override explicitly.
+        if minimum_interval_seconds is None:
+            minimum_interval_seconds = 1.05 if self.api_key else 2.05
+        self.minimum_interval_seconds = float(minimum_interval_seconds)
         self._last_request_monotonic = 0.0
 
     def quote_usdc_to_token(
@@ -42,13 +49,6 @@ class JupiterQuoteClient:
         usdc_amount: Decimal = Decimal("30"),
         slippage_bps: int = 100,
     ) -> dict:
-        if not self.api_key:
-            return {
-                "status": "UNAVAILABLE",
-                "reason": "JUPITER_API_KEY_NOT_CONFIGURED",
-                "observed_at": time.time(),
-                "source": "JUPITER_OFFICIAL",
-            }
         delay = self.minimum_interval_seconds - (time.monotonic() - self._last_request_monotonic)
         if delay > 0:
             time.sleep(delay)
@@ -61,9 +61,12 @@ class JupiterQuoteClient:
                 "slippageBps": str(slippage_bps),
             }
         )
+        headers = {"User-Agent": "mission-meme-v1/1"}
+        if self.api_key:
+            headers["x-api-key"] = self.api_key
         request = urllib.request.Request(
             self.endpoint + "?" + params,
-            headers={"x-api-key": self.api_key, "User-Agent": "mission-meme-v1/1"},
+            headers=headers,
         )
         reason = "JUPITER_RESPONSE_INVALID"
         observed_at = None
