@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mission Meme V1</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">$300 → $3000 MISSION</div>
+      <h1>Frank Follow Control</h1>
+    </div>
+    <div class="runtime" id="runtime">UNKNOWN</div>
+  </header>
+
+  <main>
+    <section class="stats" id="stats"></section>
+
+    <section class="panel">
+      <div class="panel-title">
+        <h2>当前候选</h2>
+        <span id="updated">未刷新</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Token</th><th>Decision</th><th>Pattern</th><th>Frank</th>
+              <th>Latest</th><th>Frank 原始支付</th><th>Frank Price</th><th>Executable</th><th>Δ</th><th>Impact</th><th>State</th>
+            </tr>
+          </thead>
+          <tbody id="candidates"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid">
+      <section class="panel">
+        <div class="panel-title"><h2>Frank 最近交易</h2></div>
+        <div id="trades" class="feed"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-title"><h2>Decision 变化</h2></div>
+        <div id="decisions" class="feed"></div>
+      </section>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
