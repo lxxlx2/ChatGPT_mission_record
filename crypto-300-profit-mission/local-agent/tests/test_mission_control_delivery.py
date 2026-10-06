@@ -113,3 +113,19 @@ def test_ambiguous_send_is_never_automatically_resent(tmp_path):
     out.drain(provider)
     assert len(provider.sent) == 1
     assert out.row(e["decision_id"])["status"] == "SENT_VERIFIED"
+
+
+def test_sent_unverified_cannot_remain_ambiguous_forever(tmp_path):
+    db = ControlDB(tmp_path / "mission-control.sqlite")
+    e = event(db)
+    out = GmailDelivery(db)
+    out.enqueue(e, mode="LIVE", forbidden=False)
+    db.db.execute(
+        "update gmail_delivery set status='SENT_UNVERIFIED',created_at='2000-01-01T00:00:00+00:00',last_attempt_at='2000-01-01T00:00:00+00:00' where decision_id=?",
+        (e["decision_id"],),
+    )
+    out.drain(None)
+    row=out.row(e["decision_id"])
+    assert row["status"]=="MANUAL_REVIEW"
+    assert row["last_error"]=="GMAIL_SENT_OUTCOME_UNRESOLVED_TOO_LONG"
+    assert db.db.execute("select status from decision_outbox where decision_id=? and channel='gmail'",(e["decision_id"],)).fetchone()[0]=="MANUAL_REVIEW"
