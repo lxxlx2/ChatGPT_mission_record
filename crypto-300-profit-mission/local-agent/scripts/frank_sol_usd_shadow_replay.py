@@ -29,6 +29,8 @@ from mission_agent.signals.store import Ledger
 ROOT = Path(__file__).parents[1]
 DEFAULT_POLICY = ROOT / "config" / "frank_local_signal_v1.json"
 CACHEABLE_UNAVAILABLE = frozenset({"BINANCE_KLINE_NOT_FOUND"})
+FATAL_ACCESS_REASONS = frozenset({"BINANCE_HTTP_403", "BINANCE_HTTP_418", "BINANCE_HTTP_451"})
+FATAL_ACCESS_STREAK_LIMIT = 3
 
 
 def _ensure_reference_table(db):
@@ -117,17 +119,24 @@ def _signal_key(value):
 
 
 def compare_signals_strict(source_signals: list[dict], shadow_signals: list[dict]) -> dict:
-    """Require every previously emitted source signal to survive shadow replay.
-
-    No mint is excluded merely because it also contains SOL trades. Triggering
-    signature is part of identity so an unexpectedly earlier/later stage is visible
-    for manual review rather than hidden by a looser semantic comparison.
-    """
+    """Require every previously emitted source signal to survive shadow replay."""
     source_keys = {_signal_key(x) for x in source_signals}
     shadow_keys = {_signal_key(x) for x in shadow_signals}
     added = [x for x in shadow_signals if _signal_key(x) not in source_keys]
     missing = [x for x in source_signals if _signal_key(x) not in shadow_keys]
     return {"added": added, "missing": missing, "pass": len(missing) == 0}
+
+
+def _input_failure_reason(trade: dict) -> str | None:
+    if trade.get("quote_decimals") is None:
+        return "QUOTE_DECIMALS_MISSING"
+    if trade.get("quote_amount_raw") in {None, ""}:
+        return "QUOTE_AMOUNT_MISSING"
+    return None
+
+
+def _resolved(classified: dict) -> bool:
+    return (classified.get("trade") or {}).get("quote_normalization") == "SOL_TO_USDC_SHADOW_EQUIVALENT"
 
 
 def replay(source_path: Path, target_path: Path, policy_path: Path, client=None):
@@ -145,6 +154,8 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
         "usdc_trades": 0,
     }
     reference_failures = Counter()
+    normalization_failures = Counter()
+    fatal_access_streak = 0
 
     rows = source.execute(
         "SELECT wallet,signature,person_id,slot,block_time,raw_hash,raw_reference,body "
@@ -158,18 +169,45 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
             counters["active_trades"] += 1
             if trade.get("quote_asset") in SOL_QUOTE_ASSETS:
                 counters["sol_trades"] += 1
-                if row["block_time"] is None:
-                    ref = {"status": "UNAVAILABLE", "reason": "BLOCK_TIME_MISSING", "retryable": False}
-                else:
-                    ref = _reference(target.db, client, int(row["block_time"]))
-                classified = normalize_classification(classified, ref, for_model=True)
-                if (classified.get("trade") or {}).get("quote_normalization") == "SOL_TO_USDC_SHADOW_EQUIVALENT":
-                    counters["sol_resolved"] += 1
-                else:
+                input_failure = _input_failure_reason(trade)
+                if input_failure:
                     counters["sol_unresolved"] += 1
-                    reference_failures[ref.get("reason", "UNKNOWN_REFERENCE_FAILURE")] += 1
+                    normalization_failures[input_failure] += 1
+                else:
+                    if row["block_time"] is None:
+                        ref = {"status": "UNAVAILABLE", "reason": "BLOCK_TIME_MISSING", "retryable": False}
+                    else:
+                        ref = _reference(target.db, client, int(row["block_time"]))
+
+                    reason = ref.get("reason")
+                    if reason in FATAL_ACCESS_REASONS:
+                        fatal_access_streak += 1
+                        if fatal_access_streak >= FATAL_ACCESS_STREAK_LIMIT:
+                            source.close()
+                            target.db.rollback()
+                            target.db.close()
+                            raise RuntimeError(
+                                f"BINANCE_REFERENCE_ACCESS_BLOCKED:{reason}:"
+                                f"{fatal_access_streak}_CONSECUTIVE_SOL_TRADES"
+                            )
+                    elif ref.get("status") == "VERIFIED" or reason == "BINANCE_KLINE_NOT_FOUND":
+                        fatal_access_streak = 0
+                    else:
+                        # Other failures do not prove a persistent regional block.
+                        fatal_access_streak = 0
+
+                    classified = normalize_classification(classified, ref, for_model=True)
+                    if _resolved(classified):
+                        counters["sol_resolved"] += 1
+                    else:
+                        counters["sol_unresolved"] += 1
+                        if ref.get("status") != "VERIFIED":
+                            reference_failures[reason or "UNKNOWN_REFERENCE_FAILURE"] += 1
+                        else:
+                            normalization_failures["NORMALIZATION_FAILED_WITH_VERIFIED_REFERENCE"] += 1
             else:
                 counters["usdc_trades"] += 1
+
         target.put(
             row["person_id"],
             classified,
@@ -182,8 +220,10 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
     source_signals = _signal_index(source)
     shadow_signals = _signal_index(target.db)
     comparison = compare_signals_strict(source_signals, shadow_signals)
+    sol_resolution_pass = counters["sol_trades"] > 0 and counters["sol_unresolved"] == 0
+    replay_gate_pass = comparison["pass"] and sol_resolution_pass
     report = {
-        "schema_version": 2,
+        "schema_version": 3,
         "mode": "SHADOW_REPLAY_ONLY",
         "reference_source": "BINANCE_OFFICIAL_SPOT_SOLUSDC",
         "source_db": str(source_path),
@@ -191,6 +231,7 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
         "policy_path": str(policy_path),
         "counters": counters,
         "reference_failure_counts": dict(sorted(reference_failures.items())),
+        "normalization_failure_counts": dict(sorted(normalization_failures.items())),
         "source_signal_count": len(source_signals),
         "shadow_signal_count": len(shadow_signals),
         "sol_added_signals": comparison["added"],
@@ -198,6 +239,17 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
         "source_signal_regression_pass": comparison["pass"],
         # Backward-compatible field name, now deliberately strict rather than mint-filtered.
         "usdc_regression_pass": comparison["pass"],
+        "sol_resolution_gate_pass": sol_resolution_pass,
+        "shadow_replay_gate_pass": replay_gate_pass,
+        "approval_blockers": [
+            name
+            for name, failed in (
+                ("SOURCE_SIGNAL_REGRESSION", not comparison["pass"]),
+                ("NO_SOL_TRADES_EXERCISED", counters["sol_trades"] == 0),
+                ("SOL_TRADES_UNRESOLVED", counters["sol_unresolved"] > 0),
+            )
+            if failed
+        ],
         "production_trading": "NO_GO",
     }
     source.close()
