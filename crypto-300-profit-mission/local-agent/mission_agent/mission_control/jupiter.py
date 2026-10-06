@@ -2,7 +2,7 @@
 
 No swap transaction is built or signed. This module requests read-only quotes.
 API-key access is optional: current Jupiter keyless quote access is supported,
-with a more conservative default request interval when no key is configured.
+with a conservative default request interval when no key is configured.
 """
 from __future__ import annotations
 
@@ -21,6 +21,16 @@ def _no_route_error(value) -> bool:
     return "route" in text and any(x in text for x in ("could not find", "no route", "not found"))
 
 
+def _retry_after_seconds(exc: urllib.error.HTTPError) -> float:
+    try:
+        value = exc.headers.get("Retry-After") if exc.headers is not None else None
+        if value is None:
+            return 0.0
+        return max(0.0, float(value))
+    except (TypeError, ValueError, AttributeError):
+        return 0.0
+
+
 class JupiterQuoteClient:
     def __init__(
         self,
@@ -29,17 +39,23 @@ class JupiterQuoteClient:
         endpoint: str = "https://api.jup.ag/swap/v1/quote",
         open_url=urllib.request.urlopen,
         minimum_interval_seconds: float | None = None,
+        rate_limit_cooldown_seconds: float | None = None,
     ):
         self.api_key = api_key or None
         self.endpoint = endpoint
         self.open_url = open_url
-        # Real local fixture capture on 2026-10-06 verified keyless access on the
-        # official endpoint. Stay below the observed keyless limit by default;
-        # keyed callers keep the previous cadence. Tests may override explicitly.
+        # Keyless access is documented at 0.5 requests/second. Use 2.5s by
+        # default to leave headroom for sliding-window accounting and other
+        # review traffic sharing the same public bucket. Keyed callers keep
+        # the previous cadence. Tests may override explicitly.
         if minimum_interval_seconds is None:
-            minimum_interval_seconds = 1.05 if self.api_key else 2.05
+            minimum_interval_seconds = 1.05 if self.api_key else 2.5
+        if rate_limit_cooldown_seconds is None:
+            rate_limit_cooldown_seconds = 5.0 if self.api_key else 10.0
         self.minimum_interval_seconds = float(minimum_interval_seconds)
+        self.rate_limit_cooldown_seconds = float(rate_limit_cooldown_seconds)
         self._last_request_monotonic = 0.0
+        self._cooldown_until_monotonic = 0.0
 
     def quote_usdc_to_token(
         self,
@@ -49,7 +65,12 @@ class JupiterQuoteClient:
         usdc_amount: Decimal = Decimal("30"),
         slippage_bps: int = 100,
     ) -> dict:
-        delay = self.minimum_interval_seconds - (time.monotonic() - self._last_request_monotonic)
+        now = time.monotonic()
+        not_before = max(
+            self._last_request_monotonic + self.minimum_interval_seconds,
+            self._cooldown_until_monotonic,
+        )
+        delay = not_before - now
         if delay > 0:
             time.sleep(delay)
         amount_raw = int(usdc_amount * Decimal(10**6))
@@ -147,7 +168,15 @@ class JupiterQuoteClient:
                     "input_usdc": str(usdc_amount),
                     "route_exists": False,
                 }
-            reason = "JUPITER_RATE_LIMITED" if exc.code == 429 else "JUPITER_HTTP_" + str(exc.code)
+            if exc.code == 429:
+                cooldown = max(self.rate_limit_cooldown_seconds, _retry_after_seconds(exc))
+                self._cooldown_until_monotonic = max(
+                    self._cooldown_until_monotonic,
+                    time.monotonic() + cooldown,
+                )
+                reason = "JUPITER_RATE_LIMITED"
+            else:
+                reason = "JUPITER_HTTP_" + str(exc.code)
         except (urllib.error.URLError, TimeoutError, OSError):
             observed_at = time.time()
             reason = "JUPITER_NETWORK_UNAVAILABLE"
