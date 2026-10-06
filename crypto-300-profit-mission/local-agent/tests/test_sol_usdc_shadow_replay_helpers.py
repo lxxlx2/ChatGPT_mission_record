@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import sqlite3
+from collections import Counter
 from pathlib import Path
 
 SCRIPT=Path(__file__).parents[1]/'scripts'/'frank_sol_usd_shadow_replay.py'
@@ -82,9 +83,11 @@ def test_external_reference_cache_reuses_verified_candle_and_copies_it_into_new_
     assert cache.execute('select count(*) from sol_usdc_references').fetchone()[0]==1
 
     second_target=memory_db();offline=SequenceClient([{'status':'UNAVAILABLE','reason':'SHOULD_NOT_CALL','retryable':False}])
-    second=mod._reference(second_target,offline,1019,sleep=lambda _:None,cache_db=cache)
+    stats=Counter()
+    second=mod._reference(second_target,offline,1019,sleep=lambda _:None,cache_db=cache,cache_stats=stats)
     assert second['sol_usdc']=='123'
     assert offline.calls==0
+    assert stats['hits']==1 and stats['rejected']==0
     assert second_target.execute('select count(*) from sol_usdc_references').fetchone()[0]==1
 
 
@@ -94,9 +97,10 @@ def test_tampered_reusable_cache_is_rejected_and_refetched():
     bad['evidence_sha256']='tampered'
     mod._store_reference(cache,mod.reference_key(1000),1000,bad)
     cache.commit()
-    client=SequenceClient([verified('123')])
-    value=mod._reference(target,client,1000,sleep=lambda _:None,cache_db=cache)
+    client=SequenceClient([verified('123')]);stats=Counter()
+    value=mod._reference(target,client,1000,sleep=lambda _:None,cache_db=cache,cache_stats=stats)
     assert client.calls==1
+    assert stats['rejected']==1
     assert value['sol_usdc']=='123'
     stored=cache.execute('select body from sol_usdc_references').fetchone()[0]
     assert '"sol_usdc":"123"' in stored
@@ -110,20 +114,46 @@ def test_reusable_cache_rejects_body_when_database_content_hash_no_longer_matche
     body['sol_usdc']='999'
     cache.execute('update sol_usdc_references set body=?',(json.dumps(body,sort_keys=True,separators=(',',':')),))
     cache.commit()
-    client=SequenceClient([verified('77')])
-    value=mod._reference(target,client,1000,sleep=lambda _:None,cache_db=cache)
+    client=SequenceClient([verified('77')]);stats=Counter()
+    value=mod._reference(target,client,1000,sleep=lambda _:None,cache_db=cache,cache_stats=stats)
     assert client.calls==1 and value['sol_usdc']=='77'
+    assert stats['rejected']==1
 
 
-def test_reusable_cache_rejects_wrong_candle_metadata_even_with_matching_content_hash():
+def test_reusable_cache_rejects_wrong_candle_metadata_even_with_matching_hashes():
     cache=memory_db();target=memory_db()
     bad=verified('1')
     bad['candle_open_ms']=bad['candle_open_ms']+60000
     bad['evidence_sha256']=mod._evidence_hash(bad)
     mod._store_reference(cache,mod.reference_key(1000),1000,bad)
-    client=SequenceClient([verified('88')])
-    value=mod._reference(target,client,1000,sleep=lambda _:None,cache_db=cache)
+    client=SequenceClient([verified('88')]);stats=Counter()
+    value=mod._reference(target,client,1000,sleep=lambda _:None,cache_db=cache,cache_stats=stats)
     assert client.calls==1 and value['sol_usdc']=='88'
+    assert stats['rejected']==1
+
+
+def test_reusable_cache_rejects_self_consistent_hashes_when_close_disagrees_with_selected_price():
+    cache=memory_db();target=memory_db()
+    bad=verified('150')
+    bad['sol_usdc']='1'
+    bad['evidence_sha256']=mod._evidence_hash(bad)
+    mod._store_reference(cache,mod.reference_key(1000),1000,bad)
+    client=SequenceClient([verified('77')]);stats=Counter()
+    value=mod._reference(target,client,1000,sleep=lambda _:None,cache_db=cache,cache_stats=stats)
+    assert client.calls==1 and value['sol_usdc']=='77'
+    assert stats['rejected']==1
+
+
+def test_reusable_cache_rejects_close_outside_low_high_even_with_recomputed_hashes():
+    cache=memory_db();target=memory_db()
+    bad=verified('150')
+    bad['high']='100';bad['low']='90';bad['open']='95'
+    bad['evidence_sha256']=mod._evidence_hash(bad)
+    mod._store_reference(cache,mod.reference_key(1000),1000,bad)
+    client=SequenceClient([verified('66')]);stats=Counter()
+    value=mod._reference(target,client,1000,sleep=lambda _:None,cache_db=cache,cache_stats=stats)
+    assert client.calls==1 and value['sol_usdc']=='66'
+    assert stats['rejected']==1
 
 
 def test_cleanup_sqlite_removes_target_and_sidecars(tmp_path):
