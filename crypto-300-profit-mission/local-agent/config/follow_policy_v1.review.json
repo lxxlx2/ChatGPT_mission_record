@@ -12,6 +12,7 @@
     "max_frank_buy_age_seconds": 600,
     "initial_notification_max_age_seconds": 600,
     "transient_wait_grace_seconds": 60,
+    "transient_wait_reset_gap_seconds": 300,
     "observation_bucket_seconds": 60,
     "observation_retention_seconds": 1209600,
     "max_candidates_per_cycle": 50,
