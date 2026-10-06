@@ -1,5 +1,9 @@
 import importlib.util
+import json
+import sys
 from pathlib import Path
+
+import pytest
 
 ROOT=Path(__file__).parents[1]
 
@@ -12,6 +16,7 @@ def load_script(name):
 
 threshold=load_script('mission_meme_threshold_replay.py')
 fixture=load_script('capture_jupiter_quote_fixtures.py')
+shadow=load_script('frank_sol_usd_shadow_replay.py')
 
 
 def test_threshold_outcome_marks_no_route_as_censored():
@@ -59,3 +64,27 @@ def test_fixture_amount_rejects_more_than_six_decimals():
     try:fixture.usdc_raw('0.0000001')
     except ValueError as exc:assert str(exc)=='USDC_AMOUNT_REQUIRES_AT_MOST_6_DECIMALS'
     else:raise AssertionError('expected ValueError')
+
+
+def test_shadow_cli_abort_cleans_target_and_writes_failure_report(tmp_path,monkeypatch):
+    target=tmp_path/'shadow.sqlite';report=tmp_path/'report.json';source=tmp_path/'source.sqlite'
+    source.write_text('unused')
+
+    def fail_replay(source_path,target_path,policy_path,client=None,reference_cache_db=None):
+        Path(target_path).write_text('partial')
+        for suffix in ('-wal','-shm','-journal'):
+            Path(str(target_path)+suffix).write_text('partial')
+        raise RuntimeError('simulated replay abort')
+
+    monkeypatch.setattr(shadow,'replay',fail_replay)
+    monkeypatch.setattr(sys,'argv',[
+        'frank_sol_usd_shadow_replay.py','--source',str(source),'--target',str(target),'--report',str(report)
+    ])
+    with pytest.raises(SystemExit) as exc:
+        shadow.main()
+    assert 'SHADOW_REPLAY_ABORTED' in str(exc.value)
+    assert not any(Path(str(target)+suffix).exists() for suffix in ('','-wal','-shm','-journal'))
+    body=json.loads(report.read_text())
+    assert body['status']=='ABORTED'
+    assert body['target_cleaned'] is True
+    assert body['error_type']=='RuntimeError'
