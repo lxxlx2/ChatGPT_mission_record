@@ -1,7 +1,8 @@
 import io,json
 from decimal import Decimal
 
-from mission_agent.market.sol_usd import BinanceSolUsdHistoryClient,USDC,normalize_classification,reference_key
+from mission_agent.market.sol_usd import BinanceSolUsdHistoryClient,USDC,normalize_classification,normalize_trade_event,reference_key
+from mission_agent.mission_control.frank import _event_price_usdc
 
 
 class Response(io.BytesIO):
@@ -11,7 +12,6 @@ class Response(io.BytesIO):
 
 def test_binance_reference_uses_previous_closed_minute_only():
     block_time=180
-    # event is at 00:03:00; reference must be fully closed 00:02 candle.
     body=[[120000,'100','102','99','101','1',179999,'0',1,'0','0','0']]
     seen=[]
     def open_url(request,timeout=8):seen.append(request.full_url);return Response(json.dumps(body).encode())
@@ -53,3 +53,11 @@ def test_missing_reference_never_converts_sol_to_usdc():
     assert result['trade']['quote_asset']=='SOL'
     assert result['trade']['quote_usd_status']=='UNDETERMINED'
     assert 'quote_normalization' not in result['trade']
+
+
+def test_mission_control_uses_verified_sol_event_time_usd_and_never_current_sol_price():
+    event={'token_amount_raw':'1000000','token_decimals':6,'quote_asset':'SOL','quote_quantity':'2.5','at':180}
+    ref={'status':'VERIFIED','source':'BINANCE_OFFICIAL_SPOT_SOLUSDT','sol_usd':'100'}
+    normalized=normalize_trade_event(event,ref)
+    assert _event_price_usdc(normalized)==Decimal('250')
+    assert _event_price_usdc(event) is None
