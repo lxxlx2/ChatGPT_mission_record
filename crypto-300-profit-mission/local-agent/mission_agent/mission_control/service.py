@@ -76,7 +76,7 @@ class MissionMemeService:
     def cycle(self)->dict:
         runtime=self.frank.runtime();candidates=self.frank.candidates();events=[];errors=[];debounced=[]
         bootstrap=self.control.db.execute('SELECT count(*) FROM decision_events').fetchone()[0]==0
-        initial_max_age=int(self.policy['decision']['initial_notification_max_age_seconds']);grace=int(self.policy['decision'].get('transient_wait_grace_seconds',60));max_candidates=int(self.policy['decision'].get('max_candidates_per_cycle',50));selected=candidates[:max_candidates]
+        initial_max_age=int(self.policy['decision']['initial_notification_max_age_seconds']);grace=int(self.policy['decision'].get('transient_wait_grace_seconds',0));max_candidates=int(self.policy['decision'].get('max_candidates_per_cycle',50));selected=candidates[:max_candidates]
         for candidate in selected:
             try:
                 candidate={**candidate,'runtime_status':runtime.get('status')};quote=self._quote(candidate);evaluation_now=time.time();result=evaluate(candidate,quote,self.policy,now=evaluation_now)
