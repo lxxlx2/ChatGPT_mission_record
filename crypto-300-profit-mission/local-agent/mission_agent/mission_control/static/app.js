@@ -13,6 +13,14 @@ const age = (ts) => {
   return `${Math.floor(sec/3600)}h`;
 };
 const badge = (value) => `<span class="badge ${String(value).toLowerCase().replaceAll('_','-')}">${esc(value)}</span>`;
+const frankQuote = (x) => {
+  const asset = x.latest_buy_original_quote_asset;
+  const qty = x.latest_buy_original_quote_quantity;
+  if (!asset || qty == null) return 'N/A';
+  const original = `${n(qty,6)} ${esc(asset === 'So11111111111111111111111111111111111111112' ? 'WSOL' : asset)}`;
+  if (!x.latest_buy_quote_was_normalized) return original;
+  return `${original}<small> ≈ ${n(x.latest_buy_usdc_equivalent,2)} USDC（历史换算）</small>`;
+};
 
 async function get(path) {
   const r = await fetch(path,{cache:'no-store'});
@@ -48,13 +56,14 @@ function renderCandidates(rows) {
       <td>${esc(x.pattern)}</td>
       <td>${esc(x.buy_count)}/${esc(x.sell_count)}</td>
       <td>${esc(x.latest_side||'N/A')} ${age(x.latest_at)}</td>
+      <td>${frankQuote(x)}</td>
       <td>${n(m.frank_latest_buy_price_usdc,8)}</td>
       <td>${n(m.execution_price_usdc,8)}</td>
       <td>${m.price_deviation_pct != null ? n(m.price_deviation_pct,2)+'%' : 'N/A'}</td>
       <td>${m.price_impact_pct != null ? n(m.price_impact_pct,2)+'%' : 'N/A'}</td>
       <td>${esc(x.position_state||'N/A')}</td>
     </tr>`;
-  }).join('') || '<tr><td colspan="10" class="empty">暂无候选</td></tr>';
+  }).join('') || '<tr><td colspan="11" class="empty">暂无候选</td></tr>';
 }
 
 function renderTrades(rows) {
