@@ -1,6 +1,6 @@
 # Airdrop / TGE Canonical Registry
 
-Updated: 2026-09-28
+Updated: 2026-10-07
 
 Grass 与 Backpack 明确排除。
 
@@ -43,7 +43,6 @@ Clay Shares 作为 Claynosaurz/HEEBOO 相关权益子项持续检查。
 ## Shard 2
 - Relay / @RelayProtocol
 - Titan / @Titan_Exchange
-- Abstract / @AbstractChain
 - Reya / @reya_xyz
 - 01.xyz / 01 Exchange / @01Exchange
 - N1 / @N1Chain
@@ -109,6 +108,8 @@ Do not require a public project announcement to recognize a direct platform enti
 
 
 ## Closed / excluded deals
+
+- Abstract / @AbstractChain — **USER_SUPPRESSED** on 2026-10-07. Remove Abstract/ABS from active TGE/airdrop monitoring, including hourly urgent checks, shard discovery and rights monitoring. Historical records remain for audit only. Reactivate only if the user explicitly asks to monitor Abstract/ABS again.
 
 - humans& / @humansand — **CLOSED**. The user's Echo/Alpen Capital allocation was fully refunded on 2026-09-24. There is no remaining user entitlement or capital at risk in this deal. Exclude humans& and its Echo/Alpen deal channel from hourly shards, urgent checks and rights monitoring. Historical records remain for audit only. Reactivate only if the user explicitly enters a new humans& exposure or asks to monitor it again.
 
