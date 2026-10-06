@@ -20,18 +20,30 @@ def test_threshold_outcome_marks_no_route_as_censored():
     assert result['status']=='NO_ROUTE' and result['row'] is None
 
 
-def test_threshold_metrics_include_pessimistic_minus_100_for_censored():
+def test_threshold_metrics_apply_minus_100_only_to_no_route():
     samples=[
-        {'candidate_decision':'BUY','return_15m_pct':10.0,'return_60m_pct':20.0,'outcome_60m_status':'OBSERVED'},
-        {'candidate_decision':'BUY','return_15m_pct':None,'return_60m_pct':None,'outcome_60m_status':'NO_ROUTE'},
+        {'candidate_decision':'BUY','return_15m_pct':10.0,'return_60m_pct':20.0,'outcome_15m_status':'OBSERVED','outcome_60m_status':'OBSERVED'},
+        {'candidate_decision':'BUY','return_15m_pct':None,'return_60m_pct':None,'outcome_15m_status':'NO_ROUTE','outcome_60m_status':'NO_ROUTE'},
     ]
     result=threshold.metrics(samples,'BUY',min_samples=2)
     assert result['sample_count']==2
     assert result['return_60m_count']==1
     assert result['censored_60m_count']==1
     assert result['no_route_60m_count']==1
-    assert result['pessimistic_worst_60m_pct']==-100.0
-    assert result['status']=='EVALUABLE_WITH_CENSORING'
+    assert result['route_failure_bound_worst_60m_pct']==-100.0
+    assert result['status']=='EVALUABLE_WITH_ROUTE_FAILURE_BOUND'
+
+
+def test_no_observation_stays_unknown_and_is_not_forced_to_minus_100():
+    samples=[
+        {'candidate_decision':'BUY','return_15m_pct':5.0,'return_60m_pct':10.0,'outcome_15m_status':'OBSERVED','outcome_60m_status':'OBSERVED'},
+        {'candidate_decision':'BUY','return_15m_pct':None,'return_60m_pct':None,'outcome_15m_status':'NO_OBSERVATION','outcome_60m_status':'NO_OBSERVATION'},
+    ]
+    result=threshold.metrics(samples,'BUY',min_samples=2)
+    assert result['unknown_censored_60m_count']==1
+    assert result['no_route_60m_count']==0
+    assert result['route_failure_bound_worst_60m_pct']==10.0
+    assert result['status']=='EVALUABLE_WITH_UNKNOWN_CENSORING'
 
 
 def test_threshold_metrics_require_larger_default_sample_gate():
