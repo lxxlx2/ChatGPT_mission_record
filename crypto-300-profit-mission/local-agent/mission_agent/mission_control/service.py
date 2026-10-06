@@ -13,6 +13,7 @@ from .debounce import TransitionDebounce
 from .delivery import GmailDelivery, LocalDelivery
 from .frank import FrankReader
 from .jupiter import JupiterQuoteClient
+from .observations import ObservationStore
 from .policy import evaluate, load_policy, should_notify
 
 _TRANSIENT_WAIT_REASONS={"CRITICAL_DATA_INCOMPLETE","FRANK_RUNTIME_NOT_LIVE","FRANK_BUY_SIGNAL_STALE_OR_UNKNOWN","QUOTE_METRICS_INVALID"}
@@ -22,7 +23,7 @@ _ACTIONABLE={"BUY","SMALL_BUY"}
 class MissionMemeService:
     def __init__(self,*,production_root:Path,control_root:Path,policy_path:Path,live_delivery:bool=False,gmail_config:Path|None=None,jupiter_api_key:str|None=None,approved_policy_sha256:str|None=None):
         self.production_root=Path(production_root);self.control_root=Path(control_root);self.control_root.mkdir(parents=True,exist_ok=True,mode=0o700)
-        self.control=ControlDB(self.control_root/'mission-control.sqlite');self.debounce=TransitionDebounce(self.control.db);self.frank=FrankReader(self.production_root)
+        self.control=ControlDB(self.control_root/'mission-control.sqlite');self.debounce=TransitionDebounce(self.control.db);self.observations=ObservationStore(self.control.db);self.frank=FrankReader(self.production_root)
         self.policy,self.policy_hash=load_policy(policy_path);self.live_delivery_requested=bool(live_delivery);self.approved_policy_sha256=approved_policy_sha256
         self.delivery_allowed=bool(self.live_delivery_requested and self.policy.get('status')=='FROZEN_APPROVED' and self.policy.get('live_delivery_approved') is True and self.approved_policy_sha256==self.policy_hash)
         self.gmail_config=gmail_config or (self.production_root/'gmail-existing-source.json');self.jupiter=JupiterQuoteClient(jupiter_api_key or os.environ.get('JUPITER_API_KEY'))
@@ -76,14 +77,14 @@ class MissionMemeService:
     def cycle(self)->dict:
         runtime=self.frank.runtime();candidates=self.frank.candidates();events=[];errors=[];debounced=[]
         bootstrap=self.control.db.execute('SELECT count(*) FROM decision_events').fetchone()[0]==0
-        initial_max_age=int(self.policy['decision']['initial_notification_max_age_seconds']);grace=int(self.policy['decision'].get('transient_wait_grace_seconds',0));max_candidates=int(self.policy['decision'].get('max_candidates_per_cycle',50));selected=candidates[:max_candidates]
+        rules=self.policy['decision'];initial_max_age=int(rules['initial_notification_max_age_seconds']);grace=int(rules.get('transient_wait_grace_seconds',0));bucket_seconds=int(rules.get('observation_bucket_seconds',60));retention_seconds=int(rules.get('observation_retention_seconds',1209600));max_candidates=int(rules.get('max_candidates_per_cycle',50));selected=candidates[:max_candidates]
         for candidate in selected:
             try:
                 candidate={**candidate,'runtime_status':runtime.get('status')};quote=self._quote(candidate);evaluation_now=time.time();result=evaluate(candidate,quote,self.policy,now=evaluation_now)
                 payload={'person_id':candidate['person_id'],'mint':candidate['mint'],'episode_id':candidate.get('episode_id'),'source_signal_id':candidate.get('source_signal_id'),'source_signal_type':candidate.get('source_signal_type') or 'NONE','decision':result['decision'],'created_at':utc(),'policy_id':self.policy['policy_id'],'policy_hash':self.policy_hash,'inputs':self._decision_inputs(candidate,quote),'metrics':result['metrics'],'reasons':result['reasons'],'missing':result['missing'],'invalidation':result['invalidation']}
                 self.control.db.execute('BEGIN IMMEDIATE')
                 try:
-                    self.control.upsert_latest(payload,self.policy['policy_id'],self.policy_hash)
+                    self.control.upsert_latest(payload,self.policy['policy_id'],self.policy_hash);self.observations.record(candidate=candidate,result=result,quote=quote,now=evaluation_now,bucket_seconds=bucket_seconds)
                     prior=self.control.latest_event(candidate['person_id'],candidate['mint'],candidate.get('episode_id'));previous_decision=prior['decision'] if prior else None
                     transient=self._transient_wait(result);reason=(result.get('reasons') or result.get('missing') or ['TRANSIENT_WAIT'])[0]
                     allowed=self.debounce.allow(person_id=candidate['person_id'],mint=candidate['mint'],episode_id=candidate.get('episode_id'),previous_decision=previous_decision,target_decision=result['decision'],transient=transient,reason=reason,now=evaluation_now,grace_seconds=grace)
@@ -99,8 +100,9 @@ class MissionMemeService:
                 if recorded['changed']:events.append({'decision_id':event['decision_id'],'decision':payload['decision'],'previous':previous,'mint':payload['mint'],'notification_enqueued':notify})
             except Exception as exc:
                 errors.append({'mint':candidate.get('mint'),'error':type(exc).__name__,'message':str(exc)[:240]});continue
+        pruned=self.observations.prune(time.time(),retention_seconds)
         if self.delivery_allowed:self.local.drain();self.gmail.drain(existing_provider(self.gmail_config))
-        status='OK' if not errors else 'DEGRADED';result={'runtime':runtime,'candidate_count':len(candidates),'evaluated_count':len(selected),'decision_events':events,'debounced_transitions':debounced,'candidate_errors':errors,'delivery_allowed':self.delivery_allowed,'bootstrap':bootstrap,'policy_id':self.policy['policy_id'],'policy_hash':self.policy_hash,'approved_policy_sha256_match':self.approved_policy_sha256==self.policy_hash if self.approved_policy_sha256 else False,'status':status}
+        status='OK' if not errors else 'DEGRADED';result={'runtime':runtime,'candidate_count':len(candidates),'evaluated_count':len(selected),'decision_events':events,'debounced_transitions':debounced,'candidate_errors':errors,'observation_rows_pruned':pruned,'delivery_allowed':self.delivery_allowed,'bootstrap':bootstrap,'policy_id':self.policy['policy_id'],'policy_hash':self.policy_hash,'approved_policy_sha256_match':self.approved_policy_sha256==self.policy_hash if self.approved_policy_sha256 else False,'status':status}
         self._write_health(status,candidate_count=len(candidates),evaluated_count=len(selected),candidate_error_count=len(errors),debounced_transition_count=len(debounced));return result
 
     def loop(self,interval_seconds:int=5):
