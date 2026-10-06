@@ -1,8 +1,8 @@
 """Database boundaries for Mission Meme V1.
 
 The Frank production database is opened read-only. Mission Control owns a
-separate writable database for snapshots, decision transitions and delivery
-receipts. No code in this module can mutate the Frank ledger.
+separate writable database for latest candidate state, decision transitions and
+delivery receipts. No code in this module can mutate the Frank ledger.
 """
 from __future__ import annotations
 
@@ -47,6 +47,20 @@ class ControlDB:
         self.db.execute("PRAGMA busy_timeout=5000")
         self.db.executescript(
             """
+            CREATE TABLE IF NOT EXISTS candidate_latest(
+                entity_key TEXT PRIMARY KEY,
+                person_id TEXT NOT NULL,
+                mint TEXT NOT NULL,
+                episode_id TEXT,
+                decision TEXT NOT NULL,
+                policy_id TEXT NOT NULL,
+                policy_hash TEXT NOT NULL,
+                input_hash TEXT NOT NULL,
+                evaluated_at TEXT NOT NULL,
+                body TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS idx_candidate_latest_entity
+                ON candidate_latest(person_id,mint,episode_id);
             CREATE TABLE IF NOT EXISTS decision_snapshots(
                 snapshot_id TEXT PRIMARY KEY,
                 person_id TEXT NOT NULL,
@@ -149,6 +163,39 @@ class ControlDB:
             (key, utc(), expires_at, json.dumps(body, sort_keys=True)),
         )
 
+    @staticmethod
+    def _entity_key(person_id: str, mint: str, episode_id: str | None) -> str:
+        return digest({"person_id": person_id, "mint": mint, "episode_id": episode_id})
+
+    def upsert_latest(self, payload: dict, policy_id: str, policy_hash: str) -> str:
+        """Keep exactly one mutable latest row per person/mint/episode.
+
+        This table is intentionally not an audit trail. It exists so the dashboard
+        can show fresh quote/price/impact data while immutable decision snapshots
+        remain bounded to actual state transitions.
+        """
+        person_id = payload["person_id"]
+        mint = payload["mint"]
+        episode_id = payload.get("episode_id")
+        entity_key = self._entity_key(person_id, mint, episode_id)
+        input_hash = digest(payload["inputs"])
+        encoded = json.dumps(payload, sort_keys=True)
+        self.db.execute(
+            """
+            INSERT INTO candidate_latest(entity_key,person_id,mint,episode_id,decision,policy_id,policy_hash,input_hash,evaluated_at,body)
+            VALUES(?,?,?,?,?,?,?,?,?,?)
+            ON CONFLICT(entity_key) DO UPDATE SET
+                decision=excluded.decision,
+                policy_id=excluded.policy_id,
+                policy_hash=excluded.policy_hash,
+                input_hash=excluded.input_hash,
+                evaluated_at=excluded.evaluated_at,
+                body=excluded.body
+            """,
+            (entity_key, person_id, mint, episode_id, payload["decision"], policy_id, policy_hash, input_hash, payload["created_at"], encoded),
+        )
+        return entity_key
+
     def latest_event(self, person_id: str, mint: str, episode_id: str | None):
         if episode_id is None:
             row = self.db.execute(
@@ -183,12 +230,7 @@ class ControlDB:
         return row[0] if row else None
 
     def record(self, payload: dict, policy_id: str, policy_hash: str) -> dict:
-        """Persist a snapshot only for a decision transition.
-
-        Re-evaluations that keep the same decision are intentionally not stored as
-        new snapshots. This bounds database growth during long-lived unchanged
-        positions while preserving every decision transition immutably.
-        """
+        """Persist immutable snapshot/event rows only for a decision transition."""
         person_id = payload["person_id"]
         mint = payload["mint"]
         episode_id = payload.get("episode_id")
