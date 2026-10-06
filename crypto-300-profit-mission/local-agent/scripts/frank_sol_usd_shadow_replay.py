@@ -116,6 +116,20 @@ def _signal_key(value):
     )
 
 
+def compare_signals_strict(source_signals: list[dict], shadow_signals: list[dict]) -> dict:
+    """Require every previously emitted source signal to survive shadow replay.
+
+    No mint is excluded merely because it also contains SOL trades. Triggering
+    signature is part of identity so an unexpectedly earlier/later stage is visible
+    for manual review rather than hidden by a looser semantic comparison.
+    """
+    source_keys = {_signal_key(x) for x in source_signals}
+    shadow_keys = {_signal_key(x) for x in shadow_signals}
+    added = [x for x in shadow_signals if _signal_key(x) not in source_keys]
+    missing = [x for x in source_signals if _signal_key(x) not in shadow_keys]
+    return {"added": added, "missing": missing, "pass": len(missing) == 0}
+
+
 def replay(source_path: Path, target_path: Path, policy_path: Path, client=None):
     source = open_production_ro(source_path)
     target = Ledger(target_path)
@@ -167,15 +181,7 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
 
     source_signals = _signal_index(source)
     shadow_signals = _signal_index(target.db)
-    source_keys = {_signal_key(x) for x in source_signals}
-    shadow_keys = {_signal_key(x) for x in shadow_signals}
-    added = [x for x in shadow_signals if _signal_key(x) not in source_keys]
-    missing = [x for x in source_signals if _signal_key(x) not in shadow_keys]
-
-    # Strict regression gate: every previously emitted source signal must still be
-    # present with the same stage and triggering signature. Mixed SOL/USDC mints are
-    # intentionally NOT excluded from this comparison.
-    strict_regression_pass = len(missing) == 0
+    comparison = compare_signals_strict(source_signals, shadow_signals)
     report = {
         "schema_version": 2,
         "mode": "SHADOW_REPLAY_ONLY",
@@ -187,11 +193,11 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
         "reference_failure_counts": dict(sorted(reference_failures.items())),
         "source_signal_count": len(source_signals),
         "shadow_signal_count": len(shadow_signals),
-        "sol_added_signals": added,
-        "missing_source_signals": missing,
-        "source_signal_regression_pass": strict_regression_pass,
+        "sol_added_signals": comparison["added"],
+        "missing_source_signals": comparison["missing"],
+        "source_signal_regression_pass": comparison["pass"],
         # Backward-compatible field name, now deliberately strict rather than mint-filtered.
-        "usdc_regression_pass": strict_regression_pass,
+        "usdc_regression_pass": comparison["pass"],
         "production_trading": "NO_GO",
     }
     source.close()
