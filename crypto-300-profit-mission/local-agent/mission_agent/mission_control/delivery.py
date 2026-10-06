@@ -7,6 +7,7 @@ are created or persisted here.
 from __future__ import annotations
 
 import base64,email,json,re,shutil,subprocess
+from datetime import datetime, timezone
 from email import policy as mime_policy
 from email.message import EmailMessage
 
@@ -16,6 +17,16 @@ from .db import ControlDB,utc
 
 
 def _short(mint:str)->str:return mint[:7]+"…"+mint[-5:]
+
+
+def _seconds_since(value: str | None) -> float | None:
+    if not value:
+        return None
+    try:
+        return max(0.0, (datetime.now(timezone.utc) - datetime.fromisoformat(value)).total_seconds())
+    except (TypeError, ValueError):
+        return None
+
 
 def render(event:dict)->dict:
     body=json.loads(event["body"]) if isinstance(event.get("body"),str) else event["body"]
@@ -45,7 +56,7 @@ class LocalDelivery:
             event={"decision_id":row["decision_id"],"body":json.loads(row["body"])};content=render(event);summary=" | ".join(content["body"].splitlines()[:7]);binary=shutil.which("terminal-notifier")
             if binary:args=[binary,"-title",content["subject"],"-message",summary,"-group",row["decision_id"]];mechanism="terminal-notifier-group"
             else:
-                script="display notification "+json.dumps(summary)+" with title "+json.dumps(content["subject"]);args=["/usr/bin/osascript","-e",script];mechanism="osascript-notification"
+                script="display notification "+json.dumps(summary,ensure_ascii=False)+" with title "+json.dumps(content["subject"],ensure_ascii=False);args=["/usr/bin/osascript","-e",script];mechanism="osascript-notification"
             try:
                 result=self.run(args,capture_output=True,text=True,timeout=15)
                 if result.returncode:raise RuntimeError("LOCAL_NOTIFICATION_COMMAND_FAILED")
@@ -58,6 +69,10 @@ class LocalDelivery:
 
 
 class GmailDelivery:
+    READBACK_BACKOFF_SECONDS=60
+    CREDENTIAL_BACKOFF_SECONDS=300
+    MAX_SEND_ATTEMPTS=5
+
     def __init__(self,control:ControlDB):self.control,self.db=control,control.db
     def enqueue(self,event:dict,*,mode:str,forbidden:bool)->None:
         content=render(event);decision_id=event["decision_id"];forbidden=forbidden or mode!="LIVE";wire="<mission."+digest({"decision_id":decision_id,"mode":mode})+"@local.invalid>";status="DRY_RUN_AUDIT" if forbidden else "PENDING"
@@ -77,21 +92,40 @@ class GmailDelivery:
         if not all(checks):raise PermanentError("SENT_IDENTITY_OR_CONTENT_MISMATCH")
         return {"decision_id":row["decision_id"],"gmail_message_id":message["id"],"gmail_thread_id":message.get("threadId"),"verified_at":utc()}
     def _set(self,decision_id:str,status:str,error:str|None=None)->None:
-        self.db.execute("UPDATE gmail_delivery SET status=?,last_error=? WHERE decision_id=?",(status,error,decision_id));self.db.execute("UPDATE decision_outbox SET status=?,last_error=? WHERE decision_id=? AND channel='gmail'",(status,error,decision_id))
+        self.db.execute("UPDATE gmail_delivery SET status=?,last_error=?,last_attempt_at=? WHERE decision_id=?",(status,error,utc(),decision_id));self.db.execute("UPDATE decision_outbox SET status=?,last_error=? WHERE decision_id=? AND channel='gmail'",(status,error,decision_id))
     def _verified(self,decision_id:str,receipt:dict)->None:
         self.db.execute("UPDATE gmail_delivery SET status='SENT_VERIFIED',sent_at=COALESCE(sent_at,?),gmail_message_id=?,gmail_thread_id=?,readback_verified=1,last_error=NULL,receipt=? WHERE decision_id=?",(utc(),receipt["gmail_message_id"],receipt.get("gmail_thread_id"),json.dumps(receipt),decision_id))
         self.db.execute("UPDATE decision_outbox SET status='SENT_VERIFIED',receipt=?,last_error=NULL WHERE decision_id=? AND channel='gmail'",(json.dumps(receipt),decision_id))
+    def _due(self,row:dict)->bool:
+        age=_seconds_since(row.get("last_attempt_at"))
+        if row["status"] in {"SENDING","SENT_UNVERIFIED"}:
+            return age is None or age>=self.READBACK_BACKOFF_SECONDS
+        if row["status"]=="CREDENTIAL_BLOCKED":
+            return age is None or age>=self.CREDENTIAL_BACKOFF_SECONDS
+        if row["status"]=="RETRYABLE_ERROR":
+            if int(row.get("attempt_count") or 0)>=self.MAX_SEND_ATTEMPTS:
+                self._set(row["decision_id"],"MANUAL_REVIEW","GMAIL_RETRY_LIMIT_REACHED")
+                return False
+            return age is None or age>=self.READBACK_BACKOFF_SECONDS
+        return True
     def drain(self,provider)->None:
-        rows=self.db.execute("SELECT * FROM gmail_delivery WHERE delivery_forbidden=0 AND status NOT IN ('SENT_VERIFIED','PERMANENT_ERROR','DRY_RUN_AUDIT') ORDER BY created_at").fetchall()
+        rows=self.db.execute("SELECT * FROM gmail_delivery WHERE delivery_forbidden=0 AND status NOT IN ('SENT_VERIFIED','PERMANENT_ERROR','DRY_RUN_AUDIT','MANUAL_REVIEW') ORDER BY created_at").fetchall()
         for raw_row in rows:
-            row=dict(raw_row);decision_id=row["decision_id"];uncertain=row["status"] in {"SENDING","SENT_UNVERIFIED"} or bool(row["gmail_message_id"])
+            row=dict(raw_row)
+            if not self._due(row):continue
+            decision_id=row["decision_id"];uncertain=row["status"] in {"SENDING","SENT_UNVERIFIED"} or bool(row["gmail_message_id"])
             try:
                 if provider is None:raise CredentialBlocked("NO_LOCAL_GMAIL_CREDENTIAL")
                 provider.ready();candidates=[provider.get(row["gmail_message_id"])] if row["gmail_message_id"] else [provider.get(mid) for mid in provider.find_sent(row["wire_message_id"],decision_id)]
                 if len(candidates)>1:raise PermanentError("MULTIPLE_SENT_IDENTITIES_REQUIRE_REVIEW")
                 if candidates:self._verified(decision_id,self._verify(row,candidates[0]));continue
                 if uncertain:self._set(decision_id,"SENT_UNVERIFIED","SEND_OUTCOME_UNCERTAIN_WAITING_SENT");continue
-                wire=self._wire(row,provider.recipient);self.db.execute("UPDATE gmail_delivery SET status='SENDING',attempt_count=attempt_count+1,last_attempt_at=? WHERE decision_id=?",(utc(),decision_id));self.db.execute("UPDATE decision_outbox SET status='SENDING',attempts=attempts+1 WHERE decision_id=? AND channel='gmail'",(decision_id,))
+                wire=self._wire(row,provider.recipient)
+                self.db.execute("UPDATE gmail_delivery SET status='SENDING',attempt_count=attempt_count+1,last_attempt_at=? WHERE decision_id=?",(utc(),decision_id));self.db.execute("UPDATE decision_outbox SET status='SENDING',attempts=attempts+1 WHERE decision_id=? AND channel='gmail'",(decision_id,))
+                # From this point onward, any exception is ambiguous: the provider may
+                # have accepted the message. Never automatically resend until Sent
+                # readback proves absence/presence through the stable identity.
+                uncertain=True
                 response=provider.send(wire)
                 if not response.get("id"):raise AmbiguousSend("SEND_RETURNED_NO_MESSAGE_ID")
                 self.db.execute("UPDATE gmail_delivery SET status='SENT_UNVERIFIED',gmail_message_id=?,gmail_thread_id=?,sent_at=? WHERE decision_id=?",(response["id"],response.get("threadId"),utc(),decision_id));self._verified(decision_id,self._verify(self.row(decision_id),provider.get(response["id"])))
