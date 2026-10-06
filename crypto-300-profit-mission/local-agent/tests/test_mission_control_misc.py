@@ -1,8 +1,10 @@
 import io
 import json
+import urllib.error
 
 import pytest
 
+import mission_agent.mission_control.jupiter as jupiter_module
 from mission_agent.mission_control.frank import _pid_alive
 from mission_agent.mission_control.jupiter import JupiterQuoteClient
 from mission_agent.mission_control.server import _host_header_is_loopback, serve
@@ -41,9 +43,13 @@ def test_keyless_jupiter_quote_uses_network_without_auth_header():
     assert "x-api-key" not in headers
 
 
-def test_jupiter_default_throttle_is_more_conservative_for_keyless():
-    assert JupiterQuoteClient(None).minimum_interval_seconds==2.05
-    assert JupiterQuoteClient("key").minimum_interval_seconds==1.05
+def test_jupiter_default_throttle_has_keyless_headroom_and_cooldown():
+    keyless=JupiterQuoteClient(None)
+    keyed=JupiterQuoteClient("key")
+    assert keyless.minimum_interval_seconds==2.5
+    assert keyed.minimum_interval_seconds==1.05
+    assert keyless.rate_limit_cooldown_seconds==10.0
+    assert keyed.rate_limit_cooldown_seconds==5.0
 
 
 def test_keyed_jupiter_quote_sends_auth_header():
@@ -59,6 +65,39 @@ def test_keyed_jupiter_quote_sends_auth_header():
     assert result["status"]=="OK"
     headers={k.lower():v for k,v in seen[0].header_items()}
     assert headers["x-api-key"]=="key"
+
+
+def test_jupiter_429_sets_cooldown_before_next_request(monkeypatch):
+    body={"outAmount":"1000000","routePlan":[{"swapInfo":{}}],"priceImpactPct":"0.001"}
+    calls={"count":0}
+    sleeps=[]
+
+    def open_url(request,timeout=8):
+        calls["count"]+=1
+        if calls["count"]==1:
+            raise urllib.error.HTTPError(
+                request.full_url,
+                429,
+                "rate limited",
+                {"Retry-After":"12"},
+                io.BytesIO(b'{}'),
+            )
+        return FakeResponse(json.dumps(body).encode())
+
+    monkeypatch.setattr(jupiter_module.time,"monotonic",lambda:100.0)
+    monkeypatch.setattr(jupiter_module.time,"sleep",lambda seconds:sleeps.append(seconds))
+    client=JupiterQuoteClient(
+        None,
+        open_url=open_url,
+        minimum_interval_seconds=0,
+        rate_limit_cooldown_seconds=10,
+    )
+    first=client.quote_usdc_to_token("Mint111",6)
+    second=client.quote_usdc_to_token("Mint111",6)
+    assert first["status"]=="UNAVAILABLE"
+    assert first["reason"]=="JUPITER_RATE_LIMITED"
+    assert second["status"]=="OK"
+    assert sleeps and sleeps[-1]>=12.0
 
 
 def test_jupiter_missing_price_impact_fails_closed():
