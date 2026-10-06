@@ -159,7 +159,7 @@ class MissionMemeService:
         rules = self.policy["decision"]
         initial_max_age = int(rules["initial_notification_max_age_seconds"])
         grace = int(rules.get("transient_wait_grace_seconds", 0))
-        reset_gap = int(rules.get("transient_wait_reset_gap_seconds", max(grace * 5, grace + 1)))
+        reset_gap = int(rules.get("transient_wait_reset_gap_seconds", max(grace * 10, grace + 1)))
         bucket_seconds = int(rules.get("observation_bucket_seconds", 60))
         retention_seconds = int(rules.get("observation_retention_seconds", 1209600))
         max_candidates = int(rules.get("max_candidates_per_cycle", 50))
