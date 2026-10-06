@@ -1,182 +1,164 @@
 # Crypto Mission Latest State
 
-Updated: 2026-10-04
+Updated: 2026-10-07 Asia/Bangkok
 Timezone: Asia/Bangkok
 Canonical scope: `../STATUS_SCOPE_2026-10-04.md`
 
 ## Current operational posture
 
-- Frank local deterministic signal system: **LIVE**.
+- Frank local deterministic signal system: **LIVE** on the existing production build.
 - Frank ACCUMULATION local notification: **LIVE**.
 - Frank MULTIPLE local notification + standalone Gmail: **LIVE**.
+- New Mission Meme follow-decision / Jupiter work remains **REVIEW_ONLY** until separately promoted.
 - GPT Frank/Meme signal authority: **REMOVED**.
-- `$300-3000` umbrella GPT task: **PAUSED 2026-10-04**.
+- `$300-3000` umbrella GPT task: **PAUSED**.
 - NFT opportunity radar: **SPEC_PRESENT / RUNTIME_PAUSED**.
 - MONSTER / 妖币: **RESEARCH_FROZEN / VALIDATION_NOT_PASSED**.
 - CORE PRICE / overall-market trend module: **PAUSED**.
 - Other tracked persons / TOKEN_CONSENSUS: **DEFERRED**.
 - Production trading: **NO_GO**.
 
-## Frank acceptance state
+## Current capital policy
 
-`FRANK_LOCAL_SIGNAL_V1` remains frozen.
-
-Latest historical E2E acceptance used STONK and passed:
-- frozen historical replay;
-- historical-test ACCUMULATION local notification;
-- historical-test MULTIPLE local notification;
-- exactly one historical-test Gmail;
-- Gmail Sent readback;
-- duplicate suppression;
-- crash recovery without resend;
-- live scanner remained isolated/gap-free.
-
-Canonical evidence: `../meme/FRANK_HISTORICAL_MULTIPLE_DELIVERY_E2E.md`.
-
-## MONSTER / 妖币
-
-Latest state:
-- `MONSTER_D1_V3_TRAIN_PASS`;
-- frozen winner V3-062;
-- TRAIN median/p95 unique entities per day: 89 / 127;
-- TRAIN >=5X: 19/20;
-- TRAIN >=10X: 6/7;
-- once-only 2024 evaluation: `INSUFFICIENT_DATA + CEILING_FAIL`;
-- 2024 median/p95: 101 / 152;
-- D2 blocked; D3 not started; no Monster LaunchAgent/live Gmail.
-
-No V4 retuning against the exposed 2024 set is authorized.
-
-## NFT module
-
-The NFT discovery specification remains preserved in `../watchlists/nft-mint-radar.md`, but there is no current Mission runtime providing hourly NFT coverage.
-
-Fresh ownership checks in this holdings refresh:
-- Credits contract: **0 owned**;
-- UNICRED contract: **0 owned**.
-
-INK #372 remains prior known inventory but was not freshly ownership-verified by a supported Ink NFT endpoint in this refresh and has no reliable included mark.
-
-## CORE PRICE / overall-market trend module
-
-This is the previously paused module referred to as “整体走势”.
-
-- legacy `$300 Crypto资产状态监控`: **DISABLED**;
-- prior BTC/ETH/SOL/HYPE/BNB abnormal-price model/rules remain preserved;
-- no current market classification or alert coverage is claimed;
-- do not reactivate without explicit user authorization.
+- Ignore individual assets worth **< $1** in displayed holdings.
+- Binance USDC is investment capital parked in Earn; keep parked unless a materially better opportunity is identified and explicitly approved.
+- Bybit USDC is personal cash for living expenses and next month's rent; it is excluded from investment capital.
+- Sui chain assets are **0** by latest user confirmation.
 
 ## Fresh direct-chain holdings
-
-Fresh reads were taken around 2026-10-04 05:24-05:26 Asia/Bangkok.
 
 Canonical wallets:
 - EVM: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 - Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 - Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
-Fresh reference prices used only for marking known balances:
-- ETH: **$2,687.63**
-- SOL: **$119.79**
-- USDC: **$1.00014**
+Reference marks used only for this balance snapshot:
+- ETH: **$2,692.98**
+- SOL: **$87.00**
+- USDC: **$0.999923**
 
-### Solana — DIRECT_CHAIN
+### Solana — DIRECT_CHAIN / finalized
 
-- USDC: **142.162136** (~$142.18)
-- native SOL: **0.003093645** (~$0.37; below $1 display threshold)
-- returned classic SPL accounts other than USDC had zero token balance in this read.
+- USDC: **531.094071** (~$531.05)
+- native SOL: **0.039406389** (~$3.43)
 
-The enhanced Solana asset endpoint was unavailable during this refresh and a Token-2022 full-account enumeration was not completed. Do not infer that every possible Solana asset class was exhaustively scanned.
+Other classic SPL balances returned zero. Token-2022 non-transferable/unpriced/spam-like receipts are not promoted into NAV.
 
 ### Ethereum — DIRECT_CHAIN
 
-- native ETH: **0.000634360344095958** (~$1.70)
-- canonical USDC: **1.006555** (~$1.01)
-- Credits contract owned count: **0**, verified at block 26,114,793 / 2026-10-03T22:26:23Z.
+- native ETH: **0.000904693862403571** (~$2.44)
+- canonical USDC: **0**
 
-### Base — DIRECT_CHAIN
+### Ink — DIRECT_CHAIN
 
-- native ETH: **0.000967183780184779** (~$2.60)
+- native ETH: **0.010133156790964273** (~$27.29)
 
-No unverified/spam Base token receipt is promoted into the marked portfolio.
+Known Ink NFT inventory remains unpriced and excluded from the marked subtotal.
 
-### Ink — DIRECT_CHAIN native balance
+### Other chains — below $1 / excluded
 
-- native ETH: **0.011133212494942321** (~$29.92)
+Fresh native/token balances below the current materiality threshold include Base, Unichain, Arbitrum, Optimism, Linea, World Chain, Robinhood Chain and BNB Chain. MegaETH native balance is 0. No unpriced/spam receipt is promoted into NAV.
 
-This is higher than the prior stored `0.010389022090321585 ETH`; the balance change is recorded as a balance change only, not as profit or an inferred source transaction.
+### Sui — USER_CONFIRMED
 
-INK #372 NFT ownership/value was not freshly verified by a supported Ink NFT endpoint in this refresh.
+- **all Sui-chain assets = 0**
 
-### Unichain — DIRECT_CHAIN
+Do not carry forward any old SUI balance.
 
-- native ETH: **0.000020589846025254** (~$0.06; below display threshold)
-- UNICRED contract owned count: **0**, verified at block 60,318,039 / 2026-10-03T22:26:38Z.
+## CEX / off-chain state
 
-### Other fresh EVM native balances
+### Binance — USER_CONFIRMED / PARKED INVESTMENT RESERVE
 
-Fresh reads also returned small native balances on Arbitrum, Optimism, Linea, World Chain, MegaETH, Robinhood Chain and other supported EVM networks. They are below the material display threshold or lack a reliable material mark and are not promoted into the displayed subtotal.
+- **600.866553 USDC**
+- screenshot shows Earn current APR **2.11%**
+- auto-subscribe enabled
+- execution rule: leave in Earn unless a materially better risk/reward opportunity is found and explicitly approved
 
-### Sui
+Current reference mark: ~**$600.82**.
 
-Latest explicit user-confirmed state remains:
-- **SUI = 0 / cleared**.
+### Bybit — USER_CONFIRMED / PERSONAL CASH EXCLUDED FROM INVESTMENT
 
-The generic connected portfolio method still does not accept the canonical Sui address format, so this refresh did not independently re-scan Sui. Classification remains `USER_CONFIRMED`, not `DIRECT_CHAIN`.
+- count only the USDC line: **403.020679 USDC** (~$402.99)
+- purpose: living expenses + next month's rent
+- classification: **EXCLUDED_FROM_INVESTMENT_CAPITAL**
 
-## Private / off-chain state
+Do not use the Bybit account total-asset figure as Mission capital.
 
-### Binance — USER_CONFIRMED carry-forward
+## Legion / JUMP — CLOSED / REFUND COMPLETE
 
-Latest stored user-confirmed available balance:
-- **$523.72**
+Application outcome:
+- **UNSUCCESSFUL / REJECTED**
+- final JUMP allocation: **0**
+- accepted investment: **0 USDC**
 
-Not independently refreshed in this chain scan.
+Original 1,000 USDC deposit has been refunded on Ethereum.
 
-### Legion / JUMP — USER_CONFIRMED carry-forward
+Refund transaction:
+`0x3d3264417775aa9cf0bf5d83f69f00b2ada9e01852784bc52897264025c5e0b5`
 
-- pending/committed capital: **$1,000.00**
-- state: **PENDING_ALLOCATION**
+Confirmed ERC-20 transfer:
+- sale contract -> participating wallet
+- **1,000 USDC**
+- timestamp: `2026-10-06T17:28:23Z`
 
-Do not count this as liquid available balance until allocation/refund state changes.
+Latest direct contract-state read after refund:
+- `investedCapital = 0`
+- `hasRefunded = true`
+- `hasSettled = false`
+- `hasClaimedExcess = false`
+- vesting address = zero
 
-## Current marked reference
+Therefore:
+- remove the old **$1,000 pending JUMP** bucket;
+- do not carry any JUMP token position;
+- do not separately add the returned 1,000 USDC on top of current wallet/CEX balances.
 
-Using only the fresh known material chain balances above plus the latest stored Binance value:
+Canonical incident/closure evidence:
+- `../positions/jump.md`
+- `../../research/projects/jump/jump-reclaim-2026-10-07.md`
 
-Liquid / available reference:
-- Binance: $523.72
-- Solana USDC: ~$142.18
-- Ethereum USDC: ~$1.01
-- Ethereum ETH: ~$1.70
-- Base ETH: ~$2.60
-- Ink ETH: ~$29.92
+## Current marked capital reference
 
-**Liquid / available subtotal: ~ $701.13**
+Material on-chain subtotal:
+- Solana USDC: ~$531.05
+- Solana SOL: ~$3.43
+- Ethereum ETH: ~$2.44
+- Ink ETH: ~$27.29
 
-Pending / committed:
-- Legion / JUMP: **$1,000.00**
+**On-chain material subtotal: ~ $564.21**
 
-**Total tracked reference: ~ $1,701.13**, excluding sub-$1 dust and unpriced/unverified NFTs/tokens.
+Investable parked CEX capital:
+- Binance Earn: ~**$600.82**
+
+**Current Mission-addressable / investable reference: ~ $1,165.03**
+
+Excluded personal cash:
+- Bybit USDC: ~**$402.99**, living expenses / rent
+
+Also excluded from the above investable reference:
+- sub-$1 dust;
+- unpriced NFTs/tokens;
+- private/pre-TGE/points rights without reliable liquid marks.
 
 This is asset completeness, **not Mission PnL**.
 
 ## Closed / excluded current holdings
 
-Confirmed/currently cleared:
+- JUMP public-sale application: rejected / zero allocation / deposit refunded
 - Credits: 0
 - UNICRED #230: not owned
-- SUI: 0 by latest user-confirmed state
+- SUI: 0
 - PONS futures/spot: closed
 - XRP / Variational: closed
 - prior meme sleeves with zero verified current balances: historical only
+- all individual positions below $1: omitted from displayed holdings
 
-Excluded from marked current presentation:
-- individual assets below $1;
-- unpriced unsolicited tokens/NFTs;
-- spam/claim-bait;
-- stale listing asks;
-- unknown balances without verified identity/value.
+## Frank / Mission Meme development state
+
+- Production Frank core remains on the existing frozen/live authority.
+- Review-only Mission Control / Jupiter / replay work is maintained separately and must not silently replace production.
+- Latest reviewed development branch has diverged substantially from main; integration must preserve newer main state and carry over only reviewed module changes.
+- Production trading remains **NO_GO**.
 
 ## Refresh policy
 
