@@ -1,8 +1,10 @@
 """Localhost-only Mission Meme V1 dashboard server."""
 from __future__ import annotations
 
+import ipaddress
 import json
 import mimetypes
+import socket
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
@@ -11,10 +13,46 @@ from .db import open_control_ro
 from .frank import FrankReader
 
 
+def _host_is_loopback(host: str, port: int) -> bool:
+    try:
+        infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    except socket.gaierror:
+        return False
+    if not infos:
+        return False
+    for _, _, _, _, sockaddr in infos:
+        address = str(sockaddr[0]).split("%", 1)[0]
+        try:
+            if not ipaddress.ip_address(address).is_loopback:
+                return False
+        except ValueError:
+            return False
+    return True
+
+
+def _host_header_is_loopback(value: str | None) -> bool:
+    value = (value or "").strip().lower()
+    if not value:
+        return False
+    if value.startswith("["):
+        end = value.find("]")
+        host = value[1:end] if end >= 0 else value
+    else:
+        host = value.rsplit(":", 1)[0] if ":" in value else value
+    if host == "localhost":
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
+
+
 class DashboardState:
     def __init__(self, production_root: Path, control_root: Path):
         self.frank = FrankReader(production_root)
-        self.control_db = Path(control_root) / "mission-control.sqlite"
+        self.control_root = Path(control_root)
+        self.control_db = self.control_root / "mission-control.sqlite"
+        self.control_health = self.control_root / "mission-control-health.json"
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():
@@ -27,6 +65,14 @@ class DashboardState:
 
     def runtime(self):
         return self.frank.runtime()
+
+    def mission_control_health(self):
+        if not self.control_health.is_file():
+            return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_MISSING"}
+        try:
+            return json.loads(self.control_health.read_text())
+        except (OSError, ValueError):
+            return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_UNREADABLE"}
 
     def candidates(self):
         candidates = self.frank.candidates()
@@ -66,6 +112,9 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *_):
         return
 
+    def _allowed_host(self):
+        return _host_header_is_loopback(self.headers.get("Host"))
+
     def _json(self, payload, status=200):
         data = json.dumps(payload, ensure_ascii=False, default=str).encode()
         self.send_response(status)
@@ -88,9 +137,13 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_GET(self):
+        if not self._allowed_host():
+            return self.send_error(421, "loopback Host required")
         path = urlparse(self.path).path
         if path == "/api/runtime":
             return self._json(self.state.runtime())
+        if path == "/api/control-health":
+            return self._json(self.state.mission_control_health())
         if path == "/api/candidates":
             return self._json(self.state.candidates())
         if path == "/api/trades":
@@ -107,8 +160,13 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
 
+class IPv6ThreadingHTTPServer(ThreadingHTTPServer):
+    address_family = socket.AF_INET6
+
+
 def serve(production_root: Path, control_root: Path, host: str = "127.0.0.1", port: int = 8765):
-    if host not in {"127.0.0.1", "localhost", "::1"}:
+    if host not in {"127.0.0.1", "localhost", "::1"} or not _host_is_loopback(host, port):
         raise ValueError("MISSION_CONTROL_LOCALHOST_ONLY")
     Handler.state = DashboardState(production_root, control_root)
-    ThreadingHTTPServer((host, port), Handler).serve_forever()
+    server_cls = IPv6ThreadingHTTPServer if ":" in host else ThreadingHTTPServer
+    server_cls((host, port), Handler).serve_forever()
