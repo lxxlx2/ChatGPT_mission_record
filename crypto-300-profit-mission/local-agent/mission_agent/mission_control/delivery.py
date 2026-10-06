@@ -72,6 +72,7 @@ class GmailDelivery:
     READBACK_BACKOFF_SECONDS=60
     CREDENTIAL_BACKOFF_SECONDS=300
     MAX_SEND_ATTEMPTS=5
+    SENT_UNVERIFIED_MAX_AGE_SECONDS=3600
 
     def __init__(self,control:ControlDB):self.control,self.db=control,control.db
     def enqueue(self,event:dict,*,mode:str,forbidden:bool)->None:
@@ -99,6 +100,10 @@ class GmailDelivery:
     def _due(self,row:dict)->bool:
         age=_seconds_since(row.get("last_attempt_at"))
         if row["status"] in {"SENDING","SENT_UNVERIFIED"}:
+            unresolved_age=_seconds_since(row.get("sent_at") or row.get("created_at"))
+            if unresolved_age is not None and unresolved_age>=self.SENT_UNVERIFIED_MAX_AGE_SECONDS:
+                self._set(row["decision_id"],"MANUAL_REVIEW","GMAIL_SENT_OUTCOME_UNRESOLVED_TOO_LONG")
+                return False
             return age is None or age>=self.READBACK_BACKOFF_SECONDS
         if row["status"]=="CREDENTIAL_BLOCKED":
             return age is None or age>=self.CREDENTIAL_BACKOFF_SECONDS
@@ -124,7 +129,7 @@ class GmailDelivery:
                 self.db.execute("UPDATE gmail_delivery SET status='SENDING',attempt_count=attempt_count+1,last_attempt_at=? WHERE decision_id=?",(utc(),decision_id));self.db.execute("UPDATE decision_outbox SET status='SENDING',attempts=attempts+1 WHERE decision_id=? AND channel='gmail'",(decision_id,))
                 # From this point onward, any exception is ambiguous: the provider may
                 # have accepted the message. Never automatically resend until Sent
-                # readback proves absence/presence through the stable identity.
+                # readback proves presence through the stable identity.
                 uncertain=True
                 response=provider.send(wire)
                 if not response.get("id"):raise AmbiguousSend("SEND_RETURNED_NO_MESSAGE_ID")
