@@ -71,9 +71,22 @@ Every reusable-cache hit is revalidated before use. Validation requires all of t
 - `reference_epoch` matches the requested trade minute;
 - `candle_open_ms == reference_epoch * 1000`;
 - candle close is within the same minute and before the Frank trade;
-- selected SOL/USDC price is positive.
+- OHLC values and selected price are positive;
+- `high >= low`;
+- `low <= open <= high`;
+- `low <= close <= high`;
+- `close == sol_usdc`.
 
-A corrupted, stale-schema or tampered reusable row is treated as a cache miss and is refetched from the official source. A successful verified refetch replaces the invalid cache row.
+A corrupted, stale-schema or internally inconsistent reusable row is treated as a cache miss and is refetched from the official source. A successful verified refetch replaces the invalid cache row.
+
+The replay report exposes:
+
+- `reference_cache_hit_count`;
+- `reference_cache_rejected_count`.
+
+This makes rejected reusable rows auditable instead of silently hiding them behind a refetch.
+
+These integrity checks are designed to detect corruption, stale schema and internally inconsistent records. The hashes are not keyed signatures and therefore do not by themselves prove authenticity against a party that can deliberately rewrite every field and recompute every hash. Approval still depends on the official-source capture path and manual traceability of recovered SOL signals.
 
 Transient failures such as HTTP 429, 5xx, timeout, network failure or malformed/transient response are retried with bounded backoff and are **not persisted** as reusable evidence.
 
@@ -87,16 +100,24 @@ Input/normalization failures are reported separately from reference failures. Ex
 
 These must not be mislabeled as Binance reference failures.
 
-### Abort cleanup
+### Abort cleanup and report protection
 
-A failed/aborted CLI replay must not leave a stale target that blocks the next run.
+A failed or manually interrupted CLI replay must not leave a stale target that blocks the next run.
 
-On an exception the CLI:
+Before replay starts, the CLI refuses:
+
+- an existing target SQLite or its `-wal`, `-shm`, `-journal` sidecars;
+- an existing report path;
+- a target path equal to the report path.
+
+This prevents an ABORTED run from overwriting an earlier audit report.
+
+On an exception, including `KeyboardInterrupt`, the CLI:
 
 1. rolls back and closes the replay DB;
 2. removes target SQLite plus `-wal`, `-shm` and `-journal` sidecars;
-3. writes the requested report path with `status = ABORTED`, error type/message and `target_cleaned`;
-4. exits non-zero.
+3. writes the requested report path with `status = ABORTED`, error type/message and `target_cleaned`, only if that report path is still absent;
+4. preserves normal `KeyboardInterrupt` semantics for Ctrl-C, while ordinary failures exit non-zero with `SHADOW_REPLAY_ABORTED`.
 
 Verified entries already committed to an optional reusable reference cache may remain because each future hit is independently revalidated.
 
@@ -150,7 +171,7 @@ sol_resolution_gate_pass == true
 shadow_replay_gate_pass == true
 ```
 
-`usdc_regression_pass` remains only as a deprecated compatibility field. It is deliberately conservative and now mirrors the final `shadow_replay_gate_pass`, so an old consumer cannot see `true` when SOL normalization is unresolved.
+`usdc_regression_pass` remains only as a deprecated compatibility field. It is deliberately conservative and mirrors the final `shadow_replay_gate_pass`, so an old consumer cannot see `true` when SOL normalization is unresolved.
 
 This prevents the empty-pass failure mode where Binance is inaccessible, every SOL trade remains unresolved, the shadow output equals source output, and a signal-only regression comparison would otherwise look green.
 
@@ -187,7 +208,9 @@ Recovery before 60 seconds clears the pending transition silently.
 
 The downtime reset threshold is deliberately independent from the grace period and is set above the current theoretical sequential worst case of roughly `50 candidates * 8s Jupiter timeout ~= 400s`. A slow full cycle must not continuously restart the timer. Only an observation gap longer than 600 seconds restarts debounce evidence.
 
-This is a review-candidate bound, not a latency target. If real REVIEW_ONLY runs approach this worst case, candidate evaluation concurrency/overall cycle deadline should be reviewed separately rather than increasing the gap indefinitely.
+Known tradeoff: an interruption shorter than 600 seconds does not prove a true service restart, so the previous `first_seen_at` may remain valid and the first post-recovery cycle can immediately authorize a WAIT if the transient condition is still present. This is intentional in the review candidate to avoid suppressing a genuine persistent invalidation merely because one cycle was very slow. Runtime observations should be reviewed before changing this bound.
+
+This is a review-candidate bound, not a latency target. If real REVIEW_ONLY runs approach the sequential worst case, candidate evaluation concurrency or an overall cycle deadline should be reviewed separately rather than increasing the gap indefinitely.
 
 Non-transient `NO_BUY`, SELL/EXIT and structural invalidations remain immediate.
 
@@ -267,9 +290,12 @@ Coverage includes:
 - deterministic missing K line is cacheable only in the current replay target;
 - reusable external cache stores VERIFIED candles only;
 - reusable-cache hits revalidate DB content hash, evidence SHA and candle metadata;
-- a tampered reusable cache row is rejected and refetched;
+- reusable-cache hits require `close == sol_usdc` and valid OHLC bounds;
+- deliberately recomputed hashes do not rescue internally inconsistent candle data;
+- rejected reusable-cache rows are counted;
 - reusable external reference cache copies valid evidence into a fresh replay target without a network call;
-- aborted replay target/SQLite sidecars are removable by cleanup path;
+- ordinary abort and Ctrl-C both clean replay target/SQLite sidecars;
+- existing report path is refused before replay and never overwritten;
 - strict regression does not exclude mixed SOL/USDC mints;
 - missing quote decimals/amount are input failures, not reference failures;
 - frozen Frank V1 can recover ACCUMULATION/MULTIPLE from verified shadow input;
