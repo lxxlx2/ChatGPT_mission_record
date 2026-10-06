@@ -11,7 +11,7 @@ Mission Meme V1 is a **local Frank follow-assistance tool**. It does four jobs o
 1. show whether the Frank runtime is actually alive now;
 2. show Frank ACCUMULATION / MULTIPLE episodes and observed positions;
 3. apply a fixed deterministic follow rule to the current executable Jupiter quote;
-4. notify the user locally and by Gmail when a fresh result or result transition exists.
+4. notify the user locally and by Gmail when a fresh result or meaningful result transition exists.
 
 No LLM, no auto-trading, no wallet signing, no cloud deployment, no new scheduler.
 
@@ -93,55 +93,59 @@ manual CLI flag = --live-delivery
 
 Current numeric thresholds are deliberately provisional review values. External review may replace them before approval.
 
+## Review fixes after 82f980a2
+
+The external review found two P0 regressions and two additional quality issues. The review branch now addresses them as follows:
+
+1. **Fresh quote false-stale regression**: evaluation time is read after each Jupiter quote returns. A newly fetched quote can no longer be rejected merely because its `observed_at` is a few milliseconds later than a cycle-level clock captured before the request.
+2. **New episode first result missing notification**: first notification eligibility is no longer tied to the entire database bootstrap. Every newly appearing episode can notify when its own Frank activity is fresh; old historical episodes remain silent.
+3. **Dashboard values freezing**: `candidate_latest` stores exactly one mutable latest row per person/mint/episode and is refreshed every evaluation. Immutable snapshot/event history is still created only on Decision transitions.
+4. **Ambiguous Gmail delivery unbounded**: unresolved `SENDING` / `SENT_UNVERIFIED` state older than one hour is promoted to `MANUAL_REVIEW`; it is never blindly resent.
+5. **Actionable invalidation**: a BUY/SMALL_BUY that becomes WAIT because Frank runtime/data becomes stale is notified once. Initial/transient non-actionable WAIT states remain dashboard-only to avoid outage storms.
+
 ## Notification behavior
 
-Every **new result** or **Decision transition** is meaningful:
+A fresh new episode or a Decision transition is eligible for notification.
+
+To prevent historical spam:
+
+- an episode with no previous Decision only notifies when its latest Frank activity is within `initial_notification_max_age_seconds`;
+- default review value: 600 seconds;
+- this rule applies independently to every episode, including episodes first seen after the service has already been running.
+
+Transient WAIT states are normally dashboard-only when there was no actionable state to invalidate. However:
 
 ```text
-NONE -> BUY
-NONE -> SMALL_BUY
-NONE -> WAIT
-NONE -> NO_BUY
 BUY -> WAIT
-BUY -> NO_BUY
-WAIT -> BUY
-WAIT -> SMALL_BUY
-...etc
+SMALL_BUY -> WAIT
 ```
 
-Same-state reevaluation is silent.
-
-To prevent historical spam on first startup:
-
-- existing old episodes are recorded as baseline;
-- first-cycle notification is allowed only when the candidate's latest Frank activity is within `initial_notification_max_age_seconds`;
-- default review value: 600 seconds;
-- later state transitions notify normally.
+must notify once even when the WAIT reason is runtime/data staleness. Recovery to a later actionable Decision is also a new transition and can notify normally.
 
 Both local and Gmail delivery use a stable `decision_id`.
 
-Gmail delivery has independent state in `mission-control.sqlite`, performs Sent readback, and treats ambiguous acceptance as non-resendable until reconciled.
+Gmail delivery has independent state in `mission-control.sqlite`, performs Sent readback, never blindly resends an ambiguous accepted message, and escalates unresolved ambiguity to `MANUAL_REVIEW` after one hour.
 
-## Dashboard
+## Dashboard storage model
 
-Local high-density dashboard shows:
+Two storage roles are intentionally separated:
 
-- Frank LIVE / DEGRADED / OFFLINE / UNKNOWN;
-- PID and heartbeat age;
-- current candidate table;
-- Decision;
-- ACCUMULATION / MULTIPLE;
-- Frank BUY/SELL count;
-- latest action;
-- latest Frank buy price;
-- current executable price;
-- price deviation;
-- price impact;
-- position state;
-- recent Frank trades;
-- recent Decision transitions.
+`candidate_latest`
+- one mutable row per person/mint/episode;
+- refreshed every evaluation;
+- used by the dashboard for current executable price, deviation, impact and reasons;
+- bounded by the number of observed episodes.
 
-The dashboard reads the latest **snapshot**, not only the latest transition event, so same-state price updates remain visible without sending duplicate notifications.
+`decision_snapshots` / `decision_events`
+- immutable audit history;
+- written only when the Decision changes;
+- same-state market refresh does not grow this history.
+
+## Jupiter price-impact semantics
+
+Jupiter's official developer documentation states that legacy `priceImpactPct` is a decimal ratio from 0 to 1, not already percentage points. Example: `0.01` means 1% impact. Mission Control therefore multiplies the raw field by 100 before comparing it with policy thresholds expressed in percent.
+
+This semantic point is no longer considered unknown. A separate **real-response fixture requirement remains** before approval so response/error shapes are tested against current production API behavior rather than only synthetic bodies.
 
 ## Existing tests remain mandatory
 
@@ -159,68 +163,42 @@ The new code does not replace any existing Frank V1/Gmail/local-notification tes
 - post-acceptance crash recovery;
 - Gmail failure not blocking the Frank scanner.
 
-## New tests included
+## New review-regression tests
+
+The review branch now includes explicit coverage for:
 
 - production SQLite rejects writes;
-- same Decision state creates snapshots but no duplicate event;
-- Decision transition retains previous state;
-- MULTIPLE near Frank -> BUY;
-- ACCUMULATION -> at most SMALL_BUY;
-- SELL / stale quote / high impact / chase -> no BUY;
-- runtime not LIVE -> WAIT;
-- no Jupiter route -> NO_BUY;
-- missing Jupiter API key fails closed without network;
-- dashboard refuses a public bind address;
-- REVIEW_ONLY cannot live-deliver;
-- bootstrap old episode cannot enqueue historical notification;
+- fresh quote returned after cycle start is not falsely `QUOTE_STALE`;
+- old bootstrap history remains silent;
+- a fresh MULTIPLE episode appearing after bootstrap enqueues its first result;
+- BUY invalidated by Frank runtime failure produces one WAIT notification;
+- event/latest/outbox writes roll back together on enqueue failure;
+- same Decision state does not grow immutable snapshot/event history;
+- same Decision state does refresh `candidate_latest`;
+- dashboard reads the refreshed latest executable price;
 - Gmail decision identity is exactly-once;
-- post-acceptance Gmail crash does not resend.
+- post-acceptance Gmail crash does not resend;
+- ambiguous Gmail state cannot remain unresolved forever;
+- missing Jupiter key fails closed without network;
+- explicit no-route response maps to NO_BUY input;
+- Jupiter `priceImpactPct` scaling is covered;
+- dashboard refuses public bind/Host values.
 
-## Acceptance before first execution
+## Remaining approval blockers
 
-External AI/code review should confirm:
+Do **not** change the policy to `FROZEN_APPROVED` until all of these are complete:
 
-1. production DB cannot be mutated;
-2. no existing production file changed;
-3. provisional threshold values are acceptable or replaced;
-4. stale/missing data cannot produce BUY;
-5. Frank OFFLINE/DEGRADED cannot produce BUY;
-6. first startup cannot mass-send historical results;
-7. Gmail/local dedupe is sound;
-8. review mode cannot deliver;
-9. localhost server cannot bind publicly;
-10. Jupiter integration is quote-only and official;
-11. full old + new test suite is expected to pass before approval.
-
-## Files added
-
-```text
-mission_agent/mission_control/
-  __init__.py
-  db.py
-  frank.py
-  jupiter.py
-  policy.py
-  delivery.py
-  service.py
-  server.py
-  static/
-    index.html
-    app.js
-    styles.css
-
-scripts/mission_meme_v1.py
-config/follow_policy_v1.review.json
-
-tests/test_mission_control_policy.py
-tests/test_mission_control_db.py
-tests/test_mission_control_delivery.py
-tests/test_mission_control_service.py
-tests/test_mission_control_misc.py
-```
+1. external reviewer reruns the Mission Control test set and full local-agent suite against the latest review-branch HEAD;
+2. capture current real Jupiter quote responses/fixtures for at least:
+   - one liquid routable mint;
+   - one thin-liquidity routable mint;
+   - one no-route mint/error response;
+3. verify the thin-liquidity response against Jupiter's displayed/independent impact interpretation;
+4. complete the planned historical threshold replay before treating provisional 8% / 20% deviation and 1.5% / 3% impact values as frozen policy;
+5. preserve `PRODUCTION_TRADING = NO_GO`.
 
 ## Execution
 
-No command in this document has been executed during the code-only phase.
+No local Python service, pytest suite, Jupiter live request, macOS notification or Gmail send is claimed as executed by the code-authoring step documented here.
 
-After review, the first step is to run the existing and new tests. Only after they pass should the policy gate be changed from `REVIEW_ONLY`.
+After external review, tests should be run against the exact review-branch HEAD. Only after all blockers pass should the policy gate be considered for `FROZEN_APPROVED`.
