@@ -8,6 +8,15 @@ from pathlib import Path
 from mission_agent.mission_control.service import MissionMemeService
 
 
+USDC="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+
+
+def _candidate(latest_at, *, mint="Mint111", episode="ep1", signal="signal1"):
+    event={"signature":signal+"-tx3","at":latest_at,"direction":"BUY","token_amount_raw":"1000000","token_decimals":6,"quote_asset":USDC,"quote_quantity":"1"}
+    state={"episode_id":episode,"state":"OPEN","current_raw":"3000000","events":[{**event,"signature":signal+"-tx1","at":latest_at-120},{**event,"signature":signal+"-tx2","at":latest_at-60},event]}
+    return mint,state,(signal,"frank",mint,episode,"FRANK_MULTIPLE_SIGNAL","MULTIPLE",str(latest_at),"h",json.dumps({"signal_id":signal}))
+
+
 def make_prod(root: Path, *, latest_at=None):
     root.mkdir(parents=True)
     latest_at=int(time.time()) if latest_at is None else latest_at
@@ -18,10 +27,18 @@ def make_prod(root: Path, *, latest_at=None):
     create table signals(signal_id text primary key,person_id text,mint text,episode_id text,signal_type text,stage text,created_at text,content_hash text,body text);
     create table trades(wallet text,signature text,mint text,episode_id text,block_time integer,side text,body text);
     """)
-    event={"signature":"tx3","at":latest_at,"direction":"BUY","token_amount_raw":"1000000","token_decimals":6,"quote_asset":"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v","quote_quantity":"1"}
-    state={"episode_id":"ep1","state":"OPEN","current_raw":"3000000","events":[{**event,"signature":"tx1","at":latest_at-120},{**event,"signature":"tx2","at":latest_at-60},event]}
-    db.execute("insert into v1_states values(?,?,?)",("frank","Mint111",json.dumps(state)))
-    db.execute("insert into signals values(?,?,?,?,?,?,?,?,?)",("signal1","frank","Mint111","ep1","FRANK_MULTIPLE_SIGNAL","MULTIPLE",str(latest_at),"h",json.dumps({"signal_id":"signal1"})))
+    mint,state,signal_row=_candidate(latest_at)
+    db.execute("insert into v1_states values(?,?,?)",("frank",mint,json.dumps(state)))
+    db.execute("insert into signals values(?,?,?,?,?,?,?,?,?)",signal_row)
+    db.commit();db.close()
+
+
+def add_candidate(root: Path, *, mint="Mint222", episode="ep2", signal="signal2", latest_at=None):
+    latest_at=int(time.time()) if latest_at is None else latest_at
+    mint,state,signal_row=_candidate(latest_at,mint=mint,episode=episode,signal=signal)
+    db=sqlite3.connect(root/"forward.sqlite")
+    db.execute("insert into v1_states values(?,?,?)",("frank",mint,json.dumps(state)))
+    db.execute("insert into signals values(?,?,?,?,?,?,?,?,?)",signal_row)
     db.commit();db.close()
 
 
@@ -45,6 +62,20 @@ def test_review_policy_never_allows_live_delivery_and_records_dry_outbox(tmp_pat
     service.close()
 
 
+def test_quote_observed_after_cycle_started_is_not_false_stale(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod);policy(p)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
+    def delayed_quote(*a,**k):
+        time.sleep(.01)
+        return good_quote()
+    service.jupiter.quote_usdc_to_token=delayed_quote
+    result=service.cycle()
+    assert result["decision_events"][0]["decision"]=="BUY"
+    body=json.loads(service.control.db.execute("select body from candidate_latest").fetchone()[0])
+    assert "QUOTE_STALE" not in body["missing"]
+    service.close()
+
+
 def test_bootstrap_old_historical_candidate_does_not_enqueue_notification(tmp_path):
     prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod,latest_at=int(time.time())-3600);policy(p)
     service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
@@ -52,6 +83,42 @@ def test_bootstrap_old_historical_candidate_does_not_enqueue_notification(tmp_pa
     result=service.cycle()
     assert result["decision_events"][0]["notification_enqueued"] is False
     assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==0
+    service.close()
+
+
+def test_fresh_new_episode_after_bootstrap_enqueues_first_result(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod,latest_at=int(time.time())-3600);policy(p)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
+    service.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
+    first=service.cycle()
+    assert first["bootstrap"] is True
+    assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==0
+    add_candidate(prod,latest_at=int(time.time()))
+    second=service.cycle()
+    fresh=[x for x in second["decision_events"] if x["mint"]=="Mint222"]
+    assert len(fresh)==1
+    assert fresh[0]["decision"]=="BUY"
+    assert fresh[0]["notification_enqueued"] is True
+    assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==2
+    service.close()
+
+
+def test_actionable_result_invalidated_by_runtime_failure_notifies_once(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod);policy(p)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
+    service.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
+    first=service.cycle()
+    assert first["decision_events"][0]["decision"]=="BUY"
+    health=json.loads((prod/"health.json").read_text())
+    health["last_successful_poll"]="2000-01-01T00:00:00+00:00"
+    (prod/"health.json").write_text(json.dumps(health))
+    second=service.cycle()
+    assert second["decision_events"][0]["decision"]=="WAIT"
+    assert second["decision_events"][0]["notification_enqueued"] is True
+    assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==4
+    third=service.cycle()
+    assert third["decision_events"]==[]
+    assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==4
     service.close()
 
 
@@ -65,6 +132,7 @@ def test_event_and_outbox_rollback_together_on_enqueue_failure(tmp_path):
     assert first["candidate_errors"]
     assert service.control.db.execute("select count(*) from decision_events").fetchone()[0]==0
     assert service.control.db.execute("select count(*) from decision_snapshots").fetchone()[0]==0
+    assert service.control.db.execute("select count(*) from candidate_latest").fetchone()[0]==0
     assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==0
     assert service.control.db.execute("select count(*) from local_delivery").fetchone()[0]==0
     service.gmail.enqueue=original
