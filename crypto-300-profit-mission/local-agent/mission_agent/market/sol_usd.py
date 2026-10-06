@@ -1,11 +1,11 @@
 """Deterministic SOL->USD event-time normalization for Frank trades.
 
-Default source is Binance official public Spot market-data.  No API key is
-required.  To avoid replay look-ahead, the reference price is the close of the
+Default source is Binance official public Spot market-data. No API key is
+required. To avoid replay look-ahead, the reference price is the close of the
 previous fully closed 1-minute SOLUSDT candle, never the current candle.
 
-The network client is intentionally separate from the evaluator.  Callers must
-persist the returned reference evidence before using it in a model replay.
+The network client is intentionally separate from the evaluator. Callers must
+persist returned reference evidence before using it in a model replay.
 """
 from __future__ import annotations
 
@@ -15,9 +15,11 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, ROUND_HALF_EVEN
 
-SOL_QUOTE_ASSETS=frozenset({'SOL','So11111111111111111111111111111111111111112'})
+USDC='EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+WSOL='So11111111111111111111111111111111111111112'
+SOL_QUOTE_ASSETS=frozenset({'SOL',WSOL})
 SOURCE='BINANCE_OFFICIAL_SPOT_SOLUSDT'
 SELECTION_RULE='PREVIOUS_CLOSED_1M_CLOSE'
 DEFAULT_ENDPOINT='https://data-api.binance.vision/api/v3/klines'
@@ -64,7 +66,7 @@ def normalize_trade_event(event:dict,reference:dict|None)->dict:
     value=dict(event);asset=value.get('quote_asset')
     try:quote=Decimal(str(value.get('quote_quantity')))
     except (InvalidOperation,ValueError,TypeError):quote=None
-    if asset=='EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' and quote is not None:
+    if asset==USDC and quote is not None:
         value['quote_usd_quantity']=str(quote);value['quote_usd_status']='USDC_DIRECT';value['quote_usd_reference']={'source':'USDC_DIRECT','block_time':value.get('at')}
         return value
     if asset not in SOL_QUOTE_ASSETS:
@@ -78,8 +80,14 @@ def normalize_trade_event(event:dict,reference:dict|None)->dict:
     return value
 
 
-def normalize_classification(classified:dict,reference:dict|None)->dict:
-    """Normalize one classified ACTIVE_TRADE without mutating caller input."""
+def normalize_classification(classified:dict,reference:dict|None,*,for_model:bool=False)->dict:
+    """Normalize one ACTIVE_TRADE without mutating caller input.
+
+    In ordinary audit mode the original SOL quote remains untouched and verified
+    USD-equivalent fields are appended. In shadow-model mode, a verified SOL quote
+    is converted to synthetic USDC raw units so the frozen V1 evaluator can be
+    replayed unchanged. Original quote fields and reference evidence are preserved.
+    """
     value=dict(classified);trade=value.get('trade')
     if not trade or value.get('classification')!='ACTIVE_TRADE':return value
     t=dict(trade);asset=t.get('quote_asset')
@@ -87,9 +95,12 @@ def normalize_classification(classified:dict,reference:dict|None)->dict:
     if t.get('quote_decimals') is None:return value
     try:q=Decimal(str(t['quote_amount_raw']))/(Decimal(10)**int(t['quote_decimals']))
     except (InvalidOperation,ValueError,TypeError,KeyError):return value
-    synthetic={'quote_asset':asset,'quote_quantity':str(q),'at':value.get('block_time')}
-    normalized=normalize_trade_event(synthetic,reference)
+    normalized=normalize_trade_event({'quote_asset':asset,'quote_quantity':str(q),'at':value.get('block_time')},reference)
     for key in ('quote_usd_quantity','quote_usd_status','quote_usd_reference'):
         if key in normalized:t[key]=normalized[key]
+    if for_model and normalized.get('quote_usd_status')=='SOL_EVENT_TIME_VERIFIED':
+        original={'quote_asset':t.get('quote_asset'),'quote_amount_raw':t.get('quote_amount_raw'),'quote_decimals':t.get('quote_decimals'),'quote_quantity':str(q)}
+        micro=(Decimal(normalized['quote_usd_quantity'])*Decimal(10**6)).quantize(Decimal('1'),rounding=ROUND_HALF_EVEN)
+        t.update(original_quote=original,quote_asset=USDC,quote_amount_raw=str(int(micro)),quote_decimals=6,quote_normalization='SOL_TO_USD_SHADOW_EQUIVALENT')
     value['trade']=t
     return value
