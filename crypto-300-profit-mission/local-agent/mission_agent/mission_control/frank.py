@@ -40,23 +40,36 @@ def _token_quantity(event: dict) -> Decimal | None:
 
 
 def _event_price_usdc(event: dict) -> Decimal | None:
-    """Return event-time USDC/token only from durable event-time evidence.
-
-    Direct USDC trades use their quote quantity. SOL/WSOL trades are accepted only
-    when upstream replay/normalization attached verified event-time SOL/USDC
-    evidence. A current SOL price is never substituted for a historical trade.
-    """
     quantity = _token_quantity(event)
     if not quantity:
         return None
     try:
-        if event.get("quote_asset") == USDC:
+        if event.get("quote_asset") == USDC and not event.get("quote_normalization"):
             return Decimal(str(event["quote_quantity"])) / quantity
         if event.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" and event.get("quote_usdc_equivalent") is not None:
             return Decimal(str(event["quote_usdc_equivalent"])) / quantity
     except (KeyError, InvalidOperation, ZeroDivisionError, TypeError):
         return None
     return None
+
+
+def _quote_display(event: dict | None) -> dict:
+    if not event:
+        return {"asset": None, "quantity": None, "normalized": False, "usdc_equivalent": None}
+    original = event.get("original_quote") or {}
+    if event.get("quote_normalization") == "SOL_TO_USDC_SHADOW_EQUIVALENT" and original:
+        return {
+            "asset": original.get("quote_asset"),
+            "quantity": original.get("quote_quantity"),
+            "normalized": True,
+            "usdc_equivalent": event.get("quote_usdc_equivalent"),
+        }
+    return {
+        "asset": event.get("quote_asset"),
+        "quantity": event.get("quote_quantity"),
+        "normalized": False,
+        "usdc_equivalent": event.get("quote_usdc_equivalent") if event.get("quote_asset") != USDC else event.get("quote_quantity"),
+    }
 
 
 class FrankReader:
@@ -133,27 +146,24 @@ class FrankReader:
                 elif source_signal_type == "FRANK_ACCUMULATION_SIGNAL":
                     pattern = "ACCUMULATION"
                 else:
-                    # Unknown/new signal kinds are never silently treated as accumulation.
                     continue
-                source_signal_id = signal_row["signal_id"]
-                source_signal_at = signal_row["created_at"]
                 events = state.get("events") or []
                 latest = events[-1] if events else None
                 buys = [e for e in events if e.get("direction") == "BUY"]
                 latest_buy = buys[-1] if buys else None
                 latest_buy_price = _event_price_usdc(latest_buy) if latest_buy else None
+                quote_display = _quote_display(latest_buy)
                 latest_quote_asset = latest_buy.get("quote_asset") if latest_buy else None
                 if latest_buy_price is not None:
                     price_status = "SOL_EVENT_TIME_USDC_VERIFIED" if latest_buy and latest_buy.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"
-                elif latest_quote_asset in {"SOL", WSOL}:
+                elif latest_quote_asset in {"SOL", WSOL} or quote_display["asset"] in {"SOL", WSOL}:
                     price_status = "SOL_EVENT_TIME_USDC_UNAVAILABLE"
                 else:
                     price_status = "QUOTE_PRICE_UNAVAILABLE"
                 result.append({
                     "person_id": row["person_id"], "mint": row["mint"], "episode_id": state.get("episode_id"),
-                    "pattern": pattern, "source_signal_id": source_signal_id, "source_signal_type": source_signal_type,
-                    "source_signal_at": source_signal_at,
-                    "position_state": state.get("state"), "current_raw": state.get("current_raw"),
+                    "pattern": pattern, "source_signal_id": signal_row["signal_id"], "source_signal_type": source_signal_type,
+                    "source_signal_at": signal_row["created_at"], "position_state": state.get("state"), "current_raw": state.get("current_raw"),
                     "buy_count": len(buys), "sell_count": sum(e.get("direction") == "SELL" for e in events),
                     "latest_side": latest.get("direction") if latest else None, "latest_signature": latest.get("signature") if latest else None,
                     "latest_at": latest.get("at") if latest else None, "latest_buy_at": latest_buy.get("at") if latest_buy else None,
@@ -161,6 +171,10 @@ class FrankReader:
                     "latest_buy_price_status": price_status,
                     "latest_buy_quote_asset": latest_quote_asset,
                     "latest_buy_quote_quantity": latest_buy.get("quote_quantity") if latest_buy else None,
+                    "latest_buy_original_quote_asset": quote_display["asset"],
+                    "latest_buy_original_quote_quantity": quote_display["quantity"],
+                    "latest_buy_quote_was_normalized": quote_display["normalized"],
+                    "latest_buy_usdc_equivalent": quote_display["usdc_equivalent"],
                     "token_decimals": int(latest_buy.get("token_decimals")) if latest_buy and latest_buy.get("token_decimals") is not None else None,
                     "events": events,
                 })
