@@ -5,6 +5,7 @@ import pytest
 
 from mission_agent.mission_control.db import ControlDB, utc
 from mission_agent.mission_control.delivery import GmailDelivery, LocalDelivery
+from mission_agent.signals.gmail import AmbiguousSend
 
 
 class Provider:
@@ -13,6 +14,7 @@ class Provider:
         self.messages = {}
         self.sent = []
         self.crash = False
+        self.ambiguous = False
     def ready(self):
         return None
     def find_sent(self, wire_id, decision_id):
@@ -30,6 +32,8 @@ class Provider:
         }
         if self.crash:
             raise SystemExit("post-acceptance crash")
+        if self.ambiguous:
+            raise AmbiguousSend("provider accepted but response was ambiguous")
         return {"id": mid, "threadId": "thread-" + mid}
 
 
@@ -44,6 +48,10 @@ def event(db):
     }
     row = db.record(payload, "P1", "hash1")["event"]
     return row
+
+
+def age_retry(db, decision_id):
+    db.db.execute("update gmail_delivery set last_attempt_at='2000-01-01T00:00:00+00:00' where decision_id=?", (decision_id,))
 
 
 def test_review_mode_delivery_is_forbidden(tmp_path):
@@ -81,7 +89,27 @@ def test_post_acceptance_crash_does_not_duplicate_email(tmp_path):
     with pytest.raises(SystemExit):
         out.drain(provider)
     assert len(provider.sent) == 1
+    assert out.row(e["decision_id"])["status"] == "SENDING"
     provider.crash = False
+    age_retry(db, e["decision_id"])
+    out.drain(provider)
+    assert len(provider.sent) == 1
+    assert out.row(e["decision_id"])["status"] == "SENT_VERIFIED"
+
+
+def test_ambiguous_send_is_never_automatically_resent(tmp_path):
+    db = ControlDB(tmp_path / "mission-control.sqlite")
+    e = event(db)
+    out = GmailDelivery(db)
+    out.enqueue(e, mode="LIVE", forbidden=False)
+    provider = Provider(); provider.ambiguous = True
+    out.drain(provider)
+    assert len(provider.sent) == 1
+    assert out.row(e["decision_id"])["status"] == "SENT_UNVERIFIED"
+    provider.ambiguous = False
+    out.drain(provider)
+    assert len(provider.sent) == 1
+    age_retry(db, e["decision_id"])
     out.drain(provider)
     assert len(provider.sent) == 1
     assert out.row(e["decision_id"])["status"] == "SENT_VERIFIED"
