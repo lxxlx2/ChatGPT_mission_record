@@ -140,8 +140,8 @@ class MissionMemeService:
     def _notification_intent(self, *, candidate: dict, result: dict, event: dict, bootstrap: bool, now: float, initial_max_age: int) -> bool:
         previous = event.get("previous_decision")
         notify = should_notify(previous, result["decision"])
-        if previous is None and (bootstrap or not self.control.last_enqueued_decision(candidate["person_id"], candidate["mint"], candidate.get("episode_id"))):
-            notify = bool(notify and self._fresh_initial(candidate.get("latest_at"), now, initial_max_age))
+        if previous is None:
+            notify = bool(notify and bootstrap and self._fresh_initial(candidate.get("latest_at"), now, initial_max_age))
         if self._transient_wait(result):
             # Data-quality/runtime WAITs are visible in dashboard/heartbeat, but do
             # not generate N per-token notifications during a shared outage.
@@ -182,10 +182,8 @@ class MissionMemeService:
                     recorded = self.control.record(payload,self.policy["policy_id"],self.policy_hash)
                     event = recorded["event"]
                     previous = event.get("previous_decision")
-                    outbox_count = self.control.db.execute("SELECT count(*) FROM decision_outbox WHERE decision_id=?", (event["decision_id"],)).fetchone()[0]
-                    recovery_needed = (not recorded["changed"] and outbox_count == 0)
                     notify = False
-                    if recorded["changed"] or recovery_needed:
+                    if recorded["changed"]:
                         notify = self._notification_intent(candidate=candidate,result=result,event=event,bootstrap=bootstrap,now=now,initial_max_age=initial_max_age)
                     if notify:
                         forbidden = not self.delivery_allowed
@@ -196,10 +194,10 @@ class MissionMemeService:
                     self.control.db.execute("ROLLBACK")
                     raise
 
-                if recorded["changed"] or recovery_needed:
+                if recorded["changed"]:
                     events.append({
                         "decision_id":event["decision_id"],"decision":payload["decision"],"previous":previous,"mint":payload["mint"],
-                        "notification_enqueued":notify,"recovered_missing_outbox":recovery_needed,
+                        "notification_enqueued":notify,
                     })
             except Exception as exc:
                 errors.append({"mint": candidate.get("mint"), "error": type(exc).__name__, "message": str(exc)[:240]})
