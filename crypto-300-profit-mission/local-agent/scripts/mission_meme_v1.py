@@ -25,6 +25,10 @@ def parser():
     )
     p.add_argument("--gmail-config", type=Path)
     p.add_argument("--live-delivery", action="store_true")
+    p.add_argument(
+        "--approved-policy-sha256",
+        help="Required in addition to FROZEN_APPROVED + live_delivery_approved + --live-delivery. Must exactly match the loaded policy bytes.",
+    )
     p.add_argument("--interval", type=int, default=5)
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8765)
@@ -42,6 +46,7 @@ def main():
         policy_path=args.policy,
         live_delivery=args.live_delivery,
         gmail_config=args.gmail_config,
+        approved_policy_sha256=args.approved_policy_sha256,
     )
     try:
         if args.command == "cycle":
