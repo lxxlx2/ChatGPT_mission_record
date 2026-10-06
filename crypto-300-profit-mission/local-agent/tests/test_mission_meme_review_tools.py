@@ -88,3 +88,46 @@ def test_shadow_cli_abort_cleans_target_and_writes_failure_report(tmp_path,monke
     assert body['status']=='ABORTED'
     assert body['target_cleaned'] is True
     assert body['error_type']=='RuntimeError'
+
+
+def test_shadow_cli_keyboard_interrupt_cleans_target_and_preserves_interrupt_semantics(tmp_path,monkeypatch):
+    target=tmp_path/'shadow.sqlite';report=tmp_path/'report.json';source=tmp_path/'source.sqlite'
+    source.write_text('unused')
+
+    def interrupt_replay(source_path,target_path,policy_path,client=None,reference_cache_db=None):
+        Path(target_path).write_text('partial')
+        Path(str(target_path)+'-wal').write_text('partial')
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(shadow,'replay',interrupt_replay)
+    monkeypatch.setattr(sys,'argv',[
+        'frank_sol_usd_shadow_replay.py','--source',str(source),'--target',str(target),'--report',str(report)
+    ])
+    with pytest.raises(KeyboardInterrupt):
+        shadow.main()
+    assert not any(Path(str(target)+suffix).exists() for suffix in ('','-wal','-shm','-journal'))
+    body=json.loads(report.read_text())
+    assert body['status']=='ABORTED'
+    assert body['target_cleaned'] is True
+    assert body['error_type']=='KeyboardInterrupt'
+
+
+def test_shadow_cli_refuses_existing_report_without_overwrite_or_replay(tmp_path,monkeypatch):
+    target=tmp_path/'shadow.sqlite';report=tmp_path/'report.json';source=tmp_path/'source.sqlite'
+    source.write_text('unused');report.write_text('KEEP_ME')
+    called={'replay':0}
+
+    def should_not_run(*args,**kwargs):
+        called['replay']+=1
+        raise AssertionError('replay should not run')
+
+    monkeypatch.setattr(shadow,'replay',should_not_run)
+    monkeypatch.setattr(sys,'argv',[
+        'frank_sol_usd_shadow_replay.py','--source',str(source),'--target',str(target),'--report',str(report)
+    ])
+    with pytest.raises(SystemExit) as exc:
+        shadow.main()
+    assert str(exc.value)=='REPORT_MUST_NOT_EXIST'
+    assert report.read_text()=='KEEP_ME'
+    assert called['replay']==0
+    assert not shadow._target_artifacts_exist(target)
