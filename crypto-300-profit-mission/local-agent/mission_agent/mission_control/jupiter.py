@@ -14,6 +14,11 @@ from decimal import Decimal, InvalidOperation
 USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 
 
+def _no_route_error(value) -> bool:
+    text = str(value or "").lower()
+    return "route" in text and any(x in text for x in ("could not find", "no route", "not found"))
+
+
 class JupiterQuoteClient:
     def __init__(
         self,
@@ -37,12 +42,11 @@ class JupiterQuoteClient:
         usdc_amount: Decimal = Decimal("30"),
         slippage_bps: int = 100,
     ) -> dict:
-        observed_at = time.time()
         if not self.api_key:
             return {
                 "status": "UNAVAILABLE",
                 "reason": "JUPITER_API_KEY_NOT_CONFIGURED",
-                "observed_at": observed_at,
+                "observed_at": time.time(),
                 "source": "JUPITER_OFFICIAL",
             }
         delay = self.minimum_interval_seconds - (time.monotonic() - self._last_request_monotonic)
@@ -55,22 +59,51 @@ class JupiterQuoteClient:
                 "outputMint": mint,
                 "amount": str(amount_raw),
                 "slippageBps": str(slippage_bps),
-                "instructionVersion": "V2",
             }
         )
         request = urllib.request.Request(
             self.endpoint + "?" + params,
             headers={"x-api-key": self.api_key, "User-Agent": "mission-meme-v1/1"},
         )
+        reason = "JUPITER_RESPONSE_INVALID"
+        observed_at = None
         try:
             self._last_request_monotonic = time.monotonic()
             with self.open_url(request, timeout=8) as response:
                 body = json.load(response)
+            observed_at = time.time()
             if body.get("error"):
+                if _no_route_error(body.get("error")):
+                    return {
+                        "status": "OK",
+                        "reason": "JUPITER_NO_ROUTE",
+                        "observed_at": observed_at,
+                        "source": "JUPITER_OFFICIAL",
+                        "input_usdc": str(usdc_amount),
+                        "route_exists": False,
+                    }
                 return {
                     "status": "UNAVAILABLE",
                     "reason": "JUPITER_QUOTE_ERROR",
                     "error": str(body.get("error")),
+                    "observed_at": observed_at,
+                    "source": "JUPITER_OFFICIAL",
+                }
+            route_plan = body.get("routePlan") or []
+            if not route_plan:
+                return {
+                    "status": "OK",
+                    "reason": "JUPITER_NO_ROUTE",
+                    "observed_at": observed_at,
+                    "source": "JUPITER_OFFICIAL",
+                    "input_usdc": str(usdc_amount),
+                    "route_exists": False,
+                }
+            raw_impact = body.get("priceImpactPct")
+            if raw_impact in (None, ""):
+                return {
+                    "status": "UNAVAILABLE",
+                    "reason": "JUPITER_PRICE_IMPACT_MISSING",
                     "observed_at": observed_at,
                     "source": "JUPITER_OFFICIAL",
                 }
@@ -79,7 +112,7 @@ class JupiterQuoteClient:
                 raise ValueError("JUPITER_ZERO_OUTPUT")
             token_out = out_raw / (Decimal(10) ** int(token_decimals))
             executable_price = usdc_amount / token_out
-            impact_fraction = Decimal(str(body.get("priceImpactPct") or "0"))
+            impact_fraction = Decimal(str(raw_impact))
             return {
                 "status": "OK",
                 "source": "JUPITER_OFFICIAL",
@@ -90,19 +123,37 @@ class JupiterQuoteClient:
                 "execution_price_usdc": str(executable_price),
                 "price_impact_pct": str(impact_fraction * Decimal(100)),
                 "other_amount_threshold": str(body.get("otherAmountThreshold") or ""),
-                "route_exists": bool(body.get("routePlan")),
-                "route_plan": body.get("routePlan") or [],
-                "time_taken": body.get("timeTaken"),
+                "route_exists": True,
+                "route_plan": route_plan,
+                "time_taken": None if body.get("timeTaken") is None else str(body.get("timeTaken")),
             }
         except urllib.error.HTTPError as exc:
+            observed_at = time.time()
+            try:
+                raw = exc.read().decode("utf-8", errors="replace")
+                error_body = json.loads(raw) if raw else {}
+            except (OSError, ValueError, TypeError):
+                error_body = {}
+            error_value = error_body.get("error") or error_body.get("message") or ""
+            if _no_route_error(error_value):
+                return {
+                    "status": "OK",
+                    "reason": "JUPITER_NO_ROUTE",
+                    "observed_at": observed_at,
+                    "source": "JUPITER_OFFICIAL",
+                    "input_usdc": str(usdc_amount),
+                    "route_exists": False,
+                }
             reason = "JUPITER_RATE_LIMITED" if exc.code == 429 else "JUPITER_HTTP_" + str(exc.code)
         except (urllib.error.URLError, TimeoutError, OSError):
+            observed_at = time.time()
             reason = "JUPITER_NETWORK_UNAVAILABLE"
         except (ValueError, KeyError, InvalidOperation, TypeError):
+            observed_at = time.time()
             reason = "JUPITER_RESPONSE_INVALID"
         return {
             "status": "UNAVAILABLE",
             "reason": reason,
-            "observed_at": observed_at,
+            "observed_at": observed_at if observed_at is not None else time.time(),
             "source": "JUPITER_OFFICIAL",
         }
