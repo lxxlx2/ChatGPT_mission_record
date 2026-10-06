@@ -1,26 +1,211 @@
 const $ = (id) => document.getElementById(id);
-const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
+const WSOL_MINT = 'So11111111111111111111111111111111111111112';
+
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+
 const n = (v, digits=4) => {
   const x = Number(v);
-  return Number.isFinite(x) ? x.toLocaleString(undefined,{maximumFractionDigits:digits}) : 'N/A';
+  return Number.isFinite(x)
+    ? x.toLocaleString('zh-CN',{maximumFractionDigits:digits})
+    : '暂无';
 };
-const short = (mint) => mint ? `${mint.slice(0,6)}…${mint.slice(-4)}` : 'N/A';
+
+const money = (v, digits=8) => {
+  const x = Number(v);
+  if (!Number.isFinite(x)) return '暂无';
+  return x.toLocaleString('zh-CN',{
+    minimumFractionDigits: x > 0 && x < 0.01 ? Math.min(6,digits) : 0,
+    maximumFractionDigits: digits,
+  });
+};
+
+const short = (value, left=6, right=4) =>
+  value ? `${value.slice(0,left)}…${value.slice(-right)}` : '暂无';
+
 const age = (ts) => {
-  if (!ts) return 'N/A';
+  if (!ts) return '时间未知';
   const sec = Math.max(0, Math.floor(Date.now()/1000 - Number(ts)));
-  if (sec < 60) return `${sec}s`;
-  if (sec < 3600) return `${Math.floor(sec/60)}m`;
-  return `${Math.floor(sec/3600)}h`;
+  if (sec < 60) return `${sec}秒前`;
+  if (sec < 3600) return `${Math.floor(sec/60)}分钟前`;
+  if (sec < 86400) return `${Math.floor(sec/3600)}小时前`;
+  return `${Math.floor(sec/86400)}天前`;
 };
-const badge = (value) => `<span class="badge ${String(value).toLowerCase().replaceAll('_','-')}">${esc(value)}</span>`;
-const frankQuote = (x) => {
-  const asset = x.latest_buy_original_quote_asset;
-  const qty = x.latest_buy_original_quote_quantity;
-  if (!asset || qty == null) return 'N/A';
-  const original = `${n(qty,6)} ${esc(asset === 'So11111111111111111111111111111111111111112' ? 'WSOL' : asset)}`;
+
+const decisionLabel = {
+  BUY:'可跟',
+  SMALL_BUY:'小仓跟',
+  WAIT:'等待',
+  NO_BUY:'不跟',
+  UNASSESSED:'未评估',
+};
+
+const patternLabel = {
+  ACCUMULATION:'持续建仓',
+  MULTIPLE:'多次强加仓',
+  NONE:'无跟单模式',
+};
+
+const stateLabel = {
+  OPEN:'持仓中',
+  CLOSED:'已退出',
+  INVENTORY_UNDETERMINED:'仓位不明',
+};
+
+const sideLabel = {
+  BUY:'买入',
+  ADD:'加仓',
+  REENTRY:'重新建仓',
+  SELL:'卖出',
+  EXIT:'退出仓位',
+  SELL_POSITION_UNRESOLVED:'卖出待确认',
+  ACTIVE_TRADE:'主动交易',
+};
+
+const runtimeLabel = {
+  LIVE:'正常',
+  RUNNING:'正常',
+  OK:'正常',
+  STARTING:'启动中',
+  DEGRADED:'异常降级',
+  OFFLINE:'离线',
+  STOPPED:'已停止',
+  UNKNOWN:'未知',
+};
+
+const reasonText = {
+  FRANK_RUNTIME_NOT_LIVE:'Frank 实时监控当前不在线，先不跟。',
+  POSITION_STATE_CLOSED:'Frank 已经退出该仓位，不跟。',
+  POSITION_STATE_INVENTORY_UNDETERMINED:'无法确认 Frank 当前仓位，不跟。',
+  INVENTORY_UNDETERMINED:'无法确认 Frank 当前持仓数量，不跟。',
+  ZERO_OR_NEGATIVE_INVENTORY:'Frank 当前已没有可确认持仓，不跟。',
+  LATEST_ACTION_SELL:'Frank 最新动作是卖出，等待新的买入序列。',
+  NO_FOLLOW_PATTERN:'目前还没有形成可跟随的建仓模式。',
+  FRANK_BUY_SIGNAL_STALE_OR_UNKNOWN:'Frank 最近有效买入已经过期或时间未知，当前不追。',
+  CRITICAL_DATA_INCOMPLETE:'关键价格或执行数据不完整，等待数据恢复。',
+  QUOTE_METRICS_INVALID:'Jupiter 报价缺少有效成交价或价格冲击数据。',
+  NO_EXECUTABLE_JUPITER_ROUTE:'Jupiter 当前没有可执行的跟单路径，不跟。',
+  PRICE_TOO_FAR_FROM_FRANK:'当前价格已经离 Frank 买入价太远，暂时不追。',
+  EXECUTION_IMPACT_TOO_HIGH:'当前 $30 跟单的预计价格冲击太高，暂时不追。',
+  FRANK_MULTIPLE_ACTIVE:'Frank 当前处于多次强加仓模式。',
+  PRICE_STILL_CLOSE_TO_FRANK:'当前成交价仍接近 Frank 的参考买入价。',
+  EXECUTION_IMPACT_ACCEPTABLE:'当前预计价格冲击在可接受范围。',
+  FRANK_PATTERN_ACTIVE:'Frank 当前仍处于可跟随建仓模式。',
+  FOLLOWABLE_WITH_SMALL_SIZE:'当前条件只适合小仓跟随。',
+  ACCUMULATION_NOT_MULTIPLE:'目前只是持续建仓，还没有升级到强 MULTIPLE。',
+  PRICE_DEVIATION_ABOVE_BUY_LIMIT:'价格偏离超过“正常跟随”阈值，只适合小仓。',
+  PRICE_IMPACT_ABOVE_BUY_LIMIT:'价格冲击超过“正常跟随”阈值，只适合小仓。',
+};
+
+const missingText = {
+  FRESH_FRANK_BUY:'缺少 10 分钟内的新鲜 Frank 买入。',
+  LIVE_FRANK_RUNTIME:'Frank 实时监控不在线。',
+  QUOTE_TIMESTAMP:'Jupiter 报价没有有效时间戳。',
+  QUOTE_STALE:'Jupiter 报价已过期。',
+  EXECUTION_PRICE_OR_IMPACT:'缺少当前成交价或价格冲击。',
+  TOKEN_DECIMALS_UNKNOWN:'Token decimals 未确认。',
+  JUPITER_QUOTE_UNAVAILABLE:'Jupiter 当前报价不可用。',
+};
+
+function translated(map, raw, fallback='未知') {
+  if (raw == null || raw === '') return fallback;
+  return map[raw] || String(raw);
+}
+
+function badge(value, labelMap=decisionLabel) {
+  const cls = String(value || 'unknown').toLowerCase().replaceAll('_','-');
+  const label = translated(labelMap,value,String(value || '未知'));
+  return `<span class="badge ${esc(cls)}" title="原始状态：${esc(value || 'UNKNOWN')}">${esc(label)}</span>`;
+}
+
+function quoteAsset(asset) {
+  if (asset === USDC_MINT) return 'USDC';
+  if (asset === WSOL_MINT) return 'SOL';
+  return asset || '未知资产';
+}
+
+function frankQuote(x) {
+  const asset = x.latest_buy_original_quote_asset || x.latest_buy_quote_asset;
+  const qty = x.latest_buy_original_quote_quantity ?? x.latest_buy_quote_quantity;
+  if (!asset || qty == null) return '暂无';
+  const original = `${n(qty,6)} ${esc(quoteAsset(asset))}`;
   if (!x.latest_buy_quote_was_normalized) return original;
-  return `${original}<small> ≈ ${n(x.latest_buy_usdc_equivalent,2)} USDC（历史换算）</small>`;
-};
+  return `${original}<span class="subvalue">≈ ${n(x.latest_buy_usdc_equivalent,2)} USDC（历史换算）</span>`;
+}
+
+function reasonFor(x) {
+  const reasons = Array.isArray(x.reasons) ? x.reasons : [];
+  const missing = Array.isArray(x.missing) ? x.missing : [];
+  const pieces = [];
+  for (const r of reasons) pieces.push(reasonText[r] || r);
+  for (const m of missing) pieces.push(missingText[m] || m);
+  const unique = [...new Set(pieces.filter(Boolean))];
+  if (unique.length) return unique.join(' ');
+  if (x.decision === 'UNASSESSED') return '等待 Mission Control 完成首次评估。';
+  return '当前没有额外说明。';
+}
+
+function copyButton(value, label='复制') {
+  if (!value) return '';
+  return `<button class="copy-btn" type="button" data-copy="${esc(value)}">${esc(label)}</button>`;
+}
+
+function researchLinks(mint) {
+  if (!mint) return '';
+  const encoded = encodeURIComponent(mint);
+  return `<a class="link-btn" href="https://solscan.io/token/${encoded}" target="_blank" rel="noreferrer">Solscan ↗</a>`;
+}
+
+function tokenIdentity(mint) {
+  if (!mint) return '<span class="muted">CA 未知</span>';
+  return `
+    <div class="ca-row">
+      <span class="ca-label">CA</span>
+      <code class="ca-full">${esc(mint)}</code>
+      ${copyButton(mint,'复制 CA')}
+      ${researchLinks(mint)}
+    </div>`;
+}
+
+async function copyText(value, button) {
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch (_) {
+    const area = document.createElement('textarea');
+    area.value = value;
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand('copy');
+    area.remove();
+  }
+  const old = button.textContent;
+  button.textContent = '已复制';
+  button.classList.add('copied');
+  showToast('已复制到剪贴板');
+  setTimeout(() => {
+    button.textContent = old;
+    button.classList.remove('copied');
+  }, 1200);
+}
+
+function showToast(text) {
+  const toast = $('toast');
+  toast.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove('show'), 1400);
+}
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-copy]');
+  if (!button) return;
+  copyText(button.dataset.copy,button);
+});
 
 async function get(path) {
   const r = await fetch(path,{cache:'no-store'});
@@ -28,79 +213,163 @@ async function get(path) {
   return r.json();
 }
 
-function renderRuntime(runtime) {
-  $('runtime').className = `runtime ${String(runtime.status||'UNKNOWN').toLowerCase()}`;
-  $('runtime').innerHTML = `${badge(runtime.status||'UNKNOWN')}<span>poll ${n(runtime.heartbeat_age_seconds,0)}s</span><span>PID ${esc(runtime.pid ?? 'N/A')}</span>`;
+function renderRuntime(runtime, control) {
+  const rawStatus = runtime.status || 'UNKNOWN';
+  const heartbeat = Number(runtime.heartbeat_age_seconds);
+  const heartbeatText = Number.isFinite(heartbeat)
+    ? `上次心跳 ${Math.round(heartbeat)} 秒前`
+    : '心跳时间未知';
+  const controlText = translated(runtimeLabel,control?.status,'未知');
+
+  $('runtime').className = `runtime ${String(rawStatus).toLowerCase()}`;
+  $('runtime').innerHTML = `
+    <div class="runtime-main">
+      ${badge(rawStatus,runtimeLabel)}
+      <strong>Frank 监控${translated(runtimeLabel,rawStatus,'未知')}</strong>
+      <span>· ${esc(heartbeatText)}</span>
+      <span>· 跟单引擎${esc(controlText)}</span>
+    </div>
+    <details class="tech-details">
+      <summary>技术信息</summary>
+      <div>Frank PID：${esc(runtime.pid ?? '未知')}</div>
+      <div>原始状态：${esc(rawStatus)}</div>
+      <div>生产交易：${esc(runtime.production_trading ?? '未知')}</div>
+      <div>最后处理 Slot：${esc(runtime.last_processed_slot ?? '未知')}</div>
+    </details>`;
 }
 
 function renderStats(candidates, runtime) {
   const counts = {BUY:0,SMALL_BUY:0,WAIT:0,NO_BUY:0,UNASSESSED:0};
   candidates.forEach(x => counts[x.decision] = (counts[x.decision]||0)+1);
   const items = [
-    ['Frank', runtime.status||'UNKNOWN'],
-    ['BUY', counts.BUY],
-    ['SMALL BUY', counts.SMALL_BUY],
-    ['WAIT', counts.WAIT],
-    ['NO BUY', counts.NO_BUY],
-    ['Candidates', candidates.length],
+    ['Frank监控', translated(runtimeLabel,runtime.status,'未知')],
+    ['可跟', counts.BUY],
+    ['小仓跟', counts.SMALL_BUY],
+    ['等待', counts.WAIT],
+    ['不跟', counts.NO_BUY],
+    ['候选', candidates.length],
   ];
-  $('stats').innerHTML = items.map(([k,v]) => `<div class="stat"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join('');
+  $('stats').innerHTML = items.map(([k,v]) =>
+    `<div class="stat"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`
+  ).join('');
+}
+
+function metric(label,value,help='') {
+  return `<div class="metric" ${help ? `title="${esc(help)}"` : ''}>
+    <span>${esc(label)}</span>
+    <strong>${value}</strong>
+  </div>`;
 }
 
 function renderCandidates(rows) {
   $('candidates').innerHTML = rows.map(x => {
     const m = x.metrics || {};
-    return `<tr>
-      <td><code title="${esc(x.mint)}">${esc(short(x.mint))}</code></td>
-      <td>${badge(x.decision||'UNASSESSED')}</td>
-      <td>${esc(x.pattern)}</td>
-      <td>${esc(x.buy_count)}/${esc(x.sell_count)}</td>
-      <td>${esc(x.latest_side||'N/A')} ${age(x.latest_at)}</td>
-      <td>${frankQuote(x)}</td>
-      <td>${n(m.frank_latest_buy_price_usdc,8)}</td>
-      <td>${n(m.execution_price_usdc,8)}</td>
-      <td>${m.price_deviation_pct != null ? n(m.price_deviation_pct,2)+'%' : 'N/A'}</td>
-      <td>${m.price_impact_pct != null ? n(m.price_impact_pct,2)+'%' : 'N/A'}</td>
-      <td>${esc(x.position_state||'N/A')}</td>
-    </tr>`;
-  }).join('') || '<tr><td colspan="11" class="empty">暂无候选</td></tr>';
+    const decision = x.decision || 'UNASSESSED';
+    const reason = reasonFor(x);
+    const delta = m.price_deviation_pct != null ? `${n(m.price_deviation_pct,2)}%` : '暂无';
+    const impact = m.price_impact_pct != null ? `${n(m.price_impact_pct,2)}%` : '暂无';
+    const frankPrice = m.frank_latest_buy_price_usdc != null ? `$${money(m.frank_latest_buy_price_usdc,8)}` : '暂无';
+    const execPrice = m.execution_price_usdc != null ? `$${money(m.execution_price_usdc,8)}` : '暂无';
+    const buys = x.buy_count ?? 0;
+    const sells = x.sell_count ?? 0;
+
+    return `<article class="candidate-card decision-${esc(decision.toLowerCase().replaceAll('_','-'))}">
+      <div class="candidate-head">
+        <div class="candidate-title">
+          ${badge(decision)}
+          <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
+          <span class="state-text">Frank仓位：${esc(translated(stateLabel,x.position_state,'未知'))}</span>
+        </div>
+        <div class="candidate-time">最近动作：${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}</div>
+      </div>
+
+      ${tokenIdentity(x.mint)}
+
+      <div class="decision-reason">
+        <span>为什么是“${esc(translated(decisionLabel,decision,decision))}”</span>
+        <strong>${esc(reason)}</strong>
+      </div>
+
+      <div class="metrics-grid">
+        ${metric('Frank 买/卖次数',`买 ${esc(buys)} · 卖 ${esc(sells)}`,'当前观察到的建仓序列内买入/卖出次数，不代表钱包终身累计。')}
+        ${metric('Frank 最近动作',`${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}`)}
+        ${metric('Frank 原始支付',frankQuote(x),'Frank 真实交易使用的报价资产和数量。')}
+        ${metric('Frank 参考买入价',frankPrice,'用于比较你现在跟单是否已经追高。')}
+        ${metric('当前 $30 成交价',execPrice,'Jupiter 对 $30 USDC 跟单的当前可执行报价。')}
+        ${metric('相对 Frank 偏离',esc(delta),'当前跟单价格相对 Frank 参考买入价的偏离。')}
+        ${metric('预计价格冲击',esc(impact),'用 $30 USDC 下单时 Jupiter 估算的价格冲击。')}
+      </div>
+    </article>`;
+  }).join('') || '<div class="empty">当前没有 Frank 跟单候选</div>';
+}
+
+function tradeHint(side) {
+  const hints = {
+    BUY:'Frank 新买入。',
+    ADD:'Frank 在已有仓位上继续加仓。',
+    REENTRY:'Frank 退出后重新建立仓位。',
+    SELL:'Frank 有卖出动作。',
+    EXIT:'Frank 已退出该观察仓位。',
+    SELL_POSITION_UNRESOLVED:'检测到卖出，但无法精确重建卖出后的剩余仓位；这条只作为风险提示。',
+  };
+  return hints[side] || `原始事件：${side || 'UNKNOWN'}`;
 }
 
 function renderTrades(rows) {
-  $('trades').innerHTML = rows.slice(0,30).map(x => `<div class="feed-row">
-    <div>${badge(x.side)}</div>
-    <div><code>${esc(short(x.mint))}</code><small>${esc(x.signature)}</small></div>
-    <time>${new Date(Number(x.block_time)*1000).toLocaleString()}</time>
-  </div>`).join('') || '<div class="empty">暂无交易</div>';
+  $('trades').innerHTML = rows.slice(0,30).map(x => {
+    const side = x.side || 'UNKNOWN';
+    const solscan = x.signature
+      ? `<a class="link-btn compact" href="https://solscan.io/tx/${encodeURIComponent(x.signature)}" target="_blank" rel="noreferrer">交易 ↗</a>`
+      : '';
+    return `<div class="feed-row trade-row">
+      <div class="feed-badge">${badge(side,sideLabel)}</div>
+      <div class="feed-main">
+        <div class="feed-token"><code>${esc(short(x.mint,8,6))}</code> ${copyButton(x.mint,'复制 CA')}</div>
+        <small>${esc(tradeHint(side))}</small>
+        <div class="hash-row"><span>Tx ${esc(short(x.signature,10,8))}</span> ${copyButton(x.signature,'复制 Tx')} ${solscan}</div>
+      </div>
+      <time>${new Date(Number(x.block_time)*1000).toLocaleString('zh-CN')}</time>
+    </div>`;
+  }).join('') || '<div class="empty">暂无交易</div>';
 }
 
 function renderDecisions(rows) {
   $('decisions').innerHTML = rows.slice(0,30).map(x => {
     const b = x.body || {};
-    return `<div class="feed-row">
-      <div>${badge(x.decision)}</div>
-      <div><code>${esc(short(x.mint))}</code><small>${esc(b.previous_decision||'NONE')} → ${esc(x.decision)}</small></div>
-      <time>${esc(x.created_at)}</time>
+    const previous = b.previous_decision || 'NONE';
+    const previousLabel = previous === 'NONE' ? '首次评估' : translated(decisionLabel,previous,previous);
+    const nowLabel = translated(decisionLabel,x.decision,x.decision);
+    return `<div class="feed-row decision-row">
+      <div class="feed-badge">${badge(x.decision)}</div>
+      <div class="feed-main">
+        <div class="feed-token"><code>${esc(short(x.mint,8,6))}</code> ${copyButton(x.mint,'复制 CA')}</div>
+        <small>${esc(previousLabel)} → ${esc(nowLabel)}</small>
+      </div>
+      <time>${new Date(x.created_at).toLocaleString('zh-CN')}</time>
     </div>`;
-  }).join('') || '<div class="empty">暂无 Decision</div>';
+  }).join('') || '<div class="empty">暂无判断变化</div>';
 }
 
 async function refresh() {
   try {
-    const [runtime,candidates,trades,decisions] = await Promise.all([
-      get('/api/runtime'), get('/api/candidates'), get('/api/trades'), get('/api/decisions')
+    const [runtime,control,candidates,trades,decisions] = await Promise.all([
+      get('/api/runtime'),
+      get('/api/control-health'),
+      get('/api/candidates'),
+      get('/api/trades'),
+      get('/api/decisions')
     ]);
-    renderRuntime(runtime);
+    renderRuntime(runtime,control);
     renderStats(candidates,runtime);
     renderCandidates(candidates);
     renderTrades(trades);
     renderDecisions(decisions);
-    $('updated').textContent = `更新 ${new Date().toLocaleTimeString()}`;
+    $('updated').textContent = `更新于 ${new Date().toLocaleTimeString('zh-CN')}`;
   } catch (e) {
     $('runtime').className = 'runtime offline';
-    $('runtime').textContent = `DASHBOARD ERROR: ${e.message}`;
+    $('runtime').innerHTML = `<strong>控制台读取失败</strong><span>${esc(e.message)}</span>`;
   }
 }
 
 refresh();
-setInterval(refresh, 5000);
+setInterval(refresh,5000);
