@@ -1,6 +1,6 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-10-02 Asia/Bangkok
+Updated: 2026-10-07 Asia/Bangkok
 
 Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
@@ -15,6 +15,16 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - source_type: user_confirmed + stored deal history
 - remaining_entitlement: none known
 - monitor_action: suppress unless user explicitly re-enters a new exposure
+
+## User-suppressed / excluded from active monitoring
+
+### Abstract / ABS
+- project_id: abstract
+- state: USER_SUPPRESSED
+- effective_date: 2026-10-07
+- source_type: user_confirmed
+- remaining_entitlement: not evaluated; user explicitly requested removal from TGE monitoring
+- monitor_action: suppress Abstract / @AbstractChain / ABS from active discovery and notifications; reactivate only on explicit user request
 
 ## Completed / suppress
 
