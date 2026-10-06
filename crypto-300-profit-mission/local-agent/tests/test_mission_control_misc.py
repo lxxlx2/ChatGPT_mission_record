@@ -24,11 +24,41 @@ def responder(payload, seen=None):
     return open_url
 
 
-def test_missing_jupiter_key_fails_closed_without_network():
-    client = JupiterQuoteClient(None, open_url=lambda *a,**k: pytest.fail("network must not be used"))
-    result = client.quote_usdc_to_token("Mint111", 6)
-    assert result["status"] == "UNAVAILABLE"
-    assert result["reason"] == "JUPITER_API_KEY_NOT_CONFIGURED"
+def test_keyless_jupiter_quote_uses_network_without_auth_header():
+    seen=[]
+    body={"outAmount":"1000000","routePlan":[{"swapInfo":{}}],"priceImpactPct":"0.001"}
+
+    def open_url(request,timeout=8):
+        seen.append(request)
+        return FakeResponse(json.dumps(body).encode())
+
+    client=JupiterQuoteClient(None,open_url=open_url,minimum_interval_seconds=0)
+    result=client.quote_usdc_to_token("Mint111",6)
+    assert result["status"]=="OK"
+    assert result["route_exists"] is True
+    assert result["price_impact_pct"]=="0.100"
+    headers={k.lower():v for k,v in seen[0].header_items()}
+    assert "x-api-key" not in headers
+
+
+def test_jupiter_default_throttle_is_more_conservative_for_keyless():
+    assert JupiterQuoteClient(None).minimum_interval_seconds==2.05
+    assert JupiterQuoteClient("key").minimum_interval_seconds==1.05
+
+
+def test_keyed_jupiter_quote_sends_auth_header():
+    seen=[]
+    body={"outAmount":"1000000","routePlan":[{"swapInfo":{}}],"priceImpactPct":"0.001"}
+
+    def open_url(request,timeout=8):
+        seen.append(request)
+        return FakeResponse(json.dumps(body).encode())
+
+    client=JupiterQuoteClient("key",open_url=open_url,minimum_interval_seconds=0)
+    result=client.quote_usdc_to_token("Mint111",6)
+    assert result["status"]=="OK"
+    headers={k.lower():v for k,v in seen[0].header_items()}
+    assert headers["x-api-key"]=="key"
 
 
 def test_jupiter_missing_price_impact_fails_closed():
