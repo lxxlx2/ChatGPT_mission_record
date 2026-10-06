@@ -162,11 +162,40 @@ class ControlDB:
             ).fetchone()
         return dict(row) if row else None
 
+    def last_enqueued_decision(self, person_id: str, mint: str, episode_id: str | None):
+        sql = """
+            SELECT e.decision
+            FROM decision_events e
+            JOIN decision_outbox o ON o.decision_id=e.decision_id
+            WHERE e.person_id=? AND e.mint=? AND {episode_clause}
+            ORDER BY e.rowid DESC LIMIT 1
+        """
+        if episode_id is None:
+            row = self.db.execute(
+                sql.format(episode_clause="e.episode_id IS NULL"),
+                (person_id, mint),
+            ).fetchone()
+        else:
+            row = self.db.execute(
+                sql.format(episode_clause="e.episode_id=?"),
+                (person_id, mint, episode_id),
+            ).fetchone()
+        return row[0] if row else None
+
     def record(self, payload: dict, policy_id: str, policy_hash: str) -> dict:
-        """Persist an immutable snapshot and create an event only on decision change."""
+        """Persist a snapshot only for a decision transition.
+
+        Re-evaluations that keep the same decision are intentionally not stored as
+        new snapshots. This bounds database growth during long-lived unchanged
+        positions while preserving every decision transition immutably.
+        """
         person_id = payload["person_id"]
         mint = payload["mint"]
         episode_id = payload.get("episode_id")
+        previous = self.latest_event(person_id, mint, episode_id)
+        if previous and previous["decision"] == payload["decision"]:
+            return {"changed": False, "snapshot_id": previous["snapshot_id"], "event": previous}
+
         input_hash = digest(payload["inputs"])
         snapshot_id = digest(
             {
@@ -196,9 +225,6 @@ class ControlDB:
                 encoded,
             ),
         )
-        previous = self.latest_event(person_id, mint, episode_id)
-        if previous and previous["decision"] == payload["decision"]:
-            return {"changed": False, "snapshot_id": snapshot_id, "event": previous}
         decision_id = digest(
             {
                 "snapshot_id": snapshot_id,
