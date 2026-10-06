@@ -34,9 +34,13 @@ class TransitionDebounce:
         Only actionable->transient WAIT transitions are delayed. Candidate latest
         state can still update immediately so the dashboard shows degraded data.
         Recovery before the grace window clears the pending transition and creates
-        no WAIT/recovery event pair.
+        no WAIT/recovery event pair. A zero/negative grace disables debounce and
+        preserves legacy immediate-transition behavior for old fixtures/replays.
         """
         key=self._key(person_id,mint,episode_id)
+        if float(grace_seconds)<=0:
+            self.db.execute('DELETE FROM transition_debounce WHERE entity_key=?',(key,))
+            return True
         if not transient or previous_decision not in ACTIONABLE or target_decision!='WAIT':
             self.db.execute('DELETE FROM transition_debounce WHERE entity_key=?',(key,))
             return True
