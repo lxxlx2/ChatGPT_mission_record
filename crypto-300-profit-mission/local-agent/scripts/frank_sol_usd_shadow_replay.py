@@ -431,6 +431,24 @@ def _target_artifacts_exist(path: Path) -> bool:
     return any(Path(str(path) + suffix).exists() for suffix in ("", "-wal", "-shm", "-journal"))
 
 
+def _assert_distinct_paths(source: Path, target: Path, report: Path, reference_cache: Path | None) -> None:
+    """Fail before any write when operational paths alias one another."""
+    named = {
+        "source": source,
+        "target": target,
+        "report": report,
+    }
+    if reference_cache is not None:
+        named["reference_cache"] = reference_cache
+    seen: dict[Path, str] = {}
+    for name, path in named.items():
+        resolved = path.expanduser().resolve(strict=False)
+        previous = seen.get(resolved)
+        if previous is not None:
+            raise SystemExit(f"PATH_COLLISION:{previous}:{name}")
+        seen[resolved] = name
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--source", type=Path, required=True)
@@ -439,12 +457,11 @@ def main():
     p.add_argument("--policy", type=Path, default=DEFAULT_POLICY)
     p.add_argument("--reference-cache", type=Path)
     a = p.parse_args()
+    _assert_distinct_paths(a.source, a.target, a.report, a.reference_cache)
     if _target_artifacts_exist(a.target):
         raise SystemExit("TARGET_MUST_NOT_EXIST")
     if a.report.exists():
         raise SystemExit("REPORT_MUST_NOT_EXIST")
-    if a.target.resolve() == a.report.resolve():
-        raise SystemExit("TARGET_AND_REPORT_MUST_DIFFER")
     a.target.parent.mkdir(parents=True, exist_ok=True)
     a.report.parent.mkdir(parents=True, exist_ok=True)
     cache_db = None
