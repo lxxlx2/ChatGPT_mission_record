@@ -131,3 +131,52 @@ def test_shadow_cli_refuses_existing_report_without_overwrite_or_replay(tmp_path
     assert report.read_text()=='KEEP_ME'
     assert called['replay']==0
     assert not shadow._target_artifacts_exist(target)
+
+
+@pytest.mark.parametrize('left,right',[
+    ('source','target'),
+    ('source','report'),
+    ('source','reference_cache'),
+    ('target','report'),
+    ('target','reference_cache'),
+    ('report','reference_cache'),
+])
+def test_shadow_operational_paths_must_be_pairwise_distinct(tmp_path,left,right):
+    paths={
+        'source':tmp_path/'source.sqlite',
+        'target':tmp_path/'shadow.sqlite',
+        'report':tmp_path/'report.json',
+        'reference_cache':tmp_path/'cache.sqlite',
+    }
+    paths[right]=paths[left]
+    with pytest.raises(SystemExit) as exc:
+        shadow._assert_distinct_paths(
+            paths['source'],paths['target'],paths['report'],paths['reference_cache']
+        )
+    assert str(exc.value).startswith('PATH_COLLISION:')
+
+
+def test_shadow_cli_refuses_reference_cache_equal_source_before_any_write(tmp_path,monkeypatch):
+    source=tmp_path/'forward.sqlite';target=tmp_path/'shadow.sqlite';report=tmp_path/'report.json'
+    source.write_bytes(b'PRODUCTION_SOURCE_SENTINEL')
+    called={'replay':0}
+
+    def should_not_run(*args,**kwargs):
+        called['replay']+=1
+        raise AssertionError('replay should not run')
+
+    monkeypatch.setattr(shadow,'replay',should_not_run)
+    monkeypatch.setattr(sys,'argv',[
+        'frank_sol_usd_shadow_replay.py',
+        '--source',str(source),
+        '--target',str(target),
+        '--report',str(report),
+        '--reference-cache',str(source),
+    ])
+    with pytest.raises(SystemExit) as exc:
+        shadow.main()
+    assert str(exc.value)=='PATH_COLLISION:source:reference_cache'
+    assert source.read_bytes()==b'PRODUCTION_SOURCE_SENTINEL'
+    assert called['replay']==0
+    assert not target.exists()
+    assert not report.exists()
