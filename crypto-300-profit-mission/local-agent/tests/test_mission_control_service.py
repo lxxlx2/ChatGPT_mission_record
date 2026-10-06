@@ -5,7 +5,6 @@ import sqlite3
 import time
 from pathlib import Path
 
-from mission_agent.mission_control.delivery import GmailDelivery
 from mission_agent.mission_control.service import MissionMemeService
 
 
@@ -76,18 +75,16 @@ def test_event_and_outbox_rollback_together_on_enqueue_failure(tmp_path):
     service.close()
 
 
-def test_missing_outbox_from_old_build_is_recovered_without_new_event(tmp_path):
-    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod);policy(p)
+def test_intentionally_silent_bootstrap_event_stays_silent_on_next_cycle(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod,latest_at=int(time.time())-3600);policy(p)
     service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
     service.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
-    first=service.cycle();decision_id=first["decision_events"][0]["decision_id"]
-    service.control.db.execute("delete from gmail_delivery where decision_id=?",(decision_id,))
-    service.control.db.execute("delete from local_delivery where decision_id=?",(decision_id,))
-    service.control.db.execute("delete from decision_outbox where decision_id=?",(decision_id,))
+    first=service.cycle()
+    assert first["decision_events"][0]["notification_enqueued"] is False
     second=service.cycle()
+    assert second["decision_events"]==[]
     assert service.control.db.execute("select count(*) from decision_events").fetchone()[0]==1
-    assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==2
-    assert second["decision_events"][0]["recovered_missing_outbox"] is True
+    assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==0
     service.close()
 
 
