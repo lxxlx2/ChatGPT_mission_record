@@ -100,6 +100,39 @@ def test_jupiter_429_sets_cooldown_before_next_request(monkeypatch):
     assert sleeps and sleeps[-1]>=12.0
 
 
+def test_jupiter_retry_after_is_capped_at_60_seconds(monkeypatch):
+    body={"outAmount":"1000000","routePlan":[{"swapInfo":{}}],"priceImpactPct":"0.001"}
+    calls={"count":0}
+    sleeps=[]
+
+    def open_url(request,timeout=8):
+        calls["count"]+=1
+        if calls["count"]==1:
+            raise urllib.error.HTTPError(
+                request.full_url,
+                429,
+                "rate limited",
+                {"Retry-After":"3600"},
+                io.BytesIO(b'{}'),
+            )
+        return FakeResponse(json.dumps(body).encode())
+
+    monkeypatch.setattr(jupiter_module.time,"monotonic",lambda:100.0)
+    monkeypatch.setattr(jupiter_module.time,"sleep",lambda seconds:sleeps.append(seconds))
+    client=JupiterQuoteClient(
+        None,
+        open_url=open_url,
+        minimum_interval_seconds=0,
+        rate_limit_cooldown_seconds=10,
+    )
+    first=client.quote_usdc_to_token("Mint111",6)
+    second=client.quote_usdc_to_token("Mint111",6)
+    assert first["status"]=="UNAVAILABLE"
+    assert first["reason"]=="JUPITER_RATE_LIMITED"
+    assert second["status"]=="OK"
+    assert sleeps and sleeps[-1]==60.0
+
+
 def test_jupiter_missing_price_impact_fails_closed():
     body={"outAmount":"1000000","routePlan":[{"swapInfo":{}}]}
     client=JupiterQuoteClient("key",open_url=responder(body),minimum_interval_seconds=0)
