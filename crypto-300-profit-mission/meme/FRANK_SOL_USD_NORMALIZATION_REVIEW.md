@@ -1,4 +1,4 @@
-# Frank SOL/USD normalization + Mission Meme follow review
+# Frank SOL/USDC normalization + Mission Meme follow review
 
 Status: `CODE_ONLY / REVIEW_ONLY / NOT_AUTHORIZED_LIVE`
 
@@ -8,9 +8,9 @@ Production trading: `NO_GO`
 
 ## Why this exists
 
-Frank V1 currently records SOL/WSOL active trades and inventory chronology, but its frozen amount predicates are numeric only for direct USDC quotes. A SOL quote therefore remains `UNDETERMINED` for USD-size gates even when the trade itself is valid.
+Frank V1 currently records SOL/WSOL active trades and inventory chronology, but its frozen amount predicates are numeric only for direct USDC quotes. A SOL quote therefore remains `UNDETERMINED` for the existing USD-equivalent gates even when the trade itself is valid.
 
-The original source policy is stated in USD-equivalent terms. This review candidate adds auditable event-time SOL/USD evidence without teaching the frozen evaluator to call the network and without changing the live production model.
+The original source policy is stated in USD-equivalent terms, while the frozen implementation uses direct USDC as the numeric representation. This review candidate therefore normalizes SOL to an auditable event-time **SOL/USDC** reference, rather than silently treating USDT as USD, and does not change the live production model.
 
 ## Safety architecture
 
@@ -22,7 +22,7 @@ The candidate path is:
 source forward.sqlite [READ ONLY]
   -> existing ACTIVE_TRADE classification
   -> if quote is SOL/WSOL:
-       Binance official public SOLUSDT 1m history
+       Binance official public SOLUSDC 1m history
        previous fully closed candle close only
        persist source candle + evidence hash
   -> shadow-only synthetic USDC-equivalent quote
@@ -37,7 +37,7 @@ No current SOL price is substituted for a historical Frank trade.
 
 Default candidate source:
 
-`BINANCE_OFFICIAL_SPOT_SOLUSDT`
+`BINANCE_OFFICIAL_SPOT_SOLUSDC`
 
 Endpoint class: Binance official public Spot market-data, no account credential required.
 
@@ -45,7 +45,9 @@ Selection rule:
 
 `PREVIOUS_CLOSED_1M_CLOSE`
 
-For a Frank trade at epoch `T`, normalization uses the close of the immediately previous fully closed UTC 1-minute SOLUSDT candle. This intentionally gives up some precision to avoid using any price information that completed after the trade.
+For a Frank trade at epoch `T`, normalization uses the close of the immediately previous fully closed UTC 1-minute SOLUSDC candle. This intentionally gives up some precision to avoid using any price information that completed after the trade.
+
+The pair was verified through Binance market data to have current 1-minute candles and historical 1-minute data for 2026-09-01, covering the relevant recent Frank research window.
 
 Each persisted reference contains:
 
@@ -54,7 +56,7 @@ Each persisted reference contains:
 - Frank block time;
 - candle open/close timestamps;
 - OHLC;
-- selected SOL/USD close;
+- selected SOL/USDC close;
 - evidence SHA256.
 
 If the exact candle is unavailable or invalid, normalization stays `UNDETERMINED`.
@@ -71,15 +73,15 @@ original_quote:
   quantity = 2.5 SOL
 
 event-time reference:
-  SOL/USD = 100
+  SOL/USDC = 100
 
 shadow model quote:
   quote_asset = USDC
   quote_quantity = 250
-  quote_normalization = SOL_TO_USD_SHADOW_EQUIVALENT
+  quote_normalization = SOL_TO_USDC_SHADOW_EQUIVALENT
 ```
 
-The synthetic USDC representation exists only so the already-frozen V1 evaluator can consume the USD-equivalent amount without any code change. The original SOL quote and normalization evidence remain attached to the trade.
+The synthetic USDC representation exists only so the already-frozen V1 evaluator can consume the amount without any evaluator code change. The original SOL quote and normalization evidence remain attached to the trade.
 
 This must never be described as Frank actually paying USDC.
 
@@ -105,7 +107,7 @@ Hard acceptance gate before any production migration design:
 usdc_regression_pass = true
 missing previously valid USDC source signals = 0
 all added SOL signals manually inspectable back to:
-  transaction -> original SOL quote -> Binance candle -> USD equivalent -> V1 predicates
+  transaction -> original SOL quote -> Binance SOLUSDC candle -> USDC equivalent -> V1 predicates
 ```
 
 A recovered SOL signal is evidence for review, not automatic production authorization.
@@ -168,13 +170,13 @@ Metis `/swap/v1` is currently deprecated by Jupiter. The current candidate keeps
 
 New code-level coverage includes:
 
-- exact previous-closed-minute candle selection;
+- exact previous-closed-minute SOLUSDC candle selection;
 - future/wrong candle fails closed;
 - SOL quote normalization preserves original quote;
-- missing SOL/USD reference stays unresolved;
+- missing SOL/USDC reference stays unresolved;
 - original frozen Frank V1 evaluator can recover ACCUMULATION/MULTIPLE from verified normalized SOL input;
 - unresolved SOL still stays `UNDETERMINED`;
-- Mission Control only uses verified event-time SOL/USD for Frank entry price;
+- Mission Control only uses verified event-time SOL/USDC for Frank entry price;
 - transient WAIT debounce and recovery;
 - zero-grace compatibility for older fixtures;
 - bounded forward observation upsert/pruning.
