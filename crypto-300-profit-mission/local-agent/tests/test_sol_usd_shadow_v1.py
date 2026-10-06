@@ -10,11 +10,11 @@ from test_frank_local_signals import active
 POLICY=Path(__file__).parents[1]/'config/frank_local_signal_v1.json'
 
 
-def put_sol(ledger,engine,signature,at,sol_amount,sol_usd='100'):
+def put_sol(ledger,engine,signature,at,sol_amount,sol_usdc='100'):
     event=active(signature,100,20)
     event['block_time']=at;event['slot']=at
     event['trade']['quote_asset']='SOL';event['trade']['quote_amount_raw']=str(int(sol_amount*1_000_000_000));event['trade']['quote_decimals']=9
-    ref={'status':'VERIFIED','source':'BINANCE_OFFICIAL_SPOT_SOLUSDT','selection_rule':'PREVIOUS_CLOSED_1M_CLOSE','sol_usd':sol_usd,'evidence_sha256':'fixture'}
+    ref={'status':'VERIFIED','source':'BINANCE_OFFICIAL_SPOT_SOLUSDC','selection_rule':'PREVIOUS_CLOSED_1M_CLOSE','sol_usdc':sol_usdc,'evidence_sha256':'fixture'}
     normalized=normalize_classification(event,ref,for_model=True)
     ledger.put('frank',normalized,signature,'fixture',dry_run=True)
     engine.drain()
@@ -24,7 +24,7 @@ def signals(ledger):
     return [json.loads(r[0]) for r in ledger.db.execute('select body from signals order by created_at,signal_type')]
 
 
-def test_verified_sol_usd_shadow_recovers_same_accumulation_and_multiple_shape(tmp_path):
+def test_verified_sol_usdc_shadow_recovers_same_accumulation_and_multiple_shape(tmp_path):
     ledger=Ledger(tmp_path/'shadow.sqlite');engine=Engine(ledger,load_policy(POLICY),dry_run=True)
     put_sol(ledger,engine,'first',100000,130)
     put_sol(ledger,engine,'second',101200,130)
@@ -33,7 +33,7 @@ def test_verified_sol_usd_shadow_recovers_same_accumulation_and_multiple_shape(t
     state=json.loads(ledger.db.execute('select body from v1_states').fetchone()[0])
     assert all(e['quote_asset']=='EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' for e in state['events'])
     assert all(e['original_quote']['quote_asset']=='SOL' for e in state['events'])
-    assert all(e['quote_usd_status']=='SOL_EVENT_TIME_VERIFIED' for e in state['events'])
+    assert all(e['quote_usdc_status']=='SOL_EVENT_TIME_USDC_VERIFIED' for e in state['events'])
 
 
 def test_unresolved_sol_reference_remains_fail_closed(tmp_path):
