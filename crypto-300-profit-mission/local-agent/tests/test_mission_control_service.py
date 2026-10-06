@@ -1,9 +1,11 @@
+import hashlib
 import json
 import os
 import sqlite3
 import time
 from pathlib import Path
 
+from mission_agent.mission_control.delivery import GmailDelivery
 from mission_agent.mission_control.service import MissionMemeService
 
 
@@ -24,14 +26,18 @@ def make_prod(root: Path, *, latest_at=None):
     db.commit();db.close()
 
 
-def policy(path: Path):
-    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":"REVIEW_ONLY","live_delivery_approved":False,"decision":{"quote_usdc_amount":"30","slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"initial_notification_max_age_seconds":600,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
+def policy(path: Path, *, status="REVIEW_ONLY", live=False):
+    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":status,"live_delivery_approved":live,"decision":{"quote_usdc_amount":"30","slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"max_frank_buy_age_seconds":600,"initial_notification_max_age_seconds":600,"max_candidates_per_cycle":50,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
+
+
+def good_quote():
+    return {"status":"OK","source":"JUPITER_OFFICIAL","observed_at":time.time(),"input_usdc":"30","execution_price_usdc":"1.02","price_impact_pct":"0.5","route_exists":True,"route_plan":[{}],"time_taken":0.0123}
 
 
 def test_review_policy_never_allows_live_delivery_and_records_dry_outbox(tmp_path):
     prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod);policy(p)
     service=MissionMemeService(production_root=prod,control_root=control,policy_path=p,live_delivery=True)
-    service.jupiter.quote_usdc_to_token=lambda *a,**k:{"status":"OK","source":"JUPITER_OFFICIAL","observed_at":time.time(),"input_usdc":"30","execution_price_usdc":"1.02","price_impact_pct":"0.5","route_exists":True,"route_plan":[{}]}
+    service.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
     result=service.cycle()
     assert result["delivery_allowed"] is False
     assert result["decision_events"][0]["decision"]=="BUY"
@@ -43,8 +49,54 @@ def test_review_policy_never_allows_live_delivery_and_records_dry_outbox(tmp_pat
 def test_bootstrap_old_historical_candidate_does_not_enqueue_notification(tmp_path):
     prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod,latest_at=int(time.time())-3600);policy(p)
     service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
-    service.jupiter.quote_usdc_to_token=lambda *a,**k:{"status":"OK","source":"JUPITER_OFFICIAL","observed_at":time.time(),"input_usdc":"30","execution_price_usdc":"1.02","price_impact_pct":"0.5","route_exists":True,"route_plan":[{}]}
+    service.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
     result=service.cycle()
     assert result["decision_events"][0]["notification_enqueued"] is False
     assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==0
     service.close()
+
+
+def test_event_and_outbox_rollback_together_on_enqueue_failure(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod);policy(p)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
+    service.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
+    original=service.gmail.enqueue
+    service.gmail.enqueue=lambda *a,**k:(_ for _ in ()).throw(RuntimeError("simulated crash between event and outbox"))
+    first=service.cycle()
+    assert first["candidate_errors"]
+    assert service.control.db.execute("select count(*) from decision_events").fetchone()[0]==0
+    assert service.control.db.execute("select count(*) from decision_snapshots").fetchone()[0]==0
+    assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==0
+    assert service.control.db.execute("select count(*) from local_delivery").fetchone()[0]==0
+    service.gmail.enqueue=original
+    second=service.cycle()
+    assert second["decision_events"][0]["notification_enqueued"] is True
+    assert service.control.db.execute("select count(*) from decision_events").fetchone()[0]==1
+    assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==2
+    service.close()
+
+
+def test_missing_outbox_from_old_build_is_recovered_without_new_event(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod);policy(p)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
+    service.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
+    first=service.cycle();decision_id=first["decision_events"][0]["decision_id"]
+    service.control.db.execute("delete from gmail_delivery where decision_id=?",(decision_id,))
+    service.control.db.execute("delete from local_delivery where decision_id=?",(decision_id,))
+    service.control.db.execute("delete from decision_outbox where decision_id=?",(decision_id,))
+    second=service.cycle()
+    assert service.control.db.execute("select count(*) from decision_events").fetchone()[0]==1
+    assert service.control.db.execute("select count(*) from decision_outbox").fetchone()[0]==2
+    assert second["decision_events"][0]["recovered_missing_outbox"] is True
+    service.close()
+
+
+def test_live_gate_requires_exact_policy_sha_even_for_frozen_policy(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json";make_prod(prod);policy(p,status="FROZEN_APPROVED",live=True)
+    without=MissionMemeService(production_root=prod,control_root=control,policy_path=p,live_delivery=True)
+    assert without.delivery_allowed is False
+    without.close()
+    expected=hashlib.sha256(p.read_bytes()).hexdigest()
+    with_hash=MissionMemeService(production_root=prod,control_root=control,policy_path=p,live_delivery=True,approved_policy_sha256=expected)
+    assert with_hash.delivery_allowed is True
+    with_hash.close()
