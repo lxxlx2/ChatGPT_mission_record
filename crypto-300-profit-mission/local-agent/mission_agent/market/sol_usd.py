@@ -1,0 +1,95 @@
+"""Deterministic SOL->USD event-time normalization for Frank trades.
+
+Default source is Binance official public Spot market-data.  No API key is
+required.  To avoid replay look-ahead, the reference price is the close of the
+previous fully closed 1-minute SOLUSDT candle, never the current candle.
+
+The network client is intentionally separate from the evaluator.  Callers must
+persist the returned reference evidence before using it in a model replay.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from decimal import Decimal, InvalidOperation
+
+SOL_QUOTE_ASSETS=frozenset({'SOL','So11111111111111111111111111111111111111112'})
+SOURCE='BINANCE_OFFICIAL_SPOT_SOLUSDT'
+SELECTION_RULE='PREVIOUS_CLOSED_1M_CLOSE'
+DEFAULT_ENDPOINT='https://data-api.binance.vision/api/v3/klines'
+
+
+def _canonical(value)->bytes:
+    return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()
+
+
+def reference_key(block_time:int)->str:
+    minute=(int(block_time)//60-1)*60
+    return f'{SOURCE}:1m:{minute}'
+
+
+class BinanceSolUsdHistoryClient:
+    def __init__(self,*,endpoint:str=DEFAULT_ENDPOINT,open_url=urllib.request.urlopen):
+        self.endpoint=endpoint;self.open_url=open_url
+
+    def reference(self,block_time:int)->dict:
+        block_time=int(block_time)
+        target_open=(block_time//60-1)*60
+        start_ms=target_open*1000;end_ms=start_ms+59999
+        params=urllib.parse.urlencode({'symbol':'SOLUSDT','interval':'1m','startTime':str(start_ms),'endTime':str(end_ms),'limit':'1'})
+        request=urllib.request.Request(self.endpoint+'?'+params,headers={'User-Agent':'mission-meme-v1/sol-usd-review'})
+        try:
+            with self.open_url(request,timeout=8) as response:body=json.load(response)
+        except urllib.error.HTTPError as exc:
+            return {'status':'UNAVAILABLE','reason':'BINANCE_HTTP_'+str(exc.code),'source':SOURCE,'selection_rule':SELECTION_RULE,'block_time':block_time,'observed_at':time.time()}
+        except (urllib.error.URLError,TimeoutError,OSError,ValueError,TypeError):
+            return {'status':'UNAVAILABLE','reason':'BINANCE_HISTORY_UNAVAILABLE','source':SOURCE,'selection_rule':SELECTION_RULE,'block_time':block_time,'observed_at':time.time()}
+        try:
+            if not isinstance(body,list) or len(body)!=1 or not isinstance(body[0],list) or len(body[0])<7:raise ValueError('BAD_KLINE')
+            row=body[0];open_ms=int(row[0]);close_ms=int(row[6]);price=Decimal(str(row[4]))
+            if open_ms!=start_ms or close_ms>block_time*1000 or price<=0:raise ValueError('INVALID_REFERENCE')
+            evidence={'status':'VERIFIED','source':SOURCE,'symbol':'SOLUSDT','interval':'1m','selection_rule':SELECTION_RULE,'block_time':block_time,'candle_open_ms':open_ms,'candle_close_ms':close_ms,'open':str(row[1]),'high':str(row[2]),'low':str(row[3]),'close':str(row[4]),'sol_usd':str(price),'observed_at':time.time()}
+            evidence['evidence_sha256']=hashlib.sha256(_canonical({k:v for k,v in evidence.items() if k not in {'observed_at','evidence_sha256'}})).hexdigest()
+            return evidence
+        except (ValueError,TypeError,InvalidOperation,IndexError):
+            return {'status':'UNAVAILABLE','reason':'BINANCE_HISTORY_RESPONSE_INVALID','source':SOURCE,'selection_rule':SELECTION_RULE,'block_time':block_time,'observed_at':time.time()}
+
+
+def normalize_trade_event(event:dict,reference:dict|None)->dict:
+    """Return a copy with deterministic USD-equivalent evidence when possible."""
+    value=dict(event);asset=value.get('quote_asset')
+    try:quote=Decimal(str(value.get('quote_quantity')))
+    except (InvalidOperation,ValueError,TypeError):quote=None
+    if asset=='EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' and quote is not None:
+        value['quote_usd_quantity']=str(quote);value['quote_usd_status']='USDC_DIRECT';value['quote_usd_reference']={'source':'USDC_DIRECT','block_time':value.get('at')}
+        return value
+    if asset not in SOL_QUOTE_ASSETS:
+        value['quote_usd_status']='UNDETERMINED';return value
+    if quote is None or not reference or reference.get('status')!='VERIFIED':
+        value['quote_usd_status']='UNDETERMINED';value['quote_usd_reference']=reference or {'status':'UNAVAILABLE','reason':'SOL_USD_REFERENCE_MISSING'};return value
+    try:usd=quote*Decimal(str(reference['sol_usd']))
+    except (InvalidOperation,ValueError,TypeError,KeyError):
+        value['quote_usd_status']='UNDETERMINED';value['quote_usd_reference']=reference;return value
+    value['quote_usd_quantity']=str(usd);value['quote_usd_status']='SOL_EVENT_TIME_VERIFIED';value['quote_usd_reference']=reference
+    return value
+
+
+def normalize_classification(classified:dict,reference:dict|None)->dict:
+    """Normalize one classified ACTIVE_TRADE without mutating caller input."""
+    value=dict(classified);trade=value.get('trade')
+    if not trade or value.get('classification')!='ACTIVE_TRADE':return value
+    t=dict(trade);asset=t.get('quote_asset')
+    if asset not in SOL_QUOTE_ASSETS:return value
+    if t.get('quote_decimals') is None:return value
+    try:q=Decimal(str(t['quote_amount_raw']))/(Decimal(10)**int(t['quote_decimals']))
+    except (InvalidOperation,ValueError,TypeError,KeyError):return value
+    synthetic={'quote_asset':asset,'quote_quantity':str(q),'at':value.get('block_time')}
+    normalized=normalize_trade_event(synthetic,reference)
+    for key in ('quote_usd_quantity','quote_usd_status','quote_usd_reference'):
+        if key in normalized:t[key]=normalized[key]
+    value['trade']=t
+    return value
