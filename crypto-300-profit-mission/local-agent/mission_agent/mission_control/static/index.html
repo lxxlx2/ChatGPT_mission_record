@@ -3,50 +3,64 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Mission Meme V1</title>
+  <title>Frank 跟单控制台</title>
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
   <header class="topbar">
     <div>
-      <div class="eyebrow">$300 → $3000 MISSION</div>
-      <h1>Frank Follow Control</h1>
+      <div class="eyebrow">$300 → $3000 MISSION · MEME</div>
+      <h1>Frank 跟单控制台</h1>
+      <div class="subtitle">只读观察 · 不自动交易</div>
     </div>
-    <div class="runtime" id="runtime">UNKNOWN</div>
+    <div class="runtime" id="runtime">正在读取 Frank 状态…</div>
   </header>
 
   <main>
     <section class="stats" id="stats"></section>
 
+    <section class="legend">
+      <span><b class="dot buy-dot"></b>可跟：当前满足强信号和执行条件</span>
+      <span><b class="dot small-dot"></b>小仓：可以跟，但条件弱一档</span>
+      <span><b class="dot wait-dot"></b>等待：暂时不要追，等新买入或更好价格</span>
+      <span><b class="dot no-dot"></b>不跟：Frank 已退出、仓位异常或无执行路径</span>
+    </section>
+
     <section class="panel">
       <div class="panel-title">
-        <h2>当前候选</h2>
+        <div>
+          <h2>当前跟单候选</h2>
+          <p>先看“结论 + 原因”，需要自己研究时直接复制 CA。</p>
+        </div>
         <span id="updated">未刷新</span>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Token</th><th>Decision</th><th>Pattern</th><th>Frank</th>
-              <th>Latest</th><th>Frank 原始支付</th><th>Frank Price</th><th>Executable</th><th>Δ</th><th>Impact</th><th>State</th>
-            </tr>
-          </thead>
-          <tbody id="candidates"></tbody>
-        </table>
-      </div>
+      <div id="candidates" class="candidate-list"></div>
     </section>
 
     <section class="grid">
       <section class="panel">
-        <div class="panel-title"><h2>Frank 最近交易</h2></div>
+        <div class="panel-title">
+          <div>
+            <h2>Frank 最近交易</h2>
+            <p>中文动作 + CA/交易哈希快捷复制。</p>
+          </div>
+        </div>
         <div id="trades" class="feed"></div>
       </section>
+
       <section class="panel">
-        <div class="panel-title"><h2>Decision 变化</h2></div>
+        <div class="panel-title">
+          <div>
+            <h2>跟单判断变化</h2>
+            <p>只记录 Decision 状态真正发生变化的时点。</p>
+          </div>
+        </div>
         <div id="decisions" class="feed"></div>
       </section>
     </section>
   </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="/static/app.js"></script>
 </body>
 </html>
