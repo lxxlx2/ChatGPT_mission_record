@@ -153,10 +153,11 @@ class FrankReader:
                 latest_buy = buys[-1] if buys else None
                 latest_buy_price = _event_price_usdc(latest_buy) if latest_buy else None
                 quote_display = _quote_display(latest_buy)
-                latest_quote_asset = latest_buy.get("quote_asset") if latest_buy else None
+                model_quote_asset = latest_buy.get("quote_asset") if latest_buy else None
+                model_quote_quantity = latest_buy.get("quote_quantity") if latest_buy else None
                 if latest_buy_price is not None:
                     price_status = "SOL_EVENT_TIME_USDC_VERIFIED" if latest_buy and latest_buy.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"
-                elif latest_quote_asset in {"SOL", WSOL} or quote_display["asset"] in {"SOL", WSOL}:
+                elif model_quote_asset in {"SOL", WSOL} or quote_display["asset"] in {"SOL", WSOL}:
                     price_status = "SOL_EVENT_TIME_USDC_UNAVAILABLE"
                 else:
                     price_status = "QUOTE_PRICE_UNAVAILABLE"
@@ -169,12 +170,16 @@ class FrankReader:
                     "latest_at": latest.get("at") if latest else None, "latest_buy_at": latest_buy.get("at") if latest_buy else None,
                     "latest_buy_price_usdc": str(latest_buy_price) if latest_buy_price is not None else None,
                     "latest_buy_price_status": price_status,
-                    "latest_buy_quote_asset": latest_quote_asset,
-                    "latest_buy_quote_quantity": latest_buy.get("quote_quantity") if latest_buy else None,
+                    # Public/legacy quote fields always describe what Frank actually paid.
+                    "latest_buy_quote_asset": quote_display["asset"],
+                    "latest_buy_quote_quantity": quote_display["quantity"],
                     "latest_buy_original_quote_asset": quote_display["asset"],
                     "latest_buy_original_quote_quantity": quote_display["quantity"],
                     "latest_buy_quote_was_normalized": quote_display["normalized"],
                     "latest_buy_usdc_equivalent": quote_display["usdc_equivalent"],
+                    # Synthetic model fields are explicit so API consumers cannot confuse them with payment evidence.
+                    "latest_buy_model_quote_asset": model_quote_asset,
+                    "latest_buy_model_quote_quantity": model_quote_quantity,
                     "token_decimals": int(latest_buy.get("token_decimals")) if latest_buy and latest_buy.get("token_decimals") is not None else None,
                     "events": events,
                 })
