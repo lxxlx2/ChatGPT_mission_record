@@ -28,13 +28,14 @@ def payload(decision="BUY", input_nonce=1):
     }
 
 
-def test_same_decision_new_snapshot_does_not_create_duplicate_event(tmp_path):
+def test_same_decision_does_not_grow_snapshots_or_events(tmp_path):
     db = ControlDB(tmp_path / "mission-control.sqlite")
-    a = db.record(payload("BUY",1), "P1", "h1")
-    b = db.record(payload("BUY",2), "P1", "h1")
-    assert a["changed"] is True
-    assert b["changed"] is False
-    assert db.db.execute("select count(*) from decision_snapshots").fetchone()[0] == 2
+    first = db.record(payload("BUY",1), "P1", "h1")
+    for nonce in range(2,7):
+        repeated = db.record(payload("BUY",nonce), "P1", "h1")
+        assert repeated["changed"] is False
+        assert repeated["snapshot_id"] == first["snapshot_id"]
+    assert db.db.execute("select count(*) from decision_snapshots").fetchone()[0] == 1
     assert db.db.execute("select count(*) from decision_events").fetchone()[0] == 1
 
 
@@ -46,3 +47,5 @@ def test_decision_change_creates_new_event_with_previous_state(tmp_path):
     assert changed["event"]["previous_decision"] == "BUY"
     body = json.loads(changed["event"]["body"])
     assert body["previous_decision"] == "BUY"
+    assert db.db.execute("select count(*) from decision_snapshots").fetchone()[0] == 2
+    assert db.db.execute("select count(*) from decision_events").fetchone()[0] == 2
