@@ -40,11 +40,11 @@ def _token_quantity(event: dict) -> Decimal | None:
 
 
 def _event_price_usdc(event: dict) -> Decimal | None:
-    """Return event-time USD/token only from durable event-time evidence.
+    """Return event-time USDC/token only from durable event-time evidence.
 
     Direct USDC trades use their quote quantity. SOL/WSOL trades are accepted only
-    when upstream replay/normalization attached verified event-time USD evidence.
-    Today's SOL price is never substituted for a historical trade.
+    when upstream replay/normalization attached verified event-time SOL/USDC
+    evidence. A current SOL price is never substituted for a historical trade.
     """
     quantity = _token_quantity(event)
     if not quantity:
@@ -52,8 +52,8 @@ def _event_price_usdc(event: dict) -> Decimal | None:
     try:
         if event.get("quote_asset") == USDC:
             return Decimal(str(event["quote_quantity"])) / quantity
-        if event.get("quote_usd_status") == "SOL_EVENT_TIME_VERIFIED" and event.get("quote_usd_quantity") is not None:
-            return Decimal(str(event["quote_usd_quantity"])) / quantity
+        if event.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" and event.get("quote_usdc_equivalent") is not None:
+            return Decimal(str(event["quote_usdc_equivalent"])) / quantity
     except (KeyError, InvalidOperation, ZeroDivisionError, TypeError):
         return None
     return None
@@ -144,9 +144,9 @@ class FrankReader:
                 latest_buy_price = _event_price_usdc(latest_buy) if latest_buy else None
                 latest_quote_asset = latest_buy.get("quote_asset") if latest_buy else None
                 if latest_buy_price is not None:
-                    price_status = "SOL_EVENT_TIME_VERIFIED" if latest_buy and latest_buy.get("quote_usd_status") == "SOL_EVENT_TIME_VERIFIED" else "USDC_DIRECT"
+                    price_status = "SOL_EVENT_TIME_USDC_VERIFIED" if latest_buy and latest_buy.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"
                 elif latest_quote_asset in {"SOL", WSOL}:
-                    price_status = "SOL_EVENT_TIME_USD_UNAVAILABLE"
+                    price_status = "SOL_EVENT_TIME_USDC_UNAVAILABLE"
                 else:
                     price_status = "QUOTE_PRICE_UNAVAILABLE"
                 result.append({
