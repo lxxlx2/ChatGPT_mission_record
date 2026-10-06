@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import sqlite3
 from pathlib import Path
 
@@ -99,6 +100,19 @@ def test_tampered_reusable_cache_is_rejected_and_refetched():
     assert value['sol_usdc']=='123'
     stored=cache.execute('select body from sol_usdc_references').fetchone()[0]
     assert '"sol_usdc":"123"' in stored
+
+
+def test_reusable_cache_rejects_body_when_database_content_hash_no_longer_matches():
+    cache=memory_db();target=memory_db()
+    good=verified('10')
+    mod._store_reference(cache,mod.reference_key(1000),1000,good)
+    body=json.loads(cache.execute('select body from sol_usdc_references').fetchone()[0])
+    body['sol_usdc']='999'
+    cache.execute('update sol_usdc_references set body=?',(json.dumps(body,sort_keys=True,separators=(',',':')),))
+    cache.commit()
+    client=SequenceClient([verified('77')])
+    value=mod._reference(target,client,1000,sleep=lambda _:None,cache_db=cache)
+    assert client.calls==1 and value['sol_usdc']=='77'
 
 
 def test_reusable_cache_rejects_wrong_candle_metadata_even_with_matching_content_hash():
