@@ -1,6 +1,8 @@
 import importlib.util
+import io
 import json
 import sys
+import urllib.parse
 from pathlib import Path
 
 import pytest
@@ -64,6 +66,35 @@ def test_fixture_amount_rejects_more_than_six_decimals():
     try:fixture.usdc_raw('0.0000001')
     except ValueError as exc:assert str(exc)=='USDC_AMOUNT_REQUIRES_AT_MOST_6_DECIMALS'
     else:raise AssertionError('expected ValueError')
+
+
+def test_fixture_capture_keyless_matches_runtime_request(monkeypatch):
+    seen=[]
+
+    class Response(io.BytesIO):
+        status=200
+        def __enter__(self):return self
+        def __exit__(self,*args):self.close();return False
+
+    body={'outAmount':'1000000','routePlan':[{'swapInfo':{}}],'priceImpactPct':'0.001'}
+
+    def open_url(request,timeout=10):
+        seen.append(request)
+        return Response(json.dumps(body).encode())
+
+    monkeypatch.setattr(fixture.urllib.request,'urlopen',open_url)
+    record=fixture.capture('KEYLESS','Mint111',6,None)
+    headers={k.lower():v for k,v in seen[0].header_items()}
+    query=urllib.parse.parse_qs(urllib.parse.urlparse(seen[0].full_url).query)
+    assert record['access_mode']=='KEYLESS'
+    assert 'x-api-key' not in headers
+    assert set(query)=={'inputMint','outputMint','amount','slippageBps'}
+    assert 'instructionVersion' not in query
+
+
+def test_fixture_capture_defaults_match_runtime_throttle_modes():
+    assert fixture.default_interval_seconds(None)==2.5
+    assert fixture.default_interval_seconds('key')==1.05
 
 
 def test_shadow_cli_abort_cleans_target_and_writes_failure_report(tmp_path,monkeypatch):
