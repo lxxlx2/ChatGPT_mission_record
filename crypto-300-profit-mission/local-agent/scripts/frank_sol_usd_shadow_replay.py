@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sqlite3
 import time
 from collections import Counter
 from pathlib import Path
@@ -58,12 +59,42 @@ def _cacheable(value: dict) -> bool:
     return value.get("status") == "VERIFIED" or value.get("reason") in CACHEABLE_UNAVAILABLE
 
 
-def _reference(db, client, block_time: int, *, attempts: int = 3, sleep=time.sleep):
-    """Return one candle reference without permanently caching transient failures."""
-    key = reference_key(block_time)
+def _load_reference(db, key: str):
     row = db.execute("SELECT body FROM sol_usdc_references WHERE reference_key=?", (key,)).fetchone()
-    if row:
-        return json.loads(row[0])
+    return json.loads(row[0]) if row else None
+
+
+def _store_reference(db, key: str, block_time: int, value: dict) -> None:
+    encoded = json.dumps(value, sort_keys=True, separators=(",", ":"))
+    db.execute(
+        "INSERT OR REPLACE INTO sol_usdc_references VALUES(?,?,?,?,?,?,?)",
+        (
+            key,
+            value.get("source", "UNAVAILABLE"),
+            value.get("status", "UNAVAILABLE"),
+            reference_epoch(block_time),
+            _hash(value),
+            encoded,
+            utc(),
+        ),
+    )
+
+
+def _reference(db, client, block_time: int, *, attempts: int = 3, sleep=time.sleep, cache_db=None):
+    """Return one candle reference without permanently caching transient failures.
+
+    The replay target always receives a copy of every durable reference it uses.
+    cache_db is an optional reusable read-through cache for later replay runs.
+    """
+    key = reference_key(block_time)
+    value = _load_reference(db, key)
+    if value:
+        return value
+    if cache_db is not None:
+        value = _load_reference(cache_db, key)
+        if value:
+            _store_reference(db, key, block_time, value)
+            return value
 
     value = None
     for attempt in range(max(1, int(attempts))):
@@ -76,19 +107,10 @@ def _reference(db, client, block_time: int, *, attempts: int = 3, sleep=time.sle
     if value is None:
         value = {"status": "UNAVAILABLE", "reason": "REFERENCE_CLIENT_RETURNED_NONE", "retryable": True}
     if _cacheable(value):
-        encoded = json.dumps(value, sort_keys=True, separators=(",", ":"))
-        db.execute(
-            "INSERT INTO sol_usdc_references VALUES(?,?,?,?,?,?,?)",
-            (
-                key,
-                value.get("source", "UNAVAILABLE"),
-                value.get("status", "UNAVAILABLE"),
-                reference_epoch(block_time),
-                _hash(value),
-                encoded,
-                utc(),
-            ),
-        )
+        _store_reference(db, key, block_time, value)
+        if cache_db is not None:
+            _store_reference(cache_db, key, block_time, value)
+            cache_db.commit()
     return value
 
 
@@ -139,10 +161,12 @@ def _resolved(classified: dict) -> bool:
     return (classified.get("trade") or {}).get("quote_normalization") == "SOL_TO_USDC_SHADOW_EQUIVALENT"
 
 
-def replay(source_path: Path, target_path: Path, policy_path: Path, client=None):
+def replay(source_path: Path, target_path: Path, policy_path: Path, client=None, reference_cache_db=None):
     source = open_production_ro(source_path)
     target = Ledger(target_path)
     _ensure_reference_table(target.db)
+    if reference_cache_db is not None:
+        _ensure_reference_table(reference_cache_db)
     engine = Engine(target, load_policy(policy_path), dry_run=True)
     client = client or BinanceSolUsdcHistoryClient()
     counters = {
@@ -177,7 +201,12 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
                     if row["block_time"] is None:
                         ref = {"status": "UNAVAILABLE", "reason": "BLOCK_TIME_MISSING", "retryable": False}
                     else:
-                        ref = _reference(target.db, client, int(row["block_time"]))
+                        ref = _reference(
+                            target.db,
+                            client,
+                            int(row["block_time"]),
+                            cache_db=reference_cache_db,
+                        )
 
                     reason = ref.get("reason")
                     if reason in FATAL_ACCESS_REASONS:
@@ -193,7 +222,6 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
                     elif ref.get("status") == "VERIFIED" or reason == "BINANCE_KLINE_NOT_FOUND":
                         fatal_access_streak = 0
                     else:
-                        # Other failures do not prove a persistent regional block.
                         fatal_access_streak = 0
 
                     classified = normalize_classification(classified, ref, for_model=True)
@@ -237,7 +265,6 @@ def replay(source_path: Path, target_path: Path, policy_path: Path, client=None)
         "sol_added_signals": comparison["added"],
         "missing_source_signals": comparison["missing"],
         "source_signal_regression_pass": comparison["pass"],
-        # Backward-compatible field name, now deliberately strict rather than mint-filtered.
         "usdc_regression_pass": comparison["pass"],
         "sol_resolution_gate_pass": sol_resolution_pass,
         "shadow_replay_gate_pass": replay_gate_pass,
@@ -264,13 +291,25 @@ def main():
     p.add_argument("--target", type=Path, required=True)
     p.add_argument("--report", type=Path, required=True)
     p.add_argument("--policy", type=Path, default=DEFAULT_POLICY)
+    p.add_argument("--reference-cache", type=Path)
     a = p.parse_args()
     if a.target.exists():
         raise SystemExit("TARGET_MUST_NOT_EXIST")
     a.target.parent.mkdir(parents=True, exist_ok=True)
-    result = replay(a.source, a.target, a.policy)
-    a.report.write_text(json.dumps(result, indent=2, sort_keys=True))
-    print(json.dumps(result, sort_keys=True))
+    cache_db = None
+    try:
+        if a.reference_cache:
+            a.reference_cache.parent.mkdir(parents=True, exist_ok=True)
+            cache_db = sqlite3.connect(a.reference_cache)
+            _ensure_reference_table(cache_db)
+        result = replay(a.source, a.target, a.policy, reference_cache_db=cache_db)
+        if cache_db is not None:
+            cache_db.commit()
+        a.report.write_text(json.dumps(result, indent=2, sort_keys=True))
+        print(json.dumps(result, sort_keys=True))
+    finally:
+        if cache_db is not None:
+            cache_db.close()
 
 
 if __name__ == "__main__":
