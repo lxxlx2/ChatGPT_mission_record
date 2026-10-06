@@ -4,29 +4,10 @@ from .policy import USDC
 
 D=Decimal
 
-
-def usd_amount(event):
-    """Return (usd_value, known).
-
-    Existing USDC behavior is unchanged.  Non-USDC events become numeric only
-    when a durable upstream normalizer supplied verified USD-equivalent evidence.
-    The evaluator itself never performs network I/O.
-    """
-    if event.get('quote_asset')==USDC:
-        return D(event['quote_quantity']),True
-    if event.get('quote_usd_status')=='SOL_EVENT_TIME_VERIFIED' and event.get('quote_usd_quantity') is not None:
-        return D(event['quote_usd_quantity']),True
-    return D(0),False
-
-
 def amount(events):
-    known=D(0);unknown=False
-    for event in events:
-        value,resolved=usd_amount(event)
-        if resolved:known+=value
-        else:unknown=True
+    known=sum((D(e['quote_quantity']) for e in events if e['quote_asset']==USDC),D(0))
+    unknown=any(e['quote_asset']!=USDC for e in events)
     return known,unknown
-
 
 def amount_gate(events,minimum):
     known,unknown=amount(events)
@@ -50,6 +31,7 @@ def evaluate(state,at,policy):
     net=sum((int(e['token_amount_raw'])*(1 if e['direction']=='BUY' else -1) for e in recent_trades),0)
     current=D(state['current_raw']) if state['current_raw'] is not None else None;peak=D(state['peak_raw'])
     retained=current is not None and peak>0 and current/peak>=D(m['retention_ratio_min'])
+    # Include the inventory carried into the rolling window; no future peak is used.
     points=state['inventory_points'];cutoff=at-m['distribution_window_seconds'];inside=[p for p in points if cutoff<=p['at']<=at];before=[p for p in points if p['at']<cutoff]
     if before:inside.insert(0,before[-1])
     rolling_peak=max((D(p['raw']) for p in inside if p['raw'] is not None),default=D(0))
@@ -65,10 +47,9 @@ def evaluate(state,at,policy):
                  hft='FAIL' if state.get('hft',False) else 'PASS',freshness='PASS' if not stale or (fresh_buy and open_known) else 'FAIL')
     multiple=all(gates[k]=='PASS' for k in ['prior_accumulation','t0','cumulative_amount','persistence','inventory','distribution','hft','freshness'])
     stages=[]
-    if accumulation:stages.append({'signal_type':'FRANK_ACCUMULATION_SIGNAL','stage':'PRECONFIRM','reason_codes':['PATH_C_REPEATED_ACTIVE_BUYS_GE_2','ROLLING_60M_USD_EQUIVALENT_GE_25000','PATH_C_SINGLE_LARGE_BUY_NOT_ACCUMULATION']})
-    if multiple:stages.append({'signal_type':'FRANK_MULTIPLE_SIGNAL','stage':'SUSPECTED_CONVICTION','reason_codes':['ACCUMULATION_BEHAVIOR_STAGE_ESTABLISHED','MEANINGFUL_ACCUMULATION_T0_ESTABLISHED','EPISODE_USD_EQUIVALENT_GE_10000','PERSISTENCE_PATH_A_PRIOR_HOURLY_WATCH' if prior_watch else 'PERSISTENCE_PATH_B_GE_3_BUYS_SPAN_GE_45M','OBSERVED_INVENTORY_RETAINED_OR_RESUMED_NET_BUYING','NO_UNRECOVERED_35PCT_ROLLING_DISTRIBUTION','NO_CONFIRMED_HFT_EXECUTION','FRESHNESS_BEHAVIOR_PASSED','NON_BEHAVIOR_VETO_GATES_REMOVED_BY_USER_REQUIREMENT']})
-    known_recent,unknown_recent=amount(recent);known_episode,unknown_episode=amount(buys)
-    return {'stages':stages,'predicates':gates,'known_rolling_usd_equivalent':str(known_recent),'known_episode_usd_equivalent':str(known_episode),'usd_equivalent_unknown':bool(unknown_recent or unknown_episode),'buy_count':len(buys),'buy_span_seconds':span,'inventory_scope':'OBSERVED_ACTIVE_SEQUENCE','lifetime_position':'LIFETIME_POSITION_UNKNOWN','sequence':'CURRENT_ACCUMULATION_SEQUENCE_KNOWN','usd_estimate':'verified_event_time_equivalent_when_available'}
+    if accumulation:stages.append({'signal_type':'FRANK_ACCUMULATION_SIGNAL','stage':'PRECONFIRM','reason_codes':['PATH_C_REPEATED_ACTIVE_BUYS_GE_2','ROLLING_60M_USDC_QUOTE_GE_25000','PATH_C_SINGLE_LARGE_BUY_NOT_ACCUMULATION']})
+    if multiple:stages.append({'signal_type':'FRANK_MULTIPLE_SIGNAL','stage':'SUSPECTED_CONVICTION','reason_codes':['ACCUMULATION_BEHAVIOR_STAGE_ESTABLISHED','MEANINGFUL_ACCUMULATION_T0_ESTABLISHED','EPISODE_USDC_QUOTE_GE_10000','PERSISTENCE_PATH_A_PRIOR_HOURLY_WATCH' if prior_watch else 'PERSISTENCE_PATH_B_GE_3_BUYS_SPAN_GE_45M','OBSERVED_INVENTORY_RETAINED_OR_RESUMED_NET_BUYING','NO_UNRECOVERED_35PCT_ROLLING_DISTRIBUTION','NO_CONFIRMED_HFT_EXECUTION','FRESHNESS_BEHAVIOR_PASSED','NON_BEHAVIOR_VETO_GATES_REMOVED_BY_USER_REQUIREMENT']})
+    return {'stages':stages,'predicates':gates,'known_rolling_usdc':str(amount(recent)[0]),'known_episode_usdc':str(amount(buys)[0]),'buy_count':len(buys),'buy_span_seconds':span,'inventory_scope':'OBSERVED_ACTIVE_SEQUENCE','lifetime_position':'LIFETIME_POSITION_UNKNOWN','sequence':'CURRENT_ACCUMULATION_SEQUENCE_KNOWN','usd_estimate':'unavailable'}
 
 def watch_eligible(state,at,policy):
     m=policy['mapping']['FRANK_MULTIPLE_SIGNAL'];recent=[e for e in state['events'] if at-3600<=e['at']<=at]
@@ -82,6 +63,6 @@ def establish_t0(state,policy):
     if not buys:return
     last=buys[-1];recent=[e for e in buys if last['at']-m['t0_window_seconds']<=e['at']<=last['at']]
     repeat=len(recent)>=m['t0_repeated_buy_count'] and amount_gate(recent,m['t0_repeated_amount_min'])=='PASS'
-    large=any(usd_amount(e)[1] and usd_amount(e)[0]>=D(m['t0_large_buy_min']) for e in recent[:-1])
-    state['t0_amount_status']='UNDETERMINED' if amount(recent)[1] and not (repeat or large) else 'FAIL'
+    large=any(e['quote_asset']==USDC and D(e['quote_quantity'])>=D(m['t0_large_buy_min']) for e in recent[:-1])
+    state['t0_amount_status']='UNDETERMINED' if any(e['quote_asset']!=USDC for e in recent) and not (repeat or large) else 'FAIL'
     if repeat or large:state['t0']=last['at'];state['t0_amount_status']='PASS'
