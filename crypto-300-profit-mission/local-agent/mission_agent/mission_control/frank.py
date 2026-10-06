@@ -11,10 +11,15 @@ from pathlib import Path
 from .db import open_production_ro
 
 USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+WSOL = "So11111111111111111111111111111111111111112"
 
 
-def _pid_alive(pid: int | None) -> bool:
-    if not pid or pid <= 0:
+def _pid_alive(pid: int | str | None) -> bool:
+    try:
+        pid = int(pid)
+    except (TypeError, ValueError):
+        return False
+    if pid <= 0:
         return False
     try:
         os.kill(pid, 0)
@@ -23,6 +28,8 @@ def _pid_alive(pid: int | None) -> bool:
         return False
     except PermissionError:
         return True
+    except (TypeError, ValueError, OverflowError):
+        return False
 
 
 def _token_quantity(event: dict) -> Decimal | None:
@@ -33,6 +40,13 @@ def _token_quantity(event: dict) -> Decimal | None:
 
 
 def _event_price_usdc(event: dict) -> Decimal | None:
+    """Return an exact event-time USDC/token price only when USDC was the quote asset.
+
+    WSOL events intentionally remain unavailable here. Converting a historical SOL
+    trade with today's SOL/USD price would create a false entry price and can cause
+    an unsafe BUY decision. Mission Control therefore fails closed until a durable
+    event-time SOL/USD source is added.
+    """
     if event.get("quote_asset") != USDC:
         return None
     quantity = _token_quantity(event)
@@ -40,7 +54,7 @@ def _event_price_usdc(event: dict) -> Decimal | None:
         return None
     try:
         return Decimal(str(event["quote_quantity"])) / quantity
-    except (KeyError, InvalidOperation, ZeroDivisionError):
+    except (KeyError, InvalidOperation, ZeroDivisionError, TypeError):
         return None
 
 
@@ -101,40 +115,55 @@ class FrankReader:
             rows = db.execute("SELECT person_id,mint,body FROM v1_states").fetchall()
             result = []
             for row in rows:
-                state = json.loads(row["body"])
+                try:
+                    state = json.loads(row["body"])
+                except (TypeError, ValueError):
+                    continue
                 signals = db.execute(
                     "SELECT signal_id,signal_type,created_at,body FROM signals WHERE person_id=? AND mint=? AND episode_id=? ORDER BY CAST(created_at AS INTEGER),rowid",
                     (row["person_id"], row["mint"], state.get("episode_id")),
                 ).fetchall()
-                pattern = "NONE"
-                source_signal_id = None
-                source_signal_type = "NONE"
-                if signals:
-                    decoded = [(s, json.loads(s["body"])) for s in signals]
-                    multiples = [(s, b) for s, b in decoded if s["signal_type"] == "FRANK_MULTIPLE_SIGNAL"]
-                    signal_row, _ = multiples[-1] if multiples else decoded[-1]
-                    source_signal_id = signal_row["signal_id"]
-                    source_signal_type = signal_row["signal_type"]
-                    pattern = "MULTIPLE" if source_signal_type == "FRANK_MULTIPLE_SIGNAL" else "ACCUMULATION"
-                if pattern == "NONE":
+                if not signals:
                     continue
+                signal_row = signals[-1]
+                source_signal_type = signal_row["signal_type"]
+                if source_signal_type == "FRANK_MULTIPLE_SIGNAL":
+                    pattern = "MULTIPLE"
+                elif source_signal_type == "FRANK_ACCUMULATION_SIGNAL":
+                    pattern = "ACCUMULATION"
+                else:
+                    # Unknown/new signal kinds are never silently treated as accumulation.
+                    continue
+                source_signal_id = signal_row["signal_id"]
+                source_signal_at = signal_row["created_at"]
                 events = state.get("events") or []
                 latest = events[-1] if events else None
                 buys = [e for e in events if e.get("direction") == "BUY"]
                 latest_buy = buys[-1] if buys else None
                 latest_buy_price = _event_price_usdc(latest_buy) if latest_buy else None
+                latest_quote_asset = latest_buy.get("quote_asset") if latest_buy else None
+                if latest_buy_price is not None:
+                    price_status = "USDC_DIRECT"
+                elif latest_quote_asset == WSOL:
+                    price_status = "SOL_EVENT_TIME_USD_UNAVAILABLE"
+                else:
+                    price_status = "QUOTE_PRICE_UNAVAILABLE"
                 result.append({
                     "person_id": row["person_id"], "mint": row["mint"], "episode_id": state.get("episode_id"),
                     "pattern": pattern, "source_signal_id": source_signal_id, "source_signal_type": source_signal_type,
+                    "source_signal_at": source_signal_at,
                     "position_state": state.get("state"), "current_raw": state.get("current_raw"),
                     "buy_count": len(buys), "sell_count": sum(e.get("direction") == "SELL" for e in events),
                     "latest_side": latest.get("direction") if latest else None, "latest_signature": latest.get("signature") if latest else None,
                     "latest_at": latest.get("at") if latest else None, "latest_buy_at": latest_buy.get("at") if latest_buy else None,
                     "latest_buy_price_usdc": str(latest_buy_price) if latest_buy_price is not None else None,
+                    "latest_buy_price_status": price_status,
+                    "latest_buy_quote_asset": latest_quote_asset,
+                    "latest_buy_quote_quantity": latest_buy.get("quote_quantity") if latest_buy else None,
                     "token_decimals": int(latest_buy.get("token_decimals")) if latest_buy and latest_buy.get("token_decimals") is not None else None,
                     "events": events,
                 })
-            result.sort(key=lambda x: (x.get("latest_at") or 0), reverse=True)
+            result.sort(key=lambda x: int(x.get("latest_at") or 0), reverse=True)
             return result
         finally:
             db.close()
