@@ -6,5 +6,6 @@
       "label": "FOMO execution / fee-payer infrastructure",
       "source": "repo:WALLET_CLUSTER_ANALYSIS_SPEC.md#GOMO-regression-example"
     }
-  }
+  },
+  "normalization_complete": false
 }
