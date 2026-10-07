@@ -265,6 +265,20 @@ def test_token2022_disabled_hook_and_active_delegate_are_distinguished():
     assert delegate["sensitive_extension_details"][0]["status"]=="ACTIVE_RISK"
 
 
+def test_token2022_sensitive_but_unresolved_config_is_not_upgraded_to_active_risk():
+    profile=token2022_profile({
+        "extension":"confidentialTransferMint",
+        "state":{"autoApproveNewAccounts":False},
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert profile["active_extension_risks"]==[]
+    a=analyzer();a.token_profile=lambda:profile
+    out=a.analyze()
+    assert out["assessment"]["chain_permission_status"]=="UNRESOLVED"
+    assert out["assessment"]["trading_status"]=="WATCH / CHAIN_PERMISSION_UNRESOLVED"
+
+
 def test_adaptive_scan_deepens_suspicious_counterpart_beyond_initial_prefix():
     a=analyzer()
     a.deep_holders=2
