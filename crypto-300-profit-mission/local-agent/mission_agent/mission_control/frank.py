@@ -64,11 +64,15 @@ def _quote_display(event: dict | None) -> dict:
         return {"asset": None, "quantity": None, "normalized": False, "usdc_equivalent": None}
     original = event.get("original_quote") or {}
     if event.get("quote_normalization") == "SOL_TO_USDC_SHADOW_EQUIVALENT" and original:
+        authorized=(
+            event.get("amount_predicate")=="SOL_EVENT_TIME_USDC_VERIFIED"
+            and event.get("quote_usdc_status")=="SOL_EVENT_TIME_USDC_VERIFIED"
+        )
         return {
             "asset": original.get("quote_asset"),
             "quantity": original.get("quote_quantity"),
-            "normalized": True,
-            "usdc_equivalent": event.get("quote_usdc_equivalent"),
+            "normalized": authorized,
+            "usdc_equivalent": event.get("quote_usdc_equivalent") if authorized else None,
         }
     direct_usdc=event.get("amount_predicate") in (None,"USDC_DIRECT_NUMERIC")
     return {
