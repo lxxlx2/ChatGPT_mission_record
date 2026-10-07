@@ -170,7 +170,8 @@ class SolanaReadOnlyRPC:
                 if method=="getTransaction" and result is None and len(self.endpoints)>1 and null_seen<1:
                     null_seen+=1
                     continue
-                if ttl and self.cache:self.cache.put(method,params,result,ttl,time.time())
+                if ttl and self.cache and result is not None:
+                    self.cache.put(method,params,result,ttl,time.time())
                 return result
             except urllib.error.HTTPError as exc:
                 last_error=RPCError("HTTP_"+str(exc.code));self.endpoint_failures[endpoint]+=1
