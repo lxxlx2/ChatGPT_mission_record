@@ -584,7 +584,74 @@ function clusterMetricValue(v) {
 function usd(v,digits=2) {
   const x=Number(v);
   if (!Number.isFinite(x)) return '暂无';
-  if (Math.abs(x)>=1000000) return '
+  if (Math.abs(x)>=1000000) return '$' + n(x/1000000,2) + 'M';
+  if (Math.abs(x)>=1000) return '$' + n(x/1000,2) + 'K';
+  return '$' + n(x,digits);
+}
+
+function pctText(v) {
+  const x=Number(v);
+  return Number.isFinite(x) ? n(x,2) + '%' : '暂无';
+}
+
+function authorityText(value,status='OK') {
+  if (status!=='OK') return '<span class="unresolved">未确认</span>';
+  if (value == null || value==='') return '<span class="ok-text">已撤销 / null</span>';
+  if (value==='UNAVAILABLE') return '<span class="unresolved">未自动确认</span>';
+  return '<code>' + esc(short(String(value),8,6)) + '</code>' + copyButton(String(value),'复制');
+}
+
+function fact(label,value,sub='') {
+  return '<div class="fact-card"><span>' + esc(label) + '</span><strong>' + value + '</strong>' +
+    (sub ? '<small>' + sub + '</small>' : '') + '</div>';
+}
+
+function quoteAssetLabel(asset) {
+  if (asset===WSOL_MINT || asset==='SOL') return 'SOL';
+  if (asset===USDC_MINT || asset==='USDC') return 'USDC';
+  return asset ? short(String(asset),6,4) : '未知';
+}
+
+function acquisitionCell(h) {
+  const a=h.first_acquisition || {};
+  if (a.status==='NOT_SCANNED') return '<span class="muted">未深扫</span>';
+  if (a.status!=='CONFIRMED_BOUNDED') return '<span class="unresolved">未确认</span>';
+  const pay=a.quote_quantity != null
+    ? n(a.quote_quantity,6) + ' ' + quoteAssetLabel(a.quote_asset)
+    : '支付额未解析';
+  const when=a.block_time ? new Date(Number(a.block_time)*1000).toLocaleString('zh-CN') : '时间未知';
+  const tx=a.signature ? '<a class="link-btn compact" href="https://solscan.io/tx/' + encodeURIComponent(a.signature) + '" target="_blank" rel="noreferrer">Tx ↗</a>' : '';
+  return '<div class="holder-evidence"><b>市场买入</b><span>' + esc(pay) + '</span><small>' + esc(when) + ' ' + tx + '</small></div>';
+}
+
+function fundingCell(h) {
+  const f=h.funding;
+  if (!h.deep_scanned) return '<span class="muted">未深扫</span>';
+  if (!f) return '<span class="unresolved">未确认</span>';
+  const role=clusterRoleLabel[f.source_role] || f.source_role || '未确认';
+  const link=f.source ? '<a class="link-btn compact" href="https://solscan.io/account/' + encodeURIComponent(f.source) + '" target="_blank" rel="noreferrer">查看 ↗</a>' : '';
+  return '<div class="holder-evidence"><code>' + esc(short(f.source,7,5)) + '</code><span>' +
+    esc(f.sol != null ? n(f.sol,6) + ' SOL' : '金额未解析') + '</span><small>' + esc(role) + ' ' + link + '</small></div>';
+}
+
+const assessmentLabel = {
+  'RISK / AUTHORITY_PRESENT':'风险 / 权限仍存在',
+  'WATCH / CONTROL_CLUSTER_RISK':'观察 / 存在可能共同控制集群',
+  'WATCH / WALLET_CLUSTER_UNRESOLVED':'观察 / 钱包集群尚未完全确认',
+  'WATCH / CHAIN_STRUCTURE_PASS':'观察 / 链上结构通过当前扫描',
+};
+
+function clusterErrorMessage(error) {
+  const raw=((error?.type || '') + ' ' + (error?.message || '')).toUpperCase();
+  if (raw.includes('429') || raw.includes('RATE_LIMIT')) {
+    return '免费 Solana RPC 触发限流（HTTP 429）。系统已经自动降速并切换备用免费节点；如果仍失败，稍后重试，或先用“快速”档。';
+  }
+  if (raw.includes('403')) {
+    return '当前免费 RPC 拒绝了请求（HTTP 403）。系统会尝试备用节点；持续出现时可在本机配置其他免费 RPC。';
+  }
+  return (error?.type || 'ERROR') + ' · ' + (error?.message || '未知错误');
+}
+
 function holderRole(h) {
   const label = clusterRoleLabel[h.role] || h.role || '未确认';
   const unresolved = String(h.role || '').includes('UNRESOLVED');
