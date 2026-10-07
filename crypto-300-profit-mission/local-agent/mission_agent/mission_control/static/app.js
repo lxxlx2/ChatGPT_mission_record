@@ -799,13 +799,17 @@ function renderClusterReport(report) {
   ].map(([k,v]) => '<div class="cluster-summary-card"><span>' + k + '</span><strong>' + v + '</strong></div>').join('');
 
   const activeAuthorities = assessment.active_authorities || [];
+  const activeExtensionRisks=assessment.active_extension_risks || [];
+  const unresolvedExtensionRisks=assessment.unresolved_extension_risks || [];
   let chainConclusion = '合约权限未确认';
   if (assessment.chain_permission_status === 'PASS') {
-    chainConclusion = 'Mint authority 与 Freeze authority 均已撤销，当前未见活动权限或已识别的 Token-2022 敏感扩展。';
+    chainConclusion = 'Mint authority 与 Freeze authority 均未活动；已解析的敏感 Token-2022 扩展未发现活动风险。';
   } else if (assessment.chain_permission_status === 'RISK') {
-    const extensionRisks=assessment.sensitive_extensions || [];
-    const risks=activeAuthorities.concat(extensionRisks.map(x => 'Token-2022 ' + x));
-    chainConclusion = '存在链上权限/扩展风险：' + risks.join('、') + '。需要先核实风险含义。';
+    const risks=activeAuthorities.concat(activeExtensionRisks.map(x => 'Token-2022 ' + (x.name || '扩展') + ' / ' + (x.reason || 'ACTIVE_RISK')));
+    chainConclusion = '存在活动链上权限/扩展风险：' + risks.join('、') + '。';
+  } else if (assessment.chain_permission_status === 'UNRESOLVED' && unresolvedExtensionRisks.length) {
+    chainConclusion = '存在 Token-2022 敏感扩展，但当前 RPC 解析信息不足以判断其是否活动：' +
+      unresolvedExtensionRisks.map(x => (x.name || '扩展') + ' / ' + (x.reason || 'UNRESOLVED')).join('、') + '。';
   }
 
   let clusterConclusion = '钱包集群状态未确认';
@@ -858,7 +862,9 @@ function renderClusterReport(report) {
     fact('Freeze authority',authorityText(profile.freeze_authority,profile.status)) +
     fact('Metadata update authority',authorityText(profile.metadata_update_authority,profile.metadata_update_authority_status==='CHAIN_PARSED' ? 'OK' : 'UNAVAILABLE')) +
     fact('Token-2022 扩展','<span>' + esc((profile.extensions || []).join(', ') || '无已解析扩展') + '</span>') +
-    fact('敏感扩展','<span>' + ((profile.sensitive_extensions || []).length ? '<span class="warn-text">' + esc((profile.sensitive_extensions || []).join(', ')) + '</span>' : '<span class="ok-text">未发现</span>') + '</span>');
+    fact('活动扩展风险','<span>' + ((profile.active_extension_risks || []).length ? '<span class="warn-text">' + esc((profile.active_extension_risks || []).map(x => (x.name || '扩展') + ': ' + (x.reason || 'ACTIVE_RISK')).join(', ')) + '</span>' : '<span class="ok-text">未发现</span>') + '</span>') +
+    fact('非活动敏感扩展','<span>' + esc((profile.inactive_sensitive_extensions || []).map(x => x.name || '扩展').join(', ') || '无') + '</span>') +
+    fact('待核实敏感扩展','<span>' + ((profile.unresolved_sensitive_extensions || []).length ? '<span class="warn-text">' + esc((profile.unresolved_sensitive_extensions || []).map(x => x.name || '扩展').join(', ')) + '</span>' : '<span class="ok-text">无</span>') + '</span>');
 
   const h24tx=(mainPair.txns || {}).h24 || {};
   const h1tx=(mainPair.txns || {}).h1 || {};
