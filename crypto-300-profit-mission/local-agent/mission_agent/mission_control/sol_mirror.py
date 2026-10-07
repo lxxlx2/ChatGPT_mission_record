@@ -112,8 +112,11 @@ class SolNormalizedMirror:
                     "SELECT rowid,wallet,signature,person_id,slot,block_time,seen_at,classified_at,raw_hash,raw_reference,body FROM signatures ORDER BY block_time,slot,signature"
                 ).fetchall()
             latest_time=None
+            last_source_time=int(self._meta("last_source_block_time","0") or 0)
             for row in rows:
                 max_rowid=max(max_rowid,int(row["rowid"]))
+                if initialized and row["block_time"] is not None and int(row["block_time"]) < last_source_time:
+                    raise RuntimeError("SOURCE_CHRONOLOGY_REGRESSION")
                 try:classified=json.loads(row["body"])
                 except (TypeError,ValueError):
                     failures["SOURCE_BODY_INVALID"]=failures.get("SOURCE_BODY_INVALID",0)+1;continue
@@ -138,6 +141,7 @@ class SolNormalizedMirror:
             if rows:
                 self.engine.drain(until=latest_time)
                 self._set_meta("last_source_rowid",max_rowid);self._set_meta("initialized","1")
+                if latest_time is not None:self._set_meta("last_source_block_time",latest_time)
             source_signals={r[0] for r in source.execute("SELECT signal_id FROM signals")}
             mirror_signals={r[0] for r in self.db.execute("SELECT signal_id FROM signals")}
             added=sorted(mirror_signals-source_signals)
