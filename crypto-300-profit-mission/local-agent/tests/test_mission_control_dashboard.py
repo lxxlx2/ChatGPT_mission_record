@@ -144,6 +144,22 @@ def test_dashboard_frontend_fetches_and_renders_review_activity():
 
 
 
+def test_routed_usdc_event_is_never_used_as_frank_follow_price(tmp_path):
+    prod=tmp_path/"prod";make_prod(prod)
+    db=sqlite3.connect(prod/"forward.sqlite")
+    row=db.execute("select body from v1_states where person_id='frank' and mint='Mint111'").fetchone()
+    state=json.loads(row[0]);latest=state["events"][-1]
+    latest["amount_predicate"]="UNDETERMINED"
+    latest["amount_predicate_reason"]="ROUTED_RESIDUAL_ASSETS"
+    latest["route_amount_semantics"]="GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST"
+    db.execute("update v1_states set body=? where person_id='frank' and mint='Mint111'",(json.dumps(state),))
+    db.commit();db.close()
+    candidate=FrankReader(prod).candidates()[0]
+    assert candidate["latest_buy_price_usdc"] is None
+    assert candidate["latest_buy_price_status"]=="ROUTED_QUOTE_PRICE_UNAVAILABLE"
+    assert candidate["latest_buy_usdc_equivalent"] is None
+
+
 def test_cluster_frank_snapshot_failure_is_nonfatal(tmp_path):
     manager=ClusterJobManager(tmp_path/"control")
     class BrokenFrank:
