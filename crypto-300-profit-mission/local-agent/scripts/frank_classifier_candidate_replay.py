@@ -64,6 +64,19 @@ def _existing_dir(path: Path, label: str) -> Path:
     return resolved
 
 
+def _exclusive_write_text(path: Path, value: str) -> None:
+    flags=os.O_WRONLY|os.O_CREAT|os.O_EXCL
+    if hasattr(os,"O_NOFOLLOW"):flags|=os.O_NOFOLLOW
+    fd=os.open(path,flags,0o600)
+    try:
+        with os.fdopen(fd,"w") as handle:
+            handle.write(value)
+    except Exception:
+        try:path.unlink()
+        except OSError:pass
+        raise
+
+
 def _output_in_workspace(path: Path, work: Path) -> Path:
     raw=path.expanduser()
     if raw.is_absolute():
@@ -420,7 +433,7 @@ def main() -> None:
     db.close()
 
     if output.exists():raise ValueError("OUTPUT_MUST_NOT_EXIST")
-    output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+    _exclusive_write_text(output,json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print(json.dumps({
         "signature_count":result["signature_count"],
         "reclassified_count":result["reclassified_count"],
