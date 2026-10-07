@@ -61,11 +61,19 @@ def inspect_mint(rpc,mint:str)->dict:
     if mint_authority:risks.append("MINT_AUTHORITY_ACTIVE")
     if freeze_authority:risks.append("FREEZE_AUTHORITY_ACTIVE")
     for name in sensitive:risks.append("SENSITIVE_EXTENSION:"+name)
+    supply_raw=str(info.get("supply")) if info.get("supply") is not None else None
+    decimals=info.get("decimals")
+    supply_quantity=None
+    try:
+        if supply_raw is not None and decimals is not None:
+            supply_quantity=str(Decimal(supply_raw)/(Decimal(10)**int(decimals)))
+    except (InvalidOperation,TypeError,ValueError):
+        pass
     return {
         "status":"OK","source":"SOLANA_FINALIZED_JSON_RPC","observed_at":observed,
         "token_program":program,"token_standard":standard,
-        "supply_raw":str(info.get("supply")) if info.get("supply") is not None else None,
-        "decimals":info.get("decimals"),"is_initialized":info.get("isInitialized"),
+        "supply_raw":supply_raw,"supply_quantity":supply_quantity,
+        "decimals":decimals,"is_initialized":info.get("isInitialized"),
         "mint_authority":mint_authority,"freeze_authority":freeze_authority,
         "metadata_update_authority":update_authority,
         "metadata_update_authority_status":"VERIFIED" if update_values else "UNRESOLVED",
