@@ -38,7 +38,7 @@ def test_direct_transfer_is_relation_not_control():
 
 def test_common_funder_plus_sync_can_form_probable_control_cluster():
     a=analyzer();a.registry={"normalization_complete":False,"addresses":{"F":{"role":"EOA","source":"fixture"}}}
-    def scan(h,mapping):
+    def scan(h,mapping,top_owners):
         if h.owner=="A":
             a.funding.append({"owner":"A","source":"F","lamports":"1","signature":"fa","block_time":90})
             a.trades.append({"owner":"A","signature":"a1","block_time":100,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"100","quote_decimals":9,"program_ids":["DEX"],"signers":["A"]})
@@ -65,7 +65,7 @@ def test_special_lp_is_excluded_but_raw_top10_keeps_it():
 
 def test_execution_cluster_does_not_become_control_without_strong_evidence():
     a=analyzer()
-    def scan(h,mapping):
+    def scan(h,mapping,top_owners):
         if h.owner=="A":
             a.trades.append({"owner":"A","signature":"a1","block_time":100,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"100","quote_decimals":9,"program_ids":["DEX"],"signers":["A"]})
         if h.owner=="B":
@@ -87,7 +87,7 @@ def test_strict_special_metrics_are_unresolved_until_normalization_is_declared_c
 
 def test_unknown_common_funder_is_not_promoted_to_probable_control():
     a=analyzer()
-    def scan(h,mapping):
+    def scan(h,mapping,top_owners):
         if h.owner in {"A","B"}:
             a.funding.append({"owner":h.owner,"source":"UNKNOWN","lamports":"1","signature":"f-"+h.owner,"block_time":90})
             a.trades.append({"owner":h.owner,"signature":"t-"+h.owner,"block_time":100,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"100","quote_decimals":9,"program_ids":["DEX"],"signers":[h.owner]})
