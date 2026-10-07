@@ -28,6 +28,7 @@ def body(sig,at):
         "trade":{
             "mint":"MintSOL","direction":"BUY","token_amount_raw":"1000000","token_decimals":6,
             "quote_asset":"SOL","quote_amount_raw":"100000000000","quote_decimals":9,
+            "amount_predicate":"UNDETERMINED","amount_predicate_reason":"NON_USDC_QUOTE",
             "referenced_pre_raw":"0","referenced_post_raw":"1000000",
         },
     }
