@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "policy_id": "FOLLOW_POLICY_V1_REVIEW_CANDIDATE",
+  "status": "FROZEN_APPROVED",
+  "live_delivery_approved": true,
+  "basis": "USER_APPROVED_LIVE_NOTIFICATION_2026-10-07",
+  "decision": {
+    "quote_usdc_amount": "30",
+    "slippage_bps": 100,
+    "quote_cache_seconds": 20,
+    "max_quote_age_seconds": 30,
+    "max_frank_buy_age_seconds": 600,
+    "initial_notification_max_age_seconds": 600,
+    "transient_wait_grace_seconds": 60,
+    "transient_wait_reset_gap_seconds": 600,
+    "observation_bucket_seconds": 60,
+    "observation_retention_seconds": 5184000,
+    "max_candidates_per_cycle": 50,
+    "hard_no_buy_position_states": [
+      "CLOSED",
+      "INVENTORY_UNDETERMINED"
+    ],
+    "buy": {
+      "required_pattern": "MULTIPLE",
+      "max_price_deviation_pct": "8",
+      "max_price_impact_pct": "1.5"
+    },
+    "small_buy": {
+      "allowed_patterns": [
+        "MULTIPLE",
+        "ACCUMULATION"
+      ],
+      "max_price_deviation_pct": "20",
+      "max_price_impact_pct": "3"
+    }
+  }
+}
