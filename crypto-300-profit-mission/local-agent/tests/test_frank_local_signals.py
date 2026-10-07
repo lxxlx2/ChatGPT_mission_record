@@ -113,6 +113,76 @@ def test_multiple_target_assets_remain_ambiguous_without_dust_guess():
     assert set(e['classification_details']['target_assets'])=={'mint1','second-target'}
 
 
+
+
+def test_received_then_spent_created_intermediate_residual_is_routed_single_target():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:
+        t['meta'][field][1]['mint']=USDC
+    route='route-intermediate'
+    add_owned_asset(t,route,0,10,6)
+    route_index=len(t['transaction']['message']['accountKeys'])-1
+    route_account=t['transaction']['message']['accountKeys'][route_index]['pubkey']
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    t['meta']['innerInstructions']=[{'index':0,'instructions':[
+        {'programId':token,'parsed':{'type':'initializeAccount3','info':{
+            'account':route_account,'owner':WALLET,'mint':route}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'quote_ata','destination':'pool-a','mint':USDC,
+            'tokenAmount':{'amount':'500000','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-a','destination':route_account,'mint':route,
+            'tokenAmount':{'amount':'1000','decimals':6},'authority':'pool'}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':route_account,'destination':'pool-b','mint':route,
+            'tokenAmount':{'amount':'990','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-b','destination':'ata','mint':'mint1',
+            'tokenAmount':{'amount':'1000000','decimals':6},'authority':'pool'}}},
+    ]}]
+    e=classify('routed-residual',t,WALLET)
+    assert e['classification']=='ACTIVE_TRADE'
+    assert e['classification_reason']=='SIGNED_DEX_SWAP_ROUTED_SINGLE_TARGET_WITH_RESIDUAL_INTERMEDIATE'
+    assert e['trade']['mint']=='mint1'
+    assert e['trade']['quote_asset']==USDC
+    assert e['trade']['amount_predicate']=='USDC_DIRECT_NUMERIC'
+    routed=e['trade']['route_intermediate_assets']
+    assert len(routed)==1 and routed[0]['mint']==route
+    assert routed[0]['gross_in_raw']=='1000'
+    assert routed[0]['gross_out_raw']=='990'
+    assert routed[0]['net_delta']=='10'
+    assert routed[0]['downstream_target']=='mint1'
+    flows=e['evidence']['wallet_token_transfer_flows']
+    assert [(x['mint'],x['direction']) for x in flows]==[
+        (USDC,'OUT'),(route,'IN'),(route,'OUT'),('mint1','IN')
+    ]
+
+
+def test_existing_partially_sold_second_asset_is_not_assumed_route_intermediate():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:
+        t['meta'][field][1]['mint']=USDC
+    route='existing-second-target'
+    add_owned_asset(t,route,100,110,6)
+    route_index=len(t['transaction']['message']['accountKeys'])-1
+    route_account=t['transaction']['message']['accountKeys'][route_index]['pubkey']
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    t['meta']['innerInstructions']=[{'index':0,'instructions':[
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-a','destination':route_account,'mint':route,
+            'tokenAmount':{'amount':'1000','decimals':6},'authority':'pool'}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':route_account,'destination':'pool-b','mint':route,
+            'tokenAmount':{'amount':'990','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-b','destination':'ata','mint':'mint1',
+            'tokenAmount':{'amount':'1000000','decimals':6},'authority':'pool'}}},
+    ]}]
+    e=classify('existing-two-targets',t,WALLET)
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert e['classification_reason']=='AMBIGUOUS_USER_EXCHANGE_ASSETS'
+
+
 STAGE={'signal_type':'FRANK_ACCUMULATION_SIGNAL','stage':'PRECONFIRM','reason_codes':['TEST_SUPPLIED_STAGE']}
 MULTIPLE={'signal_type':'FRANK_MULTIPLE_SIGNAL','stage':'SUSPECTED_CONVICTION','reason_codes':['TEST_SUPPLIED_STAGE']}
 
