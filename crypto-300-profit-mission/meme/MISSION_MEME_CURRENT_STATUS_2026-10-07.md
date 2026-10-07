@@ -391,3 +391,34 @@ Remaining runtime acceptance items:
 3. exercise a real SOL/WSOL-quoted Frank trade before declaring the SOL normalization path empirically exercised;
 4. verify one actual Mission Control Gmail notification end-to-end, including Sent readback, when a real new eligible signal occurs;
 5. after a future Mac reboot/login, verify both LaunchAgents automatically recover and Dashboard HTTP returns 200 without manual intervention.
+
+
+## 13. CA research report v2 candidate — pending review
+
+Branch:
+`feature/meme-ca-report-v2-20261007`
+
+Reason:
+- first real CA acceptance attempt hit `HTTP_429` on the shared Solana public RPC;
+- the first web UI exposed wallet-cluster mechanics but was too thin for the user's actual Meme investment workflow.
+
+Candidate changes:
+- explain quick / standard / deep scan budgets directly in the UI;
+- remove the low-value CA hero description;
+- pace and rotate across the free Solana mainnet endpoints listed in the Solana RPC directory, honor `Retry-After`, retain local cache, and expose RPC failure counts;
+- never cache `getTransaction = null` as durable evidence;
+- add finalized-chain token program / supply / mint authority / freeze authority / parsed metadata-update-authority status;
+- add DexScreener secondary market snapshot (price, market cap, pair, liquidity, volume, buys/sells, price change);
+- add a Jupiter $30 read-only executable quote and impact;
+- expose bounded first confirmed market acquisition and pre-acquisition funding evidence for deep-scanned Top20 owners;
+- render two explicit conclusion layers: chain/market-structure conclusion and full-investment conclusion;
+- keep the full-investment conclusion pending when exact-CA narrative/official adoption, creator claim/buy/lock or treasury links are not verified;
+- persist the richer report in both JSON and Markdown.
+
+Trust boundary:
+- finalized Solana RPC is authoritative for chain ownership/transactions/permissions;
+- DexScreener is secondary market metadata only;
+- Jupiter is executable quote evidence only;
+- social/project adoption is not automatically inferred from name or link matching.
+
+This branch is **not merged or live**. It requires a fresh full local-agent test run and external review before merge/reinstall.
