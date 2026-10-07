@@ -224,7 +224,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 
 .cluster-result{display:grid;gap:12px}
 .cluster-summary{
-  display:grid;grid-template-columns:2fr repeat(5,1fr);gap:8px
+  display:grid;grid-template-columns:2fr repeat(6,1fr);gap:8px
 }
 .cluster-summary-card{
   border:1px solid var(--line);background:#101419;border-radius:7px;padding:10px 11px;min-width:0
