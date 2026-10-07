@@ -199,7 +199,7 @@ def test_launchd_installer_persists_authenticated_solana_rpc_for_restart():
     configure=(scripts/"configure_mission_meme_rpc.sh").read_text()
 
     assert 'RPC_FILE="$APP_SUPPORT/solana_rpc_urls"' in installer
-    assert 'SOLANA_RPC_URLS="$(cat "$RPC_FILE")"' in installer
+    assert 'SOLANA_RPC_URLS="\\$(cat "\\$RPC_FILE")"' in installer
     assert installer.count("export SOLANA_RPC_URLS")>=2
     assert 'chmod 600 "$RPC_FILE"' in installer
     assert "Authenticated Solana RPC: CONFIGURED (secret not printed)" in installer
