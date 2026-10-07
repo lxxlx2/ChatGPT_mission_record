@@ -73,3 +73,29 @@ def test_report_separates_coverage_and_performance():
     assert data["summary"]["track_count"]==1
     assert data["summary"]["entry_measured"]==1
     assert data["summary"]["horizons"]["300"]["measured"]==1
+
+
+def test_horizon_recovers_from_existing_sample_after_interrupted_finalize():
+    x=db();j=Jup();t=OutcomeTracker(x,j)
+    tid=t.register(candidate=candidate(),result=result(),quote=entry_quote(),now=100)
+    sample_id="manual"
+    x.execute(
+        "insert into outcome_samples values(?,?,?,?,?,?,?,?,?,?,?,?)",
+        (sample_id,tid,1,400.0,300,"MEASURED",None,"36","1.2","0.4",1,json.dumps({"fixture":True}))
+    )
+    t.sample_due(now=700,max_quotes=0)
+    row=x.execute("select * from outcome_horizons where tracking_id=? and horizon_seconds=300",(tid,)).fetchone()
+    assert row["status"]=="MEASURED"
+    assert row["sample_id"]==sample_id
+    assert row["return_pct"]=="20.0"
+
+
+def test_report_contains_profit_factor_and_robustness_shape():
+    x=db();j=Jup();t=OutcomeTracker(x,j)
+    t.register(candidate=candidate(),result=result(),quote=entry_quote(),now=100)
+    t.sample_due(now=400,max_quotes=2)
+    data=report(x)
+    five=data["summary"]["horizons"]["300"]
+    assert "profit_factor" in five
+    assert "performance_groups" in data["summary"]
+    assert "robustness_24h" in data["summary"]
