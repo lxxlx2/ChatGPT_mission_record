@@ -86,3 +86,27 @@ Automatic cluster rules follow `meme/WALLET_CLUSTER_ANALYSIS_SPEC.md`:
 ## Important limitation
 
 A free public RPC is not an indexed historical analytics service. Bounded history can miss old funding, consolidation and multi-token coordination. If material evidence is missing, the correct result is unresolved, not a guessed clean-holder conclusion.
+
+## Verified address labels
+
+Global infrastructure labels live under `addresses`. Token-specific dev/LP/treasury/escrow labels belong under `tokens.<MINT>.addresses` so an address is not accidentally treated as the same role for every token.
+
+Strict normalized concentration fields stay `UNRESOLVED` until that token's registry explicitly sets:
+
+    "normalization_complete": true
+
+Before that point the tool still emits `KNOWN_EX_*` metrics, but they are labelled as partial known-label calculations rather than complete holder normalization.
+
+Example:
+
+    "tokens": {
+      "<MINT>": {
+        "normalization_complete": true,
+        "addresses": {
+          "<POOL_AUTHORITY>": {"role":"AMM_POOL","source":"verified pool account"},
+          "<CREATOR>": {"role":"CREATOR","source":"verified create transaction"}
+        }
+      }
+    }
+
+This gate is intentional: an unlabelled CEX hot wallet or LP authority must not be silently treated as an ordinary independent holder.
