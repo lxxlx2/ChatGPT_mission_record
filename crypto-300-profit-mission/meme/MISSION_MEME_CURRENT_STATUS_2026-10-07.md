@@ -454,7 +454,7 @@ Required acceptance before merge:
 6. keep `PRODUCTION_TRADING = NO_GO`.
 
 
-## 13. 2026-10-08 Frank classifier coverage remediation candidate
+## 15. 2026-10-08 Frank classifier coverage remediation candidate
 
 Status: `FEATURE_BRANCH_ONLY / LOCAL_VALIDATION_REQUIRED / PRODUCTION_UNCHANGED`.
 
@@ -481,8 +481,27 @@ Frozen Frank thresholds are unchanged:
 - non-USDC/composite quote amounts cannot satisfy the USDC amount threshold by themselves;
 - production trading remains `NO_GO`.
 
+Local validation checkpoint on `7387ca1dfa83861406020b08c6ed78f424025c36`:
+- Python compile: PASS;
+- targeted regression: `167 passed`;
+- full local-agent suite: `769 passed`;
+- RACE production raw hash: verified;
+- old and candidate classifier at that checkpoint both returned `UNKNOWN_NEEDS_REVIEW / AMBIGUOUS_USER_EXCHANGE_ASSETS` because net balance evidence showed two positive non-quote assets: RARI `EFn88...gYwR` and RACE `RACEyW...9dLD`, with `5000 USDC` net outflow.
+
+Follow-up chain inspection showed why net-only balance classification is insufficient for this case:
+- the wallet's RACE Token-2022 ATA is created inside the transaction;
+- RACE is received into that wallet-owned ATA and then spent again inside the same atomic transaction, leaving only a residual balance;
+- the other positive target is RARI, whose principal pool is RARI/RACE;
+- therefore the candidate parser now records ordered wallet-owned token transfer legs and may collapse a residual intermediate only when the chain flow proves receive-before-spend into exactly one downstream target. No dust/value threshold is used;
+- parser evidence schema is bumped to `frank-v8`;
+- a new isolated read-only classifier replay tool `scripts/frank_classifier_candidate_replay.py` compares stored production classification/state/signal behavior with current candidate code before any migration.
+
+The route-flow additions were committed after the 769-pass checkpoint, so the exact current branch head still requires a fresh targeted + full suite run.
+
 Before any merge/runtime refresh:
-- run targeted parser/classifier/evaluator/SOL-normalization/Mission Control/CA-cluster tests and the full local-agent suite;
-- replay the current read-only `forward.sqlite` raw references through the candidate classifier in an isolated workspace;
-- inspect changed classifications, HFT changes, new/lost ACCUMULATION/MULTIPLE and specifically the RACE raw transaction;
+- run targeted parser/classifier/evaluator/SOL-normalization/Mission Control/CA-cluster tests and the full local-agent suite on the current head;
+- rerun the RACE raw transaction and require either a fully evidence-backed routed single-target result or continued fail-closed ambiguity;
+- run `scripts/frank_classifier_candidate_replay.py` against the current read-only `forward.sqlite` in a new isolated workspace;
+- inspect changed classifications, HFT changes, new/lost ACCUMULATION/MULTIPLE and every state delta;
+- require baseline production-signal parity before interpreting candidate signal deltas;
 - do not mutate existing production DB or replay historical notifications.
