@@ -55,6 +55,20 @@ def test_active_swap_requires_frank_authority():
 def test_active_buy_creates_position(tmp_path):
     l=Ledger(tmp_path/'db');put(l,active());p=json.loads(l.db.execute('select body from positions').fetchone()[0]);assert p['state']=='OPEN' and p['buy_count']==1 and p['current_token_position']=='100'
 
+def test_ledger_position_separates_unknown_quote_out_from_known_target_cost(tmp_path):
+    l=Ledger(tmp_path/'db')
+    e=active('unknown-cost',100,5000)
+    e['trade']['amount_predicate']='UNDETERMINED'
+    e['trade']['amount_predicate_reason']='ROUTED_RESIDUAL_ASSETS'
+    e['trade']['route_amount_semantics']='GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST'
+    put(l,e)
+    p=json.loads(l.db.execute('select body from positions').fetchone()[0])
+    assert p['gross_quote_spent']=={}
+    assert p['gross_quote_out_observed']=={USDC:'5000'}
+    assert len(p['quote_cost_unknown_contributions'])==1
+    assert p['quote_cost_unknown_contributions'][0]['signature']=='unknown-cost'
+
+
 def test_second_active_buy_is_add(tmp_path):
     l=Ledger(tmp_path/'db');put(l,active());put(l,active('add'));assert l.db.execute("select side from trades where signature='add'").fetchone()[0]=='ADD'
 
