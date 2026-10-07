@@ -20,8 +20,13 @@ from pathlib import Path
 from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
 from ..signals.classifier import classify
 from ..market.sol_usd import USDC, WSOL
+from .market import DexScreenerMarketClient
 
 DEFAULT_RPC = "https://api.mainnet.solana.com"
+DEFAULT_RPC_FALLBACKS = (
+    "https://api.mainnet-beta.solana.com",
+    "https://rpc.ankr.com/solana",
+)
 SYSTEM_PROGRAM = "11111111111111111111111111111111"
 TOKEN_PROGRAMS = {
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -68,38 +73,116 @@ class RpcCache:
 
 class SolanaReadOnlyRPC:
     ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction"}
-    def __init__(self, endpoint=DEFAULT_RPC, *, open_url=urllib.request.urlopen, sleep=time.sleep, min_interval=.30, cache:RpcCache|None=None):
-        self.endpoint=endpoint;self.open_url=open_url;self.sleep=sleep;self.min_interval=float(min_interval);self.cache=cache;self.last=0.0;self.calls=0;self.cache_hits=0
+    RETRYABLE_HTTP={403,429,500,502,503,504}
+
+    def __init__(
+        self,
+        endpoint=DEFAULT_RPC,
+        *,
+        fallback_endpoints=None,
+        open_url=urllib.request.urlopen,
+        sleep=time.sleep,
+        min_interval=.45,
+        cache:RpcCache|None=None,
+    ):
+        endpoints=[endpoint]
+        endpoints.extend(DEFAULT_RPC_FALLBACKS if fallback_endpoints is None else fallback_endpoints)
+        self.endpoints=[]
+        for value in endpoints:
+            if value and value not in self.endpoints:self.endpoints.append(value)
+        self.endpoint=self.endpoints[0]
+        self.open_url=open_url
+        self.sleep=sleep
+        self.min_interval=float(min_interval)
+        self.cache=cache
+        self.cache_hits=0
+        self.calls=0
+        self.endpoint_calls=defaultdict(int)
+        self.endpoint_failures=defaultdict(int)
+        self._last_by_endpoint=defaultdict(float)
+        self._cooldown_until=defaultdict(float)
+        self._cursor=0
+
+    def _next_endpoint(self):
+        now=time.monotonic()
+        ranked=[]
+        for offset in range(len(self.endpoints)):
+            idx=(self._cursor+offset)%len(self.endpoints)
+            endpoint=self.endpoints[idx]
+            ready=max(
+                self._cooldown_until[endpoint],
+                self._last_by_endpoint[endpoint]+self.min_interval,
+            )
+            ranked.append((ready,offset,idx,endpoint))
+        ready,_,idx,endpoint=min(ranked,key=lambda x:(x[0],x[1]))
+        delay=ready-now
+        if delay>0:self.sleep(delay)
+        self._cursor=(idx+1)%len(self.endpoints)
+        self.endpoint=endpoint
+        return endpoint
+
+    @staticmethod
+    def _retry_after(exc):
+        try:return min(60.0,max(0.0,float(exc.headers.get("Retry-After","0"))))
+        except (TypeError,ValueError,AttributeError):return 0.0
+
+    @staticmethod
+    def _rpc_rate_limited(error):
+        if not isinstance(error,dict):return False
+        code=error.get("code")
+        message=str(error.get("message") or "").lower()
+        return code in {-32005,-32429,429} or "rate limit" in message or "too many request" in message
+
     def call(self, method, params, *, ttl=0):
         if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
         now=time.time()
         if ttl and self.cache:
             hit=self.cache.get(method,params,now)
             if hit is not None:self.cache_hits+=1;return hit
-        wait=self.min_interval-(time.monotonic()-self.last)
-        if wait>0:self.sleep(wait)
+
         body=json.dumps({"jsonrpc":"2.0","id":1,"method":method,"params":params}).encode()
-        req=urllib.request.Request(self.endpoint,data=body,headers={"Content-Type":"application/json","User-Agent":"mission-meme-cluster/1"})
         last_error=None
-        for attempt in range(3):
+        null_seen=0
+        max_attempts=max(6,len(self.endpoints)*3)
+        for attempt in range(max_attempts):
+            endpoint=self._next_endpoint()
+            req=urllib.request.Request(endpoint,data=body,headers={
+                "Content-Type":"application/json",
+                "User-Agent":"mission-meme-cluster/2",
+            })
             try:
-                self.last=time.monotonic();self.calls+=1
+                self._last_by_endpoint[endpoint]=time.monotonic()
+                self.calls+=1;self.endpoint_calls[endpoint]+=1
                 with self.open_url(req,timeout=20) as response:value=json.loads(response.read())
-                if value.get("error"):raise RPCError("RPC_"+str(value["error"].get("code","ERROR")))
+                if value.get("error"):
+                    error=value.get("error") or {}
+                    if self._rpc_rate_limited(error):
+                        self.endpoint_failures[endpoint]+=1
+                        self._cooldown_until[endpoint]=max(
+                            self._cooldown_until[endpoint],
+                            time.monotonic()+min(30.0,1.5*(2**min(attempt,4))),
+                        )
+                        last_error=RPCError("RPC_RATE_LIMITED")
+                        continue
+                    raise RPCError("RPC_"+str(error.get("code","ERROR")))
                 if "result" not in value:raise RPCError("RPC_ENVELOPE_INVALID")
                 result=value["result"]
+                if method=="getTransaction" and result is None and len(self.endpoints)>1 and null_seen<1:
+                    null_seen+=1
+                    continue
                 if ttl and self.cache:self.cache.put(method,params,result,ttl,time.time())
                 return result
             except urllib.error.HTTPError as exc:
-                last_error=RPCError("HTTP_"+str(exc.code))
-                if exc.code not in {429,500,502,503,504} or attempt==2:raise last_error
-                try:retry_after=min(30.0,max(0.0,float(exc.headers.get("Retry-After","0"))))
-                except (TypeError,ValueError,AttributeError):retry_after=0.0
-                self.sleep(max(min(5.0,1.0*(2**attempt)),retry_after))
+                last_error=RPCError("HTTP_"+str(exc.code));self.endpoint_failures[endpoint]+=1
+                if exc.code not in self.RETRYABLE_HTTP:raise last_error
+                retry=max(self._retry_after(exc),min(30.0,1.5*(2**min(attempt,4))))
+                self._cooldown_until[endpoint]=max(self._cooldown_until[endpoint],time.monotonic()+retry)
             except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
-                last_error=RPCError(type(exc).__name__)
-                if attempt==2:raise last_error
-                self.sleep(min(5.0,1.0*(2**attempt)))
+                last_error=RPCError(type(exc).__name__);self.endpoint_failures[endpoint]+=1
+                self._cooldown_until[endpoint]=max(
+                    self._cooldown_until[endpoint],
+                    time.monotonic()+min(10.0,1.0*(2**min(attempt,3))),
+                )
         raise last_error or RPCError("RPC_FAILED")
 
 
