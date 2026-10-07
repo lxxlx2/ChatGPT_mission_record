@@ -15,6 +15,7 @@ from .frank import FrankReader
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
 from .outcomes import OutcomeTracker
+from .sol_mirror import SolNormalizedMirror, merge_candidates
 from .policy import evaluate, load_policy, should_notify
 
 
@@ -46,6 +47,12 @@ class MissionMemeService:
         self.debounce = TransitionDebounce(self.control.db)
         self.observations = ObservationStore(self.control.db)
         self.frank = FrankReader(self.production_root)
+        frozen_frank_policy = Path(__file__).resolve().parents[2] / "config" / "frank_local_signal_v1.json"
+        self.sol_mirror = SolNormalizedMirror(
+            self.production_root / "forward.sqlite",
+            self.control_root / "sol-normalized-v1.sqlite",
+            frozen_frank_policy,
+        )
         self.policy, self.policy_hash = load_policy(policy_path)
         self.live_delivery_requested = bool(live_delivery)
         self.approved_policy_sha256 = approved_policy_sha256
@@ -63,6 +70,7 @@ class MissionMemeService:
         self.health_path = self.control_root / "mission-control-health.json"
 
     def close(self):
+        self.sol_mirror.close()
         self.control.close()
 
     def _write_health(self, status: str, **extra) -> None:
@@ -153,7 +161,10 @@ class MissionMemeService:
 
     def cycle(self) -> dict:
         runtime = self.frank.runtime()
-        candidates = self.frank.candidates()
+        sol_normalization = self.sol_mirror.sync()
+        base_candidates = self.frank.candidates()
+        overlay_candidates = self.sol_mirror.candidates() if sol_normalization.get("status") == "OK" else []
+        candidates = merge_candidates(base_candidates, overlay_candidates)
         events = []
         errors = []
         debounced = []
@@ -258,6 +269,7 @@ class MissionMemeService:
         status = "OK" if not errors else "DEGRADED"
         result = {
             "runtime":runtime,
+            "sol_normalization":sol_normalization,
             "candidate_count":len(candidates),
             "evaluated_count":len(selected),
             "decision_events":events,
@@ -281,6 +293,11 @@ class MissionMemeService:
             outcome_active=outcome_tracking.get("active",0),
             outcome_sampled=outcome_tracking.get("sampled",0),
             outcome_error_count=len(outcome_tracking.get("errors") or []),
+            sol_normalization_status=sol_normalization.get("status"),
+            sol_normalization_copied=sol_normalization.get("copied",0),
+            sol_normalization_resolved=sol_normalization.get("sol_resolved",0),
+            sol_normalization_unresolved=sol_normalization.get("sol_unresolved",0),
+            sol_normalization_added_signals=sol_normalization.get("added_signal_count",0),
         )
         return result
 
