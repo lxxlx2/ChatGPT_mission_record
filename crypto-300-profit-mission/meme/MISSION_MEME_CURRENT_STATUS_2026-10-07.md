@@ -100,7 +100,8 @@ User-run acceptance on 2026-10-07 confirmed:
 
 - original live-notification acceptance baseline: `706 passed`
 - independent review of feature head `fa01f7e`: `727 passed` (21 additional tests)
-- subsequent review-fix commits after `fa01f7e` still require a fresh full local rerun before merge
+- independent re-review of remediation head `6c069ea`: `736 passed`; all nine previously reported issues were rechecked and no new blocker was found
+- small post-review UI/persistence polish after `6c069ea` still requires one final full local rerun before merge
 - approved policy gate: PASS
 - Gmail OAuth readiness: PASS
 - recipient resolved successfully
@@ -326,3 +327,14 @@ Independent review of `fa01f7e` found three credibility-impacting defects plus s
 9. This status document now distinguishes current main/live authority from review-branch candidate functionality.
 
 A fresh full local-agent test run is required after these remediation commits; do not reuse the earlier `727 passed` as proof for the new head.
+
+
+### Post-736 polish
+
+After the `736 passed` review of `6c069ea`, three non-blocking polish items were implemented:
+
+- persisted CA reports display exact observation time plus relative age after refresh, reducing the chance that an old holder snapshot is mistaken for current state;
+- `SHARED_INFRA` / common-CEX evidence is localized in the Dashboard as public/shared infrastructure and explicitly says it does not imply common control;
+- cluster report files, including `latest.json`, are written with temp-file + atomic replace semantics to avoid partial reads during same-CA refresh.
+
+These commits were made after the 736-pass run, so one final full-suite rerun on the current feature HEAD is still required before merge.
