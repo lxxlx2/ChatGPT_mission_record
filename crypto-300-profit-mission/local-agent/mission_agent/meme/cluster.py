@@ -282,7 +282,12 @@ class WalletClusterAnalyzer:
             sig=meta.get("signature")
             if not sig:continue
             try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
-            except Exception:continue
+            except Exception as exc:
+                self.tx_errors.append({"signature":sig,"phase":"funding","error":type(exc).__name__})
+                continue
+            if not tx:
+                self.tx_errors.append({"signature":sig,"phase":"funding","error":"UNAVAILABLE_ON_PUBLIC_RPC"})
+                continue
             bt=tx.get("blockTime")
             if bt is None or bt>first["block_time"]:continue
             for source,lamports in _native_funders(tx,holder.owner):
@@ -332,6 +337,11 @@ class WalletClusterAnalyzer:
                     pair_counts[pair]["IDENTICAL_SIZE"]+=1;self._edge(*pair,"IDENTICAL_SIZE",a["signature"],other_signature=b["signature"],quote_amount_raw=a["quote_amount_raw"])
                 common=set(a.get("program_ids") or []) & set(b.get("program_ids") or [])
                 common-=set(INFRA_PROGRAMS)
+                common-=set(DEX_PROGRAMS)
+                common={
+                    program for program in common
+                    if (self._entry(program) or {}).get("role") not in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","AMM_POOL","PROTOCOL_VAULT"}
+                }
                 if common:
                     pair_counts[pair]["SAME_EXECUTION_PROGRAM"]+=1;self._edge(*pair,"SAME_EXECUTION_PROGRAM",a["signature"],other_signature=b["signature"],programs=sorted(common))
         signer_owners=defaultdict(set)
@@ -396,7 +406,12 @@ class WalletClusterAnalyzer:
         ex_lp=[h for h in holders if h.role not in {"LP","AMM_POOL"}]
         ex_special_top10=sum(h.raw for h in nonspecial[:10])
         ex_lp_top10=sum(h.raw for h in ex_lp[:10])
-        dev_raw=sum(h.raw for h in holders if h.role in DEV_ROLES)
+        dev_owners={h.owner for h in holders if h.role in DEV_ROLES}
+        dev_linked_owners=set(dev_owners)
+        for group in control.groups():
+            if set(group) & dev_owners:
+                dev_linked_owners.update(group)
+        dev_raw=sum(balances[o] for o in dev_linked_owners)
         cluster_values=[];seen=set();group_by_owner={}
         for g in control.groups():
             for o in g:group_by_owner[o]=tuple(sorted(g))
@@ -406,7 +421,10 @@ class WalletClusterAnalyzer:
             seen.add(g);cluster_values.append(sum(balances[o] for o in g))
         cluster_values.sort(reverse=True)
         unresolved_raw=0;classified=set()
-        for g in control_groups+execution_groups+relation_groups:classified.update(g["wallets"])
+        # Execution-only similarity never resolves holder identity/control. Keep
+        # those material holders in the unresolved bucket unless a direct
+        # relation or probable-control cluster independently explains them.
+        for g in control_groups+relation_groups:classified.update(g["wallets"])
         for h in nonspecial:
             pct=Decimal(h.raw)*100/Decimal(supply) if supply else Decimal(0)
             if pct>=self.material_pct and h.owner not in classified and h.role in {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:unresolved_raw+=h.raw
