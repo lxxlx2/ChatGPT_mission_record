@@ -83,6 +83,39 @@ def _all_valid_nonnegative(values):
     parsed=[_decimal_value(value) for value in values]
     return all(value is not None and value>=0 for value in parsed)
 
+def _direct_alias_values(mapping, aliases):
+    if not isinstance(mapping,dict):
+        return []
+    return [
+        value for key,value in mapping.items()
+        if _extension_name(key) in aliases
+    ]
+
+def _fee_schedule(config, schedule_name):
+    schedules=_config_values(config,{schedule_name})
+    if not schedules:
+        return {"status":"INCOMPLETE"}
+    if len(schedules)!=1 or not isinstance(schedules[0],dict):
+        return {"status":"INVALID"}
+    schedule=schedules[0]
+    basis=_direct_alias_values(schedule,{"transferfeebasispoints","basispoints"})
+    maximum=_direct_alias_values(schedule,{"maximumfee","maxfee"})
+    if not basis or not maximum:
+        return {"status":"INCOMPLETE"}
+    if len(basis)!=1 or len(maximum)!=1:
+        return {"status":"INVALID"}
+    basis_value=_decimal_value(basis[0]);maximum_value=_decimal_value(maximum[0])
+    if (
+        basis_value is None or maximum_value is None
+        or basis_value<0 or maximum_value<0
+    ):
+        return {"status":"INVALID"}
+    return {
+        "status":"VALID",
+        "basis_points":basis_value,
+        "maximum_fee":maximum_value,
+    }
+
 def _extension_risk(extension):
     if not isinstance(extension,dict):
         return {"name":str(extension),"status":"UNRESOLVED","reason":"EXTENSION_CONFIG_UNAVAILABLE","config":extension}
@@ -95,19 +128,39 @@ def _extension_risk(extension):
     if "transferfee" in normalized:
         config_authorities=_config_values(config,{"transferfeeconfigauthority"})
         withdraw_authorities=_config_values(config,{"withdrawwithheldauthority"})
-        basis_points=_config_values(config,{"transferfeebasispoints","basispoints"})
-        maximum_fees=_config_values(config,{"maximumfee","maxfee"})
         authority_values=config_authorities+withdraw_authorities
         authority_states=[_authority_state(v) for v in authority_values]
-        positive_fee=any(_positive_number(v) for v in basis_points+maximum_fees)
+        older=_fee_schedule(config,"oldertransferfee")
+        newer=_fee_schedule(config,"newertransferfee")
+        positive_fee=any(
+            schedule.get("status")=="VALID"
+            and (schedule["basis_points"]>0 or schedule["maximum_fee"]>0)
+            for schedule in (older,newer)
+        )
+        # A directly parseable positive fee elsewhere in an incomplete payload
+        # is still sufficient to remain fail-closed as active risk.
+        if not positive_fee:
+            raw_fee_values=_config_values(config,{"transferfeebasispoints","basispoints","maximumfee","maxfee"})
+            positive_fee=any(_positive_number(v) for v in raw_fee_values)
         if "ACTIVE" in authority_states or positive_fee:
             status="ACTIVE_RISK";reason="TRANSFER_FEE_ACTIVE_OR_MUTABLE"
         else:
-            authorities_complete=bool(config_authorities) and bool(withdraw_authorities)
-            schedules_complete=len(basis_points)>=2 and len(maximum_fees)>=2
-            authorities_valid=authorities_complete and all(state=="REVOKED" for state in authority_states)
-            fees_valid=schedules_complete and _all_valid_nonnegative(basis_points+maximum_fees)
-            if authorities_valid and fees_valid:
+            authorities_complete=len(config_authorities)==1 and len(withdraw_authorities)==1
+            authorities_valid=(
+                authorities_complete
+                and all(state=="REVOKED" for state in authority_states)
+            )
+            schedules=(older,newer)
+            schedules_complete=all(item["status"]!="INCOMPLETE" for item in schedules)
+            schedules_valid=all(item["status"]=="VALID" for item in schedules)
+            schedules_zero=(
+                schedules_valid
+                and all(
+                    item["basis_points"]==0 and item["maximum_fee"]==0
+                    for item in schedules
+                )
+            )
+            if authorities_valid and schedules_zero:
                 status="INACTIVE";reason="TRANSFER_FEE_ZERO_AND_AUTHORITIES_REVOKED"
             elif not authorities_complete or not schedules_complete:
                 reason="TRANSFER_FEE_CONFIG_INCOMPLETE"
@@ -121,9 +174,9 @@ def _extension_risk(extension):
         if "ACTIVE" in authority_states or "ACTIVE" in program_states:
             status="ACTIVE_RISK";reason="TRANSFER_HOOK_ACTIVE_OR_MUTABLE"
         elif (
-            hook_authorities and programs
-            and all(state=="REVOKED" for state in authority_states)
-            and all(state=="REVOKED" for state in program_states)
+            len(hook_authorities)==1 and len(programs)==1
+            and authority_states==["REVOKED"]
+            and program_states==["REVOKED"]
         ):
             status="INACTIVE";reason="TRANSFER_HOOK_DISABLED_AND_AUTHORITY_REVOKED"
         elif not hook_authorities or not programs:
