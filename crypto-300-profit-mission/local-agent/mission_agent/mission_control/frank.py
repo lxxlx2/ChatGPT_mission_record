@@ -249,6 +249,65 @@ class FrankReader:
         finally:
             db.close()
 
+    def review_activity(self, limit: int = 30) -> list[dict]:
+        """Expose ambiguous active swap-like facts without promoting them to trades/signals."""
+        db = open_production_ro(self.database)
+        try:
+            try:
+                rows=db.execute(
+                    """SELECT signature,block_time,body FROM signatures
+                       WHERE json_extract(body,'$.classification')='UNKNOWN_NEEDS_REVIEW'
+                         AND json_extract(body,'$.evidence.mechanical_classification')='ACTIVE_SWAP_LIKE'
+                       ORDER BY block_time DESC LIMIT ?""",
+                    (limit,),
+                ).fetchall()
+            except sqlite3.Error:
+                return []
+            result=[]
+            for row in rows:
+                try:body=json.loads(row["body"])
+                except (TypeError,ValueError):continue
+                evidence=body.get("evidence") or {}
+                grouped={}
+                for delta in evidence.get("token_balance_deltas") or []:
+                    if not delta.get("wallet_owned"):continue
+                    try:
+                        raw=int(delta.get("delta") or 0);decimals=int(delta.get("decimals"))
+                    except (TypeError,ValueError):continue
+                    if not raw:continue
+                    mint=delta.get("mint")
+                    if not mint:continue
+                    item=grouped.setdefault(mint,{"mint":mint,"delta_raw":0,"decimals":decimals})
+                    if item["decimals"]!=decimals:continue
+                    item["delta_raw"]+=raw
+                for flow in evidence.get("decoded_transient_token_flows") or []:
+                    try:
+                        raw=int(flow.get("net_transfer_raw") or 0);decimals=int(flow.get("decimals"))
+                    except (TypeError,ValueError):continue
+                    mint=flow.get("mint")
+                    if not mint or not raw:continue
+                    item=grouped.setdefault(mint,{"mint":mint,"delta_raw":0,"decimals":decimals})
+                    if item["decimals"]!=decimals:continue
+                    item["delta_raw"]+=raw
+                assets=[
+                    {**item,"delta_raw":str(item["delta_raw"])}
+                    for item in grouped.values() if item["delta_raw"]
+                ]
+                quote_mints={USDC,WSOL,"Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"}
+                result.append({
+                    "signature":row["signature"],"block_time":row["block_time"],
+                    "classification_reason":body.get("classification_reason"),
+                    "candidate_mints":[x["mint"] for x in assets if x["mint"] not in quote_mints],
+                    "assets":assets,
+                    "program_ids":evidence.get("program_ids") or [],
+                    "dex_program_interaction":bool((evidence.get("classification_evidence") or {}).get("dex_program_interaction")),
+                    "swap_instruction_evidence":bool((evidence.get("classification_evidence") or {}).get("swap_instruction_evidence")),
+                    "opposing_economic_flows":bool((evidence.get("classification_evidence") or {}).get("opposing_economic_flows")),
+                })
+            return result
+        finally:
+            db.close()
+
     def recent_trades(self, limit: int = 100) -> list[dict]:
         db = open_production_ro(self.database)
         try:
