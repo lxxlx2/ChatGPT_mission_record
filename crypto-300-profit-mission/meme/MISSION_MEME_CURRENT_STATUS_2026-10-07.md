@@ -439,7 +439,9 @@ Changes relative to v2:
 - deep preset remains 20 owners / 100 + 50;
 - Dashboard jobs expose progressive stages instead of a generic long-running spinner;
 - per-CA conclusion history persists only material assessment changes and records new risks / removed uncertainty;
-- missing `InvalidOperation` import in the v2 candidate was corrected.
+- missing `InvalidOperation` import in the v2 candidate was corrected;
+- CA reports now include the existing read-only Frank state for that exact mint;
+- Token-2022 sensitive extensions are surfaced as explicit chain-risk flags.
 
 No main merge, LaunchAgent reinstall, notification-rule change, threshold change, wallet signing or production trading is authorized by this branch.
 
