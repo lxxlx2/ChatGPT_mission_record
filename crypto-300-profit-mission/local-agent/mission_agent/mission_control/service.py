@@ -132,7 +132,9 @@ class MissionMemeService:
         return {k:candidate.get(k) for k in (
             "person_id","mint","episode_id","runtime_status","pattern","source_signal_id","source_signal_type","source_signal_at",
             "position_state","current_raw","buy_count","sell_count","latest_side","latest_signature","latest_at",
-            "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset","latest_buy_quote_quantity","token_decimals"
+            "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset","latest_buy_quote_quantity",
+            "latest_buy_original_quote_asset","latest_buy_original_quote_quantity","latest_buy_quote_was_normalized",
+            "latest_buy_usdc_equivalent","latest_buy_model_quote_asset","latest_buy_model_quote_quantity","candidate_source","token_decimals"
         )} | {"quote":cls._stable_quote_inputs(quote)}
 
     @staticmethod
