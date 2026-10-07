@@ -29,7 +29,7 @@ def test_direct_transfer_is_relation_not_control():
     a=analyzer()
     def scan(h,mapping,top_owners):
         if h.owner=="A":a._edge("A","B","DIRECT_TOKEN_TRANSFER","tx1")
-        return 100
+        return {"block_time":100,"signature":"first-"+h.owner}
     a._scan_holder=scan
     out=a.analyze()
     assert out["confirmed_relation_groups"][0]["supply_pct"]=="35.0000"
@@ -45,7 +45,7 @@ def test_common_funder_plus_sync_can_form_probable_control_cluster():
         if h.owner=="B":
             a.funding.append({"owner":"B","source":"F","lamports":"1","signature":"fb","block_time":90})
             a.trades.append({"owner":"B","signature":"b1","block_time":101,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"100","quote_decimals":9,"program_ids":["DEX"],"signers":["B"]})
-        return 100
+        return {"block_time":100,"signature":"first-"+h.owner}
     a._scan_holder=scan
     out=a.analyze()
     assert out["probable_control_clusters"]
@@ -70,7 +70,7 @@ def test_execution_cluster_does_not_become_control_without_strong_evidence():
             a.trades.append({"owner":"A","signature":"a1","block_time":100,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"100","quote_decimals":9,"program_ids":["DEX"],"signers":["A"]})
         if h.owner=="B":
             a.trades.append({"owner":"B","signature":"b1","block_time":100,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"100","quote_decimals":9,"program_ids":["DEX"],"signers":["B"]})
-        return 100
+        return {"block_time":100,"signature":"first-"+h.owner}
     a._scan_holder=scan
     out=a.analyze()
     assert out["probable_execution_clusters"]
@@ -91,7 +91,7 @@ def test_unknown_common_funder_is_not_promoted_to_probable_control():
         if h.owner in {"A","B"}:
             a.funding.append({"owner":h.owner,"source":"UNKNOWN","lamports":"1","signature":"f-"+h.owner,"block_time":90})
             a.trades.append({"owner":h.owner,"signature":"t-"+h.owner,"block_time":100,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"100","quote_decimals":9,"program_ids":["DEX"],"signers":[h.owner]})
-        return 100
+        return {"block_time":100,"signature":"first-"+h.owner}
     a._scan_holder=scan
     out=a.analyze()
     assert out["probable_control_clusters"]==[]
