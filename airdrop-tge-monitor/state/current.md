@@ -5,10 +5,10 @@ Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-07 10:52:44 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-07 14:50:27 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-07 10:52:44 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-07/105244-final-retry.md
+- latest_authoritative_success: 2026-10-07 14:50:27 Asia/Bangkok
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-07/145027-final.md
 - latest_scheduled_shard: 2
 - latest_executed_shard: 2
 - latest_stale_shard_recovery: false
@@ -47,7 +47,7 @@ Timezone: Asia/Bangkok
 
 ## Health
 
-- Latest final-retry audit completed successfully.
+- Latest final audit completed successfully.
 - Known-events were processed before discovery.
 - Urgent set and Shard 2 completed without unresolved source or identity failures.
 - No new Tier A/B material delta affecting unresolved user rights was found.
