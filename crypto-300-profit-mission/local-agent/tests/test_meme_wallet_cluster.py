@@ -206,6 +206,65 @@ def test_full_report_exposes_bounded_holder_acquisition_and_conservative_conclus
     assert out["assessment"]["trading_status"]=="WATCH / WALLET_CLUSTER_UNRESOLVED"
 
 
+def token2022_profile(extension):
+    class RPC:
+        endpoint="test";calls=0;cache_hits=0
+        def call(self,*args,**kwargs):
+            return {"value":{
+                "owner":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                "data":{"parsed":{"info":{
+                    "mintAuthority":None,"freezeAuthority":None,"decimals":6,
+                    "supply":"1000000","isInitialized":True,"extensions":[extension],
+                }}},
+            }}
+    return WalletClusterAnalyzer("Mint",rpc=RPC(),deep_holders=1).token_profile()
+
+
+def test_token2022_zero_transfer_fee_with_revoked_authorities_is_inactive_not_risk():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{
+            "transferFeeConfigAuthority":None,
+            "withdrawWithheldAuthority":None,
+            "olderTransferFee":{"transferFeeBasisPoints":0,"maximumFee":0},
+            "newerTransferFee":{"transferFeeBasisPoints":0,"maximumFee":0},
+        },
+    })
+    assert profile["sensitive_extension_details"][0]["status"]=="INACTIVE"
+    assert profile["active_extension_risks"]==[]
+    assert profile["risk_flags"]==[]
+    a=analyzer();a.token_profile=lambda:profile
+    out=a.analyze()
+    assert out["assessment"]["chain_permission_status"]=="PASS"
+
+
+def test_token2022_nonzero_transfer_fee_is_active_risk_even_when_authority_revoked():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{
+            "transferFeeConfigAuthority":None,
+            "withdrawWithheldAuthority":None,
+            "olderTransferFee":{"transferFeeBasisPoints":25,"maximumFee":100},
+            "newerTransferFee":{"transferFeeBasisPoints":25,"maximumFee":100},
+        },
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="ACTIVE_RISK"
+    assert "TRANSFER_FEE_ACTIVE_OR_MUTABLE"==detail["reason"]
+    assert profile["active_extension_risks"]
+
+
+def test_token2022_disabled_hook_and_active_delegate_are_distinguished():
+    hook=token2022_profile({
+        "extension":"transferHook","state":{"authority":None,"programId":None}
+    })
+    assert hook["sensitive_extension_details"][0]["status"]=="INACTIVE"
+    delegate=token2022_profile({
+        "extension":"permanentDelegate","state":{"delegate":"Delegate1111111111111111111111111111111"}
+    })
+    assert delegate["sensitive_extension_details"][0]["status"]=="ACTIVE_RISK"
+
+
 def test_adaptive_scan_deepens_suspicious_counterpart_beyond_initial_prefix():
     a=analyzer()
     a.deep_holders=2
