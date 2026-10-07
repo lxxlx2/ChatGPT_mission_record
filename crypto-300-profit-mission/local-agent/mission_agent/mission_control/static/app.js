@@ -427,11 +427,14 @@ function renderReviewActivity(rows) {
     const solscan=x.signature
       ? `<a class="link-btn compact" href="https://solscan.io/tx/${encodeURIComponent(x.signature)}" target="_blank" rel="noreferrer">交易 ↗</a>`
       : '';
+    const residual=(x.residual_flow_candidates || []);
     const reason=x.review_scope==='SIGNED_OPPOSING_FLOW_MARKET_UNPROVEN'
       ? 'Frank 已签名且存在相反资产流，但市场程序/指令证据不足；未进入跟随模型。'
-      : x.classification_reason==='AMBIGUOUS_USER_EXCHANGE_ASSETS'
-        ? '多资产/多结算腿，无法安全归约成单一买卖；未进入跟随模型。'
-        : `未归约原因：${x.classification_reason || 'UNKNOWN'}`;
+      : x.classification_reason==='AMBIGUOUS_USER_EXCHANGE_ASSETS' && residual.length
+        ? '检测到新建资产账户存在 receive→spend 守恒残余，但无法证明该支出与另一目标资产属于同一路由；保持待复核，不进入跟随模型。'
+        : x.classification_reason==='AMBIGUOUS_USER_EXCHANGE_ASSETS'
+          ? '多资产/多结算腿，无法安全归约成单一买卖；未进入跟随模型。'
+          : `未归约原因：${x.classification_reason || 'UNKNOWN'}`;
     return `<div class="feed-row trade-row">
       <div class="feed-badge">${badge('REVIEW',sideLabel)}</div>
       <div class="feed-main">
