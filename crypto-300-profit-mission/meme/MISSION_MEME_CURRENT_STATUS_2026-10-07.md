@@ -2,7 +2,7 @@
 
 Timezone: Asia/Bangkok
 
-Status: `LIVE_NOTIFICATION / OBSERVATION_ACTIVE / PRODUCTION_TRADING_NO_GO`
+Status: `MAIN_MERGED / LOCAL_RUNTIME_PENDING_REFRESH / LIVE_NOTIFICATION_EXISTING_STACK / PRODUCTION_TRADING_NO_GO`
 
 This file is the current operational handoff for the Frank/Meme lane. It supersedes older review-only wording for current runtime state, while older reports remain historical evidence.
 
@@ -54,12 +54,12 @@ Implemented and in main:
 17. LaunchAgent runtime policy is copied to `~/Library/Application Support/FrankMeme/follow_policy_v1.approved.json` to avoid macOS Documents/TCC denial.
 18. Existing Frank production LaunchAgent remains separate and is not modified by Mission Control.
 
-### 2A. Review-branch additions — not yet main/live
+### 2A. Meme local tooling v2 — merged to main, local runtime refresh pending
 
-Branch:
-`feature/meme-local-tooling-v2-20261007`
+Merge commit:
+`2f83be332e2c20270a3f534e333f1a19ea8b6bc5`
 
-The branch currently adds, pending re-review + local rerun + merge:
+The following functionality is now in `main`:
 
 - independent forward outcome tracking with executable Jupiter entry/exit quotes;
 - fixed T+5m / T+15m / T+1h / T+6h / T+24h horizons;
@@ -68,7 +68,7 @@ The branch currently adds, pending re-review + local rerun + merge:
 - a free local Solana wallet-cluster engine and a tabbed `CA 链上查询` view inside the same Dashboard;
 - Chinese trading-oriented Mission Control notification content.
 
-These additions are **not operational authority** until the branch is revalidated, synchronized with current main, merged, and the local LaunchAgents are restarted on the merged main.
+Pre-merge review is complete (`738 passed` on feature code head `b6f26499`). The code is now merged to `main`, but the user's Mac is still running the previously installed local checkout/LaunchAgents until it is explicitly synchronized and restarted. Do not claim the new CA-query/outcome/SOL-sidecar code is live before that local acceptance.
 
 ## 3. Current approved follow policy
 
@@ -198,9 +198,9 @@ Do not call the strategy validated from raw Frank wallet PnL or one large winner
 
 Current main/live Mission Control still has the historical gap described below: it stores 60-day observations plus immutable Decision transitions, but does not yet guarantee independent fixed-horizon capture after Frank exits.
 
-The review branch now contains a forward-only outcome tracker that records executable Jupiter entry inventory and T+5m/T+15m/T+1h/T+6h/T+24h exit observations, with `MISSED_WINDOW` instead of hindsight backfill.
+`main` now contains the forward-only outcome tracker that records executable Jupiter entry inventory and T+5m/T+15m/T+1h/T+6h/T+24h exit observations, with `MISSED_WINDOW` instead of hindsight backfill.
 
-Until that branch is revalidated, merged and restarted locally, the live system must still be treated as having the old gap. Do not reconstruct missing horizon prices by guess.
+Until the user's local checkout is synchronized to merge commit `2f83be33` (or a later main) and the Mission Meme LaunchAgents are restarted, the currently running local system must still be treated as having the old gap. Do not reconstruct missing horizon prices by guess.
 
 ## 7. Open validation items inside current Frank system
 
@@ -216,7 +216,7 @@ These are not blockers for normal notification use, but remain unclosed evidence
 
 ### P0 — needed for rigorous monthly Frank strategy review
 
-**Post-signal outcome tracker / monthly evaluator — IMPLEMENTED IN REVIEW BRANCH, NOT YET MAIN/LIVE**
+**Post-signal outcome tracker / monthly evaluator — MERGED TO MAIN, LOCAL RUNTIME REFRESH PENDING**
 
 Review-branch implementation:
 - forward-only registration for fresh REENTRY_WATCH / ACCUMULATION / MULTIPLE stages;
@@ -229,7 +229,7 @@ Review-branch implementation:
 - Ex-Top1 / Ex-Top3 24h robustness;
 - `MISSED_WINDOW` rather than late-price backfill.
 
-It still needs current-head full-suite rerun and live forward sampling after merge.
+It still needs one final local full-suite rerun on merged `main`, LaunchAgent restart, and then real forward sampling.
 
 ### P1 — tracked-person expansion
 
@@ -253,7 +253,7 @@ The old design exists, but live authority is Frank-only. It requires at least tw
 
 ### P1 — wallet-cluster automation for CA research
 
-**General wallet-cluster reconstruction engine — IMPLEMENTED IN REVIEW BRANCH, NOT YET MAIN/LIVE**
+**General wallet-cluster reconstruction engine — MERGED TO MAIN, LOCAL RUNTIME REFRESH PENDING**
 
 Review-branch implementation:
 - CA input in the same localhost Dashboard under `CA 链上查询`;
@@ -269,7 +269,7 @@ Review-branch implementation:
 - quick / standard / deep presets;
 - asynchronous single-worker execution to protect the free public RPC path.
 
-The current branch still requires one real public-RPC CA acceptance run on the user's Mac before merge.
+The merged implementation still requires one real public-RPC CA acceptance run on the user's Mac before calling the feature locally accepted.
 
 ### P2 — MONSTER / 妖币 discovery
 
@@ -338,3 +338,28 @@ After the `736 passed` review of `6c069ea`, three non-blocking polish items were
 - cluster report files, including `latest.json`, are written with temp-file + atomic replace semantics to avoid partial reads during same-CA refresh.
 
 These commits were independently revalidated on `b6f26499`; the full local-agent suite passed `738` tests with no new blocker.
+
+
+## 11. Merge record — 2026-10-07
+
+Pull request #27 merged successfully into `main`.
+
+- merge commit: `2f83be332e2c20270a3f534e333f1a19ea8b6bc5`
+- accepted feature code head: `b6f26499`
+- accepted feature full-suite result: `738 passed`
+- final branch head before merge added acceptance/status documentation only
+- production trading authority remains `NO_GO`
+
+Main had advanced by 22 commits since the feature branch merge-base. Those commits touched airdrop/TGE, crypto-daily and US-stock-daily files and did not overlap the 23 Meme feature paths. GitHub reported PR #27 mergeable/clean and merged it normally.
+
+### Required local post-merge acceptance
+
+Before calling Meme local tooling v2 live on the user's Mac:
+
+1. synchronize the local `frank-meme-main` checkout to current `origin/main`;
+2. run the complete local-agent pytest suite on the merged main;
+3. restart/reinstall the Mission Meme LaunchAgents so the loop and Dashboard load the merged code;
+4. confirm policy gate, `delivery_allowed=true`, Dashboard HTTP 200 and both LaunchAgents running;
+5. run one real CA query against Solana finalized RPC and verify Top20/coverage/cluster rendering;
+6. confirm existing Frank signal view and Mac/Gmail notification path still remain healthy;
+7. keep `PRODUCTION_TRADING = NO_GO`.
