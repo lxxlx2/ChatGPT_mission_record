@@ -28,18 +28,94 @@ def _seconds_since(value: str | None) -> float | None:
         return None
 
 
+DECISION_ZH={"BUY":"可跟","SMALL_BUY":"小仓跟","WAIT":"等待","NO_BUY":"不跟"}
+PATTERN_ZH={"MULTIPLE":"多次强加仓","ACCUMULATION":"持续建仓","REENTRY_WATCH":"重新建仓观察","NONE":"无模式"}
+STATE_ZH={"OPEN":"持仓中","CLOSED":"已退出","INVENTORY_UNDETERMINED":"仓位不明"}
+ACTION_ZH={"BUY":"买入","ADD":"加仓","REENTRY":"重新建仓","SELL":"卖出","EXIT":"清仓","SELL_POSITION_UNRESOLVED":"卖出后仓位待确认"}
+REASON_ZH={
+    "FRANK_RUNTIME_NOT_LIVE":"Frank 实时监控不在线",
+    "POSITION_STATE_CLOSED":"Frank 已退出该仓位",
+    "POSITION_STATE_INVENTORY_UNDETERMINED":"Frank 仓位无法确认",
+    "INVENTORY_UNDETERMINED":"Frank 当前持仓数量无法确认",
+    "ZERO_OR_NEGATIVE_INVENTORY":"Frank 当前已无可确认持仓",
+    "LATEST_ACTION_SELL":"Frank 最新动作是卖出",
+    "NO_FOLLOW_PATTERN":"尚未形成可跟随模式",
+    "FRANK_BUY_SIGNAL_STALE_OR_UNKNOWN":"Frank 最近有效买入已过期或时间未知",
+    "CRITICAL_DATA_INCOMPLETE":"关键报价/价格数据不完整",
+    "QUOTE_METRICS_INVALID":"Jupiter 报价指标不完整",
+    "NO_EXECUTABLE_JUPITER_ROUTE":"Jupiter 当前无可执行路径",
+    "PRICE_TOO_FAR_FROM_FRANK":"当前价格离 Frank 买入价过远",
+    "EXECUTION_IMPACT_TOO_HIGH":"当前 30 USDC 跟单价格冲击过高",
+    "FRANK_MULTIPLE_ACTIVE":"Frank 当前处于多次强加仓模式",
+    "PRICE_STILL_CLOSE_TO_FRANK":"当前成交价仍接近 Frank 参考买入价",
+    "EXECUTION_IMPACT_ACCEPTABLE":"当前预计价格冲击可接受",
+    "FRANK_PATTERN_ACTIVE":"Frank 当前仍处于可跟随建仓模式",
+    "FOLLOWABLE_WITH_SMALL_SIZE":"当前条件只适合小仓跟随",
+    "ACCUMULATION_NOT_MULTIPLE":"目前只是持续建仓，尚未升级为 MULTIPLE",
+    "PRICE_DEVIATION_ABOVE_BUY_LIMIT":"价格偏离超过正常跟随阈值",
+    "PRICE_IMPACT_ABOVE_BUY_LIMIT":"价格冲击超过正常跟随阈值",
+    "FRANK_REENTRY_WATCH_ACTIVE":"Frank 清仓后重新建仓，当前先观察",
+}
+MISSING_ZH={
+    "FRESH_FRANK_BUY":"缺少 10 分钟内的新鲜 Frank 买入",
+    "LIVE_FRANK_RUNTIME":"Frank 实时监控不在线",
+    "QUOTE_TIMESTAMP":"Jupiter 报价缺少时间戳",
+    "QUOTE_STALE":"Jupiter 报价已过期",
+    "EXECUTION_PRICE_OR_IMPACT":"缺少当前成交价或价格冲击",
+    "TOKEN_DECIMALS_UNKNOWN":"Token decimals 未确认",
+    "JUPITER_QUOTE_UNAVAILABLE":"Jupiter 报价不可用",
+    "SOL_EVENT_TIME_USDC_UNAVAILABLE":"缺少事件时间 SOL/USDC 参考价",
+}
+USDC_MINT="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+WSOL_MINT="So11111111111111111111111111111111111111112"
+
+def _zh(mapping,value,fallback="未知"):
+    if value in (None,""):return fallback
+    return mapping.get(value,str(value))
+
+def _asset(value):
+    if value==USDC_MINT:return "USDC"
+    if value in {"SOL",WSOL_MINT}:return "SOL"
+    return str(value or "未知资产")
+
+def _display(value,suffix=""):
+    return "暂无" if value in (None,"") else str(value)+suffix
+
 def render(event:dict)->dict:
     body=json.loads(event["body"]) if isinstance(event.get("body"),str) else event["body"]
-    metrics=body.get("metrics") or {};inputs=body["inputs"]
-    subject=f"[Mission Meme] {body['decision']} {_short(body['mint'])}"
+    metrics=body.get("metrics") or {};inputs=body["inputs"];quote=inputs.get("quote") or {}
+    decision=body["decision"];pattern=inputs.get("pattern")
+    subject=f"[Meme提醒] {_zh(DECISION_ZH,decision,decision)} | {_zh(PATTERN_ZH,pattern,pattern)} | {_short(body['mint'])}"
+    original_asset=inputs.get("latest_buy_original_quote_asset") or inputs.get("latest_buy_quote_asset")
+    original_qty=inputs.get("latest_buy_original_quote_quantity") or inputs.get("latest_buy_quote_quantity")
+    payment=_display(original_qty," "+_asset(original_asset))
+    if inputs.get("latest_buy_quote_was_normalized") and inputs.get("latest_buy_usdc_equivalent") not in (None,""):
+        payment += " ≈ "+str(inputs.get("latest_buy_usdc_equivalent"))+" USDC（事件时间换算）"
+    frank_price=metrics.get("frank_latest_buy_price_usdc") or inputs.get("latest_buy_price_usdc")
+    exec_price=metrics.get("execution_price_usdc") or quote.get("execution_price_usdc")
+    impact=metrics.get("price_impact_pct") or quote.get("price_impact_pct")
+    deviation=metrics.get("price_deviation_pct")
+    reasons="；".join(REASON_ZH.get(x,x) for x in (body.get("reasons") or [])) or "无额外说明"
+    missing="；".join(MISSING_ZH.get(x,x) for x in (body.get("missing") or [])) or "无"
+    sig=inputs.get("latest_signature")
     text="\n".join([
-        f"Decision: {body['decision']}",f"Previous: {body.get('previous_decision') or 'NONE'}",f"Token CA: {body['mint']}",
-        f"Frank pattern: {inputs.get('pattern')}",f"Frank position: {inputs.get('position_state')}",f"Frank BUY/SELL: {inputs.get('buy_count')}/{inputs.get('sell_count')}",
-        f"Latest action: {inputs.get('latest_side')}",f"Latest signature: {inputs.get('latest_signature') or 'N/A'}",
-        f"Frank latest buy price: {metrics.get('frank_latest_buy_price_usdc') or 'N/A'} USDC",f"Executable price: {metrics.get('execution_price_usdc') or 'N/A'} USDC",
-        f"Price deviation: {metrics.get('price_deviation_pct') or 'N/A'}%",f"Quote impact: {metrics.get('price_impact_pct') or 'N/A'}%",
-        "Reasons: "+(", ".join(body.get("reasons") or []) or "N/A"),"Missing: "+(", ".join(body.get("missing") or []) or "NONE"),
-        "Invalidation: "+(", ".join(body.get("invalidation") or []) or "NONE"),f"Decision ID: {body['decision_id']}",f"Policy: {body['policy_id']} / {body['policy_hash']}"
+        "结论："+_zh(DECISION_ZH,decision,decision),
+        "Frank 模式："+_zh(PATTERN_ZH,pattern,pattern),
+        "CA："+body["mint"],
+        "Frank 仓位："+_zh(STATE_ZH,inputs.get("position_state"),str(inputs.get("position_state") or "未知")),
+        f"Frank 买/卖次数：{inputs.get('buy_count')}/{inputs.get('sell_count')}",
+        "Frank 最近动作："+_zh(ACTION_ZH,inputs.get("latest_side"),str(inputs.get("latest_side") or "未知")),
+        "Frank 原始支付："+payment,
+        "Frank 参考买入价："+_display(frank_price," USDC"),
+        "当前 30 USDC 可成交价："+_display(exec_price," USDC"),
+        "相对 Frank 偏离："+_display(deviation,"%"),
+        "预计价格冲击："+_display(impact,"%"),
+        "判断原因："+reasons,
+        "缺失/不可确认："+missing,
+        "CA 页面：https://solscan.io/token/"+body["mint"],
+        "最近交易："+("https://solscan.io/tx/"+sig if sig else "暂无"),
+        "Decision ID："+body["decision_id"],
+        "Policy："+body["policy_id"]+" / "+body["policy_hash"],
     ])
     return {"subject":subject,"body":text,"content_hash":digest({"subject":subject,"body":text})}
 
