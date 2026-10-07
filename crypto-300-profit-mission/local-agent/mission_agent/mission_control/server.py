@@ -453,6 +453,9 @@ class DashboardState:
     def recent_trades(self):
         return self.frank.recent_trades(100)
 
+    def review_activity(self):
+        return self.frank.review_activity(30)
+
     def decisions(self):
         rows = self._control_query("SELECT * FROM decision_events ORDER BY rowid DESC LIMIT 100")
         for row in rows:
@@ -503,6 +506,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.candidates())
         if path == "/api/trades":
             return self._json(self.state.recent_trades())
+        if path == "/api/review-activity":
+            return self._json(self.state.review_activity())
         if path == "/api/decisions":
             return self._json(self.state.decisions())
         if path == "/api/cluster-analysis":
