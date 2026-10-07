@@ -608,3 +608,25 @@ Current gate:
 - production historical migration/backfill: NOT REQUIRED / NOT AUTHORIZED;
 - production trading: NO_GO;
 - main merge: still pending second review and isolated real-CA acceptance.
+
+
+### FRANK-009/010/011 closure-fix local validation — 2026-10-08
+
+Validated HEAD: `f110d247ab009d5eec4b793ed08ccb38d873a91a`.
+
+Local validation:
+- compile: PASS;
+- focused FRANK-009/010/011 regression: `52 passed`;
+- full local-agent suite: `798 passed`.
+
+The validated fix scope remains intentionally narrow:
+- FRANK-009: incomplete or invalid Token-2022 transfer-fee / transfer-hook configuration remains `UNRESOLVED`; only complete, valid, explicitly inactive configuration may become `INACTIVE`;
+- FRANK-010: assessment-history semantic comparison excludes accounting-only raw extension config changes such as `withheldAmount`, while the current raw extension configuration remains available as audit context;
+- FRANK-011: tests now cover the exact incomplete/malformed transfer-fee cases, missing transfer-hook program-id case, and accounting-only withheld-balance history regression reproduced by the second reviewer.
+
+No policy thresholds, Frank historical state, production DB, `v1_seen`, LaunchAgents, notification history or production-trading state were changed.
+
+Next gate is a closure-only independent review of exactly
+`82d66fd0c1d0edf45e5334006cbb24dbf2f71db1..f110d247ab009d5eec4b793ed08ccb38d873a91a`,
+limited to FRANK-009/010/011. FRANK-001..008 should not be reopened unless this
+four-file diff directly regresses one of them.
