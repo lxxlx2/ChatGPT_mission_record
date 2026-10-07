@@ -129,6 +129,23 @@ def test_composite_usdc_event_is_not_labeled_direct_usdc_equivalent():
     assert normalized.get('quote_usdc_equivalent') is None
 
 
+def test_unauthorized_synthetic_sol_fields_do_not_create_follow_price_or_display_equivalent():
+    event={
+        'token_amount_raw':'1000000','token_decimals':6,
+        'quote_asset':USDC,'quote_quantity':'30000',
+        'quote_normalization':'SOL_TO_USDC_SHADOW_EQUIVALENT',
+        'original_quote':{'quote_asset':'SOL','quote_quantity':'200'},
+        'quote_usdc_equivalent':'30000','quote_usdc_status':'SOL_EVENT_TIME_USDC_VERIFIED',
+        'amount_predicate':'UNDETERMINED','amount_predicate_reason':'ROUTED_RESIDUAL_ASSETS',
+    }
+    assert _event_price_usdc(event) is None
+    display=_quote_display(event)
+    assert display['asset']=='SOL'
+    assert display['quantity']=='200'
+    assert display['normalized'] is False
+    assert display['usdc_equivalent'] is None
+
+
 def test_same_candle_can_be_reused_without_reusing_first_trade_block_time():
     ref={'status':'VERIFIED','source':'BINANCE_OFFICIAL_SPOT_SOLUSDC','sol_usdc':'100','reference_epoch':960,'evidence_sha256':'same-candle'}
     one=normalize_classification(_classified(1000),ref,for_model=False)['trade']
