@@ -73,6 +73,10 @@ def _origin_is_loopback(value: str | None) -> bool:
         return False
 
 
+def _content_type_is_json(value: str | None) -> bool:
+    return (value or "").split(";",1)[0].strip().lower()=="application/json"
+
+
 def _decode_json_object(raw: bytes) -> dict:
     try:
         body=json.loads(raw)
@@ -374,8 +378,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_error(421, "loopback Host required")
         if not _origin_is_loopback(self.headers.get("Origin")):
             return self._json({"error":"CROSS_ORIGIN_POST_FORBIDDEN"},403)
-        content_type=(self.headers.get("Content-Type") or "").split(";",1)[0].strip().lower()
-        if content_type!="application/json":
+        if not _content_type_is_json(self.headers.get("Content-Type")):
             return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
         path = urlparse(self.path).path
         if path != "/api/cluster-analysis":
