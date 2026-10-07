@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from mission_agent.meme.cluster import Holder, WalletClusterAnalyzer
+from mission_agent.meme.cluster import Holder, RpcCache, WalletClusterAnalyzer
 
 
 class DummyRPC:
@@ -96,3 +96,13 @@ def test_unknown_common_funder_is_not_promoted_to_probable_control():
     out=a.analyze()
     assert out["probable_control_clusters"]==[]
     assert "COMMON_FUNDER_UNRESOLVED" in {e["type"] for e in out["edges"]}
+
+
+def test_rpc_cache_rejects_tampered_body(tmp_path):
+    cache=RpcCache(tmp_path/"cache.sqlite")
+    cache.put("getTokenSupply",["M"],{"value":{"amount":"100"}},60,100)
+    assert cache.get("getTokenSupply",["M"],101)=={"value":{"amount":"100"}}
+    cache.db.execute("update rpc_cache set body='{}'")
+    cache.db.commit()
+    assert cache.get("getTokenSupply",["M"],101) is None
+    cache.close()
