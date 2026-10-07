@@ -84,8 +84,9 @@ def _quote_display(event: dict | None) -> dict:
 
 
 class FrankReader:
-    def __init__(self, production_root: Path):
+    def __init__(self, production_root: Path, person_id: str = "frank"):
         self.root = Path(production_root)
+        self.person_id = str(person_id)
         self.database = self.root / "forward.sqlite"
         self.health_path = self.root / "health.json"
 
@@ -229,7 +230,7 @@ class FrankReader:
 
     def mint_snapshot(self, mint: str) -> dict:
         """Read Frank's exact-person observed state for one mint without creating a signal."""
-        person_id="frank"
+        person_id=self.person_id
         db = open_production_ro(self.database)
         try:
             row = db.execute(
