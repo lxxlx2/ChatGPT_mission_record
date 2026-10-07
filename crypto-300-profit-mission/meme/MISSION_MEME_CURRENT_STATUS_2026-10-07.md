@@ -496,12 +496,27 @@ Follow-up chain inspection showed why net-only balance classification is insuffi
 - parser evidence schema is bumped to `frank-v8`;
 - a new isolated read-only classifier replay tool `scripts/frank_classifier_candidate_replay.py` compares stored production classification/state/signal behavior with current candidate code before any migration.
 
-The route-flow additions were committed after the 769-pass checkpoint, so the exact current branch head still requires a fresh targeted + full suite run.
+Current local validation checkpoint on `5d7c47f9151da75c20f7a2e695425d41386d531e`:
+- targeted regression: `164 passed`;
+- full local-agent suite: `772 passed`;
+- real RACE raw transaction reclassified from `UNKNOWN_NEEDS_REVIEW / AMBIGUOUS_USER_EXCHANGE_ASSETS` to `ACTIVE_TRADE / SIGNED_DEX_SWAP_ROUTED_SINGLE_TARGET_WITH_RESIDUAL_INTERMEDIATE`;
+- resolved final target mint: RARI `EFn88CiiFHhihqdr1Y11XBDxbbYarBf1ij92DsrigYwR`;
+- RACE `RACEyWiM2ztEZcJx2AHXU2eWjhxU57x3vXn92b39dLD` is preserved as a routed residual intermediate with chain proof `CREATED_ZERO_PRE_RECEIVED_THEN_SPENT_CONSERVED_RESIDUAL`;
+- aggregate USDC outflow is retained in the trade record, but `amount_predicate=UNDETERMINED`, `amount_predicate_reason=ROUTED_RESIDUAL_ASSETS`, and `route_amount_semantics=GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST`; therefore this event cannot satisfy the frozen >=25,000 direct-known-USDC amount gate by itself;
+- isolated read-only production-history replay covered `970 / 970` stored signatures with `0` unreclassified rows;
+- classifier changes: `72 ACTIVE_TRADE -> ACTIVE_TRADE` representation/provenance changes plus exactly `1 UNKNOWN_NEEDS_REVIEW -> ACTIVE_TRADE` (the RACE/RARI routed transaction);
+- baseline signal parity against production: `true`;
+- source/baseline/candidate signal counts: `3 / 3 / 3`;
+- new signals: `0`;
+- lost signals: `0`;
+- candidate state deltas: `1`; exact delta remains a review item before any production-state migration;
+- replay acceptance: `REVIEW_DELTAS`;
+- production DB was opened read-only, no LaunchAgent changed, no production notification sent, and production trading remained `NO_GO`.
 
-Before any merge/runtime refresh:
-- run targeted parser/classifier/evaluator/SOL-normalization/Mission Control/CA-cluster tests and the full local-agent suite on the current head;
-- rerun the RACE raw transaction and require either a fully evidence-backed routed single-target result or continued fail-closed ambiguity;
-- run `scripts/frank_classifier_candidate_replay.py` against the current read-only `forward.sqlite` in a new isolated workspace;
-- inspect changed classifications, HFT changes, new/lost ACCUMULATION/MULTIPLE and every state delta;
-- require baseline production-signal parity before interpreting candidate signal deltas;
-- do not mutate existing production DB or replay historical notifications.
+Independent review gate before any merge/runtime refresh:
+- review the exact state delta and confirm it is the expected consequence of recognizing the routed RARI buy rather than an unrelated state change;
+- review all 73 classifier transitions, especially the 72 `ACTIVE_TRADE -> ACTIVE_TRADE` representation/provenance changes, for amount-gate or follow-price regressions;
+- verify routed residual reconstruction is fail-closed for true multi-target buys, reused/existing token accounts, multiple quote payers, incomplete transfer metadata and unrelated CPI transfers;
+- verify `UNDETERMINED` routed/composite quote provenance cannot leak into frozen >=25k USDC gates, SOL normalization, Mission Control Frank reference-price math or historical notification replay;
+- review adaptive Top20 deepening, Token-2022 extension semantics, assessment-history semantics and Frank read-only DB failure isolation from the CA v3 work;
+- do not mutate existing production DB, backfill production state, replay historical notifications, merge main, reinstall LaunchAgents or enable production trading during review.
