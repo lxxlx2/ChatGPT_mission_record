@@ -14,11 +14,14 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from decimal import Decimal
 from urllib.parse import parse_qs, urlparse
 
 from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
+from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .frank import FrankReader
+from .jupiter import JupiterQuoteClient
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -115,7 +118,14 @@ class ClusterJobManager:
         self.report_root.mkdir(parents=True, exist_ok=True)
         self.cache_path = self.control_root / "wallet-cluster-rpc-cache.sqlite"
         self.registry_path = Path(__file__).resolve().parents[2] / "config" / "meme_special_addresses.json"
-        self.rpc_endpoint = os.environ.get("SOLANA_RPC_URL", "https://api.mainnet.solana.com")
+        configured=os.environ.get("SOLANA_RPC_URLS")
+        if configured:
+            self.rpc_endpoints=[x.strip() for x in configured.split(",") if x.strip()]
+        else:
+            primary=os.environ.get("SOLANA_RPC_URL","https://api.mainnet.solana.com")
+            self.rpc_endpoints=[primary,"https://api.mainnet-beta.solana.com","https://rpc.ankr.com/solana"]
+        self.rpc_endpoints=list(dict.fromkeys(self.rpc_endpoints))
+        self.rpc_endpoint=self.rpc_endpoints[0]
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
@@ -176,7 +186,11 @@ class ClusterJobManager:
             preset = job["preset"]
         cache = RpcCache(self.cache_path)
         try:
-            rpc = SolanaReadOnlyRPC(self.rpc_endpoint, cache=cache)
+            rpc = SolanaReadOnlyRPC(
+                self.rpc_endpoint,
+                fallback_endpoints=self.rpc_endpoints[1:],
+                cache=cache,
+            )
             registry = load_registry(self.registry_path)
             opts = CLUSTER_PRESETS[preset]
             report = WalletClusterAnalyzer(
@@ -186,7 +200,23 @@ class ClusterJobManager:
                 deep_holders=opts["deep_holders"],
                 history_per_holder=opts["history_per_holder"],
                 funding_lookback=opts["funding_lookback"],
+                market_client=DexScreenerMarketClient(),
             ).analyze()
+            try:
+                report["execution_quote_30_usdc"]=JupiterQuoteClient(
+                    os.environ.get("JUPITER_API_KEY")
+                ).quote_usdc_to_token(
+                    mint,
+                    int(report["decimals"]),
+                    usdc_amount=Decimal("30"),
+                    slippage_bps=100,
+                )
+            except Exception as exc:
+                report["execution_quote_30_usdc"]={
+                    "status":"UNAVAILABLE",
+                    "source":"JUPITER_OFFICIAL",
+                    "reason":type(exc).__name__,
+                }
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
