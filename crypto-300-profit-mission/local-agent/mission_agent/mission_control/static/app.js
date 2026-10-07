@@ -334,7 +334,40 @@ function renderCandidates(rows) {
         ${metric('预计价格冲击',esc(impact),'用 $30 USDC 下单时 Jupiter 估算的价格冲击；已退出仓位不会浪费请求。')}
       </div>
     </article>`;
-  }).join('') || '<div class="empty">当前没有 Frank 跟单候选</div>';
+  }).join('') || '<div class="empty">当前没有需要跟踪的 Frank 候选</div>';
+}
+
+function withinHours(ts,hours) {
+  const value = Number(ts);
+  if (!Number.isFinite(value)) return false;
+  const ageSeconds = Date.now()/1000 - value;
+  return ageSeconds >= 0 && ageSeconds <= hours * 3600;
+}
+
+function renderEnded(rows) {
+  const recent = rows
+    .filter(x => x.position_state === 'CLOSED' && withinHours(x.latest_at,24))
+    .sort((a,b) => Number(b.latest_at || 0) - Number(a.latest_at || 0));
+
+  const panel = $('ended-panel');
+  $('ended-count').textContent = recent.length;
+  panel.hidden = recent.length === 0;
+
+  $('ended').innerHTML = recent.map(x => `
+    <div class="ended-row">
+      <div class="ended-main">
+        ${badge(x.decision || 'NO_BUY')}
+        <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
+        <span>${esc(age(x.latest_at))}退出</span>
+      </div>
+      <div class="ended-ca">
+        <code>${esc(x.mint)}</code>
+        ${copyButton(x.mint,'复制 CA')}
+        ${researchLinks(x.mint)}
+      </div>
+      <div class="ended-note">${esc(reasonFor(x))}</div>
+    </div>
+  `).join('');
 }
 
 function tradeHint(side) {
@@ -393,9 +426,13 @@ async function refresh() {
       get('/api/trades'),
       get('/api/decisions')
     ]);
+    const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
+    const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
+
     renderRuntime(runtime,control);
-    renderStats(candidates,runtime);
-    renderCandidates(candidates);
+    renderStats(activeCandidates,runtime);
+    renderCandidates(activeCandidates);
+    renderEnded(endedCandidates);
     renderTrades(trades);
     renderDecisions(decisions);
     $('updated').textContent = `更新于 ${new Date().toLocaleTimeString('zh-CN')}`;
