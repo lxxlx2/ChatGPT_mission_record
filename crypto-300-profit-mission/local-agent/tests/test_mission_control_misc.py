@@ -174,3 +174,18 @@ def test_dashboard_host_header_gate_accepts_only_loopback_values():
     assert _host_header_is_loopback("localhost:8765") is True
     assert _host_header_is_loopback("[::1]:8765") is True
     assert _host_header_is_loopback("example.com:8765") is False
+
+
+def test_jupiter_reverse_quote_measures_same_token_raw_back_to_usdc():
+    seen=[]
+    body={"outAmount":"36000000","routePlan":[{"swapInfo":{}}],"priceImpactPct":"0.004"}
+    client=JupiterQuoteClient(None,open_url=responder(body,seen),minimum_interval_seconds=0)
+    result=client.quote_token_to_usdc("Mint111","30000000",6)
+    assert result["status"]=="OK"
+    assert result["route_exists"] is True
+    assert result["out_usdc"]=="36"
+    assert result["execution_price_usdc"]=="1.2"
+    assert result["price_impact_pct"]=="0.400"
+    assert "inputMint=Mint111" in seen[0]
+    assert "outputMint="+jupiter_module.USDC in seen[0]
+    assert "amount=30000000" in seen[0]
