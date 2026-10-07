@@ -141,7 +141,7 @@ def test_rpc_keeps_primary_for_healthy_requests():
     assert calls==["https://primary.test","https://primary.test"]
 
 
-def test_token_2022_sensitive_extensions_are_explicit_risk_flags():
+def test_token_2022_sensitive_extension_without_state_stays_unresolved():
     class RPC:
         endpoint="test";calls=0;cache_hits=0
         def call(self,method,params,ttl=0):
@@ -158,4 +158,7 @@ def test_token_2022_sensitive_extensions_are_explicit_risk_flags():
             }}
     out=WalletClusterAnalyzer("Mint",rpc=RPC()).token_profile()
     assert out["sensitive_extensions"]==["transferFeeConfig"]
-    assert "SENSITIVE_EXTENSION:transferFeeConfig" in out["risk_flags"]
+    assert out["risk_flags"]==[]
+    assert out["active_extension_risks"]==[]
+    assert out["unresolved_sensitive_extensions"][0]["name"]=="transferFeeConfig"
+    assert out["unresolved_sensitive_extensions"][0]["status"]=="UNRESOLVED"
