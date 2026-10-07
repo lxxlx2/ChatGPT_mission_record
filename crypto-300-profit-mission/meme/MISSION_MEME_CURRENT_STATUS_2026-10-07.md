@@ -550,3 +550,61 @@ This owner-fix code has not yet been locally validated. Required next gate:
 - reclassify the real RACE raw transaction and require fail-closed `UNKNOWN_NEEDS_REVIEW` with an unproven residual-flow candidate, not an `ACTIVE_TRADE`;
 - run the new migration replay into a fresh workspace and review source->baseline parity plus every baseline->candidate semantic delta;
 - only after these pass, perform an independent second review. No main merge, real-CA acceptance, production-state migration, historical backfill, LaunchAgent reinstall or production trading is authorized yet.
+
+
+### Owner-fix validation after independent review — 2026-10-08
+
+Validated code HEAD: `b487c78d2f4a5d8f1a323605b2c4be97f9f4072d`.
+
+Local owner validation:
+- targeted owner-fix regression: `234 passed`;
+- full local-agent suite: `794 passed`;
+- real RACE raw hash verified;
+- real RACE remains deliberately fail-closed:
+  `UNKNOWN_NEEDS_REVIEW / AMBIGUOUS_USER_EXCHANGE_ASSETS`, `trade=null`;
+- RACE residual-flow evidence is retained as
+  `CREATED_ZERO_PRE_RECEIVED_THEN_SPENT_CONSERVED_RESIDUAL_ONLY`
+  with `route_binding=UNPROVEN`; it is not promoted to RARI or another final-target trade.
+
+Migration replay v2 against the current read-only production ledger:
+- signatures: `978 / 978` reclassified, `0` unavailable;
+- source -> baseline signal identity parity: `true`;
+- source -> baseline state parity: `true`;
+- source -> baseline evaluation deltas: `0`;
+- baseline -> candidate signal identity parity: `true`;
+- candidate signal content deltas: `0`;
+- candidate evaluation deltas: `0`;
+- candidate email deltas: `0`;
+- new/lost signal identities: `0 / 0`;
+- top-level classifier transitions: `72 ACTIVE_TRADE -> ACTIVE_TRADE`, no UNKNOWN -> ACTIVE promotion;
+- candidate state deltas: `18`.
+
+The 18 candidate state deltas were reviewed field-by-field. Across all 18 state rows, every changed field is additive classifier/audit provenance only:
+- `events[*].quote_legs[*].asset/decimals/raw_delta`;
+- `events[*].route_amount_semantics`;
+- `events[*].route_intermediate_assets`.
+
+No candidate state delta changes policy/behavior fields such as:
+`state`, `hft`, `t0`, `watch_at`, `current_raw`, episode identity,
+buy/sell counts or amount predicates. Therefore historical state migration/backfill
+is **not required and is not authorized**. The safer deployment model is
+forward-only: preserve the current production ledger and `v1_seen`, deploy the
+reviewed code only after second-review/acceptance gates, and let the new parser /
+classifier provenance apply only to newly observed signatures.
+
+The replay also reports three source -> baseline signal-content deltas. These are
+not signal-identity or decision changes: two include the expected
+`LIVE -> DRY_RUN_AUDIT` replay-mode difference, and all three add the new
+presentation/provenance fields (`latest_quote_* provenance`,
+`gross_quote_out_observed`, empty unknown-cost contribution list). Candidate
+signal content is exactly equal to baseline signal content, so the classifier
+owner-fix introduces no additional signal-body delta.
+
+Current gate:
+- code tests: PASS;
+- RACE fail-closed regression: PASS;
+- source -> baseline state/evaluation/signal-identity parity: PASS;
+- candidate signal/evaluation/email behavior parity: PASS;
+- production historical migration/backfill: NOT REQUIRED / NOT AUTHORIZED;
+- production trading: NO_GO;
+- main merge: still pending second review and isolated real-CA acceptance.
