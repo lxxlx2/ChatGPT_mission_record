@@ -164,3 +164,37 @@ def test_dev_linked_cluster_includes_probable_control_wallets():
     out=a.analyze()
     assert set(out["probable_control_clusters"][0]["wallets"])=={"A","B"}
     assert out["metrics"]["DEV_LINKED_CLUSTER_PCT"]=="35.0000"
+
+
+def test_full_report_exposes_bounded_holder_acquisition_and_conservative_conclusion():
+    a=analyzer()
+    a.token_profile=lambda:{
+        "status":"OK","mint_authority":None,"freeze_authority":None,
+        "metadata_update_authority":"UNAVAILABLE","metadata_update_authority_status":"UNAVAILABLE",
+        "token_program":"SPL Token",
+    }
+    a.market_snapshot=lambda:{
+        "status":"OK","source":"DEXSCREENER_API","price_usd":"0.001","market_cap_usd":"1000000",
+        "main_pair":{"liquidity_usd":"100000","volume":{"h24":"2000000"}},
+    }
+    def scan(h,mapping,top_owners):
+        if h.owner=="A":
+            a.trades.append({
+                "owner":"A","signature":"buy-a","block_time":100,"direction":"BUY",
+                "quote_asset":"SOL","quote_amount_raw":"12000000000","quote_decimals":9,
+                "token_amount_raw":"1000000","token_decimals":0,"program_ids":[],"signers":["A"],
+            })
+            return {
+                "block_time":100,"signature":"buy-a","type":"MARKET_BUY",
+                "quote_asset":"SOL","quote_amount_raw":"12000000000","quote_decimals":9,
+                "token_amount_raw":"1000000","token_decimals":0,"program_ids":[],
+            }
+        return None
+    a._scan_holder=scan
+    out=a.analyze()
+    assert out["schema_version"]==2
+    assert out["holders"][0]["first_acquisition"]["type"]=="MARKET_BUY"
+    assert out["holders"][0]["first_acquisition"]["quote_quantity"]=="12"
+    assert out["assessment"]["chain_permission_status"]=="PASS"
+    assert out["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
+    assert out["assessment"]["trading_status"]=="WATCH / WALLET_CLUSTER_UNRESOLVED"
