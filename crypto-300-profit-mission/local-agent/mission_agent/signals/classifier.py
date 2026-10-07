@@ -51,16 +51,17 @@ def classify(signature, tx, wallet):
             'target_assets':[m for m,_ in tokens],
             'quote_assets':[m for m,_ in quotes],
         }
-        routed_intermediates=[]
-        effective_tokens=tokens
+        # Multiple positive non-quote balances are economically multi-target at
+        # the wallet boundary. Receive/spend conservation can identify a residual
+        # flow candidate, but cannot prove user intent or bind that spend to the
+        # other target without router/market-call level evidence. Keep such cases
+        # fail-closed instead of collapsing them into a single ACTIVE_TRADE.
         if len(tokens)>1:
-            flow_by_mint=defaultdict(lambda:{
-                'in_raw':0,'out_raw':0,'first_in':None,'first_out':None,'last_out':None
-            })
-            changed_mints=set(changed)
+            flow_by_mint=defaultdict(lambda:{'in_raw':0,'out_raw':0,'first_in':None,'first_out':None,'last_out':None})
+            token_mints={m for m,_ in tokens}
             for flow in e.get('wallet_token_transfer_flows') or []:
                 mint=flow.get('mint')
-                if mint not in changed_mints:continue
+                if mint not in token_mints:continue
                 try:raw=int(flow.get('raw_amount') or 0)
                 except (TypeError,ValueError):continue
                 order=(int(flow.get('outer_index',0)),int(flow.get('inner_index',-1)))
@@ -76,44 +77,30 @@ def classify(signature, tx, wallet):
                 a.get('mint') for a in e.get('created_token_accounts') or []
                 if a.get('owner')==wallet and a.get('mint')
             }
-            # Split routers can deliver the final asset on one path before another
-            # path has finished recycling an intermediate asset. Do not require one
-            # global instruction order across every route leg. Instead require one
-            # durable final sink (positive net, inbound-only) and prove every other
-            # positive target is a newly-created, received-then-spent residual whose
-            # gross transfer conservation matches its observed net balance.
-            sink_tokens=[
-                (m,g) for m,g in tokens
-                if g['delta']>0 and flow_by_mint[m]['in_raw']>0 and flow_by_mint[m]['out_raw']==0
-            ]
-            if len(sink_tokens)==1:
-                sink_mint,_=sink_tokens[0]
-                upstream_quotes=[
-                    qm for qm,qg in quotes
-                    if qg['delta']<0 and flow_by_mint[qm]['out_raw']>0
-                ]
-                if len(upstream_quotes)==1:
-                    for mint,g in tokens:
-                        if mint==sink_mint:continue
-                        f=flow_by_mint[mint]
-                        conserved=f['in_raw']-f['out_raw']==g['delta']
-                        if (
-                            mint in created_mints and g['pre']==0 and g['delta']>0 and
-                            f['in_raw']>0 and f['out_raw']>0 and
-                            f['first_in'] is not None and f['first_out'] is not None and
-                            f['first_in']<f['first_out'] and conserved
-                        ):
-                            routed_intermediates.append({
-                                'mint':mint,'net_delta':str(g['delta']),
-                                'gross_in_raw':str(f['in_raw']),'gross_out_raw':str(f['out_raw']),
-                                'first_in_order':list(f['first_in']),'last_out_order':list(f['last_out']),
-                                'upstream_quote_asset':upstream_quotes[0],
-                                'downstream_target':sink_mint,
-                                'proof':'CREATED_ZERO_PRE_RECEIVED_THEN_SPENT_CONSERVED_RESIDUAL',
-                            })
-                    if len(routed_intermediates)==len(tokens)-1:
-                        effective_tokens=sink_tokens
-            details['routed_intermediate_assets']=routed_intermediates
+            residual_candidates=[]
+            for mint,g in tokens:
+                flow=flow_by_mint[mint]
+                if (
+                    mint in created_mints and g['pre']==0 and g['delta']>0
+                    and flow['in_raw']>0 and flow['out_raw']>0
+                    and flow['first_in'] is not None and flow['first_out'] is not None
+                    and flow['first_in']<flow['first_out']
+                    and flow['in_raw']-flow['out_raw']==g['delta']
+                ):
+                    residual_candidates.append({
+                        'mint':mint,'net_delta':str(g['delta']),
+                        'gross_in_raw':str(flow['in_raw']),'gross_out_raw':str(flow['out_raw']),
+                        'first_in_order':list(flow['first_in']),'last_out_order':list(flow['last_out']),
+                        'proof':'CREATED_ZERO_PRE_RECEIVED_THEN_SPENT_CONSERVED_RESIDUAL_ONLY',
+                        'route_binding':'UNPROVEN',
+                    })
+            details['residual_flow_candidates']=residual_candidates
+            base.update(
+                classification_reason='AMBIGUOUS_USER_EXCHANGE_ASSETS',
+                classification_details=details,
+            )
+            return base
+        effective_tokens=tokens
         if len(effective_tokens)==1 and quotes:
             mint,g=effective_tokens[0]
             opposing=[(m,q) for m,q in quotes if g['delta']*q['delta']<0]
@@ -121,14 +108,9 @@ def classify(signature, tx, wallet):
             if len(opposing)==1:
                 quote,q=opposing[0]
                 composite=len(quotes)>1
-                amount_predicate=(
-                    'USDC_DIRECT_NUMERIC'
-                    if quote==USDC and not composite and not routed_intermediates
-                    else 'UNDETERMINED'
-                )
+                amount_predicate='USDC_DIRECT_NUMERIC' if quote==USDC and not composite else 'UNDETERMINED'
                 amount_reason=None
-                if routed_intermediates:amount_reason='ROUTED_RESIDUAL_ASSETS'
-                elif composite:amount_reason='COMPOSITE_QUOTE_LEGS'
+                if composite:amount_reason='COMPOSITE_QUOTE_LEGS'
                 elif quote!=USDC:amount_reason='NON_USDC_QUOTE'
                 quote_legs=[
                     {'asset':'SOL' if qm==WSOL else qm,'raw_delta':str(qg['delta']),'decimals':qg['decimals']}
@@ -137,8 +119,6 @@ def classify(signature, tx, wallet):
                 base.update(
                     classification='ACTIVE_TRADE',
                     classification_reason=(
-                        'SIGNED_DEX_SWAP_ROUTED_SINGLE_TARGET_WITH_RESIDUAL_INTERMEDIATE'
-                        if routed_intermediates else
                         'SIGNED_DEX_SWAP_SINGLE_TARGET_PRIMARY_QUOTE_WITH_AUXILIARY_LEGS'
                         if composite else 'SIGNED_DEX_SWAP_OPPOSING_OWNED_FLOWS'
                     ),
@@ -151,11 +131,8 @@ def classify(signature, tx, wallet):
                         'referenced_pre_raw':str(g['pre']),'referenced_post_raw':str(g['post']),
                         'amount_predicate':amount_predicate,'amount_predicate_reason':amount_reason,
                         'quote_legs':quote_legs,
-                        'route_intermediate_assets':routed_intermediates,
-                        'route_amount_semantics':(
-                            'GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST'
-                            if routed_intermediates else 'DIRECT_OR_SINGLE_TARGET_QUOTE'
-                        ),
+                        'route_intermediate_assets':[],
+                        'route_amount_semantics':'DIRECT_OR_SINGLE_TARGET_QUOTE',
                     },
                 )
                 return base
