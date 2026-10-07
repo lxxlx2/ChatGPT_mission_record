@@ -738,6 +738,7 @@ function renderClusterReport(report) {
   const market = report.market || {};
   const mainPair = market.main_pair || {};
   const quote = report.execution_quote_30_usdc || {};
+  const frank = report.frank || {};
   const assessment = report.assessment || {};
 
   const observedAt = Number(report.observed_at);
@@ -761,9 +762,11 @@ function renderClusterReport(report) {
   const activeAuthorities = assessment.active_authorities || [];
   let chainConclusion = '合约权限未确认';
   if (assessment.chain_permission_status === 'PASS') {
-    chainConclusion = 'Mint authority 与 Freeze authority 均已撤销，当前未见这两项一级权限红旗。';
+    chainConclusion = 'Mint authority 与 Freeze authority 均已撤销，当前未见活动权限或已识别的 Token-2022 敏感扩展。';
   } else if (assessment.chain_permission_status === 'RISK') {
-    chainConclusion = '仍存在活动权限：' + activeAuthorities.join('、') + '。需要先处理权限风险。';
+    const extensionRisks=assessment.sensitive_extensions || [];
+    const risks=activeAuthorities.concat(extensionRisks.map(x => 'Token-2022 ' + x));
+    chainConclusion = '存在链上权限/扩展风险：' + risks.join('、') + '。需要先核实风险含义。';
   }
 
   let clusterConclusion = '钱包集群状态未确认';
@@ -814,7 +817,9 @@ function renderClusterReport(report) {
     fact('Supply','<span>' + esc(Number.isFinite(supplyApprox) ? n(supplyApprox,2) : '暂无') + '</span>') +
     fact('Mint authority',authorityText(profile.mint_authority,profile.status)) +
     fact('Freeze authority',authorityText(profile.freeze_authority,profile.status)) +
-    fact('Metadata update authority',authorityText(profile.metadata_update_authority,profile.metadata_update_authority_status==='CHAIN_PARSED' ? 'OK' : 'UNAVAILABLE'));
+    fact('Metadata update authority',authorityText(profile.metadata_update_authority,profile.metadata_update_authority_status==='CHAIN_PARSED' ? 'OK' : 'UNAVAILABLE')) +
+    fact('Token-2022 扩展','<span>' + esc((profile.extensions || []).join(', ') || '无已解析扩展') + '</span>') +
+    fact('敏感扩展','<span>' + ((profile.sensitive_extensions || []).length ? '<span class="warn-text">' + esc((profile.sensitive_extensions || []).join(', ')) + '</span>' : '<span class="ok-text">未发现</span>') + '</span>');
 
   const h24tx=(mainPair.txns || {}).h24 || {};
   const h1tx=(mainPair.txns || {}).h1 || {};
@@ -897,6 +902,21 @@ function renderClusterReport(report) {
     '<details class="cluster-raw-details"><summary>查看覆盖与限制说明</summary>' +
       '<div class="limitations">' + (report.limitations || []).map(x => '<p>' + esc(x) + '</p>').join('') + '</div>' +
     '</details>';
+
+  let frankStatus='<span class="muted">Frank 当前没有观察到这个 CA</span>';
+  if (frank.status==='OBSERVED') {
+    frankStatus=frank.position_state==='OPEN'
+      ? '<span class="ok-text">已观察，当前仓位 OPEN</span>'
+      : '<span class="warn-text">已观察，当前仓位 ' + esc(frank.position_state || '未知') + '</span>';
+  } else if (frank.status==='UNAVAILABLE') {
+    frankStatus='<span class="unresolved">Frank 数据不可用：' + esc(frank.reason || 'UNKNOWN') + '</span>';
+  }
+  $('cluster-frank').innerHTML =
+    fact('状态',frankStatus) +
+    fact('买 / 卖次数','<span>' + esc((frank.buy_count ?? 0) + ' / ' + (frank.sell_count ?? 0)) + '</span>') +
+    fact('最近动作','<span>' + esc(frank.latest_side || '无') + '</span>') +
+    fact('V1 信号','<span>' + esc(frank.signal_type || '无') + '</span>') +
+    fact('最近时间','<span>' + (frank.latest_at ? esc(age(frank.latest_at)) : '无') + '</span>');
 
   const websites=(market.websites || []).map(url => safeHttpUrl(url)).filter(Boolean).map(url =>
     '<a class="link-btn" href="' + esc(url) + '" target="_blank" rel="noreferrer">网站 ↗</a>'
