@@ -57,7 +57,7 @@ def test_active_buy_creates_position(tmp_path):
 
 def test_ledger_position_separates_unknown_quote_out_from_known_target_cost(tmp_path):
     l=Ledger(tmp_path/'db')
-    e=active('unknown-cost',100,5000)
+    e=active('unknown-cost',100,5000 * 10**6)
     e['trade']['amount_predicate']='UNDETERMINED'
     e['trade']['amount_predicate_reason']='ROUTED_RESIDUAL_ASSETS'
     e['trade']['route_amount_semantics']='GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST'
