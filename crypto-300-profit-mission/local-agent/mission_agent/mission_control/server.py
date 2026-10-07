@@ -195,6 +195,19 @@ class ClusterJobManager:
             job["future"] = self.executor.submit(self._run, job_id)
             return self._public_job(job)
 
+    def _frank_snapshot(self, mint: str) -> dict:
+        if self.frank is None:
+            return {"status":"UNAVAILABLE","reason":"PRODUCTION_ROOT_NOT_CONFIGURED","mint":mint}
+        try:
+            return self.frank.mint_snapshot(mint)
+        except (OSError,ValueError,sqlite3.Error) as exc:
+            # CA research must remain usable when the optional production
+            # Frank read-only database is temporarily unavailable.
+            return {
+                "status":"UNAVAILABLE","reason":"FRANK_READ_ERROR","mint":mint,
+                "error_class":type(exc).__name__,
+            }
+
     def _set_progress(self, job_id: str, stage: str, details: dict | None = None):
         details=details or {}
         progress={"stage":stage,"updated_at":time.time()}
@@ -309,18 +322,7 @@ class ClusterJobManager:
                 market_client=self.market_client,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
-            if self.frank is None:
-                report["frank"]={"status":"UNAVAILABLE","reason":"PRODUCTION_ROOT_NOT_CONFIGURED","mint":mint}
-            else:
-                try:
-                    report["frank"]=self.frank.mint_snapshot(mint)
-                except (OSError,ValueError,sqlite3.Error) as exc:
-                    # CA research must remain usable when the optional production
-                    # Frank read-only database is temporarily unavailable.
-                    report["frank"]={
-                        "status":"UNAVAILABLE","reason":"FRANK_READ_ERROR","mint":mint,
-                        "error_class":type(exc).__name__,
-                    }
+            report["frank"]=self._frank_snapshot(mint)
             try:
                 report["execution_quote_30_usdc"]=self.jupiter.quote_usdc_to_token(
                     mint,
