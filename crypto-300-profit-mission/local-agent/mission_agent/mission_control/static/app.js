@@ -474,7 +474,7 @@ const clusterMetricLabel = {
   DEV_LINKED_CLUSTER_PCT:'Dev 关联集群',
   CLUSTER_ADJUSTED_TOP10_PCT:'集群调整后 Top10',
   UNRESOLVED_MATERIAL_HOLDER_PCT:'重大未确认持仓',
-  KNOWN_EX_LP_TOP10_PCT:'已知标签下排除 LP Top10',
+  KNOWN_EX_LP_TOP10_PCT:'已识别池/Vault 排除后 Top10',
   KNOWN_EX_SPECIAL_TOP10_PCT:'已知标签下排除特殊地址 Top10',
   KNOWN_CLUSTER_ADJUSTED_TOP10_PCT:'已知证据下集群调整 Top10',
 };
