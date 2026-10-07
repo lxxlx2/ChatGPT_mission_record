@@ -133,23 +133,49 @@ class FrankReader:
                     state = json.loads(row["body"])
                 except (TypeError, ValueError):
                     continue
+                events = state.get("events") or []
+                latest = events[-1] if events else None
+                buys = [e for e in events if e.get("direction") == "BUY"]
+
                 signals = db.execute(
                     "SELECT signal_id,signal_type,created_at,body FROM signals WHERE person_id=? AND mint=? AND episode_id=? ORDER BY CAST(created_at AS INTEGER),rowid",
                     (row["person_id"], row["mint"], state.get("episode_id")),
                 ).fetchall()
-                if not signals:
-                    continue
-                signal_row = signals[-1]
-                source_signal_type = signal_row["signal_type"]
-                if source_signal_type == "FRANK_MULTIPLE_SIGNAL":
-                    pattern = "MULTIPLE"
-                elif source_signal_type == "FRANK_ACCUMULATION_SIGNAL":
-                    pattern = "ACCUMULATION"
+
+                source_signal_id = None
+                source_signal_type = None
+                source_signal_at = None
+                if signals:
+                    signal_row = signals[-1]
+                    source_signal_id = signal_row["signal_id"]
+                    source_signal_type = signal_row["signal_type"]
+                    source_signal_at = signal_row["created_at"]
+                    if source_signal_type == "FRANK_MULTIPLE_SIGNAL":
+                        pattern = "MULTIPLE"
+                    elif source_signal_type == "FRANK_ACCUMULATION_SIGNAL":
+                        pattern = "ACCUMULATION"
+                    else:
+                        continue
                 else:
-                    continue
-                events = state.get("events") or []
-                latest = events[-1] if events else None
-                buys = [e for e in events if e.get("direction") == "BUY"]
+                    # A confirmed re-entry is useful research evidence even before
+                    # it qualifies for the frozen ACCUMULATION/MULTIPLE model.
+                    # Do not invent an amount threshold here: this is WATCH only,
+                    # never an actionable Frank signal by itself.
+                    first = events[0] if events else None
+                    if state.get("state") != "OPEN" or not first or first.get("direction") != "BUY":
+                        continue
+                    first_signature = first.get("signature")
+                    if not first_signature:
+                        continue
+                    reentry = db.execute(
+                        "SELECT side,block_time FROM trades WHERE signature=? AND mint=? ORDER BY rowid DESC LIMIT 1",
+                        (first_signature, row["mint"]),
+                    ).fetchone()
+                    if not reentry or reentry["side"] != "REENTRY":
+                        continue
+                    pattern = "REENTRY_WATCH"
+                    source_signal_type = "FRANK_REENTRY_WATCH"
+                    source_signal_at = str(first.get("at") or reentry["block_time"] or "")
                 latest_buy = buys[-1] if buys else None
                 latest_buy_price = _event_price_usdc(latest_buy) if latest_buy else None
                 quote_display = _quote_display(latest_buy)
@@ -163,8 +189,8 @@ class FrankReader:
                     price_status = "QUOTE_PRICE_UNAVAILABLE"
                 result.append({
                     "person_id": row["person_id"], "mint": row["mint"], "episode_id": state.get("episode_id"),
-                    "pattern": pattern, "source_signal_id": signal_row["signal_id"], "source_signal_type": source_signal_type,
-                    "source_signal_at": signal_row["created_at"], "position_state": state.get("state"), "current_raw": state.get("current_raw"),
+                    "pattern": pattern, "source_signal_id": source_signal_id, "source_signal_type": source_signal_type,
+                    "source_signal_at": source_signal_at, "position_state": state.get("state"), "current_raw": state.get("current_raw"),
                     "buy_count": len(buys), "sell_count": sum(e.get("direction") == "SELL" for e in events),
                     "latest_side": latest.get("direction") if latest else None, "latest_signature": latest.get("signature") if latest else None,
                     "latest_at": latest.get("at") if latest else None, "latest_buy_at": latest_buy.get("at") if latest_buy else None,
