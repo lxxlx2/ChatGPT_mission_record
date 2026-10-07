@@ -205,15 +205,39 @@ def report(db,*,since_epoch=None,until_epoch=None):
     for x in tracks:
         summary["by_pattern"][x["pattern"]]=summary["by_pattern"].get(x["pattern"],0)+1
         summary["by_decision"][x["initial_decision"]]=summary["by_decision"].get(x["initial_decision"],0)+1
+    def stats(values):
+        values=sorted(x for x in values if x is not None)
+        if not values:return {"measured":0,"win_rate_pct":None,"median_return_pct":None,"mean_return_pct":None}
+        return {
+            "measured":len(values),
+            "win_rate_pct":str(Decimal(sum(x>0 for x in values))*100/Decimal(len(values))),
+            "median_return_pct":str(values[len(values)//2]),
+            "mean_return_pct":str(sum(values,Decimal(0))/Decimal(len(values))),
+        }
+    grouped={"by_pattern":{},"by_decision":{}}
     for h in HORIZONS:
         rows=[x for x in horizons if x["horizon_seconds"]==h]
-        measured=[_decimal(x["return_pct"]) for x in rows if x["status"]=="MEASURED" and _decimal(x["return_pct"]) is not None]
-        measured=sorted(measured)
-        median=None if not measured else str(measured[len(measured)//2])
-        summary["horizons"][str(h)]={
-            "measured":len(measured),"total":len(rows),"win_rate_pct":None if not measured else str(Decimal(sum(x>0 for x in measured))*100/Decimal(len(measured))),
-            "median_return_pct":median,
-        }
+        values=[_decimal(x["return_pct"]) for x in rows if x["status"]=="MEASURED"]
+        summary["horizons"][str(h)]={**stats(values),"total":len(rows)}
+        for group_name,field in (("by_pattern","pattern"),("by_decision","initial_decision")):
+            keys=sorted({by_id[x["tracking_id"]][field] for x in rows if x["tracking_id"] in by_id})
+            grouped[group_name].setdefault(str(h),{})
+            for key in keys:
+                vals=[_decimal(x["return_pct"]) for x in rows if x["status"]=="MEASURED" and by_id[x["tracking_id"]][field]==key]
+                grouped[group_name][str(h)][key]=stats(vals)
+    summary["performance_groups"]=grouped
+    h24=[x for x in horizons if x["horizon_seconds"]==86400 and x["status"]=="MEASURED" and _decimal(x["return_pct"]) is not None]
+    by_mint=defaultdict(list)
+    for row in h24:by_mint[by_id[row["tracking_id"]]["mint"]].append(_decimal(row["return_pct"]))
+    ranked=sorted(by_mint,key=lambda mint:sum(by_mint[mint],Decimal(0)),reverse=True)
+    def without(excluded):
+        return [_decimal(x["return_pct"]) for x in h24 if by_id[x["tracking_id"]]["mint"] not in excluded]
+    summary["robustness_24h"]={
+        "all":stats(without(set())),
+        "top_positive_mints":ranked[:3],
+        "ex_top1":stats(without(set(ranked[:1]))),
+        "ex_top3":stats(without(set(ranked[:3]))),
+    }
     paths=defaultdict(list)
     for s in samples:
         if s["status"]=="MEASURED" and s.get("out_usdc") is not None:paths[s["tracking_id"]].append(s)
