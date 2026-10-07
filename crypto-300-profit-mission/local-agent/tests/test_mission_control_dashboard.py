@@ -1,4 +1,5 @@
 import json
+import sqlite3
 import time
 
 from mission_agent.mission_control.server import (
@@ -63,6 +64,50 @@ def test_stale_wait_still_exposes_quote_and_frank_price_for_research(tmp_path):
     service.close()
 
 
+
+
+def test_frank_review_activity_exposes_ambiguous_active_swap_without_signal(tmp_path):
+    prod=tmp_path/"prod"
+    make_prod(prod)
+    db=sqlite3.connect(prod/"forward.sqlite")
+    db.execute("create table signatures(signature text,block_time integer,body text)")
+    race="RACEyWiM2ztEZcJx2AHXU2eWjhxU57x3vXn92b39dLD"
+    body={
+        "classification":"UNKNOWN_NEEDS_REVIEW",
+        "classification_reason":"AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "evidence":{
+            "mechanical_classification":"ACTIVE_SWAP_LIKE",
+            "classification_evidence":{
+                "dex_program_interaction":True,
+                "swap_instruction_evidence":True,
+                "opposing_economic_flows":True,
+            },
+            "program_ids":["market"],
+            "token_balance_deltas":[
+                {"mint":race,"wallet_owned":True,"delta":"7053930","decimals":6},
+                {"mint":"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v","wallet_owned":True,"delta":"-2737775637","decimals":6},
+            ],
+            "decoded_transient_token_flows":[],
+        },
+    }
+    db.execute("insert into signatures values(?,?,?)",("race-sig",1791318208,json.dumps(body)))
+    db.commit();db.close()
+    rows=FrankReader(prod).review_activity()
+    assert len(rows)==1
+    assert rows[0]["signature"]=="race-sig"
+    assert rows[0]["candidate_mints"]==[race]
+    assert rows[0]["swap_instruction_evidence"] is True
+    assert FrankReader(prod).candidates()[0]["mint"]=="Mint111"
+
+
+def test_dashboard_frontend_fetches_and_renders_review_activity():
+    from mission_agent.mission_control.server import Handler
+    js=(Handler.static_root/"app.js").read_text()
+    assert "/api/review-activity" in js
+    assert "renderReviewActivity" in js
+    assert "多资产/多结算腿" in js
+
+
 def test_cluster_query_validates_solana_ca_and_presets(tmp_path):
     manager=ClusterJobManager(tmp_path/"control")
     mint="So11111111111111111111111111111111111111112"
@@ -88,6 +133,8 @@ def test_dashboard_static_contains_signal_and_cluster_tabs():
     assert 'id="cluster-market"' in html
     assert 'id="cluster-frank"' in html
     assert 'id="cluster-narrative"' in html
+    assert 'id="review-activity-panel"' in html
+    assert 'id="review-activity"' in html
     assert 'Top20 全解析' in html
 
 
