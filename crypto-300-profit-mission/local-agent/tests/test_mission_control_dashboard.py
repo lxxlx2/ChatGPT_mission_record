@@ -36,4 +36,7 @@ def test_same_decision_refreshes_dashboard_metrics_without_new_event(tmp_path):
     rows=dashboard.candidates()
     assert rows[0]["decision"]=="BUY"
     assert rows[0]["metrics"]["execution_price_usdc"]=="1.05"
+    assert rows[0]["decision_quote"]["status"]=="OK"
+    assert rows[0]["decision_quote"]["execution_price_usdc"]=="1.05"
+    assert rows[0]["latest_buy_price_usdc"]=="1"
     service.close()
