@@ -33,6 +33,8 @@ def test_inspect_token2022_mint_authorities_and_supply():
     assert out["mint_authority"] is None
     assert out["freeze_authority"] is None
     assert out["supply_quantity"]=="946242000"
+    assert out["metadata_update_authority"] is None
+    assert out["metadata_update_authority_status"]=="VERIFIED"
     assert out["risk_flags"]==[]
 
 
