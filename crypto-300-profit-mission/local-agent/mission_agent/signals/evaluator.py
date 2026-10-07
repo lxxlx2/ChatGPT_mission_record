@@ -5,8 +5,13 @@ from .policy import USDC
 D=Decimal
 
 def amount(events):
-    known=sum((D(e['quote_quantity']) for e in events if e['quote_asset']==USDC),D(0))
-    unknown=any(e['quote_asset']!=USDC for e in events)
+    def direct_usdc(e):
+        predicate=e.get('amount_predicate')
+        if predicate is None:
+            return e.get('quote_asset')==USDC
+        return predicate=='USDC_DIRECT_NUMERIC' and e.get('quote_asset')==USDC
+    known=sum((D(e['quote_quantity']) for e in events if direct_usdc(e)),D(0))
+    unknown=any(not direct_usdc(e) for e in events)
     return known,unknown
 
 def amount_gate(events,minimum):
