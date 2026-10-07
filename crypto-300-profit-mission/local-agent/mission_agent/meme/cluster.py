@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
 
-from ..frank.parser import INFRA_PROGRAMS
+from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
 from ..signals.classifier import classify
 
 DEFAULT_RPC = "https://api.mainnet.solana.com"
@@ -173,6 +173,7 @@ class WalletClusterAnalyzer:
         program=value.get("owner")
         if value.get("executable"):return "PUBLIC_PROGRAM","RPC_EXECUTABLE_ACCOUNT"
         if program==SYSTEM_PROGRAM:return "ORDINARY","RPC_SYSTEM_OWNED"
+        if program in DEX_PROGRAMS:return "PROTOCOL_VAULT","RPC_RECOGNIZED_DEX_PROGRAM:"+str(program)
         if program in TOKEN_PROGRAMS:return "TOKEN_ACCOUNT_OWNER_UNRESOLVED","RPC_TOKEN_PROGRAM_OWNED"
         return "PROGRAM_OWNED_UNRESOLVED","RPC_PROGRAM_OWNER:"+str(program)
     def _supply(self):
