@@ -84,7 +84,7 @@ class MultiEndpointSolanaRPC:
         if not values:
             values=[DEFAULT_RPC]
         self.clients=[
-            SolanaReadOnlyRPC(endpoint,cache=cache,min_interval=min_interval)
+            SolanaReadOnlyRPC(endpoint,cache=cache,min_interval=min_interval,max_attempts=1)
             for endpoint in values
         ]
         self.endpoint=values[0]
@@ -113,8 +113,8 @@ class MultiEndpointSolanaRPC:
 
 class SolanaReadOnlyRPC:
     ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction"}
-    def __init__(self, endpoint=DEFAULT_RPC, *, open_url=urllib.request.urlopen, sleep=time.sleep, min_interval=.30, cache:RpcCache|None=None):
-        self.endpoint=endpoint;self.open_url=open_url;self.sleep=sleep;self.min_interval=float(min_interval);self.cache=cache;self.last=0.0;self.calls=0;self.cache_hits=0
+    def __init__(self, endpoint=DEFAULT_RPC, *, open_url=urllib.request.urlopen, sleep=time.sleep, min_interval=.30, cache:RpcCache|None=None, max_attempts=3):
+        self.endpoint=endpoint;self.open_url=open_url;self.sleep=sleep;self.min_interval=float(min_interval);self.cache=cache;self.last=0.0;self.calls=0;self.cache_hits=0;self.max_attempts=max(1,int(max_attempts))
     def call(self, method, params, *, ttl=0):
         if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
         now=time.time()
@@ -126,7 +126,7 @@ class SolanaReadOnlyRPC:
         body=json.dumps({"jsonrpc":"2.0","id":1,"method":method,"params":params}).encode()
         req=urllib.request.Request(self.endpoint,data=body,headers={"Content-Type":"application/json","User-Agent":"mission-meme-cluster/1"})
         last_error=None
-        for attempt in range(3):
+        for attempt in range(self.max_attempts):
             try:
                 self.last=time.monotonic();self.calls+=1
                 with self.open_url(req,timeout=20) as response:value=json.loads(response.read())
@@ -137,13 +137,13 @@ class SolanaReadOnlyRPC:
                 return result
             except urllib.error.HTTPError as exc:
                 last_error=RPCError("HTTP_"+str(exc.code))
-                if exc.code not in {429,500,502,503,504} or attempt==2:raise last_error
+                if exc.code not in {429,500,502,503,504} or attempt==self.max_attempts-1:raise last_error
                 try:retry_after=min(30.0,max(0.0,float(exc.headers.get("Retry-After","0"))))
                 except (TypeError,ValueError,AttributeError):retry_after=0.0
                 self.sleep(max(min(5.0,1.0*(2**attempt)),retry_after))
             except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
                 last_error=RPCError(type(exc).__name__)
-                if attempt==2:raise last_error
+                if attempt==self.max_attempts-1:raise last_error
                 self.sleep(min(5.0,1.0*(2**attempt)))
         raise last_error or RPCError("RPC_FAILED")
 
