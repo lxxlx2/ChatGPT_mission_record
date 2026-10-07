@@ -120,3 +120,20 @@ def test_null_get_transaction_is_not_cached(tmp_path):
     assert rpc.call("getTransaction",["sig",{"encoding":"jsonParsed"}],ttl=999) is None
     assert len(calls)>before
     cache.close()
+
+
+def test_rpc_keeps_primary_for_healthy_requests():
+    calls=[]
+    def open_url(request,timeout=20):
+        calls.append(request.full_url)
+        return Response({"jsonrpc":"2.0","id":1,"result":{"value":{"amount":"100","decimals":0}}})
+    rpc=SolanaReadOnlyRPC(
+        "https://primary.test",
+        fallback_endpoints=["https://fallback.test"],
+        open_url=open_url,
+        sleep=lambda *_:None,
+        min_interval=0,
+    )
+    rpc.call("getTokenSupply",["MintA",{"commitment":"finalized"}])
+    rpc.call("getTokenSupply",["MintB",{"commitment":"finalized"}])
+    assert calls==["https://primary.test","https://primary.test"]
