@@ -138,7 +138,7 @@ class FrankReader:
     def candidates(self) -> list[dict]:
         db = open_production_ro(self.database)
         try:
-            rows = db.execute("SELECT person_id,mint,body FROM v1_states").fetchall()
+            rows = db.execute("SELECT person_id,mint,body FROM v1_states WHERE person_id=?",(self.person_id,)).fetchall()
             result = []
             for row in rows:
                 try:
@@ -271,7 +271,8 @@ class FrankReader:
             try:
                 rows=db.execute(
                     """SELECT signature,block_time,body FROM signatures
-                       WHERE json_extract(body,'$.classification')='UNKNOWN_NEEDS_REVIEW'
+                       WHERE person_id=?
+                         AND json_extract(body,'$.classification')='UNKNOWN_NEEDS_REVIEW'
                          AND (
                            json_extract(body,'$.evidence.mechanical_classification')='ACTIVE_SWAP_LIKE'
                            OR (
@@ -281,7 +282,7 @@ class FrankReader:
                            )
                          )
                        ORDER BY block_time DESC LIMIT ?""",
-                    (limit,),
+                    (self.person_id,limit),
                 ).fetchall()
             except sqlite3.Error:
                 return []
@@ -338,7 +339,14 @@ class FrankReader:
     def recent_trades(self, limit: int = 100) -> list[dict]:
         db = open_production_ro(self.database)
         try:
-            rows = db.execute("SELECT wallet,signature,mint,episode_id,block_time,side,body FROM trades ORDER BY block_time DESC LIMIT ?", (limit,)).fetchall()
+            rows = db.execute(
+                """SELECT t.wallet,t.signature,t.mint,t.episode_id,t.block_time,t.side,t.body
+                   FROM trades t
+                   JOIN signatures s ON s.wallet=t.wallet AND s.signature=t.signature
+                   WHERE s.person_id=?
+                   ORDER BY t.block_time DESC LIMIT ?""",
+                (self.person_id,limit),
+            ).fetchall()
             result = []
             for row in rows:
                 item = dict(row)
