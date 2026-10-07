@@ -91,12 +91,21 @@ def test_frank_review_activity_exposes_ambiguous_active_swap_without_signal(tmp_
         },
     }
     db.execute("insert into signatures values(?,?,?)",("race-sig",1791318208,json.dumps(body)))
+    unproven=json.loads(json.dumps(body))
+    unproven["classification_reason"]="INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE"
+    unproven["frank_is_signer"]=True
+    unproven["evidence"]["mechanical_classification"]="UNKNOWN"
+    unproven["evidence"]["classification_evidence"]["dex_program_interaction"]=False
+    unproven["evidence"]["classification_evidence"]["swap_instruction_evidence"]=False
+    db.execute("insert into signatures values(?,?,?)",("unproven-sig",1791318209,json.dumps(unproven)))
     db.commit();db.close()
     rows=FrankReader(prod).review_activity()
-    assert len(rows)==1
-    assert rows[0]["signature"]=="race-sig"
-    assert rows[0]["candidate_mints"]==[race]
-    assert rows[0]["swap_instruction_evidence"] is True
+    assert len(rows)==2
+    by_sig={row["signature"]:row for row in rows}
+    assert by_sig["race-sig"]["candidate_mints"]==[race]
+    assert by_sig["race-sig"]["swap_instruction_evidence"] is True
+    assert by_sig["race-sig"]["review_scope"]=="ACTIVE_SWAP_LIKE"
+    assert by_sig["unproven-sig"]["review_scope"]=="SIGNED_OPPOSING_FLOW_MARKET_UNPROVEN"
     assert FrankReader(prod).candidates()[0]["mint"]=="Mint111"
 
 
