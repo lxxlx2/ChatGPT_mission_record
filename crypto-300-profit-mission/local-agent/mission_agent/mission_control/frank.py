@@ -214,6 +214,41 @@ class FrankReader:
         finally:
             db.close()
 
+    def mint_snapshot(self, mint: str) -> dict:
+        """Read the latest observed Frank state for one mint without creating a signal."""
+        db = open_production_ro(self.database)
+        try:
+            row = db.execute(
+                "SELECT person_id,mint,body FROM v1_states WHERE mint=? ORDER BY rowid DESC LIMIT 1",
+                (mint,),
+            ).fetchone()
+            if not row:
+                return {"status":"NOT_OBSERVED","mint":mint}
+            try:
+                state=json.loads(row["body"])
+            except (TypeError,ValueError):
+                return {"status":"UNAVAILABLE","reason":"STATE_BODY_INVALID","mint":mint}
+            events=state.get("events") or []
+            latest=events[-1] if events else None
+            buys=[event for event in events if event.get("direction")=="BUY"]
+            sells=[event for event in events if event.get("direction")=="SELL"]
+            signal=db.execute(
+                "SELECT signal_type,created_at FROM signals WHERE person_id=? AND mint=? AND episode_id=? ORDER BY rowid DESC LIMIT 1",
+                (row["person_id"],mint,state.get("episode_id")),
+            ).fetchone()
+            return {
+                "status":"OBSERVED","person_id":row["person_id"],"mint":mint,
+                "episode_id":state.get("episode_id"),"position_state":state.get("state"),
+                "current_raw":state.get("current_raw"),"buy_count":len(buys),"sell_count":len(sells),
+                "latest_side":latest.get("direction") if latest else None,
+                "latest_at":latest.get("at") if latest else None,
+                "latest_signature":latest.get("signature") if latest else None,
+                "signal_type":signal["signal_type"] if signal else None,
+                "signal_at":signal["created_at"] if signal else None,
+            }
+        finally:
+            db.close()
+
     def recent_trades(self, limit: int = 100) -> list[dict]:
         db = open_production_ro(self.database)
         try:
