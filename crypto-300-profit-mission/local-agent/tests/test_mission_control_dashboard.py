@@ -1,6 +1,6 @@
 import time
 
-from mission_agent.mission_control.server import DashboardState
+from mission_agent.mission_control.server import ClusterJobManager, DashboardState
 from mission_agent.mission_control.service import MissionMemeService
 from test_mission_control_service import make_prod, policy
 
@@ -57,3 +57,25 @@ def test_stale_wait_still_exposes_quote_and_frank_price_for_research(tmp_path):
     assert row["decision_quote"]["execution_price_usdc"]=="1.07"
     assert row["decision_quote"]["price_impact_pct"]=="0.5"
     service.close()
+
+
+def test_cluster_query_validates_solana_ca_and_presets(tmp_path):
+    manager=ClusterJobManager(tmp_path/"control")
+    mint="So11111111111111111111111111111111111111112"
+    assert manager.validate_mint(mint)==mint
+    for bad in ("", "not-a-ca", "../escape", "0"*32):
+        try:
+            manager.validate_mint(bad)
+        except ValueError as exc:
+            assert str(exc)=="INVALID_SOLANA_CA"
+        else:
+            raise AssertionError("invalid CA accepted")
+
+
+def test_dashboard_static_contains_signal_and_cluster_tabs():
+    from mission_agent.mission_control.server import Handler
+    html=(Handler.static_root/"index.html").read_text()
+    assert 'data-view="signals"' in html
+    assert 'data-view="cluster"' in html
+    assert 'id="cluster-form"' in html
+    assert 'id="cluster-result"' in html
