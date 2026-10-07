@@ -235,6 +235,19 @@ class ClusterJobManager:
                 job["progress"]=progress
 
     @staticmethod
+    def _extension_semantic_config(value):
+        accounting_only={"withheldamount"}
+        if isinstance(value,dict):
+            return {
+                key:ClusterJobManager._extension_semantic_config(child)
+                for key,child in value.items()
+                if str(key).lower().replace("_","").replace("-","") not in accounting_only
+            }
+        if isinstance(value,list):
+            return [ClusterJobManager._extension_semantic_config(child) for child in value]
+        return value
+
+    @staticmethod
     def _assessment_snapshot(report: dict) -> dict:
         assessment=report.get("assessment") or {}
         metrics=report.get("metrics") or {}
@@ -248,23 +261,39 @@ class ClusterJobManager:
         extension_details=[
             {
                 "name":row.get("name"),"status":row.get("status"),"reason":row.get("reason"),
+                "semantic_config":ClusterJobManager._extension_semantic_config(row.get("config")),
             }
             for row in (profile.get("sensitive_extension_details") or [])
             if isinstance(row,dict)
         ]
-        extension_details.sort(key=lambda row:(str(row.get("name")),str(row.get("status")),str(row.get("reason"))))
+        extension_details.sort(key=lambda row:(
+            str(row.get("name")),str(row.get("status")),str(row.get("reason")),
+            json.dumps(row.get("semantic_config"),sort_keys=True,default=str),
+        ))
         active_extension_risks=[
-            {"name":row.get("name"),"status":row.get("status"),"reason":row.get("reason")}
+            {
+                "name":row.get("name"),"status":row.get("status"),"reason":row.get("reason"),
+                "semantic_config":ClusterJobManager._extension_semantic_config(row.get("config")),
+            }
             for row in (assessment.get("active_extension_risks") or [])
             if isinstance(row,dict)
         ]
-        active_extension_risks.sort(key=lambda row:(str(row.get("name")),str(row.get("status")),str(row.get("reason"))))
+        active_extension_risks.sort(key=lambda row:(
+            str(row.get("name")),str(row.get("status")),str(row.get("reason")),
+            json.dumps(row.get("semantic_config"),sort_keys=True,default=str),
+        ))
         unresolved_extension_risks=[
-            {"name":row.get("name"),"status":row.get("status"),"reason":row.get("reason")}
+            {
+                "name":row.get("name"),"status":row.get("status"),"reason":row.get("reason"),
+                "semantic_config":ClusterJobManager._extension_semantic_config(row.get("config")),
+            }
             for row in (assessment.get("unresolved_extension_risks") or [])
             if isinstance(row,dict)
         ]
-        unresolved_extension_risks.sort(key=lambda row:(str(row.get("name")),str(row.get("status")),str(row.get("reason"))))
+        unresolved_extension_risks.sort(key=lambda row:(
+            str(row.get("name")),str(row.get("status")),str(row.get("reason")),
+            json.dumps(row.get("semantic_config"),sort_keys=True,default=str),
+        ))
         return {
             "structure_rating":structure,
             "investment_rating":investment,
