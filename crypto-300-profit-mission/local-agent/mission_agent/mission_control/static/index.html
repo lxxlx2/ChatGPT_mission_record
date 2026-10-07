@@ -17,6 +17,12 @@
   </header>
 
   <main>
+    <nav class="view-tabs" aria-label="Meme 控制台功能">
+      <button class="view-tab active" type="button" data-view="signals">Frank 信号</button>
+      <button class="view-tab" type="button" data-view="cluster">CA 链上查询</button>
+    </nav>
+
+    <div id="signals-view" class="view-pane active">
     <section class="stats" id="stats"></section>
 
     <section class="legend">
@@ -69,6 +75,99 @@
         <div id="decisions" class="feed"></div>
       </section>
     </section>
+    </div>
+
+    <div id="cluster-view" class="view-pane">
+      <section class="cluster-hero">
+        <div>
+          <div class="eyebrow">MEME ON-CHAIN RESEARCH</div>
+          <h2>CA 链上结构查询</h2>
+          <p>输入 Solana CA，自动分析 Top20、实际 owner、资金来源、内部转账和控制/执行集群。只读、免费、证据优先。</p>
+        </div>
+        <div class="cluster-trust">
+          <span>Finalized RPC</span>
+          <span>本地缓存</span>
+          <span>不猜身份</span>
+        </div>
+      </section>
+
+      <section class="cluster-search panel">
+        <form id="cluster-form">
+          <label for="cluster-mint">Solana CA</label>
+          <div class="cluster-search-row">
+            <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴 token CA" />
+            <select id="cluster-preset" name="preset" title="扫描深度">
+              <option value="quick">快速</option>
+              <option value="standard" selected>标准</option>
+              <option value="deep">深度</option>
+            </select>
+            <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
+          </div>
+          <div class="cluster-preset-help" id="cluster-preset-help">标准：Top20 owner，深扫前 10 个 owner，兼顾速度和可信度。</div>
+        </form>
+      </section>
+
+      <section id="cluster-status" class="cluster-status" hidden></section>
+
+      <section id="cluster-result" class="cluster-result" hidden>
+        <div class="cluster-summary" id="cluster-summary"></div>
+
+        <section class="panel">
+          <div class="panel-title">
+            <div>
+              <h2>集中度</h2>
+              <p>严格指标未完成身份归一化时会直接显示“未确认”，不会用猜测值代替。</p>
+            </div>
+          </div>
+          <div class="cluster-metrics" id="cluster-metrics"></div>
+        </section>
+
+        <section class="grid cluster-grid">
+          <section class="panel">
+            <div class="panel-title">
+              <div>
+                <h2>Top20 实际 Owner</h2>
+                <p>token account 已解析到 owner；角色未确认时保留“未确认”。</p>
+              </div>
+            </div>
+            <div class="holder-table-wrap">
+              <table class="holder-table">
+                <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th></tr></thead>
+                <tbody id="cluster-holders"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <div>
+                <h2>证据与覆盖率</h2>
+                <p>所有自动结论都附带扫描范围和未解决项。</p>
+              </div>
+            </div>
+            <div id="cluster-coverage" class="cluster-coverage"></div>
+          </section>
+        </section>
+
+        <section class="grid cluster-grid">
+          <section class="panel">
+            <div class="panel-title"><div><h2>关系 / 控制集群</h2><p>确认关系和 probable control 分开显示。</p></div></div>
+            <div id="cluster-control" class="cluster-list"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-title"><div><h2>执行集群</h2><p>执行同步不等于共同所有权。</p></div></div>
+            <div id="cluster-execution" class="cluster-list"></div>
+          </section>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <div><h2>原始证据摘要</h2><p>共同资金源、直接转账、同步交易、共同签名等。</p></div>
+          </div>
+          <div id="cluster-evidence" class="cluster-evidence"></div>
+        </section>
+      </section>
+    </div>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
