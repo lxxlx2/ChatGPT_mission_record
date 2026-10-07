@@ -739,17 +739,96 @@ def load_registry(path:Path|None):
 
 
 def markdown(report:dict)->str:
-    m=report["metrics"];lines=[f"# Meme Wallet Cluster — {report['mint']}","",f"Source: {report['source']}","", "## Concentration"]
+    m=report.get("metrics") or {}
+    profile=report.get("token_profile") or {}
+    market=report.get("market") or {}
+    assessment=report.get("assessment") or {}
+    quote=report.get("execution_quote_30_usdc") or {}
+    pair=market.get("main_pair") or {}
+    lines=[
+        f"# Meme CA Research — {report.get('mint')}",
+        "",
+        f"Observed at: {report.get('observed_at')}",
+        f"Schema: {report.get('schema_version')}",
+        "",
+        "## Conclusion",
+        "",
+        f"- Trading status: {assessment.get('trading_status','UNRESOLVED')}",
+        f"- Chain permission: {assessment.get('chain_permission_status','UNRESOLVED')}",
+        f"- Wallet cluster: {assessment.get('cluster_status','UNRESOLVED')}",
+        f"- Narrative: {assessment.get('narrative_status','UNRESOLVED')}",
+        "",
+        "## Token / contract",
+        "",
+        f"- Name / Symbol: {market.get('name') or 'UNAVAILABLE'} / {market.get('symbol') or 'UNAVAILABLE'}",
+        f"- Token program: {profile.get('token_program','UNAVAILABLE')}",
+        f"- Supply raw: {report.get('supply_raw')}",
+        f"- Decimals: {report.get('decimals')}",
+        f"- Mint authority: {profile.get('mint_authority')}",
+        f"- Freeze authority: {profile.get('freeze_authority')}",
+        f"- Metadata update authority: {profile.get('metadata_update_authority','UNAVAILABLE')}",
+        "",
+        "## Current market",
+        "",
+        f"- Market source status: {market.get('status','UNAVAILABLE')} / {market.get('source','UNAVAILABLE')}",
+        f"- Price USD: {market.get('price_usd','UNAVAILABLE')}",
+        f"- Market cap USD: {market.get('market_cap_usd','UNAVAILABLE')}",
+        f"- Main DEX: {pair.get('dex_id','UNAVAILABLE')}",
+        f"- Main pair: {pair.get('pair_address','UNAVAILABLE')}",
+        f"- Main-pair liquidity USD: {pair.get('liquidity_usd','UNAVAILABLE')}",
+        f"- 24h volume USD: {(pair.get('volume') or {}).get('h24','UNAVAILABLE')}",
+        f"- Jupiter $30 quote: {quote.get('status','UNAVAILABLE')} / price={quote.get('execution_price_usdc','UNAVAILABLE')} / impact={quote.get('price_impact_pct','UNAVAILABLE')}%",
+        "",
+        "## Concentration",
+        "",
+    ]
     for k,v in m.items():
         suffix="%" if v not in {"UNRESOLVED","UNAVAILABLE",None} else ""
         lines.append(f"- {k}: {v}{suffix}")
-    lines+=["","## Top holders","", "|#|Owner|Share|Role|","|---:|---|---:|---|"]
-    for h in report["holders"]:lines.append(f"|{h['rank']}|{h['owner']}|{h['supply_pct']}%|{h['role']}|")
-    for title,key in [("Confirmed relations","confirmed_relation_groups"),("Probable control","probable_control_clusters"),("Probable execution","probable_execution_clusters")]:
-        lines+=["",f"## {title}"]
-        rows=report[key]
+    lines += [
+        "",
+        "## Top holders",
+        "",
+        "|#|Owner|Share|Role|First acquisition|Funding source|",
+        "|---:|---|---:|---|---|---|",
+    ]
+    for h in report.get("holders") or []:
+        a=h.get("first_acquisition") or {}
+        first=(
+            f"{a.get('type')} {a.get('quote_quantity') or ''} {a.get('quote_asset') or ''} "
+            f"@ {a.get('block_time') or ''}"
+        ).strip() if a.get("status")=="CONFIRMED_BOUNDED" else a.get("status","UNRESOLVED")
+        funding=h.get("funding") or {}
+        funder=f"{funding.get('source') or 'UNRESOLVED'} {funding.get('sol') or ''} SOL".strip()
+        lines.append(
+            f"|{h.get('rank')}|{h.get('owner')}|{h.get('supply_pct')}%|{h.get('role')}|{first}|{funder}|"
+        )
+    for title,key in [
+        ("Confirmed relations","confirmed_relation_groups"),
+        ("Probable control","probable_control_clusters"),
+        ("Probable execution","probable_execution_clusters"),
+    ]:
+        lines += ["",f"## {title}"]
+        rows=report.get(key) or []
         if not rows:lines.append("- None confirmed in bounded evidence.")
-        for g in rows:lines.append(f"- {g['cluster_id']}: {g['supply_pct']}% — "+", ".join(g["wallets"]))
-    lines+=["","## Coverage","",json.dumps(report["coverage"],ensure_ascii=False,indent=2),"", "## Limitations"]
-    lines += [f"- {x}" for x in report["limitations"]]
+        for g in rows:
+            edge_types=sorted({x.get("type") for x in (g.get("evidence") or []) if x.get("type")})
+            lines.append(
+                f"- {g.get('cluster_id')}: {g.get('supply_pct')}% — "
+                + ", ".join(g.get("wallets") or [])
+                + (" — evidence: "+", ".join(edge_types) if edge_types else "")
+            )
+    lines += [
+        "",
+        "## Coverage",
+        "",
+        "~~~json",
+        json.dumps(report.get("coverage") or {},ensure_ascii=False,indent=2),
+        "~~~",
+        "",
+        "## Next checks",
+    ]
+    lines += [f"- {x}" for x in assessment.get("next_checks") or []]
+    lines += ["","## Limitations"]
+    lines += [f"- {x}" for x in report.get("limitations") or []]
     return "\n".join(lines)+"\n"
