@@ -405,6 +405,48 @@ def test_assessment_history_records_risk_detail_change_and_attributes_coverage(t
     assert coverage_only["assessment_history_context"]["coverage_changed_since_previous_observation"] is True
 
 
+def test_assessment_history_ignores_accounting_only_extension_change(tmp_path):
+    manager=ClusterJobManager(tmp_path/"control")
+    out=tmp_path/"report";out.mkdir()
+    base={
+        "observed_at":100,
+        "assessment":{
+            "trading_status":"RISK / ACTIVE_CHAIN_PERMISSION",
+            "chain_permission_status":"RISK",
+            "cluster_status":"NO_MATERIAL_CONTROL_CLUSTER_FOUND",
+            "narrative_status":"NOT_AUTOMATICALLY_VERIFIED",
+            "active_extension_risks":[
+                {"name":"transferFeeConfig","status":"ACTIVE_RISK","reason":"TRANSFER_FEE_ACTIVE_OR_MUTABLE",
+                 "config":{"withheldAmount":"0","transferFeeConfigAuthority":"Authority1"}}
+            ],
+            "unresolved_extension_risks":[],
+        },
+        "metrics":{
+            "LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":"0",
+            "UNRESOLVED_MATERIAL_HOLDER_PCT":"0",
+        },
+        "token_profile":{
+            "mint_authority":None,"freeze_authority":None,
+            "sensitive_extension_details":[
+                {"name":"transferFeeConfig","status":"ACTIVE_RISK","reason":"TRANSFER_FEE_ACTIVE_OR_MUTABLE",
+                 "config":{"withheldAmount":"0","transferFeeConfigAuthority":"Authority1"}}
+            ],
+        },
+        "coverage":{"scan_mode":"ADAPTIVE","deep_holders_scanned":6,"adaptive_deepened_owners":[]},
+    }
+    manager._attach_assessment_history(out,base,"standard")
+    assert len(base["assessment_history"])==1
+
+    accounting_only=json.loads(json.dumps(base))
+    accounting_only["observed_at"]=200
+    accounting_only["assessment"]["active_extension_risks"][0]["config"]["withheldAmount"]="1"
+    accounting_only["token_profile"]["sensitive_extension_details"][0]["config"]["withheldAmount"]="1"
+    manager._attach_assessment_history(out,accounting_only,"standard")
+
+    assert len(accounting_only["assessment_history"])==1
+    assert accounting_only["assessment_history_context"]["current_extension_audit_details"][0]["config"]["withheldAmount"]=="1"
+
+
 def test_dashboard_frontend_shows_progress_and_conclusion_history():
     from mission_agent.mission_control.server import Handler
     js=(Handler.static_root/"app.js").read_text()
