@@ -16,7 +16,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
+from ..meme.cluster import DEFAULT_RPC, FALLBACK_RPCS, MultiEndpointSolanaRPC, RpcCache, WalletClusterAnalyzer, load_registry, markdown
 from .db import open_control_ro
 from .frank import FrankReader
 
@@ -115,7 +115,11 @@ class ClusterJobManager:
         self.report_root.mkdir(parents=True, exist_ok=True)
         self.cache_path = self.control_root / "wallet-cluster-rpc-cache.sqlite"
         self.registry_path = Path(__file__).resolve().parents[2] / "config" / "meme_special_addresses.json"
-        self.rpc_endpoint = os.environ.get("SOLANA_RPC_URL", "https://api.mainnet.solana.com")
+        primary=os.environ.get("SOLANA_RPC_URL",DEFAULT_RPC)
+        extra=[x.strip() for x in os.environ.get("SOLANA_RPC_FALLBACKS","").split(",") if x.strip()]
+        self.rpc_endpoints=[]
+        for endpoint in [primary,DEFAULT_RPC,*FALLBACK_RPCS,*extra]:
+            if endpoint and endpoint not in self.rpc_endpoints:self.rpc_endpoints.append(endpoint)
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
