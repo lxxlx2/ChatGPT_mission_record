@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from mission_agent.frank.parser import DEX_PROGRAMS
 from mission_agent.meme.cluster import Holder, RpcCache, WalletClusterAnalyzer
 
 
@@ -106,3 +107,58 @@ def test_rpc_cache_rejects_tampered_body(tmp_path):
     cache.db.commit()
     assert cache.get("getTokenSupply",["M"],101) is None
     cache.close()
+
+
+def test_public_dex_program_is_shared_infrastructure_not_execution_evidence():
+    a=analyzer()
+    jupiter=next(iter(DEX_PROGRAMS))
+    def scan(h,mapping,top_owners):
+        if h.owner=="A":
+            a.trades.append({"owner":"A","signature":"a1","block_time":100,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"100","quote_decimals":9,"program_ids":[jupiter],"signers":["A"]})
+        if h.owner=="B":
+            a.trades.append({"owner":"B","signature":"b1","block_time":101,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"200","quote_decimals":9,"program_ids":[jupiter],"signers":["B"]})
+        return {"block_time":100,"signature":"first-"+h.owner}
+    a._scan_holder=scan
+    out=a.analyze()
+    assert out["probable_execution_clusters"]==[]
+    assert "SAME_EXECUTION_PROGRAM" not in {e["type"] for e in out["edges"]}
+    assert out["metrics"]["UNRESOLVED_MATERIAL_HOLDER_PCT"]=="43.0000"
+
+
+def test_funding_scan_skips_public_rpc_null_transaction_instead_of_failing():
+    class NullTxRPC:
+        endpoint="test";calls=0;cache_hits=0
+        def call(self,method,params,ttl=0):
+            if method=="getSignaturesForAddress":
+                return [{"signature":"missing"}]
+            if method=="getTransaction":
+                return None
+            raise AssertionError(method)
+    a=WalletClusterAnalyzer("Mint",rpc=NullTxRPC())
+    h=Holder("ta","A",100,0,"ORDINARY","test")
+    a._scan_funding(h,{"block_time":100,"signature":"first"},{"A","B"})
+    assert a.funding==[]
+    assert a.tx_errors==[{"signature":"missing","phase":"funding","error":"UNAVAILABLE_ON_PUBLIC_RPC"}]
+
+
+def test_dev_linked_cluster_includes_probable_control_wallets():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{"F":{"role":"EOA","source":"fixture"}}}
+    a.holders=lambda:(1000,0,[
+        Holder("ta1","A",200,0,"DEV","fixture"),
+        Holder("ta2","B",150,0,"ORDINARY","fixture"),
+        Holder("ta3","C",100,0,"LP","fixture"),
+        Holder("ta4","D",80,0,"ORDINARY","fixture"),
+    ])
+    def scan(h,mapping,top_owners):
+        if h.owner=="A":
+            a.funding.append({"owner":"A","source":"F","lamports":"1","signature":"fa","block_time":90})
+            a.trades.append({"owner":"A","signature":"a1","block_time":100,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"100","quote_decimals":9,"program_ids":[],"signers":["A"]})
+        if h.owner=="B":
+            a.funding.append({"owner":"B","source":"F","lamports":"1","signature":"fb","block_time":90})
+            a.trades.append({"owner":"B","signature":"b1","block_time":101,"direction":"BUY","quote_asset":"SOL","quote_amount_raw":"200","quote_decimals":9,"program_ids":[],"signers":["B"]})
+        return {"block_time":100,"signature":"first-"+h.owner}
+    a._scan_holder=scan
+    out=a.analyze()
+    assert set(out["probable_control_clusters"][0]["wallets"])=={"A","B"}
+    assert out["metrics"]["DEV_LINKED_CLUSTER_PCT"]=="35.0000"
