@@ -302,6 +302,7 @@ class WalletClusterAnalyzer:
             if len({r["owner"] for r in rows})<2:continue
             role=(self._entry(source) or {}).get("role")
             if role=="CEX":kind="COMMON_FUNDER_CEX"
+            elif role in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","BRIDGE","AMM_POOL","PROTOCOL_VAULT"}:kind="SHARED_INFRA"
             elif role in {"EOA","DEV","CREATOR","TREASURY"}:kind="COMMON_FUNDER_EOA"
             else:kind="COMMON_FUNDER_UNRESOLVED"
             owners=sorted({r["owner"] for r in rows})
@@ -311,7 +312,9 @@ class WalletClusterAnalyzer:
         for row in self.consolidations:by_destination[row["destination_owner"]].add(row["source_owner"])
         for destination,owners in by_destination.items():
             role=(self._entry(destination) or {}).get("role")
-            kind="COMMON_CONSOLIDATION" if role in {"EOA","DEV","CREATOR","TREASURY"} else "COMMON_CONSOLIDATION_UNRESOLVED"
+            if role in {"EOA","DEV","CREATOR","TREASURY"}:kind="COMMON_CONSOLIDATION"
+            elif role in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","BRIDGE","AMM_POOL","PROTOCOL_VAULT","CEX"}:kind="SHARED_INFRA"
+            else:kind="COMMON_CONSOLIDATION_UNRESOLVED"
             owners=sorted(owners)
             if len(owners)>1:
                 evidence=next(x for x in self.consolidations if x["destination_owner"]==destination)
@@ -355,7 +358,9 @@ class WalletClusterAnalyzer:
             owners=sorted(owners)
             if len(owners)>1:
                 role=(self._entry(signer) or {}).get("role")
-                kind="COMMON_SIGNER" if role in {"EOA","DEV","CREATOR","TREASURY"} else "COMMON_SIGNER_UNRESOLVED"
+                if role in {"EOA","DEV","CREATOR","TREASURY"}:kind="COMMON_SIGNER"
+                elif role in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","BRIDGE","AMM_POOL","PROTOCOL_VAULT","CEX"}:kind="SHARED_INFRA"
+                else:kind="COMMON_SIGNER_UNRESOLVED"
                 for i,a in enumerate(owners):
                     for b in owners[i+1:]:self._edge(a,b,kind,"MULTI_TX",signer=signer)
         for pair,counts in pair_counts.items():
