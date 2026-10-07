@@ -7,5 +7,6 @@
       "source": "repo:WALLET_CLUSTER_ANALYSIS_SPEC.md#GOMO-regression-example"
     }
   },
-  "normalization_complete": false
+  "normalization_complete": false,
+  "tokens": {}
 }
