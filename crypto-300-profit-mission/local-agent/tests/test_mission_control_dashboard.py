@@ -81,6 +81,11 @@ def test_dashboard_static_contains_signal_and_cluster_tabs():
     assert 'data-view="cluster"' in html
     assert 'id="cluster-form"' in html
     assert 'id="cluster-result"' in html
+    assert 'id="cluster-conclusion"' in html
+    assert 'id="cluster-token-profile"' in html
+    assert 'id="cluster-market"' in html
+    assert 'id="cluster-narrative"' in html
+    assert 'Top20 全解析' in html
 
 
 class NoRunExecutor:
@@ -156,3 +161,27 @@ def test_atomic_cluster_report_write_replaces_complete_file(tmp_path):
     _atomic_write_text(path,'{"version":2,"complete":true}')
     assert path.read_text()=='{"version":2,"complete":true}'
     assert list(tmp_path.glob("latest.json.tmp-*"))==[]
+
+
+def test_cluster_dashboard_explains_presets_and_localizes_rate_limit():
+    from mission_agent.mission_control.server import Handler
+    html=(Handler.static_root/"index.html").read_text()
+    js=(Handler.static_root/"app.js").read_text()
+    assert "快速" in html and "标准" in html and "深度" in html
+    assert "深扫前 6 个 owner" in html
+    assert "深扫前 10 个 owner" in html
+    assert "Top20 owner 全部深扫" in html
+    assert "免费 Solana RPC 触发限流（HTTP 429）" in js
+    assert "execution_quote_30_usdc" in js
+    assert "token_profile" in js
+    assert "first_acquisition" in js
+
+
+def test_cluster_manager_has_multiple_free_rpc_endpoints_by_default(tmp_path,monkeypatch):
+    monkeypatch.delenv("SOLANA_RPC_URLS",raising=False)
+    monkeypatch.delenv("SOLANA_RPC_URL",raising=False)
+    manager=ClusterJobManager(tmp_path/"control")
+    assert manager.rpc_endpoints[0]=="https://api.mainnet.solana.com"
+    assert "https://api.mainnet-beta.solana.com" in manager.rpc_endpoints
+    assert "https://rpc.ankr.com/solana" in manager.rpc_endpoints
+    assert len(manager.rpc_endpoints)>=3
