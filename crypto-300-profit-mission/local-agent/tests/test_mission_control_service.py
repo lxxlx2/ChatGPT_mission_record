@@ -165,3 +165,46 @@ def test_live_gate_requires_exact_policy_sha_even_for_frozen_policy(tmp_path):
     with_hash=MissionMemeService(production_root=prod,control_root=control,policy_path=p,live_delivery=True,approved_policy_sha256=expected)
     assert with_hash.delivery_allowed is True
     with_hash.close()
+
+
+def add_reentry_watch(root: Path, *, mint="ReentryMint", latest_at=None, side="REENTRY"):
+    latest_at=int(time.time()) if latest_at is None else latest_at
+    sig="reentry-"+mint
+    event={"signature":sig,"at":latest_at,"direction":"BUY","token_amount_raw":"1000000","token_decimals":6,"quote_asset":USDC,"quote_quantity":"15000"}
+    state={"episode_id":"v1-"+mint,"state":"OPEN","current_raw":"1000000","events":[event]}
+    db=sqlite3.connect(root/"forward.sqlite")
+    db.execute("insert into v1_states values(?,?,?)",("frank",mint,json.dumps(state)))
+    db.execute("insert into trades values(?,?,?,?,?,?,?)",("wallet",sig,mint,"ledger-"+mint,latest_at,side,json.dumps({"side":side})))
+    db.commit();db.close()
+
+
+def test_confirmed_reentry_enters_watch_without_changing_frozen_signals(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json"
+    make_prod(prod);add_reentry_watch(prod);policy(p)
+    before=sqlite3.connect(prod/"forward.sqlite").execute("select count(*) from signals").fetchone()[0]
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
+    service.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
+    candidates=service.frank.candidates()
+    watch=[x for x in candidates if x["mint"]=="ReentryMint"]
+    assert len(watch)==1
+    assert watch[0]["pattern"]=="REENTRY_WATCH"
+    assert watch[0]["source_signal_id"] is None
+    assert watch[0]["source_signal_type"]=="FRANK_REENTRY_WATCH"
+    result=service.cycle()
+    event=[x for x in result["decision_events"] if x["mint"]=="ReentryMint"]
+    assert len(event)==1
+    assert event[0]["decision"]=="WAIT"
+    body=json.loads(service.control.db.execute("select body from candidate_latest where mint='ReentryMint'").fetchone()[0])
+    assert body["reasons"]==["FRANK_REENTRY_WATCH_ACTIVE"]
+    after=sqlite3.connect(prod/"forward.sqlite").execute("select count(*) from signals").fetchone()[0]
+    assert after==before
+    service.close()
+
+
+def test_plain_single_buy_without_reentry_is_not_promoted_to_watch(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json"
+    make_prod(prod);add_reentry_watch(prod,mint="PlainBuyMint",side="BUY");policy(p)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
+    candidates=service.frank.candidates()
+    assert all(x["mint"]!="PlainBuyMint" for x in candidates)
+    service.close()
