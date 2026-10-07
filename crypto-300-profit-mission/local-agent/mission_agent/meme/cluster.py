@@ -251,7 +251,9 @@ class WalletClusterAnalyzer:
         for source,rows in by_funder.items():
             if len({r["owner"] for r in rows})<2:continue
             role=(self.registry.get("addresses") or {}).get(source,{}).get("role")
-            kind="COMMON_FUNDER_CEX" if role=="CEX" else "COMMON_FUNDER_EOA"
+            if role=="CEX":kind="COMMON_FUNDER_CEX"
+            elif role in {"EOA","DEV","CREATOR","TREASURY"}:kind="COMMON_FUNDER_EOA"
+            else:kind="COMMON_FUNDER_UNRESOLVED"
             owners=sorted({r["owner"] for r in rows})
             for i,a in enumerate(owners):
                 for b in owners[i+1:]:self._edge(a,b,kind,rows[0]["signature"],funder=source)
@@ -284,8 +286,10 @@ class WalletClusterAnalyzer:
         for signer,owners in signer_owners.items():
             owners=sorted(owners)
             if len(owners)>1:
+                role=(self.registry.get("addresses") or {}).get(signer,{}).get("role")
+                kind="COMMON_SIGNER" if role in {"EOA","DEV","CREATOR","TREASURY"} else "COMMON_SIGNER_UNRESOLVED"
                 for i,a in enumerate(owners):
-                    for b in owners[i+1:]:self._edge(a,b,"COMMON_SIGNER","MULTI_TX",signer=signer)
+                    for b in owners[i+1:]:self._edge(a,b,kind,"MULTI_TX",signer=signer)
         for pair,counts in pair_counts.items():
             if sum(counts.values())>=3:self._edge(*pair,"REPEATED_SYNC_BEHAVIOR","MULTI_TX",counts=dict(counts))
     @staticmethod
@@ -339,16 +343,20 @@ class WalletClusterAnalyzer:
         for h in nonspecial:
             pct=Decimal(h.raw)*100/Decimal(supply) if supply else Decimal(0)
             if pct>=self.material_pct and h.owner not in classified and h.role in {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:unresolved_raw+=h.raw
+        normalization_complete=bool(self.registry.get("normalization_complete"))
         metrics={
             "RAW_TOP10_PCT":self._pct(raw_top10,supply),
-            "EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply),
-            "EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply),
+            "EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply) if normalization_complete else "UNRESOLVED",
+            "EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply) if normalization_complete else "UNRESOLVED",
             "LARGEST_CONFIRMED_RELATION_GROUP_PCT":relation_groups[0]["supply_pct"] if relation_groups else "0",
             "LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":control_groups[0]["supply_pct"] if control_groups else "0",
             "LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT":execution_groups[0]["supply_pct"] if execution_groups else "0",
-            "DEV_LINKED_CLUSTER_PCT":self._pct(dev_raw,supply),
-            "CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply),
+            "DEV_LINKED_CLUSTER_PCT":self._pct(dev_raw,supply) if normalization_complete else "UNRESOLVED",
+            "CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply) if normalization_complete else "UNRESOLVED",
             "UNRESOLVED_MATERIAL_HOLDER_PCT":self._pct(unresolved_raw,supply),
+            "KNOWN_EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply),
+            "KNOWN_EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply),
+            "KNOWN_CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply),
         }
         holder_rows=[{"rank":i+1,"token_account":h.token_account,"owner":h.owner,"raw":str(h.raw),"quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply),"role":h.role,"role_source":h.role_source,"account_program":h.account_program} for i,h in enumerate(holders)]
         return {
@@ -358,7 +366,7 @@ class WalletClusterAnalyzer:
             "probable_execution_clusters":execution_groups,
             "edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges],
             "funding_evidence":self.funding,"trade_evidence":self.trades,"transaction_errors":self.tx_errors,
-            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":min(len(holders),self.deep_holders),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
+            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":min(len(holders),self.deep_holders),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
             "limitations":[
                 "Only raw finalized RPC evidence and explicit local labels are treated as authoritative.",
                 "CEX/public-infrastructure identity is never guessed from funding alone.",
