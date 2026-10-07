@@ -149,14 +149,17 @@ def normalize_trade_event(event: dict, reference: dict | None) -> dict:
         quote = None
 
     if asset == USDC and quote is not None:
-        if value.get("amount_predicate")=="UNDETERMINED":
-            value["quote_usdc_status"] = "UNDETERMINED"
+        predicate=value.get("amount_predicate")
+        reason=value.get("amount_predicate_reason")
+        known=predicate in {"USDC_DIRECT_NUMERIC","SOL_EVENT_TIME_USDC_VERIFIED"} or (predicate is None and not reason)
+        if not known:
+            value["quote_usdc_status"]="UNDETERMINED"
             return value
-        value["quote_usdc_equivalent"] = str(quote)
-        value["quote_usdc_status"] = "USDC_DIRECT"
-        value["quote_usdc_reference"] = {
-            "trade_block_time": value.get("at"),
-            "reference": {"source": "USDC_DIRECT"},
+        value["quote_usdc_equivalent"]=str(quote)
+        value["quote_usdc_status"]="SOL_EVENT_TIME_USDC_VERIFIED" if predicate=="SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"
+        value["quote_usdc_reference"]={
+            "trade_block_time":value.get("at"),
+            "reference":{"source":"CAUSAL_SOL_NORMALIZATION" if predicate=="SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"},
         }
         return value
     if asset not in SOL_QUOTE_ASSETS:
