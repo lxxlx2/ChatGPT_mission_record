@@ -204,6 +204,8 @@ This candidate keeps the clean v2 report structure and adds:
 - adaptive standard scan rather than a fixed 10-owner x 30-transaction fan-out;
 - per-CA assessment history stored in `assessment-history.json`;
 - report-visible conclusion changes only when material assessment fields change;
-- explicit new-risk and resolved-uncertainty fields for each conclusion transition.
+- explicit new-risk and resolved-uncertainty fields for each conclusion transition;
+- the existing Frank production DB is read only to show whether Frank has observed the exact CA, current state and latest V1 signal;
+- Token-2022 sensitive extensions such as transfer-fee/hook/permanent-delegate style controls are exposed as explicit risk flags rather than hidden inside raw parsed data.
 
 The branch is a review candidate only until the local full test suite and at least one real CA acceptance pass succeed. It does not change production trading authority, Frank thresholds, notification policy, or scheduler configuration.
