@@ -405,6 +405,59 @@ def test_assessment_history_records_risk_detail_change_and_attributes_coverage(t
     assert coverage_only["assessment_history_context"]["coverage_changed_since_previous_observation"] is True
 
 
+def test_assessment_history_records_transfer_fee_parameter_change(tmp_path):
+    manager=ClusterJobManager(tmp_path/"control")
+    out=tmp_path/"report";out.mkdir()
+    config25={
+        "state":{
+            "transferFeeConfigAuthority":"Authority1",
+            "withdrawWithheldAuthority":None,
+            "olderTransferFee":{"transferFeeBasisPoints":25,"maximumFee":100},
+            "newerTransferFee":{"transferFeeBasisPoints":25,"maximumFee":100},
+            "withheldAmount":"0",
+        }
+    }
+    base={
+        "observed_at":100,
+        "assessment":{
+            "trading_status":"RISK / ACTIVE_CHAIN_PERMISSION",
+            "chain_permission_status":"RISK",
+            "cluster_status":"NO_MATERIAL_CONTROL_CLUSTER_FOUND",
+            "narrative_status":"NOT_AUTOMATICALLY_VERIFIED",
+            "active_extension_risks":[
+                {"name":"transferFeeConfig","status":"ACTIVE_RISK","reason":"TRANSFER_FEE_ACTIVE_OR_MUTABLE","config":config25}
+            ],
+            "unresolved_extension_risks":[],
+        },
+        "metrics":{
+            "LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":"0",
+            "UNRESOLVED_MATERIAL_HOLDER_PCT":"0",
+        },
+        "token_profile":{
+            "mint_authority":None,"freeze_authority":None,
+            "sensitive_extension_details":[
+                {"name":"transferFeeConfig","status":"ACTIVE_RISK","reason":"TRANSFER_FEE_ACTIVE_OR_MUTABLE","config":config25}
+            ],
+        },
+        "coverage":{"scan_mode":"ADAPTIVE","deep_holders_scanned":6,"adaptive_deepened_owners":[]},
+    }
+    manager._attach_assessment_history(out,base,"standard")
+    assert len(base["assessment_history"])==1
+
+    changed=json.loads(json.dumps(base))
+    changed["observed_at"]=200
+    changed["assessment"]["active_extension_risks"][0]["config"]["state"]["newerTransferFee"]["transferFeeBasisPoints"]=50
+    changed["token_profile"]["sensitive_extension_details"][0]["config"]["state"]["newerTransferFee"]["transferFeeBasisPoints"]=50
+    manager._attach_assessment_history(out,changed,"standard")
+
+    assert len(changed["assessment_history"])==2
+    latest=changed["assessment_history"][-1]
+    assert latest["change_category"]=="CHAIN_PERMISSION_CHANGE"
+    assert "sensitive_extension_details" in latest["changed_fields"]
+    assert "active_extension_risks" in latest["changed_fields"]
+    assert latest["new_risk"]
+
+
 def test_assessment_history_ignores_accounting_only_extension_change(tmp_path):
     manager=ClusterJobManager(tmp_path/"control")
     out=tmp_path/"report";out.mkdir()
