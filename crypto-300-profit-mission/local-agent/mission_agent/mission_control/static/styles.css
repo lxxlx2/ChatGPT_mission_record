@@ -68,7 +68,7 @@ main{padding:18px 24px 40px;max-width:1800px;margin:auto}
 .candidate-title>strong{font-size:14px}
 .state-text,.candidate-time{color:#8b95a3;font-size:11px}
 .ca-row{
-  display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;
   align-items:center;gap:8px;
   padding:9px 10px;border:1px solid #252b33;background:#0c0f13;border-radius:6px
 }
