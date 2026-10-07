@@ -106,16 +106,12 @@ LOCAL_AGENT="$LOCAL_AGENT"
 PROD="$PROD"
 VENV="$VENV"
 CONTROL_POINTER="$CONTROL_POINTER"
-POLICY="$POLICY"
+POLICY="$RUNTIME_POLICY"
 APPROVED_HASH_FILE="$APPROVED_HASH_FILE"
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 CONTROL="\$(cat "\$CONTROL_POINTER")"
 APPROVED_HASH="\$(cat "\$APPROVED_HASH_FILE")"
-CURRENT_HASH="\$(shasum -a 256 "\$POLICY" | awk '{print \$1}')"
 mkdir -p "\$CONTROL/logs"
-if [ "\$CURRENT_HASH" != "\$APPROVED_HASH" ]; then
-  echo "WARNING: APPROVED_POLICY_HASH_CHANGED; live delivery will remain fail-closed until reinstall." >&2
-fi
 cd "\$LOCAL_AGENT"
 echo "\$\$" > "\$CONTROL/loop.pid"
 exec env PYTHONPATH=. "\$VENV/bin/python" scripts/mission_meme_v1.py loop \
