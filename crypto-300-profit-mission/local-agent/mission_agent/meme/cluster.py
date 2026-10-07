@@ -33,6 +33,10 @@ TOKEN_PROGRAMS = {
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
     "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
 }
+SENSITIVE_EXTENSION_WORDS = (
+    "transferfee","transferhook","permanentdelegate","pausable",
+    "confidentialtransfer","defaultaccountstate",
+)
 SPECIAL_ROLES = {
     "LP", "AMM_POOL", "PROTOCOL_VAULT", "ESCROW", "VESTING", "LOCK",
     "BURN", "CEX", "BRIDGE", "ROUTER", "PUBLIC_INFRA", "PUBLIC_PROGRAM", "MARKET_MAKER",
@@ -342,6 +346,21 @@ class WalletClusterAnalyzer:
         elif program=="TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA":token_program="SPL Token"
         else:token_program=program or "UNRESOLVED"
         found_update,update_authority=self._find_key(parsed,"updateAuthority")
+        extension_names=[]
+        for extension in info.get("extensions") or []:
+            if isinstance(extension,dict):
+                name=extension.get("extension") or extension.get("type")
+                if name:extension_names.append(str(name))
+            elif extension:
+                extension_names.append(str(extension))
+        sensitive=[
+            name for name in extension_names
+            if any(word in name.lower().replace("_","").replace("-","") for word in SENSITIVE_EXTENSION_WORDS)
+        ]
+        risk_flags=[]
+        if info.get("mintAuthority"):risk_flags.append("MINT_AUTHORITY_ACTIVE")
+        if info.get("freezeAuthority"):risk_flags.append("FREEZE_AUTHORITY_ACTIVE")
+        risk_flags.extend("SENSITIVE_EXTENSION:"+name for name in sensitive)
         return {
             "status":"OK",
             "source":"SOLANA_FINALIZED_JSON_RPC",
@@ -354,6 +373,9 @@ class WalletClusterAnalyzer:
             "is_initialized":info.get("isInitialized"),
             "metadata_update_authority":update_authority if found_update else "UNAVAILABLE",
             "metadata_update_authority_status":"CHAIN_PARSED" if found_update else "UNAVAILABLE",
+            "extensions":extension_names,
+            "sensitive_extensions":sensitive,
+            "risk_flags":risk_flags,
         }
 
     def market_snapshot(self):
@@ -719,9 +741,10 @@ class WalletClusterAnalyzer:
                 name for name in ("mint_authority","freeze_authority")
                 if token_profile.get(name) not in {None,""}
             ]
-            chain_status="PASS" if not active_authorities else "RISK"
+            sensitive_extensions=list(token_profile.get("sensitive_extensions") or [])
+            chain_status="PASS" if not active_authorities and not sensitive_extensions else "RISK"
         else:
-            active_authorities=[];chain_status="UNRESOLVED"
+            active_authorities=[];sensitive_extensions=[];chain_status="UNRESOLVED"
 
         unresolved_pct=Decimal(str(metrics["UNRESOLVED_MATERIAL_HOLDER_PCT"] or "0"))
         if control_groups:
@@ -743,6 +766,7 @@ class WalletClusterAnalyzer:
         assessment={
             "chain_permission_status":chain_status,
             "active_authorities":active_authorities,
+            "sensitive_extensions":sensitive_extensions,
             "cluster_status":cluster_status,
             "trading_status":trading_status,
             "narrative_status":"NOT_AUTOMATICALLY_VERIFIED",
