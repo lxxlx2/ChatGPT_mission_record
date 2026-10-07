@@ -1,8 +1,10 @@
 """Conservative user-level classification over immutable jsonParsed chain evidence."""
 from collections import defaultdict
 from ..frank.parser import normalize, IncompleteTransaction, WSOL, INFRA_PROGRAMS
+from .policy import USDC
 
-QUOTE_MINTS = frozenset({WSOL, 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'})
+USDT='Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
+QUOTE_MINTS = frozenset({WSOL, USDC, USDT})
 
 def classify(signature, tx, wallet):
     base = {'signature': signature, 'wallet': wallet, 'slot': tx.get('slot'),
@@ -24,27 +26,68 @@ def classify(signature, tx, wallet):
     for d in e['token_balance_deltas']:
         if not d['wallet_owned']: continue
         g = groups[d['mint']]
-        if g['decimals'] is not None and g['decimals'] != d['decimals']: return base
+        if g['decimals'] is not None and g['decimals'] != d['decimals']:
+            base['classification_reason']='WALLET_MINT_DECIMALS_CONFLICT'
+            return base
         g.update(delta=g['delta']+int(d['delta']), pre=g['pre']+int(d['pre_amount']),
                  post=g['post']+int(d['post_amount']), decimals=d['decimals'])
     # Transient WSOL flow is decoded transfer evidence, never inferred from rent-inclusive SOL delta.
     for f in e['decoded_transient_token_flows']:
-        g = groups[f['mint']]; g['delta'] += int(f['net_transfer_raw']); g['decimals'] = f['decimals']
+        g = groups[f['mint']]
+        if g['decimals'] is not None and g['decimals'] != f['decimals']:
+            base['classification_reason']='WALLET_MINT_DECIMALS_CONFLICT'
+            return base
+        g['delta'] += int(f['net_transfer_raw']); g['decimals'] = f['decimals']
     changed = {m:g for m,g in groups.items() if g['delta']}
     authority = e['wallet_is_signer']
     if label == 'ACTIVE_SWAP_LIKE' and authority:
         tokens = [(m,g) for m,g in changed.items() if m not in QUOTE_MINTS]
         quotes = [(m,g) for m,g in changed.items() if m in QUOTE_MINTS]
-        if len(tokens)==1 and len(quotes)==1 and tokens[0][1]['delta']*quotes[0][1]['delta']<0:
-            mint,g = tokens[0]; quote,q = quotes[0]
-            base.update(classification='ACTIVE_TRADE', classification_reason='SIGNED_DEX_SWAP_OPPOSING_OWNED_FLOWS',
-                        trade={'mint':mint,'direction':'BUY' if g['delta']>0 else 'SELL',
-                               'token_amount_raw':str(abs(g['delta'])), 'token_decimals':g['decimals'],
-                               'quote_asset':'SOL' if quote==WSOL else quote,
-                               'quote_amount_raw':str(abs(q['delta'])), 'quote_decimals':q['decimals'],
-                               'referenced_pre_raw':str(g['pre']), 'referenced_post_raw':str(g['post'])})
-        else:
-            base['classification_reason']='AMBIGUOUS_USER_EXCHANGE_ASSETS'
+        details={
+            'changed_assets':[
+                {'mint':m,'delta':str(g['delta']),'decimals':g['decimals']}
+                for m,g in sorted(changed.items())
+            ],
+            'target_assets':[m for m,_ in tokens],
+            'quote_assets':[m for m,_ in quotes],
+        }
+        if len(tokens)==1 and quotes:
+            mint,g=tokens[0]
+            opposing=[(m,q) for m,q in quotes if g['delta']*q['delta']<0]
+            details['opposing_quote_assets']=[m for m,_ in opposing]
+            if len(opposing)==1:
+                quote,q=opposing[0]
+                composite=len(quotes)>1
+                amount_predicate='USDC_DIRECT_NUMERIC' if quote==USDC and not composite else 'UNDETERMINED'
+                amount_reason=None
+                if composite:amount_reason='COMPOSITE_QUOTE_LEGS'
+                elif quote!=USDC:amount_reason='NON_USDC_QUOTE'
+                quote_legs=[
+                    {'asset':'SOL' if qm==WSOL else qm,'raw_delta':str(qg['delta']),'decimals':qg['decimals']}
+                    for qm,qg in sorted(quotes,key=lambda x:x[0])
+                ]
+                base.update(
+                    classification='ACTIVE_TRADE',
+                    classification_reason=(
+                        'SIGNED_DEX_SWAP_SINGLE_TARGET_PRIMARY_QUOTE_WITH_AUXILIARY_LEGS'
+                        if composite else 'SIGNED_DEX_SWAP_OPPOSING_OWNED_FLOWS'
+                    ),
+                    classification_details=details,
+                    trade={
+                        'mint':mint,'direction':'BUY' if g['delta']>0 else 'SELL',
+                        'token_amount_raw':str(abs(g['delta'])),'token_decimals':g['decimals'],
+                        'quote_asset':'SOL' if quote==WSOL else quote,
+                        'quote_amount_raw':str(abs(q['delta'])),'quote_decimals':q['decimals'],
+                        'referenced_pre_raw':str(g['pre']),'referenced_post_raw':str(g['post']),
+                        'amount_predicate':amount_predicate,'amount_predicate_reason':amount_reason,
+                        'quote_legs':quote_legs,
+                    },
+                )
+                return base
+        base.update(
+            classification_reason='AMBIGUOUS_USER_EXCHANGE_ASSETS',
+            classification_details=details,
+        )
         return base
     if label=='ACTIVE_SWAP_LIKE':
         base['classification_reason']='WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN'
