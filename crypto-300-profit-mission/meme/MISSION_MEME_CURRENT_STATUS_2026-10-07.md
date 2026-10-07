@@ -630,3 +630,32 @@ Next gate is a closure-only independent review of exactly
 `82d66fd0c1d0edf45e5334006cbb24dbf2f71db1..f110d247ab009d5eec4b793ed08ccb38d873a91a`,
 limited to FRANK-009/010/011. FRANK-001..008 should not be reopened unless this
 four-file diff directly regresses one of them.
+
+
+### FRANK-009/010 final edge-fix local validation — 2026-10-08
+
+Validated runtime/test HEAD: `e628c61a2c0566f2202d590d7ff8167e074d1f3c`.
+
+Local validation:
+- compile: PASS;
+- focused FRANK-009/010 regression: `54 passed`;
+- full local-agent suite: `800 passed`.
+
+The two remaining closure-review reproductions are now covered:
+- FRANK-009: a single `olderTransferFee` schedule containing duplicate aliases
+  (`transferFeeBasisPoints` + `basisPoints`, `maximumFee` + `maxFee`)
+  cannot satisfy the requirement for distinct `olderTransferFee` and
+  `newerTransferFee` schedules; the result remains `UNRESOLVED /
+  TRANSFER_FEE_CONFIG_INCOMPLETE`;
+- FRANK-010: accounting-only config such as `withheldAmount` is excluded from
+  semantic history comparison, while authority/program/older-newer fee
+  parameters remain in the semantic snapshot; therefore `withheldAmount 0 -> 1`
+  does not append history, but a newer transfer fee parameter change
+  `25 -> 50 bps` does append a `CHAIN_PERMISSION_CHANGE`.
+
+No other review findings, policy thresholds, historical state, production DB,
+`v1_seen`, LaunchAgents, notification history or production-trading state were changed.
+
+Next gate is a closure-only review of exactly
+`56eb0b8dafcbcd372f1f01cf4a33a7a2d760790e..e628c61a2c0566f2202d590d7ff8167e074d1f3c`,
+limited to FRANK-009 and FRANK-010.
