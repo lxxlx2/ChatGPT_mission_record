@@ -76,39 +76,43 @@ def classify(signature, tx, wallet):
                 a.get('mint') for a in e.get('created_token_accounts') or []
                 if a.get('owner')==wallet and a.get('mint')
             }
-            target_first_in={}
-            for mint,_ in tokens:
-                target_first_in[mint]=flow_by_mint[mint]['first_in']
-            for mint,g in tokens:
-                f=flow_by_mint[mint]
-                # Conservative route proof: the wallet-owned ATA was created in this
-                # transaction, the asset was received before being spent again, a
-                # positive residual remains, and exactly one other positive target
-                # is first received only after that spend. No value/dust threshold.
-                if mint not in created_mints or g['delta']<=0 or not f['in_raw'] or not f['out_raw']:
-                    continue
-                if f['first_in'] is None or f['last_out'] is None or f['first_in']>=f['last_out']:
-                    continue
-                later_targets=[
-                    other for other,_ in tokens if other!=mint and
-                    target_first_in.get(other) is not None and target_first_in[other]>f['last_out']
-                ]
+            # Split routers can deliver the final asset on one path before another
+            # path has finished recycling an intermediate asset. Do not require one
+            # global instruction order across every route leg. Instead require one
+            # durable final sink (positive net, inbound-only) and prove every other
+            # positive target is a newly-created, received-then-spent residual whose
+            # gross transfer conservation matches its observed net balance.
+            sink_tokens=[
+                (m,g) for m,g in tokens
+                if g['delta']>0 and flow_by_mint[m]['in_raw']>0 and flow_by_mint[m]['out_raw']==0
+            ]
+            if len(sink_tokens)==1:
+                sink_mint,_=sink_tokens[0]
                 upstream_quotes=[
                     qm for qm,qg in quotes
-                    if qg['delta']<0 and flow_by_mint[qm]['out_raw']>0 and
-                    flow_by_mint[qm]['first_out'] is not None and
-                    flow_by_mint[qm]['first_out']<f['first_in']
+                    if qg['delta']<0 and flow_by_mint[qm]['out_raw']>0
                 ]
-                if len(later_targets)==1 and len(upstream_quotes)==1:
-                    routed_intermediates.append({
-                        'mint':mint,'net_delta':str(g['delta']),
-                        'gross_in_raw':str(f['in_raw']),'gross_out_raw':str(f['out_raw']),
-                        'first_in_order':list(f['first_in']),'last_out_order':list(f['last_out']),
-                        'upstream_quote_asset':upstream_quotes[0],
-                        'downstream_target':later_targets[0],
-                    })
-            routed_mints={x['mint'] for x in routed_intermediates}
-            effective_tokens=[(m,g) for m,g in tokens if m not in routed_mints]
+                if len(upstream_quotes)==1:
+                    for mint,g in tokens:
+                        if mint==sink_mint:continue
+                        f=flow_by_mint[mint]
+                        conserved=f['in_raw']-f['out_raw']==g['delta']
+                        if (
+                            mint in created_mints and g['pre']==0 and g['delta']>0 and
+                            f['in_raw']>0 and f['out_raw']>0 and
+                            f['first_in'] is not None and f['first_out'] is not None and
+                            f['first_in']<f['first_out'] and conserved
+                        ):
+                            routed_intermediates.append({
+                                'mint':mint,'net_delta':str(g['delta']),
+                                'gross_in_raw':str(f['in_raw']),'gross_out_raw':str(f['out_raw']),
+                                'first_in_order':list(f['first_in']),'last_out_order':list(f['last_out']),
+                                'upstream_quote_asset':upstream_quotes[0],
+                                'downstream_target':sink_mint,
+                                'proof':'CREATED_ZERO_PRE_RECEIVED_THEN_SPENT_CONSERVED_RESIDUAL',
+                            })
+                    if len(routed_intermediates)==len(tokens)-1:
+                        effective_tokens=sink_tokens
             details['routed_intermediate_assets']=routed_intermediates
         if len(effective_tokens)==1 and quotes:
             mint,g=effective_tokens[0]
@@ -117,9 +121,14 @@ def classify(signature, tx, wallet):
             if len(opposing)==1:
                 quote,q=opposing[0]
                 composite=len(quotes)>1
-                amount_predicate='USDC_DIRECT_NUMERIC' if quote==USDC and not composite else 'UNDETERMINED'
+                amount_predicate=(
+                    'USDC_DIRECT_NUMERIC'
+                    if quote==USDC and not composite and not routed_intermediates
+                    else 'UNDETERMINED'
+                )
                 amount_reason=None
-                if composite:amount_reason='COMPOSITE_QUOTE_LEGS'
+                if routed_intermediates:amount_reason='ROUTED_RESIDUAL_ASSETS'
+                elif composite:amount_reason='COMPOSITE_QUOTE_LEGS'
                 elif quote!=USDC:amount_reason='NON_USDC_QUOTE'
                 quote_legs=[
                     {'asset':'SOL' if qm==WSOL else qm,'raw_delta':str(qg['delta']),'decimals':qg['decimals']}
@@ -143,6 +152,10 @@ def classify(signature, tx, wallet):
                         'amount_predicate':amount_predicate,'amount_predicate_reason':amount_reason,
                         'quote_legs':quote_legs,
                         'route_intermediate_assets':routed_intermediates,
+                        'route_amount_semantics':(
+                            'GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST'
+                            if routed_intermediates else 'DIRECT_OR_SINGLE_TARGET_QUOTE'
+                        ),
                     },
                 )
                 return base
