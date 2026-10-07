@@ -427,7 +427,9 @@ class WalletClusterAnalyzer:
         if not first:return
         options={"commitment":"finalized","limit":self.funding_lookback,"before":first["signature"]}
         try:rows=self.rpc.call("getSignaturesForAddress",[holder.owner,options],ttl=300)
-        except Exception:return
+        except Exception as exc:
+            self.tx_errors.append({"address":holder.owner,"phase":"funding_signatures","error":type(exc).__name__})
+            return
         best=None
         for meta in rows or []:
             sig=meta.get("signature")
