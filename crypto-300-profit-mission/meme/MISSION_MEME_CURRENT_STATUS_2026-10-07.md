@@ -520,3 +520,33 @@ Independent review gate before any merge/runtime refresh:
 - verify `UNDETERMINED` routed/composite quote provenance cannot leak into frozen >=25k USDC gates, SOL normalization, Mission Control Frank reference-price math or historical notification replay;
 - review adaptive Top20 deepening, Token-2022 extension semantics, assessment-history semantics and Frank read-only DB failure isolation from the CA v3 work;
 - do not mutate existing production DB, backfill production state, replay historical notifications, merge main, reinstall LaunchAgents or enable production trading during review.
+
+
+### Independent review FAIL and owner-fix candidate — 2026-10-08
+
+Independent review of BASE `18427693ac53113f60243b6f9836a868ddbabc37` through review HEAD `4b3efc8b1c887f622f6a1eb13bced89f7414bc76` returned `FAIL`: 1 BLOCKING, 5 HIGH and 5 MEDIUM findings. The previous 772-pass checkpoint remains valid test evidence for that reviewed code, but it is not approval for real-CA acceptance, production migration or main merge.
+
+Owner-fix policy after review:
+- keep the frozen Frank thresholds unchanged;
+- treat any transaction with more than one positive non-quote wallet net balance as economically multi-target unless router/market-call level evidence actually binds the route;
+- receive -> spend conservation alone is retained only as `residual_flow_candidates` review evidence with `route_binding=UNPROVEN`; it no longer promotes a transaction to `ACTIVE_TRADE`;
+- therefore the real RACE/RARI transaction is expected to return to `UNKNOWN_NEEDS_REVIEW / AMBIGUOUS_USER_EXCHANGE_ASSETS` until stronger route binding is implemented. This intentionally removes the prior speculative RARI production-state delta.
+
+Owner-fix candidate now addresses the review findings as follows:
+1. migration replay report output is constrained to a brand-new isolated workspace, reserved DB names/existing paths are rejected, and final report creation uses exclusive/no-follow semantics;
+2. missing/invalid raw hashes are migration-blocking rather than counted as verified reclassification;
+3. migration replay compares full classifier bodies, full V1 state/evaluation/signal/email semantics and multiplicity-aware signal identities rather than only summary counts;
+4. replay uses stored ACTIVE_TRADE evaluation clocks when available, the stored terminal model clock, and explicitly labels classified-at timing surrogates where historical poll clocks are unavailable;
+5. routed/composite/otherwise uncertain SOL quotes cannot gain `SOL_EVENT_TIME_USDC_VERIFIED` authority merely because a valid SOLUSDC candle exists;
+6. T0 large-buy establishment uses the same known-amount provenance rule as the other frozen USDC gates;
+7. Engine/Ledger/signal/email presentation separates authoritative target cost from gross observed quote flow and preserves unknown-cost contributions;
+8. every Frank Mission Control read, including exact-CA snapshot, candidate list, review activity and recent trades, is explicitly scoped to `person_id=frank` by the reader identity;
+9. Token-2022 sensitive extension parsing preserves configuration and distinguishes `ACTIVE_RISK`, `INACTIVE` and `UNRESOLVED` rather than treating extension-name presence as active authority;
+10. assessment history now includes extension/authority semantics and separately records scan coverage so coverage-only changes do not append fake chain-state conclusions;
+11. unresolved residual-flow facts remain visible in the Dashboard review panel without becoming candidates/signals.
+
+This owner-fix code has not yet been locally validated. Required next gate:
+- compile + targeted regression + full local-agent suite on the exact owner-fix HEAD;
+- reclassify the real RACE raw transaction and require fail-closed `UNKNOWN_NEEDS_REVIEW` with an unproven residual-flow candidate, not an `ACTIVE_TRADE`;
+- run the new migration replay into a fresh workspace and review source->baseline parity plus every baseline->candidate semantic delta;
+- only after these pass, perform an independent second review. No main merge, real-CA acceptance, production-state migration, historical backfill, LaunchAgent reinstall or production trading is authorized yet.
