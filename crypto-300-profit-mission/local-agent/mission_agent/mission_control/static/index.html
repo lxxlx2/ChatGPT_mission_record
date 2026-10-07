@@ -81,8 +81,7 @@
       <section class="cluster-hero">
         <div>
           <div class="eyebrow">MEME ON-CHAIN RESEARCH</div>
-          <h2>CA 链上结构查询</h2>
-          <p>输入 Solana CA，自动分析 Top20、实际 owner、资金来源、内部转账和控制/执行集群。只读、免费、证据优先。</p>
+          <h2>CA 链上研究</h2>
         </div>
         <div class="cluster-trust">
           <span>Finalized RPC</span>
@@ -103,7 +102,12 @@
             </select>
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">标准：Top20 owner，深扫前 10 个 owner，兼顾速度和可信度。</div>
+          <div class="cluster-preset-help" id="cluster-preset-help">标准：Top20 全部解析；深扫前 10 个 owner，每个最多 30 笔目标币历史 + 12 笔建仓前 funding。默认正式分析。</div>
+          <div class="preset-guide">
+            <div><b>快速</b><span>Top20 全解析；深扫前 6 个 owner；12 笔目标币历史 + 8 笔 funding。用于第一轮排雷。</span></div>
+            <div class="active"><b>标准</b><span>Top20 全解析；深扫前 10 个 owner；30 + 12。默认正式分析。</span></div>
+            <div><b>深度</b><span>Top20 owner 全部深扫；100 + 50。用于高价值项目或疑似分仓/集群，免费 RPC 压力最大。</span></div>
+          </div>
         </form>
       </section>
 
@@ -111,6 +115,27 @@
 
       <section id="cluster-result" class="cluster-result" hidden>
         <div class="cluster-summary" id="cluster-summary"></div>
+
+        <section class="panel conclusion-panel">
+          <div class="panel-title">
+            <div>
+              <h2>综合结论</h2>
+              <p>把合约权限、市场、持仓结构和未确认项分开，不把社区叙事自动当事实。</p>
+            </div>
+          </div>
+          <div id="cluster-conclusion" class="cluster-conclusion"></div>
+        </section>
+
+        <section class="grid cluster-grid">
+          <section class="panel">
+            <div class="panel-title"><div><h2>代币 / 合约</h2><p>Mint、权限、供应量直接来自 finalized RPC。</p></div></div>
+            <div id="cluster-token-profile" class="fact-grid"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-title"><div><h2>当前市场</h2><p>参考市场数据与 Jupiter $30 实际可执行报价分开显示。</p></div></div>
+            <div id="cluster-market" class="fact-grid"></div>
+          </section>
+        </section>
 
         <section class="panel">
           <div class="panel-title">
@@ -132,7 +157,7 @@
             </div>
             <div class="holder-table-wrap">
               <table class="holder-table">
-                <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th></tr></thead>
+                <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>首次确认建仓</th><th>建仓前资金源</th></tr></thead>
                 <tbody id="cluster-holders"></tbody>
               </table>
             </div>
@@ -165,6 +190,13 @@
             <div><h2>原始证据摘要</h2><p>共同资金源、直接转账、同步交易、共同签名等。</p></div>
           </div>
           <div id="cluster-evidence" class="cluster-evidence"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <div><h2>叙事 / 官方关系</h2><p>只展示可抓到的项目链接；“官方认领、creator claim、买入、锁仓”等不会因为币名相同就自动确认。</p></div>
+          </div>
+          <div id="cluster-narrative" class="cluster-narrative"></div>
         </section>
       </section>
     </div>
