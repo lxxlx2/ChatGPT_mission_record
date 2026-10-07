@@ -459,9 +459,9 @@ setInterval(refresh,5000);
 
 
 const clusterPresetHelp = {
-  quick:'快速：Top20 全部解析；深扫前 6 个 owner，每个最多 12 笔目标币历史 + 8 笔建仓前 funding。用于第一轮排雷。',
-  standard:'标准：Top20 全部解析；深扫前 10 个 owner，每个最多 30 笔目标币历史 + 12 笔建仓前 funding。默认正式分析。',
-  deep:'深度：Top20 owner 全部深扫；每个最多 100 笔目标币历史 + 50 笔建仓前 funding。用于重要项目或疑似分仓/集群，免费 RPC 压力最大。',
+  quick:'快速：Top20 全部解析；浅扫前 6 个 owner，每个最多 8 笔目标币历史 + 4 笔 funding。用于快速排雷。',
+  standard:'标准：Top20 全部解析；先浅扫前 6 个 owner（12 + 8），只对出现关系证据、重大未确认角色或高风险标签的钱包自动加深到 30 + 12。',
+  deep:'深度：Top20 owner 全部深扫；每个最多 100 笔目标币历史 + 50 笔 funding。仅用于高价值项目或强烈怀疑分仓/集群时。',
 };
 
 const clusterMetricLabel = {
@@ -650,6 +650,39 @@ const assessmentLabel = {
   'WATCH / CHAIN_STRUCTURE_PASS':'观察 / 链上结构通过当前扫描',
 };
 
+function renderAssessmentHistory(rows) {
+  rows=(rows || []).slice(-6).reverse();
+  if (!rows.length) return '<div class="next-checks"><b>结论变化</b><span>暂无历史结论记录</span></div>';
+  return '<div class="next-checks"><b>结论变化</b>' + rows.map(row => {
+    const when=row.observed_at ? new Date(Number(row.observed_at)*1000).toLocaleString('zh-CN') : '时间未知';
+    const risk=(row.new_risk || []).length ? ' · 新风险 ' + (row.new_risk || []).join(', ') : '';
+    const cleared=(row.removed_uncertainty || []).length ? ' · 已消除不确定项 ' + (row.removed_uncertainty || []).join(', ') : '';
+    return '<span><strong>' + esc(when) + '</strong> · ' +
+      esc(row.structure_rating || 'UNRESOLVED') + ' / ' + esc(row.investment_rating || 'UNRESOLVED') +
+      ' · ' + esc(row.reason || '') + esc(risk) + esc(cleared) + '</span>';
+  }).join('') + '</div>';
+}
+
+function clusterProgressDetail(job) {
+  const p=job.progress || {};
+  const stage=p.stage || job.status || 'RUNNING';
+  if (stage==='BASE_READY') {
+    const name=[p.name,p.symbol].filter(Boolean).join(' · ') || 'Token 信息已读取';
+    return name + (p.market_cap_usd != null ? ' · MC ' + usd(p.market_cap_usd) : '') +
+      (p.liquidity_usd != null ? ' · LP ' + usd(p.liquidity_usd) : '') +
+      ' · 正在解析 Top20 owner';
+  }
+  if (stage==='HOLDERS_READY') return 'Top20 owner 已解析 ' + esc(p.top_accounts_resolved ?? 0) + ' 个，开始历史浅扫';
+  if (stage==='OWNER_SCAN') return '历史浅扫 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?') + ' 个 owner';
+  if (stage==='FUNDING_SCAN') return '建仓前 funding 回看 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?');
+  if (stage==='ADAPTIVE_DEEPEN') return '发现需要继续核实的钱包，正在自适应加深 ' + esc(p.scanned ?? 0) + ' / ' + esc(p.target ?? '?');
+  if (stage==='FINALIZING') return '链上扫描完成，正在生成集群、风险和结论';
+  if (stage==='REPORT_PERSISTING') return '正在保存完整报告和结论变化历史';
+  return job.preset === 'deep'
+    ? '深度扫描会读取更多历史交易，免费 RPC 下需要更长时间。'
+    : '正在执行只读链上分析…';
+}
+
 function clusterErrorMessage(error) {
   const raw=((error?.type || '') + ' ' + (error?.message || '')).toUpperCase();
   if (raw.includes('429') || raw.includes('RATE_LIMIT')) {
@@ -771,7 +804,8 @@ function renderClusterReport(report) {
       '<span>① 项目方/叙事主体是否明确确认这个 CA</span>' +
       '<span>② creator claim → 买入 → lock/treasury 是否能链上闭环</span>' +
       '<span>③ ATH/关键价位用历史行情或实时盘口验证，不从当前快照猜</span>' +
-    '</div>';
+    '</div>' +
+    renderAssessmentHistory(report.assessment_history);
 
   const supplyApprox = Number(report.supply_raw) / (10 ** Number(report.decimals || 0));
   $('cluster-token-profile').innerHTML =
@@ -904,7 +938,7 @@ async function pollClusterJob(jobId) {
     }
     clusterStatus('running',
       job.status === 'QUEUED' ? '等待开始分析' : '正在扫描链上数据',
-      job.preset === 'deep' ? '深度扫描会读取更多历史交易，免费 RPC 下需要更长时间。' : '正在解析 owner、资金源、转账和同步行为…');
+      clusterProgressDetail(job));
     clusterPollTimer = setTimeout(() => pollClusterJob(jobId), 1200);
   } catch (e) {
     $('cluster-submit').disabled = false;
