@@ -7,6 +7,7 @@ multi-evidence rules in WALLET_CLUSTER_ANALYSIS_SPEC.md.
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import sqlite3
 import time
@@ -304,6 +305,40 @@ class WalletClusterAnalyzer:
         except Exception:
             # UI progress must never alter evidence collection or report correctness.
             return
+
+    @staticmethod
+    def _accepts_optional_limit(method, positional_without_limit):
+        """Keep compatibility with old tests/local overrides that use the pre-v3 signature."""
+        try:
+            params=list(inspect.signature(method).parameters.values())
+        except (TypeError,ValueError):
+            return True
+        if any(p.kind==inspect.Parameter.VAR_POSITIONAL for p in params):
+            return True
+        positional=[
+            p for p in params
+            if p.kind in (inspect.Parameter.POSITIONAL_ONLY,inspect.Parameter.POSITIONAL_OR_KEYWORD)
+        ]
+        return len(positional)>positional_without_limit
+
+    def _scan_holder_bounded(self,holder,account_to_owner,top_owners,limit):
+        method=self._scan_holder
+        if self._accepts_optional_limit(method,3):
+            return method(holder,account_to_owner,top_owners,limit)
+        # Legacy override path: preserve the old 3-argument call contract.
+        original=self.history_per_holder
+        self.history_per_holder=int(limit)
+        try:return method(holder,account_to_owner,top_owners)
+        finally:self.history_per_holder=original
+
+    def _scan_funding_bounded(self,holder,first,top_owners,limit):
+        method=self._scan_funding
+        if self._accepts_optional_limit(method,3):
+            return method(holder,first,top_owners,limit)
+        original=self.funding_lookback
+        self.funding_lookback=int(limit)
+        try:return method(holder,first,top_owners)
+        finally:self.funding_lookback=original
     def _entry(self,address):
         token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
         return (token_cfg.get("addresses") or {}).get(address) or (self.registry.get("addresses") or {}).get(address)
@@ -584,11 +619,11 @@ class WalletClusterAnalyzer:
 
         for idx,h in enumerate(deep,1):
             self._progress("OWNER_SCAN",scanned=idx-1,target=len(deep),owner=h.owner,mode="SHALLOW")
-            firsts[h.owner]=self._scan_holder(h,account_to_owner,top_owners,self.history_per_holder)
+            firsts[h.owner]=self._scan_holder_bounded(h,account_to_owner,top_owners,self.history_per_holder)
             self._progress("OWNER_SCAN",scanned=idx,target=len(deep),owner=h.owner,mode="SHALLOW")
         for idx,h in enumerate(deep,1):
             self._progress("FUNDING_SCAN",scanned=idx-1,target=len(deep),owner=h.owner,mode="SHALLOW")
-            self._scan_funding(h,firsts.get(h.owner),top_owners,self.funding_lookback)
+            self._scan_funding_bounded(h,firsts.get(h.owner),top_owners,self.funding_lookback)
         self._derive_pair_edges()
 
         adaptive_history=self.adaptive_history_per_holder or self.history_per_holder
@@ -607,8 +642,8 @@ class WalletClusterAnalyzer:
             if targets:
                 self._progress("ADAPTIVE_DEEPEN",scanned=0,target=len(targets),owners=self.adaptive_deepened_owners)
                 for idx,h in enumerate(targets,1):
-                    firsts[h.owner]=self._scan_holder(h,account_to_owner,top_owners,adaptive_history) or firsts.get(h.owner)
-                    self._scan_funding(h,firsts.get(h.owner),top_owners,adaptive_funding)
+                    firsts[h.owner]=self._scan_holder_bounded(h,account_to_owner,top_owners,adaptive_history) or firsts.get(h.owner)
+                    self._scan_funding_bounded(h,firsts.get(h.owner),top_owners,adaptive_funding)
                     self._progress("ADAPTIVE_DEEPEN",scanned=idx,target=len(targets),owner=h.owner)
                 self._derive_pair_edges()
         self._progress("FINALIZING",deep_holders_scanned=len(deep),adaptive_deepened=len(self.adaptive_deepened_owners))
@@ -633,7 +668,7 @@ class WalletClusterAnalyzer:
 
         def acquisition(owner):
             row=firsts.get(owner)
-            if not row:
+            if not row or not isinstance(row,dict):
                 return {"status":"UNRESOLVED","type":"UNRESOLVED"} if owner in deep_seen else {"status":"NOT_SCANNED","type":"NOT_SCANNED"}
             token_qty=None
             if row.get("token_amount_raw") not in {None,""} and row.get("token_decimals") is not None:
