@@ -110,3 +110,37 @@ Example:
     }
 
 This gate is intentional: an unlabelled CEX hot wallet or LP authority must not be silently treated as an ordinary independent holder.
+
+
+## Dashboard integration
+
+The localhost Mission Meme dashboard now has two top-level views:
+
+- `Frank 信号`: existing live Frank/Mission Control view.
+- `CA 链上查询`: interactive wallet-cluster research.
+
+From any current Frank candidate, `链上查询` carries that CA directly into the research tab.
+
+The research view supports three bounded presets:
+
+- `快速`: 6 owners / 12 target-token signatures / 8 funding signatures.
+- `标准`: 10 owners / 30 target-token signatures / 12 funding signatures.
+- `深度`: 20 owners / 100 target-token signatures / 50 funding signatures.
+
+Queries are asynchronous so a long public-RPC scan does not block Frank signal rendering. Only one cluster job runs at a time to avoid turning the free Solana RPC into an uncontrolled fan-out.
+
+Reports are persisted under the existing Mission Control root:
+
+    <control-root>/cluster-reports/<MINT>/
+
+The web result separates:
+
+- strict concentration metrics;
+- Top20 resolved owner rows;
+- confirmed relation groups;
+- probable control clusters;
+- probable execution clusters;
+- unresolved relation evidence;
+- RPC/cache coverage and limitations.
+
+The UI never converts an `UNRESOLVED` strict metric into a numeric value.
