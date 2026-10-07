@@ -85,8 +85,10 @@ class DashboardState:
             "SELECT person_id,mint,episode_id,decision,evaluated_at,body FROM candidate_latest ORDER BY evaluated_at DESC"
         )
         by_key = {(x["person_id"], x["mint"], x["episode_id"]): x for x in latest}
+        seen = set()
         for item in candidates:
-            row = by_key.get((item["person_id"], item["mint"], item.get("episode_id")))
+            key=(item["person_id"], item["mint"], item.get("episode_id"));seen.add(key)
+            row = by_key.get(key)
             if row:
                 body = json.loads(row["body"])
                 item["decision"] = body["decision"]
@@ -101,6 +103,28 @@ class DashboardState:
                 item["decision"] = "UNASSESSED"
                 item["metrics"] = {}
                 item["decision_quote"] = {}
+        # A SOL-normalized sidecar can legitimately create a follow candidate that
+        # does not exist in the frozen production signal table. candidate_latest is
+        # the canonical Mission Control view, so expose those rows without writing
+        # anything back to Frank production.
+        for key,row in by_key.items():
+            if key in seen:
+                continue
+            body=json.loads(row["body"]);inputs=body.get("inputs") or {}
+            item={k:inputs.get(k) for k in (
+                "person_id","mint","episode_id","pattern","source_signal_id","source_signal_type","source_signal_at",
+                "position_state","current_raw","buy_count","sell_count","latest_side","latest_signature","latest_at",
+                "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset",
+                "latest_buy_quote_quantity","token_decimals"
+            )}
+            item.update({
+                "decision":body["decision"],"decision_created_at":row["evaluated_at"],
+                "metrics":body.get("metrics") or {},"decision_quote":inputs.get("quote") or {},
+                "reasons":body.get("reasons") or [],"missing":body.get("missing") or [],
+                "invalidation":body.get("invalidation") or [],"candidate_source":"MISSION_CONTROL_OVERLAY",
+            })
+            candidates.append(item)
+        candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
 
     def recent_trades(self):
