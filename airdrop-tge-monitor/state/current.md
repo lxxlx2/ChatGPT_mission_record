@@ -5,10 +5,10 @@ Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-07 04:48:38 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-07 08:48:48 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-07 04:48:38 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-07/044838-final.md
+- latest_authoritative_success: 2026-10-07 08:48:48 Asia/Bangkok
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-07/084848-final.md
 - latest_scheduled_shard: 0
 - latest_executed_shard: 0
 - latest_stale_shard_recovery: false
@@ -33,6 +33,7 @@ Timezone: Asia/Bangkok
 - MetaMask Money Sweepstakes registration: DELIVERED; unchanged repeats suppressed
 - Cambria RSGP Genesis opt-in: DELIVERED_RECOVERY; unchanged repeats suppressed
 - closed_scope_skipped: humans& via Echo/Alpen Capital
+- user_suppressed_scope_skipped: Abstract / ABS
 
 ## Open urgent events
 
