@@ -48,6 +48,27 @@ def make_source(tmp_path):
     return source,raw_path
 
 
+def make_hourly_source(tmp_path):
+    prod=tmp_path/"prod-hourly";prod.mkdir()
+    raw_root=prod/"raw";raw_root.mkdir()
+    source=prod/"forward.sqlite"
+    ledger=Ledger(source)
+    for index,(sig,at) in enumerate((("first",3600),("second",4200))):
+        value=tx();value["slot"]=100+index;value["blockTime"]=at
+        for field in ("preTokenBalances","postTokenBalances"):
+            value["meta"][field][1]["mint"]=USDC
+        value["meta"]["preTokenBalances"][1]["uiTokenAmount"]["amount"]="13000000000"
+        value["meta"]["postTokenBalances"][1]["uiTokenAmount"]["amount"]="0"
+        raw_path=raw_root/(sig+".json.gz")
+        raw_path.write_bytes(gzip.compress(json.dumps(value,sort_keys=True).encode(),mtime=0))
+        classified=classify(sig,value,WALLET)
+        ledger.put("frank",classified,raw_hash(value),str(raw_path),dry_run=True)
+    engine=Engine(ledger,load_policy(POLICY),dry_run=True)
+    engine.drain(until=8940)
+    ledger.db.close()
+    return source
+
+
 def run_main(monkeypatch,*args):
     monkeypatch.setattr(sys,"argv",[str(SCRIPT),*map(str,args)])
     replay.main()
@@ -115,6 +136,22 @@ def test_semantic_diffs_detect_event_provenance_and_signal_identity_changes():
     one={"a":{"person_id":"frank","mint":"M","episode_id":"E1","signal_type":"X","stage":"S","triggered_at":1,"triggering_signature":"t","latest_buy_signature":"b"}}
     two={"b":{"person_id":"other","mint":"M","episode_id":"E2","signal_type":"X","stage":"S","triggered_at":2,"triggering_signature":"t","latest_buy_signature":"b"}}
     assert replay._signal_counter(one)!=replay._signal_counter(two)
+
+
+def test_replay_reproduces_hourly_watch_and_terminal_clock_semantics(tmp_path,monkeypatch):
+    source=make_hourly_source(tmp_path)
+    work=tmp_path/"hourly-replay";output=work/"report.json"
+    run_main(
+        monkeypatch,
+        "--source",source,"--policy",POLICY,
+        "--work",work,"--output",output,
+    )
+    report=json.loads(output.read_text())
+    assert report["timing_equivalence"]["terminal_clock"]==8940
+    assert report["baseline_source_signal_identity_parity"] is True
+    assert report["baseline_source_state_parity"] is True
+    assert report["candidate_signal_identity_parity"] is True
+    assert report["source_baseline_evaluation_deltas"]==[]
 
 
 def test_replay_is_read_only_and_reproduces_source_state_with_terminal_clock(tmp_path,monkeypatch):
