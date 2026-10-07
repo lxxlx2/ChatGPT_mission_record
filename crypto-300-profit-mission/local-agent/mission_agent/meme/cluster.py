@@ -817,6 +817,21 @@ def markdown(report:dict)->str:
         f"- Wallet cluster: {assessment.get('cluster_status','UNRESOLVED')}",
         f"- Narrative: {assessment.get('narrative_status','UNRESOLVED')}",
         "",
+        "## Conclusion history",
+        "",
+    ]
+    history=report.get("assessment_history") or []
+    if history:
+        for row in history[-10:]:
+            lines.append(
+                f"- {row.get('observed_at')} [{row.get('preset','unknown')}] "
+                f"{row.get('structure_rating','UNRESOLVED')} / {row.get('investment_rating','UNRESOLVED')} "
+                f"— {row.get('reason','')}"
+            )
+    else:
+        lines.append("- No material conclusion change recorded yet.")
+    lines += [
+        "",
         "## Token / contract",
         "",
         f"- Name / Symbol: {market.get('name') or 'UNAVAILABLE'} / {market.get('symbol') or 'UNAVAILABLE'}",
