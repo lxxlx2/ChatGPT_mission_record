@@ -168,6 +168,7 @@ function tokenIdentity(mint) {
       <span class="ca-label">CA</span>
       <code class="ca-full">${esc(mint)}</code>
       ${copyButton(mint,'复制 CA')}
+      <button class="link-btn" type="button" data-cluster-ca="${esc(mint)}">链上查询</button>
       ${researchLinks(mint)}
     </div>`;
 }
@@ -204,6 +205,15 @@ function showToast(text) {
 }
 
 document.addEventListener('click', (event) => {
+  const clusterButton = event.target.closest('[data-cluster-ca]');
+  if (clusterButton) {
+    const mint=clusterButton.dataset.clusterCa;
+    $('cluster-mint').value=mint;
+    setView('cluster');
+    $('cluster-mint').focus();
+    showToast('已带入 CA，可直接开始查询');
+    return;
+  }
   const button = event.target.closest('[data-copy]');
   if (!button) return;
   copyText(button.dataset.copy,button);
