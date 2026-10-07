@@ -17,7 +17,7 @@ launchctl disable "gui/$UID_VALUE/$DASH_LABEL" >/dev/null 2>&1 || true
 
 rm -f "$LOOP_PLIST" "$DASH_PLIST"
 rm -f "$APP_SUPPORT/mission-loop.sh" "$APP_SUPPORT/dashboard.sh"
-rm -f "$APP_SUPPORT/approved_policy_sha256" "$APP_SUPPORT/dashboard_port"
+rm -f "$APP_SUPPORT/approved_policy_sha256" "$APP_SUPPORT/follow_policy_v1.approved.json" "$APP_SUPPORT/dashboard_port"
 
 echo "Mission Meme LaunchAgents removed."
 echo "mission-control.sqlite, observations, and logs were NOT deleted."
