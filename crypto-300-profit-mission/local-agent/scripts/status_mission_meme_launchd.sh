@@ -7,6 +7,7 @@ LOOP_LABEL="com.${USER_NAME}.frank-meme.loop"
 DASH_LABEL="com.${USER_NAME}.frank-meme.dashboard"
 CONTROL_POINTER="${CONTROL_POINTER:-$HOME/.frank_meme_control_root}"
 APP_SUPPORT="$HOME/Library/Application Support/FrankMeme"
+RPC_FILE="$APP_SUPPORT/solana_rpc_urls"
 
 TMP="/tmp/frank-meme-launchctl-$$.txt"
 trap 'rm -f "$TMP"' EXIT
@@ -44,4 +45,13 @@ echo "Dashboard=http://127.0.0.1:$PORT"
 
 if [ -f "$APP_SUPPORT/approved_policy_sha256" ]; then
   echo "Pinned approved policy SHA256=$(cat "$APP_SUPPORT/approved_policy_sha256")"
+fi
+
+echo
+if [ -s "$RPC_FILE" ]; then
+  MODE="$(stat -f '%Lp' "$RPC_FILE" 2>/dev/null || true)"
+  echo "Authenticated Solana RPC: CONFIGURED"
+  echo "RPC config permissions: ${MODE:-UNKNOWN}"
+else
+  echo "Authenticated Solana RPC: MISSING"
 fi
