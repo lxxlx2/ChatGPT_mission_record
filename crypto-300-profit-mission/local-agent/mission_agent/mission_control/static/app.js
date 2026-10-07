@@ -64,6 +64,7 @@ const sideLabel = {
   EXIT:'退出仓位',
   SELL_POSITION_UNRESOLVED:'卖出待确认',
   ACTIVE_TRADE:'主动交易',
+  REVIEW:'待复核',
 };
 
 const runtimeLabel = {
@@ -412,6 +413,35 @@ function renderTrades(rows) {
   }).join('') || '<div class="empty">暂无交易</div>';
 }
 
+function renderReviewActivity(rows) {
+  const panel=$('review-activity-panel');
+  const count=$('review-activity-count');
+  if (!panel || !count) return;
+  count.textContent=rows.length;
+  panel.hidden=rows.length===0;
+  $('review-activity').innerHTML=rows.slice(0,30).map(x => {
+    const mints=(x.candidate_mints || []);
+    const mintHtml=mints.length
+      ? mints.map(m => `<code>${esc(short(m,8,6))}</code> ${copyButton(m,'复制 CA')}`).join(' ')
+      : '<span>目标资产未能唯一确定</span>';
+    const solscan=x.signature
+      ? `<a class="link-btn compact" href="https://solscan.io/tx/${encodeURIComponent(x.signature)}" target="_blank" rel="noreferrer">交易 ↗</a>`
+      : '';
+    const reason=x.classification_reason==='AMBIGUOUS_USER_EXCHANGE_ASSETS'
+      ? '多资产/多结算腿，无法安全归约成单一买卖；未进入跟随模型。'
+      : `未归约原因：${x.classification_reason || 'UNKNOWN'}`;
+    return `<div class="feed-row trade-row">
+      <div class="feed-badge">${badge('REVIEW',sideLabel)}</div>
+      <div class="feed-main">
+        <div class="feed-token">${mintHtml}</div>
+        <small>${esc(reason)}</small>
+        <div class="hash-row"><span>Tx ${esc(short(x.signature,10,8))}</span> ${copyButton(x.signature,'复制 Tx')} ${solscan}</div>
+      </div>
+      <time>${new Date(Number(x.block_time)*1000).toLocaleString('zh-CN')}</time>
+    </div>`;
+  }).join('') || '<div class="empty">暂无待复核行为</div>';
+}
+
 function renderDecisions(rows) {
   $('decisions').innerHTML = rows.slice(0,30).map(x => {
     const b = x.body || {};
@@ -431,11 +461,12 @@ function renderDecisions(rows) {
 
 async function refresh() {
   try {
-    const [runtime,control,candidates,trades,decisions] = await Promise.all([
+    const [runtime,control,candidates,trades,reviewActivity,decisions] = await Promise.all([
       get('/api/runtime'),
       get('/api/control-health'),
       get('/api/candidates'),
       get('/api/trades'),
+      get('/api/review-activity'),
       get('/api/decisions')
     ]);
     const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
@@ -446,6 +477,7 @@ async function refresh() {
     renderCandidates(activeCandidates);
     renderEnded(endedCandidates);
     renderTrades(trades);
+    renderReviewActivity(reviewActivity);
     renderDecisions(decisions);
     $('updated').textContent = `更新于 ${new Date().toLocaleTimeString('zh-CN')}`;
   } catch (e) {
