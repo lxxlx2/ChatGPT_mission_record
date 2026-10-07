@@ -606,6 +606,15 @@ function fact(label,value,sub='') {
     (sub ? '<small>' + sub + '</small>' : '') + '</div>';
 }
 
+function safeHttpUrl(value) {
+  try {
+    const u=new URL(String(value || ''));
+    return (u.protocol==='http:' || u.protocol==='https:') ? u.href : '';
+  } catch (_) {
+    return '';
+  }
+}
+
 function quoteAssetLabel(asset) {
   if (asset===WSOL_MINT || asset==='SOL') return 'SOL';
   if (asset===USDC_MINT || asset==='USDC') return 'USDC';
@@ -769,8 +778,9 @@ function renderClusterReport(report) {
 
   const h24tx=(mainPair.txns || {}).h24 || {};
   const h1tx=(mainPair.txns || {}).h1 || {};
-  const marketUrl=mainPair.url
-    ? '<a class="link-btn compact" href="' + esc(mainPair.url) + '" target="_blank" rel="noreferrer">市场页 ↗</a>'
+  const safeMarketUrl=safeHttpUrl(mainPair.url);
+  const marketUrl=safeMarketUrl
+    ? '<a class="link-btn compact" href="' + esc(safeMarketUrl) + '" target="_blank" rel="noreferrer">市场页 ↗</a>'
     : '';
   const pairLink=mainPair.pair_address
     ? '<a class="link-btn compact" href="https://solscan.io/account/' + encodeURIComponent(mainPair.pair_address) + '" target="_blank" rel="noreferrer">Pool ↗</a>'
@@ -848,7 +858,7 @@ function renderClusterReport(report) {
       '<div class="limitations">' + (report.limitations || []).map(x => '<p>' + esc(x) + '</p>').join('') + '</div>' +
     '</details>';
 
-  const websites=(market.websites || []).map(url =>
+  const websites=(market.websites || []).map(url => safeHttpUrl(url)).filter(Boolean).map(url =>
     '<a class="link-btn" href="' + esc(url) + '" target="_blank" rel="noreferrer">网站 ↗</a>'
   ).join('');
   const socials=(market.socials || []).map(x =>
