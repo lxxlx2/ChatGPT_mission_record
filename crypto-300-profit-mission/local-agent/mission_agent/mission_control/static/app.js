@@ -261,15 +261,49 @@ function metric(label,value,help='') {
   </div>`;
 }
 
+function quoteUnavailableText(x, q) {
+  const reason = q?.reason;
+  if (reason === 'POSITION_NOT_FOLLOWABLE') return '未请求（Frank 已退出）';
+  if (reason === 'LATEST_ACTION_SELL') return '未请求（Frank 最新动作是卖出）';
+  if (reason === 'FRANK_RUNTIME_NOT_LIVE') return '未请求（Frank 监控不在线）';
+  if (reason === 'TOKEN_DECIMALS_UNKNOWN') return '无法报价（Token decimals 未知）';
+  if (q?.status === 'UNAVAILABLE') return `报价不可用（${reason || 'Jupiter 异常'}）`;
+  if (q?.status === 'OK' && q?.route_exists === false) return '无可执行路径';
+  return '暂无可用报价';
+}
+
+function frankPriceText(x, m) {
+  const value = m.frank_latest_buy_price_usdc ?? x.latest_buy_price_usdc;
+  if (value != null) return `${money(value,8)}`;
+  if (x.latest_buy_price_status === 'SOL_EVENT_TIME_USDC_UNAVAILABLE') return '无法计算（缺历史 SOL/USD）';
+  if (x.latest_buy_price_status === 'QUOTE_PRICE_UNAVAILABLE') return '无法从原始交易计算';
+  return '暂无参考价';
+}
+
 function renderCandidates(rows) {
   $('candidates').innerHTML = rows.map(x => {
     const m = x.metrics || {};
+    const q = x.decision_quote || {};
     const decision = x.decision || 'UNASSESSED';
     const reason = reasonFor(x);
-    const delta = m.price_deviation_pct != null ? `${n(m.price_deviation_pct,2)}%` : '暂无';
-    const impact = m.price_impact_pct != null ? `${n(m.price_impact_pct,2)}%` : '暂无';
-    const frankPrice = m.frank_latest_buy_price_usdc != null ? `$${money(m.frank_latest_buy_price_usdc,8)}` : '暂无';
-    const execPrice = m.execution_price_usdc != null ? `$${money(m.execution_price_usdc,8)}` : '暂无';
+
+    const frankPriceRaw = m.frank_latest_buy_price_usdc ?? x.latest_buy_price_usdc;
+    const execRaw = m.execution_price_usdc ?? q.execution_price_usdc;
+    const impactRaw = m.price_impact_pct ?? q.price_impact_pct;
+
+    let deltaRaw = m.price_deviation_pct;
+    if (deltaRaw == null && frankPriceRaw != null && execRaw != null) {
+      const f = Number(frankPriceRaw);
+      const e = Number(execRaw);
+      if (Number.isFinite(f) && f > 0 && Number.isFinite(e)) {
+        deltaRaw = (e / f - 1) * 100;
+      }
+    }
+
+    const delta = deltaRaw != null ? `${n(deltaRaw,2)}%` : quoteUnavailableText(x,q);
+    const impact = impactRaw != null ? `${n(impactRaw,2)}%` : quoteUnavailableText(x,q);
+    const frankPrice = frankPriceText(x,m);
+    const execPrice = execRaw != null ? `${money(execRaw,8)}` : quoteUnavailableText(x,q);
     const buys = x.buy_count ?? 0;
     const sells = x.sell_count ?? 0;
 
@@ -294,10 +328,10 @@ function renderCandidates(rows) {
         ${metric('Frank 买/卖次数',`买 ${esc(buys)} · 卖 ${esc(sells)}`,'当前观察到的建仓序列内买入/卖出次数，不代表钱包终身累计。')}
         ${metric('Frank 最近动作',`${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}`)}
         ${metric('Frank 原始支付',frankQuote(x),'Frank 真实交易使用的报价资产和数量。')}
-        ${metric('Frank 参考买入价',frankPrice,'用于比较你现在跟单是否已经追高。')}
-        ${metric('当前 $30 成交价',execPrice,'Jupiter 对 $30 USDC 跟单的当前可执行报价。')}
-        ${metric('相对 Frank 偏离',esc(delta),'当前跟单价格相对 Frank 参考买入价的偏离。')}
-        ${metric('预计价格冲击',esc(impact),'用 $30 USDC 下单时 Jupiter 估算的价格冲击。')}
+        ${metric('Frank 参考买入价',frankPrice,'直接来自 Frank 最近买入事件；即使当前 Decision 因超时提前结束，也尽量展示。')}
+        ${metric('当前 $30 成交价',execPrice,'Jupiter 已经请求过就展示真实报价；只有明确跳过/失败才显示原因。')}
+        ${metric('相对 Frank 偏离',esc(delta),'如果决策提前返回但 Frank 参考价和 Jupiter 报价都存在，Dashboard 会独立计算偏离供研究。')}
+        ${metric('预计价格冲击',esc(impact),'用 $30 USDC 下单时 Jupiter 估算的价格冲击；已退出仓位不会浪费请求。')}
       </div>
     </article>`;
   }).join('') || '<div class="empty">当前没有 Frank 跟单候选</div>';
