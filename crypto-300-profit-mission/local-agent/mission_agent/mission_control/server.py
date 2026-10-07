@@ -4,12 +4,19 @@ from __future__ import annotations
 import ipaddress
 import json
 import mimetypes
+import os
+import re
 import socket
 import sqlite3
+import threading
+import time
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
+from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
 from .db import open_control_ro
 from .frank import FrankReader
 
@@ -48,12 +55,127 @@ def _host_header_is_loopback(value: str | None) -> bool:
         return False
 
 
+SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
+CLUSTER_PRESETS = {
+    "quick": {"deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8},
+    "standard": {"deep_holders": 10, "history_per_holder": 30, "funding_lookback": 12},
+    "deep": {"deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50},
+}
+
+
+class ClusterJobManager:
+    def __init__(self, control_root: Path):
+        self.control_root = Path(control_root)
+        self.report_root = self.control_root / "cluster-reports"
+        self.report_root.mkdir(parents=True, exist_ok=True)
+        self.cache_path = self.control_root / "wallet-cluster-rpc-cache.sqlite"
+        self.registry_path = Path(__file__).resolve().parents[2] / "config" / "meme_special_addresses.json"
+        self.rpc_endpoint = os.environ.get("SOLANA_RPC_URL", "https://api.mainnet.solana.com")
+        self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
+        self.lock = threading.Lock()
+        self.jobs: dict[str, dict] = {}
+
+    @staticmethod
+    def validate_mint(mint: str) -> str:
+        value = (mint or "").strip()
+        if not SOLANA_PUBKEY_RE.fullmatch(value):
+            raise ValueError("INVALID_SOLANA_CA")
+        return value
+
+    def _public_job(self, job: dict) -> dict:
+        return {k: v for k, v in job.items() if k not in {"future"}}
+
+    def submit(self, mint: str, preset: str = "standard") -> dict:
+        mint = self.validate_mint(mint)
+        if preset not in CLUSTER_PRESETS:
+            raise ValueError("INVALID_CLUSTER_PRESET")
+        with self.lock:
+            for job in self.jobs.values():
+                if job["mint"] == mint and job["status"] in {"QUEUED", "RUNNING"}:
+                    return self._public_job(job)
+            job_id = uuid.uuid4().hex
+            job = {
+                "job_id": job_id,
+                "mint": mint,
+                "preset": preset,
+                "status": "QUEUED",
+                "created_at": time.time(),
+                "started_at": None,
+                "finished_at": None,
+                "error": None,
+                "report": None,
+            }
+            self.jobs[job_id] = job
+            job["future"] = self.executor.submit(self._run, job_id)
+            return self._public_job(job)
+
+    def _run(self, job_id: str):
+        with self.lock:
+            job = self.jobs[job_id]
+            job["status"] = "RUNNING"
+            job["started_at"] = time.time()
+            mint = job["mint"]
+            preset = job["preset"]
+        cache = RpcCache(self.cache_path)
+        try:
+            rpc = SolanaReadOnlyRPC(self.rpc_endpoint, cache=cache)
+            registry = load_registry(self.registry_path)
+            opts = CLUSTER_PRESETS[preset]
+            report = WalletClusterAnalyzer(
+                mint,
+                rpc=rpc,
+                special_registry=registry,
+                deep_holders=opts["deep_holders"],
+                history_per_holder=opts["history_per_holder"],
+                funding_lookback=opts["funding_lookback"],
+            ).analyze()
+            stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+            out = self.report_root / mint
+            out.mkdir(parents=True, exist_ok=True)
+            payload = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
+            (out / f"{stamp}.json").write_text(payload)
+            (out / f"{stamp}.md").write_text(markdown(report))
+            (out / "latest.json").write_text(payload)
+            with self.lock:
+                job = self.jobs[job_id]
+                job["status"] = "DONE"
+                job["finished_at"] = time.time()
+                job["report"] = report
+        except Exception as exc:
+            with self.lock:
+                job = self.jobs[job_id]
+                job["status"] = "ERROR"
+                job["finished_at"] = time.time()
+                job["error"] = {
+                    "type": type(exc).__name__,
+                    "message": str(exc)[:500],
+                }
+        finally:
+            cache.close()
+
+    def get(self, job_id: str) -> dict | None:
+        with self.lock:
+            job = self.jobs.get(job_id)
+            return None if job is None else self._public_job(job)
+
+    def latest(self, mint: str) -> dict | None:
+        mint = self.validate_mint(mint)
+        path = self.report_root / mint / "latest.json"
+        if not path.is_file():
+            return None
+        try:
+            return json.loads(path.read_text())
+        except (OSError, ValueError):
+            return None
+
+
 class DashboardState:
     def __init__(self, production_root: Path, control_root: Path):
         self.frank = FrankReader(production_root)
         self.control_root = Path(control_root)
         self.control_db = self.control_root / "mission-control.sqlite"
         self.control_health = self.control_root / "mission-control-health.json"
+        self.cluster_jobs = ClusterJobManager(self.control_root)
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():
@@ -182,6 +304,19 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.recent_trades())
         if path == "/api/decisions":
             return self._json(self.state.decisions())
+        if path == "/api/cluster-analysis":
+            query = parse_qs(urlparse(self.path).query)
+            job_id = (query.get("job_id") or [""])[0]
+            job = self.state.cluster_jobs.get(job_id)
+            return self._json(job if job is not None else {"error":"CLUSTER_JOB_NOT_FOUND"}, 200 if job is not None else 404)
+        if path == "/api/cluster-latest":
+            query = parse_qs(urlparse(self.path).query)
+            mint = (query.get("mint") or [""])[0]
+            try:
+                report = self.state.cluster_jobs.latest(mint)
+            except ValueError as exc:
+                return self._json({"error":str(exc)},400)
+            return self._json(report if report is not None else {"error":"CLUSTER_REPORT_NOT_FOUND"}, 200 if report is not None else 404)
         if path in {"/", "/index.html"}:
             return self._file(self.static_root / "index.html")
         if path.startswith("/static/"):
@@ -190,6 +325,29 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send_error(403)
             return self._file(candidate)
         self.send_error(404)
+
+
+    def do_POST(self):
+        if not self._allowed_host():
+            return self.send_error(421, "loopback Host required")
+        path = urlparse(self.path).path
+        if path != "/api/cluster-analysis":
+            return self.send_error(404)
+        try:
+            length = int(self.headers.get("Content-Length") or "0")
+        except ValueError:
+            return self._json({"error":"INVALID_CONTENT_LENGTH"},400)
+        if length <= 0 or length > 32768:
+            return self._json({"error":"INVALID_REQUEST_SIZE"},400)
+        try:
+            body = json.loads(self.rfile.read(length))
+        except (ValueError, UnicodeDecodeError):
+            return self._json({"error":"INVALID_JSON"},400)
+        try:
+            job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
+        except ValueError as exc:
+            return self._json({"error":str(exc)},400)
+        return self._json(job,202)
 
 
 class IPv6ThreadingHTTPServer(ThreadingHTTPServer):
