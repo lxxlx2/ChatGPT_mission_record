@@ -270,8 +270,13 @@ class Holder:
 
 
 class WalletClusterAnalyzer:
-    def __init__(self,mint:str,*,rpc:SolanaReadOnlyRPC,special_registry:dict|None=None,history_per_holder=30,deep_holders=10,funding_lookback=12,material_pct=Decimal("1")):
+    def __init__(
+        self,mint:str,*,rpc:SolanaReadOnlyRPC,special_registry:dict|None=None,
+        history_per_holder=30,deep_holders=10,funding_lookback=12,
+        material_pct=Decimal("1"),market_client:DexScreenerMarketClient|None=None,
+    ):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
+        self.market_client=market_client
         self.edges=[];self.trades=[];self.funding=[];self.consolidations=[];self.tx_errors=[]
     def _entry(self,address):
         token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
@@ -288,6 +293,61 @@ class WalletClusterAnalyzer:
         if program in DEX_PROGRAMS:return "PROTOCOL_VAULT","RPC_RECOGNIZED_DEX_PROGRAM:"+str(program)
         if program in TOKEN_PROGRAMS:return "TOKEN_ACCOUNT_OWNER_UNRESOLVED","RPC_TOKEN_PROGRAM_OWNED"
         return "PROGRAM_OWNED_UNRESOLVED","RPC_PROGRAM_OWNER:"+str(program)
+
+    @staticmethod
+    def _find_key(value,key):
+        if isinstance(value,dict):
+            if key in value:return True,value.get(key)
+            for child in value.values():
+                found,result=WalletClusterAnalyzer._find_key(child,key)
+                if found:return True,result
+        elif isinstance(value,list):
+            for child in value:
+                found,result=WalletClusterAnalyzer._find_key(child,key)
+                if found:return True,result
+        return False,None
+
+    def token_profile(self):
+        try:
+            result=self.rpc.call("getAccountInfo",[self.mint,{"encoding":"jsonParsed","commitment":"finalized"}],ttl=60)
+        except Exception as exc:
+            return {"status":"UNAVAILABLE","source":"SOLANA_FINALIZED_JSON_RPC","reason":type(exc).__name__}
+        value=(result or {}).get("value") or {}
+        parsed=((value.get("data") or {}).get("parsed") or {}) if isinstance(value.get("data"),dict) else {}
+        info=parsed.get("info") or {}
+        program=value.get("owner")
+        if program=="TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb":token_program="SPL Token-2022"
+        elif program=="TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA":token_program="SPL Token"
+        else:token_program=program or "UNRESOLVED"
+        found_update,update_authority=self._find_key(parsed,"updateAuthority")
+        return {
+            "status":"OK",
+            "source":"SOLANA_FINALIZED_JSON_RPC",
+            "token_program":token_program,
+            "program_id":program,
+            "mint_authority":info.get("mintAuthority"),
+            "freeze_authority":info.get("freezeAuthority"),
+            "decimals":info.get("decimals"),
+            "supply_raw":str(info.get("supply")) if info.get("supply") is not None else None,
+            "is_initialized":info.get("isInitialized"),
+            "metadata_update_authority":update_authority if found_update else "UNAVAILABLE",
+            "metadata_update_authority_status":"CHAIN_PARSED" if found_update else "UNAVAILABLE",
+        }
+
+    def market_snapshot(self):
+        if self.market_client is None:
+            return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":"MARKET_CLIENT_DISABLED"}
+        try:return self.market_client.token_snapshot(self.mint)
+        except Exception as exc:
+            return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":type(exc).__name__}
+
+    @staticmethod
+    def _quote_quantity(record):
+        raw=record.get("quote_amount_raw")
+        decimals=record.get("quote_decimals")
+        if raw in {None,""} or decimals is None:return None
+        try:return str(Decimal(str(raw))/(Decimal(10)**int(decimals)))
+        except (ValueError,TypeError,InvalidOperation):return None
     def _supply(self):
         r=self.rpc.call("getTokenSupply",[self.mint,{"commitment":"finalized"}],ttl=30)
         v=(r or {}).get("value") or {}
@@ -350,10 +410,18 @@ class WalletClusterAnalyzer:
             except Exception:continue
             trade=c.get("trade") or {}
             if c.get("classification")=="ACTIVE_TRADE" and trade.get("mint")==self.mint:
-                if bt is not None and (first is None or bt < first["block_time"]):
-                    first={"block_time":int(bt),"signature":sig}
-                record={"owner":holder.owner,"signature":sig,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)}
+                record={"owner":holder.owner,"signature":sig,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"token_amount_raw":trade.get("token_amount_raw"),"token_decimals":trade.get("token_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)}
                 if not any(x["owner"]==holder.owner and x["signature"]==sig for x in self.trades):self.trades.append(record)
+                if trade.get("direction")=="BUY" and bt is not None and (first is None or bt < first["block_time"]):
+                    first={
+                        "block_time":int(bt),"signature":sig,"type":"MARKET_BUY",
+                        "quote_asset":trade.get("quote_asset"),
+                        "quote_amount_raw":trade.get("quote_amount_raw"),
+                        "quote_decimals":trade.get("quote_decimals"),
+                        "token_amount_raw":trade.get("token_amount_raw"),
+                        "token_decimals":trade.get("token_decimals"),
+                        "program_ids":(c.get("evidence") or {}).get("program_ids") or [],
+                    }
         return first
     def _scan_funding(self,holder:Holder,first,top_owners):
         if not first:return
