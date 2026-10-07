@@ -1,7 +1,7 @@
 import time
 
 from mission_agent.mission_control.server import (
-    ClusterJobManager, DashboardState, _atomic_write_text, _content_type_is_json, _decode_json_object, _origin_is_loopback,
+    CLUSTER_PRESETS, ClusterJobManager, DashboardState, _atomic_write_text, _content_type_is_json, _decode_json_object, _origin_is_loopback,
 )
 from mission_agent.mission_control.service import MissionMemeService
 from test_mission_control_service import make_prod, policy
@@ -168,8 +168,8 @@ def test_cluster_dashboard_explains_presets_and_localizes_rate_limit():
     html=(Handler.static_root/"index.html").read_text()
     js=(Handler.static_root/"app.js").read_text()
     assert "快速" in html and "标准" in html and "深度" in html
-    assert "深扫前 6 个 owner" in html
-    assert "深扫前 10 个 owner" in html
+    assert "浅扫前 6 个 owner" in html
+    assert "自动加深到 30 + 12" in html
     assert "Top20 owner 全部深扫" in html
     assert "免费 Solana RPC 触发限流（HTTP 429）" in js
     assert "execution_quote_30_usdc" in js
@@ -182,9 +182,10 @@ def test_cluster_manager_has_multiple_free_rpc_endpoints_by_default(tmp_path,mon
     monkeypatch.delenv("SOLANA_RPC_URL",raising=False)
     manager=ClusterJobManager(tmp_path/"control")
     assert manager.rpc_endpoints[0]=="https://api.mainnet.solana.com"
+    assert "https://solana-rpc.publicnode.com" in manager.rpc_endpoints
     assert "https://api.mainnet-beta.solana.com" in manager.rpc_endpoints
     assert "https://rpc.ankr.com/solana" in manager.rpc_endpoints
-    assert len(manager.rpc_endpoints)>=3
+    assert len(manager.rpc_endpoints)>=4
 
 
 def test_cluster_dashboard_has_two_level_conclusions():
@@ -193,3 +194,57 @@ def test_cluster_dashboard_has_two_level_conclusions():
     assert "链上 / 市场结构结论" in js
     assert "完整投资结论" in js
     assert "完整投资结论待叙事 / 官方关系核实" in js
+
+
+def test_standard_cluster_preset_is_adaptive_not_bruteforce():
+    standard=CLUSTER_PRESETS["standard"]
+    assert standard["deep_holders"]==6
+    assert standard["history_per_holder"]==12
+    assert standard["funding_lookback"]==8
+    assert standard["adaptive_history_per_holder"]==30
+    assert standard["adaptive_funding_lookback"]==12
+
+
+def test_assessment_history_only_appends_on_meaningful_change(tmp_path):
+    manager=ClusterJobManager(tmp_path/"control")
+    out=tmp_path/"report"
+    out.mkdir()
+    base={
+        "observed_at":100,
+        "assessment":{
+            "trading_status":"WATCH / WALLET_CLUSTER_UNRESOLVED",
+            "chain_permission_status":"PASS",
+            "cluster_status":"WALLET_CLUSTER_UNRESOLVED",
+            "narrative_status":"NOT_AUTOMATICALLY_VERIFIED",
+        },
+        "metrics":{
+            "LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":"0",
+            "UNRESOLVED_MATERIAL_HOLDER_PCT":"12.0000",
+        },
+        "token_profile":{"mint_authority":None,"freeze_authority":None},
+    }
+    manager._attach_assessment_history(out,base,"standard")
+    assert len(base["assessment_history"])==1
+    same=json.loads(json.dumps(base))
+    same["observed_at"]=200
+    manager._attach_assessment_history(out,same,"standard")
+    assert len(same["assessment_history"])==1
+    changed=json.loads(json.dumps(base))
+    changed["observed_at"]=300
+    changed["assessment"]["cluster_status"]="PROBABLE_CONTROL_CLUSTER_PRESENT"
+    changed["assessment"]["trading_status"]="WATCH / CONTROL_CLUSTER_RISK"
+    changed["metrics"]["LARGEST_PROBABLE_CONTROL_CLUSTER_PCT"]="24.0000"
+    manager._attach_assessment_history(out,changed,"standard")
+    assert len(changed["assessment_history"])==2
+    latest=changed["assessment_history"][-1]
+    assert "PROBABLE_CONTROL_CLUSTER_PRESENT" in latest["new_risk"]
+    assert "cluster_status" in latest["changed_fields"]
+
+
+def test_dashboard_frontend_shows_progress_and_conclusion_history():
+    from mission_agent.mission_control.server import Handler
+    js=(Handler.static_root/"app.js").read_text()
+    assert "clusterProgressDetail" in js
+    assert "ADAPTIVE_DEEPEN" in js
+    assert "结论变化" in js
+    assert "assessment_history" in js
