@@ -49,11 +49,21 @@ def _event_price_usdc(event: dict) -> Decimal | None:
         if event.get("quote_asset") == USDC and direct_usdc and not event.get("quote_normalization"):
             return Decimal(str(event["quote_quantity"])) / quantity
         if (
-            event.get("amount_predicate")=="SOL_EVENT_TIME_USDC_VERIFIED"
-            and event.get("quote_usdc_status")=="SOL_EVENT_TIME_USDC_VERIFIED"
+            event.get("quote_usdc_status")=="SOL_EVENT_TIME_USDC_VERIFIED"
             and event.get("quote_usdc_equivalent") is not None
         ):
-            return Decimal(str(event["quote_usdc_equivalent"])) / quantity
+            predicate=event.get("amount_predicate")
+            reason=event.get("amount_predicate_reason")
+            simple_sol=(
+                event.get("quote_asset") in {"SOL",WSOL}
+                and predicate in (None,"UNDETERMINED","SOL_EVENT_TIME_USDC_VERIFIED")
+                and reason in (None,"NON_USDC_QUOTE","CAUSAL_PREVIOUS_CLOSED_SOLUSDC_REFERENCE")
+                and not event.get("route_intermediate_assets")
+                and event.get("route_amount_semantics") in (None,"DIRECT_OR_SINGLE_TARGET_QUOTE")
+                and not (isinstance(event.get("quote_legs"),list) and len(event.get("quote_legs"))>1)
+            )
+            if predicate=="SOL_EVENT_TIME_USDC_VERIFIED" or simple_sol:
+                return Decimal(str(event["quote_usdc_equivalent"])) / quantity
     except (KeyError, InvalidOperation, ZeroDivisionError, TypeError):
         return None
     return None
