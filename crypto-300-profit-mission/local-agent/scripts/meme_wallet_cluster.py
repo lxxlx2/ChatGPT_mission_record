@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -41,6 +42,8 @@ def main():
     finally:
         cache.close()
 
+    stable=json.dumps(report,ensure_ascii=False,sort_keys=True,separators=(",",":")).encode()
+    report["report_sha256"]=hashlib.sha256(stable).hexdigest()
     j=out/"cluster-report.json";m=out/"cluster-report.md"
     j.write_text(json.dumps(report,ensure_ascii=False,indent=2,sort_keys=True))
     m.write_text(markdown(report))
