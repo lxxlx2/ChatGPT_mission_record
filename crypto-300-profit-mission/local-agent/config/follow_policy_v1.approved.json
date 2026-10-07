@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "policy_id": "FOLLOW_POLICY_V1_REVIEW_CANDIDATE",
-  "status": "REVIEW_ONLY",
-  "live_delivery_approved": false,
-  "basis": "PROVISIONAL_FIXED_RULES_PENDING_EXTERNAL_AI_REVIEW",
+  "status": "FROZEN_APPROVED",
+  "live_delivery_approved": true,
+  "basis": "USER_APPROVED_LIVE_NOTIFICATION_2026-10-07",
   "decision": {
     "quote_usdc_amount": "30",
     "slippage_bps": 100,
