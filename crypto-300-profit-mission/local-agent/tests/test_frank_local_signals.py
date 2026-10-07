@@ -115,7 +115,7 @@ def test_multiple_target_assets_remain_ambiguous_without_dust_guess():
 
 
 
-def test_received_then_spent_created_intermediate_residual_is_routed_single_target():
+def test_received_then_spent_created_residual_remains_ambiguous_without_route_binding():
     t=tx()
     for field in ['preTokenBalances','postTokenBalances']:
         t['meta'][field][1]['mint']=USDC
@@ -141,20 +141,16 @@ def test_received_then_spent_created_intermediate_residual_is_routed_single_targ
             'tokenAmount':{'amount':'1000000','decimals':6},'authority':'pool'}}},
     ]}]
     e=classify('routed-residual',t,WALLET)
-    assert e['classification']=='ACTIVE_TRADE'
-    assert e['classification_reason']=='SIGNED_DEX_SWAP_ROUTED_SINGLE_TARGET_WITH_RESIDUAL_INTERMEDIATE'
-    assert e['trade']['mint']=='mint1'
-    assert e['trade']['quote_asset']==USDC
-    assert e['trade']['amount_predicate']=='UNDETERMINED'
-    assert e['trade']['amount_predicate_reason']=='ROUTED_RESIDUAL_ASSETS'
-    assert e['trade']['route_amount_semantics']=='GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST'
-    routed=e['trade']['route_intermediate_assets']
-    assert len(routed)==1 and routed[0]['mint']==route
-    assert routed[0]['gross_in_raw']=='1000'
-    assert routed[0]['gross_out_raw']=='990'
-    assert routed[0]['net_delta']=='10'
-    assert routed[0]['upstream_quote_asset']==USDC
-    assert routed[0]['downstream_target']=='mint1'
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert e['classification_reason']=='AMBIGUOUS_USER_EXCHANGE_ASSETS'
+    assert e['trade'] is None
+    candidates=e['classification_details']['residual_flow_candidates']
+    assert len(candidates)==1 and candidates[0]['mint']==route
+    assert candidates[0]['gross_in_raw']=='1000'
+    assert candidates[0]['gross_out_raw']=='990'
+    assert candidates[0]['net_delta']=='10'
+    assert candidates[0]['route_binding']=='UNPROVEN'
+    assert 'downstream_target' not in candidates[0]
     flows=e['evidence']['wallet_token_transfer_flows']
     assert [(x['mint'],x['direction']) for x in flows]==[
         (USDC,'OUT'),(route,'IN'),(route,'OUT'),('mint1','IN')
@@ -192,14 +188,12 @@ def test_split_route_can_receive_final_target_before_residual_intermediate_finis
             'tokenAmount':{'amount':'600000','decimals':6},'authority':'pool'}}},
     ]}]
     e=classify('split-routed-residual',t,WALLET)
-    assert e['classification']=='ACTIVE_TRADE'
-    assert e['trade']['mint']=='mint1'
-    assert e['trade']['amount_predicate']=='UNDETERMINED'
-    assert e['trade']['amount_predicate_reason']=='ROUTED_RESIDUAL_ASSETS'
-    routed=e['trade']['route_intermediate_assets']
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert e['trade'] is None
+    routed=e['classification_details']['residual_flow_candidates']
     assert len(routed)==1
     assert routed[0]['mint']==route
-    assert routed[0]['proof']=='CREATED_ZERO_PRE_RECEIVED_THEN_SPENT_CONSERVED_RESIDUAL'
+    assert routed[0]['proof']=='CREATED_ZERO_PRE_RECEIVED_THEN_SPENT_CONSERVED_RESIDUAL_ONLY'
 
 
 def test_existing_partially_sold_second_asset_is_not_assumed_route_intermediate():
