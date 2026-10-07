@@ -98,3 +98,25 @@ def test_token_profile_reads_chain_authorities_without_market_guessing():
     assert out["freeze_authority"] is None
     assert out["metadata_update_authority"] is None
     assert out["metadata_update_authority_status"]=="CHAIN_PARSED"
+
+
+def test_null_get_transaction_is_not_cached(tmp_path):
+    from mission_agent.meme.cluster import RpcCache
+    cache=RpcCache(tmp_path/"rpc.sqlite")
+    calls=[]
+    def open_url(request,timeout=20):
+        calls.append(request.full_url)
+        return Response({"jsonrpc":"2.0","id":1,"result":None})
+    rpc=SolanaReadOnlyRPC(
+        "https://one.test",
+        fallback_endpoints=["https://two.test"],
+        open_url=open_url,
+        sleep=lambda *_:None,
+        min_interval=0,
+        cache=cache,
+    )
+    assert rpc.call("getTransaction",["sig",{"encoding":"jsonParsed"}],ttl=999) is None
+    before=len(calls)
+    assert rpc.call("getTransaction",["sig",{"encoding":"jsonParsed"}],ttl=999) is None
+    assert len(calls)>before
+    cache.close()
