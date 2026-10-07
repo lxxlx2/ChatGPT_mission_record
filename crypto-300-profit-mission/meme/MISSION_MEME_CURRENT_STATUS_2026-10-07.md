@@ -468,8 +468,13 @@ Candidate remediation on `feature/meme-ca-report-v3-20261007` now:
 4. recognizes official Solana USDT as a quote identity, but keeps non-USDC amount predicates `UNDETERMINED`; no USDT=$1 assumption is introduced;
 5. permits one target asset plus exactly one opposing primary quote even when additional quote refund/auxiliary legs exist; every quote leg is preserved, and composite quotes remain `UNDETERMINED` for the frozen USDC amount gate;
 6. keeps multiple target assets, multiple opposing payment quotes, native-SOL reconciliation mismatches and unproven market programs fail-closed;
-7. exposes existing `ACTIVE_SWAP_LIKE + UNKNOWN_NEEDS_REVIEW` records in a read-only Dashboard `待复核链上行为` panel instead of making them appear absent;
-8. does not reclassify or backfill existing production history automatically and does not send historical notifications.
+7. exposes existing `ACTIVE_SWAP_LIKE + UNKNOWN_NEEDS_REVIEW` records, plus signed successful opposing-flow cases with market proof still unresolved, in a read-only Dashboard `待复核链上行为` panel instead of making them appear absent;
+8. keeps composite/auxiliary quote provenance out of both frozen USDC amount gates and Mission Control Frank reference-price math; a composite primary-USDC leg is not treated as the full Frank cost;
+9. preserves the existing SOL-normalization sidecar semantics only for a simple non-USDC SOL quote with a verified causal previous-closed-minute reference; composite SOL legs remain `UNDETERMINED`;
+10. resolves `programIdIndex` consistently for swap, token-transfer and native-transfer evidence and fixes re-entrant invocation-stack handling;
+11. extends adaptive CA deepening to suspicious/material Top20 owners outside the first-six shallow prefix, including a relation counterpart discovered from a shallow owner;
+12. makes the optional Frank per-CA snapshot non-fatal to the independent CA report if the read-only production DB is temporarily unavailable;
+13. does not reclassify or backfill existing production history automatically and does not send historical notifications.
 
 Frozen Frank thresholds are unchanged:
 - ACCUMULATION still requires >=2 active buys within 60 minutes and >=25,000 direct-known USDC under the existing policy;
@@ -477,7 +482,7 @@ Frozen Frank thresholds are unchanged:
 - production trading remains `NO_GO`.
 
 Before any merge/runtime refresh:
-- run targeted parser/classifier/evaluator/Mission Control tests and the full local-agent suite;
+- run targeted parser/classifier/evaluator/SOL-normalization/Mission Control/CA-cluster tests and the full local-agent suite;
 - replay the current read-only `forward.sqlite` raw references through the candidate classifier in an isolated workspace;
 - inspect changed classifications, HFT changes, new/lost ACCUMULATION/MULTIPLE and specifically the RACE raw transaction;
 - do not mutate existing production DB or replay historical notifications.
