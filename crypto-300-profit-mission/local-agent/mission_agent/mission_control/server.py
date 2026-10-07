@@ -92,12 +92,15 @@ class DashboardState:
                 item["decision"] = body["decision"]
                 item["decision_created_at"] = row["evaluated_at"]
                 item["metrics"] = body.get("metrics") or {}
+                inputs = body.get("inputs") or {}
+                item["decision_quote"] = inputs.get("quote") or {}
                 item["reasons"] = body.get("reasons") or []
                 item["missing"] = body.get("missing") or []
                 item["invalidation"] = body.get("invalidation") or []
             else:
                 item["decision"] = "UNASSESSED"
                 item["metrics"] = {}
+                item["decision_quote"] = {}
         return candidates
 
     def recent_trades(self):

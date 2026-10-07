@@ -57,6 +57,14 @@ def evaluate(candidate: dict, quote: dict, policy: dict, *, now: float | None = 
         return {"decision":"NO_BUY","reasons":["ZERO_OR_NEGATIVE_INVENTORY"],"missing":[],"invalidation":[],"metrics":{}}
     if latest_side == "SELL":
         return {"decision":"WAIT","reasons":["LATEST_ACTION_SELL"],"missing":[],"invalidation":["WAIT_FOR_FRESH_BUY_SEQUENCE"],"metrics":{}}
+    if pattern == "REENTRY_WATCH":
+        return {
+            "decision":"WAIT",
+            "reasons":["FRANK_REENTRY_WATCH_ACTIVE"],
+            "missing":[],
+            "invalidation":["WAIT_FOR_ACCUMULATION_OR_MULTIPLE","FRANK_EXIT"],
+            "metrics":{},
+        }
     if pattern not in {"ACCUMULATION","MULTIPLE"}:
         return {"decision":"WAIT","reasons":["NO_FOLLOW_PATTERN"],"missing":[],"invalidation":[],"metrics":{}}
 

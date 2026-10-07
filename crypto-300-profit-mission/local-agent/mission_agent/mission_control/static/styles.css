@@ -149,3 +149,23 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
   .feed-row time{grid-column:2;text-align:left}
   .decision-reason{flex-direction:column;gap:4px}
 }
+
+.ended-panel>summary{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 14px;cursor:pointer;list-style:none
+}
+.ended-panel>summary::-webkit-details-marker{display:none}
+.ended-panel>summary h2{font-size:14px;margin:0;font-weight:700}
+.ended-panel>summary p{font-size:11px;color:#6f7986;margin:4px 0 0}
+.summary-hint{font-size:11px;color:#7f8996;white-space:nowrap}
+.ended-panel[open] .summary-hint{font-size:0}
+.ended-panel[open] .summary-hint::after{content:"收起";font-size:11px}
+.ended-list{border-top:1px solid var(--line)}
+.ended-row{padding:11px 14px;border-bottom:1px solid #191d22}
+.ended-row:last-child{border-bottom:0}
+.ended-main{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ended-main strong{font-size:12px}
+.ended-main span{font-size:11px;color:#7f8996}
+.ended-ca{display:flex;align-items:center;gap:7px;margin-top:7px;min-width:0}
+.ended-ca code{font-size:11px;overflow:auto;white-space:nowrap;flex:1}
+.ended-note{margin-top:6px;color:#7f8996;font-size:11px}

@@ -36,4 +36,24 @@ def test_same_decision_refreshes_dashboard_metrics_without_new_event(tmp_path):
     rows=dashboard.candidates()
     assert rows[0]["decision"]=="BUY"
     assert rows[0]["metrics"]["execution_price_usdc"]=="1.05"
+    assert rows[0]["decision_quote"]["status"]=="OK"
+    assert rows[0]["decision_quote"]["execution_price_usdc"]=="1.05"
+    assert rows[0]["latest_buy_price_usdc"]=="1"
+    service.close()
+
+
+def test_stale_wait_still_exposes_quote_and_frank_price_for_research(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json"
+    make_prod(prod,latest_at=int(time.time())-3600);policy(p)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=p)
+    service.jupiter.quote_usdc_to_token=lambda *a,**k:quote("1.07")
+    result=service.cycle()
+    assert result["decision_events"][0]["decision"]=="WAIT"
+    dashboard=DashboardState(prod,control)
+    row=dashboard.candidates()[0]
+    assert row["latest_buy_price_usdc"]=="1"
+    assert row["metrics"].get("execution_price_usdc") is None
+    assert row["decision_quote"]["status"]=="OK"
+    assert row["decision_quote"]["execution_price_usdc"]=="1.07"
+    assert row["decision_quote"]["price_impact_pct"]=="0.5"
     service.close()
