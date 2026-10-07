@@ -126,6 +126,8 @@ class ClusterJobManager:
             self.rpc_endpoints=[primary,"https://api.mainnet-beta.solana.com","https://rpc.ankr.com/solana"]
         self.rpc_endpoints=list(dict.fromkeys(self.rpc_endpoints))
         self.rpc_endpoint=self.rpc_endpoints[0]
+        self.market_client=DexScreenerMarketClient()
+        self.jupiter=JupiterQuoteClient(os.environ.get("JUPITER_API_KEY"))
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
@@ -200,12 +202,10 @@ class ClusterJobManager:
                 deep_holders=opts["deep_holders"],
                 history_per_holder=opts["history_per_holder"],
                 funding_lookback=opts["funding_lookback"],
-                market_client=DexScreenerMarketClient(),
+                market_client=self.market_client,
             ).analyze()
             try:
-                report["execution_quote_30_usdc"]=JupiterQuoteClient(
-                    os.environ.get("JUPITER_API_KEY")
-                ).quote_usdc_to_token(
+                report["execution_quote_30_usdc"]=self.jupiter.quote_usdc_to_token(
                     mint,
                     int(report["decimals"]),
                     usdc_amount=Decimal("30"),
