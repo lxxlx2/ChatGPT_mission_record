@@ -363,3 +363,31 @@ Before calling Meme local tooling v2 live on the user's Mac:
 5. run one real CA query against Solana finalized RPC and verify Top20/coverage/cluster rendering;
 6. confirm existing Frank signal view and Mac/Gmail notification path still remain healthy;
 7. keep `PRODUCTION_TRADING = NO_GO`.
+
+## 12. Local post-merge acceptance — 2026-10-07
+
+User-local merged-main acceptance completed on `58a98faf`:
+
+- local checkout synchronized to `origin/main` at `58a98faf`;
+- complete local-agent suite: `738 passed` in 6.17s;
+- policy gate: PASS;
+- approved policy SHA256: `355336f2959e674939210b51be97d2df1d6e66f4ee3cca8acfe041dabb9e3ae8`;
+- Gmail OAuth/config preflight: PASS, recipient `lxx.run688@gmail.com`, no email sent during preflight;
+- Mission Meme loop LaunchAgent: running / active;
+- Mission Meme dashboard LaunchAgent: running / active;
+- Mission Control health: `status=OK`, `delivery_allowed=true`, `candidate_error_count=0`, `outcome_error_count=0`;
+- SOL normalization sidecar: `status=OK`, with zero copied/resolved/unresolved rows in this acceptance cycle;
+- Dashboard HTTP: 200 at localhost port 8766;
+- AUTO-START: ON AFTER USER LOGIN;
+- LIVE DELIVERY: policy-gated and enabled by approved policy;
+- `PRODUCTION_TRADING = NO_GO`.
+
+This closes the merged-main code/test/LaunchAgent startup acceptance gate.
+
+Remaining runtime acceptance items:
+
+1. run at least one real Solana CA through the new `CA 链上查询` page and verify Top20 owner / coverage / cluster rendering against live finalized RPC;
+2. observe the first genuinely new forward outcome track and confirm T+5m/T+15m/T+1h/T+6h/T+24h persistence begins without historical backfill;
+3. exercise a real SOL/WSOL-quoted Frank trade before declaring the SOL normalization path empirically exercised;
+4. verify one actual Mission Control Gmail notification end-to-end, including Sent readback, when a real new eligible signal occurs;
+5. after a future Mac reboot/login, verify both LaunchAgents automatically recover and Dashboard HTTP returns 200 without manual intervention.
