@@ -242,6 +242,15 @@ class ClusterJobManager:
         narrative=assessment.get("narrative_status")
         structure=assessment.get("trading_status") or "UNRESOLVED"
         investment="PENDING_NARRATIVE" if narrative=="NOT_AUTOMATICALLY_VERIFIED" else structure
+        extension_details=[
+            {
+                "name":row.get("name"),"status":row.get("status"),"reason":row.get("reason"),
+                "config":row.get("config"),
+            }
+            for row in (profile.get("sensitive_extension_details") or [])
+            if isinstance(row,dict)
+        ]
+        extension_details.sort(key=lambda row:(str(row.get("name")),str(row.get("status")),json.dumps(row.get("config"),sort_keys=True,default=str)))
         return {
             "structure_rating":structure,
             "investment_rating":investment,
@@ -249,10 +258,30 @@ class ClusterJobManager:
             "cluster_status":assessment.get("cluster_status"),
             "largest_control_cluster_pct":metrics.get("LARGEST_PROBABLE_CONTROL_CLUSTER_PCT"),
             "unresolved_material_holder_pct":metrics.get("UNRESOLVED_MATERIAL_HOLDER_PCT"),
-            "mint_authority_active":bool(profile.get("mint_authority")),
-            "freeze_authority_active":bool(profile.get("freeze_authority")),
+            "mint_authority":profile.get("mint_authority"),
+            "freeze_authority":profile.get("freeze_authority"),
+            "sensitive_extension_details":extension_details,
+            "active_extension_risks":assessment.get("active_extension_risks") or [],
+            "unresolved_extension_risks":assessment.get("unresolved_extension_risks") or [],
             "narrative_status":narrative,
         }
+
+    @staticmethod
+    def _coverage_snapshot(report: dict, preset: str) -> dict:
+        coverage=report.get("coverage") or {}
+        return {
+            "preset":preset,
+            "scan_mode":coverage.get("scan_mode"),
+            "top_accounts_resolved":coverage.get("top_accounts_resolved"),
+            "deep_holders_scanned":coverage.get("deep_holders_scanned"),
+            "adaptive_deepened_owners":sorted(coverage.get("adaptive_deepened_owners") or []),
+            "history_per_holder":coverage.get("history_per_holder"),
+            "funding_lookback":coverage.get("funding_lookback"),
+        }
+
+    @staticmethod
+    def _changed_fields(before: dict, after: dict) -> list[str]:
+        return [key for key in sorted(set(before)|set(after)) if before.get(key)!=after.get(key)]
 
     def _attach_assessment_history(self, out: Path, report: dict, preset: str):
         history_path=out/"assessment-history.json"
@@ -262,37 +291,63 @@ class ClusterJobManager:
         except (OSError,ValueError):
             history=[]
         snapshot=self._assessment_snapshot(report)
+        coverage_snapshot=self._coverage_snapshot(report,preset)
         previous=(history[-1].get("snapshot") or {}) if history else {}
-        changed=[key for key,value in snapshot.items() if previous.get(key)!=value]
+        previous_coverage=(history[-1].get("coverage_snapshot") or {}) if history else {}
+        changed=self._changed_fields(previous,snapshot)
+        coverage_changed=self._changed_fields(previous_coverage,coverage_snapshot)
         if not history or changed:
-            new_risk=[]
-            removed_uncertainty=[]
+            new_risk=[];removed_uncertainty=[]
+            before_active={json.dumps(x,sort_keys=True,default=str) for x in (previous.get("active_extension_risks") or [])}
+            after_active={json.dumps(x,sort_keys=True,default=str) for x in (snapshot.get("active_extension_risks") or [])}
             if snapshot.get("chain_permission_status")=="RISK" and previous.get("chain_permission_status")!="RISK":
                 new_risk.append("CHAIN_PERMISSION_RISK")
+            if after_active-before_active:
+                new_risk.extend("TOKEN2022_ACTIVE_EXTENSION:"+x for x in sorted(after_active-before_active))
             if snapshot.get("cluster_status")=="PROBABLE_CONTROL_CLUSTER_PRESENT" and previous.get("cluster_status")!="PROBABLE_CONTROL_CLUSTER_PRESENT":
                 new_risk.append("PROBABLE_CONTROL_CLUSTER_PRESENT")
             if previous.get("cluster_status")=="WALLET_CLUSTER_UNRESOLVED" and snapshot.get("cluster_status")!="WALLET_CLUSTER_UNRESOLVED":
                 removed_uncertainty.append("WALLET_CLUSTER_UNRESOLVED")
             if previous.get("chain_permission_status")=="UNRESOLVED" and snapshot.get("chain_permission_status") in {"PASS","RISK"}:
                 removed_uncertainty.append("CHAIN_PERMISSION_UNRESOLVED")
+            if not history:
+                category="INITIAL_OBSERVATION"
+            elif any(key in changed for key in ("mint_authority","freeze_authority","sensitive_extension_details","active_extension_risks","unresolved_extension_risks","chain_permission_status")):
+                category="CHAIN_PERMISSION_CHANGE"
+            elif coverage_changed:
+                category="ASSESSMENT_CHANGE_WITH_COVERAGE_CHANGE"
+            else:
+                category="ASSESSMENT_CHANGE"
+            evidence_changes=[
+                {"field":key,"before":previous.get(key),"after":snapshot.get(key)}
+                for key in changed
+            ] if history else [{"field":"INITIAL_OBSERVATION","before":None,"after":snapshot}]
             entry={
                 "observed_at":report.get("observed_at") or time.time(),
                 "preset":preset,
                 "structure_rating":snapshot["structure_rating"],
                 "investment_rating":snapshot["investment_rating"],
+                "change_category":category,
                 "changed_fields":changed if history else list(snapshot),
-                "new_evidence":changed if history else ["INITIAL_OBSERVATION"],
+                "coverage_changed_fields":coverage_changed,
+                "new_evidence":evidence_changes,
                 "removed_uncertainty":removed_uncertainty,
                 "new_risk":new_risk,
-                "reason":"首次观测" if not history else "关键结论字段变化：" + ", ".join(changed),
+                "reason":"首次观测" if not history else category+"：" + ", ".join(changed),
                 "snapshot":snapshot,
+                "coverage_snapshot":coverage_snapshot,
             }
             history.append(entry)
             history=history[-100:]
-            _atomic_write_text(history_path,json.dumps(history,ensure_ascii=False,indent=2,sort_keys=True))
+            _atomic_write_text(history_path,json.dumps(history,ensure_ascii=False,indent=2,sort_keys=True,default=str))
         report["assessment_history"]=[
-            {k:v for k,v in row.items() if k!="snapshot"} for row in history[-20:]
+            {k:v for k,v in row.items() if k not in {"snapshot","coverage_snapshot"}} for row in history[-20:]
         ]
+        report["assessment_history_context"]={
+            "current_preset":preset,
+            "coverage_changed_since_last_record":bool(history and self._changed_fields((history[-1].get("coverage_snapshot") or {}),coverage_snapshot)),
+            "coverage_snapshot":coverage_snapshot,
+        }
 
     def _run(self, job_id: str):
         with self.lock:
