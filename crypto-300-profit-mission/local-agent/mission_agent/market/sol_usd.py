@@ -131,6 +131,9 @@ def normalize_trade_event(event: dict, reference: dict | None) -> dict:
         quote = None
 
     if asset == USDC and quote is not None:
+        if value.get("amount_predicate")=="UNDETERMINED":
+            value["quote_usdc_status"] = "UNDETERMINED"
+            return value
         value["quote_usdc_equivalent"] = str(quote)
         value["quote_usdc_status"] = "USDC_DIRECT"
         value["quote_usdc_reference"] = {
@@ -146,6 +149,10 @@ def normalize_trade_event(event: dict, reference: dict | None) -> dict:
         "trade_block_time": value.get("at"),
         "reference": reference or {"status": "UNAVAILABLE", "reason": "SOL_USDC_REFERENCE_MISSING"},
     }
+    if value.get("amount_predicate_reason")=="COMPOSITE_QUOTE_LEGS":
+        value["quote_usdc_status"]="UNDETERMINED"
+        value["quote_usdc_reference"]=wrapped_reference
+        return value
     if quote is None or not reference or reference.get("status") != "VERIFIED":
         value["quote_usdc_status"] = "UNDETERMINED"
         value["quote_usdc_reference"] = wrapped_reference
@@ -185,7 +192,13 @@ def normalize_classification(classified: dict, reference: dict | None, *, for_mo
         return value
 
     normalized = normalize_trade_event(
-        {"quote_asset": asset, "quote_quantity": str(q), "at": value.get("block_time")},
+        {
+            "quote_asset": asset,
+            "quote_quantity": str(q),
+            "at": value.get("block_time"),
+            "amount_predicate": t.get("amount_predicate"),
+            "amount_predicate_reason": t.get("amount_predicate_reason"),
+        },
         reference,
     )
     for key in ("quote_usdc_equivalent", "quote_usdc_status", "quote_usdc_reference"):
@@ -208,6 +221,8 @@ def normalize_classification(classified: dict, reference: dict | None, *, for_mo
             quote_amount_raw=str(int(micro)),
             quote_decimals=6,
             quote_normalization="SOL_TO_USDC_SHADOW_EQUIVALENT",
+            amount_predicate="SOL_EVENT_TIME_USDC_VERIFIED",
+            amount_predicate_reason="CAUSAL_PREVIOUS_CLOSED_SOLUSDC_REFERENCE",
         )
     value["trade"] = t
     return value
