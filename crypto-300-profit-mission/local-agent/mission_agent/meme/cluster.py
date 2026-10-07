@@ -19,6 +19,7 @@ from pathlib import Path
 
 from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
 from ..signals.classifier import classify
+from ..market.sol_usd import USDC, WSOL
 
 DEFAULT_RPC = "https://api.mainnet.solana.com"
 SYSTEM_PROGRAM = "11111111111111111111111111111111"
@@ -125,15 +126,31 @@ def _native_funders(tx, target):
     return rows
 
 
-def _direct_token_edges(tx, top_accounts:set[str]):
-    rows=[]
+def _token_account_meta(tx):
+    keys=tx.get("transaction",{}).get("message",{}).get("accountKeys",[])
+    names=[x.get("pubkey") if isinstance(x,dict) else x for x in keys]
+    out={}
+    balances=(tx.get("meta",{}).get("preTokenBalances") or [])+(tx.get("meta",{}).get("postTokenBalances") or [])
+    for row in balances:
+        try:address=names[int(row["accountIndex"])]
+        except (KeyError,IndexError,TypeError,ValueError):continue
+        owner=row.get("owner");mint=row.get("mint")
+        if address and owner and mint:out[address]={"owner":owner,"mint":mint}
+    return out
+
+
+def _owner_token_transfers(tx):
+    meta=_token_account_meta(tx);rows=[]
     for ix in _instructions(tx):
         p=ix.get("parsed")
         if not isinstance(p,dict) or p.get("type") not in {"transfer","transferChecked"}:continue
         info=p.get("info") or {};src=info.get("source");dst=info.get("destination")
-        if src in top_accounts and dst in top_accounts and src!=dst:
-            amount=(info.get("tokenAmount") or {}).get("amount") or info.get("amount")
-            rows.append((src,dst,str(amount) if amount is not None else None))
+        sm=meta.get(src) or {};dm=meta.get(dst) or {}
+        mint=info.get("mint") or sm.get("mint") or dm.get("mint")
+        so=sm.get("owner");do=dm.get("owner")
+        if not mint or not so or not do or so==do:continue
+        amount=(info.get("tokenAmount") or {}).get("amount") or info.get("amount")
+        rows.append({"source_owner":so,"destination_owner":do,"mint":mint,"amount_raw":str(amount) if amount is not None else None})
     return rows
 
 
@@ -167,7 +184,7 @@ class Holder:
 class WalletClusterAnalyzer:
     def __init__(self,mint:str,*,rpc:SolanaReadOnlyRPC,special_registry:dict|None=None,history_per_holder=30,deep_holders=10,funding_lookback=12,material_pct=Decimal("1")):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
-        self.edges=[];self.trades=[];self.funding=[];self.tx_errors=[]
+        self.edges=[];self.trades=[];self.funding=[];self.consolidations=[];self.tx_errors=[]
     def _role(self,address,account_info):
         explicit=(self.registry.get("addresses") or {}).get(address)
         if explicit:return explicit.get("role","UNRESOLVED"),explicit.get("source","LOCAL_REGISTRY")
@@ -213,7 +230,7 @@ class WalletClusterAnalyzer:
         x,y=sorted([a,b]);record={"a":x,"b":y,"type":kind,"signature":signature,**extra}
         key=_hash(record)
         if key not in {e["_key"] for e in self.edges}:self.edges.append({**record,"_key":key})
-    def _scan_holder(self,holder:Holder,account_to_owner):
+    def _scan_holder(self,holder:Holder,account_to_owner,top_owners):
         try:rows=self.rpc.call("getSignaturesForAddress",[holder.token_account,{"commitment":"finalized","limit":self.history_per_holder}],ttl=300)
         except Exception as exc:self.tx_errors.append({"address":holder.token_account,"error":type(exc).__name__});return None
         first_at=None
@@ -224,8 +241,16 @@ class WalletClusterAnalyzer:
             except Exception as exc:self.tx_errors.append({"signature":sig,"error":type(exc).__name__});continue
             if not tx:continue
             bt=tx.get("blockTime")
-            for src_ta,dst_ta,amount in _direct_token_edges(tx,set(account_to_owner)):
-                self._edge(account_to_owner[src_ta],account_to_owner[dst_ta],"DIRECT_TOKEN_TRANSFER",sig,amount_raw=amount,block_time=bt)
+            for tr in _owner_token_transfers(tx):
+                src=tr["source_owner"];dst=tr["destination_owner"];mint=tr["mint"]
+                if mint==self.mint:
+                    if src in top_owners and dst in top_owners:
+                        self._edge(src,dst,"DIRECT_TOKEN_TRANSFER",sig,amount_raw=tr["amount_raw"],block_time=bt)
+                    elif src in top_owners and dst not in top_owners:
+                        record={"source_owner":src,"destination_owner":dst,"mint":mint,"amount_raw":tr["amount_raw"],"signature":sig,"block_time":bt}
+                        if not any(x["source_owner"]==src and x["destination_owner"]==dst and x["signature"]==sig for x in self.consolidations):self.consolidations.append(record)
+                elif mint in {USDC,WSOL} and src in top_owners and dst in top_owners:
+                    self._edge(src,dst,"DIRECT_QUOTE_TRANSFER",sig,asset=mint,amount_raw=tr["amount_raw"],block_time=bt)
             try:c=classify(sig,tx,holder.owner)
             except Exception:continue
             trade=c.get("trade") or {}
@@ -234,7 +259,7 @@ class WalletClusterAnalyzer:
                 record={"owner":holder.owner,"signature":sig,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)}
                 if not any(x["owner"]==holder.owner and x["signature"]==sig for x in self.trades):self.trades.append(record)
         return first_at
-    def _scan_funding(self,holder:Holder,first_at):
+    def _scan_funding(self,holder:Holder,first_at,top_owners):
         if not first_at:return
         try:rows=self.rpc.call("getSignaturesForAddress",[holder.owner,{"commitment":"finalized","limit":self.funding_lookback}],ttl=300)
         except Exception:return
@@ -248,6 +273,7 @@ class WalletClusterAnalyzer:
             if bt is None or bt>first_at:continue
             for source,lamports in _native_funders(tx,holder.owner):
                 candidate={"owner":holder.owner,"source":source,"lamports":lamports,"signature":sig,"block_time":bt}
+                if source in top_owners:self._edge(source,holder.owner,"DIRECT_QUOTE_TRANSFER",sig,asset="SOL",amount_raw=lamports,block_time=bt)
                 if best is None or bt>best["block_time"]:best=candidate
         if best and not any(x["owner"]==best["owner"] and x["signature"]==best["signature"] for x in self.funding):self.funding.append(best)
     def _derive_pair_edges(self):
@@ -262,6 +288,16 @@ class WalletClusterAnalyzer:
             owners=sorted({r["owner"] for r in rows})
             for i,a in enumerate(owners):
                 for b in owners[i+1:]:self._edge(a,b,kind,rows[0]["signature"],funder=source)
+        by_destination=defaultdict(set)
+        for row in self.consolidations:by_destination[row["destination_owner"]].add(row["source_owner"])
+        for destination,owners in by_destination.items():
+            role=(self.registry.get("addresses") or {}).get(destination,{}).get("role")
+            kind="COMMON_CONSOLIDATION" if role in {"EOA","DEV","CREATOR","TREASURY"} else "COMMON_CONSOLIDATION_UNRESOLVED"
+            owners=sorted(owners)
+            if len(owners)>1:
+                evidence=next(x for x in self.consolidations if x["destination_owner"]==destination)
+                for i,a in enumerate(owners):
+                    for b in owners[i+1:]:self._edge(a,b,kind,evidence["signature"],destination=destination)
         for sig,rows in by_sig.items():
             owners=sorted({r["owner"] for r in rows})
             if len(owners)>1:
@@ -308,8 +344,9 @@ class WalletClusterAnalyzer:
             if h.owner in deep_seen:continue
             deep_seen.add(h.owner);deep.append(h)
             if len(deep)>=self.deep_holders:break
-        for h in deep:firsts[h.owner]=self._scan_holder(h,account_to_owner)
-        for h in deep:self._scan_funding(h,firsts.get(h.owner))
+        top_owners=set(owners for owners in account_to_owner.values())
+        for h in deep:firsts[h.owner]=self._scan_holder(h,account_to_owner,top_owners)
+        for h in deep:self._scan_funding(h,firsts.get(h.owner),top_owners)
         self._derive_pair_edges()
         owners=sorted({h.owner for h in holders});balances=defaultdict(int)
         for h in holders:balances[h.owner]+=h.raw
@@ -317,7 +354,7 @@ class WalletClusterAnalyzer:
         pair_types=defaultdict(set)
         for e in self.edges:
             pair=(e["a"],e["b"]);pair_types[pair].add(e["type"])
-            if e["type"]=="DIRECT_TOKEN_TRANSFER":relation.union(*pair)
+            if e["type"] in {"DIRECT_TOKEN_TRANSFER","DIRECT_QUOTE_TRANSFER"}:relation.union(*pair)
         for pair,types in pair_types.items():
             strong=len(types & STRONG);behavior=len(types & BEHAVIOR)
             if strong>=2 or (strong>=1 and behavior>=1) or ("DIRECT_TOKEN_TRANSFER" in types and strong>=1):control.union(*pair)
@@ -381,9 +418,9 @@ class WalletClusterAnalyzer:
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
             "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
-            "unresolved_relation_edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED"}],
+            "unresolved_relation_edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED","COMMON_CONSOLIDATION_UNRESOLVED"}],
             "edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges],
-            "funding_evidence":self.funding,"trade_evidence":self.trades,"transaction_errors":self.tx_errors,
+            "funding_evidence":self.funding,"consolidation_evidence":self.consolidations,"trade_evidence":self.trades,"transaction_errors":self.tx_errors,
             "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
             "limitations":[
                 "Only raw finalized RPC evidence and explicit local labels are treated as authoritative.",
