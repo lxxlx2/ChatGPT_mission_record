@@ -43,6 +43,73 @@ SPECIAL_ROLES = {
     "BURN", "CEX", "BRIDGE", "ROUTER", "PUBLIC_INFRA", "PUBLIC_PROGRAM", "MARKET_MAKER",
 }
 DEV_ROLES = {"DEV", "CREATOR", "TREASURY"}
+
+def _extension_name(value):
+    return str(value or "").lower().replace("_","").replace("-","")
+
+def _config_values(value, wanted):
+    found=[]
+    if isinstance(value,dict):
+        for key,child in value.items():
+            if _extension_name(key) in wanted:found.append(child)
+            found.extend(_config_values(child,wanted))
+    elif isinstance(value,list):
+        for child in value:found.extend(_config_values(child,wanted))
+    return found
+
+def _authority_active(value):
+    return value not in (None,"","11111111111111111111111111111111")
+
+def _positive_number(value):
+    try:return Decimal(str(value))>0
+    except (InvalidOperation,ValueError,TypeError):return False
+
+def _extension_risk(extension):
+    if not isinstance(extension,dict):
+        return {"name":str(extension),"status":"UNRESOLVED","reason":"EXTENSION_CONFIG_UNAVAILABLE","config":extension}
+    name=extension.get("extension") or extension.get("type") or "UNKNOWN"
+    normalized=_extension_name(name)
+    config={k:v for k,v in extension.items() if k not in {"extension","type"}}
+    status="UNRESOLVED";reason="SENSITIVE_EXTENSION_STATE_UNRESOLVED"
+    authorities=_config_values(config,{"authority","transferfeeconfigauthority","withdrawwithheldauthority"})
+    active_authority=any(_authority_active(v) for v in authorities)
+    if "transferfee" in normalized:
+        fees=_config_values(config,{"transferfeebasispoints","basispoints","maximumfee","maxfee"})
+        if active_authority or any(_positive_number(v) for v in fees):
+            status="ACTIVE_RISK";reason="TRANSFER_FEE_ACTIVE_OR_MUTABLE"
+        elif authorities or fees:
+            status="INACTIVE";reason="TRANSFER_FEE_ZERO_AND_AUTHORITIES_REVOKED"
+    elif "transferhook" in normalized:
+        programs=_config_values(config,{"programid","programidpubkey"})
+        active_program=any(_authority_active(v) for v in programs)
+        if active_authority or active_program:
+            status="ACTIVE_RISK";reason="TRANSFER_HOOK_ACTIVE_OR_MUTABLE"
+        elif authorities or programs:
+            status="INACTIVE";reason="TRANSFER_HOOK_DISABLED_AND_AUTHORITY_REVOKED"
+    elif "permanentdelegate" in normalized:
+        delegates=_config_values(config,{"delegate"})
+        if any(_authority_active(v) for v in delegates):
+            status="ACTIVE_RISK";reason="PERMANENT_DELEGATE_ACTIVE"
+        elif delegates:
+            status="INACTIVE";reason="PERMANENT_DELEGATE_REVOKED"
+    elif "pausable" in normalized:
+        paused=_config_values(config,{"paused","ispaused"})
+        if active_authority or any(v is True or str(v).lower()=="true" for v in paused):
+            status="ACTIVE_RISK";reason="PAUSABLE_ACTIVE_OR_MUTABLE"
+        elif authorities or paused:
+            status="INACTIVE";reason="PAUSABLE_NOT_PAUSED_AND_AUTHORITY_REVOKED"
+    elif "defaultaccountstate" in normalized:
+        states=[str(v).lower() for v in _config_values(config,{"state","accountstate"}) if v is not None]
+        if any("frozen" in v for v in states):
+            status="ACTIVE_RISK";reason="DEFAULT_ACCOUNT_STATE_FROZEN"
+        elif states and all("initialized" in v for v in states):
+            status="INACTIVE";reason="DEFAULT_ACCOUNT_STATE_INITIALIZED"
+    elif "confidentialtransfer" in normalized:
+        if active_authority:
+            status="ACTIVE_RISK";reason="CONFIDENTIAL_TRANSFER_MUTABLE_AUTHORITY"
+        elif authorities:
+            status="UNRESOLVED";reason="CONFIDENTIAL_TRANSFER_PRESENT_AUTHORITY_REVOKED_OTHER_STATE_UNRESOLVED"
+    return {"name":str(name),"status":status,"reason":reason,"config":config}
 STRONG = {"COMMON_FUNDER_EOA", "BATCH_FUNDING", "COMMON_SIGNER", "COMMON_CONSOLIDATION"}
 BEHAVIOR = {"SYNC_BUY", "SYNC_SELL", "IDENTICAL_SIZE", "SAME_EXECUTION_PROGRAM", "REPEATED_SYNC_BEHAVIOR"}
 
@@ -381,21 +448,27 @@ class WalletClusterAnalyzer:
         elif program=="TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA":token_program="SPL Token"
         else:token_program=program or "UNRESOLVED"
         found_update,update_authority=self._find_key(parsed,"updateAuthority")
-        extension_names=[]
+        extension_names=[];extension_details=[]
         for extension in info.get("extensions") or []:
             if isinstance(extension,dict):
                 name=extension.get("extension") or extension.get("type")
                 if name:extension_names.append(str(name))
+                normalized=_extension_name(name)
+                if any(word in normalized for word in SENSITIVE_EXTENSION_WORDS):
+                    extension_details.append(_extension_risk(extension))
             elif extension:
                 extension_names.append(str(extension))
-        sensitive=[
-            name for name in extension_names
-            if any(word in name.lower().replace("_","").replace("-","") for word in SENSITIVE_EXTENSION_WORDS)
-        ]
+                normalized=_extension_name(extension)
+                if any(word in normalized for word in SENSITIVE_EXTENSION_WORDS):
+                    extension_details.append(_extension_risk(extension))
+        sensitive=[row["name"] for row in extension_details]
+        active_extension_risks=[row for row in extension_details if row["status"]=="ACTIVE_RISK"]
+        inactive_sensitive_extensions=[row for row in extension_details if row["status"]=="INACTIVE"]
+        unresolved_sensitive_extensions=[row for row in extension_details if row["status"]=="UNRESOLVED"]
         risk_flags=[]
         if info.get("mintAuthority"):risk_flags.append("MINT_AUTHORITY_ACTIVE")
         if info.get("freezeAuthority"):risk_flags.append("FREEZE_AUTHORITY_ACTIVE")
-        risk_flags.extend("SENSITIVE_EXTENSION:"+name for name in sensitive)
+        risk_flags.extend("ACTIVE_EXTENSION:"+row["name"]+":"+row["reason"] for row in active_extension_risks)
         return {
             "status":"OK",
             "source":"SOLANA_FINALIZED_JSON_RPC",
@@ -410,6 +483,10 @@ class WalletClusterAnalyzer:
             "metadata_update_authority_status":"CHAIN_PARSED" if found_update else "UNAVAILABLE",
             "extensions":extension_names,
             "sensitive_extensions":sensitive,
+            "sensitive_extension_details":extension_details,
+            "active_extension_risks":active_extension_risks,
+            "inactive_sensitive_extensions":inactive_sensitive_extensions,
+            "unresolved_sensitive_extensions":unresolved_sensitive_extensions,
             "risk_flags":risk_flags,
         }
 
@@ -791,9 +868,13 @@ class WalletClusterAnalyzer:
                 if token_profile.get(name) not in {None,""}
             ]
             sensitive_extensions=list(token_profile.get("sensitive_extensions") or [])
-            chain_status="PASS" if not active_authorities and not sensitive_extensions else "RISK"
+            active_extension_risks=list(token_profile.get("active_extension_risks") or [])
+            unresolved_extension_risks=list(token_profile.get("unresolved_sensitive_extensions") or [])
+            if active_authorities or active_extension_risks:chain_status="RISK"
+            elif unresolved_extension_risks:chain_status="UNRESOLVED"
+            else:chain_status="PASS"
         else:
-            active_authorities=[];sensitive_extensions=[];chain_status="UNRESOLVED"
+            active_authorities=[];sensitive_extensions=[];active_extension_risks=[];unresolved_extension_risks=[];chain_status="UNRESOLVED"
 
         unresolved_pct=Decimal(str(metrics["UNRESOLVED_MATERIAL_HOLDER_PCT"] or "0"))
         if control_groups:
@@ -804,7 +885,9 @@ class WalletClusterAnalyzer:
             cluster_status="NO_MATERIAL_CONTROL_CLUSTER_FOUND"
 
         if chain_status=="RISK":
-            trading_status="RISK / AUTHORITY_PRESENT"
+            trading_status="RISK / ACTIVE_CHAIN_PERMISSION"
+        elif chain_status=="UNRESOLVED":
+            trading_status="WATCH / CHAIN_PERMISSION_UNRESOLVED"
         elif control_groups:
             trading_status="WATCH / CONTROL_CLUSTER_RISK"
         elif cluster_status=="WALLET_CLUSTER_UNRESOLVED":
@@ -816,6 +899,8 @@ class WalletClusterAnalyzer:
             "chain_permission_status":chain_status,
             "active_authorities":active_authorities,
             "sensitive_extensions":sensitive_extensions,
+            "active_extension_risks":active_extension_risks,
+            "unresolved_extension_risks":unresolved_extension_risks,
             "cluster_status":cluster_status,
             "trading_status":trading_status,
             "narrative_status":"NOT_AUTOMATICALLY_VERIFIED",
