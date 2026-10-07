@@ -11,6 +11,7 @@ Primary evidence source is finalized Solana JSON-RPC. No paid provider is requir
 The Dashboard/CLI now supports multiple free endpoints because public Solana RPC is rate-limited. Default mainnet order is:
 
 - `https://api.mainnet.solana.com`
+- `https://solana-rpc.publicnode.com`
 - `https://api.mainnet-beta.solana.com`
 - `https://rpc.ankr.com/solana`
 
@@ -41,14 +42,14 @@ From `crypto-300-profit-mission/local-agent`:
 
     PYTHONPATH=. python3 scripts/meme_wallet_cluster.py <MINT>
 
-Default deep scan:
-- resolves Top20 token-account owners;
-- deep-scans the first 10 holders;
-- inspects up to 30 target-token-account signatures per deep holder;
-- inspects up to 12 owner signatures for pre-acquisition SOL funding;
-- caches historical transactions locally.
+Default CLI scan remains explicitly bounded by CLI flags. The Dashboard standard preset is now adaptive:
+- resolve Top20 token-account owners first;
+- shallow-scan the first 6 unique owners with up to 12 target-token signatures and 8 funding signatures;
+- only wallets with relation evidence, material unresolved roles, or verified dev/creator/treasury roles are automatically deepened;
+- adaptive deepening expands those wallets to up to 30 target-token signatures and 12 funding signatures;
+- historical transactions remain locally cached.
 
-This is deliberately bounded so a public free RPC remains usable.
+This reduces routine public-RPC pressure while preserving a deeper evidence path for suspicious wallets.
 
 For a deeper pass:
 
@@ -137,9 +138,9 @@ From any current Frank candidate, `链上查询` carries that CA directly into t
 
 The research view supports three bounded presets. All three resolve Top20 token accounts to actual owners. The difference is how many owners receive historical deep scan and how far that scan goes:
 
-- `快速`: deep-scan first 6 unique owners; up to 12 target-token-account signatures plus 8 pre-acquisition funding signatures per scanned owner. Use for first-pass screening.
-- `标准`: deep-scan first 10 unique owners; up to 30 target-token-account signatures plus 12 pre-acquisition funding signatures. Default formal analysis.
-- `深度`: deep-scan all Top20 unique owners; up to 100 target-token-account signatures plus 50 pre-acquisition funding signatures. Use for important projects, suspected wallet splitting or hidden clusters; it puts the most pressure on free RPC.
+- `快速`: resolve Top20, then shallow-scan the first 6 unique owners with up to 8 target-token signatures plus 4 funding signatures. Use for first-pass screening.
+- `标准`: resolve Top20, shallow-scan the first 6 owners with 12 + 8, then automatically deepen only suspicious/material unresolved wallets to 30 + 12. This is the default formal analysis.
+- `深度`: deep-scan all Top20 unique owners with up to 100 target-token signatures plus 50 funding signatures. Use only for important projects or strong wallet-splitting suspicion; it puts the most pressure on free RPC.
 
 Queries are asynchronous so a long public-RPC scan does not block Frank signal rendering. Only one cluster job runs at a time to avoid turning the free Solana RPC into an uncontrolled fan-out.
 
@@ -190,3 +191,19 @@ Conclusion section:
 The tool does not automatically claim that a public X/social link means the narrative owner adopted the exact CA. Creator claim/buy/lock or official recognition needs separate first-party or on-chain evidence.
 
 The persisted JSON and Markdown reports carry the same separation between chain facts, secondary market data, inferred cluster conclusions and unresolved narrative claims.
+
+
+## Research report v3 candidate
+
+Branch: `feature/meme-ca-report-v3-20261007`.
+
+This candidate keeps the clean v2 report structure and adds:
+
+- primary-first Solana RPC behavior: configured/official RPC remains primary and PublicNode/mainnet-beta/Ankr are used only during cooldown/failure;
+- progressive job stages: base token/market context, Top20 owner resolution, owner history scan, funding scan, adaptive deepening, final report persistence;
+- adaptive standard scan rather than a fixed 10-owner x 30-transaction fan-out;
+- per-CA assessment history stored in `assessment-history.json`;
+- report-visible conclusion changes only when material assessment fields change;
+- explicit new-risk and resolved-uncertainty fields for each conclusion transition.
+
+The branch is a review candidate only until the local full test suite and at least one real CA acceptance pass succeed. It does not change production trading authority, Frank thresholds, notification policy, or scheduler configuration.
