@@ -49,8 +49,8 @@ def inspect_mint(rpc,mint:str)->dict:
         if isinstance(ext,dict):
             name=ext.get("extension") or ext.get("type")
             if name:extension_names.append(str(name))
-    update_values=[x for x in _recursive_values(info,"updateAuthority") if x not in (None,"")]
-    update_authority=str(update_values[0]) if update_values else None
+    update_values=_recursive_values(info,"updateAuthority")
+    update_authority=None if not update_values or update_values[0] in (None,"") else str(update_values[0])
     mint_authority=info.get("mintAuthority")
     freeze_authority=info.get("freezeAuthority")
     sensitive=[
