@@ -121,7 +121,9 @@ def test_public_dex_program_is_shared_infrastructure_not_execution_evidence():
     a._scan_holder=scan
     out=a.analyze()
     assert out["probable_execution_clusters"]==[]
-    assert "SAME_EXECUTION_PROGRAM" not in {e["type"] for e in out["edges"]}
+    edge_types={e["type"] for e in out["edges"]}
+    assert "SAME_EXECUTION_PROGRAM" not in edge_types
+    assert "SHARED_INFRA" in edge_types
     assert out["metrics"]["UNRESOLVED_MATERIAL_HOLDER_PCT"]=="43.0000"
 
 
