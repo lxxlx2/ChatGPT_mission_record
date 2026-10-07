@@ -104,7 +104,8 @@ class Ledger:
                     self.db.execute('INSERT OR REPLACE INTO positions VALUES(?,?,?)',(person,t['mint'],json.dumps(p,sort_keys=True)))
                     for stage in stages:
                         stype=stage['signal_type']; sid=digest({'person_id':person,'mint':t['mint'],'episode_id':p['episode_id'],'signal_type':stype,'stage':stage['stage']})
-                        body={'signal_id':sid,'person_id':person,'mint':t['mint'],'episode_id':p['episode_id'],'signal_type':stype,'stage':stage['stage'],'triggered_at':e['block_time'],'latest_trade_signature':sig,'latest_buy':quantity(t['token_amount_raw'],t['token_decimals']),'latest_quote_amount':quantity(t['quote_amount_raw'],t['quote_decimals']),'quote_asset':t['quote_asset'],'position':p,'reason_codes':stage['reason_codes'],'usd':'unavailable'}
+                        observed_asset,observed_value=_observed_quote(t)
+                        body={'signal_id':sid,'person_id':person,'mint':t['mint'],'episode_id':p['episode_id'],'signal_type':stype,'stage':stage['stage'],'triggered_at':e['block_time'],'latest_trade_signature':sig,'latest_buy':quantity(t['token_amount_raw'],t['token_decimals']),'latest_quote_amount':quantity(t['quote_amount_raw'],t['quote_decimals']),'quote_asset':t['quote_asset'],'latest_quote_observed_asset':observed_asset,'latest_quote_observed_amount':observed_value,'latest_quote_cost_known':_known_usdc_trade(t),'latest_quote_amount_predicate':t.get('amount_predicate'),'latest_quote_amount_reason':t.get('amount_predicate_reason'),'position':p,'reason_codes':stage['reason_codes'],'usd':'unavailable'}
                         inserted=self.db.execute('INSERT OR IGNORE INTO signals VALUES(?,?,?,?,?,?,?,?,?)',(sid,person,t['mint'],p['episode_id'],stype,stage['stage'],now(),digest(body),json.dumps(body,sort_keys=True))).rowcount
                         if inserted:
                             signals.append(sid)
