@@ -101,7 +101,7 @@ User-run acceptance on 2026-10-07 confirmed:
 - original live-notification acceptance baseline: `706 passed`
 - independent review of feature head `fa01f7e`: `727 passed` (21 additional tests)
 - independent re-review of remediation head `6c069ea`: `736 passed`; all nine previously reported issues were rechecked and no new blocker was found
-- small post-review UI/persistence polish after `6c069ea` still requires one final full local rerun before merge
+- final independent review of feature head `b6f26499`: `738 passed`; report-age display, shared-infra localization and atomic report persistence verified; no new blocker found
 - approved policy gate: PASS
 - Gmail OAuth readiness: PASS
 - recipient resolved successfully
@@ -326,7 +326,7 @@ Independent review of `fa01f7e` found three credibility-impacting defects plus s
 8. `DEV_LINKED_CLUSTER_PCT` includes wallets in a probable-control cluster containing a verified DEV/CREATOR/TREASURY wallet.
 9. This status document now distinguishes current main/live authority from review-branch candidate functionality.
 
-A fresh full local-agent test run is required after these remediation commits; do not reuse the earlier `727 passed` as proof for the new head.
+Independent review has now rerun the full local-agent suite on `b6f26499` with `738 passed` and found no new blocker. This is the accepted pre-merge feature-head evidence.
 
 
 ### Post-736 polish
@@ -337,4 +337,4 @@ After the `736 passed` review of `6c069ea`, three non-blocking polish items were
 - `SHARED_INFRA` / common-CEX evidence is localized in the Dashboard as public/shared infrastructure and explicitly says it does not imply common control;
 - cluster report files, including `latest.json`, are written with temp-file + atomic replace semantics to avoid partial reads during same-CA refresh.
 
-These commits were made after the 736-pass run, so one final full-suite rerun on the current feature HEAD is still required before merge.
+These commits were independently revalidated on `b6f26499`; the full local-agent suite passed `738` tests with no new blocker.
