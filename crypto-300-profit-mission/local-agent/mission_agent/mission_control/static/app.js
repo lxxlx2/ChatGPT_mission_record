@@ -520,6 +520,21 @@ const clusterEdgeLabel = {
   REPEATED_SYNC_BEHAVIOR:'重复同步行为',
 };
 
+let clusterLastAutoLoaded=false;
+
+async function loadLatestCluster(mint, silent=false) {
+  if (!mint) return false;
+  try {
+    const report=await get('/api/cluster-latest?mint=' + encodeURIComponent(mint));
+    $('cluster-mint').value=mint;
+    renderClusterReport(report);
+    if (!silent) showToast('已加载上次查询结果');
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 function setView(name) {
   const view = name === 'cluster' ? 'cluster' : 'signals';
   document.querySelectorAll('.view-tab').forEach(btn => {
@@ -528,6 +543,11 @@ function setView(name) {
   $('signals-view').classList.toggle('active', view === 'signals');
   $('cluster-view').classList.toggle('active', view === 'cluster');
   if (window.location.hash !== '#' + view) history.replaceState(null,'','#' + view);
+  if (view==='cluster' && !clusterLastAutoLoaded) {
+    clusterLastAutoLoaded=true;
+    const mint=localStorage.getItem('mission-meme-last-cluster-ca') || '';
+    if (mint) loadLatestCluster(mint,true);
+  }
 }
 
 document.querySelectorAll('.view-tab').forEach(btn => {
@@ -669,7 +689,9 @@ async function pollClusterJob(jobId) {
     if (job.status === 'DONE') {
       $('cluster-submit').disabled = false;
       $('cluster-submit').textContent = '重新查询';
-      renderClusterReport(job.report);
+      localStorage.setItem('mission-meme-last-cluster-ca',job.mint);
+      const loaded=await loadLatestCluster(job.mint,true);
+      if (!loaded) clusterStatus('error','查询已完成，但结果文件读取失败');
       return;
     }
     if (job.status === 'ERROR') {
@@ -709,6 +731,7 @@ $('cluster-form').addEventListener('submit', async (event) => {
     });
     const payload = await r.json();
     if (!r.ok) throw new Error(payload.error || ('HTTP ' + r.status));
+    localStorage.setItem('mission-meme-last-cluster-ca',mint);
     pollClusterJob(payload.job_id);
   } catch (e) {
     $('cluster-submit').disabled = false;
