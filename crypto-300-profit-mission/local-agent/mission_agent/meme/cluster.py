@@ -48,17 +48,20 @@ class RpcCache:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.db = sqlite3.connect(self.path)
-        self.db.execute("CREATE TABLE IF NOT EXISTS rpc_cache(key TEXT PRIMARY KEY,method TEXT,created_at REAL,expires_at REAL,body TEXT)")
+        self.db.execute("CREATE TABLE IF NOT EXISTS rpc_cache(key TEXT PRIMARY KEY,method TEXT,created_at REAL,expires_at REAL,content_hash TEXT,body TEXT)")
     def close(self):
         self.db.close()
     def get(self, method, params, now):
         key=_hash({"method":method,"params":params})
-        row=self.db.execute("SELECT body,expires_at FROM rpc_cache WHERE key=?",(key,)).fetchone()
+        row=self.db.execute("SELECT body,expires_at,content_hash FROM rpc_cache WHERE key=?",(key,)).fetchone()
         if not row or row[1] < now:return None
-        return json.loads(row[0])
+        try:value=json.loads(row[0])
+        except (TypeError,ValueError):return None
+        if row[2]!=_hash(value):return None
+        return value
     def put(self, method, params, body, ttl, now):
         key=_hash({"method":method,"params":params})
-        self.db.execute("INSERT OR REPLACE INTO rpc_cache VALUES(?,?,?,?,?)",(key,method,now,now+ttl,json.dumps(body,sort_keys=True)))
+        self.db.execute("INSERT OR REPLACE INTO rpc_cache VALUES(?,?,?,?,?,?)",(key,method,now,now+ttl,_hash(body),json.dumps(body,sort_keys=True)))
         self.db.commit()
 
 
