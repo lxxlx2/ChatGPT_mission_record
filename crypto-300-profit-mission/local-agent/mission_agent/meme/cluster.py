@@ -520,6 +520,8 @@ class WalletClusterAnalyzer:
     def _pct(raw,supply):
         return None if supply<=0 else str((Decimal(raw)*Decimal(100)/Decimal(supply)).quantize(Decimal("0.0001")))
     def analyze(self):
+        token_profile=self.token_profile()
+        market=self.market_snapshot()
         supply,decimals,holders=self.holders()
         account_to_owner={h.token_account:h.owner for h in holders}
         firsts={};deep=[];deep_seen=set()
@@ -527,10 +529,11 @@ class WalletClusterAnalyzer:
             if h.owner in deep_seen:continue
             deep_seen.add(h.owner);deep.append(h)
             if len(deep)>=self.deep_holders:break
-        top_owners=set(owners for owners in account_to_owner.values())
+        top_owners=set(account_to_owner.values())
         for h in deep:firsts[h.owner]=self._scan_holder(h,account_to_owner,top_owners)
         for h in deep:self._scan_funding(h,firsts.get(h.owner),top_owners)
         self._derive_pair_edges()
+
         owners=sorted({h.owner for h in holders});balances=defaultdict(int)
         for h in holders:balances[h.owner]+=h.raw
         relation=UnionFind(owners);control=UnionFind(owners);execution=UnionFind(owners)
@@ -542,6 +545,44 @@ class WalletClusterAnalyzer:
             strong=len(types & STRONG);behavior=len(types & BEHAVIOR)
             if strong>=2 or (strong>=1 and behavior>=1) or ("DIRECT_TOKEN_TRANSFER" in types and strong>=1):control.union(*pair)
             if behavior>=2 or "REPEATED_SYNC_BEHAVIOR" in types:execution.union(*pair)
+
+        funding_by_owner={}
+        for row in self.funding:
+            current=funding_by_owner.get(row["owner"])
+            if current is None or (row.get("block_time") or 0)>(current.get("block_time") or 0):
+                funding_by_owner[row["owner"]]=row
+
+        def acquisition(owner):
+            row=firsts.get(owner)
+            if not row:
+                return {"status":"UNRESOLVED","type":"UNRESOLVED"} if owner in deep_seen else {"status":"NOT_SCANNED","type":"NOT_SCANNED"}
+            token_qty=None
+            if row.get("token_amount_raw") not in {None,""} and row.get("token_decimals") is not None:
+                try:token_qty=str(Decimal(str(row["token_amount_raw"]))/(Decimal(10)**int(row["token_decimals"])))
+                except (ValueError,TypeError,InvalidOperation):token_qty=None
+            return {
+                "status":"CONFIRMED_BOUNDED",
+                "type":row.get("type") or "MARKET_BUY",
+                "block_time":row.get("block_time"),
+                "signature":row.get("signature"),
+                "quote_asset":row.get("quote_asset"),
+                "quote_quantity":self._quote_quantity(row),
+                "token_quantity":token_qty,
+                "program_ids":row.get("program_ids") or [],
+            }
+
+        def funding_record(owner):
+            row=funding_by_owner.get(owner)
+            if not row:return None
+            source=row.get("source");entry=self._entry(source) or {}
+            try:sol=str(Decimal(str(row.get("lamports")))/Decimal(10**9))
+            except (InvalidOperation,ValueError,TypeError):sol=None
+            return {
+                "source":source,"sol":sol,"signature":row.get("signature"),"block_time":row.get("block_time"),
+                "source_role":entry.get("role") or "UNRESOLVED",
+                "source_label":entry.get("label"),
+            }
+
         def group_records(groups,kind,confidence):
             out=[]
             for idx,g in enumerate(groups,1):
@@ -552,25 +593,26 @@ class WalletClusterAnalyzer:
                     "cluster_id":f"{kind}-{idx}","confidence":confidence,"wallets":sorted(g),
                     "wallet_balances_raw":{x:str(balances[x]) for x in sorted(g)},
                     "combined_raw":str(raw),"supply_pct":self._pct(raw,supply),"evidence":evidence,
-                    "first_target_acquisition":{x:({"block_time":firsts[x]["block_time"],"signature":firsts[x]["signature"],"type":"BOUNDED_EARLIEST_MARKET_TRADE"} if firsts.get(x) else {"block_time":None,"signature":None,"type":"UNRESOLVED"}) for x in sorted(g)},
+                    "first_target_acquisition":{x:acquisition(x) for x in sorted(g)},
                     "funding_evidence":[x for x in self.funding if x["owner"] in g],
                     "trade_evidence":[x for x in self.trades if x["owner"] in g],
                 })
             return sorted(out,key=lambda x:int(x["combined_raw"]),reverse=True)
+
         relation_groups=group_records(relation.groups(),"REL","CONFIRMED_RELATION")
         control_groups=group_records(control.groups(),"CTRL","PROBABLE_CONTROL_CLUSTER")
         execution_groups=group_records(execution.groups(),"EXEC","PROBABLE_EXECUTION_CLUSTER")
         raw_top10=sum(h.raw for h in holders[:10])
         nonspecial=[h for h in holders if h.role not in SPECIAL_ROLES]
-        ex_lp=[h for h in holders if h.role not in {"LP","AMM_POOL"}]
+        ex_lp=[h for h in holders if h.role not in {"LP","AMM_POOL","PROTOCOL_VAULT"}]
         ex_special_top10=sum(h.raw for h in nonspecial[:10])
         ex_lp_top10=sum(h.raw for h in ex_lp[:10])
         dev_owners={h.owner for h in holders if h.role in DEV_ROLES}
         dev_linked_owners=set(dev_owners)
         for group in control.groups():
-            if set(group) & dev_owners:
-                dev_linked_owners.update(group)
+            if set(group) & dev_owners:dev_linked_owners.update(group)
         dev_raw=sum(balances[o] for o in dev_linked_owners)
+
         cluster_values=[];seen=set();group_by_owner={}
         for g in control.groups():
             for o in g:group_by_owner[o]=tuple(sorted(g))
@@ -579,14 +621,14 @@ class WalletClusterAnalyzer:
             if g in seen:continue
             seen.add(g);cluster_values.append(sum(balances[o] for o in g))
         cluster_values.sort(reverse=True)
+
         unresolved_raw=0;classified=set()
-        # Execution-only similarity never resolves holder identity/control. Keep
-        # those material holders in the unresolved bucket unless a direct
-        # relation or probable-control cluster independently explains them.
         for g in control_groups+relation_groups:classified.update(g["wallets"])
         for h in nonspecial:
             pct=Decimal(h.raw)*100/Decimal(supply) if supply else Decimal(0)
-            if pct>=self.material_pct and h.owner not in classified and h.role in {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:unresolved_raw+=h.raw
+            if pct>=self.material_pct and h.owner not in classified and h.role in {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:
+                unresolved_raw+=h.raw
+
         token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
         normalization_complete=bool(token_cfg.get("normalization_complete",self.registry.get("normalization_complete",False)))
         metrics={
@@ -603,23 +645,86 @@ class WalletClusterAnalyzer:
             "KNOWN_EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply),
             "KNOWN_CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply),
         }
-        holder_rows=[{"rank":i+1,"token_account":h.token_account,"owner":h.owner,"raw":str(h.raw),"quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply),"role":h.role,"role_source":h.role_source,"account_program":h.account_program} for i,h in enumerate(holders)]
+
+        holder_rows=[]
+        for i,h in enumerate(holders):
+            holder_rows.append({
+                "rank":i+1,"token_account":h.token_account,"owner":h.owner,"raw":str(h.raw),
+                "quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply),"role":h.role,
+                "role_source":h.role_source,"account_program":h.account_program,
+                "deep_scanned":h.owner in deep_seen,
+                "first_acquisition":acquisition(h.owner),
+                "funding":funding_record(h.owner),
+            })
+
+        if token_profile.get("status")=="OK":
+            active_authorities=[
+                name for name in ("mint_authority","freeze_authority")
+                if token_profile.get(name) not in {None,""}
+            ]
+            chain_status="PASS" if not active_authorities else "RISK"
+        else:
+            active_authorities=[];chain_status="UNRESOLVED"
+
+        unresolved_pct=Decimal(str(metrics["UNRESOLVED_MATERIAL_HOLDER_PCT"] or "0"))
+        if control_groups:
+            cluster_status="PROBABLE_CONTROL_CLUSTER_PRESENT"
+        elif not normalization_complete or unresolved_pct>0:
+            cluster_status="WALLET_CLUSTER_UNRESOLVED"
+        else:
+            cluster_status="NO_MATERIAL_CONTROL_CLUSTER_FOUND"
+
+        if chain_status=="RISK":
+            trading_status="RISK / AUTHORITY_PRESENT"
+        elif control_groups:
+            trading_status="WATCH / CONTROL_CLUSTER_RISK"
+        elif cluster_status=="WALLET_CLUSTER_UNRESOLVED":
+            trading_status="WATCH / WALLET_CLUSTER_UNRESOLVED"
+        else:
+            trading_status="WATCH / CHAIN_STRUCTURE_PASS"
+
+        assessment={
+            "chain_permission_status":chain_status,
+            "active_authorities":active_authorities,
+            "cluster_status":cluster_status,
+            "trading_status":trading_status,
+            "narrative_status":"NOT_AUTOMATICALLY_VERIFIED",
+            "next_checks":[
+                "Verify whether the project/narrative owner explicitly recognizes this exact CA.",
+                "Verify creator-fee claim, creator buy, lock or treasury relationship on-chain when relevant.",
+                "Use live executable quote and current market structure before any entry; this report does not infer an ATH that was not observed.",
+            ],
+        }
+
+        endpoint_calls=dict(getattr(self.rpc,"endpoint_calls",{}) or {})
+        endpoint_failures=dict(getattr(self.rpc,"endpoint_failures",{}) or {})
+        endpoints=list(getattr(self.rpc,"endpoints",[getattr(self.rpc,"endpoint","UNKNOWN")]))
         return {
-            "schema_version":1,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC","rpc_endpoint":self.rpc.endpoint,
-            "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,"holders":holder_rows,
+            "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
+            "rpc_endpoint":getattr(self.rpc,"endpoint","UNKNOWN"),"rpc_endpoints":endpoints,
+            "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
+            "token_profile":token_profile,"market":market,"assessment":assessment,"holders":holder_rows,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
             "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
             "unresolved_relation_edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED","COMMON_CONSOLIDATION_UNRESOLVED"}],
             "edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges],
-            "funding_evidence":self.funding,"consolidation_evidence":self.consolidations,"trade_evidence":self.trades,"transaction_errors":self.tx_errors,
-            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
+            "funding_evidence":self.funding,"consolidation_evidence":self.consolidations,
+            "trade_evidence":self.trades,"transaction_errors":self.tx_errors,
+            "coverage":{
+                "top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),
+                "history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,
+                "material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,
+                "rpc_calls":getattr(self.rpc,"calls",0),"rpc_cache_hits":getattr(self.rpc,"cache_hits",0),
+                "rpc_endpoint_calls":endpoint_calls,"rpc_endpoint_failures":endpoint_failures,
+            },
             "limitations":[
-                "Only raw finalized RPC evidence and explicit local labels are treated as authoritative.",
+                "Raw finalized RPC is authoritative for chain ownership/transactions; DexScreener is secondary market data only.",
                 "CEX/public-infrastructure identity is never guessed from funding alone.",
                 "Program-owned holder accounts remain unresolved unless explicitly labelled.",
                 "Bounded history can miss older funding, consolidation, and cross-token coordination.",
                 "PROBABLE_EXECUTION_CLUSTER never implies common beneficial ownership.",
+                "Narrative ownership, social endorsement and creator identity are not automatically inferred from token name or social links.",
             ],
         }
 
