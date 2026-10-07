@@ -385,3 +385,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
   .preset-guide{grid-template-columns:1fr}
   .fact-grid{grid-template-columns:1fr}
 }
+
+.conclusion-leads{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.conclusion-lead.secondary{border-color:#554c2d;background:#18160f}
+.conclusion-lead.secondary strong{color:#e1ca71}
+@media(max-width:800px){.conclusion-leads{grid-template-columns:1fr}}
