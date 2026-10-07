@@ -46,6 +46,7 @@ const decisionLabel = {
 const patternLabel = {
   ACCUMULATION:'持续建仓',
   MULTIPLE:'多次强加仓',
+  REENTRY_WATCH:'重新建仓观察',
   NONE:'无跟单模式',
 };
 
@@ -94,6 +95,7 @@ const reasonText = {
   PRICE_STILL_CLOSE_TO_FRANK:'当前成交价仍接近 Frank 的参考买入价。',
   EXECUTION_IMPACT_ACCEPTABLE:'当前预计价格冲击在可接受范围。',
   FRANK_PATTERN_ACTIVE:'Frank 当前仍处于可跟随建仓模式。',
+  FRANK_REENTRY_WATCH_ACTIVE:'Frank 清仓后重新建仓，已进入观察；目前还没有形成持续建仓或多次强加仓信号。',
   FOLLOWABLE_WITH_SMALL_SIZE:'当前条件只适合小仓跟随。',
   ACCUMULATION_NOT_MULTIPLE:'目前只是持续建仓，还没有升级到强 MULTIPLE。',
   PRICE_DEVIATION_ABOVE_BUY_LIMIT:'价格偏离超过“正常跟随”阈值，只适合小仓。',
