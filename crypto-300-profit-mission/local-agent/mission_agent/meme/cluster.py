@@ -115,15 +115,20 @@ def _signers(tx):
     return [k.get("pubkey") for k in tx.get("transaction",{}).get("message",{}).get("accountKeys",[]) if isinstance(k,dict) and k.get("signer")]
 
 
-def _native_funders(tx, target):
+def _native_transfers(tx):
     rows=[]
     for ix in _instructions(tx):
         p=ix.get("parsed")
         if not isinstance(p,dict) or p.get("type")!="transfer":continue
         info=p.get("info") or {}
-        if info.get("destination")==target and info.get("source") and "lamports" in info:
-            rows.append((info["source"],str(info["lamports"])))
+        src=info.get("source");dst=info.get("destination")
+        if src and dst and "lamports" in info:
+            rows.append({"source":src,"destination":dst,"lamports":str(info["lamports"])})
     return rows
+
+
+def _native_funders(tx, target):
+    return [(x["source"],x["lamports"]) for x in _native_transfers(tx) if x["destination"]==target]
 
 
 def _token_account_meta(tx):
@@ -245,6 +250,9 @@ class WalletClusterAnalyzer:
             except Exception as exc:self.tx_errors.append({"signature":sig,"error":type(exc).__name__});continue
             if not tx:continue
             bt=tx.get("blockTime")
+            for tr in _native_transfers(tx):
+                if tr["source"] in top_owners and tr["destination"] in top_owners:
+                    self._edge(tr["source"],tr["destination"],"DIRECT_QUOTE_TRANSFER",sig,asset="SOL",amount_raw=tr["lamports"],block_time=bt)
             for tr in _owner_token_transfers(tx):
                 src=tr["source_owner"];dst=tr["destination_owner"];mint=tr["mint"]
                 if mint==self.mint:
@@ -448,7 +456,9 @@ def load_registry(path:Path|None):
 
 def markdown(report:dict)->str:
     m=report["metrics"];lines=[f"# Meme Wallet Cluster — {report['mint']}","",f"Source: {report['source']}","", "## Concentration"]
-    for k,v in m.items():lines.append(f"- {k}: {v}%")
+    for k,v in m.items():
+        suffix="%" if v not in {"UNRESOLVED","UNAVAILABLE",None} else ""
+        lines.append(f"- {k}: {v}{suffix}")
     lines+=["","## Top holders","", "|#|Owner|Share|Role|","|---:|---|---:|---|"]
     for h in report["holders"]:lines.append(f"|{h['rank']}|{h['owner']}|{h['supply_pct']}%|{h['role']}|")
     for title,key in [("Confirmed relations","confirmed_relation_groups"),("Probable control","probable_control_clusters"),("Probable execution","probable_execution_clusters")]:
