@@ -20,6 +20,7 @@ LAUNCH_DIR="$HOME/Library/LaunchAgents"
 LOOP_RUNNER="$APP_SUPPORT/mission-loop.sh"
 DASH_RUNNER="$APP_SUPPORT/dashboard.sh"
 APPROVED_HASH_FILE="$APP_SUPPORT/approved_policy_sha256"
+RUNTIME_POLICY="$APP_SUPPORT/follow_policy_v1.approved.json"
 PORT_FILE="$APP_SUPPORT/dashboard_port"
 
 LOOP_PLIST="$LAUNCH_DIR/$LOOP_LABEL.plist"
@@ -45,7 +46,10 @@ CONTROL="$(cat "$CONTROL_POINTER")"
 mkdir -p "$APP_SUPPORT" "$LOG_DIR" "$LAUNCH_DIR" "$CONTROL/logs"
 chmod 700 "$APP_SUPPORT" "$LOG_DIR"
 
-POLICY_SHA="$(shasum -a 256 "$POLICY" | awk '{print $1}')"
+cp "$POLICY" "$RUNTIME_POLICY"
+chmod 600 "$RUNTIME_POLICY"
+
+POLICY_SHA="$(shasum -a 256 "$RUNTIME_POLICY" | awk '{print $1}')"
 printf '%s\n' "$POLICY_SHA" > "$APPROVED_HASH_FILE"
 chmod 600 "$APPROVED_HASH_FILE"
 
@@ -59,7 +63,7 @@ fi
 printf '%s\n' "$PORT" > "$PORT_FILE"
 chmod 600 "$PORT_FILE"
 
-"$VENV/bin/python" - "$POLICY" "$POLICY_SHA" <<'PY'
+"$VENV/bin/python" - "$RUNTIME_POLICY" "$POLICY_SHA" <<'PY'
 import hashlib
 import json
 import sys
@@ -102,16 +106,12 @@ LOCAL_AGENT="$LOCAL_AGENT"
 PROD="$PROD"
 VENV="$VENV"
 CONTROL_POINTER="$CONTROL_POINTER"
-POLICY="$POLICY"
+POLICY="$RUNTIME_POLICY"
 APPROVED_HASH_FILE="$APPROVED_HASH_FILE"
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 CONTROL="\$(cat "\$CONTROL_POINTER")"
 APPROVED_HASH="\$(cat "\$APPROVED_HASH_FILE")"
-CURRENT_HASH="\$(shasum -a 256 "\$POLICY" | awk '{print \$1}')"
 mkdir -p "\$CONTROL/logs"
-if [ "\$CURRENT_HASH" != "\$APPROVED_HASH" ]; then
-  echo "WARNING: APPROVED_POLICY_HASH_CHANGED; live delivery will remain fail-closed until reinstall." >&2
-fi
 cd "\$LOCAL_AGENT"
 echo "\$\$" > "\$CONTROL/loop.pid"
 exec env PYTHONPATH=. "\$VENV/bin/python" scripts/mission_meme_v1.py loop \
@@ -254,6 +254,7 @@ HTTP="$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/" || tru
 echo "Dashboard HTTP=$HTTP"
 echo "Dashboard=http://127.0.0.1:$PORT"
 echo "Approved policy SHA256=$POLICY_SHA"
+echo "Runtime policy=$RUNTIME_POLICY"
 echo "AUTO-START: ON AFTER USER LOGIN"
 echo "LIVE DELIVERY: policy-gated"
 echo "PRODUCTION_TRADING: NO_GO"

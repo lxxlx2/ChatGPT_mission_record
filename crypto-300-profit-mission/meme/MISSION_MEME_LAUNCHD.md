@@ -8,7 +8,7 @@ This does not install or modify the Frank production watcher. The existing Frank
 
 - Production Frank database remains read-only to Mission Control.
 - PRODUCTION_TRADING remains NO_GO.
-- The installer pins the currently approved policy SHA256. If follow_policy_v1.approved.json changes later, live delivery fails closed until the LaunchAgent is explicitly reinstalled/re-approved.
+- The installer copies the currently approved policy into ~/Library/Application Support/FrankMeme/follow_policy_v1.approved.json and pins its SHA256. The LaunchAgent reads this fixed runtime copy instead of re-reading the repository policy under ~/Documents, avoiding macOS background-process Documents privacy/TCC failures. Policy changes require explicit reinstall/re-approval.
 - Gmail credentials are reused from the existing local OAuth source. The installer performs a read-only readiness check and does not send a test email.
 - No historical notification backlog is replayed by the installer.
 - LaunchAgents start after the macOS user logs in, not before login.
