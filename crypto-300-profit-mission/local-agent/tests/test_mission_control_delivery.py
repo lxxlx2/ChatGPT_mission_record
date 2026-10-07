@@ -4,7 +4,7 @@ import json
 import pytest
 
 from mission_agent.mission_control.db import ControlDB, utc
-from mission_agent.mission_control.delivery import GmailDelivery, LocalDelivery
+from mission_agent.mission_control.delivery import GmailDelivery, LocalDelivery, render
 from mission_agent.signals.gmail import AmbiguousSend
 
 
@@ -129,3 +129,16 @@ def test_sent_unverified_cannot_remain_ambiguous_forever(tmp_path):
     assert row["status"]=="MANUAL_REVIEW"
     assert row["last_error"]=="GMAIL_SENT_OUTCOME_UNRESOLVED_TOO_LONG"
     assert db.db.execute("select status from decision_outbox where decision_id=? and channel='gmail'",(e["decision_id"],)).fetchone()[0]=="MANUAL_REVIEW"
+
+
+def test_mission_control_notification_is_chinese_and_research_friendly(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    rendered=render(e)
+    assert "[Meme提醒] 可跟" in rendered["subject"]
+    assert "结论：可跟" in rendered["body"]
+    assert "CA：Mint111111111111111" in rendered["body"]
+    assert "Frank 买/卖次数：3/0" in rendered["body"]
+    assert "当前 30 USDC 可成交价：1.02 USDC" in rendered["body"]
+    assert "判断原因：Frank 当前处于多次强加仓模式" in rendered["body"]
+    assert "https://solscan.io/token/Mint111111111111111" in rendered["body"]

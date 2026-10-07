@@ -14,6 +14,8 @@ from .delivery import GmailDelivery, LocalDelivery
 from .frank import FrankReader
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
+from .outcomes import OutcomeTracker
+from .sol_mirror import SolNormalizedMirror, merge_candidates
 from .policy import evaluate, load_policy, should_notify
 
 
@@ -45,6 +47,12 @@ class MissionMemeService:
         self.debounce = TransitionDebounce(self.control.db)
         self.observations = ObservationStore(self.control.db)
         self.frank = FrankReader(self.production_root)
+        frozen_frank_policy = Path(__file__).resolve().parents[2] / "config" / "frank_local_signal_v1.json"
+        self.sol_mirror = SolNormalizedMirror(
+            self.production_root / "forward.sqlite",
+            self.control_root / "sol-normalized-v1.sqlite",
+            frozen_frank_policy,
+        )
         self.policy, self.policy_hash = load_policy(policy_path)
         self.live_delivery_requested = bool(live_delivery)
         self.approved_policy_sha256 = approved_policy_sha256
@@ -56,11 +64,13 @@ class MissionMemeService:
         )
         self.gmail_config = gmail_config or (self.production_root / "gmail-existing-source.json")
         self.jupiter = JupiterQuoteClient(jupiter_api_key or os.environ.get("JUPITER_API_KEY"))
+        self.outcomes = OutcomeTracker(self.control.db, self.jupiter)
         self.local = LocalDelivery(self.control)
         self.gmail = GmailDelivery(self.control)
         self.health_path = self.control_root / "mission-control-health.json"
 
     def close(self):
+        self.sol_mirror.close()
         self.control.close()
 
     def _write_health(self, status: str, **extra) -> None:
@@ -122,7 +132,9 @@ class MissionMemeService:
         return {k:candidate.get(k) for k in (
             "person_id","mint","episode_id","runtime_status","pattern","source_signal_id","source_signal_type","source_signal_at",
             "position_state","current_raw","buy_count","sell_count","latest_side","latest_signature","latest_at",
-            "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset","latest_buy_quote_quantity","token_decimals"
+            "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset","latest_buy_quote_quantity",
+            "latest_buy_original_quote_asset","latest_buy_original_quote_quantity","latest_buy_quote_was_normalized",
+            "latest_buy_usdc_equivalent","latest_buy_model_quote_asset","latest_buy_model_quote_quantity","candidate_source","token_decimals"
         )} | {"quote":cls._stable_quote_inputs(quote)}
 
     @staticmethod
@@ -151,10 +163,14 @@ class MissionMemeService:
 
     def cycle(self) -> dict:
         runtime = self.frank.runtime()
-        candidates = self.frank.candidates()
+        sol_normalization = self.sol_mirror.sync()
+        base_candidates = self.frank.candidates()
+        overlay_candidates = self.sol_mirror.candidates() if sol_normalization.get("status") == "OK" else []
+        candidates = merge_candidates(base_candidates, overlay_candidates)
         events = []
         errors = []
         debounced = []
+        outcome_registered = 0
         bootstrap = self.control.db.execute("SELECT count(*) FROM decision_events").fetchone()[0] == 0
         rules = self.policy["decision"]
         initial_max_age = int(rules["initial_notification_max_age_seconds"])
@@ -188,6 +204,10 @@ class MissionMemeService:
                         now=evaluation_now,
                         bucket_seconds=bucket_seconds,
                     )
+                    outcome_fresh_at = candidate.get("source_signal_at") or candidate.get("latest_at")
+                    if self._fresh_initial(outcome_fresh_at,evaluation_now,initial_max_age):
+                        if self.outcomes.register(candidate=candidate,result=result,quote=quote,now=evaluation_now):
+                            outcome_registered += 1
                     prior = self.control.latest_event(candidate["person_id"], candidate["mint"], candidate.get("episode_id"))
                     previous_decision = prior["decision"] if prior else None
                     transient = self._transient_wait(result)
@@ -240,6 +260,11 @@ class MissionMemeService:
                 errors.append({"mint": candidate.get("mint"), "error": type(exc).__name__, "message": str(exc)[:240]})
                 continue
 
+        outcome_tracking = self.outcomes.sample_due(
+            now=time.time(),
+            slippage_bps=int(rules["slippage_bps"]),
+        )
+        outcome_tracking["registered"] = outcome_registered
         pruned = self.observations.prune(time.time(), retention_seconds)
         if self.delivery_allowed:
             self.local.drain()
@@ -248,12 +273,14 @@ class MissionMemeService:
         status = "OK" if not errors else "DEGRADED"
         result = {
             "runtime":runtime,
+            "sol_normalization":sol_normalization,
             "candidate_count":len(candidates),
             "evaluated_count":len(selected),
             "decision_events":events,
             "debounced_transitions":debounced,
             "candidate_errors":errors,
             "observation_rows_pruned":pruned,
+            "outcome_tracking":outcome_tracking,
             "delivery_allowed":self.delivery_allowed,
             "bootstrap":bootstrap,
             "policy_id":self.policy["policy_id"],
@@ -267,6 +294,14 @@ class MissionMemeService:
             evaluated_count=len(selected),
             candidate_error_count=len(errors),
             debounced_transition_count=len(debounced),
+            outcome_active=outcome_tracking.get("active",0),
+            outcome_sampled=outcome_tracking.get("sampled",0),
+            outcome_error_count=len(outcome_tracking.get("errors") or []),
+            sol_normalization_status=sol_normalization.get("status"),
+            sol_normalization_copied=sol_normalization.get("copied",0),
+            sol_normalization_resolved=sol_normalization.get("sol_resolved",0),
+            sol_normalization_unresolved=sol_normalization.get("sol_unresolved",0),
+            sol_normalization_added_signals=sol_normalization.get("added_signal_count",0),
         )
         return result
 

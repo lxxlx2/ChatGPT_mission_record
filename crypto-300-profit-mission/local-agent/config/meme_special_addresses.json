@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "addresses": {
+    "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51": {
+      "role": "PUBLIC_INFRA",
+      "label": "FOMO execution / fee-payer infrastructure",
+      "source": "repo:WALLET_CLUSTER_ANALYSIS_SPEC.md#GOMO-regression-example"
+    }
+  },
+  "normalization_complete": false,
+  "tokens": {}
+}

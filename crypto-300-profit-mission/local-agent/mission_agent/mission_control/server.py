@@ -4,12 +4,19 @@ from __future__ import annotations
 import ipaddress
 import json
 import mimetypes
+import os
+import re
 import socket
 import sqlite3
+import threading
+import time
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
+from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
 from .db import open_control_ro
 from .frank import FrankReader
 
@@ -48,12 +55,186 @@ def _host_header_is_loopback(value: str | None) -> bool:
         return False
 
 
+def _origin_is_loopback(value: str | None) -> bool:
+    if not value:
+        return True
+    try:
+        parsed=urlparse(value)
+    except ValueError:
+        return False
+    if parsed.scheme not in {"http","https"} or not parsed.hostname:
+        return False
+    host=parsed.hostname.lower()
+    if host=="localhost":
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
+
+
+def _content_type_is_json(value: str | None) -> bool:
+    return (value or "").split(";",1)[0].strip().lower()=="application/json"
+
+
+def _decode_json_object(raw: bytes) -> dict:
+    try:
+        body=json.loads(raw)
+    except (ValueError, UnicodeDecodeError) as exc:
+        raise ValueError("INVALID_JSON") from exc
+    if not isinstance(body,dict):
+        raise ValueError("JSON_OBJECT_REQUIRED")
+    return body
+
+
+def _atomic_write_text(path: Path, text_value: str):
+    path = Path(path)
+    tmp = path.with_name(path.name + f".tmp-{os.getpid()}-{uuid.uuid4().hex}")
+    try:
+        tmp.write_text(text_value)
+        os.replace(tmp, path)
+    finally:
+        try:
+            tmp.unlink()
+        except FileNotFoundError:
+            pass
+
+
+SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
+CLUSTER_PRESETS = {
+    "quick": {"deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8},
+    "standard": {"deep_holders": 10, "history_per_holder": 30, "funding_lookback": 12},
+    "deep": {"deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50},
+}
+
+
+class ClusterJobManager:
+    def __init__(self, control_root: Path):
+        self.control_root = Path(control_root)
+        self.report_root = self.control_root / "cluster-reports"
+        self.report_root.mkdir(parents=True, exist_ok=True)
+        self.cache_path = self.control_root / "wallet-cluster-rpc-cache.sqlite"
+        self.registry_path = Path(__file__).resolve().parents[2] / "config" / "meme_special_addresses.json"
+        self.rpc_endpoint = os.environ.get("SOLANA_RPC_URL", "https://api.mainnet.solana.com")
+        self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
+        self.lock = threading.Lock()
+        self.jobs: dict[str, dict] = {}
+        self.max_retained_jobs = 64
+
+    @staticmethod
+    def validate_mint(mint: str) -> str:
+        value = (mint or "").strip()
+        if not SOLANA_PUBKEY_RE.fullmatch(value):
+            raise ValueError("INVALID_SOLANA_CA")
+        return value
+
+    def _public_job(self, job: dict) -> dict:
+        return {k: v for k, v in job.items() if k not in {"future"}}
+
+    def _prune_jobs_locked(self):
+        finished=[
+            job for job in self.jobs.values()
+            if job["status"] in {"DONE","ERROR"}
+        ]
+        finished.sort(key=lambda x: x.get("finished_at") or x.get("created_at") or 0, reverse=True)
+        keep={x["job_id"] for x in finished[:self.max_retained_jobs]}
+        active={x["job_id"] for x in self.jobs.values() if x["status"] in {"QUEUED","RUNNING"}}
+        for job_id in list(self.jobs):
+            if job_id not in keep and job_id not in active:
+                self.jobs.pop(job_id,None)
+
+    def submit(self, mint: str, preset: str = "standard") -> dict:
+        mint = self.validate_mint(mint)
+        if preset not in CLUSTER_PRESETS:
+            raise ValueError("INVALID_CLUSTER_PRESET")
+        with self.lock:
+            self._prune_jobs_locked()
+            for job in self.jobs.values():
+                if job["mint"] == mint and job["preset"] == preset and job["status"] in {"QUEUED", "RUNNING"}:
+                    return self._public_job(job)
+            job_id = uuid.uuid4().hex
+            job = {
+                "job_id": job_id,
+                "mint": mint,
+                "preset": preset,
+                "status": "QUEUED",
+                "created_at": time.time(),
+                "started_at": None,
+                "finished_at": None,
+                "error": None,
+            }
+            self.jobs[job_id] = job
+            job["future"] = self.executor.submit(self._run, job_id)
+            return self._public_job(job)
+
+    def _run(self, job_id: str):
+        with self.lock:
+            job = self.jobs[job_id]
+            job["status"] = "RUNNING"
+            job["started_at"] = time.time()
+            mint = job["mint"]
+            preset = job["preset"]
+        cache = RpcCache(self.cache_path)
+        try:
+            rpc = SolanaReadOnlyRPC(self.rpc_endpoint, cache=cache)
+            registry = load_registry(self.registry_path)
+            opts = CLUSTER_PRESETS[preset]
+            report = WalletClusterAnalyzer(
+                mint,
+                rpc=rpc,
+                special_registry=registry,
+                deep_holders=opts["deep_holders"],
+                history_per_holder=opts["history_per_holder"],
+                funding_lookback=opts["funding_lookback"],
+            ).analyze()
+            stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+            out = self.report_root / mint
+            out.mkdir(parents=True, exist_ok=True)
+            payload = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
+            _atomic_write_text(out / f"{stamp}.json", payload)
+            _atomic_write_text(out / f"{stamp}.md", markdown(report))
+            _atomic_write_text(out / "latest.json", payload)
+            with self.lock:
+                job = self.jobs[job_id]
+                job["status"] = "DONE"
+                job["finished_at"] = time.time()
+                self._prune_jobs_locked()
+        except Exception as exc:
+            with self.lock:
+                job = self.jobs[job_id]
+                job["status"] = "ERROR"
+                job["finished_at"] = time.time()
+                job["error"] = {
+                    "type": type(exc).__name__,
+                    "message": str(exc)[:500],
+                }
+                self._prune_jobs_locked()
+        finally:
+            cache.close()
+
+    def get(self, job_id: str) -> dict | None:
+        with self.lock:
+            job = self.jobs.get(job_id)
+            return None if job is None else self._public_job(job)
+
+    def latest(self, mint: str) -> dict | None:
+        mint = self.validate_mint(mint)
+        path = self.report_root / mint / "latest.json"
+        if not path.is_file():
+            return None
+        try:
+            return json.loads(path.read_text())
+        except (OSError, ValueError):
+            return None
+
+
 class DashboardState:
     def __init__(self, production_root: Path, control_root: Path):
         self.frank = FrankReader(production_root)
         self.control_root = Path(control_root)
         self.control_db = self.control_root / "mission-control.sqlite"
         self.control_health = self.control_root / "mission-control-health.json"
+        self.cluster_jobs = ClusterJobManager(self.control_root)
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():
@@ -85,8 +266,10 @@ class DashboardState:
             "SELECT person_id,mint,episode_id,decision,evaluated_at,body FROM candidate_latest ORDER BY evaluated_at DESC"
         )
         by_key = {(x["person_id"], x["mint"], x["episode_id"]): x for x in latest}
+        seen = set()
         for item in candidates:
-            row = by_key.get((item["person_id"], item["mint"], item.get("episode_id")))
+            key=(item["person_id"], item["mint"], item.get("episode_id"));seen.add(key)
+            row = by_key.get(key)
             if row:
                 body = json.loads(row["body"])
                 item["decision"] = body["decision"]
@@ -101,6 +284,28 @@ class DashboardState:
                 item["decision"] = "UNASSESSED"
                 item["metrics"] = {}
                 item["decision_quote"] = {}
+        # A SOL-normalized sidecar can legitimately create a follow candidate that
+        # does not exist in the frozen production signal table. candidate_latest is
+        # the canonical Mission Control view, so expose those rows without writing
+        # anything back to Frank production.
+        for key,row in by_key.items():
+            if key in seen:
+                continue
+            body=json.loads(row["body"]);inputs=body.get("inputs") or {}
+            item={k:inputs.get(k) for k in (
+                "person_id","mint","episode_id","pattern","source_signal_id","source_signal_type","source_signal_at",
+                "position_state","current_raw","buy_count","sell_count","latest_side","latest_signature","latest_at",
+                "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset",
+                "latest_buy_quote_quantity","token_decimals"
+            )}
+            item.update({
+                "decision":body["decision"],"decision_created_at":row["evaluated_at"],
+                "metrics":body.get("metrics") or {},"decision_quote":inputs.get("quote") or {},
+                "reasons":body.get("reasons") or [],"missing":body.get("missing") or [],
+                "invalidation":body.get("invalidation") or [],"candidate_source":"MISSION_CONTROL_OVERLAY",
+            })
+            candidates.append(item)
+        candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
 
     def recent_trades(self):
@@ -158,6 +363,19 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.recent_trades())
         if path == "/api/decisions":
             return self._json(self.state.decisions())
+        if path == "/api/cluster-analysis":
+            query = parse_qs(urlparse(self.path).query)
+            job_id = (query.get("job_id") or [""])[0]
+            job = self.state.cluster_jobs.get(job_id)
+            return self._json(job if job is not None else {"error":"CLUSTER_JOB_NOT_FOUND"}, 200 if job is not None else 404)
+        if path == "/api/cluster-latest":
+            query = parse_qs(urlparse(self.path).query)
+            mint = (query.get("mint") or [""])[0]
+            try:
+                report = self.state.cluster_jobs.latest(mint)
+            except ValueError as exc:
+                return self._json({"error":str(exc)},400)
+            return self._json(report if report is not None else {"error":"CLUSTER_REPORT_NOT_FOUND"}, 200 if report is not None else 404)
         if path in {"/", "/index.html"}:
             return self._file(self.static_root / "index.html")
         if path.startswith("/static/"):
@@ -166,6 +384,33 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send_error(403)
             return self._file(candidate)
         self.send_error(404)
+
+
+    def do_POST(self):
+        if not self._allowed_host():
+            return self.send_error(421, "loopback Host required")
+        if not _origin_is_loopback(self.headers.get("Origin")):
+            return self._json({"error":"CROSS_ORIGIN_POST_FORBIDDEN"},403)
+        if not _content_type_is_json(self.headers.get("Content-Type")):
+            return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
+        path = urlparse(self.path).path
+        if path != "/api/cluster-analysis":
+            return self.send_error(404)
+        try:
+            length = int(self.headers.get("Content-Length") or "0")
+        except ValueError:
+            return self._json({"error":"INVALID_CONTENT_LENGTH"},400)
+        if length <= 0 or length > 32768:
+            return self._json({"error":"INVALID_REQUEST_SIZE"},400)
+        try:
+            body = _decode_json_object(self.rfile.read(length))
+        except ValueError as exc:
+            return self._json({"error":str(exc)},400)
+        try:
+            job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
+        except ValueError as exc:
+            return self._json({"error":str(exc)},400)
+        return self._json(job,202)
 
 
 class IPv6ThreadingHTTPServer(ThreadingHTTPServer):
