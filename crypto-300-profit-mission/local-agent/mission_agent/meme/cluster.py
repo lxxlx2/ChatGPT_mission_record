@@ -231,7 +231,8 @@ class WalletClusterAnalyzer:
             trade=c.get("trade") or {}
             if c.get("classification")=="ACTIVE_TRADE" and trade.get("mint")==self.mint:
                 first_at=bt if first_at is None else min(first_at,bt or first_at)
-                self.trades.append({"owner":holder.owner,"signature":sig,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)})
+                record={"owner":holder.owner,"signature":sig,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)}
+                if not any(x["owner"]==holder.owner and x["signature"]==sig for x in self.trades):self.trades.append(record)
         return first_at
     def _scan_funding(self,holder:Holder,first_at):
         if not first_at:return
@@ -248,7 +249,7 @@ class WalletClusterAnalyzer:
             for source,lamports in _native_funders(tx,holder.owner):
                 candidate={"owner":holder.owner,"source":source,"lamports":lamports,"signature":sig,"block_time":bt}
                 if best is None or bt>best["block_time"]:best=candidate
-        if best:self.funding.append(best)
+        if best and not any(x["owner"]==best["owner"] and x["signature"]==best["signature"] for x in self.funding):self.funding.append(best)
     def _derive_pair_edges(self):
         by_funder=defaultdict(list);by_sig=defaultdict(list)
         for f in self.funding:by_funder[f["source"]].append(f);by_sig[f["signature"]].append(f)
@@ -302,9 +303,13 @@ class WalletClusterAnalyzer:
     def analyze(self):
         supply,decimals,holders=self.holders()
         account_to_owner={h.token_account:h.owner for h in holders}
-        firsts={}
-        for h in holders[:self.deep_holders]:firsts[h.owner]=self._scan_holder(h,account_to_owner)
-        for h in holders[:self.deep_holders]:self._scan_funding(h,firsts.get(h.owner))
+        firsts={};deep=[];deep_seen=set()
+        for h in holders:
+            if h.owner in deep_seen:continue
+            deep_seen.add(h.owner);deep.append(h)
+            if len(deep)>=self.deep_holders:break
+        for h in deep:firsts[h.owner]=self._scan_holder(h,account_to_owner)
+        for h in deep:self._scan_funding(h,firsts.get(h.owner))
         self._derive_pair_edges()
         owners=sorted({h.owner for h in holders});balances=defaultdict(int)
         for h in holders:balances[h.owner]+=h.raw
@@ -370,7 +375,7 @@ class WalletClusterAnalyzer:
             "probable_execution_clusters":execution_groups,
             "edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges],
             "funding_evidence":self.funding,"trade_evidence":self.trades,"transaction_errors":self.tx_errors,
-            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":min(len(holders),self.deep_holders),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
+            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
             "limitations":[
                 "Only raw finalized RPC evidence and explicit local labels are treated as authoritative.",
                 "CEX/public-infrastructure identity is never guessed from funding alone.",
