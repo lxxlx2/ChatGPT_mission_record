@@ -329,7 +329,7 @@ def main() -> None:
     rows=db.execute("SELECT * FROM signatures").fetchall()
     source_eval_clock=_source_active_eval_clock(db)
     terminal_clock=_terminal_clock(db,rows)
-    stored={};candidate={};transitions=[];unreclassified=[]
+    stored={};candidate={};transitions=[];classification_body_deltas=[];unreclassified=[]
 
     for row in rows:
         try:old=json.loads(row["body"])
@@ -343,6 +343,12 @@ def main() -> None:
             continue
         new=classify(row["signature"],tx,row["wallet"])
         candidate[row["signature"]]=new
+        if old!=new:
+            classification_body_deltas.append({
+                "signature":row["signature"],
+                "block_time":row["block_time"],
+                "field_diffs":_field_diff(old,new),
+            })
         if (
             old.get("classification"),old.get("classification_reason"),old.get("trade")
         ) != (
@@ -410,6 +416,8 @@ def main() -> None:
         "classification_transition_count":len(transitions),
         "classification_transition_counts":dict(sorted(transition_counts.items())),
         "classification_transitions":transitions,
+        "classification_body_delta_count":len(classification_body_deltas),
+        "classification_body_deltas":classification_body_deltas,
         "source_summary":{
             "signal_count":len(source_snapshot["signals"]),"state_count":len(source_snapshot["states"]),
             "evaluation_count":len(source_snapshot["evaluations"]),"email_count":len(source_snapshot["emails"]),
@@ -440,6 +448,7 @@ def main() -> None:
         "unreclassified_count":result["unreclassified_count"],
         "transition_count":result["classification_transition_count"],
         "transition_counts":result["classification_transition_counts"],
+        "classification_body_delta_count":result["classification_body_delta_count"],
         "baseline_source_signal_identity_parity":result["baseline_source_signal_identity_parity"],
         "baseline_source_state_parity":result["baseline_source_state_parity"],
         "candidate_signal_identity_parity":result["candidate_signal_identity_parity"],
