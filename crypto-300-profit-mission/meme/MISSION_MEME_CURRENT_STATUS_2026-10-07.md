@@ -452,3 +452,32 @@ Required acceptance before merge:
 4. verify an RPC 429 can fail over without failing the entire report;
 5. verify a repeat query with unchanged assessment does not append a fake conclusion-change event;
 6. keep `PRODUCTION_TRADING = NO_GO`.
+
+
+## 13. 2026-10-08 Frank classifier coverage remediation candidate
+
+Status: `FEATURE_BRANCH_ONLY / LOCAL_VALIDATION_REQUIRED / PRODUCTION_UNCHANGED`.
+
+A real RACE transaction exposed a classifier coverage gap already anticipated by the 2026-10-04 isolated trade-coverage study. The historical study had confirmed 19 active user trades that CURRENT classification missed; the shadow reconstruction changed one ACCUMULATION and one MULTIPLE on gross additions and also removed one existing MULTIPLE through the original sticky HFT rule. This means transaction-coverage repair can affect both positive and negative signal outcomes and must not be deployed without replay/acceptance.
+
+Candidate remediation on `feature/meme-ca-report-v3-20261007` now:
+
+1. adds officially documented Orca Whirlpools, Meteora DAMM v2 and Manifest market program IDs to the recognized market set; program identity still does not suffice without signer/authority, opposing owned flows and invocation-bound swap instruction evidence;
+2. resolves parsed `programIdIndex` consistently instead of requiring a literal `programId` field in the second-stage swap check;
+3. handles re-entrant program log stacks by closing the innermost matching invocation;
+4. recognizes official Solana USDT as a quote identity, but keeps non-USDC amount predicates `UNDETERMINED`; no USDT=$1 assumption is introduced;
+5. permits one target asset plus exactly one opposing primary quote even when additional quote refund/auxiliary legs exist; every quote leg is preserved, and composite quotes remain `UNDETERMINED` for the frozen USDC amount gate;
+6. keeps multiple target assets, multiple opposing payment quotes, native-SOL reconciliation mismatches and unproven market programs fail-closed;
+7. exposes existing `ACTIVE_SWAP_LIKE + UNKNOWN_NEEDS_REVIEW` records in a read-only Dashboard `待复核链上行为` panel instead of making them appear absent;
+8. does not reclassify or backfill existing production history automatically and does not send historical notifications.
+
+Frozen Frank thresholds are unchanged:
+- ACCUMULATION still requires >=2 active buys within 60 minutes and >=25,000 direct-known USDC under the existing policy;
+- non-USDC/composite quote amounts cannot satisfy the USDC amount threshold by themselves;
+- production trading remains `NO_GO`.
+
+Before any merge/runtime refresh:
+- run targeted parser/classifier/evaluator/Mission Control tests and the full local-agent suite;
+- replay the current read-only `forward.sqlite` raw references through the candidate classifier in an isolated workspace;
+- inspect changed classifications, HFT changes, new/lost ACCUMULATION/MULTIPLE and specifically the RACE raw transaction;
+- do not mutate existing production DB or replay historical notifications.
