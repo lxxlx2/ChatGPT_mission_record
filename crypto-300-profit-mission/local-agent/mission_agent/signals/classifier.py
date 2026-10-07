@@ -51,8 +51,56 @@ def classify(signature, tx, wallet):
             'target_assets':[m for m,_ in tokens],
             'quote_assets':[m for m,_ in quotes],
         }
-        if len(tokens)==1 and quotes:
-            mint,g=tokens[0]
+        routed_intermediates=[]
+        effective_tokens=tokens
+        if len(tokens)>1:
+            flow_by_mint=defaultdict(lambda:{'in_raw':0,'out_raw':0,'first_in':None,'last_out':None})
+            for flow in e.get('wallet_token_transfer_flows') or []:
+                mint=flow.get('mint')
+                if mint not in dict(tokens):continue
+                try:raw=int(flow.get('raw_amount') or 0)
+                except (TypeError,ValueError):continue
+                order=(int(flow.get('outer_index',0)),int(flow.get('inner_index',-1)))
+                item=flow_by_mint[mint]
+                if flow.get('direction')=='IN':
+                    item['in_raw']+=raw
+                    if item['first_in'] is None or order<item['first_in']:item['first_in']=order
+                elif flow.get('direction')=='OUT':
+                    item['out_raw']+=raw
+                    if item['last_out'] is None or order>item['last_out']:item['last_out']=order
+            created_mints={
+                a.get('mint') for a in e.get('created_token_accounts') or []
+                if a.get('owner')==wallet and a.get('mint')
+            }
+            target_first_in={}
+            for mint,_ in tokens:
+                target_first_in[mint]=flow_by_mint[mint]['first_in']
+            for mint,g in tokens:
+                f=flow_by_mint[mint]
+                # Conservative route proof: the wallet-owned ATA was created in this
+                # transaction, the asset was received before being spent again, a
+                # positive residual remains, and exactly one other positive target
+                # is first received only after that spend. No value/dust threshold.
+                if mint not in created_mints or g['delta']<=0 or not f['in_raw'] or not f['out_raw']:
+                    continue
+                if f['first_in'] is None or f['last_out'] is None or f['first_in']>=f['last_out']:
+                    continue
+                later_targets=[
+                    other for other,_ in tokens if other!=mint and
+                    target_first_in.get(other) is not None and target_first_in[other]>f['last_out']
+                ]
+                if len(later_targets)==1:
+                    routed_intermediates.append({
+                        'mint':mint,'net_delta':str(g['delta']),
+                        'gross_in_raw':str(f['in_raw']),'gross_out_raw':str(f['out_raw']),
+                        'first_in_order':list(f['first_in']),'last_out_order':list(f['last_out']),
+                        'downstream_target':later_targets[0],
+                    })
+            routed_mints={x['mint'] for x in routed_intermediates}
+            effective_tokens=[(m,g) for m,g in tokens if m not in routed_mints]
+            details['routed_intermediate_assets']=routed_intermediates
+        if len(effective_tokens)==1 and quotes:
+            mint,g=effective_tokens[0]
             opposing=[(m,q) for m,q in quotes if g['delta']*q['delta']<0]
             details['opposing_quote_assets']=[m for m,_ in opposing]
             if len(opposing)==1:
@@ -69,6 +117,8 @@ def classify(signature, tx, wallet):
                 base.update(
                     classification='ACTIVE_TRADE',
                     classification_reason=(
+                        'SIGNED_DEX_SWAP_ROUTED_SINGLE_TARGET_WITH_RESIDUAL_INTERMEDIATE'
+                        if routed_intermediates else
                         'SIGNED_DEX_SWAP_SINGLE_TARGET_PRIMARY_QUOTE_WITH_AUXILIARY_LEGS'
                         if composite else 'SIGNED_DEX_SWAP_OPPOSING_OWNED_FLOWS'
                     ),
@@ -81,6 +131,7 @@ def classify(signature, tx, wallet):
                         'referenced_pre_raw':str(g['pre']),'referenced_post_raw':str(g['post']),
                         'amount_predicate':amount_predicate,'amount_predicate_reason':amount_reason,
                         'quote_legs':quote_legs,
+                        'route_intermediate_assets':routed_intermediates,
                     },
                 )
                 return base
