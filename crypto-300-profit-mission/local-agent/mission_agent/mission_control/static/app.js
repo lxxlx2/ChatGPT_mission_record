@@ -1210,9 +1210,10 @@ function factRow(label,value,note='') {
 }
 
 function authorityValue(value,status='') {
+  if (status==='UNRESOLVED') return '<span class="warn-text">未确认</span>';
   if (value === null) return '<span class="ok-text">已撤销</span>';
   if (value) return '<span class="danger-text">' + esc(short(value,8,6)) + '</span>';
-  return '<span class="warn-text">' + esc(status==='UNRESOLVED' ? '未确认' : '暂无') + '</span>';
+  return '<span class="warn-text">暂无</span>';
 }
 
 function renderAssessment(report) {
