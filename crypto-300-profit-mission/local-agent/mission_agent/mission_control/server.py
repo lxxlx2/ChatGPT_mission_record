@@ -345,7 +345,7 @@ class ClusterJobManager:
         ]
         report["assessment_history_context"]={
             "current_preset":preset,
-            "coverage_changed_since_last_record":bool(history and self._changed_fields((history[-1].get("coverage_snapshot") or {}),coverage_snapshot)),
+            "coverage_changed_since_previous_observation":bool(coverage_changed),
             "coverage_snapshot":coverage_snapshot,
         }
 
