@@ -99,3 +99,19 @@ def test_report_contains_profit_factor_and_robustness_shape():
     assert "profit_factor" in five
     assert "performance_groups" in data["summary"]
     assert "robustness_24h" in data["summary"]
+
+
+def test_even_sample_median_uses_statistical_midpoint():
+    x=db();j=Jup();t=OutcomeTracker(x,j)
+    c1=candidate();c1["mint"]="M1";c1["episode_id"]="E1";c1["source_signal_id"]="S1"
+    c2=candidate();c2["mint"]="M2";c2["episode_id"]="E2";c2["source_signal_id"]="S2"
+    tid1=t.register(candidate=c1,result=result(),quote=entry_quote(),now=100)
+    tid2=t.register(candidate=c2,result=result(),quote=entry_quote(),now=100)
+    t._record_horizon({"tracking_id":tid1,"entry_input_usdc":"30"},300,
+        {"sample_id":"s1","sample_at":400.0,"out_usdc":"15"},status="MEASURED")
+    t._record_horizon({"tracking_id":tid2,"entry_input_usdc":"30"},300,
+        {"sample_id":"s2","sample_at":400.0,"out_usdc":"33"},status="MEASURED")
+    data=report(x)
+    row=data["summary"]["horizons"]["300"]
+    assert row["median_return_pct"]=="-20.0"
+    assert row["mean_return_pct"]=="-20.0"
