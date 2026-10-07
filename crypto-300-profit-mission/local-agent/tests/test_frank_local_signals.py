@@ -9,6 +9,7 @@ from mission_agent.signals.registry import load
 from test_frank_fm import tx
 from mission_agent.frank.rpc import WALLET
 from mission_agent.frank.parser import WSOL
+from mission_agent.signals.classifier import USDT
 
 USDC='EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
 FIXTURES=Path(__file__).parent/'fixtures/frank_local'
@@ -24,6 +25,17 @@ def active(sig='buy',amount=100,quote=20):
     return classify(sig,t,WALLET)
 
 def put(l,e,**kwargs):return l.put('frank',e,e['signature'],'raw',**kwargs)
+
+
+def add_owned_asset(t,mint,pre,post,decimals=6):
+    index=len(t['transaction']['message']['accountKeys'])
+    t['transaction']['message']['accountKeys'].append({'pubkey':'owned-'+str(index),'signer':False})
+    t['meta']['preBalances'].append(2000000);t['meta']['postBalances'].append(2000000)
+    def row(amount):
+        return {'accountIndex':index,'mint':mint,'owner':WALLET,
+                'uiTokenAmount':{'amount':str(amount),'decimals':decimals,'uiAmount':None}}
+    t['meta']['preTokenBalances'].append(row(pre));t['meta']['postTokenBalances'].append(row(post))
+    return t
 
 def test_third_party_ata_create_is_not_trade():
     result=classify('ata',json.loads(gzip.decompress((FIXTURES/'ata.json.gz').read_bytes())),WALLET)
@@ -59,6 +71,47 @@ def test_multi_hop_swap_dedupes_to_one_trade(tmp_path):
     l=Ledger(tmp_path/'db');t=tx();t['transaction']['message']['instructions']*=3
     for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDC
     e=classify('multi',t,WALLET);put(l,e);put(l,e);assert l.db.execute('select count(*) from trades').fetchone()[0]==1
+
+
+
+def test_usdt_is_preserved_as_non_usdc_quote_without_amount_gate():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDT
+    e=classify('usdt',t,WALLET)
+    assert e['classification']=='ACTIVE_TRADE'
+    assert e['trade']['quote_asset']==USDT
+    assert e['trade']['amount_predicate']=='UNDETERMINED'
+
+
+def test_single_target_with_auxiliary_quote_refund_is_trade_but_amount_is_undetermined():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDC
+    add_owned_asset(t,WSOL,0,250000000,9)
+    e=classify('refund',t,WALLET)
+    assert e['classification']=='ACTIVE_TRADE'
+    assert e['trade']['quote_asset']==USDC
+    assert e['trade']['amount_predicate']=='UNDETERMINED'
+    assert len(e['trade']['quote_legs'])==2
+
+
+def test_two_opposing_quote_payments_remain_ambiguous():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDC
+    add_owned_asset(t,WSOL,250000000,0,9)
+    e=classify('two-payments',t,WALLET)
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert e['classification_reason']=='AMBIGUOUS_USER_EXCHANGE_ASSETS'
+    assert set(e['classification_details']['opposing_quote_assets'])=={USDC,WSOL}
+
+
+def test_multiple_target_assets_remain_ambiguous_without_dust_guess():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDC
+    add_owned_asset(t,'second-target',0,1,9)
+    e=classify('multi-target',t,WALLET)
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert set(e['classification_details']['target_assets'])=={'mint1','second-target'}
+
 
 STAGE={'signal_type':'FRANK_ACCUMULATION_SIGNAL','stage':'PRECONFIRM','reason_codes':['TEST_SUPPLIED_STAGE']}
 MULTIPLE={'signal_type':'FRANK_MULTIPLE_SIGNAL','stage':'SUSPECTED_CONVICTION','reason_codes':['TEST_SUPPLIED_STAGE']}
