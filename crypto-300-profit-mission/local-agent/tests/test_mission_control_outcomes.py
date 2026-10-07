@@ -9,7 +9,7 @@ class Jup:
         self.calls=[]
     def quote_token_to_usdc(self,mint,raw,decimals,slippage_bps=100):
         self.calls.append((mint,raw,decimals,slippage_bps))
-        return {"status":"OK","source":"JUPITER_OFFICIAL","observed_at":600.0,"route_exists":True,"out_usdc":"36","execution_price_usdc":"1.2","price_impact_pct":"0.4"}
+        return {"status":"OK","source":"JUPITER_OFFICIAL","observed_at":400.0,"route_exists":True,"out_usdc":"36","execution_price_usdc":"1.2","price_impact_pct":"0.4"}
 
 
 def db():
