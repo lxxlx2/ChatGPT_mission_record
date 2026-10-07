@@ -14,6 +14,8 @@ def engine(tmp_path,dry=True):
 
 def buy(l,eng,sig,at,quote,amount=100,asset=USDC):
     e=active(sig,amount,quote);e['block_time']=at;e['slot']=at;e['trade']['quote_amount_raw']=str(int(quote)*10**6);e['trade']['quote_asset']=asset;e['trade']['quote_decimals']=6
+    e['trade']['amount_predicate']='USDC_DIRECT_NUMERIC' if asset==USDC else 'UNDETERMINED'
+    e['trade']['amount_predicate_reason']=None if asset==USDC else 'NON_USDC_QUOTE'
     put(l,e);return eng.drain()
 
 def signals(l):return [json.loads(r[0]) for r in l.db.execute('select body from signals order by created_at,signal_type')]
