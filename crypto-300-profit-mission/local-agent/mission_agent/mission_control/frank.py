@@ -200,7 +200,12 @@ class FrankReader:
                 if latest_buy_price is not None:
                     price_status = "SOL_EVENT_TIME_USDC_VERIFIED" if latest_buy and latest_buy.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"
                 elif latest_buy and latest_buy.get("amount_predicate")=="UNDETERMINED" and model_quote_asset==USDC:
-                    price_status = "COMPOSITE_QUOTE_PRICE_UNAVAILABLE"
+                    reason=latest_buy.get("amount_predicate_reason")
+                    price_status = (
+                        "ROUTED_QUOTE_PRICE_UNAVAILABLE" if reason=="ROUTED_RESIDUAL_ASSETS"
+                        else "COMPOSITE_QUOTE_PRICE_UNAVAILABLE" if reason=="COMPOSITE_QUOTE_LEGS"
+                        else "QUOTE_COST_UNDETERMINED"
+                    )
                 elif model_quote_asset in {"SOL", WSOL} or quote_display["asset"] in {"SOL", WSOL}:
                     price_status = "SOL_EVENT_TIME_USDC_UNAVAILABLE"
                 else:
