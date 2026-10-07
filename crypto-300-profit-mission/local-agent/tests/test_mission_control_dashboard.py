@@ -1,6 +1,8 @@
 import time
 
-from mission_agent.mission_control.server import ClusterJobManager, DashboardState
+from mission_agent.mission_control.server import (
+    ClusterJobManager, DashboardState, _content_type_is_json, _decode_json_object, _origin_is_loopback,
+)
 from mission_agent.mission_control.service import MissionMemeService
 from test_mission_control_service import make_prod, policy
 
@@ -79,3 +81,61 @@ def test_dashboard_static_contains_signal_and_cluster_tabs():
     assert 'data-view="cluster"' in html
     assert 'id="cluster-form"' in html
     assert 'id="cluster-result"' in html
+
+
+class NoRunExecutor:
+    def submit(self,*args,**kwargs):
+        return object()
+
+
+def test_cluster_post_json_must_be_object():
+    assert _decode_json_object(b'{"mint":"M"}')=={"mint":"M"}
+    for raw,reason in ((b'[]',"JSON_OBJECT_REQUIRED"),(b'"x"',"JSON_OBJECT_REQUIRED"),(b'{',"INVALID_JSON")):
+        try:
+            _decode_json_object(raw)
+        except ValueError as exc:
+            assert str(exc)==reason
+        else:
+            raise AssertionError("invalid cluster POST accepted")
+
+
+def test_cluster_post_rejects_cross_origin_and_non_json():
+    assert _origin_is_loopback(None) is True
+    assert _origin_is_loopback("http://127.0.0.1:8766") is True
+    assert _origin_is_loopback("http://localhost:8766") is True
+    assert _origin_is_loopback("http://evil.example") is False
+    assert _content_type_is_json("application/json") is True
+    assert _content_type_is_json("application/json; charset=utf-8") is True
+    assert _content_type_is_json("text/plain") is False
+
+
+def test_cluster_jobs_dedupe_only_same_ca_and_same_preset(tmp_path):
+    manager=ClusterJobManager(tmp_path/"control")
+    manager.executor=NoRunExecutor()
+    mint="So11111111111111111111111111111111111111112"
+    quick=manager.submit(mint,"quick")
+    deep=manager.submit(mint,"deep")
+    quick_again=manager.submit(mint,"quick")
+    assert quick["job_id"]!=deep["job_id"]
+    assert quick_again["job_id"]==quick["job_id"]
+
+
+def test_cluster_job_memory_retention_is_bounded(tmp_path):
+    manager=ClusterJobManager(tmp_path/"control")
+    now=time.time()
+    with manager.lock:
+        for i in range(80):
+            job_id=f"done-{i}"
+            manager.jobs[job_id]={
+                "job_id":job_id,"mint":"M","preset":"quick","status":"DONE",
+                "created_at":now-i,"started_at":now-i,"finished_at":now-i,"error":None,
+            }
+        manager._prune_jobs_locked()
+    assert len(manager.jobs)==manager.max_retained_jobs
+
+
+def test_dashboard_frontend_restores_latest_cluster_report():
+    from mission_agent.mission_control.server import Handler
+    js=(Handler.static_root/"app.js").read_text()
+    assert "/api/cluster-latest?mint=" in js
+    assert "mission-meme-last-cluster-ca" in js
