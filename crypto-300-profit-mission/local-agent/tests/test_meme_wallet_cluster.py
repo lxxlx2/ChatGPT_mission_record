@@ -265,6 +265,48 @@ def test_token2022_disabled_hook_and_active_delegate_are_distinguished():
     assert delegate["sensitive_extension_details"][0]["status"]=="ACTIVE_RISK"
 
 
+def test_token2022_transfer_fee_missing_required_fields_stays_unresolved():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{"transferFeeConfigAuthority":None},
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert detail["reason"]=="TRANSFER_FEE_CONFIG_INCOMPLETE"
+    a=analyzer();a.token_profile=lambda:profile
+    out=a.analyze()
+    assert out["assessment"]["chain_permission_status"]=="UNRESOLVED"
+
+
+def test_token2022_transfer_fee_invalid_numeric_fields_stay_unresolved():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{
+            "transferFeeConfigAuthority":None,
+            "withdrawWithheldAuthority":None,
+            "olderTransferFee":{"transferFeeBasisPoints":"invalid","maximumFee":"invalid"},
+            "newerTransferFee":{"transferFeeBasisPoints":"invalid","maximumFee":"invalid"},
+        },
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert detail["reason"]=="TRANSFER_FEE_CONFIG_INVALID"
+    a=analyzer();a.token_profile=lambda:profile
+    assert a.analyze()["assessment"]["chain_permission_status"]=="UNRESOLVED"
+
+
+def test_token2022_transfer_hook_missing_program_id_stays_unresolved():
+    profile=token2022_profile({
+        "extension":"transferHook",
+        "state":{"authority":None},
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert detail["reason"]=="TRANSFER_HOOK_CONFIG_INCOMPLETE"
+    a=analyzer();a.token_profile=lambda:profile
+    assert a.analyze()["assessment"]["chain_permission_status"]=="UNRESOLVED"
+
+
 def test_token2022_sensitive_but_unresolved_config_is_not_upgraded_to_active_risk():
     profile=token2022_profile({
         "extension":"confidentialTransferMint",
