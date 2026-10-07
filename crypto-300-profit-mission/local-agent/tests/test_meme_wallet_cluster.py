@@ -204,3 +204,33 @@ def test_full_report_exposes_bounded_holder_acquisition_and_conservative_conclus
     assert out["assessment"]["chain_permission_status"]=="PASS"
     assert out["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
     assert out["assessment"]["trading_status"]=="WATCH / WALLET_CLUSTER_UNRESOLVED"
+
+
+def test_adaptive_scan_deepens_only_suspicious_initial_owner():
+    a=analyzer()
+    a.deep_holders=2
+    a.history_per_holder=12
+    a.funding_lookback=8
+    a.adaptive_history_per_holder=30
+    a.adaptive_funding_lookback=12
+    calls=[]
+    progress=[]
+    a.progress_callback=lambda stage,details:progress.append((stage,dict(details)))
+    def scan(h,mapping,top_owners,history_limit=None):
+        calls.append((h.owner,history_limit))
+        if h.owner=="A" and history_limit==12:
+            a._edge("A","D","DIRECT_TOKEN_TRANSFER","tx-adaptive")
+        return {"block_time":100,"signature":"first-"+h.owner}
+    a._scan_holder=scan
+    a._scan_funding=lambda *args,**kwargs:None
+    out=a.analyze()
+    assert ("A",12) in calls and ("B",12) in calls
+    assert ("A",30) in calls
+    assert ("B",30) not in calls
+    assert out["coverage"]["scan_mode"]=="ADAPTIVE"
+    assert out["coverage"]["adaptive_deepened_owners"]==["A"]
+    stages=[x[0] for x in progress]
+    assert "BASE_READY" in stages
+    assert "HOLDERS_READY" in stages
+    assert "ADAPTIVE_DEEPEN" in stages
+    assert "FINALIZING" in stages
