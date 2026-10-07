@@ -73,6 +73,16 @@ def _origin_is_loopback(value: str | None) -> bool:
         return False
 
 
+def _decode_json_object(raw: bytes) -> dict:
+    try:
+        body=json.loads(raw)
+    except (ValueError, UnicodeDecodeError) as exc:
+        raise ValueError("INVALID_JSON") from exc
+    if not isinstance(body,dict):
+        raise ValueError("JSON_OBJECT_REQUIRED")
+    return body
+
+
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 CLUSTER_PRESETS = {
     "quick": {"deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8},
@@ -377,11 +387,9 @@ class Handler(BaseHTTPRequestHandler):
         if length <= 0 or length > 32768:
             return self._json({"error":"INVALID_REQUEST_SIZE"},400)
         try:
-            body = json.loads(self.rfile.read(length))
-        except (ValueError, UnicodeDecodeError):
-            return self._json({"error":"INVALID_JSON"},400)
-        if not isinstance(body,dict):
-            return self._json({"error":"JSON_OBJECT_REQUIRED"},400)
+            body = _decode_json_object(self.rfile.read(length))
+        except ValueError as exc:
+            return self._json({"error":str(exc)},400)
         try:
             job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
         except ValueError as exc:
