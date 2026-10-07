@@ -237,7 +237,7 @@ class WalletClusterAnalyzer:
     def _scan_holder(self,holder:Holder,account_to_owner,top_owners):
         try:rows=self.rpc.call("getSignaturesForAddress",[holder.token_account,{"commitment":"finalized","limit":self.history_per_holder}],ttl=300)
         except Exception as exc:self.tx_errors.append({"address":holder.token_account,"error":type(exc).__name__});return None
-        first_at=None
+        first=None
         for meta in rows or []:
             sig=meta.get("signature")
             if not sig:continue
@@ -259,13 +259,15 @@ class WalletClusterAnalyzer:
             except Exception:continue
             trade=c.get("trade") or {}
             if c.get("classification")=="ACTIVE_TRADE" and trade.get("mint")==self.mint:
-                first_at=bt if first_at is None else min(first_at,bt or first_at)
+                if bt is not None and (first is None or bt < first["block_time"]):
+                    first={"block_time":int(bt),"signature":sig}
                 record={"owner":holder.owner,"signature":sig,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)}
                 if not any(x["owner"]==holder.owner and x["signature"]==sig for x in self.trades):self.trades.append(record)
-        return first_at
-    def _scan_funding(self,holder:Holder,first_at,top_owners):
-        if not first_at:return
-        try:rows=self.rpc.call("getSignaturesForAddress",[holder.owner,{"commitment":"finalized","limit":self.funding_lookback}],ttl=300)
+        return first
+    def _scan_funding(self,holder:Holder,first,top_owners):
+        if not first:return
+        options={"commitment":"finalized","limit":self.funding_lookback,"before":first["signature"]}
+        try:rows=self.rpc.call("getSignaturesForAddress",[holder.owner,options],ttl=300)
         except Exception:return
         best=None
         for meta in rows or []:
@@ -274,7 +276,7 @@ class WalletClusterAnalyzer:
             try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
             except Exception:continue
             bt=tx.get("blockTime")
-            if bt is None or bt>first_at:continue
+            if bt is None or bt>first["block_time"]:continue
             for source,lamports in _native_funders(tx,holder.owner):
                 candidate={"owner":holder.owner,"source":source,"lamports":lamports,"signature":sig,"block_time":bt}
                 if source in top_owners:self._edge(source,holder.owner,"DIRECT_QUOTE_TRANSFER",sig,asset="SOL",amount_raw=lamports,block_time=bt)
@@ -373,7 +375,7 @@ class WalletClusterAnalyzer:
                     "cluster_id":f"{kind}-{idx}","confidence":confidence,"wallets":sorted(g),
                     "wallet_balances_raw":{x:str(balances[x]) for x in sorted(g)},
                     "combined_raw":str(raw),"supply_pct":self._pct(raw,supply),"evidence":evidence,
-                    "first_target_acquisition":{x:({"block_time":firsts.get(x),"type":"MARKET_BUY_WITHIN_BOUNDED_HISTORY"} if firsts.get(x) else {"block_time":None,"type":"UNRESOLVED"}) for x in sorted(g)},
+                    "first_target_acquisition":{x:({"block_time":firsts[x]["block_time"],"signature":firsts[x]["signature"],"type":"BOUNDED_EARLIEST_MARKET_TRADE"} if firsts.get(x) else {"block_time":None,"signature":None,"type":"UNRESOLVED"}) for x in sorted(g)},
                     "funding_evidence":[x for x in self.funding if x["owner"] in g],
                     "trade_evidence":[x for x in self.trades if x["owner"] in g],
                 })
