@@ -76,6 +76,52 @@ def test_composite_usdc_quote_never_satisfies_frozen_amount_gate(tmp_path):
     assert evaluation['predicates']['accumulation_amount']=='UNDETERMINED'
 
 
+def test_undetermined_large_usdc_cannot_establish_t0(tmp_path):
+    l,eng=engine(tmp_path)
+    e=active('uncertain-large',100,6000);e['block_time']=100000;e['slot']=100000
+    e['trade']['quote_amount_raw']='6000000000';e['trade']['quote_decimals']=6
+    e['trade']['quote_asset']=USDC;e['trade']['amount_predicate']='UNDETERMINED'
+    e['trade']['amount_predicate_reason']='COMPOSITE_QUOTE_LEGS'
+    put(l,e);eng.drain()
+    buy(l,eng,'direct-small',100600,100)
+    state=json.loads(l.db.execute('select body from v1_states').fetchone()[0])
+    assert state['t0'] is None
+    assert state['t0_amount_status']=='UNDETERMINED'
+
+
+def test_direct_known_large_usdc_preserves_frozen_t0_behavior(tmp_path):
+    l,eng=engine(tmp_path)
+    buy(l,eng,'known-large',100000,6000)
+    buy(l,eng,'direct-small',100600,100)
+    state=json.loads(l.db.execute('select body from v1_states').fetchone()[0])
+    assert state['t0']==100600
+    assert state['t0_amount_status']=='PASS'
+
+
+def test_signal_and_email_separate_unknown_latest_quote_from_known_cost(tmp_path):
+    from mission_agent.signals.email import content
+    l,eng=engine(tmp_path)
+    buy(l,eng,'first',100000,13000)
+    buy(l,eng,'second',101200,13000)
+    e=active('routed-latest',100,5000);e['block_time']=102700;e['slot']=102700
+    e['trade']['quote_amount_raw']='5000000000';e['trade']['quote_decimals']=6
+    e['trade']['quote_asset']=USDC;e['trade']['amount_predicate']='UNDETERMINED'
+    e['trade']['amount_predicate_reason']='ROUTED_RESIDUAL_ASSETS'
+    e['trade']['route_amount_semantics']='GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST'
+    put(l,e);eng.drain()
+    multiple=[s for s in signals(l) if s['signal_type']=='FRANK_MULTIPLE_SIGNAL'][-1]
+    assert multiple['latest_buy_signature']=='routed-latest'
+    assert multiple['latest_quote_cost_known'] is False
+    assert multiple['position']['gross_quote_spent']=={USDC:'26000'}
+    assert multiple['position']['gross_quote_out_observed']=={USDC:'31000'}
+    assert len(multiple['position']['quote_cost_unknown_contributions'])==1
+    body=content(multiple)['body']
+    assert '累计已确认投入 26,000 USDC' in body
+    assert '累计观察 quote 流出 31,000 USDC' in body
+    assert '成本归属未确认的主动买入 1 笔' in body
+    assert '最终目标成本未确认' in body
+
+
 def test_hft_behavior_blocks_multiple_but_not_selected_accumulation(tmp_path):
     l,eng=engine(tmp_path);buy(l,eng,'first',100000,13000);buy(l,eng,'second',100010,13000);buy(l,eng,'third',100020,13000);buy(l,eng,'fourth',102700,13000)
     assert len(signals(l))==1;state=json.loads(l.db.execute('select body from v1_states').fetchone()[0]);assert evaluate(state,102700,eng.policy)['predicates']['hft']=='FAIL'
