@@ -102,6 +102,26 @@ def test_composite_sol_quote_never_becomes_model_amount_or_follow_price():
     assert _event_price_usdc(trade) is None
 
 
+def test_routed_sol_quote_never_gains_usdc_amount_authority_or_follow_price():
+    classified=_classified()
+    classified['trade']['amount_predicate']='UNDETERMINED'
+    classified['trade']['amount_predicate_reason']='ROUTED_RESIDUAL_ASSETS'
+    classified['trade']['route_intermediate_assets']=[{'mint':'Residual'}]
+    classified['trade']['route_amount_semantics']='GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST'
+    ref={'status':'VERIFIED','source':'BINANCE_OFFICIAL_SPOT_SOLUSDC','sol_usdc':'150','evidence_sha256':'h'}
+    audit=normalize_classification(classified,ref,for_model=False)['trade']
+    model=normalize_classification(classified,ref,for_model=True)['trade']
+    for trade in (audit,model):
+        assert trade['quote_asset']=='SOL'
+        assert trade['amount_predicate']=='UNDETERMINED'
+        assert trade['amount_predicate_reason']=='ROUTED_RESIDUAL_ASSETS'
+        assert trade['quote_usdc_status']=='UNDETERMINED'
+        assert trade.get('quote_usdc_equivalent') is None
+        assert 'quote_normalization' not in trade
+        event={**trade,'quote_quantity':'200','token_amount_raw':'1000000','token_decimals':6}
+        assert _event_price_usdc(event) is None
+
+
 def test_composite_usdc_event_is_not_labeled_direct_usdc_equivalent():
     event={'quote_asset':USDC,'quote_quantity':'2500','at':180,'amount_predicate':'UNDETERMINED','amount_predicate_reason':'COMPOSITE_QUOTE_LEGS'}
     normalized=normalize_trade_event(event,None)
