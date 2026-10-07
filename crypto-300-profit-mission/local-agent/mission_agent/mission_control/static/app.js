@@ -518,6 +518,8 @@ const clusterEdgeLabel = {
   IDENTICAL_SIZE:'相同下单金额',
   SAME_EXECUTION_PROGRAM:'相同非公共执行程序',
   REPEATED_SYNC_BEHAVIOR:'重复同步行为',
+  SHARED_INFRA:'共享公共基础设施（不代表共同控制）',
+  COMMON_FUNDER_CEX:'共同 CEX 资金源（不代表共同控制）',
 };
 
 let clusterLastAutoLoaded=false;
@@ -615,8 +617,15 @@ function renderClusterReport(report) {
   const unresolvedEdges = report.unresolved_relation_edges || [];
   const errors = report.transaction_errors || [];
 
+  const observedAt = Number(report.observed_at);
+  const observedText = Number.isFinite(observedAt)
+    ? new Date(observedAt * 1000).toLocaleString('zh-CN')
+    : '时间未知';
+  const observedAge = Number.isFinite(observedAt) ? age(observedAt) : '时间未知';
+
   $('cluster-summary').innerHTML = [
     ['CA', '<code class="summary-ca">' + esc(mint) + '</code>' + copyButton(mint,'复制 CA')],
+    ['观测时间', esc(observedText) + '<span class="subvalue">' + esc(observedAge) + '</span>'],
     ['Top owner 已解析', esc(coverage.top_accounts_resolved ?? 0) + ' / 20'],
     ['深扫 owner', esc(coverage.deep_holders_scanned ?? 0)],
     ['控制集群', esc(ctrl.length)],
@@ -676,8 +685,8 @@ function renderClusterReport(report) {
     '</details>';
 
   clusterStatus('done','查询完成',
-    '数据源：Solana finalized JSON-RPC · RPC 调用 ' + (coverage.rpc_calls ?? 0) +
-    ' · 缓存命中 ' + (coverage.rpc_cache_hits ?? 0));
+    '观测于 ' + observedText + '（' + observedAge + '） · 数据源：Solana finalized JSON-RPC · RPC 调用 ' +
+    (coverage.rpc_calls ?? 0) + ' · 缓存命中 ' + (coverage.rpc_cache_hits ?? 0));
 }
 
 let clusterPollTimer = null;
