@@ -204,8 +204,10 @@ class MissionMemeService:
                         now=evaluation_now,
                         bucket_seconds=bucket_seconds,
                     )
-                    if self.outcomes.register(candidate=candidate,result=result,quote=quote,now=evaluation_now):
-                        outcome_registered += 1
+                    outcome_fresh_at = candidate.get("source_signal_at") or candidate.get("latest_at")
+                    if self._fresh_initial(outcome_fresh_at,evaluation_now,initial_max_age):
+                        if self.outcomes.register(candidate=candidate,result=result,quote=quote,now=evaluation_now):
+                            outcome_registered += 1
                     prior = self.control.latest_event(candidate["person_id"], candidate["mint"], candidate.get("episode_id"))
                     previous_decision = prior["decision"] if prior else None
                     transient = self._transient_wait(result)
