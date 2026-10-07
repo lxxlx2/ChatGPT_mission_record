@@ -151,6 +151,7 @@ def test_received_then_spent_created_intermediate_residual_is_routed_single_targ
     assert routed[0]['gross_in_raw']=='1000'
     assert routed[0]['gross_out_raw']=='990'
     assert routed[0]['net_delta']=='10'
+    assert routed[0]['upstream_quote_asset']==USDC
     assert routed[0]['downstream_target']=='mint1'
     flows=e['evidence']['wallet_token_transfer_flows']
     assert [(x['mint'],x['direction']) for x in flows]==[
