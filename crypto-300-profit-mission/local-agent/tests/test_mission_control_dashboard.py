@@ -340,6 +340,53 @@ def test_assessment_history_only_appends_on_meaningful_change(tmp_path):
     assert "cluster_status" in latest["changed_fields"]
 
 
+def test_assessment_history_records_risk_detail_change_and_attributes_coverage(tmp_path):
+    manager=ClusterJobManager(tmp_path/"control")
+    out=tmp_path/"report";out.mkdir()
+    base={
+        "observed_at":100,
+        "assessment":{
+            "trading_status":"RISK / ACTIVE_CHAIN_PERMISSION",
+            "chain_permission_status":"RISK",
+            "cluster_status":"NO_MATERIAL_CONTROL_CLUSTER_FOUND",
+            "narrative_status":"NOT_AUTOMATICALLY_VERIFIED",
+            "active_extension_risks":[{"name":"transferFeeConfig","status":"ACTIVE_RISK","reason":"TRANSFER_FEE_ACTIVE_OR_MUTABLE"}],
+            "unresolved_extension_risks":[],
+        },
+        "metrics":{
+            "LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":"0",
+            "UNRESOLVED_MATERIAL_HOLDER_PCT":"0",
+        },
+        "token_profile":{
+            "mint_authority":None,"freeze_authority":None,
+            "sensitive_extension_details":[
+                {"name":"transferFeeConfig","status":"ACTIVE_RISK","reason":"TRANSFER_FEE_ACTIVE_OR_MUTABLE","config":{"fee":1}}
+            ],
+        },
+        "coverage":{"scan_mode":"ADAPTIVE","deep_holders_scanned":6,"adaptive_deepened_owners":[]},
+    }
+    manager._attach_assessment_history(out,base,"standard")
+    changed=json.loads(json.dumps(base))
+    changed["observed_at"]=200
+    changed["assessment"]["active_extension_risks"]=[{"name":"permanentDelegate","status":"ACTIVE_RISK","reason":"PERMANENT_DELEGATE_ACTIVE"}]
+    changed["token_profile"]["sensitive_extension_details"]=[
+        {"name":"permanentDelegate","status":"ACTIVE_RISK","reason":"PERMANENT_DELEGATE_ACTIVE","config":{"delegate":"D"}}
+    ]
+    manager._attach_assessment_history(out,changed,"standard")
+    assert len(changed["assessment_history"])==2
+    latest=changed["assessment_history"][-1]
+    assert latest["change_category"]=="CHAIN_PERMISSION_CHANGE"
+    assert "sensitive_extension_details" in latest["changed_fields"]
+    assert latest["new_risk"]
+
+    coverage_only=json.loads(json.dumps(changed))
+    coverage_only["observed_at"]=300
+    coverage_only["coverage"]["deep_holders_scanned"]=20
+    manager._attach_assessment_history(out,coverage_only,"deep")
+    assert len(coverage_only["assessment_history"])==2
+    assert coverage_only["assessment_history_context"]["coverage_changed_since_previous_observation"] is True
+
+
 def test_dashboard_frontend_shows_progress_and_conclusion_history():
     from mission_agent.mission_control.server import Handler
     js=(Handler.static_root/"app.js").read_text()
@@ -347,6 +394,31 @@ def test_dashboard_frontend_shows_progress_and_conclusion_history():
     assert "ADAPTIVE_DEEPEN" in js
     assert "结论变化" in js
     assert "assessment_history" in js
+
+
+def test_frank_mint_snapshot_never_returns_other_person_same_mint(tmp_path):
+    prod=tmp_path/"prod";make_prod(prod)
+    db=sqlite3.connect(prod/"forward.sqlite")
+    db.execute(
+        "insert or replace into v1_states(person_id,mint,body) values(?,?,?)",
+        ("other","Mint111",json.dumps({
+            "person_id":"other","mint":"Mint111","episode_id":"other-e","state":"OPEN",
+            "current_raw":"999","events":[{"direction":"BUY","at":999999,"signature":"other-buy"}],
+        }))
+    )
+    db.execute(
+        "insert or replace into v1_states(person_id,mint,body) values(?,?,?)",
+        ("other","OtherOnly",json.dumps({
+            "person_id":"other","mint":"OtherOnly","episode_id":"other-only","state":"OPEN",
+            "current_raw":"1","events":[{"direction":"BUY","at":1000000,"signature":"other-only-buy"}],
+        }))
+    )
+    db.commit();db.close()
+    snapshot=FrankReader(prod).mint_snapshot("Mint111")
+    assert snapshot["status"]=="OBSERVED"
+    assert snapshot["person_id"]=="frank"
+    assert snapshot["latest_signature"]!="other-buy"
+    assert FrankReader(prod).mint_snapshot("OtherOnly")["status"]=="NOT_OBSERVED"
 
 
 def test_frank_mint_snapshot_reads_existing_observed_state(tmp_path):
