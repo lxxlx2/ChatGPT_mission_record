@@ -105,9 +105,18 @@ def _atomic_write_text(path: Path, text_value: str):
 
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 CLUSTER_PRESETS = {
-    "quick": {"deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8},
-    "standard": {"deep_holders": 10, "history_per_holder": 30, "funding_lookback": 12},
-    "deep": {"deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50},
+    "quick": {
+        "deep_holders": 6, "history_per_holder": 8, "funding_lookback": 4,
+        "adaptive_history_per_holder": None, "adaptive_funding_lookback": None,
+    },
+    "standard": {
+        "deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8,
+        "adaptive_history_per_holder": 30, "adaptive_funding_lookback": 12,
+    },
+    "deep": {
+        "deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50,
+        "adaptive_history_per_holder": None, "adaptive_funding_lookback": None,
+    },
 }
 
 
@@ -123,7 +132,12 @@ class ClusterJobManager:
             self.rpc_endpoints=[x.strip() for x in configured.split(",") if x.strip()]
         else:
             primary=os.environ.get("SOLANA_RPC_URL","https://api.mainnet.solana.com")
-            self.rpc_endpoints=[primary,"https://api.mainnet-beta.solana.com","https://rpc.ankr.com/solana"]
+            self.rpc_endpoints=[
+                primary,
+                "https://solana-rpc.publicnode.com",
+                "https://api.mainnet-beta.solana.com",
+                "https://rpc.ankr.com/solana",
+            ]
         self.rpc_endpoints=list(dict.fromkeys(self.rpc_endpoints))
         self.rpc_endpoint=self.rpc_endpoints[0]
         self.market_client=DexScreenerMarketClient()
@@ -174,10 +188,97 @@ class ClusterJobManager:
                 "started_at": None,
                 "finished_at": None,
                 "error": None,
+                "progress": {"stage":"QUEUED","updated_at":time.time()},
             }
             self.jobs[job_id] = job
             job["future"] = self.executor.submit(self._run, job_id)
             return self._public_job(job)
+
+    def _set_progress(self, job_id: str, stage: str, details: dict | None = None):
+        details=details or {}
+        progress={"stage":stage,"updated_at":time.time()}
+        if stage=="BASE_READY":
+            profile=details.get("token_profile") or {}
+            market=details.get("market") or {}
+            pair=market.get("main_pair") or {}
+            progress.update({
+                "token_program":profile.get("token_program"),
+                "mint_authority":profile.get("mint_authority"),
+                "freeze_authority":profile.get("freeze_authority"),
+                "market_status":market.get("status"),
+                "name":market.get("name"),
+                "symbol":market.get("symbol"),
+                "market_cap_usd":market.get("market_cap_usd"),
+                "liquidity_usd":pair.get("liquidity_usd"),
+            })
+        else:
+            for key in ("top_accounts_resolved","scanned","target","owner","mode","deep_holders_scanned","adaptive_deepened"):
+                if key in details:progress[key]=details.get(key)
+            if details.get("owners"):progress["owners"]=list(details.get("owners") or [])[:10]
+        with self.lock:
+            job=self.jobs.get(job_id)
+            if job is not None and job.get("status") in {"QUEUED","RUNNING"}:
+                job["progress"]=progress
+
+    @staticmethod
+    def _assessment_snapshot(report: dict) -> dict:
+        assessment=report.get("assessment") or {}
+        metrics=report.get("metrics") or {}
+        profile=report.get("token_profile") or {}
+        narrative=assessment.get("narrative_status")
+        structure=assessment.get("trading_status") or "UNRESOLVED"
+        investment="PENDING_NARRATIVE" if narrative=="NOT_AUTOMATICALLY_VERIFIED" else structure
+        return {
+            "structure_rating":structure,
+            "investment_rating":investment,
+            "chain_permission_status":assessment.get("chain_permission_status"),
+            "cluster_status":assessment.get("cluster_status"),
+            "largest_control_cluster_pct":metrics.get("LARGEST_PROBABLE_CONTROL_CLUSTER_PCT"),
+            "unresolved_material_holder_pct":metrics.get("UNRESOLVED_MATERIAL_HOLDER_PCT"),
+            "mint_authority_active":bool(profile.get("mint_authority")),
+            "freeze_authority_active":bool(profile.get("freeze_authority")),
+            "narrative_status":narrative,
+        }
+
+    def _attach_assessment_history(self, out: Path, report: dict, preset: str):
+        history_path=out/"assessment-history.json"
+        try:
+            history=json.loads(history_path.read_text()) if history_path.is_file() else []
+            if not isinstance(history,list):history=[]
+        except (OSError,ValueError):
+            history=[]
+        snapshot=self._assessment_snapshot(report)
+        previous=(history[-1].get("snapshot") or {}) if history else {}
+        changed=[key for key,value in snapshot.items() if previous.get(key)!=value]
+        if not history or changed:
+            new_risk=[]
+            removed_uncertainty=[]
+            if snapshot.get("chain_permission_status")=="RISK" and previous.get("chain_permission_status")!="RISK":
+                new_risk.append("CHAIN_PERMISSION_RISK")
+            if snapshot.get("cluster_status")=="PROBABLE_CONTROL_CLUSTER_PRESENT" and previous.get("cluster_status")!="PROBABLE_CONTROL_CLUSTER_PRESENT":
+                new_risk.append("PROBABLE_CONTROL_CLUSTER_PRESENT")
+            if previous.get("cluster_status")=="WALLET_CLUSTER_UNRESOLVED" and snapshot.get("cluster_status")!="WALLET_CLUSTER_UNRESOLVED":
+                removed_uncertainty.append("WALLET_CLUSTER_UNRESOLVED")
+            if previous.get("chain_permission_status")=="UNRESOLVED" and snapshot.get("chain_permission_status") in {"PASS","RISK"}:
+                removed_uncertainty.append("CHAIN_PERMISSION_UNRESOLVED")
+            entry={
+                "observed_at":report.get("observed_at") or time.time(),
+                "preset":preset,
+                "structure_rating":snapshot["structure_rating"],
+                "investment_rating":snapshot["investment_rating"],
+                "changed_fields":changed if history else list(snapshot),
+                "new_evidence":changed if history else ["INITIAL_OBSERVATION"],
+                "removed_uncertainty":removed_uncertainty,
+                "new_risk":new_risk,
+                "reason":"首次观测" if not history else "关键结论字段变化：" + ", ".join(changed),
+                "snapshot":snapshot,
+            }
+            history.append(entry)
+            history=history[-100:]
+            _atomic_write_text(history_path,json.dumps(history,ensure_ascii=False,indent=2,sort_keys=True))
+        report["assessment_history"]=[
+            {k:v for k,v in row.items() if k!="snapshot"} for row in history[-20:]
+        ]
 
     def _run(self, job_id: str):
         with self.lock:
@@ -202,7 +303,10 @@ class ClusterJobManager:
                 deep_holders=opts["deep_holders"],
                 history_per_holder=opts["history_per_holder"],
                 funding_lookback=opts["funding_lookback"],
+                adaptive_history_per_holder=opts.get("adaptive_history_per_holder"),
+                adaptive_funding_lookback=opts.get("adaptive_funding_lookback"),
                 market_client=self.market_client,
+                progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
             try:
                 report["execution_quote_30_usdc"]=self.jupiter.quote_usdc_to_token(
@@ -217,9 +321,11 @@ class ClusterJobManager:
                     "source":"JUPITER_OFFICIAL",
                     "reason":type(exc).__name__,
                 }
+            self._set_progress(job_id,"REPORT_PERSISTING",{"deep_holders_scanned":(report.get("coverage") or {}).get("deep_holders_scanned"),"adaptive_deepened":len((report.get("coverage") or {}).get("adaptive_deepened_owners") or [])})
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
+            self._attach_assessment_history(out,report,preset)
             payload = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
             _atomic_write_text(out / f"{stamp}.json", payload)
             _atomic_write_text(out / f"{stamp}.md", markdown(report))
@@ -228,6 +334,7 @@ class ClusterJobManager:
                 job = self.jobs[job_id]
                 job["status"] = "DONE"
                 job["finished_at"] = time.time()
+                job["progress"] = {"stage":"DONE","updated_at":job["finished_at"]}
                 self._prune_jobs_locked()
         except Exception as exc:
             with self.lock:
@@ -238,6 +345,7 @@ class ClusterJobManager:
                     "type": type(exc).__name__,
                     "message": str(exc)[:500],
                 }
+                job["progress"] = {"stage":"ERROR","updated_at":job["finished_at"]}
                 self._prune_jobs_locked()
         finally:
             cache.close()
