@@ -121,7 +121,7 @@ CLUSTER_PRESETS = {
 
 
 class ClusterJobManager:
-    def __init__(self, control_root: Path):
+    def __init__(self, control_root: Path, production_root: Path | None = None):
         self.control_root = Path(control_root)
         self.report_root = self.control_root / "cluster-reports"
         self.report_root.mkdir(parents=True, exist_ok=True)
@@ -142,6 +142,7 @@ class ClusterJobManager:
         self.rpc_endpoint=self.rpc_endpoints[0]
         self.market_client=DexScreenerMarketClient()
         self.jupiter=JupiterQuoteClient(os.environ.get("JUPITER_API_KEY"))
+        self.frank=FrankReader(production_root) if production_root is not None else None
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
@@ -308,6 +309,9 @@ class ClusterJobManager:
                 market_client=self.market_client,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
+            report["frank"]=self.frank.mint_snapshot(mint) if self.frank is not None else {
+                "status":"UNAVAILABLE","reason":"PRODUCTION_ROOT_NOT_CONFIGURED","mint":mint,
+            }
             try:
                 report["execution_quote_30_usdc"]=self.jupiter.quote_usdc_to_token(
                     mint,
@@ -372,7 +376,7 @@ class DashboardState:
         self.control_root = Path(control_root)
         self.control_db = self.control_root / "mission-control.sqlite"
         self.control_health = self.control_root / "mission-control-health.json"
-        self.cluster_jobs = ClusterJobManager(self.control_root)
+        self.cluster_jobs = ClusterJobManager(self.control_root, production_root)
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():
