@@ -278,6 +278,27 @@ def test_token2022_transfer_fee_missing_required_fields_stays_unresolved():
     assert out["assessment"]["chain_permission_status"]=="UNRESOLVED"
 
 
+def test_token2022_single_older_schedule_with_duplicate_aliases_is_not_complete():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{
+            "transferFeeConfigAuthority":None,
+            "withdrawWithheldAuthority":None,
+            "olderTransferFee":{
+                "transferFeeBasisPoints":0,
+                "basisPoints":0,
+                "maximumFee":0,
+                "maxFee":0,
+            },
+        },
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert detail["reason"]=="TRANSFER_FEE_CONFIG_INCOMPLETE"
+    a=analyzer();a.token_profile=lambda:profile
+    assert a.analyze()["assessment"]["chain_permission_status"]=="UNRESOLVED"
+
+
 def test_token2022_transfer_fee_invalid_numeric_fields_stay_unresolved():
     profile=token2022_profile({
         "extension":"transferFeeConfig",
