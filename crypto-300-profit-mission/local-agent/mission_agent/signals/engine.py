@@ -105,7 +105,7 @@ class Engine:
                     self.db.execute('INSERT OR IGNORE INTO v1_episodes VALUES(?,?,?)',(episode,person,mint))
                 if s is not None:
                     amount_predicate=t.get('amount_predicate') or ('USDC_DIRECT_NUMERIC' if t['quote_asset']==USDC else 'UNDETERMINED')
-                    if amount_predicate not in {'USDC_DIRECT_NUMERIC','UNDETERMINED'}:
+                    if amount_predicate not in {'USDC_DIRECT_NUMERIC','SOL_EVENT_TIME_USDC_VERIFIED','UNDETERMINED'}:
                         raise ValueError('TRADE_AMOUNT_PREDICATE_INVALID')
                     event={'signature':row['signature'],'at':at,'slot':row['slot'],**t,'quote_quantity':quantity(t['quote_amount_raw'],t['quote_decimals']),'amount_predicate':amount_predicate};s['events'].append(event)
                     amount=int(t['token_amount_raw']);current=int(s['current_raw']) if s['current_raw'] is not None else None
