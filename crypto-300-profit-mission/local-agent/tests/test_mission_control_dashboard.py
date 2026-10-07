@@ -142,6 +142,21 @@ def test_dashboard_frontend_fetches_and_renders_review_activity():
     assert "多资产/多结算腿" in js
 
 
+
+
+def test_cluster_frank_snapshot_failure_is_nonfatal(tmp_path):
+    manager=ClusterJobManager(tmp_path/"control")
+    class BrokenFrank:
+        def mint_snapshot(self,mint):
+            raise sqlite3.OperationalError("locked")
+    manager.frank=BrokenFrank()
+    result=manager._frank_snapshot("Mint111")
+    assert result["status"]=="UNAVAILABLE"
+    assert result["reason"]=="FRANK_READ_ERROR"
+    assert result["error_class"]=="OperationalError"
+    assert result["mint"]=="Mint111"
+
+
 def test_cluster_query_validates_solana_ca_and_presets(tmp_path):
     manager=ClusterJobManager(tmp_path/"control")
     mint="So11111111111111111111111111111111111111112"
