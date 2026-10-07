@@ -751,10 +751,16 @@ function renderClusterReport(report) {
       ' · 24h 成交 ' + usd(h24) + '。';
   }
 
+  const structureConclusion=assessmentLabel[assessment.trading_status] || assessment.trading_status || '等待数据';
+  const fullConclusion=assessment.narrative_status==='NOT_AUTOMATICALLY_VERIFIED'
+    ? '完整投资结论待叙事 / 官方关系核实'
+    : structureConclusion;
+
   $('cluster-conclusion').innerHTML =
-    '<div class="conclusion-lead"><span>当前结论</span><strong>' +
-      esc(assessmentLabel[assessment.trading_status] || assessment.trading_status || '等待数据') +
-    '</strong></div>' +
+    '<div class="conclusion-leads">' +
+      '<div class="conclusion-lead"><span>链上 / 市场结构结论</span><strong>' + esc(structureConclusion) + '</strong></div>' +
+      '<div class="conclusion-lead secondary"><span>完整投资结论</span><strong>' + esc(fullConclusion) + '</strong></div>' +
+    '</div>' +
     '<div class="conclusion-grid">' +
       '<div><b>链上权限</b><p>' + esc(chainConclusion) + '</p></div>' +
       '<div><b>Holder / Cluster</b><p>' + esc(clusterConclusion) + '</p></div>' +
