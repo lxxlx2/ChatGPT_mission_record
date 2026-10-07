@@ -47,7 +47,7 @@ def policy(path: Path, *, status="REVIEW_ONLY", live=False):
 
 
 def good_quote():
-    return {"status":"OK","source":"JUPITER_OFFICIAL","observed_at":time.time(),"input_usdc":"30","execution_price_usdc":"1.02","price_impact_pct":"0.5","route_exists":True,"route_plan":[{}],"time_taken":0.0123}
+    return {"status":"OK","source":"JUPITER_OFFICIAL","observed_at":time.time(),"input_usdc":"30","out_amount_raw":"30000000","token_out":"30","execution_price_usdc":"1.02","price_impact_pct":"0.5","route_exists":True,"route_plan":[{}],"time_taken":0.0123}
 
 
 def test_review_policy_never_allows_live_delivery_and_records_dry_outbox(tmp_path):
@@ -208,3 +208,21 @@ def test_plain_single_buy_without_reentry_is_not_promoted_to_watch(tmp_path):
     candidates=service.frank.candidates()
     assert all(x["mint"]!="PlainBuyMint" for x in candidates)
     service.close()
+
+
+def test_fresh_signal_registers_forward_outcome_but_old_bootstrap_does_not(tmp_path):
+    fresh_prod=tmp_path/"fresh-prod";fresh_control=tmp_path/"fresh-control";p=tmp_path/"policy.json"
+    make_prod(fresh_prod);policy(p)
+    fresh=MissionMemeService(production_root=fresh_prod,control_root=fresh_control,policy_path=p)
+    fresh.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
+    fresh.cycle()
+    assert fresh.control.db.execute("select count(*) from outcome_tracks").fetchone()[0]==1
+    fresh.close()
+
+    old_prod=tmp_path/"old-prod";old_control=tmp_path/"old-control"
+    make_prod(old_prod,latest_at=int(time.time())-3600)
+    old=MissionMemeService(production_root=old_prod,control_root=old_control,policy_path=p)
+    old.jupiter.quote_usdc_to_token=lambda *a,**k:good_quote()
+    old.cycle()
+    assert old.control.db.execute("select count(*) from outcome_tracks").fetchone()[0]==0
+    old.close()
