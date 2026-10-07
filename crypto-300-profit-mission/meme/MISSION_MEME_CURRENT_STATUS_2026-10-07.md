@@ -54,6 +54,22 @@ Implemented and in main:
 17. LaunchAgent runtime policy is copied to `~/Library/Application Support/FrankMeme/follow_policy_v1.approved.json` to avoid macOS Documents/TCC denial.
 18. Existing Frank production LaunchAgent remains separate and is not modified by Mission Control.
 
+### 2A. Review-branch additions — not yet main/live
+
+Branch:
+`feature/meme-local-tooling-v2-20261007`
+
+The branch currently adds, pending re-review + local rerun + merge:
+
+- independent forward outcome tracking with executable Jupiter entry/exit quotes;
+- fixed T+5m / T+15m / T+1h / T+6h / T+24h horizons;
+- 5-minute sampled MFE / MAE / max drawdown plus monthly grouped statistics and Ex-Top robustness;
+- live SOL-quoted Frank normalization in a separate sidecar DB, while keeping production Frank read-only and the frozen Frank evaluator unchanged;
+- a free local Solana wallet-cluster engine and a tabbed `CA 链上查询` view inside the same Dashboard;
+- Chinese trading-oriented Mission Control notification content.
+
+These additions are **not operational authority** until the branch is revalidated, synchronized with current main, merged, and the local LaunchAgents are restarted on the merged main.
+
 ## 3. Current approved follow policy
 
 Runtime policy:
@@ -82,7 +98,9 @@ These values must not be silently changed from accumulated live results.
 
 User-run acceptance on 2026-10-07 confirmed:
 
-- full local-agent suite: `706 passed`
+- original live-notification acceptance baseline: `706 passed`
+- independent review of feature head `fa01f7e`: `727 passed` (21 additional tests)
+- subsequent review-fix commits after `fa01f7e` still require a fresh full local rerun before merge
 - approved policy gate: PASS
 - Gmail OAuth readiness: PASS
 - recipient resolved successfully
@@ -175,17 +193,19 @@ Canonical followability horizons remain:
 
 Do not call the strategy validated from raw Frank wallet PnL or one large winner.
 
-### D. Known evaluation gap
+### D. Main/live evaluation gap vs review-branch candidate
 
-Mission Control currently stores 60-day observations while an episode is being evaluated, plus immutable Decision transitions. It does **not** yet guarantee an independent fixed-horizon market-price capture for every signal after Frank exits/closes the position.
+Current main/live Mission Control still has the historical gap described below: it stores 60-day observations plus immutable Decision transitions, but does not yet guarantee independent fixed-horizon capture after Frank exits.
 
-Therefore a rigorous one-month T+5m/T+15m/T+1h/T+6h/T+24h return table requires the dedicated post-signal outcome tracker listed in the backlog below, or a separately verified historical reconstruction. Do not fabricate missing horizon prices.
+The review branch now contains a forward-only outcome tracker that records executable Jupiter entry inventory and T+5m/T+15m/T+1h/T+6h/T+24h exit observations, with `MISSED_WINDOW` instead of hindsight backfill.
+
+Until that branch is revalidated, merged and restarted locally, the live system must still be treated as having the old gap. Do not reconstruct missing horizon prices by guess.
 
 ## 7. Open validation items inside current Frank system
 
 These are not blockers for normal notification use, but remain unclosed evidence gaps:
 
-1. `SOL_NORMALIZATION = IMPLEMENTED_BUT_NOT_EXERCISED` on a real production SOL/WSOL-quoted Frank trade.
+1. Real production SOL/WSOL-quoted Frank normalization remains unexercised. The review branch now has a live read-only sidecar candidate, but it still needs a real Frank SOL/WSOL trade acceptance before this gate is closed.
 2. A real Jupiter `NO_ROUTE` fixture has not been observed; current no-route handling remains conservative.
 3. Sustained Jupiter 429 handling still uses bounded blocking cooldown; a non-blocking cycle-level design remains preferable.
 4. First real post-enable Mission Control Gmail send + Sent readback still needs live evidence.
@@ -195,16 +215,20 @@ These are not blockers for normal notification use, but remain unclosed evidence
 
 ### P0 — needed for rigorous monthly Frank strategy review
 
-**Post-signal outcome tracker / monthly evaluator — NOT IMPLEMENTED**
+**Post-signal outcome tracker / monthly evaluator — IMPLEMENTED IN REVIEW BRANCH, NOT YET MAIN/LIVE**
 
-Purpose:
-- continue independent market-price observation after a signal even if Frank exits;
-- persist fixed horizons T+5m/T+15m/T+1h/T+6h/T+24h;
-- calculate executable return, MFE/MAE, drawdown, win rate, median return, profit factor and concentration;
-- compare BUY vs SMALL_BUY vs REENTRY_WATCH/WAIT baselines;
-- support Ex-Top1 / Ex-Top3 robustness.
+Review-branch implementation:
+- forward-only registration for fresh REENTRY_WATCH / ACCUMULATION / MULTIPLE stages;
+- executable Jupiter 30 USDC -> token entry inventory;
+- same raw token inventory -> USDC exit quotes;
+- T+5m/T+15m/T+1h/T+6h/T+24h;
+- 5-minute sampled MFE/MAE/max drawdown;
+- win rate, statistical median, mean return, profit factor;
+- grouping by pattern and Decision;
+- Ex-Top1 / Ex-Top3 24h robustness;
+- `MISSED_WINDOW` rather than late-price backfill.
 
-This is the main missing piece if the goal is to judge strategy effectiveness after one month without reconstructing missing prices later.
+It still needs current-head full-suite rerun and live forward sampling after merge.
 
 ### P1 — tracked-person expansion
 
@@ -228,9 +252,23 @@ The old design exists, but live authority is Frank-only. It requires at least tw
 
 ### P1 — wallet-cluster automation for CA research
 
-**General wallet-cluster reconstruction engine — SPEC PRESENT, GENERAL AUTOMATION NOT ESTABLISHED**
+**General wallet-cluster reconstruction engine — IMPLEMENTED IN REVIEW BRANCH, NOT YET MAIN/LIVE**
 
-The analysis rule is mandatory for serious Meme CA research, but there is no general live production service that automatically resolves holder ownership/control/execution clusters and emits cluster-adjusted concentration for every token.
+Review-branch implementation:
+- CA input in the same localhost Dashboard under `CA 链上查询`;
+- Top20 token-account -> real owner resolution;
+- bounded finalized Solana JSON-RPC history;
+- direct target-token and SOL/USDC/WSOL relations;
+- common funding / batch funding / common signer / consolidation evidence;
+- synchronized buy/sell and distinctive-size behavior;
+- public DEX/router/CEX/shared-infrastructure exclusion;
+- confirmed relation vs probable control vs probable execution kept separate;
+- strict concentration fields stay `UNRESOLVED` until special-address normalization is explicitly complete;
+- persistent local reports + hashed RPC cache;
+- quick / standard / deep presets;
+- asynchronous single-worker execution to protect the free public RPC path.
+
+The current branch still requires one real public-RPC CA acceptance run on the user's Mac before merge.
 
 ### P2 — MONSTER / 妖币 discovery
 
@@ -271,3 +309,20 @@ The following are deliberate boundaries and should not be treated as unfinished 
 - new ChatGPT automation for this lane.
 
 They require separate explicit authorization if ever reconsidered.
+
+
+## 10. 2026-10-07 external review remediation on feature branch
+
+Independent review of `fa01f7e` found three credibility-impacting defects plus several hardening issues. The branch now contains fixes for:
+
+1. Public Jupiter/Raydium/PumpSwap/etc. DEX programs are recorded as `SHARED_INFRA`, not `SAME_EXECUTION_PROGRAM`; execution-only clusters no longer reduce unresolved material-holder share.
+2. Funding-history `getTransaction = null` is recorded as unavailable evidence and skipped instead of aborting the CA job.
+3. Even-sized outcome samples use the statistical midpoint median instead of the upper middle element.
+4. Cluster POST body must be a JSON object.
+5. Same CA is deduplicated only for the same scan preset; a requested deep scan is no longer silently replaced by an active quick scan.
+6. Cluster POST requires `application/json` and rejects a non-loopback Origin while still allowing local CLI requests with no Origin.
+7. Completed in-memory job metadata is bounded and full reports stay on disk; Dashboard reloads the last persisted CA report.
+8. `DEV_LINKED_CLUSTER_PCT` includes wallets in a probable-control cluster containing a verified DEV/CREATOR/TREASURY wallet.
+9. This status document now distinguishes current main/live authority from review-branch candidate functionality.
+
+A fresh full local-agent test run is required after these remediation commits; do not reuse the earlier `727 passed` as proof for the new head.
