@@ -329,6 +329,7 @@ class FrankReader:
                 result.append({
                     "signature":row["signature"],"block_time":row["block_time"],
                     "classification_reason":body.get("classification_reason"),
+                    "residual_flow_candidates":((body.get("classification_details") or {}).get("residual_flow_candidates") or []),
                     "review_scope":(
                         "ACTIVE_SWAP_LIKE"
                         if evidence.get("mechanical_classification")=="ACTIVE_SWAP_LIKE"
