@@ -87,6 +87,19 @@ def _decode_json_object(raw: bytes) -> dict:
     return body
 
 
+def _atomic_write_text(path: Path, text_value: str):
+    path = Path(path)
+    tmp = path.with_name(path.name + f".tmp-{os.getpid()}-{uuid.uuid4().hex}")
+    try:
+        tmp.write_text(text_value)
+        os.replace(tmp, path)
+    finally:
+        try:
+            tmp.unlink()
+        except FileNotFoundError:
+            pass
+
+
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 CLUSTER_PRESETS = {
     "quick": {"deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8},
@@ -178,9 +191,9 @@ class ClusterJobManager:
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
             payload = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
-            (out / f"{stamp}.json").write_text(payload)
-            (out / f"{stamp}.md").write_text(markdown(report))
-            (out / "latest.json").write_text(payload)
+            _atomic_write_text(out / f"{stamp}.json", payload)
+            _atomic_write_text(out / f"{stamp}.md", markdown(report))
+            _atomic_write_text(out / "latest.json", payload)
             with self.lock:
                 job = self.jobs[job_id]
                 job["status"] = "DONE"
