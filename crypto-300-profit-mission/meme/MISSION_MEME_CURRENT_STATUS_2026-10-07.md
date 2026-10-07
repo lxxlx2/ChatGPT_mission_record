@@ -659,3 +659,26 @@ No other review findings, policy thresholds, historical state, production DB,
 Next gate is a closure-only review of exactly
 `56eb0b8dafcbcd372f1f01cf4a33a7a2d760790e..e628c61a2c0566f2202d590d7ff8167e074d1f3c`,
 limited to FRANK-009 and FRANK-010.
+
+
+### Independent closure review complete — 2026-10-08
+
+Final closure review of
+`56eb0b8dafcbcd372f1f01cf4a33a7a2d760790e..26af467c439d2dc08b8ba86e48056d4170348630`
+reported:
+- FRANK-009: `CLOSED`;
+- FRANK-010: `CLOSED`;
+- all previous FRANK-001..011 findings: `CLOSED`;
+- `SAFE_FOR_ISOLATED_REAL_CA_ACCEPTANCE = YES`;
+- `SAFE_FOR_PRODUCTION_STATE_MIGRATION = NO`;
+- `SAFE_FOR_MAIN_MERGE = NO` until the isolated real-CA acceptance gate is completed.
+
+The independently re-run closure suite reported `800 passed` on the validated
+runtime/test code. Historical Frank state migration/backfill remains unnecessary
+and unauthorized. Existing production `v1_seen`, historical notifications,
+production DB contents and LaunchAgents must remain untouched during isolated
+real-CA acceptance. Production trading remains `NO_GO`.
+
+Next gate: localhost-only port `8877`, a fresh isolated control root, dashboard
+server only (no Mission Meme loop / no delivery), read-only production Frank
+snapshot access, and live Solana/Jupiter/DexScreener CA-report generation.
