@@ -679,6 +679,8 @@ function fundingCell(h) {
 
 const assessmentLabel = {
   'RISK / AUTHORITY_PRESENT':'风险 / 权限仍存在',
+  'RISK / ACTIVE_CHAIN_PERMISSION':'风险 / 存在有效链上权限或扩展',
+  'WATCH / CHAIN_PERMISSION_UNRESOLVED':'观察 / Token-2022 权限状态待核实',
   'WATCH / CONTROL_CLUSTER_RISK':'观察 / 存在可能共同控制集群',
   'WATCH / WALLET_CLUSTER_UNRESOLVED':'观察 / 钱包集群尚未完全确认',
   'WATCH / CHAIN_STRUCTURE_PASS':'观察 / 链上结构通过当前扫描',
