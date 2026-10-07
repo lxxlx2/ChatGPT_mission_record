@@ -140,6 +140,18 @@ class OutcomeTracker:
         for track in rows:
             age=float(now)-float(track["available_at"])
             for h in HORIZONS:
+                if self.db.execute("SELECT 1 FROM outcome_horizons WHERE tracking_id=? AND horizon_seconds=?",(track["tracking_id"],h)).fetchone():
+                    continue
+                sample=self.db.execute(
+                    """SELECT * FROM outcome_samples
+                       WHERE tracking_id=? AND age_seconds>=? AND age_seconds<=?
+                       ORDER BY age_seconds,sample_at LIMIT 1""",
+                    (track["tracking_id"],h,h+HORIZON_GRACE_SECONDS),
+                ).fetchone()
+                if sample:
+                    sample=dict(sample)
+                    self._record_horizon(track,h,sample,status=sample["status"],reason=sample.get("reason"))
+                    continue
                 if age<=h+HORIZON_GRACE_SECONDS:continue
                 if track["entry_status"]!="MEASURED":
                     self._record_horizon(track,h,status="UNAVAILABLE",reason="ENTRY_QUOTE_UNAVAILABLE_AT_SIGNAL")
@@ -207,12 +219,15 @@ def report(db,*,since_epoch=None,until_epoch=None):
         summary["by_decision"][x["initial_decision"]]=summary["by_decision"].get(x["initial_decision"],0)+1
     def stats(values):
         values=sorted(x for x in values if x is not None)
-        if not values:return {"measured":0,"win_rate_pct":None,"median_return_pct":None,"mean_return_pct":None}
+        if not values:return {"measured":0,"win_rate_pct":None,"median_return_pct":None,"mean_return_pct":None,"profit_factor":None}
+        gains=sum((x for x in values if x>0),Decimal(0));losses=-sum((x for x in values if x<0),Decimal(0))
+        profit_factor="INF" if gains>0 and losses==0 else None if losses==0 else str(gains/losses)
         return {
             "measured":len(values),
             "win_rate_pct":str(Decimal(sum(x>0 for x in values))*100/Decimal(len(values))),
             "median_return_pct":str(values[len(values)//2]),
             "mean_return_pct":str(sum(values,Decimal(0))/Decimal(len(values))),
+            "profit_factor":profit_factor,
         }
     grouped={"by_pattern":{},"by_decision":{}}
     for h in HORIZONS:
