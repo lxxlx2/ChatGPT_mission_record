@@ -73,6 +73,20 @@ def test_replay_rejects_workspace_inside_production_source_directory(tmp_path):
         replay._new_workspace(source.parent/"candidate-replay",source.resolve())
 
 
+def test_replay_rejects_existing_symlink_or_hardlink_output_alias(tmp_path):
+    source,_=make_source(tmp_path)
+    work=tmp_path/"manual-work";work.mkdir()
+    symlink=work/"symlink-report.json"
+    symlink.symlink_to(source)
+    with pytest.raises(ValueError,match="OUTPUT_MUST_NOT_EXIST"):
+        replay._output_in_workspace(symlink,work)
+
+    hardlink=work/"hardlink-report.json"
+    hardlink.hardlink_to(source)
+    with pytest.raises(ValueError,match="OUTPUT_MUST_NOT_EXIST"):
+        replay._output_in_workspace(hardlink,work)
+
+
 def test_replay_rejects_reserved_database_output_name(tmp_path):
     source,_=make_source(tmp_path)
     work=replay._new_workspace(tmp_path/"audit-work",source.resolve())
