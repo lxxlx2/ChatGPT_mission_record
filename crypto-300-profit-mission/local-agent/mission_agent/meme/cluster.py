@@ -102,23 +102,30 @@ class SolanaReadOnlyRPC:
         self.endpoint_failures=defaultdict(int)
         self._last_by_endpoint=defaultdict(float)
         self._cooldown_until=defaultdict(float)
-        self._cursor=0
 
     def _next_endpoint(self):
         now=time.monotonic()
-        ranked=[]
-        for offset in range(len(self.endpoints)):
-            idx=(self._cursor+offset)%len(self.endpoints)
-            endpoint=self.endpoints[idx]
-            ready=max(
-                self._cooldown_until[endpoint],
-                self._last_by_endpoint[endpoint]+self.min_interval,
-            )
-            ranked.append((ready,offset,idx,endpoint))
-        ready,_,idx,endpoint=min(ranked,key=lambda x:(x[0],x[1]))
+        primary=self.endpoints[0]
+        # Keep the official/configured primary as the normal source. Only move to
+        # fallbacks while the primary is in an error cooldown window.
+        primary_cooldown=self._cooldown_until[primary]
+        if primary_cooldown<=now:
+            endpoint=primary
+            ready=max(now,self._last_by_endpoint[endpoint]+self.min_interval)
+        else:
+            ranked=[]
+            for priority,endpoint in enumerate(self.endpoints[1:],1):
+                ready=max(
+                    self._cooldown_until[endpoint],
+                    self._last_by_endpoint[endpoint]+self.min_interval,
+                )
+                ranked.append((ready,priority,endpoint))
+            if ranked:
+                ready,_,endpoint=min(ranked,key=lambda x:(x[0],x[1]))
+            else:
+                endpoint=primary;ready=max(primary_cooldown,self._last_by_endpoint[primary]+self.min_interval)
         delay=ready-now
         if delay>0:self.sleep(delay)
-        self._cursor=(idx+1)%len(self.endpoints)
         self.endpoint=endpoint
         return endpoint
 
