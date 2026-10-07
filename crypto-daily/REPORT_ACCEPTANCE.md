@@ -105,3 +105,12 @@ Hard fail examples:
 DRAFT -> INPUT_MANIFEST_READY -> PRE_SEND_LINT_PASS -> QA_PASS -> GMAIL_SENT_READBACK -> GITHUB_ARCHIVED_READBACK -> DELIVERED
 
 If Gmail succeeds but GitHub archive fails, repair GitHub only and do not resend.
+
+## Existing-scope chain shutdown / forced migration regression guard (2026-10-07)
+Within existing chain-ecosystem, infrastructure, security and cross-market coverage, daily prebuild and pre-send discovery must include fresh English searches for a confirmed chain/L2 shutdown, sunset, wind-down, permanent halt, forced asset migration, bridge withdrawal deadline or loss of access. This adds no new monitored asset, user-specific alert, or automation.
+
+A confirmed material chain-termination announcement is eligible for the formal Crypto Daily under Section 6 or Section 9, even when that project is USER_SUPPRESSED inside the separate TGE/airdrop rights monitor. TGE suppression applies solely to its user-specific rights discovery/notifications; it does not erase market-wide material infrastructure news. Maintain original user suppression and never reactivate user-specific TGE alerting without explicit user instruction.
+
+For each candidate, verify the official announcement, chain identity, effective shutdown date, actual migration/bridge steps and loss-of-access risks. Include exactly one primary detailed report item with material user-relevant safety action, and at most one Top-5 short summary if truly high priority. Warn about fake migration websites; never present an unverified migration link as trusted. If key fields remain unavailable, record the gap in internal audit, without asserting the chain remains operational or claiming comprehensive discovery.
+
+Regression incident: Abstract/ABS announced on 2026-10-06 that Abstract L2 will end on 2026-12-15, with users asked to migrate funds before the deadline. The 2026-10-07 formal Crypto Daily omitted this major chain shutdown despite the pre-delivery window; keep this omission in the quality audit. The user's separate Abstract/ABS TGE suppression remains unchanged.
