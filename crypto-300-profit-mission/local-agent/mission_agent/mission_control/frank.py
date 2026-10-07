@@ -48,7 +48,11 @@ def _event_price_usdc(event: dict) -> Decimal | None:
         direct_usdc=amount_predicate in (None,"USDC_DIRECT_NUMERIC")
         if event.get("quote_asset") == USDC and direct_usdc and not event.get("quote_normalization"):
             return Decimal(str(event["quote_quantity"])) / quantity
-        if event.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" and event.get("quote_usdc_equivalent") is not None:
+        if (
+            event.get("amount_predicate")=="SOL_EVENT_TIME_USDC_VERIFIED"
+            and event.get("quote_usdc_status")=="SOL_EVENT_TIME_USDC_VERIFIED"
+            and event.get("quote_usdc_equivalent") is not None
+        ):
             return Decimal(str(event["quote_usdc_equivalent"])) / quantity
     except (KeyError, InvalidOperation, ZeroDivisionError, TypeError):
         return None
@@ -224,12 +228,13 @@ class FrankReader:
             db.close()
 
     def mint_snapshot(self, mint: str) -> dict:
-        """Read the latest observed Frank state for one mint without creating a signal."""
+        """Read Frank's exact-person observed state for one mint without creating a signal."""
+        person_id="frank"
         db = open_production_ro(self.database)
         try:
             row = db.execute(
-                "SELECT person_id,mint,body FROM v1_states WHERE mint=? ORDER BY rowid DESC LIMIT 1",
-                (mint,),
+                "SELECT person_id,mint,body FROM v1_states WHERE person_id=? AND mint=? LIMIT 1",
+                (person_id,mint),
             ).fetchone()
             if not row:
                 return {"status":"NOT_OBSERVED","mint":mint}
