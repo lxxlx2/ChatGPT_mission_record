@@ -1,9 +1,12 @@
 """Integer raw-unit economic evidence; conservative mechanical classifications.
 
-Program identity primary references (retrieved 2026-10-01):
+Program identity primary references:
 https://github.com/raydium-io/raydium-library
 https://github.com/pump-fun/pump-public-docs/tree/main/idl
 https://github.com/MeteoraAg/dlmm-sdk/blob/main/idls/dlmm.json
+https://github.com/MeteoraAg/damm-v2-sdk
+https://github.com/orca-so/whirlpools
+https://github.com/Bonasa-Tech/manifest
 Registry membership never suffices without wallet authority, opposing owned
 flows and a swap instruction bound to the invoked recognized program.
 """
@@ -17,11 +20,30 @@ DEX_PROGRAMS=frozenset({'675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8',
                        'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'})
 PARSER_VERSION='frank-v7'
 WSOL='So11111111111111111111111111111111111111112'
-DEX_PROGRAMS=DEX_PROGRAMS | frozenset({'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK','CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C','pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA','6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P','LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo'})
+DEX_PROGRAMS=DEX_PROGRAMS | frozenset({
+    'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK',
+    'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C',
+    'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA',
+    '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P',
+    'LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo',
+    # Officially documented markets recovered by the historical coverage audit.
+    'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc',  # Orca Whirlpools
+    'cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG',  # Meteora DAMM v2
+    'MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms',  # Manifest core
+})
 AUTH_FIELDS=frozenset({'authority','owner','multisigAuthority','transferAuthority','delegate','withdrawAuthority','stakeAuthority'})
 AUTH_OWNER_TYPES=frozenset({'transfer','transferChecked','closeAccount','burn','burnChecked','approve','approveChecked','revoke','setAuthority'})
 
 class IncompleteTransaction(ValueError):pass
+
+def _program_id(ix,names):
+    program=ix.get('programId')
+    if program:return program
+    if 'programIdIndex' not in ix:return None
+    index=ix.get('programIdIndex')
+    if type(index) is not int or index<0 or index>=len(names):
+        raise IncompleteTransaction('PROGRAM_INDEX_INVALID')
+    return names[index]
 
 def normalize(signature,tx,wallet=WALLET):
     if tx is None:raise IncompleteTransaction('UNAVAILABLE_ON_PUBLIC_RPC')
@@ -42,8 +64,7 @@ def normalize(signature,tx,wallet=WALLET):
         for n,ix in enumerate(group['instructions']):all_ix.append(('inner',f"{group['index']}:{n}",ix))
     authorities=[];programs=set();created=[];closed=[];types=[]
     for scope,index,ix in all_ix:
-        program=ix.get('programId')
-        if not program and 'programIdIndex' in ix:program=names[ix['programIdIndex']]
+        program=_program_id(ix,names)
         if program:programs.add(program)
         parsed=ix.get('parsed',{});parsed=parsed if isinstance(parsed,dict) else {};info=parsed.get('info',{});kind=parsed.get('type','');types.append(kind)
         for field in sorted(AUTH_FIELDS):
@@ -74,13 +95,18 @@ def normalize(signature,tx,wallet=WALLET):
         parts=log.split()
         if len(parts)>=4 and parts[0]=='Program' and parts[2]=='invoke':stack.append(parts[1])
         elif len(parts)>=3 and parts[0]=='Program' and parts[2] in ('success','failed:'):
-            if parts[1] in stack:stack=stack[:stack.index(parts[1])]
+            if parts[1] in stack:
+                # Pop the innermost matching invocation. Re-entrant CPI can place
+                # the same program on the stack more than once.
+                pos=len(stack)-1-stack[::-1].index(parts[1])
+                stack=stack[:pos]
         elif log.startswith('Program log: Instruction: ') and stack and stack[-1] in DEX_PROGRAMS:
             kind=log.split('Instruction: ',1)[1].lower()
             if kind.startswith(('swap','route','sharedaccountsroute','buy','sell')):swap_instruction=True
     for _,_,ix in all_ix:
         parsed=ix.get('parsed',{})
-        if isinstance(parsed,dict) and ix.get('programId') in DEX_PROGRAMS:
+        program=_program_id(ix,names)
+        if isinstance(parsed,dict) and program in DEX_PROGRAMS:
             if parsed.get('type','').lower().startswith(('swap','route','sharedaccountsroute','buy','sell')):swap_instruction=True
     # A token account created and closed inside this transaction may be absent from
     # pre/post vectors. Preserve its decoded transfer flow separately from balances.
