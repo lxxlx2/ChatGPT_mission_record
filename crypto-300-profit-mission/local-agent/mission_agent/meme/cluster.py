@@ -185,8 +185,12 @@ class WalletClusterAnalyzer:
     def __init__(self,mint:str,*,rpc:SolanaReadOnlyRPC,special_registry:dict|None=None,history_per_holder=30,deep_holders=10,funding_lookback=12,material_pct=Decimal("1")):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
         self.edges=[];self.trades=[];self.funding=[];self.consolidations=[];self.tx_errors=[]
+    def _entry(self,address):
+        token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
+        return (token_cfg.get("addresses") or {}).get(address) or (self.registry.get("addresses") or {}).get(address)
+
     def _role(self,address,account_info):
-        explicit=(self.registry.get("addresses") or {}).get(address)
+        explicit=self._entry(address)
         if explicit:return explicit.get("role","UNRESOLVED"),explicit.get("source","LOCAL_REGISTRY")
         value=(account_info or {}).get("value") if isinstance(account_info,dict) else None
         if not value:return "UNRESOLVED","ACCOUNT_INFO_UNAVAILABLE"
@@ -281,7 +285,7 @@ class WalletClusterAnalyzer:
         for f in self.funding:by_funder[f["source"]].append(f);by_sig[f["signature"]].append(f)
         for source,rows in by_funder.items():
             if len({r["owner"] for r in rows})<2:continue
-            role=(self.registry.get("addresses") or {}).get(source,{}).get("role")
+            role=(self._entry(source) or {}).get("role")
             if role=="CEX":kind="COMMON_FUNDER_CEX"
             elif role in {"EOA","DEV","CREATOR","TREASURY"}:kind="COMMON_FUNDER_EOA"
             else:kind="COMMON_FUNDER_UNRESOLVED"
@@ -291,7 +295,7 @@ class WalletClusterAnalyzer:
         by_destination=defaultdict(set)
         for row in self.consolidations:by_destination[row["destination_owner"]].add(row["source_owner"])
         for destination,owners in by_destination.items():
-            role=(self.registry.get("addresses") or {}).get(destination,{}).get("role")
+            role=(self._entry(destination) or {}).get("role")
             kind="COMMON_CONSOLIDATION" if role in {"EOA","DEV","CREATOR","TREASURY"} else "COMMON_CONSOLIDATION_UNRESOLVED"
             owners=sorted(owners)
             if len(owners)>1:
@@ -327,7 +331,7 @@ class WalletClusterAnalyzer:
         for signer,owners in signer_owners.items():
             owners=sorted(owners)
             if len(owners)>1:
-                role=(self.registry.get("addresses") or {}).get(signer,{}).get("role")
+                role=(self._entry(signer) or {}).get("role")
                 kind="COMMON_SIGNER" if role in {"EOA","DEV","CREATOR","TREASURY"} else "COMMON_SIGNER_UNRESOLVED"
                 for i,a in enumerate(owners):
                     for b in owners[i+1:]:self._edge(a,b,kind,"MULTI_TX",signer=signer)
@@ -396,7 +400,8 @@ class WalletClusterAnalyzer:
         for h in nonspecial:
             pct=Decimal(h.raw)*100/Decimal(supply) if supply else Decimal(0)
             if pct>=self.material_pct and h.owner not in classified and h.role in {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:unresolved_raw+=h.raw
-        normalization_complete=bool(self.registry.get("normalization_complete"))
+        token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
+        normalization_complete=bool(token_cfg.get("normalization_complete",self.registry.get("normalization_complete",False)))
         metrics={
             "RAW_TOP10_PCT":self._pct(raw_top10,supply),
             "EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply) if normalization_complete else "UNRESOLVED",
@@ -435,7 +440,7 @@ class WalletClusterAnalyzer:
 def load_registry(path:Path|None):
     if path is None:return {"schema_version":1,"addresses":{}}
     data=json.loads(Path(path).read_text())
-    if data.get("schema_version")!=1 or not isinstance(data.get("addresses"),dict):raise ValueError("SPECIAL_REGISTRY_SCHEMA")
+    if data.get("schema_version")!=1 or not isinstance(data.get("addresses"),dict) or not isinstance(data.get("tokens",{}),dict):raise ValueError("SPECIAL_REGISTRY_SCHEMA")
     return data
 
 
