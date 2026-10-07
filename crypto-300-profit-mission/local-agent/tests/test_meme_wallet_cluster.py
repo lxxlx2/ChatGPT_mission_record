@@ -206,7 +206,7 @@ def test_full_report_exposes_bounded_holder_acquisition_and_conservative_conclus
     assert out["assessment"]["trading_status"]=="WATCH / WALLET_CLUSTER_UNRESOLVED"
 
 
-def test_adaptive_scan_deepens_only_suspicious_initial_owner():
+def test_adaptive_scan_deepens_suspicious_counterpart_beyond_initial_prefix():
     a=analyzer()
     a.deep_holders=2
     a.history_per_holder=12
@@ -226,11 +226,38 @@ def test_adaptive_scan_deepens_only_suspicious_initial_owner():
     out=a.analyze()
     assert ("A",12) in calls and ("B",12) in calls
     assert ("A",30) in calls
+    assert ("D",30) in calls
     assert ("B",30) not in calls
     assert out["coverage"]["scan_mode"]=="ADAPTIVE"
-    assert out["coverage"]["adaptive_deepened_owners"]==["A"]
+    assert out["coverage"]["adaptive_deepened_owners"]==["A","D"]
     stages=[x[0] for x in progress]
     assert "BASE_READY" in stages
     assert "HOLDERS_READY" in stages
     assert "ADAPTIVE_DEEPEN" in stages
     assert "FINALIZING" in stages
+
+def test_adaptive_scan_deepens_material_unresolved_owner_outside_initial_prefix():
+    rows=[
+        Holder("ta1","A",200,0,"ORDINARY","test"),
+        Holder("ta2","B",150,0,"ORDINARY","test"),
+        Holder("ta3","C",100,0,"ORDINARY","test"),
+        Holder("ta4","D",80,0,"ORDINARY","test"),
+        Holder("ta5","E",70,0,"ORDINARY","test"),
+        Holder("ta6","F",60,0,"ORDINARY","test"),
+        Holder("ta7","G",50,0,"UNRESOLVED","test"),
+    ]
+    a=analyzer()
+    a.holders=lambda:(1000,0,rows)
+    a.deep_holders=2
+    a.history_per_holder=12
+    a.funding_lookback=8
+    a.adaptive_history_per_holder=30
+    a.adaptive_funding_lookback=12
+    calls=[]
+    a._scan_holder=lambda h,m,t,history_limit=None:(calls.append((h.owner,history_limit)) or {"block_time":100,"signature":"first-"+h.owner})
+    a._scan_funding=lambda *args,**kwargs:None
+    out=a.analyze()
+    assert ("G",12) not in calls
+    assert ("G",30) in calls
+    assert "G" in out["coverage"]["adaptive_deepened_owners"]
+
