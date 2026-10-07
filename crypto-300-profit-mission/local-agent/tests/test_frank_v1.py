@@ -59,6 +59,21 @@ def test_amount_non_usdc_undetermined_preserves_active_trade(tmp_path):
     assert len(l.db.execute('select * from trades').fetchall())==3 and signals(l)==[]
     e=json.loads(l.db.execute('select body from v1_evaluations order by at desc limit 1').fetchone()[0]);assert e['predicates']['cumulative_amount']=='UNDETERMINED' and e['predicates']['persistence']=='PASS'
 
+
+
+def test_composite_usdc_quote_never_satisfies_frozen_amount_gate(tmp_path):
+    l,eng=engine(tmp_path)
+    for sig,at in [('first',100000),('second',100600)]:
+        e=active(sig,100,13000);e['block_time']=at;e['slot']=at
+        e['trade']['quote_amount_raw']='13000000000';e['trade']['quote_decimals']=6
+        e['trade']['quote_asset']=USDC;e['trade']['amount_predicate']='UNDETERMINED'
+        e['trade']['amount_predicate_reason']='COMPOSITE_QUOTE_LEGS'
+        put(l,e);eng.drain()
+    assert signals(l)==[]
+    evaluation=json.loads(l.db.execute('select body from v1_evaluations order by at desc limit 1').fetchone()[0])
+    assert evaluation['predicates']['accumulation_amount']=='UNDETERMINED'
+
+
 def test_hft_behavior_blocks_multiple_but_not_selected_accumulation(tmp_path):
     l,eng=engine(tmp_path);buy(l,eng,'first',100000,13000);buy(l,eng,'second',100010,13000);buy(l,eng,'third',100020,13000);buy(l,eng,'fourth',102700,13000)
     assert len(signals(l))==1;state=json.loads(l.db.execute('select body from v1_states').fetchone()[0]);assert evaluate(state,102700,eng.policy)['predicates']['hft']=='FAIL'
