@@ -5,12 +5,12 @@ Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-08 00:45:19 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-08 01:54:40 Asia/Bangkok
 - latest_actual_run_status: success
-- latest_authoritative_success: 2026-10-08 00:45:19 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-08/004519-final.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
+- latest_authoritative_success: 2026-10-08 01:54:40 Asia/Bangkok
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-08/015440-final.md
+- latest_scheduled_shard: 1
+- latest_executed_shard: 1
 - latest_stale_shard_recovery: false
 - latest_candidate_count: 0
 - latest_triggered_events: 0
@@ -47,8 +47,8 @@ Timezone: Asia/Bangkok
 
 ## Health
 
-- Latest authoritative completion: airdrop-tge-monitor/runs/2026-10-08/004519-final.md
+- Latest authoritative completion: airdrop-tge-monitor/runs/2026-10-08/015440-final.md
 - Known-events were processed before discovery.
-- Urgent set and Shard 0 completed without unresolved source or identity failures.
+- Urgent set and Shard 1 completed without unresolved source or identity failures.
 - No new Tier A/B material delta affecting unresolved user rights was found.
 - No Gmail or ChatGPT notification was attempted because triggered_events=0.
