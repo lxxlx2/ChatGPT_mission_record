@@ -104,7 +104,10 @@ class Engine:
                     s={'person_id':person,'mint':mint,'episode_id':episode,'state':'OPEN','events':[],'current_raw':'0','peak_raw':'0','inventory_points':[],'t0':None,'t0_amount_status':'FAIL','hft':False,'accumulation_emitted':False,'multiple_emitted':False,'watch_at':None}
                     self.db.execute('INSERT OR IGNORE INTO v1_episodes VALUES(?,?,?)',(episode,person,mint))
                 if s is not None:
-                    event={'signature':row['signature'],'at':at,'slot':row['slot'],**t,'quote_quantity':quantity(t['quote_amount_raw'],t['quote_decimals']),'amount_predicate':'USDC_DIRECT_NUMERIC' if t['quote_asset']==USDC else 'UNDETERMINED'};s['events'].append(event)
+                    amount_predicate=t.get('amount_predicate') or ('USDC_DIRECT_NUMERIC' if t['quote_asset']==USDC else 'UNDETERMINED')
+                    if amount_predicate not in {'USDC_DIRECT_NUMERIC','UNDETERMINED'}:
+                        raise ValueError('TRADE_AMOUNT_PREDICATE_INVALID')
+                    event={'signature':row['signature'],'at':at,'slot':row['slot'],**t,'quote_quantity':quantity(t['quote_amount_raw'],t['quote_decimals']),'amount_predicate':amount_predicate};s['events'].append(event)
                     amount=int(t['token_amount_raw']);current=int(s['current_raw']) if s['current_raw'] is not None else None
                     if t['direction']=='BUY':
                         if current is not None:s['current_raw']=str(current+amount)
