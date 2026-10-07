@@ -156,3 +156,18 @@ def test_atomic_cluster_report_write_replaces_complete_file(tmp_path):
     _atomic_write_text(path,'{"version":2,"complete":true}')
     assert path.read_text()=='{"version":2,"complete":true}'
     assert list(tmp_path.glob("latest.json.tmp-*"))==[]
+
+
+def test_dashboard_ca_view_uses_practical_report_sections_and_no_redundant_subtitle():
+    from mission_agent.mission_control.server import Handler
+    html=(Handler.static_root/"index.html").read_text()
+    js=(Handler.static_root/"app.js").read_text()
+    assert "CA 综合研究" in html
+    assert "输入 Solana CA，自动分析 Top20" not in html
+    for element_id in ("cluster-verdict","cluster-security","cluster-market","cluster-frank","cluster-narrative"):
+        assert f'id="{element_id}"' in html
+    assert "快速 · 6户" in html
+    assert "标准 · 10户" in html
+    assert "深度 · 20户" in html
+    assert "免费 RPC 被限流" in js
+    assert "RPC 路由" in js
