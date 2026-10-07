@@ -22,6 +22,7 @@ from ..signals.classifier import classify
 from ..market.sol_usd import USDC, WSOL
 
 DEFAULT_RPC = "https://api.mainnet.solana.com"
+FALLBACK_RPCS = ("https://solana-rpc.publicnode.com",)
 SYSTEM_PROGRAM = "11111111111111111111111111111111"
 TOKEN_PROGRAMS = {
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -64,6 +65,50 @@ class RpcCache:
         key=_hash({"method":method,"params":params})
         self.db.execute("INSERT OR REPLACE INTO rpc_cache VALUES(?,?,?,?,?,?)",(key,method,now,now+ttl,_hash(body),json.dumps(body,sort_keys=True)))
         self.db.commit()
+
+
+class MultiEndpointSolanaRPC:
+    """Read-only failover across free Solana RPC endpoints.
+
+    Cache keys are chain-method/params based, so successful finalized responses can
+    be reused regardless of which endpoint returned them.
+    """
+    RETRYABLE = {"HTTP_403","HTTP_429","HTTP_500","HTTP_502","HTTP_503","HTTP_504","RPC_-32005","RPC_-32004"}
+
+    def __init__(self, endpoints, *, cache=None, min_interval=.30):
+        values=[]
+        for endpoint in endpoints:
+            endpoint=(endpoint or "").strip()
+            if endpoint and endpoint not in values:
+                values.append(endpoint)
+        if not values:
+            values=[DEFAULT_RPC]
+        self.clients=[
+            SolanaReadOnlyRPC(endpoint,cache=cache,min_interval=min_interval)
+            for endpoint in values
+        ]
+        self.endpoint=values[0]
+        self.endpoint_history=[]
+    @property
+    def calls(self):
+        return sum(x.calls for x in self.clients)
+    @property
+    def cache_hits(self):
+        return sum(x.cache_hits for x in self.clients)
+    def call(self, method, params, *, ttl=0):
+        last=None
+        for client in self.clients:
+            try:
+                result=client.call(method,params,ttl=ttl)
+                self.endpoint=client.endpoint
+                if not self.endpoint_history or self.endpoint_history[-1]!=client.endpoint:
+                    self.endpoint_history.append(client.endpoint)
+                return result
+            except RPCError as exc:
+                last=exc
+                if str(exc) not in self.RETRYABLE:
+                    raise
+        raise last or RPCError("RPC_ALL_ENDPOINTS_FAILED")
 
 
 class SolanaReadOnlyRPC:
@@ -462,7 +507,7 @@ class WalletClusterAnalyzer:
             "unresolved_relation_edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED","COMMON_CONSOLIDATION_UNRESOLVED"}],
             "edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges],
             "funding_evidence":self.funding,"consolidation_evidence":self.consolidations,"trade_evidence":self.trades,"transaction_errors":self.tx_errors,
-            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
+            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits,"rpc_endpoint_history":getattr(self.rpc,"endpoint_history",[self.rpc.endpoint])},
             "limitations":[
                 "Only raw finalized RPC evidence and explicit local labels are treated as authoritative.",
                 "CEX/public-infrastructure identity is never guessed from funding alone.",
