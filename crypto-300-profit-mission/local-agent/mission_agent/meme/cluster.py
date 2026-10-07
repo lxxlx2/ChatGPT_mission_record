@@ -322,17 +322,24 @@ class WalletClusterAnalyzer:
             strong=len(types & STRONG);behavior=len(types & BEHAVIOR)
             if strong>=2 or (strong>=1 and behavior>=1) or ("DIRECT_TOKEN_TRANSFER" in types and strong>=1):control.union(*pair)
             if behavior>=2 or "REPEATED_SYNC_BEHAVIOR" in types:execution.union(*pair)
-        def group_records(groups,kind):
+        def group_records(groups,kind,confidence):
             out=[]
             for idx,g in enumerate(groups,1):
                 if len(g)<2:continue
                 raw=sum(balances[x] for x in g)
                 evidence=[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["a"] in g and e["b"] in g]
-                out.append({"cluster_id":f"{kind}-{idx}","wallets":sorted(g),"combined_raw":str(raw),"supply_pct":self._pct(raw,supply),"evidence":evidence})
+                out.append({
+                    "cluster_id":f"{kind}-{idx}","confidence":confidence,"wallets":sorted(g),
+                    "wallet_balances_raw":{x:str(balances[x]) for x in sorted(g)},
+                    "combined_raw":str(raw),"supply_pct":self._pct(raw,supply),"evidence":evidence,
+                    "first_target_acquisition":{x:({"block_time":firsts.get(x),"type":"MARKET_BUY_WITHIN_BOUNDED_HISTORY"} if firsts.get(x) else {"block_time":None,"type":"UNRESOLVED"}) for x in sorted(g)},
+                    "funding_evidence":[x for x in self.funding if x["owner"] in g],
+                    "trade_evidence":[x for x in self.trades if x["owner"] in g],
+                })
             return sorted(out,key=lambda x:int(x["combined_raw"]),reverse=True)
-        relation_groups=group_records(relation.groups(),"REL")
-        control_groups=group_records(control.groups(),"CTRL")
-        execution_groups=group_records(execution.groups(),"EXEC")
+        relation_groups=group_records(relation.groups(),"REL","CONFIRMED_RELATION")
+        control_groups=group_records(control.groups(),"CTRL","PROBABLE_CONTROL_CLUSTER")
+        execution_groups=group_records(execution.groups(),"EXEC","PROBABLE_EXECUTION_CLUSTER")
         raw_top10=sum(h.raw for h in holders[:10])
         nonspecial=[h for h in holders if h.role not in SPECIAL_ROLES]
         ex_lp=[h for h in holders if h.role not in {"LP","AMM_POOL"}]
@@ -373,6 +380,8 @@ class WalletClusterAnalyzer:
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,"holders":holder_rows,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
+            "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
+            "unresolved_relation_edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED"}],
             "edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges],
             "funding_evidence":self.funding,"trade_evidence":self.trades,"transaction_errors":self.tx_errors,
             "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
