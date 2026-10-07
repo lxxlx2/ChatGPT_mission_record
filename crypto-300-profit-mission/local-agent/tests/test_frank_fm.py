@@ -280,6 +280,26 @@ def test_ephemeral_wsol_consideration_keeps_balance_vectors_exact():
     assert normalize('s',t)['mechanical_classification']=='UNKNOWN'
 
 
+
+
+def test_indexed_token_program_preserves_ephemeral_wsol_flow():
+    from mission_agent.frank.parser import WSOL
+    t=tx();t['meta']['preTokenBalances']=t['meta']['preTokenBalances'][1:];t['meta']['postTokenBalances']=t['meta']['postTokenBalances'][1:]
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    t['transaction']['message']['accountKeys'].append({'pubkey':token,'signer':False})
+    t['meta']['preBalances'].append(0);t['meta']['postBalances'].append(0)
+    token_index=len(t['transaction']['message']['accountKeys'])-1
+    instructions=[
+      {'programIdIndex':token_index,'parsed':{'type':'initializeAccount3','info':{'account':'ephemeral-indexed','owner':WALLET,'mint':WSOL}}},
+      {'programIdIndex':token_index,'parsed':{'type':'transferChecked','info':{'source':'vault','destination':'ephemeral-indexed','tokenAmount':{'amount':'123456','decimals':9},'authority':'vault'}}},
+      {'programIdIndex':token_index,'parsed':{'type':'closeAccount','info':{'account':'ephemeral-indexed','owner':WALLET,'destination':'router'}}},
+    ]
+    t['meta']['innerInstructions']=[{'index':0,'instructions':instructions}]
+    e=normalize('indexed-wsol',t)
+    assert e['mechanical_classification']=='ACTIVE_SWAP_LIKE'
+    assert e['decoded_transient_token_flows'][0]['net_transfer_raw']=='123456'
+
+
 def test_frank_cursor_candidate_commit_rolls_back_together(tmp_path):
     r=Repository(tmp_path/'atomic.sqlite');s=FrankStore(r);e=normalize('atomic',tx());c=build(e,e['token_balance_deltas'][0])
     with pytest.raises(RuntimeError,match='PARTIAL'):
