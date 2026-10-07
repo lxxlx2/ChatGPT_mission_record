@@ -95,11 +95,12 @@ def test_frank_review_activity_exposes_ambiguous_active_swap_without_signal(tmp_
     prod=tmp_path/"prod"
     make_prod(prod)
     db=sqlite3.connect(prod/"forward.sqlite")
-    db.execute("create table signatures(signature text,block_time integer,body text)")
+    db.execute("create table signatures(signature text,person_id text,block_time integer,body text)")
     race="RACEyWiM2ztEZcJx2AHXU2eWjhxU57x3vXn92b39dLD"
     body={
         "classification":"UNKNOWN_NEEDS_REVIEW",
         "classification_reason":"AMBIGUOUS_USER_EXCHANGE_ASSETS",
+        "classification_details":{"residual_flow_candidates":[{"mint":race,"route_binding":"UNPROVEN"}]},
         "evidence":{
             "mechanical_classification":"ACTIVE_SWAP_LIKE",
             "classification_evidence":{
@@ -115,14 +116,14 @@ def test_frank_review_activity_exposes_ambiguous_active_swap_without_signal(tmp_
             "decoded_transient_token_flows":[],
         },
     }
-    db.execute("insert into signatures values(?,?,?)",("race-sig",1791318208,json.dumps(body)))
+    db.execute("insert into signatures values(?,?,?,?)",("race-sig","frank",1791318208,json.dumps(body)))
     unproven=json.loads(json.dumps(body))
     unproven["classification_reason"]="INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE"
     unproven["frank_is_signer"]=True
     unproven["evidence"]["mechanical_classification"]="UNKNOWN"
     unproven["evidence"]["classification_evidence"]["dex_program_interaction"]=False
     unproven["evidence"]["classification_evidence"]["swap_instruction_evidence"]=False
-    db.execute("insert into signatures values(?,?,?)",("unproven-sig",1791318209,json.dumps(unproven)))
+    db.execute("insert into signatures values(?,?,?,?)",("unproven-sig","frank",1791318209,json.dumps(unproven)))
     db.commit();db.close()
     rows=FrankReader(prod).review_activity()
     assert len(rows)==2
@@ -130,6 +131,7 @@ def test_frank_review_activity_exposes_ambiguous_active_swap_without_signal(tmp_
     assert by_sig["race-sig"]["candidate_mints"]==[race]
     assert by_sig["race-sig"]["swap_instruction_evidence"] is True
     assert by_sig["race-sig"]["review_scope"]=="ACTIVE_SWAP_LIKE"
+    assert by_sig["race-sig"]["residual_flow_candidates"][0]["route_binding"]=="UNPROVEN"
     assert by_sig["unproven-sig"]["review_scope"]=="SIGNED_OPPOSING_FLOW_MARKET_UNPROVEN"
     assert FrankReader(prod).candidates()[0]["mint"]=="Mint111"
 
