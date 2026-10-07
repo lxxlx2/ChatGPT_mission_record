@@ -145,7 +145,9 @@ def test_received_then_spent_created_intermediate_residual_is_routed_single_targ
     assert e['classification_reason']=='SIGNED_DEX_SWAP_ROUTED_SINGLE_TARGET_WITH_RESIDUAL_INTERMEDIATE'
     assert e['trade']['mint']=='mint1'
     assert e['trade']['quote_asset']==USDC
-    assert e['trade']['amount_predicate']=='USDC_DIRECT_NUMERIC'
+    assert e['trade']['amount_predicate']=='UNDETERMINED'
+    assert e['trade']['amount_predicate_reason']=='ROUTED_RESIDUAL_ASSETS'
+    assert e['trade']['route_amount_semantics']=='GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST'
     routed=e['trade']['route_intermediate_assets']
     assert len(routed)==1 and routed[0]['mint']==route
     assert routed[0]['gross_in_raw']=='1000'
@@ -157,6 +159,47 @@ def test_received_then_spent_created_intermediate_residual_is_routed_single_targ
     assert [(x['mint'],x['direction']) for x in flows]==[
         (USDC,'OUT'),(route,'IN'),(route,'OUT'),('mint1','IN')
     ]
+
+
+def test_split_route_can_receive_final_target_before_residual_intermediate_finishes():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:
+        t['meta'][field][1]['mint']=USDC
+    route='route-split-intermediate'
+    add_owned_asset(t,route,0,10,6)
+    route_index=len(t['transaction']['message']['accountKeys'])-1
+    route_account=t['transaction']['message']['accountKeys'][route_index]['pubkey']
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    t['meta']['innerInstructions']=[{'index':0,'instructions':[
+        {'programId':token,'parsed':{'type':'initializeAccount3','info':{
+            'account':route_account,'owner':WALLET,'mint':route}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'quote_ata','destination':'pool-a','mint':USDC,
+            'tokenAmount':{'amount':'500000','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-a','destination':route_account,'mint':route,
+            'tokenAmount':{'amount':'1000','decimals':6},'authority':'pool'}}},
+        # A parallel route delivers part of the final target before this
+        # intermediate leg is fully recycled.
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'parallel-pool','destination':'ata','mint':'mint1',
+            'tokenAmount':{'amount':'400000','decimals':6},'authority':'pool'}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':route_account,'destination':'pool-b','mint':route,
+            'tokenAmount':{'amount':'990','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-b','destination':'ata','mint':'mint1',
+            'tokenAmount':{'amount':'600000','decimals':6},'authority':'pool'}}},
+    ]}]
+    e=classify('split-routed-residual',t,WALLET)
+    assert e['classification']=='ACTIVE_TRADE'
+    assert e['trade']['mint']=='mint1'
+    assert e['trade']['amount_predicate']=='UNDETERMINED'
+    assert e['trade']['amount_predicate_reason']=='ROUTED_RESIDUAL_ASSETS'
+    routed=e['trade']['route_intermediate_assets']
+    assert len(routed)==1
+    assert routed[0]['mint']==route
+    assert routed[0]['proof']=='CREATED_ZERO_PRE_RECEIVED_THEN_SPENT_CONSERVED_RESIDUAL'
 
 
 def test_existing_partially_sold_second_asset_is_not_assumed_route_intermediate():
