@@ -22,6 +22,12 @@ def holders():
 def analyzer():
     a=WalletClusterAnalyzer("Mint",rpc=DummyRPC(),deep_holders=4,material_pct=Decimal("1"))
     a.holders=lambda:(1000,0,holders())
+    a.token_profile=lambda:{
+        "status":"OK","mint_authority":None,"freeze_authority":None,
+        "metadata_update_authority":"UNAVAILABLE","metadata_update_authority_status":"UNAVAILABLE",
+        "token_program":"SPL Token",
+    }
+    a.market_snapshot=lambda:{"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":"FIXTURE_DISABLED"}
     a._scan_funding=lambda *a,**k:None
     return a
 
