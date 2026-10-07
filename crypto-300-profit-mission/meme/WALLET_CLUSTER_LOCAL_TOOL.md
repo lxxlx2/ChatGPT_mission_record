@@ -144,3 +144,34 @@ The web result separates:
 - RPC/cache coverage and limitations.
 
 The UI never converts an `UNRESOLVED` strict metric into a numeric value.
+
+
+## 2026-10-07 CA query reliability + report layout
+
+The first real Mac acceptance query hit `HTTP_429` on Solana's shared public RPC. This is a provider rate-limit condition, not a CA-format or token-contract error.
+
+The query path now uses free read-only failover:
+
+1. `SOLANA_RPC_URL` when explicitly configured;
+2. Solana Labs public mainnet RPC;
+3. PublicNode Solana RPC;
+4. optional comma-separated `SOLANA_RPC_FALLBACKS`.
+
+A rate-limited endpoint fails over immediately instead of burning three retries on the same provider. Finalized responses are still cached locally.
+
+Scan presets now mean:
+
+- `快速 · 6户`: Top20 owner resolution, deep scan 6 unique owners, 12 target-token signatures per owner, 8 pre-acquisition funding signatures.
+- `标准 · 10户`: Top20 owner resolution, deep scan 10 owners, 30 target-token signatures, 12 funding signatures.
+- `深度 · 20户`: all Top20 owners deep-scanned, 100 target-token signatures, 50 funding signatures.
+
+The web report now separates:
+
+- current deterministic conclusion;
+- token standard / mint / freeze / metadata / Token-2022 sensitive extensions;
+- current DEX market snapshot (free DexScreener source);
+- holder / cluster concentration;
+- Frank's actually observed state for that CA;
+- external links and narrative/official-relation uncertainty.
+
+Creator-fee receipt, community mentions, likes and public shared infrastructure are not automatically treated as official endorsement. External narrative identity remains unresolved until an explicit first-party or independently verifiable evidence chain exists.
