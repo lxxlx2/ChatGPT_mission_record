@@ -60,9 +60,28 @@ def _config_values(value, wanted):
 def _authority_active(value):
     return value not in (None,"","11111111111111111111111111111111")
 
+def _decimal_value(value):
+    try:
+        number=Decimal(str(value))
+    except (InvalidOperation,ValueError,TypeError):
+        return None
+    return number if number.is_finite() else None
+
 def _positive_number(value):
-    try:return Decimal(str(value))>0
-    except (InvalidOperation,ValueError,TypeError):return False
+    number=_decimal_value(value)
+    return number is not None and number>0
+
+def _authority_state(value):
+    if value in (None,"","11111111111111111111111111111111"):
+        return "REVOKED"
+    if isinstance(value,str):
+        return "ACTIVE"
+    return "INVALID"
+
+def _all_valid_nonnegative(values):
+    if not values:return False
+    parsed=[_decimal_value(value) for value in values]
+    return all(value is not None and value>=0 for value in parsed)
 
 def _extension_risk(extension):
     if not isinstance(extension,dict):
@@ -74,18 +93,43 @@ def _extension_risk(extension):
     authorities=_config_values(config,{"authority","transferfeeconfigauthority","withdrawwithheldauthority"})
     active_authority=any(_authority_active(v) for v in authorities)
     if "transferfee" in normalized:
-        fees=_config_values(config,{"transferfeebasispoints","basispoints","maximumfee","maxfee"})
-        if active_authority or any(_positive_number(v) for v in fees):
+        config_authorities=_config_values(config,{"transferfeeconfigauthority"})
+        withdraw_authorities=_config_values(config,{"withdrawwithheldauthority"})
+        basis_points=_config_values(config,{"transferfeebasispoints","basispoints"})
+        maximum_fees=_config_values(config,{"maximumfee","maxfee"})
+        authority_values=config_authorities+withdraw_authorities
+        authority_states=[_authority_state(v) for v in authority_values]
+        positive_fee=any(_positive_number(v) for v in basis_points+maximum_fees)
+        if "ACTIVE" in authority_states or positive_fee:
             status="ACTIVE_RISK";reason="TRANSFER_FEE_ACTIVE_OR_MUTABLE"
-        elif authorities or fees:
-            status="INACTIVE";reason="TRANSFER_FEE_ZERO_AND_AUTHORITIES_REVOKED"
+        else:
+            authorities_complete=bool(config_authorities) and bool(withdraw_authorities)
+            schedules_complete=len(basis_points)>=2 and len(maximum_fees)>=2
+            authorities_valid=authorities_complete and all(state=="REVOKED" for state in authority_states)
+            fees_valid=schedules_complete and _all_valid_nonnegative(basis_points+maximum_fees)
+            if authorities_valid and fees_valid:
+                status="INACTIVE";reason="TRANSFER_FEE_ZERO_AND_AUTHORITIES_REVOKED"
+            elif not authorities_complete or not schedules_complete:
+                reason="TRANSFER_FEE_CONFIG_INCOMPLETE"
+            else:
+                reason="TRANSFER_FEE_CONFIG_INVALID"
     elif "transferhook" in normalized:
+        hook_authorities=_config_values(config,{"authority"})
         programs=_config_values(config,{"programid","programidpubkey"})
-        active_program=any(_authority_active(v) for v in programs)
-        if active_authority or active_program:
+        authority_states=[_authority_state(v) for v in hook_authorities]
+        program_states=[_authority_state(v) for v in programs]
+        if "ACTIVE" in authority_states or "ACTIVE" in program_states:
             status="ACTIVE_RISK";reason="TRANSFER_HOOK_ACTIVE_OR_MUTABLE"
-        elif authorities or programs:
+        elif (
+            hook_authorities and programs
+            and all(state=="REVOKED" for state in authority_states)
+            and all(state=="REVOKED" for state in program_states)
+        ):
             status="INACTIVE";reason="TRANSFER_HOOK_DISABLED_AND_AUTHORITY_REVOKED"
+        elif not hook_authorities or not programs:
+            reason="TRANSFER_HOOK_CONFIG_INCOMPLETE"
+        else:
+            reason="TRANSFER_HOOK_CONFIG_INVALID"
     elif "permanentdelegate" in normalized:
         delegates=_config_values(config,{"delegate"})
         if any(_authority_active(v) for v in delegates):
