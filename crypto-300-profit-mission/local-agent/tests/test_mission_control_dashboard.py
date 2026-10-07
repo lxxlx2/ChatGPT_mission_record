@@ -4,6 +4,7 @@ import time
 from mission_agent.mission_control.server import (
     CLUSTER_PRESETS, ClusterJobManager, DashboardState, _atomic_write_text, _content_type_is_json, _decode_json_object, _origin_is_loopback,
 )
+from mission_agent.mission_control.frank import FrankReader
 from mission_agent.mission_control.service import MissionMemeService
 from test_mission_control_service import make_prod, policy
 
@@ -85,6 +86,7 @@ def test_dashboard_static_contains_signal_and_cluster_tabs():
     assert 'id="cluster-conclusion"' in html
     assert 'id="cluster-token-profile"' in html
     assert 'id="cluster-market"' in html
+    assert 'id="cluster-frank"' in html
     assert 'id="cluster-narrative"' in html
     assert 'Top20 全解析' in html
 
@@ -249,3 +251,16 @@ def test_dashboard_frontend_shows_progress_and_conclusion_history():
     assert "ADAPTIVE_DEEPEN" in js
     assert "结论变化" in js
     assert "assessment_history" in js
+
+
+def test_frank_mint_snapshot_reads_existing_observed_state(tmp_path):
+    prod=tmp_path/"prod"
+    make_prod(prod)
+    snapshot=FrankReader(prod).mint_snapshot("Mint111")
+    assert snapshot["status"]=="OBSERVED"
+    assert snapshot["position_state"]=="OPEN"
+    assert snapshot["buy_count"]==3
+    assert snapshot["sell_count"]==0
+    assert snapshot["latest_side"]=="BUY"
+    assert snapshot["signal_type"]=="FRANK_MULTIPLE_SIGNAL"
+    assert FrankReader(prod).mint_snapshot("UnknownMint")["status"]=="NOT_OBSERVED"
