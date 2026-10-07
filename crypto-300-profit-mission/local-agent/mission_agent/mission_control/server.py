@@ -110,9 +110,9 @@ CLUSTER_PRESETS = {
 
 
 class ClusterJobManager:
-    def __init__(self, control_root: Path, production_root: Path):
+    def __init__(self, control_root: Path, production_root: Path | None = None):
         self.control_root = Path(control_root)
-        self.production_root = Path(production_root)
+        self.production_root = Path(production_root) if production_root is not None else None
         self.report_root = self.control_root / "cluster-reports"
         self.report_root.mkdir(parents=True, exist_ok=True)
         self.cache_path = self.control_root / "wallet-cluster-rpc-cache.sqlite"
@@ -196,7 +196,7 @@ class ClusterJobManager:
             report["scan_preset"]=preset
             report["token_security"]=inspect_mint(rpc,mint)
             report["market"]=DexScreenerClient().token_market(mint)
-            report["frank"]=FrankReader(self.production_root).mint_snapshot(mint)
+            report["frank"]=FrankReader(self.production_root).mint_snapshot(mint) if self.production_root is not None else {"status":"UNAVAILABLE","reason":"PRODUCTION_ROOT_NOT_CONFIGURED","mint":mint}
             report["automated_assessment"]=automated_assessment(report)
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
