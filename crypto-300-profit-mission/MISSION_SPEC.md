@@ -1,6 +1,6 @@
 # Crypto Profit Mission
 
-Updated: 2026-10-04
+Updated: 2026-10-07
 Timezone: Asia/Bangkok
 
 ## Authority
@@ -9,6 +9,9 @@ This file defines global Mission policy and current authority boundaries.
 
 Current scope/status detail:
 - `STATUS_SCOPE_2026-10-04.md`
+
+Current Frank/Meme operational status:
+- `meme/MISSION_MEME_CURRENT_STATUS_2026-10-07.md`
 
 Current-state precedence:
 1. `MISSION_SPEC.md`
@@ -73,38 +76,59 @@ Sui note:
 ### Frank / Meme — LIVE
 
 Status:
-`FRANK_LOCAL_SIGNAL_V1_LIVE`
+`MISSION_MEME_LIVE_NOTIFICATION_V1`
 
-Current authority:
+Current operational authority:
 - Frank only;
-- local deterministic runtime owns chain collection, classification, stage evaluation, dedupe and delivery authority;
+- Frank production remains the deterministic chain/classification/pattern source;
+- Mission Control reads Frank production read-only and owns current follow-decision / local+Gmail delivery state;
 - GPT is not in the Frank signal critical path;
-- other persons and TOKEN_CONSENSUS are deferred.
+- other persons and TOKEN_CONSENSUS remain deferred;
+- automatic trading remains forbidden.
 
-Canonical policy:
+Current operational handoff:
+- `meme/MISSION_MEME_CURRENT_STATUS_2026-10-07.md`
+
+Canonical Frank V1 policy:
 - `meme/FRANK_LOCAL_SIGNAL_V1_POLICY.md`
 
-Signal delivery:
-- `ACCUMULATION` -> local macOS notification;
-- `MULTIPLE` -> local macOS notification + standalone Gmail;
-- same person/mint/episode/stage is deduped;
-- Gmail Sent readback and durable receipt are part of delivery correctness.
+Approved Mission Control follow policy:
+- `local-agent/config/follow_policy_v1.approved.json`
+- `status = FROZEN_APPROVED`
+- `live_delivery_approved = true`
+- approved policy SHA256 must match the explicitly pinned runtime hash.
 
-Frozen ACCUMULATION mapping:
+Current functions:
+- ACCUMULATION / MULTIPLE reading from frozen Frank V1;
+- REENTRY_WATCH for confirmed CLOSED -> REENTRY episodes, WAIT-only until the frozen signal model independently qualifies;
+- Jupiter official executable quote;
+- deterministic `BUY / SMALL_BUY / WAIT / NO_BUY`;
+- Chinese localhost Dashboard;
+- local macOS + Gmail live notification for eligible Decision transitions;
+- separate `mission-control.sqlite` audit state;
+- 60-day observation retention;
+- Gmail Sent readback / dedupe / ambiguity handling;
+- LaunchAgent autostart for Mission Control loop and Dashboard after user login;
+- runtime approved-policy copy under `~/Library/Application Support/FrankMeme/` to avoid macOS Documents/TCC denial.
+
+Latest local acceptance evidence supplied by the user:
+- full local-agent suite: `706 passed`;
+- Mission Control health `status = OK`;
+- `delivery_allowed = true`;
+- Dashboard HTTP 200;
+- Mission Control loop LaunchAgent `state = running`;
+- Dashboard LaunchAgent `state = running`;
+- Gmail OAuth readiness PASS;
+- `PRODUCTION_TRADING = NO_GO`.
+
+Remaining Frank validation gaps are tracked in the current operational handoff. In particular, do not silently claim that real SOL normalization, a real Jupiter NO_ROUTE fixture, first real post-enable Mission Control Gmail send, or actual reboot/login recovery have passed until evidence exists.
+
+Frozen ACCUMULATION mapping remains:
 - within 60 minutes >=2 confirmed ACTIVE BUYs;
 - cumulative raw USDC quote >=25,000;
 - the old single-large-buy Path C branch is explicitly **not** ACCUMULATION.
 
 MULTIPLE keeps the frozen V1 conviction/persistence/inventory/distribution/HFT/stale predicates. Do not silently change thresholds from live data.
-
-Latest historical delivery acceptance:
-- STONK historical frozen-V1 MULTIPLE E2E passed;
-- replay -> historical-test local notification -> one historical-test Gmail -> Sent readback -> dedupe -> crash recovery;
-- live scanner remained isolated and gap-free;
-- no policy threshold was tuned against the test.
-
-Evidence:
-- `meme/FRANK_HISTORICAL_MULTIPLE_DELIVERY_E2E.md`
 
 ### NFT opportunity radar — PAUSED
 
