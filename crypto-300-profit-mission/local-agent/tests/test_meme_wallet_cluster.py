@@ -27,7 +27,7 @@ def analyzer():
 
 def test_direct_transfer_is_relation_not_control():
     a=analyzer()
-    def scan(h,mapping):
+    def scan(h,mapping,top_owners):
         if h.owner=="A":a._edge("A","B","DIRECT_TOKEN_TRANSFER","tx1")
         return 100
     a._scan_holder=scan
