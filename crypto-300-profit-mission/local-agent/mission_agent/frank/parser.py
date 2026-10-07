@@ -121,7 +121,7 @@ def normalize(signature,tx,wallet=WALLET):
         for scope,index,ix in all_ix:
             parsed=ix.get('parsed',{});parsed=parsed if isinstance(parsed,dict) else {};info=parsed.get('info',{})
             if parsed.get('type') not in ('transfer','transferChecked'):continue
-            if ix.get('programId') not in ('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA','TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'):continue
+            if _program_id(ix,names) not in ('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA','TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'):continue
             raw=info.get('amount',info.get('tokenAmount',{}).get('amount'))
             if raw is None:continue
             flow=(int(raw) if info.get('destination')==address else 0)-(int(raw) if info.get('source')==address else 0)
@@ -136,7 +136,7 @@ def normalize(signature,tx,wallet=WALLET):
     native_incoming=[]
     for scope,index,ix in all_ix:
         parsed=ix.get('parsed',{});parsed=parsed if isinstance(parsed,dict) else {};info=parsed.get('info',{})
-        if ix.get('programId')=='11111111111111111111111111111111' and parsed.get('type')=='transfer' and info.get('destination')==wallet:
+        if _program_id(ix,names)=='11111111111111111111111111111111' and parsed.get('type')=='transfer' and info.get('destination')==wallet:
             native_incoming.append({'scope':scope,'instruction':str(index),'source':info.get('source'),'lamports':str(info['lamports'])})
     if meta['err'] is not None:label='FAILED'
     elif active and dex and paired and swap_instruction:label='ACTIVE_SWAP_LIKE'
