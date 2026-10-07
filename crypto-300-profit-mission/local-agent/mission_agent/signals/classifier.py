@@ -54,10 +54,13 @@ def classify(signature, tx, wallet):
         routed_intermediates=[]
         effective_tokens=tokens
         if len(tokens)>1:
-            flow_by_mint=defaultdict(lambda:{'in_raw':0,'out_raw':0,'first_in':None,'last_out':None})
+            flow_by_mint=defaultdict(lambda:{
+                'in_raw':0,'out_raw':0,'first_in':None,'first_out':None,'last_out':None
+            })
+            changed_mints=set(changed)
             for flow in e.get('wallet_token_transfer_flows') or []:
                 mint=flow.get('mint')
-                if mint not in dict(tokens):continue
+                if mint not in changed_mints:continue
                 try:raw=int(flow.get('raw_amount') or 0)
                 except (TypeError,ValueError):continue
                 order=(int(flow.get('outer_index',0)),int(flow.get('inner_index',-1)))
@@ -67,6 +70,7 @@ def classify(signature, tx, wallet):
                     if item['first_in'] is None or order<item['first_in']:item['first_in']=order
                 elif flow.get('direction')=='OUT':
                     item['out_raw']+=raw
+                    if item['first_out'] is None or order<item['first_out']:item['first_out']=order
                     if item['last_out'] is None or order>item['last_out']:item['last_out']=order
             created_mints={
                 a.get('mint') for a in e.get('created_token_accounts') or []
@@ -89,11 +93,18 @@ def classify(signature, tx, wallet):
                     other for other,_ in tokens if other!=mint and
                     target_first_in.get(other) is not None and target_first_in[other]>f['last_out']
                 ]
-                if len(later_targets)==1:
+                upstream_quotes=[
+                    qm for qm,qg in quotes
+                    if qg['delta']<0 and flow_by_mint[qm]['out_raw']>0 and
+                    flow_by_mint[qm]['first_out'] is not None and
+                    flow_by_mint[qm]['first_out']<f['first_in']
+                ]
+                if len(later_targets)==1 and len(upstream_quotes)==1:
                     routed_intermediates.append({
                         'mint':mint,'net_delta':str(g['delta']),
                         'gross_in_raw':str(f['in_raw']),'gross_out_raw':str(f['out_raw']),
                         'first_in_order':list(f['first_in']),'last_out_order':list(f['last_out']),
+                        'upstream_quote_asset':upstream_quotes[0],
                         'downstream_target':later_targets[0],
                     })
             routed_mints={x['mint'] for x in routed_intermediates}
