@@ -47,6 +47,31 @@ def test_same_decision_refreshes_dashboard_metrics_without_new_event(tmp_path):
     service.close()
 
 
+
+
+def test_composite_usdc_event_is_never_used_as_frank_follow_price(tmp_path):
+    prod=tmp_path/"prod"
+    make_prod(prod)
+    db=sqlite3.connect(prod/"forward.sqlite")
+    row=db.execute("select body from v1_states where mint='Mint111'").fetchone()
+    state=json.loads(row[0])
+    latest=state["events"][-1]
+    latest["amount_predicate"]="UNDETERMINED"
+    latest["amount_predicate_reason"]="COMPOSITE_QUOTE_LEGS"
+    latest["quote_legs"]=[
+        {"asset":"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v","raw_delta":"-1000000","decimals":6},
+        {"asset":"So11111111111111111111111111111111111111112","raw_delta":"1","decimals":9},
+    ]
+    db.execute("update v1_states set body=? where mint='Mint111'",(json.dumps(state),))
+    db.commit();db.close()
+    candidate=FrankReader(prod).candidates()[0]
+    assert candidate["latest_buy_price_usdc"] is None
+    assert candidate["latest_buy_price_status"]=="COMPOSITE_QUOTE_PRICE_UNAVAILABLE"
+    assert candidate["latest_buy_quote_asset"]=="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    assert candidate["latest_buy_quote_quantity"]=="1"
+    assert candidate["latest_buy_usdc_equivalent"] is None
+
+
 def test_stale_wait_still_exposes_quote_and_frank_price_for_research(tmp_path):
     prod=tmp_path/"prod";control=tmp_path/"control";p=tmp_path/"policy.json"
     make_prod(prod,latest_at=int(time.time())-3600);policy(p)
