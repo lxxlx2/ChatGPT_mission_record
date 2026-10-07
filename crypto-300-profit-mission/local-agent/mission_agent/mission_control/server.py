@@ -55,6 +55,24 @@ def _host_header_is_loopback(value: str | None) -> bool:
         return False
 
 
+def _origin_is_loopback(value: str | None) -> bool:
+    if not value:
+        return True
+    try:
+        parsed=urlparse(value)
+    except ValueError:
+        return False
+    if parsed.scheme not in {"http","https"} or not parsed.hostname:
+        return False
+    host=parsed.hostname.lower()
+    if host=="localhost":
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
+
+
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 CLUSTER_PRESETS = {
     "quick": {"deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8},
@@ -74,6 +92,7 @@ class ClusterJobManager:
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
+        self.max_retained_jobs = 64
 
     @staticmethod
     def validate_mint(mint: str) -> str:
@@ -85,13 +104,26 @@ class ClusterJobManager:
     def _public_job(self, job: dict) -> dict:
         return {k: v for k, v in job.items() if k not in {"future"}}
 
+    def _prune_jobs_locked(self):
+        finished=[
+            job for job in self.jobs.values()
+            if job["status"] in {"DONE","ERROR"}
+        ]
+        finished.sort(key=lambda x: x.get("finished_at") or x.get("created_at") or 0, reverse=True)
+        keep={x["job_id"] for x in finished[:self.max_retained_jobs]}
+        active={x["job_id"] for x in self.jobs.values() if x["status"] in {"QUEUED","RUNNING"}}
+        for job_id in list(self.jobs):
+            if job_id not in keep and job_id not in active:
+                self.jobs.pop(job_id,None)
+
     def submit(self, mint: str, preset: str = "standard") -> dict:
         mint = self.validate_mint(mint)
         if preset not in CLUSTER_PRESETS:
             raise ValueError("INVALID_CLUSTER_PRESET")
         with self.lock:
+            self._prune_jobs_locked()
             for job in self.jobs.values():
-                if job["mint"] == mint and job["status"] in {"QUEUED", "RUNNING"}:
+                if job["mint"] == mint and job["preset"] == preset and job["status"] in {"QUEUED", "RUNNING"}:
                     return self._public_job(job)
             job_id = uuid.uuid4().hex
             job = {
@@ -103,7 +135,6 @@ class ClusterJobManager:
                 "started_at": None,
                 "finished_at": None,
                 "error": None,
-                "report": None,
             }
             self.jobs[job_id] = job
             job["future"] = self.executor.submit(self._run, job_id)
@@ -140,7 +171,7 @@ class ClusterJobManager:
                 job = self.jobs[job_id]
                 job["status"] = "DONE"
                 job["finished_at"] = time.time()
-                job["report"] = report
+                self._prune_jobs_locked()
         except Exception as exc:
             with self.lock:
                 job = self.jobs[job_id]
@@ -150,6 +181,7 @@ class ClusterJobManager:
                     "type": type(exc).__name__,
                     "message": str(exc)[:500],
                 }
+                self._prune_jobs_locked()
         finally:
             cache.close()
 
@@ -330,6 +362,11 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self._allowed_host():
             return self.send_error(421, "loopback Host required")
+        if not _origin_is_loopback(self.headers.get("Origin")):
+            return self._json({"error":"CROSS_ORIGIN_POST_FORBIDDEN"},403)
+        content_type=(self.headers.get("Content-Type") or "").split(";",1)[0].strip().lower()
+        if content_type!="application/json":
+            return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
         path = urlparse(self.path).path
         if path != "/api/cluster-analysis":
             return self.send_error(404)
@@ -343,6 +380,8 @@ class Handler(BaseHTTPRequestHandler):
             body = json.loads(self.rfile.read(length))
         except (ValueError, UnicodeDecodeError):
             return self._json({"error":"INVALID_JSON"},400)
+        if not isinstance(body,dict):
+            return self._json({"error":"JSON_OBJECT_REQUIRED"},400)
         try:
             job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
         except ValueError as exc:
