@@ -14,7 +14,7 @@ import urllib.error
 import urllib.request
 from collections import defaultdict
 from dataclasses import dataclass
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
@@ -24,6 +24,7 @@ from .market import DexScreenerMarketClient
 
 DEFAULT_RPC = "https://api.mainnet.solana.com"
 DEFAULT_RPC_FALLBACKS = (
+    "https://solana-rpc.publicnode.com",
     "https://api.mainnet-beta.solana.com",
     "https://rpc.ankr.com/solana",
 )
@@ -275,10 +276,23 @@ class WalletClusterAnalyzer:
         self,mint:str,*,rpc:SolanaReadOnlyRPC,special_registry:dict|None=None,
         history_per_holder=30,deep_holders=10,funding_lookback=12,
         material_pct=Decimal("1"),market_client:DexScreenerMarketClient|None=None,
+        adaptive_history_per_holder=None,adaptive_funding_lookback=None,
+        progress_callback=None,
     ):
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
         self.market_client=market_client
+        self.adaptive_history_per_holder=int(adaptive_history_per_holder) if adaptive_history_per_holder else None
+        self.adaptive_funding_lookback=int(adaptive_funding_lookback) if adaptive_funding_lookback else None
+        self.progress_callback=progress_callback
         self.edges=[];self.trades=[];self.funding=[];self.consolidations=[];self.tx_errors=[]
+        self.adaptive_deepened_owners=[]
+
+    def _progress(self,stage,**details):
+        if not self.progress_callback:return
+        try:self.progress_callback(stage,details)
+        except Exception:
+            # UI progress must never alter evidence collection or report correctness.
+            return
     def _entry(self,address):
         token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
         return (token_cfg.get("addresses") or {}).get(address) or (self.registry.get("addresses") or {}).get(address)
@@ -383,8 +397,9 @@ class WalletClusterAnalyzer:
         x,y=sorted([a,b]);record={"a":x,"b":y,"type":kind,"signature":signature,**extra}
         key=_hash(record)
         if key not in {e["_key"] for e in self.edges}:self.edges.append({**record,"_key":key})
-    def _scan_holder(self,holder:Holder,account_to_owner,top_owners):
-        try:rows=self.rpc.call("getSignaturesForAddress",[holder.token_account,{"commitment":"finalized","limit":self.history_per_holder}],ttl=300)
+    def _scan_holder(self,holder:Holder,account_to_owner,top_owners,history_limit=None):
+        limit=int(history_limit or self.history_per_holder)
+        try:rows=self.rpc.call("getSignaturesForAddress",[holder.token_account,{"commitment":"finalized","limit":limit}],ttl=300)
         except Exception as exc:self.tx_errors.append({"address":holder.token_account,"error":type(exc).__name__});return None
         first=None
         for meta in rows or []:
@@ -424,9 +439,10 @@ class WalletClusterAnalyzer:
                         "program_ids":(c.get("evidence") or {}).get("program_ids") or [],
                     }
         return first
-    def _scan_funding(self,holder:Holder,first,top_owners):
+    def _scan_funding(self,holder:Holder,first,top_owners,funding_limit=None):
         if not first:return
-        options={"commitment":"finalized","limit":self.funding_lookback,"before":first["signature"]}
+        limit=int(funding_limit or self.funding_lookback)
+        options={"commitment":"finalized","limit":limit,"before":first["signature"]}
         try:rows=self.rpc.call("getSignaturesForAddress",[holder.owner,options],ttl=300)
         except Exception as exc:
             self.tx_errors.append({"address":holder.owner,"phase":"funding_signatures","error":type(exc).__name__})
@@ -525,7 +541,10 @@ class WalletClusterAnalyzer:
     def analyze(self):
         token_profile=self.token_profile()
         market=self.market_snapshot()
+        self._progress("BASE_READY",token_profile=token_profile,market=market)
+
         supply,decimals,holders=self.holders()
+        self._progress("HOLDERS_READY",top_accounts_resolved=len(holders),supply_raw=str(supply),decimals=decimals)
         account_to_owner={h.token_account:h.owner for h in holders}
         firsts={};deep=[];deep_seen=set()
         for h in holders:
@@ -533,9 +552,37 @@ class WalletClusterAnalyzer:
             deep_seen.add(h.owner);deep.append(h)
             if len(deep)>=self.deep_holders:break
         top_owners=set(account_to_owner.values())
-        for h in deep:firsts[h.owner]=self._scan_holder(h,account_to_owner,top_owners)
-        for h in deep:self._scan_funding(h,firsts.get(h.owner),top_owners)
+
+        for idx,h in enumerate(deep,1):
+            self._progress("OWNER_SCAN",scanned=idx-1,target=len(deep),owner=h.owner,mode="SHALLOW")
+            firsts[h.owner]=self._scan_holder(h,account_to_owner,top_owners,self.history_per_holder)
+            self._progress("OWNER_SCAN",scanned=idx,target=len(deep),owner=h.owner,mode="SHALLOW")
+        for idx,h in enumerate(deep,1):
+            self._progress("FUNDING_SCAN",scanned=idx-1,target=len(deep),owner=h.owner,mode="SHALLOW")
+            self._scan_funding(h,firsts.get(h.owner),top_owners,self.funding_lookback)
         self._derive_pair_edges()
+
+        adaptive_history=self.adaptive_history_per_holder or self.history_per_holder
+        adaptive_funding=self.adaptive_funding_lookback or self.funding_lookback
+        if adaptive_history>self.history_per_holder or adaptive_funding>self.funding_lookback:
+            suspicious=set()
+            for edge in self.edges:
+                if edge.get("type") not in {"SHARED_INFRA","COMMON_FUNDER_CEX"}:
+                    suspicious.update((edge.get("a"),edge.get("b")))
+            for h in deep:
+                pct=Decimal(h.raw)*100/Decimal(supply) if supply else Decimal(0)
+                if pct>=self.material_pct and h.role in DEV_ROLES | {"UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:
+                    suspicious.add(h.owner)
+            targets=[h for h in deep if h.owner in suspicious]
+            self.adaptive_deepened_owners=[h.owner for h in targets]
+            if targets:
+                self._progress("ADAPTIVE_DEEPEN",scanned=0,target=len(targets),owners=self.adaptive_deepened_owners)
+                for idx,h in enumerate(targets,1):
+                    firsts[h.owner]=self._scan_holder(h,account_to_owner,top_owners,adaptive_history) or firsts.get(h.owner)
+                    self._scan_funding(h,firsts.get(h.owner),top_owners,adaptive_funding)
+                    self._progress("ADAPTIVE_DEEPEN",scanned=idx,target=len(targets),owner=h.owner)
+                self._derive_pair_edges()
+        self._progress("FINALIZING",deep_holders_scanned=len(deep),adaptive_deepened=len(self.adaptive_deepened_owners))
 
         owners=sorted({h.owner for h in holders});balances=defaultdict(int)
         for h in holders:balances[h.owner]+=h.raw
@@ -717,6 +764,10 @@ class WalletClusterAnalyzer:
             "coverage":{
                 "top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),
                 "history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,
+                "adaptive_history_per_holder":self.adaptive_history_per_holder,
+                "adaptive_funding_lookback":self.adaptive_funding_lookback,
+                "adaptive_deepened_owners":list(self.adaptive_deepened_owners),
+                "scan_mode":"ADAPTIVE" if self.adaptive_history_per_holder or self.adaptive_funding_lookback else "FIXED",
                 "material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,
                 "rpc_calls":getattr(self.rpc,"calls",0),"rpc_cache_hits":getattr(self.rpc,"cache_hits",0),
                 "rpc_endpoint_calls":endpoint_calls,"rpc_endpoint_failures":endpoint_failures,
