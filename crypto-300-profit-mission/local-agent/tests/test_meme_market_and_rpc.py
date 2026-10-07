@@ -98,6 +98,8 @@ def test_token_profile_reads_chain_authorities_without_market_guessing():
     assert out["freeze_authority"] is None
     assert out["metadata_update_authority"] is None
     assert out["metadata_update_authority_status"]=="CHAIN_PARSED"
+    assert out["sensitive_extensions"]==[]
+    assert out["risk_flags"]==[]
 
 
 def test_null_get_transaction_is_not_cached(tmp_path):
@@ -137,3 +139,23 @@ def test_rpc_keeps_primary_for_healthy_requests():
     rpc.call("getTokenSupply",["MintA",{"commitment":"finalized"}])
     rpc.call("getTokenSupply",["MintB",{"commitment":"finalized"}])
     assert calls==["https://primary.test","https://primary.test"]
+
+
+def test_token_2022_sensitive_extensions_are_explicit_risk_flags():
+    class RPC:
+        endpoint="test";calls=0;cache_hits=0
+        def call(self,method,params,ttl=0):
+            assert method=="getAccountInfo"
+            return {"value":{
+                "owner":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                "data":{"parsed":{"info":{
+                    "mintAuthority":None,"freezeAuthority":None,"decimals":6,"supply":"1000000",
+                    "extensions":[
+                        {"extension":"transferFeeConfig"},
+                        {"extension":"tokenMetadata","state":{"updateAuthority":None}},
+                    ],
+                }}}
+            }}
+    out=WalletClusterAnalyzer("Mint",rpc=RPC()).token_profile()
+    assert out["sensitive_extensions"]==["transferFeeConfig"]
+    assert "SENSITIVE_EXTENSION:transferFeeConfig" in out["risk_flags"]
