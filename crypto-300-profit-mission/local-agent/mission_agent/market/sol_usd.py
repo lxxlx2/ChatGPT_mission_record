@@ -121,6 +121,24 @@ class BinanceSolUsdcHistoryClient:
             return _unavailable("BINANCE_HISTORY_RESPONSE_INVALID", target_open, retryable=True)
 
 
+def _simple_sol_quote_eligible(event: dict) -> bool:
+    """Only a simple, economically attributable SOL/WSOL quote may gain USDC authority."""
+    reason=event.get("amount_predicate_reason")
+    predicate=event.get("amount_predicate")
+    if predicate not in (None,"UNDETERMINED"):
+        return False
+    if reason not in (None,"NON_USDC_QUOTE"):
+        return False
+    if event.get("route_intermediate_assets"):
+        return False
+    if event.get("route_amount_semantics") not in (None,"DIRECT_OR_SINGLE_TARGET_QUOTE"):
+        return False
+    quote_legs=event.get("quote_legs")
+    if isinstance(quote_legs,list) and len(quote_legs)>1:
+        return False
+    return True
+
+
 def normalize_trade_event(event: dict, reference: dict | None) -> dict:
     """Return a copy with deterministic USDC-equivalent evidence when possible."""
     value = dict(event)
@@ -149,7 +167,7 @@ def normalize_trade_event(event: dict, reference: dict | None) -> dict:
         "trade_block_time": value.get("at"),
         "reference": reference or {"status": "UNAVAILABLE", "reason": "SOL_USDC_REFERENCE_MISSING"},
     }
-    if value.get("amount_predicate_reason")=="COMPOSITE_QUOTE_LEGS":
+    if not _simple_sol_quote_eligible(value):
         value["quote_usdc_status"]="UNDETERMINED"
         value["quote_usdc_reference"]=wrapped_reference
         return value
@@ -198,6 +216,9 @@ def normalize_classification(classified: dict, reference: dict | None, *, for_mo
             "at": value.get("block_time"),
             "amount_predicate": t.get("amount_predicate"),
             "amount_predicate_reason": t.get("amount_predicate_reason"),
+            "quote_legs": t.get("quote_legs"),
+            "route_intermediate_assets": t.get("route_intermediate_assets"),
+            "route_amount_semantics": t.get("route_amount_semantics"),
         },
         reference,
     )
