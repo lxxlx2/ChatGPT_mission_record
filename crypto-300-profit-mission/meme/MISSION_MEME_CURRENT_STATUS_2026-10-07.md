@@ -422,3 +422,31 @@ Trust boundary:
 - social/project adoption is not automatically inferred from name or link matching.
 
 This branch is **not merged or live**. It requires a fresh full local-agent test run and external review before merge/reinstall.
+
+
+## 14. CA research report v3 candidate — local validation required
+
+Branch:
+`feature/meme-ca-report-v3-20261007`
+
+Built from the clean v2 candidate `18427693`, without modifying `main`.
+
+Changes relative to v2:
+- PublicNode added immediately after the configured/official Solana RPC in the fallback order;
+- healthy requests stay on the configured/official primary rather than round-robin across providers;
+- quick preset reduced to 6 owners / 8 target-token signatures / 4 funding signatures;
+- standard preset changed to adaptive mode: 6 owners / 12 + 8 first, with only suspicious/material unresolved wallets deepened to 30 + 12;
+- deep preset remains 20 owners / 100 + 50;
+- Dashboard jobs expose progressive stages instead of a generic long-running spinner;
+- per-CA conclusion history persists only material assessment changes and records new risks / removed uncertainty;
+- missing `InvalidOperation` import in the v2 candidate was corrected.
+
+No main merge, LaunchAgent reinstall, notification-rule change, threshold change, wallet signing or production trading is authorized by this branch.
+
+Required acceptance before merge:
+1. full local-agent pytest on this exact branch head;
+2. real CA query using the previously rate-limited test CA or another valid Solana CA;
+3. verify base/Top20 progress appears before the final cluster report;
+4. verify an RPC 429 can fail over without failing the entire report;
+5. verify a repeat query with unchanged assessment does not append a fake conclusion-change event;
+6. keep `PRODUCTION_TRADING = NO_GO`.
