@@ -222,10 +222,12 @@ def report(db,*,since_epoch=None,until_epoch=None):
         if not values:return {"measured":0,"win_rate_pct":None,"median_return_pct":None,"mean_return_pct":None,"profit_factor":None}
         gains=sum((x for x in values if x>0),Decimal(0));losses=-sum((x for x in values if x<0),Decimal(0))
         profit_factor="INF" if gains>0 and losses==0 else None if losses==0 else str(gains/losses)
+        mid=len(values)//2
+        median=values[mid] if len(values)%2 else (values[mid-1]+values[mid])/Decimal(2)
         return {
             "measured":len(values),
             "win_rate_pct":str(Decimal(sum(x>0 for x in values))*100/Decimal(len(values))),
-            "median_return_pct":str(values[len(values)//2]),
+            "median_return_pct":str(median),
             "mean_return_pct":str(sum(values,Decimal(0))/Decimal(len(values))),
             "profit_factor":profit_factor,
         }
