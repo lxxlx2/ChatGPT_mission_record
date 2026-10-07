@@ -44,7 +44,9 @@ def _event_price_usdc(event: dict) -> Decimal | None:
     if not quantity:
         return None
     try:
-        if event.get("quote_asset") == USDC and not event.get("quote_normalization"):
+        amount_predicate=event.get("amount_predicate")
+        direct_usdc=amount_predicate in (None,"USDC_DIRECT_NUMERIC")
+        if event.get("quote_asset") == USDC and direct_usdc and not event.get("quote_normalization"):
             return Decimal(str(event["quote_quantity"])) / quantity
         if event.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" and event.get("quote_usdc_equivalent") is not None:
             return Decimal(str(event["quote_usdc_equivalent"])) / quantity
@@ -64,11 +66,16 @@ def _quote_display(event: dict | None) -> dict:
             "normalized": True,
             "usdc_equivalent": event.get("quote_usdc_equivalent"),
         }
+    direct_usdc=event.get("amount_predicate") in (None,"USDC_DIRECT_NUMERIC")
     return {
         "asset": event.get("quote_asset"),
         "quantity": event.get("quote_quantity"),
         "normalized": False,
-        "usdc_equivalent": event.get("quote_usdc_equivalent") if event.get("quote_asset") != USDC else event.get("quote_quantity"),
+        "usdc_equivalent": (
+            event.get("quote_usdc_equivalent")
+            if event.get("quote_asset") != USDC
+            else event.get("quote_quantity") if direct_usdc else None
+        ),
     }
 
 
@@ -183,6 +190,8 @@ class FrankReader:
                 model_quote_quantity = latest_buy.get("quote_quantity") if latest_buy else None
                 if latest_buy_price is not None:
                     price_status = "SOL_EVENT_TIME_USDC_VERIFIED" if latest_buy and latest_buy.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"
+                elif latest_buy and latest_buy.get("amount_predicate")=="UNDETERMINED" and model_quote_asset==USDC:
+                    price_status = "COMPOSITE_QUOTE_PRICE_UNAVAILABLE"
                 elif model_quote_asset in {"SOL", WSOL} or quote_display["asset"] in {"SOL", WSOL}:
                     price_status = "SOL_EVENT_TIME_USDC_UNAVAILABLE"
                 else:
