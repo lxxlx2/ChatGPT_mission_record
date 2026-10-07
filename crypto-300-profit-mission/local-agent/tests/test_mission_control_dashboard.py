@@ -185,3 +185,11 @@ def test_cluster_manager_has_multiple_free_rpc_endpoints_by_default(tmp_path,mon
     assert "https://api.mainnet-beta.solana.com" in manager.rpc_endpoints
     assert "https://rpc.ankr.com/solana" in manager.rpc_endpoints
     assert len(manager.rpc_endpoints)>=3
+
+
+def test_cluster_dashboard_has_two_level_conclusions():
+    from mission_agent.mission_control.server import Handler
+    js=(Handler.static_root/"app.js").read_text()
+    assert "链上 / 市场结构结论" in js
+    assert "完整投资结论" in js
+    assert "完整投资结论待叙事 / 官方关系核实" in js
