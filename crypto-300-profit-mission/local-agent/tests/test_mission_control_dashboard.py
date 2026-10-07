@@ -1,7 +1,7 @@
 import time
 
 from mission_agent.mission_control.server import (
-    ClusterJobManager, DashboardState, _content_type_is_json, _decode_json_object, _origin_is_loopback,
+    ClusterJobManager, DashboardState, _atomic_write_text, _content_type_is_json, _decode_json_object, _origin_is_loopback,
 )
 from mission_agent.mission_control.service import MissionMemeService
 from test_mission_control_service import make_prod, policy
@@ -139,3 +139,20 @@ def test_dashboard_frontend_restores_latest_cluster_report():
     js=(Handler.static_root/"app.js").read_text()
     assert "/api/cluster-latest?mint=" in js
     assert "mission-meme-last-cluster-ca" in js
+
+
+def test_dashboard_cluster_report_shows_observation_age_and_shared_infra_label():
+    from mission_agent.mission_control.server import Handler
+    js=(Handler.static_root/"app.js").read_text()
+    assert "观测时间" in js
+    assert "report.observed_at" in js
+    assert "共享公共基础设施（不代表共同控制）" in js
+
+
+def test_atomic_cluster_report_write_replaces_complete_file(tmp_path):
+    path=tmp_path/"latest.json"
+    _atomic_write_text(path,'{"version":1}')
+    assert path.read_text()=='{"version":1}'
+    _atomic_write_text(path,'{"version":2,"complete":true}')
+    assert path.read_text()=='{"version":2,"complete":true}'
+    assert list(tmp_path.glob("latest.json.tmp-*"))==[]
