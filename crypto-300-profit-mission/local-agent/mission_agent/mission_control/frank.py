@@ -257,7 +257,14 @@ class FrankReader:
                 rows=db.execute(
                     """SELECT signature,block_time,body FROM signatures
                        WHERE json_extract(body,'$.classification')='UNKNOWN_NEEDS_REVIEW'
-                         AND json_extract(body,'$.evidence.mechanical_classification')='ACTIVE_SWAP_LIKE'
+                         AND (
+                           json_extract(body,'$.evidence.mechanical_classification')='ACTIVE_SWAP_LIKE'
+                           OR (
+                             json_extract(body,'$.frank_is_signer')=1
+                             AND json_extract(body,'$.evidence.tx_err') IS NULL
+                             AND json_extract(body,'$.evidence.classification_evidence.opposing_economic_flows')=1
+                           )
+                         )
                        ORDER BY block_time DESC LIMIT ?""",
                     (limit,),
                 ).fetchall()
@@ -297,6 +304,11 @@ class FrankReader:
                 result.append({
                     "signature":row["signature"],"block_time":row["block_time"],
                     "classification_reason":body.get("classification_reason"),
+                    "review_scope":(
+                        "ACTIVE_SWAP_LIKE"
+                        if evidence.get("mechanical_classification")=="ACTIVE_SWAP_LIKE"
+                        else "SIGNED_OPPOSING_FLOW_MARKET_UNPROVEN"
+                    ),
                     "candidate_mints":[x["mint"] for x in assets if x["mint"] not in quote_mints],
                     "assets":assets,
                     "program_ids":evidence.get("program_ids") or [],
