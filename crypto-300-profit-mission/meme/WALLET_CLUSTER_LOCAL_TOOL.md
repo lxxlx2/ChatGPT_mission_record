@@ -6,7 +6,21 @@ Goal: turn the mandatory wallet-cluster specification into a repeatable local co
 
 ## Data sources
 
-Default source is finalized Solana JSON-RPC. The tool accepts a custom `SOLANA_RPC_URL` when the public endpoint is rate-limited. No paid provider is required.
+Primary evidence source is finalized Solana JSON-RPC. No paid provider is required.
+
+The Dashboard/CLI now supports multiple free endpoints because public Solana RPC is rate-limited. Default mainnet order is:
+
+- `https://api.mainnet.solana.com`
+- `https://api.mainnet-beta.solana.com`
+- `https://rpc.ankr.com/solana`
+
+The client paces requests per endpoint, honors `Retry-After`, cools down nodes that return 403/429/5xx, rotates to the next free endpoint, and keeps the existing local SQLite cache.
+
+Overrides:
+- `SOLANA_RPC_URL=<primary>`
+- `SOLANA_RPC_URLS=<comma-separated endpoint list>`
+
+Raw finalized RPC remains authoritative for ownership, authorities and transaction evidence.
 
 The tool uses:
 - getTokenSupply
@@ -121,11 +135,11 @@ The localhost Mission Meme dashboard now has two top-level views:
 
 From any current Frank candidate, `链上查询` carries that CA directly into the research tab.
 
-The research view supports three bounded presets:
+The research view supports three bounded presets. All three resolve Top20 token accounts to actual owners. The difference is how many owners receive historical deep scan and how far that scan goes:
 
-- `快速`: 6 owners / 12 target-token signatures / 8 funding signatures.
-- `标准`: 10 owners / 30 target-token signatures / 12 funding signatures.
-- `深度`: 20 owners / 100 target-token signatures / 50 funding signatures.
+- `快速`: deep-scan first 6 unique owners; up to 12 target-token-account signatures plus 8 pre-acquisition funding signatures per scanned owner. Use for first-pass screening.
+- `标准`: deep-scan first 10 unique owners; up to 30 target-token-account signatures plus 12 pre-acquisition funding signatures. Default formal analysis.
+- `深度`: deep-scan all Top20 unique owners; up to 100 target-token-account signatures plus 50 pre-acquisition funding signatures. Use for important projects, suspected wallet splitting or hidden clusters; it puts the most pressure on free RPC.
 
 Queries are asynchronous so a long public-RPC scan does not block Frank signal rendering. Only one cluster job runs at a time to avoid turning the free Solana RPC into an uncontrolled fan-out.
 
@@ -144,3 +158,35 @@ The web result separates:
 - RPC/cache coverage and limitations.
 
 The UI never converts an `UNRESOLVED` strict metric into a numeric value.
+
+
+## Research report v2
+
+The CA page is no longer only a wallet-cluster table. It produces a structured Meme research report with separate evidence layers.
+
+Chain-authoritative section:
+- token program;
+- supply/decimals;
+- mint authority;
+- freeze authority;
+- metadata update authority when parsable from the mint account;
+- Top20 token account -> actual owner;
+- bounded first confirmed market acquisition for deep-scanned owners;
+- pre-acquisition SOL funding when visible;
+- direct transfers / common funding / signer / consolidation / synchronized execution clusters.
+
+Secondary market section:
+- DexScreener token-pairs API is used only for current market/pair metadata: name/symbol, reference price, market cap, DEX/pair, liquidity, volume, buys/sells and price change;
+- Jupiter official quote remains the source for a current read-only $30 USDC executable quote and price impact;
+- neither source is allowed to override raw-chain ownership or authority facts.
+
+Conclusion section:
+- chain permission status;
+- holder / wallet-cluster status;
+- current market snapshot;
+- explicit unresolved narrative status;
+- next checks such as exact-CA official recognition, creator-fee claim, creator buy, lock/treasury relationship and verified ATH/key levels.
+
+The tool does not automatically claim that a public X/social link means the narrative owner adopted the exact CA. Creator claim/buy/lock or official recognition needs separate first-party or on-chain evidence.
+
+The persisted JSON and Markdown reports carry the same separation between chain facts, secondary market data, inferred cluster conclusions and unresolved narrative claims.
