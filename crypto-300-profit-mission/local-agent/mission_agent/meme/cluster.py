@@ -336,14 +336,17 @@ class WalletClusterAnalyzer:
                 if a.get("quote_asset")==b.get("quote_asset") and a.get("quote_amount_raw")==b.get("quote_amount_raw") and a.get("quote_amount_raw"):
                     pair_counts[pair]["IDENTICAL_SIZE"]+=1;self._edge(*pair,"IDENTICAL_SIZE",a["signature"],other_signature=b["signature"],quote_amount_raw=a["quote_amount_raw"])
                 common=set(a.get("program_ids") or []) & set(b.get("program_ids") or [])
-                common-=set(INFRA_PROGRAMS)
-                common-=set(DEX_PROGRAMS)
-                common={
+                public_common={
                     program for program in common
-                    if (self._entry(program) or {}).get("role") not in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","AMM_POOL","PROTOCOL_VAULT"}
+                    if program in INFRA_PROGRAMS
+                    or program in DEX_PROGRAMS
+                    or (self._entry(program) or {}).get("role") in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","AMM_POOL","PROTOCOL_VAULT"}
                 }
-                if common:
-                    pair_counts[pair]["SAME_EXECUTION_PROGRAM"]+=1;self._edge(*pair,"SAME_EXECUTION_PROGRAM",a["signature"],other_signature=b["signature"],programs=sorted(common))
+                if public_common:
+                    self._edge(*pair,"SHARED_INFRA",a["signature"],other_signature=b["signature"],programs=sorted(public_common))
+                nonpublic_common=common-public_common
+                if nonpublic_common:
+                    pair_counts[pair]["SAME_EXECUTION_PROGRAM"]+=1;self._edge(*pair,"SAME_EXECUTION_PROGRAM",a["signature"],other_signature=b["signature"],programs=sorted(nonpublic_common))
         signer_owners=defaultdict(set)
         for t in trades:
             for signer in t.get("signers") or []:
