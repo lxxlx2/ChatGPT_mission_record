@@ -64,7 +64,7 @@ class RpcCache:
 
 class SolanaReadOnlyRPC:
     ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction"}
-    def __init__(self, endpoint=DEFAULT_RPC, *, open_url=urllib.request.urlopen, sleep=time.sleep, min_interval=.12, cache:RpcCache|None=None):
+    def __init__(self, endpoint=DEFAULT_RPC, *, open_url=urllib.request.urlopen, sleep=time.sleep, min_interval=.30, cache:RpcCache|None=None):
         self.endpoint=endpoint;self.open_url=open_url;self.sleep=sleep;self.min_interval=float(min_interval);self.cache=cache;self.last=0.0;self.calls=0;self.cache_hits=0
     def call(self, method, params, *, ttl=0):
         if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
@@ -89,7 +89,9 @@ class SolanaReadOnlyRPC:
             except urllib.error.HTTPError as exc:
                 last_error=RPCError("HTTP_"+str(exc.code))
                 if exc.code not in {429,500,502,503,504} or attempt==2:raise last_error
-                self.sleep(min(5.0,1.0*(2**attempt)))
+                try:retry_after=min(30.0,max(0.0,float(exc.headers.get("Retry-After","0"))))
+                except (TypeError,ValueError,AttributeError):retry_after=0.0
+                self.sleep(max(min(5.0,1.0*(2**attempt)),retry_after))
             except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
                 last_error=RPCError(type(exc).__name__)
                 if attempt==2:raise last_error
