@@ -1,0 +1,389 @@
+"""Free, read-only Solana wallet-cluster analysis for Meme CA research.
+
+The analyzer prefers raw finalized JSON-RPC evidence over third-party labels.
+It never upgrades a graph link to common ownership without the explicit
+multi-evidence rules in WALLET_CLUSTER_ANALYSIS_SPEC.md.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import sqlite3
+import time
+import urllib.error
+import urllib.request
+from collections import defaultdict
+from dataclasses import dataclass
+from decimal import Decimal
+from pathlib import Path
+
+from ..frank.parser import INFRA_PROGRAMS
+from ..signals.classifier import classify
+
+DEFAULT_RPC = "https://api.mainnet.solana.com"
+SYSTEM_PROGRAM = "11111111111111111111111111111111"
+TOKEN_PROGRAMS = {
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+}
+SPECIAL_ROLES = {
+    "LP", "AMM_POOL", "PROTOCOL_VAULT", "ESCROW", "VESTING", "LOCK",
+    "BURN", "CEX", "BRIDGE", "ROUTER", "PUBLIC_INFRA", "MARKET_MAKER",
+}
+DEV_ROLES = {"DEV", "CREATOR", "TREASURY"}
+STRONG = {"COMMON_FUNDER_EOA", "BATCH_FUNDING", "COMMON_SIGNER", "COMMON_CONSOLIDATION"}
+BEHAVIOR = {"SYNC_BUY", "SYNC_SELL", "IDENTICAL_SIZE", "SAME_EXECUTION_PROGRAM", "REPEATED_SYNC_BEHAVIOR"}
+
+
+def _hash(value) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
+
+
+class RPCError(RuntimeError):
+    pass
+
+
+class RpcCache:
+    def __init__(self, path: Path):
+        self.path = Path(path)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.db = sqlite3.connect(self.path)
+        self.db.execute("CREATE TABLE IF NOT EXISTS rpc_cache(key TEXT PRIMARY KEY,method TEXT,created_at REAL,expires_at REAL,body TEXT)")
+    def close(self):
+        self.db.close()
+    def get(self, method, params, now):
+        key=_hash({"method":method,"params":params})
+        row=self.db.execute("SELECT body,expires_at FROM rpc_cache WHERE key=?",(key,)).fetchone()
+        if not row or row[1] < now:return None
+        return json.loads(row[0])
+    def put(self, method, params, body, ttl, now):
+        key=_hash({"method":method,"params":params})
+        self.db.execute("INSERT OR REPLACE INTO rpc_cache VALUES(?,?,?,?,?)",(key,method,now,now+ttl,json.dumps(body,sort_keys=True)))
+        self.db.commit()
+
+
+class SolanaReadOnlyRPC:
+    ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction"}
+    def __init__(self, endpoint=DEFAULT_RPC, *, open_url=urllib.request.urlopen, sleep=time.sleep, min_interval=.12, cache:RpcCache|None=None):
+        self.endpoint=endpoint;self.open_url=open_url;self.sleep=sleep;self.min_interval=float(min_interval);self.cache=cache;self.last=0.0;self.calls=0;self.cache_hits=0
+    def call(self, method, params, *, ttl=0):
+        if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
+        now=time.time()
+        if ttl and self.cache:
+            hit=self.cache.get(method,params,now)
+            if hit is not None:self.cache_hits+=1;return hit
+        wait=self.min_interval-(time.monotonic()-self.last)
+        if wait>0:self.sleep(wait)
+        body=json.dumps({"jsonrpc":"2.0","id":1,"method":method,"params":params}).encode()
+        req=urllib.request.Request(self.endpoint,data=body,headers={"Content-Type":"application/json","User-Agent":"mission-meme-cluster/1"})
+        last_error=None
+        for attempt in range(3):
+            try:
+                self.last=time.monotonic();self.calls+=1
+                with self.open_url(req,timeout=20) as response:value=json.loads(response.read())
+                if value.get("error"):raise RPCError("RPC_"+str(value["error"].get("code","ERROR")))
+                if "result" not in value:raise RPCError("RPC_ENVELOPE_INVALID")
+                result=value["result"]
+                if ttl and self.cache:self.cache.put(method,params,result,ttl,time.time())
+                return result
+            except urllib.error.HTTPError as exc:
+                last_error=RPCError("HTTP_"+str(exc.code))
+                if exc.code not in {429,500,502,503,504} or attempt==2:raise last_error
+                self.sleep(min(5.0,1.0*(2**attempt)))
+            except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
+                last_error=RPCError(type(exc).__name__)
+                if attempt==2:raise last_error
+                self.sleep(min(5.0,1.0*(2**attempt)))
+        raise last_error or RPCError("RPC_FAILED")
+
+
+def _instructions(tx):
+    if not tx:return []
+    msg=tx.get("transaction",{}).get("message",{})
+    out=list(msg.get("instructions") or [])
+    for group in tx.get("meta",{}).get("innerInstructions") or []:out.extend(group.get("instructions") or [])
+    return out
+
+
+def _signers(tx):
+    return [k.get("pubkey") for k in tx.get("transaction",{}).get("message",{}).get("accountKeys",[]) if isinstance(k,dict) and k.get("signer")]
+
+
+def _native_funders(tx, target):
+    rows=[]
+    for ix in _instructions(tx):
+        p=ix.get("parsed")
+        if not isinstance(p,dict) or p.get("type")!="transfer":continue
+        info=p.get("info") or {}
+        if info.get("destination")==target and info.get("source") and "lamports" in info:
+            rows.append((info["source"],str(info["lamports"])))
+    return rows
+
+
+def _direct_token_edges(tx, top_accounts:set[str]):
+    rows=[]
+    for ix in _instructions(tx):
+        p=ix.get("parsed")
+        if not isinstance(p,dict) or p.get("type") not in {"transfer","transferChecked"}:continue
+        info=p.get("info") or {};src=info.get("source");dst=info.get("destination")
+        if src in top_accounts and dst in top_accounts and src!=dst:
+            amount=(info.get("tokenAmount") or {}).get("amount") or info.get("amount")
+            rows.append((src,dst,str(amount) if amount is not None else None))
+    return rows
+
+
+class UnionFind:
+    def __init__(self, values):self.p={x:x for x in values}
+    def find(self,x):
+        while self.p[x]!=x:self.p[x]=self.p[self.p[x]];x=self.p[x]
+        return x
+    def union(self,a,b):
+        a,b=self.find(a),self.find(b)
+        if a!=b:self.p[b]=a
+    def groups(self):
+        out=defaultdict(list)
+        for x in self.p:out[self.find(x)].append(x)
+        return list(out.values())
+
+
+@dataclass
+class Holder:
+    token_account:str
+    owner:str
+    raw:int
+    decimals:int
+    role:str
+    role_source:str
+    account_program:str|None=None
+    @property
+    def quantity(self):return Decimal(self.raw)/(Decimal(10)**self.decimals)
+
+
+class WalletClusterAnalyzer:
+    def __init__(self,mint:str,*,rpc:SolanaReadOnlyRPC,special_registry:dict|None=None,history_per_holder=30,deep_holders=10,funding_lookback=12,material_pct=Decimal("1")):
+        self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
+        self.edges=[];self.trades=[];self.funding=[];self.tx_errors=[]
+    def _role(self,address,account_info):
+        explicit=(self.registry.get("addresses") or {}).get(address)
+        if explicit:return explicit.get("role","UNRESOLVED"),explicit.get("source","LOCAL_REGISTRY")
+        value=(account_info or {}).get("value") if isinstance(account_info,dict) else None
+        if not value:return "UNRESOLVED","ACCOUNT_INFO_UNAVAILABLE"
+        program=value.get("owner")
+        if value.get("executable"):return "PUBLIC_PROGRAM","RPC_EXECUTABLE_ACCOUNT"
+        if program==SYSTEM_PROGRAM:return "ORDINARY","RPC_SYSTEM_OWNED"
+        if program in TOKEN_PROGRAMS:return "TOKEN_ACCOUNT_OWNER_UNRESOLVED","RPC_TOKEN_PROGRAM_OWNED"
+        return "PROGRAM_OWNED_UNRESOLVED","RPC_PROGRAM_OWNER:"+str(program)
+    def _supply(self):
+        r=self.rpc.call("getTokenSupply",[self.mint,{"commitment":"finalized"}],ttl=30)
+        v=(r or {}).get("value") or {}
+        return int(v["amount"]),int(v["decimals"])
+    def _top(self):
+        r=self.rpc.call("getTokenLargestAccounts",[self.mint,{"commitment":"finalized"}],ttl=30)
+        return (r or {}).get("value") or []
+    def _accounts(self,addresses):
+        r=self.rpc.call("getMultipleAccounts",[addresses,{"encoding":"jsonParsed","commitment":"finalized"}],ttl=60)
+        return (r or {}).get("value") or []
+    def holders(self):
+        supply,decimals=self._supply();top=self._top()[:20];tas=[x["address"] for x in top]
+        infos=self._accounts(tas)
+        owners=[];temp=[]
+        for row,info in zip(top,infos):
+            parsed=(((info or {}).get("data") or {}).get("parsed") or {}).get("info") or {}
+            owner=parsed.get("owner")
+            amount=((parsed.get("tokenAmount") or {}).get("amount")) or row.get("amount")
+            if not owner or amount is None:continue
+            owners.append(owner);temp.append((row,owner,int(amount)))
+        unique_owners=list(dict.fromkeys(owners))
+        owner_infos=self._accounts(unique_owners) if owners else []
+        owner_map={o:i for o,i in zip(unique_owners,owner_infos)}
+        result=[]
+        for row,owner,raw in temp:
+            role,source=self._role(owner,{"value":owner_map.get(owner)})
+            program=(owner_map.get(owner) or {}).get("owner") if isinstance(owner_map.get(owner),dict) else None
+            result.append(Holder(row["address"],owner,raw,decimals,role,source,program))
+        return supply,decimals,result
+    def _edge(self,a,b,kind,signature,**extra):
+        if not a or not b or a==b:return
+        x,y=sorted([a,b]);record={"a":x,"b":y,"type":kind,"signature":signature,**extra}
+        key=_hash(record)
+        if key not in {e["_key"] for e in self.edges}:self.edges.append({**record,"_key":key})
+    def _scan_holder(self,holder:Holder,account_to_owner):
+        try:rows=self.rpc.call("getSignaturesForAddress",[holder.token_account,{"commitment":"finalized","limit":self.history_per_holder}],ttl=300)
+        except Exception as exc:self.tx_errors.append({"address":holder.token_account,"error":type(exc).__name__});return None
+        first_at=None
+        for meta in rows or []:
+            sig=meta.get("signature")
+            if not sig:continue
+            try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
+            except Exception as exc:self.tx_errors.append({"signature":sig,"error":type(exc).__name__});continue
+            if not tx:continue
+            bt=tx.get("blockTime")
+            for src_ta,dst_ta,amount in _direct_token_edges(tx,set(account_to_owner)):
+                self._edge(account_to_owner[src_ta],account_to_owner[dst_ta],"DIRECT_TOKEN_TRANSFER",sig,amount_raw=amount,block_time=bt)
+            try:c=classify(sig,tx,holder.owner)
+            except Exception:continue
+            trade=c.get("trade") or {}
+            if c.get("classification")=="ACTIVE_TRADE" and trade.get("mint")==self.mint:
+                first_at=bt if first_at is None else min(first_at,bt or first_at)
+                self.trades.append({"owner":holder.owner,"signature":sig,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)})
+        return first_at
+    def _scan_funding(self,holder:Holder,first_at):
+        if not first_at:return
+        try:rows=self.rpc.call("getSignaturesForAddress",[holder.owner,{"commitment":"finalized","limit":self.funding_lookback}],ttl=300)
+        except Exception:return
+        best=None
+        for meta in rows or []:
+            sig=meta.get("signature")
+            if not sig:continue
+            try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
+            except Exception:continue
+            bt=tx.get("blockTime")
+            if bt is None or bt>first_at:continue
+            for source,lamports in _native_funders(tx,holder.owner):
+                candidate={"owner":holder.owner,"source":source,"lamports":lamports,"signature":sig,"block_time":bt}
+                if best is None or bt>best["block_time"]:best=candidate
+        if best:self.funding.append(best)
+    def _derive_pair_edges(self):
+        by_funder=defaultdict(list);by_sig=defaultdict(list)
+        for f in self.funding:by_funder[f["source"]].append(f);by_sig[f["signature"]].append(f)
+        for source,rows in by_funder.items():
+            if len({r["owner"] for r in rows})<2:continue
+            role=(self.registry.get("addresses") or {}).get(source,{}).get("role")
+            kind="COMMON_FUNDER_CEX" if role=="CEX" else "COMMON_FUNDER_EOA"
+            owners=sorted({r["owner"] for r in rows})
+            for i,a in enumerate(owners):
+                for b in owners[i+1:]:self._edge(a,b,kind,rows[0]["signature"],funder=source)
+        for sig,rows in by_sig.items():
+            owners=sorted({r["owner"] for r in rows})
+            if len(owners)>1:
+                for i,a in enumerate(owners):
+                    for b in owners[i+1:]:self._edge(a,b,"BATCH_FUNDING",sig)
+        trades=sorted(self.trades,key=lambda x:(x.get("block_time") or 0,x["owner"]))
+        pair_counts=defaultdict(lambda:defaultdict(int))
+        for i,a in enumerate(trades):
+            for b in trades[i+1:]:
+                if a["owner"]==b["owner"]:continue
+                if a.get("block_time") is None or b.get("block_time") is None:continue
+                if b["block_time"]-a["block_time"]>2:break
+                pair=tuple(sorted([a["owner"],b["owner"]]))
+                if a["direction"]==b["direction"]:
+                    kind="SYNC_BUY" if a["direction"]=="BUY" else "SYNC_SELL";pair_counts[pair][kind]+=1
+                    self._edge(*pair,kind,a["signature"],other_signature=b["signature"],seconds_apart=abs(a["block_time"]-b["block_time"]))
+                if a.get("quote_asset")==b.get("quote_asset") and a.get("quote_amount_raw")==b.get("quote_amount_raw") and a.get("quote_amount_raw"):
+                    pair_counts[pair]["IDENTICAL_SIZE"]+=1;self._edge(*pair,"IDENTICAL_SIZE",a["signature"],other_signature=b["signature"],quote_amount_raw=a["quote_amount_raw"])
+                common=set(a.get("program_ids") or []) & set(b.get("program_ids") or [])
+                common-=set(INFRA_PROGRAMS)
+                if common:
+                    pair_counts[pair]["SAME_EXECUTION_PROGRAM"]+=1;self._edge(*pair,"SAME_EXECUTION_PROGRAM",a["signature"],other_signature=b["signature"],programs=sorted(common))
+        signer_owners=defaultdict(set)
+        for t in trades:
+            for signer in t.get("signers") or []:
+                if signer!=t["owner"] and signer not in INFRA_PROGRAMS:signer_owners[signer].add(t["owner"])
+        for signer,owners in signer_owners.items():
+            owners=sorted(owners)
+            if len(owners)>1:
+                for i,a in enumerate(owners):
+                    for b in owners[i+1:]:self._edge(a,b,"COMMON_SIGNER","MULTI_TX",signer=signer)
+        for pair,counts in pair_counts.items():
+            if sum(counts.values())>=3:self._edge(*pair,"REPEATED_SYNC_BEHAVIOR","MULTI_TX",counts=dict(counts))
+    @staticmethod
+    def _pct(raw,supply):
+        return None if supply<=0 else str((Decimal(raw)*Decimal(100)/Decimal(supply)).quantize(Decimal("0.0001")))
+    def analyze(self):
+        supply,decimals,holders=self.holders()
+        account_to_owner={h.token_account:h.owner for h in holders}
+        firsts={}
+        for h in holders[:self.deep_holders]:firsts[h.owner]=self._scan_holder(h,account_to_owner)
+        for h in holders[:self.deep_holders]:self._scan_funding(h,firsts.get(h.owner))
+        self._derive_pair_edges()
+        owners=sorted({h.owner for h in holders});balances=defaultdict(int)
+        for h in holders:balances[h.owner]+=h.raw
+        relation=UnionFind(owners);control=UnionFind(owners);execution=UnionFind(owners)
+        pair_types=defaultdict(set)
+        for e in self.edges:
+            pair=(e["a"],e["b"]);pair_types[pair].add(e["type"])
+            if e["type"]=="DIRECT_TOKEN_TRANSFER":relation.union(*pair)
+        for pair,types in pair_types.items():
+            strong=len(types & STRONG);behavior=len(types & BEHAVIOR)
+            if strong>=2 or (strong>=1 and behavior>=1) or ("DIRECT_TOKEN_TRANSFER" in types and strong>=1):control.union(*pair)
+            if behavior>=2 or "REPEATED_SYNC_BEHAVIOR" in types:execution.union(*pair)
+        def group_records(groups,kind):
+            out=[]
+            for idx,g in enumerate(groups,1):
+                if len(g)<2:continue
+                raw=sum(balances[x] for x in g)
+                evidence=[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["a"] in g and e["b"] in g]
+                out.append({"cluster_id":f"{kind}-{idx}","wallets":sorted(g),"combined_raw":str(raw),"supply_pct":self._pct(raw,supply),"evidence":evidence})
+            return sorted(out,key=lambda x:int(x["combined_raw"]),reverse=True)
+        relation_groups=group_records(relation.groups(),"REL")
+        control_groups=group_records(control.groups(),"CTRL")
+        execution_groups=group_records(execution.groups(),"EXEC")
+        raw_top10=sum(h.raw for h in holders[:10])
+        nonspecial=[h for h in holders if h.role not in SPECIAL_ROLES]
+        ex_lp=[h for h in holders if h.role not in {"LP","AMM_POOL"}]
+        ex_special_top10=sum(h.raw for h in nonspecial[:10])
+        ex_lp_top10=sum(h.raw for h in ex_lp[:10])
+        dev_raw=sum(h.raw for h in holders if h.role in DEV_ROLES)
+        cluster_values=[];seen=set();group_by_owner={}
+        for g in control.groups():
+            for o in g:group_by_owner[o]=tuple(sorted(g))
+        for h in nonspecial:
+            g=group_by_owner.get(h.owner,(h.owner,))
+            if g in seen:continue
+            seen.add(g);cluster_values.append(sum(balances[o] for o in g))
+        cluster_values.sort(reverse=True)
+        unresolved_raw=0;classified=set()
+        for g in control_groups+execution_groups+relation_groups:classified.update(g["wallets"])
+        for h in nonspecial:
+            pct=Decimal(h.raw)*100/Decimal(supply) if supply else Decimal(0)
+            if pct>=self.material_pct and h.owner not in classified and h.role in {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:unresolved_raw+=h.raw
+        metrics={
+            "RAW_TOP10_PCT":self._pct(raw_top10,supply),
+            "EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply),
+            "EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply),
+            "LARGEST_CONFIRMED_RELATION_GROUP_PCT":relation_groups[0]["supply_pct"] if relation_groups else "0",
+            "LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":control_groups[0]["supply_pct"] if control_groups else "0",
+            "LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT":execution_groups[0]["supply_pct"] if execution_groups else "0",
+            "DEV_LINKED_CLUSTER_PCT":self._pct(dev_raw,supply),
+            "CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply),
+            "UNRESOLVED_MATERIAL_HOLDER_PCT":self._pct(unresolved_raw,supply),
+        }
+        holder_rows=[{"rank":i+1,"token_account":h.token_account,"owner":h.owner,"raw":str(h.raw),"quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply),"role":h.role,"role_source":h.role_source,"account_program":h.account_program} for i,h in enumerate(holders)]
+        return {
+            "schema_version":1,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC","rpc_endpoint":self.rpc.endpoint,
+            "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,"holders":holder_rows,
+            "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
+            "probable_execution_clusters":execution_groups,
+            "edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges],
+            "funding_evidence":self.funding,"trade_evidence":self.trades,"transaction_errors":self.tx_errors,
+            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":min(len(holders),self.deep_holders),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
+            "limitations":[
+                "Only raw finalized RPC evidence and explicit local labels are treated as authoritative.",
+                "CEX/public-infrastructure identity is never guessed from funding alone.",
+                "Program-owned holder accounts remain unresolved unless explicitly labelled.",
+                "Bounded history can miss older funding, consolidation, and cross-token coordination.",
+                "PROBABLE_EXECUTION_CLUSTER never implies common beneficial ownership.",
+            ],
+        }
+
+
+def load_registry(path:Path|None):
+    if path is None:return {"schema_version":1,"addresses":{}}
+    data=json.loads(Path(path).read_text())
+    if data.get("schema_version")!=1 or not isinstance(data.get("addresses"),dict):raise ValueError("SPECIAL_REGISTRY_SCHEMA")
+    return data
+
+
+def markdown(report:dict)->str:
+    m=report["metrics"];lines=[f"# Meme Wallet Cluster — {report['mint']}","",f"Source: {report['source']}","", "## Concentration"]
+    for k,v in m.items():lines.append(f"- {k}: {v}%")
+    lines+=["","## Top holders","", "|#|Owner|Share|Role|","|---:|---|---:|---|"]
+    for h in report["holders"]:lines.append(f"|{h['rank']}|{h['owner']}|{h['supply_pct']}%|{h['role']}|")
+    for title,key in [("Confirmed relations","confirmed_relation_groups"),("Probable control","probable_control_clusters"),("Probable execution","probable_execution_clusters")]:
+        lines+=["",f"## {title}"]
+        rows=report[key]
+        if not rows:lines.append("- None confirmed in bounded evidence.")
+        for g in rows:lines.append(f"- {g['cluster_id']}: {g['supply_pct']}% — "+", ".join(g["wallets"]))
+    lines+=["","## Coverage","",json.dumps(report["coverage"],ensure_ascii=False,indent=2),"", "## Limitations"]
+    lines += [f"- {x}" for x in report["limitations"]]
+    return "\n".join(lines)+"\n"
