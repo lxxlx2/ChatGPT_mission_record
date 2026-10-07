@@ -14,6 +14,7 @@ from .delivery import GmailDelivery, LocalDelivery
 from .frank import FrankReader
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
+from .outcomes import OutcomeTracker
 from .policy import evaluate, load_policy, should_notify
 
 
@@ -56,6 +57,7 @@ class MissionMemeService:
         )
         self.gmail_config = gmail_config or (self.production_root / "gmail-existing-source.json")
         self.jupiter = JupiterQuoteClient(jupiter_api_key or os.environ.get("JUPITER_API_KEY"))
+        self.outcomes = OutcomeTracker(self.control.db, self.jupiter)
         self.local = LocalDelivery(self.control)
         self.gmail = GmailDelivery(self.control)
         self.health_path = self.control_root / "mission-control-health.json"
@@ -155,6 +157,7 @@ class MissionMemeService:
         events = []
         errors = []
         debounced = []
+        outcome_registered = 0
         bootstrap = self.control.db.execute("SELECT count(*) FROM decision_events").fetchone()[0] == 0
         rules = self.policy["decision"]
         initial_max_age = int(rules["initial_notification_max_age_seconds"])
@@ -188,6 +191,8 @@ class MissionMemeService:
                         now=evaluation_now,
                         bucket_seconds=bucket_seconds,
                     )
+                    if self.outcomes.register(candidate=candidate,result=result,quote=quote,now=evaluation_now):
+                        outcome_registered += 1
                     prior = self.control.latest_event(candidate["person_id"], candidate["mint"], candidate.get("episode_id"))
                     previous_decision = prior["decision"] if prior else None
                     transient = self._transient_wait(result)
@@ -240,6 +245,11 @@ class MissionMemeService:
                 errors.append({"mint": candidate.get("mint"), "error": type(exc).__name__, "message": str(exc)[:240]})
                 continue
 
+        outcome_tracking = self.outcomes.sample_due(
+            now=time.time(),
+            slippage_bps=int(rules["slippage_bps"]),
+        )
+        outcome_tracking["registered"] = outcome_registered
         pruned = self.observations.prune(time.time(), retention_seconds)
         if self.delivery_allowed:
             self.local.drain()
@@ -254,6 +264,7 @@ class MissionMemeService:
             "debounced_transitions":debounced,
             "candidate_errors":errors,
             "observation_rows_pruned":pruned,
+            "outcome_tracking":outcome_tracking,
             "delivery_allowed":self.delivery_allowed,
             "bootstrap":bootstrap,
             "policy_id":self.policy["policy_id"],
@@ -267,6 +278,9 @@ class MissionMemeService:
             evaluated_count=len(selected),
             candidate_error_count=len(errors),
             debounced_transition_count=len(debounced),
+            outcome_active=outcome_tracking.get("active",0),
+            outcome_sampled=outcome_tracking.get("sampled",0),
+            outcome_error_count=len(outcome_tracking.get("errors") or []),
         )
         return result
 
