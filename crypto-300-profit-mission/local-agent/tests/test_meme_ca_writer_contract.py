@@ -15,7 +15,7 @@ from scripts.meme_acceptance_integrity import capture, verify, STABLE_HEALTH_KEY
 LEDGER_STABLE = {
     "system": "FRANK_ONLY",
     "policy": "FRANK_LOCAL_SIGNAL_V1",
-    "policy_hash": "a" * 64,
+    "policy_hash": "83ebab1fbb8ec7e03950626137c5597a38b81b8a4085d9150610018cc78cedab",
     "identifier": "com.jerson.crypto-monitor-frank-local",
     "code_commit": "b" * 40,
     "loaded_source_sha256": "c" * 64,
@@ -25,6 +25,7 @@ LEDGER_STABLE = {
     "other_persons": "DEFERRED",
     "new_automation": False,
     "poll_interval_seconds": 30,
+    "source_drift": False,
 }
 
 
@@ -122,3 +123,44 @@ def test_shadow_writer_stable_fields_still_detected_without_poll_false_positive(
     health.write_text(json.dumps(shadow))
     with pytest.raises(RuntimeError, match="IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED"):
         verify(before, prod, loop, dash)
+
+
+@pytest.mark.parametrize("remove_key", ["policy_hash","code_commit","loaded_source_sha256","source_drift","identifier"])
+def test_ledger_missing_authority_field_is_denied_at_capture(tmp_path, remove_key):
+    prod,health,loop,dash=_prod(tmp_path)
+    value=json.loads(health.read_text())
+    del value[remove_key]
+    health.write_text(json.dumps(value))
+    with pytest.raises(ValueError,match="HEALTH_"):
+        capture(prod,loop,dash)
+
+
+def test_ledger_profile_unknown_or_repository_mismatch_denied(tmp_path):
+    prod,health,loop,dash=_prod(tmp_path)
+    health.write_text(json.dumps({"status":"RUNNING","poll_count":10}))
+    with pytest.raises(ValueError,match="HEALTH_WRITER_PROFILE_UNSUPPORTED"):
+        capture(prod,loop,dash)
+    health.write_text(json.dumps({"identifier":"com.jerson.crypto-monitor-frank-shadow",
+                                  "status":"RUNNING"}))
+    with pytest.raises(ValueError,match="HEALTH_REQUIRED_STABLE_FIELDS_MISSING"):
+        capture(prod,loop,dash)
+
+
+def test_ledger_source_drift_and_pre_capture_policy_mismatch_fail_closed(tmp_path):
+    prod,health,loop,dash=_prod(tmp_path)
+    original=json.loads(health.read_text())
+    for key,value,code in (
+        ("source_drift",True,"HEALTH_SOURCE_DRIFT"),
+        ("policy_hash","a"*64,"HEALTH_FROZEN_POLICY_NOT_APPROVED"),
+        ("production_trading","YES","HEALTH_PRODUCTION_TRADING_UNSAFE"),
+    ):
+        current=dict(original);current[key]=value
+        health.write_text(json.dumps(current))
+        with pytest.raises(ValueError,match=code):
+            capture(prod,loop,dash)
+    health.write_text(json.dumps(original))
+    baseline=capture(prod,loop,dash)
+    changed=dict(original);changed["source_drift"]=True
+    health.write_text(json.dumps(changed))
+    with pytest.raises(ValueError,match="HEALTH_SOURCE_DRIFT"):
+        verify(baseline,prod,loop,dash)

@@ -14,6 +14,7 @@ from mission_agent.signals.policy import USDC, load_policy
 from mission_agent.signals.store import Ledger
 from mission_agent.frank.rpc import WALLET
 from test_frank_fm import tx
+from test_meme_ca_writer_contract import LEDGER_STABLE
 
 
 SCRIPT=Path(__file__).parents[1]/"scripts"/"frank_classifier_candidate_replay.py"
@@ -220,7 +221,8 @@ def test_acceptance_integrity_snapshot_allows_normal_live_heartbeats_and_appends
     con.execute("INSERT INTO signatures VALUES(?,?,?,?,?,?,?)",("w","first","frank",1,100,"oldhash","raw1"))
     con.commit();con.close()
     health=prod/"health.json"
-    health.write_text(json.dumps({"last_successful_poll":100,"lag_seconds":4,"status":"RUNNING","policy_hash":"immutable"}))
+    health.write_text(json.dumps({**LEDGER_STABLE,"last_successful_poll":100,
+                                  "lag_seconds":4,"status":"RUNNING"}))
     loop=tmp_path/"loop.plist";loop.write_text("<plist>loop</plist>")
     dash=tmp_path/"dashboard.plist";dash.write_text("<plist>dash</plist>")
     def command(op,*more):
@@ -229,8 +231,9 @@ def test_acceptance_integrity_snapshot_allows_normal_live_heartbeats_and_appends
     before=json.loads(subprocess.check_output(command("capture"),text=True))
     before_path=tmp_path/"before.json"
     before_path.write_text(json.dumps(before))
-    health.write_text(json.dumps({"last_successful_poll":101,"lag_seconds":0,"status":"RUNNING",
-                                  "last_chain_signature":"second","policy_hash":"immutable"}))
+    health.write_text(json.dumps({**LEDGER_STABLE,"last_successful_poll":101,
+                                  "lag_seconds":0,"status":"RUNNING",
+                                  "last_chain_signature":"second"}))
     con=sqlite3.connect(db)
     con.execute("INSERT INTO signatures VALUES(?,?,?,?,?,?,?)",("w","second","frank",2,110,"newhash","raw2"))
     con.commit();con.close()
@@ -254,7 +257,8 @@ def test_acceptance_bash_fake_prod_integrity_only(tmp_path):
     db=sqlite3.connect(prod/"forward.sqlite")
     db.execute("CREATE TABLE signatures(wallet TEXT,signature TEXT,person_id TEXT,slot INTEGER,block_time INTEGER,raw_hash TEXT,raw_reference TEXT)")
     db.commit();db.close()
-    (prod/"health.json").write_text('{"last_successful_poll":1,"status":"RUNNING"}')
+    (prod/"health.json").write_text(json.dumps({**LEDGER_STABLE,
+                                              "last_successful_poll":1,"status":"RUNNING"}))
     home=tmp_path/"home";home.mkdir()
     venv=tmp_path/"fake-venv";(venv/"bin").mkdir(parents=True)
     (venv/"bin"/"python").symlink_to(Path(sys.executable))
@@ -295,7 +299,7 @@ def test_acceptance_integrity_allows_real_writer_polling_but_not_stable_tamper(t
     db.commit();db.close()
     health_path=prod/"health.json"
     health={"service_source_sha256":"stable-script","parser_version":"frank-v8",
-            "identifier":"frank","historical_network_backfill":"BOUNDED300S_IDLE_WINDOW_ONLY",
+            "identifier":"com.jerson.crypto-monitor-frank-shadow","historical_network_backfill":"BOUNDED300S_IDLE_WINDOW_ONLY",
             "gmail":0,"app_alert":0,"automation_mutations":0,"production_writes":0,
             "last_poll_at":"time1","candidate_duplicate_count":0,
             "request_count":100,"rpc_429_count":0,"rpc_error_count":0,
@@ -353,3 +357,24 @@ def test_replay_transition_ignores_nonsemantic_balance_reference_metadata():
     assert replay.semantic_classification(updated)==replay.semantic_classification(source)
     updated["trade"]["quote_amount_raw"]="500000"
     assert replay.semantic_classification(updated)!=replay.semantic_classification(source)
+
+
+def test_acceptance_shell_self_test_rejects_missing_health_authority(tmp_path):
+    import os,subprocess
+    sh=Path(__file__).parents[1]/"scripts"/"accept_meme_ca_v3.sh"
+    prod=tmp_path/"prod";prod.mkdir()
+    db=sqlite3.connect(prod/"forward.sqlite")
+    db.execute("CREATE TABLE signatures(wallet TEXT,signature TEXT,person_id TEXT,slot INTEGER,block_time INTEGER,raw_hash TEXT,raw_reference TEXT)")
+    db.commit();db.close()
+    (prod/"health.json").write_text('{"status":"RUNNING"}')
+    home=tmp_path/"home";home.mkdir()
+    venv=tmp_path/"venv";(venv/"bin").mkdir(parents=True)
+    (venv/"bin"/"python").symlink_to(Path(sys.executable))
+    env={**os.environ,"INTEGRITY_SELF_TEST_ONLY":"1","PROD":str(prod),
+         "WORKTREE":str(Path(__file__).parents[3]),
+         "LOCAL_AGENT":str(Path(__file__).parents[1]),"HOME":str(home),
+         "VENV":str(venv),"CONTROL":str(tmp_path/"control")}
+    result=subprocess.run(["bash",str(sh)],env=env,text=True,capture_output=True)
+    assert result.returncode!=0
+    assert "HEALTH_WRITER_PROFILE_UNSUPPORTED" in result.stderr
+    assert "INTEGRITY_SELF_TEST_ONLY: PASS" not in result.stdout
