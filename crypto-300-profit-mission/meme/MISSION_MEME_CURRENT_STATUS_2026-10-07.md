@@ -460,3 +460,33 @@ Review of `1865fd7c` was **FAIL** despite an actual independent **826 passed, 0 
 **Evidence state on this fourth remediation HEAD:** Git commit/push verified; **pytest/compileall/bash-n = NOT_RUN on current HEAD**, no CI result, historical production replay **NOT_RUN**, RARI-specific raw fixture **NOT_RUN**, authenticated real-CA integrated-head acceptance **NOT_RUN**, actual Mac live/reboot checks **NOT_RUN**.
 
 **Authority:** PR #29 DRAFT and `REVIEW_ONLY`. `CODE_REVIEW=FAIL_PENDING_NEW_INDEPENDENT_CHECK`; `READY_FOR_CONTROLLED_MERGE=NO`; `DEPLOY=NO`; `PRODUCTION_TRADING=NO_GO`. No main merge, service restart, production DB mutation, new automation or Gmail send is authorized.
+
+
+## 16. 2026-10-08 fifth remediation after independent fourth Review FAIL
+
+**Review evidence:** reviewer tested former HEAD `8d137bcac3fc759dd76314850697582d5e7f8ec6` and reported **834 pytest passes**, all compile/shell syntax passes, but **CODE_REVIEW=FAIL**. Reviewer verified a **separate unpushed 837-pass prototype**, which has **not been adopted as executed evidence for this branch**. The local patch path was not available in the author's container; equivalent changes have been authored against the GitHub review branch.
+
+### Writer provenance and integrity authority
+
+Repository inspection: `accept_meme_ca_v3.sh` and `install_mission_meme_launchd.sh` both use `live-v1` as PROD; the Mission loop reads `forward.sqlite` V1 signal tables from that root. The relevant writer schema/health is `Ledger` / `scripts/frank_local_signal_service.py`. `scripts/frank_shadow_service.py` writes a different Repository-style schema, and **must not** be used as sole authority for live-v1 health invariants. **The actual Mac LaunchAgent or invoking process has not been read**; repository wiring alone does not prove the installed writer's current CLI args.
+
+**B-1:** `meme_acceptance_integrity.py` `STABLE_HEALTH_KEYS` now includes both known writer profiles. The real Ledger writer's stable configuration values `system`, `policy`, `policy_hash`, `code_commit`, `loaded_source_sha256`, `delivery_authority`, `gpt_in_critical_path`, `production_trading`, `other_persons`, `new_automation`, and `poll_interval_seconds` are checked when present. Volatile RPC/scan counters, signatures, poll timestamps, state and health summary updates are excluded. A new isolated regression uses the actual `Ledger` database schema, seven synthetic RUNNING/RETRY health ticks and new signature rows, plus six individually parameterized stable-key tamper checks. An additional synthetic `frank_shadow_service` health profile checks cross-writer compatibility.
+
+**Integrity claim remains SCOPED** to the existing signature identity prefix, schema, configured stable-health fields and LaunchAgent file hashes. Mutable `signatures.body`, alert state, other DB tables and unknown health fields are **not verified**. The Ledger writer's full process-level RUNNING harness was exercised in the *reviewer's separate sandbox only*. The newly committed regression simulates writer health ticks and uses the authentic Ledger schema; it is **not an author-executed full service harness**.
+
+### Additional remediation
+
+- **M-1:** Added behavioral `frank_v1_replay.report` NULL-outbox test: a NULL status must fail with `HISTORICAL_DELIVERY_MUST_BE_DISABLED`, while `DRY_RUN_AUDIT` remains allowed. Production Gmail/outbox untouched.
+- **H-2:** Added an opt-in installer safety test which executes the actual inline Python policy gate against a `REVIEW_ONLY` policy in an isolated temporary HOME/worktree. The Python shim refuses later OAuth preflight, and a fake `launchctl` tracks unwanted calls. Deleting the policy assertion should cause the test to FAIL instead of reporting a false PASS. This is not an authorized install.
+- **M-2:** Removed `referenced_pre_raw` and `referenced_post_raw` from historical replay's semantic transition projection; they remain in complete evidence diffs. Direct quote quantity, classification and derived SOL route eligibility still define semantic transitions. Added regression to differentiate harmless reference changes from quote amount changes.
+- **M-3:** Tightened Mission Control fake sidecar test to require exactly two outbox entries and the expected Frank mint only. Previously loose `outbox<=2` is gone. Older source-inspection tests remain supplementary, not authority.
+
+**Deferred:** low-priority exception text in legacy Frank writing paths and unknown-owner parser hardening need separate provenance/safety evaluation. Avoid modifying frozen Frank production semantics as a cosmetic follow-up.
+
+### Independent acceptance remains pending
+
+This new PR head has **NOT_RUN** author pytest, compileall, shell syntax or full Ledger RUNNING harness. Current edits are **SUBMITTED_TO_GIT** and await **fifth independent review** of the exact HEAD with real test output. The old 834 and unpushed prototype 837 results must never be copied forward as a PASS for new code.
+
+Still NOT_RUN: H3 production copied-history baseline/candidate replay and genuine RAW-gz coverage; RARI raw transaction-specific acceptance; authenticated real CA integrated-head acceptance; Mac reboot/login LaunchAgent recovery; live Gmail Sent readback.
+
+**Production state and permissions:** PR #29 remains Draft/REVIEW_ONLY; `CAN_MERGE=NO`, `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`. No code was merged to main; no production service, alert, automation, policy, or database was changed.
