@@ -13,6 +13,8 @@ import json
 import os
 import sys
 import time
+import re
+import tempfile
 import urllib.request
 import urllib.error
 from collections import Counter
@@ -29,6 +31,8 @@ MAX_SOL_PAGES = 15
 MAX_SOL_TRANSACTIONS_PER_WALLET = 1000
 MAX_EVM_LOGS = 3000
 MAX_EVM_REQUESTS = 600
+RPC_MIN_INTERVAL_SECONDS = 0.15
+RPC_RETRY_DELAYS_SECONDS = (1.0, 2.0, 4.0)
 
 
 class IncompleteWindow(RuntimeError):
@@ -36,24 +40,131 @@ class IncompleteWindow(RuntimeError):
 
 
 class RPC:
+    """Read-only JSON RPC with bounded backoff and credential-free diagnostics."""
+
     def __init__(self, url: str):
         if not isinstance(url, str) or not url.startswith("https://"):
             raise ValueError("HTTPS_RPC_REQUIRED")
         self.url = url
         self.calls = 0
+        self.last_method = "NONE"
+        self.scan_stage = "INIT"
+        self.progress = {}
+        self._last_request = 0.0
 
     def call(self, method: str, params: list):
-        self.calls += 1
-        body = json.dumps({"jsonrpc":"2.0","id":self.calls,"method":method,"params":params}).encode()
+        self.last_method = method
+        body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method,
+                           "params": params}).encode()
         request = urllib.request.Request(
             self.url, data=body, method="POST",
-            headers={"Content-Type":"application/json","Accept":"application/json"},
+            headers={"Content-Type": "application/json", "Accept": "application/json"},
         )
-        with urllib.request.urlopen(request, timeout=18) as response:
-            reply = json.load(response)
-        if not isinstance(reply, dict) or reply.get("error") or "result" not in reply:
-            raise IncompleteWindow("RPC_RESPONSE_INCOMPLETE:" + method)
-        return reply["result"]
+        for attempt in range(len(RPC_RETRY_DELAYS_SECONDS) + 1):
+            wait = RPC_MIN_INTERVAL_SECONDS - (time.monotonic() - self._last_request)
+            if wait > 0:
+                time.sleep(wait)
+            self.calls += 1
+            self._last_request = time.monotonic()
+            try:
+                with urllib.request.urlopen(request, timeout=18) as response:
+                    reply = json.load(response)
+                if not isinstance(reply, dict):
+                    raise IncompleteWindow("RPC_NOT_JSON_OBJECT")
+                error = reply.get("error")
+                if error:
+                    code = error.get("code") if isinstance(error, dict) else None
+                    tag = "RPC_ERROR_" + str(code) if isinstance(code, int) else "RPC_ERROR_UNKNOWN"
+                    # Some providers express rate limiting through JSON-RPC errors.
+                    if code in (-32005, -32016) and attempt < len(RPC_RETRY_DELAYS_SECONDS):
+                        time.sleep(RPC_RETRY_DELAYS_SECONDS[attempt])
+                        continue
+                    raise IncompleteWindow(tag)
+                if "result" not in reply:
+                    raise IncompleteWindow("RPC_RESULT_MISSING")
+                return reply["result"]
+            except urllib.error.HTTPError as exc:
+                if exc.code in (408, 429, 500, 502, 503, 504) and attempt < len(RPC_RETRY_DELAYS_SECONDS):
+                    time.sleep(RPC_RETRY_DELAYS_SECONDS[attempt])
+                    continue
+                raise IncompleteWindow("RPC_HTTP_" + str(exc.code)) from None
+            except (TimeoutError, urllib.error.URLError, OSError):
+                if attempt < len(RPC_RETRY_DELAYS_SECONDS):
+                    time.sleep(RPC_RETRY_DELAYS_SECONDS[attempt])
+                    continue
+                raise IncompleteWindow("RPC_TRANSPORT_FAILURE") from None
+            except (json.JSONDecodeError, UnicodeError):
+                raise IncompleteWindow("RPC_JSON_PARSE_FAILURE") from None
+        raise IncompleteWindow("RPC_RETRY_EXHAUSTED")
+
+
+def safe_error(error: Exception) -> str:
+    """Never disclose endpoint URLs or provider tokens in terminal diagnostics."""
+    if isinstance(error, IncompleteWindow):
+        code = str(error)
+        if re.fullmatch(r"[A-Za-z0-9_:-]{1,90}", code):
+            return code
+    if isinstance(error, ValueError):
+        code = str(error)
+        if re.fullmatch(r"[A-Z_]{4,80}", code):
+            return code
+    return "UNEXPECTED_" + type(error).__name__.upper()
+
+
+class SignatureCache:
+    """Atomic immutable finalized-tx JSON cache outside any live Frank storage."""
+
+    def __init__(self, root: Path | None):
+        self.root = root
+        self.hits = 0
+        self.writes = 0
+
+    def _filename(self, wallet: str, signature: str) -> Path | None:
+        # No untrusted RPC response may become an arbitrary path.
+        if (not re.fullmatch(r"[1-9A-HJ-NP-Za-km-z]{32,64}", wallet)
+                or not re.fullmatch(r"[1-9A-HJ-NP-Za-km-z]{64,100}", signature)
+                or self.root is None):
+            return None
+        return self.root / wallet / (signature + ".json")
+
+    def load(self, wallet: str, signature: str, slot: int) -> dict | None:
+        file = self._filename(wallet, signature)
+        if not file or not file.is_file() or file.is_symlink():
+            return None
+        try:
+            with file.open(encoding="utf-8") as handle:
+                data = json.load(handle)
+            if (not isinstance(data, dict)
+                    or data.get("signature") != signature
+                    or data.get("slot") != slot
+                    or not isinstance(data.get("tx"), dict)
+                    or data["tx"].get("slot") != slot):
+                return None
+            self.hits += 1
+            return data["tx"]
+        except (OSError, ValueError, TypeError):
+            return None
+
+    def save(self, wallet: str, signature: str, slot: int, tx: dict):
+        path = self._filename(wallet, signature)
+        if not path:
+            return
+        parent = path.parent
+        parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if parent.is_symlink() or self.root.is_symlink():
+            raise IncompleteWindow("CACHE_SYMLINK_UNSAFE")
+        fd, temporary = tempfile.mkstemp(prefix=".partial-", dir=parent)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as out:
+                os.fchmod(out.fileno(), 0o600)
+                json.dump({"signature": signature, "slot": slot, "tx": tx}, out)
+                out.flush()
+                os.fsync(out.fileno())
+            os.replace(temporary, path)
+            self.writes += 1
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
 
 
 def configured_solana_endpoints(path: Path) -> list[str]:
@@ -101,23 +212,36 @@ def solana_signatures(rpc: RPC, wallet: str, cutoff: int, until: int) -> list[di
     raise IncompleteWindow("SOL_MAX_PAGES_REACHED")
 
 
-def scan_solana(rpc: RPC, wallet: str, cutoff: int, until: int) -> dict:
+def scan_solana(rpc: RPC, wallet: str, cutoff: int, until: int,
+                cache: SignatureCache | None = None) -> dict:
+    rpc.scan_stage = "SOL_GET_SIGNATURES"
     signatures = solana_signatures(rpc, wallet, cutoff, until)
+    rpc.progress = {"signatures_in_window": len(signatures),
+                    "transactions_decoded": 0}
     rows = []
     for item in signatures:
         sig = item["signature"]
-        tx = rpc.call("getTransaction", [sig, {
-            "encoding":"jsonParsed", "commitment":"finalized", "maxSupportedTransactionVersion":0,
-        }])
-        if not tx:
-            raise IncompleteWindow("SOL_FINALIZED_TRANSACTION_UNAVAILABLE")
-        if tx.get("slot") != item.get("slot"):
-            raise IncompleteWindow("SOL_SIGNATURE_SLOT_MISMATCH")
+        rpc.scan_stage = "SOL_GET_TRANSACTION"
+        slot = item.get("slot")
+        tx = cache.load(wallet, sig, slot) if cache else None
+        if tx is None:
+            tx = rpc.call("getTransaction", [sig, {
+                "encoding":"jsonParsed", "commitment":"finalized", "maxSupportedTransactionVersion":0,
+            }])
+            if not tx:
+                raise IncompleteWindow("SOL_FINALIZED_TRANSACTION_UNAVAILABLE")
+            if tx.get("slot") != slot:
+                raise IncompleteWindow("SOL_SIGNATURE_SLOT_MISMATCH")
+            if cache:
+                cache.save(wallet, sig, slot, tx)
+        rpc.scan_stage = "SOL_DECODE_TRANSACTION"
         rows.extend(solana_events(sig, tx, wallet))
+        rpc.progress["transactions_decoded"] += 1
     return {
         "chain":"SOL", "wallet":wallet, "status":"COMPLETE",
-        "signatures_scanned":len(signatures), "rpc_calls":rpc.calls,
-        "legs":rows,
+        "signatures_scanned":len(signatures),
+        "cache_hits":cache.hits if cache else 0,
+        "rpc_calls":rpc.calls, "legs":rows,
     }
 
 
@@ -182,32 +306,50 @@ def pad_evm_wallet(wallet: str) -> str:
 
 
 def scan_robinhood(rpc: RPC, wallet: str, cutoff: int, until: int) -> dict:
+    rpc.scan_stage = "RH_CHAIN_ID"
     chain=int(rpc.call("eth_chainId",[]),16)
     if chain!=RH_CHAIN_ID:
         raise IncompleteWindow("RH_CHAIN_ID_MISMATCH")
+    rpc.scan_stage = "RH_GET_WALLET_CODE"
     code=(rpc.call("eth_getCode",[wallet,"latest"]) or "").lower()
-    if code!=FOMO_EIP7702_CODE:
-        raise IncompleteWindow("RH_CANDIDATE_NOT_EIP7702_FOMO_ACCOUNT")
+    delegation_confirmed = code == FOMO_EIP7702_CODE
+    # A Hoodwatch association is only a candidate. Do not suppress evidence
+    # collection because its chain code is EOA / changed / unknown; mark it.
+    wallet_code_status = ("FOMO_EIP7702_CONFIRMED" if delegation_confirmed else
+                          "EOA" if code == "0x" else
+                          "OTHER_DELEGATION" if code.startswith("0xef0100") else
+                          "CONTRACT_OR_UNKNOWN")
+    rpc.scan_stage = "RH_FIND_BLOCK_RANGE"
     first,last=rh_block_number(rpc,cutoff,until)
     if last < first:
         return {"chain":"RH", "wallet":wallet, "status":"COMPLETE",
                 "first_block":first,"last_block":last,"userop_tx_count":0,
-                "inbound_transfer_tx_count":0,"eip7702_delegation_confirmed":True,
+                "inbound_transfer_tx_count":0,"eip7702_delegation_confirmed":delegation_confirmed,
+                "wallet_code_status":wallet_code_status,
                 "rpc_calls":rpc.calls,"legs":[]}
     padded=pad_evm_wallet(wallet)
+    rpc.scan_stage = "RH_USEROP_LOGS"
     ops=rh_getlogs(rpc,first,last,[TOPIC_USEROP,None,padded])
+    rpc.progress["userop_log_count"] = len(ops)
     # Receipts must contain ALL sibling UserOps for correct per-operation scope.
+    rpc.scan_stage = "RH_INBOUND_ERC20_LOGS"
     inbound=rh_getlogs(rpc,first,last,[TOPIC_TRANSFER,None,padded])
+    rpc.progress["inbound_log_count"] = len(inbound)
     op_hashes={log["transactionHash"] for log in ops}
     transfer_hashes={log["transactionHash"] for log in inbound}
     found=[]
+    rpc.progress["candidate_tx_count"] = len(op_hashes | transfer_hashes)
+    rpc.progress["receipt_count"] = 0
     for hash_value in sorted(op_hashes|transfer_hashes):
+        rpc.scan_stage = "RH_GET_RECEIPT"
         receipt=rpc.call("eth_getTransactionReceipt",[hash_value])
+        rpc.progress["receipt_count"] += 1
         if not receipt or receipt.get("status")!="0x1":
             continue
         if hash_value in op_hashes:
             found+=robinhood_user_operations(receipt,wallet)
         if hash_value in transfer_hashes:
+            rpc.scan_stage = "RH_GET_TRANSACTION"
             tx=rpc.call("eth_getTransactionByHash",[hash_value])
             if tx:
                 found+=robinhood_buy_fills(tx,receipt,wallet)
@@ -215,7 +357,9 @@ def scan_robinhood(rpc: RPC, wallet: str, cutoff: int, until: int) -> dict:
         "chain":"RH", "wallet":wallet, "status":"COMPLETE",
         "first_block":first,"last_block":last,"userop_tx_count":len(op_hashes),
         "inbound_transfer_tx_count":len(transfer_hashes),
-        "eip7702_delegation_confirmed":True,"rpc_calls":rpc.calls,"legs":found,
+        "eip7702_delegation_confirmed":delegation_confirmed,
+        "wallet_code_status":wallet_code_status,
+        "rpc_calls":rpc.calls,"legs":found,
     }
 
 
