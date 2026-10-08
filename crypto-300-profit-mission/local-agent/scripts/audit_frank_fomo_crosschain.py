@@ -363,7 +363,8 @@ def scan_robinhood(rpc: RPC, wallet: str, cutoff: int, until: int) -> dict:
     }
 
 
-def audit(hours: int, solana_urls: list[str], rh_url: str, audited_at: int | None = None) -> dict:
+def audit(hours: int, solana_urls: list[str], rh_url: str, audited_at: int | None = None,
+          cache_dir: Path | None = None) -> dict:
     until=int(time.time()) if audited_at is None else int(audited_at)
     if until > int(time.time()) or until <= hours*3600:
         raise ValueError("INVALID_AUDIT_END_TIME")
@@ -378,27 +379,44 @@ def audit(hours: int, solana_urls: list[str], rh_url: str, audited_at: int | Non
         "chains":[], "counts":{}, "paired":[],
     }
     legs=[]
+    cache=SignatureCache(cache_dir)
     for wallet in (SOL_CASH_WALLET,SOL_CANDIDATE_WALLET):
         failures=[]
         for endpoint in solana_urls:
+            rpc=RPC(endpoint)
             try:
-                value=scan_solana(RPC(endpoint),wallet,since,until)
+                value=scan_solana(rpc,wallet,since,until,cache=cache)
                 break
             except (IncompleteWindow, ValueError, KeyError, TypeError, urllib.error.URLError, TimeoutError) as exc:
-                # Never output private RPC URL or credentials.
-                failures.append(type(exc).__name__)
+                # Never output private RPC URL, token or exception trace.
+                failures.append({
+                    "reason":safe_error(exc), "stage":rpc.scan_stage,
+                    "method":rpc.last_method, "rpc_calls":rpc.calls,
+                    **rpc.progress,
+                })
         else:
             value={"chain":"SOL","wallet":wallet,"status":"INCOMPLETE",
-                   "error":"SOL_RPC_WINDOW_UNAVAILABLE_OR_BUDGET","trials":len(failures),"legs":[]}
+                   "error":"SOL_SCAN_INCOMPLETE",
+                   "endpoint_trials":len(failures),
+                   "diagnostics":failures,"cache_hits":cache.hits,"legs":[]}
         legs+=value.pop("legs")
         report["chains"].append(value)
+    rh_rpc=RPC(rh_url)
     try:
-        value=scan_robinhood(RPC(rh_url),RH_CANDIDATE_WALLET,since,until)
-    except (IncompleteWindow, ValueError, KeyError, TypeError, urllib.error.URLError, TimeoutError):
+        value=scan_robinhood(rh_rpc,RH_CANDIDATE_WALLET,since,until)
+    except (IncompleteWindow, ValueError, KeyError, TypeError, urllib.error.URLError, TimeoutError) as exc:
         value={"chain":"RH","wallet":RH_CANDIDATE_WALLET,"status":"INCOMPLETE",
-               "error":"RH_RPC_WINDOW_OR_IDENTITY_UNAVAILABLE","legs":[]}
+               "error":"RH_SCAN_INCOMPLETE",
+               "diagnostics":[{
+                   "reason":safe_error(exc),"stage":rh_rpc.scan_stage,
+                   "method":rh_rpc.last_method,"rpc_calls":rh_rpc.calls,
+                   **rh_rpc.progress,
+               }],
+               "legs":[]}
     legs+=value.pop("legs")
     report["chains"].append(value)
+    report["cache"]={"hits":cache.hits,"writes":cache.writes,
+                     "enabled":cache_dir is not None}
     report["counts"]=dict(Counter(x["kind"] for x in legs))
     report["paired"]=pair_orders(legs)
     report["paired_counts"]=dict(Counter(x["kind"] for x in report["paired"]))
@@ -416,12 +434,22 @@ def main():
                         default=Path.home()/"Library/Application Support/FrankMeme/solana_rpc_urls")
     parser.add_argument("--robinhood-rpc",default=os.environ.get("ROBINHOOD_RPC_URL",DEFAULT_RH_RPC))
     parser.add_argument("--output",type=Path,help="Optional research JSON report; never a production DB")
+    parser.add_argument("--cache-dir",type=Path,
+                        default=Path.home()/"Documents/ChatGPT/frank-fomo-rpc-cache",
+                        help="Separate resumable finalized Solana transaction cache")
     parser.add_argument("--as-of-epoch",type=int,
                         help="Reproduce a fixed UTC time window; end timestamp inclusive")
     args=parser.parse_args()
     try:
         endpoints=configured_solana_endpoints(args.solana_rpc_file)
-        result=audit(args.hours,endpoints,args.robinhood_rpc,args.as_of_epoch)
+        cache_dir=args.cache_dir.resolve()
+        if (cache_dir.is_symlink() or
+            "FrankMeme" in str(cache_dir) or
+            "crypto-monitor-frank-only" in str(cache_dir) or
+            "mission-control" in str(cache_dir)):
+            raise IncompleteWindow("CACHE_DIR_UNSAFE")
+        result=audit(args.hours,endpoints,args.robinhood_rpc,args.as_of_epoch,
+                     cache_dir=cache_dir)
     except (IncompleteWindow, ValueError):
         print('{"status":"PRECHECK_FAILED","production_db_writes":0,"gmail_sent":0}')
         return 2
@@ -444,12 +472,14 @@ def main():
             {k:v for k,v in chain.items() if k in (
                 "chain","wallet","status","error","signatures_scanned",
                 "userop_tx_count","inbound_transfer_tx_count",
-                "eip7702_delegation_confirmed")}
+                "eip7702_delegation_confirmed","wallet_code_status",
+                "diagnostics","cache_hits")}
             for chain in result["chains"]
         ],
         "leg_counts":result["counts"],"order_counts":result["paired_counts"],
         "paired_preview":result["paired"][:15],
         "evidence_rows_total":len(result["evidence"]),
+        "rpc_cache":result["cache"],
         "full_evidence_file":str(args.output) if args.output else None,
         "production_db_writes":0,"gmail_sent":0,"follow_signals_changed":False,
     }
