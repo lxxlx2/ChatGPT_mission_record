@@ -324,8 +324,8 @@ def pair_orders(events: list[dict]) -> list[dict]:
             "legs": len(legs), "attribution": "THIRD_PARTY_UNVERIFIED",
             "follow_signal_eligible": False,
             "solana_cash_amount_raw": (
-                pay[0]["amount_raw"] if kind == "PAIRED_BUY_EVIDENCE"
-                else payout[0]["amount_raw"] if kind == "PAIRED_SELL_EVIDENCE"
+                pay[0].get("amount_raw") if kind == "PAIRED_BUY_EVIDENCE"
+                else payout[0].get("amount_raw") if kind == "PAIRED_SELL_EVIDENCE"
                 else None
             ),
             "solana_cash_decimals": 6 if kind.startswith("PAIRED_") else None,
@@ -335,8 +335,8 @@ def pair_orders(events: list[dict]) -> list[dict]:
                 else None
             ),
             "rh_token_quantity_raw": (
-                buy[0]["amount_raw"] if kind == "PAIRED_BUY_EVIDENCE"
-                else sell[0]["amount_raw"] if kind == "PAIRED_SELL_EVIDENCE"
+                buy[0].get("amount_raw") if kind == "PAIRED_BUY_EVIDENCE"
+                else sell[0].get("amount_raw") if kind == "PAIRED_SELL_EVIDENCE"
                 else None
             ),
             "rh_token_decimals": None,  # Requires independent ERC-20 decimals RPC.
