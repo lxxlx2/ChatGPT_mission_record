@@ -220,15 +220,18 @@ def replay(
         for row in ledger.db.execute("SELECT signal_id,subject,body,content_hash FROM email_content ORDER BY signal_id")
     }
     summary=engine.summary()
-    if ledger.db.execute(
-        "SELECT 1 FROM outbox WHERE status!='DRY_RUN_AUDIT'"
-    ).fetchone():
-        raise RuntimeError("NON_DRY_RUN_OUTBOX")
+    verify_dry_run_outbox(ledger.db)
     ledger.db.close()
     return {
         "signals":signals,"states":states,"evaluations":evaluations,"emails":emails,
         "summary":summary,"timing_sources":dict(timing_sources),
     }
+
+
+def verify_dry_run_outbox(db: sqlite3.Connection) -> None:
+    """Runtime safety check that also runs under python -O."""
+    if db.execute("SELECT 1 FROM outbox WHERE status!='DRY_RUN_AUDIT'").fetchone():
+        raise RuntimeError("NON_DRY_RUN_OUTBOX")
 
 
 def _source_snapshot(db: sqlite3.Connection) -> dict:
@@ -292,6 +295,22 @@ def _mapping_deltas(before: dict,after: dict) -> list[dict]:
         elif before[key]!=after[key]:
             out.append({"key":key,"change":"CHANGED","field_diffs":_field_diff(before[key],after[key])})
     return out
+
+
+def semantic_classification(value: dict) -> tuple:
+    """Exclude evidence-only metadata from signal-affecting transition counts.
+
+    Complete field diffs are still retained separately for forensic review.
+    """
+    trade=value.get("trade")
+    projected=None
+    if isinstance(trade,dict):
+        important=("mint","direction","token_amount_raw","token_decimals",
+                   "quote_asset","quote_amount_raw","quote_decimals",
+                   "amount_predicate","amount_predicate_reason",
+                   "referenced_pre_raw","referenced_post_raw")
+        projected=tuple((name,str(trade.get(name))) for name in important)
+    return (value.get("classification"),value.get("classification_reason"),projected)
 
 
 def _signal_identity(body: dict) -> tuple:
@@ -366,16 +385,14 @@ def main() -> None:
                 "block_time":row["block_time"],
                 "field_diffs":_field_diff(old,new),
             })
-        if (
-            old.get("classification"),old.get("classification_reason"),old.get("trade")
-        ) != (
-            new.get("classification"),new.get("classification_reason"),new.get("trade")
-        ):
+        if semantic_classification(old)!=semantic_classification(new):
             transitions.append({
                 "signature":row["signature"],"block_time":row["block_time"],
                 "old_classification":old.get("classification"),"old_reason":old.get("classification_reason"),
                 "new_classification":new.get("classification"),"new_reason":new.get("classification_reason"),
                 "old_trade":old.get("trade"),"new_trade":new.get("trade"),
+                "source_program_ids":(old.get("evidence") or {}).get("program_ids") or [],
+                "candidate_program_ids":(new.get("evidence") or {}).get("program_ids") or [],
                 "classification_details":new.get("classification_details"),
             })
 

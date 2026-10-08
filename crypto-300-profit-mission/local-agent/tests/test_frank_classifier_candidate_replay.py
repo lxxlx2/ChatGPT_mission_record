@@ -196,9 +196,14 @@ def test_replay_report_verifies_source_sha256(tmp_path,monkeypatch):
 
 
 def test_replay_outbox_guard_is_not_python_assert():
-    text=SCRIPT.read_text()
-    assert 'raise RuntimeError("NON_DRY_RUN_OUTBOX")' in text
-    assert "assert not ledger.db.execute" not in text
+    database=sqlite3.connect(":memory:")
+    database.execute("CREATE TABLE outbox(status TEXT)")
+    database.execute("INSERT INTO outbox VALUES('DRY_RUN_AUDIT')")
+    replay.verify_dry_run_outbox(database)
+    database.execute("INSERT INTO outbox VALUES('PENDING_SEND')")
+    with pytest.raises(RuntimeError,match="NON_DRY_RUN_OUTBOX"):
+        replay.verify_dry_run_outbox(database)
+    database.close()
 
 
 def test_acceptance_integrity_snapshot_allows_normal_live_heartbeats_and_appends(tmp_path):
@@ -258,3 +263,17 @@ def test_acceptance_bash_fake_prod_integrity_only(tmp_path):
     assert result.returncode==0,(result.stdout,result.stderr)
     assert "REAL_CA_ACCEPTANCE: NOT_RUN" in result.stdout
     assert (control/"integrity-before.json").is_file()
+
+
+def test_replay_transition_ignores_evidence_only_route_metadata():
+    source={"classification":"ACTIVE_TRADE",
+            "classification_reason":"SIGNED_DEX_SWAP_OPPOSING_OWNED_FLOWS",
+            "trade":{"mint":"M","direction":"BUY","token_amount_raw":"100",
+                     "quote_asset":"SOL","quote_amount_raw":"500"}}
+    candidate=json.loads(json.dumps(source))
+    candidate["trade"]["route_intermediate_evidence_status"]="NO_INTERMEDIATE_TRANSFER_OBSERVED"
+    candidate["trade"]["route_intermediate_assets"]=[]
+    assert source!=candidate
+    assert replay.semantic_classification(source)==replay.semantic_classification(candidate)
+    candidate["trade"]["quote_asset"]="USDT"
+    assert replay.semantic_classification(source)!=replay.semantic_classification(candidate)

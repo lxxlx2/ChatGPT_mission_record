@@ -226,3 +226,18 @@ def test_fresh_signal_registers_forward_outcome_but_old_bootstrap_does_not(tmp_p
     old.cycle()
     assert old.control.db.execute("select count(*) from outcome_tracks").fetchone()[0]==0
     old.close()
+
+
+def test_live_service_uses_base_candidates_without_requesting_shadow_candidates(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=pol)
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:good_quote()
+    service.sol_mirror.sync=lambda:{"status":"OK","sol_resolved":999}
+    def forbidden_shadow():
+        raise AssertionError("SOL_SHADOW_CANDIDATES_USED_IN_LIVE_DECISION")
+    service.sol_mirror.candidates=forbidden_shadow
+    result=service.cycle()
+    assert len(result["decision_events"])==1
+    assert result["decision_events"][0]["mint"]=="Mint111"
+    service.close()

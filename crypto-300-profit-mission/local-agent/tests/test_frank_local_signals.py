@@ -348,3 +348,18 @@ def test_actual_classifier_simple_sol_route_is_not_marked_unverified():
     assert trade["quote_asset"]=="SOL"
     assert trade["quote_usdc_status"]=="SOL_EVENT_TIME_USDC_VERIFIED"
     assert trade["amount_predicate"]=="UNDETERMINED"
+
+
+def test_install_guard_is_behavioral_and_has_no_side_effects(tmp_path):
+    import os,subprocess
+    root=Path(__file__).parents[1]
+    installer=root/"scripts"/"install_mission_meme_launchd.sh"
+    home=tmp_path/"isolated-home"
+    home.mkdir()
+    env={**os.environ,"HOME":str(home),"WORKTREE":str(tmp_path/"does-not-exist")}
+    env.pop("CONFIRM_MISSION_LOOP_RESTART",None)
+    completed=subprocess.run(["bash",str(installer)],env=env,
+                             capture_output=True,text=True)
+    assert completed.returncode!=0
+    assert "MISSION_LOOP_RESTART_NOT_AUTHORIZED" in completed.stderr
+    assert not (home/"Library").exists()
