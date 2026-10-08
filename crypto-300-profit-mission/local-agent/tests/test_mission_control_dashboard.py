@@ -663,3 +663,17 @@ def test_dashboard_prioritizes_trade_tape_and_states_scope():
     assert 'LOCAL_INDEX_ONLY' in (Handler.static_root.parent/"frank.py").read_text()
     assert '不抓取实时官方帖子' in js
     assert '未接入 X/FOMO 外部叙事检索' in js
+
+def test_frank_wallet_live_rpc_audit_diff_reports_missing_signatures():
+    import runpy
+    from mission_agent.mission_control.server import Handler
+    script=Handler.static_root.parent.parent.parent / "scripts" / "audit_frank_live_24h.py"
+    audit=runpy.run_path(str(script),run_name="coverage_unit_test")
+    result=audit["compare"]({"sig-a","sig-b"}, {"sig-a","local-only"})
+    assert result["chain_signatures"]==2
+    assert result["locally_indexed_signatures"]==2
+    assert result["matched"]==1
+    assert result["missing_from_local"]==1
+    assert result["missing_signatures_first_10"]==["sig-b"]
+    assert result["local_not_in_rpc_page"]==1
+    assert result["local_not_in_rpc_first_10"]==["local-only"]
