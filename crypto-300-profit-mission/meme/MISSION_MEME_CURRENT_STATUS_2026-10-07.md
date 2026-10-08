@@ -440,3 +440,23 @@ Subsequent review-branch changes:
 **Remaining blocking gates:** independent pytest / compileall / shell syntax run for current HEAD, source-vs-candidate historical replay on copied real `forward.sqlite` plus raw transactions, H3 user approval for altered USDT/DEX classifications, and RARI-specific inclusion/exclusion determination. No reviewed historical signal transition may be approved from synthetic fixtures alone.
 
 **No merge, no local deployment, no new monitoring/automation, no live trades, no sending Gmail, no LaunchAgent restart.** `PRODUCTION_TRADING=NO_GO`.
+
+
+## 15. 2026-10-08 fourth remediation after independent third Review FAIL
+
+Review of `1865fd7c` was **FAIL** despite an actual independent **826 passed, 0 failed, 0 skipped** suite on that **older** HEAD. Root cause was actual Frank writer health keys missed by CA acceptance integrity comparison. Reviewer also identified route provenance, semantic replay, NULL outbox, coverage descriptions and test strength. A separate reviewer's *uncommitted local remediation prototype* reportedly had 830 passes; this is **not acceptance evidence** for the current review branch, and that prototype patch was not mounted here.
+
+**Current review branch only:** `review/meme-ca-v3-integrate-main-20261008` (see PR #29 for exact rolling HEAD).
+- **B1 / CA integrity:** Stable-health allowlist now follows actual `scripts/frank_shadow_service.py` stable writer keys rather than excluding an incomplete list of heartbeat counters. A regression changes `last_poll_at`, `candidate_duplicate_count`, request/rate/error/retry counts, transport status and `poll_seconds`, and then separately tampers `production_writes`. It must accept the former and reject the latter. This checks a *signature identity prefix* (wallet, signature, person, slot, block time, raw hash/reference), schema, stable-health allowlist and LaunchAgent plist hashes. It **does not** prove immutable historical `body`/alert state or untouched unrelated DB tables. Normal live DB appends are allowed; this is a scoped invariant check and not a full production snapshot.
+- **H1 / quote provenance:** For a single-target USDC trade whose `wallet_token_transfer_flows` is missing, `route_intermediate_evidence_status=UNVERIFIED` forces `amount_predicate=UNDETERMINED` and reason `ROUTE_EVIDENCE_UNVERIFIED`. Additional intermediate mints remain `ROUTED_RESIDUAL_ASSETS` and fail-closed.
+- **M1 / dry-run outbox:** Both replay scripts now use SQLite `status IS NOT 'DRY_RUN_AUDIT'` so NULL status fails closed.
+- **M2 / classifier replay:** `semantic_classification` includes derived SOL route eligibility via `_simple_sol_quote_eligible`, without treating benign new audit keys as transitions. All H3 baseline evidence must be generated anew with this definition.
+- **M3 / accurate integrity scope:** Updated helper docstring, report scope and CA acceptance output to state that only existing signature **identity columns** are checked, not mutable historical bodies or full DB state.
+- **M4 / sidecar tests:** Added cycle-level test that injects a fabricated SOL shadow candidate into `sync()` output and confirms it creates no decision/DB candidate/outbox. Earlier test that replaced `candidates()` remains as a secondary defense.
+- **L1 / exception secrecy:** Generic fixed errors replace `str(exc)` in Mission Control loop, SOL sidecar and Dashboard request-validation paths, while retaining exception class for diagnostics. Added simulated secret-bearing RPC/candidate exception checks.
+- **L2 / authorized installer path:** Isolated HOME/worktree and mock `launchctl`, `python`, `curl`, `sleep` simulate the explicit `CONFIRM_MISSION_LOOP_RESTART=1` path with zero real launchd/OAuth/HTTP impact. This does **not** authorize or prove actual Mac installer safety and does not replace a separate deployment review.
+- **H2 low-priority parser ambiguity:** Unknown-owner transfer-flow hardening remains deferred because it may alter frozen classifier behavior; require validated transaction evidence and H3 review before changing production parser semantics.
+
+**Evidence state on this fourth remediation HEAD:** Git commit/push verified; **pytest/compileall/bash-n = NOT_RUN on current HEAD**, no CI result, historical production replay **NOT_RUN**, RARI-specific raw fixture **NOT_RUN**, authenticated real-CA integrated-head acceptance **NOT_RUN**, actual Mac live/reboot checks **NOT_RUN**.
+
+**Authority:** PR #29 DRAFT and `REVIEW_ONLY`. `CODE_REVIEW=FAIL_PENDING_NEW_INDEPENDENT_CHECK`; `READY_FOR_CONTROLLED_MERGE=NO`; `DEPLOY=NO`; `PRODUCTION_TRADING=NO_GO`. No main merge, service restart, production DB mutation, new automation or Gmail send is authorized.
