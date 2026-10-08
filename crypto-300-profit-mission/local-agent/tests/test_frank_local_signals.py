@@ -410,3 +410,53 @@ def test_direct_usdc_with_missing_flow_evidence_is_not_known_cost():
     assert trade["amount_predicate_reason"]=="ROUTE_EVIDENCE_UNVERIFIED"
     assert not known_usdc_event(trade)
     assert not _known_usdc_trade(trade)
+
+
+def test_installer_authorized_path_in_isolated_mock_sandbox(tmp_path):
+    import os, subprocess
+    root=Path(__file__).parents[1]
+    installer=root/"scripts"/"install_mission_meme_launchd.sh"
+    fake_home=tmp_path/"home";fake_home.mkdir()
+    worktree=tmp_path/"worktree";worktree.mkdir()
+    (worktree/".git").mkdir()
+    local=worktree/"crypto-300-profit-mission"/"local-agent"
+    local.mkdir(parents=True)
+    prod=tmp_path/"prod";prod.mkdir()
+    (prod/"forward.sqlite").write_bytes(b"fake-source-never-opened-by-mock")
+    (prod/"health.json").write_text('{"status":"RUNNING"}')
+    venv=tmp_path/"venv";(venv/"bin").mkdir(parents=True)
+    fake_python=venv/"bin"/"python"
+    fake_python.write_text("#!/bin/sh\ncat >/dev/null\nexit 0\n".replace("\\\n","\n"))
+    fake_python.chmod(0o700)
+    control=tmp_path/"control";control.mkdir()
+    pointer=tmp_path/"pointer";pointer.write_text(str(control))
+    policy_file=tmp_path/"policy.json"
+    policy_file.write_text('{"status":"FROZEN_APPROVED","live_delivery_approved":true}')
+    stub_bin=tmp_path/"bin";stub_bin.mkdir()
+    log=tmp_path/"launchctl.log"
+    launchctl=stub_bin/"launchctl"
+    launchctl.write_text('#!/bin/sh\nprintf "%s\\\n" "$*" >> "$SIM_LAUNCHCTL_LOG"\n'.replace("\\\n","\n"))
+    launchctl.chmod(0o700)
+    mock_sleep=stub_bin/"sleep";mock_sleep.write_text("#!/bin/sh\nexit 0\n".replace("\\\n","\n"))
+    mock_sleep.chmod(0o700)
+    mock_curl=stub_bin/"curl";mock_curl.write_text('#!/bin/sh\nprintf 200\n'.replace("\\\n","\n"))
+    mock_curl.chmod(0o700)
+    env={**os.environ,"HOME":str(fake_home),"WORKTREE":str(worktree),
+         "LOCAL_AGENT":str(local),"PROD":str(prod),"VENV":str(venv),
+         "CONTROL_POINTER":str(pointer),"POLICY":str(policy_file),
+         "CONFIRM_MISSION_LOOP_RESTART":"1",
+         "SOLANA_RPC_URLS":"https://rpc.example.invalid/?api-key=NOT_A_REAL_KEY",
+         "PATH":str(stub_bin)+os.pathsep+os.environ["PATH"],
+         "SIM_LAUNCHCTL_LOG":str(log)}
+    result=subprocess.run(["bash",str(installer)],env=env,capture_output=True,text=True)
+    assert result.returncode==0,(result.stdout,result.stderr)
+    commands=log.read_text()
+    assert "bootout" in commands
+    assert "bootstrap" in commands
+    assert "kickstart -k" in commands
+    app=fake_home/"Library"/"Application Support"/"FrankMeme"
+    assert (app/"mission-loop.sh").is_file()
+    assert (app/"dashboard.sh").is_file()
+    assert "--live-delivery" in (app/"mission-loop.sh").read_text()
+    assert (app/"solana_rpc_urls").stat().st_mode & 0o077==0
+    assert "NOT_A_REAL_KEY" not in result.stdout+result.stderr
