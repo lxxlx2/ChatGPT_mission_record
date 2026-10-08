@@ -138,7 +138,7 @@ def integration_health(port, loop_label, dash_label, agent, previous_updated=Non
                 abort("PROCESS_RUNNING_FROM_WRONG_SOURCE")
             paths = (
                 "/api/runtime", "/api/control-health", "/api/candidates",
-                "/api/trades", "/api/review-activity", "/api/decisions",
+                "/api/trades", "/api/review-activity", "/api/decisions", "/api/coverage",
             )
             results = {p: http_json(port, p) for p in paths}
             control = results["/api/control-health"]
@@ -152,6 +152,9 @@ def integration_health(port, loop_label, dash_label, agent, previous_updated=Non
             for path in ("/api/candidates", "/api/trades", "/api/review-activity", "/api/decisions"):
                 if not isinstance(results[path], list):
                     abort("DASHBOARD_JSON_INVALID:" + path)
+            coverage = results["/api/coverage"]
+            if not isinstance(coverage, dict) or coverage.get("scope") != "LOCAL_INDEX_ONLY" or coverage.get("status") != "OK":
+                abort("FRANK_COVERAGE_API_UNAVAILABLE")
             return {"dashboard_port":port, "loop_pid":loop_pid, "dashboard_pid":dash_pid,
                     "dashboard_routes":len(paths), "delivery_allowed":True,
                     "control_status":control["status"], "runtime_status":runtime["status"]}
@@ -279,7 +282,17 @@ def main():
         if len(previous_agents) != 1:
             abort("RUNNER_SOURCE_MISMATCH")
         old_agent = Path(next(iter(previous_agents))).resolve(strict=True)
-        if old_agent == agent or "frank-meme-main" not in str(old_agent):
+        safe_install_root = home / "Documents/ChatGPT"
+        try:
+            relative_old = old_agent.relative_to(safe_install_root)
+        except ValueError:
+            abort("UNEXPECTED_INSTALLED_SOURCE")
+        allowed_old_repo = relative_old.parts and (
+            relative_old.parts[0] == "frank-meme-main"
+            or relative_old.parts[0].startswith("frank-meme-pr29-")
+        )
+        if (old_agent == agent or not allowed_old_repo or
+                tuple(relative_old.parts[-2:]) != ("crypto-300-profit-mission","local-agent")):
             abort("UNEXPECTED_INSTALLED_SOURCE")
         venv_values = {read_runner_value(original[name], "VENV") for name in runner_names}
         if len(venv_values) != 1:
