@@ -87,9 +87,14 @@ def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
         p=fakebin/exe;p.write_text(chr(10).join(contents));p.chmod(0o700)
     # Seed the old approved state to prove rejected requests cause NO mutations.
     app=home/"Library"/"Application Support"/"FrankMeme";app.mkdir(parents=True)
+    existing_approved_policy=json.dumps({
+        "schema_version":1,"policy_id":"PREVIOUS_LIVE_POLICY",
+        "status":"FROZEN_APPROVED","live_delivery_approved":True,
+        "decision":{"observation_retention_seconds":5184000}
+    },sort_keys=True).encode()
     baseline_files={
-        "follow_policy_v1.approved.json":b"PREVIOUS_APPROVED_POLICY",
-        "approved_policy_sha256":b"PREVIOUS_APPROVED_DIGEST",
+        "follow_policy_v1.approved.json":existing_approved_policy,
+        "approved_policy_sha256":hashlib.sha256(existing_approved_policy).hexdigest().encode(),
         "solana_rpc_urls":b"https://old.example.invalid/?api-key=PREVIOUS_SECRET",
         "dashboard_port":b"8766\\n",
         "mission-loop.sh":b"PREVIOUS_RUNNER",
@@ -160,3 +165,32 @@ def test_frank_v1_replay_outbox_rejects_pending_and_missing_table(tmp_path):
     with pytest.raises(sqlite3.OperationalError):
         frank_v1_replay.report(engine,tmp_path/"report.json")
     db.close()
+
+
+def test_rejected_installer_preserves_previous_policy_that_loop_accepts(tmp_path):
+    from mission_agent.mission_control.service import MissionMemeService
+    from test_mission_control_service import make_prod
+    import hashlib
+    result,before,after,log,app,requested=run_installer_isolated(tmp_path,retention=1)
+    assert result.returncode!=0
+    assert "POLICY_NOT_AUTHORIZED" in result.stderr
+    assert before==after
+    assert not log.exists()
+    existing_sha=(app/"approved_policy_sha256").read_text()
+    assert existing_sha==hashlib.sha256((app/"follow_policy_v1.approved.json").read_bytes()).hexdigest()
+    prod=tmp_path/"real-ledger-prod"
+    make_prod(prod)
+    old=MissionMemeService(
+        production_root=prod,control_root=tmp_path/"control-old",
+        policy_path=app/"follow_policy_v1.approved.json",
+        live_delivery=True,approved_policy_sha256=existing_sha,
+    )
+    assert old.delivery_allowed is True
+    old.close()
+    rejected=MissionMemeService(
+        production_root=prod,control_root=tmp_path/"control-rejected",
+        policy_path=tmp_path/"candidate-policy.json",
+        live_delivery=True,approved_policy_sha256=requested,
+    )
+    assert rejected.delivery_allowed is False
+    rejected.close()
