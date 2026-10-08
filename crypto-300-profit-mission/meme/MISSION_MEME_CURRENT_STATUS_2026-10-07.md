@@ -746,3 +746,30 @@ Next deployment gate:
   RPC file and that no unintended loop/delivery is started;
 - then perform an explicit user-approved restart/re-login check;
 - no historical migration/backfill, no production-trading enablement.
+
+
+### Existing LaunchAgent runner restart-preflight — 2026-10-08
+
+User's read-only macOS preflight:
+
+- Alchemy endpoint persisted in `~/Library/Application Support/FrankMeme/solana_rpc_urls`, file mode `0600`.
+- Existing localhost Dashboard is already running on port `8766`: process PID `19490`; existing Mission Meme loop is running: PID `19488`.
+- Both existing plists have `RunAtLoad=true` and `KeepAlive=true` and resolve to runner scripts in `~/Library/Application Support/FrankMeme/`.
+- Both existing runner scripts point to the original `frank-meme-main` worktree and `~/.frank_meme_control_root`.
+- Neither *already installed* runner exports `SOLANA_RPC_URLS`; merely updating the installer in the isolated Git branch does not rewrite active installed runner files.
+- Real-CA v3 report acceptance is PASS, but post-login service RPC continuity has **not** yet been verified.
+
+A separate **opt-in**, no-launchctl-mutation runner patch script was added at
+`local-agent/scripts/patch_mission_meme_rpc_runners.py`: dry-run by default;
+explicit `--apply` updates only the two existing runner shell files, creates
+timestamped backups, inserts a persistent RPC-file loader before the original
+`cd "$LOCAL_AGENT"`, validates shell syntax, and does not modify production
+state, plists, running processes, or notifications. Static tests added. This
+patch must first be run and validated locally; do not describe the restart
+gate as passed until then.
+
+A subsequent *dashboard-only* `launchctl kickstart -k` can verify live reload,
+while preserving the loop PID / delivery state unchanged. A real reboot/re-login
+check is still needed to substantiate restart persistence. Do not invoke the
+installer here because it would restart BOTH Dashboard and loop, potentially
+triggering live-delivery work. `PRODUCTION_TRADING=NO_GO`.
