@@ -199,3 +199,62 @@ def test_replay_outbox_guard_is_not_python_assert():
     text=SCRIPT.read_text()
     assert 'raise RuntimeError("NON_DRY_RUN_OUTBOX")' in text
     assert "assert not ledger.db.execute" not in text
+
+
+def test_acceptance_integrity_snapshot_allows_normal_live_heartbeats_and_appends(tmp_path):
+    import subprocess
+    module_path=Path(__file__).parents[1]/"scripts"/"meme_acceptance_integrity.py"
+    prod=tmp_path/"fake-prod";prod.mkdir()
+    db=prod/"forward.sqlite"
+    con=sqlite3.connect(db)
+    con.execute("CREATE TABLE signatures(wallet TEXT,signature TEXT,person_id TEXT,slot INTEGER,block_time INTEGER,raw_hash TEXT,raw_reference TEXT)")
+    con.execute("INSERT INTO signatures VALUES(?,?,?,?,?,?,?)",("w","first","frank",1,100,"oldhash","raw1"))
+    con.commit();con.close()
+    health=prod/"health.json"
+    health.write_text(json.dumps({"last_successful_poll":100,"lag_seconds":4,"status":"RUNNING","policy_hash":"immutable"}))
+    loop=tmp_path/"loop.plist";loop.write_text("<plist>loop</plist>")
+    dash=tmp_path/"dashboard.plist";dash.write_text("<plist>dash</plist>")
+    def command(op,*more):
+        return [sys.executable,str(module_path),op,"--prod",str(prod),
+                "--loop-plist",str(loop),"--dash-plist",str(dash),*more]
+    before=json.loads(subprocess.check_output(command("capture"),text=True))
+    before_path=tmp_path/"before.json"
+    before_path.write_text(json.dumps(before))
+    health.write_text(json.dumps({"last_successful_poll":101,"lag_seconds":0,"status":"RUNNING",
+                                  "last_chain_signature":"second","policy_hash":"immutable"}))
+    con=sqlite3.connect(db)
+    con.execute("INSERT INTO signatures VALUES(?,?,?,?,?,?,?)",("w","second","frank",2,110,"newhash","raw2"))
+    con.commit();con.close()
+    out=json.loads(subprocess.check_output(command("verify","--before",str(before_path)),text=True))
+    assert out["status"]=="PASS" and out["new_live_rows_allowed"]
+    # Real historical mutation must fail, even though live appends are permitted.
+    con=sqlite3.connect(db)
+    con.execute("UPDATE signatures SET raw_hash='TAMPERED' WHERE signature='first'")
+    con.commit();con.close()
+    bad=subprocess.run(command("verify","--before",str(before_path)),capture_output=True,text=True)
+    assert bad.returncode!=0
+    assert "IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED" in bad.stderr
+
+
+def test_acceptance_bash_fake_prod_integrity_only(tmp_path):
+    import os
+    import subprocess
+    sh=Path(__file__).parents[1]/"scripts"/"accept_meme_ca_v3.sh"
+    module_path=Path(__file__).parents[1]/"scripts"/"meme_acceptance_integrity.py"
+    prod=tmp_path/"fake-prod";prod.mkdir()
+    db=sqlite3.connect(prod/"forward.sqlite")
+    db.execute("CREATE TABLE signatures(wallet TEXT,signature TEXT,person_id TEXT,slot INTEGER,block_time INTEGER,raw_hash TEXT,raw_reference TEXT)")
+    db.commit();db.close()
+    (prod/"health.json").write_text('{"last_successful_poll":1,"status":"RUNNING"}')
+    home=tmp_path/"home";home.mkdir()
+    venv=tmp_path/"fake-venv";(venv/"bin").mkdir(parents=True)
+    (venv/"bin"/"python").symlink_to(Path(sys.executable))
+    worktree=Path(__file__).parents[3]
+    control=tmp_path/"control"
+    env={**os.environ,"INTEGRITY_SELF_TEST_ONLY":"1","PROD":str(prod),
+         "WORKTREE":str(worktree),"LOCAL_AGENT":str(Path(__file__).parents[1]),
+         "HOME":str(home),"VENV":str(venv),"CONTROL":str(control)}
+    result=subprocess.run(["bash",str(sh)],env=env,capture_output=True,text=True)
+    assert result.returncode==0,(result.stdout,result.stderr)
+    assert "REAL_CA_ACCEPTANCE: NOT_RUN" in result.stdout
+    assert (control/"integrity-before.json").is_file()

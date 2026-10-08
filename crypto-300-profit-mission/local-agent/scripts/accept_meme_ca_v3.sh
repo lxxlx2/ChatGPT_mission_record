@@ -21,22 +21,27 @@ die(){ echo "ERROR: $*" >&2; exit 1; }
 [ -f "$PROD/forward.sqlite" ] || die "PRODUCTION_DB_NOT_FOUND"
 [ -f "$PROD/health.json" ] || die "PRODUCTION_HEALTH_NOT_FOUND"
 
-# Hash the original DB, health and LaunchAgent definitions before starting the
-# isolated acceptance. A concurrent production write is a FAIL, never "untouched".
+# Track the immutable prefix of existing signatures and stable health settings.
+# The normal live scanner is allowed to append rows and refresh heartbeats.
 LOOP_PLIST="$HOME/Library/LaunchAgents/com.$(id -un).frank-meme.loop.plist"
 DASH_PLIST="$HOME/Library/LaunchAgents/com.$(id -un).frank-meme.dashboard.plist"
-integrity_snapshot() {
-  local file
-  for file in "$PROD/forward.sqlite" "$PROD/health.json" "$LOOP_PLIST" "$DASH_PLIST"; do
-    if [ -f "$file" ]; then
-      shasum -a 256 "$file"
-    else
-      printf 'MISSING %s\n' "$file"
-    fi
-  done
+INTEGRITY_HELPER="$LOCAL_AGENT/scripts/meme_acceptance_integrity.py"
+integrity_cmd() {
+  "$PY" "$INTEGRITY_HELPER" "$1" --prod "$PROD" \
+    --loop-plist "$LOOP_PLIST" --dash-plist "$DASH_PLIST" "${@:2}"
 }
-INTEGRITY_BEFORE="$(integrity_snapshot)"
 [ -x "$PY" ] || die "VENV_PYTHON_NOT_FOUND"
+
+# A safe isolated fake-PROD harness for regression tests; no RPC, daemon,
+# LaunchAgent changes, or CA acceptance is attempted in this branch.
+if [ "${INTEGRITY_SELF_TEST_ONLY:-}" = "1" ]; then
+  CONTROL="${CONTROL:-$(mktemp -d)}"
+  mkdir -p "$CONTROL"
+  integrity_cmd capture > "$CONTROL/integrity-before.json"
+  integrity_cmd verify --before "$CONTROL/integrity-before.json"
+  echo "INTEGRITY_SELF_TEST_ONLY: PASS; REAL_CA_ACCEPTANCE: NOT_RUN"
+  exit 0
+fi
 [ -s "$RPC_FILE" ] || die "AUTHENTICATED_SOLANA_RPC_NOT_CONFIGURED"
 
 if lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; then
@@ -44,6 +49,8 @@ if lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; then
 fi
 
 mkdir -m 700 "$CONTROL"
+integrity_cmd capture > "$CONTROL/integrity-before.json"
+chmod 600 "$CONTROL/integrity-before.json"
 SOLANA_RPC_URLS="$(cat "$RPC_FILE")"
 [ -n "$SOLANA_RPC_URLS" ] || die "AUTHENTICATED_SOLANA_RPC_EMPTY"
 export SOLANA_RPC_URLS
@@ -190,16 +197,16 @@ PY
 
 [ ! -e "$CONTROL/mission-control.sqlite" ] || die "MISSION_CONTROL_DB_CREATED"
 [ ! -e "$CONTROL/sol-normalized-v1.sqlite" ] || die "SOL_MIRROR_DB_CREATED"
-INTEGRITY_AFTER="$(integrity_snapshot)"
-[ "$INTEGRITY_BEFORE" = "$INTEGRITY_AFTER" ] || die "PRODUCTION_DB_HEALTH_OR_LAUNCHAGENT_INTEGRITY_CHANGED"
-echo "Production DB / health.json / LaunchAgent plist before-after SHA256: PASS"
+integrity_cmd verify --before "$CONTROL/integrity-before.json" \
+  || die "IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED"
+echo "Immutable ledger prefix / stable health / LaunchAgent plist: PASS"
 
 echo
 echo "===== ACCEPTANCE RESULT ====="
 echo "ISOLATED_REAL_CA_ACCEPTANCE: PASS"
 echo "No Mission Control decision DB: PASS"
 echo "No SOL-normalized sidecar: PASS"
-echo "Production files unchanged during this acceptance: VERIFIED_BY_SHA256"
+echo "Immutable historical ledger prefix unchanged; live append/health heartbeats permitted"
 echo "No migration/backfill function invoked by this acceptance script"
 echo "No Mission Control loop or delivery runner invoked by this acceptance script"
 echo "LaunchAgent plists unchanged: VERIFIED_BY_SHA256"
