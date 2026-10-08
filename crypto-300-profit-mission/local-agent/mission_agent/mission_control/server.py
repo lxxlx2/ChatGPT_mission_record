@@ -458,7 +458,6 @@ class ClusterJobManager:
                 market_client=self.market_client,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
-            report["frank"]=self._frank_snapshot(mint)
             try:
                 report["execution_quote_30_usdc"]=self.jupiter.quote_usdc_to_token(
                     mint,
