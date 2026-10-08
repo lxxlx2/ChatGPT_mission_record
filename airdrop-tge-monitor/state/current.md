@@ -1,16 +1,16 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-09 02:55 Asia/Bangkok
+Updated: 2026-10-09 03:47 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-09 02:55:00 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-09 03:47:34 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-08 05:47:29 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/025407-final-retry.md
-- latest_scheduled_shard: 2
-- latest_executed_shard: 1
-- latest_stale_shard_recovery: true
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/034734-final.md
+- latest_scheduled_shard: 3
+- latest_executed_shard: 3
+- latest_stale_shard_recovery: false
 - latest_candidate_count: 2
 - latest_triggered_events: 0
 - latest_identity_failures: 0
@@ -45,3 +45,5 @@ Timezone: Asia/Bangkok
 - Shard freshness from observed terminals: shard 0 2026-10-08 22:53 partial; shard 1 2026-10-08 19:57 partial; shard 2 2026-10-09 00:54 partial; shard 3 2026-10-08 23:54 partial. Last fully successful run unchanged at 2026-10-08 05:47:29.
 
 - 2026-10-09 02:55 Asia/Bangkok invocation: 025407-final-retry.md persisted (commit bf96d3c748c3e8c2f08c2cbed29fcd90a76d8da1). Scheduled shard 2, executed stale shard 1; urgent + shard 1 checked, no verified Tier A/B new ACTION; triggered_events: 0, Gmail not attempted, user silent. Attempt and primary final writes blocked by safety checks. Cambria extension remains unverified/current-action source gap. Partial; latest fully successful run remains 2026-10-08 05:47:29. Earlier 014623-attempt.md lacks observed terminal.
+
+- 2026-10-09 03:47:34 invocation: 034734-final.md persisted (commit 30e64bc370038d72f0c2b3c77309f0504cbd6498). Scheduled and executed Shard 3, urgent + 13 unique projects in scope; 2 Cambria unverified candidates, 0 ACTION, 1 Cambria source gap, no Gmail or user notification. Attempt write blocked by tool safety checks. Latest fully successful run remains 2026-10-08 05:47:29; current partial. Shard 3 last partial coverage 2026-10-09 03:47:34. Earlier attempt-only windows remain historical gaps.
