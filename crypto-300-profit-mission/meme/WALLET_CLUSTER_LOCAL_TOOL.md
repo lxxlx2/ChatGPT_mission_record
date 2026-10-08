@@ -209,3 +209,37 @@ This candidate keeps the clean v2 report structure and adds:
 - Token-2022 sensitive extensions such as transfer-fee/hook/permanent-delegate style controls are exposed as explicit risk flags rather than hidden inside raw parsed data.
 
 The branch is a review candidate only until the local full test suite and at least one real CA acceptance pass succeed. It does not change production trading authority, Frank thresholds, notification policy, or scheduler configuration.
+
+## 2026-10-09 trader-first CA presentation correction (PR #29, REVIEW_ONLY)
+
+The product preserves **two independent jobs**, and should never use the
+follow-signal model as the gate to a general CA query:
+
+1. **Frank signals:** existing frozen ACCUMULATION / MULTIPLE historical
+   accumulation model, deterministic follow decisions, observation, CA copy,
+   local/macOS/Gmail eligibility. The person registry remains Frank-only in
+   production, with future-person architecture deferred, not silently enabled.
+2. **CA research:** accepts *any valid Solana Mint*; does not require Frank
+   holdings, states, signals, or a match with a monitored person. The live
+   Frank reader is no longer queried on the CA job completion path. Manual
+   CA analysis does not create automated signals or trading orders.
+
+The review-branch UI moves trader-facing market price / liquidity / execution
+quote / permissions / raw holder concentration / Top20 owners to the front.
+The raw chain / funding / probable cluster and RPC evidence remain accessible
+through a collapsed detailed view. The immediate read-only base snapshot
+shows market and chain-authority fields while holder history is still scanning.
+A subsequent holder snapshot exposes the **raw ranked token-account Top10**
+percentage including pools; it is not a claim of beneficial ownership
+concentration or LP-adjusted safety. Preview is explicitly incomplete and
+must never be promoted into a BUY/SELL signal.
+
+Current developer CI and mock progress tests verify field consistency only.
+Actual timed Mac RPC acceptance, real CA usefulness/accuracy in the first
+seconds, and independent human visual QA remain **NOT VERIFIED**. Existing
+live Dashboard/Loop is unchanged by the PR. No main merge, policy modification,
+notification changes, or trading deployment is authorized by this UI branch.
+
+The sole purpose of this product pass is fast, accurate *manual* trading
+judgment. Performance bottlenecks must be profiled on real CA queries before
+expanding expensive index sources or changing market data providers.
