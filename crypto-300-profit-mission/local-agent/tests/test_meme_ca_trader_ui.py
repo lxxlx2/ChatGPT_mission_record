@@ -40,9 +40,14 @@ def test_readonly_ca_preview_is_early_and_persists_during_deep_history(tmp_path)
     assert first["preview"]["freeze_authority"] == "risk"
     assert first["preview"]["market_status"] == "OK"
     assert "frank" not in first["preview"]
+    manager._set_progress("abc", "HOLDERS_READY", {
+        "top_accounts_resolved": 20, "raw_top10_resolved_pct": "67.42",
+    })
     manager._set_progress("abc", "OWNER_SCAN", {"scanned": 2, "target": 6})
     later = manager.get("abc")
-    assert later["preview"] == first["preview"]
+    assert later["preview"]["market_cap_usd"] == first["preview"]["market_cap_usd"]
+    assert later["preview"]["raw_top10_resolved_pct"] == "67.42"
+    assert later["preview"]["top_accounts_resolved"] == 20
     assert later["progress"]["scanned"] == 2
     manager.executor.shutdown(wait=True)
 
