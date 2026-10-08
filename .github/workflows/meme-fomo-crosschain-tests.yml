@@ -10,11 +10,13 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/run_frank_fomo_rh_recheck.sh'
       - 'crypto-300-profit-mission/local-agent/tests/test_fomo_crosschain.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_inspect_frank_solana_root_window.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/index.html'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/styles.css'
       - 'crypto-300-profit-mission/local-agent/tests/test_meme_ca_trader_ui.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_dashboard.py'
       - '.github/workflows/meme-fomo-crosschain-tests.yml'
   workflow_dispatch:
 
