@@ -370,8 +370,88 @@ class FrankReader:
             result = []
             for row in rows:
                 item = dict(row)
-                item["body"] = json.loads(item["body"])
+                trade = json.loads(item["body"])
+                item["body"] = trade
+                # Display observable cash leg, not a synthetic model conversion.
+                original = trade.get("original_quote") or {}
+                if trade.get("quote_normalization") and original:
+                    asset = original.get("quote_asset")
+                    qty = original.get("quote_quantity")
+                else:
+                    asset = trade.get("quote_asset")
+                    try:
+                        qty = str(Decimal(str(trade["quote_amount_raw"])) /
+                                  (Decimal(10) ** int(trade["quote_decimals"])))
+                    except (KeyError, InvalidOperation, ValueError, TypeError):
+                        qty = None
+                item["observed_quote_asset"] = asset
+                item["observed_quote_quantity"] = qty
+                amount = _token_quantity(trade)
+                item["token_quantity"] = str(amount) if amount is not None else None
+                verified_price = _event_price_usdc({**trade, "quote_quantity": qty})
+                item["verified_fill_price_usdc"] = str(verified_price) if verified_price is not None else None
+                try:
+                    after = trade.get("position_after_raw")
+                    item["position_after_token"] = (
+                        str(Decimal(str(after)) / (Decimal(10) ** int(trade["token_decimals"])))
+                        if after is not None else None
+                    )
+                except (KeyError, InvalidOperation, ValueError, TypeError):
+                    item["position_after_token"] = None
                 result.append(item)
             return result
+        finally:
+            db.close()
+
+    def activity_coverage(self, now: float | None = None) -> dict:
+        """Count the local index funnel; this is NOT a full-chain RPC audit."""
+        now = time.time() if now is None else float(now)
+        db = open_production_ro(self.database)
+        try:
+            start = db.execute(
+                "SELECT MIN(block_time),MAX(block_time),COUNT(*) FROM signatures WHERE person_id=?",
+                (self.person_id,),
+            ).fetchone()
+            windows = {}
+            for label, seconds in (("24h", 86400), ("7d", 604800), ("30d", 2592000)):
+                cutoff = int(now - seconds)
+                sig = db.execute(
+                    """SELECT COUNT(*) AS total,
+                              SUM(CASE WHEN json_extract(body,'$.classification')='ACTIVE_TRADE' THEN 1 ELSE 0 END) AS active,
+                              SUM(CASE WHEN json_extract(body,'$.classification')='UNKNOWN_NEEDS_REVIEW' THEN 1 ELSE 0 END) AS pending
+                       FROM signatures WHERE person_id=? AND block_time>=?""",
+                    (self.person_id,cutoff),
+                ).fetchone()
+                trades = db.execute(
+                    """SELECT COUNT(*) AS total,
+                              SUM(CASE WHEN t.side IN ('BUY','ADD','REENTRY') THEN 1 ELSE 0 END) AS buys,
+                              SUM(CASE WHEN t.side IN ('SELL','EXIT','SELL_POSITION_UNRESOLVED') THEN 1 ELSE 0 END) AS sells
+                       FROM trades t JOIN signatures s ON s.wallet=t.wallet AND s.signature=t.signature
+                       WHERE s.person_id=? AND t.block_time>=?""",
+                    (self.person_id,cutoff),
+                ).fetchone()
+                windows[label] = {
+                    "indexed_signatures": int(sig["total"] or 0),
+                    "active_trade_classifications": int(sig["active"] or 0),
+                    "unknown_needs_review": int(sig["pending"] or 0),
+                    "other_classifications": max(0,int(sig["total"] or 0)-int(sig["active"] or 0)-int(sig["pending"] or 0)),
+                    "recognized_trades": int(trades["total"] or 0),
+                    "recognized_buys": int(trades["buys"] or 0),
+                    "recognized_sells": int(trades["sells"] or 0),
+                }
+            return {
+                "status":"OK", "person_id":self.person_id,
+                "scope":"LOCAL_INDEX_ONLY", "chain_completeness_verified":False,
+                "earliest_indexed_block_time":start[0],
+                "latest_indexed_block_time":start[1],
+                "indexed_signatures_all_time":int(start[2] or 0),
+                "windows":windows,
+            }
+        except sqlite3.Error:
+            return {
+                "status":"UNAVAILABLE", "scope":"LOCAL_INDEX_ONLY",
+                "chain_completeness_verified":False,
+                "reason":"SOURCE_LEDGER_COVERAGE_QUERY_FAILED", "windows":{},
+            }
         finally:
             db.close()
