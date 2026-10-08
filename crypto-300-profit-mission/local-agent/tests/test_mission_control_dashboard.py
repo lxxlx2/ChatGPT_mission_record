@@ -310,7 +310,7 @@ def test_cluster_dashboard_has_two_level_conclusions():
     js=(Handler.static_root/"app.js").read_text()
     assert "链上 / 市场结构结论" in js
     assert "完整投资结论" in js
-    assert "完整投资结论待叙事 / 官方关系核实" in js
+    assert "外部叙事研究未接入，暂无完整结论" in js
 
 
 def test_standard_cluster_preset_is_adaptive_not_bruteforce():
@@ -584,3 +584,82 @@ def test_dashboard_validation_errors_use_fixed_safe_codes():
     assert '{"error":str(exc)}' not in source
     assert '"INVALID_CLUSTER_REQUEST"' in source
     assert '"INVALID_SOLANA_CA"' in source
+
+def test_local_frank_activity_funnel_is_explicitly_not_chain_completeness(tmp_path):
+    prod=tmp_path/"prod";make_prod(prod)
+    now=int(time.time())
+    with sqlite3.connect(prod/"forward.sqlite") as db:
+        db.execute("""CREATE TABLE signatures(
+            wallet TEXT,signature TEXT,person_id TEXT,block_time INTEGER,body TEXT
+        )""")
+        rows=[
+            ("w","buy","frank",now-40,{"classification":"ACTIVE_TRADE"}),
+            ("w","review","frank",now-35,{"classification":"UNKNOWN_NEEDS_REVIEW"}),
+            ("w","transfer","frank",now-30,{"classification":"PASSIVE_TRANSFER"}),
+            ("w","old","frank",now-90000,{"classification":"ACTIVE_TRADE"}),
+            ("w","other","notfrank",now-10,{"classification":"ACTIVE_TRADE"}),
+        ]
+        db.executemany(
+            "INSERT INTO signatures VALUES(?,?,?,?,?)",
+            [(w,sig,person,when,json.dumps(body)) for w,sig,person,when,body in rows],
+        )
+        db.execute(
+            "INSERT INTO trades VALUES(?,?,?,?,?,?,?)",
+            ("w","buy","Mint111","ep",now-40,"BUY","{}"),
+        )
+        db.execute(
+            "INSERT INTO trades VALUES(?,?,?,?,?,?,?)",
+            ("w","old","Mint111","ep",now-90000,"EXIT","{}"),
+        )
+    result=FrankReader(prod).activity_coverage(now)
+    assert result["scope"]=="LOCAL_INDEX_ONLY"
+    assert result["chain_completeness_verified"] is False
+    assert result["indexed_signatures_all_time"]==4
+    assert result["windows"]["24h"]=={
+        "indexed_signatures":3, "active_trade_classifications":1,
+        "unknown_needs_review":1, "other_classifications":1,
+        "recognized_trades":1, "recognized_buys":1, "recognized_sells":0,
+    }
+    assert result["windows"]["7d"]["recognized_trades"]==2
+
+
+def test_frank_trade_tape_observed_quote_not_synthetic_price(tmp_path):
+    prod=tmp_path/"prod";make_prod(prod)
+    now=int(time.time())
+    quote_mint="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    with sqlite3.connect(prod/"forward.sqlite") as db:
+        db.execute("""CREATE TABLE signatures(
+            wallet TEXT,signature TEXT,person_id TEXT,block_time INTEGER,body TEXT
+        )""")
+        db.execute(
+            "INSERT INTO signatures VALUES(?,?,?,?,?)",
+            ("wallet","trade1","frank",now,json.dumps({"classification":"ACTIVE_TRADE"})),
+        )
+        body={
+            "direction":"BUY", "token_amount_raw":"1000000","token_decimals":6,
+            "quote_asset":quote_mint,"quote_amount_raw":"2500000","quote_decimals":6,
+            "amount_predicate":"USDC_DIRECT_NUMERIC","position_after_raw":"1000000",
+        }
+        db.execute(
+            "INSERT INTO trades VALUES(?,?,?,?,?,?,?)",
+            ("wallet","trade1","Mint111","ep",now,"BUY",json.dumps(body)),
+        )
+    trade=FrankReader(prod).recent_trades()[0]
+    assert trade["observed_quote_asset"]==quote_mint
+    assert trade["observed_quote_quantity"]=="2.5"
+    assert trade["token_quantity"]=="1"
+    assert trade["verified_fill_price_usdc"]=="2.5"
+    assert trade["position_after_token"]=="1"
+
+
+def test_dashboard_prioritizes_trade_tape_and_states_scope():
+    from mission_agent.mission_control.server import Handler
+    html=(Handler.static_root/"index.html").read_text()
+    js=(Handler.static_root/"app.js").read_text()
+    server=(Handler.static_root.parent/"server.py").read_text()
+    assert html.index('id="trades"') < html.index('id="candidates"')
+    assert 'id="coverage"' in html
+    assert '/api/coverage' in js and '/api/coverage' in server
+    assert 'LOCAL_INDEX_ONLY' in (Handler.static_root.parent/"frank.py").read_text()
+    assert '不抓取实时官方帖子' not in js  # never imply narratives are fetched
+    assert '外部叙事检索未接入' in js
