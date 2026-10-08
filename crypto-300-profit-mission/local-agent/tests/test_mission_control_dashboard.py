@@ -305,12 +305,12 @@ def test_cluster_manager_has_multiple_free_rpc_endpoints_by_default(tmp_path,mon
     assert len(manager.rpc_endpoints)>=4
 
 
-def test_cluster_dashboard_has_two_level_conclusions():
+def test_cluster_dashboard_does_not_fabricate_narrative_conclusion():
     from mission_agent.mission_control.server import Handler
     js=(Handler.static_root/"app.js").read_text()
     assert "链上 / 市场结构结论" in js
-    assert "完整投资结论" in js
-    assert "外部叙事研究未接入，暂无完整结论" in js
+    assert "完整投资结论" not in js
+    assert "未接入 X/FOMO 外部叙事检索" in js
 
 
 def test_standard_cluster_preset_is_adaptive_not_bruteforce():
