@@ -1,10 +1,26 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-10-07 Asia/Bangkok
+Updated: 2026-10-08 Asia/Bangkok
 
 Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
 Hard scope rule: do not create a new monitor/task/file for a user-specific future action. If the user explicitly gives a date/time for an action already within this existing rights-monitor scope, record it here as an unresolved known event so the existing monitor can act on it. No new monitoring scope may be added without explicit user authorization.
+
+## Merger-resolved TGE scope — historical / no active independent TGE
+
+### Loopscale / Orca / Formation
+- event_key: formation:orca_loopscale_merger:2026-10-08
+- project_ids: loopscale, orca, formation
+- evidence: issuer-level merger announcement; combined entity is Formation; ORCA/xORCA remain the stated token network
+- confirmed_first_party: https://www.prnewswire.com/news-releases/orca-and-loopscale-merge-to-build-capital-markets-for-ai-and-the-frontier-economy-302901726.html
+- independent_loopscale_tge: NOT_CONFIRMED
+- new_formation_token: NOT_ANNOUNCED
+- orca_or_xorca_tge: ALREADY_EXISTING_TOKEN; NOT_NEW_TGE
+- delivery_status: NO_TGE_ACTION; NO_GMAIL
+- user_rights: no verified new entitlement/claim/airdrop from this merger; personal holdings/entitlements not established
+- monitor_action: SUPPRESS_INDEPENDENT_TGE_DISCOVERY; remove Loopscale from Shard 1, do not add Orca or Formation. Maintain history for audit; do not create new automation. A separately proven new user right or fresh token launch requires new first-party evidence and explicit user direction.
+- daily_lane: Crypto Daily Section 6 (merger + ORCA tokenholder governance), not TGE Section 7
+- current_governance: proposal not proven passed; vote ends 2026-10-10 19:42 UTC, cooldown ends 2026-10-12 19:42 UTC; do not assert enactment
 
 ## CLOSED / no remaining rights
 
