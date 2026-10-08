@@ -553,3 +553,25 @@ def test_cluster_job_error_response_does_not_echo_sensitive_exception():
     source=inspect.getsource(ClusterJobManager._run)
     assert '"message": "CLUSTER_ANALYSIS_UNAVAILABLE"' in source
     assert 'str(exc)[:500]' not in source
+
+
+def test_cluster_runtime_exception_with_authenticated_url_is_redacted(tmp_path,monkeypatch):
+    import mission_agent.mission_control.server as server
+    secret="SECRET_API_VALUE"
+    manager=server.ClusterJobManager(tmp_path/"control")
+    mint="So11111111111111111111111111111111111111112"
+    job_id="sensitive-exception"
+    manager.jobs[job_id]={
+        "job_id":job_id,"mint":mint,"preset":"quick","status":"QUEUED",
+        "created_at":time.time(),"started_at":None,"finished_at":None,"error":None,
+    }
+    def explode(*args,**kwargs):
+        raise RuntimeError("network failed at https://rpc.test/?api-key="+secret)
+    monkeypatch.setattr(server,"WalletClusterAnalyzer",explode)
+    manager._run(job_id)
+    result=manager.get(job_id)
+    serialized=json.dumps(result)
+    assert result["status"]=="ERROR"
+    assert result["error"]["type"]=="RuntimeError"
+    assert result["error"]["message"]=="CLUSTER_ANALYSIS_UNAVAILABLE"
+    assert secret not in serialized
