@@ -33,6 +33,8 @@ def _prod(tmp_path):
     prod = tmp_path / "fake-prod"
     prod.mkdir()
     ledger = Ledger(prod / "forward.sqlite")
+    # Engine initializes v1_states when the real Ledger writer runs.
+    ledger.db.execute("CREATE TABLE IF NOT EXISTS v1_states(person_id TEXT,mint TEXT,body TEXT,PRIMARY KEY(person_id,mint))")
     ledger.db.execute(
         """INSERT INTO signatures (
              wallet,signature,person_id,slot,block_time,seen_at,classified_at,
