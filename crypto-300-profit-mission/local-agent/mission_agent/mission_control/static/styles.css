@@ -40,6 +40,16 @@ main{padding:18px 24px 40px;max-width:1800px;margin:auto}
 .stat{border:1px solid var(--line);background:#111419;padding:12px 14px;min-height:68px;border-radius:6px}
 .stat span{display:block;color:#84909e;font-size:11px;letter-spacing:.04em}
 .stat strong{display:block;margin-top:8px;font-size:22px;font-weight:700}
+
+.coverage-strip{display:flex;flex-wrap:wrap;align-items:center;gap:7px 18px;margin:0 0 12px;
+  padding:10px 12px;border:1px solid #2a3440;background:#111820;border-radius:6px;
+  color:#aab7c6;font-size:11px;line-height:1.45}
+.coverage-strip strong{color:#e7ebf0}
+.trade-core{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:7px 0 3px}
+.trade-core strong{font-size:13px;color:#e7ebef;font-variant-numeric:tabular-nums}
+.trade-core span{color:#909ba7;font-size:11px}
+.trade-row .feed-main small{font-variant-numeric:tabular-nums}
+
 .legend{
   display:flex;flex-wrap:wrap;gap:8px 18px;
   margin:0 0 12px;padding:9px 12px;
