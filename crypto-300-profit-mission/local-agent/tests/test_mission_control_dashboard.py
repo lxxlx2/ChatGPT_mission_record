@@ -661,5 +661,5 @@ def test_dashboard_prioritizes_trade_tape_and_states_scope():
     assert 'id="coverage"' in html
     assert '/api/coverage' in js and '/api/coverage' in server
     assert 'LOCAL_INDEX_ONLY' in (Handler.static_root.parent/"frank.py").read_text()
-    assert '不抓取实时官方帖子' not in js  # never imply narratives are fetched
-    assert '外部叙事检索未接入' in js
+    assert '不抓取实时官方帖子' in js
+    assert '未接入 X/FOMO 外部叙事检索' in js
