@@ -342,3 +342,91 @@ def test_rh_log_http_rate_limit_does_not_recursively_split(monkeypatch):
         audit["rh_getlogs"](rpc,100,100000,[fc.TOPIC_TRANSFER])
     assert rpc.calls==1
 
+
+
+def test_solana_v1_tx_decode_pinned_and_compatible_with_jsonparsed_cache(tmp_path):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="sol_v1_test")
+    wallet=fc.SOL_CASH_WALLET
+    sig="3"*88
+    tx=sol_tx(wallet,cosigned=False)
+    tx["version"]=1
+    seen=[]
+    class RPC:
+        def __init__(self):
+            self.scan_stage="";self.progress={};self.calls=0;self.last_method="NONE"
+        def call(self,method,params):
+            self.calls+=1;self.last_method=method
+            if method=="getSignaturesForAddress":
+                return [{"signature":sig,"slot":1212,"blockTime":110}]
+            if method=="getTransaction":
+                version=params[1].get("maxSupportedTransactionVersion")
+                seen.append(version)
+                if version!=1:
+                    raise audit["IncompleteWindow"]("RPC_ERROR_-32015")
+                assert params[1]["encoding"]=="jsonParsed"
+                return tx
+            raise AssertionError(method)
+    cache=audit["SignatureCache"](tmp_path/"cached")
+    first=audit["scan_solana"](RPC(),wallet,100,115,cache=cache)
+    assert first["status"]=="COMPLETE"
+    assert first["signatures_scanned"]==1
+    assert seen==[1]
+    assert cache.writes==1
+    second=audit["scan_solana"](RPC(),wallet,100,115,cache=cache)
+    assert second["status"]=="COMPLETE"
+    assert second["cache_hits"]==1
+    assert seen==[1]  # cached retry must not make a second getTransaction call
+
+
+def test_robinhood_fallback_403_then_publicnode_no_key_url_logged(monkeypatch):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="rh_fallback_test")
+    gl=audit["audit"].__globals__
+    visited=[]
+    class RPC:
+        def __init__(self,url):
+            self.url=url;self.calls=0;self.last_method="eth_chainId"
+            self.scan_stage="RH_CHAIN_ID";self.progress={}
+    def sol(rpc,wallet,cutoff,until,cache=None):
+        return {"chain":"SOL","wallet":wallet,"status":"COMPLETE",
+                "signatures_scanned":0,"legs":[]}
+    def rh(rpc,wallet,cutoff,until):
+        visited.append(rpc.url)
+        if "rpc.mainnet.chain.robinhood.com" in rpc.url:
+            raise audit["IncompleteWindow"]("RPC_HTTP_403")
+        return {"chain":"RH","wallet":wallet,"status":"COMPLETE",
+                "wallet_code_status":"OTHER_DELEGATION",
+                "eip7702_delegation_confirmed":False,"legs":[]}
+    monkeypatch.setitem(gl,"RPC",RPC)
+    monkeypatch.setitem(gl,"scan_solana",sol)
+    monkeypatch.setitem(gl,"scan_robinhood",rh)
+    report=audit["audit"](24,["https://solana.secret.example/KEY"],None,1791472854)
+    assert report["status"]=="RPC_WINDOW_COMPLETE_IDENTITY_UNVERIFIED"
+    assert visited==list(audit["DEFAULT_RH_RPCS"])
+    assert "secret" not in str(report).lower()
+    assert report["chains"][-1]["eip7702_delegation_confirmed"] is False
+    assert report["paired"]==[]
+
+
+def test_robinhood_all_rpc_403_fail_closed_with_two_reasons(monkeypatch):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="rh_all_denied_test")
+    gl=audit["audit"].__globals__
+    class RPC:
+        def __init__(self,url):
+            self.calls=1;self.scan_stage="RH_CHAIN_ID"
+            self.last_method="eth_chainId";self.progress={}
+    def sol(rpc,wallet,cutoff,until,cache=None):
+        return {"chain":"SOL","wallet":wallet,"status":"COMPLETE","legs":[]}
+    def rh(rpc,wallet,cutoff,until):
+        raise audit["IncompleteWindow"]("RPC_HTTP_403")
+    monkeypatch.setitem(gl,"RPC",RPC)
+    monkeypatch.setitem(gl,"scan_solana",sol)
+    monkeypatch.setitem(gl,"scan_robinhood",rh)
+    report=audit["audit"](24,["https://solana.example"],None,1791472854)
+    rh_item=report["chains"][-1]
+    assert report["status"]=="PARTIAL"
+    assert rh_item["endpoint_trials"]==2
+    assert [x["reason"] for x in rh_item["diagnostics"]]==["RPC_HTTP_403","RPC_HTTP_403"]
+    assert not report["paired"]
