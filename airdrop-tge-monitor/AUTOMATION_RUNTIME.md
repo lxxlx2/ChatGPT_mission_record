@@ -3,7 +3,7 @@
 Updated: 2026-09-28 19:34 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-Authority for the existing :14 task.
+Authority for the existing hourly :50 task (Asia/Bangkok).
 
 ## Audit
 
@@ -145,21 +145,6 @@ Closed/refunded deals must not consume monitoring. Once a full refund or complet
 
 Current closed example: humans& via Echo/Alpen Capital was fully refunded on 2026-09-24 and is excluded from active monitoring.
 
-### Persistence survival
-
-Today's attempt-only runs show that creating an attempt file is not enough.
-
-Immediately after attempt creation, create a compact provisional `HHMMSS-final.md` with:
-- run_status: started
-- scheduled/executed shard
-- urgent-set status: pending
-- notification status: pending
-
-Then perform only the bounded urgent set + one shard. Update that same final file to success/partial/failure. If update fails, write `final-retry.md`.
-
-Never spend the remaining run budget on optional cache or deep enrichment before a durable final artifact exists.
-
-
 ## Clock integrity and pending-delivery override — 2026-09-28
 
 A timestamp integrity failure was confirmed on 2026-09-28:
@@ -236,3 +221,12 @@ For missed-delivery recovery, require:
 Do not backfill stale no-deadline historical events merely because they were absent from GitHub.
 
 Generic underlying-company valuation/funding is background only unless a mapped user-rights source confirms user-level term impact.
+
+## 2026-10-08 terminal-audit and pending-delivery health correction (latest override)
+
+1. Each invocation checks the canonical known-events and pending-undelivered finals BEFORE new discovery. A recorded `PENDING_DELIVERY` is only a candidate: before resend require fresh Tier A/B proof that the relevant action is currently open/reopened and materially changes user rights. Do not resend unchanged/expired opt-in reminders; do not convert a past post date into a new event date. Keep earlier pending candidates in audit until independently resolved.
+2. Write one append-only `HHMMSS-attempt.md` at the start. Then perform only the current urgent set plus one shard. At the end write exactly one terminal `HHMMSS-final.md`; if this write fails, one compact `HHMMSS-final-retry.md`. DO NOT create provisional `run_status: started` in any final artifact; attempt does not count as final. No multiple updates to the same final.
+3. Minimize terminal audit payload: clock time, scheduled/executed shard, authoritative source receipt counts, candidate/action/notification outcome, delivery proof or exact blocking reason, and uncovered gaps. If an early operation fails, still try to write a truthful compact terminal audit. Never label a failed write/sent email as a success.
+4. On completion update existing `state/current.md` with the latest authoritative success, most recent attempted/partial run, missing final windows, and unresolved pending delivery. A state update is cache synchronization, not a substitute for run final. Maintain user suppression of Abstract and CLOSED status of humans&.
+5. Health regression confirmed on 2026-10-08: runs at 07:53, 08:50, 09:48 and 11:47 had attempts without terminal final as of 11:53 Asia/Bangkok. The 06:47 Cambria candidate referenced an X status posted 2026-09-30 after the previously announced Sep 29 deadline, but no reliable direct readback establishes reopened opt-in. The existing Cambria opt-in reminder was already sent on Sep 27; do not duplicate without newly verified Tier A/B material delta.
+6. Do not change the :50 schedule, task title, scope or recipient; no new automation, delivery-only monitor, or extra user notification for runtime health. English primary sources only for actionable claims.
