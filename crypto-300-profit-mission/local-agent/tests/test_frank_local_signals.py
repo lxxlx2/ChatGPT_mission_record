@@ -426,7 +426,7 @@ def test_installer_authorized_path_in_isolated_mock_sandbox(tmp_path):
     (prod/"health.json").write_text('{"status":"RUNNING"}')
     venv=tmp_path/"venv";(venv/"bin").mkdir(parents=True)
     fake_python=venv/"bin"/"python"
-    fake_python.write_text("#!/bin/sh\ncat >/dev/null\nexit 0\n".replace("\\\n","\n"))
+    fake_python.write_text("#!/bin/sh\ncat >/dev/null\nexit 0\n")
     fake_python.chmod(0o700)
     control=tmp_path/"control";control.mkdir()
     pointer=tmp_path/"pointer";pointer.write_text(str(control))
@@ -435,11 +435,11 @@ def test_installer_authorized_path_in_isolated_mock_sandbox(tmp_path):
     stub_bin=tmp_path/"bin";stub_bin.mkdir()
     log=tmp_path/"launchctl.log"
     launchctl=stub_bin/"launchctl"
-    launchctl.write_text('#!/bin/sh\nprintf "%s\\\n" "$*" >> "$SIM_LAUNCHCTL_LOG"\n'.replace("\\\n","\n"))
+    launchctl.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$SIM_LAUNCHCTL_LOG"\n')
     launchctl.chmod(0o700)
-    mock_sleep=stub_bin/"sleep";mock_sleep.write_text("#!/bin/sh\nexit 0\n".replace("\\\n","\n"))
+    mock_sleep=stub_bin/"sleep";mock_sleep.write_text("#!/bin/sh\nexit 0\n")
     mock_sleep.chmod(0o700)
-    mock_curl=stub_bin/"curl";mock_curl.write_text('#!/bin/sh\nprintf 200\n'.replace("\\\n","\n"))
+    mock_curl=stub_bin/"curl";mock_curl.write_text('#!/bin/sh\nprintf 200\n')
     mock_curl.chmod(0o700)
     env={**os.environ,"HOME":str(fake_home),"WORKTREE":str(worktree),
          "LOCAL_AGENT":str(local),"PROD":str(prod),"VENV":str(venv),
