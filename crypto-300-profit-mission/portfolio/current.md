@@ -1,6 +1,6 @@
 # Current Portfolio / Capital Map
 
-Updated: 2026-10-07 Asia/Bangkok
+Updated: 2026-10-08 Asia/Bangkok (GANG sale commitment reconciliation)
 Timezone: Asia/Bangkok
 
 ## Accounting rule
@@ -31,7 +31,7 @@ These marks are not trading signals.
 
 ### Solana — DIRECT_CHAIN / finalized
 
-- USDC: **531.094071 USDC** (~**$531.05**)
+- USDC: **31.094071 USDC** (~**$31.09**) after verified GANG ICO deposit of 500 USDC on 2026-10-08.
 - native SOL: **0.039406389 SOL** (~**$3.43**)
 
 Classic SPL token accounts other than USDC returned zero in the current read. Token-2022 accounts included non-transferable/unpriced or spam-like items with no reliable >=$1 mark; they are excluded from NAV.
@@ -128,14 +128,14 @@ The sale contract transferred **1,000 USDC** back to the participating wallet. D
 
 ## Current marked capital reference
 
-### On-chain material subtotal
+### On-chain material subtotal (liquid marked assets; GANG sale escrow excluded)
 
-- Solana USDC: ~$531.05
+- Solana USDC: ~$31.09
 - Solana SOL: ~$3.43
 - Ethereum ETH: ~$2.44
 - Ink ETH: ~$27.29
 
-**Material on-chain subtotal: ~ $564.21**
+**Material on-chain subtotal: ~ $64.25** (approximate, other asset marks inherited from 2026-10-07 snapshot)
 
 ### Investable but parked CEX capital
 
@@ -143,9 +143,19 @@ The sale contract transferred **1,000 USDC** back to the participating wallet. D
 
 ### Current investable / Mission-addressable reference
 
-**~ $1,165.03**
+**~ $665.07**
 
-This includes the material on-chain subtotal plus Binance parked investment reserve. It excludes Bybit living/rent cash, sub-$1 dust, unpriced NFTs/tokens and private/pre-TGE rights.
+This includes liquid material on-chain assets plus Binance parked investment reserve. The separate **500 USDC GANG sale escrow** is excluded from liquid NAV; it is a pending allocation/refund right, not additional cash. It excludes Bybit living/rent cash, sub-$1 dust, unpriced NFTs/tokens and private/pre-TGE rights.
+
+### GANG / Backable — verified ICO escrow, pending settlement
+
+- Deposit: **500 USDC**, on 2026-10-08 12:57:48 Bangkok from canonical Solana wallet.
+- Tx: `LLxbLZNJYKcWGchRt7QNwnx8UKs4gzu5rYC2CFbRWzm9FzjrCjFHaMbKeebKHZAc8gkcympJTqioHGp2f7ifYia`
+- Individual FundingRecord: `GgFwSstgG9e6XDEWAc4wrcD8EqVaqHpzo7ScvNGEEQot`, committed=500, approved=0 (pre-settlement), token claim=false, refund=false.
+- Token Mint: `syQqkspvb2PRr1meJ5pJDmhgxwc4hUou2TMjjrTmeta`; **no GANG public-sale tokens claimed yet**.
+- Scheduled sale end: **2026-10-12 00:30:01 Bangkok**, but exact claim/refund availability remains unknown pending final close and completion.
+- Accounting: removed 500 from liquid Solana USDC. The escrowed commitment is cost-basis tracking only; do not mark as a second 500 in NAV.
+- Position detail: `crypto-300-profit-mission/positions/gang.md`.
 
 ### Personal cash excluded from investment
 
@@ -159,6 +169,7 @@ These entries preserve unresolved economic rights/cost bases and are not added t
 
 | Project | User right / position | Historical cost / committed capital | Current state | Accounting treatment |
 |---|---|---:|---|---|
+| GANG / The Syndicate | Backable Solana v0.7 sale escrow, actual chain-verified 500 USDC committed on 2026-10-08; final GANG allocation and refundable excess pending sale completion | **$500** | Live until 2026-10-12 00:30:01 Bangkok; claim/refund only after contract state permits | Illiquid pre-settlement commitment; separate from wallet cash. See `positions/gang.md` |
 | Reya | CoinList token-sale allocation | **$5,000** | pre-TGE / unresolved distribution | cost basis only; exclude from liquid NAV |
 | Makina | Legion / ICO token allocation | **$1,000** | pre-TGE | cost basis only; exclude from liquid NAV |
 | Block Stranding | presale / future token rights | **100 SOL** | pre-TGE | preserve native-unit cost; do not convert without explicit valuation refresh |
@@ -175,7 +186,7 @@ These entries preserve unresolved economic rights/cost bases and are not added t
 | RepublicX / rTTOK / ByteDance economic exposure | 5,000 contingent payout notes, $1 principal each | **$5,000** | illiquid contractual note exposure | not direct ByteDance stock ownership; cost basis only |
 | Surf Limited Edition NFT #691 | 1 NFT, pending delivery / airdrop | **$228** | delivery not independently verified | historical acquisition cost only |
 
-Known dollar-denominated historical acquisition cost above: **$16,628**, plus **100 SOL** Block Stranding historical cost. JUMP is no longer included because the application was rejected and the 1,000 USDC deposit was refunded.
+Known dollar-denominated historical acquisition cost above: **$17,128**, plus **100 SOL** Block Stranding historical cost. JUMP is no longer included because the application was rejected and the 1,000 USDC deposit was refunded.
 
 ### Points / rewards / potential token rights
 
