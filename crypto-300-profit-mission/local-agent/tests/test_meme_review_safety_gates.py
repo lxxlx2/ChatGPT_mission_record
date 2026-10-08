@@ -35,7 +35,8 @@ def test_frank_v1_replay_report_rejects_null_outbox_at_runtime(tmp_path):
 def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
                            live=True, retention=5184000,
                            hash_mismatch=False, no_approval=False,
-                           confirm=True):
+                           confirm=True, tamper_candidate_during_oauth=False,
+                           fail_postinstall_hash=False):
     """Execute real installer/Python policy gate, mock all external side effects.
 
     Existing on-disk approved files are fingerprinted before the run. Any
@@ -55,12 +56,15 @@ def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
     py=venv/"bin"/"python"
     py.write_text(chr(10).join([
         "#!"+sys.executable,
-        "import sys",
+        "import os,sys",
+        "from pathlib import Path",
         "script=sys.stdin.read()",
         "if 'POLICY_GATE: PASS' in script:",
         "    sys.argv=['-',*sys.argv[2:]]",
         "    exec(compile(script,'<real-policy-gate>','exec'))",
         "else:",
+        "    if os.environ.get('TEST_MUTATE_CANDIDATE') == '1':",
+        "        Path(os.environ['POLICY']).write_text('{\\\"status\\\":\\\"MUTATED_AFTER_APPROVAL\\\"}')",
         "    print('GMAIL_PREFLIGHT: ISOLATED_MOCK')",
         "",
     ]))
@@ -85,6 +89,13 @@ def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
     for exe,contents in [("sleep",["#!/bin/sh","exit 0",""]),
                          ("curl",["#!/bin/sh","echo 200",""])]:
         p=fakebin/exe;p.write_text(chr(10).join(contents));p.chmod(0o700)
+    if fail_postinstall_hash:
+        # Only called after all policy preflight; report an injected wrong SHA.
+        sha=fakebin/"shasum"
+        sha.write_text(chr(10).join([
+            "#!/bin/sh", "echo '0000000000000000000000000000000000000000000000000000000000000000  file'","",
+        ]))
+        sha.chmod(0o700)
     # Seed the old approved state to prove rejected requests cause NO mutations.
     app=home/"Library"/"Application Support"/"FrankMeme";app.mkdir(parents=True)
     existing_approved_policy=json.dumps({
@@ -107,7 +118,8 @@ def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
          "CONTROL_POINTER":str(pointer),"POLICY":str(candidate),
          "SOLANA_RPC_URLS":"https://new.example.invalid/?api-key=NEW_SECRET",
          "PATH":str(fakebin)+os.pathsep+os.environ["PATH"],
-         "FAKE_LAUNCH_LOG":str(log)}
+         "FAKE_LAUNCH_LOG":str(log),
+         "TEST_MUTATE_CANDIDATE":"1" if tamper_candidate_during_oauth else "0"}
     if confirm:env["CONFIRM_MISSION_LOOP_RESTART"]="1"
     else:env.pop("CONFIRM_MISSION_LOOP_RESTART",None)
     if not no_approval:env["APPROVED_POLICY_SHA256"]=approved
@@ -194,3 +206,22 @@ def test_rejected_installer_preserves_previous_policy_that_loop_accepts(tmp_path
     )
     assert rejected.delivery_allowed is False
     rejected.close()
+
+
+def test_installer_uses_once_verified_policy_snapshot_despite_late_candidate_edit(tmp_path):
+    result,before,after,log,app,approved=run_installer_isolated(
+        tmp_path,tamper_candidate_during_oauth=True)
+    assert result.returncode==0,(result.stdout,result.stderr)
+    import hashlib
+    assert "MUTATED_AFTER_APPROVAL" in (tmp_path/"candidate-policy.json").read_text()
+    assert hashlib.sha256((app/"follow_policy_v1.approved.json").read_bytes()).hexdigest()==approved
+    assert (app/"approved_policy_sha256").read_text().strip()==approved
+
+
+def test_installer_restores_previous_policy_on_postcopy_sha_failure(tmp_path):
+    result,before,after,log,app,approved=run_installer_isolated(
+        tmp_path,fail_postinstall_hash=True)
+    assert result.returncode!=0
+    assert "POST_INSTALL_POLICY_HASH_MISMATCH" in result.stderr
+    assert before==after
+    assert not log.exists()
