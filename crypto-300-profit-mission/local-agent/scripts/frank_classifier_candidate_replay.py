@@ -310,8 +310,7 @@ def semantic_classification(value: dict) -> tuple:
     if isinstance(trade,dict):
         important=("mint","direction","token_amount_raw","token_decimals",
                    "quote_asset","quote_amount_raw","quote_decimals",
-                   "amount_predicate","amount_predicate_reason",
-                   "referenced_pre_raw","referenced_post_raw")
+                   "amount_predicate","amount_predicate_reason")
         projected=tuple((name,str(trade.get(name))) for name in important)
         if trade.get("quote_asset") in {"SOL","WSOL","So11111111111111111111111111111111111111112"}:
             projected+= (("simple_sol_quote_eligible",_simple_sol_quote_eligible(trade)),)

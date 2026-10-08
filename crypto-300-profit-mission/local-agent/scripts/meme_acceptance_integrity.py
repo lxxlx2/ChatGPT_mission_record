@@ -13,9 +13,18 @@ import json
 import sqlite3
 from pathlib import Path
 
-# Only stable fields written by scripts/frank_shadow_service.py are compared.
-# New/unknown fields are treated as volatile until their writers are audited.
+# Both real Frank writers have different health schemas. The production
+# Ledger writer is scripts/frank_local_signal_service.py (forward.sqlite
+# contains signatures/v1_states); the older Repository writer lives elsewhere.
+# An explicit allowlist prevents polling counters from raising false FAIL.
+# New/unknown keys remain unchecked until the owning writer is audited.
 STABLE_HEALTH_KEYS = frozenset({
+    # Ledger (production live-v1)
+    "system", "policy", "policy_hash", "code_commit",
+    "loaded_source_sha256", "delivery_authority",
+    "gpt_in_critical_path", "production_trading", "other_persons",
+    "new_automation", "poll_interval_seconds",
+    # Repository / frank_shadow_service
     "service_source_sha256", "parser_version", "identifier",
     "historical_network_backfill", "gmail", "app_alert",
     "automation_mutations", "production_writes",
@@ -45,8 +54,9 @@ def _health_snapshot(path: Path) -> str:
     content = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(content, dict):
         raise ValueError("HEALTH_JSON_NOT_OBJECT")
-    # Explicit allowlist: request_count, last_poll_at, poll_seconds, RPC
-    # counters and source cursors change during normal 30-second polling.
+    # Only confirmed stable configuration keys. The Ledger writer updates
+    # poll_count, last_poll_at, status, model, local/raw pending and retry fields
+    # during normal scanning. The Repository writer also advances RPC counters.
     stable = {key: content[key] for key in sorted(STABLE_HEALTH_KEYS)
               if key in content}
     return _digest(_canonical(stable))

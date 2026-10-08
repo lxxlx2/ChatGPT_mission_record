@@ -337,3 +337,19 @@ def test_replay_transition_detects_sol_route_eligibility_flip():
     both["trade"]["route_intermediate_evidence_status"]="NO_INTERMEDIATE_TRANSFER_OBSERVED"
     both["trade"]["route_intermediate_assets"]=[]
     assert replay.semantic_classification(base)==replay.semantic_classification(both)
+
+
+def test_replay_transition_ignores_nonsemantic_balance_reference_metadata():
+    source={"classification":"ACTIVE_TRADE",
+            "classification_reason":"SIGNED_DEX_SWAP_OPPOSING_OWNED_FLOWS",
+            "trade":{"mint":"M","direction":"BUY","token_amount_raw":"100",
+                     "quote_asset":USDC,"quote_amount_raw":"1000000",
+                     "quote_decimals":6,"amount_predicate":"USDC_DIRECT_NUMERIC",
+                     "referenced_pre_raw":"100","referenced_post_raw":"200"}}
+    updated=json.loads(json.dumps(source))
+    updated["trade"]["referenced_pre_raw"]="120"
+    updated["trade"]["referenced_post_raw"]="220"
+    assert updated!=source
+    assert replay.semantic_classification(updated)==replay.semantic_classification(source)
+    updated["trade"]["quote_amount_raw"]="500000"
+    assert replay.semantic_classification(updated)!=replay.semantic_classification(source)
