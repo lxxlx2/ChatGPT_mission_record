@@ -783,7 +783,10 @@ function renderClusterPreview(job) {
     fact('市值',ready ? esc(usd(p.market_cap_usd)) : '暂不可用') +
     fact('主池流动性',ready ? esc(usd(p.liquidity_usd)) : '暂不可用') +
     fact('权限',esc(authority)) +
-    '</div><p>这不是完整的持仓集中度或买入建议。钱包聚类、Top20 实际持有人及可执行报价正在单独核对。</p>';
+    fact('原始 Top10 持币占比', p.raw_top10_resolved_pct != null
+      ? esc(pctText(p.raw_top10_resolved_pct)) : '待解析', '含池子，未做 LP 排除或钱包关联归因') +
+    '</div><p>已解析 Owner：' + esc(p.top_accounts_resolved ?? '待查询') +
+    '。原始 Top10 可能含 LP 或交易所；钱包聚类和实际可成交报价仍在独立核对，不能据此认定筹码安全。</p>';
 }
 
 function clusterErrorMessage(error) {
