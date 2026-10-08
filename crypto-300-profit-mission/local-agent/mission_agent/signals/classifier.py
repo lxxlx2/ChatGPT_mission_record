@@ -131,7 +131,8 @@ def classify(signature, tx, wallet):
                         'referenced_pre_raw':str(g['pre']),'referenced_post_raw':str(g['post']),
                         'amount_predicate':amount_predicate,'amount_predicate_reason':amount_reason,
                         'quote_legs':quote_legs,
-                        'route_intermediate_assets':[],
+                        'route_intermediate_assets':None,
+                        'route_intermediate_evidence_status':'UNVERIFIED',
                         'route_amount_semantics':'DIRECT_OR_SINGLE_TARGET_QUOTE',
                     },
                 )

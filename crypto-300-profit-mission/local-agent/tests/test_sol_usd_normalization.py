@@ -169,3 +169,17 @@ def test_mission_control_uses_verified_sol_event_time_usdc_and_never_current_sol
     normalized=normalize_trade_event(event,ref)
     assert _event_price_usdc(normalized)==Decimal('250')
     assert _event_price_usdc(event) is None
+
+
+def test_unverified_route_intermediates_never_gain_synthetic_usdc():
+    classified=_classified()
+    # Exact field semantics: missing proof cannot mean proven empty.
+    classified["trade"]["route_intermediate_assets"]=None
+    classified["trade"]["route_intermediate_evidence_status"]="UNVERIFIED"
+    ref={"status":"VERIFIED","sol_usdc":"150","source":"BINANCE_OFFICIAL_SPOT_SOLUSDC"}
+    for model in (False,True):
+        trade=normalize_classification(classified,ref,for_model=model)["trade"]
+        assert trade["quote_asset"]=="SOL"
+        assert trade["amount_predicate"]=="UNDETERMINED"
+        assert trade["quote_usdc_status"]=="UNDETERMINED"
+        assert "quote_normalization" not in trade

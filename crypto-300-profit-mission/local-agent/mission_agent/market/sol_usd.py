@@ -129,6 +129,8 @@ def _simple_sol_quote_eligible(event: dict) -> bool:
         return False
     if reason not in (None,"NON_USDC_QUOTE"):
         return False
+    if event.get("route_intermediate_evidence_status")=="UNVERIFIED":
+        return False
     if event.get("route_intermediate_assets"):
         return False
     if event.get("route_amount_semantics") not in (None,"DIRECT_OR_SINGLE_TARGET_QUOTE"):
@@ -221,6 +223,7 @@ def normalize_classification(classified: dict, reference: dict | None, *, for_mo
             "amount_predicate_reason": t.get("amount_predicate_reason"),
             "quote_legs": t.get("quote_legs"),
             "route_intermediate_assets": t.get("route_intermediate_assets"),
+            "route_intermediate_evidence_status": t.get("route_intermediate_evidence_status"),
             "route_amount_semantics": t.get("route_amount_semantics"),
         },
         reference,
