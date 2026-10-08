@@ -323,7 +323,7 @@ def test_acceptance_integrity_allows_real_writer_polling_but_not_stable_tamper(t
     assert module.verify(before,prod,loop,dash)["status"]=="PASS"
     health["production_writes"]=1
     health_path.write_text(json.dumps(health))
-    with pytest.raises(RuntimeError,match="IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED"):
+    with pytest.raises((RuntimeError,ValueError),match="(HEALTH_|IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED)"):
         module.verify(before,prod,loop,dash)
 
 

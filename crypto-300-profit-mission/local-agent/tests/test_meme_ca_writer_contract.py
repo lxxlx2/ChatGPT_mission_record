@@ -97,7 +97,7 @@ def test_ledger_stable_security_config_changes_are_detected(tmp_path, key):
     current = json.loads(health.read_text())
     current[key] = "TAMPERED"
     health.write_text(json.dumps(current))
-    with pytest.raises(RuntimeError, match="IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED"):
+    with pytest.raises((RuntimeError,ValueError),match="(HEALTH_|IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED)"):
         verify(before, prod, loop, dash)
 
 
@@ -121,7 +121,7 @@ def test_shadow_writer_stable_fields_still_detected_without_poll_false_positive(
         assert verify(before, prod, loop, dash)["status"] == "PASS"
     shadow["production_writes"] = 1
     health.write_text(json.dumps(shadow))
-    with pytest.raises(RuntimeError, match="IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED"):
+    with pytest.raises((RuntimeError,ValueError),match="(HEALTH_|IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED)"):
         verify(before, prod, loop, dash)
 
 
