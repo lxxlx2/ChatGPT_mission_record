@@ -48,59 +48,35 @@ CONTROL="$(cat "$CONTROL_POINTER")"
 [ -n "$CONTROL" ] || die "CONTROL_POINTER_EMPTY"
 [ -d "$CONTROL" ] || die "CONTROL_ROOT_NOT_FOUND: $CONTROL"
 
-mkdir -p "$APP_SUPPORT" "$LOG_DIR" "$LAUNCH_DIR" "$CONTROL/logs"
-chmod 700 "$APP_SUPPORT" "$LOG_DIR"
-
-# Persist the authenticated Solana RPC outside Git/plists so LaunchAgents retain
-# it after logout/reboot. An explicit environment value refreshes the file;
-# otherwise an existing 0600 file is reused.
+# PREPARE AND AUTHORIZE before mutating any installed policy, credential,
+# runner, plist or launchd state. No self-approval from a candidate's own hash.
+[ -n "${APPROVED_POLICY_SHA256:-}" ] || die "EXTERNAL_POLICY_APPROVAL_REQUIRED"
 if [ -n "${SOLANA_RPC_URLS:-}" ]; then
-  umask 077
-  printf '%s\n' "$SOLANA_RPC_URLS" > "$RPC_FILE"
+  RPC_URLS_VALUE="$SOLANA_RPC_URLS"
+else
+  [ -f "$RPC_FILE" ] || die "SOLANA_RPC_URLS_NOT_CONFIGURED"
+  RPC_URLS_VALUE="$(cat "$RPC_FILE" 2>/dev/null || true)"
 fi
-[ -f "$RPC_FILE" ] || die "SOLANA_RPC_URLS_NOT_CONFIGURED: run scripts/configure_mission_meme_rpc.sh first"
-RPC_URLS_VALUE="$(cat "$RPC_FILE" 2>/dev/null || true)"
 [ -n "$RPC_URLS_VALUE" ] || die "SOLANA_RPC_URLS_EMPTY"
-chmod 600 "$RPC_FILE"
 
-cp "$POLICY" "$RUNTIME_POLICY"
-chmod 600 "$RUNTIME_POLICY"
-
-POLICY_SHA="$(shasum -a 256 "$RUNTIME_POLICY" | awk '{print $1}')"
-printf '%s\n' "$POLICY_SHA" > "$APPROVED_HASH_FILE"
-chmod 600 "$APPROVED_HASH_FILE"
-
-PORT="8766"
-if [ -f "$CONTROL/dashboard.port" ]; then
-  CANDIDATE_PORT="$(cat "$CONTROL/dashboard.port" 2>/dev/null || true)"
-  if [[ "$CANDIDATE_PORT" =~ ^[0-9]+$ ]]; then
-    PORT="$CANDIDATE_PORT"
-  fi
-fi
-printf '%s\n' "$PORT" > "$PORT_FILE"
-chmod 600 "$PORT_FILE"
-
-"$VENV/bin/python" - "$RUNTIME_POLICY" "$POLICY_SHA" <<'PY'
-import hashlib
-import json
+# Use the EXACT authorization predicate also enforced by MissionMemeService.
+# The external digest is supplied by the operator via environment; it is
+# never derived from the candidate policy by this installer.
+PYTHONPATH="$LOCAL_AGENT" "$VENV/bin/python" - "$POLICY" "$APPROVED_POLICY_SHA256" <<'PY'
 import sys
-from pathlib import Path
-
-path = Path(sys.argv[1])
-expected = sys.argv[2]
-raw = path.read_bytes()
-data = json.loads(raw)
-actual = hashlib.sha256(raw).hexdigest()
-
-assert actual == expected
-assert data.get("status") == "FROZEN_APPROVED"
-assert data.get("live_delivery_approved") is True
-assert data.get("decision", {}).get("observation_retention_seconds") == 5184000
-
+from mission_agent.mission_control.policy import (
+    load_policy, live_delivery_policy_authorized,
+)
+policy, actual = load_policy(sys.argv[1])
+if not live_delivery_policy_authorized(policy, actual, sys.argv[2]):
+    raise SystemExit("POLICY_NOT_AUTHORIZED")
 print("POLICY_GATE: PASS")
 print("policy_sha256:", actual)
 PY
+POLICY_SHA="$APPROVED_POLICY_SHA256"
 
+# External OAuth/readiness preflight occurs after policy authorization,
+# but BEFORE any installed state is altered. This only validates readiness.
 PYTHONPATH="$LOCAL_AGENT" "$VENV/bin/python" - "$PROD" <<'PY'
 import sys
 from pathlib import Path
@@ -115,6 +91,37 @@ print("GMAIL_PREFLIGHT: PASS")
 print("gmail_recipient:", provider.recipient)
 print("NO_EMAIL_SENT")
 PY
+
+PORT="8766"
+if [ -f "$CONTROL/dashboard.port" ]; then
+  CANDIDATE_PORT="$(cat "$CONTROL/dashboard.port" 2>/dev/null || true)"
+  if [[ "$CANDIDATE_PORT" =~ ^[0-9]+$ ]]; then
+    PORT="$CANDIDATE_PORT"
+  fi
+fi
+
+# The following writes are permitted only AFTER all policy/preflight gates.
+mkdir -p "$APP_SUPPORT" "$LOG_DIR" "$LAUNCH_DIR" "$CONTROL/logs"
+chmod 700 "$APP_SUPPORT" "$LOG_DIR"
+umask 077
+install_atomic() {
+  local dest="$1"
+  local temp
+  temp="$(mktemp "$APP_SUPPORT/.mission-install.XXXXXXXX")"
+  cat > "$temp"
+  chmod 600 "$temp"
+  mv -f "$temp" "$dest"
+}
+
+# Two independent atomic replaces. A crash between them fails closed because
+# policy bytes and externally approved digest cannot match until both commit.
+install_atomic "$RUNTIME_POLICY" < "$POLICY"
+printf '%s\n' "$POLICY_SHA" | install_atomic "$APPROVED_HASH_FILE"
+if [ -n "${SOLANA_RPC_URLS:-}" ]; then
+  printf '%s\n' "$SOLANA_RPC_URLS" | install_atomic "$RPC_FILE"
+fi
+chmod 600 "$RPC_FILE"
+printf '%s\n' "$PORT" | install_atomic "$PORT_FILE"
 
 cat > "$LOOP_RUNNER" <<EOF
 #!/bin/bash

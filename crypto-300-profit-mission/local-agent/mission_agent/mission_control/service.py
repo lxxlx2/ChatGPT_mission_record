@@ -16,7 +16,7 @@ from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
 from .outcomes import OutcomeTracker
 from .sol_mirror import SolNormalizedMirror
-from .policy import evaluate, load_policy, should_notify
+from .policy import evaluate, load_policy, should_notify, live_delivery_policy_authorized
 
 
 _TRANSIENT_WAIT_REASONS = {
@@ -58,9 +58,9 @@ class MissionMemeService:
         self.approved_policy_sha256 = approved_policy_sha256
         self.delivery_allowed = bool(
             self.live_delivery_requested
-            and self.policy.get("status") == "FROZEN_APPROVED"
-            and self.policy.get("live_delivery_approved") is True
-            and self.approved_policy_sha256 == self.policy_hash
+            and live_delivery_policy_authorized(
+                self.policy, self.policy_hash, self.approved_policy_sha256
+            )
         )
         self.gmail_config = gmail_config or (self.production_root / "gmail-existing-source.json")
         self.jupiter = JupiterQuoteClient(jupiter_api_key or os.environ.get("JUPITER_API_KEY"))

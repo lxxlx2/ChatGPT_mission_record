@@ -3,11 +3,38 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+import secrets
 import time
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 VALID_DECISIONS = {"BUY", "SMALL_BUY", "WAIT", "NO_BUY"}
+_APPROVED_SHA_RE = re.compile(r"[0-9a-f]{64}\\Z")
+_REQUIRED_RETENTION_SECONDS = 5184000
+
+
+def live_delivery_policy_authorized(policy: dict, actual_sha: str,
+                                    externally_approved_sha: str | None) -> bool:
+    """One authorization predicate for installer AND Mission Loop.
+
+    Caller must supply the independently approved digest, never compute the
+    expected value from the same candidate and use it as approval authority.
+    This validates byte identity plus the approved policy's hard safety gates.
+    """
+    return bool(
+        isinstance(externally_approved_sha, str)
+        and _APPROVED_SHA_RE.fullmatch(externally_approved_sha)
+        and isinstance(actual_sha, str)
+        and secrets.compare_digest(actual_sha, externally_approved_sha)
+        and isinstance(policy, dict)
+        and policy.get("schema_version") == 1
+        and policy.get("status") == "FROZEN_APPROVED"
+        and policy.get("live_delivery_approved") is True
+        and isinstance(policy.get("decision"), dict)
+        and type(policy["decision"].get("observation_retention_seconds")) is int
+        and policy["decision"]["observation_retention_seconds"] == _REQUIRED_RETENTION_SECONDS
+    )
 
 
 def load_policy(path: Path) -> tuple[dict, str]:
