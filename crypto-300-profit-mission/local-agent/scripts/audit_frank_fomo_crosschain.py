@@ -9,6 +9,7 @@ Usage: python -B scripts/audit_frank_fomo_crosschain.py --hours 6
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -415,9 +416,66 @@ def scan_robinhood(rpc: RPC, wallet: str, cutoff: int, until: int) -> dict:
     }
 
 
+def read_complete_solana_evidence(path: Path, since: int, until: int) -> dict:
+    """Reuse only a fully decoded local historical SOL report for exact window.
+
+    Never import RH observations from an incomplete prior audit. This is a
+    research snapshot, not independent proof of Frank identity or signal.
+    """
+    if (path.is_symlink() or not path.is_file() or
+            path.stat().st_mode & 0o077 or path.stat().st_size > 30_000_000):
+        raise IncompleteWindow("SOL_EVIDENCE_FILE_UNSAFE")
+    raw = path.read_bytes()
+    try:
+        data = json.loads(raw)
+    except (ValueError, UnicodeError):
+        raise IncompleteWindow("SOL_EVIDENCE_JSON_INVALID") from None
+    if (not isinstance(data, dict) or
+            data.get("cutoff_epoch") != since or
+            data.get("audited_at_epoch") != until or
+            data.get("identity_attribution") != "THIRD_PARTY_UNVERIFIED"):
+        raise IncompleteWindow("SOL_EVIDENCE_WINDOW_OR_IDENTITY_MISMATCH")
+    chains = data.get("chains")
+    events = data.get("evidence")
+    if not isinstance(chains, list) or not isinstance(events, list):
+        raise IncompleteWindow("SOL_EVIDENCE_SHAPE_INVALID")
+    expected = {SOL_CASH_WALLET, SOL_CANDIDATE_WALLET}
+    sol_chains = [c for c in chains if isinstance(c, dict) and c.get("chain") == "SOL"]
+    if (len(sol_chains) != 2 or
+            {c.get("wallet") for c in sol_chains} != expected or
+            any(c.get("status") != "COMPLETE" or
+                not isinstance(c.get("signatures_scanned"), int) or
+                c["signatures_scanned"] < 0 for c in sol_chains)):
+        raise IncompleteWindow("SOL_EVIDENCE_NOT_COMPLETE")
+    sol_events = []
+    for e in events:
+        if not isinstance(e, dict):
+            raise IncompleteWindow("SOL_EVIDENCE_EVENT_INVALID")
+        if e.get("chain") != "SOL":
+            # Never carry unverified RH events from an old PARTIAL report.
+            continue
+        if (e.get("wallet") not in expected
+                or not isinstance(e.get("tx_id"), str)
+                or e.get("signal_eligible") is not False):
+            raise IncompleteWindow("SOL_EVIDENCE_EVENT_UNTRUSTED")
+        stamp = e.get("block_time")
+        if stamp is not None and (not isinstance(stamp, int) or stamp < since or stamp > until):
+            raise IncompleteWindow("SOL_EVIDENCE_EVENT_OUTSIDE_WINDOW")
+        sol_events.append(e)
+    return {
+        "chains": [
+            {**c, "source": "PREVIOUS_COMPLETE_SOLANA_EVIDENCE"}
+            for c in sol_chains
+        ],
+        "evidence": sol_events,
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
+
+
 def audit(hours: int, solana_urls: list[str], rh_url: str | None,
           audited_at: int | None = None, cache_dir: Path | None = None,
-          rh_extra_urls: list[str] | None = None) -> dict:
+          rh_extra_urls: list[str] | None = None,
+          solana_snapshot: dict | None = None) -> dict:
     until=int(time.time()) if audited_at is None else int(audited_at)
     if until > int(time.time()) or until <= hours*3600:
         raise ValueError("INVALID_AUDIT_END_TIME")
@@ -433,27 +491,33 @@ def audit(hours: int, solana_urls: list[str], rh_url: str | None,
     }
     legs=[]
     cache=SignatureCache(cache_dir)
-    for wallet in (SOL_CASH_WALLET,SOL_CANDIDATE_WALLET):
-        failures=[]
-        for endpoint in solana_urls:
-            rpc=RPC(endpoint)
-            try:
-                value=scan_solana(rpc,wallet,since,until,cache=cache)
-                break
-            except (IncompleteWindow, ValueError, KeyError, TypeError, urllib.error.URLError, TimeoutError) as exc:
-                # Never output private RPC URL, token or exception trace.
-                failures.append({
-                    "reason":safe_error(exc), "stage":rpc.scan_stage,
-                    "method":rpc.last_method, "rpc_calls":rpc.calls,
-                    **rpc.progress,
-                })
-        else:
-            value={"chain":"SOL","wallet":wallet,"status":"INCOMPLETE",
-                   "error":"SOL_SCAN_INCOMPLETE",
-                   "endpoint_trials":len(failures),
-                   "diagnostics":failures,"cache_hits":cache.hits,"legs":[]}
-        legs+=value.pop("legs")
-        report["chains"].append(value)
+    if solana_snapshot is not None:
+        report["chains"].extend(solana_snapshot["chains"])
+        legs.extend(solana_snapshot["evidence"])
+        report["solana_evidence_sha256"]=solana_snapshot["sha256"]
+        report["solana_skipped_from_verified_snapshot"]=True
+    else:
+        for wallet in (SOL_CASH_WALLET,SOL_CANDIDATE_WALLET):
+            failures=[]
+            for endpoint in solana_urls:
+                rpc=RPC(endpoint)
+                try:
+                    value=scan_solana(rpc,wallet,since,until,cache=cache)
+                    break
+                except (IncompleteWindow, ValueError, KeyError, TypeError, urllib.error.URLError, TimeoutError) as exc:
+                    # Never output private RPC URL, token or exception trace.
+                    failures.append({
+                        "reason":safe_error(exc), "stage":rpc.scan_stage,
+                        "method":rpc.last_method, "rpc_calls":rpc.calls,
+                        **rpc.progress,
+                    })
+            else:
+                value={"chain":"SOL","wallet":wallet,"status":"INCOMPLETE",
+                       "error":"SOL_SCAN_INCOMPLETE",
+                       "endpoint_trials":len(failures),
+                       "diagnostics":failures,"cache_hits":cache.hits,"legs":[]}
+            legs+=value.pop("legs")
+            report["chains"].append(value)
     # Prefer supplied authenticated RPCs over public endpoints (which returned
     # 403 on Mac). An alternate MUST pass eth_chainId 4663 to be accepted.
     rh_endpoints = []
@@ -507,6 +571,8 @@ def main():
     parser.add_argument("--robinhood-rpc-file",type=Path,
                         default=Path.home()/"Library/Application Support/FrankMeme/robinhood_rpc_urls",
                         help="Optional private 0600 HTTPS Robinhood RPC list; never printed")
+    parser.add_argument("--solana-evidence-file",type=Path,
+                        help="Reuse an exact complete historical SOL JSON report; RH is re-queried")
     parser.add_argument("--no-reuse-solana-alchemy",action="store_true",
                         help="Do not derive Robinhood Alchemy endpoint from a configured Solana Alchemy app key")
     parser.add_argument("--output",type=Path,help="Optional research JSON report; never a production DB")
@@ -531,8 +597,13 @@ def main():
             private_rh += derive_robinhood_alchemy_rpcs(endpoints)
         # De-duplicate credentials without ever printing them.
         private_rh = list(dict.fromkeys(private_rh))
-        result=audit(args.hours,endpoints,args.robinhood_rpc,args.as_of_epoch,
-                     cache_dir=cache_dir,rh_extra_urls=private_rh)
+        window_end = args.as_of_epoch if args.as_of_epoch is not None else int(time.time())
+        snapshot=(read_complete_solana_evidence(
+            args.solana_evidence_file, window_end-args.hours*3600, window_end)
+            if args.solana_evidence_file else None)
+        result=audit(args.hours,endpoints,args.robinhood_rpc,window_end,
+                     cache_dir=cache_dir,rh_extra_urls=private_rh,
+                     solana_snapshot=snapshot)
     except (IncompleteWindow, ValueError):
         print('{"status":"PRECHECK_FAILED","production_db_writes":0,"gmail_sent":0}')
         return 2
@@ -564,6 +635,9 @@ def main():
         "evidence_rows_total":len(result["evidence"]),
         "rpc_cache":result["cache"],
         "rh_provider_diagnostics":result.get("rh_provider_diagnostics", {}),
+        "solana_skipped_from_previous_complete_report":
+            result.get("solana_skipped_from_verified_snapshot",False),
+        "solana_evidence_sha256":result.get("solana_evidence_sha256"),
         "full_evidence_file":str(args.output) if args.output else None,
         "production_db_writes":0,"gmail_sent":0,"follow_signals_changed":False,
     }
