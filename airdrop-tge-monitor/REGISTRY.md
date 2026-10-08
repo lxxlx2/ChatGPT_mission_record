@@ -1,6 +1,6 @@
 # Airdrop / TGE Canonical Registry
 
-Updated: 2026-10-07
+Updated: 2026-10-08
 
 Grass 与 Backpack 明确排除。
 
@@ -33,7 +33,6 @@ Clay Shares 作为 Claynosaurz/HEEBOO 相关权益子项持续检查。
 - ForecastFDN / @ForecastFDN
 - Hylo / @hylo_so
 - OnRe / @onrefinance
-- Loopscale / @loopscale
 - Reflect / @reflectmoney
 - Tydro / @tydrohq
 - Theo / @Theo_Network
@@ -106,6 +105,18 @@ Known mapping:
 
 Do not require a public project announcement to recognize a direct platform entitlement/refund notice.
 
+
+
+## Formation / Orca / Loopscale TGE-scope resolution — 2026-10-08
+
+- canonical_relationship: Orca (@orca_so) + Loopscale (@loopscale) combined into Formation (@formation_so) on 2026-10-08 Asia/Bangkok (announced 2026-10-07 19:00 ET).
+- verified_token_network: existing ORCA and xORCA; no independently confirmed Formation token or separate Loopscale TGE from this announcement.
+- scope_decision: remove independent Loopscale from Shard 1; Orca and Formation are NOT being added as new TGE watch entries. Treat the merger as a Crypto Daily protocol/governance event, not a TGE/action event.
+- historical_state: retain past Loopscale monitoring/audit records. No claim, TGE, allocation, airdrop or new user entitlement is confirmed by this merger.
+- user_instruction: no new automation/monitor. Do not continue independent TGE discovery of these two legacy names solely because of their merger; future user-specific rights/real token-launch scope needs separately verified first-party evidence and user authorization.
+- relevant_existing_token_governance: Orca proposal published 2026-09-29 on fee split / treasury transfer / council changes; voting deadline 2026-10-10 19:42 UTC, cooldown until 2026-10-12 19:42 UTC. Proposal only, not yet proven passed/executed. Report via existing Crypto Daily governance lane, not TGE notification absent established user action.
+- first_party_merger: https://www.prnewswire.com/news-releases/orca-and-loopscale-merge-to-build-capital-markets-for-ai-and-the-frontier-economy-302901726.html
+- first_party_governance: https://forums.orca.so/t/tokenholder-proposal-resourcing-orca-for-its-next-phase/1281
 
 ## Closed / excluded deals
 
