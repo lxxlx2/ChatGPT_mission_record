@@ -7,6 +7,7 @@ are created or persisted here.
 from __future__ import annotations
 
 import base64,email,json,re,shutil,subprocess
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP, localcontext
 from datetime import datetime, timezone
 from email import policy as mime_policy
 from email.message import EmailMessage
@@ -81,6 +82,39 @@ def _asset(value):
 def _display(value,suffix=""):
     return "暂无" if value in (None,"") else str(value)+suffix
 
+
+def _readable_number(value, *, decimal_places=None, significant_digits=None,
+                     grouping=False, trim=False):
+    """Format display only. Never feed rounded values back into policy/metrics."""
+    if value in (None, ""):
+        return "暂无"
+    try:
+        amount=Decimal(str(value))
+        if not amount.is_finite() or abs(amount.adjusted()) > 36:
+            return "暂无"
+        places=(max(0, significant_digits - amount.adjusted() - 1)
+                if significant_digits is not None and amount else decimal_places or 0)
+        with localcontext() as ctx:
+            ctx.prec=max(40,len(amount.as_tuple().digits)+abs(amount.adjusted())+places+5)
+            amount=amount.quantize(Decimal(1).scaleb(-places),rounding=ROUND_HALF_UP)
+        shown=format(amount,",f" if grouping else "f")
+        if trim and "." in shown:
+            shown=shown.rstrip("0").rstrip(".")
+        return "0" if shown in {"-0","-0.00"} else shown
+    except (InvalidOperation, ValueError, TypeError, OverflowError):
+        return "暂无"
+
+
+def _payment_display(value, asset):
+    if value in (None, ""):
+        return "暂无"
+    symbol=_asset(asset)
+    places=2 if symbol=="USDC" else 4 if symbol=="SOL" else 6
+    shown=_readable_number(value,decimal_places=places,
+                           grouping=symbol=="USDC",trim=symbol!="USDC")
+    return "暂无" if shown=="暂无" else shown+" "+symbol
+
+
 def render(event:dict)->dict:
     body=json.loads(event["body"]) if isinstance(event.get("body"),str) else event["body"]
     metrics=body.get("metrics") or {};inputs=body["inputs"];quote=inputs.get("quote") or {}
@@ -88,9 +122,9 @@ def render(event:dict)->dict:
     subject=f"[Meme提醒] {_zh(DECISION_ZH,decision,decision)} | {_zh(PATTERN_ZH,pattern,pattern)} | {_short(body['mint'])}"
     original_asset=inputs.get("latest_buy_original_quote_asset") or inputs.get("latest_buy_quote_asset")
     original_qty=inputs.get("latest_buy_original_quote_quantity") or inputs.get("latest_buy_quote_quantity")
-    payment=_display(original_qty," "+_asset(original_asset))
+    payment=_payment_display(original_qty,original_asset)
     if inputs.get("latest_buy_quote_was_normalized") and inputs.get("latest_buy_usdc_equivalent") not in (None,""):
-        payment += " ≈ "+str(inputs.get("latest_buy_usdc_equivalent"))+" USDC（事件时间换算）"
+        payment += " ≈ "+_readable_number(inputs.get("latest_buy_usdc_equivalent"),decimal_places=2,grouping=True)+" USDC（事件时间换算）"
     frank_price=metrics.get("frank_latest_buy_price_usdc") or inputs.get("latest_buy_price_usdc")
     exec_price=metrics.get("execution_price_usdc") or quote.get("execution_price_usdc")
     impact=metrics.get("price_impact_pct") or quote.get("price_impact_pct")
@@ -101,15 +135,18 @@ def render(event:dict)->dict:
     text="\n".join([
         "结论："+_zh(DECISION_ZH,decision,decision),
         "Frank 模式："+_zh(PATTERN_ZH,pattern,pattern),
-        "CA："+body["mint"],
+        "",
+        "CA（长按复制完整地址）：",
+        body["mint"],
+        "",
         "Frank 仓位："+_zh(STATE_ZH,inputs.get("position_state"),str(inputs.get("position_state") or "未知")),
         f"Frank 买/卖次数：{inputs.get('buy_count')}/{inputs.get('sell_count')}",
         "Frank 最近动作："+_zh(ACTION_ZH,inputs.get("latest_side"),str(inputs.get("latest_side") or "未知")),
         "Frank 原始支付："+payment,
-        "Frank 参考买入价："+_display(frank_price," USDC"),
-        "当前 30 USDC 可成交价："+_display(exec_price," USDC"),
-        "相对 Frank 偏离："+_display(deviation,"%"),
-        "预计价格冲击："+_display(impact,"%"),
+        "Frank 参考买入价："+_display(_readable_number(frank_price,significant_digits=6,trim=True)," USDC") if frank_price not in (None,"") else "Frank 参考买入价：暂无",
+        "当前 30 USDC 可成交价："+_display(_readable_number(exec_price,significant_digits=6,trim=True)," USDC") if exec_price not in (None,"") else "当前 30 USDC 可成交价：暂无",
+        "相对 Frank 偏离："+_display(_readable_number(deviation,decimal_places=2),"%") if deviation not in (None,"") else "相对 Frank 偏离：暂无",
+        "预计价格冲击："+_display(_readable_number(impact,decimal_places=2),"%") if impact not in (None,"") else "预计价格冲击：暂无",
         "判断原因："+reasons,
         "缺失/不可确认："+missing,
         "CA 页面：https://solscan.io/token/"+body["mint"],

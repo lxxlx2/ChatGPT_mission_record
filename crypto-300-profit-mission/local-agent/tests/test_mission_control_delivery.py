@@ -137,8 +137,34 @@ def test_mission_control_notification_is_chinese_and_research_friendly(tmp_path)
     rendered=render(e)
     assert "[Meme提醒] 可跟" in rendered["subject"]
     assert "结论：可跟" in rendered["body"]
-    assert "CA：Mint111111111111111" in rendered["body"]
+    assert "CA（长按复制完整地址）：\nMint111111111111111\n" in rendered["body"]
     assert "Frank 买/卖次数：3/0" in rendered["body"]
     assert "当前 30 USDC 可成交价：1.02 USDC" in rendered["body"]
     assert "判断原因：Frank 当前处于多次强加仓模式" in rendered["body"]
     assert "https://solscan.io/token/Mint111111111111111" in rendered["body"]
+
+
+def test_mission_control_email_mobile_readable_amounts_keep_full_ca(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"]) if isinstance(e["body"],str) else e["body"]
+    mint="METAewgxyPbgwsseH8T16a39CQ5VyVxZi9zXiDPY18m"
+    body["mint"]=mint
+    body["inputs"]["latest_buy_original_quote_asset"]="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    body["inputs"]["latest_buy_original_quote_quantity"]="40300.819981"
+    body["metrics"]["frank_latest_buy_price_usdc"]="0.06281989977852861423955923621"
+    body["metrics"]["price_impact_pct"]="0.123456789"
+    rendered=render({"body":body})
+    assert f"\n{mint}\n" in rendered["body"]
+    assert "Frank 原始支付：40,300.82 USDC" in rendered["body"]
+    assert "Frank 参考买入价：0.0628199 USDC" in rendered["body"]
+    assert "预计价格冲击：0.12%" in rendered["body"]
+    assert f"https://solscan.io/token/{mint}" in rendered["body"]
+
+
+def test_mission_control_email_tiny_prices_remain_nonzero(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"]) if isinstance(e["body"],str) else e["body"]
+    body["metrics"]["frank_latest_buy_price_usdc"]="0.00000000123456789"
+    assert "Frank 参考买入价：0.00000000123457 USDC" in render({"body":body})["body"]
