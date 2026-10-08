@@ -66,7 +66,7 @@ def configured_solana_endpoints(path: Path) -> list[str]:
     return endpoints
 
 
-def solana_signatures(rpc: RPC, wallet: str, cutoff: int) -> list[dict]:
+def solana_signatures(rpc: RPC, wallet: str, cutoff: int, until: int) -> list[dict]:
     results = []
     before = None
     seen = set()
@@ -85,9 +85,11 @@ def solana_signatures(rpc: RPC, wallet: str, cutoff: int) -> list[dict]:
             if sig["signature"] in seen:
                 continue
             seen.add(sig["signature"])
-            if int(sig["blockTime"]) < cutoff:
+            stamp = int(sig["blockTime"])
+            if stamp < cutoff:
                 return results
-            results.append(sig)
+            if stamp <= until:
+                results.append(sig)
             if len(results) > MAX_SOL_TRANSACTIONS_PER_WALLET:
                 raise IncompleteWindow("SOL_WALLET_TRANSACTION_BUDGET_EXCEEDED")
         if len(page) < 1000:
@@ -99,8 +101,8 @@ def solana_signatures(rpc: RPC, wallet: str, cutoff: int) -> list[dict]:
     raise IncompleteWindow("SOL_MAX_PAGES_REACHED")
 
 
-def scan_solana(rpc: RPC, wallet: str, cutoff: int) -> dict:
-    signatures = solana_signatures(rpc, wallet, cutoff)
+def scan_solana(rpc: RPC, wallet: str, cutoff: int, until: int) -> dict:
+    signatures = solana_signatures(rpc, wallet, cutoff, until)
     rows = []
     for item in signatures:
         sig = item["signature"]
@@ -119,24 +121,29 @@ def scan_solana(rpc: RPC, wallet: str, cutoff: int) -> dict:
     }
 
 
-def rh_block_number(rpc: RPC, cutoff: int) -> tuple[int,int]:
+def rh_block_number(rpc: RPC, cutoff: int, until: int) -> tuple[int,int]:
     newest = int(rpc.call("eth_blockNumber", []), 16)
     if newest < 1:
         raise IncompleteWindow("RH_HEIGHT_INVALID")
     last = rpc.call("eth_getBlockByNumber", [hex(newest),False])
     if not last or int(last["timestamp"],16) < cutoff:
         raise IncompleteWindow("RH_HEAD_OLDER_THAN_WINDOW")
-    lo,hi = 0,newest
-    while lo < hi:
-        mid=(lo+hi)//2
-        block=rpc.call("eth_getBlockByNumber",[hex(mid),False])
-        if not block or block.get("timestamp") is None:
-            raise IncompleteWindow("RH_BLOCK_TIMESTAMP_MISSING")
-        if int(block["timestamp"],16)<cutoff:
-            lo=mid+1
-        else:
-            hi=mid
-    return lo,newest
+    def first_block_at_or_after(timestamp: int) -> int:
+        lo,hi = 0,newest
+        while lo < hi:
+            mid=(lo+hi)//2
+            block=rpc.call("eth_getBlockByNumber",[hex(mid),False])
+            if not block or block.get("timestamp") is None:
+                raise IncompleteWindow("RH_BLOCK_TIMESTAMP_MISSING")
+            if int(block["timestamp"],16)<timestamp:
+                lo=mid+1
+            else:
+                hi=mid
+        return lo
+    first = first_block_at_or_after(cutoff)
+    # Upper bound is inclusive; exclude the first block beyond the window.
+    last_block = first_block_at_or_after(until+1)-1 if int(last["timestamp"],16)>until else newest
+    return first, max(first-1, last_block)
 
 
 def rh_getlogs(rpc: RPC, first: int, last: int, topics: list) -> list[dict]:
@@ -174,14 +181,19 @@ def pad_evm_wallet(wallet: str) -> str:
     return "0x" + "0"*24 + wallet.removeprefix("0x").lower()
 
 
-def scan_robinhood(rpc: RPC, wallet: str, cutoff: int) -> dict:
+def scan_robinhood(rpc: RPC, wallet: str, cutoff: int, until: int) -> dict:
     chain=int(rpc.call("eth_chainId",[]),16)
     if chain!=RH_CHAIN_ID:
         raise IncompleteWindow("RH_CHAIN_ID_MISMATCH")
     code=(rpc.call("eth_getCode",[wallet,"latest"]) or "").lower()
     if code!=FOMO_EIP7702_CODE:
         raise IncompleteWindow("RH_CANDIDATE_NOT_EIP7702_FOMO_ACCOUNT")
-    first,last=rh_block_number(rpc,cutoff)
+    first,last=rh_block_number(rpc,cutoff,until)
+    if last < first:
+        return {"chain":"RH", "wallet":wallet, "status":"COMPLETE",
+                "first_block":first,"last_block":last,"userop_tx_count":0,
+                "inbound_transfer_tx_count":0,"eip7702_delegation_confirmed":True,
+                "rpc_calls":rpc.calls,"legs":[]}
     padded=pad_evm_wallet(wallet)
     ops=rh_getlogs(rpc,first,last,[TOPIC_USEROP,None,padded])
     # Receipts must contain ALL sibling UserOps for correct per-operation scope.
@@ -207,8 +219,10 @@ def scan_robinhood(rpc: RPC, wallet: str, cutoff: int) -> dict:
     }
 
 
-def audit(hours: int, solana_urls: list[str], rh_url: str) -> dict:
-    until=int(time.time())
+def audit(hours: int, solana_urls: list[str], rh_url: str, audited_at: int | None = None) -> dict:
+    until=int(time.time()) if audited_at is None else int(audited_at)
+    if until > int(time.time()) or until <= hours*3600:
+        raise ValueError("INVALID_AUDIT_END_TIME")
     since=until-hours*3600
     report={
         "status":"PARTIAL", "window_hours":hours, "cutoff_epoch":since,
@@ -224,7 +238,7 @@ def audit(hours: int, solana_urls: list[str], rh_url: str) -> dict:
         failures=[]
         for endpoint in solana_urls:
             try:
-                value=scan_solana(RPC(endpoint),wallet,since)
+                value=scan_solana(RPC(endpoint),wallet,since,until)
                 break
             except (IncompleteWindow, ValueError, KeyError, TypeError, urllib.error.URLError, TimeoutError) as exc:
                 # Never output private RPC URL or credentials.
@@ -235,7 +249,7 @@ def audit(hours: int, solana_urls: list[str], rh_url: str) -> dict:
         legs+=value.pop("legs")
         report["chains"].append(value)
     try:
-        value=scan_robinhood(RPC(rh_url),RH_CANDIDATE_WALLET,since)
+        value=scan_robinhood(RPC(rh_url),RH_CANDIDATE_WALLET,since,until)
     except (IncompleteWindow, ValueError, KeyError, TypeError, urllib.error.URLError, TimeoutError):
         value={"chain":"RH","wallet":RH_CANDIDATE_WALLET,"status":"INCOMPLETE",
                "error":"RH_RPC_WINDOW_OR_IDENTITY_UNAVAILABLE","legs":[]}
@@ -258,10 +272,12 @@ def main():
                         default=Path.home()/"Library/Application Support/FrankMeme/solana_rpc_urls")
     parser.add_argument("--robinhood-rpc",default=os.environ.get("ROBINHOOD_RPC_URL",DEFAULT_RH_RPC))
     parser.add_argument("--output",type=Path,help="Optional research JSON report; never a production DB")
+    parser.add_argument("--as-of-epoch",type=int,
+                        help="Reproduce a fixed UTC time window; end timestamp inclusive")
     args=parser.parse_args()
     try:
         endpoints=configured_solana_endpoints(args.solana_rpc_file)
-        result=audit(args.hours,endpoints,args.robinhood_rpc)
+        result=audit(args.hours,endpoints,args.robinhood_rpc,args.as_of_epoch)
     except (IncompleteWindow, ValueError):
         print('{"status":"PRECHECK_FAILED","production_db_writes":0,"gmail_sent":0}')
         return 2
