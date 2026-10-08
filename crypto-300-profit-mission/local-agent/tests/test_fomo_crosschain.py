@@ -495,3 +495,91 @@ def test_authenticated_provider_preferred_and_report_never_prints_key(monkeypatc
     assert result["rh_provider_diagnostics"]["authenticated_provider_configured"]
     assert "LOCAL_TEST_KEY123" not in str(result)
     assert result["promotion_to_follow_signals"]=="FORBIDDEN"
+
+
+
+def test_rh_only_audit_reuses_exact_complete_solana_evidence_without_queries(tmp_path,monkeypatch):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="snapshot_audit_test")
+    window_end=1791472854
+    cutoff=window_end-24*3600
+    oid="0x"+"c"*64
+    row={
+        "chain":"SOL","kind":"RELAY_PAY","tx_id":"2"*88,
+        "wallet":fc.SOL_CASH_WALLET,"order_id":oid,
+        "asset":fc.USDC,"amount_raw":"8000000","decimals":6,
+        "block_time":cutoff+200,"signal_eligible":False,
+        "reason":"FOMO_COSIGNED_RELAY_DEPOSIT",
+    }
+    report={
+        "cutoff_epoch":cutoff,"audited_at_epoch":window_end,
+        "identity_attribution":"THIRD_PARTY_UNVERIFIED",
+        "chains":[
+            {"chain":"SOL","wallet":fc.SOL_CASH_WALLET,
+             "status":"COMPLETE","signatures_scanned":173},
+            {"chain":"SOL","wallet":fc.SOL_CANDIDATE_WALLET,
+             "status":"COMPLETE","signatures_scanned":0},
+            {"chain":"RH","wallet":fc.RH_CANDIDATE_WALLET,"status":"INCOMPLETE"},
+        ],
+        "evidence":[row,{**row,"chain":"RH","wallet":fc.RH_CANDIDATE_WALLET}],
+    }
+    file=tmp_path/"evidence.json"
+    file.write_text(json.dumps(report))
+    file.chmod(0o600)
+    snapshot=audit["read_complete_solana_evidence"](file,cutoff,window_end)
+    assert len(snapshot["evidence"])==1
+    assert len(snapshot["chains"])==2
+    assert all(x["source"]=="PREVIOUS_COMPLETE_SOLANA_EVIDENCE"
+               for x in snapshot["chains"])
+    g=audit["audit"].__globals__
+    class RPC:
+        def __init__(self,url):
+            self.calls=0;self.scan_stage="INIT";self.last_method="NONE";self.progress={}
+    def must_not_scan_solana(*args,**kwargs):
+        raise AssertionError("SOLANA_RPC_MUST_NOT_BE_CALLED")
+    def rh(rpc,wallet,cutoff,until):
+        return {"chain":"RH","wallet":wallet,"status":"COMPLETE",
+                "eip7702_delegation_confirmed":True,
+                "legs":[{
+                    "chain":"RH","kind":"BUY_FILL","tx_id":"0x"+"d"*64,
+                    "wallet":wallet,"order_id":oid,"asset":"0x"+"f"*40,
+                    "amount_raw":"150000000","decimals":None,
+                    "signal_eligible":False,
+                }]}
+    monkeypatch.setitem(g,"RPC",RPC)
+    monkeypatch.setitem(g,"scan_solana",must_not_scan_solana)
+    monkeypatch.setitem(g,"scan_robinhood",rh)
+    result=audit["audit"](24,["https://solana.invalid"],None,window_end,
+                          solana_snapshot=snapshot)
+    assert result["status"]=="RPC_WINDOW_COMPLETE_IDENTITY_UNVERIFIED"
+    assert result["solana_skipped_from_verified_snapshot"] is True
+    assert result["paired_counts"]=={"PAIRED_BUY_EVIDENCE":1}
+    assert result["paired"][0]["follow_signal_eligible"] is False
+    assert result["production_db_writes"]==0
+
+
+def test_reject_partial_or_wrong_window_solana_evidence(tmp_path):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="snapshot_rejection_test")
+    now=1791472854
+    base={
+        "cutoff_epoch":now-86400,"audited_at_epoch":now,
+        "identity_attribution":"THIRD_PARTY_UNVERIFIED",
+        "chains":[
+            {"chain":"SOL","wallet":fc.SOL_CASH_WALLET,
+             "status":"INCOMPLETE","signatures_scanned":93},
+            {"chain":"SOL","wallet":fc.SOL_CANDIDATE_WALLET,
+             "status":"COMPLETE","signatures_scanned":0}],
+        "evidence":[],
+    }
+    p=tmp_path/"evidence.json"
+    p.write_text(json.dumps(base));p.chmod(0o600)
+    with pytest.raises(audit["IncompleteWindow"],match="SOL_EVIDENCE_NOT_COMPLETE"):
+        audit["read_complete_solana_evidence"](p,now-86400,now)
+    base["chains"][0]["status"]="COMPLETE"
+    p.write_text(json.dumps(base))
+    with pytest.raises(audit["IncompleteWindow"],match="SOL_EVIDENCE_WINDOW_OR_IDENTITY_MISMATCH"):
+        audit["read_complete_solana_evidence"](p,now-86400,now+1)
+    p.chmod(0o644)
+    with pytest.raises(audit["IncompleteWindow"],match="SOL_EVIDENCE_FILE_UNSAFE"):
+        audit["read_complete_solana_evidence"](p,now-86400,now)
