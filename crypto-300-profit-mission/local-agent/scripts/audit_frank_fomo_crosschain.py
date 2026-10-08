@@ -19,6 +19,7 @@ import urllib.request
 import urllib.error
 from collections import Counter
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 from mission_agent.meme.fomo_crosschain import (
     FOMO_EIP7702_CODE, RH_CANDIDATE_WALLET, RH_CHAIN_ID, RH_ENTRYPOINT,
@@ -176,6 +177,45 @@ def configured_solana_endpoints(path: Path) -> list[str]:
     if not endpoints or len(endpoints) > 10 or any(not x.startswith("https://") for x in endpoints):
         raise IncompleteWindow("RPC_CONFIG_INVALID")
     return endpoints
+
+
+def derive_robinhood_alchemy_rpcs(solana_endpoints: list[str]) -> list[str]:
+    """Reuse an Alchemy *app* key only across Alchemy's known mainnet hosts.
+
+    No generic host substitution; never send existing Solana RPC credentials to
+    arbitrary RH/public endpoints. The live scanner still checks chain ID 4663.
+    """
+    urls: list[str] = []
+    for raw in solana_endpoints:
+        if not isinstance(raw, str):
+            continue
+        parsed = urlsplit(raw)
+        if (parsed.scheme != "https" or parsed.hostname != "solana-mainnet.g.alchemy.com"
+                or parsed.port is not None or parsed.username or parsed.password
+                or parsed.query or parsed.fragment):
+            continue
+        if not re.fullmatch(r"/v2/[A-Za-z0-9_-]{8,256}", parsed.path):
+            continue
+        target = urlunsplit(("https", "robinhood-mainnet.g.alchemy.com",
+                            parsed.path, "", ""))
+        if target not in urls:
+            urls.append(target)
+    return urls
+
+
+def configured_robinhood_rpc_file(path: Path) -> list[str]:
+    """Optional user-managed 0600 file, unlike public unauthenticated RPCs."""
+    if path.is_symlink():
+        raise IncompleteWindow("RH_RPC_FILE_SYMLINK_UNSAFE")
+    if not path.exists():
+        return []
+    if not path.is_file() or path.stat().st_mode & 0o077:
+        raise IncompleteWindow("RH_RPC_FILE_PERMISSIONS_UNSAFE")
+    entries = [part.strip() for part in path.read_text(encoding="utf-8").split(",")
+               if part.strip()]
+    if len(entries) > 8 or any(not url.startswith("https://") for url in entries):
+        raise IncompleteWindow("RH_RPC_FILE_CONFIG_INVALID")
+    return entries
 
 
 def solana_signatures(rpc: RPC, wallet: str, cutoff: int, until: int) -> list[dict]:
@@ -375,8 +415,9 @@ def scan_robinhood(rpc: RPC, wallet: str, cutoff: int, until: int) -> dict:
     }
 
 
-def audit(hours: int, solana_urls: list[str], rh_url: str, audited_at: int | None = None,
-          cache_dir: Path | None = None) -> dict:
+def audit(hours: int, solana_urls: list[str], rh_url: str | None,
+          audited_at: int | None = None, cache_dir: Path | None = None,
+          rh_extra_urls: list[str] | None = None) -> dict:
     until=int(time.time()) if audited_at is None else int(audited_at)
     if until > int(time.time()) or until <= hours*3600:
         raise ValueError("INVALID_AUDIT_END_TIME")
@@ -413,12 +454,10 @@ def audit(hours: int, solana_urls: list[str], rh_url: str, audited_at: int | Non
                    "diagnostics":failures,"cache_hits":cache.hits,"legs":[]}
         legs+=value.pop("legs")
         report["chains"].append(value)
-    # The official Robinhood RPC can refuse public requests (403).
-    # Keep read-only transport failover separate from on-chain attribution:
-    # an alternate node MUST still return eth_chainId 4663, otherwise
-    # scan_robinhood raises RH_CHAIN_ID_MISMATCH and we preserve PARTIAL.
+    # Prefer supplied authenticated RPCs over public endpoints (which returned
+    # 403 on Mac). An alternate MUST pass eth_chainId 4663 to be accepted.
     rh_endpoints = []
-    for endpoint in ([rh_url] if rh_url else []) + list(DEFAULT_RH_RPCS):
+    for endpoint in ([rh_url] if rh_url else []) + list(rh_extra_urls or []) + list(DEFAULT_RH_RPCS):
         if isinstance(endpoint, str) and endpoint.startswith("https://") and endpoint not in rh_endpoints:
             rh_endpoints.append(endpoint)
     rh_failures = []
@@ -441,6 +480,13 @@ def audit(hours: int, solana_urls: list[str], rh_url: str, audited_at: int | Non
     report["chains"].append(value)
     report["cache"]={"hits":cache.hits,"writes":cache.writes,
                      "enabled":cache_dir is not None}
+    report["rh_provider_diagnostics"]={
+        "authenticated_candidate_count":len(rh_extra_urls or []) + (1 if rh_url else 0),
+        "total_providers_checked":len(rh_endpoints) if value["status"]!="COMPLETE" else None,
+        "authenticated_provider_configured":bool(rh_extra_urls or rh_url),
+        "configure_hint":("AUTHENTICATED_RH_RPC_RECOMMENDED"
+                          if value["status"]!="COMPLETE" else None),
+    }
     report["counts"]=dict(Counter(x["kind"] for x in legs))
     report["paired"]=pair_orders(legs)
     report["paired_counts"]=dict(Counter(x["kind"] for x in report["paired"]))
@@ -457,7 +503,12 @@ def main():
     parser.add_argument("--solana-rpc-file",type=Path,
                         default=Path.home()/"Library/Application Support/FrankMeme/solana_rpc_urls")
     parser.add_argument("--robinhood-rpc",default=os.environ.get("ROBINHOOD_RPC_URL"),
-                        help="Optional HTTPS Robinhood Chain RPC; existing official/publicnode fallbacks are tried")
+                        help="Optional private Robinhood Mainnet RPC URL (never printed)")
+    parser.add_argument("--robinhood-rpc-file",type=Path,
+                        default=Path.home()/"Library/Application Support/FrankMeme/robinhood_rpc_urls",
+                        help="Optional private 0600 HTTPS Robinhood RPC list; never printed")
+    parser.add_argument("--no-reuse-solana-alchemy",action="store_true",
+                        help="Do not derive Robinhood Alchemy endpoint from a configured Solana Alchemy app key")
     parser.add_argument("--output",type=Path,help="Optional research JSON report; never a production DB")
     parser.add_argument("--cache-dir",type=Path,
                         default=Path.home()/"Documents/ChatGPT/frank-fomo-rpc-cache",
@@ -475,8 +526,13 @@ def main():
             "crypto-monitor-frank-only" in str(cache_dir) or
             "mission-control" in str(cache_dir)):
             raise IncompleteWindow("CACHE_DIR_UNSAFE")
+        private_rh=configured_robinhood_rpc_file(args.robinhood_rpc_file)
+        if not args.no_reuse_solana_alchemy:
+            private_rh += derive_robinhood_alchemy_rpcs(endpoints)
+        # De-duplicate credentials without ever printing them.
+        private_rh = list(dict.fromkeys(private_rh))
         result=audit(args.hours,endpoints,args.robinhood_rpc,args.as_of_epoch,
-                     cache_dir=cache_dir)
+                     cache_dir=cache_dir,rh_extra_urls=private_rh)
     except (IncompleteWindow, ValueError):
         print('{"status":"PRECHECK_FAILED","production_db_writes":0,"gmail_sent":0}')
         return 2
@@ -507,6 +563,7 @@ def main():
         "paired_preview":result["paired"][:15],
         "evidence_rows_total":len(result["evidence"]),
         "rpc_cache":result["cache"],
+        "rh_provider_diagnostics":result.get("rh_provider_diagnostics", {}),
         "full_evidence_file":str(args.output) if args.output else None,
         "production_db_writes":0,"gmail_sent":0,"follow_signals_changed":False,
     }
