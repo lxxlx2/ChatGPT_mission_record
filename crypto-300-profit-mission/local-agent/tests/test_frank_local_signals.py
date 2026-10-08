@@ -363,3 +363,24 @@ def test_install_guard_is_behavioral_and_has_no_side_effects(tmp_path):
     assert completed.returncode!=0
     assert "MISSION_LOOP_RESTART_NOT_AUTHORIZED" in completed.stderr
     assert not (home/"Library").exists()
+
+
+def test_direct_usdc_with_extra_intermediate_flow_has_undetermined_cost():
+    t=tx()
+    for field in ("preTokenBalances","postTokenBalances"):
+        t["meta"][field][1]["mint"]=USDC
+    # The parser can see an owned token intermediate even if it nets to zero.
+    original_normalize=__import__("mission_agent.signals.classifier",fromlist=["normalize"]).normalize
+    import mission_agent.signals.classifier as cl
+    def with_extra(*args,**kwargs):
+        result=original_normalize(*args,**kwargs)
+        result["wallet_token_transfer_flows"]=[
+            {"mint":"EXTRA_RESIDUAL","direction":"IN","raw_amount":"10"}]
+        return result
+    from unittest.mock import patch
+    with patch.object(cl,"normalize",with_extra):
+        classified=cl.classify("extra-route",t,WALLET)
+    assert classified["classification"]=="ACTIVE_TRADE"
+    assert classified["trade"]["amount_predicate"]=="UNDETERMINED"
+    assert classified["trade"]["amount_predicate_reason"]=="ROUTED_RESIDUAL_ASSETS"
+    assert classified["trade"]["route_intermediate_evidence_status"]=="UNVERIFIED"

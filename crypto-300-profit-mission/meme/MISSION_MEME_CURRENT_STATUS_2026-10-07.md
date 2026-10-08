@@ -422,3 +422,21 @@ Remediation applied on PR #29 only, with these explicit controls:
 **Forbidden during review:** main merge, local installer invocation, LaunchAgent kickstart, production `forward.sqlite` writes, historical migration/backfill, strategy threshold changes, sending Gmail, new automation, live trading.
 
 **Review standard:** FAIL until H3 replay and all new patch tests/independent review pass; only then can a separate controlled merge/deploy be considered.
+
+
+## 14. 2026-10-08 second review FAIL: X1-X8 repair in PR #29 only
+
+An independent second review of `a51517b8` reported **814 collected, 813 passed, 1 failed**, plus HIGH/MEDIUM safety gaps. This is evidence for that **older head only**, not the current remediation branch. The reviewer confirmed the previous fixes caught 9 pre-fix failures. H3 historical classifier replay and M5 RARI fixture remain missing.
+
+Subsequent review-branch changes:
+
+- **X1/X2:** Actual classifier now assigns `NO_INTERMEDIATE_TRANSFER_OBSERVED` only when parser flow data is present and contains no unrelated mint, permitting SOL/USD equivalent **for read-only research only**. Absent flow evidence or additional intermediate mint remains `UNVERIFIED`, with no synthetic gate promotion. All historical SOL-quote V1 gates remain direct-USDC-only. Routed USDC gross input with extra intermediate flow also becomes `UNDETERMINED`.
+- **X3:** Isolated CA acceptance checks a stable DB schema and SHA256 of the **existing immutable signatures prefix**, allowing new rows from the separately running live scanner. Health compares stable content after excluding known heartbeat fields; LaunchAgent plists are hashed. A fake-PROD integrity-only shell harness and behavioral tests are added. These are **selected invariant checks, not full production immutability proof**.
+- **X4:** `store._known_usdc_trade` now reuses `evaluator.known_usdc_event`; synthetic `SOL_EVENT_TIME_USDC_VERIFIED` is not known USDC in either frozen gate or position accounting.
+- **X5:** Unresolved common funders, signers and consolidation edges prevent the categorical `NO_MATERIAL_CONTROL_CLUSTER_FOUND` conclusion even with otherwise normalized metrics.
+- **X6:** Only valid `https://` RPC endpoints without embedded userinfo or whitespace are accepted; invalid endpoints fail with a generic exception. Dashboard job error messages are constant redacted strings, not untrusted exception text.
+- **X7/X8:** Behavioral tests added for sidecar isolation, default installer refusal, outbox guard, fake-prod acceptance and input integrity. Replay transition counts compare signal-relevant semantic fields; complete audit metadata diffs remain separately visible.
+
+**Remaining blocking gates:** independent pytest / compileall / shell syntax run for current HEAD, source-vs-candidate historical replay on copied real `forward.sqlite` plus raw transactions, H3 user approval for altered USDT/DEX classifications, and RARI-specific inclusion/exclusion determination. No reviewed historical signal transition may be approved from synthetic fixtures alone.
+
+**No merge, no local deployment, no new monitoring/automation, no live trades, no sending Gmail, no LaunchAgent restart.** `PRODUCTION_TRADING=NO_GO`.
