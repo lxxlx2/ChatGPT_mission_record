@@ -30,7 +30,7 @@ DEFAULT_RH_RPC = "https://rpc.mainnet.chain.robinhood.com"
 MAX_SOL_PAGES = 15
 MAX_SOL_TRANSACTIONS_PER_WALLET = 1000
 MAX_EVM_LOGS = 3000
-MAX_EVM_REQUESTS = 600
+MAX_EVM_REQUESTS = 2000
 RPC_MIN_INTERVAL_SECONDS = 0.15
 RPC_RETRY_DELAYS_SECONDS = (1.0, 2.0, 4.0)
 
@@ -282,16 +282,27 @@ def rh_getlogs(rpc: RPC, first: int, last: int, topics: list) -> list[dict]:
         if calls>MAX_EVM_REQUESTS:
             raise IncompleteWindow("RH_RPC_REQUEST_BUDGET_EXCEEDED")
         try:
+            rpc.progress["log_chunks_attempted"] = calls
             logs=rpc.call("eth_getLogs",[{"fromBlock":hex(a),"toBlock":hex(b),"topics":topics}])
             if not isinstance(logs,list):
                 raise ValueError("RH_LOGS_NOT_ARRAY")
-        except (ValueError, urllib.error.URLError, IncompleteWindow, TimeoutError):
-            if a>=b:
-                raise IncompleteWindow("RH_LOGS_UNAVAILABLE")
+        except (ValueError, urllib.error.URLError, IncompleteWindow, TimeoutError) as exc:
+            # Splitting cannot fix auth errors, 429, transport failure or an
+            # unsupported RPC method. Preserve the actual failure stage.
+            reason = safe_error(exc)
+            if (reason in {"RPC_HTTP_429", "RPC_HTTP_401", "RPC_HTTP_403",
+                           "RPC_TRANSPORT_FAILURE", "RPC_JSON_PARSE_FAILURE",
+                           "RPC_ERROR_-32601", "RPC_ERROR_-32602",
+                           "RPC_ERROR_-32016"} or
+                    reason.startswith("RPC_HTTP_5")):
+                raise IncompleteWindow(reason) from None
+            if a >= b:
+                raise IncompleteWindow("RH_LOGS_UNAVAILABLE_" + reason) from None
             mid=(a+b)//2
             stack.extend(((mid+1,b),(a,mid)))
             continue
         result+=logs
+        rpc.progress["log_chunks_completed"] = rpc.progress.get("log_chunks_completed", 0) + 1
         if len(result)>MAX_EVM_LOGS:
             raise IncompleteWindow("RH_LOG_RESULT_BUDGET_EXCEEDED")
     unique={}
@@ -442,6 +453,8 @@ def main():
     args=parser.parse_args()
     try:
         endpoints=configured_solana_endpoints(args.solana_rpc_file)
+        if args.cache_dir.is_symlink():
+            raise IncompleteWindow("CACHE_DIR_SYMLINK_UNSAFE")
         cache_dir=args.cache_dir.resolve()
         if (cache_dir.is_symlink() or
             "FrankMeme" in str(cache_dir) or
