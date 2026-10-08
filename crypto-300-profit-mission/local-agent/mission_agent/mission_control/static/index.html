@@ -89,11 +89,6 @@
           <div class="eyebrow">MEME ON-CHAIN RESEARCH</div>
           <h2>CA 链上研究</h2>
         </div>
-        <div class="cluster-trust">
-          <span>Finalized RPC</span>
-          <span>本地缓存</span>
-          <span>不猜身份</span>
-        </div>
       </section>
 
       <section class="cluster-search panel">
@@ -102,18 +97,14 @@
           <div class="cluster-search-row">
             <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴 token CA" />
             <select id="cluster-preset" name="preset" title="扫描深度">
-              <option value="quick">快速</option>
-              <option value="standard" selected>标准</option>
+              <option value="quick" selected>快速</option>
+              <option value="standard">标准</option>
               <option value="deep">深度</option>
             </select>
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">标准：Top20 全部解析；先浅扫前 6 个 owner（12 + 8），只对可疑钱包自动加深到 30 + 12。</div>
-          <div class="preset-guide">
-            <div><b>快速</b><span>Top20 全解析；浅扫前 6 个 owner；8 笔目标币历史 + 4 笔 funding。用于第一轮排雷。</span></div>
-            <div class="active"><b>标准</b><span>Top20 全解析；前 6 个 owner 先做 12 + 8；发现关系证据、重大未确认角色后才自动加深到 30 + 12。</span></div>
-            <div><b>深度</b><span>Top20 owner 全部深扫；100 + 50。仅用于高价值项目或强烈怀疑分仓/集群，免费 RPC 压力最大。</span></div>
-          </div>
+          <div class="cluster-preset-help" id="cluster-preset-help">快速模式：先查权限、主池与 Top20 地址；需要深度钱包归因时再切换模式。</div>
+
         </form>
       </section>
 
