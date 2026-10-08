@@ -241,14 +241,7 @@ function renderRuntime(runtime, control) {
       <strong>Frank 监控${translated(runtimeLabel,rawStatus,'未知')}</strong>
       <span>· ${esc(heartbeatText)}</span>
       <span>· 跟单引擎${esc(controlText)}</span>
-    </div>
-    <details class="tech-details">
-      <summary>技术信息</summary>
-      <div>Frank PID：${esc(runtime.pid ?? '未知')}</div>
-      <div>原始状态：${esc(rawStatus)}</div>
-      <div>生产交易：${esc(runtime.production_trading ?? '未知')}</div>
-      <div>最后处理 Slot：${esc(runtime.last_processed_slot ?? '未知')}</div>
-    </details>`;
+    </div>`;
 }
 
 function renderStats(candidates, runtime, coverage) {
