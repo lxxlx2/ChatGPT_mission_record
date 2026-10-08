@@ -175,3 +175,27 @@ def test_replay_is_read_only_and_reproduces_source_state_with_terminal_clock(tmp
     assert report["timing_equivalence"]["terminal_clock"] is not None
     assert (work/"baseline.sqlite").is_file()
     assert (work/"candidate.sqlite").is_file()
+
+
+def test_replay_report_verifies_source_sha256(tmp_path,monkeypatch):
+    source,_=make_source(tmp_path)
+    extra=tmp_path/"health.json"
+    extra.write_text('{"status":"OK"}')
+    original=replay.sha256_file(source)
+    work=tmp_path/"hash-work"
+    output=work/"report.json"
+    run_main(
+        monkeypatch,"--source",source,"--policy",POLICY,
+        "--work",work,"--output",output,"--integrity-file",extra,
+    )
+    report=json.loads(output.read_text())
+    assert report["integrity_check"]=="PASS"
+    assert report["integrity_verified_file_count"]==2
+    assert report["verified_integrity_files_sha256"][str(source.resolve())]==original
+    assert report["production_files_changed"]=="NOT_VERIFIED_FROM_SOURCE_COPY"
+
+
+def test_replay_outbox_guard_is_not_python_assert():
+    text=SCRIPT.read_text()
+    assert 'raise RuntimeError("NON_DRY_RUN_OUTBOX")' in text
+    assert "assert not ledger.db.execute" not in text

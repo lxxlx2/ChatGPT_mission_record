@@ -220,9 +220,10 @@ def replay(
         for row in ledger.db.execute("SELECT signal_id,subject,body,content_hash FROM email_content ORDER BY signal_id")
     }
     summary=engine.summary()
-    assert not ledger.db.execute(
+    if ledger.db.execute(
         "SELECT 1 FROM outbox WHERE status!='DRY_RUN_AUDIT'"
-    ).fetchone(),"NON_DRY_RUN_OUTBOX"
+    ).fetchone():
+        raise RuntimeError("NON_DRY_RUN_OUTBOX")
     ledger.db.close()
     return {
         "signals":signals,"states":states,"evaluations":evaluations,"emails":emails,
@@ -305,12 +306,22 @@ def _signal_counter(signals: dict) -> Counter:
     return Counter(_signal_identity(body) for body in signals.values())
 
 
+def sha256_file(path: Path) -> str:
+    digest=hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda:handle.read(1024*1024),b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def main() -> None:
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--source",type=Path,required=True)
     p.add_argument("--policy",type=Path,required=True)
     p.add_argument("--work",type=Path,required=True)
     p.add_argument("--output",type=Path,required=True)
+    p.add_argument("--integrity-file",type=Path,action="append",default=[],
+                   help="Additional read-only files to hash before and after replay (health.json / plists)")
     args=p.parse_args()
 
     source=_existing_file(args.source,"SOURCE")
@@ -319,6 +330,12 @@ def main() -> None:
     output=_output_in_workspace(args.output,work)
     baseline_path=work/"baseline.sqlite"
     candidate_path=work/"candidate.sqlite"
+    verification_files=[source]
+    for extra in args.integrity_file:
+        path=_existing_file(extra,"INTEGRITY_FILE")
+        if path not in verification_files:
+            verification_files.append(path)
+    before={str(path):sha256_file(path) for path in verification_files}
 
     # All path validation happens before the first write.
     work.mkdir(mode=0o700)
@@ -404,7 +421,9 @@ def main() -> None:
         "study":"FRANK_CLASSIFIER_CANDIDATE_REPLAY_V2",
         "source":str(source),"source_open_mode":"READ_ONLY",
         "workspace":str(work),"report_output":str(output),
-        "production_files_changed":False,"live_signal_sent":False,"production_trading":"NO_GO",
+        "production_files_changed":"NOT_VERIFIED_FROM_SOURCE_COPY",
+        "live_signal_sent":False,"production_trading":"NO_GO",
+        "verified_integrity_files_sha256":before,
         "timing_equivalence":{
             "terminal_clock":terminal_clock,
             "per_signature_sources":baseline["timing_sources"],
@@ -439,7 +458,13 @@ def main() -> None:
         "acceptance":acceptance,
     }
     db.close()
-
+    after={str(path):sha256_file(path) for path in verification_files}
+    if after!=before:
+        raise RuntimeError("READ_ONLY_INPUT_INTEGRITY_CHANGED")
+    result["integrity_check"]="PASS"
+    result["integrity_verified_file_count"]=len(verification_files)
+    # Snapshot check only: source is normally a copy, not proof about the live
+    # production DB. Do not claim production unchanged from static strings.
     if output.exists():raise ValueError("OUTPUT_MUST_NOT_EXIST")
     _exclusive_write_text(output,json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print(json.dumps({
@@ -457,6 +482,8 @@ def main() -> None:
         "candidate_evaluation_delta_count":len(candidate_evaluation_deltas),
         "candidate_email_delta_count":len(candidate_email_deltas),
         "acceptance":acceptance,"output":str(output),
+        "integrity_check":result["integrity_check"],
+        "integrity_verified_file_count":len(verification_files),
     },ensure_ascii=False,indent=2))
 
 

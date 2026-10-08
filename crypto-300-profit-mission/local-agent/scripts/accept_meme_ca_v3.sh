@@ -19,6 +19,23 @@ die(){ echo "ERROR: $*" >&2; exit 1; }
 
 [ -d "$LOCAL_AGENT" ] || die "LOCAL_AGENT_NOT_FOUND"
 [ -f "$PROD/forward.sqlite" ] || die "PRODUCTION_DB_NOT_FOUND"
+[ -f "$PROD/health.json" ] || die "PRODUCTION_HEALTH_NOT_FOUND"
+
+# Hash the original DB, health and LaunchAgent definitions before starting the
+# isolated acceptance. A concurrent production write is a FAIL, never "untouched".
+LOOP_PLIST="$HOME/Library/LaunchAgents/com.$(id -un).frank-meme.loop.plist"
+DASH_PLIST="$HOME/Library/LaunchAgents/com.$(id -un).frank-meme.dashboard.plist"
+integrity_snapshot() {
+  local file
+  for file in "$PROD/forward.sqlite" "$PROD/health.json" "$LOOP_PLIST" "$DASH_PLIST"; do
+    if [ -f "$file" ]; then
+      shasum -a 256 "$file"
+    else
+      printf 'MISSING %s\n' "$file"
+    fi
+  done
+}
+INTEGRITY_BEFORE="$(integrity_snapshot)"
 [ -x "$PY" ] || die "VENV_PYTHON_NOT_FOUND"
 [ -s "$RPC_FILE" ] || die "AUTHENTICATED_SOLANA_RPC_NOT_CONFIGURED"
 
@@ -173,16 +190,18 @@ PY
 
 [ ! -e "$CONTROL/mission-control.sqlite" ] || die "MISSION_CONTROL_DB_CREATED"
 [ ! -e "$CONTROL/sol-normalized-v1.sqlite" ] || die "SOL_MIRROR_DB_CREATED"
+INTEGRITY_AFTER="$(integrity_snapshot)"
+[ "$INTEGRITY_BEFORE" = "$INTEGRITY_AFTER" ] || die "PRODUCTION_DB_HEALTH_OR_LAUNCHAGENT_INTEGRITY_CHANGED"
+echo "Production DB / health.json / LaunchAgent plist before-after SHA256: PASS"
 
 echo
 echo "===== ACCEPTANCE RESULT ====="
 echo "ISOLATED_REAL_CA_ACCEPTANCE: PASS"
 echo "No Mission Control decision DB: PASS"
 echo "No SOL-normalized sidecar: PASS"
-echo "Production state migration: NOT PERFORMED"
-echo "Historical backfill: NOT PERFORMED"
-echo "v1_seen: UNTOUCHED"
-echo "Notifications: NOT RUN"
-echo "LaunchAgents: UNTOUCHED"
+echo "Production files unchanged during this acceptance: VERIFIED_BY_SHA256"
+echo "No migration/backfill function invoked by this acceptance script"
+echo "No Mission Control loop or delivery runner invoked by this acceptance script"
+echo "LaunchAgent plists unchanged: VERIFIED_BY_SHA256"
 echo "PRODUCTION_TRADING: NO_GO"
 echo "Artifacts: $CONTROL"
