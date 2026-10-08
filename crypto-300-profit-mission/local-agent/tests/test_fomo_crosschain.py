@@ -150,7 +150,8 @@ def test_multi_token_or_multi_order_not_wrongly_called_sell():
 
 def test_cross_chain_relay_join_is_exact_unique_and_not_followable():
     oid="0x"+"f"*64
-    pay={"kind":"RELAY_PAY","order_id":oid,"chain":"SOL","asset":fc.USDC,"tx_id":"sol1"}
+    pay={"kind":"RELAY_PAY","order_id":oid,"chain":"SOL","asset":fc.USDC,"tx_id":"sol1",
+         "reason":"FOMO_COSIGNED_RELAY_DEPOSIT"}
     fill={"kind":"BUY_FILL","order_id":oid,"chain":"RH","asset":"0x"+"a"*40,"tx_id":"rh1"}
     other={"kind":"RELAY_PAY","order_id":"0x"+"e"*64,"chain":"SOL","asset":fc.USDC,"tx_id":"sol2"}
     joined=fc.pair_orders([pay,fill,other])
@@ -184,7 +185,7 @@ def test_collector_requires_true_rpc_completeness(monkeypatch):
     class NoPage:
         def call(self,method,params):
             if method=="getSignaturesForAddress":
-                return [{"signature":"one","slot":10,"blockTime":999}]
+                return [{"signature":str(i),"slot":10,"blockTime":999} for i in range(1000)]
             if method=="getTransaction":
                 return None
             raise AssertionError(method)
