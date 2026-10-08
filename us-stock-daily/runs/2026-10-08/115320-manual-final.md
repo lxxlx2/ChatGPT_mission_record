@@ -1,0 +1,14 @@
+run_time: 2026-10-08T11:53:20+07:00
+mode: manual_delivery_recovery
+status: DELIVERED
+report_date: 2026-10-08
+prior_0737_and_0837_status: BLOCKED_WITH_REASON
+subject: 美股每日晨报｜2026-10-08｜正式补发
+gmail_id: 1a119d9b4b8d44a7
+gmail_readback: PASS
+git_report: us-stock-daily/reports/daily/2026/2026-10/2026-10-08.md
+git_commit: d3f0cc240078a064b20b0f4d6d6368348f56c500
+body_match: PASS
+qa_sections: 12
+new_task: false
+schedule_changed: false
