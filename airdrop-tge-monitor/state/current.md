@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-08 19:57 Asia/Bangkok
+Updated: 2026-10-08 20:51 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-08 19:54:49 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-08 20:50:01 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-08 05:47:29 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-08/195449-final-retry.md
-- latest_scheduled_shard: 3
-- latest_executed_shard: 1
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-08/205001-final.md
+- latest_scheduled_shard: 0
+- latest_executed_shard: 3
 - latest_stale_shard_recovery: true
-- latest_candidate_count: 3
+- latest_candidate_count: 1
 - latest_triggered_events: 0
-- latest_identity_failures: 2
+- latest_identity_failures: 0
 - latest_source_failures: 1
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: silent
@@ -36,5 +36,6 @@ Timezone: Asia/Bangkok
 - Autheo THEO: unrelated to Theo Network; rejected identity collision.
 - Earlier attempts without terminal finals remain historical gaps; 2026-10-08 18:45 attempt also lacks observed terminal.
 - 2026-10-08 19:54 attempt plus 19:57 terminal final-retry persisted.
+- 2026-10-08 20:50 invocation: attempt write blocked by safety checks; 20:51 terminal 205001-final.md persisted. Urgent and stale Shard 3 checked; partial due to Cambria Tier A readback gap.
 - Last fully successful run remains 2026-10-08 05:47:29 Asia/Bangkok; partial run is not success.
 - No new Tier A/B material ACTION; Gmail not attempted; ChatGPT silent.
