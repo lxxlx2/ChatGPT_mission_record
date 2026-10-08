@@ -760,6 +760,32 @@ function clusterProgressDetail(job) {
     : '正在执行只读链上分析…';
 }
 
+
+function renderClusterPreview(job) {
+  const node=$('cluster-preview');
+  const p=job?.preview;
+  if (!node || !p) { if (node) node.hidden=true; return; }
+  const known=p.token_status==='OK';
+  const authRisk=known && (p.mint_authority != null || p.freeze_authority != null);
+  const extRisks=(p.active_extension_risks || []).length;
+  const extUnknown=(p.unresolved_extension_risks || []).length;
+  const authority= !known ? '权限尚未验证'
+    : (authRisk || extRisks) ? '存在活动权限或扩展风险'
+    : extUnknown ? '部分扩展风险待核实'
+    : '已解析权限未发现活动风险';
+  const ready=p.market_status==='OK';
+  node.hidden=false;
+  node.innerHTML=
+    '<div class="cluster-preview-head"><strong>已取得基础行情，持仓与资金关系仍在扫描</strong><span>临时结果，待链上报告核实</span></div>' +
+    '<div class="cluster-preview-items">' +
+    fact('代币',esc([p.name,p.symbol].filter(Boolean).join(' / ') || '名称未确认')) +
+    fact('参考价',ready ? esc(usd(p.price_usd,8)) : '暂不可用') +
+    fact('市值',ready ? esc(usd(p.market_cap_usd)) : '暂不可用') +
+    fact('主池流动性',ready ? esc(usd(p.liquidity_usd)) : '暂不可用') +
+    fact('权限',esc(authority)) +
+    '</div><p>这不是完整的持仓集中度或买入建议。钱包聚类、Top20 实际持有人及可执行报价正在单独核对。</p>';
+}
+
 function clusterErrorMessage(error) {
   const raw=((error?.type || '') + ' ' + (error?.message || '')).toUpperCase();
   if (raw.includes('429') || raw.includes('RATE_LIMIT')) {
@@ -802,6 +828,7 @@ function renderClusterGroup(group, kind) {
 
 function renderClusterReport(report) {
   $('cluster-result').hidden = false;
+  $('cluster-preview').hidden = true;
   const coverage = report.coverage || {};
   const metrics = report.metrics || {};
   const mint = report.mint || '';
@@ -815,7 +842,6 @@ function renderClusterReport(report) {
   const market = report.market || {};
   const mainPair = market.main_pair || {};
   const quote = report.execution_quote_30_usdc || {};
-  const frank = report.frank || {};
   const assessment = report.assessment || {};
 
   const observedAt = Number(report.observed_at);
@@ -828,7 +854,8 @@ function renderClusterReport(report) {
 
   $('cluster-summary').innerHTML = [
     ['Token', '<span>' + esc(tokenName) + '</span><span class="subvalue">' + esc(tokenSymbol) + '</span>'],
-    ['CA', '<code class="summary-ca">' + esc(mint) + '</code>' + copyButton(mint,'复制 CA')],
+    ['CA', '<code class="summary-ca">' + esc(mint) + '</code>' + copyButton(mint,'复制 CA') + '<span class="subvalue">' + researchLinks(mint) + '</span>'],
+    ['参考价', market.status==='OK' ? esc(usd(market.price_usd,8)) : '<span class="unresolved">不可用</span>'],
     ['市值', esc(usd(market.market_cap_usd))],
     ['主池流动性', esc(usd(mainPair.liquidity_usd))],
     ['观测时间', esc(observedText) + '<span class="subvalue">' + esc(observedAge) + '</span>'],
@@ -876,7 +903,8 @@ function renderClusterReport(report) {
       '<div><b>Holder / Cluster</b><p>' + esc(clusterConclusion) + '</p></div>' +
       '<div><b>市场状态</b><p>' + esc(marketConclusion) + '</p></div>' +
     '</div>' +
-    renderAssessmentHistory(report.assessment_history);
+    '<details class="cluster-assessment-history"><summary>历史判断变化（仅供复核）</summary>' +
+    renderAssessmentHistory(report.assessment_history) + '</details>';
 
   const supplyApprox = Number(report.supply_raw) / (10 ** Number(report.decimals || 0));
   $('cluster-token-profile').innerHTML =
@@ -916,15 +944,19 @@ function renderClusterReport(report) {
     fact('主池 / DEX','<span>' + esc((mainPair.dex_id || '未确认') + ' · ' + short(mainPair.pair_address || '',7,5)) + '</span>',pairLink + ' ' + marketUrl);
 
   const primary = [
-    'RAW_TOP10_PCT','KNOWN_EX_LP_TOP10_PCT','EX_LP_TOP10_PCT','EX_SPECIAL_TOP10_PCT',
-    'LARGEST_CONFIRMED_RELATION_GROUP_PCT','LARGEST_PROBABLE_CONTROL_CLUSTER_PCT',
-    'LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT','DEV_LINKED_CLUSTER_PCT',
-    'CLUSTER_ADJUSTED_TOP10_PCT','UNRESOLVED_MATERIAL_HOLDER_PCT'
+    'RAW_TOP10_PCT','KNOWN_EX_LP_TOP10_PCT','DEV_LINKED_CLUSTER_PCT',
+    'LARGEST_PROBABLE_CONTROL_CLUSTER_PCT','UNRESOLVED_MATERIAL_HOLDER_PCT'
   ];
-  $('cluster-metrics').innerHTML = primary.map(key =>
+  const extra = [
+    'EX_LP_TOP10_PCT','EX_SPECIAL_TOP10_PCT','LARGEST_CONFIRMED_RELATION_GROUP_PCT',
+    'LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT','CLUSTER_ADJUSTED_TOP10_PCT'
+  ];
+  const renderConcentration = key =>
     '<div class="cluster-metric"><span>' + esc(clusterMetricLabel[key] || key) + '</span><strong>' +
-    clusterMetricValue(metrics[key]) + '</strong></div>'
-  ).join('');
+    clusterMetricValue(metrics[key]) + '</strong></div>';
+  $('cluster-metrics').innerHTML = primary.map(renderConcentration).join('') +
+    '<details class="cluster-extra-metrics"><summary>查看其余集中度指标</summary><div class="cluster-metrics-extra">' +
+    extra.map(renderConcentration).join('') + '</div></details>';
 
   $('cluster-holders').innerHTML = (report.holders || []).map(h =>
     '<tr><td>' + esc(h.rank) + '</td><td>' + ownerCell(h.owner) + '</td><td>' +
@@ -973,21 +1005,6 @@ function renderClusterReport(report) {
       '<div class="limitations">' + (report.limitations || []).map(x => '<p>' + esc(x) + '</p>').join('') + '</div>' +
     '</details>';
 
-  let frankStatus='<span class="muted">Frank 当前没有观察到这个 CA</span>';
-  if (frank.status==='OBSERVED') {
-    frankStatus=frank.position_state==='OPEN'
-      ? '<span class="ok-text">已观察，当前仓位 OPEN</span>'
-      : '<span class="warn-text">已观察，当前仓位 ' + esc(frank.position_state || '未知') + '</span>';
-  } else if (frank.status==='UNAVAILABLE') {
-    frankStatus='<span class="unresolved">Frank 数据不可用：' + esc(frank.reason || 'UNKNOWN') + '</span>';
-  }
-  $('cluster-frank').innerHTML =
-    fact('状态',frankStatus) +
-    fact('买 / 卖次数','<span>' + esc((frank.buy_count ?? 0) + ' / ' + (frank.sell_count ?? 0)) + '</span>') +
-    fact('最近动作','<span>' + esc(frank.latest_side || '无') + '</span>') +
-    fact('V1 信号','<span>' + esc(frank.signal_type || '无') + '</span>') +
-    fact('最近时间','<span>' + (frank.latest_at ? esc(age(frank.latest_at)) : '无') + '</span>');
-
   const websites=(market.websites || []).map(url => safeHttpUrl(url)).filter(Boolean).map(url =>
     '<a class="link-btn" href="' + esc(url) + '" target="_blank" rel="noreferrer">网站 ↗</a>'
   ).join('');
@@ -1021,11 +1038,13 @@ async function pollClusterJob(jobId) {
       return;
     }
     if (job.status === 'ERROR') {
+      $('cluster-preview').hidden = true;
       $('cluster-submit').disabled = false;
       $('cluster-submit').textContent = '重新查询';
       clusterStatus('error','查询失败',clusterErrorMessage(job.error));
       return;
     }
+    renderClusterPreview(job);
     clusterStatus('running',
       job.status === 'QUEUED' ? '等待开始分析' : '正在扫描链上数据',
       clusterProgressDetail(job));
@@ -1047,6 +1066,7 @@ $('cluster-form').addEventListener('submit', async (event) => {
   $('cluster-submit').disabled = true;
   $('cluster-submit').textContent = '分析中…';
   $('cluster-result').hidden = true;
+  $('cluster-preview').hidden = true;
   clusterStatus('running','准备链上分析','只读查询，不连接钱包，不发交易。');
   try {
     const r = await fetch('/api/cluster-analysis',{
