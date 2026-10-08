@@ -160,6 +160,9 @@ def test_cross_chain_relay_join_is_exact_unique_and_not_followable():
     assert good["kind"]=="PAIRED_BUY_EVIDENCE"
     assert good["attribution"]=="THIRD_PARTY_UNVERIFIED"
     assert good["follow_signal_eligible"] is False
+    assert good["rh_token_contract"]=="0x"+"a"*40
+    assert good["rh_token_decimals"] is None
+    assert good["solana_cash_decimals"]==6
     dup=fc.pair_orders([pay,fill,{**fill,"tx_id":"rh2"}])
     assert dup[0]["kind"]=="INCOMPLETE_OR_AMBIGUOUS_ORDER"
 
