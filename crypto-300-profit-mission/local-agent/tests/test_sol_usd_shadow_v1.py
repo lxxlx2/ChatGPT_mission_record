@@ -31,12 +31,12 @@ def signals(ledger):
     return [json.loads(r[0]) for r in ledger.db.execute('select body from signals order by created_at,signal_type')]
 
 
-def test_verified_sol_usdc_shadow_recovers_same_accumulation_and_multiple_shape(tmp_path):
+def test_sol_usdc_shadow_research_does_not_authorize_frozen_v1_signals(tmp_path):
     ledger=Ledger(tmp_path/'shadow.sqlite');engine=Engine(ledger,load_policy(POLICY),dry_run=True)
     put_sol(ledger,engine,'first',100000,130)
     put_sol(ledger,engine,'second',101200,130)
     put_sol(ledger,engine,'third',102700,50)
-    assert [s['signal_type'] for s in signals(ledger)]==['FRANK_ACCUMULATION_SIGNAL','FRANK_MULTIPLE_SIGNAL']
+    assert signals(ledger)==[]  # SOL synthetic USDC remains barred by frozen direct-USDC policy.
     state=json.loads(ledger.db.execute('select body from v1_states').fetchone()[0])
     assert all(e['quote_asset']=='EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' for e in state['events'])
     assert all(e['original_quote']['quote_asset']=='SOL' for e in state['events'])

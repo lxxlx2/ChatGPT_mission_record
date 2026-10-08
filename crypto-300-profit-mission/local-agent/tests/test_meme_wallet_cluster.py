@@ -442,3 +442,33 @@ def test_rpc_secret_never_emitted_in_report():
     assert report["rpc_endpoint"]=="PRIMARY"
     assert report["coverage"]["rpc_endpoint_calls"]=={"PRIMARY":3}
     assert report["coverage"]["rpc_endpoint_failures"]=={"PRIMARY":1}
+
+
+def test_rpc_secret_stays_out_of_persisted_latest_and_loader(tmp_path):
+    from mission_agent.mission_control.server import ClusterJobManager, _atomic_write_text
+    import json
+    mint="So11111111111111111111111111111111111111112"
+    secret="SECRET123"
+    a=analyzer()
+    a.mint=mint
+    url="https://rpc.example.com/?api-key="+secret
+    class AuthRPC:
+        endpoint=url
+        endpoints=[url]
+        endpoint_calls={url:1}
+        endpoint_failures={url:0}
+        calls=1
+        cache_hits=0
+    a.rpc=AuthRPC()
+    a._scan_holder=lambda *args:None
+    report=a.analyze()
+    manager=ClusterJobManager(tmp_path/"root")
+    report_path=manager.report_root/mint/"latest.json"
+    report_path.parent.mkdir(parents=True,exist_ok=True)
+    _atomic_write_text(report_path,json.dumps(report,sort_keys=True))
+    persisted=report_path.read_text()
+    api_payload=json.dumps(manager.latest(mint),sort_keys=True)
+    assert secret not in persisted
+    assert secret not in api_payload
+    assert url not in persisted
+    assert url not in api_payload
