@@ -510,3 +510,24 @@ Still NOT_RUN: H3 production copied-history baseline/candidate replay and genuin
 **Critical evidence limitation:** Current review-branch changes are committed via GitHub connector only; **no fresh author-executed pytest, shell syntax, standalone Ledger RUNNING harness, or production replay on the exact new HEAD has been performed**. No GitHub CI run is known. Fifth-review 845 passes do NOT transfer to this code.
 
 **Authority:** PR #29 `DRAFT/REVIEW_ONLY`; `CODE_REVIEW=FAIL_PENDING_SIXTH_INDEPENDENT_REVIEW`; `CAN_MERGE=NO`, `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`. No restart, Gmail send, live CA, raw-history replay, backfill or production change.
+
+
+## 18. 2026-10-08 final targeted cleanup after sixth conditional-PASS review
+
+**Independent sixth review evidence, exact older HEAD `3065d14af57392695e4f154acbe4aa82a95f45be`:** `CODE_REVIEW=PASS (CONDITIONAL)`, 862 pytest passed / 0 failed / 0 skipped, compileall and tracked shell syntax passed; real Ledger RUNNING/RETRY harness 7 checks passed, 9 negative controls detected. **These are verified review results for the old HEAD only**, not an automatic PASS for the later cleanup commits.
+
+The user requested to **finish the outstanding code cleanup without expanding the Frank/Dashboard feature scope**. All modifications below are restricted to the existing PR #29 review branch; **no changes to main or deployed Mac runtime**.
+
+**Final cleanup scope:**
+
+- **L-1: health↔database schema binding.** `scripts/meme_acceptance_integrity.py` now validates health profile against the SQLite schema *within the same read-only database snapshot*: `LEDGER_FRANK_LOCAL` requires an Engine-owned `v1_states` table; `REPOSITORY_FRANK_SHADOW` must not contain that table. This prevents a complete shadow health JSON from being accepted alongside the live Ledger's DB. It is a narrow identity binding, not proof of all Repository migration tables.
+- **T-1: pre-capture identifier test.** A baseline already containing the wrong Ledger `identifier` must be rejected, in addition to existing tests for post-baseline tampering.
+- **R-1: installer candidate TOCTOU.** The candidate policy is snapshotted once to a private temp file before the actual policy gate and Gmail OAuth readiness check. The approved bytes are taken from that same snapshot during installation, never reread from the original `POLICY` after preflight delay. After atomic copy, `shasum -a 256` must match the external `APPROVED_POLICY_SHA256`. If this check fails, the previous runtime policy bytes are restored (or the newly created runtime policy is removed); no new approved hash, RPC credential, plist, runner or launchctl mutations are permitted by this failure path.
+- **Targeted tests:** Real Ledger schema fixtures include the Engine-owned `v1_states`; shadow fixtures are schema-distinct; complete shadow-health + Ledger DB must fail; wrong Ledger identifier at capture fails; an OAuth-stage edit to the original candidate must not affect installed bytes; forced bad postcopy hash must preserve the previously approved runtime state.
+- **No other functionality changed.** Frozen Frank signals, parser, SOL/USD research, local Mission Control decisions, Gmail routing and trade state remain as before. The previously documented limits on immutable signature body, alert states and arbitrary unrelated tables remain.
+- **Residual trust model:** A process with the same user's ability to modify installed policy+approval files (and executable code) can fabricate its own local authority. Files are 0600 but this is *not* an independently rooted credential; should not be represented as one. Installer Gmail preflight may perform OAuth/profile network operations after policy authorization; it does not send Gmail in the tested path.
+- **Mac LaunchAgent writer launch provenance remains `UNVERIFIED_PRODUCTION_LAUNCHAGENT`.** The repo supports an inference about Ledger `live-v1` ownership but actual installed launch arguments have not been read.
+
+**Current-HEAD evidence:** Git branch updates verified via GitHub; the full pytest, compileall, shell lint and real Ledger harness have **NOT been executed against these last cleanup commits** in the author's environment. Keep code acceptance **PENDING_FINAL_TARGETED_REGRESSION**, not PASS. Do not restate 862 passes as current HEAD's test count.
+
+**Hard gates unchanged:** H3 real source-vs-candidate replay on isolated copies of production `forward.sqlite` plus *all* bound raw gz = `NOT_RUN`; RARI signed raw evidence = `NOT_RUN`; authenticated CA, post-login Mac durability, Gmail Sent readback = `NOT_RUN`. Separate explicit approvals required for accessing/using production data, merging or deploying. `CAN_MERGE=NO`, `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`. No more discretionary features should be added to this PR while finishing validation.
