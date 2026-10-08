@@ -228,3 +228,117 @@ def test_historical_evm_block_window_is_bounded_above():
             assert method=="eth_getBlockByNumber"
             return {"timestamp":hex(int(params[0],16)*5)}
     assert audit["rh_block_number"](RPC(),11,20)==(3,4)
+
+def test_rpc_rate_limit_diagnostic_never_leaks_api_credentials(monkeypatch):
+    import urllib.error
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="http_rate_limit_test")
+    class FakeHTTP:
+        def __init__(self): self.calls=0
+        def __call__(self, request, timeout):
+            self.calls+=1
+            raise urllib.error.HTTPError(
+                "https://private-rpc.example/api/SECRETKEY",429,"rate limit",None,None)
+    fake=FakeHTTP()
+    monkeypatch.setitem(audit["RPC"].call.__globals__,"RPC_RETRY_DELAYS_SECONDS",())
+    monkeypatch.setattr(audit["urllib"].request,"urlopen",fake)
+    rpc=audit["RPC"]("https://private-rpc.example/api/SECRETKEY")
+    with pytest.raises(audit["IncompleteWindow"]) as err:
+        rpc.call("getTransaction",["fake",{}])
+    assert audit["safe_error"](err.value)=="RPC_HTTP_429"
+    assert "SECRETKEY" not in str(err.value)
+    assert rpc.last_method=="getTransaction"
+    assert fake.calls==1
+
+
+def test_finalized_solana_cache_survives_partial_rpc_retry(tmp_path):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="cache_test")
+    cache=audit["SignatureCache"](tmp_path/"frank-fomo-cache")
+    wallet=fc.SOL_CASH_WALLET
+    sig="2"*88
+    tx=sol_tx(wallet,cosigned=False,instructions=[])
+    cache.save(wallet,sig,tx["slot"],tx)
+    read=cache.load(wallet,sig,tx["slot"])
+    assert read==tx and cache.hits==1 and cache.writes==1
+    assert cache.load(wallet,sig,999) is None
+    assert cache.load(wallet,"not-a-signature",tx["slot"]) is None
+    file=tmp_path/"frank-fomo-cache"/wallet/(sig+".json")
+    assert file.stat().st_mode & 0o077 == 0
+    assert (tmp_path/"frank-fomo-cache"/wallet).stat().st_mode & 0o077 == 0
+
+
+def test_candidate_rh_wallet_eoa_is_visible_but_not_verified():
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="eoa_wallet_test")
+    class RPC:
+        def __init__(self): self.calls=0; self.scan_stage=""; self.progress={}
+        def call(self,method,params):
+            self.calls+=1
+            if method=="eth_chainId": return hex(fc.RH_CHAIN_ID)
+            if method=="eth_getCode": return "0x"
+            if method=="eth_blockNumber": return "0x5"
+            if method=="eth_getBlockByNumber":
+                return {"timestamp":hex(int(params[0],16)*5)}
+            if method=="eth_getLogs": return []
+            raise AssertionError(method)
+    result=audit["scan_robinhood"](RPC(),fc.RH_CANDIDATE_WALLET,11,20)
+    assert result["status"]=="COMPLETE"
+    assert result["wallet_code_status"]=="EOA"
+    assert result["eip7702_delegation_confirmed"] is False
+    assert result["userop_tx_count"]==0
+    assert result["inbound_transfer_tx_count"]==0
+
+
+def test_live_audit_partial_report_has_reason_method_and_progress_no_url(monkeypatch):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="partial_report_test")
+    funcs=audit["audit"].__globals__
+    class RPC:
+        def __init__(self,url):
+            self.scan_stage="INIT";self.last_method="NONE";self.calls=0
+            self.progress={}
+    def fail_solana(rpc,wallet,since,until,cache=None):
+        rpc.scan_stage="SOL_GET_TRANSACTION"
+        rpc.last_method="getTransaction"
+        rpc.calls=57
+        rpc.progress={"signatures_in_window":173,"transactions_decoded":55}
+        raise audit["IncompleteWindow"]("RPC_HTTP_429")
+    def fail_rh(rpc,wallet,since,until):
+        rpc.scan_stage="RH_INBOUND_ERC20_LOGS"
+        rpc.last_method="eth_getLogs"
+        rpc.calls=7
+        rpc.progress={"log_chunks_completed":3}
+        raise audit["IncompleteWindow"]("RPC_ERROR_-32062")
+    monkeypatch.setitem(funcs,"RPC",RPC)
+    monkeypatch.setitem(funcs,"scan_solana",fail_solana)
+    monkeypatch.setitem(funcs,"scan_robinhood",fail_rh)
+    report=audit["audit"](24,["https://private/SECRETKEY"],
+                          "https://robinhood.rpc",1791472854)
+    assert report["status"]=="PARTIAL"
+    assert len(report["chains"])==3
+    assert report["chains"][0]["diagnostics"][0]=={
+        "reason":"RPC_HTTP_429","stage":"SOL_GET_TRANSACTION",
+        "method":"getTransaction","rpc_calls":57,
+        "signatures_in_window":173,"transactions_decoded":55}
+    assert report["chains"][2]["diagnostics"][0]["reason"]=="RPC_ERROR_-32062"
+    assert "SECRETKEY" not in str(report)
+    assert report["paired"]==[]
+    assert report["production_db_writes"]==0
+    assert report["gmail_sent"]==0
+
+
+def test_rh_log_http_rate_limit_does_not_recursively_split(monkeypatch):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="log_rate_limit_test")
+    class RPC:
+        def __init__(self):
+            self.progress={}; self.calls=0
+        def call(self,method,params):
+            self.calls+=1
+            raise audit["IncompleteWindow"]("RPC_HTTP_429")
+    rpc=RPC()
+    with pytest.raises(audit["IncompleteWindow"],match="RPC_HTTP_429"):
+        audit["rh_getlogs"](rpc,100,100000,[fc.TOPIC_TRANSFER])
+    assert rpc.calls==1
+
