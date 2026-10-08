@@ -728,11 +728,21 @@ class WalletClusterAnalyzer:
                 evidence=next(x for x in self.consolidations if x["destination_owner"]==destination)
                 for i,a in enumerate(owners):
                     for b in owners[i+1:]:self._edge(a,b,kind,evidence["signature"],destination=destination)
+        # A single CEX payout transaction can serve independent users.
+        # Require the SAME identified non-public funder, not just a tx signature.
+        batches=defaultdict(list)
         for sig,rows in by_sig.items():
+            for row in rows:batches[(sig,row["source"])].append(row)
+        for (sig,source),rows in batches.items():
             owners=sorted({r["owner"] for r in rows})
-            if len(owners)>1:
-                for i,a in enumerate(owners):
-                    for b in owners[i+1:]:self._edge(a,b,"BATCH_FUNDING",sig)
+            if len(owners)<2:continue
+            role=(self._entry(source) or {}).get("role")
+            if role=="CEX":kind="COMMON_FUNDER_CEX"
+            elif role in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","BRIDGE","AMM_POOL","PROTOCOL_VAULT"}:kind="SHARED_INFRA"
+            elif role in {"EOA","DEV","CREATOR","TREASURY"}:kind="BATCH_FUNDING"
+            else:kind="COMMON_FUNDER_UNRESOLVED"
+            for i,a in enumerate(owners):
+                for b in owners[i+1:]:self._edge(a,b,kind,sig,funder=source,batch=True)
         trades=sorted(self.trades,key=lambda x:(x.get("block_time") or 0,x["owner"]))
         pair_counts=defaultdict(lambda:defaultdict(int))
         for i,a in enumerate(trades):
@@ -1008,12 +1018,21 @@ class WalletClusterAnalyzer:
             ],
         }
 
-        endpoint_calls=dict(getattr(self.rpc,"endpoint_calls",{}) or {})
-        endpoint_failures=dict(getattr(self.rpc,"endpoint_failures",{}) or {})
-        endpoints=list(getattr(self.rpc,"endpoints",[getattr(self.rpc,"endpoint","UNKNOWN")]))
+        # Never persist credential-bearing RPC URLs in JSON, markdown, latest,
+        # or API responses. Stable labels keep diagnostics without secret values.
+        raw_endpoints=list(getattr(self.rpc,"endpoints",[getattr(self.rpc,"endpoint","UNKNOWN")]))
+        endpoint_labels={value:("PRIMARY" if i==0 else f"FALLBACK_{i}")
+                         for i,value in enumerate(raw_endpoints)}
+        def safe_rpc_label(value):
+            return endpoint_labels.get(value,"UNLISTED_RPC")
+        endpoints=[safe_rpc_label(value) for value in raw_endpoints]
+        endpoint_calls={safe_rpc_label(k):v for k,v in
+                        (getattr(self.rpc,"endpoint_calls",{}) or {}).items()}
+        endpoint_failures={safe_rpc_label(k):v for k,v in
+                           (getattr(self.rpc,"endpoint_failures",{}) or {}).items()}
         return {
             "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
-            "rpc_endpoint":getattr(self.rpc,"endpoint","UNKNOWN"),"rpc_endpoints":endpoints,
+            "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
             "token_profile":token_profile,"market":market,"assessment":assessment,"holders":holder_rows,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,

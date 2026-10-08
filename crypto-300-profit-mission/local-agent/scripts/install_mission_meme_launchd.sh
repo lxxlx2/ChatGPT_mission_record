@@ -32,6 +32,10 @@ die() {
   exit 1
 }
 
+# This installer replaces both active LaunchAgents, including live-delivery loop.
+# No writes, PID stops or launchctl mutation without explicit opt-in.
+[ "${CONFIRM_MISSION_LOOP_RESTART:-}" = "1" ] || die "MISSION_LOOP_RESTART_NOT_AUTHORIZED: explicit CONFIRM_MISSION_LOOP_RESTART=1 required"
+
 [ -e "$WORKTREE/.git" ] || die "WORKTREE_NOT_GIT: $WORKTREE"
 [ -d "$LOCAL_AGENT" ] || die "LOCAL_AGENT_NOT_FOUND: $LOCAL_AGENT"
 [ -f "$PROD/forward.sqlite" ] || die "PRODUCTION_DB_NOT_FOUND: $PROD/forward.sqlite"

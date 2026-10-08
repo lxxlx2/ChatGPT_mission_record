@@ -397,3 +397,48 @@ def test_adaptive_scan_deepens_material_unresolved_owner_outside_initial_prefix(
     assert ("G",30) in calls
     assert "G" in out["coverage"]["adaptive_deepened_owners"]
 
+
+
+def test_cex_batch_with_synchronized_buys_is_not_control_cluster():
+    a=analyzer()
+    a.registry={"normalization_complete":False,
+                "addresses":{"HOT":{"role":"CEX","source":"review-fixture"}}}
+    def scan(holder,*args):
+        if holder.owner in {"A","B"}:
+            a.funding.append({"owner":holder.owner,"source":"HOT",
+                              "lamports":"5000000","signature":"cex-batch-tx",
+                              "block_time":80})
+            a.trades.append({"owner":holder.owner,"signature":"buy-"+holder.owner,
+                             "block_time":100 if holder.owner=="A" else 101,
+                             "direction":"BUY","quote_asset":"SOL",
+                             "quote_amount_raw":"100","quote_decimals":9,
+                             "program_ids":["DEX"],"signers":[holder.owner]})
+        return {"block_time":100,"signature":"first-"+holder.owner}
+    a._scan_holder=scan
+    report=a.analyze()
+    assert report["probable_control_clusters"]==[]
+    assert any(x["type"]=="COMMON_FUNDER_CEX" for x in report["shared_infrastructure_exclusions"])
+    assert not any(x["type"]=="BATCH_FUNDING" for x in report["edges"])
+
+
+def test_rpc_secret_never_emitted_in_report():
+    a=analyzer()
+    secret="SECRET123"
+    url="https://example.com/rpc?api-key="+secret
+    class AuthRPC:
+        endpoint=url
+        endpoints=[url,"https://fallback.example.net"]
+        endpoint_calls={url:3}
+        endpoint_failures={url:1}
+        calls=3
+        cache_hits=0
+    a.rpc=AuthRPC()
+    a._scan_holder=lambda *args:None
+    report=a.analyze()
+    import json
+    serialized=json.dumps(report)
+    assert secret not in serialized
+    assert url not in serialized
+    assert report["rpc_endpoint"]=="PRIMARY"
+    assert report["coverage"]["rpc_endpoint_calls"]=={"PRIMARY":3}
+    assert report["coverage"]["rpc_endpoint_failures"]=={"PRIMARY":1}
