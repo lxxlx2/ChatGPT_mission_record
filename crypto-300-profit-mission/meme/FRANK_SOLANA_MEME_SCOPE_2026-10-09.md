@@ -85,6 +85,107 @@ Fixed window `1791386454..1791472854`:
   Keep both as separate candidate identities and test exact onchain holdings
   and real FOMO fill owners before combining.
 
+## Independent direct-chain spot check — 2026-10-09 (READ ONLY)
+
+Sources: Solana finalized RPC queried via the already designated Alchemy app; official
+Solana RPC/JSON schemas and official Token-2022 program reference. Chainstack's FOMO
+listener and Bitquery FOMO documentation are *independent third-party observations*,
+not verified FOMO operator specifications.
+
+### Confirmed onchain: 498g root wallet and a Relay PAY
+
+- Solana root `498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ`.
+- Direct RPC transaction
+  `KTW6qm2yw8PJC1cqUVejnG9yfYo3UQN5Y6dJJrwXeZQfbxL2ZvbtB4aymTPbPYr9BkhJrrhtswMGUytgqF5othS`,
+  slot `454281417`, successful, version 0, two required signatures:
+  fee payer / first signer `AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51`
+  and second signer the `498g...` root. The instruction touches Relay depository
+  `99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2`.
+  Owned USDC `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+  falls from 11,394.381098 to 6,394.381098: exactly 5,000 USDC.
+  Counterparty token account rises by 5,000 USDC.
+  **This is valid payment evidence only; no Solana-Mint BUY inferred.**
+- Direct `getTokenAccountsByOwner` for this root returned current SPL Token
+  accounts, including balances and a frozen token account, and separate Token-2022
+  accounts. The connector truncated large responses; **full counts and historical
+  closed accounts NOT measured**.
+- Correct onchain program ids: SPL Token
+  `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`;
+  Token-2022 `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`.
+- Other candidate `A5SEXYJY4jTEi6sjMLfZs5KAP8SVfLDPDV67GgSSZSk`:
+  `getAccountInfo=null`, zero current SPL and Token-2022 accounts, zero
+  root-address signatures returned. **Current snapshot only**, no claim about
+  historical closed accounts or offchain persona ownership. Park candidate until
+  affirmative identity and execution evidence.
+- Third-party Provadata and CopyFomo report `498g...` as Frank's Solana
+  profile wallet; chain data corroborates FOMO-style usage but does not independently
+  cryptographically bind the offchain handle to the pubkey.
+
+### Corrected coverage hypothesis
+
+The sampled Relay PAY has two actual Solana signatures, not just one FOMO
+signature. Chainstack's co-signer listener extracts a non-co-signer signer
+as the user for observed transactions. Thus **it is plausible that direct,
+user-authorized same-chain FOMO swaps for `498g` already reference that
+root** and are discoverable in its 173-address-signature window.
+The 173/173 root-signature parity neither proves every *person* fill nor
+proves that missing SPL-account-only BUY transactions exist. The earlier
+`FRANK_NOT_SIGNER` and `ACTIVE_TRADE=1` distributions are classifier
+outputs, not independent exhaustive trade labels.
+
+**Test the alternative explanations instead of presupposing one**:
+(1) confirmed direct user-signed swaps in the root set;
+(2) delegated/account-only transactions discovered by owned token accounts;
+(3) separately controlled Solana execution wallet, only if attribution verified.
+One sided token receipt, owner label from a DEX row, FOMO co-signer, or
+historical ATA address by itself is not BUY proof. Token balance `owner`
+is the wallet authority, distinct from transaction fee payer / first signer.
+
+### Minimum reproducible Solana-only acceptance sequence
+
+1. Pin a fixed finalized time window, wallet identities and all raw evidence
+   snapshots. Reuse the existing local 173/173 decoded root-window snapshot;
+   its separate `SWAP_CANDIDATE` mint/amount are still unverified.
+2. Enumerate *current* SPL + Token-2022 accounts by candidate root, record
+   exact owner/mint/ATA, and pursue *historical closed* token accounts using
+   a bounded independent historical index. Mark past account inventory
+   `INCOMPLETE` when old ATA discovery cannot be proven.
+3. Enumerate signatures for root plus established owned token accounts.
+   Deduplicate transaction signatures and verify accountKeys, signer set,
+   `preTokenBalances/postTokenBalances` owner/mint/raw amount, SOL lamport
+   counterflow, DEX instructions and failed txs. Do not count a multi-hop
+   swap more than once.
+4. Cross-check FOMO cosigner and DFlow user-owner filtered fills for a **recent
+   overlapping window**; Bitquery's documented per-wallet DEX trade lookback
+   is approximately 12h and cannot retroactively certify the fixed old window.
+   DFlow is one source, not an exhaustive router whitelist. In disagreement,
+   inspect the actual full signed transaction.
+5. Produce separate root-index, owner-token-account, confirmed economic fills,
+   and external-feed coverage metrics. Classify `BUY/SELL/TRANSFER/RELAY_PAY/
+   RECEIPT/UNKNOWN` based on evidence; require a Solana-issued *exact mint*
+   plus simultaneous verifiable consideration for BUY/SELL.
+   Cross-chain-funded SOL token receipts can be `RECEIPT_COST_UNKNOWN`;
+   no RH research required, no invented cost or trading signal.
+6. Only after two independent methods reconcile sampled fills with explicit
+   omissions/limitations: perform historical causal episode / delayed-follow
+   replay. Frozen signal gates, existing Mac services and Gmail receipts are
+   protected; review source updates in PR only. No auto-trading.
+
+Stop conditions: missing wallet identity, incomplete historical account
+coverage, clipped RPC response, missing quote leg, or unverified owner must
+remain `UNVERIFIED`; never report 100% Frank-person trade recall.
+No live Mac deployment, service changes, new monitors or mail sent by this
+spot check.
+
+Sources:
+- https://solana.com/docs/rpc/http/getsignaturesforaddress
+- https://solana.com/docs/rpc/http/gettokenaccountsbyowner
+- https://solana.com/docs/rpc/json-structures
+- https://www.solana-program.com/docs/token-2022
+- https://fomo.family/blog/announcing-fomo-web
+- https://github.com/chainstacklabs/fomo-solana-rh-listeners/blob/main/scripts/03_listen_solana_grpc.py
+- https://docs.bitquery.io/docs/blockchain/Solana/fomo-api/
+
 ## Correct scope for next code iteration
 
 1. Build read-only **Solana SPL account universe** for each candidate owner.
