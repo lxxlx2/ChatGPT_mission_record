@@ -9,6 +9,7 @@ from mission_agent.signals.registry import load
 from test_frank_fm import tx
 from mission_agent.frank.rpc import WALLET
 from mission_agent.frank.parser import WSOL
+from mission_agent.signals.classifier import USDT
 
 USDC='EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
 FIXTURES=Path(__file__).parent/'fixtures/frank_local'
@@ -24,6 +25,17 @@ def active(sig='buy',amount=100,quote=20):
     return classify(sig,t,WALLET)
 
 def put(l,e,**kwargs):return l.put('frank',e,e['signature'],'raw',**kwargs)
+
+
+def add_owned_asset(t,mint,pre,post,decimals=6):
+    index=len(t['transaction']['message']['accountKeys'])
+    t['transaction']['message']['accountKeys'].append({'pubkey':'owned-'+str(index),'signer':False})
+    t['meta']['preBalances'].append(2000000);t['meta']['postBalances'].append(2000000)
+    def row(amount):
+        return {'accountIndex':index,'mint':mint,'owner':WALLET,
+                'uiTokenAmount':{'amount':str(amount),'decimals':decimals,'uiAmount':None}}
+    t['meta']['preTokenBalances'].append(row(pre));t['meta']['postTokenBalances'].append(row(post))
+    return t
 
 def test_third_party_ata_create_is_not_trade():
     result=classify('ata',json.loads(gzip.decompress((FIXTURES/'ata.json.gz').read_bytes())),WALLET)
@@ -43,6 +55,20 @@ def test_active_swap_requires_frank_authority():
 def test_active_buy_creates_position(tmp_path):
     l=Ledger(tmp_path/'db');put(l,active());p=json.loads(l.db.execute('select body from positions').fetchone()[0]);assert p['state']=='OPEN' and p['buy_count']==1 and p['current_token_position']=='100'
 
+def test_ledger_position_separates_unknown_quote_out_from_known_target_cost(tmp_path):
+    l=Ledger(tmp_path/'db')
+    e=active('unknown-cost',100,5000 * 10**6)
+    e['trade']['amount_predicate']='UNDETERMINED'
+    e['trade']['amount_predicate_reason']='ROUTED_RESIDUAL_ASSETS'
+    e['trade']['route_amount_semantics']='GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST'
+    put(l,e)
+    p=json.loads(l.db.execute('select body from positions').fetchone()[0])
+    assert p['gross_quote_spent']=={}
+    assert p['gross_quote_out_observed']=={USDC:'5000'}
+    assert len(p['quote_cost_unknown_contributions'])==1
+    assert p['quote_cost_unknown_contributions'][0]['signature']=='unknown-cost'
+
+
 def test_second_active_buy_is_add(tmp_path):
     l=Ledger(tmp_path/'db');put(l,active());put(l,active('add'));assert l.db.execute("select side from trades where signature='add'").fetchone()[0]=='ADD'
 
@@ -59,6 +85,155 @@ def test_multi_hop_swap_dedupes_to_one_trade(tmp_path):
     l=Ledger(tmp_path/'db');t=tx();t['transaction']['message']['instructions']*=3
     for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDC
     e=classify('multi',t,WALLET);put(l,e);put(l,e);assert l.db.execute('select count(*) from trades').fetchone()[0]==1
+
+
+
+def test_usdt_is_preserved_as_non_usdc_quote_without_amount_gate():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDT
+    e=classify('usdt',t,WALLET)
+    assert e['classification']=='ACTIVE_TRADE'
+    assert e['trade']['quote_asset']==USDT
+    assert e['trade']['amount_predicate']=='UNDETERMINED'
+
+
+def test_single_target_with_auxiliary_quote_refund_is_trade_but_amount_is_undetermined():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDC
+    add_owned_asset(t,WSOL,0,250000000,9)
+    e=classify('refund',t,WALLET)
+    assert e['classification']=='ACTIVE_TRADE'
+    assert e['trade']['quote_asset']==USDC
+    assert e['trade']['amount_predicate']=='UNDETERMINED'
+    assert len(e['trade']['quote_legs'])==2
+
+
+def test_two_opposing_quote_payments_remain_ambiguous():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDC
+    add_owned_asset(t,WSOL,250000000,0,9)
+    e=classify('two-payments',t,WALLET)
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert e['classification_reason']=='AMBIGUOUS_USER_EXCHANGE_ASSETS'
+    assert set(e['classification_details']['opposing_quote_assets'])=={USDC,WSOL}
+
+
+def test_multiple_target_assets_remain_ambiguous_without_dust_guess():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:t['meta'][field][1]['mint']=USDC
+    add_owned_asset(t,'second-target',0,1,9)
+    e=classify('multi-target',t,WALLET)
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert set(e['classification_details']['target_assets'])=={'mint1','second-target'}
+
+
+
+
+def test_received_then_spent_created_residual_remains_ambiguous_without_route_binding():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:
+        t['meta'][field][1]['mint']=USDC
+    route='route-intermediate'
+    add_owned_asset(t,route,0,10,6)
+    route_index=len(t['transaction']['message']['accountKeys'])-1
+    route_account=t['transaction']['message']['accountKeys'][route_index]['pubkey']
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    t['meta']['innerInstructions']=[{'index':0,'instructions':[
+        {'programId':token,'parsed':{'type':'initializeAccount3','info':{
+            'account':route_account,'owner':WALLET,'mint':route}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'quote_ata','destination':'pool-a','mint':USDC,
+            'tokenAmount':{'amount':'500000','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-a','destination':route_account,'mint':route,
+            'tokenAmount':{'amount':'1000','decimals':6},'authority':'pool'}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':route_account,'destination':'pool-b','mint':route,
+            'tokenAmount':{'amount':'990','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-b','destination':'ata','mint':'mint1',
+            'tokenAmount':{'amount':'1000000','decimals':6},'authority':'pool'}}},
+    ]}]
+    e=classify('routed-residual',t,WALLET)
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert e['classification_reason']=='AMBIGUOUS_USER_EXCHANGE_ASSETS'
+    assert e['trade'] is None
+    candidates=e['classification_details']['residual_flow_candidates']
+    assert len(candidates)==1 and candidates[0]['mint']==route
+    assert candidates[0]['gross_in_raw']=='1000'
+    assert candidates[0]['gross_out_raw']=='990'
+    assert candidates[0]['net_delta']=='10'
+    assert candidates[0]['route_binding']=='UNPROVEN'
+    assert 'downstream_target' not in candidates[0]
+    flows=e['evidence']['wallet_token_transfer_flows']
+    assert [(x['mint'],x['direction']) for x in flows]==[
+        (USDC,'OUT'),(route,'IN'),(route,'OUT'),('mint1','IN')
+    ]
+
+
+def test_split_route_can_receive_final_target_before_residual_intermediate_finishes():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:
+        t['meta'][field][1]['mint']=USDC
+    route='route-split-intermediate'
+    add_owned_asset(t,route,0,10,6)
+    route_index=len(t['transaction']['message']['accountKeys'])-1
+    route_account=t['transaction']['message']['accountKeys'][route_index]['pubkey']
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    t['meta']['innerInstructions']=[{'index':0,'instructions':[
+        {'programId':token,'parsed':{'type':'initializeAccount3','info':{
+            'account':route_account,'owner':WALLET,'mint':route}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'quote_ata','destination':'pool-a','mint':USDC,
+            'tokenAmount':{'amount':'500000','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-a','destination':route_account,'mint':route,
+            'tokenAmount':{'amount':'1000','decimals':6},'authority':'pool'}}},
+        # A parallel route delivers part of the final target before this
+        # intermediate leg is fully recycled.
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'parallel-pool','destination':'ata','mint':'mint1',
+            'tokenAmount':{'amount':'400000','decimals':6},'authority':'pool'}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':route_account,'destination':'pool-b','mint':route,
+            'tokenAmount':{'amount':'990','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-b','destination':'ata','mint':'mint1',
+            'tokenAmount':{'amount':'600000','decimals':6},'authority':'pool'}}},
+    ]}]
+    e=classify('split-routed-residual',t,WALLET)
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert e['trade'] is None
+    routed=e['classification_details']['residual_flow_candidates']
+    assert len(routed)==1
+    assert routed[0]['mint']==route
+    assert routed[0]['proof']=='CREATED_ZERO_PRE_RECEIVED_THEN_SPENT_CONSERVED_RESIDUAL_ONLY'
+
+
+def test_existing_partially_sold_second_asset_is_not_assumed_route_intermediate():
+    t=tx()
+    for field in ['preTokenBalances','postTokenBalances']:
+        t['meta'][field][1]['mint']=USDC
+    route='existing-second-target'
+    add_owned_asset(t,route,100,110,6)
+    route_index=len(t['transaction']['message']['accountKeys'])-1
+    route_account=t['transaction']['message']['accountKeys'][route_index]['pubkey']
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    t['meta']['innerInstructions']=[{'index':0,'instructions':[
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-a','destination':route_account,'mint':route,
+            'tokenAmount':{'amount':'1000','decimals':6},'authority':'pool'}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':route_account,'destination':'pool-b','mint':route,
+            'tokenAmount':{'amount':'990','decimals':6},'authority':WALLET}}},
+        {'programId':token,'parsed':{'type':'transferChecked','info':{
+            'source':'pool-b','destination':'ata','mint':'mint1',
+            'tokenAmount':{'amount':'1000000','decimals':6},'authority':'pool'}}},
+    ]}]
+    e=classify('existing-two-targets',t,WALLET)
+    assert e['classification']=='UNKNOWN_NEEDS_REVIEW'
+    assert e['classification_reason']=='AMBIGUOUS_USER_EXCHANGE_ASSETS'
+
 
 STAGE={'signal_type':'FRANK_ACCUMULATION_SIGNAL','stage':'PRECONFIRM','reason_codes':['TEST_SUPPLIED_STAGE']}
 MULTIPLE={'signal_type':'FRANK_MULTIPLE_SIGNAL','stage':'SUSPECTED_CONVICTION','reason_codes':['TEST_SUPPLIED_STAGE']}

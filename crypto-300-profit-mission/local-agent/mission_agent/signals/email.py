@@ -55,9 +55,15 @@ def content(signal):
     priority=('ACCUMULATION_BEHAVIOR_STAGE_ESTABLISHED','EPISODE_USDC_QUOTE_GE_10000','PERSISTENCE_PATH_A_PRIOR_HOURLY_WATCH','PERSISTENCE_PATH_B_GE_3_BUYS_SPAN_GE_45M')
     overview=[REASON_ZH.get(c,'未识别规则：'+c) for c in codes if c in priority][:3]
     if not overview:overview=explanations[:3] or [UNAVAILABLE]
-    quote=amount(signal.get('latest_quote_amount'))+' '+label(signal.get('quote_asset'))
+    observed_asset=signal.get('latest_quote_observed_asset') or signal.get('quote_asset')
+    observed_amount=signal.get('latest_quote_observed_amount')
+    if observed_amount is None:observed_amount=signal.get('latest_quote_amount')
+    quote=amount(observed_amount)+' '+label(observed_asset)
+    latest_cost_known=signal.get('latest_quote_cost_known')
     tokens=amount(signal.get('latest_buy'))+' token'
     cumulative=quote_total(p.get('gross_quote_spent'))
+    observed_cumulative=quote_total(p.get('gross_quote_out_observed'))
+    unknown_cost=p.get('quote_cost_unknown_contributions') or []
     inventory=amount(p.get('current_token_quantity'))+' token'
     # The Engine supplies latest-BUY amounts, not necessarily the triggering event's amounts.
     buy_known=not unavailable(signal.get('latest_buy_signature'))
@@ -66,15 +72,25 @@ def content(signal):
     direction='BUY' if buy_known else UNAVAILABLE
     mode=signal.get('delivery_mode')
     heading='Frank 多倍信号（历史 / 演练，非当前实时交易）' if mode is not None and mode!='LIVE' else 'Frank 多倍信号'
-    body=[heading,'“多倍信号”是 Frank 持续建仓行为模型的阶段名称，不代表价格将上涨数倍。','',f'状态：{STAGE_ZH.get(stage,stage)}',f'Token：{token}',f'CA：{mint}',f'时间：{when}（Asia/Bangkok）','',trade_heading,f'{direction} {quote}',('获得 ' if buy_known else 'Token 数量：')+tokens,'','累计：',f"本轮观察到 Frank 主动买入 {text(p.get('buy_count'))} 次；主动卖出 {text(p.get('sell_count'))} 次",f'累计投入 {cumulative}',f"首次主动买入：{timestamp(p.get('first_buy_at'))}（Asia/Bangkok）",f"最新主动买入：{timestamp(p.get('last_buy_at'))}（Asia/Bangkok）",f'当前观察库存：{inventory}',('仅代表本轮已观察主动交易序列，不代表 Frank 的完整历史持仓。' if p.get('inventory_scope')=='OBSERVED_ACTIVE_SEQUENCE' else '库存观察范围：'+text(p.get('inventory_scope'))),'','为什么触发：']+['- '+str(x) for x in overview]
-    body+=['','链上事实',f"首次主动买入时间：{timestamp(p.get('first_buy_at'))}（Asia/Bangkok）",f"最新主动买入时间：{timestamp(p.get('last_buy_at'))}（Asia/Bangkok）",f"当前 buy_count：{text(p.get('buy_count'))}",f"当前 sell_count：{text(p.get('sell_count'))}",f'最近一次主动买入 quote：{quote}',f'最近一次主动买入 token：{tokens}',f'累计 quote spent：{cumulative}',f'当前观察库存：{inventory}',f"最新触发交易：{short(signal.get('latest_trade_signature'))}"]
+    latest_quote_line=f'{direction} {quote}'
+    if latest_cost_known is False:
+        latest_quote_line+='（仅为观察到的 quote 流出；最终目标成本未确认）'
+    cumulative_lines=[f'累计投入 {cumulative}'] if not unknown_cost else [
+        f'累计已确认投入 {cumulative}',
+        f'累计观察 quote 流出 {observed_cumulative}',
+        f'成本归属未确认的主动买入 {len(unknown_cost)} 笔',
+    ]
+    body=[heading,'“多倍信号”是 Frank 持续建仓行为模型的阶段名称，不代表价格将上涨数倍。','',f'状态：{STAGE_ZH.get(stage,stage)}',f'Token：{token}',f'CA：{mint}',f'时间：{when}（Asia/Bangkok）','',trade_heading,latest_quote_line,('获得 ' if buy_known else 'Token 数量：')+tokens,'','累计：',f"本轮观察到 Frank 主动买入 {text(p.get('buy_count'))} 次；主动卖出 {text(p.get('sell_count'))} 次"]+cumulative_lines+[f"首次主动买入：{timestamp(p.get('first_buy_at'))}（Asia/Bangkok）",f"最新主动买入：{timestamp(p.get('last_buy_at'))}（Asia/Bangkok）",f'当前观察库存：{inventory}',('仅代表本轮已观察主动交易序列，不代表 Frank 的完整历史持仓。' if p.get('inventory_scope')=='OBSERVED_ACTIVE_SEQUENCE' else '库存观察范围：'+text(p.get('inventory_scope'))),'','为什么触发：']+['- '+str(x) for x in overview]
+    body+=['','链上事实',f"首次主动买入时间：{timestamp(p.get('first_buy_at'))}（Asia/Bangkok）",f"最新主动买入时间：{timestamp(p.get('last_buy_at'))}（Asia/Bangkok）",f"当前 buy_count：{text(p.get('buy_count'))}",f"当前 sell_count：{text(p.get('sell_count'))}",f'最近一次主动买入 quote：{quote}',f'最近一次主动买入 token：{tokens}',f'累计已确认 quote cost：{cumulative}',f'累计观察 quote out：{observed_cumulative}',f'当前观察库存：{inventory}',f"最新触发交易：{short(signal.get('latest_trade_signature'))}"]
     if not same_trade:body+=['本次触发交易方向：UNAVAILABLE（不从最新 BUY 推断）']
     body+=['','触发说明（全部）：']+['- '+str(x) for x in explanations or [UNAVAILABLE]]
     body+=['','风险 / 不确定性']
     if p.get('lifetime_position')=='LIFETIME_POSITION_UNKNOWN':
         body+=['当前只能确认本轮观察到的建仓序列，无法保证这是 Frank 对该 Token 的完整历史仓位。']
     else:body+=['完整历史仓位状态：'+text(p.get('lifetime_position'))]
-    body+=['USD 估值：暂无可靠数据' if unavailable(signal.get('usd')) else 'USD 估值：'+text(signal['usd']),'金额按原始 quote 记录；USDC quote 直接进行数值比较。','本邮件展示模型研究信号，不构成收益保证。']
+    if unknown_cost:
+        body+=['部分主动买入仅确认 quote 总流出，无法把全部金额归属于最终目标 Token；这些金额不作为已确认目标成本展示。']
+    body+=['USD 估值：暂无可靠数据' if unavailable(signal.get('usd')) else 'USD 估值：'+text(signal['usd']),'只有带已验证金额 provenance 的 quote 才参与模型金额比较；观察到的总流出与最终目标成本分开记录。','本邮件展示模型研究信号，不构成收益保证。']
     mode=signal.get('delivery_mode')
     if mode is not None and mode!='LIVE':body+=['投递模式：'+text(mode)+'；不是当前实时交易。']
     # Whitelist audit fields. Never serialize the input object, environment or credentials.
@@ -85,6 +101,6 @@ def content(signal):
     for key in ('inventory_scope','lifetime_position'):
         if key in p:body.append(key+': '+text(p[key]))
     if 'sequence' in signal:body.append('sequence: '+text(signal['sequence']))
-    body += ['USD estimate: '+text(signal.get('usd')),f"latest_quote_amount_raw_quantity: {text(signal.get('latest_quote_amount'))}",f"quote_asset: {text(signal.get('quote_asset'))}",f"latest_buy_token_quantity: {text(signal.get('latest_buy'))}",f"current_token_position_raw: {text(p.get('current_token_position'))}",'gross_quote_spent: '+json.dumps(p.get('gross_quote_spent'),ensure_ascii=False,sort_keys=True)]
+    body += ['USD estimate: '+text(signal.get('usd')),f"latest_quote_amount_raw_quantity: {text(signal.get('latest_quote_amount'))}",f"quote_asset: {text(signal.get('quote_asset'))}",f"latest_quote_observed_amount: {text(signal.get('latest_quote_observed_amount'))}",f"latest_quote_observed_asset: {text(signal.get('latest_quote_observed_asset'))}",f"latest_quote_cost_known: {text(signal.get('latest_quote_cost_known'))}",f"latest_quote_amount_predicate: {text(signal.get('latest_quote_amount_predicate'))}",f"latest_quote_amount_reason: {text(signal.get('latest_quote_amount_reason'))}",f"latest_buy_token_quantity: {text(signal.get('latest_buy'))}",f"current_token_position_raw: {text(p.get('current_token_position'))}",'gross_quote_spent_known: '+json.dumps(p.get('gross_quote_spent'),ensure_ascii=False,sort_keys=True),'gross_quote_out_observed: '+json.dumps(p.get('gross_quote_out_observed'),ensure_ascii=False,sort_keys=True),'quote_cost_unknown_contributions: '+json.dumps(unknown_cost,ensure_ascii=False,sort_keys=True)]
     body='\n'.join(body)
     return {'signal_id':signal['signal_id'],'subject':subject,'body':body,'body_hash':digest(body),'content_hash':digest({'subject':subject,'body':body})}

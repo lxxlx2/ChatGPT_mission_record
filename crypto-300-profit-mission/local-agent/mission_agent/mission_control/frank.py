@@ -44,10 +44,26 @@ def _event_price_usdc(event: dict) -> Decimal | None:
     if not quantity:
         return None
     try:
-        if event.get("quote_asset") == USDC and not event.get("quote_normalization"):
+        amount_predicate=event.get("amount_predicate")
+        direct_usdc=amount_predicate in (None,"USDC_DIRECT_NUMERIC")
+        if event.get("quote_asset") == USDC and direct_usdc and not event.get("quote_normalization"):
             return Decimal(str(event["quote_quantity"])) / quantity
-        if event.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" and event.get("quote_usdc_equivalent") is not None:
-            return Decimal(str(event["quote_usdc_equivalent"])) / quantity
+        if (
+            event.get("quote_usdc_status")=="SOL_EVENT_TIME_USDC_VERIFIED"
+            and event.get("quote_usdc_equivalent") is not None
+        ):
+            predicate=event.get("amount_predicate")
+            reason=event.get("amount_predicate_reason")
+            simple_sol=(
+                event.get("quote_asset") in {"SOL",WSOL}
+                and predicate in (None,"UNDETERMINED","SOL_EVENT_TIME_USDC_VERIFIED")
+                and reason in (None,"NON_USDC_QUOTE","CAUSAL_PREVIOUS_CLOSED_SOLUSDC_REFERENCE")
+                and not event.get("route_intermediate_assets")
+                and event.get("route_amount_semantics") in (None,"DIRECT_OR_SINGLE_TARGET_QUOTE")
+                and not (isinstance(event.get("quote_legs"),list) and len(event.get("quote_legs"))>1)
+            )
+            if predicate=="SOL_EVENT_TIME_USDC_VERIFIED" or simple_sol:
+                return Decimal(str(event["quote_usdc_equivalent"])) / quantity
     except (KeyError, InvalidOperation, ZeroDivisionError, TypeError):
         return None
     return None
@@ -58,23 +74,33 @@ def _quote_display(event: dict | None) -> dict:
         return {"asset": None, "quantity": None, "normalized": False, "usdc_equivalent": None}
     original = event.get("original_quote") or {}
     if event.get("quote_normalization") == "SOL_TO_USDC_SHADOW_EQUIVALENT" and original:
+        authorized=(
+            event.get("amount_predicate")=="SOL_EVENT_TIME_USDC_VERIFIED"
+            and event.get("quote_usdc_status")=="SOL_EVENT_TIME_USDC_VERIFIED"
+        )
         return {
             "asset": original.get("quote_asset"),
             "quantity": original.get("quote_quantity"),
-            "normalized": True,
-            "usdc_equivalent": event.get("quote_usdc_equivalent"),
+            "normalized": authorized,
+            "usdc_equivalent": event.get("quote_usdc_equivalent") if authorized else None,
         }
+    direct_usdc=event.get("amount_predicate") in (None,"USDC_DIRECT_NUMERIC")
     return {
         "asset": event.get("quote_asset"),
         "quantity": event.get("quote_quantity"),
         "normalized": False,
-        "usdc_equivalent": event.get("quote_usdc_equivalent") if event.get("quote_asset") != USDC else event.get("quote_quantity"),
+        "usdc_equivalent": (
+            event.get("quote_usdc_equivalent")
+            if event.get("quote_asset") != USDC
+            else event.get("quote_quantity") if direct_usdc else None
+        ),
     }
 
 
 class FrankReader:
-    def __init__(self, production_root: Path):
+    def __init__(self, production_root: Path, person_id: str = "frank"):
         self.root = Path(production_root)
+        self.person_id = str(person_id)
         self.database = self.root / "forward.sqlite"
         self.health_path = self.root / "health.json"
 
@@ -126,7 +152,7 @@ class FrankReader:
     def candidates(self) -> list[dict]:
         db = open_production_ro(self.database)
         try:
-            rows = db.execute("SELECT person_id,mint,body FROM v1_states").fetchall()
+            rows = db.execute("SELECT person_id,mint,body FROM v1_states WHERE person_id=?",(self.person_id,)).fetchall()
             result = []
             for row in rows:
                 try:
@@ -183,6 +209,13 @@ class FrankReader:
                 model_quote_quantity = latest_buy.get("quote_quantity") if latest_buy else None
                 if latest_buy_price is not None:
                     price_status = "SOL_EVENT_TIME_USDC_VERIFIED" if latest_buy and latest_buy.get("quote_usdc_status") == "SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"
+                elif latest_buy and latest_buy.get("amount_predicate")=="UNDETERMINED" and model_quote_asset==USDC:
+                    reason=latest_buy.get("amount_predicate_reason")
+                    price_status = (
+                        "ROUTED_QUOTE_PRICE_UNAVAILABLE" if reason=="ROUTED_RESIDUAL_ASSETS"
+                        else "COMPOSITE_QUOTE_PRICE_UNAVAILABLE" if reason=="COMPOSITE_QUOTE_LEGS"
+                        else "QUOTE_COST_UNDETERMINED"
+                    )
                 elif model_quote_asset in {"SOL", WSOL} or quote_display["asset"] in {"SOL", WSOL}:
                     price_status = "SOL_EVENT_TIME_USDC_UNAVAILABLE"
                 else:
@@ -214,10 +247,126 @@ class FrankReader:
         finally:
             db.close()
 
+    def mint_snapshot(self, mint: str) -> dict:
+        """Read Frank's exact-person observed state for one mint without creating a signal."""
+        person_id=self.person_id
+        db = open_production_ro(self.database)
+        try:
+            row = db.execute(
+                "SELECT person_id,mint,body FROM v1_states WHERE person_id=? AND mint=? LIMIT 1",
+                (person_id,mint),
+            ).fetchone()
+            if not row:
+                return {"status":"NOT_OBSERVED","mint":mint}
+            try:
+                state=json.loads(row["body"])
+            except (TypeError,ValueError):
+                return {"status":"UNAVAILABLE","reason":"STATE_BODY_INVALID","mint":mint}
+            events=state.get("events") or []
+            latest=events[-1] if events else None
+            buys=[event for event in events if event.get("direction")=="BUY"]
+            sells=[event for event in events if event.get("direction")=="SELL"]
+            signal=db.execute(
+                "SELECT signal_type,created_at FROM signals WHERE person_id=? AND mint=? AND episode_id=? ORDER BY rowid DESC LIMIT 1",
+                (row["person_id"],mint,state.get("episode_id")),
+            ).fetchone()
+            return {
+                "status":"OBSERVED","person_id":row["person_id"],"mint":mint,
+                "episode_id":state.get("episode_id"),"position_state":state.get("state"),
+                "current_raw":state.get("current_raw"),"buy_count":len(buys),"sell_count":len(sells),
+                "latest_side":latest.get("direction") if latest else None,
+                "latest_at":latest.get("at") if latest else None,
+                "latest_signature":latest.get("signature") if latest else None,
+                "signal_type":signal["signal_type"] if signal else None,
+                "signal_at":signal["created_at"] if signal else None,
+            }
+        finally:
+            db.close()
+
+    def review_activity(self, limit: int = 30) -> list[dict]:
+        """Expose ambiguous active swap-like facts without promoting them to trades/signals."""
+        db = open_production_ro(self.database)
+        try:
+            try:
+                rows=db.execute(
+                    """SELECT signature,block_time,body FROM signatures
+                       WHERE person_id=?
+                         AND json_extract(body,'$.classification')='UNKNOWN_NEEDS_REVIEW'
+                         AND (
+                           json_extract(body,'$.evidence.mechanical_classification')='ACTIVE_SWAP_LIKE'
+                           OR (
+                             json_extract(body,'$.frank_is_signer')=1
+                             AND json_extract(body,'$.evidence.tx_err') IS NULL
+                             AND json_extract(body,'$.evidence.classification_evidence.opposing_economic_flows')=1
+                           )
+                         )
+                       ORDER BY block_time DESC LIMIT ?""",
+                    (self.person_id,limit),
+                ).fetchall()
+            except sqlite3.Error:
+                return []
+            result=[]
+            for row in rows:
+                try:body=json.loads(row["body"])
+                except (TypeError,ValueError):continue
+                evidence=body.get("evidence") or {}
+                grouped={}
+                for delta in evidence.get("token_balance_deltas") or []:
+                    if not delta.get("wallet_owned"):continue
+                    try:
+                        raw=int(delta.get("delta") or 0);decimals=int(delta.get("decimals"))
+                    except (TypeError,ValueError):continue
+                    if not raw:continue
+                    mint=delta.get("mint")
+                    if not mint:continue
+                    item=grouped.setdefault(mint,{"mint":mint,"delta_raw":0,"decimals":decimals})
+                    if item["decimals"]!=decimals:continue
+                    item["delta_raw"]+=raw
+                for flow in evidence.get("decoded_transient_token_flows") or []:
+                    try:
+                        raw=int(flow.get("net_transfer_raw") or 0);decimals=int(flow.get("decimals"))
+                    except (TypeError,ValueError):continue
+                    mint=flow.get("mint")
+                    if not mint or not raw:continue
+                    item=grouped.setdefault(mint,{"mint":mint,"delta_raw":0,"decimals":decimals})
+                    if item["decimals"]!=decimals:continue
+                    item["delta_raw"]+=raw
+                assets=[
+                    {**item,"delta_raw":str(item["delta_raw"])}
+                    for item in grouped.values() if item["delta_raw"]
+                ]
+                quote_mints={USDC,WSOL,"Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"}
+                result.append({
+                    "signature":row["signature"],"block_time":row["block_time"],
+                    "classification_reason":body.get("classification_reason"),
+                    "residual_flow_candidates":((body.get("classification_details") or {}).get("residual_flow_candidates") or []),
+                    "review_scope":(
+                        "ACTIVE_SWAP_LIKE"
+                        if evidence.get("mechanical_classification")=="ACTIVE_SWAP_LIKE"
+                        else "SIGNED_OPPOSING_FLOW_MARKET_UNPROVEN"
+                    ),
+                    "candidate_mints":[x["mint"] for x in assets if x["mint"] not in quote_mints],
+                    "assets":assets,
+                    "program_ids":evidence.get("program_ids") or [],
+                    "dex_program_interaction":bool((evidence.get("classification_evidence") or {}).get("dex_program_interaction")),
+                    "swap_instruction_evidence":bool((evidence.get("classification_evidence") or {}).get("swap_instruction_evidence")),
+                    "opposing_economic_flows":bool((evidence.get("classification_evidence") or {}).get("opposing_economic_flows")),
+                })
+            return result
+        finally:
+            db.close()
+
     def recent_trades(self, limit: int = 100) -> list[dict]:
         db = open_production_ro(self.database)
         try:
-            rows = db.execute("SELECT wallet,signature,mint,episode_id,block_time,side,body FROM trades ORDER BY block_time DESC LIMIT ?", (limit,)).fetchall()
+            rows = db.execute(
+                """SELECT t.wallet,t.signature,t.mint,t.episode_id,t.block_time,t.side,t.body
+                   FROM trades t
+                   JOIN signatures s ON s.wallet=t.wallet AND s.signature=t.signature
+                   WHERE s.person_id=?
+                   ORDER BY t.block_time DESC LIMIT ?""",
+                (self.person_id,limit),
+            ).fetchall()
             result = []
             for row in rows:
                 item = dict(row)

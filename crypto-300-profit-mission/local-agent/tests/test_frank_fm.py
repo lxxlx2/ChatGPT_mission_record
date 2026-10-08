@@ -37,6 +37,40 @@ def test_passive_receipt_not_active():
 def test_supported_transaction_versions(version):
     t=tx();t['version']=version;assert normalize('s',t)['version']==version
 
+
+
+def test_official_market_programs_are_recognized_with_own_swap_instruction():
+    programs=[
+        'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc',
+        'cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG',
+        'MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms',
+    ]
+    for program in programs:
+        t=tx();t['transaction']['message']['instructions'][0]['programId']=program
+        assert normalize('market-'+program[:4],t)['mechanical_classification']=='ACTIVE_SWAP_LIKE'
+
+
+def test_parsed_program_id_index_can_supply_swap_identity():
+    t=tx()
+    keys=t['transaction']['message']['accountKeys']
+    keys.append({'pubkey':DEX,'signer':False})
+    t['meta']['preBalances'].append(0);t['meta']['postBalances'].append(0)
+    t['transaction']['message']['instructions'][0].pop('programId')
+    t['transaction']['message']['instructions'][0]['programIdIndex']=len(keys)-1
+    assert normalize('indexed',t)['mechanical_classification']=='ACTIVE_SWAP_LIKE'
+
+
+def test_reentrant_program_log_stack_keeps_inner_swap_bound_to_market():
+    t=tx();t['transaction']['message']['instructions'][0].pop('parsed')
+    t['meta']['logMessages']=[
+        f'Program {DEX} invoke [1]',
+        f'Program {DEX} invoke [2]',
+        'Program log: Instruction: Swap',
+        f'Program {DEX} success',
+        f'Program {DEX} success',
+    ]
+    assert normalize('nested',t)['mechanical_classification']=='ACTIVE_SWAP_LIKE'
+
 def test_failed_transaction_not_swap():
     t=tx();t['meta']['err']={'InstructionError':[0,{'Custom':4}]};assert normalize('s',t)['mechanical_classification']=='FAILED'
 
@@ -244,6 +278,26 @@ def test_ephemeral_wsol_consideration_keeps_balance_vectors_exact():
     assert e['decoded_transient_token_flows'][0]['net_transfer_raw']=='123456'
     t['meta']['innerInstructions'][0]['instructions'][0]['parsed']['info']['owner']='other'
     assert normalize('s',t)['mechanical_classification']=='UNKNOWN'
+
+
+
+
+def test_indexed_token_program_preserves_ephemeral_wsol_flow():
+    from mission_agent.frank.parser import WSOL
+    t=tx();t['meta']['preTokenBalances']=t['meta']['preTokenBalances'][1:];t['meta']['postTokenBalances']=t['meta']['postTokenBalances'][1:]
+    token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+    t['transaction']['message']['accountKeys'].append({'pubkey':token,'signer':False})
+    t['meta']['preBalances'].append(0);t['meta']['postBalances'].append(0)
+    token_index=len(t['transaction']['message']['accountKeys'])-1
+    instructions=[
+      {'programIdIndex':token_index,'parsed':{'type':'initializeAccount3','info':{'account':'ephemeral-indexed','owner':WALLET,'mint':WSOL}}},
+      {'programIdIndex':token_index,'parsed':{'type':'transferChecked','info':{'source':'vault','destination':'ephemeral-indexed','tokenAmount':{'amount':'123456','decimals':9},'authority':'vault'}}},
+      {'programIdIndex':token_index,'parsed':{'type':'closeAccount','info':{'account':'ephemeral-indexed','owner':WALLET,'destination':'router'}}},
+    ]
+    t['meta']['innerInstructions']=[{'index':0,'instructions':instructions}]
+    e=normalize('indexed-wsol',t)
+    assert e['mechanical_classification']=='ACTIVE_SWAP_LIKE'
+    assert e['decoded_transient_token_flows'][0]['net_transfer_raw']=='123456'
 
 
 def test_frank_cursor_candidate_commit_rolls_back_together(tmp_path):

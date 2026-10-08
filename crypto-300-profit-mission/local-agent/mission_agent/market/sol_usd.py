@@ -121,6 +121,24 @@ class BinanceSolUsdcHistoryClient:
             return _unavailable("BINANCE_HISTORY_RESPONSE_INVALID", target_open, retryable=True)
 
 
+def _simple_sol_quote_eligible(event: dict) -> bool:
+    """Only a simple, economically attributable SOL/WSOL quote may gain USDC authority."""
+    reason=event.get("amount_predicate_reason")
+    predicate=event.get("amount_predicate")
+    if predicate not in (None,"UNDETERMINED"):
+        return False
+    if reason not in (None,"NON_USDC_QUOTE"):
+        return False
+    if event.get("route_intermediate_assets"):
+        return False
+    if event.get("route_amount_semantics") not in (None,"DIRECT_OR_SINGLE_TARGET_QUOTE"):
+        return False
+    quote_legs=event.get("quote_legs")
+    if isinstance(quote_legs,list) and len(quote_legs)>1:
+        return False
+    return True
+
+
 def normalize_trade_event(event: dict, reference: dict | None) -> dict:
     """Return a copy with deterministic USDC-equivalent evidence when possible."""
     value = dict(event)
@@ -131,11 +149,17 @@ def normalize_trade_event(event: dict, reference: dict | None) -> dict:
         quote = None
 
     if asset == USDC and quote is not None:
-        value["quote_usdc_equivalent"] = str(quote)
-        value["quote_usdc_status"] = "USDC_DIRECT"
-        value["quote_usdc_reference"] = {
-            "trade_block_time": value.get("at"),
-            "reference": {"source": "USDC_DIRECT"},
+        predicate=value.get("amount_predicate")
+        reason=value.get("amount_predicate_reason")
+        known=predicate in {"USDC_DIRECT_NUMERIC","SOL_EVENT_TIME_USDC_VERIFIED"} or (predicate is None and not reason)
+        if not known:
+            value["quote_usdc_status"]="UNDETERMINED"
+            return value
+        value["quote_usdc_equivalent"]=str(quote)
+        value["quote_usdc_status"]="SOL_EVENT_TIME_USDC_VERIFIED" if predicate=="SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"
+        value["quote_usdc_reference"]={
+            "trade_block_time":value.get("at"),
+            "reference":{"source":"CAUSAL_SOL_NORMALIZATION" if predicate=="SOL_EVENT_TIME_USDC_VERIFIED" else "USDC_DIRECT"},
         }
         return value
     if asset not in SOL_QUOTE_ASSETS:
@@ -146,6 +170,10 @@ def normalize_trade_event(event: dict, reference: dict | None) -> dict:
         "trade_block_time": value.get("at"),
         "reference": reference or {"status": "UNAVAILABLE", "reason": "SOL_USDC_REFERENCE_MISSING"},
     }
+    if not _simple_sol_quote_eligible(value):
+        value["quote_usdc_status"]="UNDETERMINED"
+        value["quote_usdc_reference"]=wrapped_reference
+        return value
     if quote is None or not reference or reference.get("status") != "VERIFIED":
         value["quote_usdc_status"] = "UNDETERMINED"
         value["quote_usdc_reference"] = wrapped_reference
@@ -185,7 +213,16 @@ def normalize_classification(classified: dict, reference: dict | None, *, for_mo
         return value
 
     normalized = normalize_trade_event(
-        {"quote_asset": asset, "quote_quantity": str(q), "at": value.get("block_time")},
+        {
+            "quote_asset": asset,
+            "quote_quantity": str(q),
+            "at": value.get("block_time"),
+            "amount_predicate": t.get("amount_predicate"),
+            "amount_predicate_reason": t.get("amount_predicate_reason"),
+            "quote_legs": t.get("quote_legs"),
+            "route_intermediate_assets": t.get("route_intermediate_assets"),
+            "route_amount_semantics": t.get("route_amount_semantics"),
+        },
         reference,
     )
     for key in ("quote_usdc_equivalent", "quote_usdc_status", "quote_usdc_reference"):
@@ -208,6 +245,8 @@ def normalize_classification(classified: dict, reference: dict | None, *, for_mo
             quote_amount_raw=str(int(micro)),
             quote_decimals=6,
             quote_normalization="SOL_TO_USDC_SHADOW_EQUIVALENT",
+            amount_predicate="SOL_EVENT_TIME_USDC_VERIFIED",
+            amount_predicate_reason="CAUSAL_PREVIOUS_CLOSED_SOLUSDC_REFERENCE",
         )
     value["trade"] = t
     return value

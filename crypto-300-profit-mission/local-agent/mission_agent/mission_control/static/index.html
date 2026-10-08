@@ -54,6 +54,17 @@
       <div id="ended" class="ended-list"></div>
     </details>
 
+    <details class="panel ended-panel" id="review-activity-panel" hidden>
+      <summary>
+        <div>
+          <h2>待复核链上行为 <span id="review-activity-count">0</span></h2>
+          <p>Frank 已签名且存在链上经济流；部分事件已具备 swap 证据，部分仍缺市场/指令绑定或无法归约成单目标交易。这里只展示事实，不进入跟随信号。</p>
+        </div>
+        <span class="summary-hint">展开查看</span>
+      </summary>
+      <div id="review-activity" class="feed"></div>
+    </details>
+
     <section class="grid">
       <section class="panel">
         <div class="panel-title">
@@ -81,8 +92,7 @@
       <section class="cluster-hero">
         <div>
           <div class="eyebrow">MEME ON-CHAIN RESEARCH</div>
-          <h2>CA 链上结构查询</h2>
-          <p>输入 Solana CA，自动分析 Top20、实际 owner、资金来源、内部转账和控制/执行集群。只读、免费、证据优先。</p>
+          <h2>CA 链上研究</h2>
         </div>
         <div class="cluster-trust">
           <span>Finalized RPC</span>
@@ -103,7 +113,12 @@
             </select>
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">标准：Top20 owner，深扫前 10 个 owner，兼顾速度和可信度。</div>
+          <div class="cluster-preset-help" id="cluster-preset-help">标准：Top20 全部解析；先浅扫前 6 个 owner（12 + 8），只对可疑钱包自动加深到 30 + 12。</div>
+          <div class="preset-guide">
+            <div><b>快速</b><span>Top20 全解析；浅扫前 6 个 owner；8 笔目标币历史 + 4 笔 funding。用于第一轮排雷。</span></div>
+            <div class="active"><b>标准</b><span>Top20 全解析；前 6 个 owner 先做 12 + 8；发现关系证据、重大未确认角色后才自动加深到 30 + 12。</span></div>
+            <div><b>深度</b><span>Top20 owner 全部深扫；100 + 50。仅用于高价值项目或强烈怀疑分仓/集群，免费 RPC 压力最大。</span></div>
+          </div>
         </form>
       </section>
 
@@ -111,6 +126,27 @@
 
       <section id="cluster-result" class="cluster-result" hidden>
         <div class="cluster-summary" id="cluster-summary"></div>
+
+        <section class="panel conclusion-panel">
+          <div class="panel-title">
+            <div>
+              <h2>综合结论</h2>
+              <p>把合约权限、市场、持仓结构和未确认项分开，不把社区叙事自动当事实。</p>
+            </div>
+          </div>
+          <div id="cluster-conclusion" class="cluster-conclusion"></div>
+        </section>
+
+        <section class="grid cluster-grid">
+          <section class="panel">
+            <div class="panel-title"><div><h2>代币 / 合约</h2><p>Mint、权限、供应量直接来自 finalized RPC。</p></div></div>
+            <div id="cluster-token-profile" class="fact-grid"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-title"><div><h2>当前市场</h2><p>参考市场数据与 Jupiter $30 实际可执行报价分开显示。</p></div></div>
+            <div id="cluster-market" class="fact-grid"></div>
+          </section>
+        </section>
 
         <section class="panel">
           <div class="panel-title">
@@ -132,7 +168,7 @@
             </div>
             <div class="holder-table-wrap">
               <table class="holder-table">
-                <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th></tr></thead>
+                <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>首次确认建仓</th><th>建仓前资金源</th></tr></thead>
                 <tbody id="cluster-holders"></tbody>
               </table>
             </div>
@@ -165,6 +201,21 @@
             <div><h2>原始证据摘要</h2><p>共同资金源、直接转账、同步交易、共同签名等。</p></div>
           </div>
           <div id="cluster-evidence" class="cluster-evidence"></div>
+        </section>
+
+        <section class="grid cluster-grid">
+          <section class="panel">
+            <div class="panel-title">
+              <div><h2>Frank 观察状态</h2><p>只读取现有 Frank production 数据，不新增信号、不改阈值。</p></div>
+            </div>
+            <div id="cluster-frank" class="fact-grid"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-title">
+              <div><h2>叙事 / 官方关系</h2><p>只展示可抓到的项目链接；“官方认领、creator claim、买入、锁仓”等不会因为币名相同就自动确认。</p></div>
+            </div>
+            <div id="cluster-narrative" class="cluster-narrative"></div>
+          </section>
         </section>
       </section>
     </div>

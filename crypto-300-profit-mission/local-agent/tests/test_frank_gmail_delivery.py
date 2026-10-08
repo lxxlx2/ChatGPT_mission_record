@@ -74,7 +74,19 @@ def test_test_email_cannot_be_confused_with_live_signal(tmp_path):
 def test_email_template_has_all_required_fields_and_raw_quote(tmp_path):
     l,e,o,sid=setup(tmp_path);s=signals(l)[-1];m=content(s)
     for x in ('signal_id:','时间：','Token：','CA / Mint:','stage:','episode_id:','首次主动买入时间：','最新主动买入时间：','当前 buy_count：','当前 sell_count：','本次：','累计投入','当前观察库存：','触发说明（全部）：','最新触发交易：'):assert x in m['body']
-    assert m['subject'].endswith('1970-01-02 11:31');s['quote_asset']='SOL';s['latest_quote_amount']='7.123';assert '7.123 SOL' in content(s)['body']
+    assert m['subject'].endswith('1970-01-02 11:31')
+    s['quote_asset']='SOL';s['latest_quote_amount']='7.123'
+    s['latest_quote_observed_asset']='SOL';s['latest_quote_observed_amount']='7.123'
+    s['latest_quote_cost_known']=False
+    s['latest_quote_amount_predicate']='UNDETERMINED'
+    s['latest_quote_amount_reason']='NON_USDC_QUOTE'
+    s['position']['gross_quote_spent']={}
+    s['position']['gross_quote_out_observed']={'SOL':'7.123'}
+    s['position']['quote_cost_unknown_contributions']=[{
+        'signature':s['latest_buy_signature'],'quote_asset':'SOL','quote_quantity':'7.123',
+        'amount_predicate':'UNDETERMINED','amount_predicate_reason':'NON_USDC_QUOTE',
+    }]
+    assert '7.123 SOL' in content(s)['body']
 
 def test_wrong_sent_subject_or_marker_or_content_cannot_verify(tmp_path):
     l,e,o,sid=setup(tmp_path);p=Provider();o.drain(p);r=o.row(sid);message=dict(p.messages['gmail-1']);raw=base64.urlsafe_b64decode(message['raw']).replace(b'X-Frank-Signal-ID:',b'X-Wrong-Signal-ID:');message['raw']=base64.urlsafe_b64encode(raw).decode()

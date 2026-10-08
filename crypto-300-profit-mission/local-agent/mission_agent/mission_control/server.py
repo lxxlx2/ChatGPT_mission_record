@@ -14,11 +14,14 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from decimal import Decimal
 from urllib.parse import parse_qs, urlparse
 
 from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
+from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .frank import FrankReader
+from .jupiter import JupiterQuoteClient
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -102,20 +105,44 @@ def _atomic_write_text(path: Path, text_value: str):
 
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 CLUSTER_PRESETS = {
-    "quick": {"deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8},
-    "standard": {"deep_holders": 10, "history_per_holder": 30, "funding_lookback": 12},
-    "deep": {"deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50},
+    "quick": {
+        "deep_holders": 6, "history_per_holder": 8, "funding_lookback": 4,
+        "adaptive_history_per_holder": None, "adaptive_funding_lookback": None,
+    },
+    "standard": {
+        "deep_holders": 6, "history_per_holder": 12, "funding_lookback": 8,
+        "adaptive_history_per_holder": 30, "adaptive_funding_lookback": 12,
+    },
+    "deep": {
+        "deep_holders": 20, "history_per_holder": 100, "funding_lookback": 50,
+        "adaptive_history_per_holder": None, "adaptive_funding_lookback": None,
+    },
 }
 
 
 class ClusterJobManager:
-    def __init__(self, control_root: Path):
+    def __init__(self, control_root: Path, production_root: Path | None = None):
         self.control_root = Path(control_root)
         self.report_root = self.control_root / "cluster-reports"
         self.report_root.mkdir(parents=True, exist_ok=True)
         self.cache_path = self.control_root / "wallet-cluster-rpc-cache.sqlite"
         self.registry_path = Path(__file__).resolve().parents[2] / "config" / "meme_special_addresses.json"
-        self.rpc_endpoint = os.environ.get("SOLANA_RPC_URL", "https://api.mainnet.solana.com")
+        configured=os.environ.get("SOLANA_RPC_URLS")
+        if configured:
+            self.rpc_endpoints=[x.strip() for x in configured.split(",") if x.strip()]
+        else:
+            primary=os.environ.get("SOLANA_RPC_URL","https://api.mainnet.solana.com")
+            self.rpc_endpoints=[
+                primary,
+                "https://solana-rpc.publicnode.com",
+                "https://api.mainnet-beta.solana.com",
+                "https://rpc.ankr.com/solana",
+            ]
+        self.rpc_endpoints=list(dict.fromkeys(self.rpc_endpoints))
+        self.rpc_endpoint=self.rpc_endpoints[0]
+        self.market_client=DexScreenerMarketClient()
+        self.jupiter=JupiterQuoteClient(os.environ.get("JUPITER_API_KEY"))
+        self.frank=FrankReader(production_root) if production_root is not None else None
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
@@ -162,10 +189,228 @@ class ClusterJobManager:
                 "started_at": None,
                 "finished_at": None,
                 "error": None,
+                "progress": {"stage":"QUEUED","updated_at":time.time()},
             }
             self.jobs[job_id] = job
             job["future"] = self.executor.submit(self._run, job_id)
             return self._public_job(job)
+
+    def _frank_snapshot(self, mint: str) -> dict:
+        if self.frank is None:
+            return {"status":"UNAVAILABLE","reason":"PRODUCTION_ROOT_NOT_CONFIGURED","mint":mint}
+        try:
+            return self.frank.mint_snapshot(mint)
+        except (OSError,ValueError,sqlite3.Error) as exc:
+            # CA research must remain usable when the optional production
+            # Frank read-only database is temporarily unavailable.
+            return {
+                "status":"UNAVAILABLE","reason":"FRANK_READ_ERROR","mint":mint,
+                "error_class":type(exc).__name__,
+            }
+
+    def _set_progress(self, job_id: str, stage: str, details: dict | None = None):
+        details=details or {}
+        progress={"stage":stage,"updated_at":time.time()}
+        if stage=="BASE_READY":
+            profile=details.get("token_profile") or {}
+            market=details.get("market") or {}
+            pair=market.get("main_pair") or {}
+            progress.update({
+                "token_program":profile.get("token_program"),
+                "mint_authority":profile.get("mint_authority"),
+                "freeze_authority":profile.get("freeze_authority"),
+                "market_status":market.get("status"),
+                "name":market.get("name"),
+                "symbol":market.get("symbol"),
+                "market_cap_usd":market.get("market_cap_usd"),
+                "liquidity_usd":pair.get("liquidity_usd"),
+            })
+        else:
+            for key in ("top_accounts_resolved","scanned","target","owner","mode","deep_holders_scanned","adaptive_deepened"):
+                if key in details:progress[key]=details.get(key)
+            if details.get("owners"):progress["owners"]=list(details.get("owners") or [])[:10]
+        with self.lock:
+            job=self.jobs.get(job_id)
+            if job is not None and job.get("status") in {"QUEUED","RUNNING"}:
+                job["progress"]=progress
+
+    @staticmethod
+    def _extension_semantic_config(value):
+        accounting_only={"withheldamount"}
+        if isinstance(value,dict):
+            return {
+                key:ClusterJobManager._extension_semantic_config(child)
+                for key,child in value.items()
+                if str(key).lower().replace("_","").replace("-","") not in accounting_only
+            }
+        if isinstance(value,list):
+            return [ClusterJobManager._extension_semantic_config(child) for child in value]
+        return value
+
+    @staticmethod
+    def _assessment_snapshot(report: dict) -> dict:
+        assessment=report.get("assessment") or {}
+        metrics=report.get("metrics") or {}
+        profile=report.get("token_profile") or {}
+        narrative=assessment.get("narrative_status")
+        structure=assessment.get("trading_status") or "UNRESOLVED"
+        investment="PENDING_NARRATIVE" if narrative=="NOT_AUTOMATICALLY_VERIFIED" else structure
+        # History compares semantic permission/risk state only. Raw extension
+        # config can contain accounting counters (for example withheldAmount)
+        # that are useful audit evidence but are not new permissions or risks.
+        extension_details=[
+            {
+                "name":row.get("name"),"status":row.get("status"),"reason":row.get("reason"),
+                "semantic_config":ClusterJobManager._extension_semantic_config(row.get("config")),
+            }
+            for row in (profile.get("sensitive_extension_details") or [])
+            if isinstance(row,dict)
+        ]
+        extension_details.sort(key=lambda row:(
+            str(row.get("name")),str(row.get("status")),str(row.get("reason")),
+            json.dumps(row.get("semantic_config"),sort_keys=True,default=str),
+        ))
+        active_extension_risks=[
+            {
+                "name":row.get("name"),"status":row.get("status"),"reason":row.get("reason"),
+                "semantic_config":ClusterJobManager._extension_semantic_config(row.get("config")),
+            }
+            for row in (assessment.get("active_extension_risks") or [])
+            if isinstance(row,dict)
+        ]
+        active_extension_risks.sort(key=lambda row:(
+            str(row.get("name")),str(row.get("status")),str(row.get("reason")),
+            json.dumps(row.get("semantic_config"),sort_keys=True,default=str),
+        ))
+        unresolved_extension_risks=[
+            {
+                "name":row.get("name"),"status":row.get("status"),"reason":row.get("reason"),
+                "semantic_config":ClusterJobManager._extension_semantic_config(row.get("config")),
+            }
+            for row in (assessment.get("unresolved_extension_risks") or [])
+            if isinstance(row,dict)
+        ]
+        unresolved_extension_risks.sort(key=lambda row:(
+            str(row.get("name")),str(row.get("status")),str(row.get("reason")),
+            json.dumps(row.get("semantic_config"),sort_keys=True,default=str),
+        ))
+        return {
+            "structure_rating":structure,
+            "investment_rating":investment,
+            "chain_permission_status":assessment.get("chain_permission_status"),
+            "cluster_status":assessment.get("cluster_status"),
+            "largest_control_cluster_pct":metrics.get("LARGEST_PROBABLE_CONTROL_CLUSTER_PCT"),
+            "unresolved_material_holder_pct":metrics.get("UNRESOLVED_MATERIAL_HOLDER_PCT"),
+            "mint_authority":profile.get("mint_authority"),
+            "freeze_authority":profile.get("freeze_authority"),
+            "sensitive_extension_details":extension_details,
+            "active_extension_risks":active_extension_risks,
+            "unresolved_extension_risks":unresolved_extension_risks,
+            "narrative_status":narrative,
+        }
+
+    @staticmethod
+    def _extension_audit_snapshot(report: dict) -> list[dict]:
+        profile=report.get("token_profile") or {}
+        details=[
+            {
+                "name":row.get("name"),"status":row.get("status"),"reason":row.get("reason"),
+                "config":row.get("config"),
+            }
+            for row in (profile.get("sensitive_extension_details") or [])
+            if isinstance(row,dict)
+        ]
+        details.sort(key=lambda row:(
+            str(row.get("name")),str(row.get("status")),str(row.get("reason")),
+            json.dumps(row.get("config"),sort_keys=True,default=str),
+        ))
+        return details
+
+    @staticmethod
+    def _coverage_snapshot(report: dict, preset: str) -> dict:
+        coverage=report.get("coverage") or {}
+        return {
+            "preset":preset,
+            "scan_mode":coverage.get("scan_mode"),
+            "top_accounts_resolved":coverage.get("top_accounts_resolved"),
+            "deep_holders_scanned":coverage.get("deep_holders_scanned"),
+            "adaptive_deepened_owners":sorted(coverage.get("adaptive_deepened_owners") or []),
+            "history_per_holder":coverage.get("history_per_holder"),
+            "funding_lookback":coverage.get("funding_lookback"),
+        }
+
+    @staticmethod
+    def _changed_fields(before: dict, after: dict) -> list[str]:
+        return [key for key in sorted(set(before)|set(after)) if before.get(key)!=after.get(key)]
+
+    def _attach_assessment_history(self, out: Path, report: dict, preset: str):
+        history_path=out/"assessment-history.json"
+        try:
+            history=json.loads(history_path.read_text()) if history_path.is_file() else []
+            if not isinstance(history,list):history=[]
+        except (OSError,ValueError):
+            history=[]
+        snapshot=self._assessment_snapshot(report)
+        extension_audit_snapshot=self._extension_audit_snapshot(report)
+        coverage_snapshot=self._coverage_snapshot(report,preset)
+        previous=(history[-1].get("snapshot") or {}) if history else {}
+        previous_coverage=(history[-1].get("coverage_snapshot") or {}) if history else {}
+        changed=self._changed_fields(previous,snapshot)
+        coverage_changed=self._changed_fields(previous_coverage,coverage_snapshot)
+        if not history or changed:
+            new_risk=[];removed_uncertainty=[]
+            before_active={json.dumps(x,sort_keys=True,default=str) for x in (previous.get("active_extension_risks") or [])}
+            after_active={json.dumps(x,sort_keys=True,default=str) for x in (snapshot.get("active_extension_risks") or [])}
+            if snapshot.get("chain_permission_status")=="RISK" and previous.get("chain_permission_status")!="RISK":
+                new_risk.append("CHAIN_PERMISSION_RISK")
+            if after_active-before_active:
+                new_risk.extend("TOKEN2022_ACTIVE_EXTENSION:"+x for x in sorted(after_active-before_active))
+            if snapshot.get("cluster_status")=="PROBABLE_CONTROL_CLUSTER_PRESENT" and previous.get("cluster_status")!="PROBABLE_CONTROL_CLUSTER_PRESENT":
+                new_risk.append("PROBABLE_CONTROL_CLUSTER_PRESENT")
+            if previous.get("cluster_status")=="WALLET_CLUSTER_UNRESOLVED" and snapshot.get("cluster_status")!="WALLET_CLUSTER_UNRESOLVED":
+                removed_uncertainty.append("WALLET_CLUSTER_UNRESOLVED")
+            if previous.get("chain_permission_status")=="UNRESOLVED" and snapshot.get("chain_permission_status") in {"PASS","RISK"}:
+                removed_uncertainty.append("CHAIN_PERMISSION_UNRESOLVED")
+            if not history:
+                category="INITIAL_OBSERVATION"
+            elif any(key in changed for key in ("mint_authority","freeze_authority","sensitive_extension_details","active_extension_risks","unresolved_extension_risks","chain_permission_status")):
+                category="CHAIN_PERMISSION_CHANGE"
+            elif coverage_changed:
+                category="ASSESSMENT_CHANGE_WITH_COVERAGE_CHANGE"
+            else:
+                category="ASSESSMENT_CHANGE"
+            evidence_changes=[
+                {"field":key,"before":previous.get(key),"after":snapshot.get(key)}
+                for key in changed
+            ] if history else [{"field":"INITIAL_OBSERVATION","before":None,"after":snapshot}]
+            entry={
+                "observed_at":report.get("observed_at") or time.time(),
+                "preset":preset,
+                "structure_rating":snapshot["structure_rating"],
+                "investment_rating":snapshot["investment_rating"],
+                "change_category":category,
+                "changed_fields":changed if history else list(snapshot),
+                "coverage_changed_fields":coverage_changed,
+                "new_evidence":evidence_changes,
+                "removed_uncertainty":removed_uncertainty,
+                "new_risk":new_risk,
+                "reason":"首次观测" if not history else category+"：" + ", ".join(changed),
+                "snapshot":snapshot,
+                "extension_audit_snapshot":extension_audit_snapshot,
+                "coverage_snapshot":coverage_snapshot,
+            }
+            history.append(entry)
+            history=history[-100:]
+            _atomic_write_text(history_path,json.dumps(history,ensure_ascii=False,indent=2,sort_keys=True,default=str))
+        report["assessment_history"]=[
+            {k:v for k,v in row.items() if k not in {"snapshot","coverage_snapshot","extension_audit_snapshot"}} for row in history[-20:]
+        ]
+        report["assessment_history_context"]={
+            "current_preset":preset,
+            "coverage_changed_since_previous_observation":bool(coverage_changed),
+            "coverage_snapshot":coverage_snapshot,
+            "current_extension_audit_details":extension_audit_snapshot,
+        }
 
     def _run(self, job_id: str):
         with self.lock:
@@ -176,7 +421,11 @@ class ClusterJobManager:
             preset = job["preset"]
         cache = RpcCache(self.cache_path)
         try:
-            rpc = SolanaReadOnlyRPC(self.rpc_endpoint, cache=cache)
+            rpc = SolanaReadOnlyRPC(
+                self.rpc_endpoint,
+                fallback_endpoints=self.rpc_endpoints[1:],
+                cache=cache,
+            )
             registry = load_registry(self.registry_path)
             opts = CLUSTER_PRESETS[preset]
             report = WalletClusterAnalyzer(
@@ -186,10 +435,30 @@ class ClusterJobManager:
                 deep_holders=opts["deep_holders"],
                 history_per_holder=opts["history_per_holder"],
                 funding_lookback=opts["funding_lookback"],
+                adaptive_history_per_holder=opts.get("adaptive_history_per_holder"),
+                adaptive_funding_lookback=opts.get("adaptive_funding_lookback"),
+                market_client=self.market_client,
+                progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
             ).analyze()
+            report["frank"]=self._frank_snapshot(mint)
+            try:
+                report["execution_quote_30_usdc"]=self.jupiter.quote_usdc_to_token(
+                    mint,
+                    int(report["decimals"]),
+                    usdc_amount=Decimal("30"),
+                    slippage_bps=100,
+                )
+            except Exception as exc:
+                report["execution_quote_30_usdc"]={
+                    "status":"UNAVAILABLE",
+                    "source":"JUPITER_OFFICIAL",
+                    "reason":type(exc).__name__,
+                }
+            self._set_progress(job_id,"REPORT_PERSISTING",{"deep_holders_scanned":(report.get("coverage") or {}).get("deep_holders_scanned"),"adaptive_deepened":len((report.get("coverage") or {}).get("adaptive_deepened_owners") or [])})
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
+            self._attach_assessment_history(out,report,preset)
             payload = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
             _atomic_write_text(out / f"{stamp}.json", payload)
             _atomic_write_text(out / f"{stamp}.md", markdown(report))
@@ -198,6 +467,7 @@ class ClusterJobManager:
                 job = self.jobs[job_id]
                 job["status"] = "DONE"
                 job["finished_at"] = time.time()
+                job["progress"] = {"stage":"DONE","updated_at":job["finished_at"]}
                 self._prune_jobs_locked()
         except Exception as exc:
             with self.lock:
@@ -208,6 +478,7 @@ class ClusterJobManager:
                     "type": type(exc).__name__,
                     "message": str(exc)[:500],
                 }
+                job["progress"] = {"stage":"ERROR","updated_at":job["finished_at"]}
                 self._prune_jobs_locked()
         finally:
             cache.close()
@@ -234,7 +505,7 @@ class DashboardState:
         self.control_root = Path(control_root)
         self.control_db = self.control_root / "mission-control.sqlite"
         self.control_health = self.control_root / "mission-control-health.json"
-        self.cluster_jobs = ClusterJobManager(self.control_root)
+        self.cluster_jobs = ClusterJobManager(self.control_root, production_root)
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():
@@ -311,6 +582,9 @@ class DashboardState:
     def recent_trades(self):
         return self.frank.recent_trades(100)
 
+    def review_activity(self):
+        return self.frank.review_activity(30)
+
     def decisions(self):
         rows = self._control_query("SELECT * FROM decision_events ORDER BY rowid DESC LIMIT 100")
         for row in rows:
@@ -361,6 +635,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.candidates())
         if path == "/api/trades":
             return self._json(self.state.recent_trades())
+        if path == "/api/review-activity":
+            return self._json(self.state.review_activity())
         if path == "/api/decisions":
             return self._json(self.state.decisions())
         if path == "/api/cluster-analysis":

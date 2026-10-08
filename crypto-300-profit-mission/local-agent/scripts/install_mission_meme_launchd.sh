@@ -22,6 +22,7 @@ DASH_RUNNER="$APP_SUPPORT/dashboard.sh"
 APPROVED_HASH_FILE="$APP_SUPPORT/approved_policy_sha256"
 RUNTIME_POLICY="$APP_SUPPORT/follow_policy_v1.approved.json"
 PORT_FILE="$APP_SUPPORT/dashboard_port"
+RPC_FILE="$APP_SUPPORT/solana_rpc_urls"
 
 LOOP_PLIST="$LAUNCH_DIR/$LOOP_LABEL.plist"
 DASH_PLIST="$LAUNCH_DIR/$DASH_LABEL.plist"
@@ -45,6 +46,18 @@ CONTROL="$(cat "$CONTROL_POINTER")"
 
 mkdir -p "$APP_SUPPORT" "$LOG_DIR" "$LAUNCH_DIR" "$CONTROL/logs"
 chmod 700 "$APP_SUPPORT" "$LOG_DIR"
+
+# Persist the authenticated Solana RPC outside Git/plists so LaunchAgents retain
+# it after logout/reboot. An explicit environment value refreshes the file;
+# otherwise an existing 0600 file is reused.
+if [ -n "${SOLANA_RPC_URLS:-}" ]; then
+  umask 077
+  printf '%s\n' "$SOLANA_RPC_URLS" > "$RPC_FILE"
+fi
+[ -f "$RPC_FILE" ] || die "SOLANA_RPC_URLS_NOT_CONFIGURED: run scripts/configure_mission_meme_rpc.sh first"
+RPC_URLS_VALUE="$(cat "$RPC_FILE" 2>/dev/null || true)"
+[ -n "$RPC_URLS_VALUE" ] || die "SOLANA_RPC_URLS_EMPTY"
+chmod 600 "$RPC_FILE"
 
 cp "$POLICY" "$RUNTIME_POLICY"
 chmod 600 "$RUNTIME_POLICY"
@@ -108,9 +121,13 @@ VENV="$VENV"
 CONTROL_POINTER="$CONTROL_POINTER"
 POLICY="$RUNTIME_POLICY"
 APPROVED_HASH_FILE="$APPROVED_HASH_FILE"
+RPC_FILE="$RPC_FILE"
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 CONTROL="\$(cat "\$CONTROL_POINTER")"
 APPROVED_HASH="\$(cat "\$APPROVED_HASH_FILE")"
+SOLANA_RPC_URLS="\$(cat "\$RPC_FILE")"
+[ -n "\$SOLANA_RPC_URLS" ] || { echo "ERROR: SOLANA_RPC_URLS_EMPTY" >&2; exit 1; }
+export SOLANA_RPC_URLS
 mkdir -p "\$CONTROL/logs"
 cd "\$LOCAL_AGENT"
 echo "\$\$" > "\$CONTROL/loop.pid"
@@ -131,9 +148,13 @@ PROD="$PROD"
 VENV="$VENV"
 CONTROL_POINTER="$CONTROL_POINTER"
 PORT_FILE="$PORT_FILE"
+RPC_FILE="$RPC_FILE"
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 CONTROL="\$(cat "\$CONTROL_POINTER")"
 PORT="\$(cat "\$PORT_FILE")"
+SOLANA_RPC_URLS="\$(cat "\$RPC_FILE")"
+[ -n "\$SOLANA_RPC_URLS" ] || { echo "ERROR: SOLANA_RPC_URLS_EMPTY" >&2; exit 1; }
+export SOLANA_RPC_URLS
 mkdir -p "\$CONTROL/logs"
 cd "\$LOCAL_AGENT"
 echo "\$\$" > "\$CONTROL/dashboard.pid"
@@ -255,6 +276,7 @@ echo "Dashboard HTTP=$HTTP"
 echo "Dashboard=http://127.0.0.1:$PORT"
 echo "Approved policy SHA256=$POLICY_SHA"
 echo "Runtime policy=$RUNTIME_POLICY"
+echo "Authenticated Solana RPC: CONFIGURED (secret not printed)"
 echo "AUTO-START: ON AFTER USER LOGIN"
 echo "LIVE DELIVERY: policy-gated"
 echo "PRODUCTION_TRADING: NO_GO"

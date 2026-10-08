@@ -133,7 +133,16 @@ class SolNormalizedMirror:
                         if ref.get("reason") in FATAL_ACCESS_REASONS:
                             sol_unresolved+=1;failures[ref["reason"]]=failures.get(ref["reason"],0)+1
                         elif ref.get("status")=="VERIFIED":
-                            body=normalize_classification(classified,ref,for_model=True);sol_resolved+=1
+                            body=normalize_classification(classified,ref,for_model=True)
+                            normalized_trade=body.get("trade") or {}
+                            if (
+                                normalized_trade.get("amount_predicate")=="SOL_EVENT_TIME_USDC_VERIFIED"
+                                and normalized_trade.get("quote_asset")=="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+                            ):
+                                sol_resolved+=1
+                            else:
+                                sol_unresolved+=1
+                                failures["SOL_QUOTE_PROVENANCE_INELIGIBLE"]=failures.get("SOL_QUOTE_PROVENANCE_INELIGIBLE",0)+1
                         else:
                             sol_unresolved+=1;reason=ref.get("reason") or "SOL_REFERENCE_UNAVAILABLE";failures[reason]=failures.get(reason,0)+1
                 self._insert_signature(row,body);copied+=1

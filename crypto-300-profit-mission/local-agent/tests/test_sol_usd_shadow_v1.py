@@ -13,7 +13,14 @@ POLICY=Path(__file__).parents[1]/'config/frank_local_signal_v1.json'
 def put_sol(ledger,engine,signature,at,sol_amount,sol_usdc='100'):
     event=active(signature,100,20)
     event['block_time']=at;event['slot']=at
-    event['trade']['quote_asset']='SOL';event['trade']['quote_amount_raw']=str(int(sol_amount*1_000_000_000));event['trade']['quote_decimals']=9
+    event['trade']['quote_asset']='SOL'
+    event['trade']['quote_amount_raw']=str(int(sol_amount*1_000_000_000))
+    event['trade']['quote_decimals']=9
+    event['trade']['amount_predicate']='UNDETERMINED'
+    event['trade']['amount_predicate_reason']='NON_USDC_QUOTE'
+    event['trade']['quote_legs']=[{'asset':'SOL','raw_delta':str(-int(sol_amount*1_000_000_000)),'decimals':9}]
+    event['trade']['route_intermediate_assets']=[]
+    event['trade']['route_amount_semantics']='DIRECT_OR_SINGLE_TARGET_QUOTE'
     ref={'status':'VERIFIED','source':'BINANCE_OFFICIAL_SPOT_SOLUSDC','selection_rule':'PREVIOUS_CLOSED_1M_CLOSE','sol_usdc':sol_usdc,'evidence_sha256':'fixture'}
     normalized=normalize_classification(event,ref,for_model=True)
     ledger.put('frank',normalized,signature,'fixture',dry_run=True)
@@ -38,7 +45,11 @@ def test_verified_sol_usdc_shadow_recovers_same_accumulation_and_multiple_shape(
 
 def test_unresolved_sol_reference_remains_fail_closed(tmp_path):
     ledger=Ledger(tmp_path/'shadow.sqlite');engine=Engine(ledger,load_policy(POLICY),dry_run=True)
-    event=active('one',100,20);event['block_time']=100000;event['slot']=100000;event['trade']['quote_asset']='SOL';event['trade']['quote_amount_raw']=str(130*1_000_000_000);event['trade']['quote_decimals']=9
+    event=active('one',100,20);event['block_time']=100000;event['slot']=100000
+    event['trade']['quote_asset']='SOL';event['trade']['quote_amount_raw']=str(130*1_000_000_000);event['trade']['quote_decimals']=9
+    event['trade']['amount_predicate']='UNDETERMINED';event['trade']['amount_predicate_reason']='NON_USDC_QUOTE'
+    event['trade']['quote_legs']=[{'asset':'SOL','raw_delta':str(-130*1_000_000_000),'decimals':9}]
+    event['trade']['route_intermediate_assets']=[];event['trade']['route_amount_semantics']='DIRECT_OR_SINGLE_TARGET_QUOTE'
     normalized=normalize_classification(event,{'status':'UNAVAILABLE','reason':'fixture'},for_model=True)
     ledger.put('frank',normalized,'one','fixture',dry_run=True);engine.drain()
     assert signals(ledger)==[]
