@@ -442,3 +442,5 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 @media(max-width:460px){
   .cluster-preview-items,.cluster-summary{grid-template-columns:1fr}
 }
+
+.cluster-status[hidden],.cluster-result[hidden],.cluster-preview[hidden]{display:none}
