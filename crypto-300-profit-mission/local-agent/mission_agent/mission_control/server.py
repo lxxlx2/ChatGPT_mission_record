@@ -250,7 +250,12 @@ class ClusterJobManager:
                         "freeze_authority":profile.get("freeze_authority"),
                         "active_extension_risks":profile.get("active_extension_risks") or [],
                         "unresolved_extension_risks":profile.get("unresolved_sensitive_extensions") or [],
+                        "raw_top10_resolved_pct":None,
+                        "top_accounts_resolved":None,
                     }
+                elif stage=="HOLDERS_READY" and isinstance(job.get("preview"),dict):
+                    job["preview"]["raw_top10_resolved_pct"]=details.get("raw_top10_resolved_pct")
+                    job["preview"]["top_accounts_resolved"]=details.get("top_accounts_resolved")
 
     @staticmethod
     def _extension_semantic_config(value):
