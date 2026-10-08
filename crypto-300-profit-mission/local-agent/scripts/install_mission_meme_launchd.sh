@@ -59,10 +59,18 @@ else
 fi
 [ -n "$RPC_URLS_VALUE" ] || die "SOLANA_RPC_URLS_EMPTY"
 
+# Copy the policy once into a private temporary snapshot, outside installed
+# Application Support. OAuth preflight may delay installation, but editing the
+# original policy during this delay cannot alter the approved bytes.
+STAGED_POLICY="$(mktemp "${TMPDIR:-/tmp}/frank-meme-policy.XXXXXXXX")"
+chmod 600 "$STAGED_POLICY"
+trap 'rm -f "$STAGED_POLICY"' EXIT
+cat "$POLICY" > "$STAGED_POLICY"
+
 # Use the EXACT authorization predicate also enforced by MissionMemeService.
 # The external digest is supplied by the operator via environment; it is
 # never derived from the candidate policy by this installer.
-PYTHONPATH="$LOCAL_AGENT" "$VENV/bin/python" - "$POLICY" "$APPROVED_POLICY_SHA256" <<'PY'
+PYTHONPATH="$LOCAL_AGENT" "$VENV/bin/python" - "$STAGED_POLICY" "$APPROVED_POLICY_SHA256" <<'PY'
 import sys
 from mission_agent.mission_control.policy import (
     load_policy, live_delivery_policy_authorized,
@@ -115,7 +123,24 @@ install_atomic() {
 
 # Two independent atomic replaces. A crash between them fails closed because
 # policy bytes and externally approved digest cannot match until both commit.
-install_atomic "$RUNTIME_POLICY" < "$POLICY"
+PREVIOUS_RUNTIME_POLICY=""
+if [ -f "$RUNTIME_POLICY" ]; then
+  PREVIOUS_RUNTIME_POLICY="$(mktemp "${TMPDIR:-/tmp}/frank-meme-previous.XXXXXXXX")"
+  chmod 600 "$PREVIOUS_RUNTIME_POLICY"
+  cat "$RUNTIME_POLICY" > "$PREVIOUS_RUNTIME_POLICY"
+fi
+install_atomic "$RUNTIME_POLICY" < "$STAGED_POLICY"
+INSTALLED_POLICY_SHA="$(shasum -a 256 "$RUNTIME_POLICY" | awk '{print $1}')"
+if [ "$INSTALLED_POLICY_SHA" != "$POLICY_SHA" ]; then
+  if [ -n "$PREVIOUS_RUNTIME_POLICY" ]; then
+    install_atomic "$RUNTIME_POLICY" < "$PREVIOUS_RUNTIME_POLICY"
+  else
+    rm -f "$RUNTIME_POLICY"
+  fi
+  [ -z "$PREVIOUS_RUNTIME_POLICY" ] || rm -f "$PREVIOUS_RUNTIME_POLICY"
+  die "POST_INSTALL_POLICY_HASH_MISMATCH"
+fi
+[ -z "$PREVIOUS_RUNTIME_POLICY" ] || rm -f "$PREVIOUS_RUNTIME_POLICY"
 printf '%s\n' "$POLICY_SHA" | install_atomic "$APPROVED_HASH_FILE"
 if [ -n "${SOLANA_RPC_URLS:-}" ]; then
   printf '%s\n' "$SOLANA_RPC_URLS" | install_atomic "$RPC_FILE"

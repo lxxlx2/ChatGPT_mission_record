@@ -218,6 +218,7 @@ def test_acceptance_integrity_snapshot_allows_normal_live_heartbeats_and_appends
     db=prod/"forward.sqlite"
     con=sqlite3.connect(db)
     con.execute("CREATE TABLE signatures(wallet TEXT,signature TEXT,person_id TEXT,slot INTEGER,block_time INTEGER,raw_hash TEXT,raw_reference TEXT)")
+    con.execute("CREATE TABLE v1_states(person_id TEXT,mint TEXT,body TEXT)")
     con.execute("INSERT INTO signatures VALUES(?,?,?,?,?,?,?)",("w","first","frank",1,100,"oldhash","raw1"))
     con.commit();con.close()
     health=prod/"health.json"
@@ -256,6 +257,7 @@ def test_acceptance_bash_fake_prod_integrity_only(tmp_path):
     prod=tmp_path/"fake-prod";prod.mkdir()
     db=sqlite3.connect(prod/"forward.sqlite")
     db.execute("CREATE TABLE signatures(wallet TEXT,signature TEXT,person_id TEXT,slot INTEGER,block_time INTEGER,raw_hash TEXT,raw_reference TEXT)")
+    db.execute("CREATE TABLE v1_states(person_id TEXT,mint TEXT,body TEXT)")
     db.commit();db.close()
     (prod/"health.json").write_text(json.dumps({**LEDGER_STABLE,
                                               "last_successful_poll":1,"status":"RUNNING"}))

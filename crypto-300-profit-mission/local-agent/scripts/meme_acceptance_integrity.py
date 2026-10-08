@@ -119,7 +119,8 @@ def _health_snapshot(path: Path) -> dict:
     }
 
 
-def _database_snapshot(path: Path, max_rowid: int | None = None) -> dict:
+def _database_snapshot(path: Path, max_rowid: int | None = None,
+                       expected_profile: str | None = None) -> dict:
     if not path.is_file():
         raise ValueError("FORWARD_DB_MISSING")
     uri = path.resolve().as_uri() + "?mode=ro"
@@ -131,6 +132,11 @@ def _database_snapshot(path: Path, max_rowid: int | None = None) -> dict:
             "WHERE type IN ('table','index','trigger','view') "
             "AND name NOT LIKE 'sqlite_%' ORDER BY type,name"
         ).fetchall()
+        tables = {row[1] for row in schema if row[0] == "table"}
+        if expected_profile == "LEDGER_FRANK_LOCAL" and "v1_states" not in tables:
+            raise ValueError("DB_SCHEMA_WRITER_PROFILE_MISMATCH")
+        if expected_profile == "REPOSITORY_FRANK_SHADOW" and "v1_states" in tables:
+            raise ValueError("DB_SCHEMA_WRITER_PROFILE_MISMATCH")
         max_seen = conn.execute("SELECT COALESCE(MAX(rowid),0) FROM signatures").fetchone()[0]
         limit = max_seen if max_rowid is None else max_rowid
         if max_seen < limit:
@@ -152,9 +158,13 @@ def _database_snapshot(path: Path, max_rowid: int | None = None) -> dict:
 
 def capture(prod: Path, loop_plist: Path, dash_plist: Path,
             *, max_rowid: int | None = None) -> dict:
+    health = _health_snapshot(prod / "health.json")
     return {"version": 1,
-            "db": _database_snapshot(prod / "forward.sqlite", max_rowid),
-            **_health_snapshot(prod / "health.json"),
+            "db": _database_snapshot(
+                prod / "forward.sqlite", max_rowid,
+                expected_profile=health["health_profile"],
+            ),
+            **health,
             "launchagent_sha256": {
                 "loop": _file_hash(loop_plist),
                 "dashboard": _file_hash(dash_plist),

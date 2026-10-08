@@ -103,6 +103,9 @@ def test_ledger_stable_security_config_changes_are_detected(tmp_path, key):
 
 def test_shadow_writer_stable_fields_still_detected_without_poll_false_positive(tmp_path):
     prod, health, loop, dash = _prod(tmp_path)
+    # Separate the synthetic Repository schema from Ledger-owned v1_states.
+    with sqlite3.connect(prod / "forward.sqlite") as database:
+        database.execute("DROP TABLE v1_states")
     shadow = {
         "identifier": "com.jerson.crypto-monitor-frank-shadow",
         "service_source_sha256": "a" * 64,
@@ -164,3 +167,25 @@ def test_ledger_source_drift_and_pre_capture_policy_mismatch_fail_closed(tmp_pat
     health.write_text(json.dumps(changed))
     with pytest.raises(ValueError,match="HEALTH_SOURCE_DRIFT"):
         verify(baseline,prod,loop,dash)
+
+
+def test_complete_shadow_health_rejected_against_ledger_schema(tmp_path):
+    prod,health,loop,dash=_prod(tmp_path)
+    health.write_text(json.dumps({
+        "identifier":"com.jerson.crypto-monitor-frank-shadow",
+        "service_source_sha256":"a"*64,
+        "parser_version":"frank-v8",
+        "historical_network_backfill":"BOUNDED300S_IDLE_WINDOW_ONLY",
+        "gmail":0,"app_alert":0,"automation_mutations":0,"production_writes":0,
+    }))
+    with pytest.raises(ValueError,match="DB_SCHEMA_WRITER_PROFILE_MISMATCH"):
+        capture(prod,loop,dash)
+
+
+def test_wrong_ledger_identifier_fails_at_capture_not_only_at_verify(tmp_path):
+    prod,health,loop,dash=_prod(tmp_path)
+    data=json.loads(health.read_text())
+    data["identifier"]="com.not-approved-ledger"
+    health.write_text(json.dumps(data))
+    with pytest.raises(ValueError,match="HEALTH_WRITER_PROFILE_MISMATCH"):
+        capture(prod,loop,dash)
