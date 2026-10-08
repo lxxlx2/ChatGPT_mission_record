@@ -159,8 +159,8 @@ def solana_events(signature: str, tx: dict, wallet: str) -> list[dict]:
                 continue
             amount = int.from_bytes(decoded[8:16], "little")
             oid = order_id("0x" + decoded[16:48].hex())
-            if amount > 0 and oid:
-                cash = deltas.get(USDC, {}).get("raw", 0)
+            cash = deltas.get(USDC, {}).get("raw", 0)
+            if amount > 0 and oid and cash < 0:
                 rows.append(_row("SOL", "RELAY_PAY", signature, wallet, order=oid,
                                  asset=USDC, amount_raw=amount, decimals=6,
                                  reason=("FOMO_COSIGNED_RELAY_DEPOSIT" if cosigned else
@@ -310,7 +310,8 @@ def pair_orders(events: list[dict]) -> list[dict]:
         buy = [x for x in legs if x["kind"] == "BUY_FILL"]
         sell = [x for x in legs if x["kind"] == "SELL_EXECUTED"]
         payout = [x for x in legs if x["kind"] == "RELAY_PAYOUT"]
-        if len(pay) == len(buy) == 1 and not sell and not payout:
+        if (len(pay) == len(buy) == 1 and not sell and not payout
+                and pay[0].get("reason") == "FOMO_COSIGNED_RELAY_DEPOSIT"):
             kind = "PAIRED_BUY_EVIDENCE"
         elif len(sell) == len(payout) == 1 and not pay and not buy:
             kind = "PAIRED_SELL_EVIDENCE"
