@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-09 00:54 Asia/Bangkok
+Updated: 2026-10-09 02:55 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-09 00:53:37 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-09 02:55:00 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-08 05:47:29 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/005337-final-retry.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 2
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/025407-final-retry.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 1
 - latest_stale_shard_recovery: true
-- latest_candidate_count: 3
+- latest_candidate_count: 2
 - latest_triggered_events: 0
-- latest_identity_failures: 2
+- latest_identity_failures: 0
 - latest_source_failures: 1
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: silent
@@ -43,3 +43,5 @@ Timezone: Asia/Bangkok
 - 2026-10-08 23:53 invocation: terminal 235356-final.md persisted, partial, Shard 3, Cambria source gap; state cache previously stale.
 - 2026-10-09 00:53 invocation: attempt 005337-attempt.md and terminal 005337-final-retry.md persisted. Scheduled Shard 0; executed stale Shard 2. 13 unique projects checked; 3 candidates; 0 ACTION; 2 identity rejections; 1 Cambria source gap. Primary final write blocked; compact fallback successful. No Gmail or user notification.
 - Shard freshness from observed terminals: shard 0 2026-10-08 22:53 partial; shard 1 2026-10-08 19:57 partial; shard 2 2026-10-09 00:54 partial; shard 3 2026-10-08 23:54 partial. Last fully successful run unchanged at 2026-10-08 05:47:29.
+
+- 2026-10-09 02:55 Asia/Bangkok invocation: 025407-final-retry.md persisted (commit bf96d3c748c3e8c2f08c2cbed29fcd90a76d8da1). Scheduled shard 2, executed stale shard 1; urgent + shard 1 checked, no verified Tier A/B new ACTION; triggered_events: 0, Gmail not attempted, user silent. Attempt and primary final writes blocked by safety checks. Cambria extension remains unverified/current-action source gap. Partial; latest fully successful run remains 2026-10-08 05:47:29. Earlier 014623-attempt.md lacks observed terminal.
