@@ -233,6 +233,24 @@ class ClusterJobManager:
             job=self.jobs.get(job_id)
             if job is not None and job.get("status") in {"QUEUED","RUNNING"}:
                 job["progress"]=progress
+                if stage=="BASE_READY":
+                    profile=details.get("token_profile") or {}
+                    market=details.get("market") or {}
+                    pair=market.get("main_pair") or {}
+                    job["preview"]={
+                        "stage":"BASE_READY", "observed_at":time.time(),
+                        "name":market.get("name"), "symbol":market.get("symbol"),
+                        "market_status":market.get("status"),
+                        "price_usd":market.get("price_usd"),
+                        "market_cap_usd":market.get("market_cap_usd"),
+                        "liquidity_usd":pair.get("liquidity_usd"),
+                        "volume_h24_usd":(pair.get("volume") or {}).get("h24"),
+                        "token_status":profile.get("status"),
+                        "mint_authority":profile.get("mint_authority"),
+                        "freeze_authority":profile.get("freeze_authority"),
+                        "active_extension_risks":profile.get("active_extension_risks") or [],
+                        "unresolved_extension_risks":profile.get("unresolved_sensitive_extensions") or [],
+                    }
 
     @staticmethod
     def _extension_semantic_config(value):
