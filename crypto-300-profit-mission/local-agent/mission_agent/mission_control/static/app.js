@@ -417,7 +417,8 @@ function tradeHint(side) {
 function tradeAmount(x) {
   const asset = x.observed_quote_asset;
   const qty = x.observed_quote_quantity;
-  if (qty == null || !asset) return '实际支付金额待核实';
+  if (qty == null || !asset) return '交易资金腿金额待核实';
+  if (x.body?.amount_predicate === 'UNDETERMINED' && !x.body?.original_quote) return '多资产路线的目标成本未确认';
   const amount = n(qty,asset === USDC_MINT ? 2 : 4);
   if (asset === USDC_MINT) return amount + ' USDC';
   if (asset === WSOL_MINT || asset === 'SOL') return amount + ' SOL';
