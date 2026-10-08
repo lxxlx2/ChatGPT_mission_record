@@ -336,6 +336,8 @@ def test_state_and_evaluator_share_frozen_known_usdc_logic(tmp_path):
 
 def test_actual_classifier_simple_sol_route_is_not_marked_unverified():
     t=tx()
+    for field in ("preTokenBalances","postTokenBalances"):
+        t["meta"][field][1]["mint"]=WSOL
     e=classify("simple-sol",t,WALLET)
     assert e["classification"]=="ACTIVE_TRADE"
     assert e["trade"]["quote_asset"]=="SOL"
