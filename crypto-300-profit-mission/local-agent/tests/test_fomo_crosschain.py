@@ -430,3 +430,68 @@ def test_robinhood_all_rpc_403_fail_closed_with_two_reasons(monkeypatch):
     assert rh_item["endpoint_trials"]==2
     assert [x["reason"] for x in rh_item["diagnostics"]]==["RPC_HTTP_403","RPC_HTTP_403"]
     assert not report["paired"]
+
+
+
+def test_reuse_alchemy_key_only_across_exact_official_hosts():
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="alchemy_derive_test")
+    good="https://solana-mainnet.g.alchemy.com/v2/LOCAL_TEST_KEY123"
+    bad=[
+        "https://solana-mainnet.g.alchemy.com.evil.example/v2/LOCAL_TEST_KEY123",
+        "https://solana-mainnet.g.alchemy.com:444/v2/LOCAL_TEST_KEY123",
+        "http://solana-mainnet.g.alchemy.com/v2/LOCAL_TEST_KEY123",
+        "https://solana-mainnet.g.alchemy.com/v2/LOCAL_TEST_KEY123?redirect=evil",
+        "https://solana-mainnet.g.alchemy.com/token/LOCAL_TEST_KEY123",
+        "https://solana-mainnet.other-provider.com/v2/LOCAL_TEST_KEY123",
+    ]
+    result=audit["derive_robinhood_alchemy_rpcs"]([*bad,good,good])
+    assert result==["https://robinhood-mainnet.g.alchemy.com/v2/LOCAL_TEST_KEY123"]
+    assert all("evil.example" not in v for v in result)
+
+
+def test_optional_robinhood_private_rpc_file_requires_owner_only(tmp_path):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="rh_file_test")
+    cfg=tmp_path/"robinhood_rpc_urls"
+    url="https://robinhood-mainnet.g.alchemy.com/v2/TESTKEY123456"
+    assert audit["configured_robinhood_rpc_file"](cfg)==[]
+    cfg.write_text(url)
+    cfg.chmod(0o644)
+    with pytest.raises(audit["IncompleteWindow"],match="PERMISSIONS_UNSAFE"):
+        audit["configured_robinhood_rpc_file"](cfg)
+    cfg.chmod(0o600)
+    assert audit["configured_robinhood_rpc_file"](cfg)==[url]
+    link=tmp_path/"alias"
+    link.symlink_to(cfg)
+    with pytest.raises(audit["IncompleteWindow"],match="SYMLINK_UNSAFE"):
+        audit["configured_robinhood_rpc_file"](link)
+
+
+def test_authenticated_provider_preferred_and_report_never_prints_key(monkeypatch):
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="provider_preference_test")
+    globals_=audit["audit"].__globals__
+    chosen=[]
+    class RPC:
+        def __init__(self,url):
+            self.url=url
+            self.calls=0;self.scan_stage="INIT";self.last_method="NONE";self.progress={}
+    def sol(rpc,wallet,cutoff,until,cache=None):
+        return {"chain":"SOL","wallet":wallet,"status":"COMPLETE",
+                "signatures_scanned":0,"legs":[]}
+    def rh(rpc,wallet,cutoff,until):
+        chosen.append(rpc.url)
+        return {"chain":"RH","wallet":wallet,"status":"COMPLETE",
+                "eip7702_delegation_confirmed":True,"legs":[]}
+    monkeypatch.setitem(globals_,"RPC",RPC)
+    monkeypatch.setitem(globals_,"scan_solana",sol)
+    monkeypatch.setitem(globals_,"scan_robinhood",rh)
+    secret="https://robinhood-mainnet.g.alchemy.com/v2/LOCAL_TEST_KEY123"
+    result=audit["audit"](24,["https://solana.example"],None,1791472854,
+                          rh_extra_urls=[secret])
+    assert chosen==[secret]
+    assert result["status"]=="RPC_WINDOW_COMPLETE_IDENTITY_UNVERIFIED"
+    assert result["rh_provider_diagnostics"]["authenticated_provider_configured"]
+    assert "LOCAL_TEST_KEY123" not in str(result)
+    assert result["promotion_to_follow_signals"]=="FORBIDDEN"
