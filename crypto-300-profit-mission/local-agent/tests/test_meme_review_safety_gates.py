@@ -53,16 +53,17 @@ def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
     (prod/"health.json").write_text('{"status":"RUNNING"}')
     venv=tmp_path/"venv";(venv/"bin").mkdir(parents=True)
     py=venv/"bin"/"python"
-    py.write_text(
-        "#!"+sys.executable+"\\n"
-        "import sys\\n"
-        "script=sys.stdin.read()\\n"
-        "if 'POLICY_GATE: PASS' in script:\\n"
-        "    sys.argv=['-',*sys.argv[2:]]\\n"
-        "    exec(compile(script,'<real-policy-gate>','exec'))\\n"
-        "else:\\n"
-        "    print('GMAIL_PREFLIGHT: ISOLATED_MOCK')\\n"
-    )
+    py.write_text(chr(10).join([
+        "#!"+sys.executable,
+        "import sys",
+        "script=sys.stdin.read()",
+        "if 'POLICY_GATE: PASS' in script:",
+        "    sys.argv=['-',*sys.argv[2:]]",
+        "    exec(compile(script,'<real-policy-gate>','exec'))",
+        "else:",
+        "    print('GMAIL_PREFLIGHT: ISOLATED_MOCK')",
+        "",
+    ]))
     py.chmod(0o700)
     control=tmp_path/"control";control.mkdir()
     pointer=tmp_path/"pointer";pointer.write_text(str(control))
@@ -77,17 +78,19 @@ def run_installer_isolated(tmp_path, *, status="FROZEN_APPROVED",
     fakebin=tmp_path/"fakebin";fakebin.mkdir()
     log=tmp_path/"launchctl.log"
     fake=(fakebin/"launchctl")
-    fake.write_text('#!/bin/sh\\nprintf "%s\\\\n" "$*" >> "$FAKE_LAUNCH_LOG"\\n')
+    fake.write_text(chr(10).join([
+        "#!/bin/sh",'echo "$*" >> "$FAKE_LAUNCH_LOG"',"",
+    ]))
     fake.chmod(0o700)
-    for exe,contents in [("sleep","#!/bin/sh\\nexit 0\\n"),
-                         ("curl","#!/bin/sh\\nprintf 200\\n")]:
-        p=fakebin/exe;p.write_text(contents);p.chmod(0o700)
+    for exe,contents in [("sleep",["#!/bin/sh","exit 0",""]),
+                         ("curl",["#!/bin/sh","echo 200",""])]:
+        p=fakebin/exe;p.write_text(chr(10).join(contents));p.chmod(0o700)
     # Seed the old approved state to prove rejected requests cause NO mutations.
     app=home/"Library"/"Application Support"/"FrankMeme";app.mkdir(parents=True)
     baseline_files={
         "follow_policy_v1.approved.json":b"PREVIOUS_APPROVED_POLICY",
         "approved_policy_sha256":b"PREVIOUS_APPROVED_DIGEST",
-        "solana_rpc_urls":b"https://old.example.invalid/?api-key=PREVIOUS_SECRET\\n",
+        "solana_rpc_urls":b"https://old.example.invalid/?api-key=PREVIOUS_SECRET",
         "dashboard_port":b"8766\\n",
         "mission-loop.sh":b"PREVIOUS_RUNNER",
         "dashboard.sh":b"PREVIOUS_DASHBOARD",
