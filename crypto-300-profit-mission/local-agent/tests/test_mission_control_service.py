@@ -262,7 +262,12 @@ def test_cycle_ignores_sol_candidates_returned_by_sync_and_keeps_outbox_scope(tm
     persisted=[r[0] for r in service.control.db.execute("SELECT mint FROM candidate_latest").fetchall()]
     assert persisted==["Mint111"]
     outbox=service.control.db.execute("SELECT count(*) FROM decision_outbox").fetchone()[0]
-    assert outbox<=2
+    assert outbox==2
+    destinations=service.control.db.execute(
+        """SELECT DISTINCT events.mint FROM decision_outbox AS queue
+           JOIN decision_events AS events ON queue.decision_id=events.decision_id"""
+    ).fetchall()
+    assert [row[0] for row in destinations]==["Mint111"]
     # sync diagnostics are research output and may contain the injected
     # shadow candidate. Decision/outbox records must still remain Frank-only.
     assert all(event["mint"]!="SOL_SHADOW_NOT_AUTHORIZED"
