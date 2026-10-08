@@ -159,7 +159,7 @@ function copyButton(value, label='复制') {
 function researchLinks(mint) {
   if (!mint) return '';
   const encoded = encodeURIComponent(mint);
-  return `<a class="link-btn" href="https://solscan.io/token/${encoded}" target="_blank" rel="noreferrer">Solscan ↗</a>`;
+  return `<a class="link-btn" href="https://solscan.io/token/${encoded}" target="_blank" rel="noreferrer">Solscan ↗</a> <a class="link-btn" href="https://gmgn.ai/sol/token/${encoded}" target="_blank" rel="noreferrer">GMGN 图表 ↗</a>`;
 }
 
 function tokenIdentity(mint) {
@@ -449,7 +449,7 @@ function renderTrades(rows) {
         <div class="feed-token"><code>${esc(short(x.mint,8,6))}</code> ${copyButton(x.mint,'复制 CA')}</div>
         <div class="trade-core"><strong>${esc(isBuy?'买入/投入':'卖出/收到')}：${esc(tradeAmount(x))}</strong><span>${esc(qty)}</span></div>
         <small>${esc(fillPrice(x))} · ${esc(after)} · ${esc(tradeHint(side))}</small>
-        <div class="hash-row">${copyButton(x.signature,'复制 Tx')} ${tx}</div>
+        <div class="hash-row">${copyButton(x.signature,'复制 Tx')} ${tx} ${researchLinks(x.mint)}</div>
       </div>
       <time>${new Date(Number(x.block_time)*1000).toLocaleString('zh-CN')}</time>
     </div>`;
