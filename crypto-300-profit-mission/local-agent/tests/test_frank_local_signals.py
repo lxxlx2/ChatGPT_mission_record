@@ -386,3 +386,27 @@ def test_direct_usdc_with_extra_intermediate_flow_has_undetermined_cost():
     assert classified["trade"]["amount_predicate"]=="UNDETERMINED"
     assert classified["trade"]["amount_predicate_reason"]=="ROUTED_RESIDUAL_ASSETS"
     assert classified["trade"]["route_intermediate_evidence_status"]=="UNVERIFIED"
+
+
+def test_direct_usdc_with_missing_flow_evidence_is_not_known_cost():
+    from unittest.mock import patch
+    import mission_agent.signals.classifier as cl
+    from mission_agent.signals.evaluator import known_usdc_event
+    from mission_agent.signals.store import _known_usdc_trade
+    value=tx()
+    for field in ("preTokenBalances","postTokenBalances"):
+        value["meta"][field][1]["mint"]=USDC
+    original=cl.normalize
+    def without_flows(*args,**kwargs):
+        evidence=original(*args,**kwargs)
+        evidence["wallet_token_transfer_flows"]=None
+        return evidence
+    with patch.object(cl,"normalize",without_flows):
+        event=cl.classify("missing-flows",value,WALLET)
+    assert event["classification"]=="ACTIVE_TRADE"
+    trade=event["trade"]
+    assert trade["route_intermediate_evidence_status"]=="UNVERIFIED"
+    assert trade["amount_predicate"]=="UNDETERMINED"
+    assert trade["amount_predicate_reason"]=="ROUTE_EVIDENCE_UNVERIFIED"
+    assert not known_usdc_event(trade)
+    assert not _known_usdc_trade(trade)

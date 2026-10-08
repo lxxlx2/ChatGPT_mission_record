@@ -203,6 +203,10 @@ def test_replay_outbox_guard_is_not_python_assert():
     database.execute("INSERT INTO outbox VALUES('PENDING_SEND')")
     with pytest.raises(RuntimeError,match="NON_DRY_RUN_OUTBOX"):
         replay.verify_dry_run_outbox(database)
+    database.execute("DELETE FROM outbox")
+    database.execute("INSERT INTO outbox VALUES(NULL)")
+    with pytest.raises(RuntimeError,match="NON_DRY_RUN_OUTBOX"):
+        replay.verify_dry_run_outbox(database)
     database.close()
 
 
@@ -277,3 +281,59 @@ def test_replay_transition_ignores_evidence_only_route_metadata():
     assert replay.semantic_classification(source)==replay.semantic_classification(candidate)
     candidate["trade"]["quote_asset"]="USDT"
     assert replay.semantic_classification(source)!=replay.semantic_classification(candidate)
+
+
+def test_acceptance_integrity_allows_real_writer_polling_but_not_stable_tamper(tmp_path):
+    import importlib.util
+    module_path=Path(__file__).parents[1]/"scripts"/"meme_acceptance_integrity.py"
+    spec=importlib.util.spec_from_file_location("meme_acceptance_integrity_for_test",module_path)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    prod=tmp_path/"prod";prod.mkdir()
+    db=sqlite3.connect(prod/"forward.sqlite")
+    db.execute("CREATE TABLE signatures(wallet TEXT,signature TEXT,person_id TEXT,slot INTEGER,block_time INTEGER,raw_hash TEXT,raw_reference TEXT)")
+    db.execute("INSERT INTO signatures VALUES(?,?,?,?,?,?,?)",("w","sig1","frank",1,100,"rawhash","ref"))
+    db.commit();db.close()
+    health_path=prod/"health.json"
+    health={"service_source_sha256":"stable-script","parser_version":"frank-v8",
+            "identifier":"frank","historical_network_backfill":"BOUNDED300S_IDLE_WINDOW_ONLY",
+            "gmail":0,"app_alert":0,"automation_mutations":0,"production_writes":0,
+            "last_poll_at":"time1","candidate_duplicate_count":0,
+            "request_count":100,"rpc_429_count":0,"rpc_error_count":0,
+            "timeouts":0,"retry":0,"last_rpc_success_at":"time1",
+            "private_transport_status":"WAITING_REAL_ACTIVE_EVENT",
+            "active_e2e_status":"FRANK_ACTIVE_E2E_WAITING_REAL_EVENT",
+            "poll_seconds":"0.5","last_successful_poll":"time1"}
+    health_path.write_text(json.dumps(health))
+    loop=tmp_path/"loop.plist";loop.write_text("loop")
+    dash=tmp_path/"dash.plist";dash.write_text("dash")
+    before=module.capture(prod,loop,dash)
+    assert before["db"]["identity_prefix_rows"]==1
+    assert before["health_stable_sha256"]
+    health.update(last_poll_at="time2",candidate_duplicate_count=1,
+                  request_count=101,rpc_429_count=1,rpc_error_count=1,
+                  timeouts=1,retry=1,last_rpc_success_at="time2",
+                  private_transport_status="RPC_RETRY",
+                  active_e2e_status="FRANK_ACTIVE_E2E_PASS",
+                  poll_seconds="7.3",last_successful_poll="time2")
+    health_path.write_text(json.dumps(health))
+    assert module.verify(before,prod,loop,dash)["status"]=="PASS"
+    health["production_writes"]=1
+    health_path.write_text(json.dumps(health))
+    with pytest.raises(RuntimeError,match="IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED"):
+        module.verify(before,prod,loop,dash)
+
+
+def test_replay_transition_detects_sol_route_eligibility_flip():
+    base={"classification":"ACTIVE_TRADE",
+          "classification_reason":"SIGNED_DEX_SWAP_OPPOSING_OWNED_FLOWS",
+          "trade":{"mint":"M","direction":"BUY","token_amount_raw":"200",
+                   "quote_asset":"SOL","quote_amount_raw":"1000",
+                   "amount_predicate":"UNDETERMINED",
+                   "amount_predicate_reason":"NON_USDC_QUOTE"}}
+    alt=json.loads(json.dumps(base))
+    alt["trade"]["route_intermediate_evidence_status"]="UNVERIFIED"
+    assert replay.semantic_classification(base)!=replay.semantic_classification(alt)
+    both=json.loads(json.dumps(base))
+    both["trade"]["route_intermediate_evidence_status"]="NO_INTERMEDIATE_TRANSFER_OBSERVED"
+    both["trade"]["route_intermediate_assets"]=[]
+    assert replay.semantic_classification(base)==replay.semantic_classification(both)

@@ -129,11 +129,12 @@ def classify(signature, tx, wallet):
                     'UNVERIFIED' if flows is None or route_mints
                     else 'NO_INTERMEDIATE_TRANSFER_OBSERVED'
                 )
-                if route_mints:
-                    # Gross input with an unresolved routed residual is not
-                    # verified final-target cost, even if the input is USDC.
+                if route_status=='UNVERIFIED':
+                    # Neither missing flow evidence nor an observed extra
+                    # intermediate proves the final-target quote cost.
                     amount_predicate='UNDETERMINED'
-                    amount_reason='ROUTED_RESIDUAL_ASSETS'
+                    amount_reason=('ROUTED_RESIDUAL_ASSETS' if route_mints
+                                   else 'ROUTE_EVIDENCE_UNVERIFIED')
                 base.update(
                     classification='ACTIVE_TRADE',
                     classification_reason=(

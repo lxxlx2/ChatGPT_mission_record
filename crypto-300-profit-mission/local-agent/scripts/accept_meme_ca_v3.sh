@@ -199,14 +199,14 @@ PY
 [ ! -e "$CONTROL/sol-normalized-v1.sqlite" ] || die "SOL_MIRROR_DB_CREATED"
 integrity_cmd verify --before "$CONTROL/integrity-before.json" \
   || die "IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED"
-echo "Immutable ledger prefix / stable health / LaunchAgent plist: PASS"
+echo "Signature identity prefix / stable health allowlist / LaunchAgent plist: PASS"
 
 echo
 echo "===== ACCEPTANCE RESULT ====="
 echo "ISOLATED_REAL_CA_ACCEPTANCE: PASS"
 echo "No Mission Control decision DB: PASS"
 echo "No SOL-normalized sidecar: PASS"
-echo "Immutable historical ledger prefix unchanged; live append/health heartbeats permitted"
+echo "Existing signature identity columns unchanged; mutable body and other tables NOT VERIFIED"
 echo "No migration/backfill function invoked by this acceptance script"
 echo "No Mission Control loop or delivery runner invoked by this acceptance script"
 echo "LaunchAgent plists unchanged: VERIFIED_BY_SHA256"

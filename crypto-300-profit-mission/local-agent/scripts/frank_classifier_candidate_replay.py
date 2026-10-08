@@ -18,6 +18,7 @@ from datetime import datetime
 from pathlib import Path
 
 from mission_agent.signals.classifier import classify
+from mission_agent.market.sol_usd import _simple_sol_quote_eligible
 from mission_agent.signals.engine import Engine
 from mission_agent.signals.policy import load_policy
 from mission_agent.signals.store import Ledger
@@ -230,7 +231,7 @@ def replay(
 
 def verify_dry_run_outbox(db: sqlite3.Connection) -> None:
     """Runtime safety check that also runs under python -O."""
-    if db.execute("SELECT 1 FROM outbox WHERE status!='DRY_RUN_AUDIT'").fetchone():
+    if db.execute("SELECT 1 FROM outbox WHERE status IS NOT 'DRY_RUN_AUDIT'").fetchone():
         raise RuntimeError("NON_DRY_RUN_OUTBOX")
 
 
@@ -301,6 +302,8 @@ def semantic_classification(value: dict) -> tuple:
     """Exclude evidence-only metadata from signal-affecting transition counts.
 
     Complete field diffs are still retained separately for forensic review.
+    The derived SOL route-eligibility predicate is a classification-relevant
+    semantic; merely adding an audit field without changing eligibility is not.
     """
     trade=value.get("trade")
     projected=None
@@ -310,6 +313,8 @@ def semantic_classification(value: dict) -> tuple:
                    "amount_predicate","amount_predicate_reason",
                    "referenced_pre_raw","referenced_post_raw")
         projected=tuple((name,str(trade.get(name))) for name in important)
+        if trade.get("quote_asset") in {"SOL","WSOL","So11111111111111111111111111111111111111112"}:
+            projected+= (("simple_sol_quote_eligible",_simple_sol_quote_eligible(trade)),)
     return (value.get("classification"),value.get("classification_reason"),projected)
 
 

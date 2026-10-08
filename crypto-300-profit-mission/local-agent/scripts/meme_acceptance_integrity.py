@@ -1,8 +1,9 @@
-"""Read-only, concurrency-tolerant integrity snapshots for isolated Meme CA acceptance.
+"""Read-only, concurrency-tolerant scoped invariants for Meme CA acceptance.
 
-The live Frank scanner legitimately appends signatures and updates health ticks.
-Check immutable existing ledger rows, schema and stable health configuration.
-This is evidence of selected invariants, not proof that no live process wrote.
+Live Frank appends signatures and refreshes health. Compare the existing
+signature *identity columns*, schema, explicit stable health configuration and
+LaunchAgent definitions. Does not cover mutable signature body/alert fields,
+other tables or concurrent non-prefix writes. It is not a full DB audit.
 """
 from __future__ import annotations
 
@@ -12,12 +13,12 @@ import json
 import sqlite3
 from pathlib import Path
 
-VOLATILE_HEALTH_KEYS = frozenset({
-    "last_successful_poll", "lag_seconds", "last_chain_signature",
-    "last_local_signature", "consecutive_errors", "last_error", "status",
-    "last_heartbeat", "last_successful_scan", "updated_at", "checked_at",
-    "generated_at", "last_cycle_at", "last_scan_at", "poll_count", "pid",
-    "uptime_seconds",
+# Only stable fields written by scripts/frank_shadow_service.py are compared.
+# New/unknown fields are treated as volatile until their writers are audited.
+STABLE_HEALTH_KEYS = frozenset({
+    "service_source_sha256", "parser_version", "identifier",
+    "historical_network_backfill", "gmail", "app_alert",
+    "automation_mutations", "production_writes",
 })
 
 
@@ -44,9 +45,10 @@ def _health_snapshot(path: Path) -> str:
     content = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(content, dict):
         raise ValueError("HEALTH_JSON_NOT_OBJECT")
-    # Exclude only expected live progress and heartbeat counters.
-    stable = {key: value for key, value in content.items()
-              if key not in VOLATILE_HEALTH_KEYS}
+    # Explicit allowlist: request_count, last_poll_at, poll_seconds, RPC
+    # counters and source cursors change during normal 30-second polling.
+    stable = {key: content[key] for key in sorted(STABLE_HEALTH_KEYS)
+              if key in content}
     return _digest(_canonical(stable))
 
 
@@ -75,8 +77,8 @@ def _database_snapshot(path: Path, max_rowid: int | None = None) -> dict:
             hasher.update(_canonical(row) + b"\n")
             count += 1
         return {"schema_sha256": _digest(_canonical(schema)),
-                "max_rowid": int(limit), "immutable_prefix_rows": count,
-                "immutable_prefix_sha256": hasher.hexdigest()}
+                "max_rowid": int(limit), "identity_prefix_rows": count,
+                "identity_prefix_sha256": hasher.hexdigest()}
     finally:
         conn.close()
 
@@ -99,8 +101,8 @@ def verify(before: dict, prod: Path, loop_plist: Path, dash_plist: Path) -> dict
                     max_rowid=int(before["db"]["max_rowid"]))
     if after != before:
         raise RuntimeError("IMMUTABLE_LEDGER_OR_STABLE_HEALTH_OR_PLIST_CHANGED")
-    return {"status": "PASS", "scope": "IMMUTABLE_PREFIX_AND_STABLE_HEALTH",
-            "baseline_rows": before["db"]["immutable_prefix_rows"],
+    return {"status": "PASS", "scope": "SIGNATURE_IDENTITY_PREFIX_AND_STABLE_HEALTH",
+            "baseline_rows": before["db"]["identity_prefix_rows"],
             "heartbeat_updates_allowed": True,
             "new_live_rows_allowed": True}
 
