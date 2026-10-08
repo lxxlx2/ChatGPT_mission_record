@@ -191,7 +191,7 @@ def test_collector_requires_true_rpc_completeness(monkeypatch):
             raise AssertionError(method)
     monkeypatch.setitem(audit["solana_signatures"].__globals__,"MAX_SOL_PAGES",1)
     with pytest.raises(audit["IncompleteWindow"]):
-        audit["solana_signatures"](NoPage(),"wallet",10)
+        audit["solana_signatures"](NoPage(),"wallet",10,1000)
     assert audit["pad_evm_wallet"](fc.RH_CANDIDATE_WALLET).endswith(fc.RH_CANDIDATE_WALLET[2:])
 
 
@@ -199,3 +199,29 @@ def test_audit_never_exposes_unverified_identity_as_signal():
     assert fc.RH_CHAIN_ID==4663
     assert fc.FOMO_EIP7702_CODE.startswith("0xef0100")
     assert fc.RH_CANDIDATE_WALLET.lower()=="0x696d1265c8fc4f14797abebfae3c43ebfa9d8e28"
+
+def test_exact_historical_window_excludes_newer_solana_events():
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="historical_window_test")
+    class RPC:
+        def call(self,method,params):
+            assert method=="getSignaturesForAddress"
+            return [
+                {"signature":"newer","slot":4,"blockTime":120},
+                {"signature":"in-window","slot":3,"blockTime":110},
+                {"signature":"older","slot":2,"blockTime":95},
+            ]
+    found=audit["solana_signatures"](RPC(),"wallet",100,115)
+    assert [x["signature"] for x in found]==["in-window"]
+
+
+def test_historical_evm_block_window_is_bounded_above():
+    script=Path(__file__).resolve().parents[1]/"scripts/audit_frank_fomo_crosschain.py"
+    audit=runpy.run_path(str(script),run_name="historical_rh_test")
+    class RPC:
+        def call(self,method,params):
+            if method=="eth_blockNumber":
+                return "0x5"
+            assert method=="eth_getBlockByNumber"
+            return {"timestamp":hex(int(params[0],16)*5)}
+    assert audit["rh_block_number"](RPC(),11,20)==(3,4)
