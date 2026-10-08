@@ -651,8 +651,8 @@ class Handler(BaseHTTPRequestHandler):
             mint = (query.get("mint") or [""])[0]
             try:
                 report = self.state.cluster_jobs.latest(mint)
-            except ValueError as exc:
-                return self._json({"error":str(exc)},400)
+            except ValueError:
+                return self._json({"error":"INVALID_SOLANA_CA"},400)
             return self._json(report if report is not None else {"error":"CLUSTER_REPORT_NOT_FOUND"}, 200 if report is not None else 404)
         if path in {"/", "/index.html"}:
             return self._file(self.static_root / "index.html")
@@ -682,12 +682,12 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"error":"INVALID_REQUEST_SIZE"},400)
         try:
             body = _decode_json_object(self.rfile.read(length))
-        except ValueError as exc:
-            return self._json({"error":str(exc)},400)
+        except ValueError:
+            return self._json({"error":"INVALID_JSON_REQUEST"},400)
         try:
             job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
-        except ValueError as exc:
-            return self._json({"error":str(exc)},400)
+        except ValueError:
+            return self._json({"error":"INVALID_CLUSTER_REQUEST"},400)
         return self._json(job,202)
 
 

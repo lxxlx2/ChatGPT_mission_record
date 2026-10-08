@@ -575,3 +575,12 @@ def test_cluster_runtime_exception_with_authenticated_url_is_redacted(tmp_path,m
     assert result["error"]["type"]=="RuntimeError"
     assert result["error"]["message"]=="CLUSTER_ANALYSIS_UNAVAILABLE"
     assert secret not in serialized
+
+
+def test_dashboard_validation_errors_use_fixed_safe_codes():
+    from mission_agent.mission_control.server import Handler
+    import inspect
+    source=inspect.getsource(Handler)
+    assert '{"error":str(exc)}' not in source
+    assert '"INVALID_CLUSTER_REQUEST"' in source
+    assert '"INVALID_SOLANA_CA"' in source

@@ -241,3 +241,42 @@ def test_live_service_uses_base_candidates_without_requesting_shadow_candidates(
     assert len(result["decision_events"])==1
     assert result["decision_events"][0]["mint"]=="Mint111"
     service.close()
+
+
+def test_cycle_ignores_sol_candidates_returned_by_sync_and_keeps_outbox_scope(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=pol)
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:good_quote()
+    base=service.frank.candidates()
+    assert len(base)==1
+    shadow={**base[0],"mint":"SOL_SHADOW_NOT_AUTHORIZED",
+            "candidate_source":"SOL_NORMALIZED_SIDECAR",
+            "source_signal_id":"SHADOW_FAKE_SIGNAL"}
+    service.sol_mirror.sync=lambda:{"status":"OK","copied":0,
+                                    "candidates":[shadow],"overlay_candidates":[shadow],
+                                    "sol_resolved":2}
+    result=service.cycle()
+    assert result["candidate_count"]==1
+    assert [event["mint"] for event in result["decision_events"]]==["Mint111"]
+    persisted=[r[0] for r in service.control.db.execute("SELECT mint FROM candidate_latest").fetchall()]
+    assert persisted==["Mint111"]
+    outbox=service.control.db.execute("SELECT count(*) FROM decision_outbox").fetchone()[0]
+    assert outbox<=2
+    assert "SOL_SHADOW_NOT_AUTHORIZED" not in json.dumps(result)
+    service.close()
+
+
+def test_candidate_exception_does_not_persist_secret_in_health_or_result(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=pol)
+    secret="CREDENTIAL_LEAK_SAMPLE"
+    service.sol_mirror.sync=lambda:{"status":"OK"}
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:(
+        _ for _ in ()).throw(RuntimeError("https://rpc.example/?api-key="+secret))
+    result=service.cycle()
+    assert result["candidate_errors"]
+    assert secret not in json.dumps(result)
+    assert secret not in (control/"mission-control-health.json").read_text()
+    service.close()

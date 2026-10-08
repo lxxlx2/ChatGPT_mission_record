@@ -156,7 +156,7 @@ class SolNormalizedMirror:
             added=sorted(mirror_signals-source_signals)
             return {"status":"OK","copied":copied,"sol_trades":sol_trades,"sol_resolved":sol_resolved,"sol_unresolved":sol_unresolved,"failures":failures,"added_signal_count":len(added),"added_signal_ids":added[:50],"sidecar":str(self.sidecar_db)}
         except Exception as exc:
-            return {"status":"DEGRADED","error":type(exc).__name__,"message":str(exc)[:240],"copied":copied,"sol_trades":sol_trades,"sol_resolved":sol_resolved,"sol_unresolved":sol_unresolved,"failures":failures,"sidecar":str(self.sidecar_db)}
+            return {"status":"DEGRADED","error":type(exc).__name__,"message":"SOL_NORMALIZATION_FAILED","copied":copied,"sol_trades":sol_trades,"sol_resolved":sol_resolved,"sol_unresolved":sol_unresolved,"failures":failures,"sidecar":str(self.sidecar_db)}
         finally:
             source.close()
     def candidates(self):

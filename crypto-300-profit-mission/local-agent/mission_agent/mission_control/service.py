@@ -258,7 +258,8 @@ class MissionMemeService:
                         "notification_enqueued":notify,
                     })
             except Exception as exc:
-                errors.append({"mint": candidate.get("mint"), "error": type(exc).__name__, "message": str(exc)[:240]})
+                errors.append({"mint": candidate.get("mint"), "error": type(exc).__name__,
+                               "message": "CANDIDATE_EVALUATION_FAILED"})
                 continue
 
         outcome_tracking = self.outcomes.sample_due(
@@ -311,5 +312,5 @@ class MissionMemeService:
             try:
                 self.cycle()
             except Exception as exc:
-                self._write_health("ERROR", error=type(exc).__name__, message=str(exc)[:240])
+                self._write_health("ERROR", error=type(exc).__name__, message="MISSION_CYCLE_FAILED")
             time.sleep(max(1,interval_seconds))

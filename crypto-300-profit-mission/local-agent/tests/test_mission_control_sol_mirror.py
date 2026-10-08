@@ -130,3 +130,19 @@ def test_live_decision_service_never_merges_shadow_candidates():
     source=Path(service.__file__).read_text()
     assert "candidates = base_candidates" in source
     assert "merge_candidates(base_candidates, overlay_candidates)" not in source
+
+
+def test_sol_mirror_exception_never_persists_url(tmp_path):
+    source=tmp_path/"forward.sqlite";sidecar=tmp_path/"mirror.sqlite"
+    make_source(source)
+    policy=Path(__file__).parents[1]/"config"/"frank_local_signal_v1.json"
+    mirror=SolNormalizedMirror(source,sidecar,policy,client=RefClient())
+    secret="HIDDEN_RPC_KEY"
+    def explode(*args,**kwargs):
+        raise RuntimeError("https://rpc.test/?api-key="+secret)
+    mirror.client.reference=explode
+    result=mirror.sync()
+    assert result["status"]=="DEGRADED"
+    assert secret not in json.dumps(result)
+    assert result["message"]=="SOL_NORMALIZATION_FAILED"
+    mirror.close()
