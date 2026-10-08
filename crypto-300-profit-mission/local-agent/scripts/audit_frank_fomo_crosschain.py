@@ -26,7 +26,8 @@ from mission_agent.meme.fomo_crosschain import (
     robinhood_buy_fills, robinhood_user_operations, pair_orders, solana_events,
 )
 
-DEFAULT_RH_RPC = "https://rpc.mainnet.chain.robinhood.com"
+DEFAULT_RH_RPCS = ("https://rpc.mainnet.chain.robinhood.com",
+                   "https://robinhood-rpc.publicnode.com")
 MAX_SOL_PAGES = 15
 MAX_SOL_TRANSACTIONS_PER_WALLET = 1000
 MAX_EVM_LOGS = 3000
@@ -412,18 +413,30 @@ def audit(hours: int, solana_urls: list[str], rh_url: str, audited_at: int | Non
                    "diagnostics":failures,"cache_hits":cache.hits,"legs":[]}
         legs+=value.pop("legs")
         report["chains"].append(value)
-    rh_rpc=RPC(rh_url)
-    try:
-        value=scan_robinhood(rh_rpc,RH_CANDIDATE_WALLET,since,until)
-    except (IncompleteWindow, ValueError, KeyError, TypeError, urllib.error.URLError, TimeoutError) as exc:
+    # The official Robinhood RPC can refuse public requests (403).
+    # Keep read-only transport failover separate from on-chain attribution:
+    # an alternate node MUST still return eth_chainId 4663, otherwise
+    # scan_robinhood raises RH_CHAIN_ID_MISMATCH and we preserve PARTIAL.
+    rh_endpoints = []
+    for endpoint in ([rh_url] if rh_url else []) + list(DEFAULT_RH_RPCS):
+        if isinstance(endpoint, str) and endpoint.startswith("https://") and endpoint not in rh_endpoints:
+            rh_endpoints.append(endpoint)
+    rh_failures = []
+    for endpoint in rh_endpoints:
+        rh_rpc = RPC(endpoint)
+        try:
+            value=scan_robinhood(rh_rpc,RH_CANDIDATE_WALLET,since,until)
+            break
+        except (IncompleteWindow, ValueError, KeyError, TypeError, urllib.error.URLError, TimeoutError) as exc:
+            rh_failures.append({
+                "reason":safe_error(exc), "stage":rh_rpc.scan_stage,
+                "method":rh_rpc.last_method, "rpc_calls":rh_rpc.calls,
+                **rh_rpc.progress,
+            })
+    else:
         value={"chain":"RH","wallet":RH_CANDIDATE_WALLET,"status":"INCOMPLETE",
-               "error":"RH_SCAN_INCOMPLETE",
-               "diagnostics":[{
-                   "reason":safe_error(exc),"stage":rh_rpc.scan_stage,
-                   "method":rh_rpc.last_method,"rpc_calls":rh_rpc.calls,
-                   **rh_rpc.progress,
-               }],
-               "legs":[]}
+               "error":"RH_SCAN_INCOMPLETE","endpoint_trials":len(rh_failures),
+               "diagnostics":rh_failures,"legs":[]}
     legs+=value.pop("legs")
     report["chains"].append(value)
     report["cache"]={"hits":cache.hits,"writes":cache.writes,
@@ -443,7 +456,8 @@ def main():
     parser.add_argument("--hours",type=int,default=6,choices=(1,6,24))
     parser.add_argument("--solana-rpc-file",type=Path,
                         default=Path.home()/"Library/Application Support/FrankMeme/solana_rpc_urls")
-    parser.add_argument("--robinhood-rpc",default=os.environ.get("ROBINHOOD_RPC_URL",DEFAULT_RH_RPC))
+    parser.add_argument("--robinhood-rpc",default=os.environ.get("ROBINHOOD_RPC_URL"),
+                        help="Optional HTTPS Robinhood Chain RPC; existing official/publicnode fallbacks are tried")
     parser.add_argument("--output",type=Path,help="Optional research JSON report; never a production DB")
     parser.add_argument("--cache-dir",type=Path,
                         default=Path.home()/"Documents/ChatGPT/frank-fomo-rpc-cache",
