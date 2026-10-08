@@ -620,6 +620,12 @@ class WalletClusterAnalyzer:
         return (r or {}).get("value") or []
     def holders(self):
         supply,decimals=self._supply();top=self._top()[:20];tas=[x["address"] for x in top]
+        raw_top10=top[:10]
+        self._raw_top10_snapshot_pct=(
+            str((Decimal(sum(int(x["amount"]) for x in raw_top10))*100/Decimal(supply)).quantize(Decimal("0.01")))
+            if supply>0 and raw_top10 and all(str(x.get("amount","")).isdigit() for x in raw_top10)
+            else None
+        )
         infos=self._accounts(tas)
         owners=[];temp=[]
         for row,info in zip(top,infos):
@@ -799,10 +805,7 @@ class WalletClusterAnalyzer:
         self._progress("BASE_READY",token_profile=token_profile,market=market)
 
         supply,decimals,holders=self.holders()
-        preview_top10_pct=(
-            str((Decimal(sum(h.raw for h in holders[:10]))*100/Decimal(supply)).quantize(Decimal("0.01")))
-            if supply>0 and len(holders)>=10 else None
-        )
+        preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
         self._progress(
             "HOLDERS_READY",top_accounts_resolved=len(holders),
             supply_raw=str(supply),decimals=decimals,
