@@ -290,8 +290,26 @@ def main():
             raise SystemExit("OUTPUT_MUST_BE_SEPARATE_FROM_LIVE_RUNTIME")
         args.output.write_text(payload,encoding="utf-8")
         os.chmod(args.output,0o600)
-    else:
-        print(payload)
+    # Keep the terminal readable; exact chain evidence remains in --output JSON.
+    summary={
+        "status":result["status"],"window_hours":result["window_hours"],
+        "cutoff_epoch":result["cutoff_epoch"],
+        "window_end_epoch":result["audited_at_epoch"],
+        "identity_attribution":result["identity_attribution"],
+        "chain_coverage":[
+            {k:v for k,v in chain.items() if k in (
+                "chain","wallet","status","error","signatures_scanned",
+                "userop_tx_count","inbound_transfer_tx_count",
+                "eip7702_delegation_confirmed")}
+            for chain in result["chains"]
+        ],
+        "leg_counts":result["counts"],"order_counts":result["paired_counts"],
+        "paired_preview":result["paired"][:15],
+        "evidence_rows_total":len(result["evidence"]),
+        "full_evidence_file":str(args.output) if args.output else None,
+        "production_db_writes":0,"gmail_sent":0,"follow_signals_changed":False,
+    }
+    print(json.dumps(summary,ensure_ascii=False,indent=2,sort_keys=True))
     return 0 if result["status"]=="RPC_WINDOW_COMPLETE_IDENTITY_UNVERIFIED" else 3
 
 
