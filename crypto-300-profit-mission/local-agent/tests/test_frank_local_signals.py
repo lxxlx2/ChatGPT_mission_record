@@ -295,3 +295,25 @@ def test_real_confirmed_positive_chronology(side,tmp_path):
 
 def test_confirmed_sell_with_missing_prehistory_is_never_lost_or_guessed_exit(tmp_path):
     l=Ledger(tmp_path/'db');put(l,active('sell',-100));assert l.inspect('sell')[0]['body']['classification']=='ACTIVE_TRADE';assert l.db.execute('select side from trades').fetchone()[0]=='SELL_POSITION_UNRESOLVED';assert l.db.execute('select count(*) from positions').fetchone()[0]==0
+
+
+def test_synthetic_sol_usdc_cannot_satisfy_frozen_amount_predicates():
+    from mission_agent.signals.evaluator import known_usdc_event, amount_gate
+    real={"quote_asset":USDC,"quote_quantity":"25000",
+          "amount_predicate":"USDC_DIRECT_NUMERIC"}
+    shadow={"quote_asset":USDC,"quote_quantity":"100000",
+            "amount_predicate":"SOL_EVENT_TIME_USDC_VERIFIED",
+            "amount_predicate_reason":"CAUSAL_PREVIOUS_CLOSED_SOLUSDC_REFERENCE"}
+    assert known_usdc_event(real)
+    assert not known_usdc_event(shadow)
+    assert amount_gate([shadow],"25000")=="UNDETERMINED"
+    assert amount_gate([real],"25000")=="PASS"
+
+
+def test_install_script_blocks_loop_restart_by_default():
+    source=Path(__file__).parents[1]/"scripts"/"install_mission_meme_launchd.sh"
+    text=source.read_text()
+    guard='CONFIRM_MISSION_LOOP_RESTART:-'
+    assert guard in text
+    assert text.index(guard)<text.index('mkdir -p "$APP_SUPPORT"')
+    assert text.index(guard)<text.index('launchctl bootout')

@@ -61,7 +61,7 @@ def test_live_sol_mirror_reuses_frozen_engine_without_writing_source(tmp_path):
     assert normalized["quote_asset"]=="SOL"
     assert normalized["amount_predicate"]=="UNDETERMINED"
     assert normalized["quote_usdc_status"]=="SOL_EVENT_TIME_USDC_VERIFIED"
-    assert normalized["quote_usdc_equivalent"]=="15000.0"
+    assert normalized["quote_usdc_equivalent"]=="15000"
     mirror.close()
     source_ledger=Ledger(source)
     assert source_ledger.db.execute("select count(*) from signals").fetchone()[0]==0

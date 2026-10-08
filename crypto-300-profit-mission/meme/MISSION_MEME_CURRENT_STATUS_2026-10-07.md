@@ -391,3 +391,34 @@ Remaining runtime acceptance items:
 3. exercise a real SOL/WSOL-quoted Frank trade before declaring the SOL normalization path empirically exercised;
 4. verify one actual Mission Control Gmail notification end-to-end, including Sent readback, when a real new eligible signal occurs;
 5. after a future Mac reboot/login, verify both LaunchAgents automatically recover and Dashboard HTTP returns 200 without manual intervention.
+
+
+## 13. 2026-10-08 CA V3 integration: review FAIL and remediation in isolated PR #29
+
+**Branch:** `review/meme-ca-v3-integrate-main-20261008`.
+**PR:** https://github.com/lxxlx2/ChatGPT_mission_record/pull/29
+**Authority:** REVIEW_ONLY / NOT_MERGED / NOT_DEPLOYED / PRODUCTION_TRADING_NO_GO.
+
+An external AI review of integrated HEAD `7014589e` reported **FAIL**, with 804 passing pytest cases on that pre-remediation head. This test count **does not cover subsequent fixes**. Main branch and installed Mac services remain separate.
+
+Remediation applied on PR #29 only, with these explicit controls:
+
+- **B1:** frozen policy `temporary_sol_conversion_allowed=false` wins. SOL normalization sidecar now records audit price equivalence without `for_model=True`; synthesized SOL USD predicates cannot count as known USDC and shadow candidates are not merged into Mission Control live decisions, observation/outbox or notifications. Any future strategy-authority change would require separate user approval, policy SHA approval and actual replay.
+- **H1:** report diagnostics use `PRIMARY`/`FALLBACK_N` labels only for configured authenticated RPC URLs. No credential-bearing URL should be persisted in report/latest.json or returned through cluster APIs.
+- **H2:** CEX/public/unresolved batch payouts are excluded from strong `BATCH_FUNDING` evidence, even with synchronized buys; EOA/verified-control-funder evidence remains separately evaluated.
+- **H4:** installed LaunchAgent installer refuses to run without explicit `CONFIRM_MISSION_LOOP_RESTART=1`, before any installer writes or restarts. Do not use this flag in review; existing non-restarting runner patch remains the safe route.
+- **M1:** SOL sidecar source rows, source/mirror signals and candidate states are restricted to `person_id='frank'`.
+- **M2:** replay uses before/after read-only file SHA256 comparisons and explicit runtime failure for non-dry-run outbox; isolated CA acceptance checks `forward.sqlite`, `health.json`, and the two LaunchAgent plists. Snapshot hashes cannot establish the provenance of an unobserved live deployment.
+- **M3:** `route_intermediate_assets=None` and `route_intermediate_evidence_status=UNVERIFIED` no longer pretend that an unknown route is proven simple. SOL normalization fails closed for explicitly unverified intermediate routing.
+
+**Remaining gates, NOT YET PASSED:**
+
+1. Other AI independent re-review on the exact updated PR HEAD plus a fresh full local-agent test run. Pre-fix 804 passes are historical.
+2. **H3:** expanding Frank classifier quote identity to USDT, DEX programs and parser v8 remains a potentially behavior-changing production classifier update. Requires real production `forward.sqlite` + associated raw signature evidence, exact baseline/candidate replay, review of state/episode/amount/email deltas and explicit separate approval before merge or deployment. USDT must not satisfy direct-known-USDC thresholds.
+3. **M5:** RARI residual-intermediate incident is a research lead in earlier source handoff, not a validated fixture in this integration. Do not claim RARI was replayed; obtain original signed transaction/raw fixture to validate, or explicitly exclude it from acceptance scope. Unproven routes remain `UNKNOWN_NEEDS_REVIEW`.
+4. Real CA integrated-head acceptance and Mac reboot/re-login persistence are still pending. Prior isolated 3-CA test was on source branch and is historical.
+5. One genuine post-enable Gmail Sent readback remains pending; tests must not send real notification or change live outbox.
+
+**Forbidden during review:** main merge, local installer invocation, LaunchAgent kickstart, production `forward.sqlite` writes, historical migration/backfill, strategy threshold changes, sending Gmail, new automation, live trading.
+
+**Review standard:** FAIL until H3 replay and all new patch tests/independent review pass; only then can a separate controlled merge/deploy be considered.
