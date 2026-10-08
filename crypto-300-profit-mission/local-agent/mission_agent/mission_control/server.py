@@ -584,6 +584,9 @@ class DashboardState:
     def recent_trades(self):
         return self.frank.recent_trades(100)
 
+    def activity_coverage(self):
+        return self.frank.activity_coverage()
+
     def review_activity(self):
         return self.frank.review_activity(30)
 
@@ -637,6 +640,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.candidates())
         if path == "/api/trades":
             return self._json(self.state.recent_trades())
+        if path == "/api/coverage":
+            return self._json(self.state.activity_coverage())
         if path == "/api/review-activity":
             return self._json(self.state.review_activity())
         if path == "/api/decisions":
