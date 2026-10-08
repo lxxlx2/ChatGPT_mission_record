@@ -6,6 +6,7 @@ on:
     paths:
       - 'crypto-300-profit-mission/local-agent/mission_agent/meme/fomo_crosschain.py'
       - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_fomo_crosschain.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/run_frank_fomo_rh_recheck.sh'
       - 'crypto-300-profit-mission/local-agent/tests/test_fomo_crosschain.py'
       - '.github/workflows/meme-fomo-crosschain-tests.yml'
   workflow_dispatch:
@@ -40,6 +41,9 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           python -B -m py_compile mission_agent/meme/fomo_crosschain.py scripts/audit_frank_fomo_crosschain.py tests/test_fomo_crosschain.py
+      - name: Operator script static checks
+        working-directory: crypto-300-profit-mission/local-agent
+        run: bash -n scripts/run_frank_fomo_rh_recheck.sh
       - name: Offline FOMO proof tests
         working-directory: crypto-300-profit-mission/local-agent
         env:
