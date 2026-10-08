@@ -25,6 +25,8 @@ A newer dated scope/status file supersedes older dated scope snapshots. Historic
 
 Never use stale chat values or older Git snapshots to overwrite newer verified state.
 
+For current balances, CEX holdings, refunds and capital classifications, use the **latest dated** `portfolio/current.md` and `state/latest.md` over historical dated STATUS_SCOPE snapshots. This does not relax Mission policy/authority boundaries.
+
 ## Objective
 
 Core objective remains to grow the Mission starting asset set toward **3,000 USD-equivalent net liquidation value** while preserving auditable provenance.
@@ -220,29 +222,22 @@ Rules:
 
 This pause does **not** modify independent tasks such as Crypto Daily, the all-project Airdrop/TGE monitor or the US-stock morning report.
 
+
 ## Current portfolio authority
 
-Current holdings:
-- `portfolio/current.md`
-- `state/latest.md`
+Canonical live **capital and position records**:
+- `portfolio/current.md` (latest 2026-10-08 CEX screenshot + chain refresh).
+- `state/latest.md` (same refreshed snapshot and current operational status).
+- `positions/gang.md` (GANG / The Syndicate Backable: 500 USDC committed on Solana, final allocation/refund pending).
+- `positions/jump.md` (JUMP sale failed, 1,000 USDC refunded, 0 allocation).
 
-Latest 2026-10-04 chain refresh materially confirms:
-- Solana USDC `142.162136`;
-- Solana SOL `0.003093645`;
-- Ethereum USDC `1.006555`;
-- Ethereum ETH `0.000634360344095958`;
-- Base ETH `0.000967183780184779`;
-- Ink ETH `0.011133212494942321`;
-- Credits current owned count `0`;
-- UNICRED current owned count `0`.
+As of the 2026-10-08 refresh, the verified material on-chain subtotal is approximately **$63.88**. The latest user screenshot shows Binance estimated total assets **$631.20 USDT-equivalent**; classification is investable parked capital, but the coin/product breakdown and withdrawability are not verified. Combined marked/reference capital is approximately **$695.08**, before any unresolved/unpriced assets.
 
-SUI remains 0 by latest explicit user-confirmed state but was not freshly readable through the connected generic method.
+**GANG 500 USDC committed to sale escrow** is tracked separately as a pending, illiquid position at historical cost, not added again to liquid investable NAV. This is distinct from the failed/refunded JUMP position. Neither amount can be counted as a new profit.
 
-Latest private/off-chain values carried forward with their labels:
-- Binance available balance: `$523.72`, USER_CONFIRMED, not independently refreshed in the chain scan;
-- Legion/JUMP pending capital: `$1,000`, USER_CONFIRMED / PENDING_ALLOCATION.
+**Bybit 435.948711 USDC / ~$436.16 displayed total** is reserved for personal living expenses and next month's rent, and is excluded from the Mission invested-capital figure. Exclude every Bybit account asset, not merely IMU dust.
 
-Displayed current asset reference is approximately `$701.13` liquid/available plus `$1,000` pending JUMP, for approximately `$1,701.13` tracked reference, excluding sub-$1 dust and unpriced/unverified inventory. This is not Mission PnL.
+Individual assets below **$1** are omitted. Sui remains zero by prior USER_CONFIRMED state, **not independently chain-refreshed today**. Unsupported chains/tokens are UNRESOLVED, never silently zero. No total above should be called $300 Mission PnL without provenance and exits.
 
 ## Position state rules
 
