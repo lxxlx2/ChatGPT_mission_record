@@ -472,3 +472,37 @@ def test_rpc_secret_stays_out_of_persisted_latest_and_loader(tmp_path):
     assert secret not in api_payload
     assert url not in persisted
     assert url not in api_payload
+
+
+def test_unknown_batch_with_sync_buy_keeps_cluster_unresolved():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{}}
+    def scan(holder,*args):
+        if holder.owner in {"A","B"}:
+            a.funding.append({"owner":holder.owner,"source":"UNKNOWN",
+                              "lamports":"5000000","signature":"same-tx","block_time":80})
+            a.trades.append({"owner":holder.owner,"signature":"buy-"+holder.owner,
+                             "block_time":100 if holder.owner=="A" else 101,
+                             "direction":"BUY","quote_asset":"SOL",
+                             "quote_amount_raw":"10","quote_decimals":9,
+                             "program_ids":[],"signers":[holder.owner]})
+        return {"block_time":100,"signature":"first-"+holder.owner}
+    a._scan_holder=scan
+    report=a.analyze()
+    assert not report["probable_control_clusters"]
+    assert report["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
+    assert "COMMON_FUNDER_UNRESOLVED" in {e["type"] for e in report["edges"]}
+
+
+def test_authenticated_rpc_endpoint_validator_excludes_unsafe_urls():
+    import pytest
+    from mission_agent.meme.cluster import SolanaReadOnlyRPC
+    for url in (
+        "api.example.com/?api-key=SECRET123",
+        "http://api.example.com/?api-key=SECRET123",
+        "https://api.example.com/ with-space",
+        "https://user:SECRET123@api.example.com/rpc",
+    ):
+        with pytest.raises(ValueError,match="RPC_ENDPOINT_INVALID") as exc:
+            SolanaReadOnlyRPC(url,fallback_endpoints=[])
+        assert "SECRET123" not in str(exc.value)

@@ -22,7 +22,7 @@ def put_sol(ledger,engine,signature,at,sol_amount,sol_usdc='100'):
     event['trade']['route_intermediate_assets']=[]
     event['trade']['route_amount_semantics']='DIRECT_OR_SINGLE_TARGET_QUOTE'
     ref={'status':'VERIFIED','source':'BINANCE_OFFICIAL_SPOT_SOLUSDC','selection_rule':'PREVIOUS_CLOSED_1M_CLOSE','sol_usdc':sol_usdc,'evidence_sha256':'fixture'}
-    normalized=normalize_classification(event,ref,for_model=True)
+    normalized=normalize_classification(event,ref,for_model=False)
     ledger.put('frank',normalized,signature,'fixture',dry_run=True)
     engine.drain()
 
@@ -38,8 +38,8 @@ def test_sol_usdc_shadow_research_does_not_authorize_frozen_v1_signals(tmp_path)
     put_sol(ledger,engine,'third',102700,50)
     assert signals(ledger)==[]  # SOL synthetic USDC remains barred by frozen direct-USDC policy.
     state=json.loads(ledger.db.execute('select body from v1_states').fetchone()[0])
-    assert all(e['quote_asset']=='EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' for e in state['events'])
-    assert all(e['original_quote']['quote_asset']=='SOL' for e in state['events'])
+    assert all(e['quote_asset']=='SOL' for e in state['events'])
+    assert all(e['amount_predicate']=='UNDETERMINED' for e in state['events'])
     assert all(e['quote_usdc_status']=='SOL_EVENT_TIME_USDC_VERIFIED' for e in state['events'])
 
 

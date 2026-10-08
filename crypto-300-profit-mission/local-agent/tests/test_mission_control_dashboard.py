@@ -545,3 +545,11 @@ def test_frank_mint_snapshot_reads_existing_observed_state(tmp_path):
     assert snapshot["latest_side"]=="BUY"
     assert snapshot["signal_type"]=="FRANK_MULTIPLE_SIGNAL"
     assert FrankReader(prod).mint_snapshot("UnknownMint")["status"]=="NOT_OBSERVED"
+
+
+def test_cluster_job_error_response_does_not_echo_sensitive_exception():
+    import inspect
+    from mission_agent.mission_control.server import ClusterJobManager
+    source=inspect.getsource(ClusterJobManager._run)
+    assert '"message": "CLUSTER_ANALYSIS_UNAVAILABLE"' in source
+    assert 'str(exc)[:500]' not in source

@@ -116,6 +116,19 @@ def classify(signature, tx, wallet):
                     {'asset':'SOL' if qm==WSOL else qm,'raw_delta':str(qg['delta']),'decimals':qg['decimals']}
                     for qm,qg in sorted(quotes,key=lambda x:x[0])
                 ]
+                # No observed wallet-owned transfer through an additional mint
+                # supports a simple single-target quote for research. Missing
+                # flow evidence or an additional non-target/quote mint is unresolved.
+                flows=e.get('wallet_token_transfer_flows')
+                route_mints=sorted({
+                    flow.get('mint') for flow in (flows or [])
+                    if isinstance(flow,dict) and flow.get('mint')
+                    and flow['mint'] not in ({mint} | QUOTE_MINTS)
+                })
+                route_status=(
+                    'UNVERIFIED' if flows is None or route_mints
+                    else 'NO_INTERMEDIATE_TRANSFER_OBSERVED'
+                )
                 base.update(
                     classification='ACTIVE_TRADE',
                     classification_reason=(
@@ -131,8 +144,11 @@ def classify(signature, tx, wallet):
                         'referenced_pre_raw':str(g['pre']),'referenced_post_raw':str(g['post']),
                         'amount_predicate':amount_predicate,'amount_predicate_reason':amount_reason,
                         'quote_legs':quote_legs,
-                        'route_intermediate_assets':None,
-                        'route_intermediate_evidence_status':'UNVERIFIED',
+                        'route_intermediate_assets':(
+                            [{'mint':m} for m in route_mints] if route_mints
+                            else None if flows is None else []
+                        ),
+                        'route_intermediate_evidence_status':route_status,
                         'route_amount_semantics':'DIRECT_OR_SINGLE_TARGET_QUOTE',
                     },
                 )

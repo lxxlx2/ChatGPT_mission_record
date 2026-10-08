@@ -258,8 +258,15 @@ class SolanaReadOnlyRPC:
         endpoints=[endpoint]
         endpoints.extend(DEFAULT_RPC_FALLBACKS if fallback_endpoints is None else fallback_endpoints)
         self.endpoints=[]
+        from urllib.parse import urlsplit
         for value in endpoints:
-            if value and value not in self.endpoints:self.endpoints.append(value)
+            if not value:continue
+            if not isinstance(value,str) or any(c.isspace() for c in value):
+                raise ValueError("RPC_ENDPOINT_INVALID")
+            parsed=urlsplit(value)
+            if parsed.scheme!="https" or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
+                raise ValueError("RPC_ENDPOINT_INVALID")
+            if value not in self.endpoints:self.endpoints.append(value)
         self.endpoint=self.endpoints[0]
         self.open_url=open_url
         self.sleep=sleep
@@ -986,7 +993,11 @@ class WalletClusterAnalyzer:
         unresolved_pct=Decimal(str(metrics["UNRESOLVED_MATERIAL_HOLDER_PCT"] or "0"))
         if control_groups:
             cluster_status="PROBABLE_CONTROL_CLUSTER_PRESENT"
-        elif not normalization_complete or unresolved_pct>0:
+        elif (not normalization_complete or unresolved_pct>0 or
+              any(edge.get("type") in {
+                  "COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED",
+                  "COMMON_CONSOLIDATION_UNRESOLVED"
+              } for edge in self.edges)):
             cluster_status="WALLET_CLUSTER_UNRESOLVED"
         else:
             cluster_status="NO_MATERIAL_CONTROL_CLUSTER_FOUND"

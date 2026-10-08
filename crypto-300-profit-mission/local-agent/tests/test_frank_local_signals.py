@@ -317,3 +317,34 @@ def test_install_script_blocks_loop_restart_by_default():
     assert guard in text
     assert text.index(guard)<text.index('mkdir -p "$APP_SUPPORT"')
     assert text.index(guard)<text.index('launchctl bootout')
+
+
+def test_state_and_evaluator_share_frozen_known_usdc_logic(tmp_path):
+    from mission_agent.signals.store import _known_usdc_trade
+    from mission_agent.signals.evaluator import known_usdc_event
+    candidates=[
+        {"quote_asset":USDC,"amount_predicate":"USDC_DIRECT_NUMERIC"},
+        {"quote_asset":USDC,"amount_predicate":"SOL_EVENT_TIME_USDC_VERIFIED"},
+        {"quote_asset":USDC,"amount_predicate":"UNDETERMINED"},
+        {"quote_asset":USDC},
+        {"quote_asset":USDT,"amount_predicate":"USDC_DIRECT_NUMERIC"},
+    ]
+    for row in candidates:
+        assert _known_usdc_trade(row)==known_usdc_event(row)
+    assert not _known_usdc_trade(candidates[1])
+
+
+def test_actual_classifier_simple_sol_route_is_not_marked_unverified():
+    t=tx()
+    e=classify("simple-sol",t,WALLET)
+    assert e["classification"]=="ACTIVE_TRADE"
+    assert e["trade"]["quote_asset"]=="SOL"
+    assert e["trade"]["route_intermediate_assets"]==[]
+    assert e["trade"]["route_intermediate_evidence_status"]=="NO_INTERMEDIATE_TRANSFER_OBSERVED"
+    from mission_agent.market.sol_usd import normalize_classification
+    reference={"status":"VERIFIED","source":"BINANCE_OFFICIAL_SPOT_SOLUSDC",
+               "sol_usdc":"120","evidence_sha256":"fixture"}
+    trade=normalize_classification(e,reference,for_model=False)["trade"]
+    assert trade["quote_asset"]=="SOL"
+    assert trade["quote_usdc_status"]=="SOL_EVENT_TIME_USDC_VERIFIED"
+    assert trade["amount_predicate"]=="UNDETERMINED"

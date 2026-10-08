@@ -474,9 +474,11 @@ class ClusterJobManager:
                 job = self.jobs[job_id]
                 job["status"] = "ERROR"
                 job["finished_at"] = time.time()
+                # Never surface exception messages: a network/lib error may
+                # interpolate authenticated RPC URLs or request headers.
                 job["error"] = {
                     "type": type(exc).__name__,
-                    "message": str(exc)[:500],
+                    "message": "CLUSTER_ANALYSIS_UNAVAILABLE",
                 }
                 job["progress"] = {"stage":"ERROR","updated_at":job["finished_at"]}
                 self._prune_jobs_locked()

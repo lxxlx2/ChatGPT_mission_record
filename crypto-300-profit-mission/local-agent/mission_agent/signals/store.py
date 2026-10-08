@@ -5,16 +5,15 @@ from decimal import Decimal
 from ..db.connection import connect, transaction
 from ..hashing import digest
 from .policy import USDC
+from .evaluator import known_usdc_event
 
 def now(): return datetime.now(timezone.utc).isoformat()
 
 def quantity(raw,decimals): return str(Decimal(raw)/(Decimal(10)**decimals))
 
 def _known_usdc_trade(trade):
-    predicate=trade.get('amount_predicate')
-    if predicate is None:
-        return trade.get('quote_asset')==USDC and not trade.get('amount_predicate_reason')
-    return trade.get('quote_asset')==USDC and predicate in {'USDC_DIRECT_NUMERIC','SOL_EVENT_TIME_USDC_VERIFIED'}
+    # One authority for the frozen direct-USDC predicate across state and gates.
+    return known_usdc_event(trade)
 
 def _observed_quote(trade):
     original=trade.get('original_quote') or {}
