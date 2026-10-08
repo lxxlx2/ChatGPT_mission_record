@@ -400,3 +400,45 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 .conclusion-lead.secondary{border-color:#554c2d;background:#18160f}
 .conclusion-lead.secondary strong{color:#e1ca71}
 @media(max-width:800px){.conclusion-leads{grid-template-columns:1fr}}
+
+/* CA research: trading questions first, diagnostics available on demand. */
+.cluster-preview{margin:0 0 12px;padding:12px 14px;border:1px solid #34465a;border-radius:7px;background:#111923}
+.cluster-preview-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}
+.cluster-preview-head strong{font-size:13px;color:#b9dcef}
+.cluster-preview-head span,.cluster-preview>p{font-size:10px;color:#94a4b4;margin:8px 0 0}
+.cluster-preview-items{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.cluster-preview-items .fact-card{background:#0e161f}
+.cluster-result{gap:8px}
+.cluster-result>.panel{margin-bottom:0}
+.cluster-summary{grid-template-columns:2.1fr 2.1fr repeat(4,minmax(0,1fr))}
+.cluster-summary-card{padding:9px 11px}
+.cluster-summary-card strong{font-size:13px;overflow-wrap:anywhere;align-items:flex-start;flex-wrap:wrap}
+.cluster-summary-card .subvalue{font-size:10px;margin-top:5px}
+.cluster-summary-card .link-btn{padding:3px 5px;font-size:10px;display:inline-flex;margin:0 3px 3px 0}
+.cluster-metrics{grid-template-columns:repeat(5,minmax(0,1fr));padding:9px;gap:7px}
+.cluster-metric{padding:9px}
+.cluster-metric strong{font-size:15px;margin-top:5px}
+.cluster-extra-metrics{grid-column:1 / -1;font-size:11px;color:#9ba8b5;padding:0 2px}
+.cluster-extra-metrics summary,.cluster-assessment-history summary{cursor:pointer;padding:7px 3px;color:#94a5b5;font-size:11px}
+.cluster-metrics-extra{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:7px}
+.cluster-assessment-history{margin-top:8px}
+.cluster-detail-fold{margin-top:4px}
+.cluster-detail-fold>summary{cursor:pointer;padding:13px 15px;font-size:12px;font-weight:650;list-style:revert;color:#a8b9cb}
+.cluster-detail-fold[open]>summary{border-bottom:1px solid #252a31}
+.cluster-detail-body{padding:12px}
+.cluster-detail-body .panel:last-child{margin-bottom:0}
+.cluster-result .conclusion-lead{padding:9px 11px}
+.cluster-result .conclusion-grid>div{padding:9px}
+@media(max-width:1250px){
+  .cluster-preview-items,.cluster-metrics-extra{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cluster-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cluster-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:780px){
+  .cluster-preview-items,.cluster-metrics,.cluster-metrics-extra{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cluster-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cluster-preview-head{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:460px){
+  .cluster-preview-items,.cluster-summary{grid-template-columns:1fr}
+}
