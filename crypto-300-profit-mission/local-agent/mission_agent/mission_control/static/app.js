@@ -251,20 +251,39 @@ function renderRuntime(runtime, control) {
     </details>`;
 }
 
-function renderStats(candidates, runtime) {
-  const counts = {BUY:0,SMALL_BUY:0,WAIT:0,NO_BUY:0,UNASSESSED:0};
-  candidates.forEach(x => counts[x.decision] = (counts[x.decision]||0)+1);
+function renderStats(candidates, runtime, coverage) {
+  const w = coverage?.windows?.['24h'] || {};
+  const action = candidates.filter(x => x.decision === 'BUY' || x.decision === 'SMALL_BUY').length;
   const items = [
-    ['Frank监控', translated(runtimeLabel,runtime.status,'未知')],
-    ['可跟', counts.BUY],
-    ['小仓跟', counts.SMALL_BUY],
-    ['等待', counts.WAIT],
-    ['不跟', counts.NO_BUY],
-    ['候选', candidates.length],
+    ['Frank状态', translated(runtimeLabel,runtime.status,'未知')],
+    ['24h已索引签名', w.indexed_signatures ?? '—'],
+    ['24h已识别买入', w.recognized_buys ?? '—'],
+    ['24h已识别卖出', w.recognized_sells ?? '—'],
+    ['24h待复核', w.unknown_needs_review ?? '—'],
+    ['当前可跟候选', action],
   ];
-  $('stats').innerHTML = items.map(([k,v]) =>
-    `<div class="stat"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`
+  $('stats').innerHTML = items.map(([key,value]) =>
+    `<div class="stat"><span>${esc(key)}</span><strong>${esc(value)}</strong></div>`
   ).join('');
+}
+
+function renderCoverage(coverage) {
+  const node = $('coverage');
+  if (!node) return;
+  if (coverage?.status !== 'OK') {
+    node.textContent = '本地索引覆盖率不可读取；当前不能判断链上交易是否漏报。';
+    return;
+  }
+  const w=coverage.windows || {};
+  const t=w['24h'] || {};
+  const since=coverage.earliest_indexed_block_time
+    ? new Date(Number(coverage.earliest_indexed_block_time)*1000).toLocaleString('zh-CN')
+    : '未知';
+  node.innerHTML =
+    `<strong>统计范围：本地索引，不是 Frank 钱包的完整链上交易数</strong>` +
+    `<span>24h 已索引 ${esc(t.indexed_signatures ?? '—')} 笔签名 · 已识别 ${esc(t.recognized_trades ?? '—')} 笔交易 · 待复核 ${esc(t.unknown_needs_review ?? '—')} 笔</span>` +
+    `<span>7d 已识别 ${esc(w['7d']?.recognized_trades ?? '—')} 笔 · 30d 已识别 ${esc(w['30d']?.recognized_trades ?? '—')} 笔 · 最早索引 ${esc(since)}</span>` +
+    '<span>与 Solana RPC 全量记录的完整性尚未核对；不能用此处数据计算 Frank 的全钱包胜率或漏单率。</span>';
 }
 
 function metric(label,value,help='') {
@@ -395,22 +414,45 @@ function tradeHint(side) {
   return hints[side] || `原始事件：${side || 'UNKNOWN'}`;
 }
 
+function tradeAmount(x) {
+  const asset = x.observed_quote_asset;
+  const qty = x.observed_quote_quantity;
+  if (qty == null || !asset) return '实际支付金额待核实';
+  const amount = n(qty,asset === USDC_MINT ? 2 : 4);
+  if (asset === USDC_MINT) return amount + ' USDC';
+  if (asset === WSOL_MINT || asset === 'SOL') return amount + ' SOL';
+  return amount + ' ' + short(asset,6,4);
+}
+
+function fillPrice(x) {
+  const price = Number(x.verified_fill_price_usdc);
+  if (!Number.isFinite(price) || price <= 0) return '成交价不可核实';
+  const digits=Math.max(0,Math.min(18,5-Math.floor(Math.log10(price))));
+  return '$' + price.toLocaleString('en-US',{maximumFractionDigits:digits});
+}
+
 function renderTrades(rows) {
-  $('trades').innerHTML = rows.slice(0,30).map(x => {
+  $('trades').innerHTML = rows.slice(0,50).map(x => {
     const side = x.side || 'UNKNOWN';
-    const solscan = x.signature
-      ? `<a class="link-btn compact" href="https://solscan.io/tx/${encodeURIComponent(x.signature)}" target="_blank" rel="noreferrer">交易 ↗</a>`
+    const isBuy=['BUY','ADD','REENTRY'].includes(side);
+    const after=x.position_after_token == null ? '持仓未能确认'
+      : '本序列剩余 ' + n(x.position_after_token,2) + ' 枚';
+    const qty=x.token_quantity == null ? '目标币数量未知'
+      : n(x.token_quantity,2) + ' 枚';
+    const tx=x.signature
+      ? `<a class="link-btn compact" href="https://solscan.io/tx/${encodeURIComponent(x.signature)}" target="_blank" rel="noreferrer">链上原始交易 ↗</a>`
       : '';
     return `<div class="feed-row trade-row">
       <div class="feed-badge">${badge(side,sideLabel)}</div>
       <div class="feed-main">
         <div class="feed-token"><code>${esc(short(x.mint,8,6))}</code> ${copyButton(x.mint,'复制 CA')}</div>
-        <small>${esc(tradeHint(side))}</small>
-        <div class="hash-row"><span>Tx ${esc(short(x.signature,10,8))}</span> ${copyButton(x.signature,'复制 Tx')} ${solscan}</div>
+        <div class="trade-core"><strong>${esc(isBuy?'买入/投入':'卖出/收到')}：${esc(tradeAmount(x))}</strong><span>${esc(qty)}</span></div>
+        <small>${esc(fillPrice(x))} · ${esc(after)} · ${esc(tradeHint(side))}</small>
+        <div class="hash-row">${copyButton(x.signature,'复制 Tx')} ${tx}</div>
       </div>
       <time>${new Date(Number(x.block_time)*1000).toLocaleString('zh-CN')}</time>
     </div>`;
-  }).join('') || '<div class="empty">暂无交易</div>';
+  }).join('') || '<div class="empty">本地尚无可识别交易；这不代表钱包没有链上活动</div>';
 }
 
 function renderReviewActivity(rows) {
@@ -466,19 +508,21 @@ function renderDecisions(rows) {
 
 async function refresh() {
   try {
-    const [runtime,control,candidates,trades,reviewActivity,decisions] = await Promise.all([
+    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage] = await Promise.all([
       get('/api/runtime'),
       get('/api/control-health'),
       get('/api/candidates'),
       get('/api/trades'),
       get('/api/review-activity'),
-      get('/api/decisions')
+      get('/api/decisions'),
+      get('/api/coverage')
     ]);
     const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
     const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
 
     renderRuntime(runtime,control);
-    renderStats(activeCandidates,runtime);
+    renderStats(activeCandidates,runtime,coverage);
+    renderCoverage(coverage);
     renderCandidates(activeCandidates);
     renderEnded(endedCandidates);
     renderTrades(trades);
@@ -832,7 +876,7 @@ function renderClusterReport(report) {
 
   const structureConclusion=assessmentLabel[assessment.trading_status] || assessment.trading_status || '等待数据';
   const fullConclusion=assessment.narrative_status==='NOT_AUTOMATICALLY_VERIFIED'
-    ? '完整投资结论待叙事 / 官方关系核实'
+    ? '外部叙事研究未接入，暂无完整结论'
     : structureConclusion;
 
   $('cluster-conclusion').innerHTML =
@@ -970,8 +1014,8 @@ function renderClusterReport(report) {
     '<span class="narrative-link">' + esc((x.platform || 'social') + ': ' + (x.handle || '')) + '</span>'
   ).join('');
   $('cluster-narrative').innerHTML =
-    '<div class="narrative-state"><strong>未自动确认项目方/叙事主体与 exact CA 的关系</strong>' +
-    '<p>公开链接存在 ≠ 项目方认领。creator fee claim、creator 买入、lock/treasury 关系必须另外做第一方或链上闭环。</p></div>' +
+    '<div class="narrative-state"><strong>未接入 X/FOMO 外部叙事检索</strong>' +
+    '<p>目前仅展示市场资料附带的链接；不抓取实时官方帖子，也不提供官方认领或叙事打分。</p></div>' +
     '<div class="narrative-links">' + (websites || socials ? websites + socials : '<span class="muted">当前市场资料没有可展示的官网/社交链接</span>') + '</div>';
 
   clusterStatus('done','查询完成',
