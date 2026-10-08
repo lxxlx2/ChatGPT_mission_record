@@ -799,7 +799,16 @@ class WalletClusterAnalyzer:
         self._progress("BASE_READY",token_profile=token_profile,market=market)
 
         supply,decimals,holders=self.holders()
-        self._progress("HOLDERS_READY",top_accounts_resolved=len(holders),supply_raw=str(supply),decimals=decimals)
+        preview_top10_pct=(
+            str((Decimal(sum(h.raw for h in holders[:10]))*100/Decimal(supply)).quantize(Decimal("0.01")))
+            if supply>0 and len(holders)>=10 else None
+        )
+        self._progress(
+            "HOLDERS_READY",top_accounts_resolved=len(holders),
+            supply_raw=str(supply),decimals=decimals,
+            raw_top10_resolved_pct=preview_top10_pct,
+            holder_snapshot_status="BOUNDED_RESOLVED_ONLY",
+        )
         account_to_owner={h.token_account:h.owner for h in holders}
         firsts={};deep=[];deep_seen=set()
         for h in holders:
