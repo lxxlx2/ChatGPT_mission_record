@@ -682,3 +682,67 @@ real-CA acceptance. Production trading remains `NO_GO`.
 Next gate: localhost-only port `8877`, a fresh isolated control root, dashboard
 server only (no Mission Meme loop / no delivery), read-only production Frank
 snapshot access, and live Solana/Jupiter/DexScreener CA-report generation.
+
+
+### Isolated real-CA v3 acceptance complete — 2026-10-08
+
+Validated code+scripts HEAD:
+`d66ee620e125945fce1dc5bd0cf71acae80daddd`.
+
+User-supplied local validation:
+- macOS shell syntax: `PASS`;
+- focused test suite: `62 passed`;
+- full local-agent suite: `802 passed`;
+- persistent authenticated Alchemy Solana RPC file:
+  `~/Library/Application Support/FrankMeme/solana_rpc_urls`,
+  permissions `0600`; endpoint secret not included in this report;
+- terminal RPC variables unset before the acceptance run;
+- isolated localhost dashboard on port `8877` bound to
+  `127.0.0.1:8877`;
+- invalid-CA POST rejected with HTTP 400;
+- the three real-CA `standard` scans all reached `DONE`:
+  - `RACEyWiM2ztEZcJx2AHXU2eWjhxU57x3vXn92b39dLD` —
+    `SPL Token-2022`, `ADAPTIVE`, deep holders scanned=6,
+    adaptive deepened=7, `chain_permission_status=RISK`,
+    `WALLET_CLUSTER_UNRESOLVED`, Frank `NOT_OBSERVED`,
+    Jupiter quote `OK`;
+  - `3Dgwn5E7H5a8k6iGrz3qirkaJqUaJrKHEZ2xPcLRpump` —
+    `SPL Token-2022`, `ADAPTIVE`, deep holders scanned=6,
+    adaptive deepened=12, `chain_permission_status=PASS`,
+    `WALLET_CLUSTER_UNRESOLVED`, Frank `OBSERVED`
+    (2 BUY, 1 SELL), Jupiter quote `OK`;
+  - `2AVjqmGbMqg7rSyHVv2deVdggsBgBtu1Bi69BUvE5WRv` —
+    classic `SPL Token`, `ADAPTIVE`, deep holders scanned=6,
+    adaptive deepened=12, `chain_permission_status=PASS`,
+    `WALLET_CLUSTER_UNRESOLVED`, Frank `OBSERVED`
+    (1 BUY, 1 SELL), Jupiter quote `OK`;
+- reports include assessment history entries (1 each);
+- `REAL_CA_SCHEMA_AND_SEMANTICS: PASS`;
+- `ISOLATED_REAL_CA_ACCEPTANCE: PASS`;
+- no `mission-control.sqlite` or `sol-normalized-v1.sqlite` in
+  isolated control root;
+- production state migration: `NOT PERFORMED`;
+- historical backfill: `NOT PERFORMED`;
+- production `v1_seen`: `UNTOUCHED`;
+- notification loop: `NOT STARTED`;
+- LaunchAgents: `UNTOUCHED`;
+- `PRODUCTION_TRADING=NO_GO`.
+
+Artifacts:
+`/Users/jerson/.frank_meme_ca_v3_accept_20261008_130816`
+
+Acceptance scope is real-CA report generation and isolation only. It does NOT
+establish historical cluster evidence completeness (all three remain
+`WALLET_CLUSTER_UNRESOLVED`), main merge validation, live notification
+behavior, or macOS post-reboot LaunchAgent recovery.
+
+Next deployment gate:
+- inspect existing `frank-meme.dashboard` and `frank-meme.loop`
+  LaunchAgent state, configured worktree, control root and policy;
+- do not run the existing installer blindly: its default path installs,
+  bootstraps and kickstarts BOTH dashboard and the live-delivery-capable
+  loop, and may replace existing configurations;
+- ensure that the post-login dashboard runner loads the persisted authenticated
+  RPC file and that no unintended loop/delivery is started;
+- then perform an explicit user-approved restart/re-login check;
+- no historical migration/backfill, no production-trading enablement.
