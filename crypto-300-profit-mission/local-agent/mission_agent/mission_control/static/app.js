@@ -836,11 +836,9 @@ function renderClusterReport(report) {
   $('cluster-summary').innerHTML = [
     ['Token', '<span>' + esc(tokenName) + '</span><span class="subvalue">' + esc(tokenSymbol) + '</span>'],
     ['CA', '<code class="summary-ca">' + esc(mint) + '</code>' + copyButton(mint,'复制 CA')],
+    ['市值', esc(usd(market.market_cap_usd))],
+    ['主池流动性', esc(usd(mainPair.liquidity_usd))],
     ['观测时间', esc(observedText) + '<span class="subvalue">' + esc(observedAge) + '</span>'],
-    ['Top owner 已解析', esc(coverage.top_accounts_resolved ?? 0) + ' / 20'],
-    ['深扫 owner', esc(coverage.deep_holders_scanned ?? 0)],
-    ['控制集群', esc(ctrl.length)],
-    ['身份归一化', strictComplete ? '<span class="ok-text">已完成</span>' : '<span class="warn-text">未完成</span>'],
   ].map(([k,v]) => '<div class="cluster-summary-card"><span>' + k + '</span><strong>' + v + '</strong></div>').join('');
 
   const activeAuthorities = assessment.active_authorities || [];
@@ -876,25 +874,14 @@ function renderClusterReport(report) {
   }
 
   const structureConclusion=assessmentLabel[assessment.trading_status] || assessment.trading_status || '等待数据';
-  const fullConclusion=assessment.narrative_status==='NOT_AUTOMATICALLY_VERIFIED'
-    ? '外部叙事研究未接入，暂无完整结论'
-    : structureConclusion;
-
   $('cluster-conclusion').innerHTML =
     '<div class="conclusion-leads">' +
       '<div class="conclusion-lead"><span>链上 / 市场结构结论</span><strong>' + esc(structureConclusion) + '</strong></div>' +
-      '<div class="conclusion-lead secondary"><span>完整投资结论</span><strong>' + esc(fullConclusion) + '</strong></div>' +
     '</div>' +
     '<div class="conclusion-grid">' +
       '<div><b>链上权限</b><p>' + esc(chainConclusion) + '</p></div>' +
       '<div><b>Holder / Cluster</b><p>' + esc(clusterConclusion) + '</p></div>' +
       '<div><b>市场状态</b><p>' + esc(marketConclusion) + '</p></div>' +
-      '<div><b>叙事关系</b><p>项目方是否正式确认 exact CA、creator fee claim、买入或锁仓，当前本地工具不会仅凭币名/X 链接自动确认。</p></div>' +
-    '</div>' +
-    '<div class="next-checks"><b>下一步最值得核实</b>' +
-      '<span>① 项目方/叙事主体是否明确确认这个 CA</span>' +
-      '<span>② creator claim → 买入 → lock/treasury 是否能链上闭环</span>' +
-      '<span>③ ATH/关键价位用历史行情或实时盘口验证，不从当前快照猜</span>' +
     '</div>' +
     renderAssessmentHistory(report.assessment_history);
 
