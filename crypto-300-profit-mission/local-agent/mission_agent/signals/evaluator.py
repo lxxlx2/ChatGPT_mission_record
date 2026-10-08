@@ -4,7 +4,7 @@ from .policy import USDC
 
 D=Decimal
 
-KNOWN_USDC_PREDICATES=frozenset({'USDC_DIRECT_NUMERIC','SOL_EVENT_TIME_USDC_VERIFIED'})
+KNOWN_USDC_PREDICATES=frozenset({'USDC_DIRECT_NUMERIC'})  # Frozen policy forbids synthetic SOL quote.
 
 def known_usdc_event(event):
     predicate=event.get('amount_predicate')

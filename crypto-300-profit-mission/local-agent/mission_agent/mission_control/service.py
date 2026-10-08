@@ -15,7 +15,7 @@ from .frank import FrankReader
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
 from .outcomes import OutcomeTracker
-from .sol_mirror import SolNormalizedMirror, merge_candidates
+from .sol_mirror import SolNormalizedMirror
 from .policy import evaluate, load_policy, should_notify
 
 
@@ -165,8 +165,9 @@ class MissionMemeService:
         runtime = self.frank.runtime()
         sol_normalization = self.sol_mirror.sync()
         base_candidates = self.frank.candidates()
-        overlay_candidates = self.sol_mirror.candidates() if sol_normalization.get("status") == "OK" else []
-        candidates = merge_candidates(base_candidates, overlay_candidates)
+        # Sidecar is research-only until an explicitly reviewed policy change.
+        # Never feed shadow-converted SOL amounts into decision/outbox delivery.
+        candidates = base_candidates
         events = []
         errors = []
         debounced = []

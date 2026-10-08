@@ -53,13 +53,15 @@ def test_live_sol_mirror_reuses_frozen_engine_without_writing_source(tmp_path):
     assert result["sol_trades"]==2
     assert result["sol_resolved"]==2
     assert result["sol_unresolved"]==0
-    assert result["added_signal_count"]>=1
-    candidates=mirror.candidates()
-    assert candidates
-    assert candidates[0]["pattern"]=="ACCUMULATION"
-    assert candidates[0]["latest_buy_quote_asset"]=="SOL"
-    assert candidates[0]["latest_buy_quote_was_normalized"] is True
-    assert candidates[0]["latest_buy_usdc_equivalent"]=="15000"
+    assert result["added_signal_count"]==0
+    # Causal price evidence is research-only; cannot promote SOL to V1 USDC gates.
+    assert mirror.candidates()==[]
+    normalized=json.loads(mirror.db.execute(
+        "SELECT body FROM signatures WHERE signature='s1'").fetchone()[0])["trade"]
+    assert normalized["quote_asset"]=="SOL"
+    assert normalized["amount_predicate"]=="UNDETERMINED"
+    assert normalized["quote_usdc_status"]=="SOL_EVENT_TIME_USDC_VERIFIED"
+    assert normalized["quote_usdc_equivalent"]=="15000.0"
     mirror.close()
     source_ledger=Ledger(source)
     assert source_ledger.db.execute("select count(*) from signals").fetchone()[0]==0
@@ -101,3 +103,30 @@ def test_merge_prefers_stronger_or_verified_sol_overlay():
     overlay=[{"person_id":"frank","mint":"M","episode_id":"E","pattern":"ACCUMULATION","latest_at":1,"latest_buy_price_status":"SOL_EVENT_TIME_USDC_VERIFIED"}]
     out=merge_candidates(base,overlay)
     assert out[0]["latest_buy_price_status"]=="SOL_EVENT_TIME_USDC_VERIFIED"
+
+
+def test_sol_mirror_excludes_non_frank_person_history(tmp_path):
+    source=tmp_path/"forward.sqlite";sidecar=tmp_path/"mirror.sqlite"
+    make_source(source)
+    ledger=Ledger(source)
+    ledger.db.execute(
+        "INSERT INTO signatures VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+        ("wallet","other-person","other",1200,1200,"seen","classified",
+         "hash","raw-ref",json.dumps(body("other-person",1200)),"NO","SOURCE")
+    )
+    ledger.db.commit();ledger.db.close()
+    policy=Path(__file__).parents[1]/"config"/"frank_local_signal_v1.json"
+    mirror=SolNormalizedMirror(source,sidecar,policy,client=RefClient())
+    result=mirror.sync()
+    assert result["status"]=="OK"
+    assert result["copied"]==2
+    assert mirror.db.execute(
+        "select count(*) from signatures where person_id!='frank'").fetchone()[0]==0
+    mirror.close()
+
+
+def test_live_decision_service_never_merges_shadow_candidates():
+    import mission_agent.mission_control.service as service
+    source=Path(service.__file__).read_text()
+    assert "candidates = base_candidates" in source
+    assert "merge_candidates(base_candidates, overlay_candidates)" not in source
