@@ -43,7 +43,7 @@ def add_candidate(root: Path, *, mint="Mint222", episode="ep2", signal="signal2"
 
 
 def policy(path: Path, *, status="REVIEW_ONLY", live=False):
-    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":status,"live_delivery_approved":live,"decision":{"quote_usdc_amount":"30","slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"max_frank_buy_age_seconds":600,"initial_notification_max_age_seconds":600,"max_candidates_per_cycle":50,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
+    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":status,"live_delivery_approved":live,"decision":{"quote_usdc_amount":"30","observation_retention_seconds":5184000,"slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"max_frank_buy_age_seconds":600,"initial_notification_max_age_seconds":600,"max_candidates_per_cycle":50,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
 
 
 def good_quote():
@@ -291,3 +291,24 @@ def test_candidate_exception_does_not_persist_secret_in_health_or_result(tmp_pat
     assert secret not in json.dumps(result)
     assert secret not in (control/"mission-control-health.json").read_text()
     service.close()
+
+
+def test_mission_loop_denies_rejected_retention_even_if_candidate_sha_matches(tmp_path):
+    prod=tmp_path/"prod";make_prod(prod)
+    pol=tmp_path/"policy.json"
+    policy(pol,status="FROZEN_APPROVED",live=True)
+    expected=hashlib.sha256(pol.read_bytes()).hexdigest()
+    good=MissionMemeService(production_root=prod,control_root=tmp_path/"good-control",
+                            policy_path=pol,live_delivery=True,
+                            approved_policy_sha256=expected)
+    assert good.delivery_allowed is True
+    good.close()
+    changed=json.loads(pol.read_text())
+    changed["decision"]["observation_retention_seconds"]=1
+    pol.write_text(json.dumps(changed))
+    new_digest=hashlib.sha256(pol.read_bytes()).hexdigest()
+    rejected=MissionMemeService(production_root=prod,control_root=tmp_path/"bad-control",
+                                policy_path=pol,live_delivery=True,
+                                approved_policy_sha256=new_digest)
+    assert rejected.delivery_allowed is False
+    rejected.close()

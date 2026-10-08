@@ -10,7 +10,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 VALID_DECISIONS = {"BUY", "SMALL_BUY", "WAIT", "NO_BUY"}
-_APPROVED_SHA_RE = re.compile(r"[0-9a-f]{64}\\Z")
+_APPROVED_SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
 _REQUIRED_RETENTION_SECONDS = 5184000
 
 
