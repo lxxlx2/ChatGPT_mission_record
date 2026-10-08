@@ -226,7 +226,7 @@ def scan_solana(rpc: RPC, wallet: str, cutoff: int, until: int,
         tx = cache.load(wallet, sig, slot) if cache else None
         if tx is None:
             tx = rpc.call("getTransaction", [sig, {
-                "encoding":"jsonParsed", "commitment":"finalized", "maxSupportedTransactionVersion":0,
+                "encoding":"jsonParsed", "commitment":"finalized", "maxSupportedTransactionVersion":1,
             }])
             if not tx:
                 raise IncompleteWindow("SOL_FINALIZED_TRANSACTION_UNAVAILABLE")
