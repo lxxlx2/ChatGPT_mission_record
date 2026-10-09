@@ -115,6 +115,17 @@ def _payment_display(value, asset):
     return "暂无" if shown=="暂无" else shown+" "+symbol
 
 
+def _compact_price(value):
+    """Human-facing small-price display; decision calculations remain unrounded."""
+    try:
+        raw=Decimal(str(value))
+        if raw.is_finite() and 0<abs(raw)<Decimal("0.00001"):
+            return format(raw,".2E").replace("E-0","e-").replace("E+0","e+").replace("E","e")
+    except (ValueError,TypeError,InvalidOperation):
+        return "暂无"
+    return _readable_number(value,significant_digits=4,trim=True)
+
+
 def render(event:dict)->dict:
     body=json.loads(event["body"]) if isinstance(event.get("body"),str) else event["body"]
     metrics=body.get("metrics") or {};inputs=body["inputs"];quote=inputs.get("quote") or {}
@@ -145,9 +156,9 @@ def render(event:dict)->dict:
         "最近买入投入："+payment,
     ]
     if frank_price not in (None,""):
-        lines.append("Frank 参考买价："+_readable_number(frank_price,significant_digits=4,trim=True)+" USDC")
+        lines.append("Frank 参考买价："+_compact_price(frank_price)+" USDC")
     if exec_price not in (None,""):
-        lines.append("当前可成交价："+_readable_number(exec_price,significant_digits=4,trim=True)+" USDC")
+        lines.append("当前可成交价："+_compact_price(exec_price)+" USDC")
     if deviation not in (None,""):
         lines.append("相对 Frank 买价："+_readable_number(deviation,decimal_places=1)+"%")
     if impact not in (None,""):
