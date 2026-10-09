@@ -45,36 +45,36 @@ jobs:
             if not choices:
               print("STATUS: UNVERIFIED_NO_PREBUY_POOL_ON_PAGE");sys.exit(0)
             choices.sort(key=lambda x:float(x.get("current_reserve_usd") or 0),reverse=True)
-            pool=choices[0]
-            params=urllib.parse.urlencode({
-                "aggregate":5,"before_timestamp":EXIT+900,"limit":350,
-                "currency":"usd","token":pool["side"]})
-            url=BASE+"/networks/solana/pools/"+pool["pool"]+"/ohlcv/minute?"+params
-            candles=get(url).get("data",{}).get("attributes",{}).get("ohlcv_list") or []
-            candles=sorted(candles,key=lambda r:r[0])
-            print("SELECTED_POOL:",json.dumps(pool,separators=(",",":")))
-            print("BARS_COUNT:",len(candles))
-            if not candles:
-              print("STATUS: UNVERIFIED_NO_HISTORIC_POOL_CANDLES");sys.exit(0)
-            print("BARS_TIME_RANGE:",candles[0][0],candles[-1][0])
-            def first_after(t):
-              x=next((r for r in candles if r[0]>=t and r[0]<t+900),None)
-              return {"candle_start":x[0],"close_usd":x[4],"volume_usd":x[5]} if x else None
-            exit_candle=first_after(EXIT)
-            rows=[]
-            for lag in (0,300,900,1800,3600):
-              sample=first_after(BUY+lag)
-              pct=None
-              if sample and exit_candle and sample["close_usd"] and exit_candle["close_usd"]:
-                pct=(exit_candle["close_usd"]/sample["close_usd"]-1)*100
-              rows.append({"lag_seconds":lag,"entry_proxy":sample,
-                           "exit_proxy":exit_candle,"gross_pool_close_return_pct":pct})
-            print("STATUS: PUBLIC_POOL_CANDLES_OBSERVED_NOT_EXECUTABLE_QUOTES")
-            print("LAG_RESULT_JSON:",json.dumps({
-              "mint":MINT,"pool":pool,"lags":rows,"bar_minutes":5,
-              "max_lookahead_seconds":900,"scope":"ONE_PUBLIC_POOL_NOT_FOMO_ROUTER",
-              "fees_slippage_omitted":True,"depth_at_trade_time_unknown":True,
-              "profitability_copy_confirmed":False},separators=(",",":")))
+            for pool in choices[:2]:
+              params=urllib.parse.urlencode({
+                  "aggregate":5,"before_timestamp":EXIT+900,"limit":350,
+                  "currency":"usd","token":pool["side"]})
+              url=BASE+"/networks/solana/pools/"+pool["pool"]+"/ohlcv/minute?"+params
+              candles=get(url).get("data",{}).get("attributes",{}).get("ohlcv_list") or []
+              candles=sorted(candles,key=lambda r:r[0])
+              print("SELECTED_POOL:",json.dumps(pool,separators=(",",":")))
+              print("BARS_COUNT:",len(candles))
+              if not candles:
+                print("STATUS: UNVERIFIED_NO_HISTORIC_POOL_CANDLES");sys.exit(0)
+              print("BARS_TIME_RANGE:",candles[0][0],candles[-1][0])
+              def first_after(t):
+                x=next((r for r in candles if r[0]>=t and r[0]<t+900),None)
+                return {"candle_start":x[0],"close_usd":x[4],"volume_usd":x[5]} if x else None
+              exit_candle=first_after(EXIT)
+              rows=[]
+              for lag in (0,300,900,1800,3600):
+                sample=first_after(BUY+lag)
+                pct=None
+                if sample and exit_candle and sample["close_usd"] and exit_candle["close_usd"]:
+                  pct=(exit_candle["close_usd"]/sample["close_usd"]-1)*100
+                rows.append({"lag_seconds":lag,"entry_proxy":sample,
+                             "exit_proxy":exit_candle,"gross_pool_close_return_pct":pct})
+              print("STATUS: PUBLIC_POOL_CANDLES_OBSERVED_NOT_EXECUTABLE_QUOTES")
+              print("LAG_RESULT_JSON:",json.dumps({
+                "mint":MINT,"pool":pool,"lags":rows,"bar_minutes":5,
+                "max_lookahead_seconds":900,"scope":"ONE_PUBLIC_POOL_NOT_FOMO_ROUTER",
+                "fees_slippage_omitted":True,"depth_at_trade_time_unknown":True,
+                "profitability_copy_confirmed":False},separators=(",",":")))
           except Exception as e:
             print("STATUS: UNVERIFIED_PUBLIC_OHLCV_FAILURE")
             print("ERROR_TYPE:",type(e).__name__,"DETAIL:",str(e)[:180])
