@@ -135,16 +135,45 @@ jobs:
               found["tx_ok"] and found["root_signed"] and found["fomo_signed"]
               and found["root_tweetcraft_raw"]==-4732220716414
               and found["root_usdc_raw"]==7031556770)
-          found["sell_opcode_bound_to_dex"]=not malformed and any(
-              x["program"] in (DLMM,PUMP) and x["opcode_log"] in
-              ("Sell","Swap","Swap2","SwapExactIn","SwapExactOut") for x in events)
-          found["instruction_confirmed_sale"]=(found["buy_back_consideration_matching"]
-              and found["sell_opcode_bound_to_dex"] and
-              any(z.get("source") and z.get("destination") for z in instr))
+          # A finalized successful Solana tx may end with "Log truncated";
+          # require its only unmatched frame to be the top-level router.
+          root_router="proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
+          tail_truncated=(malformed and len(mismatch)==1
+              and mismatch[0].get("type")=="unterminated_invocation"
+              and mismatch[0].get("stack_tail")==[root_router]
+              and (meta.get("logMessages") or [])[-1:] == ["Log truncated"])
+          nested_valid=(not malformed or tail_truncated)
+          pump_sell_opcode=any(x.get("program")==PUMP and x.get("anchor_sell")
+                                for x in ids)
+          meteora_swap2_opcode=any(x.get("program")==DLMM and x.get("anchor_swap2")
+                                   for x in ids)
+          pump_sell_log=any(x["program"]==PUMP and x["opcode_log"]=="Sell"
+                            for x in events)
+          meteora_swap2_log=any(x["program"]==DLMM and x["opcode_log"]=="Swap2"
+                                for x in events)
+          root_out=any(x.get("source")=="7qujRSPgfbgiwMhBSc1znjaQoHM9jt6HQVw6TgxnLAsG"
+                  and x.get("authority")==ROOT and x.get("mint")==MINT
+                  and x.get("raw")=="4732220716414" for x in instr)
+          root_receipt=any(x.get("destination")=="6kD22oUQrV8tVpE2hkQzkoobwCQAy2iiZcipWn8AD5jF"
+                  and x.get("mint")==USDC and x.get("raw")=="7047407163" for x in instr)
+          root_fee_out=any(x.get("source")=="6kD22oUQrV8tVpE2hkQzkoobwCQAy2iiZcipWn8AD5jF"
+                  and x.get("authority")==ROOT and x.get("mint")==USDC
+                  and x.get("raw")=="15850393" for x in instr)
+          found["root_tail_log_truncated"]=tail_truncated
+          found["nested_program_frames_verified"]=nested_valid
+          found["pump_sell_opcode_verified"]=pump_sell_opcode and pump_sell_log
+          found["meteora_swap2_verified"]=meteora_swap2_opcode and meteora_swap2_log
+          found["exact_token_outbound_verified"]=root_out
+          found["usdc_net_receipt_direct_transfers_verified"]=root_receipt and root_fee_out
+          found["instruction_confirmed_sale"]=(
+              found["buy_back_consideration_matching"] and nested_valid
+              and pump_sell_opcode and pump_sell_log
+              and meteora_swap2_opcode and meteora_swap2_log
+              and root_out and root_receipt and root_fee_out)
           print("STATUS: PUBLIC_CHAIN_TRANSACTION_OBSERVED")
           print("RESULT_JSON:",json.dumps(found,ensure_ascii=False,separators=(",",":")))
           if found["instruction_confirmed_sale"]:
-            print("FINAL_CLASSIFICATION: HIGH_CONFIDENCE_ROOT_AUTHORIZED_DEX_SELL")
+            print("FINAL_CLASSIFICATION: CONFIRMED_ROOT_AUTHORIZED_DEX_SELL_EVIDENCE")
           else:
             print("FINAL_CLASSIFICATION: SELL_INSTRUCTION_CONFIRMATION_INCOMPLETE")
           PY
