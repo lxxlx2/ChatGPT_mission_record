@@ -288,7 +288,7 @@ def scan_page(state,call):
         prev_time=at
         if at<START:
             cutoff=True
-            break
+            continue
         if at<=END:
             if sig in seen:
                 raise ScanBlocked("SIGNATURE_PAGE_DUPLICATE")
