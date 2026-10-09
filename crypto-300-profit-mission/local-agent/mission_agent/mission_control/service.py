@@ -66,7 +66,10 @@ class MissionMemeService:
         self.jupiter = JupiterQuoteClient(jupiter_api_key or os.environ.get("JUPITER_API_KEY"))
         self.outcomes = OutcomeTracker(self.control.db, self.jupiter)
         self.local = LocalDelivery(self.control)
-        self.gmail = GmailDelivery(self.control)
+        self.gmail = GmailDelivery(
+            self.control,
+            max_decision_age_seconds=int(self.policy["decision"]["initial_notification_max_age_seconds"]),
+        )
         self.health_path = self.control_root / "mission-control-health.json"
 
     def close(self):
@@ -135,7 +138,13 @@ class MissionMemeService:
             "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset","latest_buy_quote_quantity",
             "latest_buy_original_quote_asset","latest_buy_original_quote_quantity","latest_buy_quote_was_normalized",
             "latest_buy_usdc_equivalent","latest_buy_model_quote_asset","latest_buy_model_quote_quantity","candidate_source","token_decimals"
-        )} | {"quote":cls._stable_quote_inputs(quote)}
+        )} | {
+            "quote":cls._stable_quote_inputs(quote),
+            # Preserve the actual Jupiter observation for the frozen Gmail body.
+            # Do not add it to stable quote decision metrics or reinterpret as
+            # a current executable price at delivery time.
+            "quote_observed_at":quote.get("observed_at"),
+        }
 
     @staticmethod
     def _fresh_initial(latest_at, now: float, max_age: int) -> bool:
