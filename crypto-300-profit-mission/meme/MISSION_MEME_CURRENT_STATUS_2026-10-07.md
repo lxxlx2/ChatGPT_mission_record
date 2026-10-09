@@ -649,3 +649,21 @@ Hard safety constraints:
 **Bounded first real Mac probe**: PR #29 review-only script `scripts/audit_frank_native_resume.py` now supports `--account` (only an account in the immutable root-observed inventory), allowing one real signature RPC request without advancing all 30 accounts in order. Initial probe shall use only Tweetcraft's already-root-observed token account `7qujRSPgfbgiwMhBSc1znjaQoHM9jt6HQVw6TgxnLAsG`, fixed Bangkok 2026-10-07 22:20:54 to 2026-10-08 22:20:54 historical window, `--phase signatures --allow-network --max-rpc-calls 1`. Only account signature checkpoint receipts within a research directory may be written. The original 1,000/account cap, 300 extra decoded tx cap and 1 second intra-run minimum remain unchanged. The script stops on 429 (HTTP or JSON RPC) and never retries or switches API credentials.
 
 **Verification**: GitHub Actions run `37928599733` verified `76 targeted / 950 full tests PASSED` at code SHA `7eb7a716a255aad261ffa6c75356cc78d77a41f8`, including selected-account allow-list and no-scan of unrelated accounts. This is OFFLINE CI, not proof of actual RPC success. First Mac query has **NOT_RUN** status pending local operator execution. No user authority for automated batch scan beyond this first explicitly controlled run; choose next account only after reviewing first result. `CAN_DEPLOY=NO`; `PRODUCTION_TRADING=NO_GO`.
+
+## 28. 2026-10-09 Frank first real resumable Solana account RPC success
+
+**Operator-supplied REAL Mac invocation**: Review SHA `97889e6746971301f3f14c18b17aaf9b8cb62e12`, `scripts/audit_frank_native_resume.py --phase signatures --allow-network --max-rpc-calls 1 --account 7qujRSPgfbgiwMhBSc1znjaQoHM9jt6HQVw6TgxnLAsG`. The JSON output unequivocally records **one actual RPC attempt** and **one signature page checkpoint**, with no stop reason, no observed HTTP 429, and no production writes.
+
+Evidence values supplied:
+- `status=OBSERVED_SCOPE_PARTIAL`, `wallet=498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ`, `start=1791386454`, `end=1791472854`.
+- `source_sha256=030d8cbce0c506a277c5883855b8397996cc1bc02d253884076c376257154d88`; `context_sha256=7d3401ef45781d3a7af5d8d832e686fa71a5bd8618e723aded6db24416452458`.
+- `historical_root_count=173`, `local_classified_count=1`, `accounts_total=30`, `accounts_complete=1`; remaining **29 accounts PENDING**, 0 capped.
+- `extra_signature_candidates_from_completed_accounts=2`, `decode_receipts_pending=2`, `decode_receipts_complete=0`, `decoded_opposing_flow_review_candidates=0` (**zero is not evidence of no swaps because no receipts have been decoded**).
+- `rpc_attempts=1`, `new_signature_pages=1`, `new_receipts=0`, `stop_reason=null`, `selected_account=7qujRSPgfbgiwMhBSc1znjaQoHM9jt6HQVw6TgxnLAsG`.
+- `signals_changed=false`, `production_db_writes=0`, `emails_sent=0`, `trade_confirmed_by_audit=false`, `full_person_trade_coverage=false`.
+
+**Interpretation**: Real RPC with one selected owned-token account successfully created a resumable checkpoint on the operator's Mac. Two token-account-referenced signatures outside the already-indexed 173 root signatures require instruction-level decode; they are **not confirmed Frank buys or sells** and may correspond to previously observed Tweetcraft associated-token-only events. Exact hash identity and ownership must be verified before assuming equivalence to previous evidence.
+
+**Next narrow gate**: Repeat unchanged source context from pinned review code, `--phase decode --allow-network --max-rpc-calls 2`, which uses the two persisted signatures and writes per-signature evidence receipts. A response `OBSERVED_SCOPE_PARTIAL` and process exit 2 remain expected because 29 other observed accounts are incomplete. Once decoded, prioritize the Frank-owned **USDC token account** `6kD22oUQrV8tVpE2hkQzkoobwCQAy2iiZcipWn8AD5jF` for new limited read-only history. No unsolicited broad 30-account scans.
+
+**Release gates unchanged:** GitHub PR #29 remains draft, no merges, no production alert/email changes, no auto-trading. `PERSON_TRADE_COVERAGE=UNVERIFIED`, `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`.
