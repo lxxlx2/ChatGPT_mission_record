@@ -34,6 +34,7 @@ from scripts.audit_frank_fomo_crosschain import (
 from scripts.audit_frank_native_owner_coverage import (
     START, END, MAX_ADDITIONAL_TRANSACTIONS,
     account_keys, build_seed_inventory, flows, local_snapshot,
+    owned_deltas,
 )
 from scripts.audit_frank_root_offline import cached_root
 from scripts.inspect_frank_solana_root_window import read_report
@@ -345,6 +346,20 @@ def decode_candidates(store,root_sigs):
     return ordered[:MAX_ADDITIONAL_TRANSACTIONS],len(ordered[MAX_ADDITIONAL_TRANSACTIONS:])
 
 
+def partial_decode_sample(store,root_sigs,account):
+    """Three temporal probes of saved, root-absent signatures; never coverage."""
+    if not isinstance(account,str) or account not in store.context["inventory"]:
+        raise ScanBlocked("ACCOUNT_OUTSIDE_OBSERVED_INVENTORY")
+    state=store.account(account)
+    if state["status"] not in ("ACTIVE","CAPPED") or not state["rows"]:
+        raise ScanBlocked("PARTIAL_ACCOUNT_EVIDENCE_REQUIRED")
+    rows=[row for row in state["rows"] if row["signature"] not in root_sigs]
+    if not rows:
+        raise ScanBlocked("PARTIAL_ACCOUNT_HAS_NO_EXTRA_SIGNATURES")
+    indices=sorted({0,len(rows)//2,len(rows)-1})
+    return [rows[i] for i in indices]
+
+
 def decode_tx(row,call):
     tx=call("getTransaction",[row["signature"],{
         "encoding":"jsonParsed","commitment":"finalized",
@@ -362,6 +377,9 @@ def decode_tx(row,call):
         "fomo_cosigned":indicators["fomo_cosigned"],
         "target_mints":indicators["target_mints"],
         "quote_mints":indicators["quote_mints"],
+        "signed_by_root":indicators["signed_by_root"],
+        "has_known_router":indicators["has_known_router"],
+        "owned_token_deltas":owned_deltas(tx,WALLET),
     }
 
 
@@ -409,11 +427,20 @@ def do_run(store,root_sigs,phase,network,budget,endpoint=None,account=None,
                 store.save_account(updated)
                 state=updated
                 counts["new_signature_pages"]+=1
-    elif phase=="decode":
-        candidates,_=decode_candidates(store,root_sigs)
+    elif phase in ("decode","partial-decode"):
+        if phase=="partial-decode":
+            if account is None:
+                raise ScanBlocked("PARTIAL_DECODE_ACCOUNT_REQUIRED")
+            candidates=partial_decode_sample(store,root_sigs,account)
+        else:
+            candidates,_=decode_candidates(store,root_sigs)
         for row in candidates:
             if store.receipt(row["signature"]) is not None:
                 continue
+            # Preserve the original 300-decoded-additional-transaction ceiling
+            # across complete and partial review modes, within this context.
+            if len(list(store.root.glob("receipt-*.json")))>=MAX_ADDITIONAL_TRANSACTIONS:
+                return counts,"DECODE_ORIGINAL_BUDGET_REACHED"
             if counts["rpc_attempts"]>=budget:
                 return counts,"REQUEST_BUDGET_EXHAUSTED"
             try:
@@ -491,6 +518,27 @@ def report(store,root_sigs,local_trades,counts,stopped):
             "scope":"PARTIAL_SIGNATURES_ONLY_NOT_DECODED"
         } for addr,s in states.items()
            if s["status"] in ("ACTIVE","CAPPED") and s["rows"]],
+        "partial_account_sampled_receipts":[{
+            "account":addr,"status":state["status"],
+            "sample_method":"FIRST_MIDDLE_LAST_OF_SAVED_ROOT_ABSENT_SIGNatures",
+            "saved_sample_candidates":len(samples),
+            "receipts":[({
+                "signature":r["signature"],"slot":r["slot"],
+                "block_time":r["blockTime"],
+                "decoded":bool(rcpt),
+                "root_referenced":rcpt.get("root_referenced") if rcpt else None,
+                "opposing_flow":rcpt.get("opposing_flow") if rcpt else None,
+                "fomo_cosigned":rcpt.get("fomo_cosigned") if rcpt else None,
+                "signed_by_root":rcpt.get("signed_by_root") if rcpt else None,
+                "has_known_router":rcpt.get("has_known_router") if rcpt else None,
+                "owned_token_deltas":rcpt.get("owned_token_deltas") if rcpt else None,
+                "target_mints":rcpt.get("target_mints") if rcpt else None,
+                "quote_mints":rcpt.get("quote_mints") if rcpt else None,
+            }) for r,rcpt in ((r,store.receipt(r["signature"])) for r in samples)]
+        } for addr,state in states.items()
+          if state["status"] in ("ACTIVE","CAPPED") and state["rows"]
+          for samples in [partial_decode_sample(store,root_sigs,addr)]
+          if any(r["signature"] not in root_sigs for r in state["rows"])],
         "extra_signature_candidates_from_completed_accounts":len(candidates)+deferred,
         "decode_receipts_complete":len(decoded),
         "decode_receipts_pending":len(undecoded),
@@ -521,7 +569,7 @@ def report(store,root_sigs,local_trades,counts,stopped):
 
 def main():
     cli=argparse.ArgumentParser(description="Frank durable checkpoint scanner (PLAN ONLY BY DEFAULT)")
-    cli.add_argument("--phase",choices=("plan","signatures","decode"),default="plan")
+    cli.add_argument("--phase",choices=("plan","signatures","decode","partial-decode"),default="plan")
     cli.add_argument("--allow-network",action="store_true")
     cli.add_argument("--max-rpc-calls",type=int,default=3)
     cli.add_argument("--min-rpc-spacing-seconds",type=float,default=MIN_REQUEST_INTERVAL_SECONDS)
@@ -541,8 +589,10 @@ def main():
             raise ScanBlocked("EXPLICIT_NETWORK_PERMISSION_REQUIRED")
         if args.phase!="plan" and not 1<=args.max_rpc_calls<=MAX_CALLS_PER_RUN:
             raise ScanBlocked("REQUEST_BUDGET_INVALID")
-        if args.account and args.phase!="signatures":
-            raise ScanBlocked("ACCOUNT_FILTER_REQUIRES_SIGNATURES_PHASE")
+        if args.account and args.phase not in ("signatures","partial-decode"):
+            raise ScanBlocked("ACCOUNT_FILTER_REQUIRES_SIGNATURES_OR_PARTIAL_DECODE")
+        if args.phase=="partial-decode" and not args.account:
+            raise ScanBlocked("PARTIAL_DECODE_ACCOUNT_REQUIRED")
         ctx,root_sigs,local_trades=offline_context(args.source_report,args.cache_dir,args.db)
         store=Checkpoints(args.checkpoint_dir,ctx,create=args.phase!="plan")
         if args.account and args.account not in ctx["inventory"]:
