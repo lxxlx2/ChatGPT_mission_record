@@ -8,6 +8,7 @@ const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({
 }[c]));
 
 const n = (v, digits=4) => {
+  if (v == null || v === '') return '暂无';
   const x = Number(v);
   return Number.isFinite(x)
     ? x.toLocaleString('zh-CN',{maximumFractionDigits:digits})
@@ -15,6 +16,7 @@ const n = (v, digits=4) => {
 };
 
 const money = (v, digits=8) => {
+  if (v == null || v === '') return '暂无';
   const x = Number(v);
   if (!Number.isFinite(x)) return '暂无';
   return x.toLocaleString('zh-CN',{
@@ -24,6 +26,7 @@ const money = (v, digits=8) => {
 };
 
 const smallPrice = (value) => {
+  if (value == null || value === '') return '暂无';
   const x=Number(value);
   if (!Number.isFinite(x) || x<=0) return '暂无';
   if (x<0.00001) return x.toExponential(2);
@@ -660,6 +663,7 @@ function clusterMetricValue(v) {
 
 
 function usd(v,digits=2) {
+  if (v == null || v === '') return '暂无';
   const x=Number(v);
   if (!Number.isFinite(x)) return '暂无';
   if (Math.abs(x)>=1000000) return '$' + n(x/1000000,2) + 'M';
@@ -668,6 +672,7 @@ function usd(v,digits=2) {
 }
 
 function pctText(v) {
+  if (v == null || v === '') return '暂无';
   const x=Number(v);
   return Number.isFinite(x) ? n(x,2) + '%' : '暂无';
 }
@@ -777,6 +782,335 @@ function renderClusterPreview(job) {
     : extUnknown ? '部分扩展风险待核实'
     : '已解析权限未发现活动风险';
   const ready=p.market_status==='OK';
+  const q=p.execution_quote_30_usdc;
+  const quoteAt=q?.observed_at == null ? NaN : Number(q.observed_at);
+  const quoteAge=Date.now()/1000-quoteAt;
+  const quoteFresh=Number.isFinite(quoteAge) && quoteAge>=0 && quoteAge<=30;
+  const quoteText=!q ? '正在请求 Jupiter 报价'
+    : !quoteFresh ? '报价已过期，完整报告将刷新'
+    : q.status==='OK' && q.route_exists===true &&
+      q.execution_price_usdc != null && q.price_impact_pct != null
+      ? '
+  node.innerHTML=
+    '<div class="cluster-preview-head"><strong>已取得基础行情，持仓与资金关系仍在扫描</strong><span>临时结果，待链上报告核实</span></div>' +
+    '<div class="cluster-preview-items">' +
+    fact('代币',esc([p.name,p.symbol].filter(Boolean).join(' / ') || '名称未确认')) +
+    fact('参考价',ready ? esc(usd(p.price_usd,8)) : '暂不可用') +
+    fact('市值',ready ? esc(usd(p.market_cap_usd)) : '暂不可用') +
+    fact('主池流动性',ready ? esc(usd(p.liquidity_usd)) : '暂不可用') +
+    fact('$30 可成交报价',esc(quoteText),'Jupiter 只读报价，30 秒后过期，不能直接视为下单建议') +
+    fact('权限',esc(authority)) +
+    fact('原始 Top10 持币占比', p.raw_top10_resolved_pct != null
+      ? esc(pctText(p.raw_top10_resolved_pct)) : '待解析', '含池子，未做 LP 排除或钱包关联归因') +
+    '</div><p>已解析 Owner：' + esc(p.top_accounts_resolved ?? '待查询') +
+    '。原始 Top10 可能含 LP 或交易所；钱包聚类仍在独立核对，不能据此认定筹码安全或可跟单。</p>';
+}
+
+function clusterErrorMessage(error) {
+  const raw=((error?.type || '') + ' ' + (error?.message || '')).toUpperCase();
+  if (raw.includes('429') || raw.includes('RATE_LIMIT')) {
+    return '免费 Solana RPC 触发限流（HTTP 429）。系统已经自动降速并切换备用免费节点；如果仍失败，稍后重试，或先用“快速”档。';
+  }
+  if (raw.includes('403')) {
+    return '当前免费 RPC 拒绝了请求（HTTP 403）。系统会尝试备用节点；持续出现时可在本机配置其他免费 RPC。';
+  }
+  return (error?.type || 'ERROR') + ' · ' + (error?.message || '未知错误');
+}
+
+function holderRole(h) {
+  const label = clusterRoleLabel[h.role] || h.role || '未确认';
+  const unresolved = String(h.role || '').includes('UNRESOLVED');
+  return '<span class="role-pill ' + (unresolved ? 'unresolved-role' : '') + '">' + esc(label) + '</span>';
+}
+
+function ownerCell(owner) {
+  return '<div class="owner-cell"><code>' + esc(short(owner,8,6)) + '</code>' +
+    copyButton(owner,'复制') +
+    '<a class="link-btn compact" href="https://solscan.io/account/' + encodeURIComponent(owner) + '" target="_blank" rel="noreferrer">查看 ↗</a></div>';
+}
+
+function renderClusterGroup(group, kind) {
+  const confidence = group.confidence || kind;
+  const evidence = Array.isArray(group.evidence) ? group.evidence : [];
+  const edgeTypes = [...new Set(evidence.map(e => clusterEdgeLabel[e.type] || e.type))];
+  const wallets = (group.wallets || []).map(w =>
+    '<div class="cluster-wallet">' + ownerCell(w) + '<span>' +
+    esc(n((group.wallet_balances_raw || {})[w],0)) + ' raw</span></div>'
+  ).join('');
+  return '<article class="cluster-card">' +
+    '<div class="cluster-card-head"><div><span class="confidence ' + esc(String(confidence).toLowerCase()) + '">' +
+      esc(confidence === 'CONFIRMED_RELATION' ? '确认关系' : confidence === 'PROBABLE_CONTROL_CLUSTER' ? '可能共同控制' : '可能共同执行') +
+    '</span><strong>' + esc(group.cluster_id || '') + '</strong></div><b>' + esc(group.supply_pct || '0') + '%</b></div>' +
+    '<div class="cluster-wallets">' + wallets + '</div>' +
+    '<div class="cluster-evidence-tags">' + (edgeTypes.map(x => '<span>' + esc(x) + '</span>').join('') || '<span>无自动证据摘要</span>') + '</div>' +
+  '</article>';
+}
+
+function renderClusterReport(report) {
+  $('cluster-result').hidden = false;
+  $('cluster-preview').hidden = true;
+  const coverage = report.coverage || {};
+  const metrics = report.metrics || {};
+  const mint = report.mint || '';
+  const strictComplete = coverage.special_normalization_complete === true;
+  const ctrl = report.probable_control_clusters || [];
+  const exec = report.probable_execution_clusters || [];
+  const rel = report.confirmed_relation_groups || [];
+  const unresolvedEdges = report.unresolved_relation_edges || [];
+  const errors = report.transaction_errors || [];
+  const profile = report.token_profile || {};
+  const market = report.market || {};
+  const mainPair = market.main_pair || {};
+  const quote = report.execution_quote_30_usdc || {};
+  const assessment = report.assessment || {};
+
+  const observedAt = Number(report.observed_at);
+  const observedText = Number.isFinite(observedAt)
+    ? new Date(observedAt * 1000).toLocaleString('zh-CN')
+    : '时间未知';
+  const observedAge = Number.isFinite(observedAt) ? age(observedAt) : '时间未知';
+  const tokenName = market.name || '名称未取到';
+  const tokenSymbol = market.symbol || '—';
+
+  $('cluster-summary').innerHTML = [
+    ['代币', '<span>' + esc(tokenName) + '</span><span class="subvalue">' + esc(tokenSymbol) + '</span>'],
+    ['CA', '<code class="summary-ca">' + esc(mint) + '</code>' + copyButton(mint,'复制 CA')],
+    ['参考价', market.status==='OK' ? esc('$'+smallPrice(market.price_usd)) : '<span class="unresolved">不可用</span>'],
+    ['市值', esc(usd(market.market_cap_usd))],
+    ['流动性', esc(usd(mainPair.liquidity_usd))],
+  ].map(([k,v]) => '<div class="cluster-summary-card"><span>' + k + '</span><strong>' + v + '</strong></div>').join('');
+
+  const activeAuthorities = assessment.active_authorities || [];
+  const activeExtensionRisks=assessment.active_extension_risks || [];
+  const unresolvedExtensionRisks=assessment.unresolved_extension_risks || [];
+  let chainConclusion = '合约权限未确认';
+  if (assessment.chain_permission_status === 'PASS') {
+    chainConclusion = 'Mint authority 与 Freeze authority 均未活动；已解析的敏感 Token-2022 扩展未发现活动风险。';
+  } else if (assessment.chain_permission_status === 'RISK') {
+    const risks=activeAuthorities.concat(activeExtensionRisks.map(x => 'Token-2022 ' + (x.name || '扩展') + ' / ' + (x.reason || 'ACTIVE_RISK')));
+    chainConclusion = '存在活动链上权限/扩展风险：' + risks.join('、') + '。';
+  } else if (assessment.chain_permission_status === 'UNRESOLVED' && unresolvedExtensionRisks.length) {
+    chainConclusion = '存在 Token-2022 敏感扩展，但当前 RPC 解析信息不足以判断其是否活动：' +
+      unresolvedExtensionRisks.map(x => (x.name || '扩展') + ' / ' + (x.reason || 'UNRESOLVED')).join('、') + '。';
+  }
+
+  let clusterConclusion = '钱包集群状态未确认';
+  if (assessment.cluster_status === 'PROBABLE_CONTROL_CLUSTER_PRESENT') {
+    clusterConclusion = '发现可能共同控制集群，最大占比 ' + (metrics.LARGEST_PROBABLE_CONTROL_CLUSTER_PCT || '未知') + '%。';
+  } else if (assessment.cluster_status === 'WALLET_CLUSTER_UNRESOLVED') {
+    clusterConclusion = '当前未完成全部钱包归因；重大未确认持仓约 ' + (metrics.UNRESOLVED_MATERIAL_HOLDER_PCT || '0') + '%。不能写成“筹码已确认干净”。';
+  } else if (assessment.cluster_status === 'NO_MATERIAL_CONTROL_CLUSTER_FOUND') {
+    clusterConclusion = '当前 bounded scan 未发现重大 probable control cluster。';
+  }
+
+  if (rel.length) {
+    const confirmedMax = Math.max(...rel.map(x=>Number(x.supply_pct)).filter(Number.isFinite));
+    if (Number.isFinite(confirmedMax)) {
+      clusterConclusion = '发现直接资金或代币关系，最大关联组约 ' + n(confirmedMax,2) +
+        '%；这不能证明同一控制人。' + clusterConclusion;
+    }
+  }
+
+  let marketConclusion = '当前市场数据未取到。';
+  if (market.status === 'OK') {
+    const h24 = (mainPair.volume || {}).h24;
+    marketConclusion = '参考价 $' + smallPrice(market.price_usd) +
+      ' · MC ' + usd(market.market_cap_usd) +
+      ' · 主池流动性 ' + usd(mainPair.liquidity_usd) +
+      ' · 24h 成交 ' + usd(h24) + '。';
+  }
+
+  const structureConclusion=assessmentLabel[assessment.trading_status] || assessment.trading_status || '等待数据';
+  $('cluster-conclusion').innerHTML =
+    '<div class="conclusion-leads">' +
+      '<div class="conclusion-lead"><span>链上 / 市场结构结论</span><strong>' + esc(structureConclusion) + '</strong></div>' +
+    '</div>' +
+    '<div class="conclusion-grid">' +
+      '<div><b>链上权限</b><p>' + esc(chainConclusion) + '</p></div>' +
+      '<div><b>Holder / Cluster</b><p>' + esc(clusterConclusion) + '</p></div>' +
+      '<div><b>市场状态</b><p>' + esc(marketConclusion) + '</p></div>' +
+    '</div>' +
+    '<details class="cluster-assessment-history"><summary>历史判断变化（仅供复核）</summary>' +
+    renderAssessmentHistory(report.assessment_history) + '</details>';
+
+  const supplyApprox = Number(report.supply_raw) / (10 ** Number(report.decimals || 0));
+  $('cluster-token-profile').innerHTML =
+    fact('名称 / Symbol','<span>' + esc(tokenName) + ' · ' + esc(tokenSymbol) + '</span>','名称来自市场元数据；权限来自链上') +
+    fact('Token Program','<span>' + esc(profile.token_program || '未确认') + '</span>') +
+    fact('Supply','<span>' + esc(Number.isFinite(supplyApprox) ? n(supplyApprox,2) : '暂无') + '</span>') +
+    fact('Mint authority',authorityText(profile.mint_authority,profile.status)) +
+    fact('Freeze authority',authorityText(profile.freeze_authority,profile.status)) +
+    fact('Metadata update authority',authorityText(profile.metadata_update_authority,profile.metadata_update_authority_status==='CHAIN_PARSED' ? 'OK' : 'UNAVAILABLE')) +
+    fact('Token-2022 扩展','<span>' + esc((profile.extensions || []).join(', ') || '无已解析扩展') + '</span>') +
+    fact('活动扩展风险','<span>' + ((profile.active_extension_risks || []).length ? '<span class="warn-text">' + esc((profile.active_extension_risks || []).map(x => (x.name || '扩展') + ': ' + (x.reason || 'ACTIVE_RISK')).join(', ')) + '</span>' : '<span class="ok-text">未发现</span>') + '</span>') +
+    fact('非活动敏感扩展','<span>' + esc((profile.inactive_sensitive_extensions || []).map(x => x.name || '扩展').join(', ') || '无') + '</span>') +
+    fact('待核实敏感扩展','<span>' + ((profile.unresolved_sensitive_extensions || []).length ? '<span class="warn-text">' + esc((profile.unresolved_sensitive_extensions || []).map(x => x.name || '扩展').join(', ')) + '</span>' : '<span class="ok-text">无</span>') + '</span>');
+
+  const h24tx=(mainPair.txns || {}).h24 || {};
+  const h1tx=(mainPair.txns || {}).h1 || {};
+  const safeMarketUrl=safeHttpUrl(mainPair.url);
+  const marketUrl=safeMarketUrl
+    ? '<a class="link-btn compact" href="' + esc(safeMarketUrl) + '" target="_blank" rel="noreferrer">市场页 ↗</a>'
+    : '';
+  const pairLink=mainPair.pair_address
+    ? '<a class="link-btn compact" href="https://solscan.io/account/' + encodeURIComponent(mainPair.pair_address) + '" target="_blank" rel="noreferrer">Pool ↗</a>'
+    : '';
+  const quoteText = quote.status==='OK' && quote.route_exists
+    ? '$'+smallPrice(quote.execution_price_usdc) + '<span class="subvalue">冲击 ' + pctText(quote.price_impact_pct) + '</span>'
+    : '<span class="unresolved">' + esc(quote.reason || '报价不可用') + '</span>';
+
+  $('cluster-market').innerHTML =
+    fact('当前参考价','<span>' + (market.status==='OK' ? '$'+smallPrice(market.price_usd) : '<span class="unresolved">不可用</span>') + '</span>','DexScreener 参考价') +
+    fact('$30 实际可成交价','<span>' + quoteText + '</span>','Jupiter read-only quote') +
+    fact('Market Cap','<span>' + (market.status==='OK' ? usd(market.market_cap_usd) : '暂无') + '</span>') +
+    fact('主池流动性','<span>' + (market.status==='OK' ? usd(mainPair.liquidity_usd) : '暂无') + '</span>') +
+    fact('24h 成交额','<span>' + (market.status==='OK' ? usd((mainPair.volume || {}).h24) : '暂无') + '</span>') +
+    fact('24h 买 / 卖','<span>' + esc((h24tx.buys ?? '—') + ' / ' + (h24tx.sells ?? '—')) + '</span>') +
+    fact('1h 买 / 卖','<span>' + esc((h1tx.buys ?? '—') + ' / ' + (h1tx.sells ?? '—')) + '</span>') +
+    fact('价格变化','<span>1h ' + esc(pctText((mainPair.price_change || {}).h1)) + ' · 24h ' + esc(pctText((mainPair.price_change || {}).h24)) + '</span>') +
+    fact('主池 / DEX','<span>' + esc((mainPair.dex_id || '未确认') + ' · ' + short(mainPair.pair_address || '',7,5)) + '</span>',pairLink + ' ' + marketUrl);
+
+  const primary = [
+    'RAW_TOP10_PCT','KNOWN_EX_LP_TOP10_PCT','DEV_LINKED_CLUSTER_PCT',
+    'LARGEST_PROBABLE_CONTROL_CLUSTER_PCT','UNRESOLVED_MATERIAL_HOLDER_PCT'
+  ];
+  const extra = [
+    'EX_LP_TOP10_PCT','EX_SPECIAL_TOP10_PCT','LARGEST_CONFIRMED_RELATION_GROUP_PCT',
+    'LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT','CLUSTER_ADJUSTED_TOP10_PCT'
+  ];
+  const renderConcentration = key =>
+    '<div class="cluster-metric"><span>' + esc(clusterMetricLabel[key] || key) + '</span><strong>' +
+    clusterMetricValue(metrics[key]) + '</strong></div>';
+  $('cluster-metrics').innerHTML = primary.map(renderConcentration).join('') +
+    '<details class="cluster-extra-metrics"><summary>查看其余集中度指标</summary><div class="cluster-metrics-extra">' +
+    extra.map(renderConcentration).join('') + '</div></details>';
+
+  $('cluster-holders').innerHTML = (report.holders || []).map(h =>
+    '<tr><td>' + esc(h.rank) + '</td><td>' + ownerCell(h.owner) + '</td><td>' +
+    esc(h.supply_pct) + '%</td><td>' + holderRole(h) + '</td><td>' +
+    fundingCell(h) + '</td><td>' + acquisitionCell(h) + '</td></tr>'
+  ).join('') || '<tr><td colspan="6" class="empty">没有可解析 holder</td></tr>';
+
+  const rpcFailures=Object.values(coverage.rpc_endpoint_failures || {}).reduce((a,b)=>a+Number(b||0),0);
+  const warnings = [];
+  if (!strictComplete) warnings.push('特殊地址身份归一化尚未完成，严格 EX_* / cluster-adjusted 指标会保持“未确认”；“已识别 LP 后 Top10”仍可作为部分事实查看。');
+  if (unresolvedEdges.length) warnings.push('存在 ' + unresolvedEdges.length + ' 条未确认共同 funder/signer/归集关系，未升级为共同控制。');
+  if (errors.length) warnings.push('有 ' + errors.length + ' 笔历史交易读取/解析失败，覆盖率不是 100%。');
+  if (rpcFailures) warnings.push('免费 RPC 共出现 ' + rpcFailures + ' 次失败/限流，系统已尝试自动降速或切换备用节点。');
+  if (market.status!=='OK') warnings.push('市场参考数据不可用：' + (market.reason || 'UNKNOWN') + '。链上 holder 结果仍可独立成立。');
+
+  $('cluster-coverage').innerHTML =
+    '<div class="coverage-grid">' +
+      '<div><span>RPC 调用</span><strong>' + esc(coverage.rpc_calls ?? 0) + '</strong></div>' +
+      '<div><span>本地缓存命中</span><strong>' + esc(coverage.rpc_cache_hits ?? 0) + '</strong></div>' +
+      '<div><span>使用 RPC 节点</span><strong>' + esc(Object.keys(coverage.rpc_endpoint_calls || {}).length || 1) + '</strong></div>' +
+      '<div><span>RPC 失败/限流</span><strong>' + esc(rpcFailures) + '</strong></div>' +
+      '<div><span>每 owner 历史上限</span><strong>' + esc(coverage.history_per_holder ?? 0) + '</strong></div>' +
+      '<div><span>Funding 回看</span><strong>' + esc(coverage.funding_lookback ?? 0) + '</strong></div>' +
+    '</div>' +
+    '<div class="trust-box">' + (warnings.map(x => '<p>⚠ ' + esc(x) + '</p>').join('') || '<p class="ok-text">当前自动分析未发现覆盖率警告。</p>') + '</div>';
+
+  $('cluster-control').innerHTML =
+    rel.map(g => renderClusterGroup(g,'relation')).join('') +
+    ctrl.map(g => renderClusterGroup(g,'control')).join('') ||
+    '<div class="empty">当前 bounded evidence 未形成确认关系组或 probable 控制集群</div>';
+
+  $('cluster-execution').innerHTML =
+    exec.map(g => renderClusterGroup(g,'execution')).join('') ||
+    '<div class="empty">当前 bounded evidence 未形成 probable 执行集群</div>';
+
+  const edges = report.edges || [];
+  const grouped = {};
+  edges.forEach(e => grouped[e.type] = (grouped[e.type] || 0) + 1);
+  $('cluster-evidence').innerHTML =
+    '<div class="evidence-counts">' +
+      Object.entries(grouped).sort((a,b)=>b[1]-a[1]).map(([type,count]) =>
+        '<div><span>' + esc(clusterEdgeLabel[type] || type) + '</span><strong>' + esc(count) + '</strong></div>'
+      ).join('') +
+    '</div>' +
+    '<details class="cluster-raw-details"><summary>查看覆盖与限制说明</summary>' +
+      '<div class="limitations">' + (report.limitations || []).map(x => '<p>' + esc(x) + '</p>').join('') + '</div>' +
+    '</details>';
+
+  const websites=(market.websites || []).map(url => safeHttpUrl(url)).filter(Boolean).map(url =>
+    '<a class="link-btn" href="' + esc(url) + '" target="_blank" rel="noreferrer">网站 ↗</a>'
+  ).join('');
+  const socials=(market.socials || []).map(x =>
+    '<span class="narrative-link">' + esc((x.platform || 'social') + ': ' + (x.handle || '')) + '</span>'
+  ).join('');
+  $('cluster-narrative').innerHTML =
+    '<div class="narrative-state"><strong>未接入 X/FOMO 外部叙事检索</strong>' +
+    '<p>目前仅展示市场资料附带的链接；不抓取实时官方帖子，也不提供官方认领或叙事打分。</p></div>' +
+    '<div class="narrative-links">' + (websites || socials ? websites + socials : '<span class="muted">当前市场资料没有可展示的官网/社交链接</span>') + '</div>';
+
+  clusterStatus('done','分析已更新', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
+}
+
+
+let clusterPollTimer = null;
+
+async function pollClusterJob(jobId) {
+  clearTimeout(clusterPollTimer);
+  try {
+    const job = await get('/api/cluster-analysis?job_id=' + encodeURIComponent(jobId));
+    if (job.status === 'DONE') {
+      $('cluster-submit').disabled = false;
+      $('cluster-submit').textContent = '重新查询';
+      localStorage.setItem('mission-meme-last-cluster-ca',job.mint);
+      const loaded=await loadLatestCluster(job.mint,true);
+      if (!loaded) clusterStatus('error','查询已完成，但结果文件读取失败');
+      return;
+    }
+    if (job.status === 'ERROR') {
+      $('cluster-preview').hidden = true;
+      $('cluster-submit').disabled = false;
+      $('cluster-submit').textContent = '重新查询';
+      clusterStatus('error','查询失败',clusterErrorMessage(job.error));
+      return;
+    }
+    renderClusterPreview(job);
+    clusterStatus('running',
+      job.status === 'QUEUED' ? '等待开始分析' : '正在扫描链上数据',
+      clusterProgressDetail(job));
+    clusterPollTimer = setTimeout(() => pollClusterJob(jobId), 1200);
+  } catch (e) {
+    $('cluster-submit').disabled = false;
+    clusterStatus('error','查询状态读取失败',e.message);
+  }
+}
+
+$('cluster-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const mint = $('cluster-mint').value.trim();
+  const preset = $('cluster-preset').value;
+  if (!mint) {
+    clusterStatus('error','请输入 Solana CA');
+    return;
+  }
+  $('cluster-submit').disabled = true;
+  $('cluster-submit').textContent = '分析中…';
+  $('cluster-result').hidden = true;
+  $('cluster-preview').hidden = true;
+  clusterStatus('running','准备链上分析','只读查询，不连接钱包，不发交易。');
+  try {
+    const r = await fetch('/api/cluster-analysis',{
+      method:'POST',
+      cache:'no-store',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({mint,preset}),
+    });
+    const payload = await r.json();
+    if (!r.ok) throw new Error(payload.error || ('HTTP ' + r.status));
+    localStorage.setItem('mission-meme-last-cluster-ca',mint);
+    pollClusterJob(payload.job_id);
+  } catch (e) {
+    $('cluster-submit').disabled = false;
+    $('cluster-submit').textContent = '开始查询';
+    clusterStatus('error','无法开始查询',e.message);
+  }
+});
++smallPrice(q.execution_price_usdc)+' · 冲击 '+pctText(q.price_impact_pct)
+      : '暂不可成交 / 报价不可用';
   node.hidden=false;
   node.innerHTML=
     '<div class="cluster-preview-head"><strong>已取得基础行情，持仓与资金关系仍在扫描</strong><span>临时结果，待链上报告核实</span></div>' +
