@@ -38,7 +38,7 @@ from scripts.audit_frank_root_offline import cached_root
 from scripts.inspect_frank_solana_root_window import read_report
 
 VERSION = 1
-PAGE_SIZE = 100
+PAGE_SIZE = 250
 MAX_CALLS_PER_RUN = 8
 SIGNATURE_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{64,100}$")
 ACCOUNT_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
@@ -164,6 +164,10 @@ class Checkpoints:
         rows=item.get("rows")
         if not isinstance(rows,list) or len(rows)>MAX_SOL_TRANSACTIONS_PER_WALLET:
             raise ScanBlocked("ACCOUNT_SIGNATURE_BUDGET_BROKEN")
+        if (item.get("before") is not None and
+                (not isinstance(item.get("before"),str) or
+                 not SIGNATURE_RE.fullmatch(item["before"]))):
+            raise ScanBlocked("ACCOUNT_CURSOR_INVALID")
         if item.get("pages")!=0 and item.get("before") is None and item["status"]=="ACTIVE":
             raise ScanBlocked("ACCOUNT_CURSOR_MISSING")
         if len({r["signature"] for r in rows})!=len(rows):
@@ -300,7 +304,8 @@ def decode_tx(row,call):
         "encoding":"jsonParsed","commitment":"finalized",
         "maxSupportedTransactionVersion":1,
     }])
-    if not isinstance(tx,dict) or tx.get("slot")!=row["slot"]:
+    if (not isinstance(tx,dict) or tx.get("slot")!=row["slot"]
+            or tx.get("blockTime")!=row["blockTime"]):
         raise ScanBlocked("DECODE_TRANSACTION_MISMATCH")
     if not isinstance(tx.get("meta"),dict) or not isinstance(tx.get("transaction"),dict):
         raise ScanBlocked("DECODE_TRANSACTION_INCOMPLETE")
