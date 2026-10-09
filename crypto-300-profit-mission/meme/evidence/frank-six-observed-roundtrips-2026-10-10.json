@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "updated_date_bangkok": "2026-10-10",
+  "status": "OBSERVED_SELECTED_ROOT_WALLET_TRANSACTION_NET_CLOSED_EPISODES_NOT_PERSON_WIDE_PNL",
+  "wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+  "sampling": "PURPOSIVE_NONRANDOM_SIGNAL_SELECTION: 5 frozen ACCUMULATION episodes out of 18 frozen signal mints + one later non-accumulation TWEETCRAFT",
+  "frozen_population_ref": "crypto-300-profit-mission/meme/evidence/frank-trade-coverage-sol-usdt-complex-2026-10-04.json",
+  "sources": {
+    "root_historical_evidence": "GitHub repo M3 frozen research 6874 verified raw tx, 32 signals, 18 unique ACCUMULATION mints",
+    "eight_mint_account_observations": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37967832133",
+    "seven_mint_exit_opcode_matches": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37968282422",
+    "E4_first_exit_jupiter_raydium": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37977057963",
+    "fourK1_two_buys": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37967163318",
+    "fourK1_one_exit": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37967581454",
+    "tweetcraft_exit": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37964537094",
+    "limited_18_mint_price_proxy": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37966679082"
+  },
+  "case_results": [
+    {
+      "mint": "MukLDtJ8Cx9DxLbeyLRSWPSposTMWuwHANbuaudpump",
+      "symbol": "UNVERIFIED",
+      "signal_trigger_bkk": "2026-09-06 04:00:55",
+      "exit_last_bkk": "2026-09-06 09:54:40",
+      "spend_usdc": "42500.000000",
+      "net_receipt_usdc": "50952.838215",
+      "net_margin_usdc": "8452.838215",
+      "observed_return_pct": "19.889031",
+      "exits": [
+        "3tHLTQ436c4vUbjS67Fpny7wiUjCaFRDQeXiL2FbDWZoQjsRCvgWJGTeN6t8tshfEv7J9NKbbj3LZ5fFmZVp1Dyu",
+        "451Qx3rK5qbrgJTU5ugKk3tZHvxB4UthwDv5VAX9eKBj4dPWPPPx8JuTR8Xvk3cCfpS1mEsFPYNg2mPwK1GCD9JZ"
+      ],
+      "independent_exit_opcode": "Pump AMM Sell and Meteora DLMM Swap2",
+      "known_ata_after_signal": "COMPLETE_13_TOTAL_SIGNATURES_3_AFTER_TRIGGER",
+      "note": "original lot sold; later third-party unsigned token receipt recorded, not counted as a new owner buy"
+    },
+    {
+      "mint": "8K5X85PAJHAAVSvYaAzgVPPAPsqqHmvx16ZyBiscYF8L",
+      "symbol": "UNVERIFIED",
+      "signal_trigger_bkk": "2026-09-08 09:42:17",
+      "exit_last_bkk": "2026-09-08 11:27:36",
+      "spend_usdc": "28598.056732",
+      "net_receipt_usdc": "28582.603719",
+      "net_margin_usdc": "-15.453013",
+      "observed_return_pct": "-0.054035",
+      "exits": [
+        "4ZrNGcUsHij86pn17xq12ZE98z2JTEEJmrq8vQY3HSN3tptZJYmifX6mUXJJPNkK6Ax2sob82bqcjLa4tZsovWA5",
+        "4qMowAx4xRGovoPMfHjDeqHSu8sAXbEdQ21ydonKKs1q5JAHgoZmv4HNH54XYESQf1mpt8g9MF9UvkiefceK21Df"
+      ],
+      "independent_exit_opcode": "Meteora DLMM Swap",
+      "known_ata_after_signal": "COMPLETE_29_TOTAL_SIGNATURES_3_AFTER_TRIGGER",
+      "note": "full original lot exits confirmed; later unsigned receipt not treated as authorized purchase"
+    },
+    {
+      "mint": "E4Ap4icMLwKot8rkkTbq5JkS5kZxt5XCE3yfxbzYBjHx",
+      "symbol": "UNVERIFIED",
+      "signal_trigger_bkk": "2026-09-11 10:24:02",
+      "exit_last_bkk": "2026-09-11 10:47:54",
+      "spend_usdc": "50000.000000",
+      "net_receipt_usdc": "40912.316439",
+      "net_margin_usdc": "-9087.683561",
+      "observed_return_pct": "-18.175367",
+      "exits": [
+        "2aemk5HoVVnCFfYQD1sci4B4Fddr5govJLbcJe9aHEBXaFSr4K7ht9PudQ5taVmyWXio4Y87iBiF6HyFqu3kiShZ",
+        "ZTea1KgawvFfB3ScQYKsaHNCQsyMobbFHzBX1tcsiF4xyMTn43nfmyJaFccV94MaxENga1tF9BVDCrcshxC1fCd"
+      ],
+      "independent_exit_opcode": "Jupiter SharedAccountsRouteV2 + Raydium CLMM SwapV2 for first exit; Meteora DLMM Swap2 for second",
+      "known_ata_after_signal": "COMPLETE_10_TOTAL_SIGNATURES_3_AFTER_TRIGGER",
+      "note": "first leg originally missed by Meteora-only whitelist; proved by exact Raydium/Jupiter opcodes and source ATA transfer"
+    },
+    {
+      "mint": "PerPsCe2SJ7Q25CN4R5TTX4fmBdmknE2hQmqCt96fHL",
+      "symbol": "UNVERIFIED",
+      "signal_trigger_bkk": "2026-09-12 23:37:15",
+      "exit_last_bkk": "2026-09-14 06:58:00",
+      "spend_usdc": "27000.000000",
+      "net_receipt_usdc": "61919.993902",
+      "net_margin_usdc": "34919.993902",
+      "observed_return_pct": "129.333311",
+      "exits": [
+        "5nWTX6KWh4h8UWSJRAPRi27UqtmY8bWkgoZwsWBXty3drjZGNQvduTzenKV9rHCiGWSqebRnzGwJtKCARicrwsVF",
+        "2GwyTXkrgx4DQaieYshXECbYtZgzvZ9DMhXUVCMqVDychCjTHGfkyh3aVSUwKxALVtof7XSmfTNu6w5BQtecUZSP"
+      ],
+      "independent_exit_opcode": "Meteora DAMM v2 Swap2 and DLMM Swap",
+      "known_ata_after_signal": "COMPLETE_4_TOTAL_SIGNATURES_2_AFTER_TRIGGER",
+      "note": "largest winner in selected six, must remove in stress test"
+    },
+    {
+      "mint": "4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta",
+      "symbol": "UNVERIFIED",
+      "signal_trigger_bkk": "2026-09-23 00:12:49",
+      "exit_last_bkk": "2026-09-23 03:44:02",
+      "spend_usdc": "25000.000000",
+      "net_receipt_usdc": "15524.767593",
+      "net_margin_usdc": "-9475.232407",
+      "observed_return_pct": "-37.900930",
+      "exits": [
+        "2oS3PbpByKDpK8wW9oG3jycS2R6t45Lko3KhXwrx4Pdp1SkvRNM5fEkqr9XK2dYi8mb3Cie8hFxkFYWJXW3R9KAs"
+      ],
+      "independent_exit_opcode": "Meteora DAMM v2 Swap2",
+      "known_ata_after_signal": "COMPLETE_3_TOTAL_SIGNATURES_1_AFTER_TRIGGER",
+      "note": "two independent root-signed buys exactly 15000+10000 USDC separated by 8 seconds; PASS_ACCUMULATION_THRESHOLD"
+    },
+    {
+      "mint": "HzYCHqAN2uoHGRnL9v2ChCfFQX3bvJuJd5zu2Hd5MZQy",
+      "symbol": "TWEETCRAFT_OFFCHAIN_LABEL",
+      "signal_trigger_bkk": "2026-10-08 08:46:16",
+      "exit_last_bkk": "2026-10-09 08:26:47",
+      "spend_usdc": "6715.734492",
+      "net_receipt_usdc": "7031.556770",
+      "net_margin_usdc": "315.822278",
+      "observed_return_pct": "4.702721",
+      "exits": [
+        "5wqKv5YuurRKUaJAK5fZtFrNg6GocVZuTTiAPWYrYDaswyUArwAZurpbZFU6WBjHp5z5Bt5bPCkLNKVQHfS6yigx"
+      ],
+      "independent_exit_opcode": "Pump AMM Sell and Meteora DLMM Swap2",
+      "known_ata_after_signal": "COMPLETE_3_AFTER_BUY_SIGNATURES_4_RPC",
+      "note": "single buy fails frozen ACCUMULATION 2x/60m/25000 USDC"
+    }
+  ],
+  "totals": {
+    "roundtrip_count": 6,
+    "positive": 3,
+    "negative": 3,
+    "capital_at_buy_sum_usdc": "179813.791224",
+    "sum_net_delta_usdc": "25110.285414",
+    "sum_net_delta_over_spend_pct": "13.964605",
+    "biggest_winner_mint": "PerPsCe2SJ7Q25CN4R5TTX4fmBdmknE2hQmqCt96fHL",
+    "biggest_winner_delta_usdc": "34919.993902",
+    "excluding_biggest_winner_sum_usdc": "-9809.708488",
+    "excluding_biggest_winner_spend_usdc": "152813.791224",
+    "excluding_biggest_winner_weighted_pct": "-6.419387",
+    "equal_weighted_6_mean_pct": "16.299122",
+    "equal_weighted_5_ex_biggest_mean_pct": "-6.307716"
+  },
+  "guards": {
+    "offchain_person_wallet_identity": "THIRD_PARTY_UNVERIFIED",
+    "all_historical_ATAs": "UNVERIFIED",
+    "quote_net_delta_nature": "USDC transaction-owned wallet net flows, no native gas or offchain fees",
+    "historical_delayed_copy_exec": "NOT_VALIDATED",
+    "pool_candle_sample": "3/18 then 429",
+    "live_trading": "NO_GO",
+    "signal_promotion": "NONE",
+    "github_pr_merge": "NONE",
+    "alerts_created": "NONE",
+    "email_sent": "NONE"
+  }
+}
