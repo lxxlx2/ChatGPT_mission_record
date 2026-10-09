@@ -89,3 +89,62 @@ def test_local_read_is_read_only_and_uses_exact_closed_window(tmp_path):
     assert db.read_bytes()==before
     with pytest.raises(audit.EvidenceGap,match="LOCAL_LEDGER_NOT_FOUND"):
         audit.local_snapshot(tmp_path/"missing",W,audit.START,audit.END)
+
+
+def test_missing_report_exposes_stage_without_network(tmp_path,monkeypatch):
+    def must_not_call(*args):
+        raise AssertionError("RPC must not be called for missing inputs")
+    monkeypatch.setattr(audit,"configured_solana_endpoints",must_not_call)
+    with pytest.raises(audit.AuditStageError) as exc:
+        audit.run(tmp_path/"missing.json",tmp_path, tmp_path/"db",
+                  tmp_path/"rpc",audit.START,audit.END)
+    assert exc.value.stage=="SOURCE_REPORT"
+    assert exc.value.code=="SOURCE_REPORT_UNSAFE_OR_MISSING"
+
+
+def test_missing_local_ledger_fails_before_rpc_calls(tmp_path,monkeypatch):
+    monkeypatch.setattr(audit,"read_report",lambda *args:(173,"test-sha"))
+    def must_not_call(*args):
+        raise AssertionError("RPC must not be called for missing ledger")
+    monkeypatch.setattr(audit,"configured_solana_endpoints",must_not_call)
+    with pytest.raises(audit.AuditStageError) as exc:
+        audit.run(tmp_path/"report",tmp_path,tmp_path/"missing.sqlite",
+                  tmp_path/"rpc",audit.START,audit.END)
+    assert exc.value.stage=="LOCAL_LEDGER"
+    assert exc.value.code=="LOCAL_LEDGER_NOT_FOUND"
+
+
+def test_root_rpc_failures_report_provider_code_without_key(tmp_path,monkeypatch):
+    monkeypatch.setattr(audit,"read_report",lambda *args:(173,"test-sha"))
+    monkeypatch.setattr(audit,"local_snapshot",lambda *args:({SIG},set()))
+    monkeypatch.setattr(audit,"configured_solana_endpoints",
+                        lambda *args:["https://private-rpc.example/v2/SECRET_TOKEN"])
+    def fail_rpc(*args):
+        raise audit.IncompleteWindow("SOL_MAX_PAGES_REACHED")
+    monkeypatch.setattr(audit,"solana_signatures",fail_rpc)
+    with pytest.raises(audit.AuditStageError) as exc:
+        audit.run(tmp_path/"report",tmp_path,tmp_path/"db",
+                  tmp_path/"rpc",audit.START,audit.END)
+    assert exc.value.stage=="ROOT_SIGNATURES"
+    assert exc.value.code=="SOL_MAX_PAGES_REACHED"
+    assert exc.value.details["rpc_endpoints_attempted"]==1
+    assert "SECRET_TOKEN" not in str(exc.value)
+
+
+def test_account_scan_failure_exposes_stage_and_completed_account_count(monkeypatch):
+    def fail_rpc(*args):
+        raise audit.IncompleteWindow("SOL_WALLET_TRANSACTION_BUDGET_EXCEEDED")
+    monkeypatch.setattr(audit,"solana_signatures",fail_rpc)
+    with pytest.raises(audit.AuditStageError) as exc:
+        audit.query_referenced_accounts(object(),{ATA:MINT},audit.START,audit.END,set(),W)
+    assert exc.value.stage=="TOKEN_ACCOUNT_SIGNATURES"
+    assert exc.value.code=="SOL_WALLET_TRANSACTION_BUDGET_EXCEEDED"
+    assert exc.value.details=={"accounts_completed":0,"accounts_total":1}
+
+
+def test_raw_rpc_exception_message_is_never_exposed():
+    code=audit.safe_failure_code(
+        ValueError("https://solana-mainnet.g.alchemy.com/v2/SECRET_TOKEN")
+    )
+    assert code=="UNEXPECTED_VALUEERROR"
+    assert "SECRET_TOKEN" not in code
