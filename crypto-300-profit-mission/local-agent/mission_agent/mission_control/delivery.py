@@ -156,7 +156,7 @@ def render(event:dict)->dict:
         lines.append("需要核实："+missing)
     if sig:
         lines += ["","交易哈希："+sig]
-    text="\\n".join(lines)
+    text="\n".join(lines)
     return {"subject":subject,"body":text,"content_hash":digest({"subject":subject,"body":text})}
 
 
