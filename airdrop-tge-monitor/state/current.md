@@ -1,15 +1,15 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-09 19:20 Asia/Bangkok (manual audit of latest terminal at 18:49)
+Updated: 2026-10-09 19:53:50 Asia/Bangkok (latest terminal partial)
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-09 18:49:28 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-09 19:53:50 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-08 05:47:29 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/184928-final.md
-- latest_scheduled_shard: 2
-- latest_executed_shard: 0
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/195225-final.md
+- latest_scheduled_shard: 3
+- latest_executed_shard: 3
 - latest_stale_shard_recovery: true
 - latest_candidate_count: 2
 - latest_triggered_events: 0
@@ -39,3 +39,5 @@ Timezone: Asia/Bangkok
 - No new verified event meets first-party/current/unresolved-rights ACTION_GATE. No Gmail sent or needed from last partial.
 - Historical attempt-only and source gaps remain audit issues; see immutable run artifacts.
 - No task, scope, title, or schedule changes.
+
+- 2026-10-09 19:53:50 Asia/Bangkok: terminal 195225-final.md persisted; scheduled/executed stale Shard 3, urgent plus 13 unique projects, 2 unverified candidates (Concrete Additional USDC allocation and Cambria Genesis whitelist), 0 ACTION, 2 source gaps, no Gmail/ChatGPT. Attempt write blocked by safety checks; final is authoritative. Last fully successful run remains 2026-10-08 05:47:29. No task/scope/schedule changes.
