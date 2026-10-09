@@ -211,3 +211,45 @@ def test_decoding_rejects_wrong_block_time_for_matching_slot():
     }
     with pytest.raises(scan.ScanBlocked,match="DECODE_TRANSACTION_MISMATCH"):
         scan.decode_tx(item,lambda *args:tx)
+
+
+def test_json_rpc_rate_limit_is_not_retried_or_recorded(monkeypatch,tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    requests=[]
+    class Response:
+        def __enter__(self):return self
+        def __exit__(self,*args):return False
+        def read(self,*args):return b'{"jsonrpc":"2.0","id":1,"error":{"code":-32005,"message":"limit"}}'
+    def fake_urlopen(request,timeout):
+        requests.append(request)
+        return Response()
+    monkeypatch.setattr(scan.urllib.request,"urlopen",fake_urlopen)
+    counts,reason=scan.do_run(store,set(),"signatures",True,3,
+                              "https://example.invalid/PRIVATE")
+    assert counts["rpc_attempts"]==1
+    assert reason=="RPC_RATE_LIMIT"
+    assert len(requests)==1
+    assert store.account(ACCOUNT)["status"]=="PENDING"
+
+
+def test_explicit_network_scan_respects_minimum_spacing(monkeypatch,tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    PAGE=scan.PAGE_SIZE
+    rows=[row(i,scan.END-i-1) for i in range(PAGE)]
+    clock={"t":100.0,"waited":[]}
+    monkeypatch.setattr(scan.time,"monotonic",lambda:clock["t"])
+    def sleep(seconds):
+        clock["waited"].append(seconds)
+        clock["t"]+=seconds
+    monkeypatch.setattr(scan.time,"sleep",sleep)
+    responses=[rows,[row(PAGE,scan.START-5)]]
+    def fake_rpc(*args):
+        assert responses
+        return responses.pop(0)
+    monkeypatch.setattr(scan,"one_rpc",fake_rpc)
+    counts,reason=scan.do_run(store,set(),"signatures",True,2,
+                              "https://example.invalid")
+    assert reason is None
+    assert counts["rpc_attempts"]==2
+    assert clock["waited"]==[scan.MIN_REQUEST_INTERVAL_SECONDS]
+    assert store.account(ACCOUNT)["status"]=="COMPLETE"
