@@ -219,7 +219,8 @@ def test_real_ca_acceptance_covers_token2022_and_classic_spl_without_loop():
     assert "RACE_TOKEN2022" in script
     assert "FRANK_TOKEN2022" in script
     assert "FRANK_CLASSIC_SPL" in script
-    assert '"SPL Token-2022",True' in script
+    assert '"SPL Token-2022")' in script
+    assert "require_frank" not in script
     assert '"SPL Token",True' in script
     assert "mission_meme_v1.py serve" in script
     assert "mission_meme_v1.py loop" not in script
