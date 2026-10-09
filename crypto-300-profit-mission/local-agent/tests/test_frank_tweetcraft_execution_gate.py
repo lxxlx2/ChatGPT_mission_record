@@ -1,6 +1,4 @@
 """Synthetic, strictly offline Meteora DLMM swap2 semantics regression cases."""
-import copy
-from hashlib import sha256
 
 import pytest
 
@@ -19,7 +17,7 @@ def b58encode(data):
     while value:
         value,i=divmod(value,58)
         chars=ALPHABET[i]+chars
-    return "1"*(len(data)-len(data.lstrip(b"\\0")))+chars
+    return "1"*(len(data)-len(data.lstrip(bytes([0]))))+chars
 
 
 def balance(idx,mint,owner,amount):
@@ -49,7 +47,7 @@ def fixture():
         {"pubkey":gate.DLMM,"signer":False},
         {"pubkey":gate.BISONFI,"signer":False},
     ]
-    raw=gate.SWAP2_DISCRIMINATOR+b"\\0"*16
+    raw=gate.SWAP2_DISCRIMINATOR+bytes(16)
     logs=[
         f"Program {gate.DFLOW} invoke [1]",
         "Program log: Instruction: Swap",
