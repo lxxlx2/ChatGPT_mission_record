@@ -28,6 +28,7 @@ BTC/ETH/SOL current 24h price/range/volume when available, plus material relativ
 
 ## CR-04 Security carry-forward
 Every material security candidate from the prior 24h is either included in Section 9 after fresh verification or listed in the internal audit as omitted with concrete reason. Major-CEX account-security receipts follow SECURITY_SOURCE_POLICY.md.
+The security input manifest must include the existing wallet-user-draining discovery receipt defined by SECURITY_SOURCE_POLICY.md, with an actual English-query/source result and `checked_at`. The absence of a wallet-security receipt is `SECURITY_COVERAGE_GAP`, not proof no hardware-wallet/user-drain incidents occurred. A high-impact user-wallet allegation with direct user/researcher evidence but unresolved manufacturer cause/aggregate loss belongs in the internal unresolved-candidate audit and may be described in Section 9 as unconfirmed when materially safety-relevant; it must never be upgraded to a confirmed exploit or reported audited loss without supporting evidence. Do not add redundant coverage or loosen CR-18/19. 
 
 ## CR-05 TGE/rights freshness
 Section 7 consumes only current/actionable TGE/rights state. User-known/closed/refunded/expired events are not recycled as new information. When possible, use the canonical TGE monitor state rather than rediscovering stale events.
