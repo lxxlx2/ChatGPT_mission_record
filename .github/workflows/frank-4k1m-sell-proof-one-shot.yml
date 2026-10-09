@@ -64,7 +64,7 @@ jobs:
               for c in x:n=n*58+alphabet.index(c)
               return b"\x00"*(len(x)-len(x.lstrip("1")))+(
                      n.to_bytes((n.bit_length()+7)//8,"big") if n else b"")
-            prog=[];mint_out=0;usdc_in=0
+            prog=[];mint_out=0;usdc_in=0;mint_ata_out=0;usdc_ata_in=0;route_transfers=[]
             ixgroups=[tx["transaction"]["message"].get("instructions") or []]
             ixgroups += [x.get("instructions") or [] for x in meta.get("innerInstructions") or []]
             for group in ixgroups:
@@ -79,10 +79,21 @@ jobs:
                 parsed=ix.get("parsed")
                 if isinstance(parsed,dict) and parsed.get("type") in ("transfer","transferChecked"):
                   info=parsed.get("info") or {}
-                  if info.get("mint")==MINT and info.get("authority")==ROOT:
-                    mint_out+=int(info.get("tokenAmount",{}).get("amount","0"))
-                  if info.get("mint")==USDC and info.get("destination")=="6kD22oUQrV8tVpE2hkQzkoobwCQAy2iiZcipWn8AD5jF":
-                    usdc_in+=int(info.get("tokenAmount",{}).get("amount","0"))
+                  units=(info.get("tokenAmount") or {}).get("amount") if parsed["type"]=="transferChecked" else info.get("amount")
+                  if not isinstance(units,str) or not units.isdigit():continue
+                  raw=int(units)
+                  source,destination=info.get("source"),info.get("destination")
+                  from_ata=source=="CPHUvKaMTTWB8s9kvZyZ1Haj1u7gRwYiub34FpZxK4qb"
+                  to_usdc=destination=="6kD22oUQrV8tVpE2hkQzkoobwCQAy2iiZcipWn8AD5jF"
+                  if info.get("mint")==MINT and info.get("authority")==ROOT:mint_out+=raw
+                  if info.get("mint")==USDC and to_usdc:usdc_in+=raw
+                  if from_ata:mint_ata_out+=raw
+                  if to_usdc:usdc_ata_in+=raw
+                  if from_ata or to_usdc:
+                    route_transfers.append({"kind":parsed["type"],"mint":info.get("mint"),
+                       "from_ata":from_ata,"to_usdc":to_usdc,
+                       "source":source,"destination":destination,
+                       "authority":info.get("authority"),"raw":str(raw)})
             result={"slot":tx["slot"],"block_time":tx["blockTime"],
               "tx_succeeded":meta.get("err") is None,
               "root_signed":ROOT in signed,
@@ -92,13 +103,16 @@ jobs:
               "swap2_raw_opcodes":prog[:12],
               "mint_transfer_signed_out_raw":mint_out,
               "usdc_transfer_direct_in_raw":usdc_in,
+              "mint_target_ata_out_raw_all_parsed_types":mint_ata_out,
+              "usdc_root_ata_in_raw_all_parsed_types":usdc_ata_in,
+              "route_transfers":route_transfers[:16],
               "stack_valid":terminated,"truncated_single_outer":valid_trunc,
               "fee_lamports":meta.get("fee"),
               "fee_payer":names[0] if names else None}
             confirmed=(result["tx_succeeded"] and result["root_signed"]
               and result["owned_usdc_net_raw"]==15524767593
               and result["owned_target_net_raw"]==-156402214732
-              and mint_out==156402214732 and usdc_in>0
+              and mint_ata_out==156402214732 and usdc_ata_in>0
               and any(p["swap2"] for p in prog) and bool(result["swap2_program_logs"])
               and (terminated or valid_trunc))
             result["instruction_confirmed_sell"]=confirmed
