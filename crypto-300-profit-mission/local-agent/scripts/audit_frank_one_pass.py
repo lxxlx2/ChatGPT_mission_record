@@ -26,6 +26,7 @@ ROOT=audit.WALLET
 TARGET=fixed.TWEETCRAFT_MINT
 ATA=buygate.ROOT_TWEET_ATA
 BUY_TIME=1791423976
+BUY_SLOT=454400785
 CAP_PAGES=4
 CAP_SIGNATURES=1000
 CAP_DECODE=60
@@ -84,7 +85,9 @@ def advance(state,page):
         if prev is not None and item["blockTime"]>prev:
             raise audit.ScanBlocked("LIFECYCLE_PAGE_TIME_REVERSED")
         prev=item["blockTime"]
-        if item["blockTime"]<=BUY_TIME:
+        # Preserve later instructions in the same second but higher slots.
+        if (item["blockTime"]<BUY_TIME or
+                (item["blockTime"]==BUY_TIME and item["slot"]<=BUY_SLOT)):
             past_buy=True
             continue
         if item["signature"] in seen:
