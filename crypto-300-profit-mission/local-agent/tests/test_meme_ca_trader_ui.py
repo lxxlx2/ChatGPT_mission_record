@@ -281,7 +281,7 @@ def test_ca_quote_archive_has_explicit_expiry_and_dynamic_api_freshness(tmp_path
               "execution_quote_30_usdc":archived}
     rendered = markdown(report)
     assert "HISTORICAL_SNAPSHOT" in rendered
-    assert "2027-01-15" not in rendered or "not live" in rendered
+    assert 'Market snapshot (historical; not live)' in rendered
     assert "observed_at:" in rendered and "valid_until:" in rendered
     assert "30 seconds after quote" in rendered
 
