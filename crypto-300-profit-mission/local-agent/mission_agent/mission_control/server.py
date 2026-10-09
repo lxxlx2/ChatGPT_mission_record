@@ -4,6 +4,7 @@ from __future__ import annotations
 import ipaddress
 import json
 import mimetypes
+import math
 import os
 import re
 import socket
@@ -103,6 +104,42 @@ def _atomic_write_text(path: Path, text_value: str):
             pass
 
 
+CA_QUOTE_TTL_SECONDS = 30
+
+
+def _annotate_ca_quote(quote: dict, *, now: float | None = None, archived: bool = False) -> dict:
+    """An archived quote is never certified current; HTTP consumers get a live expiry check."""
+    result = dict(quote)
+    try:
+        observed = float(result.get("observed_at"))
+        if not math.isfinite(observed) or observed <= 0:
+            observed = None
+    except (TypeError, ValueError):
+        observed = None
+    valid_until = observed + CA_QUOTE_TTL_SECONDS if observed is not None else None
+    result["valid_until"] = valid_until
+    result["quote_record_type"] = "HISTORICAL_SNAPSHOT"
+    result["freshness_ttl_seconds"] = CA_QUOTE_TTL_SECONDS
+    if archived:
+        result["freshness_status"] = "ARCHIVED_NOT_LIVE"
+        result["is_current_at_response"] = False
+    else:
+        checked_at = time.time() if now is None else float(now)
+        fresh = (
+            result.get("status") == "OK" and result.get("route_exists") is True
+            and result.get("execution_price_usdc") is not None
+            and result.get("price_impact_pct") is not None
+            and valid_until is not None
+            and observed <= checked_at <= valid_until
+        )
+        result["freshness_checked_at"] = checked_at
+        result["freshness_status"] = ("CURRENT_AT_RESPONSE" if fresh else
+                                       "EXPIRED" if valid_until is not None and checked_at > valid_until else
+                                       "UNAVAILABLE")
+        result["is_current_at_response"] = bool(fresh)
+    return result
+
+
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 CLUSTER_PRESETS = {
     "quick": {
@@ -156,7 +193,14 @@ class ClusterJobManager:
         return value
 
     def _public_job(self, job: dict) -> dict:
-        return {k: v for k, v in job.items() if k not in {"future"}}
+        public = {k: v for k, v in job.items() if k not in {"future"}}
+        preview = job.get("preview")
+        if isinstance(preview, dict):
+            public["preview"] = dict(preview)
+            quote = preview.get("execution_quote_30_usdc")
+            if isinstance(quote, dict):
+                public["preview"]["execution_quote_30_usdc"] = _annotate_ca_quote(quote)
+        return public
 
     def _prune_jobs_locked(self):
         finished=[
@@ -510,6 +554,9 @@ class ClusterJobManager:
                     "reason":type(exc).__name__,
                 }
             self._set_progress(job_id,"REPORT_PERSISTING",{"deep_holders_scanned":(report.get("coverage") or {}).get("deep_holders_scanned"),"adaptive_deepened":len((report.get("coverage") or {}).get("adaptive_deepened_owners") or [])})
+            report["execution_quote_30_usdc"] = _annotate_ca_quote(
+                report.get("execution_quote_30_usdc") or {}, archived=True,
+            )
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
@@ -551,7 +598,11 @@ class ClusterJobManager:
         if not path.is_file():
             return None
         try:
-            return json.loads(path.read_text())
+            report = json.loads(path.read_text())
+            quote = report.get("execution_quote_30_usdc")
+            if isinstance(quote, dict):
+                report["execution_quote_30_usdc"] = _annotate_ca_quote(quote)
+            return report
         except (OSError, ValueError):
             return None
 
