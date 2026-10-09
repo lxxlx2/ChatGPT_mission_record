@@ -207,23 +207,43 @@ def local_snapshot(db_path, wallet, start, end):
 def query_referenced_accounts(rpc,inventory,start,end,root_sigs,wallet):
     joined={}
     account_counts={}
+    incomplete_accounts={}
+    deferred_signatures={}
     for addr in sorted(inventory):
         try:
             rows=solana_signatures(rpc,addr,start,end)
         except (IncompleteWindow,OSError,ValueError,TimeoutError) as exc:
+            reason=safe_failure_code(exc)
+            if reason in {
+                "SOL_WALLET_TRANSACTION_BUDGET_EXCEEDED",
+                "SOL_MAX_PAGES_REACHED",
+            }:
+                incomplete_accounts[addr]={
+                    "mint":inventory[addr],
+                    "reason":reason,
+                    "signature_count":None,
+                    "window_complete":False,
+                }
+                continue
             raise AuditStageError(
-                "TOKEN_ACCOUNT_SIGNATURES",safe_failure_code(exc),
-                {"accounts_completed":len(account_counts),"accounts_total":len(inventory)}
+                "TOKEN_ACCOUNT_SIGNATURES",reason,
+                {"accounts_completed":len(account_counts),"accounts_total":len(inventory),
+                 "accounts_incomplete":len(incomplete_accounts)}
             ) from None
         account_counts[addr]=len(rows)
         for row in rows:
             sig=row["signature"]
-            if sig not in root_sigs:
-                if sig in joined and joined[sig]["slot"]!=row["slot"]:
+            if sig in root_sigs:
+                continue
+            previous=joined.get(sig) or deferred_signatures.get(sig)
+            if previous:
+                if previous["slot"]!=row["slot"]:
                     raise EvidenceGap("EXTRA_SIGNATURE_SLOT_CONFLICT")
+                continue
+            if len(joined)<MAX_ADDITIONAL_TRANSACTIONS:
                 joined[sig]=row
-                if len(joined)>MAX_ADDITIONAL_TRANSACTIONS:
-                    raise EvidenceGap("EXTRA_TRANSACTION_BUDGET_EXCEEDED")
+            else:
+                deferred_signatures[sig]=row
     evidence=[]
     for sig,row in sorted(joined.items(),key=lambda p:(p[1]["slot"],p[0])):
         try:
@@ -237,7 +257,9 @@ def query_referenced_accounts(rpc,inventory,start,end,root_sigs,wallet):
         except (EvidenceGap,IncompleteWindow,OSError,ValueError,TypeError,KeyError) as exc:
             raise AuditStageError(
                 "EXTRA_TRANSACTION_DECODE",safe_failure_code(exc),
-                {"extra_transactions_completed":len(evidence),"extra_transactions_total":len(joined)}
+                {"extra_transactions_completed":len(evidence),"extra_transactions_total":len(joined),
+                 "accounts_complete":len(account_counts),
+                 "accounts_incomplete":len(incomplete_accounts)}
             ) from None
         evidence.append({
             "signature":sig,"slot":row["slot"],
@@ -249,7 +271,7 @@ def query_referenced_accounts(rpc,inventory,start,end,root_sigs,wallet):
                 "TOKEN_OR_QUOTE_ONLY" if not f["no_observed_token_net"] else
                 "NO_OWNER_TOKEN_DELTA"),
         })
-    return account_counts,evidence
+    return account_counts,evidence,incomplete_accounts,deferred_signatures
 
 
 def run(source_report,cache_dir,db_path,rpc_file,start,end):
@@ -287,12 +309,14 @@ def run(source_report,cache_dir,db_path,rpc_file,start,end):
         "ROOT_OWNER_INVENTORY",build_seed_inventory,root_tx,WALLET
     )
     root_sigs=set(root_tx)
-    counts,extra=stage_call(
+    counts,extra,incomplete_accounts,deferred=stage_call(
         "TOKEN_ACCOUNT_SIGNATURES",query_referenced_accounts,
         rpc,inventory,start,end,root_sigs,WALLET
     )
+    scope_complete=not incomplete_accounts and not deferred
     return {
-        "status":"OBSERVED_OWNER_ACCOUNT_WINDOW_RECONCILED",
+        "status":("OBSERVED_OWNER_ACCOUNT_WINDOW_RECONCILED" if scope_complete
+                  else "OBSERVED_OWNER_ACCOUNT_WINDOW_PARTIAL"),
         "wallet":WALLET,"start":start,"end":end,
         "source_report_sha256":source_sha,
         "root_rpc_signatures":len(root_sigs),
@@ -306,11 +330,18 @@ def run(source_report,cache_dir,db_path,rpc_file,start,end):
         "current_owner_account_inventory_checked":False,
         "historical_accounts_never_mentioned_in_root_not_discoverable":True,
         "owned_account_signature_counts":counts,
+        "observed_accounts_fully_scanned":len(counts),
+        "observed_accounts_incomplete":len(incomplete_accounts),
+        "incomplete_account_details":incomplete_accounts,
+        "scope_complete_for_observed_accounts":scope_complete,
+        "extra_signatures_not_decoded":len(deferred),
+        "extra_signatures_deferred_sample":list(sorted(deferred))[:30],
+        "signal_coverage_validated":False,
         "owner_account_unique_extra_signatures":len(extra),
         "extra_opposing_flow_candidates":sum(x["opposing_net_token_quote"] for x in extra),
         "extra_transaction_details":extra,
         "raw_user_confirmed_additional_fills":0,
-        "warning":"An owner token account touched in root transactions is discoverable even if since closed. Accounts never referenced by root in the window remain UNVERIFIED. Opposing net balances are only CANDIDATE evidence, not BUY/SELL; native SOL and gross transient routing need separate tx instruction review.",
+        "warning":"Even a COMPLETE result covers only token accounts discovered in root transaction evidence. Incomplete accounts and deferred signatures are UNKNOWN, not zero buys. Previously closed unreferenced accounts, native SOL and transient routing require independent verification. No BUY/SELL is confirmed by this audit.",
         "production_db_writes":0,"emails_sent":0,"signals_changed":False,
     }
 
@@ -345,7 +376,7 @@ def main():
         overview["extra_review_sample"]=report["extra_transaction_details"][:20]
         overview["full_report"]=str(output)
         print(json.dumps(overview,ensure_ascii=False,indent=2))
-        return 0
+        return 0 if report["scope_complete_for_observed_accounts"] else 2
     except (EvidenceGap,IncompleteWindow,OSError,ValueError,TypeError) as exc:
         known=isinstance(exc,AuditStageError)
         stage=exc.stage if known else "REPORT_OUTPUT"
