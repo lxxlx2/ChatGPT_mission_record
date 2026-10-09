@@ -502,3 +502,97 @@ def test_cutoff_page_cannot_be_complete_if_original_signature_cap_overflows(tmp_
     assert len(completed["rows"])==1000
     assert completed["unretained_in_window_signatures_on_cap_page"]==1
     assert completed["cap_reason"]=="SIGNATURE_LIMIT"
+
+ 
+def test_partial_root_absent_sampling_picks_three_time_spaced_saved_rows(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    state=store.account(ACCOUNT)
+    state.update({"status":"ACTIVE","pages":1,"before":sig(5),
+                  "rows":[row(i,scan.END-i-1) for i in range(6)]})
+    store.save_account(state)
+    samples=scan.partial_decode_sample(store,{sig(1)},ACCOUNT)
+    assert [r["signature"] for r in samples]==[sig(0),sig(3),sig(5)]
+    assert store.account(ACCOUNT)==state
+
+
+def test_partial_decode_three_receipts_preserves_signature_cursor_and_never_trades(tmp_path,monkeypatch):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    state=store.account(ACCOUNT)
+    state.update({"status":"ACTIVE","pages":1,"before":sig(5),
+                  "rows":[row(i,scan.END-i-1) for i in range(6)]})
+    store.save_account(state)
+    root_sigs={sig(1)}
+    chosen=scan.partial_decode_sample(store,root_sigs,ACCOUNT)
+    index_by_sig={r["signature"]:r for r in chosen}
+    def balance(idx,mint,raw):
+        return {"accountIndex":idx,"mint":mint,"owner":ROOT,
+                "uiTokenAmount":{"amount":str(raw),"decimals":6}}
+    calls=[]
+    def rpc(_url,method,params):
+        assert method=="getTransaction"
+        signature=params[0]
+        calls.append(signature)
+        r=index_by_sig[signature]
+        return {
+            "slot":r["slot"],"blockTime":r["blockTime"],
+            "transaction":{"message":{"accountKeys":[
+                {"pubkey":ACCOUNT,"signer":False},
+                {"pubkey":OTHER,"signer":False},
+                {"pubkey":scan.flows.__globals__["FOMO_COSIGNER"],"signer":True},
+            ],"instructions":[]}},
+            "meta":{"err":None,
+                    "preTokenBalances":[balance(0,MINT,0),
+                                        balance(1,scan.flows.__globals__["USDC"],1000)],
+                    "postTokenBalances":[balance(0,MINT,20),
+                                         balance(1,scan.flows.__globals__["USDC"],500)],
+                    "innerInstructions":[]}
+        }
+    monkeypatch.setattr(scan,"one_rpc",rpc)
+    result,stop=scan.do_run(store,root_sigs,"partial-decode",True,2,
+                            "https://example.invalid",account=ACCOUNT)
+    assert result["rpc_attempts"]==2
+    assert result["new_receipts"]==2
+    assert stop=="REQUEST_BUDGET_EXHAUSTED"
+    assert store.account(ACCOUNT)==state
+    again,stop=scan.do_run(store,root_sigs,"partial-decode",True,2,
+                            "https://example.invalid",account=ACCOUNT)
+    assert again["rpc_attempts"]==1 and stop is None
+    assert len(calls)==3
+    finish,stop=scan.do_run(store,root_sigs,"partial-decode",True,3,
+                             "https://example.invalid",account=ACCOUNT)
+    assert finish["rpc_attempts"]==0 and stop is None
+    report=scan.report(store,root_sigs,set(),finish,stop)
+    samples=report["partial_account_sampled_receipts"]
+    assert len(samples)==1
+    assert samples[0]["status"]=="ACTIVE"
+    assert samples[0]["saved_sample_candidates"]==3
+    assert all(x["decoded"] for x in samples[0]["receipts"])
+    assert all(x["opposing_flow"] for x in samples[0]["receipts"])
+    assert all(x["fomo_cosigned"] for x in samples[0]["receipts"])
+    assert all(x["root_referenced"] is False for x in samples[0]["receipts"])
+    assert all(x["owned_token_deltas"]==[
+        {"mint":scan.flows.__globals__["USDC"],"raw":"-500","decimals":6},
+        {"mint":MINT,"raw":"20","decimals":6},
+    ] or sorted(x["owned_token_deltas"],key=lambda y:y["mint"])==sorted([
+        {"mint":scan.flows.__globals__["USDC"],"raw":"-500","decimals":6},
+        {"mint":MINT,"raw":"20","decimals":6}],key=lambda y:y["mint"])
+        for x in samples[0]["receipts"])
+    assert report["trade_confirmed_by_audit"] is False
+    assert report["full_person_trade_coverage"] is False
+    assert report["production_db_writes"]==0
+    assert report["emails_sent"]==0
+    assert report["extra_signature_candidates_from_completed_accounts"]==0
+
+
+def test_partial_decode_rejects_unobserved_or_no_saved_inwindow_signatures(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    with pytest.raises(scan.ScanBlocked,match="ACCOUNT_OUTSIDE_OBSERVED_INVENTORY"):
+        scan.partial_decode_sample(store,set(),OTHER)
+    with pytest.raises(scan.ScanBlocked,match="PARTIAL_ACCOUNT_EVIDENCE_REQUIRED"):
+        scan.partial_decode_sample(store,set(),ACCOUNT)
+    state=store.account(ACCOUNT)
+    state.update({"status":"COMPLETE","pages":1,"before":sig(0),
+                  "rows":[row(0,scan.END-10)]})
+    store.save_account(state)
+    with pytest.raises(scan.ScanBlocked,match="PARTIAL_ACCOUNT_EVIDENCE_REQUIRED"):
+        scan.partial_decode_sample(store,set(),ACCOUNT)
