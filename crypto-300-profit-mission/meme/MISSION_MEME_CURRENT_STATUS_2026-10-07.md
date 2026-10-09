@@ -888,3 +888,14 @@ All three `reason=null`. `status=OK` and `route_exists=true` establish Jupiter q
 **RARI existing SELL:** Separate known SELL signature `3VCne139PQuDB5PgpLBtTo8X5UbaH37eEyuVF5shisQPUpBVMBmx5XcBGKna64bZueVFWaLvf6ENPhLQR2r3xxb3` was previously verified against local raw and classified `ACTIVE_TRADE / SELL`; no earlier same-mint BUY row existed in the source ledger at that check. SELL does not prove original BUY. Earlier uncertainty is a substantive example of conservative false-negative-vs-false-positive tradeoff, not a justification to relax the classifier without signed route-level proof.
 
 **Decision separation:** `RARI_ORIGINAL_BUY=UNCONFIRMED`, `RARI_MULTITARGET_ROUTE_BINDING=UNPROVEN`, `RARI_CLASSIFIER_FALLBACK=UNKNOWN_NEEDS_REVIEW`; exclude this example from *confirmed* historical BUY statistics. The 3/3 Mac CA read-only acceptance does not depend on RARI and remains PASS. The untouched Frank classifier does not gain authorization for new RARI signals. H3 conservative semantics is reviewed but requires explicit authorization before new parser deployment. `CLAUDE_FINAL_FULL_PR_REVIEW=NOT_VERIFIED` (previous review was targeted to reported fixes). `MAC_REBOOT=DEFERRED_BY_USER`, `MAC_PR_HEAD_DEPLOYED=NO`, `CAN_MERGE=NO`, `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`.
+
+## 45. 2026-10-10 Gmail pre-send staleness protection
+
+Independent Claude review of previous HEAD `81c8a9ec`: CONDITIONAL PASS; identified overdue Gmail first-send of frozen Jupiter quote as a pre-deployment issue.
+
+Resolved on review branch: Mission Control Gmail pending decisions now use the immutable original decision timestamp, capped by approved 600-second age, and fail closed to MANUAL_REVIEW on stale or invalid timestamps. Already-attempted sends retain Sent reconciliation and no automatic re-send. The original Jupiter observed_at is preserved as a canonical decimal string, and the email displays explicit UTC decision and historical quote observation times with no misleading current-price claim. Short Mac notifications continue to include full CA.
+
+Tested code HEAD: `be6d2971359a552e6022953b60c442f5b00ce3ff`.
+GitHub Actions SUCCESS: https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37992871224 ; 1020 full tests passed, 121 FOMO tests passed, Python / Node / shell checks passed.
+
+Scope: no change to frozen policy, Frank writer, standalone legacy signals/gmail module, main, or active Mac services. Patched code has not been independently re-reviewed or deployed. Mac reboot acceptance remains deferred by user. H3 historical conservative drift and unresolved RARI original BUY evidence remain separate gates. PR stays Draft; CAN_MERGE=NO, CAN_DEPLOY=NO, PRODUCTION_TRADING=NO_GO.
