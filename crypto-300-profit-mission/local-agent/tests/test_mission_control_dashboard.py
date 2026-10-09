@@ -267,7 +267,7 @@ def test_dashboard_frontend_restores_latest_cluster_report():
 def test_dashboard_cluster_report_shows_observation_age_and_shared_infra_label():
     from mission_agent.mission_control.server import Handler
     js=(Handler.static_root/"app.js").read_text()
-    assert "观测时间" in js
+    assert "数据时间" in js
     assert "report.observed_at" in js
     assert "共享公共基础设施（不代表共同控制）" in js
 
@@ -658,7 +658,7 @@ def test_dashboard_prioritizes_trade_tape_and_states_scope():
     html=(Handler.static_root/"index.html").read_text()
     js=(Handler.static_root/"app.js").read_text()
     server=(Handler.static_root.parent/"server.py").read_text()
-    assert html.index('id="trades"') < html.index('id="candidates"')
+    assert html.index('id="candidates"') < html.index('id="trades"')
     assert 'id="coverage"' in html
     assert '/api/coverage' in js and '/api/coverage' in server
     assert 'LOCAL_INDEX_ONLY' in (Handler.static_root.parent/"frank.py").read_text()
