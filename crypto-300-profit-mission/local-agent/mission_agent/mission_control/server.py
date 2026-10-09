@@ -256,6 +256,39 @@ class ClusterJobManager:
                 elif stage=="HOLDERS_READY" and isinstance(job.get("preview"),dict):
                     job["preview"]["raw_top10_resolved_pct"]=details.get("raw_top10_resolved_pct")
                     job["preview"]["top_accounts_resolved"]=details.get("top_accounts_resolved")
+        # BASE_READY is emitted before slow Top20/funding history. Fetch a
+        # read-only, time-stamped execution quote now so the trader sees it
+        # while history scans. The final report still refreshes the quote
+        # after history completes; an early quote must not be reused as fresh.
+        if stage=="BASE_READY":
+            profile=details.get("token_profile") or {}
+            decimals=profile.get("decimals")
+            if profile.get("status")!="OK" or type(decimals) is not int or not 0 <= decimals <= 18:
+                early_quote={
+                    "status":"UNAVAILABLE","reason":"TOKEN_DECIMALS_UNKNOWN",
+                    "source":"JUPITER_OFFICIAL","observed_at":time.time(),
+                }
+            else:
+                try:
+                    response=self.jupiter.quote_usdc_to_token(
+                        self.jobs[job_id]["mint"],decimals,
+                        usdc_amount=Decimal("30"),slippage_bps=100,
+                    )
+                    early_quote={
+                        key:response.get(key) for key in (
+                            "status","reason","source","observed_at","route_exists",
+                            "execution_price_usdc","price_impact_pct",
+                        )
+                    }
+                except Exception as exc:
+                    early_quote={
+                        "status":"UNAVAILABLE","reason":type(exc).__name__,
+                        "source":"JUPITER_OFFICIAL","observed_at":time.time(),
+                    }
+            with self.lock:
+                job=self.jobs.get(job_id)
+                if job is not None and job.get("status")=="RUNNING" and isinstance(job.get("preview"),dict):
+                    job["preview"]["execution_quote_30_usdc"]=early_quote
 
     @staticmethod
     def _extension_semantic_config(value):
