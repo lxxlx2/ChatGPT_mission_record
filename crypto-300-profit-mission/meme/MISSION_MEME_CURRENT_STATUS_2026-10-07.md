@@ -817,3 +817,21 @@ This update **continues** section 35's isolated TWEETCRAFT round and responds to
 **Status updates at this checkpoint:** `MAC_ISOLATED_THREE_CA=PASS`; `MAC_ISOLATED_SAFETY=PASS`; `MAC_PREVIEW_TIMING_MEASURED=YES`; `MAC_FULL_SCAN_TIMING_MEASURED=YES`; `CA_CLUSTER_ALL_THREE=UNRESOLVED`; `JUPITER_ROUTE_AND_PRICE_FROM_TERMINAL=UNVERIFIED`; `MAC_INTEGRATED_PRODUCTION_DEPLOY=NOT_RUN`; `LIVE_GMAIL_SENT=NOT_RUN`; `MAC_LOGIN_RECOVERY=NOT_RUN`; `RARI_RAW=NOT_RUN`. Earlier H3 1087/1087 Mac historical replay and conservative semantic drift remain recorded separately, with `H3_ENGINE_ACCEPTANCE=REVIEW_DELTAS`, not unconditional promotion. `CAN_MERGE=NO`; `CAN_DEPLOY=NO`; `PRODUCTION_TRADING=NO_GO`.
 
 **Next, bounded:** inspect the three already saved isolated `cluster-reports/<mint>/latest.json` quote fields for route existence/price/impact (read-only; no full rerun needed). Then use existing rollout gates for separately authorized Frank loop/dashboard/Gmail runtime checks; avoid unrelated changes/new alert jobs. This operator evidence is authoritative only for the observed three isolated samples and read-only integrity checks.
+
+## 40. 2026-10-10 isolated Mac Jupiter $30 saved quote fields verified
+
+**Source:** Operator-supplied read-only extraction from 3 historical `cluster-reports/<mint>/latest.json` files in isolated Mac acceptance `~/.frank_meme_ca_v3_accept_20261010_033114`, tested code HEAD `4a71706be5a30bf947617a0122b1ccef0190840c`. No additional RPC calls or orders were made. These are historical 30-second-TTL quotes, not current market prices.
+
+| Symbol / mint | status | route_exists | Historical $30 buy execution_price_usdc per token | Jupiter price_impact_pct | observed_at (Unix sec) |
+|---|---|---|---:|---:|---:|
+| SPEC / `2AVjqmGbMqg7rSyHVv2deVdggsBgBtu1Bi69BUvE5WRv` | OK | true | `0.00009106528547494438856086046836` | `0.8791907851613982728583876100` | `1791578214.661563` |
+| knightcat / `3Dgwn5E7H5a8k6iGrz3qirkaJqUaJrKHEZ2xPcLRpump` | OK | true | `0.0007342677499975870432010600128` | `1.928268292635969587153959010` | `1791578044.5198772` |
+| RACE / `RACEyWiM2ztEZcJx2AHXU2eWjhxU57x3vXn92b39dLD` | OK | true | `389.2918780737837872909178205` | `0.0617339777166704739605294300` | `1791577898.193869` |
+
+All three `reason=null`. `status=OK` and `route_exists=true` establish Jupiter quoting an indicative route at the observation timestamp for 30 USDC input, NOT an actually signed/settled swap, guaranteed fill, profitable entry, or present-time route.
+
+**Bounded interpretation:** SPEC quote price impact 0.8792%; knightcat 1.9283% (above the normal Frank frozen follow impact cap of 1.5%, but no standalone CA is itself a Frank buy instruction); RACE 0.0617%, despite `RISK / ACTIVE_CHAIN_PERMISSION`, which prevents treating low impact as safety. All 3 wallet cluster ratings were `WALLET_CLUSTER_UNRESOLVED`. The quoted RACE unit price does not establish token market cap or fair value. No BUY signal, deviation validation or trade permission is inferred.
+
+**Gate update:** `MAC_ISOLATED_CA_JUPITER_QUOTE_FIELDS=PASS_3_OF_3`, `ROUTE_AT_OBSERVATION=TRUE_3_OF_3`, `PRICE_AND_IMPACT_AT_OBSERVATION=RECORDED_3_OF_3`. Section 39's lack of terminal-summary detail is now resolved by the operator's saved-report readback (`VERIFIED_BY_OPERATOR_LOCAL_SAVED_REPORT_READBACK`), not independently downloaded files. The underlying Mac CA acceptance and 1003-pass CI were already recorded.
+
+**Unchanged:** H3 conservative semantic delta still requires explicit approval before promotion; RARI signed raw fixture, real Frank live notification + Gmail Sent verification and Mac login recovery remain unverified or not run as separately documented. `CAN_MERGE=NO`, `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`; PR Draft; no production modification.
