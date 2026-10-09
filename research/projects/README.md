@@ -21,4 +21,6 @@ Current mapped material:
 - Slop Cash / Umia SLOP auction and planned user participation: `research/projects/slop-cash/slop-cash-umia-auction.md` (no funds committed; terms/eligibility TBA).
 - Sixth Sense Labs / SXTH user-intended participation, machine.fun Foundry verification: `research/projects/sxth/sxth-sixth-sense-labs-machine-foundry.md` (project identified, token mint/launch unconfirmed; no funds committed).
 
+- Backpack Exchange / BP token fundamentals, equity exchange mechanics and onchain supply: `research/projects/backpack/backpack-bp-fundamentals-and-tokenomics.md` (research only, no funds committed).
+
 Operational monitoring thresholds remain in the Mission/TGE task roots.
