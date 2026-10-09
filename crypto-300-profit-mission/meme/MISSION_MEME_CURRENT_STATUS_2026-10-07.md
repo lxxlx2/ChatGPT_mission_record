@@ -560,3 +560,20 @@ The user requested to **finish the outstanding code cleanup without expanding th
 **Verification:** review-source branch commit `c19798372d0f19054ab32b20dbc4fa33c5856093` GitHub CI run `37890315910`: targeted 46 passed, full 920 passed, compile, shell and JS syntax checks pass. These are **offline regression results**. Real Mac RPC historical account scan and comparisons are still **NOT_RUN**. Production signals, thresholds, live monitoring, LaunchAgent, email, and CA production UI untouched. `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`.
 
 **Next operator action:** execute this one Git-hosted read-only historical account audit in a detached worktree using existing RPC/cache/database; verify source inventory and classification gap counts; if evidence identifies a true overlooked economic fill, manually validate the tx then propose one minimal classifier fix with frozen replay tests. Do not add new fallback monitors or a new market-data provider.
+
+## 22. 2026-10-09 Alchemy rate-limit incident and zero-RPC evidence gate
+
+**Mac incident observed:** the operator's latest invocation of commit `6fe0b010a2eaef249271ea3b1cad983942423bf9` failed at `TOKEN_ACCOUNT_SIGNATURES` with `RPC_HTTP_429` after **18 of 30 observed historical token accounts** were fully scanned, and **1 account** had been classified as high-volume/incomplete. The other 11 accounts were **not fully scanned** in this run. Operator also supplied a received Alchemy throughput warning showing more than 10% of recent requests rate-limited. It is **not verified** that this research process alone caused the team's overall rate-limit incidence: Alchemy enforces throughput at account level across apps. This is a **FAILED / UNVERIFIED** Mac acceptance; no output proving extra Frank buys, no confirmed full trade coverage.
+
+**Code finding:** historical `solana_signatures` retries and re-requests every token account when the audit restarts. Its memory-only `account_counts`, `joined`, `deferred_signatures` are discarded on `RPC_HTTP_429`; there is no durable resume checkpoint. Single-account 1,000 signature and extra-decode 300 signature bounds are valid and MUST remain unchanged. Repeated full retries are wasteful while 429s exist.
+
+**Immediate containment:** stop re-running the full-window native account scanner, stop upgrading CU capacity for this investigation, and do not create fallback monitors or alternate Alchemy keys. New `local-agent/scripts/audit_frank_root_offline.py` uses the existing fixed-window source report, 173 cached finalized root transactions, and read-only local forward ledger, without any RPC or third-party calls. It verifies cached transaction identities, slot, time window, original root count, wallet-owned pre/post balances, local indexed signatures and classifications; outputs:
+- observed token account inventory and mint counts;
+- root-signature token/quote opposing net-flow **candidates** with evidence hash/slot;
+- separately counted unmatched ledger signatures and observed grouping;
+- `rpc_requests=0`, `can_conclude_complete_frank_trades=false`, `token_account_signature_coverage_checked=false`.
+Only scoped root-cache agreement is possible. A signed net-flow candidate is not a confirmed trade, especially if routing/counterparty cannot be proven.
+
+**Future network design gate:** before any more full scans, implement source-hash-bound, per-account **durable checkpoint** for completed signature lists, separate decoded-tx receipts, query budgets per explicit run, and stop-on-429 without replaying prior accounts. Preserve incomplete-account causes and scope, never infer zero trades from missing RPC. Do not silently switch the paid source or widen thresholds. No network resume implementation or live replay authorized/completed in this commit.
+
+**Status:** PR #29 remains **DRAFT / REVIEW_ONLY**, production Frank signal/mail/launchd/CA unaffected, `NO_GO` remains. Next task is **offline Mac evidence review**, then targeted source-gap analysis. Real alert/coverage proof and production deployment remain **NOT_VERIFIED / NOT_EXECUTED**.
