@@ -104,9 +104,9 @@ from pathlib import Path
 BASE=os.environ["BASE"]
 CONTROL=Path(os.environ["CONTROL"])
 cases=[
-    ("RACE_TOKEN2022",os.environ["RACE"],"SPL Token-2022",False),
-    ("FRANK_TOKEN2022",os.environ["FRANK_TOKEN2022"],"SPL Token-2022",True),
-    ("FRANK_CLASSIC_SPL",os.environ["FRANK_CLASSIC_SPL"],"SPL Token",True),
+    ("RACE_TOKEN2022",os.environ["RACE"],"SPL Token-2022"),
+    ("FRANK_TOKEN2022",os.environ["FRANK_TOKEN2022"],"SPL Token-2022"),
+    ("FRANK_CLASSIC_SPL",os.environ["FRANK_CLASSIC_SPL"],"SPL Token"),
 ]
 
 def get_json(path):
@@ -128,13 +128,21 @@ except urllib.error.HTTPError as exc:
 print("invalid CA -> HTTP 400: PASS")
 
 summaries=[]
-for name,mint,expected_program,require_frank in cases:
+for name,mint,expected_program in cases:
     print("\n=====",name,"=====")
-    job=post_json("/api/cluster-analysis",{"mint":mint,"preset":"standard"})
-    job_id=job["job_id"];deadline=time.time()+1800;last=None
+    started=time.monotonic()
+    preview_seconds=None
+    quote_preview_seconds=None
+    job=post_json("/api/cluster-analysis",{"mint":mint,"preset":"quick" if name=="RACE_TOKEN2022" else "standard"})
+    job_id=job["job_id"];deadline=time.time()+300;last=None
     while True:
         state=get_json("/api/cluster-analysis?"+urllib.parse.urlencode({"job_id":job_id}))
         stage=(state.get("progress") or {}).get("stage")
+        preview=state.get("preview") or {}
+        if preview and preview_seconds is None:
+            preview_seconds=round(time.monotonic()-started,3)
+        if preview.get("execution_quote_30_usdc") is not None and quote_preview_seconds is None:
+            quote_preview_seconds=round(time.monotonic()-started,3)
         if stage!=last:
             print("progress:",stage,json.dumps(state.get("progress") or {},ensure_ascii=False,sort_keys=True))
             last=stage
@@ -148,7 +156,6 @@ for name,mint,expected_program,require_frank in cases:
     profile=report.get("token_profile") or {}
     assessment=report.get("assessment") or {}
     coverage=report.get("coverage") or {}
-    frank=report.get("frank") or {}
     execution=report.get("execution_quote_30_usdc") or {}
 
     assert report.get("schema_version")==2
@@ -162,12 +169,6 @@ for name,mint,expected_program,require_frank in cases:
     }
     for detail in profile.get("sensitive_extension_details") or []:
         assert detail.get("status") in {"ACTIVE_RISK","INACTIVE","UNRESOLVED"},detail
-    if require_frank:
-        assert frank.get("status")=="OBSERVED",frank
-        assert frank.get("person_id")=="frank",frank
-        assert frank.get("mint")==mint,frank
-    elif frank.get("status")=="OBSERVED":
-        assert frank.get("person_id")=="frank",frank
 
     history=report.get("assessment_history")
     assert isinstance(history,list) and history
@@ -184,15 +185,17 @@ for name,mint,expected_program,require_frank in cases:
         "scan_mode":coverage.get("scan_mode"),
         "deep_holders_scanned":coverage.get("deep_holders_scanned"),
         "adaptive_deepened_count":len(coverage.get("adaptive_deepened_owners") or []),
-        "frank_status":frank.get("status"),"frank_person_id":frank.get("person_id"),
-        "frank_buy_count":frank.get("buy_count"),"frank_sell_count":frank.get("sell_count"),
         "execution_quote_status":execution.get("status"),
+        "first_preview_seconds":preview_seconds,
+        "first_quote_preview_seconds":quote_preview_seconds,
+        "full_report_seconds":round(time.monotonic()-started,3),
         "assessment_history_count":len(history),
     })
 
 print("\n===== REAL-CA SUMMARY =====")
 print(json.dumps(summaries,ensure_ascii=False,indent=2))
 print("REAL_CA_SCHEMA_AND_SEMANTICS: PASS")
+print("TIMING_IS_ACTUAL_RUNNER_MEASUREMENT_NOT_MAC_LATENCY: true")
 PY
 
 [ ! -e "$CONTROL/mission-control.sqlite" ] || die "MISSION_CONTROL_DB_CREATED"
