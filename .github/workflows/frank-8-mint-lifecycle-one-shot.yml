@@ -1,0 +1,26 @@
+name: Frank Eight Mint Historical Lifecycle One Shot
+on:
+  push:
+    branches: [review/meme-ca-v3-integrate-main-20261008]
+    paths: ['.github/workflows/frank-8-mint-lifecycle-one-shot.yml']
+permissions:
+  contents: read
+jobs:
+  bounded-root-trade-historical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bounded public Solana owner ATA life-cycle sample
+        run: |
+          python3 -m py_compile crypto-300-profit-mission/local-agent/scripts/audit_frank_multimint_lifecycle_public.py
+          python3 crypto-300-profit-mission/local-agent/scripts/audit_frank_multimint_lifecycle_public.py \
+            --max-rpc 34 --output frank-eight-mint-lifecycle.json
+      - name: Preserve historical evidence with explicit partial-status markers
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frank-eight-mint-lifecycle
+          path: frank-eight-mint-lifecycle.json
+          if-no-files-found: ignore
+          retention-days: 7
