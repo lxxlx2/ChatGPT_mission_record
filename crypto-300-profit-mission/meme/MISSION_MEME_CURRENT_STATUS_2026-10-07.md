@@ -577,3 +577,22 @@ Only scoped root-cache agreement is possible. A signed net-flow candidate is not
 **Future network design gate:** before any more full scans, implement source-hash-bound, per-account **durable checkpoint** for completed signature lists, separate decoded-tx receipts, query budgets per explicit run, and stop-on-429 without replaying prior accounts. Preserve incomplete-account causes and scope, never infer zero trades from missing RPC. Do not silently switch the paid source or widen thresholds. No network resume implementation or live replay authorized/completed in this commit.
 
 **Status:** PR #29 remains **DRAFT / REVIEW_ONLY**, production Frank signal/mail/launchd/CA unaffected, `NO_GO` remains. Next task is **offline Mac evidence review**, then targeted source-gap analysis. Real alert/coverage proof and production deployment remain **NOT_VERIFIED / NOT_EXECUTED**.
+
+## 23. 2026-10-09 Frank 173-root offline reconciliation and 148 unsigned movement follow-up
+
+**Operator-provided actual Mac offline result:** Immutable review SHA `9339f07d6601cbb8fc2892cd9d110312cf09f762` ran `scripts/audit_frank_root_offline.py` using locally cached finalized root transactions and read-only Mission SQLite. Result `OFFLINE_ROOT_CACHE_RECONCILED_SCOPE_LIMITED` at `1791386454..1791472854`: source root report **173**, cache **173**, Mission root signatures **173**, missing on either side **0**; local trade signatures **1**; **30** token accounts observed in cached root transaction balance vectors (29 non-USDC mints plus USDC observed by this run). Source SHA-256 `030d8cbce0c506a277c5883855b8397996cc1bc02d253884076c376257154d88`.
+
+**Signed wallet and economic net-flow classifications from this run:**
+- `ROOT_NOT_SIGNER:NO_TOKEN_NET=22`
+- `ROOT_NOT_SIGNER:QUOTE_ONLY=1`
+- `ROOT_NOT_SIGNER:TARGET_ONLY=148`
+- `ROOT_SIGNED:OPPOSING=1`
+- `ROOT_SIGNED:QUOTE_ONLY=1`
+
+Only signed paired net-flow candidate sig `4sP6iSpctgnnbKsLcGRn1YvaPB7TF9EGc1A6KL4G7gGwLKdP1Jm6LfEH3fs9UhQLMFNPwJ6tmS4FaEAaGT9XCC9S`, Tweetcraft mint `HzYCHqAN2uoHGRnL9v2ChCfFQX3bvJuJd5zu2Hd5MZQy`, matching existing Mission classified signature; `trade_confirmed=false` at this research evidence layer.
+
+**Interpretation:** 148 unsigned/one-sided owner token balance changes are **not established buys or sells**. They may be passive token receipts, transfers, or sponsored execution legs. Historical FOMO wallet trades can have fee payers and token owners distinct, so a root-only signer requirement is a **hypothesis for missed fills, not proof**. The 173 signature agreement establishes only **root-address-referenced coverage**. It cannot prove token-account-only or FOMO owner-indexed coverage. Current native token-account scan ended `RPC_HTTP_429` after 18/30 accounts and one incomplete high-activity account; there is no trustworthy all-account conclusion. Production signal count `1` cannot be interpreted as Frank's full actual trades.
+
+**New offline evidence review code:** Existing `scripts/audit_frank_root_offline.py` in PR #29 now outputs `unsigned_target_only_events`, signer/FOMO co-signer/router combinations, parser mechanical classification, per-mint counts, timeline and per-transaction receipt/authority evidence from the **same cached data only**. No added RPC/API. It deliberately keeps `unsigned_target_only_trade_count_confirmed=0` and never upgrades FOMO/router presence to a BUY or follow signal. GitHub CI run `37907296297` passed **60 targeted / 934 full tests**. This code has **NOT** been executed on the operator's Mac; its actual 148-event breakdown remains unverified until that one offline replay.
+
+**Release:** no main merge, runtime rollout, launchd change, extra monitoring, Gmail, trade execution or threshold change. `CAN_DEPLOY=NO`; `PRODUCTION_TRADING=NO_GO`.
