@@ -432,3 +432,73 @@ def test_cutoff_page_fully_validates_rows_before_saving_time_bounds(tmp_path):
     with pytest.raises(scan.ScanBlocked,match="SIGNATURE_ROW_INVALID"):
         scan.scan_page(store.account(ACCOUNT),lambda *_:invalid)
     assert store.account(ACCOUNT)["status"]=="PENDING"
+
+
+def test_partial_usdc_account_reports_686_unclassified_signatures_offline(tmp_path,monkeypatch):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    state=store.account(ACCOUNT)
+    state.update({"status":"ACTIVE","pages":3,"before":sig(685),
+                  "rows":[row(i,scan.END-i-1) for i in range(686)]})
+    store.save_account(state)
+    monkeypatch.setattr(scan,"one_rpc",lambda *a:pytest.fail("NETWORK CALLED"))
+    counters,stop=scan.do_run(store,set(),"plan",False,0)
+    report=scan.report(store,{sig(0),sig(1)},set(),counters,stop)
+    assert report["status"]=="OBSERVED_SCOPE_PARTIAL"
+    assert report["extra_signature_candidates_from_completed_accounts"]==0
+    partial=report["partial_account_signature_evidence"]
+    assert len(partial)==1
+    assert partial[0]["saved_window_signatures"]==686
+    assert partial[0]["already_in_root_count"]==2
+    assert partial[0]["not_in_root_count"]==684
+    assert len(partial[0]["unclassified_extra_sample"])==8
+    assert partial[0]["scope"]=="PARTIAL_SIGNATURES_ONLY_NOT_DECODED"
+    assert report["full_person_trade_coverage"] is False
+    assert report["trade_confirmed_by_audit"] is False
+    assert counters["rpc_attempts"]==0
+
+
+def test_usdc_signature_overflow_checkpoints_prefix_and_marks_incomplete(tmp_path,monkeypatch):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    state=store.account(ACCOUNT)
+    state.update({"status":"ACTIVE","pages":4,"before":sig(935),
+                  "rows":[row(i,scan.END-i-1) for i in range(936)]})
+    store.save_account(state)
+    page=[row(i,scan.END-i-1) for i in range(936,1186)]
+    calls=[]
+    def rpc(_url,method,params):
+        calls.append(params)
+        return page
+    monkeypatch.setattr(scan,"one_rpc",rpc)
+    counts,reason=scan.do_run(store,set(),"signatures",True,3,
+                              "https://example.invalid",account=ACCOUNT)
+    assert counts["rpc_attempts"]==1 and reason is None
+    after=store.account(ACCOUNT)
+    assert after["status"]=="CAPPED"
+    assert after["cap_reason"]=="SIGNATURE_LIMIT"
+    assert len(after["rows"])==1000
+    assert after["unretained_in_window_signatures_on_cap_page"]==186
+    assert after["pages"]==5
+    assert len(calls)==1
+    report=scan.report(store,set(),set(),counts,reason)
+    assert report["accounts_capped"][ACCOUNT]["observed_rows"]==1000
+    assert report["accounts_capped"][ACCOUNT]["status"]=="INCOMPLETE_LIMIT"
+    assert report["extra_signature_candidates_from_completed_accounts"]==0
+    assert report["partial_account_signature_evidence"][0]["not_in_root_count"]==1000
+    assert report["full_person_trade_coverage"] is False
+    again,why=scan.do_run(store,set(),"signatures",True,2,
+                          "https://example.invalid",account=ACCOUNT)
+    assert again["rpc_attempts"]==0 and why is None
+
+
+def test_cutoff_page_cannot_be_complete_if_original_signature_cap_overflows(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    state=store.account(ACCOUNT)
+    state.update({"status":"ACTIVE","pages":4,"before":sig(994),
+                  "rows":[row(i,scan.START+1000-i) for i in range(995)]})
+    store.save_account(state)
+    page=[row(i,scan.START+1000-i) for i in range(995,1006)]
+    completed=scan.scan_page(store.account(ACCOUNT),lambda *_:page)
+    assert completed["status"]=="CAPPED"
+    assert len(completed["rows"])==1000
+    assert completed["unretained_in_window_signatures_on_cap_page"]==1
+    assert completed["cap_reason"]=="SIGNATURE_LIMIT"
