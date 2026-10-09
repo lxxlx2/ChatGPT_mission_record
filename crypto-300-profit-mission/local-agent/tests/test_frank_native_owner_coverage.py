@@ -60,8 +60,10 @@ def test_token_account_only_no_owner_delta_is_not_synthetic_buy(monkeypatch):
                     {"signature":EXTRA,"slot":454400786,"blockTime":1791423976}]
         return []
     monkeypatch.setattr(audit,"solana_signatures",signatures)
-    counts,rows=audit.query_referenced_accounts(
+    counts,rows,blocked,deferred=audit.query_referenced_accounts(
         FakeRPC(),{ATA:MINT},audit.START,audit.END,{SIG},W)
+    assert blocked=={}
+    assert deferred=={}
     assert counts[ATA]==2
     assert len(rows)==1
     assert rows[0]["signature"]==EXTRA
@@ -131,15 +133,62 @@ def test_root_rpc_failures_report_provider_code_without_key(tmp_path,monkeypatch
     assert "SECRET_TOKEN" not in str(exc.value)
 
 
-def test_account_scan_failure_exposes_stage_and_completed_account_count(monkeypatch):
+def test_high_volume_account_is_marked_incomplete_without_erasing_other_accounts(monkeypatch):
+    # One known high-volume token account cannot invalidate a complete low-volume sibling.
+    other="2shtxUKnoNBMSvnBUqSuVfCQdjB54GM6LgNE6W2fCRkX"
+    assert len(other)==44
+    calls=[]
+    def fake_signatures(_rpc,address,start,end):
+        calls.append(address)
+        if address==ATA:
+            raise audit.IncompleteWindow("SOL_WALLET_TRANSACTION_BUDGET_EXCEEDED")
+        return [{"signature":SIG,"slot":454400785,"blockTime":1791423976}]
+    monkeypatch.setattr(audit,"solana_signatures",fake_signatures)
+    counts,rows,blocked,deferred=audit.query_referenced_accounts(
+        object(),{ATA:MINT,other:audit.USDC},audit.START,audit.END,{SIG},W)
+    assert set(calls)=={ATA,other}
+    assert counts=={other:1}
+    assert rows==[]
+    assert deferred=={}
+    assert blocked=={ATA:{
+        "mint":MINT,
+        "reason":"SOL_WALLET_TRANSACTION_BUDGET_EXCEEDED",
+        "signature_count":None,
+        "window_complete":False,
+    }}
+
+
+def test_unrelated_rpc_failure_remains_hard_failure(monkeypatch):
     def fail_rpc(*args):
-        raise audit.IncompleteWindow("SOL_WALLET_TRANSACTION_BUDGET_EXCEEDED")
+        raise audit.IncompleteWindow("RPC_HTTP_429")
     monkeypatch.setattr(audit,"solana_signatures",fail_rpc)
     with pytest.raises(audit.AuditStageError) as exc:
         audit.query_referenced_accounts(object(),{ATA:MINT},audit.START,audit.END,set(),W)
     assert exc.value.stage=="TOKEN_ACCOUNT_SIGNATURES"
-    assert exc.value.code=="SOL_WALLET_TRANSACTION_BUDGET_EXCEEDED"
-    assert exc.value.details=={"accounts_completed":0,"accounts_total":1}
+    assert exc.value.code=="RPC_HTTP_429"
+
+
+def test_excess_additional_signatures_preserved_as_unverified_not_decoded(monkeypatch):
+    other="2shtxUKnoNBMSvnBUqSuVfCQdjB54GM6LgNE6W2fCRkX"
+    monkeypatch.setattr(audit,"MAX_ADDITIONAL_TRANSACTIONS",1)
+    def signatures(_rpc,address,start,end):
+        return [
+            {"signature":SIG,"slot":454400785,"blockTime":1791423976},
+            {"signature":EXTRA,"slot":454400786,"blockTime":1791423976},
+        ]
+    monkeypatch.setattr(audit,"solana_signatures",signatures)
+    class FakeRPC:
+        def call(self,method,params):
+            assert params[0] in {SIG,EXTRA}
+            return tx(slot=454400785 if params[0]==SIG else 454400786,
+                      root_signed=False,changed=False)
+    counts,rows,blocked,deferred=audit.query_referenced_accounts(
+        FakeRPC(),{ATA:MINT,other:audit.USDC},audit.START,audit.END,set(),W)
+    assert len(counts)==2
+    assert len(rows)==1
+    assert len(deferred)==1
+    assert set(deferred).isdisjoint({r["signature"] for r in rows})
+    assert blocked=={}
 
 
 def test_raw_rpc_exception_message_is_never_exposed():
