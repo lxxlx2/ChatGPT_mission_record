@@ -1,0 +1,118 @@
+name: Frank E4 Raydium Jupiter Sell Proof One Shot
+on:
+  push:
+    branches: [review/meme-ca-v3-integrate-main-20261008]
+    paths: ['.github/workflows/frank-e4-raydium-jupiter-proof-one-shot.yml']
+permissions:
+  contents: read
+jobs:
+  verify-single-historical-exit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check finalized signature, token account flows and exact Jupiter Raydium instructions
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,re,urllib.request
+          SIG="2aemk5HoVVnCFfYQD1sci4B4Fddr5govJLbcJe9aHEBXaFSr4K7ht9PudQ5taVmyWXio4Y87iBiF6HyFqu3kiShZ"
+          ROOT="498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
+          MINT="E4Ap4icMLwKot8rkkTbq5JkS5kZxt5XCE3yfxbzYBjHx"
+          ATA="GEsXK8ZseuwTvc4ZennHZBANUnBFKVpC9TK3dFMtU6tg"
+          USDC="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          JUPITER="JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          RAYDIUM_CLMM="CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK"
+          q=json.dumps({"jsonrpc":"2.0","id":1,"method":"getTransaction",
+             "params":[SIG,{"encoding":"jsonParsed","commitment":"finalized",
+                                 "maxSupportedTransactionVersion":1}]}).encode()
+          try:
+            req=urllib.request.Request("https://api.mainnet-beta.solana.com",data=q,
+                                      headers={"Content-Type":"application/json"})
+            with urllib.request.urlopen(req,timeout=18) as response:tx=json.load(response).get("result")
+            if not isinstance(tx,dict):raise ValueError("FINALIZED_TRANSACTION_NOT_RETURNED")
+            meta=tx["meta"]; keys=tx["transaction"]["message"]["accountKeys"]
+            names=[x["pubkey"] for x in keys]
+            signed=[x["pubkey"] for x in keys if x.get("signer")]
+            flows={}
+            for field,sign in (("preTokenBalances",-1),("postTokenBalances",1)):
+              for z in meta.get(field) or []:
+                if z.get("owner")==ROOT:
+                  m=z["mint"];flows[m]=flows.get(m,0)+sign*int(z["uiTokenAmount"]["amount"])
+            stack=[];invalid=[];events=[]
+            inv=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) invoke \[(\d+)\]$")
+            done=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) (success|failed:.*)$")
+            logs=meta.get("logMessages") or []
+            for line in logs:
+              z=inv.fullmatch(line)
+              if z:
+                if int(z.group(2))!=len(stack)+1:invalid.append("DEPTH_MISMATCH")
+                stack.append(z.group(1));continue
+              z=done.fullmatch(line)
+              if z:
+                if not stack or stack[-1]!=z.group(1):invalid.append("RETURN_MISMATCH")
+                else:stack.pop()
+                if z.group(2)!="success":invalid.append("PROGRAM_FAILED")
+              if line.startswith("Program log: Instruction: "):
+                events.append({"program":stack[-1] if stack else None,
+                               "name":line.split("Instruction: ",1)[1]})
+            alphabet="123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+            def decode58(v):
+              n=0
+              for c in v:n=n*58+alphabet.index(c)
+              return bytes([0])*(len(v)-len(v.lstrip("1")))+(n.to_bytes((n.bit_length()+7)//8,"big") if n else b"")
+            instruction_checks=[]
+            source_out=0;usdc_in=0;transfers=[]
+            groups=[tx["transaction"]["message"].get("instructions") or []]
+            groups += [x.get("instructions") or [] for x in meta.get("innerInstructions") or []]
+            for g in groups:
+              for ix in g:
+                prog=ix.get("programId")
+                if prog is None and isinstance(ix.get("programIdIndex"),int):
+                  prog=names[ix["programIdIndex"]]
+                if prog in (JUPITER,RAYDIUM_CLMM) and isinstance(ix.get("data"),str):
+                  raw=decode58(ix["data"])
+                  label="shared_accounts_route_v2" if prog==JUPITER else "swap_v2"
+                  match=raw[:8]==hashlib.sha256(("global:"+label).encode()).digest()[:8]
+                  instruction_checks.append({"program":prog,"expected":label,
+                     "discriminator_hex":raw[:8].hex(),"anchor_opcode_matched":match})
+                parsed=ix.get("parsed") or {}
+                if parsed.get("type") not in ("transfer","transferChecked"):continue
+                info=parsed.get("info") or {}
+                amount=(info.get("tokenAmount") or {}).get("amount") if parsed["type"]=="transferChecked" else info.get("amount")
+                if not isinstance(amount,str) or not amount.isdigit():continue
+                if info.get("source")==ATA:
+                  source_out+=int(amount)
+                  transfers.append({"direction":"TARGET_ATA_OUT","raw":amount,
+                                    "destination":info.get("destination"),
+                                    "authority":info.get("authority")})
+                if info.get("destination")=="6kD22oUQrV8tVpE2hkQzkoobwCQAy2iiZcipWn8AD5jF":
+                  usdc_in+=int(amount)
+                  transfers.append({"direction":"USDC_ATA_IN","raw":amount})
+            jupiter_log=any(e["program"]==JUPITER and e["name"]=="SharedAccountsRouteV2" for e in events)
+            raydium_log=any(e["program"]==RAYDIUM_CLMM and e["name"]=="SwapV2" for e in events)
+            jupiter_id=any(x["program"]==JUPITER and x["anchor_opcode_matched"] for x in instruction_checks)
+            raydium_id=any(x["program"]==RAYDIUM_CLMM and x["anchor_opcode_matched"] for x in instruction_checks)
+            result={"signature":SIG,"slot":tx["slot"],"block_time":tx["blockTime"],
+              "succeeded":meta.get("err") is None,"root_signed":ROOT in signed,
+              "target_net_out_raw":flows.get(MINT,0),"usdc_net_in_raw":flows.get(USDC,0),
+              "target_ata_instruction_out_raw":source_out,
+              "usdc_ata_instruction_in_raw":usdc_in,
+              "jupiter_route_opcode_matched":jupiter_id,"jupiter_route_program_log":jupiter_log,
+              "raydium_clmm_swap_v2_opcode_matched":raydium_id,
+              "raydium_clmm_swap_v2_program_log":raydium_log,
+              "call_stack_valid":not stack and not invalid,
+              "anchor_opcode_checks":instruction_checks,
+              "sample_transfer_provenance":transfers[:12]}
+            result["confirmed_root_authorized_dex_exit"]=(
+              result["succeeded"] and result["root_signed"] and
+              result["target_net_out_raw"]==-1101462225622394 and
+              result["usdc_net_in_raw"]==20696377193 and
+              source_out==1101462225622394 and usdc_in>0 and
+              jupiter_log and raydium_log and jupiter_id and raydium_id and
+              result["call_stack_valid"])
+            print("E4_FIRST_EXIT_JSON:",json.dumps(result,separators=(",",":")))
+            print("STATUS:","CONFIRMED_JUPITER_RAYDIUM_CLMM_EXIT"
+                   if result["confirmed_root_authorized_dex_exit"] else
+                   "UNVERIFIED_INSTRUCTION_BINDING")
+          except Exception as e:
+            print("STATUS: UNVERIFIED_PUBLIC_SOLANA_RPC",type(e).__name__,str(e)[:150])
+          PY
