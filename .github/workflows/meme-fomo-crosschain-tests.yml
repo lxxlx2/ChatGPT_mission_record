@@ -56,7 +56,7 @@ jobs:
       - name: Compile new code
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m py_compile mission_agent/meme/fomo_crosschain.py scripts/audit_frank_fomo_crosschain.py scripts/inspect_frank_solana_root_window.py tests/test_fomo_crosschain.py tests/test_inspect_frank_solana_root_window.py tests/test_meme_ca_trader_ui.py tests/test_frank_owned_token_account_reconcile.py mission_agent/mission_control/server.py tests/test_meme_ca_trader_ui.py mission_agent/mission_control/delivery.py scripts/reconcile_frank_owned_token_account.py tests/test_frank_owned_token_account_reconcile.py scripts/audit_frank_gmgn_activity.py tests/test_frank_gmgn_activity_audit.py
+          python -B -m py_compile mission_agent/meme/fomo_crosschain.py mission_agent/meme/cluster.py mission_agent/mission_control/server.py mission_agent/mission_control/delivery.py scripts/audit_frank_fomo_crosschain.py scripts/inspect_frank_solana_root_window.py scripts/reconcile_frank_owned_token_account.py scripts/audit_frank_gmgn_activity.py tests/test_frank_gmgn_activity_audit.py
       - name: Operator script static checks
         working-directory: crypto-300-profit-mission/local-agent
         run: bash -n scripts/run_frank_fomo_rh_recheck.sh scripts/preview_meme_ca_ui.sh
@@ -67,7 +67,7 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent
         env:
           PYTHONDONTWRITEBYTECODE: '1'
-        run: python -B -m pytest -q -p no:cacheprovider tests/test_fomo_crosschain.py tests/test_inspect_frank_solana_root_window.py
+        run: python -B -m pytest -q -p no:cacheprovider tests/test_fomo_crosschain.py tests/test_inspect_frank_solana_root_window.py tests/test_frank_owned_token_account_reconcile.py tests/test_frank_gmgn_activity_audit.py
       - name: Full local-agent regressions
         working-directory: crypto-300-profit-mission/local-agent
         env:
