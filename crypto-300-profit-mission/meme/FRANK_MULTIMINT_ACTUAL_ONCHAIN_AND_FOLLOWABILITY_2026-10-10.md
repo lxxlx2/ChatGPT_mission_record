@@ -49,7 +49,7 @@ These are **identified onchain trading activities attributed to the fixed public
 For these **six selected/reconstructable** cases only:
 - **3 positive and 3 negative** wallet-quote outcome examples.
 - Combined archived buy gross quote = **179,813.791224 USDC**; sum of six observed conditional quote-net deltas = **+25,110.285414 USDC**. The sum does NOT imply $179k of capital was concurrently required, a 30-day profit rate, or $300 follower performance.
-- Largest winner **PerPs +34,919.993902 USDC** is **139.1% of total positive net sample outcome**. It dominates the combined result. Without it, the other five sum **−9,809.708488 USDC**.
+- Largest winner **PerPs +34,919.993902 USDC** is **139.1% of the six-case combined NET result** (not 139.1% of all profitable trades' gross gains). It dominates the combined result. Without it, the other five sum **−9,809.708488 USDC**.
 - Arithmetic mean of six individual percentage returns = **+16.299122%**, inflated by PerPs. Without PerPs, five-case equal-weight average becomes **−6.307716%**. Neither mean is an estimator of out-of-sample ROI or a signal to trade.
 - Median of the six percentages = **+2.324343%**, heavily dependent on sample composition.
 - The **4K1m** episode actually passes archived frozen ACCUMULATION's >=2 active buys / >=25,000 USDC in <=60m, and later a historical `MULTIPLE` observation at Sep 23 01:29 Bangkok, but its realized wallet USDC exit margin is **−37.900930%**. Accumulation cannot be equated with future positive return; post-MULT delayed-copy price at market execution remains unmeasured.
