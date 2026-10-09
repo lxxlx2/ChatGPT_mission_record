@@ -316,3 +316,30 @@ def test_explicit_account_must_come_from_locked_historic_owner_inventory(tmp_pat
             store,set(),"signatures",True,1,"https://example.invalid",
             account=OTHER
         )
+
+
+def test_zero_rpc_plan_reports_decoded_nonopposing_receipt_identifiers(tmp_path,monkeypatch):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    state=store.account(ACCOUNT)
+    state.update({"status":"COMPLETE","pages":1,"before":sig(1),
+                  "rows":[row(0,scan.START+25),row(1,scan.START+20)]})
+    store.save_account(state)
+    for index in (0,1):
+        store._write(store.root/("receipt-"+sig(index)+".json"),{
+            "context":store.key,"signature":sig(index),
+            "slot":400000+index,"tx_sha256":"a"*64,
+            "opposing_flow":False,"root_referenced":False,
+            "fomo_cosigned":False,
+            "target_mints":[MINT],"quote_mints":[],
+            "trade_confirmed":False,
+        })
+    monkeypatch.setattr(scan,"one_rpc",lambda *args:pytest.fail("NETWORK CALLED"))
+    counts,stop=scan.do_run(store,set(),"plan",False,0)
+    report=scan.report(store,set(),set(),counts,stop)
+    assert counts["rpc_attempts"]==0
+    assert report["decoded_opposing_flow_review_candidates"]==0
+    assert report["decoded_review_sample"]==[]
+    assert len(report["decoded_receipt_sample"])==2
+    assert {x["signature"] for x in report["decoded_receipt_sample"]}=={sig(0),sig(1)}
+    assert all(x["target_mints"]==[MINT] for x in report["decoded_receipt_sample"])
+    assert all(x["fomo_cosigned"] is False for x in report["decoded_receipt_sample"])
