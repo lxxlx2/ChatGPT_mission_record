@@ -138,3 +138,10 @@ def test_local_db_read_only_and_report_outside_production(tmp_path):
     path=m.write_report(output,{"status":"RESEARCH_ONLY"})
     assert path.stat().st_mode & 0o077 == 0
     assert json.loads(path.read_text())["status"]=="RESEARCH_ONLY"
+
+
+def test_unknown_gmgn_activity_kind_is_not_silently_ignored_as_zero_buys():
+    with pytest.raises(m.IncompleteEvidence,match="GMGN_ACTIVITY_TYPE_UNRECOGNIZED"):
+        m.normalize(activity(S1,"swap_unknown_new_schema",T0 + 10))
+    row=m.normalize(activity(S1,"transfer",T0 + 10))
+    assert row["side"] is None
