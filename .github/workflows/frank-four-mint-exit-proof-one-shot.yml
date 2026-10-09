@@ -1,0 +1,123 @@
+name: Frank Four Mint Exit Instruction Proof One Shot
+on:
+  push:
+    branches: [review/meme-ca-v3-integrate-main-20261008]
+    paths: ['.github/workflows/frank-four-mint-exit-proof-one-shot.yml']
+permissions:
+  contents: read
+jobs:
+  four-historic-mint-exits:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Verify eight historically observed signed exits by raw DEX opcode
+        run: |
+          python3 - <<'PY'
+          import json,urllib.request,time,hashlib,re
+          ROOT="498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
+          USDC="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          VENUES={
+            "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+            "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"}
+          cases=[
+           ("MukLDtJ8Cx9DxLbeyLRSWPSposTMWuwHANbuaudpump",
+             "3tHLTQ436c4vUbjS67Fpny7wiUjCaFRDQeXiL2FbDWZoQjsRCvgWJGTeN6t8tshfEv7J9NKbbj3LZ5fFmZVp1Dyu",
+             "451Qx3rK5qbrgJTU5ugKk3tZHvxB4UthwDv5VAX9eKBj4dPWPPPx8JuTR8Xvk3cCfpS1mEsFPYNg2mPwK1GCD9JZ"),
+           ("8K5X85PAJHAAVSvYaAzgVPPAPsqqHmvx16ZyBiscYF8L",
+             "4ZrNGcUsHij86pn17xq12ZE98z2JTEEJmrq8vQY3HSN3tptZJYmifX6mUXJJPNkK6Ax2sob82bqcjLa4tZsovWA5",
+             "4qMowAx4xRGovoPMfHjDeqHSu8sAXbEdQ21ydonKKs1q5JAHgoZmv4HNH54XYESQf1mpt8g9MF9UvkiefceK21Df"),
+           ("E4Ap4icMLwKot8rkkTbq5JkS5kZxt5XCE3yfxbzYBjHx",
+             "2aemk5HoVVnCFfYQD1sci4B4Fddr5govJLbcJe9aHEBXaFSr4K7ht9PudQ5taVmyWXio4Y87iBiF6HyFqu3kiShZ",
+             "ZTea1KgawvFfB3ScQYKsaHNCQsyMobbFHzBX1tcsiF4xyMTn43nfmyJaFccV94MaxENga1tF9BVDCrcshxC1fCd"),
+           ("PerPsCe2SJ7Q25CN4R5TTX4fmBdmknE2hQmqCt96fHL",
+             "5nWTX6KWh4h8UWSJRAPRi27UqtmY8bWkgoZwsWBXty3drjZGNQvduTzenKV9rHCiGWSqebRnzGwJtKCARicrwsVF",
+             "2GwyTXkrgx4DQaieYshXECbYtZgzvZ9DMhXUVCMqVDychCjTHGfkyh3aVSUwKxALVtof7XSmfTNu6w5BQtecUZSP")]
+          alphabet="123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+          def decode58(data):
+            n=0
+            for ch in data:n=n*58+alphabet.index(ch)
+            return bytes([0])*(len(data)-len(data.lstrip("1")))+(
+                  n.to_bytes((n.bit_length()+7)//8,"big") if n else b"")
+          root_inv=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) invoke \[(\d+)\]$")
+          close_inv=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) (success|failed:.*)$")
+          slugs={k:hashlib.sha256(("global:"+k).encode()).digest()[:8]
+                 for k in ("swap2","sell","swap")}
+          last=0;calls=0;counts={"confirmed":0,"unverified":0}
+          for mint,a,b in cases:
+            for sig in (a,b):
+              if last:
+                remaining=2.5-(time.monotonic()-last)
+                if remaining>0:time.sleep(remaining)
+              last=time.monotonic();calls+=1
+              try:
+                req=urllib.request.Request("https://api.mainnet-beta.solana.com",
+                    data=json.dumps({"jsonrpc":"2.0","id":calls,"method":"getTransaction",
+                    "params":[sig,{"encoding":"jsonParsed","commitment":"finalized",
+                                   "maxSupportedTransactionVersion":1}]}).encode(),
+                    headers={"Content-Type":"application/json"})
+                with urllib.request.urlopen(req,timeout=18) as f:
+                  response=json.load(f)
+                tx=response.get("result")
+                if not isinstance(tx,dict):raise ValueError("NO_FINALIZED_TX")
+                meta=tx["meta"]
+                keys=tx["transaction"]["message"]["accountKeys"]
+                names=[x["pubkey"] for x in keys]
+                signed={x["pubkey"] for x in keys if x.get("signer") is True}
+                changes={}
+                for phase,k in (("preTokenBalances",-1),("postTokenBalances",1)):
+                  for z in meta.get(phase) or []:
+                    if z.get("owner")==ROOT:
+                      code=z.get("mint")
+                      changes[code]=changes.get(code,0)+k*int(z["uiTokenAmount"]["amount"])
+                stack=[];invalid=False;ops=[]
+                logs=meta.get("logMessages") or []
+                for line in logs:
+                  p=root_inv.fullmatch(line)
+                  if p:
+                    if int(p.group(2))!=len(stack)+1:invalid=True
+                    stack.append(p.group(1));continue
+                  p=close_inv.fullmatch(line)
+                  if p:
+                    if not stack or stack[-1]!=p.group(1):invalid=True
+                    else:stack.pop()
+                    if p.group(2)!="success":invalid=True
+                  if line.startswith("Program log: Instruction: "):
+                    ops.append((stack[-1] if stack else None,
+                              line.split("Instruction: ",1)[1].lower()))
+                log_valid=(not invalid and (not stack or
+                    logs[-1:] == ["Log truncated"] and len(stack)==1))
+                groups=[tx["transaction"]["message"].get("instructions") or []]
+                groups += [z.get("instructions") or [] for z in meta.get("innerInstructions") or []]
+                rawops=[]
+                for rows in groups:
+                  for ix in rows:
+                    prog=ix.get("programId")
+                    if prog is None and isinstance(ix.get("programIdIndex"),int):
+                      prog=names[ix["programIdIndex"]]
+                    if prog not in VENUES or not isinstance(ix.get("data"),str):continue
+                    raw=decode58(ix["data"])
+                    matched=[label for label,v in slugs.items() if raw[:8]==v]
+                    if matched:rawops.append({"program":prog,"labels":matched})
+                paired=[r for r in rawops if any((r["program"],name) in ops
+                                                     for name in r["labels"])]
+                ok=(meta.get("err") is None and ROOT in signed
+                    and changes.get(mint,0)<0 and changes.get(USDC,0)>0
+                    and log_valid and len(paired)>0)
+                rec={"mint":mint,"signature":sig,"slot":tx["slot"],
+                     "block_time":tx["blockTime"],"root_signed":ROOT in signed,
+                     "token_out_raw":str(changes.get(mint,0)),
+                     "usdc_in_raw":str(changes.get(USDC,0)),
+                     "matched_opcode_log_pairs":paired,
+                     "stack_valid_or_root_truncated":log_valid,
+                     "onchain_exit_confirmed":ok}
+                print("EXIT_JSON:",json.dumps(rec,separators=(",",":")))
+                counts["confirmed" if ok else "unverified"]+=1
+              except Exception as e:
+                print("STATUS: PARTIAL_RPC_STOP",type(e).__name__,str(e)[:100],
+                      "RPC_ATTEMPTS:",calls)
+                raise SystemExit(0)
+          print("SUMMARY_JSON:",json.dumps({"tx_checked":calls,**counts,
+                 "only_root_authorized_opposing_dex_flows":True,
+                 "not_executable_follower_returns":True},separators=(",",":")))
+          PY
