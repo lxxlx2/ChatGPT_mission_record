@@ -866,7 +866,7 @@ function renderClusterReport(report) {
   const quote = report.execution_quote_30_usdc || {};
   const assessment = report.assessment || {};
 
-  const observedAt = Number(report.observed_at);
+  const observedAt = report.observed_at == null ? NaN : Number(report.observed_at);
   const observedText = Number.isFinite(observedAt)
     ? new Date(observedAt * 1000).toLocaleString('zh-CN')
     : '时间未知';
@@ -877,7 +877,7 @@ function renderClusterReport(report) {
   $('cluster-summary').innerHTML = [
     ['代币', '<span>' + esc(tokenName) + '</span><span class="subvalue">' + esc(tokenSymbol) + '</span>'],
     ['CA', '<code class="summary-ca">' + esc(mint) + '</code>' + copyButton(mint,'复制 CA')],
-    ['参考价', market.status==='OK' ? esc('$'+smallPrice(market.price_usd)) : '<span class="unresolved">不可用</span>'],
+    ['参考价', market.status==='OK' && market.price_usd != null ? esc('$'+smallPrice(market.price_usd)) : '<span class="unresolved">不可用</span>'],
     ['市值', esc(usd(market.market_cap_usd))],
     ['流动性', esc(usd(mainPair.liquidity_usd))],
   ].map(([k,v]) => '<div class="cluster-summary-card"><span>' + k + '</span><strong>' + v + '</strong></div>').join('');
@@ -900,7 +900,10 @@ function renderClusterReport(report) {
   if (assessment.cluster_status === 'PROBABLE_CONTROL_CLUSTER_PRESENT') {
     clusterConclusion = '发现可能共同控制集群，最大占比 ' + (metrics.LARGEST_PROBABLE_CONTROL_CLUSTER_PCT || '未知') + '%。';
   } else if (assessment.cluster_status === 'WALLET_CLUSTER_UNRESOLVED') {
-    clusterConclusion = '当前未完成全部钱包归因；重大未确认持仓约 ' + (metrics.UNRESOLVED_MATERIAL_HOLDER_PCT || '0') + '%。不能写成“筹码已确认干净”。';
+    const unknownShare = metrics.UNRESOLVED_MATERIAL_HOLDER_PCT;
+    clusterConclusion = '当前未完成全部钱包归因；重大未确认持仓约 ' +
+      (unknownShare == null || unknownShare === 'UNRESOLVED' ? '未确认' : unknownShare + '%') +
+      '。不能写成“筹码已确认干净”。';
   } else if (assessment.cluster_status === 'NO_MATERIAL_CONTROL_CLUSTER_FOUND') {
     clusterConclusion = '当前 bounded scan 未发现重大 probable control cluster。';
   }
@@ -935,7 +938,8 @@ function renderClusterReport(report) {
     '<details class="cluster-assessment-history"><summary>历史判断变化（仅供复核）</summary>' +
     renderAssessmentHistory(report.assessment_history) + '</details>';
 
-  const supplyApprox = Number(report.supply_raw) / (10 ** Number(report.decimals || 0));
+  const supplyApprox = report.supply_raw == null || report.decimals == null
+    ? NaN : Number(report.supply_raw) / (10 ** Number(report.decimals));
   $('cluster-token-profile').innerHTML =
     fact('名称 / Symbol','<span>' + esc(tokenName) + ' · ' + esc(tokenSymbol) + '</span>','名称来自市场元数据；权限来自链上') +
     fact('Token Program','<span>' + esc(profile.token_program || '未确认') + '</span>') +
@@ -957,12 +961,18 @@ function renderClusterReport(report) {
   const pairLink=mainPair.pair_address
     ? '<a class="link-btn compact" href="https://solscan.io/account/' + encodeURIComponent(mainPair.pair_address) + '" target="_blank" rel="noreferrer">Pool ↗</a>'
     : '';
-  const quoteText = quote.status==='OK' && quote.route_exists
-    ? '$'+smallPrice(quote.execution_price_usdc) + '<span class="subvalue">冲击 ' + pctText(quote.price_impact_pct) + '</span>'
-    : '<span class="unresolved">' + esc(quote.reason || '报价不可用') + '</span>';
+  const finalQuoteAt = quote.observed_at == null ? NaN : Number(quote.observed_at);
+  const finalQuoteAge = Date.now()/1000 - finalQuoteAt;
+  const finalQuoteFresh = Number.isFinite(finalQuoteAge) && finalQuoteAge>=0 && finalQuoteAge<=30;
+  const quoteText = !finalQuoteFresh
+    ? '<span class="unresolved">报价已过期，请重新查询</span>'
+    : quote.status==='OK' && quote.route_exists===true &&
+      quote.execution_price_usdc != null && quote.price_impact_pct != null
+      ? '$'+smallPrice(quote.execution_price_usdc) + '<span class="subvalue">冲击 ' + pctText(quote.price_impact_pct) + '</span>'
+      : '<span class="unresolved">' + esc(quote.reason || '报价不可用') + '</span>';
 
   $('cluster-market').innerHTML =
-    fact('当前参考价','<span>' + (market.status==='OK' ? '$'+smallPrice(market.price_usd) : '<span class="unresolved">不可用</span>') + '</span>','DexScreener 参考价') +
+    fact('查询时参考价','<span>' + (market.status==='OK' && market.price_usd != null ? '$'+smallPrice(market.price_usd) : '<span class="unresolved">不可用</span>') + '</span>','DexScreener 参考价') +
     fact('$30 实际可成交价','<span>' + quoteText + '</span>','Jupiter read-only quote') +
     fact('Market Cap','<span>' + (market.status==='OK' ? usd(market.market_cap_usd) : '暂无') + '</span>') +
     fact('主池流动性','<span>' + (market.status==='OK' ? usd(mainPair.liquidity_usd) : '暂无') + '</span>') +
