@@ -171,14 +171,24 @@ class Checkpoints:
             raise ScanBlocked("ACCOUNT_CURSOR_INVALID")
         if item.get("pages")!=0 and item.get("before") is None and item["status"]=="ACTIVE":
             raise ScanBlocked("ACCOUNT_CURSOR_MISSING")
+        if any(not isinstance(r,dict) or
+               not isinstance(r.get("signature"),str) or
+               not SIGNATURE_RE.fullmatch(r["signature"]) or
+               type(r.get("slot")) is not int or
+               type(r.get("blockTime")) is not int or
+               not START<=r["blockTime"]<=END for r in rows):
+            raise ScanBlocked("ACCOUNT_ROWS_INVALID")
         if len({r["signature"] for r in rows})!=len(rows):
             raise ScanBlocked("ACCOUNT_DUPLICATE_SIGNATURE")
-        if any(not isinstance(r,dict) or not SIGNATURE_RE.fullmatch(r.get("signature",""))
-               or type(r.get("slot")) is not int or type(r.get("blockTime")) is not int
-               or not START<=r["blockTime"]<=END for r in rows):
-            raise ScanBlocked("ACCOUNT_ROWS_INVALID")
+        if any(older["blockTime"]>newer["blockTime"]
+               for newer,older in zip(rows,rows[1:])):
+            raise ScanBlocked("ACCOUNT_HISTORY_ORDER_INVALID")
         if type(item.get("pages")) is not int or not 0<=item["pages"]<=MAX_SOL_PAGES:
             raise ScanBlocked("ACCOUNT_PAGE_LIMIT_BROKEN")
+        if len(rows)>item["pages"]*PAGE_SIZE:
+            raise ScanBlocked("ACCOUNT_ROWS_EXCEED_PAGES")
+        if item["status"]=="PENDING" and (item["pages"] or rows or item["before"]):
+            raise ScanBlocked("ACCOUNT_PENDING_HAS_PROGRESS")
         return item
 
     def save_account(self,item):
@@ -245,7 +255,7 @@ def scan_page(state,call):
         raise ScanBlocked("SIGNATURE_PAGE_INVALID")
     new={**state,"rows":list(state["rows"]),"pages":state["pages"]+1}
     seen={r["signature"] for r in new["rows"]}
-    prev_time=None
+    prev_time=state["rows"][-1]["blockTime"] if state["rows"] else None
     cutoff=False
     for row in page:
         if not isinstance(row,dict):
@@ -293,7 +303,10 @@ def decode_candidates(store,root_sigs):
             if sig["signature"] in root_sigs:
                 continue
             other=all_sigs.get(sig["signature"])
-            if other is not None and other["slot"]!=sig["slot"]:
+            if other is not None and (
+                other["slot"]!=sig["slot"] or
+                other["blockTime"]!=sig["blockTime"]
+            ):
                 raise ScanBlocked("SIGNATURE_CONFLICT_ACROSS_ACCOUNTS")
             all_sigs[sig["signature"]]=sig
     ordered=sorted(all_sigs.values(),key=lambda r:(r["blockTime"],r["slot"],r["signature"]))
@@ -386,6 +399,14 @@ def report(store,root_sigs,local_trades,counts,stopped):
         if rcpt is None:
             undecoded.append(row["signature"])
         else:
+            if (rcpt.get("slot")!=row["slot"] or
+                    not isinstance(rcpt.get("tx_sha256"),str) or
+                    not re.fullmatch(r"[0-9a-f]{64}",rcpt["tx_sha256"]) or
+                    type(rcpt.get("opposing_flow")) is not bool or
+                    type(rcpt.get("root_referenced")) is not bool or
+                    type(rcpt.get("fomo_cosigned")) is not bool or
+                    not isinstance(rcpt.get("target_mints"),list)):
+                raise ScanBlocked("RECEIPT_EVIDENCE_INVALID")
             decoded.append(rcpt)
     full_observed=(len(completed)==len(states) and not deferred and not undecoded)
     return {
