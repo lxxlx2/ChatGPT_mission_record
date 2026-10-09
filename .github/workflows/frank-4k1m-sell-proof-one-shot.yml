@@ -1,0 +1,110 @@
+name: Frank 4K1m Sale Instruction Proof One Shot
+on:
+  push:
+    branches: [review/meme-ca-v3-integrate-main-20261008]
+    paths: ['.github/workflows/frank-4k1m-sell-proof-one-shot.yml']
+permissions:
+  contents: read
+jobs:
+  independently-confirm-sell:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Single Solana RPC with instruction and token delta matching
+        run: |
+          python3 - <<'PY'
+          import json,urllib.request,hashlib,re
+          SIGNATURE="2oS3PbpByKDpK8wW9oG3jycS2R6t45Lko3KhXwrx4Pdp1SkvRNM5fEkqr9XK2dYi8mb3Cie8hFxkFYWJXW3R9KAs"
+          ROOT="498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
+          MINT="4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta"
+          USDC="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          DAMMV2="cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
+          msg=json.dumps({"jsonrpc":"2.0","id":1,"method":"getTransaction",
+             "params":[SIGNATURE,{"encoding":"jsonParsed","commitment":"finalized",
+                                  "maxSupportedTransactionVersion":1}]}).encode()
+          request=urllib.request.Request("https://api.mainnet-beta.solana.com",data=msg,
+                                          headers={"Content-Type":"application/json"})
+          try:
+            with urllib.request.urlopen(request,timeout=18) as f: body=json.load(f)
+            tx=body.get("result")
+            if not isinstance(tx,dict):raise ValueError("TX_UNAVAILABLE")
+            meta=tx["meta"]
+            keys=tx["transaction"]["message"]["accountKeys"]
+            names=[z["pubkey"] for z in keys]
+            signed={z["pubkey"] for z in keys if z.get("signer") is True}
+            flows={}
+            for phase,sgn in (("preTokenBalances",-1),("postTokenBalances",1)):
+              for row in meta.get(phase) or []:
+                if row.get("owner")==ROOT:
+                  token=row.get("mint")
+                  flows[token]=flows.get(token,0)+sgn*int(row["uiTokenAmount"]["amount"])
+            logs=meta.get("logMessages") or []
+            stack=[];invalid=[];events=[]
+            invoke=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) invoke \[(\d+)\]$")
+            final=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) (success|failed:.*)$")
+            for line in logs:
+              m=invoke.fullmatch(line)
+              if m:
+                if int(m.group(2))!=len(stack)+1:invalid.append("DEPTH")
+                stack.append(m.group(1));continue
+              m=final.fullmatch(line)
+              if m:
+                if not stack or stack[-1]!=m.group(1):invalid.append("MISMATCH")
+                else:stack.pop()
+                if m.group(2)!="success":invalid.append("FAILURE")
+              if line.startswith("Program log: Instruction: "):
+                events.append({"program":stack[-1] if stack else None,
+                  "label":line.split("Instruction: ",1)[1]})
+            terminated=(not stack and not invalid)
+            valid_trunc=(logs[-1:] == ["Log truncated"] and not invalid and
+                         len(stack)==1)
+            alphabet="123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+            def decode58(x):
+              n=0
+              for c in x:n=n*58+alphabet.index(c)
+              return b"\x00"*(len(x)-len(x.lstrip("1")))+(
+                     n.to_bytes((n.bit_length()+7)//8,"big") if n else b"")
+            prog=[];mint_out=0;usdc_in=0
+            ixgroups=[tx["transaction"]["message"].get("instructions") or []]
+            ixgroups += [x.get("instructions") or [] for x in meta.get("innerInstructions") or []]
+            for group in ixgroups:
+              for ix in group:
+                program=ix.get("programId")
+                if program is None and isinstance(ix.get("programIdIndex"),int):
+                  program=names[ix["programIdIndex"]]
+                if program==DAMMV2 and isinstance(ix.get("data"),str):
+                  raw=decode58(ix["data"])
+                  prog.append({"discriminator":raw[:8].hex(),
+                     "swap2":raw[:8]==hashlib.sha256(b"global:swap2").digest()[:8]})
+                parsed=ix.get("parsed")
+                if isinstance(parsed,dict) and parsed.get("type") in ("transfer","transferChecked"):
+                  info=parsed.get("info") or {}
+                  if info.get("mint")==MINT and info.get("authority")==ROOT:
+                    mint_out+=int(info.get("tokenAmount",{}).get("amount","0"))
+                  if info.get("mint")==USDC and info.get("destination")=="6kD22oUQrV8tVpE2hkQzkoobwCQAy2iiZcipWn8AD5jF":
+                    usdc_in+=int(info.get("tokenAmount",{}).get("amount","0"))
+            result={"slot":tx["slot"],"block_time":tx["blockTime"],
+              "tx_succeeded":meta.get("err") is None,
+              "root_signed":ROOT in signed,
+              "owned_usdc_net_raw":flows.get(USDC,0),
+              "owned_target_net_raw":flows.get(MINT,0),
+              "swap2_program_logs":[x for x in events if x["program"]==DAMMV2 and x["label"]=="Swap2"][:8],
+              "swap2_raw_opcodes":prog[:12],
+              "mint_transfer_signed_out_raw":mint_out,
+              "usdc_transfer_direct_in_raw":usdc_in,
+              "stack_valid":terminated,"truncated_single_outer":valid_trunc,
+              "fee_lamports":meta.get("fee"),
+              "fee_payer":names[0] if names else None}
+            confirmed=(result["tx_succeeded"] and result["root_signed"]
+              and result["owned_usdc_net_raw"]==15524767593
+              and result["owned_target_net_raw"]==-156402214732
+              and mint_out==156402214732 and usdc_in>0
+              and any(p["swap2"] for p in prog) and bool(result["swap2_program_logs"])
+              and (terminated or valid_trunc))
+            result["instruction_confirmed_sell"]=confirmed
+            result["conditional_usdc_pnl_raw"]=15524767593-25000000000
+            print("RESULT_JSON:",json.dumps(result,separators=(",",":")))
+            print("STATUS:","CONFIRMED_ROOT_DEX_SELL" if confirmed else "SELL_NOT_FULLY_CONFIRMED")
+          except Exception as e:
+            print("STATUS: UNVERIFIED_RPC",type(e).__name__,str(e)[:140])
+          PY
