@@ -761,3 +761,22 @@ This update **continues** section 35's isolated TWEETCRAFT round and responds to
 **Canonical finished evidence**: `meme/FRANK_SIX_ROUNDTRIPS_OUTLIER_AND_FOLLOWABILITY_2026-10-10.md`; machine-readable `meme/evidence/frank-six-observed-roundtrips-2026-10-10.json`. Sources and all seven GitHub Actions public-RPC references embedded there. The earlier one-lot TWEETCRAFT report remains accurate for that lot but is **not** the entire pattern sample. Wallet-person binding is only third-party; complete alternative/closed ATA, FOMO person-wide fill recall and complete 18-signal accounting remain UNVERIFIED.
 
 **Frozen decision**: `PERSON_PATTERN=OBSERVE_ONLY`, `PRODUCTION_TRADING=NO_GO`, `AUTOMATIC_TRADING=NOT_ENABLED`, `DELAYED_COPY_ALPHA=NOT_VALIDATED`, `NO_GO_TO_PROMOTION`. No GitHub main merge, no additional recurring task/monitor, no Gmail, no Mac production service/config action, no wallet signing. The bounded task's result has been completed and documented to the limit of available independently verifiable source coverage.
+
+## 37. 2026-10-10 trader-first CA early quote and current integration gate
+
+**Source-code exact tested HEAD:** 7c26fb1b0f8eee5c1905219a4e672d3f801f9d91 on draft PR #29 (review/meme-ca-v3-integrate-main-20261008). No main/Mac live change.
+
+**Executed GitHub CI:** https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37982507740 completed successfully at 2026-10-09 19:47 UTC. 121 offline FOMO-specific tests and 1000 full local-agent tests passed, with Python compilation, node --check, and shell syntax checks passing. This is exact-HEAD CI, not independent AI review or real Mac acceptance.
+
+**Trader usability changes confined to review branch:**
+
+1. BASE_READY now requests a time-stamped read-only Jupiter 30 USDC quote before long Top20/holder/funding history; invalid or unknown decimals fail closed. The completed report obtains a new final quote after history scanning, never reusing the first provisional quote as fresh.
+2. Preview and persisted reports reject any quote older than 30 seconds as current. Missing numeric market/holder data displays unknown rather than fabricated zero. When full history fails due to public RPC issues, retain only explicitly provisional first-screen market and permissions without a completed-cluster assertion.
+3. The Mac isolated CA acceptance script no longer requires Frank to have traded the queried Mint. It records first-preview, first-execution-quote, and full-report durations; uses existing RACE and Frank-observed classic/Token-2022 test Mints solely as independent CA fixtures, 300-second bounded cases, and checks production identity-prefix/health/plist invariants read-only. This updated script has NOT_RUN on actual Mac.
+4. Added Node VM UI-value and failure-preview tests, server BASE_READY early quote test, negative unknown-decimals gate, and acceptance-script contract regression. Existing Frank follow policy and decision code remain untouched.
+
+**Frozen authority:** ACCUMULATION/MULTIPLE thresholds unchanged; approved FOLLOW_POLICY_V1 untouched; CA remains usable for arbitrary valid Solana Mint without Frank matching; no new monitoring, LaunchAgent, mail, main merge, wallet action, live trading, RH/EVM scope, or production config change. PRODUCTION_TRADING=NO_GO.
+
+**Open gates:** OTHER_AI_FINAL_REVIEW=NOT_RUN; ACTUAL_MAC_THREE_CA_TIMING=NOT_RUN; AUTHENTICATED_INTEGRATED_CA_ACCEPTANCE=NOT_RUN; RARI_SIGNED_RAW_FIXTURE=NOT_RUN; H3 conservative economic semantic drift still needs separate review/approval before prod classifier promotion; new Gmail Sent readback and reboot/login acceptance remain NOT_RUN. CAN_MERGE=NO and CAN_DEPLOY=NO.
+
+**Next sequence:** independent AI reviews the new PR diff for correctness and frozen-policy/source-isolation invariants; fix any substantive finding and rerun exact-HEAD CI; then run the existing Mac isolated real CA acceptance from a separate fetched PR worktree without starting Loop, measure actual quote/preview latency; only after evidence passes consider separately reviewed controlled merge and local deployment plus Frank/dashboard/Gmail acceptance. Never present CI as production deployment.
