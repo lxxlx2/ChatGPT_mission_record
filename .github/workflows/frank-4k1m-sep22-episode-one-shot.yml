@@ -1,0 +1,105 @@
+name: Frank Sep22 4K1m Solana Episode One Shot
+on:
+  push:
+    branches: [review/meme-ca-v3-integrate-main-20261008]
+    paths: ['.github/workflows/frank-4k1m-sep22-episode-one-shot.yml']
+permissions:
+  contents: read
+jobs:
+  onchain-spot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Verify two signed historical buys and bounded token-account history
+        run: |
+          python3 - <<'PY'
+          import json,time,urllib.request,urllib.error,sys
+          ROOT="498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
+          MINT="4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta"
+          USDC="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          SIGNATURES=(
+            "3yRk6QKSGRs6HNMp3VNt7jUAFRyHA9ZnnuZqcVoKkKqpVB31oDbyiSqCEf6iUNV1UUZ7s6ZcXCmm4rWAebTcKgUf",
+            "2352K9kgpndgb9A39xyWGJsCruHgJgVf6PheQECWrSmPfKndKT8uF83DcFoNJaoQrCc8wpiaKdaVCoqTcrmfvzqv")
+          count=0;last=0;MAX=9
+          def rpc(method,params):
+            global count,last
+            if count>=MAX:raise RuntimeError("EXPLICIT_RPC_BUDGET_EXHAUSTED")
+            if last:
+              seconds=2-(time.monotonic()-last)
+              if seconds>0:time.sleep(seconds)
+            count+=1;last=time.monotonic()
+            b=json.dumps({"jsonrpc":"2.0","id":count,"method":method,"params":params}).encode()
+            request=urllib.request.Request("https://api.mainnet-beta.solana.com",
+                headers={"Content-Type":"application/json"},data=b)
+            with urllib.request.urlopen(request,timeout=18) as reply:
+              result=json.load(reply)
+            if "error" in result:
+              raise RuntimeError("RPC_ERROR_"+str(result["error"])[:120])
+            return result.get("result")
+          def parse(signature,tx):
+            if not isinstance(tx,dict):raise RuntimeError("TX_NOT_AVAILABLE")
+            keys=tx["transaction"]["message"]["accountKeys"]
+            signers=[x["pubkey"] for x in keys if x.get("signer") is True]
+            accounts=[x["pubkey"] for x in keys]
+            changes={}
+            target_accounts=set()
+            for tag,sign in (("preTokenBalances",-1),("postTokenBalances",1)):
+              for row in tx["meta"].get(tag) or []:
+                if row.get("owner")==ROOT:
+                  mint=row.get("mint")
+                  changes[mint]=changes.get(mint,0)+sign*int(row["uiTokenAmount"]["amount"])
+                  if mint==MINT:target_accounts.add(accounts[row["accountIndex"]])
+            logs=tx["meta"].get("logMessages") or []
+            opcodes=[line[:100] for line in logs if "Instruction: Swap" in line]
+            return {"sig":signature,"slot":tx["slot"],"at":tx["blockTime"],
+                   "ok":tx["meta"].get("err") is None,"root_signed":ROOT in signers,
+                   "owner_usdc_change_raw":str(changes.get(USDC,0)),
+                   "owner_mint_change_raw":str(changes.get(MINT,0)),
+                   "target_owner_accounts":sorted(target_accounts),
+                   "swap_opcode_logs":opcodes[:8]}
+          try:
+            buys=[]
+            for s in SIGNATURES:
+              tx=rpc("getTransaction",[s,{"encoding":"jsonParsed",
+                "commitment":"finalized","maxSupportedTransactionVersion":1}])
+              buys.append(parse(s,tx))
+            print("BUYS_JSON:",json.dumps(buys,separators=(",",":")))
+            if not all(x["ok"] and x["root_signed"] and
+                 int(x["owner_usdc_change_raw"])<0 and
+                 int(x["owner_mint_change_raw"])>0 for x in buys):
+              print("STATUS: INDEPENDENT_BUY_CONDITIONS_UNVERIFIED");sys.exit(0)
+            accounts=set(buys[0]["target_owner_accounts"]+buys[1]["target_owner_accounts"])
+            if len(accounts)!=1:
+              print("STATUS: MULTIPLE_MINT_ACCOUNTS_NO_SINGLE_TRACE");sys.exit(0)
+            ata=next(iter(accounts))
+            rows=rpc("getSignaturesForAddress",[ata,{"limit":1000,"commitment":"finalized"}])
+            if not isinstance(rows,list):
+              print("STATUS: HISTORIC_ATA_SIGNATURES_UNAVAILABLE");sys.exit(0)
+            cutoff=buys[1]["at"];post=[x for x in rows if x.get("blockTime") and x["blockTime"]>cutoff]
+            reached=any(x.get("blockTime") and x["blockTime"]<=cutoff for x in rows)
+            print("SIGNATURE_INVENTORY_JSON:",json.dumps({
+                 "ata":ata,"count_page":len(rows),"after_buy_count":len(post),
+                 "page_reached_buy_time":reached,"page_limit_saturated":len(rows)>=1000,
+                 "full_post_buy_coverage":reached or len(rows)<1000},separators=(",",":")))
+            if not post:
+              print("STATUS: NO_AFTER_BUY_EVENTS_OBSERVED_ON_THIS_ATA");sys.exit(0)
+            # Deterministic no-cherry-pick three-stratum samples: earliest, middle, latest
+            points=sorted({0,len(post)//2,len(post)-1})
+            candidates=[post[i] for i in points]
+            newer=[]
+            for row in candidates:
+              try:
+                tx=rpc("getTransaction",[row["signature"],{
+                   "encoding":"jsonParsed","commitment":"finalized",
+                   "maxSupportedTransactionVersion":1}])
+                newer.append(parse(row["signature"],tx))
+              except Exception as ex:
+                print("STATUS: PARTIAL_AFTER_BUY_DECODE_STOP",type(ex).__name__,str(ex)[:100])
+                break
+            print("AFTER_BUY_SAMPLE_JSON:",json.dumps(newer,separators=(",",":")))
+            print("RPC_CALLS:",count)
+            print("STATUS: INDEPENDENT_4K1M_TWO_BUYS_CONFIRMED_POSTBUY_SAMPLE_ONLY")
+          except Exception as ex:
+            print("STATUS: UNVERIFIED_ONE_SHOT_RPC_ERROR",
+                  type(ex).__name__,str(ex)[:180],"RPC_CALLS:",count)
+          PY
