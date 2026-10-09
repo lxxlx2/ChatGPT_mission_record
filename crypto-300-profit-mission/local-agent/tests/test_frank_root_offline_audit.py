@@ -113,4 +113,5 @@ def test_offline_mismatched_ledger_is_not_silent_success(monkeypatch,tmp_path):
     con.close()
     report=offline.build_offline_report(tmp_path/"source",cache,db,offline.START,offline.END)
     assert report["cached_root_not_in_local_ledger"]==[S2]
+    assert report["status"]=="OFFLINE_ROOT_CACHE_LOCAL_LEDGER_GAPS"
     assert report["can_conclude_complete_frank_trades"] is False
