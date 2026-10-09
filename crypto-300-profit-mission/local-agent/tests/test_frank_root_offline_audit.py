@@ -115,3 +115,31 @@ def test_offline_mismatched_ledger_is_not_silent_success(monkeypatch,tmp_path):
     assert report["cached_root_not_in_local_ledger"]==[S2]
     assert report["status"]=="OFFLINE_ROOT_CACHE_LOCAL_LEDGER_GAPS"
     assert report["can_conclude_complete_frank_trades"] is False
+
+
+def test_unsigned_one_sided_receipt_separated_from_confirmed_fills():
+    receipt=tx(S2,offline.START+31,True)
+    keys=receipt["transaction"]["message"]["accountKeys"]
+    keys[0]={"pubkey":offline.WALLET,"signer":False}
+    keys.append({"pubkey":"AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51","signer":True})
+    receipt["meta"]["postTokenBalances"][1]["uiTokenAmount"]["amount"]="10000000"
+    receipt["transaction"]["message"]["instructions"].append(
+        {"programId":"DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"}
+    )
+    evidence=offline.unsigned_target_only_evidence({S2:receipt},offline.WALLET)
+    assert evidence["unsigned_target_only_events"]==1
+    assert evidence["unsigned_target_only_trade_count_confirmed"]==0
+    row=evidence["unsigned_target_only_transaction_evidence"][0]
+    assert row["direction"]=="IN"
+    assert row["fomo_cosigned"] is True
+    assert row["known_router_present"] is True
+    assert row["trade_confirmed"] is False
+    assert row["target_changes"][0]["mint"]==M
+    assert evidence["unsigned_target_only_patterns"][0]["count"]==1
+
+
+def test_signed_paired_payment_is_not_counted_as_unsigned_target_only():
+    signed=tx(S1,offline.START+20,True)
+    info=offline.unsigned_target_only_evidence({S1:signed},offline.WALLET)
+    assert info["unsigned_target_only_events"]==0
+    assert info["unsigned_target_only_transaction_evidence"]==[]
