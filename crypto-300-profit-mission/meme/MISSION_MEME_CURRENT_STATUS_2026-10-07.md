@@ -845,3 +845,24 @@ All three `reason=null`. `status=OK` and `route_exists=true` establish Jupiter q
 **Reporting rules:** actual reboot/login persistence is NOT_RUN until operator separately performs a real Mac reboot/login. New live end-to-end Gmail send remains NOT_RUN without naturally occurring live decision + matching SENT_VERIFIED, and must never be manufactured as a buy event. The historical decision local-record correlation will be VERIFIED/UNAVAILABLE based on Mac database; lack of record is not evidence of an email failing to send.
 
 **Status at documentation time:** `LINKED_GMAIL_HISTORICAL_SENT=PASS`; `GMAIL_NEW_HEAD_LIVE_END_TO_END=NOT_RUN`; `MAC_REBOOT_LOGIN_RECOVERY=NOT_RUN`; `MAC_ONE_SHOT_FRANK_DASHBOARD_READONLY=NOT_RUN` (awaits executing the committed script on Mac); `CAN_MERGE=NO`, `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`. New source code has not been applied to the installed Mac loop/dashboard.
+
+## 42. 2026-10-10 actual Mac Frank/Control/Gmail read-only live acceptance PASS
+
+**Evidence:** User-pasted JSON from committed `scripts/accept_meme_live_readonly.py` executed on Mac in detached review worktree HEAD `1bb5a9d742c3e5db381ef69b7eac8a8c95931589`. Sample began 2026-10-09 20:50:27.715754 UTC (2026-10-10 03:50:27 Bangkok); one 36-second observation interval. This is real operator local process and localhost HTTP evidence, not a GitHub Actions simulation. The script does not reboot, send any message, start or stop services, or update production sources.
+
+| Check / metric | Observed result | Status |
+|---|---|---|
+| Loop LaunchAgent `com.jerson.frank-meme.loop` | loaded=true, running=true, pid=92684, runs=4; plist RunAtLoad/KeepAlive/label PASS | PASS |
+| Dashboard LaunchAgent `com.jerson.frank-meme.dashboard` | loaded=true, running=true, pid=92682, runs=5; plist RunAtLoad/KeepAlive/label PASS | PASS |
+| Frank writer | RUNNING, poll_count=17622 (increased by 1 during sampled interval), last successful age=17.98 sec, source_drift=false, consecutive_errors=0, lag_seconds=0, raw_pending=0, model_unprocessed=0, restart_count=4 | PASS |
+| Dashboard GET-only seven APIs | /api/runtime LIVE+OK (heartbeat age=11.82s); /api/control-health OK; /api/candidates 2; /api/trades 76; /api/review-activity 1; /api/decisions 7; /api/coverage LOCAL_INDEX_ONLY OK | PASS 7/7 |
+| Mission Control loop | status=OK, delivery_allowed=true, candidate_error_count=0, updated-at advanced during sample, age=2.2sec | PASS |
+| Installed approved follow policy SHA256 | on-disk policy digest matches pin | PASS |
+| Local Gmail state | gmail_delivery DRY_RUN_AUDIT=1, SENT_VERIFIED=1; Gmail outbox same distributions, 7 recorded decision events | PASS for recorded state |
+| Gmail Sent original 2026-10-08 live `NO_BUY` | decision `30cfdb6f4887953cd05ebaf1ccf8769be85ce74ee7ae23f33f2c5484012a0488`; local Gmail SENT_VERIFIED, readback_verified=true, delivery_mode=LIVE, delivery_forbidden=false, gmail_message_id exactly `1a11bbebc6dd49f8`, matches Gmail connector's real SENT message observed separately | PASS historical end-to-end receipt correlation |
+
+**All seven script `gates` with runnable assertions passed**: `INSTALLED_LAUNCHAGENTS`, `DASHBOARD_READONLY_API`, `FRANK_RUNTIME_CURRENT`, `MISSION_CONTROL_CURRENT`, `POLICY_PIN`, `WRITER_ADVANCED_DURING_SAMPLE`, `CONTROL_ADVANCED_DURING_SAMPLE`. The `PRODUCTION_TRADING` field remained NO_GO.
+
+**Important scope:** The successful original 2026-10-08 live-mail reconciliation is a meaningful real local-DB + Gmail Sent end-to-end proof for the *currently installed* old production version; it cannot certify after deploying the new PR head. A 36-second healthy sample is not a latency percentile, not a new actionable Frank buy, and does not prove no missed on-chain signatures over longer time. Presence of LaunchAgent RunAtLoad/KeepAlive and nonzero previous runs does not prove new post-reboot recovery; no reboot was performed. Do not manufacture live trading signals or new email merely to satisfy a gate.
+
+**Gate transitions:** `MAC_ONE_SHOT_FRANK_DASHBOARD_READONLY=PASS`, `FRANK_HEARTBEAT_AND_CURSOR_SAMPLE=PASS` (writer counters and lag; precise no-gap longitudinal audit still separate), `CONTROL_HEALTH_36S=PASS`, `DASHBOARD_READONLY_7_OF_7=PASS`, `INSTALLED_LAUNCHAGENT_CONFIGURATION=PASS`, `GMAIL_HISTORICAL_LIVE_SENT_LOCAL_RECEIPT_ID_MATCH=PASS`, `APPROVED_POLICY_PIN=PASS`. `GMAIL_POST_PR_DEPLOYED_END_TO_END=NOT_RUN`, `MAC_POST_REBOOT_LOGIN_RECOVERY=NOT_RUN`, `MAC_NEW_PR_INSTALLED=NO`, `RARI_SIGNED_RAW_FIXTURE=NOT_RUN`, `H3_ECONOMIC_SEMANTIC_DELTAS=REVIEW_REQUIRED`. `CAN_MERGE=NO`, `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`. The next checkpoint needs a deliberately authorized reboot/login or a separately approved deployment; the existing 36-second read-only audit can be rerun after reboot without modification.
