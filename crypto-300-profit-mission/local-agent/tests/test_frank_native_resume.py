@@ -22,7 +22,7 @@ def sig(index):
     while n:
         n,rest=divmod(n,58)
         out=CHARS[rest]+out
-    return "2"*(88-len(out))+out
+    return "1"*(88-len(out))+out
 
 
 def context(accounts=None):
