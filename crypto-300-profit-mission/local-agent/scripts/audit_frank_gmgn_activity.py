@@ -80,6 +80,8 @@ def normalize(row):
         raise IncompleteEvidence("GMGN_SIGNATURE_MISSING")
     kind = str(row.get("event_type") or row.get("type") or "").lower()
     if kind not in SIDES:
+        if kind not in {"transfer", "add", "remove"}:
+            raise IncompleteEvidence("GMGN_ACTIVITY_TYPE_UNRECOGNIZED")
         return {"signature": signature, "time": epoch(row.get("timestamp")),
                 "type": kind, "side": None, "mint": None}
     token = row.get("token")
