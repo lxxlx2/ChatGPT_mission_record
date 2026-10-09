@@ -164,3 +164,17 @@ if(result.missing.some(v=>v!=='暂无')) throw Error('MISSING_MARKED_AS_ZERO');
 if(result.zero[2]!=='$0' || result.zero[3]!=='0%') throw Error('REAL_ZERO_HIDDEN');
 """
     subprocess.run(["node", "-e", script, str(root / "app.js")], check=True)
+
+
+def test_real_ca_acceptance_script_is_readonly_and_does_not_require_frank_presence():
+    import subprocess
+    script=Handler.static_root.parents[3] / "scripts" / "accept_meme_ca_v3.sh"
+    assert script.exists()
+    body=script.read_text()
+    assert "require_frank" not in body
+    assert "first_quote_preview_seconds" in body
+    assert "full_report_seconds" in body
+    assert "REAL_CA_SCHEMA_AND_SEMANTICS: PASS" in body
+    assert "mission-control.sqlite" in body
+    assert "No Mission Control loop" in body
+    subprocess.run(["bash","-n",str(script)],check=True)
