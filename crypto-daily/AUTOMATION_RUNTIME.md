@@ -408,3 +408,11 @@ Completion evidence:
 - ordinary cycle: final/final-retry artifact;
 - daily delivery: Gmail Sent id + readback;
 - archive success is separate from email delivery and must not cause duplicate mail.
+
+## 2026-10-09 verified actual schedule and Gmail deliverability override (latest)
+
+The single existing Crypto 每日情报 scheduler's actual Asia/Bangkok minute is :10, with hours 00/03/06/08/09/10/11/15/19/23. This is a clarification of existing schedule, not permission to change it. The current slot mapping is 08:10 full 13-section prebuild without Gmail; 09:10 formal primary; 10:10/11:10 recovery; all other slots bounded collector with terminal final/final-retry. Older :00 or hourly-language references elsewhere in this file are historical, not governing clock times.
+
+The 2026-10-09 primary and recovery cycles had full report material and reported QA PASS but repeated Gmail execution-layer safety blocks. Manual official delivery succeeded at the same Asia/Bangkok date; Gmail id `1a1209d4664105f9`, exact archived official report path `crypto-daily/reports/daily/2026/2026-10/2026-10-09.md`. This is authoritative delivery proof; dedupe before any retry.
+
+Operational priority remains: read latest canonical; pre-send manifest and fresh source verification; exact Gmail Sent dedupe; complete 13-section CR-01..19 QA; send full text/plain once through approved Gmail connector; readback; identical Git archive/readback; compact truthful terminal final. No smaller email, invented Sent proof, duplicate send, extra automation, title/schedule/scope change, or unverified global security completeness claim. When Gmail's provider safety checks block a send, record the explicit external blocker; do not claim to have bypassed or resolved platform restrictions. Use the next existing delivery/recovery slot to retry only after Sent dedupe. Prompt simplification is a bounded runtime improvement, not proof that the external safety block has been permanently eliminated.
