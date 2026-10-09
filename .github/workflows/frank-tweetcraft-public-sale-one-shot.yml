@@ -58,25 +58,28 @@ jobs:
               if entry.get("owner")==ROOT:
                 mint=entry["mint"]
                 grouped[mint]=grouped.get(mint,0)+sign*int(entry["uiTokenAmount"]["amount"])
-          stack=[]; events=[]; malformed=False
+          stack=[]; events=[]; malformed=False; mismatch=[]
           inv=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) invoke \[(\d+)\]$")
           done=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) (success|failed:.*)$")
-          for line in meta.get("logMessages") or []:
+          for log_index,line in enumerate(meta.get("logMessages") or []):
             match=inv.fullmatch(line)
             if match:
-              if int(match.group(2))!=len(stack)+1:malformed=True
+              if int(match.group(2))!=len(stack)+1:
+                malformed=True;mismatch.append({'index':log_index,'type':'depth','line':line[:140],'stack_tail':stack[-3:]})
               stack.append(match.group(1));continue
             match=done.fullmatch(line)
             if match:
-              if not stack or stack[-1]!=match.group(1):malformed=True
+              if not stack or stack[-1]!=match.group(1):
+                malformed=True;mismatch.append({'index':log_index,'type':'unexpected_return','line':line[:140],'stack_tail':stack[-3:]})
               else:stack.pop()
-              if match.group(2)!="success":malformed=True
+              if match.group(2)!="success":malformed=True;mismatch.append({'index':log_index,'type':'failed','line':line[:140]})
               continue
             if line.startswith("Program log: Instruction: "):
               instruction=line.split("Instruction: ",1)[1]
               if instruction in ("Sell","Buy","Swap","Swap2","SwapExactIn","SwapExactOut"):
                 events.append({"program":stack[-1] if stack else None,"opcode_log":instruction})
-          if stack:malformed=True
+          if stack:
+            malformed=True;mismatch.append({'type':'unterminated_invocation','stack_tail':stack[-8:]})
           instr=[]
           parsed_groups=[tx["transaction"]["message"].get("instructions") or []]
           parsed_groups += [g.get("instructions") or [] for g in meta.get("innerInstructions") or []]
@@ -100,6 +103,9 @@ jobs:
               "root_usdc_raw":grouped.get(USDC,0),
               "root_tweetcraft_raw":grouped.get(MINT,0),
               "invocation_stack_valid":not malformed,
+              "log_line_count":len(meta.get("logMessages") or []),
+              "stack_mismatches":mismatch[:12],
+              "stack_mismatches_truncated":len(mismatch)>12,
               "dex_opcode_logs":events,
               "token_transfers":instr[:60],
               "transfers_truncated":len(instr)>60,
