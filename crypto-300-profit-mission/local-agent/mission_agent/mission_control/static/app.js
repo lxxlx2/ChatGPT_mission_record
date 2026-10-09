@@ -793,8 +793,9 @@ function renderClusterPreview(job) {
       ? '$'+smallPrice(q.execution_price_usdc)+' · 冲击 '+pctText(q.price_impact_pct)
       : '暂不可成交 / 报价不可用';
   node.hidden=false;
+  const incomplete=job.status==='ERROR';
   node.innerHTML=
-    '<div class="cluster-preview-head"><strong>已取得基础行情，持仓与资金关系仍在扫描</strong><span>临时结果，待链上报告核实</span></div>' +
+    '<div class="cluster-preview-head"><strong>' + (incomplete ? '深度分析未完成，已保留基础行情' : '已取得基础行情，持仓与资金关系仍在扫描') + '</strong><span>临时结果，待链上报告核实</span></div>' +
     '<div class="cluster-preview-items">' +
     fact('代币',esc([p.name,p.symbol].filter(Boolean).join(' / ') || '名称未确认')) +
     fact('参考价',ready ? esc(usd(p.price_usd,8)) : '暂不可用') +
@@ -1074,7 +1075,7 @@ async function pollClusterJob(jobId) {
       return;
     }
     if (job.status === 'ERROR') {
-      $('cluster-preview').hidden = true;
+      renderClusterPreview(job);
       $('cluster-submit').disabled = false;
       $('cluster-submit').textContent = '重新查询';
       clusterStatus('error','查询失败',clusterErrorMessage(job.error));
