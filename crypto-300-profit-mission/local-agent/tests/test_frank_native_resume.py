@@ -289,3 +289,30 @@ def test_report_refuses_wrong_slot_in_validly_hashed_receipt(tmp_path):
     with pytest.raises(scan.ScanBlocked,match="RECEIPT_EVIDENCE_INVALID"):
         scan.report(store,set(),set(),{"rpc_attempts":0,"new_signature_pages":0,
                                        "new_receipts":0},None)
+
+
+def test_explicit_one_account_rpc_selection_cannot_scan_others(tmp_path,monkeypatch):
+    store=scan.Checkpoints(tmp_path/"checkpoint",
+        context({ACCOUNT:MINT,OTHER:scan.flows.__globals__["USDC"]}),create=True)
+    calls=[]
+    def fake_rpc(_url,method,params):
+        calls.append(params[0])
+        return [row(0,scan.START+20)]
+    monkeypatch.setattr(scan,"one_rpc",fake_rpc)
+    counters,reason=scan.do_run(
+        store,set(),"signatures",True,1,"https://example.invalid",account=ACCOUNT
+    )
+    assert reason is None
+    assert counters["rpc_attempts"]==1
+    assert calls==[ACCOUNT]
+    assert store.account(ACCOUNT)["status"]=="COMPLETE"
+    assert store.account(OTHER)["status"]=="PENDING"
+
+
+def test_explicit_account_must_come_from_locked_historic_owner_inventory(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    with pytest.raises(scan.ScanBlocked,match="ACCOUNT_OUTSIDE_OBSERVED_INVENTORY"):
+        scan.do_run(
+            store,set(),"signatures",True,1,"https://example.invalid",
+            account=OTHER
+        )
