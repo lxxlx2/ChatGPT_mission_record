@@ -178,3 +178,44 @@ def test_real_ca_acceptance_script_is_readonly_and_does_not_require_frank_presen
     assert "mission-control.sqlite" in body
     assert "No Mission Control loop" in body
     subprocess.run(["bash","-n",str(script)],check=True)
+
+
+def test_ca_partial_preview_survives_depth_failure_and_stale_quotes_are_hidden():
+    import subprocess
+    js=Handler.static_root / "app.js"
+    script=r"""
+const fs=require('node:fs');
+const vm=require('node:vm');
+const js=fs.readFileSync(process.argv[1],'utf8');
+const fn=js.slice(js.indexOf('function renderClusterPreview(job)'),js.indexOf('function clusterErrorMessage('));
+const panel={hidden:true,innerHTML:''};
+const now=Date.now()/1000;
+const ctx={
+  Date,Number,NaN,
+  $:()=>panel,
+  esc:x=>String(x ?? ''),
+  usd:x=>x==null?'暂无':'$'+x,
+  smallPrice:x=>String(x),
+  pctText:x=>String(x)+'%',
+  fact:(name,value)=>name+':'+value+';',
+};
+vm.runInNewContext(fn+'\nrenderClusterPreview(job);',
+  {...ctx,job:{
+    status:'ERROR',
+    preview:{
+      token_status:'OK',mint_authority:null,freeze_authority:null,
+      market_status:'OK',name:'Sample',symbol:'S',
+      price_usd:'0.01',market_cap_usd:null,liquidity_usd:null,
+      execution_quote_30_usdc:{
+        status:'OK',route_exists:true,observed_at:now-40,
+        execution_price_usdc:'0.012',price_impact_pct:'0.2'
+      }
+    }
+  }}
+);
+if(panel.hidden) throw Error('PREVIEW_DISCARDED_ON_FAILURE');
+if(!panel.innerHTML.includes('深度分析未完成')) throw Error('MISSING_INCOMPLETE_WARNING');
+if(!panel.innerHTML.includes('报价已过期')) throw Error('STALE_QUOTE_SHOWN');
+if(!panel.innerHTML.includes('市值:暂无')) throw Error('MISSING_METRIC_ZEROED');
+"""
+    subprocess.run(["node","-e",script,str(js)],check=True)
