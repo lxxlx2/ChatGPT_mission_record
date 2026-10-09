@@ -1,0 +1,125 @@
+name: Frank Tweetcraft Public Sale One Shot
+on:
+  push:
+    branches: [review/meme-ca-v3-integrate-main-20261008]
+    paths: ['.github/workflows/frank-tweetcraft-public-sale-one-shot.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  public-chain-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Independently verify one historical sell using public Solana RPC
+        env:
+          PYTHONUNBUFFERED: '1'
+        run: |
+          python3 - <<'PY'
+          import json, re, sys, urllib.request, urllib.error
+          from decimal import Decimal
+          SIGNATURE="5wqKv5YuurRKUaJAK5fZtFrNg6GocVZuTTiAPWYrYDaswyUArwAZurpbZFU6WBjHp5z5Bt5bPCkLNKVQHfS6yigx"
+          ROOT="498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
+          MINT="HzYCHqAN2uoHGRnL9v2ChCfFQX3bvJuJd5zu2Hd5MZQy"
+          USDC="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          FOMO="AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51"
+          DLMM="LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+          PUMP="pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          payload=json.dumps({"jsonrpc":"2.0","id":1,"method":"getTransaction",
+            "params":[SIGNATURE,{"commitment":"finalized","encoding":"jsonParsed",
+                                 "maxSupportedTransactionVersion":1}]}).encode()
+          tx=None; failures=[]
+          for url in ("https://api.mainnet-beta.solana.com","https://solana-rpc.publicnode.com"):
+            try:
+              req=urllib.request.Request(url,data=payload,headers={"Content-Type":"application/json"})
+              with urllib.request.urlopen(req,timeout=18) as resp:
+                body=json.load(resp)
+              if body.get("error"):raise RuntimeError(str(body["error"])[:100])
+              tx=body.get("result")
+              if not isinstance(tx,dict):raise RuntimeError("NULL_TRANSACTION")
+              print("RPC_SOURCE:",url)
+              break
+            except Exception as e:
+              failures.append({"endpoint":url,"type":type(e).__name__,"detail":str(e)[:100]})
+          if tx is None:
+            print("STATUS: UNVERIFIED_PUBLIC_RPC_UNAVAILABLE")
+            print("PUBLIC_RPC_FAILURES:",json.dumps(failures))
+            sys.exit(2)
+          keys=tx["transaction"]["message"]["accountKeys"]
+          if not isinstance(keys,list) or not all(isinstance(k,dict) for k in keys):
+            print("STATUS: UNVERIFIED_KEYS");sys.exit(2)
+          names=[k["pubkey"] for k in keys]
+          signers=[k["pubkey"] for k in keys if k.get("signer") is True]
+          meta=tx["meta"]
+          grouped={}
+          for name,sign in (("preTokenBalances",-1),("postTokenBalances",1)):
+            for entry in meta[name]:
+              if entry.get("owner")==ROOT:
+                mint=entry["mint"]
+                grouped[mint]=grouped.get(mint,0)+sign*int(entry["uiTokenAmount"]["amount"])
+          stack=[]; events=[]; malformed=False
+          inv=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) invoke \[(\d+)\]$")
+          done=re.compile(r"^Program ([1-9A-HJ-NP-Za-km-z]{32,44}) (success|failed:.*)$")
+          for line in meta.get("logMessages") or []:
+            match=inv.fullmatch(line)
+            if match:
+              if int(match.group(2))!=len(stack)+1:malformed=True
+              stack.append(match.group(1));continue
+            match=done.fullmatch(line)
+            if match:
+              if not stack or stack[-1]!=match.group(1):malformed=True
+              else:stack.pop()
+              if match.group(2)!="success":malformed=True
+              continue
+            if line.startswith("Program log: Instruction: "):
+              instruction=line.split("Instruction: ",1)[1]
+              if instruction in ("Sell","Buy","Swap","Swap2","SwapExactIn","SwapExactOut"):
+                events.append({"program":stack[-1] if stack else None,"opcode_log":instruction})
+          if stack:malformed=True
+          instr=[]
+          parsed_groups=[tx["transaction"]["message"].get("instructions") or []]
+          parsed_groups += [g.get("instructions") or [] for g in meta.get("innerInstructions") or []]
+          for group in parsed_groups:
+            for ix in group:
+              program=ix.get("programId")
+              if program is None and isinstance(ix.get("programIdIndex"),int):
+                idx=ix["programIdIndex"]
+                if 0<=idx<len(names): program=names[idx]
+              p=ix.get("parsed")
+              if isinstance(p,dict) and p.get("type") in ("transfer","transferChecked"):
+                info=p.get("info") or {}
+                quantity=info.get("tokenAmount",{}).get("amount") if isinstance(info.get("tokenAmount"),dict) else info.get("amount")
+                instr.append({"program":program,"type":p.get("type"),"source":info.get("source"),
+                              "destination":info.get("destination"),"authority":info.get("authority"),
+                              "mint":info.get("mint"),"raw":quantity})
+          found={
+              "slot":tx.get("slot"),"block_time":tx.get("blockTime"),
+              "tx_ok":meta.get("err") is None,
+              "root_signed":ROOT in signers,"fomo_signed":FOMO in signers,
+              "root_usdc_raw":grouped.get(USDC,0),
+              "root_tweetcraft_raw":grouped.get(MINT,0),
+              "invocation_stack_valid":not malformed,
+              "dex_opcode_logs":events,
+              "token_transfers":instr[:60],
+              "transfers_truncated":len(instr)>60,
+              "sol_fee_lamports":meta.get("fee"),
+              "fee_payer":names[0] if names else None,
+          }
+          found["buy_back_consideration_matching"]=(
+              found["tx_ok"] and found["root_signed"] and found["fomo_signed"]
+              and found["root_tweetcraft_raw"]==-4732220716414
+              and found["root_usdc_raw"]==7031556770)
+          found["sell_opcode_bound_to_dex"]=not malformed and any(
+              x["program"] in (DLMM,PUMP) and x["opcode_log"] in
+              ("Sell","Swap","Swap2","SwapExactIn","SwapExactOut") for x in events)
+          found["instruction_confirmed_sale"]=(found["buy_back_consideration_matching"]
+              and found["sell_opcode_bound_to_dex"] and
+              any(z.get("source") and z.get("destination") for z in instr))
+          print("STATUS: PUBLIC_CHAIN_TRANSACTION_OBSERVED")
+          print("RESULT_JSON:",json.dumps(found,ensure_ascii=False,separators=(",",":")))
+          if found["instruction_confirmed_sale"]:
+            print("FINAL_CLASSIFICATION: HIGH_CONFIDENCE_ROOT_AUTHORIZED_DEX_SELL")
+          else:
+            print("FINAL_CLASSIFICATION: SELL_INSTRUCTION_CONFIRMATION_INCOMPLETE")
+          PY
