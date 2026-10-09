@@ -333,7 +333,7 @@ def decode_tx(row,call):
     }
 
 
-def do_run(store,root_sigs,phase,network,budget,endpoint=None):
+def do_run(store,root_sigs,phase,network,budget,endpoint=None,account=None):
     counts={"rpc_attempts":0,"new_signature_pages":0,"new_receipts":0}
     failure=None
     if phase=="plan":
@@ -342,6 +342,10 @@ def do_run(store,root_sigs,phase,network,budget,endpoint=None):
         raise ScanBlocked("EXPLICIT_NETWORK_PERMISSION_REQUIRED")
     if not 1<=budget<=MAX_CALLS_PER_RUN:
         raise ScanBlocked("REQUEST_BUDGET_INVALID")
+    if account is not None and (
+        not isinstance(account,str) or account not in store.context["inventory"]
+    ):
+        raise ScanBlocked("ACCOUNT_OUTSIDE_OBSERVED_INVENTORY")
     last_rpc_at=None
     def call(method,params):
         nonlocal last_rpc_at
@@ -355,7 +359,8 @@ def do_run(store,root_sigs,phase,network,budget,endpoint=None):
         counts["rpc_attempts"]+=1
         return one_rpc(endpoint,method,params)
     if phase=="signatures":
-        for addr in sorted(store.context["inventory"]):
+        selected=[account] if account is not None else sorted(store.context["inventory"])
+        for addr in selected:
             state=store.account(addr)
             while state["status"] not in ("COMPLETE","CAPPED"):
                 if counts["rpc_attempts"]>=budget:
@@ -449,6 +454,7 @@ def main():
     cli.add_argument("--phase",choices=("plan","signatures","decode"),default="plan")
     cli.add_argument("--allow-network",action="store_true")
     cli.add_argument("--max-rpc-calls",type=int,default=3)
+    cli.add_argument("--account",default=None,help="Limit signature phase to one root-observed owned token account")
     cli.add_argument("--checkpoint-dir",type=Path,default=CHECKPOINT_DIR)
     cli.add_argument("--source-report",type=Path,
                      default=Path.home()/"Documents/ChatGPT/frank-fomo-fixed-20261009-054846.json")
@@ -464,8 +470,12 @@ def main():
             raise ScanBlocked("EXPLICIT_NETWORK_PERMISSION_REQUIRED")
         if args.phase!="plan" and not 1<=args.max_rpc_calls<=MAX_CALLS_PER_RUN:
             raise ScanBlocked("REQUEST_BUDGET_INVALID")
+        if args.account and args.phase!="signatures":
+            raise ScanBlocked("ACCOUNT_FILTER_REQUIRES_SIGNATURES_PHASE")
         ctx,root_sigs,local_trades=offline_context(args.source_report,args.cache_dir,args.db)
         store=Checkpoints(args.checkpoint_dir,ctx,create=args.phase!="plan")
+        if args.account and args.account not in ctx["inventory"]:
+            raise ScanBlocked("ACCOUNT_OUTSIDE_OBSERVED_INVENTORY")
         if args.phase=="plan":
             counts,reason=do_run(store,root_sigs,"plan",False,0)
         else:
@@ -480,12 +490,14 @@ def main():
             try:
                 fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
                 counts,reason=do_run(store,root_sigs,args.phase,True,
-                                     args.max_rpc_calls,urls[0])
+                                     args.max_rpc_calls,urls[0],
+                                     account=args.account)
             except BlockingIOError:
                 raise ScanBlocked("CONCURRENT_RESEARCH_SCAN")
             finally:
                 os.close(fd)
         output=report(store,root_sigs,local_trades,counts,reason)
+        output["selected_account"]=args.account
         print(json.dumps(output,ensure_ascii=False,indent=2))
         return 0 if args.phase=="plan" or (
             not reason and output["status"]=="OBSERVED_SCOPE_REVIEW_COMPLETE"
