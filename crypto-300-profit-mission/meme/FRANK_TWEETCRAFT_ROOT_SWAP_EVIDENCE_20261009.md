@@ -28,3 +28,30 @@ Operator ran `scripts/audit_frank_root_execution_focus.py` from SHA `bfdf73e327e
 Run PR #29 review-only `scripts/audit_frank_tweetcraft_instruction_offline.py` with the same immutable source report, root cache, readonly ledger, and pinned HEAD. It fails closed if the exact transaction hash, signers, amounts, mint, slot and window do not match user-provided evidence. It reports decoded outer and inner instruction program IDs, token transfer details, fee payer, and relevant logs, but **does not assign `executable_buy_confirmed=true` without independently verified DEX program/Swap instruction semantics**. No RPC calls, no monitors, production changes or network. Once done, only test a historical delayed-entry episode if execution attribution, follow-up price history and exit state can be independently established.
 
 **Review-state gates:** PR #29 Draft. `TRADE_COVERAGE=UNVERIFIED`; `PRODUCTION_TRADING=NO_GO`, no alerts, email, wallet signing or production deployment.
+
+## New real local instruction output (2026-10-09, strict execution mapping pending)
+
+Operator executed `scripts/audit_frank_tweetcraft_instruction_offline.py` from pinned SHA `005406768b6a929717dd10d10e62fe1923d23ec2` on the Mac; output `status=ROOT_SIGNED_TWEETCRAFT_BUY_CANDIDATE_INSTRUCTION_REVIEW`, `rpc_attempts=0`, exit `0`, actual `instruction_count=38`, `instruction_details_truncated=false`, target tx/slot/time and owner USDC/TWEETCRAFT amounts match earlier cached audit. The report intentionally still said `executable_buy_confirmed=false` because program-specific opcode/call-stack binding had not yet been inspected.
+
+**Exact Frank-authorized outgoing USDC transfers from account `6kD22oUQrV8tVpE2hkQzkoobwCQAy2iiZcipWn8AD5jF`:**
+- `15.110402` USDC to `B218KQgaFwVt6CRrxYbuHLZ9qzbPs6mwhWL7c7YdpwJA` (`transferChecked`).
+- `12.088322` USDC to `12xJHAvuCk3Hw38ywzRMjoRQ74GRpLrZm1uYMuDUvPSy` (`transferChecked`).
+- `2.006560` USDC to `7Rb2u9SPGqJhtC9Y2UKttnUzKDW93VHEo1ZH6XX22dr8` (`transfer`), subsequently forwarded to `HrTf9CzXR1dRH4Sof5QrpmGWwpwAf3qZzwCsEjQpXcSq`.
+- `6,686.529208` USDC to `2Y7HATmn9aJBcxCskE5V2U2epmjvkZmB51zTJBbhj4cU` (`transfer`), the largest route-sized leg.
+- TOTAL = **6,715.734492 USDC**, exactly reconciled with Frank-owned USDC balance net change. Largest leg = 6,686.529208; three other outbound transfers sum 29.205284 USDC (0.4348784788% of the gross). Those recipients' **fee/settlement roles remain UNVERIFIED**; do not label the whole 29.205284 as a single proven platform fee.
+
+**Exact incoming Token-2022 TWEETCRAFT instructions to Frank-owned ATA `7qujRSPgfbgiwMhBSc1znjaQoHM9jt6HQVw6TgxnLAsG`:**
+- Source `yuF9W9QoeVQ8Qu7Dz3moCpsqPNVgUUaqw5M9GKGYt9S`, transferred 3,508,980.043008 TWEETCRAFT.
+- Source `AN8Bp8AswcS3toaYHLD9hBaBGciKKG3E5YaRGrY3pujX`, transferred 1,223,240.673406 TWEETCRAFT.
+- TOTAL = **4,732,220.716414 TWEETCRAFT**, exactly reconciled with the user's ATA change.
+
+**Actual execution logs sampled**: `Instruction: Swap`, `Instruction: Buy`, `Instruction: GetFeesWithQuoteMint`, `Instruction: Swap2`, alongside `TransferChecked`. The transaction includes `DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH`, `BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi`, and `LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo`. Meteora's **official DLMM documentation** confirms `LBUZ...` is the `lb_clmm` deployed program (NOT Meteora Dynamic Bonding Curve), `swap2` supports Token-2022 exact-in swaps, and the swap discriminator is Anchor `sha256("global:swap2")[:8]` = `41 4b 3f 4c eb 5b 5b 88`. Citations:
+- https://github.com/MeteoraAg/docs/blob/main/developer-guides/dlmm/index.mdx
+- https://github.com/MeteoraAg/docs/blob/main/developer-guides/dlmm/program/instructions.mdx
+- https://github.com/MeteoraAg/dlmm-sdk/blob/main/idls/dlmm.json
+- DFlow aggregator V4 program ID independent description: https://github.com/no-limit-nodes/every-solana-program-decoded/blob/main/programs/dflow_aggregator_v4/instructions/swap.md
+- `BiSoNH...` is publicly labeled BisonFi by Solscan, not cryptographically verified by this audit.
+
+User-supplied log excerpt did NOT include full `Program <pubkey> invoke [N]` / success frames, nor raw Base58 data for DLMM instructions, so it is NOT yet possible from the pasted excerpt alone to bind `Instruction: Swap2` to the actual DLMM call or validate discriminator. PR-only `scripts/audit_frank_tweetcraft_execution_gate.py` now reads the **same cached** transaction (ZERO additional RPC) and fails closed unless program invocation frames bind the logs to Meteora DLMM `swap2`, an exact DLMM instruction discriminator exists in the raw tx, and both inbound/outbound amounts reconcile. Even if the gate passes, **Frank-person identity, episodic repeatability, P&L and production deployment remain UNVERIFIED/NO_GO**.
+
+Gross-wallet-net implied ratio remains `0.0014191507316440` USDC/TWEETCRAFT; isolated largest USDC leg/total token receipt is `0.0014129791505302` USDC/TWEETCRAFT, **NOT** an independently proven single-pool execution price given multi-hop routing and no decoded event payload. Do not infer market cap from unverified circulating supply; do not count WSOL intermediate account lifecycle as separate Frank purchases or sales.
