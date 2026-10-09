@@ -168,7 +168,7 @@ if(result.zero[2]!=='$0' || result.zero[3]!=='0%') throw Error('REAL_ZERO_HIDDEN
 
 def test_real_ca_acceptance_script_is_readonly_and_does_not_require_frank_presence():
     import subprocess
-    script=Handler.static_root.parents[3] / "scripts" / "accept_meme_ca_v3.sh"
+    script=Handler.static_root.parents[2] / "scripts" / "accept_meme_ca_v3.sh"
     assert script.exists()
     body=script.read_text()
     assert "require_frank" not in body
