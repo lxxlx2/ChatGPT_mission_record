@@ -17,7 +17,7 @@ jobs:
           PYTHONUNBUFFERED: '1'
         run: |
           python3 - <<'PY'
-          import json, re, sys, urllib.request, urllib.error
+          import json, re, sys, urllib.request, urllib.error, hashlib
           from decimal import Decimal
           SIGNATURE="5wqKv5YuurRKUaJAK5fZtFrNg6GocVZuTTiAPWYrYDaswyUArwAZurpbZFU6WBjHp5z5Bt5bPCkLNKVQHfS6yigx"
           ROOT="498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
@@ -81,6 +81,13 @@ jobs:
           if stack:
             malformed=True;mismatch.append({'type':'unterminated_invocation','stack_tail':stack[-8:]})
           instr=[]
+          ids=[]
+          def decode58(value):
+            digits="123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+            val=0
+            for ch in value:
+              val=val*58+digits.index(ch)
+            return bytes([0])*(len(value)-len(value.lstrip("1")))+(val.to_bytes((val.bit_length()+7)//8,"big") if val else b"")
           parsed_groups=[tx["transaction"]["message"].get("instructions") or []]
           parsed_groups += [g.get("instructions") or [] for g in meta.get("innerInstructions") or []]
           for group in parsed_groups:
@@ -89,6 +96,16 @@ jobs:
               if program is None and isinstance(ix.get("programIdIndex"),int):
                 idx=ix["programIdIndex"]
                 if 0<=idx<len(names): program=names[idx]
+              data=ix.get("data")
+              if program in (DLMM,PUMP) and isinstance(data,str):
+                try:
+                  raw=decode58(data)
+                  ids.append({"program":program,"discriminator_hex":raw[:8].hex(),
+                              "anchor_swap2":raw[:8]==hashlib.sha256(b"global:swap2").digest()[:8],
+                              "anchor_sell":raw[:8]==hashlib.sha256(b"global:sell").digest()[:8],
+                              "instruction_bytes":len(raw)})
+                except ValueError:
+                  ids.append({"program":program,"status":"BASE58_DECODE_FAILED"})
               p=ix.get("parsed")
               if isinstance(p,dict) and p.get("type") in ("transfer","transferChecked"):
                 info=p.get("info") or {}
@@ -106,6 +123,8 @@ jobs:
               "log_line_count":len(meta.get("logMessages") or []),
               "stack_mismatches":mismatch[:12],
               "stack_mismatches_truncated":len(mismatch)>12,
+              "last_log_lines":(meta.get("logMessages") or [])[-7:],
+              "dex_raw_discriminators":ids,
               "dex_opcode_logs":events,
               "token_transfers":instr[:60],
               "transfers_truncated":len(instr)>60,
