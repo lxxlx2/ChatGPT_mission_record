@@ -196,7 +196,7 @@ def test_old_decision_is_never_sent_when_gmail_credentials_recover(tmp_path, del
     db.close()
 
 
-@pytest.mark.parametrize("invalid_time", [None,"invalid","2999-01-01T00:00:00+00:00","2026-01-01T00:00:00"])
+@pytest.mark.parametrize("invalid_time", ["","invalid","2999-01-01T00:00:00+00:00","2026-01-01T00:00:00"])
 def test_missing_invalid_future_or_naive_decision_timestamp_blocks_first_send(tmp_path,invalid_time):
     db=ControlDB(tmp_path/"mission-control.sqlite")
     e=event(db)
