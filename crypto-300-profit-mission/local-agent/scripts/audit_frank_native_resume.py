@@ -16,6 +16,7 @@ import argparse
 import fcntl
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -353,7 +354,8 @@ def decode_tx(row,call):
     }
 
 
-def do_run(store,root_sigs,phase,network,budget,endpoint=None,account=None):
+def do_run(store,root_sigs,phase,network,budget,endpoint=None,account=None,
+           spacing_seconds=MIN_REQUEST_INTERVAL_SECONDS):
     counts={"rpc_attempts":0,"new_signature_pages":0,"new_receipts":0}
     failure=None
     if phase=="plan":
@@ -362,6 +364,10 @@ def do_run(store,root_sigs,phase,network,budget,endpoint=None,account=None):
         raise ScanBlocked("EXPLICIT_NETWORK_PERMISSION_REQUIRED")
     if not 1<=budget<=MAX_CALLS_PER_RUN:
         raise ScanBlocked("REQUEST_BUDGET_INVALID")
+    if (type(spacing_seconds) not in (int,float) or
+            not math.isfinite(spacing_seconds) or
+            not MIN_REQUEST_INTERVAL_SECONDS<=spacing_seconds<=60):
+        raise ScanBlocked("REQUEST_SPACING_INVALID")
     if account is not None and (
         not isinstance(account,str) or account not in store.context["inventory"]
     ):
@@ -372,7 +378,7 @@ def do_run(store,root_sigs,phase,network,budget,endpoint=None,account=None):
         if counts["rpc_attempts"]>=budget:
             raise ScanBlocked("REQUEST_BUDGET_EXHAUSTED")
         if last_rpc_at is not None:
-            delay=MIN_REQUEST_INTERVAL_SECONDS-(time.monotonic()-last_rpc_at)
+            delay=spacing_seconds-(time.monotonic()-last_rpc_at)
             if delay>0:
                 time.sleep(delay)
         last_rpc_at=time.monotonic()
@@ -488,6 +494,7 @@ def main():
     cli.add_argument("--phase",choices=("plan","signatures","decode"),default="plan")
     cli.add_argument("--allow-network",action="store_true")
     cli.add_argument("--max-rpc-calls",type=int,default=3)
+    cli.add_argument("--min-rpc-spacing-seconds",type=float,default=MIN_REQUEST_INTERVAL_SECONDS)
     cli.add_argument("--account",default=None,help="Limit signature phase to one root-observed owned token account")
     cli.add_argument("--checkpoint-dir",type=Path,default=CHECKPOINT_DIR)
     cli.add_argument("--source-report",type=Path,
@@ -525,7 +532,8 @@ def main():
                 fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
                 counts,reason=do_run(store,root_sigs,args.phase,True,
                                      args.max_rpc_calls,urls[0],
-                                     account=args.account)
+                                     account=args.account,
+                                     spacing_seconds=args.min_rpc_spacing_seconds)
             except BlockingIOError:
                 raise ScanBlocked("CONCURRENT_RESEARCH_SCAN")
             finally:
