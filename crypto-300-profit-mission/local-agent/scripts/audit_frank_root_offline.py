@@ -10,19 +10,18 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 from datetime import datetime, timezone
-import hashlib
 import json
 import os
 from pathlib import Path
 import re
-import stat
 import sys
 
-from mission_agent.meme.fomo_crosschain import SOL_CASH_WALLET as WALLET
+from mission_agent.meme.fomo_crosschain import SOL_CASH_WALLET as WALLET, USDC
 from scripts.audit_frank_native_owner_coverage import (
     START, END, EvidenceGap, build_seed_inventory, local_snapshot,
-    flows, read_report, MAX_OWNER_ACCOUNTS,
+    flows, read_report,
 )
+from scripts.inspect_frank_solana_root_window import EvidenceError
 
 SIG = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{64,100}$")
 MAX_CACHED_TX_BYTES = 8_000_000
@@ -144,7 +143,7 @@ def main():
         output["full_report"]=str(path)
         print(json.dumps(output,ensure_ascii=False,indent=2))
         return 0
-    except (EvidenceGap,OSError,TypeError,ValueError,KeyError) as exc:
+    except (EvidenceGap,EvidenceError,OSError,TypeError,ValueError,KeyError) as exc:
         code=str(exc)
         if not re.fullmatch(r"[A-Z][A-Z0-9_]{3,80}",code):
             code="OFFLINE_EVIDENCE_UNAVAILABLE"
