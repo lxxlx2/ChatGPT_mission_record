@@ -338,7 +338,9 @@ const base={
   setTimeout:(fn,ms)=>{callback=fn;delay=ms;return 42}
 };
 const now=Date.now()/1000;
-const evaluate=(body)=>vm.runInNewContext(helper + '\n' + body,base);
+const context=vm.createContext(base);
+vm.runInContext(helper,context);
+const evaluate=(body)=>vm.runInContext(body,context);
 const q={
   status:'OK',route_exists:true,observed_at:now,
   execution_price_usdc:'0.01',price_impact_pct:'0.2',
