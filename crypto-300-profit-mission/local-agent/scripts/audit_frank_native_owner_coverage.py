@@ -42,6 +42,32 @@ class EvidenceGap(Exception):
     pass
 
 
+class AuditStageError(EvidenceGap):
+    def __init__(self, stage, code, details=None):
+        self.stage=stage
+        self.code=code
+        self.details=details or {}
+        super().__init__(code)
+
+
+def safe_failure_code(exc):
+    raw=str(exc)
+    if isinstance(exc,(EvidenceGap,IncompleteWindow,ValueError)) and re.fullmatch(
+        r"[A-Z][A-Z0-9_]*(?::[0-9]+)?",raw
+    ):
+        return raw
+    return "UNEXPECTED_" + type(exc).__name__.upper()
+
+
+def stage_call(stage, action, *args):
+    try:
+        return action(*args)
+    except AuditStageError:
+        raise
+    except (EvidenceGap,IncompleteWindow,OSError,ValueError,TypeError,KeyError,sqlite3.Error) as exc:
+        raise AuditStageError(stage,safe_failure_code(exc)) from None
+
+
 def account_keys(tx):
     m = (tx.get("transaction") or {}).get("message") or {}
     keys = m.get("accountKeys")
@@ -182,7 +208,13 @@ def query_referenced_accounts(rpc,inventory,start,end,root_sigs,wallet):
     joined={}
     account_counts={}
     for addr in sorted(inventory):
-        rows=solana_signatures(rpc,addr,start,end)
+        try:
+            rows=solana_signatures(rpc,addr,start,end)
+        except (IncompleteWindow,OSError,ValueError,TimeoutError) as exc:
+            raise AuditStageError(
+                "TOKEN_ACCOUNT_SIGNATURES",safe_failure_code(exc),
+                {"accounts_completed":len(account_counts),"accounts_total":len(inventory)}
+            ) from None
         account_counts[addr]=len(rows)
         for row in rows:
             sig=row["signature"]
@@ -194,13 +226,19 @@ def query_referenced_accounts(rpc,inventory,start,end,root_sigs,wallet):
                     raise EvidenceGap("EXTRA_TRANSACTION_BUDGET_EXCEEDED")
     evidence=[]
     for sig,row in sorted(joined.items(),key=lambda p:(p[1]["slot"],p[0])):
-        tx=rpc.call("getTransaction",[sig,{"encoding":"jsonParsed",
-            "commitment":"finalized","maxSupportedTransactionVersion":1}])
-        if not isinstance(tx,dict) or tx.get("slot")!=row["slot"]:
-            raise EvidenceGap("EXTRA_TRANSACTION_UNAVAILABLE")
-        if tx.get("meta") is None or tx.get("transaction") is None:
-            raise EvidenceGap("EXTRA_TRANSACTION_METADATA_MISSING")
-        f=flows(tx,wallet)
+        try:
+            tx=rpc.call("getTransaction",[sig,{"encoding":"jsonParsed",
+                "commitment":"finalized","maxSupportedTransactionVersion":1}])
+            if not isinstance(tx,dict) or tx.get("slot")!=row["slot"]:
+                raise EvidenceGap("EXTRA_TRANSACTION_UNAVAILABLE")
+            if tx.get("meta") is None or tx.get("transaction") is None:
+                raise EvidenceGap("EXTRA_TRANSACTION_METADATA_MISSING")
+            f=flows(tx,wallet)
+        except (EvidenceGap,IncompleteWindow,OSError,ValueError,TypeError,KeyError) as exc:
+            raise AuditStageError(
+                "EXTRA_TRANSACTION_DECODE",safe_failure_code(exc),
+                {"extra_transactions_completed":len(evidence),"extra_transactions_total":len(joined)}
+            ) from None
         evidence.append({
             "signature":sig,"slot":row["slot"],
             "block_time":row["blockTime"],
@@ -215,28 +253,44 @@ def query_referenced_accounts(rpc,inventory,start,end,root_sigs,wallet):
 
 
 def run(source_report,cache_dir,db_path,rpc_file,start,end):
-    count,source_sha=read_report(source_report,WALLET,start,end)
-    endpoints=configured_solana_endpoints(rpc_file)
+    count,source_sha=stage_call("SOURCE_REPORT",read_report,source_report,WALLET,start,end)
+    if cache_dir.is_symlink() or not cache_dir.is_dir():
+        raise AuditStageError("ROOT_CACHE","CACHE_DIRECTORY_MISSING_OR_UNSAFE")
+    local_root,local_trades=stage_call(
+        "LOCAL_LEDGER",local_snapshot,db_path,WALLET,start,end
+    )
+    endpoints=stage_call("RPC_CONFIGURATION",configured_solana_endpoints,rpc_file)
     rpc=None
     source_rows=None
+    endpoint_failures=[]
     for endpoint in endpoints:
         try:
             candidate=RPC(endpoint)
             found=solana_signatures(candidate,WALLET,start,end)
-            if len(found)==count:
-                rpc,source_rows=candidate,found
-                break
-        except (OSError,ValueError,TimeoutError,IncompleteWindow):
-            continue
+            if len(found)!=count:
+                endpoint_failures.append("ROOT_SIGNATURE_COUNT_MISMATCH")
+                continue
+            rpc,source_rows=candidate,found
+            break
+        except (OSError,ValueError,TimeoutError,IncompleteWindow) as exc:
+            endpoint_failures.append(safe_failure_code(exc))
     if rpc is None:
-        raise EvidenceGap("ROOT_FINALIZED_WINDOW_UNVERIFIED")
-    if cache_dir.is_symlink() or not cache_dir.is_dir():
-        raise EvidenceGap("CACHE_DIRECTORY_MISSING_OR_UNSAFE")
-    root_tx=fetch_cached_root(source_rows,SignatureCache(cache_dir),WALLET)
-    inventory,baseline=build_seed_inventory(root_tx,WALLET)
-    local_root,local_trades=local_snapshot(db_path,WALLET,start,end)
+        raise AuditStageError(
+            "ROOT_SIGNATURES",
+            endpoint_failures[-1] if endpoint_failures else "ROOT_FINALIZED_WINDOW_UNVERIFIED",
+            {"rpc_endpoints_attempted":len(endpoints)}
+        )
+    root_tx=stage_call(
+        "ROOT_CACHE",fetch_cached_root,source_rows,SignatureCache(cache_dir),WALLET
+    )
+    inventory,baseline=stage_call(
+        "ROOT_OWNER_INVENTORY",build_seed_inventory,root_tx,WALLET
+    )
     root_sigs=set(root_tx)
-    counts,extra=query_referenced_accounts(rpc,inventory,start,end,root_sigs,WALLET)
+    counts,extra=stage_call(
+        "TOKEN_ACCOUNT_SIGNATURES",query_referenced_accounts,
+        rpc,inventory,start,end,root_sigs,WALLET
+    )
     return {
         "status":"OBSERVED_OWNER_ACCOUNT_WINDOW_RECONCILED",
         "wallet":WALLET,"start":start,"end":end,
@@ -273,7 +327,7 @@ def main():
     args=p.parse_args()
     try:
         if args.start>=args.end or args.end>int(datetime.now(timezone.utc).timestamp()):
-            raise EvidenceGap("WINDOW_INVALID")
+            raise AuditStageError("ARGUMENTS","WINDOW_INVALID")
         report=run(args.source_report,args.cache_dir,args.db,args.rpc_file,args.start,args.end)
         target=args.output_dir.expanduser()
         if target.is_symlink() or "live-v1" in str(target) or "FrankMeme" in str(target):
@@ -293,8 +347,12 @@ def main():
         print(json.dumps(overview,ensure_ascii=False,indent=2))
         return 0
     except (EvidenceGap,IncompleteWindow,OSError,ValueError,TypeError) as exc:
-        reason=str(exc) if isinstance(exc,EvidenceGap) and re.fullmatch(r"[A-Z0-9_:]{3,90}",str(exc)) else "CHAIN_OR_CACHE_EVIDENCE_UNAVAILABLE"
-        print(json.dumps({"status":"UNVERIFIED","reason":reason,
+        known=isinstance(exc,AuditStageError)
+        stage=exc.stage if known else "REPORT_OUTPUT"
+        reason=exc.code if known else safe_failure_code(exc)
+        details=exc.details if known else {}
+        print(json.dumps({"status":"UNVERIFIED","stage":stage,"reason":reason,
+                          "diagnostics":details,
                           "production_db_writes":0,"emails_sent":0,"signals_changed":False}))
         return 2
 
