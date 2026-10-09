@@ -367,7 +367,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 .fact-card>small{display:block;margin-top:5px;color:#687480;font-size:9px;line-height:1.4}
 .fact-card .subvalue{font-size:9px}
 
-.holder-table{min-width:1180px}
+.holder-table{min-width:850px}
 .holder-evidence{display:flex;flex-direction:column;gap:3px;min-width:150px}
 .holder-evidence b{font-size:10px;color:#cdd4dc}
 .holder-evidence span{font-size:10px;color:#aab4bf}
@@ -444,3 +444,19 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 }
 
 .cluster-status[hidden],.cluster-result[hidden],.cluster-preview[hidden]{display:none}
+
+/* Transaction-first presentation. Forensic details are available on demand. */
+#coverage-details{margin-bottom:9px}
+#coverage-details>summary{cursor:pointer;padding:8px 12px;color:#788492;font-size:11px}
+#coverage-details .coverage-strip{margin:0;border:0;border-top:1px solid var(--line);border-radius:0;background:transparent}
+#decision-history{margin-top:8px}
+#decision-history>summary{padding:10px 14px;cursor:pointer;font-size:12px;color:#a7b3bd;list-style:revert}
+#signals-view>.panel>.feed{max-height:610px}
+#cluster-result>.cluster-summary{grid-template-columns:2fr 2fr repeat(3,minmax(0,1fr))}
+.holder-table{min-width:850px}
+.holder-table td:nth-child(5),.holder-table td:nth-child(6){min-width:140px}
+.trade-core strong{font-size:15px}
+.trade-core span{font-size:12px}
+.feed-row{font-size:12px;grid-template-columns:90px minmax(0,1fr) 152px}
+@media(max-width:1100px){#cluster-result>.cluster-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){#cluster-result>.cluster-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
