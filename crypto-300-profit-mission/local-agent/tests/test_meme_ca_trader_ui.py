@@ -106,12 +106,20 @@ def test_ca_early_jupiter_quote_precedes_holder_history_and_is_timestamped(tmp_p
     early = manager.get("early")
     assert calls == [(mint, 6, 30)]
     assert early["progress"]["stage"] == "BASE_READY"
-    assert early["preview"]["execution_quote_30_usdc"] == {
+    initial_quote = early["preview"]["execution_quote_30_usdc"]
+    assert {k: initial_quote.get(k) for k in (
+        "status","source","reason","observed_at","route_exists",
+        "execution_price_usdc","price_impact_pct",
+    )} == {
         "status": "OK", "source": "JUPITER_OFFICIAL",
         "reason": None, "observed_at": 1_800_000_000.0,
         "route_exists": True, "execution_price_usdc": "0.00123",
         "price_impact_pct": "0.40",
     }
+    assert initial_quote["valid_until"] == 1_800_000_030.0
+    assert initial_quote["quote_record_type"] == "HISTORICAL_SNAPSHOT"
+    assert initial_quote["freshness_status"] == "EXPIRED"
+    assert initial_quote["is_current_at_response"] is False
     manager._set_progress("early", "HOLDERS_READY", {
         "top_accounts_resolved": 20, "raw_top10_resolved_pct": "42",
     })
@@ -219,3 +227,81 @@ if(!panel.innerHTML.includes('报价已过期')) throw Error('STALE_QUOTE_SHOWN'
 if(!panel.innerHTML.includes('市值:暂无')) throw Error('MISSING_METRIC_ZEROED');
 """
     subprocess.run(["node","-e",script,str(js)],check=True)
+
+
+
+def test_ca_quote_archive_has_explicit_expiry_and_dynamic_api_freshness(tmp_path, monkeypatch):
+    import json
+    import mission_agent.mission_control.server as server
+    from mission_agent.meme.cluster import markdown
+
+    sample = {
+        "status": "OK", "route_exists": True,
+        "observed_at": 1800000000.0,
+        "execution_price_usdc": "0.001",
+        "price_impact_pct": "0.2",
+    }
+    archived = server._annotate_ca_quote(sample, archived=True)
+    assert archived["quote_record_type"] == "HISTORICAL_SNAPSHOT"
+    assert archived["valid_until"] == 1800000030.0
+    assert archived["freshness_status"] == "ARCHIVED_NOT_LIVE"
+    assert archived["is_current_at_response"] is False
+    assert "freshness_checked_at" not in archived
+    current = server._annotate_ca_quote(archived, now=1800000020.0)
+    assert current["is_current_at_response"] is True
+    assert current["freshness_status"] == "CURRENT_AT_RESPONSE"
+    at_expiry = server._annotate_ca_quote(archived, now=1800000030.0)
+    assert at_expiry["is_current_at_response"] is True
+    expired = server._annotate_ca_quote(archived, now=1800000030.001)
+    assert expired["is_current_at_response"] is False
+    assert expired["freshness_status"] == "EXPIRED"
+    assert server._annotate_ca_quote({
+        **sample, "observed_at": None,
+    }, now=1800000010.0)["is_current_at_response"] is False
+    assert server._annotate_ca_quote({
+        **sample, "observed_at": 1800000060,
+    }, now=1800000010.0)["is_current_at_response"] is False
+
+    mint = "So11111111111111111111111111111111111111112"
+    manager = ClusterJobManager(tmp_path / "control")
+    dest = manager.report_root / mint
+    dest.mkdir(parents=True)
+    saved = {"mint":mint,"execution_quote_30_usdc":archived}
+    (dest/"latest.json").write_text(json.dumps(saved))
+    monkeypatch.setattr(server.time,"time",lambda:1800000020.0)
+    read_now = manager.latest(mint)
+    assert read_now["execution_quote_30_usdc"]["is_current_at_response"] is True
+    monkeypatch.setattr(server.time,"time",lambda:1800000031.0)
+    read_later = manager.latest(mint)
+    assert read_later["execution_quote_30_usdc"]["is_current_at_response"] is False
+    assert json.loads((dest/"latest.json").read_text()) == saved
+    manager.executor.shutdown(wait=True)
+
+    report = {"mint":mint,"observed_at":1800000005.0,
+              "execution_quote_30_usdc":archived}
+    rendered = markdown(report)
+    assert "HISTORICAL_SNAPSHOT" in rendered
+    assert "2027-01-15" not in rendered or "not live" in rendered
+    assert "observed_at:" in rendered and "valid_until:" in rendered
+    assert "30 seconds after quote" in rendered
+
+
+def test_ca_quote_api_does_not_turn_old_or_unexecutable_route_into_current(tmp_path,monkeypatch):
+    import time
+    import mission_agent.mission_control.server as server
+    manager = ClusterJobManager(tmp_path / "control")
+    now = time.time()
+    mint = "So11111111111111111111111111111111111111112"
+    manager.jobs["stale"] = {
+        "job_id":"stale", "mint":mint, "preset":"quick",
+        "status":"RUNNING", "progress":{},
+        "preview":{"execution_quote_30_usdc":{
+            "status":"OK","route_exists":True,"observed_at":now-40,
+            "execution_price_usdc":"0.01","price_impact_pct":"0.5",
+        }},
+    }
+    assert manager.get("stale")["preview"]["execution_quote_30_usdc"]["freshness_status"] == "EXPIRED"
+    manager.jobs["stale"]["preview"]["execution_quote_30_usdc"]["observed_at"] = now
+    manager.jobs["stale"]["preview"]["execution_quote_30_usdc"]["route_exists"] = False
+    assert manager.get("stale")["preview"]["execution_quote_30_usdc"]["is_current_at_response"] is False
+    manager.executor.shutdown(wait=True)
