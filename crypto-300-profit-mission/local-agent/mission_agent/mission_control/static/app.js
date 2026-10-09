@@ -8,6 +8,7 @@ const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({
 }[c]));
 
 const n = (v, digits=4) => {
+  if (v == null || v === '') return '暂无';
   const x = Number(v);
   return Number.isFinite(x)
     ? x.toLocaleString('zh-CN',{maximumFractionDigits:digits})
@@ -15,6 +16,7 @@ const n = (v, digits=4) => {
 };
 
 const money = (v, digits=8) => {
+  if (v == null || v === '') return '暂无';
   const x = Number(v);
   if (!Number.isFinite(x)) return '暂无';
   return x.toLocaleString('zh-CN',{
@@ -24,6 +26,7 @@ const money = (v, digits=8) => {
 };
 
 const smallPrice = (value) => {
+  if (value == null || value === '') return '暂无';
   const x=Number(value);
   if (!Number.isFinite(x) || x<=0) return '暂无';
   if (x<0.00001) return x.toExponential(2);
@@ -660,6 +663,7 @@ function clusterMetricValue(v) {
 
 
 function usd(v,digits=2) {
+  if (v == null || v === '') return '暂无';
   const x=Number(v);
   if (!Number.isFinite(x)) return '暂无';
   if (Math.abs(x)>=1000000) return '$' + n(x/1000000,2) + 'M';
@@ -668,6 +672,7 @@ function usd(v,digits=2) {
 }
 
 function pctText(v) {
+  if (v == null || v === '') return '暂无';
   const x=Number(v);
   return Number.isFinite(x) ? n(x,2) + '%' : '暂无';
 }
@@ -777,6 +782,16 @@ function renderClusterPreview(job) {
     : extUnknown ? '部分扩展风险待核实'
     : '已解析权限未发现活动风险';
   const ready=p.market_status==='OK';
+  const q=p.execution_quote_30_usdc;
+  const quoteAt=q?.observed_at == null ? NaN : Number(q.observed_at);
+  const quoteAge=Date.now()/1000-quoteAt;
+  const quoteFresh=Number.isFinite(quoteAge) && quoteAge>=0 && quoteAge<=30;
+  const quoteText=!q ? '正在请求 Jupiter 报价'
+    : !quoteFresh ? '报价已过期，完整报告将刷新'
+    : q.status==='OK' && q.route_exists===true &&
+      q.execution_price_usdc != null && q.price_impact_pct != null
+      ? '$'+smallPrice(q.execution_price_usdc)+' · 冲击 '+pctText(q.price_impact_pct)
+      : '暂不可成交 / 报价不可用';
   node.hidden=false;
   node.innerHTML=
     '<div class="cluster-preview-head"><strong>已取得基础行情，持仓与资金关系仍在扫描</strong><span>临时结果，待链上报告核实</span></div>' +
@@ -785,11 +800,12 @@ function renderClusterPreview(job) {
     fact('参考价',ready ? esc(usd(p.price_usd,8)) : '暂不可用') +
     fact('市值',ready ? esc(usd(p.market_cap_usd)) : '暂不可用') +
     fact('主池流动性',ready ? esc(usd(p.liquidity_usd)) : '暂不可用') +
+    fact('$30 可成交报价',esc(quoteText),'Jupiter 只读报价，30 秒后过期，不能直接视为下单建议') +
     fact('权限',esc(authority)) +
     fact('原始 Top10 持币占比', p.raw_top10_resolved_pct != null
       ? esc(pctText(p.raw_top10_resolved_pct)) : '待解析', '含池子，未做 LP 排除或钱包关联归因') +
     '</div><p>已解析 Owner：' + esc(p.top_accounts_resolved ?? '待查询') +
-    '。原始 Top10 可能含 LP 或交易所；钱包聚类和实际可成交报价仍在独立核对，不能据此认定筹码安全。</p>';
+    '。原始 Top10 可能含 LP 或交易所；钱包聚类仍在独立核对，不能据此认定筹码安全或可跟单。</p>';
 }
 
 function clusterErrorMessage(error) {
