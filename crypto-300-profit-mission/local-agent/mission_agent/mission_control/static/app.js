@@ -889,10 +889,18 @@ function renderClusterReport(report) {
     clusterConclusion = '当前 bounded scan 未发现重大 probable control cluster。';
   }
 
+  if (rel.length) {
+    const confirmedMax = Math.max(...rel.map(x=>Number(x.supply_pct)).filter(Number.isFinite));
+    if (Number.isFinite(confirmedMax)) {
+      clusterConclusion = '发现直接资金或代币关系，最大关联组约 ' + n(confirmedMax,2) +
+        '%；这不能证明同一控制人。' + clusterConclusion;
+    }
+  }
+
   let marketConclusion = '当前市场数据未取到。';
   if (market.status === 'OK') {
     const h24 = (mainPair.volume || {}).h24;
-    marketConclusion = '参考价 ' + usd(market.price_usd,6) +
+    marketConclusion = '参考价 $' + smallPrice(market.price_usd) +
       ' · MC ' + usd(market.market_cap_usd) +
       ' · 主池流动性 ' + usd(mainPair.liquidity_usd) +
       ' · 24h 成交 ' + usd(h24) + '。';
@@ -1021,10 +1029,7 @@ function renderClusterReport(report) {
     '<p>目前仅展示市场资料附带的链接；不抓取实时官方帖子，也不提供官方认领或叙事打分。</p></div>' +
     '<div class="narrative-links">' + (websites || socials ? websites + socials : '<span class="muted">当前市场资料没有可展示的官网/社交链接</span>') + '</div>';
 
-  clusterStatus('done','查询完成',
-    '观测于 ' + observedText + '（' + observedAge + '） · finalized RPC 调用 ' +
-    (coverage.rpc_calls ?? 0) + ' · 本地缓存命中 ' + (coverage.rpc_cache_hits ?? 0) +
-    (rpcFailures ? ' · 自动处理 RPC 失败/限流 ' + rpcFailures + ' 次' : ''));
+  clusterStatus('done','分析已更新', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
 }
 
 
