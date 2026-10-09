@@ -343,3 +343,49 @@ def test_zero_rpc_plan_reports_decoded_nonopposing_receipt_identifiers(tmp_path,
     assert {x["signature"] for x in report["decoded_receipt_sample"]}=={sig(0),sig(1)}
     assert all(x["target_mints"]==[MINT] for x in report["decoded_receipt_sample"])
     assert all(x["fomo_cosigned"] is False for x in report["decoded_receipt_sample"])
+
+
+def test_recent_usdc_page_saves_time_bounds_without_false_complete(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoints",context(),create=True)
+    first=[row(i,scan.END+scan.PAGE_SIZE-i) for i in range(scan.PAGE_SIZE)]
+    s=scan.scan_page(store.account(ACCOUNT),lambda *_:first)
+    assert s["status"]=="ACTIVE"
+    assert s["rows"]==[]
+    assert s["last_page_size"]==250
+    assert s["last_page_oldest_block_time"]==scan.END+1
+    store.save_account(s)
+    reopened=scan.Checkpoints(store.root,context(),create=True)
+    assert reopened.account(ACCOUNT)["before"]==first[-1]["signature"]
+    page=[row(scan.PAGE_SIZE,scan.END-1),
+          row(scan.PAGE_SIZE+1,scan.START-1)]
+    completed=scan.scan_page(reopened.account(ACCOUNT),lambda *_:page)
+    assert completed["status"]=="COMPLETE"
+    assert len(completed["rows"])==1
+    assert completed["rows"][0]["blockTime"]==scan.END-1
+    assert completed["last_page_oldest_block_time"]==scan.START-1
+
+
+def test_newer_only_page_detects_cross_page_time_reversal(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoints",context(),create=True)
+    page=[row(i,scan.END+250-i) for i in range(250)]
+    s=scan.scan_page(store.account(ACCOUNT),lambda *_:page)
+    store.save_account(s)
+    invalid=[row(250,scan.END+10)]
+    with pytest.raises(scan.ScanBlocked,match="SIGNATURE_TIME_ORDER_INVALID"):
+        scan.scan_page(store.account(ACCOUNT),lambda *_:invalid)
+    assert store.account(ACCOUNT)==s
+
+
+def test_existing_page_without_diagnostics_resumes_without_reset(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoints",context(),create=True)
+    old=store.account(ACCOUNT)
+    old.update({"status":"ACTIVE","pages":1,"before":sig(250),"rows":[]})
+    store.save_account(old)
+    assert store.account(ACCOUNT)==old
+    page=[row(251,scan.END-10)]
+    res=scan.scan_page(store.account(ACCOUNT),lambda *_:page)
+    assert res["status"]=="COMPLETE"
+    assert res["pages"]==2
+    assert res["rows"][0]["signature"]==sig(251)
+    assert res["last_page_oldest_block_time"]==scan.END-10
+    assert store.account(ACCOUNT)["before"]==sig(250)
