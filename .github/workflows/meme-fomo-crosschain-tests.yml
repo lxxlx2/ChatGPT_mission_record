@@ -34,6 +34,7 @@ on:
       - 'crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/delivery.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/service.py'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/index.html'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/styles.css'
@@ -43,6 +44,7 @@ on:
       - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_dashboard.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_misc.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_delivery.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_service.py'
       - '.github/workflows/meme-fomo-crosschain-tests.yml'
   workflow_dispatch:
 
