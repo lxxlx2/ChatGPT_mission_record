@@ -1,0 +1,30 @@
+name: Frank Multi-Token Historical Followability One Shot
+on:
+  push:
+    branches: [review/meme-ca-v3-integrate-main-20261008]
+    paths:
+      - '.github/workflows/frank-multi-token-followability-one-shot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  historical-signal-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check frozen evidence and run bounded public historical candle replay
+        run: |
+          python3 -m py_compile crypto-300-profit-mission/local-agent/scripts/audit_frank_historical_signal_followability.py
+          python3 crypto-300-profit-mission/local-agent/scripts/audit_frank_historical_signal_followability.py \
+            --limit-mints 18 --max-http 36 --spacing 6 \
+            --output frank-multi-token-followability.json
+      - name: Retain raw bounded historical evidence for audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frank-multi-token-followability-json
+          path: frank-multi-token-followability.json
+          if-no-files-found: ignore
+          retention-days: 7
