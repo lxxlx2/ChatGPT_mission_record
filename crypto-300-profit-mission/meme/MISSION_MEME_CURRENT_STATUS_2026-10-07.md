@@ -780,3 +780,20 @@ This update **continues** section 35's isolated TWEETCRAFT round and responds to
 **Open gates:** OTHER_AI_FINAL_REVIEW=NOT_RUN; ACTUAL_MAC_THREE_CA_TIMING=NOT_RUN; AUTHENTICATED_INTEGRATED_CA_ACCEPTANCE=NOT_RUN; RARI_SIGNED_RAW_FIXTURE=NOT_RUN; H3 conservative economic semantic drift still needs separate review/approval before prod classifier promotion; new Gmail Sent readback and reboot/login acceptance remain NOT_RUN. CAN_MERGE=NO and CAN_DEPLOY=NO.
 
 **Next sequence:** independent AI reviews the new PR diff for correctness and frozen-policy/source-isolation invariants; fix any substantive finding and rerun exact-HEAD CI; then run the existing Mac isolated real CA acceptance from a separate fetched PR worktree without starting Loop, measure actual quote/preview latency; only after evidence passes consider separately reviewed controlled merge and local deployment plus Frank/dashboard/Gmail acceptance. Never present CI as production deployment.
+
+## 38. 2026-10-10 Claude findings closed in review branch; final Mac gate remains
+
+**Other AI review input:** Claude reviewed exact earlier HEAD 92df59536721e10ed7b4b9e5417119151126c3e7, reported TARGETED_CODE_REVIEW=PASS, two nonblocking quote freshness issues, one obsolete one-shot workflow, and explicitly withheld merge/deploy authorization. Not a full 89-file review. After remediation the updated HEAD still requires Claude's targeted follow-up review; never extrapolate older approval.
+
+**Remediation done:**
+
+1. `meme/cluster.py` Markdown now calls the Jupiter $30 quote a HISTORICAL_SNAPSHOT, includes its actual UTC observed_at and UTC valid_until, explicitly says expired after 30 seconds and cannot be read as a live quote; current-market heading relabeled historical.
+2. `mission_control/server.py` dynamically rechecks Jupiter quote freshness at every job/preview and `/api/cluster-latest` response, returns valid_until, TTL, freshness_checked_at, freshness_status, and is_current_at_response; future/missing observations and unexecutable routes fail closed. Persisted `latest.json` includes `quote_record_type=HISTORICAL_SNAPSHOT`, `freshness_status=ARCHIVED_NOT_LIVE` and is_current_at_response=false, with expiry timestamp. The archived JSON itself never attests live execution suitability. Existing read-only price and Frank threshold/policy remain unchanged.
+3. Deleted obsolete `.github/workflows/frank-e4-raydium-jupiter-proof-one-shot.yml`; the completed historical proof remains available via GitHub Actions run 37977057963 and signed-evidence reports. No new monitor or workflow was created.
+4. Added regression tests for report labeling, TTL boundary, clock future/missing, reopening same stored JSON at different times without mutating file, stale preview and unavailable routes.
+
+**Executed CI:** https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37984652032 succeeded at code HEAD 5ea19db4739c960bf755939cf754046d30adf720, with 121 FOMO-specific tests passed, 1002 full local-agent tests passed, Python compilation, node syntax and shell checks passed. This HEAD includes removal of the one-shot workflow. Subsequent status-document-only changes do not alter tested code.
+
+**No-go gates remain:** PR #29 is DRAFT; CAN_MERGE=NO, CAN_DEPLOY=NO, PRODUCTION_TRADING=NO_GO. Claude must confirm remediation on updated HEAD. Three-Mint isolated actual Mac CA timing, real free/authenticated RPC behavior, Gmail Sent readback, installed macOS LaunchAgent restart persistence and remaining RARI signed raw proof are NOT_RUN/UNVERIFIED. Historical H3 1087/1087 source replay at earlier 6cb432e was executed and is still recorded as conservative economic semantic drift with separate approval needed; Claude's local environment lacking that raw data is not proof that the original Mac replay did not happen.
+
+**Next:** Claude incremental review of quote/CLI test commits; then isolated Mac live-CA timing/semantics acceptance with existing script, no Loop start or production mutations; fix if observed evidence fails. Only afterwards consider separate merge/deployment approval. No unrelated boundary feature expansion.
