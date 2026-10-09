@@ -253,3 +253,39 @@ def test_explicit_network_scan_respects_minimum_spacing(monkeypatch,tmp_path):
     assert counts["rpc_attempts"]==2
     assert clock["waited"]==[scan.MIN_REQUEST_INTERVAL_SECONDS]
     assert store.account(ACCOUNT)["status"]=="COMPLETE"
+
+
+def test_checkpoint_with_valid_hash_but_invalid_account_rows_fails_closed(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    state=store.account(ACCOUNT)
+    state.update({"status":"ACTIVE","pages":1,"before":sig(1),
+                  "rows":[row(0,scan.END-5),{"signature":123,"slot":10,"blockTime":scan.END-10}]})
+    store.save_account(state)
+    with pytest.raises(scan.ScanBlocked,match="ACCOUNT_ROWS_INVALID"):
+        store.account(ACCOUNT)
+
+
+def test_saved_page_requires_nonincreasing_history_across_resume(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    state=store.account(ACCOUNT)
+    state.update({"status":"ACTIVE","pages":1,"before":sig(0),
+                  "rows":[row(0,scan.START+10)]})
+    store.save_account(state)
+    with pytest.raises(scan.ScanBlocked,match="SIGNATURE_TIME_ORDER_INVALID"):
+        scan.scan_page(store.account(ACCOUNT),lambda *args:[row(1,scan.START+20)])
+    assert store.account(ACCOUNT)["rows"]==state["rows"]
+
+
+def test_report_refuses_wrong_slot_in_validly_hashed_receipt(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    state=store.account(ACCOUNT)
+    state.update({"status":"COMPLETE","pages":1,"before":sig(0),
+                  "rows":[row(0,scan.START+25)]})
+    store.save_account(state)
+    rcpt={"context":store.key,"signature":sig(0),"slot":999,
+          "tx_sha256":"a"*64,"opposing_flow":False,
+          "root_referenced":False,"fomo_cosigned":False,"target_mints":[]}
+    store._write(store.root/("receipt-"+sig(0)+".json"),rcpt)
+    with pytest.raises(scan.ScanBlocked,match="RECEIPT_EVIDENCE_INVALID"):
+        scan.report(store,set(),set(),{"rpc_attempts":0,"new_signature_pages":0,
+                                       "new_receipts":0},None)
