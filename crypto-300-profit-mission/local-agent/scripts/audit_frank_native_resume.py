@@ -274,6 +274,7 @@ def scan_page(state,call):
                if state.get("last_page_oldest_block_time") is not None
                else state["rows"][-1]["blockTime"] if state["rows"] else None)
     cutoff=False
+    overflow=0
     for row in page:
         if not isinstance(row,dict):
             raise ScanBlocked("SIGNATURE_ROW_INVALID")
@@ -293,9 +294,10 @@ def scan_page(state,call):
             if sig in seen:
                 raise ScanBlocked("SIGNATURE_PAGE_DUPLICATE")
             seen.add(sig)
-            new["rows"].append({"signature":sig,"slot":slot,"blockTime":at})
-            if len(new["rows"])>MAX_SOL_TRANSACTIONS_PER_WALLET:
-                raise ScanBlocked("ACCOUNT_SIGNATURE_BUDGET_BROKEN")
+            if len(new["rows"])>=MAX_SOL_TRANSACTIONS_PER_WALLET:
+                overflow+=1
+            else:
+                new["rows"].append({"signature":sig,"slot":slot,"blockTime":at})
     if state["before"] and page and page[-1].get("signature")==state["before"]:
         raise ScanBlocked("SIGNATURE_CURSOR_STALLED")
     new["before"]=page[-1]["signature"] if page else state["before"]
@@ -303,11 +305,20 @@ def scan_page(state,call):
     if page:
         new["last_page_newest_block_time"]=page[0]["blockTime"]
         new["last_page_oldest_block_time"]=page[-1]["blockTime"]
-    if cutoff or len(page)<PAGE_SIZE:
-        new["status"]="COMPLETE"
-    elif (len(new["rows"])>=MAX_SOL_TRANSACTIONS_PER_WALLET
-          or new["pages"]>=MAX_SOL_PAGES):
+    if overflow:
+        # This page had more in-window signatures than the immutable limit.
+        # Retain the newest capped prefix, never claim complete coverage.
         new["status"]="CAPPED"
+        new["cap_reason"]="SIGNATURE_LIMIT"
+        new["unretained_in_window_signatures_on_cap_page"]=overflow
+    elif cutoff or len(page)<PAGE_SIZE:
+        new["status"]="COMPLETE"
+    elif len(new["rows"])>=MAX_SOL_TRANSACTIONS_PER_WALLET:
+        new["status"]="CAPPED"
+        new["cap_reason"]="SIGNATURE_LIMIT"
+    elif new["pages"]>=MAX_SOL_PAGES:
+        new["status"]="CAPPED"
+        new["cap_reason"]="PAGE_LIMIT"
     else:
         new["status"]="ACTIVE"
     return new
@@ -421,8 +432,11 @@ def report(store,root_sigs,local_trades,counts,stopped):
     candidates,deferred=decode_candidates(store,root_sigs)
     completed={addr:s for addr,s in states.items() if s["status"]=="COMPLETE"}
     capped={addr:{"mint":s["mint"],"observed_rows":len(s["rows"]),
-                   "status":"INCOMPLETE_LIMIT"} for addr,s in states.items()
-            if s["status"]=="CAPPED"}
+                   "status":"INCOMPLETE_LIMIT",
+                   "cap_reason":s.get("cap_reason","UNKNOWN_OLD_CHECKPOINT"),
+                   "unretained_in_window_signatures_on_cap_page":
+                       s.get("unretained_in_window_signatures_on_cap_page",0)}
+            for addr,s in states.items() if s["status"]=="CAPPED"}
     undecoded=[]
     decoded=[]
     for row in candidates:
@@ -461,6 +475,22 @@ def report(store,root_sigs,local_trades,counts,stopped):
             "last_page_time_diagnostics_known":
                 state.get("last_page_oldest_block_time") is not None
         } for addr,state in states.items() if state["status"] in ("PENDING","ACTIVE")],
+        # Visibility into incomplete accounts is SIGNATURE-ONLY; these
+        # cannot be merged into the complete-account decoder or BUY count.
+        "partial_account_signature_evidence":[{
+            "account":addr,"mint":s["mint"],"status":s["status"],
+            "saved_window_signatures":len(s["rows"]),
+            "already_in_root_count":sum(
+                x["signature"] in root_sigs for x in s["rows"]),
+            "not_in_root_count":sum(
+                x["signature"] not in root_sigs for x in s["rows"]),
+            "unclassified_extra_sample":[{
+                "signature":x["signature"],
+                "block_time":x["blockTime"],"slot":x["slot"],
+            } for x in s["rows"] if x["signature"] not in root_sigs][:8],
+            "scope":"PARTIAL_SIGNATURES_ONLY_NOT_DECODED"
+        } for addr,s in states.items()
+           if s["status"] in ("ACTIVE","CAPPED") and s["rows"]],
         "extra_signature_candidates_from_completed_accounts":len(candidates)+deferred,
         "decode_receipts_complete":len(decoded),
         "decode_receipts_pending":len(undecoded),
