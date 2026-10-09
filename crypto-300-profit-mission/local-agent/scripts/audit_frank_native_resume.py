@@ -40,6 +40,7 @@ from scripts.inspect_frank_solana_root_window import read_report
 VERSION = 1
 PAGE_SIZE = 250
 MAX_CALLS_PER_RUN = 8
+MIN_REQUEST_INTERVAL_SECONDS = 1.0
 SIGNATURE_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{64,100}$")
 ACCOUNT_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 RESEARCH_DIR = Path.home() / "Documents/ChatGPT/frank-fomo-research"
@@ -328,9 +329,16 @@ def do_run(store,root_sigs,phase,network,budget,endpoint=None):
         raise ScanBlocked("EXPLICIT_NETWORK_PERMISSION_REQUIRED")
     if not 1<=budget<=MAX_CALLS_PER_RUN:
         raise ScanBlocked("REQUEST_BUDGET_INVALID")
+    last_rpc_at=None
     def call(method,params):
+        nonlocal last_rpc_at
         if counts["rpc_attempts"]>=budget:
             raise ScanBlocked("REQUEST_BUDGET_EXHAUSTED")
+        if last_rpc_at is not None:
+            delay=MIN_REQUEST_INTERVAL_SECONDS-(time.monotonic()-last_rpc_at)
+            if delay>0:
+                time.sleep(delay)
+        last_rpc_at=time.monotonic()
         counts["rpc_attempts"]+=1
         return one_rpc(endpoint,method,params)
     if phase=="signatures":
