@@ -1,16 +1,16 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-09 10:46 Asia/Bangkok
+Updated: 2026-10-09 12:48 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-09 10:45:22 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-09 12:48:36 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-08 05:47:29 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/104522-final.md
-- latest_scheduled_shard: 2
-- latest_executed_shard: 2
-- latest_stale_shard_recovery: false
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/124733-final.md
+- latest_scheduled_shard: 0
+- latest_executed_shard: 3
+- latest_stale_shard_recovery: true
 - latest_candidate_count: 3
 - latest_triggered_events: 0
 - latest_identity_failures: 0
@@ -51,3 +51,5 @@ Timezone: Asia/Bangkok
 - 2026-10-09 04:55:51 invocation: attempt 045459-attempt.md persisted; primary final blocked by safety checks; terminal 045459-final-retry.md persisted (commit c80f2905a392852b1306b803a29caeac7b7d7448). Scheduled Shard 0, executed stale Shard 1; urgent plus 13 unique in-scope projects; 4 candidates, 0 ACTION, 1 Neutrl handle identity drift, 2 source gaps (Concrete Additional USDC allocation and Cambria opt-in extension). Gmail not attempted, user silent. Partial, latest fully successful run unchanged. Historical attempt-only gaps remain. 
 
 - 2026-10-09 07:59:37 invocation: 075906-attempt.md and terminal 075937-final-retry.md persisted. Scheduled shard 3, recovered oldest stale shard 0; urgent + 15 unique projects, 2 unverified candidates (Concrete Additional USDC and Cambria RSGP extension), 0 ACTION, 0 identity failures, 2 first-party source gaps. Gmail not attempted, user silent. Primary final blocked by safety checks, fallback terminal persisted; partial. Latest fully successful run unchanged. Shard 0 latest partial coverage 2026-10-09 07:59:37. No task or schedule changes.
+
+- 2026-10-09T12:48:36+07:00 invocation: attempt 124733-attempt.md and terminal 124733-final.md persisted. Scheduled Shard 0, executed stale Shard 3; 13 unique projects checked, 3 candidates, 0 Tier A/B ACTION, 2 official current-state gaps (Concrete Additional USDC and Cambria RSGP opt-in). No Gmail or user notification. Partial. Latest fully successful run remains 2026-10-08 05:47:29. Historical attempt-only gaps remain; no new task/scope/schedule changes.
