@@ -410,7 +410,8 @@ def report(store,root_sigs,local_trades,counts,stopped):
                     type(rcpt.get("opposing_flow")) is not bool or
                     type(rcpt.get("root_referenced")) is not bool or
                     type(rcpt.get("fomo_cosigned")) is not bool or
-                    not isinstance(rcpt.get("target_mints"),list)):
+                    not isinstance(rcpt.get("target_mints"),list) or
+                    not isinstance(rcpt.get("quote_mints"),list)):
                 raise ScanBlocked("RECEIPT_EVIDENCE_INVALID")
             decoded.append(rcpt)
     full_observed=(len(completed)==len(states) and not deferred and not undecoded)
@@ -434,6 +435,14 @@ def report(store,root_sigs,local_trades,counts,stopped):
         "decode_receipts_pending":len(undecoded),
         "decode_deferred_by_original_budget":deferred,
         "decoded_opposing_flow_review_candidates":sum(bool(x["opposing_flow"]) for x in decoded),
+        "decoded_receipt_sample":[{
+            "signature":x["signature"],"slot":x["slot"],
+            "root_referenced":x["root_referenced"],
+            "opposing_flow":x["opposing_flow"],
+            "fomo_cosigned":x["fomo_cosigned"],
+            "target_mints":x["target_mints"],
+            "quote_mints":x["quote_mints"],
+        } for x in decoded][:20],
         "decoded_review_sample":[{
             "signature":x["signature"],"opposing_flow":x["opposing_flow"],
             "root_referenced":x["root_referenced"],"fomo_cosigned":x["fomo_cosigned"],
