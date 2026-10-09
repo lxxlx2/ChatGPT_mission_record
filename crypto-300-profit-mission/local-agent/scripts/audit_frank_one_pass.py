@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+from decimal import Decimal
 import fcntl
 import json
 import os
@@ -158,6 +159,48 @@ def classify(row,tx):
             "trade_confirmed":False}
 
 
+
+def conditional_roundtrip(matches, complete, buy_cost_raw=6715734492,
+                          tokens_bought_raw=4732220716414, buy_time=BUY_TIME):
+    """Only a conditional lot delta, never an instruction-confirmed sell/PnL."""
+    if not complete:
+        return {"status":"UNVERIFIED_INCOMPLETE_ACCOUNT"}
+    outflows=[x for x in matches if int(x.get("token_delta_raw","0"))<0]
+    if len(outflows)!=1:
+        return {"status":"UNVERIFIED_NOT_SINGLE_OUTFLOW"}
+    exit_tx=outflows[0]
+    if (int(exit_tx["token_delta_raw"])!=-tokens_bought_raw
+            or int(exit_tx.get("usdc_delta_raw","0"))<=0
+            or exit_tx.get("frank_signed") is not True
+            or exit_tx.get("fomo_cosigned") is not True):
+        return {"status":"UNVERIFIED_NOT_MATCHED_ROOT_AUTHORIZED_EXIT"}
+    if any(int(x.get("token_delta_raw","0"))!=0
+           for x in matches if x is not exit_tx):
+        return {"status":"UNVERIFIED_OTHER_TARGET_TOKEN_MOVEMENTS"}
+    usdc_in_raw=int(exit_tx["usdc_delta_raw"])
+    delta_raw=usdc_in_raw-buy_cost_raw
+    pnl=Decimal(delta_raw)/Decimal(1000000)
+    percentage=(Decimal(delta_raw)/Decimal(buy_cost_raw))*Decimal(100)
+    elapsed=exit_tx["block_time"]-buy_time
+    if elapsed<0:
+        return {"status":"UNVERIFIED_TIME_ORDER"}
+    return {
+        "status":"CONDITIONAL_MATCHED_TOKEN_ROUNDTRIP",
+        "buy_signature":fixed.BUY_SIGNATURE,
+        "sell_candidate_signature":exit_tx["signature"],
+        "hold_seconds":elapsed,
+        "token_quantity_raw":str(tokens_bought_raw),
+        "buy_net_usdc":str(Decimal(buy_cost_raw)/1000000),
+        "exit_candidate_net_usdc":str(Decimal(usdc_in_raw)/1000000),
+        "indicative_profit_usdc":str(pnl),
+        "indicative_return_pct":str(percentage.quantize(Decimal("0.000001"))),
+        "sale_instruction_verified":False,
+        "gas_and_multiwallet_pnl_complete":False,
+        "trade_coverage_complete_for_person":False,
+        "classification":"ROOT_SIGNED_SELL_CANDIDATE_NOT_FINALIZED_PNL",
+    }
+
+
 def run(network, budget, source, cache, db, rpc_file, checkpoint_root):
     ctx,root_sigs,_=audit.offline_context(source,cache,db)
     if fixed.BUY_SIGNATURE not in root_sigs:
@@ -261,7 +304,7 @@ def run(network, budget, source, cache, db, rpc_file, checkpoint_root):
             len(state["signatures"])<=CAP_DECODE and
             len(matches)==len([r for r in state["signatures"]
                                if r["signature"]!=fixed.BUY_SIGNATURE]))
-    last_match=next((x for x in matches if int(x.get("token_delta_raw","0"))<0),None)
+    lot=conditional_roundtrip(matches,fully)
     return {
       "status":"HISTORICAL_ROOT_BUY_CONFIRMED_LIFECYCLE_REVIEW",
       "confirmed_buy":{
@@ -288,6 +331,7 @@ def run(network, budget, source, cache, db, rpc_file, checkpoint_root):
                                    ("OPPOSING_FLOW_SELL_CANDIDATE",
                                     "TOKEN_OUTFLOW_NOT_PROVEN_SELL") for x in matches),
       "findings_sample":matches[:60],
+      "conditional_lot_roundtrip":lot,
       "realized_pnl":"UNVERIFIED",
       "person_pattern":"OBSERVE_ONLY",
       "production_trading":"NO_GO",
