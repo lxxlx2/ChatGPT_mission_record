@@ -1,5 +1,6 @@
 import base64
 import json
+import subprocess
 
 import pytest
 
@@ -281,4 +282,25 @@ def test_quote_timestamp_is_frozen_utc_and_original_message_identity(tmp_path):
     for invalid in [float("nan"),float("inf"),-1,0,None,"nonsense"]:
         body["inputs"]["quote_observed_at"]=invalid
         assert "报价观察时间：未记录" in render({"body":body})["body"]
+    db.close()
+
+
+
+def test_local_mac_notification_still_includes_full_ca_after_quote_times(tmp_path,monkeypatch):
+    import mission_agent.mission_control.delivery as delivery
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    calls=[]
+    def fake_run(args,**kwargs):
+        calls.append(args)
+        return subprocess.CompletedProcess(args,0)
+    monkeypatch.setattr(delivery.shutil,"which",lambda name:None)
+    local=LocalDelivery(db,run=fake_run)
+    local.enqueue(e,forbidden=False)
+    local.drain()
+    assert len(calls)==1
+    assert "Mint111111111111111" in calls[0][-1]
+    assert "决策时间：" in calls[0][-1]
+    assert "结论：" in calls[0][-1]
+    assert db.db.execute("SELECT status FROM local_delivery").fetchone()[0]=="COMMAND_ACCEPTED"
     db.close()
