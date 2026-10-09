@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-09 15:50 Asia/Bangkok
+Updated: 2026-10-09 19:20 Asia/Bangkok (manual audit of latest terminal at 18:49)
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-09 15:50:42 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-09 18:49:28 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-08 05:47:29 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/154934-final-retry.md
-- latest_scheduled_shard: 3
-- latest_executed_shard: 1
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/184928-final.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 0
 - latest_stale_shard_recovery: true
-- latest_candidate_count: 4
+- latest_candidate_count: 2
 - latest_triggered_events: 0
-- latest_identity_failures: 1
+- latest_identity_failures: 0
 - latest_source_failures: 2
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: silent
@@ -31,12 +31,11 @@ Timezone: Asia/Bangkok
 - Loopscale independent TGE discovery: SUPPRESSED per registry
 
 ## Pending and health
-- Cambria RSGP 2026-09-30 extension: UNVERIFIED_PENDING, no fresh first-party open action readback.
-- Concrete Additional USDC allocation: UNVERIFIED_PENDING, first-party update unavailable.
-- Neutrl redemption: candidate official account @Neutrl mismatches registry @neutrl_labs; no ACTION.
-- Autheo THEO unrelated to Theo Network; Spacecoin unrelated to Space.
-- Earlier attempt-only windows remain historical health gaps. See prior Git history and run audits.
-- Most recent authoritative terminal: 2026-10-09 15:50:42, 154934-final-retry.md. Attempt also persisted; primary final write blocked by safety checks.
-- Last fully successful run remains 2026-10-08 05:47:29. Latest run partial, 14 unique projects, 4 candidates, 0 ACTION, 1 identity failure, 2 source gaps. No Gmail or user notification.
-- Last observed partial shard coverage: shard 0 2026-10-09 07:59; shard 1 2026-10-09 15:50; shard 2 2026-10-09 14:52; shard 3 2026-10-09 12:48.
+- Cambria: current official whitelist/mint content exists but no independently verified NEW user-specific opt-in eligibility, deadline extension or unfinished individual right. Previously delivered RSGP opt-in is not repeated. 2026-10-09 18:49 status UNVERIFIED_CANDIDATE/NO_ACTION.
+- Concrete Additional USDC allocation: UNVERIFIED_PENDING. Canonical foundation page inaccessible; Tier A/B eligibility/action delta not established. Existing CT claim-open already delivered.
+- Identity: Space @intodotspace distinct from Spacecoin @spacecoin. No ambiguous account treated as user-rights evidence.
+- Latest terminal audit: 2026-10-09 18:49:28, runs/2026-10-09/184928-final.md. Run partial: 15 unique projects, 2 candidates, 0 ACTION, 0 identity failures, 2 source failures; final persisted but attempt write blocked by tool safety checks.
+- Last fully successful monitoring run remains 2026-10-08 05:47:29. Recent finals are partial; do not claim fully healthy. Continue existing :50 schedule and stale-shard recovery.
+- No new verified event meets first-party/current/unresolved-rights ACTION_GATE. No Gmail sent or needed from last partial.
+- Historical attempt-only and source gaps remain audit issues; see immutable run artifacts.
 - No task, scope, title, or schedule changes.
