@@ -153,8 +153,12 @@ def test_ca_frontend_null_is_unknown_and_quote_is_time_limited():
     import subprocess
     root = Handler.static_root
     js = (root / "app.js").read_text()
-    assert "const quoteFresh=" in js
-    assert "quoteAge<=30" in js
+    assert "function caQuoteCurrent(" in js
+    assert "q?.is_current_at_response !== true" in js
+    assert "q?.freshness_status !== 'CURRENT_AT_RESPONSE'" in js
+    assert "Number(q.valid_until)*1000-Date.now()" in js
+    assert "const quoteFresh=" not in js
+    assert "quoteAge<=30" not in js
     assert "报价已过期" in js
     assert "fact('$30 可成交报价'" in js
     script = r"""
@@ -196,7 +200,7 @@ def test_ca_partial_preview_survives_depth_failure_and_stale_quotes_are_hidden()
 const fs=require('node:fs');
 const vm=require('node:vm');
 const js=fs.readFileSync(process.argv[1],'utf8');
-const fn=js.slice(js.indexOf('function renderClusterPreview(job)'),js.indexOf('function clusterErrorMessage('));
+const fn=js.slice(js.indexOf('let caQuoteExpiryTimer = null;'),js.indexOf('function clusterErrorMessage('));
 const panel={hidden:true,innerHTML:''};
 const now=Date.now()/1000;
 const ctx={
@@ -207,6 +211,8 @@ const ctx={
   smallPrice:x=>String(x),
   pctText:x=>String(x)+'%',
   fact:(name,value)=>name+':'+value+';',
+  clearTimeout:()=>{},
+  setTimeout:()=>1,
 };
 vm.runInNewContext(fn+'\nrenderClusterPreview(job);',
   {...ctx,job:{
@@ -217,7 +223,9 @@ vm.runInNewContext(fn+'\nrenderClusterPreview(job);',
       price_usd:'0.01',market_cap_usd:null,liquidity_usd:null,
       execution_quote_30_usdc:{
         status:'OK',route_exists:true,observed_at:now-40,
-        execution_price_usdc:'0.012',price_impact_pct:'0.2'
+        execution_price_usdc:'0.012',price_impact_pct:'0.2',
+        is_current_at_response:false,freshness_status:'EXPIRED',
+        valid_until:now-10
       }
     }
   }}
@@ -306,3 +314,53 @@ def test_ca_quote_api_does_not_turn_old_or_unexecutable_route_into_current(tmp_p
     manager.jobs["stale"]["preview"]["execution_quote_30_usdc"]["route_exists"] = False
     assert manager.get("stale")["preview"]["execution_quote_30_usdc"]["is_current_at_response"] is False
     manager.executor.shutdown(wait=True)
+
+
+
+def test_ca_frontend_uses_server_authority_and_never_recomputes_30_second_ttl():
+    import subprocess
+    from mission_agent.mission_control.server import Handler
+    js = Handler.static_root / "app.js"
+    script = r"""
+const fs=require('node:fs');
+const vm=require('node:vm');
+const source=fs.readFileSync(process.argv[1],'utf8');
+const helper=source.slice(source.indexOf('let caQuoteExpiryTimer = null;'),
+                          source.indexOf('function renderClusterPreview(job)'));
+if (!helper.includes('is_current_at_response') || helper.includes('quoteAge<=30'))
+  throw Error('NOT_USING_SERVER_AUTHORITY');
+let callback=null,delay=null;
+const span={textContent:'fresh',classList:{add(v){this.latest=v}}};
+const base={
+  Date,Number,NaN,
+  $:id=>id==='cluster-final-quote'?span:null,
+  clearTimeout:()=>{},
+  setTimeout:(fn,ms)=>{callback=fn;delay=ms;return 42}
+};
+const now=Date.now()/1000;
+const evaluate=(body)=>vm.runInNewContext(helper + '\n' + body,base);
+const q={
+  status:'OK',route_exists:true,observed_at:now,
+  execution_price_usdc:'0.01',price_impact_pct:'0.2',
+  is_current_at_response:true,freshness_status:'CURRENT_AT_RESPONSE',
+  freshness_checked_at:now,valid_until:now+3
+};
+if(!evaluate('caQuoteCurrent('+JSON.stringify(q)+')')) throw Error('FRESH_REJECTED');
+if(evaluate('caQuoteCurrent('+JSON.stringify({...q,is_current_at_response:false})+')'))
+  throw Error('SERVER_REJECTION_IGNORED');
+if(evaluate('caQuoteCurrent('+JSON.stringify({...q,freshness_status:'ARCHIVED_NOT_LIVE'})+')'))
+  throw Error('ARCHIVED_NOT_LIVE_ACCEPTED');
+if(evaluate('caQuoteCurrent('+JSON.stringify({...q,valid_until:now-1})+')'))
+  throw Error('LOCAL_EXPIRY_NOT_ENFORCED');
+if(evaluate('caQuoteCurrent('+JSON.stringify({...q,valid_until:null})+')'))
+  throw Error('MISSING_SERVER_EXPIRY_ACCEPTED');
+evaluate('caScheduleQuoteExpiry('+JSON.stringify(q)+',"cluster-final-quote")');
+if(!callback || !(delay>0 && delay<3500)) throw Error('DISPLAY_DOES_NOT_EXPIRE');
+callback();
+if(!span.textContent.includes('已过期')) throw Error('VISIBLE_PRICE_REMAINS_FRESH');
+if(!source.includes('caScheduleQuoteExpiry(quote, \u0027cluster-final-quote\u0027)'))
+  throw Error('FINAL_REPORT_NOT_COVERED');
+if(!source.includes('caScheduleQuoteExpiry(q, \u0027cluster-preview-quote\u0027)'))
+  throw Error('PREVIEW_NOT_COVERED');
+"""
+    subprocess.run(["node", "-e", script, str(js)], check=True)
