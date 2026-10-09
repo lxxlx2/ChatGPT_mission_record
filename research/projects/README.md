@@ -18,3 +18,5 @@ Current mapped material:
 - FLOP Close Call competition: active operational rules remain in Mission; long-form activity analysis should use a project directory here.
 
 Operational monitoring thresholds remain in the Mission/TGE task roots.
+- Slop Cash / Umia SLOP auction and planned user participation: `research/projects/slop-cash/slop-cash-umia-auction.md` (no funds committed; terms/eligibility TBA).
+- SXTH participation candidate / identity unresolved: `research/projects/sxth/sxth-identity-unresolved.md` (do not confuse with SXT; no funds committed).
