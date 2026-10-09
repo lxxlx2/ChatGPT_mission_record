@@ -39,6 +39,7 @@ on:
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/styles.css'
       - 'crypto-300-profit-mission/local-agent/tests/test_meme_ca_trader_ui.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_dashboard.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_misc.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_delivery.py'
       - '.github/workflows/meme-fomo-crosschain-tests.yml'
   workflow_dispatch:
