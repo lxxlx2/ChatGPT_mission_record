@@ -222,7 +222,18 @@ class LocalDelivery:
     def drain(self)->None:
         rows=self.control.db.execute("SELECT d.*,e.body FROM local_delivery d JOIN decision_events e USING(decision_id) WHERE d.status IN ('PENDING','RETRY_PENDING') ORDER BY d.created_at").fetchall()
         for row in rows:
-            event={"decision_id":row["decision_id"],"body":json.loads(row["body"])};content=render(event);summary=" | ".join(content["body"].splitlines()[:7]);binary=shutil.which("terminal-notifier")
+            event={"decision_id":row["decision_id"],"body":json.loads(row["body"])}
+            content=render(event)
+            # Keep the actionable CA in short macOS alerts even when the full
+            # frozen Gmail template gains quote times and disclaimer lines.
+            title_lines=content["body"].splitlines()
+            summary=" | ".join((
+                title_lines[0],
+                title_lines[1],
+                "CA："+event["body"]["mint"],
+                "决策时间："+_utc_decision(event["body"].get("created_at")),
+            ))
+            binary=shutil.which("terminal-notifier")
             if binary:args=[binary,"-title",content["subject"],"-message",summary,"-group",row["decision_id"]];mechanism="terminal-notifier-group"
             else:
                 script="display notification "+json.dumps(summary,ensure_ascii=False)+" with title "+json.dumps(content["subject"],ensure_ascii=False);args=["/usr/bin/osascript","-e",script];mechanism="osascript-notification"
