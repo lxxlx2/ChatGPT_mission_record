@@ -189,6 +189,20 @@ class Checkpoints:
             raise ScanBlocked("ACCOUNT_ROWS_EXCEED_PAGES")
         if item["status"]=="PENDING" and (item["pages"] or rows or item["before"]):
             raise ScanBlocked("ACCOUNT_PENDING_HAS_PROGRESS")
+        # Diagnostics are optional: support checkpoints created before this field
+        # existed without resetting their durable signature cursor.
+        newest=item.get("last_page_newest_block_time")
+        oldest=item.get("last_page_oldest_block_time")
+        if newest is not None or oldest is not None:
+            if (type(newest) is not int or type(oldest) is not int
+                    or oldest>newest or item["pages"]<1):
+                raise ScanBlocked("ACCOUNT_PAGE_DIAGNOSTICS_INVALID")
+        last_size=item.get("last_page_size")
+        if last_size is not None and (
+            type(last_size) is not int or not 0<=last_size<=PAGE_SIZE
+            or item["pages"]<1
+        ):
+            raise ScanBlocked("ACCOUNT_PAGE_DIAGNOSTICS_INVALID")
         return item
 
     def save_account(self,item):
@@ -255,7 +269,9 @@ def scan_page(state,call):
         raise ScanBlocked("SIGNATURE_PAGE_INVALID")
     new={**state,"rows":list(state["rows"]),"pages":state["pages"]+1}
     seen={r["signature"] for r in new["rows"]}
-    prev_time=state["rows"][-1]["blockTime"] if state["rows"] else None
+    prev_time=(state.get("last_page_oldest_block_time")
+               if state.get("last_page_oldest_block_time") is not None
+               else state["rows"][-1]["blockTime"] if state["rows"] else None)
     cutoff=False
     for row in page:
         if not isinstance(row,dict):
@@ -282,6 +298,10 @@ def scan_page(state,call):
     if state["before"] and page and page[-1].get("signature")==state["before"]:
         raise ScanBlocked("SIGNATURE_CURSOR_STALLED")
     new["before"]=page[-1]["signature"] if page else state["before"]
+    new["last_page_size"]=len(page)
+    if page:
+        new["last_page_newest_block_time"]=page[0]["blockTime"]
+        new["last_page_oldest_block_time"]=page[-1]["blockTime"]
     if cutoff or len(page)<PAGE_SIZE:
         new["status"]="COMPLETE"
     elif (len(new["rows"])>=MAX_SOL_TRANSACTIONS_PER_WALLET
@@ -428,7 +448,12 @@ def report(store,root_sigs,local_trades,counts,stopped):
         "accounts_capped":capped,
         "accounts_pending_or_active":[{
             "account":addr,"mint":state["mint"],"status":state["status"],
-            "saved_pages":state["pages"],"saved_signatures":len(state["rows"])
+            "saved_pages":state["pages"],"saved_signatures":len(state["rows"]),
+            "last_page_newest_block_time":state.get("last_page_newest_block_time"),
+            "last_page_oldest_block_time":state.get("last_page_oldest_block_time"),
+            "last_page_size":state.get("last_page_size"),
+            "last_page_time_diagnostics_known":
+                state.get("last_page_oldest_block_time") is not None
         } for addr,state in states.items() if state["status"] in ("PENDING","ACTIVE")],
         "extra_signature_candidates_from_completed_accounts":len(candidates)+deferred,
         "decode_receipts_complete":len(decoded),
