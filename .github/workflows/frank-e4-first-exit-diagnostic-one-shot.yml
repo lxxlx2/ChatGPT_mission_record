@@ -65,7 +65,35 @@ jobs:
               "opcode_logs":bound[:50],"raw_instruction_headers":programs[:60],
               "last_logs":logs[-6:],"open_log_stack":stack[-4:]}
             print("DIAGNOSTIC_JSON:",json.dumps(result,separators=(",",":")))
-            print("STATUS: OBSERVED_PUBLIC_FINALIZED_TRANSACTION")
+            owner="498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
+            usdc="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+            mint="E4Ap4icMLwKot8rkkTbq5JkS5kZxt5XCE3yfxbzYBjHx"
+            swaps={}
+            for stage,k in (("preTokenBalances",-1),("postTokenBalances",1)):
+              for x in meta.get(stage) or []:
+                if x.get("owner")==owner:
+                  token=x["mint"]
+                  swaps[token]=swaps.get(token,0)+k*int(x["uiTokenAmount"]["amount"])
+            jup="JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+            ray="CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK"
+            rawj=hashlib.sha256(b"global:shared_accounts_route_v2").digest()[:8].hex()
+            rawr=hashlib.sha256(b"global:swap_v2").digest()[:8].hex()
+            joint=(any(x["program"]==jup and x["prefix_hex"]==rawj for x in programs)
+                   and any(x["program"]==ray and x["prefix_hex"]==rawr for x in programs)
+                   and any(x["program"]==jup and x["name"]=="SharedAccountsRouteV2" for x in bound)
+                   and any(x["program"]==ray and x["name"]=="SwapV2" for x in bound))
+            success=(meta.get("err") is None and owner in result["signers"]
+                     and swaps.get(mint)==-1101462225622394
+                     and swaps.get(usdc)==20696377193
+                     and joint and not stack)
+            print("E4_FIRST_EXIT_CONFIRMED_JSON:",json.dumps({
+               "signature":sig,"root_signed":owner in result["signers"],
+               "usdc_net_raw":swaps.get(usdc),"target_net_raw":swaps.get(mint),
+               "jupiter_route_and_raydium_clmm_swapv2_verified":joint,
+               "source":"official Raydium CLMM mainnet CAMMCzo program",
+               "confirmed_onchain_sell":success},separators=(",",":")))
+            print("STATUS: CONFIRMED_JUPITER_RAYDIUM_CLMM_EXIT" if success
+                  else "STATUS: UNVERIFIED_E4_FIRST_EXIT_GATE")
           except Exception as e:
             print("STATUS: UNVERIFIED_PUBLIC_RPC",type(e).__name__,str(e)[:140])
           PY
