@@ -61,8 +61,8 @@ def test_default_plan_uses_only_local_state_no_network_or_files(tmp_path,monkeyp
 
 def test_page_cursor_restarts_after_429_with_no_duplicate_calls(tmp_path,monkeypatch):
     store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
-    first_page=[row(i,scan.END-i-5) for i in range(100)]
-    later_page=[row(100,scan.START-5)]
+    first_page=[row(i,scan.END-i-5) for i in range(scan.PAGE_SIZE)]
+    later_page=[row(scan.PAGE_SIZE,scan.START-5)]
     calls=[]
     def rpc(_url,method,params):
         calls.append((method,params))
@@ -77,7 +77,7 @@ def test_page_cursor_restarts_after_429_with_no_duplicate_calls(tmp_path,monkeyp
     assert c1["rpc_attempts"]==1 and reason1=="REQUEST_BUDGET_EXHAUSTED"
     s1=store.account(ACCOUNT)
     assert s1["status"]=="ACTIVE" and s1["pages"]==1
-    assert len(s1["rows"])==100
+    assert len(s1["rows"])==scan.PAGE_SIZE
     c2,reason2=scan.do_run(store,set(),"signatures",True,2,"https://example.invalid")
     assert c2["rpc_attempts"]==1 and reason2=="RPC_HTTP_429"
     assert store.account(ACCOUNT)==s1
@@ -86,7 +86,7 @@ def test_page_cursor_restarts_after_429_with_no_duplicate_calls(tmp_path,monkeyp
     assert reason3 is None and c3["rpc_attempts"]==1
     state=reopened.account(ACCOUNT)
     assert state["status"]=="COMPLETE"
-    assert len(state["rows"])==100
+    assert len(state["rows"])==scan.PAGE_SIZE
     assert len(calls)==3
     assert all("before" not in calls[0][1][1] for _ in range(1))
     assert calls[1][1][1]["before"]==first_page[-1]["signature"]
@@ -100,15 +100,15 @@ def test_cap_kept_at_original_1000_and_never_called_again(tmp_path,monkeypatch):
     calls=[]
     def rpc(_url,method,params):
         calls.append(params)
-        n=(len(calls)-1)*100
-        return [row(i,scan.END-i-1) for i in range(n,n+100)]
+        n=(len(calls)-1)*scan.PAGE_SIZE
+        return [row(i,scan.END-i-1) for i in range(n,n+scan.PAGE_SIZE)]
     monkeypatch.setattr(scan,"one_rpc",rpc)
     for _ in range(3):
         counts,reason=scan.do_run(store,set(),"signatures",True,4,"https://example.invalid")
     item=store.account(ACCOUNT)
     assert item["status"]=="CAPPED"
     assert len(item["rows"])==1000
-    assert len(calls)==10
+    assert len(calls)==4
     before=len(calls)
     counts,reason=scan.do_run(store,set(),"signatures",True,2,"https://example.invalid")
     assert counts["rpc_attempts"]==0
@@ -200,3 +200,14 @@ def test_no_network_without_explicit_permission(tmp_path):
     store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
     with pytest.raises(scan.ScanBlocked,match="EXPLICIT_NETWORK_PERMISSION_REQUIRED"):
         scan.do_run(store,set(),"signatures",False,1)
+
+
+def test_decoding_rejects_wrong_block_time_for_matching_slot():
+    item=row(4,scan.START+30)
+    tx={
+        "slot":item["slot"],"blockTime":scan.START+31,
+        "transaction":{"message":{"accountKeys":[],"instructions":[]}},
+        "meta":{"err":None,"preTokenBalances":[],"postTokenBalances":[]},
+    }
+    with pytest.raises(scan.ScanBlocked,match="DECODE_TRANSACTION_MISMATCH"):
+        scan.decode_tx(item,lambda *args:tx)
