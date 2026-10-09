@@ -1095,6 +1095,15 @@ def load_registry(path:Path|None):
 
 
 def markdown(report:dict)->str:
+    def quote_time(value):
+        try:
+            stamp=float(value)
+            if not 0 < stamp < 4102444800:
+                return "UNAVAILABLE"
+            return time.strftime("%Y-%m-%d %H:%M:%S UTC",time.gmtime(stamp))
+        except (TypeError,ValueError,OverflowError):
+            return "UNAVAILABLE"
+
     m=report.get("metrics") or {}
     profile=report.get("token_profile") or {}
     market=report.get("market") or {}
@@ -1142,7 +1151,7 @@ def markdown(report:dict)->str:
         f"- Inactive sensitive extensions: {json.dumps(profile.get('inactive_sensitive_extensions') or [],ensure_ascii=False,sort_keys=True)}",
         f"- Unresolved sensitive extensions: {json.dumps(profile.get('unresolved_sensitive_extensions') or [],ensure_ascii=False,sort_keys=True)}",
         "",
-        "## Current market",
+        "## Market snapshot (historical; not live)",
         "",
         f"- Market source status: {market.get('status','UNAVAILABLE')} / {market.get('source','UNAVAILABLE')}",
         f"- Price USD: {market.get('price_usd','UNAVAILABLE')}",
@@ -1151,7 +1160,13 @@ def markdown(report:dict)->str:
         f"- Main pair: {pair.get('pair_address','UNAVAILABLE')}",
         f"- Main-pair liquidity USD: {pair.get('liquidity_usd','UNAVAILABLE')}",
         f"- 24h volume USD: {(pair.get('volume') or {}).get('h24','UNAVAILABLE')}",
-        f"- Jupiter $30 quote: {quote.get('status','UNAVAILABLE')} / price={quote.get('execution_price_usdc','UNAVAILABLE')} / impact={quote.get('price_impact_pct','UNAVAILABLE')}%",
+        f"- Jupiter $30 quote (HISTORICAL_SNAPSHOT, never a live trading quote): "
+        f"status_at_capture={quote.get('status','UNAVAILABLE')} / "
+        f"price={quote.get('execution_price_usdc','UNAVAILABLE')} / "
+        f"impact={quote.get('price_impact_pct','UNAVAILABLE')}%",
+        f"- Jupiter quote observed_at: {quote_time(quote.get('observed_at'))}",
+        f"- Jupiter quote valid_until: {quote_time(quote.get('valid_until'))} "
+        "(expires 30 seconds after quote; do not treat this saved report as current)",
         "",
         "## Concentration",
         "",
