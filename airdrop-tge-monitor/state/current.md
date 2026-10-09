@@ -1,17 +1,17 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-09 07:59 Asia/Bangkok
+Updated: 2026-10-09 10:46 Asia/Bangkok
 Timezone: Asia/Bangkok
 
 - architecture: urgent_plus_4_shards_with_stale_recovery
 - expected_schedule: hourly at minute 50
-- latest_actual_scheduler_run: 2026-10-09 07:59:37 Asia/Bangkok
+- latest_actual_scheduler_run: 2026-10-09 10:45:22 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-08 05:47:29 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/075937-final-retry.md
-- latest_scheduled_shard: 3
-- latest_executed_shard: 0
-- latest_stale_shard_recovery: true
-- latest_candidate_count: 2
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-09/104522-final.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
+- latest_stale_shard_recovery: false
+- latest_candidate_count: 3
 - latest_triggered_events: 0
 - latest_identity_failures: 0
 - latest_source_failures: 2
