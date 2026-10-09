@@ -49,3 +49,34 @@ def test_checkpoint_reads_original_without_api(tmp_path):
     store._write(store.root/"history.json",original)
     assert module.initial_state(store)==original
     assert original["status"]=="PENDING"
+
+
+def _exit_case():
+    return {"signature":"5wqKv5YuurRKUaJAK5fZtFrNg6GocVZuTTiAPWYrYDaswyUArwAZurpbZFU6WBjHp5z5Bt5bPCkLNKVQHfS6yigx",
+            "block_time":1791509207,
+            "token_delta_raw":"-4732220716414",
+            "usdc_delta_raw":"7031556770",
+            "frank_signed":True,"fomo_cosigned":True}
+
+
+def test_conditional_lot_round_trip_matches_actual_reported_amounts():
+    evidence=module.conditional_roundtrip(
+        [{"token_delta_raw":"0"},{ "token_delta_raw":"0"},_exit_case()],True)
+    assert evidence["status"]=="CONDITIONAL_MATCHED_TOKEN_ROUNDTRIP"
+    assert evidence["hold_seconds"]==85231
+    assert evidence["indicative_profit_usdc"]=="315.822278"
+    assert evidence["indicative_return_pct"]=="4.702721"
+    assert evidence["sale_instruction_verified"] is False
+    assert evidence["gas_and_multiwallet_pnl_complete"] is False
+
+
+def test_round_trip_rejects_other_token_movements_and_incomplete_windows():
+    base=[{"token_delta_raw":"0"},_exit_case()]
+    assert module.conditional_roundtrip(base,False)["status"]=="UNVERIFIED_INCOMPLETE_ACCOUNT"
+    assert module.conditional_roundtrip([{"token_delta_raw":"12"},_exit_case()],True)["status"]=="UNVERIFIED_OTHER_TARGET_TOKEN_MOVEMENTS"
+    x=dict(_exit_case())
+    x["frank_signed"]=False
+    assert module.conditional_roundtrip([x],True)["status"]=="UNVERIFIED_NOT_MATCHED_ROOT_AUTHORIZED_EXIT"
+    x=dict(_exit_case())
+    x["usdc_delta_raw"]="0"
+    assert module.conditional_roundtrip([x],True)["status"]=="UNVERIFIED_NOT_MATCHED_ROOT_AUTHORIZED_EXIT"
