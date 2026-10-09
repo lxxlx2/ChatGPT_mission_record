@@ -21,7 +21,8 @@ from scripts.audit_frank_native_owner_coverage import (
     START, END, EvidenceGap, build_seed_inventory, local_snapshot,
     flows, read_report,
 )
-from scripts.inspect_frank_solana_root_window import EvidenceError
+from scripts.inspect_frank_solana_root_window import EvidenceError, owned_deltas
+from mission_agent.frank.parser import normalize as frank_normalize, IncompleteTransaction
 
 SIG = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{64,100}$")
 MAX_CACHED_TX_BYTES = 8_000_000
@@ -69,6 +70,92 @@ def cached_root(cache_dir: Path, wallet: str, start: int, end: int, expected: in
     return result
 
 
+def unsigned_target_only_evidence(transactions, wallet):
+    """Explain target-only passive movement without declaring an executed trade."""
+    observations=[]
+    conditions=Counter()
+    parser_results=Counter()
+    associated_programs=Counter()
+    mint_counts=Counter()
+    for signature,tx in transactions.items():
+        meta=tx.get("meta") or {}
+        if meta.get("err") is not None:
+            continue
+        f=flows(tx,wallet)
+        if (f["signed_by_root"] or f["target_count"]==0
+                or f["quote_count"] or f["opposing_net_token_quote"]):
+            continue
+        deltas=owned_deltas(tx,wallet)
+        targets=[row for row in deltas if row["mint"] not in {
+            USDC,"So11111111111111111111111111111111111111112",
+            "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+        } and int(row["raw"]) != 0]
+        if not targets:
+            continue
+        keys=((tx.get("transaction") or {}).get("message") or {}).get("accountKeys") or []
+        fee_payer=keys[0].get("pubkey") if keys and isinstance(keys[0],dict) else None
+        try:
+            parsed=frank_normalize(signature,tx,wallet=wallet)
+            classification=parsed["mechanical_classification"]
+            authoritative=bool(parsed["classification_evidence"]["wallet_authority"])
+            transferred=len(parsed["wallet_token_transfer_flows"])
+        except (IncompleteTransaction,ValueError,KeyError,IndexError,TypeError):
+            classification="PARSER_INCOMPLETE"
+            authoritative=False
+            transferred=None
+        parser_results[classification]+=1
+        names=set()
+        for ix in (((tx.get("transaction") or {}).get("message") or {}).get("instructions") or []):
+            if isinstance(ix,dict) and isinstance(ix.get("programId"),str):
+                names.add(ix["programId"])
+        for group in (meta.get("innerInstructions") or []):
+            for ix in group.get("instructions") or []:
+                if isinstance(ix,dict) and isinstance(ix.get("programId"),str):
+                    names.add(ix["programId"])
+        for program in names:
+            associated_programs[program]+=1
+        direction=("IN" if all(int(row["raw"])>0 for row in targets) else
+                   "OUT" if all(int(row["raw"])<0 for row in targets) else "MIXED")
+        for row in targets:
+            mint_counts[row["mint"]]+=1
+        conditions[(direction, bool(f["fomo_cosigned"]),
+                    bool(f["has_known_router"]),classification)]+=1
+        observations.append({
+            "signature":signature,"slot":tx.get("slot"),
+            "block_time":tx.get("blockTime"),
+            "direction":direction,
+            "target_changes":[{"mint":r["mint"],"net_raw":r["raw"],
+                "decimals":r["decimals"]} for r in targets],
+            "fee_payer":fee_payer,
+            "fomo_cosigned":bool(f["fomo_cosigned"]),
+            "known_router_present":bool(f["has_known_router"]),
+            "wallet_authority_detected":authoritative,
+            "decoded_owned_transfer_legs":transferred,
+            "parser_classification":classification,
+            "trade_confirmed":False,
+        })
+    observations.sort(key=lambda x:(x["block_time"] or 0,x["slot"] or 0,x["signature"]))
+    return {
+        "unsigned_target_only_events":len(observations),
+        "unsigned_target_only_by_mint":dict(sorted(mint_counts.items())),
+        "unsigned_target_only_parser_classifications":dict(sorted(parser_results.items())),
+        "unsigned_target_only_patterns":[
+            {"direction":direction,"fomo_cosigned":cosign,
+             "known_router_present":router,"parser_classification":classification,
+             "count":n}
+            for (direction,cosign,router,classification),n in sorted(
+                conditions.items(),key=lambda p:(-p[1],p[0]))
+        ],
+        "unsigned_target_only_program_presence":dict(sorted(
+            associated_programs.items(),key=lambda p:(-p[1],p[0]))
+        ),
+        "unsigned_target_only_transaction_evidence":observations,
+        "unsigned_target_only_trade_count_confirmed":0,
+        "unsigned_target_only_attribution": "REVIEW_ONLY",
+        "unsigned_target_only_limitation":"Per-tx net change is not a paid buy or sale. FOMO cosigning, DFlow/router presence and passive receipt tags are only evidence; historical fill attribution requires verifying payment and route. Signature set is limited to root-referenced transactions.",
+    }
+
+
 def build_offline_report(source_report, cache_dir, db_path, start, end):
     source_count,source_hash=read_report(source_report,WALLET,start,end)
     transactions=cached_root(cache_dir,WALLET,start,end,source_count)
@@ -90,6 +177,7 @@ def build_offline_report(source_report, cache_dir, db_path, start, end):
                 "trade_confirmed":False,
             })
     candidate_rows.sort(key=lambda x:(x["block_time"],x["slot"],x["signature"]))
+    unsigned=unsigned_target_only_evidence(transactions,WALLET)
     mint_to_accounts=Counter(inventory.values())
     return {
         "status":("OFFLINE_ROOT_CACHE_RECONCILED_SCOPE_LIMITED"
@@ -110,6 +198,7 @@ def build_offline_report(source_report, cache_dir, db_path, start, end):
         },
         "root_opposing_flow_candidate_count":len(candidate_rows),
         "root_opposing_flow_candidates":candidate_rows,
+        **unsigned,
         "token_account_signature_coverage_checked":False,
         "historical_unreferenced_accounts_checked":False,
         "can_conclude_complete_frank_trades":False,
@@ -139,9 +228,11 @@ def main():
         fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
         with os.fdopen(fd,"w",encoding="utf-8") as writer:
             json.dump(body,writer,indent=2,ensure_ascii=False)
-        output={k:v for k,v in body.items() if k not in ("root_opposing_flow_candidates","observed_accounts_by_mint")}
+        output={k:v for k,v in body.items() if k not in ("root_opposing_flow_candidates","observed_accounts_by_mint","unsigned_target_only_transaction_evidence","unsigned_target_only_by_mint","unsigned_target_only_program_presence")}
         output["candidate_sample"]=body["root_opposing_flow_candidates"][:25]
         output["account_mints"]=body["observed_accounts_by_mint"]
+        output["unsigned_target_only_sample"]=body["unsigned_target_only_transaction_evidence"][:20]
+        output["unsigned_target_only_mint_counts"]=body["unsigned_target_only_by_mint"]
         output["full_report"]=str(path)
         print(json.dumps(output,ensure_ascii=False,indent=2))
         return 0
