@@ -332,7 +332,7 @@ def test_service_preserves_quote_observation_and_uses_frozen_gmail_max_age(tmp_p
     event=json.loads(service.control.db.execute(
         "SELECT body FROM decision_events"
     ).fetchone()[0])
-    assert event["inputs"]["quote_observed_at"]==quote["observed_at"]
+    assert event["inputs"]["quote_observed_at"]==str(quote["observed_at"])
     assert "observed_at" not in event["inputs"]["quote"]
     gmail=service.control.db.execute(
         "SELECT body FROM gmail_delivery"
