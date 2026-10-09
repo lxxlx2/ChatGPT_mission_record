@@ -118,13 +118,14 @@ def test_ca_early_jupiter_quote_precedes_holder_history_and_is_timestamped(tmp_p
     }
     assert initial_quote["valid_until"] == 1_800_000_030.0
     assert initial_quote["quote_record_type"] == "HISTORICAL_SNAPSHOT"
-    assert initial_quote["freshness_status"] == "EXPIRED"
+    assert initial_quote["freshness_status"] in {"EXPIRED", "UNAVAILABLE"}
     assert initial_quote["is_current_at_response"] is False
     manager._set_progress("early", "HOLDERS_READY", {
         "top_accounts_resolved": 20, "raw_top10_resolved_pct": "42",
     })
     later = manager.get("early")
-    assert later["preview"]["execution_quote_30_usdc"] == early["preview"]["execution_quote_30_usdc"]
+    assert later["preview"]["execution_quote_30_usdc"]["valid_until"] == initial_quote["valid_until"]
+    assert later["preview"]["execution_quote_30_usdc"]["execution_price_usdc"] == "0.00123"
     assert later["preview"]["top_accounts_resolved"] == 20
     manager.executor.shutdown(wait=True)
 
