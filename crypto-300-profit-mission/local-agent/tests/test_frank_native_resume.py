@@ -424,3 +424,11 @@ def test_rpc_spacing_fails_closed_for_invalid_interval(tmp_path,spacing):
     with pytest.raises(scan.ScanBlocked,match="REQUEST_SPACING_INVALID"):
         scan.do_run(store,set(),"signatures",True,1,
                     "https://example.invalid",spacing_seconds=spacing)
+
+
+def test_cutoff_page_fully_validates_rows_before_saving_time_bounds(tmp_path):
+    store=scan.Checkpoints(tmp_path/"checkpoint",context(),create=True)
+    invalid=[row(0,scan.START-1),{"signature":None,"blockTime":None,"slot":None}]
+    with pytest.raises(scan.ScanBlocked,match="SIGNATURE_ROW_INVALID"):
+        scan.scan_page(store.account(ACCOUNT),lambda *_:invalid)
+    assert store.account(ACCOUNT)["status"]=="PENDING"
