@@ -389,3 +389,38 @@ def test_existing_page_without_diagnostics_resumes_without_reset(tmp_path):
     assert res["rows"][0]["signature"]==sig(251)
     assert res["last_page_oldest_block_time"]==scan.END-10
     assert store.account(ACCOUNT)["before"]==sig(250)
+
+
+def test_explicit_five_second_rpc_spacing_for_usdc_resume(tmp_path,monkeypatch):
+    store=scan.Checkpoints(tmp_path/"checkpoints",context(),create=True)
+    clock={"now":100.0,"sleeps":[]}
+    monkeypatch.setattr(scan.time,"monotonic",lambda:clock["now"])
+    def fake_sleep(seconds):
+        clock["sleeps"].append(seconds)
+        clock["now"]+=seconds
+    monkeypatch.setattr(scan.time,"sleep",fake_sleep)
+    calls=[]
+    def fake_rpc(_url,method,params):
+        calls.append((method,params[1].get("before")))
+        if len(calls)==1:
+            return [row(i,scan.END+250-i) for i in range(scan.PAGE_SIZE)]
+        return [row(scan.PAGE_SIZE,scan.END-15)]
+    monkeypatch.setattr(scan,"one_rpc",fake_rpc)
+    c,reason=scan.do_run(store,set(),"signatures",True,2,
+                          "https://example.invalid",
+                          account=ACCOUNT,spacing_seconds=5)
+    assert reason is None
+    assert c["rpc_attempts"]==2
+    assert c["new_signature_pages"]==2
+    assert clock["sleeps"]==[5]
+    assert calls[1][1]==sig(249)
+    assert store.account(ACCOUNT)["status"]=="COMPLETE"
+    assert store.account(ACCOUNT)["rows"][0]["blockTime"]==scan.END-15
+
+
+@pytest.mark.parametrize("spacing",[0.5,0,-1,float("nan"),float("inf"),61,True])
+def test_rpc_spacing_fails_closed_for_invalid_interval(tmp_path,spacing):
+    store=scan.Checkpoints(tmp_path/"checkpoints",context(),create=True)
+    with pytest.raises(scan.ScanBlocked,match="REQUEST_SPACING_INVALID"):
+        scan.do_run(store,set(),"signatures",True,1,
+                    "https://example.invalid",spacing_seconds=spacing)
