@@ -170,10 +170,24 @@ for name,mint,expected_program in cases:
     for detail in profile.get("sensitive_extension_details") or []:
         assert detail.get("status") in {"ACTIVE_RISK","INACTIVE","UNRESOLVED"},detail
 
+    assert preview_seconds is not None,(name,"BASE_PREVIEW_MISSING")
+    assert quote_preview_seconds is not None,(name,"EARLY_JUPITER_QUOTE_PREVIEW_MISSING")
+    assert execution.get("quote_record_type")=="HISTORICAL_SNAPSHOT",execution
+    assert execution.get("freshness_status") in {"CURRENT_AT_RESPONSE","EXPIRED","UNAVAILABLE"},execution
+    assert isinstance(execution.get("is_current_at_response"),bool),execution
+    if execution.get("is_current_at_response"):
+        assert execution.get("freshness_status")=="CURRENT_AT_RESPONSE"
+        assert execution.get("valid_until") is not None
+
     history=report.get("assessment_history")
     assert isinstance(history,list) and history
     report_dir=CONTROL/"cluster-reports"/mint
     assert (report_dir/"latest.json").is_file()
+    archived=json.loads((report_dir/"latest.json").read_text())
+    archived_quote=archived.get("execution_quote_30_usdc") or {}
+    assert archived_quote.get("quote_record_type")=="HISTORICAL_SNAPSHOT",archived_quote
+    assert archived_quote.get("freshness_status")=="ARCHIVED_NOT_LIVE",archived_quote
+    assert archived_quote.get("is_current_at_response") is False,archived_quote
     assert list(report_dir.glob("*.md"))
     assert execution.get("status") in {"OK","UNAVAILABLE"},execution
 
@@ -195,7 +209,7 @@ for name,mint,expected_program in cases:
 print("\n===== REAL-CA SUMMARY =====")
 print(json.dumps(summaries,ensure_ascii=False,indent=2))
 print("REAL_CA_SCHEMA_AND_SEMANTICS: PASS")
-print("TIMING_IS_ACTUAL_RUNNER_MEASUREMENT_NOT_MAC_LATENCY: true")
+print("TIMING_IS_LOCAL_SCRIPT_ELAPSED_WALL_TIME_SECONDS: true")
 PY
 
 [ ! -e "$CONTROL/mission-control.sqlite" ] || die "MISSION_CONTROL_DB_CREATED"
