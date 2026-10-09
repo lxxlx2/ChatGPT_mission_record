@@ -143,7 +143,7 @@ class MissionMemeService:
             # Preserve the actual Jupiter observation for the frozen Gmail body.
             # Do not add it to stable quote decision metrics or reinterpret as
             # a current executable price at delivery time.
-            "quote_observed_at":quote.get("observed_at"),
+            "quote_observed_at":(None if quote.get("observed_at") is None else str(quote["observed_at"])),
         }
 
     @staticmethod
