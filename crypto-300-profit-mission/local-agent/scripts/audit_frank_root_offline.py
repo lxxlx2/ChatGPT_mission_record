@@ -92,7 +92,9 @@ def build_offline_report(source_report, cache_dir, db_path, start, end):
     candidate_rows.sort(key=lambda x:(x["block_time"],x["slot"],x["signature"]))
     mint_to_accounts=Counter(inventory.values())
     return {
-        "status":"OFFLINE_ROOT_CACHE_RECONCILED_SCOPE_LIMITED",
+        "status":("OFFLINE_ROOT_CACHE_RECONCILED_SCOPE_LIMITED"
+                  if set(transactions)==local_root
+                  else "OFFLINE_ROOT_CACHE_LOCAL_LEDGER_GAPS"),
         "wallet":WALLET,"start":start,"end":end,
         "source_report_sha256":source_hash,
         "cached_root_transaction_count":len(transactions),
