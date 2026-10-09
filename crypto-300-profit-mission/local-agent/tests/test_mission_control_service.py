@@ -312,3 +312,32 @@ def test_mission_loop_denies_rejected_retention_even_if_candidate_sha_matches(tm
                                 approved_policy_sha256=new_digest)
     assert rejected.delivery_allowed is False
     rejected.close()
+
+
+
+def test_service_preserves_quote_observation_and_uses_frozen_gmail_max_age(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    content=json.loads(pol.read_text())
+    content["decision"]["initial_notification_max_age_seconds"]=543
+    pol.write_text(json.dumps(content))
+    service=MissionMemeService(
+        production_root=prod,control_root=control,policy_path=pol
+    )
+    assert service.gmail.max_decision_age_seconds==543
+    quote=good_quote()
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:quote
+    result=service.cycle()
+    assert result["decision_events"][0]["decision"]=="BUY"
+    event=json.loads(service.control.db.execute(
+        "SELECT body FROM decision_events"
+    ).fetchone()[0])
+    assert event["inputs"]["quote_observed_at"]==quote["observed_at"]
+    assert "observed_at" not in event["inputs"]["quote"]
+    gmail=service.control.db.execute(
+        "SELECT body FROM gmail_delivery"
+    ).fetchone()[0]
+    assert "Jupiter 报价观察时间：" in gmail
+    assert "决策时 $30 报价：" in gmail
+    assert "当前可成交价：" not in gmail
+    service.close()
