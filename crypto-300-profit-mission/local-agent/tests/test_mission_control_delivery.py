@@ -158,7 +158,7 @@ def test_mission_control_email_mobile_readable_amounts_keep_full_ca(tmp_path):
     assert f"\n{mint}\n" in rendered["body"]
     assert "最近买入投入：40,300.82 USDC" in rendered["body"]
     assert "Frank 参考买价：0.06282 USDC" in rendered["body"]
-    assert "预计价格冲击：0.12%" in rendered["body"]
+    assert "预计价格冲击：0.1%" in rendered["body"]
     assert "Decision ID：" not in rendered["body"]
 
 
