@@ -215,3 +215,11 @@ Reliability rules:
 - Gmail Sent id + readback is delivery authority;
 - GitHub archive failure after Gmail success must never cause a resend;
 - every recovery/resend remains a full 12-section report.
+
+## 2026-10-09 verified actual schedule and delivery override (latest)
+
+The single existing 美股每日晨报 scheduler uses Asia/Bangkok 05:40 prebuild, 06:40 repair, 07:40 primary, 08:40 recovery. This clarifies the actual schedule; older 07:00/08:00/09:00 prose in this document is superseded and must not be used to alter the existing scheduler.
+
+For 2026-10-09, primary and recovery had a complete 12-section QA-PASS pending body but approved Gmail tool calls returned execution safety blocks. Manual official recovery sent one full report to the authorized recipient, Gmail id `1a1209a71157526b`; authoritative Git archive is `us-stock-daily/reports/daily/2026/2026-10/2026-10-09.md`. Same-day future invocations MUST dedupe this Sent and repair archive only, never resend.
+
+Prioritize actual delivery over redundant research: compact attempt, read latest canonical and pending, Gmail Sent dedupe, validate latest completed market session / macro / 12 sections / STK acceptance, bounded repair, full text/plain Gmail, readback, identical Git archive/readback, terminal audit. If tool safety blocks an email, report real BLOCKED_WITH_REASON internally without claiming delivery; a future existing recovery slot may retry after Sent dedupe. Prompt simplification does not override platform checks or relax quality standards. No task, name, schedule, monitor scope, or monthly-subtask change.
