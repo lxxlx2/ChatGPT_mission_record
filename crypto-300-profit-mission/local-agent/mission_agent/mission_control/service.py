@@ -68,7 +68,7 @@ class MissionMemeService:
         self.local = LocalDelivery(self.control)
         self.gmail = GmailDelivery(
             self.control,
-            max_decision_age_seconds=int(self.policy["decision"]["initial_notification_max_age_seconds"]),
+            max_decision_age_seconds=int(self.policy["decision"].get("initial_notification_max_age_seconds", 600)),
         )
         self.health_path = self.control_root / "mission-control-health.json"
 
