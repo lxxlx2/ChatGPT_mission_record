@@ -30,12 +30,12 @@ def txn(time,quote_from,quote_to,token_from,token_to,router=False):
             "preTokenBalances":[
                 bal(0,USDC,ROOT,quote_from),
                 bal(1,TOKEN,ROOT,token_from),
-                bal(2,USDC,OTHER,0),
+                bal(2,USDC,OTHER,max(quote_to-quote_from,0)),
             ],
             "postTokenBalances":[
                 bal(0,USDC,ROOT,quote_to),
                 bal(1,TOKEN,ROOT,token_to),
-                bal(2,USDC,OTHER,quote_from-quote_to),
+                bal(2,USDC,OTHER,max(quote_from-quote_to,0)),
             ],
             "innerInstructions":[]},
     }
