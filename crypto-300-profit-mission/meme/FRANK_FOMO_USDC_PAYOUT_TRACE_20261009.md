@@ -38,3 +38,15 @@ For **all three**, `tx_succeeded=true`, `frank_root_signed=false`, `fomo_cosigne
 3. Only if there is real Frank-owned USDC outflow paired with target acquisition and externally verifiable beneficiary/authority relationship should the hypothesis of missing active BUY/SELL be escalated. Fee distributions remain `OBSERVE_ONLY`.
 
 No production, main branch, LaunchAgent, monitor, email, wallet or autotrading changes. PR #29 remains DRAFT; `PERSON_TRADE_COVERAGE=UNVERIFIED`; `PRODUCTION_TRADING=NO_GO`.
+
+## External fee schedule corroboration (2026-10-09, provisional)
+
+Fee tiers cited in English-language *third-party* write-ups as sourced to FOMO's own help site (`help.fomo.family`): Solana orders worth 5–47.50 USDC reportedly incur 2% fees, and orders worth 47.50–190 USDC reportedly incur a 0.95 USDC flat fee. Sources: https://fomoappguide.com/guides/fees/fomo-fees-explained and https://fomo-trading.com/solana . **These are NOT independent verification of current official live platform fee terms, nor proof of the parties' entitlements. Official help site wasn't directly accessible in this research.**
+
+Observed matching signatures:
+- First trace: USDC input 33.135284, USDC allocated to Frank 0.265050 and another recipient 0.397576, total 0.662626, approximately 1.99976% of funding input. Remaining 32.472658 USDC goes elsewhere; total allocations reconcile exactly to 33.135284.
+- Second trace: 100.000000 USDC input, fee-shaped distributions 0.475000 (Frank) + 0.380000 + 0.095000 = 0.950000 USDC. Remaining 99.050000 USDC distributes as 97.425580 + 1.624420.
+- Third trace: 100.000000 USDC input, the **same** 0.475000 Frank + 0.380000 + 0.095000 = 0.950000 USDC, and 99.050000 remaining.
+- Frank's share is approximately 40% of first fee-like distribution and exactly 50% of each latter fee-like distribution. The difference itself warns against assuming a universal referral share contract.
+
+**Interpretation upgrade (not trade classification)**: three independent wallet-owner routes, FOMO fee payer/cosigner, an exact reproducible 0.95 USDC distribution at the 100-USDC size, and a ~2% distribution at the 33-USDC size provide strong contextual evidence for `FOMO_FEE_DISTRIBUTION_CANDIDATE` rather than Frank personal buys/sells. Neither the actual source of individual fee entitlement nor official contemporaneous schedule is confirmed. NO upgrade to `BUY`, `SELL`, `PERSON_PATTERN` or alert delivery. Future sampling should target discriminating cases rather than spending RPC on more examples of the same apparent fee-credit pattern.
