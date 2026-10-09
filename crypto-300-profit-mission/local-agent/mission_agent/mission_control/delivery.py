@@ -29,6 +29,45 @@ def _seconds_since(value: str | None) -> float | None:
         return None
 
 
+def _decision_age_seconds(value: str | None) -> float | None:
+    """Fail closed on missing, malformed, naive or future decision timestamps."""
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        at = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if at.tzinfo is None or at.utcoffset() is None:
+            return None
+        seconds = (datetime.now(timezone.utc) - at).total_seconds()
+        return seconds if seconds >= 0 else None
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
+def _utc_observation(value) -> str:
+    """Render historical quote time, never invent a missing observation."""
+    try:
+        if value is None or isinstance(value, bool):
+            return "未记录（不可当作实时报价）"
+        at = Decimal(str(value))
+        if not at.is_finite() or at <= 0:
+            return "未记录（不可当作实时报价）"
+        return datetime.fromtimestamp(float(at), timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    except (ValueError, TypeError, OverflowError, InvalidOperation):
+        return "未记录（不可当作实时报价）"
+
+
+def _utc_decision(value) -> str:
+    if not isinstance(value, str):
+        return "未记录"
+    try:
+        at = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if at.tzinfo is None or at.utcoffset() is None:
+            return "未记录"
+        return at.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    except (ValueError, OverflowError):
+        return "未记录"
+
+
 DECISION_ZH={"BUY":"可跟","SMALL_BUY":"小仓跟","WAIT":"等待","NO_BUY":"不跟"}
 PATTERN_ZH={"MULTIPLE":"多次强加仓","ACCUMULATION":"持续建仓","REENTRY_WATCH":"重新建仓观察","NONE":"无模式"}
 STATE_ZH={"OPEN":"持仓中","CLOSED":"已退出","INVENTORY_UNDETERMINED":"仓位不明"}
@@ -148,6 +187,9 @@ def render(event:dict)->dict:
     lines=[
         "结论："+_zh(DECISION_ZH,decision,decision)+"  |  "+_zh(PATTERN_ZH,pattern,pattern),
         "原因："+reasons,
+        "决策时间："+_utc_decision(body.get("created_at")),
+        "Jupiter 报价观察时间："+_utc_observation(inputs.get("quote_observed_at")),
+        "报价为决策时历史快照，不代表收到邮件时仍可成交。",
         "",
         "CA（单独一行，便于长按复制）",
         body["mint"],
@@ -158,7 +200,7 @@ def render(event:dict)->dict:
     if frank_price not in (None,""):
         lines.append("Frank 参考买价："+_compact_price(frank_price)+" USDC")
     if exec_price not in (None,""):
-        lines.append("当前可成交价："+_compact_price(exec_price)+" USDC")
+        lines.append("决策时 $30 报价："+_compact_price(exec_price)+" USDC")
     if deviation not in (None,""):
         lines.append("相对 Frank 买价："+_readable_number(deviation,decimal_places=1)+"%")
     if impact not in (None,""):
@@ -201,7 +243,11 @@ class GmailDelivery:
     MAX_SEND_ATTEMPTS=5
     SENT_UNVERIFIED_MAX_AGE_SECONDS=3600
 
-    def __init__(self,control:ControlDB):self.control,self.db=control,control.db
+    def __init__(self,control:ControlDB,*,max_decision_age_seconds:int=600):
+        if type(max_decision_age_seconds) is not int or max_decision_age_seconds<=0:
+            raise ValueError("GMAIL_DECISION_MAX_AGE_INVALID")
+        self.control,self.db=control,control.db
+        self.max_decision_age_seconds=max_decision_age_seconds
     def enqueue(self,event:dict,*,mode:str,forbidden:bool)->None:
         content=render(event);decision_id=event["decision_id"];forbidden=forbidden or mode!="LIVE";wire="<mission."+digest({"decision_id":decision_id,"mode":mode})+"@local.invalid>";status="DRY_RUN_AUDIT" if forbidden else "PENDING"
         self.db.execute("INSERT OR IGNORE INTO gmail_delivery(decision_id,delivery_mode,delivery_forbidden,subject,body,content_hash,wire_message_id,status,created_at) VALUES(?,?,?,?,?,?,?,?,?)",(decision_id,mode,int(forbidden),content["subject"],content["body"],content["content_hash"],wire,status,utc()))
@@ -241,17 +287,39 @@ class GmailDelivery:
             return age is None or age>=self.READBACK_BACKOFF_SECONDS
         return True
     def drain(self,provider)->None:
-        rows=self.db.execute("SELECT * FROM gmail_delivery WHERE delivery_forbidden=0 AND status NOT IN ('SENT_VERIFIED','PERMANENT_ERROR','DRY_RUN_AUDIT','MANUAL_REVIEW') ORDER BY created_at").fetchall()
+        rows=self.db.execute("""
+            SELECT g.*,e.created_at AS decision_created_at
+            FROM gmail_delivery g
+            JOIN decision_events e ON e.decision_id=g.decision_id
+            WHERE g.delivery_forbidden=0
+              AND g.status NOT IN ('SENT_VERIFIED','PERMANENT_ERROR','DRY_RUN_AUDIT','MANUAL_REVIEW')
+            ORDER BY g.created_at
+        """).fetchall()
         for raw_row in rows:
             row=dict(raw_row)
+            decision_id=row["decision_id"]
+            uncertain=row["status"] in {"SENDING","SENT_UNVERIFIED"} or bool(row["gmail_message_id"])
+            # Already-attempted sends must still be reconciled against Gmail Sent,
+            # even after the original decision expires. Never retry their send.
+            if not uncertain:
+                age=_decision_age_seconds(row["decision_created_at"])
+                if age is None or age>self.max_decision_age_seconds:
+                    self._set(decision_id,"MANUAL_REVIEW","GMAIL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND")
+                    continue
             if not self._due(row):continue
-            decision_id=row["decision_id"];uncertain=row["status"] in {"SENDING","SENT_UNVERIFIED"} or bool(row["gmail_message_id"])
             try:
                 if provider is None:raise CredentialBlocked("NO_LOCAL_GMAIL_CREDENTIAL")
                 provider.ready();candidates=[provider.get(row["gmail_message_id"])] if row["gmail_message_id"] else [provider.get(mid) for mid in provider.find_sent(row["wire_message_id"],decision_id)]
                 if len(candidates)>1:raise PermanentError("MULTIPLE_SENT_IDENTITIES_REQUIRE_REVIEW")
                 if candidates:self._verified(decision_id,self._verify(row,candidates[0]));continue
                 if uncertain:self._set(decision_id,"SENT_UNVERIFIED","SEND_OUTCOME_UNCERTAIN_WAITING_SENT");continue
+                # Provider readiness/readback may block for minutes. Recheck the
+                # immutable decision immediately before the FIRST send attempt.
+                if not uncertain:
+                    age=_decision_age_seconds(row["decision_created_at"])
+                    if age is None or age>self.max_decision_age_seconds:
+                        self._set(decision_id,"MANUAL_REVIEW","GMAIL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND")
+                        continue
                 wire=self._wire(row,provider.recipient)
                 self.db.execute("UPDATE gmail_delivery SET status='SENDING',attempt_count=attempt_count+1,last_attempt_at=? WHERE decision_id=?",(utc(),decision_id));self.db.execute("UPDATE decision_outbox SET status='SENDING',attempts=attempts+1 WHERE decision_id=? AND channel='gmail'",(decision_id,))
                 # From this point onward, any exception is ambiguous: the provider may
