@@ -10,8 +10,7 @@
   <header class="topbar">
     <div>
       <div class="eyebrow">$300 → $3000 MISSION · MEME</div>
-      <h1>Frank 交易终端</h1>
-      <div class="subtitle">先看买卖金额与有效跟单信号 · 只读 · 不自动交易</div>
+      <h1 id="product-title">Frank 信号</h1>
     </div>
     <div class="runtime" id="runtime">正在读取 Frank 状态…</div>
   </header>
@@ -25,40 +24,23 @@
     <div id="signals-view" class="view-pane active">
     <section class="stats" id="stats"></section>
 
-    <section class="coverage-strip" id="coverage">正在读取本地索引覆盖率…</section>
-
-    <section class="grid">
-      <section class="panel">
-        <div class="panel-title">
-          <div>
-            <h2>Frank 已识别买卖流水</h2>
-            <p>按时间倒序；显示原始金额、成交价与仓位，无法核实的数值不估算。</p>
-          </div>
-        </div>
-        <div id="trades" class="feed"></div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-title">
-          <div>
-            <h2>跟单判断变化</h2>
-            <p>只记录 Decision 状态真正发生变化的时点。</p>
-          </div>
-        </div>
-        <div id="decisions" class="feed"></div>
-      </section>
-    </section>
+    <details class="panel ended-panel" id="coverage-details"><summary>数据来源与覆盖范围</summary><div class="coverage-strip" id="coverage">正在读取本地索引范围…</div></details>
 
     <section class="panel">
       <div class="panel-title">
-        <div>
-          <h2>当前可跟单候选</h2>
-          <p>这里只出现通过既定 Frank 模式识别和报价评估的候选，不是全部链上买卖。</p>
-        </div>
+        <div><h2>当前跟单机会</h2></div>
         <span id="updated">未刷新</span>
       </div>
       <div id="candidates" class="candidate-list"></div>
     </section>
+    <section class="panel">
+      <div class="panel-title"><div><h2>Frank 最近买卖</h2></div></div>
+      <div id="trades" class="feed"></div>
+    </section>
+    <details class="panel ended-panel" id="decision-history">
+      <summary><div><h2>历史判断记录</h2></div><span class="summary-hint">展开</span></summary>
+      <div id="decisions" class="feed"></div>
+    </details>
 
     <details class="panel ended-panel" id="ended-panel" hidden>
       <summary>
@@ -84,13 +66,6 @@
     </div>
 
     <div id="cluster-view" class="view-pane">
-      <section class="cluster-hero">
-        <div>
-          <div class="eyebrow">MEME ON-CHAIN RESEARCH</div>
-          <h2>CA 链上研究</h2>
-        </div>
-      </section>
-
       <section class="cluster-search panel">
         <form id="cluster-form">
           <label for="cluster-mint">Solana CA</label>
@@ -129,7 +104,7 @@
           <div class="panel-title"><div><h2>前 20 大实际持有人</h2><p>账户已解析到 Owner；建仓记录来自有限历史采样，未扫描时明确标记。</p></div></div>
           <div class="holder-table-wrap">
             <table class="holder-table">
-              <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>首次确认建仓</th><th>建仓前资金源</th></tr></thead>
+              <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>资金来源</th><th>首次买入记录</th></tr></thead>
               <tbody id="cluster-holders"></tbody>
             </table>
           </div>
