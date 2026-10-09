@@ -132,28 +132,31 @@ def render(event:dict)->dict:
     reasons="；".join(REASON_ZH.get(x,x) for x in (body.get("reasons") or [])) or "无额外说明"
     missing="；".join(MISSING_ZH.get(x,x) for x in (body.get("missing") or [])) or "无"
     sig=inputs.get("latest_signature")
-    text="\n".join([
-        "结论："+_zh(DECISION_ZH,decision,decision),
-        "Frank 模式："+_zh(PATTERN_ZH,pattern,pattern),
+    action=_zh(ACTION_ZH,inputs.get("latest_side"),str(inputs.get("latest_side") or "未知"))
+    position=_zh(STATE_ZH,inputs.get("position_state"),str(inputs.get("position_state") or "未知"))
+    lines=[
+        "结论："+_zh(DECISION_ZH,decision,decision)+"  |  "+_zh(PATTERN_ZH,pattern,pattern),
+        "原因："+reasons,
         "",
-        "CA（长按复制完整地址）：",
+        "CA（单独一行，便于长按复制）",
         body["mint"],
         "",
-        "Frank 仓位："+_zh(STATE_ZH,inputs.get("position_state"),str(inputs.get("position_state") or "未知")),
-        f"Frank 买/卖次数：{inputs.get('buy_count')}/{inputs.get('sell_count')}",
-        "Frank 最近动作："+_zh(ACTION_ZH,inputs.get("latest_side"),str(inputs.get("latest_side") or "未知")),
-        "Frank 原始支付："+payment,
-        "Frank 参考买入价："+_display(_readable_number(frank_price,significant_digits=6,trim=True)," USDC") if frank_price not in (None,"") else "Frank 参考买入价：暂无",
-        "当前 30 USDC 可成交价："+_display(_readable_number(exec_price,significant_digits=6,trim=True)," USDC") if exec_price not in (None,"") else "当前 30 USDC 可成交价：暂无",
-        "相对 Frank 偏离："+_display(_readable_number(deviation,decimal_places=2),"%") if deviation not in (None,"") else "相对 Frank 偏离：暂无",
-        "预计价格冲击："+_display(_readable_number(impact,decimal_places=2),"%") if impact not in (None,"") else "预计价格冲击：暂无",
-        "判断原因："+reasons,
-        "缺失/不可确认："+missing,
-        "CA 页面：https://solscan.io/token/"+body["mint"],
-        "最近交易："+("https://solscan.io/tx/"+sig if sig else "暂无"),
-        "Decision ID："+body["decision_id"],
-        "Policy："+body["policy_id"]+" / "+body["policy_hash"],
-    ])
+        "Frank 动作："+action+"  |  仓位："+position,
+        "最近买入投入："+payment,
+    ]
+    if frank_price not in (None,""):
+        lines.append("Frank 参考买价："+_readable_number(frank_price,significant_digits=4,trim=True)+" USDC")
+    if exec_price not in (None,""):
+        lines.append("当前可成交价："+_readable_number(exec_price,significant_digits=4,trim=True)+" USDC")
+    if deviation not in (None,""):
+        lines.append("相对 Frank 买价："+_readable_number(deviation,decimal_places=1)+"%")
+    if impact not in (None,""):
+        lines.append("预计价格冲击："+_readable_number(impact,decimal_places=1)+"%")
+    if missing!="无":
+        lines.append("需要核实："+missing)
+    if sig:
+        lines += ["","交易哈希："+sig]
+    text="\\n".join(lines)
     return {"subject":subject,"body":text,"content_hash":digest({"subject":subject,"body":text})}
 
 
