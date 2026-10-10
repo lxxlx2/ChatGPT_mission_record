@@ -1,6 +1,7 @@
 # Crypto Hourly Collector Spec — V2 (2026-10-10)
 
 Mode: FACTUAL_NEWS_COLLECTOR
+Active schedule (user-authorized 2026-10-10): ordinary collector 00:20/03:20/06:20/12:20/16:20/20:20; prebuild 08:20; primary 09:20; recover 10:20/11:20, all Asia/Bangkok. Historical 15:10/19:10/23:10 notes below are retrospective only.
 Timezone: Asia/Bangkok
 Authority: existing `Crypto 每日情报` task; actual schedule and Gmail unchanged.
 Scope: same REPORT_SPEC.md categories; do not add a task, extra alerts, permanent ticker/project watches or paid feeds.
@@ -38,7 +39,7 @@ the absence of independent pre-send discovery caused demonstrable omissions.
    Choose from the last **two successfully persisted deep-shard completions**:
    prefer the shard missing from those two when they differ; if identical,
    choose the next one cyclically. If history unavailable, use fallback mapping
-   `00=0,03=1,06=2,15=0,19=1,23=2` (not wall-clock modulo).
+   `00=0,03=1,06=2,12=0,16=1,20=2` (not wall-clock modulo).
    A partial/attempt-only run does not count as a completed shard. At the
    next available collector prioritize the missed shard. Log
    `planned_shard, executed_shard, last_two_complete_shards, backlog_shards`.
@@ -62,7 +63,7 @@ the absence of independent pre-send discovery caused demonstrable omissions.
    `checked_no_update` from unavailable providers.
 
 ## Daily publisher and recovery handoff
-At 08:10, read the previous 24h research AND finals, including failed or
+At 08:20, read the previous 24h research AND finals, including failed or
 missing hours, plus a 48h carry-over for new official critical disclosures
 and previously missed material leads. Independently run the same cross-domain
 headlines batch against the *since-last-sent* period; do NOT treat a missing
@@ -71,7 +72,7 @@ collector report as proof of no events. Record every HIGH candidate with
 A source publication AFTER today's sent email is due in the next ordinary
 collector and next eligible formal report, not retroactively a false omission.
 
-At 09:10, 10:10 and 11:10, dedupe Gmail Sent first, refresh core quotes
+At 09:20, 10:20 and 11:20, dedupe Gmail Sent first, refresh core quotes
 and highest-impact headlines/official material updates, do all latest
 REPORT_ACCEPTANCE pre-send checks and CR-18/19, then send only a complete
 13-section QA-PASS email. A source/provider gap requires explicit internal
