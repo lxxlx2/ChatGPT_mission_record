@@ -1,0 +1,82 @@
+{
+  "scope": "BNB native block deltas for four 2026 multi-major candidates where raw ERC20 token positions have complete inbound/outbound transfer history; no attribution without tx validation",
+  "source": "BSC_MEME_2026_MULTI_OPPORTUNITY_EOAS_EARLY_OUTGOING_2026-10-10.json",
+  "records": [
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "token": "我踏马来了",
+      "all_token_flow_blocks": [
+        73336244,
+        73336320,
+        73336411,
+        73349355,
+        73349545,
+        73658892,
+        73658932,
+        73658949,
+        73659009,
+        73659051,
+        73659129,
+        73659284,
+        73659369
+      ],
+      "checked_blocks": [
+        {
+          "block": 73336244,
+          "delta_wei": "-420436959999999991",
+          "signed_token_in_transactions": [
+            "0x74c5473f07968e866b7a49b77347691c60f84ee44bdf8f9ff6c097ac805bf3bb"
+          ],
+          "signed_token_out_transactions": [],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 73336320,
+          "delta_wei": "370046040760233618",
+          "signed_token_in_transactions": [],
+          "signed_token_out_transactions": [
+            "0x0609bcb63f65292b23ef638b3a817dcd4d9c6cd1e28926c887bf28d43d687741"
+          ],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 73336411,
+          "delta_wei": "428490094341470308",
+          "signed_token_in_transactions": [],
+          "signed_token_out_transactions": [
+            "0xf7ebceaac6c6ea89b97d886ccbca3252cedb1b2499e406a1a004e24b4b105d7d"
+          ],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 73349355,
+          "delta_wei": "-301294063999999988",
+          "signed_token_in_transactions": [
+            "0x98cdc8d8334def70ef3f7dc226fb400416c5b4eb5519a0157396fd0c97a90dd1"
+          ],
+          "signed_token_out_transactions": [],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 73349545,
+          "delta_wei": "348935517311412225",
+          "signed_token_in_transactions": [],
+          "signed_token_out_transactions": [
+            "0xe2ac1db23f1cc13e24e661b32552cd7b60369fb6bc942c400c7208121c2490eb"
+          ],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 73658892,
+          "delta_wei": "-300038821919999967",
+          "signed_token_in_transactions": [
+            "0x05ea0065e3d2f4289826e91634ad84a768dc75289de9acec8f2c805ddf9975bb"
+          ],
+          "signed_token_out_transactions": [],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        }
+      ]
+    }
+  ],
+  "interpretation": "Differences in native wallet BNB at block N minus block N-1; include gas; native delta does not capture WBNB, USDT and USDC received; check other tx in same block."
+}
