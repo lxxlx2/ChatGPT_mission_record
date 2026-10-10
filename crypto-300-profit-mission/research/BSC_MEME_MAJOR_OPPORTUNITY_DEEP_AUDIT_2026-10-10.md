@@ -44,3 +44,20 @@ This one EOA has four previously audited material 2026 profitable Binance-relate
 - Avoid treating an early buyer who exits a token a year before Futures launch as a Binance announcement insider. For the GIGGLE deposit, the event link is directly corroborated with official Binance spot timing.
 
 No user commands, Git production modifications, monitoring, live validator or trading actions.
+
+## C. Four.meme pre-V2 wallet cohort
+
+Primary RPC finding: the 2026 MARSCOIN and 牛来 early purchases of `0x2adf961b40951736bcff3b36b7fb1cd5775475ba` both sent BNB to `0x1de460f363af910f51726def188f9004276bf4bc`, labelled Four.meme Token Manager on BscScan, via selector `0x4d819a2a`. Their first tokens came from **pre-V2 pools**, respectively `0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1` and `0x595d70977dff3c841df0bc0138ce89f80c7c9423`. This validates that V2-only wallet selection misses major early traders.
+
+From each of those pools 100 ERC20 outgoing entries (50 distinct tx hashes) were queried in 10x10 Alchemy pages, yielding 35/44 non-manager recipient addresses for MARSCOIN/牛来. Two overlap: `0x62ccef0b4545166f721caa9fee13c1d3767e27dc` is a smart contract (exclude from person-level results); `0xadffbebbd2d9141cff80f8a905846ba8f9e3946d` is EOA with trades on both.
+
+Early-trading-episode EOA `0xadffbebbd2d9141cff80f8a905846ba8f9e3946d`, based on original token-transfer blocks and before/after BNB balances:
+
+| Token | Sampled buy-block BNB debit | Sampled sell-block credit | Episode estimated net |
+|---|---:|---:|---:|
+| MARSCOIN | 0.72204141168 | 0.8307888200814364 | +0.10874740840143637 BNB (15.06%) |
+| 牛来 | 0.62594698856 | 0.6798050121190302 | +0.053858023559030244 BNB (8.60%) |
+
+MARS episode: buys at blocks 112441470, 112441471, 112441578, 112442297; exits at 112441493, 112441511, 112441518, 112441533, 112441542, 112441661, 112442409, 112442414. 牛来 episode: buys at 115829267, 115853809, 115854032, 115854994; sells 115829502, 115833784, 115853817, 115854094, 115855119.
+
+Both token wallet transfer histories were independently paged to completion: 43 in /37 out transfer rows (MARSCOIN), 41 in /35 out (牛来), many later transactions. Therefore **the early episode returns are not full-token or lifetime PnL**. With only modest wins, candidate state is SECONDARY_OBSERVE_ONLY, not promoted as a repeatedly material big-opportunity winner. Historical balances may include non-native settlement. No paid GMGN, monitors or trading.
