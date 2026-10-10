@@ -274,6 +274,69 @@ function renderStats(candidates, runtime, coverage) {
   ).join('');
 }
 
+const watchLabels = {
+  MODEL_OPEN:'模型标记持有（未独立核实）',
+  NEEDS_INVENTORY_REVIEW:'持仓待核实',
+  HISTORICAL_EXIT:'历史退出',
+  WATCH_UNRESOLVED:'有买入，后续状态待核',
+  HISTORY_SELL_ONLY:'历史卖出，原仓位待核',
+  MODEL_STATE_ONLY:'仅有模型记录',
+};
+
+let walletWatchData = {status:'LOADING',rows:[],summary:{}};
+
+function renderFrankWatchlist(payload) {
+  walletWatchData = payload || {status:'UNAVAILABLE',rows:[],summary:{}};
+  const all = Array.isArray(walletWatchData.rows) ? walletWatchData.rows : [];
+  const summary = walletWatchData.summary || {};
+  const filter = $('watch-filter')?.value || 'ALL';
+  const search = ($('watch-search')?.value || '').trim().toLowerCase();
+  const rows = all.filter(x =>
+    (filter === 'ALL' || x.watch_state === filter) &&
+    (!search || String(x.mint || '').toLowerCase().includes(search))
+  );
+  $('watch-total-count').textContent = String(summary.total_observed ?? all.length);
+  $('watch-scope').textContent = walletWatchData.status === 'SOURCE_UNAVAILABLE'
+    ? '本地索引暂不可读'
+    : '仅本地索引，钱包实时余额未核实';
+  $('watch-summary').textContent = '已观察 ' + String(summary.total_observed ?? all.length) +
+    ' · 模型持有 ' + String(summary.model_open ?? '—') +
+    ' · 仓位待核 ' + String(summary.inventory_needs_review ?? '—') +
+    ' · 历史退出 ' + String(summary.historical_exit ?? '—') +
+    ' · 其他 ' + String(summary.unresolved_history ?? '—') +
+    ' · 当前筛选 ' + rows.length;
+  if (walletWatchData.status === 'SOURCE_UNAVAILABLE') {
+    $('watch-rows').innerHTML = '<tr><td colspan="6">本地 Frank 历史库不可读取，未把未知状态当作零仓位。</td></tr>';
+    return;
+  }
+  $('watch-rows').innerHTML = rows.map(x => {
+    const mint = x.mint || '';
+    const sig = x.last_event_signature || '';
+    const last = x.last_event_time
+      ? new Date(Number(x.last_event_time) * 1000).toLocaleString('zh-CN')
+      : '时间未核实';
+    const txLink = sig
+      ? '<a href="https://solscan.io/tx/' + encodeURIComponent(sig) +
+        '" target="_blank" rel="noreferrer">交易 ↗</a>'
+      : '无交易签名';
+    const queryLink = 'https://gmgn.ai/sol/token/' + encodeURIComponent(mint);
+    return '<tr>' +
+      '<td><code title="' + esc(mint) + '">' + esc(short(mint,9,6)) + '</code> ' +
+        copyButton(mint,'复制 CA') + '</td>' +
+      '<td>' + esc(watchLabels[x.watch_state] || x.watch_state || '待核') + '</td>' +
+      '<td>买 ' + esc(x.local_recognized_buys ?? 0) +
+        ' / 卖 ' + esc(x.local_recognized_sells ?? 0) + '</td>' +
+      '<td>' + esc(translated(sideLabel,x.last_event_side,'未知')) +
+        ' · ' + esc(last) + '<div class="watch-tx">' + txLink + '</div></td>' +
+      '<td>' + esc(x.current_chain_balance_verified ? '已核余额' : '实时余额未核实') +
+        '<div class="watch-tx">收益未核算</div></td>' +
+      '<td><a href="https://solscan.io/token/' + encodeURIComponent(mint) +
+        '" target="_blank" rel="noreferrer">Solscan ↗</a> ' +
+        '<a href="' + queryLink + '" target="_blank" rel="noreferrer">GMGN ↗</a></td>' +
+    '</tr>';
+  }).join('') || '<tr><td colspan="6">当前筛选没有记录。尝试选择「全部观察」。</td></tr>';
+}
+
 function renderCoverage(coverage) {
   const node = $('coverage');
   if (!node) return;
@@ -511,14 +574,15 @@ function renderDecisions(rows) {
 
 async function refresh() {
   try {
-    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage] = await Promise.all([
+    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch] = await Promise.all([
       get('/api/runtime'),
       get('/api/control-health'),
       get('/api/candidates'),
       get('/api/trades'),
       get('/api/review-activity'),
       get('/api/decisions'),
-      get('/api/coverage')
+      get('/api/coverage'),
+      get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}}))
     ]);
     const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
     const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
@@ -526,6 +590,7 @@ async function refresh() {
     renderRuntime(runtime,control);
     renderStats(activeCandidates,runtime,coverage);
     renderCoverage(coverage);
+    renderFrankWatchlist(watch);
     renderCandidates(activeCandidates);
     renderEnded(endedCandidates);
     renderTrades(trades);
@@ -1090,6 +1155,9 @@ function renderClusterReport(report) {
   clusterStatus('done','分析已更新', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
 }
 
+
+$('watch-filter').addEventListener('change', () => renderFrankWatchlist(walletWatchData));
+$('watch-search').addEventListener('input', () => renderFrankWatchlist(walletWatchData));
 
 let clusterPollTimer = null;
 
