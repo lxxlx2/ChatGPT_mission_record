@@ -90,11 +90,15 @@ def _reader(path: Path) -> sqlite3.Connection:
 
 def snapshot(source: Path,dest: Path) -> None:
     """Consistent online backup with a read-only source connection."""
-    with _reader(source) as reader:
-        with sqlite3.connect(dest) as backup:
-            reader.backup(backup,pages=200,sleep=0.05)
-            if backup.execute("PRAGMA quick_check").fetchone()[0]!="ok":
-                raise ValueError("ISOLATED_SQLITE_QUICK_CHECK_FAILED")
+    reader=_reader(source)
+    backup=sqlite3.connect(dest)
+    try:
+        reader.backup(backup,pages=200,sleep=0.05)
+        if backup.execute("PRAGMA quick_check").fetchone()[0]!="ok":
+            raise ValueError("ISOLATED_SQLITE_QUICK_CHECK_FAILED")
+    finally:
+        backup.close()
+        reader.close()
     dest.chmod(0o600)
 
 
@@ -164,7 +168,7 @@ def compare(old:dict,new:dict)->dict:
 
 
 def run(home:Path,release_agent:Path,expected_head:str) -> dict:
-    root=_identity_gate(release_agent.parent.parent.parent,expected_head)
+    root=_identity_gate(release_agent.parent.parent,expected_head)
     app=home/"Library/Application Support/FrankMeme"
     production=home/"Documents/ChatGPT/crypto-monitor-frank-only-evidence-20261003/live-v1"
     control=Path((home/".frank_meme_control_root").read_text().strip()).expanduser().resolve(strict=True)
@@ -196,12 +200,15 @@ def run(home:Path,release_agent:Path,expected_head:str) -> dict:
         shutil.copyfile(production/"health.json",prod/"health.json")
         (prod/"health.json").chmod(0o600)
         snapshot(control/"mission-control.sqlite",sandbox/"control.sqlite")
-        with _reader(sandbox/"control.sqlite") as copied:
+        copied=_reader(sandbox/"control.sqlite")
+        try:
             counts={
                 row[0]:int(row[1]) for row in copied.execute(
                     "SELECT channel,COUNT(*) FROM decision_outbox GROUP BY channel"
                 ).fetchall()
             }
+        finally:
+            copied.close()
         common_now=time.time()
         older=_run_worker(old,prod,policy,common_now)
         newer=_run_worker(release_agent,prod,policy,common_now)
