@@ -140,10 +140,10 @@ Binance Spot + USD-M exchangeInfo / ticker / klines / optional WS
 
 ### 已实际实现并提交原 PR #30
 
-- [Shadow collector + durable queue](../local-agent/scripts/monster_v4_shadow.py)：Python 标准库，Binance Spot + USD-M 官方 exchangeInfo / ticker/24hr / 5m klines；只支持单次手动扫描和状态查看，未安装后台进程。
-- [Hermetic regressions](../local-agent/tests/test_monster_v4_shadow.py)：15项自动测试，覆盖首次快照建基线、双次快照异动、重启去重、旧队列优先、网络错误退避、不删除未完成候选、过期事件、已闭合5m与因果时钟、价格失效后的二次发现、源故障/恢复记录。
-- [Research CI](../../.github/workflows/monster-v4-research-baseline.yml)：新脚本编译与15项测试已经进入 CI。CI 通过与真实 Binance 网络、真机器持续运行是不同层级验证。
-- SQLite 独立记录快照、D0/D1 队列、事件、Dry-run outbox、扫描覆盖与故障状态。WATCH 写入和队列创建在同一个事务；数据源失败不宣称覆盖成功，另一个 venue 仍可独立运行。超时深查只作 LATE_REVIEW，不补发过期买入价。
+- [Shadow collector + durable queue](../local-agent/scripts/monster_v4_shadow.py)：Python 标准库，Binance Spot + USD-M 官方 exchangeInfo / ticker/24hr / 5m klines；已支持单次扫描、状态查看及人工启动的前台 `shadow-loop`，默认每180秒扫描一次；未安装后台进程。
+- [Hermetic regressions](../local-agent/tests/test_monster_v4_shadow.py)：22项自动测试，覆盖首次快照建基线、双次快照异动、重启去重、旧队列优先、网络错误退避、不删除未完成候选、过期事件、已闭合5m与因果时钟、价格失效后的二次发现、源故障/恢复记录。
+- [Research CI](../../.github/workflows/monster-v4-research-baseline.yml)：新脚本编译与22项测试已经进入 CI。CI 通过与真实 Binance 网络、真机器持续运行是不同层级验证。
+- SQLite 独立记录快照、D0/D1 队列、事件、Dry-run outbox、扫描覆盖与故障状态。WATCH 写入和队列创建在同一个事务；数据源失败不宣称覆盖成功，另一个 venue 仍可独立运行。未执行过深查且超时记 `LATE_REVIEW`；已完成深查但不形成SETUP记 `NO_SETUP_WITHIN_WINDOW`，不补发过期买入价。
 - SETUP 必须存在 WATCH 之后完成的5m证据；旧时段5m不能反向提高后来的信号等级。首次 WATCH 后观察价格回撤15%标为 INVALIDATED，真实二次异动可以重新 WATCH。
 - 出站消息均为 DRY_RUN_ONLY，仅落库未发送；Frank/Gmail/LaunchAgent 没有变化。
 
@@ -167,3 +167,30 @@ Binance Spot + USD-M exchangeInfo / ticker / klines / optional WS
 4. 本地安装、连续至少14日 Shadow、真实 Monster Gmail（及 Sent readback）需要后续安全关口。生产交易始终 NO_GO，现有 Frank 不受影响。
 
 下一顺序：前瞻真实数据捕获和覆盖监控、D0阈值与早期赢家区分、D2 Spot 30USDT 盘口验证、独立审阅和回归测试、独立部署验收、用户授权后通知发送测试。
+
+
+## 8. 2026-10-11 接手连续性核验与第二批 Shadow 实现（PR #30）
+
+### Git 连续性
+
+以旧交接点 `f1b187a06a780724a03b3731bf3540c36cfee31b` 对比 2026-10-10 16:34 UTC 的 `f5771c7c2472549acc6225d52e3cb7024a7f95fe`：GitHub compare = ahead 28 / behind 0；Stage3/4 没有被替换、删除或重新计为新独立验证。
+
+### 新增代码与根因修复
+
+- 首次实现时发现 D0 在 WATCH 冷却期内仍可能插入新 D1 queue：如果第一次深查已处理完成，同币再次超过 5% 快照涨幅会生成没有新 WATCH 配套的 orphan D1 queue，造成重复深查/潜在重复 SETUP。现将 D1 入队与实际新 WATCH 绑定，保留失效后重新WATCH及冷却期结束再开新 episode 能力。
+- 首次 D1 结果若没达到 SETUP，现在在15分钟候选有效窗口内继续等待新一根已闭合5m并复查；不会把已检查但无持续确认的信号标为“漏查”。到期且从未成功检查记 LATE_REVIEW；曾经检查但无 SETUP 记 NO_SETUP_WITHIN_WINDOW。
+- 新增人工启动的 `shadow-loop` 前台模式，默认180秒每轮，每次打印已持久化事件、backlog 与健康指标；不自启动、不触发 Gmail/交易，关闭前台即停止。测试允许有限轮数；最低间隔60秒，避免无意高频刷公共API。
+- 官方 ticker 存在无效价格/成交字段导致部分标的被拒绝时，记录 `INVALID_TICKER_ROWS` 并把场所标为 DEGRADED，不将不完整覆盖直接写成健康成功。另一个场所仍可继续。
+- 新增7项针对实际退化路径的回归测试，当前 Shadow 合计22项。用于复核的最新 CI 为 GitHub Actions run `38082920646`，该 run 在2026-10-11 检查为 success。
+
+### Stage5 实际已暴露样本的审慎解读
+
+固定60个样本中，FULLMARKET_SAMPLED 30条有20条完整 WATCH 前24小时记录，GT5X_PREHIT_POSITIVE 30条有22条完整记录；其余18条按预注册 short-listing 路径全部保留，短历史可用已完成小时数为2至23，普通10、GT历史赢家8。
+
+完整历史样本中，普通20条 vs 事后5x赢家22条的最新完成1h价格涨幅中位数分别为 +10.37% / +17.66%，最新1h成交额相对之前23个小时非零中位数比为 12.88x / 20.64x，4h相对BTC强度中位数为 +16.15 / +20.24 个百分点。均按当前已提交CSV重算；**这些是事后条件群组差异，不是实时可预测胜率**，且既有样本类型、上市年龄、合约/现货结构及 BTC regime 都可能造成混杂。不能根据这些中位数冻结策略阈值。
+
+### 放行仍被阻止的项目
+
+`NOT_DONE`：独立其它AI正式代码review、独立前瞻14日连续shadow实测、生产真实数据API长周期429/恢复和延迟分布、D2 30USD现货盘口/手续费/成交验证、用户Mac部署与真实Monster Gmail Sent-readback。22项密封测试覆盖回归合同，但不能证明用户本机真实实时通知已生效。
+
+`FRANK_UNCHANGED`；`MONSTER_SHADOW_ONLY`；`NO_NEW_MONITOR_OR_AUTOMATION`；`PRODUCTION_TRADING=NO_GO`。
