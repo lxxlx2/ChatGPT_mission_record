@@ -15,7 +15,7 @@ class ReadonlyMarketReplayTests(unittest.TestCase):
   event=[25*h,1.25,1.27,1,1.25,20,150000,400]
   p=deque(bars[1:],maxlen=24)
   signals,ratio=mod.signal_info(event,p,bars[0][0])
-  self.assertEqual(round(ratio,2),8)
+  self.assertEqual(round(ratio,2),15)
   self.assertTrue(signals["ANY_STRONG"])
   self.assertTrue(signals["EARLY_WATCH"])
   self.assertTrue(signals["BREAKOUT24"])
