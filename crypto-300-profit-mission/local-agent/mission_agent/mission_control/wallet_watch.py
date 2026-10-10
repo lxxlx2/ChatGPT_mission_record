@@ -125,7 +125,9 @@ def from_seed(watch_seed: list[dict], *, as_of: int | None = None) -> dict:
             "last_event_side": last.get("side"),
             "last_observed_quote_asset": last.get("quote_asset"),
             "last_observed_quote_quantity": last.get("quote_amount"),
-            "last_event_evidence": "LOCAL_INDEX_CLASSIFICATION_ONLY",
+            "last_event_evidence": "LOCAL_INDEX_MULTILEG_UNRESOLVED" if row.get("last_event_multileg_conflict") else "LOCAL_INDEX_CLASSIFICATION_ONLY",
+            "last_event_multileg_conflict": bool(row.get("last_event_multileg_conflict")),
+            "conflicting_trade_signatures": int(row.get("conflicting_trade_signatures") or 0),
             "current_chain_balance": None,
             "current_chain_balance_verified": False,
             "market_value_usd": None,
@@ -166,7 +168,7 @@ def from_sqlite(path: Path, *, person_id: str = PERSON, as_of: int | None = None
                 "local_state": body.get("state", "UNKNOWN"),
                 "local_current_raw": body.get("current_raw"),
             }
-        agg = defaultdict(lambda: {"buys": 0, "sells": 0, "last": None})
+        agg = defaultdict(lambda: {"buys": 0, "sells": 0, "last": None, "conflicts": set()})
         rows = db.execute(
             """SELECT t.mint,t.side,t.signature,t.block_time,t.body
                FROM trades t INNER JOIN signatures s
@@ -175,13 +177,20 @@ def from_sqlite(path: Path, *, person_id: str = PERSON, as_of: int | None = None
                ORDER BY t.block_time ASC,t.signature ASC,t.rowid ASC""",
             (person_id,),
         )
-        seen = set()
+        seen = {}
         for rec in rows:
             key = (rec["mint"], rec["signature"], rec["side"], rec["block_time"])
-            if key in seen:
-                continue
-            seen.add(key)
             mint = rec["mint"]
+            if key in seen:
+                if seen[key] != rec["body"]:
+                    # One signature may carry multiple distinct swap legs.
+                    # Count it once, but do not use an arbitrary leg as a fill.
+                    g = agg[mint]
+                    g["conflicts"].add(rec["signature"])
+                    if g["last"] and g["last"]["signature"] == rec["signature"]:
+                        g["last"]["quote_amount"] = None
+                continue
+            seen[key] = rec["body"]
             side = rec["side"]
             group = agg[mint]
             if side in BUY:
@@ -205,6 +214,10 @@ def from_sqlite(path: Path, *, person_id: str = PERSON, as_of: int | None = None
                 "local_recognized_buy_count": g["buys"],
                 "local_recognized_sell_count": g["sells"],
                 "latest_recognized_trade": g["last"],
+                "conflicting_trade_signatures": len(g.get("conflicts") or []),
+                "last_event_multileg_conflict": bool(
+                    g.get("last") and g["last"]["signature"] in g.get("conflicts", set())
+                ),
             })
         result = from_seed(seed, as_of=as_of)
         result["data_source"] = "READ_ONLY_FORWARD_SQLITE"
