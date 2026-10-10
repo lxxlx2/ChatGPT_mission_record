@@ -22,6 +22,8 @@ from mission_agent.mission_control.evidence_sync import EvidenceSpool, GitEviden
 from scripts.meme_evidence_sync import capture_frank
 from scripts.frank_wallet_d0_snapshot import report as d0_report
 from mission_agent.mission_control.wallet_history import export_history
+from mission_agent.mission_control.wallet_watch import from_seed
+from mission_agent.mission_control.wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 
 
 def refresh_zip_summary(packet: Path, status: dict) -> None:
@@ -44,6 +46,8 @@ def main(argv=None):
     p.add_argument("--control-root", required=True, type=Path)
     p.add_argument("--output", required=True, type=Path)
     p.add_argument("--sync", action="store_true", help="Attempt GitHub upload via existing authenticated gh CLI")
+    p.add_argument("--inventory-evidence", type=Path, default=None,
+                   help="Optional dated finalized RPC JSON; read-only research join, NOT live inventory")
     args = p.parse_args(argv)
     spool = EvidenceSpool(args.control_root)
     status = {"status": "READONLY_BOOTSTRAP", "frank": "NOT_STARTED",
@@ -65,6 +69,17 @@ def main(argv=None):
         status["frank_history_records"] = data["frank_full_local_history"]["record_count"]
     except (OSError, ValueError, sqlite3.Error) as exc:
         status["frank_history"] = "UNAVAILABLE_" + type(exc).__name__
+    if args.inventory_evidence is not None:
+        try:
+            if "d0_local_audit" not in data:
+                raise InventoryEvidenceError("FRANK_WATCH_SOURCE_MISSING")
+            proof = json.loads(args.inventory_evidence.read_text(encoding="utf-8"))
+            model = from_seed(data["d0_local_audit"]["watch_seed"])
+            data["inventory_reconciliation"] = reconcile_watchlist(model, proof)
+            status["inventory_reconciliation"] = "DATED_POINT_IN_TIME_NOT_LIVE"
+            status["inventory_mints_checked"] = data["inventory_reconciliation"]["snapshot_reconciliation"]["matched_mints"]
+        except (OSError, ValueError, InventoryEvidenceError, TypeError) as exc:
+            status["inventory_reconciliation"] = "UNAVAILABLE_" + type(exc).__name__
     reports = args.control_root / "cluster-reports"
     if reports.is_dir():
         for filename in sorted(reports.glob("*/latest.json")):
@@ -87,6 +102,9 @@ def main(argv=None):
         if "d0_local_audit" in data:
             archive.writestr("frank-d0-local-index.json",
                              json.dumps(data["d0_local_audit"], ensure_ascii=False, indent=2))
+        if "inventory_reconciliation" in data:
+            archive.writestr("frank-inventory-dated-reconciliation.json",
+                             json.dumps(data["inventory_reconciliation"], ensure_ascii=False, indent=2))
         for folder in ("ca", "ca-parts", "frank", "frank-history", "frank-history-parts"):
             for source in sorted((spool.pending / folder).rglob("*.json")):
                 archive.write(source, "sanitized-pending/" + source.relative_to(spool.pending).as_posix())
