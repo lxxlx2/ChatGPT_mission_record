@@ -360,3 +360,54 @@ def test_rollback_validation_requires_heartbeat_advance_when_prior_exists(
         "--rollback","--backup",str(backup),"--confirm",deploy.CONFIRM
     ])
     assert checked==[(8766,state["old_agent"],"2026-10-10T00:00:00Z")]
+
+
+
+def test_real_integration_health_rejects_pre_rollback_heartbeat(
+    tmp_path,monkeypatch,
+):
+    """Exercise the real integration_health predicate with mocked HTTP/jobs."""
+    agent=tmp_path/"old-agent"
+    agent.mkdir()
+    monkeypatch.setattr(deploy,"TIMEOUT_SECONDS",0.02)
+    monkeypatch.setattr(deploy.time,"sleep",lambda _:None)
+    monkeypatch.setattr(deploy,"loaded_job",lambda label:1 if label.endswith(".loop") else 2)
+    monkeypatch.setattr(deploy,"cwd_for_pid",lambda pid:agent)
+    called=[]
+    def http(port,path):
+        called.append(path)
+        if path=="/api/control-health":
+            return {"status":"OK","delivery_allowed":True,"updated_at":"OLD_HEARTBEAT"}
+        if path=="/api/runtime":
+            return {"status":"LIVE"}
+        if path=="/api/coverage":
+            return {"scope":"LOCAL_INDEX_ONLY","status":"OK"}
+        return []
+    monkeypatch.setattr(deploy,"http_json",http)
+    with pytest.raises(RuntimeError,match="INTEGRATION_CHECK_TIMEOUT"):
+        deploy.integration_health(8766,"test.loop","test.dashboard",
+                                  agent,previous_updated="OLD_HEARTBEAT")
+    assert "/api/control-health" in called
+
+
+def test_real_integration_health_accepts_new_healthy_old_loop(
+    tmp_path,monkeypatch,
+):
+    agent=tmp_path/"old-agent"
+    agent.mkdir()
+    monkeypatch.setattr(deploy,"loaded_job",lambda label:1 if label.endswith(".loop") else 2)
+    monkeypatch.setattr(deploy,"cwd_for_pid",lambda pid:agent)
+    def http(port,path):
+        if path=="/api/control-health":
+            return {"status":"OK","delivery_allowed":True,"updated_at":"NEW_HEARTBEAT"}
+        if path=="/api/runtime":
+            return {"status":"LIVE"}
+        if path=="/api/coverage":
+            return {"scope":"LOCAL_INDEX_ONLY","status":"OK"}
+        return []
+    monkeypatch.setattr(deploy,"http_json",http)
+    outcome=deploy.integration_health(8766,"test.loop","test.dashboard",
+                                      agent,previous_updated="OLD_HEARTBEAT")
+    assert outcome["dashboard_routes"]==7
+    assert outcome["control_status"]=="OK"
+    assert outcome["runtime_status"]=="LIVE"
