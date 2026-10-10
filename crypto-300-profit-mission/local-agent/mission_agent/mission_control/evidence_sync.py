@@ -358,5 +358,10 @@ class GitEvidencePublisher:
                         sent += 1
                 except (KeyError, ValueError, OSError, RuntimeError) as exc:
                     errors.append({"kind": "frank", "bucket": bucket, "reason": type(exc).__name__})
-            return {"status": "SYNC_OK" if not errors else "SYNC_PARTIAL",
-                    "uploaded": sent, "errors": errors, "remote_branch": BRANCH}
+            pending_ca = len(list((self.spool.pending / "ca").glob("*.json")))
+            pending_frank = len(list((self.spool.pending / "frank").glob("*.json")))
+            status = ("SYNC_PARTIAL" if errors else
+                      "SYNC_PENDING_WINDOW" if pending_ca or pending_frank else "SYNC_OK")
+            return {"status": status, "uploaded": sent, "errors": errors,
+                    "pending_ca": pending_ca, "pending_frank": pending_frank,
+                    "remote_branch": BRANCH}
