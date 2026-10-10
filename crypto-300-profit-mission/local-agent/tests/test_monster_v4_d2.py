@@ -31,12 +31,38 @@ class MonsterD2Tests(unittest.TestCase):
     def test_full_30_usdt_fill_with_fees_and_lot_rounding(self):
         x = self.calc()
         self.assertTrue(x["snapshot_executable_proxy"])
-        self.assertTrue(x["research_liquidity_gate"])
+        self.assertFalse(x["research_liquidity_gate"])
         self.assertEqual(x["fee_source"], "USER_UNCONFIRMED_SCENARIO")
         self.assertEqual(x["base_sellable_after_fee_and_step"], "29")
         self.assertEqual(x["buy_quote_unfilled"], "0")
         self.assertGreater(x["instant_roundtrip_loss_usdt"], 0)
         self.assertEqual(x["classification"], "RESEARCH_LIQUIDITY_NOT_BUY")
+
+    def test_fine_step_trade_passes_research_liquidity_gate(self):
+        rules = [dict(f) for f in RULE["filters"]]
+        rules[1]["stepSize"] = "0.0001"
+        r = {**RULE, "filters": rules}
+        x = self.calc(rule=r)
+        self.assertTrue(x["snapshot_executable_proxy"])
+        self.assertTrue(x["research_liquidity_gate"])
+        self.assertLess(x["instant_roundtrip_cost_bps"], 250)
+
+    def test_frozen_real_binance_depth_evidence_three_spot_symbols(self):
+        import json
+        filename = (Path(__file__).resolve().parents[2] / "monster" / "evidence" /
+                    "monster_stage6_spot_orderbook_3symbol_20261011.json")
+        data = json.loads(filename.read_text(encoding="utf-8"))
+        self.assertEqual(len(data["snapshots"]), 3)
+        self.assertEqual({x["symbol"] for x in data["snapshots"]},
+                         {"TSTUSDT", "BROCCOLI714USDT", "BTCUSDT"})
+        for item in data["snapshots"]:
+            with self.subTest(symbol=item["symbol"]):
+                x = m.evaluate_spot_execution(item["symbol_info"], item["book"],
+                        item["exchange_info_server_time_ms"])
+                self.assertTrue(x["snapshot_executable_proxy"])
+                self.assertEqual(x["book_levels"], {"bid":100,"ask":100})
+                self.assertGreaterEqual(x["instant_roundtrip_loss_usdt"],0)
+                self.assertEqual(x["classification"],"RESEARCH_LIQUIDITY_NOT_BUY")
 
     def test_insufficient_asks_not_marked_executable(self):
         x = self.calc(book={"lastUpdateId": 4,
