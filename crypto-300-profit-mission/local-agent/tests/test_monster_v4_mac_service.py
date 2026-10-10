@@ -78,6 +78,33 @@ class MonsterMacServiceTests(unittest.TestCase):
         self.assertEqual(evidence.read_text(),"do-not-delete")
         launch.assert_not_called()
 
+    def test_install_only_bootstraps_monster_label(self):
+        class Outcome:
+            returncode=0
+            stdout="state = running"
+        with patch.object(m.sys,"platform","darwin"),\
+             patch.object(m,"source_files",return_value=[
+                 self.source/name for name in m.SCRIPT_NAMES]),\
+             patch.object(m,"run_launchctl",return_value=Outcome()) as ctl:
+            out=m.install(self.root,self.plist,do_launch=True)
+        self.assertEqual(out["result"],"INSTALLED")
+        self.assertTrue(self.plist.exists())
+        calls=[c.args[0] for c in ctl.call_args_list]
+        self.assertTrue(any(x[0]=="bootstrap" for x in calls))
+        self.assertFalse(any("frank" in str(x).lower() for x in calls))
+        self.assertTrue((self.root/"releases"/out["release"]/
+                         m.SCRIPT_NAMES[1]).exists())
+
+    def test_failed_bootstrap_restores_previous_state_not_frank(self):
+        with patch.object(m.sys,"platform","darwin"),\
+             patch.object(m,"source_files",return_value=[
+                 self.source/name for name in m.SCRIPT_NAMES]),\
+             patch.object(m,"run_launchctl",side_effect=RuntimeError("launchd failed")):
+            with self.assertRaisesRegex(RuntimeError,"launchd failed"):
+                m.install(self.root,self.plist,do_launch=True)
+        self.assertFalse(self.plist.exists())
+        self.assertTrue(self.root.exists())
+
     def test_platform_protection(self):
         with patch.object(m.sys,"platform","linux"):
             with self.assertRaisesRegex(RuntimeError,"MACOS"):
