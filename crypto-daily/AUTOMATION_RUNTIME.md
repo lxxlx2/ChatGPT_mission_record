@@ -1,5 +1,9 @@
 # Crypto Daily Automatic Runtime
 
+> ACTIVE EXECUTION TIME (2026-10-10 user authorization): HH:20 at 00,03,06,08,09,10,11,12,16,20 Asia/Bangkok. Ordinary collector hours=00,03,06,12,16,20; 08 prebuild, 09 primary, 10/11 recovery. This directive overrides earlier :10/:00/every-hour material below, without changing scope, tasks or content/delivery gates.
+
+
+
 Updated: 2026-09-28 19:34 Asia/Bangkok
 Timezone: Asia/Bangkok
 Mode: FACTUAL_NEWS_COLLECTOR
@@ -411,7 +415,7 @@ Completion evidence:
 
 ## 2026-10-09 verified actual schedule and Gmail deliverability override (latest)
 
-The single existing Crypto 每日情报 scheduler's actual Asia/Bangkok minute is :10, with hours 00/03/06/08/09/10/11/15/19/23. This is a clarification of existing schedule, not permission to change it. The current slot mapping is 08:10 full 13-section prebuild without Gmail; 09:10 formal primary; 10:10/11:10 recovery; all other slots bounded collector with terminal final/final-retry. Older :00 or hourly-language references elsewhere in this file are historical, not governing clock times.
+The single existing Crypto 每日情报 scheduler's current Asia/Bangkok minute is :20, with hours 00/03/06/08/09/10/11/12/16/20, expressly approved 2026-10-10. Current slots: 08:20 full 13-section prebuild without Gmail; 09:20 primary; 10:20/11:20 recovery; all other slots bounded collector with terminal final/final-retry. Previous :10 schedule is historical. Older :00 or hourly-language references elsewhere in this file are historical, not governing clock times.
 
 The 2026-10-09 primary and recovery cycles had full report material and reported QA PASS but repeated Gmail execution-layer safety blocks. Manual official delivery succeeded at the same Asia/Bangkok date; Gmail id `1a1209d4664105f9`, exact archived official report path `crypto-daily/reports/daily/2026/2026-10/2026-10-09.md`. This is authoritative delivery proof; dedupe before any retry.
 
@@ -432,12 +436,12 @@ Regression reference: Oct 9 CPC/State Council policy and Oct 10 English national
 
 ## 2026-10-10 V2 discovery and delivery correctness override — latest
 
-Read `COLLECTOR_SPEC.md` V2 along with existing canonical rules. Its cross-domain discovery and completion-based deep-shard selection OVERRIDE older `hour % 3`, "every three wall-clock hours" and start-file references elsewhere. Actual schedule remains exactly 00:10,03:10,06:10,08:10,09:10,10:10,11:10,15:10,19:10,23:10 Asia/Bangkok; ordinary collectors are 00/03/06/15/19/23 only. **No new triggers, tasks, watchlists or Gmail-alert types.**
+Read `COLLECTOR_SPEC.md` V2 along with existing canonical rules. Its cross-domain discovery and completion-based deep-shard selection OVERRIDE older `hour % 3`, "every three wall-clock hours" and start-file references elsewhere. Actual user-approved schedule now exactly 00:20,03:20,06:20,08:20,09:20,10:20,11:20,12:20,16:20,20:20 Asia/Bangkok; ordinary collectors are 00/03/06/12/16/20 only. **No new triggers, tasks, watchlists or Gmail-alert types.**
 
 Ordinary collectors execute: minimal attempt -> core market and security receipts -> 4-source-family bounded breaking-news discovery across CURRENT scope -> ONE overdue/scheduled deep shard -> compact research + terminal final (fallback once). If a research write fails, preserve concise high-impact candidates in the final. A PARTIAL run or absent final must never be counted as a completed deep shard. Persist actual source timestamps, checked_at, source URL, first_seen and `HIGH` event keys. Never use candidate selection to drop critical official advisories merely because already patched.
 
-08:10/09:10 pipeline independently checks the previous 24h material candidates, the previous 48h new/omitted official critical disclosures, absent finals and **fresh cross-domain news since last authoritative Gmail**. Every HIGH candidate must appear in the internal disposition list with `included_section` or `excluded_with_reason`. On first discovery of a serious but uncertain claim, classify DISCOVERED/VERIFYING instead of silently omitting or alleging confirmed loss. As dictated by REPORT_ACCEPTANCE CR-20, pre-send lint fails when the bounded discovery ATTEMPT was skipped; a documented optional provider outage alone is not justification to suppress a otherwise-verified complete report. Fix and rerun lint in the same invocation.
+08:20/09:20 pipeline independently checks the previous 24h material candidates, the previous 48h new/omitted official critical disclosures, absent finals and **fresh cross-domain news since last authoritative Gmail**. Every HIGH candidate must appear in the internal disposition list with `included_section` or `excluded_with_reason`. On first discovery of a serious but uncertain claim, classify DISCOVERED/VERIFYING instead of silently omitting or alleging confirmed loss. As dictated by REPORT_ACCEPTANCE CR-20, pre-send lint fails when the bounded discovery ATTEMPT was skipped; a documented optional provider outage alone is not justification to suppress a otherwise-verified complete report. Fix and rerun lint in the same invocation.
 
-09:10 primary and 10:10/11:10 recovery: Gmail Sent dedupe first, complete 13-section report only; do not waste time trying to reconstruct unavailable hourly artifacts before the essential candidate/headline sweep. Once QA passes, attempt Gmail send, read back actual Sent, then archive exact body to Git and read back. On Gmail safety block, keep full QA evidence and a compact terminal failure final; on Git archive block after sent, repair archive only. These are separate delivery states. Do not interpret tool safety errors as verified policy reasons.
+09:20 primary and 10:20/11:20 recovery: Gmail Sent dedupe first, complete 13-section report only; do not waste time trying to reconstruct unavailable hourly artifacts before the essential candidate/headline sweep. Once QA passes, attempt Gmail send, read back actual Sent, then archive exact body to Git and read back. On Gmail safety block, keep full QA evidence and a compact terminal failure final; on Git archive block after sent, repair archive only. These are separate delivery states. Do not interpret tool safety errors as verified policy reasons.
 
 Known regressions: Abstract Oct 6, Ledger Oct 9 (media wave after prior mail), XRPL Oct 9 already-patched-critical disclosure, national blockchain policy Oct 9/10. See `crypto-daily/tests/REGRESSION_CASES.md`. The fixed report heading never forces exactly five items: CR-19 now authorizes fewer genuinely important Top5 items. All existing CR-18/19, no-Chinese-source and no-fabrication rules stand.
