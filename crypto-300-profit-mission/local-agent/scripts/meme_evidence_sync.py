@@ -50,9 +50,14 @@ def capture_frank(spool: EvidenceSpool, prod: Path) -> dict:
         candidates = reader.candidates()
     except (OSError, ValueError, sqlite3.Error):
         trades, candidates = [], []
+    try:
+        watch = read_frank_watchlist(prod / "forward.sqlite")
+    except (OSError, ValueError, sqlite3.Error):
+        watch = {"summary": {"status": "SOURCE_UNAVAILABLE"}, "rows": []}
     path = spool.frank_scan(
         poll_count=health["poll_count"], health=health, coverage=coverage,
         recent_trades=trades, signal_candidates=candidates,
+        observed_watchlist=watch,
     )
     return {"status": "QUEUED_LOCALLY", "kind": "frank", "poll_count": health["poll_count"],
             "spool_file": str(path)}
