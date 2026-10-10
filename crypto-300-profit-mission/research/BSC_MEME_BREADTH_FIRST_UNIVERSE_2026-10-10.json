@@ -178,7 +178,7 @@
       "contract": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
       "listing_earlier_claim": "ALPHA_ONLY; no Futures/Spot confirmed",
       "class": "SECONDARY_ALPHA_ONLY",
-      "v2_wbnb_pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3",
+      "v2_wbnb_pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
       "source_layer": "PANCAKE_V2_WBNB_ONLY",
       "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
     }
