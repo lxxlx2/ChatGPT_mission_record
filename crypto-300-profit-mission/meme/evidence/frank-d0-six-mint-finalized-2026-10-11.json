@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "date_bangkok": "2026-10-11",
+  "status": "REAL_DIRECT_CHAIN_BALANCE_SAMPLE_NOT_FULL_WALLET_PORTFOLIO",
+  "wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+  "universe_source": "crypto-300-profit-mission/meme/evidence/frank-six-observed-roundtrips-2026-10-10.json",
+  "rpc_network": "solana-mainnet",
+  "rpc_commitment": "finalized",
+  "total_checked": 6,
+  "nonzero_count": 2,
+  "zero_at_slot_count": 4,
+  "records": [
+    {
+      "mint": "MukLDtJ8Cx9DxLbeyLRSWPSposTMWuwHANbuaudpump",
+      "raw_balance": "33586031",
+      "decimals": 6,
+      "ui_balance": "33.586031",
+      "finalized_slot": 455413478,
+      "token_account": "3aBbda8aFcsgswXCCfDgXZeY3ptA22xrYqJxoX6vjW2r",
+      "balance_status": "NONZERO_VERIFIED",
+      "executable_usd_value_status": "PRICE_UNAVAILABLE_NOT_ASSUMED_ZERO",
+      "source": "ALCHEMY_SOLANA_FINALIZED_GET_TOKEN_ACCOUNTS_BY_OWNER_MINT"
+    },
+    {
+      "mint": "8K5X85PAJHAAVSvYaAzgVPPAPsqqHmvx16ZyBiscYF8L",
+      "raw_balance": "327203717034",
+      "decimals": 9,
+      "ui_balance": "327.203717034",
+      "finalized_slot": 455413479,
+      "token_account": "7gBvKycrG9BHHDCuXDa5bkCkVb34deRXXw6kcgxVsbNG",
+      "balance_status": "NONZERO_VERIFIED",
+      "executable_usd_value_status": "PRICE_UNAVAILABLE_NOT_ASSUMED_ZERO",
+      "source": "ALCHEMY_SOLANA_FINALIZED_GET_TOKEN_ACCOUNTS_BY_OWNER_MINT"
+    },
+    {
+      "mint": "E4Ap4icMLwKot8rkkTbq5JkS5kZxt5XCE3yfxbzYBjHx",
+      "raw_balance": "0",
+      "decimals": 9,
+      "ui_balance": "0",
+      "finalized_slot": 455413478,
+      "token_account": "GEsXK8ZseuwTvc4ZennHZBANUnBFKVpC9TK3dFMtU6tg",
+      "balance_status": "ZERO_AT_SLOT_VERIFIED",
+      "executable_usd_value_status": "PRICE_UNAVAILABLE_NOT_ASSUMED_ZERO",
+      "source": "ALCHEMY_SOLANA_FINALIZED_GET_TOKEN_ACCOUNTS_BY_OWNER_MINT"
+    },
+    {
+      "mint": "PerPsCe2SJ7Q25CN4R5TTX4fmBdmknE2hQmqCt96fHL",
+      "raw_balance": "0",
+      "decimals": 6,
+      "ui_balance": "0",
+      "finalized_slot": 455413480,
+      "token_account": "4751NvuxMBQsDsquedm8AXzYnr34gdnVmbb2YcV62gGD",
+      "balance_status": "ZERO_AT_SLOT_VERIFIED",
+      "executable_usd_value_status": "PRICE_UNAVAILABLE_NOT_ASSUMED_ZERO",
+      "source": "ALCHEMY_SOLANA_FINALIZED_GET_TOKEN_ACCOUNTS_BY_OWNER_MINT"
+    },
+    {
+      "mint": "4K1m7gAMDKzrxQn68yuZAd767w57Fw7Ykw69dG3umeta",
+      "raw_balance": "0",
+      "decimals": 6,
+      "ui_balance": "0",
+      "finalized_slot": 455413479,
+      "token_account": "CPHUvKaMTTWB8s9kvZyZ1Haj1u7gRwYiub34FpZxK4qb",
+      "balance_status": "ZERO_AT_SLOT_VERIFIED",
+      "executable_usd_value_status": "PRICE_UNAVAILABLE_NOT_ASSUMED_ZERO",
+      "source": "ALCHEMY_SOLANA_FINALIZED_GET_TOKEN_ACCOUNTS_BY_OWNER_MINT"
+    },
+    {
+      "mint": "HzYCHqAN2uoHGRnL9v2ChCfFQX3bvJuJd5zu2Hd5MZQy",
+      "raw_balance": "0",
+      "decimals": 6,
+      "ui_balance": "0",
+      "finalized_slot": 455413480,
+      "token_account": "7qujRSPgfbgiwMhBSc1znjaQoHM9jt6HQVw6TgxnLAsG",
+      "balance_status": "ZERO_AT_SLOT_VERIFIED",
+      "executable_usd_value_status": "PRICE_UNAVAILABLE_NOT_ASSUMED_ZERO",
+      "source": "ALCHEMY_SOLANA_FINALIZED_GET_TOKEN_ACCOUNTS_BY_OWNER_MINT"
+    }
+  ],
+  "additional_independent_confirmation": {
+    "mint": "HzYCHqAN2uoHGRnL9v2ChCfFQX3bvJuJd5zu2Hd5MZQy",
+    "first_buy_signature": "4sP6iSpctgnnbKsLcGRn1YvaPB7TF9EGc1A6KL4G7gGwLKdP1Jm6LfEH3fs9UhQLMFNPwJ6tmS4FaEAaGT9XCC9S",
+    "first_buy_signature_finalized_success_slot": 454400785,
+    "sell_signature": "5wqKv5YuurRKUaJAK5fZtFrNg6GocVZuTTiAPWYrYDaswyUArwAZurpbZFU6WBjHp5z5Bt5bPCkLNKVQHfS6yigx",
+    "sell_signature_finalized_success_slot": 454718132,
+    "signature_status_rpc_context_slot": 455413184,
+    "prior_source_verified_buy_cost_usdc": "6715.734492",
+    "prior_source_verified_sell_net_usdc": "7031.556770",
+    "prior_source_single_roundtrip_net_usdc": "315.822278",
+    "source_document": "crypto-300-profit-mission/meme/FRANK_TWEETCRAFT_ROOT_SWAP_EVIDENCE_20261009.md",
+    "limitations": "The full historical sell transaction getTransaction response is clipped by the connector after 8098 bytes. New direct verification in this pass is status and current token account, while exact historical cash flow derives from prior recorded audited source."
+  },
+  "caveats": [
+    "Historical observed trade episodes can be closed while current token accounts retain a positive balance; this cannot automatically be called a new buy or significant portfolio exposure.",
+    "A positive native token quantity is not proof of an economically meaningful USD value, and a zero account balance at this snapshot is not proof of complete wallet lifetime disposal across accounts.",
+    "This small six-mint purposive sample must not be reported as a complete Frank wallet portfolio or as wallet-wide 7D/30D PnL.",
+    "Alchemy USD token price lookup returned PRICE_NOT_FOUND for the two positive-balance mints; USD mark unresolved.",
+    "No running user Mac database was read and no trading or production actions were executed."
+  ]
+}
