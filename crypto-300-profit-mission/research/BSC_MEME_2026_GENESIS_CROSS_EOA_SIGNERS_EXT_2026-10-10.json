@@ -1,0 +1,122 @@
+{
+  "date_utc": "2026-10-10",
+  "source": [
+    "BSC_MEME_GENESIS_GLOBAL_TRANSFERS_2026_PRIORITY_2026-10-10.json",
+    "BSC_MEME_GENESIS_GLOBAL_TRANSFERS_LEGACY_B_2026-10-10.json"
+  ],
+  "interpretation": "Global early token transfer receiver overlapping multiple token contracts; actual transaction from must match receiver to confirm origin, PnL unverified",
+  "records": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "tx": "0xf682e44c816c5e71714100941191a3162f720364a2a193003bb26eac48d8c03c",
+      "block": 83635852,
+      "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_value": "0x58c51c2883f0289ab7e00",
+      "tx_signer": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "100000000000000000",
+      "method": "0x0b3f5cf9",
+      "status": "DIRECT_SIGNED"
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "tx": "0xfb0ef4261a36da684642786170f914e83f0b22eb572260e5b7fb3ccc57af62ed",
+      "block": 63454351,
+      "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_value": "0x5b7efdc943f30f9386800",
+      "tx_signer": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "100000000000000000",
+      "method": "0x7771fdb0",
+      "status": "DIRECT_SIGNED"
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "tx": "0x74c5473f07968e866b7a49b77347691c60f84ee44bdf8f9ff6c097ac805bf3bb",
+      "block": 73336244,
+      "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_value": "0x264704ab13cf7f4d980e00",
+      "tx_signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "400000000000000000",
+      "method": "0x0b3f5cf9",
+      "status": "DIRECT_SIGNED"
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "tx": "0xc73e2df907f59580fc27c7100ee94b877c452b019869a61cfe595761fd52177b",
+      "block": 83635854,
+      "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_value": "0x17a19ad62bba8e636de000",
+      "tx_signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "500000000000000000",
+      "method": "0x0b3f5cf9",
+      "status": "DIRECT_SIGNED"
+    },
+    {
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "tx": "0xd5f7328f403115fab8e1c9bf7eb95a442a0118fe477bfcf446185658dc79deee",
+      "block": 83635783,
+      "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_value": "0x676e197c843e5fe9ba000",
+      "tx_signer": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "88800000000000000",
+      "method": "0x0b3f5cf9",
+      "status": "DIRECT_SIGNED"
+    },
+    {
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "tx": "0x57509018155492a61f5ca34ebabe8e18d7556651c9074350f999fb800a875363",
+      "block": 112441411,
+      "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "raw_value": "0x3469d93a90b8e805875f2",
+      "tx_signer": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "100000000000000000",
+      "method": "0x4d819a2a",
+      "status": "DIRECT_SIGNED"
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "tx": "0xa9a40de723b31bde3df8be876facbeedbe1b73b8311379580acda16e6f0ca354",
+      "block": 73336301,
+      "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_value": "0x9916e4b4fa32a3d877e00",
+      "tx_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "200000000000000000",
+      "method": "0x0b3f5cf9",
+      "status": "DIRECT_SIGNED"
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "tx": "0xb76c737c5d71d98fcd09ee74cc3da4f68cc6b9a6fcea262d92faa8ca41bc7a35",
+      "block": 83635788,
+      "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_value": "0xf9a1258f2053fcac42a00",
+      "tx_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "200000000000000000",
+      "method": "0x0b3f5cf9",
+      "status": "DIRECT_SIGNED"
+    }
+  ]
+}
