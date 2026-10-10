@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from .db import ControlDB, utc
 from .debounce import TransitionDebounce
 from .delivery import GmailDelivery, LocalDelivery
 from .frank import FrankReader
+from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
 from .outcomes import OutcomeTracker
@@ -343,9 +345,35 @@ class MissionMemeService:
         return result
 
     def loop(self, interval_seconds: int = 5):
-        while True:
-            try:
-                self.cycle()
-            except Exception as exc:
-                self._write_health("ERROR", error=type(exc).__name__, message="MISSION_CYCLE_FAILED")
-            time.sleep(max(1,interval_seconds))
+        # An existing Mission Control loop may observe the completed Frank poll
+        # without touching the writer or scheduling another monitor.
+        export_enabled = os.environ.get("MISSION_EVIDENCE_EXPORT_ENABLED") == "1"
+        spool = EvidenceSpool(self.control_root) if export_enabled else None
+        publisher = GitEvidencePublisher(spool) if export_enabled else None
+        exporter = ThreadPoolExecutor(max_workers=1, thread_name_prefix="frank-evidence") if export_enabled else None
+        upload_future = None
+        last_poll_count = None
+        try:
+            while True:
+                try:
+                    self.cycle()
+                except Exception as exc:
+                    self._write_health("ERROR", error=type(exc).__name__, message="MISSION_CYCLE_FAILED")
+                if export_enabled:
+                    try:
+                        health = self.frank.runtime()
+                        count = health.get("poll_count")
+                        if type(count) is int and count >= 0 and count != last_poll_count and health.get("last_poll_at"):
+                            spool.frank_scan(poll_count=count, health=health)
+                            last_poll_count = count
+                        if upload_future is None or upload_future.done():
+                            # Network work runs in a separate worker. A slow GitHub
+                            # connection never occupies the decision/Gmail loop.
+                            upload_future = exporter.submit(publisher.sync)
+                    except (OSError, ValueError, RuntimeError):
+                        # Evidence is best effort; policy and delivery are unchanged.
+                        pass
+                time.sleep(max(1, interval_seconds))
+        finally:
+            if exporter is not None:
+                exporter.shutdown(wait=False, cancel_futures=True)
