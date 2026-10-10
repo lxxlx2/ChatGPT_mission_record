@@ -192,13 +192,57 @@ def verify_policy(app):
 
 
 def restore(backup, app, loop_label, dash_label):
-    for name in ("dashboard.sh", "mission-loop.sh"):
-        old = safe_read(backup / name)
-        atomic_text(app / name, old)
+    """Restore only runner scripts; verify old services actually recover.
+
+    A rollback is not successful merely because kickstart returned zero. The
+    old service must run from the pinned old source and pass the read-only
+    seven-route health check. Never restore a stale SQLite snapshot.
+    """
+    names = ("dashboard.sh", "mission-loop.sh")
+    old = {name:safe_read(backup / name) for name in names}
+    sources = {read_runner_value(old[name], "LOCAL_AGENT") for name in names}
+    if len(sources) != 1:
+        abort("ROLLBACK_BACKUP_SOURCE_MISMATCH")
+    agent = Path(next(iter(sources))).resolve(strict=True)
+    # Reject mismatched/malicious backup runner targets before changing files.
+    trusted = Path.home() / "Documents/ChatGPT"
+    try:
+        parts = agent.relative_to(trusted).parts
+    except ValueError:
+        abort("ROLLBACK_SOURCE_OUTSIDE_TRUSTED_ROOT")
+    if (
+        len(parts) < 3
+        or not (parts[0] == "frank-meme-main" or parts[0].startswith("frank-meme-pr29-"))
+        or parts[-2:] != ("crypto-300-profit-mission", "local-agent")
+        or "--live-delivery" not in old["mission-loop.sh"]
+        or len({read_runner_value(old[name], "VENV") for name in names}) != 1
+        or read_runner_value(old["mission-loop.sh"], "CONTROL_POINTER")
+           != str(Path.home() / ".frank_meme_control_root")
+    ):
+        abort("ROLLBACK_BACKUP_RUNNER_INVALID")
+
+    port = int(safe_read(app / "dashboard_port").strip())
+    if not 1 <= port <= 65535:
+        abort("ROLLBACK_DASHBOARD_PORT_INVALID")
+    previous_updated = None
+    try:
+        previous_updated = http_json(port, "/api/control-health").get("updated_at")
+    except (OSError, RuntimeError, ValueError, urllib.error.URLError, json.JSONDecodeError):
+        # A broken new Dashboard must not prevent recovery to the old one.
+        pass
+    for name in names:
+        atomic_text(app / name, old[name])
     # Do not restore SQLite: newer delivery receipts could exist. Never risk duplicates.
     restart(dash_label)
     restart(loop_label)
+    # This failure intentionally propagates: restored files != recovered service.
+    report = integration_health(
+        port, loop_label, dash_label, agent, previous_updated=previous_updated
+    )
     print("RUNNERS_RESTORED=YES")
+    print("ROLLBACK_OLD_RUNTIME_HEALTH=PASS")
+    print("ROLLBACK_OLD_RUNTIME_SOURCE=" + str(agent))
+    print("ROLLBACK_DASHBOARD_ROUTES_PASS=" + str(report["dashboard_routes"]))
     print("CONTROL_SQLITE_RESTORED=NO_SAFE_APPEND_ONLY")
     print("BACKUP_DIR=" + str(backup))
 
