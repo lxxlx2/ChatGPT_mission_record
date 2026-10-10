@@ -1,0 +1,147 @@
+{
+  "chain": "BNB Smart Chain",
+  "research_only": true,
+  "production": "NO_GO",
+  "source_files": [
+    "BSC_MEME_2026_CLOSED_POSITION_SIGNER_AUDIT_2026-10-10.json",
+    "BSC_MEME_2026_RECONCILED_POSITIONS_NATIVE_BLOCK_DELTAS_2026-10-10.json",
+    "BSC_MEME_2026_EOA_TOKEN_QUANTITY_RECONCILIATION_2026-10-10.json",
+    "BSC_MEME_2026_RECONCILED_POSITIONS_QUOTE_FLOWS_2026-10-10.json"
+  ],
+  "exact_evidence": "Alchemy ERC20 transfer history full pagination, ethGetTransactionByHash original signer 32 matched, BNB ethGetBalance (N) minus (N-1) all 32 unique trade blocks, BSC ERC20 WBNB/USDC/USDT/BUSD quote history",
+  "caveats": [
+    "Exact native BNB balances on token trade blocks may include other activity within same block. Without full traces, positive native delta is strong trade-associated accounting evidence but not mathematically isolated per-transaction realized profit.",
+    "ERC20 quantity equality establishes no token inventory remains in the given wallet, does not by itself establish CEX sale or ownership transfer. Here all exits are originally signed to Four.meme manager.",
+    "Stablecoin/WBNB deposits in other blocks may be unrelated. Do not add these to position profit unless tx hash matches.",
+    "No other unrecorded assets or wallets or unrelated small-meme activity included. No wallet-cluster beneficial ownership verified.",
+    "BNB units only, not USD, no invented marks or price conversions.",
+    "No alert automation or production trading enabled."
+  ],
+  "cases": [
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "token": "我踏马来了",
+      "token_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "all_erc20_in_events": 5,
+      "all_erc20_out_events": 8,
+      "inbound_complete": true,
+      "outbound_complete": true,
+      "raw_in_minus_out": "0",
+      "all_original_tx_signers_match": true,
+      "all_original_tx_target_four_meme_manager": true,
+      "number_of_original_token_transactions": 13,
+      "native_trade_block_count": 13,
+      "all_trade_blocks_checked": true,
+      "native_bnbs_received_on_token_tx_blocks_wei": "3706157213879692575",
+      "native_bnbs_debited_on_token_tx_blocks_wei": "-2021807406399999946",
+      "native_bnbs_net_on_token_tx_blocks_wei": "1684349807479692629",
+      "native_net_bnb_approx": 1.6843498074796925,
+      "gas_already_included_in_native_balance_deltas": true,
+      "erc20_quote_reads": [
+        {
+          "direction": "in",
+          "pagination_complete": true,
+          "error": null,
+          "rows": []
+        },
+        {
+          "direction": "out",
+          "pagination_complete": true,
+          "error": null,
+          "rows": []
+        }
+      ],
+      "conclusion_status": "FULL_POSITION_TOKEN_QUANTITY_CLOSED_AND_ALL_ORIGINAL_TX_SIGNS_MATCH; POSITIVE_NATIVE_BNB_EVENT_BLOCK_DELTAS; SAME_BLOCK_ATTRIBUTION_AND_OTHER_QUOTE_ASSETS_STILL_AUDIT_CAVEAT"
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "token": "龙虾",
+      "token_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "all_erc20_in_events": 3,
+      "all_erc20_out_events": 6,
+      "inbound_complete": true,
+      "outbound_complete": true,
+      "raw_in_minus_out": "0",
+      "all_original_tx_signers_match": true,
+      "all_original_tx_target_four_meme_manager": true,
+      "number_of_original_token_transactions": 9,
+      "native_trade_block_count": 9,
+      "all_trade_blocks_checked": true,
+      "native_bnbs_received_on_token_tx_blocks_wei": "3094451635146750109",
+      "native_bnbs_debited_on_token_tx_blocks_wei": "-1801716054079999977",
+      "native_bnbs_net_on_token_tx_blocks_wei": "1292735581066750132",
+      "native_net_bnb_approx": 1.2927355810667502,
+      "gas_already_included_in_native_balance_deltas": true,
+      "erc20_quote_reads": [
+        {
+          "direction": "in",
+          "pagination_complete": true,
+          "error": null,
+          "rows": [
+            {
+              "hash": "0xae663f0c9abdc2415baf69792aa0c275efa6d26c68302c07da28a5c832e9b2a8",
+              "block": 83824619,
+              "asset": "USDT",
+              "ca": "0x55d398326f99059ff775485246999027b3197955",
+              "from": "0xda0559e8dbf793ba6502e2d58563b09f6e4a8dc9",
+              "to": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+              "raw_value": "0x1be00667497bcdb"
+            }
+          ]
+        },
+        {
+          "direction": "out",
+          "pagination_complete": true,
+          "error": null,
+          "rows": []
+        }
+      ],
+      "conclusion_status": "FULL_POSITION_TOKEN_QUANTITY_CLOSED_AND_ALL_ORIGINAL_TX_SIGNS_MATCH; POSITIVE_NATIVE_BNB_EVENT_BLOCK_DELTAS; SAME_BLOCK_ATTRIBUTION_AND_OTHER_QUOTE_ASSETS_STILL_AUDIT_CAVEAT"
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "token": "我踏马来了",
+      "token_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "all_erc20_in_events": 7,
+      "all_erc20_out_events": 3,
+      "inbound_complete": true,
+      "outbound_complete": true,
+      "raw_in_minus_out": "0",
+      "all_original_tx_signers_match": true,
+      "all_original_tx_target_four_meme_manager": true,
+      "number_of_original_token_transactions": 10,
+      "native_trade_block_count": 10,
+      "all_trade_blocks_checked": true,
+      "native_bnbs_received_on_token_tx_blocks_wei": "1307044881206958353",
+      "native_bnbs_debited_on_token_tx_blocks_wei": "-451534729599999852",
+      "native_bnbs_net_on_token_tx_blocks_wei": "855510151606958501",
+      "native_net_bnb_approx": 0.8555101516069584,
+      "gas_already_included_in_native_balance_deltas": true,
+      "erc20_quote_reads": [
+        {
+          "direction": "in",
+          "pagination_complete": true,
+          "error": null,
+          "rows": [
+            {
+              "hash": "0xfb21248b77ee133886f9bc289d9e35ebad038eef950f3815ac9c67ed11a0dffe",
+              "block": 73447302,
+              "asset": "WBNB",
+              "ca": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "from": "0xecaa9b67652897bea70fadbd85cc491b2aab2246",
+              "to": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+              "raw_value": "0x10dfa019c89540"
+            }
+          ]
+        },
+        {
+          "direction": "out",
+          "pagination_complete": true,
+          "error": null,
+          "rows": []
+        }
+      ],
+      "conclusion_status": "FULL_POSITION_TOKEN_QUANTITY_CLOSED_AND_ALL_ORIGINAL_TX_SIGNS_MATCH; POSITIVE_NATIVE_BNB_EVENT_BLOCK_DELTAS; SAME_BLOCK_ATTRIBUTION_AND_OTHER_QUOTE_ASSETS_STILL_AUDIT_CAVEAT"
+    }
+  ]
+}
