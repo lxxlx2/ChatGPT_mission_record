@@ -398,7 +398,7 @@ class GitEvidencePublisher:
                     part_files = []
                     for rec in manifest.get("parts") or []:
                         name = rec["file"]
-                        if not re.fullmatch(r"part-\\d{4}\\.json", name):
+                        if not re.fullmatch(r"part-\d{4}\.json", name):
                             raise ValueError("FRANK_HISTORY_PART_NAME_INVALID")
                         local = self.spool.pending / "frank-history-parts" / history_id / name
                         chunk = json.loads(local.read_text())
