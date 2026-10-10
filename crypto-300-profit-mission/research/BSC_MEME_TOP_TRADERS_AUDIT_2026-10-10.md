@@ -100,3 +100,28 @@ Original 18 were biased toward projects with Binance Futures and/or Spot listing
 - This wallet's selected 4 tokens are now **4 completed positions, 3 winning and 1 losing**, selected-sample 75% win rate, PnL `12.30272776608792 - 0.08192960354079075 = +12.22079816254713 BNB` across those positions. It remains **NOT an all-wallet historical win rate nor a proven profitable current strategy**. This wallet is inactive in documented Meme trading after December 2025.
 - **Methodology fix:** identify actual ERC20 quote asset transfers via `eth_getTransactionReceipt`, not merely the wallet's native-token balance change. For each trade calculate `net_quote_in - net_quote_out - Gas` with WBNB/BUSD/USDT/USDC normalisation; if different assets, use contemporaneous execution-rate conversion or leave PnL unconfirmed. **Never interpret outgoing token Transfer as a sell without receipt/quote verification**.
 - For delayed copying, the 69-second BUBB roundtrip **cannot** be replicated by a 5/15/30m-delayed follower; mark this trade `FOLLOW_DELAY_5MIN=NO_TRADE`, not extrapolate the wallet's overall win rate.
+
+## Corrected collection policy: no paid GMGN, read data directly
+
+2026-10-10 user clarification: **GMGN API requires deposits and restrictive usage quotas. It is explicitly REJECTED. Do not use, recommend, reinstall, ask user for keys, or ask the user to run scripts.** The previous proposed paid collector was a research-process error. Replaced README: [README_BSC_MEME_TOP_TRADERS.md](README_BSC_MEME_TOP_TRADERS.md) clearly marks those code artifacts as DEPRECATED / NOT APPROVED FOR EXECUTION.
+
+### Assistant directly fetched BNB Mainnet chain data using connected read-only Alchemy
+
+No CLI, no API key from the user and no paid GMGN sources. Alchemy `getAssetTransfers` from the verified V2/WBNB pair with paging 5 x 10 rows and a direct transaction hash count:
+
+| Token | BSC CA | Pancake V2/WBNB pool | Transfer events queried | Unique tx hashes | Queried block range |
+|---|---|---|---:|---:|---|
+| 牛来 | `0xbeea1d618e533a387d941f58a7d4c9b7bd377777` | `0xbfc26980d8068ae744f5405d3abf6e7df02e11b3` | 50 | 25 | 116314923–116318053 |
+| MARSCOIN | `0xFe189E97832DA1573e4e4Ff034F4fFC3a15c7777` | `0x9f286c9bd510150c62a08da72af797ac45311ae0` | 50 | 25 | 112668718–112679229 |
+
+Note: each swap often emits **two ERC20 transfers** to token pool/fee and to a token receiver, hence 50 entries ≠ 50 buys or 50 traders. Distinct hashes ≠ distinct controlling wallets and require `ethGetTransactionByHash` signer verification.
+
+In first 50 牛来 V2 outgoing rows, 20 unique non-self receiver addresses were identified. Largest displayed token recipient `0xbcfb163853e224bd5703c2032aaefe1ca2aa2c75` received 375.1201544 units in sampled rows, but **has deployed contract bytecode** (ethGetCode; and hundreds of trade-type in/out records); cannot be listed as the top human/EOA trader. Other large early receivers `0x00f67f6fff4cd3c0e1a60f881a574df15c73f2e1` and `0x011af51cc6614fec1de0e0ff6dc315a150f3851c` are also contracts. This is why blindly sorting pair-transfer recipients misidentifies contract routers and custody/launchpad venues.
+
+One other early receiver `0xb1597ebddb06f2b860f8b6c5f63f0f374f7b811e` **is EOA**. Its first direct 牛来 ERC20 incoming transfer at block 116072133 precedes the V2 pool's first outward transfer block 116314923 by ~242,790 blocks, demonstrating exposure to non-V2 venues/earlier trading. It has multiple inbound and outbound token transfers (both have next page) and nonzero residual holdings. **Profit is UNVERIFIED until all quote and inventory flows, possible launchpad flows and complete relevant tx receipts are reconstructed**. It is a research lead, not a winner or an endorsement.
+
+Public non-paid optional ranking *lead*: Binance's own `binance-leaderboard` skill docs describe **Public, no auth** wallet leaderboards for 7/30/90 days on BSC; this is overall wallet recent PnL ranking, not 19-token all-time top realized-profit ledger: https://www.binance.com/en/skills/detail/binance-web3/binance-leaderboard . No live Binance leaderboard response was fetched in this chat, hence no claims of rankings. Dune's normalized `dex.trades` exists but is not yet executed in this chat, so no Dune output is counted as evidence.
+
+### Correct next protocol
+
+Assistant continues directly, in bounded research batches, first 2026 tokens. Build an accurate full-market candidate list from launchpad migration, V2/V3 pool swaps and receipts, de-duplicate true original tx signer and economically controlled wallets, calculate ALL positions and losses. Include signed exit into WBNB/USDT/USDC quote assets, not just BNB native balance deltas. Crosscheck time/event relative to Binance Alpha/perps/spot and recency of true BSC Meme buys. When no all-time top-N is fully reconstructed, label incomplete: **no paid API, no fake top-wallet rankings, no user-side work, no production changes**.
