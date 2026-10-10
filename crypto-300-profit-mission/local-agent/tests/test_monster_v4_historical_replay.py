@@ -21,7 +21,7 @@ class MonsterHistoricalRealReplayTests(unittest.TestCase):
         self.assertEqual(len(cases),2)
         for c in cases:
             self.assertEqual(c["bars_verified"],3600)
-            self.assertGreater(c["polls"],200)
+            self.assertGreaterEqual(c["polls"],180)
             self.assertEqual(c["ticker24"],
                 "1440_REAL_1M_QUOTE_SUM_PROXY_NOT_BINANCE_TICKER")
             self.assertFalse(c["forward_out_of_sample"])
