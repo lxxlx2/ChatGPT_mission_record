@@ -19,7 +19,9 @@
       "actual_tx_to": "0xd70ce47ec32625420640da206f0b3525c2bec678",
       "tx_native_value_wei": "5000000000000000000",
       "tx_block": 48397922,
-      "tx_signer_verified": true
+      "tx_signer_verified": true,
+      "receipt_status": "SUCCESS",
+      "receipt_block": 48397922
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
@@ -31,7 +33,9 @@
       "actual_tx_to": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
       "tx_native_value_wei": "110000000000000000",
       "tx_block": 60878718,
-      "tx_signer_verified": true
+      "tx_signer_verified": true,
+      "receipt_status": "SUCCESS",
+      "receipt_block": 60878718
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
@@ -43,7 +47,9 @@
       "actual_tx_to": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
       "tx_native_value_wei": "55000000000000000",
       "tx_block": 61093210,
-      "tx_signer_verified": true
+      "tx_signer_verified": true,
+      "receipt_status": "SUCCESS",
+      "receipt_block": 61093210
     },
     {
       "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
@@ -55,7 +61,9 @@
       "actual_tx_to": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
       "tx_native_value_wei": "5000000000000000000",
       "tx_block": 48398195,
-      "tx_signer_verified": true
+      "tx_signer_verified": true,
+      "receipt_status": "SUCCESS",
+      "receipt_block": 48398195
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
@@ -67,7 +75,9 @@
       "actual_tx_to": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
       "tx_native_value_wei": "100000000000000000",
       "tx_block": 61967419,
-      "tx_signer_verified": true
+      "tx_signer_verified": true,
+      "receipt_status": "SUCCESS",
+      "receipt_block": 61967419
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
@@ -79,7 +89,9 @@
       "actual_tx_to": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
       "tx_native_value_wei": "300000000000000000",
       "tx_block": 62116128,
-      "tx_signer_verified": true
+      "tx_signer_verified": true,
+      "receipt_status": "SUCCESS",
+      "receipt_block": 62116128
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
@@ -91,7 +103,9 @@
       "actual_tx_to": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
       "tx_native_value_wei": "500000000000000000",
       "tx_block": 62524634,
-      "tx_signer_verified": true
+      "tx_signer_verified": true,
+      "receipt_status": "SUCCESS",
+      "receipt_block": 62524634
     }
   ],
   "shared_external_senders": [
