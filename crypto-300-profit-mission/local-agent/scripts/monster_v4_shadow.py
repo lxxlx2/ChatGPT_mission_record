@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS candidate_queue (
  priority INTEGER NOT NULL, reason TEXT NOT NULL,
  status TEXT NOT NULL DEFAULT 'PENDING', attempts INTEGER NOT NULL DEFAULT 0,
  retry_after_ms INTEGER NOT NULL DEFAULT 0, deadline_ms INTEGER NOT NULL,
- last_error TEXT
+ last_error TEXT, last_evaluated_bar_ms INTEGER
 );
 CREATE UNIQUE INDEX IF NOT EXISTS queue_one_pending ON candidate_queue(venue,symbol)
  WHERE status='PENDING';
@@ -171,6 +171,27 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
                      "classification":"WATCH_NO_LONGER_ACTIVE"})
             if ret is None or ret<Decimal("0.05") or quote<min_quote24:
                 continue
+            prev_watch=db.execute(
+                "SELECT last_watch_ms,invalidated FROM watch_state WHERE venue=? AND symbol=?",
+                (venue,symbol)).fetchone()
+            if (prev_watch is not None and not prev_watch["invalidated"]
+                    and observed_ms-prev_watch["last_watch_ms"]<WATCH_COOLDOWN_MS):
+                continue
+            # A new WATCH always owns exactly one queued D1 episode. A repeat
+            # snapshot within cooldown must not create an orphan queue item.
+            # Reap a previous expired unprocessed episode before a fresh WATCH.
+            old_pending=db.execute("""SELECT id,deadline_ms,last_evaluated_bar_ms
+                FROM candidate_queue WHERE venue=? AND symbol=? AND status='PENDING'""",
+                (venue,symbol)).fetchone()
+            if old_pending is not None and old_pending["deadline_ms"]<observed_ms:
+                status="EVALUATED" if old_pending["last_evaluated_bar_ms"] is not None else "LATE"
+                db.execute("UPDATE candidate_queue SET status=? WHERE id=?",
+                           (status,old_pending["id"]))
+                if status=="LATE":
+                    record_event(db,venue,symbol,"LATE_REVIEW",observed_ms,
+                                 old_pending["id"],
+                                 {"reason":"OVERDUE_WHEN_REARMING_WATCH",
+                                  "classification":"STALE_NOT_ACTIONABLE"})
             reason="FAST_SNAPSHOT_PRICE_PLUS_24H_LIQUIDITY_CONTEXT"
             priority=min(100,int(ret*1000))
             db.execute("""INSERT INTO candidate_queue
@@ -181,12 +202,6 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
                  priority=MAX(candidate_queue.priority,excluded.priority)""",
                 (venue,symbol,observed_ms,observed_ms,priority,reason,
                  observed_ms+QUEUE_DEADLINE_MS))
-            prev_watch=db.execute(
-                "SELECT last_watch_ms,invalidated FROM watch_state WHERE venue=? AND symbol=?",
-                (venue,symbol)).fetchone()
-            if (prev_watch is not None and not prev_watch["invalidated"]
-                    and observed_ms-prev_watch["last_watch_ms"]<WATCH_COOLDOWN_MS):
-                continue
             db.execute("""INSERT INTO watch_state
                 (venue,symbol,last_watch_ms,last_watch_price,invalidated)
                 VALUES(?,?,?,?,0)
@@ -253,13 +268,20 @@ def process_queue(db, now_ms, fetch_candles, limit=8):
     for item in pending:
         with db:
             if now_ms>item["deadline_ms"]:
-                db.execute("UPDATE candidate_queue SET status='LATE' WHERE id=?",
-                           (item["id"],))
-                record_event(db,item["venue"],item["symbol"],"LATE_REVIEW",
-                             now_ms,item["id"],{"first_seen_ms":item["first_seen_ms"],
-                             "deadline_ms":item["deadline_ms"],
-                             "classification":"STALE_NOT_ACTIONABLE"})
-                late+=1
+                if item["last_evaluated_bar_ms"] is not None:
+                    db.execute("""UPDATE candidate_queue
+                        SET status='EVALUATED',last_error='NO_SETUP_WITHIN_WINDOW'
+                        WHERE id=?""",(item["id"],))
+                    completed+=1
+                else:
+                    db.execute("UPDATE candidate_queue SET status='LATE' WHERE id=?",
+                               (item["id"],))
+                    record_event(db,item["venue"],item["symbol"],"LATE_REVIEW",
+                                 now_ms,item["id"],
+                                 {"first_seen_ms":item["first_seen_ms"],
+                                  "deadline_ms":item["deadline_ms"],
+                                  "classification":"STALE_NOT_ACTIONABLE"})
+                    late+=1
                 continue
         try:
             details=evaluate_closed_5m(
@@ -283,12 +305,29 @@ def process_queue(db, now_ms, fetch_candles, limit=8):
                     (now_ms+60_000,item["id"]))
                 deferred+=1
                 continue
-            db.execute("UPDATE candidate_queue SET status='EVALUATED' WHERE id=?",
-                       (item["id"],))
+            if (item["last_evaluated_bar_ms"] is not None
+                    and details["bar_last_open_ms"]<=item["last_evaluated_bar_ms"]):
+                db.execute("""UPDATE candidate_queue SET retry_after_ms=?
+                    WHERE id=?""",(now_ms+60_000,item["id"]))
+                deferred+=1
+                continue
             if details["setup_candidate"]:
+                db.execute("""UPDATE candidate_queue SET status='EVALUATED',
+                    last_evaluated_bar_ms=?,last_error=NULL WHERE id=?""",
+                    (details["bar_last_open_ms"],item["id"]))
                 record_event(db,item["venue"],item["symbol"],"SETUP_ACTIVE",
                              now_ms,item["id"],details)
-            completed+=1
+                completed+=1
+            elif now_ms>=item["deadline_ms"]:
+                db.execute("""UPDATE candidate_queue SET status='EVALUATED',
+                    last_evaluated_bar_ms=?,last_error='NO_SETUP_WITHIN_WINDOW'
+                    WHERE id=?""",(details["bar_last_open_ms"],item["id"]))
+                completed+=1
+            else:
+                db.execute("""UPDATE candidate_queue SET last_evaluated_bar_ms=?,
+                    retry_after_ms=?,last_error='NO_SETUP_YET' WHERE id=?""",
+                    (details["bar_last_open_ms"],now_ms+60_000,item["id"]))
+                deferred+=1
     return {"completed":completed,"deferred":deferred,"late":late,
             "selected":len(pending)}
 
