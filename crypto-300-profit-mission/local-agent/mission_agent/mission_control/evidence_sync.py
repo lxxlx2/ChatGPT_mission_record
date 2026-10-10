@@ -24,7 +24,7 @@ BRANCH = "evidence/frank-ca-local"
 PREFIX = "crypto-300-profit-mission/meme/local-evidence"
 PUBKEY = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 SAFE_ID = re.compile(r"^[a-f0-9]{16,64}$")
-BANNED = re.compile(r"secret|password|passphrase|private|seed|key|bearer|authorization|cookie|credential|webhook|rpc_url|endpoint_url|gmail|email|local_path|home_dir", re.I)
+BANNED = re.compile(r"secret|password|passphrase|private|seed|bearer|authorization|cookie|credential|webhook|rpc_url|endpoint_url|gmail|email|local_path|home_dir|api[_-]?key|access_token|refresh_token|auth_token|^key$|_token$", re.I)
 SENSITIVE_INLINE = re.compile(r"(?i)(bearer\s+[a-z0-9._~+/-]+|(?:api[_-]?key|token|password|secret)\s*[:=]\s*[^\s&,;]+)")
 CA_FIELDS = ("schema_version", "mint", "source", "observed_at", "supply_raw", "decimals",
              "token_profile", "market", "assessment", "holders", "metrics",
