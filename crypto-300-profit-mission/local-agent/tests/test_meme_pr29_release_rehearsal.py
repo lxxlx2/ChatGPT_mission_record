@@ -154,14 +154,17 @@ def test_apply_failure_uses_real_backup_restore_and_keeps_append_only_receipts(t
     expected_head="a"*40
 
     def inject_post_restart_failure(port,loop_label,dash_label,agent,previous_updated=None):
-        # We got past runner source switch and both mocked launchctl restarts.
-        assert all('LOCAL_AGENT="' + str(HERE) + '"' in
-                   (app/name).read_text() for name in state["names"])
-        with sqlite3.connect(state["control"]/"mission-control.sqlite") as conn:
-            conn.execute("INSERT INTO gmail_delivery VALUES (?,?,?)",
-                         ("new-mail", "SENT_VERIFIED", "new-message-id"))
         if agent != state["old_agent"]:
+            # Simulate a failed new-code boot after both mocked restarts.
+            assert all('LOCAL_AGENT="' + str(HERE) + '"' in
+                       (app/name).read_text() for name in state["names"])
+            with sqlite3.connect(state["control"]/"mission-control.sqlite") as conn:
+                conn.execute("INSERT INTO gmail_delivery VALUES (?,?,?)",
+                             ("new-mail", "SENT_VERIFIED", "new-message-id"))
             raise RuntimeError("SIMULATED_NEW_RELEASE_HEALTH_FAILURE")
+        # The restored old runner should be validated separately and healthy.
+        assert all('LOCAL_AGENT="' + str(state["old_agent"]) + '"' in
+                   (app/name).read_text() for name in state["names"])
         return {"dashboard_routes":7,"control_status":"OK","runtime_status":"LIVE"}
 
     monkeypatch.setattr(deploy,"integration_health",inject_post_restart_failure)
