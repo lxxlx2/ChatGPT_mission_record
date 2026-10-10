@@ -62,6 +62,12 @@ CREATE TABLE IF NOT EXISTS failures (
 CREATE TABLE IF NOT EXISTS source_state (
  venue TEXT PRIMARY KEY, degraded_since_ms INTEGER, last_ok_ms INTEGER
 );
+CREATE TABLE IF NOT EXISTS d2_reviews (
+ source_event_id TEXT PRIMARY KEY REFERENCES events(event_id),
+ venue TEXT NOT NULL, symbol TEXT NOT NULL, observed_ms INTEGER NOT NULL,
+ status TEXT NOT NULL DEFAULT 'PENDING', attempts INTEGER NOT NULL DEFAULT 0,
+ retry_after_ms INTEGER NOT NULL DEFAULT 0, last_error TEXT
+);
 """
 
 def open_store(path):
@@ -331,6 +337,80 @@ def process_queue(db, now_ms, fetch_candles, limit=8):
     return {"completed":completed,"deferred":deferred,"late":late,
             "selected":len(pending)}
 
+def process_d2(db, now_ms, evaluate_spot=None, limit=4):
+    """Depth evaluation for newly confirmed SETUP; venue-safe and durable.
+
+    This is an instantaneous non-tradeability / execution-cost check only.
+    Never upgrades a WATCH into a BUY recommendation.
+    """
+    if limit<1:
+        raise ValueError("BAD_D2_LIMIT")
+    # All observed SETUP events are enrolled. No top-N candidate is silently
+    # forgotten due to transient scan work limits or daemon restarts.
+    with db:
+        db.execute("""INSERT OR IGNORE INTO d2_reviews(source_event_id,venue,symbol,observed_ms)
+            SELECT event_id,venue,symbol,observed_ms FROM events
+            WHERE event_type='SETUP_ACTIVE'""")
+    if evaluate_spot is None:
+        try:
+            from monster_v4_d2 import get_spot_execution_snapshot as evaluate_spot
+        except ImportError:
+            from scripts.monster_v4_d2 import get_spot_execution_snapshot as evaluate_spot
+    pending=db.execute("""SELECT * FROM d2_reviews
+        WHERE status='PENDING' AND retry_after_ms<=?
+        ORDER BY observed_ms,source_event_id LIMIT ?""",
+        (now_ms,limit)).fetchall()
+    result={"selected":len(pending),"checked":0,"retry":0,"skipped":0,"late":0}
+    for item in pending:
+        source_event_id=item["source_event_id"]
+        if item["venue"]!="spot":
+            with db:
+                db.execute("""UPDATE d2_reviews SET status='FUTURES_ONLY'
+                    WHERE source_event_id=?""",(source_event_id,))
+                record_event(db,item["venue"],item["symbol"],"D2_NOT_SPOT",
+                    now_ms,source_event_id,
+                    {"classification":"FUTURES_ONLY_NO_SPOT_EXECUTION","source_event_id":source_event_id})
+            result["skipped"]+=1
+            continue
+        if now_ms-item["observed_ms"]>10*60_000:
+            with db:
+                db.execute("""UPDATE d2_reviews SET status='LATE'
+                    WHERE source_event_id=?""",(source_event_id,))
+                record_event(db,item["venue"],item["symbol"],"D2_LATE",
+                    now_ms,source_event_id,
+                    {"classification":"DEPTH_NOT_CAPTURED_WITHIN_10MIN",
+                     "source_event_id":source_event_id,
+                     "source_observed_ms":item["observed_ms"]})
+            result["late"]+=1
+            continue
+        try:
+            details=evaluate_spot(item["symbol"])
+            if not isinstance(details,dict) or details.get("symbol")!=item["symbol"]:
+                raise ValueError("D2_MISMATCHED_SYMBOL")
+            if details.get("classification")!="RESEARCH_LIQUIDITY_NOT_BUY":
+                raise ValueError("D2_NOT_RESEARCH_ONLY")
+        except (ValueError,TypeError,KeyError,OSError,urllib.error.URLError) as exc:
+            with db:
+                tries=item["attempts"]+1
+                db.execute("""UPDATE d2_reviews SET attempts=?,retry_after_ms=?,
+                    last_error=? WHERE source_event_id=?""",
+                    (tries,now_ms+min(60_000*2**min(tries,5),300_000),
+                     type(exc).__name__+":"+str(exc)[:160],source_event_id))
+                db.execute("""INSERT INTO failures(venue,observed_ms,stage,error)
+                    VALUES(?,?,?,?)""",
+                    (item["venue"],now_ms,"D2",type(exc).__name__))
+            result["retry"]+=1
+            continue
+        with db:
+            db.execute("""UPDATE d2_reviews SET status='CHECKED',last_error=NULL
+                WHERE source_event_id=?""",(source_event_id,))
+            record_event(db,item["venue"],item["symbol"],"D2_LIQUIDITY",
+                now_ms,source_event_id,
+                {"source_event_id":source_event_id,"depth":details,
+                 "classification":"SHADOW_COST_ONLY_NOT_BUY"})
+        result["checked"]+=1
+    return result
+
 def health(db, now_ms):
     counts={r["status"]:r["n"] for r in db.execute(
         "SELECT status,COUNT(*) AS n FROM candidate_queue GROUP BY status")}
@@ -343,6 +423,11 @@ def health(db, now_ms):
             "events":dict((r["event_type"],r["n"]) for r in db.execute(
                 "SELECT event_type,COUNT(*) AS n FROM events GROUP BY event_type")),
             "queue":counts,"oldest_pending_age_sec":max(0,(now_ms-oldest)//1000) if oldest else None,
+            "d2_queue":{r["status"]:r["n"] for r in db.execute(
+                "SELECT status,COUNT(*) AS n FROM d2_reviews GROUP BY status")},
+            "d2_oldest_pending_age_sec":max(0,(now_ms-t)//1000) if (
+                t:=db.execute("SELECT MIN(observed_ms) FROM d2_reviews WHERE status='PENDING'").fetchone()[0]
+                ) else None,
             "last_polls":polls,
             "degraded_venues":[r["venue"] for r in db.execute(
                 "SELECT venue FROM source_state WHERE degraded_since_ms IS NOT NULL")],
@@ -417,6 +502,7 @@ def scan_once(db,now_ms):
             mark_source_health(db,venue,now_ms,type(exc).__name__+":"+str(exc))
             reports.append({"venue":venue,"error":type(exc).__name__})
     reports.append({"queue":process_queue(db,now_ms,fetch_5m)})
+    reports.append({"d2":process_d2(db,now_ms)})
     return reports
 
 def run_shadow_loop(db, interval_seconds=180, max_cycles=None):
