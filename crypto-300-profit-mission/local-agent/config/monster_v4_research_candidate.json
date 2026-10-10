@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "model_id": "MONSTER_V4_RESEARCH_20261010",
+  "status": "RESEARCH_CANDIDATE_UNVALIDATED",
+  "production_enabled": false,
+  "live_gmail_enabled": false,
+  "trading_enabled": false,
+  "venue_scope": [
+    "BINANCE_SPOT_USDT",
+    "BINANCE_USDM_PERPETUAL_USDT"
+  ],
+  "source_scope": "OFFICIAL_BINANCE_PUBLIC_MARKET_DATA",
+  "frozen_baseline": "V3_062_DIAGNOSTIC_NOT_VALIDATED",
+  "discovery": {
+    "full_universe_interval_seconds": 180,
+    "candidate_recent_check_seconds": 60,
+    "queue_persistent": true,
+    "oldest_deferred_slot_per_cycle_min": 1,
+    "max_deep_fetch_per_cycle": 8,
+    "deferred_drop_allowed": false,
+    "allow_early_watch_before_1h_v3_confirmation": true,
+    "broad_v2_path": true,
+    "new_listing_hours": 168,
+    "no_30d_history_requirement_for_new_listing": true
+  },
+  "source_freshness": {
+    "ticker_max_age_seconds": 180,
+    "kline_closed_only": true,
+    "watch_target_p95_latency_seconds": 300,
+    "actionable_target_p95_latency_seconds": 300,
+    "display_stale_or_unknown": true,
+    "never_invent_missing_metric": true
+  },
+  "research_features": {
+    "price": {
+      "return_15m_observed": true,
+      "return_1h_observed": true,
+      "prior_24h_high_breakout": true,
+      "btc_relative_1h": true
+    },
+    "flow": {
+      "quote_volume_15m": true,
+      "quote_volume_1h": true,
+      "prior_24h_median_quote_volume": true,
+      "taker_buy_share": true
+    },
+    "structure": {
+      "closed_5m_persistence": true,
+      "intrabar_wick_ratio": true,
+      "spot_futures_identity_verified": true
+    },
+    "futures_optional": [
+      "open_interest",
+      "funding_rate",
+      "top_long_short_ratio",
+      "global_long_short_ratio"
+    ],
+    "execution": {
+      "spot_trading_enabled": true,
+      "spot_spread": true,
+      "spot_orderbook_30_usdt_impact": true,
+      "futures_only_explicit_label": true
+    }
+  },
+  "candidate_ranking_weights": {
+    "price_structure": 20,
+    "quote_volume_and_taker": 25,
+    "persistence": 15,
+    "btc_relative": 15,
+    "derivatives_and_verified_cross_venue": 10,
+    "verified_execution": 15
+  },
+  "exploratory_thresholds_not_validated": {
+    "watch_score_candidates": [
+      40,
+      55
+    ],
+    "setup_score_candidates": [
+      55,
+      65
+    ],
+    "independent_watch_families": 2,
+    "early_listing_strong_single_path_watch": true,
+    "no_fixed_daily_limit_that_drops_events": true,
+    "expire_live_quote_seconds": 120,
+    "price_impact_30usdt_watch_threshold_pct": 3
+  },
+  "outbox": {
+    "modes": [
+      "DRY_RUN_LOCAL",
+      "LIVE_GMAIL_AFTER_SEPARATE_APPROVAL"
+    ],
+    "event_types": [
+      "WATCH_EARLY",
+      "SETUP_ACTIVE",
+      "IGNITION_ACTIONABLE_SPOT",
+      "IGNITION_FUTURES_ONLY",
+      "EXHAUSTION",
+      "INVALIDATED",
+      "MISSED_ALERT",
+      "SOURCE_DEGRADED"
+    ],
+    "dedupe_on": [
+      "venue",
+      "entity",
+      "first_seen_window",
+      "state_transition"
+    ],
+    "must_keep_initial_observation_at": true,
+    "stale_actionable_is_not_sent_as_live_price": true,
+    "gmail_provider_send_requires_approval": true
+  },
+  "data_governance": {
+    "historical_ground_truth_2024_exposed": true,
+    "historical_2025_2026_exposed": true,
+    "upcoming_forward_unseen": true,
+    "never_claim_execution_roi_from_high_close_gt": true,
+    "production_frank_unchanged": true
+  }
+}

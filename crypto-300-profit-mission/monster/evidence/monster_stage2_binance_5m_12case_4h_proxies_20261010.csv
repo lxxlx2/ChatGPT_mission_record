@@ -1,0 +1,13 @@
+group,venue,symbol,trigger_closed_utc,first_next_5m_open,4h_close_return_pct,4h_min_low_return_pct,4h_max_high_return_pct,4h_quote_turnover_usdt
+breakout_only,futures,ETHUSDT,2026-07-14T13:00:00Z,1860.7,0.66,-0.36,1.47,3212114932
+breakout_only,futures,ZECUSDT,2025-06-16T10:00:00Z,45.98,-1.54,-2.5,0.28,2506845
+breakout_only,spot,ETHUSDT,2025-08-22T15:00:00Z,4613.93,3.81,-0.01,5.11,1825152095
+breakout_only,futures,XRPUSDT,2025-02-14T09:00:00Z,2.6939,0.12,-0.58,3.56,1096057204
+breakout_only,spot,LINKUSDT,2025-08-17T05:00:00Z,24.21,1.86,-0.7,2.19,45522843
+breakout_only,spot,ENAUSDT,2026-08-20T18:00:00Z,0.1067,6.09,-0.84,7.03,9650079
+triple,futures,FILUSDT,2025-11-07T18:00:00Z,3.419,2.49,-7.25,16.23,893060837
+triple,futures,AXSUSDT,2026-04-25T06:00:00Z,1.404,18.3,-3.42,19.52,242259012
+triple,futures,BELUSDT,2026-04-06T09:00:00Z,0.1296,-5.94,-11.65,6.33,21443045
+triple,futures,PEOPLEUSDT,2025-11-07T17:00:00Z,0.01689,-16.87,-22.32,4.32,65540922
+triple,spot,AXSUSDT,2026-04-25T06:00:00Z,1.412,18.34,-3.47,19.26,24445553
+triple,spot,BELUSDT,2025-10-16T13:00:00Z,0.5957,-49.84,-55.15,9.25,49270925
