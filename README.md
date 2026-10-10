@@ -20,7 +20,7 @@
 | Meme 分析 | `research/memes/` | Meme 叙事、社区传播、launchpad、筹码和交易研究 |
 | NFT 分析 | `research/nfts/` | mint、collection、creator、rarity、二级和出售研究 |
 
-## 当前自动化 / runtime 状态 — 2026-10-04
+## 当前自动化 / runtime 状态（各任务以最新权威文件为准）
 
 ### Crypto 每日情报
 - **ACTIVE**
@@ -35,19 +35,22 @@
 ### $300-3000 Crypto Mission
 
 当前 canonical 状态：
-- `crypto-300-profit-mission/STATUS_SCOPE_2026-10-04.md`
-- `crypto-300-profit-mission/MISSION_SPEC.md`
+- `crypto-300-profit-mission/MISSION_SPEC.md`（长期政策，包括逐项资产 >=$1 计入口径）
+- `crypto-300-profit-mission/state/latest.md`（最新模块状态）
+- `crypto-300-profit-mission/portfolio/current.md`（最新钱包及 CEX 来源时间）
+- `crypto-300-profit-mission/performance/current.md`（初始 $300 + 原六个 Credits 的收益归因）
+- `crypto-300-profit-mission/STATUS_SCOPE_2026-10-04.md`（2026-10-04 历史范围快照）
 
 当前模块：
 - Frank local deterministic signal: **LIVE**；ACCUMULATION 本地通知 LIVE；MULTIPLE 本地通知 + Gmail LIVE；GPT signal authority 已移除。
 - NFT opportunity radar: **SPEC_PRESENT / RUNTIME_PAUSED**。
-- MONSTER / 妖币: **V3 TRAIN PASS，但 2024 validation 未通过；RESEARCH_FROZEN**。
+- MONSTER / 妖币: **V3 2024 验证未通过；V4 在 Draft PR #30 进行研究，尚未批准实盘监控、邮件或交易**。
 - CORE PRICE / “整体走势”: **PAUSED**。
 - `$300-3000` umbrella GPT task: **PAUSED 2026-10-04**，因为没有剩余实质授权 lane。
 - legacy `$300 Crypto资产状态监控`: **DISABLED**。
 - production trading: **NO_GO**。
 
-Frank 当前不依赖 ChatGPT scheduler；它由本地 deterministic runtime 独立运行。
+Frank 当前不依赖 ChatGPT scheduler；它由本地 deterministic runtime 独立运行。2026-10-10 PR #29 已合并，用户 Mac 上先前授权的 Loop/Dashboard 部署曾通过 7 项只读验收；实际后续运行以本地健康检查为准。
 
 ### 美股每日晨报
 - **ACTIVE**
@@ -122,7 +125,7 @@ Dated status/scope snapshot 使用已有稳定格式，例如：
 
 - 禁止使用中文网站作为 Crypto / TGE / Mission 的确认来源；
 - 官方、一手链上、交易所原始数据优先；
-- 钱包实时值优先于历史快照；
+- 钱包实时值优先于历史快照；资产展示逐项独立核实 **>=1 USD 才计入已标价资产**，低于 $1 不计入展示合计，未定价/未查全保留 UNRESOLVED；
 - 私有交易场所未连接时只能使用 `USER_CONFIRMED` + freshness；
 - provider failure 不等于余额为 0；
 - 未识别 / 垃圾资产不计入 NAV；
