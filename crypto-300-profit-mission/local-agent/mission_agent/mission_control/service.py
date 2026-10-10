@@ -13,6 +13,7 @@ from .db import ControlDB, utc
 from .debounce import TransitionDebounce
 from .delivery import GmailDelivery, LocalDelivery
 from .frank import FrankReader
+from .wallet_watch import from_sqlite as read_frank_watchlist
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
