@@ -287,6 +287,63 @@ class MonsterShadowTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"BAD_SHADOW_LOOP_CONFIG"):
             m.run_shadow_loop(self.db,interval_seconds=5,max_cycles=1)
 
+    def _create_d2_setup(self, venue="spot", symbol="AAAUSDT"):
+        m.record_event(self.db, venue, symbol, "SETUP_ACTIVE", BASE,
+                       "fixture-episode", {"classification":"RESEARCH_ONLY_UNVALIDATED"})
+        self.db.commit()
+
+    def test_d2_spot_enqueued_and_only_checked_once_on_restart(self):
+        self._create_d2_setup()
+        seen=[]
+        def evaluator(symbol):
+            seen.append(symbol)
+            return {"symbol":symbol,"classification":"RESEARCH_LIQUIDITY_NOT_BUY",
+                    "snapshot_executable_proxy":True,"research_liquidity_gate":True}
+        r=m.process_d2(self.db,BASE+180_000,evaluator)
+        self.assertEqual(r["checked"],1)
+        self.assertEqual(seen,["AAAUSDT"])
+        self.assertEqual(m.process_d2(self.db,BASE+200_000,evaluator)["selected"],0)
+        self.db.close()
+        self.db=m.open_store(self.path)
+        self.assertEqual(m.process_d2(self.db,BASE+300_000,evaluator)["selected"],0)
+        self.assertEqual(m.health(self.db,BASE+300_000)["d2_queue"],{"CHECKED":1})
+        self.assertEqual(m.health(self.db,BASE+300_000)["mail_sent"],0)
+
+    def test_d2_future_setup_not_misrepresented_as_buyable_spot(self):
+        self._create_d2_setup(venue="futures")
+        r=m.process_d2(self.db,BASE+1000,
+                       lambda symbol:self.fail("futures incorrectly requested spot depth"))
+        self.assertEqual(r["skipped"],1)
+        self.assertEqual(m.health(self.db,BASE+1000)["d2_queue"],{"FUTURES_ONLY":1})
+        self.assertEqual(m.health(self.db,BASE+1000)["events"]["D2_NOT_SPOT"],1)
+
+    def test_d2_failure_retries_without_discarding_event(self):
+        self._create_d2_setup()
+        def fail(symbol):
+            raise OSError("depth gateway offline")
+        self.assertEqual(m.process_d2(self.db,BASE+1000,fail)["retry"],1)
+        self.assertEqual(m.process_d2(self.db,BASE+3000,fail)["selected"],0)
+        self.assertEqual(m.health(self.db,BASE+3000)["d2_queue"],{"PENDING":1})
+        res=m.process_d2(self.db,BASE+121_000,
+                         lambda symbol:{"symbol":symbol,
+                                        "classification":"RESEARCH_LIQUIDITY_NOT_BUY"})
+        self.assertEqual(res["checked"],1)
+        self.assertEqual(m.health(self.db,BASE+121_000)["source_failures"],1)
+
+    def test_d2_late_never_requests_old_book_as_live(self):
+        self._create_d2_setup()
+        r=m.process_d2(self.db,BASE+11*60_000,
+                       lambda symbol:self.fail("stale depth fetched"))
+        self.assertEqual(r["late"],1)
+        self.assertEqual(m.health(self.db,BASE+11*60_000)["events"]["D2_LATE"],1)
+
+    def test_d2_rejects_forged_symbol_or_buy_classification(self):
+        self._create_d2_setup()
+        r=m.process_d2(self.db,BASE+10_000,
+                       lambda symbol:{"symbol":"OTHERUSDT","classification":"BUY"})
+        self.assertEqual(r["retry"],1)
+        self.assertEqual(m.health(self.db,BASE+10_000)["d2_queue"],{"PENDING":1})
+
     def test_duplicate_symbol_does_not_create_two_events(self):
         m.observe_snapshot(self.db,"spot",BASE,[row("DUSDT",1)])
         r=m.observe_snapshot(self.db,"spot",BASE+180_000,
