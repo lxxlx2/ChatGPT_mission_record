@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -19,6 +20,20 @@ import zipfile
 from mission_agent.mission_control.evidence_sync import EvidenceSpool, GitEvidencePublisher
 from scripts.meme_evidence_sync import capture_frank
 from scripts.frank_wallet_d0_snapshot import report as d0_report
+
+
+def refresh_zip_summary(packet: Path, status: dict) -> None:
+    """Atomically reflect final Git upload state inside the portable ZIP."""
+    tmp = packet.with_name(packet.name + ".summary-tmp")
+    try:
+        with zipfile.ZipFile(packet, "r") as source, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as dest:
+            for item in source.infolist():
+                if item.filename != "summary.json":
+                    dest.writestr(item, source.read(item.filename))
+            dest.writestr("summary.json", json.dumps(status, ensure_ascii=False, indent=2, sort_keys=True))
+        os.replace(tmp, packet)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def main(argv=None):
@@ -84,6 +99,7 @@ def main(argv=None):
                     status["git_sync"] = "GIT_SYNC_FAILED_PENDING_RETAINED"
             else:
                 status["git_sync"] = "GH_AUTH_UNAVAILABLE_PENDING_RETAINED"
+    refresh_zip_summary(args.output, status)
     receipt = args.output.with_suffix(".status.json")
     receipt.write_text(json.dumps(status, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
     print(json.dumps({"packet": str(args.output), "status_file": str(receipt),
