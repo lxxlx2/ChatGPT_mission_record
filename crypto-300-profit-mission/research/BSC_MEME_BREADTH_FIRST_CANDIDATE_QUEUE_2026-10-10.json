@@ -19,7 +19,10 @@
     "BSC_MEME_GENESIS_GLOBAL_TRANSFERS_LEGACY_B_2026-10-10.json",
     "BSC_MEME_GLOBAL_GENESIS_V2_GAP_MATRIX_2026-10-10.json",
     "BSC_MEME_GLOBAL_GENESIS_POOL_RECIPIENT_OVERLAPS_2026-10-10.json",
-    "BSC_MEME_GENESIS_NEW_EOA_ORIGINAL_SIGNER_CHECK_2026-10-10.json"
+    "BSC_MEME_GENESIS_NEW_EOA_ORIGINAL_SIGNER_CHECK_2026-10-10.json",
+    "BSC_MEME_VERIFIED_EVENT_ANCHOR_TRANSFER_WINDOWS_2026-10-10.json",
+    "BSC_MEME_ORIGINAL_SIGNERS_GLOBAL_EARLY_2026-10-10.json",
+    "BSC_MEME_GLOBAL_EARLY_SIGNERS_LEGACY_2026-10-10.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -40,7 +43,12 @@
     "original_global_signer_tx_checked_legacy": 42,
     "pool_plus_genesis_distinct_overlapping_recipient_addresses": 60,
     "pool_plus_genesis_code_confirmed_eoas": 14,
-    "pool_plus_genesis_code_confirmed_contracts": 46
+    "pool_plus_genesis_code_confirmed_contracts": 46,
+    "transfer_rows_in_two_documented_event_anchor_samples": 80,
+    "event_window_signer_attempts": 20,
+    "event_window_signers_verified": 15,
+    "event_window_original_tx_response_truncations": 5,
+    "original_first_global_early_signer_cross_token_repeaters_in_67_checked": 0
   },
   "venue_coverage": [
     {
@@ -1206,16 +1214,18 @@
     "Contract recipient overlap is not trader same-control evidence",
     "CEX deposit is not realized sale",
     "Signer matches of new EOAs only prove individual direct swaps, not sustained profitable strategy",
-    "Global ERC20 first-transfer history identifies early launch routes but not the full transaction/quote-asset history, first true actionable swap, nor an exhaustive listing-event window"
+    "Global ERC20 first-transfer history identifies early launch routes but not the full transaction/quote-asset history, first true actionable swap, nor an exhaustive listing-event window",
+    "GIGGLE/MARSCOIN event blocks were chosen from documented specific post-listing transactions; these 50-block pre/post windows are not a census of Binance launch prices or all transactions. 5 of 20 signer lookups were too long to parse and are UNKNOWN, not negative trader evidence."
   ],
   "next_work_order": [
+    "Continue 2026 material opportunity candidate universe discovery with exact official Binance CA evidence, then timestamp-derived boundary blocks via free primary data when available; paid Blockscout/GMGN dependency not permitted",
     "Follow genesis-stage original EOAs across core material opportunities with complete quote/gas flows, but continue cross-token breadth scanning before ranking",
-    "Expand launchpad/V3/aggregator and event-window samples across all 19 rather than focus single EOA",
     "Obtain verified transaction signers and retain signed trade proof for each material cohort",
     "Reconcile full native BNB, WBNB, stablecoin + gas cashflows including major losses and off-wallet transfers",
     "Check funding and same-block sniper coordination / same beneficial owner",
     "Rank materially profitable repeated core captures, then delay-follow replay"
   ],
   "sample_depth_per_pool": 50,
-  "signer_warning": "Three new EOAs have first trades of 4 and 币安人生 in very nearby blocks; possible coordinated bots, common control NOT proven. They cannot be counted as independent profitable strategies without funding and full PnL analysis."
+  "signer_warning": "Three new EOAs have first trades of 4 and 币安人生 in very nearby blocks; possible coordinated bots, common control NOT proven. They cannot be counted as independent profitable strategies without funding and full PnL analysis.",
+  "last_evidence_expansion": "2026-10-10 second pass: all 19 first-global ERC20 histories, cross-source 60 overlaps with 46 contracts/14 EOAs, 5 new signed EOA candidates, 2 separate chain-anchored listing-related samples."
 }
