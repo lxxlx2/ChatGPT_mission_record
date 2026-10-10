@@ -234,7 +234,7 @@
         }
       ],
       "tx_status": "SIGNER_NOT_YET_RECHECKED",
-      "balance_status": "PARTIAL_6_OF_11",
+      "balance_status": "ALL_TOKEN_TRANSFER_BLOCK_BALANCES_READ",
       "block_deltas": [
         {
           "block": 63056802,
@@ -259,17 +259,32 @@
         {
           "block": 63059219,
           "delta_wei": "-10019838720000000"
+        },
+        {
+          "block": 63059313,
+          "delta_wei": "13869591746034824"
+        },
+        {
+          "block": 63059390,
+          "delta_wei": "-10019838720000000"
+        },
+        {
+          "block": 63061910,
+          "delta_wei": "9798480049699319"
+        },
+        {
+          "block": 63084301,
+          "delta_wei": "-20030057940000000"
+        },
+        {
+          "block": 63114158,
+          "delta_wei": "23235081706748782"
         }
       ],
-      "unread_blocks": [
-        63059313,
-        63059390,
-        63061910,
-        63084301,
-        63114158
-      ],
-      "native_BNB_net_wei": null,
-      "profit_status": "UNRESOLVED_SAME_BLOCK_AND_QUOTES"
+      "unread_blocks": [],
+      "native_BNB_net_wei": "18550029825373735",
+      "profit_status": "UNRESOLVED_SAME_BLOCK_AND_QUOTES",
+      "native_BNB_net_approx": 0.018550029825373737
     }
   ]
 }
