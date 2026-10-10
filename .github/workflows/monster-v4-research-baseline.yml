@@ -17,6 +17,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_d2_evidence.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_price_probe.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_replay.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_history_source_quality.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_history_source_quality.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_historical_replay.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_historical_price_probe.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_mac_service.py'
@@ -89,6 +91,13 @@ jobs:
           python -B -m py_compile scripts/monster_v4_historical_price_probe.py tests/test_monster_v4_historical_price_probe.py
           python -B -m unittest discover -v -s tests -p test_monster_v4_historical_price_probe.py
           python -B scripts/monster_v4_historical_price_probe.py
+      - name: Audit all 60 officially collected historical sources and early-listing gaps
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_history_source_quality.py tests/test_monster_v4_history_source_quality.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_history_source_quality.py
+          python -B scripts/monster_v4_history_source_quality.py > /tmp/monster_v4_stage7_quality.json
+          python -c 'import json; d=json.load(open("/tmp/monster_v4_stage7_quality.json")); print(json.dumps({"SOURCE60_AUDIT_COUNTS":d["status_counts"],"BY_COHORT":d["cohorts"],"NEW_LISTING":d["new_listing_proxy_valid_24h_warmup"]}))'
       - name: Stage7 authentic 60h 1m data same-production D0 and D1 replay, skip gap cases
         working-directory: crypto-300-profit-mission/local-agent
         run: |
