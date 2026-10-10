@@ -121,3 +121,25 @@
 - 对用户真正需要的及时通知，本证据支持“**强上涨可以立即观察通知，但不等于立即市价追涨**”；下一研究的候选不是强制等待三小时，而是用5m走势和已知流动性触发 `WATCH -> RETESTED_SETUP` 的实测转移。何种转移有效尚未经过全市场5m负例检验。
 
 派生12例机器明细：[evidence/monster_stage2_binance_5m_12case_4h_proxies_20261010.csv](evidence/monster_stage2_binance_5m_12case_4h_proxies_20261010.csv)。全部结果来自当轮直接请求 Binance，不是用户 Mac 新生成文件；没有提交全部API返回的原始 K 线。
+
+
+## 7. 无需 Mac：30例固定种子 Binance 5m 分层压力测试
+
+为减少“只挑 PNUT/MMT 上涨赢家”的事后偏差，另对 **2025–2026 已曝光历史事件**做结构化抽查：直接在用户上传的全市场 `ANY_STRONG` emitted episodes 里按当时已完成小时的 `paths` 将事件分为三组，每组按 `SHA256("mstrs3:20261010:"+group+":"+venue+":"+symbol+":"+first_utc)` 固定排序，取**第一批10个不同(venue,symbol)**，不按历史收益/价格好坏选择。排除既知 `special_product=true`、不完整24h结果和杠杆式 `UPUSDT/DOWNUSDT` 命名（后者豁免普通 `JUPUSDT/SYRUPUSDT`）。三组分别为：
+- **breakout_only**：`BREAKOUT24` 存在，且没有 `VOLUME_1H8`、`MOMENTUM4`、`NEW_NO_BASE`；
+- **triple**：同时满足 `BREAKOUT24 + VOLUME_1H8 + MOMENTUM4`；
+- **new_listing_proxy**：仅以官方来源历史缓存可见的前24h `NEW_NO_BASE` 标记入组；不是已独立核对的**官方上市时刻**，WCT spot/futures 是同币双场所，不能算独立样本。
+
+直接逐个调用 Binance 公开 Spot 或 USD-M `5m klines`，指定 `startTime=first_utc` 至 `first_utc+4h`；**30/30 都取得 48 根有效5m K线**，没有使用 Mac 数据导出、没有运行新交易程序或发送提醒。
+
+| 2025–2026 固定样本组 | 数量 | 4h理论收盘收益中位数 | 四小时内最低价跌超10% | 最大案例 |
+|---|---:|---:|---:|---|
+| 单纯 BREAKOUT | 10 | **+1.30%** | 0/10 | QKC Spot 2026-07-02：4h收盘 -6.23%，低点 -9.83% |
+| 三强动量叠加 | 10 | **-10.56%** | 7/10 | NOT Futures 2026-04-27：4h收盘 -35.14%，低点 -36.45% |
+| 新币初始数据代理 | 10 | **-8.36%** | 6/10 | FOLKS Futures 2025-11-06：4h收盘 -25.21%，低点 -37.45% |
+
+**再次强调：30例不够推出一个已验证的交易规则**，尤其本次分组也是在看到历史后进行的探索，三组并非概率抽样到未来未知市场；低点跌幅是事件发生后的事后风险统计，不能在信号时预先看见。0/10 不等于“低风险保证”。
+
+这次抽样却直接回答了一个操作设计问题：**WATCH可以第一时间发，强势三条件和刚上市不应自动触发市价BUY**。应优先保留新币/三强的紧急人工提醒与连续5m结构复审，再在*因果上晚于首次WATCH*的时点研究回踩承接/反抽失败、真正现货可交易与点差；因此后续需双时间戳 `first_watch_at` / `first_actionable_at`，不能为了提高预警时效假装下一时刻就可赚钱。
+
+完整30例事件名、时刻、4h close/low/high 比值保存在 [30例 CSV](evidence/monster_stage2_binance_5m_30case_deterministic_20261010.csv)。直接通过官方 Binance 行情接口读取，结论均为 **5m OHLCV 理论价格**，未模拟盘口优先级、滑点、资金费率、杠杆清算、邮件/客户端延迟。
