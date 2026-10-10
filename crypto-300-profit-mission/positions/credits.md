@@ -1,6 +1,6 @@
 # Jack / Visualize Value Credits NFT 持仓、稀有度与 Mission 资产记录
 
-Updated: 2026-10-04
+Updated: 2026-10-10
 Timezone: Asia/Bangkok
 Status: **CLOSED / CURRENT_OWNERSHIP_ZERO**
 
@@ -27,7 +27,7 @@ This provenance remains part of Mission performance/accounting history even thou
 
 ## Current holdings — DIRECT_CHAIN
 
-Fresh Ethereum ownership query at block **26,114,793** / **2026-10-03T22:26:23Z**:
+Latest direct Ethereum Alchemy NFT ownership query at block **26,163,166** / **2026-10-10T16:15:59Z**:
 - owned NFTs from the Credits contract: **0**.
 
 Current Credits inventory:
@@ -63,7 +63,7 @@ Prior 0.25 ETH / 0.40 ETH listing asks were aspirational historical asks and are
 
 ## Accounting
 
-- Current inventory count: **0**.
+- Current inventory count: **0**, independently reconfirmed on 2026-10-10. NFT claims/other collection holdings outside this canonical Credits contract were not evaluated as part of this specific ownership read.
 - The original six remain Mission starting-asset provenance.
 - Historical sale proceeds remain subject to transaction-level/cost-basis reconciliation where unresolved.
 - Do not double-count sold NFTs and their proceeds.
