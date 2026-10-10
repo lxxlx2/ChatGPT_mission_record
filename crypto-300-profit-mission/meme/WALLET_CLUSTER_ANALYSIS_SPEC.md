@@ -1,12 +1,25 @@
 # Meme Wallet Cluster Analysis Spec
 
-Updated: 2026-10-06
+Updated: 2026-10-11
 Status: MANDATORY for Meme / new-token CA analysis
 Scope: Solana first; same logic applies to EVM where equivalent evidence exists.
 
 Purpose: fix a gap in the previous Meme analysis flow. Raw Top10/Top20 holder concentration is not enough. Every serious Meme analysis must reconstruct wallet relationships before calling holder structure "clean", "distributed", or "healthy".
 
 This is an analysis/research rule only. It does not create monitoring, automation, live validation, or production trading authority.
+
+## 0. 2026-10-11 product correction: one-mode, accuracy-first
+
+This specification remains the chain-evidence semantics authority. The latest user-approved **product/implementation acceptance authority** for the manual CA page is [`ca-analysis-unified-accuracy-acceptance.md`](ca-analysis-unified-accuracy-acceptance.md).
+
+Required decisions:
+- **One user-facing query mode only**. Internal progressive collection is permitted, but bounded scan completion must not be called comprehensive completion. Existing quick/standard/deep UI and hard 100/50 signature limits are historical implementation, **not approved target behavior**.
+- Raw `getTokenLargestAccounts` returns only 20 **token accounts**. If LP/vault/public addresses are removed, computing an exact *eligible owner Top10* generally requires additional holder ranks beyond those initial 20 and owner aggregation. Partial known-label figures must be disclosed as partial; no false complete Top10 percentages.
+- `0` probable-control estimate means no qualifying evidence *within the searched sample*; unknown wallet attribution and shared-infrastructure links must be separately reported.
+- **External narrative research is mandatory**, citing exact-CA public evidence, distinguishing market chatter, claimed official support and verified official recognition. Merely showing website/X links is incomplete.
+- Remove the inherited `$30` Jupiter quote from **generic CA analysis**. The existing standalone Frank follow policy and $30 quote are **not changed or revoked**.
+- Do not label an incomplete job `ANALYSIS_COMPLETE`. Return `PARTIAL` while collecting, or `INCOMPLETE_EVIDENCE` with specific blockers and attempted alternative sources after collection, while preserving verified facts.
+- Never deploy, restart or modify production as part of documenting this change. Independent review and real Mac evidence are required before authorizing implementation rollout.
 
 ## 1. Mandatory rule
 
