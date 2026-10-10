@@ -1,5 +1,7 @@
 # Airdrop / TGE Canonical Registry
 
+Active scheduled minutes (2026-10-10 user-approved): hourly HH:00 Asia/Bangkok. Existing urgent set and hour % 4 shard mapping remain unchanged. Historic HH:50 logs are legitimate past records; no new/closed/removed monitored projects.
+
 Updated: 2026-10-08
 
 Grass 与 Backpack 明确排除。
