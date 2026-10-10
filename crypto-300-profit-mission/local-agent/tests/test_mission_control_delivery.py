@@ -304,3 +304,87 @@ def test_local_mac_notification_still_includes_full_ca_after_quote_times(tmp_pat
     assert "结论：" in calls[0][-1]
     assert db.db.execute("SELECT status FROM local_delivery").fetchone()[0]=="COMMAND_ACCEPTED"
     db.close()
+
+
+
+@pytest.mark.parametrize("local_status", ["PENDING", "RETRY_PENDING"])
+def test_local_recovered_notification_does_not_popup_stale_decision(tmp_path, local_status):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    calls=[]
+    local=LocalDelivery(db,run=lambda *args,**kw:calls.append(args))
+    local.enqueue(e,forbidden=False)
+    db.db.execute("UPDATE decision_events SET created_at=? WHERE decision_id=?",
+                  ("2026-01-01T00:00:00+00:00",e["decision_id"]))
+    db.db.execute("UPDATE local_delivery SET status=? WHERE decision_id=?",
+                  (local_status,e["decision_id"]))
+    local.drain()
+    assert calls==[]
+    assert db.db.execute("SELECT status,last_error FROM local_delivery WHERE decision_id=?",
+                         (e["decision_id"],)).fetchone()==(
+                             "MANUAL_REVIEW","LOCAL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
+                         )
+    assert db.db.execute("SELECT status,attempts FROM decision_outbox WHERE decision_id=? AND channel='local'",
+                         (e["decision_id"],)).fetchone()==("MANUAL_REVIEW",0)
+    local.drain()
+    assert calls==[]
+    db.close()
+
+
+@pytest.mark.parametrize("invalid_at", ["","broken","2026-01-01T00:00:00","2999-01-01T00:00:00+00:00"])
+def test_local_decision_invalid_clock_never_displays_notification(tmp_path,invalid_at):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    local=LocalDelivery(db,run=lambda *args,**kw:pytest.fail("must not dispatch"))
+    local.enqueue(e,forbidden=False)
+    db.db.execute("UPDATE decision_events SET created_at=? WHERE decision_id=?",(invalid_at,e["decision_id"]))
+    local.drain()
+    assert db.db.execute("SELECT status FROM local_delivery WHERE decision_id=?",
+                         (e["decision_id"],)).fetchone()[0]=="MANUAL_REVIEW"
+    db.close()
+
+
+def test_local_notification_age_recheck_before_os_dispatch(monkeypatch,tmp_path):
+    import mission_agent.mission_control.delivery as delivery
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    calls=[]
+    local=LocalDelivery(db,run=lambda *args,**kw:calls.append(args),max_decision_age_seconds=600)
+    local.enqueue(e,forbidden=False)
+    age=iter([599,601])
+    monkeypatch.setattr(delivery,"_decision_age_seconds",lambda _:next(age))
+    monkeypatch.setattr(delivery.shutil,"which",lambda _:None)
+    local.drain()
+    assert calls==[]
+    assert db.db.execute("SELECT status FROM decision_outbox WHERE channel='local'").fetchone()[0]=="MANUAL_REVIEW"
+    db.close()
+
+
+def test_local_notification_600_second_edge_sends_once(monkeypatch,tmp_path):
+    import mission_agent.mission_control.delivery as delivery
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    calls=[]
+    def fake_run(args,**kwargs):
+        calls.append(args)
+        return subprocess.CompletedProcess(args,0)
+    local=LocalDelivery(db,run=fake_run,max_decision_age_seconds=600)
+    local.enqueue(e,forbidden=False)
+    monkeypatch.setattr(delivery,"_decision_age_seconds",lambda _:600)
+    monkeypatch.setattr(delivery.shutil,"which",lambda _:None)
+    local.drain()
+    local.drain()
+    assert len(calls)==1
+    assert db.db.execute("SELECT status FROM local_delivery").fetchone()[0]=="COMMAND_ACCEPTED"
+    db.close()
+
+
+def test_local_and_gmail_use_same_policy_max_age_validation(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    for value in [0,-2,600.0,"600",None,True]:
+        with pytest.raises(ValueError):
+            LocalDelivery(db,max_decision_age_seconds=value)
+        with pytest.raises(ValueError):
+            GmailDelivery(db,max_decision_age_seconds=value)
+    assert LocalDelivery(db,max_decision_age_seconds=600).max_decision_age_seconds==600
+    db.close()
