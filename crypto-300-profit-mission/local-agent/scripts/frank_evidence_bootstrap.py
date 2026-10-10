@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+"""One-shot read-only Mac Frank/CA packet; optional verified Git sync.
+
+This does not install, launch, stop, update or reconfigure a monitoring service.
+It exports sanitized scan/CA artifacts plus an explicit D0 local coverage audit.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import time
+import zipfile
+
+from mission_agent.mission_control.evidence_sync import EvidenceSpool, GitEvidencePublisher
+from scripts.meme_evidence_sync import capture_frank
+from scripts.frank_wallet_d0_snapshot import report as d0_report
+
+
+def main(argv=None):
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--production-root", required=True, type=Path)
+    p.add_argument("--control-root", required=True, type=Path)
+    p.add_argument("--output", required=True, type=Path)
+    p.add_argument("--sync", action="store_true", help="Attempt GitHub upload via existing authenticated gh CLI")
+    args = p.parse_args(argv)
+    spool = EvidenceSpool(args.control_root)
+    status = {"status": "READONLY_BOOTSTRAP", "frank": "NOT_STARTED",
+              "ca_queued": 0, "ca_errors": [], "git_sync": "NOT_REQUESTED"}
+    data = {}
+    try:
+        data["frank_capture"] = capture_frank(spool, args.production_root)
+        status["frank"] = "QUEUED"
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        status["frank"] = "UNAVAILABLE_" + type(exc).__name__
+    try:
+        data["d0_local_audit"] = d0_report(args.production_root / "forward.sqlite", int(time.time()))
+    except (OSError, ValueError) as exc:
+        status["d0_audit"] = "UNAVAILABLE_" + type(exc).__name__
+    reports = args.control_root / "cluster-reports"
+    if reports.is_dir():
+        for filename in sorted(reports.glob("*/latest.json")):
+            mint = filename.parent.name
+            try:
+                raw = filename.read_bytes()
+                job_id = hashlib.sha256(mint.encode() + b"\x00" + raw).hexdigest()
+                payload = json.loads(raw)
+                spool.ca_done(mint=mint, job_id=job_id, report=payload)
+                status["ca_queued"] += 1
+            except (OSError, ValueError, KeyError) as exc:
+                # No private path or source exception message is written.
+                status["ca_errors"].append({"mint": mint if len(mint) < 46 else "[INVALID]",
+                                            "error_type": type(exc).__name__})
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    # Create the portable packet *before* syncing, since confirmed uploads
+    # correctly remove their corresponding local pending files.
+    with zipfile.ZipFile(args.output, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("summary.json", json.dumps(status, indent=2, sort_keys=True))
+        if "d0_local_audit" in data:
+            archive.writestr("frank-d0-local-index.json",
+                             json.dumps(data["d0_local_audit"], ensure_ascii=False, indent=2))
+        for folder in ("ca", "ca-parts", "frank"):
+            for source in sorted((spool.pending / folder).rglob("*.json")):
+                archive.write(source, "sanitized-pending/" + source.relative_to(spool.pending).as_posix())
+    if args.sync:
+        if not shutil.which("gh"):
+            status["git_sync"] = "GH_CLI_MISSING_PENDING_RETAINED"
+        else:
+            try:
+                authenticated = subprocess.run(["gh", "auth", "status"],
+                                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                               timeout=10, check=False).returncode == 0
+            except (OSError, subprocess.TimeoutExpired):
+                authenticated = False
+            if authenticated:
+                try:
+                    data["git_sync_result"] = GitEvidencePublisher(spool).sync(force=True)
+                    status["git_sync"] = data["git_sync_result"]["status"]
+                except (OSError, ValueError, RuntimeError):
+                    status["git_sync"] = "GIT_SYNC_FAILED_PENDING_RETAINED"
+            else:
+                status["git_sync"] = "GH_AUTH_UNAVAILABLE_PENDING_RETAINED"
+    receipt = args.output.with_suffix(".status.json")
+    receipt.write_text(json.dumps(status, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
+    print(json.dumps({"packet": str(args.output), "status_file": str(receipt),
+                      "state": status}, ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except (OSError, ValueError, RuntimeError) as exc:
+        print(json.dumps({"status": "BOOTSTRAP_FAILED", "error_class": type(exc).__name__}),
+              file=sys.stderr)
+        sys.exit(2)
