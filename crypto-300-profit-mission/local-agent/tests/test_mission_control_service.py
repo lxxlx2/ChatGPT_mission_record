@@ -341,3 +341,34 @@ def test_service_preserves_quote_observation_and_uses_frozen_gmail_max_age(tmp_p
     assert "决策时 $30 报价：" in gmail
     assert "当前可成交价：" not in gmail
     service.close()
+
+
+
+def test_cycle_reports_wait_latency_and_manual_review_counts_without_sending(tmp_path):
+    from mission_agent.mission_control.server import DashboardState
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=pol)
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:good_quote()
+    result=service.cycle()
+    assert result["delivery_allowed"] is False
+    assert result["decision_events"][0]["notification_enqueued"] is True
+    assert result["cycle_elapsed_seconds"]>=0
+    assert result["pre_delivery_wait_seconds"] is not None
+    assert result["pre_delivery_wait_seconds"]>=0
+    before=DashboardState(prod,control).mission_control_health()
+    assert before["manual_review_total_count"]==0
+    assert before["manual_review_local_count"]==0
+    assert before["manual_review_gmail_count"]==0
+    service.control.db.execute(
+        "UPDATE decision_outbox SET status='MANUAL_REVIEW' WHERE channel IN ('local','gmail')"
+    )
+    service._write_health("OK",cycle_elapsed_seconds=1.5,pre_delivery_wait_seconds=0.4)
+    health=DashboardState(prod,control).mission_control_health()
+    assert health["manual_review_total_count"]==2
+    assert health["manual_review_local_count"]==1
+    assert health["manual_review_gmail_count"]==1
+    assert health["cycle_elapsed_seconds"]==1.5
+    assert health["pre_delivery_wait_seconds"]==0.4
+    assert "email" not in health
+    service.close()
