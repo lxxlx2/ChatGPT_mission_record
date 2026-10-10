@@ -184,6 +184,19 @@ class MonsterShadowTests(unittest.TestCase):
         self.assertEqual(res["watch_new"],1)
         self.assertEqual(m.health(self.db,BASE+720_000)["events"]["WATCH_EARLY"],2)
 
+    def test_source_outage_and_recovery_only_emit_transitions(self):
+        m.mark_source_health(self.db,"spot",BASE,"HTTPError:429")
+        m.mark_source_health(self.db,"spot",BASE+30_000,"HTTPError:429")
+        self.assertEqual(m.health(self.db,BASE+30_000)["events"]["SOURCE_DEGRADED"],1)
+        self.assertEqual(m.health(self.db,BASE+30_000)["degraded_venues"],["spot"])
+        m.mark_source_health(self.db,"spot",BASE+180_000)
+        m.mark_source_health(self.db,"spot",BASE+360_000)
+        h=m.health(self.db,BASE+360_000)
+        self.assertEqual(h["events"]["SOURCE_RECOVERED"],1)
+        self.assertEqual(h["degraded_venues"],[])
+        self.assertEqual(h["source_failures"],2)
+        self.assertEqual(h["mail_sent"],0)
+
     def test_duplicate_symbol_does_not_create_two_events(self):
         m.observe_snapshot(self.db,"spot",BASE,[row("DUSDT",1)])
         r=m.observe_snapshot(self.db,"spot",BASE+180_000,
