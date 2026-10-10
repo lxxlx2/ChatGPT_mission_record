@@ -1,0 +1,311 @@
+"""Opt-in Frank/CA evidence spool and independent GitHub publisher.
+
+Never modifies the Frank ledger, alert, policy or live Git checkout.
+Uses gh authenticated CLI; content is sent on stdin and verified after upload.
+No provider key, local paths, email, credential, quote or RPC URLs are exported.
+"""
+from __future__ import annotations
+
+import base64
+from datetime import datetime, timezone
+import fcntl
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import tempfile
+import time
+from urllib.parse import urlsplit, urlunsplit
+
+REPO = "lxxlx2/ChatGPT_mission_record"
+BRANCH = "evidence/frank-ca-local"
+PREFIX = "crypto-300-profit-mission/meme/local-evidence"
+PUBKEY = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
+SAFE_ID = re.compile(r"^[a-f0-9]{16,64}$")
+BANNED = re.compile(r"secret|password|passphrase|private|seed|key|bearer|authorization|cookie|credential|webhook|rpc_url|endpoint_url|gmail|email|local_path|home_dir", re.I)
+SENSITIVE_INLINE = re.compile(r"(?i)(bearer\s+[a-z0-9._~+/-]+|(?:api[_-]?key|token|password|secret)\s*[:=]\s*[^\s&,;]+)")
+CA_FIELDS = ("schema_version", "mint", "source", "observed_at", "supply_raw", "decimals",
+             "token_profile", "market", "assessment", "holders", "metrics",
+             "confirmed_relation_groups", "probable_control_clusters",
+             "probable_execution_clusters", "shared_infrastructure_exclusions",
+             "unresolved_relation_edges", "edges", "funding_evidence",
+             "consolidation_evidence", "trade_evidence", "transaction_errors",
+             "coverage", "limitations")
+MAX_CA_BYTES = 250_000
+MAX_RECURSION = 14
+MAX_ARRAY = 300
+MAX_TEXT = 3000
+MAX_REMOTE_BYTES = 650_000
+
+
+def canonical(obj: object) -> bytes:
+    return (json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n").encode("utf-8")
+
+
+def digest(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def safe(value: object, level: int = 0) -> object:
+    """Whitelist/scrub recursive data, never sending arbitrary source logs."""
+    if level > MAX_RECURSION:
+        return "[DEPTH_LIMIT]"
+    if value is None or isinstance(value, (bool, int)):
+        return value
+    if isinstance(value, float):
+        return value if -1e308 < value < 1e308 else None
+    if isinstance(value, str):
+        if SENSITIVE_INLINE.search(value):
+            return "[REDACTED]"
+        if len(value) > MAX_TEXT:
+            return "[TEXT_OVER_LIMIT]"
+        if value.startswith(("https://", "http://")):
+            try:
+                u = urlsplit(value)
+                if u.username or u.password or u.query or u.fragment:
+                    return urlunsplit((u.scheme, u.hostname or "", u.path, "", ""))
+            except ValueError:
+                return "[URL_INVALID]"
+        return value
+    if isinstance(value, list):
+        return [safe(x, level + 1) for x in value[:MAX_ARRAY]]
+    if isinstance(value, dict):
+        return {str(k): safe(v, level + 1) for k, v in value.items()
+                if isinstance(k, str) and not BANNED.search(k) and len(k) <= 90}
+    return "[TYPE_REDACTED]"
+
+
+def atomic_new(path: Path, data: bytes) -> bool:
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    try:
+        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError:
+        if path.read_bytes() != data:
+            raise ValueError("EVENT_ID_COLLISION_DIFFERENT_CONTENT")
+        return False
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+            f.flush()
+            os.fsync(f.fileno())
+    except BaseException:
+        path.unlink(missing_ok=True)
+        raise
+    return True
+
+
+class EvidenceSpool:
+    def __init__(self, root: Path):
+        self.root = Path(root) / "git-evidence-spool"
+        self.pending = self.root / "pending"
+        self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
+
+    def ca_done(self, *, mint: str, job_id: str, report: dict) -> Path:
+        if not PUBKEY.fullmatch(mint) or not SAFE_ID.fullmatch(job_id):
+            raise ValueError("INVALID_CA_OR_JOB_ID")
+        if not isinstance(report, dict) or report.get("mint") != mint:
+            raise ValueError("CA_REPORT_IDENTITY_MISMATCH")
+        limited = {k: report[k] for k in CA_FIELDS if k in report}
+        filtered = safe(limited)
+        omissions = {}
+        def clipped(v):
+            if isinstance(v, list):
+                return len(v) > MAX_ARRAY
+            return False
+        for k, v in limited.items():
+            if clipped(v):
+                omissions[k] = {"original_count": len(v), "exported_count": MAX_ARRAY}
+        exported = {
+            "schema_version": 1, "kind": "ca", "job_id": job_id, "mint": mint,
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "local_job_status": "DONE", "chain_completeness_verified": False,
+            "coverage_provenance": "BOUNDED_OR_PARTIAL_UNLESS_INDEPENDENTLY_AUDITED",
+            "data": filtered, "omitted_arrays": omissions,
+        }
+        raw = canonical(exported)
+        if len(raw) > MAX_CA_BYTES:
+            # Do not silently advertise truncated scientific coverage as complete.
+            included = ("schema_version", "mint", "source", "observed_at", "supply_raw",
+                        "decimals", "token_profile", "market", "assessment", "metrics",
+                        "coverage", "transaction_errors", "limitations")
+            exported["data"] = safe({k: limited[k] for k in included if k in limited})
+            exported["full_local_report_sha256"] = digest(canonical(report))
+            exported["omitted_sections_due_to_size"] = sorted(set(limited) - set(included))
+            exported["export_completeness"] = "SUMMARY_ONLY_SIZE_GUARD"
+            raw = canonical(exported)
+        else:
+            exported["export_completeness"] = "SELECTED_FIELDS_WITH_ARRAY_CAP"
+            exported["full_local_report_sha256"] = digest(canonical(report))
+            raw = canonical(exported)
+        if len(raw) > MAX_CA_BYTES:
+            raise ValueError("CA_EXPORT_TOO_LARGE_FAIL_CLOSED")
+        name = f"{job_id}.json"
+        dest = self.pending / "ca" / name
+        atomic_new(dest, raw)
+        return dest
+
+    def frank_scan(self, *, poll_count: int, health: dict, coverage: dict | None = None) -> Path:
+        if type(poll_count) is not int or poll_count < 0:
+            raise ValueError("FRANK_POLL_COUNT_INVALID")
+        if not isinstance(health, dict):
+            raise ValueError("FRANK_HEALTH_INVALID")
+        # Never export full health: can contain local paths and provider errors.
+        allowed = ("status", "last_successful_poll", "last_model_successful_eval",
+                   "last_chain_signature", "last_processed_signature",
+                   "last_processed_slot", "new_signatures", "lag_seconds",
+                   "model_unprocessed", "raw_pending", "local_pending",
+                   "consecutive_errors", "policy_hash", "source_drift")
+        h = {k: health.get(k) for k in allowed}
+        cov = coverage or {}
+        envelope = {
+            "schema_version": 1, "kind": "frank",
+            "poll_count": poll_count, "captured_at_utc": datetime.now(timezone.utc).isoformat(),
+            "source_status": "LOCAL_WRITER_HEALTH_READ_ONLY",
+            "chain_completeness_verified": False,
+            "health": safe(h),
+            "coverage": safe({k: cov.get(k) for k in ("status", "scope", "windows",
+                          "earliest_indexed_block_time", "latest_indexed_block_time",
+                          "indexed_signatures_all_time")}),
+        }
+        stamp = h.get("last_successful_poll") or envelope["captured_at_utc"]
+        try:
+            dt = datetime.fromisoformat(str(stamp).replace("Z", "+00:00")).astimezone(timezone.utc)
+        except ValueError:
+            dt = datetime.now(timezone.utc)
+        bucket = f"{dt:%Y-%m-%d}/{dt.hour:02d}{(dt.minute//15)*15:02d}"
+        envelope["bucket_utc"] = bucket
+        raw = canonical(envelope)
+        identity = digest(canonical({"poll_count": poll_count, "checkpoint": h.get("last_processed_signature"),
+                                     "success": h.get("last_successful_poll")}))[:20]
+        dest = self.pending / "frank" / f"{poll_count:012d}-{identity}.json"
+        atomic_new(dest, raw)
+        return dest
+
+
+class GitEvidencePublisher:
+    def __init__(self, spool: EvidenceSpool, *, clock=time.time, gh="gh"):
+        self.spool, self.clock, self.gh = spool, clock, gh
+
+    def _gh(self, method: str, remote: str, payload: dict | None = None) -> dict | None:
+        if not remote.startswith(PREFIX + "/") or ".." in remote.split("/"):
+            raise ValueError("REMOTE_PATH_FORBIDDEN")
+        api = "repos/" + REPO + "/contents/" + remote
+        cmd = [self.gh, "api", "--method", method, "-H",
+               "Accept: application/vnd.github+json", api]
+        if method == "GET":
+            cmd[-1] += "?ref=" + BRANCH
+        if payload is not None:
+            cmd += ["--input", "-"]
+        try:
+            result = subprocess.run(cmd, input=canonical(payload) if payload is not None else None,
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    timeout=25, check=False)
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise RuntimeError("GH_TRANSPORT_UNAVAILABLE") from exc
+        if result.returncode:
+            # Never include subprocess stderr because it may contain secrets.
+            if method == "GET" and b"HTTP 404" in result.stderr:
+                return None
+            raise RuntimeError("GH_API_" + method + "_FAILED")
+        try:
+            return json.loads(result.stdout)
+        except (ValueError, UnicodeError) as exc:
+            raise RuntimeError("GH_API_INVALID_RESPONSE") from exc
+
+    def _remote(self, remote: str) -> tuple[bytes | None, str | None]:
+        existing = self._gh("GET", remote)
+        if existing is None:
+            return None, None
+        if existing.get("encoding") != "base64":
+            raise RuntimeError("GH_CONTENT_ENCODING_UNSUPPORTED")
+        try:
+            content = base64.b64decode(existing["content"], validate=False)
+        except (KeyError, ValueError) as exc:
+            raise RuntimeError("GH_CONTENT_INVALID") from exc
+        return content, existing["sha"]
+
+    def _upload(self, remote: str, blob: bytes):
+        if len(blob) > MAX_REMOTE_BYTES:
+            raise ValueError("GIT_EVIDENCE_SIZE_LIMIT")
+        for attempt in range(3):
+            prior, sha = self._remote(remote)
+            if prior == blob:
+                return
+            args = {"message": "evidence: update " + remote.removeprefix(PREFIX + "/"),
+                    "content": base64.b64encode(blob).decode("ascii"), "branch": BRANCH}
+            if sha:
+                args["sha"] = sha
+            try:
+                self._gh("PUT", remote, args)
+            except RuntimeError:
+                if attempt == 2:
+                    raise
+                time.sleep(min(2 ** attempt, 4))
+                continue
+            received, _ = self._remote(remote)
+            if received == blob:
+                return
+            if attempt == 2:
+                raise RuntimeError("GH_READBACK_HASH_MISMATCH")
+        raise RuntimeError("GH_READBACK_HASH_MISMATCH")
+
+    def sync(self, *, force: bool = False) -> dict:
+        self.spool.root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        lock_path = self.spool.root / "sync.lock"
+        with lock_path.open("a+") as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return {"status": "SYNC_BUSY", "uploaded": 0}
+            sent = 0
+            errors = []
+            for p in sorted((self.spool.pending / "ca").glob("*.json")):
+                try:
+                    data = json.loads(p.read_text())
+                    if p.stem != data["job_id"] or not SAFE_ID.fullmatch(p.stem):
+                        raise ValueError("CA_SPOOL_IDENTITY_INVALID")
+                    remote = f"{PREFIX}/ca/{data['mint']}/{p.name}"
+                    self._upload(remote, p.read_bytes())
+                    p.unlink()
+                    sent += 1
+                except (ValueError, OSError, RuntimeError, KeyError) as exc:
+                    errors.append({"kind": "ca", "event": p.name, "reason": type(exc).__name__})
+            # Do not sync an open 15-minute bucket unless explicitly forced.
+            current_bucket_start = int(self.clock() // 900) * 900
+            groups: dict[str, list[tuple[Path, dict]]] = {}
+            for p in sorted((self.spool.pending / "frank").glob("*.json")):
+                try:
+                    item = json.loads(p.read_text())
+                    bucket = str(item["bucket_utc"])
+                    dt = datetime.strptime(bucket, "%Y-%m-%d/%H%M").replace(tzinfo=timezone.utc)
+                    if dt.timestamp() >= current_bucket_start and not force:
+                        continue
+                    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}/\d{4}", bucket):
+                        raise ValueError("BAD_BUCKET")
+                    groups.setdefault(bucket, []).append((p, item))
+                except (KeyError, ValueError, OSError) as exc:
+                    errors.append({"kind": "frank", "event": p.name, "reason": type(exc).__name__})
+            for bucket, rows in sorted(groups.items()):
+                remote = f"{PREFIX}/frank/{bucket}.json"
+                try:
+                    old, _ = self._remote(remote)
+                    existing = json.loads(old)["events"] if old is not None else []
+                    by_id = {str(z["poll_count"]): z for z in existing}
+                    for _, row in rows:
+                        key = str(row["poll_count"])
+                        if key in by_id and by_id[key] != row:
+                            raise ValueError("POLL_ID_DIFFERENT_EVIDENCE")
+                        by_id[key] = row
+                    events = sorted(by_id.values(), key=lambda x: x["poll_count"])
+                    packet = {"schema_version": 1, "bucket_utc": bucket,
+                              "record_count": len(events), "events": events}
+                    self._upload(remote, canonical(packet))
+                    for p, _ in rows:
+                        p.unlink()
+                        sent += 1
+                except (KeyError, ValueError, OSError, RuntimeError) as exc:
+                    errors.append({"kind": "frank", "bucket": bucket, "reason": type(exc).__name__})
+            return {"status": "SYNC_OK" if not errors else "SYNC_PARTIAL",
+                    "uploaded": sent, "errors": errors, "remote_branch": BRANCH}
