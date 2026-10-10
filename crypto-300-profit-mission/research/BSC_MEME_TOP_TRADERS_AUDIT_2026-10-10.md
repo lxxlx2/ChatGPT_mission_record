@@ -74,3 +74,16 @@ If the CLI is unavailable, this file was **not executed against live GMGN** duri
 2. Reconstruct all-venue entry/exit via Four.meme, Pancake V2/V3, aggregator and quote assets. Verify claimed realized profit and sale receipts; exclude transfer-ins, LPs, CEX/bot routers.
 3. Cluster only on noncustodial funding, repeated bilateral flows and timing; distinguish person from shared service.
 4. Audit full wallet loss history, recent genuine buys/sells (30d), followable holding times and 5/15/30 minute delayed fills with fees/slippage; out-of-sample validate. No go until gates pass.
+
+## Alpha-only cohort expansion (2026-10-10 addendum)
+
+Original 18 were biased toward projects with Binance Futures and/or Spot listing. **BUBB** is independently established as **Binance Alpha-only within current evidence**, so the *candidate* scope is now **19**, including an Alpha-only control sample. The original 18-token V2 first/latest sampling coverage **remains only 18/19**: BUBB is newly checked for its first 10 transfers, but has no documented latest-slice overlap audit yet.
+
+- BUBB (Bubb), contract `0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b`, metadata verified with read-only BNB Mainnet ERC20 token metadata.
+- Pancake V2/WBNB pair `0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c` resolved via factory eth_call.
+- First pair outgoing token transfer at block 47620848, 2025-03-20 04:17:03 UTC; token transfer tx `0x68d5fee6213f8896da65e7e804305817d10a2bfd05add66e362ae05e4a29dfa6`.
+- Binance Alpha announced addition on 2025-03-24: https://www.binance.com/en/square/post/03-24-2025-binance-alpha-adds-bubb-and-agon-to-its-platform-21972444251250
+- Binance Alpha delisted BUBB from *featured/recommended list* effective 2026-04-30: https://www.binance.com/en/support/announcement/detail/9b3112ca2a4b4d8098403d9cc4a1a855
+- No official BUBB perpetual or spot listing is established in this pass; do not infer one.
+- `bsc_meme_top_traders_readonly.py` now includes 19 candidate contracts. The separate locally tested, fuller offline prototype also includes 19. Neither script has yet obtained live 19x top traders rankings from this environment.
+- BUBB alone does NOT exhaust Alpha-only memes; full Binance Alpha 2025–2026 eligibility export remains a separate coverage requirement. Do not label 19 as Binance universe population.
