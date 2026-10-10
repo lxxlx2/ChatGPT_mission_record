@@ -1,7 +1,7 @@
 # Airdrop / TGE Monitor State
 Updated: 2026-10-10 22:49:08 Asia/Bangkok
 Timezone: Asia/Bangkok
-- expected_schedule: hourly :50 (unchanged)
+- expected_schedule: hourly :00 Asia/Bangkok (user-approved schedule change 2026-10-10; not yet proof of actual :00 execution)
 - latest_actual_run: 2026-10-10 22:49:08 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
@@ -16,6 +16,8 @@ Timezone: Asia/Bangkok
 - latest_source_failures: 1
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: silent
+
+- configuration_note: task schedule now HH:00; latest_actual_run HH:49 below reflects historical pre-change execution, not a future schedule error
 
 ## Durable known-events
 Read state/known-events.md before discovery. All previously delivered, completed, closed and user-suppressed events remain deduped. No newly due unresolved user action.
