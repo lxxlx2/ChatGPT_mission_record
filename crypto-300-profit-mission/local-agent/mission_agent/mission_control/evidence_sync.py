@@ -303,7 +303,7 @@ class GitEvidencePublisher:
                     parts = []
                     for chunk in data.get("data_chunks") or []:
                         name = chunk["file"]
-                        if not re.fullmatch(r"part-\\d{4}\\.json", name):
+                        if not re.fullmatch(r"part-\d{4}\.json", name):
                             raise ValueError("CA_PART_FILENAME_INVALID")
                         local = self.spool.pending / "ca-parts" / p.stem / name
                         encoded = json.loads(local.read_text())
