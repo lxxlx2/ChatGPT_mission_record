@@ -178,3 +178,21 @@ Official Binance first-party listings: 我踏马来了 https://www.binance.com/e
 - Recalculate wallet 0x239e full historical PnL, other tokens, trade timing and max loss; determine whether its activity in September 2026 is actual trading rather than only transfers, and whether any signals would be late but actionable.
 - Do not count stale 2025-only winners as present opportunities without 2026 activity and current trading validation.
 - Remain `OBSERVE_ONLY`; `PRODUCTION_TRADING=NO_GO`; no monitor/automation/launchd/Gmail config changes.
+
+
+### Additional 2026 trades of the same wallet, including losses
+
+To avoid two-winning-trade survivorship bias, researched three more complete, zero-current-balance ERC20 round trips for EOA `0x239e74bfbd02d71cdc70fecc2d505dc13acfb337`. Each of nine original trades (buy/sell transactions across these three tokens) independently checked `transaction.from == EOA`. Values below reflect direct BNB-balance delta across transaction-containing BSC blocks (net of that block's native gas, but possible same-block other-value caveat still applies). The ERC20 contract ID is essential due to non-unique token symbols.
+
+| Token / contract | BUY: BNB net decreases | SELL: BNB net increases | Estimated closed-position PnL | Approx ROI |
+|---|---:|---:|---:|---:|
+| Meme `0xf9d556ad3eb1836e53e1433bdd6dd5568a047777` | 0.0100847206 | 0.01715114834062531 | +0.007066427740625311 | +70.07% |
+| QQ `0xea54485bcfd3096a7e1ca8eccaa0c0cf37057777` | 0.06015111348 | 0.0258475049058344 | -0.0343036085741656 | -57.03% |
+| LION `0x705a450d0a0a807d04c75a8ba9a5f88a64067777` | 0.02006709212 | 0.010089712353703808 | -0.009977379766296193 | -49.72% |
+
+- Meme buy/sell block 119919330 / 119920209; buy tx `0xca0ae172afd91a64836af64c8860c1ba310277603b83294a39d696e112c71e09`, sell tx `0x468b5e9739cc4d5aa3c8ea8bb5e23369002c32f66693b9d12caeabc764a852bc`.
+- QQ buy blocks 116786906, 116787302, 116787699; sell blocks 116787153, 117904196. One full entry/exit cycle across repeated partial sells. Buy tx `0xb97ea50ed09066a75c02e7d6a82e2f6caea5a57a4b98e4cdf13f83602ec0bb6b`, final sell tx `0x62441767042a2e5e9086bee319b496b0f21717253f1115c12f5a694da384672a`.
+- LION buy/sell block 117888218 / 117888395, tx `0x8bb352b783e084f8f296ba06b039af59d451ca09eba95c681720239d2f87680f` and `0x99f5908b8c84354b46dd08f5a003e3430e43d89f46f3176a2cd63eaf20d62a1b`.
+- Among these specifically researched **five** closed positions (我踏马来了, 龙虾, Meme, QQ, LION), 3 were net profitable, 2 lost, combined +0.25927775341787535 BNB (limited selected sample win rate 3/5 = 60%). **Do not claim historical wallet win rate 60%**; many other txs were not sampled. Distinct from 18 project candidate universe, which includes only the first two of these five.
+- Additional candidate-universe checks on the same wallet for 牛来, MARSCOIN, 哈基米, 币安人生, TST and MUBARAK found no direct trading transfers, except one tiny 16.939109 牛来 inbound transfer with no matching outbound; this is not a repeated hit/profit on those six. Broader active-wallet candidate search is still necessary.
+- Bottom line: EOA `0x239e74bf...` is a genuinely active-in-2026 **research candidate** with at least two observed BSC Binance Meme profitable closed positions and observable losing Meme positions elsewhere, but no demonstrated full-history edge, no proof of insider Binance connection, no tested delay-follow profitability. Status remains **OBSERVE_ONLY**.
