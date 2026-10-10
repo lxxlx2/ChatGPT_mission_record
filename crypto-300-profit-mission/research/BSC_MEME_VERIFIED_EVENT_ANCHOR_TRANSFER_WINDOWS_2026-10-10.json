@@ -637,7 +637,54 @@
       "next_page_key": "26c87a31-8442-48f3-b9fb-682eb30b282b",
       "complete_query": false,
       "error": null,
-      "distinct_transactions": 10
+      "distinct_transactions": 10,
+      "signer_examples": [
+        {
+          "token": "MARSCOIN",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0x0d7f0cd1aa1c0ec93ac856114519c2bfee3eeedb5254a56e859e1b2f114212d6",
+          "block": 120088191,
+          "original_signer": "0x0761c0e8d5ce24af0120d7787578bf350bd15eef",
+          "target": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+          "native_value_wei": "0",
+          "selector": "0x42e3dcf3",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "MARSCOIN",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0xb4a5ddae3f49cd570e720bd6031d771c10a9fcefeaa0427467c5706d9cbfe153",
+          "block": 120088192,
+          "original_signer": "0xe764202cd701a46bab39ee5a275ce68fbb6909f9",
+          "target": "0xd36b6d646ac6e23672e9eedec558164c7f2d6deb",
+          "native_value_wei": "0",
+          "selector": "0x27772d13",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "MARSCOIN",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0xe61124c387a7a7bb5a0b5599463844c7e9c611d72d419bdb663597f2a18d1489",
+          "block": 120088194,
+          "original_signer": "0xaa24f318768a6064aa1be87ec88324f75711e9a2",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_value_wei": "0",
+          "selector": "0x4d819a2a",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "MARSCOIN",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0x3d58922b39e98a0b499dd8afb4da9db6e5046094a1e988a63ea461ea89005618",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 11 column 7756)"
+        },
+        {
+          "token": "MARSCOIN",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0x9d04163e8ab2761e1cab2d43d58f89368e97cfe8ae3232e61fede630f31bea98",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 9 column 7823)"
+        }
+      ]
     },
     {
       "token": "MARSCOIN",
@@ -813,7 +860,54 @@
       "next_page_key": "288316b4-7c17-40c2-8521-c759abf15050",
       "complete_query": false,
       "error": null,
-      "distinct_transactions": 10
+      "distinct_transactions": 10,
+      "signer_examples": [
+        {
+          "token": "MARSCOIN",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0x370051da53af9e7074783d2b70451621537c4ac0a9d57c89187c1fd8994b6c44",
+          "block": 120088241,
+          "original_signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_value_wei": "0",
+          "selector": "0x4d819a2a",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "MARSCOIN",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0x8a890380f0e7b91c791230cb94a897ce53e11626c8d80e660f4a25c53e603dff",
+          "block": 120088242,
+          "original_signer": "0x391244619a8d05c201db977333b0eee95938e639",
+          "target": "0x1a1ec25dc08e98e5e93f1104b5e5cdd298707d31",
+          "native_value_wei": "0",
+          "selector": "0x5f575529",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "MARSCOIN",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0x495e7c58075dbfe595f7911aa37281196b6e090cb9d947a2f6ade091d7c779c9",
+          "block": 120088242,
+          "original_signer": "0xaa500ba4b9cd9307a4b6aa127ac2299b185644ac",
+          "target": "0x2f68417a18da681589f4ea64b9cc9839209acff7",
+          "native_value_wei": "0",
+          "selector": "0xedad400c",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "MARSCOIN",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0x4b589efdfb82a0b87502c7a08c193046ed43dd0768f9d56ed8b4c4d18b1a14b2",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 11 column 7756)"
+        },
+        {
+          "token": "MARSCOIN",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0xdaac3f6f7d92f34c8429af07122b125fe7f0195d5f332a848008bc3a40883f96",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 11 column 7756)"
+        }
+      ]
     }
   ]
 }
