@@ -57,6 +57,32 @@ class MonsterHistoricalRealReplayTests(unittest.TestCase):
         self.assertEqual(m._proxy_trade(bars,t0,t0+3500*60000,180000,20)["status"],
                          "CENSORED_NO_COMPLETE_EXIT")
 
+    def test_actual_delisted_alpaca_has_no_executable_24h_exit(self):
+        p=m.EVIDENCE/"monster_v4_replay_1m_futures_ALPACAUSDT_2025-04-29.json"
+        _,bars=m.load_case(p)
+        watch=m.parse_ms("2025-04-29T12:00:00Z")
+        trade=m._proxy_trade(bars,bars[0][0],watch,180000,20)
+        self.assertEqual(trade["status"],"CENSORED_ZERO_VOLUME_EXIT")
+        self.assertEqual(bars[3063][6],0)
+        self.assertEqual(bars[3063][5],Decimal(0))
+
+    def test_mutating_future_prices_does_not_change_current_d0_d1(self):
+        p=m.EVIDENCE/"monster_v4_replay_1m_spot_XTZUSDT_2025-03-02.json"
+        src,bars=m.load_case(p)
+        baseline=m.replay_case(src,bars)
+        amended=list(bars)
+        for i in range(2400,len(bars)):
+            v=list(bars[i])
+            v[1]=v[1]*Decimal(9)
+            v[2]=v[2]*Decimal(9)
+            v[3]=v[3]*Decimal(9)
+            v[4]=v[4]*Decimal(9)
+            v[5]=v[5]*Decimal(9)
+            amended[i]=tuple(v)
+        changed=m.replay_case(src,amended)
+        self.assertEqual(baseline["watch_events"],changed["watch_events"])
+        self.assertEqual(baseline["setup_events"],changed["setup_events"])
+
     def test_real_cases_report_stale_not_profitable_pass(self):
         paths=sorted(m.EVIDENCE.glob("monster_v4_replay_1m_*.json"))
         result=m.run(paths)
