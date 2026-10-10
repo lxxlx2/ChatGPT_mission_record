@@ -1,5 +1,5 @@
 {
-  "scope": "two newly surfaced 2025 multi-token sample EOAs; signer evidence is NOT profit or complete position proof",
+  "scope": "Five newly surfaced EOA clusters, 2025 original signed first sample trades in two tokens each; NO confirmed profit",
   "chain": "bnb-mainnet",
   "source": "Alchemy ethGetTransactionByHash",
   "records": [
@@ -45,6 +45,72 @@
       "block": 63454410,
       "native_tx_value_wei": "15150000000000000",
       "selector": "0x3b164a8e",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    },
+    {
+      "wallet": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "token": "4",
+      "tx": "0x3f6ac49d305fbd6ee77bd259279e07bc17c0786fad4b3afb65ef68baac1e080c",
+      "origin_signer": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "target": "0x296b00198dc7ec3410e12da814d9267bb8df506a",
+      "block": 63056886,
+      "native_tx_value_wei": "50000000000000000",
+      "selector": "0x7e7c8b25",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    },
+    {
+      "wallet": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "token": "币安人生",
+      "tx": "0x36715085deb04c4386ba354d4f1a2ba640f717c30f38a82d44da2ab70feca361",
+      "origin_signer": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "target": "0x296b00198dc7ec3410e12da814d9267bb8df506a",
+      "block": 63454415,
+      "native_tx_value_wei": "50000000000000000",
+      "selector": "0x7e7c8b25",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    },
+    {
+      "wallet": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "token": "4",
+      "tx": "0x37c1f42485f0ed43b01e5c8cec8553850a486d9b2ded02e55f3252ffe61b884a",
+      "origin_signer": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "block": 63056884,
+      "native_tx_value_wei": "50500000000000000",
+      "selector": "0x3b164a8e",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    },
+    {
+      "wallet": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "token": "币安人生",
+      "tx": "0x345eaa7302bc9bb89899ed12e18a5228f7da75fe37bfbbb6ff0b964db4354d9d",
+      "origin_signer": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "block": 63454412,
+      "native_tx_value_wei": "101000000000000000",
+      "selector": "0x3b164a8e",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    },
+    {
+      "wallet": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+      "token": "4",
+      "tx": "0xf204b95ced49c55f80638f656a09c7681d027f54fbf135844a6f7c15bad4c11a",
+      "origin_signer": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+      "target": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "block": 63056886,
+      "native_tx_value_wei": "70000000000000000",
+      "selector": "0x7ff36ab5",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    },
+    {
+      "wallet": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+      "token": "币安人生",
+      "tx": "0x8b2d03b9db8931039d2f9fd212017da802798ec79333dd730e3f2ea60d4e24a7",
+      "origin_signer": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+      "target": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "block": 63454410,
+      "native_tx_value_wei": "20000000000000000",
+      "selector": "0x7ff36ab5",
       "status": "DIRECT_SIGNER_CONFIRMED"
     }
   ],
