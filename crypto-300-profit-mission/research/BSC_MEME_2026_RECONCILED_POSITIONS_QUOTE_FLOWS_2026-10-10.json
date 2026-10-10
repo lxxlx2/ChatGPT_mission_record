@@ -1,0 +1,157 @@
+{
+  "source": "Alchemy bnb-mainnet native external+internal transfers and ERC20 WBNB incoming for early position interval ±3 blocks",
+  "interpretation": "Wallet native outgoing native value captures buys; native incoming may be internal swap credit; must still match tx hash to ERC20 inventory, gas and other quote assets; incomplete pagination cannot be treated zero",
+  "items": [
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:我踏马来了",
+      "type": "native_in",
+      "args": {
+        "network": "bnb-mainnet",
+        "toAddress": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+        "category": [
+          "external",
+          "internal"
+        ],
+        "fromBlock": "0x45f05b1",
+        "toBlock": "0x463f3ec",
+        "order": "asc",
+        "maxCount": "0xa"
+      },
+      "rows": [],
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text=\"RPC error (-32602): The 'internal' category is not supported for this network. Check the Alchemy documentation for supported networks.\", annotations=None, meta=None)]"
+    },
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:我踏马来了",
+      "type": "native_out",
+      "args": {
+        "network": "bnb-mainnet",
+        "fromAddress": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+        "category": [
+          "external",
+          "internal"
+        ],
+        "fromBlock": "0x45f05b1",
+        "toBlock": "0x463f3ec",
+        "order": "asc",
+        "maxCount": "0xa"
+      },
+      "rows": [],
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text=\"RPC error (-32602): The 'internal' category is not supported for this network. Check the Alchemy documentation for supported networks.\", annotations=None, meta=None)]"
+    },
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:我踏马来了",
+      "type": "wbnb_in",
+      "range": {
+        "from": "0x45f05b1",
+        "to": "0x463f3ec"
+      },
+      "rows": [],
+      "pageKey": null,
+      "error": null
+    },
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:龙虾",
+      "type": "native_in",
+      "args": {
+        "network": "bnb-mainnet",
+        "toAddress": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+        "category": [
+          "external",
+          "internal"
+        ],
+        "fromBlock": "0x4fc2e8b",
+        "toBlock": "0x51f86d2",
+        "order": "asc",
+        "maxCount": "0xa"
+      },
+      "rows": [],
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text=\"RPC error (-32602): The 'internal' category is not supported for this network. Check the Alchemy documentation for supported networks.\", annotations=None, meta=None)]"
+    },
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:龙虾",
+      "type": "native_out",
+      "args": {
+        "network": "bnb-mainnet",
+        "fromAddress": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+        "category": [
+          "external",
+          "internal"
+        ],
+        "fromBlock": "0x4fc2e8b",
+        "toBlock": "0x51f86d2",
+        "order": "asc",
+        "maxCount": "0xa"
+      },
+      "rows": [],
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text=\"RPC error (-32602): The 'internal' category is not supported for this network. Check the Alchemy documentation for supported networks.\", annotations=None, meta=None)]"
+    },
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:龙虾",
+      "type": "wbnb_in",
+      "range": {
+        "from": "0x4fc2e8b",
+        "to": "0x51f86d2"
+      },
+      "rows": [],
+      "pageKey": null,
+      "error": null
+    },
+    {
+      "pair": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c:我踏马来了",
+      "type": "native_in",
+      "args": {
+        "network": "bnb-mainnet",
+        "toAddress": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+        "category": [
+          "external",
+          "internal"
+        ],
+        "fromBlock": "0x45f05ea",
+        "toBlock": "0x46427b1",
+        "order": "asc",
+        "maxCount": "0xa"
+      },
+      "rows": [],
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text=\"RPC error (-32602): The 'internal' category is not supported for this network. Check the Alchemy documentation for supported networks.\", annotations=None, meta=None)]"
+    },
+    {
+      "pair": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c:我踏马来了",
+      "type": "native_out",
+      "args": {
+        "network": "bnb-mainnet",
+        "fromAddress": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+        "category": [
+          "external",
+          "internal"
+        ],
+        "fromBlock": "0x45f05ea",
+        "toBlock": "0x46427b1",
+        "order": "asc",
+        "maxCount": "0xa"
+      },
+      "rows": [],
+      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text=\"RPC error (-32602): The 'internal' category is not supported for this network. Check the Alchemy documentation for supported networks.\", annotations=None, meta=None)]"
+    },
+    {
+      "pair": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c:我踏马来了",
+      "type": "wbnb_in",
+      "range": {
+        "from": "0x45f05ea",
+        "to": "0x46427b1"
+      },
+      "rows": [
+        {
+          "hash": "0xfb21248b77ee133886f9bc289d9e35ebad038eef950f3815ac9c67ed11a0dffe",
+          "block": 73447302,
+          "category": "erc20",
+          "from": "0xecaa9b67652897bea70fadbd85cc491b2aab2246",
+          "to": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "value": 0.004749478347707712,
+          "raw_value": "0x10dfa019c89540"
+        }
+      ],
+      "pageKey": null,
+      "error": null
+    }
+  ]
+}
