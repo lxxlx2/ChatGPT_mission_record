@@ -1,5 +1,7 @@
 # Airdrop / TGE Monitor Spec
 
+Active schedule authority: existing task runs HOURLY at minute 00 Asia/Bangkok, starting 2026-10-10 00-minute cadence (future invocations). Older :14/:50 history is not active. Existing urgent+one-shard, ACTION_GATE, scope and alert dedupe unchanged.
+
 Updated: 2026-09-26 15:10 Asia/Bangkok
 Timezone: Asia/Bangkok
 
@@ -7,7 +9,7 @@ Timezone: Asia/Bangkok
 
 提高真实执行率。取消“每小时穷尽完整白名单”的不可持续要求，改为 urgent + shard。
 
-## 每小时 :14
+## 每小时 :00（2026-10-10 用户批准的新配置）
 
 读取：
 - `REGISTRY.md`
