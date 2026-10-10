@@ -1,0 +1,31 @@
+{
+  "schema": "MONSTER_STAGE7_SOURCE_QA_CI_V1",
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38090705792",
+  "run_commit": "fdb64387e9003b857fde0256d63292c10b5a49ef",
+  "executed": "GitHub Actions real Python source quality on downloaded official Binance 1m files",
+  "registered": 60,
+  "actual_files": 60,
+  "valid_contiguous_60h": 40,
+  "missing_pre_history_or_incomplete_60h": 20,
+  "cohorts": {
+    "FULLMARKET_SAMPLED": {
+      "n": 30,
+      "valid": 20,
+      "incomplete": 10
+    },
+    "GT5X_PREHIT_POSITIVE": {
+      "n": 30,
+      "valid": 20,
+      "incomplete": 10
+    }
+  },
+  "new_listing_proxy": {
+    "total": 10,
+    "valid24h_warmup": 0
+  },
+  "exclusion_rule": "Do not silently pad or consider invalid 60h as genuine complete episodes",
+  "reason": "Official historical available 1m series starts after requested 30h pre-anchor for many recently listed symbols",
+  "source": "Stage5 frozen identities plus each official 1m Binance case-file; see monster_v4_history_source_quality.py",
+  "strategy_conclusion": "Special new-listing/short-history protocol required, under active research, no model approval",
+  "deployment": "NO_GO"
+}
