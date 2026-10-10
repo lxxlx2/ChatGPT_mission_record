@@ -272,3 +272,57 @@ def test_git_frank_scan_keeps_full_nonsignal_watchlist(tmp_path):
     assert j["signal_eligible_candidates_sample"] == []
     assert "DO_NOT_PUBLISH" not in p.read_text()
     assert j["observed_watchlist"]["rows"][0]["watch_state"] == "MODEL_OPEN"
+
+
+def test_complete_frank_history_export_roundtrip_with_large_chunks(tmp_path):
+    spool = EvidenceSpool(tmp_path)
+    sigs = [{"signature": f"sig-{i:04d}", "side": "BUY",
+             "mint": MINT, "memo": "public-data-" + "w" * 350,
+             "gmail_api_key": "DO_NOT_EXPORT"}
+            for i in range(700)]
+    report = {
+        "schema_version": 1, "person_id": "frank",
+        "source_scope": "COMPLETE_LOCAL_RECOGNIZED_TRADES_NOT_FULL_CHAIN",
+        "record_count": 700, "records": sigs,
+        "realized_pnl_usd": None, "chain_completeness_verified": False,
+        "private_key": "DO_NOT_EXPORT",
+    }
+    path = spool.frank_history(report)
+    manifest = json.loads(path.read_text())
+    assert manifest["record_count"] == 700
+    assert len(manifest["parts"]) >= 2
+    assert manifest["chain_completeness_verified"] is False
+    pub = FakeGit(spool)
+    outcome = pub.sync()
+    assert outcome["status"] == "SYNC_OK"
+    assert outcome["uploaded"] == 1
+    prefix = f"{PREFIX}/frank-history/{manifest['snapshot_id']}/"
+    parts = []
+    for item in manifest["parts"]:
+        remote = prefix + item["file"]
+        packet = json.loads(pub.remote[remote])
+        parts.append(base64.b64decode(packet["payload_b64"]))
+    reconstructed = json.loads(b"".join(parts))
+    assert reconstructed["record_count"] == 700
+    assert len(reconstructed["records"]) == 700
+    assert "DO_NOT_EXPORT" not in json.dumps(reconstructed)
+    assert json.loads(pub.remote[f"{PREFIX}/frank-history/{path.name}"])["snapshot_id"] == manifest["snapshot_id"]
+    assert list((spool.pending / "frank-history").glob("*.json")) == []
+
+
+def test_frank_history_failed_part_keeps_entire_snapshot_queued(tmp_path):
+    spool = EvidenceSpool(tmp_path)
+    report = {
+        "person_id": "frank",
+        "source_scope": "COMPLETE_LOCAL_RECOGNIZED_TRADES_NOT_FULL_CHAIN",
+        "record_count": 2,
+        "records": [{"signature": "a"}, {"signature": "b"}],
+    }
+    manifest_file = spool.frank_history(report)
+    manifest = json.loads(manifest_file.read_text())
+    src = spool.pending / "frank-history-parts" / manifest["snapshot_id"] / "part-0000.json"
+    src.unlink()
+    result = FakeGit(spool).sync()
+    assert result["status"] == "SYNC_PARTIAL"
+    assert result["pending_history"] == 1
+    assert manifest_file.exists()
