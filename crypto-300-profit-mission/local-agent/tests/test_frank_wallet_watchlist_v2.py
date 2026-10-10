@@ -153,4 +153,6 @@ def test_watch_page_has_source_and_accessibility_labels():
     assert 'id="watch-search"' in html
     assert 'id="watch-filter"' in html
     assert "独立" not in service or "signal" in service.lower()
-    assert "current_chain_balance_verified" in js
+    assert "snapshot_inventory_state" in js
+    assert "DATED_POINT_IN_TIME_NOT_LIVE" in js
+    assert "实时余额已核实" not in js
