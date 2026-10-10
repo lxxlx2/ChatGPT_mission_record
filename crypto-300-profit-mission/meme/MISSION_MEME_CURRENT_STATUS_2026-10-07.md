@@ -968,3 +968,20 @@ Remaining independent release actions: Claude incremental verification of latest
 **Gate split after legitimate scoped deployment:** `PR29_MAC_LOOP_DASHBOARD_DEPLOY=PASS`; `PR29_MAC_POSTDEPLOY_READONLY_7_OF_7=PASS`; `FRANK_WRITER_EXISTING_RUNTIME_HEALTH=PASS` but `FRANK_WRITER_NEW_ENGINE_DEPLOYMENT=NOT_RUN_SEPARATE_APPROVAL`; `CURRENT_PR_GMAIL_NEW_REAL_SENT_E2E=NOT_RUN_NO_NEW_MAIL_SENT`; `MAC_REAL_REBOOT_LOGIN_RECOVERY=DEFERRED_BY_USER`; `MAIN_MERGE=NO`, `PR_DRAFT=YES`; `PRODUCTION_TRADING=NO_GO`. The previous pre-deployment `CAN_DEPLOY=NO` gate is now resolved **only for this single explicitly authorized Loop/Dashboard install**, and does not authorize a further deployment, Writer update, changing frozen policy, restarting services, trading, or merging main.
 
 **Rollback reference:** Actual backup directory name `pr29-01_6vl0s` under the user's installed `FrankMeme/deploy-backups`. The historical 1047 full / 121 FOMO green CI corresponds to code commit `9d4eff41882cf1ef289bff39294bfadafa8f889a`; later installed commit added only status documentation. Do not state 1047 tests ran on the doc-only installed commit unless independently rerun.
+
+## 51. 2026-10-11 manual CA analysis accuracy gap and product requirement handoff
+
+**User-reported real installed Dashboard screenshots, not a new direct Mac RPC replay by this governance review:** the `CA 链上查询` page for Agency showed a selected deep preset but many `未确认` metrics/roles and holder funding rows; apparent partial “known LP/vault” figures appeared beside strict LP-adjusted unknowns; `$30` Jupiter quote was already expired; narrative said `未接入 X/FOMO 外部叙事检索`. Green `Frank 监控正常` verifies existing monitored-service health, **not the scientific completeness of an unrelated manual CA investigation**.
+
+**Git code readback and verified design defects:** three quick/standard/deep presets still exist; deep caps every scanned owner to at most 100 target-token signatures and 50 funding signatures. `getTokenLargestAccounts` supplies only 20 token accounts. The provisional ex-LP/ex-special Top10 is computed after filtering these 20, so it can omit eligible holder ranks beyond 20 and must not be sold as complete. Numeric 0% probable-control metric proves no evidence detected within the bounded scan, **not** no undiscovered controlling wallets. The CA page's lack of narrative enrichment is hardcoded and the generic $30 quote is inherited from the separate Frank follow policy.
+
+**User decision, recorded as canonical requirements:**
+- CA research has **one accuracy-first UI mode**, internally progressive but truthfully incomplete until sufficient verified data exists.
+- Required business output: correct account-owner/LP adjusted holder ranks, material funder/acquisition evidence, cross-wallet control vs public infrastructure, external narrative from independent public sites and exact-CA adoption status, market/source time, and a concise evidence-backed conclusion.
+- Generic CA page **must not show or fetch the frozen Frank follow-strategy $30 quote**. Do not modify Frank writer, already-approved follow-decision quote size, local/Gmail signals or notification policy.
+- GMGN/FOMO/OKX Wallet **publicly accessible results** are cross-check/feature-parity references, not a requirement to subscribe to paid GMGN API. When official/indexed sources fail, report specific coverage gaps with source attempts, not fake complete green status.
+- Implementation, independent AI review, real-source cross-check, and actual Mac QA are all mandatory before any further deployment approval.
+
+**Written implementation and acceptance record:** `meme/ca-analysis-unified-accuracy-acceptance.md`; normative linkage in `meme/WALLET_CLUSTER_ANALYSIS_SPEC.md` and historical implementation caveat in `meme/WALLET_CLUSTER_LOCAL_TOOL.md`.
+
+**Current state:** `CA_ONE_MODE_REQUIREMENTS_RECORDED`, `CA_CORRECTION_CODE=NOT_IMPLEMENTED`, `INDEPENDENT_CODE_REVIEW=NOT_RUN`, `REAL_MAC_ACCEPTANCE=NOT_RUN`, `PRODUCTION_DEPLOYMENT=NO`. No new monitoring task, email, automation or wallet action. Existing installed Frank/Mission Control release remains unchanged by this documentation record.
