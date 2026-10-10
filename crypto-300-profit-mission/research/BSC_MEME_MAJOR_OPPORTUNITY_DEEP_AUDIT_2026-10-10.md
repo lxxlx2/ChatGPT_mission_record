@@ -61,3 +61,24 @@ Early-trading-episode EOA `0xadffbebbd2d9141cff80f8a905846ba8f9e3946d`, based on
 MARS episode: buys at blocks 112441470, 112441471, 112441578, 112442297; exits at 112441493, 112441511, 112441518, 112441533, 112441542, 112441661, 112442409, 112442414. 牛来 episode: buys at 115829267, 115853809, 115854032, 115854994; sells 115829502, 115833784, 115853817, 115854094, 115855119.
 
 Both token wallet transfer histories were independently paged to completion: 43 in /37 out transfer rows (MARSCOIN), 41 in /35 out (牛来), many later transactions. Therefore **the early episode returns are not full-token or lifetime PnL**. With only modest wins, candidate state is SECONDARY_OBSERVE_ONLY, not promoted as a repeatedly material big-opportunity winner. Historical balances may include non-native settlement. No paid GMGN, monitors or trading.
+
+## D. Exchange-event timing comparison: MARSCOIN versus 牛来
+
+Official first-party listing times: [MARSCOIN Spot announcement](https://www.binance.com/en/support/announcement/detail/c2eaa763831745b2b1701dab45e20225) (posted 2026-09-04 10:15 UTC, opened 2026-09-04 13:00 UTC); [牛来 Spot announcement](https://www.binance.com/en/support/announcement/detail/6133e417dcfe43a8ad20c0db1b53c7e8) (posted 2026-09-09 11:30, opened 2026-09-09 14:30 UTC).
+
+Main candidate `0x2adf961b40951736bcff3b36b7fb1cd5775475ba` held MARSCOIN from launchpad buys starting 2026-07-28 13:47:15 UTC (block 112636561), long before Binance announced listing. Recomputed **ten native-BNB sell-block net credits** for the MARSCOIN position, with original ERC20 token outgoing transfers:
+
+| MARSCOIN exit stage | Blocks | Native BNB net sale proceeds |
+|---|---|---:|
+| Before Spot (2026-07/early Aug) | 112645256,112994387 | 0.5214495063109142 |
+| **The day after Spot (2026-09-05 09:40:44–12:41:22 UTC)** | 120088241,120095162,120111060,120111216,120111303,120112322 | **6.570086570044018** |
+| Later dust | 122582898,122995918 | 0.013590708420522775 |
+| ALL these identified sell blocks | ten block-events | **7.105126784775456** |
+
+Thus **92.46966% of audited MARSCOIN BNB sell receipts** occurred in the six sales 20–24 hours after official Binance Spot start. At least the first and last of the 2026-09-05 six transactions independently checked: first tx `0x370051da53af9e7074783d2b70451621537c4ac0a9d57c89187c1fd8994b6c44` and last `0x1a651124e72fac2a01b5361d4265aa916628432d6fdda668ecb3701215f22d33` both have `tx.from` equal to main candidate and `tx.to` equal to Four.meme Token Manager `0x1de460f363af910f51726def188f9004276bf4bc`, and ERC20 split fee/pool transfer out. They are genuine original-wallet swaps, not unrelated recipient movements. The timing is independently confirmed by BSC `ethGetBlockByNumber`.
+
+For **牛来**, earliest main candidate buy `2026-08-14 09:09:32 UTC` (block 115862004) predates Binance Spot 2026-09-09 14:30. Some disposals such as block 119097043 (2026-08-31) and block 119884915 (2026-09-04) predate Spot, while block 122988185 (2026-09-20 12:20) was a **small +0.009770914 BNB** net native sale-block credit afterward. Thus its profits were **not all demonstrated to be concentrated after Spot**. Treat GIGGLE and MARSCOIN as stronger event-related examples, 牛来 as principally early-selection/partial prelisting exit pending full per-event grouping.
+
+**Inference boundary:** confirmed spot-adjacent selling and deposits are not proof of advance knowledge or of Binance-directed manipulation. The GIGGLE Binance deposit cannot be counted as actual CEX sale; MARSCOIN swaps are on-chain and have actual native consideration. Native-block balance accounting still needs quote-asset parity checks for a fully finalized PnL.
+
+This strengthens `0x2adf...` as a repeat **early-selection + exchange-event management** research candidate, but delay-copyability and total-market top-ranking are unverified.
