@@ -86,7 +86,9 @@ Before Gmail send, require PASS for:
 7. freshness_lint
 8. repetition_budget_lint
 9. section_substance_lint
-10. top5_count_lint
+10. top5_count_lint (1–5 high-impact verified items, fewer than five when justified)
+11. high_impact_candidate_accounting_lint
+12. cross_domain_discovery_receipt_lint
 
 Any FAIL means `QA_FAIL_NO_SEND`. Rewrite and rerun lint before sending.
 
@@ -99,7 +101,7 @@ Hard fail examples:
 - BTC/ETH/SOL relative-strength repeated unchanged in Sections 2, 3, 12 and 13.
 
 ## CR-19 Section substance and breadth
-- Section 1 must contain exactly 5 genuinely important items because the fixed heading is `今日最重要的5件事`. Do not pad with no-op/process text; instead select the five highest-decision-value items across market, flows, regulation, security and protocol/ecosystem evidence.
+- Section 1 contains at most five genuinely important and independently supportable items. The existing fixed heading `今日最重要的5件事` is a capacity label, NOT a quota: when only 3–4 material events exist, write 3–4, never fabricate or pad to five. The top5_count_lint rejects >5 and filler and accepts fewer when the event ledger supports that count.
 - Section 2 is the canonical home for BTC/ETH/SOL core tape.
 - Section 3 must focus on mature-market movers/persistent trends beyond merely restating Section 2. If a liquid asset moves roughly >=5% in 24h, >=15% in 7d, or has a major catalyst/volume shock, investigate it. If none qualifies, one short line is better than recycled BTC/ETH/SOL prose.
 - Section 5 prioritizes actual ETF/fund/exchange/whale capital movement. Analyst price targets alone do not satisfy institutional-flow coverage.
@@ -121,3 +123,16 @@ A confirmed material chain-termination announcement is eligible for the formal C
 For each candidate, verify the official announcement, chain identity, effective shutdown date, actual migration/bridge steps and loss-of-access risks. Include exactly one primary detailed report item with material user-relevant safety action, and at most one Top-5 short summary if truly high priority. Warn about fake migration websites; never present an unverified migration link as trusted. If key fields remain unavailable, record the gap in internal audit, without asserting the chain remains operational or claiming comprehensive discovery.
 
 Regression incident: Abstract/ABS announced on 2026-10-06 that Abstract L2 will end on 2026-12-15, with users asked to migrate funds before the deadline. The 2026-10-07 formal Crypto Daily omitted this major chain shutdown despite the pre-delivery window; keep this omission in the quality audit. The user's separate Abstract/ABS TGE suppression remains unchanged.
+
+## CR-20 Discovery coverage, importance and survival — 2026-10-10
+
+The authoritative bounded collector and pre-send discovery protocol is `COLLECTOR_SPEC.md` V2. Verify:
+1. A real cross-domain English headline discovery attempt covering existing scope (critical security/chain stoppage, regulation/policy, market/ETF/flows and major ecosystem/rights) was performed no later than pre-send. Source receipt contains actual query/category, checked_at, returned source URL and unavailable/fallback status. A name-only `checked_no_update` is NOT evidence.
+2. Deep shard selection derives from the last two actually completed persisted collector shard records. **Never use wall-clock hour modulo 3** against the existing sparse schedule. A missed/partial shard is not a completed scan. If old collectors are missing, log the gap; independently refresh critical recent news before sending.
+3. An event manifest tracks `event_key, claim, source_published_at, first_seen_at, actual source, confirmation_state, materiality, primary_section, excluded_reason`. Every HIGH materiality candidate from prior research/finals (including last 48h previously omitted official disclosures) is either addressed in ONE report detail section or excluded with an evidence-based reason. An eight ordinary-candidate cap cannot silently drop HIGH items.
+4. **Separate discovery from verification.** Serious but unconfirmed user reports remain internally `VERIFYING`; confirmed official fixed vulnerabilities remain material even when there was no theft; do not imply manufacturer compromise or actual token inflation from hypothetical attack severity. Cross-domain candidate gate does not require a token/CA to exist.
+5. The 08:10 prebuild and the 09:10/10:10/11:10 full publisher/recovery independently refresh high-impact news since the previous authoritative sent email, instead of assuming hourly collectors were complete. News published after a prior day's send is first eligible for the next collector/next normal report.
+6. A network/source blockage must not be falsely marked checked or trigger invented content. If bounded English alternative retrieval was attempted and the mandatory material facts for a complete report are independently verifiable, a single optional social/specialist outage may be recorded as PARTIAL_COVERAGE in internal audit without causing an automatic Gmail miss. If discovery was not attempted at all, `discovery_coverage_lint: FAIL`; repair in the same invocation. Delivery still requires all other full-report hard gates.
+7. Report quality and operation health are independent. `DISCOVERY_OK`, `CONTENT_QA_PASS`, `EMAIL_SENT_READBACK`, and `GIT_ARCHIVE_EQUAL` are separately evidenced states. Neither a final run log nor a generated report is proof of sent Gmail; Git outages do not authorize fabricated completion or duplicate sends.
+
+Regression inputs: Abstract chain shutdown, Ledger multi-user-wallet allegations, official XRPL 3.4.1 fixed critical disclosure, Oct 9 national blockchain-network directive, and absent collector finals. No new task, notification channel, watchlist category or timetable is authorized.
