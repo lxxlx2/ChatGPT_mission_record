@@ -1,6 +1,8 @@
 # Monster V4 — 实用型本地妖币发现与预警模型（研究合同 v0.1）
 
-> **模块开发硬性规则：** [MONSTER_MODULE_DEVELOPMENT_RULES.md](MONSTER_MODULE_DEVELOPMENT_RULES.md)（同时由 [AGENTS.md](AGENTS.md) 引用）。从研究、设计、实现、独立复审、测试、Mac 与 Frank 并行部署，到通知实测、问题修复及逐批 Git 同步，均按此执行。\n\n状态：**研究方案与 D0/D1 Shadow 原型已写 Git / 未经独立 AI review / 未在用户 Mac 部署 / 未接入真实 Gmail**；目标从发现到用户通知尽可能短。已有的 V3-062 仅为 *历史参考配置*，不是生产预测模型。
+> **模块开发硬性规则：** [MONSTER_MODULE_DEVELOPMENT_RULES.md](MONSTER_MODULE_DEVELOPMENT_RULES.md)（同时由 [AGENTS.md](AGENTS.md) 引用）。
+>
+> **Stage 6 工程与证据入口：** [真实盘口及D2回放](MONSTER_STAGE6_D2_SPOT_EXECUTION_AND_MAC_SHADOW_20261011.md) · [与Frank并行的Mac安装/回滚](MONSTER_MAC_SHADOW_DEPLOYMENT_20261011.md) · [独立其他AI复审任务单（仍待实际审查）](MONSTER_INDEPENDENT_AI_REVIEW_PACKET_20261011.md)。从研究、设计、实现、独立复审、测试、Mac 与 Frank 并行部署，到通知实测、问题修复及逐批 Git 同步，均按此执行。\n\n状态：**研究方案与 D0/D1 Shadow 原型已写 Git / 未经独立 AI review / 未在用户 Mac 部署 / 未接入真实 Gmail**；目标从发现到用户通知尽可能短。已有的 V3-062 仅为 *历史参考配置*，不是生产预测模型。
 依据：[历史数据复核](MONSTER_V4_DATA_BASELINE_2026-10-10.md)、[V2 D1](../local-agent/docs/MONSTER_D1_V2.md)、[V3 报告](../local-agent/PHASE_MONSTER_D1_V3_REDESIGN_REPORT.md)、[BTW 漏报](../health/2026-09-28-btw-monster-missed-alert.md) 和既有 [D2 资料源审查](../local-agent/docs/MONSTER_D2_SOURCE_AUDIT_V1.md)。
 
 ## 0. 必须先解决什么
