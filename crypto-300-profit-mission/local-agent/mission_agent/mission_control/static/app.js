@@ -289,24 +289,47 @@ function renderFrankWatchlist(payload) {
   walletWatchData = payload || {status:'UNAVAILABLE',rows:[],summary:{}};
   const all = Array.isArray(walletWatchData.rows) ? walletWatchData.rows : [];
   const summary = walletWatchData.summary || {};
+  const reconciliation = walletWatchData.snapshot_reconciliation || null;
   const filter = $('watch-filter')?.value || 'ALL';
   const search = ($('watch-search')?.value || '').trim().toLowerCase();
   const rows = all.filter(x =>
-    (filter === 'ALL' || x.watch_state === filter) &&
+    (filter === 'ALL' || (
+      filter === 'SNAPSHOT_NONZERO' ? x.snapshot_inventory_state === 'NONZERO_AT_SLOT' :
+      filter === 'MODEL_MISMATCH' ? !!x.model_chain_disagreement :
+      x.watch_state === filter
+    )) &&
     (!search || String(x.mint || '').toLowerCase().includes(search))
   );
+  const sortWeight = (x) => x.snapshot_inventory_state === 'NONZERO_AT_SLOT'
+    ? (x.watch_state === 'MODEL_OPEN' ? 0 : 1)
+    : (x.watch_state === 'MODEL_OPEN' ? 2 : 3);
+  rows.sort((a,b) => sortWeight(a)-sortWeight(b) ||
+    (Number(b.last_event_time || 0)-Number(a.last_event_time || 0)));
   $('watch-total-count').textContent = String(summary.total_observed ?? all.length);
+  const datedSnapshot = walletWatchData.snapshot_status === 'DATED_POINT_IN_TIME_NOT_LIVE';
+  const sourceDate = datedSnapshot
+    ? String(walletWatchData.snapshot_date_bangkok || '未提供日期')
+    : '';
   $('watch-scope').textContent = walletWatchData.status === 'SOURCE_UNAVAILABLE'
     ? '本地索引暂不可读'
-    : '仅本地索引，钱包实时余额未核实';
+    : datedSnapshot
+      ? '历史链上余额核验：' + sourceDate + '，非实时'
+      : '仅本地索引，链上余额未核实';
   $('watch-summary').textContent = '已观察 ' + String(summary.total_observed ?? all.length) +
     ' · 模型持有 ' + String(summary.model_open ?? '—') +
-    ' · 仓位待核 ' + String(summary.inventory_needs_review ?? '—') +
+    ' · 待核 ' + String(summary.inventory_needs_review ?? '—') +
     ' · 历史退出 ' + String(summary.historical_exit ?? '—') +
-    ' · 其他 ' + String(summary.unresolved_history ?? '—') +
+    (reconciliation
+      ? ' · 样本核验非零 ' + String(reconciliation.nonzero_at_snapshot ?? '—') +
+        ' · 模型冲突 ' + String(
+          Number(reconciliation.model_closed_with_remaining_tokens || 0) +
+          Number(reconciliation.model_unknown_with_remaining_tokens || 0) +
+          Number(reconciliation.model_open_with_zero_tokens || 0) +
+          Number(reconciliation.model_uncertain_nonzero || 0))
+      : ' · 尚无链上余额样本') +
     ' · 当前筛选 ' + rows.length;
   if (walletWatchData.status === 'SOURCE_UNAVAILABLE') {
-    $('watch-rows').innerHTML = '<tr><td colspan="6">本地 Frank 历史库不可读取，未把未知状态当作零仓位。</td></tr>';
+    $('watch-rows').innerHTML = '<tr><td colspan="6">本地 Frank 历史库不可读取，未知状态没有按零仓位处理。</td></tr>';
     return;
   }
   $('watch-rows').innerHTML = rows.map(x => {
@@ -319,17 +342,29 @@ function renderFrankWatchlist(payload) {
       ? '<a href="https://solscan.io/tx/' + encodeURIComponent(sig) +
         '" target="_blank" rel="noreferrer">交易 ↗</a>'
       : '无交易签名';
+    const chainState = x.snapshot_inventory_state;
+    const balance = chainState === 'NONZERO_AT_SLOT'
+      ? '样本余额：' + esc(x.snapshot_token_quantity) + ' 代币'
+      : chainState === 'ZERO_AT_SLOT'
+        ? '样本余额：0'
+        : '链上余额未核实';
+    const proof = x.snapshot_verified_slot
+      ? ' · slot ' + esc(x.snapshot_verified_slot)
+      : '';
+    const mismatch = x.model_chain_disagreement
+      ? '<div class="watch-mismatch">模型与链上记录有差异，需追溯</div>'
+      : '';
     const queryLink = 'https://gmgn.ai/sol/token/' + encodeURIComponent(mint);
     return '<tr>' +
       '<td><code title="' + esc(mint) + '">' + esc(short(mint,9,6)) + '</code> ' +
         copyButton(mint,'复制 CA') + '</td>' +
-      '<td>' + esc(watchLabels[x.watch_state] || x.watch_state || '待核') + '</td>' +
+      '<td>' + esc(watchLabels[x.watch_state] || x.watch_state || '待核') +
+        mismatch + '</td>' +
       '<td>买 ' + esc(x.local_recognized_buys ?? 0) +
         ' / 卖 ' + esc(x.local_recognized_sells ?? 0) + '</td>' +
       '<td>' + esc(translated(sideLabel,x.last_event_side,'未知')) +
         ' · ' + esc(last) + '<div class="watch-tx">' + txLink + '</div></td>' +
-      '<td>' + esc(x.current_chain_balance_verified ? '已核余额' : '实时余额未核实') +
-        '<div class="watch-tx">收益未核算</div></td>' +
+      '<td>' + balance + '<div class="watch-tx">美元价值未核实' + proof + '</div></td>' +
       '<td><a href="https://solscan.io/token/' + encodeURIComponent(mint) +
         '" target="_blank" rel="noreferrer">Solscan ↗</a> ' +
         '<a href="' + queryLink + '" target="_blank" rel="noreferrer">GMGN ↗</a></td>' +
