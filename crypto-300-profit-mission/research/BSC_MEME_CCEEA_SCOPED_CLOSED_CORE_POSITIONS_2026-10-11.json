@@ -1,0 +1,97 @@
+{
+  "method": "Alchemy bnb-mainnet full ERC20 complete history under 19 CAs + direct signed original tx + block N native balance difference vs N-1",
+  "positions": [
+    {
+      "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "token": "我踏马来了",
+      "scope": "19 token CA universe only, both directions paginated, position fully closed by exact ERC20 transfer quantities",
+      "all_token_quantity_zero": true,
+      "raw_in": "90444976088463000000000",
+      "raw_out": "90444976088463000000000",
+      "events": [
+        {
+          "direction": "in",
+          "block": 73382086,
+          "tx": "0x8690030b29c4dd0adf257af284404f966089ba2b53def5bf02887bf4f8ee343c",
+          "event_id": "0x8690030b29c4dd0adf257af284404f966089ba2b53def5bf02887bf4f8ee343c:log:272",
+          "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+          "token": "我踏马来了",
+          "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "to": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+          "raw_value": "0x1327082fba6fb028d600",
+          "decimals": 18
+        },
+        {
+          "direction": "out",
+          "block": 73382697,
+          "tx": "0x1590dde8fb5f1d118165a03349aa455a3badf72dbeb7fbed035b2308e82e6d75",
+          "event_id": "0x1590dde8fb5f1d118165a03349aa455a3badf72dbeb7fbed035b2308e82e6d75:log:158",
+          "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+          "token": "我踏马来了",
+          "from": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+          "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "raw_value": "0xac0d75d39a4e1c75000",
+          "decimals": 18
+        },
+        {
+          "direction": "out",
+          "block": 73661700,
+          "tx": "0x314bed4eb3f558d7256fa7e2f59fc6dc3f72afc5e411c00c754ad8f37bf7632c",
+          "event_id": "0x314bed4eb3f558d7256fa7e2f59fc6dc3f72afc5e411c00c754ad8f37bf7632c:log:492",
+          "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+          "token": "我踏马来了",
+          "from": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+          "to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+          "raw_value": "0x86630d280cace618600",
+          "decimals": 18
+        }
+      ],
+      "tx": [
+        {
+          "hash": "0x8690030b29c4dd0adf257af284404f966089ba2b53def5bf02887bf4f8ee343c",
+          "block": 73382086,
+          "original_signer": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+          "original_signer_match": true,
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "selector": "0x7771fdb0",
+          "native_tx_value_wei": "5000000000000000"
+        },
+        {
+          "hash": "0x1590dde8fb5f1d118165a03349aa455a3badf72dbeb7fbed035b2308e82e6d75",
+          "block": 73382697,
+          "original_signer": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+          "original_signer_match": true,
+          "target": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "selector": "0xf464e7db",
+          "native_tx_value_wei": "0"
+        },
+        {
+          "hash": "0x314bed4eb3f558d7256fa7e2f59fc6dc3f72afc5e411c00c754ad8f37bf7632c",
+          "block": 73661700,
+          "original_signer": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+          "original_signer_match": true,
+          "target": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+          "selector": "0x810c705b",
+          "native_tx_value_wei": "0"
+        }
+      ],
+      "block_deltas": [
+        {
+          "block": 73382086,
+          "delta_wei": "-5025149199999988"
+        },
+        {
+          "block": 73382697,
+          "delta_wei": "2420712355037367"
+        },
+        {
+          "block": 73661700,
+          "delta_wei": "27141110644335888"
+        }
+      ],
+      "native_balance_net_wei": "24536673799373267",
+      "native_balance_net_BNB": 0.024536673799373267,
+      "assumptions": "Block delta includes BNB gas and any unrelated transactions in block; not independently isolated realized profit. Check nonnative quote token and all tx receipts."
+    }
+  ]
+}
