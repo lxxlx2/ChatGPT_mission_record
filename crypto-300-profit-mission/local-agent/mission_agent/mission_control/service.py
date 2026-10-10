@@ -361,7 +361,9 @@ class MissionMemeService:
                     self._write_health("ERROR", error=type(exc).__name__, message="MISSION_CYCLE_FAILED")
                 if export_enabled:
                     try:
-                        health = self.frank.runtime()
+                        # Use the writer's exact health record for deterministic
+                        # identical evidence in both automatic and manual export.
+                        health = json.loads(self.frank.health_path.read_text(encoding="utf-8"))
                         count = health.get("poll_count")
                         if type(count) is int and count >= 0 and count != last_poll_count and health.get("last_poll_at"):
                             spool.frank_scan(poll_count=count, health=health)
