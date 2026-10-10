@@ -14,6 +14,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_full_market_history_diagnostic.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_shadow.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_stage5_integrity.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_stage5_integrity.py'
       - '.github/workflows/monster-v4-research-baseline.yml'
   pull_request:
     paths:
@@ -66,6 +68,12 @@ jobs:
         run: |
           python -B -m py_compile scripts/monster_v4_shadow.py tests/test_monster_v4_shadow.py
           python -B -m unittest discover -v -s tests -p test_monster_v4_shadow.py
+      - name: Stage5 frozen 60-case plus 18 short-listing integrity gate
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_stage5_integrity.py tests/test_monster_stage5_integrity.py
+          python -B -m unittest discover -v -s tests -p test_monster_stage5_integrity.py
+          python -B scripts/monster_stage5_integrity.py
       - name: Print research-only machine summary
         working-directory: crypto-300-profit-mission/local-agent
         run: python -B scripts/monster_v4_baseline_audit.py
