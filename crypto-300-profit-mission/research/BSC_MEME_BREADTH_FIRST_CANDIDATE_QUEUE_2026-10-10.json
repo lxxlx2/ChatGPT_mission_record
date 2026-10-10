@@ -2,7 +2,7 @@
   "schema_version": "1",
   "date_utc": "2026-10-10",
   "scope": "EARLY_POOL_COVERAGE_NOT_FULL_PROFIT_RANKING",
-  "status": "BREADTH_FIRST_GENESIS_19_TOKENS_ARCHIVED; 21_POOL_FIRST50_ARCHIVED; 19_CANDIDATE_WALLETS; REALIZED_PNL_INCOMPLETE",
+  "status": "23_CANDIDATE_EOAS_19_TOKENS_FIRST100_2026_GENESIS_19_OTHERS_FIRST20_21_POOLS_FIRST50; ALL_HISTORIC_PNL_INCOMPLETE",
   "sources": [
     "BSC_MEME_EARLY_POOL_SAMPLE_B01_2026-10-10.json",
     "BSC_MEME_EARLY_POOL_SAMPLE_B02_2026-10-10.json",
@@ -22,7 +22,8 @@
     "BSC_MEME_GENESIS_NEW_EOA_ORIGINAL_SIGNER_CHECK_2026-10-10.json",
     "BSC_MEME_VERIFIED_EVENT_ANCHOR_TRANSFER_WINDOWS_2026-10-10.json",
     "BSC_MEME_ORIGINAL_SIGNERS_GLOBAL_EARLY_2026-10-10.json",
-    "BSC_MEME_GLOBAL_EARLY_SIGNERS_LEGACY_2026-10-10.json"
+    "BSC_MEME_GLOBAL_EARLY_SIGNERS_LEGACY_2026-10-10.json",
+    "BSC_MEME_2026_GENESIS_CROSS_EOA_SIGNERS_EXT_2026-10-10.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -36,19 +37,20 @@
     "recipient_addresses_in_two_or_more_different_tokens": 44,
     "eoas_in_cross_token_recipient_sample": 9,
     "contracts_in_cross_token_recipient_sample": 35,
-    "wallets_in_research_queue": 19,
+    "wallets_in_research_queue": 23,
     "full_pagination_complete_pools": 0,
-    "global_genesis_transfer_rows": 530,
+    "global_genesis_transfer_rows": 780,
     "original_global_signer_tx_checked_2026": 25,
     "original_global_signer_tx_checked_legacy": 42,
-    "pool_plus_genesis_distinct_overlapping_recipient_addresses": 60,
-    "pool_plus_genesis_code_confirmed_eoas": 14,
-    "pool_plus_genesis_code_confirmed_contracts": 46,
+    "pool_plus_genesis_distinct_overlapping_recipient_addresses": 66,
+    "pool_plus_genesis_code_confirmed_eoas": 18,
+    "pool_plus_genesis_code_confirmed_contracts": 48,
     "transfer_rows_in_two_documented_event_anchor_samples": 80,
     "event_window_signer_attempts": 20,
     "event_window_signers_verified": 15,
     "event_window_original_tx_response_truncations": 5,
-    "original_first_global_early_signer_cross_token_repeaters_in_67_checked": 0
+    "original_first_global_early_signer_cross_token_repeaters_in_67_checked": 0,
+    "newly_verified_dual_token_2026_origin_signers": 4
   },
   "venue_coverage": [
     {
@@ -328,7 +330,12 @@
             "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb"
           }
         ]
-      }
+      },
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "4",
+        "币安人生",
+        "哈基米 / HAJIMI"
+      ]
     },
     {
       "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
@@ -357,7 +364,11 @@
             "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
           }
         ]
-      }
+      },
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "我踏马来了",
+        "龙虾"
+      ]
     },
     {
       "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
@@ -386,7 +397,11 @@
             "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb"
           }
         ]
-      }
+      },
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "币安人生",
+        "哈基米 / HAJIMI"
+      ]
     },
     {
       "wallet": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
@@ -415,7 +430,11 @@
             "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb"
           }
         ]
-      }
+      },
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "币安人生",
+        "哈基米 / HAJIMI"
+      ]
     },
     {
       "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
@@ -501,7 +520,11 @@
             "pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127"
           }
         ]
-      }
+      },
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "SIREN",
+        "BANANAS31"
+      ]
     },
     {
       "wallet": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
@@ -543,7 +566,11 @@
             "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b"
           }
         ]
-      }
+      },
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "4",
+        "币安人生"
+      ]
     },
     {
       "wallet": "0x4789f192df5deb559af2bd9185781fda995856d5",
@@ -585,7 +612,11 @@
             "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b"
           }
         ]
-      }
+      },
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "4",
+        "币安人生"
+      ]
     },
     {
       "wallet": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
@@ -627,7 +658,11 @@
             "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b"
           }
         ]
-      }
+      },
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "4",
+        "币安人生"
+      ]
     },
     {
       "wallet": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
@@ -669,7 +704,11 @@
             "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b"
           }
         ]
-      }
+      },
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "4",
+        "币安人生"
+      ]
     },
     {
       "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
@@ -712,7 +751,11 @@
           }
         ]
       },
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "TST",
+        "BOB"
+      ]
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -755,7 +798,11 @@
           }
         ]
       },
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "4",
+        "MUBARAK"
+      ]
     },
     {
       "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
@@ -763,7 +810,8 @@
       "research_status": "RESEARCH_ONLY / REALIZED_MATERIAL_PNL_UNKNOWN / PERSON_PATTERN_OBSERVE_ONLY",
       "early_sample_tokens": [
         "4",
-        "MARSCOIN"
+        "MARSCOIN",
+        "我踏马来了"
       ],
       "verified_direct_sample_signers": [
         {
@@ -798,7 +846,12 @@
           }
         ]
       },
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "4",
+        "我踏马来了",
+        "MARSCOIN"
+      ]
     },
     {
       "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
@@ -846,7 +899,11 @@
           }
         ]
       },
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "4",
+        "哈基米 / HAJIMI"
+      ]
     },
     {
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
@@ -895,7 +952,201 @@
           }
         ]
       },
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "我踏马来了",
+        "龙虾"
+      ]
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "prior_state": "2026_GLOBAL_GENESIS_100_EVENTS_SELF_SIGNED_CROSS_TOKEN",
+      "research_status": "EARLY_TOKEN_ACQUISITION_CANDIDATE; FULL_COST_PNL_AND_CONTROL_UNKNOWN",
+      "early_sample_tokens": [
+        "龙虾",
+        "币安人生"
+      ],
+      "first_transfer_proofs": {
+        "龙虾": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xf682e44c816c5e71714100941191a3162f720364a2a193003bb26eac48d8c03c",
+            "block": 83635852,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ],
+        "币安人生": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xfb0ef4261a36da684642786170f914e83f0b22eb572260e5b7fb3ccc57af62ed",
+            "block": 63454351,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ]
+      },
+      "verified_direct_sample_signers": [
+        {
+          "token": "龙虾",
+          "tx": "0xf682e44c816c5e71714100941191a3162f720364a2a193003bb26eac48d8c03c",
+          "block": 83635852,
+          "signer_status": "DIRECT_SIGNED"
+        },
+        {
+          "token": "币安人生",
+          "tx": "0xfb0ef4261a36da684642786170f914e83f0b22eb572260e5b7fb3ccc57af62ed",
+          "block": 63454351,
+          "signer_status": "DIRECT_SIGNED"
+        }
+      ],
+      "pnl_not_recomputed": true,
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "龙虾",
+        "币安人生"
+      ]
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "prior_state": "2026_GLOBAL_GENESIS_100_EVENTS_SELF_SIGNED_CROSS_TOKEN",
+      "research_status": "EARLY_TOKEN_ACQUISITION_CANDIDATE; FULL_COST_PNL_AND_CONTROL_UNKNOWN",
+      "early_sample_tokens": [
+        "我踏马来了",
+        "龙虾"
+      ],
+      "first_transfer_proofs": {
+        "我踏马来了": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0x74c5473f07968e866b7a49b77347691c60f84ee44bdf8f9ff6c097ac805bf3bb",
+            "block": 73336244,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ],
+        "龙虾": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xc73e2df907f59580fc27c7100ee94b877c452b019869a61cfe595761fd52177b",
+            "block": 83635854,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ]
+      },
+      "verified_direct_sample_signers": [
+        {
+          "token": "我踏马来了",
+          "tx": "0x74c5473f07968e866b7a49b77347691c60f84ee44bdf8f9ff6c097ac805bf3bb",
+          "block": 73336244,
+          "signer_status": "DIRECT_SIGNED"
+        },
+        {
+          "token": "龙虾",
+          "tx": "0xc73e2df907f59580fc27c7100ee94b877c452b019869a61cfe595761fd52177b",
+          "block": 83635854,
+          "signer_status": "DIRECT_SIGNED"
+        }
+      ],
+      "pnl_not_recomputed": true,
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "我踏马来了",
+        "龙虾"
+      ]
+    },
+    {
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "prior_state": "2026_GLOBAL_GENESIS_100_EVENTS_SELF_SIGNED_CROSS_TOKEN",
+      "research_status": "EARLY_TOKEN_ACQUISITION_CANDIDATE; FULL_COST_PNL_AND_CONTROL_UNKNOWN",
+      "early_sample_tokens": [
+        "龙虾",
+        "MARSCOIN"
+      ],
+      "first_transfer_proofs": {
+        "龙虾": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xd5f7328f403115fab8e1c9bf7eb95a442a0118fe477bfcf446185658dc79deee",
+            "block": 83635783,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          },
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xd1f3b07c1b348f24d69ee6e1ebe5d0a5ed3deaf2878dbb887e4a9b0d29bf0ae7",
+            "block": 83635840,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ],
+        "MARSCOIN": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0x57509018155492a61f5ca34ebabe8e18d7556651c9074350f999fb800a875363",
+            "block": 112441411,
+            "from": "0x1de460f363af910f51726def188f9004276bf4bc"
+          }
+        ]
+      },
+      "verified_direct_sample_signers": [
+        {
+          "token": "龙虾",
+          "tx": "0xd5f7328f403115fab8e1c9bf7eb95a442a0118fe477bfcf446185658dc79deee",
+          "block": 83635783,
+          "signer_status": "DIRECT_SIGNED"
+        },
+        {
+          "token": "MARSCOIN",
+          "tx": "0x57509018155492a61f5ca34ebabe8e18d7556651c9074350f999fb800a875363",
+          "block": 112441411,
+          "signer_status": "DIRECT_SIGNED"
+        }
+      ],
+      "pnl_not_recomputed": true,
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "龙虾",
+        "MARSCOIN"
+      ]
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "prior_state": "2026_GLOBAL_GENESIS_100_EVENTS_SELF_SIGNED_CROSS_TOKEN",
+      "research_status": "EARLY_TOKEN_ACQUISITION_CANDIDATE; FULL_COST_PNL_AND_CONTROL_UNKNOWN",
+      "early_sample_tokens": [
+        "我踏马来了",
+        "龙虾"
+      ],
+      "first_transfer_proofs": {
+        "我踏马来了": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xa9a40de723b31bde3df8be876facbeedbe1b73b8311379580acda16e6f0ca354",
+            "block": 73336301,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ],
+        "龙虾": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xb76c737c5d71d98fcd09ee74cc3da4f68cc6b9a6fcea262d92faa8ca41bc7a35",
+            "block": 83635788,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ]
+      },
+      "verified_direct_sample_signers": [
+        {
+          "token": "我踏马来了",
+          "tx": "0xa9a40de723b31bde3df8be876facbeedbe1b73b8311379580acda16e6f0ca354",
+          "block": 73336301,
+          "signer_status": "DIRECT_SIGNED"
+        },
+        {
+          "token": "龙虾",
+          "tx": "0xb76c737c5d71d98fcd09ee74cc3da4f68cc6b9a6fcea262d92faa8ca41bc7a35",
+          "block": 83635788,
+          "signer_status": "DIRECT_SIGNED"
+        }
+      ],
+      "pnl_not_recomputed": true,
+      "latest_genesis_plus_pool_overlap_tokens": [
+        "我踏马来了",
+        "龙虾"
+      ]
     }
   ],
   "overlapping_contract_recipients": [
@@ -1215,7 +1466,8 @@
     "CEX deposit is not realized sale",
     "Signer matches of new EOAs only prove individual direct swaps, not sustained profitable strategy",
     "Global ERC20 first-transfer history identifies early launch routes but not the full transaction/quote-asset history, first true actionable swap, nor an exhaustive listing-event window",
-    "GIGGLE/MARSCOIN event blocks were chosen from documented specific post-listing transactions; these 50-block pre/post windows are not a census of Binance launch prices or all transactions. 5 of 20 signer lookups were too long to parse and are UNKNOWN, not negative trader evidence."
+    "GIGGLE/MARSCOIN event blocks were chosen from documented specific post-listing transactions; these 50-block pre/post windows are not a census of Binance launch prices or all transactions. 5 of 20 signer lookups were too long to parse and are UNKNOWN, not negative trader evidence.",
+    "Four newly surfaced 2026 cross-token EOAs have own signed acquisition events but neither full realized net profits nor a confirmed common-controller identity; avoid premature profitability rankings."
   ],
   "next_work_order": [
     "Continue 2026 material opportunity candidate universe discovery with exact official Binance CA evidence, then timestamp-derived boundary blocks via free primary data when available; paid Blockscout/GMGN dependency not permitted",
@@ -1227,5 +1479,11 @@
   ],
   "sample_depth_per_pool": 50,
   "signer_warning": "Three new EOAs have first trades of 4 and 币安人生 in very nearby blocks; possible coordinated bots, common control NOT proven. They cannot be counted as independent profitable strategies without funding and full PnL analysis.",
-  "last_evidence_expansion": "2026-10-10 second pass: all 19 first-global ERC20 histories, cross-source 60 overlaps with 46 contracts/14 EOAs, 5 new signed EOA candidates, 2 separate chain-anchored listing-related samples."
+  "last_evidence_expansion": "2026-10-10 second pass: all 19 first-global ERC20 histories, cross-source 60 overlaps with 46 contracts/14 EOAs, 5 new signed EOA candidates, 2 separate chain-anchored listing-related samples.",
+  "source_depth": {
+    "priority_2026_genesis_per_token": 100,
+    "legacy_genesis_per_token": 20,
+    "early_pool_per_venue": 50,
+    "all_pages_complete": false
+  }
 }
