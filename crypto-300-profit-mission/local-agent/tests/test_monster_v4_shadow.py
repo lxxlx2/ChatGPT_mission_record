@@ -15,7 +15,7 @@ def row(sym,price,quote="200000"):
     return {"symbol":sym,"lastPrice":str(price),"quoteVolume":str(quote)}
 
 def six_bars(now, rising=True):
-    start=(now//m.INTERVAL_MS-7)*m.INTERVAL_MS
+    start=(now//m.INTERVAL_MS-6)*m.INTERVAL_MS
     bars=[]
     for i in range(6):
         price=1+i*.02 if rising else 1-i*.02
