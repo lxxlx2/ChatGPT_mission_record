@@ -1,0 +1,7 @@
+model,available_cases,entered,not_entered,median24_pct,median4h_pct,minlow20_count,up20_count,skipped_now_winners20
+NOW,29,29,0,35.9041,16.7356,2,17,0
+WAIT30,29,29,0,26.4615,4.5396,5,16,0
+WAIT60,29,29,0,15.657,13.0932,5,13,0
+PB03,29,28,1,16.7516,8.3813,6,13,0
+PB05,29,28,1,16.7516,9.3799,6,13,0
+PB08,29,22,7,14.494,10.1925,7,10,4
