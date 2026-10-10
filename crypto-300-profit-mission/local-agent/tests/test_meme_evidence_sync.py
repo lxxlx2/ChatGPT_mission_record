@@ -159,6 +159,25 @@ def test_no_private_detail_in_generic_sanitizer():
     assert result["url"] == "https://safe.example/path"
 
 
+
+def test_frank_trade_and_signal_samples_are_data_only(tmp_path):
+    spool = EvidenceSpool(tmp_path)
+    health = {"poll_count": 9, "last_poll_at": "2026-10-11T02:01:00+00:00",
+              "last_processed_signature": "sig", "status": "RUNNING"}
+    row = {"mint": MINT, "signature": "tx-1", "side": "SELL", "block_time": 1791712800,
+           "observed_quote_asset": "USDC", "observed_quote_quantity": "7031.556770",
+           "body": {"gmail_token": "must_not_export"}, "local_rpc_key": "must_not_export"}
+    signal = {"mint": MINT, "pattern": "MULTIPLE",
+              "position_state": "OPEN", "private_key": "must_not_export"}
+    file = spool.frank_scan(poll_count=9, health=health,
+                            recent_trades=[row], signal_candidates=[signal])
+    exported = json.loads(file.read_text())
+    assert exported["recent_recognized_trades_sample"][0]["observed_quote_quantity"] == "7031.556770"
+    assert exported["signal_eligible_candidates_sample"][0]["pattern"] == "MULTIPLE"
+    assert "gmail_token" not in file.read_text()
+    assert "must_not_export" not in file.read_text()
+    assert exported["chain_completeness_verified"] is False
+
 def test_code_is_opt_in_and_not_added_to_frank_writer():
     root = Path(__file__).resolve().parents[1]
     server = (root / "mission_agent" / "mission_control" / "server.py").read_text()
