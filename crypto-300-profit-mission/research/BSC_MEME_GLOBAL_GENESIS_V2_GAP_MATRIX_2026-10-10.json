@@ -1,0 +1,632 @@
+{
+  "method": "Alchemy global token ERC20 earliest transfers versus first outgoing transfers from previously canonical Pancake V2 WBNB pool",
+  "tokens": 19,
+  "source_files": [
+    "BSC_MEME_GENESIS_GLOBAL_TRANSFERS_2026_PRIORITY_2026-10-10.json",
+    "BSC_MEME_GENESIS_GLOBAL_TRANSFERS_LEGACY_A_2026-10-10.json",
+    "BSC_MEME_GENESIS_GLOBAL_TRANSFERS_LEGACY_B_2026-10-10.json",
+    "BSC_MEME_EARLY_POOL_SAMPLE_B01_2026-10-10.json",
+    "BSC_MEME_EARLY_POOL_SAMPLE_B02_2026-10-10.json",
+    "BSC_MEME_EARLY_POOL_SAMPLE_B03_2026-10-10.json",
+    "BSC_MEME_EARLY_POOL_SAMPLE_B04_2026-10-10.json",
+    "BSC_MEME_ORIGINAL_SIGNERS_GLOBAL_EARLY_2026-10-10.json"
+  ],
+  "interpretation": "GAP BETWEEN TOKEN TRANSFER HISTORY AND V2 SAMPLE, NOT DURATION/TRADE PRICE OR EVIDENCE THAT ALPHA PRECEDED LAUNCH",
+  "data": [
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "genesis_first_transfer_block": 73336231,
+      "genesis_first_transfer_hash": "0xefe254f187556a7098fa078e50ad3d96ee0cdd74adfe42d5105d3ee7c51db516",
+      "pancake_v2_pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "v2_first_sampled_outgoing_block": 73658907,
+      "block_gap": 322676,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 37
+        },
+        {
+          "address": "0xb94e603ec214ede57dc5d4bc7242840bc1ca4161",
+          "transfer_rows": 2
+        },
+        {
+          "address": "0xd45d45c1057157da041c6385710e9416f822a7b8",
+          "transfer_rows": 2
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 50,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": true,
+      "original_signer_transactions_checked": 5,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "龙虾",
+      "contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "genesis_first_transfer_block": 83635770,
+      "genesis_first_transfer_hash": "0x822621d8b11dc2d0e36ffaf8219a6c79564ad707d885e450ac73e80554c7b616",
+      "pancake_v2_pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "v2_first_sampled_outgoing_block": 83636129,
+      "block_gap": 359,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 33
+        },
+        {
+          "address": "0xfdae25a95c1d608efd8181370fb19327e09692af",
+          "transfer_rows": 2
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x757eba15a64468e6535532fcf093cef90e226f85",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 50,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": true,
+      "original_signer_transactions_checked": 5,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "牛来",
+      "contract": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "genesis_first_transfer_block": 115628768,
+      "genesis_first_transfer_hash": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "pancake_v2_pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "v2_first_sampled_outgoing_block": 116314923,
+      "block_gap": 686155,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "transfer_rows": 20
+        },
+        {
+          "address": "0x9e698d361bb2375bd335dad156accbbad45bf364",
+          "transfer_rows": 8
+        },
+        {
+          "address": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+          "transfer_rows": 8
+        },
+        {
+          "address": "0x3508dca95a64c9378cb07ef6f40553a50905372a",
+          "transfer_rows": 6
+        }
+      ],
+      "sampled_global_transfer_events": 50,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": true,
+      "original_signer_transactions_checked": 5,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "MARSCOIN",
+      "contract": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "genesis_first_transfer_block": 112441387,
+      "genesis_first_transfer_hash": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "pancake_v2_pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "v2_first_sampled_outgoing_block": 112668718,
+      "block_gap": 227331,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "transfer_rows": 24
+        },
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "transfer_rows": 22
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 50,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": true,
+      "original_signer_transactions_checked": 5,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "contract": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "genesis_first_transfer_block": 63836072,
+      "genesis_first_transfer_hash": "0xa5ae81903fe909d0f2689b9f27bfbf628ffa66708955f834ccf85c4939f5ed00",
+      "pancake_v2_pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "v2_first_sampled_outgoing_block": 63838944,
+      "block_gap": 2872,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 37
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x757eba15a64468e6535532fcf093cef90e226f85",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x51001ae979bf723bc521e651d7d08812302e9d0d",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 50,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": true,
+      "original_signer_transactions_checked": 5,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "TST",
+      "contract": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "genesis_first_transfer_block": 46135204,
+      "genesis_first_transfer_hash": "0x60d7ed4a6dca6fd538aeb10072f7c7b90e18fb8ea62ea07ca544ad9b8fc785f5",
+      "pancake_v2_pool": "0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b",
+      "v2_first_sampled_outgoing_block": 46421406,
+      "block_gap": 286202,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 13
+        },
+        {
+          "address": "0xbca940e929945ded756c257a4ca665df4cfa3e0e",
+          "transfer_rows": 3
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "CHEEMS",
+      "contract": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "genesis_first_transfer_block": 42638147,
+      "genesis_first_transfer_hash": "0x60ced0426e0a0ebcf44fb48340888ea7d91ca4d81d9e4841974c255b224232c0",
+      "pancake_v2_pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "v2_first_sampled_outgoing_block": 42638564,
+      "block_gap": 417,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+          "transfer_rows": 15
+        },
+        {
+          "address": "0x833a18a1f710862604eb22c09311f48225d2c616",
+          "transfer_rows": 2
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "MUBARAK",
+      "contract": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "genesis_first_transfer_block": 47425350,
+      "genesis_first_transfer_hash": "0x317ae8dc95823a0aec0d42a0617e879a08a249f5ea8bbeab88b0c5e786366995",
+      "pancake_v2_pool": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+      "v2_first_sampled_outgoing_block": 47442149,
+      "block_gap": 16799,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 14
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0xe0d4592af65cbc554ed06587afde267581a43f15",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "TUT",
+      "contract": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "genesis_first_transfer_block": 46430529,
+      "genesis_first_transfer_hash": "0x344b94d234da6d390aef4f2d4355c9f908c1f38ac58a68fb83b4a2937f0422a3",
+      "pancake_v2_pool": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+      "v2_first_sampled_outgoing_block": 46521969,
+      "block_gap": 91440,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 14
+        },
+        {
+          "address": "0xbca940e929945ded756c257a4ca665df4cfa3e0e",
+          "transfer_rows": 2
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "BROCCOLI714",
+      "contract": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "genesis_first_transfer_block": 46627236,
+      "genesis_first_transfer_hash": "0xe35da013720d5d52008a851b73e857115a8376c5ac69e55e297efecd92e5d5df",
+      "pancake_v2_pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "v2_first_sampled_outgoing_block": 46627716,
+      "block_gap": 480,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+          "transfer_rows": 10
+        },
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 8
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "contract": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "genesis_first_transfer_block": 46627236,
+      "genesis_first_transfer_hash": "0x8cd3454cfcdffe1d3600b526d47444e965741e5f21c2a666a9ef815a72fc59bd",
+      "pancake_v2_pool": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+      "v2_first_sampled_outgoing_block": 46628417,
+      "block_gap": 1181,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+          "transfer_rows": 12
+        },
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 6
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "SIREN",
+      "contract": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "genesis_first_transfer_block": 46464388,
+      "genesis_first_transfer_hash": "0xa14fb90087d1361ef250dddbf1617fa526d154a2eb5257fa7c38230ba44cebde",
+      "pancake_v2_pool": "0xa9b4493042830109b44e18ec3586ecd22bd032ed",
+      "v2_first_sampled_outgoing_block": 46828940,
+      "block_gap": 364552,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 15
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0xbca940e929945ded756c257a4ca665df4cfa3e0e",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "BANANAS31",
+      "contract": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "genesis_first_transfer_block": 44034624,
+      "genesis_first_transfer_hash": "0x33668034d868ff4d87fe72bad614eb70b579224616379deebed2e39aa492dcae",
+      "pancake_v2_pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127",
+      "v2_first_sampled_outgoing_block": 46871949,
+      "block_gap": 2837325,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 15
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0xf73fb8ae0ecd7f3a21be7ba9958f6487ab64b721",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "BOB",
+      "contract": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "genesis_first_transfer_block": 44007502,
+      "genesis_first_transfer_hash": "0x53f76884c0c4f34dec585d5380c8b891387a6ac4a1c637d843790f6d0a786916",
+      "pancake_v2_pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "v2_first_sampled_outgoing_block": 44007572,
+      "block_gap": 70,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+          "transfer_rows": 16
+        },
+        {
+          "address": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+          "transfer_rows": 2
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0xd8b1c92ddf1db6ae158d3a4fd945e10c0e6e515f",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "BULLA",
+      "contract": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "genesis_first_transfer_block": 50452465,
+      "genesis_first_transfer_hash": "0xe30d7d61e6f0c4a405b7a9b35571bf4c93a84ff79aaaefe58f7d517c80d21e73",
+      "pancake_v2_pool": "0x3551191f78869c29388886330f31739a87866c38",
+      "v2_first_sampled_outgoing_block": 50982375,
+      "block_gap": 529910,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x38799ce388a9b65ec6ba7a47c1efb9cf1a7068e4",
+          "transfer_rows": 13
+        },
+        {
+          "address": "0xcbf18dc7d88b3edb48bccdc33129f7e823412410",
+          "transfer_rows": 3
+        },
+        {
+          "address": "0x0dab8151527f987670976b57d8ccf62b27321b90",
+          "transfer_rows": 2
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "4",
+      "contract": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "genesis_first_transfer_block": 63056727,
+      "genesis_first_transfer_hash": "0x79a9441c1a83abbe6bb44f5f894339ebe3d67f1a28229aed370443f1aa6cd2f0",
+      "pancake_v2_pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "v2_first_sampled_outgoing_block": 63056879,
+      "block_gap": 152,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 14
+        },
+        {
+          "address": "0x50d1c20d42e4535123ff3a8889cbc2a7a1397f45",
+          "transfer_rows": 3
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x757eba15a64468e6535532fcf093cef90e226f85",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "GIGGLE",
+      "contract": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "genesis_first_transfer_block": 61963318,
+      "genesis_first_transfer_hash": "0x3decddd55069f03c7ca7099a2a3963a9c3c553fdb98102e7231ae9cf8850a32e",
+      "pancake_v2_pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "v2_first_sampled_outgoing_block": 61963755,
+      "block_gap": 437,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+          "transfer_rows": 18
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x32869ac00d4ea0bcf147e566b3ddc0d4a14e2866",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "币安人生",
+      "contract": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "genesis_first_transfer_block": 63454340,
+      "genesis_first_transfer_hash": "0xe1926bda8b81013194dfd0c1b6f46316990affd86c8da0c9c7513ff4a5fbd2b1",
+      "pancake_v2_pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "v2_first_sampled_outgoing_block": 63454407,
+      "block_gap": 67,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 18
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x757eba15a64468e6535532fcf093cef90e226f85",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    },
+    {
+      "token": "BUBB",
+      "contract": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "genesis_first_transfer_block": 47611770,
+      "genesis_first_transfer_hash": "0xd6251e164977b25954ef94b6bee6d13a917c091d059c05b5bd52657542ddefc0",
+      "pancake_v2_pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+      "v2_first_sampled_outgoing_block": 47620848,
+      "block_gap": 9078,
+      "most_common_genesis_erc20_senders": [
+        {
+          "address": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "transfer_rows": 18
+        },
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "transfer_rows": 1
+        },
+        {
+          "address": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+          "transfer_rows": 1
+        }
+      ],
+      "sampled_global_transfer_events": 20,
+      "sampled_early_v2_transfer_events": 50,
+      "genesis_sample_continues": true,
+      "prioritize_2026": false,
+      "original_signer_transactions_checked": 0,
+      "early_trade_venue_status": "GLOBAL_ERC20_GENESIS_OBSERVED; TRUE_FIRST_SWAP_AND_EARLIEST_BUYER_NOT_YET_FULLY_DECODED"
+    }
+  ]
+}
