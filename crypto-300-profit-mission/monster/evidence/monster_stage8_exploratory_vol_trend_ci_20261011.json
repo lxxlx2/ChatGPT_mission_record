@@ -1,0 +1,112 @@
+{
+  "schema": "MONSTER_STAGE8_EXPLORATORY_CAUSAL_TURNOVER_RESEARCH_V1",
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38090901400",
+  "ci_head": "23a89166d654ba15fc0079956eab1d82ebf52cb4",
+  "classification": "EXPOSED_HISTORICAL_EXPLORATION_NOT_OUT_OF_SAMPLE",
+  "source": "40 verified official Binance minute histories, previous 23 completed hours quote ratio, closed 3m poll price return",
+  "limitations": [
+    "Ordinary full-market sampled strong events are not unbiased random negatives",
+    "Cannot calculate general market FPR or profitability",
+    "Missing 20 short-history events: do not impute",
+    "This study does not change production V4 thresholds",
+    "Historical 24h ticker reconstructed from minute quote not archived actual exchange ticker"
+  ],
+  "CASES": 40,
+  "NOT_UNSEEN_VALIDATION": true,
+  "RULES": {
+    "R15_2_VOL8": {
+      "last60m_quote_vs_prev23h_median": "8",
+      "return_threshold_pct": "2",
+      "return_window_min": 15
+    },
+    "R240_8_VOL2": {
+      "last60m_quote_vs_prev23h_median": "2",
+      "return_threshold_pct": "8",
+      "return_window_min": 240
+    },
+    "R60_3_VOL4": {
+      "last60m_quote_vs_prev23h_median": "4",
+      "return_threshold_pct": "3",
+      "return_window_min": 60
+    },
+    "R60_5_VOL2": {
+      "last60m_quote_vs_prev23h_median": "2",
+      "return_threshold_pct": "5",
+      "return_window_min": 60
+    }
+  },
+  "STAGE8_CAUSAL_RESEARCH": {
+    "R15_2_VOL8": {
+      "FULLMARKET_SAMPLED": {
+        "after_old_watch": 1,
+        "all_rule_events": 14,
+        "before_old_watch": 11,
+        "detected": 12,
+        "n": 20,
+        "not_detected": 8
+      },
+      "GT5X_PREHIT_POSITIVE": {
+        "after_old_watch": 3,
+        "all_rule_events": 25,
+        "before_old_watch": 14,
+        "detected": 17,
+        "n": 20,
+        "not_detected": 3
+      }
+    },
+    "R240_8_VOL2": {
+      "FULLMARKET_SAMPLED": {
+        "after_old_watch": 0,
+        "all_rule_events": 20,
+        "before_old_watch": 17,
+        "detected": 17,
+        "n": 20,
+        "not_detected": 3
+      },
+      "GT5X_PREHIT_POSITIVE": {
+        "after_old_watch": 1,
+        "all_rule_events": 30,
+        "before_old_watch": 18,
+        "detected": 19,
+        "n": 20,
+        "not_detected": 1
+      }
+    },
+    "R60_3_VOL4": {
+      "FULLMARKET_SAMPLED": {
+        "after_old_watch": 2,
+        "all_rule_events": 24,
+        "before_old_watch": 18,
+        "detected": 20,
+        "n": 20,
+        "not_detected": 0
+      },
+      "GT5X_PREHIT_POSITIVE": {
+        "after_old_watch": 2,
+        "all_rule_events": 28,
+        "before_old_watch": 18,
+        "detected": 20,
+        "n": 20,
+        "not_detected": 0
+      }
+    },
+    "R60_5_VOL2": {
+      "FULLMARKET_SAMPLED": {
+        "after_old_watch": 0,
+        "all_rule_events": 23,
+        "before_old_watch": 19,
+        "detected": 19,
+        "n": 20,
+        "not_detected": 1
+      },
+      "GT5X_PREHIT_POSITIVE": {
+        "after_old_watch": 0,
+        "all_rule_events": 26,
+        "before_old_watch": 20,
+        "detected": 20,
+        "n": 20,
+        "not_detected": 0
+      }
+    }
+  }
+}
