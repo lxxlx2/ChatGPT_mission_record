@@ -532,13 +532,16 @@ def scan_once(db,now_ms):
     for venue in ("spot","futures"):
         try:
             rows,expected=fetch_market(venue)
-            if not expected or len(rows)<expected:
-                raise ValueError("PARTIAL_EXCHANGEINFO_TICKER_COVERAGE")
+            if not expected:
+                raise ValueError("EMPTY_EXCHANGEINFO_UNIVERSE")
             result=observe_snapshot(db,venue,now_ms,rows)
+            result["coverage_expected"]=expected
+            result["coverage_missing"]=max(0,expected-result["valid"])
             reports.append(result)
-            if result["invalid"]:
+            if result["coverage_missing"] or result["invalid"]:
                 mark_source_health(db,venue,now_ms,
-                    "INVALID_TICKER_ROWS:"+str(result["invalid"]))
+                    "PARTIAL_TICKER_COVERAGE:"+str(result["valid"])+"/"+str(expected)+
+                    ";INVALID:"+str(result["invalid"]))
             else:
                 mark_source_health(db,venue,now_ms)
         except (ValueError,KeyError,TypeError,urllib.error.URLError,OSError) as exc:
