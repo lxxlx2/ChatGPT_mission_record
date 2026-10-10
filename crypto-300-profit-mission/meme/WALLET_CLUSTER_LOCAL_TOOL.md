@@ -243,3 +243,18 @@ notification changes, or trading deployment is authorized by this UI branch.
 The sole purpose of this product pass is fast, accurate *manual* trading
 judgment. Performance bottlenecks must be profiled on real CA queries before
 expanding expensive index sources or changing market data providers.
+
+## 2026-10-11 unified-accuracy product requirement: current implementation is insufficient
+
+**Read this section before treating the three presets or a green Dashboard status as product acceptance.** The user has explicitly rejected fast/standard/deep as separate accuracy levels. The code described earlier in this file is the **currently implemented legacy behavior**, not the approved target UX. New product authority: [`ca-analysis-unified-accuracy-acceptance.md`](ca-analysis-unified-accuracy-acceptance.md), supported by [`WALLET_CLUSTER_ANALYSIS_SPEC.md`](WALLET_CLUSTER_ANALYSIS_SPEC.md).
+
+Mandatory next engineering work:
+1. One CA research query mode, progressive evidence collection with explicit incomplete-vs-complete semantics; no quick/standard/deep UI.
+2. Fix current top-20-token-account / filtering pitfall when reporting exact Top10 after LP/vault exclusion; obtain enough additional ranks/owner mapping and evidence or state that the metric cannot be computed from the current source.
+3. Replace arbitrary 100 target-token + 50 funding signature bounded history as a supposed full deep result; paginate/reconstruct material first-acquisition and funder lineage, preserving true source coverage.
+4. Include independently sourced external narrative, exact-CA affiliation checks and source timestamps. Showing DexScreener social URL hints alone does not satisfy narrative requirements.
+5. Remove generic CA's 30-USDC Jupiter quote and expired-quote display; **do not** change Frank follow-decision's frozen, separate 30-USDC quote policy.
+6. Compare real outputs against accessible third-party public displays/second data source with matched definitions; independently review real code and run on the Mac before considering rollout.
+
+**As of this documentation commit, none of these product corrections have been implemented, reviewed, run or deployed.** Current Frank monitoring must remain unaffected; no new monitoring, Gmail or trading authority is granted.
+
