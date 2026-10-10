@@ -59,6 +59,9 @@ CREATE TABLE IF NOT EXISTS failures (
  id INTEGER PRIMARY KEY AUTOINCREMENT, venue TEXT NOT NULL,
  observed_ms INTEGER NOT NULL, stage TEXT NOT NULL, error TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS source_state (
+ venue TEXT PRIMARY KEY, degraded_since_ms INTEGER, last_ok_ms INTEGER
+);
 """
 
 def open_store(path):
@@ -301,7 +304,10 @@ def health(db, now_ms):
             "events":dict((r["event_type"],r["n"]) for r in db.execute(
                 "SELECT event_type,COUNT(*) AS n FROM events GROUP BY event_type")),
             "queue":counts,"oldest_pending_age_sec":max(0,(now_ms-oldest)//1000) if oldest else None,
-            "last_polls":polls,"source_failures":db.execute("SELECT COUNT(*) FROM failures").fetchone()[0]}
+            "last_polls":polls,
+            "degraded_venues":[r["venue"] for r in db.execute(
+                "SELECT venue FROM source_state WHERE degraded_since_ms IS NOT NULL")],
+            "source_failures":db.execute("SELECT COUNT(*) FROM failures").fetchone()[0]}
 
 def binance_json(url,timeout=12):
     request=urllib.request.Request(url,headers={"User-Agent":"MonsterV4Shadow/0.1"})
@@ -329,6 +335,31 @@ def fetch_5m(venue,symbol,now_ms):
         {"symbol":symbol,"interval":"5m","limit":8})
     return binance_json(url)
 
+def mark_source_health(db,venue,now_ms,error=None):
+    """Persist an outage/recovery transition once; never pretend failed polls succeeded."""
+    with db:
+        old=db.execute("SELECT * FROM source_state WHERE venue=?",(venue,)).fetchone()
+        degraded=old is not None and old["degraded_since_ms"] is not None
+        if error is None:
+            if degraded:
+                record_event(db,venue,"FULL_UNIVERSE","SOURCE_RECOVERED",now_ms,
+                             old["degraded_since_ms"],
+                             {"degraded_since_ms":old["degraded_since_ms"],
+                              "recovered_ms":now_ms,"status":"RESTORED"})
+            db.execute("""INSERT INTO source_state(venue,last_ok_ms) VALUES(?,?)
+                ON CONFLICT(venue) DO UPDATE SET degraded_since_ms=NULL,
+                    last_ok_ms=excluded.last_ok_ms""",(venue,now_ms))
+        else:
+            db.execute("INSERT INTO failures(venue,observed_ms,stage,error) VALUES(?,?,?,?)",
+                       (venue,now_ms,"D0",error[:160]))
+            if not degraded:
+                db.execute("""INSERT INTO source_state(venue,degraded_since_ms)
+                    VALUES(?,?) ON CONFLICT(venue) DO UPDATE SET
+                    degraded_since_ms=excluded.degraded_since_ms""",(venue,now_ms))
+                record_event(db,venue,"FULL_UNIVERSE","SOURCE_DEGRADED",
+                    now_ms,now_ms,{"degraded_since_ms":now_ms,"error":error[:160],
+                                   "coverage":"UNKNOWN_NO_CURRENT_SCAN"})
+
 def scan_once(db,now_ms):
     reports=[]
     for venue in ("spot","futures"):
@@ -337,10 +368,9 @@ def scan_once(db,now_ms):
             if not expected or len(rows)<expected:
                 raise ValueError("PARTIAL_EXCHANGEINFO_TICKER_COVERAGE")
             reports.append(observe_snapshot(db,venue,now_ms,rows))
+            mark_source_health(db,venue,now_ms)
         except (ValueError,KeyError,TypeError,urllib.error.URLError,OSError) as exc:
-            with db:
-                db.execute("INSERT INTO failures(venue,observed_ms,stage,error) VALUES(?,?,?,?)",
-                    (venue,now_ms,"D0",type(exc).__name__+":"+str(exc)[:160]))
+            mark_source_health(db,venue,now_ms,type(exc).__name__+":"+str(exc))
             reports.append({"venue":venue,"error":type(exc).__name__})
     reports.append({"queue":process_queue(db,now_ms,fetch_5m)})
     return reports
