@@ -108,6 +108,15 @@ def _proxy_trade(bars, base_ms, watch_ms, delay_ms, slip_bps):
     entry=bars[i][1]; exit_price=bars[exit_i][1]
     if entry <= 0 or exit_price <= 0:
         return {"status":"NO_EXECUTABLE_PRICE"}
+    # A fixed price from a zero-trade delisting bar is not an executable exit.
+    if bars[i][6] == 0 or bars[i][5] == 0:
+        return {"status":"CENSORED_NO_ENTRY_TRADES"}
+    if bars[exit_i][6] == 0 or bars[exit_i][5] == 0:
+        return {"status":"CENSORED_ZERO_VOLUME_EXIT"}
+    if bars[i][5] < 30 or bars[exit_i][5] < 30:
+        return {"status":"CENSORED_MINUTE_QUOTE_LT_30_USDT"}
+    if any(v[6] == 0 for v in bars[max(i,exit_i-5):exit_i+1]):
+        return {"status":"CENSORED_ZERO_VOLUME_NEAR_EXIT"}
     fee=Decimal("0.001")
     slippage=Decimal(slip_bps)/10000
     gross=(exit_price/entry-1)*100
@@ -171,11 +180,19 @@ def replay_case(src, bars):
             d1state={r["status"]:r["n"] for r in db.execute(
                 "SELECT status,COUNT(*) n FROM candidate_queue GROUP BY status")}
             trade_proxies=[]
+            last_entered_ms=None
             for watch in watches:
                 by_scenario={}
+                # Non-overlap is essential: a 24h position cannot be reopened
+                # on the same symbol six hours later as if capital were free.
+                overlap=(last_entered_ms is not None and
+                         watch["observed_ms"]+180_000<last_entered_ms+24*3600_000)
                 for slip in SCENARIOS_BPS:
-                    by_scenario[str(slip)]=_proxy_trade(
-                        bars,first,watch["observed_ms"],180000,slip)
+                    by_scenario[str(slip)]=(
+                        {"status":"OVERLAPPING_24H_HOLD_NO_NEW_POSITION"} if overlap else
+                        _proxy_trade(bars,first,watch["observed_ms"],180000,slip))
+                if not overlap and by_scenario["20"]["status"]=="PRICE_PROXY_ONLY":
+                    last_entered_ms=watch["observed_ms"]+180_000
                 trade_proxies.append({
                     "watch_utc":utc(watch["observed_ms"]),
                     "lead_hours_vs_old_anchor":round((anchor-watch["observed_ms"])/3600000,3),
