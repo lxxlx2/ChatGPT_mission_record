@@ -899,3 +899,20 @@ Tested code HEAD: `be6d2971359a552e6022953b60c442f5b00ce3ff`.
 GitHub Actions SUCCESS: https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/37992871224 ; 1020 full tests passed, 121 FOMO tests passed, Python / Node / shell checks passed.
 
 Scope: no change to frozen policy, Frank writer, standalone legacy signals/gmail module, main, or active Mac services. Patched code has not been independently re-reviewed or deployed. Mac reboot acceptance remains deferred by user. H3 historical conservative drift and unresolved RARI original BUY evidence remain separate gates. PR stays Draft; CAN_MERGE=NO, CAN_DEPLOY=NO, PRODUCTION_TRADING=NO_GO.
+
+## 46. 2026-10-10 local notification expiry, review counts and latency instrumentation
+
+Input: Claude's incremental review of code `be6d2971` confirmed the Gmail stale-first-send fix with 1020 passing tests and mutation evidence, while identifying (1) missing expiry on the macOS local notification channel, (2) potential 600-second hold from serial Jupiter candidate processing, and (3) silent MANUAL_REVIEW counts.
+
+Changes restricted to review PR #29:
+
+- LocalDelivery checks the original immutable `decision_events.created_at` for every PENDING/RETRY_PENDING before local notification rendering and again immediately before dispatch. Stale, future, unparseable, empty or timezone-naive times fail closed to MANUAL_REVIEW in both local_delivery and decision_outbox. Approved `initial_notification_max_age_seconds` controls both local and Gmail (default 600 in old review fixtures); accepted desktop notifications are never replayed.
+- The control health JSON includes per-channel and total MANUAL_REVIEW outbox row counts, and the Dashboard existing health header shows them when nonzero. No extra notification or automation was added.
+- The service records actual `cycle_elapsed_seconds` and `pre_delivery_wait_seconds` (first new enqueued event to pre-drain) for future Mac runtime observation; this is instrumentation, not an assertion that real cycle time or delivery SLA passed. Under long cycles, stale notifications remain suppressed, not silently treated as fresh. No candidate iteration, signal/threshold, Gmail retry, policy, Frank writer or deployment behavior was modified by this step.
+- Added tests for old local PENDING/RETRY_PENDING suppression, malformed/future/naive timestamp, age boundary, second-check late expiry, policy age constructor validation and health/dashboard counter readback.
+
+Exact code HEAD tested: `54624f18b4dc445d40802867f8773aa6d4302ea8`. GitHub Actions run https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38038895004 succeeded: 1030 full pytest PASS, 121 FOMO targeted PASS, compile and JS checks pass. This is code CI, not Mac performance telemetry, reboot recovery, send from new code or deployment.
+
+Prior real Mac evidence remains: standalone three-CA PASS, real existing-version Dashboard 7/7 PASS and live Gmail Sent identity readback PASS. Claude's list labeling all those tests NOT_RUN is outdated. Current PR deployed into live services = NO; actual Mac reboot/login test deferred at user's request.
+
+Remaining independent release actions: Claude incremental verification of latest local notification/health changes; current-source runtime decision replay for changed Mission Control Frank price calculation (read-only); rollback-on-copy rehearsal; separate Frank writer upgrade and H3 user approval if pursued; RARI original BUY unconfirmed. `CAN_MERGE=NO`, `CAN_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`, Draft PR preserved.
