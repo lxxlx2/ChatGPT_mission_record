@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 
 from mission_agent.meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
+from mission_agent.meme.market import DexScreenerMarketClient
 
 
 def main():
@@ -38,6 +39,7 @@ def main():
             deep_holders=args.deep_holders,
             funding_lookback=args.funding_lookback,
             material_pct=args.material_pct,
+            market_client=DexScreenerMarketClient(),
         ).analyze()
     finally:
         cache.close()

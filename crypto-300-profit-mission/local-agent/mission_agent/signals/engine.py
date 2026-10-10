@@ -4,7 +4,7 @@ from decimal import Decimal
 from ..db.connection import transaction
 from ..hashing import digest
 from .policy import POLICY_SHA256,USDC
-from .evaluator import evaluate,watch_eligible,establish_t0,watch_tick
+from .evaluator import evaluate,watch_eligible,establish_t0,watch_tick,known_usdc_event
 from .store import quantity
 
 class Engine:
@@ -39,13 +39,56 @@ class Engine:
         sid=digest({'policy_id':self.policy['policy_id'],'policy_hash':POLICY_SHA256,'person_id':s['person_id'],'mint':s['mint'],'episode_id':s['episode_id'],'signal_type':stage['signal_type'],'stage':stage['stage']})
         if self.db.execute('SELECT 1 FROM signals WHERE signal_id=?',(sid,)).fetchone():
             self.db.execute("UPDATE v1_meta SET value=CAST(value AS INTEGER)+1 WHERE key='duplicates_suppressed'");return None
-        buys=[e for e in s['events'] if e['direction']=='BUY'];latest=buys[-1];quote={}
-        sold_quote={}
+        buys=[e for e in s['events'] if e['direction']=='BUY'];latest=buys[-1]
+        known_spent={};known_received={};observed_spent={};observed_received={};unknown_cost=[]
+        def add(total,asset,value):
+            total[asset]=str(Decimal(total.get(asset,'0'))+Decimal(value))
+        def observed_quote(e):
+            original=e.get('original_quote') or {}
+            if e.get('quote_normalization') and original.get('quote_asset') and original.get('quote_quantity') is not None:
+                return original['quote_asset'],str(original['quote_quantity'])
+            return e.get('quote_asset'),str(e.get('quote_quantity'))
         for e in s['events']:
-            target=quote if e['direction']=='BUY' else sold_quote
-            target[e['quote_asset']]=str(Decimal(target.get(e['quote_asset'],'0'))+Decimal(e['quote_quantity']))
-        position={'first_buy_at':buys[0]['at'],'last_buy_at':latest['at'],'buy_count':len(buys),'sell_count':sum(e['direction']=='SELL' for e in s['events']),'gross_token_bought':str(sum(int(e['token_amount_raw']) for e in buys)),'gross_token_sold':str(sum(int(e['token_amount_raw']) for e in s['events'] if e['direction']=='SELL')),'gross_quote_spent':quote,'gross_quote_received':sold_quote,'current_token_position':s['current_raw'],'current_token_quantity':quantity(s['current_raw'],latest['token_decimals']) if s['current_raw'] is not None else None,'episode_id':s['episode_id'],'inventory_scope':'OBSERVED_ACTIVE_SEQUENCE','lifetime_position':'LIFETIME_POSITION_UNKNOWN'}
-        body={'policy_id':self.policy['policy_id'],'policy_hash':POLICY_SHA256,'signal_id':sid,'person_id':s['person_id'],'mint':s['mint'],'episode_id':s['episode_id'],'signal_type':stage['signal_type'],'stage':stage['stage'],'triggered_at':at,'first_trigger_at':at,'latest_trade_signature':s['events'][-1]['signature'],'triggering_signature':s['events'][-1]['signature'],'latest_buy_signature':latest['signature'],'latest_buy':quantity(latest['token_amount_raw'],latest['token_decimals']),'latest_quote_amount':latest['quote_quantity'],'quote_asset':latest['quote_asset'],'position':position,'reason_codes':stage['reason_codes'],'usd':'unavailable','delivery_mode':'DRY_RUN_AUDIT' if self.dry_run else 'LIVE'}
+            asset,observed=observed_quote(e)
+            observed_target=observed_spent if e['direction']=='BUY' else observed_received
+            if asset and observed not in {None,'None'}:add(observed_target,asset,observed)
+            known_target=known_spent if e['direction']=='BUY' else known_received
+            if known_usdc_event(e):add(known_target,USDC,e['quote_quantity'])
+            elif e['direction']=='BUY':
+                unknown_cost.append({
+                    'signature':e.get('signature'),'quote_asset':asset,'quote_quantity':observed,
+                    'amount_predicate':e.get('amount_predicate'),
+                    'amount_predicate_reason':e.get('amount_predicate_reason'),
+                    'route_amount_semantics':e.get('route_amount_semantics'),
+                })
+        latest_observed_asset,latest_observed_quantity=observed_quote(latest)
+        latest_cost_known=known_usdc_event(latest)
+        position={
+            'first_buy_at':buys[0]['at'],'last_buy_at':latest['at'],'buy_count':len(buys),
+            'sell_count':sum(e['direction']=='SELL' for e in s['events']),
+            'gross_token_bought':str(sum(int(e['token_amount_raw']) for e in buys)),
+            'gross_token_sold':str(sum(int(e['token_amount_raw']) for e in s['events'] if e['direction']=='SELL')),
+            'gross_quote_spent':known_spent,'gross_quote_received':known_received,
+            'gross_quote_out_observed':observed_spent,'gross_quote_in_observed':observed_received,
+            'quote_cost_unknown_contributions':unknown_cost,
+            'current_token_position':s['current_raw'],
+            'current_token_quantity':quantity(s['current_raw'],latest['token_decimals']) if s['current_raw'] is not None else None,
+            'episode_id':s['episode_id'],'inventory_scope':'OBSERVED_ACTIVE_SEQUENCE',
+            'lifetime_position':'LIFETIME_POSITION_UNKNOWN'
+        }
+        body={
+            'policy_id':self.policy['policy_id'],'policy_hash':POLICY_SHA256,'signal_id':sid,
+            'person_id':s['person_id'],'mint':s['mint'],'episode_id':s['episode_id'],
+            'signal_type':stage['signal_type'],'stage':stage['stage'],'triggered_at':at,'first_trigger_at':at,
+            'latest_trade_signature':s['events'][-1]['signature'],'triggering_signature':s['events'][-1]['signature'],
+            'latest_buy_signature':latest['signature'],'latest_buy':quantity(latest['token_amount_raw'],latest['token_decimals']),
+            'latest_quote_amount':latest['quote_quantity'],'quote_asset':latest['quote_asset'],
+            'latest_quote_observed_asset':latest_observed_asset,'latest_quote_observed_amount':latest_observed_quantity,
+            'latest_quote_cost_known':latest_cost_known,'latest_quote_amount_predicate':latest.get('amount_predicate'),
+            'latest_quote_amount_reason':latest.get('amount_predicate_reason'),
+            'position':position,'reason_codes':stage['reason_codes'],'usd':'unavailable',
+            'delivery_mode':'DRY_RUN_AUDIT' if self.dry_run else 'LIVE'
+        }
         encoded=json.dumps(body,sort_keys=True);content_hash=digest(body)
         self.db.execute('INSERT INTO signals VALUES(?,?,?,?,?,?,?,?,?)',(sid,s['person_id'],s['mint'],s['episode_id'],stage['signal_type'],stage['stage'],str(at),content_hash,encoded))
         for channel in (['local','gmail'] if stage['signal_type']=='FRANK_MULTIPLE_SIGNAL' else ['local']):self.db.execute('INSERT INTO outbox(signal_id,channel,status) VALUES(?,?,?)',(sid,channel,'DRY_RUN_AUDIT' if self.dry_run else 'PENDING'))
@@ -104,7 +147,10 @@ class Engine:
                     s={'person_id':person,'mint':mint,'episode_id':episode,'state':'OPEN','events':[],'current_raw':'0','peak_raw':'0','inventory_points':[],'t0':None,'t0_amount_status':'FAIL','hft':False,'accumulation_emitted':False,'multiple_emitted':False,'watch_at':None}
                     self.db.execute('INSERT OR IGNORE INTO v1_episodes VALUES(?,?,?)',(episode,person,mint))
                 if s is not None:
-                    event={'signature':row['signature'],'at':at,'slot':row['slot'],**t,'quote_quantity':quantity(t['quote_amount_raw'],t['quote_decimals']),'amount_predicate':'USDC_DIRECT_NUMERIC' if t['quote_asset']==USDC else 'UNDETERMINED'};s['events'].append(event)
+                    amount_predicate=t.get('amount_predicate') or ('USDC_DIRECT_NUMERIC' if t['quote_asset']==USDC else 'UNDETERMINED')
+                    if amount_predicate not in {'USDC_DIRECT_NUMERIC','SOL_EVENT_TIME_USDC_VERIFIED','UNDETERMINED'}:
+                        raise ValueError('TRADE_AMOUNT_PREDICATE_INVALID')
+                    event={'signature':row['signature'],'at':at,'slot':row['slot'],**t,'quote_quantity':quantity(t['quote_amount_raw'],t['quote_decimals']),'amount_predicate':amount_predicate};s['events'].append(event)
                     amount=int(t['token_amount_raw']);current=int(s['current_raw']) if s['current_raw'] is not None else None
                     if t['direction']=='BUY':
                         if current is not None:s['current_raw']=str(current+amount)

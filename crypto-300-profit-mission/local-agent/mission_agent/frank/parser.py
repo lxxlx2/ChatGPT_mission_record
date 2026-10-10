@@ -1,9 +1,12 @@
 """Integer raw-unit economic evidence; conservative mechanical classifications.
 
-Program identity primary references (retrieved 2026-10-01):
+Program identity primary references:
 https://github.com/raydium-io/raydium-library
 https://github.com/pump-fun/pump-public-docs/tree/main/idl
 https://github.com/MeteoraAg/dlmm-sdk/blob/main/idls/dlmm.json
+https://github.com/MeteoraAg/damm-v2-sdk
+https://github.com/orca-so/whirlpools
+https://github.com/Bonasa-Tech/manifest
 Registry membership never suffices without wallet authority, opposing owned
 flows and a swap instruction bound to the invoked recognized program.
 """
@@ -15,13 +18,32 @@ from .rpc import RPC,WALLET
 INFRA_PROGRAMS=frozenset({'11111111111111111111111111111111','TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA','TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb','ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL','ComputeBudget111111111111111111111111111111','MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr'})
 DEX_PROGRAMS=frozenset({'675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8',
                        'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'})
-PARSER_VERSION='frank-v7'
+PARSER_VERSION='frank-v8'
 WSOL='So11111111111111111111111111111111111111112'
-DEX_PROGRAMS=DEX_PROGRAMS | frozenset({'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK','CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C','pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA','6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P','LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo'})
+DEX_PROGRAMS=DEX_PROGRAMS | frozenset({
+    'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK',
+    'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C',
+    'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA',
+    '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P',
+    'LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo',
+    # Officially documented markets recovered by the historical coverage audit.
+    'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc',  # Orca Whirlpools
+    'cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG',  # Meteora DAMM v2
+    'MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms',  # Manifest core
+})
 AUTH_FIELDS=frozenset({'authority','owner','multisigAuthority','transferAuthority','delegate','withdrawAuthority','stakeAuthority'})
 AUTH_OWNER_TYPES=frozenset({'transfer','transferChecked','closeAccount','burn','burnChecked','approve','approveChecked','revoke','setAuthority'})
 
 class IncompleteTransaction(ValueError):pass
+
+def _program_id(ix,names):
+    program=ix.get('programId')
+    if program:return program
+    if 'programIdIndex' not in ix:return None
+    index=ix.get('programIdIndex')
+    if type(index) is not int or index<0 or index>=len(names):
+        raise IncompleteTransaction('PROGRAM_INDEX_INVALID')
+    return names[index]
 
 def normalize(signature,tx,wallet=WALLET):
     if tx is None:raise IncompleteTransaction('UNAVAILABLE_ON_PUBLIC_RPC')
@@ -42,8 +64,7 @@ def normalize(signature,tx,wallet=WALLET):
         for n,ix in enumerate(group['instructions']):all_ix.append(('inner',f"{group['index']}:{n}",ix))
     authorities=[];programs=set();created=[];closed=[];types=[]
     for scope,index,ix in all_ix:
-        program=ix.get('programId')
-        if not program and 'programIdIndex' in ix:program=names[ix['programIdIndex']]
+        program=_program_id(ix,names)
         if program:programs.add(program)
         parsed=ix.get('parsed',{});parsed=parsed if isinstance(parsed,dict) else {};info=parsed.get('info',{});kind=parsed.get('type','');types.append(kind)
         for field in sorted(AUTH_FIELDS):
@@ -61,6 +82,42 @@ def normalize(signature,tx,wallet=WALLET):
         if 'owner' not in identity:raise IncompleteTransaction('TOKEN_OWNER_MISSING')
         amount_pre=int(a['uiTokenAmount']['amount']) if a else 0;amount_post=int(b['uiTokenAmount']['amount']) if b else 0
         deltas.append({'mint':identity['mint'],'owner':identity['owner'],'pre_amount':str(amount_pre),'post_amount':str(amount_post),'delta':str(amount_post-amount_pre),'decimals':identity['uiTokenAmount']['decimals'],'account_index':index,'wallet_owned':identity['owner']==wallet})
+    # Preserve gross ordered wallet-owned token transfer legs. Net pre/post
+    # deltas alone cannot distinguish a final target from a routed intermediate
+    # that is received and mostly spent again inside the same atomic transaction.
+    account_meta={}
+    for d in deltas:
+        if 0<=d['account_index']<len(names):
+            account_meta[names[d['account_index']]]={'owner':d['owner'],'mint':d['mint']}
+    for account in created:
+        if account.get('account') and account.get('mint'):
+            account_meta.setdefault(account['account'],{'owner':account.get('owner'),'mint':account.get('mint')})
+    wallet_token_transfer_flows=[]
+    token_programs={'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA','TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'}
+    for scope,index,ix in all_ix:
+        parsed=ix.get('parsed',{});parsed=parsed if isinstance(parsed,dict) else {};info=parsed.get('info',{})
+        if parsed.get('type') not in ('transfer','transferChecked') or _program_id(ix,names) not in token_programs:continue
+        source=info.get('source');destination=info.get('destination')
+        source_meta=account_meta.get(source) or {};destination_meta=account_meta.get(destination) or {}
+        source_owned=source_meta.get('owner')==wallet;destination_owned=destination_meta.get('owner')==wallet
+        if source_owned==destination_owned:continue
+        raw=info.get('amount',info.get('tokenAmount',{}).get('amount'))
+        if raw is None:continue
+        mint=info.get('mint') or source_meta.get('mint') or destination_meta.get('mint')
+        if not mint:continue
+        decimals=info.get('tokenAmount',{}).get('decimals')
+        if decimals is None:
+            matched=next((d for d in deltas if d['mint']==mint and d['wallet_owned']),None)
+            decimals=matched.get('decimals') if matched else None
+        outer_index=int(str(index).split(':',1)[0])
+        inner_index=int(str(index).split(':',1)[1]) if scope=='inner' and ':' in str(index) else -1
+        wallet_token_transfer_flows.append({
+            'scope':scope,'instruction':str(index),'outer_index':outer_index,'inner_index':inner_index,
+            'mint':mint,'direction':'OUT' if source_owned else 'IN','raw_amount':str(int(raw)),
+            'decimals':decimals,'source':source,'destination':destination,
+        })
+    wallet_token_transfer_flows.sort(key=lambda x:(x['outer_index'],x['inner_index'],0 if x['direction']=='OUT' else 1))
+
     signer=keys[i]['signer'];fee_payer=i==0;fee=meta.get('fee')
     if type(fee) is not int:raise IncompleteTransaction('FEE_MISSING')
     sol_delta=post[i]-pre[i];economic_sol=sol_delta+(fee if fee_payer else 0)
@@ -74,13 +131,18 @@ def normalize(signature,tx,wallet=WALLET):
         parts=log.split()
         if len(parts)>=4 and parts[0]=='Program' and parts[2]=='invoke':stack.append(parts[1])
         elif len(parts)>=3 and parts[0]=='Program' and parts[2] in ('success','failed:'):
-            if parts[1] in stack:stack=stack[:stack.index(parts[1])]
+            if parts[1] in stack:
+                # Pop the innermost matching invocation. Re-entrant CPI can place
+                # the same program on the stack more than once.
+                pos=len(stack)-1-stack[::-1].index(parts[1])
+                stack=stack[:pos]
         elif log.startswith('Program log: Instruction: ') and stack and stack[-1] in DEX_PROGRAMS:
             kind=log.split('Instruction: ',1)[1].lower()
             if kind.startswith(('swap','route','sharedaccountsroute','buy','sell')):swap_instruction=True
     for _,_,ix in all_ix:
         parsed=ix.get('parsed',{})
-        if isinstance(parsed,dict) and ix.get('programId') in DEX_PROGRAMS:
+        program=_program_id(ix,names)
+        if isinstance(parsed,dict) and program in DEX_PROGRAMS:
             if parsed.get('type','').lower().startswith(('swap','route','sharedaccountsroute','buy','sell')):swap_instruction=True
     # A token account created and closed inside this transaction may be absent from
     # pre/post vectors. Preserve its decoded transfer flow separately from balances.
@@ -95,7 +157,7 @@ def normalize(signature,tx,wallet=WALLET):
         for scope,index,ix in all_ix:
             parsed=ix.get('parsed',{});parsed=parsed if isinstance(parsed,dict) else {};info=parsed.get('info',{})
             if parsed.get('type') not in ('transfer','transferChecked'):continue
-            if ix.get('programId') not in ('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA','TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'):continue
+            if _program_id(ix,names) not in ('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA','TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'):continue
             raw=info.get('amount',info.get('tokenAmount',{}).get('amount'))
             if raw is None:continue
             flow=(int(raw) if info.get('destination')==address else 0)-(int(raw) if info.get('source')==address else 0)
@@ -110,7 +172,7 @@ def normalize(signature,tx,wallet=WALLET):
     native_incoming=[]
     for scope,index,ix in all_ix:
         parsed=ix.get('parsed',{});parsed=parsed if isinstance(parsed,dict) else {};info=parsed.get('info',{})
-        if ix.get('programId')=='11111111111111111111111111111111' and parsed.get('type')=='transfer' and info.get('destination')==wallet:
+        if _program_id(ix,names)=='11111111111111111111111111111111' and parsed.get('type')=='transfer' and info.get('destination')==wallet:
             native_incoming.append({'scope':scope,'instruction':str(index),'source':info.get('source'),'lamports':str(info['lamports'])})
     if meta['err'] is not None:label='FAILED'
     elif active and dex and paired and swap_instruction:label='ACTIVE_SWAP_LIKE'
@@ -119,7 +181,7 @@ def normalize(signature,tx,wallet=WALLET):
     elif programs<=INFRA_PROGRAMS and active and any(k in ('transfer','transferChecked') for k in types) and values and all(x<=0 for x in values):label='TRANSFER_OUT_LIKE'
     elif programs<=INFRA_PROGRAMS and any(k in ('transfer','transferChecked') for k in types) and values and all(x>=0 for x in values):label='TRANSFER_IN_LIKE'
     else:label='UNKNOWN'
-    evidence={'parser_version':PARSER_VERSION,'decoded_transient_token_flows':transient,'native_incoming_transfer_evidence':native_incoming,'event_id':f'frank:tx:{signature}','signature':signature,'slot':tx['slot'],'block_time':tx.get('blockTime'),'tx_err':meta['err'],'fee':fee,'version':tx.get('version','legacy'),'wallet':wallet,'wallet_is_signer':signer,'wallet_is_fee_payer':fee_payer,'wallet_token_owner':any(d['wallet_owned'] for d in deltas),'authority_accounts':authorities,'inner_instruction_authority_evidence':[a for a in authorities if a['scope']=='inner' and a['is_authority_evidence']],'program_ids':sorted(programs),'pre_SOL_lamports':str(pre[i]),'post_SOL_lamports':str(post[i]),'SOL_delta_lamports':str(sol_delta),'fee_adjusted_SOL_delta_lamports':str(economic_sol),'token_balance_deltas':deltas,'created_token_accounts':created,'closed_token_accounts':closed,'instruction_count':len(outer),'inner_instruction_count':len(all_ix)-len(outer),'source_rpc':RPC,'mechanical_classification':label,'classification_evidence':{'wallet_authority':auth,'dex_program_interaction':dex,'swap_instruction_evidence':swap_instruction,'opposing_economic_flows':paired},'raw_transaction_sha256':hashlib.sha256(json.dumps(tx,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest(),'limitations':['SOL delta includes account rent; fee adjustment is not a swap cost','Unknown program decoders remain UNKNOWN; no PnL','Owner-level changes alone do not establish active swap']}
+    evidence={'parser_version':PARSER_VERSION,'decoded_transient_token_flows':transient,'wallet_token_transfer_flows':wallet_token_transfer_flows,'native_incoming_transfer_evidence':native_incoming,'event_id':f'frank:tx:{signature}','signature':signature,'slot':tx['slot'],'block_time':tx.get('blockTime'),'tx_err':meta['err'],'fee':fee,'version':tx.get('version','legacy'),'wallet':wallet,'wallet_is_signer':signer,'wallet_is_fee_payer':fee_payer,'wallet_token_owner':any(d['wallet_owned'] for d in deltas),'authority_accounts':authorities,'inner_instruction_authority_evidence':[a for a in authorities if a['scope']=='inner' and a['is_authority_evidence']],'program_ids':sorted(programs),'pre_SOL_lamports':str(pre[i]),'post_SOL_lamports':str(post[i]),'SOL_delta_lamports':str(sol_delta),'fee_adjusted_SOL_delta_lamports':str(economic_sol),'token_balance_deltas':deltas,'created_token_accounts':created,'closed_token_accounts':closed,'instruction_count':len(outer),'inner_instruction_count':len(all_ix)-len(outer),'source_rpc':RPC,'mechanical_classification':label,'classification_evidence':{'wallet_authority':auth,'dex_program_interaction':dex,'swap_instruction_evidence':swap_instruction,'opposing_economic_flows':paired},'raw_transaction_sha256':hashlib.sha256(json.dumps(tx,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest(),'limitations':['SOL delta includes account rent; fee adjustment is not a swap cost','Unknown program decoders remain UNKNOWN; no PnL','Owner-level changes alone do not establish active swap']}
     evidence['evidence_sha256']=digest(evidence);return evidence
 
 

@@ -22,6 +22,12 @@ def holders():
 def analyzer():
     a=WalletClusterAnalyzer("Mint",rpc=DummyRPC(),deep_holders=4,material_pct=Decimal("1"))
     a.holders=lambda:(1000,0,holders())
+    a.token_profile=lambda:{
+        "status":"OK","mint_authority":None,"freeze_authority":None,
+        "metadata_update_authority":"UNAVAILABLE","metadata_update_authority_status":"UNAVAILABLE",
+        "token_program":"SPL Token",
+    }
+    a.market_snapshot=lambda:{"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":"FIXTURE_DISABLED"}
     a._scan_funding=lambda *a,**k:None
     return a
 
@@ -164,3 +170,339 @@ def test_dev_linked_cluster_includes_probable_control_wallets():
     out=a.analyze()
     assert set(out["probable_control_clusters"][0]["wallets"])=={"A","B"}
     assert out["metrics"]["DEV_LINKED_CLUSTER_PCT"]=="35.0000"
+
+
+def test_full_report_exposes_bounded_holder_acquisition_and_conservative_conclusion():
+    a=analyzer()
+    a.token_profile=lambda:{
+        "status":"OK","mint_authority":None,"freeze_authority":None,
+        "metadata_update_authority":"UNAVAILABLE","metadata_update_authority_status":"UNAVAILABLE",
+        "token_program":"SPL Token",
+    }
+    a.market_snapshot=lambda:{
+        "status":"OK","source":"DEXSCREENER_API","price_usd":"0.001","market_cap_usd":"1000000",
+        "main_pair":{"liquidity_usd":"100000","volume":{"h24":"2000000"}},
+    }
+    def scan(h,mapping,top_owners):
+        if h.owner=="A":
+            a.trades.append({
+                "owner":"A","signature":"buy-a","block_time":100,"direction":"BUY",
+                "quote_asset":"SOL","quote_amount_raw":"12000000000","quote_decimals":9,
+                "token_amount_raw":"1000000","token_decimals":0,"program_ids":[],"signers":["A"],
+            })
+            return {
+                "block_time":100,"signature":"buy-a","type":"MARKET_BUY",
+                "quote_asset":"SOL","quote_amount_raw":"12000000000","quote_decimals":9,
+                "token_amount_raw":"1000000","token_decimals":0,"program_ids":[],
+            }
+        return None
+    a._scan_holder=scan
+    out=a.analyze()
+    assert out["schema_version"]==2
+    assert out["holders"][0]["first_acquisition"]["type"]=="MARKET_BUY"
+    assert out["holders"][0]["first_acquisition"]["quote_quantity"]=="12"
+    assert out["assessment"]["chain_permission_status"]=="PASS"
+    assert out["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
+    assert out["assessment"]["trading_status"]=="WATCH / WALLET_CLUSTER_UNRESOLVED"
+
+
+def token2022_profile(extension):
+    class RPC:
+        endpoint="test";calls=0;cache_hits=0
+        def call(self,*args,**kwargs):
+            return {"value":{
+                "owner":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                "data":{"parsed":{"info":{
+                    "mintAuthority":None,"freezeAuthority":None,"decimals":6,
+                    "supply":"1000000","isInitialized":True,"extensions":[extension],
+                }}},
+            }}
+    return WalletClusterAnalyzer("Mint",rpc=RPC(),deep_holders=1).token_profile()
+
+
+def test_token2022_zero_transfer_fee_with_revoked_authorities_is_inactive_not_risk():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{
+            "transferFeeConfigAuthority":None,
+            "withdrawWithheldAuthority":None,
+            "olderTransferFee":{"transferFeeBasisPoints":0,"maximumFee":0},
+            "newerTransferFee":{"transferFeeBasisPoints":0,"maximumFee":0},
+        },
+    })
+    assert profile["sensitive_extension_details"][0]["status"]=="INACTIVE"
+    assert profile["active_extension_risks"]==[]
+    assert profile["risk_flags"]==[]
+    a=analyzer();a.token_profile=lambda:profile
+    out=a.analyze()
+    assert out["assessment"]["chain_permission_status"]=="PASS"
+
+
+def test_token2022_nonzero_transfer_fee_is_active_risk_even_when_authority_revoked():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{
+            "transferFeeConfigAuthority":None,
+            "withdrawWithheldAuthority":None,
+            "olderTransferFee":{"transferFeeBasisPoints":25,"maximumFee":100},
+            "newerTransferFee":{"transferFeeBasisPoints":25,"maximumFee":100},
+        },
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="ACTIVE_RISK"
+    assert "TRANSFER_FEE_ACTIVE_OR_MUTABLE"==detail["reason"]
+    assert profile["active_extension_risks"]
+
+
+def test_token2022_disabled_hook_and_active_delegate_are_distinguished():
+    hook=token2022_profile({
+        "extension":"transferHook","state":{"authority":None,"programId":None}
+    })
+    assert hook["sensitive_extension_details"][0]["status"]=="INACTIVE"
+    delegate=token2022_profile({
+        "extension":"permanentDelegate","state":{"delegate":"Delegate1111111111111111111111111111111"}
+    })
+    assert delegate["sensitive_extension_details"][0]["status"]=="ACTIVE_RISK"
+
+
+def test_token2022_transfer_fee_missing_required_fields_stays_unresolved():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{"transferFeeConfigAuthority":None},
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert detail["reason"]=="TRANSFER_FEE_CONFIG_INCOMPLETE"
+    a=analyzer();a.token_profile=lambda:profile
+    out=a.analyze()
+    assert out["assessment"]["chain_permission_status"]=="UNRESOLVED"
+
+
+def test_token2022_single_older_schedule_with_duplicate_aliases_is_not_complete():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{
+            "transferFeeConfigAuthority":None,
+            "withdrawWithheldAuthority":None,
+            "olderTransferFee":{
+                "transferFeeBasisPoints":0,
+                "basisPoints":0,
+                "maximumFee":0,
+                "maxFee":0,
+            },
+        },
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert detail["reason"]=="TRANSFER_FEE_CONFIG_INCOMPLETE"
+    a=analyzer();a.token_profile=lambda:profile
+    assert a.analyze()["assessment"]["chain_permission_status"]=="UNRESOLVED"
+
+
+def test_token2022_transfer_fee_invalid_numeric_fields_stay_unresolved():
+    profile=token2022_profile({
+        "extension":"transferFeeConfig",
+        "state":{
+            "transferFeeConfigAuthority":None,
+            "withdrawWithheldAuthority":None,
+            "olderTransferFee":{"transferFeeBasisPoints":"invalid","maximumFee":"invalid"},
+            "newerTransferFee":{"transferFeeBasisPoints":"invalid","maximumFee":"invalid"},
+        },
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert detail["reason"]=="TRANSFER_FEE_CONFIG_INVALID"
+    a=analyzer();a.token_profile=lambda:profile
+    assert a.analyze()["assessment"]["chain_permission_status"]=="UNRESOLVED"
+
+
+def test_token2022_transfer_hook_missing_program_id_stays_unresolved():
+    profile=token2022_profile({
+        "extension":"transferHook",
+        "state":{"authority":None},
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert detail["reason"]=="TRANSFER_HOOK_CONFIG_INCOMPLETE"
+    a=analyzer();a.token_profile=lambda:profile
+    assert a.analyze()["assessment"]["chain_permission_status"]=="UNRESOLVED"
+
+
+def test_token2022_sensitive_but_unresolved_config_is_not_upgraded_to_active_risk():
+    profile=token2022_profile({
+        "extension":"confidentialTransferMint",
+        "state":{"autoApproveNewAccounts":False},
+    })
+    detail=profile["sensitive_extension_details"][0]
+    assert detail["status"]=="UNRESOLVED"
+    assert profile["active_extension_risks"]==[]
+    a=analyzer();a.token_profile=lambda:profile
+    out=a.analyze()
+    assert out["assessment"]["chain_permission_status"]=="UNRESOLVED"
+    assert out["assessment"]["trading_status"]=="WATCH / CHAIN_PERMISSION_UNRESOLVED"
+
+
+def test_adaptive_scan_deepens_suspicious_counterpart_beyond_initial_prefix():
+    a=analyzer()
+    a.deep_holders=2
+    a.history_per_holder=12
+    a.funding_lookback=8
+    a.adaptive_history_per_holder=30
+    a.adaptive_funding_lookback=12
+    calls=[]
+    progress=[]
+    a.progress_callback=lambda stage,details:progress.append((stage,dict(details)))
+    def scan(h,mapping,top_owners,history_limit=None):
+        calls.append((h.owner,history_limit))
+        if h.owner=="A" and history_limit==12:
+            a._edge("A","D","DIRECT_TOKEN_TRANSFER","tx-adaptive")
+        return {"block_time":100,"signature":"first-"+h.owner}
+    a._scan_holder=scan
+    a._scan_funding=lambda *args,**kwargs:None
+    out=a.analyze()
+    assert ("A",12) in calls and ("B",12) in calls
+    assert ("A",30) in calls
+    assert ("D",30) in calls
+    assert ("B",30) not in calls
+    assert out["coverage"]["scan_mode"]=="ADAPTIVE"
+    assert out["coverage"]["adaptive_deepened_owners"]==["A","D"]
+    stages=[x[0] for x in progress]
+    assert "BASE_READY" in stages
+    assert "HOLDERS_READY" in stages
+    assert "ADAPTIVE_DEEPEN" in stages
+    assert "FINALIZING" in stages
+
+def test_adaptive_scan_deepens_material_unresolved_owner_outside_initial_prefix():
+    rows=[
+        Holder("ta1","A",200,0,"ORDINARY","test"),
+        Holder("ta2","B",150,0,"ORDINARY","test"),
+        Holder("ta3","C",100,0,"ORDINARY","test"),
+        Holder("ta4","D",80,0,"ORDINARY","test"),
+        Holder("ta5","E",70,0,"ORDINARY","test"),
+        Holder("ta6","F",60,0,"ORDINARY","test"),
+        Holder("ta7","G",50,0,"UNRESOLVED","test"),
+    ]
+    a=analyzer()
+    a.holders=lambda:(1000,0,rows)
+    a.deep_holders=2
+    a.history_per_holder=12
+    a.funding_lookback=8
+    a.adaptive_history_per_holder=30
+    a.adaptive_funding_lookback=12
+    calls=[]
+    a._scan_holder=lambda h,m,t,history_limit=None:(calls.append((h.owner,history_limit)) or {"block_time":100,"signature":"first-"+h.owner})
+    a._scan_funding=lambda *args,**kwargs:None
+    out=a.analyze()
+    assert ("G",12) not in calls
+    assert ("G",30) in calls
+    assert "G" in out["coverage"]["adaptive_deepened_owners"]
+
+
+
+def test_cex_batch_with_synchronized_buys_is_not_control_cluster():
+    a=analyzer()
+    a.registry={"normalization_complete":False,
+                "addresses":{"HOT":{"role":"CEX","source":"review-fixture"}}}
+    def scan(holder,*args):
+        if holder.owner in {"A","B"}:
+            a.funding.append({"owner":holder.owner,"source":"HOT",
+                              "lamports":"5000000","signature":"cex-batch-tx",
+                              "block_time":80})
+            a.trades.append({"owner":holder.owner,"signature":"buy-"+holder.owner,
+                             "block_time":100 if holder.owner=="A" else 101,
+                             "direction":"BUY","quote_asset":"SOL",
+                             "quote_amount_raw":"100","quote_decimals":9,
+                             "program_ids":["DEX"],"signers":[holder.owner]})
+        return {"block_time":100,"signature":"first-"+holder.owner}
+    a._scan_holder=scan
+    report=a.analyze()
+    assert report["probable_control_clusters"]==[]
+    assert any(x["type"]=="COMMON_FUNDER_CEX" for x in report["shared_infrastructure_exclusions"])
+    assert not any(x["type"]=="BATCH_FUNDING" for x in report["edges"])
+
+
+def test_rpc_secret_never_emitted_in_report():
+    a=analyzer()
+    secret="SECRET123"
+    url="https://example.com/rpc?api-key="+secret
+    class AuthRPC:
+        endpoint=url
+        endpoints=[url,"https://fallback.example.net"]
+        endpoint_calls={url:3}
+        endpoint_failures={url:1}
+        calls=3
+        cache_hits=0
+    a.rpc=AuthRPC()
+    a._scan_holder=lambda *args:None
+    report=a.analyze()
+    import json
+    serialized=json.dumps(report)
+    assert secret not in serialized
+    assert url not in serialized
+    assert report["rpc_endpoint"]=="PRIMARY"
+    assert report["coverage"]["rpc_endpoint_calls"]=={"PRIMARY":3}
+    assert report["coverage"]["rpc_endpoint_failures"]=={"PRIMARY":1}
+
+
+def test_rpc_secret_stays_out_of_persisted_latest_and_loader(tmp_path):
+    from mission_agent.mission_control.server import ClusterJobManager, _atomic_write_text
+    import json
+    mint="So11111111111111111111111111111111111111112"
+    secret="SECRET123"
+    a=analyzer()
+    a.mint=mint
+    url="https://rpc.example.com/?api-key="+secret
+    class AuthRPC:
+        endpoint=url
+        endpoints=[url]
+        endpoint_calls={url:1}
+        endpoint_failures={url:0}
+        calls=1
+        cache_hits=0
+    a.rpc=AuthRPC()
+    a._scan_holder=lambda *args:None
+    report=a.analyze()
+    manager=ClusterJobManager(tmp_path/"root")
+    report_path=manager.report_root/mint/"latest.json"
+    report_path.parent.mkdir(parents=True,exist_ok=True)
+    _atomic_write_text(report_path,json.dumps(report,sort_keys=True))
+    persisted=report_path.read_text()
+    api_payload=json.dumps(manager.latest(mint),sort_keys=True)
+    assert secret not in persisted
+    assert secret not in api_payload
+    assert url not in persisted
+    assert url not in api_payload
+
+
+def test_unknown_batch_with_sync_buy_keeps_cluster_unresolved():
+    a=analyzer()
+    a.registry={"normalization_complete":True,"addresses":{}}
+    def scan(holder,*args):
+        if holder.owner in {"A","B"}:
+            a.funding.append({"owner":holder.owner,"source":"UNKNOWN",
+                              "lamports":"5000000","signature":"same-tx","block_time":80})
+            a.trades.append({"owner":holder.owner,"signature":"buy-"+holder.owner,
+                             "block_time":100 if holder.owner=="A" else 101,
+                             "direction":"BUY","quote_asset":"SOL",
+                             "quote_amount_raw":"10","quote_decimals":9,
+                             "program_ids":[],"signers":[holder.owner]})
+        return {"block_time":100,"signature":"first-"+holder.owner}
+    a._scan_holder=scan
+    report=a.analyze()
+    assert not report["probable_control_clusters"]
+    assert report["assessment"]["cluster_status"]=="WALLET_CLUSTER_UNRESOLVED"
+    assert "COMMON_FUNDER_UNRESOLVED" in {e["type"] for e in report["edges"]}
+
+
+def test_authenticated_rpc_endpoint_validator_excludes_unsafe_urls():
+    import pytest
+    from mission_agent.meme.cluster import SolanaReadOnlyRPC
+    for url in (
+        "api.example.com/?api-key=SECRET123",
+        "http://api.example.com/?api-key=SECRET123",
+        "https://api.example.com/ with-space",
+        "https://user:SECRET123@api.example.com/rpc",
+    ):
+        with pytest.raises(ValueError,match="RPC_ENDPOINT_INVALID") as exc:
+            SolanaReadOnlyRPC(url,fallback_endpoints=[])
+        assert "SECRET123" not in str(exc.value)

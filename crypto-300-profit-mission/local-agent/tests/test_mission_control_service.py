@@ -43,7 +43,7 @@ def add_candidate(root: Path, *, mint="Mint222", episode="ep2", signal="signal2"
 
 
 def policy(path: Path, *, status="REVIEW_ONLY", live=False):
-    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":status,"live_delivery_approved":live,"decision":{"quote_usdc_amount":"30","slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"max_frank_buy_age_seconds":600,"initial_notification_max_age_seconds":600,"max_candidates_per_cycle":50,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
+    path.write_text(json.dumps({"schema_version":1,"policy_id":"P1","status":status,"live_delivery_approved":live,"decision":{"quote_usdc_amount":"30","observation_retention_seconds":5184000,"slippage_bps":100,"quote_cache_seconds":20,"max_quote_age_seconds":30,"max_frank_buy_age_seconds":600,"initial_notification_max_age_seconds":600,"max_candidates_per_cycle":50,"hard_no_buy_position_states":["CLOSED","INVENTORY_UNDETERMINED"],"buy":{"required_pattern":"MULTIPLE","max_price_deviation_pct":"8","max_price_impact_pct":"1.5"},"small_buy":{"allowed_patterns":["MULTIPLE","ACCUMULATION"],"max_price_deviation_pct":"20","max_price_impact_pct":"3"}}}))
 
 
 def good_quote():
@@ -226,3 +226,149 @@ def test_fresh_signal_registers_forward_outcome_but_old_bootstrap_does_not(tmp_p
     old.cycle()
     assert old.control.db.execute("select count(*) from outcome_tracks").fetchone()[0]==0
     old.close()
+
+
+def test_live_service_uses_base_candidates_without_requesting_shadow_candidates(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=pol)
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:good_quote()
+    service.sol_mirror.sync=lambda:{"status":"OK","sol_resolved":999}
+    def forbidden_shadow():
+        raise AssertionError("SOL_SHADOW_CANDIDATES_USED_IN_LIVE_DECISION")
+    service.sol_mirror.candidates=forbidden_shadow
+    result=service.cycle()
+    assert len(result["decision_events"])==1
+    assert result["decision_events"][0]["mint"]=="Mint111"
+    service.close()
+
+
+def test_cycle_ignores_sol_candidates_returned_by_sync_and_keeps_outbox_scope(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=pol)
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:good_quote()
+    base=service.frank.candidates()
+    assert len(base)==1
+    shadow={**base[0],"mint":"SOL_SHADOW_NOT_AUTHORIZED",
+            "candidate_source":"SOL_NORMALIZED_SIDECAR",
+            "source_signal_id":"SHADOW_FAKE_SIGNAL"}
+    service.sol_mirror.sync=lambda:{"status":"OK","copied":0,
+                                    "candidates":[shadow],"overlay_candidates":[shadow],
+                                    "sol_resolved":2}
+    result=service.cycle()
+    assert result["candidate_count"]==1
+    assert [event["mint"] for event in result["decision_events"]]==["Mint111"]
+    persisted=[r[0] for r in service.control.db.execute("SELECT mint FROM candidate_latest").fetchall()]
+    assert persisted==["Mint111"]
+    outbox=service.control.db.execute("SELECT count(*) FROM decision_outbox").fetchone()[0]
+    assert outbox==2
+    destinations=service.control.db.execute(
+        """SELECT DISTINCT events.mint FROM decision_outbox AS queue
+           JOIN decision_events AS events ON queue.decision_id=events.decision_id"""
+    ).fetchall()
+    assert [row[0] for row in destinations]==["Mint111"]
+    # sync diagnostics are research output and may contain the injected
+    # shadow candidate. Decision/outbox records must still remain Frank-only.
+    assert all(event["mint"]!="SOL_SHADOW_NOT_AUTHORIZED"
+               for event in result["decision_events"])
+    assert "SOL_SHADOW_NOT_AUTHORIZED" not in json.dumps(
+        [json.loads(row[0]) for row in service.control.db.execute(
+            "SELECT body FROM decision_events").fetchall()])
+    service.close()
+
+
+def test_candidate_exception_does_not_persist_secret_in_health_or_result(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=pol)
+    secret="CREDENTIAL_LEAK_SAMPLE"
+    service.sol_mirror.sync=lambda:{"status":"OK"}
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:(
+        _ for _ in ()).throw(RuntimeError("https://rpc.example/?api-key="+secret))
+    result=service.cycle()
+    assert result["candidate_errors"]
+    assert secret not in json.dumps(result)
+    assert secret not in (control/"mission-control-health.json").read_text()
+    service.close()
+
+
+def test_mission_loop_denies_rejected_retention_even_if_candidate_sha_matches(tmp_path):
+    prod=tmp_path/"prod";make_prod(prod)
+    pol=tmp_path/"policy.json"
+    policy(pol,status="FROZEN_APPROVED",live=True)
+    expected=hashlib.sha256(pol.read_bytes()).hexdigest()
+    good=MissionMemeService(production_root=prod,control_root=tmp_path/"good-control",
+                            policy_path=pol,live_delivery=True,
+                            approved_policy_sha256=expected)
+    assert good.delivery_allowed is True
+    good.close()
+    changed=json.loads(pol.read_text())
+    changed["decision"]["observation_retention_seconds"]=1
+    pol.write_text(json.dumps(changed))
+    new_digest=hashlib.sha256(pol.read_bytes()).hexdigest()
+    rejected=MissionMemeService(production_root=prod,control_root=tmp_path/"bad-control",
+                                policy_path=pol,live_delivery=True,
+                                approved_policy_sha256=new_digest)
+    assert rejected.delivery_allowed is False
+    rejected.close()
+
+
+
+def test_service_preserves_quote_observation_and_uses_frozen_gmail_max_age(tmp_path):
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    content=json.loads(pol.read_text())
+    content["decision"]["initial_notification_max_age_seconds"]=543
+    pol.write_text(json.dumps(content))
+    service=MissionMemeService(
+        production_root=prod,control_root=control,policy_path=pol
+    )
+    assert service.gmail.max_decision_age_seconds==543
+    quote=good_quote()
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:quote
+    result=service.cycle()
+    assert result["decision_events"][0]["decision"]=="BUY"
+    event=json.loads(service.control.db.execute(
+        "SELECT body FROM decision_events"
+    ).fetchone()[0])
+    assert event["inputs"]["quote_observed_at"]==str(quote["observed_at"])
+    assert "observed_at" not in event["inputs"]["quote"]
+    gmail=service.control.db.execute(
+        "SELECT body FROM gmail_delivery"
+    ).fetchone()[0]
+    assert "Jupiter 报价观察时间：" in gmail
+    assert "决策时 $30 报价：" in gmail
+    assert "当前可成交价：" not in gmail
+    service.close()
+
+
+
+def test_cycle_reports_wait_latency_and_manual_review_counts_without_sending(tmp_path):
+    from mission_agent.mission_control.server import DashboardState
+    prod=tmp_path/"prod";control=tmp_path/"control";pol=tmp_path/"policy.json"
+    make_prod(prod);policy(pol)
+    service=MissionMemeService(production_root=prod,control_root=control,policy_path=pol)
+    service.jupiter.quote_usdc_to_token=lambda *args,**kwargs:good_quote()
+    result=service.cycle()
+    assert result["delivery_allowed"] is False
+    assert result["decision_events"][0]["notification_enqueued"] is True
+    assert result["cycle_elapsed_seconds"]>=0
+    assert result["pre_delivery_wait_seconds"] is not None
+    assert result["pre_delivery_wait_seconds"]>=0
+    before=DashboardState(prod,control).mission_control_health()
+    assert before["manual_review_total_count"]==0
+    assert before["manual_review_local_count"]==0
+    assert before["manual_review_gmail_count"]==0
+    service.control.db.execute(
+        "UPDATE decision_outbox SET status='MANUAL_REVIEW' WHERE channel IN ('local','gmail')"
+    )
+    service._write_health("OK",cycle_elapsed_seconds=1.5,pre_delivery_wait_seconds=0.4)
+    health=DashboardState(prod,control).mission_control_health()
+    assert health["manual_review_total_count"]==2
+    assert health["manual_review_local_count"]==1
+    assert health["manual_review_gmail_count"]==1
+    assert health["cycle_elapsed_seconds"]==1.5
+    assert health["pre_delivery_wait_seconds"]==0.4
+    assert "email" not in health
+    service.close()

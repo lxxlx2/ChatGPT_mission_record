@@ -10,8 +10,7 @@
   <header class="topbar">
     <div>
       <div class="eyebrow">$300 → $3000 MISSION · MEME</div>
-      <h1>Meme 研究控制台</h1>
-      <div class="subtitle">Frank 信号 · CA 链上研究 · 只读 · 不自动交易</div>
+      <h1 id="product-title">Frank 信号</h1>
     </div>
     <div class="runtime" id="runtime">正在读取 Frank 状态…</div>
   </header>
@@ -25,23 +24,23 @@
     <div id="signals-view" class="view-pane active">
     <section class="stats" id="stats"></section>
 
-    <section class="legend">
-      <span><b class="dot buy-dot"></b>可跟：当前满足强信号和执行条件</span>
-      <span><b class="dot small-dot"></b>小仓：可以跟，但条件弱一档</span>
-      <span><b class="dot wait-dot"></b>等待：暂时不要追，等新买入或更好价格</span>
-      <span><b class="dot no-dot"></b>不跟：Frank 已退出、仓位异常或无执行路径</span>
-    </section>
+    <details class="panel ended-panel" id="coverage-details"><summary>数据来源与覆盖范围</summary><div class="coverage-strip" id="coverage">正在读取本地索引范围…</div></details>
 
     <section class="panel">
       <div class="panel-title">
-        <div>
-          <h2>当前跟单候选</h2>
-          <p>先看“结论 + 原因”，需要自己研究时直接复制 CA。</p>
-        </div>
+        <div><h2>当前跟单机会</h2></div>
         <span id="updated">未刷新</span>
       </div>
       <div id="candidates" class="candidate-list"></div>
     </section>
+    <section class="panel">
+      <div class="panel-title"><div><h2>Frank 最近买卖</h2></div></div>
+      <div id="trades" class="feed"></div>
+    </section>
+    <details class="panel ended-panel" id="decision-history">
+      <summary><div><h2>历史判断记录</h2></div><span class="summary-hint">展开</span></summary>
+      <div id="decisions" class="feed"></div>
+    </details>
 
     <details class="panel ended-panel" id="ended-panel" hidden>
       <summary>
@@ -54,118 +53,93 @@
       <div id="ended" class="ended-list"></div>
     </details>
 
-    <section class="grid">
-      <section class="panel">
-        <div class="panel-title">
-          <div>
-            <h2>Frank 最近交易</h2>
-            <p>中文动作 + CA/交易哈希快捷复制。</p>
-          </div>
+    <details class="panel ended-panel" id="review-activity-panel" hidden>
+      <summary>
+        <div>
+          <h2>待复核链上行为 <span id="review-activity-count">0</span></h2>
+          <p>Frank 已签名且存在链上经济流；部分事件已具备 swap 证据，部分仍缺市场/指令绑定或无法归约成单目标交易。这里只展示事实，不进入跟随信号。</p>
         </div>
-        <div id="trades" class="feed"></div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-title">
-          <div>
-            <h2>跟单判断变化</h2>
-            <p>只记录 Decision 状态真正发生变化的时点。</p>
-          </div>
-        </div>
-        <div id="decisions" class="feed"></div>
-      </section>
-    </section>
+        <span class="summary-hint">展开查看</span>
+      </summary>
+      <div id="review-activity" class="feed"></div>
+    </details>
     </div>
 
     <div id="cluster-view" class="view-pane">
-      <section class="cluster-hero">
-        <div>
-          <div class="eyebrow">MEME ON-CHAIN RESEARCH</div>
-          <h2>CA 链上结构查询</h2>
-          <p>输入 Solana CA，自动分析 Top20、实际 owner、资金来源、内部转账和控制/执行集群。只读、免费、证据优先。</p>
-        </div>
-        <div class="cluster-trust">
-          <span>Finalized RPC</span>
-          <span>本地缓存</span>
-          <span>不猜身份</span>
-        </div>
-      </section>
-
       <section class="cluster-search panel">
         <form id="cluster-form">
           <label for="cluster-mint">Solana CA</label>
           <div class="cluster-search-row">
             <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴 token CA" />
             <select id="cluster-preset" name="preset" title="扫描深度">
-              <option value="quick">快速</option>
-              <option value="standard" selected>标准</option>
+              <option value="quick" selected>快速</option>
+              <option value="standard">标准</option>
               <option value="deep">深度</option>
             </select>
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">标准：Top20 owner，深扫前 10 个 owner，兼顾速度和可信度。</div>
+          <div class="cluster-preset-help" id="cluster-preset-help">快速模式：先查权限、主池与 Top20 地址；需要深度钱包归因时再切换模式。</div>
+
         </form>
       </section>
 
       <section id="cluster-status" class="cluster-status" hidden></section>
+      <section id="cluster-preview" class="cluster-preview" hidden aria-live="polite"></section>
 
       <section id="cluster-result" class="cluster-result" hidden>
         <div class="cluster-summary" id="cluster-summary"></div>
-
+        <section class="panel conclusion-panel">
+          <div class="panel-title"><div><h2>快速判断</h2><p>合约风险、筹码集中与市场可交易性。未确认的数据保持未确认。</p></div></div>
+          <div id="cluster-conclusion" class="cluster-conclusion"></div>
+        </section>
         <section class="panel">
-          <div class="panel-title">
-            <div>
-              <h2>集中度</h2>
-              <p>严格指标未完成身份归一化时会直接显示“未确认”，不会用猜测值代替。</p>
-            </div>
-          </div>
-          <div class="cluster-metrics" id="cluster-metrics"></div>
+          <div class="panel-title"><div><h2>行情与交易条件</h2><p>市场参考行情与 Jupiter 可执行报价分开显示，点击 CA 可跳转交易。</p></div></div>
+          <div id="cluster-market" class="fact-grid"></div>
         </section>
-
-        <section class="grid cluster-grid">
-          <section class="panel">
-            <div class="panel-title">
-              <div>
-                <h2>Top20 实际 Owner</h2>
-                <p>token account 已解析到 owner；角色未确认时保留“未确认”。</p>
-              </div>
-            </div>
-            <div class="holder-table-wrap">
-              <table class="holder-table">
-                <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th></tr></thead>
-                <tbody id="cluster-holders"></tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-title">
-              <div>
-                <h2>证据与覆盖率</h2>
-                <p>所有自动结论都附带扫描范围和未解决项。</p>
-              </div>
-            </div>
-            <div id="cluster-coverage" class="cluster-coverage"></div>
-          </section>
-        </section>
-
-        <section class="grid cluster-grid">
-          <section class="panel">
-            <div class="panel-title"><div><h2>关系 / 控制集群</h2><p>确认关系和 probable control 分开显示。</p></div></div>
-            <div id="cluster-control" class="cluster-list"></div>
-          </section>
-          <section class="panel">
-            <div class="panel-title"><div><h2>执行集群</h2><p>执行同步不等于共同所有权。</p></div></div>
-            <div id="cluster-execution" class="cluster-list"></div>
-          </section>
-        </section>
-
         <section class="panel">
-          <div class="panel-title">
-            <div><h2>原始证据摘要</h2><p>共同资金源、直接转账、同步交易、共同签名等。</p></div>
-          </div>
-          <div id="cluster-evidence" class="cluster-evidence"></div>
+          <div class="panel-title"><div><h2>筹码集中度</h2><p>优先看 Top10、开发者关联与未确认持仓。严格数据不足时不会显示安全结论。</p></div></div>
+          <div id="cluster-metrics" class="cluster-metrics"></div>
         </section>
+        <section class="panel">
+          <div class="panel-title"><div><h2>前 20 大实际持有人</h2><p>账户已解析到 Owner；建仓记录来自有限历史采样，未扫描时明确标记。</p></div></div>
+          <div class="holder-table-wrap">
+            <table class="holder-table">
+              <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>资金来源</th><th>首次买入记录</th></tr></thead>
+              <tbody id="cluster-holders"></tbody>
+            </table>
+          </div>
+        </section>
+        <details class="panel cluster-detail-fold">
+          <summary>展开完整链上证据和技术细节</summary>
+          <div class="cluster-detail-body">
+            <section class="panel">
+              <div class="panel-title"><div><h2>代币合约与权限详情</h2><p>来自 finalized RPC，包含 Token-2022 敏感扩展。</p></div></div>
+              <div id="cluster-token-profile" class="fact-grid"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-title"><div><h2>证据覆盖率</h2><p>未解析的所有权和 RPC 缺口会保留。</p></div></div>
+              <div id="cluster-coverage" class="cluster-coverage"></div>
+            </section>
+            <div class="grid cluster-grid">
+              <section class="panel">
+                <div class="panel-title"><div><h2>关系 / 控制集群</h2><p>确认关系与可能共同控制分开。</p></div></div>
+                <div id="cluster-control" class="cluster-list"></div>
+              </section>
+              <section class="panel">
+                <div class="panel-title"><div><h2>同步交易钱包</h2><p>相似交易不等于同一所有人。</p></div></div>
+                <div id="cluster-execution" class="cluster-list"></div>
+              </section>
+            </div>
+            <section class="panel">
+              <div class="panel-title"><div><h2>原始证据摘要</h2><p>可复核共同资金源、直接转账和同步交易。</p></div></div>
+              <div id="cluster-evidence" class="cluster-evidence"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-title"><div><h2>项目链接</h2><p>未接入实时 X / FOMO 叙事检索，不作背书。</p></div></div>
+              <div id="cluster-narrative" class="cluster-narrative"></div>
+            </section>
+          </div>
+        </details>
       </section>
     </div>
   </main>

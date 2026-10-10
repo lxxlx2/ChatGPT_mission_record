@@ -104,12 +104,12 @@ class SolNormalizedMirror:
             initialized=self._meta("initialized","0")=="1"
             if initialized:
                 rows=source.execute(
-                    "SELECT rowid,wallet,signature,person_id,slot,block_time,seen_at,classified_at,raw_hash,raw_reference,body FROM signatures WHERE rowid>? ORDER BY block_time,slot,signature",
+                    "SELECT rowid,wallet,signature,person_id,slot,block_time,seen_at,classified_at,raw_hash,raw_reference,body FROM signatures WHERE rowid>? AND person_id='frank' ORDER BY block_time,slot,signature",
                     (max_rowid,),
                 ).fetchall()
             else:
                 rows=source.execute(
-                    "SELECT rowid,wallet,signature,person_id,slot,block_time,seen_at,classified_at,raw_hash,raw_reference,body FROM signatures ORDER BY block_time,slot,signature"
+                    "SELECT rowid,wallet,signature,person_id,slot,block_time,seen_at,classified_at,raw_hash,raw_reference,body FROM signatures WHERE person_id='frank' ORDER BY block_time,slot,signature"
                 ).fetchall()
             latest_time=None
             last_source_time=int(self._meta("last_source_block_time","0") or 0)
@@ -133,7 +133,16 @@ class SolNormalizedMirror:
                         if ref.get("reason") in FATAL_ACCESS_REASONS:
                             sol_unresolved+=1;failures[ref["reason"]]=failures.get(ref["reason"],0)+1
                         elif ref.get("status")=="VERIFIED":
-                            body=normalize_classification(classified,ref,for_model=True);sol_resolved+=1
+                            body=normalize_classification(classified,ref,for_model=False)
+                            normalized_trade=body.get("trade") or {}
+                            if (
+                                normalized_trade.get("quote_usdc_status")=="SOL_EVENT_TIME_USDC_VERIFIED"
+                                and normalized_trade.get("quote_asset") in SOL_QUOTE_ASSETS
+                            ):
+                                sol_resolved+=1
+                            else:
+                                sol_unresolved+=1
+                                failures["SOL_QUOTE_PROVENANCE_INELIGIBLE"]=failures.get("SOL_QUOTE_PROVENANCE_INELIGIBLE",0)+1
                         else:
                             sol_unresolved+=1;reason=ref.get("reason") or "SOL_REFERENCE_UNAVAILABLE";failures[reason]=failures.get(reason,0)+1
                 self._insert_signature(row,body);copied+=1
@@ -142,16 +151,16 @@ class SolNormalizedMirror:
                 self.engine.drain(until=latest_time)
                 self._set_meta("last_source_rowid",max_rowid);self._set_meta("initialized","1")
                 if latest_time is not None:self._set_meta("last_source_block_time",latest_time)
-            source_signals={r[0] for r in source.execute("SELECT signal_id FROM signals")}
-            mirror_signals={r[0] for r in self.db.execute("SELECT signal_id FROM signals")}
+            source_signals={r[0] for r in source.execute("SELECT signal_id FROM signals WHERE person_id='frank'")}
+            mirror_signals={r[0] for r in self.db.execute("SELECT signal_id FROM signals WHERE person_id='frank'")}
             added=sorted(mirror_signals-source_signals)
             return {"status":"OK","copied":copied,"sol_trades":sol_trades,"sol_resolved":sol_resolved,"sol_unresolved":sol_unresolved,"failures":failures,"added_signal_count":len(added),"added_signal_ids":added[:50],"sidecar":str(self.sidecar_db)}
         except Exception as exc:
-            return {"status":"DEGRADED","error":type(exc).__name__,"message":str(exc)[:240],"copied":copied,"sol_trades":sol_trades,"sol_resolved":sol_resolved,"sol_unresolved":sol_unresolved,"failures":failures,"sidecar":str(self.sidecar_db)}
+            return {"status":"DEGRADED","error":type(exc).__name__,"message":"SOL_NORMALIZATION_FAILED","copied":copied,"sol_trades":sol_trades,"sol_resolved":sol_resolved,"sol_unresolved":sol_unresolved,"failures":failures,"sidecar":str(self.sidecar_db)}
         finally:
             source.close()
     def candidates(self):
-        rows=self.db.execute("SELECT person_id,mint,body FROM v1_states").fetchall();result=[]
+        rows=self.db.execute("SELECT person_id,mint,body FROM v1_states WHERE person_id='frank'").fetchall();result=[]
         for row in rows:
             try:state=json.loads(row["body"])
             except (TypeError,ValueError):continue

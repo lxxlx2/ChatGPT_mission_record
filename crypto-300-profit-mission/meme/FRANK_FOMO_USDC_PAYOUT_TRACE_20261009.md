@@ -1,0 +1,60 @@
+# Frank Solana USDC: three FOMO-cosigned third-party payout traces (2026-10-09)
+
+Status: **CHAIN_TX_TRACES_OBSERVED / ECONOMIC_PURPOSE_UNCONFIRMED / FRANK_TRADES_NOT_CONFIRMED**.
+
+## Provenance, scope, and limitations
+
+User ran the review-only `scripts/audit_frank_partial_trace.py` from pinned PR #29 code `f70952ae97655e00691173bf753ff66cfe1a73a2` on Mac. Operator-pasted result: `status=TRACE_REVIEW_ONLY`, `rpc_attempts=3`, `all_sample_traces_complete=true`, exit 0. That script checks each fetched `getTransaction` against the SHA-256 digest of its existing local decoded receipt, then saves trace receipts. This document records **the provided output**. It does not claim independent new RPC access or that the unprinted unparsed instruction bytes/order IDs were independently decoded.
+
+Fixed audit scope: Frank Solana main wallet `498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ`; known owned USDC token account `6kD22oUQrV8tVpE2hkQzkoobwCQAy2iiZcipWn8AD5jF`; USDC mint `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`. Root-only cached list had 173 main-wallet-referenced signatures, while the unfinished USDC-account scan collected 686 in-window signatures, 684 absent from the root list. **Signature membership does not prove 684 Frank BUY/SELL events.**
+
+## Three real transaction traces, separate from Frank's root wallet
+
+| Tx signature (prefix) | Fee payer | Frank-owned USDC net receipt | Funding/source in same tx | Program and signer evidence |
+|---|---|---:|---|---|
+| `VTj1ZEHE8SRA...` | `AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51` | +0.265050 USDC | `GnvuWxnim8pTf8c83rPBtg3eKn7RByn55WAukQSnqwkQ` owns USDC account `43n5tkYnvyoBDr5oMRfwc7gf17fUpD3eABxHrh1NpgPp`, -33.135284 USDC; split +32.472658 elsewhere, +0.397576 elsewhere, +0.265050 to Frank | FOMO cosigner present; `DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH` present; other-owner token/W SOL movements; no Frank target token delta |
+| `5e4Yhedz6hVhWQK...` | same FOMO cosigner | +0.475000 USDC | `3ZnJCjxJqj2YSaDTxbPAnFNXBjA6i8C8UCvhoJf9J43V` owns USDC account `BPpVKs57AEeWVy22BXVcGn5NG8zsgn655Uio7cupZXiM`, -100 USDC; split +97.425580, +1.624420, +0.380000, +0.095000, +0.475000 (Frank) | FOMO cosigner; `JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4` present; other-owner token/W SOL movements; no Frank target token delta |
+| `5S6iHKmP5NBCyqv...` | same FOMO cosigner | +0.475000 USDC | `BafcHutB6YAA29XJvwThwR6Nust813q2fKMikLMGr1PG` owns USDC account `8mb39MavteRoUmEvByR3UErHkEL4wKcMJF2mr4BLRgq5`, -100 USDC; split +99.050000, +0.380000, +0.095000, +0.475000 (Frank) | FOMO cosigner; `proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u` present; other-owner pump-token/W SOL movements; no Frank target token delta |
+
+Exact signatures:
+- `VTj1ZEHE8SRAjJcpWiTu1RMr6xZoxoYKUidtSK9XCucgviF4vaExybXHS7FKnk1pZNEbxzngNmeMgwTKBZX2P2r`
+- `5e4Yhedz6hVhWQKjrKgobyfVEQR4Gz33BY13dgiQko5tywZqy9j4WknTAAoNM3EL9PUc3ECuRyfFdun7n3YM4BxM`
+- `5S6iHKmP5NBCyqvjsftqVLMLWc3SM18QDsmGqNk7SPsiURDqmD49fdFoPrmZJP4HRKoqwaz7pRxXUKgvw1Snjvem`
+
+For **all three**, `tx_succeeded=true`, `frank_root_signed=false`, `fomo_cosigned=true`, `relay_solver_signed=false`. Their trace instructions directly show non-Frank USDC source accounts paying Frank's USDC associated account, with other participants executing token movements. Combined sample Frank receipt is **+1.215050 USDC**; this is NOT measured profit, trading P&L, or confirmed sale proceeds.
+
+## Interpretation / decision
+
+**Confirmed:** these three root-absent signatures are FOMO-cosigned third-party funded **USDC credit/distribution events to an account belonging to Frank**, not Frank-root-signed swaps. In tx 2 and tx 3 the identical 100-USDC funded transactions both allocate 0.475 to Frank, 0.095 to another recipient, and 0.38 to another recipient. The consistent split strongly suggests a **route fee share, rebate or referral distribution**; none of these economic explanations is independently proved from decoded order identifiers or platform records.
+
+**Not confirmed:** Frank initiated these trades, Frank sold or bought the other participants' tokens, Frank received trading P&L, the three samples are representative of all 684 root-absent signatures, or the economic identity behind the FOMO distribution/fee recipients. Do not count three Frank buys/sells. `has_known_router=true` alone is insufficient for attributed trading.
+
+**Classifier caution:** `mission_agent/meme/fomo_crosschain.py::solana_events` starts with a root-wallet-present-in-transaction check, so it ignores root-absent FOMO-cosigned receipts. This is a **coverage issue for settlement/receipt observation**, not proof that safe BUY/SELL classifier should accept unsigned third-party routed transactions. Keep receipt/payout signals separate from person trading signals. Do not promote fee income into `PERSON_PATTERN` or `TOKEN_CONSENSUS`.
+
+## Next investigation without blind account scans
+
+1. Use already persisted hashes and full instructions to establish whether a fee-sharing/referral order ID can be recovered; if not, report `FEE_SHARE_HYPOTHESIS_UNCONFIRMED`.
+2. Investigate a bounded second small sample of *other* root-absent USDC signatures (not these same 3). Stratify by date and whether Frank-owned USDC is positive, negative, or zero; **balance polarity requires actual transaction decode**. Keep samples clearly distinct from confirmed trades.
+3. Only if there is real Frank-owned USDC outflow paired with target acquisition and externally verifiable beneficiary/authority relationship should the hypothesis of missing active BUY/SELL be escalated. Fee distributions remain `OBSERVE_ONLY`.
+
+No production, main branch, LaunchAgent, monitor, email, wallet or autotrading changes. PR #29 remains DRAFT; `PERSON_TRADE_COVERAGE=UNVERIFIED`; `PRODUCTION_TRADING=NO_GO`.
+
+## External fee schedule corroboration (2026-10-09, provisional)
+
+Fee tiers cited in English-language *third-party* write-ups as sourced to FOMO's own help site (`help.fomo.family`): Solana orders worth 5–47.50 USDC reportedly incur 2% fees, and orders worth 47.50–190 USDC reportedly incur a 0.95 USDC flat fee. Sources: https://fomoappguide.com/guides/fees/fomo-fees-explained and https://fomo-trading.com/solana . **These are NOT independent verification of current official live platform fee terms, nor proof of the parties' entitlements. Official help site wasn't directly accessible in this research.**
+
+Observed matching signatures:
+- First trace: USDC input 33.135284, USDC allocated to Frank 0.265050 and another recipient 0.397576, total 0.662626, approximately 1.99976% of funding input. Remaining 32.472658 USDC goes elsewhere; total allocations reconcile exactly to 33.135284.
+- Second trace: 100.000000 USDC input, fee-shaped distributions 0.475000 (Frank) + 0.380000 + 0.095000 = 0.950000 USDC. Remaining 99.050000 USDC distributes as 97.425580 + 1.624420.
+- Third trace: 100.000000 USDC input, the **same** 0.475000 Frank + 0.380000 + 0.095000 = 0.950000 USDC, and 99.050000 remaining.
+- Frank's share is approximately 40% of first fee-like distribution and exactly 50% of each latter fee-like distribution. The difference itself warns against assuming a universal referral share contract.
+
+**Interpretation upgrade (not trade classification)**: three independent wallet-owner routes, FOMO fee payer/cosigner, an exact reproducible 0.95 USDC distribution at the 100-USDC size, and a ~2% distribution at the 33-USDC size provide strong contextual evidence for `FOMO_FEE_DISTRIBUTION_CANDIDATE` rather than Frank personal buys/sells. Neither the actual source of individual fee entitlement nor official contemporaneous schedule is confirmed. NO upgrade to `BUY`, `SELL`, `PERSON_PATTERN` or alert delivery. Future sampling should target discriminating cases rather than spending RPC on more examples of the same apparent fee-credit pattern.
+
+## 2026-10-09 next gate: root-authorized 5,000 USDC Relay payment
+
+Separate root-wallet evidence from this exact historic window must not be buried under the 684 account-only receipt signatures. Already documented by the actual onchain audit in `FRANK_SOLANA_MEME_SCOPE_2026-10-09.md`: signature `KTW6qm2yw8PJC1cqUVejnG9yfYo3UQN5Y6dJJrwXeZQfbxL2ZvbtB4aymTPbPYr9BkhJrrhtswMGUytgqF5othS`, slot `454281417`, root `498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ` co-signed with FOMO, and root-owned USDC **fell exactly 5,000**, credited to a Relay depository-related counterparty. Reported order identifier `0xcb9a15b8ab25ecbbbb657b12fce469a196ef9efb3cea089e8b335aa78b2776ed`. This is *confirmed user-signature/payment evidence*, NOT proof of the exact token mint, final delivery or profit.
+
+Review-only new `local-agent/scripts/audit_frank_root_execution_focus.py` reads the **existing 173 cached root transactions** and readonly evidence SQLite without RPC. It produces signed USDC outflows, exact possible target mint and quote delta for existing paired-flow candidates, and reported Relay order identifiers; all transactions remain `trade_confirmed=false` until instruction validation. This separates genuine root-authorized spending from FOMO fee-distribution receipts and avoids wasting RPC on re-scanning high-volume USDC token-account timestamps. Source remains `PR #29` research-only; no automatic buy/sell or production action.
+
+**Persona binding still open**: `498g...AayQ` is third-party attributed to Frank on Provadata/CopyFomo, while a separate `A5SEXY...SZSk` appears in an unrelated Frank-indexing service. Prior dossier explicitly says neither offchain name attribution is cryptographically resolved. Do not combine wallets or treat outside fee recipients as proof of Frank's trading pattern. No RH-chain token search requested; eventual **Solana mint and payer/beneficiary proof** are the goal.

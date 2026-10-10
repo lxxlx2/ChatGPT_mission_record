@@ -4,9 +4,20 @@ from .policy import USDC
 
 D=Decimal
 
+KNOWN_USDC_PREDICATES=frozenset({'USDC_DIRECT_NUMERIC'})  # Frozen policy forbids synthetic SOL quote.
+
+def known_usdc_event(event):
+    predicate=event.get('amount_predicate')
+    # Legacy direct-USDC rows predate explicit provenance. Preserve only that
+    # narrow compatibility case; all explicit UNKNOWN/UNDETERMINED provenance
+    # remains non-authoritative.
+    if predicate is None:
+        return event.get('quote_asset')==USDC and not event.get('amount_predicate_reason')
+    return predicate in KNOWN_USDC_PREDICATES and event.get('quote_asset')==USDC
+
 def amount(events):
-    known=sum((D(e['quote_quantity']) for e in events if e['quote_asset']==USDC),D(0))
-    unknown=any(e['quote_asset']!=USDC for e in events)
+    known=sum((D(e['quote_quantity']) for e in events if known_usdc_event(e)),D(0))
+    unknown=any(not known_usdc_event(e) for e in events)
     return known,unknown
 
 def amount_gate(events,minimum):
@@ -63,6 +74,6 @@ def establish_t0(state,policy):
     if not buys:return
     last=buys[-1];recent=[e for e in buys if last['at']-m['t0_window_seconds']<=e['at']<=last['at']]
     repeat=len(recent)>=m['t0_repeated_buy_count'] and amount_gate(recent,m['t0_repeated_amount_min'])=='PASS'
-    large=any(e['quote_asset']==USDC and D(e['quote_quantity'])>=D(m['t0_large_buy_min']) for e in recent[:-1])
-    state['t0_amount_status']='UNDETERMINED' if any(e['quote_asset']!=USDC for e in recent) and not (repeat or large) else 'FAIL'
+    large=any(known_usdc_event(e) and D(e['quote_quantity'])>=D(m['t0_large_buy_min']) for e in recent[:-1])
+    state['t0_amount_status']='UNDETERMINED' if any(not known_usdc_event(e) for e in recent) and not (repeat or large) else 'FAIL'
     if repeat or large:state['t0']=last['at'];state['t0_amount_status']='PASS'

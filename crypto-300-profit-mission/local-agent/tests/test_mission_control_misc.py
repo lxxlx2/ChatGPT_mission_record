@@ -1,6 +1,7 @@
 import io
 import json
 import urllib.error
+from pathlib import Path
 
 import pytest
 
@@ -189,3 +190,89 @@ def test_jupiter_reverse_quote_measures_same_token_raw_back_to_usdc():
     assert "inputMint=Mint111" in seen[0]
     assert "outputMint="+jupiter_module.USDC in seen[0]
     assert "amount=30000000" in seen[0]
+
+
+def test_launchd_installer_persists_authenticated_solana_rpc_for_restart():
+    scripts=Path(__file__).resolve().parents[1]/"scripts"
+    installer=(scripts/"install_mission_meme_launchd.sh").read_text()
+    status=(scripts/"status_mission_meme_launchd.sh").read_text()
+    configure=(scripts/"configure_mission_meme_rpc.sh").read_text()
+
+    assert 'RPC_FILE="$APP_SUPPORT/solana_rpc_urls"' in installer
+    assert 'SOLANA_RPC_URLS="\\$(cat "\\$RPC_FILE")"' in installer
+    assert installer.count("export SOLANA_RPC_URLS")>=2
+    assert 'chmod 600 "$RPC_FILE"' in installer
+    assert "Authenticated Solana RPC: CONFIGURED (secret not printed)" in installer
+
+    assert 'RPC_FILE="$APP_SUPPORT/solana_rpc_urls"' in status
+    assert "Authenticated Solana RPC: CONFIGURED" in status
+    assert 'cat "$RPC_FILE"' not in status
+
+    assert 'RPC_FILE="$APP_SUPPORT/solana_rpc_urls"' in configure
+    assert 'chmod 600 "$TMP"' in configure
+    assert "Secret value: NOT PRINTED" in configure
+
+
+def test_real_ca_acceptance_covers_token2022_and_classic_spl_without_loop():
+    script=(Path(__file__).resolve().parents[1]/"scripts"/"accept_meme_ca_v3.sh").read_text()
+
+    assert "RACE_TOKEN2022" in script
+    assert "FRANK_TOKEN2022" in script
+    assert "FRANK_CLASSIC_SPL" in script
+    assert '"SPL Token-2022")' in script
+    assert "require_frank" not in script
+    assert '"SPL Token")' in script
+    assert "mission_meme_v1.py serve" in script
+    assert "mission_meme_v1.py loop" not in script
+    assert "--live-delivery" not in script
+    assert "MISSION_CONTROL_DB_CREATED" in script
+    assert "SOL_MIRROR_DB_CREATED" in script
+
+
+def test_rpc_runner_patcher_is_idempotent_and_does_not_rewrite_launch_command():
+    import importlib.util
+
+    path = Path(__file__).resolve().parents[1] / "scripts" / "patch_mission_meme_rpc_runners.py"
+    spec = importlib.util.spec_from_file_location("patch_mission_meme_rpc_runners", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    for command in ("serve", "loop"):
+        old = (
+            '#!/bin/bash\nset -euo pipefail\n'
+            'LOCAL_AGENT="/tmp/local-agent"\n'
+            'export PATH="/usr/bin:/bin"\n'
+            'cd "$LOCAL_AGENT"\n'
+            f'exec env PYTHONPATH=. python scripts/mission_meme_v1.py {command} --port 8766\n'
+        )
+        new, changed = module.patch_runner(old, command)
+        assert changed is True
+        assert new.count('export SOLANA_RPC_URLS') == 1
+        assert new.count('SOLANA_RPC_URLS="$(cat "$RPC_FILE")"') == 1
+        assert new.count(f"scripts/mission_meme_v1.py {command}") == 1
+        assert new.index("export SOLANA_RPC_URLS") < new.index('cd "$LOCAL_AGENT"')
+        assert module.shell_syntax_ok(new)
+
+        again, changed_again = module.patch_runner(new, command)
+        assert changed_again is False
+        assert again == new
+
+
+def test_rpc_runner_patcher_rejects_unknown_and_partial_configs():
+    import importlib.util
+
+    path = Path(__file__).resolve().parents[1] / "scripts" / "patch_mission_meme_rpc_runners.py"
+    spec = importlib.util.spec_from_file_location("patch_mission_meme_rpc_runners_invalid", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    with pytest.raises(ValueError, match="RUNNER_COMMAND_MISMATCH"):
+        module.patch_runner('cd "$LOCAL_AGENT"\n', "serve")
+    with pytest.raises(ValueError, match="PARTIAL_RPC_CONFIG_NEEDS_MANUAL_REVIEW"):
+        module.patch_runner(
+            'RPC_FILE="/tmp/key"\ncd "$LOCAL_AGENT"\n'
+            'exec python scripts/mission_meme_v1.py serve\n',
+            "serve",
+        )
+    with pytest.raises(ValueError, match="RUNNER_WORKDIR_ANCHOR_MISMATCH"):
+        module.patch_runner("exec python scripts/mission_meme_v1.py loop\n", "loop")

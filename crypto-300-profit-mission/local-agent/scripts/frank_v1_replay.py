@@ -28,7 +28,7 @@ def report(engine,path):
     value['signals']=[json.loads(r[0]) for r in db.execute('SELECT body FROM signals ORDER BY CAST(created_at AS INTEGER),signal_id')]
     value['predicate_evaluations']=db.execute('SELECT count(*) FROM v1_evaluations').fetchone()[0]
     value['notifications_sent']=0;value['gmail_sent']=0
-    if db.execute("SELECT count(*) FROM outbox WHERE status!='DRY_RUN_AUDIT'").fetchone()[0]:raise ValueError('HISTORICAL_DELIVERY_MUST_BE_DISABLED')
+    if db.execute("SELECT count(*) FROM outbox WHERE status IS NOT 'DRY_RUN_AUDIT'").fetchone()[0]:raise ValueError('HISTORICAL_DELIVERY_MUST_BE_DISABLED')
     Path(path).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n');return value
 
 def main():

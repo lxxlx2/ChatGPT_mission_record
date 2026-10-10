@@ -1,0 +1,110 @@
+name: Meme FOMO Crosschain Readonly Tests
+on:
+  push:
+    branches:
+      - review/meme-ca-v3-integrate-main-20261008
+    paths:
+      - 'crypto-300-profit-mission/local-agent/mission_agent/meme/fomo_crosschain.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_fomo_crosschain.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/inspect_frank_solana_root_window.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/reconcile_frank_owned_token_account.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_gmgn_activity.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_native_owner_coverage.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_root_offline.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_native_resume.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_partial_trace.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_root_execution_focus.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_tweetcraft_instruction_offline.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_tweetcraft_execution_gate.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/audit_frank_one_pass.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/preview_meme_ca_ui.sh'
+      - 'crypto-300-profit-mission/local-agent/scripts/run_frank_fomo_rh_recheck.sh'
+      - 'crypto-300-profit-mission/local-agent/tests/test_fomo_crosschain.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_inspect_frank_solana_root_window.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_owned_token_account_reconcile.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_gmgn_activity_audit.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_native_owner_coverage.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_root_offline_audit.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_native_resume.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_partial_trace.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_root_execution_focus.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_tweetcraft_instruction_offline.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_tweetcraft_execution_gate.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_one_pass.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/delivery.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/service.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/index.html'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/styles.css'
+      - 'crypto-300-profit-mission/local-agent/tests/test_meme_ca_trader_ui.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/accept_meme_live_readonly.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_meme_live_readonly_audit.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_dashboard.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_misc.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_delivery.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_mission_control_service.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_meme_pr29_release_rehearsal.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/accept_meme_pr29_shadow_readonly.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_meme_pr29_shadow_readonly.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/deploy_mission_meme_pr29.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank.py'
+      - '.github/workflows/meme-fomo-crosschain-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: meme-fomo-crosschain-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: 'crypto-300-profit-mission/local-agent/pyproject.toml'
+      - name: Install pinned test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install 'numpy==2.3.3'
+      - name: Compile new code
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile mission_agent/meme/fomo_crosschain.py mission_agent/meme/cluster.py mission_agent/mission_control/server.py mission_agent/mission_control/delivery.py scripts/audit_frank_fomo_crosschain.py scripts/inspect_frank_solana_root_window.py scripts/reconcile_frank_owned_token_account.py scripts/audit_frank_gmgn_activity.py tests/test_frank_gmgn_activity_audit.py scripts/audit_frank_native_owner_coverage.py tests/test_frank_native_owner_coverage.py scripts/audit_frank_root_offline.py tests/test_frank_root_offline_audit.py scripts/audit_frank_native_resume.py tests/test_frank_native_resume.py scripts/audit_frank_partial_trace.py tests/test_frank_partial_trace.py scripts/audit_frank_root_execution_focus.py tests/test_frank_root_execution_focus.py scripts/audit_frank_tweetcraft_instruction_offline.py tests/test_frank_tweetcraft_instruction_offline.py scripts/audit_frank_tweetcraft_execution_gate.py tests/test_frank_tweetcraft_execution_gate.py scripts/audit_frank_one_pass.py tests/test_frank_one_pass.py
+      - name: Compile Mac read-only decision parity acceptance
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m py_compile scripts/accept_meme_pr29_shadow_readonly.py tests/test_meme_pr29_shadow_readonly.py
+      - name: Compile isolated release rehearsal
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m py_compile tests/test_meme_pr29_release_rehearsal.py scripts/deploy_mission_meme_pr29.py
+      - name: Compile Mac readonly audit
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m py_compile scripts/accept_meme_live_readonly.py tests/test_meme_live_readonly_audit.py
+      - name: Operator script static checks
+        working-directory: crypto-300-profit-mission/local-agent
+        run: bash -n scripts/run_frank_fomo_rh_recheck.sh scripts/preview_meme_ca_ui.sh
+      - name: Frontend script syntax
+        working-directory: crypto-300-profit-mission/local-agent
+        run: node --check mission_agent/mission_control/static/app.js
+      - name: Offline FOMO proof tests
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests/test_fomo_crosschain.py tests/test_inspect_frank_solana_root_window.py tests/test_frank_owned_token_account_reconcile.py tests/test_frank_gmgn_activity_audit.py tests/test_frank_native_owner_coverage.py tests/test_frank_root_offline_audit.py tests/test_frank_native_resume.py tests/test_frank_partial_trace.py tests/test_frank_root_execution_focus.py tests/test_frank_tweetcraft_instruction_offline.py tests/test_frank_tweetcraft_execution_gate.py tests/test_frank_one_pass.py
+      - name: Full local-agent regressions
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python -B -m pytest -q -p no:cacheprovider

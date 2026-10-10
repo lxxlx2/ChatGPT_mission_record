@@ -22,6 +22,7 @@ DASH_RUNNER="$APP_SUPPORT/dashboard.sh"
 APPROVED_HASH_FILE="$APP_SUPPORT/approved_policy_sha256"
 RUNTIME_POLICY="$APP_SUPPORT/follow_policy_v1.approved.json"
 PORT_FILE="$APP_SUPPORT/dashboard_port"
+RPC_FILE="$APP_SUPPORT/solana_rpc_urls"
 
 LOOP_PLIST="$LAUNCH_DIR/$LOOP_LABEL.plist"
 DASH_PLIST="$LAUNCH_DIR/$DASH_LABEL.plist"
@@ -30,6 +31,10 @@ die() {
   echo "ERROR: $*" >&2
   exit 1
 }
+
+# This installer replaces both active LaunchAgents, including live-delivery loop.
+# No writes, PID stops or launchctl mutation without explicit opt-in.
+[ "${CONFIRM_MISSION_LOOP_RESTART:-}" = "1" ] || die "MISSION_LOOP_RESTART_NOT_AUTHORIZED: explicit CONFIRM_MISSION_LOOP_RESTART=1 required"
 
 [ -e "$WORKTREE/.git" ] || die "WORKTREE_NOT_GIT: $WORKTREE"
 [ -d "$LOCAL_AGENT" ] || die "LOCAL_AGENT_NOT_FOUND: $LOCAL_AGENT"
@@ -43,47 +48,43 @@ CONTROL="$(cat "$CONTROL_POINTER")"
 [ -n "$CONTROL" ] || die "CONTROL_POINTER_EMPTY"
 [ -d "$CONTROL" ] || die "CONTROL_ROOT_NOT_FOUND: $CONTROL"
 
-mkdir -p "$APP_SUPPORT" "$LOG_DIR" "$LAUNCH_DIR" "$CONTROL/logs"
-chmod 700 "$APP_SUPPORT" "$LOG_DIR"
-
-cp "$POLICY" "$RUNTIME_POLICY"
-chmod 600 "$RUNTIME_POLICY"
-
-POLICY_SHA="$(shasum -a 256 "$RUNTIME_POLICY" | awk '{print $1}')"
-printf '%s\n' "$POLICY_SHA" > "$APPROVED_HASH_FILE"
-chmod 600 "$APPROVED_HASH_FILE"
-
-PORT="8766"
-if [ -f "$CONTROL/dashboard.port" ]; then
-  CANDIDATE_PORT="$(cat "$CONTROL/dashboard.port" 2>/dev/null || true)"
-  if [[ "$CANDIDATE_PORT" =~ ^[0-9]+$ ]]; then
-    PORT="$CANDIDATE_PORT"
-  fi
+# PREPARE AND AUTHORIZE before mutating any installed policy, credential,
+# runner, plist or launchd state. No self-approval from a candidate's own hash.
+[ -n "${APPROVED_POLICY_SHA256:-}" ] || die "EXTERNAL_POLICY_APPROVAL_REQUIRED"
+if [ -n "${SOLANA_RPC_URLS:-}" ]; then
+  RPC_URLS_VALUE="$SOLANA_RPC_URLS"
+else
+  [ -f "$RPC_FILE" ] || die "SOLANA_RPC_URLS_NOT_CONFIGURED"
+  RPC_URLS_VALUE="$(cat "$RPC_FILE" 2>/dev/null || true)"
 fi
-printf '%s\n' "$PORT" > "$PORT_FILE"
-chmod 600 "$PORT_FILE"
+[ -n "$RPC_URLS_VALUE" ] || die "SOLANA_RPC_URLS_EMPTY"
 
-"$VENV/bin/python" - "$RUNTIME_POLICY" "$POLICY_SHA" <<'PY'
-import hashlib
-import json
+# Copy the policy once into a private temporary snapshot, outside installed
+# Application Support. OAuth preflight may delay installation, but editing the
+# original policy during this delay cannot alter the approved bytes.
+STAGED_POLICY="$(mktemp "${TMPDIR:-/tmp}/frank-meme-policy.XXXXXXXX")"
+chmod 600 "$STAGED_POLICY"
+trap 'rm -f "$STAGED_POLICY"' EXIT
+cat "$POLICY" > "$STAGED_POLICY"
+
+# Use the EXACT authorization predicate also enforced by MissionMemeService.
+# The external digest is supplied by the operator via environment; it is
+# never derived from the candidate policy by this installer.
+PYTHONPATH="$LOCAL_AGENT" "$VENV/bin/python" - "$STAGED_POLICY" "$APPROVED_POLICY_SHA256" <<'PY'
 import sys
-from pathlib import Path
-
-path = Path(sys.argv[1])
-expected = sys.argv[2]
-raw = path.read_bytes()
-data = json.loads(raw)
-actual = hashlib.sha256(raw).hexdigest()
-
-assert actual == expected
-assert data.get("status") == "FROZEN_APPROVED"
-assert data.get("live_delivery_approved") is True
-assert data.get("decision", {}).get("observation_retention_seconds") == 5184000
-
+from mission_agent.mission_control.policy import (
+    load_policy, live_delivery_policy_authorized,
+)
+policy, actual = load_policy(sys.argv[1])
+if not live_delivery_policy_authorized(policy, actual, sys.argv[2]):
+    raise SystemExit("POLICY_NOT_AUTHORIZED")
 print("POLICY_GATE: PASS")
 print("policy_sha256:", actual)
 PY
+POLICY_SHA="$APPROVED_POLICY_SHA256"
 
+# External OAuth/readiness preflight occurs after policy authorization,
+# but BEFORE any installed state is altered. This only validates readiness.
 PYTHONPATH="$LOCAL_AGENT" "$VENV/bin/python" - "$PROD" <<'PY'
 import sys
 from pathlib import Path
@@ -99,6 +100,54 @@ print("gmail_recipient:", provider.recipient)
 print("NO_EMAIL_SENT")
 PY
 
+PORT="8766"
+if [ -f "$CONTROL/dashboard.port" ]; then
+  CANDIDATE_PORT="$(cat "$CONTROL/dashboard.port" 2>/dev/null || true)"
+  if [[ "$CANDIDATE_PORT" =~ ^[0-9]+$ ]]; then
+    PORT="$CANDIDATE_PORT"
+  fi
+fi
+
+# The following writes are permitted only AFTER all policy/preflight gates.
+mkdir -p "$APP_SUPPORT" "$LOG_DIR" "$LAUNCH_DIR" "$CONTROL/logs"
+chmod 700 "$APP_SUPPORT" "$LOG_DIR"
+umask 077
+install_atomic() {
+  local dest="$1"
+  local temp
+  temp="$(mktemp "$APP_SUPPORT/.mission-install.XXXXXXXX")"
+  cat > "$temp"
+  chmod 600 "$temp"
+  mv -f "$temp" "$dest"
+}
+
+# Two independent atomic replaces. A crash between them fails closed because
+# policy bytes and externally approved digest cannot match until both commit.
+PREVIOUS_RUNTIME_POLICY=""
+if [ -f "$RUNTIME_POLICY" ]; then
+  PREVIOUS_RUNTIME_POLICY="$(mktemp "${TMPDIR:-/tmp}/frank-meme-previous.XXXXXXXX")"
+  chmod 600 "$PREVIOUS_RUNTIME_POLICY"
+  cat "$RUNTIME_POLICY" > "$PREVIOUS_RUNTIME_POLICY"
+fi
+install_atomic "$RUNTIME_POLICY" < "$STAGED_POLICY"
+INSTALLED_POLICY_SHA="$(shasum -a 256 "$RUNTIME_POLICY" | awk '{print $1}')"
+if [ "$INSTALLED_POLICY_SHA" != "$POLICY_SHA" ]; then
+  if [ -n "$PREVIOUS_RUNTIME_POLICY" ]; then
+    install_atomic "$RUNTIME_POLICY" < "$PREVIOUS_RUNTIME_POLICY"
+  else
+    rm -f "$RUNTIME_POLICY"
+  fi
+  [ -z "$PREVIOUS_RUNTIME_POLICY" ] || rm -f "$PREVIOUS_RUNTIME_POLICY"
+  die "POST_INSTALL_POLICY_HASH_MISMATCH"
+fi
+[ -z "$PREVIOUS_RUNTIME_POLICY" ] || rm -f "$PREVIOUS_RUNTIME_POLICY"
+printf '%s\n' "$POLICY_SHA" | install_atomic "$APPROVED_HASH_FILE"
+if [ -n "${SOLANA_RPC_URLS:-}" ]; then
+  printf '%s\n' "$SOLANA_RPC_URLS" | install_atomic "$RPC_FILE"
+fi
+chmod 600 "$RPC_FILE"
+printf '%s\n' "$PORT" | install_atomic "$PORT_FILE"
+
 cat > "$LOOP_RUNNER" <<EOF
 #!/bin/bash
 set -euo pipefail
@@ -108,9 +157,13 @@ VENV="$VENV"
 CONTROL_POINTER="$CONTROL_POINTER"
 POLICY="$RUNTIME_POLICY"
 APPROVED_HASH_FILE="$APPROVED_HASH_FILE"
+RPC_FILE="$RPC_FILE"
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 CONTROL="\$(cat "\$CONTROL_POINTER")"
 APPROVED_HASH="\$(cat "\$APPROVED_HASH_FILE")"
+SOLANA_RPC_URLS="\$(cat "\$RPC_FILE")"
+[ -n "\$SOLANA_RPC_URLS" ] || { echo "ERROR: SOLANA_RPC_URLS_EMPTY" >&2; exit 1; }
+export SOLANA_RPC_URLS
 mkdir -p "\$CONTROL/logs"
 cd "\$LOCAL_AGENT"
 echo "\$\$" > "\$CONTROL/loop.pid"
@@ -131,9 +184,13 @@ PROD="$PROD"
 VENV="$VENV"
 CONTROL_POINTER="$CONTROL_POINTER"
 PORT_FILE="$PORT_FILE"
+RPC_FILE="$RPC_FILE"
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 CONTROL="\$(cat "\$CONTROL_POINTER")"
 PORT="\$(cat "\$PORT_FILE")"
+SOLANA_RPC_URLS="\$(cat "\$RPC_FILE")"
+[ -n "\$SOLANA_RPC_URLS" ] || { echo "ERROR: SOLANA_RPC_URLS_EMPTY" >&2; exit 1; }
+export SOLANA_RPC_URLS
 mkdir -p "\$CONTROL/logs"
 cd "\$LOCAL_AGENT"
 echo "\$\$" > "\$CONTROL/dashboard.pid"
@@ -255,6 +312,7 @@ echo "Dashboard HTTP=$HTTP"
 echo "Dashboard=http://127.0.0.1:$PORT"
 echo "Approved policy SHA256=$POLICY_SHA"
 echo "Runtime policy=$RUNTIME_POLICY"
+echo "Authenticated Solana RPC: CONFIGURED (secret not printed)"
 echo "AUTO-START: ON AFTER USER LOGIN"
 echo "LIVE DELIVERY: policy-gated"
 echo "PRODUCTION_TRADING: NO_GO"

@@ -4,10 +4,26 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from ..db.connection import connect, transaction
 from ..hashing import digest
+from .policy import USDC
+from .evaluator import known_usdc_event
 
 def now(): return datetime.now(timezone.utc).isoformat()
 
 def quantity(raw,decimals): return str(Decimal(raw)/(Decimal(10)**decimals))
+
+def _known_usdc_trade(trade):
+    # One authority for the frozen direct-USDC predicate across state and gates.
+    return known_usdc_event(trade)
+
+def _observed_quote(trade):
+    original=trade.get('original_quote') or {}
+    if trade.get('quote_normalization') and original.get('quote_asset') and original.get('quote_quantity') is not None:
+        return original['quote_asset'],str(original['quote_quantity'])
+    return trade.get('quote_asset'),quantity(trade['quote_amount_raw'],trade['quote_decimals'])
+
+def _add_quote(total,asset,value):
+    if not asset:return
+    total[asset]=str(Decimal(total.get(asset,'0'))+Decimal(value))
 
 class Ledger:
     def __init__(self,path):
@@ -42,16 +58,16 @@ class Ledger:
             t=e.get('trade');position=None;signals=[]
             if t:
                 r=self.db.execute('SELECT body FROM positions WHERE person_id=? AND mint=?',(person,t['mint'])).fetchone()
-                p=json.loads(r[0]) if r else {'person_id':person,'mint':t['mint'],'state':'NONE','episode_id':None,'episode_number':0,'first_buy_at':None,'last_buy_at':None,'buy_count':0,'sell_count':0,'gross_token_bought':'0','gross_token_sold':'0','gross_quote_spent':{},'gross_quote_received':{},'current_token_position':'0','last_trade_signature':None,'history_complete':False}
+                p=json.loads(r[0]) if r else {'person_id':person,'mint':t['mint'],'state':'NONE','episode_id':None,'episode_number':0,'first_buy_at':None,'last_buy_at':None,'buy_count':0,'sell_count':0,'gross_token_bought':'0','gross_token_sold':'0','gross_quote_spent':{},'gross_quote_received':{},'gross_quote_out_observed':{},'gross_quote_in_observed':{},'quote_cost_unknown_contributions':[],'quote_proceeds_unknown_contributions':[],'current_token_position':'0','last_trade_signature':None,'history_complete':False}
                 before=int(p['current_token_position']) if p['current_token_position'] is not None else 0;amount=int(t['token_amount_raw'])
                 if t['direction']=='BUY':
                     side='ADD' if p['state']=='OPEN' else 'REENTRY' if p['state']=='CLOSED' else 'BUY'
                     if p['state']!='OPEN':
                         episode=p['episode_number']+1
-                        p.update(episode_number=episode,episode_id=digest({'person':person,'mint':t['mint'],'first':sig}),first_buy_at=e['block_time'],last_buy_at=None,buy_count=0,sell_count=0,gross_token_bought='0',gross_token_sold='0',gross_quote_spent={},gross_quote_received={},current_token_position='0')
+                        p.update(episode_number=episode,episode_id=digest({'person':person,'mint':t['mint'],'first':sig}),first_buy_at=e['block_time'],last_buy_at=None,buy_count=0,sell_count=0,gross_token_bought='0',gross_token_sold='0',gross_quote_spent={},gross_quote_received={},gross_quote_out_observed={},gross_quote_in_observed={},quote_cost_unknown_contributions=[],quote_proceeds_unknown_contributions=[],current_token_position='0')
                         before=0
                     p.update(state='OPEN',last_buy_at=e['block_time'],buy_count=p['buy_count']+1,gross_token_bought=str(int(p['gross_token_bought'])+amount),current_token_position=str(before+amount))
-                    q=p['gross_quote_spent']
+                    q=p['gross_quote_spent'];observed_q=p.setdefault('gross_quote_out_observed',{});unknown_q=p.setdefault('quote_cost_unknown_contributions',[])
                 else:
                     # A sell in incomplete prehistory must not invent an entry or an episode.
                     if p['state']!='OPEN' or amount>before:
@@ -60,21 +76,35 @@ class Ledger:
                         self.db.execute('INSERT INTO trades VALUES(?,?,?,?,?,?,?)',(wallet,sig,t['mint'],None,e['block_time'],'SELL_POSITION_UNRESOLVED',json.dumps(unresolved,sort_keys=True)))
                         if r:
                             p.update(state='INVENTORY_UNDETERMINED',current_token_position=None,last_trade_signature=sig,sell_count=p['sell_count']+1,gross_token_sold=str(int(p['gross_token_sold'])+amount))
-                            received=p['gross_quote_received'];received[t['quote_asset']]=str(Decimal(received.get(t['quote_asset'],'0'))+Decimal(quantity(t['quote_amount_raw'],t['quote_decimals'])))
+                            received=p['gross_quote_received'];observed_received=p.setdefault('gross_quote_in_observed',{})
+                            asset,observed_value=_observed_quote(t);_add_quote(observed_received,asset,observed_value)
+                            if _known_usdc_trade(t):_add_quote(received,USDC,quantity(t['quote_amount_raw'],t['quote_decimals']))
+                            else:p.setdefault('quote_proceeds_unknown_contributions',[]).append({'signature':sig,'quote_asset':asset,'quote_quantity':observed_value,'amount_predicate':t.get('amount_predicate'),'amount_predicate_reason':t.get('amount_predicate_reason')})
                             self.db.execute('UPDATE positions SET body=? WHERE person_id=? AND mint=?',(json.dumps(p,sort_keys=True),person,t['mint']))
                         t=None
                     else:
                         remaining=before-amount;side='EXIT' if remaining==0 else 'SELL'
-                        p.update(state='CLOSED' if remaining==0 else 'OPEN',sell_count=p['sell_count']+1,gross_token_sold=str(int(p['gross_token_sold'])+amount),current_token_position=str(remaining));q=p['gross_quote_received']
+                        p.update(state='CLOSED' if remaining==0 else 'OPEN',sell_count=p['sell_count']+1,gross_token_sold=str(int(p['gross_token_sold'])+amount),current_token_position=str(remaining));q=p['gross_quote_received'];observed_q=p.setdefault('gross_quote_in_observed',{});unknown_q=p.setdefault('quote_proceeds_unknown_contributions',[])
                 if t:
-                    q[t['quote_asset']]=str(Decimal(q.get(t['quote_asset'],'0'))+Decimal(quantity(t['quote_amount_raw'],t['quote_decimals'])))
+                    observed_asset,observed_value=_observed_quote(t)
+                    _add_quote(observed_q,observed_asset,observed_value)
+                    if _known_usdc_trade(t):
+                        _add_quote(q,USDC,quantity(t['quote_amount_raw'],t['quote_decimals']))
+                    else:
+                        unknown_q.append({
+                            'signature':sig,'quote_asset':observed_asset,'quote_quantity':observed_value,
+                            'amount_predicate':t.get('amount_predicate'),
+                            'amount_predicate_reason':t.get('amount_predicate_reason'),
+                            'route_amount_semantics':t.get('route_amount_semantics'),
+                        })
                     p['last_trade_signature']=sig;position=p
                     trade={**t,'side':side,'position_before_raw':str(before),'position_after_raw':p['current_token_position'],'episode_id':p['episode_id']}
                     self.db.execute('INSERT INTO trades VALUES(?,?,?,?,?,?,?)',(wallet,sig,t['mint'],p['episode_id'],e['block_time'],side,json.dumps(trade,sort_keys=True)))
                     self.db.execute('INSERT OR REPLACE INTO positions VALUES(?,?,?)',(person,t['mint'],json.dumps(p,sort_keys=True)))
                     for stage in stages:
                         stype=stage['signal_type']; sid=digest({'person_id':person,'mint':t['mint'],'episode_id':p['episode_id'],'signal_type':stype,'stage':stage['stage']})
-                        body={'signal_id':sid,'person_id':person,'mint':t['mint'],'episode_id':p['episode_id'],'signal_type':stype,'stage':stage['stage'],'triggered_at':e['block_time'],'latest_trade_signature':sig,'latest_buy':quantity(t['token_amount_raw'],t['token_decimals']),'latest_quote_amount':quantity(t['quote_amount_raw'],t['quote_decimals']),'quote_asset':t['quote_asset'],'position':p,'reason_codes':stage['reason_codes'],'usd':'unavailable'}
+                        observed_asset,observed_value=_observed_quote(t)
+                        body={'signal_id':sid,'person_id':person,'mint':t['mint'],'episode_id':p['episode_id'],'signal_type':stype,'stage':stage['stage'],'triggered_at':e['block_time'],'latest_trade_signature':sig,'latest_buy':quantity(t['token_amount_raw'],t['token_decimals']),'latest_quote_amount':quantity(t['quote_amount_raw'],t['quote_decimals']),'quote_asset':t['quote_asset'],'latest_quote_observed_asset':observed_asset,'latest_quote_observed_amount':observed_value,'latest_quote_cost_known':_known_usdc_trade(t),'latest_quote_amount_predicate':t.get('amount_predicate'),'latest_quote_amount_reason':t.get('amount_predicate_reason'),'position':p,'reason_codes':stage['reason_codes'],'usd':'unavailable'}
                         inserted=self.db.execute('INSERT OR IGNORE INTO signals VALUES(?,?,?,?,?,?,?,?,?)',(sid,person,t['mint'],p['episode_id'],stype,stage['stage'],now(),digest(body),json.dumps(body,sort_keys=True))).rowcount
                         if inserted:
                             signals.append(sid)

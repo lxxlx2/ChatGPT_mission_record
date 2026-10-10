@@ -34,7 +34,9 @@ def test_optional_fields_can_be_missing_without_invention(signal):
 
 def test_unknown_inventory_and_amount_remain_unknown(signal):
     signal['position']['current_token_quantity']=None
-    signal['usd']='unknown';signal['latest_quote_amount']=None
+    signal['usd']='unknown'
+    signal['latest_quote_amount']=None
+    signal['latest_quote_observed_amount']=None
     body=content(signal)['body']
     assert '当前观察库存：UNAVAILABLE token' in body
     assert 'USD 估值：暂无可靠数据' in body
@@ -88,10 +90,26 @@ def test_latest_buy_is_not_misrepresented_as_triggering_sell(signal):
     assert 'SELL 5,000' not in body
 
 def test_non_usdc_quote_remains_original_asset_without_usd_conversion(signal):
-    signal['quote_asset']='SOL';signal['latest_quote_amount']='7.123'
-    signal['position']['gross_quote_spent']={'SOL':'8.456'}
+    signal['quote_asset']='SOL'
+    signal['latest_quote_amount']='7.123'
+    signal['latest_quote_observed_asset']='SOL'
+    signal['latest_quote_observed_amount']='7.123'
+    signal['latest_quote_cost_known']=False
+    signal['latest_quote_amount_predicate']='UNDETERMINED'
+    signal['latest_quote_amount_reason']='NON_USDC_QUOTE'
+    signal['position']['gross_quote_spent']={}
+    signal['position']['gross_quote_out_observed']={'SOL':'8.456'}
+    signal['position']['quote_cost_unknown_contributions']=[{
+        'signature':signal['latest_buy_signature'],
+        'quote_asset':'SOL',
+        'quote_quantity':'7.123',
+        'amount_predicate':'UNDETERMINED',
+        'amount_predicate_reason':'NON_USDC_QUOTE',
+    }]
     body=content(signal)['body']
-    assert 'BUY 7.123 SOL' in body and '累计投入 8.456 SOL' in body
+    assert 'BUY 7.123 SOL（仅为观察到的 quote 流出；最终目标成本未确认）' in body
+    assert '累计观察 quote 流出 8.456 SOL' in body
+    assert '累计已确认投入 UNAVAILABLE' in body
     assert 'USD 估值：暂无可靠数据' in body
 
 def test_existing_durable_content_is_not_rewritten_by_presentation(signal,tmp_path):

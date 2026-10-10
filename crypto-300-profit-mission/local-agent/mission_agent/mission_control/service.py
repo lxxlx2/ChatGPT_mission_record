@@ -15,8 +15,8 @@ from .frank import FrankReader
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
 from .outcomes import OutcomeTracker
-from .sol_mirror import SolNormalizedMirror, merge_candidates
-from .policy import evaluate, load_policy, should_notify
+from .sol_mirror import SolNormalizedMirror
+from .policy import evaluate, load_policy, should_notify, live_delivery_policy_authorized
 
 
 _TRANSIENT_WAIT_REASONS = {
@@ -58,15 +58,21 @@ class MissionMemeService:
         self.approved_policy_sha256 = approved_policy_sha256
         self.delivery_allowed = bool(
             self.live_delivery_requested
-            and self.policy.get("status") == "FROZEN_APPROVED"
-            and self.policy.get("live_delivery_approved") is True
-            and self.approved_policy_sha256 == self.policy_hash
+            and live_delivery_policy_authorized(
+                self.policy, self.policy_hash, self.approved_policy_sha256
+            )
         )
         self.gmail_config = gmail_config or (self.production_root / "gmail-existing-source.json")
         self.jupiter = JupiterQuoteClient(jupiter_api_key or os.environ.get("JUPITER_API_KEY"))
         self.outcomes = OutcomeTracker(self.control.db, self.jupiter)
-        self.local = LocalDelivery(self.control)
-        self.gmail = GmailDelivery(self.control)
+        self.local = LocalDelivery(
+            self.control,
+            max_decision_age_seconds=int(self.policy["decision"].get("initial_notification_max_age_seconds", 600)),
+        )
+        self.gmail = GmailDelivery(
+            self.control,
+            max_decision_age_seconds=int(self.policy["decision"].get("initial_notification_max_age_seconds", 600)),
+        )
         self.health_path = self.control_root / "mission-control-health.json"
 
     def close(self):
@@ -74,7 +80,17 @@ class MissionMemeService:
         self.control.close()
 
     def _write_health(self, status: str, **extra) -> None:
+        review_counts={"local":0,"gmail":0}
+        for row in self.control.db.execute(
+            "SELECT channel,COUNT(*) AS n FROM decision_outbox "
+            "WHERE status='MANUAL_REVIEW' GROUP BY channel"
+        ).fetchall():
+            if row["channel"] in review_counts:
+                review_counts[row["channel"]]=int(row["n"])
         payload = {
+            "manual_review_local_count":review_counts["local"],
+            "manual_review_gmail_count":review_counts["gmail"],
+            "manual_review_total_count":sum(review_counts.values()),
             "status": status,
             "updated_at": utc(),
             "policy_id": self.policy.get("policy_id"),
@@ -135,7 +151,13 @@ class MissionMemeService:
             "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset","latest_buy_quote_quantity",
             "latest_buy_original_quote_asset","latest_buy_original_quote_quantity","latest_buy_quote_was_normalized",
             "latest_buy_usdc_equivalent","latest_buy_model_quote_asset","latest_buy_model_quote_quantity","candidate_source","token_decimals"
-        )} | {"quote":cls._stable_quote_inputs(quote)}
+        )} | {
+            "quote":cls._stable_quote_inputs(quote),
+            # Preserve the actual Jupiter observation for the frozen Gmail body.
+            # Do not add it to stable quote decision metrics or reinterpret as
+            # a current executable price at delivery time.
+            "quote_observed_at":(None if quote.get("observed_at") is None else str(quote["observed_at"])),
+        }
 
     @staticmethod
     def _fresh_initial(latest_at, now: float, max_age: int) -> bool:
@@ -162,11 +184,14 @@ class MissionMemeService:
         return notify
 
     def cycle(self) -> dict:
+        cycle_started_monotonic=time.monotonic()
+        first_enqueued_monotonic=None
         runtime = self.frank.runtime()
         sol_normalization = self.sol_mirror.sync()
         base_candidates = self.frank.candidates()
-        overlay_candidates = self.sol_mirror.candidates() if sol_normalization.get("status") == "OK" else []
-        candidates = merge_candidates(base_candidates, overlay_candidates)
+        # Sidecar is research-only until an explicitly reviewed policy change.
+        # Never feed shadow-converted SOL amounts into decision/outbox delivery.
+        candidates = base_candidates
         events = []
         errors = []
         debounced = []
@@ -251,13 +276,16 @@ class MissionMemeService:
                     self.control.db.execute("ROLLBACK")
                     raise
 
+                if notify and first_enqueued_monotonic is None:
+                    first_enqueued_monotonic=time.monotonic()
                 if recorded["changed"]:
                     events.append({
                         "decision_id":event["decision_id"],"decision":payload["decision"],"previous":previous,"mint":payload["mint"],
                         "notification_enqueued":notify,
                     })
             except Exception as exc:
-                errors.append({"mint": candidate.get("mint"), "error": type(exc).__name__, "message": str(exc)[:240]})
+                errors.append({"mint": candidate.get("mint"), "error": type(exc).__name__,
+                               "message": "CANDIDATE_EVALUATION_FAILED"})
                 continue
 
         outcome_tracking = self.outcomes.sample_due(
@@ -266,9 +294,14 @@ class MissionMemeService:
         )
         outcome_tracking["registered"] = outcome_registered
         pruned = self.observations.prune(time.time(), retention_seconds)
+        pre_delivery_wait_seconds=(
+            round(time.monotonic()-first_enqueued_monotonic,3)
+            if first_enqueued_monotonic is not None else None
+        )
         if self.delivery_allowed:
             self.local.drain()
             self.gmail.drain(existing_provider(self.gmail_config))
+        cycle_elapsed_seconds=round(time.monotonic()-cycle_started_monotonic,3)
 
         status = "OK" if not errors else "DEGRADED"
         result = {
@@ -287,9 +320,13 @@ class MissionMemeService:
             "policy_hash":self.policy_hash,
             "approved_policy_sha256_match":self.approved_policy_sha256 == self.policy_hash if self.approved_policy_sha256 else False,
             "status":status,
+            "cycle_elapsed_seconds":cycle_elapsed_seconds,
+            "pre_delivery_wait_seconds":pre_delivery_wait_seconds,
         }
         self._write_health(
             status,
+            cycle_elapsed_seconds=cycle_elapsed_seconds,
+            pre_delivery_wait_seconds=pre_delivery_wait_seconds,
             candidate_count=len(candidates),
             evaluated_count=len(selected),
             candidate_error_count=len(errors),
@@ -310,5 +347,5 @@ class MissionMemeService:
             try:
                 self.cycle()
             except Exception as exc:
-                self._write_health("ERROR", error=type(exc).__name__, message=str(exc)[:240])
+                self._write_health("ERROR", error=type(exc).__name__, message="MISSION_CYCLE_FAILED")
             time.sleep(max(1,interval_seconds))
