@@ -567,15 +567,183 @@
     {
       "label": "BUBB",
       "token_ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
-      "pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3",
+      "pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
       "venue": "PANCAKE_V2_WBNB",
-      "transfer_rows": 0,
-      "unique_transactions": 0,
-      "recipient_addresses": [],
-      "next_page_key": null,
-      "unread_after_sample": false,
-      "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text='RPC error (400): {\"error\":\"Invalid fromAddress: exp",
-      "rows": []
+      "transfer_rows": 20,
+      "unique_transactions": 20,
+      "recipient_addresses": [
+        "0x00005934b024eaceb3802c2ddcf12d81fc5d5909",
+        "0x0000000d94514cbcf9455c0be85541e5d45cf1f5",
+        "0xb0ea3a6e2705b33a282433e1b95e97b656ba56e3",
+        "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+        "0x0000000ba5269b91a180f49db0b90e3c93e5e30b"
+      ],
+      "next_page_key": "5b5b7047-ce44-470e-b314-d5c20fe0868f",
+      "unread_after_sample": true,
+      "error": null,
+      "rows": [
+        {
+          "block": 47620848,
+          "tx": "0x68d5fee6213f8896da65e7e804305817d10a2bfd05add66e362ae05e4a29dfa6",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0x00005934b024eaceb3802c2ddcf12d81fc5d5909",
+          "raw_value": "0x1133338a617f42431b7",
+          "decimals": 18
+        },
+        {
+          "block": 47620854,
+          "tx": "0xedaf7a7e0bb1d374382a4687b16c74cc6f96cf5a223f9d66ead92e584ba1ed8c",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0x0000000d94514cbcf9455c0be85541e5d45cf1f5",
+          "raw_value": "0xc694d63b3602757da9",
+          "decimals": 18
+        },
+        {
+          "block": 47620856,
+          "tx": "0x2137ae18ec87a86fce5ab73733415c1bff41f571d27f11e443df2cc834f74448",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0x0000000d94514cbcf9455c0be85541e5d45cf1f5",
+          "raw_value": "0x132d7a4c82514bc3e08",
+          "decimals": 18
+        },
+        {
+          "block": 47620861,
+          "tx": "0xab224a81abc238e83b6d630b5f0fecc94fb77623fb99383966acedbcf2102407",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0x0000000d94514cbcf9455c0be85541e5d45cf1f5",
+          "raw_value": "0xa27724156a10c121d2",
+          "decimals": 18
+        },
+        {
+          "block": 47620862,
+          "tx": "0x8b5763c4d9f6c8353a3d0a11671cd79ff60996bfffa2c0e49d623b6a70c8e3bb",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xb0ea3a6e2705b33a282433e1b95e97b656ba56e3",
+          "raw_value": "0x12feb1d10a89f67080",
+          "decimals": 18
+        },
+        {
+          "block": 47620881,
+          "tx": "0xdbfa730fcc3d9def071f7c330330e9c1718d7c1af2b0b7cc82e7511037057690",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "raw_value": "0x5bbc0b499297e40262",
+          "decimals": 18
+        },
+        {
+          "block": 47620915,
+          "tx": "0x7c3ba1f60f50b662253efde44abce4da0dc1f69b90941f568ea4ff468d4aed10",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "raw_value": "0x3263db6c1fa397a593",
+          "decimals": 18
+        },
+        {
+          "block": 47620927,
+          "tx": "0xa5de3b80e8f5bdadd6b1261be4dc612aca958fce6d0d1f4eea277d7bf407fdf5",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "raw_value": "0x21ab1d3c5e859363e5",
+          "decimals": 18
+        },
+        {
+          "block": 47620930,
+          "tx": "0x723f35e9233c13f62ffccaf7eb1eef4cb8619f2f3308e4179fd46843d95a3451",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0x0000000ba5269b91a180f49db0b90e3c93e5e30b",
+          "raw_value": "0x8c094aad79e25f4d41",
+          "decimals": 18
+        },
+        {
+          "block": 47620932,
+          "tx": "0x3b5f342aa9397c9cbf428392d203a4596c9eeeb845c52b84546f8d789820bcb0",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0x0000000d94514cbcf9455c0be85541e5d45cf1f5",
+          "raw_value": "0xbf9a8ce4f38a6f7a56",
+          "decimals": 18
+        },
+        {
+          "block": 47620991,
+          "tx": "0xd7b0ecc2ccdb993a4f365e11993c51860102ebbf0d96e9e0feea05f18b54982e",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0x0000000d94514cbcf9455c0be85541e5d45cf1f5",
+          "raw_value": "0x1700ac2081529cdf4e2",
+          "decimals": 18
+        },
+        {
+          "block": 47620994,
+          "tx": "0x616431bb423c92fe3150e6b653288d427fc70a7906087955f3575b62fc60c275",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "raw_value": "0x5561db410a2e651daa",
+          "decimals": 18
+        },
+        {
+          "block": 47620995,
+          "tx": "0x8e5a9c27cf08bd44cc20fe2dcd9a587046ed8bfa1eeb0f37c7fa9e26fd3041c1",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "raw_value": "0x3c6858a09c15200797",
+          "decimals": 18
+        },
+        {
+          "block": 47621019,
+          "tx": "0xe11c4011b8c41e5eee83d945f9a83b47376c5e61227e6773bb55d70a9bee7810",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "raw_value": "0x2fcb921543813c6387",
+          "decimals": 18
+        },
+        {
+          "block": 47621024,
+          "tx": "0x7230c02d5bd028bfe393ab9898a374edae05a7a4625a4b94d874e898ce3e2f80",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0x0000000ba5269b91a180f49db0b90e3c93e5e30b",
+          "raw_value": "0xb0a95532e4f08b7ef7",
+          "decimals": 18
+        },
+        {
+          "block": 47621030,
+          "tx": "0xf6e3704f896c83b9f35e502632ca8e202935b6e07cdb53c1a3f9ca2afc8eb3e8",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xb0ea3a6e2705b33a282433e1b95e97b656ba56e3",
+          "raw_value": "0x730233b46694c913f8",
+          "decimals": 18
+        },
+        {
+          "block": 47621033,
+          "tx": "0x2eaef5f3c1efd1f25282147d50f2cd8c9d2731172d68c88c4711923b8767a569",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0x0000000ba5269b91a180f49db0b90e3c93e5e30b",
+          "raw_value": "0xa80158ea9e41dbd068",
+          "decimals": 18
+        },
+        {
+          "block": 47621067,
+          "tx": "0x4988c23591f366e7e52d755ab20d01f31eeaf34efe640fa3886282a26d4d83eb",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "raw_value": "0x2109eb7d44ee510aac",
+          "decimals": 18
+        },
+        {
+          "block": 47621079,
+          "tx": "0x4fe1973c79d9e8ed86b23ff3a0694c85b50312ad29dc42d35b9edcc26dfd328a",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "raw_value": "0x1ac21ad69273398f6e",
+          "decimals": 18
+        },
+        {
+          "block": 47621084,
+          "tx": "0xc41781e6ed4949dfb26ca56200283844734cbbea956a36d404b5d77310897e11",
+          "from": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "to": "0xb0ea3a6e2705b33a282433e1b95e97b656ba56e3",
+          "raw_value": "0x439b2290749fbb6813",
+          "decimals": 18
+        }
+      ],
+      "note": "Pool address typo in initial write (missing final hex 'c') corrected from prior source; chain query succeeded."
     },
     {
       "label": "MARSCOIN",
