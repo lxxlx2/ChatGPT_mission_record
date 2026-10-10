@@ -129,7 +129,9 @@
           "block": 78069513,
           "bnb": 2.03846
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0xf5988713400da6fc8a58ec9515e2b0df9b40b115",
@@ -212,7 +214,9 @@
           "block": 63203157,
           "bnb": 8.4998
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0x161ba15a5f335c9f06bb5bbb0a9ce14076fbb645",
@@ -241,7 +245,9 @@
           "block": 55942605,
           "bnb": 0.99999
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0x66fa07aae14e110013fb1a8835413ea77fe1b5c6",
@@ -299,7 +305,9 @@
           "block": 47749159,
           "bnb": 3
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0x5d146231bbb42c2289a827d5c18e13d12e1c39d1",
@@ -333,7 +341,9 @@
           "block": 47634777,
           "bnb": 0.7
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0x4789f192df5deb559af2bd9185781fda995856d5",
@@ -373,7 +383,9 @@
           "block": 62524634,
           "bnb": 0.5
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0x3ddd85301cc43b35c44d3293d36d15b6f57a2ae7",
@@ -395,7 +407,9 @@
           "block": 63319215,
           "bnb": 1e-7
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0xbd612a3f30dca67bf60a39fd0d35e39b7ab80774",
@@ -417,7 +431,9 @@
           "block": 61932498,
           "bnb": 0.04739
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0x3c783c21a0383057d128bae431894a5c19f9cf06",
@@ -451,7 +467,9 @@
           "block": 64216601,
           "bnb": 0.007984
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0x8894e0a0c962cb723c1976a4421c95949be2d4e3",
@@ -473,7 +491,9 @@
           "block": 34868057,
           "bnb": 1.01884568
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0x515b72ed8a97f42c568d6a143232775018f133c8",
@@ -495,7 +515,9 @@
           "block": 61122111,
           "bnb": 0.10999
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
@@ -565,7 +587,9 @@
           "block": 37082807,
           "bnb": 1.028
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     },
     {
       "source_address": "0xa180fe01b906a1be37be6c534a3300785b20d947",
@@ -587,7 +611,9 @@
           "block": 71467502,
           "bnb": 1.19999
         }
-      ]
+      ],
+      "code_status": "EOA",
+      "code_check_method": "Alchemy bnb-mainnet ethGetCode latest, independently queried for each of 13 sources in this research pass"
     }
   ],
   "not_proven": [
@@ -595,5 +621,6 @@
     "First 10 incoming external native BNB transfers only; native internal and ERC20 other-asset funding not indexed.",
     "Direct transfers alone imply interactions, not one operator, nor profitable copying relationship.",
     "Funds may be returned by marketplaces, bridge, trading, not initial capital funding. Need independent role/contract proof."
-  ]
+  ],
+  "funding_role_caveat": "Code=0x (EOA) does not prove individual/common ownership. 0x8894e0a0c962cb723c1976a4421c95949be2d4e3 was previously verified as Binance 51; exchange infrastructure must be excluded from owner clustering."
 }
