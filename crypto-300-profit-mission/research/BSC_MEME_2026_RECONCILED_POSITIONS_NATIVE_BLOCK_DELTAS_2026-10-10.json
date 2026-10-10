@@ -139,6 +139,77 @@
           "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
         }
       ]
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "token": "龙虾",
+      "all_token_flow_blocks": [
+        83635854,
+        83635885,
+        83635968,
+        83636000,
+        83636080,
+        83636094,
+        83636160,
+        85952169,
+        85952207
+      ],
+      "checked_blocks": [
+        {
+          "block": 83635854,
+          "delta_wei": "-500034868039999990",
+          "signed_token_in_transactions": [
+            "0xc73e2df907f59580fc27c7100ee94b877c452b019869a61cfe595761fd52177b"
+          ],
+          "signed_token_out_transactions": [],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 83635885,
+          "delta_wei": "-300032816039999987",
+          "signed_token_in_transactions": [
+            "0xde628d09c869cd86ff38f440d623cda55a8395f2e9b8049bc3ad52d07c48a71f"
+          ],
+          "signed_token_out_transactions": [],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 83635968,
+          "delta_wei": "393564350951502375",
+          "signed_token_in_transactions": [],
+          "signed_token_out_transactions": [
+            "0x46adc1bb441302aa49cb1de9aff8a3ca6569dd2324569491b513fa28eaa0b4cf"
+          ],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 83636000,
+          "delta_wei": "478189772999604840",
+          "signed_token_in_transactions": [],
+          "signed_token_out_transactions": [
+            "0x21870257be05a174adfbebf956553dd460c28ed94185b8b5a12b1d17744a0ef5"
+          ],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 83636080,
+          "delta_wei": "391735018681104735",
+          "signed_token_in_transactions": [],
+          "signed_token_out_transactions": [
+            "0xd129473c9d20ccdb8dfd102b19e7136fe0fed6ff5ce5b6ca86de1ccab3f78ed4"
+          ],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 83636094,
+          "delta_wei": "272842717361505598",
+          "signed_token_in_transactions": [],
+          "signed_token_out_transactions": [
+            "0x4ad7226b748a5e227bd759bfd477e9eaab4b9b27546193718136d432088dde6e"
+          ],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        }
+      ]
     }
   ],
   "interpretation": "Differences in native wallet BNB at block N minus block N-1; include gas; native delta does not capture WBNB, USDT and USDC received; check other tx in same block."
