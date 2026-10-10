@@ -242,6 +242,10 @@ function renderRuntime(runtime, control) {
     ? `上次心跳 ${Math.round(heartbeat)} 秒前`
     : '心跳时间未知';
   const controlText = translated(runtimeLabel,control?.status,'未知');
+  const needsReview = Number(control?.manual_review_total_count);
+  const reviewText = Number.isFinite(needsReview) && needsReview > 0
+    ? `<span>· 通知待人工核对 ${esc(needsReview)}（邮件 ${esc(Number(control?.manual_review_gmail_count)||0)}，本地 ${esc(Number(control?.manual_review_local_count)||0)}）</span>`
+    : '';
 
   $('runtime').className = `runtime ${String(rawStatus).toLowerCase()}`;
   $('runtime').innerHTML = `
@@ -250,6 +254,7 @@ function renderRuntime(runtime, control) {
       <strong>Frank 监控${translated(runtimeLabel,rawStatus,'未知')}</strong>
       <span>· ${esc(heartbeatText)}</span>
       <span>· 跟单引擎${esc(controlText)}</span>
+      ${reviewText}
     </div>`;
 }
 
