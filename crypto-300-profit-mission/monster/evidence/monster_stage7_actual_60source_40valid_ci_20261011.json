@@ -1,0 +1,449 @@
+{
+  "schema": "MONSTER_STAGE7_ALL60_REPLAY_CI_OUTPUT_V1",
+  "data_origin": "60 historical Stage5 events, 60 event-specific Binance official 1m 60h data files, frozen in Git",
+  "execution": "ACTUAL_GITHUB_ACTIONS_COMPLETED_SUCCESS",
+  "ci_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38090508617",
+  "ci_commit": "01fd92944ff750ed399c2a4bbe013334182a0c11",
+  "conclusions": "Research only. 40 time-complete 60h cases replayed; 20 not counted because missing source warmup",
+  "requirements": [
+    "same production V4 D0 observe_snapshot",
+    "same production V4 D1 process_queue",
+    "1m close only after bar closes",
+    "ticker quote24 reconstructed from 1440 1m bars",
+    "D2 historical book UNAVAILABLE, only delayed 30USDT price proxy"
+  ],
+  "PER_CASE": [
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2025-11-07T07:39:00Z",
+      "old_anchor": "2025-11-07T08:00:00Z",
+      "setups": 1,
+      "symbol": "1000WHYUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-03-30T11:00:00Z",
+      "setups": 0,
+      "symbol": "1000XUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-04-29T09:45:00Z",
+      "old_anchor": "2025-04-29T12:00:00Z",
+      "setups": 1,
+      "symbol": "ALPACAUSDT",
+      "watches": 3
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2026-06-07T08:00:00Z",
+      "setups": 0,
+      "symbol": "BIOUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-10-15T15:36:00Z",
+      "old_anchor": "2025-10-15T16:00:00Z",
+      "setups": 1,
+      "symbol": "BLESSUSDT",
+      "watches": 2
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-04-09T18:00:00Z",
+      "setups": 0,
+      "symbol": "CGPTUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-11-04T19:42:00Z",
+      "old_anchor": "2025-11-04T20:00:00Z",
+      "setups": 1,
+      "symbol": "CUDISUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-10-01T09:00:00Z",
+      "setups": 0,
+      "symbol": "CVXUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2026-06-10T06:57:00Z",
+      "old_anchor": "2026-06-10T09:00:00Z",
+      "setups": 1,
+      "symbol": "ESPORTSUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2025-10-25T03:03:00Z",
+      "old_anchor": "2025-10-25T04:00:00Z",
+      "setups": 1,
+      "symbol": "GIGGLEUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2026-05-01T19:39:00Z",
+      "old_anchor": "2026-05-01T20:00:00Z",
+      "setups": 1,
+      "symbol": "LABUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-11-25T08:00:00Z",
+      "setups": 0,
+      "symbol": "MIRAUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2026-04-27T05:57:00Z",
+      "old_anchor": "2026-04-27T06:00:00Z",
+      "setups": 1,
+      "symbol": "NOTUSDT",
+      "watches": 2
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2024-01-03T12:24:00Z",
+      "old_anchor": "2024-01-03T13:00:00Z",
+      "setups": 0,
+      "symbol": "PEOPLEUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-09-21T03:06:00Z",
+      "old_anchor": "2025-09-21T04:00:00Z",
+      "setups": 1,
+      "symbol": "PUMPBTCUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-05-25T23:00:00Z",
+      "setups": 0,
+      "symbol": "RUNEUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-10-18T04:15:00Z",
+      "old_anchor": "2025-10-18T05:00:00Z",
+      "setups": 0,
+      "symbol": "SLERFUSDT",
+      "watches": 2
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2025-03-28T03:54:00Z",
+      "old_anchor": "2025-03-28T05:00:00Z",
+      "setups": 1,
+      "symbol": "VIDTUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2022-05-22T03:45:00Z",
+      "old_anchor": "2022-05-22T04:00:00Z",
+      "setups": 1,
+      "symbol": "ANCUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-12-23T19:15:00Z",
+      "old_anchor": "2025-12-23T20:00:00Z",
+      "setups": 1,
+      "symbol": "BIFIUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-12-31T19:12:00Z",
+      "old_anchor": "2025-12-31T17:00:00Z",
+      "setups": 1,
+      "symbol": "BROCCOLI714USDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": null,
+      "old_anchor": "2021-03-07T12:00:00Z",
+      "setups": 0,
+      "symbol": "CHRUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2022-11-15T00:21:00Z",
+      "old_anchor": "2022-11-15T01:00:00Z",
+      "setups": 1,
+      "symbol": "FIDAUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2021-01-01T02:48:00Z",
+      "old_anchor": "2021-01-01T03:00:00Z",
+      "setups": 1,
+      "symbol": "FUNUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2025-03-11T19:54:00Z",
+      "old_anchor": "2025-03-11T20:00:00Z",
+      "setups": 1,
+      "symbol": "HARDUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2025-04-27T00:03:00Z",
+      "old_anchor": "2025-04-27T01:00:00Z",
+      "setups": 1,
+      "symbol": "JSTUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2022-12-25T18:09:00Z",
+      "old_anchor": "2022-12-25T19:00:00Z",
+      "setups": 0,
+      "symbol": "MIRUSDT",
+      "watches": 2
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2021-01-03T15:51:00Z",
+      "old_anchor": "2021-01-03T13:00:00Z",
+      "setups": 1,
+      "symbol": "NANOUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2026-02-10T05:03:00Z",
+      "old_anchor": "2026-02-10T08:00:00Z",
+      "setups": 2,
+      "symbol": "NKNUSDT",
+      "watches": 2
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-11-07T17:00:00Z",
+      "setups": 0,
+      "symbol": "NOTUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": null,
+      "old_anchor": "2022-12-04T19:00:00Z",
+      "setups": 0,
+      "symbol": "OSMOUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2024-01-03T12:24:00Z",
+      "old_anchor": "2024-01-03T13:00:00Z",
+      "setups": 1,
+      "symbol": "PEOPLEUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2021-01-29T16:57:00Z",
+      "old_anchor": "2021-01-29T17:00:00Z",
+      "setups": 1,
+      "symbol": "PNTUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2026-07-02T14:36:00Z",
+      "old_anchor": "2026-07-02T15:00:00Z",
+      "setups": 1,
+      "symbol": "QKCUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-06-10T23:00:00Z",
+      "setups": 0,
+      "symbol": "RPLUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2026-06-11T06:24:00Z",
+      "old_anchor": "2026-06-11T07:00:00Z",
+      "setups": 1,
+      "symbol": "STGUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2026-06-29T17:57:00Z",
+      "old_anchor": "2026-06-29T20:00:00Z",
+      "setups": 1,
+      "symbol": "SYNUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2025-01-21T10:45:00Z",
+      "old_anchor": "2025-01-21T11:00:00Z",
+      "setups": 1,
+      "symbol": "UTKUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2021-03-09T05:54:00Z",
+      "old_anchor": "2021-03-09T06:00:00Z",
+      "setups": 1,
+      "symbol": "VITEUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-03-02T17:00:00Z",
+      "setups": 0,
+      "symbol": "XTZUSDT",
+      "watches": 0
+    }
+  ],
+  "SKIPPED": [
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_AVNTUSDT_2025-09-09.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_BROCCOLI714USDT_2025-03-21.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_BTWUSDT_2026-06-04.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_CLOUSDT_2025-10-14.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_CTRUSDT_2026-05-29.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_EULUSDT_2025-10-14.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_FOLKSUSDT_2025-11-06.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_GRVTUSDT_2026-08-01.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_MMTUSDT_2025-11-04.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_MUSDT_2025-07-08.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_PNUTUSDT_2024-11-12.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_RECALLUSDT_2025-10-15.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_STBLUSDT_2025-09-17.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_WCTUSDT_2025-04-16.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_futures_ZRCUSDT_2025-07-29.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_spot_CHZUSDT_2021-03-07.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_spot_MMTUSDT_2025-11-04.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_spot_PNUTUSDT_2024-11-12.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_spot_STPTUSDT_2021-09-30.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_spot_WCTUSDT_2025-04-16.json"
+    }
+  ],
+  "STAGE7_REAL_BINANCE_REPLAY_SUMMARY": {
+    "cases_replayed": 40,
+    "cases_skipped": 20,
+    "caution": "RETROSPECTIVE_SELECTED_COHORTS_NOT_UNBIASED_UNIVERSE",
+    "cohorts": {
+      "FULLMARKET_SAMPLED": {
+        "assumed_trades_with_exit": 9,
+        "found_n": 11,
+        "n": 20,
+        "proxy_net_pct_20bps_losers": 2,
+        "proxy_net_pct_20bps_median": 25.0207,
+        "proxy_net_pct_20bps_winners": 7,
+        "setup_n": 11,
+        "watch_events": 13
+      },
+      "GT5X_PREHIT_POSITIVE": {
+        "assumed_trades_with_exit": 16,
+        "found_n": 18,
+        "n": 20,
+        "proxy_net_pct_20bps_losers": 2,
+        "proxy_net_pct_20bps_median": 45.1611,
+        "proxy_net_pct_20bps_winners": 14,
+        "setup_n": 15,
+        "watch_events": 23
+      }
+    },
+    "historical_orderbook": "UNAVAILABLE",
+    "production_gate": "NO_GO",
+    "profitability_validated": false
+  }
+}
