@@ -1028,7 +1028,7 @@ User screenshot compared the installed Frank signals view (~2026-10-11 04:48 Ban
 - Entire feature is **disabled by default** until `MISSION_EVIDENCE_EXPORT_ENABLED=1` is enabled **on a separately reviewed deployment**. Git records are stored exclusively on newly created `evidence/frank-ca-local` branch. No new monitor, automation, launchd, Gmail or trading action.
 - Canonical product architecture/risks in `meme/frank-ca-git-evidence-sync-design-2026-10-11.md`. Evidence branch README records provenance and data contract; no genuine user Mac evidence has been claimed uploaded yet.
 
-**Actual GitHub CI acceptance**: [run 38091791663](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38091791663) succeeded on `0328130a`: 11 new exporter tests passed, 80 existing Dashboard/Control/Delivery regression tests passed; compilation passed. This is **isolated CI**, not actual Mac installation or live provider authentication.
+**Actual GitHub CI acceptance**: [run 38091976029](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38091976029) succeeded on `c4caebfb`: 11 new exporter tests passed, 80 existing Dashboard/Control/Delivery regression tests passed; compilation passed. This is **isolated CI**, not actual Mac installation or live provider authentication.
 
 **Gates:** `DESIGN_AND_RESEARCH_CODE=YES`; `GITHUB_CI=PASS`; `REAL_MAC_SOURCE_CAPTURE=NOT_RUN`; `REAL_MAC_GH_AUTH=NOT_VERIFIED`; `REAL_MAC_FIRST_EVIDENCE_GIT_READBACK=NOT_VERIFIED`; `INDEPENDENT_EXTERNAL_AI_REVIEW=NOT_RUN`; `MERGE=NO`; `PRODUCTION_DEPLOY=NO`; `FROZEN_FRANK_MODEL_UNCHANGED`; `PRODUCTION_TRADING=NO_GO`.
 
