@@ -14,49 +14,84 @@
       "to": "0xd70ce47ec32625420640da206f0b3525c2bec678",
       "tx": "0xb5e153902bedc8246633c476525b7c1f5bac843692efa16fdfa9a5937ce695b2",
       "block": 48397922,
-      "bnb": 5
+      "bnb": 5,
+      "actual_tx_from": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+      "actual_tx_to": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+      "tx_native_value_wei": "5000000000000000000",
+      "tx_block": 48397922,
+      "tx_signer_verified": true
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
       "to": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
       "tx": "0x9570161c7dcc308f3aca1da7e2c4975135d95379ed3e7ffdf011f204f9433e8e",
       "block": 60878718,
-      "bnb": 0.11
+      "bnb": 0.11,
+      "actual_tx_from": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "actual_tx_to": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
+      "tx_native_value_wei": "110000000000000000",
+      "tx_block": 60878718,
+      "tx_signer_verified": true
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
       "to": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
       "tx": "0x6fdf6a1e458f0c8443eee7a726a73ccda95d2d1771b3968562fd31f46e5b0f17",
       "block": 61093210,
-      "bnb": 0.055
+      "bnb": 0.055,
+      "actual_tx_from": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "actual_tx_to": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
+      "tx_native_value_wei": "55000000000000000",
+      "tx_block": 61093210,
+      "tx_signer_verified": true
     },
     {
       "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
       "to": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
       "tx": "0x49260f6dd65211c5373d77569234276936ed1bf632bae662d0e5617675c65585",
       "block": 48398195,
-      "bnb": 5
+      "bnb": 5,
+      "actual_tx_from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+      "actual_tx_to": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+      "tx_native_value_wei": "5000000000000000000",
+      "tx_block": 48398195,
+      "tx_signer_verified": true
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
       "to": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
       "tx": "0xb1b0d6f4f3f225836d53a9ef0dd391941e9d2cebac6ca2595d018bac2cf115b0",
       "block": 61967419,
-      "bnb": 0.1
+      "bnb": 0.1,
+      "actual_tx_from": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "actual_tx_to": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "tx_native_value_wei": "100000000000000000",
+      "tx_block": 61967419,
+      "tx_signer_verified": true
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
       "to": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
       "tx": "0x1a4ee38e5069a7d4d801010f7c303376359d6e208683f50777f8c17edb6c0a9f",
       "block": 62116128,
-      "bnb": 0.3
+      "bnb": 0.3,
+      "actual_tx_from": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "actual_tx_to": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "tx_native_value_wei": "300000000000000000",
+      "tx_block": 62116128,
+      "tx_signer_verified": true
     },
     {
       "from": "0x4789f192df5deb559af2bd9185781fda995856d5",
       "to": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
       "tx": "0x6c1d22027cf49ea6eabc9b87fd99d85ab13554d1879cd0921c460e2c7cf185a0",
       "block": 62524634,
-      "bnb": 0.5
+      "bnb": 0.5,
+      "actual_tx_from": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "actual_tx_to": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "tx_native_value_wei": "500000000000000000",
+      "tx_block": 62524634,
+      "tx_signer_verified": true
     }
   ],
   "shared_external_senders": [
