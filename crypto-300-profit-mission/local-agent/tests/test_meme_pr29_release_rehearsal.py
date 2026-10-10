@@ -126,6 +126,11 @@ def _setup(tmp_path, monkeypatch):
                         {"delivery_allowed": True, "updated_at":"2026-10-10T00:00:00Z"})
     monkeypatch.setattr(deploy, "check_frank_stable",
                         lambda *args: (SimpleNamespace(verify=lambda *x: None),{}))
+    # A successful restore must pass actual integration_health entrypoint.
+    # Fake only provider process/HTTP internals, never actual Mac services.
+    monkeypatch.setattr(deploy,"integration_health",
+                        lambda port,loop,dash,agent,previous_updated=None:
+                        {"dashboard_routes":7,"runtime_status":"LIVE","control_status":"OK"})
     restarts=[]
     monkeypatch.setattr(deploy, "restart", lambda label: restarts.append(label))
     return {
@@ -155,7 +160,9 @@ def test_apply_failure_uses_real_backup_restore_and_keeps_append_only_receipts(t
         with sqlite3.connect(state["control"]/"mission-control.sqlite") as conn:
             conn.execute("INSERT INTO gmail_delivery VALUES (?,?,?)",
                          ("new-mail", "SENT_VERIFIED", "new-message-id"))
-        raise RuntimeError("SIMULATED_NEW_RELEASE_HEALTH_FAILURE")
+        if agent != state["old_agent"]:
+            raise RuntimeError("SIMULATED_NEW_RELEASE_HEALTH_FAILURE")
+        return {"dashboard_routes":7,"control_status":"OK","runtime_status":"LIVE"}
 
     monkeypatch.setattr(deploy,"integration_health",inject_post_restart_failure)
     with pytest.raises(RuntimeError, match="SIMULATED_NEW_RELEASE_HEALTH_FAILURE"):
@@ -283,3 +290,73 @@ def test_old_release_mission_delivery_ignores_new_manual_review_rows(tmp_path):
         "SELECT status FROM decision_outbox WHERE decision_id=?",(decision,)
     ))=={"MANUAL_REVIEW"}
     control.close()
+
+
+
+def test_rollback_runtime_health_failure_is_not_claimed_as_success(
+    tmp_path,monkeypatch,capsys,
+):
+    """A successful kickstart is NOT enough to report rollback success."""
+    state=_setup(tmp_path,monkeypatch)
+    app=state["app"]
+    backup=app/"deploy-backups"/"pr29-unhealthy"
+    backup.mkdir(parents=True)
+    for name,data in state["original"].items():
+        (backup/name).write_bytes(data)
+        (app/name).write_text(f'LOCAL_AGENT="{HERE}"\n')
+    monkeypatch.setattr(
+        deploy,"integration_health",
+        lambda *args,**kwargs:deploy.abort("ROLLBACK_HEALTH_CHECK_FAILED"),
+    )
+    with pytest.raises(RuntimeError,match="ROLLBACK_HEALTH_CHECK_FAILED"):
+        _invoke(monkeypatch,[
+            "--rollback","--backup",str(backup),"--confirm",deploy.CONFIRM
+        ])
+    assert "RUNNERS_RESTORED=YES" not in capsys.readouterr().out
+    assert {name:(app/name).read_bytes() for name in state["names"]}==state["original"]
+    assert state["restarts"]==[
+        "com.audit.frank-meme.dashboard","com.audit.frank-meme.loop"
+    ]
+
+
+def test_rollback_invalid_runner_backup_never_changes_any_active_file(
+    tmp_path,monkeypatch,
+):
+    state=_setup(tmp_path,monkeypatch)
+    app=state["app"]
+    backup=app/"deploy-backups"/"pr29-invalid"
+    backup.mkdir(parents=True)
+    for name,data in state["original"].items():
+        (backup/name).write_bytes(data)
+    injected=(backup/"mission-loop.sh").read_text().replace(
+        str(state["old_agent"]),"/tmp/unknown-agent/crypto-300-profit-mission/local-agent"
+    )
+    (backup/"mission-loop.sh").write_text(injected)
+    with pytest.raises(RuntimeError,match="ROLLBACK_BACKUP_SOURCE_MISMATCH"):
+        _invoke(monkeypatch,[
+            "--rollback","--backup",str(backup),"--confirm",deploy.CONFIRM
+        ])
+    assert state["restarts"]==[]
+    assert {name:(app/name).read_bytes() for name in state["names"]}==state["original"]
+
+
+def test_rollback_validation_requires_heartbeat_advance_when_prior_exists(
+    tmp_path,monkeypatch,
+):
+    state=_setup(tmp_path,monkeypatch)
+    app=state["app"]
+    backup=app/"deploy-backups"/"pr29-freshness"
+    backup.mkdir(parents=True)
+    for name,data in state["original"].items():
+        (backup/name).write_bytes(data)
+    checked=[]
+    def probe(port,loop,dash,agent,previous_updated=None):
+        checked.append((port,agent,previous_updated))
+        if previous_updated is None:
+            raise AssertionError("MUST_REQUIRE_HEARTBEAT_ADVANCE")
+        return {"dashboard_routes":7}
+    monkeypatch.setattr(deploy,"integration_health",probe)
+    _invoke(monkeypatch,[
+        "--rollback","--backup",str(backup),"--confirm",deploy.CONFIRM
+    ])
+    assert checked==[(8766,state["old_agent"],"2026-10-10T00:00:00Z")]
