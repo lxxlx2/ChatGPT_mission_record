@@ -18,9 +18,29 @@
 | Stage4 67,300事件 | `evidence/monster_stage4_full_market_causal_cohorts_20261010.csv` 为cohort汇总；全量157,437行研究episode原始输入来自之前用户上传包，不能因为汇总存在而声称整个原始样本已在Git | **不能**：小时聚合不能还原新V4分钟级WATCH/D1 |
 | Stage5 60例前态特征 | `monster_stage5_first_watch_prestates_60case_20261010.csv`，已明确历史普通与未来已知5x正例及未满24小时样本 | **不能**：没有连续分钟路径及分钟观察时点ticker |
 | Stage6 D2 3组现货100档book | `monster_stage6_spot_orderbook_3symbol_20261011.json`，2026-10-11约03:55 BKK采集的实时公开盘口 | **不能**：并非历史各WATCH瞬间的历史盘口；只能做同瞬时30USDT成本示例 |
-| **新数据读取核验** | `evidence/monster_v4_backtest_xtz_1m_probe_20261011.json`：直接调用Binance官方历史Spot `1m`，2025-03-02T15:00至18:59 UTC，真实连续240根，来自Stage5普通例 `XTZUSDT` (17:00 UTC WATCH anchor) | **仅证明官方分钟原始行情当前可取**；没有24h预热，也没有全市场覆盖，绝不报V4胜率 |
+| **新数据读取核验** | `evidence/monster_v4_backtest_xtz_1m_probe_20261011.json`：直接调用Binance官方历史Spot `1m`，2025-03-02T15:00至18:59 UTC，真实连续240根，来自Stage5普通例 `XTZUSDT` (17:00 UTC WATCH anchor) | **仅证明官方分钟原始行情当前可取（另有历史GT5x BROCCOLI714 240根分钟数据与价格阈值压力测试）**；没有24h预热，也没有全市场覆盖，绝不报V4胜率 |
 
 上述取数为源可用性起点，不能称完成全量V4回测。历史 Spot/Futures 数据获取可用官方 REST / Binance public-data 档案；2025年起 Spot public-data ZIP 时间精度变化需对照官方文档。不依赖付费GMGN。对退市、上市前、期货专用、0量bar必须保留不可交易/censored状态，不能补零后照常统计回报。
+
+### 首次用官方原始1m价格实证发现 D0 的历史缺口
+
+在上述 XT Z 与 BROCCOLI714 各240根1m数据获取后，又完整获取并保留了 **BROCCOLI714USDT** 的官方历史Spot `1m` 实际240根：2025-12-31 15:00–18:59 UTC，历史旧信号首次观察锚点 `2025-12-31T17:00:00Z`；原Stage5将此例归为 `GT5X_PREHIT_POSITIVE` 且记录未来最大close约5.4679×、最大high约5.5004×。这份报告**仅以老报告的GT标签作案例索引，不把标签喂给发现器**。证据分别位于：
+
+- [XTZ官方1m连续240根](evidence/monster_v4_backtest_xtz_1m_probe_20261011.json)
+- [BROCCOLI714官方1m连续240根](evidence/monster_v4_backtest_broccoli714_1m_probe_20261011.json)
+- [可复算的因果价格采样脚本](../local-agent/scripts/monster_v4_historical_price_probe.py)
+
+研究代理：用每三根完全收盘的官方1m close构成一个3m时点，观察之前3/15/60分钟的收益是否满足**当前V4 D0已实现**的价格阈值。此方法不使用未来价，仍不能还原过去ticker的精确快照时间、订单簿和24小时ticker成交额。窗口 15:00–19:00 UTC 的80个模拟3m观察点：
+
+| 当前研究阈值 | XTZ本4小时最大收益 | BROCCOLI714本4小时最大收益 | 两例价格阈值命中次数 |
+|---|---:|---:|---:|
+| 3分钟 ≥5% | 2.1171% | 2.044% | 0 / 0 |
+| 15分钟 ≥8% | 4.3883% | 4.481% | 0 / 0 |
+| 60分钟 ≥15% | 6.9588% | 7.340% | 0 / 0 |
+
+原历史WATCH时点对比：XTZ的3/15/60分钟代理涨幅约0.6061%/0.2415%/6.9588%；**BROCCOLI714约-0.3704%/+1.8168%/+5.6559%**。后者是已知历史5×正例，但V4现行三个价格路径在该4h窗口里均**不会触发**；仅依赖它们就存在把本应关注的事件拖后乃至漏掉的风险。不能因此断言它在窗口外永远不会命中，也不能据此编造整体漏报率。
+
+**立即设计结论：当前 V4 D0 研究阈值不能放行。** 需要研究成交额异常、相对BTC强弱、上新/流动性变化等独立早期观察路径，再用全体普通样本控制噪声；不能只为了该5×例临时把价格阈值向下调而声称验证成功。
 
 ## B. 下一步先做的数据分析，而不是追加部署代码
 
