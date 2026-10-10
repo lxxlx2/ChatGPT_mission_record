@@ -42,7 +42,7 @@ def _read_decimal(raw: Any, decimals: Any) -> str | None:
         if n < 0 or n > 18 or not str(raw).isascii() or not str(raw).isdecimal():
             return None
         value = Decimal(str(raw)) / (Decimal(10) ** n)
-        return str(value) if value.is_finite() and value >= 0 else None
+        return str(value.quantize(Decimal(1).scaleb(-n))) if value.is_finite() and value >= 0 else None
     except (InvalidOperation, ValueError, TypeError, OverflowError):
         return None
 
