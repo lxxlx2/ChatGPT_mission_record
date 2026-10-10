@@ -16,6 +16,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_d2.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_d2_evidence.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_price_probe.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_replay.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_historical_replay.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_historical_price_probe.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_mac_service.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_mac_service.py'
@@ -87,6 +89,13 @@ jobs:
           python -B -m py_compile scripts/monster_v4_historical_price_probe.py tests/test_monster_v4_historical_price_probe.py
           python -B -m unittest discover -v -s tests -p test_monster_v4_historical_price_probe.py
           python -B scripts/monster_v4_historical_price_probe.py
+      - name: Stage7 authentic 60h 1m data same-production D0 and D1 replay, skip gap cases
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_historical_replay.py tests/test_monster_v4_historical_replay.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_historical_replay.py
+          python -B scripts/monster_v4_historical_replay.py --output /tmp/monster_v4_stage7_actual.json > /tmp/monster_v4_stage7_stdout.json
+          python -c 'import json; d=json.load(open("/tmp/monster_v4_stage7_actual.json")); print(json.dumps({"STAGE7_REAL_BINANCE_REPLAY_SUMMARY":d["summary"],"PER_CASE":[{"symbol":x["symbol"],"cohort":x["cohort"],"watches":x["watch_count"],"setups":x["d1_setups"],"first_watch":x["first_watch_utc"],"old_anchor":x["old_research_watch_utc"]} for x in d["cases"]],"SKIPPED":d["skipped"]]},sort_keys=True))'
       - name: Monster macOS isolated installation and rollback contract (hermetic)
         working-directory: crypto-300-profit-mission/local-agent
         run: |
