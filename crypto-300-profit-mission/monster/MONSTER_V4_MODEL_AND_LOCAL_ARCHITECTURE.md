@@ -1,6 +1,6 @@
 # Monster V4 — 实用型本地妖币发现与预警模型（研究合同 v0.1）
 
-状态：**研究方案 / 未复跑 / 未经独立 review / 未上线**；目标从发现到用户通知尽可能短。已有的 V3-062 仅为 *历史参考配置*，不是生产预测模型。
+状态：**研究方案与 D0/D1 Shadow 原型已写 Git / 未经独立 AI review / 未在用户 Mac 部署 / 未接入真实 Gmail**；目标从发现到用户通知尽可能短。已有的 V3-062 仅为 *历史参考配置*，不是生产预测模型。
 依据：[历史数据复核](MONSTER_V4_DATA_BASELINE_2026-10-10.md)、[V2 D1](../local-agent/docs/MONSTER_D1_V2.md)、[V3 报告](../local-agent/PHASE_MONSTER_D1_V3_REDESIGN_REPORT.md)、[BTW 漏报](../health/2026-09-28-btw-monster-missed-alert.md) 和既有 [D2 资料源审查](../local-agent/docs/MONSTER_D2_SOURCE_AUDIT_V1.md)。
 
 ## 0. 必须先解决什么
@@ -134,3 +134,36 @@ Binance Spot + USD-M exchangeInfo / ticker / klines / optional WS
 | Frank 副作用 | 0 改动、0 停机要求，Monster 独立部署回滚 |
 
 本稿的 `WATCH/SETUP/IGNITION` 阈值均为研究候选，不是经过证明的可盈利买卖策略。**优先独立实现与正确通知，再用数据迭代，不能为了凑信号而伪造涨幅概率**。
+
+
+## 7. 2026-10-10 首批真实工程交付与数据源核验
+
+### 已实际实现并提交原 PR #30
+
+- [Shadow collector + durable queue](../local-agent/scripts/monster_v4_shadow.py)：Python 标准库，Binance Spot + USD-M 官方 exchangeInfo / ticker/24hr / 5m klines；只支持单次手动扫描和状态查看，未安装后台进程。
+- [Hermetic regressions](../local-agent/tests/test_monster_v4_shadow.py)：15项自动测试，覆盖首次快照建基线、双次快照异动、重启去重、旧队列优先、网络错误退避、不删除未完成候选、过期事件、已闭合5m与因果时钟、价格失效后的二次发现、源故障/恢复记录。
+- [Research CI](../../.github/workflows/monster-v4-research-baseline.yml)：新脚本编译与15项测试已经进入 CI。CI 通过与真实 Binance 网络、真机器持续运行是不同层级验证。
+- SQLite 独立记录快照、D0/D1 队列、事件、Dry-run outbox、扫描覆盖与故障状态。WATCH 写入和队列创建在同一个事务；数据源失败不宣称覆盖成功，另一个 venue 仍可独立运行。超时深查只作 LATE_REVIEW，不补发过期买入价。
+- SETUP 必须存在 WATCH 之后完成的5m证据；旧时段5m不能反向提高后来的信号等级。首次 WATCH 后观察价格回撤15%标为 INVALIDATED，真实二次异动可以重新 WATCH。
+- 出站消息均为 DRY_RUN_ONLY，仅落库未发送；Frank/Gmail/LaunchAgent 没有变化。
+
+### 直接通过 Binance 官方公开接口完成的一次性核对
+
+在 2026-10-10 查询全市场 exchangeInfo 与无 symbol 的 ticker/24hr，按当前 status=TRADING / USDT 及 venue 条件筛选：
+
+| 场所与条件 | 当前活跃 venue-symbol | ticker 对应记录 |
+|---|---:|---:|
+| Spot + isSpotTradingAllowed | 506 | 506 |
+| USD-M Perpetual | 525 | 525 |
+| 合计（可能重复经济标的） | **1031** | **1031** |
+
+这是单个时点的官方市场 API 检查结果，不意味着脚本在用户 Mac 已实现前瞻连续100%扫描，也不代表1031个不同代币。Spot全市场24h ticker 的官方 IP weight=80，USD-M 为40，需要实际观察 API 429、动态请求权重、重试及恢复。
+
+### 当前必须保留的限制
+
+1. 快照增长达到5%、24h滚动 quoteVolume 达10万 USDT仅是探索性 D0 条件；24h成交额不能冒充3min成交额，快照时间间隔实际允许30秒至10分钟。尚未验证盈利。
+2. 真实连续轮询、前瞻漏报率/通知时效、数据源健康面板、盘口深度与30 USD成交模拟仍未完成；WATCH/SETUP不等于可盈利的 IGNITION。
+3. 尚无其它独立 AI 完成的代码审阅。当前只有 CI 和实现者自查，不可伪称外部review已通过。
+4. 本地安装、连续至少14日 Shadow、真实 Monster Gmail（及 Sent readback）需要后续安全关口。生产交易始终 NO_GO，现有 Frank 不受影响。
+
+下一顺序：前瞻真实数据捕获和覆盖监控、D0阈值与早期赢家区分、D2 Spot 30USDT 盘口验证、独立审阅和回归测试、独立部署验收、用户授权后通知发送测试。
