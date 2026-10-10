@@ -4,7 +4,7 @@ Last updated: 2026-09-27
 Status: canonical
 Timezone: Asia/Bangkok
 
-> **Execution precedence (2026-10-10):** The historic `09:00/10:00/11:00` and `every hour` scheduling paragraphs below describe older designs, NOT today's executable schedule. Existing sole task actually runs at 00/03/06/08/09/10/11/15/19/23 **at :10** Asia/Bangkok. Ordinary collectors 00/03/06/15/19/23 use `COLLECTOR_SPEC.md` V2. 08:10 prebuild; 09:10 primary; 10:10/11:10 recovery. Current `REPORT_ACCEPTANCE.md` CR-20 and `AUTOMATION_RUNTIME.md` latest override precedence. No added schedule, task or monitored category.
+> **Execution precedence (2026-10-10):** The historic `09:00/10:00/11:00` and `every hour` scheduling paragraphs below describe older designs, NOT today's executable schedule. Existing sole task now runs at 00/03/06/08/09/10/11/12/16/20 **at :20** Asia/Bangkok, user-authorized 2026-10-10. Ordinary collectors 00/03/06/12/16/20 use `COLLECTOR_SPEC.md` V2. 08:20 prebuild; 09:20 primary; 10:20/11:20 recovery. Current `REPORT_ACCEPTANCE.md` CR-20 and `AUTOMATION_RUNTIME.md` latest override precedence. No added schedule, task or monitored category.
 
 
 ## 1. Purpose
@@ -519,7 +519,7 @@ A run audit saying sent/attempted/known does not satisfy delivery.
 
 To isolate research from send failures:
 - the primary hourly task may persist a QA-approved pending body at `crypto-daily/delivery-pending/YYYY-MM-DD.md` after a Gmail failure;
-- the existing dedicated publisher/recovery automation may deliver that body at 09:10, 10:10 or 11:10;
+- the existing enabled Crypto Daily task may deliver that body at 09:20, 10:20 or 11:20; historical separate-publisher references are inactive;
 - both automations must deduplicate using the exact Gmail subject and official report path;
 - the body eventually archived as official must equal the successfully sent Gmail body;
 - pending files remain historical audit artifacts and do not count as an official report.
