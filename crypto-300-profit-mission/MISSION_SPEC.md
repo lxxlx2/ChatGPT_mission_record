@@ -1,14 +1,14 @@
 # Crypto Profit Mission
 
-Updated: 2026-10-07
+Updated: 2026-10-10
 Timezone: Asia/Bangkok
 
 ## Authority
 
 This file defines global Mission policy and current authority boundaries.
 
-Current scope/status detail:
-- `STATUS_SCOPE_2026-10-04.md`
+Current dated scope history:
+- `STATUS_SCOPE_2026-10-04.md` is an immutable 2026-10-04 historical snapshot. For more recent operational facts, see `state/latest.md`; for live balances see `portfolio/current.md`.
 
 Current Frank/Meme operational status:
 - `meme/MISSION_MEME_CURRENT_STATUS_2026-10-07.md`
@@ -21,7 +21,7 @@ Current-state precedence:
 5. active module policy/watchlist files
 6. historical/background strategy and immutable reports
 
-A newer dated scope/status file supersedes older dated scope snapshots. Historical reports remain evidence for what happened but do not override a newer current-state authority.
+A newer dated scope/status file supersedes older dated scope snapshots, and current mutable status pointers override older dated snapshots for facts updated since their dates. Historical reports remain evidence for what happened but do not override a newer current-state authority.
 
 Never use stale chat values or older Git snapshots to overwrite newer verified state.
 
@@ -69,6 +69,13 @@ Rules:
 - wallet balance changes are not PnL without transaction/cost-basis evidence;
 - historical snapshots belong in Git history or immutable reports, not `state/latest.md`.
 
+Mandatory asset display/valuation rule, effective as a continuing Mission policy:
+- **Only independently priced, individually identifiable positions with current supportable USD market value >= $1.00 are included in displayed holdings and USD marked subtotals.** Each position worth < $1.00 is excluded individually; never combine multiple dust items to manufacture a qualifying position. At exactly $1.00 the item qualifies.
+- A token/NFT whose price or identity cannot be independently verified remains `UNPRICED/UNRESOLVED`, excluded from liquid NAV but not relabeled as zero or proven under $1. Treat scam/claim-bait as excluded.
+- This is a **presentation and marked-assets rule**, not authorization to erase transaction history or historical cost, or to ignore dust-related fees when reconstructing actual PnL.
+- Binance CEX current amounts require a new authenticated read or user screenshot; historical screenshots remain dated. Bybit is fully excluded as reserved personal cash.
+- Wallet portfolio coverage may be incomplete. A failing or truncated token enumerator must never silently imply there are no further holdings.
+
 Sui note:
 - current generic connected portfolio method does not accept the canonical Sui address format;
 - until a supported Sui-native endpoint is used, fresh Sui state must not be labeled `DIRECT_CHAIN`.
@@ -114,7 +121,7 @@ Current functions:
 - runtime approved-policy copy under `~/Library/Application Support/FrankMeme/` to avoid macOS Documents/TCC denial.
 
 Latest local acceptance evidence supplied by the user:
-- full local-agent suite: `706 passed`;
+- earlier local-agent suite: `706 passed` (historical Oct 7 acceptance only; later PR reviews/tests are in the operational handoff);
 - Mission Control health `status = OK`;
 - `delivery_allowed = true`;
 - Dashboard HTTP 200;
@@ -152,10 +159,10 @@ Current NFT holdings are separate from the radar:
 - UNICRED current owned count: 0;
 - INK #372 remains prior-known inventory but was not freshly ownership-verified/marked in the 2026-10-04 refresh.
 
-### MONSTER / 妖币 — FROZEN
+### MONSTER / 妖币 — V4 RESEARCH-ONLY; NO LIVE AUTHORITY
 
 Status:
-`RESEARCH_FROZEN / VALIDATION_NOT_PASSED`
+`V3_VALIDATION_NOT_PASSED / V4_RESEARCH_DRAFT_PR_30 / NO_MONSTER_RUNTIME`
 
 Latest authority:
 - `local-agent/PHASE_MONSTER_D1_V3_REDESIGN_REPORT.md`
@@ -174,7 +181,7 @@ Current result:
 - Monster LaunchAgent = 0;
 - no live Monster Gmail/scanner authority.
 
-The exposed 2024 validation set must not be reused to tune or reselect a V4 winner. No automatic V4/D2/D3 work is authorized.
+The exposed 2024 validation set must not be repackaged as an untouched V4 holdout. V4 **read-only research** is proceeding in Draft PR #30 at `research/monster-v4-local-discovery-20261010`; completed historical studies do **not** establish a profitable or independently validated buy model. No automatic production V4 scanner, LaunchAgent, Gmail, D2/D3 promotion or trading is authorized.
 
 ### CORE PRICE / overall-market trend — PAUSED
 
@@ -208,7 +215,7 @@ Umbrella task:
 
 Reason:
 - Frank/Meme authority moved fully local;
-- Monster is frozen;
+- Monster V4 has read-only research but no authorized live runtime;
 - NFT runtime is paused;
 - CORE PRICE is paused;
 - other persons/consensus are deferred.
@@ -225,19 +232,23 @@ This pause does **not** modify independent tasks such as Crypto Daily, the all-p
 
 ## Current portfolio authority
 
-Canonical live **capital and position records**:
-- `portfolio/current.md` (latest 2026-10-08 CEX screenshot + chain refresh).
-- `state/latest.md` (same refreshed snapshot and current operational status).
-- `positions/gang.md` (GANG / The Syndicate Backable: 500 USDC committed on Solana, final allocation/refund pending).
-- `positions/jump.md` (JUMP sale failed, 1,000 USDC refunded, 0 allocation).
+Canonical mutable operational positions and capital classifications:
+- `portfolio/current.md`: **2026-10-10 independently rechecked chain asset snapshot**, with explicit chain coverage, Binance and Bybit screenshot freshness, the per-asset $1 filter and unsettled GANG escrow.
+- `state/latest.md`: **2026-10-10 current module and asset pointer**.
+- `performance/current.md`: current Mission starting-capital provenance and profit reconciliation status; **Mission realized PnL and $3,000 target progress remain UNRESOLVED**.
+- `positions/gang.md`: 500 USDC Backable Solana escrow (still committed in 2026-10-10 account read; final claim/refund unknown).
+- `positions/jump.md`: sale rejected, **1,000 USDC refunded and no current position**.
+- `positions/credits.md`: six original Credits exited; current count **0**, reconfirmed 2026-10-10.
+- `positions/unicred.md`: UNICRED owned count **0**, reconfirmed 2026-10-10.
 
-As of the 2026-10-08 refresh, the verified material on-chain subtotal is approximately **$63.88**. The latest user screenshot shows Binance estimated total assets **$631.20 USDT-equivalent**; classification is investable parked capital, but the coin/product breakdown and withdrawability are not verified. Combined marked/reference capital is approximately **$695.08**, before any unresolved/unpriced assets.
+Asset marks, not PnL:
+- At the verified 2026-10-10 chain/price snapshot, material Solana holdings are 58.047629 USDC and 0.038163041 SOL, combined **~$62.31**. All independently priced EVM native balances examined were individually below $1; token/NFT completeness remains **UNRESOLVED** owing to truncated/rate-limited coverage.
+- Latest private Binance screenshot (2026-10-09) showed USDC Earn with **~$656.07** display mark; it was **not independently refreshed October 10**. A mixed-freshness indicative reference is **~$718.38**, **not** verified comprehensive NAV or $300 Mission return.
+- Entire Bybit account is for living expenses/rent and **excluded**; 2026-10-09 screenshot was ~353.173611 USDC (~$353.42 UI).
+- GANG 500 USDC commitment is historical encumbered cost **outside** the above liquid balance. No claim/refund allocation is yet established; no double count.
+- Sui = 0 by latest `USER_CONFIRMED` state only; no fresh Sui-native RPC was obtained in this sweep.
 
-**GANG 500 USDC committed to sale escrow** is tracked separately as a pending, illiquid position at historical cost, not added again to liquid investable NAV. This is distinct from the failed/refunded JUMP position. Neither amount can be counted as a new profit.
-
-**Bybit 435.948711 USDC / ~$436.16 displayed total** is reserved for personal living expenses and next month's rent, and is excluded from the Mission invested-capital figure. Exclude every Bybit account asset, not merely IMU dust.
-
-Individual assets below **$1** are omitted. Sui remains zero by prior USER_CONFIRMED state, **not independently chain-refreshed today**. Unsupported chains/tokens are UNRESOLVED, never silently zero. No total above should be called $300 Mission PnL without provenance and exits.
+Historical 2026-10-04 `STATUS_SCOPE` balances and historical strategy plans are not current holdings. All performance attribution needs original Mission cashflows plus six exited Credits, without inventing profits from wallet transfers.
 
 ## Position state rules
 
@@ -251,7 +262,7 @@ Currently closed/cleared examples include:
 - prior zero-balance meme sleeves: historical only;
 - SUI: 0 by latest user-confirmed state.
 
-JUMP remains a pending/committed-capital item until allocation/refund is verified.
+JUMP is closed: its prior 1,000 USDC sale deposit was refunded and its allocation is zero. GANG remains a separate pending 500 USDC escrow until settlement evidence is obtained.
 
 Do not originate new positions, order levels, stops, leverage or allocation from an automatic monitor.
 
