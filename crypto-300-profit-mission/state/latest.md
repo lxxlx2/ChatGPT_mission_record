@@ -29,7 +29,7 @@ Policy: `../MISSION_SPEC.md` | Latest assets: `../portfolio/current.md` | Missio
 - Solana finalized: **58.047629 USDC** (slot 455317412; ~$58.10 using Alchemy 1.00082 USD mark); **0.038163041 SOL** (slot 455317409; ~$4.21 using Binance SOLUSDT 110.44).
 - **Individually priced >=$1 on-chain subtotal approximately $62.31**.
 - Other sampled EVM native chain positions each fall below $1. Several ERC-20 enumerations were truncated or rate/credit-limited; **complete token and NFT inventory = UNRESOLVED**, not all zero. See portfolio detailed chain table/source limits.
-- Credits owned **0**, verified Ethereum block 26163166; UNICRED owned **0**, verified Unichain block 60900610.
+- Credits owned **0**, verified Ethereum block 26163166; UNICRED owned **0**, verified Unichain block 60900610. Ethereum NFT owner inventory separately found **20** instances including unsolicited/spam; e.g. Cap Proof of Participation #0 has a current *collection asking floor* 0.00042 ETH (~$1.05), but no verified executable bid. Other NFT sale values stay **UNRESOLVED** and are not added to ~$62.31.
 - GANG FundingRecord present, **500 USDC originally committed** verified from account data at Solana finalized slot 455317963; **final allocation/refund/claim still unknown**. This escrow is **not** free wallet USDC and is not doubled into marked liquid assets.
 - Sui asset total **0 USER_CONFIRMED**, **not** fresh direct Sui RPC.
 
