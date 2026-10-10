@@ -176,7 +176,59 @@
       "next_page_key": "bb6e4ab0-3add-4e93-86c9-6610202d3b93",
       "complete_query": false,
       "error": null,
-      "distinct_transactions": 12
+      "distinct_transactions": 12,
+      "signer_examples": [
+        {
+          "token": "GIGGLE",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0x0022381f5b2cd7241982c3d81def8ca98dfd6d429d3b7144b466ac526b557844",
+          "block": 65829219,
+          "original_signer": "0xbf0f2cd41634c5618679f2465752e93fc767ef49",
+          "target": "0xaaaaaaaaaac9630b35e6d485f57abd93ad3d2930",
+          "native_value_wei": "0",
+          "selector": "0x3e0f9c3c",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "GIGGLE",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0x4f3a22976daa25bf2a3801c8b1e561b5ad4e3c30c2dd00d93c5a0814efcd5f2a",
+          "block": 65829222,
+          "original_signer": "0xd2fbe778259c26f8952e9d5121189ecba1c8edf5",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_value_wei": "0",
+          "selector": "0x1861a3d8",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "GIGGLE",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0x7a70a4b23c936a30cedfe9e6aeaeee76e9c3d9e7e1d07aad0cdd0996ba076969",
+          "block": 65829222,
+          "original_signer": "0x2beb10fccef67ddd02a7ac961b4dbbe49093dde2",
+          "target": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "native_value_wei": "0",
+          "selector": "0xa9059cbb",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "GIGGLE",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0xb486ec51e9352a63adb2c776063c9685ece38c25805d87dd32eacd4b7dca246c",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 9 column 7822)"
+        },
+        {
+          "token": "GIGGLE",
+          "side": "BEFORE_ANCHOR",
+          "hash": "0x2b3cfa3dd28e6a5dbe7c28df13e7765cbdb4c726f2cf0ee524858f5bc0de2ea3",
+          "block": 65829225,
+          "original_signer": "0x2a82a3aa1cf8e79b686ad65f9851c1945cebf50b",
+          "target": "0x6015126d7d23648c2e4466693b8deab005ffaba8",
+          "native_value_wei": "0",
+          "selector": "0x03b87e5f",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        }
+      ]
     },
     {
       "token": "GIGGLE",
@@ -352,7 +404,64 @@
       "next_page_key": "634efe29-8e42-42b6-9384-5b3b5475c28d",
       "complete_query": false,
       "error": null,
-      "distinct_transactions": 12
+      "distinct_transactions": 12,
+      "signer_examples": [
+        {
+          "token": "GIGGLE",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0x772847c2a7ba62c6ce0ea9427ce66440db3846522e1973be31977fd7373690dc",
+          "block": 65829269,
+          "original_signer": "0x269ded61c4ccff9e486dc0e2918a3c342422fc22",
+          "target": "0x6015126d7d23648c2e4466693b8deab005ffaba8",
+          "native_value_wei": "500000000000000000",
+          "selector": "0xb80c2f09",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "GIGGLE",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0xb22e09d0394faced5f9b11a32420d48e5da9ebdab29397ba4ee446eedd4c5d60",
+          "block": 65829269,
+          "original_signer": "0xe7f1e5670811bb42b9b88ab65b4b18676e55b0c8",
+          "target": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+          "native_value_wei": "0",
+          "selector": "0x810c705b",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "GIGGLE",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0xc4ed86621a961e69e952f9002a0d93715449f186f0d515dd56ede2482f9334b2",
+          "block": 65829269,
+          "original_signer": "0x8db3d63708522c2e7775b98203f999184cd461ea",
+          "target": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "native_value_wei": "0",
+          "selector": "0xa9059cbb",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "GIGGLE",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0xae4b3703d20554aabc8a3adc5543f18e7a21ac926fb694b9c037df05bdc7758c",
+          "block": 65829271,
+          "original_signer": "0x1490882238f41b5dc90b6c67c3e56a22776fc562",
+          "target": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "native_value_wei": "0",
+          "selector": "0xa9059cbb",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        },
+        {
+          "token": "GIGGLE",
+          "side": "AT_AND_AFTER_ANCHOR",
+          "hash": "0xa881712404fd6d7732f8f441eb812b9a49037a204f0daf7e0386d3671b6ccc52",
+          "block": 65829271,
+          "original_signer": "0x76a1b09cfa49cd62b3f11de9c1e11d4b691c8ee4",
+          "target": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "native_value_wei": "0",
+          "selector": "0xa9059cbb",
+          "verification": "SIGNED_TX_CONFIRMED; BUNDLE_OR_BUY_SELL_PNL_UNKNOWN"
+        }
+      ]
     },
     {
       "token": "MARSCOIN",
