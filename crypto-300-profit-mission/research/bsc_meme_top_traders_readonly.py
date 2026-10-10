@@ -22,6 +22,7 @@ TOKENS = [
  ("GIGGLE","0x20d6015660b3fe52e6690a889b5c51f69902ce0e",2025),
  ("币安人生","0x924fa68a0fc644485b8df8abfa0a41c2e7744444",2025),
  ("哈基米","0x82ec31d69b3c289e541b50e30681fd1acad24444",2025),
+ ("BUBB","0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",2025),
 ]
 PUBLIC_TEST_KEY="gmgn_solbscbaseethmonadtron" # GMGN official documentation, TEST only.
 ADDR=re.compile(r"^0x[0-9a-f]{40}$")
