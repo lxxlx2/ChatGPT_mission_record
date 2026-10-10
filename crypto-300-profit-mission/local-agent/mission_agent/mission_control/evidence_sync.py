@@ -146,7 +146,9 @@ class EvidenceSpool:
         atomic_new(dest, raw)
         return dest
 
-    def frank_scan(self, *, poll_count: int, health: dict, coverage: dict | None = None) -> Path:
+    def frank_scan(self, *, poll_count: int, health: dict, coverage: dict | None = None,
+                   recent_trades: list[dict] | None = None,
+                   signal_candidates: list[dict] | None = None) -> Path:
         if type(poll_count) is not int or poll_count < 0:
             raise ValueError("FRANK_POLL_COUNT_INVALID")
         if not isinstance(health, dict):
@@ -162,6 +164,19 @@ class EvidenceSpool:
         observed = str(health.get("last_poll_at") or health.get("last_successful_poll") or "")
         if not observed:
             raise ValueError("FRANK_POLL_TIMESTAMP_MISSING")
+        # Use explicit, public-chain-safe fields only. Do not publish raw SQL
+        # bodies, local credentials, full policies or provider exceptions.
+        trade_fields = ("signature", "mint", "side", "block_time",
+                        "observed_quote_asset", "observed_quote_quantity",
+                        "token_quantity", "verified_fill_price_usdc",
+                        "position_after_token")
+        signal_fields = ("mint", "pattern", "source_signal_id",
+                         "source_signal_type", "position_state", "latest_side",
+                         "latest_signature", "latest_at", "buy_count", "sell_count")
+        recent = [safe({k: row.get(k) for k in trade_fields})
+                  for row in (recent_trades or [])[:40] if isinstance(row, dict)]
+        signals = [safe({k: row.get(k) for k in signal_fields})
+                   for row in (signal_candidates or [])[:60] if isinstance(row, dict)]
         envelope = {
             "schema_version": 1, "kind": "frank",
             "poll_count": poll_count, "captured_at_utc": observed,
@@ -171,6 +186,9 @@ class EvidenceSpool:
             "coverage": safe({k: cov.get(k) for k in ("status", "scope", "windows",
                           "earliest_indexed_block_time", "latest_indexed_block_time",
                           "indexed_signatures_all_time")}),
+            "recent_recognized_trades_sample": recent,
+            "signal_eligible_candidates_sample": signals,
+            "trade_sample_scope": "LATEST_40_LOCALLY_CLASSIFIED_NOT_FULL_HISTORY",
         }
         stamp = observed
         try:
