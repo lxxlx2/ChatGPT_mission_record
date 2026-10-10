@@ -2,7 +2,7 @@
 
 Updated: 2026-09-28 19:34 Asia/Bangkok
 Timezone: Asia/Bangkok
-> Active 2026-10-10 schedule: existing `Crypto 每日情报` at :10 Asia/Bangkok only; 08:10 prebuild, 09:10 primary, 10:10/11:10 recovery, other scheduled hours bounded collectors. The old 09:00/10:00/11:00 and dedicated publisher text below is historical, not active. `COLLECTOR_SPEC.md` V2 + `REPORT_ACCEPTANCE.md` CR-20 govern discovery. No task or schedule change.
+> Active user-authorized schedule (2026-10-10): existing `Crypto 每日情报` at :20 Asia/Bangkok; 00:20/03:20/06:20/12:20/16:20/20:20 bounded collectors, 08:20 prebuild, 09:20 primary, 10:20/11:20 recovery. The old 09:00/10:00/11:00 and dedicated publisher text below is historical, not active. `COLLECTOR_SPEC.md` V2 + `REPORT_ACCEPTANCE.md` CR-20 govern discovery. No task or schedule change.
 
 
 ## Execution model
@@ -81,9 +81,9 @@ GitHub archive 失败不得取消已经成功的 Gmail。
 The existing `Crypto 09:00 日报发布` automation is the delivery fallback for the primary hourly task.
 
 Schedule:
-- 09:10
-- 10:10
-- 11:10
+- 09:20
+- 10:20
+- 11:20
 Asia/Bangkok.
 
 It is delivery-only and idempotent.
@@ -111,7 +111,7 @@ The 09:00 publisher treats that pending file as the primary body:
 - refresh only facts that are materially time-sensitive;
 - preserve the body structure unless a correction is needed;
 - Gmail delivery takes priority over broader research;
-- target Gmail proof by 09:10.
+- target Gmail proof by 09:20.
 
 If a valid pending body exists, recovery jobs must send it rather than rebuilding a new long report.
 
