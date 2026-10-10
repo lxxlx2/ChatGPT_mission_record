@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 import time
 from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
