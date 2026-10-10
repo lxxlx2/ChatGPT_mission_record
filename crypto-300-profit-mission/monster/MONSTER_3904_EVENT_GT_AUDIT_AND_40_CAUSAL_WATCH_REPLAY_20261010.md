@@ -123,9 +123,9 @@ GT 创建方式为：每个 **小时收盘 anchor**，只要未来168个完整�
 
 ## 7. 2026-10-10 全市场负样本只读回放器已准备好，正式 Mac 全历史结果仍待执行
 
-**研究工具（不是 V4 生产信号模型）：** \`local-agent/scripts/monster_full_market_history_diagnostic.py\`。它逐文件只读读取 Mac 已有的 FM3 2021–2024 \`expanded-coverage.json\` + \`bars_path\`，以及 FM2 2025–2026 \`universe-current-merged-v1.json\` + \`bars/{venue}/{symbol}.json.gz\`，不用访问交易所、下载档案、导入 Frank SQLite、运行新 Agent 或发邮件。周期为2021–2026，不把2024/2025/2026重新包装为未见过的验证集。
+**研究工具（不是 V4 生产信号模型）：** `local-agent/scripts/monster_full_market_history_diagnostic.py`。它逐文件只读读取 Mac 已有的 FM3 2021–2024 `expanded-coverage.json` + `bars_path`，以及 FM2 2025–2026 `universe-current-merged-v1.json` + `bars/{venue}/{symbol}.json.gz`，不用访问交易所、下载档案、导入 Frank SQLite、运行新 Agent 或发邮件。周期为2021–2026，不把2024/2025/2026重新包装为未见过的验证集。
 
-输出 \`monster-full-universe-hourly-research-20261010.zip\` 包含：\`summary.json\`（全部市场小时、WATCH/ANY_STRONG 去重 episode/day、median/p95、event-level GT覆盖、24h next-open proxy 结果）、\`all_gt_event_signal_coverage.csv\`（3,904个原始 GT事件的首次因果信号）、\`all_market_signal_episodes.csv\`（全市场研究候选及限定窗口内的24h OHLCV代理结果）、\`README.txt\`。对 Watch 和 Strong episode 使用连续 3 小时不满足后重新武装、最短24小时冷却；**这是此次诊断的降噪口径**，不是冻结或批准的 Gmail 去重参数。
+输出 `monster-full-universe-hourly-research-20261010.zip` 包含：`summary.json`（全部市场小时、WATCH/ANY_STRONG 去重 episode/day、median/p95、event-level GT覆盖、24h next-open proxy 结果）、`all_gt_event_signal_coverage.csv`（3,904个原始 GT事件的首次因果信号）、`all_market_signal_episodes.csv`（全市场研究候选及限定窗口内的24h OHLCV代理结果）、`README.txt`。对 Watch 和 Strong episode 使用连续 3 小时不满足后重新武装、最短24小时冷却；**这是此次诊断的降噪口径**，不是冻结或批准的 Gmail 去重参数。
 
 验证路径：
 - GitHub Actions 研究 CI：**12/12 合成/隔离检查通过**（6历史基线+3正例包导出+3全市场分析工具）；运行 [38058668269](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38058668269)。
