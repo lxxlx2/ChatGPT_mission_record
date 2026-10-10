@@ -119,3 +119,17 @@ GT 创建方式为：每个 **小时收盘 anchor**，只要未来168个完整�
 5. **不要选择、冻结或部署 V4 参数**，直到看到全市场负例上的噪声与延迟实测，且单独预留真正未暴露的 forward 验证。
 
 **硬边界保留**：PR #30 Draft，所有文件是研究数据报告，`FRANK_UNCHANGED`, `MONSTER_RUNTIME=NOT_INSTALLED`, `GMAIL_MONSTER=NOT_ENABLED`, `PRODUCTION_TRADING=NO_GO`。历史高倍 GT、以及这次“捕捉到”的时刻都不是实盘成交通知事实。
+
+
+## 7. 2026-10-10 全市场负样本只读回放器已准备好，正式 Mac 全历史结果仍待执行
+
+**研究工具（不是 V4 生产信号模型）：** \`local-agent/scripts/monster_full_market_history_diagnostic.py\`。它逐文件只读读取 Mac 已有的 FM3 2021–2024 \`expanded-coverage.json\` + \`bars_path\`，以及 FM2 2025–2026 \`universe-current-merged-v1.json\` + \`bars/{venue}/{symbol}.json.gz\`，不用访问交易所、下载档案、导入 Frank SQLite、运行新 Agent 或发邮件。周期为2021–2026，不把2024/2025/2026重新包装为未见过的验证集。
+
+输出 \`monster-full-universe-hourly-research-20261010.zip\` 包含：\`summary.json\`（全部市场小时、WATCH/ANY_STRONG 去重 episode/day、median/p95、event-level GT覆盖、24h next-open proxy 结果）、\`all_gt_event_signal_coverage.csv\`（3,904个原始 GT事件的首次因果信号）、\`all_market_signal_episodes.csv\`（全市场研究候选及限定窗口内的24h OHLCV代理结果）、\`README.txt\`。对 Watch 和 Strong episode 使用连续 3 小时不满足后重新武装、最短24小时冷却；**这是此次诊断的降噪口径**，不是冻结或批准的 Gmail 去重参数。
+
+验证路径：
+- GitHub Actions 研究 CI：**12/12 合成/隔离检查通过**（6历史基线+3正例包导出+3全市场分析工具）；运行 [38058668269](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38058668269)。
+- 实际用户上传的 40 个 GT 1h 窗口先构造了独立的 **39个历史标的-分期流本地试样数据集**（两个不同年期的 FIDA 事件合并到同一历史流）。在这 39 条缓存流上做只读 replay 后，40条5× GT 的首次 ANY_STRONG 预警时间与早先独立计算的 40 条回测表逐条对比，**0差异**。这只是“实际正例窗口回归”，**不是对 Mac 完整全市场19m根原始K线完成了回放**。
+- 任何大量未找到缓存、年份时钟断档、统计异常、实际高通知量，都应视为研究事实记录，不通过偷偷删掉低质量币提高表现。
+
+**尚未做的不是模型参数微调，而是运行真实完整缓存**：直到用户 Mac 上传上述小型 ZIP 的运行结果，仍然不能声称全市场误报率、每日邮件负担和普通非妖币的 24h 回撤已经测得。真正会不会赚到钱还依赖 5m/盘口/交易手续费与通知时延，单靠此工具仍只是可观测信号负担与下一小时 open 近似。
