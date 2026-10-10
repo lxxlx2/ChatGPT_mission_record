@@ -366,11 +366,15 @@ class MissionMemeService:
                         health = json.loads(self.frank.health_path.read_text(encoding="utf-8"))
                         count = health.get("poll_count")
                         if type(count) is int and count >= 0 and count != last_poll_count and health.get("last_poll_at"):
+                            # Every completed poll receives one small audit row.
+                            # Repeat trade/position samples only on new evidence
+                            # or a periodic checkpoint, keeping Git buckets compact.
+                            material = int(health.get("new_signatures") or 0) > 0 or count % 30 == 0
                             spool.frank_scan(
                                 poll_count=count, health=health,
-                                coverage=self.frank.activity_coverage(),
-                                recent_trades=self.frank.recent_trades(40),
-                                signal_candidates=self.frank.candidates(),
+                                coverage=self.frank.activity_coverage() if material else None,
+                                recent_trades=self.frank.recent_trades(40) if material else None,
+                                signal_candidates=self.frank.candidates() if material else None,
                             )
                             last_poll_count = count
                         if upload_future is None or upload_future.done():
