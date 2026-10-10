@@ -191,7 +191,7 @@ def test_gh_client_passes_content_via_stdin_and_scrubs_errors(tmp_path):
 
 def test_no_private_detail_in_generic_sanitizer():
     payload = {"api_key": "secret", "bearer": "token", "private_notes": "none",
-               "holders": [{"owner": MINT, "source": "DEX"}],
+               "holders": [{"owner": MINT, "pubkey": MINT, "source": "DEX"}],
                "url": "https://safe.example/path?wallet=abc",
                "trade_evidence": [{"signature": "a"}]}
     result = safe(payload)
@@ -199,6 +199,7 @@ def test_no_private_detail_in_generic_sanitizer():
     assert "bearer" not in result
     assert "private_notes" not in result
     assert result["holders"][0]["owner"] == MINT
+    assert result["holders"][0]["pubkey"] == MINT
     assert result["url"] == "https://safe.example/path"
 
 
