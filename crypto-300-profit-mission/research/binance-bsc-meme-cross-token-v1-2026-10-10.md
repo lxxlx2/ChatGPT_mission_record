@@ -113,3 +113,68 @@ Direct on-chain results:
 ### Caveat / no manipulation attribution
 
 Official Binance listings evidence only Binance product listings and decisions. Insider association, front-running, coordinated trades, controlled wallet cluster, Binance-directed price manipulation and actual multi-meme realized PnL remain UNVERIFIED unless independently established with adequate direct evidence.
+
+
+## 2026-10-10 additional complete V1 pair-onset coverage / active wallet pilot
+
+User-priority modification: **investigate all 18 candidate tokens**, prioritize 2026, and treat currently active wallets as more relevant than historical wallets abandoned after a one-off success. A 30-day activity window is a *research filter for the observation date*, not a production signal, immutable threshold, or evidence of profitability. When no active profitable cross-token wallet can be verified, report that rather than upgrading stale winners.
+
+### Full 18/18 Pancake V2/WBNB first-observed outward transfer audit
+
+Factory `0xca143ce32fe78f1f7019d7d551a6402fc5350c73`, WBNB `0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c`. All below involve a valid deployed BSC ERC20 and the corresponding `getPair(token,WBNB)` result. Timestamp obtained with `eth_getBlockByNumber`. **Not** a claim of earliest token trade across all Pancake V3/Four.meme/aggregators or the earliest Binance Alpha debut.
+
+| Token | First pair -> token transfer (block) | UTC timestamp |
+|---|---:|---|
+| CHEEMS | 42638564 | 2024-09-28 03:51:30 |
+| BOB | 44007572 | 2024-11-14 16:57:32 |
+| TST | 46421406 | 2025-02-06 12:39:40 |
+| TUT | 46521969 | 2025-02-10 00:28:24 |
+| BROCCOLI714 | 46627716 | 2025-02-13 16:36:19 |
+| BROCCOLIF3B | 46628417 | 2025-02-13 17:11:22 |
+| SIREN | 46828940 | 2025-02-20 16:18:55 |
+| BANANAS31 | 46871949 | 2025-02-22 04:09:32 |
+| MUBARAK | 47442149 | 2025-03-13 23:21:25 |
+| BULLA | 50982375 | 2025-06-06 13:46:08 |
+| GIGGLE | 61963755 | 2025-09-21 16:21:27 |
+| 4 | 63056879 | 2025-10-01 04:08:41 |
+| 币安人生 | 63454407 | 2025-10-04 15:01:32 |
+| 哈基米 | 63838944 | 2025-10-07 23:09:03 |
+| 我踏马来了 | 73658907 | 2026-01-01 05:46:51 |
+| 龙虾 | 83636129 | 2026-02-27 08:50:41 |
+| MARSCOIN | 112668718 | 2026-07-28 17:48:28 |
+| 牛来 | 116314923 | 2026-08-16 17:47:19 |
+
+Important: MARSCOIN canonical CA is **exactly** `0xFe189E97832DA1573e4e4Ff034F4fFC3a15c7777`; its V2 pair is `0x9f286c9bd510150c62a08da72af797ac45311ae0`. A malformed shortened address in an exploratory query incorrectly returned zero pair; its correct lookup was repeated, validated, and returned the pool above. Do not use the malformed value.
+
+Additional V2/WBNB pair addresses:
+- CHEEMS `0xaf0eb8f2f114917ef0026105c070cf08423f488e`
+- BROCCOLIF3B `0xd32041a219835ed79c1ffd7f43df68d06b9b13d5`
+- SIREN `0xa9b4493042830109b44e18ec3586ecd22bd032ed`
+- BOB `0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58`
+- BULLA `0x3551191f78869c29388886330f31739a87866c38`
+- 4 `0xf0a949d3d93b833c183a27ee067165b6f2c9625e`
+- 币安人生 `0x66f289de31eef70d52186729d2637ac978cfc56b`
+- 我踏马来了 `0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480`
+- 龙虾 `0x22af7297243c4eef12e2d5a4f888b92e56bf127c`
+- 牛来 `0xbfc26980d8068ae744f5405d3abf6e7df02e11b3`
+- 哈基米 `0xc33bacff9141da689875e6381c1932348ab4c5cb`
+
+2026 five-token pilot: extracted first 30 V2 pool ERC20 outgoing transfers **per token** for 我踏马来了, 龙虾, 牛来, 哈基米, 币安人生 (150 transfer rows, not 150 unique trades). Six overlapping recipient addresses on two sample tokens; `0x38fb583d3a797219651eb960fdbdeb31f8ec7a18` and `0xb300000b72deaeb607a12d5f54773d1c19c7028d` are smart contracts, not independent profitable traders. Three other repeated earlier recipients are high-activity EOAs with no PnL inferred from the overlap alone. A further shared tx initiator `0x994824828bf19ae7a17dd4004cbdf90e8f4fa1e0` sent early swaps on both 我踏马来了 and 龙虾 via `0x38fb...`; **no direct token balance/transfer position for either token in that EOA** was found, and its nonzero nonce alone cannot be taken as verified profit. No profitability claim for router/MEV overlaps.
+
+### Priority, 2026 cross-token **realized** profitable EOA: 0x239e74bfbd02d71cdc70fecc2d505dc13acfb337
+
+BSC `eth_getCode=0x` (EOA), `eth_getTransactionCount=0x12d6` (=4822) on the observation day. Native active send last checked 2026-09-18 01:06:10Z at block 122514474, and token outgoing later in September. **This is within 30 days of 2026-10-10**, while not proof of recent profitable trades. Its full 4822-tx trading history is NOT reconstructed. Do not rank this wallet on 2 winning examples alone.
+
+1. 我踏马来了 CA `0xc51a9250795c0186a6fb4a7d20a90330651e4444`. Initial buy block 73658908 at 2026-01-01 05:46:51Z, tx `0x5eaf490ddad77bc6ddfc366f49c86b25fda316d6468a95cd3f5907fdcf39e347`, direct `tx.from` wallet; 322094.73547686834 units. Five sales in blocks 73659128, 73659482, 73659538, 73660412, 73664688, signed by same wallet. Wallet now holds zero units; total position accounted. Native BNB balance block deltas: initial buy -0.030755250000000000 BNB, five sales +0.12812197052437657 BNB, approx **+0.09736672052437657 BNB**, return +316.6% relative to buy net debit. Relevant Binance perp listed 2026-01-21 14:30Z, therefore initial entry precedes perp. First sale example `0x2413eaeadd4d7be589d9773bd4c53c2811254c1c641736ad1dacd6fd36137687`.
+2. 龙虾 CA `0xeccbb861c0dda7efd964010085488b69317e4444`. Initial buy block 83636130 at 2026-02-27 08:50:41Z, tx `0x5a697b7dc48c947f8f2a1f61677fadb04c2374ca38298302bfc94b8623aaa3fc`; same `tx.from` wallet. **7 buy txs** all signed by the wallet, with token incoming sum **271811.9432272108**, and **14 sell txs** all signed by same wallet with token outgoing sum **271811.94322721084**. Current token balance zero. Buy blocks: 83636130, 85589795, 85767531, 85954137, 85954824, 85959961, 86649314. Sell blocks: 83638195, 83640592, 83641353, 83646760, 83659034, 83673243, 83675049, 84031185, 84188954, 85602706, 85952403, 85957578, 85961371, 87876365. Buy-block net BNB deltas sum -0.82768143708; sale-block net BNB deltas sum +1.0268070305733352; approximate **+0.19912559349333525 BNB**, +24.06%. Example exit `0xbd99c6758d693e9613fcd63d1a0857f8f407ac329dff678734c66a5d70695d45`. Initial entry precedes Binance 龙虾 perp 2026-03-11 11:30Z. Independent exact-contract anchor: https://www.binance.com/en/alpha/bsc/0xeccbb861c0dda7efd964010085488b69317e4444 and https://www.gate.com/announcements/article/50132 .
+3. Combined for THESE TWO positions ONLY: **+0.2964923140177118 BNB**, 2/2 closed profitable; sample-selected and therefore *not the wallet's historical win rate*. BNB delta by transaction-containing block includes contemporaneous Gas and could theoretically contain other same-block balance movements. Thus treat as verified token buy/sell counts, verified block cashflows, **estimated position-level realized profit**, not fully fee/internal-flow-audited accounting. Do not extrapolate.
+
+Official Binance first-party listings: 我踏马来了 https://www.binance.com/en/support/announcement/detail/7736f9a5aae24206b17884e5de02dabc ; 龙虾 https://www.binance.com/lo-LA/support/announcement/detail/d9c05581552140eba3f393ef0a9a23b3 ; Binance exact-CA Alpha page for 我踏马来了 https://www.binance.com/en/alpha/bsc/0xc51a9250795c0186a6fb4a7d20a90330651e4444 ; Binance exact-CA Alpha page for 龙虾 https://www.binance.com/en/alpha/bsc/0xeccbb861c0dda7efd964010085488b69317e4444 .
+
+### Research guardrails for next iteration
+
+- This run **checked first V2 pool records for all 18 candidates**, with short samples and a 2026-focused 150-transfer pilot; it DID NOT compute every wallet's full all-DEX lifetime transactions, PnL, all routes/aggregators, or completeness of the Binance Alpha universe. Label coverage faithfully.
+- To meet the user's long-run objective, add pre- and post-Binance-listing windows for **each** of the 18, and seek missing BSC 2026 additions only with first-party listing evidence; audit full complete winner AND loser histories per wallet, including other unrelated meme losses.
+- Recalculate wallet 0x239e full historical PnL, other tokens, trade timing and max loss; determine whether its activity in September 2026 is actual trading rather than only transfers, and whether any signals would be late but actionable.
+- Do not count stale 2025-only winners as present opportunities without 2026 activity and current trading validation.
+- Remain `OBSERVE_ONLY`; `PRODUCTION_TRADING=NO_GO`; no monitor/automation/launchd/Gmail config changes.
