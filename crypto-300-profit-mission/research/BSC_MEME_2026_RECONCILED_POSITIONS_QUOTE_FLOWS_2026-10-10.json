@@ -153,5 +153,75 @@
       "pageKey": null,
       "error": null
     }
+  ],
+  "quote_erc20_transfer_queries": [
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:我踏马来了",
+      "dir": "in",
+      "rows": [],
+      "more_unread": false,
+      "pageKey": null
+    },
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:我踏马来了",
+      "dir": "out",
+      "rows": [],
+      "more_unread": false,
+      "pageKey": null
+    },
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:龙虾",
+      "dir": "in",
+      "rows": [
+        {
+          "hash": "0xae663f0c9abdc2415baf69792aa0c275efa6d26c68302c07da28a5c832e9b2a8",
+          "block": 83824619,
+          "asset": "USDT",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "from": "0xda0559e8dbf793ba6502e2d58563b09f6e4a8dc9",
+          "to": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+          "raw_value": "0x1be00667497bcdb"
+        }
+      ],
+      "more_unread": false,
+      "pageKey": null
+    },
+    {
+      "pair": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c:龙虾",
+      "dir": "out",
+      "rows": [],
+      "more_unread": false,
+      "pageKey": null
+    },
+    {
+      "pair": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c:我踏马来了",
+      "dir": "in",
+      "rows": [
+        {
+          "hash": "0xfb21248b77ee133886f9bc289d9e35ebad038eef950f3815ac9c67ed11a0dffe",
+          "block": 73447302,
+          "asset": "WBNB",
+          "ca": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "from": "0xecaa9b67652897bea70fadbd85cc491b2aab2246",
+          "to": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "raw_value": "0x10dfa019c89540"
+        }
+      ],
+      "more_unread": false,
+      "pageKey": null
+    },
+    {
+      "pair": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c:我踏马来了",
+      "dir": "out",
+      "rows": [],
+      "more_unread": false,
+      "pageKey": null
+    }
+  ],
+  "quote_contracts": [
+    "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+    "0x55d398326f99059ff775485246999027b3197955",
+    "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+    "0xe9e7cea3dedca5984780bafc599bd69add087d56"
   ]
 }
