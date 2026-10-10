@@ -12,6 +12,9 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/frank_evidence_bootstrap.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_meme_evidence_sync.py'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_watch.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_inventory.py'
+      - 'crypto-300-profit-mission/meme/evidence/frank-v2-thirty-two-mint-finalized-2026-10-11.json'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_wallet_inventory_v2.py'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/index.html'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/styles.css'
@@ -39,10 +42,10 @@ jobs:
       - name: Compile exporter and integration
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m py_compile mission_agent/mission_control/evidence_sync.py mission_agent/mission_control/server.py mission_agent/mission_control/service.py scripts/meme_evidence_sync.py scripts/frank_evidence_bootstrap.py mission_agent/mission_control/wallet_watch.py tests/test_frank_wallet_watchlist_v2.py tests/test_meme_evidence_sync.py
+          python -B -m py_compile mission_agent/mission_control/evidence_sync.py mission_agent/mission_control/server.py mission_agent/mission_control/service.py scripts/meme_evidence_sync.py scripts/frank_evidence_bootstrap.py mission_agent/mission_control/wallet_watch.py mission_agent/mission_control/wallet_inventory.py tests/test_frank_wallet_watchlist_v2.py tests/test_frank_wallet_inventory_v2.py tests/test_meme_evidence_sync.py
       - name: New exporter safety and exact fake-Git readback tests
         working-directory: crypto-300-profit-mission/local-agent
-        run: python -m pytest -q tests/test_meme_evidence_sync.py tests/test_frank_wallet_watchlist_v2.py
+        run: python -m pytest -q tests/test_meme_evidence_sync.py tests/test_frank_wallet_watchlist_v2.py tests/test_frank_wallet_inventory_v2.py
       - name: Validate browser-side JavaScript
         run: node --check crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js
       - name: Existing Frank/Dashboard regression subset
