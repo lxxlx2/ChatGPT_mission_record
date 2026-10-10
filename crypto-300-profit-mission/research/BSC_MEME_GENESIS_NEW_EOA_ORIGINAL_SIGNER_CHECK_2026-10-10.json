@@ -1,0 +1,160 @@
+{
+  "status": "PROVISIONAL_OVERLAP_CANDIDATES; NO_PROFIT_PROVEN",
+  "source": "Global ERC20 and V2 pool overlaps + ethGetTransactionByHash",
+  "new_addresses": 5,
+  "records": [
+    {
+      "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "token": "TST",
+      "transfer": {
+        "role": "GENESIS_GLOBAL_TO",
+        "hash": "0xfbba36398a09263e67c2f4819e9ccb03f3179e01c8e7da7475437f63f8773398",
+        "block": 46411247,
+        "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+      },
+      "tx_from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "tx_to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "tx_value_wei": "500000000000000000",
+      "tx_method": "0x87f27655",
+      "verification": "EOA_SELF_SIGNED"
+    },
+    {
+      "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "token": "BOB",
+      "transfer": {
+        "role": "POOL_TO",
+        "hash": "0x7d3832a3d26bdebe13b1dc86e075b3cbafe8fcc3829972564afcd43ededec194",
+        "block": 44007594,
+        "from": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+        "venue": "PANCAKE_V2_WBNB"
+      },
+      "tx_from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "tx_to": "0x013bb8a204499523ddf717e0abaa14e6dc849060",
+      "tx_value_wei": "139320442060087755",
+      "tx_method": "0x2f100e4a",
+      "verification": "EOA_SELF_SIGNED"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "4",
+      "transfer": {
+        "role": "POOL_TO",
+        "hash": "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b",
+        "block": 63056884,
+        "from": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+        "venue": "PANCAKE_V2_WBNB"
+      },
+      "tx_from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "500000000000000000",
+      "tx_method": "0x5b9e9006",
+      "verification": "EOA_SELF_SIGNED"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "MUBARAK",
+      "transfer": {
+        "role": "GENESIS_GLOBAL_TO",
+        "hash": "0x8413f404b7ca72e36f389f0209f9d99432f21b43c535f0e0e227aa2718960215",
+        "block": 47425367,
+        "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+      },
+      "tx_from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "tx_to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_value_wei": "505000000000000000",
+      "tx_method": "0x3b164a8e",
+      "verification": "EOA_SELF_SIGNED"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "4",
+      "transfer": {
+        "role": "GENESIS_GLOBAL_TO",
+        "hash": "0x4a50efb0627b59ff570ada36a57c67c37a98be8d1f9a9e165bba4e86a34e0420",
+        "block": 63056804,
+        "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+      },
+      "tx_from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "500000000000000000",
+      "tx_method": "0x7771fdb0",
+      "verification": "EOA_SELF_SIGNED"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "MARSCOIN",
+      "transfer": {
+        "role": "POOL_TO",
+        "hash": "0x5bea415185365eb1ac7c76bc49f1ff83c61b20a9f90555a3086124779752c2a5",
+        "block": 112441463,
+        "from": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+        "venue": "FOUR_MEME_PRE_V2"
+      },
+      "tx_from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "730000000000000000",
+      "tx_method": "0x4d819a2a",
+      "verification": "EOA_SELF_SIGNED"
+    },
+    {
+      "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "token": "4",
+      "transfer": {
+        "role": "GENESIS_GLOBAL_TO",
+        "hash": "0x8fdd1e8a9c6bbead7b50f9a3e7c96b20a2abfb454ddedf6631913b7080da63cc",
+        "block": 63056802,
+        "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+      },
+      "tx_from": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "8000000000000000",
+      "tx_method": "0x7771fdb0",
+      "verification": "EOA_SELF_SIGNED"
+    },
+    {
+      "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "token": "哈基米 / HAJIMI",
+      "transfer": {
+        "role": "GENESIS_GLOBAL_TO",
+        "hash": "0x6450b81e4007043af234cc8b787e9d536410c26e24fe8a380cecc8667ccc8ce4",
+        "block": 63836091,
+        "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+      },
+      "tx_from": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "6000000000000000",
+      "tx_method": "0x7771fdb0",
+      "verification": "EOA_SELF_SIGNED"
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "transfer": {
+        "role": "GENESIS_GLOBAL_TO",
+        "hash": "0xc0d75250a3970809e6a1e1287609cac4be09e59bf3ebe9b5016b1c1c38211653",
+        "block": 73336279,
+        "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+      },
+      "tx_from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "500000000000000000",
+      "tx_method": "0x0b3f5cf9",
+      "verification": "EOA_SELF_SIGNED"
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "龙虾",
+      "transfer": {
+        "role": "GENESIS_GLOBAL_TO",
+        "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+        "block": 83635776,
+        "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+      },
+      "tx_from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_value_wei": "800000000000000000",
+      "tx_method": "0x0b3f5cf9",
+      "verification": "EOA_SELF_SIGNED"
+    }
+  ]
+}
