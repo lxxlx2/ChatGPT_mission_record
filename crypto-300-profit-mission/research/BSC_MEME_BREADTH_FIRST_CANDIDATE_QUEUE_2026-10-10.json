@@ -2,7 +2,7 @@
   "schema_version": "1",
   "date_utc": "2026-10-10",
   "scope": "EARLY_POOL_COVERAGE_NOT_FULL_PROFIT_RANKING",
-  "status": "ALL_21_SOURCE_POOLS_FIRST_50_TRANSFERS_PERSISTED; 44_OVERLAPS_CODE_CHECKED; PROFIT_RESEARCH_PENDING",
+  "status": "BREADTH_FIRST_GENESIS_19_TOKENS_ARCHIVED; 21_POOL_FIRST50_ARCHIVED; 19_CANDIDATE_WALLETS; REALIZED_PNL_INCOMPLETE",
   "sources": [
     "BSC_MEME_EARLY_POOL_SAMPLE_B01_2026-10-10.json",
     "BSC_MEME_EARLY_POOL_SAMPLE_B02_2026-10-10.json",
@@ -13,7 +13,13 @@
     "BSC_MEME_BREADTH_FIRST_UNIVERSE_2026-10-10.json",
     "BSC_MEME_CROSS_TOKEN_NEW_EOA_SIGNERS_2026-10-10.json",
     "BSC_MEME_EARLY_RECIPIENT_CROSSCHECK_EXT_B01_2026-10-10.json",
-    "BSC_MEME_EARLY_RECIPIENT_CROSSCHECK_EXT_B02_2026-10-10.json"
+    "BSC_MEME_EARLY_RECIPIENT_CROSSCHECK_EXT_B02_2026-10-10.json",
+    "BSC_MEME_GENESIS_GLOBAL_TRANSFERS_2026_PRIORITY_2026-10-10.json",
+    "BSC_MEME_GENESIS_GLOBAL_TRANSFERS_LEGACY_A_2026-10-10.json",
+    "BSC_MEME_GENESIS_GLOBAL_TRANSFERS_LEGACY_B_2026-10-10.json",
+    "BSC_MEME_GLOBAL_GENESIS_V2_GAP_MATRIX_2026-10-10.json",
+    "BSC_MEME_GLOBAL_GENESIS_POOL_RECIPIENT_OVERLAPS_2026-10-10.json",
+    "BSC_MEME_GENESIS_NEW_EOA_ORIGINAL_SIGNER_CHECK_2026-10-10.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -27,8 +33,14 @@
     "recipient_addresses_in_two_or_more_different_tokens": 44,
     "eoas_in_cross_token_recipient_sample": 9,
     "contracts_in_cross_token_recipient_sample": 35,
-    "wallets_in_research_queue": 14,
-    "full_pagination_complete_pools": 0
+    "wallets_in_research_queue": 19,
+    "full_pagination_complete_pools": 0,
+    "global_genesis_transfer_rows": 530,
+    "original_global_signer_tx_checked_2026": 25,
+    "original_global_signer_tx_checked_legacy": 42,
+    "pool_plus_genesis_distinct_overlapping_recipient_addresses": 60,
+    "pool_plus_genesis_code_confirmed_eoas": 14,
+    "pool_plus_genesis_code_confirmed_contracts": 46
   },
   "venue_coverage": [
     {
@@ -650,6 +662,232 @@
           }
         ]
       }
+    },
+    {
+      "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "prior_state": "GENESIS_PLUS_POOL_MULTITOKEN_EOA_DIRECT_SIGNER_CONFIRMED",
+      "research_status": "RESEARCH_ONLY / REALIZED_MATERIAL_PNL_UNKNOWN / PERSON_PATTERN_OBSERVE_ONLY",
+      "early_sample_tokens": [
+        "TST",
+        "BOB"
+      ],
+      "verified_direct_sample_signers": [
+        {
+          "token": "TST",
+          "tx": "0xfbba36398a09263e67c2f4819e9ccb03f3179e01c8e7da7475437f63f8773398",
+          "block": 46411247,
+          "signer_status": "EOA_SELF_SIGNED"
+        },
+        {
+          "token": "BOB",
+          "tx": "0x7d3832a3d26bdebe13b1dc86e075b3cbafe8fcc3829972564afcd43ededec194",
+          "block": 44007594,
+          "signer_status": "EOA_SELF_SIGNED"
+        }
+      ],
+      "first_transfer_proofs": {
+        "TST": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xfbba36398a09263e67c2f4819e9ccb03f3179e01c8e7da7475437f63f8773398",
+            "block": 46411247,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ],
+        "BOB": [
+          {
+            "role": "POOL_TO",
+            "hash": "0x7d3832a3d26bdebe13b1dc86e075b3cbafe8fcc3829972564afcd43ededec194",
+            "block": 44007594,
+            "from": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+            "venue": "PANCAKE_V2_WBNB"
+          }
+        ]
+      },
+      "pnl_not_recomputed": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "prior_state": "GENESIS_PLUS_POOL_MULTITOKEN_EOA_DIRECT_SIGNER_CONFIRMED",
+      "research_status": "RESEARCH_ONLY / REALIZED_MATERIAL_PNL_UNKNOWN / PERSON_PATTERN_OBSERVE_ONLY",
+      "early_sample_tokens": [
+        "4",
+        "MUBARAK"
+      ],
+      "verified_direct_sample_signers": [
+        {
+          "token": "4",
+          "tx": "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b",
+          "block": 63056884,
+          "signer_status": "EOA_SELF_SIGNED"
+        },
+        {
+          "token": "MUBARAK",
+          "tx": "0x8413f404b7ca72e36f389f0209f9d99432f21b43c535f0e0e227aa2718960215",
+          "block": 47425367,
+          "signer_status": "EOA_SELF_SIGNED"
+        }
+      ],
+      "first_transfer_proofs": {
+        "4": [
+          {
+            "role": "POOL_TO",
+            "hash": "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b",
+            "block": 63056884,
+            "from": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+            "venue": "PANCAKE_V2_WBNB"
+          }
+        ],
+        "MUBARAK": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0x8413f404b7ca72e36f389f0209f9d99432f21b43c535f0e0e227aa2718960215",
+            "block": 47425367,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ]
+      },
+      "pnl_not_recomputed": true
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "prior_state": "GENESIS_PLUS_POOL_MULTITOKEN_EOA_DIRECT_SIGNER_CONFIRMED",
+      "research_status": "RESEARCH_ONLY / REALIZED_MATERIAL_PNL_UNKNOWN / PERSON_PATTERN_OBSERVE_ONLY",
+      "early_sample_tokens": [
+        "4",
+        "MARSCOIN"
+      ],
+      "verified_direct_sample_signers": [
+        {
+          "token": "4",
+          "tx": "0x4a50efb0627b59ff570ada36a57c67c37a98be8d1f9a9e165bba4e86a34e0420",
+          "block": 63056804,
+          "signer_status": "EOA_SELF_SIGNED"
+        },
+        {
+          "token": "MARSCOIN",
+          "tx": "0x5bea415185365eb1ac7c76bc49f1ff83c61b20a9f90555a3086124779752c2a5",
+          "block": 112441463,
+          "signer_status": "EOA_SELF_SIGNED"
+        }
+      ],
+      "first_transfer_proofs": {
+        "4": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0x4a50efb0627b59ff570ada36a57c67c37a98be8d1f9a9e165bba4e86a34e0420",
+            "block": 63056804,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ],
+        "MARSCOIN": [
+          {
+            "role": "POOL_TO",
+            "hash": "0x5bea415185365eb1ac7c76bc49f1ff83c61b20a9f90555a3086124779752c2a5",
+            "block": 112441463,
+            "from": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+            "venue": "FOUR_MEME_PRE_V2"
+          }
+        ]
+      },
+      "pnl_not_recomputed": true
+    },
+    {
+      "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "prior_state": "GENESIS_PLUS_POOL_MULTITOKEN_EOA_DIRECT_SIGNER_CONFIRMED",
+      "research_status": "RESEARCH_ONLY / REALIZED_MATERIAL_PNL_UNKNOWN / PERSON_PATTERN_OBSERVE_ONLY",
+      "early_sample_tokens": [
+        "4",
+        "哈基米 / HAJIMI"
+      ],
+      "verified_direct_sample_signers": [
+        {
+          "token": "4",
+          "tx": "0x8fdd1e8a9c6bbead7b50f9a3e7c96b20a2abfb454ddedf6631913b7080da63cc",
+          "block": 63056802,
+          "signer_status": "EOA_SELF_SIGNED"
+        },
+        {
+          "token": "哈基米 / HAJIMI",
+          "tx": "0x6450b81e4007043af234cc8b787e9d536410c26e24fe8a380cecc8667ccc8ce4",
+          "block": 63836091,
+          "signer_status": "EOA_SELF_SIGNED"
+        }
+      ],
+      "first_transfer_proofs": {
+        "4": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0x8fdd1e8a9c6bbead7b50f9a3e7c96b20a2abfb454ddedf6631913b7080da63cc",
+            "block": 63056802,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ],
+        "哈基米 / HAJIMI": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0x6450b81e4007043af234cc8b787e9d536410c26e24fe8a380cecc8667ccc8ce4",
+            "block": 63836091,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          },
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xf41b30949d549da690520da8931d4143e60f5a7f63f35cf93cb7795f239405bc",
+            "block": 63836111,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ]
+      },
+      "pnl_not_recomputed": true
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "prior_state": "GENESIS_PLUS_POOL_MULTITOKEN_EOA_DIRECT_SIGNER_CONFIRMED",
+      "research_status": "RESEARCH_ONLY / REALIZED_MATERIAL_PNL_UNKNOWN / PERSON_PATTERN_OBSERVE_ONLY",
+      "early_sample_tokens": [
+        "我踏马来了",
+        "龙虾"
+      ],
+      "verified_direct_sample_signers": [
+        {
+          "token": "我踏马来了",
+          "tx": "0xc0d75250a3970809e6a1e1287609cac4be09e59bf3ebe9b5016b1c1c38211653",
+          "block": 73336279,
+          "signer_status": "EOA_SELF_SIGNED"
+        },
+        {
+          "token": "龙虾",
+          "tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+          "block": 83635776,
+          "signer_status": "EOA_SELF_SIGNED"
+        }
+      ],
+      "first_transfer_proofs": {
+        "我踏马来了": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0xc0d75250a3970809e6a1e1287609cac4be09e59bf3ebe9b5016b1c1c38211653",
+            "block": 73336279,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          },
+          {
+            "role": "POOL_TO",
+            "hash": "0xd459f09283165d44a8d1784bd54604fe1f488fd7d176f8efbd1f88b2fb44830f",
+            "block": 73658909,
+            "from": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+            "venue": "PANCAKE_V2_WBNB"
+          }
+        ],
+        "龙虾": [
+          {
+            "role": "GENESIS_GLOBAL_TO",
+            "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+            "block": 83635776,
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+          }
+        ]
+      },
+      "pnl_not_recomputed": true
     }
   ],
   "overlapping_contract_recipients": [
@@ -967,9 +1205,11 @@
     "No comprehensive highest-profit wallet leaderboard, no reconstructed capital PnL on these newly discovered EOAs",
     "Contract recipient overlap is not trader same-control evidence",
     "CEX deposit is not realized sale",
-    "Signer matches of new EOAs only prove individual direct swaps, not sustained profitable strategy"
+    "Signer matches of new EOAs only prove individual direct swaps, not sustained profitable strategy",
+    "Global ERC20 first-transfer history identifies early launch routes but not the full transaction/quote-asset history, first true actionable swap, nor an exhaustive listing-event window"
   ],
   "next_work_order": [
+    "Follow genesis-stage original EOAs across core material opportunities with complete quote/gas flows, but continue cross-token breadth scanning before ranking",
     "Expand launchpad/V3/aggregator and event-window samples across all 19 rather than focus single EOA",
     "Obtain verified transaction signers and retain signed trade proof for each material cohort",
     "Reconcile full native BNB, WBNB, stablecoin + gas cashflows including major losses and off-wallet transfers",
