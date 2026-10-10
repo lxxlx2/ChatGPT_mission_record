@@ -17,6 +17,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_d2_evidence.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_price_probe.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_replay.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_causal_feature_research.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_causal_feature_research.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_history_source_quality.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_history_source_quality.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_historical_replay.py'
@@ -105,6 +107,13 @@ jobs:
           python -B -m unittest discover -v -s tests -p test_monster_v4_historical_replay.py
           python -B scripts/monster_v4_historical_replay.py --output /tmp/monster_v4_stage7_actual.json > /tmp/monster_v4_stage7_stdout.json
           python -c 'import json; d=json.load(open("/tmp/monster_v4_stage7_actual.json")); print(json.dumps({"STAGE7_REAL_BINANCE_REPLAY_SUMMARY":d["summary"],"PER_CASE":[{"symbol":x["symbol"],"cohort":x["cohort"],"watches":x["watch_count"],"setups":x["d1_setups"],"first_watch":x["first_watch_utc"],"old_anchor":x["old_research_watch_utc"]} for x in d["cases"]],"SKIPPED":d["skipped"]},sort_keys=True))'
+      - name: Stage8 authentic-source purely exploratory volume and price causal feature comparison
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_causal_feature_research.py tests/test_monster_v4_causal_feature_research.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_causal_feature_research.py
+          python -B scripts/monster_v4_causal_feature_research.py > /tmp/monster_v4_stage8_research.json
+          python -c 'import json; d=json.load(open("/tmp/monster_v4_stage8_research.json")); print(json.dumps({"STAGE8_CAUSAL_RESEARCH":d["summary"],"RULES":d["rules"],"CASES":d["frozen_historical_event_cases"],"NOT_UNSEEN_VALIDATION":d["thresholds_pre_exposed_to_2021_2026_data"]},sort_keys=True))'
       - name: Monster macOS isolated installation and rollback contract (hermetic)
         working-directory: crypto-300-profit-mission/local-agent
         run: |
