@@ -14,6 +14,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_full_market_history_diagnostic.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_d2.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_mac_service.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_mac_service.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_d2.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_shadow.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_stage5_integrity.py'
@@ -75,6 +77,11 @@ jobs:
         run: |
           python -B -m py_compile scripts/monster_v4_d2.py tests/test_monster_v4_d2.py
           python -B -m unittest discover -v -s tests -p test_monster_v4_d2.py
+      - name: Monster macOS isolated installation and rollback contract (hermetic)
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_mac_service.py tests/test_monster_v4_mac_service.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_mac_service.py
       - name: Stage5 frozen 60-case plus 18 short-listing integrity gate
         working-directory: crypto-300-profit-mission/local-agent
         run: |
