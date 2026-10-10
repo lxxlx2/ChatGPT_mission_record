@@ -1,164 +1,94 @@
-# Crypto Hourly Collector Spec
+# Crypto Hourly Collector Spec — V2 (2026-10-10)
 
 Mode: FACTUAL_NEWS_COLLECTOR
-
-Updated: 2026-09-27 01:20 Asia/Bangkok
 Timezone: Asia/Bangkok
+Authority: existing `Crypto 每日情报` task; actual schedule and Gmail unchanged.
+Scope: same REPORT_SPEC.md categories; do not add a task, extra alerts, permanent ticker/project watches or paid feeds.
 
-Goal: provide reliable rolling material for the daily report and Mission without making every hourly run an exhaustive internet crawl.
+## Problem addressed
+The former `hour % 3` shard rule was wrong for actual ordinary collector hours
+`00:10, 03:10, 06:10, 15:10, 19:10, 23:10`: it assigned four of six runs
+to shard 0 and only one each to shards 1 and 2. Publication near/after 19:10,
+missing finals, official releases not covered by generic security searches, and
+the absence of independent pre-send discovery caused demonstrable omissions.
 
-## Start / final audit
+## Execution order — bounded and factual
+1. Read current task canonical and the previous two actual completed collector
+   finals. Write one small `runs/YYYY-MM-DD/HHMMSS-attempt.md` before research
+   if possible (one retry maximum). Do not use a provisional final.
+2. Core market/risk: BTC/ETH/SOL spot, unusual liquid movers, existing deadline
+   watch and the SECURITY_SOURCE_POLICY mandatory CEX, wallet-user-loss and
+   official protocol security checks. A query without a real result/receipt does
+   not prove coverage.
+3. **Cross-domain headline discovery, EVERY collector**, independent of shard:
+   issue a bounded English discovery batch using news index/search for:
+   - urgent chain/protocol/wallet/exchange security, critical patch or shutdown;
+   - nation/regulator/major-chain policy, market access or macro change;
+   - ETF/issuer/exchange/whale/funding and unusual market structure;
+   - significant existing-scope ecosystem, RWA, stablecoin, TGE/deadline, NFT
+     or early-market development.
+   Typically use 4 focused batched searches, plus up to 2 source-specific
+   lookups on highest-impact NEW leads. Record actual queries, timestamps,
+   result URL(s), and coverage errors. This is a DISCOVERY pass, not proof
+   every website worldwide was checked. X/Reddit inaccessible -> indexed
+   English sources / official first-party websites; mark direct sources missing.
+4. One **deep shard**, with the original scope unchanged:
+   0 social/NFT; 1 ecosystem/primary market/TGE/RWA/PM;
+   2 institutional flows/macro/policy/derivatives/deep security.
+   Choose from the last **two successfully persisted deep-shard completions**:
+   prefer the shard missing from those two when they differ; if identical,
+   choose the next one cyclically. If history unavailable, use fallback mapping
+   `00=0,03=1,06=2,15=0,19=1,23=2` (not wall-clock modulo).
+   A partial/attempt-only run does not count as a completed shard. At the
+   next available collector prioritize the missed shard. Log
+   `planned_shard, executed_shard, last_two_complete_shards, backlog_shards`.
+   Aim for all three shards in any three successful covered collector runs;
+   do not claim this property when artifacts or sources are missing.
+5. Persist a compact event ledger in the SAME existing research/final artifacts:
+   `event_key, category, first_seen_at_bkk, source_published_at, checked_at,
+   source_url, source_tier, claim, confirmed_facts, unverified, materiality,
+   status, candidate_next_step`.
+   Status is DISCOVERED / VERIFYING / VERIFIED / DISMISSED / CARRIED.
+   Discovery is NEVER synonymous with endorsement or verified loss/trade.
+   Keep up to eight ordinary candidates; HIGH materiality candidates are
+   separately carried until verified, disproved or explicitly reasoned out,
+   and must not silently vanish because eight ordinary slots were full.
+6. Terminal audit: write exactly one factual `HHMMSS-final.md`; if blocked,
+   retry one compact `HHMMSS-final-retry.md`. Preserve at minimum coverage
+   matrix, real links, unresolved high-impact event keys, gaps, actual
+   research persistence and failure reason. Missing final => UNHEALTHY.
+   Report `success` only if core+cross-domain+deep shard+durable final
+   completed; otherwise PARTIAL with explicit missing lanes. No invented
+   `checked_no_update` from unavailable providers.
 
-The automatic scheduler uses `AUTOMATION_RUNTIME.md`.
+## Daily publisher and recovery handoff
+At 08:10, read the previous 24h research AND finals, including failed or
+missing hours, plus a 48h carry-over for new official critical disclosures
+and previously missed material leads. Independently run the same cross-domain
+headlines batch against the *since-last-sent* period; do NOT treat a missing
+collector report as proof of no events. Record every HIGH candidate with
+`included_section` or `excluded_with_reason` in the delivery manifest.
+A source publication AFTER today's sent email is due in the next ordinary
+collector and next eligible formal report, not retroactively a false omission.
 
-Each run is append-only:
+At 09:10, 10:10 and 11:10, dedupe Gmail Sent first, refresh core quotes
+and highest-impact headlines/official material updates, do all latest
+REPORT_ACCEPTANCE pre-send checks and CR-18/19, then send only a complete
+13-section QA-PASS email. A source/provider gap requires explicit internal
+`PARTIAL_COVERAGE`; do not invent facts and do not automatically suppress
+a verified report solely because one optional platform is unreachable.
+Missing discovery attempts/manifest, however, cannot count as QA_PASS.
+Sent + readback + identical Git archive are separate delivery evidence.
+Never send a second normal email for the same date.
 
-Start:
-`crypto-daily/runs/YYYY-MM-DD/HHMMSS-start.md`
-with `run_status: started`.
-
-Final:
-`crypto-daily/runs/YYYY-MM-DD/HHMMSS-final.md`
-with the completed status and lane results.
-
-Do not update the start file. A final file is the proof of completion.
-
-## Core scan every hour
-
-Always collect:
-- BTC / ETH / SOL market state;
-- high-volume / high-move crypto outliers using bulk market data;
-- major exchange / security / protocol incident headlines;
-- any deadline-sensitive event already carried from recent research.
-
-Use concise paraphrase. Do not copy long source text or exploit instructions.
-
-## Rotating discovery shard
-
-To keep the hourly task reliable, run one discovery shard per hour while core risk scanning remains hourly.
-
-Using Asia/Bangkok hour modulo 3:
-
-### Shard 0: social / NFT
-- English X discovery;
-- Reddit discovery;
-- NFT / digital art / open edition / mint / claim / drop.
-
-### Shard 1: ecosystem / primary market
-- TGE / ICO / public sale / unlock;
-- chain/ecosystem launches;
-- RWA / stablecoin / AI-Crypto / DePIN;
-- prediction-market changes.
-
-### Shard 2: flow / macro / security depth
-- whale / exchange flow;
-- derivatives / basis / liquidation anomalies;
-- cross-chain / cross-platform spread candidates;
-- regulation / macro / geopolitical crypto impact;
-- deeper security follow-up.
-
-Over any 3 consecutive successful hourly runs, all discovery categories are covered.
-
-If a critical breaking event appears outside the current shard, follow it immediately.
-
-## Candidate budget
-
-Save at most 8 material candidates.
-
-Prioritize:
-1. security / solvency;
-2. BTC/ETH/SOL and highly liquid market regime changes;
-3. deadline-sensitive opportunities;
-4. meaningful primary-market/TGE;
-5. strong NFT/new-ecosystem candidates;
-6. other research.
-
-No material update is a valid successful result.
-
-## Research file
-
-Write:
-`crypto-daily/research/YYYY-MM-DD/HHMMSS.md`
-
-Keep it compact:
-- topic
-- why_it_matters
-- confirmed_facts
-- market_snapshot
-- source_names/domains
-- confidence
-- unresolved
-- discovery_shard
-
-If the normal research write is blocked:
-1. retry once at `HHMMSS-retry.md` using the compact schema;
-2. if that also fails, embed a compact `research_payload` plus material candidates directly in the final/final-retry audit;
-3. finalize partial_failure, but preserve enough content for the 09:00 report to recover the missed hour.
-
-The 09:00 report reads both research files and final audits when a research gap exists.
-
-## 09:00, 10:00, 11:00
-
-The existing automation follows `REPORT_SPEC.md` and `DELIVERY_RUNBOOK.md`.
-
-At 09:00 delivery is higher priority than new research.
-
-At 10:00 and 11:00 missing-delivery recovery is higher priority than ordinary collection.
-
-At other hours, do not read the full REPORT_SPEC unless required.
-
-## Final audit
-
-Create the append-only final file with:
-- run_status
-- core_market_scan
-- security_scan
-- discovery_shard
-- x_scanned / reddit_scanned / nft_scanned as applicable
-- candidate_count
-- research_path
-- research_write
-- source_failures
-- tool_errors
-
-Normal no-result/no-update is healthy.
-
-Single source failure does not abort the run.
-
-Temporary failure never disables or pauses the automation.
-
-## Runtime-policy boundary
-
-This hourly collector is factual research only.
-
-It may:
-- retrieve public market/news/official-source facts;
-- calculate descriptive market statistics;
-- save compact research/audit files;
-- identify topics that deserve later human review.
-
-It must not:
-- recommend a personalized trade;
-- invent entry/exit/stop/leverage/position size;
-- tell the user to buy/sell/short/long;
-- execute or prepare transactions;
-- reallocate the user's capital.
-
-Candidate labels in this collector mean research priority only. Investment/action decisions belong to interactive chat or a separately authorized rule monitor.
-
-The first GitHub skeleton audit is intentionally content-neutral and must be attempted before reading other project files or starting external research.
-
-
-## Success classification
-
-Normal absence of news is not a source failure.
-
-Examples that are healthy:
-- no fresh authoritative security incident found
-- no material candidate found
-- a discovery category is not due in the current rotating shard
-- X/Reddit/NFT fields are not_due outside their shard
-
-Use `source_failures` / `tool_errors` only for actual request, access, parsing, provider or persistence errors.
-
-If core scan + scheduled shard + research write + audit finalization all succeed and there is no real tool/access error, final status should be `success`, even when the factual result is "no update".
+## Stable regression scenarios
+- Oct 6 Abstract L2 wind-down: chain shutdown/forced migration headline.
+- Oct 9 Ledger multiple user wallet drains: allegations first; amount/causation
+  NOT confirmed by reposts; later issuer acknowledgement is a state change.
+- Oct 9 XRPL critical inflation-potential overflow disclosed AFTER Sep 25
+  patch: official severity and patch dates distinct from real exploitation.
+- Oct 9/10 national blockchain network policy: actual government/industry
+  policy vs no token-launch or trading legalization inference.
+- Any scheduled hour with no final: backlog must not be called covered.
+The collector is factual research only: no personalized trading instructions,
+wallet signatures, NFT mint links, or unverified token purchases.
