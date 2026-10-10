@@ -1,0 +1,42 @@
+name: Frank CA evidence export tests
+
+on:
+  push:
+    branches:
+      - research/frank-wallet-v2-d0-readonly-20261011
+    paths:
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/evidence_sync.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/service.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/meme_evidence_sync.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_meme_evidence_sync.py'
+      - '.github/workflows/frank-ca-evidence-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  research-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install existing pinned dev tooling
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]'
+      - name: Compile exporter and integration
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile mission_agent/mission_control/evidence_sync.py mission_agent/mission_control/server.py mission_agent/mission_control/service.py scripts/meme_evidence_sync.py tests/test_meme_evidence_sync.py
+      - name: New exporter safety and exact fake-Git readback tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pytest -q tests/test_meme_evidence_sync.py
+      - name: Existing Frank/Dashboard regression subset
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pytest -q tests/test_mission_control_dashboard.py tests/test_mission_control_service.py tests/test_mission_control_delivery.py
