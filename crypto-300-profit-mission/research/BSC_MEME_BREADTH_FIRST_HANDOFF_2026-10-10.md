@@ -100,3 +100,13 @@ This section supersedes the first-pass candidate count above; it does not supers
 - Provider note: the prior optional Blockscout session is invalid and offered a paid upgrade. **No upgrade, key, new monitoring or private API requested**; all completed reads use the previously approved connected Alchemy. Archive gaps explicitly rather than inventing block-to-date conversions.
 
 **Required next phase:** continue expanding the eligible Binance BSC meme contract population via official CA and announcement corroboration; paginate actual first venues and material event windows beyond earliest-50; compare significant profitable and losing core positions, actual quote proceeds (BNB/WBNB/stables), cross-wallet clusters and delayed followability. Keep `OBSERVE_ONLY` and `NO_GO` with no auto-alert setup.
+
+## 2026-10-11 follow-up: all 23 candidate addresses
+
+Research-only BSC breadth: all 23 candidate wallets checked against all 19 previously researched token CAs for both inbound and outbound ERC20 transfers. 46 directions, 394 sampled events, 33 remaining paginated. Four raw source files BSC_MEME_CORE_WALLET_CROSS_TOKEN_TRANSFER_SCREEN_B01 through B04 dated 2026-10-11; machine-readable index BSC_MEME_23_WALLET_BREADTH_COVERAGE_MATRIX_2026-10-11.json. First ten transfers per direction are partial and MUST NOT overwrite prior verified material event trades.
+
+Native BNB external inbound breadth: 227 sampled transfers for all 23 addresses, source files BSC_MEME_FUNDING_FIRST_NATIVE_INBOUND_B01 through B04 dated 2026-10-11. Deduplicated links in BSC_MEME_23_EOA_NATIVE_FUNDING_SHARED_SOURCES_2026-10-11.json: 13 distinct funding senders repeated across recipients, seven candidate-to-candidate native transfers, all 7 independently verified by signed transaction and SUCCESS receipt. The 13 shared source addresses were code-checked as EOAs, but some can be exchange/infrastructure wallets.
+
+Two notable possible clusters: historical reciprocal 5 BNB between 0xd70ce47e... and 0x57c98bc7...; three confirmed payments totalling 0.9 BNB from 0x4789f192... to 0x3638cd44..., and two totalling 0.165 BNB to 0xe54bdcaf.... These are funding relationships, NOT proof of same beneficial controller or independent winners. Do not score exchange wallet 0x8894e0a0... (prior Binance 51 label) as an owner cluster.
+
+Priority remains verified core major-opportunity histories: 0x2adf... four selected 2026 winners; 0xd70ce... three historical; 0x239e... two scoped 2026 winners; 0x5c48... two fully reconciled ERC20 inventories with positive native BNB trade-block differences pending quote and same-block attribution. No production signals, automated trading, monitors or paid APIs enabled.
