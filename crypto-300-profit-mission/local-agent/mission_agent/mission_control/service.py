@@ -366,7 +366,12 @@ class MissionMemeService:
                         health = json.loads(self.frank.health_path.read_text(encoding="utf-8"))
                         count = health.get("poll_count")
                         if type(count) is int and count >= 0 and count != last_poll_count and health.get("last_poll_at"):
-                            spool.frank_scan(poll_count=count, health=health)
+                            spool.frank_scan(
+                                poll_count=count, health=health,
+                                coverage=self.frank.activity_coverage(),
+                                recent_trades=self.frank.recent_trades(40),
+                                signal_candidates=self.frank.candidates(),
+                            )
                             last_poll_count = count
                         if upload_future is None or upload_future.done():
                             # Network work runs in a separate worker. A slow GitHub
