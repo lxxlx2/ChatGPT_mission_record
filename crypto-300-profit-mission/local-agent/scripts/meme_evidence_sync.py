@@ -13,6 +13,7 @@ import sqlite3
 import sys
 
 from mission_agent.mission_control.evidence_sync import EvidenceSpool, GitEvidencePublisher
+from mission_agent.mission_control.wallet_watch import from_sqlite as read_frank_watchlist
 
 
 def _frank_health(prod: Path) -> dict:
