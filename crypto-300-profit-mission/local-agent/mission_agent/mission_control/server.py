@@ -22,6 +22,7 @@ from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, l
 from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .frank import FrankReader
+from .wallet_watch import from_sqlite as read_frank_watchlist
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
 
@@ -704,6 +705,18 @@ class DashboardState:
         candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
 
+    def frank_observed_watchlist(self):
+        try:
+            return read_frank_watchlist(self.frank.database, person_id=self.frank.person_id,
+                                        as_of=int(time.time()))
+        except (OSError, ValueError, sqlite3.Error):
+            return {
+                "schema_version": 1, "status": "SOURCE_UNAVAILABLE",
+                "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
+                "chain_completeness_verified": False,
+                "summary": {}, "rows": [],
+            }
+
     def recent_trades(self):
         return self.frank.recent_trades(100)
 
@@ -761,6 +774,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.mission_control_health())
         if path == "/api/candidates":
             return self._json(self.state.candidates())
+        if path == "/api/frank-observed-watchlist":
+            return self._json(self.state.frank_observed_watchlist())
         if path == "/api/trades":
             return self._json(self.state.recent_trades())
         if path == "/api/coverage":
