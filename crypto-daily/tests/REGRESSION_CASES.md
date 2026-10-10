@@ -50,3 +50,16 @@ Validation type: specification/rotation-contract dry-run, NOT a claim that a fut
 Dry-run executable rotation inputs: normal [0,3,6,15,19,23] -> [0,1,2,0,1,2]; missing 19 -> [0,1,2,0,missing,1]; missing 03 -> [0,missing,2,1,0,2]. The 'PASS' results above validate scheduling decisions only, not live discovery. Before declaring the fix VERIFIED IN PRODUCTION, inspect >=3 future *actual* ordinary collectors and at least one next complete Crypto Daily Gmail Sent/readback/Git body equality. Any missing final or key source receipt keeps status PARTIAL/UNHEALTHY.
 
 Pass threshold for V2 claim: actual persisted finals report `cross_domain_receipts`, `last_two_complete_shards`, `executed_shard`, and `high_impact_candidate_dispositions` when applicable, plus distinct delivery proof. Missing test evidence is FAIL/NOT YET VERIFIED, never inferred PASS.
+
+
+## User-approved scheduling update regression (2026-10-10)
+This is a specification-level deterministic check. **Not** a claim that new schedule has already delivered a real email.
+
+- Crypto existing enabled automation (same ID, same scope): ordinary collector `00:20/03:20/06:20/12:20/16:20/20:20`, prebuild `08:20`, Gmail official `09:20`, deduped recovery `10:20/11:20`. All Asia/Bangkok, exact 10 per day.
+- TGE existing enabled automation (same ID, same 24 per day) now uses hourly `HH:00`, urgent + one `hour % 4` shard, time gate and action dedupe unchanged.
+- US-stock daily existing enabled automation stays `05:40/06:40/07:40/08:40`, exact 4 per day.
+- Total 38 scheduled invocations/day. Minutes for the three systems are 00/20/40, yielding 20-minute launch spacing in hours where all three coexist. **This is spacing of scheduled starts, not assurance of no overlapping executions.**
+- Collector fallback shard map `00=0,03=1,06=2,12=0,16=1,20=2`, only when there are no durable completed-shard receipts. Completed-state rotation overrides fallback; absent final or partial does not count as completed.
+- Never compare old `:10` or `:50` historical runs against new schedule as if they were future missing/late runs; the new boundary is the timestamp of the user-authorized schedule edit. No manufactured final or backwards repairs.
+
+Future production acceptance: three consecutive real collector completions with source receipts/finals; next 09:20 complete Crypto Gmail Sent/readback and identical Git archive; first next hourly HH:00 TGE actual attempt/final; next 07:40 US-stock full Gmail. An automation enabled/schedule updated is not proof the execution will complete.
