@@ -2469,7 +2469,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x3d9404280e58102c9ea54405f94cccd49708d552",
@@ -2493,7 +2493,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x3dd696bc5bf81ec3032260b981be4cb10645dac7",
@@ -2689,7 +2689,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
@@ -2907,7 +2907,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0x9be520b4ee9f702dbafe21eede032f2454010498",
@@ -2965,7 +2965,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
@@ -3080,7 +3080,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0xd49bd24e4a34cdd0f78ef37baf30b43f82b6070e",
@@ -3137,7 +3137,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
@@ -3203,7 +3203,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
@@ -3232,6 +3232,6 @@
       "code_type": "EOA"
     }
   ],
-  "classified_cumulative": 52,
-  "still_unknown": 8
+  "classified_cumulative": 60,
+  "still_unknown": 0
 }
