@@ -69,6 +69,49 @@ def test_ca_snapshot_sanitizes_and_reads_back(tmp_path):
     assert any(op == "GET" for op, _ in pub.calls)
 
 
+
+def test_large_ca_report_preserves_complete_sanitized_evidence_in_git(tmp_path):
+    queue = EvidenceSpool(tmp_path)
+    # 700 independent bounded evidence rows are deliberately larger than
+    # the old single-file cutoff: never silently discard their signatures.
+    evidence = [{"signature": f"sig-{i:06d}", "owner": MINT,
+                 "amount_raw": str(i), "memo": "x" * 350}
+                for i in range(700)]
+    report = {"mint": MINT, "schema_version": 2,
+              "trade_evidence": evidence, "metrics": {"RAW_TOP10": "25"},
+              "rpc_url": "https://secret.invalid/key"}
+    queue.ca_done(mint=MINT, job_id=JOB, report=report)
+    manifest = json.loads((queue.pending / "ca" / (JOB + ".json")).read_text())
+    assert manifest["export_completeness"] == "ALL_SELECTED_FIELDS_IN_CHUNKS"
+    assert len(manifest["data_chunks"]) >= 2
+    pub = FakeGit(queue)
+    assert pub.sync()["status"] == "SYNC_OK"
+    assert list((queue.pending / "ca").glob("*.json")) == []
+    chunks = []
+    for rec in manifest["data_chunks"]:
+        remote = f"{PREFIX}/ca/{MINT}/{JOB}/{rec['file']}"
+        chunk = json.loads(pub.remote[remote])
+        chunks.append(base64.b64decode(chunk["payload_b64"]))
+    reconstructed = json.loads(b"".join(chunks))
+    assert len(reconstructed["trade_evidence"]) == 700
+    assert reconstructed["trade_evidence"][-1]["signature"] == "sig-000699"
+    assert reconstructed["metrics"]["RAW_TOP10"] == "25"
+    assert "rpc_url" not in reconstructed
+
+
+def test_incomplete_ca_part_retains_manifest_and_pending_files(tmp_path):
+    queue = EvidenceSpool(tmp_path)
+    report = {"mint": MINT, "trade_evidence":
+              [{"signature": f"sig-{i}", "memo": "z" * 700} for i in range(700)]}
+    queue.ca_done(mint=MINT, job_id=JOB, report=report)
+    meta = json.loads((queue.pending / "ca" / (JOB + ".json")).read_text())
+    assert meta["data_chunks"]
+    first_part = queue.pending / "ca-parts" / JOB / meta["data_chunks"][0]["file"]
+    first_part.unlink()
+    result = FakeGit(queue).sync()
+    assert result["status"] == "SYNC_PARTIAL"
+    assert (queue.pending / "ca" / (JOB + ".json")).exists()
+
 def test_invalid_ca_identity_does_not_queue(tmp_path):
     q = EvidenceSpool(tmp_path)
     with pytest.raises(ValueError):
