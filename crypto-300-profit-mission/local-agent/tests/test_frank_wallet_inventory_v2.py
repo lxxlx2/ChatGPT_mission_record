@@ -5,6 +5,7 @@ from copy import deepcopy
 import json
 from pathlib import Path
 import sqlite3
+import zipfile
 
 import pytest
 
@@ -13,6 +14,7 @@ from mission_agent.mission_control.wallet_inventory import (
 )
 from mission_agent.mission_control.wallet_watch import from_seed
 from mission_agent.mission_control.server import DashboardState
+from scripts.frank_evidence_bootstrap import main as mac_bootstrap
 
 EVIDENCE = (Path(__file__).resolve().parents[2] / "meme" / "evidence" /
             "frank-v2-thirty-two-mint-finalized-2026-10-11.json")
@@ -150,3 +152,41 @@ def test_dashboard_dated_source_must_be_explicit_optin_and_safe(tmp_path, real_s
     assert with_proof["wallet_total_nav_usd"] is None
     assert all(r["current_chain_balance_verified"] is False for r in with_proof["rows"])
     assert db.exists()
+
+
+def test_mac_bootstrap_combines_local_model_and_explicit_dated_source_without_deployment(
+        tmp_path, real_snapshot):
+    prod = tmp_path / "production"
+    prod.mkdir()
+    with sqlite3.connect(prod / "forward.sqlite") as conn:
+        conn.executescript("""
+            CREATE TABLE v1_states(person_id TEXT,mint TEXT,body TEXT);
+            CREATE TABLE signatures(wallet TEXT,person_id TEXT,signature TEXT,block_time INTEGER,body TEXT);
+            CREATE TABLE trades(wallet TEXT,signature TEXT,mint TEXT,episode_id TEXT,block_time INTEGER,side TEXT,body TEXT);
+        """)
+        conn.execute("INSERT INTO v1_states VALUES(?,?,?)",
+                     ("frank", sorted(OPEN)[0], '{"state":"OPEN","current_raw":"1"}'))
+    evidence = tmp_path / "finalized.json"
+    evidence.write_text(json.dumps(real_snapshot))
+    output = tmp_path / "frank-evidence.zip"
+    result = mac_bootstrap([
+        "--production-root", str(prod),
+        "--control-root", str(tmp_path / "control"),
+        "--output", str(output),
+        "--inventory-evidence", str(evidence),
+    ])
+    assert result == 0
+    with zipfile.ZipFile(output) as z:
+        names = z.namelist()
+        assert "frank-inventory-dated-reconciliation.json" in names
+        report = json.loads(z.read("frank-inventory-dated-reconciliation.json"))
+        assert report["snapshot_reconciliation"]["matched_mints"] == 1
+        assert report["snapshot_reconciliation"]["nonzero_at_snapshot"] == 1
+        assert report["chain_completeness_verified"] is False
+        assert report["wallet_total_nav_usd"] is None
+        assert "frank-d0-local-index.json" in names
+        assert any("frank-history" in n for n in names)
+        status = json.loads(z.read("summary.json"))
+        assert status["inventory_reconciliation"] == "DATED_POINT_IN_TIME_NOT_LIVE"
+        assert status["git_sync"] == "NOT_REQUESTED"
+    assert not (prod / "health.json").exists()
