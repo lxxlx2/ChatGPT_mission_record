@@ -1,6 +1,6 @@
 {
   "date_utc": "2026-10-10",
-  "status": "READ_ONLY; 3 ERC20 quantity matched positions, signer and quote audit in progress",
+  "status": "32 signed ERC20 entry and exit transactions for 3 full-quantity histories verified; BNB native block change present, WBNB and other quotes still require care",
   "source": "BSC_MEME_2026_MULTI_OPPORTUNITY_EOAS_EARLY_OUTGOING_2026-10-10.json",
   "pairs": [
     {
@@ -229,6 +229,112 @@
           "kind": "ERC20_OUT",
           "block": 85952207,
           "original_signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "0",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        }
+      ]
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "token": "我踏马来了",
+      "records": [
+        {
+          "hash": "0xa9a40de723b31bde3df8be876facbeedbe1b73b8311379580acda16e6f0ca354",
+          "kind": "ERC20_IN",
+          "block": 73336301,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "200000000000000000",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        },
+        {
+          "hash": "0xefe2cd2c184a7fba55d2568743e926f59107223db7454c96f000322e511ef9e8",
+          "kind": "ERC20_IN",
+          "block": 73336334,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "10000000000000000",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        },
+        {
+          "hash": "0x1e8d57b83c5ada1158ef72e6029d9c4cda0ead92940ecb6d48ba0dc25b038bf2",
+          "kind": "ERC20_IN",
+          "block": 73336338,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "10000000000000000",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        },
+        {
+          "hash": "0xfbd5edd65f362622be69b29c296f4c4de92fd0941866d0f0c4ad035249ec339b",
+          "kind": "ERC20_IN",
+          "block": 73540886,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "200000000000000000",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        },
+        {
+          "hash": "0x496359ca877bfc6b79d714ace4f490e881686c3e6fb339a4221c89ce90fed7d4",
+          "kind": "ERC20_IN",
+          "block": 73540892,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "10000000000000000",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        },
+        {
+          "hash": "0xb4d225b2c8aea0ea88f2d59692982f654d9f381b48d70972d2354320d4e1ea07",
+          "kind": "ERC20_IN",
+          "block": 73540896,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "10000000000000000",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        },
+        {
+          "hash": "0xe233c94baee5f6c6a7275013fb13cf9304235fcf28ce3241847548bef8b2dfe4",
+          "kind": "ERC20_IN",
+          "block": 73540898,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "10000000000000000",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        },
+        {
+          "hash": "0x53631c06edaaf127a392cce0ec25e8eec4ad41f641f7bf46d4bec81e1af7b57f",
+          "kind": "ERC20_OUT",
+          "block": 73336610,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "0",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        },
+        {
+          "hash": "0x0183ea776ecbd9fb41a410f4dc80371ab3dc317686562e44a16887ba15cc2de8",
+          "kind": "ERC20_OUT",
+          "block": 73336613,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "native_tx_value_wei": "0",
+          "selector": "0x0b3f5cf9",
+          "status": "WALLET_ORIGINAL_SIGNER"
+        },
+        {
+          "hash": "0xbea723be6c07eaa73c12a56f804d1f067675b02b5134f8244c80ed2373c9251f",
+          "kind": "ERC20_OUT",
+          "block": 73672622,
+          "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
           "target": "0x1de460f363af910f51726def188f9004276bf4bc",
           "native_tx_value_wei": "0",
           "selector": "0x0b3f5cf9",
