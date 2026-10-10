@@ -159,9 +159,12 @@ class EvidenceSpool:
                    "consecutive_errors", "policy_hash", "source_drift")
         h = {k: health.get(k) for k in allowed}
         cov = coverage or {}
+        observed = str(health.get("last_poll_at") or health.get("last_successful_poll") or "")
+        if not observed:
+            raise ValueError("FRANK_POLL_TIMESTAMP_MISSING")
         envelope = {
             "schema_version": 1, "kind": "frank",
-            "poll_count": poll_count, "captured_at_utc": datetime.now(timezone.utc).isoformat(),
+            "poll_count": poll_count, "captured_at_utc": observed,
             "source_status": "LOCAL_WRITER_HEALTH_READ_ONLY",
             "chain_completeness_verified": False,
             "health": safe(h),
@@ -169,7 +172,7 @@ class EvidenceSpool:
                           "earliest_indexed_block_time", "latest_indexed_block_time",
                           "indexed_signatures_all_time")}),
         }
-        stamp = h.get("last_successful_poll") or envelope["captured_at_utc"]
+        stamp = observed
         try:
             dt = datetime.fromisoformat(str(stamp).replace("Z", "+00:00")).astimezone(timezone.utc)
         except ValueError:
@@ -180,6 +183,8 @@ class EvidenceSpool:
         identity = digest(canonical({"poll_count": poll_count, "checkpoint": h.get("last_processed_signature"),
                                      "success": h.get("last_successful_poll")}))[:20]
         dest = self.pending / "frank" / f"{poll_count:012d}-{identity}.json"
+        if dest.is_file():
+            return dest  # stable first capture for this verified writer poll
         atomic_new(dest, raw)
         return dest
 
