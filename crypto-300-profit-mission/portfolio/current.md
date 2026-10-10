@@ -56,7 +56,9 @@ On October 10, the canonical EVM wallet's native balances remain individually be
 - Ink Tydro Ink Points remain present, but lack a reliable executable quote; no invented USD value.
 - Ethereum Credits collection `0x97630aA70AB14ed9883B41dAfccBc11349723043` **0 NFTs held**, Alchemy owner-specific read at block **26163166**, 2026-10-10 16:15:59 UTC.
 - Unichain UNICRED contract `0xf60de24F228dc7Ca6fF025958d2eE3A956ED88E5` **0 NFTs held**, Alchemy owner-specific read at block **60900610**, 2026-10-10 16:16:09 UTC.
-- Other Ethereum NFTs/Ink NFT rights lack an independently verified sale quote and are excluded from USD NAV, **not asserted zero inventory**. Solana enhanced owner-asset enumeration failed; classic SPL/Token-2022 RPC checks above succeeded.
+- The Ethereum owner NFT inventory query returned **20 token instances** (including spam/soulbound/airdrops), not zero overall. Among explicitly owned examples: `Cap Proof of Participation` token #0 (`0xCCCC5100D45432F49ed9bACc4A9CDfC77618cccC`) and `Okay Gamer Bear #169` (`0xa499f4bF71f9378A5a9DF58cB3bD263a9CDe823E`). Both ownership rows were shown by Alchemy; these are separate from the already exited Credits/UNICRED collections.
+- Alchemy/OpenSea collection **floor listing asks** on 2026-10-10T16:25 UTC: Cap Pop **0.00042 ETH** (~$1.05 at Binance ETHUSDT 2510.52), while Okay Gamer Bears has a **stale** floor reference 0.001 ETH from 2026-03-21 (~$2.51 if naively repriced, **not** a current quote). Cap Pop's ~1.05 is an **asking-price indication**, not an executable bid for this specific token, sale receipt or proven liquidation price. **Both NFT cash realizations remain UNRESOLVED; neither is included in the $62.31 on-chain subtotal** under the credible-price requirement.
+- Other Ethereum NFTs/Ink NFT rights similarly lack a fresh independent executable sale quote and are excluded from marked USD NAV, **not asserted zero inventory**. Solana enhanced owner-asset enumeration failed; classic SPL/Token-2022 RPC checks above succeeded.
 
 ### Sui / user-confirmed, not chain verified
 
