@@ -156,6 +156,107 @@
       "selector": "0x87f27655",
       "value_wei": "300000000000000000",
       "status": "CHAIN_TX_ORIGINAL_SIGNER_VERIFIED; SWAP_PURCHASE_AND_PNL_NOT_PROVEN"
+    },
+    {
+      "token": "BROCCOLI714",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "transfer_hash": "0xe35da013720d5d52008a851b73e857115a8376c5ac69e55e297efecd92e5d5df",
+      "block": 46627236,
+      "token_sender": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+      "token_recipient": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "original_signer": "0x392eb7553df2400e0a3fc8ac65f35ae3114a3924",
+      "target": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "selector": "0x519ebb10",
+      "value_wei": "1010000000000000000",
+      "status": "CHAIN_TX_ORIGINAL_SIGNER_VERIFIED; SWAP_PURCHASE_AND_PNL_NOT_PROVEN"
+    },
+    {
+      "token": "BROCCOLI714",
+      "hash": "0x104fcaaec47e0c323a84acd7a58520f1a12da4c9dd9833bc125af2cff627e18d",
+      "status": "TX_RESPONSE_UNPARSEABLE"
+    },
+    {
+      "token": "BROCCOLI714",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "transfer_hash": "0x08c080883369b4ec22e11172330b25098d5efb6618033b67487afb9eb4b6ae14",
+      "block": 46627237,
+      "token_sender": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "token_recipient": "0x77777e7a8f844b73f6269bbda7f440af16038d90",
+      "original_signer": "0x77777e7a8f844b73f6269bbda7f440af16038d90",
+      "target": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "selector": "0x87f27655",
+      "value_wei": "8000000000000000000",
+      "status": "CHAIN_TX_ORIGINAL_SIGNER_VERIFIED; SWAP_PURCHASE_AND_PNL_NOT_PROVEN"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "transfer_hash": "0x8cd3454cfcdffe1d3600b526d47444e965741e5f21c2a666a9ef815a72fc59bd",
+      "block": 46627236,
+      "token_sender": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+      "token_recipient": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "original_signer": "0x689733e47745a77004bedeb8d61a00357087f2a6",
+      "target": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "selector": "0x519ebb10",
+      "value_wei": "1010000000000000000",
+      "status": "CHAIN_TX_ORIGINAL_SIGNER_VERIFIED; SWAP_PURCHASE_AND_PNL_NOT_PROVEN"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "hash": "0x500d064ddc50819cbc9860aae73e0a9b3d25f468042f56e28d140e629e04bd1d",
+      "status": "TX_RESPONSE_UNPARSEABLE"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "transfer_hash": "0xe9fbcad6aa348ab32a2a9d77747b8663fed5dbf045511a9b050e95b4ad05990f",
+      "block": 46627239,
+      "token_sender": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "token_recipient": "0x4521a15102e89af1795eeda7a78e472210955015",
+      "original_signer": "0x4521a15102e89af1795eeda7a78e472210955015",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x7771fdb0",
+      "value_wei": "5050505050505050506",
+      "status": "CHAIN_TX_ORIGINAL_SIGNER_VERIFIED; SWAP_PURCHASE_AND_PNL_NOT_PROVEN"
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "transfer_hash": "0xa14fb90087d1361ef250dddbf1617fa526d154a2eb5257fa7c38230ba44cebde",
+      "block": 46464388,
+      "token_sender": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
+      "token_recipient": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "original_signer": "0x080ae51c010685b24b789c76b9e9351d6a0be4ea",
+      "target": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "selector": "0x519ebb10",
+      "value_wei": "505000000000000000",
+      "status": "CHAIN_TX_ORIGINAL_SIGNER_VERIFIED; SWAP_PURCHASE_AND_PNL_NOT_PROVEN"
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "transfer_hash": "0x1ee66a226eb6f57d41f012c62d23072efe0ce9f26e27598e9e4d258bb7133320",
+      "block": 46464395,
+      "token_sender": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "token_recipient": "0xba25ec3b03a9f5eb08f67dc7a22b3f77df73a584",
+      "original_signer": "0xba25ec3b03a9f5eb08f67dc7a22b3f77df73a584",
+      "target": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "selector": "0x87f27655",
+      "value_wei": "100000000000000000",
+      "status": "CHAIN_TX_ORIGINAL_SIGNER_VERIFIED; SWAP_PURCHASE_AND_PNL_NOT_PROVEN"
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "transfer_hash": "0xa8785c42c46fd6f4055e63c1f87706fce47035ef8ee6ffbb0e6d383e6dbc5e23",
+      "block": 46464396,
+      "token_sender": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "token_recipient": "0x060c2aa17f1299cbfe17b4f1f10e78bc0d7aeb9e",
+      "original_signer": "0x060c2aa17f1299cbfe17b4f1f10e78bc0d7aeb9e",
+      "target": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "selector": "0x87f27655",
+      "value_wei": "300000000000000000",
+      "status": "CHAIN_TX_ORIGINAL_SIGNER_VERIFIED; SWAP_PURCHASE_AND_PNL_NOT_PROVEN"
     }
   ]
 }
