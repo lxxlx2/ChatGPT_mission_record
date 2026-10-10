@@ -196,3 +196,62 @@ To avoid two-winning-trade survivorship bias, researched three more complete, ze
 - Among these specifically researched **five** closed positions (我踏马来了, 龙虾, Meme, QQ, LION), 3 were net profitable, 2 lost, combined +0.25927775341787535 BNB (limited selected sample win rate 3/5 = 60%). **Do not claim historical wallet win rate 60%**; many other txs were not sampled. Distinct from 18 project candidate universe, which includes only the first two of these five.
 - Additional candidate-universe checks on the same wallet for 牛来, MARSCOIN, 哈基米, 币安人生, TST and MUBARAK found no direct trading transfers, except one tiny 16.939109 牛来 inbound transfer with no matching outbound; this is not a repeated hit/profit on those six. Broader active-wallet candidate search is still necessary.
 - Bottom line: EOA `0x239e74bf...` is a genuinely active-in-2026 **research candidate** with at least two observed BSC Binance Meme profitable closed positions and observable losing Meme positions elsewhere, but no demonstrated full-history edge, no proof of insider Binance connection, no tested delay-follow profitability. Status remains **OBSERVE_ONLY**.
+
+## 2026-10-10 top-profit-address and cross-wallet linkage expansion
+
+Scope requested: **all 18 sample tokens**, seek highest-realized-profit traders per token, compare them across coins, infer common control only with corroborating chain evidence, and prioritize activity in 2026. This addendum records what is **actually audited** versus what still needs a historical PnL-indexed top-trader export.
+
+### Coverage and rank caveat
+
+- Direct Alchemy BSC RPC read **both first and latest 10 pair->token ERC20 outgoing transfer rows** for each of the 18 candidate token addresses' previously verified Pancake V2/WBNB pool. Some tokens have fewer than 10 distinct observable non-self recipient events within the immediate transfer-page. The first-slice scan produced 11 repeated recipient addresses across >=2 sample tokens, of which 8 had contract code and **only 3 had EOA code**. Repetition of a token-transfer receiver is not proof of the same owner actually initiating a trade, nor a realized-profit leaderboard.
+- The latest-slice scan produced 13 repeated recipient addresses across >=2 token pools; **12 contracts and 1 EOA**. The EOA was `0x7817dbf38e9d1c95671625f0052c147864692fe0`, appearing in CHEEMS, TST, BROCCOLI714, MARSCOIN. Original transactions from these four occurrences have **different tx.from signer wallets**, all call destination contract `0x16ceff8d5a4c8648fcc7293f8bd3ac9ada454219`; it is therefore a **shared transfer receiver/intermediary**, not a validated repeated-investor PnL record. Examples:
+  - CHEEMS tx `0xbe399e756095a4d381b8474fec39a56234873145928e80697aa565dffa0291d4`, tx.from `0x0aa536530a613b4b3f93601737b91ce183576def`;
+  - TST tx `0x84a40b907c12a9d5f62042c9925bd942d1066f9100d503d219adc6626e1f5da6`, tx.from `0x715626db0eb11a093344c6fe325654461c9c2138`;
+  - BROCCOLI714 tx `0x61503580a82b5089390af28f3b3ddf96b0ea3b5fb9eaed59ecb27d64e05d90d3`, tx.from `0x366888c9645d96224ff8fafd863d0994df23d7cd`;
+  - MARSCOIN tx `0x001ec5bdc03fb1c79f4fa7a5e1c7f298bf22104738c8c05c813e62b9d238bb1c`, tx.from `0xbfc398f7b1e66d11043cafe90f7fad1bd2a77daf`.
+- One *actual common tx.from signer* between a MARSCOIN and 牛来 recent V2 pool transfer is `0x92c466204ca732ead4f6517d2d20b0f18e8f6fde`, on original transactions `0x6646815c1ec321d59378bea45f46073b52960c0d6d16a7ea4588fa5d87ed9f78` and `0x487e206f7ef882dfd6602e1946cd30ae2d54ce000d933c791853b14b0139ba54`, respectively. It is an EOA with >100k nonce on observation day, both swaps route through contract `0x29be31e7ef434a74d69da1cb6b51ad65c83e9a7b`; no direct token-in/out ERC20 transfers of these two tokens at signer wallet. **PROFIT_UNVERIFIED / contract-aggregated activity / not a copy-trading candidate without beneficiary tracing.**
+- **CRITICAL:** This two-window transfer sampling is not a **top profit** ranking across all time, all DEX versions and launchpads. Even the first 10 recipients can miss the most profitable early traders (for example `0xe54bd...` occurs outside some first-10 rows). Exact 18-token top-N PnL coverage requires historical full-pool/event indexing or a keyed top-trader API. GMGN officially documents `gmgn-cli token traders --chain bsc --address <CA> --tag smart_degen --order-by profit`, requiring a `GMGN_API_KEY` (official https://github.com/GMGNAI/gmgn-skills/blob/main/skills/gmgn-token/SKILL.md); no key or authorized agent integration was used. Birdeye documents EVM token Top Traders PnL support (https://birdeye.so/data-api/blog/detail/token-top-traders-api-updates-track-smart-money-across-evm-and-solana), but 2–90d windows cannot alone reconstruct all 2025 launches in October 2026. No leaderboard data were fabricated.
+
+### Three historical early-trader profit clusters, on-chain confirmed entries and reconstructed exits
+
+All values below are **BNB balance differences at transaction-containing blocks**, with both original ERC20 token flow and buy/sell signer addresses corroborated for sampled trades. This estimates realized trade PnL net of the transaction-block balance changes. It is **not** a complete all-DEX, all-asset wallet audit, and unusual simultaneous block payments or transfers can still affect results. Rows describe a specifically selected and reconstructed set of **complete closed token positions**, not 'top 1' all-market ranking.
+
+| EOA | Token | Native BNB buy net debits | Native BNB sell net credits | PnL BNB | Context |
+|---|---|---:|---:|---:|---|
+| `0xd70ce47ec32625420640da206f0b3525c2bec678` | 4 | 0.100909664 | 7.146838520587929 | +7.045928856587929 | 1 buy; 27 independently listed sell txs, ERC20 flows balance, dust remains |
+| same | 币安人生 | 0.110934684179004 | 1.839729129650899 | +1.728794445471895 | 2 buys, 13 sell txs, token flow balances (tiny dust) |
+| same | 哈基米 | 0.4610464146216875 | 3.989050878649783 | +3.528004464028095 | 4 buys, 23 sell txs, token flow balances, final amount zero |
+| `0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4` | 币安人生 | 0.021267136 | 0.4018086119896191 | +0.38054147598961907 | 1 buy, 5 sells; zero meaningful remaining balance |
+| same | 哈基米 | 0.020993536 | 0.3707732340759646 | +0.3497796980759646 | 1 buy, 4 sells; no token remains |
+| `0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568` | 币安人生 | 0.040843136 | 0.08670424522737501 | +0.045861109227375005 | 1 buy and exit, ERC20 balance zero |
+| same | 哈基米 | 0.03075549 | 5.855017559114763 | +5.824262069114763 | 1 buy and exit, ERC20 balance zero; EXTREME outlier |
+| `0x239e74bfbd02d71cdc70fecc2d505dc13acfb337` | 我踏马来了 | 0.03075525 | 0.12812197052437657 | +0.09736672052437657 | 2026; five sales |
+| same | 龙虾 | 0.82768143708 | 1.0268070305733352 | +0.19912559349333525 | 2026; seven buys, fourteen sales; also documented elsewhere in this file |
+
+**Selected-position subtotal / not entire wallet PnL**:
+- `0xd70ce...`: 3/3 selected closed Binance Meme winners, +12.30272776608792 BNB. Largest 4 profit +7.045928856587929 BNB; BUY tx `0x035aa1476b0da70d2dd31865cd50a2e073053c70df2f94bdba22dfa12f6aa17a`, earliest SELL tx `0xaf8f4e3f8213ee9c74774e5d093f99e5bf6a39cd479a165c4a422b38e878718b`. Its entire 4 position 751096.660369485 units went out in 27 sell txs (with dust).
+- `0x57c98...`: 2/2 selected closed token winners, +0.7303211740655837 BNB. First buys in 币安人生 and 哈基米 at blocks 63454409 and 63838946.
+- `0xe54bd...`: 2/2 selected closed token winners, +5.870123178342138 BNB, overwhelmingly from the extreme 哈基米 trade. 币安人生 BUY `0x38f9dc2536bb936c1f2dc4f40851ba326a335e9f328294e11c330fe647b053f5`, SELL `0x839b1202719595f879da5443e13bcafc574dbb5c63914be67fcfca280ec604e4`; 哈基米 BUY `0x5e46faa6f9c95b0c851d8fde6a79b8fe540ab9e29627531fa78614f1a2e6113e`, SELL `0x2523458015a452a3232ae7a2c2fa50cc6c15bd2644956cacfc347948e226d021`.
+- `0x239e...`: 2026 selected two +0.2964923140177118 BNB; also three selected *non-universe* Meme positions net -0.0372145605998365 BNB, documented elsewhere, so DO NOT infer all-wallet win rate.
+
+### Actual funding and wallet-wallet linkage, separate from trading coincidences
+
+Two of the historical EOAs have **direct, confirmed bidirectional funding flows**:
+- From `0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4` to `0xd70ce47ec32625420640da206f0b3525c2bec678`: 5 BNB, tx `0xb5e153902bedc8246633c476525b7c1f5bac843692efa16fdfa9a5937ce695b2` (block 48397922).
+- From `0xd70ce...` back to `0x57c98...`: 5 BNB, tx `0x49260f6dd65211c5373d77569234276936ed1bf632bae662d0e5617675c65585` (block 48398195).
+- Both received BNB from funding addresses `0x66fa07aae14e110013fb1a8835413ea77fe1b5c6` and `0x5d146231bbb42c2289a827d5c18e13d12e1c39d1`; e.g. `0x66fa07...` sent 3 BNB to first wallet in tx `0x8eca5fbf2a30c2b6e2fc6d388fb2f6a7a018e6b1e37c8d4a4444405b7af6b35e` and 2.1 BNB to second in tx `0x7acb4660a9dbe516815eee68380886e2674317d4e3931ac223809356206b493e`.
+- The shared funder `0x66fa07...` had a high outgoing nonce of 12,540 when checked, so shared funding can reflect an exchange, automated disperser or omnibus actor. Direct 5-BNB bilateral settlement PLUS common funding PLUS near-synchronous launch trading supports **COORDINATED_WALLET_CLUSTER / identity still UNCONFIRMED**; it does not prove one person, Binance employment, advance knowledge or manipulation.
+- The other high-profit wallet `0xe54bd...` has a **different observed primary funding origin** `0xf5988713400da6fc8a58ec9515e2b0df9b40b115`. Its synchronized early buys alone are insufficient to merge it into this wallet cluster.
+
+### Recency matters: native balance transfers vs actual Meme swaps
+
+As-of observation date 2026-10-10:
+- `0xd70ce...`: latest identified token outgoing **2025-12-24** (block 72759513), latest native active outgoing Dec 2025. **STALE**.
+- `0x57c98...`: latest token outgoing **2025-12-19** (block 72185878), latest native active Dec 2025. **STALE**.
+- `0xe54bd...`: latest identified token outgoing **2026-08-07** (block 114557113), native BNB transfer as late as **2026-09-15** (block 121975534). **Native-active-within-30d, NOT verified Meme swap within 30d**.
+- `0x239e...`: latest verified target-independent Meme buy/sell **2026-09-04** (Meme `0xf9d556ad3eb1836e53e1433bdd6dd5568a047777`, blocks 119919330/119920209); native active transfer **2026-09-18** (block 122514474). **Native-active-within-30d, NOT yet verified Meme swap within 30d**.
+- Consequently, **none of the four named EOA wallets here has a proved target-Meme swap in the trailing 30d** under this audit. This is an important limitation for the user’s active-copytrading requirement; do not present a 2025 whale as a currently verified actionable target.
+
+### Next audit gate
+
+Acquire complete top-20/100 realized-profit leaderboard PER TOKEN for all 18, with explicit as-of date, chain/CA, all-time-vs-window PnL methodology, and identify real original signer vs multi-user executor. Merge on true signer + corroborated controlling wallet, not token transfer receiver. For every recurring high-profit address require actual lifetime winners AND losers, chronological entry relative to Alpha/perp/Spot, latest true Meme swap within a recent window, liquidity, gas, slippage, selling behavior, copy delay 5/15/30m and relationship funding facts. If the top-profit indexed source cannot be queried, mark `FULL_TOP_PROFIT_LEADERBOARD=UNVERIFIED` rather than manufacturing rankings. Research only, OBSERVE_ONLY, production NO_GO, live validation remains stopped, no monitoring/automation/task modifications.
