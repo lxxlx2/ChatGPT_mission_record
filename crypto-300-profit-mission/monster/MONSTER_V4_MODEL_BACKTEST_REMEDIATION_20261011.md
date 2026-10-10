@@ -24,7 +24,7 @@
 
 ### 首次用官方原始1m价格实证发现 D0 的历史缺口
 
-在上述 XT Z 与 BROCCOLI714 各240根1m数据获取后，又完整获取并保留了 **BROCCOLI714USDT** 的官方历史Spot `1m` 实际240根：2025-12-31 15:00–18:59 UTC，历史旧信号首次观察锚点 `2025-12-31T17:00:00Z`；原Stage5将此例归为 `GT5X_PREHIT_POSITIVE` 且记录未来最大close约5.4679×、最大high约5.5004×。这份报告**仅以老报告的GT标签作案例索引，不把标签喂给发现器**。证据分别位于：
+在上述 XTZ 与 BROCCOLI714 各240根1m数据获取后，又完整获取并保留了 **BROCCOLI714USDT** 的官方历史Spot `1m` 实际240根：2025-12-31 15:00–18:59 UTC，历史旧信号首次观察锚点 `2025-12-31T17:00:00Z`；原Stage5将此例归为 `GT5X_PREHIT_POSITIVE` 且记录未来最大close约5.4679×、最大high约5.5004×。这份报告**仅以老报告的GT标签作案例索引，不把标签喂给发现器**。证据分别位于：
 
 - [XTZ官方1m连续240根](evidence/monster_v4_backtest_xtz_1m_probe_20261011.json)
 - [BROCCOLI714官方1m连续240根](evidence/monster_v4_backtest_broccoli714_1m_probe_20261011.json)
