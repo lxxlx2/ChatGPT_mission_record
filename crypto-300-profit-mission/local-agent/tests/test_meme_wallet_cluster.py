@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from mission_agent.frank.parser import DEX_PROGRAMS
-from mission_agent.meme.cluster import Holder, RpcCache, WalletClusterAnalyzer
+from mission_agent.meme.cluster import Holder, MultiEndpointSolanaRPC, RPCError, RpcCache, WalletClusterAnalyzer
 
 
 class DummyRPC:
@@ -164,3 +164,35 @@ def test_dev_linked_cluster_includes_probable_control_wallets():
     out=a.analyze()
     assert set(out["probable_control_clusters"][0]["wallets"])=={"A","B"}
     assert out["metrics"]["DEV_LINKED_CLUSTER_PCT"]=="35.0000"
+
+
+def test_multi_endpoint_rpc_falls_back_after_429():
+    class Client:
+        def __init__(self,endpoint,result=None,error=None):
+            self.endpoint=endpoint;self.result=result;self.error=error;self.calls=0;self.cache_hits=0
+        def call(self,*args,**kwargs):
+            self.calls+=1
+            if self.error:raise self.error
+            return self.result
+    rpc=MultiEndpointSolanaRPC(["https://primary","https://backup"])
+    rpc.clients=[
+        Client("https://primary",error=RPCError("HTTP_429")),
+        Client("https://backup",result={"value":"ok"}),
+    ]
+    assert rpc.call("getTokenSupply",["M"])=={"value":"ok"}
+    assert rpc.endpoint=="https://backup"
+    assert rpc.endpoint_history==["https://backup"]
+
+
+def test_multi_endpoint_rpc_does_not_hide_non_retryable_rpc_error():
+    class Client:
+        endpoint="https://primary";calls=0;cache_hits=0
+        def call(self,*args,**kwargs):raise RPCError("RPC_-32602")
+    rpc=MultiEndpointSolanaRPC(["https://primary","https://backup"])
+    rpc.clients=[Client()]
+    try:
+        rpc.call("getTokenSupply",["M"])
+    except RPCError as exc:
+        assert str(exc)=="RPC_-32602"
+    else:
+        raise AssertionError("non-retryable RPC error was hidden")

@@ -81,8 +81,7 @@
       <section class="cluster-hero">
         <div>
           <div class="eyebrow">MEME ON-CHAIN RESEARCH</div>
-          <h2>CA 链上结构查询</h2>
-          <p>输入 Solana CA，自动分析 Top20、实际 owner、资金来源、内部转账和控制/执行集群。只读、免费、证据优先。</p>
+          <h2>CA 综合研究</h2>
         </div>
         <div class="cluster-trust">
           <span>Finalized RPC</span>
@@ -97,13 +96,13 @@
           <div class="cluster-search-row">
             <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴 token CA" />
             <select id="cluster-preset" name="preset" title="扫描深度">
-              <option value="quick">快速</option>
-              <option value="standard" selected>标准</option>
-              <option value="deep">深度</option>
+              <option value="quick">快速 · 6户</option>
+              <option value="standard" selected>标准 · 10户</option>
+              <option value="deep">深度 · 20户</option>
             </select>
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">标准：Top20 owner，深扫前 10 个 owner，兼顾速度和可信度。</div>
+          <div class="cluster-preset-help" id="cluster-preset-help">标准：Top20 全部解析 owner；深查前 10 个实际 owner，每个最多 30 条目标币交易 + 12 条首次建仓前资金历史。</div>
         </form>
       </section>
 
@@ -111,6 +110,38 @@
 
       <section id="cluster-result" class="cluster-result" hidden>
         <div class="cluster-summary" id="cluster-summary"></div>
+
+        <section class="panel report-verdict-panel">
+          <div class="panel-title">
+            <div>
+              <h2>当前结论</h2>
+              <p>链上事实、市场数据和未确认项分开，不把外部叙事当成链上事实。</p>
+            </div>
+          </div>
+          <div id="cluster-verdict" class="report-verdict"></div>
+        </section>
+
+        <section class="grid report-grid">
+          <section class="panel">
+            <div class="panel-title"><div><h2>代币 / 权限</h2><p>Mint、Freeze、Token-2022 敏感扩展和 metadata 权限。</p></div></div>
+            <div id="cluster-security" class="report-facts"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-title"><div><h2>价格 / 市值 / 流动性</h2><p>免费行情源用于市场快照；筹码与权限仍以链上为准。</p></div></div>
+            <div id="cluster-market" class="report-facts"></div>
+          </section>
+        </section>
+
+        <section class="grid report-grid">
+          <section class="panel">
+            <div class="panel-title"><div><h2>Frank / 已启用人物信号</h2><p>只显示当前系统实际启用并能验证的数据。</p></div></div>
+            <div id="cluster-frank" class="report-facts"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-title"><div><h2>叙事 / 官方关系</h2><p>自动工具不会把 creator fee、点赞、社区喊单直接写成官方背书。</p></div></div>
+            <div id="cluster-narrative" class="report-facts"></div>
+          </section>
+        </section>
 
         <section class="panel">
           <div class="panel-title">

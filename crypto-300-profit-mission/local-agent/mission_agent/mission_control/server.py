@@ -16,7 +16,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
+from ..meme.cluster import DEFAULT_RPC, FALLBACK_RPCS, MultiEndpointSolanaRPC, RpcCache, WalletClusterAnalyzer, load_registry, markdown
+from ..meme.token_report import DexScreenerClient, automated_assessment, inspect_mint
 from .db import open_control_ro
 from .frank import FrankReader
 
@@ -109,13 +110,18 @@ CLUSTER_PRESETS = {
 
 
 class ClusterJobManager:
-    def __init__(self, control_root: Path):
+    def __init__(self, control_root: Path, production_root: Path | None = None):
         self.control_root = Path(control_root)
+        self.production_root = Path(production_root) if production_root is not None else None
         self.report_root = self.control_root / "cluster-reports"
         self.report_root.mkdir(parents=True, exist_ok=True)
         self.cache_path = self.control_root / "wallet-cluster-rpc-cache.sqlite"
         self.registry_path = Path(__file__).resolve().parents[2] / "config" / "meme_special_addresses.json"
-        self.rpc_endpoint = os.environ.get("SOLANA_RPC_URL", "https://api.mainnet.solana.com")
+        primary=os.environ.get("SOLANA_RPC_URL",DEFAULT_RPC)
+        extra=[x.strip() for x in os.environ.get("SOLANA_RPC_FALLBACKS","").split(",") if x.strip()]
+        self.rpc_endpoints=[]
+        for endpoint in [primary,DEFAULT_RPC,*FALLBACK_RPCS,*extra]:
+            if endpoint and endpoint not in self.rpc_endpoints:self.rpc_endpoints.append(endpoint)
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
@@ -176,7 +182,7 @@ class ClusterJobManager:
             preset = job["preset"]
         cache = RpcCache(self.cache_path)
         try:
-            rpc = SolanaReadOnlyRPC(self.rpc_endpoint, cache=cache)
+            rpc = MultiEndpointSolanaRPC(self.rpc_endpoints, cache=cache)
             registry = load_registry(self.registry_path)
             opts = CLUSTER_PRESETS[preset]
             report = WalletClusterAnalyzer(
@@ -187,6 +193,11 @@ class ClusterJobManager:
                 history_per_holder=opts["history_per_holder"],
                 funding_lookback=opts["funding_lookback"],
             ).analyze()
+            report["scan_preset"]=preset
+            report["token_security"]=inspect_mint(rpc,mint)
+            report["market"]=DexScreenerClient().token_market(mint)
+            report["frank"]=FrankReader(self.production_root).mint_snapshot(mint) if self.production_root is not None else {"status":"UNAVAILABLE","reason":"PRODUCTION_ROOT_NOT_CONFIGURED","mint":mint}
+            report["automated_assessment"]=automated_assessment(report)
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
@@ -234,7 +245,7 @@ class DashboardState:
         self.control_root = Path(control_root)
         self.control_db = self.control_root / "mission-control.sqlite"
         self.control_health = self.control_root / "mission-control-health.json"
-        self.cluster_jobs = ClusterJobManager(self.control_root)
+        self.cluster_jobs = ClusterJobManager(self.control_root, production_root)
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():

@@ -22,6 +22,7 @@ from ..signals.classifier import classify
 from ..market.sol_usd import USDC, WSOL
 
 DEFAULT_RPC = "https://api.mainnet.solana.com"
+FALLBACK_RPCS = ("https://solana-rpc.publicnode.com",)
 SYSTEM_PROGRAM = "11111111111111111111111111111111"
 TOKEN_PROGRAMS = {
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -66,10 +67,54 @@ class RpcCache:
         self.db.commit()
 
 
+class MultiEndpointSolanaRPC:
+    """Read-only failover across free Solana RPC endpoints.
+
+    Cache keys are chain-method/params based, so successful finalized responses can
+    be reused regardless of which endpoint returned them.
+    """
+    RETRYABLE = {"HTTP_403","HTTP_429","HTTP_500","HTTP_502","HTTP_503","HTTP_504","RPC_-32005","RPC_-32004"}
+
+    def __init__(self, endpoints, *, cache=None, min_interval=.30):
+        values=[]
+        for endpoint in endpoints:
+            endpoint=(endpoint or "").strip()
+            if endpoint and endpoint not in values:
+                values.append(endpoint)
+        if not values:
+            values=[DEFAULT_RPC]
+        self.clients=[
+            SolanaReadOnlyRPC(endpoint,cache=cache,min_interval=min_interval,max_attempts=1)
+            for endpoint in values
+        ]
+        self.endpoint=values[0]
+        self.endpoint_history=[]
+    @property
+    def calls(self):
+        return sum(x.calls for x in self.clients)
+    @property
+    def cache_hits(self):
+        return sum(x.cache_hits for x in self.clients)
+    def call(self, method, params, *, ttl=0):
+        last=None
+        for client in self.clients:
+            try:
+                result=client.call(method,params,ttl=ttl)
+                self.endpoint=client.endpoint
+                if not self.endpoint_history or self.endpoint_history[-1]!=client.endpoint:
+                    self.endpoint_history.append(client.endpoint)
+                return result
+            except RPCError as exc:
+                last=exc
+                if str(exc) not in self.RETRYABLE:
+                    raise
+        raise last or RPCError("RPC_ALL_ENDPOINTS_FAILED")
+
+
 class SolanaReadOnlyRPC:
     ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction"}
-    def __init__(self, endpoint=DEFAULT_RPC, *, open_url=urllib.request.urlopen, sleep=time.sleep, min_interval=.30, cache:RpcCache|None=None):
-        self.endpoint=endpoint;self.open_url=open_url;self.sleep=sleep;self.min_interval=float(min_interval);self.cache=cache;self.last=0.0;self.calls=0;self.cache_hits=0
+    def __init__(self, endpoint=DEFAULT_RPC, *, open_url=urllib.request.urlopen, sleep=time.sleep, min_interval=.30, cache:RpcCache|None=None, max_attempts=3):
+        self.endpoint=endpoint;self.open_url=open_url;self.sleep=sleep;self.min_interval=float(min_interval);self.cache=cache;self.last=0.0;self.calls=0;self.cache_hits=0;self.max_attempts=max(1,int(max_attempts))
     def call(self, method, params, *, ttl=0):
         if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
         now=time.time()
@@ -81,7 +126,7 @@ class SolanaReadOnlyRPC:
         body=json.dumps({"jsonrpc":"2.0","id":1,"method":method,"params":params}).encode()
         req=urllib.request.Request(self.endpoint,data=body,headers={"Content-Type":"application/json","User-Agent":"mission-meme-cluster/1"})
         last_error=None
-        for attempt in range(3):
+        for attempt in range(self.max_attempts):
             try:
                 self.last=time.monotonic();self.calls+=1
                 with self.open_url(req,timeout=20) as response:value=json.loads(response.read())
@@ -92,13 +137,13 @@ class SolanaReadOnlyRPC:
                 return result
             except urllib.error.HTTPError as exc:
                 last_error=RPCError("HTTP_"+str(exc.code))
-                if exc.code not in {429,500,502,503,504} or attempt==2:raise last_error
+                if exc.code not in {429,500,502,503,504} or attempt==self.max_attempts-1:raise last_error
                 try:retry_after=min(30.0,max(0.0,float(exc.headers.get("Retry-After","0"))))
                 except (TypeError,ValueError,AttributeError):retry_after=0.0
                 self.sleep(max(min(5.0,1.0*(2**attempt)),retry_after))
             except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
                 last_error=RPCError(type(exc).__name__)
-                if attempt==2:raise last_error
+                if attempt==self.max_attempts-1:raise last_error
                 self.sleep(min(5.0,1.0*(2**attempt)))
         raise last_error or RPCError("RPC_FAILED")
 
@@ -462,7 +507,7 @@ class WalletClusterAnalyzer:
             "unresolved_relation_edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED","COMMON_CONSOLIDATION_UNRESOLVED"}],
             "edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges],
             "funding_evidence":self.funding,"consolidation_evidence":self.consolidations,"trade_evidence":self.trades,"transaction_errors":self.tx_errors,
-            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits},
+            "coverage":{"top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep),"history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,"material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,"rpc_calls":self.rpc.calls,"rpc_cache_hits":self.rpc.cache_hits,"rpc_endpoint_history":getattr(self.rpc,"endpoint_history",[self.rpc.endpoint])},
             "limitations":[
                 "Only raw finalized RPC evidence and explicit local labels are treated as authoritative.",
                 "CEX/public-infrastructure identity is never guessed from funding alone.",
