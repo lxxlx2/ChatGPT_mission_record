@@ -88,3 +88,12 @@ Important: profitable trading on an asset that later lists on Binance is differe
 Primary exchange links: https://www.binance.com/en-PH/support/announcement/detail/ca3196e008da448da107d397bae0b4b0 and https://www.binance.com/en/support/announcement/detail/a6aeec228c6a403da616e873011317ea .
 
 These wallets demonstrably traded several tokens that later became major Binance memes. Their 2025 哈基米 trades ended about 11 months before the 2026 futures listing. They must not be called successfully timed Binance-announcement traders. This is strong historical early-token selection evidence, but not a verified listing-catalyst strategy. Keep separate research fields: EVENTUAL_LISTED_TOKEN_SELECTION and BINANCE_EVENT_TIMING.
+
+## Follow-up on event timing and early launchpad
+
+Full original-chain details and source transaction hashes: [BSC_MEME_MAJOR_OPPORTUNITY_DEEP_AUDIT_2026-10-10.md](BSC_MEME_MAJOR_OPPORTUNITY_DEEP_AUDIT_2026-10-10.md).
+
+- GIGGLE: 196.134965 units transferred from the leading EOA to an intermediary, then into the BscScan-labelled Binance 51 account at **2025-10-25 06:12:57 UTC**, ~13 min after official Spot opening. V2 historical pool midquote was ~39.47 BNB; exchange sale/PnL cannot be verified. Not a fifth independently confirmed realized winner.
+- HAJIMI: 990550.58398 units moved into a separately funded EOA in May 2026, which still holds these tokens as part of a ~1.21m-unit wallet balance. No verified sale of that transfer. Do not label the source's zero token balance a fully realized exit.
+- MARSCOIN + 牛来: verified pre-PancakeSwap V2 buys through Four.meme Token Manager. First 100 pre-V2 pool transfers per coin uncovered EOA `0xadffbebbd2d9141cff80f8a905846ba8f9e3946d` with both early episode returns modestly positive (~0.10875 BNB, ~0.05386 BNB). Smaller wins only, not a high-priority major-event wallet.
+- Keep major-capture ranking distinct from unrelated small-Meme win rates. Research only, production NO_GO.
