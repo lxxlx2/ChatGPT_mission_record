@@ -406,24 +406,58 @@ def scan_once(db,now_ms):
             rows,expected=fetch_market(venue)
             if not expected or len(rows)<expected:
                 raise ValueError("PARTIAL_EXCHANGEINFO_TICKER_COVERAGE")
-            reports.append(observe_snapshot(db,venue,now_ms,rows))
-            mark_source_health(db,venue,now_ms)
+            result=observe_snapshot(db,venue,now_ms,rows)
+            reports.append(result)
+            if result["invalid"]:
+                mark_source_health(db,venue,now_ms,
+                    "INVALID_TICKER_ROWS:"+str(result["invalid"]))
+            else:
+                mark_source_health(db,venue,now_ms)
         except (ValueError,KeyError,TypeError,urllib.error.URLError,OSError) as exc:
             mark_source_health(db,venue,now_ms,type(exc).__name__+":"+str(exc))
             reports.append({"venue":venue,"error":type(exc).__name__})
     reports.append({"queue":process_queue(db,now_ms,fetch_5m)})
     return reports
 
+def run_shadow_loop(db, interval_seconds=180, max_cycles=None):
+    """Foreground operator-invoked shadow only. Never installs or sends anything."""
+    if interval_seconds<60 or (max_cycles is not None and max_cycles<1):
+        raise ValueError("BAD_SHADOW_LOOP_CONFIG")
+    count=0
+    while True:
+        started=time.monotonic()
+        now_ms=int(time.time()*1000)
+        result=scan_once(db,now_ms)
+        print(json.dumps({"cycle":count+1,"observed_ms":now_ms,
+                          "results":result,"health":health(db,int(time.time()*1000))},
+                         ensure_ascii=False),flush=True)
+        count+=1
+        if max_cycles is not None and count>=max_cycles:
+            return count
+        time.sleep(max(0,interval_seconds-(time.monotonic()-started)))
+
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument("command",choices=("scan-once","status"))
+    parser.add_argument("command",choices=("scan-once","status","shadow-loop"))
     parser.add_argument("--db",type=Path,required=True)
+    parser.add_argument("--interval-seconds",type=int,default=180)
+    parser.add_argument("--max-cycles",type=int)
     opts=parser.parse_args()
     db=open_store(opts.db)
-    now_ms=int(time.time()*1000)
-    if opts.command=="scan-once":
-        print(json.dumps(scan_once(db,now_ms),ensure_ascii=False))
-    print(json.dumps(health(db,now_ms),ensure_ascii=False,indent=2))
+    try:
+        now_ms=int(time.time()*1000)
+        if opts.command=="scan-once":
+            print(json.dumps(scan_once(db,now_ms),ensure_ascii=False))
+        elif opts.command=="shadow-loop":
+            try:
+                run_shadow_loop(db,opts.interval_seconds,opts.max_cycles)
+            except KeyboardInterrupt:
+                print("SHADOW_FOREGROUND_STOPPED_BY_OPERATOR",flush=True)
+            return
+        print(json.dumps(health(db,int(time.time()*1000)),
+                         ensure_ascii=False,indent=2))
+    finally:
+        db.close()
 
 if __name__=="__main__":
     main()
