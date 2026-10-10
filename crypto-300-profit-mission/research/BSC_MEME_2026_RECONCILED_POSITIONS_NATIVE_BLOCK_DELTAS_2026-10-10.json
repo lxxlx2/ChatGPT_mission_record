@@ -208,6 +208,33 @@
             "0x4ad7226b748a5e227bd759bfd477e9eaab4b9b27546193718136d432088dde6e"
           ],
           "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 83636160,
+          "delta_wei": "312160885594236353",
+          "signed_token_in_transactions": [],
+          "signed_token_out_transactions": [
+            "0xe9e3a8467fe9f5b9b1d3a858c5dccb3d911c9d031207cc0c1e2f11d30ee292c1"
+          ],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 85952169,
+          "delta_wei": "-1001648370000000000",
+          "signed_token_in_transactions": [
+            "0xf4b76043b40d268baa0fa76130b26621168aef0e99f34938f3dd19e74d59d28d"
+          ],
+          "signed_token_out_transactions": [],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
+        },
+        {
+          "block": 85952207,
+          "delta_wei": "1245958889558796208",
+          "signed_token_in_transactions": [],
+          "signed_token_out_transactions": [
+            "0xc1b893b2f5a5ba09d3d12145b6249ef0ac178227eea429d069a8825362ec070c"
+          ],
+          "status": "NATIVE_WALLET_BALANCE_BLOCK_DELTA; MAY_INCLUDE_OTHER_SAME_BLOCK_TX"
         }
       ]
     }
