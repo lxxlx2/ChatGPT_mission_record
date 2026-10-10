@@ -12,7 +12,7 @@ class ReadonlyMarketReplayTests(unittest.TestCase):
  def test_closed_hour_does_not_peek_current_or_future_price(self):
   h=mod.H
   bars=[[i*h,1,1.01,.99,1,20,10000,100] for i in range(25)]
-  event=[25*h,1.2,1.22,1,1.2,20,80000,400]
+  event=[25*h,1.25,1.27,1,1.25,20,150000,400]
   p=deque(bars[1:],maxlen=24)
   signals,ratio=mod.signal_info(event,p,bars[0][0])
   self.assertEqual(round(ratio,2),8)
