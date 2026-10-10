@@ -10,12 +10,12 @@ Prior Git research scoped 18 Futures/Spot-oriented BSC meme token contracts and 
 Each pool: first 50 ERC20 outgoing transfer events only. Full pagination and full venues are still incomplete.
 Raw transfer provenance is recorded as tx hash, block, sender, recipient, ERC20 raw quantity and decimals.
 
-Captured ERC20 transfer rows: 1050
+Captured earliest V2/Four.meme ERC20 transfer rows: 1050, plus second-pass global earliest ERC20 transfers: 530; additional event-anchor windows: 80
 Unique pool transfer recipients: 567
 Observed recipients repeated in >=2 token samples: 44
 Among overlaps EOA (code=0x): 9
 Among overlaps deployed smart contracts: 35
-Combined wallet candidate queue: 14
+Combined wallet candidate queue: 19 (updated after second pass; see appended section)
 Fully paginated venues: 0
 
 ## Sampled source coverage
@@ -80,3 +80,23 @@ BSC_MEME_MAJOR_OPPORTUNITY_DEEP_AUDIT_2026-10-10.md
 Five additional early EOAs have 10 independently signer-matched transactions across pairs of tokens, but NO complete net PnL evidence.
 Several 4 and 币安人生 sampled buys occurred in close blocks. Common beneficial control remains UNVERIFIED.
 No paid GMGN, new monitoring, automated trading or user-side execution was used.
+
+## 2026-10-10 second pass: broad ERC20 inception, overlap and event anchors
+
+This section supersedes the first-pass candidate count above; it does not supersede the raw first-50-per-pool provenance.
+
+- Read the **globally earliest 20 ERC20 transfer events** for each of 19 token CAs directly through Alchemy without filtering to a known DEX pool. Expanded five 2026-priority event assets (我踏马来了, 龙虾, 牛来, MARSCOIN, HAJIMI) to first **50** each. Total **530** globally earliest ERC20 transfer events across 19 CAs, archived in `BSC_MEME_GENESIS_GLOBAL_TRANSFERS_2026_PRIORITY_2026-10-10.json`, `...LEGACY_A_2026-10-10.json`, and `...LEGACY_B_2026-10-10.json`.
+- `BSC_MEME_GLOBAL_GENESIS_V2_GAP_MATRIX_2026-10-10.json` records all 19 exact CAs, earliest globally observed Transfer block and previously observed V2 first outgoing Transfer block, and the block-number gap. Not proof of first tradable price, launchpad transaction, Alpha initial listing or historical realized gains.
+- Re-read **67 original signed transactions** using `ethGetTransactionByHash`, 25 from the five priority tokens and 42 from other scoped contracts. `BSC_MEME_ORIGINAL_SIGNERS_GLOBAL_EARLY_2026-10-10.json` and `BSC_MEME_GLOBAL_EARLY_SIGNERS_LEGACY_2026-10-10.json` contain the full transaction hashes, signers, target and selectors. **No signer overlapped across two different tokens within just these 67 selected first transactions**; this is a sample result, not evidence repeat-winning wallets do not exist.
+- Deduplicating the first-global and first-50 V2/Four.meme recipient histories surfaced **60 distinct cross-token recipient addresses**. All received onchain contract-code checks (44 inherited from the previous verified check; 16 new). **46 contracts, 14 EOAs**. Contracts are excluded from PERSON_PATTERN rankings even when their address appears in many token flows.
+- Five previously unqueued EOA addresses appeared across two scoped token samples and **each had two original transactions verified as self-signed**, one per token. Their realized costs, sale proceeds, major-event timing and PnL remain unknown:
+  - `0x11a7327957ed5d370d2e009ec250ab0da2ab98d8`: TST + BOB.
+  - `0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0`: 4 + MUBARAK.
+  - `0xa83b73f5644cde337b61da79589f10ea15548811`: 4 + MARSCOIN.
+  - `0xcceea39c8a5b5306a4eabaaca82a2777a39d8037`: 4 + HAJIMI.
+  - `0xddac928a240bdace3994c2cc0783d4e29a002127`: 我踏马来了 + 龙虾.
+- The durable candidate wallet queue now contains **19 unique EOA addresses**, old and new, with explicit signed provenance in `BSC_MEME_BREADTH_FIRST_CANDIDATE_QUEUE_2026-10-10.json`. There are NOT 19 proven independent material winners.
+- Captured two chain-anchored trading intervals: GIGGLE near a previously proven 2025-10-25 post-Spot Binance-deposit transaction block `65829269`, and MARSCOIN near a 2026-09-05 signed post-Spot sale block `120088241`. Each had 50-block before and 50-block at/after intervals; first 20 ERC20 transfers per interval, **80 total**; all still paginated. Independently verified 15/20 selected original signer transactions; five long RPC responses were truncated/invalid and **remain unresolved**. These are not comprehensive listing-hour/highest-profit trader populations. Evidence: `BSC_MEME_VERIFIED_EVENT_ANCHOR_TRANSFER_WINDOWS_2026-10-10.json`.
+- Provider note: the prior optional Blockscout session is invalid and offered a paid upgrade. **No upgrade, key, new monitoring or private API requested**; all completed reads use the previously approved connected Alchemy. Archive gaps explicitly rather than inventing block-to-date conversions.
+
+**Required next phase:** continue expanding the eligible Binance BSC meme contract population via official CA and announcement corroboration; paginate actual first venues and material event windows beyond earliest-50; compare significant profitable and losing core positions, actual quote proceeds (BNB/WBNB/stables), cross-wallet clusters and delayed followability. Keep `OBSERVE_ONLY` and `NO_GO` with no auto-alert setup.
