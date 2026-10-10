@@ -31,8 +31,7 @@ class MonsterMacServiceTests(unittest.TestCase):
                              self.root/"state/monster.sqlite",self.root/"logs")
         self.assertEqual(plan["Label"],m.LABEL)
         self.assertTrue(plan["KeepAlive"])
-        self.assertEqual(plan["ProgramArguments"][-3:],[
-            "--interval-seconds","180"] if False else
+        self.assertEqual(plan["ProgramArguments"][-4:],
             ["--db",str(self.root/"state/monster.sqlite"),
              "--interval-seconds","180"])
         self.assertNotIn("Frank",str(plan))
