@@ -1,109 +1,50 @@
-# Crypto Mission Performance Tracker
+# Mission Performance / Starting-Capital Provenance and Realized PnL
 
-Updated: 2026-09-28 17:58 Asia/Bangkok
-Timezone: Asia/Bangkok
+Updated: 2026-10-10 Asia/Bangkok
+Status: `MISSION_PNL_UNRESOLVED`
+Current position/balance authority: `../portfolio/current.md`.
+Operational authority: `../state/latest.md`.
 
-## Core objective
+## Mission objective and starting inventory
 
-Target: **3,000 USD-equivalent Mission net liquidation value**.
+- Target: **$3,000 equivalent net liquidation value** of the **original Mission starting asset set**, with auditable cashflows.
+- Original starting cash principal: **$300**.
+- Original six Credits NFTs: **#21646, #21753, #22857, #23042, #23232, #23328**. These are part of starting-set provenance and must be valued and attributed separately from later cash contributions.
+- **Current original Credits held: 0; historical exited: all 6.** Ethereum owner-specific Alchemy check at block 26163166 (2026-10-10 16:15:59 UTC) confirms zero current Credits for the canonical wallet. Historical sale provenance is recorded in `../positions/credits.md`.
+- UNICRED #230 is not owned (verified Unichain block 60900610 on 2026-10-10); closed historical asset, not current holdings.
 
-Starting asset set:
-- 300 USD cash principal
-- original six Credits NFTs #21646, #21753, #22857, #23042, #23232, #23328
+## Current asset reference (not Mission performance)
 
-Current original Credits:
-- held: #23042, #23232
-- exited: #21646, #21753, #22857, #23328
+As of this report, separately verified >=$1 chain positions consist of:
+- Solana wallet USDC **58.047629**, approximately **$58.10** using the sampled USDC/USD quote.
+- Solana wallet SOL **0.038163041**, approximately **$4.21** using sampled Binance SOLUSDT spot.
+- **Known material on-chain subtotal ~$62.31** (2026-10-10 chain and quotes).
+- Binance flexible USDC last observed by **2026-10-09 user screenshot**, UI ~$656.07; **not independently refreshed October 10**.
+- **Mixed-freshness total reference ~$718.38**; *neither verified comprehensive NAV nor Mission-earned profit*.
+- The GANG **500 USDC** sale commitment is separately encumbered historical cost and excluded from liquid subtotal, with allocation/refund pending.
+- The entire Bybit account is personal living/rent money, excluded from all Mission investment and performance calculations.
+- Incomplete/unpriced token/NFT or unsupported-chain holdings remain **UNRESOLVED**, not zero or <$1 by assumption.
 
-## Current trading exposure
+## Permanent display/valuation rule
 
-**None.**
+- **An individual asset/position must have a supportable current USD valuation >= $1.00 to be included in displayed marked holdings or USD subtotals.** Exclude each individually marked asset valued < $1.00; do not combine dust positions to reach the threshold.
+- Unpriced tokens, claim-bait, spam and unverified NFT asks are not valued as dollars; keep unresolved economic rights separate. The $1 display filter does **not** delete the chain history or convert unknown values to zero.
+- Use source classes `DIRECT_CHAIN`, dated `USER_CONFIRMED`, `MARKET`, `UNAVAILABLE/UNRESOLVED`. All CEX quantities need a new authenticated or user-supplied observation to become current.
+- Historical cost and escrow commitments are not necessarily recoverable NAV.
 
-USER_CONFIRMED:
-- Binance currently holds **682.40 USDT-equivalent earn only**
-- PONSUSDT perpetual is fully closed
+## Performance methodology and open accounting
 
-## Fresh all-chain liquid asset view
+Mission PnL and target progress **remain UNRESOLVED**, pending full transaction-level reconciliation of starting $300, six Credits' acquisition/sales, fees, subsequent transfers, deposits and attribution. In particular:
+- All six Credits have been exited; their prior floor/ask marks from 2026-09-28 must not be carried forward as current inventory.
+- No separate historical NFT sale proceeds may be stacked atop wallet balances without tracing transfers/redeployment.
+- Transfers between wallets, CEX accounts, bridges and escrow are not realized profit.
+- Refunds (including the already refunded **1,000 USDC JUMP sale deposit**) are capital return, not income.
+- External deposits, other project/private-sale balances and Binance savings are not automatically part of the original $300 Mission return merely because included in a broad asset-completeness view.
+- Positions below $1 are excluded from the current *display* view under user instruction, but actual fees/losses from such positions still affect accurate historical cashflow accounting when reconciling realized performance.
+- Do not infer any ROI, return multiple, drawdown or claim of $3,000 target progress from the mixed-freshness holdings subtotal.
 
-Verified stable assets across Ethereum, Solana, Base, Unichain, Arbitrum, Monad, HyperEVM and Optimism:
-**830.844301 USD-equivalent units**.
+## Historical snapshot policy
 
-Fresh priced native/gas assets + WETH + tiny priced special-chain tokens:
-**~52.61 USD**.
+The earlier 2026-09-28 tracking snapshot reported two then-owned Credits and one UNICRED, Binance 682.40 and a $0.10 display threshold. Those values and that threshold are now **superseded**, retained only through prior Git history and original dated evidence. `performance/current.md` is a current pointer, not an append-only historical daily report.
 
-**Strict directly priced on-chain liquid reference: ~883.45 USD.**
-
-The large change vs earlier snapshots is mostly wallet movement:
-- Solana USDC increased to 430.483714;
-- Base USDC fell to 0.000252;
-- BNB native fell to 0.0000769564;
-- Arbitrum native fell to 0.00000395933;
-- Robinhood native fell to 0.0000802978;
-- PAID is now 0;
-- prior SPC balance is no longer present.
-
-Wallet movement alone is not realized PnL.
-
-## Material NFT market marks
-
-Credits #23042 + #23232:
-- direct ownership confirmed
-- floor 0.0262 ETH each
-- top offer 0.0252 WETH each
-- floor subtotal ~138.67 USD
-- top-offer subtotal ~133.38 USD
-- no rarity premium
-
-UNICRED #230:
-- direct ownership confirmed
-- floor 0.00359 ETH
-- top offer 0.0022 WETH
-- floor mark ~9.50 USD
-- top-offer reference ~5.82 USD
-
-Material NFT floor subtotal: **~148.17 USD**.
-Material NFT top-offer subtotal: **~139.20 USD**.
-
-## Total asset-completeness view
-
-On-chain + material NFT floor marks:
-**~1,031.63 USD**.
-
-Adding USER_CONFIRMED Binance earn:
-**~1,691.53 USD total tracked assets**.
-
-Using NFT top-offer references:
-**~1,682.56 USD total tracked assets**.
-
-These totals are asset-completeness references only.
-
-## Claimable / recoverable value
-
-No new verified legitimate claim was identified in the broad all-chain scan or latest TGE/rights monitor state.
-
-Unsolicited claim-looking tokens/NFTs are excluded because several are demonstrably scam-like or contain unaffiliated claim URLs.
-
-Protocol-side rewards that are held in a staking/reward contract rather than the canonical wallet require protocol-specific reads and are not assumed to be zero.
-
-## Performance accounting
-
-- External later deposits do not count as Mission profit.
-- Wallet balance changes alone are not PnL.
-- Historical Credits sale proceeds must not be double-counted.
-- Binance 682.40 earn remains outside speculative Mission performance unless provenance is explicitly reclassified.
-- Mission target progress remains UNRESOLVED until original Mission capital/proceeds are separated from later additions.
-
-
-## 2026-09-28 de-risking snapshot
-
-User intentionally reduced market risk and moved most liquid exposure into USDC / Binance earn.
-
-Current material-asset presentation threshold: ignore individual positions below $0.10.
-
-Latest asset-completeness reference:
-- material on-chain liquid assets: ~930.30 USD
-- marked NFTs: ~144.97 USD
-- Binance earn: 682.40 USD-equivalent
-- total tracked assets: ~1,757.67 USD
-
-This change must not be interpreted as realized Mission profit. Transfers between wallet USDC and Binance earn are internal allocation changes.
+No wallet signing, transaction or account transfer performed by this accounting correction.
