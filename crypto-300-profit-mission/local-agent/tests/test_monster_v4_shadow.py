@@ -252,6 +252,41 @@ class MonsterShadowTests(unittest.TestCase):
         self.assertEqual(h["events"]["WATCH_EARLY"],2)
         self.assertEqual(h["events"]["LATE_REVIEW"],1)
 
+    def test_partial_invalid_ticker_is_visible_as_degraded_coverage(self):
+        def market(venue):
+            if venue=="spot":
+                return [row("AUSDT",1),row("BADUSDT",-5)],2
+            return [row("FUSDT",1)],1
+        with patch.object(m,"fetch_market",side_effect=market):
+            report=m.scan_once(self.db,BASE)
+        self.assertEqual(report[0]["invalid"],1)
+        self.assertEqual(report[1]["invalid"],0)
+        self.assertEqual(m.health(self.db,BASE)["degraded_venues"],["spot"])
+        def recovered(venue):
+            if venue=="spot":
+                return [row("AUSDT",1),row("BADUSDT",1)],2
+            return [row("FUSDT",1)],1
+        with patch.object(m,"fetch_market",side_effect=recovered):
+            m.scan_once(self.db,BASE+180_000)
+        h=m.health(self.db,BASE+180_000)
+        self.assertEqual(h["degraded_venues"],[])
+        self.assertEqual(h["events"]["SOURCE_RECOVERED"],1)
+
+    def test_foreground_loop_only_runs_asked_cycles_and_never_sends(self):
+        with patch.object(m,"scan_once",return_value=[]) as scanner,\
+             patch.object(m.time,"sleep") as sleeper,\
+             patch.object(m.time,"monotonic",return_value=100.0),\
+             patch.object(m.time,"time",return_value=1_800_000_000.0):
+            self.assertEqual(m.run_shadow_loop(self.db,interval_seconds=180,
+                                              max_cycles=2),2)
+            self.assertEqual(scanner.call_count,2)
+            sleeper.assert_called_once_with(180.0)
+        self.assertEqual(m.health(self.db,BASE)["mail_sent"],0)
+
+    def test_foreground_loop_rejects_high_frequency(self):
+        with self.assertRaisesRegex(ValueError,"BAD_SHADOW_LOOP_CONFIG"):
+            m.run_shadow_loop(self.db,interval_seconds=5,max_cycles=1)
+
     def test_duplicate_symbol_does_not_create_two_events(self):
         m.observe_snapshot(self.db,"spot",BASE,[row("DUSDT",1)])
         r=m.observe_snapshot(self.db,"spot",BASE+180_000,
