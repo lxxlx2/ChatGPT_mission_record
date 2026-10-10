@@ -344,6 +344,44 @@ class MonsterShadowTests(unittest.TestCase):
         self.assertEqual(r["retry"],1)
         self.assertEqual(m.health(self.db,BASE+10_000)["d2_queue"],{"PENDING":1})
 
+    def test_gradual_15m_rise_triggers_without_fast_3m_move(self):
+        for i in range(6):
+            price=1.018**i
+            out=m.observe_snapshot(self.db,"spot",BASE+i*180_000,
+                                   [row("GRADUALUSDT",price)])
+            self.assertEqual(out["watch_new"],1 if i==5 else 0)
+        event=self.db.execute(
+            "SELECT payload FROM events WHERE event_type='WATCH_EARLY'").fetchone()
+        import json
+        data=json.loads(event[0])
+        self.assertTrue(data["trigger_15m_8pct"])
+        self.assertFalse(data["trigger_3m_5pct"])
+        self.assertEqual(data["research_window_ms"],900000)
+
+    def test_gradual_60m_rise_without_15m_trigger(self):
+        for i in range(21):
+            out=m.observe_snapshot(self.db,"spot",BASE+i*180_000,
+                                   [row("SLOWBURNUSDT",1.008**i)])
+            self.assertEqual(out["watch_new"],1 if i==20 else 0)
+        import json
+        event=self.db.execute(
+            "SELECT payload FROM events WHERE event_type='WATCH_EARLY'").fetchone()
+        data=json.loads(event[0])
+        self.assertTrue(data["trigger_60m_15pct"])
+        self.assertFalse(data["trigger_15m_8pct"])
+        self.assertEqual(data["research_window_ms"],3600000)
+
+    def test_history_retention_prevents_stale_60m_false_signal(self):
+        for i in range(30):
+            m.observe_snapshot(self.db,"spot",BASE+i*180_000,
+                               [row("STEADYUSDT",1)])
+        result=m.observe_snapshot(self.db,"spot",BASE+30*180_000,
+                                  [row("STEADYUSDT",1.1)])
+        self.assertEqual(result["watch_new"],1)
+        previous=self.db.execute("SELECT MIN(observed_ms) FROM snapshot_history").fetchone()[0]
+        self.assertGreaterEqual(previous,BASE+30*180_000-75*60_000)
+        self.assertEqual(self.db.execute("SELECT COUNT(*) FROM snapshot_history").fetchone()[0],26)
+
     def test_duplicate_symbol_does_not_create_two_events(self):
         m.observe_snapshot(self.db,"spot",BASE,[row("DUSDT",1)])
         r=m.observe_snapshot(self.db,"spot",BASE+180_000,
