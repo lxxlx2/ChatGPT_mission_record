@@ -93,3 +93,31 @@
 **跨年例外：** 2024 年“20+同时触发”组跌超20%的比例仅0.53%，但 2021–2023 相同组是 **19.38%**，比其孤立组的7.65%还高，说明不能把“市场共振=低风险”写成通用规律。可能存在崩盘/宏观方向差异，必须另加入当时 BTC/ETH 方向和市场广度，并按年份/行情状态检验。**先作为通知合并信息，不作为交易阻止条件。**
 
 详细分组见 [同小时研究 CSV](evidence/monster_stage2_synchronized_hour_groups_20261010.csv)。它使用已经公开暴露的全部历史时段，未设任何生产阈值、未改 Frank、不创建提醒或交易任务。
+
+
+## 6. 另外12组 Binance 5m 反例：并非只取历史妖币赢家
+
+直接从 Binance Spot / USD-M 官方历史公开接口逐组指定 `symbol + 5m + first_utc .. +4h` 拉取，**12/12 均返回完整48根5m**。选样方法：2025–2026 `ANY_STRONG` 中，把 `BREAKOUT24` 但无 `VOLUME_1H8/MOMENTUM4/NEW_NO_BASE` 视作 `breakout_only`，三者同时出现视作 `triple`；预先限定一个 18 只常见交易符号的公开报价白名单（ETH/ZEC/XRP/LINK/ENA/DOGE/TRB/PEOPLE/FIL/SUI/SOL/ADA/FET/PNUT/BNB/AXS/SKL/BEL），每组按 `SHA256("20261010:"+venue+":"+symbol+":"+first_utc)` 排序，取不重复 venue/symbol 的前六组，**没有以未来收益作为选择条件**。但白名单本身偏向常见币，**非代表性随机样本**，只能独立抽查 5m 走势，不能从12组估计全市场胜率。
+
+按信号完成小时后的下一根5m bar open 理论价格与4h市场内 low/close（非真实执行）：
+
+| 组 | 代表样本（UTC触发时刻） | 4h close涨跌 | 4h最低价相对入价 |
+|---|---|---:|---:|
+| BREAKOUT only | ETH futures 2026-07-14 13:00 | +0.66% | -0.36% |
+| BREAKOUT only | ZEC futures 2025-06-16 10:00 | -1.54% | -2.50% |
+| BREAKOUT only | ETH spot 2025-08-22 15:00 | +3.81% | -0.01% |
+| BREAKOUT only | XRP futures 2025-02-14 09:00 | +0.12% | -0.58% |
+| BREAKOUT only | LINK spot 2025-08-17 05:00 | +1.86% | -0.70% |
+| BREAKOUT only | ENA spot 2026-08-20 18:00 | +6.09% | -0.84% |
+| TRIPLE | FIL futures 2025-11-07 18:00 | +2.49% | -7.25% |
+| TRIPLE | AXS futures 2026-04-25 06:00 | +18.30% | -3.42% |
+| TRIPLE | BEL futures 2026-04-06 09:00 | -5.94% | -11.65% |
+| TRIPLE | PEOPLE futures 2025-11-07 17:00 | **-16.87%** | **-22.32%** |
+| TRIPLE | AXS spot 2026-04-25 06:00 | +18.34% | -3.47% |
+| TRIPLE | BEL spot 2025-10-16 13:00 | **-49.84%** | **-55.15%** |
+
+- `breakout_only` 六例中，4h低点无一个达到 -10%；`triple` 六例中有三例低点超过 -10%、两例超过 -20%。这是**小样本压力测试**，不是策略回测的可泛化比例；真正量化依据仍是全市场 **2025–2026 N=17,258 vs N=2,044** 的24h统计。
+- 示例 `BEL spot` 历史4h high 相对入口最高曾 +9.25%，随后4h末 -49.84%，**不能先验知道哪一刻止盈**；报价量不是每档盘口可成交深度。
+- 对用户真正需要的及时通知，本证据支持“**强上涨可以立即观察通知，但不等于立即市价追涨**”；下一研究的候选不是强制等待三小时，而是用5m走势和已知流动性触发 `WATCH -> RETESTED_SETUP` 的实测转移。何种转移有效尚未经过全市场5m负例检验。
+
+派生12例机器明细：[evidence/monster_stage2_binance_5m_12case_4h_proxies_20261010.csv](evidence/monster_stage2_binance_5m_12case_4h_proxies_20261010.csv)。全部结果来自当轮直接请求 Binance，不是用户 Mac 新生成文件；没有提交全部API返回的原始 K 线。
