@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import sqlite3
 import subprocess
 import sys
 import time
@@ -20,6 +21,7 @@ import zipfile
 from mission_agent.mission_control.evidence_sync import EvidenceSpool, GitEvidencePublisher
 from scripts.meme_evidence_sync import capture_frank
 from scripts.frank_wallet_d0_snapshot import report as d0_report
+from mission_agent.mission_control.wallet_history import export_history
 
 
 def refresh_zip_summary(packet: Path, status: dict) -> None:
@@ -56,6 +58,13 @@ def main(argv=None):
         data["d0_local_audit"] = d0_report(args.production_root / "forward.sqlite", int(time.time()))
     except (OSError, ValueError) as exc:
         status["d0_audit"] = "UNAVAILABLE_" + type(exc).__name__
+    try:
+        data["frank_full_local_history"] = export_history(args.production_root / "forward.sqlite")
+        spool.frank_history(data["frank_full_local_history"])
+        status["frank_history"] = "QUEUED_LOCALLY"
+        status["frank_history_records"] = data["frank_full_local_history"]["record_count"]
+    except (OSError, ValueError, sqlite3.Error) as exc:
+        status["frank_history"] = "UNAVAILABLE_" + type(exc).__name__
     reports = args.control_root / "cluster-reports"
     if reports.is_dir():
         for filename in sorted(reports.glob("*/latest.json")):
@@ -78,7 +87,7 @@ def main(argv=None):
         if "d0_local_audit" in data:
             archive.writestr("frank-d0-local-index.json",
                              json.dumps(data["d0_local_audit"], ensure_ascii=False, indent=2))
-        for folder in ("ca", "ca-parts", "frank"):
+        for folder in ("ca", "ca-parts", "frank", "frank-history", "frank-history-parts"):
             for source in sorted((spool.pending / folder).rglob("*.json")):
                 archive.write(source, "sanitized-pending/" + source.relative_to(spool.pending).as_posix())
     if args.sync:
