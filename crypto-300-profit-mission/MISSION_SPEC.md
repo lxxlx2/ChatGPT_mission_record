@@ -1,6 +1,6 @@
 # Crypto Profit Mission
 
-Updated: 2026-10-07
+Updated: 2026-10-10
 Timezone: Asia/Bangkok
 
 ## Authority
@@ -75,10 +75,12 @@ Sui note:
 
 ## Current Mission module map
 
-### Frank / Meme — LIVE
+### Frank / Meme — LIVE (MAINTENANCE MODE)
 
 Status:
 `MISSION_MEME_LIVE_NOTIFICATION_V1`
+
+As of 2026-10-10, the user has placed Frank **feature research/development on hold** while Monster V4 research takes priority. The installed Loop/Dashboard/Frank Writer and historically approved local/Gmail notification continue running unless separately authorized to pause/change them. Never stop Frank simply because development priority changed.
 
 Current operational authority:
 - Frank only;
@@ -152,10 +154,19 @@ Current NFT holdings are separate from the radar:
 - UNICRED current owned count: 0;
 - INK #372 remains prior-known inventory but was not freshly ownership-verified/marked in the 2026-10-04 refresh.
 
-### MONSTER / 妖币 — FROZEN
+### MONSTER / 妖币 — RESEARCH REOPENED (NOT LIVE)
 
 Status:
-`RESEARCH_FROZEN / VALIDATION_NOT_PASSED`
+`RESEARCH_ACTIVE_V4_DESIGN / HISTORICAL_V3_VALIDATION_NOT_PASSED / LIVE_NOT_AUTHORIZED`
+
+2026-10-10 user explicitly approved the phased Monster workflow: analyze already-collected evidence, build a practical early-warning model, design architecture, implement local code, obtain independent AI review, run tests, then only after acceptance and separate explicit installation authorization deploy locally. User emphasizes timely valuable WATCH and IGNITION notifications, avoiding gratuitous boundary work and missed candidates. The current stage is historical baseline/model design, with no new local service, Gmail, trading or ChatGPT task enabled.
+
+V4 design and evidence (research branch pending review):
+- `monster/MONSTER_V4_DATA_BASELINE_2026-10-10.md`
+- `monster/MONSTER_V4_MODEL_AND_LOCAL_ARCHITECTURE.md`
+- `local-agent/config/monster_v4_research_candidate.json`
+
+All V1–V3 results below remain immutable historical evidence and are NOT converted into a V4 validation PASS.
 
 Latest authority:
 - `local-agent/PHASE_MONSTER_D1_V3_REDESIGN_REPORT.md`
@@ -174,7 +185,7 @@ Current result:
 - Monster LaunchAgent = 0;
 - no live Monster Gmail/scanner authority.
 
-The exposed 2024 validation set must not be reused to tune or reselect a V4 winner. No automatic V4/D2/D3 work is authorized.
+The exposed 2024 validation set must not be presented as a fresh V4 holdout, and 2025–2026 diagnostic examples are also already exposed. V4 **research and isolated implementation** are newly authorized; production Monster launches, new user-facing alert channels, wallet actions or main policy changes are **not** authorized by this research-only state.
 
 ### CORE PRICE / overall-market trend — PAUSED
 
