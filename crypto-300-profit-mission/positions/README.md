@@ -1,19 +1,27 @@
-# Active Position and Plan Authorities
+# Mission Position Registry / Current and Historical Operational Holdings
 
-This directory is operational.
+Updated: 2026-10-10 Asia/Bangkok
 
-A file belongs here only when the Mission may need current holdings, stored thresholds, order state, deadline state or other user-specific execution facts.
+This is the **operational** `positions/` directory, not the location for full project research. Keep a file when it preserves a user-specific position, original capital provenance, existing execution rule, or compatibility reference. An exited historical file can remain without implying an open position.
 
-Long-form background research belongs under `research/`.
+Canonical current wallet balances and the **individual >= $1 USD display policy** live in `../portfolio/current.md`; current module state in `../state/latest.md`; profit provenance in `../performance/current.md`. Do not clone balances or override those newer pointers in this registry.
 
-Current examples:
-- `gang.md`: verified $500 USDC The Syndicate / GANG Backable sale commitment on Solana; sale closes 2026-10-12 00:30:01 Bangkok; actual token claim/refund timing pending settlement; manual follow-up only.
-- `pons.md`: closed historical PONS state; Binance futures closed and Robinhood spot remains dust only.
-- `xrp-variational.md`: closed historical XRP/Variational state.
-- `gstock-plan.md`: CLOSED_DUST historical GSTOCK state.
-- `eth-conditional.md`: stored ETH conditional setup.
-- `jump.md`: compatibility operational path for the JUMP sale until path migration is fully validated.
-- `credits.md`: compatibility operational path for Credits current listings until path migration is fully validated.
-- `unicred.md`: UNICRED active NFT/economics state.
+## Current exposure or unresolved operational item
 
-Do not add a long general project essay here when it can live in `research/projects/`, `research/tokens/`, `research/memes/` or `research/nfts/`.
+- `gang.md`: 500 USDC The Syndicate / GANG Backable Solana funding record; escrow committed, allocation/refund/claim pending, user follow-up only.
+
+## Closed or historical provenance (not open holdings)
+
+- `credits.md`: original six Credits NFTs **all exited**, current ownership 0; Mission starting-asset accounting remains unresolved.
+- `unicred.md`: UNICRED #230 not owned, current contract ownership 0.
+- `jump.md`: JUMP application rejected, **1,000 USDC refunded, 0 allocation**.
+- `pons.md`: PONS futures/spot closed; retain historical trade record.
+- `xrp-variational.md`: closed.
+- `gstock-plan.md`: closed dust/historical.
+- `shartcoin.md`, `flop-close-call.md`, `kardashev.md` and other older files: use latest explicit status inside the file before counting any exposure.
+
+## Stored plan only
+
+- `eth-conditional.md`: historical/conditional trade setup, **not** a currently open position or a blanket authorization to execute.
+
+Long-form background belongs under `research/projects/`, `research/tokens/`, `research/memes/` or `research/nfts/`. Do not bulk rename or move operational paths solely for cosmetic reasons; monitor compatibility takes precedence.
