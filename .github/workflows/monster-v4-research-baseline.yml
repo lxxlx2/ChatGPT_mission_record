@@ -1,0 +1,46 @@
+name: Monster V4 Research Baseline
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/monster/**'
+      - 'crypto-300-profit-mission/local-agent/config/monster_v4_research_candidate.json'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_baseline_audit.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_baseline_audit.py'
+      - '.github/workflows/monster-v4-research-baseline.yml'
+  pull_request:
+    paths:
+      - 'crypto-300-profit-mission/monster/**'
+      - 'crypto-300-profit-mission/local-agent/config/monster_v4_research_candidate.json'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_baseline_audit.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_baseline_audit.py'
+      - '.github/workflows/monster-v4-research-baseline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monster-v4-research-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  historical-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile baseline script and tests
+        run: python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_baseline_audit.py crypto-300-profit-mission/local-agent/tests/test_monster_v4_baseline_audit.py
+      - name: Reproduce evidence and independently check frozen config/validation
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m unittest discover -v -s tests -p test_monster_v4_baseline_audit.py
+      - name: Print research-only machine summary
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B scripts/monster_v4_baseline_audit.py
