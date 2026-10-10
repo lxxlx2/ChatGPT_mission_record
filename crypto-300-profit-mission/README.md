@@ -49,6 +49,14 @@ The latest **2026-10-10 read-only wallet refresh** directly confirmed:
 
 The ~**$718.38** combination of fresh chain ~$62.31 plus historical Binance screenshot ~$656.07 is **mixed-freshness indicative invested assets**, not verified comprehensive NAV or Mission PnL. Mission performance attribution remains unresolved in `performance/current.md`.
 
+## Frank wallet evidence and dashboard redesign (2026-10-11)
+
+- [Frank wallet / GMGN data-scope audit](meme/frank-wallet-ui-data-audit-2026-10-11.md): concrete Git filter root cause, screenshots vs true 24h time scope, independent two verified passive-transfer transactions, 132 sampled signatures and Alchemy 429 limitation. The current last-24h active trade count has **not** been fully independently reconciled.
+- [Frank observed-position/watchlist V2 architecture](meme/frank-wallet-monitor-dashboard-v2-design-2026-10-11.md): separate factual all-activity ledger, durable watch/held/closed list, and **unchanged frozen Frank signal/notification layer**, plus actual GMGN public functional research and accuracy/replay/AI review/real Mac acceptance plan.
+- [Single-mode manual CA requirements](meme/ca-analysis-unified-accuracy-acceptance.md): separate CA research redesign.
+
+**Gate:** requirements/data architecture complete, source backfill **incomplete**, code **not implemented**, no post-design tests, no Mac deployment, no live automation/trading change. Do not promote this design to a shipped dashboard feature.
+
 ## Canonical module files
 
 Frank / Meme:
