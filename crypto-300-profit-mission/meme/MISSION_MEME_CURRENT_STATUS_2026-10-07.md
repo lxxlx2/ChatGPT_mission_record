@@ -1016,3 +1016,19 @@ User screenshot compared the installed Frank signals view (~2026-10-11 04:48 Ban
 
 **Deployment/merge gate**: `D0_CHAIN_SELECTED_SIX=PASS`, `D0_SCREENSHOT_ALL_THREE_FULL_SIGNATURES=INCOMPLETE`, `LOCAL_PRODUCTION_SQLITE_READ=NOT_RUN`, `WALLET_WIDE_COMPLETE_LEDGER=NOT_DONE`, `D1_COMPLETE_PNL_OR_WATCH_UI=NOT_BUILT`, `PR31_DRAFT=YES`, `MAIN_RUNTIME_CODE_UNCHANGED`, `GMAIL_UNCHANGED`, `PRODUCTION_TRADING=NO_GO`. This work does **not** authorize Mac install, reconfigure existing monitor, create automation, trigger Gmail or change historical Frank signal thresholds.
 
+## 54. 2026-10-11 Frank/CA read-only Git evidence sync (tested branch; NOT installed)
+
+**User explicitly requested** that each completed Frank scan and manual CA query leave reusable evidence in Git, without asking repeatedly for Mac data and without affecting existing Frank signals, Gmail, trading, dashboard decisions or creating another monitor.
+
+**Implemented as an opt-in candidate in Draft [PR #31](https://github.com/lxxlx2/ChatGPT_mission_record/pull/31):**
+- `mission_control/evidence_sync.py` secure local spool, masked/whitelisted normalized records, fixed Git destination and authenticated GitHub CLI upload with exact-byte readback; failed uploads stay local for retry.
+- `server.py`: after the existing CA report files are already saved, queue a sanitized full-allowlist report; larger reports are split into hashed Git-readable chunks. A separate thread performs Git I/O, never blocking the query result.
+- `service.py`: existing Mission Control loop reads Frank writer health and local classified trade/candidate summaries on each newly observed completed writer `poll_count`. Records are spooled individually and published in closed 15-minute UTC buckets; no modification to `frank_local_signal_service.py` or the writer's frozen decision code. While the control loop is down, interim scan capture completeness is not guaranteed and must not be claimed.
+- `scripts/meme_evidence_sync.py`: explicit one-time `capture-frank`, `capture-ca`, `sync` commands; `scripts/frank_evidence_bootstrap.py`: one-command read-only Mac initial export, historical CA latest files, safe ZIP packet, optional `gh` Git upload.
+- Entire feature is **disabled by default** until `MISSION_EVIDENCE_EXPORT_ENABLED=1` is enabled **on a separately reviewed deployment**. Git records are stored exclusively on newly created `evidence/frank-ca-local` branch. No new monitor, automation, launchd, Gmail or trading action.
+- Canonical product architecture/risks in `meme/frank-ca-git-evidence-sync-design-2026-10-11.md`. Evidence branch README records provenance and data contract; no genuine user Mac evidence has been claimed uploaded yet.
+
+**Actual GitHub CI acceptance**: [run 38091791663](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38091791663) succeeded on `0328130a`: 11 new exporter tests passed, 80 existing Dashboard/Control/Delivery regression tests passed; compilation passed. This is **isolated CI**, not actual Mac installation or live provider authentication.
+
+**Gates:** `DESIGN_AND_RESEARCH_CODE=YES`; `GITHUB_CI=PASS`; `REAL_MAC_SOURCE_CAPTURE=NOT_RUN`; `REAL_MAC_GH_AUTH=NOT_VERIFIED`; `REAL_MAC_FIRST_EVIDENCE_GIT_READBACK=NOT_VERIFIED`; `INDEPENDENT_EXTERNAL_AI_REVIEW=NOT_RUN`; `MERGE=NO`; `PRODUCTION_DEPLOY=NO`; `FROZEN_FRANK_MODEL_UNCHANGED`; `PRODUCTION_TRADING=NO_GO`.
+
