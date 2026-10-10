@@ -6,9 +6,12 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import subprocess
+import zipfile
 from unittest.mock import patch
 
 import pytest
+
+from scripts.frank_evidence_bootstrap import refresh_zip_summary
 
 from mission_agent.mission_control.evidence_sync import (
     BRANCH, PREFIX, EvidenceSpool, GitEvidencePublisher, canonical, safe
@@ -230,3 +233,18 @@ def test_code_is_opt_in_and_not_added_to_frank_writer():
     assert 'MISSION_EVIDENCE_EXPORT_ENABLED' in server
     assert 'MISSION_EVIDENCE_EXPORT_ENABLED' in service
     assert 'MISSION_EVIDENCE_EXPORT_ENABLED' not in writer
+
+
+def test_mac_bootstrap_zip_final_status_is_verified_and_preserves_evidence(tmp_path):
+    packet = tmp_path / "packet.zip"
+    with zipfile.ZipFile(packet, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("summary.json", json.dumps({"git_sync": "NOT_REQUESTED"}))
+        archive.writestr("sanitized-pending/frank/event.json", '{"poll_count":200}')
+        archive.writestr("frank-d0-local-index.json", '{"local_observed_mints":32}')
+    refresh_zip_summary(packet, {"git_sync": "SYNC_OK", "frank": "QUEUED", "ca_queued": 2})
+    with zipfile.ZipFile(packet) as archive:
+        assert archive.namelist().count("summary.json") == 1
+        assert json.loads(archive.read("summary.json"))["git_sync"] == "SYNC_OK"
+        assert json.loads(archive.read("sanitized-pending/frank/event.json"))["poll_count"] == 200
+        assert json.loads(archive.read("frank-d0-local-index.json"))["local_observed_mints"] == 32
+    assert not packet.with_name(packet.name + ".summary-tmp").exists()
