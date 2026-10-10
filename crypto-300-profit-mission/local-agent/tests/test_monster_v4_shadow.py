@@ -359,10 +359,17 @@ class MonsterShadowTests(unittest.TestCase):
         self.assertEqual(data["research_window_ms"],900000)
 
     def test_gradual_60m_rise_without_15m_trigger(self):
+        triggered=[]
         for i in range(21):
             out=m.observe_snapshot(self.db,"spot",BASE+i*180_000,
                                    [row("SLOWBURNUSDT",1.008**i)])
-            self.assertEqual(out["watch_new"],1 if i==20 else 0)
+            if out["watch_new"]:
+                triggered.append(i)
+        # 60m bucket accepts an observed 54-66m old anchor;
+        # legitimately early detection at minute 54 is not a false positive.
+        self.assertEqual(len(triggered),1)
+        self.assertGreaterEqual(triggered[0],18)
+        self.assertLessEqual(triggered[0],20)
         import json
         event=self.db.execute(
             "SELECT payload FROM events WHERE event_type='WATCH_EARLY'").fetchone()
