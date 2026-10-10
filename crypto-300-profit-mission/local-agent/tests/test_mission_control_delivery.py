@@ -320,12 +320,12 @@ def test_local_recovered_notification_does_not_popup_stale_decision(tmp_path, lo
                   (local_status,e["decision_id"]))
     local.drain()
     assert calls==[]
-    assert db.db.execute("SELECT status,last_error FROM local_delivery WHERE decision_id=?",
-                         (e["decision_id"],)).fetchone()==(
-                             "MANUAL_REVIEW","LOCAL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
-                         )
-    assert db.db.execute("SELECT status,attempts FROM decision_outbox WHERE decision_id=? AND channel='local'",
-                         (e["decision_id"],)).fetchone()==("MANUAL_REVIEW",0)
+    assert tuple(db.db.execute("SELECT status,last_error FROM local_delivery WHERE decision_id=?",
+                               (e["decision_id"],)).fetchone())==(
+                                   "MANUAL_REVIEW","LOCAL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
+                               )
+    assert tuple(db.db.execute("SELECT status,attempts FROM decision_outbox WHERE decision_id=? AND channel='local'",
+                               (e["decision_id"],)).fetchone())==("MANUAL_REVIEW",0)
     local.drain()
     assert calls==[]
     db.close()
