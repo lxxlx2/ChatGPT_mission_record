@@ -197,6 +197,61 @@ class MonsterShadowTests(unittest.TestCase):
         self.assertEqual(h["source_failures"],2)
         self.assertEqual(h["mail_sent"],0)
 
+    def test_no_orphan_d1_queue_after_completed_watch_and_repeat_pump(self):
+        self.observe_two()
+        result=m.process_queue(self.db,BASE+600_000,
+                               lambda v,s,t:six_bars(t))
+        self.assertEqual(result["completed"],1)
+        before=self.count("candidate_queue")
+        r=m.observe_snapshot(self.db,"spot",BASE+780_000,
+                             [row("AAAUSDT",1.22)])
+        self.assertEqual(r["watch_new"],0)
+        self.assertEqual(self.count("candidate_queue"),before)
+        self.assertEqual(self.count("events"),2)
+        self.assertEqual(self.db.execute(
+            "SELECT COUNT(*) FROM candidate_queue WHERE status='PENDING'").fetchone()[0],0)
+
+    def test_no_setup_first_d1_still_tracks_and_upgrades_on_later_closed_bar(self):
+        self.observe_two()
+        at=BASE+600_000
+        result=m.process_queue(self.db,at,lambda v,s,t:six_bars(t,False))
+        self.assertEqual(result["deferred"],1)
+        self.assertEqual(self.db.execute(
+            "SELECT status FROM candidate_queue").fetchone()[0],"PENDING")
+        self.assertEqual(self.count("events"),1)
+        later=BASE+1_000_000
+        result=m.process_queue(self.db,later,lambda v,s,t:six_bars(t,True))
+        self.assertEqual(result["completed"],1)
+        self.assertEqual(m.health(self.db,later)["events"]["SETUP_ACTIVE"],1)
+
+    def test_reviewed_no_setup_expires_without_missed_review_false_alarm(self):
+        self.observe_two()
+        at=BASE+600_000
+        result=m.process_queue(self.db,at,lambda v,s,t:six_bars(t,False))
+        self.assertEqual(result["deferred"],1)
+        later=BASE+180_000+16*60_000
+        result=m.process_queue(self.db,later,
+                               lambda *args:self.fail("expired candidate fetched"))
+        self.assertEqual(result["late"],0)
+        self.assertEqual(result["completed"],1)
+        self.assertEqual(self.count("events"),1)
+        self.assertEqual(self.db.execute(
+            "SELECT last_error FROM candidate_queue").fetchone()[0],"NO_SETUP_WITHIN_WINDOW")
+
+    def test_new_watch_rearms_after_cooldown_without_reusing_expired_queue(self):
+        self.observe_two()
+        at=BASE+6*3_600_000+180_000
+        m.observe_snapshot(self.db,"spot",at,[row("AAAUSDT",1)])
+        r=m.observe_snapshot(self.db,"spot",at+180_000,[row("AAAUSDT",1.2)])
+        self.assertEqual(r["watch_new"],1)
+        self.assertEqual(self.db.execute(
+            "SELECT COUNT(*) FROM candidate_queue WHERE status='LATE'").fetchone()[0],1)
+        self.assertEqual(self.db.execute(
+            "SELECT COUNT(*) FROM candidate_queue WHERE status='PENDING'").fetchone()[0],1)
+        h=m.health(self.db,at+180_000)
+        self.assertEqual(h["events"]["WATCH_EARLY"],2)
+        self.assertEqual(h["events"]["LATE_REVIEW"],1)
+
     def test_duplicate_symbol_does_not_create_two_events(self):
         m.observe_snapshot(self.db,"spot",BASE,[row("DUSDT",1)])
         r=m.observe_snapshot(self.db,"spot",BASE+180_000,
