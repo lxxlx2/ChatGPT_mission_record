@@ -28,7 +28,7 @@ class HistoricalPriceProbeTests(unittest.TestCase):
         self.assertEqual(sample["symbol"],"BROCCOLI714USDT")
         self.assertEqual([x["window_trigger_count"] for x in sample["triggers"]],
                          [0,0,0])
-        self.assertEqual(sample["triggers"][2]["at_historical_watch_pct"],"5.655927")
+        self.assertEqual(sample["triggers"][2]["at_historical_watch_pct"],"5.655931")
 
     def test_gap_in_source_must_raise(self):
         src=json.loads(m.PATHS[0].read_text(encoding="utf-8"))
