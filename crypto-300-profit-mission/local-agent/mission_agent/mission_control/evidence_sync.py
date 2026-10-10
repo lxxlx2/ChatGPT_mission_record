@@ -35,7 +35,7 @@ CA_FIELDS = ("schema_version", "mint", "source", "observed_at", "supply_raw", "d
              "coverage", "limitations")
 MAX_CA_BYTES = 250_000
 MAX_RECURSION = 14
-MAX_ARRAY = 300
+MAX_ARRAY = 200000
 MAX_TEXT = 3000
 MAX_REMOTE_BYTES = 650_000
 
@@ -109,40 +109,49 @@ class EvidenceSpool:
             raise ValueError("CA_REPORT_IDENTITY_MISMATCH")
         limited = {k: report[k] for k in CA_FIELDS if k in report}
         filtered = safe(limited)
-        omissions = {}
-        def clipped(v):
-            if isinstance(v, list):
-                return len(v) > MAX_ARRAY
-            return False
-        for k, v in limited.items():
-            if clipped(v):
-                omissions[k] = {"original_count": len(v), "exported_count": MAX_ARRAY}
+        filtered_bytes = canonical(filtered)
+        if len(filtered_bytes) > 8_000_000:
+            raise ValueError("CA_SANITIZED_REPORT_OVER_8MB")
         exported = {
-            "schema_version": 1, "kind": "ca", "job_id": job_id, "mint": mint,
+            "schema_version": 2, "kind": "ca", "job_id": job_id, "mint": mint,
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
             "local_job_status": "DONE", "chain_completeness_verified": False,
             "coverage_provenance": "BOUNDED_OR_PARTIAL_UNLESS_INDEPENDENTLY_AUDITED",
-            "data": filtered, "omitted_arrays": omissions,
+            "selected_source_fields": list(limited),
+            "sanitized_evidence_sha256": digest(filtered_bytes),
+            "full_local_report_sha256": digest(canonical(report)),
         }
+        if len(filtered_bytes) + 3000 < MAX_CA_BYTES:
+            exported["data"] = filtered
+            exported["data_chunks"] = []
+            exported["export_completeness"] = "ALL_SELECTED_FIELDS_REDACTED"
+        else:
+            # Preserve *all* allowed sanitized research evidence, split into
+            # stable, independently verifiable GitHub-readable JSON chunks.
+            # A concise manifest remains human-readable in Git.
+            included = ("schema_version", "mint", "source", "observed_at",
+                        "supply_raw", "decimals", "assessment", "metrics", "coverage")
+            exported["data"] = safe({k: limited[k] for k in included if k in limited})
+            exported["data_chunks"] = []
+            exported["export_completeness"] = "ALL_SELECTED_FIELDS_IN_CHUNKS"
+            for i, offset in enumerate(range(0, len(filtered_bytes), 120_000)):
+                payload = filtered_bytes[offset: offset + 120_000]
+                filename = f"part-{i:04d}.json"
+                segment = {
+                    "schema_version": 1, "job_id": job_id,
+                    "part_index": i, "part_sha256": digest(payload),
+                    "payload_b64": base64.b64encode(payload).decode("ascii"),
+                }
+                dest = self.pending / "ca-parts" / job_id / filename
+                atomic_new(dest, canonical(segment))
+                exported["data_chunks"].append({
+                    "file": filename, "part_index": i, "sha256": digest(payload),
+                    "payload_bytes": len(payload),
+                })
         raw = canonical(exported)
         if len(raw) > MAX_CA_BYTES:
-            # Do not silently advertise truncated scientific coverage as complete.
-            included = ("schema_version", "mint", "source", "observed_at", "supply_raw",
-                        "decimals", "token_profile", "market", "assessment", "metrics",
-                        "coverage", "transaction_errors", "limitations")
-            exported["data"] = safe({k: limited[k] for k in included if k in limited})
-            exported["full_local_report_sha256"] = digest(canonical(report))
-            exported["omitted_sections_due_to_size"] = sorted(set(limited) - set(included))
-            exported["export_completeness"] = "SUMMARY_ONLY_SIZE_GUARD"
-            raw = canonical(exported)
-        else:
-            exported["export_completeness"] = "SELECTED_FIELDS_WITH_ARRAY_CAP"
-            exported["full_local_report_sha256"] = digest(canonical(report))
-            raw = canonical(exported)
-        if len(raw) > MAX_CA_BYTES:
-            raise ValueError("CA_EXPORT_TOO_LARGE_FAIL_CLOSED")
-        name = f"{job_id}.json"
-        dest = self.pending / "ca" / name
+            raise ValueError("CA_MANIFEST_OVER_LIMIT")
+        dest = self.pending / "ca" / f"{job_id}.json"
         atomic_new(dest, raw)
         return dest
 
@@ -289,8 +298,27 @@ class GitEvidencePublisher:
                     data = json.loads(p.read_text())
                     if p.stem != data["job_id"] or not SAFE_ID.fullmatch(p.stem):
                         raise ValueError("CA_SPOOL_IDENTITY_INVALID")
+                    if not PUBKEY.fullmatch(str(data["mint"])):
+                        raise ValueError("CA_MINT_INVALID")
+                    parts = []
+                    for chunk in data.get("data_chunks") or []:
+                        name = chunk["file"]
+                        if not re.fullmatch(r"part-\\d{4}\\.json", name):
+                            raise ValueError("CA_PART_FILENAME_INVALID")
+                        local = self.spool.pending / "ca-parts" / p.stem / name
+                        encoded = json.loads(local.read_text())
+                        payload = base64.b64decode(encoded["payload_b64"], validate=True)
+                        if digest(payload) != chunk["sha256"]:
+                            raise ValueError("CA_PART_HASH_INVALID")
+                        parts.append((local, name))
+                    for local, name in parts:
+                        self._upload(f"{PREFIX}/ca/{data['mint']}/{p.stem}/{name}", local.read_bytes())
                     remote = f"{PREFIX}/ca/{data['mint']}/{p.name}"
+                    # Manifest is the commit barrier: readers see its presence
+                    # only after all associated part blobs were read-back verified.
                     self._upload(remote, p.read_bytes())
+                    for local, _ in parts:
+                        local.unlink()
                     p.unlink()
                     sent += 1
                 except (ValueError, OSError, RuntimeError, KeyError) as exc:
