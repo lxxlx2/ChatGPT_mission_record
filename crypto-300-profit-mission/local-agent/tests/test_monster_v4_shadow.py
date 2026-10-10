@@ -98,7 +98,7 @@ class MonsterShadowTests(unittest.TestCase):
         self.assertEqual(seen,["OLDUSDT"])
         self.assertEqual(result["deferred"],1)
         self.assertEqual(self.count("candidate_queue"),2)
-        result=m.process_queue(self.db,BASE+560_000,
+        result=m.process_queue(self.db,BASE+610_000,
             lambda v,s,t:six_bars(t),limit=1)
         self.assertEqual(result["completed"],1)
         self.assertEqual(self.db.execute(
@@ -112,7 +112,7 @@ class MonsterShadowTests(unittest.TestCase):
 
     def test_setup_only_after_closed_real_candles(self):
         self.observe_two()
-        now=BASE+200_000
+        now=BASE+600_000
         result=m.process_queue(self.db,now,lambda v,s,t:six_bars(now))
         self.assertEqual(result["completed"],1)
         self.assertEqual(self.db.execute(
@@ -152,6 +152,37 @@ class MonsterShadowTests(unittest.TestCase):
         self.assertEqual(reports[0]["error"],"OSError")
         self.assertEqual(reports[1]["watch_new"],1)
         self.assertEqual(m.health(self.db,BASE+180_000)["source_failures"],1)
+
+    def test_pre_watch_candles_never_upgrade_to_setup(self):
+        self.observe_two()
+        at=BASE+200_000
+        r=m.process_queue(self.db,at,lambda v,s,t:six_bars(t))
+        self.assertEqual(r["deferred"],1)
+        self.assertEqual(self.count("events"),1)
+        self.assertEqual(self.db.execute(
+            "SELECT status FROM candidate_queue").fetchone()[0],"PENDING")
+        at=BASE+600_000
+        r=m.process_queue(self.db,at,lambda v,s,t:six_bars(t))
+        self.assertEqual(r["completed"],1)
+        self.assertEqual(self.count("events"),2)
+
+    def test_zero_quote_is_observed_but_not_tradeable_signal(self):
+        m.observe_snapshot(self.db,"spot",BASE,[row("IDLEUSDT",1,"0")])
+        rec=m.observe_snapshot(self.db,"spot",BASE+180_000,
+            [row("IDLEUSDT",10,"0")])
+        self.assertEqual(rec["invalid"],0)
+        self.assertEqual(rec["watch_new"],0)
+
+    def test_invalidated_watch_is_single_event_and_rearm_is_recorded(self):
+        self.observe_two()
+        m.observe_snapshot(self.db,"spot",BASE+360_000,[row("AAAUSDT",.85)])
+        self.assertEqual(m.health(self.db,BASE+360_000)["events"]["INVALIDATED"],1)
+        m.observe_snapshot(self.db,"spot",BASE+540_000,[row("AAAUSDT",.81)])
+        self.assertEqual(m.health(self.db,BASE+540_000)["events"]["INVALIDATED"],1)
+        res=m.observe_snapshot(self.db,"spot",BASE+720_000,
+            [row("AAAUSDT",.96)])
+        self.assertEqual(res["watch_new"],1)
+        self.assertEqual(m.health(self.db,BASE+720_000)["events"]["WATCH_EARLY"],2)
 
     def test_duplicate_symbol_does_not_create_two_events(self):
         m.observe_snapshot(self.db,"spot",BASE,[row("DUSDT",1)])
