@@ -371,11 +371,16 @@ class MissionMemeService:
                             # Repeat trade/position samples only on new evidence
                             # or a periodic checkpoint, keeping Git buckets compact.
                             material = int(health.get("new_signatures") or 0) > 0 or count % 30 == 0
+                            try:
+                                watch = read_frank_watchlist(self.frank.database) if material else None
+                            except (OSError, ValueError, sqlite3.Error):
+                                watch = {"summary": {"status": "SOURCE_UNAVAILABLE"}, "rows": []}
                             spool.frank_scan(
                                 poll_count=count, health=health,
                                 coverage=self.frank.activity_coverage() if material else None,
                                 recent_trades=self.frank.recent_trades(40) if material else None,
                                 signal_candidates=self.frank.candidates() if material else None,
+                                observed_watchlist=watch,
                             )
                             last_poll_count = count
                         if upload_future is None or upload_future.done():
