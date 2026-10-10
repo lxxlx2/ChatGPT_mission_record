@@ -18,6 +18,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_price_probe.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_replay.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_causal_feature_research.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_short_history_replay.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_short_history_replay.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_causal_feature_research.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_history_source_quality.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_history_source_quality.py'
@@ -114,6 +116,13 @@ jobs:
           python -B -m unittest discover -v -s tests -p test_monster_v4_causal_feature_research.py
           python -B scripts/monster_v4_causal_feature_research.py > /tmp/monster_v4_stage8_research.json
           python -c 'import json; d=json.load(open("/tmp/monster_v4_stage8_research.json")); print(json.dumps({"STAGE8_CAUSAL_RESEARCH":d["summary"],"RULES":d["rules"],"CASES":d["frozen_historical_event_cases"],"NOT_UNSEEN_VALIDATION":d["thresholds_pre_exposed_to_2021_2026_data"]},sort_keys=True))'
+      - name: Stage9 historical first-listing short 24h warmup via same V4 D0 and D1 (separate stratum)
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_short_history_replay.py tests/test_monster_v4_short_history_replay.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_short_history_replay.py
+          python -B scripts/monster_v4_short_history_replay.py > /tmp/monster_stage9_short.json
+          python -c 'import json; d=json.load(open("/tmp/monster_stage9_short.json")); print(json.dumps({"STAGE9_SHORT_HISTORY_SUMMARY":d["cohorts"],"ELIGIBLE":d["eligible"],"SOURCE_FAILURES":d["source_failures"],"NEW_LISTING_CASES":d["new_listing_venue_cases"],"CASES":[{"venue":x["venue"],"symbol":x["symbol"],"first":x["first_available_utc"],"watch":x["first_watch_utc"],"setup":x["d1_setups"],"minutes_before_anchor":x["first_available_minutes_before_old_watch"]} for x in d["cases"]],"REJECTED":d["rejected"]},sort_keys=True))'
       - name: Monster macOS isolated installation and rollback contract (hermetic)
         working-directory: crypto-300-profit-mission/local-agent
         run: |
