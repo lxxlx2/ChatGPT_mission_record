@@ -1,0 +1,127 @@
+{
+  "scope": "BNB native delta quote audit follow-up; receipt success, gas and ERC20 quote flow for verified EOA-signed token transactions",
+  "contracts": {
+    "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": "WBNB",
+    "0x55d398326f99059ff775485246999027b3197955": "USDT",
+    "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d": "USDC",
+    "0xe9e7cea3dedca5984780bafc599bd69add087d56": "BUSD"
+  },
+  "warning": "Native BNB internal value transfers are not represented in ERC20 logs; block balance delta separate; other same-block tx attribution not verified",
+  "pairs": [
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "token": "我踏马来了",
+      "records": [
+        {
+          "hash": "0x74c5473f07968e866b7a49b77347691c60f84ee44bdf8f9ff6c097ac805bf3bb",
+          "block": 73336244,
+          "status": "RECEIPT_TRUNCATED_OR_PARSE_ERROR",
+          "error": "SyntaxError: Expected double-quoted property name in JSON at position 8002 (line 131 column 1)"
+        },
+        {
+          "hash": "0x98cdc8d8334def70ef3f7dc226fb400416c5b4eb5519a0157396fd0c97a90dd1",
+          "block": 73349355,
+          "status": "RECEIPT_TRUNCATED_OR_PARSE_ERROR",
+          "error": "SyntaxError: Expected double-quoted property name in JSON at position 8002 (line 131 column 1)"
+        },
+        {
+          "hash": "0x05ea0065e3d2f4289826e91634ad84a768dc75289de9acec8f2c805ddf9975bb",
+          "block": 73658892,
+          "status": "RECEIPT_TRUNCATED_OR_PARSE_ERROR",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 129 column 516)"
+        },
+        {
+          "hash": "0x81ca25955f5323f86e4688da338789141fde743f138d63bfbb32813515fa43be",
+          "block": 73658949,
+          "kind": "ERC20_IN",
+          "transaction_receipt_status": "0x1",
+          "gas_wei": "17754240000000",
+          "quote_token_flows": [
+            {
+              "symbol": "WBNB",
+              "contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+              "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+              "raw_value": "297000000000000000"
+            }
+          ],
+          "status": "RECEIPT_PARSED"
+        },
+        {
+          "hash": "0x0098e49a2c6ccf2b377e9f3187c78ac235790f1b494e188694eb4a3531a7050f",
+          "block": 73659129,
+          "kind": "ERC20_IN",
+          "transaction_receipt_status": "0x1",
+          "gas_wei": "19806240000000",
+          "quote_token_flows": [
+            {
+              "symbol": "WBNB",
+              "contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+              "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+              "raw_value": "693000000000000000"
+            }
+          ],
+          "status": "RECEIPT_PARSED"
+        },
+        {
+          "hash": "0x0609bcb63f65292b23ef638b3a817dcd4d9c6cd1e28926c887bf28d43d687741",
+          "block": 73336320,
+          "kind": "ERC20_OUT",
+          "transaction_receipt_status": "0x1",
+          "gas_wei": "26083080000000",
+          "quote_token_flows": [],
+          "status": "RECEIPT_PARSED"
+        },
+        {
+          "hash": "0xf7ebceaac6c6ea89b97d886ccbca3252cedb1b2499e406a1a004e24b4b105d7d",
+          "block": 73336411,
+          "kind": "ERC20_OUT",
+          "transaction_receipt_status": "0x1",
+          "gas_wei": "25507080000000",
+          "quote_token_flows": [],
+          "status": "RECEIPT_PARSED"
+        },
+        {
+          "hash": "0xe2ac1db23f1cc13e24e661b32552cd7b60369fb6bc942c400c7208121c2490eb",
+          "block": 73349545,
+          "kind": "ERC20_OUT",
+          "transaction_receipt_status": "0x1",
+          "gas_wei": "25507080000000",
+          "quote_token_flows": [],
+          "status": "RECEIPT_PARSED"
+        },
+        {
+          "hash": "0x1f9f5e9c6132146522cb26f1d118533e5f4a68a536ff801121ad7951dad0a392",
+          "block": 73658932,
+          "status": "RECEIPT_TRUNCATED_OR_PARSE_ERROR",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 136 column 62)"
+        },
+        {
+          "hash": "0xa1d8a8bddc494e9f3c837d2a163128ceb85f8ad0587e00923bbfc9ae5cbf8c88",
+          "block": 73659009,
+          "status": "RECEIPT_TRUNCATED_OR_PARSE_ERROR",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 137 column 502)"
+        },
+        {
+          "hash": "0x8336b09fcf4697a85b958c0881bf4a479ca9fa91d4d882633fbf578337bcec2d",
+          "block": 73659051,
+          "status": "RECEIPT_TRUNCATED_OR_PARSE_ERROR",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 136 column 62)"
+        },
+        {
+          "hash": "0x929a77864034acae7de35bbe568f024758bf2c12547296ea18b6d902b482abff",
+          "block": 73659284,
+          "status": "RECEIPT_TRUNCATED_OR_PARSE_ERROR",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 136 column 71)"
+        },
+        {
+          "hash": "0xdbf42409c94269c4ec5e95e29631c549f072ff1151918b6f1131f3613ef308f8",
+          "block": 73659369,
+          "status": "RECEIPT_TRUNCATED_OR_PARSE_ERROR",
+          "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 136 column 54)"
+        }
+      ]
+    }
+  ]
+}
