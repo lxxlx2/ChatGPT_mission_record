@@ -44,6 +44,10 @@ Material ETF/fund/exchange/whale/market-structure changes are checked and separa
 ## CR-08 Macro/cross-market coverage
 Material rates/oil/USD/equity/geopolitical drivers are checked when relevant.
 
+Within existing regulation, policy and chain-infrastructure coverage, the input manifest must include an English-language check of material new sovereign/national economic and digital-infrastructure policy announcements. Include a direct government/regulator English release when accessible and independent English reporting for specific blockchain/crypto implications. A top-level nationwide blockchain-network directive qualifies for an actionable *policy-news candidate* even without an immediate public-token market reaction; separate old planning from a new policy publication, permissioned state infrastructure from permissionless L1, and confirmed proposals from launched networks. Source receipts must record published_at, checked_at, original authority and any untranslated/unavailable provision. No verified change = short coverage note; missing source receipt = POLICY_COVERAGE_GAP, not 'no update'.
+
+Regression: CPC Central Committee/State Council Oct 9 2026 national blockchain-network policy was absent from the Oct 10 23:14 collector despite English Oct 10 reports. Record `china:20261009:new-quality-productive-forces:national-blockchain-network` and read `crypto-daily/research/2026-10-10/china-national-blockchain-network-policy-triage.md` in the next eligible complete daily. This is within existing policy/infrastructure scope; no new alert, task or ticker watch. CR-18/CR-19 dedupe, factual source tiers and no-token-speculation rules remain unchanged.
+
 ## CR-09 Deduplication
 Unchanged prior-day conclusions are not repeated as new. Carry-forward is allowed only when still decision-relevant and clearly identified as ongoing or when a material delta exists.
 
