@@ -113,6 +113,23 @@ def test_duplicate_trades_no_fake_double_count(tmp_path):
     db.close()
 
 
+
+def test_conflicting_quote_legs_in_one_signature_are_not_false_precision(tmp_path):
+    p = tmp_path / "forward.sqlite"
+    db = setup_db(p)
+    record_trade(db, MINT2, "complex-route", "BUY", 1791509241, 3300000000)
+    conflicting = {"quote_asset": USDC, "quote_amount_raw": "5000000000", "quote_decimals": 6}
+    db.execute("INSERT INTO trades VALUES(?,?,?,?,?,?,?)",
+               ("wallet1", "complex-route", MINT2, "episode", 1791509241,
+                "BUY", json.dumps(conflicting)))
+    db.commit()
+    watch = from_sqlite(p)
+    assert watch["rows"][0]["local_recognized_buys"] == 1
+    assert watch["rows"][0]["last_observed_quote_quantity"] is None
+    assert watch["rows"][0]["conflicting_trade_signatures"] == 1
+    assert watch["rows"][0]["last_event_evidence"] == "LOCAL_INDEX_MULTILEG_UNRESOLVED"
+    db.close()
+
 def test_reader_is_read_only_and_missing_source_is_explicit(tmp_path):
     missing = tmp_path / "nonexistent.sqlite"
     with pytest.raises(FileNotFoundError):
