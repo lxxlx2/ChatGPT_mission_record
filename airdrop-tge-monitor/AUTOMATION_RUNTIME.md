@@ -1,9 +1,11 @@
 # Airdrop / TGE Automatic Runtime
 
+**Active execution override 2026-10-10:** Existing task now runs at HH:00 Asia/Bangkok, once each hour (24 per day), as expressly authorized. The legacy HH:50 and HH:14 references are superseded for future runs. Shard is still local hour % 4, urgent set every hour, exactly one shard per run and existing stale-shard recovery. Do not classify genuine historic HH:50 run artifacts as invalid merely due to the new schedule. Never change title, monitoring scope or notification gate.
+
 Updated: 2026-09-28 19:34 Asia/Bangkok
 Timezone: Asia/Bangkok
 
-Authority for the existing hourly :50 task (Asia/Bangkok).
+Authority for the existing hourly :00 task (Asia/Bangkok), user approved on 2026-10-10. Earlier :50 is historical.
 
 ## Audit
 
@@ -229,4 +231,4 @@ Generic underlying-company valuation/funding is background only unless a mapped 
 3. Minimize terminal audit payload: clock time, scheduled/executed shard, authoritative source receipt counts, candidate/action/notification outcome, delivery proof or exact blocking reason, and uncovered gaps. If an early operation fails, still try to write a truthful compact terminal audit. Never label a failed write/sent email as a success.
 4. On completion update existing `state/current.md` with the latest authoritative success, most recent attempted/partial run, missing final windows, and unresolved pending delivery. A state update is cache synchronization, not a substitute for run final. Maintain user suppression of Abstract and CLOSED status of humans&.
 5. Health regression confirmed on 2026-10-08: runs at 07:53, 08:50, 09:48 and 11:47 had attempts without terminal final as of 11:53 Asia/Bangkok. The 06:47 Cambria candidate referenced an X status posted 2026-09-30 after the previously announced Sep 29 deadline, but no reliable direct readback establishes reopened opt-in. The existing Cambria opt-in reminder was already sent on Sep 27; do not duplicate without newly verified Tier A/B material delta.
-6. Do not change the :50 schedule, task title, scope or recipient; no new automation, delivery-only monitor, or extra user notification for runtime health. English primary sources only for actionable claims.
+6. Do not change the newly authorized :00 schedule, task title, scope or recipient; no new automation, delivery-only monitor, or extra user notification for runtime health. English primary sources only for actionable claims.
