@@ -16,6 +16,11 @@ import time
 from pathlib import Path
 
 LABEL = "com.chatgpt.crypto-mission.monster-v4.shadow"
+# Fail closed until V4 historical replay, strategy design, independent AI review
+# and post-review tests have evidence-linked sign-off in Git. Enabling requires
+# a separately reviewed source change, never a local CLI opt-in.
+DEPLOYMENT_GATE = "NO_GO"
+DEPLOYMENT_BLOCKER = "V4_REPLAY_AND_INDEPENDENT_AI_REVIEW_INCOMPLETE"
 SCRIPT_NAMES = ("monster_v4_shadow.py", "monster_v4_d2.py")
 DEFAULT_ROOT = Path.home() / "Library/Application Support/MonsterV4Shadow"
 DEFAULT_PLIST = Path.home() / "Library/LaunchAgents" / (LABEL + ".plist")
@@ -59,6 +64,8 @@ def domain():
 
 def inspect(root=DEFAULT_ROOT, plist=DEFAULT_PLIST):
     result = {"module": "Monster V4 shadow", "label": LABEL,
+              "deployment_gate": DEPLOYMENT_GATE,
+              "deployment_blocker": DEPLOYMENT_BLOCKER if DEPLOYMENT_GATE!="GO" else None,
               "frank_untouched": True, "trading_enabled": False,
               "gmail_enabled": False, "plist_exists": plist.is_file(),
               "runtime_exists": root.is_dir(),
@@ -107,6 +114,8 @@ def inspect(root=DEFAULT_ROOT, plist=DEFAULT_PLIST):
 
 
 def install(root=DEFAULT_ROOT, plist=DEFAULT_PLIST, do_launch=True):
+    if do_launch and DEPLOYMENT_GATE != "GO":
+        raise RuntimeError("DEPLOYMENT_GATE_NO_GO:" + DEPLOYMENT_BLOCKER)
     if sys.platform != "darwin":
         raise RuntimeError("INSTALL_REQUIRES_MACOS")
     if sys.version_info < (3, 9):
@@ -192,7 +201,10 @@ def main():
                 "python_path":sys.executable,
                 "release":release_id(source_files()),
                 "label":LABEL,"frank_untouched":True,
-                "ready_for_install":sys.platform=="darwin" and sys.version_info >= (3,9)}
+                "deployment_gate":DEPLOYMENT_GATE,
+                "deployment_blocker":DEPLOYMENT_BLOCKER if DEPLOYMENT_GATE!="GO" else None,
+                "ready_for_install":(DEPLOYMENT_GATE=="GO" and
+                    sys.platform=="darwin" and sys.version_info >= (3,9))}
     elif a.command=="install":
         result=install()
     elif a.command=="uninstall":
