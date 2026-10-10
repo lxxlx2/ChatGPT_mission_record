@@ -82,7 +82,8 @@ class MonsterMacServiceTests(unittest.TestCase):
         class Outcome:
             returncode=0
             stdout="state = running"
-        with patch.object(m.sys,"platform","darwin"),\
+        with patch.object(m,"DEPLOYMENT_GATE","GO"),\
+             patch.object(m.sys,"platform","darwin"),\
              patch.object(m,"source_files",return_value=[
                  self.source/name for name in m.SCRIPT_NAMES]),\
              patch.object(m,"run_launchctl",return_value=Outcome()) as ctl:
@@ -96,7 +97,8 @@ class MonsterMacServiceTests(unittest.TestCase):
                          m.SCRIPT_NAMES[1]).exists())
 
     def test_failed_bootstrap_restores_previous_state_not_frank(self):
-        with patch.object(m.sys,"platform","darwin"),\
+        with patch.object(m,"DEPLOYMENT_GATE","GO"),\
+             patch.object(m.sys,"platform","darwin"),\
              patch.object(m,"source_files",return_value=[
                  self.source/name for name in m.SCRIPT_NAMES]),\
              patch.object(m,"run_launchctl",side_effect=RuntimeError("launchd failed")):
@@ -105,8 +107,19 @@ class MonsterMacServiceTests(unittest.TestCase):
         self.assertFalse(self.plist.exists())
         self.assertTrue(self.root.exists())
 
+    def test_installer_fails_closed_before_backtest_review(self):
+        self.assertEqual(m.DEPLOYMENT_GATE,"NO_GO")
+        with patch.object(m.sys,"platform","darwin"),\
+             patch.object(m,"run_launchctl") as launch:
+            with self.assertRaisesRegex(RuntimeError,"DEPLOYMENT_GATE_NO_GO"):
+                m.install(self.root,self.plist,do_launch=True)
+        self.assertFalse(self.plist.exists())
+        self.assertFalse(self.root.exists())
+        launch.assert_not_called()
+
     def test_platform_protection(self):
-        with patch.object(m.sys,"platform","linux"):
+        with patch.object(m,"DEPLOYMENT_GATE","GO"),\
+             patch.object(m.sys,"platform","linux"):
             with self.assertRaisesRegex(RuntimeError,"MACOS"):
                 m.install(self.root,self.plist)
             with self.assertRaisesRegex(RuntimeError,"MACOS"):
