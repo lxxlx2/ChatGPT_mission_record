@@ -157,7 +157,8 @@ class EvidenceSpool:
 
     def frank_scan(self, *, poll_count: int, health: dict, coverage: dict | None = None,
                    recent_trades: list[dict] | None = None,
-                   signal_candidates: list[dict] | None = None) -> Path:
+                   signal_candidates: list[dict] | None = None,
+                   observed_watchlist: dict | None = None) -> Path:
         if type(poll_count) is not int or poll_count < 0:
             raise ValueError("FRANK_POLL_COUNT_INVALID")
         if not isinstance(health, dict):
@@ -186,6 +187,25 @@ class EvidenceSpool:
                   for row in (recent_trades or [])[:40] if isinstance(row, dict)]
         signals = [safe({k: row.get(k) for k in signal_fields})
                    for row in (signal_candidates or [])[:60] if isinstance(row, dict)]
+        raw_watch = observed_watchlist if isinstance(observed_watchlist, dict) else {}
+        watch_rows = raw_watch.get("rows") if isinstance(raw_watch.get("rows"), list) else []
+        public_watch_keys = (
+            "mint", "watch_state", "inventory_evidence", "local_model_state",
+            "local_current_raw", "local_recognized_buys", "local_recognized_sells",
+            "last_event_time", "last_event_signature", "last_event_side",
+            "current_chain_balance_verified", "pnl_usd",
+        )
+        observed_rows = [
+            safe({k: row.get(k) for k in public_watch_keys})
+            for row in watch_rows[:300] if isinstance(row, dict)
+        ]
+        watch_meta = {
+            "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
+            "total_observed": (raw_watch.get("summary") or {}).get("total_observed"),
+            "exported_count": len(observed_rows),
+            "truncated": len(watch_rows) > 300,
+            "rows": observed_rows,
+        }
         envelope = {
             "schema_version": 1, "kind": "frank",
             "poll_count": poll_count, "captured_at_utc": observed,
@@ -197,6 +217,7 @@ class EvidenceSpool:
                           "indexed_signatures_all_time")}),
             "recent_recognized_trades_sample": recent,
             "signal_eligible_candidates_sample": signals,
+            "observed_watchlist": watch_meta,
             "trade_sample_scope": "LATEST_40_LOCALLY_CLASSIFIED_NOT_FULL_HISTORY",
         }
         stamp = observed
