@@ -9,6 +9,7 @@ on:
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py'
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/service.py'
       - 'crypto-300-profit-mission/local-agent/scripts/meme_evidence_sync.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/frank_evidence_bootstrap.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_meme_evidence_sync.py'
       - '.github/workflows/frank-ca-evidence-tests.yml'
   workflow_dispatch:
@@ -33,7 +34,7 @@ jobs:
       - name: Compile exporter and integration
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m py_compile mission_agent/mission_control/evidence_sync.py mission_agent/mission_control/server.py mission_agent/mission_control/service.py scripts/meme_evidence_sync.py tests/test_meme_evidence_sync.py
+          python -B -m py_compile mission_agent/mission_control/evidence_sync.py mission_agent/mission_control/server.py mission_agent/mission_control/service.py scripts/meme_evidence_sync.py scripts/frank_evidence_bootstrap.py tests/test_meme_evidence_sync.py
       - name: New exporter safety and exact fake-Git readback tests
         working-directory: crypto-300-profit-mission/local-agent
         run: python -m pytest -q tests/test_meme_evidence_sync.py
