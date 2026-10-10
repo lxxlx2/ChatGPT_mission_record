@@ -103,15 +103,36 @@
     {
       "block": 120228275,
       "delta_wei": "0"
+    },
+    {
+      "block": 120230829,
+      "delta_wei": "0"
+    },
+    {
+      "block": 120232161,
+      "delta_wei": "0"
+    },
+    {
+      "block": 126050422,
+      "delta_wei": "-121245995000000"
+    },
+    {
+      "block": 126050553,
+      "delta_wei": "66744972817454136"
     }
   ],
-  "unread_blocks": [
-    120230829,
-    120232161,
-    126050422,
-    126050553
-  ],
+  "unread_blocks": [],
   "original_signers_status": "NOT_AUDITED_YET",
   "quote_assets_status": "NOT_FULLY_AUDITED",
-  "scope_warning": "Native BNB block difference includes unrelated same-block activity; ERC20 equality alone is not final realized PnL"
+  "scope_warning": "Native BNB block difference includes unrelated same-block activity; ERC20 equality alone is not final realized PnL",
+  "audit_stats": {
+    "blocks_checked": 22,
+    "block_count": 22,
+    "all_blocks_verified": true,
+    "net_native_BNB_wei": "11321909495709854",
+    "net_native_BNB_approx": 0.011321909495709853,
+    "positive_blocks": 3,
+    "negative_blocks": 7,
+    "zero_blocks": 12
+  }
 }
