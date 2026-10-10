@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS snapshots (
 );
 CREATE TABLE IF NOT EXISTS watch_state (
  venue TEXT NOT NULL, symbol TEXT NOT NULL, last_watch_ms INTEGER NOT NULL,
+ last_watch_price TEXT NOT NULL, invalidated INTEGER NOT NULL DEFAULT 0,
  PRIMARY KEY(venue,symbol)
 );
 CREATE TABLE IF NOT EXISTS candidate_queue (
@@ -70,6 +71,15 @@ def open_store(path):
     db.execute("PRAGMA foreign_keys=ON")
     db.executescript(SCHEMA)
     return db
+
+def nonnegative(value, name):
+    try:
+        result = Decimal(str(value))
+    except (InvalidOperation, ValueError, TypeError) as exc:
+        raise ValueError("INVALID_" + name) from exc
+    if not result.is_finite() or result < 0:
+        raise ValueError("INVALID_" + name)
+    return result
 
 def positive(value, name):
     try:
@@ -117,7 +127,7 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
                 raise ValueError("DUPLICATE_SYMBOL")
             symbols.add(sym)
             p=positive(row["lastPrice"],"PRICE")
-            q=positive(row["quoteVolume"],"QUOTE24")
+            q=nonnegative(row["quoteVolume"],"QUOTE24")
             valid.append((sym,p,q))
         except (KeyError,ValueError,TypeError):
             invalid+=1
@@ -141,9 +151,24 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
                 observed_ms=excluded.observed_ms,price=excluded.price,
                 quote24=excluded.quote24""",
                 (venue,symbol,observed_ms,str(price),str(quote)))
+            prior_watch=db.execute(
+                "SELECT * FROM watch_state WHERE venue=? AND symbol=?",
+                (venue,symbol)).fetchone()
+            if (prior_watch is not None and not prior_watch["invalidated"]
+                    and price<=Decimal(prior_watch["last_watch_price"])*Decimal("0.85")):
+                db.execute("UPDATE watch_state SET invalidated=1 WHERE venue=? AND symbol=?",
+                           (venue,symbol))
+                db.execute("""UPDATE candidate_queue SET status='INVALIDATED'
+                    WHERE venue=? AND symbol=? AND status='PENDING'""",
+                    (venue,symbol))
+                record_event(db,venue,symbol,"INVALIDATED",observed_ms,
+                    prior_watch["last_watch_ms"],
+                    {"observed_ms":observed_ms,"last_watch_ms":prior_watch["last_watch_ms"],
+                     "reason":"PRICE_REVERSED_15PCT_FROM_FIRST_WATCH",
+                     "classification":"WATCH_NO_LONGER_ACTIVE"})
             if ret is None or ret<Decimal("0.05") or quote<min_quote24:
                 continue
-            reason="FAST_3M_PRICE_PLUS_24H_LIQUIDITY_CONTEXT"
+            reason="FAST_SNAPSHOT_PRICE_PLUS_24H_LIQUIDITY_CONTEXT"
             priority=min(100,int(ret*1000))
             db.execute("""INSERT INTO candidate_queue
                 (venue,symbol,first_seen_ms,last_seen_ms,priority,reason,deadline_ms)
@@ -154,18 +179,24 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
                 (venue,symbol,observed_ms,observed_ms,priority,reason,
                  observed_ms+QUEUE_DEADLINE_MS))
             prev_watch=db.execute(
-                "SELECT last_watch_ms FROM watch_state WHERE venue=? AND symbol=?",
+                "SELECT last_watch_ms,invalidated FROM watch_state WHERE venue=? AND symbol=?",
                 (venue,symbol)).fetchone()
-            if prev_watch is not None and observed_ms-prev_watch["last_watch_ms"]<WATCH_COOLDOWN_MS:
+            if (prev_watch is not None and not prev_watch["invalidated"]
+                    and observed_ms-prev_watch["last_watch_ms"]<WATCH_COOLDOWN_MS):
                 continue
-            db.execute("""INSERT INTO watch_state VALUES(?,?,?)
-                ON CONFLICT(venue,symbol) DO UPDATE SET last_watch_ms=excluded.last_watch_ms""",
-                (venue,symbol,observed_ms))
+            db.execute("""INSERT INTO watch_state
+                (venue,symbol,last_watch_ms,last_watch_price,invalidated)
+                VALUES(?,?,?,?,0)
+                ON CONFLICT(venue,symbol) DO UPDATE SET
+                last_watch_ms=excluded.last_watch_ms,
+                last_watch_price=excluded.last_watch_price,invalidated=0""",
+                (venue,symbol,observed_ms,str(price)))
             record_event(db,venue,symbol,"WATCH_EARLY",observed_ms,observed_ms,
                 {"observed_ms":observed_ms,"return_snapshot_pct":round(float(ret*100),4),
                  "snapshot_lag_ms":observed_ms-prev["observed_ms"],
                  "quote24_usdt":str(quote),"venue":venue,
                  "classification":"RESEARCH_WATCH_NOT_BUY",
+                 "snapshot_move_window_not_fixed_3m":True,
                  "execution_verified":False})
             watch_new+=1
         db.execute("""INSERT INTO polls
@@ -242,6 +273,13 @@ def process_queue(db, now_ms, fetch_candles, limit=8):
             deferred+=1
             continue
         with db:
+            # A candidate cannot be upgraded using only pre-WATCH candles.
+            if details["bar_last_open_ms"]+INTERVAL_MS<=item["first_seen_ms"]:
+                db.execute("""UPDATE candidate_queue SET retry_after_ms=?,
+                    last_error='AWAIT_POST_WATCH_CLOSED_5M' WHERE id=?""",
+                    (now_ms+60_000,item["id"]))
+                deferred+=1
+                continue
             db.execute("UPDATE candidate_queue SET status='EVALUATED' WHERE id=?",
                        (item["id"],))
             if details["setup_candidate"]:
