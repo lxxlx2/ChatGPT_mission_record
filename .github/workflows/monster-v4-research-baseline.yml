@@ -95,7 +95,7 @@ jobs:
           python -B -m py_compile scripts/monster_v4_historical_replay.py tests/test_monster_v4_historical_replay.py
           python -B -m unittest discover -v -s tests -p test_monster_v4_historical_replay.py
           python -B scripts/monster_v4_historical_replay.py --output /tmp/monster_v4_stage7_actual.json > /tmp/monster_v4_stage7_stdout.json
-          python -c 'import json; d=json.load(open("/tmp/monster_v4_stage7_actual.json")); print(json.dumps({"STAGE7_REAL_BINANCE_REPLAY_SUMMARY":d["summary"],"PER_CASE":[{"symbol":x["symbol"],"cohort":x["cohort"],"watches":x["watch_count"],"setups":x["d1_setups"],"first_watch":x["first_watch_utc"],"old_anchor":x["old_research_watch_utc"]} for x in d["cases"]],"SKIPPED":d["skipped"]]},sort_keys=True))'
+          python -c 'import json; d=json.load(open("/tmp/monster_v4_stage7_actual.json")); print(json.dumps({"STAGE7_REAL_BINANCE_REPLAY_SUMMARY":d["summary"],"PER_CASE":[{"symbol":x["symbol"],"cohort":x["cohort"],"watches":x["watch_count"],"setups":x["d1_setups"],"first_watch":x["first_watch_utc"],"old_anchor":x["old_research_watch_utc"]} for x in d["cases"]],"SKIPPED":d["skipped"]},sort_keys=True))'
       - name: Monster macOS isolated installation and rollback contract (hermetic)
         working-directory: crypto-300-profit-mission/local-agent
         run: |
