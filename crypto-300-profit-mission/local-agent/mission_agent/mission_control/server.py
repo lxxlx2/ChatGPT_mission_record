@@ -23,6 +23,7 @@ from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .frank import FrankReader
 from .wallet_watch import from_sqlite as read_frank_watchlist
+from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
 
@@ -707,8 +708,8 @@ class DashboardState:
 
     def frank_observed_watchlist(self):
         try:
-            return read_frank_watchlist(self.frank.database, person_id=self.frank.person_id,
-                                        as_of=int(time.time()))
+            observed = read_frank_watchlist(
+                self.frank.database, person_id=self.frank.person_id, as_of=int(time.time()))
         except (OSError, ValueError, sqlite3.Error):
             return {
                 "schema_version": 1, "status": "SOURCE_UNAVAILABLE",
@@ -716,6 +717,20 @@ class DashboardState:
                 "chain_completeness_verified": False,
                 "summary": {}, "rows": [],
             }
+        # Optional dated, manually imported read-only provenance. No network
+        # call, balance scan, writer intervention, or automatic deployment.
+        snapshot = self.control_root / "frank-inventory-snapshot.json"
+        if not snapshot.is_file():
+            observed["snapshot_status"] = "SNAPSHOT_NOT_PRESENT"
+            return observed
+        try:
+            if snapshot.stat().st_size > 500_000:
+                raise InventoryEvidenceError("OVERSIZED_SNAPSHOT")
+            source = json.loads(snapshot.read_text(encoding="utf-8"))
+            return reconcile_watchlist(observed, source)
+        except (OSError, ValueError, InventoryEvidenceError, TypeError):
+            observed["snapshot_status"] = "SNAPSHOT_INVALID_READ_ONLY_IGNORED"
+            return observed
 
     def recent_trades(self):
         return self.frank.recent_trades(100)
