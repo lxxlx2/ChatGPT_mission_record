@@ -1,0 +1,258 @@
+{
+  "schema_version": "1.0",
+  "date_utc": "2026-10-10",
+  "scope": "18 prior Futures-or-Spot core contracts + BUBB Alpha-only secondary; NOT complete Binance Alpha census",
+  "mode": "RESEARCH_ONLY",
+  "production": "NO_GO",
+  "collection": "Direct Alchemy bnb-mainnet, no paid GMGN",
+  "metadata_sources": [
+    "crypto-300-profit-mission/research/binance-bsc-meme-cross-token-v1-2026-10-10.md",
+    "crypto-300-profit-mission/research/BSC_MEME_TOP_TRADERS_AUDIT_2026-10-10.md",
+    "crypto-300-profit-mission/research/BSC_MEME_MAJOR_OPPORTUNITY_RESCREEN_2026-10-10.md"
+  ],
+  "token_roster": [
+    {
+      "label": "TST",
+      "contract": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "listing_earlier_claim": "Binance Spot 2025-02-09 11:00 UTC, perp 13:00 UTC",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "CHEEMS",
+      "contract": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "listing_earlier_claim": "Perp already live 2024-11-25, Spot 2025-02-09",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "MUBARAK",
+      "contract": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "listing_earlier_claim": "Perp 2025-03-17, Spot 2025-03-27",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "TUT",
+      "contract": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "listing_earlier_claim": "Perp 2025-03-20, Spot 2025-03-27; AI/narrative-adjacent",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "BROCCOLI714",
+      "contract": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "listing_earlier_claim": "Perp 2025-03-21, Spot 2025-03-27",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "BROCCOLIF3B",
+      "contract": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "listing_earlier_claim": "Separate perp 2025-03-21; do not merge with 714",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "SIREN",
+      "contract": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "listing_earlier_claim": "Perp 2025-03-22; narrative-adjacent",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xa9b4493042830109b44e18ec3586ecd22bd032ed",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "BANANAS31",
+      "contract": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "listing_earlier_claim": "Perp March 2025, Spot 2025-03-27",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "BOB",
+      "contract": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "listing_earlier_claim": "1000000BOBUSDT perp 2025-06-05",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "BULLA",
+      "contract": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "listing_earlier_claim": "Added in this pass; perp 2025-07-04",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0x3551191f78869c29388886330f31739a87866c38",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "4",
+      "contract": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "listing_earlier_claim": "Perp 2025-10-08",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "GIGGLE",
+      "contract": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "listing_earlier_claim": "Perp 2025-10-09; Spot 2025-10-25",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "币安人生",
+      "contract": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "listing_earlier_claim": "Perp 2025-10-20; Spot 2026-01-07",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "listing_earlier_claim": "Perp 2026-01-21",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "龙虾",
+      "contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "listing_earlier_claim": "Perp 2026-03-11; association of this exact CA to Binance announcement requires further primary corroboration",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "牛来",
+      "contract": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "listing_earlier_claim": "Perp 2026-08-30, Spot 2026-09-09",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "MARSCOIN",
+      "contract": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "listing_earlier_claim": "Perp 2026-09-01, Spot 2026-09-04",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "哈基米 / HAJIMI",
+      "contract": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "listing_earlier_claim": "Perp 2026-09-06",
+      "class": "CORE_FUTURES_OR_SPOT",
+      "v2_wbnb_pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    },
+    {
+      "label": "BUBB",
+      "contract": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "listing_earlier_claim": "ALPHA_ONLY; no Futures/Spot confirmed",
+      "class": "SECONDARY_ALPHA_ONLY",
+      "v2_wbnb_pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3",
+      "source_layer": "PANCAKE_V2_WBNB_ONLY",
+      "coverage": "POOL_IDENTIFIED_EARLIER; NEW_SCAN_PENDING"
+    }
+  ],
+  "supplementary_early_pools": [
+    {
+      "label": "MARSCOIN",
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "venue": "FOUR_MEME_PRE_V2"
+    },
+    {
+      "label": "牛来",
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "venue": "FOUR_MEME_PRE_V2"
+    }
+  ],
+  "known_wallets": [
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "origin": "PRIOR_GIT_RESEARCH",
+      "status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT"
+    },
+    {
+      "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+      "origin": "PRIOR_GIT_RESEARCH",
+      "status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "origin": "PRIOR_GIT_RESEARCH",
+      "status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT"
+    },
+    {
+      "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
+      "origin": "PRIOR_GIT_RESEARCH",
+      "status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT"
+    },
+    {
+      "wallet": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+      "origin": "PRIOR_GIT_RESEARCH",
+      "status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "origin": "PRIOR_GIT_RESEARCH",
+      "status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT"
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "origin": "PRIOR_GIT_RESEARCH",
+      "status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT"
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "origin": "PRIOR_GIT_RESEARCH",
+      "status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT"
+    },
+    {
+      "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+      "origin": "PRIOR_GIT_RESEARCH",
+      "status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT"
+    }
+  ],
+  "workflow": [
+    "Collect first and event-window source/recipient transfers per token and venue",
+    "Resolve true transaction signers (skip smart contracts, fee wallets, token address)",
+    "Complete signed buys/sells and quote + gas matching per wallet-token",
+    "Deduplicate common-control clusters, count material wins and losses",
+    "Validate Binance announcement-vs-trade and delayed follow profitability"
+  ],
+  "truth_constraints": [
+    "20 early token Transfer rows are not 20 buyers or complete position history",
+    "Funds moved to CEX, wallet balance zero, unrealized quotes are not realized profit",
+    "Pool recipient contract is not individual trader; V2 pool misses earlier launchpads",
+    "Do not fabricate coverage, wins, PnL, Binance involvement, or results"
+  ]
+}
