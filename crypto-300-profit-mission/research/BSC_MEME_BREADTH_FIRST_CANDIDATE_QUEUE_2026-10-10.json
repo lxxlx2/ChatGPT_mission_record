@@ -1,0 +1,692 @@
+{
+  "schema_version": "1",
+  "date_utc": "2026-10-10",
+  "scope": "EARLY_POOL_COVERAGE_NOT_FULL_PROFIT_RANKING",
+  "status": "DATASET_ARCHIVED; RECIPIENT_CONTRACT_FILTER_COMPLETE; WALLET_PROFIT_AUDIT_PENDING",
+  "sources": [
+    "BSC_MEME_EARLY_POOL_SAMPLE_B01_2026-10-10.json",
+    "BSC_MEME_EARLY_POOL_SAMPLE_B02_2026-10-10.json",
+    "BSC_MEME_EARLY_POOL_SAMPLE_B03_2026-10-10.json",
+    "BSC_MEME_EARLY_POOL_SAMPLE_B04_2026-10-10.json",
+    "BSC_MEME_EARLY_RECIPIENT_CROSSCHECK_B01_2026-10-10.json",
+    "BSC_MEME_EARLY_RECIPIENT_CROSSCHECK_B02_2026-10-10.json",
+    "BSC_MEME_BREADTH_FIRST_UNIVERSE_2026-10-10.json",
+    "BSC_MEME_CROSS_TOKEN_NEW_EOA_SIGNERS_2026-10-10.json"
+  ],
+  "statistics": {
+    "token_contracts": 19,
+    "core": 18,
+    "secondary": 1,
+    "venues": 21,
+    "v2_pools": 19,
+    "launchpad_early_pools": 2,
+    "early_erc20_transfer_rows": 420,
+    "distinct_early_transfer_recipient_addresses": 249,
+    "recipient_addresses_in_two_or_more_different_tokens": 25,
+    "eoas_in_cross_token_recipient_sample": 6,
+    "contracts_in_cross_token_recipient_sample": 19,
+    "wallets_in_research_queue": 11,
+    "full_pagination_complete_pools": 0
+  },
+  "venue_coverage": [
+    {
+      "token": "TST",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b",
+      "rows": 20,
+      "distinct_transaction_hashes": 19,
+      "earliest_sample_block": 46421406,
+      "latest_sample_block": 46421421,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "CHEEMS",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 42638564,
+      "latest_sample_block": 42638997,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "MUBARAK",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 47442149,
+      "latest_sample_block": 47442224,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "TUT",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 46521969,
+      "latest_sample_block": 46522130,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "BROCCOLI714",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 46627716,
+      "latest_sample_block": 46627728,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 46628417,
+      "latest_sample_block": 46628431,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "SIREN",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xa9b4493042830109b44e18ec3586ecd22bd032ed",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 46828940,
+      "latest_sample_block": 47193275,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "BANANAS31",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 46871949,
+      "latest_sample_block": 46980325,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "BOB",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "rows": 20,
+      "distinct_transaction_hashes": 10,
+      "earliest_sample_block": 44007572,
+      "latest_sample_block": 44007592,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "BULLA",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0x3551191f78869c29388886330f31739a87866c38",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 50982375,
+      "latest_sample_block": 51030182,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "4",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 63056879,
+      "latest_sample_block": 63056883,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "GIGGLE",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "rows": 20,
+      "distinct_transaction_hashes": 10,
+      "earliest_sample_block": 61963755,
+      "latest_sample_block": 61963755,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "币安人生",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 63454407,
+      "latest_sample_block": 63454412,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "我踏马来了",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 73658907,
+      "latest_sample_block": 73658911,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "龙虾",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 83636129,
+      "latest_sample_block": 83636138,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "牛来",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "rows": 20,
+      "distinct_transaction_hashes": 10,
+      "earliest_sample_block": 116314923,
+      "latest_sample_block": 116316090,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "MARSCOIN",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "rows": 20,
+      "distinct_transaction_hashes": 10,
+      "earliest_sample_block": 112668718,
+      "latest_sample_block": 112670334,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 63838944,
+      "latest_sample_block": 63838959,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "BUBB",
+      "venue": "PANCAKE_V2_WBNB",
+      "pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+      "rows": 20,
+      "distinct_transaction_hashes": 20,
+      "earliest_sample_block": 47620848,
+      "latest_sample_block": 47621084,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "MARSCOIN",
+      "venue": "FOUR_MEME_PRE_V2",
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "rows": 20,
+      "distinct_transaction_hashes": 10,
+      "earliest_sample_block": 112441460,
+      "latest_sample_block": 112441463,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    },
+    {
+      "token": "牛来",
+      "venue": "FOUR_MEME_PRE_V2",
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "rows": 20,
+      "distinct_transaction_hashes": 10,
+      "earliest_sample_block": 115853707,
+      "latest_sample_block": 115853739,
+      "more_unread": true,
+      "status": "SAMPLED_FIRST_TWO_PAGES_ONLY"
+    }
+  ],
+  "candidates": [
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "prior_state": "PRIOR_REPORT_LEAD",
+      "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
+      "early_sample_tokens": [],
+      "verified_direct_sample_signers": [],
+      "pnl_not_recomputed": true
+    },
+    {
+      "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+      "prior_state": "PRIOR_REPORT_LEAD",
+      "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
+      "early_sample_tokens": [
+        "4",
+        "币安人生",
+        "哈基米 / HAJIMI"
+      ],
+      "verified_direct_sample_signers": [],
+      "pnl_not_recomputed": true,
+      "early_transfer_proofs": {
+        "4": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+            "block": 63056881,
+            "tx": "0x035aa1476b0da70d2dd31865cd50a2e073053c70df2f94bdba22dfa12f6aa17a"
+          }
+        ],
+        "币安人生": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "block": 63454409,
+            "tx": "0x3b079eb6cfc2821b9421f94d01132b57808209d31c728f93e7226ced0e58cc50"
+          }
+        ],
+        "哈基米 / HAJIMI": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+            "block": 63838947,
+            "tx": "0x36375328e7d51f70e804ffc9431445ab1f387ba7c3f05db386c6de73ccd5f18d"
+          }
+        ]
+      }
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "prior_state": "PRIOR_REPORT_LEAD",
+      "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
+      "early_sample_tokens": [
+        "我踏马来了",
+        "龙虾"
+      ],
+      "verified_direct_sample_signers": [],
+      "pnl_not_recomputed": true,
+      "early_transfer_proofs": {
+        "我踏马来了": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+            "block": 73658908,
+            "tx": "0x5eaf490ddad77bc6ddfc366f49c86b25fda316d6468a95cd3f5907fdcf39e347"
+          }
+        ],
+        "龙虾": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+            "block": 83636130,
+            "tx": "0x5a697b7dc48c947f8f2a1f61677fadb04c2374ca38298302bfc94b8623aaa3fc"
+          }
+        ]
+      }
+    },
+    {
+      "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
+      "prior_state": "PRIOR_REPORT_LEAD",
+      "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
+      "early_sample_tokens": [
+        "币安人生",
+        "哈基米 / HAJIMI"
+      ],
+      "verified_direct_sample_signers": [],
+      "pnl_not_recomputed": true,
+      "early_transfer_proofs": {
+        "币安人生": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "block": 63454411,
+            "tx": "0x38f9dc2536bb936c1f2dc4f40851ba326a335e9f328294e11c330fe647b053f5"
+          }
+        ],
+        "哈基米 / HAJIMI": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+            "block": 63838950,
+            "tx": "0x5e46faa6f9c95b0c851d8fde6a79b8fe540ab9e29627531fa78614f1a2e6113e"
+          }
+        ]
+      }
+    },
+    {
+      "wallet": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+      "prior_state": "PRIOR_REPORT_LEAD",
+      "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
+      "early_sample_tokens": [
+        "币安人生",
+        "哈基米 / HAJIMI"
+      ],
+      "verified_direct_sample_signers": [],
+      "pnl_not_recomputed": true,
+      "early_transfer_proofs": {
+        "币安人生": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "block": 63454409,
+            "tx": "0x3eefe65f6f923cf154cea97ba0051843c6e8733223eb28574d30f699918b50d5"
+          }
+        ],
+        "哈基米 / HAJIMI": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+            "block": 63838946,
+            "tx": "0x0b38361840367c4bbd134a7b87b0837c89c33351ca93853f94110b8701326780"
+          }
+        ]
+      }
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "prior_state": "PRIOR_REPORT_LEAD",
+      "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
+      "early_sample_tokens": [],
+      "verified_direct_sample_signers": [],
+      "pnl_not_recomputed": true
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "prior_state": "PRIOR_REPORT_LEAD",
+      "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
+      "early_sample_tokens": [],
+      "verified_direct_sample_signers": [],
+      "pnl_not_recomputed": true
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "prior_state": "PRIOR_REPORT_LEAD",
+      "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
+      "early_sample_tokens": [],
+      "verified_direct_sample_signers": [],
+      "pnl_not_recomputed": true
+    },
+    {
+      "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+      "prior_state": "PRIOR_REPORT_LEAD",
+      "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
+      "early_sample_tokens": [],
+      "verified_direct_sample_signers": [],
+      "pnl_not_recomputed": true
+    },
+    {
+      "wallet": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "prior_state": "DISCOVERED_IN_CURRENT_EARLY_POOL_CROSSCHECK",
+      "research_status": "RESEARCH_ONLY; UNKNOWN_FULL_POSITION_PNL",
+      "early_sample_tokens": [
+        "SIREN",
+        "BANANAS31"
+      ],
+      "verified_direct_sample_signers": [
+        {
+          "token": "SIREN",
+          "tx": "0x2053845602faa797455c516b729a17c3833c599cc0a7c9740b573672bec02a70",
+          "block": 47071801,
+          "signer_status": "DIRECT_SIGNER_CONFIRMED"
+        },
+        {
+          "token": "BANANAS31",
+          "tx": "0xa22e9cef1777f78bec985b754256043d501984e92eb27f539d3b9dce4d7cec34",
+          "block": 46979554,
+          "signer_status": "DIRECT_SIGNER_CONFIRMED"
+        }
+      ],
+      "pnl_not_recomputed": true,
+      "early_transfer_proofs": {
+        "SIREN": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0xa9b4493042830109b44e18ec3586ecd22bd032ed",
+            "block": 47071801,
+            "tx": "0x2053845602faa797455c516b729a17c3833c599cc0a7c9740b573672bec02a70"
+          }
+        ],
+        "BANANAS31": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127",
+            "block": 46979554,
+            "tx": "0xa22e9cef1777f78bec985b754256043d501984e92eb27f539d3b9dce4d7cec34"
+          }
+        ]
+      }
+    },
+    {
+      "wallet": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
+      "prior_state": "DISCOVERED_IN_CURRENT_EARLY_POOL_CROSSCHECK",
+      "research_status": "RESEARCH_ONLY; UNKNOWN_FULL_POSITION_PNL",
+      "early_sample_tokens": [
+        "4",
+        "币安人生"
+      ],
+      "verified_direct_sample_signers": [
+        {
+          "token": "4",
+          "tx": "0xdf11c9ee04d7848eb4e9d74ee511f77ad127e86efd982e2354aca0e3f3d93c6a",
+          "block": 63056882,
+          "signer_status": "DIRECT_SIGNER_CONFIRMED"
+        },
+        {
+          "token": "币安人生",
+          "tx": "0xe4cd5bf20a7016fe07aaed4b5ffcd07c29e640c1ab4a3ea603eea01c1114ccd0",
+          "block": 63454410,
+          "signer_status": "DIRECT_SIGNER_CONFIRMED"
+        }
+      ],
+      "pnl_not_recomputed": true,
+      "early_transfer_proofs": {
+        "4": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+            "block": 63056882,
+            "tx": "0xdf11c9ee04d7848eb4e9d74ee511f77ad127e86efd982e2354aca0e3f3d93c6a"
+          }
+        ],
+        "币安人生": [
+          {
+            "venue": "PANCAKE_V2_WBNB",
+            "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "block": 63454410,
+            "tx": "0xe4cd5bf20a7016fe07aaed4b5ffcd07c29e640c1ab4a3ea603eea01c1114ccd0"
+          }
+        ]
+      }
+    }
+  ],
+  "overlapping_contract_recipients": [
+    {
+      "address": "0xa01cd5b68265b972b73a713f6d824d1a6d3612b0",
+      "observed_tokens": [
+        "TST",
+        "MUBARAK",
+        "TUT",
+        "BULLA"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x0000000040ac064de24cbc1cb9fcbcbc033ee5b6",
+      "observed_tokens": [
+        "TST",
+        "BROCCOLIF3B",
+        "SIREN"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x17cd8e8d4c64aa7f2a8db6947b330885da56b833",
+      "observed_tokens": [
+        "TST",
+        "MUBARAK",
+        "TUT"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x426603bac5e0ea73fd13aecad7a80c9f963f6eac",
+      "observed_tokens": [
+        "SIREN",
+        "BANANAS31",
+        "BULLA"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x52f209c6ae7f43e50b0f6f70bc9fa119a5701798",
+      "observed_tokens": [
+        "TUT",
+        "SIREN",
+        "BANANAS31"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0xedc94232a8ede362ff062459f4940b5794c5a7f4",
+      "observed_tokens": [
+        "CHEEMS",
+        "BROCCOLI714",
+        "BROCCOLIF3B"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x0000000d94514cbcf9455c0be85541e5d45cf1f5",
+      "observed_tokens": [
+        "MUBARAK",
+        "BUBB"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x1e46fb97d20c89e84396cbfecd08fde064c1dd7b",
+      "observed_tokens": [
+        "SIREN",
+        "BANANAS31"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x28e2ea090877bf75740558f6bfb36a5ffee9e9df",
+      "observed_tokens": [
+        "MUBARAK",
+        "MARSCOIN"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x38fb583d3a797219651eb960fdbdeb31f8ec7a18",
+      "observed_tokens": [
+        "我踏马来了",
+        "龙虾"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x5e2c40e5c495654e4dcae85d46d15864c084605d",
+      "observed_tokens": [
+        "TST",
+        "CHEEMS"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x6f53dbf7b4c2d1950087e0359c7dbe0dad2e0623",
+      "observed_tokens": [
+        "BROCCOLI714",
+        "BROCCOLIF3B"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x881443a59a494d630c60f1adbc46136b712d97fa",
+      "observed_tokens": [
+        "TUT",
+        "SIREN"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0x9be520b4ee9f702dbafe21eede032f2454010498",
+      "observed_tokens": [
+        "BANANAS31",
+        "BULLA"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0xb5cb05554867ce201b0e6feb8d6cefd3a1dd5e32",
+      "observed_tokens": [
+        "TST",
+        "TUT"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0xc2aced9c3ab6790f09d8073488a14975892ae048",
+      "observed_tokens": [
+        "TST",
+        "TUT"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0xca29cd653f18c702156aaac27528dc5f4db1f2c4",
+      "observed_tokens": [
+        "MUBARAK",
+        "TUT"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0xd3ac4584c2966da9101b7c950d0daf69645a680a",
+      "observed_tokens": [
+        "MUBARAK",
+        "TUT"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    },
+    {
+      "address": "0xd6eef0147908a74c76c51c51e037e17aad48cd6a",
+      "observed_tokens": [
+        "TST",
+        "BROCCOLI714"
+      ],
+      "status": "CONTRACT; EXCLUDE_FROM_PERSON_RANKING"
+    }
+  ],
+  "unresolved": [
+    "Known source sample is not exhaustive Binance Alpha/Spot/Futures universe",
+    "Most pools' first-ever tradable launchpad transactions and V3/aggregator venues have not been screened in this batch",
+    "Each pool's historic first two ERC20 Transfer pages only, future pages NOT claimed done",
+    "No comprehensive highest-profit wallet leaderboard, no reconstructed capital PnL on these newly discovered EOAs",
+    "Contract recipient overlap is not trader same-control evidence",
+    "CEX deposit is not realized sale",
+    "Signer matches of new EOAs only prove individual direct swaps, not sustained profitable strategy"
+  ],
+  "next_work_order": [
+    "Complete broader sampling across ALL 19 tokens from earliest launchpad and V2/V3 sources before prioritizing a single wallet",
+    "Resolve transaction.from for diverse early and major Binance event intervals, dedup contracts/routers",
+    "Collect BOTH successful and failed material core positions, reconcile cost and proceeds by BNB/WBNB/stables",
+    "Rank repeatable material wins and risk exposure separately from small-Meme activity",
+    "Only after data collection, per-wallet detailed review, 5/15/30m copyability"
+  ]
+}
