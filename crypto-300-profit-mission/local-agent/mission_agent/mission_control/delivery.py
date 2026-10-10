@@ -214,14 +214,38 @@ def render(event:dict)->dict:
 
 
 class LocalDelivery:
-    def __init__(self,control:ControlDB,run=subprocess.run):self.control,self.run=control,run
+    def __init__(self,control:ControlDB,run=subprocess.run,*,max_decision_age_seconds:int=600):
+        if type(max_decision_age_seconds) is not int or max_decision_age_seconds<=0:
+            raise ValueError("LOCAL_DECISION_MAX_AGE_INVALID")
+        self.control,self.run=control,run
+        self.max_decision_age_seconds=max_decision_age_seconds
     def enqueue(self,event:dict,*,forbidden:bool)->None:
         content=render(event);status="DRY_RUN_AUDIT" if forbidden else "PENDING"
         self.control.enqueue(event["decision_id"],"local",content["content_hash"],status)
         self.control.db.execute("INSERT OR IGNORE INTO local_delivery(decision_id,status,content_hash,created_at) VALUES(?,?,?,?)",(event["decision_id"],status,content["content_hash"],utc()))
+    def _expire(self,decision_id:str)->None:
+        reason="LOCAL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
+        self.control.db.execute(
+            "UPDATE local_delivery SET status='MANUAL_REVIEW',last_error=? WHERE decision_id=?",
+            (reason,decision_id),
+        )
+        self.control.db.execute(
+            "UPDATE decision_outbox SET status='MANUAL_REVIEW',last_error=? WHERE decision_id=? AND channel='local'",
+            (reason,decision_id),
+        )
+
     def drain(self)->None:
-        rows=self.control.db.execute("SELECT d.*,e.body FROM local_delivery d JOIN decision_events e USING(decision_id) WHERE d.status IN ('PENDING','RETRY_PENDING') ORDER BY d.created_at").fetchall()
+        rows=self.control.db.execute("""
+            SELECT d.*,e.body,e.created_at AS decision_created_at
+            FROM local_delivery d JOIN decision_events e USING(decision_id)
+            WHERE d.status IN ('PENDING','RETRY_PENDING')
+            ORDER BY d.created_at
+        """).fetchall()
         for row in rows:
+            age=_decision_age_seconds(row["decision_created_at"])
+            if age is None or age>self.max_decision_age_seconds:
+                self._expire(row["decision_id"])
+                continue
             event={"decision_id":row["decision_id"],"body":json.loads(row["body"])}
             content=render(event)
             # Keep the actionable CA in short macOS alerts even when the full
@@ -238,6 +262,12 @@ class LocalDelivery:
             else:
                 script="display notification "+json.dumps(summary,ensure_ascii=False)+" with title "+json.dumps(content["subject"],ensure_ascii=False);args=["/usr/bin/osascript","-e",script];mechanism="osascript-notification"
             try:
+                # Rendering/desktop utility lookup can take time; do not present
+                # a historical follow decision as live after its expiry.
+                age=_decision_age_seconds(row["decision_created_at"])
+                if age is None or age>self.max_decision_age_seconds:
+                    self._expire(row["decision_id"])
+                    continue
                 result=self.run(args,capture_output=True,text=True,timeout=15)
                 if result.returncode:raise RuntimeError("LOCAL_NOTIFICATION_COMMAND_FAILED")
                 receipt={"decision_id":row["decision_id"],"accepted_at":utc(),"mechanism":mechanism}
