@@ -125,3 +125,10 @@ Public non-paid optional ranking *lead*: Binance's own `binance-leaderboard` ski
 ### Correct next protocol
 
 Assistant continues directly, in bounded research batches, first 2026 tokens. Build an accurate full-market candidate list from launchpad migration, V2/V3 pool swaps and receipts, de-duplicate true original tx signer and economically controlled wallets, calculate ALL positions and losses. Include signed exit into WBNB/USDT/USDC quote assets, not just BNB native balance deltas. Crosscheck time/event relative to Binance Alpha/perps/spot and recency of true BSC Meme buys. When no all-time top-N is fully reconstructed, label incomplete: **no paid API, no fake top-wallet rankings, no user-side work, no production changes**.
+
+
+## Major-opportunity re-screen policy (supersedes earlier active-wallet ordering)
+
+User refined goal: focus on **material profitable captures in Binance-related large BSC Meme launches**, not generic small-coin win rate. Do not require recent activity to qualify historical repeat winners. Small/unrelated meme trades are activity metadata only. A tiny positive trade on a Binance-listed meme is merely marginal, not a meaningful success. Binance Alpha-only control tokens are a separate cohort from confirmed Binance perpetual or spot opportunities. Old ranking based on 30-day active filtering and unrelated-token losses is superseded.
+
+**Canonical updated comparison and on-chain re-screen:** [BSC_MEME_MAJOR_OPPORTUNITY_RESCREEN_2026-10-10.md](BSC_MEME_MAJOR_OPPORTUNITY_RESCREEN_2026-10-10.md). Key shortlist: `0x2adf...` four material 2026 core wins (~+13.3 BNB), `0xd70ce...` three historical core wins (~+12.30 BNB), `0x239e...` two core 2026 wins (~+0.2965 BNB); `0xe54bd...` and `0x57c98...` two historical core wins each. All are **selected audited positions**, not comprehensive all-time rankings. No paid GMGN. No production signal.
