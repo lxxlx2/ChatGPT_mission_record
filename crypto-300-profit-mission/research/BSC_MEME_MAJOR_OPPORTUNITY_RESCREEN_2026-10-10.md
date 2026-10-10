@@ -72,3 +72,19 @@ An on-chain V2/WBNB reserve spot-price snapshot check of the `0x239e...` wallet'
 5. **Broad universe:** collect top materially profitable addresses for every core token independently using full launchpad + V2/V3 / aggregator receipt evidence. This remains INCOMPLETE. No GMGN paid API or user-side collection. Distinguish unique actual wallets from shared beneficiaries. Do not invent Top 100, full opportunity hit rates, 30-day active profitability or automatic trading.
 
 No monitors/automations/prod configuration changed. User conversation titles untouched.
+
+## Verified timing correction for older profitable wallet positions
+
+Important: profitable trading on an asset that later lists on Binance is different from trading the actual Binance listing announcement. These positions have been checked directly against BSC block timestamps:
+
+| Wallet | Asset | Final observed close (UTC) | Binance perpetual start (UTC) |
+| --- | --- | --- | --- |
+| 0xd70ce... | 4 | 2025-10-03 04:02:39 | 2025-10-08 |
+| 0xd70ce... | 币安人生 | 2025-10-06 07:46:40 | 2025-10-20 |
+| 0xd70ce... | 哈基米 | 2025-10-14 06:25:18 | 2026-09-06 07:15 |
+| 0x57c98... | 哈基米 | 2025-10-08 01:54:51 | 2026-09-06 07:15 |
+| 0xe54bd... | 哈基米 | 2025-10-10 02:16:01 | 2026-09-06 07:15 |
+
+Primary exchange links: https://www.binance.com/en-PH/support/announcement/detail/ca3196e008da448da107d397bae0b4b0 and https://www.binance.com/en/support/announcement/detail/a6aeec228c6a403da616e873011317ea .
+
+These wallets demonstrably traded several tokens that later became major Binance memes. Their 2025 哈基米 trades ended about 11 months before the 2026 futures listing. They must not be called successfully timed Binance-announcement traders. This is strong historical early-token selection evidence, but not a verified listing-catalyst strategy. Keep separate research fields: EVENTUAL_LISTED_TOKEN_SELECTION and BINANCE_EVENT_TIMING.
