@@ -344,6 +344,35 @@ class MonsterShadowTests(unittest.TestCase):
         self.assertEqual(r["retry"],1)
         self.assertEqual(m.health(self.db,BASE+10_000)["d2_queue"],{"PENDING":1})
 
+    def test_partial_venue_scan_keeps_valid_watch_and_reports_missing(self):
+        def market(venue):
+            if venue=="spot":
+                self.assertEqual(venue,"spot")
+                return [row("LIVEUSDT",1)],3
+            return [row("FUTUSDT",1)],1
+        with patch.object(m,"fetch_market",side_effect=market):
+            result=m.scan_once(self.db,BASE)
+        self.assertEqual(result[0]["coverage_expected"],3)
+        self.assertEqual(result[0]["coverage_missing"],2)
+        self.assertEqual(result[0]["valid"],1)
+        self.assertEqual(m.health(self.db,BASE)["degraded_venues"],["spot"])
+        def improved(venue):
+            if venue=="spot":
+                return [row("LIVEUSDT",1.08)],3
+            return [row("FUTUSDT",1)],1
+        with patch.object(m,"fetch_market",side_effect=improved),\
+             patch.object(m,"fetch_5m",return_value=six_bars(BASE+180_000)):
+            result=m.scan_once(self.db,BASE+180_000)
+        self.assertEqual(result[0]["watch_new"],1)
+        self.assertEqual(m.health(self.db,BASE+180_000)["degraded_venues"],["spot"])
+        self.assertEqual(m.health(self.db,BASE+180_000)["events"]["WATCH_EARLY"],1)
+        with patch.object(m,"fetch_market",return_value=(
+                [row("LIVEUSDT",1.08),row("MISSING1USDT",1),row("MISSING2USDT",1)],3)):
+            result=m.scan_once(self.db,BASE+360_000)
+        self.assertEqual(result[0]["coverage_missing"],0)
+        self.assertEqual(m.health(self.db,BASE+360_000)["degraded_venues"],[])
+        self.assertEqual(m.health(self.db,BASE+360_000)["events"]["SOURCE_RECOVERED"],1)
+
     def test_gradual_15m_rise_triggers_without_fast_3m_move(self):
         for i in range(6):
             price=1.018**i
