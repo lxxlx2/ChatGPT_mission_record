@@ -155,6 +155,51 @@ class EvidenceSpool:
         atomic_new(dest, raw)
         return dest
 
+    def frank_history(self, report: dict) -> Path:
+        """Queue a complete locally recognized historical trade report once.
+
+        Each versioned snapshot is content-addressed and reconstructable. The
+        sanitized normalizer is explicitly separate from chain completeness.
+        """
+        if (not isinstance(report, dict) or
+            report.get("source_scope") != "COMPLETE_LOCAL_RECOGNIZED_TRADES_NOT_FULL_CHAIN" or
+            report.get("person_id") != "frank" or
+            not isinstance(report.get("records"), list)):
+            raise ValueError("HISTORY_REPORT_SCHEMA_INVALID")
+        cleaned = safe(report)
+        blob = canonical(cleaned)
+        if len(blob) > 8_000_000:
+            raise ValueError("FRANK_HISTORY_OVER_8MB")
+        if cleaned.get("record_count") != len(cleaned["records"]):
+            raise ValueError("FRANK_HISTORY_RECORDS_WOULD_BE_TRUNCATED")
+        history_id = digest(blob)
+        parts = []
+        for i, offset in enumerate(range(0, len(blob), 120_000)):
+            section = blob[offset: offset + 120_000]
+            name = f"part-{i:04d}.json"
+            packet = {
+                "schema_version": 1, "snapshot_id": history_id,
+                "part_index": i, "part_sha256": digest(section),
+                "payload_b64": base64.b64encode(section).decode("ascii"),
+            }
+            target = self.pending / "frank-history-parts" / history_id / name
+            atomic_new(target, canonical(packet))
+            parts.append({"file": name, "part_index": i,
+                          "sha256": digest(section), "bytes": len(section)})
+        manifest = {
+            "schema_version": 1, "kind": "frank-history",
+            "snapshot_id": history_id,
+            "sanitized_content_sha256": history_id,
+            "record_count": cleaned["record_count"],
+            "source_scope": cleaned["source_scope"],
+            "parts": parts,
+            "chain_completeness_verified": False,
+            "net_pnl_verified": False,
+        }
+        target = self.pending / "frank-history" / (history_id + ".json")
+        atomic_new(target, canonical(manifest))
+        return target
+
     def frank_scan(self, *, poll_count: int, health: dict, coverage: dict | None = None,
                    recent_trades: list[dict] | None = None,
                    signal_candidates: list[dict] | None = None,
@@ -344,6 +389,32 @@ class GitEvidencePublisher:
                     sent += 1
                 except (ValueError, OSError, RuntimeError, KeyError) as exc:
                     errors.append({"kind": "ca", "event": p.name, "reason": type(exc).__name__})
+            for p in sorted((self.spool.pending / "frank-history").glob("*.json")):
+                try:
+                    manifest = json.loads(p.read_text())
+                    history_id = manifest.get("snapshot_id")
+                    if not isinstance(history_id, str) or not SAFE_ID.fullmatch(history_id) or history_id != p.stem:
+                        raise ValueError("FRANK_HISTORY_ID_INVALID")
+                    part_files = []
+                    for rec in manifest.get("parts") or []:
+                        name = rec["file"]
+                        if not re.fullmatch(r"part-\\d{4}\\.json", name):
+                            raise ValueError("FRANK_HISTORY_PART_NAME_INVALID")
+                        local = self.spool.pending / "frank-history-parts" / history_id / name
+                        chunk = json.loads(local.read_text())
+                        payload = base64.b64decode(chunk["payload_b64"], validate=True)
+                        if digest(payload) != rec["sha256"]:
+                            raise ValueError("FRANK_HISTORY_CHUNK_MISMATCH")
+                        part_files.append((local, name))
+                    for local, name in part_files:
+                        self._upload(f"{PREFIX}/frank-history/{history_id}/{name}", local.read_bytes())
+                    self._upload(f"{PREFIX}/frank-history/{p.name}", p.read_bytes())
+                    for local, _ in part_files:
+                        local.unlink()
+                    p.unlink()
+                    sent += 1
+                except (ValueError, OSError, RuntimeError, KeyError) as exc:
+                    errors.append({"kind": "frank-history", "event": p.name, "reason": type(exc).__name__})
             # Do not sync an open 15-minute bucket unless explicitly forced.
             current_bucket_start = int(self.clock() // 900) * 900
             groups: dict[str, list[tuple[Path, dict]]] = {}
@@ -381,8 +452,10 @@ class GitEvidencePublisher:
                     errors.append({"kind": "frank", "bucket": bucket, "reason": type(exc).__name__})
             pending_ca = len(list((self.spool.pending / "ca").glob("*.json")))
             pending_frank = len(list((self.spool.pending / "frank").glob("*.json")))
+            pending_history = len(list((self.spool.pending / "frank-history").glob("*.json")))
             status = ("SYNC_PARTIAL" if errors else
-                      "SYNC_PENDING_WINDOW" if pending_ca or pending_frank else "SYNC_OK")
+                      "SYNC_PENDING_WINDOW" if pending_ca or pending_frank or pending_history else "SYNC_OK")
             return {"status": status, "uploaded": sent, "errors": errors,
                     "pending_ca": pending_ca, "pending_frank": pending_frank,
+                    "pending_history": pending_history,
                     "remote_branch": BRANCH}
