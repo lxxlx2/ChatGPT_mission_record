@@ -22,6 +22,7 @@ from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, l
 from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .frank import FrankReader
+from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
 
 
@@ -184,6 +185,13 @@ class ClusterJobManager:
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
         self.max_retained_jobs = 64
+        # Explicit opt-in, isolated from the existing CA report worker.
+        self.evidence_enabled = os.environ.get("MISSION_EVIDENCE_EXPORT_ENABLED") == "1"
+        self.evidence_spool = EvidenceSpool(self.control_root) if self.evidence_enabled else None
+        self.evidence_executor = (
+            ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-evidence")
+            if self.evidence_enabled else None
+        )
 
     @staticmethod
     def validate_mint(mint: str) -> str:
@@ -565,6 +573,15 @@ class ClusterJobManager:
             _atomic_write_text(out / f"{stamp}.json", payload)
             _atomic_write_text(out / f"{stamp}.md", markdown(report))
             _atomic_write_text(out / "latest.json", payload)
+            if self.evidence_enabled:
+                try:
+                    self.evidence_spool.ca_done(mint=mint, job_id=job_id, report=report)
+                    self.evidence_executor.submit(
+                        GitEvidencePublisher(self.evidence_spool).sync
+                    )
+                except (OSError, ValueError, RuntimeError):
+                    # Finished CA report remains valid even if export fails.
+                    pass
             with self.lock:
                 job = self.jobs[job_id]
                 job["status"] = "DONE"
