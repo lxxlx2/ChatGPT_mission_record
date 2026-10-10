@@ -27,6 +27,12 @@ CREATE TABLE IF NOT EXISTS snapshots (
  venue TEXT NOT NULL, symbol TEXT NOT NULL, observed_ms INTEGER NOT NULL,
  price TEXT NOT NULL, quote24 TEXT NOT NULL, PRIMARY KEY(venue,symbol)
 );
+CREATE TABLE IF NOT EXISTS snapshot_history (
+ venue TEXT NOT NULL, symbol TEXT NOT NULL, observed_ms INTEGER NOT NULL,
+ price TEXT NOT NULL, quote24 TEXT NOT NULL,
+ PRIMARY KEY(venue,symbol,observed_ms)
+);
+CREATE INDEX IF NOT EXISTS history_ttl ON snapshot_history(observed_ms);
 CREATE TABLE IF NOT EXISTS watch_state (
  venue TEXT NOT NULL, symbol TEXT NOT NULL, last_watch_ms INTEGER NOT NULL,
  last_watch_price TEXT NOT NULL, invalidated INTEGER NOT NULL DEFAULT 0,
@@ -114,6 +120,18 @@ def record_event(db, venue, symbol, kind, observed_ms, anchor, payload):
                (eid, observed_ms))
     return eid
 
+def historical_return(db, venue, symbol, now_ms, price, window_ms, tolerance_ms):
+    """Return observed past-window change, never future/lookahead prices."""
+    target=now_ms-window_ms
+    prior=db.execute("""SELECT observed_ms,price FROM snapshot_history
+        WHERE venue=? AND symbol=? AND observed_ms BETWEEN ? AND ?
+        ORDER BY ABS(observed_ms-?) ASC LIMIT 1""",
+        (venue,symbol,target-tolerance_ms,target+tolerance_ms,target)).fetchone()
+    if prior is None:
+        return None
+    return {"return":price/positive(prior["price"],"HISTORICAL_PRICE")-Decimal(1),
+            "lag_ms":now_ms-prior["observed_ms"],"window_ms":window_ms}
+
 def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")):
     """Complete-time snapshots; rolling 24h turnover is CONTEXT, not 3m volume.
 
@@ -160,6 +178,17 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
                 observed_ms=excluded.observed_ms,price=excluded.price,
                 quote24=excluded.quote24""",
                 (venue,symbol,observed_ms,str(price),str(quote)))
+            longer=[]
+            for window_ms,tolerance_ms,minimum_return in (
+                (15*60_000,3*60_000,Decimal("0.08")),
+                (60*60_000,6*60_000,Decimal("0.15"))):
+                value=historical_return(db,venue,symbol,observed_ms,price,
+                                        window_ms,tolerance_ms)
+                if value is not None and value["return"]>=minimum_return:
+                    longer.append(value)
+            db.execute("""INSERT OR IGNORE INTO snapshot_history
+                (venue,symbol,observed_ms,price,quote24) VALUES(?,?,?,?,?)""",
+                (venue,symbol,observed_ms,str(price),str(quote)))
             prior_watch=db.execute(
                 "SELECT * FROM watch_state WHERE venue=? AND symbol=?",
                 (venue,symbol)).fetchone()
@@ -175,8 +204,15 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
                     {"observed_ms":observed_ms,"last_watch_ms":prior_watch["last_watch_ms"],
                      "reason":"PRICE_REVERSED_15PCT_FROM_FIRST_WATCH",
                      "classification":"WATCH_NO_LONGER_ACTIVE"})
-            if ret is None or ret<Decimal("0.05") or quote<min_quote24:
+            windows=longer[:]
+            if ret is not None and ret>=Decimal("0.05"):
+                windows.append({"return":ret,
+                                "lag_ms":observed_ms-prev["observed_ms"],
+                                "window_ms":180_000})
+            if not windows or quote<min_quote24:
                 continue
+            chosen=max(windows,key=lambda w:w["return"])
+            ret=chosen["return"]
             prev_watch=db.execute(
                 "SELECT last_watch_ms,invalidated FROM watch_state WHERE venue=? AND symbol=?",
                 (venue,symbol)).fetchone()
@@ -198,7 +234,8 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
                                  old_pending["id"],
                                  {"reason":"OVERDUE_WHEN_REARMING_WATCH",
                                   "classification":"STALE_NOT_ACTIONABLE"})
-            reason="FAST_SNAPSHOT_PRICE_PLUS_24H_LIQUIDITY_CONTEXT"
+            reason=("SNAPSHOT_WINDOW_"+str(chosen["window_ms"]//60_000)+
+                    "MIN_PLUS_24H_LIQUIDITY_CONTEXT")
             priority=min(100,int(ret*1000))
             db.execute("""INSERT INTO candidate_queue
                 (venue,symbol,first_seen_ms,last_seen_ms,priority,reason,deadline_ms)
@@ -217,7 +254,11 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
                 (venue,symbol,observed_ms,str(price)))
             record_event(db,venue,symbol,"WATCH_EARLY",observed_ms,observed_ms,
                 {"observed_ms":observed_ms,"return_snapshot_pct":round(float(ret*100),4),
-                 "snapshot_lag_ms":observed_ms-prev["observed_ms"],
+                 "snapshot_lag_ms":chosen["lag_ms"],
+                  "research_window_ms":chosen["window_ms"],
+                  "trigger_3m_5pct":any(w["window_ms"]==180_000 for w in windows),
+                  "trigger_15m_8pct":any(w["window_ms"]==900_000 for w in windows),
+                  "trigger_60m_15pct":any(w["window_ms"]==3_600_000 for w in windows),
                  "quote24_usdt":str(quote),"venue":venue,
                  "classification":"RESEARCH_WATCH_NOT_BUY",
                  "snapshot_move_window_not_fixed_3m":True,
@@ -227,6 +268,8 @@ def observe_snapshot(db, venue, observed_ms, rows, min_quote24=Decimal("100000")
             (venue,observed_ms,source_total,scanned,invalid,watch_new)
             VALUES(?,?,?,?,?,?)""",
             (venue,observed_ms,len(rows),len(valid),invalid,watch_new))
+        db.execute("DELETE FROM snapshot_history WHERE observed_ms<?",
+                   (observed_ms-75*60_000,))
     return {"venue":venue,"source_total":len(rows),"valid":len(valid),
             "invalid":invalid,"watch_new":watch_new}
 
