@@ -1,0 +1,184 @@
+{
+  "schema_version": "1",
+  "source": "BSC_MEME_2026_MULTI_OPPORTUNITY_EOAS_EARLY_OUTGOING_2026-10-10.json",
+  "num_wallets": 4,
+  "num_pairs": 8,
+  "important": "Exact ERC20 transfer quantity equality does NOT prove sales, profit, swap completeness in quote BNB/WBNB or common beneficial owner",
+  "pairs": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "龙虾",
+      "token_contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "first_observed_buy_block": 83635852,
+      "last_observed_token_out_block": 83636271,
+      "first_observed_token_in": 10,
+      "first_observed_token_out": 10,
+      "inbound_query_complete": false,
+      "outbound_query_complete": false,
+      "token_in_raw": "10676000845041130477113386",
+      "token_out_raw": "6357107376585655751000000",
+      "net_token_raw": "4318893468455474726113386",
+      "exact_quantity_reconciled": false,
+      "unique_incoming_txs": 10,
+      "unique_outgoing_txs": 10,
+      "exit_contracts": [
+        "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
+      ],
+      "state": "FULL_QUANTITY_IF_BOTH_PAGES_COMPLETE; CASHFLOW_PNL_UNVERIFIED"
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "币安人生",
+      "token_contract": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "first_observed_buy_block": 63454351,
+      "last_observed_token_out_block": 63455595,
+      "first_observed_token_in": 10,
+      "first_observed_token_out": 10,
+      "inbound_query_complete": false,
+      "outbound_query_complete": false,
+      "token_in_raw": "8972161485747746478339167",
+      "token_out_raw": "7813801830670372000000000",
+      "net_token_raw": "1158359655077374478339167",
+      "exact_quantity_reconciled": false,
+      "unique_incoming_txs": 10,
+      "unique_outgoing_txs": 10,
+      "exit_contracts": [
+        "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "0x66f289de31eef70d52186729d2637ac978cfc56b"
+      ],
+      "state": "FULL_QUANTITY_IF_BOTH_PAGES_COMPLETE; CASHFLOW_PNL_UNVERIFIED"
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "token": "我踏马来了",
+      "token_contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "first_observed_buy_block": 73336244,
+      "last_observed_token_out_block": 73659369,
+      "first_observed_token_in": 5,
+      "first_observed_token_out": 8,
+      "inbound_query_complete": true,
+      "outbound_query_complete": true,
+      "token_in_raw": "67787105215211609823131242",
+      "token_out_raw": "67787105215211609823131242",
+      "net_token_raw": "0",
+      "exact_quantity_reconciled": true,
+      "unique_incoming_txs": 5,
+      "unique_outgoing_txs": 8,
+      "exit_contracts": [
+        "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+      ],
+      "state": "FULL_QUANTITY_IF_BOTH_PAGES_COMPLETE; CASHFLOW_PNL_UNVERIFIED"
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "token": "龙虾",
+      "token_contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "first_observed_buy_block": 83635854,
+      "last_observed_token_out_block": 85952207,
+      "first_observed_token_in": 3,
+      "first_observed_token_out": 6,
+      "inbound_query_complete": true,
+      "outbound_query_complete": true,
+      "token_in_raw": "35914714758044566631444458",
+      "token_out_raw": "35914714758044566631444458",
+      "net_token_raw": "0",
+      "exact_quantity_reconciled": true,
+      "unique_incoming_txs": 3,
+      "unique_outgoing_txs": 6,
+      "exit_contracts": [
+        "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
+      ],
+      "state": "FULL_QUANTITY_IF_BOTH_PAGES_COMPLETE; CASHFLOW_PNL_UNVERIFIED"
+    },
+    {
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "token": "龙虾",
+      "token_contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "first_observed_buy_block": 83635783,
+      "last_observed_token_out_block": 83635904,
+      "first_observed_token_in": 3,
+      "first_observed_token_out": 10,
+      "inbound_query_complete": true,
+      "outbound_query_complete": false,
+      "token_in_raw": "29383455921023573000000000",
+      "token_out_raw": "24271721349005374000000000",
+      "net_token_raw": "5111734572018199000000000",
+      "exact_quantity_reconciled": false,
+      "unique_incoming_txs": 3,
+      "unique_outgoing_txs": 10,
+      "exit_contracts": [
+        "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+      ],
+      "state": "FULL_QUANTITY_IF_BOTH_PAGES_COMPLETE; CASHFLOW_PNL_UNVERIFIED"
+    },
+    {
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "token": "MARSCOIN",
+      "token_contract": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "first_observed_buy_block": 112441411,
+      "last_observed_token_out_block": 112441528,
+      "first_observed_token_in": 10,
+      "first_observed_token_out": 10,
+      "inbound_query_complete": false,
+      "outbound_query_complete": false,
+      "token_in_raw": "4546606566500179660939758",
+      "token_out_raw": "495031236439079549341370",
+      "net_token_raw": "4051575330061100111598388",
+      "exact_quantity_reconciled": false,
+      "unique_incoming_txs": 10,
+      "unique_outgoing_txs": 5,
+      "exit_contracts": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "state": "FULL_QUANTITY_IF_BOTH_PAGES_COMPLETE; CASHFLOW_PNL_UNVERIFIED"
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "token": "我踏马来了",
+      "token_contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "first_observed_buy_block": 73336301,
+      "last_observed_token_out_block": 73672622,
+      "first_observed_token_in": 7,
+      "first_observed_token_out": 3,
+      "inbound_query_complete": true,
+      "outbound_query_complete": true,
+      "token_in_raw": "17902714158602084000000000",
+      "token_out_raw": "17902714158602084000000000",
+      "net_token_raw": "0",
+      "exact_quantity_reconciled": true,
+      "unique_incoming_txs": 7,
+      "unique_outgoing_txs": 3,
+      "exit_contracts": [
+        "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+      ],
+      "state": "FULL_QUANTITY_IF_BOTH_PAGES_COMPLETE; CASHFLOW_PNL_UNVERIFIED"
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "token": "龙虾",
+      "token_contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "first_observed_buy_block": 83635788,
+      "last_observed_token_out_block": 83636145,
+      "first_observed_token_in": 1,
+      "first_observed_token_out": 10,
+      "inbound_query_complete": true,
+      "outbound_query_complete": false,
+      "token_in_raw": "18861470183165681000000000",
+      "token_out_raw": "10108031553223922246879000",
+      "net_token_raw": "8753438629941758753121000",
+      "exact_quantity_reconciled": false,
+      "unique_incoming_txs": 1,
+      "unique_outgoing_txs": 10,
+      "exit_contracts": [
+        "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
+      ],
+      "state": "FULL_QUANTITY_IF_BOTH_PAGES_COMPLETE; CASHFLOW_PNL_UNVERIFIED"
+    }
+  ]
+}
