@@ -42,7 +42,17 @@ def capture_frank(spool: EvidenceSpool, prod: Path) -> dict:
     from datetime import datetime
     t = datetime.fromisoformat(str(health["last_poll_at"]).replace("Z", "+00:00")).timestamp()
     coverage = _local_coverage(prod / "forward.sqlite", t)
-    path = spool.frank_scan(poll_count=health["poll_count"], health=health, coverage=coverage)
+    from mission_agent.mission_control.frank import FrankReader
+    reader = FrankReader(prod)
+    try:
+        trades = reader.recent_trades(40)
+        candidates = reader.candidates()
+    except (OSError, ValueError, sqlite3.Error):
+        trades, candidates = [], []
+    path = spool.frank_scan(
+        poll_count=health["poll_count"], health=health, coverage=coverage,
+        recent_trades=trades, signal_candidates=candidates,
+    )
     return {"status": "QUEUED_LOCALLY", "kind": "frank", "poll_count": health["poll_count"],
             "spool_file": str(path)}
 
