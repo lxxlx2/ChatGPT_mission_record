@@ -26,6 +26,40 @@
 
     <details class="panel ended-panel" id="coverage-details"><summary>数据来源与覆盖范围</summary><div class="coverage-strip" id="coverage">正在读取本地索引范围…</div></details>
 
+    <section class="panel frank-watch-panel" id="frank-watch-panel">
+      <div class="panel-title">
+        <div>
+          <h2>Frank 持续观察池 <span id="watch-total-count">0</span></h2>
+          <p>完整本地交易与模型状态观察，不等于买入信号或已核实的实时链上余额。</p>
+        </div>
+        <span id="watch-scope">等待索引</span>
+      </div>
+      <div class="frank-watch-controls">
+        <label for="watch-filter">类别</label>
+        <select id="watch-filter">
+          <option value="ALL">全部观察</option>
+          <option value="MODEL_OPEN">本地模型持有</option>
+          <option value="NEEDS_INVENTORY_REVIEW">持仓待核实</option>
+          <option value="WATCH_UNRESOLVED">继续观察</option>
+          <option value="HISTORICAL_EXIT">历史退出</option>
+          <option value="HISTORY_SELL_ONLY">只有卖出记录</option>
+        </select>
+        <label for="watch-search">搜索 CA</label>
+        <input id="watch-search" type="search" autocomplete="off" placeholder="输入代币 CA"/>
+      </div>
+      <div class="frank-watch-summary" id="watch-summary">正在读取观察代币…</div>
+      <div class="frank-watch-table-wrap">
+        <table class="frank-watch-table">
+          <thead><tr>
+            <th>代币 CA</th><th>观察分类</th><th>本地交易</th>
+            <th>最近链上动作</th><th>持仓证据</th><th>研究入口</th>
+          </tr></thead>
+          <tbody id="watch-rows"></tbody>
+        </table>
+      </div>
+      <p class="frank-watch-footnote">数据来自 Frank 本地已有索引。OPEN、CLOSED 和 UNKNOWN 均为本地模型字段，未重新核实的钱包余额与收益保持未知。观察池不会触发新提醒。</p>
+    </section>
+
     <section class="panel">
       <div class="panel-title">
         <div><h2>当前跟单机会</h2></div>
