@@ -2,6 +2,8 @@
 
 Updated: 2026-09-28 19:34 Asia/Bangkok
 Timezone: Asia/Bangkok
+> Active 2026-10-10 schedule: existing `Crypto 每日情报` at :10 Asia/Bangkok only; 08:10 prebuild, 09:10 primary, 10:10/11:10 recovery, other scheduled hours bounded collectors. The old 09:00/10:00/11:00 and dedicated publisher text below is historical, not active. `COLLECTOR_SPEC.md` V2 + `REPORT_ACCEPTANCE.md` CR-20 govern discovery. No task or schedule change.
+
 
 ## Execution model
 
