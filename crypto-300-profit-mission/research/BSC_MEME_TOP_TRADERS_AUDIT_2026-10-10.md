@@ -87,3 +87,16 @@ Original 18 were biased toward projects with Binance Futures and/or Spot listing
 - No official BUBB perpetual or spot listing is established in this pass; do not infer one.
 - `bsc_meme_top_traders_readonly.py` now includes 19 candidate contracts. The separate locally tested, fuller offline prototype also includes 19. Neither script has yet obtained live 19x top traders rankings from this environment.
 - BUBB alone does NOT exhaust Alpha-only memes; full Binance Alpha 2025–2026 eligibility export remains a separate coverage requirement. Do not label 19 as Binance universe population.
+
+## BUBB loss and ERC20-quote accounting correction
+
+**Historical PnL sampling correction** to the 2025 high-win `0xd70ce47ec32625420640da206f0b3525c2bec678` address after expanding beyond Futures-listed projects:
+
+- **BUBB launchpad-stage buy** tx `0x63d09053b6df6f46dc8e4c942cc733e446fe9bf72c9dc70ca76d7c289f601c38`, block **47612448** 2025-03-19 **21:17:03 UTC**; 0.3 BNB native tx.value, wallet native balance debit including buy gas **0.300581404 BNB**. ERC20 receipt: 1,635,496.0045376373 BUBB received by signer.
+- **BUBB full exit** tx `0xa1e0683eed37d869d6a444bea0fb7e37cf3a941217f389bbb58f87fb2f8bcdbb`, block **47612471** 2025-03-19 **21:18:12 UTC**, signer same EOA, token outgoing matches total original amount exactly. **69-second holding time**.
+- Sale proceeds from receipt WBNB Transfer (WBNB contract `0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c`) to wallet = **0.22039445045920925 WBNB**. The BNB native balance decreased by sell gas **0.00174265 BNB**; a native-only balance delta sees negative value here, **incorrectly treating WBNB-proceeds as zero**.
+- ETH/BNB/WBNB equivalence at the time within same chain: approximate full-position realized PnL = `0.22039445045920925 - 0.300581404 - 0.00174265 = -0.08192960354079075 BNB` (approximately **-27.26%** against total buy debit). ERC20/tx signature + receipt checks verified on BNB Mainnet.
+- The BUBB trade occurred **7 hours before** first observed Pancake V2/WBNB outgoing transfer (block 47620848, 2025-03-20 04:17:03 UTC), confirming launchpad/pre-migration flow omitted by V2-only scanner. Early profit studies need original Four.meme/launchpad transactions and ERC20 receipt parsing.
+- This wallet's selected 4 tokens are now **4 completed positions, 3 winning and 1 losing**, selected-sample 75% win rate, PnL `12.30272776608792 - 0.08192960354079075 = +12.22079816254713 BNB` across those positions. It remains **NOT an all-wallet historical win rate nor a proven profitable current strategy**. This wallet is inactive in documented Meme trading after December 2025.
+- **Methodology fix:** identify actual ERC20 quote asset transfers via `eth_getTransactionReceipt`, not merely the wallet's native-token balance change. For each trade calculate `net_quote_in - net_quote_out - Gas` with WBNB/BUSD/USDT/USDC normalisation; if different assets, use contemporaneous execution-rate conversion or leave PnL unconfirmed. **Never interpret outgoing token Transfer as a sell without receipt/quote verification**.
+- For delayed copying, the 69-second BUBB roundtrip **cannot** be replicated by a 5/15/30m-delayed follower; mark this trade `FOLLOW_DELAY_5MIN=NO_TRADE`, not extrapolate the wallet's overall win rate.
