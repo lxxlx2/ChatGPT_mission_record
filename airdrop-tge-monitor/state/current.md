@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-11 00:05:12 Asia/Bangkok
+Updated: 2026-10-11 01:02:47 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-11 00:05:12 Asia/Bangkok
+- latest_actual_run: 2026-10-11 01:02:47 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-11/000512-final.md
-- latest_attempt_path: NOT_PERSISTED_THIS_RUN (GitHub connector blocked the attempt write)
-- latest_scheduled_shard: 0
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-11/010247-final-retry.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-11/010154-attempt.md
+- latest_scheduled_shard: 1
 - latest_executed_shard: 1
 - stale_shard_recovery: true
-- latest_candidate_count: 1
+- latest_candidate_count: 3
 - latest_triggered_events: 0
-- latest_identity_failures: 0
-- latest_source_failures: 1
+- latest_identity_failures: 1
+- latest_source_failures: 2
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: silent
 - latest_gmail_attempted: false
