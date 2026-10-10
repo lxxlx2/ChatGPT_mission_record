@@ -1,0 +1,152 @@
+{
+  "source": "GitHub Actions genuine replay same live code",
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38089808057",
+  "revision": "8205b0adbeda5dcde282266daba9d806603c66bc",
+  "date_utc": "2026-10-10T22:01:05Z",
+  "observed_scope": "12 usable 60h 1m authentic Binance events, 2 rejected incomplete",
+  "limitations": [
+    "Selected, retrospectively labeled 60-case subset; not population-unbiased",
+    "24h turnover reconstructed from 1440 complete 1m quote volumes, not archived ticker",
+    "No historical L2 execution proof; proxy outcomes not realized fills",
+    "Old research watch anchors are not first historical 2x threshold",
+    "Automated trading and deployment NO_GO"
+  ],
+  "PER_CASE": [
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-11-04T19:42:00Z",
+      "old_anchor": "2025-11-04T20:00:00Z",
+      "setups": 1,
+      "symbol": "CUDISUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-12-23T19:15:00Z",
+      "old_anchor": "2025-12-23T20:00:00Z",
+      "setups": 1,
+      "symbol": "BIFIUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2025-12-31T19:12:00Z",
+      "old_anchor": "2025-12-31T17:00:00Z",
+      "setups": 1,
+      "symbol": "BROCCOLI714USDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2025-03-11T19:54:00Z",
+      "old_anchor": "2025-03-11T20:00:00Z",
+      "setups": 1,
+      "symbol": "HARDUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2026-02-10T05:03:00Z",
+      "old_anchor": "2026-02-10T08:00:00Z",
+      "setups": 2,
+      "symbol": "NKNUSDT",
+      "watches": 2
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-11-07T17:00:00Z",
+      "setups": 0,
+      "symbol": "NOTUSDT",
+      "watches": 0
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2024-01-03T12:24:00Z",
+      "old_anchor": "2024-01-03T13:00:00Z",
+      "setups": 1,
+      "symbol": "PEOPLEUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2026-07-02T14:36:00Z",
+      "old_anchor": "2026-07-02T15:00:00Z",
+      "setups": 1,
+      "symbol": "QKCUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2026-06-11T06:24:00Z",
+      "old_anchor": "2026-06-11T07:00:00Z",
+      "setups": 1,
+      "symbol": "STGUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": "2026-06-29T17:57:00Z",
+      "old_anchor": "2026-06-29T20:00:00Z",
+      "setups": 1,
+      "symbol": "SYNUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "GT5X_PREHIT_POSITIVE",
+      "first_watch": "2021-03-09T05:54:00Z",
+      "old_anchor": "2021-03-09T06:00:00Z",
+      "setups": 1,
+      "symbol": "VITEUSDT",
+      "watches": 1
+    },
+    {
+      "cohort": "FULLMARKET_SAMPLED",
+      "first_watch": null,
+      "old_anchor": "2025-03-02T17:00:00Z",
+      "setups": 0,
+      "symbol": "XTZUSDT",
+      "watches": 0
+    }
+  ],
+  "SKIPPED": [
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_spot_CHZUSDT_2021-03-07.json"
+    },
+    {
+      "error": "ValueError:SOURCE_MARKED_INCOMPLETE",
+      "file": "monster_v4_replay_1m_spot_STPTUSDT_2021-09-30.json"
+    }
+  ],
+  "STAGE7_REAL_BINANCE_REPLAY_SUMMARY": {
+    "cases_replayed": 12,
+    "cases_skipped": 2,
+    "caution": "RETROSPECTIVE_SELECTED_COHORTS_NOT_UNBIASED_UNIVERSE",
+    "cohorts": {
+      "FULLMARKET_SAMPLED": {
+        "assumed_trades_with_exit": 6,
+        "found_n": 5,
+        "n": 7,
+        "proxy_net_pct_20bps_losers": 3,
+        "proxy_net_pct_20bps_median": 9.0273,
+        "proxy_net_pct_20bps_winners": 3,
+        "setup_n": 5,
+        "watch_events": 6
+      },
+      "GT5X_PREHIT_POSITIVE": {
+        "assumed_trades_with_exit": 5,
+        "found_n": 5,
+        "n": 5,
+        "proxy_net_pct_20bps_losers": 1,
+        "proxy_net_pct_20bps_median": 44.0072,
+        "proxy_net_pct_20bps_winners": 4,
+        "setup_n": 5,
+        "watch_events": 5
+      }
+    },
+    "historical_orderbook": "UNAVAILABLE",
+    "production_gate": "NO_GO",
+    "profitability_validated": false
+  }
+}
