@@ -1,6 +1,6 @@
 # UNICRED Position
 
-Updated: 2026-10-04
+Updated: 2026-10-10
 Timezone: Asia/Bangkok
 Status: **CLOSED / NOT_OWNED**
 
@@ -13,12 +13,12 @@ Status: **CLOSED / NOT_OWNED**
 
 ## Current direct-chain state
 
-Fresh Unichain ownership query at block **60,318,039** / **2026-10-03T22:26:38Z**:
+Latest Alchemy Unichain owner-specific NFT query at block **60,900,610** / **2026-10-10T16:16:09Z**:
 - NFTs owned from the UNICRED contract: **0**.
 
 Current state:
 - UNICRED #230: **not owned / closed**;
-- native ETH: **0.000020589846025254** (~$0.06 at the 2026-10-04 ETH mark, below display threshold);
+- native ETH: **0.000020589846025254** (still < $1 at the 2026-10-10 Binance ETHUSDT 2510.52 reference; excluded by the permanent per-asset $1 rule);
 - no current UNICRED NFT is included in portfolio NAV.
 
 Historical CRED residuals and prior #230 ownership are provenance only and must not be carried forward as current holdings.
