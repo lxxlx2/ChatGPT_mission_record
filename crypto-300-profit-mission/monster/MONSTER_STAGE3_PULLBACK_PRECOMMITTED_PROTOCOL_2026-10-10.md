@@ -23,3 +23,12 @@
 `group,venue,symbol,watch_utc,model,signal_to_entry_minutes,entry_open,entry_status,4h_close_return_pct,24h_close_return_pct,24h_min_low_return_pct,watch_fixed_24h_close_return_pct,reason`。聚合对照含 **entry_coverage、no-entry 样本的原方案结果、retest 的等待时延、24h ≥20% / ≤−20%、期间 low ≤−20%、样本数量**。
 
 这一阶段明确不实现 V4 的 live BUY/邮件、不同规则自动选优、分钟级盘口执行回测；所有时间点及涨幅后验已暴露，真正独立样本需要未来前向 shadow。
+
+
+## 扩展批次：30条历史真正5×正例的“错过赢家”检查（开始取扩展5m K线之前增加）
+
+本研究原先固定的30个普通交易信号已全部得到1h/5m后续30h对照。为验证回踩筛选有无错失真正目标，另对 [40条官方来源GT样本与首次强信号表](evidence/monster_40_event_signal_timing_register.csv) **预先确定**：去除5种 Binance 杠杆代币与 PAX 稳定币后的34条普通 instrument GT，选 `first_strong_utc` 不为空的全部30条（其余4条明确记为 `NO_ANY_STRONG_PRE2X`）。不因未来利润高低删除极端插针/退市/合约-only/双venue重复事件。
+
+每个事件直接向 Binance Spot/USDM 请求 `[first_strong_utc, first_strong_utc+30h)` 的360根5m，逐条执行**与上节完全相同**的 NOW/WAIT30/WAIT60/PB03/PB05/PB08 六套规则及 4h/24h/low 结果；请求失败、缺K线、合约退市会记录 `SOURCE_MISSING` 而不改规则或只报成功币。通过实例数量、拒绝实例相对 NOW 的24h表现、分持久5× close/插针 high 类别，衡量错失机会与买入风险，**不能把GT正例组收益说成模型正向预测能力**，因为全部30例是后见之明筛出的赢家。
+
+仍为**事后探索批次**，已暴露，不是样本外；所有确认都在前4小时内，统一下一根5m open 入场，不使用未来price作为门槛。此扩展与原先固定30个抽样普通候选**分开统计**，不得为了提高策略分数混合口径。
