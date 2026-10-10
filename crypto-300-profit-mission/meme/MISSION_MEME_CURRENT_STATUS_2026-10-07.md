@@ -1002,3 +1002,17 @@ User screenshot compared the installed Frank signals view (~2026-10-11 04:48 Ban
 - Existing `meme/ca-analysis-unified-accuracy-acceptance.md` remains authoritative for the separate one-mode manual CA report and external narrative.
 
 **NO operational change:** `FRANK_WALLET_DASHBOARD_V2=DATA_AND_ARCHITECTURE_DESIGNED`; `RAW_SIGNATURE_FULL_RECONCILIATION=INCOMPLETE`; `IMPLEMENTATION=NOT_STARTED`; `INDEPENDENT_AI_CODE_REVIEW=NOT_RUN`; `REAL_MAC_NEW_VERSION_ACCEPTANCE=NOT_RUN`; `DEPLOYMENT=NO`. Existing signals/delivery remain unchanged and `PRODUCTION_TRADING=NO_GO`. No new automation or Monitor/LaunchAgent created.
+
+## 53. 2026-10-11 D0 开始执行：真实链上持仓对账 + 只读本地索引审计候选（Draft PR #31）
+
+**Current independent direct-chain progress**: 2026-10-11 finalized `getTokenAccountsByOwner(owner,mint)` rechecked six previously studied Frank token episodes at slots 455413478–455413480. Four owner-token accounts returned zero. **Two accounts retained nonzero token quantities**, specifically MukLDtJ8…pump **33.586031** and 8K5X85PA…8L **327.203717034**. Historical source called the selected trade *episodes* closed, which cannot be silently interpreted as all current owner token inventory zero. Alchemy USD token price lookup for the two nonzero mints returned no market price; USD materiality and present profitable position state therefore **UNRESOLVED**. The 6 token facts were saved on the PR branch in `meme/evidence/frank-d0-six-mint-finalized-2026-10-11.json`.
+
+**Additional direct TWEETCRAFT read**: both prior original buy `4sP6iSp...` (slot 454400785) and sell `5wqKv5Y...` (slot 454718132) returned finalized/success from fresh `getSignatureStatuses`. Its owner-token account currently has raw amount zero. Prior original on-chain trade audit contains documented `6715.734492` USDC buy outflow, `7031.556770` USDC net sale receipt and one-roundtrip `+315.822278` USDC net difference. This is **not** wallet-wide PnL. New full `getTransaction` of the complex sell returned clipped data (8098 bytes), so the full cash-flow decode was not independently rerun this turn.
+
+**Implementation isolated from production**: [Draft PR #31](https://github.com/lxxlx2/ChatGPT_mission_record/pull/31), branch `research/frank-wallet-v2-d0-readonly-20261011`, contains:
+- `local-agent/scripts/frank_wallet_d0_snapshot.py`: read-only local `forward.sqlite` counts and union of recognized trade mints / v1_states as a **research watch seed** even if formal follow candidates=0. The 24h window and full historical observed-mint inventory have separate scope labels; no pretending total on-chain history is complete.
+- `local-agent/tests/research/test_frank_wallet_d0_snapshot.py`: five synthetic offline unit regressions. In assistant isolated container, standalone `py_compile` and **5 tests passed**; full repository CI, independent AI review and actual Mac data run are **NOT RUN**.
+- `meme/frank-d0-actual-ledger-progress-2026-10-11.md`: exact real evidence, source limits and remaining D0→D1 gates.
+
+**Deployment/merge gate**: `D0_CHAIN_SELECTED_SIX=PASS`, `D0_SCREENSHOT_ALL_THREE_FULL_SIGNATURES=INCOMPLETE`, `LOCAL_PRODUCTION_SQLITE_READ=NOT_RUN`, `WALLET_WIDE_COMPLETE_LEDGER=NOT_DONE`, `D1_COMPLETE_PNL_OR_WATCH_UI=NOT_BUILT`, `PR31_DRAFT=YES`, `MAIN_RUNTIME_CODE_UNCHANGED`, `GMAIL_UNCHANGED`, `PRODUCTION_TRADING=NO_GO`. This work does **not** authorize Mac install, reconfigure existing monitor, create automation, trigger Gmail or change historical Frank signal thresholds.
+
