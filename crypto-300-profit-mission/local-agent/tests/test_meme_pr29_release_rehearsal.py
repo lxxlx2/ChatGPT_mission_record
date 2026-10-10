@@ -225,3 +225,61 @@ def test_no_confirm_cannot_mutate_isolated_services(tmp_path,monkeypatch):
         _invoke(monkeypatch,["--apply","--expected-head","c"*40])
     assert state["restarts"]==[]
     assert {name:(state["app"]/name).read_bytes() for name in state["names"]}==state["original"]
+
+
+
+def test_old_release_mission_delivery_ignores_new_manual_review_rows(tmp_path):
+    """Check real frozen legacy delivery selectors after an isolated fallback.
+
+    This only proves MANUAL_REVIEW exclusion, NOT every possible old/new schema
+    transition. No OAuth provider or platform notification is actually invoked.
+    """
+    import types
+    from mission_agent.mission_control.db import ControlDB
+    from mission_agent.mission_control.delivery import GmailDelivery, LocalDelivery
+    from test_mission_control_delivery import event
+
+    old_source = subprocess.check_output(
+        ["git", "-C", str(ROOT), "show",
+         "49d5d3b7122efa41dd74ba6ede0c5d225309988c:"
+         "crypto-300-profit-mission/local-agent/mission_agent/mission_control/delivery.py"],
+        text=True,
+    )
+    legacy=types.ModuleType("mission_agent.mission_control._legacy_delivery")
+    legacy.__package__="mission_agent.mission_control"
+    exec(compile(old_source,"<frozen-legacy-delivery>", "exec"),legacy.__dict__)
+
+    control=ControlDB(tmp_path/"control.sqlite")
+    e=event(control)
+    LocalDelivery(control,run=lambda *a,**k:None).enqueue(e,forbidden=False)
+    GmailDelivery(control).enqueue(e,mode="LIVE",forbidden=False)
+    decision=e["decision_id"]
+    control.db.execute(
+        "UPDATE local_delivery SET status='MANUAL_REVIEW' WHERE decision_id=?",
+        (decision,)
+    )
+    control.db.execute(
+        "UPDATE gmail_delivery SET status='MANUAL_REVIEW' WHERE decision_id=?",
+        (decision,)
+    )
+    control.db.execute(
+        "UPDATE decision_outbox SET status='MANUAL_REVIEW' WHERE decision_id=?",
+        (decision,)
+    )
+
+    class NoCalls:
+        recipient="owner@example.invalid"
+        def ready(self):raise AssertionError("legacy provider should not be called")
+        def find_sent(self,*x):raise AssertionError("legacy provider should not be called")
+        def get(self,*x):raise AssertionError("legacy provider should not be called")
+        def send(self,*x):raise AssertionError("legacy provider must not send")
+    legacy.LocalDelivery(control,run=lambda *a,**kw:
+                         (_ for _ in ()).throw(AssertionError("must not show local alert"))).drain()
+    legacy.GmailDelivery(control).drain(NoCalls())
+    for table in ("gmail_delivery","local_delivery"):
+        assert control.db.execute(f"SELECT status FROM {table} WHERE decision_id=?",
+                                  (decision,)).fetchone()[0]=="MANUAL_REVIEW"
+    assert set(x["status"] for x in control.db.execute(
+        "SELECT status FROM decision_outbox WHERE decision_id=?",(decision,)
+    ))=={"MANUAL_REVIEW"}
+    control.close()
