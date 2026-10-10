@@ -484,7 +484,7 @@
       },
       "distinct_tokens": 13,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x8d68e48baee3264ecd62a8b85b80f8558cc1b499",
@@ -556,7 +556,7 @@
       },
       "distinct_tokens": 8,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x0000000040ac064de24cbc1cb9fcbcbc033ee5b6",
@@ -674,7 +674,7 @@
       },
       "distinct_tokens": 6,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x52f209c6ae7f43e50b0f6f70bc9fa119a5701798",
@@ -769,7 +769,7 @@
       },
       "distinct_tokens": 5,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x757eba15a64468e6535532fcf093cef90e226f85",
@@ -817,7 +817,7 @@
       },
       "distinct_tokens": 5,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xa01cd5b68265b972b73a713f6d824d1a6d3612b0",
@@ -884,7 +884,7 @@
       },
       "distinct_tokens": 5,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xb1000058c87d843fc0154591ff9d72af5e7213d5",
@@ -935,7 +935,7 @@
       },
       "distinct_tokens": 4,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
@@ -1041,7 +1041,7 @@
       },
       "distinct_tokens": 4,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xb5cb05554867ce201b0e6feb8d6cefd3a1dd5e32",
@@ -1134,7 +1134,7 @@
       },
       "distinct_tokens": 4,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x17cd8e8d4c64aa7f2a8db6947b330885da56b833",
@@ -1238,7 +1238,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x1e46fb97d20c89e84396cbfecd08fde064c1dd7b",
@@ -1308,7 +1308,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x426603bac5e0ea73fd13aecad7a80c9f963f6eac",
@@ -1525,7 +1525,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x4c6f446dd88fd1be8b80d2940806002777dc12a2",
@@ -1574,7 +1574,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x6ca39fcc6552cd5ace23ea6708a5b6d1eb4f6e40",
@@ -1637,7 +1637,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xb5cb0555a1d28c9dfdbc14017dae131d5c1cc19c",
@@ -1672,7 +1672,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xbca940e929945ded756c257a4ca665df4cfa3e0e",
@@ -1722,7 +1722,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xd3ac4584c2966da9101b7c950d0daf69645a680a",
@@ -1771,7 +1771,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xd6eef0147908a74c76c51c51e037e17aad48cd6a",
@@ -1806,7 +1806,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xd70ce47ec32625420640da206f0b3525c2bec678",
@@ -1841,7 +1841,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0xedc94232a8ede362ff062459f4940b5794c5a7f4",
@@ -1897,7 +1897,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xf6721a488e6a12552a30c59c9a96af1b139ebba6",
@@ -1946,7 +1946,7 @@
       },
       "distinct_tokens": 3,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x000000000023599274812f77725fbe7a8b4bdd47",
@@ -1972,7 +1972,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x0000000d94514cbcf9455c0be85541e5d45cf1f5",
@@ -2033,7 +2033,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x0000cafec60cb34ad15e580a3eee06a6fe1a1cab",
@@ -2059,7 +2059,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x000461a73d3985eef4923655782aa5d0de75c111",
@@ -2084,7 +2084,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x0d4eca97c066961e0caa10608a0736f858dd13e6",
@@ -2117,7 +2117,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
@@ -2142,7 +2142,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
@@ -2168,7 +2168,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0x28e2ea090877bf75740558f6bfb36a5ffee9e9df",
@@ -2222,7 +2222,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
@@ -2262,7 +2262,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0x311358fda82b53ad1523abb2908be722d766116f",
@@ -2288,7 +2288,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x3403ff6c49cf15c202f0cee3c10c29b11aff0f9d",
@@ -2312,7 +2312,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x34a517b2613aa140cb51ac40f8809e9fedc18774",
@@ -2338,7 +2338,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x3508dca95a64c9378cb07ef6f40553a50905372a",
@@ -2393,7 +2393,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": true,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
@@ -2419,7 +2419,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0x38fb583d3a797219651eb960fdbdeb31f8ec7a18",
@@ -2445,7 +2445,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x3d81936910786dcf122fbc187a052570775bcfdc",
@@ -2547,7 +2547,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x471e46261d1e6593f956fa41d2b14cb3715b7f2f",
@@ -2573,7 +2573,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x4789f192df5deb559af2bd9185781fda995856d5",
@@ -2599,7 +2599,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
@@ -2625,7 +2625,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0x4a50dfa71ef3dac520a685427a1bb8bbe30608a6",
@@ -2665,7 +2665,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x521faacdfa097ad35a32387727e468f7fd032fd6",
@@ -2715,7 +2715,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0x5e2c40e5c495654e4dcae85d46d15864c084605d",
@@ -2762,7 +2762,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x62ccef0b4545166f721caa9fee13c1d3767e27dc",
@@ -2802,7 +2802,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x6f53dbf7b4c2d1950087e0359c7dbe0dad2e0623",
@@ -2856,7 +2856,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x881443a59a494d630c60f1adbc46136b712d97fa",
@@ -2882,7 +2882,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -2940,7 +2940,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xa83b73f5644cde337b61da79589f10ea15548811",
@@ -2991,7 +2991,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     },
     {
       "address": "0xc2aced9c3ab6790f09d8073488a14975892ae048",
@@ -3017,7 +3017,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xca29cd653f18c702156aaac27528dc5f4db1f2c4",
@@ -3050,7 +3050,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
@@ -3106,7 +3106,7 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "CONTRACT"
     },
     {
       "address": "0xddac928a240bdace3994c2cc0783d4e29a002127",
@@ -3229,7 +3229,9 @@
       },
       "distinct_tokens": 2,
       "seen_as_global_recipient": false,
-      "code_type": "UNKNOWN"
+      "code_type": "EOA"
     }
-  ]
+  ],
+  "classified_cumulative": 52,
+  "still_unknown": 8
 }
