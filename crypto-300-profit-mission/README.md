@@ -1,9 +1,9 @@
 # $300-3000 Crypto Mission
 
-Updated: 2026-10-04
+Updated: 2026-10-10
 Timezone: Asia/Bangkok
 
-Current canonical scope snapshot: [`STATUS_SCOPE_2026-10-04.md`](STATUS_SCOPE_2026-10-04.md).
+Current mutable facts: [`MISSION_SPEC.md`](MISSION_SPEC.md), [`state/latest.md`](state/latest.md), [`portfolio/current.md`](portfolio/current.md), [`performance/current.md`](performance/current.md). Historical 2026-10-04 scope: [`STATUS_SCOPE_2026-10-04.md`](STATUS_SCOPE_2026-10-04.md).
 
 ## Current status
 
@@ -13,10 +13,12 @@ Current module state:
 - **Frank / Meme:** `FRANK_LOCAL_SIGNAL_V1_LIVE`; local deterministic authority; ACCUMULATION local alert LIVE; MULTIPLE local alert + standalone Gmail LIVE; GPT signal authority removed.
 - **Frank historical delivery acceptance:** STONK frozen-V1 MULTIPLE historical E2E passed through replay -> local TEST notifications -> Gmail -> Sent readback -> dedupe/crash recovery.
 - **NFT radar:** specification/research preserved, runtime currently paused/not active.
-- **MONSTER / 妖币:** `MONSTER_D1_V3_TRAIN_PASS`, but once-only 2024 validation is `INSUFFICIENT_DATA + CEILING_FAIL`; research frozen, D2 blocked, D3 not started, no live runtime.
+- **MONSTER / 妖币:** V3 failed independent 2024 validation. V4 2026-10-10 read-only research continues in [Draft PR #30](https://github.com/lxxlx2/ChatGPT_mission_record/pull/30) with no validated BUY strategy, live scanner, Gmail or LaunchAgent.
 - **CORE PRICE / overall-market trend module:** paused; legacy `$300 Crypto资产状态监控` remains disabled.
 - **Other tracked persons / TOKEN_CONSENSUS:** deferred.
 - **Production trading:** `NO_GO`.
+
+- **Frank / Meme integration:** [PR #29](https://github.com/lxxlx2/ChatGPT_mission_record/pull/29) merged October 10; user-authorized pre-merge Loop/Dashboard Mac acceptance passed for the scoped version. Later post-merge runtime and new-code real Gmail send are not independently verified here.
 
 ## Mission scheduler authority
 
@@ -34,16 +36,18 @@ Current capital / holdings:
 - [`portfolio/current.md`](portfolio/current.md)
 - [`state/latest.md`](state/latest.md)
 
-The 2026-10-04 refresh reconfirmed, among other items:
-- Solana: `142.162136 USDC` + `0.003093645 SOL`;
-- Ethereum: `1.006555 USDC` + `0.000634360344095958 ETH`;
-- Base: `0.000967183780184779 ETH`;
-- Ink: `0.011133212494942321 ETH`;
-- Credits owned count: `0`;
-- UNICRED owned count: `0`;
-- SUI remains `0` by latest explicit user-confirmed state; current connector did not provide a fresh Sui-native portfolio read.
+The latest **2026-10-10 read-only wallet refresh** directly confirmed:
+- Solana USDC **58.047629**, SOL **0.038163041**; approximate independently marked subtotal **~$62.31**.
+- Ethereum Credits owned **0**; Unichain UNICRED owned **0**.
+- Other checked EVM native assets individually < $1; full ERC-20/NFT completeness remains **UNRESOLVED** where provider responses were truncated or blocked.
+- Binance Earn **~$656.07** is the last **2026-10-09 user-screenshot value**, **not** a new private-account reading.
+- Bybit **~$353.42 UI** is separate personal rent/living cash and excluded from Mission capital.
+- GANG **500 USDC** committed escrow is distinct from liquid funds, final rights unresolved; JUMP refunded and closed.
+- Sui = 0 by user confirmation, not by a fresh Sui-native query.
 
-Unknown/spam/unpriced receipts are not promoted into NAV. Wallet balance changes are not automatically Mission PnL.
+**Permanent marked-asset display rule: value each separately identifiable asset; include only reliable USD values >= $1.00, exclude values < $1.00 without summing dust.** Unknown prices remain unresolved, not zero. See `MISSION_SPEC.md`.
+
+The ~**$718.38** combination of fresh chain ~$62.31 plus historical Binance screenshot ~$656.07 is **mixed-freshness indicative invested assets**, not verified comprehensive NAV or Mission PnL. Mission performance attribution remains unresolved in `performance/current.md`.
 
 ## Canonical module files
 
@@ -52,7 +56,8 @@ Frank / Meme:
 - `meme/FRANK_HISTORICAL_MULTIPLE_DELIVERY_E2E.md`
 
 Monster:
-- `local-agent/PHASE_MONSTER_D1_V3_REDESIGN_REPORT.md`
+- `local-agent/PHASE_MONSTER_D1_V3_REDESIGN_REPORT.md` (historic V3 failure)
+- [Monster V4 research PR #30](https://github.com/lxxlx2/ChatGPT_mission_record/pull/30) (research only, not in main)
 
 NFT:
 - `watchlists/nft-mint-radar.md`
