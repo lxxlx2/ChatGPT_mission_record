@@ -1,0 +1,52 @@
+{
+  "scope": "two newly surfaced 2025 multi-token sample EOAs; signer evidence is NOT profit or complete position proof",
+  "chain": "bnb-mainnet",
+  "source": "Alchemy ethGetTransactionByHash",
+  "records": [
+    {
+      "wallet": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "token": "SIREN",
+      "tx": "0x2053845602faa797455c516b729a17c3833c599cc0a7c9740b573672bec02a70",
+      "origin_signer": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "target": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "block": 47071801,
+      "native_tx_value_wei": "156969706102479",
+      "selector": "0xb6f9de95",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    },
+    {
+      "wallet": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "token": "BANANAS31",
+      "tx": "0xa22e9cef1777f78bec985b754256043d501984e92eb27f539d3b9dce4d7cec34",
+      "origin_signer": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "target": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+      "block": 46979554,
+      "native_tx_value_wei": "150714265044900",
+      "selector": "0xb6f9de95",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    },
+    {
+      "wallet": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
+      "token": "4",
+      "tx": "0xdf11c9ee04d7848eb4e9d74ee511f77ad127e86efd982e2354aca0e3f3d93c6a",
+      "origin_signer": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "block": 63056882,
+      "native_tx_value_wei": "15150000000000000",
+      "selector": "0x3b164a8e",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    },
+    {
+      "wallet": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
+      "token": "币安人生",
+      "tx": "0xe4cd5bf20a7016fe07aaed4b5ffcd07c29e640c1ab4a3ea603eea01c1114ccd0",
+      "origin_signer": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "block": 63454410,
+      "native_tx_value_wei": "15150000000000000",
+      "selector": "0x3b164a8e",
+      "status": "DIRECT_SIGNER_CONFIRMED"
+    }
+  ],
+  "classification": "CROSS_TOKEN_DIRECT_SIGNED_TRANSACTION_CONFIRMED; REALIZED_NET_PNL_UNRESOLVED; PERSON_PATTERN_OBSERVE_ONLY"
+}
