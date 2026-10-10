@@ -1,172 +1,98 @@
-# Current Portfolio / Capital Map
+# Mission Portfolio / Current Assets and Capital Classification
 
-Updated: 2026-10-09 22:18-22:24 Asia/Bangkok (user CEX screenshots + fresh finalized/native token wallet RPC reads)
+Updated: 2026-10-10 Asia/Bangkok (read-only wallet refresh; price observations around 2026-10-10 16:14 UTC)
 Timezone: Asia/Bangkok
+Portfolio authority: this file; operational status: `../state/latest.md`; performance attribution: `../performance/current.md`.
 
-## Accounting rule
+## Accounting and display policy (user-approved)
 
-- Include only individual on-chain positions with a reliable marked value of **>= $1.00** in the displayed chain subtotal.
-- Positions worth **< $1.00**, spam, claim-bait and unpriced unsolicited receipts are excluded from marked totals.
-- User-confirmed CEX balances are classified by purpose; living-expense/rent money is not investment capital.
-- Historical/private/pre-TGE rights remain separate from liquid/investable NAV.
-- This is an asset-completeness snapshot, not Mission PnL.
+- **Include a separately identifiable asset in the displayed USD asset subtotal only when its independently supportable USD mark is >= $1.00.** Exactly $1.00 is included; less than $1.00 is excluded. Apply per asset/position, not by pooling unrelated dust.
+- A balance lacking an independently supportable price is **UNPRICED / UNRESOLVED**, not proved to be worth zero or less than $1. Spam, impersonation and unsolicited claim-bait are excluded regardless of apparent face value.
+- Keep quantities and evidence for tiny assets in historical/source records when relevant; do not display them as material holdings or sum them into the subtotal.
+- Only directly confirmed wallet balances are `DIRECT_CHAIN`; CEX account figures are `USER_CONFIRMED` with their screenshot date. Unknown coverage or a failed provider is `UNAVAILABLE/UNRESOLVED`, never zero.
+- Binance flexible USDC is parked investment reserve; **the entire Bybit account is personal living/rent cash and excluded from the Mission investment subtotal.**
+- Pending escrow, token-sale rights, private assets, points and NFTs without an executable mark remain separate from liquid marked NAV; do not equate historical costs with current liquidation values.
+- Wallet movements, CEX transfers, token unlocks, refunds and gross sale proceeds are not automatically PnL; do not double-count them or historical exited NFTs. No signing, redemption, exchange transfer or trading was performed.
 
-## Canonical wallets
+## Canonical user wallets
 
-- EVM: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
+- EVM across supported networks: `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`
 - Solana: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`
 - Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
+Only these already authorized canonical wallets are in the present sweep. Wallet discovery/other accounts have **not** been asserted complete.
 
-## Fresh reference prices
+## 2026-10-10 independently rechecked on-chain material balances
 
-Direct price snapshots 2026-10-09 around 22:20 Asia/Bangkok; reference marks, not execution prices:
-- Binance public spot BTC/ETH/SOL/BNB/HYPE tickers consulted; ETH **$2,487.96**, SOL **$109.53**, BNB **$738.30**.
-- Alchemy USD token-price API: USDC **$1.00079**, ETH $2,488.68, SOL $109.413, BNB $737.96, MON $0.024592, POL $0.09883, HYPE $85.36.
-- This refresh applies SOL $109.53 and ETH $2,487.96 from Binance, USDC $1.00079 and noncore POL/MON from Alchemy. Mixed-second timestamps; approximate marks only.
-- CEX USD equivalents below are the exchange **user screenshot's marks**, not recomputed extra principal or PnL.
+### Solana / finalized RPC
 
-## Current on-chain assets >= $1
+- `getBalance` returned **38,163,041 lamports = 0.038163041 SOL**, slot **455317409**; at Binance Spot SOLUSDT **110.44** the indicative mark is **~$4.21** (USDT proxy, approximate USD).
+- `getTokenAccountsByOwner` (classic SPL) returned **58.047629 USDC**, canonical mint `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`, account `AaHmxVnUryLCrSr32zxrDGzfafXTvuHATURZbBy6XQ6A`, finalized slot **455317412**. Alchemy independently reported USDC/USD **1.00082** at 2026-10-10 16:10 UTC, indicative mark **~$58.10**.
+- Other three classic SPL accounts showed zero token balance (including one wrapped SOL account). Token-2022 returned **four accounts each holding one indivisible token**, two marked `nonTransferableAccount`; no independently verifiable >=$1 executable market value. Keep them **UNPRICED/EXCLUDED**, not absent.
+- Confirmed **material, separately marked Solana subtotal: ~$62.31**. Price-level proxies are not trade fills or available liquidity.
 
+### EVM / latest native RPC
 
-### Solana — DIRECT_CHAIN / finalized
+On October 10, the canonical EVM wallet's native balances remain individually below $1 using contemporaneous Binance Spot ETHUSDT **2510.52**, BNBUSDT **750.93**, and Alchemy POL/USD **0.10174**, MON/USD **0.024658**, HYPE/USD **85.81**:
 
-- Canonical wallet: `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`.
-- **58.047629 USDC** in canonical Solana USDC classic SPL token account `AaHmxVnUryLCrSr32zxrDGzfafXTvuHATURZbBy6XQ6A` (token mint `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`). Value **~$58.09** using USDC $1.00079. Finalized slot `454907396`, independent token account balance read.
-- **0.038163041 SOL** native (~**$4.18** using SOL $109.53). Finalized slot `454906751`. The native SOL amount is unchanged versus 2026-10-08, although its USD mark changed.
-- Compared with October 8 Solana USDC 31.094071, balance increased by **26.953558 USDC**. This is a **wallet balance delta only**, not classified as yield, trading PnL, refund or external income without transaction evidence.
-- Classic SPL token accounts checked finalized slot `454906753`: canonical USDC is the only positive token amount; WSOL and two others show zero.
-- Token-2022 program `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` queried finalized slot `454906985`: four distinct one-unit token accounts; two carry `nonTransferableAccount` extensions. No independent redeemable price >= $1. Excluded from marked subtotal, **not treated as absent**.
-- The previously committed **500 USDC GANG sale escrow** is not part of the 58.047629 wallet USDC balance. No double count.
+| Chain | Fresh native balance | Treatment |
+| --- | ---: | --- |
+| Ethereum | 0.000190807320080339 ETH | < $1; excluded |
+| Base | 0.000137238616283283 ETH | < $1; excluded |
+| Arbitrum | 0.000003959328931033 ETH | < $1; excluded |
+| Optimism | 0.000065278581034767 ETH | < $1; excluded |
+| Unichain | 0.000020589846025254 ETH | < $1; excluded |
+| Ink | 0.000003101575720485 ETH | < $1; excluded |
+| Linea | 0.000283128973717299 ETH | < $1; excluded |
+| World Chain | 0.000106736504323280 ETH | < $1; excluded |
+| BNB Chain | 0.000006838245578456 BNB | < $1; excluded |
+| Polygon | 0.2912959076072843 POL | < $1; excluded |
+| Monad | 0.3817997 MON | < $1; excluded |
+| HyperEVM | 0.000234033730511199 HYPE | < $1; excluded |
+| MegaETH | 0.000082071511230598 native units | denomination/mark unresolved; excluded |
 
-### Ethereum — DIRECT_CHAIN
+- Ethereum canonical USDC balance confirmed **0** by direct filtered `getTokenBalances`.
+- EVM ERC-20 coverage is **INCOMPLETE**: Alchemy full listings for Ethereum/Base/Optimism/BNB/Polygon exceeded response limits; Blockscout returned partial priced pages for Ethereum, Optimism and Arbitrum (none independently verified at >=$1 in those checked pages), with Base/Polygon blocked by exhausted PRO credits. Several other networks contain unpriced ERC-20 receipts. No exhaustive token-portfolio zero or no-other-assets assertion.
+- Ink Tydro Ink Points remain present, but lack a reliable executable quote; no invented USD value.
+- Ethereum Credits collection `0x97630aA70AB14ed9883B41dAfccBc11349723043` **0 NFTs held**, Alchemy owner-specific read at block **26163166**, 2026-10-10 16:15:59 UTC.
+- Unichain UNICRED contract `0xf60de24F228dc7Ca6fF025958d2eE3A956ED88E5` **0 NFTs held**, Alchemy owner-specific read at block **60900610**, 2026-10-10 16:16:09 UTC.
+- Other Ethereum NFTs/Ink NFT rights lack an independently verified sale quote and are excluded from USD NAV, **not asserted zero inventory**. Solana enhanced owner-asset enumeration failed; classic SPL/Token-2022 RPC checks above succeeded.
 
-- Native ETH: **0.000190807320080339 ETH**, approximately **$0.47** at $2,487.96, **EXCLUDED** under individual position < $1 rule. This replaces the October 8 native balance of 0.000904693862403571 ETH.
-- Canonical Ethereum USDC `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`: fresh direct ERC-20 balance **0**.
-- Token inventory endpoint returned >8KB and truncated in one provider response; some unsolicited/historical ERC-20 records remain **UNRESOLVED**. No unpriced receipt is assigned $0 or included.
+### Sui / user-confirmed, not chain verified
 
-### Ink — DIRECT_CHAIN
+The latest explicit user-confirmed Sui account state remains **0**, with no fresh supported Sui-native RPC result in this refresh. Label `USER_CONFIRMED`, never `DIRECT_CHAIN`.
 
-- Native ETH: **0.000003101575720485 ETH**, approximately **$0.0077** at $2,487.96, **EXCLUDED**. The October 8 previous balance of 0.010133156790964273 ETH (~$25 at current price) is superseded. No cause or destination is inferred from balances alone.
-- Tydro Ink Points token `0x40abd730cc9da34a8ee9823feabdba35e50c4ac7` present, but Alchemy contract quote returned **price not found**; **UNPRICED / EXCLUDED**, not zero balance.
-- Known INK NFT rights stay unpriced; no refreshed executable NFT sale quote.
+## Off-chain accounts and capital classification
 
-### Below-$1 chain balances — excluded
+### Binance / last user screenshot, 2026-10-09 22:18 Bangkok
 
-Fresh direct native RPC October 9 confirmed the following individually below $1, prices as listed in reference section:
+- Screenshot account total **~656.07 USDT-equivalent**; **655.55477225 USDC flexible Earn** is the underlying holding, not a second asset. Accrued displayed interest **0.8927689 USDC is already included**.
+- `USER_CONFIRMED_HISTORICAL_2026-10-09`. No connected private Binance read on October 10, so today's real balance/withdrawability **UNVERIFIED**. The cited promo APR is variable and not used to accrue invented earnings.
+- Classified `INVESTMENT_RESERVE`, but parked in Earn, subject to withdrawal and platform conditions.
 
-- Ethereum: 0.000190807320080339 ETH (~$0.47).
-- Ink: 0.000003101575720485 ETH (~$0.0077).
-- Base: 0.000137238616283283 ETH (~$0.34).
-- Unichain: 0.000020589846025254 ETH (~$0.05).
-- Arbitrum: 0.000003959328931033 ETH (~$0.01).
-- Optimism: 0.000065278581034767 ETH (~$0.16).
-- Linea: 0.000283128973717299 ETH (~$0.70).
-- World Chain: 0.00010673650432328 ETH (~$0.27).
-- BNB Chain: 0.000006838245578456 BNB (~$0.005).
-- Polygon: 0.2912959076072843 POL (~$0.029).
-- Monad: 0.3817997 MON (~$0.009).
-- HyperEVM: 0.000234033730511199 HYPE (~$0.020).
-- MegaETH native: 0.000082071511230598 (assuming ETH-equivalent ~$0.20; underlying native denomination not independently re-verified; omit from NAV).
-- Arbitrum canonical USDC 1 raw smallest unit (0.000001 USDC); Base canonical USDC 252 raw smallest units (0.000252 USDC). Excluded.
-- Some other token accounts were found across networks, but their decimals/asset identities and independently realizable prices are incomplete; they are **UNRESOLVED, NOT ZERO**. Broad Alchemy multichain enumeration and several large per-network lists truncated at response limits. Blockscout sampled Ink/Arbitrum/Optimism and partial Ethereum, but failed on Base/Polygon due to API credits; several chains lack coverage. Do not assert exhaustive no-assets on those chains.
-- No individual confirmed ERC-20 holding with independently verifiable value >= $1 was added to this snapshot. Unsupported or unknown ERC-20s/NFTs remain outside marked subtotal pending actual identity/price verification.
+### Bybit / last user screenshot, 2026-10-09 22:18 Bangkok
 
+- Historical screenshot **353.173611 USDC (~$353.42 displayed)**, including 353.087100 Earn / 0.086456 unified / 0.000055 funding.
+- `USER_CONFIRMED_HISTORICAL_2026-10-09`. No live account read.
+- **BYBIT = EXCLUDED_FROM_INVESTMENT_CAPITAL** in its entirety, even if an individual position would otherwise exceed $1. Reserved for personal living and rent.
 
-### Sui — USER_CONFIRMED
+## Material capital reference (not realized profit)
 
-- **SUI chain assets = 0**
+| Bucket | USD reference | Freshness / status |
+| --- | ---: | --- |
+| Solana USDC + SOL (each >= $1) | **~$62.31** | 2026-10-10 finalized chain, contemporaneous approximate quotes |
+| Binance flexible Earn | **~$656.07** | 2026-10-09 user screenshot, NOT 2026-10-10 live |
+| **Cross-source indicative investment reference** | **~$718.38** | mixed freshness; **not** audited full NAV or Mission PnL |
+| GANG / The Syndicate escrow | **500 USDC historical commitment** | 2026-10-10 FundingRecord account re-read; illiquid/pending and excluded from above |
+| Bybit living/rent cash | **~$353.42 historical UI mark** | excluded completely |
 
-This is the latest explicit user-confirmed state. Do not carry forward any old SUI position.
+The GANG FundingRecord `GgFwSstgG9e6XDEWAc4wrcD8EqVaqHpzo7ScvNGEEQot` was still present, owner `moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM`, at Solana finalized slot **455317963**. The stored funding amount's little-endian 8-byte field remains **500,000,000 raw USDC units = 500 USDC**. This confirms committed historical escrow; **final allocation/claim/refund and recoverability still UNCONFIRMED** pending the raise's settlement. The scheduled close remains **2026-10-12 00:30:01 Asia/Bangkok** per prior recorded launch contract, not a guaranteed claim time. See `positions/gang.md`.
 
-## CEX / off-chain capital buckets
+JUMP / Jumper Legion **rejected / 0 allocated / 1,000 USDC already refunded**, per existing on-chain settlement record `positions/jump.md`. Do not add its refund or expected token position again. The refund transaction was previously verified, **not re-executed/re-fetched in this October 10 snapshot**.
 
+## Current status vs historic provenance
 
-### Binance — USER_CONFIRMED / PARKED INVESTMENT RESERVE
-
-Latest user screenshots: **2026-10-09 approximately 22:18 Bangkok**, Savings/Earn screen:
-- **656.07 USDT estimated TOTAL ASSETS** (exchange's display mark, approximately USD $656.07), superseding October 8 UI estimate of 631.20.
-- Actual position: **655.55477225 USDC**, one **Flexible Earn** holding (one product).
-- App shows **annual rate up to 4.22%**, variable and not guaranteed; cumulative interest displayed **0.8927689 USDC** (included in held USDC; **DO NOT add again**).
-- The separate **BFUSD auto-subscription enabled, APR 2.58%** banner is **not a separate proved BFUSD holding**. Do not add notional BFUSD assets.
-- UI-implied USDC-to-USDT mark is embedded in the displayed 656.07; do not treat 655.55477225 USDC plus 656.07 USDT as separate assets.
-- Previous October 8 UI reference: 631.20; this screen increases UI-estimated value by **24.87 USDT**. Difference is not proof of interest/trading profit or external transfer.
-- Categorization: **USER_CONFIRMED / INVESTMENT RESERVE IN EARN**. Entire displayed mark included in investable reference, subject to current platform availability/withdrawal terms. No orders, Earn redemption, subscriptions or transfers authorized by screenshot.
-
-### Bybit — USER_CONFIRMED / NON-INVESTMENT PERSONAL CASH
-
-Latest user screenshot: **2026-10-09 approximately 22:18 Bangkok**:
-- USDC total **353.173611 USDC**, UI net valuation approximately **$353.42** at indicated index price $1.0007.
-- Savings/Earn **353.087100 USDC** (99.97% on UI).
-- Unified trading **0.086456 USDC** (~$0.08, excluded by < $1 policy if displayed separately).
-- Funding account **0.000055 USDC** (~$0.00, excluded).
-- Displayed cumulative PnL **+$0.24 (+0.07%)** is Bybit's UI account data, not Mission PnL and not counted as additional asset.
-- Previous screenshot showed 435.948711 USDC ($436.16 UI account); changed amount is **not** inferred to be an investment transfer or realized loss.
-- **The ENTIRE Bybit wallet/account is explicitly excluded** from Mission investment capital, liquid NAV, $300 budget, and capital reference. Retained solely as living-expense and next-month rent capital.
-
-`BYBIT = EXCLUDED_FROM_INVESTMENT_CAPITAL`
-
-## JUMP / Jumper Legion — REJECTED / REFUND COMPLETE
-
-- application result: **UNSUCCESSFUL / REJECTED**
-- final allocation: **0 JUMP / 0 USDC accepted**
-- original deposit: **1,000 USDC**
-- refund status: **COMPLETE ON-CHAIN**
-- refund transaction: `0x3d3264417775aa9cf0bf5d83f69f00b2ada9e01852784bc52897264025c5e0b5`
-- refund transfer timestamp: `2026-10-06T17:28:23Z`
-
-Latest direct contract state read after refund:
-
-- `investedCapital = 0`
-- `hasSettled = false`
-- `hasClaimedExcess = false`
-- `hasRefunded = true`
-- `vestingAddress = 0x0000000000000000000000000000000000000000`
-
-The sale contract transferred **1,000 USDC** back to the participating wallet. Do not carry a pending JUMP sale asset or JUMP token position forward, and do not add the refund as a separate asset on top of current wallet/CEX balances.
-
-
-## Current marked capital reference
-
-### Verified individual liquid assets >= $1 on-chain (direct RPC, GANG sale escrow excluded)
-
-- Solana USDC: **58.047629 USDC** (~**$58.09**).
-- Solana SOL: **0.038163041 SOL** (~**$4.18**).
-- Ethereum ETH, Ink ETH and all other individually confirmed native balances have fallen below the $1 rule; excluded.
-- No freshly price-verified ERC-20/Token-2022 asset >= $1 added. Unpriced tokens/NFTs remain unresolved, not presumed valueless.
-
-**Verified material on-chain subtotal: ~$62.27.**
-
-### Binance investment reserve
-
-- Binance screenshot UI total: **~$656.07**.
-- Underlying asset: **655.55477225 USDC in flexible Earn**, cumulative interest already included.
-
-### Combined known marked investment reference
-
-**~$718.34 = ~$62.27 direct chain material positions + $656.07 Binance exchange UI valuation.**
-
-This is mixed-source, mixed-freshness, **not Mission PnL**. It is not a guarantee that the full Earn position is immediately withdrawable. Any unsupported/unpriced tokens, illiquid NFTs and pre-TGE/private rights remain outside this marked reference.
-
-**Separately**, the original **500 USDC GANG / The Syndicate** commitment remains an illiquid pre-settlement historical cost and is already absent from current wallet USDC. An exposure-plus-historical-cost view is **~$1,218.34 = ~$718.34 + $500**, **NOT current liquidation NAV** and not two separate 500 USDC assets.
-
-**Excluded Bybit personal cash: 353.173611 USDC (~$353.42 UI valuation), investment contribution $0.**
-
-
-### GANG / Backable — verified ICO escrow, pending settlement
-
-- Deposit: **500 USDC**, on 2026-10-08 12:57:48 Bangkok from canonical Solana wallet.
-- Tx: `LLxbLZNJYKcWGchRt7QNwnx8UKs4gzu5rYC2CFbRWzm9FzjrCjFHaMbKeebKHZAc8gkcympJTqioHGp2f7ifYia`
-- Individual FundingRecord: `GgFwSstgG9e6XDEWAc4wrcD8EqVaqHpzo7ScvNGEEQot`, committed=500, approved=0 (pre-settlement), token claim=false, refund=false.
-- Token Mint: `syQqkspvb2PRr1meJ5pJDmhgxwc4hUou2TMjjrTmeta`; **no GANG public-sale tokens claimed yet**.
-- Scheduled sale end: **2026-10-12 00:30:01 Bangkok**, but exact claim/refund availability remains unknown pending final close and completion.
-- Accounting: removed 500 from liquid Solana USDC. The escrowed commitment is cost-basis tracking only; do not mark as a second 500 in NAV.
-- Position detail: `crypto-300-profit-mission/positions/gang.md`.
-
-
-### Personal cash excluded from investment
-
-- Bybit: **353.173611 USDC** (2026-10-09 screenshot UI value ~**$353.42**) for living expenses and next month's rent. Entire account excluded.
+The original six Credits NFT positions are **all exited** and UNICRED #230 is **not owned**. PONS, XRP/Variational and old meme trading sleeves remain historical/closed; do not report them as open holdings. Other private/ICO/points rights below are a separate **historical rights and cost register**, not an immediately liquid wallet or a claim of October 10 re-verification.
 
 ## Pre-TGE / private / points rights inventory
 
