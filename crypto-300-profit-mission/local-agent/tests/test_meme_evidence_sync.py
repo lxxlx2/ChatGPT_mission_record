@@ -248,3 +248,27 @@ def test_mac_bootstrap_zip_final_status_is_verified_and_preserves_evidence(tmp_p
         assert json.loads(archive.read("sanitized-pending/frank/event.json"))["poll_count"] == 200
         assert json.loads(archive.read("frank-d0-local-index.json"))["local_observed_mints"] == 32
     assert not packet.with_name(packet.name + ".summary-tmp").exists()
+
+
+def test_git_frank_scan_keeps_full_nonsignal_watchlist(tmp_path):
+    spool = EvidenceSpool(tmp_path)
+    health = {"poll_count": 900, "status": "RUNNING",
+              "last_poll_at": "2026-10-11T03:01:00+00:00"}
+    rows = []
+    for i in range(32):
+        rows.append({"mint": MINT if i == 0 else "H" + str(i).zfill(42),
+                     "watch_state": "MODEL_OPEN" if i < 5 else "HISTORY_SELL_ONLY",
+                     "local_recognized_buys": 0 if i >= 5 else 1,
+                     "local_recognized_sells": 1 if i >= 5 else 0,
+                     "wallet_secret": "DO_NOT_PUBLISH",
+                     "current_chain_balance_verified": False})
+    p = spool.frank_scan(poll_count=900, health=health,
+                         observed_watchlist={"summary": {"total_observed": 32}, "rows": rows},
+                         signal_candidates=[])
+    j = json.loads(p.read_text())
+    assert len(j["observed_watchlist"]["rows"]) == 32
+    assert j["observed_watchlist"]["total_observed"] == 32
+    assert j["observed_watchlist"]["truncated"] is False
+    assert j["signal_eligible_candidates_sample"] == []
+    assert "DO_NOT_PUBLISH" not in p.read_text()
+    assert j["observed_watchlist"]["rows"][0]["watch_state"] == "MODEL_OPEN"
