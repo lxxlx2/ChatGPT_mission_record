@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+  "chain": "bnb-mainnet",
+  "source": "Alchemy complete per-contract inbound/outbound ERC20 category transfer reads, maxCount 5, no remaining pagination",
+  "scoped_two_additional_tokens": [
+    {
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "dirs": [
+        {
+          "direction": "in",
+          "more_pages": false,
+          "events": [
+            {
+              "hash": "0x23503a25cec46689853897ef24ba20a80ee249faf6579654c6c8d76149ba305d",
+              "block": 65814102,
+              "raw": "0x9ea917f80ef2fd2",
+              "from": "0xd9704dabefd6500b9b469ee02e00a0b3b0ab6f8a",
+              "to": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+              "id": "0x23503a25cec46689853897ef24ba20a80ee249faf6579654c6c8d76149ba305d:log:276"
+            },
+            {
+              "hash": "0xf4a9dd9bc7e86bfb9ba7af34a264d61ddfe024e3396645792336e084379557b5",
+              "block": 65814110,
+              "raw": "0x936e079bd041fd0",
+              "from": "0xd9704dabefd6500b9b469ee02e00a0b3b0ab6f8a",
+              "to": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+              "id": "0xf4a9dd9bc7e86bfb9ba7af34a264d61ddfe024e3396645792336e084379557b5:log:294"
+            },
+            {
+              "hash": "0x6ef8dfb624804ebdb173b8400d64f47356cdde348cf247119d097e7a4e0e2b22",
+              "block": 65814114,
+              "raw": "0x8c03657c571178c",
+              "from": "0xd9704dabefd6500b9b469ee02e00a0b3b0ab6f8a",
+              "to": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+              "id": "0x6ef8dfb624804ebdb173b8400d64f47356cdde348cf247119d097e7a4e0e2b22:log:370"
+            }
+          ]
+        },
+        {
+          "direction": "out",
+          "more_pages": false,
+          "events": [
+            {
+              "hash": "0x145d8f7bf744c38f63a7e3bc0f4e89649bfcb4d0047c6db3cf50c4b1e5eaeffb",
+              "block": 65814174,
+              "raw": "0x1be1a8510364672e",
+              "from": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+              "to": "0xd9704dabefd6500b9b469ee02e00a0b3b0ab6f8a",
+              "id": "0x145d8f7bf744c38f63a7e3bc0f4e89649bfcb4d0047c6db3cf50c4b1e5eaeffb:log:293"
+            }
+          ]
+        }
+      ],
+      "raw_in": "2009071974686680878",
+      "raw_out": "2009071974686680878",
+      "raw_diff": "0",
+      "transfers": 4,
+      "complete": true
+    },
+    {
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "dirs": [
+        {
+          "direction": "in",
+          "more_pages": false,
+          "events": [
+            {
+              "hash": "0xbbe12e3cce1c7465b5959b769aa6ff08cd0351af5c20fee85612b4a38ae64387",
+              "block": 74381368,
+              "raw": "0x1d1dc7a2f586bedaa",
+              "from": "0x59d8f3f1467a5bf05f0fcc2288cda9006a103f95",
+              "to": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+              "id": "0xbbe12e3cce1c7465b5959b769aa6ff08cd0351af5c20fee85612b4a38ae64387:log:374"
+            }
+          ]
+        },
+        {
+          "direction": "out",
+          "more_pages": false,
+          "events": [
+            {
+              "hash": "0xf95fba9cd055c59680a09c7f5b5c9103186bbf4a7e769183a229014e6be11a4f",
+              "block": 74382612,
+              "raw": "0x1d1dc7a2f586bedaa",
+              "from": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+              "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+              "id": "0xf95fba9cd055c59680a09c7f5b5c9103186bbf4a7e769183a229014e6be11a4f:log:2"
+            }
+          ]
+        }
+      ],
+      "raw_in": "33568840066278354346",
+      "raw_out": "33568840066278354346",
+      "raw_diff": "0",
+      "transfers": 2,
+      "complete": true
+    }
+  ],
+  "production": "NO_GO",
+  "cautions": [
+    "Complete ERC20 inventory not sufficient to identify owner BNB/USD PnL",
+    "Another two tokens from same 19-CA wallet sample are required to guard against two-winning-token selection bias"
+  ]
+}
