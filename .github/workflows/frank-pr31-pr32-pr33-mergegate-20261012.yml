@@ -65,8 +65,13 @@ jobs:
               *) exit 4;;
             esac
             echo "MERGING_PR=$n $pin" | tee -a "$report"
-            if ! git -c merge.conflictStyle=zdiff3 merge --no-ff --no-commit "$pin" >> "$report" 2>&1; then
-              echo "MERGE_CONFLICT=YES PR=$n" | tee -a "$report"
+            if ! git -c user.name='CI Merge Test' -c user.email='ci-merge@example.invalid' -c merge.conflictStyle=zdiff3 merge --no-ff --no-commit "$pin" >> "$report" 2>&1; then
+              echo "MERGE_ATTEMPT_FAILED_PR=$n" | tee -a "$report"
+              if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
+                echo "MERGE_CONFLICT=YES" | tee -a "$report"
+              else
+                echo "MERGE_FAILURE_NONCONFLICT=YES" | tee -a "$report"
+              fi
               git diff --name-only --diff-filter=U | tee -a "$report"
               git ls-files -u | tee -a "$report"
               git status --short | tee -a "$report"
