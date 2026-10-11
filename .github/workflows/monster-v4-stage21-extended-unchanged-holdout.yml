@@ -1,0 +1,48 @@
+name: Monster Stage21 Ten Unseen Dates Frozen Stage20 V4 Replay
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage21_extended_holdout.py'
+      - '.github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: monster-stage21-ten-fixed-new-dates-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  original-unchanged-v4-ten-frozen-dates:
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        date: ['2025-03-09','2025-04-09','2025-05-09','2025-06-09','2025-07-09','2025-08-09','2025-09-09','2025-10-09','2026-03-09','2026-06-09']
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify byte-identical Stage20 rules and frozen historical target
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage21_extended_holdout.py tests/test_monster_v4_stage21_extended_holdout.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage21_extended_holdout.py
+      - name: Verify official Binance Spot full 758-symbol SHA256 1m 60h source and unchanged Stage20 V4 quality risk exit
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage21_extended_holdout.py --date ${{ matrix.date }} --output /tmp/monster_stage21_${{ matrix.date }}.json
+      - name: Archive real source checksum, all original D0 D1 events and five fixed simulation arms
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage21-fixed-v4-758-${{ matrix.date }}
+          path: /tmp/monster_stage21_${{ matrix.date }}.json
+          if-no-files-found: warn
+          retention-days: 30
