@@ -1,0 +1,407 @@
+{
+  "schema": "MONSTER_STAGE30_FULL_NEW_DATE_V4_168H_STRICT_36_ARTIFACT_SHA_AGGREGATE_SUCCESS_V1",
+  "date": "2026-10-11",
+  "market": "BINANCE_SPOT_758_FROZEN_AS_OF_2026_10_PLUS_HISTORICAL",
+  "preregistered_contract": "monster_stage30_six_new_dates_full758_7d_watch_holdout_prereg_20261011.json",
+  "contract_commit": "1362f9aa44e6b0b726200d95c4067e991acb3c72",
+  "original_source_36_SHA_proof": "monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json",
+  "original_ci_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38154393594",
+  "source_ci_head": "bd37cdf4f006845b9ce7c8b81a4c6c2f518d0a57",
+  "original36_zip_inner_json_sha_reverified_by_source_ci": true,
+  "independent_aggregate_ci": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38155841570",
+  "aggregate_ci_status": "SUCCESS",
+  "aggregate_source_36_zip_inner_json_sha_recomputed": true,
+  "aggregate_artifact": {
+    "id": 11708517709,
+    "zip_sha256": "60bd0e7eaadadb67077d1d3457c14dbb0e30146d2bf0e9c4e89afc35c7c0c9fb",
+    "raw_json_sha256": "47240831f200c4a262d3a66ea5ad157d84a76c87e6ea483d15f223b8637b34ff",
+    "raw_json_bytes": 58415
+  },
+  "frozen_dates": [
+    {
+      "D1": 73,
+      "attempted": 758,
+      "complete": 392,
+      "date": "2025-01-19",
+      "early_2x": 1,
+      "gross_10x": 0,
+      "gross_2x": 2,
+      "gross_5x": 0,
+      "watch": 80
+    },
+    {
+      "D1": 184,
+      "attempted": 758,
+      "complete": 394,
+      "date": "2025-04-19",
+      "early_2x": 10,
+      "gross_10x": 0,
+      "gross_2x": 12,
+      "gross_5x": 1,
+      "watch": 213
+    },
+    {
+      "D1": 108,
+      "attempted": 758,
+      "complete": 404,
+      "date": "2025-07-19",
+      "early_2x": 7,
+      "gross_10x": 0,
+      "gross_2x": 7,
+      "gross_5x": 1,
+      "watch": 120
+    },
+    {
+      "D1": 53,
+      "attempted": 758,
+      "complete": 433,
+      "date": "2025-10-19",
+      "early_2x": 2,
+      "gross_10x": 0,
+      "gross_2x": 2,
+      "gross_5x": 0,
+      "watch": 68
+    },
+    {
+      "D1": 125,
+      "attempted": 758,
+      "complete": 432,
+      "date": "2026-04-19",
+      "early_2x": 6,
+      "gross_10x": 0,
+      "gross_2x": 6,
+      "gross_5x": 0,
+      "watch": 143
+    },
+    {
+      "D1": 100,
+      "attempted": 758,
+      "complete": 459,
+      "date": "2026-07-19",
+      "early_2x": 4,
+      "gross_10x": 0,
+      "gross_2x": 4,
+      "gross_5x": 0,
+      "watch": 136
+    }
+  ],
+  "attempted": 4548,
+  "source_full_168h_joint": 2514,
+  "source_states": {
+    "CENSORED_GAPPED_216H_MINUTE_ARCHIVE": 1,
+    "CENSORED_GT_NOT_COMPLETE_168H": 2033,
+    "COMPLETE_168H_CONTINUOUS_V4": 2514
+  },
+  "WATCH": 760,
+  "D1_per_symbol": 643,
+  "real_production_V4_original_thresholds_changed": false,
+  "gross_2x_vs_first_1m": {
+    "total": 33,
+    "early": 30,
+    "late": 2,
+    "no_watch": 1,
+    "recent_prior6h": 25,
+    "recent_prior24h": 28,
+    "missed": [
+      {
+        "date": "2025-01-19",
+        "symbol": "VTHOUSDT",
+        "actual_first_2x_UTC": "2025-01-21T10:00:00Z",
+        "first_watch_UTC": "2025-01-21T10:03:00Z",
+        "classification": "LATE_3_MIN"
+      },
+      {
+        "date": "2025-04-19",
+        "symbol": "PENGUUSDT",
+        "actual_first_2x_UTC": "2025-04-25T13:08:00Z",
+        "first_watch_UTC": null,
+        "classification": "NO_WATCH_168H"
+      },
+      {
+        "date": "2025-04-19",
+        "symbol": "CETUSUSDT",
+        "actual_first_2x_UTC": "2025-04-25T01:10:00Z",
+        "first_watch_UTC": "2025-04-25T06:30:00Z",
+        "classification": "LATE_5H20M"
+      }
+    ]
+  },
+  "gross_5x_vs_first_1m": {
+    "total": 2,
+    "early": 2,
+    "late": 0,
+    "no_watch": 0,
+    "within_prior6h": 2,
+    "cases": [
+      {
+        "date": "2025-04-19",
+        "symbol": "ALPACAUSDT",
+        "cross5x": "2025-04-25T14:29:00Z",
+        "first_watch": "2025-04-19T12:18:00Z",
+        "nearest_prior_watch_min": 182
+      },
+      {
+        "date": "2025-07-19",
+        "symbol": "SPKUSDT",
+        "cross5x": "2025-07-23T11:09:00Z",
+        "first_watch": "2025-07-21T05:51:00Z",
+        "nearest_prior_watch_min": 12
+      }
+    ]
+  },
+  "gross_10x": {
+    "verifiable_cases": 0,
+    "early": 0,
+    "late": 0,
+    "no_watch": 0
+  },
+  "all_24h_original_WATCH_20bps": {
+    "independent_30USDT_proxy_PnL_sum": 17.575264,
+    "losses": 297,
+    "mean_net_pct": 0.136242,
+    "median_net_pct": -5.638822,
+    "proxy_evaluable": 430,
+    "real_L2_execution_verified": false,
+    "same_symbol_24h_overlap_skip": 250,
+    "source_censored_excluding_overlap": 80,
+    "source_proxy_status_counts": {
+      "CENSORED_MINUTE_QUOTE_LT_30_USDT": 18,
+      "CENSORED_NO_COMPLETE_EXIT": 1,
+      "CENSORED_NO_ENTRY_TRADES": 1,
+      "CENSORED_ZERO_VOLUME_EXIT": 21,
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT": 39,
+      "PRICE_PROXY_ONLY": 430,
+      "SKIP_SAME_SYMBOL_24H_CAPITAL_OCCUPIED": 250
+    },
+    "watch_count": 760,
+    "wins": 133
+  },
+  "all_24h_original_WATCH_100bps": {
+    "independent_30USDT_proxy_PnL_sum": -187.469686,
+    "losses": 311,
+    "mean_net_pct": -1.453253,
+    "median_net_pct": -7.136648,
+    "proxy_evaluable": 430,
+    "real_L2_execution_verified": false,
+    "same_symbol_24h_overlap_skip": 250,
+    "source_censored_excluding_overlap": 80,
+    "source_proxy_status_counts": {
+      "CENSORED_MINUTE_QUOTE_LT_30_USDT": 18,
+      "CENSORED_NO_COMPLETE_EXIT": 1,
+      "CENSORED_NO_ENTRY_TRADES": 1,
+      "CENSORED_ZERO_VOLUME_EXIT": 21,
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT": 39,
+      "PRICE_PROXY_ONLY": 430,
+      "SKIP_SAME_SYMBOL_24H_CAPITAL_OCCUPIED": 250
+    },
+    "watch_count": 760,
+    "wins": 119
+  },
+  "watch_same_poll_groups": {
+    "isolated_1": {
+      "WATCH": 713,
+      "valid": 402,
+      "wins": 125,
+      "losses": 277,
+      "median_net20": -5.584263,
+      "independent30U20": 46.536804
+    },
+    "local_2_to_7": {
+      "WATCH": 47,
+      "independent_poll_episodes": 23,
+      "valid": 28,
+      "wins": 8,
+      "losses": 20,
+      "median_net20": -9.388775,
+      "independent30U20": -28.96154
+    },
+    "BURST_8PLUS": {
+      "WATCH": 0,
+      "independent_poll_episodes": 0,
+      "dates": 0,
+      "price_proxy_evaluable": 0
+    }
+  },
+  "original_WATCH_funded_fixed_lot_30USDT_1_slot": {
+    "optimistic_return_unknown_principal_20bps": {
+      "cash_overdrawn": false,
+      "censored_principal_recovery_pct_UNVERIFIED": 100,
+      "counts": {
+        "losing": 1,
+        "selected": 1,
+        "selected_evaluable": 1,
+        "settled": 1,
+        "skip_insufficient_cash_30u": 499,
+        "skip_slots_busy": 10,
+        "winning": 0
+      },
+      "final_cash_USDT": 25.564826,
+      "gross_lot_entries_USDT": 30,
+      "gross_settlements_USDT": 25.564826,
+      "initial_cash_USDT": 30,
+      "lot_policy": "FIXED_30U",
+      "lowest_realized_book_NAV_USDT": 25.564826,
+      "max_positions": 1,
+      "not_real_wallet_execution": true,
+      "peak_realized_book_NAV_USDT": 30,
+      "realized_proxy_profit_USDT": -4.435174,
+      "slippage_bps_side": 20
+    },
+    "optimistic_return_unknown_principal_100bps": {
+      "cash_overdrawn": false,
+      "censored_principal_recovery_pct_UNVERIFIED": 100,
+      "counts": {
+        "losing": 1,
+        "selected": 1,
+        "selected_evaluable": 1,
+        "settled": 1,
+        "skip_insufficient_cash_30u": 499,
+        "skip_slots_busy": 10,
+        "winning": 0
+      },
+      "final_cash_USDT": 25.159027,
+      "gross_lot_entries_USDT": 30,
+      "gross_settlements_USDT": 25.159027,
+      "initial_cash_USDT": 30,
+      "lot_policy": "FIXED_30U",
+      "lowest_realized_book_NAV_USDT": 25.159027,
+      "max_positions": 1,
+      "not_real_wallet_execution": true,
+      "peak_realized_book_NAV_USDT": 30,
+      "realized_proxy_profit_USDT": -4.840973,
+      "slippage_bps_side": 100
+    }
+  },
+  "original_WATCH_funded_fixed_lot_300USDT_10_slots": {
+    "optimistic_unknown_exit_20bps": {
+      "cash_overdrawn": false,
+      "censored_principal_recovery_pct_UNVERIFIED": 100,
+      "counts": {
+        "censored_settled": 42,
+        "losing": 179,
+        "selected": 289,
+        "selected_censored": 42,
+        "selected_evaluable": 247,
+        "settled": 289,
+        "skip_insufficient_cash_30u": 190,
+        "skip_slots_busy": 31,
+        "winning": 68
+      },
+      "final_cash_USDT": 220.510594,
+      "gross_lot_entries_USDT": 8670,
+      "gross_settlements_USDT": 8590.510594,
+      "initial_cash_USDT": 300,
+      "lot_policy": "FIXED_30U",
+      "lowest_realized_book_NAV_USDT": 193.457201,
+      "max_positions": 10,
+      "not_real_wallet_execution": true,
+      "peak_realized_book_NAV_USDT": 319.206202,
+      "realized_proxy_profit_USDT": -79.489406,
+      "slippage_bps_side": 20
+    },
+    "extreme_zero_unknown_exit_20bps": {
+      "cash_overdrawn": false,
+      "censored_principal_recovery_pct_UNVERIFIED": 0,
+      "counts": {
+        "censored_settled": 11,
+        "losing": 87,
+        "selected": 135,
+        "selected_censored": 11,
+        "selected_evaluable": 124,
+        "settled": 135,
+        "skip_insufficient_cash_30u": 374,
+        "skip_slots_busy": 1,
+        "winning": 37
+      },
+      "final_cash_USDT": 11.853578,
+      "gross_lot_entries_USDT": 4050,
+      "gross_settlements_USDT": 3761.853578,
+      "initial_cash_USDT": 300,
+      "lot_policy": "FIXED_30U",
+      "lowest_realized_book_NAV_USDT": 11.853578,
+      "max_positions": 10,
+      "not_real_wallet_execution": true,
+      "peak_realized_book_NAV_USDT": 300,
+      "realized_proxy_profit_USDT": -288.146422,
+      "slippage_bps_side": 20
+    },
+    "optimistic_unknown_exit_100bps": {
+      "cash_overdrawn": false,
+      "censored_principal_recovery_pct_UNVERIFIED": 100,
+      "counts": {
+        "censored_settled": 32,
+        "losing": 160,
+        "selected": 239,
+        "selected_censored": 32,
+        "selected_evaluable": 207,
+        "settled": 239,
+        "skip_insufficient_cash_30u": 255,
+        "skip_slots_busy": 16,
+        "winning": 47
+      },
+      "final_cash_USDT": 107.222234,
+      "gross_lot_entries_USDT": 7170,
+      "gross_settlements_USDT": 6977.222234,
+      "initial_cash_USDT": 300,
+      "lot_policy": "FIXED_30U",
+      "lowest_realized_book_NAV_USDT": 101.452597,
+      "max_positions": 10,
+      "not_real_wallet_execution": true,
+      "peak_realized_book_NAV_USDT": 303.738363,
+      "realized_proxy_profit_USDT": -192.777766,
+      "slippage_bps_side": 100
+    },
+    "extreme_zero_unknown_exit_100bps": {
+      "cash_overdrawn": false,
+      "censored_principal_recovery_pct_UNVERIFIED": 0,
+      "counts": {
+        "censored_settled": 7,
+        "losing": 75,
+        "selected": 101,
+        "selected_censored": 7,
+        "selected_evaluable": 94,
+        "settled": 101,
+        "skip_insufficient_cash_30u": 408,
+        "skip_slots_busy": 1,
+        "winning": 19
+      },
+      "final_cash_USDT": 3.764068,
+      "gross_lot_entries_USDT": 3030,
+      "gross_settlements_USDT": 2733.764068,
+      "initial_cash_USDT": 300,
+      "lot_policy": "FIXED_30U",
+      "lowest_realized_book_NAV_USDT": 3.764068,
+      "max_positions": 10,
+      "not_real_wallet_execution": true,
+      "peak_realized_book_NAV_USDT": 300,
+      "realized_proxy_profit_USDT": -296.235932,
+      "slippage_bps_side": 100
+    }
+  },
+  "release_gates": {
+    "300U_funded_optimistic_net_gt0": false,
+    "actual_historical_L2_and_real_fill_verified": false,
+    "burst_dates_gte_3": false,
+    "burst_evaluable_gte_30": false,
+    "independent_burst_poll_episodes_gte_6": false,
+    "median100_pct_gt0": false,
+    "median20_pct_gt0": false,
+    "other_AI_review_complete": false,
+    "source_exit_censor_fraction_lte_20pct": true,
+    "win_fraction_gte_55pct": false
+  },
+  "interpretation": [
+    "Stage29 observed 8+ bursts in only two already exposed historical poll events; Stage30 new six dates had exactly zero 8+ events so forward cohort DOES NOT reproduce frequent opportunity nor imply effective BUY filter",
+    "Historical true high price 2x/5x is not a buy/sell fill; 10x event denominator zero means no probability estimate",
+    "All WATCH price proxy median negative under both tested bps; 20bps independent summation slight positive is top-winner concentration with impossible unrestricted capital; 300U actual funded scenario loses even under optimistic unknown-exit full principal return",
+    "Missing hourly or 1m sources are censored, not marked no-WATCH, and real historical point-in-time exchangeInfo and L2 depth unavailable",
+    "All 36 original source ZIP+JSON SHA and official publisher SHA for 1h and 10 daily1m verified twice; no new model threshold trained after new dates",
+    "Actual global Spot Futures shared queue not re-run; Stage28 91 of98 burst candidates LATE in earlier source example",
+    "No actual historical trading, wallet balance, orders, swap fills, execution fees proven"
+  ],
+  "independent_other_AI_review": "NOT_DONE",
+  "real_gmail": "OFF",
+  "automatic_trading": "NO_GO",
+  "Mac_monster_deployment": "NO_GO",
+  "Frank": "UNCHANGED"
+}
