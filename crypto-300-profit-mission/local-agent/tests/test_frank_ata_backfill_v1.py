@@ -699,3 +699,14 @@ def test_http_exception_family_always_retains_partial_artifact(tmp_path, exc_fac
     assert db_path.stat().st_mtime_ns == before
     assert (output.stat().st_mode & 0o777) == 0o600
     assert result["git_sync"] == "NOT_REQUESTED"
+
+
+def test_since_time_zero_cli_help_is_explicit_about_no_time_boundary(capsys):
+    from scripts.frank_ata_backfill import run
+    with pytest.raises(SystemExit) as exit_status:
+        run(["--help"])
+    assert exit_status.value.code == 0
+    output = capsys.readouterr().out
+    assert "0 = no time lower bound" in output
+    assert "budgets still apply" in output
+    assert "bounded recent history only" not in output
