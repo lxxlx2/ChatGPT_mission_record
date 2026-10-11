@@ -1,0 +1,64 @@
+name: Monster Stage22 Official AggTrades Pre-D1 Stop Root Cause
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage22_aggtrade_flow.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage22_aggtrade_flow.py'
+      - '.github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage22-aggtrades-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verified-pre-d1-aggtrades:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        include:
+          - {date: '2025-03-09', artifact_id: 11699770461}
+          - {date: '2025-04-09', artifact_id: 11699530963}
+          - {date: '2025-05-09', artifact_id: 11698873764}
+          - {date: '2025-06-09', artifact_id: 11698144486}
+          - {date: '2025-07-09', artifact_id: 11699139954}
+          - {date: '2025-08-09', artifact_id: 11699371447}
+          - {date: '2025-09-09', artifact_id: 11698564156}
+          - {date: '2025-10-09', artifact_id: 11699566060}
+          - {date: '2026-03-09', artifact_id: 11699261748}
+          - {date: '2026-06-09', artifact_id: 11698194639}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test publisher SHA256 and strict no-future aggressor-side direction
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage22_aggtrade_flow.py tests/test_monster_v4_stage22_aggtrade_flow.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage22_aggtrade_flow.py
+      - name: Fetch immutable original Stage21 daily 758-symbol artifact for the selected date
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/${{ matrix.artifact_id }}/zip > /tmp/monster_stage21_original_${{ matrix.date }}.zip
+      - name: Official publisher-checksummed Spot AggTrades directional causal features for every qualified first D1
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage22_aggtrade_flow.py --date ${{ matrix.date }} --source-artifact /tmp/monster_stage21_original_${{ matrix.date }}.zip --output /tmp/monster_stage22_aggflow_${{ matrix.date }}.json
+      - name: Retain explicit source failures, original exit labels and all new preregistered features
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage22-official-d1-aggflow-${{ matrix.date }}
+          path: /tmp/monster_stage22_aggflow_${{ matrix.date }}.json
+          if-no-files-found: warn
+          retention-days: 30
