@@ -1,0 +1,51 @@
+name: Monster Stage15 Historical Archived Spot Universe V4 Replay
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage15_archive_only.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage15_archive_only.py'
+      - '.github/workflows/monster-v4-stage15-historical-archive-only.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monster-stage15-research-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  archived-spot-universe-v4-replay:
+    strategy:
+      fail-fast: false
+      matrix:
+        date: ['2025-11-17', '2026-02-17', '2026-05-17', '2026-08-17', '2026-09-17']
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm bytecode and 7 source-contract tests before network
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage15_archive_only.py tests/test_monster_v4_stage15_archive_only.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage15_archive_only.py
+      - name: Enumerate all historical Spot symbols from Binance public S3 and replay archive-only USDT symbols
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage15_archive_only.py --date ${{ matrix.date }} --output /tmp/monster_stage15_${{ matrix.date }}.json
+      - name: Preserve every archived-only source, checksum and actual D0-D1 event result
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage15-archive-only-${{ matrix.date }}-official-v4
+          path: /tmp/monster_stage15_${{ matrix.date }}.json
+          if-no-files-found: warn
+          retention-days: 30
