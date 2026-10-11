@@ -185,7 +185,10 @@
       "events_in": 2,
       "events_out": 17,
       "unique_trade_hashes": 19,
-      "timestamps": {},
+      "timestamps": {
+        "entry": 1759291725,
+        "v2_sample_reference": 1759291721
+      },
       "cautions": []
     },
     {
@@ -207,7 +210,10 @@
       "events_in": 17,
       "events_out": 10,
       "unique_trade_hashes": 27,
-      "timestamps": {},
+      "timestamps": {
+        "entry": 1759590107,
+        "v2_sample_reference": 1759590092
+      },
       "cautions": []
     },
     {
@@ -229,7 +235,10 @@
       "events_in": 3,
       "events_out": 3,
       "unique_trade_hashes": 6,
-      "timestamps": {},
+      "timestamps": {
+        "entry": 1767857541,
+        "v2_sample_reference": 1767246411
+      },
       "cautions": []
     },
     {
@@ -251,7 +260,10 @@
       "events_in": 6,
       "events_out": 7,
       "unique_trade_hashes": 13,
-      "timestamps": {},
+      "timestamps": {
+        "entry": 1768058344,
+        "v2_sample_reference": 1759878543
+      },
       "cautions": []
     },
     {
@@ -273,12 +285,15 @@
       "events_in": 4,
       "events_out": 9,
       "unique_trade_hashes": 13,
-      "timestamps": {},
+      "timestamps": {
+        "entry": 1772182672,
+        "v2_sample_reference": 1772182241
+      },
       "cautions": []
     }
   ],
   "reference_warning": "Earliest sampled V2 transfer can be later than Four.meme bonding curve or alternative venue; positive/negative lags do not prove speed or insider status. First wallet incoming transfer is not necessarily a purchase.",
-  "timestamp_status": "PARTIAL_FIRST_SIX",
+  "timestamp_status": "ALL_11_FIRST_ENTRY_AND_WHERE_AVAILABLE_V2_SAMPLE_REFERENCES",
   "backtest_status": "NOT_RUN_NO_EXECUTABLE_QUOTE_SERIES",
   "production": "NO_GO"
 }
