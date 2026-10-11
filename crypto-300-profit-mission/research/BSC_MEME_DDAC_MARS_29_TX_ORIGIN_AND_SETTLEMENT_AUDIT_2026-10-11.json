@@ -301,8 +301,13 @@
         "0x0af40b9fc2b323b36802ccf63c17b70e195d46838d332c1becdcca08d6a567cd:log:573"
       ],
       "block_native_diff_wei": "0",
-      "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "transaction_signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "tx_receipt_status": "PENDING",
+      "signer_matches": false,
+      "transaction_target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "native_tx_value_wei": "0",
+      "method_selector": "0x84da2c7b",
+      "tx_check": "VERIFIED"
     },
     {
       "hash": "0x726e3ae1d2e3ad27f0143334b9184d8706555a1b7246e242042b6e5050bf0693",
@@ -313,8 +318,13 @@
         "0x726e3ae1d2e3ad27f0143334b9184d8706555a1b7246e242042b6e5050bf0693:log:242"
       ],
       "block_native_diff_wei": "0",
-      "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "transaction_signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "tx_receipt_status": "PENDING",
+      "signer_matches": false,
+      "transaction_target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "native_tx_value_wei": "0",
+      "method_selector": "0x84da2c7b",
+      "tx_check": "VERIFIED"
     },
     {
       "hash": "0x43e373611a22b92725a5434ad8b23c13d48d30e596c060173ec1b5e7afdd3f9c",
@@ -326,7 +336,9 @@
       ],
       "block_native_diff_wei": "0",
       "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "tx_receipt_status": "PENDING",
+      "tx_check": "PARSE_FAILED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 9 column 7821)"
     },
     {
       "hash": "0x4f3ecc60a2287fde41419a49cded3f8e1d2ff4b15d25f70a7abf1e380150ae03",
@@ -338,7 +350,9 @@
       ],
       "block_native_diff_wei": "0",
       "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "tx_receipt_status": "PENDING",
+      "tx_check": "PARSE_FAILED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 9 column 7821)"
     },
     {
       "hash": "0x1b8ebb303c3a50ef7a5aa4265c6253e694846a6ba1bcb06687170210b0b29ca9",
@@ -350,7 +364,9 @@
       ],
       "block_native_diff_wei": "0",
       "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "tx_receipt_status": "PENDING",
+      "tx_check": "PARSE_FAILED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 8 column 7700)"
     },
     {
       "hash": "0xb0ad6dcb2f5c57a46f89977407989c8eb5f6a03f0c5a834e3afa1166bcf21a51",
@@ -362,7 +378,9 @@
       ],
       "block_native_diff_wei": "0",
       "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "tx_receipt_status": "PENDING",
+      "tx_check": "PARSE_FAILED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 8 column 7700)"
     },
     {
       "hash": "0x9574a98294013648aef6e0c36aedf9fc055455bc3c4041738a12689ef859978a",
@@ -374,7 +392,9 @@
       ],
       "block_native_diff_wei": "0",
       "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "tx_receipt_status": "PENDING",
+      "tx_check": "PARSE_FAILED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 8 column 7700)"
     },
     {
       "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
@@ -386,8 +406,13 @@
         "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3:log:477"
       ],
       "block_native_diff_wei": "97103451021333063",
-      "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "transaction_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "tx_receipt_status": "PENDING",
+      "signer_matches": true,
+      "transaction_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "native_tx_value_wei": "0",
+      "method_selector": "0x4d819a2a",
+      "tx_check": "VERIFIED"
     },
     {
       "hash": "0xcb9d192eb9459e008f4d670f6eafef2a875e8d54e410d464820e2cb13f6fe945",
