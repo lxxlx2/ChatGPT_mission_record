@@ -1,0 +1,56 @@
+name: Monster Stage13 Four Preregistered Dates Full 504 Spot V4 Backtest
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage13_fixed_calendar4_preregistration_20261011.json'
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage12_all504_spot_universe_preregistered_20261011.json'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage13_multiday.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_archive_universe_replay.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage13_multiday.py'
+      - '.github/workflows/monster-v4-stage13-preregistered-multidate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monster-stage13-preregistered-four-dates-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  archived-true-minute-ohlcv-v4-replay:
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        calendar: ['2025-11-17', '2026-02-17', '2026-05-17', '2026-08-17']
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Freeze sample dates and validate genuine microsecond zip + checksum source
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage13_multiday.py tests/test_monster_v4_stage13_multiday.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage13_multiday.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_archive_universe_replay.py
+      - name: Rebuild ALL current504 historical 1m ZIP with SHA and run actual production D0/D1
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage13_multiday.py --date ${{ matrix.calendar }} --output /tmp/monster_stage13_${{ matrix.calendar }}.json
+      - name: Preserve independently archived full per-symbol causal result and missing-source reasons
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage13-full504-${{ matrix.calendar }}-official-1m-v4
+          path: /tmp/monster_stage13_${{ matrix.calendar }}.json
+          if-no-files-found: warn
+          retention-days: 30
