@@ -191,7 +191,11 @@ def test_mac_bootstrap_combines_local_model_and_explicit_dated_source_without_de
         assert report["wallet_total_nav_usd"] is None
         assert "frank-d0-local-index.json" in names
         assert any("frank-history" in n for n in names)
+        assert any("frank-transfer-history/" in n for n in names)
+        assert any("frank-transfer-history-parts/" in n for n in names)
         status = json.loads(z.read("summary.json"))
         assert status["inventory_reconciliation"] == "DATED_POINT_IN_TIME_NOT_LIVE"
+        assert status["frank_transfer_signature_records"] == 0
+        assert status["frank_transfer_history"] == "QUEUED_LOCALLY"
         assert status["git_sync"] == "NOT_REQUESTED"
     assert not (prod / "health.json").exists()
