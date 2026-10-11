@@ -151,6 +151,13 @@ def shared_production_replay(watches,day,market=None,db_opener=production.open_s
         raise ValueError("STAGE28_WATCH_ARRIVAL_ORDER_UNFROZEN")
     with tempfile.TemporaryDirectory(prefix="monster_stage28_shared_d1_") as td:
         db=db_opener(Path(td)/"all_symbols_same.sqlite")
+        source_errors=[]
+        def tracked_market_candles(venue,symbol,now_ms):
+            try:
+                return market.closed_before(venue,symbol,now_ms)
+            except (ValueError,TypeError,OSError,urllib.error.URLError,urllib.error.HTTPError) as exc:
+                source_errors.append(type(exc).__name__+":"+str(exc))
+                raise
         try:
             ix=0
             peak_pending=0
@@ -169,7 +176,9 @@ def shared_production_replay(watches,day,market=None,db_opener=production.open_s
                 pending=db.execute(
                     "SELECT COUNT(*) FROM candidate_queue WHERE status='PENDING'").fetchone()[0]
                 peak_pending=max(peak_pending,pending)
-                q=production.process_queue(db,tick,market.closed_before,limit=8)
+                q=production.process_queue(db,tick,tracked_market_candles,limit=8)
+                if source_errors:
+                    raise RuntimeError("STAGE28_VERIFIED_5M_SOURCE_FAILED:"+source_errors[0][:190])
                 polls+=1
                 selected+=q["selected"];completed+=q["completed"]
                 deferred+=q["deferred"];late+=q["late"]
