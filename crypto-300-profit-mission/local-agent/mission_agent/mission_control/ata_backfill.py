@@ -136,6 +136,15 @@ def validate_transaction(tx: dict, signature: str, ata: str, mint: str,
         return {"signature": signature, "status": "SLOT_UNAVAILABLE"}
     if tx["meta"].get("err") is not None:
         return {"signature": signature, "slot": slot, "status": "FAILED_TX_NO_BALANCE_PROOF"}
+    # getTransaction must bind its returned transaction to the exact signature
+    # looked up. ATA/mint/owner balances alone do not prove transaction identity.
+    # jsonParsed getTransaction includes the ordered transaction.signatures array.
+    transaction = tx.get("transaction")
+    signatures = transaction.get("signatures") if isinstance(transaction, dict) else None
+    if (not isinstance(signatures, list) or not signatures
+            or signatures[0] != signature):
+        return {"signature": signature, "slot": slot,
+                "status": "TRANSACTION_SIGNATURE_UNVERIFIED"}
     try:
         message = tx["transaction"]["message"]
         pubkeys, signers = _keys(message)
