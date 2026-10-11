@@ -242,15 +242,26 @@ function renderRuntime(runtime, control) {
     ? `上次心跳 ${Math.round(heartbeat)} 秒前`
     : '心跳时间未知';
   const controlText = translated(runtimeLabel,control?.status,'未知');
-  const hasBreakdown = control?.manual_review_breakdown_available === true;
+  const requiredBreakdown = [
+    'manual_review_actionable_count', 'manual_review_pending_count',
+    'manual_review_blocked_count', 'manual_review_expired_unsent_count',
+    'manual_review_visible_total_count',
+  ];
+  const contractAvailable = requiredBreakdown.every(k =>
+    Number.isInteger(control?.[k]) && control[k] >= 0);
+  const hasBreakdown = control?.manual_review_breakdown_available === true &&
+    contractAvailable;
   const actionable = Number(hasBreakdown
     ? control?.manual_review_actionable_count
     : control?.manual_review_total_count);
   const expired = Number(hasBreakdown ? control?.manual_review_expired_unsent_count : 0);
   const pending = Number(hasBreakdown ? control?.manual_review_pending_count : 0);
+  const blocked = Number(hasBreakdown ? control?.manual_review_blocked_count : 0);
   const reviewParts = [];
-  if (!hasBreakdown && control?.manual_review_breakdown_error) {
-    reviewParts.push('<span>· 通知分类暂不可用，需核查数据库</span>');
+  if (control?.manual_review_breakdown_available === true && !contractAvailable) {
+    reviewParts.push('<span>· 接口版本不匹配：投递确认及异常数量不可用，请先升级后端</span>');
+  } else if (!hasBreakdown) {
+    reviewParts.push('<span>· 通知分类暂不可用；下列历史总数为心跳陈旧值，需核查数据库</span>');
   }
   if (Number.isFinite(pending) && pending > 0) {
     const gmail = Number(control?.manual_review_pending_gmail_count) || 0;
@@ -258,6 +269,14 @@ function renderRuntime(runtime, control) {
     const other = Number(control?.manual_review_pending_other_count) || 0;
     reviewParts.push('<span title="可能已发送，等待 Gmail Sent 或本地投递结果核验；不得自动重发">· 投递结果待确认 ' +
       esc(pending) + '（邮件 ' + esc(gmail) + '，本地 ' + esc(local) +
+      '，其他 ' + esc(other) + '）</span>');
+  }
+  if (hasBreakdown && Number.isFinite(blocked) && blocked > 0) {
+    const gmail = Number(control?.manual_review_blocked_gmail_count) || 0;
+    const local = Number(control?.manual_review_blocked_local_count) || 0;
+    const other = Number(control?.manual_review_blocked_other_count) || 0;
+    reviewParts.push('<span title="凭证阻塞、重试错误或重试排队；当前仅显示，不修改重试规则">· 运行阻塞待处理 ' +
+      esc(blocked) + '（邮件 ' + esc(gmail) + '，本地 ' + esc(local) +
       '，其他 ' + esc(other) + '）</span>');
   }
   if (Number.isFinite(actionable) && actionable > 0) {
@@ -268,7 +287,7 @@ function renderRuntime(runtime, control) {
       ? control?.manual_review_actionable_local_count
       : control?.manual_review_local_count) || 0;
     const other = Number(hasBreakdown ? control?.manual_review_actionable_other_count : 0) || 0;
-    reviewParts.push(`<span title="人工复核队列（不包括另外单列的投递待确认记录）">· 通知异常待复核 ${esc(actionable)}（邮件 ${esc(gmail)}，本地 ${esc(local)}，其他 ${esc(other)}）</span>`);
+    reviewParts.push(`<span title="包括终态投递异常，可能需要核查重复发送或身份不匹配；不得自动重发">· 通知异常待复核 ${esc(actionable)}（邮件 ${esc(gmail)}，本地 ${esc(local)}，其他 ${esc(other)}）</span>`);
   }
   if (Number.isFinite(expired) && expired > 0) {
     const gmail = Number(control?.manual_review_expired_unsent_gmail_count) || 0;
