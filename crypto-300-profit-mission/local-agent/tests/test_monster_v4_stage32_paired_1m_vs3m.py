@@ -28,12 +28,12 @@ class Stage32Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"NOT_FROZEN_DAY"):
             m.run("2025-11-19",0,Path("/tmp/absent.zip"))
     def test_anonymous_monthly_fail_closed_on_real_source_error(self):
-        with patch.object(m.gt,"label",return_value={"symbol":"TUSDT","status":"SOURCE_NETWORK_FAILED"}):
-            with self.assertRaisesRegex(RuntimeError,"HOURLY_NETWORK_OR_INTEGRITY_FAILURE"):
-                m.compare_one("TUSDT",date(2025,3,19))
+        with self.assertRaisesRegex(RuntimeError,"HOURLY_NETWORK_OR_INTEGRITY_FAILURE"):
+            m.compare_one("TUSDT",date(2025,3,19),
+                          hourly_get=lambda s,d:{"symbol":"TUSDT","status":"SOURCE_NETWORK_FAILED"})
     def test_hourly_missing_not_no_WATCH(self):
-        with patch.object(m.gt,"label",return_value={"symbol":"TUSDT","status":"MONTH_ARCHIVE_MISSING_404"}):
-            o=m.compare_one("TUSDT",date(2025,3,19))
+        o=m.compare_one("TUSDT",date(2025,3,19),
+                        hourly_get=lambda s,d:{"symbol":"TUSDT","status":"MONTH_ARCHIVE_MISSING_404"})
         self.assertEqual(o["status"],"CENSORED_GT_NOT_COMPLETE_168H")
     def test_new_one_minute_poll_is_true_60s_and_original_only_3min(self):
         bars=sample_bars()
@@ -58,7 +58,7 @@ class Stage32Tests(unittest.TestCase):
         self.assertFalse(result["5x"]["is_gt_positive"])
     def test_source_consistency_requires_one_hour_month_sha(self):
         bad={"symbol":"TUSDT","status":"VERIFIED_COMPLETE_168H","archive_sha256":""}
-        with patch.object(m.gt,"label",return_value=bad):
-            with self.assertRaisesRegex(RuntimeError,"UNVERIFIED_MONTHLY"):
-                m.compare_one("TUSDT",date(2025,3,19))
+        with self.assertRaisesRegex(RuntimeError,"UNVERIFIED_MONTHLY"):
+            m.compare_one("TUSDT",date(2025,3,19),
+                          hourly_get=lambda s,d:bad)
 if __name__=="__main__":unittest.main()
