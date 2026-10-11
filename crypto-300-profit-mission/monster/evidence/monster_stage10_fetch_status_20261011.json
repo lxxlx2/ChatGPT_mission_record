@@ -1,0 +1,68 @@
+{
+  "schema": "MONSTER_STAGE10_SOURCE_STATUS_V1",
+  "source": "Binance official public spot 1m kline startTime query per pre-registered pair, 2026-10-11",
+  "prereg_file": "monster_stage10_neutral_preregistered_24case_20261011.json",
+  "n": 24,
+  "complete_60h": 17,
+  "historical_60h_unavailable": 7,
+  "unavailable": [
+    {
+      "symbol": "QQQBUSDT",
+      "anchor_utc": "2025-06-17T12:00:00Z",
+      "requested_start_ms": 1750053600000,
+      "first_returned_bar_ms": 1782826200000,
+      "classification": "FULL_60H_SOURCE_NOT_AVAILABLE_AT_PREREGISTERED_ANCHOR",
+      "note": "first returned bar for source query occurs after planned 60h start; do not impute or replace"
+    },
+    {
+      "symbol": "NVDABUSDT",
+      "anchor_utc": "2025-06-17T12:00:00Z",
+      "requested_start_ms": 1750053600000,
+      "first_returned_bar_ms": 1781200800000,
+      "classification": "FULL_60H_SOURCE_NOT_AVAILABLE_AT_PREREGISTERED_ANCHOR",
+      "note": "first returned bar for source query occurs after planned 60h start; do not impute or replace"
+    },
+    {
+      "symbol": "SENTUSDT",
+      "anchor_utc": "2025-10-17T12:00:00Z",
+      "requested_start_ms": 1760594400000,
+      "first_returned_bar_ms": 1769086800000,
+      "classification": "FULL_60H_SOURCE_NOT_AVAILABLE_AT_PREREGISTERED_ANCHOR",
+      "note": "first returned bar for source query occurs after planned 60h start; do not impute or replace"
+    },
+    {
+      "symbol": "COINBUSDT",
+      "anchor_utc": "2026-01-17T12:00:00Z",
+      "requested_start_ms": 1768543200000,
+      "first_returned_bar_ms": 1783431000000,
+      "classification": "FULL_60H_SOURCE_NOT_AVAILABLE_AT_PREREGISTERED_ANCHOR",
+      "note": "first returned bar for source query occurs after planned 60h start; do not impute or replace"
+    },
+    {
+      "symbol": "DRAMBUSDT",
+      "anchor_utc": "2026-01-17T12:00:00Z",
+      "requested_start_ms": 1768543200000,
+      "first_returned_bar_ms": 1783431000000,
+      "classification": "FULL_60H_SOURCE_NOT_AVAILABLE_AT_PREREGISTERED_ANCHOR",
+      "note": "first returned bar for source query occurs after planned 60h start; do not impute or replace"
+    },
+    {
+      "symbol": "AVGOBUSDT",
+      "anchor_utc": "2026-01-17T12:00:00Z",
+      "requested_start_ms": 1768543200000,
+      "first_returned_bar_ms": 1784122200000,
+      "classification": "FULL_60H_SOURCE_NOT_AVAILABLE_AT_PREREGISTERED_ANCHOR",
+      "note": "first returned bar for source query occurs after planned 60h start; do not impute or replace"
+    },
+    {
+      "symbol": "CRWDBUSDT",
+      "anchor_utc": "2026-04-17T12:00:00Z",
+      "requested_start_ms": 1776319200000,
+      "first_returned_bar_ms": 1788350400000,
+      "classification": "FULL_60H_SOURCE_NOT_AVAILABLE_AT_PREREGISTERED_ANCHOR",
+      "note": "first returned bar for source query occurs after planned 60h start; do not impute or replace"
+    }
+  ],
+  "warning": "CURRENT_LISTING_SURVIVORSHIP; source first returned bar is NOT verified official listing timestamp and might reflect API availability",
+  "never_fill_or_replace": true
+}
