@@ -1,5 +1,7 @@
 # Monster V4 — 实用型本地妖币发现与预警模型（研究合同 v0.1）
 
+> **Stage20最新（2026-10-11）**：[四个未使用日期的758币质量筛选与保守退出实际验证](MONSTER_STAGE20_QUALITY_EXIT_HELDOUT_ACTUAL_RESULTS_20261011.md)，[官方CI #38130576819](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38130576819)及[全ZIP+JSON SHA独立复算CI #38131123057](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131123057)全部Success。20个唯一D1中18个通过质量筛选，6h策略14笔有效7盈7亏、中位+0.375359%，100bps滑点中位-1.217933%；冻结的样本量、胜率、删失率关口全部失败。**Stage20判定 FAIL_NO_GO**，不得部署Monster、改Frank、发真实Gmail或宣称另一AI Review完成。
+
 > **最新跟进（2026-10-11，Stage16–19）：** [Stage16–18 七日真实2×/5×标签、因果WATCH及七个漏报根因](MONSTER_STAGE16_TO_18_REAL_GT_EARLY_WATCH_RESULTS_20261011.md)；[Stage19 全部758币×五日期渐进上涨候选研究结果](MONSTER_STAGE19_GRADUAL_WATCH_FULL758_REPLAY_RESULTS_20261011.md)。历史源验证了6/20已知2×事件可由新路径在固定12h初始窗口观察，但79个新WATCH有73个后续七天未达2×，67笔30USDT假设交易23盈44亏、中位-5.482202%，新增规则正式研究判定 `REJECT_GRADUAL_CANDIDATE`。整体V4尚未达到稳定正收益与独立其他AI Review门槛，`MONSTER_DEPLOYMENT=NO_GO`；Frank现有实例不受影响。
 
 > **模块开发硬性规则：** [MONSTER_MODULE_DEVELOPMENT_RULES.md](MONSTER_MODULE_DEVELOPMENT_RULES.md)（同时由 [AGENTS.md](AGENTS.md) 引用）。
