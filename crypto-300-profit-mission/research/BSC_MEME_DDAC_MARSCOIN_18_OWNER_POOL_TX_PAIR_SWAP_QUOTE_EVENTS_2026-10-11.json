@@ -1,0 +1,205 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "source_file": "BSC_MEME_DDAC_MARSCOIN_29_TX_TWO_PAIR_CLASSIFICATION_FROZEN_2026-10-11.json",
+  "method": "For each source owner EOA 18 pool-involved source tx hashes, read eth_getLogs exact pair+block+Swap event and filter same tx hash; decode token0 quote / token1 MARS into raw uint256, preserve MARS transfer tax residual, no assumed BNB conversion.",
+  "expected": 18,
+  "rows": [
+    {
+      "token": "MARSCOIN",
+      "hash": "0xfd87fa6d585acdf047e96264ddfb1bb0c428c882449d72554a34ec6841b63824",
+      "block": 112441920,
+      "venue": "SPCXB_PAIR",
+      "side": "IN",
+      "source_mars_wallet_in_raw": "1011535330957146847160857",
+      "source_mars_wallet_out_raw": "0",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "2481035477991251445",
+      "amount_mars_in_raw": "0",
+      "amount_quote_out_raw": "0",
+      "amount_mars_out_raw": "1042819928821800873361708",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "31284597864654026200851"
+    },
+    {
+      "token": "MARSCOIN",
+      "hash": "0x8f5386192f6f5da18185098556a2f93661211d59b63e6baaff6d66435647b35c",
+      "block": 112442886,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "1011535330957146847160857",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "981189271028432441746032",
+      "amount_quote_out_raw": "2855238960147439606",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "30346059928714405414825"
+    },
+    {
+      "token": "MARSCOIN",
+      "hash": "0xc13d9d1b476a6fa2ae56ed17518281101dde33e930572ce40ef46819e54bc989",
+      "block": 112635735,
+      "venue": "SPCXB_PAIR",
+      "side": "IN",
+      "source_mars_wallet_in_raw": "232502967133953547234570",
+      "source_mars_wallet_out_raw": "0",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "2584821600123442781",
+      "amount_mars_in_raw": "0",
+      "amount_quote_out_raw": "0",
+      "amount_mars_out_raw": "239693780550467574468628",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "7190813416514027234058"
+    },
+    {
+      "token": "MARSCOIN",
+      "hash": "0x4323589f5edadbb49c6b1eefe5ab816af12993bccefe4d4c1fe2592f07be881d",
+      "block": 112639419,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "129258254199897074065853",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "125380506573900161843878",
+      "amount_quote_out_raw": "2600268578903973594",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "3877747625996912221975"
+    },
+    {
+      "token": "MARSCOIN",
+      "hash": "0x5c771003a07ad6a04e570aa8b56e6fed209a8d12a37102c8e79743cf48d14c36",
+      "block": 112643175,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "51622356467028236584358",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "50073685773017389486828",
+      "amount_quote_out_raw": "2690421549396182003",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "1548670694010847097530"
+    },
+    {
+      "token": "MARSCOIN",
+      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
+      "block": 112964866,
+      "venue": "SPCXB_PAIR",
+      "side": "IN",
+      "source_mars_wallet_in_raw": "74482554822020571897449",
+      "source_mars_wallet_out_raw": "0",
+      "status": "SOURCE_EVENT_TRUNCATED_OR_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 139 column 34)"
+    }
+  ],
+  "pending": [
+    {
+      "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
+      "block": 112964882,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "63052455644524404240904"
+    },
+    {
+      "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6",
+      "block": 112965110,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "33517149669909257353852"
+    },
+    {
+      "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
+      "block": 112965118,
+      "venue": "SPCXB_PAIR",
+      "side": "IN",
+      "source_mars_wallet_in_raw": "17916712949914776414738",
+      "source_mars_wallet_out_raw": "0"
+    },
+    {
+      "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
+      "block": 112971917,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "23726009462264961650895"
+    },
+    {
+      "hash": "0x1df1b31f9c0bef52268e8a6e908b96d99be0c998b8bfcfbe10b9910c1186f1a2",
+      "block": 112972386,
+      "venue": "USDT_PAIR",
+      "side": "IN",
+      "source_mars_wallet_in_raw": "7510065098359254422193",
+      "source_mars_wallet_out_raw": "0"
+    },
+    {
+      "hash": "0xb5aadaa7350e902a40b94338332f50b6ec5fe47bc774f4da132d9bb0e62d5b55",
+      "block": 112993813,
+      "venue": "USDT_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "6247214912124843214617"
+    },
+    {
+      "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
+      "block": 113003453,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "4997771929699874571694"
+    },
+    {
+      "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
+      "block": 113137477,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "3379529294261664489986"
+    },
+    {
+      "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
+      "block": 113975350,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "16611558424537833796791"
+    },
+    {
+      "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854",
+      "block": 113986944,
+      "venue": "SPCXB_PAIR",
+      "side": "IN",
+      "source_mars_wallet_in_raw": "585322708923802449772",
+      "source_mars_wallet_out_raw": "0"
+    },
+    {
+      "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
+      "block": 115522575,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "1053953881003267576411"
+    },
+    {
+      "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
+      "block": 119938551,
+      "venue": "SPCXB_PAIR",
+      "side": "OUT",
+      "source_mars_wallet_in_raw": "0",
+      "source_mars_wallet_out_raw": "177675243581310770890"
+    }
+  ],
+  "status": "6_OF_18_PAIR_SWAP_PROBES",
+  "production": "NO_GO"
+}
