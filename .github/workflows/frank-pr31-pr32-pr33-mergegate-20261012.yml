@@ -123,3 +123,72 @@ jobs:
           name: frank-exact-merge-${{ matrix.merge_order }}
           path: ${{ runner.temp }}/frank-merge-evidence/
           retention-days: 14
+
+  publish-integrated-review-branch:
+    needs: [isolated-combination]
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    env:
+      MAIN_PIN: "26da9bbb56235db055c1e581ec1535f3bdc51635"
+      PR31_PIN: "c50e7e2259e85ce89e14641a4e1e98ca3e4a4bc7"
+      PR32_PIN: "85f1a792dd7d0fbf354c09ac83872887ed301c10"
+      PR33_PIN: "48f53a71f692f5dc62f67198f4794e79c45402d2"
+      DEST: "review/frank-pr31-pr32-pr33-integration-20261012"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+      - name: Recheck exact trusted refs before publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          main_head="$(git ls-remote origin refs/heads/main | cut -f1)"
+          p31="$(git ls-remote origin refs/heads/research/frank-wallet-v2-d0-readonly-20261011 | cut -f1)"
+          p32="$(git ls-remote origin refs/heads/fix/frank-gmail-oauth-recovery-20261011 | cut -f1)"
+          p33="$(git ls-remote origin refs/heads/fix/frank-dashboard-review-breakdown-20261011 | cut -f1)"
+          test "$main_head" = "$MAIN_PIN"
+          test "$p31" = "$PR31_PIN"
+          test "$p32" = "$PR32_PIN"
+          test "$p33" = "$PR33_PIN"
+          if git ls-remote --exit-code origin "refs/heads/$DEST" >/dev/null 2>&1; then
+            echo 'INTEGRATION_REF_ALREADY_EXISTS: refuse overwrite'
+            exit 4
+          fi
+          echo 'PINNED_SOURCE_REFS_VERIFIED=YES'
+      - name: Create immutable integration candidate without production actions
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach "$RUNNER_TEMP/frank-release-candidate" "$MAIN_PIN"
+          cd "$RUNNER_TEMP/frank-release-candidate"
+          for n in 31 32 33; do
+            case "$n" in
+              31) pin="$PR31_PIN";;
+              32) pin="$PR32_PIN";;
+              33) pin="$PR33_PIN";;
+            esac
+            if git -c user.name='CI Integration Candidate' -c user.email='ci-integrate@example.invalid' merge --no-ff --no-commit "$pin"; then
+              :
+            else
+              conflicted="$(git diff --name-only --diff-filter=U)"
+              expected='.github/workflows/frank-pr32-pr33-review-tests.yml'
+              test "$n" = "33" && test "$conflicted" = "$expected" || {
+                echo "UNREVIEWED_MERGE_CONFLICT=$conflicted"
+                exit 6
+              }
+              git show "$PR33_PIN:$expected" > "$expected"
+              test "$(git hash-object "$expected")" = 'ed885cbad2a3bbb5abee00321fa9e9a4f823ceeb'
+              git add "$expected"
+              test -z "$(git diff --name-only --diff-filter=U)"
+              echo 'AUDITED_WORKFLOW_CONFLICT_RESOLVED=YES'
+            fi
+            git -c user.name='CI Integration Candidate' -c user.email='ci-integrate@example.invalid' commit -q -m "Review-only combined PR $n source"
+          done
+          test -z "$(git status --porcelain)"
+          echo "VERIFIED_COMBINATION_TREE=$(git rev-parse HEAD^{tree})"
+          echo "INTEGRATION_SHA=$(git rev-parse HEAD)"
+          git push origin "HEAD:refs/heads/$DEST"
+          echo "INTEGRATION_BRANCH=$DEST"
