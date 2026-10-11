@@ -11,7 +11,7 @@ alert changes, or edits to the original collector.
 from __future__ import annotations
 
 from collections import Counter
-from http.client import IncompleteRead
+from http.client import HTTPException
 from hashlib import sha256
 from typing import Any
 
@@ -247,7 +247,7 @@ def scan_ata_mints(
                 # Same official method used by collector, but ATA NOT main wallet.
                 try:
                     items = rpc.call("getSignaturesForAddress", [account, opts])
-                except (OSError, RuntimeError, ValueError, AttributeError, IncompleteRead) as exc:
+                except (OSError, RuntimeError, ValueError, AttributeError, HTTPException) as exc:
                     status = "RPC_INTERRUPTED_PARTIAL"
                     interruption = type(exc).__name__
                     break
@@ -294,7 +294,7 @@ def scan_ata_mints(
                                     "maxSupportedTransactionVersion": 1,
                                 },
                             ])
-                        except (OSError, RuntimeError, ValueError, AttributeError, IncompleteRead) as exc:
+                        except (OSError, RuntimeError, ValueError, AttributeError, HTTPException) as exc:
                             status = "RPC_INTERRUPTED_PARTIAL"
                             interruption = type(exc).__name__
                             evidence.append({
