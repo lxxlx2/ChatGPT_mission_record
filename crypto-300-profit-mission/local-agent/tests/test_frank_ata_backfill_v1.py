@@ -656,7 +656,7 @@ def test_http_exception_family_always_retains_partial_artifact(tmp_path, exc_fac
     """HTTP protocol errors must serialize prior verified evidence with a non-success status."""
     import json
     import sqlite3
-    from scripts.frank_ata_backfill import run, main
+    from scripts.frank_ata_backfill import run
     db_path = tmp_path / "local.sqlite"
     with sqlite3.connect(db_path) as connection:
         connection.execute("CREATE TABLE signatures(person_id TEXT, signature TEXT)")
@@ -679,7 +679,7 @@ def test_http_exception_family_always_retains_partial_artifact(tmp_path, exc_fac
 
     output = tmp_path / "incomplete-rpc.json"
     rpc = ProtocolFaultRPC(
-        {J7_ATA: items},
+        {J7_ATA: items[:1] if fail_method == "getSignaturesForAddress" else items},
         {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0]),
          other: tx(*TX_RAW[1], signature=other)})
     args = ["--database", str(db_path), "--mint", J7,
