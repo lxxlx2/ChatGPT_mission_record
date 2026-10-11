@@ -423,8 +423,13 @@
         "0xcb9d192eb9459e008f4d670f6eafef2a875e8d54e410d464820e2cb13f6fe945:log:335"
       ],
       "block_native_diff_wei": "-106329200000000",
-      "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "transaction_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "tx_receipt_status": "PENDING",
+      "signer_matches": true,
+      "transaction_target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "native_tx_value_wei": "0",
+      "method_selector": "0x84da2c7b",
+      "tx_check": "VERIFIED"
     },
     {
       "hash": "0x06441d6a56eb71fe11849e5984b40feb786dc1279dc0fe55714e5b42ca0dadba",
@@ -435,8 +440,13 @@
         "0x06441d6a56eb71fe11849e5984b40feb786dc1279dc0fe55714e5b42ca0dadba:log:655"
       ],
       "block_native_diff_wei": "0",
-      "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "transaction_signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "tx_receipt_status": "PENDING",
+      "signer_matches": false,
+      "transaction_target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "native_tx_value_wei": "0",
+      "method_selector": "0x84da2c7b",
+      "tx_check": "VERIFIED"
     },
     {
       "hash": "0x84c1ea4080445c4f3e34daa441f692d9220c50aa8b25544bf1994521cd60c830",
@@ -447,8 +457,13 @@
         "0x84c1ea4080445c4f3e34daa441f692d9220c50aa8b25544bf1994521cd60c830:log:807"
       ],
       "block_native_diff_wei": "0",
-      "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "transaction_signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "tx_receipt_status": "PENDING",
+      "signer_matches": false,
+      "transaction_target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "native_tx_value_wei": "0",
+      "method_selector": "0x84da2c7b",
+      "tx_check": "VERIFIED"
     },
     {
       "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
@@ -460,8 +475,13 @@
         "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa:log:268"
       ],
       "block_native_diff_wei": "40427384627832188",
-      "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "transaction_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "tx_receipt_status": "PENDING",
+      "signer_matches": true,
+      "transaction_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "native_tx_value_wei": "0",
+      "method_selector": "0x4d819a2a",
+      "tx_check": "VERIFIED"
     },
     {
       "hash": "0xbd0bb6906165fd348b2ae064e4bb0a071202d9592bc1f0529d5a627cf69a342b",
@@ -473,7 +493,16 @@
       ],
       "block_native_diff_wei": "0",
       "transaction_signer": null,
-      "tx_receipt_status": "PENDING"
+      "tx_receipt_status": "PENDING",
+      "tx_check": "PARSE_FAILED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 9 column 7819)"
     }
-  ]
+  ],
+  "audit_stats": {
+    "total": 29,
+    "verified": 23,
+    "selfSigned": 19,
+    "otherSigned": 4,
+    "truncated": 6
+  }
 }
