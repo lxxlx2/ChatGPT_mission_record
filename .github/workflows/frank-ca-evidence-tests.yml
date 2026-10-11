@@ -60,6 +60,9 @@ jobs:
       - name: New exporter safety and exact fake-Git readback tests
         working-directory: crypto-300-profit-mission/local-agent
         run: python -m pytest -q tests/test_meme_evidence_sync.py tests/test_frank_wallet_watchlist_v2.py tests/test_frank_wallet_inventory_v2.py tests/test_frank_wallet_history_v2.py tests/test_frank_wallet_reconciliation_v2.py tests/test_frank_wallet_transfers_v2.py tests/test_frank_transfer_archive_v2.py
+      - name: Bounded ATA provenance unit tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pytest -q tests/test_frank_ata_backfill_v1.py
       - name: Validate browser-side JavaScript
         run: node --check crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js
       - name: Existing Frank/Dashboard regression subset
