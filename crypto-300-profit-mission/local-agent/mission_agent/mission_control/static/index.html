@@ -30,14 +30,15 @@
       <div class="panel-title">
         <div>
           <h2>Frank 持续观察池 <span id="watch-total-count">0</span></h2>
-          <p>默认只看交易及模型重点观察；被动转入和其他账户活动单独筛选，防止垃圾空投淹没观察池。</p>
+          <p>默认聚焦模型持有及仓位待核对象；历史买卖、被动转入和其他账户活动可分别筛选，不把空投当买入信号。</p>
         </div>
         <span id="watch-scope">等待索引</span>
       </div>
       <div class="frank-watch-controls">
         <label for="watch-filter">类别</label>
         <select id="watch-filter">
-          <option value="PRIMARY" selected>交易及模型重点观察</option>
+          <option value="WATCH_NOW" selected>当前待观察（模型持有/仓位待核）</option>
+          <option value="PRIMARY">全部交易及模型历史</option>
           <option value="ALL">全部本地账户活动</option>
           <option value="PASSIVE_RECEIPT_ONLY">仅被动转入（不代表值得买入）</option>
           <option value="OTHER_ACCOUNT_ACTIVITY">其他账户活动（未核实）</option>
