@@ -153,3 +153,32 @@ def test_canonical_ata_invalid_mint_or_wrong_program_rejected():
         derive_ata(WALLET, "not-base58!", TOKEN)
     with pytest.raises(ValueError):
         derive_ata(WALLET, J7, "malicious-token-program")
+
+
+def test_explicit_ata_cli_reads_existing_index_without_changes(tmp_path):
+    import json
+    import sqlite3
+    from scripts.frank_ata_backfill import run
+    db = tmp_path / "forward.sqlite"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE signatures(person_id TEXT,signature TEXT)")
+        conn.execute("INSERT INTO signatures VALUES (?,?)", ("frank", SIGNATURES[0]))
+    rpc = FakeRPC({
+        J7_ATA: [{"signature": SIGNATURES[0], "slot": 454705300,
+                  "blockTime": 1791505760, "err": None}]
+    }, {SIGNATURES[0]: tx(*TX_RAW[0])})
+    output = tmp_path / "result.json"
+    before = db.stat().st_mtime_ns
+    report = run(["--database", str(db), "--mint", J7,
+                  "--output", str(output), "--page-size", "5"], rpc=rpc)
+    assert report["absent_verified_signatures"] == 0
+    assert report["production_modified"] is False
+    assert db.stat().st_mtime_ns == before
+    assert output.exists()
+    assert (output.stat().st_mode & 0o777) == 0o600
+    packet = json.loads(output.read_text())
+    assert packet["source_scope"] == SCOPE
+    assert packet["observations"][0]["already_in_main_wallet_index"] is True
+    with pytest.raises(FileExistsError):
+        run(["--database", str(db), "--mint", J7,
+             "--output", str(output)], rpc=rpc)
