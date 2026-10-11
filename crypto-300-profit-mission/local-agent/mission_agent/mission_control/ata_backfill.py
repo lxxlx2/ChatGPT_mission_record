@@ -89,19 +89,29 @@ def derive_ata(owner: str, mint: str, token_program: str) -> tuple[str, int]:
     raise ValueError("NO_VALID_PROGRAM_DERIVED_ADDRESS")
 
 
-def _keys(message: dict) -> tuple[list[str], set[str]]:
-    raw = message.get("accountKeys") or []
-    keys = [x if isinstance(x, str) else x.get("pubkey") for x in raw]
+def _keys(message: dict) -> tuple[list[str], set[str] | None]:
+    """Return account keys and provable signers, or None if signer data is absent.
+
+    jsonParsed Solana keys provide a signer boolean per account. Raw legacy
+    messages can instead derive the signers from numRequiredSignatures.
+    Missing or malformed signer data must never silently mean "Frank did not
+    sign" when reporting external source provenance.
+    """
+    raw = message.get("accountKeys")
+    if not isinstance(raw, list) or not raw:
+        return [], None
+    keys = [x if isinstance(x, str) else x.get("pubkey") if isinstance(x, dict) else None
+            for x in raw]
     if any(not isinstance(x, str) for x in keys):
-        return [], set()
-    signers = {x.get("pubkey") for x in raw
-               if isinstance(x, dict) and x.get("signer") is True}
-    if not signers:
-        header = message.get("header") or {}
-        required = header.get("numRequiredSignatures")
-        if type(required) is int and required >= 0:
-            signers = set(keys[:required])
-    return keys, signers
+        return [], None
+    if all(isinstance(x, dict) and type(x.get("signer")) is bool for x in raw):
+        return keys, {x["pubkey"] for x in raw if x["signer"]}
+    header = message.get("header")
+    header = header if isinstance(header, dict) else {}
+    required = header.get("numRequiredSignatures")
+    if type(required) is int and 1 <= required <= len(keys):
+        return keys, set(keys[:required])
+    return keys, None
 
 
 def _balance(rows: list, pubkeys: list[str], ata: str,
@@ -165,7 +175,9 @@ def validate_transaction(tx: dict, signature: str, ata: str, mint: str,
     return {
         "signature": signature, "slot": slot, "block_time": tx.get("blockTime"),
         "ata": ata, "mint": mint, "token_program": program,
-        "status": "VERIFIED_ATA_BALANCE_DELTA", "wallet_signed": owner in signers,
+        "status": "VERIFIED_ATA_BALANCE_DELTA",
+        "wallet_signed": owner in signers if signers is not None else None,
+        "signer_identity_verified": signers is not None,
         "raw_before": str(pre["raw"]), "raw_after": str(post["raw"]),
         "raw_delta": str(change), "decimals": pre["decimals"],
         "direction": "IN" if change > 0 else "OUT" if change < 0 else "ZERO",
