@@ -1,0 +1,39 @@
+name: Monster Stage30 Authentic 36 Finished Original 168h Source SHA Proof
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - '.github/workflows/monster-v4-stage30-derive-original36-source-proof.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  independent-rehash-of-all-github-36-original-artifacts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Protect prereg 36 exact source SHA, fail queued runs or wrong model SHA
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage30_make_real_source_proof.py tests/test_monster_v4_stage30_make_real_source_proof.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage30_make_real_source_proof.py
+      - name: From completed successful CI download and independently SHA verify all original 36 ZIP/JSON and month plus day publisher SHA entries
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage30_make_real_source_proof.py --output /tmp/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json
+      - name: Save genuine original 36 full-market SHA evidence to permanently persist after CI
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage30-authentic-full36-original-market-SHA-evidence
+          path: /tmp/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json
+          retention-days: 30
