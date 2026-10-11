@@ -178,16 +178,22 @@
       "source_mars_wallet_out_raw": "6247214912124843214617",
       "status": "SOURCE_EVENT_TRUNCATED_OR_UNRESOLVED",
       "error": "Error: LOG_COUNT_0"
-    }
-  ],
-  "pending": [
+    },
     {
       "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
       "block": 113003453,
       "venue": "SPCXB_PAIR",
       "side": "OUT",
       "source_mars_wallet_in_raw": "0",
-      "source_mars_wallet_out_raw": "4997771929699874571694"
+      "source_mars_wallet_out_raw": "4997771929699874571694",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "4847838771808878334544",
+      "amount_quote_out_raw": "1586628955375493302",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "149933157890996237150"
     },
     {
       "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
@@ -195,7 +201,15 @@
       "venue": "SPCXB_PAIR",
       "side": "OUT",
       "source_mars_wallet_in_raw": "0",
-      "source_mars_wallet_out_raw": "3379529294261664489986"
+      "source_mars_wallet_out_raw": "3379529294261664489986",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "3278143415433814555287",
+      "amount_quote_out_raw": "1259542899259174267",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "101385878827849934699"
     },
     {
       "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
@@ -203,7 +217,15 @@
       "venue": "SPCXB_PAIR",
       "side": "OUT",
       "source_mars_wallet_in_raw": "0",
-      "source_mars_wallet_out_raw": "16611558424537833796791"
+      "source_mars_wallet_out_raw": "16611558424537833796791",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "16113211671801698782888",
+      "amount_quote_out_raw": "3967018379356511861",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "498346752736135013903"
     },
     {
       "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854",
@@ -211,7 +233,15 @@
       "venue": "SPCXB_PAIR",
       "side": "IN",
       "source_mars_wallet_in_raw": "585322708923802449772",
-      "source_mars_wallet_out_raw": "0"
+      "source_mars_wallet_out_raw": "0",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "247659216316843169",
+      "amount_mars_in_raw": "0",
+      "amount_quote_out_raw": "0",
+      "amount_mars_out_raw": "603425473117322113167",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "18102764193519663395"
     },
     {
       "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
@@ -219,7 +249,15 @@
       "venue": "SPCXB_PAIR",
       "side": "OUT",
       "source_mars_wallet_in_raw": "0",
-      "source_mars_wallet_out_raw": "1053953881003267576411"
+      "source_mars_wallet_out_raw": "1053953881003267576411",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "1022335264573169549119",
+      "amount_quote_out_raw": "428928551809892176",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "31618616430098027292"
     },
     {
       "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
@@ -227,9 +265,45 @@
       "venue": "SPCXB_PAIR",
       "side": "OUT",
       "source_mars_wallet_in_raw": "0",
-      "source_mars_wallet_out_raw": "177675243581310770890"
+      "source_mars_wallet_out_raw": "177675243581310770890",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "172344986273871447764",
+      "amount_quote_out_raw": "195729087522878178",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "5330257307439323126"
     }
   ],
-  "status": "12_OF_18_SWAP_PROBES",
-  "production": "NO_GO"
+  "pending": [],
+  "status": "18_OF_18_SWAP_PROBES_WITH_TRUNCATION_AND_UNEXPECTED_POOL_TYPE",
+  "production": "NO_GO",
+  "matchCount": 14,
+  "unverified": [
+    {
+      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
+      "block": 112964866,
+      "venue": "SPCXB_PAIR",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 139 column 34)"
+    },
+    {
+      "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
+      "block": 112964882,
+      "venue": "SPCXB_PAIR",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 57)"
+    },
+    {
+      "hash": "0x1df1b31f9c0bef52268e8a6e908b96d99be0c998b8bfcfbe10b9910c1186f1a2",
+      "block": 112972386,
+      "venue": "USDT_PAIR",
+      "error": "Error: LOG_COUNT_0"
+    },
+    {
+      "hash": "0xb5aadaa7350e902a40b94338332f50b6ec5fe47bc774f4da132d9bb0e62d5b55",
+      "block": 112993813,
+      "venue": "USDT_PAIR",
+      "error": "Error: LOG_COUNT_0"
+    }
+  ]
 }
