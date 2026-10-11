@@ -1,0 +1,70 @@
+name: Monster Stage28 Production Shared SQLite D1 True Official 5m Replay
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_real_shared_sqlite_d1.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage28_real_shared_sqlite_d1.py'
+      - '.github/workflows/monster-v4-stage28-real-production-shared-d1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage28-real-production-shared-D1-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  real-shared-spot-d1-unchanged-production-SQLite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        date: ['2025-11-04','2025-12-04','2026-02-04','2026-04-04','2026-08-04','2026-09-04']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prove unchanged original production D1 code, real SQLite and 5m official SHA
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage28_real_shared_sqlite_d1.py tests/test_monster_v4_stage28_real_shared_sqlite_d1.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage28_real_shared_sqlite_d1.py
+      - name: Re-download all 36 exact original Stage26 source ZIPs from approved GitHub CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' > /tmp/stage28_originals.tsv
+          import json
+          from pathlib import Path
+          p=Path("crypto-300-profit-mission/monster/evidence/monster_stage26_verified_sharded_168h_artifact_proof_20261011.json")
+          d=json.loads(p.read_text())
+          if len(d["artifacts"])!=36 or d["source_ci_conclusion"]!="SUCCESS_ALL_36":
+              raise SystemExit("STAGE28_ORIGINAL_SOURCE_NOT_COMPLETE")
+          for a in sorted(d["artifacts"],key=lambda x:(x["date"],x["shard"])):
+              print(a["date"],a["shard"],a["artifact_id"])
+          PY
+          while read -r day shard artifact; do
+            gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/"$artifact"/zip > "/tmp/monster_stage26_${day}_shard${shard}.zip"
+          done < /tmp/stage28_originals.tsv
+      - name: Actual original process_queue and evaluate_closed_5m with one shared SQLite and fully publisher verified Spot 5m for date
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          args=()
+          while read -r day shard artifact; do
+            args+=("/tmp/monster_stage26_${day}_shard${shard}.zip")
+          done < /tmp/stage28_originals.tsv
+          python -B scripts/monster_v4_stage28_real_shared_sqlite_d1.py --day ${{ matrix.date }} --original-zips "${args[@]}" --output "/tmp/monster_stage28_${{ matrix.date }}_real_shared_sqlite.json"
+      - name: Preserve exact production queue status, SETUP and LATE, verified source 5m archive SHA
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage28-real-shared-SQLite-D1-${{ matrix.date }}
+          path: /tmp/monster_stage28_${{ matrix.date }}_real_shared_sqlite.json
+          if-no-files-found: warn
+          retention-days: 30
