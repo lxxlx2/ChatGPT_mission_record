@@ -91,7 +91,7 @@
     }
   ],
   "pending_tx": [],
-  "status": "10_OF_10_NATIVE_BLOCKS; QUOTE_SIGNER_RECEIPT_AUDIT_PENDING",
+  "status": "5_OF_10_ORIGINAL_TX_PROVENANCE",
   "production": "NO_GO",
   "caveats": [
     "Open token quantity is not a realized loss nor zero exposure",
@@ -99,5 +99,62 @@
     "Quote ERC20 assets and receipt status pending"
   ],
   "complete_native_blocks": 10,
-  "native_net_wei": "317210430780095567"
+  "native_net_wei": "317210430780095567",
+  "tx_audit": [
+    {
+      "hash": "0x8a39b3f7178ef8b5c9e773bc1a7c9fea1c7225a998096335b8edad5a68e2db3b",
+      "block": 47488546,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "value_wei": "505000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "914375000000000",
+      "transaction_complete": true,
+      "receipt_complete": true
+    },
+    {
+      "hash": "0xa958a9cc12945d71b74d72511e7aad3a41a02c3db1ebdb7206d0c6a71afe6be9",
+      "block": 47488550,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "value_wei": "2020000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "823700000000000",
+      "transaction_complete": true,
+      "receipt_complete": true
+    },
+    {
+      "hash": "0x46cae9573f0e7ab4e842ef8f5b3a2e7c07c8d296691aa67d080331fd36e811c6",
+      "block": 47488557,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "value_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "1446205000000000",
+      "transaction_complete": true,
+      "receipt_complete": true
+    },
+    {
+      "hash": "0x9855207918bb37530b41f6607a0edcfe0ae9056cbc3d3ff6c017188eb7d8b7bd",
+      "block": 47575207,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "value_wei": "1010000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "933800000000000",
+      "transaction_complete": true,
+      "receipt_complete": true
+    },
+    {
+      "hash": "0x96ccb90850e7923fb2724f8c46f7f4a58872feadd021558d17b59f4f127bf97d",
+      "block": 47575216,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "value_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "1465735000000000",
+      "transaction_complete": true,
+      "receipt_complete": true
+    }
+  ]
 }
