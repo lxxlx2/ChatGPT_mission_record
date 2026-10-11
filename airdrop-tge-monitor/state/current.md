@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-11 18:04:40 Asia/Bangkok
+Updated: 2026-10-11 19:04:56 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-11 18:04:40 Asia/Bangkok
+- latest_actual_run: 2026-10-11 19:04:56 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-11/180440-final-retry.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-11/180354-attempt.md (write blocked)
-- latest_scheduled_shard: 2
-- latest_executed_shard: 3
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-11/190456-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-11/190405-attempt.md (committed after first blocked attempt)
+- latest_scheduled_shard: 3
+- latest_executed_shard: 1
 - stale_shard_recovery: true
-- latest_candidate_count: 3
+- latest_candidate_count: 4
 - latest_triggered_events: 0
-- latest_identity_failures: 0
-- latest_source_failures: 6
+- latest_identity_failures: 2
+- latest_source_failures: 5
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
@@ -39,3 +39,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-11 15:58:48: partial urgent + oldest stale shard0, real attempt 155800-attempt.md and terminal 155848-final-retry.md committed; primary final write blocked. Two candidates: Concrete additional allocation unverified and Space Oct15 already delivered; three source gaps Concrete/TurboFlow/Space original Telegram. No new Tier A/B ACTION; Gmail/App silent. Historical attempt-only gaps remain. Schedule HH:00 unchanged; this invocation was at 15:58 and does not prove an HH:00 trigger.
 
 - 2026-10-11 18:04:40: partial urgent + stale shard3, 180440-final-retry.md committed. Attempt and primary final blocked by connector safety checks; 3 candidates, no new Tier A/B ACTION. Concrete additional allocation unverified; Space Oct15 already delivered; Cambria rumored TGE date unconfirmed. Six source gaps; no Gmail/App notification. Prior 17:00 attempt-only gap remains. Schedule HH:00 unchanged.
+
+- 2026-10-11 19:04:56: partial urgent + stale shard1 (scheduled shard3), attempt 190405-attempt.md and terminal 190456-final.md committed; 4 candidates, 0 new ACTION, 5 unresolved source/action gaps, 2 identity conflicts. Concrete extra allocation unverified; Space Oct15 delivered and deduped; Neutrl redemption not Tier A/B verified for user's rights; unrelated Autheo THEO rejected. No Gmail/App notice. Historical attempt-only gaps unresolved. Hourly HH:00 unchanged; no new daily email.
