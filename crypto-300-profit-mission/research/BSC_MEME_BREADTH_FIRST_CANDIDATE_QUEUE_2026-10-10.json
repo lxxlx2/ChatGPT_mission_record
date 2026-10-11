@@ -80,7 +80,11 @@
     "BSC_MEME_5C48_THREE_TOKEN_SCOPE_INCLUDE_NEGATIVE_CONTROL_2026-10-11.json",
     "BSC_MEME_FOUR_EOA_IFML_LOBSTER_CAPITAL_AND_EPISODE_COMPARISON_2026-10-11.json",
     "BSC_MEME_FOUR_WALLETS_19_CA_BREADTH_AND_EVIDENCE_GAPS_2026-10-11.json",
-    "BSC_MEME_ADDRESS_MODEL_3_5C48_THREE_COIN_AND_FOUR_EOA_RESEARCH_REPORT_2026-10-11.md"
+    "BSC_MEME_ADDRESS_MODEL_3_5C48_THREE_COIN_AND_FOUR_EOA_RESEARCH_REPORT_2026-10-11.md",
+    "BSC_MEME_DDAC_MARSCOIN_FULL_TRANSFER_ANOMALY_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_NATIVE_BLOCK_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_TX_SIGNER_RECEIPT_ATTRIBUTION_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -1121,7 +1125,7 @@
         "我踏马来了",
         "龙虾"
       ],
-      "current_research_priority": "HIGH_BREADTH_UNRESOLVED_OTHER_COINS_GIGGLE_MARSCOIN_BINANCE_LIFE; IFML_5_EPISODES_AND_LOBSTER_2_NEGATIVE; NO_GO",
+      "current_research_priority": "HIGH_COMPARABLE_TWO_MAJOR_COINS_PLUS_MARS_29_TX_NATIVE_POSITIVE_WITH_UNKNOWN_ERC20_SOURCE; FULL_ROUTE_PNL_AND_GIGGLE_BINANCE_LIFE_PENDING; NO_GO",
       "material_2026_position_proof": {
         "MARSCOIN": {
           "complete_token_transfer_history": true,
@@ -1152,7 +1156,8 @@
         "mars_full_receipts_still_truncated": 6,
         "mars_native_bnb_event_scope_net_wei": "3409712195316107766",
         "status": "NOT_ISOLATED_FINAL_PNL"
-      }
+      },
+      "latest_mars_research": "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json"
     },
     {
       "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
@@ -1673,6 +1678,8 @@
     "8e6b 32 self-signed token-trade transactions across 3 fully reconciled 2026 major token quantities have +5.437877 BNB aggregate event-block wallet native changes (two positive, one negative), but internal-transaction attribution/finality, controller/followability and further 8-token losses remain unresolved."
   ],
   "next_work_order": [
+    "Complete DDAC MARSCOIN 19 self-signed transactions quote-asset route and economic cost attribution; retain other-signed/unknown events and token residue",
+    "Audit DDAC GIGGLE and Binance Life source-wide cashflow, and reconcile original 19-CA baseline with newly indexed full history",
     "Audit DDAC GIGGLE/MARSCOIN/Binance Life including incoming source and unclosed raw token balances before any wallet ranking",
     "Audit 9D Binance Life original receipts and quote settlements, 239e NiuLai passive inbound, and any 5C48 Binance Life non-native quote proceeds",
     "Define a chronology-frozen unbiased BSC launch CA opportunity universe and wallet-active-window denominator; independent model QA then untouched validation",
@@ -1897,5 +1904,31 @@
     "pancake_v2_actions": 10,
     "pancake_v2_pair_swap_logs": 3,
     "pancake_v2_pair_router_wbnb_fallback_proofs": 7
+  },
+  "address_model_3_ddac_mars_2026_10_11": {
+    "status": "29_DISTINCT_TX_NATIVE_BLOCKS_VERIFIED_19_ORIGINAL_SIGNERS_4_OTHER_6_TRUNCATED_SENDER_UNKNOWN",
+    "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+    "old_scan_in": 0,
+    "old_scan_out": 19,
+    "new_full_scan_in": 17,
+    "new_full_scan_out": 23,
+    "unique_source_hashes": 29,
+    "scoped_native_delta_wei": "3409712195316107766",
+    "self_signed_native_input_wei": "2850000000000000000",
+    "confirmed_owner_signers": 19,
+    "confirmed_other_signers": 4,
+    "unconfirmed_sender_due_source_truncation": 6,
+    "receipt_success_status_explicit": 18,
+    "unknown_receipt_header": 11,
+    "erc20_inventory_residual_raw": "3050660512775076744",
+    "realized_net_profit": "UNRESOLVED_NON_BNB_COST_AND_ROUTER_ATTRIBUTION",
+    "source_files": [
+      "BSC_MEME_DDAC_MARSCOIN_FULL_TRANSFER_ANOMALY_2026-10-11.json",
+      "BSC_MEME_DDAC_MARSCOIN_29_NATIVE_BLOCK_CASHFLOW_2026-10-11.json",
+      "BSC_MEME_DDAC_MARSCOIN_29_TX_SIGNER_RECEIPT_ATTRIBUTION_2026-10-11.json",
+      "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json"
+    ],
+    "production": "NO_GO"
   }
 }
