@@ -1,0 +1,345 @@
+{
+  "date": "2026-10-11",
+  "type": "INDEPENDENT_EXACT_INTEGER_MULTIFILL_LEDGER_RECONCILIATION",
+  "scope": "All frozen 24 in-sample multifill no-fee/fee-gas-stress what-if simulations",
+  "source_files": [
+    "BSC_MEME_FOLLOW_V1_MULTIFILL_FROZEN_SPEC_2026-10-11.json",
+    "BSC_MEME_FOLLOW_V1_MULTIFILL_HISTORICAL_RESERVE_EVIDENCE_2026-10-11.json",
+    "BSC_MEME_FOLLOW_V1_MULTIFILL_SCENARIO_RESULTS_2026-10-11.json"
+  ],
+  "scenarios_checked": 24,
+  "trade_ledger_entries_checked": 368,
+  "zero_reserve_failures": 0,
+  "results_consistent": true,
+  "independent_diagnostics": [
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "4",
+      "lag": 0,
+      "fee": "ZERO_FEE",
+      "buys": 2,
+      "sells": 17,
+      "gas_assumption_wei": "0",
+      "net_wei": "1625217811675958303",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "4",
+      "lag": 0,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 2,
+      "sells": 17,
+      "gas_assumption_wei": "9500000000000000",
+      "net_wei": "1607117799369594759",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "4",
+      "lag": 0,
+      "fee": "ZERO_FEE",
+      "buys": 2,
+      "sells": 17,
+      "gas_assumption_wei": "0",
+      "net_wei": "3239777681010551795",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "4",
+      "lag": 0,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 2,
+      "sells": 17,
+      "gas_assumption_wei": "9500000000000000",
+      "net_wei": "3213161077644632681",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "4",
+      "lag": 10,
+      "fee": "ZERO_FEE",
+      "buys": 2,
+      "sells": 17,
+      "gas_assumption_wei": "0",
+      "net_wei": "1341113227292091897",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "4",
+      "lag": 10,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 2,
+      "sells": 17,
+      "gas_assumption_wei": "9500000000000000",
+      "net_wei": "1324428184603839756",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "4",
+      "lag": 10,
+      "fee": "ZERO_FEE",
+      "buys": 2,
+      "sells": 17,
+      "gas_assumption_wei": "0",
+      "net_wei": "2674165143576957011",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "4",
+      "lag": 10,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 2,
+      "sells": 17,
+      "gas_assumption_wei": "9500000000000000",
+      "net_wei": "2650358082305689843",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "我踏马来了",
+      "lag": 0,
+      "fee": "ZERO_FEE",
+      "buys": 1,
+      "sells": 5,
+      "gas_assumption_wei": "0",
+      "net_wei": "119073819436326597",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "我踏马来了",
+      "lag": 0,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 1,
+      "sells": 5,
+      "gas_assumption_wei": "3000000000000000",
+      "net_wei": "115231481192885177",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "我踏马来了",
+      "lag": 0,
+      "fee": "ZERO_FEE",
+      "buys": 1,
+      "sells": 5,
+      "gas_assumption_wei": "0",
+      "net_wei": "236952824503834856",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "我踏马来了",
+      "lag": 0,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 1,
+      "sells": 5,
+      "gas_assumption_wei": "3000000000000000",
+      "net_wei": "232278005822455796",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "我踏马来了",
+      "lag": 10,
+      "fee": "ZERO_FEE",
+      "buys": 1,
+      "sells": 5,
+      "gas_assumption_wei": "0",
+      "net_wei": "122410791989318182",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "我踏马来了",
+      "lag": 10,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 1,
+      "sells": 5,
+      "gas_assumption_wei": "3000000000000000",
+      "net_wei": "118551879376653048",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "我踏马来了",
+      "lag": 10,
+      "fee": "ZERO_FEE",
+      "buys": 1,
+      "sells": 5,
+      "gas_assumption_wei": "0",
+      "net_wei": "243586594199547414",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "我踏马来了",
+      "lag": 10,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 1,
+      "sells": 5,
+      "gas_assumption_wei": "3000000000000000",
+      "net_wei": "238879002906878463",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "lag": 0,
+      "fee": "ZERO_FEE",
+      "buys": 7,
+      "sells": 14,
+      "gas_assumption_wei": "0",
+      "net_wei": "502635679997343174",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "lag": 0,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 7,
+      "sells": 14,
+      "gas_assumption_wei": "10500000000000000",
+      "net_wei": "487885301593803716",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "lag": 0,
+      "fee": "ZERO_FEE",
+      "buys": 7,
+      "sells": 14,
+      "gas_assumption_wei": "0",
+      "net_wei": "1000649515118618641",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "lag": 0,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 7,
+      "sells": 14,
+      "gas_assumption_wei": "10500000000000000",
+      "net_wei": "981686532542497176",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "lag": 10,
+      "fee": "ZERO_FEE",
+      "buys": 7,
+      "sells": 14,
+      "gas_assumption_wei": "0",
+      "net_wei": "444836136837097984",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "lag": 10,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 7,
+      "sells": 14,
+      "gas_assumption_wei": "10500000000000000",
+      "net_wei": "430373123330752729",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "lag": 10,
+      "fee": "ZERO_FEE",
+      "buys": 7,
+      "sells": 14,
+      "gas_assumption_wei": "0",
+      "net_wei": "885803097930661521",
+      "final_token": "0",
+      "passed": true
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "lag": 10,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "buys": 7,
+      "sells": 14,
+      "gas_assumption_wei": "10500000000000000",
+      "net_wei": "867408601862648822",
+      "final_token": "0",
+      "passed": true
+    }
+  ],
+  "failures": [],
+  "size_monotonicity_warnings": [
+    {
+      "token": "4",
+      "lag": 10,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "issue": "LARGER_AMOUNT_HIGHER_RETURN_RATE"
+    },
+    {
+      "token": "我踏马来了",
+      "lag": 0,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "issue": "LARGER_AMOUNT_HIGHER_RETURN_RATE"
+    },
+    {
+      "token": "我踏马来了",
+      "lag": 10,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "issue": "LARGER_AMOUNT_HIGHER_RETURN_RATE"
+    },
+    {
+      "token": "龙虾",
+      "lag": 0,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "issue": "LARGER_AMOUNT_HIGHER_RETURN_RATE"
+    },
+    {
+      "token": "龙虾",
+      "lag": 10,
+      "fee": "STRESS_25BPS_AND_0_0005BNB_PER_ACTION",
+      "issue": "LARGER_AMOUNT_HIGHER_RETURN_RATE"
+    }
+  ],
+  "external_ai_review": "NOT_EXECUTED",
+  "executable_chain_replay": "NOT_EXECUTED",
+  "production": "NO_GO",
+  "limitations": [
+    "Independent arithmetic reread does not validate historical pool venue selection or quote executability",
+    "Actual gas, transfer taxes, MEV and causal transaction ordering depend on onchain venue and are not replicated",
+    "Choosing 3 historical winning opportunities from earlier results is in-sample sampling bias"
+  ]
+}
