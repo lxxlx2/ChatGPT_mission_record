@@ -1,0 +1,219 @@
+{
+  "schema": "MONSTER_STAGE27_VERIFIED_SHA36_SHARED_FIFO_AND_CASH_FUNDED_BOUNDS_V1",
+  "study_date": "2026-10-11",
+  "preregistered_commit": "8697b9275efcf1571343fcb95a90b58409a42e97",
+  "preregistered_contract": "monster_stage27_shared_queue_cash_budget_prereg_20261011.json",
+  "source": "Stage26 original 36 authenticated GitHub Actions original ZIPs containing complete V4 168h replay results",
+  "source_frozen_proof": "monster_stage26_verified_sharded_168h_artifact_proof_20261011.json",
+  "original_six_dates": [
+    "2025-11-04",
+    "2025-12-04",
+    "2026-02-04",
+    "2026-04-04",
+    "2026-08-04",
+    "2026-09-04"
+  ],
+  "CI_run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38144813974",
+  "CI_commit_sha": "13bf11d934f23303822ed4a6b40cdadbba4a8049",
+  "CI_completed_conclusion": "SUCCESS",
+  "regression_tests": "8/8 PASS",
+  "full_exact_SHA_original_source_artifact_count": 36,
+  "full_original_758_by_6_symbol_date_attempts": 4548,
+  "fully_causal_source_168h_symbol_date": 2719,
+  "all_original_watch_events": 1132,
+  "queue": {
+    "model": "OPTIMISTIC_AT_MOST_ONE_FIRST_EVALUATION_PER_D1_8_PER_3_MIN_POLL_WITH_15MIN_TTL__NOT_ACTUAL_SHARED_SQLITE",
+    "served_first_within_TTL": 1082,
+    "expired_without_first_evaluation": 50,
+    "per_date": {
+      "2025-11-04": {
+        "watches": 260,
+        "evaluated": 260,
+        "expired": 0,
+        "peak_poll": 2
+      },
+      "2025-12-04": {
+        "watches": 133,
+        "evaluated": 133,
+        "expired": 0,
+        "peak_poll": 2
+      },
+      "2026-02-04": {
+        "watches": 269,
+        "evaluated": 219,
+        "expired": 50,
+        "peak_poll": 98
+      },
+      "2026-04-04": {
+        "watches": 181,
+        "evaluated": 181,
+        "expired": 0,
+        "peak_poll": 2
+      },
+      "2026-08-04": {
+        "watches": 182,
+        "evaluated": 182,
+        "expired": 0,
+        "peak_poll": 2
+      },
+      "2026-09-04": {
+        "watches": 107,
+        "evaluated": 107,
+        "expired": 0,
+        "peak_poll": 12
+      }
+    },
+    "worst_poll": "2026-02-06T00:36:00Z",
+    "simultaneous_distinct_symbols": 98,
+    "max_first_eval_of_simultaneous_WATCH_through_plus_15min": 48,
+    "minimum_not_first_evaluated_from_simultaneous_burst": 50,
+    "source_watch_in_utc_hour_2026_02_06T00": 104,
+    "note": "50 is optimistic single-evaluation queue model conditional on these source arrivals; NOT a measured actual Gmail or actual D1 loss count; multiple rechecks make actual throughput worse"
+  },
+  "cash": {
+    "source_original_watch": 1132,
+    "excluded_original_same_symbol_24h_overlap": 326,
+    "all_non_overlap_source_trade_cases": 806,
+    "slippage_bps_per_side": [
+      20,
+      100
+    ],
+    "fees_bps_per_side": 10,
+    "valid_exit_proxy_cash_return_multiplier": "max(0,1+net_pct/100)",
+    "no_interest_no_margin_no_shorting": true,
+    "full_lot_requires_30_USDT_cash_and_free_slot": true,
+    "fractional_min_notional_USDT": 1,
+    "censored_recovery_scenarios_pct": [
+      100,
+      0
+    ],
+    "all_usdt_balances_exact_code_output_round6": true,
+    "twenty_bps_optimistic_full_recovery": {
+      "30_one_slot_fixed30": {
+        "selected": 1,
+        "evaluable": 1,
+        "positive": 0,
+        "negative": 1,
+        "insufficient_cash_skipped": 779,
+        "slots_busy_skipped": 26,
+        "final_cash": 22.648636,
+        "pnl": -7.351364
+      },
+      "30_one_slot_fractional": {
+        "selected": 42,
+        "evaluable": 30,
+        "positive": 6,
+        "negative": 24,
+        "censored": 12,
+        "final_cash": 4.905648,
+        "pnl": -25.094352
+      },
+      "300_ten_slots_fixed30": {
+        "selected": 319,
+        "evaluable": 222,
+        "positive": 65,
+        "negative": 157,
+        "censored": 97,
+        "insufficient_cash_skipped": 333,
+        "slots_busy_skipped": 154,
+        "final_cash": 233.324813,
+        "pnl": -66.675187
+      },
+      "300_ten_slots_fractional": {
+        "selected": 346,
+        "evaluable": 239,
+        "positive": 71,
+        "negative": 168,
+        "censored": 107,
+        "final_cash": 219.799853,
+        "pnl": -80.200147
+      }
+    },
+    "twenty_bps_zero_recovery_stress": {
+      "30_one_slot_fixed30": {
+        "selected": 1,
+        "final_cash": 22.648636,
+        "pnl": -7.351364
+      },
+      "30_one_slot_fractional": {
+        "selected": 8,
+        "final_cash": 0,
+        "pnl": -30
+      },
+      "300_ten_slots_fixed30": {
+        "selected": 84,
+        "final_cash": 7.537218,
+        "pnl": -292.462782
+      },
+      "300_ten_slots_fractional": {
+        "selected": 97,
+        "final_cash": 0,
+        "pnl": -300
+      }
+    },
+    "hundred_bps_optimistic_full_recovery": {
+      "30_one_slot_fixed30": {
+        "selected": 1,
+        "final_cash": 22.289126,
+        "pnl": -7.710874
+      },
+      "30_one_slot_fractional": {
+        "selected": 42,
+        "final_cash": 3.035473,
+        "pnl": -26.964527
+      },
+      "300_ten_slots_fixed30": {
+        "selected": 256,
+        "final_cash": 135.576225,
+        "pnl": -164.423775
+      },
+      "300_ten_slots_fractional": {
+        "selected": 296,
+        "final_cash": 135.618956,
+        "pnl": -164.381044
+      }
+    },
+    "hundred_bps_zero_recovery_stress": {
+      "30_one_slot_fixed30": {
+        "selected": 1,
+        "final_cash": 22.289126,
+        "pnl": -7.710874
+      },
+      "30_one_slot_fractional": {
+        "selected": 8,
+        "final_cash": 0,
+        "pnl": -30
+      },
+      "300_ten_slots_fixed30": {
+        "selected": 81,
+        "final_cash": 7.449911,
+        "pnl": -292.55009
+      },
+      "300_ten_slots_fractional": {
+        "selected": 88,
+        "final_cash": 0,
+        "pnl": -300
+      }
+    },
+    "cautions": [
+      "Even 100% recovery is optimistic assumption for missing actual exits, and 0% is extreme mathematical stress, neither is actual settlement evidence",
+      "Historical fixed 24h price proxy does not verify actual entry and exit fills or venue min notional",
+      "Ledger NAV books open trades at cost, not mark-to-market drawdown",
+      "Date samples were exposed already before Stage26, do not report as strategy OOS",
+      "Actual production shared D1 may re-evaluate candidate across polls and have concurrent sources other than this subset",
+      "Historical global USD cash and actual user funds were never accessed or modified"
+    ]
+  },
+  "aggregated_original_artifact": {
+    "id": 11703993796,
+    "zip_sha256": "e0fa24fa82b3a5142c6bdce76459feca43af25043d0bcc69f5f4401d626f2c6d",
+    "raw_JSON_sha256": "039432bb469b18f019c212e36bb3b37d1661447f64fb4a9e34bc0307c7e60db2",
+    "raw_JSON_size_bytes": 440061
+  },
+  "production_impact": "NONE",
+  "external_other_ai_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "frank": "UNTOUCHED",
+  "real_gmail": "OFF",
+  "trading": "NO_GO"
+}
