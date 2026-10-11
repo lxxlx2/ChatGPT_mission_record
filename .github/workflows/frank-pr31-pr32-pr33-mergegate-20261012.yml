@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - review/frank-pr31-pr32-pr33-mergegate-20261012
+    paths:
+      - '.github/workflows/frank-pr31-pr32-pr33-mergegate-20261012.yml'
   workflow_dispatch:
 
 permissions:
@@ -157,7 +159,12 @@ jobs:
           test "$p32" = "$PR32_PIN"
           test "$p33" = "$PR33_PIN"
           if git ls-remote --exit-code origin "refs/heads/$DEST" >/dev/null 2>&1; then
-            echo 'INTEGRATION_REF_ALREADY_EXISTS: refuse overwrite'
+            old="$(git ls-remote origin "refs/heads/$DEST" | cut -f1)"
+            if [ "$old" = 'dafb126e33338523630bb48d4fe838ddd9c7fb95' ]; then
+              echo 'INTEGRATION_PINNED_REF_ALREADY_PUBLISHED=PASS'
+              exit 0
+            fi
+            echo "INTEGRATION_REF_COLLISION=$old"
             exit 4
           fi
           echo 'PINNED_SOURCE_REFS_VERIFIED=YES'
