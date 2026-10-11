@@ -134,7 +134,11 @@ def _proxy_trade(bars, base_ms, watch_ms, delay_ms, slip_bps):
             "historical_book_verified":False}
 
 
-def replay_case(src, bars):
+def replay_case(src, bars, include_zero_trade_ticks=False):
+    """Default preserves Stage7 skip policy; opt-in models a ticker present
+    even when the most recent closed minute bar has no actual trades. Both
+    paths use the exact same production D0/D1 decision functions.
+    """
     first=bars[0][0]
     anchor=parse_ms(src["old_watch_utc"])
     # Observe first 24h silently to create the known 24h volume window;
@@ -161,7 +165,8 @@ def replay_case(src, bars):
                 # not be treated as confirmed tradable live market ticks.
                 if bars[i][6] == 0 or bars[i][5] == 0:
                     no_trade_minutes+=1
-                    continue
+                    if not include_zero_trade_ticks:
+                        continue
                 rolling_quote=quote_prefix[i+1]-quote_prefix[i+1-ROLLING_24H_BARS]
                 live.observe_snapshot(db,src["venue"],ms,[{
                     "symbol":src["symbol"],"lastPrice":str(bars[i][4]),
@@ -206,7 +211,11 @@ def replay_case(src, bars):
                 "quote24_threshold_usdt":100000,
                 "replay_start_utc":utc(bars[start_i][0]+INTERVAL_1M),
                 "replay_end_utc":utc(bars[end_i-1][0]+INTERVAL_1M),
-                "polls":polls,"polls_skipped_no_trade":no_trade_minutes,
+                "polls":polls,
+                "polls_skipped_no_trade":(0 if include_zero_trade_ticks else no_trade_minutes),
+                "polls_zero_trade_minute":no_trade_minutes,
+                "ticker_zero_trade_policy":("INCLUDE_CLOSED_1M_LAST_PRICE_PROXY" if
+                    include_zero_trade_ticks else "SKIP_ZERO_TRADE_POLL"),
                 "watch_count":len(watches),"first_watch_utc":utc(first_watch) if first_watch else None,
                 "first_watch_lead_hours_vs_old_anchor":(
                     round((anchor-first_watch)/3600000,3) if first_watch else None),
