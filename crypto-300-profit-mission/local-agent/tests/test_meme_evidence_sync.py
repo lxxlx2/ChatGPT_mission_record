@@ -326,3 +326,63 @@ def test_frank_history_failed_part_keeps_entire_snapshot_queued(tmp_path):
     assert result["status"] == "SYNC_PARTIAL"
     assert result["pending_history"] == 1
     assert manifest_file.exists()
+
+
+def test_frank_git_material_snapshot_retains_all_224_source_scoped_tokens(tmp_path):
+    spool = EvidenceSpool(tmp_path)
+    rows = []
+    for i in range(224):
+        source_kind = ("LOCAL_TRADE_OR_MODEL_WITH_SIGNATURE_DELTA" if i < 33
+                       else "SIGNATURE_TOKEN_DELTA_ONLY")
+        category = ("MODEL_OPEN" if i < 33 else
+                    "PASSIVE_RECEIPT_ONLY" if i < 137 else
+                    "OTHER_ACCOUNT_ACTIVITY")
+        rows.append({
+            "mint": "H" + str(i).zfill(42), "watch_state": category,
+            "origin_scope": source_kind, "local_model_state": "UNKNOWN",
+            "local_recognized_buys": 1 if i < 33 else 0,
+            "local_recognized_sells": 0,
+            "passive_receipt_events": 1 if 33 <= i < 137 else 0,
+            "signature_received_events": 1 if 33 <= i < 137 else 0,
+            "signature_observed_in_raw": "1000000" if 33 <= i < 137 else "0",
+            "signature_token_amount_decimals": 6,
+            "transfer_counterparty_verified": False,
+            "pnl_usd": None, "api_key": "MUST_NOT_EXPORT",
+        })
+    watch = {
+        "summary": {
+            "total_observed": 224,
+            "original_trade_or_model_observed": 33,
+            "passive_receipt_only": 104,
+            "other_account_activity_only": 87,
+        },
+        "signature_activity_provenance": {
+            "signature_rows_scanned": 1720,
+            "wallet_owned_delta_mints": 224,
+            "signature_rows_without_parsed_counterparty_flow": 1720,
+            "counterparty_flow_is_complete": False,
+        }, "rows": rows,
+    }
+    spool.frank_scan(poll_count=21754, health={
+        "poll_count": 21754, "last_poll_at": "2026-10-11T07:24:45+00:00",
+        "new_signatures": 1}, observed_watchlist=watch)
+    pub = FakeGit(spool)
+    result = pub.sync(force=True)
+    assert result["status"] == "SYNC_OK"
+    remote_events = [
+        json.loads(value)["events"]
+        for key, value in pub.remote.items()
+        if "/frank/" in key and key.endswith(".json")
+    ]
+    assert len(remote_events) == 1
+    archived = remote_events[0][0]["observed_watchlist"]
+    assert archived["total_observed"] == 224
+    assert archived["exported_count"] == 224
+    assert archived["truncated"] is False
+    assert archived["passive_receipt_only"] == 104
+    assert archived["other_account_activity_only"] == 87
+    assert archived["signature_activity_provenance"]["counterparty_flow_is_complete"] is False
+    assert len(archived["rows"]) == 224
+    assert archived["rows"][33]["passive_receipt_events"] == 1
+    assert archived["rows"][33]["transfer_counterparty_verified"] is False
+    assert "MUST_NOT_EXPORT" not in str(archived)
