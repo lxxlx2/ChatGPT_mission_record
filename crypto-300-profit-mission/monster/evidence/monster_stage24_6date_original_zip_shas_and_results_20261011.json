@@ -1,0 +1,187 @@
+{
+  "schema": "MONSTER_STAGE24_REAL_6DATE_FULL758_168H_GT_ORIGINAL_V4_12H_WATCH_SHA_PROOF_V1",
+  "preregistration": "monster_stage24_unseen_7d_whole_market_watch_gt_prereg_20261011.json",
+  "prereg_commit": "2ff6926bff0648912f982e8b68385440b7946068",
+  "original_source_ci": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38134672934",
+  "original_source_ci_commit": "366f4ec5d3a6bbf1b332dcb904a738a806b37ada",
+  "ci_conclusion": "SUCCESS_ALL_SIX_MATRIX_JOBS",
+  "six_original_zip_hash_verified_locally": true,
+  "six_extracted_original_json_hash_verified_locally": true,
+  "raw_each_symbol_case_count": 758,
+  "original_unchanged_v4": true,
+  "official_sources": "Publisher-SHA256 verified Binance Spot monthly 1h for 168h raw future high labels plus 3 Spot daily 1m ZIP for 60h causal V4 replay; no historical orderbook",
+  "timescope": "GT from day06 168h; V4 WATCH only day06-day18, not full7d",
+  "artifacts": [
+    {
+      "date": "2025-11-04",
+      "artifact_id": 11700651924,
+      "zip_sha256": "208983ef0aff92f7d955422c7a1c31a028f1bfcc493787c1066359d02bb4fced",
+      "raw_json_sha256": "5ff32103c7e7c5125d0566f81ae190ad1bf1624df381fbae0e19aeda485da465",
+      "complete_168h": 437,
+      "complete_60h": 436,
+      "joint": 436,
+      "gross2x": 14,
+      "early2x": 4,
+      "gross5x": 1,
+      "v4_watch_episodes": 18
+    },
+    {
+      "date": "2025-12-04",
+      "artifact_id": 11700023559,
+      "zip_sha256": "bd598644221525ab600c46fa6e3717c3f4afd4d8eafaf24f8ae56e7635783601",
+      "raw_json_sha256": "d6d0451e790119f095b7f89cb8036f347dd6bf4777091fd3529fbb5641cc1df6",
+      "complete_168h": 440,
+      "complete_60h": 440,
+      "joint": 440,
+      "gross2x": 4,
+      "early2x": 0,
+      "gross5x": 0,
+      "v4_watch_episodes": 8
+    },
+    {
+      "date": "2026-02-04",
+      "artifact_id": 11700058433,
+      "zip_sha256": "0d070204d065cd149bdfecfe25ad30befda9e82df2dc89f2e3c8ef7029c7f8a3",
+      "raw_json_sha256": "d0d482e4c8913005c7166db0612384bacab0b1824ec4971e6bdf327544c9d37b",
+      "complete_168h": 445,
+      "complete_60h": 445,
+      "joint": 445,
+      "gross2x": 2,
+      "early2x": 0,
+      "gross5x": 0,
+      "v4_watch_episodes": 7
+    },
+    {
+      "date": "2026-04-04",
+      "artifact_id": 11700786475,
+      "zip_sha256": "ab43955277e977744736793677ad9ff3a5d998806aa678457a618609e271027a",
+      "raw_json_sha256": "62d9eb04bc62d17ec7c33077c62ba809b99e86c95eaaedc689490c6490f37507",
+      "complete_168h": 438,
+      "complete_60h": 438,
+      "joint": 438,
+      "gross2x": 8,
+      "early2x": 2,
+      "gross5x": 0,
+      "v4_watch_episodes": 13
+    },
+    {
+      "date": "2026-08-04",
+      "artifact_id": 11700956514,
+      "zip_sha256": "942faf119a815b83801ee0895a45e93e196d34b6fa717e3bb56b124ea8c3ab06",
+      "raw_json_sha256": "31591740f6ae5a054a8e0992c29961dae0c709c0630fed3b2cc43e182cc0911e",
+      "complete_168h": 478,
+      "complete_60h": 478,
+      "joint": 478,
+      "gross2x": 9,
+      "early2x": 1,
+      "gross5x": 3,
+      "v4_watch_episodes": 10
+    },
+    {
+      "date": "2026-09-04",
+      "artifact_id": 11700382028,
+      "zip_sha256": "b7551e7107d241cc7b839f9a46ef79400cb11d50a556f9ac7ca3bfe161f81d3e",
+      "raw_json_sha256": "27f048d8060e8caa8158f2534e65b53a61589c9008414b2b37e85a06da243b3a",
+      "complete_168h": 485,
+      "complete_60h": 485,
+      "joint": 485,
+      "gross2x": 3,
+      "early2x": 0,
+      "gross5x": 0,
+      "v4_watch_episodes": 5
+    }
+  ],
+  "pooled_recomputed_from_six_original_verified_zips": {
+    "attempted": 4548,
+    "hourly_source_status": {
+      "VERIFIED_COMPLETE_168H": 2723,
+      "MONTH_ARCHIVE_MISSING_404": 1774,
+      "CENSORED_7D_HOURLY_GAP": 51
+    },
+    "minute_source_status": {
+      "VERIFIED_COMPLETE_60H_1M": 2722,
+      "SOURCE_MISSING_DAY_ARCHIVE": 1822,
+      "CENSORED_60H_1M_GAP": 4
+    },
+    "both_sources_complete": 2722,
+    "v4_watch_episodes": 61,
+    "v4_watch_symbol_dates": 55,
+    "v4_d1_events": 50,
+    "future_gross_high_2x": {
+      "joint_verified_positives": 40,
+      "strict_early_watch": 7,
+      "no_watch_in_fixed12h": 33,
+      "inside_crossing_hour_ambiguous": 0,
+      "after_first_crossing_hour": 0,
+      "first_crossing_after_fixed12h": 39
+    },
+    "future_gross_high_5x": {
+      "joint_verified_positives": 4,
+      "strict_early_watch": 2,
+      "no_watch_in_fixed12h": 2,
+      "first_crossing_after_fixed12h": 4
+    },
+    "future_gross_high_10x": {
+      "joint_verified_positives": 1,
+      "strict_early_watch": 0,
+      "no_watch_in_fixed12h": 1,
+      "first_crossing_after_fixed12h": 1
+    },
+    "original_v4_watch24h_proxy_20bps": {
+      "evaluable": 43,
+      "win": 14,
+      "loss": 29,
+      "censored": 18,
+      "median_net_pct": -9.134183,
+      "independent_30usdt_proxy_pnl": -16.630285
+    }
+  },
+  "notable_event_register": [
+    {
+      "date": "2025-11-04",
+      "symbol": "GIGGLEUSDT",
+      "max_raw_1h_high_multiple": 5.359756,
+      "first_2x_hour_index": 5,
+      "first_5x_hour_index": 38,
+      "first_v4_watch_utc": "2025-11-04T09:42:00Z",
+      "classification": "STRICT_EARLY"
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "BICOUSDT",
+      "max_raw_1h_high_multiple": 5.424955,
+      "first_5x_hour_index": 121,
+      "first_v4_watch_utc": "2026-08-04T16:33:00Z",
+      "classification": "STRICT_EARLY"
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "HEIUSDT",
+      "max_raw_1h_high_multiple": 6.144482,
+      "first_5x_hour_index": 47,
+      "first_v4_watch_utc": null,
+      "classification": "NO_WATCH_IN_FIXED_12H"
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "TUTUSDT",
+      "max_raw_1h_high_multiple": 13.139725,
+      "first_10x_hour_index": 121,
+      "first_v4_watch_utc": null,
+      "classification": "NO_WATCH_IN_FIXED_12H"
+    }
+  ],
+  "interpretation": "Counts 7/40 early for fixed 12-hour window only; 39/40 first crossing hours occur later, so cannot declare model missed 33/40 under continuous seven-day coverage; proxy cost returns also fail profit positive",
+  "known_limits": [
+    "No exact historic exchangeInfo trading eligibility or survivorship-free 2025 universe",
+    "2 historical Unicode USDT symbol archives not replayed",
+    "1h intrahour crossing timestamp unknown, same-hour WATCH must be ambiguous",
+    "No historical L2 order-book or executable fills",
+    "7d GT from fixed 06:00 starting price may not match entry opportunity or claim 2x tradable return"
+  ],
+  "independent_other_ai_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "real_gmail": "OFF",
+  "production_trading": "NO_GO",
+  "frank": "UNTOUCHED"
+}
