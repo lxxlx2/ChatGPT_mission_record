@@ -449,3 +449,25 @@ def test_sanitizer_no_secret_retained_in_framed_url_path():
     uri = '(https://server.example.com/messaging/bearer/SUPERSECRETTOKENKEY)'
     assert safe(uri) == "[URL_REDACTED]"
     assert safe("http://server.example.com/path/mykey@provider.example") == "[EMAIL_REDACTED]"
+
+
+def test_r5_public_links_and_plain_text_survive_sanitizer():
+    from mission_agent.mission_control.evidence_sync import safe as _s
+    gh = ("https://github.com/lxxlx2/ChatGPT_mission_record/blob/research/"
+          "frank-wallet-v2-d0-readonly-20261011/crypto-300-profit-mission/meme/evidence/x.json")
+    assert _s(gh) == gh
+    tx = "https://solscan.io/tx/5wqKv5YuurRKUaJAK5fZtFrNg6GocVZuTTiAPWYrYDaswyUArwAZurpbZFU6WBjHp5z5Bt5bPCkLNKVQHfS6yigx"
+    assert _s(tx) == tx
+    assert _s("profile: ok") == "profile: ok"
+    assert _s("reconfile: 3") == "reconfile: 3"
+    assert _s("file transfer note") == "file transfer note"
+    assert _s("deposit ~ approx 3") == "deposit ~ approx 3"
+
+
+def test_r5_secret_path_and_local_path_redaction_remains_active():
+    from mission_agent.mission_control.evidence_sync import safe as _s
+    assert _s("file:///Users/alice/Library/FrankMeme/state.db") == "[LOCAL_PATH_REDACTED]"
+    assert _s("~/Library/Application Support/FrankMeme/policy.json") == "[LOCAL_PATH_REDACTED]"
+    assert _s("https://solana-mainnet.g.alchemy.com/v2/FAKE_TEST_KEY_1234567890abcdef") == "[URL_REDACTED]"
+    assert _s("https://api.example.com/v1/token/abc") == "[URL_REDACTED]"
+    assert _s("https://github.com/x/y/private/notes") == "[URL_REDACTED]"
