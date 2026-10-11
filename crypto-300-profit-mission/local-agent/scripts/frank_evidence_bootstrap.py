@@ -24,6 +24,7 @@ from scripts.frank_wallet_d0_snapshot import report as d0_report
 from mission_agent.mission_control.wallet_history import export_history
 from mission_agent.mission_control.wallet_watch import from_seed
 from mission_agent.mission_control.wallet_inventory import InventoryEvidenceError, reconcile_watchlist
+from mission_agent.mission_control.wallet_reconciliation import analyze as analyze_frank_gap
 
 
 def refresh_zip_summary(packet: Path, status: dict) -> None:
@@ -76,6 +77,10 @@ def main(argv=None):
             proof = json.loads(args.inventory_evidence.read_text(encoding="utf-8"))
             model = from_seed(data["d0_local_audit"]["watch_seed"])
             data["inventory_reconciliation"] = reconcile_watchlist(model, proof)
+            if "frank_full_local_history" in data:
+                data["local_trade_inventory_gap_audit"] = analyze_frank_gap(
+                    data["frank_full_local_history"], proof)
+                status["local_trade_inventory_gap_audit"] = "LOCALLY_ANALYZED_NO_PNL"
             status["inventory_reconciliation"] = "DATED_POINT_IN_TIME_NOT_LIVE"
             status["inventory_mints_checked"] = data["inventory_reconciliation"]["snapshot_reconciliation"]["matched_mints"]
         except (OSError, ValueError, InventoryEvidenceError, TypeError) as exc:
@@ -105,6 +110,10 @@ def main(argv=None):
         if "inventory_reconciliation" in data:
             archive.writestr("frank-inventory-dated-reconciliation.json",
                              json.dumps(data["inventory_reconciliation"], ensure_ascii=False, indent=2))
+        if "local_trade_inventory_gap_audit" in data:
+            archive.writestr("frank-local-trade-inventory-gap-audit.json",
+                             json.dumps(data["local_trade_inventory_gap_audit"],
+                                        ensure_ascii=False, indent=2))
         for folder in ("ca", "ca-parts", "frank", "frank-history", "frank-history-parts"):
             for source in sorted((spool.pending / folder).rglob("*.json")):
                 archive.write(source, "sanitized-pending/" + source.relative_to(spool.pending).as_posix())
