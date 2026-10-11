@@ -1,10 +1,30 @@
 # GANG / The Syndicate — Backable ICO operational position
 
-Updated: 2026-10-12 Asia/Bangkok (Complete and automatic claim/refund finalized; live GANG pools)
+Updated: 2026-10-12 Asia/Bangkok (user-executed 8008.208 GANG complete sale verified; realized loss reconciled)
 Network: Solana mainnet
 Source standard: direct finalized Solana state + actual MetaDAO v0.7 contract + user participation statement.
-State: `COMPLETE_ONCHAIN / RECEIVED_8008_208_GANG / REFUNDED_19_507520_USDC / LIVE_POOL`
+State: `CLOSED / GANG_ZERO / REALIZED_LOSS_96_210562_USDC / NO_OUTSTANDING_ESCROW`
 Trading execution: `NO_GO` (research/read-only only; no standing automation or monitor authorized).
+
+## 2026-10-12 final exit — GANG position CLOSED with realized loss
+
+Evidence: **DIRECT_CHAIN SOLANA_FINALIZED**, 2026-10-12 ~01:52–01:56 Asia/Bangkok. Primary sale signature https://solscan.io/tx/2cGKrncYix2AK2kAqtepgWJ1ipBsuH95TYwPHohRhAEkkbNRiwDbUUzLUyTG5RhA5D1xdi4Cbj9PUajsx8gGJNDk, successful finalized transaction **slot 455756451 / 2026-10-11T18:51:52Z**, which is 2026-10-12 01:51:52 Bangkok.
+
+### Fully reconciled exit, not unrealized PnL
+
+- Solana main wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`.
+- Pre-trade `getTokenAccountsByOwner` finalized **slot 455756240**: **8,008.208 GANG** and **87.434841 USDC** in `AaHmxVnUryLCrSr32zxrDGzfafXTvuHATURZbBy6XQ6A`; native SOL **0.013457492** at nearby finalized slot 455756239.
+- Post-trade finalized **slot 455757417**: GANG Token Account `5XBM2iEibBNAVBMjPYb9Deh8ibm4CCqZrbqk8n7TpGJo` no longer shows positive balance; *entire wallet GANG position is zero*. USDC Token Account **471.716759 USDC**. Native SOL **0.012905142** at slot 455757419.
+- Independent `getSignaturesForAddress` on both the user GANG Token Account and USDC Token Account identifies exactly one **successful** GANG sale/USDC-wallet-changing transaction between the pre/post snapshots: the signature above. Thus **net USDC realized from this complete exit = 471.716759 − 87.434841 = 384.281918 USDC**. The USDC flow is grounded by the two finalized account reads and transaction index; transaction-detail output was truncated, so do not claim a fully parsed inner-instruction ledger.
+- Originally deposited 500.000000 USDC in Backable; `approved_amount=480.492480` was spent on 8008.208 GANG at ICO unit cost $0.06; the **19.507520 USDC rejected balance had already been refunded** at launch completion, confirmed from FundingRecord flags, *and is part of wallet USDC balances; do not add it a second time into NAV*.
+- **GANG-only realized PnL = 384.281918 − 480.492480 = −96.210562 USDC**, ROI = **−20.0233%** of GANG approved cost, average net sale realization = **$0.047986017/GANG**. Cashflow explanation for original $500: $384.281918 sold proceeds + $19.507520 returned deposit = **$403.789438 recovered**, net **−$96.210562**, i.e. **−19.2421%** of original $500 commitment. Distinguish these two percentage denominators.
+- These are net wallet USDC cashflows; realized PnL **excludes native SOL transaction/network/priority fees**, any unrelated SOL spend or other taxes. Last-sale transaction's parsed meta returned `fee=352350 lamports`, approximately 0.000352350 SOL; the whole pre/post SOL balance reduction was 0.000552350 SOL but not all such difference is independently established as a network fee. No fake USD precision for gas.
+- **Status `CLOSED / GANG=0 / FULL_EXIT_REALIZED_LOSS`; cost basis consumed**. No position, mark-to-market GANG value, future unrealized profit or old $500 escrow should remain in active assets. Add proceeds only via existing wallet USDC balance; do **not add the 384.281918 USDC proceeds a second time to current NAV**.
+- User-confirmed screenshot from OKX Web3 approx 01:52 shows ~471.76 USDC and other assets; independently matches Solana direct 471.716759 USDC balance. Screenshot does not prove every cross-chain holding belongs to the canonical EVM account. No LP created.
+- This realized loss is a **position-specific GANG result**; original Mission $300 cash + six Credits NFTs portfolio PnL remains unresolved until provenance reconciliation; do not equate GANG loss to whole-Mission return. Bybit life/rent reserve excluded throughout.
+
+Earlier `COMPLETE_ONCHAIN / RECEIVED_8008_208_GANG` headings describe historical conditions **before this user-executed sale**. This section and the updated top-line state supersede all prior holder/current-inventory statements without altering historical evidence. No ChatGPT transaction, signing, or automation was performed.
+
 
 ## 2026-10-12 finalized COMPLETE / automatic distribution / live pool evidence
 
