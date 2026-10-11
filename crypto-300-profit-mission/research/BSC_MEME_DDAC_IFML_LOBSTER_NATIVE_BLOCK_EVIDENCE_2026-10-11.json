@@ -157,58 +157,86 @@
       "after_wei": "33623960206870262231",
       "native_delta_wei": "587798179087093122",
       "status": "NATIVE_BALANCE_VERIFIED"
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "我踏马来了",
       "dir": "in",
       "block": 74360480,
       "hash": "0x54bf67f75ad4edf7376877aed21ef59b076a17be18330e83d394d482cfd54e05",
-      "token_raw": "152241093285911316311916"
+      "token_raw": "152241093285911316311916",
+      "before_wei": "10963826996500098048",
+      "after_wei": "10463791919100098048",
+      "native_delta_wei": "-500035077400000000",
+      "status": "NATIVE_BALANCE_VERIFIED"
     },
     {
       "token": "我踏马来了",
       "dir": "out",
       "block": 74377785,
       "hash": "0x75865523c9c26955cc769b4c11f0fe14ac0c77e9f945d954338826e3ddb6347b",
-      "token_raw": "152241093285911316311916"
+      "token_raw": "152241093285911316311916",
+      "before_wei": "11175102190045228064",
+      "after_wei": "11695212440521763786",
+      "native_delta_wei": "520110250476535722",
+      "status": "NATIVE_BALANCE_VERIFIED"
     },
     {
       "token": "我踏马来了",
       "dir": "in",
       "block": 74460512,
       "hash": "0xb19db9769e263071ebaa9a90d452aaac86cbc5ee5dcceae954996a334e1b8246",
-      "token_raw": "196814410022627640097170"
+      "token_raw": "196814410022627640097170",
+      "before_wei": "11551771897905074173",
+      "after_wei": "11051596510905074173",
+      "native_delta_wei": "-500175387000000000",
+      "status": "NATIVE_BALANCE_VERIFIED"
     },
     {
       "token": "我踏马来了",
       "dir": "out",
       "block": 74468389,
       "hash": "0xaf25e6a23743c25bae818e760f16919fc7d1617451a34470e1f93fe7999a762e",
-      "token_raw": "196814410022627640097170"
+      "token_raw": "196814410022627640097170",
+      "before_wei": "9887266031759841233",
+      "after_wei": "10417545935912797839",
+      "native_delta_wei": "530279904152956606",
+      "status": "NATIVE_BALANCE_VERIFIED"
     },
     {
       "token": "我踏马来了",
       "dir": "in",
       "block": 74473636,
       "hash": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a",
-      "token_raw": "91088412526212094717943"
+      "token_raw": "91088412526212094717943",
+      "before_wei": "10384511150110072997",
+      "after_wei": "9384430391199365350",
+      "native_delta_wei": "-1000080758910707647",
+      "status": "NATIVE_BALANCE_VERIFIED"
     },
     {
       "token": "我踏马来了",
       "dir": "in",
       "block": 74473637,
       "hash": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad",
-      "token_raw": "89736767273195553619223"
+      "token_raw": "89736767273195553619223",
+      "before_wei": "9384430391199365350",
+      "after_wei": "8384358006771675603",
+      "native_delta_wei": "-1000072384427689747",
+      "status": "NATIVE_BALANCE_VERIFIED"
     },
     {
       "token": "我踏马来了",
       "dir": "out",
       "block": 74473641,
       "hash": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e",
-      "token_raw": "180825179799407648337166"
-    },
+      "token_raw": "180825179799407648337166",
+      "before_wei": "8384358006771675603",
+      "after_wei": "9938186563207818195",
+      "native_delta_wei": "1553828556436142592",
+      "status": "NATIVE_BALANCE_VERIFIED"
+    }
+  ],
+  "pending": [
     {
       "token": "龙虾",
       "dir": "in",
@@ -238,7 +266,7 @@
       "token_raw": "195581662531433206271053"
     }
   ],
-  "state": "PARTIAL_14_OF_25",
+  "state": "PARTIAL_21_OF_25",
   "scope": "Native wallet BNB block delta at 25 original ERC20 event tx blocks, wallet balance before block and after block, not fully isolated transaction PnL.",
   "production": "NO_GO"
 }
