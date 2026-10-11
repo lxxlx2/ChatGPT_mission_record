@@ -47,7 +47,7 @@ class NewDateTests(unittest.TestCase):
         self.assertEqual(d["attempted"],2)
         self.assertEqual(d["source_status_counts"]["CENSORED_GT_NOT_COMPLETE_168H"],1)
     def test_source_manifest_universe_size_mismatch_rejected(self):
-        with patch.object(m,"original_universe",return_value=["AUSDT"]*758):
+        with patch.object(m,"original_universe",return_value=["AUSDT"]):
             with self.assertRaisesRegex(ValueError,"SOURCE_SHARD_SIZE_MISMATCH"):
                 m.replay_shard("2025-01-19",0,Path("/tmp/not_used.zip"))
     def test_unknown_date_aborts_before_price_reads(self):
