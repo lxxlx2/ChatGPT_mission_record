@@ -1,0 +1,108 @@
+name: Monster Stage26 Actual 36 Artifact ZIP and JSON Original Source Proof
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - '.github/workflows/monster-v4-stage26-derive-source-proof.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  prove-all-thirty-six-originals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify final exact original successful source run and SHA-rehash each of its 36 ZIPs and JSONs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import hashlib,io,json,re,subprocess,zipfile
+          from collections import Counter
+          from pathlib import Path
+          root="repos/lxxlx2/ChatGPT_mission_record/"
+          run_id=38136620497
+          def gh(path):
+              return subprocess.check_output(["gh","api","-H","Accept: application/vnd.github+json",path])
+          run=json.loads(gh(root+f"actions/runs/{run_id}"))
+          if run["status"]!="completed" or run["conclusion"]!="success":
+              raise SystemExit("STAGE26_ORIGINAL_SOURCE_CI_NOT_SUCCESS")
+          if run["head_sha"]!="6a380551d8e86bc404e8d1156a4aea2952d3bb5f":
+              raise SystemExit("STAGE26_SOURCE_CODE_COMMIT_CHANGED")
+          r=json.loads(gh(root+f"actions/runs/{run_id}/artifacts?per_page=100"))
+          xs=r["artifacts"]
+          if len(xs)!=36 or r["total_count"]!=36:
+              raise SystemExit("STAGE26_WRONG_ORIGINAL_ARTIFACT_COUNT")
+          pattern=re.compile(r"^monster-stage26-originalV4-continuous168h-(20\d\d-\d\d-\d\d)-shard([0-5])$")
+          expected_dates={"2025-11-04","2025-12-04","2026-02-04","2026-04-04","2026-08-04","2026-09-04"}
+          proof=[];pairs=set();source_cases={}
+          for art in xs:
+              match=pattern.fullmatch(art["name"])
+              if not match:
+                  raise SystemExit("STAGE26_ARTIFACT_NAME_UNEXPECTED")
+              day,shard=match[1],int(match[2])
+              if day not in expected_dates or (day,shard) in pairs:
+                  raise SystemExit("STAGE26_ARTIFACT_DUPLICATE_OR_UNKNOWN")
+              pairs.add((day,shard))
+              data=gh(root+f"actions/artifacts/{art['id']}/zip")
+              archive_sha=hashlib.sha256(data).hexdigest()
+              if art.get("digest")!="sha256:"+archive_sha:
+                  raise SystemExit("STAGE26_ARTIFACT_ZIP_SHA_BAD")
+              member=f"monster_stage26_{day}_shard{shard}.json"
+              with zipfile.ZipFile(io.BytesIO(data)) as z:
+                  if z.namelist()!=[member] or z.getinfo(member).file_size>15000000:
+                      raise SystemExit("STAGE26_BAD_ORIGINAL_MEMBER")
+                  raw=z.read(member)
+              obj=json.loads(raw)
+              if obj.get("schema")!="MONSTER_STAGE26_FULL168H_758_6DATE_PER_SYMBOL_CONTINUOUS_V4_V1" or (obj.get("date"),obj.get("shard"))!=(day,shard):
+                  raise SystemExit("STAGE26_ORIGINAL_RESULT_ID_BAD")
+              rows=obj["cases"]
+              if len(rows) not in (126,127):
+                  raise SystemExit("STAGE26_WRONG_SHARD_SIZE")
+              ids={x["symbol"] for x in rows}
+              if len(ids)!=len(rows) or ids.intersection(source_cases.get(day,set())):
+                  raise SystemExit("STAGE26_DUPLICATE_OR_MISSING_SOURCE_SYMBOL")
+              source_cases.setdefault(day,set()).update(ids)
+              if any(("NETWORK_FAILURE" in c["status"] or "INTEGRITY_REJECTED" in c["status"]) for c in rows):
+                  raise SystemExit("STAGE26_SOURCE_INTEGRITY_OR_NETWORK_FAILURE")
+              verified=[c for c in rows if c["status"]=="COMPLETE_168H_CONTINUOUS_V4"]
+              for c in verified:
+                  hashes=c.get("official_source_SHA256_days",[])
+                  if len(hashes)!=10 or len({x["date"] for x in hashes})!=10 or not all(len(x["sha256"])==64 for x in hashes):
+                      raise SystemExit("STAGE26_TEN_OFFICIAL_PUBLISHER_SHAS_ABSENT")
+                  if c["continuous"].get("polls")!=3360 or c["continuous"].get("continuous_sqlite_reset_count")!=0:
+                      raise SystemExit("STAGE26_REPLAY_NOT_FULL168H")
+              proof.append({"date":day,"shard":shard,"artifact_id":art["id"],
+                  "zip_sha256":archive_sha,"raw_json_sha256":hashlib.sha256(raw).hexdigest(),
+                  "cases":len(rows),"complete168h":len(verified),
+                  "watch_episodes":sum(c["continuous"]["watch_count"] for c in verified)})
+          if len(pairs)!=36 or any(len(source_cases.get(d,set()))!=758 for d in expected_dates):
+              raise SystemExit("STAGE26_NOT_758x6_FULL_UNIVERSE")
+          proof.sort(key=lambda a:(a["date"],a["shard"]))
+          output={"schema":"MONSTER_STAGE26_ALL36_ORIGINAL_GHA_ZIP_JSON_SHA256_REAL_PROOF_V1",
+              "source_ci_run":"https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38136620497",
+              "source_ci_conclusion":"SUCCESS_ALL_36","source_git_sha":"6a380551d8e86bc404e8d1156a4aea2952d3bb5f",
+              "all_4548_symbol_date_attempts_persisted":True,
+              "all_36_original_ZIP_and_internal_JSON_SHA256_recomputed":True,
+              "actual_GitHub_original_36_artifacts":True,
+              "source_complete_total":sum(x["complete168h"] for x in proof),
+              "watch_total":sum(x["watch_episodes"] for x in proof),
+              "artifacts":proof,
+              "historical_real_L2_fills":"UNVERIFIED",
+              "independent_other_AI_review":"NOT_DONE",
+              "deployment":"NO_GO","gmail":"OFF","trading":"NO_GO"}
+          target=Path("/tmp/monster_stage26_verified_sharded_168h_artifact_proof_20261011.json")
+          target.write_text(json.dumps(output,indent=2,sort_keys=True)+"\n")
+          print("STAGE26_SOURCE_PROOF_JSON "+json.dumps(output,separators=(",",":"),sort_keys=True))
+          PY
+      - name: Archive the immutable exact source proof for Git persistence
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage26-original-36-artifacts-all-sha-proof
+          path: /tmp/monster_stage26_verified_sharded_168h_artifact_proof_20261011.json
+          retention-days: 30
