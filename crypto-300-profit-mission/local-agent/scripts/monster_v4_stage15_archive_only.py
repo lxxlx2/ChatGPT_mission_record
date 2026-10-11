@@ -60,7 +60,7 @@ def list_ever_spot_symbols(read=read_url):
             symbol = folder[len(ROOT):-1]
             if (not symbol or "/" in symbol or not symbol.isascii()
                     or not symbol.isalnum() or symbol.upper() != symbol):
-                raise ValueError("S3_LIST_INVALID_SYMBOL")
+                raise ValueError("S3_LIST_INVALID_SYMBOL:" + repr(folder))
             found.add(symbol)
             if len(found) > MAX_SYMBOLS:
                 raise ValueError("S3_LIST_TOO_MANY_SYMBOLS")
