@@ -386,3 +386,32 @@ def test_frank_git_material_snapshot_retains_all_224_source_scoped_tokens(tmp_pa
     assert archived["rows"][33]["passive_receipt_events"] == 1
     assert archived["rows"][33]["transfer_counterparty_verified"] is False
     assert "MUST_NOT_EXPORT" not in str(archived)
+
+
+def test_immutable_git_content_id_collision_rejected_without_put(tmp_path):
+    pub = FakeGit(EvidenceSpool(tmp_path))
+    path = f"{PREFIX}/frank-history/" + "a" * 64 + ".json"
+    pub.remote[path] = b'{"different":true}'
+    with pytest.raises(ValueError, match="IMMUTABLE_GIT_EVIDENCE_COLLISION"):
+        pub._upload(path, b'{"different":false}')
+    assert pub.remote[path] == b'{"different":true}'
+    assert not any(method == "PUT" for method, _ in pub.calls)
+    # Repeated identical uploads remain idempotent, without a PUT.
+    pub.calls.clear()
+    pub._upload(path, b'{"different":true}')
+    assert not any(method == "PUT" for method, _ in pub.calls)
+
+
+def test_existing_frank_time_bucket_may_append_without_mutating_immutable_sources(tmp_path):
+    pub = FakeGit(EvidenceSpool(tmp_path))
+    path = f"{PREFIX}/frank/2026-10-11/1015.json"
+    pub.remote[path] = b'{"events":[1]}'
+    pub._upload(path, b'{"events":[1,2]}')
+    assert pub.remote[path] == b'{"events":[1,2]}'
+    assert any(method == "PUT" for method, _ in pub.calls)
+
+
+def test_sanitizer_cannot_silently_truncate_arrays_or_export_mac_home_path():
+    assert safe({"path": "/Users/alice/private/state.db"})["path"] == "[LOCAL_PATH_REDACTED]"
+    with pytest.raises(ValueError, match="SAFE_ARRAY_EXCEEDS_LIMIT"):
+        safe(list(range(200001)))
