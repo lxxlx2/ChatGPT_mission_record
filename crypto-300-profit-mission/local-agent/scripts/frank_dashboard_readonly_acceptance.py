@@ -10,11 +10,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 from pathlib import Path
 import re
 import sqlite3
-import sys
 from urllib import request
 from urllib.parse import quote
 
