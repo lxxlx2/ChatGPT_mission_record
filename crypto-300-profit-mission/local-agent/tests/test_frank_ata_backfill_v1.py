@@ -348,6 +348,64 @@ def test_duplicate_same_ata_signature_is_not_double_counted():
     assert len([name for name, _ in rpc.calls if name == "getTransaction"]) == 1
 
 
+
+
+def test_malformed_provider_page_preserves_prior_verified_ata_evidence():
+    other = "5PiBn5JdjJDnRGziiSfsu2affgBR3DyTTCR3CHpcode"
+    other_legacy, _ = derive_ata(WALLET, other, TOKEN)
+    first = [{"signature": SIGNATURES[0], "slot": TX_RAW[0][2],
+              "blockTime": 1791505760, "err": None}]
+    rpc = FakeRPC(
+        {J7_ATA: first, other_legacy: {"malformed": "not a list"}},
+        {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0])},
+    )
+    report = scan_ata_mints(rpc, [J7, other], known_signatures=set())
+    assert report["scan_status"] == "PARTIAL_SOURCE_INVALID"
+    assert report["interruption_type"] == "INVALID_PROVIDER_SIGNATURE_PAGE"
+    assert report["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
+    assert report["unscanned_canonical_accounts"] == 1
+    assert len(report["verified_nonzero_signatures_absent_from_local_index"]) == 1
+
+
+def test_invalid_signature_row_fails_closed_after_preserving_prior_proof():
+    rpc = FakeRPC(
+        {J7_ATA: [
+            {"signature": SIGNATURES[0], "slot": TX_RAW[0][2],
+             "blockTime": 1791505760, "err": None},
+            {"signature": "NOT_A_SOLANA_SIGNATURE", "err": None},
+        ]},
+        {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0])},
+    )
+    report = scan_ata_mints(rpc, [J7], known_signatures=set())
+    assert report["scan_status"] == "PARTIAL_SOURCE_INVALID"
+    assert report["interruption_type"] == "INVALID_PROVIDER_SIGNATURE_ROW"
+    assert report["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
+
+
+def test_tx_fetch_budget_is_partial_not_full_success():
+    source = [{"signature": sig, "slot": raw[2], "blockTime": 1791505760,
+               "err": None} for sig, raw in zip(SIGNATURES, TX_RAW)]
+    rpc = FakeRPC({J7_ATA: source}, {
+        sig: tx(*raw, signature=sig) for sig, raw in zip(SIGNATURES, TX_RAW)
+    })
+    report = scan_ata_mints(rpc, [J7], known_signatures=set(),
+                            max_tx_fetches=1)
+    assert report["scan_status"] == "PARTIAL_BUDGET_OR_PAGINATION"
+    assert report["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
+    assert report["complete_wallet_history"] is False
+
+
+def test_manual_cli_returns_failure_exit_for_all_partial_categories(monkeypatch):
+    from scripts import frank_ata_backfill
+    for status in ("PARTIAL_SOURCE_INVALID", "PARTIAL_BUDGET_OR_PAGINATION",
+                   "PARTIAL_RPC_INTERRUPTED"):
+        monkeypatch.setattr(frank_ata_backfill, "run",
+                            lambda argv=None, s=status: {
+                                "git_sync": "NOT_REQUESTED",
+                                "scan_status": s,
+                            })
+        assert frank_ata_backfill.main([]) == 3
+
 def test_real_twelve_sell_only_source_accounts_have_provable_program_ata_match():
     import json
     from pathlib import Path
