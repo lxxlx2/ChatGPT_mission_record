@@ -339,8 +339,12 @@ function renderFrankWatchlist(payload) {
   }
   $('watch-rows').innerHTML = rows.map(x => {
     const mint = x.mint || '';
-    const sig = x.last_event_signature || x.last_signature_activity_signature || '';
-    const lastTime = x.last_event_time || x.last_signature_activity_time;
+    const signatureIsLatest = Number(x.last_signature_activity_time || 0) >
+      Number(x.last_event_time || 0);
+    const sig = (signatureIsLatest ? x.last_signature_activity_signature : x.last_event_signature)
+      || x.last_signature_activity_signature || '';
+    const lastTime = signatureIsLatest ? x.last_signature_activity_time
+      : (x.last_event_time || x.last_signature_activity_time);
     const last = lastTime
       ? new Date(Number(lastTime) * 1000).toLocaleString('zh-CN')
       : '时间未核实';
@@ -368,9 +372,9 @@ function renderFrankWatchlist(payload) {
         mismatch + '</td>' +
       '<td>买 ' + esc(x.local_recognized_buys ?? 0) +
         ' / 卖 ' + esc(x.local_recognized_sells ?? 0) + '</td>' +
-      '<td>' + (x.last_event_side
+      '<td>' + (x.last_event_side && !signatureIsLatest
         ? esc(translated(sideLabel,x.last_event_side,'未知'))
-        : '本地账户余额变动') +
+        : '本地账户余额变动（未必是买卖）') +
         ' · ' + esc(last) + '<div class="watch-tx">' + txLink +
         (x.passive_receipt_events
           ? '<div>被动转入记录 ' + esc(x.passive_receipt_events) + ' 笔</div>' : '') +
