@@ -1,0 +1,89 @@
+name: Monster Stage32 Exact 36 Fresh Source SHA and 1m Versus 3m Funded Portfolio
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_aggregate.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_make_real_source_proof.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage32_aggregate.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage32_make_real_source_proof.py'
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json'
+      - '.github/workflows/monster-v4-stage32-exact-original36-SHA-aggregate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  full_original_source_proof_regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and check all source integrity, no time travel, closed candle economics tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage32_aggregate.py tests/test_monster_v4_stage32_aggregate.py scripts/monster_v4_stage32_make_real_source_proof.py tests/test_monster_v4_stage32_make_real_source_proof.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage32_aggregate.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage32_make_real_source_proof.py
+  original36_full_758_sixdate_real_portfolio_rehash:
+    needs: full_original_source_proof_regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Determine if all actual 36 original source artifacts have been SHA registered
+        id: proof
+        run: |
+          if test -s crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json; then
+            echo proof=true >> "$GITHUB_OUTPUT"
+          else
+            echo proof=false >> "$GITHUB_OUTPUT"
+            echo STAGE32_OFFICIAL_36_ORIGINALS_NOT_YET_COMPLETE_NO_MARKET_PROFIT_CONCLUSION
+          fi
+      - name: Read all 36 original source artifact IDs from exact frozen Git proof
+        if: steps.proof.outputs.proof == 'true'
+        run: |
+          python - <<'PY' >/tmp/monster32_artifacts.tsv
+          import json
+          from pathlib import Path
+          p=Path("crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json")
+          d=json.loads(p.read_text())
+          if d.get("source_ci_status")!="SUCCESS_ALL_36" or len(d.get("artifacts",[]))!=36:
+              raise SystemExit("NOT_ALL_TRUE_STAGE32_ORIGINALS")
+          for r in sorted(d["artifacts"],key=lambda x:(x["date"],x["shard"])):
+              print(r["date"],r["shard"],r["artifact_id"])
+          PY
+      - name: Fetch and independently rehash original 36 ZIP and full JSON source plus publisher checksums
+        if: steps.proof.outputs.proof == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          while read -r day shard artifact; do
+            gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/"$artifact"/zip > "/tmp/monster_stage32_${day}_shard${shard}.zip"
+          done </tmp/monster32_artifacts.tsv
+      - name: Truly recompute original paired 1min versus3min full six dates all758 2x5x10x and 300USDT money ledger
+        if: steps.proof.outputs.proof == 'true'
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          args=()
+          while read -r day shard artifact; do
+            args+=("/tmp/monster_stage32_${day}_shard${shard}.zip")
+          done </tmp/monster32_artifacts.tsv
+          python -B scripts/monster_v4_stage32_aggregate.py --original-zips "${args[@]}" --output /tmp/monster_stage32_final_full_dual_1m3m_300U_sha_comparison.json
+      - name: Preserve true original six-date 1min and3min GT, source and 30/300U results
+        if: steps.proof.outputs.proof == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage32-final-6date-full758-strictSHA-1min-vs3min-cash
+          path: /tmp/monster_stage32_final_full_dual_1m3m_300U_sha_comparison.json
+          retention-days: 30
