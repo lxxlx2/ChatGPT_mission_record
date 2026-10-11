@@ -438,6 +438,8 @@ def test_sanitizer_blocks_wrapped_file_paths_and_secrets_in_urls():
         ), item
         assert "alice" not in result and "example.org" not in result
     assert safe("https://safe.example/path?wallet=abc") == "https://safe.example/path"
+    assert safe("https://safe.example.com/u/person%40gmail.com") == "[URL_REDACTED]"
+    assert safe("https://safe.example.com/keys/%61ccess_token%2Fabcd") == "[URL_REDACTED]"
     assert safe("https://safe.example/") == "https://safe.example/"
     assert safe({"refresh_token": "private-value", "safe": "ok"}) == {"safe": "ok"}
 
