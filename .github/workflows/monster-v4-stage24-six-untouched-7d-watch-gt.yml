@@ -1,0 +1,48 @@
+name: Monster Stage24 Frozen Six Date All758 Real 7D Gross High vs Original V4 WATCH
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_full_market_7d_watch_audit.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage24_full_market_7d_watch_audit.py'
+      - '.github/workflows/monster-v4-stage24-six-untouched-7d-watch-gt.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: monster-stage24-six-date-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  frozen-six-date-758-symbol-official-hourly-minute-ground-truth-v4:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        date: ['2025-11-04','2025-12-04','2026-02-04','2026-04-04','2026-08-04','2026-09-04']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify prereg, frozen original source blobs, causal early hour, data censoring and same V4
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage24_full_market_7d_watch_audit.py tests/test_monster_v4_stage24_full_market_7d_watch_audit.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage24_full_market_7d_watch_audit.py
+      - name: Actual original production V4 replay and publisher-verified 168h historical Spot 1h 2x/5x truth on 758 symbols
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage24_full_market_7d_watch_audit.py --date ${{ matrix.date }} --output /tmp/monster_stage24_${{ matrix.date }}.json
+      - name: Preserve per-symbol true source SHAs, censored cases, original WATCH timestamps, future peaks and assumed cost returns
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage24-six-date-758-7d-gt-v4-${{ matrix.date }}
+          path: /tmp/monster_stage24_${{ matrix.date }}.json
+          if-no-files-found: warn
+          retention-days: 30
