@@ -65,8 +65,8 @@
       "mars_side": "OUT",
       "spcxb_from_mars_venue_raw": "2690421549396182003",
       "bridge": "USDT_SPCXB_V3",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
@@ -74,8 +74,8 @@
       "mars_side": "IN",
       "spcxb_from_mars_venue_raw": "4985442910027358206",
       "bridge": "USDT_SPCXB_V3",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
@@ -83,8 +83,8 @@
       "mars_side": "OUT",
       "spcxb_from_mars_venue_raw": "5573768837820999200",
       "bridge": "USDT_SPCXB_V3",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6",
@@ -92,40 +92,40 @@
       "mars_side": "OUT",
       "spcxb_from_mars_venue_raw": "4396294429869024146",
       "bridge": "USDT_SPCXB_V3",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
       "block": 112965118,
       "mars_side": "IN",
       "spcxb_from_mars_venue_raw": "2509122919803295381",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
       "block": 112971917,
       "mars_side": "OUT",
       "spcxb_from_mars_venue_raw": "4897742200782718467",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
       "block": 113003453,
       "mars_side": "OUT",
       "spcxb_from_mars_venue_raw": "1586628955375493302",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
       "block": 113137477,
       "mars_side": "OUT",
       "spcxb_from_mars_venue_raw": "1259542899259174267",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
@@ -143,24 +143,24 @@
       "block": 113986944,
       "mars_side": "IN",
       "spcxb_from_mars_venue_raw": "247659216316843169",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
       "block": 115522575,
       "mars_side": "OUT",
       "spcxb_from_mars_venue_raw": "428928551809892176",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     },
     {
       "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
       "block": 119938551,
       "mars_side": "OUT",
       "spcxb_from_mars_venue_raw": "195729087522878178",
-      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "status": "NO_MATCHING_SWAP_AT_USDT_SPCXB_POOL_0x977D",
+      "original_probe_result": "Valid decoded eth_getLogs JSON, zero same-transaction Swap logs for this specific pool; could be alternate pool/fee tier, not provider truncation."
     }
   ],
   "pending": [],
@@ -170,58 +170,48 @@
   "not_observed": [
     {
       "block": 112643175,
-      "hash": "0x5c771003a07ad6a04e570aa8b56e6fed209a8d12a37102c8e79743cf48d14c36",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0x5c771003a07ad6a04e570aa8b56e6fed209a8d12a37102c8e79743cf48d14c36"
     },
     {
       "block": 112964866,
-      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9"
     },
     {
       "block": 112964882,
-      "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c"
     },
     {
       "block": 112965110,
-      "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6"
     },
     {
       "block": 112965118,
-      "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357"
     },
     {
       "block": 112971917,
-      "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169"
     },
     {
       "block": 113003453,
-      "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8"
     },
     {
       "block": 113137477,
-      "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870"
     },
     {
       "block": 113986944,
-      "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854"
     },
     {
       "block": 115522575,
-      "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3"
     },
     {
       "block": 119938551,
-      "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
-      "error": "Error: EXACT_SWAP_MATCH_0"
+      "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa"
     }
-  ]
+  ],
+  "correction": "Previous label 'SWAP_LOG_MISSING_OR_TRUNCATED' was too broad. All 11 were valid JSON responses with zero matching tx hashes, indicating only that this specific 0x977D USDT/SPCXB pool was not observed. A second fee-tier pool 0x51a45... exposes fee=500 and standard Uniswap V3 Swap topic 0xc42079f9. It must be checked independently."
 }
