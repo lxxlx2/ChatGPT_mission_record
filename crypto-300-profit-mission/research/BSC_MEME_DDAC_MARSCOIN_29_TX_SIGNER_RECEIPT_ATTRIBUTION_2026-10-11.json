@@ -91,44 +91,93 @@
       "receipt_status": "0x1",
       "receipt_gas_wei": null,
       "wallet_self_signed": true
-    }
-  ],
-  "pending": [
+    },
     {
       "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6",
       "block": 112965110,
-      "wallet_native_block_delta_wei": "858425086881459880"
+      "wallet_native_block_delta_wei": "858425086881459880",
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "original_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "wallet_self_signed": true,
+      "status": "SUCCESS"
     },
     {
       "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
       "block": 112965118,
-      "wallet_native_block_delta_wei": "-500052413360000000"
+      "wallet_native_block_delta_wei": "-500052413360000000",
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "original_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "500000000000000000",
+      "receipt_status": null,
+      "receipt_gas_wei": "52413360000000",
+      "wallet_self_signed": true,
+      "status": "RECEIPT_UNRESOLVED"
     },
     {
       "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
       "block": 112971917,
-      "wallet_native_block_delta_wei": "953049126254362424"
+      "wallet_native_block_delta_wei": "953049126254362424",
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "original_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "wallet_self_signed": true,
+      "status": "SUCCESS"
     },
     {
       "hash": "0x1df1b31f9c0bef52268e8a6e908b96d99be0c998b8bfcfbe10b9910c1186f1a2",
       "block": 112972386,
-      "wallet_native_block_delta_wei": "-300040698840000000"
+      "wallet_native_block_delta_wei": "-300040698840000000",
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "original_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "300000000000000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "wallet_self_signed": true,
+      "status": "SUCCESS"
     },
     {
       "hash": "0xb5aadaa7350e902a40b94338332f50b6ec5fe47bc774f4da132d9bb0e62d5b55",
       "block": 112993813,
-      "wallet_native_block_delta_wei": "332521602584285880"
+      "wallet_native_block_delta_wei": "332521602584285880",
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "original_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "0",
+      "receipt_status": null,
+      "receipt_gas_wei": "50328840000000",
+      "wallet_self_signed": true,
+      "status": "RECEIPT_UNRESOLVED"
     },
     {
       "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
       "block": 113003453,
-      "wallet_native_block_delta_wei": "305748699984736501"
+      "wallet_native_block_delta_wei": "305748699984736501",
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "original_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "wallet_self_signed": true,
+      "status": "SUCCESS"
     },
     {
       "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
       "block": 113137477,
-      "wallet_native_block_delta_wei": "240689540005429088"
-    },
+      "wallet_native_block_delta_wei": "240689540005429088",
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "original_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "tx_native_value_wei": "0",
+      "receipt_status": null,
+      "receipt_gas_wei": "60484080000000",
+      "wallet_self_signed": true,
+      "status": "RECEIPT_UNRESOLVED"
+    }
+  ],
+  "pending": [
     {
       "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
       "block": 113975350,
@@ -205,7 +254,7 @@
       "wallet_native_block_delta_wei": "0"
     }
   ],
-  "status": "PARTIAL_7_OF_29_ORIGINAL_TX_PROVENANCE",
+  "status": "PARTIAL_14_OF_29_ORIGINAL_TX",
   "caveat": "Counterparty-initiated deposits or contract transfers must not be counted as owner's native spend or trade successes; wallet balance change at source token block is only a scoped aggregate.",
   "production": "NO_GO"
 }
