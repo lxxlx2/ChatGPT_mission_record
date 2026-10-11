@@ -230,3 +230,58 @@ def test_git_failure_preserves_ata_file_and_returns_non_success(tmp_path, monkey
     assert report["git_sync"] == "SYNC_FAILED_LOCAL_FILE_RETAINED"
     assert report["git_error_type"] == "RuntimeError"
     assert out.exists()
+
+
+def test_rpc_rate_limit_after_first_mint_retains_verified_rows_and_marks_rest_unscanned():
+    alt_mint = "5PiBn5JdjJDnRGziiSfsu2affgBR3DyTTCR3CHpcode"
+    first_alt_ata, _ = derive_ata(WALLET, alt_mint, TOKEN)
+    chain = [
+        {"signature": sig, "slot": raw[2], "blockTime": 1791505760,
+         "err": None}
+        for sig, raw in zip(SIGNATURES, TX_RAW)
+    ]
+    class RateLimitedRPC(FakeRPC):
+        def call(self, method, args):
+            if method == "getSignaturesForAddress" and args[0] == first_alt_ata:
+                raise RuntimeError("PROVIDER_429")
+            return super().call(method, args)
+    rpc = RateLimitedRPC({J7_ATA: chain}, {
+        sig: tx(*raw) for sig, raw in zip(SIGNATURES, TX_RAW)
+    })
+    result = scan_ata_mints(
+        rpc, [J7, alt_mint], known_signatures={SIGNATURES[0]},
+        page_size=50,
+    )
+    assert result["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
+    assert result["interruption_type"] == "RuntimeError"
+    assert result["unscanned_canonical_accounts"] == 1
+    assert len(result["accounts"]) == 3
+    assert result["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 3
+    assert len(result["verified_nonzero_signatures_absent_from_local_index"]) == 2
+    assert result["complete_wallet_history"] is False
+
+
+def test_partial_provider_failure_serializes_non_success_with_existing_evidence(
+        tmp_path):
+    import json
+    import sqlite3
+    from scripts.frank_ata_backfill import run
+    db = tmp_path / "forward.sqlite"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE signatures(person_id TEXT,signature TEXT)")
+        conn.execute("INSERT INTO signatures VALUES (?,?)", ("frank", SIGNATURES[0]))
+    class FailJ7RPC(FakeRPC):
+        def call(self, method, args):
+            if method == "getSignaturesForAddress" and args[0] == J7_ATA:
+                raise RuntimeError("PROVIDER_429")
+            return super().call(method, args)
+    output = tmp_path / "partial-source.json"
+    answer = run(["--database", str(db), "--mint", J7,
+                  "--output", str(output)], rpc=FailJ7RPC())
+    assert answer["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
+    assert answer["git_sync"] == "NOT_REQUESTED"
+    assert output.is_file()
+    record = json.loads(output.read_text())
+    assert record["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
+    assert record["complete_wallet_history"] is False
+    assert record["interruption_type"] == "RuntimeError"
