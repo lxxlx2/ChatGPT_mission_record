@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 import pytest
 
-from mission_agent.mission_control.wallet_watch import from_seed, from_sqlite
+from mission_agent.mission_control.wallet_watch import from_seed, from_sqlite, merge_signature_activity
 from mission_agent.mission_control.server import DashboardState
 
 MINT1 = "HzYCHqAN2uoHGRnL9v2ChCfFQX3bvJuJd5zu2Hd5MZQy"
@@ -156,3 +156,110 @@ def test_watch_page_has_source_and_accessibility_labels():
     assert "snapshot_inventory_state" in js
     assert "DATED_POINT_IN_TIME_NOT_LIVE" in js
     assert "实时余额已核实" not in js
+    assert 'value="PRIMARY" selected' in html
+    assert 'value="PASSIVE_RECEIPT_ONLY"' in html
+    assert 'value="OTHER_ACCOUNT_ACTIVITY"' in html
+    assert "passive_receipt_only" in js
+
+
+def _sig(signature, mint, amount, classification="PASSIVE_TRANSFER",
+         signer=False, ts=1791505760):
+    return {"signature": signature, "block_time": ts,
+            "body": json.dumps({
+                "classification": classification,
+                "evidence": {
+                    "wallet_is_signer": signer,
+                    "wallet_token_transfer_flows": [],
+                    "token_balance_deltas": [{
+                        "mint": mint, "wallet_owned": True,
+                        "decimals": 6, "delta": str(amount),
+                        "pre_amount": "0", "post_amount": str(abs(amount)),
+                    }],
+                },
+            })}
+
+
+def test_wallet_signature_delta_adds_passive_mint_without_fake_buy(tmp_path):
+    p = tmp_path / "forward.sqlite"
+    db = setup_db(p)
+    record_trade(db, MINT1, "existing-trade", "BUY", 1791505600, 1500000)
+    db.execute("INSERT INTO signatures VALUES (?,?,?,?,?)",
+               ("wallet1", "frank", "passive-new", 1791505760,
+                _sig("passive-new", MINT2, 2846838050235)["body"]))
+    db.execute("INSERT INTO signatures VALUES (?,?,?,?,?)",
+               ("wallet1", "frank", "zero-ata", 1791505780,
+                _sig("zero-ata", MINT3, 0, "ATA_CREATE")["body"]))
+    db.commit()
+    output = from_sqlite(p)
+    rows = {x["mint"]: x for x in output["rows"]}
+    assert output["summary"]["original_trade_or_model_observed"] == 1
+    assert output["summary"]["total_observed"] == 3
+    assert output["summary"]["passive_receipt_only"] == 1
+    assert output["summary"]["other_account_activity_only"] == 1
+    assert rows[MINT2]["watch_state"] == "PASSIVE_RECEIPT_ONLY"
+    assert rows[MINT2]["local_recognized_buys"] == 0
+    assert rows[MINT2]["passive_receipt_events"] == 1
+    assert rows[MINT2]["signature_observed_in_raw"] == "2846838050235"
+    assert rows[MINT2]["transfer_counterparty_verified"] is False
+    assert rows[MINT2]["pnl_usd"] is None
+    assert rows[MINT3]["watch_state"] == "OTHER_ACCOUNT_ACTIVITY"
+    assert output["signature_activity_provenance"][
+        "signature_rows_without_parsed_counterparty_flow"] == 3
+    db.close()
+
+
+def test_j7_source_still_missing_two_onchain_transfers_remains_unresolved():
+    watch = from_seed([{
+        "mint": MINT1, "local_state": "UNKNOWN",
+        "local_recognized_buy_count": 0, "local_recognized_sell_count": 1,
+    }])
+    records = [
+        _sig("first-external-transfer", MINT1, "2846838050235", ts=1791505760),
+        _sig("later-sell", MINT1, "-12508217470763",
+             classification="ACTIVE_TRADE", signer=True, ts=1791509213),
+    ]
+    result = merge_signature_activity(watch, records)
+    row = result["rows"][0]
+    assert row["watch_state"] == "HISTORY_SELL_ONLY"
+    assert row["passive_receipt_events"] == 1
+    assert row["signature_observed_in_raw"] == "2846838050235"
+    assert row["signature_observed_out_raw"] == "12508217470763"
+    assert row["sender_cost_basis_usd"] is None
+    assert row["current_chain_balance_verified"] is False
+    assert result["signature_activity_provenance"]["counterparty_flow_is_complete"] is False
+
+
+def test_mac_20261011_delta_scope_224_mints_33_core_104_passive_87_other():
+    # Actual source count baseline from real 1720-row 2026-10-11 Git upload:
+    # 224 unique wallet-owned delta mints (33 trade/model + 191 extras).
+    # Of 191 extras, 104 had a passive incoming delta and 87 had only
+    # non-positive/zero or other account activity. Fake signatures are not
+    # used to claim exact real transaction coverage.
+    mint = lambda i: "H" + str(i).zfill(42)
+    base = from_seed([{"mint": mint(i), "local_state": "OPEN"}
+                      for i in range(33)])
+    recs = [_sig(f"sig-{i}", mint(i), "10", ts=1791505760 + i,
+                 classification="ACTIVE_TRADE", signer=True)
+            for i in range(33)]
+    recs += [_sig(f"passive-{i}", mint(i), "1", ts=1791506000 + i)
+             for i in range(33, 137)]
+    recs += [_sig(f"other-{i}", mint(i), "0", ts=1791506000 + i,
+                  classification="ATA_CREATE")
+             for i in range(137,224)]
+    result = merge_signature_activity(base, recs)
+    assert result["summary"]["original_trade_or_model_observed"] == 33
+    assert result["summary"]["total_observed"] == 224
+    assert result["summary"]["passive_receipt_only"] == 104
+    assert result["summary"]["other_account_activity_only"] == 87
+    assert all(not x["is_follow_signal"] for x in result["rows"])
+    assert all(x["market_value_usd"] is None for x in result["rows"])
+
+
+def test_passive_activity_never_overwrites_existing_closed_trade_status():
+    watch = from_seed([{"mint": MINT1, "local_state": "CLOSED",
+                        "local_recognized_sell_count": 2}])
+    result = merge_signature_activity(watch, [_sig("passive", MINT1, 5)])
+    row = result["rows"][0]
+    assert row["watch_state"] == "HISTORICAL_EXIT"
+    assert row["passive_receipt_events"] == 1
+    assert row["origin_scope"] == "LOCAL_TRADE_OR_MODEL_WITH_SIGNATURE_DELTA"
