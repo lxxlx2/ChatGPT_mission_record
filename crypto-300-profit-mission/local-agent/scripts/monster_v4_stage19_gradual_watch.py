@@ -132,10 +132,15 @@ def run_symbol(symbol,day, *, get_day=archive.get_day, comparator=replay.replay_
     except (urllib.error.URLError,TimeoutError,OSError) as e:
         return {"symbol":symbol,"status":"SOURCE_NETWORK_FAILED","reason":str(e)[:120]}
     except ValueError as e:
-        classification = ("SOURCE_PARTIAL_OR_NONCONTIGUOUS" if str(e) in
-            ("GAPPED_ARCHIVE_DAY","INCOMPLETE_60H_REAL_ARCHIVE","STAGE19_INCOMPLETE_60H")
-            else "SOURCE_INTEGRITY_REJECTED")
-        return {"symbol":symbol,"status":classification,"reason":str(e)[:120]}
+        reason=str(e)
+        if reason.startswith("SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_"):
+            classification="SOURCE_MISSING"
+        elif reason in ("GAPPED_ARCHIVE_DAY","INCOMPLETE_60H_REAL_ARCHIVE",
+                        "STAGE19_INCOMPLETE_60H"):
+            classification="SOURCE_PARTIAL_OR_NONCONTIGUOUS"
+        else:
+            classification="SOURCE_INTEGRITY_REJECTED"
+        return {"symbol":symbol,"status":classification,"reason":reason[:120]}
 
 def summarize(cases):
     statuses=Counter(x["status"] for x in cases)
