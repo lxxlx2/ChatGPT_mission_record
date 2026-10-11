@@ -1,0 +1,280 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "source_files": [
+    "BSC_MEME_DDAC_IFML_LOBSTER_FULL_TRANSFER_HISTORY_2026-10-11.json",
+    "BSC_MEME_DDAC_IFML_LOBSTER_25_ORIGINAL_TX_RECEIPT_AUDIT_2026-10-11.json"
+  ],
+  "originals_signer_success_25of25": true,
+  "manager_contract": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+  "v2_pairs": {
+    "我踏马来了": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+    "龙虾": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
+  },
+  "topics": {
+    "in": "0x7db52723a3b2cdd6164364b3b766e65e540d7be48ffa89582956d8eaebe62942",
+    "out": "0x0a5575b3648bae2210cee56bf33254cc1ddfbc7bf637c0af2ac18b14fb1bae19",
+    "v2": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+  },
+  "expected": 25,
+  "rows": [
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "hash": "0xc0d75250a3970809e6a1e1287609cac4be09e59bf3ebe9b5016b1c1c38211653",
+      "block": 73336279,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "36883643467552719000000000",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "token_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "event_account": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "curve_token_amount_raw": "36883643467552719000000000",
+      "curve_cost_wei": "490099009900990086",
+      "protocol_fee_wei": "4900990099009900",
+      "token_qty_matches": true,
+      "account_matches": true
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0xe9164404de7eeed8fab3c8c114de3d795bd06763f302dca59c7128f4d53dde61",
+      "block": 73336473,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "18415563331780014000000000",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "token_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "event_account": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "curve_token_amount_raw": "18415563331780014000000000",
+      "curve_cost_wei": "517493599293621612",
+      "protocol_fee_wei": "5174935992936216",
+      "token_qty_matches": true,
+      "account_matches": true
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0xa4ef9760f32487730a0698c1b6d05553775340c39eb4e57494ee24de89a433b1",
+      "block": 73336724,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "4617020033943176000000000",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "token_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "event_account": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "curve_token_amount_raw": "4617020033943176000000000",
+      "curve_cost_wei": "252855112387238470",
+      "protocol_fee_wei": "2528551123872384",
+      "token_qty_matches": true,
+      "account_matches": true
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0xb42d32d5fc4dcbe447142d22a05271b4939c18c1bc0d953484d8b5b13f595982",
+      "block": 73336790,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "6925530050914764000000000",
+      "status": "LOG_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 108 column 29)"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "hash": "0xfcee8bad9a488e0c0c46052903cc96ce52758ca46b6943a22edbe324add8007d",
+      "block": 73338992,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "13763332025106610000000000",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "token_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "event_account": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "curve_token_amount_raw": "13763332025106610000000000",
+      "curve_cost_wei": "196039603960396037",
+      "protocol_fee_wei": "1960396039603960",
+      "token_qty_matches": true,
+      "account_matches": true
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0x27288328876ed0bde49e35a99e2353210f0df8fd0c81fbd82e68bae1733244e6",
+      "block": 73350171,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "10344431038010687000000000",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "token_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "event_account": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "curve_token_amount_raw": "10344431038010687000000000",
+      "curve_cost_wei": "308723240330460641",
+      "protocol_fee_wei": "3087232403304606",
+      "token_qty_matches": true,
+      "account_matches": true
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0x978e3cec0a8e0c59aa973b2f25f7e993e38ff38c59afdabdb20a8a4aad61f2a6",
+      "block": 73473922,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "10344431038010688000000000",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "token_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "event_account": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "curve_token_amount_raw": "10344431038010688000000000",
+      "curve_cost_wei": "207185277563451091",
+      "protocol_fee_wei": "2071852775634510",
+      "token_qty_matches": true,
+      "account_matches": true
+    }
+  ],
+  "pending": [
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "hash": "0x06173cdf3a8de2596440e8cf370324c15b3dd4fe1428b62925a58515d0b840eb",
+      "block": 73658894,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "8071344345554309000000000"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "hash": "0xd459f09283165d44a8d1784bd54604fe1f488fd7d176f8efbd1f88b2fb44830f",
+      "block": 73658909,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "9453292053039410252790219"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0xaf0d45f462a469f6fe9f14a595ba6a704d13b57d74cc5833e69b6ec2827fd897",
+      "block": 73658934,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "8762318199296859626395109"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0x00df97a9523f8ce86272c90473bdafd19deebd2604865c0ee15ecf87285489d4",
+      "block": 73658976,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "4253981423867734613755598"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0xf9afe2d80fbec8a3fe812d5b202fc5f6295bc1e6842f2c719fcd48142010276a",
+      "block": 73659187,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "2254168387714562506319756"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "hash": "0x6ffb6389c7d24e708e40aef7fd5270f43e6ba67f3808727df4afb720f48c0804",
+      "block": 73660360,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "586435579763265038773477"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0x833262d874218a200b39312eb0550d44a53bf6af033adb23a03cbb066eae4844",
+      "block": 73689258,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "2840603967477827545093233"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "hash": "0x54bf67f75ad4edf7376877aed21ef59b076a17be18330e83d394d482cfd54e05",
+      "block": 74360480,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "152241093285911316311916"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0x75865523c9c26955cc769b4c11f0fe14ac0c77e9f945d954338826e3ddb6347b",
+      "block": 74377785,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "152241093285911316311916"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "hash": "0xb19db9769e263071ebaa9a90d452aaac86cbc5ee5dcceae954996a334e1b8246",
+      "block": 74460512,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "196814410022627640097170"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0xaf25e6a23743c25bae818e760f16919fc7d1617451a34470e1f93fe7999a762e",
+      "block": 74468389,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "196814410022627640097170"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "hash": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a",
+      "block": 74473636,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "91088412526212094717943"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "hash": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad",
+      "block": 74473637,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "89736767273195553619223"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "hash": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e",
+      "block": 74473641,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "180825179799407648337166"
+    },
+    {
+      "token": "龙虾",
+      "dir": "in",
+      "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+      "block": 83635776,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "99069253510299993000000000"
+    },
+    {
+      "token": "龙虾",
+      "dir": "out",
+      "hash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "block": 83635800,
+      "venue": "MANAGER2",
+      "original_token_transfer_raw": "99069253510299993000000000"
+    },
+    {
+      "token": "龙虾",
+      "dir": "in",
+      "hash": "0xced27dd146159a8a34130a4e8e64bddd642c28773cc1514ad7ed5175c8529050",
+      "block": 83792918,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "195581662531433206271053"
+    },
+    {
+      "token": "龙虾",
+      "dir": "out",
+      "hash": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8",
+      "block": 84007473,
+      "venue": "V2_PAIR",
+      "original_token_transfer_raw": "195581662531433206271053"
+    }
+  ],
+  "status": "PARTIAL_7_OF_25_QUOTE_EVENT_PROBES",
+  "production": "NO_GO",
+  "limitations": [
+    "Quote event price and protocol fee alone do not yet establish all router fee and wallet actual native settlement",
+    "V2 pair Swap logs can truncate; original ERC20 WBNB transfer fallback required if so"
+  ]
+}
