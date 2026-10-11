@@ -70,37 +70,65 @@
       "after_wei": "27613885005158620351",
       "native_block_delta_wei": "858425086881459880",
       "status": "VALID"
-    }
-  ],
-  "pending": [
+    },
     {
       "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
-      "block": 112965118
+      "block": 112965118,
+      "before_wei": "27613885005158620351",
+      "after_wei": "27113832591798620351",
+      "native_block_delta_wei": "-500052413360000000",
+      "status": "VALID"
     },
     {
       "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
-      "block": 112971917
+      "block": 112971917,
+      "before_wei": "30341615561354593142",
+      "after_wei": "31294664687608955566",
+      "native_block_delta_wei": "953049126254362424",
+      "status": "VALID"
     },
     {
       "hash": "0x1df1b31f9c0bef52268e8a6e908b96d99be0c998b8bfcfbe10b9910c1186f1a2",
-      "block": 112972386
+      "block": 112972386,
+      "before_wei": "31142876726639585628",
+      "after_wei": "30842836027799585628",
+      "native_block_delta_wei": "-300040698840000000",
+      "status": "VALID"
     },
     {
       "hash": "0xb5aadaa7350e902a40b94338332f50b6ec5fe47bc774f4da132d9bb0e62d5b55",
-      "block": 112993813
+      "block": 112993813,
+      "before_wei": "31313283273887659083",
+      "after_wei": "31645804876471944963",
+      "native_block_delta_wei": "332521602584285880",
+      "status": "VALID"
     },
     {
       "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
-      "block": 113003453
+      "block": 113003453,
+      "before_wei": "30041172144258240293",
+      "after_wei": "30346920844242976794",
+      "native_block_delta_wei": "305748699984736501",
+      "status": "VALID"
     },
     {
       "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
-      "block": 113137477
+      "block": 113137477,
+      "before_wei": "33027022889703935069",
+      "after_wei": "33267712429709364157",
+      "native_block_delta_wei": "240689540005429088",
+      "status": "VALID"
     },
     {
       "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
-      "block": 113975350
-    },
+      "block": 113975350,
+      "before_wei": "13594528615477876955",
+      "after_wei": "14361490117716039086",
+      "native_block_delta_wei": "766961502238162131",
+      "status": "VALID"
+    }
+  ],
+  "pending": [
     {
       "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854",
       "block": 113986944
@@ -158,6 +186,6 @@
       "block": 120232161
     }
   ],
-  "status": "PARTIAL_8_OF_29",
+  "status": "PARTIAL_15_OF_29",
   "production": "NO_GO"
 }
