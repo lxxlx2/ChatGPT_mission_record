@@ -1,18 +1,18 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-12 02:03:50 Asia/Bangkok
+Updated: 2026-10-12 04:02:25 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-12 02:03:50 Asia/Bangkok
+- latest_actual_run: 2026-10-12 04:02:25 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-12/020350-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-12/020239-attempt.md
-- latest_scheduled_shard: 2
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-12/040225-final-retry.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-12/040146-attempt.md
+- latest_scheduled_shard: 0
 - latest_executed_shard: 1
 - stale_shard_recovery: true
-- latest_candidate_count: 3
+- latest_candidate_count: 4
 - latest_triggered_events: 0
-- latest_identity_failures: 0
+- latest_identity_failures: 1
 - latest_source_failures: 4
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: SILENT
@@ -45,3 +45,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-11 21:04:16: partial urgent + stale shard1 (scheduled shard1). Actual attempt 210321-attempt.md committed, primary terminal blocked by connector safety check, 210416-final-retry.md committed. 13 unique projects checked/attempted, 4 candidates, 0 Tier A/B new ACTION, 5 unresolved first-party source/action gaps, 2 identity conflicts (Neutrl account, Autheo/THEO). Concrete additional USDC unverified; Space Oct15 already delivered. No Gmail/App notification. Prior attempt-only gaps remain; HH:00 schedule unchanged. This partial does not update latest_authoritative_success.
 
 - 2026-10-11 22:56:37: partial urgent + oldest stale shard1 (scheduled shard2). Actual attempt 225543-attempt.md and terminal 225637-final.md committed; 13 unique projects attempted, 9 checked_no_update, 4 unresolved source/action gaps (Concrete, ForecastFDN, Neutrl portal, Theo app), 3 candidate reviews, 0 new ACTION and 0 new identity failures. Official Space Telegram channel confirms Oct15 sunset unchanged and previously delivered; no duplicate. No Gmail/App notice. Historical attempt-only gaps remain. Invocation 22:55 off-minute, not counted as HH:00 scheduler proof. Task schedule and scope unchanged.
+
+- 2026-10-12 04:02:25: actual hourly :00 invocation, attempt 040146-attempt.md committed and terminal 040225-final-retry.md committed (primary final blocked by safety checks). Urgent + only oldest stale shard1 (scheduled shard0); 13 unique projects attempted, 9 checked_no_update, 4 unresolved source/action gaps, 4 candidate reviews including rejected Autheo/THEO collision, 0 new ACTION. Space Oct15 delivered/deduped, Concrete extra allocation unverified. No Gmail/App output. Historical attempt-only gaps persist; partial is not authoritative full-success shard coverage. Schedule HH:00 unchanged.
