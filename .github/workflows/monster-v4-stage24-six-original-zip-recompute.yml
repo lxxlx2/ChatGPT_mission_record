@@ -1,0 +1,55 @@
+name: Monster Stage24 Strict SHA Six Original 758 by 6 Opportunity Recompute
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_aggregate.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage24_aggregate.py'
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage24_6date_original_zip_shas_and_results_20261011.json'
+      - '.github/workflows/monster-v4-stage24-six-original-zip-recompute.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage24-original-six-sha-recompute-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify-published-data-evidence-and-original-v4-early-watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check source and regression test fair denominators, prior-hour precedence and missing coverage
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage24_aggregate.py tests/test_monster_v4_stage24_aggregate.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage24_aggregate.py
+      - name: Read six original Actions ZIPs using read-only GitHub token
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700651924/zip > /tmp/monster24_2025-11-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700023559/zip > /tmp/monster24_2025-12-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700058433/zip > /tmp/monster24_2026-02-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700786475/zip > /tmp/monster24_2026-04-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700956514/zip > /tmp/monster24_2026-08-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700382028/zip > /tmp/monster24_2026-09-04.zip
+      - name: SHA gate six ZIPs and each JSON, reproduce all 4548 symbols, 40 gross2x and strict pre-cross WATCH leads
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage24_aggregate.py --artifact-zips /tmp/monster24_2025-11-04.zip /tmp/monster24_2025-12-04.zip /tmp/monster24_2026-02-04.zip /tmp/monster24_2026-04-04.zip /tmp/monster24_2026-08-04.zip /tmp/monster24_2026-09-04.zip --output /tmp/monster_stage24_verified_recomputed.json
+      - name: Persist same-source recomputed evidence for future independent review
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage24-all-original-six-758x6-sha-verified-recompute
+          path: /tmp/monster_stage24_verified_recomputed.json
+          if-no-files-found: warn
+          retention-days: 30
