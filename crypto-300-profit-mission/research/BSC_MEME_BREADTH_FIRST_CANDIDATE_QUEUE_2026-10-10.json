@@ -59,7 +59,16 @@
     "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_FROZEN_SPEC_2026-10-11.json",
     "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_EVIDENCE_2026-10-11.json",
     "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md",
-    "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_INDEPENDENT_ARITHMETIC_QA_2026-10-11.json"
+    "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_INDEPENDENT_ARITHMETIC_QA_2026-10-11.json",
+    "BSC_MEME_FOLLOW_V1_MULTIFILL_FROZEN_SPEC_2026-10-11.json",
+    "BSC_MEME_FOLLOW_V1_MULTIFILL_HISTORICAL_RESERVE_EVIDENCE_2026-10-11.json",
+    "BSC_MEME_FOLLOW_V1_MULTIFILL_SCENARIO_RESULTS_2026-10-11.json",
+    "BSC_MEME_FOLLOW_V1_MULTIFILL_INDEPENDENT_LEDGER_QA_2026-10-11.json",
+    "BSC_MEME_FOLLOW_V1_EPISODE_PROFIT_CONCENTRATION_2026-10-11.json",
+    "BSC_MEME_8E6B_4_ORIGINAL_TWO_EPISODE_EXACT_SETTLEMENT_2026-10-11.json",
+    "BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+    "BSC_MEME_239E_19_CA_ELIGIBLE_OPPORTUNITY_COVERAGE_2026-10-11.json",
+    "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -421,8 +430,9 @@
         "combined_native_bnb_event_scope_net_wei": "296492314017711706",
         "status": "SIGNED_SUCCESS_SCOPED_NATIVE_BALANCES; LOWER_ABSOLUTE_BNB_CAPTURE; NO_GO"
       },
-      "current_research_priority": "HIGH_EARLY_ENTRY_TIMING_TWO_VERIFIED_MATERIAL_COHORTS; FULL_WALLET_BREADTH_AND_COPY_FOLLOWABILITY_PENDING",
-      "latest_entry_timing_source": "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json"
+      "current_research_priority": "HIGH_EARLY_ENTRY_BUT_PNL_CONCENTRATED_ONE_LOBSTER_EPISODE; 2_SIGNED_TOKEN_POSITIONS_OVER_19_CA; 239e_SCOPE_NO_GO",
+      "latest_entry_timing_source": "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json",
+      "latest_v1": "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md"
     },
     {
       "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
@@ -857,7 +867,7 @@
         "4",
         "MUBARAK"
       ],
-      "current_research_priority": "HIGH_BROAD_REPEAT_CANDIDATE; EARLY_ENTRY_NOT_CONSISTENT; V0_NON_CAUSAL_AND_LIQUIDITY_FLAGS_NO_GO",
+      "current_research_priority": "HIGH_REPEAT_EVENT_AND_4_SECOND_EPISODE_PROFIT_CONCENTRATION; FULL_WALLET_LIFETIME_MISSING; COPY_NO_GO",
       "material_position_evidence": {
         "full_19_CA_history": false,
         "observed_scoped_tokens": 11,
@@ -943,7 +953,8 @@
         "status": "STRONG_REPEATED_TRADE_ASSOCIATED_NATIVE_FLOW_CANDIDATE; NOT_LIFETIME_PNL; NOT_COPY_APPROVED",
         "best_evidence": "4 exact 19/19 settled; GIGGLE 16 signed success plus 6 USDT exits minus 1 USDT buy; MUBARAK 16 signed success; several losses included"
       },
-      "latest_follow_lag_research": "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md"
+      "latest_follow_lag_research": "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md",
+      "latest_v1": "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md"
     },
     {
       "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
@@ -1646,6 +1657,9 @@
     "8e6b 32 self-signed token-trade transactions across 3 fully reconciled 2026 major token quantities have +5.437877 BNB aggregate event-block wallet native changes (two positive, one negative), but internal-transaction attribution/finality, controller/followability and further 8-token losses remain unresolved."
   ],
   "next_work_order": [
+    "Expand independent BSC major token opportunity denominator to later launches and 23 wallets with identical original tx proof, including zero participation and missing/counterparty-led tokens",
+    "Add persistent follower reserve impact and actual token/quote settlement routing; preregister untouched validation and independent code review",
+    "Audit 239e 2026 early sample ownership/funding and 9d1240 overlapping wallet as independent comparator",
     "Audit 239e across 19 scoped token CAs and expand token universe to test whether two same-timestamp launches generalize",
     "Reconstruct complete original 8e6b & 239e trading event streams with quote-token receipts, original same-block transaction isolation, alternative Four.meme venues, commissions and lost cohorts",
     "Replay chronological follow state machine across complete buy/sell signal sequence; skip exits that predate delayed buys, use actual swap route quote and fees, separate in-sample and untouched validation",
@@ -1783,5 +1797,53 @@
       "external_ai_review": "NOT_DONE",
       "production": "NO_GO"
     }
+  },
+  "address_follow_multifill_v1_2026_10_11": {
+    "state": "24_OF_24_FIXED_IN_SAMPLE_MULTIFILL_SCENARIOS_COMPUTED_AND_LEDGER_QA_PASSED_BUT_NONEXECUTABLE",
+    "wallet8e6b4": {
+      "signed_original_trade_count": 19,
+      "fully_closed_inventory_episodes": 2,
+      "original_net_bnb_wei": "13164987453603066615",
+      "episode1_original_net_wei": "-117977426190152500",
+      "episode2_original_net_wei": "13282964879793219115"
+    },
+    "wallet239e": {
+      "confirmed_active_traded_cohorts": [
+        "我踏马来了",
+        "龙虾"
+      ],
+      "known19_ca_inbound_only_uncertain": [
+        "牛来"
+      ],
+      "no_matched_ca_transfer_token": "MARSCOIN",
+      "lobster_six_native_episode_original_total_wei": "199125593493335144",
+      "lobster_first_native_episode_net_wei": "196173568640778761"
+    },
+    "study": {
+      "trade_events": 46,
+      "original_signed_success_trades": 46,
+      "frozen_cohorts": 3,
+      "reserve_snapshots": 92,
+      "scenarios": 24,
+      "independent_exact_integer_ledger_steps": 368,
+      "calculation_failures": 0,
+      "impossible_fills_or_shortfalls": 0,
+      "real_executable_backtest": "NOT_EXECUTED",
+      "out_of_sample": "NOT_EXECUTED",
+      "external_ai_review": "NOT_EXECUTED"
+    },
+    "risk": "PnL concentrated in specific early/later episodes and selection bias huge. Quotes use historical exogenous V2 snapshots; do not deploy.",
+    "source_files": [
+      "BSC_MEME_FOLLOW_V1_MULTIFILL_FROZEN_SPEC_2026-10-11.json",
+      "BSC_MEME_FOLLOW_V1_MULTIFILL_HISTORICAL_RESERVE_EVIDENCE_2026-10-11.json",
+      "BSC_MEME_FOLLOW_V1_MULTIFILL_SCENARIO_RESULTS_2026-10-11.json",
+      "BSC_MEME_FOLLOW_V1_MULTIFILL_INDEPENDENT_LEDGER_QA_2026-10-11.json",
+      "BSC_MEME_FOLLOW_V1_EPISODE_PROFIT_CONCENTRATION_2026-10-11.json",
+      "BSC_MEME_8E6B_4_ORIGINAL_TWO_EPISODE_EXACT_SETTLEMENT_2026-10-11.json",
+      "BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+      "BSC_MEME_239E_19_CA_ELIGIBLE_OPPORTUNITY_COVERAGE_2026-10-11.json",
+      "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md"
+    ],
+    "production": "NO_GO"
   }
 }
