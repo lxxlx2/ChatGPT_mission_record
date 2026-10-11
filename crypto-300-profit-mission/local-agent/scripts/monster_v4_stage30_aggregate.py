@@ -58,6 +58,8 @@ def decode(path,proof):
         if r["date"]!=proof["date"]:
             raise ValueError("STAGE30_WRONG_ORIGINAL_DATE")
         if r["status"]=="COMPLETE_168H_CONTINUOUS_V4":
+            if len(r.get("hourly_GT_monthly_SHA256") or "")!=64 or r.get("hourly_GT_original_status")!="VERIFIED_COMPLETE_168H":
+                raise ValueError("STAGE30_PUBLISHER_GT_MONTHLY_SOURCE_SHA_ABSENT")
             hashes=r["official_source_SHA256_days"]
             if len(hashes)!=10 or len({h["date"] for h in hashes})!=10 or any(len(h.get("sha256",""))!=64 for h in hashes):
                 raise ValueError("STAGE30_10_GENUINE_OFFICIAL_SOURCE_SHA_MISSING")
