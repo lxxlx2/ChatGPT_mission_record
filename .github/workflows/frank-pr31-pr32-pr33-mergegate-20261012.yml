@@ -1,0 +1,108 @@
+name: Frank PR31 PR32 PR33 exact-combination merge gate
+
+on:
+  push:
+    branches:
+      - review/frank-pr31-pr32-pr33-mergegate-20261012
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-combination:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    strategy:
+      fail-fast: false
+      matrix:
+        merge_order:
+          - "31-32-33"
+          - "32-33-31"
+    env:
+      MAIN_PIN: "26da9bbb56235db055c1e581ec1535f3bdc51635"
+      PR31_PIN: "c50e7e2259e85ce89e14641a4e1e98ca3e4a4bc7"
+      PR32_PIN: "85f1a792dd7d0fbf354c09ac83872887ed301c10"
+      PR33_PIN: "48f53a71f692f5dc62f67198f4794e79c45402d2"
+      MERGE_ORDER: ${{ matrix.merge_order }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Isolated exact-SHA merge with conflict evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/frank-merge-evidence"
+          report="$RUNNER_TEMP/frank-merge-evidence/merge-${MERGE_ORDER}.txt"
+          set -o pipefail
+          {
+            echo "MAIN_PIN=$MAIN_PIN"
+            echo "PR31_PIN=$PR31_PIN"
+            echo "PR32_PIN=$PR32_PIN"
+            echo "PR33_PIN=$PR33_PIN"
+            echo "MERGE_ORDER=$MERGE_ORDER"
+            echo "WORKFLOW_CHECKOUT=$(git rev-parse HEAD)"
+            echo "BRANCH_MAIN_AT_RUN=$(git ls-remote origin refs/heads/main | cut -f1)"
+          } | tee "$report"
+          for sha in "$MAIN_PIN" "$PR31_PIN" "$PR32_PIN" "$PR33_PIN"; do
+            git cat-file -e "${sha}^{commit}" || {
+              echo "MISSING_PINNED_COMMIT $sha" | tee -a "$report"
+              exit 3
+            }
+          done
+          git worktree add --detach "$RUNNER_TEMP/frank-merged" "$MAIN_PIN"
+          cd "$RUNNER_TEMP/frank-merged"
+          for n in ${MERGE_ORDER//-/ }; do
+            case "$n" in
+              31) pin="$PR31_PIN";;
+              32) pin="$PR32_PIN";;
+              33) pin="$PR33_PIN";;
+              *) exit 4;;
+            esac
+            echo "MERGING_PR=$n $pin" | tee -a "$report"
+            if ! git -c merge.conflictStyle=zdiff3 merge --no-ff --no-commit "$pin" >> "$report" 2>&1; then
+              echo "MERGE_CONFLICT=YES PR=$n" | tee -a "$report"
+              git diff --name-only --diff-filter=U | tee -a "$report"
+              git ls-files -u | tee -a "$report"
+              git status --short | tee -a "$report"
+              exit 2
+            fi
+            git -c user.name='CI Merge Test' -c user.email='ci-merge@example.invalid' commit -q -m "Local-only PR $n merge validation"
+            echo "MERGED_SHA=$(git rev-parse HEAD)" | tee -a "$report"
+          done
+          echo "MERGE_CONFLICT=NO" | tee -a "$report"
+          echo "COMBINED_TEMP_SHA=$(git rev-parse HEAD)" | tee -a "$report"
+          git status --porcelain | tee -a "$report"
+          cp "$report" "$GITHUB_WORKSPACE/merge-report.txt"
+      - name: Install pinned local-agent dev dependencies
+        working-directory: ${{ runner.temp }}/frank-merged/crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3 pyflakes==3.4.0
+      - name: Validate combined backend and frontend syntax
+        working-directory: ${{ runner.temp }}/frank-merged/crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent/mission_control scripts tests
+          node --check mission_agent/mission_control/static/app.js
+          python -m pyflakes mission_agent/mission_control/delivery_review.py scripts/reauthorize_existing_gmail.py scripts/deploy_frank_dashboard_review_badge.py scripts/frank_dashboard_readonly_acceptance.py
+      - name: PR31 PR32 PR33 focused regression tests
+        working-directory: ${{ runner.temp }}/frank-merged/crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider             tests/test_frank_ata_backfill_v1.py             tests/test_meme_evidence_sync.py             tests/test_frank_wallet_watchlist_v2.py             tests/research/test_frank_git_real_transfer_replay.py             tests/research/test_reauthorize_existing_gmail.py             tests/research/test_delivery_review_breakdown.py             tests/research/test_delivery_review_integration.py             tests/research/test_frank_dashboard_deploy.py             tests/research/test_frank_dashboard_readonly_acceptance.py
+      - name: Full combined local-agent suite including real Git replay
+        working-directory: ${{ runner.temp }}/frank-merged/crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: "1"
+        run: python -B -m pytest -q -p no:cacheprovider tests
+      - name: Persist isolated merge evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frank-exact-merge-${{ matrix.merge_order }}
+          path: ${{ runner.temp }}/frank-merge-evidence/
+          retention-days: 14
