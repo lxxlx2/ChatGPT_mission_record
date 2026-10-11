@@ -95,10 +95,29 @@ def summary_from_database(root: Path):
               'CREDENTIAL_BLOCKED','RETRYABLE_ERROR','RETRY_PENDING'
             )
         """).fetchall()]
+        # Group *all* recorded outcomes, not just suspected failures.
+        # Status labels are constrained to non-sensitive machine state tokens
+        # and unknown channels are aggregated into "other".
+        status_rows = db.execute("""
+            SELECT channel,status,COUNT(*) AS number
+            FROM decision_outbox GROUP BY channel,status
+        """).fetchall()
+        if len(status_rows) > 128:
+            raise ValueError("OUTBOX_STATUS_GROUP_LIMIT_EXCEEDED")
+        status_counts = {}
+        for row in status_rows:
+            channel = row["channel"] if row["channel"] in ("gmail", "local") else "other"
+            raw_status = row["status"]
+            state = (raw_status if isinstance(raw_status, str) and
+                     re.fullmatch(r"[A-Z][A-Z0-9_]{0,63}", raw_status)
+                     else "NONSTANDARD_STATUS")
+            key = channel + "/" + state
+            status_counts[key] = status_counts.get(key, 0) + row["number"]
         hidden = db.execute("""
             SELECT COUNT(*) FROM decision_outbox
             WHERE status NOT IN (
               'PENDING','SENT_VERIFIED','DELIVERED','DRY_RUN_AUDIT',
+              'COMMAND_ACCEPTED',
               'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED','PERMANENT_ERROR',
               'CREDENTIAL_BLOCKED','RETRYABLE_ERROR','RETRY_PENDING'
             )
@@ -169,6 +188,7 @@ def summary_from_database(root: Path):
         "manual_review_pending_other_count": pending["other"],
         "manual_review_visible_total_count": len(records),
         "dashboard_hidden_nonsuccess_rows": hidden,
+        "outbox_status_counts_by_channel": status_counts,
     }
 
 
@@ -213,6 +233,10 @@ def main():
         control = control_root()
         counts = summary_from_database(control)
         result["database_access"] = "READ_ONLY_OK"
+        # This aggregate is diagnostic evidence only, not part of the HTTP
+        # contract or its count-parity comparison.
+        result["outbox_status_counts_by_channel"] = counts.pop(
+            "outbox_status_counts_by_channel")
         result["database_counts"] = counts
         http = local_dashboard_health(control)
         result["dashboard_http"] = "OK"
