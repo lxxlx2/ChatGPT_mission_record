@@ -1,0 +1,378 @@
+{
+  "actual_GitHub_original_36_artifacts": true,
+  "all_36_original_ZIP_and_internal_JSON_SHA256_recomputed": true,
+  "all_4548_symbol_date_attempts_persisted": true,
+  "artifacts": [
+    {
+      "artifact_id": 11700914875,
+      "cases": 127,
+      "complete168h": 62,
+      "date": "2025-11-04",
+      "raw_json_sha256": "41cf19e30f97418fc8a7e3dac39f7bd24e9998224ce51575ad9a339045862971",
+      "shard": 0,
+      "watch_episodes": 44,
+      "zip_sha256": "abd3f9d7ce1d4526839e66a49a94e9b3336373c11346fe6e18bc717a5ada0ef5"
+    },
+    {
+      "artifact_id": 11700914900,
+      "cases": 127,
+      "complete168h": 77,
+      "date": "2025-11-04",
+      "raw_json_sha256": "1e29ae8001853ce9823d26ba652b381ba2bc77cc1d87b59451eae7ac9d7760f0",
+      "shard": 1,
+      "watch_episodes": 36,
+      "zip_sha256": "567e17d45bd25ceafa293a36b76895cbfe4ab18e6583fbfa502f6367375d1e7a"
+    },
+    {
+      "artifact_id": 11701785526,
+      "cases": 126,
+      "complete168h": 66,
+      "date": "2025-11-04",
+      "raw_json_sha256": "9b31652b06f9cef7c4d0f6209429bc3575ae0cb5e5d069e161c6bd4f7582c17e",
+      "shard": 2,
+      "watch_episodes": 29,
+      "zip_sha256": "209420b5635064777a215c9e3edf95bfe6b0eb3979ac8f770cfa28f6543cb7d4"
+    },
+    {
+      "artifact_id": 11701655901,
+      "cases": 126,
+      "complete168h": 76,
+      "date": "2025-11-04",
+      "raw_json_sha256": "c5d3f653e4ce7203ead24b5c93cd2ee08f1edfb79147dc1ea58b06e73b74042f",
+      "shard": 3,
+      "watch_episodes": 58,
+      "zip_sha256": "16ef6414a18729f85d25a4450d57211460b124c5a1db798a349e4b305b082dd3"
+    },
+    {
+      "artifact_id": 11702020015,
+      "cases": 126,
+      "complete168h": 72,
+      "date": "2025-11-04",
+      "raw_json_sha256": "c652cb89552fac5c111fd2a86338bfb01dd7f0ac36c2d9e14def3a965e1b56a9",
+      "shard": 4,
+      "watch_episodes": 39,
+      "zip_sha256": "0833f9c9392434b0e641c99276d80eecab557a512a4c1c7b076b963a3b5506d6"
+    },
+    {
+      "artifact_id": 11701089372,
+      "cases": 126,
+      "complete168h": 80,
+      "date": "2025-11-04",
+      "raw_json_sha256": "b4fcf50e49f685b71a123fc180d647cd98b770f5cac9fc539ff931914ec5041c",
+      "shard": 5,
+      "watch_episodes": 54,
+      "zip_sha256": "08f891fee4cb6cc158c8db01a636ac334c477f77509cf13c3ca09571c6a5df75"
+    },
+    {
+      "artifact_id": 11701280981,
+      "cases": 127,
+      "complete168h": 64,
+      "date": "2025-12-04",
+      "raw_json_sha256": "2f276ab3782f2140a84c65effc0346261a943bfc50c833859cd3b749b9f73f89",
+      "shard": 0,
+      "watch_episodes": 25,
+      "zip_sha256": "23c5a5b53cb6a5ce831d12df8c3bee571fc3ae6d2f3243e04638e2690aec4659"
+    },
+    {
+      "artifact_id": 11701004777,
+      "cases": 127,
+      "complete168h": 77,
+      "date": "2025-12-04",
+      "raw_json_sha256": "f5c257ffe45728cba4147288709aef38b3c113aaeadba7cb4f3298172d687008",
+      "shard": 1,
+      "watch_episodes": 21,
+      "zip_sha256": "c8d58eef6ff1b4ab5ab96be21b8c9cc846243ba6d68c4f630ab400ba54a52cb3"
+    },
+    {
+      "artifact_id": 11701885255,
+      "cases": 126,
+      "complete168h": 69,
+      "date": "2025-12-04",
+      "raw_json_sha256": "5dd790a9a6755499fa95a236b3278e3577b7c20bf7fc7f701e1746ef041afc8e",
+      "shard": 2,
+      "watch_episodes": 25,
+      "zip_sha256": "9e82806b752e67a8eeccb8ff4095033d94f7322a46f44f5597b699de30988c21"
+    },
+    {
+      "artifact_id": 11702050119,
+      "cases": 126,
+      "complete168h": 77,
+      "date": "2025-12-04",
+      "raw_json_sha256": "76bceaa85f3d61e00b2f28ce6c5d0eeb5024e8135e74b9a7cc0ac9fe02ba0437",
+      "shard": 3,
+      "watch_episodes": 22,
+      "zip_sha256": "d870dead3601064f5c0c2b59bd2494796cfaa47b0154063e95044c998ff6b422"
+    },
+    {
+      "artifact_id": 11701650951,
+      "cases": 126,
+      "complete168h": 72,
+      "date": "2025-12-04",
+      "raw_json_sha256": "d8eac8b88ea791592b3c65080cae27334837fcd368ecbee048ba4afcb62ac524",
+      "shard": 4,
+      "watch_episodes": 20,
+      "zip_sha256": "41e8825265f5e3b9eb95c9962beeb216b62d248ed735dfddd1c7e0e49df8eef3"
+    },
+    {
+      "artifact_id": 11701651080,
+      "cases": 126,
+      "complete168h": 81,
+      "date": "2025-12-04",
+      "raw_json_sha256": "d1eb3faa32fe6dc0f0df6dd0768f744e6d70cb8f47efd589010bd367b5b486fa",
+      "shard": 5,
+      "watch_episodes": 20,
+      "zip_sha256": "73b9abef7816f63097630ba05378900f210267caa01c1b82fd31c99894781f9f"
+    },
+    {
+      "artifact_id": 11702055280,
+      "cases": 127,
+      "complete168h": 64,
+      "date": "2026-02-04",
+      "raw_json_sha256": "ebc1db5b10f9fe3063b5935ac218be59f139114b125ffa5b92513e82e4b48e19",
+      "shard": 0,
+      "watch_episodes": 27,
+      "zip_sha256": "f80774c69f0ad14532ba69ac00c0329010578496a2e3329bb5bf8531b4d0fa58"
+    },
+    {
+      "artifact_id": 11701835964,
+      "cases": 127,
+      "complete168h": 79,
+      "date": "2026-02-04",
+      "raw_json_sha256": "f5c43599e0679cf04d50939d481d6c669b02ea8bf1ad489639d65e59b9bcd0fc",
+      "shard": 1,
+      "watch_episodes": 32,
+      "zip_sha256": "862e4b862882a7e0f0850c206806f699c915a075aa0654951be61e61969c427a"
+    },
+    {
+      "artifact_id": 11701386381,
+      "cases": 126,
+      "complete168h": 70,
+      "date": "2026-02-04",
+      "raw_json_sha256": "e95c91b01523794010abf78df6d2deea33c6c2409b5809b8d5c69a911a9205f1",
+      "shard": 2,
+      "watch_episodes": 46,
+      "zip_sha256": "2902a5ff368072dd01977c4d2324d7a2dc1e1ffe4a7ab95563515faf640412df"
+    },
+    {
+      "artifact_id": 11701840817,
+      "cases": 126,
+      "complete168h": 79,
+      "date": "2026-02-04",
+      "raw_json_sha256": "60f5aaf2e1a9f4a364bcab489dae045e17dfd3b24943267b294929862fd18b55",
+      "shard": 3,
+      "watch_episodes": 84,
+      "zip_sha256": "60f94aff1993240507519d59f3b5a62b5c401ab14a3bc9f374aa72b4fb35b8b6"
+    },
+    {
+      "artifact_id": 11701526864,
+      "cases": 126,
+      "complete168h": 72,
+      "date": "2026-02-04",
+      "raw_json_sha256": "bbf11ed9d9f0ee0354f529423446e1103808bb07ea3411113161e6b7bc599761",
+      "shard": 4,
+      "watch_episodes": 40,
+      "zip_sha256": "2952de37c68081eb44d051d827b0116e1f5a76b2fe275705e8f5b3243a0f64da"
+    },
+    {
+      "artifact_id": 11701955894,
+      "cases": 126,
+      "complete168h": 81,
+      "date": "2026-02-04",
+      "raw_json_sha256": "ccf107727ca1120150ea933f15be56980e4c8a3e94c025a86ff06d6131b836a8",
+      "shard": 5,
+      "watch_episodes": 40,
+      "zip_sha256": "21a69822b98adfa9a63410ad60b3dad173aebdfe615a2cf0f36475a2fd6c3483"
+    },
+    {
+      "artifact_id": 11701271364,
+      "cases": 127,
+      "complete168h": 66,
+      "date": "2026-04-04",
+      "raw_json_sha256": "75c426b3fab3dfef43e9820e9e567e971a93d1ef9770cec47bfe28059c06ba59",
+      "shard": 0,
+      "watch_episodes": 19,
+      "zip_sha256": "aacae487208bab20dfe15c405320044f19d08a166ee4e7079cbbb1bd94245465"
+    },
+    {
+      "artifact_id": 11701291379,
+      "cases": 127,
+      "complete168h": 79,
+      "date": "2026-04-04",
+      "raw_json_sha256": "0af1574c31f3ee8b0c2b360f0756f79281e7ba8548b014ba632e145259cdf3d3",
+      "shard": 1,
+      "watch_episodes": 31,
+      "zip_sha256": "8db25a6143ff10574dde3d1bcdc06c6cc8c8c7d485c4d2c766b32226a0fc8380"
+    },
+    {
+      "artifact_id": 11701550943,
+      "cases": 126,
+      "complete168h": 68,
+      "date": "2026-04-04",
+      "raw_json_sha256": "18d6bed5baa2d2ce7d17d9d02f3f41e2d125e5c4dacd36493f48fd025faae6db",
+      "shard": 2,
+      "watch_episodes": 40,
+      "zip_sha256": "a3ec42d56a9c74bd0b9eca25915fd3c5ae72caa1ab6238d10495d86c6651bf0c"
+    },
+    {
+      "artifact_id": 11701286457,
+      "cases": 126,
+      "complete168h": 77,
+      "date": "2026-04-04",
+      "raw_json_sha256": "583ebb2ae92fbc0b79b97dafa9e5b57f15fb1a45a910fa15ba1eb6a13f047eb0",
+      "shard": 3,
+      "watch_episodes": 24,
+      "zip_sha256": "480ab06bc271eca2d9165b40f37f66316a6447d09c0505d6447db6078aff6006"
+    },
+    {
+      "artifact_id": 11701491897,
+      "cases": 126,
+      "complete168h": 69,
+      "date": "2026-04-04",
+      "raw_json_sha256": "99ffcc170fd8fd10b6b82a18a0e929831deb90c1ad7de03a31bcca15cd5b8985",
+      "shard": 4,
+      "watch_episodes": 31,
+      "zip_sha256": "ba0bbb45d8f795ff757f64b52ce58b244dd2248b106a9f215ea0154e9327ad8a"
+    },
+    {
+      "artifact_id": 11701940957,
+      "cases": 126,
+      "complete168h": 79,
+      "date": "2026-04-04",
+      "raw_json_sha256": "c6067bf6b08b8ad54baf7614491b4a4a8e374c8d09868aadc47035fe5fd9abd7",
+      "shard": 5,
+      "watch_episodes": 36,
+      "zip_sha256": "0ab563b4dbc9b64fd17844e6aa863154aed634362d4011d8e49ba3831756baef"
+    },
+    {
+      "artifact_id": 11702080769,
+      "cases": 127,
+      "complete168h": 74,
+      "date": "2026-08-04",
+      "raw_json_sha256": "b7d5e8469fa23462f6ff0f43fa25dbe5251a6a298bbd504576c0f9a50319db30",
+      "shard": 0,
+      "watch_episodes": 28,
+      "zip_sha256": "37f611f52db45cb69f053f3939f1f497e72823fbd643bc3b2cffd5e7545841e4"
+    },
+    {
+      "artifact_id": 11702005968,
+      "cases": 127,
+      "complete168h": 90,
+      "date": "2026-08-04",
+      "raw_json_sha256": "1dd71ef1cbe821c93cd30a42156c0a793194e7f20744228e67d5904d8a545414",
+      "shard": 1,
+      "watch_episodes": 24,
+      "zip_sha256": "9c46d4fecfd163e08a90e7ff5535c65677950879e95f24f6205b61cdcabd46da"
+    },
+    {
+      "artifact_id": 11701646008,
+      "cases": 126,
+      "complete168h": 70,
+      "date": "2026-08-04",
+      "raw_json_sha256": "9e8e15d368fa5be2d1f7bb8db680bbd35d3407d3dcd437e5aad4971a5297e9d9",
+      "shard": 2,
+      "watch_episodes": 18,
+      "zip_sha256": "50c1ca8b8b7f78ae66fd85a7d298417f2d682907e14406fc25c843467b0f4735"
+    },
+    {
+      "artifact_id": 11701276710,
+      "cases": 126,
+      "complete168h": 83,
+      "date": "2026-08-04",
+      "raw_json_sha256": "b854b79327a037b5c1e7d2478781bd73762e5e3b5a0cb6638548ddb138b15eeb",
+      "shard": 3,
+      "watch_episodes": 20,
+      "zip_sha256": "a9b1a2f8254adbc79ebd0ffe86779e15630a7c930854e1e88af8a2e9441e16b9"
+    },
+    {
+      "artifact_id": 11702110934,
+      "cases": 126,
+      "complete168h": 76,
+      "date": "2026-08-04",
+      "raw_json_sha256": "ca8825e2a81ff876a08365fcd1d0e7ac042a6f63981f837df23f28d82012a80e",
+      "shard": 4,
+      "watch_episodes": 40,
+      "zip_sha256": "572ff262505b07659712035f6413d4c002d38ed5d3ee5d66070f84e67b4237bf"
+    },
+    {
+      "artifact_id": 11702255425,
+      "cases": 126,
+      "complete168h": 85,
+      "date": "2026-08-04",
+      "raw_json_sha256": "8020bafcd245a28713047dba978138b891ee4b28bd6ff6961cc54e9f547dae7b",
+      "shard": 5,
+      "watch_episodes": 52,
+      "zip_sha256": "c1efbdb6b890e81093958e355c106ca144857d03e8ada1c57f0aa5d0c87681d1"
+    },
+    {
+      "artifact_id": 11702046110,
+      "cases": 127,
+      "complete168h": 76,
+      "date": "2026-09-04",
+      "raw_json_sha256": "2dd231127b5f8efd0402aad62f8ca7fbd2bb63b3bc6a301d71fe3ded445bcc21",
+      "shard": 0,
+      "watch_episodes": 11,
+      "zip_sha256": "c3f7af5a98ea9db253193cb5b6565745438672f627f310c8469558886fcf0cb9"
+    },
+    {
+      "artifact_id": 11702101240,
+      "cases": 127,
+      "complete168h": 91,
+      "date": "2026-09-04",
+      "raw_json_sha256": "d64af4ac90eb008a8b34289909765ec304d205775d409cac823e738545179997",
+      "shard": 1,
+      "watch_episodes": 13,
+      "zip_sha256": "8025763b4f865afa2cba055949c80dbc286f0406e4d4f145aa93b80c99bf0a06"
+    },
+    {
+      "artifact_id": 11702215779,
+      "cases": 126,
+      "complete168h": 75,
+      "date": "2026-09-04",
+      "raw_json_sha256": "d71f7b6f1946873bd5b5cd1a6e27890f40caef8683417b8e2f1a33ba6aa1c1ac",
+      "shard": 2,
+      "watch_episodes": 18,
+      "zip_sha256": "367a2d038b6e0d76e759ca4da5760a91a32acb8a4d0ac2637fb51da4c2b4fb39"
+    },
+    {
+      "artifact_id": 11701481508,
+      "cases": 126,
+      "complete168h": 81,
+      "date": "2026-09-04",
+      "raw_json_sha256": "19b5f5642f123c26b347be3ceb4940848b1549e860e987dc7ca3425cd042e713",
+      "shard": 3,
+      "watch_episodes": 22,
+      "zip_sha256": "152d33c384aba1f5de5e213b66c1f48dac499b43cc9f9df4035a627175a5128a"
+    },
+    {
+      "artifact_id": 11701916456,
+      "cases": 126,
+      "complete168h": 74,
+      "date": "2026-09-04",
+      "raw_json_sha256": "bdfff8aa4727af569f1615a0fe5528dfe24abc02fdbfaca6b59f34f540e1c55b",
+      "shard": 4,
+      "watch_episodes": 19,
+      "zip_sha256": "d012786a7cccd3573aea47e25b3ee83513ca0b88879b1c15e99f9a3702c359c6"
+    },
+    {
+      "artifact_id": 11701361853,
+      "cases": 126,
+      "complete168h": 88,
+      "date": "2026-09-04",
+      "raw_json_sha256": "74d38ae210b0d0578a8137cd60e5985cd331b8b73ca1378702f304060b25041b",
+      "shard": 5,
+      "watch_episodes": 24,
+      "zip_sha256": "58dbc535d697f7220f8546193da57ec40fbc90bbf340bf0b1557836d4fd664f1"
+    }
+  ],
+  "deployment": "NO_GO",
+  "gmail": "OFF",
+  "historical_real_L2_fills": "UNVERIFIED",
+  "independent_other_AI_review": "NOT_DONE",
+  "schema": "MONSTER_STAGE26_ALL36_ORIGINAL_GHA_ZIP_JSON_SHA256_REAL_PROOF_V1",
+  "source_ci_conclusion": "SUCCESS_ALL_36",
+  "source_ci_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38136620497",
+  "source_complete_total": 2719,
+  "source_git_sha": "6a380551d8e86bc404e8d1156a4aea2952d3bb5f",
+  "trading": "NO_GO",
+  "watch_total": 1132
+}
