@@ -19,6 +19,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_replay.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_causal_feature_research.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_short_history_replay.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_neutral_control_replay.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_neutral_control_replay.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_short_history_replay.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_causal_feature_research.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_history_source_quality.py'
@@ -35,6 +37,8 @@ on:
   pull_request:
     paths:
       - 'crypto-300-profit-mission/monster/**'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_neutral_control_replay.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_neutral_control_replay.py'
       - 'crypto-300-profit-mission/local-agent/config/monster_v4_research_candidate.json'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_baseline_audit.py'
       - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_baseline_audit.py'
@@ -123,6 +127,12 @@ jobs:
           python -B -m unittest discover -v -s tests -p test_monster_v4_short_history_replay.py
           python -B scripts/monster_v4_short_history_replay.py > /tmp/monster_stage9_short.json
           python -c 'import json; d=json.load(open("/tmp/monster_stage9_short.json")); print(json.dumps({"STAGE9_SHORT_HISTORY_SUMMARY":d["cohorts"],"ELIGIBLE":d["eligible"],"SOURCE_FAILURES":d["source_failures"],"NEW_LISTING_CASES":d["new_listing_venue_cases"],"CASES":[{"venue":x["venue"],"symbol":x["symbol"],"first":x["first_available_utc"],"watch":x["first_watch_utc"],"setup":x["d1_setups"],"minutes_before_anchor":x["first_available_minutes_before_old_watch"]} for x in d["cases"]],"REJECTED":d["rejected"]},sort_keys=True))'
+      - name: Stage10 pre-registered 24 symbol-time neutral-control true V4 D0/D1 replay
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_neutral_control_replay.py tests/test_monster_v4_neutral_control_replay.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_neutral_control_replay.py
+          python -B scripts/monster_v4_neutral_control_replay.py --output /tmp/monster_stage10_actual_neutral.json
       - name: Monster macOS isolated installation and rollback contract (hermetic)
         working-directory: crypto-300-profit-mission/local-agent
         run: |
