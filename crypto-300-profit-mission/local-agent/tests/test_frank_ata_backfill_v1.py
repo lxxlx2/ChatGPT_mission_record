@@ -43,12 +43,13 @@ class FakeRPC:
 
 
 def tx(pre, post, slot, *, signer="VP4B4yj63FNP4BZLZdBJYRsTi1LqUuUENY8wfAdtSn8",
-       program=TOKEN_2022, ata=J7_ATA, include_post=True):
+       program=TOKEN_2022, ata=J7_ATA, include_post=True,
+       signature=SIGNATURES[0]):
     base = {"accountIndex": 2, "mint": J7, "owner": WALLET, "programId": program,
             "uiTokenAmount": {"amount": pre, "decimals": 6}}
     after = {**base, "uiTokenAmount": {"amount": post, "decimals": 6}}
     return {"slot": slot, "blockTime": 1791505760,
-            "transaction": {"message": {"accountKeys": [
+            "transaction": {"signatures": [signature], "message": {"accountKeys": [
                 {"pubkey": signer, "signer": True},
                 {"pubkey": "VP4B4yj63FNP4BZLZdBJYRsTi1LqUuUENY8wfAdtSn8", "signer": False},
                 {"pubkey": ata, "signer": False},
@@ -76,7 +77,7 @@ def test_j7_real_chain_triplet_signatures_recover_missing_two_without_false_buy(
         for i, (sig, raw) in enumerate(zip(SIGNATURES, TX_RAW))
     ]
     rpc = FakeRPC({J7_ATA: list(reversed(j7))}, {
-        sig: tx(*raw) for sig, raw in zip(SIGNATURES, TX_RAW)
+        sig: tx(*raw, signature=sig) for sig, raw in zip(SIGNATURES, TX_RAW)
     })
     result = scan_ata_mints(rpc, [J7], known_signatures={SIGNATURES[0]},
                             since_time=1791490000)
@@ -95,17 +96,40 @@ def test_j7_real_chain_triplet_signatures_recover_missing_two_without_false_buy(
 
 
 def test_owner_program_mismatch_does_not_promote_balance_evidence():
-    j7 = tx("0", "5000000", 454705824, program=TOKEN)
+    j7 = tx("0", "5000000", 454705824, program=TOKEN, signature=SIGNATURES[1])
     result = validate_transaction(j7, SIGNATURES[1], J7_ATA, J7, TOKEN_2022)
     assert result["status"] == "OWNER_OR_BALANCE_UNVERIFIED"
     assert "raw_delta" not in result
 
 
 def test_missing_post_balance_not_assumed_zero():
-    j7 = tx("0", "5000000", 454705824, include_post=False)
+    j7 = tx("0", "5000000", 454705824, include_post=False, signature=SIGNATURES[1])
     result = validate_transaction(j7, SIGNATURES[1], J7_ATA, J7, TOKEN_2022)
     assert result["status"] == "PARTIAL_PRE_POST_BALANCE_UNVERIFIED"
     assert "raw_delta" not in result
+
+
+def test_real_rpc_tx_must_match_requested_primary_signature_before_any_delta():
+    record = tx("0", "5000000", 454705824, signature=SIGNATURES[1])
+    swapped = validate_transaction(record, SIGNATURES[0], J7_ATA, J7, TOKEN_2022)
+    assert swapped["status"] == "TRANSACTION_SIGNATURE_UNVERIFIED"
+    assert "raw_delta" not in swapped
+    record["transaction"].pop("signatures")
+    missing = validate_transaction(record, SIGNATURES[1], J7_ATA, J7, TOKEN_2022)
+    assert missing["status"] == "TRANSACTION_SIGNATURE_UNVERIFIED"
+    assert "raw_delta" not in missing
+
+
+def test_scanner_rejects_misbound_rpc_response_without_missing_signature_claim():
+    indexed = [{"signature": SIGNATURES[0], "slot": 454705300,
+                "blockTime": 1791505760, "err": None}]
+    unrelated = tx(*TX_RAW[0], signature=SIGNATURES[1])
+    result = scan_ata_mints(
+        FakeRPC({J7_ATA: indexed}, {SIGNATURES[0]: unrelated}),
+        [J7], known_signatures=set())
+    assert result["statistics"]["TRANSACTION_SIGNATURE_UNVERIFIED"] == 1
+    assert result["verified_nonzero_signatures_absent_from_local_index"] == []
+    assert result["complete_wallet_history"] is False
 
 
 def test_failed_transaction_is_never_a_transfer():
@@ -122,7 +146,7 @@ def test_history_budget_cannot_be_interpreted_as_chain_complete():
                 "blockTime": 1791505760, "err": None}
                for i in range(4)]
     rpc = FakeRPC({a: records}, {
-        sig: tx(*TX_RAW[i]) for i, sig in enumerate(SIGNATURES)
+        sig: tx(*TX_RAW[i], signature=sig) for i, sig in enumerate(SIGNATURES)
     })
     result = scan_ata_mints(rpc, [J7], known_signatures=set(),
                             page_size=4, max_pages_per_ata=1)
@@ -166,7 +190,7 @@ def test_explicit_ata_cli_reads_existing_index_without_changes(tmp_path):
     rpc = FakeRPC({
         J7_ATA: [{"signature": SIGNATURES[0], "slot": 454705300,
                   "blockTime": 1791505760, "err": None}]
-    }, {SIGNATURES[0]: tx(*TX_RAW[0])})
+    }, {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0])})
     output = tmp_path / "result.json"
     before = db.stat().st_mtime_ns
     report = run(["--database", str(db), "--mint", J7,
@@ -201,7 +225,7 @@ def test_explicit_git_sync_uses_only_dedicated_evidence_branch_and_retains_local
     rpc = FakeRPC({
         J7_ATA: [{"signature": SIGNATURES[0], "slot": 454705300,
                   "blockTime": 1791505760, "err": None}]
-    }, {SIGNATURES[0]: tx(*TX_RAW[0])})
+    }, {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0])})
     result = run(["--database", str(p), "--mint", J7,
                   "--output", str(out), "--sync-git"], rpc=rpc)
     assert result["git_sync"] == "SYNC_OK_READBACK_VERIFIED"
@@ -246,7 +270,7 @@ def test_rpc_rate_limit_after_first_mint_retains_verified_rows_and_marks_rest_un
                 raise RuntimeError("PROVIDER_429")
             return super().call(method, args)
     rpc = RateLimitedRPC({J7_ATA: chain}, {
-        sig: tx(*raw) for sig, raw in zip(SIGNATURES, TX_RAW)
+        sig: tx(*raw, signature=sig) for sig, raw in zip(SIGNATURES, TX_RAW)
     })
     result = scan_ata_mints(
         rpc, [J7, alt_mint], known_signatures={SIGNATURES[0]},
@@ -294,7 +318,7 @@ def test_duplicate_same_ata_signature_is_not_double_counted():
         {"signature": SIGNATURES[0], "slot": 454705300,
          "blockTime": 1791505760, "err": None},
     ]
-    rpc = FakeRPC({J7_ATA: source}, {SIGNATURES[0]: tx(*TX_RAW[0])})
+    rpc = FakeRPC({J7_ATA: source}, {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0])})
     res = scan_ata_mints(rpc, [J7], known_signatures=set())
     assert res["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
     assert res["statistics"]["duplicate_ata_signature_occurrences_skipped"] == 1
