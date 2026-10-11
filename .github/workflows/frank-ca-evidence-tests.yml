@@ -41,12 +41,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Install existing pinned dev tooling
         working-directory: crypto-300-profit-mission/local-agent
         run: python -m pip install -e '.[dev]'
+      - name: Install optional numeric dependencies for full-suite collection
+        run: python -m pip install 'numpy>=2,<3'
       - name: Compile exporter and integration
         working-directory: crypto-300-profit-mission/local-agent
         run: |
