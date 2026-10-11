@@ -1,0 +1,64 @@
+{
+  "schema": "MONSTER_STAGE28_ORIGINAL_SHARED_SQLITE_D1_EXACT_PROCESS_QUEUE_PRE_REGISTERED_V1",
+  "date": "2026-10-11",
+  "source": "all 36 original Stage26 GitHub artifact ZIP and internal JSON SHA256 identities, six already exposed dates",
+  "source_manifest": "monster_stage26_verified_sharded_168h_artifact_proof_20261011.json",
+  "source_dates": [
+    "2025-11-04",
+    "2025-12-04",
+    "2026-02-04",
+    "2026-04-04",
+    "2026-08-04",
+    "2026-09-04"
+  ],
+  "watch_events_expected": 1132,
+  "fully_verified_source_symbol_date": 2719,
+  "model_development_no_parameter_tuning": true,
+  "production_source_blob_sha1": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+  "source_rehash_script": "monster_v4_stage27_shared_queue_cash_ledger.py",
+  "shared_queue_contract": {
+    "real_code": "monster_v4_shadow.open_store,process_queue,evaluate_closed_5m,record_event",
+    "one_shared_sqlite_per_frozen_day": true,
+    "futures_venue_replayed": false,
+    "original_WATCH_from_stage26_per_symbol_168h_replay": true,
+    "watch_injection": "Reproduce original candidate_queue enqueue, first_seen=actual WATCH observed timestamp. Same-time ties symbol lexical, original global D0 insertion order unknown.",
+    "poll_schedule": "day UTC 06:03 and every three minutes for 168h, plus seven queue-drain polls after horizon",
+    "process_queue_limit": 8,
+    "ttl_mins": 15,
+    "real_multiple_evaluations_retry_waits_enabled": true,
+    "candle_source": "Binance original publisher SHA256 CHECKSUM verified daily 5m Spot OHLCV archive, cached across all candidate evaluations; close-only before each D1 evaluation, never post-observation",
+    "candle_gap_policy": "Missing or corrupted official 5m source FAIL CLOSED, never treat as a no-SETUP or a late signal",
+    "compare_to_original_independent_V4": "826 D1 setups found by Stage26 per-symbol original non-global replay, but no guarantee same queue watch invalidation state"
+  },
+  "known_limitations": [
+    "WATCH event arrivals are original independent per-symbol D0 outputs; the shared D0 snapshot database and historical exchangeInfo were not re-run globally",
+    "Prior Stage26 WATCH outputs do not include exact global arrival row order, priority or invalidation event timestamps; ties lexical and invalidation not injected",
+    "Real global Spot+Futures queue contention and network latency not measured",
+    "Official aggregated 5m archive may differ subtly from 1m reconstructed 5m; report potential pricing volume precision difference",
+    "No historical L2 or real execution, not an AI independent review or deployment permit"
+  ],
+  "predeclared_comparison": [
+    "original WATCH arrivals and sources",
+    "real candidate_queue status counts SETUP_ACTIVE, LATE_REVIEW, EVALUATED and pending",
+    "D1 first evaluation and repeat attempts from DB",
+    "how many original individual D1 were not reproduced and causal reasons",
+    "2026-02-06 00:36 UTC burst and expire evidence",
+    "candidate delay and source verification digest per day",
+    "unchanged Stage26 original 2x/5x opportunity inventory reference"
+  ],
+  "acceptance": {
+    "all_six_days_complete": true,
+    "all_watch_events_count_1132": true,
+    "all_sha_original_36_verified": true,
+    "original_production_code_sha_locked": true,
+    "official_5m_SHA_each_source": true,
+    "zero_unhandled_source_errors": true,
+    "stable_tie_determinism": true,
+    "still_needs_new_unseen_dates_for_profit": true
+  },
+  "review": "NOT_DONE",
+  "deployment": "NO_GO",
+  "frank": "UNCHANGED",
+  "gmail": "OFF",
+  "trading": "NO_GO"
+}
