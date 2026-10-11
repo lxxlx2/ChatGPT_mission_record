@@ -234,39 +234,73 @@
       "after_wei": "9938186563207818195",
       "native_delta_wei": "1553828556436142592",
       "status": "NATIVE_BALANCE_VERIFIED"
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "龙虾",
       "dir": "in",
       "block": 83635776,
       "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
-      "token_raw": "99069253510299993000000000"
+      "token_raw": "99069253510299993000000000",
+      "before_wei": "17806507402194926070",
+      "after_wei": "16997499825194926074",
+      "native_delta_wei": "-809007576999999996",
+      "status": "NATIVE_BALANCE_VERIFIED"
     },
     {
       "token": "龙虾",
       "dir": "out",
       "block": 83635800,
       "hash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
-      "token_raw": "99069253510299993000000000"
+      "token_raw": "99069253510299993000000000",
+      "before_wei": "16997499825194926074",
+      "after_wei": "17714337786680311798",
+      "native_delta_wei": "716837961485385724",
+      "status": "NATIVE_BALANCE_VERIFIED"
     },
     {
       "token": "龙虾",
       "dir": "in",
       "block": 83792918,
       "hash": "0xced27dd146159a8a34130a4e8e64bddd642c28773cc1514ad7ed5175c8529050",
-      "token_raw": "195581662531433206271053"
+      "token_raw": "195581662531433206271053",
+      "before_wei": "48187940702594330386",
+      "after_wei": "47387920912794330386",
+      "native_delta_wei": "-800019789800000000",
+      "status": "NATIVE_BALANCE_VERIFIED"
     },
     {
       "token": "龙虾",
       "dir": "out",
       "block": 84007473,
       "hash": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8",
-      "token_raw": "195581662531433206271053"
+      "token_raw": "195581662531433206271053",
+      "before_wei": "15434565203300238572",
+      "after_wei": "16143211476686548116",
+      "native_delta_wei": "708646273386309544",
+      "status": "NATIVE_BALANCE_VERIFIED"
     }
   ],
-  "state": "PARTIAL_21_OF_25",
+  "pending": [],
+  "state": "25_OF_25_ORIGINAL_NATIVE_BLOCK_DELTAS_READ_NOT_NET_REALIZED_PNL",
   "scope": "Native wallet BNB block delta at 25 original ERC20 event tx blocks, wallet balance before block and after block, not fully isolated transaction PnL.",
-  "production": "NO_GO"
+  "production": "NO_GO",
+  "by_token": [
+    {
+      "token": "我踏马来了",
+      "blocks": 21,
+      "total_native_block_delta_wei": "2329674116520169814",
+      "in_blocks": 9,
+      "out_blocks": 12
+    },
+    {
+      "token": "龙虾",
+      "blocks": 4,
+      "total_native_block_delta_wei": "-183543131928304728",
+      "in_blocks": 2,
+      "out_blocks": 2
+    }
+  ],
+  "aggregate_wei": "2146130984591865086",
+  "verified_count": 25,
+  "distinct_blocks": 25
 }
