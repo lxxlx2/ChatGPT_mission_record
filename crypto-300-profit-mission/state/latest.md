@@ -1,6 +1,6 @@
 # Mission Current Operational and Asset State
 
-Updated: 2026-10-12 Asia/Bangkok (GANG finalized claim/refund and pool research; other earlier module data unchanged)
+Updated: 2026-10-12 Asia/Bangkok (user GANG full exit, realized loss, screenshot and Solana portfolio refresh)
 Timezone: Asia/Bangkok
 Policy: `../MISSION_SPEC.md` | Latest assets: `../portfolio/current.md` | Mission PnL: `../performance/current.md`
 
@@ -24,7 +24,19 @@ Policy: `../MISSION_SPEC.md` | Latest assets: `../portfolio/current.md` | Missio
 - Binance flexible USDC is earmarked investment capital. Entire Bybit account is reserved for personal expenses/rent and excluded.
 - The original $300 cash plus six historical Credits NFTs is the Mission starting set. Later deposits and wallet movements must not be counted as Mission PnL.
 
-## GANG finalized distribution and current pool observations — 2026-10-12
+## Current dated investment asset and GANG exit state — 2026-10-12 ~01:53 Bangkok
+
+- **GANG FULLY CLOSED / NO GANG BALANCE** on canonical Solana wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`. User's actual successful swap https://solscan.io/tx/2cGKrncYix2AK2kAqtepgWJ1ipBsuH95TYwPHohRhAEkkbNRiwDbUUzLUyTG5RhA5D1xdi4Cbj9PUajsx8gGJNDk at slot 455756451, 2026-10-12 01:51:52 Bangkok. Before sale finalized slot 455756240: 8008.208 GANG and 87.434841 USDC. After slot 455757417: 0 GANG and **471.716759 USDC**. **USDC proceeds net 384.281918**.
+- Backable original escrow 500 USDC; approved GANG cost **480.492480**, already refunded **19.507520**; user recovered **403.789438 USDC** from the two GANG-specific exit/refund cashflows, **realized GANG loss −96.210562 USDC** before SOL gas, no remaining GANG or escrow. **Do not add the refund or gross proceeds a second time on top of 471.716759 current wallet USDC**. Position authority `../positions/gang.md`; realized sub-ledger `../performance/current.md`; original Mission $300+Credits total PnL still unresolved.
+- Canonical Solana native **0.012905142 SOL**, finalized slot 455757419, approx $1.44 at Alchemy $111.43/SOL; eligible under >=$1 individual asset display filter. Other Solana SPL assets have no separately valued >=$1 holding from latest standard SPL owner listing, besides USDC; additional asset inventory incomplete.
+- OKX Web3 screenshot **account 01 shows $484.64 total**, itemized assets clearly >=$1: USDC ~$471.76 (matches direct 471.716759; don't double count), ETH ~$6.08, SOL ~$1.43 (matches direct SOL; don't double count), TRX ~$1.11; **~$480.38 identified >=$1**. STRK ~$0.55 excluded. The remaining $4.26 headline difference cannot be allocated to individually >=$1 assets without expanded inventory. ETH and TRX ownership across OKX accounts/addresses not independently traced to canonical EVM/Tron RPC; screenshot only.
+- **Binance Earn 695.70724404 USDC** in one flexible savings position, screenshot UI **~$696.34 USDT-equivalent**, variable banner APR up to 4.01%, historical accrued interest 1.04524069 USDC included in principal. Do not double count USDC quantity and UI quote. Previous Binance 655.55477225 USDC is historical.
+- **Bybit personal/living/rent 445.724250 USDC** (Earn 397.147100, Funding 48.490694, Unified 0.086456), UI ~$446.12. **ENTIRE ACCOUNT EXCLUDED** from investment totals regardless of amount. Previous Bybit 353.173611 USDC historical only.
+- **Known identifiable >=$1 investment asset reference ~$1,176.72** = Binance UI ~$696.34 + itemized OKX Web3 ~$480.38, including canonical Solana positions only once; mixed user-screen/directed chain basis, not complete audited account NAV. OKX+Binance combined headline UI totals $1,180.98 include unidentified assets and are NOT the strict >=$1 filtered total. Private investment rights and NFTs not priced; Mission-wide PnL remains unresolved.
+- Trade action: performed by USER, not ChatGPT. **PRODUCTION_TRADING=NO_GO** remains; no monitor/task, Gmail, real order, or runtime changes made by this read-only Git documentation update. Last pre-sale 01:31 GANG-in-wallet and 2026-10-10 escrow observations below are **historical only**.
+
+
+## Historical milestone: GANG finalized distribution and pool observations — 2026-10-12 before full exit
 
 - **GANG LaunchState=Complete** (Solana finalized after 01:30 Bangkok), approved total 600,000 USDC from 631,770.75 USDC pledged.
 - User's FundingRecord confirms 500 USDC original commitment, **480.492480 USDC approved**, `is_tokens_claimed=true`, `is_usdc_refunded=true`. User wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` directly holds **8008.208 GANG**, ERC/SPL Token Account `5XBM2iEibBNAVBMjPYb9Deh8ibm4CCqZrbqk8n7TpGJo`. **19.507520 USDC refund was processed under the FundingRecord; wallet USDC currently 85.102445** (finalized slot 455753009), with other unknown intervening USDC flows possible. Do not add original escrow or refund a second time.
