@@ -183,5 +183,24 @@
   "monster_deployment": "NO_GO",
   "real_gmail": "OFF",
   "production_trading": "NO_GO",
-  "frank": "UNTOUCHED"
+  "frank": "UNTOUCHED",
+  "independent_original_artifact_byte_recompute": {
+    "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38135171536",
+    "run_commit": "b8ee14ab843a62435334820a522f39ec4bb1c163",
+    "conclusion": "SUCCESS",
+    "original_six_ZIP_and_internal_JSON_sha256_verified": true,
+    "aggregate_regression_tests": "5/5 PASS",
+    "artifact_id": 11700847054,
+    "artifact_zip_sha256": "de4bb2371f3fafb8ce05d1eff4bd2811f7cb78148d2bc74ec38cb598fae8ae36",
+    "recomputed_positive_all_hourly_2x": 41,
+    "recomputed_positive_joint_hourly_and_minutes_2x": 40,
+    "gt_positive_minute_censored": 1,
+    "recomputed_gross_5x": 4,
+    "recomputed_gross_10x": 1,
+    "recomputed_all_hourly_GT_close_2x_joint": 32,
+    "recomputed_strict_early_in_fixed12h_2x": 7,
+    "recomputed_gt2x_first_crossed_after_fixed_window": 39,
+    "original_24h_proxy_median_net_pct": -9.134183,
+    "same_time_scope_warning": "Not full7day WATCH coverage; only original day06–18 UTC signal window"
+  }
 }
