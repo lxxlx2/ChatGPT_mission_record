@@ -65,29 +65,69 @@
       "receipt_status": "0x1",
       "receipt_gas_wei": "9237195000000000",
       "receipt_body_complete": true
-    }
-  ],
-  "pending_txs": [
+    },
     {
       "symbol": "BROCCOLIF3B",
       "block": 46627320,
-      "hash": "0xc44a801bd394f3dd2c0153db941547a97dbbacf8ca16639ac62927bb82657393"
+      "hash": "0xc44a801bd394f3dd2c0153db941547a97dbbacf8ca16639ac62927bb82657393",
+      "wallet_native_before_wei": "9345287509763732414",
+      "wallet_native_after_wei": "7311218907763732414",
+      "delta_wei": "-2034068602000000000",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "tx_target": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "tx_native_value_wei": "2000000000000000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "34068602000000000",
+      "receipt_body_complete": true,
+      "tx_raw_response_truncated": false
     },
     {
       "symbol": "BROCCOLIF3B",
       "block": 47625222,
-      "hash": "0x41b4054c5ce5c46e7cffa3cc0b009b061b90c08814ab42bdea7ea323515e3738"
+      "hash": "0x41b4054c5ce5c46e7cffa3cc0b009b061b90c08814ab42bdea7ea323515e3738",
+      "wallet_native_before_wei": "5121160369251158550",
+      "wallet_native_after_wei": "3102623824251158550",
+      "delta_wei": "-2018536545000000000",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "tx_target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "2020000000000000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "936545000000000",
+      "receipt_body_complete": true,
+      "tx_raw_response_truncated": false
     },
     {
       "symbol": "BROCCOLIF3B",
       "block": 47625414,
-      "hash": "0xac223c5e2dd8868f104013b75eb82135b831d610a861c004305e1d505afd786c"
+      "hash": "0xac223c5e2dd8868f104013b75eb82135b831d610a861c004305e1d505afd786c",
+      "wallet_native_before_wei": "3102438372251158550",
+      "wallet_native_after_wei": "2092787397251158550",
+      "delta_wei": "-1009650975000000000",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "tx_target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "1010000000000000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "850975000000000",
+      "receipt_body_complete": true,
+      "tx_raw_response_truncated": false
     },
     {
       "symbol": "BROCCOLIF3B",
       "block": 121208916,
-      "hash": "0x145955921cb1baceccc109fdf3753c4e5e79e258c354de6e5cbb445ddfe06212"
-    },
+      "hash": "0x145955921cb1baceccc109fdf3753c4e5e79e258c354de6e5cbb445ddfe06212",
+      "wallet_native_before_wei": "14135082051766732134",
+      "wallet_native_after_wei": "14134957181431732134",
+      "delta_wei": "-124870335000000",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "tx_target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "tx_native_value_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "receipt_body_complete": false,
+      "tx_raw_response_truncated": false
+    }
+  ],
+  "pending_txs": [
     {
       "symbol": "BROCCOLIF3B",
       "block": 46628564,
@@ -104,7 +144,7 @@
       "hash": "0xae314cd93a33ccfd644ed387deb939887a320fd635d03f163c38975cbe89122e"
     }
   ],
-  "status": "PARTIAL_4_OF_11",
+  "status": "PARTIAL_8_OF_11",
   "interpretation": "Native per-block wallet delta, not transaction-isolated realized PnL; token inventory BROCCOLIF3B remains open.",
   "production": "NO_GO"
 }
