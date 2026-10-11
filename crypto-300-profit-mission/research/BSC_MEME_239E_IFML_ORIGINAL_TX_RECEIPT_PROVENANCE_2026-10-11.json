@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "token": "我踏马来了",
+  "source_file": "BSC_MEME_239E_TWO_MAJOR_FULL_SIGNED_FLOW_SOURCE_2026-10-11.json",
+  "original_native_block_sum_source": "BSC_MEME_239E_TWO_MAJOR_NATIVE_CASHFLOW_2026-10-11.json",
+  "native_scope_net_wei": "97366720524376562",
+  "unique_hashes": 6,
+  "self_signed_count": 6,
+  "receipt_success_count": 6,
+  "rows": [
+    {
+      "hash": "0x5eaf490ddad77bc6ddfc366f49c86b25fda316d6468a95cd3f5907fdcf39e347",
+      "block": 73658908,
+      "dir": "in",
+      "signer": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "tx_value_wei": "30300000000000000",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "491250000000000",
+      "full_receipt": true
+    },
+    {
+      "hash": "0x2413eaeadd4d7be589d9773bd4c53c2811254c1c641736ad1dacd6fd36137687",
+      "block": 73659128,
+      "dir": "out",
+      "signer": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "tx_value_wei": "0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "156701000000000",
+      "full_receipt": true
+    },
+    {
+      "hash": "0xe50103669ee4abf783cc70841e8e8339d07be75e9fd8df924cc53af0719d1e3b",
+      "block": 73659482,
+      "dir": "out",
+      "signer": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "tx_value_wei": "0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "167185000000000",
+      "full_receipt": true
+    },
+    {
+      "hash": "0x7d0ed883555f35254726e087a0d529ca972ab7aef2609bdc5e1714e40248cb4d",
+      "block": 73659538,
+      "dir": "out",
+      "signer": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "tx_value_wei": "0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "156701000000000",
+      "full_receipt": true
+    },
+    {
+      "hash": "0x0f373a6aae815e3929caaae0a4c6716b5dd0e94f35baeb1c429df6fd821ae768",
+      "block": 73660412,
+      "dir": "out",
+      "signer": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "tx_value_wei": "0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "156701000000000",
+      "full_receipt": true
+    },
+    {
+      "hash": "0x04fd13d549990ce656116adaaeee52c6e5892fa4c4037285c73200711d537326",
+      "block": 73664688,
+      "dir": "out",
+      "signer": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "tx_value_wei": "0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "151937000000000",
+      "full_receipt": true
+    }
+  ],
+  "status": "SELF_SIGNED_RECEIPTS_COMPARISON; NOT_ISOLATED_FINAL_PNL",
+  "production": "NO_GO"
+}
