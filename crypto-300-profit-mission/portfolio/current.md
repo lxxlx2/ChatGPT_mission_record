@@ -1,6 +1,6 @@
 # Mission Portfolio / Current Assets and Capital Classification
 
-Updated: 2026-10-12 Asia/Bangkok (GANG completion and new on-chain Solana wallet holdings; older snapshots retained dated)
+Updated: 2026-10-12 Asia/Bangkok (GANG fully exited, Binance/Bybit/OKX screenshots and finalized Solana holdings)
 Timezone: Asia/Bangkok
 Portfolio authority: this file; operational status: `../state/latest.md`; performance attribution: `../performance/current.md`.
 
@@ -22,7 +22,50 @@ Portfolio authority: this file; operational status: `../state/latest.md`; perfor
 
 Only these already authorized canonical wallets are in the present sweep. Wallet discovery/other accounts have **not** been asserted complete.
 
-## Latest material Solana change — 2026-10-12 GANG completion
+## Latest material assets: GANG fully exited, updated CEX and OKX — 2026-10-12
+
+Snapshot chronology: user screenshots **2026-10-12 around 01:52–01:53 Bangkok**; direct Solana RPC finalized **slot 455757417/455757419**, shortly after the user's full sale. Preserve distinctions `DIRECT_CHAIN` / `USER_CONFIRMED_SCREENSHOT` / `UNRESOLVED`. Per-asset USD value **< $1 EXCLUDED**. No new signing, purchase, transfer or account access.
+
+### Canonical Solana main wallet — direct finalized
+
+- Canonical wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`: **471.716759 USDC** in `AaHmxVnUryLCrSr32zxrDGzfafXTvuHATURZbBy6XQ6A` (Solana SPL classic mainnet), slot 455757417. This **includes the already refunded 19.507520 USDC ICO excess AND the 384.281918 USDC GANG sale proceeds**; do not add either again.
+- **0.012905142 SOL** native (12,905,142 lamports), finalized slot 455757419. Approximate independent Alchemy SOL/USD quote **$111.43** at 2026-10-11T18:56Z => **~$1.44**, individually above $1 threshold.
+- **0 GANG**, previously held 8,008.208 GANG; former user token account `5XBM2iEibBNAVBMjPYb9Deh8ibm4CCqZrbqk8n7TpGJo` no longer has any positive GANG (classic SPL complete owner inventory).
+- GANG full-exit confirmed transaction https://solscan.io/tx/2cGKrncYix2AK2kAqtepgWJ1ipBsuH95TYwPHohRhAEkkbNRiwDbUUzLUyTG5RhA5D1xdi4Cbj9PUajsx8gGJNDk, finalized slot 455756451 at 2026-10-12 01:51:52 Bangkok. Pre-sell finalized slot 455756240: 8,008.208 GANG / 87.434841 USDC; post-sell 0 GANG / 471.716759 USDC. **Realized net cash proceeds 384.281918 USDC**, GANG approved cost **480.492480 USDC**, GANG-specific **realized loss −96.210562 USDC** before SOL network gas. Original $500 total includes separate 19.507520 returned escrow; no outstanding GANG position/escrow. Details in `../positions/gang.md`.
+
+### OKX Web3 account 01 — user screenshot
+
+2026-10-12 ~01:52 account UI shows **$484.64 total** and gain `+$409.69 (+546.69%) / 1 day`; the latter is **wallet-app display statistic NOT verified portfolio investment profit or GANG profit**, and can reflect incoming transfers. Do not copy it to Mission PnL. Displayed items:
+- USDC **471.76**, separately confirms the Solana wallet's 471.716759 USDC (not a second 471.76 USDC holding).
+- ETH **0.002403 ETH ≈ $6.08** (user screenshot). The canonical EVM wallet's directly queried native balances across previously recorded EVM networks do **not** sum to this amount, therefore **ETH balance ownership/account mapping across OKX Web3 identities is not independently reconciled**. Retain as `USER_CONFIRMED`, do not assert `DIRECT_CHAIN`, and do not add same underlying funds to EVM chain subtotals twice.
+- SOL **0.012905 ≈ $1.43**, independently aligns with 0.012905142 SOL on the canonical Solana wallet (not additional SOL).
+- TRX **3.3847 ≈ $1.11**, screenshot-confirmed; Tron/native address not independently RPC-verified this turn.
+- STRK shows **$0.55**, explicitly **excluded** under < $1 threshold.
+- **Identifiable, individually >=$1 screenshot positions sum to approx $480.38** ($471.76 USDC + $6.08 ETH + $1.43 SOL + $1.11 TRX). OKX headline $484.64 exceeds that by $4.26, including visible $0.55 STRK and **$3.71 of undisclosed/cropped components with individual denominations unavailable**. Do **NOT** add that unexplained difference to the filtered investment subtotal, nor claim all are dust or zero.
+- OKX Web3 screenshot may aggregate assets from more than the canonical EVM/Solana addresses; only Solana sub-balances are independently matched. Mark extra ETH/TRX as dated `USER_CONFIRMED_SCREENSHOT` until wallet addresses/smart accounts are reconciled.
+
+### Binance flexible USDC Earn — current user screenshot (investment capital)
+
+- **695.70724404 USDC in Flexible Earn**, one position. Binance screenshot estimated account total **696.34 USDT-equivalent (~$696.34)**. These refer to **one asset**, not 695.70724404 + $696.34.
+- Product rate banner up to **4.01% variable APR**, screenshot cumulative interest **1.04524069 USDC**, already contained in the current USDC holding; do not double count.
+- Difference from prior 2026-10-09 Binance snapshot 655.55477225 USDC is **+40.15247179 USDC balance change** (UI USD total changes 656.07 → 696.34, +40.27 estimated dollars). No claim it was all interest, GANG proceeds or investment PnL.
+
+### Bybit personal living/rent money — excluded (2026-10-12 user screenshot)
+
+- **445.724250 USDC**, UI valuation **~$446.12**, components Earn **397.147100**, funding **48.490694**, unified trading **0.086456**, sum reconciles.
+- Screenshot Bybit PnL +$0.40 is account's display, not Mission profit; life/rent funds **fully excluded from investable funds and all subtotal calculations**.
+- Previous screenshot 353.173611 is historical only, no attribution of increase to investment return.
+- `BYBIT = EXCLUDED_FROM_INVESTMENT_CAPITAL` unchanged.
+
+### Current defensible filtered investment reference (mixed evidence)
+
+- **Binance screenshot UI mark ~$696.34** plus **OKX screenshot visible individually-qualified assets ~$480.38** = **~$1,176.72 identified investment holdings** at 2026-10-12 around 01:52–01:53 Bangkok.
+- **Not a complete wallet NAV**: additional OKX balance discrepancy $4.26 has not been attributed by denomination; unidentified tokens/NFTs and unsupported chain inventory excluded. Screenshot source mixed with directly confirmed Solana USDC/SOL. Do not add canonical direct Solana holdings again to OKX screenshot subtotal.
+- OKX headline $484.64 + Binance headline $696.34 = $1,180.98 of two *UI totals*, but **cannot use this $1,180.98 figure as strict >=$1 verified holdings** until the OKX $4.26 discrepancy is attributed.
+- Bybit personal funds excluded entirely. GANG closed realized loss **−96.210562 USDC** recorded at position level, *not* original Mission performance PnL. Historical investments/private rights remain outside liquid-NAV.
+
+
+## Historical snapshot: 2026-10-12 GANG initially distributed, BEFORE sale
 
 Source: direct finalized Solana RPC observations around **01:31–01:41 Asia/Bangkok**, main account details in `../positions/gang.md`. This section **supersedes the older October 10 GANG escrow and 58.047629 USDC wallet snapshot below**; other historical asset sections remain their original dated evidence.
 
@@ -97,7 +140,7 @@ The latest explicit user-confirmed Sui account state remains **0**, with no fres
 - `USER_CONFIRMED_HISTORICAL_2026-10-09`. No live account read.
 - **BYBIT = EXCLUDED_FROM_INVESTMENT_CAPITAL** in its entirety, even if an individual position would otherwise exceed $1. Reserved for personal living and rent.
 
-## Historical pre-GANG-settlement material capital reference (2026-10-10; not today's NAV)
+## Historical pre-GANG-settlement material capital reference (2026-10-10; NOT today's NAV)
 
 | Bucket | USD reference | Freshness / status |
 | --- | ---: | --- |
