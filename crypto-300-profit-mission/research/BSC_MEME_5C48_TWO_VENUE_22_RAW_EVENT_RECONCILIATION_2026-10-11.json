@@ -238,9 +238,7 @@
       "manager_curve_cost_wei": "294059405940594047",
       "manager_base_fee_wei": "2940594059405940",
       "matches_wallet_token_amount": true
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "龙虾",
       "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
@@ -249,7 +247,14 @@
       "dir": "out",
       "amount_raw": "8966698802238546000000000",
       "source_peer": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
-      "venue": "MANAGER2"
+      "venue": "MANAGER2",
+      "status": "MATCHED_DIRECT_CHAIN_EVENT",
+      "manager_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "manager_account": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "manager_amount_raw": "8966698802238546000000000",
+      "manager_curve_cost_wei": "401628475297451403",
+      "manager_base_fee_wei": "4016284752974514",
+      "matches_wallet_token_amount": true
     },
     {
       "token": "龙虾",
@@ -259,7 +264,14 @@
       "dir": "out",
       "amount_raw": "13450048203357820000000000",
       "source_peer": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
-      "venue": "MANAGER2"
+      "venue": "MANAGER2",
+      "status": "MATCHED_DIRECT_CHAIN_EVENT",
+      "manager_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "manager_account": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "manager_amount_raw": "13450048203357820000000000",
+      "manager_curve_cost_wei": "487980946775106978",
+      "manager_base_fee_wei": "4879809467751069",
+      "matches_wallet_token_amount": true
     },
     {
       "token": "龙虾",
@@ -269,7 +281,14 @@
       "dir": "out",
       "amount_raw": "6725024101678910000000000",
       "source_peer": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
-      "venue": "MANAGER2"
+      "venue": "MANAGER2",
+      "status": "MATCHED_DIRECT_CHAIN_EVENT",
+      "manager_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "manager_account": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "manager_amount_raw": "6725024101678910000000000",
+      "manager_curve_cost_wei": "399761809715412993",
+      "manager_base_fee_wei": "3997618097154129",
+      "matches_wallet_token_amount": true
     },
     {
       "token": "龙虾",
@@ -279,7 +298,9 @@
       "dir": "out",
       "amount_raw": "3362512050839455000000000",
       "source_peer": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
-      "venue": "MANAGER2"
+      "venue": "MANAGER2",
+      "status": "SOURCE_EVENT_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 108 column 27)"
     },
     {
       "token": "龙虾",
@@ -289,7 +310,9 @@
       "dir": "out",
       "amount_raw": "3362512050839456000000000",
       "source_peer": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
-      "venue": "PANCAKE_V2"
+      "venue": "PANCAKE_V2",
+      "status": "SOURCE_EVENT_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 61)"
     },
     {
       "token": "龙虾",
@@ -299,7 +322,9 @@
       "dir": "in",
       "amount_raw": "47919549090379631444458",
       "source_peer": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
-      "venue": "PANCAKE_V2"
+      "venue": "PANCAKE_V2",
+      "status": "SOURCE_EVENT_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 68)"
     },
     {
       "token": "龙虾",
@@ -309,12 +334,20 @@
       "dir": "out",
       "amount_raw": "47919549090379631444458",
       "source_peer": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
-      "venue": "PANCAKE_V2"
+      "venue": "PANCAKE_V2",
+      "status": "SOURCE_EVENT_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 68)"
     }
   ],
-  "state": "15_OF_22_ORIGINAL_RAW_EVENT_PROBES",
+  "pending": [],
+  "state": "22_OF_22_RAW_EVENT_PROBES_WITH_EXPLICIT_TRUNCATION_ERRORS",
   "production": "NO_GO",
   "limitations": [
     "Unmatched event must be preserved and independently resolved, never classified as profitable by assumption"
-  ]
+  ],
+  "by_venue": {
+    "MANAGER2": 12,
+    "V2": 10
+  },
+  "matched": 14
 }
