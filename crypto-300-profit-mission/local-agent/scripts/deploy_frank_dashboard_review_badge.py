@@ -14,7 +14,6 @@ import os
 from pathlib import Path
 import re
 import secrets
-import shutil
 import sqlite3
 import subprocess
 import sys
