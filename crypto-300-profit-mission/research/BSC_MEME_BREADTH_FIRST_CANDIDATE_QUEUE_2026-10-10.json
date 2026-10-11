@@ -30,7 +30,10 @@
     "BSC_MEME_23_EOA_POSITION_COVERAGE_MATRIX_REFRESH_2026-10-11.json",
     "BSC_MEME_DDAC_NIULAI_CLOSED_BNB_BLOCK_AUDIT_2026-10-11.json",
     "BSC_MEME_DDAC_MARS_NATIVE_BLOCK_DELTA_2026-10-11.json",
-    "BSC_MEME_DDAC_MARS_29_TX_ORIGIN_AND_SETTLEMENT_AUDIT_2026-10-11.json"
+    "BSC_MEME_DDAC_MARS_29_TX_ORIGIN_AND_SETTLEMENT_AUDIT_2026-10-11.json",
+    "BSC_MEME_8E6B_THREE_CORE_EVENT_CASHFLOW_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_8E6B_HAJIMI_LOBSTER_26_BLOCK_BALANCES_2026-10-11.json",
+    "BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -64,9 +67,9 @@
     "native_external_incoming_transfer_sample_2026_10_11": 227,
     "native_funding_shared_senders": 13,
     "verified_direct_candidate_bnb_transfers": 7,
-    "latest_2026_10_11_erc20_sample_rows": 1021,
-    "latest_2026_10_11_unread_directions": 25,
-    "wallets_with_complete_19_ca_direction_history": 9
+    "latest_2026_10_11_erc20_sample_rows": 1224,
+    "latest_2026_10_11_unread_directions": 23,
+    "wallets_with_complete_19_ca_direction_history": 11
   },
   "venue_coverage": [
     {
@@ -776,7 +779,7 @@
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
       "prior_state": "GENESIS_PLUS_POOL_MULTITOKEN_EOA_DIRECT_SIGNER_CONFIRMED",
-      "research_status": "RESEARCH_ONLY / REALIZED_MATERIAL_PNL_UNKNOWN / PERSON_PATTERN_OBSERVE_ONLY",
+      "research_status": "CROSS_TOKEN_ACTIVITY_PROVEN; 2 POSITIVE 1 NEGATIVE CLOSED BSC NATIVE EVENT CASHFLOWS; REALIZED_ISOLATED_PNL_UNVERIFIED; FOLLOWABLE_SIGNAL_NO_GO",
       "early_sample_tokens": [
         "4",
         "MUBARAK"
@@ -818,7 +821,38 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "4",
         "MUBARAK"
-      ]
+      ],
+      "current_research_priority": "HIGH_PRIORITY_REPEATED_MATERIAL_NATIVE_BNB_CASHFLOW",
+      "material_position_evidence": {
+        "full_19_CA_history": false,
+        "observed_scoped_tokens": 11,
+        "first_token_original_signer_verified": 10,
+        "first_token_original_signer_attempted": 11,
+        "complete_2026_position_token_inventory": [
+          "我踏马来了",
+          "哈基米 / HAJIMI",
+          "龙虾"
+        ],
+        "native_BNB_delta_by_position": [
+          {
+            "token": "我踏马来了",
+            "BNB": -0.5990238168449055
+          },
+          {
+            "token": "哈基米 / HAJIMI",
+            "BNB": 1.2428992807984849
+          },
+          {
+            "token": "龙虾",
+            "BNB": 4.794001707717377
+          }
+        ],
+        "combined_scoped_native_delta_BNB": 5.437877171670956,
+        "all_32_position_transactions_originally_signed": "32/32",
+        "transaction_receipt_success_headers": "30/32; 2 龙虾 headers unavailable due truncation; ERC20 log exists",
+        "quality": "QUOTE_TRACES_AND_SAME_BLOCK_OTHER_ACTIVITY_NOT_FULLY_EXCLUDED",
+        "source": "BSC_MEME_8E6B_THREE_CORE_EVENT_CASHFLOW_RECONCILIATION_2026-10-11.json"
+      }
     },
     {
       "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
@@ -1510,10 +1544,12 @@
     "GIGGLE/MARSCOIN event blocks were chosen from documented specific post-listing transactions; these 50-block pre/post windows are not a census of Binance launch prices or all transactions. 5 of 20 signer lookups were too long to parse and are UNKNOWN, not negative trader evidence.",
     "Four newly surfaced 2026 cross-token EOAs have own signed acquisition events but neither full realized net profits nor a confirmed common-controller identity; avoid premature profitability rankings.",
     "The 33 paginated first-10 ERC20 transfer directions need further history; sampled absence of a given token may be false negative. Native funding source overlaps may reflect shared infrastructure and cannot establish beneficial ownership.",
-    "0xddac MARS +3.409712 BNB is exact aggregate native wallet block delta over 29 token-flow blocks. All 19 nonzero BNB-change txs have matched original signer, 18 target Four.meme manager; final per-tx realized PnL needs remaining receipts and same-block/quote attribution."
+    "0xddac MARS +3.409712 BNB is exact aggregate native wallet block delta over 29 token-flow blocks. All 19 nonzero BNB-change txs have matched original signer, 18 target Four.meme manager; final per-tx realized PnL needs remaining receipts and same-block/quote attribution.",
+    "8e6b 32 self-signed token-trade transactions across 3 fully reconciled 2026 major token quantities have +5.437877 BNB aggregate event-block wallet native changes (two positive, one negative), but internal-transaction attribution/finality, controller/followability and further 8-token losses remain unresolved."
   ],
   "next_work_order": [
-    "Continue the 33 paginated wallet/transfer directions and deduplicate launchpad V2/V3 across 2026 core major opportunities",
+    "Prioritize 0x8e6b three-position loss/win quote and same-block attribution, assess all 11 early token portfolio outcomes before ranking as followable",
+    "Compare 0x8e6b to 0xddac, 0x2adf and other core wallets on pre-major-entry, opportunity capture, downside and fresh activity",
     "Test 7 signed BNB candidate-to-candidate events for controller clusters, filtering Binance CEX and shared infrastructure",
     "Continue 2026 material opportunity candidate universe discovery with exact official Binance CA evidence, then timestamp-derived boundary blocks via free primary data when available; paid Blockscout/GMGN dependency not permitted",
     "Obtain verified transaction signers and retain signed trade proof for each material cohort",
