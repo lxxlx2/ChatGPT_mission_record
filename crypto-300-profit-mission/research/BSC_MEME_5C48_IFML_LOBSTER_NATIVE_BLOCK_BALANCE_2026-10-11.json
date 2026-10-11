@@ -234,18 +234,37 @@
       "native_after_wei": "535237222306892767",
       "native_delta_wei": "-1001648370000000000",
       "status": "NATIVE_BALANCE_VERIFIED"
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "龙虾",
       "dir": "out",
       "block": 85952207,
       "hash": "0xc1b893b2f5a5ba09d3d12145b6249ef0ac178227eea429d069a8825362ec070c",
-      "raw": "47919549090379631444458"
+      "raw": "47919549090379631444458",
+      "native_before_wei": "535237222306892767",
+      "native_after_wei": "1781196111865688975",
+      "native_delta_wei": "1245958889558796208",
+      "status": "NATIVE_BALANCE_VERIFIED"
     }
   ],
+  "pending": [],
   "status": "PARTIAL_21_OF_22_NATIVE_BLOCKS",
   "production": "NO_GO",
-  "caution": "Native wallet block delta may include unrelated same-block movements; token quantities from source ERC20 transfers."
+  "caution": "Native wallet block delta may include unrelated same-block movements; token quantities from source ERC20 transfers.",
+  "verified": 22,
+  "by_token": [
+    {
+      "token": "我踏马来了",
+      "blocks": 13,
+      "net_native_wei": "1684349807479692629"
+    },
+    {
+      "token": "龙虾",
+      "blocks": 9,
+      "net_native_wei": "1292735581066750132"
+    }
+  ],
+  "combined_wei": "2977085388546442761",
+  "state": "22_OF_22_NATIVE_BLOCK_BALANCE_VERIFIED_BUT_SIGNER_NOT_YET_FULLY_AUDITED",
+  "distinct_blocks": 22
 }
