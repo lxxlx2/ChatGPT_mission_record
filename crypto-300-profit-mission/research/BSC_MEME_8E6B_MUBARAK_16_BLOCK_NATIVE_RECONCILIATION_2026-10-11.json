@@ -138,7 +138,7 @@
     }
   ],
   "pending_tx": [],
-  "status": "ALL_16_NATIVE_BLOCK_BALANCES_VERIFIED_SIGNER_RECEIPTS_QUOTE_PENDING",
+  "status": "MUBARAK_16_NATIVE_BLOCKS_16_ORIGINAL_SELF_SIGNED_SUCCESS_QUOTES_NOT_FULLY_TRACED",
   "production": "NO_GO",
   "caveats": [
     "Token balance quantity closed, not proof transaction isolated returns",
@@ -235,7 +235,100 @@
       "gas_wei": "1445370000000000",
       "receipt_complete": true,
       "tx_complete": true
+    },
+    {
+      "hash": "0x157badd198cd0db1ac8bb8e47b35bd01857e6d28d66882b0512c82802ef570e0",
+      "block": 47426067,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "1010000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "923665000000000",
+      "receipt_complete": true,
+      "tx_complete": true
+    },
+    {
+      "hash": "0xfc10978982c4316808efbca9bebdafc9142a05bd6517db45d34c7c32d89ebad9",
+      "block": 47426073,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "1596910000000000",
+      "receipt_complete": true,
+      "tx_complete": true
+    },
+    {
+      "hash": "0x46eab58da04dce83de6d6a090d2aeadc6cf2e737f899462ad70ffe34b408e86b",
+      "block": 47426394,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "505000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "906740000000000",
+      "receipt_complete": true,
+      "tx_complete": true
+    },
+    {
+      "hash": "0x7bdcc80baa8983e5433ed7d06ebdd3599bfb30669cb1810b501a518bc051868c",
+      "block": 47426611,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "1445300000000000",
+      "receipt_complete": true,
+      "tx_complete": true
+    },
+    {
+      "hash": "0xeba08abea107e87eaed81e4f76fe7de999a7867a0d3382ad22d7e4701cadd487",
+      "block": 47476115,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "1010000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "928100000000000",
+      "receipt_complete": true,
+      "tx_complete": true
+    },
+    {
+      "hash": "0x3a7421e824c446a875114d4ab9f950d54e8a83515dd3a235222b31044610fc7f",
+      "block": 47476125,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "1466735000000000",
+      "receipt_complete": true,
+      "tx_complete": true
+    },
+    {
+      "hash": "0x13da50c585e8b67caad158bbfa1fa4a0605b3725c4122cf3b350e4ff41f40484",
+      "block": 47537139,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "303000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "928165000000000",
+      "receipt_complete": true,
+      "tx_complete": true
+    },
+    {
+      "hash": "0xaad12c4338b60fb4fd79e805ee40f80cca224518575928bdcdc5d7c45d643dd2",
+      "block": 47537150,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "tx_native_value_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "1446740000000000",
+      "receipt_complete": true,
+      "tx_complete": true
     }
   ],
-  "tx_audit_status": "PARTIAL_8_OF_16"
+  "tx_audit_status": "ALL_16_OF_16",
+  "self_signed_count": 16,
+  "receipt_success_count": 16,
+  "total_original_native_value_wei": "3333000000000000000",
+  "total_gas_wei": "21512120000000000",
+  "unknown_gas_count": 0
 }
