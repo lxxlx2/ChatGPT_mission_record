@@ -5,7 +5,6 @@ No live Gmail, Mac services, user wallet, or production database.
 from __future__ import annotations
 
 import json
-import sqlite3
 
 import pytest
 
