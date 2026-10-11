@@ -320,34 +320,59 @@
       "before_wei": "13129335718356980266",
       "after_wei": "13135778844922679468",
       "delta_wei": "6443126565699202"
-    }
-  ],
-  "unverified_remaining": [
+    },
     {
       "token": "龙虾",
       "hash": "0x667b8989cc5d2f5dfd6b42aad139cb8724710ca4b5f4c346ceca2bdc06846629",
       "block": 83636684,
-      "dir": "out"
+      "dir": "out",
+      "before_wei": "13135778844922679468",
+      "after_wei": "13200600195397277762",
+      "delta_wei": "64821350474598294"
     },
     {
       "token": "龙虾",
       "hash": "0x014449374008914bb094a27853cb55ce693ea90c14eb2b44e2d6f2a2ed457ac0",
       "block": 83636711,
-      "dir": "out"
+      "dir": "out",
+      "before_wei": "13200600195397277762",
+      "after_wei": "13262851631848141726",
+      "delta_wei": "62251436450863964"
     },
     {
       "token": "龙虾",
       "hash": "0xd6b6d1b7be654133a1949389883a6c763cbfec74725288788d9687823099d5b3",
       "block": 83636714,
-      "dir": "out"
+      "dir": "out",
+      "before_wei": "13262846072608141726",
+      "after_wei": "13318296589113125576",
+      "delta_wei": "55450516504983850"
     },
     {
       "token": "龙虾",
       "hash": "0x363852852e72d638e82ecbb508b851afd82030581cca57360932ee64a4626989",
       "block": 83636718,
-      "dir": "out"
+      "dir": "out",
+      "before_wei": "13318296589113125576",
+      "after_wei": "13809376194821598691",
+      "delta_wei": "491079605708473115"
     }
   ],
-  "status": "PARTIAL_35_OF_39",
-  "production": "NO_GO"
+  "unverified_remaining": [],
+  "status": "39_OF_39_NATIVE_BALANCE_EVIDENCE_COMPLETE_SIGNATURE_RECEIPTS_AND_QUOTE_OPEN",
+  "production": "NO_GO",
+  "verified_blocks": 39,
+  "by_token": [
+    {
+      "token": "我踏马来了",
+      "verified": 10,
+      "net_native_block_wei": "855510151606958501"
+    },
+    {
+      "token": "龙虾",
+      "verified": 29,
+      "net_native_block_wei": "1642366642703365664"
+    }
+  ],
+  "combined_native_event_block_net_wei": "2497876794310324165"
 }
