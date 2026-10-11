@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-10-11",
+  "chain": "bnb-mainnet",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "method": "Original block header timestamp for token wallet first incoming transfer, first outgoing transfer, last transfer, and earliest sampled PANCAKE_V2_WBNB pool outgoing transfer (NOT canonical launch time). Token event direction is not proof of swap.",
+  "source_files": [
+    "BSC_MEME_8E6B_2026_SIX_CORE_POSITION_TRANSFER_HISTORY_2026-10-11.json",
+    "BSC_MEME_8E6B_GIGGLE_OUTBOUND_FULL_CURSOR_AUDIT_2026-10-11.json",
+    "BSC_MEME_8E6B_EARLY_2025_THREE_TOKEN_FULL_TRANSFER_HISTORY_2026-10-11.json",
+    "BSC_MEME_8E6B_MUBARAK_TUT_FULL_TRANSFER_HISTORY_2026-10-11.json",
+    "BSC_MEME_BREADTH_FIRST_HANDOFF_2026-10-10.md"
+  ],
+  "selected_11_token_cohorts": [
+    {
+      "token": "BROCCOLIF3B",
+      "first_in": {
+        "block": 46627320,
+        "hash": "0xc44a801bd394f3dd2c0153db941547a97dbbacf8ca16639ac62927bb82657393"
+      },
+      "first_out": {
+        "block": 46628564,
+        "hash": "0x441c6c65bcdbaee092e14019ec52c27ea79a7fc65b450652d90948bf02bce40f"
+      },
+      "last_event": {
+        "block": 121208916,
+        "hash": "0x145955921cb1baceccc109fdf3753c4e5e79e258c354de6e5cbb445ddfe06212"
+      },
+      "v2_pool_sample_first_block": 46628417,
+      "first_in_block_minus_v2_reference": -1097,
+      "events_in": 4,
+      "events_out": 3,
+      "unique_trade_hashes": 7,
+      "timestamps": {
+        "entry": 1739463391,
+        "v2_sample_reference": 1739466682
+      },
+      "cautions": [
+        "WALLET_BUY_PREDATES_V2_SAMPLE_REFERENCE; DO_NOT_CALL_NEGATIVE_LAG_PRELISTING_EDGE"
+      ]
+    },
+    {
+      "token": "MUBARAK",
+      "first_in": {
+        "block": 47425367,
+        "hash": "0x8413f404b7ca72e36f389f0209f9d99432f21b43c535f0e0e227aa2718960215"
+      },
+      "first_out": {
+        "block": 47425526,
+        "hash": "0xe570d7b852311a7ab2973507d7d4daa89c7298ccc9d78ba6b8abcee4064460ac"
+      },
+      "last_event": {
+        "block": 47537150,
+        "hash": "0xaad12c4338b60fb4fd79e805ee40f80cca224518575928bdcdc5d7c45d643dd2"
+      },
+      "v2_pool_sample_first_block": 47442149,
+      "first_in_block_minus_v2_reference": -16782,
+      "events_in": 5,
+      "events_out": 11,
+      "unique_trade_hashes": 16,
+      "timestamps": {
+        "entry": 1741857739,
+        "v2_sample_reference": 1741908085
+      },
+      "cautions": [
+        "WALLET_BUY_PREDATES_V2_SAMPLE_REFERENCE; DO_NOT_CALL_NEGATIVE_LAG_PRELISTING_EDGE"
+      ]
+    },
+    {
+      "token": "SIREN",
+      "first_in": {
+        "block": 47454336,
+        "hash": "0xbcd4ca5d1a7a72849a21baacc49ee7da6f317074af21c5840a7e8d159d948588"
+      },
+      "first_out": {
+        "block": 47454364,
+        "hash": "0x32de477094920c7ebc9bf67dfbc07bc3cc41cf93fe83baa48928a78aa7426915"
+      },
+      "last_event": {
+        "block": 47454364,
+        "hash": "0x32de477094920c7ebc9bf67dfbc07bc3cc41cf93fe83baa48928a78aa7426915"
+      },
+      "v2_pool_sample_first_block": 46828940,
+      "first_in_block_minus_v2_reference": 625396,
+      "events_in": 1,
+      "events_out": 1,
+      "unique_trade_hashes": 2,
+      "timestamps": {
+        "entry": 1741944658,
+        "v2_sample_reference": 1740068335
+      },
+      "cautions": []
+    },
+    {
+      "token": "TUT",
+      "first_in": {
+        "block": 47488546,
+        "hash": "0x8a39b3f7178ef8b5c9e773bc1a7c9fea1c7225a998096335b8edad5a68e2db3b"
+      },
+      "first_out": {
+        "block": 47488557,
+        "hash": "0x46cae9573f0e7ab4e842ef8f5b3a2e7c07c8d296691aa67d080331fd36e811c6"
+      },
+      "last_event": {
+        "block": 115361864,
+        "hash": "0x18d2d25689548eabb55ff92ea428f46614d85932105e19ac071ec453b25e8b69"
+      },
+      "v2_pool_sample_first_block": 46521969,
+      "first_in_block_minus_v2_reference": 966577,
+      "events_in": 6,
+      "events_out": 4,
+      "unique_trade_hashes": 10,
+      "timestamps": {
+        "entry": 1742047288,
+        "v2_sample_reference": 1739147304
+      },
+      "cautions": []
+    },
+    {
+      "token": "BULLA",
+      "first_in": {
+        "block": 51154911,
+        "hash": "0x09ce3d5e03297bca5c6a0f7ab64afce6306cdbf526e3611f91b2cf19f49e1c7b"
+      },
+      "first_out": {
+        "block": 51155048,
+        "hash": "0xeb516c7f78eb2b9d62abeb272847ba6b5df352cb6985d912a3a9516b34e913cc"
+      },
+      "last_event": {
+        "block": 51155048,
+        "hash": "0xeb516c7f78eb2b9d62abeb272847ba6b5df352cb6985d912a3a9516b34e913cc"
+      },
+      "v2_pool_sample_first_block": 50982375,
+      "first_in_block_minus_v2_reference": 172536,
+      "events_in": 1,
+      "events_out": 1,
+      "unique_trade_hashes": 2,
+      "timestamps": {
+        "entry": 1749476425,
+        "v2_sample_reference": 1749217568
+      },
+      "cautions": []
+    },
+    {
+      "token": "GIGGLE",
+      "first_in": {
+        "block": 62016808,
+        "hash": "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356"
+      },
+      "first_out": {
+        "block": 62019177,
+        "hash": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674"
+      },
+      "last_event": {
+        "block": 63310510,
+        "hash": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f"
+      },
+      "v2_pool_sample_first_block": 61963755,
+      "first_in_block_minus_v2_reference": 53053,
+      "events_in": 4,
+      "events_out": 23,
+      "unique_trade_hashes": 16,
+      "timestamps": {
+        "entry": 1758511481,
+        "v2_sample_reference": 1758471687
+      },
+      "cautions": []
+    },
+    {
+      "token": "4",
+      "first_in": {
+        "block": 63056884,
+        "hash": "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b"
+      },
+      "first_out": {
+        "block": 63056949,
+        "hash": "0x11f18d2e8169495b7085787d88b7de644a3579bf3e2dfb6bc609e3e8eae48601"
+      },
+      "last_event": {
+        "block": 64458294,
+        "hash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462"
+      },
+      "v2_pool_sample_first_block": 63056879,
+      "first_in_block_minus_v2_reference": 5,
+      "events_in": 2,
+      "events_out": 17,
+      "unique_trade_hashes": 19,
+      "timestamps": {},
+      "cautions": []
+    },
+    {
+      "token": "币安人生",
+      "first_in": {
+        "block": 63454427,
+        "hash": "0x534c03a24c825229776e91b9d595d0730183b93a1067a67394b981bb4229854b"
+      },
+      "first_out": {
+        "block": 63454476,
+        "hash": "0xcc92b0ea2dfe5323a3b1bdaa0afd301a335213d7ce526d6f5d273f4965af46b6"
+      },
+      "last_event": {
+        "block": 122856244,
+        "hash": "0x348554f16e7d856b14270efa19c9b3b9f87fe4967df18b50517ef49ab531e5de"
+      },
+      "v2_pool_sample_first_block": 63454407,
+      "first_in_block_minus_v2_reference": 20,
+      "events_in": 17,
+      "events_out": 10,
+      "unique_trade_hashes": 27,
+      "timestamps": {},
+      "cautions": []
+    },
+    {
+      "token": "我踏马来了",
+      "first_in": {
+        "block": 74473655,
+        "hash": "0x992dd56c53a11a8f8396db4e766c1174db779fe6843962667efaeed4e2c1fee2"
+      },
+      "first_out": {
+        "block": 74473726,
+        "hash": "0x820a196cfd5080b78e468fed18113a697327b7b51de789f8e11f7d9fcfd6a6ed"
+      },
+      "last_event": {
+        "block": 76582674,
+        "hash": "0x863688f507d05b6fbd24f21036c90b80675c9a4702c971a7e5efd1f23412fd5f"
+      },
+      "v2_pool_sample_first_block": 73658907,
+      "first_in_block_minus_v2_reference": 814748,
+      "events_in": 3,
+      "events_out": 3,
+      "unique_trade_hashes": 6,
+      "timestamps": {},
+      "cautions": []
+    },
+    {
+      "token": "HAJIMI",
+      "first_in": {
+        "block": 74741352,
+        "hash": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231"
+      },
+      "first_out": {
+        "block": 74741573,
+        "hash": "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe"
+      },
+      "last_event": {
+        "block": 120418655,
+        "hash": "0x8efa4437602e8ec8007c59fe67c888fc3d719cfda9ff8c85e0ebbaa3a7b79a60"
+      },
+      "v2_pool_sample_first_block": 63838944,
+      "first_in_block_minus_v2_reference": 10902408,
+      "events_in": 6,
+      "events_out": 7,
+      "unique_trade_hashes": 13,
+      "timestamps": {},
+      "cautions": []
+    },
+    {
+      "token": "龙虾",
+      "first_in": {
+        "block": 83637088,
+        "hash": "0x22f2c3f6f029e7ab2f9f6af2760f5ad051330ca71fc09bb3b0be394223adcf71"
+      },
+      "first_out": {
+        "block": 83638341,
+        "hash": "0x9337a2b919c2ac9749e1b311eb7a4db93c0ea62f1deba93cfa9e88bdd0b683e1"
+      },
+      "last_event": {
+        "block": 94208823,
+        "hash": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530"
+      },
+      "v2_pool_sample_first_block": 83636129,
+      "first_in_block_minus_v2_reference": 959,
+      "events_in": 4,
+      "events_out": 9,
+      "unique_trade_hashes": 13,
+      "timestamps": {},
+      "cautions": []
+    }
+  ],
+  "reference_warning": "Earliest sampled V2 transfer can be later than Four.meme bonding curve or alternative venue; positive/negative lags do not prove speed or insider status. First wallet incoming transfer is not necessarily a purchase.",
+  "timestamp_status": "PARTIAL_FIRST_SIX",
+  "backtest_status": "NOT_RUN_NO_EXECUTABLE_QUOTE_SERIES",
+  "production": "NO_GO"
+}
