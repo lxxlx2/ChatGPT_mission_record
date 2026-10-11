@@ -97,12 +97,14 @@ def round6(x):
     return round(float(x),6)
 
 
-def _proxy_trade(bars, base_ms, watch_ms, delay_ms, slip_bps):
+def _proxy_trade(bars, base_ms, watch_ms, delay_ms, slip_bps, hold_minutes=1440):
     # Observed WATCH uses already closed 1m, entry is first 1m OPEN
     # at/after the specified future latency (no future price in signal).
     entry_ms=watch_ms+delay_ms
     i=(entry_ms-base_ms)//INTERVAL_1M
-    exit_i=i+1440
+    if not isinstance(hold_minutes,int) or hold_minutes<=0:
+        raise ValueError("INVALID_REPLAY_HOLD_MINUTES")
+    exit_i=i+hold_minutes
     if i < 0 or exit_i >= len(bars):
         return {"status":"CENSORED_NO_COMPLETE_EXIT"}
     entry=bars[i][1]; exit_price=bars[exit_i][1]
