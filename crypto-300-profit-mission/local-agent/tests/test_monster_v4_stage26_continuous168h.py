@@ -113,7 +113,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(len(store),1)
         self.assertEqual(len(times),3360)
         self.assertEqual(times[0],m.replay.parse_ms("2025-11-04T06:03:00Z"))
-        self.assertEqual(times[-1],m.replay.parse_ms("2025-11-11T05:54:00Z"))
+        self.assertEqual(times[-1],m.replay.parse_ms("2025-11-11T06:00:00Z"))
         self.assertEqual(r["watch_count"],2)
         self.assertEqual(r["continuous_sqlite_reset_count"],0)
         self.assertTrue(r["polls"]>3000)
