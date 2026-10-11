@@ -1,0 +1,146 @@
+{
+  "schema": "MONSTER_STAGE15_ARCHIVED_SPOT_USDT_RESEARCH_VERIFIED_CI_V1",
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38124621017",
+  "run_status": "SUCCESS_ALL_5_JOBS",
+  "source_commit": "33ae200de7fa29aed787f3d8f0b62324a118226f",
+  "source": "Official Binance public S3 historical Spot daily/klines symbol prefixes; actual publisher-checksummed 1m ZIP verified by existing V4 archive loader",
+  "frozen_current_spot_usdt": 504,
+  "total_ever_archived_symbols_all_quotes": 3737,
+  "ever_archived_spot_usdt_symbols": 760,
+  "archive_only_spot_usdt_symbols": 256,
+  "archive_only_compatible_alphanumeric_symbols": 254,
+  "archive_only_unsupported_unicode_symbols": [
+    "币安人生USDT",
+    "牛来USDT"
+  ],
+  "archive_only_compatible_sha256": "0c2604d838fc3d7c28d0e8819fde1bb42deb6fb22360182a49c1b82bb6d25348",
+  "current_spot_missing_archive": 0,
+  "per_date": [
+    {
+      "date": "2025-11-17",
+      "artifact_id": 11697135205,
+      "artifact_zip_sha256": "24ceb43e9e7a60ff2bed9ea8024d7a30f28e172f4e033963fbb9e479df2b7f6a",
+      "json_sha256": "3b2e53a873ea1fc5f6142e22b6ac2fffa68b308c9ba33268151302fc36714881",
+      "complete": 55,
+      "missing_404": 199,
+      "partial": 0,
+      "watch": 1,
+      "d1": 1,
+      "d1_censored": 1,
+      "watch_symbols": [
+        "ARDRUSDT"
+      ]
+    },
+    {
+      "date": "2026-02-17",
+      "artifact_id": 11696588197,
+      "artifact_zip_sha256": "b82488524fc5d1dc19400dc0f9ce278e519248524e37486df5a93eed3106d872",
+      "json_sha256": "e1706e7d492de99bd9db47aa412d99c1645e686dd82345ca9c6c40d1a4b105a3",
+      "complete": 45,
+      "missing_404": 209,
+      "partial": 0,
+      "watch": 0,
+      "d1": 0,
+      "d1_censored": 0,
+      "watch_symbols": []
+    },
+    {
+      "date": "2026-05-17",
+      "artifact_id": 11697080198,
+      "artifact_zip_sha256": "7ef4074d566cbdb9f205dcfb943019531d6064c37246d15b47637fe6361731d5",
+      "json_sha256": "0ce2f9ee81acee00795e7280bf305f8c845feb1064b19fc2d56bf6ed2927edcb",
+      "complete": 26,
+      "missing_404": 228,
+      "partial": 0,
+      "watch": 0,
+      "d1": 0,
+      "d1_censored": 0,
+      "watch_symbols": []
+    },
+    {
+      "date": "2026-08-17",
+      "artifact_id": 11696054439,
+      "artifact_zip_sha256": "065e5bb045d8ffa35d362dbadd154b6b8b7d58178990000d865d6ee6c300d1d9",
+      "json_sha256": "c34fb05d827db1362d6f12e638fed22dda7650649e4a3a03d07e574170fb92b3",
+      "complete": 5,
+      "missing_404": 243,
+      "partial": 6,
+      "watch": 0,
+      "d1": 0,
+      "d1_censored": 0,
+      "watch_symbols": [],
+      "partial_symbols": [
+        "ACXUSDT",
+        "HFTUSDT",
+        "PIVXUSDT",
+        "PYRUSDT",
+        "VANRYUSDT",
+        "VICUSDT"
+      ]
+    },
+    {
+      "date": "2026-09-17",
+      "artifact_id": 11696508461,
+      "artifact_zip_sha256": "8313322bb91da4cd465d2deae7f7990388de10b35b85b44f95c5c08f11bee03f",
+      "json_sha256": "cbfe77992897be7f94b82315813cc3ee885bf0ca89df4bc3778a45b69414e778",
+      "complete": 2,
+      "missing_404": 252,
+      "partial": 0,
+      "watch": 0,
+      "d1": 0,
+      "d1_censored": 0,
+      "watch_symbols": []
+    }
+  ],
+  "totals": {
+    "archive_only_symbol_date_attempts": 1270,
+    "verified_complete_60h": 133,
+    "missing_day_archive_404": 1131,
+    "incomplete_archive": 6,
+    "additional_verified_minute_bars": 478800,
+    "additional_3m_polls": 31920,
+    "additional_watch": 1,
+    "additional_d1": 1,
+    "additional_evaluable_24h_trades": 0,
+    "additional_censored": 1
+  },
+  "single_new_signal": {
+    "spot_symbol": "ARDRUSDT",
+    "date": "2025-11-17",
+    "first_watch_utc": "2025-11-17T13:51:00Z",
+    "d1_utc": "2025-11-17T13:57:00Z",
+    "trade_proxy_status": "CENSORED_MINUTE_QUOTE_LT_30_USDT",
+    "not_proven_real_fill": true,
+    "archive_sha256": [
+      "33da0214b74e597f66c38d0990a27d2e7bca4d04d09d62f1656b2246d87ac2ff",
+      "4db181ff2e393a568803d92bd4780610734ccd9843cdefd5e0058341968dfa",
+      "aa35c6a4972f11f8f19f39d17fca6b46dec051b04efa3c7e8150ee677b99a870"
+    ]
+  },
+  "combined_stage12_13_15": {
+    "attempted_symbol_date_pairs": 3790,
+    "complete_60h": 2283,
+    "verified_minute_bars": 8218800,
+    "three_minute_polls": 547920,
+    "watch_episodes": 37,
+    "d1_episodes": 32,
+    "net_proxy_24h_evaluable": 26,
+    "positive": 9,
+    "negative": 17,
+    "additional_censored_since_stage14": 1,
+    "net_proxy_24h_median_pct": -3.722338,
+    "simulated_sum_independent_30usdt_pnl_usdt": -16.984114
+  },
+  "limitations": [
+    "Historical S3 catalog is not point-in-time trading permission/exchangeInfo; archived-only not automatically delisted at given observation time",
+    "Only exact-date fully verified 60h ZIPs were replayed; absence is not proof of no historical trading",
+    "Missing archive or partial data not zero WATCH; unavailable exits censored",
+    "Two Unicode symbol identifiers need a separate source adapter and remain explicitly unassessed",
+    "The 5 dates all from prior research; no independent forward 5x recall and no historical order book or actual fills"
+  ],
+  "strategy_validated": false,
+  "independent_other_ai_review": false,
+  "local_deployed": false,
+  "live_email_sent": false,
+  "production_trading": "NO_GO"
+}
