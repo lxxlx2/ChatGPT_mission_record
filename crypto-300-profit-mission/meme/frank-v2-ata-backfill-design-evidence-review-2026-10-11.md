@@ -70,3 +70,12 @@ Hard release flags:
 `USER_MAC_NEW_VERSION=NOT_DEPLOYED`
 `PRODUCTION_AUTO_ATA_SCAN=OFF`
 `PRODUCTION_TRADING=NO_GO`
+
+
+## 6. 429 partial-save correction and duplicate signature protection
+
+During the first bounded real-provider batch Alchemy returned 429 after earlier successful ATA signature reads. Initial research code would have stopped on an RPC exception before emitting any of the earlier verified results. **This was identified and fixed before release**: the independent ATA scanner now catches network/RPC exceptions, records `scan_status=PARTIAL_RPC_INTERRUPTED`, `interruption_type`, all already independently validated signature and token-balance observations, and the number of canonical ATA addresses left unscanned. It then **stops** rather than immediately querying additional addresses against the rate-limited provider. The manual CLI retains the partial JSON as `0600`, and returns **nonzero exit status 3** even when prior evidence survived and optional Git publishing succeeded. A missing source is never called a complete successful scan.
+
+An additional source-account deduplication guard now uses `(derived_token_account,signature)`, not only the RPC transaction cache, to avoid counting repeated Solana signatures from overlapping pages twice. Different ATA accounts in the same transaction remain distinguishable; known original Frank owner-stream signatures are marked but not claimed as new wallet activity.
+
+Regression tests exercise the exact 429-after-J7 scenario, interruption with already-validated rows, independent observable `RPC_INTERRUPTED_PARTIAL` state, local packet retention, and duplicate signature removal. A provenance test independently derives **all 12** previously observed sell-only token accounts from their Mint and verified program IDs, checking the **8 Token-2022 / 4 Tokenkeg** classification. No production deployment or second-AI review has occurred.
