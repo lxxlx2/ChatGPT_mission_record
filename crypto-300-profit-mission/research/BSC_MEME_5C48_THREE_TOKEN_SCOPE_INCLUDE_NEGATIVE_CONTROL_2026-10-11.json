@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-11",
+  "scope": "Historical in-sample 3 selected 5c48 token CAs from existing BSC 19-CA matrix, three unrelated time periods, 39 self signed successful original tx and 39 native wallet block states. Not full wallet history.",
+  "source_files": [
+    "BSC_MEME_5C48_IFML_LOBSTER_22_CLOSED_EPISODES_2026-10-11.json",
+    "BSC_MEME_5C48_22_TX_TWO_VENUE_SETTLEMENT_QA_2026-10-11.json",
+    "BSC_MEME_5C48_BINANCE_LIFE_FULL_ERC20_HISTORY_2026-10-11.json",
+    "BSC_MEME_5C48_BINANCE_LIFE_17_NATIVE_BLOCK_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_5C48_BINANCE_LIFE_17_ORIGINAL_SIGNER_RECEIPT_PROVENANCE_2026-10-11.json"
+  ],
+  "summary": {
+    "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+    "source_signed_success_count": 39,
+    "all_native_block_records": 39,
+    "selected_early_positions": [
+      {
+        "token": "我踏马来了",
+        "episodes": 4,
+        "positive": 4,
+        "negative": 0,
+        "net_native_wei": "1684349807479692629",
+        "buy_original_wei": "2000000000000000000"
+      },
+      {
+        "token": "龙虾",
+        "episodes": 2,
+        "positive": 2,
+        "negative": 0,
+        "net_native_wei": "1292735581066750132",
+        "buy_original_wei": "1800000000000000000"
+      }
+    ],
+    "third_coin": {
+      "token": "币安人生",
+      "contract": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "source_tx_count": 17,
+      "original_native_buy_count": 7,
+      "other_signed_transactions": 10,
+      "original_native_buy_value_wei": "3800000000000000000",
+      "token_in_events": 17,
+      "token_out_events": 10,
+      "same_transaction_roundtrip_count": 10,
+      "exact_token_residual_raw": "247691",
+      "token_exact_closed": false,
+      "native_event_block_delta_wei": "-100375396591269389",
+      "received_quote_assets_and_fees": "UNRESOLVED_EXACT_ROUTER_TRACE"
+    },
+    "combined_three_token_native_net_wei": "2876709991955173372",
+    "combined_native_buy_inputs_wei": "7600000000000000000",
+    "gross_buy_ratio_pct_approx": 37.8514
+  },
+  "correction": "Previously 5c48 6/6 positive closed episodes applied ONLY to selected IFML and Lobster token inventories. Binance Life later event cohort has -0.10037539659126939 BNB scoped native block movement and 247691 smallest-unit token residue. Unlike earlier simple ERC20 trade legs, 10 hashes contain equal inbound and outbound ERC20 transfers in same tx, so don't count 17 inbound transfers as 17 buy fills or mark all inventory closed.",
+  "required_next": [
+    "Reconcile third token routing and 7 native buy inputs vs 10 native return txs including WBNB, router fees and gas.",
+    "Expand to all selected 19 token CAs and separate chronological opportunity dates and no-activity from wallet unobserved-lifetime unknown.",
+    "Build untouched holdout and never declare live copy edge from winners."
+  ],
+  "production": "NO_GO"
+}
