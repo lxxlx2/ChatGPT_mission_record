@@ -1,9 +1,9 @@
 # GANG / The Syndicate — Backable ICO operational position
 
-Updated: 2026-10-08 Asia/Bangkok
+Updated: 2026-10-12 Asia/Bangkok (on-chain closure finalized and supply still in launch vault)
 Network: Solana mainnet
 Source standard: direct finalized Solana state + actual MetaDAO v0.7 contract + user participation statement.
-State: `COMMITTED_ONCHAIN / SALE_LIVE / ALLOCATION_PENDING`
+State: `COMMITTED_ONCHAIN / SALE_CLOSED / ALLOCATION_PENDING / TOKEN_POOL_NOT_YET_DEPLOYED`
 Trading execution: `NO_GO` (record-only; no standing automation or monitor authorized).
 
 ## Canonical identity and contracts
@@ -52,6 +52,38 @@ Directly decoded from the v0.7 launch account:
 - Additional recipient `53WKsoHAm2ztNF9xh68NC5dw8LWCroMsRt47x8JNvHTV` can claim 1,357,894 extra tokens after `Complete`, distinct from the team's 18-month performance lock.
 
 ## Post-close operational checklist — STATUS PENDING
+## 2026-10-12 post-window finalized on-chain milestone (SUPERSEDES pre-close operational snapshot)
+
+Research type: `DIRECT_CHAIN / SOLANA_FINALIZED`. Observation slot ~455735427 to 455735691 on October 12 Bangkok, after scheduled 00:30:01 close. Independent finalized confirmation transaction: https://solscan.io/tx/3gPviEWwUaSvtWd2mKRFat1ar7aHBBW7LPAUTiujjwqdfrCGg4LNG5ooWVFRqAikhH7zVg7nrc4aGpStjN7wX1E9 . Program logs contain `Instruction: CloseLaunch` and finalized success; blockTime 2026-10-11T17:30:17Z = 2026-10-12 00:30:17 Bangkok.
+
+**Launch PDA `EFUKEM6oaUMdCtVvgaqeV2E9baZ1ikkLng1kTakvjU7k`, decoded using MetaDAO v0.7 Launch state source:**
+- `state=Closed`, `unix_timestamp_closed=2026-10-11T17:30:17Z`.
+- `total_committed_amount=631770.75 USDC` (**commitments escrowed, not actually approved/raised/company treasury**).
+- `minimum_raise_amount=250000 USDC`, `total_approved_amount=0 USDC` at observation. Minimum commitments exceeded; funding outcome **not yet finalized**.
+- `monthly_spending_limit=41666 USDC`, `months_until_insiders_can_unlock=18`.
+- Official Backable deal page displays up-to-1M maximum for final approved raise, but `minRaise` is only fixed field in Launch; do not claim a signed on-chain hard-cap implementation.
+- Backable primary docs: https://www.backable.biz/docs/committed-vs-raised / https://www.backable.biz/docs/whats-new . Early-fill boost, time weighting, Ownership Score and reserved Aligned Parties addresses can affect **individual approval**. Never estimate actual approved amount from headline total.
+
+**User FundingRecord `GgFwSstgG9e6XDEWAc4wrcD8EqVaqHpzo7ScvNGEEQot`:**
+- `committed_amount=500 USDC`
+- `approved_amount=0 USDC` pending approval
+- `is_tokens_claimed=false`
+- `is_usdc_refunded=false`
+- Claimable GANG amount **UNCONFIRMED / no tokens distributed**. Do not treat zero approval before finalization as final rejection.
+
+**Mint & pool facts:**
+- Mint `syQqkspvb2PRr1meJ5pJDmhgxwc4hUou2TMjjrTmeta`, total supply `27157894 GANG`, 6 decimals, `freezeAuthority=null`, `mintAuthority=3bFdH9eitNJJnC2ocraqAFbnhC6GALNGowfY4otrXwi2` (launch signer, not renounced).
+- `getTokenLargestAccounts` shows **all 27,157,894 GANG** at `8TCjFJznaFcQhJmWCk9P1NXU5QAGKNLRh95oWRb3dLR9`; `getAccountInfo(jsonParsed)` confirms token-account owner `3bFdH9eitNJJnC2ocraqAFbnhC6GALNGowfY4otrXwi2` = launch signer. No transfer of supply into initial USDC/GANG pool or investor ATA at the snapshot. Wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` has no GANG token account.
+- `LaunchState::Complete` not reached: contract-required Meteora DAMM v2 + Futarchy AMM initialization not completed. **No verified pool address, LP USDC reserves, executable market price, volume or slippage**; do not use token aggregator 'buy' button as proof.
+- CompleteLaunch source: https://github.com/metaDAOproject/programs/blob/develop/programs/v07_launchpad/src/instructions/complete_launch.rs
+- CloseLaunch source: https://github.com/metaDAOproject/programs/blob/develop/programs/v07_launchpad/src/instructions/close_launch.rs
+- `set_funding_record_approval.rs` permits launch authority to approve within 2 days *after actual CloseLaunch*. `claim.rs` requires Complete; `refund.rs` requires Complete or Refunding. A scheduled close is NOT equivalent to claim enabled.
+- Project official X `https://x.com/SyndicateGameHQ`, platform official X `https://x.com/backabledotbiz`. Web direct reads of X returned 403, and no independently retrievable **post-close official announcement** establishing claim/TGE/trading time was found. `OFFICIAL_POST_CLOSE_ANNOUNCEMENT=UNVERIFIED`; do not invent a launch time or imply no statement exists anywhere.
+
+**Scenario math ONLY (not allocation):** if approved total were 631770.75 USDC *and* user approved=500 USDC, expected `500/631770.75*10000000 ≈ 7914.26 GANG`, indicative sale price $0.063177; this is not proven. If approved total 1M and user approved 500, 5000 GANG; if user approved less, excess USDC refund required. Keep prior 7948 as historical pre-close scenario only.
+
+**Next status gate:** finalized `Closed -> Complete` or `Closed -> Refunding`; personal `approved_amount` nonzero or final; actual `total_approved_amount`, LP/DAO accounts, liquidity depth, and confirmed claim/refund. Manual recheck on user request or meaningful authoritative event only. No monitor, signing, trade, claim or refund created or executed.
+
 
 1. **At or after 2026-10-12 00:30:01 Bangkok:** verify `LaunchState` moved from `Live` to `Closed` or `Refunding`. Time is a scheduled end, **not** a guarantee claim is live at that instant.
 2. If `Closed`: inspect `FundingRecord.approved_amount`, `total_approved_amount`, and whether close/approval/complete transactions are finalized. v0.7 allows launch authority to record allocation approvals within two days after close.
