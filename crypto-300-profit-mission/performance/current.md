@@ -1,9 +1,38 @@
 # Mission Performance / Starting-Capital Provenance and Realized PnL
 
-Updated: 2026-10-10 Asia/Bangkok
+Updated: 2026-10-12 Asia/Bangkok (GANG ICO realized position loss separately verified; Mission overall PnL still unresolved)
 Status: `MISSION_PNL_UNRESOLVED`
 Current position/balance authority: `../portfolio/current.md`.
 Operational authority: `../state/latest.md`.
+
+## New realized result — GANG ICO complete exit (2026-10-12)
+
+**This is a separately attributable realized position PnL, NOT proof of Mission-wide PnL or original $300-to-$3000 target progress.** Ledger sources: `../positions/gang.md`, Solana finalized FundingRecord, actual wallet pre/post exit balances and direct indexed sale signature.
+
+| Ledger item | Cashflow / treatment |
+| --- | ---: |
+| Original escrow deposit | −500.000000 USDC (2026-10-08) |
+| FundingRecord refund of rejected allocation | +19.507520 USDC (2026-10-12; processed, already part of wallet USDC) |
+| Approved investment principal converted to 8008.208 GANG | 480.492480 USDC at $0.06 each |
+| Full token sale net USDC cash receipt | +384.281918 USDC (2026-10-12 01:51:52 Bangkok) |
+| **Total recovered cash from original escrow** | **403.789438 USDC** |
+| **GANG position realized trading PnL** | **−96.210562 USDC** |
+| ROI on actual approved 480.492480 USDC token cost | **−20.023323%** |
+| ROI on original 500 USDC commitment incl. refund | **−19.242112%** |
+| Post-sale GANG inventory | **0**; position status **CLOSED** |
+
+Sale original Solana transaction (successful finalized, slot 455756451):
+https://solscan.io/tx/2cGKrncYix2AK2kAqtepgWJ1ipBsuH95TYwPHohRhAEkkbNRiwDbUUzLUyTG5RhA5D1xdi4Cbj9PUajsx8gGJNDk
+
+Direct finalized wallet balance reconciliation across this sale:
+- Before: 8008.208 GANG, 87.434841 USDC (slot 455756240).
+- After: no positive GANG, **471.716759 USDC** (slot 455757417).
+- Only one USDC account transaction between snapshots; receipt is 471.716759−87.434841=384.281918 USDC.
+- Native SOL gas and any additional denominated fees in SOL are not included in the exact USDC PnL; one recorded transaction network fee 0.000352350 SOL, broader SOL balance change 0.000552350 SOL is not wholly attributed.
+- **Do not count the $500 escrow, $19.507520 refund or 384.281918 sale proceeds again as incremental current assets**. All current amounts are represented by updated wallet USDC. Account screenshot profit figures do not establish trade profit.
+
+Mission-wide starting-asset PnL remains `MISSION_PNL_UNRESOLVED` because full attribution of the initial $300 plus six Credits NFT original basis, withdrawals, external deposits, transfers, and other investments is still outstanding. Do not present the GANG loss as the Mission's full profit/loss.
+
 
 ## Mission objective and starting inventory
 
@@ -13,7 +42,7 @@ Operational authority: `../state/latest.md`.
 - **Current original Credits held: 0; historical exited: all 6.** Ethereum owner-specific Alchemy check at block 26163166 (2026-10-10 16:15:59 UTC) confirms zero current Credits for the canonical wallet. Historical sale provenance is recorded in `../positions/credits.md`.
 - UNICRED #230 is not owned (verified Unichain block 60900610 on 2026-10-10); closed historical asset, not current holdings.
 
-## Current asset reference (not Mission performance)
+## Historical asset reference (2026-10-10; superseded by 2026-10-12 position and portfolio observations)
 
 As of this report, separately verified >=$1 chain positions consist of:
 - Solana wallet USDC **58.047629**, approximately **$58.10** using the sampled USDC/USD quote.
