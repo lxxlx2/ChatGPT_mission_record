@@ -93,7 +93,8 @@
     "BSC_MEME_DDAC_BINANCE_LIFE_FULL_ERC20_HISTORY_2026-10-11.json",
     "BSC_MEME_DDAC_BINANCE_LIFE_SEVEN_V2_PAIR_ACTUAL_SWAPS_2026-10-11.json",
     "BSC_MEME_DDAC_BINANCE_LIFE_82_TX_DISTRIBUTION_VS_7_POOL_SETTLEMENT_QA_2026-10-11.json",
-    "BSC_MEME_ADDRESS_MODEL_3_DDAC_MARS_GIGGLE_BINANCE_LIFE_RESEARCH_REPORT_2026-10-11.md"
+    "BSC_MEME_ADDRESS_MODEL_3_DDAC_MARS_GIGGLE_BINANCE_LIFE_RESEARCH_REPORT_2026-10-11.md",
+    "BSC_MEME_9D_BINANCE_LIFE_239E_NIULAI_PASSIVE_TRANSFER_CONTROL_2026-10-11.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -455,9 +456,10 @@
         "combined_native_bnb_event_scope_net_wei": "296492314017711706",
         "status": "SIGNED_SUCCESS_SCOPED_NATIVE_BALANCES; LOWER_ABSOLUTE_BNB_CAPTURE; NO_GO"
       },
-      "current_research_priority": "EARLY_PANCAKE_V2_AFTER_LAUNCH_MIGRATION_TWO_SCOPE_SAMPLES; NIULAI_INBOUND_ONLY_UNRESOLVED; NO_GO",
+      "current_research_priority": "TWO_SIGNED_HISTORIC_IFML_LOBSTER_COHORTS; NIULAI_ONE_PASSIVE_INBOUND_0_NATIVE_DELTA_NO_OWNER_BUY_OR_EXIT_PROOF__NO_GO",
       "latest_entry_timing_source": "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json",
-      "latest_v1": "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md"
+      "latest_v1": "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md",
+      "latest_niulai_source_classification": "BSC_MEME_9D_BINANCE_LIFE_239E_NIULAI_PASSIVE_TRANSFER_CONTROL_2026-10-11.json"
     },
     {
       "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
@@ -1362,7 +1364,8 @@
         "我踏马来了",
         "龙虾"
       ],
-      "current_research_priority": "HIGH_EARLY_LAUNCH_BUT_BINANCE_LIFE_AND_FULL_LIFETIME_AUDIT_OPEN; NO_GO"
+      "current_research_priority": "EARLY_CURVE_IFML_LOBSTER_SELF_SIGNED; BINANCE_LIFE_ENTERED_BY_OTHER_SIGNER_THEN_OWNER_EXITED__DO_NOT_COUNT_ACTIVE_BUY__NO_GO",
+      "additional_binance_life_source_classification": "BSC_MEME_9D_BINANCE_LIFE_239E_NIULAI_PASSIVE_TRANSFER_CONTROL_2026-10-11.json"
     }
   ],
   "overlapping_contract_recipients": [
@@ -1689,6 +1692,9 @@
     "8e6b 32 self-signed token-trade transactions across 3 fully reconciled 2026 major token quantities have +5.437877 BNB aggregate event-block wallet native changes (two positive, one negative), but internal-transaction attribution/finality, controller/followability and further 8-token losses remain unresolved."
   ],
   "next_work_order": [
+    "Audit full 23-wallet x 19-CA fixed token cohort source pagination/owner signature tiers before accepting address ranking",
+    "Complete DDAC MARS multi-hop gross quote to native owner receipt trace and full 1% fee attribution",
+    "Review address model by independent AI and run untouched date and universe evaluation; do not deploy or monitor",
     "Audit full relevant source-signed histories for 9D1240 Binance Life and 239E NiuLai passive inbound (do not treat transfers as active buys)",
     "Complete DDAC SPCXB/USDT multi-hop quote-to-native reconciliation and receipts for 2 truncated source pool swap events, preserve fee/tax venue differences",
     "Create frozen full-history 23-wallet x 19-token CA census with cursor completeness, distinct owner tx hashes and no-hindsight denominator; peer review before validation",
@@ -1996,6 +2002,18 @@
       "native_block_scope_wei": "3409712195316107766",
       "final_router_trace": "INCOMPLETE"
     },
+    "production": "NO_GO"
+  },
+  "address_model_3_passive_inbound_correction_2026_10_11": {
+    "report": "BSC_MEME_9D_BINANCE_LIFE_239E_NIULAI_PASSIVE_TRANSFER_CONTROL_2026-10-11.json",
+    "nine_binance_life_first_inbound_other_signed": true,
+    "nine_binance_life_owner_exit_seen": true,
+    "nine_binance_life_no_owner_first_buy": true,
+    "twothree_niulai_first_inbound_external_token_transfer": true,
+    "twothree_niulai_original_signer": "UNRESOLVED_TRUNCATED",
+    "twothree_niulai_no_outbound": true,
+    "twothree_niulai_native_block_delta_wei": "0",
+    "twothree_niulai_balance_raw": "16939109060931901978",
     "production": "NO_GO"
   }
 }
