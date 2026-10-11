@@ -4,7 +4,7 @@
   "frozen_spec_path": "BSC_MEME_8E6B_FOLLOW_LAG_V0_FROZEN_SPEC_2026-10-11.json",
   "frozen_spec_blob_sha": "3454698c3050cc65faab52e216e24471cd9338d5",
   "production": "NO_GO",
-  "state": "IDENTITY_PARTIAL_4_OF_8",
+  "state": "IDENTITY_COMPLETE_8_OF_8_BEFORE_RESERVE_REPLAY",
   "pool_identities": [
     {
       "token": "4",
@@ -60,6 +60,62 @@
       "quote_decimals": 18,
       "underlying_index": 0,
       "metadata_symbol": "SIREN",
+      "errors": []
+    },
+    {
+      "token": "TUT",
+      "pair": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+      "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token1": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "token_contract": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "token_decimals": 18,
+      "underlying_order_valid": true,
+      "quote": "WBNB",
+      "quote_decimals": 18,
+      "underlying_index": 1,
+      "metadata_symbol": "TUT",
+      "errors": []
+    },
+    {
+      "token": "HAJIMI",
+      "pair": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "token0": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token_contract": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "token_decimals": 18,
+      "underlying_order_valid": true,
+      "quote": "WBNB",
+      "quote_decimals": 18,
+      "underlying_index": 0,
+      "metadata_symbol": "哈基米",
+      "errors": []
+    },
+    {
+      "token": "龙虾",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token1": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "token_contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "token_decimals": 18,
+      "underlying_order_valid": true,
+      "quote": "WBNB",
+      "quote_decimals": 18,
+      "underlying_index": 1,
+      "metadata_symbol": "龙虾",
+      "errors": []
+    },
+    {
+      "token": "我踏马来了",
+      "pair": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token1": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "token_contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "token_decimals": 18,
+      "underlying_order_valid": true,
+      "quote": "WBNB",
+      "quote_decimals": 18,
+      "underlying_index": 1,
+      "metadata_symbol": "我踏马来了",
       "errors": []
     }
   ],
