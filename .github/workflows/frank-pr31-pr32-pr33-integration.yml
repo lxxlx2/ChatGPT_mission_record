@@ -95,9 +95,9 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           python -B -m compileall -q mission_agent scripts tests
-          python -m pyflakes mission_agent/mission_control/delivery_review.py mission_agent/mission_control/server.py mission_agent/mission_control/service.py
-          if [ -f scripts/reauthorize_existing_gmail.py ]; then python -m pyflakes scripts/reauthorize_existing_gmail.py; fi
-          if [ -f scripts/deploy_frank_dashboard_review_badge.py ]; then python -m pyflakes scripts/deploy_frank_dashboard_review_badge.py; fi
+          for file in mission_agent/mission_control/delivery_review.py mission_agent/mission_control/server.py mission_agent/mission_control/service.py scripts/reauthorize_existing_gmail.py scripts/deploy_frank_dashboard_review_badge.py; do
+            if [ -f "$file" ]; then python -m pyflakes "$file"; fi
+          done
           node --check mission_agent/mission_control/static/app.js
       - name: Full regression suite against the actual CI merge tree
         working-directory: crypto-300-profit-mission/local-agent
