@@ -97,7 +97,7 @@ def main(argv: list[str] | None = None) -> int:
     result = run(argv)
     print(json.dumps(result, sort_keys=True))
     return (2 if result["git_sync"] == "SYNC_FAILED_LOCAL_FILE_RETAINED"
-            else 3 if result["scan_status"] == "PARTIAL_RPC_INTERRUPTED" else 0)
+            else 3 if result["scan_status"] != "BOUNDED_COMPLETED" else 0)
 
 
 if __name__ == "__main__":
