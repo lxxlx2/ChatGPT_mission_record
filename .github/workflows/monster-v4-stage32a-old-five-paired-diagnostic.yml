@@ -1,0 +1,60 @@
+name: Monster Stage32a Five Known Meme 2x 5x Original 1m Versus 3m Diagnostics
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32a_known5_1m_cadence_diagnosis.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage32a_known5_1m_cadence_diagnosis.py'
+      - '.github/workflows/monster-v4-stage32a-old-five-paired-diagnostic.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original18_real_stage30_sha_posthoc_five_meme:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline no-unverified-source five-case cohort and original V4 unchanged tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage32a_known5_1m_cadence_diagnosis.py tests/test_monster_v4_stage32a_known5_1m_cadence_diagnosis.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage32a_known5_1m_cadence_diagnosis.py
+      - name: Retrieve all 18 original certified Stage30 data artifact ZIP not just selected winning files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' >/tmp/stage32a_sources.tsv
+          import json
+          from pathlib import Path
+          proof=json.loads(Path('crypto-300-profit-mission/monster/evidence/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json').read_text())
+          days=('2025-01-19','2025-04-19','2025-07-19')
+          source=sorted([x for x in proof['artifacts'] if x['date'] in days],key=lambda z:(z['date'],z['shard']))
+          if len(source)!=18 or proof['source_ci_status']!='SUCCESS_ALL_36':
+              raise SystemExit('NOT_ALL_18_ORIGINAL_SOURCE_PROOFS')
+          for x in source: print(x['date'],x['shard'],x['artifact_id'])
+          PY
+          while read -r day shard id; do
+            gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/"$id"/zip > "/tmp/monster_stage30_${day}_shard${shard}.zip"
+          done </tmp/stage32a_sources.tsv
+      - name: Rehash original18 artifact SHA re-download five original official monthly1h and ten daily1m publisher SHA and paired 1m 3m V4
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          files=()
+          while read -r day shard id; do files+=("/tmp/monster_stage30_${day}_shard${shard}.zip"); done </tmp/stage32a_sources.tsv
+          python -B scripts/monster_v4_stage32a_known5_1m_cadence_diagnosis.py --original-stage30-zips "${files[@]}" --output /tmp/stage32a_original_known_five_1m3m_posthoc_diagnostic.json
+      - name: Retain real posthoc five case identical original SHA and 1m 3m original V4 evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage32a-known-five-original-SHA-1m-vs3m
+          path: /tmp/stage32a_original_known_five_1m3m_posthoc_diagnostic.json
+          if-no-files-found: warn
+          retention-days: 30
