@@ -17,7 +17,7 @@ import re
 import subprocess
 import tempfile
 import time
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import unquote, urlsplit, urlunsplit
 
 REPO = "lxxlx2/ChatGPT_mission_record"
 BRANCH = "evidence/frank-ca-local"
@@ -76,7 +76,9 @@ def safe(value: object, level: int = 0) -> object:
                 u = urlsplit(value)
                 if (not u.hostname or u.username or u.password or
                         u.scheme not in ("http", "https") or
-                        SENSITIVE_URL_PATH.search(u.path)):
+                        SENSITIVE_URL_PATH.search(unquote(u.path)) or
+                        EMAIL_INLINE.search(unquote(u.path)) or
+                        LOCAL_PATH_INLINE.search(unquote(u.path))):
                     return "[URL_REDACTED]"
                 return urlunsplit((u.scheme, u.hostname, u.path, "", ""))
             except ValueError:
