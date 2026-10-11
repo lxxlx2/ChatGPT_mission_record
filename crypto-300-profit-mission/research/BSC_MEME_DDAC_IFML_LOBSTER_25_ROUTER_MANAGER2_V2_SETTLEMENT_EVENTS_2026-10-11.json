@@ -209,16 +209,21 @@
       "v2_token_out_raw": "0",
       "token_qty_matches": true,
       "direction_matches": true
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "我踏马来了",
       "dir": "in",
       "hash": "0x54bf67f75ad4edf7376877aed21ef59b076a17be18330e83d394d482cfd54e05",
       "block": 74360480,
       "venue": "V2_PAIR",
-      "original_token_transfer_raw": "152241093285911316311916"
+      "original_token_transfer_raw": "152241093285911316311916",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "v2_wbnb_in_wei": "495000000000000000",
+      "v2_token_in_raw": "0",
+      "v2_wbnb_out_wei": "0",
+      "v2_token_out_raw": "152241093285911316311916",
+      "token_qty_matches": true,
+      "direction_matches": true
     },
     {
       "token": "我踏马来了",
@@ -226,7 +231,14 @@
       "hash": "0x75865523c9c26955cc769b4c11f0fe14ac0c77e9f945d954338826e3ddb6347b",
       "block": 74377785,
       "venue": "V2_PAIR",
-      "original_token_transfer_raw": "152241093285911316311916"
+      "original_token_transfer_raw": "152241093285911316311916",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "v2_wbnb_in_wei": "0",
+      "v2_token_in_raw": "152241093285911316311916",
+      "v2_wbnb_out_wei": "525429876370837984",
+      "v2_token_out_raw": "0",
+      "token_qty_matches": true,
+      "direction_matches": true
     },
     {
       "token": "我踏马来了",
@@ -234,7 +246,14 @@
       "hash": "0xb19db9769e263071ebaa9a90d452aaac86cbc5ee5dcceae954996a334e1b8246",
       "block": 74460512,
       "venue": "V2_PAIR",
-      "original_token_transfer_raw": "196814410022627640097170"
+      "original_token_transfer_raw": "196814410022627640097170",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "v2_wbnb_in_wei": "495000000000000000",
+      "v2_token_in_raw": "0",
+      "v2_wbnb_out_wei": "0",
+      "v2_token_out_raw": "196814410022627640097170",
+      "token_qty_matches": true,
+      "direction_matches": true
     },
     {
       "token": "我踏马来了",
@@ -242,7 +261,14 @@
       "hash": "0xaf25e6a23743c25bae818e760f16919fc7d1617451a34470e1f93fe7999a762e",
       "block": 74468389,
       "venue": "V2_PAIR",
-      "original_token_transfer_raw": "196814410022627640097170"
+      "original_token_transfer_raw": "196814410022627640097170",
+      "status": "EXACT_TX_EVENT_MATCH",
+      "v2_wbnb_in_wei": "0",
+      "v2_token_in_raw": "196814410022627640097170",
+      "v2_wbnb_out_wei": "535706244548441016",
+      "v2_token_out_raw": "0",
+      "token_qty_matches": true,
+      "direction_matches": true
     },
     {
       "token": "我踏马来了",
@@ -250,7 +276,9 @@
       "hash": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a",
       "block": 74473636,
       "venue": "V2_PAIR",
-      "original_token_transfer_raw": "91088412526212094717943"
+      "original_token_transfer_raw": "91088412526212094717943",
+      "status": "LOG_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 68)"
     },
     {
       "token": "我踏马来了",
@@ -258,7 +286,9 @@
       "hash": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad",
       "block": 74473637,
       "venue": "V2_PAIR",
-      "original_token_transfer_raw": "89736767273195553619223"
+      "original_token_transfer_raw": "89736767273195553619223",
+      "status": "LOG_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 67)"
     },
     {
       "token": "我踏马来了",
@@ -266,8 +296,12 @@
       "hash": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e",
       "block": 74473641,
       "venue": "V2_PAIR",
-      "original_token_transfer_raw": "180825179799407648337166"
-    },
+      "original_token_transfer_raw": "180825179799407648337166",
+      "status": "LOG_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 57)"
+    }
+  ],
+  "pending": [
     {
       "token": "龙虾",
       "dir": "in",
@@ -301,7 +335,7 @@
       "original_token_transfer_raw": "195581662531433206271053"
     }
   ],
-  "status": "PARTIAL_14_OF_25_QUOTE_EVENT_PROBES",
+  "status": "PARTIAL_21_OF_25_QUOTE_EVENT_PROBES",
   "production": "NO_GO",
   "limitations": [
     "Quote event price and protocol fee alone do not yet establish all router fee and wallet actual native settlement",
