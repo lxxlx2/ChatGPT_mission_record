@@ -36,6 +36,54 @@ class SafeReauthTests(unittest.TestCase):
             self.assertEqual(stat.S_IMODE(backup.stat().st_mode), 0o600)
             self.assertEqual(stat.S_IMODE(path.stat().st_mode), 0o600)
 
+
+    def test_missing_recipient_fails_before_browser_or_network(self):
+        with tempfile.TemporaryDirectory() as td:
+            oauth = Path(td) / "oauth.json"
+            oauth.write_text('{"refresh_token":"old","client_id":"x","client_secret":"y"}')
+            os.chmod(oauth, 0o600)
+            with mock.patch.object(mod, "existing_config",
+                                   return_value=(oauth, {"client_id": "client"}, None)), \
+                 mock.patch.object(mod, "receive_code") as callback, \
+                 mock.patch.object(mod.webbrowser, "open") as browser, \
+                 mock.patch.object(mod, "post_token") as token:
+                with self.assertRaisesRegex(mod.RecoveryError, "RECIPIENT_REQUIRED_FOR_ACCOUNT_CHECK"):
+                    mod.main([])
+                callback.assert_not_called()
+                browser.assert_not_called()
+                token.assert_not_called()
+            self.assertEqual(json.loads(oauth.read_text())["refresh_token"], "old")
+
+    def test_two_backups_same_second_do_not_collide(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "oauth.json"
+            prior = {"client_id": "id", "client_secret": "secret", "refresh_token": "old"}
+            path.write_text(json.dumps(prior))
+            os.chmod(path, 0o600)
+            token = {"refresh_token": "new", "access_token": "short-lived"}
+            with mock.patch.object(mod.time, "strftime", return_value="20261011-231000"):
+                first = mod.atomic_write_credentials(path, prior, token)
+                second = mod.atomic_write_credentials(path, prior, token)
+            self.assertNotEqual(first, second)
+            self.assertTrue(first.is_file())
+            self.assertTrue(second.is_file())
+            self.assertEqual(stat.S_IMODE(first.stat().st_mode), 0o600)
+            self.assertEqual(stat.S_IMODE(second.stat().st_mode), 0o600)
+
+    def test_short_lived_bearer_never_persisted(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "oauth.json"
+            old = {"refresh_token": "original", "token": "stale-bearer",
+                   "client_id": "id", "client_secret": "secret"}
+            path.write_text(json.dumps(old))
+            os.chmod(path, 0o600)
+            mod.atomic_write_credentials(path, old, {
+                "refresh_token": "fresh", "access_token": "new-bearer"})
+            saved = json.loads(path.read_text())
+            self.assertNotIn("token", saved)
+            self.assertNotIn("access_token", saved)
+            self.assertEqual(saved["refresh_token"], "fresh")
+
     def test_concurrent_change_aborts_and_preserves_source(self):
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "oauth.json"
