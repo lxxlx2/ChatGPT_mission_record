@@ -12,7 +12,7 @@
 
 ## 真实Git CI、原始来源验证与独立回算
 
-- [Stage28六日期原生产D1共用SQLite真实CI #38146403662](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38146403662)：**6/6成功**，原生产代码Git Blob SHA严格匹配 \`bc958b3d90a8a52afa51515cb53f7e5fafaffaaa\`，执行实际代码SHA \`973891aae686b05e6bba35bdf506ddca578b1bda\`，7/7单元测试PASS。六日期一共引用141? ——**实际1421份**独立币日5m官方来源SHA证据（有多日期重复币，计数是币×日5m ZIP）。
+- [Stage28六日期原生产D1共用SQLite真实CI #38146403662](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38146403662)：**6/6成功**，原生产代码Git Blob SHA严格匹配 \`bc958b3d90a8a52afa51515cb53f7e5fafaffaaa\`，执行实际代码SHA \`973891aae686b05e6bba35bdf506ddca578b1bda\`，7/7单元测试PASS。六日期一共引用**1421份**独立币日5m官方来源SHA证据（有多日期重复币，计数是币×日5m ZIP）。
 - 首次Stage28单测曾因**生产源码自动吞下行情错误并安排重试**导致测试拒绝放行。新增严格研究入口：只要官方5m源下载或完整性错误，被生产函数吞掉并重试，也要使整次回测失败，不能将来源缺失伪装为“无D1”。该失败和修复CI均保留。
 - [Stage28六原始Artifact ZIP和内部JSON SHA-256再验收CI #38146953673](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38146953673)：success，5/5独立统计测试PASS，逐个核对六日期、全部1132 WATCH事件、源身份、真正生产D1队列事件和最终状态。
 - [Stage28全部**36份Stage26原始证据 + 6份Stage28**原始证据，合计42 ZIP/JSON逐字节校验并逐事件对账CI #38147245694](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38147245694)：success，4/4对账测试PASS；真实原始复算Artifact \`11704518945\`，ZIP SHA \`82b1037531f4d1df7a20883277ddf47f8cc2d87f10c547d5bc62a556f1ba5cca\`，内部JSON SHA \`5169daf2a9c4956ac16e32ee8f50639030596e957d2364fc7c0f9c14d7b6597e\`。用于永久追溯的[六日期原始身份登记](evidence/monster_stage28_original_six_real_shared_sqlite_artifact_proof_20261011.json)与[42源逐D1证据](evidence/monster_stage28_actual_42original_D1_pairwise_loss_audit_20261011.json)已提交原PR，不依赖仅30日保存的Artifact才知道关键结果。
@@ -51,7 +51,7 @@
 
 共用版新增的5条精确\`(币, D1 UTC)\`事件为\`C98USDT\`（2025-11-07 17:12）、\`FUSDT\`（2026-02-08 00:12）、\`MEUSDT\`（2026-04-05 13:00，原该币同日13:27另有旧SETUP）、\`BICOUSDT\`（2026-08-09 07:21，该币原本同周就有其他D1），以及IQ在22:30的延迟确认。
 
-**注意：824到? ——不要做错误净收益换算。** 准确口径为826旧、828新、精确匹配823、旧独有3、新独有5；其中IQ为同一个币延迟确认的迁移，SYN/TUT确实旧D1未在共用队列中重现，其他有新的事件。差异也可能受“原独立回放从官方1m累加成5m”与“Stage28直接读取官方发行5m”在成交额精度边界的影响，加上没有重放全球D0撤销事件，**未能完全隔离全球队列拥堵与行情聚合粒度这两个变量**。
+**统计口径必须严格统一。** 准确口径为826旧、828新、精确匹配823、旧独有3、新独有5；其中IQ为同一个币延迟确认的迁移，SYN/TUT确实旧D1未在共用队列中重现，其他有新的事件。差异也可能受“原独立回放从官方1m累加成5m”与“Stage28直接读取官方发行5m”在成交额精度边界的影响，加上没有重放全球D0撤销事件，**未能完全隔离全球队列拥堵与行情聚合粒度这两个变量**。
 
 ## 经济重要性判断与下阶段
 
