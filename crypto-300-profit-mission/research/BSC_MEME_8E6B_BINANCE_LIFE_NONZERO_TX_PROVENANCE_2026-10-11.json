@@ -161,45 +161,84 @@
       "gas_wei": null,
       "raw_tx_complete": true,
       "raw_receipt_complete": false
-    }
-  ],
-  "pending": [
+    },
     {
       "hash": "0x39d26b1f5da930f1013861b709874e6c99ff511cd29353e39635f4c05f8fda04",
       "block": 93215567,
       "dir": "in",
-      "delta_wei": "-500051636960000000"
+      "delta_wei": "-500051636960000000",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "native_input_wei": "500000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": null,
+      "raw_tx_complete": true,
+      "raw_receipt_complete": false
     },
     {
       "hash": "0x7d4b83de58dd4428e251647e40e692b3a4310b6e5ff06aae0a1079048dac6bbb",
       "block": 108179701,
       "dir": "out",
-      "delta_wei": "16377990805204550"
+      "delta_wei": "16377990805204550",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "native_input_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": null,
+      "raw_tx_complete": true,
+      "raw_receipt_complete": false
     },
     {
       "hash": "0x328ce1615ca34df44e93707af60f540adad2be7615f13048d40e038d225feae7",
       "block": 111591822,
       "dir": "in",
-      "delta_wei": "840019256002000000"
+      "delta_wei": "840019256002000000",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x2b6e6e4def77583229299cf386438a227e683b28",
+      "native_input_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "25618600000000",
+      "raw_tx_complete": true,
+      "raw_receipt_complete": true
     },
     {
       "hash": "0x94381b9a30883532bf84d553b7e4651a00340c6c9d14ca4810fbfa8d033317bf",
       "block": 114737225,
       "dir": "in",
-      "delta_wei": "-48744266521614"
+      "delta_wei": "-48744266521614",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "native_input_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": null,
+      "raw_tx_complete": true,
+      "raw_receipt_complete": false
     },
     {
       "hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
       "block": 121966513,
       "dir": "out",
-      "delta_wei": "25337587293196566"
+      "delta_wei": "25337587293196566",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "native_input_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": null,
+      "raw_tx_complete": true,
+      "raw_receipt_complete": false
     }
   ],
-  "status": "12_OF_17_NONZERO_NATIVE_BLOCK_TX_AUDITED",
+  "pending": [],
+  "status": "ALL_17_NONZERO_BALANCE_BLOCK_TX_SELF_SIGNED_SUCCESS",
   "production": "NO_GO",
   "caveats": [
     "Nonzero BNB token-block activity does not show all token value movements",
     "Same-block native changes can include unrelated activity",
     "Zero-native token-transfer events may be nontrading and are not claimed as wallet-signed"
-  ]
+  ],
+  "self_signed_count": 17,
+  "receipt_success_count": 17,
+  "original_native_input_wei": "5000000000000000000",
+  "complete_receipt_gas_wei": "24943294600000000",
+  "receipt_gas_count": 12
 }
