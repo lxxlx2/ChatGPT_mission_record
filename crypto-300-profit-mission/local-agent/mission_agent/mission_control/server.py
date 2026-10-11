@@ -22,7 +22,7 @@ from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, l
 from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .frank import FrankReader
-from .wallet_watch import from_sqlite as read_frank_watchlist
+from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
@@ -717,6 +717,24 @@ class DashboardState:
                 "chain_completeness_verified": False,
                 "summary": {}, "rows": [],
             }
+        # Historical, dated on-chain ATA gap evidence is a separate overlay.
+        # It does not feed the frozen signal/writer or modify local BUY/SELL
+        # counts. A missing/invalid file leaves each mint as NOT_AUDITED.
+        gap_file = (Path(__file__).resolve().parents[3] / "meme" / "evidence" /
+                    "frank-v2-known-ata-gap-summary-2026-10-11.json")
+        override = self.control_root / "frank-ata-gap-evidence.json"
+        if override.is_file():
+            gap_file = override
+        try:
+            source = None
+            if gap_file.is_file():
+                if gap_file.stat().st_size > 100_000:
+                    raise ValueError("ATA_GAP_FILE_OVER_LIMIT")
+                source = json.loads(gap_file.read_text(encoding="utf-8"))
+            observed = annotate_known_ata_gaps(observed, source)
+        except (OSError, ValueError, TypeError):
+            observed = annotate_known_ata_gaps(observed, None)
+            observed["ata_gap_source_status"] = "INVALID_EVIDENCE_IGNORED"
         # Optional dated, manually imported read-only provenance. No network
         # call, balance scan, writer intervention, or automatic deployment.
         snapshot = self.control_root / "frank-inventory-snapshot.json"
