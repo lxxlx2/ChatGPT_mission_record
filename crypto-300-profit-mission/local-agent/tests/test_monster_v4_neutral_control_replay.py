@@ -37,14 +37,19 @@ class Stage10NeutralTests(unittest.TestCase):
         self.assertEqual(summary["frozen_candidates"], 24)
         self.assertEqual(summary["valid_contiguous_60h"], 17)
         self.assertEqual(summary["source_not_historically_available"], 7)
-        self.assertEqual(summary["scanned_symbol_hours"], 204)
+        self.assertEqual(summary["nominal_window_symbol_hours"], 204)
+        self.assertEqual(summary["intended_3m_poll_intervals"], 240 * 17)
+        self.assertEqual(summary["actual_nonzero_trade_3m_polls"] +
+                         summary["skipped_zero_trade_3m_polls"], 240 * 17)
+        self.assertLessEqual(summary["actual_nonzero_trade_symbol_hours"], 204)
         self.assertEqual(len(results["cases"]), 17)
         self.assertEqual(len(results["source_unavailable"]), 7)
         self.assertEqual(len(summary["per_calendar_day"]), 6)
         self.assertEqual(results["production_gate"], "NO_GO")
         self.assertFalse(results["independent_ai_review_completed"])
         for case in results["cases"]:
-            self.assertGreater(case["polls"], 100)
+            self.assertEqual(case["intended_polls"], 240)
+            self.assertEqual(case["polls"] + case["polls_skipped_no_trade"], 240)
             if case["first_watch_utc"]:
                 self.assertGreaterEqual(case["first_watch_utc"], case["replay_start_utc"])
                 self.assertLessEqual(case["first_watch_utc"], case["replay_end_utc"])
