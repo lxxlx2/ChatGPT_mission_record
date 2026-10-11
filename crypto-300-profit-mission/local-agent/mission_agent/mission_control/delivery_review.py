@@ -16,6 +16,8 @@ def summarize_manual_reviews(rows):
     historical = {"gmail": 0, "local": 0}
     actionable = {"gmail": 0, "local": 0, "other": 0}
     pending = {"gmail": 0, "local": 0, "other": 0}
+    blocked = {"gmail": 0, "local": 0, "other": 0}
+    manual_total = 0
     for row in rows:
         channel = row.get("channel")
         channel = channel if channel in ("gmail", "local") else "other"
@@ -25,9 +27,17 @@ def summarize_manual_reviews(rows):
         if status in ("SENDING", "SENT_UNVERIFIED"):
             pending[channel] += 1
             continue
-        if status != "MANUAL_REVIEW":
+        if status in ("CREDENTIAL_BLOCKED", "RETRYABLE_ERROR", "RETRY_PENDING"):
+            blocked[channel] += 1
+            continue
+        if status == "PERMANENT_ERROR":
             actionable[channel] += 1
             continue
+        if status != "MANUAL_REVIEW":
+            # Unknown non-success states must never be silently thrown away.
+            blocked[channel] += 1
+            continue
+        manual_total += 1
         if channel == "other":
             actionable["other"] += 1
             continue
@@ -62,12 +72,17 @@ def summarize_manual_reviews(rows):
         "manual_review_actionable_gmail_count": actionable["gmail"],
         "manual_review_actionable_local_count": actionable["local"],
         "manual_review_actionable_other_count": actionable["other"],
+        "manual_review_manual_only_total_count": manual_total,
+        "manual_review_blocked_count": sum(blocked.values()),
+        "manual_review_blocked_gmail_count": blocked["gmail"],
+        "manual_review_blocked_local_count": blocked["local"],
+        "manual_review_blocked_other_count": blocked["other"],
         "manual_review_pending_count": sum(pending.values()),
         "manual_review_pending_gmail_count": pending["gmail"],
         "manual_review_pending_local_count": pending["local"],
         "manual_review_pending_other_count": pending["other"],
         "manual_review_visible_total_count": (
             sum(historical.values()) + sum(actionable.values())
-            + sum(pending.values())
+            + sum(pending.values()) + sum(blocked.values())
         ),
     }
