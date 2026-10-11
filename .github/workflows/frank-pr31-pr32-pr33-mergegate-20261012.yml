@@ -67,15 +67,27 @@ jobs:
             echo "MERGING_PR=$n $pin" | tee -a "$report"
             if ! git -c user.name='CI Merge Test' -c user.email='ci-merge@example.invalid' -c merge.conflictStyle=zdiff3 merge --no-ff --no-commit "$pin" >> "$report" 2>&1; then
               echo "MERGE_ATTEMPT_FAILED_PR=$n" | tee -a "$report"
-              if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
-                echo "MERGE_CONFLICT=YES" | tee -a "$report"
+              conflicted="$(git diff --name-only --diff-filter=U)"
+              echo "ORIGINAL_CONFLICT_PATHS=$conflicted" | tee -a "$report"
+              expected='.github/workflows/frank-pr32-pr33-review-tests.yml'
+              if [ "$n" = "33" ] && [ "$conflicted" = "$expected" ]; then
+                echo "KNOWN_WORKFLOW_ADD_ADD_CONFLICT=YES" | tee -a "$report"
+                git show "$PR33_PIN:$expected" > "$expected"
+                actual_blob="$(git hash-object "$expected")"
+                test "$actual_blob" = "ed885cbad2a3bbb5abee00321fa9e9a4f823ceeb" || exit 6
+                git add "$expected"
+                test -z "$(git diff --name-only --diff-filter=U)" || exit 7
+                echo "KNOWN_WORKFLOW_CONFLICT_RESOLVED=PR33_BLOB:$actual_blob" | tee -a "$report"
               else
-                echo "MERGE_FAILURE_NONCONFLICT=YES" | tee -a "$report"
+                if [ -n "$conflicted" ]; then
+                  echo "MERGE_CONFLICT=YES" | tee -a "$report"
+                else
+                  echo "MERGE_FAILURE_NONCONFLICT=YES" | tee -a "$report"
+                fi
+                git ls-files -u | tee -a "$report"
+                git status --short | tee -a "$report"
+                exit 2
               fi
-              git diff --name-only --diff-filter=U | tee -a "$report"
-              git ls-files -u | tee -a "$report"
-              git status --short | tee -a "$report"
-              exit 2
             fi
             git -c user.name='CI Merge Test' -c user.email='ci-merge@example.invalid' commit -q -m "Local-only PR $n merge validation"
             echo "MERGED_SHA=$(git rev-parse HEAD)" | tee -a "$report"
