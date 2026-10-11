@@ -14,6 +14,7 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/deploy_frank_dashboard_review_badge.py'
       - 'crypto-300-profit-mission/local-agent/tests/research/test_delivery_review_breakdown.py'
       - 'crypto-300-profit-mission/local-agent/tests/research/test_delivery_review_integration.py'
+      - 'crypto-300-profit-mission/local-agent/tests/research/test_frank_dashboard_deploy.py'
       - '.github/workflows/frank-pr32-pr33-review-tests.yml'
   workflow_dispatch:
 
@@ -41,7 +42,7 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           python -B -m compileall -q mission_agent/mission_control scripts tests/research
-          for f in mission_agent/mission_control/delivery_review.py mission_agent/mission_control/server.py scripts/reauthorize_existing_gmail.py scripts/deploy_frank_dashboard_review_badge.py tests/research/test_reauthorize_existing_gmail.py tests/research/test_delivery_review_breakdown.py tests/research/test_delivery_review_integration.py; do
+          for f in mission_agent/mission_control/delivery_review.py mission_agent/mission_control/server.py scripts/reauthorize_existing_gmail.py scripts/deploy_frank_dashboard_review_badge.py tests/research/test_reauthorize_existing_gmail.py tests/research/test_delivery_review_breakdown.py tests/research/test_delivery_review_integration.py tests/research/test_frank_dashboard_deploy.py; do
             if [ -f "$f" ]; then python -m pyflakes "$f"; fi
           done
           node --check mission_agent/mission_control/static/app.js
@@ -49,7 +50,7 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           files=()
-          for f in tests/research/test_reauthorize_existing_gmail.py tests/research/test_delivery_review_breakdown.py tests/research/test_delivery_review_integration.py; do
+          for f in tests/research/test_reauthorize_existing_gmail.py tests/research/test_delivery_review_breakdown.py tests/research/test_delivery_review_integration.py tests/research/test_frank_dashboard_deploy.py; do
             if [ -f "$f" ]; then files+=("$f"); fi
           done
           python -m pytest -q "${files[@]}"
