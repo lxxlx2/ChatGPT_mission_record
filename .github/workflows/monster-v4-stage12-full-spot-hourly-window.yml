@@ -1,0 +1,46 @@
+name: Monster Stage12 Full 504 Spot Universe Historical V4 Replay
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_archive_universe_replay.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_archive_universe_replay.py'
+      - '.github/workflows/monster-v4-stage12-full-spot-hourly-window.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monster-stage12-504-spot-universe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frozen-full-current-spot-universe-official-archive-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify frozen 504 selection, archive checksum and exact production D0-D1 fixtures
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_archive_universe_replay.py tests/test_monster_v4_archive_universe_replay.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_archive_universe_replay.py
+      - name: ALL 504 current spot USDT pairs official ZIP+SHA256 archived one 12h calendar observation
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_archive_universe_replay.py --output /tmp/monster_stage12_504_actual.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage12-all504-binance-spot-true-1m-source-and-production-v4-replay
+          path: /tmp/monster_stage12_504_actual.json
+          if-no-files-found: warn
+          retention-days: 30
