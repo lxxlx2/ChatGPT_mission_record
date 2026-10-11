@@ -707,6 +707,7 @@ def test_since_time_zero_cli_help_is_explicit_about_no_time_boundary(capsys):
         run(["--help"])
     assert exit_status.value.code == 0
     output = capsys.readouterr().out
-    assert "0 = no time lower bound" in output
-    assert "budgets still apply" in output
+    normalized_help = " ".join(output.split())
+    assert "0 = no time lower bound" in normalized_help
+    assert "budgets still apply" in normalized_help
     assert "bounded recent history only" not in output
