@@ -1,0 +1,52 @@
+name: Frank PR32 PR33 isolated review tests
+
+on:
+  push:
+    branches:
+      - fix/frank-gmail-oauth-recovery-20261011
+      - fix/frank-dashboard-review-breakdown-20261011
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/reauthorize_existing_gmail.py'
+      - 'crypto-300-profit-mission/local-agent/tests/research/test_reauthorize_existing_gmail.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/delivery_review.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/app.js'
+      - 'crypto-300-profit-mission/local-agent/scripts/deploy_frank_dashboard_review_badge.py'
+      - 'crypto-300-profit-mission/local-agent/tests/research/test_delivery_review_breakdown.py'
+      - 'crypto-300-profit-mission/local-agent/tests/research/test_delivery_review_integration.py'
+      - '.github/workflows/frank-pr32-pr33-review-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned local-agent test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install 'numpy>=2,<3'
+      - name: Syntax and static safety
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent/mission_control scripts tests/research
+          python -m pyflakes mission_agent/mission_control/delivery_review.py mission_agent/mission_control/server.py scripts/reauthorize_existing_gmail.py scripts/deploy_frank_dashboard_review_badge.py tests/research/test_reauthorize_existing_gmail.py tests/research/test_delivery_review_breakdown.py tests/research/test_delivery_review_integration.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: PR32 and PR33 focused suites if present
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pytest -q tests/research/test_reauthorize_existing_gmail.py tests/research/test_delivery_review_breakdown.py tests/research/test_delivery_review_integration.py
+      - name: Full local-agent regression suite
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pytest -q tests
