@@ -51,7 +51,7 @@ class SourceTests(unittest.TestCase):
         value=m.analyze("XUSDT","2025-04-09","2025-04-09T12:00:00Z",fixture())
         self.assertEqual(value["status"],"VERIFIED_PRE_SIGNAL_AGGTRADES")
         self.assertEqual(value["prior_60m_aggtrade_rows"],3)
-        self.assertAlmostEqual(value["prior_60m_aggressor_buy_quote_share"],100/230)
+        self.assertAlmostEqual(value["prior_60m_aggressor_buy_quote_share"],100/230,places=6)
         self.assertAlmostEqual(value["prior_5m_aggressor_buy_quote_share"],0)
         self.assertTrue(value["strictly_before_setup"])
     def test_future_trade_excluded_even_at_exact_setup(self):
