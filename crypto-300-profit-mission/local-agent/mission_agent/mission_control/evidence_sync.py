@@ -26,10 +26,14 @@ PUBKEY = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 SAFE_ID = re.compile(r"^[a-f0-9]{16,64}$")
 BANNED = re.compile(r"secret|password|passphrase|private|seed|bearer|authorization|cookie|credential|webhook|rpc_url|endpoint_url|gmail|email|local_path|home_dir|api[_-]?key|access_token|refresh_token|auth_token|^key$|_token$", re.I)
 SENSITIVE_INLINE = re.compile(r"(?i)(bearer\s+[a-z0-9._~+/-]+|(?:api[_-]?key|token|password|secret)\s*[:=]\s*[^\s&,;]+)")
-LOCAL_PATH_INLINE = re.compile(r"(?i)(?:file:(?:/{0,3})|~[/\\]|/(?:Users|home)/)")
+LOCAL_PATH_INLINE = re.compile(r"(?i)(?:(?<![a-z])file:/{1,3}|(?<![a-z0-9_])~[/\\]|(?<![a-z0-9_])/(?:Users|home)/)")
 EMAIL_INLINE = re.compile(r"(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}")
 EMBEDDED_URL = re.compile(r"(?i)\b(?:https?|ftp)://")
-SENSITIVE_URL_PATH = re.compile(r"(?i)(?:api[-_]?key|secret|password|token|credential|authorization|private|/[a-z0-9_-]{24,}(?:/|$))")
+SENSITIVE_URL_KEYWORD = re.compile(r"(?i)(?:api[-_]?key|secret|password|token|credential|authorization|private)")
+SENSITIVE_URL_KEY_SEGMENT = re.compile(r"(?i)/[a-z0-9_-]{24,}(?:/|$)")
+# Known public explorers/code hosts: their long path segments are commit or
+# transaction identifiers, not credentials. Keywords and userinfo still apply.
+PUBLIC_EXPLORER_HOSTS = frozenset({"github.com", "solscan.io", "gmgn.ai", "dexscreener.com", "api.exchange.coinbase.com"})
 CA_FIELDS = ("schema_version", "mint", "source", "observed_at", "supply_raw", "decimals",
              "token_profile", "market", "assessment", "holders", "metrics",
              "confirmed_relation_groups", "probable_control_clusters",
@@ -74,11 +78,15 @@ def safe(value: object, level: int = 0) -> object:
                 return "[URL_REDACTED]"
             try:
                 u = urlsplit(value)
+                path = unquote(u.path)
+                host = (u.hostname or "").lower()
+                key_segment = (host not in PUBLIC_EXPLORER_HOSTS and
+                               SENSITIVE_URL_KEY_SEGMENT.search(path))
                 if (not u.hostname or u.username or u.password or
                         u.scheme not in ("http", "https") or
-                        SENSITIVE_URL_PATH.search(unquote(u.path)) or
-                        EMAIL_INLINE.search(unquote(u.path)) or
-                        LOCAL_PATH_INLINE.search(unquote(u.path))):
+                        SENSITIVE_URL_KEYWORD.search(path) or key_segment or
+                        EMAIL_INLINE.search(path) or
+                        LOCAL_PATH_INLINE.search(path)):
                     return "[URL_REDACTED]"
                 return urlunsplit((u.scheme, u.hostname, u.path, "", ""))
             except ValueError:
