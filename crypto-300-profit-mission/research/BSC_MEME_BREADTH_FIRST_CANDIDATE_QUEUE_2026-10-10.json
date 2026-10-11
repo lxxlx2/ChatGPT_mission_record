@@ -35,7 +35,10 @@
     "BSC_MEME_8E6B_HAJIMI_LOBSTER_26_BLOCK_BALANCES_2026-10-11.json",
     "BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json",
     "BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
-    "BSC_MEME_239E_TWO_MAJOR_NATIVE_CASHFLOW_2026-10-11.json"
+    "BSC_MEME_239E_TWO_MAJOR_NATIVE_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_8E6B_GIGGLE_OUTBOUND_FULL_CURSOR_AUDIT_2026-10-11.json",
+    "BSC_MEME_8E6B_GIGGLE_16_BLOCK_NATIVE_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_8E6B_FIVE_MAJOR_EVENT_SCOPED_CHECKPOINT_2026-10-11.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -1594,6 +1597,7 @@
     "8e6b 32 self-signed token-trade transactions across 3 fully reconciled 2026 major token quantities have +5.437877 BNB aggregate event-block wallet native changes (two positive, one negative), but internal-transaction attribution/finality, controller/followability and further 8-token losses remain unresolved."
   ],
   "next_work_order": [
+    "Reconcile GIGGLE non-native quote receipts, isolate 6 no-native GIGGLE exits and 0.0006 native residual before treating scope as PnL",
     "Prioritize 0x8e6b three-position loss/win quote and same-block attribution, assess all 11 early token portfolio outcomes before ranking as followable",
     "Compare 0x8e6b to 0xddac, 0x2adf and other core wallets on pre-major-entry, opportunity capture, downside and fresh activity",
     "Test 7 signed BNB candidate-to-candidate events for controller clusters, filtering Binance CEX and shared infrastructure",
@@ -1613,5 +1617,21 @@
     "all_pages_complete": false
   },
   "last_breadth_scan": "2026-10-11: all 23 candidate EOAs scanned both directions for 19 known tokens; 394 partial ERC20 events. Native funding sample 227 events; 7 signed candidate-to-candidate transfers verified with receipts.",
-  "last_8e6b_reconciliation": "2026-10-11 confirmed 19/19 self-signed and success receipts for token 4, gross 14.004497756745366 WBNB withdrawals and exact scoped native +13.164987453603066 BNB after buys, gas, 1%-consistent route differences. Three additional token native block changes +4.794001707717377, +1.2428992807984849, -0.5990238168449055 are still scoped and unisolated."
+  "last_8e6b_reconciliation": "2026-10-11 confirmed 19/19 self-signed and success receipts for token 4, gross 14.004497756745366 WBNB withdrawals and exact scoped native +13.164987453603066 BNB after buys, gas, 1%-consistent route differences. Three additional token native block changes +4.794001707717377, +1.2428992807984849, -0.5990238168449055 are still scoped and unisolated.",
+  "last_8e6b_giggle_reconciliation": {
+    "as_of": "2026-10-11",
+    "scope": "Five selected wallet-token event cohorts, not complete lifetime PnL",
+    "source_files": [
+      "BSC_MEME_8E6B_GIGGLE_OUTBOUND_FULL_CURSOR_AUDIT_2026-10-11.json",
+      "BSC_MEME_8E6B_GIGGLE_16_BLOCK_NATIVE_RECONCILIATION_2026-10-11.json",
+      "BSC_MEME_8E6B_FIVE_MAJOR_EVENT_SCOPED_CHECKPOINT_2026-10-11.json"
+    ],
+    "giggle_event_count_in": 4,
+    "giggle_event_count_out": 23,
+    "giggle_unique_self_signed_receipt_success": 16,
+    "giggle_native_event_block_wei": "5715925819273344974",
+    "five_core_native_event_block_sum_wei": "24318790444547367859",
+    "lobster_success_receipts": "13/13 status verified; 2 full bodies truncated",
+    "no_go": true
+  }
 }
