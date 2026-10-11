@@ -1,0 +1,45 @@
+name: Monster Stage11 Official Binance Archive Crosscheck
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_archive_crosscheck.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_archive_crosscheck.py'
+      - '.github/workflows/monster-v4-stage11-archive-crosscheck.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monster-stage11-source-crosscheck-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  independent-official-archive-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline archive checksum and timestamp regressions
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_archive_crosscheck.py tests/test_monster_v4_archive_crosscheck.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_archive_crosscheck.py
+      - name: Compare genuine Binance official daily ZIP plus CHECKSUM to frozen REST data
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_archive_crosscheck.py > /tmp/monster_stage11_zip_parity.json
+          python -c 'import json; p=json.load(open("/tmp/monster_stage11_zip_parity.json")); print(json.dumps({"SCHEMA":p["schema"],"STATUS":p["status"],"VERIFIED_SYMBOLS":[v["symbol"] for v in p["results"]],"VERIFIED_1M_BARS":sum(x["matched_rest_minutes"] for x in p["results"]),"CHECKSUMS":[{"symbol":x["symbol"],"sha256":[z["sha256"] for z in x["archive_days_sha256"]]} for x in p["results"]],"TRADING":p["automated_trading"]},sort_keys=True))'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage11-binance-archive-vs-rest-source-proof
+          path: /tmp/monster_stage11_zip_parity.json
+          retention-days: 30
