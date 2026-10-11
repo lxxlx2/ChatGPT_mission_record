@@ -86,7 +86,14 @@
     "BSC_MEME_DDAC_MARSCOIN_29_TX_SIGNER_RECEIPT_ATTRIBUTION_2026-10-11.json",
     "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json",
     "BSC_MEME_DDAC_MARSCOIN_18_POOL_TRADE_V2_V3_TAX_AND_QUOTE_RECONCILIATION_2026-10-11.json",
-    "BSC_MEME_DDAC_MARSCOIN_29_TX_TWO_PAIR_CLASSIFICATION_FROZEN_2026-10-11.json"
+    "BSC_MEME_DDAC_MARSCOIN_29_TX_TWO_PAIR_CLASSIFICATION_FROZEN_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_18_OWNER_POOL_TX_PAIR_SWAP_QUOTE_EVENTS_2026-10-11.json",
+    "BSC_MEME_DDAC_GIGGLE_FULL_ERC20_HISTORY_2026-10-11.json",
+    "BSC_MEME_DDAC_GIGGLE_71_PASSIVE_OR_REWARD_INBOUND_CONTROL_2026-10-11.json",
+    "BSC_MEME_DDAC_BINANCE_LIFE_FULL_ERC20_HISTORY_2026-10-11.json",
+    "BSC_MEME_DDAC_BINANCE_LIFE_SEVEN_V2_PAIR_ACTUAL_SWAPS_2026-10-11.json",
+    "BSC_MEME_DDAC_BINANCE_LIFE_82_TX_DISTRIBUTION_VS_7_POOL_SETTLEMENT_QA_2026-10-11.json",
+    "BSC_MEME_ADDRESS_MODEL_3_DDAC_MARS_GIGGLE_BINANCE_LIFE_RESEARCH_REPORT_2026-10-11.md"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -1127,7 +1134,7 @@
         "我踏马来了",
         "龙虾"
       ],
-      "current_research_priority": "HIGH_REPEAT_EARLY_MARS_18_OWNER_TRADE_PROOFS_14_V2_PLUS_2_V3_RAW_SWAPS__ROUTER_BNB_EXIT_PNL_UNRESOLVED__GIGGLE_BINANCE_LIFE_NEXT__NO_GO",
+      "current_research_priority": "HIGH_MULTIEPISODE_BSC_TRADER_18_MARS_PAIR_SWAPS_AND_7_BINANCE_LIFE_PAIR_ACTIONS__GIGGLE_INBOUND_REWARDS__LIFETIME_PNL_NEEDS_TRACE__NO_GO",
       "material_2026_position_proof": {
         "MARSCOIN": {
           "complete_token_transfer_history": true,
@@ -1160,7 +1167,8 @@
         "status": "NOT_ISOLATED_FINAL_PNL"
       },
       "latest_mars_research": "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json",
-      "latest_mars_settlement_source": "BSC_MEME_DDAC_MARSCOIN_18_POOL_TRADE_V2_V3_TAX_AND_QUOTE_RECONCILIATION_2026-10-11.json"
+      "latest_mars_settlement_source": "BSC_MEME_DDAC_MARSCOIN_18_POOL_TRADE_V2_V3_TAX_AND_QUOTE_RECONCILIATION_2026-10-11.json",
+      "latest_three_additional_token_report": "BSC_MEME_ADDRESS_MODEL_3_DDAC_MARS_GIGGLE_BINANCE_LIFE_RESEARCH_REPORT_2026-10-11.md"
     },
     {
       "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
@@ -1681,6 +1689,9 @@
     "8e6b 32 self-signed token-trade transactions across 3 fully reconciled 2026 major token quantities have +5.437877 BNB aggregate event-block wallet native changes (two positive, one negative), but internal-transaction attribution/finality, controller/followability and further 8-token losses remain unresolved."
   ],
   "next_work_order": [
+    "Audit full relevant source-signed histories for 9D1240 Binance Life and 239E NiuLai passive inbound (do not treat transfers as active buys)",
+    "Complete DDAC SPCXB/USDT multi-hop quote-to-native reconciliation and receipts for 2 truncated source pool swap events, preserve fee/tax venue differences",
+    "Create frozen full-history 23-wallet x 19-token CA census with cursor completeness, distinct owner tx hashes and no-hindsight denominator; peer review before validation",
     "Complete DDAC GIGGLE and Binance Life original-signature and native settlement scopes before wallet ranking",
     "Reconcile remaining MARS 2 truncated V2 raw swaps and multi-hop SPCXB/USDT-to-BNB settlement using appropriate original traces; keep fee evidence tiered",
     "Complete DDAC MARSCOIN 19 self-signed transactions quote-asset route and economic cost attribution; retain other-signed/unknown events and token residue",
@@ -1950,5 +1961,41 @@
     "nonowner_or_unknown_signer_nonpool_inbound": 10,
     "current_mars_raw": "3050660512775076744",
     "current_mars_balance_eth_call": "CONFIRMED_LATEST"
+  },
+  "address_model_3_ddac_additional_token_coverage_2026_10_11": {
+    "status": "MARS_29_HASH_18_ACTIVE_TWO_VENUE__GIGGLE_71_INBOUND_OPEN__BINANCE_LIFE_82_HASH_7_V2_ACTIONS",
+    "research_report": "BSC_MEME_ADDRESS_MODEL_3_DDAC_MARS_GIGGLE_BINANCE_LIFE_RESEARCH_REPORT_2026-10-11.md",
+    "GIGGLE": {
+      "contract": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "inbound": 71,
+      "outbound": 0,
+      "known_active_buy": 0,
+      "signer_audit": "INCOMPLETE_DISTRIBUTOR_TRADES",
+      "latest_balance_raw": "1887709367246662512",
+      "realized_pnl": "UNRESOLVED"
+    },
+    "BINANCE_LIFE": {
+      "contract": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "inbound_erc20": 78,
+      "outbound_erc20": 5,
+      "unique_hashes": 82,
+      "shared_source_inbound": 69,
+      "owner_pair_trade_count": 7,
+      "owner_pair_native_scope_wei": "462620236646267526",
+      "latest_balance_raw": "21665763559661594798",
+      "realized_pnl": "UNRESOLVED"
+    },
+    "MARS": {
+      "owner_pool_actions": 18,
+      "v2_spcxb_actions": 16,
+      "v3_usdt_actions": 2,
+      "v2_direct_swap_tax_3pct": 14,
+      "v3_direct_swap_tax_0pct": 2,
+      "v2_quote_fallback": 2,
+      "latest_balance_raw": "3050660512775076744",
+      "native_block_scope_wei": "3409712195316107766",
+      "final_router_trace": "INCOMPLETE"
+    },
+    "production": "NO_GO"
   }
 }
