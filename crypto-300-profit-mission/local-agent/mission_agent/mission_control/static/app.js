@@ -372,7 +372,12 @@ function renderFrankWatchlist(payload) {
       '<td><code title="' + esc(mint) + '">' + esc(short(mint,9,6)) + '</code> ' +
         copyButton(mint,'复制 CA') + '</td>' +
       '<td>' + esc(watchLabels[x.watch_state] || x.watch_state || '待核') +
-        mismatch + '</td>' +
+        mismatch +
+        (x.owner_index_gap_status === 'CONFIRMED_HISTORICAL_GAP'
+          ? '<div class="watch-mismatch">历史索引缺口：' +
+            esc(x.owner_index_missing_signatures) + ' 条 ATA 签名未入本地主钱包索引' +
+            '（证据日期 ' + esc(x.ata_gap_source_date || '未确认') + '）</div>' : '') +
+        '</td>' +
       '<td>买 ' + esc(x.local_recognized_buys ?? 0) +
         ' / 卖 ' + esc(x.local_recognized_sells ?? 0) + '</td>' +
       '<td>' + (x.last_event_side && !signatureIsLatest
@@ -380,7 +385,10 @@ function renderFrankWatchlist(payload) {
         : '本地账户余额变动（未必是买卖）') +
         ' · ' + esc(last) + '<div class="watch-tx">' + txLink +
         (x.passive_receipt_events
-          ? '<div>被动转入记录 ' + esc(x.passive_receipt_events) + ' 笔</div>' : '') +
+          ? '<div>本地主钱包被动转入 ' + esc(x.passive_receipt_events) + ' 笔</div>' : '') +
+        (x.owner_index_gap_status === 'CONFIRMED_HISTORICAL_GAP'
+          ? '<div>另有 ATA 验证转入 ' + esc(x.ata_verified_extra_passive_receipts) +
+            ' 笔，其余缺失签名性质未确认</div>' : '') +
         '</div></td>' +
       '<td>' + balance + '<div class="watch-tx">美元价值未核实' + proof +
         (x.passive_receipt_events && !x.transfer_counterparty_verified
