@@ -1,0 +1,55 @@
+name: Monster Stage32 Six Fresh 758 Spot Original V4 Paired 1m Versus 3m
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_paired_1m_vs3m.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage32_paired_1m_vs3m.py'
+      - '.github/workflows/monster-v4-stage32-six-fresh-date-1m-vs3m-full758.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage32-fresh-six-758-1m-vs3m-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  actual-original-v4-both-cadences-full-six-new-date:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-03-19','2025-06-19','2025-09-19','2025-12-19','2026-01-19','2026-03-19']
+        shard: [0,1,2,3,4,5]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Re-check frozen six unseen date/source and actual 1min vs3min production V4 causal tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage32_paired_1m_vs3m.py tests/test_monster_v4_stage32_paired_1m_vs3m.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage32_paired_1m_vs3m.py
+      - name: Fetch original frozen 758 Spot market inventory by immutable artifact ID
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700651924/zip > /tmp/monster_stage32_original758_inventory.zip
+      - name: Same official original ten daily 1m and monthly 1h publisher SHA, paired real original V4 3360 polls vs candidate 10080 polls
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage32_paired_1m_vs3m.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --original-758-zip /tmp/monster_stage32_original758_inventory.zip --output /tmp/monster_stage32_${{ matrix.date }}_shard${{ matrix.shard }}.json
+      - name: Keep true original market universe full positive negative and missing source cases
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage32-1min-vs3min-${{ matrix.date }}-shard${{ matrix.shard }}
+          path: /tmp/monster_stage32_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          if-no-files-found: warn
+          retention-days: 30
