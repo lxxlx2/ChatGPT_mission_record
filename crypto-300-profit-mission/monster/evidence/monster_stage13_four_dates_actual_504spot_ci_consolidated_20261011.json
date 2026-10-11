@@ -1,0 +1,287 @@
+{
+  "schema": "MONSTER_STAGE13_FOUR_DATES_ACTUAL_504SPOT_GITHUB_CI_CONSOLIDATED_20261011_V1",
+  "research_only": true,
+  "underlying_commit": "3028b126ae0e4aa3c9f4cf68083b717a3eef120b",
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38122346432",
+  "run_conclusion": "ALL_FOUR_JOBS_SUCCESS",
+  "data_source": "Official Binance spot daily 1m ZIP + publisher SHA256; same V4 production D0-D1; close-only 3m ticker+prior 24h quote proxy",
+  "selection": "Dates frozen BEFORE archive retrieval; all 504 current 2026-10-11 survivor-listed USDT Spot symbols attempted per day",
+  "frozen_dates": [
+    "2025-11-17",
+    "2026-02-17",
+    "2026-05-17",
+    "2026-08-17"
+  ],
+  "outcomes": [
+    {
+      "date_utc": "2025-11-17",
+      "source_attempted": 504,
+      "complete_60h_pairs": 384,
+      "source_missing": 120,
+      "verified_1m_bars": 1382400,
+      "three_minute_polls": 92160,
+      "watch_events": 9,
+      "d1_episodes": 6,
+      "d1_profit_proxy": {
+        "n": 6,
+        "winners": 1,
+        "losers": 5,
+        "censored": 0,
+        "median_pct": -13.176265
+      },
+      "signal_d1_24h_net_pct": [
+        [
+          "BANANAS31USDT",
+          -38.115528
+        ],
+        [
+          "DUSKUSDT",
+          3.201455
+        ],
+        [
+          "EPICUSDT",
+          null
+        ],
+        [
+          "MAGICUSDT",
+          -17.526977
+        ],
+        [
+          "NMRUSDT",
+          -12.949493
+        ],
+        [
+          "USTCUSDT",
+          -13.403037
+        ],
+        [
+          "XNOUSDT",
+          -1.547452
+        ]
+      ],
+      "full_json_artifact_id": 11696120246,
+      "full_json_sha256": "b49e5998724ee6aa38bb1e04e7077b167f7e162671a232d9b44c77cce4fd7684",
+      "artifact_zip_sha256": "869e72a8c5be898ee6e103427fbfbc4372af5573f6ac4fb1fa416ffd70cae351"
+    },
+    {
+      "date_utc": "2026-02-17",
+      "source_attempted": 504,
+      "complete_60h_pairs": 395,
+      "source_missing": 109,
+      "verified_1m_bars": 1422000,
+      "three_minute_polls": 94800,
+      "watch_events": 6,
+      "d1_episodes": 6,
+      "d1_profit_proxy": {
+        "n": 5,
+        "winners": 2,
+        "losers": 3,
+        "censored": 1,
+        "median_pct": -2.952889
+      },
+      "signal_d1_24h_net_pct": [
+        [
+          "ALLOUSDT",
+          7.567225
+        ],
+        [
+          "ATMUSDT",
+          -2.952889
+        ],
+        [
+          "JTOUSDT",
+          -7.462217
+        ],
+        [
+          "MMTUSDT",
+          -14.833608
+        ],
+        [
+          "ORCAUSDT",
+          7.075119
+        ],
+        [
+          "REZUSDT",
+          null
+        ]
+      ],
+      "full_json_artifact_id": 11695244852,
+      "full_json_sha256": "1663f2e8a1b75cfe1df3436f7eb35af95de66d3790284878c3a07aa0f0a73026",
+      "artifact_zip_sha256": "236caf707c9ee553f52d3c4e41265141d228869cb8b1a9605622f84feaaf6e8f"
+    },
+    {
+      "date_utc": "2026-05-17",
+      "source_attempted": 504,
+      "complete_60h_pairs": 406,
+      "source_missing": 98,
+      "verified_1m_bars": 1461600,
+      "three_minute_polls": 97440,
+      "watch_events": 2,
+      "d1_episodes": 2,
+      "d1_profit_proxy": {
+        "n": 2,
+        "winners": 2,
+        "losers": 0,
+        "censored": 0,
+        "median_pct": 21.183957499999998
+      },
+      "signal_d1_24h_net_pct": [
+        [
+          "EDENUSDT",
+          15.933322
+        ],
+        [
+          "FIDAUSDT",
+          26.434593
+        ]
+      ],
+      "full_json_artifact_id": 11695469587,
+      "full_json_sha256": "5f71a01a179d452d4c82d0b9282b2bb8f0ac7184bc39490cc8ac2a6fe925f44b",
+      "artifact_zip_sha256": "e8594bc82f9ef5365dee352f0bb348ea66817f1714390a323e5b06363b4f9747"
+    },
+    {
+      "date_utc": "2026-08-17",
+      "source_attempted": 504,
+      "complete_60h_pairs": 478,
+      "source_missing": 26,
+      "verified_1m_bars": 1720800,
+      "three_minute_polls": 114720,
+      "watch_events": 10,
+      "d1_episodes": 10,
+      "d1_profit_proxy": {
+        "n": 8,
+        "winners": 3,
+        "losers": 5,
+        "censored": 2,
+        "median_pct": -3.882912
+      },
+      "signal_d1_24h_net_pct": [
+        [
+          "ACEUSDT",
+          9.778149
+        ],
+        [
+          "CBRSBUSDT",
+          -9.601951
+        ],
+        [
+          "EDENUSDT",
+          -3.378013
+        ],
+        [
+          "GPSUSDT",
+          11.327441
+        ],
+        [
+          "GUNUSDT",
+          null
+        ],
+        [
+          "HAEDALUSDT",
+          null
+        ],
+        [
+          "HEMIUSDT",
+          -4.387811
+        ],
+        [
+          "MVLLBUSDT",
+          -14.625871
+        ],
+        [
+          "RAREUSDT",
+          -5.916412
+        ],
+        [
+          "TUTUSDT",
+          6.54854
+        ]
+      ],
+      "full_json_artifact_id": 11696175260,
+      "full_json_sha256": "b0e74033f3f62a5b4c42b2b9b28b781a625d9973293a31b74e3659e87e945fe4",
+      "artifact_zip_sha256": "4e9b1cc7acf5681156ff1aa8876711709751aff2b57fac8345a1a144c2f7415f"
+    }
+  ],
+  "aggregate_four_dates": {
+    "attempted_symbol_date_pairs": 2016,
+    "complete_60h_pairs": 1663,
+    "minute_bars": 5986800,
+    "three_minute_polls": 399120,
+    "watch_events": 27,
+    "d1_episodes": 24,
+    "d1_price_proxy_eligible": 21,
+    "positive": 8,
+    "negative": 13,
+    "censored": 3,
+    "median_net_pct": -3.378013,
+    "assumed_sum_30usdt_net_pnl_usdt": -17.650624
+  },
+  "with_prior_sep_stage12": {
+    "baseline": {
+      "date": "2026-09-17",
+      "source_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38115890710",
+      "artifact_id": 11692709405,
+      "full_60h_data_cases": 487,
+      "source_missing": 15,
+      "source_incomplete": 2,
+      "minute_bars": 1753200,
+      "watch": 9,
+      "d1": 7,
+      "price_proxy_30usd_net_return_pct_by_symbol": [
+        [
+          "AVAUSDT",
+          -4.066663
+        ],
+        [
+          "DGBUSDT",
+          null
+        ],
+        [
+          "GLMRUSDT",
+          null
+        ],
+        [
+          "KSMUSDT",
+          -3.243138
+        ],
+        [
+          "MARSCOINUSDT",
+          -7.803841
+        ],
+        [
+          "ONEUSDT",
+          30.6281
+        ],
+        [
+          "SYNUSDT",
+          -13.292766
+        ]
+      ],
+      "artifact_zip_sha256": "6a862d2771c88f51afb74fc4cd710ac04d48c3daf946a92d158551fe51e7bac0",
+      "raw_json_sha256": "017030a1c4fbbf2321f08640e6e219a36725a2c52f5041b363931dc39cc3e5ac"
+    },
+    "attempted_symbol_date_pairs": 2520,
+    "complete_60h_pairs": 2150,
+    "minute_bars": 7740000,
+    "three_minute_polls": 516000,
+    "watch_events": 36,
+    "d1_episodes": 31,
+    "d1_price_proxy_eligible": 26,
+    "positive": 9,
+    "negative": 17,
+    "censored": 5,
+    "median_net_pct": -3.722338,
+    "assumed_sum_30usdt_net_pnl_usdt": -16.984117
+  },
+  "scope_warnings": [
+    "NOT_POINT_IN_TIME_UNIVERSE",
+    "NOT_FORWARD_HOLDOUT",
+    "NO_ARCHIVED_ACTUAL_HISTORICAL_LEVEL2_BOOK",
+    "NO_REAL_TRANSACTION_FILL",
+    "20BPS_PER_SIDE_SLIPPAGE_AND_10BPS_PER_SIDE_FEE_ASSUMED",
+    "RETURNS_ARE_INDEPENDENT_TRADE_PRICE_PROXY_NOT_CAPITAL_ACCOUNT",
+    "NOT_FULL_YEAR_MARKET"
+  ],
+  "deploy_gate": "NO_GO",
+  "real_notification_sent": false
+}
