@@ -1,0 +1,47 @@
+name: Monster Stage20 Frozen Holdout D1 Quality and Conservative Exit
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage20_quality_exit_holdout.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage20_quality_exit_holdout.py'
+      - '.github/workflows/monster-v4-stage20-frozen-holdout-quality-exits.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: monster-stage20-fourday-holdout-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  four-frozen-day-full-758-quality-exit-backtest:
+    strategy:
+      fail-fast: false
+      matrix:
+        date: ['2025-12-13', '2026-01-13', '2026-04-13', '2026-07-13']
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify fixed quality features, no future leakage, conservative exit and corpus constraints
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage20_quality_exit_holdout.py tests/test_monster_v4_stage20_quality_exit_holdout.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage20_quality_exit_holdout.py
+      - name: Replay full frozen 758 universe official publisher-SHA verified Binance 1m V4 and same-source exit variants
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage20_quality_exit_holdout.py --date ${{ matrix.date }} --output /tmp/monster_stage20_${{ matrix.date }}.json
+      - name: Preserve each source checksum, D1 quality decision and all censored non-fill exit variants
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage20-758-heldout-quality-exit-${{ matrix.date }}
+          path: /tmp/monster_stage20_${{ matrix.date }}.json
+          if-no-files-found: warn
+          retention-days: 30
