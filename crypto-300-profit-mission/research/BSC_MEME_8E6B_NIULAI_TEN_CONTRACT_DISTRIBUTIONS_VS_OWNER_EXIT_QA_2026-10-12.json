@@ -148,7 +148,7 @@
     "net_raw": "65856455282881733964"
   },
   "status": "NO_ORIGINAL_OWNER_SIGNED_BUY_PROVEN; OWN_SIGNED_EXIT_CONFIRMED",
-  "interpretation": "All 10 deposits originated through repeated calls to the same external dispatch contract, five were confirmed other-signed and five origin signer fields truncated. All ten historical DDAC? NO: 8e6b native block deltas are exactly zero. These are likely third-party distributions, economically unclassified; no evidence to count this token as independently bought or profitable trading capture.",
+  "interpretation": "All ten deposits arrived via repeated calls to the same external dispatch contract. Five original transactions are independently confirmed to have other signers; the remaining five original signer fields were truncated. All ten 8e6b wallet native BNB block deltas are exactly zero. Distribution-like receipts are a supported inference, but the economic reason is unconfirmed; none is proven to be an original self-signed purchase or profitable trading episode.",
   "caveats": [
     "Zero BNB delta on deposit block does not rule out off-wallet payment or quote sourcing, so passive cause is inference not confirmed.",
     "One self-signed exit is original trade action but not evidence of owner acquisition cost basis.",
