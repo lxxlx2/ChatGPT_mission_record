@@ -150,7 +150,8 @@
     "Per-block wallet BNB balances also include unrelated native transfers in the same block",
     "Token GIGGLE outward ERC20 events may settle as WBNB or other assets without native BNB increase",
     "Original signer, receipt statuses, quote token movements and internal call traces not complete",
-    "Do not classify sum as realized PnL"
+    "Do not classify sum as realized PnL",
+    "Residual native = wallet block delta + signed tx input + receipt gas, not necessarily WBNB withdrawal or isolated transaction payment"
   ],
   "transaction_audit": [
     {
@@ -351,5 +352,184 @@
   "success_count": 16,
   "total_native_input_wei": "2505000000000000000",
   "total_gas_wei": "42023445000000000",
-  "gas_entries": 16
+  "gas_entries": 16,
+  "net_native_trade_block_wei": "5715925819273344974",
+  "native_non_input_non_gas_residual_wei": "8262949264273344974",
+  "residual_per_block": [
+    {
+      "hash": "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356",
+      "block": 62016808,
+      "dir": "IN",
+      "native_block_delta_wei": "-1006544659000000000",
+      "native_input_wei": "1000000000000000000",
+      "gas_wei": "6544659000000000",
+      "residual_native_wei": "0"
+    },
+    {
+      "hash": "0x781dc7a0ebe9f96ab6845d13d26509a4fdc4d56fee7b7b2c7bbff067e13ee5de",
+      "block": 62018718,
+      "dir": "IN",
+      "native_block_delta_wei": "-507370960000000000",
+      "native_input_wei": "505000000000000000",
+      "gas_wei": "2970960000000000",
+      "residual_native_wei": "600000000000000"
+    },
+    {
+      "hash": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674",
+      "block": 62019177,
+      "dir": "OUT",
+      "native_block_delta_wei": "1241125381857827603",
+      "native_input_wei": "0",
+      "gas_wei": "3250336000000000",
+      "residual_native_wei": "1244375717857827603"
+    },
+    {
+      "hash": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+      "block": 62020864,
+      "dir": "OUT",
+      "native_block_delta_wei": "-7620723000000000",
+      "native_input_wei": "0",
+      "gas_wei": "7620723000000000",
+      "residual_native_wei": "0"
+    },
+    {
+      "hash": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+      "block": 62021192,
+      "dir": "OUT",
+      "native_block_delta_wei": "-2352141000000000",
+      "native_input_wei": "0",
+      "gas_wei": "2352141000000000",
+      "residual_native_wei": "0"
+    },
+    {
+      "hash": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+      "block": 62021220,
+      "dir": "OUT",
+      "native_block_delta_wei": "-7056423000000000",
+      "native_input_wei": "0",
+      "gas_wei": "7056423000000000",
+      "residual_native_wei": "0"
+    },
+    {
+      "hash": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+      "block": 62066886,
+      "dir": "OUT",
+      "native_block_delta_wei": "-2352141000000000",
+      "native_input_wei": "0",
+      "gas_wei": "2352141000000000",
+      "residual_native_wei": "0"
+    },
+    {
+      "hash": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+      "block": 62067451,
+      "dir": "OUT",
+      "native_block_delta_wei": "-2467333000000000",
+      "native_input_wei": "0",
+      "gas_wei": "2467333000000000",
+      "residual_native_wei": "0"
+    },
+    {
+      "hash": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
+      "block": 62154722,
+      "dir": "OUT",
+      "native_block_delta_wei": "749757455148637094",
+      "native_input_wei": "0",
+      "gas_wei": "503946000000000",
+      "residual_native_wei": "750261401148637094"
+    },
+    {
+      "hash": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b",
+      "block": 62299083,
+      "dir": "OUT",
+      "native_block_delta_wei": "-867942000000000",
+      "native_input_wei": "0",
+      "gas_wei": "867942000000000",
+      "residual_native_wei": "0"
+    },
+    {
+      "hash": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
+      "block": 62485438,
+      "dir": "IN",
+      "native_block_delta_wei": "-731736000000000",
+      "native_input_wei": "0",
+      "gas_wei": "731736000000000",
+      "residual_native_wei": "0"
+    },
+    {
+      "hash": "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb",
+      "block": 63071724,
+      "dir": "IN",
+      "native_block_delta_wei": "-1001778370000000000",
+      "native_input_wei": "1000000000000000000",
+      "gas_wei": "1778370000000000",
+      "residual_native_wei": "0"
+    },
+    {
+      "hash": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
+      "block": 63204096,
+      "dir": "OUT",
+      "native_block_delta_wei": "2089775229279261342",
+      "native_input_wei": "0",
+      "gas_wei": "1966393000000000",
+      "residual_native_wei": "2091741622279261342"
+    },
+    {
+      "hash": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
+      "block": 63274247,
+      "dir": "OUT",
+      "native_block_delta_wei": "953986997487939334",
+      "native_input_wei": "0",
+      "gas_wei": "535398000000000",
+      "residual_native_wei": "954522395487939334"
+    },
+    {
+      "hash": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
+      "block": 63310363,
+      "dir": "OUT",
+      "native_block_delta_wei": "1741617291180632931",
+      "native_input_wei": "0",
+      "gas_wei": "503946000000000",
+      "residual_native_wei": "1742121237180632931"
+    },
+    {
+      "hash": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f",
+      "block": 63310510,
+      "dir": "OUT",
+      "native_block_delta_wei": "1478805892319046670",
+      "native_input_wei": "0",
+      "gas_wei": "520998000000000",
+      "residual_native_wei": "1479326890319046670"
+    }
+  ],
+  "nonzero_in_residuals": [
+    {
+      "block": 62018718,
+      "residual_native_wei": "600000000000000",
+      "type": "IN_INPUT_WITH_OTHER_NATIVE_DELTA"
+    },
+    {
+      "block": 62020864,
+      "type": "OUT_HAS_NO_NATIVE_PROCEEDS_IN_BLOCK"
+    },
+    {
+      "block": 62021192,
+      "type": "OUT_HAS_NO_NATIVE_PROCEEDS_IN_BLOCK"
+    },
+    {
+      "block": 62021220,
+      "type": "OUT_HAS_NO_NATIVE_PROCEEDS_IN_BLOCK"
+    },
+    {
+      "block": 62066886,
+      "type": "OUT_HAS_NO_NATIVE_PROCEEDS_IN_BLOCK"
+    },
+    {
+      "block": 62067451,
+      "type": "OUT_HAS_NO_NATIVE_PROCEEDS_IN_BLOCK"
+    },
+    {
+      "block": 62299083,
+      "type": "OUT_HAS_NO_NATIVE_PROCEEDS_IN_BLOCK"
+    }
+  ]
 }
