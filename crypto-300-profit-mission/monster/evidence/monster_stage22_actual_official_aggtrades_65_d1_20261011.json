@@ -1,0 +1,177 @@
+{
+  "schema": "MONSTER_STAGE22_REAL_OFFICIAL_SPOT_PRE_SIGNAL_AGGRESSOR_FLOW_CI_V1",
+  "frozen_design_commit": "c6710f13a1db52de739d337a27424b53fe0dfe09",
+  "official_publisher_format": "https://github.com/binance/binance-public-data/blob/master/README.md",
+  "source_url": "https://data.binance.vision/data/spot/daily/aggTrades/{symbol}/{symbol}-aggTrades-{YYYY-MM-DD}.zip",
+  "source_date_scope": "Ten exact Stage21 frozen dates, all 65 prior quality-pass first-D1 symbol/date cases, 2025-2026",
+  "source_ci_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38133070166",
+  "source_ci_commit": "f3d08dc1b0ab027190d714e831f2f66d464103a7",
+  "source_ci_final_status": "SUCCESS_ALL_10_JOBS",
+  "failed_prior_unit_test_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38133037982",
+  "prior_test_failure": "One unit test compared rounded six-decimal buyer share at seven-decimal precision, fixed with explicit six-place assertion; all source inputs unchanged.",
+  "artifacts": [
+    {
+      "date": "2025-03-09",
+      "artifact_id": 11700016272,
+      "zip_sha256": "170851c1a9cf694d99e82d037bc55eced57afeb27943753639930d01b2c6fb04",
+      "raw_json_sha256": "1b76c245b417d17478e1553986f342079b3295c2b7172a2bc8544bdf37eeb12b",
+      "all_qualified_d1": 7,
+      "official_aggtrades_verified": 7
+    },
+    {
+      "date": "2025-04-09",
+      "artifact_id": 11699758109,
+      "zip_sha256": "66199d54d93f6cd3a6a409aee18e3d2e88b827536af364fb9e21f90a784bcb5e",
+      "raw_json_sha256": "fd710aa3878a14387f03df1ce00c68a75ab64dde6ec1e708c0483896a93e72de",
+      "all_qualified_d1": 21,
+      "official_aggtrades_verified": 21
+    },
+    {
+      "date": "2025-05-09",
+      "artifact_id": 11699817998,
+      "zip_sha256": "d09861960fad11be9cb6580393ef4df2178dde89010a9accd82fb4b49a15a1d7",
+      "raw_json_sha256": "6dbc20f416551a27fa6170695988990b6d002201bf7c03f12cb51c1d23a37139",
+      "all_qualified_d1": 8,
+      "official_aggtrades_verified": 8
+    },
+    {
+      "date": "2025-06-09",
+      "artifact_id": 11700191025,
+      "zip_sha256": "529f4f5d757573f8e4849bda77eab7bf5bca969377453590cfe354413d6a3465",
+      "raw_json_sha256": "1af073e02323a9c3373bc5120b8417732d30fd7ac70cd1a77990dac337aa0360",
+      "all_qualified_d1": 1,
+      "official_aggtrades_verified": 1
+    },
+    {
+      "date": "2025-07-09",
+      "artifact_id": 11699189481,
+      "zip_sha256": "356a2ebd6f4b8fe8a1f5995d28ab2618a43040458aece8facd8252f9726d5c0f",
+      "raw_json_sha256": "7412403fd796b0db85af99191132f68baa4c4379eadf607dc3f0f7455a9e910f",
+      "all_qualified_d1": 2,
+      "official_aggtrades_verified": 2
+    },
+    {
+      "date": "2025-08-09",
+      "artifact_id": 11700260826,
+      "zip_sha256": "ee383f38a38972cd4e4f6cd40421dfc5ba01d5fbb35b83951bb9ec6a6846bbc7",
+      "raw_json_sha256": "aec20911d8587e329d50b3d288d77ec93e62c916ddba24d2b06c01a320ff0e2b",
+      "all_qualified_d1": 2,
+      "official_aggtrades_verified": 2
+    },
+    {
+      "date": "2025-09-09",
+      "artifact_id": 11699453672,
+      "zip_sha256": "74c410eb51134548b884b07d1201fc04612998e86ae06358e49d58c07383af3e",
+      "raw_json_sha256": "4470931001f3a13c578dd005f45c99db551c72bb76c91b498f7965f629869879",
+      "all_qualified_d1": 6,
+      "official_aggtrades_verified": 6
+    },
+    {
+      "date": "2025-10-09",
+      "artifact_id": 11699528846,
+      "zip_sha256": "a45761fdcd6c0e1e62f6b96519e27cb356e5ecae882c2d133c1b7b1bc78cacb3",
+      "raw_json_sha256": "b074329b8ef60c9228f1f37f177ed52b6344a1021be0062658ae696cdbc12ea",
+      "all_qualified_d1": 8,
+      "official_aggtrades_verified": 8
+    },
+    {
+      "date": "2026-03-09",
+      "artifact_id": 11699483675,
+      "zip_sha256": "b86a7b75f684e61aa17bda2b820d242da3597ea26ba3601c57e93e999d970113",
+      "raw_json_sha256": "e92ee7c2f24658be5733e62724ef0330a714e50270bc02d6c07fd40e1dd19818",
+      "all_qualified_d1": 4,
+      "official_aggtrades_verified": 4
+    },
+    {
+      "date": "2026-06-09",
+      "artifact_id": 11699842953,
+      "zip_sha256": "e007cc13ac219fcf89fa6dc07e46941882c53bf6adb24741ba8d48f85ea6ee32",
+      "raw_json_sha256": "7a5985ddb53ab0496414d14c93ac2d8e7f9e7f14da702c279adf13066711d34d",
+      "all_qualified_d1": 6,
+      "official_aggtrades_verified": 6
+    }
+  ],
+  "publisher_sha256_verified_per_source": true,
+  "all_original_stage21_zip_and_json_sha256_validated_again": true,
+  "strict_signal_time_preceding_ms": true,
+  "causal_agg_trade_direction": "Was the buyer the maker m=true means sell-aggressor; m=false means buy-aggressor",
+  "frozen_cohort_keys_sha256": "89f62d524a23b82429ec6d19db63972766db13de82f2b6877ad99b37e1dfa3d8",
+  "cohort": {
+    "attempted": 65,
+    "official_aggtrades_verified": 65,
+    "missing_or_corrupt": 0,
+    "valid_6h_proxy": 62,
+    "stops": 34,
+    "take_profits": 8,
+    "timeouts": 20,
+    "exits_censored": 3
+  },
+  "historical_exposed_group_medians": {
+    "STOP": {
+      "n": 34,
+      "prior_5m_aggressor_buy_quote_share": 0.532229,
+      "prior_15m_aggressor_buy_quote_share": 0.543783,
+      "prior_60m_aggressor_buy_quote_share": 0.553027,
+      "prior_15m_quote_usdt": 1977885.68645,
+      "prior_15m_vs_prior45m_quote_ratio": 5.09936,
+      "original_60m_relative_btc_return_pp": 15.378,
+      "original_60m_token_return_pct": 15.569
+    },
+    "TAKE_PROFIT": {
+      "n": 8,
+      "prior_5m_aggressor_buy_quote_share": 0.529986,
+      "prior_15m_aggressor_buy_quote_share": 0.549451,
+      "prior_60m_aggressor_buy_quote_share": 0.560894,
+      "prior_15m_quote_usdt": 670135.409796,
+      "prior_15m_vs_prior45m_quote_ratio": 7.503813,
+      "original_60m_relative_btc_return_pp": 7.624,
+      "original_60m_token_return_pct": 7.527
+    },
+    "TIMEOUT_6H": {
+      "n": 20,
+      "prior_5m_aggressor_buy_quote_share": 0.547956,
+      "prior_15m_aggressor_buy_quote_share": 0.539513,
+      "prior_60m_aggressor_buy_quote_share": 0.546584,
+      "prior_15m_quote_usdt": 1238458.26026,
+      "prior_15m_vs_prior45m_quote_ratio": 10.242451,
+      "original_60m_relative_btc_return_pp": 7.649,
+      "original_60m_token_return_pct": 9.855
+    },
+    "CENSORED": {
+      "n": 3,
+      "prior_5m_aggressor_buy_quote_share": 0.527534,
+      "prior_15m_aggressor_buy_quote_share": 0.484936,
+      "prior_60m_aggressor_buy_quote_share": 0.548018,
+      "prior_15m_quote_usdt": 145588.7235,
+      "prior_15m_vs_prior45m_quote_ratio": 13.287287
+    }
+  },
+  "pairwise_rank_auc_stop_vs_other_valid_28": {
+    "prior_5m_aggressor_buy_quote_share": 0.4685,
+    "prior_15m_aggressor_buy_quote_share": 0.5189,
+    "prior_60m_aggressor_buy_quote_share": 0.5315,
+    "prior_15m_quote_usdt": 0.6134,
+    "prior_15m_vs_prior45m_quote_ratio": 0.4107,
+    "original_60m_relative_btc_return_pp": 0.792,
+    "original_60m_token_return_pct": 0.7574,
+    "notes": "AUC is purely descriptive on the same exposed labels, not unbiased model evaluation or out-of-sample forecast performance; rank AUC 0.5 is nondiscrimination. Original 60m returns predate Stage22 and have previously seen outcome labels."
+  },
+  "judgement": {
+    "aggressor_buy_share": "REJECT_AS_STANDALONE_STOP_DISCRIMINATOR_IN_EXPOSED_COHORT",
+    "relative_60m_btc_excess": "INVESTIGATE_AS_POSSIBLE_OVEREXTENSION_INDICATOR_ON_FUTURE_UNSEEN_DATES_ONLY",
+    "no_new_trade_filter_selected": true,
+    "no_threshold_tuning_on_same_65": true
+  },
+  "limits": [
+    "AggTrades are aggregated same-price/taker trades; do not equal raw per-fill trade counts",
+    "Buyer is maker flag identifies taker side, not actual bid/ask L2 depth or fills",
+    "65 cases chosen because original Stage21 already had D1 and quality-pass, so label-conditioned descriptive contrasts are NOT independent validation",
+    "Over 34 stops and 8 takeprofit from a sparse ten calendar-date sample with strong market-day clustering",
+    "Even 100% historical source completeness does not imply order-book executable prices or real PnL"
+  ],
+  "independent_other_ai_review": "NOT_DONE",
+  "deployment": "NO_GO",
+  "real_gmail": "OFF",
+  "trading": "NO_GO",
+  "frank": "UNCHANGED"
+}
