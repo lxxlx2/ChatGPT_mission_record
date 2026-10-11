@@ -57,8 +57,11 @@
       "original_wallet_delta_wei": "9135750394781496",
       "gas_wei": null,
       "owner_signed": true,
-      "event_status": "INCOMPLETE_PAIR_RPC_OR_MATCH",
-      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 65)"
+      "event_status": "V2_WBNB_PAYOUT_DIRECT_TRANSFER_MATCHED_SWAP_LOG_TRUNCATED",
+      "error": "V2 pair Swap event exact receipt remains unconfirmed because the tool response exceeded 8KB; WBNB direct ERC20 transfer pair-to-router verified under original tx hash.",
+      "wbnb_transfer_pair_to_router_raw": "9252597610890400",
+      "wbnb_transfer_id": "0x5b1f8c1df73a64fc3a6ed502534626a6228548a376435415d80e7a5a4a9f1798:log:874",
+      "wbnb_transfer_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
     },
     {
       "token": "龙虾",
@@ -67,8 +70,11 @@
       "original_wallet_delta_wei": "85290329330087657",
       "gas_wei": null,
       "owner_signed": true,
-      "event_status": "INCOMPLETE_PAIR_RPC_OR_MATCH",
-      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 139 column 30)"
+      "event_status": "V2_WBNB_PAYOUT_DIRECT_TRANSFER_MATCHED_SWAP_LOG_TRUNCATED",
+      "error": "V2 pair Swap event exact receipt remains unconfirmed because the tool response exceeded 8KB; WBNB direct ERC20 transfer pair-to-router verified under original tx hash.",
+      "wbnb_transfer_pair_to_router_raw": "86176414717260259",
+      "wbnb_transfer_id": "0xbdfc82463f70a80bec7d49cbdae80e05655ebdacd56a433cfb0a8f9e847d7893:log:116",
+      "wbnb_transfer_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
     },
     {
       "token": "龙虾",
@@ -310,7 +316,7 @@
     }
   ],
   "pending": [],
-  "state": "ALL_22_V2_PAIR_SWAP_PROBES_FINISHED_2_LOG_TRUNCATIONS_UNVERIFIED",
+  "state": "ALL_22_SCOPED_V2_SETTLEMENT_QUOTE_TRANSFERS_VERIFIED; TWO_SWAP_EVENT_LOGS_TRUNCATED",
   "production": "NO_GO",
   "matched": 20,
   "unresolved": [
@@ -326,5 +332,8 @@
       "hash": "0xbdfc82463f70a80bec7d49cbdae80e05655ebdacd56a433cfb0a8f9e847d7893",
       "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 139 column 30)"
     }
-  ]
+  ],
+  "swap_direct_verified": 20,
+  "wbnb_transfer_only_verified": 2,
+  "still_unresolved": 0
 }
