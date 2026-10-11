@@ -173,7 +173,7 @@ def _sig(signature, mint, amount, classification="PASSIVE_TRANSFER",
                     "token_balance_deltas": [{
                         "mint": mint, "wallet_owned": True,
                         "decimals": 6, "delta": str(amount),
-                        "pre_amount": "0", "post_amount": str(abs(amount)),
+                        "pre_amount": "0", "post_amount": str(abs(int(amount))),
                     }],
                 },
             })}
