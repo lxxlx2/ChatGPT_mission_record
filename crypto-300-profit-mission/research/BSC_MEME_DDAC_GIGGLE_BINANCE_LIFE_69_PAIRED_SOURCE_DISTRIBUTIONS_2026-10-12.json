@@ -716,5 +716,69 @@
     "Original 7 self-signed Binance Life V2 pool trades and all MARS owner trades remain distinct and subject to respective venue quote reconciliation."
   ],
   "production": "OBSERVE_ONLY / NO_GO",
-  "change_scope": "RESEARCH_ONLY_NO_MONITOR_NO_AUTOMATION_NO_TRADING"
+  "change_scope": "RESEARCH_ONLY_NO_MONITOR_NO_AUTOMATION_NO_TRADING",
+  "newly_verified_dispatch_contract_provenance_2026_10_12": {
+    "status": "4_OF_4_BOUNDARY_ORIGINAL_TX_TO_AND_SELECTOR_VERIFIED",
+    "onchain_contract_code_checks": [
+      {
+        "address": "0x2f7fe96e3d0308cdbf6143e7dc0bb05df73a4a83",
+        "code_nonempty": true,
+        "original_method": "eth_getCode"
+      },
+      {
+        "address": "0x27863eda4014c127f3d74d2b0a00ba175d6867d0",
+        "code_nonempty": true,
+        "original_method": "eth_getCode"
+      }
+    ],
+    "original_boundary_transaction_samples": [
+      {
+        "token": "GIGGLE",
+        "position": "FIRST",
+        "block": 105119593,
+        "tx": "0x4dc9a1a745f91ca189f0c4fb05ad2de6e919c1e9fa5a479d33239e5501314be0",
+        "original_tx_to": "0x27863eda4014c127f3d74d2b0a00ba175d6867d0",
+        "original_input_selector": "0xefabe55b",
+        "source": "DIRECT_CHAIN_ETH_GET_TRANSACTION_BY_HASH_PREFIX_VERIFIED",
+        "original_signer": "UNCONFIRMED_8KB_INPUT_TRUNCATION"
+      },
+      {
+        "token": "BINANCE_LIFE",
+        "position": "FIRST",
+        "block": 105119586,
+        "tx": "0x8a371e16b392abbe88f00da088ca2886c615e8e107e83f6efa5d915249016f14",
+        "original_tx_to": "0x27863eda4014c127f3d74d2b0a00ba175d6867d0",
+        "original_input_selector": "0xefabe55b",
+        "source": "DIRECT_CHAIN_ETH_GET_TRANSACTION_BY_HASH_PREFIX_VERIFIED",
+        "original_signer": "UNCONFIRMED_8KB_INPUT_TRUNCATION"
+      },
+      {
+        "token": "GIGGLE",
+        "position": "LAST",
+        "block": 106085915,
+        "tx": "0x9502fa919b3fef2c60a052ba208d12e2420c6f22359af825b6722a0383438ee5",
+        "original_tx_to": "0x27863eda4014c127f3d74d2b0a00ba175d6867d0",
+        "original_input_selector": "0xefabe55b",
+        "source": "DIRECT_CHAIN_ETH_GET_TRANSACTION_BY_HASH_PREFIX_VERIFIED",
+        "original_signer": "UNCONFIRMED_8KB_INPUT_TRUNCATION"
+      },
+      {
+        "token": "BINANCE_LIFE",
+        "position": "LAST",
+        "block": 106085902,
+        "tx": "0xd8ef578cb4a28eff446b5b53dcd0819a126ad7364235553b033823122cc197cb",
+        "original_tx_to": "0x27863eda4014c127f3d74d2b0a00ba175d6867d0",
+        "original_input_selector": "0xefabe55b",
+        "source": "DIRECT_CHAIN_ETH_GET_TRANSACTION_BY_HASH_PREFIX_VERIFIED",
+        "original_signer": "UNCONFIRMED_8KB_INPUT_TRUNCATION"
+      }
+    ],
+    "interpretation": "Both source-distribution token cohorts' first and last batch original transactions route to the same distinct destination contract with the same 4-byte method selector. This strengthens the evidence of shared distribution infrastructure; it does NOT prove owner control, claim mechanism, grant entitlement, sale profits or all 139 tx signers.",
+    "limits": [
+      "Method selector is known but method name and exact semantics have not been decoded or verified against independently audited contract source.",
+      "Original transaction signer fields were not independently extracted from 8KB-truncated full tx JSON; do not infer they were DDAC or counterparties.",
+      "Only four chronologically extreme source-distribution transactions checked for common dispatcher and selector; intermediate 135 transactions not independently rechecked for dispatcher target."
+    ],
+    "production": "NO_GO"
+  }
 }
