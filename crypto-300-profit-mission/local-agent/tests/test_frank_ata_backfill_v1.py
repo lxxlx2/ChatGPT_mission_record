@@ -552,3 +552,61 @@ def test_rpc_nondict_json_failure_stops_with_preserved_rows():
     assert report["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
     assert report["interruption_type"] == "AttributeError"
     assert report["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
+
+def test_meta_failed_wrong_signature_never_counts_as_verified_failed():
+    bad = tx("0", "0", 454705824, signature=SIGNATURES[1])
+    bad["meta"]["err"] = {"InstructionError": [0, "Custom"]}
+    direct = validate_transaction(bad, SIGNATURES[0], J7_ATA, J7, TOKEN_2022)
+    assert direct["status"] == "TRANSACTION_SIGNATURE_UNVERIFIED"
+    source = [{"signature": SIGNATURES[0], "blockTime": 1791505760,
+               "slot": 454705824, "err": None}]
+    scanned = scan_ata_mints(
+        FakeRPC({J7_ATA: source}, {SIGNATURES[0]: bad}),
+        [J7], known_signatures=set())
+    assert scanned["scan_status"] == "PARTIAL_TX_UNVERIFIED"
+    assert scanned["statistics"].get("FAILED_TX_NO_BALANCE_PROOF", 0) == 0
+    assert scanned["unverified_successful_signature_count"] == 1
+    assert scanned["verified_nonzero_signatures_absent_from_local_index"] == []
+
+
+def test_incomplete_read_after_first_verified_tx_writes_partial_cli_artifact(tmp_path):
+    from http.client import IncompleteRead
+    from scripts.frank_ata_backfill import run
+    import json
+    import sqlite3
+    db = tmp_path / "forward.sqlite"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE signatures(person_id TEXT,signature TEXT)")
+        conn.execute("INSERT INTO signatures VALUES ('frank',?)", (SIGNATURES[1],))
+    first = {"signature": SIGNATURES[0], "slot": 454705300,
+             "blockTime": 1791505760, "err": None}
+
+    class PartialPageRPC(FakeRPC):
+        def call(self, method, args):
+            if (method == "getSignaturesForAddress" and args[0] == J7_ATA
+                    and args[1].get("before")):
+                raise IncompleteRead(b'{"json":"truncated"', 10)
+            return super().call(method, args)
+
+    output = tmp_path / "read-only-partial.json"
+    rpc = PartialPageRPC(
+        {J7_ATA: [first]},
+        {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0])})
+    report = run(["--database", str(db), "--mint", J7,
+                  "--output", str(output), "--page-size", "1",
+                  "--pages-per-ata", "2"], rpc=rpc)
+    packet = json.loads(output.read_text())
+    assert report["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
+    assert packet["interruption_type"] == "IncompleteRead"
+    assert packet["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
+    assert packet["observations"][0]["signature"] == SIGNATURES[0]
+    assert packet["complete_wallet_history"] is False
+    assert report["production_modified"] is False
+
+
+def test_failed_meta_matching_signature_is_proven_failure_not_transfer():
+    data = tx("0", "0", 454705824, signature=SIGNATURES[0])
+    data["meta"]["err"] = {"InstructionError": [0, "Custom"]}
+    checked = validate_transaction(data, SIGNATURES[0], J7_ATA, J7, TOKEN_2022)
+    assert checked["status"] == "FAILED_TX_NO_BALANCE_PROOF"
+    assert "raw_delta" not in checked
