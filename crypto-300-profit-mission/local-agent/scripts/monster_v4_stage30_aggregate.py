@@ -157,14 +157,24 @@ def summarize(full):
     for mult in (2,5,10):
         positive=[r for r in valid if r["labels"][str(mult)+"x"]["gross_hourly_high_gt"]]
         cls=collections.Counter(r["labels"][str(mult)+"x"]["classification"] for r in positive)
+        recent={}
+        for r in positive:
+            cross=prior.previous.utc(r["labels"][str(mult)+"x"]["real_1m_cross_utc"])
+            past=[(cross-prior.previous.utc(t)).total_seconds()/60
+                  for t in r["continuous"]["watch_utcs"] if prior.previous.utc(t)<=cross]
+            nearest=min(past) if past else None
+            recent[(r["date"],r["symbol"])]=nearest
         early[str(mult)+"x"]={"valid_GT_positives":len(positive),
+            "prior_WATCH_within_6h_of_true_cross":sum(x is not None and 0<=x<=360 for x in recent.values()),
+            "prior_WATCH_within_24h_of_true_cross":sum(x is not None and 0<=x<=1440 for x in recent.values()),
             "WATCH_before_1m_high_cross":cls["WATCH_BEFORE_OR_AT_REAL_FIRST_1M_CROSS"],
             "late":cls["WATCH_AFTER_REAL_FIRST_1M_CROSS"],
             "no_watch":cls["NO_WATCH_IN_CONTINUOUS_168H"],
             "members":[{"date":r["date"],"symbol":r["symbol"],
                 "first_watch_utc":r["labels"][str(mult)+"x"]["first_v4_watch_utc"],
                 "first_real_cross_utc":r["labels"][str(mult)+"x"]["real_1m_cross_utc"],
-                "classification":r["labels"][str(mult)+"x"]["classification"]}
+                "classification":r["labels"][str(mult)+"x"]["classification"],
+                "nearest_prior_WATCH_lead_min":recent[(r["date"],r["symbol"])]}
                    for r in positive]}
     return {"schema":"MONSTER_STAGE30_FULL_SIX_UNSEEN_DATE_758_168H_ALL_ORIGINAL_SHA_RECOMPUTED_V1",
       "all_36_ZIP_and_raw_JSON_source_SHA256_reverified":True,
