@@ -1,0 +1,157 @@
+{
+  "schema": "BSC_MEME_8E6B_DDAC_NEW_MAJOR_CA_BALANCE_AND_SIGNER_QA_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "scope": "All newly found MARS and NIULAI ERC20 transfers on frozen two-wallet missing-CA census, exact integer net and fresh balanceOf/decimals, plus first inbound/outbound original signer probes.",
+  "snapshot_sources": [
+    {
+      "file": "BSC_MEME_8E6B_EIGHT_PREVIOUSLY_UNOBSERVED_CA_CURSOR_RESCAN_2026-10-12.json",
+      "sha": "5c4d3c497e616d975152d889e01e01c0f1d9178c"
+    },
+    {
+      "file": "BSC_MEME_DDAC_FOURTEEN_PREVIOUSLY_UNOBSERVED_CA_CURSOR_RESCAN_2026-10-12.json",
+      "sha": "104df1bce40d188ea41b7cd144573c893b2c58c4"
+    }
+  ],
+  "rows": [
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "牛来",
+      "contract": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "decimals": 18,
+      "source_rescan": "BSC_MEME_8E6B_EIGHT_PREVIOUSLY_UNOBSERVED_CA_CURSOR_RESCAN_2026-10-12.json",
+      "transfer_counts": {
+        "in": 10,
+        "out": 2
+      },
+      "total_raw_in": "454289218283521445537",
+      "total_raw_out": "388432763000639711573",
+      "net_raw": "65856455282881733964",
+      "onchain_balance_latest_raw": "65856455282881733964",
+      "matches_erc20_in_minus_out": true,
+      "inventory_status": "TOKEN_REMAINDER_OPEN",
+      "original_tx_boundary_samples": [
+        {
+          "direction": "in",
+          "tx": "0xcfd03c575e87d0334e2e6a0d1b3fcc4e6f24630542dbb8374c47860402cfef47",
+          "block": "0x6f1c504",
+          "original_signer": "UNCONFIRMED_TRUNCATED",
+          "is_wallet_self_signed": null,
+          "target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+          "selector": "0x84da2c7b",
+          "tx_value_wei": "0",
+          "truncated_full_tx_json": true
+        },
+        {
+          "direction": "out",
+          "tx": "0xc27551087ced3d5b41749af31010a30e0746a7cdc39fe44177dbb5cb1d426821",
+          "block": "0x7346532",
+          "original_signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "is_wallet_self_signed": true,
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "selector": "0x4d819a2a",
+          "tx_value_wei": "0",
+          "truncated_full_tx_json": false
+        }
+      ]
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "MARSCOIN",
+      "contract": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "decimals": 18,
+      "source_rescan": "BSC_MEME_8E6B_EIGHT_PREVIOUSLY_UNOBSERVED_CA_CURSOR_RESCAN_2026-10-12.json",
+      "transfer_counts": {
+        "in": 19,
+        "out": 29
+      },
+      "total_raw_in": "1292788859953753371346127",
+      "total_raw_out": "1292774129557793382935452",
+      "net_raw": "14730395959988410675",
+      "onchain_balance_latest_raw": "14730395959988410675",
+      "matches_erc20_in_minus_out": true,
+      "inventory_status": "TOKEN_REMAINDER_OPEN",
+      "original_tx_boundary_samples": [
+        {
+          "direction": "in",
+          "tx": "0x9494a07ddbaee98292510696d85df0de0de2a1b09038e7f5e07132134a873a42",
+          "block": "0x6b8eba1",
+          "original_signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "is_wallet_self_signed": true,
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "selector": "0x4d819a2a",
+          "tx_value_wei": "3000000000000000000",
+          "truncated_full_tx_json": false
+        },
+        {
+          "direction": "out",
+          "tx": "0x48aa50007c1d141f1fcd5ae8edf6583cc4063cc0f03896a74a1830601acaa0c4",
+          "block": "0x6b8ec84",
+          "original_signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "is_wallet_self_signed": true,
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "selector": "0x4d819a2a",
+          "tx_value_wei": "0",
+          "truncated_full_tx_json": false
+        }
+      ]
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "牛来",
+      "contract": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "decimals": 18,
+      "source_rescan": "BSC_MEME_DDAC_FOURTEEN_PREVIOUSLY_UNOBSERVED_CA_CURSOR_RESCAN_2026-10-12.json",
+      "transfer_counts": {
+        "in": 19,
+        "out": 4
+      },
+      "total_raw_in": "35920269388025814282622",
+      "total_raw_out": "35920269388025814282622",
+      "net_raw": "0",
+      "onchain_balance_latest_raw": "0",
+      "matches_erc20_in_minus_out": true,
+      "inventory_status": "TOKEN_QUANTITY_CLOSED",
+      "original_tx_boundary_samples": [
+        {
+          "direction": "in",
+          "tx": "0x4c7a13a77e4e2060e1fe5849c9d0d461709c99de87cc9ac909275754d9d4c979",
+          "block": "0x6ed2ac6",
+          "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "is_wallet_self_signed": true,
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "selector": "0x4d819a2a",
+          "tx_value_wei": "250000000000000000",
+          "truncated_full_tx_json": false
+        },
+        {
+          "direction": "out",
+          "tx": "0x1b7078e0f2990f18aaf7cdfe9f73cb36f2bfde7cdedce79d46abee8664085c49",
+          "block": "0x6ed3a99",
+          "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "is_wallet_self_signed": true,
+          "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "selector": "0x4d819a2a",
+          "tx_value_wei": "0",
+          "truncated_full_tx_json": false
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "wallets": 2,
+    "found_wallet_token_pairs": 3,
+    "erc20_transfer_logs": 83,
+    "onchain_balance_matches": 3,
+    "direct_boundary_signer_probes": 6,
+    "self_signed_probes": 5,
+    "truncated_original_signers": 1
+  },
+  "limitations": [
+    "The 3 current balanceOf values are refreshed and reconciled; no USD valuations or per-asset $1 rule applied because this is historical third-party wallet research.",
+    "A single original first buy/sell signer sample does not establish all original signed trades; complete signer and receipt audit still pending.",
+    "Quantity closure does not independently establish realized PnL. Passive or contract-mediated receipts must be separated.",
+    "Original 11 previously audited 8e6b CAs and five DDAC CAs are supported by separate sources; this file only covers 8 and 14 missing CAs."
+  ],
+  "production": "NO_GO"
+}
