@@ -1,9 +1,0 @@
-run_time: 2026-10-11T10:02:47+07:00
-run_status: partial
-scheduled_shard: 2
-executed_shard: 1
-triggered_events: 0
-notification_decision: NO_ACTION
-attempt_write: blocked
-final_write: blocked
-source_failures: 5
