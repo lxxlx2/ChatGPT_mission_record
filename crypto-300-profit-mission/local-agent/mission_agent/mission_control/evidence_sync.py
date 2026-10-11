@@ -349,7 +349,7 @@ class GitEvidencePublisher:
             # A divergent remote content-addressed file is a collision and
             # must never be overwritten, even with a valid GitHub blob SHA.
             mutable_frank_bucket = bool(re.fullmatch(
-                re.escape(PREFIX) + r"/frank/\\d{4}-\\d{2}-\\d{2}/\\d{4}\\.json",
+                re.escape(PREFIX) + r"/frank/\d{4}-\d{2}-\d{2}/\d{4}\.json",
                 remote,
             ))
             if sha and not mutable_frank_bucket:
