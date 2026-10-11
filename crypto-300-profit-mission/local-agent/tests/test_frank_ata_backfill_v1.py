@@ -610,3 +610,38 @@ def test_failed_meta_matching_signature_is_proven_failure_not_transfer():
     checked = validate_transaction(data, SIGNATURES[0], J7_ATA, J7, TOKEN_2022)
     assert checked["status"] == "FAILED_TX_NO_BALANCE_PROOF"
     assert "raw_delta" not in checked
+
+def test_reviewer_f3_f7_dated_correction_and_raw_chain_archive():
+    import hashlib
+    import json
+    from pathlib import Path
+    base = Path(__file__).resolve().parents[2] / "meme" / "evidence"
+    correction = json.loads((base / "frank-v2-ata-index-scope-correction-2026-10-11.json").read_text())
+    fix = correction["f3_signature_correction"]
+    assert len(fix["corrupted_82_character_signature"]) == 82
+    assert len(fix["verified_88_character_signature"]) == 88
+    assert fix["verified_88_character_signature"] == SIGNATURES[2]
+    assert fix["slot"] == 454705939
+    records = {x["mint"]: x for x in correction["records"]}
+    bp = records["BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy"]
+    assert bp["missing_before_index_start"] == 63
+    assert bp["missing_during_index_window"] == 3
+    assert bp["inwindow_failed"] == 1
+    assert bp["inwindow_success_unverified"] == 1
+    assert bp["verified_extra_passive_receipts"] == 1
+    archived = json.loads((base / "frank-v2-bpxx-3knj-raw-getTransaction-2026-10-11.json").read_text())
+    raw = archived["response_raw_text"].encode("utf-8")
+    assert hashlib.sha256(raw).hexdigest() == archived["response_raw_text_sha256"]
+    assert len(raw) == archived["response_raw_text_bytes"]
+    tx = json.loads(raw)
+    assert tx["transaction"]["signatures"][0] == archived["requested_signature"]
+    assert tx["meta"]["err"] is None and tx["slot"] == 452919433
+    owner = WALLET
+    pre = next(x for x in tx["meta"]["preTokenBalances"] if x["owner"] == owner)
+    post = next(x for x in tx["meta"]["postTokenBalances"] if x["owner"] == owner)
+    assert int(post["uiTokenAmount"]["amount"]) - int(pre["uiTokenAmount"]["amount"]) == 771543330
+    assert post["uiTokenAmount"]["decimals"] == 9
+    assert owner not in [
+        x if isinstance(x, str) else x["pubkey"]
+        for x in tx["transaction"]["message"]["accountKeys"]
+    ]
