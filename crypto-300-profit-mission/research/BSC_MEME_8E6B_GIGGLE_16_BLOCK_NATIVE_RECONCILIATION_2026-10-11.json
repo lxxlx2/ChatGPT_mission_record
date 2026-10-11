@@ -9,7 +9,7 @@
     "BSC_MEME_8E6B_GIGGLE_OUTBOUND_FULL_CURSOR_AUDIT_2026-10-11.json",
     "BSC_MEME_8E6B_2026_SIX_CORE_POSITION_TRANSFER_HISTORY_2026-10-11.json"
   ],
-  "verified_blocks": 8,
+  "verified_blocks": 16,
   "rows": [
     {
       "hash": "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356",
@@ -74,50 +74,82 @@
       "balance_before_hex": "0x804b57d99032100e",
       "balance_after_hex": "0x804293d2d5301e0e",
       "delta_wei": "-2467333000000000"
-    }
-  ],
-  "pending": [
+    },
     {
       "hash": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
       "block": 62154722,
-      "dir": "OUT"
+      "dir": "OUT",
+      "balance_before_hex": "0x40ac7a4c42ccc653",
+      "balance_after_hex": "0x4b1426bb20a2a1f9",
+      "delta_wei": "749757455148637094"
     },
     {
       "hash": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b",
       "block": 62299083,
-      "dir": "OUT"
+      "dir": "OUT",
+      "balance_before_hex": "0x5c11afa0ef52a5e8",
+      "balance_after_hex": "0x5c0e9a3d70ba29e8",
+      "delta_wei": "-867942000000000"
     },
     {
       "hash": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
       "block": 62485438,
-      "dir": "IN"
+      "dir": "IN",
+      "balance_before_hex": "0x4547c827ddcbf0d5",
+      "balance_after_hex": "0x45452ea54d7280d5",
+      "delta_wei": "-731736000000000"
     },
     {
       "hash": "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb",
       "block": 63071724,
-      "dir": "IN"
+      "dir": "IN",
+      "balance_before_hex": "0x50d57b4ae0a8f8bb",
+      "balance_after_hex": "0x42ee732c3123e4bb",
+      "delta_wei": "-1001778370000000000"
     },
     {
       "hash": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
       "block": 63204096,
-      "dir": "OUT"
+      "dir": "OUT",
+      "balance_before_hex": "0x914f3438163e75c5",
+      "balance_after_hex": "0xae4f93b7cfd84863",
+      "delta_wei": "2089775229279261342"
     },
     {
       "hash": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
       "block": 63274247,
-      "dir": "OUT"
+      "dir": "OUT",
+      "balance_before_hex": "0x4cec3645ee086656",
+      "balance_after_hex": "0x5a29746497a4955c",
+      "delta_wei": "953986997487939334"
     },
     {
       "hash": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
       "block": 63310363,
-      "dir": "OUT"
+      "dir": "OUT",
+      "balance_before_hex": "0x2085092e9300a9af",
+      "balance_after_hex": "0x38b080e17a809512",
+      "delta_wei": "1741617291180632931"
     },
     {
       "hash": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f",
       "block": 63310510,
-      "dir": "OUT"
+      "dir": "OUT",
+      "balance_before_hex": "0x23a4fafe9af31312",
+      "balance_after_hex": "0x382ac11e5a617f20",
+      "delta_wei": "1478805892319046670"
     }
   ],
-  "status": "PARTIAL_8_OF_16_BLOCKS",
-  "production": "NO_GO"
+  "pending": [],
+  "status": "NATIVE_BALANCE_16_OF_16_VERIFIED_TOKEN_TX_ATTRIBUTION_OUTSTANDING",
+  "production": "NO_GO",
+  "total_native_delta_wei": "5715925819273344974",
+  "positive_blocks": 6,
+  "negative_blocks": 10,
+  "caveats": [
+    "Per-block wallet BNB balances also include unrelated native transfers in the same block",
+    "Token GIGGLE outward ERC20 events may settle as WBNB or other assets without native BNB increase",
+    "Original signer, receipt statuses, quote token movements and internal call traces not complete",
+    "Do not classify sum as realized PnL"
+  ]
 }
