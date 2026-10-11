@@ -14,10 +14,22 @@ def summarize_manual_reviews(rows):
     the harmless historical-expiry bucket and remain actionable for review.
     """
     historical = {"gmail": 0, "local": 0}
-    actionable = {"gmail": 0, "local": 0}
+    actionable = {"gmail": 0, "local": 0, "other": 0}
+    pending = {"gmail": 0, "local": 0, "other": 0}
     for row in rows:
         channel = row.get("channel")
-        if channel not in historical:
+        channel = channel if channel in ("gmail", "local") else "other"
+        # A send may already have taken place. Until Sent readback verifies it,
+        # show a distinct pending outcome bucket; this does not authorize retry.
+        status = row.get("outbox_status", "MANUAL_REVIEW")
+        if status in ("SENDING", "SENT_UNVERIFIED"):
+            pending[channel] += 1
+            continue
+        if status != "MANUAL_REVIEW":
+            actionable[channel] += 1
+            continue
+        if channel == "other":
+            actionable["other"] += 1
             continue
         try:
             outbox_attempts = int(row.get("outbox_attempts") or 0)
@@ -49,4 +61,13 @@ def summarize_manual_reviews(rows):
         "manual_review_actionable_count": sum(actionable.values()),
         "manual_review_actionable_gmail_count": actionable["gmail"],
         "manual_review_actionable_local_count": actionable["local"],
+        "manual_review_actionable_other_count": actionable["other"],
+        "manual_review_pending_count": sum(pending.values()),
+        "manual_review_pending_gmail_count": pending["gmail"],
+        "manual_review_pending_local_count": pending["local"],
+        "manual_review_pending_other_count": pending["other"],
+        "manual_review_visible_total_count": (
+            sum(historical.values()) + sum(actionable.values())
+            + sum(pending.values())
+        ),
     }
