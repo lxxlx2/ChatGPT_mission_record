@@ -1,5 +1,7 @@
 # Monster V4 — 实用型本地妖币发现与预警模型（研究合同 v0.1）
 
+> **Stage22–23 最新（2026-10-11）**：[Stage22 官方 AggTrades对原65个D1的34笔止损根因研究](MONSTER_STAGE22_REAL_AGGTRADES_34_STOPS_DIAGNOSIS_20261011.md)，买方主动成交占比止损鉴别秩AUC约0.52，60m相对BTC过度拉升样本内AUC约0.79但不构成样本外预测；[Stage23冻结十新日期 × 758币完整对照](MONSTER_STAGE23_UNSEEN_OVEREXTENSION_758_SPOT_RESULTS_20261011.md)已使用未参与前期模型筛选的2025年每月23日完成，原质量D1 6h风控53有效交易12盈41亏，新增12pp相对BTC过滤器35有效8盈27亏，成本代理中位-5.936741%，单30U仓位净模拟亏-22.996773USDT。原始回测CI和十份ZIP/JSON独立SHA复算均通过，但 **Stage23策略 FAIL_NO_GO**，研究过滤器不部署、Frank和Gmail完全不动；独立其他AI Review仍未完成。
+
 > **Stage21最新（2026-10-11）**：[10个未观察日期共7580交易对日期、原V4+质量过滤+6h风控再验证](MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md)；[回测CI #38131455442](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131455442)和[10个ZIP、JSON重新SHA校验及复算CI #38131848138](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131848138)全部成功；预冻结候选D在62个有效模拟单里16胜46败，中位-8.550439%，100bps滑点中位-10.002048%，单30U资金槽位23个可评估仅6盈17亏；原冻结盈利资格判定 **FAIL_NO_GO**。保持原V4/Frank运行和全部生产阈值不变，独立其他AI Review仍未执行，不允许Monster部署、真实Gmail或交易。
 
 > **Stage20最新（2026-10-11）**：[四个未使用日期的758币质量筛选与保守退出实际验证](MONSTER_STAGE20_QUALITY_EXIT_HELDOUT_ACTUAL_RESULTS_20261011.md)，[官方CI #38130576819](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38130576819)及[全ZIP+JSON SHA独立复算CI #38131123057](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131123057)全部Success。20个唯一D1中18个通过质量筛选，6h策略14笔有效7盈7亏、中位+0.375359%，100bps滑点中位-1.217933%；冻结的样本量、胜率、删失率关口全部失败。**Stage20判定 FAIL_NO_GO**，不得部署Monster、改Frank、发真实Gmail或宣称另一AI Review完成。
