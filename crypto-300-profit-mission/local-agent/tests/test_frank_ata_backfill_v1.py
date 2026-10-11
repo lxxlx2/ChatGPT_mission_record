@@ -182,3 +182,51 @@ def test_explicit_ata_cli_reads_existing_index_without_changes(tmp_path):
     with pytest.raises(FileExistsError):
         run(["--database", str(db), "--mint", J7,
              "--output", str(output)], rpc=rpc)
+
+
+def test_explicit_git_sync_uses_only_dedicated_evidence_branch_and_retains_local_file(
+        tmp_path, monkeypatch):
+    import sqlite3
+    from scripts.frank_ata_backfill import run
+    from mission_agent.mission_control import evidence_sync
+    p = tmp_path / "forward.sqlite"
+    with sqlite3.connect(p) as db:
+        db.execute("CREATE TABLE signatures(person_id TEXT,signature TEXT)")
+        db.execute("INSERT INTO signatures VALUES (?,?)", ("frank", SIGNATURES[0]))
+    captured = []
+    def upload(self, path, data):
+        captured.append((path, data))
+    monkeypatch.setattr(evidence_sync.GitEvidencePublisher, "_upload", upload)
+    out = tmp_path / "ata-proof.json"
+    rpc = FakeRPC({
+        J7_ATA: [{"signature": SIGNATURES[0], "slot": 454705300,
+                  "blockTime": 1791505760, "err": None}]
+    }, {SIGNATURES[0]: tx(*TX_RAW[0])})
+    result = run(["--database", str(p), "--mint", J7,
+                  "--output", str(out), "--sync-git"], rpc=rpc)
+    assert result["git_sync"] == "SYNC_OK_READBACK_VERIFIED"
+    assert len(captured) == 1
+    path, content = captured[0]
+    assert path.startswith("crypto-300-profit-mission/meme/local-evidence/frank-ata-backfill/")
+    assert path.endswith(result["git_snapshot_id"] + ".json")
+    assert b"COMPLETE_CHAIN" not in content
+    assert out.exists()
+
+
+def test_git_failure_preserves_ata_file_and_returns_non_success(tmp_path, monkeypatch):
+    import sqlite3
+    from scripts.frank_ata_backfill import run
+    from mission_agent.mission_control import evidence_sync
+    p = tmp_path / "forward.sqlite"
+    with sqlite3.connect(p) as db:
+        db.execute("CREATE TABLE signatures(person_id TEXT,signature TEXT)")
+        db.execute("INSERT INTO signatures VALUES (?,?)", ("frank", SIGNATURES[0]))
+    def blocked_upload(*args):
+        raise RuntimeError("SIMULATED_GITHUB_FAILURE")
+    monkeypatch.setattr(evidence_sync.GitEvidencePublisher, "_upload", blocked_upload)
+    out = tmp_path / "saved.json"
+    report = run(["--database", str(p), "--mint", J7, "--output", str(out),
+                  "--sync-git"], rpc=FakeRPC())
+    assert report["git_sync"] == "SYNC_FAILED_LOCAL_FILE_RETAINED"
+    assert report["git_error_type"] == "RuntimeError"
+    assert out.exists()
