@@ -370,9 +370,7 @@
       "event_funds_raw": "9048352539032312916",
       "buy_value_minus_curve_plus_fee_wei": null,
       "sell_block_native_plus_gas_minus_curve_after_fee_wei": "-439383774429367"
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "龙虾",
       "hash": "0x38c6f15a6effda9f06439f71a317d8f5930cf9cfe8526f0486ed5ccc3f0a6a48",
@@ -382,7 +380,19 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": "25982640000000"
+      "source_receipt_gas_wei": "25982640000000",
+      "event_status": "MATCHED_MANAGER2_EVENT",
+      "event_topic0": "0x0a5575b3648bae2210cee56bf33254cc1ddfbc7bf637c0af2ac18b14fb1bae19",
+      "event_token_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "event_account": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "event_price_raw": "68896361360",
+      "event_token_amount_raw": "1113750952845750000000000",
+      "event_cost_wei": "77010077411928302",
+      "event_protocol_fee_wei": "770100774119283",
+      "event_offers_raw": "36014257343313532000000000",
+      "event_funds_raw": "15192583168233870029",
+      "buy_value_minus_curve_plus_fee_wei": null,
+      "sell_block_native_plus_gas_minus_curve_after_fee_wei": "-775658574119283"
     },
     {
       "token": "龙虾",
@@ -393,7 +403,19 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": "25982640000000"
+      "source_receipt_gas_wei": "25982640000000",
+      "event_status": "MATCHED_MANAGER2_EVENT",
+      "event_topic0": "0x0a5575b3648bae2210cee56bf33254cc1ddfbc7bf637c0af2ac18b14fb1bae19",
+      "event_token_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "event_account": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "event_price_raw": "80132665968",
+      "event_token_amount_raw": "1002375857561175000000000",
+      "event_cost_wei": "80604143612871152",
+      "event_protocol_fee_wei": "806041436128711",
+      "event_offers_raw": "13460400235113703000000000",
+      "event_funds_raw": "16868389254836535852",
+      "buy_value_minus_curve_plus_fee_wei": null,
+      "sell_block_native_plus_gas_minus_curve_after_fee_wei": "-811599236128711"
     },
     {
       "token": "龙虾",
@@ -404,7 +426,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -415,7 +439,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -426,7 +452,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -437,7 +465,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -448,7 +478,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -459,8 +491,12 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
-    },
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
+    }
+  ],
+  "pending": [
     {
       "token": "龙虾",
       "hash": "0x4d48e8694bac33079c991ff387d34ef2481637d7d7ce83bf73bec1225d3317fd",
@@ -627,6 +663,6 @@
       "source_receipt_gas_wei": null
     }
   ],
-  "state": "PARTIAL_16_OF_39",
+  "state": "PARTIAL_24_OF_39",
   "production": "NO_GO"
 }
