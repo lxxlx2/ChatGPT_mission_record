@@ -47,9 +47,9 @@ class Stage32Tests(unittest.TestCase):
         self.assertEqual((fast["continuous_sqlite_reset_count"],slow["continuous_sqlite_reset_count"]),(0,0))
     def test_GT_first_cross_class_never_uses_future_High_in_D0(self):
         day=date(2025,3,19)
-        watch=day.isoformat()+"T06:07:00Z"
+        watch=day.isoformat()+"T06:05:00Z"
         row={"gross_high_ge_2x":True,"gross_high_ge_5x":False,
-             "gross_high_ge_10x":False,"baseline_1h_open":"0.5"}
+             "gross_high_ge_10x":False,"baseline_1h_open":"0.53"}
         bars=sample_bars()
         arm={"watch_utcs":[watch]}
         with patch.object(m.original,"ACTIVE_MINUTES",60):
