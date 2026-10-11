@@ -640,6 +640,8 @@ class DashboardState:
         if not isinstance(health, dict):
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_INVALID"}
         if not self.control_db.is_file():
+            health["manual_review_breakdown_available"] = False
+            health["manual_review_breakdown_error"] = "CONTROL_DB_UNAVAILABLE"
             return health
 
         # Read-only live breakdown for display. Keep all immutable delivery
@@ -648,7 +650,8 @@ class DashboardState:
         try:
             db = open_control_ro(self.control_db)
             rows = [dict(row) for row in db.execute("""
-                SELECT o.channel, o.last_error, o.attempts AS outbox_attempts,
+                SELECT o.channel, o.status AS outbox_status,
+                       o.last_error, o.attempts AS outbox_attempts,
                        g.status AS gmail_status, g.attempt_count AS gmail_attempts,
                        g.sent_at, g.gmail_message_id,
                        l.status AS local_status, l.delivered_at AS local_delivered_at
@@ -657,17 +660,19 @@ class DashboardState:
                   ON o.channel='gmail' AND g.decision_id=o.decision_id
                 LEFT JOIN local_delivery AS l
                   ON o.channel='local' AND l.decision_id=o.decision_id
-                WHERE o.status='MANUAL_REVIEW'
+                WHERE o.status IN ('MANUAL_REVIEW','SENDING','SENT_UNVERIFIED')
             """).fetchall()]
-        except (OSError, sqlite3.DatabaseError):
-            # If classification is unavailable, the client falls back to the
-            # legacy total and never silently hides pending reviews.
+        except (OSError, sqlite3.DatabaseError) as exc:
+            # No invented 0 pending count; stale legacy totals may omit sends.
+            health["manual_review_breakdown_available"] = False
+            health["manual_review_breakdown_error"] = type(exc).__name__
             return health
         finally:
             if db is not None:
                 db.close()
         breakdown = summarize_manual_reviews(rows)
         health.update(breakdown)
+        health["manual_review_breakdown_error"] = None
         health["manual_review_gmail_count"] = (
             breakdown["manual_review_expired_unsent_gmail_count"]
             + breakdown["manual_review_actionable_gmail_count"]
