@@ -300,3 +300,22 @@ def test_duplicate_same_ata_signature_is_not_double_counted():
     assert res["statistics"]["duplicate_ata_signature_occurrences_skipped"] == 1
     assert len(res["observations"]) == 1
     assert len([name for name, _ in rpc.calls if name == "getTransaction"]) == 1
+
+
+def test_real_twelve_sell_only_source_accounts_have_provable_program_ata_match():
+    import json
+    from pathlib import Path
+    evidence_path = (Path(__file__).resolve().parents[2] / "meme" / "evidence" /
+                     "frank-v2-ata-j7-and-five-account-chain-verification-2026-10-11.json")
+    report = json.loads(evidence_path.read_text())
+    checked = report["program_cohort"]["records"]
+    assert len(checked) == 12
+    assert len({x["mint"] for x in checked}) == 12
+    legacy = token2022 = 0
+    for record in checked:
+        ata, _ = derive_ata(WALLET, record["mint"],
+                            record["verified_canonical_pda_program"])
+        assert ata == record["prior_token_account"]
+        legacy += record["verified_canonical_pda_program"] == TOKEN
+        token2022 += record["verified_canonical_pda_program"] == TOKEN_2022
+    assert (legacy, token2022) == (4, 8)
