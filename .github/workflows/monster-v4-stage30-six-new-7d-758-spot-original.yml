@@ -1,0 +1,55 @@
+name: Monster Stage30 Six NEW Calendar Dates Full758 Original V4 Seven-Day Research
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_newdates_full168h.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage30_newdates_full168h.py'
+      - '.github/workflows/monster-v4-stage30-six-new-7d-758-spot-original.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage30-original-full168h-new6x758-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  prereg-new-dates-full-source-7d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-19','2025-04-19','2025-07-19','2025-10-19','2026-04-19','2026-07-19']
+        shard: [0,1,2,3,4,5]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Hard-lock original V4, 758 cohort, six frozen new UTC dates and run seven no-lookahead tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage30_newdates_full168h.py tests/test_monster_v4_stage30_newdates_full168h.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage30_newdates_full168h.py
+      - name: Fetch SHA-locked original 758 Binance Spot current plus historical universe cohort
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700651924/zip > /tmp/monster_stage30_original_frozen_758_symbol_inventory.zip
+      - name: SHA verify original cohort and replay all six date times shard with real Binance checksum 1h and 10 daily 1m and one SQLite per symbol 168h
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage30_newdates_full168h.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --original-stage24-zip /tmp/monster_stage30_original_frozen_758_symbol_inventory.zip --output /tmp/monster_stage30_${{ matrix.date }}_shard${{ matrix.shard }}.json
+      - name: Preserve all verified/missing symbols, 2x5x10x truth and original WATCH/D1 and cost scenarios
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage30-758-full168h-newdate-${{ matrix.date }}-shard${{ matrix.shard }}
+          path: /tmp/monster_stage30_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          if-no-files-found: warn
+          retention-days: 30
