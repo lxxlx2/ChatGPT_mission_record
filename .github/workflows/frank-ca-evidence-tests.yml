@@ -59,3 +59,6 @@ jobs:
       - name: Existing Frank/Dashboard regression subset
         working-directory: crypto-300-profit-mission/local-agent
         run: python -m pytest -q tests/test_mission_control_dashboard.py tests/test_mission_control_service.py tests/test_mission_control_delivery.py
+      - name: Complete local-agent test suite (research gate)
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pytest -q tests
