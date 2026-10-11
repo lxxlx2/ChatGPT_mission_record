@@ -101,31 +101,52 @@
       "native_after_wei": "926586062185144819",
       "native_block_delta_wei": "-700099664080000000",
       "status": "VERIFIED"
-    }
-  ],
-  "pending": [
+    },
     {
       "block": 93215564,
-      "hash": "0x7f3eb604393a358b1ac52447ee727946b837479523345e12fb35a1d41e3bc77c"
+      "hash": "0x7f3eb604393a358b1ac52447ee727946b837479523345e12fb35a1d41e3bc77c",
+      "native_before_wei": "926586062185144819",
+      "native_after_wei": "226540915785144819",
+      "native_block_delta_wei": "-700045146400000000",
+      "status": "VERIFIED"
     },
     {
       "block": 93215608,
-      "hash": "0x678d71d2463c4ae9e0971f3d959e7630bbfecca7962247bc0ddbd87a7d824c7c"
+      "hash": "0x678d71d2463c4ae9e0971f3d959e7630bbfecca7962247bc0ddbd87a7d824c7c",
+      "native_before_wei": "226540915785144819",
+      "native_after_wei": "126495770825144819",
+      "native_block_delta_wei": "-100045144960000000",
+      "status": "VERIFIED"
     },
     {
       "block": 93215641,
-      "hash": "0x8d4a6e7a391dec460d6efb18a401b9f5f798293c483715e517359bb2ee28df70"
+      "hash": "0x8d4a6e7a391dec460d6efb18a401b9f5f798293c483715e517359bb2ee28df70",
+      "native_before_wei": "126495770825144819",
+      "native_after_wei": "498644349944459435",
+      "native_block_delta_wei": "372148579119314616",
+      "status": "VERIFIED"
     },
     {
       "block": 93215653,
-      "hash": "0x81c55cb510d6e1b2488e095e3df4a4b2e87f6e0606f879b3017559a30ed9f7b3"
+      "hash": "0x81c55cb510d6e1b2488e095e3df4a4b2e87f6e0606f879b3017559a30ed9f7b3",
+      "native_before_wei": "498644349944459435",
+      "native_after_wei": "752997129880814389",
+      "native_block_delta_wei": "254352779936354954",
+      "status": "VERIFIED"
     },
     {
       "block": 93215668,
-      "hash": "0x7e222ad7f657d632559afcec4cc9d3a1ca093224b4fe968e240a914c5e7f4a77"
+      "hash": "0x7e222ad7f657d632559afcec4cc9d3a1ca093224b4fe968e240a914c5e7f4a77",
+      "native_before_wei": "752997129880814389",
+      "native_after_wei": "1506046469669982262",
+      "native_block_delta_wei": "753049339789167873",
+      "status": "VERIFIED"
     }
   ],
-  "status": "12_OF_17_BLOCK_NATIVE_DELTAS",
+  "pending": [],
+  "status": "17_OF_17_NATIVE_BLOCKS_COMPLETE_OTHER_ASSETS_UNRESOLVED",
   "scope": "All actual wallet BNB balance before/after 17 unique token transfer tx blocks. Includes unrelated same-block flows, not token transaction profit.",
-  "production": "NO_GO"
+  "production": "NO_GO",
+  "native_total_wei": "-100375396591269389",
+  "all_verified": true
 }
