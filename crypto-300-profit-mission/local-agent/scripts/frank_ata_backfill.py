@@ -72,7 +72,8 @@ def run(argv: list[str] | None = None, *, rpc=None) -> dict:
               "absent_verified_signatures": len(
                   snapshot["verified_nonzero_signatures_absent_from_local_index"] or []),
               "wallet_history_complete": False,
-              "production_modified": False, "git_sync": "NOT_REQUESTED"}
+              "production_modified": False, "git_sync": "NOT_REQUESTED",
+              "scan_status": snapshot.get("scan_status", "UNKNOWN")}
     if args.sync_git:
         try:
             cleaned = canonical(safe(snapshot))
@@ -95,7 +96,8 @@ def run(argv: list[str] | None = None, *, rpc=None) -> dict:
 def main(argv: list[str] | None = None) -> int:
     result = run(argv)
     print(json.dumps(result, sort_keys=True))
-    return 2 if result["git_sync"] == "SYNC_FAILED_LOCAL_FILE_RETAINED" else 0
+    return (2 if result["git_sync"] == "SYNC_FAILED_LOCAL_FILE_RETAINED"
+            else 3 if result["scan_status"] == "PARTIAL_RPC_INTERRUPTED" else 0)
 
 
 if __name__ == "__main__":
