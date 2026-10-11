@@ -1,0 +1,135 @@
+{
+  "date": "2026-10-11",
+  "source_files": [
+    "BSC_MEME_DDAC_IFML_LOBSTER_25_TX_TWO_VENUE_RECONCILIATION_QA_2026-10-11.json",
+    "BSC_MEME_9D1240_IFML_LOBSTER_ORIGINAL_TX_RECEIPT_PROVENANCE_2026-10-11.json",
+    "BSC_MEME_239E_IFML_ORIGINAL_TX_RECEIPT_PROVENANCE_2026-10-11.json",
+    "BSC_MEME_239E_LOBSTER_21_ORIGINAL_SIGNER_RECEIPT_AUDIT_2026-10-11.json",
+    "BSC_MEME_9D1240_IFML_LOBSTER_NATIVE_BLOCK_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_239E_TWO_MAJOR_NATIVE_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_DDAC_IFML_LOBSTER_CLOSED_EPISODES_NATIVE_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_DDAC_9D1240_239E_TWO_COIN_CAPITAL_NORMALIZED_COMPARISON_2026-10-11.json",
+    "BSC_MEME_5C48_IFML_LOBSTER_22_CLOSED_EPISODES_2026-10-11.json",
+    "BSC_MEME_5C48_22_TX_TWO_VENUE_SETTLEMENT_QA_2026-10-11.json"
+  ],
+  "sample_universe": "Only two retrospectively selected major BSC meme contract addresses, these four historical EOA candidates; no unbiased lifetime or opportunity denominator.",
+  "scope_definition": "Sum of original onchain tx native value wei on source owner ERC20 inbound trades, includes repeated buy attempts and is not maximum simultaneous capital. Numerator is wallet native BNB block deltas on exactly scoped coin transfer tx blocks, possibly co-occurring same-block effects and missing non-native receipt flows. Their ratio is merely a scoped cashflow indicator, not ROI.",
+  "records": [
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "label": "DDAC",
+      "original_tx_count": 25,
+      "rows": [
+        {
+          "token": "我踏马来了",
+          "first_entry_block": 73336279,
+          "gross_original_native_buy_wei": "5700000000000000000",
+          "scope_native_block_net_wei": "2329674116520169814",
+          "native_net_to_gross_buy_pct_approx": 40.8714
+        },
+        {
+          "token": "龙虾",
+          "first_entry_block": 83635776,
+          "gross_original_native_buy_wei": "1600000000000000000",
+          "scope_native_block_net_wei": "-183543131928304728",
+          "native_net_to_gross_buy_pct_approx": -11.4714
+        }
+      ],
+      "combined_buy_wei": "7300000000000000000",
+      "combined_native_block_net_wei": "2146130984591865086",
+      "combined_native_net_to_gross_buy_pct_approx": 29.399,
+      "evidence": "25/25 signed, success and native balance; 15 V2 quote transfers, 8 direct Fourmeme curve logs, 2 curve sells unavailable"
+    },
+    {
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "label": "9D1240",
+      "original_tx_count": 39,
+      "rows": [
+        {
+          "token": "我踏马来了",
+          "first_entry_block": 73336301,
+          "gross_original_native_buy_wei": "450000000000000000",
+          "scope_native_block_net_wei": "855510151606958501",
+          "native_net_to_gross_buy_pct_approx": 190.1133
+        },
+        {
+          "token": "龙虾",
+          "first_entry_block": 83635788,
+          "gross_original_native_buy_wei": "200000000000000000",
+          "scope_native_block_net_wei": "1642366642703365664",
+          "native_net_to_gross_buy_pct_approx": 821.1833
+        }
+      ],
+      "combined_buy_wei": "650000000000000000",
+      "combined_native_block_net_wei": "2497876794310324165",
+      "combined_native_net_to_gross_buy_pct_approx": 384.2887,
+      "evidence": "39 original signed, 38 explicit success headers 1 ERC20 success log, 22 V2 quote events/transfers"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "label": "239E",
+      "original_tx_count": 27,
+      "rows": [
+        {
+          "token": "我踏马来了",
+          "first_entry_block": 73658908,
+          "gross_original_native_buy_wei": "30300000000000000",
+          "scope_native_block_net_wei": "97366720524376562",
+          "native_net_to_gross_buy_pct_approx": 321.3423
+        },
+        {
+          "token": "龙虾",
+          "first_entry_block": 83636130,
+          "gross_original_native_buy_wei": "827200000000000000",
+          "scope_native_block_net_wei": "199125593493335144",
+          "native_net_to_gross_buy_pct_approx": 24.0722
+        }
+      ],
+      "combined_buy_wei": "857500000000000000",
+      "combined_native_block_net_wei": "296492314017711706",
+      "combined_native_net_to_gross_buy_pct_approx": 34.5763,
+      "evidence": "27/27 original signed successful and scoped native blocks, quote route PnL less isolated"
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "label": "5C48",
+      "original_tx_count": 22,
+      "rows": [
+        {
+          "token": "我踏马来了",
+          "first_entry_block": 73336244,
+          "gross_original_native_buy_wei": "2000000000000000000",
+          "scope_native_block_net_wei": "1684349807479692629",
+          "native_net_to_gross_buy_pct_approx": 84.2174,
+          "closed_episodes": 4,
+          "positive_episodes": 4,
+          "negative_episodes": 0
+        },
+        {
+          "token": "龙虾",
+          "first_entry_block": 83635854,
+          "gross_original_native_buy_wei": "1800000000000000000",
+          "scope_native_block_net_wei": "1292735581066750132",
+          "native_net_to_gross_buy_pct_approx": 71.8186,
+          "closed_episodes": 2,
+          "positive_episodes": 2,
+          "negative_episodes": 0
+        }
+      ],
+      "combined_buy_wei": "3800000000000000000",
+      "combined_native_block_net_wei": "2977085388546442761",
+      "combined_native_net_to_gross_buy_pct_approx": 78.3443,
+      "evidence": "22/22 self-signed successful; 22/22 native scoped blocks; 11/12 Manager2 exact event, 3/10 V2 Swap logs and 7/10 same tx WBNB pair transfers; 10/10 V2 1pct+integer gas identity; 1 curve sell event unresolved"
+    }
+  ],
+  "checks": {
+    "number_of_wallets": 4,
+    "all_wallets_unique": true,
+    "fourth_cost_matches_receipts": true,
+    "fourth_native_matches_receipts": true,
+    "fourth_closed": true
+  },
+  "measurable_result": "All four wallets have scoped positive two-token native block deltas, but DDAC negative on Lobster and 5C48 positive in all six closed observed position episodes; 9d has much higher scoped native block delta per cumulative native buy. Wallets cannot be ranked by tradable copyability or complete return.",
+  "risk": "Gross buy principal is sum of all onchain source tx native values, including repeat buys, and is not simultaneous deployed principal. Native block deltas may contain independent flows; transfer closure alone is not realized PnL. Mixed venues and quote assets need route trace. Known winners only, no out-of-sample validation.",
+  "production": "NO_GO"
+}
