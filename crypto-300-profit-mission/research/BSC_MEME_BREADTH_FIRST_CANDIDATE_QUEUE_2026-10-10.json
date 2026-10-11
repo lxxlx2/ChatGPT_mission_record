@@ -51,7 +51,14 @@
     "BSC_MEME_DDAC_MARS_SIX_PREVIOUSLY_TRUNCATED_RECEIPT_HEADERS_RECHECK_2026-10-11.json",
     "BSC_MEME_239E_TWO_MAJOR_FULL_SIGNED_FLOW_SOURCE_2026-10-11.json",
     "BSC_MEME_239E_IFML_ORIGINAL_TX_RECEIPT_PROVENANCE_2026-10-11.json",
-    "BSC_MEME_239E_LOBSTER_21_ORIGINAL_SIGNER_RECEIPT_AUDIT_2026-10-11.json"
+    "BSC_MEME_239E_LOBSTER_21_ORIGINAL_SIGNER_RECEIPT_AUDIT_2026-10-11.json",
+    "BSC_MEME_8E6B_ELEVEN_TOKEN_ENTRY_EXIT_BLOCK_TIMELINE_2026-10-11.json",
+    "BSC_MEME_8E6B_FOLLOW_LAG_V0_FROZEN_SPEC_2026-10-11.json",
+    "BSC_MEME_8E6B_FOLLOW_LAG_V0_POOL_RESERVE_EVIDENCE_2026-10-11.json",
+    "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json",
+    "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_FROZEN_SPEC_2026-10-11.json",
+    "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_EVIDENCE_2026-10-11.json",
+    "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -412,7 +419,9 @@
         "lobster_self_signed_success": 21,
         "combined_native_bnb_event_scope_net_wei": "296492314017711706",
         "status": "SIGNED_SUCCESS_SCOPED_NATIVE_BALANCES; LOWER_ABSOLUTE_BNB_CAPTURE; NO_GO"
-      }
+      },
+      "current_research_priority": "HIGH_EARLY_ENTRY_TIMING_TWO_VERIFIED_MATERIAL_COHORTS; FULL_WALLET_BREADTH_AND_COPY_FOLLOWABILITY_PENDING",
+      "latest_entry_timing_source": "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json"
     },
     {
       "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
@@ -847,7 +856,7 @@
         "4",
         "MUBARAK"
       ],
-      "current_research_priority": "HIGH_PRIORITY_REPEATED_MATERIAL_NATIVE_BNB_CASHFLOW",
+      "current_research_priority": "HIGH_BROAD_REPEAT_CANDIDATE; EARLY_ENTRY_NOT_CONSISTENT; V0_NON_CAUSAL_AND_LIQUIDITY_FLAGS_NO_GO",
       "material_position_evidence": {
         "full_19_CA_history": false,
         "observed_scoped_tokens": 11,
@@ -932,7 +941,8 @@
         "separate_giggle_net_usdt_raw": "4061629806775951927704",
         "status": "STRONG_REPEATED_TRADE_ASSOCIATED_NATIVE_FLOW_CANDIDATE; NOT_LIFETIME_PNL; NOT_COPY_APPROVED",
         "best_evidence": "4 exact 19/19 settled; GIGGLE 16 signed success plus 6 USDT exits minus 1 USDT buy; MUBARAK 16 signed success; several losses included"
-      }
+      },
+      "latest_follow_lag_research": "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md"
     },
     {
       "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
@@ -1635,6 +1645,9 @@
     "8e6b 32 self-signed token-trade transactions across 3 fully reconciled 2026 major token quantities have +5.437877 BNB aggregate event-block wallet native changes (two positive, one negative), but internal-transaction attribution/finality, controller/followability and further 8-token losses remain unresolved."
   ],
   "next_work_order": [
+    "Audit 239e across 19 scoped token CAs and expand token universe to test whether two same-timestamp launches generalize",
+    "Reconstruct complete original 8e6b & 239e trading event streams with quote-token receipts, original same-block transaction isolation, alternative Four.meme venues, commissions and lost cohorts",
+    "Replay chronological follow state machine across complete buy/sell signal sequence; skip exits that predate delayed buys, use actual swap route quote and fees, separate in-sample and untouched validation",
     "Audit GIGGLE direct 6 USDT exits and 1 USDT buy vs internal route/other quote assets, and confirm other 10 token cohorts' BNB/WBNB/stablecoin settles",
     "Build 8e6b 11-cohort entry-to-exit timing and slippage/delay replay; include losing SIREN and IFML positions and 3 open token inventories",
     "Verify 239e and ddac quote settlements and controller clustering, compare independent wallets on economically significant events",
@@ -1716,6 +1729,49 @@
       "BSC_MEME_239E_TWO_MAJOR_FULL_SIGNED_FLOW_SOURCE_2026-10-11.json",
       "BSC_MEME_239E_IFML_ORIGINAL_TX_RECEIPT_PROVENANCE_2026-10-11.json",
       "BSC_MEME_239E_LOBSTER_21_ORIGINAL_SIGNER_RECEIPT_AUDIT_2026-10-11.json"
+    ]
+  },
+  "address_follow_lag_v0_2026_10_11": {
+    "status": "COMPLETED_EXPLORATORY_IN_SAMPLE_BUT_NOT_ACTIONABLE",
+    "frozen_wallet_8e6b": {
+      "cohorts": 8,
+      "lags_blocks": [
+        0,
+        10,
+        30,
+        60
+      ],
+      "input_BNB": [
+        0.05,
+        0.1
+      ],
+      "pool_snapshots": 64,
+      "raw_scenarios": 64,
+      "causal_invalid_scenarios": 10,
+      "insufficient_pool_depth_diagnostic_scenarios": 8,
+      "diagnostic_causal_and_depth_pass_arithmetic_only": 50,
+      "open_pnl_audit": "UNRESOLVED"
+    },
+    "frozen_wallet_239e": {
+      "shared_cohorts": 2,
+      "pool_snapshots": 16,
+      "raw_scenarios": 16,
+      "causal_invalid_scenarios": 0,
+      "depth_warnings": 0,
+      "trade_signer_receipts_27_of_27": true
+    },
+    "early_capture_evidence": "239e first IFML & Lobster inbound token transfers occur in same block timestamps as first sampled V2 pool activity; compared to 8e6b entry differences 611130s and 431s. Sampled V2 anchor is not verified first tradable token transaction.",
+    "interpretation": "Do not compare 8e6b 11-token block BNB native sum directly to 239e two-token capture rate as performance. Early 239e is candidate for more breadth, both lack executable follow evidence.",
+    "verification": "FROZEN_GRID_NO_OPTIMIZATION; no actual executable quote replay; external reviewer not yet used",
+    "production": "NO_GO",
+    "source_files": [
+      "BSC_MEME_8E6B_ELEVEN_TOKEN_ENTRY_EXIT_BLOCK_TIMELINE_2026-10-11.json",
+      "BSC_MEME_8E6B_FOLLOW_LAG_V0_FROZEN_SPEC_2026-10-11.json",
+      "BSC_MEME_8E6B_FOLLOW_LAG_V0_POOL_RESERVE_EVIDENCE_2026-10-11.json",
+      "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json",
+      "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_FROZEN_SPEC_2026-10-11.json",
+      "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_EVIDENCE_2026-10-11.json",
+      "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md"
     ]
   }
 }
