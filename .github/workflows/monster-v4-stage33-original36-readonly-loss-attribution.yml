@@ -1,0 +1,67 @@
+name: Monster Stage33 Original 36 SHA Readonly Loss Attribution
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage33_readonly_loss_attribution.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage33_readonly_loss_attribution.py'
+      - '.github/workflows/monster-v4-stage33-original36-readonly-loss-attribution.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  stage33_exact_old_model_losses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run frozen-replay loss audit regressions
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage33_readonly_loss_attribution.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage33_readonly_loss_attribution.py
+      - name: Resolve each of exactly 36 original artifact IDs from committed SHA proof
+        run: |
+          python - <<'PY' >/tmp/monster_stage33_original36_ids.tsv
+          import json
+          from pathlib import Path
+          p=Path("crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json")
+          x=json.loads(p.read_text())
+          a=x["artifacts"]
+          if len(a)!=36 or x.get("source_ci_status")!="SUCCESS_ALL_36":
+              raise SystemExit("STAGE33_NO_IMMUTABLE_SOURCE_PROOF")
+          for y in sorted(a,key=lambda s:(s["date"],s["shard"])):
+              print(y["date"],y["shard"],y["artifact_id"])
+          PY
+      - name: Fetch exact original 36 ZIPs and original frozen Stage32 final
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          while read -r day shard artifact; do
+            gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/"$artifact"/zip > "/tmp/monster_stage32_${day}_shard${shard}.zip"
+          done </tmp/monster_stage33_original36_ids.tsv
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11709968097/zip > /tmp/monster_stage32_original_frozen_final.zip
+      - name: Recompute original Stage32 SHA/economic output and attribute all funded loss sources
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          args=()
+          while read -r day shard artifact; do
+            args+=("/tmp/monster_stage32_${day}_shard${shard}.zip")
+          done </tmp/monster_stage33_original36_ids.tsv
+          python -B scripts/monster_v4_stage33_readonly_loss_attribution.py \
+            --original-zips "${args[@]}" \
+            --stage32-final /tmp/monster_stage32_original_frozen_final.zip \
+            --output /tmp/monster_stage33_exact_original36_funded_loss_attribution.json
+      - name: Retain audit-only loss explanation, no signals or production delivery
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage33-original36-full-sha-funded-loss-readonly
+          path: /tmp/monster_stage33_exact_original36_funded_loss_attribution.json
+          retention-days: 30
