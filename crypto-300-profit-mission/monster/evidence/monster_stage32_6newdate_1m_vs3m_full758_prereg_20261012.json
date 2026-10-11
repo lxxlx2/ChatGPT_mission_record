@@ -1,0 +1,68 @@
+{
+  "schema": "MONSTER_STAGE32_SIX_FRESH_DATE_1MIN_VS_ORIGINAL_3MIN_FULL758_V4_PREREG_V1",
+  "frozen_date": "2026-10-12",
+  "why": "Stage31 five selected real 2x/5x cases showed original 3m sampling misses fast bursts; test a same-threshold higher frequency scanner across entire fresh market to measure both new early hits and noise/cash losses",
+  "scope": "MONSTER anomaly/meme only; no Frank/NFT production",
+  "frozen_dates_utc": [
+    "2025-03-19",
+    "2025-06-19",
+    "2025-09-19",
+    "2025-12-19",
+    "2026-01-19",
+    "2026-03-19"
+  ],
+  "utc_start": "06:00",
+  "observe_hours": 168,
+  "warmup_hours": 24,
+  "exits_hours": 24,
+  "complete_original_spot_universe": 758,
+  "original_inventory": {
+    "artifact_id": 11700651924,
+    "source_day": "2025-11-04",
+    "zip_sha256": "208983ef0aff92f7d955422c7a1c31a028f1bfcc493787c1066359d02bb4fced",
+    "json_sha256": "5ff32103c7e7c5125d0566f81ae190ad1bf1624df381fbae0e19aeda485da465"
+  },
+  "source_contract": "same official monthly 1h and 10 daily 1m publisher SHA + same 12960 1m bars for BOTH arms; missing archived symbols remain censored; no historical point-in-time listing validation",
+  "frozen_production_files": {
+    "monster_v4_shadow_blob_sha1": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+    "stage26_original_scanner_blob_sha1": "f085f00589ca40ab56036d9901127679ebda39d4",
+    "stage16_GT_blob_sha1": "deb17a83b4a199477393430b46be5fec32cdc5aa",
+    "stage24_source_aggregator_blob_sha1": "b2b3818d0e7739799c9fbc47e397dbca38d5493e",
+    "stage30_inventory_reader_blob_sha1": "6fe08d7b3c5b75eea0727bfd7adeab3569dd2453"
+  },
+  "paired_arms": {
+    "control": "exact Stage26 original 3m live.observe_snapshot/live.process_queue with one SQLite per symbol 168h, WATCH cool down6h, D1 5m bars",
+    "candidate": "same exact live.observe_snapshot/live.process_queue unchanged thresholds+quote24 and6h cooldown but query every 1m; first poll 06:01UTC using previous closed 1m and same 24h warmup",
+    "both_original_enter_rule": "WATCH+3 minutes, 24h exit 1m OPEN, 10bps commission and 20/100bps slippage per side; no real fills",
+    "additional_cost": "1m model snapshots 3x per symbol, D1 queue processing also 3x; report queue demand and distinguish from pure scan cadence",
+    "overlap": "same symbol cannot enter two simultaneous 24h positions within each arm",
+    "global_budget": "reuse frozen original Stage27 money_ledger, 30U1slot and 300U10slots, chronological symbols sorted; 100% and0% unknown exit recovery scenarios, no real execution claim"
+  },
+  "primary_pre_frozen_criteria": {
+    "official_verified_full_168h_min_date_windows": 6,
+    "no_source_integrity_masqueraded_negative": true,
+    "gross_2x_5x_10x_baseline_same_in_both_arms": true,
+    "report_early_vs_late_by_1minute_high_cross": true,
+    "increased_early_2x_recall_must_not_lower_recall": true,
+    "improved_GROSS_2X_lead_time_seconds_report": true,
+    "extra_watch_burden_vs_original": true,
+    "new_WATCH_evaluable_trades_over_30": true,
+    "candidate_funded_300U_20bps_optimistic_net_positive": true,
+    "candidate_funded_300U_100bps_optimistic_net_positive": true,
+    "candidate_exit_censored_pct_below_20pct": true,
+    "candidate_not_worse_300U_net_than_original_3m_both_costs": true,
+    "new_AI_independent_review_before_any_deployment": true
+  },
+  "anti_leakage": "Do not change dates, thresholds or select symbols after returns; numbers not yet read; this is paired date holdout for cadence candidate motivated by previous exposed selected cases",
+  "quality_notes": [
+    "3m early hit based on first original WATCH <= first real 1m HIGH >= anchored 2x/5x",
+    "1m early hit likewise; do not count later WATCH as early",
+    "No claims of orderbook realized fills or profit at 2x high",
+    "Full market shared Spot+Futures D1 queue NOT recreated; per-symbol rate changes require later global queue stress validation"
+  ],
+  "deploy": "NO_GO",
+  "real_mail": "OFF",
+  "auto_trading": "NO_GO",
+  "Frank": "UNCHANGED",
+  "other_AI_review": "NOT_DONE"
+}
