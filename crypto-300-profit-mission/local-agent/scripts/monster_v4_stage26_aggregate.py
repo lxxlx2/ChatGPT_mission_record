@@ -134,8 +134,20 @@ def summarize(reports,freeze):
     for mult in (2,5,10):
         confirmed=[r for r in valid if r["labels"][str(mult)+"x"]["gross_hourly_high_gt"]]
         classes=Counter(r["labels"][str(mult)+"x"]["classification"] for r in confirmed)
+        recent6=0
+        recent24=0
+        recency={}
+        for r in confirmed:
+            cross=utc(r["labels"][str(mult)+"x"]["real_1m_cross_utc"])
+            prior=[(cross-utc(x)).total_seconds()/60 for x in r["continuous"]["watch_utcs"] if utc(x)<=cross]
+            nearest=min(prior) if prior else None
+            recency[r["date"]+"|"+r["symbol"]]=round(nearest,6) if nearest is not None else None
+            recent6+=bool(nearest is not None and 0<=nearest<=360)
+            recent24+=bool(nearest is not None and 0<=nearest<=1440)
         gt[str(mult)+"x"]={
            "joint_verified_future_gross_high":len(confirmed),
+           "watch_within_prior_6h_count":recent6,
+           "watch_within_prior_24h_count":recent24,
            "early_or_same_first_minute_cross":classes["WATCH_BEFORE_OR_AT_REAL_FIRST_1M_CROSS"],
            "late":classes["WATCH_AFTER_REAL_FIRST_1M_CROSS"],
            "no_watch_through_full168h":classes["NO_WATCH_IN_CONTINUOUS_168H"],
@@ -145,7 +157,8 @@ def summarize(reports,freeze):
                "first_cross_1m":r["labels"][str(mult)+"x"]["real_1m_cross_utc"],
                "first_watch_utc":r["labels"][str(mult)+"x"]["first_v4_watch_utc"],
                "classification":r["labels"][str(mult)+"x"]["classification"],
-               "lead_minutes":r["labels"][str(mult)+"x"]["lead_minutes"]}
+               "lead_minutes":r["labels"][str(mult)+"x"]["lead_minutes"],
+               "nearest_prior_watch_lead_minutes":recency[r["date"]+"|"+r["symbol"]]}
                   for r in confirmed]
         }
     watch_cases=[r for r in valid if r["continuous"]["watch_count"]>0]
