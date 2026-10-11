@@ -156,6 +156,135 @@ def from_seed(watch_seed: list[dict], *, as_of: int | None = None) -> dict:
     }
 
 
+
+def merge_signature_activity(observed: dict, signature_rows: list[dict]) -> dict:
+    """Include *all* wallet-owned token-account activity, not only recognized trades.
+
+    Raw per-token deltas are transaction evidence, NOT an actionable token
+    recommendation, trusted cost basis, market-price observation, or a verified
+    live balance. Missing parsed source/destination cannot be invented.
+    """
+    from collections import Counter
+
+    existing = {row["mint"]: row for row in observed["rows"]}
+    evidence = {}
+    classes = Counter()
+    no_transfer_flow = 0
+    for record in signature_rows:
+        if not isinstance(record, dict):
+            continue
+        body = _json_obj(record.get("body"))
+        tx = _json_obj(body.get("evidence"))
+        cls = body.get("classification") or "UNKNOWN"
+        classes[cls] += 1
+        flows = tx.get("wallet_token_transfer_flows")
+        if not isinstance(flows, list) or not flows:
+            no_transfer_flow += 1
+        deltas = tx.get("token_balance_deltas") or []
+        if not isinstance(deltas, list):
+            continue
+        # Multiple token accounts for the same mint can occur in one tx.
+        by_mint: dict[str, dict] = {}
+        for delta in deltas:
+            if not isinstance(delta, dict) or delta.get("wallet_owned") is not True:
+                continue
+            mint = delta.get("mint")
+            decimals = delta.get("decimals")
+            raw = delta.get("delta")
+            if (not isinstance(mint, str) or not 32 <= len(mint) <= 44
+                or type(decimals) is not int or not 0 <= decimals <= 18
+                or type(raw) not in (str, int) or
+                not str(raw).lstrip("-").isascii() or
+                not str(raw).lstrip("-").isdecimal()):
+                continue
+            k = by_mint.setdefault(mint, {"delta": 0, "decimals": decimals})
+            if k["decimals"] != decimals:
+                k["mixed_decimals"] = True
+            k["delta"] += int(raw)
+        timestamp = _positive_int(record.get("block_time"))
+        for mint, item in by_mint.items():
+            record_entry = evidence.setdefault(mint, {
+                "in": 0, "out": 0, "zero": 0, "passive_in": 0,
+                "last_timestamp": None, "last_signature": None,
+                "raw_in": 0, "raw_out": 0,
+                "decimals": item["decimals"], "mixed_decimals": False,
+            })
+            if item.get("mixed_decimals") or record_entry["decimals"] != item["decimals"]:
+                record_entry["mixed_decimals"] = True
+            change = item["delta"]
+            if change > 0:
+                record_entry["in"] += 1
+                record_entry["raw_in"] += change
+                if cls == "PASSIVE_TRANSFER" and tx.get("wallet_is_signer") is False:
+                    record_entry["passive_in"] += 1
+            elif change < 0:
+                record_entry["out"] += 1
+                record_entry["raw_out"] += -change
+            else:
+                record_entry["zero"] += 1
+            if timestamp is not None and (
+                record_entry["last_timestamp"] is None or
+                timestamp >= record_entry["last_timestamp"]
+            ):
+                record_entry["last_timestamp"] = timestamp
+                record_entry["last_signature"] = record.get("signature")
+    new_passive = 0
+    new_other = 0
+    for mint, activity in evidence.items():
+        row = existing.get(mint)
+        if row is None:
+            row = from_seed([{"mint": mint, "local_state": "UNKNOWN"}])["rows"][0]
+            if activity["passive_in"]:
+                row["watch_state"] = "PASSIVE_RECEIPT_ONLY"
+                new_passive += 1
+            else:
+                row["watch_state"] = "OTHER_ACCOUNT_ACTIVITY"
+                new_other += 1
+            row["origin_scope"] = "SIGNATURE_TOKEN_DELTA_ONLY"
+            existing[mint] = row
+        else:
+            row["origin_scope"] = "LOCAL_TRADE_OR_MODEL_WITH_SIGNATURE_DELTA"
+        row.update({
+            "signature_activity_count": activity["in"] + activity["out"] + activity["zero"],
+            "signature_received_events": activity["in"],
+            "signature_sent_events": activity["out"],
+            "signature_zero_events": activity["zero"],
+            "passive_receipt_events": activity["passive_in"],
+            "last_signature_activity_time": activity["last_timestamp"],
+            "last_signature_activity_signature": activity["last_signature"],
+            "signature_token_amount_decimals": (
+                None if activity["mixed_decimals"] else activity["decimals"]),
+            "signature_observed_in_raw": (
+                None if activity["mixed_decimals"] else str(activity["raw_in"])),
+            "signature_observed_out_raw": (
+                None if activity["mixed_decimals"] else str(activity["raw_out"])),
+            "signature_delta_source": "LOCAL_NORMALIZED_TRANSACTION_TOKEN_BALANCES",
+            "sender_cost_basis_usd": None,
+            "transfer_counterparty_verified": False,
+        })
+    rows = sorted(existing.values(), key=lambda x: (
+        -(x.get("last_signature_activity_time") or x.get("last_event_time") or 0),
+        x["mint"],
+    ))
+    observed["rows"] = rows
+    observed["signature_activity_provenance"] = {
+        "signature_rows_scanned": len(signature_rows),
+        "classified": dict(sorted(classes.items())),
+        "wallet_owned_delta_mints": len(evidence),
+        "signature_rows_without_parsed_counterparty_flow": no_transfer_flow,
+        "counterparty_flow_is_complete": no_transfer_flow == 0,
+        "chain_completeness_verified": False,
+    }
+    summary = observed["summary"]
+    summary["original_trade_or_model_observed"] = (
+        summary["total_observed"])
+    summary["passive_receipt_only"] = new_passive
+    summary["other_account_activity_only"] = new_other
+    summary["total_observed"] = len(rows)
+    summary["unpriced_new_activity"] = new_passive + new_other
+    return observed
+
+
 def from_sqlite(path: Path, *, person_id: str = PERSON, as_of: int | None = None) -> dict:
     """Read the existing immutable Frank SQLite through open_production_ro."""
     db = open_production_ro(Path(path))
@@ -220,6 +349,15 @@ def from_sqlite(path: Path, *, person_id: str = PERSON, as_of: int | None = None
                 ),
             })
         result = from_seed(seed, as_of=as_of)
+        signature_records = [
+            dict(rec)
+            for rec in db.execute(
+                "SELECT signature,block_time,body FROM signatures "
+                "WHERE person_id=? ORDER BY block_time,signature", (person_id,))
+        ]
+        if len(signature_records) > 200_000:
+            raise ValueError("SIGNATURE_INDEX_OVER_LIMIT")
+        result = merge_signature_activity(result, signature_records)
         result["data_source"] = "READ_ONLY_FORWARD_SQLITE"
         return result
     finally:
