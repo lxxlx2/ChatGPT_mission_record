@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+  "chain": "bnb-mainnet",
+  "token_set": [
+    "GIGGLE",
+    "币安人生"
+  ],
+  "source_file": "BSC_MEME_9D1240_GIGGLE_BINANCE_LIFE_COMPLETE_TRANSFER_HISTORY_2026-10-11.json",
+  "rows": [
+    {
+      "token": "GIGGLE",
+      "block": 65814102,
+      "hash": "0x23503a25cec46689853897ef24ba20a80ee249faf6579654c6c8d76149ba305d",
+      "dir": "in",
+      "before_wei": "5167965509936734160",
+      "after_wei": "5067720247776734160",
+      "delta_wei": "-100245262160000000"
+    },
+    {
+      "token": "GIGGLE",
+      "block": 65814110,
+      "hash": "0xf4a9dd9bc7e86bfb9ba7af34a264d61ddfe024e3396645792336e084379557b5",
+      "dir": "in",
+      "before_wei": "5067720247776734160",
+      "after_wei": "4967486376656548548",
+      "delta_wei": "-100233871120185612"
+    },
+    {
+      "token": "GIGGLE",
+      "block": 65814114,
+      "hash": "0x6ef8dfb624804ebdb173b8400d64f47356cdde348cf247119d097e7a4e0e2b22",
+      "dir": "in",
+      "before_wei": "4967486376656548548",
+      "after_wei": "4867208003656548548",
+      "delta_wei": "-100278373000000000"
+    },
+    {
+      "token": "GIGGLE",
+      "block": 65814174,
+      "hash": "0x145d8f7bf744c38f63a7e3bc0f4e89649bfcb4d0047c6db3cf50c4b1e5eaeffb",
+      "dir": "out",
+      "before_wei": "4867208003656548548",
+      "after_wei": "5200537365533199970",
+      "delta_wei": "333329361876651422"
+    },
+    {
+      "token": "币安人生",
+      "block": 74381368,
+      "hash": "0xbbe12e3cce1c7465b5959b769aa6ff08cd0351af5c20fee85612b4a38ae64387",
+      "dir": "in",
+      "before_wei": "1920751977603945811",
+      "after_wei": "1920751977603945811",
+      "delta_wei": "0"
+    },
+    {
+      "token": "币安人生",
+      "block": 74382612,
+      "hash": "0xf95fba9cd055c59680a09c7f5b5c9103186bbf4a7e769183a229014e6be11a4f",
+      "dir": "out",
+      "before_wei": "1982380840707955427",
+      "after_wei": "1988705568497494986",
+      "delta_wei": "6324727789539559"
+    }
+  ],
+  "totals": [
+    {
+      "token": "GIGGLE",
+      "delta_wei": "32571855596465810",
+      "rows": 4
+    },
+    {
+      "token": "币安人生",
+      "delta_wei": "6324727789539559",
+      "rows": 2
+    }
+  ],
+  "verified_native_balance_blocks": 6,
+  "expected_blocks": 6,
+  "status": "ALL_SCOPED_NATIVE_BALANCE_PAIR_CHECKS_TRANSACTION_SIGNATURE_PENDING",
+  "production": "NO_GO",
+  "warning": "Block-scoped native BNB net is not final realized PnL, even with closed quantity, due same-block unrelated money movements and quote assets."
+}
