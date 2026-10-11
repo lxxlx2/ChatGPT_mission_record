@@ -149,6 +149,11 @@ def main(argv=None):
                         and transfer_result["status"] == "SYNC_OK"
                         and status.get("frank_transfer_history") == "QUEUED_LOCALLY"
                         and status.get("frank_history") == "QUEUED_LOCALLY"
+                        and status.get("frank") == "QUEUED"
+                        and not status.get("ca_errors")
+                        and not str(status.get("d0_audit", "")).startswith("UNAVAILABLE_")
+                        and (args.inventory_evidence is None
+                             or status.get("inventory_reconciliation") == "DATED_POINT_IN_TIME_NOT_LIVE")
                         else "SYNC_PARTIAL"
                     )
                 except (OSError, ValueError, RuntimeError):
