@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "analysis": "BSC_MEME_9D1240_CURVE_HELPER_HISTORICAL_READ_QUOTE_V0",
+  "selection_caveat": "8 source trades and both tokens selected retrospectively from winning-wallet research. In-sample feasibility check only, not out-of-sample profitable strategy.",
+  "source_file": "BSC_MEME_9D1240_MANAGER2_39_TX_CURVE_COST_FEE_RECONCILIATION_2026-10-11.json",
+  "reference": "https://github.com/four-meme-community/fourmeme-docs/blob/main/docs/trade-guide.md",
+  "chain": "bnb-mainnet",
+  "token_manager2": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+  "helper3": "0xf251f83e40a78868fcfa3fa4599dad6494e46034",
+  "helper_methods": {
+    "getTokenInfo": "0x1f69565f",
+    "tryBuy": "0xe21b103a",
+    "signature": "tryBuy(address,uint256,uint256)"
+  },
+  "original_buy_events": [
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "source_tx_hash": "0xa9a40de723b31bde3df8be876facbeedbe1b73b8311379580acda16e6f0ca354",
+      "source_block": 73336301,
+      "original_native_value_wei": "200000000000000000",
+      "original_received_token_raw": "11567110085131347000000000",
+      "original_curve_cost_wei": "196039603960396025",
+      "original_protocol_base_fee_wei": "1960396039603960"
+    },
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "source_tx_hash": "0xefe2cd2c184a7fba55d2568743e926f59107223db7454c96f000322e511ef9e8",
+      "source_block": 73336334,
+      "original_native_value_wei": "10000000000000000",
+      "original_received_token_raw": "657719181448406000000000",
+      "original_curve_cost_wei": "9801980198019798",
+      "original_protocol_base_fee_wei": "98019801980197"
+    },
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "source_tx_hash": "0x1e8d57b83c5ada1158ef72e6029d9c4cda0ead92940ecb6d48ba0dc25b038bf2",
+      "source_block": 73336338,
+      "original_native_value_wei": "10000000000000000",
+      "original_received_token_raw": "606774697065431000000000",
+      "original_curve_cost_wei": "9801980198019794",
+      "original_protocol_base_fee_wei": "98019801980197"
+    },
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "source_tx_hash": "0xfbd5edd65f362622be69b29c296f4c4de92fd0941866d0f0c4ad035249ec339b",
+      "source_block": 73540886,
+      "original_native_value_wei": "200000000000000000",
+      "original_received_token_raw": "4418435621505237000000000",
+      "original_curve_cost_wei": "196039603960396004",
+      "original_protocol_base_fee_wei": "1960396039603960"
+    },
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "source_tx_hash": "0x496359ca877bfc6b79d714ace4f490e881686c3e6fb339a4221c89ce90fed7d4",
+      "source_block": 73540892,
+      "original_native_value_wei": "10000000000000000",
+      "original_received_token_raw": "218285073993074000000000",
+      "original_curve_cost_wei": "9801980198019767",
+      "original_protocol_base_fee_wei": "98019801980197"
+    },
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "source_tx_hash": "0xb4d225b2c8aea0ea88f2d59692982f654d9f381b48d70972d2354320d4e1ea07",
+      "source_block": 73540896,
+      "original_native_value_wei": "10000000000000000",
+      "original_received_token_raw": "218037097030184000000000",
+      "original_curve_cost_wei": "9801980198019758",
+      "original_protocol_base_fee_wei": "98019801980197"
+    },
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "source_tx_hash": "0xe233c94baee5f6c6a7275013fb13cf9304235fcf28ce3241847548bef8b2dfe4",
+      "source_block": 73540898,
+      "original_native_value_wei": "10000000000000000",
+      "original_received_token_raw": "216352402428405000000000",
+      "original_curve_cost_wei": "9801980198019800",
+      "original_protocol_base_fee_wei": "98019801980198"
+    },
+    {
+      "token": "龙虾",
+      "contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "source_tx_hash": "0xb76c737c5d71d98fcd09ee74cc3da4f68cc6b9a6fcea262d92faa8ca41bc7a35",
+      "source_block": 83635788,
+      "original_native_value_wei": "200000000000000000",
+      "original_received_token_raw": "18861470183165681000000000",
+      "original_curve_cost_wei": "196039603960396037",
+      "original_protocol_base_fee_wei": "1960396039603960"
+    }
+  ],
+  "lag_blocks": [
+    0,
+    10
+  ],
+  "quoted_funds_wei": [
+    "50000000000000000",
+    "100000000000000000"
+  ],
+  "observation_block": "Original source block + 1 + lag, after confirmation, historical eth_call view only",
+  "call_logic": "tryBuy(token, 0, funds) then decode manager, quote asset, expected token amount, curve estimated cost, estimated fee, amountMsgValue, amountApproval, amountFunds. Check historical getTokenInfo.liquidityAdded and manager/quote before claiming Four.meme quote. If amountMsgValue > fixed nominal funds mark exceeds-budget quote, do not assume executable at that budget.",
+  "scenario_count": 32,
+  "unverified_caveats": [
+    "Helper3 estimate might include historical fee/tax state which can change across block and dynamic fee plans",
+    "eth_call executes without state change; no proof follower tx inclusion, gas, MEV, front-running or available mempool reaction",
+    "If coin migrated prior to quoted block, reject as curve route instead of applying V2 formula without a new freeze",
+    "No future quote-selected wallet ranking"
+  ],
+  "production": "NO_GO"
+}
