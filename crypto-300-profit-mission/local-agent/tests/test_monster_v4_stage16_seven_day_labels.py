@@ -56,7 +56,7 @@ class Stage16Tests(unittest.TestCase):
         fake.inventory=lambda: {"archive_only_sha256":"tampered",
               "replay_eligible_archive_only_count":254,"frozen_current_count":504}
         with self.assertRaisesRegex(ValueError,"UNIVERSE_DRIFT"):
-            m.frozen_symbols()
+            m.frozen_symbols(inventory_fetch=fake.inventory)
 
     def test_close_and_high_5x_label_distinguished(self):
         m,_=load()
