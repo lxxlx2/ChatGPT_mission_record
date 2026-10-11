@@ -1,0 +1,165 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+  "source_files": [
+    "BSC_MEME_5C48_BINANCE_LIFE_FULL_ERC20_HISTORY_2026-10-11.json",
+    "BSC_MEME_5C48_BINANCE_LIFE_17_NATIVE_BLOCK_CASHFLOW_2026-10-11.json"
+  ],
+  "expected": 17,
+  "rows": [
+    {
+      "hash": "0x75add5a36f9131f4ba84384c1ebe5351b50c1d973369ae1a6a79e10f67c1b87a",
+      "block": 93211354,
+      "native_block_delta_wei": "-604303660000000000",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "600000000000000000",
+      "gas_price_wei": "10000000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "hash": "0x7dbe5eba77ca3a0defce27afef14a6e4be7e0f5d1ba63be585642b07cf417b78",
+      "block": 93211384,
+      "native_block_delta_wei": "594987382866468102",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "hash": "0xcb6807df667cdc17754a2b2298a24be8559f1c1cebd969c3849baa862e08841e",
+      "block": 93212792,
+      "native_block_delta_wei": "-604838760000000000",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "600000000000000000",
+      "gas_price_wei": "10000000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "hash": "0x9b47ed45cc1191f4ab0a1f6891880c7fb1eaa9cae2adb04a45122735bb4c70b1",
+      "block": 93212811,
+      "native_block_delta_wei": "395382649651878163",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "hash": "0x5888e64935a2ca04614fa53abe4a55bf90a3ecbe96595caa16d530607930e29e",
+      "block": 93212829,
+      "native_block_delta_wei": "231830465371007627",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "hash": "0xd5fd9df3924d16dc56b51a798b9b7e167f8af73e4dec8e26c8bc5db9f34da708",
+      "block": 93212850,
+      "native_block_delta_wei": "138260021229980516",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "hash": "0xa003894b14aed35f4de603448fe337dfee3bd498fdd367ed82292abc0a7cd0dc",
+      "block": 93212903,
+      "native_block_delta_wei": "130431631959313738",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "hash": "0x502493942a235c3dbbd26e7b7c163dccbc76aa67358ddbeae450ccaedb300a01",
+      "block": 93214379,
+      "native_block_delta_wei": "-604038260000000000",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "600000000000000000",
+      "gas_price_wei": "10000000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
+    }
+  ],
+  "pending": [
+    {
+      "hash": "0xf40f6446b3d6ec3f749d2600237aa811fd8c0aacceba102f1118bfdb3aac7d73",
+      "block": 93214434,
+      "native_block_delta_wei": "504227482156653323"
+    },
+    {
+      "hash": "0xce9d4452e16b03e07462a7cb6b2f17e78f703098b90867457665a77082c58a51",
+      "block": 93214501,
+      "native_block_delta_wei": "-500047199600000000"
+    },
+    {
+      "hash": "0x77089614cc6ad450b8ad98d1b48ba05ef0287ae6de41354be8a95c7b6a494a35",
+      "block": 93214562,
+      "native_block_delta_wei": "338372106368591699"
+    },
+    {
+      "hash": "0xf37e31f65d2c9a670cff5212ee6146ab626df8d459714a4fd8d9721e52c984c8",
+      "block": 93215563,
+      "native_block_delta_wei": "-700099664080000000"
+    },
+    {
+      "hash": "0x7f3eb604393a358b1ac52447ee727946b837479523345e12fb35a1d41e3bc77c",
+      "block": 93215564,
+      "native_block_delta_wei": "-700045146400000000"
+    },
+    {
+      "hash": "0x678d71d2463c4ae9e0971f3d959e7630bbfecca7962247bc0ddbd87a7d824c7c",
+      "block": 93215608,
+      "native_block_delta_wei": "-100045144960000000"
+    },
+    {
+      "hash": "0x8d4a6e7a391dec460d6efb18a401b9f5f798293c483715e517359bb2ee28df70",
+      "block": 93215641,
+      "native_block_delta_wei": "372148579119314616"
+    },
+    {
+      "hash": "0x81c55cb510d6e1b2488e095e3df4a4b2e87f6e0606f879b3017559a30ed9f7b3",
+      "block": 93215653,
+      "native_block_delta_wei": "254352779936354954"
+    },
+    {
+      "hash": "0x7e222ad7f657d632559afcec4cc9d3a1ca093224b4fe968e240a914c5e7f4a77",
+      "block": 93215668,
+      "native_block_delta_wei": "753049339789167873"
+    }
+  ],
+  "status": "8_OF_17_ORIGINAL_SIGNER_RECEIPT_PROVENANCE",
+  "production": "NO_GO",
+  "caveat": "Same-tx incoming/outgoing token transfers may cancel and should never be treated as two separate intentional fills."
+}
