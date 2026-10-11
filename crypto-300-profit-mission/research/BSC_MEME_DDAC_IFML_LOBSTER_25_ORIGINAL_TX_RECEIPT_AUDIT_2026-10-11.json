@@ -115,58 +115,121 @@
       "receipt_gas_wei": "1062795000000000",
       "source_native_block_delta_wei": "201747142012182071",
       "owner_signed": true
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "我踏马来了",
       "dir": "in",
       "block": 73658894,
       "hash": "0x06173cdf3a8de2596440e8cf370324c15b3dd4fe1428b62925a58515d0b840eb",
-      "source_native_block_delta_wei": "-500073324901399966"
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_value_wei": "500000000000000000",
+      "tx_gas_price_wei": "226650000",
+      "tx_gas_limit": "500000",
+      "receipt_status": "0x1",
+      "receipt_full": false,
+      "receipt_gas_wei": null,
+      "source_native_block_delta_wei": "-500073324901399966",
+      "owner_signed": true
     },
     {
       "token": "我踏马来了",
       "dir": "in",
       "block": 73658909,
       "hash": "0xd459f09283165d44a8d1784bd54604fe1f488fd7d176f8efbd1f88b2fb44830f",
-      "source_native_block_delta_wei": "-1000047575004598016"
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_value_wei": "1000000000000000000",
+      "tx_gas_price_wei": "321530944",
+      "tx_gas_limit": "600000",
+      "receipt_status": "0x1",
+      "receipt_full": true,
+      "receipt_gas_wei": "47575004598016",
+      "source_native_block_delta_wei": "-1000047575004598016",
+      "owner_signed": true
     },
     {
       "token": "我踏马来了",
       "dir": "out",
       "block": 73658934,
       "hash": "0xaf0d45f462a469f6fe9f14a595ba6a704d13b57d74cc5833e69b6ec2827fd897",
-      "source_native_block_delta_wei": "1218455232514658352"
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_value_wei": "0",
+      "tx_gas_price_wei": "500000000",
+      "tx_gas_limit": "600000",
+      "receipt_status": "0x1",
+      "receipt_full": false,
+      "receipt_gas_wei": null,
+      "source_native_block_delta_wei": "1218455232514658352",
+      "owner_signed": true
     },
     {
       "token": "我踏马来了",
       "dir": "out",
       "block": 73658976,
       "hash": "0x00df97a9523f8ce86272c90473bdafd19deebd2604865c0ee15ecf87285489d4",
-      "source_native_block_delta_wei": "1059682197836568694"
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_value_wei": "0",
+      "tx_gas_price_wei": "321530944",
+      "tx_gas_limit": "600000",
+      "receipt_status": "0x1",
+      "receipt_full": false,
+      "receipt_gas_wei": null,
+      "source_native_block_delta_wei": "1059682197836568694",
+      "owner_signed": true
     },
     {
       "token": "我踏马来了",
       "dir": "out",
       "block": 73659187,
       "hash": "0xf9afe2d80fbec8a3fe812d5b202fc5f6295bc1e6842f2c719fcd48142010276a",
-      "source_native_block_delta_wei": "1000591719010534076"
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_value_wei": "0",
+      "tx_gas_price_wei": "2000000000",
+      "tx_gas_limit": "600000",
+      "receipt_status": "0x1",
+      "receipt_full": false,
+      "receipt_gas_wei": null,
+      "source_native_block_delta_wei": "1000591719010534076",
+      "owner_signed": true
     },
     {
       "token": "我踏马来了",
       "dir": "in",
       "block": 73660360,
       "hash": "0x6ffb6389c7d24e708e40aef7fd5270f43e6ba67f3808727df4afb720f48c0804",
-      "source_native_block_delta_wei": "-500147952000000000"
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_value_wei": "500000000000000000",
+      "tx_gas_price_wei": "1000000000",
+      "tx_gas_limit": "600000",
+      "receipt_status": "0x1",
+      "receipt_full": true,
+      "receipt_gas_wei": "147952000000000",
+      "source_native_block_delta_wei": "-500147952000000000",
+      "owner_signed": true
     },
     {
       "token": "我踏马来了",
       "dir": "out",
       "block": 73689258,
       "hash": "0x833262d874218a200b39312eb0550d44a53bf6af033adb23a03cbb066eae4844",
-      "source_native_block_delta_wei": "587798179087093122"
-    },
+      "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_value_wei": "0",
+      "tx_gas_price_wei": "200000000",
+      "tx_gas_limit": "600000",
+      "receipt_status": "0x1",
+      "receipt_full": false,
+      "receipt_gas_wei": null,
+      "source_native_block_delta_wei": "587798179087093122",
+      "owner_signed": true
+    }
+  ],
+  "pending": [
     {
       "token": "我踏马来了",
       "dir": "in",
@@ -245,7 +308,7 @@
       "source_native_block_delta_wei": "708646273386309544"
     }
   ],
-  "status": "PARTIAL_7_OF_25_SIGNER_RECEIPT",
+  "status": "PARTIAL_14_OF_25_SIGNER_RECEIPT",
   "note": "Receipt header success when 0x1 even if full response truncated; gas cannot be fabricated. Original sender is EOA on transaction, not proof of independently owned person.",
   "production": "NO_GO"
 }
