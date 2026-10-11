@@ -126,3 +126,11 @@ Git-backed latest research corpus for 23 EOAs: 19 token contracts, **1,021** inb
 - **牛来**: 19 incoming, 4 outgoing ERC20 events, exact raw token in = out, **22/22 BNB native balance-delta blocks** verified, total **+0.011321909495709853 BNB**. All 10 transactions on the nonzero-BNB-change blocks rechecked as originally signed by this wallet. Still native block activity result, not fully verified realized PnL. Evidence `BSC_MEME_DDAC_NIULAI_CLOSED_BNB_BLOCK_AUDIT_2026-10-11.json`, `BSC_MEME_DDAC_NIULAI_TX_SIGNER_EVIDENCE_2026-10-11.json`.
 
 **Research triage update**: `0xddac...` should be moved forward for material MARS profit attribution. 牛来 activity is small in native BNB terms and provides less evidence of a repeated large winner. Do NOT imply two material proven wins, do NOT enable copy trading or live monitoring. Queue updated in `BSC_MEME_BREADTH_FIRST_CANDIDATE_QUEUE_2026-10-10.json`. Subsequent priority is to audit receipt/traces/quote assets of MARS, plus breadth-first remaining 25 cursors and independent material winners.
+
+## 2026-10-11 0x8e6b repeat-major event audit
+
+In 23-wallet scope, 19 token CAs, 1,224 ERC20 transfer records, 23 direction cursors remain. Pagination must resume by last verified block plus event ID dedup (stale Alchemy page keys can reset).
+
+0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0 personally signed all 32 token transactions in three quantity-closed core event positions: 我踏马来了 -0.5990238168449055 BNB native wallet block net (6 receipts success), HAJIMI +1.2428992807984849 BNB (13 receipts success), 龙虾 +4.794001707717377 BNB (11 receipt success headers, 2 truncated). Aggregate +5.437877171670956 BNB native block difference. These are verified trade-associated wallet balance changes, NOT finalized independent realized profits until traces, same-block attribution and other quote assets are fully ruled out. No independently proven profitable followability or controller linkage.
+
+Original chain data, 26 signed tx receipts and all 26 block deltas are retained in BSC_MEME_8E6B_HAJIMI_LOBSTER_26_BLOCK_BALANCES_2026-10-11.json, BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json and BSC_MEME_8E6B_THREE_CORE_EVENT_CASHFLOW_RECONCILIATION_2026-10-11.json. Prior candidate queue retained and promoted this wallet's investigation priority. Research only, NO_GO.
