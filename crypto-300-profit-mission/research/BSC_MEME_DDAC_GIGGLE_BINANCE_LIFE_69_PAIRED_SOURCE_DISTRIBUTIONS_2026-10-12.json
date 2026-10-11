@@ -1,0 +1,720 @@
+{
+  "schema": "BSC_MEME_DDAC_JOINT_SOURCE_ALIGNMENT_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "status": "HISTORICAL_RESEARCH_ONLY",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "source_contract": "0x2f7fe96e3d0308cdbf6143e7dc0bb05df73a4a83",
+  "input_snapshot": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_GIGGLE_FULL_ERC20_HISTORY_2026-10-11.json",
+      "blob_sha": "742c028c7ab5e24e548c09018d4ad0e28595d61e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_BINANCE_LIFE_FULL_ERC20_HISTORY_2026-10-11.json",
+      "blob_sha": "32f412151ea8e2ffbf220b422676812e624ce7f4"
+    }
+  ],
+  "input_counts": {
+    "giggle_full_in": 71,
+    "giggle_full_out": 0,
+    "binance_life_full_in": 78,
+    "binance_life_full_out": 5,
+    "giggle_from_shared_source": 70,
+    "binance_life_from_shared_source": 69,
+    "giggle_other_source": 1,
+    "binance_life_other_sources": 9
+  },
+  "method": "Freeze two already fully paginated archived BSC ERC20 Transfer cohorts with from=shared source and to=DDAC; sort each by ascending block, perform monotone dynamic-programming minimum sum absolute block-distance pairing with all 69 Life transfers used and only one extra GIGGLE transfer skipped. This is an exploratory correlation test, not a causal attribution model.",
+  "results": {
+    "matched_unique_pairs": 69,
+    "unpaired_shared_source_giggle": [
+      {
+        "tx": "0xbe5d59294b01ee345aefa382d8fed50291423a4e80766a619dba85736d34d3ec",
+        "block": 105367774,
+        "raw": "34500382836630030"
+      }
+    ],
+    "unmatched_shared_source_binance_life": 0,
+    "pair_block_distance_min": 2,
+    "pair_block_distance_median": 13,
+    "pair_block_distance_max": 108,
+    "pairs_within_20_blocks": 65,
+    "pairs_within_100_blocks": 68,
+    "binance_life_precedes_giggle": 68,
+    "giggle_precedes_binance_life": 1,
+    "exact_shared_tx_hash_count": 0
+  },
+  "direct_chain_spot_checks": [
+    {
+      "token": "GIGGLE",
+      "block": 105119593,
+      "tx": "0x4dc9a1a745f91ca189f0c4fb05ad2de6e919c1e9fa5a479d33239e5501314be0",
+      "log_index": "0xdd",
+      "transfer_amount_raw": "282510005100923143",
+      "status": "DIRECT_CHAIN_ETH_GETLOGS_MATCH"
+    },
+    {
+      "token": "BINANCE_LIFE",
+      "block": 105119586,
+      "tx": "0x8a371e16b392abbe88f00da088ca2886c615e8e107e83f6efa5d915249016f14",
+      "log_index": "0x11e",
+      "transfer_amount_raw": "11734761299010997880",
+      "status": "DIRECT_CHAIN_ETH_GETLOGS_MATCH"
+    },
+    {
+      "token": "GIGGLE",
+      "block": 106085915,
+      "tx": "0x9502fa919b3fef2c60a052ba208d12e2420c6f22359af825b6722a0383438ee5",
+      "log_index": "0x4f",
+      "transfer_amount_raw": "17463152254084428",
+      "status": "DIRECT_CHAIN_ETH_GETLOGS_MATCH"
+    },
+    {
+      "token": "BINANCE_LIFE",
+      "block": 106085902,
+      "tx": "0xd8ef578cb4a28eff446b5b53dcd0819a126ad7364235553b033823122cc197cb",
+      "log_index": "0x6e",
+      "transfer_amount_raw": "685572768078204058",
+      "status": "DIRECT_CHAIN_ETH_GETLOGS_MATCH"
+    }
+  ],
+  "pair_rows": [
+    {
+      "giggle_tx": "0x4dc9a1a745f91ca189f0c4fb05ad2de6e919c1e9fa5a479d33239e5501314be0",
+      "giggle_block": 105119593,
+      "giggle_received_raw": "282510005100923143",
+      "binance_life_tx": "0x8a371e16b392abbe88f00da088ca2886c615e8e107e83f6efa5d915249016f14",
+      "binance_life_block": 105119586,
+      "binance_life_received_raw": "11734761299010997880",
+      "delta_blocks_giggle_minus_life": 7
+    },
+    {
+      "giggle_tx": "0x9b64e1459ebd61367b9381ef2f19b684fd3ce793af76c7ffa81fc66b873765f2",
+      "giggle_block": 105120278,
+      "giggle_received_raw": "260716440900108363",
+      "binance_life_tx": "0xdd88498cc4bdfee37ba2898d3f8c2eb1c37b9f7f4c9ad8252d14d0d36ac0cd9c",
+      "binance_life_block": 105120260,
+      "binance_life_received_raw": "10842754960780568388",
+      "delta_blocks_giggle_minus_life": 18
+    },
+    {
+      "giggle_tx": "0x80a394a981c55604449204caa7c5a49c8022daf13c41a2a1fe2c98cd80a23557",
+      "giggle_block": 105120737,
+      "giggle_received_raw": "135834063435196368",
+      "binance_life_tx": "0x2f1d94103c9476bcc99c9553e2cf9c63e5a454551f81fbc44dc02a04079e4dd2",
+      "binance_life_block": 105120727,
+      "binance_life_received_raw": "5654227922212884286",
+      "delta_blocks_giggle_minus_life": 10
+    },
+    {
+      "giggle_tx": "0x62361e23c1b7f038cff213913930a33ca012f59adeda3029163d72812dcb1027",
+      "giggle_block": 105121152,
+      "giggle_received_raw": "62876534997572567",
+      "binance_life_tx": "0xc1482423f7ee771b7ffdb8fa46f1024064d834575b17f5b41847125327659bf2",
+      "binance_life_block": 105121142,
+      "binance_life_received_raw": "2618036250336475460",
+      "delta_blocks_giggle_minus_life": 10
+    },
+    {
+      "giggle_tx": "0x264cc88da0c16fa9301c347b3d3079308712f02b5eac8152b5f82ee253db5010",
+      "giggle_block": 105121560,
+      "giggle_received_raw": "53677224434549749",
+      "binance_life_tx": "0xd57ea66e8a0ceabe4b350956f147e1f8deef8a561f55fc1109cc71b5868757b6",
+      "binance_life_block": 105121548,
+      "binance_life_received_raw": "2233619178257300949",
+      "delta_blocks_giggle_minus_life": 12
+    },
+    {
+      "giggle_tx": "0xfadea677ebdf68698daf700c1aee450b6926c562b2fe11a6a81ceb3adfe3dce5",
+      "giggle_block": 105121970,
+      "giggle_received_raw": "35941655216900206",
+      "binance_life_tx": "0xbb6f8d1caeaebf0bda086a1da8142ebb2487e4173d799b790096d328a9e42879",
+      "binance_life_block": 105121958,
+      "binance_life_received_raw": "1497394127520307369",
+      "delta_blocks_giggle_minus_life": 12
+    },
+    {
+      "giggle_tx": "0xd2abe6d548d0e49e53e427d48014af68145c2d467f06cd29288f888eb40005ed",
+      "giggle_block": 105122383,
+      "giggle_received_raw": "26734361047979430",
+      "binance_life_tx": "0x55050db8c5ae4b8f2c7921c29c347167a5ebb63697575a707a233406eda1769e",
+      "binance_life_block": 105122376,
+      "binance_life_received_raw": "1093963087523479589",
+      "delta_blocks_giggle_minus_life": 7
+    },
+    {
+      "giggle_tx": "0x1f93a5200f2732b2db6ab632009176d99bd45e6d570224910dbf9207ad8dfd06",
+      "giggle_block": 105122796,
+      "giggle_received_raw": "44135488838715763",
+      "binance_life_tx": "0x0c0a81c10c463d39c6c934f29f7bd943933e5bb8b8e425e309f8a7cc4fc5f1b2",
+      "binance_life_block": 105122780,
+      "binance_life_received_raw": "1805687071790318176",
+      "delta_blocks_giggle_minus_life": 16
+    },
+    {
+      "giggle_tx": "0xbb4dd51161475e7b88cf8999e9227ed0c03df1664eb79c7d899b91697b3f05a0",
+      "giggle_block": 105123206,
+      "giggle_received_raw": "60443778564014121",
+      "binance_life_tx": "0xc430fe1cadbbac7f60bacbeb76abb06c1213abe1550c40dff14000fa40c65064",
+      "binance_life_block": 105123190,
+      "binance_life_received_raw": "2520492752265964352",
+      "delta_blocks_giggle_minus_life": 16
+    },
+    {
+      "giggle_tx": "0xef162e91f20130ddf545c36a723591289bdfdf3e58589f173f8dcf84d0848722",
+      "giggle_block": 105123614,
+      "giggle_received_raw": "65015135197785344",
+      "binance_life_tx": "0x939a81c6894480c458f8d980d3c57c7957f36a08d5b7b9f452af4dbbc09e5793",
+      "binance_life_block": 105123604,
+      "binance_life_received_raw": "2662217387927962875",
+      "delta_blocks_giggle_minus_life": 10
+    },
+    {
+      "giggle_tx": "0x4850bffae6df16aac6c33910467d20a4420841f5388a1fc2f85f5c2e254c7b50",
+      "giggle_block": 105124046,
+      "giggle_received_raw": "27832413599170418",
+      "binance_life_tx": "0x918bf348d3818a013c7a1af7682131eea4cb5739fcc9d20235b42d49f500d491",
+      "binance_life_block": 105124025,
+      "binance_life_received_raw": "1140235344035824239",
+      "delta_blocks_giggle_minus_life": 21
+    },
+    {
+      "giggle_tx": "0x6c4c1ea1c7f07d1386cc28d68674220a130a7c1beb116ce13fe5444cd87ce600",
+      "giggle_block": 105124441,
+      "giggle_received_raw": "27257655092077191",
+      "binance_life_tx": "0xb9851dc1a73b6fcf43701c21f2a04604be0c9d735da35198d05394cf06f1715d",
+      "binance_life_block": 105124423,
+      "binance_life_received_raw": "1121695936040743557",
+      "delta_blocks_giggle_minus_life": 18
+    },
+    {
+      "giggle_tx": "0x287187b6a7e200226f2fb5df653b4e247b06c817efb53fce75c559e311de8445",
+      "giggle_block": 105124849,
+      "giggle_received_raw": "30744274799957801",
+      "binance_life_tx": "0x872bf10b53efdab5561348d5e174510e13a64003ea82f3f54e4b7568538812fb",
+      "binance_life_block": 105124832,
+      "binance_life_received_raw": "1304988352079377551",
+      "delta_blocks_giggle_minus_life": 17
+    },
+    {
+      "giggle_tx": "0xb2df8886c573c8777122fa55919cd8dd3346df763d6355f448a6ff3a8977f69a",
+      "giggle_block": 105125667,
+      "giggle_received_raw": "21752272628305015",
+      "binance_life_tx": "0x9c30962a0973cedf57cc41c62ba7633042ffcd6dbc4350b1340750a3bfa15092",
+      "binance_life_block": 105125656,
+      "binance_life_received_raw": "901700716421095414",
+      "delta_blocks_giggle_minus_life": 11
+    },
+    {
+      "giggle_tx": "0x3cb0edeae6f0843b7afe2633f5f6d98b06f2feefffff3e0189e6344f4d4cfc15",
+      "giggle_block": 105126517,
+      "giggle_received_raw": "25410486520748089",
+      "binance_life_tx": "0x19333f9046068f132e0a70231a7e846f11f018e44aa1c651455c576e73460d71",
+      "binance_life_block": 105126493,
+      "binance_life_received_raw": "1050918180715784812",
+      "delta_blocks_giggle_minus_life": 24
+    },
+    {
+      "giggle_tx": "0xa58f07d7cde0b267cbe58f5dde11deaa77f933e071e8ea1eb44b6774e48a889e",
+      "giggle_block": 105127734,
+      "giggle_received_raw": "22357506273886887",
+      "binance_life_tx": "0xc1582801842c366327da2a8868ac131c5072905f3252fcd64912cd0e776e9f32",
+      "binance_life_block": 105127721,
+      "binance_life_received_raw": "919767275756439383",
+      "delta_blocks_giggle_minus_life": 13
+    },
+    {
+      "giggle_tx": "0xc30d740a9fd70e9dd377b806e18d453b7d0017e8ffa3cf6c482118ced87b40bd",
+      "giggle_block": 105129790,
+      "giggle_received_raw": "20904224872516946",
+      "binance_life_tx": "0xbff6b954a4e497676fe9715df8e98e73e2a16040b9ab6d8ce45213325dd7acff",
+      "binance_life_block": 105129783,
+      "binance_life_received_raw": "855049253663077514",
+      "delta_blocks_giggle_minus_life": 7
+    },
+    {
+      "giggle_tx": "0x54236932bf0c35f96b6e38b3b20c74774dc499166439100e8bee1c470bdb693b",
+      "giggle_block": 105132242,
+      "giggle_received_raw": "28184482540447494",
+      "binance_life_tx": "0xf0d423230359d67a41bf04724cf174d89a2731767e3c03ad407d42542db9b390",
+      "binance_life_block": 105132232,
+      "binance_life_received_raw": "1142499006900724576",
+      "delta_blocks_giggle_minus_life": 10
+    },
+    {
+      "giggle_tx": "0x5d9f5df10cec3bec8bbbda7cf775234ee83784fab947d5e77c724af99b73c8f0",
+      "giggle_block": 105135950,
+      "giggle_received_raw": "40156670039578817",
+      "binance_life_tx": "0x8745e0ba9cd55e6adf897d3a724ee4a2d71b1612b53be1454315c0d439b4c507",
+      "binance_life_block": 105135936,
+      "binance_life_received_raw": "1627628588140526484",
+      "delta_blocks_giggle_minus_life": 14
+    },
+    {
+      "giggle_tx": "0x91d260615f0d3ccf142388a7084ccae919853f3e8ad4d7d0968e8867fb0a2eb9",
+      "giggle_block": 105139245,
+      "giggle_received_raw": "27638991130690162",
+      "binance_life_tx": "0x765101bb7d30303095cfcbdc2dd1a9002ec7852b881e6077151c8fb8e629d96c",
+      "binance_life_block": 105139227,
+      "binance_life_received_raw": "1121041213033586364",
+      "delta_blocks_giggle_minus_life": 18
+    },
+    {
+      "giggle_tx": "0x927d0db52e70981e2b6799b571e3af3ee5cb7e6fd822e54292da648e84c180e6",
+      "giggle_block": 105143154,
+      "giggle_received_raw": "31979750026135305",
+      "binance_life_tx": "0x56ab6ac80f44abc9c171588b01797930d60b7ea9043a82dc9c2b4f50ee0ae045",
+      "binance_life_block": 105143137,
+      "binance_life_received_raw": "1299404220095430058",
+      "delta_blocks_giggle_minus_life": 17
+    },
+    {
+      "giggle_tx": "0x0660a66fb60e3caf45ec14ff35c9d1a2c7d7ba65935dcb927d04fa151e6178c4",
+      "giggle_block": 105162767,
+      "giggle_received_raw": "13821300844371298",
+      "binance_life_tx": "0x46fb50172209a055ea2ce28ae359de57908e5c98c14a77a61b112bbc5d9bbb8b",
+      "binance_life_block": 105162759,
+      "binance_life_received_raw": "570012712745556696",
+      "delta_blocks_giggle_minus_life": 8
+    },
+    {
+      "giggle_tx": "0xcf2b25ad1c269a2e2efd33eb820b7faedd13d21389f2a80543a36da0b118e629",
+      "giggle_block": 105165243,
+      "giggle_received_raw": "12823233154184709",
+      "binance_life_tx": "0xe5578159ee52b690b5046efccf64f58cbda2e68493ef295d91317c99e155910a",
+      "binance_life_block": 105165225,
+      "binance_life_received_raw": "529463554318741812",
+      "delta_blocks_giggle_minus_life": 18
+    },
+    {
+      "giggle_tx": "0xef6988d116a2e98fb4afb412190a782fd9fa385a5bb86e0915771b40c6a3f7c2",
+      "giggle_block": 105170600,
+      "giggle_received_raw": "14299384632958068",
+      "binance_life_tx": "0x06cc0ad2ce146ce1c3753f401fe9d4c02d7d2847c256561567feb0ed688d4bd5",
+      "binance_life_block": 105170591,
+      "binance_life_received_raw": "578342813378150525",
+      "delta_blocks_giggle_minus_life": 9
+    },
+    {
+      "giggle_tx": "0x3dc88498a6e0627eac3a869224be23271876f7e20c3d1eae1f8a8e9cc0c9206d",
+      "giggle_block": 105201368,
+      "giggle_received_raw": "17344872476437345",
+      "binance_life_tx": "0x38b2914cf4394cbd230bc417ac726d2fe7e0507849265b00e26370ed92189ae9",
+      "binance_life_block": 105201366,
+      "binance_life_received_raw": "701232563459468885",
+      "delta_blocks_giggle_minus_life": 2
+    },
+    {
+      "giggle_tx": "0x796e4251d4aa8d04c8f5037a324d651a6d95c3afc29fe727141f8728f78fdb77",
+      "giggle_block": 105241795,
+      "giggle_received_raw": "13712730901554365",
+      "binance_life_tx": "0x6867ff03b9c051aa7d098b0b66aca0be71cf5d82bfabde89b71711c2eec39297",
+      "binance_life_block": 105241782,
+      "binance_life_received_raw": "557964695752062692",
+      "delta_blocks_giggle_minus_life": 13
+    },
+    {
+      "giggle_tx": "0xa17362f0e2f085b48f1db77e9372ddbca06aa69b16858d01d905443bcaa46b47",
+      "giggle_block": 105243219,
+      "giggle_received_raw": "12521570605916590",
+      "binance_life_tx": "0xde6f87b9e744f758d3ebdb4769ea6a4bc5b3f52fd4f803c05f5e9501356a4fb9",
+      "binance_life_block": 105243209,
+      "binance_life_received_raw": "509447473007472830",
+      "delta_blocks_giggle_minus_life": 10
+    },
+    {
+      "giggle_tx": "0x1ffe063382d370a4dc944c5bbdfa0c85d09da545c38cd4f4fa3861e5d201bad6",
+      "giggle_block": 105244862,
+      "giggle_received_raw": "14116139001504980",
+      "binance_life_tx": "0x0b6c4d72a26e16c8a84e1e054bd791e3bfbd57609eedf0ddd74efd8f6b540ca1",
+      "binance_life_block": 105244856,
+      "binance_life_received_raw": "571444770705055249",
+      "delta_blocks_giggle_minus_life": 6
+    },
+    {
+      "giggle_tx": "0xe1b9eef03e43032f66a1df290b2b2a5b9e9acd3e0b3cb6fe41d554f54eff5636",
+      "giggle_block": 105245275,
+      "giggle_received_raw": "11458654305359796",
+      "binance_life_tx": "0xc512fb0f0547f5bd05071e4bb81dd97816c425c287f2e3e3ebf89abfab2e12db",
+      "binance_life_block": 105245269,
+      "binance_life_received_raw": "463964612898344302",
+      "delta_blocks_giggle_minus_life": 6
+    },
+    {
+      "giggle_tx": "0x97785945c7d32db93827106182f69df933aadc4fb886140f02dd99147bb0a87a",
+      "giggle_block": 105245688,
+      "giggle_received_raw": "12204377058798532",
+      "binance_life_tx": "0xb1037d4eb04913aaf426265dea0ca9ef04d30951928606c490637bba44d51825",
+      "binance_life_block": 105245677,
+      "binance_life_received_raw": "494210338465932919",
+      "delta_blocks_giggle_minus_life": 11
+    },
+    {
+      "giggle_tx": "0x95dd8ca004bd5e8ef2d67f3ccba78f1e1436acc9244a7f73805629c84c56de84",
+      "giggle_block": 105246507,
+      "giggle_received_raw": "13510857069029252",
+      "binance_life_tx": "0x3192f649f0cd7db09daf77fa69f25c34a06250439cb82c2a8675fd62c6df5178",
+      "binance_life_block": 105246500,
+      "binance_life_received_raw": "546159491102952649",
+      "delta_blocks_giggle_minus_life": 7
+    },
+    {
+      "giggle_tx": "0xdb2c34d816fb6ae384f06828d7209a239dcf7f67e5918182314d7722e6e27179",
+      "giggle_block": 105247012,
+      "giggle_received_raw": "9581538705318482",
+      "binance_life_tx": "0xb8ef80dad83f257234a3216e51e16b097bc5ec21a216209b7c0986708334a328",
+      "binance_life_block": 105246999,
+      "binance_life_received_raw": "387217708572213700",
+      "delta_blocks_giggle_minus_life": 13
+    },
+    {
+      "giggle_tx": "0x9a853d8a1e9aca5632e8b56839d2df36c9bcf3baf1304f422f516dad896c5c4f",
+      "giggle_block": 105247745,
+      "giggle_received_raw": "9171579765027728",
+      "binance_life_tx": "0xb9d7e55253e321aa795daf969f4efbf61aab666f196ebb3193b22c3be387f2c8",
+      "binance_life_block": 105247735,
+      "binance_life_received_raw": "370573341587308371",
+      "delta_blocks_giggle_minus_life": 10
+    },
+    {
+      "giggle_tx": "0x0d117909d49d338c56010eb3ffbbe6617fa0775ceb5d040caaea89f82838238a",
+      "giggle_block": 105248989,
+      "giggle_received_raw": "9233868989230639",
+      "binance_life_tx": "0x7e3e9d1900f2a2bd9c7289cab16d077e1fdd3c0c643e984d27bb7770f7861d17",
+      "binance_life_block": 105248973,
+      "binance_life_received_raw": "373013198756317440",
+      "delta_blocks_giggle_minus_life": 16
+    },
+    {
+      "giggle_tx": "0x25c339e5e8954dd0092705602a5a96401ebfabb5527273bc28644593d49df349",
+      "giggle_block": 105249816,
+      "giggle_received_raw": "16924043993586802",
+      "binance_life_tx": "0xe5bcfdfa63f6777d4dd655b97482b36651edeaac0763435f3f7c255a83884500",
+      "binance_life_block": 105249798,
+      "binance_life_received_raw": "683955154786497589",
+      "delta_blocks_giggle_minus_life": 18
+    },
+    {
+      "giggle_tx": "0x377fc837c4471c9a1d4ae0166962a81d460d7f71edd3299575a54742d683e067",
+      "giggle_block": 105251545,
+      "giggle_received_raw": "9639013292141255",
+      "binance_life_tx": "0x7349ba46350c4104100e83f9c83ad93791118056f74109e7b75cd1fa84e21972",
+      "binance_life_block": 105251532,
+      "binance_life_received_raw": "388521274513090367",
+      "delta_blocks_giggle_minus_life": 13
+    },
+    {
+      "giggle_tx": "0xca908371dd370b026df8af61c59b0a5c37f24e6e9c456abdb1dbc1a794fb92c2",
+      "giggle_block": 105252794,
+      "giggle_received_raw": "15245772615885220",
+      "binance_life_tx": "0x78e332db04c1534b5fe417fc72a8d8aef7b94653c0b13cbbe1580a6e937927d8",
+      "binance_life_block": 105252779,
+      "binance_life_received_raw": "613620852008711691",
+      "delta_blocks_giggle_minus_life": 15
+    },
+    {
+      "giggle_tx": "0x65a200d5b6e5e8745b24c90aa5a9a00e6f6bcdc28108c4994038a0bb177d9e4d",
+      "giggle_block": 105253087,
+      "giggle_received_raw": "13820734452085876",
+      "binance_life_tx": "0xe5669710e8e2db893c8e278ec291d9614fd1cc81c9d16ab755d0886e15ccf03b",
+      "binance_life_block": 105253079,
+      "binance_life_received_raw": "554784794301530299",
+      "delta_blocks_giggle_minus_life": 8
+    },
+    {
+      "giggle_tx": "0xc47bbd52161b883e2017e477408a0743ae33ad54972dd47c5423c7ba3bed1450",
+      "giggle_block": 105254323,
+      "giggle_received_raw": "14958460168548091",
+      "binance_life_tx": "0x28906c239fa7b283df8976be9eb2911617ef4f374eb6ed25ffa29db286f07bb6",
+      "binance_life_block": 105254309,
+      "binance_life_received_raw": "601206111890673427",
+      "delta_blocks_giggle_minus_life": 14
+    },
+    {
+      "giggle_tx": "0xd49214116e71800cb41465d943d01985875d9d8253c230d25983936524817e62",
+      "giggle_block": 105255142,
+      "giggle_received_raw": "6130676713795911",
+      "binance_life_tx": "0xa2d574ce251b9ff1d76749ce543c398be011c59965fec1acc034f6cc24385e0f",
+      "binance_life_block": 105255132,
+      "binance_life_received_raw": "246305006874404419",
+      "delta_blocks_giggle_minus_life": 10
+    },
+    {
+      "giggle_tx": "0x07249b4ba9ce817870b28cbe97ece9aeaefe933a577dac311d42013b347118d2",
+      "giggle_block": 105256105,
+      "giggle_received_raw": "4680446866063078",
+      "binance_life_tx": "0x40725d229b13d17055cc1a9091dac26d3e2af36794e0de1b44fc662e2d4bdeda",
+      "binance_life_block": 105256089,
+      "binance_life_received_raw": "187683253741323949",
+      "delta_blocks_giggle_minus_life": 16
+    },
+    {
+      "giggle_tx": "0xe2b6e3154895f51d2c7b70dbd5a81e74ad60901694aba0ca415e21932aeed94d",
+      "giggle_block": 105257702,
+      "giggle_received_raw": "5425876497146139",
+      "binance_life_tx": "0x6f1ade0ddb94238d5d8d89ef1d7c1a620a5f2e38fe1d416653318837cb0f4d76",
+      "binance_life_block": 105257688,
+      "binance_life_received_raw": "216333716833310075",
+      "delta_blocks_giggle_minus_life": 14
+    },
+    {
+      "giggle_tx": "0xc9bf7c563995893ace15b0fd883e73ea4ef0262c5a6ff7e8db1436614796a4a1",
+      "giggle_block": 105258450,
+      "giggle_received_raw": "4944423927349196",
+      "binance_life_tx": "0x2635eea6f017a20787186d98ae7b1646d25e87de3e4d3cad1505f29772a0b6f4",
+      "binance_life_block": 105258433,
+      "binance_life_received_raw": "197171176145897685",
+      "delta_blocks_giggle_minus_life": 17
+    },
+    {
+      "giggle_tx": "0x15ca261a0605073f61cf94e6a068156279fea716aa292897241b671e867a9900",
+      "giggle_block": 105259462,
+      "giggle_received_raw": "4845962128773213",
+      "binance_life_tx": "0x85b027ef679288a4afce9d0ee4bfde112eb900ba348a9e89259c42dd91465624",
+      "binance_life_block": 105259449,
+      "binance_life_received_raw": "193145447216937885",
+      "delta_blocks_giggle_minus_life": 13
+    },
+    {
+      "giggle_tx": "0xcc726a1ceeedd7441d313a12445d8625d5961e3995c9de0ad7654453a7352b23",
+      "giggle_block": 105262130,
+      "giggle_received_raw": "4974263151681582",
+      "binance_life_tx": "0x72cdc49a71810bf64e59f0453fa812d5c89fadd49bb24b737d589ccfaf61351f",
+      "binance_life_block": 105262118,
+      "binance_life_received_raw": "199284312311536316",
+      "delta_blocks_giggle_minus_life": 12
+    },
+    {
+      "giggle_tx": "0x80bea6703dccd3d1a7714d535fe2ece8ee6c9740b7164c055ec4e03f12495461",
+      "giggle_block": 105263791,
+      "giggle_received_raw": "6470677583616412",
+      "binance_life_tx": "0x5766726cd42e3f7f73f15290c356911c54d762513a26ece06f68ba49b1ae2741",
+      "binance_life_block": 105263775,
+      "binance_life_received_raw": "259738401251825644",
+      "delta_blocks_giggle_minus_life": 16
+    },
+    {
+      "giggle_tx": "0x0a87e5e6f37d5243c2027540971b94118568f06c36ef1d7847862863710f71c3",
+      "giggle_block": 105265005,
+      "giggle_received_raw": "5006835642542574",
+      "binance_life_tx": "0x1c1c76e83c3796a54b7d46a53400e3d4f8d32b4062e8045362aca44850a15a70",
+      "binance_life_block": 105264995,
+      "binance_life_received_raw": "201187317019625149",
+      "delta_blocks_giggle_minus_life": 10
+    },
+    {
+      "giggle_tx": "0xb29cada8230ef48dfcedb1e7cff935d6038122965d8a448aa4a783e42d32a12a",
+      "giggle_block": 105268297,
+      "giggle_received_raw": "5053577604476585",
+      "binance_life_tx": "0xca991052b98eb0f33145fb2bc7819e337f3bea2de895556c35635123ea678caf",
+      "binance_life_block": 105268292,
+      "binance_life_received_raw": "203196236977388367",
+      "delta_blocks_giggle_minus_life": 5
+    },
+    {
+      "giggle_tx": "0x03dcdceee41e79c211289bc7e5cba4a56026deab7c5371ec5e2ffbbd64c7609e",
+      "giggle_block": 105270771,
+      "giggle_received_raw": "5066409138535695",
+      "binance_life_tx": "0x5e53abf24376f730706d2c9fe4376a4a3383d91fb393f481af3bb5a409737b75",
+      "binance_life_block": 105270754,
+      "binance_life_received_raw": "203806592945230267",
+      "delta_blocks_giggle_minus_life": 17
+    },
+    {
+      "giggle_tx": "0x9645396381a4d335e34cff9ca0de69133776676f282152079f1e969de43de612",
+      "giggle_block": 105277461,
+      "giggle_received_raw": "4749081190906556",
+      "binance_life_tx": "0xdd889ed07612e39c125110375ba90fd3ffaa045541017367b67352db2b413cc7",
+      "binance_life_block": 105277445,
+      "binance_life_received_raw": "192478391376068067",
+      "delta_blocks_giggle_minus_life": 16
+    },
+    {
+      "giggle_tx": "0xa0950656414f28be6b24b68938af88bbda96047ab209c055848f4b8a9c9ef35d",
+      "giggle_block": 105278669,
+      "giggle_received_raw": "5002900563173922",
+      "binance_life_tx": "0x7cd231eb99c52f21d62e13d48f3a62d37b28a72cccb8f3e5423edbc79ad903a2",
+      "binance_life_block": 105278656,
+      "binance_life_received_raw": "202137011671804714",
+      "delta_blocks_giggle_minus_life": 13
+    },
+    {
+      "giggle_tx": "0x6c62499b88bd730b0772391062100bc86a17fab624c9f1b0d930b288d038d300",
+      "giggle_block": 105285582,
+      "giggle_received_raw": "4963238713947033",
+      "binance_life_tx": "0xe98f8a4c1fbc1824f708eb5bd27ba8fc4c3650f8b26445276b7d8bb91470dc3a",
+      "binance_life_block": 105285576,
+      "binance_life_received_raw": "202889342166632493",
+      "delta_blocks_giggle_minus_life": 6
+    },
+    {
+      "giggle_tx": "0xe96f8e7e808e4c1d69f2714cdbe990b4b10d692ed71cf8fd852ed4bb1f72f698",
+      "giggle_block": 105289800,
+      "giggle_received_raw": "5096699615223302",
+      "binance_life_tx": "0xe184a16a2053d3465eec7a102d386036403c524cdc8844a96ca8d355acb6e4a3",
+      "binance_life_block": 105289792,
+      "binance_life_received_raw": "209427514102191904",
+      "delta_blocks_giggle_minus_life": 8
+    },
+    {
+      "giggle_tx": "0x4adf18db50e093f620cefcf93165c3252fe72860a081967ac048434baca34d01",
+      "giggle_block": 105290261,
+      "giggle_received_raw": "5509140149094926",
+      "binance_life_tx": "0x1626b701f051b0cb1b4582dfc2147bea869441be26cf038fb5af33c8a0f50db1",
+      "binance_life_block": 105290255,
+      "binance_life_received_raw": "226383132499882795",
+      "delta_blocks_giggle_minus_life": 6
+    },
+    {
+      "giggle_tx": "0x4a384c87bd55af82b2704ebedcba1ee572910bf333b68d6797600890887a7516",
+      "giggle_block": 105293377,
+      "giggle_received_raw": "6085748544198224",
+      "binance_life_tx": "0x5b1a4e0de3afd35fe333eee78d48c605c9b9f89061f2391f87270edef0288439",
+      "binance_life_block": 105293370,
+      "binance_life_received_raw": "250402211726971274",
+      "delta_blocks_giggle_minus_life": 7
+    },
+    {
+      "giggle_tx": "0xf72bcfbe48b2d27c86a22bdad974e4ac025a89c68bfc28586b062fdf97fd8314",
+      "giggle_block": 105296263,
+      "giggle_received_raw": "5633953635661268",
+      "binance_life_tx": "0xd0d0f944fbc01cc9c5912dff5a63efc22be0c8d09d010d2045507bd62cd25adc",
+      "binance_life_block": 105296362,
+      "binance_life_received_raw": "232642439649301814",
+      "delta_blocks_giggle_minus_life": -99
+    },
+    {
+      "giggle_tx": "0x7f86997525ed10ed29d187fd013a5e3951ca61ed526c2cf65ab23831378aa2db",
+      "giggle_block": 105299555,
+      "giggle_received_raw": "5978382022061825",
+      "binance_life_tx": "0xa866a7004d7012ee6640f9580aa46dcc5d6d2b0dd13b50a339161f6e09021a80",
+      "binance_life_block": 105299547,
+      "binance_life_received_raw": "247383459065734872",
+      "delta_blocks_giggle_minus_life": 8
+    },
+    {
+      "giggle_tx": "0xaa76c1dc78bf9d1c7460ce216b8db250dab2bea25022fb909a76aa8ea5568924",
+      "giggle_block": 105300532,
+      "giggle_received_raw": "5906931877999289",
+      "binance_life_tx": "0x212760c71a2a76c5e4379e5cd70a85c6382b879f3f11c555d9229e21f12629b1",
+      "binance_life_block": 105300527,
+      "binance_life_received_raw": "244916492606089460",
+      "delta_blocks_giggle_minus_life": 5
+    },
+    {
+      "giggle_tx": "0x40ef987330b9d40c91af99162bd42e5afac1da6ef1bdadab7364168465dc45b0",
+      "giggle_block": 105301683,
+      "giggle_received_raw": "5301979478814156",
+      "binance_life_tx": "0x2b2d42fa65b386f83ea228dba3e30a5dc5f2efc8502223557b33758762e964c5",
+      "binance_life_block": 105301669,
+      "binance_life_received_raw": "218984180953485419",
+      "delta_blocks_giggle_minus_life": 14
+    },
+    {
+      "giggle_tx": "0xd4571b354b952647139247b23aa2b94b33f517ca85c6b693b98c1a6917cec93f",
+      "giggle_block": 105307947,
+      "giggle_received_raw": "5212429511776956",
+      "binance_life_tx": "0x777319a10a08ba74e642fdb4101af0e6de0ef9c49437f924d49e0826b880f6da",
+      "binance_life_block": 105307937,
+      "binance_life_received_raw": "214903224066910788",
+      "delta_blocks_giggle_minus_life": 10
+    },
+    {
+      "giggle_tx": "0x36296be98ec60035844bf426675bdc24024fc700e48a92be453a38fb0c85741d",
+      "giggle_block": 105310736,
+      "giggle_received_raw": "7921277462494454",
+      "binance_life_tx": "0x0861538df1e53367eb0a1e71f83cff3d4d371bdaa76dfe15d07465686601ac39",
+      "binance_life_block": 105310628,
+      "binance_life_received_raw": "315860462499277399",
+      "delta_blocks_giggle_minus_life": 108
+    },
+    {
+      "giggle_tx": "0xfe88ba8806ec347a66176d9d0c3affd742e2c7dd1c731296bbdf4fdcfcd9764a",
+      "giggle_block": 105313519,
+      "giggle_received_raw": "5955873856582269",
+      "binance_life_tx": "0xd52e9820165123b20aae69440b2a783e69e234c318bab7a57074fed12c372828",
+      "binance_life_block": 105313500,
+      "binance_life_received_raw": "246054725968473805",
+      "delta_blocks_giggle_minus_life": 19
+    },
+    {
+      "giggle_tx": "0xd67b0b950394989f8a7f643a021135fa4bd5da94abb6dd4d711d96608f3ef2fe",
+      "giggle_block": 105367863,
+      "giggle_received_raw": "10893343511243003",
+      "binance_life_tx": "0xbf563e102a6d567676af4f0c394e2b03a4a3497e965b19b8bac639725d405bf4",
+      "binance_life_block": 105367849,
+      "binance_life_received_raw": "1877686607295066536",
+      "delta_blocks_giggle_minus_life": 14
+    },
+    {
+      "giggle_tx": "0x8f89a1caae674d9c0d9305b1ac44ab0acabd8048d1ba3943ddc3a21809f96f25",
+      "giggle_block": 105393731,
+      "giggle_received_raw": "6358585352881819",
+      "binance_life_tx": "0x274882030fd889378cf3e3037030af627e2137c2ee2f29ecee41e811e155f86e",
+      "binance_life_block": 105393720,
+      "binance_life_received_raw": "262176583485174768",
+      "delta_blocks_giggle_minus_life": 11
+    },
+    {
+      "giggle_tx": "0x7cf3d2264df8bf6f25ba0838875b676a7c2fe0999116339830ce527d8d014dd1",
+      "giggle_block": 105449980,
+      "giggle_received_raw": "5638756286150541",
+      "binance_life_tx": "0xb41c92022f42b7c4d6ffde689d68a7a145a35c8ad801506f11da2918d894e0de",
+      "binance_life_block": 105449963,
+      "binance_life_received_raw": "229574927547153140",
+      "delta_blocks_giggle_minus_life": 17
+    },
+    {
+      "giggle_tx": "0x31599af9d1bf1113ac9a4b55bd5f78fbbadb3ba6724bb273e7f25eaabec74a11",
+      "giggle_block": 105527737,
+      "giggle_received_raw": "18139343669427136",
+      "binance_life_tx": "0x3978d341f3e9974492c8160dc5b3b842e3040ac619f64f5636d19ccfdac42302",
+      "binance_life_block": 105527723,
+      "binance_life_received_raw": "744235649461656404",
+      "delta_blocks_giggle_minus_life": 14
+    },
+    {
+      "giggle_tx": "0x3dde9db8c938108ac6a5010fff7a5b9e070b4808a3bd7eaf3b25e8552899ccbe",
+      "giggle_block": 105563112,
+      "giggle_received_raw": "7982738219538808",
+      "binance_life_tx": "0xa047ca476fbe94e0a3aff095c13c118a3a90b7360251d31f631a240609d94500",
+      "binance_life_block": 105563100,
+      "binance_life_received_raw": "326490330349129951",
+      "delta_blocks_giggle_minus_life": 12
+    },
+    {
+      "giggle_tx": "0x247e8d0a9bb3a9ebc0651f62e3500f7b71d9d9a29a2779dbf3f22c72b87af889",
+      "giggle_block": 105716452,
+      "giggle_received_raw": "9562558271667530",
+      "binance_life_tx": "0x2baa7b90eac62641d62a39b20dbabd5104cb3724e40f9146a45dd2b8440ae238",
+      "binance_life_block": 105716438,
+      "binance_life_received_raw": "381492205963119002",
+      "delta_blocks_giggle_minus_life": 14
+    },
+    {
+      "giggle_tx": "0x9502fa919b3fef2c60a052ba208d12e2420c6f22359af825b6722a0383438ee5",
+      "giggle_block": 106085915,
+      "giggle_received_raw": "17463152254084428",
+      "binance_life_tx": "0xd8ef578cb4a28eff446b5b53dcd0819a126ad7364235553b033823122cc197cb",
+      "binance_life_block": 106085902,
+      "binance_life_received_raw": "685572768078204058",
+      "delta_blocks_giggle_minus_life": 13
+    }
+  ],
+  "interpretation": {
+    "confirmed": "Both token transfers for paired archived ERC20 events are to the same wallet from the same source contract, with repeated tightly aligned block proximity. Sample first and last pair logs independently matched direct BSC eth_getLogs.",
+    "analytical_inference": "Cross-token correlated source-controlled distributions likely represent an orchestrated emission/reward mechanism, requiring exclusion from original self-signed trade count pending sender, tx receipt and source contract behavioral analysis.",
+    "unconfirmed": "Economic reason for transfers; whether owner controlled source or paid consideration elsewhere; any realized PnL from these distributions; exact causation between the two tokens.",
+    "trading": "Do not promote receipt counts to win count, do not add GIGGLE closed trade, retain distinct 7 verified original Binance Life pool transactions and separate MARS owner pool trades."
+  },
+  "boundaries": [
+    "Historical snapshots originally collected 2026-10-11; no new full-chain history rescan or fresh present-day GIGGLE/Life balanceOf performed.",
+    "Pair algorithm is a descriptive alignment based on block numbers, with no independent random-control/null model; proximity alone does not prove onchain process causality.",
+    "Only four boundary sample Transfer logs were freshly reverified via bnb-mainnet eth_getLogs; other historical rows retain original archived source provenance.",
+    "No native BNB, router quote, gas, internal transfer, signer verification or total capital PnL re-computed in this artifact.",
+    "Original 7 self-signed Binance Life V2 pool trades and all MARS owner trades remain distinct and subject to respective venue quote reconciliation."
+  ],
+  "production": "OBSERVE_ONLY / NO_GO",
+  "change_scope": "RESEARCH_ONLY_NO_MONITOR_NO_AUTOMATION_NO_TRADING"
+}
