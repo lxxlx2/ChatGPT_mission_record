@@ -53,33 +53,57 @@
       "native_after_wei": "1765520066802470783",
       "native_block_delta_wei": "138260021229980516",
       "status": "VERIFIED"
-    }
-  ],
-  "pending": [
+    },
     {
       "block": 93212903,
-      "hash": "0xa003894b14aed35f4de603448fe337dfee3bd498fdd367ed82292abc0a7cd0dc"
+      "hash": "0xa003894b14aed35f4de603448fe337dfee3bd498fdd367ed82292abc0a7cd0dc",
+      "native_before_wei": "1765520066802470783",
+      "native_after_wei": "1895951698761784521",
+      "native_block_delta_wei": "130431631959313738",
+      "status": "VERIFIED"
     },
     {
       "block": 93214379,
-      "hash": "0x502493942a235c3dbbd26e7b7c163dccbc76aa67358ddbeae450ccaedb300a01"
+      "hash": "0x502493942a235c3dbbd26e7b7c163dccbc76aa67358ddbeae450ccaedb300a01",
+      "native_before_wei": "1895951698761784521",
+      "native_after_wei": "1291913438761784521",
+      "native_block_delta_wei": "-604038260000000000",
+      "status": "VERIFIED"
     },
     {
       "block": 93214434,
-      "hash": "0xf40f6446b3d6ec3f749d2600237aa811fd8c0aacceba102f1118bfdb3aac7d73"
+      "hash": "0xf40f6446b3d6ec3f749d2600237aa811fd8c0aacceba102f1118bfdb3aac7d73",
+      "native_before_wei": "1291913438761784521",
+      "native_after_wei": "1796140920918437844",
+      "native_block_delta_wei": "504227482156653323",
+      "status": "VERIFIED"
     },
     {
       "block": 93214501,
-      "hash": "0xce9d4452e16b03e07462a7cb6b2f17e78f703098b90867457665a77082c58a51"
+      "hash": "0xce9d4452e16b03e07462a7cb6b2f17e78f703098b90867457665a77082c58a51",
+      "native_before_wei": "1796140920918437844",
+      "native_after_wei": "1296093721318437844",
+      "native_block_delta_wei": "-500047199600000000",
+      "status": "VERIFIED"
     },
     {
       "block": 93214562,
-      "hash": "0x77089614cc6ad450b8ad98d1b48ba05ef0287ae6de41354be8a95c7b6a494a35"
+      "hash": "0x77089614cc6ad450b8ad98d1b48ba05ef0287ae6de41354be8a95c7b6a494a35",
+      "native_before_wei": "1296093721318437844",
+      "native_after_wei": "1634465827687029543",
+      "native_block_delta_wei": "338372106368591699",
+      "status": "VERIFIED"
     },
     {
       "block": 93215563,
-      "hash": "0xf37e31f65d2c9a670cff5212ee6146ab626df8d459714a4fd8d9721e52c984c8"
-    },
+      "hash": "0xf37e31f65d2c9a670cff5212ee6146ab626df8d459714a4fd8d9721e52c984c8",
+      "native_before_wei": "1626685726265144819",
+      "native_after_wei": "926586062185144819",
+      "native_block_delta_wei": "-700099664080000000",
+      "status": "VERIFIED"
+    }
+  ],
+  "pending": [
     {
       "block": 93215564,
       "hash": "0x7f3eb604393a358b1ac52447ee727946b837479523345e12fb35a1d41e3bc77c"
@@ -101,7 +125,7 @@
       "hash": "0x7e222ad7f657d632559afcec4cc9d3a1ca093224b4fe968e240a914c5e7f4a77"
     }
   ],
-  "status": "6_OF_17_BLOCK_NATIVE_DELTAS",
+  "status": "12_OF_17_BLOCK_NATIVE_DELTAS",
   "scope": "All actual wallet BNB balance before/after 17 unique token transfer tx blocks. Includes unrelated same-block flows, not token transaction profit.",
   "production": "NO_GO"
 }
