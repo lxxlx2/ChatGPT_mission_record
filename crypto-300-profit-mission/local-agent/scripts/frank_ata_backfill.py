@@ -31,7 +31,7 @@ def run(argv: list[str] | None = None, *, rpc=None) -> dict:
                         help="Explicit Solana token Mint, repeat <=12 times")
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--since-time", type=int, default=0,
-                        help="UTC Unix timestamp lower-bound (0 = bounded recent history only)")
+                        help="UTC Unix timestamp lower bound; 0 = no time lower bound (pages/transactions budgets still apply)")
     parser.add_argument("--page-size", type=int, default=50)
     parser.add_argument("--pages-per-ata", type=int, default=2)
     parser.add_argument("--max-transactions", type=int, default=40)
