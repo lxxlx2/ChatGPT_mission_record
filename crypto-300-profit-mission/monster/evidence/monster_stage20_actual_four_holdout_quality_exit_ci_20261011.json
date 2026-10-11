@@ -228,5 +228,24 @@
   "mac_deployment": "NO_GO",
   "real_email": "OFF",
   "production_trading": "NO_GO",
-  "frank": "UNTOUCHED"
+  "frank": "UNTOUCHED",
+  "exact_sha_enforced_independent_aggregate_rerun": {
+    "script": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage20_aggregate.py",
+    "workflow": ".github/workflows/monster-v4-stage20-recompute-verified-artifacts.yml",
+    "github_run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131123057",
+    "conclusion": "SUCCESS",
+    "raw_artifact_sha_verification": "ALL_FOUR_ZIP_AND_EXTRACTED_JSON_SHA256_MATCHED",
+    "frozen_dates_exhaustive": true,
+    "recomputed_gate_values": {
+      "minimum_evaluable": false,
+      "minimum_distinct_dates": true,
+      "median_positive": true,
+      "win_fraction": false,
+      "sum30_positive": true,
+      "censor_rate": false
+    },
+    "all_hard_gates_passed": false,
+    "recomputed_artifact_id": 11698108818,
+    "artifact_zip_sha256": "8313647b78a0dab1e2014554e957aa6e0028fe67de27949b9cc5dea642d97440"
+  }
 }
