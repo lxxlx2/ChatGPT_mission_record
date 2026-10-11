@@ -138,3 +138,34 @@ def sync_transfer_history(spool: EvidenceSpool, publisher: GitEvidencePublisher)
         return {"status": "SYNC_PARTIAL" if errors else
                 "SYNC_PENDING" if pending else "SYNC_OK",
                 "uploaded": uploaded, "pending": pending, "errors": errors}
+
+
+def publish_evidence_batch(
+    spool: EvidenceSpool, publisher: GitEvidencePublisher,
+    frank_database: Path, capture_transfer: bool,
+) -> dict:
+    """Called exclusively on existing Mission Control background worker.
+
+    A transfer-source error must not block original CA/Frank Git sync. The
+    writer, original signals and Gmail never call this from their hot path.
+    """
+    capture = "NOT_REQUESTED"
+    if capture_transfer:
+        from .wallet_transfers import export_signature_evidence
+        try:
+            report = export_signature_evidence(frank_database)
+            queue_transfer_history(spool, report)
+            capture = "QUEUED_CONTENT_ADDRESSED"
+        except (OSError, ValueError, RuntimeError, TypeError) as exc:
+            capture = "SOURCE_UNAVAILABLE_" + type(exc).__name__
+    try:
+        core = publisher.sync()
+    except (OSError, ValueError, RuntimeError, TypeError) as exc:
+        core = {"status": "SYNC_PARTIAL", "error_type": type(exc).__name__}
+    try:
+        transfer = sync_transfer_history(spool, publisher)
+    except (OSError, ValueError, RuntimeError, TypeError) as exc:
+        transfer = {"status": "SYNC_PARTIAL", "error_type": type(exc).__name__}
+    return {"capture": capture, "original": core, "transfer": transfer,
+            "fully_synced": (core["status"] == "SYNC_OK"
+                             and transfer["status"] == "SYNC_OK")}
