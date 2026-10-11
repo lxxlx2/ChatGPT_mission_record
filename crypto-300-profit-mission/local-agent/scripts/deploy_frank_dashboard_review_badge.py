@@ -24,23 +24,23 @@ from urllib.parse import quote
 
 # Immutable product revision: product source files were finalized before this
 # operations script. Squash merges must never silently change this pin.
-COMMIT = "1014c14b4df00757593f7ca4de8cedae0f09afaa"
+COMMIT = "1e8fb2a5c89ae8cafba5d07283482b8858583b33"
 ROOT = "crypto-300-profit-mission/local-agent/mission_agent/mission_control"
 PATCHES = {
     "server.py": {
         "baseline": "b5eb4af5c945cc1b62337d48393fe02243f9505f",
         "legacy": "f5e00781ea4af45b4d6b15a09b8cb000f5b744f4",
-        "target": "9dcf26fe03dadd43f75c401d38ba0e412101be41",
+        "target": "03dce99acd5fa3844444f588eb2965bb4a419a75",
     },
     "static/app.js": {
         "baseline": "8f0ac1beace94f01894c151576bc276f48f1b4a4",
         "legacy": "14985b35b019054d5ff9871e002c32421345ff17",
-        "target": "f7880daa425d0a286de0c16836794c62965454ed",
+        "target": "8c8071babf34c4174b90a6699e34565575f4b7a8",
     },
     "delivery_review.py": {
         "baseline": None,
         "legacy": "62f5fa85bf41cd95e4a31a373910f81970368ea6",
-        "target": "afa98794136f48762f15fc3cd627866c7f90386a",
+        "target": "0f2032b8027f17a7e27da55d92468bbe524bbc14",
     },
 }
 
