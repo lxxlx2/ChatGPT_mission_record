@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "token": "GIGGLE",
+  "chain": "bnb-mainnet",
+  "scope": "16 unique wallet-token event blocks, native BNB balance diff N minus N-1. Not isolated per-tx profit",
+  "expected_total_unique_blocks": 16,
+  "source_files": [
+    "BSC_MEME_8E6B_GIGGLE_OUTBOUND_FULL_CURSOR_AUDIT_2026-10-11.json",
+    "BSC_MEME_8E6B_2026_SIX_CORE_POSITION_TRANSFER_HISTORY_2026-10-11.json"
+  ],
+  "verified_blocks": 8,
+  "rows": [
+    {
+      "hash": "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356",
+      "block": 62016808,
+      "dir": "IN",
+      "balance_before_hex": "0x423983ba2be1cbd7",
+      "balance_after_hex": "0x34418cb1599ecdd7",
+      "delta_wei": "-1006544659000000000"
+    },
+    {
+      "hash": "0x781dc7a0ebe9f96ab6845d13d26509a4fdc4d56fee7b7b2c7bbff067e13ee5de",
+      "block": 62018718,
+      "dir": "IN",
+      "balance_before_hex": "0x343b57de47eb0fd7",
+      "balance_after_hex": "0x2d30ccab17c4efd7",
+      "delta_wei": "-507370960000000000"
+    },
+    {
+      "hash": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674",
+      "block": 62019177,
+      "dir": "OUT",
+      "balance_before_hex": "0x2d30ccab17c4efd7",
+      "balance_after_hex": "0x3e6a29a09b204aea",
+      "delta_wei": "1241125381857827603"
+    },
+    {
+      "hash": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+      "block": 62020864,
+      "dir": "OUT",
+      "balance_before_hex": "0x375fd48b4e8cf6ea",
+      "balance_after_hex": "0x3744c189773438ea",
+      "delta_wei": "-7620723000000000"
+    },
+    {
+      "hash": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+      "block": 62021192,
+      "dir": "OUT",
+      "balance_before_hex": "0x3744c189773438ea",
+      "balance_after_hex": "0x373c6646f66ff6ea",
+      "delta_wei": "-2352141000000000"
+    },
+    {
+      "hash": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+      "block": 62021220,
+      "dir": "OUT",
+      "balance_before_hex": "0x373c6646f66ff6ea",
+      "balance_after_hex": "0x3723547f742330ea",
+      "delta_wei": "-7056423000000000"
+    },
+    {
+      "hash": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+      "block": 62066886,
+      "dir": "OUT",
+      "balance_before_hex": "0x8053b31c10f6520e",
+      "balance_after_hex": "0x804b57d99032100e",
+      "delta_wei": "-2352141000000000"
+    },
+    {
+      "hash": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+      "block": 62067451,
+      "dir": "OUT",
+      "balance_before_hex": "0x804b57d99032100e",
+      "balance_after_hex": "0x804293d2d5301e0e",
+      "delta_wei": "-2467333000000000"
+    }
+  ],
+  "pending": [
+    {
+      "hash": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
+      "block": 62154722,
+      "dir": "OUT"
+    },
+    {
+      "hash": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b",
+      "block": 62299083,
+      "dir": "OUT"
+    },
+    {
+      "hash": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
+      "block": 62485438,
+      "dir": "IN"
+    },
+    {
+      "hash": "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb",
+      "block": 63071724,
+      "dir": "IN"
+    },
+    {
+      "hash": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
+      "block": 63204096,
+      "dir": "OUT"
+    },
+    {
+      "hash": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
+      "block": 63274247,
+      "dir": "OUT"
+    },
+    {
+      "hash": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
+      "block": 63310363,
+      "dir": "OUT"
+    },
+    {
+      "hash": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f",
+      "block": 63310510,
+      "dir": "OUT"
+    }
+  ],
+  "status": "PARTIAL_8_OF_16_BLOCKS",
+  "production": "NO_GO"
+}
