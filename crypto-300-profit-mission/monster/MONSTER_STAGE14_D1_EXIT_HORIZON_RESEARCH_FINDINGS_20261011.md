@@ -38,3 +38,13 @@
 另外需要独立其他AI的真实Review和修复，再进入Mac与Frank并行部署、真实通知验收。截止本报告，`STRATEGY_POSITIVE_PNL_VALIDATED=FALSE`，`INDEPENDENT_REVIEW=NOT_DONE`，`LOCAL_DEPLOYMENT=NO_GO`，`EMAIL_SENT=0`，`AUTOMATED_TRADES=0`。
 
 本轮CI首次编译失败来自测试fixture一个右大括号遗漏，已提交更正，重新执行的同一研究代码 [CI #38123054002](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38123054002) 成功；历史源、源重放的旧24h一致性和31个案例全部通过。失败记录未删除。
+
+## 5. 2026-10-11 原始产物复核与严格配对统计（本次交接追加）
+
+研究证据：从原始 [CI #38123054002](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38123054002) 下载 artifact `11695178960`，解析原始 `monster_stage14_31d1_frozen_results.json`，不是只转述 CI 绿色状态或仓库摘要。该 ZIP 的 SHA-256 为 `8525f972949ba59a8067f795ed4106aa10d13fed57c32ed1cae5ea32b9a87a51`，解压 JSON 的 SHA-256 为 `c8c5211f884e107aafd529afab24896d2324107032a30ba1cbc95669e1980f11`，均与 [Stage14 已提交的永久证据](evidence/monster_stage14_actual_31d1_five_horizon_ci_20261011.json) 完全一致；2025-11、2026-02、2026-05、2026-08 四份 Stage13 ZIP 与 JSON 也分别与 [Stage13 永久 SHA 登记](evidence/monster_stage13_four_dates_actual_504spot_ci_consolidated_20261011.json) 一致。此操作为实施者的二次数据核查，**不得记为独立其他 AI Review**。
+
+在相同的22笔 D1 中，6h/24h 均满足原研究设定的最低历史分钟成交量与退出条件：6h 平均收益 **-0.960428%**，24h 同组平均收益 **-1.068936%**，平均配对改善 **+0.108509个百分点**；分别给每笔分配30 USDT 的模型净盈亏之和约 **-6.338823 / -7.054980 USDT**，差值仅 **+0.716157 USDT**（不是实盘账户利润）。14笔6h优于24h、8笔相反，双侧精确符号检验的未调整参考 `p = 0.286279`（单侧 `p = 0.143139`，由 `sum(comb(22,k) for k in range(14,23))/2**22` 计算）。由于信号在同一市场日期内可能相关、已比较五种退出时间并观察过这些样本，该 `p` 值也不具有未选择独立验证的显著性保证。
+
+五个预登记日期分别在可配对交易中的平均改善（6h减24h，百分点）：2025-11-17 **+4.191184**（6笔），2026-02-17 **-2.226476**（4笔），2026-05-17 **-4.493444**（2笔），2026-08-17 **-1.761730**（5笔），2026-09-17 **+0.788305**（5笔）。五个日期中只有两天平均改善为正。24h 的少数尾部赢家在6h退出时损失很大，例如 ONE 由 +30.628100% 缩为 +1.733079%。
+
+复核判定：**原 Stage14 的基础数据和已归档摘要可复现，但“6小时退出明显优于24小时”尚无可靠统计证据；五日期均值也不支持一致改进。** 不修改 D0、D1、费率或滑点，不挑选盈利日期/信号，不扩大此批样本中的参数网格。下一项有实质价值的研究是先明确未暴露时间段/历史退市币的样本和因果入场退出设计，冻结规则，再检验相对市场的增量收益、漏报率、通知密度及退出可成交性。继续保持 `STRATEGY_POSITIVE_PNL_VALIDATED=FALSE`、`INDEPENDENT_REVIEW=NOT_DONE`、`DEPLOYMENT=NO_GO`。
