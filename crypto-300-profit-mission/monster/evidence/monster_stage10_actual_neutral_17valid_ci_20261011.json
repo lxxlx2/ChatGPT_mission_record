@@ -1,0 +1,312 @@
+{
+  "schema": "MONSTER_STAGE10_ACTUAL_NEUTRAL_REPLAY_RESULTS_V1",
+  "source": "Binance 1m official original histories frozen in Git",
+  "replay_model": "Exact production V4 observe_snapshot/process_queue",
+  "ci_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38115168303",
+  "ci_code_commit": "5fd8b4093be655e3dfff143c17904d95778e130e",
+  "ci_conclusion": "success",
+  "sample": "Precommitted random-symbol calendar-time spot survivor biased 24, 7 historical source-missing never replaced",
+  "source_unavailable": [
+    {
+      "anchor_utc": "2025-06-17T12:00:00Z",
+      "reason": "SOURCE_PREHISTORY_NOT_AVAILABLE",
+      "symbol": "QQQBUSDT"
+    },
+    {
+      "anchor_utc": "2025-06-17T12:00:00Z",
+      "reason": "SOURCE_PREHISTORY_NOT_AVAILABLE",
+      "symbol": "NVDABUSDT"
+    },
+    {
+      "anchor_utc": "2025-10-17T12:00:00Z",
+      "reason": "SOURCE_PREHISTORY_NOT_AVAILABLE",
+      "symbol": "SENTUSDT"
+    },
+    {
+      "anchor_utc": "2026-01-17T12:00:00Z",
+      "reason": "SOURCE_PREHISTORY_NOT_AVAILABLE",
+      "symbol": "COINBUSDT"
+    },
+    {
+      "anchor_utc": "2026-01-17T12:00:00Z",
+      "reason": "SOURCE_PREHISTORY_NOT_AVAILABLE",
+      "symbol": "DRAMBUSDT"
+    },
+    {
+      "anchor_utc": "2026-01-17T12:00:00Z",
+      "reason": "SOURCE_PREHISTORY_NOT_AVAILABLE",
+      "symbol": "AVGOBUSDT"
+    },
+    {
+      "anchor_utc": "2026-04-17T12:00:00Z",
+      "reason": "SOURCE_PREHISTORY_NOT_AVAILABLE",
+      "symbol": "CRWDBUSDT"
+    }
+  ],
+  "summary": {
+    "actual_nonzero_trade_3m_polls": 3186,
+    "actual_nonzero_trade_symbol_hours": 159.3,
+    "d1_setup_symbols": 0,
+    "frozen_candidates": 24,
+    "intended_3m_poll_intervals": 4080,
+    "nominal_window_symbol_hours": 204,
+    "per_calendar_day": {
+      "2025-06-17": {
+        "setups": 0,
+        "valid_symbols": 2,
+        "watches": 0
+      },
+      "2025-10-17": {
+        "setups": 0,
+        "valid_symbols": 3,
+        "watches": 0
+      },
+      "2026-01-17": {
+        "setups": 0,
+        "valid_symbols": 1,
+        "watches": 0
+      },
+      "2026-04-17": {
+        "setups": 0,
+        "valid_symbols": 3,
+        "watches": 0
+      },
+      "2026-07-17": {
+        "setups": 0,
+        "valid_symbols": 4,
+        "watches": 0
+      },
+      "2026-09-17": {
+        "setups": 0,
+        "valid_symbols": 4,
+        "watches": 0
+      }
+    },
+    "proxy_30usd_negative_cases": 0,
+    "proxy_30usd_net_24h_median_pct": null,
+    "proxy_30usd_positive_cases": 0,
+    "proxy_exits_n": 0,
+    "setups": 0,
+    "skipped_zero_trade_3m_polls": 894,
+    "source_not_historically_available": 7,
+    "valid_contiguous_60h": 17,
+    "watched_symbols": 0,
+    "watches": 0,
+    "zero_trade_skip_ratio": 0.219118
+  },
+  "per_case": [
+    {
+      "anchor_utc": "2025-06-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 240,
+      "polls_skipped_no_trade": 0,
+      "replay_end_utc": "2025-06-17T18:00:00Z",
+      "replay_start_utc": "2025-06-17T06:03:00Z",
+      "symbol": "ENAUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2025-06-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 226,
+      "polls_skipped_no_trade": 14,
+      "replay_end_utc": "2025-06-17T18:00:00Z",
+      "replay_start_utc": "2025-06-17T06:03:00Z",
+      "symbol": "SSVUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2025-10-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 240,
+      "polls_skipped_no_trade": 0,
+      "replay_end_utc": "2025-10-17T18:00:00Z",
+      "replay_start_utc": "2025-10-17T06:03:00Z",
+      "symbol": "ADAUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2025-10-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 240,
+      "polls_skipped_no_trade": 0,
+      "replay_end_utc": "2025-10-17T18:00:00Z",
+      "replay_start_utc": "2025-10-17T06:03:00Z",
+      "symbol": "ZKUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2025-10-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 240,
+      "polls_skipped_no_trade": 0,
+      "replay_end_utc": "2025-10-17T18:00:00Z",
+      "replay_start_utc": "2025-10-17T06:03:00Z",
+      "symbol": "NEARUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-01-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 203,
+      "polls_skipped_no_trade": 37,
+      "replay_end_utc": "2026-01-17T18:00:00Z",
+      "replay_start_utc": "2026-01-17T06:03:00Z",
+      "symbol": "PSGUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-04-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 213,
+      "polls_skipped_no_trade": 27,
+      "replay_end_utc": "2026-04-17T18:00:00Z",
+      "replay_start_utc": "2026-04-17T06:03:00Z",
+      "symbol": "0GUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-04-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 240,
+      "polls_skipped_no_trade": 0,
+      "replay_end_utc": "2026-04-17T18:00:00Z",
+      "replay_start_utc": "2026-04-17T06:03:00Z",
+      "symbol": "ONDOUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-04-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 212,
+      "polls_skipped_no_trade": 28,
+      "replay_end_utc": "2026-04-17T18:00:00Z",
+      "replay_start_utc": "2026-04-17T06:03:00Z",
+      "symbol": "ILVUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-07-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 58,
+      "polls_skipped_no_trade": 182,
+      "replay_end_utc": "2026-07-17T18:00:00Z",
+      "replay_start_utc": "2026-07-17T06:03:00Z",
+      "symbol": "ZRXUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-07-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 221,
+      "polls_skipped_no_trade": 19,
+      "replay_end_utc": "2026-07-17T18:00:00Z",
+      "replay_start_utc": "2026-07-17T06:03:00Z",
+      "symbol": "XVSUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-07-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 150,
+      "polls_skipped_no_trade": 90,
+      "replay_end_utc": "2026-07-17T18:00:00Z",
+      "replay_start_utc": "2026-07-17T06:03:00Z",
+      "symbol": "BANANAUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-07-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 124,
+      "polls_skipped_no_trade": 116,
+      "replay_end_utc": "2026-07-17T18:00:00Z",
+      "replay_start_utc": "2026-07-17T06:03:00Z",
+      "symbol": "RVNUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-09-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 105,
+      "polls_skipped_no_trade": 135,
+      "replay_end_utc": "2026-09-17T18:00:00Z",
+      "replay_start_utc": "2026-09-17T06:03:00Z",
+      "symbol": "QUICKUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-09-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 60,
+      "polls_skipped_no_trade": 180,
+      "replay_end_utc": "2026-09-17T18:00:00Z",
+      "replay_start_utc": "2026-09-17T06:03:00Z",
+      "symbol": "TNSRUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-09-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 174,
+      "polls_skipped_no_trade": 66,
+      "replay_end_utc": "2026-09-17T18:00:00Z",
+      "replay_start_utc": "2026-09-17T06:03:00Z",
+      "symbol": "PORTOUSDT",
+      "watches": 0
+    },
+    {
+      "anchor_utc": "2026-09-17T12:00:00Z",
+      "d1_setups": 0,
+      "first_watch_utc": null,
+      "intended_polls": 240,
+      "polls": 240,
+      "polls_skipped_no_trade": 0,
+      "replay_end_utc": "2026-09-17T18:00:00Z",
+      "replay_start_utc": "2026-09-17T06:03:00Z",
+      "symbol": "LTCUSDT",
+      "watches": 0
+    }
+  ],
+  "notes": [
+    "No historical actual L2 orderbook",
+    "V4 historical quote24 is rolling minute-quote proxy",
+    "No recorded WATCH -> no simulated trades -> profits null, not zero",
+    "This is a very small set of 12h windows and NOT full-market FPR",
+    "Current-listed-only survivor bias",
+    "Zero-trade 1m minutes are skipped by historical replay, not imputed"
+  ],
+  "deployment": "NO_GO"
+}
