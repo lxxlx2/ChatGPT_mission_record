@@ -1,0 +1,57 @@
+{
+  "schema": "MONSTER_STAGE27_LOCKED_HISTORICAL_SHARED_D1_CAPACITY_AND_CASH_ACCOUNTING_V1",
+  "date": "2026-10-11",
+  "source": "All 36 SHA256 verified original Stage26 V4 history artifacts, six already exposed dates; not new unseen data",
+  "source_file": "monster_stage26_verified_sharded_168h_artifact_proof_20261011.json",
+  "all_watches": 1132,
+  "all_complete_symbol_dates": 2719,
+  "shared_queue": {
+    "process_queue_limit_per_poll": 8,
+    "poll_spacing_minutes": 3,
+    "ttl_minutes": 15,
+    "model": "optimistic first evaluation only, FIFO UTC symbol lexical; excludes repeated pending evaluations, so underestimates saturation; no shared global SQLite recreation",
+    "probe": "2026-02-06T00:36:00Z burst, previously observed 98 distinct symbols",
+    "report": "all 1132 candidate events, first evaluations, expires, busy peak, per-day rates, not actual D1 outcome or email delivery"
+  },
+  "ledger": {
+    "watch_entries": "Stage26 all 806 non-overlapping original per-symbol candidates, including source-censored positions",
+    "delay_minutes": 3,
+    "hold_hours": 24,
+    "fee_bps_side": 10,
+    "slippage_bps_side": [
+      20,
+      100
+    ],
+    "starting_balances": [
+      30,
+      300
+    ],
+    "max_positions": [
+      1,
+      10
+    ],
+    "full_lot_USDT": 30,
+    "fixed_full_lot": "Only if cash >=30, else skip; settle after 24h; avoid future winner selection",
+    "fractional_lot": "Use min(30,cash) with at least 1 USDT, no leverage, no negative balance",
+    "censored_recovery_bounds": [
+      0,
+      100
+    ],
+    "zero_recovery": "Stress case only, NOT known historical economic total loss",
+    "full_recovery": "Optimistic case only, NOT proof historical execution",
+    "interim_open_position_nav": "Book at original entry cost, not true historical mark-to-market",
+    "same_shard_origin": "same original frozen Stage26 WATCH events, no new model parameters"
+  },
+  "gates": {
+    "all_36_original_sha_verified": true,
+    "all_758_symbols_by_6_dates": true,
+    "original_replay_unchanged": true,
+    "original_40_2x_no_tuning": true,
+    "source_errors_fail_closed": true
+  },
+  "other_ai_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "trading": "NO_GO",
+  "real_gmail": "OFF",
+  "frank": "UNCHANGED"
+}
