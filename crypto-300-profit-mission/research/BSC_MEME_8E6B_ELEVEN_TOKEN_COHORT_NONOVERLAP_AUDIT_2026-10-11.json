@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-11",
+  "chain": "bnb-mainnet",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "scope": "11 specific 2025-2026 BSC token contract histories, not whole lifetime or all BSC meme universe",
+  "source_files": [
+    "BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_8E6B_GIGGLE_16_BLOCK_NATIVE_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_8E6B_HAJIMI_LOBSTER_26_BLOCK_BALANCES_2026-10-11.json",
+    "BSC_MEME_8E6B_SIX_CORE_NATIVE_BALANCE_AUDIT_2026-10-11.json",
+    "BSC_MEME_8E6B_EARLY_2025_THREE_TOKEN_BLOCK_AND_TX_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_8E6B_MUBARAK_16_BLOCK_NATIVE_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_8E6B_TUT_10_BLOCK_NATIVE_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_8E6B_BINANCE_LIFE_27_BLOCK_BALANCE_AUDIT_2026-10-11.json",
+    "BSC_MEME_8E6B_GIGGLE_MIXED_BNB_USDT_SETTLEMENT_2026-10-11.json",
+    "BSC_MEME_8E6B_EARLY_2025_THREE_TOKEN_FULL_TRANSFER_HISTORY_2026-10-11.json",
+    "BSC_MEME_8E6B_MUBARAK_TUT_FULL_TRANSFER_HISTORY_2026-10-11.json"
+  ],
+  "cohorts": [
+    {
+      "token": "4",
+      "blocks": 19,
+      "net_native_wei": "13164987453603066615",
+      "inventory_status": "CLOSED",
+      "provenance_grade": "19/19 self signed success, BNB/WBNB settlement exactly reconciled",
+      "net_native_BNB_approx": 13.164987453603066
+    },
+    {
+      "token": "GIGGLE",
+      "blocks": 16,
+      "net_native_wei": "5715925819273344974",
+      "inventory_status": "CLOSED",
+      "provenance_grade": "16/16 self signed success; gross native plus 6 USDT receipts and one USDT purchase; internal trace open",
+      "net_native_BNB_approx": 5.715925819273345
+    },
+    {
+      "token": "HAJIMI",
+      "blocks": 13,
+      "net_native_wei": "1242899280798485108",
+      "inventory_status": "CLOSED",
+      "provenance_grade": "13/13 signed and full status success; quote and internal trace open",
+      "net_native_BNB_approx": 1.2428992807984849
+    },
+    {
+      "token": "龙虾",
+      "blocks": 13,
+      "net_native_wei": "4794001707717376678",
+      "inventory_status": "CLOSED",
+      "provenance_grade": "13/13 signed success status, 2 full receipts truncated; quote and internal trace open",
+      "net_native_BNB_approx": 4.794001707717377
+    },
+    {
+      "token": "我踏马来了",
+      "blocks": 6,
+      "net_native_wei": "-599023816844905516",
+      "inventory_status": "CLOSED",
+      "provenance_grade": "6/6 signed successful original transactions; quote/internal trace open",
+      "net_native_BNB_approx": -0.5990238168449055
+    },
+    {
+      "token": "SIREN",
+      "blocks": 2,
+      "net_native_wei": "-68385433689666233",
+      "inventory_status": "CLOSED",
+      "provenance_grade": "all receipts success; other original signers checked, fee/quote unresolved",
+      "net_native_BNB_approx": -0.06838543368966624
+    },
+    {
+      "token": "BULLA",
+      "blocks": 2,
+      "net_native_wei": "195730110912580299",
+      "inventory_status": "CLOSED",
+      "provenance_grade": "all receipts success; 1/2 confirmed original signers",
+      "net_native_BNB_approx": 0.1957301109125803
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "blocks": 7,
+      "net_native_wei": "914907916334251713",
+      "inventory_status": "OPEN_REMAINDER",
+      "provenance_grade": "all receipts success; other original signers checked, fee/quote unresolved",
+      "net_native_BNB_approx": 0.9149079163342517
+    },
+    {
+      "token": "MUBARAK",
+      "blocks": 16,
+      "net_native_wei": "5299103329471661818",
+      "inventory_status": "CLOSED",
+      "provenance_grade": "16/16 signed and success, full native input/gas, quote/internal trace open",
+      "net_native_BNB_approx": 5.299103329471662
+    },
+    {
+      "token": "TUT",
+      "blocks": 10,
+      "net_native_wei": "317210430780095567",
+      "inventory_status": "OPEN_REMAINDER",
+      "provenance_grade": "10/10 success; 8/10 signed, 1 observed different signer, 1 truncated; quote/internal trace open",
+      "net_native_BNB_approx": 0.31721043078009553
+    },
+    {
+      "token": "币安人生",
+      "blocks": 27,
+      "net_native_wei": "4853964166333634383",
+      "inventory_status": "OPEN_REMAINDER",
+      "provenance_grade": "27 event blocks verified; 17 nonzero native blocks all self-signed successful; 10 zero-native events not yet fully attributed",
+      "net_native_BNB_approx": 4.853964166333634
+    }
+  ],
+  "coverage": {
+    "tokens": 11,
+    "total_token_event_blocks": 131,
+    "distinct_token_event_blocks": 131,
+    "duplicate_native_block_issues": [],
+    "closed_erc20_inventory": 8,
+    "open_erc20_inventory": 3,
+    "all_eleven_in_out_erc20_cursors_complete": true,
+    "all_19_contracts_covered": false
+  },
+  "quote": {
+    "usdt_contract": "0x55d398326f99059ff775485246999027b3197955",
+    "only_GIGGLE_usdt_trade_scope": true,
+    "giggle_usdt_in_raw": "5061629806775951927704",
+    "giggle_usdt_out_raw": "1000000000000000000000",
+    "giggle_net_usdt_raw": "4061629806775951927704"
+  },
+  "aggregate_native_wallet_event_block_net_wei": "35831320964689925406",
+  "aggregate_native_wallet_event_block_net_bnb_approx": 35.83132096468992,
+  "limitations": [
+    "Aggregate is 131 sampled wallet BNB balance changes on token transfer blocks, not proof of 131 independently PnL-attributed trades",
+    "Open inventory of BROCCOLI F3B, TUT, 币安人生 remains token exposure",
+    "BNB event net cannot simply be combined with USDT net without a price source at relevant timestamps",
+    "Only 19 known token CAs screened, with 11 showing 8e6b activity, not all blockchain assets",
+    "Cluster ownership, all-wallet losses, internal trace and same-block attribution not fully audited",
+    "Source universe and winner wallet discovery have strong survivorship/selection bias",
+    "No historical follower delay slippage / gas / MEV replay yet"
+  ],
+  "interpretation": "High research-priority repeated material event candidate; profitability ranking and automated copying not verified.",
+  "production": "NO_GO"
+}
