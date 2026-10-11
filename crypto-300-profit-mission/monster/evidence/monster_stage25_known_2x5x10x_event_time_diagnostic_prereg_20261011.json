@@ -1,0 +1,47 @@
+{
+  "schema": "MONSTER_STAGE25_STAGE24_ALL_VERIFIED_WINNER_EVENT_ALIGNED_CAUSAL_DIAGNOSTIC_PREREG_V1",
+  "asof_bangkok": "2026-10-11",
+  "frozen_previous_observed_evidence": "monster_stage24_6date_original_zip_shas_and_results_20261011.json",
+  "frozen_40_2x_register": "monster_stage24_40_joint_verified_2x_events_20261011.csv",
+  "total_unique_winning_date_symbol_pairs": 40,
+  "event_threshold_cases": {
+    "gross_hourly_2x": 40,
+    "gross_hourly_5x": 4,
+    "gross_hourly_10x": 1,
+    "total": 45
+  },
+  "dates": [
+    "2025-11-04",
+    "2025-12-04",
+    "2026-02-04",
+    "2026-04-04",
+    "2026-08-04",
+    "2026-09-04"
+  ],
+  "sample_selection": "Entire prior Stage24 jointly-source-verified future gross 2x winner set, including all 4 gross5x and 1 gross10x as SAME underlying cohort repeated thresholds. Explicit hindsight-selected diagnostic, not all-market unbiased recall.",
+  "source_provenance": {
+    "six_stage24_original_artifact_SHA256": "monster_stage24_6date_original_zip_shas_and_results_20261011.json",
+    "raw_hourly_baselines_and_cross_hour": "from original six SHA-gated zipped JSON every winner",
+    "minute": "Binance official Spot daily 1m archives and publisher CHECKSUM SHA256 for 60h centered on first historical threshold-crossing 1h interval"
+  },
+  "exact_existing_event_scorer_git_blob_sha1": "61527b48d9bc0c8b32db43da44439ea8e41a45ba",
+  "exact_original_production_v4_replayer_git_blob_sha1": "95b2595281f5aa8675c6a95e542d40d36b78e847",
+  "censor_policy": "Archive incomplete or hourly-minute mismatch must be reported as censored, never no WATCH or failed trade",
+  "causal_order": "Find first verified minute HIGH in first crossing 1h only; event-local scanner V4 uses closed 1m at 3m intervals and past rolling24h volume; WATCH <= crossing minute classified early (note timestamp ties lower confidence)",
+  "horizon": "Only 12h event-aligned around known first cross; NOT full continuous seven-day V4 monitoring",
+  "mandatory_outputs": [
+    "all 45 event identities and source proofs",
+    "2x classification/lead minutes/zero alerts",
+    "5x and 10x same underlying duplicates not counted independent",
+    "TUTUSDT exact 2x/5x/10x event diagnostic",
+    "HEIUSDT, GIGGLEUSDT, BICOUSDT event diagnostic",
+    "source missing and censorship",
+    "comparison with Stage24 frozen early 12h events"
+  ],
+  "future_policy": "Do not trade, alert, create new autonomous monitor or declare precision/winrate from posthoc positive cohort. Follow up genuine 168h continuous full-market with ordinary cases if hypothesis needs validation.",
+  "frank": "UNCHANGED",
+  "independent_other_ai_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "real_gmail": "OFF",
+  "trading": "NO_GO"
+}
