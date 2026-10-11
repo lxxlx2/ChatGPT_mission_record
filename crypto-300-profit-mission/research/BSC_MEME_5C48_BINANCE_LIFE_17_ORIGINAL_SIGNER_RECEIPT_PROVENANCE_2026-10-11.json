@@ -110,56 +110,130 @@
       "receipt_status": "0x1",
       "receipt_gas_wei": null,
       "owner_signed": true
-    }
-  ],
-  "pending": [
+    },
     {
       "hash": "0xf40f6446b3d6ec3f749d2600237aa811fd8c0aacceba102f1118bfdb3aac7d73",
       "block": 93214434,
-      "native_block_delta_wei": "504227482156653323"
+      "native_block_delta_wei": "504227482156653323",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
     },
     {
       "hash": "0xce9d4452e16b03e07462a7cb6b2f17e78f703098b90867457665a77082c58a51",
       "block": 93214501,
-      "native_block_delta_wei": "-500047199600000000"
+      "native_block_delta_wei": "-500047199600000000",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "500000000000000000",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
     },
     {
       "hash": "0x77089614cc6ad450b8ad98d1b48ba05ef0287ae6de41354be8a95c7b6a494a35",
       "block": 93214562,
-      "native_block_delta_wei": "338372106368591699"
+      "native_block_delta_wei": "338372106368591699",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
     },
     {
       "hash": "0xf37e31f65d2c9a670cff5212ee6146ab626df8d459714a4fd8d9721e52c984c8",
       "block": 93215563,
-      "native_block_delta_wei": "-700099664080000000"
+      "native_block_delta_wei": "-700099664080000000",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "700000000000000000",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
     },
     {
       "hash": "0x7f3eb604393a358b1ac52447ee727946b837479523345e12fb35a1d41e3bc77c",
       "block": 93215564,
-      "native_block_delta_wei": "-700045146400000000"
+      "native_block_delta_wei": "-700045146400000000",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "700000000000000000",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
     },
     {
       "hash": "0x678d71d2463c4ae9e0971f3d959e7630bbfecca7962247bc0ddbd87a7d824c7c",
       "block": 93215608,
-      "native_block_delta_wei": "-100045144960000000"
+      "native_block_delta_wei": "-100045144960000000",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "100000000000000000",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
     },
     {
       "hash": "0x8d4a6e7a391dec460d6efb18a401b9f5f798293c483715e517359bb2ee28df70",
       "block": 93215641,
-      "native_block_delta_wei": "372148579119314616"
+      "native_block_delta_wei": "372148579119314616",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
     },
     {
       "hash": "0x81c55cb510d6e1b2488e095e3df4a4b2e87f6e0606f879b3017559a30ed9f7b3",
       "block": 93215653,
-      "native_block_delta_wei": "254352779936354954"
+      "native_block_delta_wei": "254352779936354954",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
     },
     {
       "hash": "0x7e222ad7f657d632559afcec4cc9d3a1ca093224b4fe968e240a914c5e7f4a77",
       "block": 93215668,
-      "native_block_delta_wei": "753049339789167873"
+      "native_block_delta_wei": "753049339789167873",
+      "status": "SELF_SIGNED_SUCCESS",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "gas_price_wei": "120000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "owner_signed": true
     }
   ],
-  "status": "8_OF_17_ORIGINAL_SIGNER_RECEIPT_PROVENANCE",
+  "pending": [],
+  "status": "17_OF_17_SIGNER_AND_SUCCESS_RECEIPT_HEADERS_AUDITED",
   "production": "NO_GO",
-  "caveat": "Same-tx incoming/outgoing token transfers may cancel and should never be treated as two separate intentional fills."
+  "caveat": "Same-tx incoming/outgoing token transfers may cancel and should never be treated as two separate intentional fills.",
+  "self_signed_success": 17,
+  "original_native_input_wei": "3800000000000000000",
+  "receipt_gas_known": 0
 }
