@@ -150,3 +150,46 @@ def test_independent_database_oracle_counts_terminal_and_blocked_outcomes(source
     assert actual["manual_review_blocked_count"] == 1
     assert actual["manual_review_visible_total_count"] == 3
     assert actual["dashboard_hidden_nonsuccess_rows"] == 0
+
+
+def test_mac_local_command_accepted_is_not_a_hidden_send_failure(source):
+    # Local delivery success is COMMAND_ACCEPTED, as set in delivery.py.
+    root, db = source
+    seed(db, "COMMAND_ACCEPTED", channel="local",
+         error=None, attempts=1)
+    actual = probe.summary_from_database(root)
+    assert actual["dashboard_hidden_nonsuccess_rows"] == 0
+    assert actual["outbox_status_counts_by_channel"]["local/COMMAND_ACCEPTED"] == 1
+    assert actual["manual_review_visible_total_count"] == 0
+    assert actual["manual_review_pending_count"] == 0
+
+
+def test_mac_status_groups_distinguish_success_and_unknown_and_do_not_leak_values(source):
+    root, db = source
+    for _ in range(16):
+        seed(db, "COMMAND_ACCEPTED", channel="local", attempts=1)
+    seed(db, "UNKNOWN_TERMINAL_ERROR", channel="gmail", attempts=1)
+    seed(db, "CUSTOM_SECRET_abc@example.com", channel="local", attempts=1)
+    result = probe.summary_from_database(root)
+    assert result["outbox_status_counts_by_channel"]["local/COMMAND_ACCEPTED"] == 16
+    assert result["outbox_status_counts_by_channel"]["gmail/UNKNOWN_TERMINAL_ERROR"] == 1
+    assert result["outbox_status_counts_by_channel"]["local/NONSTANDARD_STATUS"] == 1
+    assert "abc@example.com" not in str(result)
+    assert result["dashboard_hidden_nonsuccess_rows"] == 2
+
+
+def test_command_accepted_only_mac_probe_may_still_reject_legacy_backend(
+        source, tmp_path, monkeypatch, capsys):
+    root, db = source
+    seed(db, "COMMAND_ACCEPTED", channel="local", attempts=1)
+    monkeypatch.setattr(probe, "dashboard_root", lambda: tmp_path)
+    monkeypatch.setattr(probe, "source_state", lambda path: "LEGACY")
+    monkeypatch.setattr(probe, "control_root", lambda: root)
+    monkeypatch.setattr(probe, "local_dashboard_health",
+                        lambda path: {"status": "OK", "manual_review_total_count": 0})
+    assert probe.main() == 3
+    result = json.loads(capsys.readouterr().out)
+    assert result["dashboard_hidden_nonsuccess_rows"] == 0
+    assert result["outbox_status_counts_by_channel"] == {"local/COMMAND_ACCEPTED": 1}
+    assert result["source_matches_target"] is False
+    assert result["http_missing_count_fields"]
