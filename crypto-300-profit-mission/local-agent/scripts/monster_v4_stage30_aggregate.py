@@ -186,6 +186,8 @@ def summarize(full):
       "D1_SETUPS_individual_per_symbol":sum(r["continuous"]["setups"] for r in valid),
       "independent_watch_price_proxy_20bps":arm_censored(evs,20),
       "independent_watch_price_proxy_100bps":arm_censored(evs,100),
+      "unconditional_ALL_WATCH_funded_cash_20bps":funded(evs,20),
+      "unconditional_ALL_WATCH_funded_cash_100bps":funded(evs,100),
       "verified_2x_5x_10x_rise_by_month_high":early,
       "watch_concurrency_original_same_3min_groups":groups,
       "burst_three_minute_episodes":burst_polls,
@@ -228,9 +230,14 @@ def main():
     a.output.parent.mkdir(parents=True,exist_ok=True)
     a.output.write_text(json.dumps(d,indent=2,sort_keys=True)+"\n",encoding="utf-8")
     trim={k:v for k,v in d.items() if k not in (
-        "watch_concurrency_original_same_3min_groups","verified_2x_5x_10x_rise_by_month_high")}
+        "watch_concurrency_original_same_3min_groups","verified_2x_5x_10x_rise_by_month_high",
+        "unconditional_ALL_WATCH_funded_cash_20bps","unconditional_ALL_WATCH_funded_cash_100bps")}
     trim["rise"]={k:{kk:vv for kk,vv in val.items() if kk!="members"}
                   for k,val in d["verified_2x_5x_10x_rise_by_month_high"].items()}
+    trim["cash_all_20bps"]={key:{k:v for k,v in x.items() if k!="selected_cases"} for key,x in
+         d["unconditional_ALL_WATCH_funded_cash_20bps"]["funded_cash_by_recovery_assumption"].items()}
+    trim["cash_all_100bps"]={key:{k:v for k,v in x.items() if k!="selected_cases"} for key,x in
+         d["unconditional_ALL_WATCH_funded_cash_100bps"]["funded_cash_by_recovery_assumption"].items()}
     trim["burst_group"]={k:v for k,v in d["watch_concurrency_original_same_3min_groups"]["BURST_8PLUS"].items()
                          if k not in ("funded_fixed_lot_20bps","funded_fixed_lot_100bps","per_calendar_date_20bps")}
     print("STAGE30_AGGREGATE_JSON "+json.dumps(trim,sort_keys=True),flush=True)
