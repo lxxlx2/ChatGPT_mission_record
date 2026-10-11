@@ -26,7 +26,11 @@
     "BSC_MEME_2026_GENESIS_CROSS_EOA_SIGNERS_EXT_2026-10-10.json",
     "BSC_MEME_23_WALLET_BREADTH_COVERAGE_MATRIX_2026-10-11.json",
     "BSC_MEME_23_EOA_NATIVE_FUNDING_SHARED_SOURCES_2026-10-11.json",
-    "BSC_MEME_CROSS_TOKEN_LATEST_LEAD_2026-10-11.json"
+    "BSC_MEME_CROSS_TOKEN_LATEST_LEAD_2026-10-11.json",
+    "BSC_MEME_23_EOA_POSITION_COVERAGE_MATRIX_REFRESH_2026-10-11.json",
+    "BSC_MEME_DDAC_NIULAI_CLOSED_BNB_BLOCK_AUDIT_2026-10-11.json",
+    "BSC_MEME_DDAC_MARS_NATIVE_BLOCK_DELTA_2026-10-11.json",
+    "BSC_MEME_DDAC_MARS_29_TX_ORIGIN_AND_SETTLEMENT_AUDIT_2026-10-11.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -59,7 +63,10 @@
     "all_candidate_token_transfer_unread_pagination_directions": 33,
     "native_external_incoming_transfer_sample_2026_10_11": 227,
     "native_funding_shared_senders": 13,
-    "verified_direct_candidate_bnb_transfers": 7
+    "verified_direct_candidate_bnb_transfers": 7,
+    "latest_2026_10_11_erc20_sample_rows": 1021,
+    "latest_2026_10_11_unread_directions": 25,
+    "wallets_with_complete_19_ca_direction_history": 9
   },
   "venue_coverage": [
     {
@@ -965,7 +972,32 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "我踏马来了",
         "龙虾"
-      ]
+      ],
+      "current_research_priority": "HIGHER_PRIORITY_RECONCILE_REALIZED_ONCHAIN_MARS_PNL",
+      "material_2026_position_proof": {
+        "MARSCOIN": {
+          "complete_token_transfer_history": true,
+          "token_in_transfer_events": 17,
+          "token_out_transfer_events": 23,
+          "token_outstanding_raw": "3050660512775076744",
+          "native_trade_blocks_checked": 29,
+          "observed_wallet_native_delta_BNB": 3.4097121953161076,
+          "nonzero_block_original_signers": "19/19 VERIFIED",
+          "four_meme_token_manager_txs": "18/19",
+          "receipt_status": "13/19 successful status readable; 6 unknown due receipt truncation",
+          "settlement": "BLOCK_BALANCE_OBSERVED; FINAL_PNL_UNVERIFIED"
+        },
+        "NIULAI": {
+          "complete_token_transfer_history": true,
+          "token_in_transfer_events": 19,
+          "token_out_transfer_events": 4,
+          "quantity_closed": true,
+          "blocks_checked": 22,
+          "native_block_delta_BNB": 0.011321909495709853,
+          "nonzero_tx_original_signers": "10/10 VERIFIED",
+          "settlement": "BLOCK_BALANCE_OBSERVED; FINAL_PNL_UNVERIFIED"
+        }
+      }
     },
     {
       "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
@@ -1477,7 +1509,8 @@
     "Global ERC20 first-transfer history identifies early launch routes but not the full transaction/quote-asset history, first true actionable swap, nor an exhaustive listing-event window",
     "GIGGLE/MARSCOIN event blocks were chosen from documented specific post-listing transactions; these 50-block pre/post windows are not a census of Binance launch prices or all transactions. 5 of 20 signer lookups were too long to parse and are UNKNOWN, not negative trader evidence.",
     "Four newly surfaced 2026 cross-token EOAs have own signed acquisition events but neither full realized net profits nor a confirmed common-controller identity; avoid premature profitability rankings.",
-    "The 33 paginated first-10 ERC20 transfer directions need further history; sampled absence of a given token may be false negative. Native funding source overlaps may reflect shared infrastructure and cannot establish beneficial ownership."
+    "The 33 paginated first-10 ERC20 transfer directions need further history; sampled absence of a given token may be false negative. Native funding source overlaps may reflect shared infrastructure and cannot establish beneficial ownership.",
+    "0xddac MARS +3.409712 BNB is exact aggregate native wallet block delta over 29 token-flow blocks. All 19 nonzero BNB-change txs have matched original signer, 18 target Four.meme manager; final per-tx realized PnL needs remaining receipts and same-block/quote attribution."
   ],
   "next_work_order": [
     "Continue the 33 paginated wallet/transfer directions and deduplicate launchpad V2/V3 across 2026 core major opportunities",
