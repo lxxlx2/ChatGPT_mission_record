@@ -1,0 +1,268 @@
+{
+  "schema": "BSC_MEME_DDAC_MARS_4_UNRESOLVED_UPSTREAM_ROUTE_CLOSURE_V1",
+  "date": "2026-10-12",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "network": "bnb-mainnet",
+  "status": "RESEARCH_ONLY_NO_GO",
+  "preselected_source": "BSC_MEME_DDAC_MARSCOIN_11_ALTERNATIVE_SPCXB_USDT_V3_500PPM_ROUTE_2026-10-11.json",
+  "reference_sources": [
+    "BSC_MEME_DDAC_MARSCOIN_18_POOL_TRADE_V2_V3_TAX_AND_QUOTE_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_NATIVE_BLOCK_CASHFLOW_2026-10-11.json"
+  ],
+  "venues": {
+    "WBNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+    "USDT": "0x55d398326f99059ff775485246999027b3197955",
+    "SPCXB": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+    "MARS_POOL": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+    "ROUTER": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "V4_MANAGER": "0x28e2ea090877bf75740558f6bfb36a5ffee9e9df",
+    "USDT_WBNB_100": "0x172fcd41e0913e95784454622d1c3724f546f849",
+    "USDT_SPCXB_500": "0x51a45a72cc96ca3ba615e25e80a6af2740ae2e2d",
+    "WBNB_SPCXB_2500": "0x66faad27cf481f82d0089ec8156b3aa3636010c7"
+  },
+  "classification_all_16_original_spcxb_mars_actions": {
+    "usdt_spcxb_v3_pools": 13,
+    "wbnb_spcxb_v3_2500": 2,
+    "uniswap_v4_spcxb_to_usdt_plus_v3_usdt_to_wbnb": 1,
+    "total": 16,
+    "unassigned_paths": 0
+  },
+  "latest_direct_chain_proof": {
+    "tx_owner_signed": 4,
+    "original_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "original_selector": "0x4d819a2a",
+    "original_gas_price_wei": "120000000",
+    "verified_transfer_hops": 15,
+    "new_exact_decoded_pancake_v3_swap_events": 2,
+    "all_original_BNB_delta_gas_models_integer_consistent": true
+  },
+  "rows": [
+    {
+      "route": "SPCXB_TO_USDT_V4_TO_WBNB_V3",
+      "block": 112643175,
+      "hash": "0x5c771003a07ad6a04e570aa8b56e6fed209a8d12a37102c8e79743cf48d14c36",
+      "side": "SELL",
+      "gas_limit": "1650000",
+      "native_delta_wei": "523957088343946891",
+      "spcxb_gross_raw": "2690421549396182003",
+      "wbnb_gross_out_wei": "529316564670653425",
+      "hops": [
+        {
+          "asset": "SPCXB",
+          "from": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "raw": "2690421549396182003",
+          "log_index": "0x136",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "SPCXB",
+          "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "to": "0x28e2ea090877bf75740558f6bfb36a5ffee9e9df",
+          "raw": "2690421549396182003",
+          "log_index": "0x13c",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "USDT",
+          "from": "0x28e2ea090877bf75740558f6bfb36a5ffee9e9df",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "raw": "300469119930046341453",
+          "log_index": "0x13b",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "USDT",
+          "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "to": "0x172fcd41e0913e95784454622d1c3724f546f849",
+          "raw": "300469119930046341453",
+          "log_index": "0x13f",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "WBNB",
+          "from": "0x172fcd41e0913e95784454622d1c3724f546f849",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "raw": "529316564670653425",
+          "log_index": "0x13e",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        }
+      ],
+      "implied_gas_used_1pct_model": "552589",
+      "fee_model": {
+        "gas_price_wei": "120000000",
+        "cut_type": "FLOOR_1_PERCENT_OF_WBNB_OUTPUT",
+        "cut_wei": "5293165646706534",
+        "source": "ARITHMETIC_CONSISTENCY_FROM_DIRECT_CHAIN_NATIVE_DELTA_AND_QUOTE_TRANSFERS",
+        "gas_used_receipt_readback": "UNVERIFIED_RECEIPT_TRUNCATED",
+        "integer_compatible": true
+      }
+    },
+    {
+      "route": "WBNB_TO_USDT_V3_TO_SPCXB_V3",
+      "block": 112964866,
+      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
+      "side": "BUY",
+      "gas_limit": "1450000",
+      "native_delta_wei": "-1000060594840000000",
+      "original_msg_value_wei": "1000000000000000000",
+      "spcxb_gross_raw": "4985442910027358206",
+      "hops": [
+        {
+          "asset": "WBNB",
+          "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "to": "0x172fcd41e0913e95784454622d1c3724f546f849",
+          "raw": "990000000000000000",
+          "log_index": "0x2b3",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "USDT",
+          "from": "0x172fcd41e0913e95784454622d1c3724f546f849",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "raw": "567267028203488200885",
+          "log_index": "0x2b2",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "USDT",
+          "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "to": "0x51a45a72cc96ca3ba615e25e80a6af2740ae2e2d",
+          "raw": "567267028203488200885",
+          "log_index": "0x2b8",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "SPCXB",
+          "from": "0x51a45a72cc96ca3ba615e25e80a6af2740ae2e2d",
+          "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "raw": "4985442910027358206",
+          "log_index": "0x2b6",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        }
+      ],
+      "implied_gas_used_1pct_model": "504957",
+      "fee_model": {
+        "gas_price_wei": "120000000",
+        "cut_type": "1_PERCENT_OF_ORIGINAL_BNB_INPUT",
+        "cut_wei": "10000000000000000",
+        "source": "ARITHMETIC_CONSISTENCY_FROM_DIRECT_CHAIN_NATIVE_DELTA_AND_QUOTE_TRANSFERS",
+        "gas_used_receipt_readback": "UNVERIFIED_RECEIPT_TRUNCATED",
+        "integer_compatible": true
+      }
+    },
+    {
+      "route": "SPCXB_TO_WBNB_V3_2500_A",
+      "block": 115522575,
+      "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
+      "side": "SELL",
+      "gas_limit": "1400000",
+      "native_delta_wei": "97103451021333063",
+      "spcxb_gross_raw": "428928551809892176",
+      "wbnb_gross_out_wei": "98133787173063699",
+      "hops": [
+        {
+          "asset": "SPCXB",
+          "from": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "raw": "428928551809892176",
+          "log_index": "0x1df",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "SPCXB",
+          "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "to": "0x66faad27cf481f82d0089ec8156b3aa3636010c7",
+          "raw": "428928551809892176",
+          "log_index": "0x1e4",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "WBNB",
+          "from": "0x66faad27cf481f82d0089ec8156b3aa3636010c7",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "raw": "98133787173063699",
+          "log_index": "0x1e3",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        }
+      ],
+      "v3_swap": {
+        "log_index": "0x1e6",
+        "topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+        "signed_amount0_wbnb": "-98133787173063699",
+        "signed_amount1_spcxb": "428928551809892176",
+        "raw_event_verified": true
+      },
+      "implied_gas_used_1pct_model": "408319",
+      "fee_model": {
+        "gas_price_wei": "120000000",
+        "cut_type": "FLOOR_1_PERCENT_OF_WBNB_OUTPUT",
+        "cut_wei": "981337871730636",
+        "source": "ARITHMETIC_CONSISTENCY_FROM_DIRECT_CHAIN_NATIVE_DELTA_AND_QUOTE_TRANSFERS",
+        "gas_used_receipt_readback": "UNVERIFIED_RECEIPT_TRUNCATED",
+        "integer_compatible": true
+      }
+    },
+    {
+      "route": "SPCXB_TO_WBNB_V3_2500_B",
+      "block": 119938551,
+      "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
+      "side": "SELL",
+      "gas_limit": "4500000",
+      "native_delta_wei": "40427384627832188",
+      "spcxb_gross_raw": "195729087522878178",
+      "wbnb_gross_out_wei": "40884390654375947",
+      "hops": [
+        {
+          "asset": "SPCXB",
+          "from": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "raw": "195729087522878178",
+          "log_index": "0x10e",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "SPCXB",
+          "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "to": "0x66faad27cf481f82d0089ec8156b3aa3636010c7",
+          "raw": "195729087522878178",
+          "log_index": "0x113",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        },
+        {
+          "asset": "WBNB",
+          "from": "0x66faad27cf481f82d0089ec8156b3aa3636010c7",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "raw": "40884390654375947",
+          "log_index": "0x112",
+          "proof": "DIRECT_BSC_ETH_GETLOGS_EXACT_BLOCK_TX_TOPIC1_TOPIC2"
+        }
+      ],
+      "v3_swap": {
+        "log_index": "0x115",
+        "topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+        "signed_amount0_wbnb": "-40884390654375947",
+        "signed_amount1_spcxb": "195729087522878178",
+        "raw_event_verified": true
+      },
+      "implied_gas_used_1pct_model": "401351",
+      "fee_model": {
+        "gas_price_wei": "120000000",
+        "cut_type": "FLOOR_1_PERCENT_OF_WBNB_OUTPUT",
+        "cut_wei": "408843906543759",
+        "source": "ARITHMETIC_CONSISTENCY_FROM_DIRECT_CHAIN_NATIVE_DELTA_AND_QUOTE_TRANSFERS",
+        "gas_used_receipt_readback": "UNVERIFIED_RECEIPT_TRUNCATED",
+        "integer_compatible": true
+      }
+    }
+  ],
+  "limitations": [
+    "MARSCOIN V2 primary pool has two dense-block Swap logs still unreadable: source-side original SPCXB Transfer evidence used for those historical actions.",
+    "USDT/SPCXB V3 500ppm Swap event at block 112964866 remains truncated; matched original USDT input Transfer and SPCXB output Transfer are verified on same tx hash.",
+    "Uniswap V4 singleton PoolManager identified by direct token Transfer and published BNB Chain deployment reference. V4 Swap PoolId and 2300-ppm calldata fee remain unverified against specific raw V4 Swap event due >8KB RPC result.",
+    "Four exact historical owner block BNB balances and gasPrice support integer-consistent 1% router fee plus gas model; direct full transaction receipt gasUsed is still unverified.",
+    "Per-route quote reconstruction is not comprehensive realized total PnL for all DDAC MARS events or entire wallet.",
+    "No production code, thresholds, monitor or trade changes."
+  ],
+  "production": "OBSERVE_ONLY / NO_GO"
+}
