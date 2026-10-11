@@ -1,0 +1,146 @@
+{
+  "schema": "MONSTER_STAGE25_ALL40_KNOWN_WINNERS_45_THRESHOLD_EVENTS_ACTUAL_SOURCE_GATED_CI_V1",
+  "prior_source": "Stage24 six official publisher-SHA256 monthly1h+daily1m archive ZIPs, matching Git immutable original artifact digests and 40 joint-source-verified 2x symbols",
+  "preregistered_file": "monster_stage25_known_2x5x10x_event_time_diagnostic_prereg_20261011.json",
+  "preregistered_commit": "0c197b7a2c085ec3ab858282540a04de3cb76fa5",
+  "event_aligned_original_model": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage17_event_aligned_replay.py",
+  "locked_stage17_code_git_blob_sha1": "61527b48d9bc0c8b32db43da44439ea8e41a45ba",
+  "locked_production_v4_replay_git_blob_sha1": "95b2595281f5aa8675c6a95e542d40d36b78e847",
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38135619558",
+  "run_commit": "9f50d7e0e27522f028ce586b176a4836ced1011d",
+  "run_conclusion": "SUCCESS",
+  "regression_tests": "4/4 PASS",
+  "source_actual_all_events_verified": true,
+  "original_artifact_id": 11701082231,
+  "original_artifact_zip_sha256": "c2c114670d9b8d4d4ea52c3e9fdc4f331b0d28e5a5db7675077e8ec8f083a58f",
+  "original_unzipped_json_sha256": "91ae30174b0e8b6c52596d5697a61bb3439e40c6a4795c9ab89bc889a053c475",
+  "all_original_source_hashes_externally_revalidated": true,
+  "result": {
+    "original_winner_cohort": 40,
+    "all_threshold_instances": 45,
+    "complete": 45,
+    "censored": 0,
+    "gross2x": {
+      "unique_symbol_date": 40,
+      "watch_before_or_at_first_verified_1m_cross": 36,
+      "late_watch": 3,
+      "no_watch_in_event_aligned_12h": 1,
+      "median_early_lead_minutes": 191
+    },
+    "gross5x": {
+      "threshold_instances": 4,
+      "early": 3,
+      "late": 1,
+      "no_watch": 0,
+      "median_early_lead_minutes": 210
+    },
+    "gross10x": {
+      "threshold_instances": 1,
+      "early": 1,
+      "late": 0,
+      "no_watch": 0,
+      "lead_minutes": 344
+    },
+    "explicit_no_or_late_2x": [
+      {
+        "date": "2025-11-04",
+        "symbol": "STRKUSDT",
+        "first_cross_utc": "2025-11-10T09:39:00Z",
+        "first_watch_utc": "2025-11-10T09:48:00Z",
+        "minutes_late": 9
+      },
+      {
+        "date": "2026-08-04",
+        "symbol": "BICOUSDT",
+        "first_cross_utc": "2026-08-06T13:29:00Z",
+        "first_watch_utc": "2026-08-06T13:45:00Z",
+        "minutes_late": 16
+      },
+      {
+        "date": "2026-08-04",
+        "symbol": "MUBARAKUSDT",
+        "first_cross_utc": "2026-08-09T17:25:00Z",
+        "first_watch_utc": "2026-08-09T22:06:00Z",
+        "minutes_late": 281
+      },
+      {
+        "date": "2026-09-04",
+        "symbol": "RAYUSDT",
+        "first_cross_utc": "2026-09-11T04:12:00Z",
+        "first_watch_utc": null,
+        "signal": "NO_WATCH_IN_EVENT_ALIGNED_12H"
+      }
+    ],
+    "important_crypto_cases": [
+      {
+        "date": "2026-08-04",
+        "symbol": "TUTUSDT",
+        "max_7d_hourly_high_multiple": 13.139725,
+        "event_type": "gross10x",
+        "first_cross_utc": "2026-08-09T07:05:00Z",
+        "first_watch_utc": "2026-08-09T01:21:00Z",
+        "lead_minutes": 344
+      },
+      {
+        "date": "2026-08-04",
+        "symbol": "TUTUSDT",
+        "event_type": "gross2x",
+        "lead_minutes": 199
+      },
+      {
+        "date": "2026-08-04",
+        "symbol": "TUTUSDT",
+        "event_type": "gross5x",
+        "lead_minutes": 210
+      },
+      {
+        "date": "2026-08-04",
+        "symbol": "HEIUSDT",
+        "event_type": "gross2x",
+        "lead_minutes": 82
+      },
+      {
+        "date": "2026-08-04",
+        "symbol": "HEIUSDT",
+        "event_type": "gross5x",
+        "lead_minutes": 86
+      },
+      {
+        "date": "2025-11-04",
+        "symbol": "GIGGLEUSDT",
+        "event_type": "gross2x",
+        "lead_minutes": 93
+      },
+      {
+        "date": "2025-11-04",
+        "symbol": "GIGGLEUSDT",
+        "event_type": "gross5x",
+        "lead_minutes": 283
+      },
+      {
+        "date": "2026-08-04",
+        "symbol": "BICOUSDT",
+        "event_type": "gross2x",
+        "lead_minutes": -16,
+        "note": "In original Stage24 Day-04 WATCH scan BICO had a WATCH at Aug04 16:33Z, before future 2x; event aligned around Aug06 had WATCH 16min AFTER 2x because every test independently resets its event-local queue/state. This is NOT contradiction, and absolutely not evidence of live continuous recall."
+      }
+    ]
+  },
+  "all_45_symbol_threshold_first_minute_register": "monster_stage25_45_original_first_minute_event_register_20261011.csv",
+  "method_risk": {
+    "positives_selected_by_future_label": true,
+    "intrahour_1m_high_cross_not_executable_price": true,
+    "each_event_has_separate_reset_v4_store": true,
+    "event_local_observation_only_about_12h": true,
+    "not_full168h_continuous_v4_scanner": true,
+    "not_36_over_40_unbiased_forward_all_market_recall": true,
+    "same_4_five_x_and_1_ten_x_underlying_events_duplicate_same_40_symbol_days": true,
+    "execution_l2_and_actual_fill_unverified": true,
+    "note": "36/40 historical event-aligned early merely confirms short-term V4 response near known winners, not alert system precision or tradable profit"
+  },
+  "independent_other_ai_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "real_gmail": "OFF",
+  "production_trading": "NO_GO",
+  "frank": "UNTOUCHED"
+}
