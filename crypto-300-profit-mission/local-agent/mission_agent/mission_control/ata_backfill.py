@@ -235,18 +235,26 @@ def scan_ata_mints(
                     status = "RPC_INTERRUPTED_PARTIAL"
                     interruption = type(exc).__name__
                     break
-                if not isinstance(items, list):
-                    raise ValueError("INVALID_ATA_SIGNATURE_LIST")
+                if not isinstance(items, list) or len(items) > page_size:
+                    status = "INVALID_PROVIDER_SIGNATURE_PAGE"
+                    interruption = "INVALID_PROVIDER_SIGNATURE_PAGE"
+                    break
                 stats["signature_pages"] += 1
                 if not items:
                     exhausted, status = True, "NO_MORE_PROVIDER_SIGNATURES"
                     break
                 reached_time = False
                 for item in items:
+                    if not isinstance(item, dict):
+                        status = "INVALID_PROVIDER_SIGNATURE_ROW"
+                        interruption = "INVALID_PROVIDER_SIGNATURE_ROW"
+                        break
                     signature = item.get("signature")
                     when = item.get("blockTime")
                     if not isinstance(signature, str) or not 70 <= len(signature) <= 100:
-                        raise ValueError("INVALID_SOLANA_SIGNATURE")
+                        status = "INVALID_PROVIDER_SIGNATURE_ROW"
+                        interruption = "INVALID_PROVIDER_SIGNATURE_ROW"
+                        break
                     if type(when) is int and when < since_time:
                         reached_time = True
                         break
@@ -284,7 +292,8 @@ def scan_ata_mints(
                     result["already_in_main_wallet_index"] = signature in known
                     evidence.append(result)
                     stats[result["status"]] += 1
-                if status in ("TX_FETCH_BUDGET_REACHED", "RPC_INTERRUPTED_PARTIAL"):
+                if status in ("TX_FETCH_BUDGET_REACHED", "RPC_INTERRUPTED_PARTIAL",
+                              "INVALID_PROVIDER_SIGNATURE_ROW"):
                     break
                 if reached_time:
                     status = "TIME_BOUNDARY_REACHED"
@@ -306,6 +315,14 @@ def scan_ata_mints(
                 break
         if interruption is not None:
             break
+    partial_account_work = any(row["status"] in (
+        "TX_FETCH_BUDGET_REACHED", "CURSOR_STALLED") for row in scanned)
+    scan_status = (
+        "PARTIAL_SOURCE_INVALID" if interruption and interruption.startswith("INVALID_")
+        else "PARTIAL_RPC_INTERRUPTED" if interruption
+        else "PARTIAL_BUDGET_OR_PAGINATION" if partial_account_work
+        else "BOUNDED_COMPLETED"
+    )
     missing = sorted({
         row["signature"] for row in evidence
         if row.get("status") == "VERIFIED_ATA_BALANCE_DELTA"
@@ -318,7 +335,7 @@ def scan_ata_mints(
         "config": {"page_size": page_size, "max_pages_per_ata": max_pages_per_ata,
                    "max_tx_fetches": max_tx_fetches, "mints_count": len(uniq)},
         "accounts": scanned, "observations": evidence,
-        "scan_status": "PARTIAL_RPC_INTERRUPTED" if interruption else "BOUNDED_COMPLETED",
+        "scan_status": scan_status,
         "interruption_type": interruption,
         "unscanned_canonical_accounts": len(uniq) * len(PROGRAMS) - len(scanned),
         "known_main_wallet_signatures_supplied": known_signatures is not None,
