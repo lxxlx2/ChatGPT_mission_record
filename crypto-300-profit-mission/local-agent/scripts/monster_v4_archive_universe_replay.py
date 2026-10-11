@@ -75,6 +75,13 @@ def run_symbol(symbol,download=source.read_url):
             trade_states[p["status"]]+=1
             if p["status"]=="PRICE_PROXY_ONLY":
                 profits.append(p["net_pct"])
+        d1_proxies=[]
+        for setup in case["setup_events"]:
+            setup_time=replay.parse_ms(setup["utc"])
+            # This is an explicitly hypothetical trade 3m after D1 confirmation.
+            # Trading is NOT enabled; no historical L2 depth exists.
+            simulated=replay._proxy_trade(bars,bars[0][0],setup_time,180000,20)
+            d1_proxies.append({"setup_utc":setup["utc"],"proxy":simulated})
         return {"symbol":symbol,"status":"COMPLETE_60H",
                 "archive_sha256":[p["sha256"] for p in proof],
                 "verified_minute_bars":len(bars),
@@ -86,13 +93,19 @@ def run_symbol(symbol,download=source.read_url):
                 "d1_queue":case["d1_queue"],
                 "trade_proxy_statuses":dict(trade_states),
                 "24h_assumed_20bps_net_pct":profits,
+                "setup_triggered_24h_proxy_20bps":d1_proxies,
                 "no_historical_l2_book":True,
                 "signal_is_not_a_buy_order":True}
     except ValueError as exc:
         # Invalid or unverifiable data are NOT scored as no-WATCH winners.
-        return {"symbol":symbol,"status":"SOURCE_MISSING" if
-                str(exc).startswith("SOURCE_NOT_HISTORICALLY_AVAILABLE") else
-                "SOURCE_INTEGRITY_REJECTED",
+        problem=str(exc)
+        if problem.startswith("SOURCE_NOT_HISTORICALLY_AVAILABLE"):
+            status="SOURCE_MISSING"
+        elif problem in ("GAPPED_ARCHIVE_DAY","INCOMPLETE_60H_REAL_ARCHIVE"):
+            status="SOURCE_PARTIAL_OR_NONCONTIGUOUS_HISTORICAL_CANDLES"
+        else:
+            status="SOURCE_INTEGRITY_REJECTED"
+        return {"symbol":symbol,"status":status,
                 "error":type(exc).__name__+":"+str(exc)[:160]}
     except (urllib.error.URLError,urllib.error.HTTPError,TimeoutError,ConnectionError,OSError) as exc:
         return {"symbol":symbol,"status":"SOURCE_NETWORK_FAILED",
@@ -141,6 +154,12 @@ def run(symbols=None,max_workers=MAX_WORKERS,worker=run_symbol):
     statuses=Counter(x["status"] for x in data)
     valid=[x for x in data if x["status"]=="COMPLETE_60H"]
     per_trade=[x for item in valid for x in item["24h_assumed_20bps_net_pct"]]
+    d1_trades=[t["proxy"]["net_pct"] for item in valid
+               for t in item["setup_triggered_24h_proxy_20bps"]
+               if t["proxy"]["status"]=="PRICE_PROXY_ONLY"]
+    d1_censored=Counter(t["proxy"]["status"] for item in valid
+                        for t in item["setup_triggered_24h_proxy_20bps"]
+                        if t["proxy"]["status"]!="PRICE_PROXY_ONLY")
     total_polls=sum(x["polls"] for x in valid)
     total_skipped_recent_trade=sum(x["zero_trade_poll_proxy"] for x in valid)
     summary={
@@ -162,6 +181,12 @@ def run(symbols=None,max_workers=MAX_WORKERS,worker=run_symbol):
         "assumed_20bps_per_side_net_return_median_pct":round(statistics.median(per_trade),6) if per_trade else None,
         "assumed_20bps_per_side_net_positive":sum(x>0 for x in per_trade),
         "assumed_20bps_per_side_net_negative":sum(x<0 for x in per_trade),
+        "assumed_entry_basis_for_watch_pnl":"FIRST_WATCH_PLUS_3MIN_NOT_D1_SETUP",
+        "d1_confirmed_30usdt_24h_proxy_cases":len(d1_trades),
+        "d1_confirmed_20bps_net_median_pct":round(statistics.median(d1_trades),6) if d1_trades else None,
+        "d1_confirmed_20bps_net_positive":sum(x>0 for x in d1_trades),
+        "d1_confirmed_20bps_net_negative":sum(x<0 for x in d1_trades),
+        "d1_confirmed_censored_24h_proxy_statuses":dict(d1_censored),
         "completely_unbiased_false_positive_rate":None,
         "deployment":"NO_GO",
     }
@@ -190,6 +215,10 @@ def main():
     args.output.write_text(json.dumps(report,indent=2,sort_keys=True)+"\n",encoding="utf-8")
     print(json.dumps({"STAGE12_SUMMARY":report["summary"],
                       "SRC_ERROR_CASES":[x for x in report["cases"] if x["status"]!="COMPLETE_60H"],
+                      "SIGNAL_CASES":[{k:v for k,v in x.items()
+                                        if k not in ("archive_sha256",)}
+                                      for x in report["cases"]
+                                      if x["status"]=="COMPLETE_60H" and x["watch_events"]>0],
                       "STATUS":report["classification"]},sort_keys=True))
     if report["summary"]["source_status_counts"].get("SOURCE_INTEGRITY_REJECTED",0):
         raise SystemExit("ARCHIVE_CHECKSUM_OR_INTEGRITY_REJECTED")
