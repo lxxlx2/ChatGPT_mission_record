@@ -110,7 +110,9 @@
     "d1_episodes": 67,
     "unique_first_d1_symbol_days": 65,
     "old_quality_selected": 55,
-    "new_filtered_selected": 37
+    "new_filtered_selected": 37,
+    "source_missing": 3519,
+    "source_partial_or_noncontiguous": 8
   },
   "frozen_arms": {
     "D_original_quality6h_20bps": {
@@ -205,5 +207,31 @@
   "deployment": "NO_GO",
   "gmail": "OFF",
   "trading": "NO_GO",
-  "frank": "UNCHANGED"
+  "frank": "UNCHANGED",
+  "independent_sha_recompute": {
+    "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38133850798",
+    "status": "SUCCESS",
+    "code": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_aggregate.py",
+    "all_ten_zip_sha256_verified": true,
+    "all_ten_raw_json_sha256_verified": true,
+    "full_case_ids_7580_verified": true,
+    "artifact_id": 11700152066,
+    "artifact_zip_sha256": "47164c74e78494ee9db27449dbc65ba89457781f029a2d25cd305802ce499efe",
+    "test_cases": "4/4 PASS",
+    "frozen_six_plus_capital_gate": {
+      "min30_evaluable": true,
+      "min6_distinct_dates": true,
+      "winrate55": false,
+      "net_median_positive": false,
+      "independent_30u_sum_positive": false,
+      "single_slot30u_positive": false,
+      "censor_lt20": true
+    },
+    "all_gates_passed": false,
+    "source_status": {
+      "COMPLETE_60H": 4053,
+      "SOURCE_MISSING": 3519,
+      "SOURCE_PARTIAL_OR_NONCONTIGUOUS": 8
+    }
+  }
 }
