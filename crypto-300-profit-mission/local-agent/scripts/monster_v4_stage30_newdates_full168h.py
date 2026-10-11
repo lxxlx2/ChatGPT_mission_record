@@ -76,8 +76,13 @@ def eval_one(symbol,day):
         raise ValueError("STAGE30_GT_SYMBOL_IDENTITY")
     if hourly["status"] not in ("MONTH_ARCHIVE_MISSING_404","VERIFIED_COMPLETE_168H","CENSORED_7D_HOURLY_GAP"):
         raise RuntimeError("STAGE30_OFFICIAL_HOURLY_NETWORK_OR_INTEGRITY_FAILURE:"+str(hourly))
+    if hourly["status"]=="VERIFIED_COMPLETE_168H" and len(hourly.get("archive_sha256",""))!=64:
+        raise RuntimeError("STAGE30_HOURLY_GT_PUBLISHER_SHA_NOT_PRESENT")
     source={"symbol":symbol,"hourly":hourly}
-    return runner.evaluate_one(source,day)
+    result=runner.evaluate_one(source,day)
+    result["hourly_GT_monthly_SHA256"]=hourly.get("archive_sha256")
+    result["hourly_GT_original_status"]=hourly["status"]
+    return result
 
 def summarize(rows):
     valid=[x for x in rows if x["status"]=="COMPLETE_168H_CONTINUOUS_V4"]
