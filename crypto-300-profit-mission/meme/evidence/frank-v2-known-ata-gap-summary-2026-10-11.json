@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "owner_wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+  "source_date_utc": "2026-10-11",
+  "source_scope": "DATED_HISTORICAL_ATA_VS_LOCAL_OWNER_INDEX_NOT_LIVE",
+  "verified_chain_completeness": false,
+  "records": [
+    {
+      "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
+      "owner_index_missing_signatures": 2,
+      "verified_extra_passive_receipts": 2,
+      "source_date_utc": "2026-10-11",
+      "reason": "Two finalized Token-2022 owner ATA incoming transactions, independently signature and pre/post verified; both missing from main owner archive",
+      "reference": "frank-v2-ata-j7-and-five-account-chain-verification-2026-10-11.json"
+    },
+    {
+      "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+      "owner_index_missing_signatures": 66,
+      "verified_extra_passive_receipts": 1,
+      "source_date_utc": "2026-10-11",
+      "reason": "66 ATA-list signatures absent from owner index, 63 pre-index / 3 in-index. Only one missing in-window receipt verified +0.771543330; 1 failed, 1 success unresolved",
+      "reference": "frank-v2-bpxx-1720-local-overlap-and-j7-real-tx-recheck-2026-10-11.json"
+    }
+  ],
+  "limitations": [
+    "Signature listing gap count cannot be interpreted as token-transfer count.",
+    "Only verified ATA receipts have been counted separately; economic acquisition costs unknown.",
+    "Display must retain local historical observed count and date, never rewrite as all-chain live count."
+  ]
+}
