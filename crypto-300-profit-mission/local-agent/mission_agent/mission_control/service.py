@@ -79,6 +79,7 @@ class MissionMemeService:
             max_decision_age_seconds=int(self.policy["decision"].get("initial_notification_max_age_seconds", 600)),
         )
         self.health_path = self.control_root / "mission-control-health.json"
+        self.evidence_export_last_error_type = None
 
     def close(self):
         self.sol_mirror.close()
@@ -101,6 +102,7 @@ class MissionMemeService:
             "policy_id": self.policy.get("policy_id"),
             "policy_hash": self.policy_hash,
             "delivery_allowed": self.delivery_allowed,
+            "evidence_export_last_error_type": self.evidence_export_last_error_type,
             **extra,
         }
         tmp = self.health_path.with_suffix(".tmp")
@@ -389,6 +391,10 @@ class MissionMemeService:
                             last_poll_count = count
                             if int(health.get("new_signatures") or 0) > 0:
                                 transfer_capture_needed = True
+                        if upload_future is not None and upload_future.done():
+                            # Exceptions inside background futures must remain
+                            # observable without interrupting decision/Gmail.
+                            upload_future.result()
                         if upload_future is None or upload_future.done():
                             # Network work runs in a separate worker. A slow GitHub
                             # connection never occupies the decision/Gmail loop.
@@ -405,9 +411,13 @@ class MissionMemeService:
                             if due:
                                 transfer_capture_needed = False
                                 last_transfer_snapshot_dispatch = time.monotonic()
-                    except (OSError, ValueError, RuntimeError):
-                        # Evidence is best effort; policy and delivery are unchanged.
-                        pass
+                        self.evidence_export_last_error_type = None
+                    except Exception as exc:
+                        # This opt-in evidence path touches readonly SQLite,
+                        # files and a Future. No failure may kill the real
+                        # decision/Gmail loop. Publish the error TYPE only in
+                        # the next heartbeat, never secrets or raw paths.
+                        self.evidence_export_last_error_type = type(exc).__name__
                 time.sleep(max(1, interval_seconds))
         finally:
             if exporter is not None:
