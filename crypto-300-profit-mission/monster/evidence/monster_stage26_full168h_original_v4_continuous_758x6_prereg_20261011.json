@@ -21,8 +21,9 @@
   "original_blob_sha1": {
     "v4_production_functions": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
     "v4_replayer_and_cost": "95b2595281f5aa8675c6a95e542d40d36b78e847",
-    "official_spot_archive_parser": "1c5a6b7ee3132ac498d885c329f0422d63d01008",
-    "prior_stage24_verified_sha_aggregator": "b2b3818d0e7739799c9fbc47e397dbca38d5493e"
+    "official_spot_archive_parser": "119d17f46b13f7ee70a1309f0689216e2388fd78",
+    "prior_stage24_verified_sha_aggregator": "b2b3818d0e7739799c9fbc47e397dbca38d5493e",
+    "official_spot_archive_wrapper": "1c5a6b7ee3132ac498d885c329f0422d63d01008"
   },
   "source_contract": {
     "ground_truth": "Existing six original SHA-verified Stage24 CI artifacts (all 758 cases each), official Binance publisher-verified monthly 1h outcomes",
@@ -57,5 +58,11 @@
   "monster_deployment": "NO_GO",
   "real_gmail": "OFF",
   "trading": "NO_GO",
-  "frank": "UNTOUCHED"
+  "frank": "UNTOUCHED",
+  "source_sha_correction_audit": {
+    "reason": "Correct mislabeled archive wrapper Git blob in first prereg table: the actual archive.source parser original blob is 119d17f..., while wrapper is 1c5a6b....",
+    "status": "IDENTITY_METADATA_ONLY_NO_SIGNAL_OR_DATE_CHANGE",
+    "previous_ci": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38136477449",
+    "previous_ci_reason": "Stopped at eight unit tests (7 pass, one SHA identity mismatch) before any historical minute source downloaded"
+  }
 }
