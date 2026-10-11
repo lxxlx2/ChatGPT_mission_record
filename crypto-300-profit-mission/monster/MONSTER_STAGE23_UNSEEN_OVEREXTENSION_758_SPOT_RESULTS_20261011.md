@@ -35,7 +35,7 @@ Stage22读取Binance发布方SHA256核验的65个真实Spot AggTrades样本，�
 | 合同中冻结的指标 | 目标 | F臂实际 | 结果 |
 |---|---|---|---|
 | 完整有效交易量 | 至少30笔 | 35 | PASS |
-| 覆盖不同历史观察日期 | 至少6日 | 由原始合并复核判定 | 复核记录 |
+| 覆盖不同历史观察日期 | 至少6日 | **10日** | PASS |
 | 胜率 | 至少55% | **8/35 = 22.86%** | **FAIL** |
 | 20bps净收益中位 | >0 | **-5.936741%** | **FAIL** |
 | 每笔独立30U成本代理盈亏总和 | >0 | **-28.979089 USDT** | **FAIL** |
@@ -51,3 +51,9 @@ Stage22读取Binance发布方SHA256核验的65个真实Spot AggTrades样本，�
 这组证据支持**保留V4 WATCH的早期观察研究价值，但暂时不把D1或主动买盘及相对BTC过度拉升筛选器称为可盈利BUY信号**。进一步值得做的不是同样样本反复调参，而是官方历史逐笔大额成交对实际执行质量的证据、持续更长且历史真实可交易的全市场上市币覆盖、不同市场阶段的真实延时与费用；只有通过独立全市场盈利门槛，再将代码及完整证据送给**其他AI实际Reviewer**，拿到明确审查产物、修复复验，才能考虑Mac与Frank独立并行部署。本轮尚没有任何策略通过该门槛，因此Review未发生、Monster Mac部署没有放行。
 
 所有官方行情结果、原始Github Actions Artifact ID、原始ZIP及内部JSON SHA256记录于[Stage23机器证据](evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json)，另有单独[十原始ZIP独立复算程序](../local-agent/scripts/monster_v4_stage23_aggregate.py)及单30U仓位和失败归因测试。本阶段最终 \`STAGE23=FAIL_NO_GO\`、\`STRATEGY_POSITIVE_PNL_VALIDATED=FALSE\`、\`INDEPENDENT_OTHER_AI_REVIEW=NOT_DONE\`、\`MONSTER_DEPLOYMENT=NO_GO\`、\`REAL_GMAIL=OFF\`、\`AUTOMATED_TRADING=NO_GO\`、\`FRANK=UNTOUCHED\`。
+
+## 6. 十份原始Artifact再次独立复算验收
+
+[Stage23十份原始ZIP及内部JSON逐字节SHA256独立复算CI #38133850798](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38133850798) **SUCCESS**，并先运行4/4聚合器离线测试。这个单独的执行使用GitHub Actions API重新下载十份来自原始回测CI的完整Artifact，重新计算十份ZIP与解压JSON SHA256，逐个核对日期、原始Stage20代码Git blob、758币身份、真实60小时源状态与旧D1数量、F/G两滑点臂、一个30U单槽位的时间排序。原始聚合Artifact ID为 \`11700152066\`，ZIP SHA256 \`47164c74e78494ee9db27449dbc65ba89457781f029a2d25cd305802ce499efe\`。
+
+源分母：7580次尝试，\`COMPLETE_60H=4053\`、\`SOURCE_MISSING=3519\`、\`SOURCE_PARTIAL_OR_NONCONTIGUOUS=8\`，缺源不得当无机会或真阴性。七个冻结放行指标中，样本量、十日跨度、删失率通过；实际胜率、收益中位、每笔独立30U合计及单个30U资金槽位均失败。**原始回测CI和字节复算CI双PASS，不等于策略PASS，也不是“其他AI Review”**。
