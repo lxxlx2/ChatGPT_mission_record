@@ -130,7 +130,11 @@
     "verified_direct_candidate_bnb_transfers": 7,
     "latest_2026_10_11_erc20_sample_rows": 1224,
     "latest_2026_10_11_unread_directions": 23,
-    "wallets_with_complete_19_ca_direction_history": 11
+    "wallets_with_complete_19_ca_direction_history": 13,
+    "latest_2026_10_12_complete_wallet_ca_cells": 247,
+    "latest_2026_10_12_complete_zero_transfer_cells": 196,
+    "latest_2026_10_12_unknown_incomplete_cells": 156,
+    "latest_2026_10_12_observed_wallet_ca_pairs": 85
   },
   "venue_coverage": [
     {
@@ -981,7 +985,14 @@
         "best_evidence": "4 exact 19/19 settled; GIGGLE 16 signed success plus 6 USDT exits minus 1 USDT buy; MUBARAK 16 signed success; several losses included"
       },
       "latest_follow_lag_research": "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md",
-      "latest_v1": "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md"
+      "latest_v1": "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md",
+      "address_model_4_2026_10_12": {
+        "full_fixed_19_CA_cursors": true,
+        "observed_19_ca_tokens": 13,
+        "assessment": "MARS original self-signed buy+sell sample; 牛来 incoming contract distributions, owner buy not proven; 8 historical quantity-closed cohorts; net PnL/lag-follow not validated",
+        "source": "BSC_MEME_ADDRESS_MODEL_4_23_WALLET_19_CA_COVERAGE_REPAIR_AND_EARLY_LATE_CONTROL_2026-10-12.md",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
@@ -1170,7 +1181,14 @@
       },
       "latest_mars_research": "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json",
       "latest_mars_settlement_source": "BSC_MEME_DDAC_MARSCOIN_18_POOL_TRADE_V2_V3_TAX_AND_QUOTE_RECONCILIATION_2026-10-11.json",
-      "latest_three_additional_token_report": "BSC_MEME_ADDRESS_MODEL_3_DDAC_MARS_GIGGLE_BINANCE_LIFE_RESEARCH_REPORT_2026-10-11.md"
+      "latest_three_additional_token_report": "BSC_MEME_ADDRESS_MODEL_3_DDAC_MARS_GIGGLE_BINANCE_LIFE_RESEARCH_REPORT_2026-10-11.md",
+      "address_model_4_2026_10_12": {
+        "full_fixed_19_CA_cursors": true,
+        "observed_19_ca_tokens": 6,
+        "assessment": "牛来 original owner-signed buy+sell sample and zero net token balance; MARS routes 16/16 assigned; GIGGLE contract receipts, not profitable buys",
+        "source": "BSC_MEME_ADDRESS_MODEL_4_23_WALLET_19_CA_COVERAGE_REPAIR_AND_EARLY_LATE_CONTROL_2026-10-12.md",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
@@ -2063,5 +2081,63 @@
       "BSC_MEME_ADDRESS_MODEL_4_DDAC_MARSCOIN_UPSTREAM_COMPLETION_REPORT_2026-10-12.md"
     ],
     "production": "OBSERVE_ONLY / NO_GO"
+  },
+  "address_model_4_complete_census_2026_10_12": {
+    "status": "13_OF_23_FULL_FROZEN_19_CA; 247_OF_437_CELLS_COMPLETE; RESEARCH_ONLY_NO_GO",
+    "previous_complete_wallet_count": 11,
+    "current_complete_wallet_count": 13,
+    "scope": "23 archived candidate EOAs × 19 frozen canonical BSC token CAs",
+    "observed_token_ca_pairs": 85,
+    "complete_observed": 51,
+    "complete_zero_erc20": 196,
+    "partial_observed": 34,
+    "incomplete_unknown": 156,
+    "quantity_closed": 33,
+    "audit_files": [
+      "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V2_2026-10-12.json",
+      "BSC_MEME_8E6B_EIGHT_PREVIOUSLY_UNOBSERVED_CA_CURSOR_RESCAN_2026-10-12.json",
+      "BSC_MEME_DDAC_FOURTEEN_PREVIOUSLY_UNOBSERVED_CA_CURSOR_RESCAN_2026-10-12.json",
+      "BSC_MEME_8E6B_DDAC_MARS_NIULAI_NEW_COHORT_BALANCE_AND_SIGNER_QA_2026-10-12.json",
+      "BSC_MEME_8E6B_NIULAI_TEN_CONTRACT_DISTRIBUTIONS_VS_OWNER_EXIT_QA_2026-10-12.json",
+      "BSC_MEME_ADDRESS_MODEL_4_23_WALLET_19_CA_COVERAGE_REPAIR_AND_EARLY_LATE_CONTROL_2026-10-12.md"
+    ],
+    "discovered_wallet_token_pairs": [
+      {
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "MARSCOIN",
+        "in": 19,
+        "out": 29,
+        "owner_first_buy_self_signed": true,
+        "net_raw": "14730395959988410675"
+      },
+      {
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "牛来",
+        "in": 10,
+        "out": 2,
+        "owner_in_buy_proven": false,
+        "other_signed_in": 5,
+        "unknown_signed_in": 5,
+        "zero_native_in_blocks": 10,
+        "net_raw": "65856455282881733964"
+      },
+      {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "token": "牛来",
+        "in": 19,
+        "out": 4,
+        "first_sample_buy_and_sell_self_signed": true,
+        "net_raw": "0"
+      }
+    ],
+    "source_policy": "DIRECT_ETH_CALL_BALANCEOF_MATCHED_FOR_ALL_3; ERC20_ACTIVITY_NOT_WIN_RATE",
+    "remaining": [
+      "10_WALLETS_19_CA_UNRESOLVED_CURSORS",
+      "156_PARTIAL_UNOBSERVED_WALLET_CA_CELLS",
+      "MARS_8E6B_FULL_ORIGINAL_SIGNER_QUOTE_TAX_GAS_RECONCILIATION",
+      "ELIGIBLE_EVENT_TIME_WALLET_ACTIVE_WINDOW_CONTROL",
+      "NO_OUT_OF_SAMPLE_FOLLOW_TRADING_VALIDATION"
+    ],
+    "production": "NO_GO"
   }
 }
