@@ -76,7 +76,7 @@ class EventAlignedTests(unittest.TestCase):
         e=m.frozen_events()[0]
         d=date.fromisoformat(e["date"])
         anchor=datetime(d.year,d.month,d.day,6,tzinfo=timezone.utc)+timedelta(hours=55)
-        r=m.replay_event(e,downloader=make_download(anchor,10),
+        r=m.replay_event(e,downloader=make_download(anchor,0),
                 scorer=lambda *a,**k:{"symbol":"TNSRUSDT"})
         self.assertEqual(r["status"],"CENSORED_OR_SOURCE_FAILED")
         self.assertIn("DISAGREE",r["reason"])
