@@ -373,10 +373,18 @@ function renderFrankWatchlist(payload) {
         copyButton(mint,'复制 CA') + '</td>' +
       '<td>' + esc(watchLabels[x.watch_state] || x.watch_state || '待核') +
         mismatch +
-        (x.owner_index_gap_status === 'CONFIRMED_HISTORICAL_GAP'
-          ? '<div class="watch-mismatch">历史索引缺口：' +
-            esc(x.owner_index_missing_signatures) + ' 条 ATA 签名未入本地主钱包索引' +
-            '（证据日期 ' + esc(x.ata_gap_source_date || '未确认') + '）</div>' : '') +
+        (x.owner_index_gap_status === 'DATED_ATA_VS_OWNER_INDEX_SCOPE'
+          ? '<div class="watch-mismatch">ATA 与主钱包账户键索引覆盖范围不同：' +
+            '窗口前 ' + esc(x.ata_outside_index_window_signatures) + ' 条，窗口内 ' +
+            esc(x.ata_inside_index_window_signatures) + ' 条；窗口内失败 ' +
+            esc(x.ata_inwindow_failed_signatures) + ' 条、成功未验证 ' +
+            esc(x.ata_inwindow_success_unverified) + ' 条。' +
+            '以上均不直接代表买卖或索引故障（证据日期 ' +
+            esc(x.ata_gap_source_date || '未确认') + '）</div>'
+          : x.owner_index_gap_status === 'LEGACY_UNSPLIT_ATA_INDEX_EVIDENCE'
+          ? '<div class="watch-mismatch">旧版 ATA 签名对比 ' +
+            esc(x.owner_index_missing_signatures) +
+            ' 条（未区分窗口内外，不能判为索引故障）</div>' : '') +
         '</td>' +
       '<td>买 ' + esc(x.local_recognized_buys ?? 0) +
         ' / 卖 ' + esc(x.local_recognized_sells ?? 0) + '</td>' +
@@ -386,9 +394,10 @@ function renderFrankWatchlist(payload) {
         ' · ' + esc(last) + '<div class="watch-tx">' + txLink +
         (x.passive_receipt_events
           ? '<div>本地主钱包被动转入 ' + esc(x.passive_receipt_events) + ' 笔</div>' : '') +
-        (x.owner_index_gap_status === 'CONFIRMED_HISTORICAL_GAP'
-          ? '<div>另有 ATA 验证转入 ' + esc(x.ata_verified_extra_passive_receipts) +
-            ' 笔，其余缺失签名性质未确认</div>' : '') +
+        (['DATED_ATA_VS_OWNER_INDEX_SCOPE', 'LEGACY_UNSPLIT_ATA_INDEX_EVIDENCE']
+          .includes(x.owner_index_gap_status)
+          ? '<div>另有 ATA 验证被动转入 ' + esc(x.ata_verified_extra_passive_receipts) +
+            ' 笔（不计为主动买入，成本未知）</div>' : '') +
         '</div></td>' +
       '<td>' + balance + '<div class="watch-tx">美元价值未核实' + proof +
         (x.passive_receipt_events && !x.transfer_counterparty_verified
