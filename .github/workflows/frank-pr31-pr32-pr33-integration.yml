@@ -24,7 +24,7 @@ jobs:
       BASE_SHA: '383dddf517b221cc5366c6a2b67ca4f6779e597e'
       PR31_SHA: 'c65d04a8f14d7efe6e0956fa2914781ec2d96b5f'
       PR32_SHA: '85f1a792dd7d0fbf354c09ac83872887ed301c10'
-      PR33_SHA: '33500489d611f2ef1b24421e7aa8127701411b5d'
+      PR33_SHA: '646a257bae10fe102feed526c905c39134e0d069'
       FRANK_EXPECT_REAL_GIT_REPLAY: '1'
     steps:
       - uses: actions/checkout@v4
