@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-11",
+  "source_files": [
+    "BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_FOLLOW_V1_MULTIFILL_FROZEN_SPEC_2026-10-11.json",
+    "BSC_MEME_FOLLOW_V1_EPISODE_PROFIT_CONCENTRATION_2026-10-11.json"
+  ],
+  "chain": "bnb-mainnet",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "token": "4",
+  "scope": "19/19 owner signed successful transactions, previously fully reconciled per-tx BNB/WBNB exit value including route deductions/gas; partition into two inventory-closed chronological episodes",
+  "all_owner_trade_count": 19,
+  "original_total_native_wei": "13164987453603066615",
+  "original_episodes": [
+    {
+      "episode": 1,
+      "first_block": 63056884,
+      "last_block": 63056949,
+      "owner_original_block_native_net_wei": "-117977426190152496",
+      "original_net_tx_hashes": [
+        "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b",
+        "0x11f18d2e8169495b7085787d88b7de644a3579bf3e2dfb6bc609e3e8eae48601"
+      ],
+      "owner_initial_native_buys_wei": "500000000000000000",
+      "owner_native_exits_wei": "388564229809847504",
+      "gas_wei": "6541656000000000",
+      "closed": true
+    },
+    {
+      "episode": 2,
+      "first_block": 63057889,
+      "last_block": 64458294,
+      "owner_original_block_native_net_wei": "13282964879793219111",
+      "original_net_tx_hashes": [
+        "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+        "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+        "0xfa6c5f17ea5597ab90402f96d013fb8213b67ac5f4c5af02b450f0386433898a",
+        "0x9a5e7e333092f94c7c78656f221c7b08c319727e8693084bf1e117e3c229723b",
+        "0x0e89ad3e6f44b8a7de464b10862c61c9ec7060846539fab6ae0df24927e5af7b",
+        "0x69616d58ef513786ce7536d573027a0bb83f3dc5908d10b0d13a9a6d02070219",
+        "0xc3d6fd52ea632d2c48a7cd79db4eb16ae5deaf3de930c56ba861ec2d4af8d59d",
+        "0x206bb565b2114fc58381a7f0d493f0c9454ea254f671ffadfd08c866dbf0c064",
+        "0xbe5101138ca28c421f735b802226bfb0b2b9b57c5605cc9a4dd30413c746a774",
+        "0x5e8e7847322621870ed19686d0fafdc99de479877556fb704db58b1ac20f2109",
+        "0x313bfe296591597e08046140255d5b61f6d4cbce64731d70746fbe1626e06a8f",
+        "0xd39be2185edbed118db78ab7dbd4a3d414823af83e1c9097c821d88718e0a2f4",
+        "0xd571753fe2493bafff570702d8848f634e4b3bb8deeec7a1a0ecbc751e39ad94",
+        "0x4c30211d8372ee683b9b20eaa7b965b317be21e8285f98e0215598061a78c5b1",
+        "0x2f6a73dc8d4009595ffa1da7f5a2be1a0a2dac9a57ad7d7c759f8d74347eda0f",
+        "0x7a464040b2d448505a0fa8b7e61ebc35e7384903f2097f3fb32bfea5d1e7eb84",
+        "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462"
+      ],
+      "owner_initial_native_buys_wei": "300000000000000000",
+      "owner_native_exits_wei": "13606889969066339275",
+      "gas_wei": "23925089273120164",
+      "closed": true
+    }
+  ],
+  "episode_total_matches_original_exact": true,
+  "simulation_lag10_stress05_episode_net_wei": [
+    {
+      "episode_num": 1,
+      "net_wei": "-10403928719377458"
+    },
+    {
+      "episode_num": 2,
+      "net_wei": "1334832113323217214"
+    }
+  ],
+  "risk_note": "Original 4 second episode drives observed value in this two-episode sample. Hypothetical follower fixed 0.05 allocation does not equal original owner's invested amount; V1 is not executable follow validation.",
+  "production": "NO_GO"
+}
