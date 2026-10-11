@@ -1,0 +1,40 @@
+# Frank V2 2026-10-11 12:06 Mac full history: independently verified audit
+
+Status: REAL_MAC_SOURCE_RECONCILED_PARTIAL / PRODUCTION_UNCHANGED / PNL_NOT_VERIFIED.
+
+## Source and Git integrity
+
+Uploaded packet: `frank-v2-full-history-20261011-120617.zip`; all 28 ZIP members passed CRC. Embedded `summary.json` says `git_sync=SYNC_OK`. On the actual remote `evidence/frank-ca-local` branch at `a7605c5638f76c123eb40e3703c37d6976784e46`, the Frank history manifest and history part are present and have exact Git blob hashes **a14cec81efc47787e6bb3794584a9fcf114fc1b9** and **f1828969231bbb0abd7a804e7b154056b1016565**, matching the local packet. Combined sanitized historical JSON SHA256: `7b282349a9daf10fab8062137ab6d8a10e87d6831d783e59c51e6e77ab872232`; all manifest chunk hashes verified. Frank poll `21478` appears in remote bucket `frank/2026-10-11/0500.json`. ZIP standalone Frank event blob hash differs from the remote bucket blob because the remote bucket is its own normalized wrapper; remote event identity was separately confirmed.
+
+## Current Mac source, not full wallet history
+
+`as_of_utc=2026-10-11T05:06:17Z` (Bangkok 12:06:17). Local indexed signatures **1708 lifetime**, **220 last 24h**, of which **2 ACTIVE_TRADE / 178 PASSIVE_TRANSFER / 32 FAILED_TX / 6 ATA_CREATE / 2 UNKNOWN_NEEDS_REVIEW**. Last-24h recognized active buys **1**, sells **1**. Local history/state union is now **33 mints**, with **6 OPEN / 13 CLOSED / 2 INVENTORY_UNDETERMINED / 12 UNKNOWN**; the new mint `2j5SaS7xy776qCBpyPQbZjyQSAtKiFgrwjfErthnW2ZM` entered on 2026-10-11 07:10:31 Bangkok with a **local-index BUY of 4435.255282 USDC** for **885664.587075** tokens; no later market trade for this mint in the exported local history.
+
+Full locally recognized trade archive contains **78 entries**, **33 mints**, with sides: BUY=21, ADD=14, REENTRY=2, SELL=7, EXIT=15, SELL_POSITION_UNRESOLVED=19. All 78 are locally classified `ACTIVE_TRADE`. These are already-normalized **local** records, not 78 full raw independently verified RPC transaction payloads.
+
+### Source cashflow and cost-basis gap
+
+Local parser's nominal gross observed USDC buy outflow: **400586.488515**. Gross sell inflow: **1621171.993871**. **Do not subtract to claim profit**: sell-only unknown starting inventory and transfers make the aggregate gross comparison economically invalid. At least **12 mints** have sell transactions but no locally recognized buy, including very large proceeds; initial funding, transfers, historic holdings and CEX activity are not established. **All 19 SELL_POSITION_UNRESOLVED rows have `position_after_raw=null`**. Two additional mints (`CbcyNo7m1amFWqEQm2m4PLv1UNvpcL3C1Ujm6AkzpKoU`, `GTBxUiw6wJdmmkCGZgRHLyYxqu1vG4KtRpeox6yDpump`) have both locally recorded buys and sells, but recognized sell token units exceed locally recognized buy units, requiring missing-source investigation. We have **no independently verified complete initial balance or FIFO cost basis**. No whole-wallet PnL/ROI is supported.
+
+### 32-mint historical balance comparison
+
+Preexisting direct Alchemy finalized mint-by-mint owner account sample is dated earlier on Oct 11 at slots 455426889–455430371 and covers 32/33 current observed mints: **10 nonzero, 22 zero**. Simple cumulative locally recognized token buy-minus-sell quantity matches the earlier dated sample for **15** mints; **17** have a difference and must be tagged `UNEXPLAINED_INVENTORY_OR_INDEX_GAP` (not asserted to be definite transfer). The new 33rd mint was **not** part of that earlier snapshot and **must not** be treated as zero. None of these comparisons proves complete lifetime transaction coverage.
+
+The newly discovered `2j5SaS7…nW2ZM` owner token account was independently queried with finalized RPC at slot **455530134**, and contains raw amount **886664587075** with 6 decimals, i.e. **886664.587075** tokens; compared with the earlier local BUY token units, the difference is **+1000.000000 tokens**. This difference may reflect transactions not in the local recognized-market trade history or other sources; no cause/profit/value inferred. This newer point-in-time balance must not be blended into an atomic Oct11 earlier 32-mint snapshot.
+
+Ten nonzero older snapshot tokens returned no supported USD price from Alchemy lookups. Follow the original user rule **exclude assets whose verifiable USD value is <$1**, but lack of price must remain **UNPRICED**, not presumptively excluded or valued at zero.
+
+## Source files and coding consequences
+
+Authoritative read-only records in evidence Git branch:
+- `meme/local-evidence/frank-history/7b282349a9daf10fab8062137ab6d8a10e87d6831d783e59c51e6e77ab872232.json` (manifest)
+- `meme/local-evidence/frank-history/7b282349a9daf10fab8062137ab6d8a10e87d6831d783e59c51e6e77ab872232/part-0000.json` (full original 78 selected-history event records)
+- `meme/local-evidence/frank/2026-10-11/0500.json` (writer poll checkpoint)
+- `meme/evidence/frank-v2-thirty-two-mint-finalized-2026-10-11.json` on research PR #31 (older chain sample)
+- This audit (main branch) is source-provenance/index-led, not a replacement of the raw Git evidence.
+
+Engineering classification must distinguish `KNOWN_RECORDED_TRADE`, `SELL_ONLY_NO_LOCAL_ACQUISITION`, `TOKEN_SELL_EXCEEDS_LOCAL_BUYS`, `SNAPSHOT_QUANTITY_DIFFERENCE`, `NO_HISTORIC_CHAIN_SAMPLE`, and `POSITIVE_BUT_UNPRICED`. Do not equate `UNRESOLVED` with a failed swap: 19 locally classified historical market sells are source-classified ACTIVE_TRADE but have unknown inventory aftermath. The next ledger code must retain per-signature traceability and fail closed on unknown costs.
+
+## Gates
+
+Zip/hash/remote manifest: VERIFIED. Normalized local trade coverage: EXTRACTED_NOT_FULL_CHAIN. 33rd mint owner balance: VERIFIED_AT_SLOT. Historical economic provenance for 19 unresolved sell legs: NOT_VERIFIED. Wallet total PnL/NAV: NOT_VERIFIED. New version Mac Dashboard rollout / continuous Git sync: NOT_DEPLOYED. PR #31 remains Draft, `PRODUCTION_TRADING=NO_GO`. 
