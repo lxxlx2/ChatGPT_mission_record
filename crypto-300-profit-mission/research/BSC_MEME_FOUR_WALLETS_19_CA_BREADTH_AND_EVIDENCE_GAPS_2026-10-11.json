@@ -407,12 +407,16 @@
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
       "token": "MARSCOIN",
       "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
-      "status": "TRANSFER_OBSERVED_SIGNER_OR_COST_NOT_FULLY_AUDITED",
-      "first_transfer_block": 112442886,
-      "last_transfer_block": 113975350,
-      "in_transfer_count": 0,
-      "out_transfer_count": 19,
-      "inventory_net_raw": null
+      "status": "TRANSFER_SOURCE_RESCAN_29_TX_19_SELF_SIGNED_4_EXTERNAL_6_UNKNOWN__FULL_ROUTE_UNRESOLVED",
+      "first_transfer_block": 112441920,
+      "last_transfer_block": 120232161,
+      "in_transfer_count": 17,
+      "out_transfer_count": 23,
+      "inventory_net_raw": "3050660512775076744",
+      "original_signer_count": 19,
+      "original_signer_unknown": 6,
+      "original_other_signed": 4,
+      "source_override": "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json"
     },
     {
       "label": "DDAC",
@@ -985,5 +989,24 @@
     "Underlying matrix some exact_closed_inventory booleans disagree with refreshed specific-source full transfers; preserve raw quantities and use individual refreshed evidence",
     "Wallet operational lifetime and token actual launch eligibility are unverified. Do not divide wins by 19"
   ],
-  "production": "NO_GO"
+  "production": "NO_GO",
+  "corrected_cells": [
+    {
+      "label": "DDAC",
+      "token": "MARSCOIN",
+      "previous_in": 0,
+      "previous_out": 19,
+      "new_in": 17,
+      "new_out": 23,
+      "previous_first_block": 112442886,
+      "new_first_block": 112441920,
+      "previous_last_block": 113975350,
+      "new_last_block": 120232161
+    }
+  ],
+  "additional_sources": [
+    "BSC_MEME_DDAC_MARSCOIN_FULL_TRANSFER_ANOMALY_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json"
+  ],
+  "correction_note": "New full historical paginator supersedes the older sparse DDAC MARS cell. 19 DDAC signed txs but 10 remain external/unknown and quote/profit remain unresolved. MARS not promoted to independently verified realized PnL."
 }
