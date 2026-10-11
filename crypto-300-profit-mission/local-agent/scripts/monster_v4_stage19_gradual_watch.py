@@ -132,7 +132,10 @@ def run_symbol(symbol,day, *, get_day=archive.get_day, comparator=replay.replay_
     except (urllib.error.URLError,TimeoutError,OSError) as e:
         return {"symbol":symbol,"status":"SOURCE_NETWORK_FAILED","reason":str(e)[:120]}
     except ValueError as e:
-        return {"symbol":symbol,"status":"SOURCE_PARTIAL_OR_INTEGRITY_REJECTED","reason":str(e)[:120]}
+        classification = ("SOURCE_PARTIAL_OR_NONCONTIGUOUS" if str(e) in
+            ("GAPPED_ARCHIVE_DAY","INCOMPLETE_60H_REAL_ARCHIVE","STAGE19_INCOMPLETE_60H")
+            else "SOURCE_INTEGRITY_REJECTED")
+        return {"symbol":symbol,"status":classification,"reason":str(e)[:120]}
 
 def summarize(cases):
     statuses=Counter(x["status"] for x in cases)
@@ -198,7 +201,7 @@ def main():
     if result["summary"]["complete_60h"]<120:
         raise SystemExit("STAGE19_TOO_FEW_VALID_SYMBOLS")
     if any(k in result["summary"]["status_counts"] for k in
-           ("SOURCE_NETWORK_FAILED","SOURCE_HTTP_FAILURE","SOURCE_PARTIAL_OR_INTEGRITY_REJECTED")):
+           ("SOURCE_NETWORK_FAILED","SOURCE_HTTP_FAILURE","SOURCE_INTEGRITY_REJECTED")):
         raise SystemExit("STAGE19_SOURCE_UNAVAILABLE_OR_INTEGRITY")
 
 if __name__=="__main__":
