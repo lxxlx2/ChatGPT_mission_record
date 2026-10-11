@@ -1,0 +1,149 @@
+{
+  "schema": "MONSTER_STAGE18_REAL_7_MISSED_OR_LATE_2X_MOMENTUM_GATE_DIAGNOSTIC_GITHUB_CI_V1",
+  "investigation_of": "crypto-300-profit-mission/monster/evidence/monster_stage17_actual_firstcross_minute_replay_ci_20261011.json",
+  "github_run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38125783331",
+  "run_commit": "62032b0de60a8fc040f3630ac732e5f37d5f796b",
+  "run_conclusion": "SUCCESS",
+  "unit_tests": "5_PASS_OF_5",
+  "artifact_id": 11697680624,
+  "artifact_zip_sha256": "dde20eedaddd5a23ac6e2e84dfff00e7972f3a8ad085517fff2f016694df2376",
+  "artifact_raw_json_sha256": "d4beab21c3516a17a96569bf8c05b48afc3f18c5f251b36959a153a42d541230",
+  "source": "Official Binance daily Spot 1m ZIP, publisher SHA256, actual pre-first-high-2x minute series",
+  "stages": "Production V4 frozen thresholds diagnosed without any edits",
+  "thresholds": {
+    "3m_pct": 5,
+    "15m_pct": 8,
+    "60m_pct": 15,
+    "quote24_usdt": 100000
+  },
+  "attempted": 7,
+  "source_complete": 7,
+  "classifications": {
+    "NO_FROZEN_MOMENTUM_TRIGGER_BEFORE_2X": 7
+  },
+  "cases": [
+    {
+      "date": "2026-02-17",
+      "symbol": "ENSOUSDT",
+      "first_high_2x_minute_utc": "2026-02-22T07:44:00Z",
+      "valid_pre_cross_3m_poll_count": 134,
+      "above_quote_gate_polls": 134,
+      "trigger_price_gate_polls": 0,
+      "trigger_price_and_quote_gate_polls": 0,
+      "max_pre_cross_pct": {
+        "3": 2.15475,
+        "15": 5.642787,
+        "60": 8.187718
+      },
+      "last_24h_quote_usdt": "15800186.50449000",
+      "conclusion": "NO_FROZEN_MOMENTUM_TRIGGER_BEFORE_2X"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "ENAUSDT",
+      "first_high_2x_minute_utc": "2026-08-23T09:01:00Z",
+      "valid_pre_cross_3m_poll_count": 120,
+      "above_quote_gate_polls": 120,
+      "trigger_price_gate_polls": 0,
+      "trigger_price_and_quote_gate_polls": 0,
+      "max_pre_cross_pct": {
+        "3": 2.424242,
+        "15": 3.35443,
+        "60": 6.748864
+      },
+      "last_24h_quote_usdt": "73281550.74486200",
+      "conclusion": "NO_FROZEN_MOMENTUM_TRIGGER_BEFORE_2X"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "STXUSDT",
+      "first_high_2x_minute_utc": "2026-08-23T13:18:00Z",
+      "valid_pre_cross_3m_poll_count": 126,
+      "above_quote_gate_polls": 126,
+      "trigger_price_gate_polls": 0,
+      "trigger_price_and_quote_gate_polls": 0,
+      "max_pre_cross_pct": {
+        "3": 1.806452,
+        "15": 2.789209,
+        "60": 5.764075
+      },
+      "last_24h_quote_usdt": "8408180.92234000",
+      "conclusion": "NO_FROZEN_MOMENTUM_TRIGGER_BEFORE_2X"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "ARUSDT",
+      "first_high_2x_minute_utc": "2026-09-20T17:30:00Z",
+      "valid_pre_cross_3m_poll_count": 130,
+      "above_quote_gate_polls": 130,
+      "trigger_price_gate_polls": 0,
+      "trigger_price_and_quote_gate_polls": 0,
+      "max_pre_cross_pct": {
+        "3": 3.789426,
+        "15": 6.844195,
+        "60": 12.271782
+      },
+      "last_24h_quote_usdt": "14551195.87238000",
+      "conclusion": "NO_FROZEN_MOMENTUM_TRIGGER_BEFORE_2X"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "NILUSDT",
+      "first_high_2x_minute_utc": "2026-09-22T08:57:00Z",
+      "valid_pre_cross_3m_poll_count": 139,
+      "above_quote_gate_polls": 139,
+      "trigger_price_gate_polls": 0,
+      "trigger_price_and_quote_gate_polls": 0,
+      "max_pre_cross_pct": {
+        "3": 2.965856,
+        "15": 7.510094,
+        "60": 8.558622
+      },
+      "last_24h_quote_usdt": "6907333.35505700",
+      "conclusion": "NO_FROZEN_MOMENTUM_TRIGGER_BEFORE_2X"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "SAGAUSDT",
+      "first_high_2x_minute_utc": "2026-09-22T06:14:00Z",
+      "valid_pre_cross_3m_poll_count": 124,
+      "above_quote_gate_polls": 124,
+      "trigger_price_gate_polls": 0,
+      "trigger_price_and_quote_gate_polls": 0,
+      "max_pre_cross_pct": {
+        "3": 2.088452,
+        "15": 4.765507,
+        "60": 7.628189
+      },
+      "last_24h_quote_usdt": "19645812.74997700",
+      "conclusion": "NO_FROZEN_MOMENTUM_TRIGGER_BEFORE_2X"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "ZAMAUSDT",
+      "first_high_2x_minute_utc": "2026-09-21T09:41:00Z",
+      "valid_pre_cross_3m_poll_count": 133,
+      "above_quote_gate_polls": 133,
+      "trigger_price_gate_polls": 0,
+      "trigger_price_and_quote_gate_polls": 0,
+      "max_pre_cross_pct": {
+        "3": 3.546548,
+        "15": 4.83112,
+        "60": 7.501391
+      },
+      "last_24h_quote_usdt": "31071761.48691000",
+      "conclusion": "NO_FROZEN_MOMENTUM_TRIGGER_BEFORE_2X"
+    }
+  ],
+  "causal_interpretation": "Every historical 2x case was already above quote24=100k but no sampled 3m,15m,60m price-change crossed unchanged V4 production trigger prior to the first realized 2x intraminute high. This does not prove any counterfactual gradient rule would have been profitable.",
+  "next_steps": [
+    "Develop separate frozen gradual-accumulation WATCH hypothesis and compare against ordinary symbol-dates rather than changing production V4 thresholds in-sample",
+    "Measure pre-cross lead, additional market WATCH burden, and trade-proxy after an independently frozen holdout, before independent other-AI Review"
+  ],
+  "no_new_production_services": true,
+  "frank_unchanged": true,
+  "independent_other_ai_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "real_mail": "OFF",
+  "production_trading": "NO_GO"
+}
