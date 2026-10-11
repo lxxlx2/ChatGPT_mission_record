@@ -1,0 +1,201 @@
+{
+  "schema": "MONSTER_STAGE9_SHORT_HISTORY_RUN_RESULT_V1",
+  "repo_pr": "https://github.com/lxxlx2/ChatGPT_mission_record/pull/30",
+  "ci_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38114118549",
+  "ci_commit": "3cf52561f12918725c16206b20d1f31ac04359c2",
+  "ci_conclusion": "success",
+  "data_origin": "20 predeclared incomplete 60h cases, official Binance 1m source, not full 24h warmup; unique timestamp overlap consistency",
+  "method": "Same production Monster V4 D0 observe_snapshot and D1 process_queue, partial-since-listing rolling quote volume; research only",
+  "same_sample_all_cases_no_missing": true,
+  "eligible": 20,
+  "source_failures": 0,
+  "new_listing_venue_cases": 10,
+  "cohorts": {
+    "FULLMARKET_SAMPLED": {
+      "cases_with_setup": 8,
+      "cases_with_watch": 10,
+      "first_watch_before_old_anchor": 10,
+      "short_history_cases": 10,
+      "total_watch_events": 16
+    },
+    "GT5X_PREHIT_POSITIVE": {
+      "cases_with_setup": 6,
+      "cases_with_watch": 9,
+      "first_watch_before_old_anchor": 9,
+      "short_history_cases": 10,
+      "total_watch_events": 15
+    }
+  },
+  "per_case": [
+    {
+      "first": "2025-09-09T15:00:00Z",
+      "minutes_before_anchor": 120,
+      "setup": 0,
+      "symbol": "AVNTUSDT",
+      "venue": "futures",
+      "watch": "2025-09-09T15:27:00Z"
+    },
+    {
+      "first": "2025-03-21T09:00:00Z",
+      "minutes_before_anchor": 480,
+      "setup": 2,
+      "symbol": "BROCCOLI714USDT",
+      "venue": "futures",
+      "watch": "2025-03-21T12:30:00Z"
+    },
+    {
+      "first": "2026-06-04T14:15:00Z",
+      "minutes_before_anchor": 105,
+      "setup": 1,
+      "symbol": "BTWUSDT",
+      "venue": "futures",
+      "watch": "2026-06-04T15:45:00Z"
+    },
+    {
+      "first": "2025-10-14T11:30:00Z",
+      "minutes_before_anchor": 150,
+      "setup": 0,
+      "symbol": "CLOUSDT",
+      "venue": "futures",
+      "watch": "2025-10-14T11:45:00Z"
+    },
+    {
+      "first": "2026-05-28T09:30:00Z",
+      "minutes_before_anchor": 1110,
+      "setup": 1,
+      "symbol": "CTRUSDT",
+      "venue": "futures",
+      "watch": "2026-05-29T02:09:00Z"
+    },
+    {
+      "first": "2025-10-13T14:30:00Z",
+      "minutes_before_anchor": 1350,
+      "setup": 1,
+      "symbol": "EULUSDT",
+      "venue": "futures",
+      "watch": "2025-10-14T11:12:00Z"
+    },
+    {
+      "first": "2025-11-06T12:30:00Z",
+      "minutes_before_anchor": 150,
+      "setup": 1,
+      "symbol": "FOLKSUSDT",
+      "venue": "futures",
+      "watch": "2025-11-06T12:48:00Z"
+    },
+    {
+      "first": "2026-07-31T12:45:00Z",
+      "minutes_before_anchor": 1095,
+      "setup": 1,
+      "symbol": "GRVTUSDT",
+      "venue": "futures",
+      "watch": "2026-08-01T06:36:00Z"
+    },
+    {
+      "first": "2025-11-04T12:00:00Z",
+      "minutes_before_anchor": 120,
+      "setup": 0,
+      "symbol": "MMTUSDT",
+      "venue": "futures",
+      "watch": "2025-11-04T12:06:00Z"
+    },
+    {
+      "first": "2025-07-07T09:30:00Z",
+      "minutes_before_anchor": 1170,
+      "setup": 1,
+      "symbol": "MUSDT",
+      "venue": "futures",
+      "watch": "2025-07-08T04:33:00Z"
+    },
+    {
+      "first": "2024-11-11T12:30:00Z",
+      "minutes_before_anchor": 750,
+      "setup": 1,
+      "symbol": "PNUTUSDT",
+      "venue": "futures",
+      "watch": "2024-11-11T20:42:00Z"
+    },
+    {
+      "first": "2025-10-15T12:30:00Z",
+      "minutes_before_anchor": 150,
+      "setup": 0,
+      "symbol": "RECALLUSDT",
+      "venue": "futures",
+      "watch": "2025-10-15T12:48:00Z"
+    },
+    {
+      "first": "2025-09-17T05:45:00Z",
+      "minutes_before_anchor": 315,
+      "setup": 0,
+      "symbol": "STBLUSDT",
+      "venue": "futures",
+      "watch": "2025-09-17T05:54:00Z"
+    },
+    {
+      "first": "2025-04-15T11:00:00Z",
+      "minutes_before_anchor": 1140,
+      "setup": 1,
+      "symbol": "WCTUSDT",
+      "venue": "futures",
+      "watch": "2025-04-16T01:09:00Z"
+    },
+    {
+      "first": "2025-07-29T09:45:00Z",
+      "minutes_before_anchor": 375,
+      "setup": 1,
+      "symbol": "ZRCUSDT",
+      "venue": "futures",
+      "watch": "2025-07-29T12:18:00Z"
+    },
+    {
+      "first": "2021-03-06T03:30:00Z",
+      "minutes_before_anchor": 1770,
+      "setup": 0,
+      "symbol": "CHZUSDT",
+      "venue": "spot",
+      "watch": null
+    },
+    {
+      "first": "2025-11-04T12:00:00Z",
+      "minutes_before_anchor": 120,
+      "setup": 1,
+      "symbol": "MMTUSDT",
+      "venue": "spot",
+      "watch": "2025-11-04T12:12:00Z"
+    },
+    {
+      "first": "2024-11-11T10:00:00Z",
+      "minutes_before_anchor": 900,
+      "setup": 2,
+      "symbol": "PNUTUSDT",
+      "venue": "spot",
+      "watch": "2024-11-11T21:24:00Z"
+    },
+    {
+      "first": "2021-09-29T09:00:00Z",
+      "minutes_before_anchor": 1680,
+      "setup": 1,
+      "symbol": "STPTUSDT",
+      "venue": "spot",
+      "watch": "2021-09-30T12:18:00Z"
+    },
+    {
+      "first": "2025-04-15T11:00:00Z",
+      "minutes_before_anchor": 1140,
+      "setup": 1,
+      "symbol": "WCTUSDT",
+      "venue": "spot",
+      "watch": "2025-04-16T01:09:00Z"
+    }
+  ],
+  "rejected": [],
+  "limitations": [
+    "NOT_FULL_24H_ROLLING_REFERENCE",
+    "LISTING_TIME_NOT_OFFICIALLY_CROSS_CHECKED",
+    "HISTORICAL_SPREAD_AND_DEPTH_MISSING",
+    "NOT_UNBIASED_MARKET",
+    "NO_FORWARD_OUT_OF_SAMPLE",
+    "NO_REAL_NOTIFICATION",
+    "PRODUCTION_NO_GO"
+  ]
+}
