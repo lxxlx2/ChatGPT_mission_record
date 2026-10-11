@@ -598,9 +598,7 @@
       "source_receipt_gas_wei": null,
       "event_status": "QUERY_OR_PARSE_INCOMPLETE",
       "error": "Error: MATCH_COUNT_0"
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "龙虾",
       "hash": "0x10467366b26156ad1b06270ac4bb803d87972267862c226af702a809864affb4",
@@ -610,7 +608,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -621,7 +621,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -632,7 +634,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -643,7 +647,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -654,7 +660,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -665,7 +673,9 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     },
     {
       "token": "龙虾",
@@ -676,9 +686,15 @@
       "original_tx_value_wei": "0",
       "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
       "original_receipt_status": "0x1",
-      "source_receipt_gas_wei": null
+      "source_receipt_gas_wei": null,
+      "event_status": "QUERY_OR_PARSE_INCOMPLETE",
+      "error": "Error: MATCH_COUNT_0"
     }
   ],
-  "state": "PARTIAL_32_OF_39",
-  "production": "NO_GO"
+  "pending": [],
+  "state": "ALL_39_MANAGER2_TRADE_LOG_PROBES_COMPLETE_SEVERAL_POSTMIGRATION_V2",
+  "production": "NO_GO",
+  "manager2_matched": 17,
+  "no_matching_manager2_event": 22,
+  "method_caveat": "No Manager2 purchase/sale event after migration does not imply missing trade. Transaction may route to V2 pair, must verify against pair Swap topic and wallet-signed receipt. No inferred fee or quote PnL for missing Manager2 events."
 }
