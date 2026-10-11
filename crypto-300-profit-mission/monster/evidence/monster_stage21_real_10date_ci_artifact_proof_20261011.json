@@ -243,5 +243,75 @@
   "mac_monster": "NO_GO",
   "frank": "UNTOUCHED",
   "gmail": "OFF",
-  "trading": "NO_GO"
+  "trading": "NO_GO",
+  "second_pass_independent_original_artifact_recompute": {
+    "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131848138",
+    "run_commit": "fb69d795b622ce1fe2480b0ca8609357fdbbbefc",
+    "result": "SUCCESS",
+    "artifact_id": 11698304511,
+    "artifact_zip_sha256": "800094adc5316ec0de192387c5e04f2991f5f9e843ec056869a91222c6d731d9",
+    "code": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_aggregate.py",
+    "ten_zip_sha256_verified": true,
+    "ten_json_sha256_verified": true,
+    "pooled_source_and_arm_counts_match": true,
+    "preregistered_gates": {
+      "minimum_evaluable": true,
+      "minimum_distinct_dates": true,
+      "winning_fraction": false,
+      "median_positive": false,
+      "sum_pnl_positive": false,
+      "censoring_fraction": true
+    },
+    "all_hard_gates_passed": false,
+    "matched_case_quality24h_vs_quality6h": {
+      "n": 53,
+      "six_hour_better": 37,
+      "six_hour_worse": 16,
+      "median_improvement_percentage_points": 4.257096,
+      "mean_improvement_percentage_points": 0.25424
+    },
+    "single_30usdt_capital_slot": {
+      "chosen_by_setup_chronology": 24,
+      "blocked_by_occupied_slot": 41,
+      "censored_reserved_6h": 1,
+      "evaluable": 23,
+      "wins": 6,
+      "losses": 17,
+      "net_pnl_proxy_20bps_usdt": -17.006113,
+      "net_pnl_proxy_100bps_usdt": -27.688768,
+      "real_fills": false
+    }
+  },
+  "loss_attribution_verified_from_original_10_json": {
+    "qualified_evaluable": 62,
+    "stop_loss_count": 34,
+    "stop_loss_30usdt_sum_usdt": -87.2145,
+    "take_profit_count": 8,
+    "take_profit_30usdt_sum_usdt": 41.5056,
+    "time_stop_6h_count": 20,
+    "time_stop_6h_30usdt_sum_usdt": -0.2842,
+    "qualified_symbol_dates": 65,
+    "unique_symbols": 64
+  },
+  "extended_all_14_dates_stage20_plus_stage21_descriptive_only": {
+    "arm_D_quality_bounded6h": {
+      "selected": 83,
+      "evaluable": 76,
+      "wins": 23,
+      "losses": 53,
+      "median_pct": -5.993603,
+      "independent_30usdt_pnl_sum": -32.613192,
+      "censored": 7
+    },
+    "arm_E_100bps": {
+      "selected": 83,
+      "evaluable": 76,
+      "wins": 21,
+      "losses": 55,
+      "median_pct": -7.485798,
+      "independent_30usdt_pnl_sum": -68.286707,
+      "censored": 7
+    },
+    "warning": "Stage20 four previously observed dates and Stage21 ten new holdout dates combined only as descriptive evidence, not new out-of-sample release criteria"
+  }
 }
