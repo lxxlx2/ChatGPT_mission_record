@@ -1,0 +1,84 @@
+{
+  "schema": "MONSTER_STAGE31_FROZEN_FIVE_ST30_MISSED_LATE_VS_5X_WINNER_CAUSAL_TRACE_V1",
+  "date_frozen": "2026-10-11",
+  "scope": "Monster meme 2x/5x research only; POSTHOC CASE STUDY not statistical trading strategy",
+  "baseline_commit": "bd37cdf4f006845b9ce7c8b81a4c6c2f518d0a57",
+  "baseline_real_CI": "38154393594",
+  "source_proof": "monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json",
+  "source_union": "exact full original 18 artifact ZIPs for 2025-01-19, 2025-04-19, 2025-07-19, all ZIP/JSON+publisher minute checksum independent reverify",
+  "frozen_cases": [
+    {
+      "day": "2025-01-19",
+      "symbol": "VTHOUSDT",
+      "target_m": 2,
+      "cross": "2025-01-21T10:00:00Z",
+      "expected_class": "WATCH_AFTER_REAL_FIRST_1M_CROSS"
+    },
+    {
+      "day": "2025-04-19",
+      "symbol": "PENGUUSDT",
+      "target_m": 2,
+      "cross": "2025-04-25T13:08:00Z",
+      "expected_class": "NO_WATCH_IN_CONTINUOUS_168H"
+    },
+    {
+      "day": "2025-04-19",
+      "symbol": "CETUSUSDT",
+      "target_m": 2,
+      "cross": "2025-04-25T01:10:00Z",
+      "expected_class": "WATCH_AFTER_REAL_FIRST_1M_CROSS"
+    },
+    {
+      "day": "2025-04-19",
+      "symbol": "ALPACAUSDT",
+      "target_m": 5,
+      "cross": "2025-04-25T14:29:00Z",
+      "expected_class": "WATCH_BEFORE_OR_AT_REAL_FIRST_1M_CROSS"
+    },
+    {
+      "day": "2025-07-19",
+      "symbol": "SPKUSDT",
+      "target_m": 5,
+      "cross": "2025-07-23T11:09:00Z",
+      "expected_class": "WATCH_BEFORE_OR_AT_REAL_FIRST_1M_CROSS"
+    }
+  ],
+  "locked_original_sha": {
+    "v4": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+    "historical_replay": "f085f00589ca40ab56036d9901127679ebda39d4"
+  },
+  "observation_window": {
+    "before_cross_hours": 6,
+    "after_cross_hours": 2,
+    "all_3360_poll_status_summary": true,
+    "cross_bar_high_not_closed_at_start": true
+  },
+  "controls": {
+    "baseline_original_D0": "observe_snapshot()",
+    "baseline_original_D1": "process_queue()",
+    "no_threshold_change": true,
+    "quote24_usdt": 100000,
+    "returns_3m_pct": 5,
+    "returns_15m_pct": 8,
+    "returns_60m_pct": 15,
+    "watch_cooldown_hours": 6,
+    "source_minute_SHA_check": "all 10 publisher-verified original day SHA equals Stage30 stored SHA",
+    "replay_must_exact_watch_utcs": true,
+    "replay_must_exact_setup_utcs": true,
+    "observe_snapshot_without_any_future_high_cross_in_inputs": true,
+    "historical_monthly_GT_label_only_result_identity_check": true
+  },
+  "research_outputs": [
+    "for 5 targets every 3m poll 6h before +2h after cross classify at time: momentum/no quote24/cooldown/eligible",
+    "actual event payload original V4 WATCH/EVALUATED and D1",
+    "before-and-after exact cross snapshot return for 3/15/60 windows, true minute high vs last-close proxy; no false forward fill",
+    "zero-traded-candle and low 24h turnover counts",
+    "why 5x winners gave alerts: first watch, nearest watch and current features, no posthoc BUY",
+    "same model regime compared, no tuned thresholds, no hidden source"
+  ],
+  "independent_other_AI_review": "NOT_DONE",
+  "deployment": "NO_GO",
+  "trading": "NO_GO",
+  "real_gmail": "OFF",
+  "frank": "UNCHANGED"
+}
