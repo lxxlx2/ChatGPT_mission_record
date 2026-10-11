@@ -21,6 +21,7 @@ from urllib.parse import parse_qs, urlparse
 from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
 from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
+from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
@@ -652,9 +653,58 @@ class DashboardState:
         if not self.control_health.is_file():
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_MISSING"}
         try:
-            return json.loads(self.control_health.read_text())
+            health = json.loads(self.control_health.read_text())
         except (OSError, ValueError):
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_UNREADABLE"}
+        if not isinstance(health, dict):
+            return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_INVALID"}
+        if not self.control_db.is_file():
+            health["manual_review_breakdown_available"] = False
+            health["manual_review_breakdown_error"] = "CONTROL_DB_UNAVAILABLE"
+            return health
+
+        # Read-only live breakdown for display. Keep all immutable delivery
+        # records and leave the Mission Loop's health file untouched.
+        db = None
+        try:
+            db = open_control_ro(self.control_db)
+            rows = [dict(row) for row in db.execute("""
+                SELECT o.channel, o.status AS outbox_status,
+                       o.last_error, o.attempts AS outbox_attempts,
+                       g.status AS gmail_status, g.attempt_count AS gmail_attempts,
+                       g.sent_at, g.gmail_message_id,
+                       l.status AS local_status, l.delivered_at AS local_delivered_at
+                FROM decision_outbox AS o
+                LEFT JOIN gmail_delivery AS g
+                  ON o.channel='gmail' AND g.decision_id=o.decision_id
+                LEFT JOIN local_delivery AS l
+                  ON o.channel='local' AND l.decision_id=o.decision_id
+                WHERE o.status IN ('MANUAL_REVIEW','SENDING','SENT_UNVERIFIED')
+            """).fetchall()]
+        except (OSError, sqlite3.DatabaseError) as exc:
+            # No invented 0 pending count; stale legacy totals may omit sends.
+            health["manual_review_breakdown_available"] = False
+            health["manual_review_breakdown_error"] = type(exc).__name__
+            return health
+        finally:
+            if db is not None:
+                db.close()
+        breakdown = summarize_manual_reviews(rows)
+        health.update(breakdown)
+        health["manual_review_breakdown_error"] = None
+        health["manual_review_gmail_count"] = (
+            breakdown["manual_review_expired_unsent_gmail_count"]
+            + breakdown["manual_review_actionable_gmail_count"]
+        )
+        health["manual_review_local_count"] = (
+            breakdown["manual_review_expired_unsent_local_count"]
+            + breakdown["manual_review_actionable_local_count"]
+        )
+        health["manual_review_total_count"] = (
+            breakdown["manual_review_expired_unsent_count"]
+            + breakdown["manual_review_actionable_count"]
+        )
+        return health
 
     def candidates(self):
         candidates = self.frank.candidates()
