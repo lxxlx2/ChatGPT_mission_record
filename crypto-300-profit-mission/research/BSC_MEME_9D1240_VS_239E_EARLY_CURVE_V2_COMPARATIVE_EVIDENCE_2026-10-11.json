@@ -1,0 +1,121 @@
+{
+  "date": "2026-10-11",
+  "chain": "bnb-mainnet",
+  "analysis": "BSC_MEME_9D1240_VS_239E_EARLY_ROUTE_AND_PROFIT_CONCENTRATION",
+  "source_files": [
+    "BSC_MEME_9D1240_IFML_LOBSTER_ORIGINAL_EPISODE_ATTRIBUTION_2026-10-11.json",
+    "BSC_MEME_239E_TWO_MAJOR_NATIVE_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_9D1240_39_TRADE_TWO_VENUE_ACCOUNTING_QA_2026-10-11.json",
+    "BSC_MEME_9D1240_GIGGLE_BINANCE_LIFE_NATIVE_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_9D1240_CURVE_HELPER_32_HISTORICAL_QUOTES_2026-10-11.json",
+    "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json"
+  ],
+  "timestamp_method": "ethGetBlockByNumber historical original canonical header for 14 required blocks, all 14 returned and parsed; shared 239e original entry data also in linked timeline",
+  "cohorts": [
+    {
+      "token": "我踏马来了",
+      "early_wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "later_wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "earlier_purchase": {
+        "block": 73336301,
+        "unix": 1767004387
+      },
+      "earlier_first_exit": {
+        "block": 73336610,
+        "unix": 1767004618
+      },
+      "later_purchase": {
+        "block": 73658908,
+        "unix": 1767246411
+      },
+      "earlier_final_exit": {
+        "block": 73672622,
+        "unix": 1767256697
+      },
+      "early_entry_lead_seconds": 242024,
+      "early_first_exit_precedes_later_entry_seconds": 241793,
+      "early_final_exit_after_later_entry_seconds": 10286,
+      "earlier_token_native_block_delta_wei": "855510151606958501",
+      "later_token_native_block_delta_wei": "97366720524376562",
+      "early_venue": "TokenManager2 curve 0x5c9520 via aggregator 0x1de460 at first owner purchase; evidence original transaction and decoded manager event",
+      "later_venue": "Pancake V2 pool immediately after sampled V2 pair transfer; original owner input directly from pair, signer receipt confirmed",
+      "early_second_buy_before_later_seconds": 88525
+    },
+    {
+      "token": "龙虾",
+      "early_wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "later_wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "earlier_purchase": {
+        "block": 83635788,
+        "unix": 1772182087
+      },
+      "earlier_first_exit": {
+        "block": 83635915,
+        "unix": 1772182144
+      },
+      "later_purchase": {
+        "block": 83636130,
+        "unix": 1772182241
+      },
+      "earlier_final_exit": {
+        "block": 83636718,
+        "unix": 1772182506
+      },
+      "early_entry_lead_seconds": 154,
+      "early_first_exit_precedes_later_entry_seconds": 97,
+      "early_final_exit_after_later_entry_seconds": 265,
+      "earlier_token_native_block_delta_wei": "1642366642703365664",
+      "later_token_native_block_delta_wei": "199125593493335144",
+      "early_venue": "TokenManager2 curve 0x5c9520 via aggregator 0x1de460 at first owner purchase; evidence original transaction and decoded manager event",
+      "later_venue": "Pancake V2 pool immediately after sampled V2 pair transfer; original owner input directly from pair, signer receipt confirmed"
+    }
+  ],
+  "venue_audit": {
+    "original_trades": 39,
+    "original_signature_verified": 39,
+    "receipt_explicit_success": 38,
+    "receipt_header_missing_but_erc20_success_log": 1,
+    "pre_migration_manager2_direct_logs": 17,
+    "post_migration_pancake_swap_direct_logs": 20,
+    "post_migration_pair_wbnb_transfer_proof_only": 2,
+    "uncovered_hashes": 0
+  },
+  "buy_settlement": {
+    "original_native_value_total_wei": "650000000000000000",
+    "curve_cost_total_wei": "637128712871286983",
+    "base_protocol_fee_total_wei": "6371287128712866",
+    "unassigned_extra_total_wei": "6500000000000151",
+    "identity_balance_wei": "0",
+    "all_eight_extra_near_1pct_of_original_native_value_within_50wei": true
+  },
+  "original_narrow_native_scope": {
+    "IFML_9d_wei": "855510151606958501",
+    "LOBSTER_9d_wei": "1642366642703365664",
+    "IFML_239e_wei": "97366720524376562",
+    "LOBSTER_239e_wei": "199125593493335144"
+  },
+  "controls": {
+    "GIGGLE_9d_raw_native_scope_wei": "32571855596465810",
+    "BNB_LIFE_9d_raw_native_scope_wei": "6324727789539559",
+    "BNB_LIFE_first_in_from_unrelated_signer": true,
+    "all_other_19CA_activities_unknown_beyond_selected_records": true
+  },
+  "historical_curve_quotes": {
+    "frozen": 32,
+    "read_successfully": 16,
+    "original_buy_hashes_checked": 4,
+    "state": "PARTIAL_16_OF_32__READ_ONLY_CURVE_QUOTES",
+    "execution_status": "HISTORICAL_VIEW_ONLY_NOT_VALIDATED_FILL",
+    "remaining": "16/32 not read after tool safety block"
+  },
+  "risk": [
+    "Early purchase on Four.meme curve before V2 migration cannot be priced using V2 post-migration reserves",
+    "Direct manager event buy gross cost+base fee leaves approx 1% original native amount residual across all eight trades; fee identity unresolved",
+    "Both traders chose same popular outcomes retrospectively, cannot infer population skill, universal edge or independence",
+    "Early trader native wallet delta may include unrelated same-block flows and proceeds routed to non-native assets; scope is not lifetime PnL",
+    "Control coin GIGGLE active but later, Binance Life inbound from other signer; not all 19 CAs or non-ERC20 trades covered",
+    "History-only read price is not available live simulated executable transaction, taxes/gas/MEV/latency not proven"
+  ],
+  "candidate_priority": "9d early-curve active trader high priority (two major launches plus GIGGLE control), 239e V2 same-block entry candidate. No independent controller proof or direct copying strategy.",
+  "production": "NO_GO"
+}
