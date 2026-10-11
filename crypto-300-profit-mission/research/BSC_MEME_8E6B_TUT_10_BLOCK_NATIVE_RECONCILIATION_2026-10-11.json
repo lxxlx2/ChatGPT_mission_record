@@ -91,7 +91,7 @@
     }
   ],
   "pending_tx": [],
-  "status": "5_OF_10_ORIGINAL_TX_PROVENANCE",
+  "status": "TUT_10_NATIVE_BLOCKS_10_TRANSACTIONS_CHECKED; OPEN_INVENTORY_AND_NON_NATIVE_QUOTE_NOT_RESOLVED",
   "production": "NO_GO",
   "caveats": [
     "Open token quantity is not a realized loss nor zero exposure",
@@ -155,6 +155,65 @@
       "gas_wei": "1465735000000000",
       "transaction_complete": true,
       "receipt_complete": true
+    },
+    {
+      "hash": "0x1ad96bfd805da434e55922c34055aef9daf4ef6ac298038f70f534871a92d6b6",
+      "block": 79583894,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "3000000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "27388680000000",
+      "transaction_complete": true,
+      "receipt_complete": true
+    },
+    {
+      "hash": "0xdc2c0e92a5f8e9a45464c6cad2fd1c5e0748d15dbd114709f0fd41d166e089ae",
+      "block": 79584140,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "value_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "184195000000000",
+      "transaction_complete": true,
+      "receipt_complete": true
+    },
+    {
+      "hash": "0xe3940f939f64c0812e3e64115ab8b71cf75d595a64d5f1d4d88c4f698552e0dc",
+      "block": 79584153,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "value_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "179351000000000",
+      "transaction_complete": true,
+      "receipt_complete": true
+    },
+    {
+      "hash": "0x7a75247a0888fd5eb44bebb59a4418a735c8755f2c4d28119d16efa51d560438",
+      "block": 114902733,
+      "from": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "value_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": null,
+      "transaction_complete": true,
+      "receipt_complete": false
+    },
+    {
+      "hash": "0x18d2d25689548eabb55ff92ea428f46614d85932105e19ac071ec453b25e8b69",
+      "block": 115361864,
+      "from": null,
+      "to": null,
+      "value_wei": null,
+      "receipt_status": "0x1",
+      "gas_wei": null,
+      "transaction_complete": false,
+      "receipt_complete": false
     }
-  ]
+  ],
+  "self_signed": 8,
+  "success": 10,
+  "native_input_wei": "6535000000000000000",
+  "total_known_gas_wei": "5974749680000000"
 }
