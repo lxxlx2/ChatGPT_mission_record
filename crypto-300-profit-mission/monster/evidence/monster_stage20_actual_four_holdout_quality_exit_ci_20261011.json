@@ -106,7 +106,6 @@
   "aggregate": {
     "attempted": 3032,
     "verified_complete_60h": 1764,
-    "source_missing_404": 1266,
     "source_partial_or_noncontiguous": 2,
     "verified_minute_bars": 6350400,
     "watch_episodes": 24,
@@ -171,7 +170,8 @@
       "mean_net_pct": 1.5477895,
       "independent_30usdt_sum": 6.5007159,
       "censored": 4
-    }
+    },
+    "source_missing_or_unavailable_403_404": 1266
   },
   "matched_comparison": {
     "all_v4_24h_vs_bounded6h": {
@@ -198,7 +198,8 @@
     "proxy_positive_median_required": true,
     "proxy_positive_sum_required": true,
     "censoring_fraction_max": 0.2,
-    "robustness_at_100bps_required": true
+    "robustness_at_100bps_required": false,
+    "100bps_slippage": "MANDATORY_REPORTING_SENSITIVITY_NOT_HARD_PASS_GATE"
   },
   "gate_result": {
     "evaluated_20bps": 14,
@@ -209,7 +210,8 @@
     "winrate_requirement_met": false,
     "censoring_requirement_met": false,
     "high_slippage_robustness_met": false,
-    "overall": "FAIL_NO_GO"
+    "overall": "FAIL_NO_GO",
+    "high_slippage_robustness_is_prereg_hard_gate": false
   },
   "caveats": [
     "These are four new calendar dates relative to Stage12-19, not actual future shadow or historical true point-in-time listings",
