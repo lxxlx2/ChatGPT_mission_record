@@ -98,3 +98,55 @@ def test_missing_control_database_never_creates_sqlite_file(tmp_path):
     with pytest.raises(ValueError, match="CONTROL_SQLITE_UNAVAILABLE"):
         probe.summary_from_database(tmp_path)
     assert not (tmp_path / "mission-control.sqlite").exists()
+
+
+def test_readonly_blocks_hidden_unknown_nonsuccess_with_even_matching_http(
+        source, monkeypatch, capsys, tmp_path):
+    root, db = source
+    seed(db, "UNKNOWN_TERMINAL_ERROR", attempts=1, gmail_attempts=1)
+    observed = probe.summary_from_database(root)
+    assert observed["dashboard_hidden_nonsuccess_rows"] == 1
+    monkeypatch.setattr(probe, "dashboard_root", lambda: tmp_path)
+    monkeypatch.setattr(probe, "source_state", lambda path: "TARGET")
+    monkeypatch.setattr(probe, "control_root", lambda: root)
+    monkeypatch.setattr(probe, "local_dashboard_health",
+                        lambda path: {"manual_review_breakdown_available": True,
+                                      "manual_review_breakdown_error": None,
+                                      **observed})
+    assert probe.main() == 3
+    report = json.loads(capsys.readouterr().out)
+    assert report["operational_acceptance"] == "BLOCKED_DASHBOARD_HIDES_NONSUCCESS_ROWS"
+    assert report["dashboard_hidden_nonsuccess_rows"] == 1
+
+
+def test_readonly_explicitly_reports_legacy_schema_missing_fields(
+        source, monkeypatch, capsys, tmp_path):
+    root, db = source
+    seed(db, "SENT_UNVERIFIED", attempts=1, gmail_attempts=1)
+    monkeypatch.setattr(probe, "dashboard_root", lambda: tmp_path)
+    monkeypatch.setattr(probe, "source_state", lambda path: "LEGACY")
+    monkeypatch.setattr(probe, "control_root", lambda: root)
+    monkeypatch.setattr(probe, "local_dashboard_health",
+                        lambda path: {"manual_review_breakdown_available": True,
+                                      "manual_review_breakdown_error": None,
+                                      "manual_review_total_count": 0})
+    assert probe.main() == 3
+    report = json.loads(capsys.readouterr().out)
+    assert report["operational_acceptance"] == "BLOCKED_BACKEND_SCHEMA_MISSING_FIELDS"
+    assert "manual_review_blocked_count" in report["http_missing_count_fields"]
+    assert "manual_review_pending_count" in report["http_missing_count_fields"]
+    assert report["http_matches_sqlite"] is False
+
+
+def test_independent_database_oracle_counts_terminal_and_blocked_outcomes(source):
+    root, db = source
+    seed(db, "PERMANENT_ERROR", attempts=1, gmail_attempts=1)
+    seed(db, "CREDENTIAL_BLOCKED", attempts=0, gmail_attempts=0)
+    seed(db, "SENT_UNVERIFIED", attempts=1, gmail_attempts=1)
+    actual = probe.summary_from_database(root)
+    assert actual["manual_review_total_count"] == 0
+    assert actual["manual_review_actionable_count"] == 1
+    assert actual["manual_review_pending_count"] == 1
+    assert actual["manual_review_blocked_count"] == 1
+    assert actual["manual_review_visible_total_count"] == 3
+    assert actual["dashboard_hidden_nonsuccess_rows"] == 0
