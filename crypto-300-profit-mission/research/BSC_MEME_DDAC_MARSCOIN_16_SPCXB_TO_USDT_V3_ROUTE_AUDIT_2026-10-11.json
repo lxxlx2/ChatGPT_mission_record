@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "source_file": "BSC_MEME_DDAC_MARSCOIN_18_POOL_TRADE_V2_V3_TAX_AND_QUOTE_RECONCILIATION_2026-10-11.json",
+  "method": "For 16 SPCXB/MARS V2 source owner trades, check same tx hash at USDT/SPCXB V3 pair 0x977daffc..., decode signed amount0 USDT and amount1 SPCXB, compare SPCXB quote against original MARS V2 pair gross token0 quote. A nonmatch may mean alternate routing/fees and must be preserved.",
+  "pools": {
+    "usdt_spcxb_v3": "0x977daffc095b33872e2741c19568925015c35b4d",
+    "usdt": "0x55d398326f99059ff775485246999027b3197955",
+    "spcxb": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+    "mars_spcxb_v2": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+  },
+  "expected": 16,
+  "rows": [
+    {
+      "hash": "0xfd87fa6d585acdf047e96264ddfb1bb0c428c882449d72554a34ec6841b63824",
+      "block": 112441920,
+      "mars_side": "IN",
+      "spcxb_from_mars_venue_raw": "2481035477991251445",
+      "bridge": "USDT_SPCXB_V3",
+      "status": "EXACT_CROSS_POOL_SPCXB_PATH",
+      "usdt_signed_pool_delta_raw": "283612300022495387717",
+      "spcxb_signed_pool_delta_raw": "-2481035477991251445",
+      "spcxb_matches_mars_gross_exact": true,
+      "direction_consistent": true
+    },
+    {
+      "hash": "0x8f5386192f6f5da18185098556a2f93661211d59b63e6baaff6d66435647b35c",
+      "block": 112442886,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "2855238960147439606",
+      "bridge": "USDT_SPCXB_V3",
+      "status": "EXACT_CROSS_POOL_SPCXB_PATH",
+      "usdt_signed_pool_delta_raw": "-319503166920684735560",
+      "spcxb_signed_pool_delta_raw": "2855238960147439606",
+      "spcxb_matches_mars_gross_exact": true,
+      "direction_consistent": true
+    },
+    {
+      "hash": "0xc13d9d1b476a6fa2ae56ed17518281101dde33e930572ce40ef46819e54bc989",
+      "block": 112635735,
+      "mars_side": "IN",
+      "spcxb_from_mars_venue_raw": "2584821600123442781",
+      "bridge": "USDT_SPCXB_V3",
+      "status": "EXACT_CROSS_POOL_SPCXB_PATH",
+      "usdt_signed_pool_delta_raw": "279758475384937667212",
+      "spcxb_signed_pool_delta_raw": "-2584821600123442781",
+      "spcxb_matches_mars_gross_exact": true,
+      "direction_consistent": true
+    },
+    {
+      "hash": "0x4323589f5edadbb49c6b1eefe5ab816af12993bccefe4d4c1fe2592f07be881d",
+      "block": 112639419,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "2600268578903973594",
+      "bridge": "USDT_SPCXB_V3",
+      "status": "EXACT_CROSS_POOL_SPCXB_PATH",
+      "usdt_signed_pool_delta_raw": "-281226987999692962314",
+      "spcxb_signed_pool_delta_raw": "2600268578903973594",
+      "spcxb_matches_mars_gross_exact": true,
+      "direction_consistent": true
+    },
+    {
+      "hash": "0x5c771003a07ad6a04e570aa8b56e6fed209a8d12a37102c8e79743cf48d14c36",
+      "block": 112643175,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "2690421549396182003",
+      "bridge": "USDT_SPCXB_V3",
+      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
+      "error": "Error: EXACT_SWAP_MATCH_0"
+    },
+    {
+      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
+      "block": 112964866,
+      "mars_side": "IN",
+      "spcxb_from_mars_venue_raw": "4985442910027358206",
+      "bridge": "USDT_SPCXB_V3",
+      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
+      "error": "Error: EXACT_SWAP_MATCH_0"
+    },
+    {
+      "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
+      "block": 112964882,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "5573768837820999200",
+      "bridge": "USDT_SPCXB_V3",
+      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
+      "error": "Error: EXACT_SWAP_MATCH_0"
+    },
+    {
+      "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6",
+      "block": 112965110,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "4396294429869024146",
+      "bridge": "USDT_SPCXB_V3",
+      "status": "SWAP_LOG_MISSING_OR_TRUNCATED",
+      "error": "Error: EXACT_SWAP_MATCH_0"
+    }
+  ],
+  "pending": [
+    {
+      "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
+      "block": 112965118,
+      "mars_side": "IN",
+      "spcxb_from_mars_venue_raw": "2509122919803295381"
+    },
+    {
+      "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
+      "block": 112971917,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "4897742200782718467"
+    },
+    {
+      "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
+      "block": 113003453,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "1586628955375493302"
+    },
+    {
+      "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
+      "block": 113137477,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "1259542899259174267"
+    },
+    {
+      "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
+      "block": 113975350,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "3967018379356511861"
+    },
+    {
+      "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854",
+      "block": 113986944,
+      "mars_side": "IN",
+      "spcxb_from_mars_venue_raw": "247659216316843169"
+    },
+    {
+      "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
+      "block": 115522575,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "428928551809892176"
+    },
+    {
+      "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
+      "block": 119938551,
+      "mars_side": "OUT",
+      "spcxb_from_mars_venue_raw": "195729087522878178"
+    }
+  ],
+  "status": "8_OF_16_UPSTREAM_USDT_SPCXB_BRIDGE_PROBES",
+  "production": "NO_GO"
+}
