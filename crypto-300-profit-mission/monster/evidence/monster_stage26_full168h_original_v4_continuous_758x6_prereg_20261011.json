@@ -1,0 +1,61 @@
+{
+  "schema": "MONSTER_STAGE26_SIX_FIXED_DATES_FULL_168H_PER_SYMBOL_CONTINUOUS_V4_RETROSPECTIVE_V1",
+  "created_before_168h_daily_minute_fetch": true,
+  "frozen_dates_utc": [
+    "2025-11-04",
+    "2025-12-04",
+    "2026-02-04",
+    "2026-04-04",
+    "2026-08-04",
+    "2026-09-04"
+  ],
+  "historical_outcome_labels_already_exposed": true,
+  "design_preselection": "All six Stage24 dates already used; this is a measurement repair, NOT independent out-of-sample strategy test.",
+  "frozen_universe": {
+    "all_758_attempted_each_date": true,
+    "current_asof_202610_symbols": 504,
+    "archive_only_symbols": 254,
+    "unsupported_unicode_archive_symbols": 2,
+    "point_in_time_listing": "UNVERIFIED"
+  },
+  "original_blob_sha1": {
+    "v4_production_functions": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+    "v4_replayer_and_cost": "95b2595281f5aa8675c6a95e542d40d36b78e847",
+    "official_spot_archive_parser": "1c5a6b7ee3132ac498d885c329f0422d63d01008",
+    "prior_stage24_verified_sha_aggregator": "b2b3818d0e7739799c9fbc47e397dbca38d5493e"
+  },
+  "source_contract": {
+    "ground_truth": "Existing six original SHA-verified Stage24 CI artifacts (all 758 cases each), official Binance publisher-verified monthly 1h outcomes",
+    "minutely": "Binance official daily Spot 1m ZIP+publisher SHA256 for contiguous 216h interval (24h warmup, 168h active replay, 24h exit prices), 10 daily archives needed; all 10 verified before one model poll; fail entire symbol-source on first missing day",
+    "data_saving": "If original monthly 168h GT is invalid, mark source_missing_or_gapped and do NOT claim any model negative/positive; skip additional 10 daily files as optimization; still keep all 758 symbol statuses in full-denominator output",
+    "watch": "Original V4 observe_snapshot and process_queue, unchanged 3m ticker-proxy polling based only on past 1m CLOSE with 24h rolling official quote volume and closed 5m bars",
+    "first_poll": "06:03:00 UTC relative to frozen date 06:00 start, 3m poll at closed minute with same 24h-start initialization as Stage24",
+    "last_poll": "At or before 168h end exclusive, 3m cadence; same SQLite store retained over entire 168h for each individual symbol",
+    "no_other_hourly_truth_features_in_model": true,
+    "lookahead_for_classification_only": "After WATCH emitted, official 1m FIRST HIGH crossing >= frozen 06:00 1h-open * 2/5/10 in future 168h; only labels when archived 168h complete",
+    "source_ticker_limit": "Binance historical actual full-market ticker and exchangeInfo cannot be reconstructed; use Stage24 same 1m closed-price + 24h quote rolling proxy. Zero-trade latest 1m poll retained for apples-to-apples original Stage24 baseline but marked proxy.",
+    "queue_limit": "One independent SQLite db per symbol for full168h; cross-symbol global queue limit8 and source latency are NOT represented. Report this limitation as possible optimistic timeliness.",
+    "execution_proxy": "Every original WATCH 3m delayed first minute-open entry, 24h price proxy with 10bps fee per side and 20bps,100bps slippage per side, requiring traded minute quotes and exit; enforce per-symbol non-overlapping 24h capital",
+    "capital_model": "Single 30USDT funding slot across all symbol-date WATCH candidates, deterministic sorted signal timestamp, no future-PnL ranking; reserve 24h for censored candidate",
+    "signal_output": "every watch timestamp and D1 setup timestamp, invalidation events, daily/rolling max alert count, 24h price return proxies, source hashes and cases"
+  },
+  "hard_audit_gates": {
+    "all_six_dates_reported": true,
+    "each_date_all_758_attempted": true,
+    "all_source_missing_separately_censored": true,
+    "producer_SHA_for_each_of_10_daily_archives": true,
+    "no_param_tuning": true,
+    "original_v4_function_git_blob_unchanged": true,
+    "model_state_never_reset_during_168h_for_same_symbol": true,
+    "missed_GT2x_denom_only_joint_verified_168h_1h_and_216h_1m": true,
+    "observed_alert_volume_and_dedup_reported": true,
+    "cost_proxy_net_return_and_30u_slot_reported": true,
+    "true_l2_execution_proof": "UNVERIFIED"
+  },
+  "failure_policy": "If too few full216h historical Spot 1m sources or source download fails, keep censorship and negative proof; don't silently call it no WATCH. Valid WATCH setup not imply BUY.",
+  "other_AI_independent_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "real_gmail": "OFF",
+  "trading": "NO_GO",
+  "frank": "UNTOUCHED"
+}
