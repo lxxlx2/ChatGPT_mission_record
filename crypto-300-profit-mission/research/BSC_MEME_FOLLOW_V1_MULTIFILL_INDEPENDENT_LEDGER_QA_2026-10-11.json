@@ -341,5 +341,17 @@
     "Independent arithmetic reread does not validate historical pool venue selection or quote executability",
     "Actual gas, transfer taxes, MEV and causal transaction ordering depend on onchain venue and are not replicated",
     "Choosing 3 historical winning opportunities from earlier results is in-sample sampling bias"
-  ]
+  ],
+  "size_monotonicity_qualification": {
+    "finding": "Five warnings occur only under the fixed-per-trade gas stress scenario. Net-return percentage includes a constant 0.0005 BNB/action cost; its relative share shrinks with larger capital, so larger percentage net return need not imply AMM negative-slippage anomalies.",
+    "control_check": "ZERO_FEE scenarios had 0 inverse size monotonicity flags; original warnings retained untouched, do not claim monotonicity validation absent gas normalization.",
+    "counts": {
+      "fee_free_scenarios": 12,
+      "stress_scenarios": 12,
+      "stress_size_warnings": 5,
+      "independent_replay_ledger_entries": 368,
+      "not_1104": true
+    },
+    "apology_note": "The generating Git commit subject described 1104 ledger entries; it was an erroneous commit-message count. Actual source result and this artifact contain 368 original event-ledger entries; no missing events inferred."
+  }
 }
