@@ -24,7 +24,7 @@ class NewDateTests(unittest.TestCase):
                 m.eval_one("TUSDT",m.date(2025,1,19))
     def test_official_gt_matches_original_stage26_scanner_without_future_labels(self):
         orig={"symbol":"TUSDT","status":"VERIFIED_COMPLETE_168H","baseline_1h_open":"1",
-              "maximum_high_multiple":"2.1",
+              "maximum_high_multiple":"2.1","archive_sha256":"a"*64,
               "gross_high_ge_2x":True,"gross_high_ge_5x":False,"gross_high_ge_10x":False}
         recorded={}
         def record(item,day):
