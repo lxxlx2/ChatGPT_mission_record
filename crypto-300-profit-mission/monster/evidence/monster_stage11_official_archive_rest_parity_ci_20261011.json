@@ -1,0 +1,55 @@
+{
+  "schema": "MONSTER_STAGE11_VERIFIED_OFFICIAL_BINANCE_CLOUD_ARCHIVE_V1",
+  "code_sha": "3e257527b7eeeb374be20774725596f3fa4f51e3",
+  "run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38115489739",
+  "status": "ALL_MATCHED",
+  "source": "https://github.com/binance/binance-public-data official data.binance.vision",
+  "published_checksum_files_verified": 12,
+  "frozen_rest_source_agreement_bars": 14400,
+  "symbols": [
+    "QUICKUSDT",
+    "TNSRUSDT",
+    "PORTOUSDT",
+    "LTCUSDT"
+  ],
+  "source_daily_zip_sha256": [
+    {
+      "sha256": [
+        "28693dad5fa5b70fc38c8dcc9798179a115cc04a1f3cb51652c99d01184365c1",
+        "4bb4dc4eb388f06ac3d0364d19f7753419b886f45fb47684a55a79a645c4b833",
+        "46693776cba28b52dd2f5b800371767b62950d1348308157d642be535797821d"
+      ],
+      "symbol": "QUICKUSDT"
+    },
+    {
+      "sha256": [
+        "4f575a5154a5cc708d25b3e3c0e95a8a4757ca6d988f1ab82c99192751b63144",
+        "98a02ca7f4c252429c36cb0b9c128e52dba46ba2fa192d238dc877519753c809",
+        "3fccbfef24bdcc08623c562205c89f360f84df14166d416d909577585c2be871"
+      ],
+      "symbol": "TNSRUSDT"
+    },
+    {
+      "sha256": [
+        "0816413e5670ed9883c3942962ff6f590938b8ae2865a786fb241c9ba877aa08",
+        "b38948177b969a0949b24e0f3132ecea4032a99b83a38a88547f477dbaf9ffb0",
+        "7d902b0689f4738b3f711b6378c28555c1fcc69864a6808f36a1b84fc4765f2f"
+      ],
+      "symbol": "PORTOUSDT"
+    },
+    {
+      "sha256": [
+        "629999f5c4c764996c48a413d65e68bc8aad837af4d4a4d39d133e2ee26505a2",
+        "8ad5f5f4a0ed21e02d2f87a6a658422e4b73e4da9b6fe0ad0ccb4102434560b3",
+        "9c5fc92dbd098865653cc2a2b7bec4be2373e952b65a0927b1b31ae75a236cda"
+      ],
+      "symbol": "LTCUSDT"
+    }
+  ],
+  "still_not_verified": [
+    "HISTORICAL_ORDERBOOK",
+    "TRADING_PROFITABILITY",
+    "FORWARD_GENERALIZATION"
+  ],
+  "deployment_gate": "NO_GO"
+}
