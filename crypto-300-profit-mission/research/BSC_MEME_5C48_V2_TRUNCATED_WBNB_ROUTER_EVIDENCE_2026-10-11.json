@@ -72,8 +72,15 @@
       "block": 85952169,
       "hash": "0xf4b76043b40d268baa0fa76130b26621168aef0e99f34938f3dd19e74d59d28d",
       "dir": "in",
-      "status": "WBNB_FALLBACK_UNRESOLVED",
-      "error": "SyntaxError: Expected property name or '}' in JSON at position 8002 (line 227 column 1)"
+      "status": "WBNB_TRANSFER_SAME_HASH_VERIFIED_SWAP_LOG_UNREADABLE",
+      "pagination_pages_queried": 6,
+      "pagination_complete": true,
+      "pagination_early_stop_on_target": true,
+      "match_count": 1,
+      "wbnb_transfer_raw": "990000000000000000",
+      "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "uniqueId": "0xf4b76043b40d268baa0fa76130b26621168aef0e99f34938f3dd19e74d59d28d:log:888"
     },
     {
       "token": "龙虾",
@@ -87,6 +94,7 @@
       "uniqueId": "0xc1b893b2f5a5ba09d3d12145b6249ef0ac178227eea429d069a8825362ec070c:log:366"
     }
   ],
-  "verified": 6,
-  "production": "NO_GO"
+  "verified": 7,
+  "production": "NO_GO",
+  "pagination_followup": "Target 85952169 used <=2 results/pages to avoid the previous single response 8KB truncation; scanner preserves incomplete pagination if any."
 }
