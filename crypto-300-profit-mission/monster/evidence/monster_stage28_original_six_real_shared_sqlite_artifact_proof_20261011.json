@@ -1,0 +1,104 @@
+{
+  "schema": "MONSTER_STAGE28_SIX_ORIGINAL_REAL_SHARED_SQLITE_D1_ARTIFACTS_SHA256_V1",
+  "date": "2026-10-11",
+  "frozen_source": "monster_stage28_exact_shared_d1_production_queue_prereg_20261011.json",
+  "source_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38146403662",
+  "source_commit": "973891aae686b05e6bba35bdf506ddca578b1bda",
+  "source_ci_final_status": "SUCCESS_ALL_SIX",
+  "publisher": "Binance official Spot daily 5m ZIPs and publisher SHA256 CHECKSUM for live production process_queue",
+  "all_six_actual_zip_and_uncompressed_JSON_SHA256_byte_verified": true,
+  "all_36_stage26_original_WATCH_sources_SHA256_reevaluated_in_each_ci_job": true,
+  "artifacts": [
+    {
+      "date": "2025-11-04",
+      "artifact_id": 11704448200,
+      "zip_sha256": "2010e5f14f4ddef9b6201c020874a171c847ed44e774a77fa3177ede05b33038",
+      "raw_json_sha256": "e52f97197f5e512d9af53ec0d5b3b857bf9057a5ad6089429b1b1533bdf98e21",
+      "original_watch_arrivals": 260,
+      "original_individual_setups": 219,
+      "real_shared_setups": 220,
+      "late": 2,
+      "official_5m_publisher_sha_source_count": 378
+    },
+    {
+      "date": "2025-12-04",
+      "artifact_id": 11705316730,
+      "zip_sha256": "b1631b9f9be3b6129444e811788b8b9ff2edbd0fa6619d5ec88e5919906f009a",
+      "raw_json_sha256": "fc99c6a384299ee133a0e619bc6a9d8f073d76059e28b207cea3c84541483b10",
+      "original_watch_arrivals": 133,
+      "original_individual_setups": 113,
+      "real_shared_setups": 113,
+      "late": 2,
+      "official_5m_publisher_sha_source_count": 184
+    },
+    {
+      "date": "2026-02-04",
+      "artifact_id": 11704952400,
+      "zip_sha256": "28caeed99fd23d8f4b1079a4498ae3ddf171e18ed3e9b84126a4a86a37763e8c",
+      "raw_json_sha256": "cf50420a683b200a037f1612b305e5feb7fb2dfbfc81556e912fd750bf653b6d",
+      "original_watch_arrivals": 269,
+      "original_individual_setups": 120,
+      "real_shared_setups": 121,
+      "late": 96,
+      "official_5m_publisher_sha_source_count": 213
+    },
+    {
+      "date": "2026-04-04",
+      "artifact_id": 11704917373,
+      "zip_sha256": "896e5805a0288de1a516d0399b6c241fa1d45e0244106f8559ad228291912f98",
+      "raw_json_sha256": "ad0449d4dfb0f48d5b67a14fb1776989cbd5939f7b8a2818808eeb54e59b2da5",
+      "original_watch_arrivals": 181,
+      "original_individual_setups": 149,
+      "real_shared_setups": 150,
+      "late": 9,
+      "official_5m_publisher_sha_source_count": 277
+    },
+    {
+      "date": "2026-08-04",
+      "artifact_id": 11705037406,
+      "zip_sha256": "9b56d03b0674d81bb7f7586445ad9258d6d8c899089a2c6e8b4888f17eb56da3",
+      "raw_json_sha256": "f512bcb5b602c6962f9b7bfdc32d78abb10ed746cb1511386952a53ef3f23a54",
+      "original_watch_arrivals": 182,
+      "original_individual_setups": 146,
+      "real_shared_setups": 147,
+      "late": 3,
+      "official_5m_publisher_sha_source_count": 205
+    },
+    {
+      "date": "2026-09-04",
+      "artifact_id": 11704997491,
+      "zip_sha256": "9d1b8ee7d79234d5aa096d634c814ba53e48ad880d1d62d900cf6a4861cff638",
+      "raw_json_sha256": "d3e03f47e79d460cd96c3781e08d975f249e4bbd03697e5139ef235bb9468b42",
+      "original_watch_arrivals": 107,
+      "original_individual_setups": 79,
+      "real_shared_setups": 77,
+      "late": 11,
+      "official_5m_publisher_sha_source_count": 164
+    }
+  ],
+  "original_watch_events": 1132,
+  "original_individual_setups": 826,
+  "real_production_shared_d1_setups": 828,
+  "production_shared_d1_LATE_REVIEW_total": 123,
+  "publisher_verified_five_minute_symbol_daily_archives_total": 1421,
+  "feb2026_burst": {
+    "watch_at_2026_02_06T0036_UTC": 98,
+    "queue_candidates": 98,
+    "actual_LATE": 91,
+    "actual_EVALUATED": 7,
+    "source_of_burst_first_seen": "Stage26 official Spot 168h WATCH evidence",
+    "actual_D1_SETUPS_from_burst_unverified": true
+  },
+  "boundaries": [
+    "This exact original production process_queue replay uses Stage26 per-symbol derived WATCH timestamps; not the full shared D0 observe_snapshot globally",
+    "No Stage26 D0 invalidation events injected: results potentially optimistic or different from exact full V4",
+    "Production shared queue includes Spot and Futures in real life; only Spot historical replayed",
+    "Original Stage26 reconstructed 5m from verified 1m, Stage28 uses separately SHA-verified native 5m; 1m vs 5m exact row identity NOT VERIFIED",
+    "Historic actual execution, L2 order book and real Gmail delivery unverified"
+  ],
+  "other_AI_review": "NOT_DONE",
+  "deploy": "NO_GO",
+  "frank": "UNCHANGED",
+  "gmail": "OFF",
+  "trading": "NO_GO"
+}
