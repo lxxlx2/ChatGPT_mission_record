@@ -1,0 +1,105 @@
+{
+  "schema": "MONSTER_STAGE28_ALL_42_OFFICIAL_HISTORY_ORIGINAL_SHA_PAIRWISE_D1_AUDIT_V1",
+  "asof": "2026-10-11",
+  "parent_source": "Stage26 six dates 36 original SHA-verified result ZIPs and Stage28 six source ZIPs",
+  "source_ci_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38147245694",
+  "ci_conclusion": "SUCCESS",
+  "regression_tests": "4/4 PASS",
+  "verified_original_artifacts": 42,
+  "original_stage26_independent_D1": 826,
+  "stage28_real_production_shared_queue_D1": 828,
+  "exact_same_symbol_and_setup_UTC": 823,
+  "original_only": 3,
+  "shared_only": 5,
+  "actual_pairwise_artifact_id": 11704518945,
+  "actual_pairwise_artifact_zip_sha256": "82b1037531f4d1df7a20883277ddf47f8cc2d87f10c547d5bc62a556f1ba5cca",
+  "actual_pairwise_internal_json_sha256": "5169daf2a9c4956ac16e32ee8f50639030596e957d2364fc7c0f9c14d7b6597e",
+  "original_only_events": [
+    {
+      "date": "2026-09-04",
+      "symbol": "IQUSDT",
+      "old_D1": "2026-09-09T22:21:00Z",
+      "shared_new_D1": "2026-09-09T22:30:00Z",
+      "classification": "DELAYED_9MINUTES_NOT_PERMANENTLY_LOST",
+      "old_WATCH_price_proxy": "CENSORED_ZERO_VOLUME_EXIT"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "SYNUSDT",
+      "old_D1": "2026-09-09T22:27:00Z",
+      "shared_new_D1": null,
+      "classification": "ORIGINAL_D1_NOT_REPRODUCED_SHARED_QUEUE_LATE",
+      "old_WATCH_price_proxy": "CENSORED_MINUTE_QUOTE_LT_30_USDT"
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "TUTUSDT",
+      "old_D1": "2026-09-09T22:27:00Z",
+      "shared_new_D1": null,
+      "classification": "ORIGINAL_D1_NOT_REPRODUCED_SHARED_QUEUE_LATE",
+      "old_WATCH_price_proxy": "PRICE_PROXY_ONLY",
+      "old_WATCH_24h_assumed_net_pct": 0.226808,
+      "old_WATCH_30USDT_assumed_net_USDT": 0.068042
+    }
+  ],
+  "shared_only_events": [
+    {
+      "date": "2025-11-04",
+      "symbol": "C98USDT",
+      "shared_D1": "2025-11-07T17:12:00Z",
+      "old_D1_times": []
+    },
+    {
+      "date": "2026-02-04",
+      "symbol": "FUSDT",
+      "shared_D1": "2026-02-08T00:12:00Z",
+      "old_D1_times": []
+    },
+    {
+      "date": "2026-04-04",
+      "symbol": "MEUSDT",
+      "shared_D1": "2026-04-05T13:00:00Z",
+      "old_D1_times": [
+        "2026-04-05T13:27:00Z"
+      ]
+    },
+    {
+      "date": "2026-08-04",
+      "symbol": "BICOUSDT",
+      "shared_D1": "2026-08-09T07:21:00Z",
+      "old_had_other_D1_setups": true
+    },
+    {
+      "date": "2026-09-04",
+      "symbol": "IQUSDT",
+      "shared_D1": "2026-09-09T22:30:00Z",
+      "old_D1_times": [
+        "2026-09-09T22:21:00Z"
+      ]
+    }
+  ],
+  "feb_98_burst": {
+    "UTC": "2026-02-06T00:36:00Z",
+    "SOURCE_WATCHS": 98,
+    "real_shared_queue_LATE": 91,
+    "real_shared_queue_EVALUATED": 7,
+    "original_individual_D1_exact_missing_in_feb_all_day": 0,
+    "original_watch_20bps_trade_proxy_of_91_late_burst_eligible": 55,
+    "positive": 54,
+    "negative": 1,
+    "median_24h_net_pct_if_executed": 10.909611,
+    "note": "Retrospectively known 24h cost proxies on WATCH, not ex-ante confirmed D1 or executable real fills; not a justification to submit any orders."
+  },
+  "source_limits": [
+    "Stage28 injection uses Stage26 per-symbol WATCH times, not real one-shared-global D0 full-market snapshots",
+    "Original D0 INVALIDATED events not fed; historical real Spot+Futures contention not reproduced",
+    "Stage26 D1 candle source reconstructed from 1m, Stage28 D1 uses authentic Binance publisher-SHA verified 5m; differences may stem from aggregation precision or code evaluation timing, not solely queue contention",
+    "Time-aligned independent D1 823/826 is stronger evidence than difference of net +2",
+    "LATE event does not equal lost profitable real trade"
+  ],
+  "other_AI_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "real_gmail": "OFF",
+  "trading": "NO_GO",
+  "frank": "UNCHANGED"
+}
