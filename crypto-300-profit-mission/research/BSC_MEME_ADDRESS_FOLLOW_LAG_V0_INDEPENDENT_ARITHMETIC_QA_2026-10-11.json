@@ -1,0 +1,45 @@
+{
+  "date_utc": "2026-10-11",
+  "kind": "INDEPENDENT_ARITHMETIC_AND_CAUSALITY_QA_NOT_EXTERNAL_AI_REVIEW",
+  "sources": [
+    "BSC_MEME_8E6B_FOLLOW_LAG_V0_FROZEN_SPEC_2026-10-11.json",
+    "BSC_MEME_8E6B_FOLLOW_LAG_V0_POOL_RESERVE_EVIDENCE_2026-10-11.json",
+    "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_FROZEN_SPEC_2026-10-11.json",
+    "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_EVIDENCE_2026-10-11.json"
+  ],
+  "verification": "Recalculate all frozen two-snapshot integer x*y=k outputs from raw historic contract reserves; compare wei for token quantities, output quote, BNB PnL; independently recompute causal invalid flags and enforce AMM boundedness + size price-impact direction",
+  "total_scenarios": 80,
+  "issues": [],
+  "pass": true,
+  "cohorts": [
+    {
+      "wallet": "8e6b",
+      "cohorts": 8,
+      "expected": 64,
+      "observed": 64,
+      "computed_noncausal": 10,
+      "depth_warned": 8
+    },
+    {
+      "wallet": "239e",
+      "cohorts": 2,
+      "expected": 16,
+      "observed": 16,
+      "computed_noncausal": 0,
+      "depth_warned": 0
+    }
+  ],
+  "assertions": [
+    "original amounts/lag sizes unchanged",
+    "all raw token purchases and quote returns match independent integer calculation",
+    "first-leg buy must precede original first sell signal",
+    "swap outputs strictly below quote/token pool reserves",
+    "larger fixed size has no greater proportional gross return than smaller size for same reserve snapshots"
+  ],
+  "limitations": [
+    "Arithmetic checks do not prove original block reserves are relevant to wallet actual route or any executable delayed transaction",
+    "Fee-free zero-gas model remains optimistic, all sample cohorts selected in sample",
+    "No external AI code review or end-to-end trading replay has occurred"
+  ],
+  "production": "NO_GO"
+}
