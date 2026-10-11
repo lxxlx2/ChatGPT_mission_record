@@ -83,7 +83,7 @@ class FrozenD1ExitHorizonTests(unittest.TestCase):
     def test_censored_remains_censored_not_zero_return(self):
         cases=[{"horizon_minutes_to_24h_net_price_proxy":{
             "30":{"status":"PRICE_PROXY_ONLY","net_pct":5,"pnl_usdt_on_30":1.5},
-            "1440":{"status":"CENSORED_ZERO_VOLUME_EXIT"}}]
+            "1440":{"status":"CENSORED_ZERO_VOLUME_EXIT"}}}]
         stats=m.summarize(cases,[30,1440])
         self.assertEqual(stats["30"]["positive"],1)
         self.assertEqual(stats["1440"]["real_price_proxy_evaluable"],0)
