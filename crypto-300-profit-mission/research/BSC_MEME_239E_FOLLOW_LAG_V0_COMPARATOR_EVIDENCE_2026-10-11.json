@@ -245,7 +245,12 @@
       "return_pct_approx": 234.3769,
       "buy_pool_wbnb_wei": "18216680580670290779",
       "sell_pool_wbnb_wei": "33984464694577384223",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 73659128,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 234.3769
     },
     {
       "token": "我踏马来了",
@@ -260,7 +265,12 @@
       "return_pct_approx": 231.8405,
       "buy_pool_wbnb_wei": "18216680580670290779",
       "sell_pool_wbnb_wei": "33984464694577384223",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 73659128,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 231.8405
     },
     {
       "token": "我踏马来了",
@@ -275,7 +285,12 @@
       "return_pct_approx": 251.8106,
       "buy_pool_wbnb_wei": "20389132743032605814",
       "sell_pool_wbnb_wei": "38978748197148274152",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 73659128,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 251.8106
     },
     {
       "token": "我踏马来了",
@@ -290,7 +305,12 @@
       "return_pct_approx": 249.3831,
       "buy_pool_wbnb_wei": "20389132743032605814",
       "sell_pool_wbnb_wei": "38978748197148274152",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 73659128,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 249.3831
     },
     {
       "token": "我踏马来了",
@@ -305,7 +325,12 @@
       "return_pct_approx": 147.8638,
       "buy_pool_wbnb_wei": "22991499016406539455",
       "sell_pool_wbnb_wei": "36830246932917063096",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 73659128,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 147.8638
     },
     {
       "token": "我踏马来了",
@@ -320,7 +345,12 @@
       "return_pct_approx": 146.5012,
       "buy_pool_wbnb_wei": "22991499016406539455",
       "sell_pool_wbnb_wei": "36830246932917063096",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 73659128,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 146.5012
     },
     {
       "token": "我踏马来了",
@@ -335,7 +365,12 @@
       "return_pct_approx": 110.5292,
       "buy_pool_wbnb_wei": "25622683400207230077",
       "sell_pool_wbnb_wei": "37795397303015899259",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 73659128,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 110.5292
     },
     {
       "token": "我踏马来了",
@@ -350,7 +385,12 @@
       "return_pct_approx": 109.5386,
       "buy_pool_wbnb_wei": "25622683400207230077",
       "sell_pool_wbnb_wei": "37795397303015899259",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 73659128,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 109.5386
     },
     {
       "token": "龙虾",
@@ -365,7 +405,12 @@
       "return_pct_approx": 476.7555,
       "buy_pool_wbnb_wei": "17099195640444077296",
       "sell_pool_wbnb_wei": "42816200395335845959",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 83638195,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 476.7555
     },
     {
       "token": "龙虾",
@@ -380,7 +425,12 @@
       "return_pct_approx": 471.2536,
       "buy_pool_wbnb_wei": "17099195640444077296",
       "sell_pool_wbnb_wei": "42816200395335845959",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 83638195,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 471.2536
     },
     {
       "token": "龙虾",
@@ -395,7 +445,12 @@
       "return_pct_approx": 483.1023,
       "buy_pool_wbnb_wei": "16872426191287200216",
       "sell_pool_wbnb_wei": "42463472994332608767",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 83638195,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 483.1023
     },
     {
       "token": "龙虾",
@@ -410,7 +465,12 @@
       "return_pct_approx": 477.4432,
       "buy_pool_wbnb_wei": "16872426191287200216",
       "sell_pool_wbnb_wei": "42463472994332608767",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 83638195,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 477.4432
     },
     {
       "token": "龙虾",
@@ -425,7 +485,12 @@
       "return_pct_approx": 364.5026,
       "buy_pool_wbnb_wei": "18566169772585025898",
       "sell_pool_wbnb_wei": "41614357899556847283",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 83638195,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 364.5026
     },
     {
       "token": "龙虾",
@@ -440,7 +505,12 @@
       "return_pct_approx": 360.7009,
       "buy_pool_wbnb_wei": "18566169772585025898",
       "sell_pool_wbnb_wei": "41614357899556847283",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 83638195,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 360.7009
     },
     {
       "token": "龙虾",
@@ -455,7 +525,12 @@
       "return_pct_approx": 330.6456,
       "buy_pool_wbnb_wei": "19861684968904055267",
       "sell_pool_wbnb_wei": "42817493658001232921",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 83638195,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 330.6456
     },
     {
       "token": "龙虾",
@@ -470,102 +545,151 @@
       "return_pct_approx": 327.4282,
       "buy_pool_wbnb_wei": "19861684968904055267",
       "sell_pool_wbnb_wei": "42817493658001232921",
-      "depth_warning": "NONE"
+      "depth_warning": "NONE",
+      "original_first_out_block": 83638195,
+      "causal_invalid_follow_buy_after_original_exit": false,
+      "liquidity_diagnostic": "NONE",
+      "eligible_for_causal_first_leg_upper_bound": true,
+      "causal_return_pct_approx": 327.4282
     }
   ],
   "production": "NO_GO",
   "summary_by_token": [
     {
       "token": "我踏马来了",
-      "small_input_scenarios": [
+      "scenarios": [
         {
           "lag": 0,
-          "return_pct": 234.3769,
-          "depth": "NONE"
+          "input_wei": "50000000000000000",
+          "raw_pct": 234.3769,
+          "causal_pct": 234.3769,
+          "invalid": false,
+          "depth_warning": false
+        },
+        {
+          "lag": 0,
+          "input_wei": "100000000000000000",
+          "raw_pct": 231.8405,
+          "causal_pct": 231.8405,
+          "invalid": false,
+          "depth_warning": false
         },
         {
           "lag": 10,
-          "return_pct": 251.8106,
-          "depth": "NONE"
-        },
-        {
-          "lag": 30,
-          "return_pct": 147.8638,
-          "depth": "NONE"
-        },
-        {
-          "lag": 60,
-          "return_pct": 110.5292,
-          "depth": "NONE"
-        }
-      ],
-      "large_input_scenarios": [
-        {
-          "lag": 0,
-          "return_pct": 231.8405,
-          "depth": "NONE"
+          "input_wei": "50000000000000000",
+          "raw_pct": 251.8106,
+          "causal_pct": 251.8106,
+          "invalid": false,
+          "depth_warning": false
         },
         {
           "lag": 10,
-          "return_pct": 249.3831,
-          "depth": "NONE"
+          "input_wei": "100000000000000000",
+          "raw_pct": 249.3831,
+          "causal_pct": 249.3831,
+          "invalid": false,
+          "depth_warning": false
         },
         {
           "lag": 30,
-          "return_pct": 146.5012,
-          "depth": "NONE"
+          "input_wei": "50000000000000000",
+          "raw_pct": 147.8638,
+          "causal_pct": 147.8638,
+          "invalid": false,
+          "depth_warning": false
+        },
+        {
+          "lag": 30,
+          "input_wei": "100000000000000000",
+          "raw_pct": 146.5012,
+          "causal_pct": 146.5012,
+          "invalid": false,
+          "depth_warning": false
         },
         {
           "lag": 60,
-          "return_pct": 109.5386,
-          "depth": "NONE"
+          "input_wei": "50000000000000000",
+          "raw_pct": 110.5292,
+          "causal_pct": 110.5292,
+          "invalid": false,
+          "depth_warning": false
+        },
+        {
+          "lag": 60,
+          "input_wei": "100000000000000000",
+          "raw_pct": 109.5386,
+          "causal_pct": 109.5386,
+          "invalid": false,
+          "depth_warning": false
         }
       ]
     },
     {
       "token": "龙虾",
-      "small_input_scenarios": [
+      "scenarios": [
         {
           "lag": 0,
-          "return_pct": 476.7555,
-          "depth": "NONE"
+          "input_wei": "50000000000000000",
+          "raw_pct": 476.7555,
+          "causal_pct": 476.7555,
+          "invalid": false,
+          "depth_warning": false
+        },
+        {
+          "lag": 0,
+          "input_wei": "100000000000000000",
+          "raw_pct": 471.2536,
+          "causal_pct": 471.2536,
+          "invalid": false,
+          "depth_warning": false
         },
         {
           "lag": 10,
-          "return_pct": 483.1023,
-          "depth": "NONE"
-        },
-        {
-          "lag": 30,
-          "return_pct": 364.5026,
-          "depth": "NONE"
-        },
-        {
-          "lag": 60,
-          "return_pct": 330.6456,
-          "depth": "NONE"
-        }
-      ],
-      "large_input_scenarios": [
-        {
-          "lag": 0,
-          "return_pct": 471.2536,
-          "depth": "NONE"
+          "input_wei": "50000000000000000",
+          "raw_pct": 483.1023,
+          "causal_pct": 483.1023,
+          "invalid": false,
+          "depth_warning": false
         },
         {
           "lag": 10,
-          "return_pct": 477.4432,
-          "depth": "NONE"
+          "input_wei": "100000000000000000",
+          "raw_pct": 477.4432,
+          "causal_pct": 477.4432,
+          "invalid": false,
+          "depth_warning": false
         },
         {
           "lag": 30,
-          "return_pct": 360.7009,
-          "depth": "NONE"
+          "input_wei": "50000000000000000",
+          "raw_pct": 364.5026,
+          "causal_pct": 364.5026,
+          "invalid": false,
+          "depth_warning": false
+        },
+        {
+          "lag": 30,
+          "input_wei": "100000000000000000",
+          "raw_pct": 360.7009,
+          "causal_pct": 360.7009,
+          "invalid": false,
+          "depth_warning": false
         },
         {
           "lag": 60,
-          "return_pct": 327.4282,
-          "depth": "NONE"
+          "input_wei": "50000000000000000",
+          "raw_pct": 330.6456,
+          "causal_pct": 330.6456,
+          "invalid": false,
+          "depth_warning": false
+        },
+        {
+          "lag": 60,
+          "input_wei": "100000000000000000",
+          "raw_pct": 327.4282,
+          "causal_pct": 327.4282,
+          "invalid": false,
+          "depth_warning": false
         }
       ]
     }
@@ -575,5 +699,19 @@
     "observed": 16,
     "valid_reserves": 16,
     "unresolved": 0
-  }
+  },
+  "causality_review": {
+    "checked_at": "2026-10-11",
+    "rule": "A delayed buy is causal only if first-in block + lag < original wallet first-out signal block. If the sell signal is known before delayed buy, a first-leg follower must skip instead of buying then retroactively selling.",
+    "frozen_scenario_grid_unchanged": true,
+    "frozen_cohorts_unchanged": true,
+    "scenarios_total": 16,
+    "causality_invalid_count": 0,
+    "liquidity_diagnostic_count": 0,
+    "eligible_diagnostic_count": 16,
+    "invalid_scenarios": [],
+    "caution": "Liquidity diagnostic 10x quote-reserve threshold was not a preregistered success threshold and cannot be treated as untouched validation filter. Raw arithmetic remains in place, but execution eligibility is unresolved."
+  },
+  "state": "FROZEN_SCENARIOS_PRESERVED_WITH_CAUSALITY_QA_NO_PRODUCTION",
+  "output_status": "IN_SAMPLE_UNEXECUTABLE_UPPER_BOUND; CAUSAL_INVALID_MASK_ATTACHED"
 }
