@@ -1,0 +1,68 @@
+name: Monster Stage31 Five Real Meme Cross Causal D0 Miss Vs 5x Winner Trace
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage31_five_case_causal_trace.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage31_five_case_causal_trace.py'
+      - '.github/workflows/monster-v4-stage31-five-real-meme-causal-miss.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage31-real-five-meme-original-causal-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  original-publisher-sha-causal-missed-vs-five-x:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Same real original production V4 momentum and source fail-closed tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage31_five_case_causal_trace.py tests/test_monster_v4_stage31_five_case_causal_trace.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage31_five_case_causal_trace.py
+      - name: Get immutable original Stage30 18 source day-shard artifacts not just hand-picked winning case file
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' > /tmp/monster_stage31_sources.tsv
+          import json
+          from pathlib import Path
+          p=Path("crypto-300-profit-mission/monster/evidence/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json")
+          a=json.loads(p.read_text())
+          if a.get('source_ci_status')!='SUCCESS_ALL_36' or len(a.get('artifacts',[]))!=36:
+              raise SystemExit('STAGE31_FROZEN_ORIGINAL_SOURCE_MISSING')
+          d=('2025-01-19','2025-04-19','2025-07-19')
+          chosen=sorted([r for r in a['artifacts'] if r['date'] in d],
+                        key=lambda x:(x['date'],x['shard']))
+          if len(chosen)!=18:raise SystemExit('STAGE31_REQUIRE_ALL_18_SOURCES')
+          for r in chosen:print(r['date'],r['shard'],r['artifact_id'])
+          PY
+          while read -r day shard artifact; do
+            gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/"$artifact"/zip > "/tmp/monster_stage30_${day}_shard${shard}.zip"
+          done < /tmp/monster_stage31_sources.tsv
+      - name: Verify 18 original ZIP/JSON SHA then full five-times3360 V4 original D0/D1 replay with publisher SHA original monthly1h and 10 daily1m
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          sources=()
+          while read -r day shard artifact; do
+            sources+=("/tmp/monster_stage30_${day}_shard${shard}.zip")
+          done < /tmp/monster_stage31_sources.tsv
+          python -B scripts/monster_v4_stage31_five_case_causal_trace.py --stage30-source-zips "${sources[@]}" --output /tmp/monster_stage31_five_real_meme_original_CAUSAL_168h.json
+      - name: Preserve full causal D0 reasons around 1m HIGH cross and all actual original V4 WATCH and D1 event payloads
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage31-PENGU-CETUS-VTHO-vs-ALPACA-SPK-causal
+          path: /tmp/monster_stage31_five_real_meme_original_CAUSAL_168h.json
+          if-no-files-found: warn
+          retention-days: 30
