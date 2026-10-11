@@ -191,6 +191,7 @@ def scan_ata_mints(
     evidence = []
     scanned = []
     tx_cache = {}
+    observed_ata_signatures = set()
     stats = Counter()
     interruption = None
     for mint in uniq:
@@ -228,6 +229,11 @@ def scan_ata_mints(
                     if type(when) is int and when < since_time:
                         reached_time = True
                         break
+                    pair = (account, signature)
+                    if pair in observed_ata_signatures:
+                        stats["duplicate_ata_signature_occurrences_skipped"] += 1
+                        continue
+                    observed_ata_signatures.add(pair)
                     stats["signature_occurrences"] += 1
                     if item.get("err") is not None:
                         stats["failed_signatures_not_fetched"] += 1
