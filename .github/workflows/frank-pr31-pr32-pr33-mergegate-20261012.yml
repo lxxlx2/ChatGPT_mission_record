@@ -149,7 +149,10 @@ jobs:
           p31="$(git ls-remote origin refs/heads/research/frank-wallet-v2-d0-readonly-20261011 | cut -f1)"
           p32="$(git ls-remote origin refs/heads/fix/frank-gmail-oauth-recovery-20261011 | cut -f1)"
           p33="$(git ls-remote origin refs/heads/fix/frank-dashboard-review-breakdown-20261011 | cut -f1)"
-          test "$main_head" = "$MAIN_PIN"
+          if [ "$main_head" != "$MAIN_PIN" ]; then
+            echo "BASE_MAIN_ADVANCED_SINCE_TEST_PIN=$MAIN_PIN TO=$main_head"
+            echo 'CANDIDATE_IS_REVIEW_ONLY_NOT_MAIN_MERGE_APPROVAL=YES'
+          fi
           test "$p31" = "$PR31_PIN"
           test "$p32" = "$PR32_PIN"
           test "$p33" = "$PR33_PIN"
