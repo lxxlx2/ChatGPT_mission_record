@@ -22,6 +22,7 @@ jobs:
       fail-fast: false
       max-parallel: 12
       matrix:
+        shard: [0,1,2,3,4,5]
         include:
           - {day: '2025-11-04', artifact_id: 11700651924}
           - {day: '2025-12-04', artifact_id: 11700023559}
@@ -46,20 +47,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/${{ matrix.artifact_id }}/zip > /tmp/stage26_previousGT_${{ matrix.day }}.zip
-      - name: Replay exact original V4 for seven days with one SQLite per symbol and ten source-verified minute ZIP days
+      - name: Replay original V4 continuously for seven days, frozen symbol shard
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 0 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard0.json
-          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 1 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard1.json
-          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 2 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard2.json
-          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 3 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard3.json
-          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 4 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard4.json
-          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 5 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard5.json
-      - name: Save all six original full source status and causal WATCH trade proxy shards even if partial
+          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard ${{ matrix.shard }} --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard${{ matrix.shard }}.json
+      - name: Save frozen shard complete source status and causal WATCH trade proxy even if partial
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: monster-stage26-originalV4-continuous168h-${{ matrix.day }}
+          name: monster-stage26-originalV4-continuous168h-${{ matrix.day }}-shard${{ matrix.shard }}
           path: /tmp/monster_stage26_${{ matrix.day }}_shard*.json
           if-no-files-found: warn
           retention-days: 30
