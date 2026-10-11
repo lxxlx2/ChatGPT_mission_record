@@ -1,0 +1,54 @@
+name: Monster Stage25 Known Forty 2x Event Aligned Genuine First Minute V4
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage25_event_time_diagnostic.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage25_event_time_diagnostic.py'
+      - '.github/workflows/monster-v4-stage25-first-cross-minute-40.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage25-firstcross-hindsight-diagnostic-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  stage24-all-original-winners-first-minute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate original event engine SHA, source co-index, censored classes
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage25_event_time_diagnostic.py tests/test_monster_v4_stage25_event_time_diagnostic.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage25_event_time_diagnostic.py
+      - name: Independently retrieve original six Stage24 hourly+minute evidence artifacts by ID
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700651924/zip > /tmp/monster25_source24_2025-11-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700023559/zip > /tmp/monster25_source24_2025-12-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700058433/zip > /tmp/monster25_source24_2026-02-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700786475/zip > /tmp/monster25_source24_2026-04-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700956514/zip > /tmp/monster25_source24_2026-08-04.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11700382028/zip > /tmp/monster25_source24_2026-09-04.zip
+      - name: Rehash originals and replay original V4 around first actual 1m 2x/5x/10x crossing for every known Stage24 positive
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage25_event_time_diagnostic.py --stage24-zips /tmp/monster25_source24_2025-11-04.zip /tmp/monster25_source24_2025-12-04.zip /tmp/monster25_source24_2026-02-04.zip /tmp/monster25_source24_2026-04-04.zip /tmp/monster25_source24_2026-08-04.zip /tmp/monster25_source24_2026-09-04.zip --output /tmp/monster_stage25_actual_event_firstcross_v4.json
+      - name: Preserve each real first crossing minute, original WATCH, source hashes and exposed-cohort censoring
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage25-all-40-known-2x-plus-5x-10x-event-local-v4
+          path: /tmp/monster_stage25_actual_event_firstcross_v4.json
+          if-no-files-found: warn
+          retention-days: 30
