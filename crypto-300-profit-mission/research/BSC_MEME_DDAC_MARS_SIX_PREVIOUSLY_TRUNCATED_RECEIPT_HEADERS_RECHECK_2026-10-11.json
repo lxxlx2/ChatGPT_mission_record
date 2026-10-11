@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "token": "MARSCOIN",
+  "source_file": "BSC_MEME_DDAC_MARS_29_TX_ORIGIN_AND_SETTLEMENT_AUDIT_2026-10-11.json",
+  "scope": "Re-read six previous UNVERIFIED status headers of exact MARSCOIN transaction hashes; no full tracing",
+  "checked": 6,
+  "status_success_and_block_match": 6,
+  "rows": [
+    {
+      "hash": "0x8f5386192f6f5da18185098556a2f93661211d59b63e6baaff6d66435647b35c",
+      "expected_block": 112442886,
+      "receipt_block": 112442886,
+      "success_status": "0x1",
+      "receipt_truncated": true,
+      "text_length": 8098
+    },
+    {
+      "hash": "0x4323589f5edadbb49c6b1eefe5ab816af12993bccefe4d4c1fe2592f07be881d",
+      "expected_block": 112639419,
+      "receipt_block": 112639419,
+      "success_status": "0x1",
+      "receipt_truncated": true,
+      "text_length": 8098
+    },
+    {
+      "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
+      "expected_block": 112964882,
+      "receipt_block": 112964882,
+      "success_status": "0x1",
+      "receipt_truncated": true,
+      "text_length": 8098
+    },
+    {
+      "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
+      "expected_block": 112971917,
+      "receipt_block": 112971917,
+      "success_status": "0x1",
+      "receipt_truncated": true,
+      "text_length": 8098
+    },
+    {
+      "hash": "0x1df1b31f9c0bef52268e8a6e908b96d99be0c998b8bfcfbe10b9910c1186f1a2",
+      "expected_block": 112972386,
+      "receipt_block": 112972386,
+      "success_status": "0x1",
+      "receipt_truncated": true,
+      "text_length": 8098
+    },
+    {
+      "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
+      "expected_block": 113975350,
+      "receipt_block": 113975350,
+      "success_status": "0x1",
+      "receipt_truncated": true,
+      "text_length": 8098
+    }
+  ],
+  "guardrails": [
+    "Receipt status prefix in truncated 8-KB response proves header success but full logs not available",
+    "Nonzero native MARS block movements still require unrelated block flow and quote asset isolation",
+    "Do not classify MARS as final net profit"
+  ],
+  "production": "NO_GO"
+}
