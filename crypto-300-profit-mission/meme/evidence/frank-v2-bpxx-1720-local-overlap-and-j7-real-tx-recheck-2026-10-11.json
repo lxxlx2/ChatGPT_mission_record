@@ -53,14 +53,26 @@
         "slot": 452919433,
         "block_time_utc": "2026-10-03T11:25:51Z",
         "onchain_status": "SUCCESS",
-        "transaction_verification": "RAW_RESPONSE_TRUNCATED_UNVERIFIED",
-        "wallet_signed": null
+        "transaction_verification": "DIRECT_GET_TRANSACTION_JSON_FULL_PARSED",
+        "wallet_signed": false,
+        "transaction_primary_signature_matches": true,
+        "raw_before": "1001346785078260",
+        "raw_after": "1001347556621590",
+        "raw_delta": "771543330",
+        "decimals": 9,
+        "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "owner": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+        "frank_preexisting_qty": "1001346.785078260",
+        "successful_passive_receipt_units": "0.771543330",
+        "acquisition_cost_usd": null
       }
     ],
     "pagination_provider_failure_on_next_page": true,
     "complete_ata_history": false,
     "balance_deltas_all_verified": false,
-    "missing_successful_signatures_do_not_imply_missing_buy_or_sell": true
+    "missing_successful_signatures_do_not_imply_missing_buy_or_sell": true,
+    "verified_inwindow_nonzero_passive_receipts": 1,
+    "other_successful_missing_inwindow_tx_details": "UNVERIFIED_OUTPUT_TRUNCATED"
   },
   "j7": {
     "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
