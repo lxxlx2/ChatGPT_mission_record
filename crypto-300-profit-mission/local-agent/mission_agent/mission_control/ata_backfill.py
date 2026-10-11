@@ -11,6 +11,7 @@ alert changes, or edits to the original collector.
 from __future__ import annotations
 
 from collections import Counter
+from http.client import IncompleteRead
 from hashlib import sha256
 from typing import Any
 
@@ -146,8 +147,6 @@ def validate_transaction(tx: dict, signature: str, ata: str, mint: str,
     slot = tx.get("slot")
     if type(slot) is not int or slot <= 0:
         return {"signature": signature, "status": "SLOT_UNAVAILABLE"}
-    if tx["meta"].get("err") is not None:
-        return {"signature": signature, "slot": slot, "status": "FAILED_TX_NO_BALANCE_PROOF"}
     # getTransaction must bind its returned transaction to the exact signature
     # looked up. ATA/mint/owner balances alone do not prove transaction identity.
     # jsonParsed getTransaction includes the ordered transaction.signatures array.
@@ -157,6 +156,10 @@ def validate_transaction(tx: dict, signature: str, ata: str, mint: str,
             or signatures[0] != signature):
         return {"signature": signature, "slot": slot,
                 "status": "TRANSACTION_SIGNATURE_UNVERIFIED"}
+    # Even a failed transaction must be bound to the requested signature.
+    # A misbound response with meta.err is NOT evidence that this signature failed.
+    if tx["meta"].get("err") is not None:
+        return {"signature": signature, "slot": slot, "status": "FAILED_TX_NO_BALANCE_PROOF"}
     try:
         message = tx["transaction"]["message"]
         pubkeys, signers = _keys(message)
@@ -244,7 +247,7 @@ def scan_ata_mints(
                 # Same official method used by collector, but ATA NOT main wallet.
                 try:
                     items = rpc.call("getSignaturesForAddress", [account, opts])
-                except (OSError, RuntimeError, ValueError, AttributeError) as exc:
+                except (OSError, RuntimeError, ValueError, AttributeError, IncompleteRead) as exc:
                     status = "RPC_INTERRUPTED_PARTIAL"
                     interruption = type(exc).__name__
                     break
@@ -291,7 +294,7 @@ def scan_ata_mints(
                                     "maxSupportedTransactionVersion": 1,
                                 },
                             ])
-                        except (OSError, RuntimeError, ValueError, AttributeError) as exc:
+                        except (OSError, RuntimeError, ValueError, AttributeError, IncompleteRead) as exc:
                             status = "RPC_INTERRUPTED_PARTIAL"
                             interruption = type(exc).__name__
                             evidence.append({
