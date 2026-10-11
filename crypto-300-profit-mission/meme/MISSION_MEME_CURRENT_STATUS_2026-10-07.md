@@ -1239,3 +1239,13 @@ A **separate** independent implementation on isolated remote branch `review/fran
 - Full reviewer attribution and actual fixes: `meme/FRANK_PR33_SECOND_REVIEW_REMEDIATION_2026-10-12.md` on isolated fix branch, readback-verified Git commit `f6d2f2ced67d3ec22689bb68d1c49301b46a8664`.
 
 **Release still BLOCK:** current Mac real read-only observation is only OLD/LEGACY Dashboard with 15 `MANUAL_REVIEW` expired-before-send and pending=0. Its unknown actual PERMANENT_ERROR/CREDENTIAL_BLOCKED/retry statuses are **NOT TESTED**, and that earlier probe could not see them. Next authorized action is new Mac **read-only** probe of terminal status count, never install `--apply` without independent other-AI re-review of current new code, explicit rollout approval and Mac operational dry-run. No official PR33 modifications, no main product merge, no Mac service restart, no Gmail send, no production DB write, no Wallet/V1 signal change, and no new monitoring task. `OTHER_AI_REVIEW_NEW_HEAD=NOT_DONE`, `TARGET_MAC_DEPLOY=NO`, `PRODUCTION_TRADING=NO_GO`.
+
+## 72. 2026-10-12 Frank Mac 16 unidentified status rows: accepted-local-command false positive under review
+
+The user supplied one actual Mac read-only diagnostic: LEGACY dashboard; DB READ_ONLY_OK; HTTP OK; 15 Gmail stale-before-send manual reviews, pending=0, actionable=0, blocked=0; unknown-status diagnostic count=16. This **does not establish sixteen failed sends**, because the original probe did not list the 16 actual statuses.
+
+Code inspection identified a definite categorization bug in the diagnostic: local notifications whose OS command returns success are assigned `COMMAND_ACCEPTED`, but the diagnostic had omitted this legitimate value from its allowed list. The 16 may all be this case, but that remains unverified until a new real Mac grouped status query.
+
+Research branch `review/frank-pr33-second-round-fix-20261012` corrected the readonly script whitelist and added privacy-safe aggregate-only per-channel state counts. Unknown statuses remain visible as blocking anomalies. CI [38161276669](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38161276669) SUCCESS: 55 focused and 1,102 full tests passed at code SHA `67b75bfe91e47532e9273a7d160e599f1fed7bb2`. Source Mac output observation was saved readback-verified in branch evidence `frank-pr33-mac-status16-bounded-observation-2026-10-12.json`, commit `dad338e22f44283af6f34d55b73e7826992ffda2`.
+
+New Mac aggregation is still required to determine whether any actual terminal errors exist. No product merge or Mac deployment performed; current release remains BLOCK.
