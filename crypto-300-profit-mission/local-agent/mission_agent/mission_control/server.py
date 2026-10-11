@@ -721,7 +721,7 @@ class DashboardState:
         # It does not feed the frozen signal/writer or modify local BUY/SELL
         # counts. A missing/invalid file leaves each mint as NOT_AUDITED.
         gap_file = (Path(__file__).resolve().parents[3] / "meme" / "evidence" /
-                    "frank-v2-known-ata-gap-summary-2026-10-11.json")
+                    "frank-v2-ata-index-scope-correction-2026-10-11.json")
         override = self.control_root / "frank-ata-gap-evidence.json"
         if override.is_file():
             gap_file = override
