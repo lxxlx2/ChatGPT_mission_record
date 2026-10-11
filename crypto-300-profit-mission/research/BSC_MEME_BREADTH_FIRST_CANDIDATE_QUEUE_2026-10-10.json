@@ -58,7 +58,8 @@
     "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json",
     "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_FROZEN_SPEC_2026-10-11.json",
     "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_EVIDENCE_2026-10-11.json",
-    "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md"
+    "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md",
+    "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_INDEPENDENT_ARITHMETIC_QA_2026-10-11.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -1772,6 +1773,15 @@
       "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_FROZEN_SPEC_2026-10-11.json",
       "BSC_MEME_239E_FOLLOW_LAG_V0_COMPARATOR_EVIDENCE_2026-10-11.json",
       "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_RESEARCH_REPORT_2026-10-11.md"
-    ]
+    ],
+    "qa": {
+      "source": "BSC_MEME_ADDRESS_FOLLOW_LAG_V0_INDEPENDENT_ARITHMETIC_QA_2026-10-11.json",
+      "scenarios_rechecked": 80,
+      "exact_integer_reserve_arithmetic_issues": 0,
+      "causality_flags_issues": 0,
+      "fee_and_execution_validation": "NOT_DONE",
+      "external_ai_review": "NOT_DONE",
+      "production": "NO_GO"
+    }
   }
 }
