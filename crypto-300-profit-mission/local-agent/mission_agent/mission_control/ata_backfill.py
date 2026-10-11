@@ -192,6 +192,7 @@ def scan_ata_mints(
     scanned = []
     tx_cache = {}
     stats = Counter()
+    interruption = None
     for mint in uniq:
         for program in PROGRAMS:
             account, bump = derive_ata(owner, mint, program)
@@ -206,7 +207,12 @@ def scan_ata_mints(
                 if before:
                     opts["before"] = before
                 # Same official method used by collector, but ATA NOT main wallet.
-                items = rpc.call("getSignaturesForAddress", [account, opts])
+                try:
+                    items = rpc.call("getSignaturesForAddress", [account, opts])
+                except (OSError, RuntimeError) as exc:
+                    status = "RPC_INTERRUPTED_PARTIAL"
+                    interruption = type(exc).__name__
+                    break
                 if not isinstance(items, list):
                     raise ValueError("INVALID_ATA_SIGNATURE_LIST")
                 stats["signature_pages"] += 1
@@ -230,18 +236,28 @@ def scan_ata_mints(
                         if len(tx_cache) >= max_tx_fetches:
                             status = "TX_FETCH_BUDGET_REACHED"
                             break
-                        tx_cache[signature] = rpc.call("getTransaction", [
-                            signature, {
-                                "commitment": "finalized", "encoding": "jsonParsed",
-                                "maxSupportedTransactionVersion": 1,
-                            },
-                        ])
+                        try:
+                            tx_cache[signature] = rpc.call("getTransaction", [
+                                signature, {
+                                    "commitment": "finalized", "encoding": "jsonParsed",
+                                    "maxSupportedTransactionVersion": 1,
+                                },
+                            ])
+                        except (OSError, RuntimeError) as exc:
+                            status = "RPC_INTERRUPTED_PARTIAL"
+                            interruption = type(exc).__name__
+                            evidence.append({
+                                "signature": signature, "mint": mint, "ata": account,
+                                "status": "RPC_TX_LOOKUP_UNAVAILABLE",
+                                "already_in_main_wallet_index": signature in known,
+                            })
+                            break
                     result = validate_transaction(
                         tx_cache[signature], signature, account, mint, program, owner)
                     result["already_in_main_wallet_index"] = signature in known
                     evidence.append(result)
                     stats[result["status"]] += 1
-                if status == "TX_FETCH_BUDGET_REACHED":
+                if status in ("TX_FETCH_BUDGET_REACHED", "RPC_INTERRUPTED_PARTIAL"):
                     break
                 if reached_time:
                     status = "TIME_BOUNDARY_REACHED"
@@ -259,6 +275,10 @@ def scan_ata_mints(
                 "pda_bump": bump, "status": status,
                 "provider_history_exhausted_in_bound": exhausted,
             })
+            if interruption is not None:
+                break
+        if interruption is not None:
+            break
     missing = sorted({
         row["signature"] for row in evidence
         if row.get("status") == "VERIFIED_ATA_BALANCE_DELTA"
@@ -271,6 +291,9 @@ def scan_ata_mints(
         "config": {"page_size": page_size, "max_pages_per_ata": max_pages_per_ata,
                    "max_tx_fetches": max_tx_fetches, "mints_count": len(uniq)},
         "accounts": scanned, "observations": evidence,
+        "scan_status": "PARTIAL_RPC_INTERRUPTED" if interruption else "BOUNDED_COMPLETED",
+        "interruption_type": interruption,
+        "unscanned_canonical_accounts": len(uniq) * len(PROGRAMS) - len(scanned),
         "known_main_wallet_signatures_supplied": known_signatures is not None,
         "verified_nonzero_signatures_absent_from_local_index": (
             missing if known_signatures is not None else None),
