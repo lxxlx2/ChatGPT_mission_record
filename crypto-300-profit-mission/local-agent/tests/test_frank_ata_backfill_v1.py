@@ -285,3 +285,18 @@ def test_partial_provider_failure_serializes_non_success_with_existing_evidence(
     assert record["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
     assert record["complete_wallet_history"] is False
     assert record["interruption_type"] == "RuntimeError"
+
+
+def test_duplicate_same_ata_signature_is_not_double_counted():
+    source = [
+        {"signature": SIGNATURES[0], "slot": 454705300,
+         "blockTime": 1791505760, "err": None},
+        {"signature": SIGNATURES[0], "slot": 454705300,
+         "blockTime": 1791505760, "err": None},
+    ]
+    rpc = FakeRPC({J7_ATA: source}, {SIGNATURES[0]: tx(*TX_RAW[0])})
+    res = scan_ata_mints(rpc, [J7], known_signatures=set())
+    assert res["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
+    assert res["statistics"]["duplicate_ata_signature_occurrences_skipped"] == 1
+    assert len(res["observations"]) == 1
+    assert len([name for name, _ in rpc.calls if name == "getTransaction"]) == 1
