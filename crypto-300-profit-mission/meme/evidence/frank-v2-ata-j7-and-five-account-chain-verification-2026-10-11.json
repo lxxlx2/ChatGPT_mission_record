@@ -10,7 +10,81 @@
     "legacy_spl_token_canonical_ata": 4,
     "token2022_canonical_ata": 8,
     "cohort_scope": "12 local sell-only mints with previously recorded ATA public keys",
-    "noncanonical_token_accounts_covered": false
+    "noncanonical_token_accounts_covered": false,
+    "records": [
+      {
+        "mint": "31k88G5Mq7ptbRDf3AM13HAq6wRQHXHikR8hik7wPygk",
+        "prior_token_account": "GzYbdwTGmqe5mhNgeu1Y2DD8PkKYayoQAT5krELB5EbG",
+        "verified_canonical_pda_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "5PiBn5JdjJDnRGziiSfsu2affgBR3DyTTCR3CHpcode",
+        "prior_token_account": "FeXhhTUXG745D4BgU77ofqWMeEzbrRXZnCJhkhYqR3jb",
+        "verified_canonical_pda_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "6e8LLHkqCTa4mzGuL1PoUxSfeHmDeceJ3DaJSSUNg937",
+        "prior_token_account": "7aRyKNk66cqpPzaTBDij43byNyKVgC436w34JHht2Gb7",
+        "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "7KEPApdbBMByrmqihz3bht2uMhFQcatjfSFQCKq66kH3",
+        "prior_token_account": "DVkYDJKQ9i1QQMHsgwBKRi5fqVycvYkwYny6bD2FawmX",
+        "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "8dBnKHwNYH3hz2fFTJczVwzBTpJFAMtc53k3uA4zpump",
+        "prior_token_account": "93qZdBKeHDEfjj5S2HbruEi5nwXqkYTctYwuFAyMAkVn",
+        "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF",
+        "prior_token_account": "He6xeyX27KH3jFeqBYzEoP5fhwyGtqxXu4yc5XcsDqzc",
+        "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+        "prior_token_account": "5WnoYgzTcSXVLfnGWNhYiZGYwSFk7PgBF6SUEHS1q6Qq",
+        "verified_canonical_pda_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "EFn88CiiFHhihqdr1Y11XBDxbbYarBf1ij92DsrigYwR",
+        "prior_token_account": "5D91uUNoTqy337wjFxr1R9gZnwq6d5CuwPJeQ9oLtZvH",
+        "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "GZw7LxHtQKSQ1YsGnpNH7SovnBF8X6poYgavHwrmRekp",
+        "prior_token_account": "6JcLVdUX1V86SdxRtUiiTDh78D7Kb699FDwo57WgX1g6",
+        "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "GoADAwux19tGxb3W4ykPzZz8p5JCSYaxBRpuW7s9pump",
+        "prior_token_account": "3VHDNtApjrasS2sRLXZSDHZ6ahE8yyZvbqzJ1jSshtbU",
+        "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
+        "prior_token_account": "FjESMbdMaDapesMo889siXL1oQmgvQz8wsLTnHKeTNem",
+        "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "canonical_address_matches_previous_ata": true
+      },
+      {
+        "mint": "wdysfTqUsJ8qAVB1796BXgGisThoBzu1keQmdgswdyt",
+        "prior_token_account": "G5GCbtGPu7V2dGCbXsoN8ET1JZqMX5N7uZniYitSWw8e",
+        "verified_canonical_pda_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "canonical_address_matches_previous_ata": true
+      }
+    ]
   },
   "j7": {
     "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
