@@ -1,0 +1,163 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "token": "MARSCOIN",
+  "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "source_file": "BSC_MEME_DDAC_MARSCOIN_FULL_TRANSFER_ANOMALY_2026-10-11.json",
+  "scope": "Native BNB before/after each of 29 unique DDAC MARSCOIN token transfer transaction blocks. Same-block unrelated activity and non-BNB quotes unresolved.",
+  "expected": 29,
+  "rows": [
+    {
+      "hash": "0xfd87fa6d585acdf047e96264ddfb1bb0c428c882449d72554a34ec6841b63824",
+      "block": 112441920,
+      "before_wei": "23536132035966976745",
+      "after_wei": "23036072668126976745",
+      "native_block_delta_wei": "-500059367840000000",
+      "status": "VALID"
+    },
+    {
+      "hash": "0x8f5386192f6f5da18185098556a2f93661211d59b63e6baaff6d66435647b35c",
+      "block": 112442886,
+      "before_wei": "22442665722408665210",
+      "after_wei": "22994221336709060810",
+      "native_block_delta_wei": "551555614300395600",
+      "status": "VALID"
+    },
+    {
+      "hash": "0xc13d9d1b476a6fa2ae56ed17518281101dde33e930572ce40ef46819e54bc989",
+      "block": 112635735,
+      "before_wei": "24487766878118910847",
+      "after_wei": "23987707497438910847",
+      "native_block_delta_wei": "-500059380680000000",
+      "status": "VALID"
+    },
+    {
+      "hash": "0x4323589f5edadbb49c6b1eefe5ab816af12993bccefe4d4c1fe2592f07be881d",
+      "block": 112639419,
+      "before_wei": "25357710406214464001",
+      "after_wei": "25849160834067341529",
+      "native_block_delta_wei": "491450427852877528",
+      "status": "VALID"
+    },
+    {
+      "hash": "0x5c771003a07ad6a04e570aa8b56e6fed209a8d12a37102c8e79743cf48d14c36",
+      "block": 112643175,
+      "before_wei": "26229796247814335051",
+      "after_wei": "26753753336158281942",
+      "native_block_delta_wei": "523957088343946891",
+      "status": "VALID"
+    },
+    {
+      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
+      "block": 112964866,
+      "before_wei": "27957464639215873879",
+      "after_wei": "26957404044375873879",
+      "native_block_delta_wei": "-1000060594840000000",
+      "status": "VALID"
+    },
+    {
+      "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
+      "block": 112964882,
+      "before_wei": "26957404044375873879",
+      "after_wei": "28055656865157160471",
+      "native_block_delta_wei": "1098252820781286592",
+      "status": "VALID"
+    },
+    {
+      "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6",
+      "block": 112965110,
+      "before_wei": "26755459918277160471",
+      "after_wei": "27613885005158620351",
+      "native_block_delta_wei": "858425086881459880",
+      "status": "VALID"
+    }
+  ],
+  "pending": [
+    {
+      "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
+      "block": 112965118
+    },
+    {
+      "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
+      "block": 112971917
+    },
+    {
+      "hash": "0x1df1b31f9c0bef52268e8a6e908b96d99be0c998b8bfcfbe10b9910c1186f1a2",
+      "block": 112972386
+    },
+    {
+      "hash": "0xb5aadaa7350e902a40b94338332f50b6ec5fe47bc774f4da132d9bb0e62d5b55",
+      "block": 112993813
+    },
+    {
+      "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
+      "block": 113003453
+    },
+    {
+      "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
+      "block": 113137477
+    },
+    {
+      "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
+      "block": 113975350
+    },
+    {
+      "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854",
+      "block": 113986944
+    },
+    {
+      "hash": "0x0af40b9fc2b323b36802ccf63c17b70e195d46838d332c1becdcca08d6a567cd",
+      "block": 114094942
+    },
+    {
+      "hash": "0x726e3ae1d2e3ad27f0143334b9184d8706555a1b7246e242042b6e5050bf0693",
+      "block": 114096341
+    },
+    {
+      "hash": "0x43e373611a22b92725a5434ad8b23c13d48d30e596c060173ec1b5e7afdd3f9c",
+      "block": 115356822
+    },
+    {
+      "hash": "0x4f3ecc60a2287fde41419a49cded3f8e1d2ff4b15d25f70a7abf1e380150ae03",
+      "block": 115356908
+    },
+    {
+      "hash": "0x1b8ebb303c3a50ef7a5aa4265c6253e694846a6ba1bcb06687170210b0b29ca9",
+      "block": 115357060
+    },
+    {
+      "hash": "0xb0ad6dcb2f5c57a46f89977407989c8eb5f6a03f0c5a834e3afa1166bcf21a51",
+      "block": 115359762
+    },
+    {
+      "hash": "0x9574a98294013648aef6e0c36aedf9fc055455bc3c4041738a12689ef859978a",
+      "block": 115362146
+    },
+    {
+      "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
+      "block": 115522575
+    },
+    {
+      "hash": "0xcb9d192eb9459e008f4d670f6eafef2a875e8d54e410d464820e2cb13f6fe945",
+      "block": 117201123
+    },
+    {
+      "hash": "0x06441d6a56eb71fe11849e5984b40feb786dc1279dc0fe55714e5b42ca0dadba",
+      "block": 119322364
+    },
+    {
+      "hash": "0x84c1ea4080445c4f3e34daa441f692d9220c50aa8b25544bf1994521cd60c830",
+      "block": 119938438
+    },
+    {
+      "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
+      "block": 119938551
+    },
+    {
+      "hash": "0xbd0bb6906165fd348b2ae064e4bb0a071202d9592bc1f0529d5a627cf69a342b",
+      "block": 120232161
+    }
+  ],
+  "status": "PARTIAL_8_OF_29",
+  "production": "NO_GO"
+}
