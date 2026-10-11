@@ -26,6 +26,10 @@ PUBKEY = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 SAFE_ID = re.compile(r"^[a-f0-9]{16,64}$")
 BANNED = re.compile(r"secret|password|passphrase|private|seed|bearer|authorization|cookie|credential|webhook|rpc_url|endpoint_url|gmail|email|local_path|home_dir|api[_-]?key|access_token|refresh_token|auth_token|^key$|_token$", re.I)
 SENSITIVE_INLINE = re.compile(r"(?i)(bearer\s+[a-z0-9._~+/-]+|(?:api[_-]?key|token|password|secret)\s*[:=]\s*[^\s&,;]+)")
+LOCAL_PATH_INLINE = re.compile(r"(?i)(?:file:(?:/{0,3})|~[/\\]|/(?:Users|home)/)")
+EMAIL_INLINE = re.compile(r"(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}")
+EMBEDDED_URL = re.compile(r"(?i)\b(?:https?|ftp)://")
+SENSITIVE_URL_PATH = re.compile(r"(?i)(?:api[-_]?key|secret|password|token|credential|authorization|private|/[a-z0-9_-]{24,}(?:/|$))")
 CA_FIELDS = ("schema_version", "mint", "source", "observed_at", "supply_raw", "decimals",
              "token_profile", "market", "assessment", "holders", "metrics",
              "confirmed_relation_groups", "probable_control_clusters",
@@ -57,17 +61,24 @@ def safe(value: object, level: int = 0) -> object:
     if isinstance(value, float):
         return value if -1e308 < value < 1e308 else None
     if isinstance(value, str):
-        if re.search(r"(?i)(?:^|[\s=])/(?:Users|home)/[^\s]+", value):
+        if LOCAL_PATH_INLINE.search(value):
             return "[LOCAL_PATH_REDACTED]"
+        if EMAIL_INLINE.search(value):
+            return "[EMAIL_REDACTED]"
         if SENSITIVE_INLINE.search(value):
             return "[REDACTED]"
         if len(value) > MAX_TEXT:
             return "[TEXT_OVER_LIMIT]"
-        if value.startswith(("https://", "http://")):
+        if EMBEDDED_URL.search(value):
+            if not value.startswith(("https://", "http://")):
+                return "[URL_REDACTED]"
             try:
                 u = urlsplit(value)
-                if u.username or u.password or u.query or u.fragment:
-                    return urlunsplit((u.scheme, u.hostname or "", u.path, "", ""))
+                if (not u.hostname or u.username or u.password or
+                        u.scheme not in ("http", "https") or
+                        SENSITIVE_URL_PATH.search(u.path)):
+                    return "[URL_REDACTED]"
+                return urlunsplit((u.scheme, u.hostname, u.path, "", ""))
             except ValueError:
                 return "[URL_INVALID]"
         return value
