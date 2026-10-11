@@ -43,7 +43,7 @@ Exactly **92/92** original archived block reserve snapshots have been read and s
 | 239e / 龙虾 | Fifth | +0.003567 |
 | 239e / 龙虾 | Sixth | -0.022472 |
 
-The 龙头 first episode in 239e's 龙虾 model exceeds the total scenario net gain; remaining episodes net slightly negative. Profit concentration also appears in the separately verified original owner-native cashflow evidence. This does not prove a future edge or winning wallet in the broader BSC universe.
+The 龙虾 first episode in 239e's 龙虾 model exceeds the total scenario net gain; remaining episodes net slightly negative. Profit concentration also appears in the separately verified original owner-native cashflow evidence. This does not prove a future edge or winning wallet in the broader BSC universe.
 
 ## Evidence grading and blocked production gates
 
