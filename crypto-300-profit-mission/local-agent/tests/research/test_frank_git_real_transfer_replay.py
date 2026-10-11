@@ -88,7 +88,20 @@ def test_actual_mac_1720_signature_archive_replays_to_224_scoped_mints():
         "signature_rows_without_parsed_counterparty_flow"] == 1720
     by_mint = {x["mint"]: x for x in merged["rows"]}
     assert len(by_mint) == 224
+    # This is the local-only count; never present it as all-chain J7 history.
     assert by_mint[J7]["passive_receipt_events"] == 1
+    from mission_agent.mission_control.wallet_watch import annotate_known_ata_gaps
+    gap_file = (Path(__file__).resolve().parents[3] / "meme" / "evidence" /
+                "frank-v2-known-ata-gap-summary-2026-10-11.json")
+    source = json.loads(gap_file.read_text())
+    annotated = annotate_known_ata_gaps(merged, source)
+    covered = {x["mint"]: x for x in annotated["rows"]}
+    assert covered[J7]["owner_index_gap_status"] == "CONFIRMED_HISTORICAL_GAP"
+    assert covered[J7]["owner_index_missing_signatures"] == 2
+    assert covered[J7]["ata_verified_extra_passive_receipts"] == 2
+    bp = "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy"
+    assert covered[bp]["owner_index_missing_signatures"] == 66
+    assert covered[bp]["ata_verified_extra_passive_receipts"] == 1
     assert by_mint[J7]["signature_observed_in_raw"] == "2846838050235"
     assert by_mint[J7]["signature_observed_out_raw"] == "12508217470763"
     assert by_mint[J7]["sender_cost_basis_usd"] is None
