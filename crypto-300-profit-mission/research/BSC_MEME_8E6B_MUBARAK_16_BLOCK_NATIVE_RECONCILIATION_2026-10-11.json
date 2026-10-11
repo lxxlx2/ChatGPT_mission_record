@@ -71,87 +71,80 @@
       "before_wei": "6071605643241152233",
       "after_wei": "6590151394691086210",
       "delta_wei": "518545751449933977"
-    }
-  ],
-  "pending_tx": [
+    },
     {
-      "block": 47426067,
       "hash": "0x157badd198cd0db1ac8bb8e47b35bd01857e6d28d66882b0512c82802ef570e0",
-      "id": "0x157badd198cd0db1ac8bb8e47b35bd01857e6d28d66882b0512c82802ef570e0:log:66",
-      "raw": "0x225197109f845a0fd6909",
-      "from": "0x90a54475d512b8f3852351611c38fad30a513491",
-      "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "dir": "in"
+      "block": 47426067,
+      "dir": "in",
+      "before_wei": "6590151394691086210",
+      "after_wei": "5580427729691086210",
+      "delta_wei": "-1009723665000000000"
     },
     {
-      "block": 47426073,
       "hash": "0xfc10978982c4316808efbca9bebdafc9142a05bd6517db45d34c7c32d89ebad9",
-      "id": "0xfc10978982c4316808efbca9bebdafc9142a05bd6517db45d34c7c32d89ebad9:log:57",
-      "raw": "0x225197109f845a0fd6909",
-      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "to": "0x90a54475d512b8f3852351611c38fad30a513491",
-      "dir": "out"
+      "block": 47426073,
+      "dir": "out",
+      "before_wei": "5580427729691086210",
+      "after_wei": "6596867376866650346",
+      "delta_wei": "1016439647175564136"
     },
     {
-      "block": 47426394,
       "hash": "0x46eab58da04dce83de6d6a090d2aeadc6cf2e737f899462ad70ffe34b408e86b",
-      "id": "0x46eab58da04dce83de6d6a090d2aeadc6cf2e737f899462ad70ffe34b408e86b:log:143",
-      "raw": "0x588e212aee403df32695",
-      "from": "0x90a54475d512b8f3852351611c38fad30a513491",
-      "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "dir": "in"
+      "block": 47426394,
+      "dir": "in",
+      "before_wei": "6596867376866650346",
+      "after_wei": "6091560636866650346",
+      "delta_wei": "-505306740000000000"
     },
     {
-      "block": 47426611,
       "hash": "0x7bdcc80baa8983e5433ed7d06ebdd3599bfb30669cb1810b501a518bc051868c",
-      "id": "0x7bdcc80baa8983e5433ed7d06ebdd3599bfb30669cb1810b501a518bc051868c:log:131",
-      "raw": "0x588e212aee403df32695",
-      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "to": "0x90a54475d512b8f3852351611c38fad30a513491",
-      "dir": "out"
+      "block": 47426611,
+      "dir": "out",
+      "before_wei": "6091560636866650346",
+      "after_wei": "6427744919838469111",
+      "delta_wei": "336184282971818765"
     },
     {
-      "block": 47476115,
       "hash": "0xeba08abea107e87eaed81e4f76fe7de999a7867a0d3382ad22d7e4701cadd487",
-      "id": "0xeba08abea107e87eaed81e4f76fe7de999a7867a0d3382ad22d7e4701cadd487:log:77",
-      "raw": "0x414473f4c1ea6c7e832",
-      "from": "0x90a54475d512b8f3852351611c38fad30a513491",
-      "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "dir": "in"
+      "block": 47476115,
+      "dir": "in",
+      "before_wei": "11486439011049426124",
+      "after_wei": "10476710911049426124",
+      "delta_wei": "-1009728100000000000"
     },
     {
-      "block": 47476125,
       "hash": "0x3a7421e824c446a875114d4ab9f950d54e8a83515dd3a235222b31044610fc7f",
-      "id": "0x3a7421e824c446a875114d4ab9f950d54e8a83515dd3a235222b31044610fc7f:log:56",
-      "raw": "0x414473f4c1ea6c7e832",
-      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "to": "0x90a54475d512b8f3852351611c38fad30a513491",
-      "dir": "out"
+      "block": 47476125,
+      "dir": "out",
+      "before_wei": "10476710911049426124",
+      "after_wei": "11475532520491122607",
+      "delta_wei": "998821609441696483"
     },
     {
-      "block": 47537139,
       "hash": "0x13da50c585e8b67caad158bbfa1fa4a0605b3725c4122cf3b350e4ff41f40484",
-      "id": "0x13da50c585e8b67caad158bbfa1fa4a0605b3725c4122cf3b350e4ff41f40484:log:271",
-      "raw": "0x524850e08a24cc4979",
-      "from": "0xd770176e9102a4a61f1820b211ed1346305de6d2",
-      "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "dir": "in"
+      "block": 47537139,
+      "dir": "in",
+      "before_wei": "1615919119352802743",
+      "after_wei": "1312350954352802743",
+      "delta_wei": "-303568165000000000"
     },
     {
-      "block": 47537150,
       "hash": "0xaad12c4338b60fb4fd79e805ee40f80cca224518575928bdcdc5d7c45d643dd2",
-      "id": "0xaad12c4338b60fb4fd79e805ee40f80cca224518575928bdcdc5d7c45d643dd2:log:79",
-      "raw": "0x524850e08a24cc4979",
-      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "to": "0xd770176e9102a4a61f1820b211ed1346305de6d2",
-      "dir": "out"
+      "block": 47537150,
+      "dir": "out",
+      "before_wei": "1312350954352802743",
+      "after_wei": "1600631701606105305",
+      "delta_wei": "288280747253302562"
     }
   ],
-  "status": "PARTIAL_8_OF_16_NATIVE_BALANCES",
+  "pending_tx": [],
+  "status": "ALL_16_NATIVE_BLOCK_BALANCES_VERIFIED_SIGNER_RECEIPTS_QUOTE_PENDING",
   "production": "NO_GO",
   "caveats": [
     "Token balance quantity closed, not proof transaction isolated returns",
     "Native balance blocks can include same block unrelated movements",
     "ERC20 USDT/WBNB quote receipts not yet assessed"
-  ]
+  ],
+  "verified_blocks": 16,
+  "sum_native_wei": "5299103329471661818"
 }
