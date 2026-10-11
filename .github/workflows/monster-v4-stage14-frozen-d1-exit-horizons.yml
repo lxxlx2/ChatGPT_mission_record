@@ -1,0 +1,48 @@
+name: Monster Stage14 Frozen 31 D1 Historical Exit Horizon Study
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage14_frozen_31d1_horizon_study_20261011.json'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage14_d1_exit_horizons.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage14_d1_exit_horizons.py'
+      - '.github/workflows/monster-v4-stage14-frozen-d1-exit-horizons.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monster-stage14-frozen-31-d1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frozen-stage14-exit-horizon-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate prereg frozen episodes, reproducibility and censoring
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage14_d1_exit_horizons.py tests/test_monster_v4_stage14_d1_exit_horizons.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage14_d1_exit_horizons.py
+      - name: Download independently verified official 1m ZIP+SHA for 31 frozen D1 events and replay exits
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage14_d1_exit_horizons.py --output /tmp/monster_stage14_31d1_frozen_results.json
+      - name: Store all real event-level 30m/2h/6h/12h/24h results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage14-31d1-horizon-source-and-priceproxy
+          path: /tmp/monster_stage14_31d1_frozen_results.json
+          if-no-files-found: warn
+          retention-days: 30
