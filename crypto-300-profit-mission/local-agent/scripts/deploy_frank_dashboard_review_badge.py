@@ -6,6 +6,8 @@ Dry-run by default; never restart Mission Control, change Gmail state, or send m
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
+import fcntl
 from datetime import datetime, timezone
 import getpass
 import hashlib
@@ -14,6 +16,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+import signal
 import sqlite3
 import subprocess
 import sys
@@ -130,6 +133,7 @@ def dashboard_port(control: Path):
 
 
 def actual_delivery_counts(control: Path):
+    """Independent sqlite-only breakdown; never invokes DashboardState."""
     path = (control / "mission-control.sqlite").resolve()
     if not path.is_file():
         raise RuntimeError("CONTROL_DB_NOT_FOUND")
@@ -148,54 +152,87 @@ def actual_delivery_counts(control: Path):
               ON o.channel='gmail' AND o.decision_id=g.decision_id
             LEFT JOIN local_delivery AS l
               ON o.channel='local' AND o.decision_id=l.decision_id
-            WHERE o.status IN ('MANUAL_REVIEW','SENDING','SENT_UNVERIFIED')
+            WHERE o.status IN (
+                'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED',
+                'PERMANENT_ERROR','CREDENTIAL_BLOCKED',
+                'RETRYABLE_ERROR','RETRY_PENDING'
+            )
         """).fetchall()
+        unknown = db.execute("""
+            SELECT COUNT(*) FROM decision_outbox
+            WHERE status NOT IN (
+                'PENDING','SENT_VERIFIED','DELIVERED','DRY_RUN_AUDIT',
+                'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED',
+                'PERMANENT_ERROR','CREDENTIAL_BLOCKED',
+                'RETRYABLE_ERROR','RETRY_PENDING'
+            )
+        """).fetchone()[0]
     finally:
         db.close()
-    expired = 0
-    manual = 0
-    pending = 0
-    by_pending = {"gmail": 0, "local": 0, "other": 0}
-    by_actionable = {"gmail": 0, "local": 0, "other": 0}
-    by_expired = {"gmail": 0, "local": 0}
+    if unknown:
+        raise RuntimeError("UNCLASSIFIED_OUTBOX_STATUS_REQUIRES_REVIEW")
+    expired = {"gmail": 0, "local": 0}
+    actionable = {"gmail": 0, "local": 0, "other": 0}
+    pending = {"gmail": 0, "local": 0, "other": 0}
+    blocked = {"gmail": 0, "local": 0, "other": 0}
+    manual = {"gmail": 0, "local": 0, "other": 0}
     for row in rows:
         channel = row["channel"] if row["channel"] in ("gmail", "local") else "other"
-        if row["status"] != "MANUAL_REVIEW":
-            pending += 1
-            by_pending[channel] += 1
+        status = row["status"]
+        if status in ("SENDING", "SENT_UNVERIFIED"):
+            pending[channel] += 1
             continue
-        manual += 1
-        unsent = (
-            (channel == "gmail" and row["last_error"] ==
-             "GMAIL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
+        if status in ("CREDENTIAL_BLOCKED", "RETRYABLE_ERROR", "RETRY_PENDING"):
+            blocked[channel] += 1
+            continue
+        if status == "PERMANENT_ERROR":
+            actionable[channel] += 1
+            continue
+        manual[channel] += 1
+        if channel == "other":
+            actionable[channel] += 1
+            continue
+        try:
+            attempts = int(row["attempts"] or 0)
+            gmail_attempts = int(row["gmail_attempts"] or 0)
+        except (TypeError, ValueError, OverflowError):
+            actionable[channel] += 1
+            continue
+        expired_before_send = (
+            (channel == "gmail"
+             and row["last_error"] == "GMAIL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
              and row["gmail_status"] == "MANUAL_REVIEW"
-             and row["attempts"] == 0 and row["gmail_attempts"] == 0
+             and attempts == 0 and gmail_attempts == 0
              and not row["sent_at"] and not row["gmail_message_id"])
             or
-            (channel == "local" and row["last_error"] ==
-             "LOCAL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
+            (channel == "local"
+             and row["last_error"] == "LOCAL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
              and row["local_status"] == "MANUAL_REVIEW"
-             and row["attempts"] == 0 and not row["delivered_at"])
+             and attempts == 0 and not row["delivered_at"])
         )
-        if unsent:
-            expired += 1
-            by_expired[channel] += 1
-        else:
-            by_actionable[channel] += 1
+        (expired if expired_before_send else actionable)[channel] += 1
     return {
-        "manual_review_total_count": manual,
-        "manual_review_expired_unsent_count": expired,
-        "manual_review_expired_unsent_gmail_count": by_expired["gmail"],
-        "manual_review_expired_unsent_local_count": by_expired["local"],
-        "manual_review_actionable_count": manual - expired,
-        "manual_review_actionable_gmail_count": by_actionable["gmail"],
-        "manual_review_actionable_local_count": by_actionable["local"],
-        "manual_review_actionable_other_count": by_actionable["other"],
-        "manual_review_pending_count": pending,
-        "manual_review_pending_gmail_count": by_pending["gmail"],
-        "manual_review_pending_local_count": by_pending["local"],
-        "manual_review_pending_other_count": by_pending["other"],
-        "manual_review_visible_total_count": manual + pending,
+        "manual_review_total_count": sum(manual.values()),
+        "manual_review_expired_unsent_count": sum(expired.values()),
+        "manual_review_expired_unsent_gmail_count": expired["gmail"],
+        "manual_review_expired_unsent_local_count": expired["local"],
+        "manual_review_actionable_count": sum(actionable.values()),
+        "manual_review_actionable_gmail_count": actionable["gmail"],
+        "manual_review_actionable_local_count": actionable["local"],
+        "manual_review_actionable_other_count": actionable["other"],
+        "manual_review_manual_only_total_count": sum(manual.values()),
+        "manual_review_manual_only_gmail_count": manual["gmail"],
+        "manual_review_manual_only_local_count": manual["local"],
+        "manual_review_manual_only_other_count": manual["other"],
+        "manual_review_pending_count": sum(pending.values()),
+        "manual_review_pending_gmail_count": pending["gmail"],
+        "manual_review_pending_local_count": pending["local"],
+        "manual_review_pending_other_count": pending["other"],
+        "manual_review_blocked_count": sum(blocked.values()),
+        "manual_review_blocked_gmail_count": blocked["gmail"],
+        "manual_review_blocked_local_count": blocked["local"],
+        "manual_review_blocked_other_count": blocked["other"],
+        "manual_review_visible_total_count": len(rows),
     }
 
 
@@ -205,10 +242,12 @@ def health_endpoint(control: Path):
 
 def verify_dashboard():
     root = control_root()
-    expected = actual_delivery_counts(root)
     endpoint = health_endpoint(root)
     for _ in range(30):
         try:
+            # The live Mission state can legitimately change while waiting.
+            # Re-read sqlite on EVERY retry, not just once before the loop.
+            expected = actual_delivery_counts(root)
             with urllib.request.urlopen(endpoint, timeout=1.5) as response:
                 body = json.load(response)
             if (body.get("manual_review_breakdown_available") is not True
@@ -228,6 +267,39 @@ def verify_dashboard():
     raise RuntimeError("DASHBOARD_DATABASE_READBACK_FAILED")
 
 
+@contextmanager
+def deployment_mutex():
+    """One active --apply, with no credential paths or system-wide locks."""
+    folder = Path.home() / "Library/Application Support/FrankMeme"
+    folder.mkdir(mode=0o700, parents=True, exist_ok=True)
+    path = folder / ".dashboard-review-deploy.lock"
+    fd = os.open(path, os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    try:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise RuntimeError("DASHBOARD_DEPLOY_ALREADY_RUNNING") from None
+        yield
+    finally:
+        os.close(fd)
+
+
+@contextmanager
+def interrupted_install_guard():
+    """SIGTERM/SIGHUP become rollback-capable InterruptedError; SIGKILL cannot."""
+    handlers = {}
+    def interrupted(signal_number, frame):
+        raise InterruptedError("DASHBOARD_INSTALL_SIGNAL_INTERRUPTED")
+    try:
+        for kind in (signal.SIGTERM, signal.SIGHUP):
+            handlers[kind] = signal.getsignal(kind)
+            signal.signal(kind, interrupted)
+        yield
+    finally:
+        for kind, previous in handlers.items():
+            signal.signal(kind, previous)
+
+
 def verify_rollback(root: Path, saved: dict):
     for relative, previous in saved.items():
         data = (root / relative).read_bytes() if (root / relative).is_file() else None
@@ -235,9 +307,25 @@ def verify_rollback(root: Path, saved: dict):
             raise RuntimeError("ROLLBACK_FILE_BYTES_MISMATCH_" + relative)
     control = control_root()
     with urllib.request.urlopen(health_endpoint(control), timeout=5) as response:
-        if not isinstance(json.load(response), dict):
+        result = json.load(response)
+        if (not isinstance(result, dict)
+                or result.get("status") in (None, "UNKNOWN", "ERROR")):
             raise RuntimeError("ROLLBACK_HTTP_NOT_HEALTHY")
     print("ROLLBACK_READBACK=PASS")
+
+
+def _replace_bytes(path: Path, data: bytes):
+    fd, temp = tempfile.mkstemp(prefix=".frank-review-write-", dir=path.parent)
+    try:
+        os.fchmod(fd, 0o644)
+        with os.fdopen(fd, "wb") as out:
+            out.write(data)
+            out.flush()
+            os.fsync(out.fileno())
+        os.replace(temp, path)
+    finally:
+        if os.path.exists(temp):
+            os.unlink(temp)
 
 
 def install(root: Path, new: dict):
@@ -245,6 +333,7 @@ def install(root: Path, new: dict):
     backup = Path.home() / "Library/Application Support/FrankMeme/dashboard-review-backups" / stamp
     backup.mkdir(mode=0o700, parents=True, exist_ok=False)
     saved = {}
+    # Finish ALL backups before any live product file can be replaced.
     for relative in PATCHES:
         current = root / relative
         data = current.read_bytes() if current.is_file() else None
@@ -252,51 +341,50 @@ def install(root: Path, new: dict):
         if data is not None:
             location = backup / relative
             location.parent.mkdir(parents=True, mode=0o700, exist_ok=True)
-            with location.open("xb") as out:
+            fd = os.open(location, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+            with os.fdopen(fd, "wb") as out:
                 out.write(data)
                 out.flush()
                 os.fsync(out.fileno())
-    print("LOCAL_BACKUP=CREATED")
-    try:
-        for relative, data in new.items():
-            path = root / relative
-            fd, temp = tempfile.mkstemp(prefix=".frank-review-", dir=path.parent)
-            try:
-                os.fchmod(fd, 0o644)
-                with os.fdopen(fd, "wb") as out:
-                    out.write(data)
-                    out.flush()
-                    os.fsync(out.fileno())
-                os.replace(temp, path)
-            finally:
-                if os.path.exists(temp):
-                    os.unlink(temp)
-        restart_dashboard()
-        verify_dashboard()
-        print("DASHBOARD_UPDATE=SUCCESS")
-        print("MISSION_LOOP_RESTART=NO")
-        print("DATABASE_WRITE=NO")
-        print("EMAIL_SEND=NO")
-    except Exception:
-        for relative, data in saved.items():
-            path = root / relative
-            if data is None:
-                path.unlink(missing_ok=True)
-            else:
-                fd, temp = tempfile.mkstemp(prefix=".frank-restore-", dir=path.parent)
+    print("LOCAL_BACKUP=CREATED BACKUP_NAME=" + backup.name, flush=True)
+    with interrupted_install_guard():
+        try:
+            for relative, data in new.items():
+                _replace_bytes(root / relative, data)
+            restart_dashboard()
+            verify_dashboard()
+            print("DASHBOARD_UPDATE=SUCCESS")
+            print("MISSION_LOOP_RESTART=NO")
+            print("DATABASE_WRITE=NO")
+            print("EMAIL_SEND=NO")
+        except BaseException:
+            failures = []
+            # Each restoration attempt is independent. One ENOSPC must NOT
+            # prevent the remaining files being put back.
+            for relative, previous in saved.items():
                 try:
-                    with os.fdopen(fd, "wb") as out:
-                        out.write(data)
-                        out.flush()
-                        os.fsync(out.fileno())
-                    os.replace(temp, path)
-                finally:
-                    if os.path.exists(temp):
-                        os.unlink(temp)
-        restart_dashboard()
-        verify_rollback(root, saved)
-        print("ROLLBACK=DASHBOARD_FILES_RESTORED")
-        raise
+                    path = root / relative
+                    if previous is None:
+                        path.unlink(missing_ok=True)
+                    else:
+                        _replace_bytes(path, previous)
+                except BaseException as exc:
+                    failures.append("restore:" + relative + ":" + type(exc).__name__)
+            try:
+                restart_dashboard()
+            except BaseException as exc:
+                failures.append("restart:" + type(exc).__name__)
+            try:
+                verify_rollback(root, saved)
+            except BaseException as exc:
+                failures.append("verify:" + type(exc).__name__)
+            if failures:
+                print("ROLLBACK_INCOMPLETE=" + ",".join(failures)
+                      + " MANUAL_ACTION_REQUIRED BACKUP_NAME=" + backup.name,
+                      file=sys.stderr, flush=True)
+                raise RuntimeError("DASHBOARD_ROLLBACK_INCOMPLETE") from None
+            print("ROLLBACK=DASHBOARD_FILES_RESTORED", flush=True)
+            raise
 
 
 def main(argv=None):
@@ -316,7 +404,12 @@ def main(argv=None):
     if not args.apply:
         print("DRY_RUN=PASS")
         return 0
-    install(root, new)
+    with deployment_mutex():
+        # Recheck after locking, as another process may have changed the
+        # source since preflight loaded the original version.
+        if local_version(root) != version:
+            raise RuntimeError("LOCAL_VERSION_CHANGED_BEFORE_APPLY")
+        install(root, new)
     return 0
 
 
