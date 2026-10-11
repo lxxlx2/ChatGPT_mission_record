@@ -2015,5 +2015,25 @@
     "twothree_niulai_native_block_delta_wei": "0",
     "twothree_niulai_balance_raw": "16939109060931901978",
     "production": "NO_GO"
+  },
+  "address_model_4_ddac_distributor_and_negative_controls_2026_10_12": {
+    "status": "RESEARCH_ARTIFACT_ARCHIVED_OBSERVE_ONLY_NO_GO",
+    "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "matched_cross_token_distributor_pairs": 69,
+    "shared_source_giggle_receipts": 70,
+    "shared_source_binance_life_receipts": 69,
+    "fresh_direct_chain_transfer_log_spot_checks": 4,
+    "original_binance_life_owner_pool_actions": 7,
+    "giggle_original_owner_trade": "UNCONFIRMED_NONE_PROVEN",
+    "closed_native_scope_negative_episodes": {
+      "IFML": 1,
+      "LOBSTER": 2
+    },
+    "historic_research_files": [
+      "BSC_MEME_DDAC_GIGGLE_BINANCE_LIFE_69_PAIRED_SOURCE_DISTRIBUTIONS_2026-10-12.json",
+      "BSC_MEME_ADDRESS_MODEL_4_DDAC_CROSS_TOKEN_DISTRIBUTION_AND_NEGATIVE_CONTROLS_2026-10-12.md"
+    ],
+    "remaining": "REALIZED_PNL_UNRESOLVED; SOURCE_PAYOUT_CAUSE_UNCONFIRMED; MARS_4_UNRESOLVED_MULTIHOP_ROUTES; MODEL_FOLLOWABILITY_NOT_VALIDATED",
+    "production": "NO_GO"
   }
 }
