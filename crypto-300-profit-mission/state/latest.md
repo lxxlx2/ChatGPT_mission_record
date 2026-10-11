@@ -1,6 +1,6 @@
 # Mission Current Operational and Asset State
 
-Updated: 2026-10-10 Asia/Bangkok
+Updated: 2026-10-12 Asia/Bangkok (GANG finalized claim/refund and pool research; other earlier module data unchanged)
 Timezone: Asia/Bangkok
 Policy: `../MISSION_SPEC.md` | Latest assets: `../portfolio/current.md` | Mission PnL: `../performance/current.md`
 
@@ -24,7 +24,17 @@ Policy: `../MISSION_SPEC.md` | Latest assets: `../portfolio/current.md` | Missio
 - Binance flexible USDC is earmarked investment capital. Entire Bybit account is reserved for personal expenses/rent and excluded.
 - The original $300 cash plus six historical Credits NFTs is the Mission starting set. Later deposits and wallet movements must not be counted as Mission PnL.
 
-## Verified asset observations — 2026-10-10
+## GANG finalized distribution and current pool observations — 2026-10-12
+
+- **GANG LaunchState=Complete** (Solana finalized after 01:30 Bangkok), approved total 600,000 USDC from 631,770.75 USDC pledged.
+- User's FundingRecord confirms 500 USDC original commitment, **480.492480 USDC approved**, `is_tokens_claimed=true`, `is_usdc_refunded=true`. User wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` directly holds **8008.208 GANG**, ERC/SPL Token Account `5XBM2iEibBNAVBMjPYb9Deh8ibm4CCqZrbqk8n7TpGJo`. **19.507520 USDC refund was processed under the FundingRecord; wallet USDC currently 85.102445** (finalized slot 455753009), with other unknown intervening USDC flows possible. Do not add original escrow or refund a second time.
+- Tradable Futarchy AMM pool account `7YktVLcciZ12HnsM2VektRZuxaPE9VRSyYhGBid47b2A` at finalized slot 455753008 held **2,099,533.808242 GANG and 114,463.155810 USDC**; reserve ratio implies ~$0.05451837 per GANG and full-supply FDV ~$1.481M; indicative only, not exact execution quote. Meteora DAMM v2 GANG pool vault `7fugxJgmtgA3gL6DEWSuZmNK7qxGKEqvXJXg97XzSY55` holds ~900k GANG with confirmed new swaps; exact quote-token reserve/pool account could not be fully resolved due Alchemy RPC 429 on program scan.
+- Total GANG mint 27,157,894; price-based performance program controls 12,900,000 (47.5%), not a freely salable retail whale. Remaining holders require attribution to pools, treasuries and retail, not assumed insider dumps.
+- Mathematical break-even `$0.06/GANG` / FDV **$1,629,473.64**, before fees and price impact. Refund + GANG unrealized value should not be treated as already realized PnL.
+- Operational position: `../positions/gang.md`. Current wallet accounting: `../portfolio/current.md`. This is a **read-only accounting update**; no trading/claims/monitors changed. Previous October 10 FundingRecord pending state and $718.38 assets figure were **historical only**, superseded by this new event.
+
+
+## Historical verified asset observations — 2026-10-10
 
 - Solana finalized: **58.047629 USDC** (slot 455317412; ~$58.10 using Alchemy 1.00082 USD mark); **0.038163041 SOL** (slot 455317409; ~$4.21 using Binance SOLUSDT 110.44).
 - **Individually priced >=$1 on-chain subtotal approximately $62.31**.
