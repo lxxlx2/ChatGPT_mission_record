@@ -1,0 +1,298 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "token": "MARSCOIN",
+  "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "source_files": [
+    "BSC_MEME_DDAC_MARSCOIN_29_TX_TWO_PAIR_CLASSIFICATION_FROZEN_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_18_OWNER_POOL_TX_PAIR_SWAP_QUOTE_EVENTS_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_NATIVE_BLOCK_CASHFLOW_2026-10-11.json"
+  ],
+  "trade_sources": {
+    "spcxb_mars_v2": {
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "token0_quote": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "token1_mars": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "decimals": 18,
+      "raw_swap_event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+    },
+    "usdt_mars_v3": {
+      "pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+      "token0_quote": "0x55d398326f99059ff775485246999027b3197955",
+      "token1_mars": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "decimals": 18,
+      "pool_fee_tier_ppm": 10000,
+      "swap_event_topic": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
+    }
+  },
+  "counts": {
+    "raw_mars_trading_hashes": 18,
+    "owner_spcxb_v2_actions": 16,
+    "owner_usdt_v3_actions": 2,
+    "direct_v2_swap_logs": 14,
+    "direct_v3_swap_logs": 2,
+    "v2_quote_transfer_fallbacks": 2,
+    "owner_nonpool_receive_count": 1,
+    "nonowner_or_signer_unknown_nonpool_in_count": 10,
+    "all_source_events": 29
+  },
+  "v2_direct_swaps": [
+    {
+      "block": 112441920,
+      "hash": "0xfd87fa6d585acdf047e96264ddfb1bb0c428c882449d72554a34ec6841b63824",
+      "side": "IN",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "1042819928821800873361708",
+      "net_mars_raw": "1011535330957146847160857",
+      "transfer_tax_raw": "31284597864654026200851",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "2481035477991251445",
+      "swap_verified": true
+    },
+    {
+      "block": 112442886,
+      "hash": "0x8f5386192f6f5da18185098556a2f93661211d59b63e6baaff6d66435647b35c",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "1011535330957146847160857",
+      "net_mars_raw": "981189271028432441746032",
+      "transfer_tax_raw": "30346059928714405414825",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "2855238960147439606",
+      "swap_verified": true
+    },
+    {
+      "block": 112635735,
+      "hash": "0xc13d9d1b476a6fa2ae56ed17518281101dde33e930572ce40ef46819e54bc989",
+      "side": "IN",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "239693780550467574468628",
+      "net_mars_raw": "232502967133953547234570",
+      "transfer_tax_raw": "7190813416514027234058",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "2584821600123442781",
+      "swap_verified": true
+    },
+    {
+      "block": 112639419,
+      "hash": "0x4323589f5edadbb49c6b1eefe5ab816af12993bccefe4d4c1fe2592f07be881d",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "129258254199897074065853",
+      "net_mars_raw": "125380506573900161843878",
+      "transfer_tax_raw": "3877747625996912221975",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "2600268578903973594",
+      "swap_verified": true
+    },
+    {
+      "block": 112643175,
+      "hash": "0x5c771003a07ad6a04e570aa8b56e6fed209a8d12a37102c8e79743cf48d14c36",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "51622356467028236584358",
+      "net_mars_raw": "50073685773017389486828",
+      "transfer_tax_raw": "1548670694010847097530",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "2690421549396182003",
+      "swap_verified": true
+    },
+    {
+      "block": 112965110,
+      "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "33517149669909257353852",
+      "net_mars_raw": "32511635179811979633237",
+      "transfer_tax_raw": "1005514490097277720615",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "4396294429869024146",
+      "swap_verified": true
+    },
+    {
+      "block": 112965118,
+      "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
+      "side": "IN",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "18470838092695645788389",
+      "net_mars_raw": "17916712949914776414738",
+      "transfer_tax_raw": "554125142780869373651",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "2509122919803295381",
+      "swap_verified": true
+    },
+    {
+      "block": 112971917,
+      "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "23726009462264961650895",
+      "net_mars_raw": "23014229178397012801369",
+      "transfer_tax_raw": "711780283867948849526",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "4897742200782718467",
+      "swap_verified": true
+    },
+    {
+      "block": 113003453,
+      "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "4997771929699874571694",
+      "net_mars_raw": "4847838771808878334544",
+      "transfer_tax_raw": "149933157890996237150",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "1586628955375493302",
+      "swap_verified": true
+    },
+    {
+      "block": 113137477,
+      "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "3379529294261664489986",
+      "net_mars_raw": "3278143415433814555287",
+      "transfer_tax_raw": "101385878827849934699",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "1259542899259174267",
+      "swap_verified": true
+    },
+    {
+      "block": 113975350,
+      "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "16611558424537833796791",
+      "net_mars_raw": "16113211671801698782888",
+      "transfer_tax_raw": "498346752736135013903",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "3967018379356511861",
+      "swap_verified": true
+    },
+    {
+      "block": 113986944,
+      "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854",
+      "side": "IN",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "603425473117322113167",
+      "net_mars_raw": "585322708923802449772",
+      "transfer_tax_raw": "18102764193519663395",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "247659216316843169",
+      "swap_verified": true
+    },
+    {
+      "block": 115522575,
+      "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "1053953881003267576411",
+      "net_mars_raw": "1022335264573169549119",
+      "transfer_tax_raw": "31618616430098027292",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "428928551809892176",
+      "swap_verified": true
+    },
+    {
+      "block": 119938551,
+      "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
+      "side": "OUT",
+      "venue": "SPCXB_PAIR",
+      "gross_mars_raw": "177675243581310770890",
+      "net_mars_raw": "172344986273871447764",
+      "transfer_tax_raw": "5330257307439323126",
+      "tax_3pct_exact": true,
+      "quote_spcxb_raw": "195729087522878178",
+      "swap_verified": true
+    }
+  ],
+  "v3_direct_swaps": [
+    {
+      "block": 112972386,
+      "hash": "0x1df1b31f9c0bef52268e8a6e908b96d99be0c998b8bfcfbe10b9910c1186f1a2",
+      "side": "IN",
+      "status": "V3_SWAP_MATCH_NO_MARS_TRANSFER_TAX",
+      "raw_quote_usdt_signed": "170714114440979346972",
+      "raw_mars_signed": "-7510065098359254422193",
+      "source_mars_wallet_raw": "7510065098359254422193",
+      "pool_mars_raw": "7510065098359254422193",
+      "token_transfer_tax_raw": "0",
+      "fee_tier_ppm": 10000,
+      "raw_event_words": 7,
+      "swap_topic": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
+    },
+    {
+      "block": 112993813,
+      "hash": "0xb5aadaa7350e902a40b94338332f50b6ec5fe47bc774f4da132d9bb0e62d5b55",
+      "side": "OUT",
+      "status": "V3_SWAP_MATCH_NO_MARS_TRANSFER_TAX",
+      "raw_quote_usdt_signed": "-195029325098807988615",
+      "raw_mars_signed": "6247214912124843214617",
+      "source_mars_wallet_raw": "6247214912124843214617",
+      "pool_mars_raw": "6247214912124843214617",
+      "token_transfer_tax_raw": "0",
+      "fee_tier_ppm": 10000,
+      "raw_event_words": 7,
+      "swap_topic": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
+    }
+  ],
+  "v2_quote_transfer_fallbacks": [
+    {
+      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
+      "block": 112964866,
+      "side": "IN",
+      "source": "SPCXB_TRANSFER_TO_PAIR",
+      "quote_spcxb_raw": "4985442910027358206",
+      "from": "0x51a45a72cc96ca3ba615e25e80a6af2740ae2e2d",
+      "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "status": "EXACT_TX_QUOTE_TRANSFER_SWAP_LOG_TRUNCATED"
+    },
+    {
+      "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
+      "block": 112964882,
+      "side": "OUT",
+      "source": "SPCXB_TRANSFER_FROM_PAIR",
+      "quote_spcxb_raw": "5573768837820999200",
+      "from": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "status": "EXACT_TX_QUOTE_TRANSFER_SWAP_LOG_TRUNCATED"
+    }
+  ],
+  "native_wallet_deltas_by_source_action": {
+    "SPCXB_PAIR_IN": {
+      "trades": 5,
+      "native_wei": "-2550283121520000000"
+    },
+    "SPCXB_PAIR_OUT": {
+      "trades": 11,
+      "native_wei": "5927620742291821886"
+    },
+    "USDT_PAIR_IN": {
+      "trades": 1,
+      "native_wei": "-300040698840000000"
+    },
+    "USDT_PAIR_OUT": {
+      "trades": 1,
+      "native_wei": "332521602584285880"
+    },
+    "OTHER_OR_UNKNOWN_NON_POOL": {
+      "trades": 10,
+      "native_wei": "0"
+    },
+    "NON_POOL_IN": {
+      "trades": 1,
+      "native_wei": "-106329200000000"
+    }
+  },
+  "native_scope_total_wei": "3409712195316107766",
+  "remaining_mars_raw": "3050660512775076744",
+  "decision_rule": "V2 pair MARS Transfer gross-to-net is exactly 3% for 14 raw swap matches. Two owner-side USDT/MARS V3 swaps directly match original MARS amounts with zero transfer tax. V3 fee tier=10000 => 1% pool swap fee, different from MARS transfer tax. Two V2 dense-block swap logs remain unreadable; only exact-hash quote ERC20 transfers recovered. This is historical matched original execution, not a simulated copy fill.",
+  "limitations": [
+    "BNB quote is not token0: SPCXB or USDT quote required conversion through a multi-hop router. Original owner wallet native delta includes final quote settlement and gas but no complete internal trace.",
+    "One original owner non-pool receive and ten external/unknown sender MARS transfers are excluded from owner pool trades",
+    "Quoted token transfer rate is venue dependent and historical; do not infer all future transfers tax rates",
+    "No independent gasUsed receipt for 11 historic tx, latest residual token balance not marked to market",
+    "No unbiased full-market opportunity set or out-of-sample follower fill validation"
+  ],
+  "production": "NO_GO"
+}
