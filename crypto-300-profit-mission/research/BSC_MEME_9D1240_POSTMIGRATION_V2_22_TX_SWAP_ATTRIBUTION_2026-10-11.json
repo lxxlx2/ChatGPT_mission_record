@@ -1,0 +1,244 @@
+{
+  "date": "2026-10-11",
+  "chain": "bnb-mainnet",
+  "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+  "source_file": "BSC_MEME_9D1240_MANAGER2_39_TX_CURVE_COST_FEE_RECONCILIATION_2026-10-11.json",
+  "verified_pool_token_order": "Token0=WBNB token1=tracked meme token for both matching V2 pairs, originally verified in frozen V0",
+  "pair_swap_topic0": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+  "method": "eth_getLogs token/WBNB pair Swap event by exact transactionHash at historical block. Decode four uint256 inputs/outputs, compare pool native gross WBNB out to owner wallet block delta plus known receipt gas. Difference includes routing fee/taxes/same-block transfers and cannot be assigned by this alone.",
+  "expected": 22,
+  "rows": [
+    {
+      "token": "我踏马来了",
+      "block": 73672622,
+      "hash": "0xbea723be6c07eaa73c12a56f804d1f067675b02b5134f8244c80ed2373c9251f",
+      "original_wallet_delta_wei": "842670179564270327",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "5071110194956900000000000",
+      "amount_wbnb_out_wei": "851205155923505380",
+      "amount_token_out_raw": "0"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636137,
+      "hash": "0xceb75613bd34ecf4c7e7cb85099c739c01b4ab6ae2d3c7004930ae2c572da1a2",
+      "original_wallet_delta_wei": "7424386496372457",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "90213827180505790000000",
+      "amount_wbnb_out_wei": "7523947208457027",
+      "amount_token_out_raw": "0"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636140,
+      "hash": "0x741c1971f01306bd406ef8ff6a34e1d57b479713ead2291d45426674902bab7f",
+      "original_wallet_delta_wei": "7096403049923109",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "89311688908700732100000",
+      "amount_wbnb_out_wei": "7192650797902130",
+      "amount_token_out_raw": "0"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636145,
+      "hash": "0x5b1f8c1df73a64fc3a6ed502534626a6228548a376435415d80e7a5a4a9f1798",
+      "original_wallet_delta_wei": "9135750394781496",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "INCOMPLETE_PAIR_RPC_OR_MATCH",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 65)"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636158,
+      "hash": "0xbdfc82463f70a80bec7d49cbdae80e05655ebdacd56a433cfb0a8f9e847d7893",
+      "original_wallet_delta_wei": "85290329330087657",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "INCOMPLETE_PAIR_RPC_OR_MATCH",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 139 column 30)"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636343,
+      "hash": "0xc641497b7931c232db4d55c311eb46fba177d2caabaf48f16a6e91e04045faf5",
+      "original_wallet_delta_wei": "98793244116016574",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "787809476694758287780890",
+      "amount_wbnb_out_wei": "99816993369713711",
+      "amount_token_out_raw": "0"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636357,
+      "hash": "0x583c97f7650bdc0b10479487c4f42e1db90f6cdf502752b075cb6215f6debce9",
+      "original_wallet_delta_wei": "86852993818142305",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "709028529025282459002801",
+      "amount_wbnb_out_wei": "87754863695093237",
+      "amount_token_out_raw": "0"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636369,
+      "hash": "0x4d48e8694bac33079c991ff387d34ef2481637d7d7ce83bf73bec1225d3317fd",
+      "original_wallet_delta_wei": "82839595725472904",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "638125676122754213102520",
+      "amount_wbnb_out_wei": "83700926227750408",
+      "amount_token_out_raw": "0"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636378,
+      "hash": "0xe8e17135bc120487a712191c3fd88d81eeac48fbab816ca19b590a4aedd333b3",
+      "original_wallet_delta_wei": "67723444350017689",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "574313108510478791792268",
+      "amount_wbnb_out_wei": "68432086454563322",
+      "amount_token_out_raw": "0"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636389,
+      "hash": "0x0bdbd16617524f0febe60e08fa48bec67707b0a5d91c5aee6399253962cd6de6",
+      "original_wallet_delta_wei": "64180149414731722",
+      "gas_wei": null,
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "516881797659430912613042",
+      "amount_wbnb_out_wei": "64853000661345173",
+      "amount_token_out_raw": "0"
+    }
+  ],
+  "pending": [
+    {
+      "token": "龙虾",
+      "block": 83636467,
+      "hash": "0xb1996d037835d11a95acb4206d88a670f26d3f4543f49a78f1dd8a205cce8f01",
+      "original_wallet_delta_wei": "6812682334883121",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636473,
+      "hash": "0xb1c39e0f023f40b8d03703cc226c4475e53088475f2cc3d6a495a773294c7819",
+      "original_wallet_delta_wei": "6825091176714643",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636488,
+      "hash": "0x45150044cb05d8d9ca6c94f64390f5f1954e91218cd2737aaa29a0ae695738d1",
+      "original_wallet_delta_wei": "63522589377234398",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636497,
+      "hash": "0x53528a3b7ba677b89f74d4126fb335f3cd7dfb1f16b2ac7e375e0b1755072f31",
+      "original_wallet_delta_wei": "6183774391431534",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636507,
+      "hash": "0x02948cffd91ffc048b835ab7347317a0075a41330d22ec2dc1d543b036c71a11",
+      "original_wallet_delta_wei": "6192684148241089",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636520,
+      "hash": "0x10467366b26156ad1b06270ac4bb803d87972267862c226af702a809864affb4",
+      "original_wallet_delta_wei": "70476731364149657",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636540,
+      "hash": "0x778d73d8f96c92990366fdf378424ef9b8bb616fa57ada63b03a0536980043d8",
+      "original_wallet_delta_wei": "6333720224103196",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636553,
+      "hash": "0x798722ba509dba3945236e6828bbc6212e85cbe79e9e1dc61a09eb8abe026e39",
+      "original_wallet_delta_wei": "6443126565699202",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636684,
+      "hash": "0x667b8989cc5d2f5dfd6b42aad139cb8724710ca4b5f4c346ceca2bdc06846629",
+      "original_wallet_delta_wei": "64821350474598294",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636711,
+      "hash": "0x014449374008914bb094a27853cb55ce693ea90c14eb2b44e2d6f2a2ed457ac0",
+      "original_wallet_delta_wei": "62251436450863964",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636714,
+      "hash": "0xd6b6d1b7be654133a1949389883a6c763cbfec74725288788d9687823099d5b3",
+      "original_wallet_delta_wei": "55450516504983850",
+      "gas_wei": null,
+      "owner_signed": true
+    },
+    {
+      "token": "龙虾",
+      "block": 83636718,
+      "hash": "0x363852852e72d638e82ecbb508b851afd82030581cca57360932ee64a4626989",
+      "original_wallet_delta_wei": "491079605708473115",
+      "gas_wei": null,
+      "owner_signed": true
+    }
+  ],
+  "state": "PARTIAL_10_OF_22_V2",
+  "production": "NO_GO"
+}
