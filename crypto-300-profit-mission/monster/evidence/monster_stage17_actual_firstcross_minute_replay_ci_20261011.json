@@ -1,0 +1,208 @@
+{
+  "schema": "MONSTER_STAGE17_EXPOSED_EVENT_ALIGNED_TRUE_1M_V4_CI_V1",
+  "source_commit": "3842c090ad668b0f754ae146bc9cd5d93b73ad7a",
+  "ci": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38125494378",
+  "ci_conclusion": "SUCCESS",
+  "unit_tests": "5/5 pass",
+  "artifact_id": 11697435506,
+  "artifact_zip_sha256": "86ce4fe494614aedfc3a316af9e2da65dc5149715321303b181656e67dad5616",
+  "json_sha256": "1b1ca0b567d3bb35164ba007dee48e5ffe1470f79bff627efc1a4df754216151",
+  "official_input": "Binance daily spot 1m archives with publisher SHA256, staged in 60h contiguous causal windows, actual production D0/D1",
+  "selection": "Known future 2x first-cross 20 events and follow-on 5x TNSR; hindsight-selected exposed diagnostic and NOT independent/unbiased or broad-market validation",
+  "total_event_cases": 21,
+  "unique_two_x_events": 20,
+  "additional_same_underlying_symbol_tnsr_five_x": 1,
+  "status": {
+    "complete": 21,
+    "censored": 0
+  },
+  "all21": {
+    "watch_before_1m_cross": 14,
+    "watch_after_1m_cross": 1,
+    "no_watch": 6
+  },
+  "unique2x": {
+    "watch_before_1m_cross": 13,
+    "watch_after_1m_cross": 1,
+    "no_watch": 6,
+    "median_early_watch_lead_minutes": 114
+  },
+  "cases": [
+    {
+      "baseline_date": "2025-11-17",
+      "symbol": "DYMUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 206,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2025-11-17",
+      "symbol": "TNSRUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 38,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2025-11-17",
+      "symbol": "TNSRUSDT",
+      "threshold_x": 5,
+      "lead_minutes": 360,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-02-17",
+      "symbol": "ENSOUSDT",
+      "threshold_x": 2,
+      "lead_minutes": null,
+      "classification": "NO_WATCH"
+    },
+    {
+      "baseline_date": "2026-05-17",
+      "symbol": "EDENUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 85,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-05-17",
+      "symbol": "FIDAUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 301,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-08-17",
+      "symbol": "ENAUSDT",
+      "threshold_x": 2,
+      "lead_minutes": null,
+      "classification": "NO_WATCH"
+    },
+    {
+      "baseline_date": "2026-08-17",
+      "symbol": "HEMIUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 114,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-08-17",
+      "symbol": "ONGUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 345,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-08-17",
+      "symbol": "STXUSDT",
+      "threshold_x": 2,
+      "lead_minutes": null,
+      "classification": "NO_WATCH"
+    },
+    {
+      "baseline_date": "2026-08-17",
+      "symbol": "TRUMPUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 40,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-08-17",
+      "symbol": "TUTUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 183,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-09-17",
+      "symbol": "ARUSDT",
+      "threshold_x": 2,
+      "lead_minutes": -18,
+      "classification": "LATE"
+    },
+    {
+      "baseline_date": "2026-09-17",
+      "symbol": "CELRUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 312,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-09-17",
+      "symbol": "GUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 112,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-09-17",
+      "symbol": "MUBARAKUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 76,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-09-17",
+      "symbol": "NILUSDT",
+      "threshold_x": 2,
+      "lead_minutes": null,
+      "classification": "NO_WATCH"
+    },
+    {
+      "baseline_date": "2026-09-17",
+      "symbol": "ONEUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 211,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-09-17",
+      "symbol": "PHAUSDT",
+      "threshold_x": 2,
+      "lead_minutes": 7,
+      "classification": "EARLY"
+    },
+    {
+      "baseline_date": "2026-09-17",
+      "symbol": "SAGAUSDT",
+      "threshold_x": 2,
+      "lead_minutes": null,
+      "classification": "NO_WATCH"
+    },
+    {
+      "baseline_date": "2026-09-17",
+      "symbol": "ZAMAUSDT",
+      "threshold_x": 2,
+      "lead_minutes": null,
+      "classification": "NO_WATCH"
+    }
+  ],
+  "proxy_24h_2x_only": {
+    "evaluable": 14,
+    "positive": 10,
+    "negative": 4,
+    "median_pct": 19.6090775,
+    "sum_assumed_30usdt_pnl_usdt": 226.570783,
+    "hindsight_selected": true
+  },
+  "key_tnsr": {
+    "first_two_x_cross": "2025-11-19T13:02:00Z",
+    "first_two_x_watch": "2025-11-19T12:24:00Z",
+    "early_lead_min": 38,
+    "first_five_x_cross": "2025-11-20T12:12:00Z",
+    "first_five_x_watch": "2025-11-20T06:12:00Z",
+    "five_x_follow_on_lead_min": 360,
+    "first_two_x_24h_proxy_net_pct": 394.454263,
+    "warning": "TNSR 2x and 5x studies overlap on the same underlying asset and must not be treated as independent portfolio trades"
+  },
+  "limitations": [
+    "All 2x events selected from future known 1h outcome labels; event-aligned timing is hindsight sample design",
+    "24h cost uses assumed 10bps fee plus 20bps slippage per side and 30USDT minimum historical minute quote, no L2 orderbook, no executable fills",
+    "Event-aligned 12h surrounding each future cross is not a continuous full-market real-time scan, cannot claim measured broad-market recall",
+    "Source missing/unsupported symbols are outside this known-winner subset, and symbol 5x follow-on overlaps its earlier 2x setup"
+  ],
+  "valid_profit_model": false,
+  "other_ai_review_done": false,
+  "mac_deployed": false,
+  "real_gmail": false,
+  "production_trading": "NO_GO"
+}
