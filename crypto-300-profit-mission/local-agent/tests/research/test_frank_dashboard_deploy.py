@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import importlib.util
-import io
 import json
 from pathlib import Path
 import subprocess
@@ -35,7 +34,7 @@ def sample_root(tmp_path, version):
 def fake_remote(monkeypatch, altered=None):
     def read(url, timeout=None):
         name=url.split("/mission_control/")[-1]
-        assert url.split("/")[4] == app.COMMIT
+        assert url.split("/")[5] == app.COMMIT
         assert name in app.PATCHES
         data=git_blob(app.PATCHES[name]["target"])
         if altered==name:
