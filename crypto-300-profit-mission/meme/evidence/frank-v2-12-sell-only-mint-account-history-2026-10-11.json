@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "read_date_bangkok": "2026-10-11",
+  "frank_wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+  "local_oldest_indexed_signature_time_utc": "2026-10-02T22:54:44Z",
+  "source": "Alchemy Solana getSignaturesForAddress on exact owner token account, finalized, paginated in limited batches",
+  "scope": "12 mints with locally recognized SELL but no locally recognized BUY in Mac 78-event history",
+  "count": 12,
+  "accounts_with_transactions_before_local_index_start": 10,
+  "accounts_without_preindex_activity_found": 2,
+  "important": "Pre-index signatures prove earlier token-account activity only, NOT necessarily market buys or token acquisition costs. Accounts without pre-index proof require in-window transfer/delegate/event analysis; historical index completeness remains unverified.",
+  "high_value_bpxx": {
+    "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+    "historical_signed_sale_events": 4,
+    "local_gross_usdc_sell_proceeds": "1028942.996687",
+    "direct_finalized_early_transaction": {
+      "signature": "3knjrZuSocitUtSunifVFy1V1mYyAzz7NLJUf96Kqg77T85x4wU8wkoHSWBxPKh22xhBAGpCewARmHksQJABGXVU",
+      "block_time_utc": "2026-10-03T11:25:51Z",
+      "slot": 452919433,
+      "frank_owned_balance_pre_raw": "1001346785078260",
+      "frank_owned_balance_post_raw": "1001347556621590",
+      "decimals": 9,
+      "frank_was_signer": false,
+      "source_signers": [
+        "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+        "CEHjPuJVCWvwG5xcT5vrWv9ivb8c36kFpSWKD8jCWrt9"
+      ],
+      "confirmed_nonmarket_inbound_raw": "771543330"
+    },
+    "cost_basis": "NOT_VERIFIED"
+  },
+  "j7_specific_source_proof": "meme/evidence/frank-v2-j7-onchain-three-transfer-origin-2026-10-11.json",
+  "records": [
+    {
+      "mint": "31k88G5Mq7ptbRDf3AM13HAq6wRQHXHikR8hik7wPygk",
+      "token_account": "GzYbdwTGmqe5mhNgeu1Y2DD8PkKYayoQAT5krELB5EbG",
+      "earliest_observed_utc": "2026-10-01T15:30:16Z",
+      "signatures_reviewed_at_least": 4,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "5PiBn5JdjJDnRGziiSfsu2affgBR3DyTTCR3CHpcode",
+      "token_account": "FeXhhTUXG745D4BgU77ofqWMeEzbrRXZnCJhkhYqR3jb",
+      "earliest_observed_utc": "2026-10-02T16:05:58Z",
+      "signatures_reviewed_at_least": 2,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "6e8LLHkqCTa4mzGuL1PoUxSfeHmDeceJ3DaJSSUNg937",
+      "token_account": "7aRyKNk66cqpPzaTBDij43byNyKVgC436w34JHht2Gb7",
+      "earliest_observed_utc": "2026-10-02T16:22:42Z",
+      "signatures_reviewed_at_least": 3,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "7KEPApdbBMByrmqihz3bht2uMhFQcatjfSFQCKq66kH3",
+      "token_account": "DVkYDJKQ9i1QQMHsgwBKRi5fqVycvYkwYny6bD2FawmX",
+      "earliest_observed_utc": "2026-10-02T16:18:28Z",
+      "signatures_reviewed_at_least": 3,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "8dBnKHwNYH3hz2fFTJczVwzBTpJFAMtc53k3uA4zpump",
+      "token_account": "93qZdBKeHDEfjj5S2HbruEi5nwXqkYTctYwuFAyMAkVn",
+      "earliest_observed_utc": "2026-10-02T16:43:36Z",
+      "signatures_reviewed_at_least": 2,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF",
+      "token_account": "He6xeyX27KH3jFeqBYzEoP5fhwyGtqxXu4yc5XcsDqzc",
+      "earliest_observed_utc": "2026-10-02T21:25:14Z",
+      "signatures_reviewed_at_least": 2,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+      "token_account": "5WnoYgzTcSXVLfnGWNhYiZGYwSFk7PgBF6SUEHS1q6Qq",
+      "earliest_observed_utc": "2026-09-26T08:58:06Z",
+      "signatures_reviewed_at_least": 24,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "EFn88CiiFHhihqdr1Y11XBDxbbYarBf1ij92DsrigYwR",
+      "token_account": "5D91uUNoTqy337wjFxr1R9gZnwq6d5CuwPJeQ9oLtZvH",
+      "earliest_observed_utc": "2026-10-06T20:23:18Z",
+      "signatures_reviewed_at_least": 6,
+      "pre_local_index_tx_seen": false,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "GZw7LxHtQKSQ1YsGnpNH7SovnBF8X6poYgavHwrmRekp",
+      "token_account": "6JcLVdUX1V86SdxRtUiiTDh78D7Kb699FDwo57WgX1g6",
+      "earliest_observed_utc": "2026-10-02T16:12:55Z",
+      "signatures_reviewed_at_least": 3,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "GoADAwux19tGxb3W4ykPzZz8p5JCSYaxBRpuW7s9pump",
+      "token_account": "3VHDNtApjrasS2sRLXZSDHZ6ahE8yyZvbqzJ1jSshtbU",
+      "earliest_observed_utc": "2026-10-01T21:33:17Z",
+      "signatures_reviewed_at_least": 2,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
+      "token_account": "FjESMbdMaDapesMo889siXL1oQmgvQz8wsLTnHKeTNem",
+      "earliest_observed_utc": "2026-10-09T00:29:20Z",
+      "signatures_reviewed_at_least": 17,
+      "pre_local_index_tx_seen": false,
+      "trade_acquisition_cost_verified": false
+    },
+    {
+      "mint": "wdysfTqUsJ8qAVB1796BXgGisThoBzu1keQmdgswdyt",
+      "token_account": "G5GCbtGPu7V2dGCbXsoN8ET1JZqMX5N7uZniYitSWw8e",
+      "earliest_observed_utc": "2026-10-02T20:09:37Z",
+      "signatures_reviewed_at_least": 2,
+      "pre_local_index_tx_seen": true,
+      "trade_acquisition_cost_verified": false
+    }
+  ]
+}
