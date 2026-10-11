@@ -45,6 +45,7 @@ def export_signature_evidence(path: Path, *, person_id: str = "frank") -> dict:
             "WHERE person_id=? ORDER BY block_time,signature", (person_id,))
         records = []
         by_class = Counter()
+        provenance = Counter()
         seen = set()
         for row in cursor:
             if len(records) >= MAX_SIGNATURES:
@@ -62,6 +63,21 @@ def export_signature_evidence(path: Path, *, person_id: str = "frank") -> dict:
             flows = _public_rows(evidence.get("wallet_token_transfer_flows"), FLOW_FIELDS)
             deltas = _public_rows(evidence.get("token_balance_deltas"), DELTA_FIELDS)
             deltas = [x for x in deltas if x.get("wallet_owned") is True]
+            provenance["signature_rows"] += 1
+            provenance["signature_rows_with_parsed_counterparty_flows"] += bool(flows)
+            provenance["wallet_owned_delta_rows"] += bool(deltas)
+            meaningful = [
+                x for x in deltas if
+                isinstance(x.get("delta"), str)
+                and x["delta"].lstrip("-").isascii()
+                and x["delta"].lstrip("-").isdecimal()
+                and int(x["delta"]) != 0
+            ]
+            provenance["nonzero_wallet_delta_signature_rows"] += bool(meaningful)
+            provenance["passive_nonzero_delta_without_parsed_counterparty"] += (
+                classification == "PASSIVE_TRANSFER" and
+                not flows and bool(meaningful)
+            )
             records.append({
                 "signature": signature, "block_time": row["block_time"],
                 "slot": evidence.get("slot"),
@@ -72,6 +88,11 @@ def export_signature_evidence(path: Path, *, person_id: str = "frank") -> dict:
                 "mechanical_classification": evidence.get("mechanical_classification"),
                 "tx_err": evidence.get("tx_err"),
                 "transfer_flows": flows,
+                "counterparty_attribution_status": (
+                    "PARSED_TOKEN_ACCOUNT_FLOW" if flows else
+                    "BALANCE_DELTA_ONLY_COUNTERPARTY_UNRESOLVED" if meaningful else
+                    "NO_NONZERO_TOKEN_DELTA_PROVEN"
+                ),
                 "wallet_owned_token_deltas": deltas,
                 "raw_transaction_sha256": evidence.get("raw_transaction_sha256"),
                 "normalizer_version": evidence.get("parser_version"),
@@ -83,6 +104,9 @@ def export_signature_evidence(path: Path, *, person_id: str = "frank") -> dict:
             "source_scope": SOURCE_SCOPE,
             "record_count": len(records),
             "local_classifications": dict(sorted(by_class.items())),
+            "source_attribution_coverage": dict(sorted(provenance.items())),
+            "all_counterparties_verified": (
+                provenance["passive_nonzero_delta_without_parsed_counterparty"] == 0),
             "source_evidence_includes_untraded_transfers": True,
             "chain_history_complete": False,
             "pnl_verified": False,
