@@ -51,8 +51,17 @@ def get_day(symbol,day,download=source.read_url):
             time.sleep(1+attempt)
 
 
-def run_symbol(symbol,download=source.read_url):
-    days=[DAY+timedelta(days=i) for i in (-1,0,1)]
+def run_symbol(symbol,download=source.read_url,calendar_day=None,calendar_anchor=None):
+    """Reuse identical Stage12 production D0/D1 scoring for frozen new dates.
+
+    Calendar parameters select only WHICH historical bars to fetch, not model
+    thresholds, outcome labels, entry/exit or treatment of missing sources.
+    """
+    day = DAY if calendar_day is None else calendar_day
+    anchor = ANCHOR if calendar_anchor is None else calendar_anchor
+    if replay.parse_ms(anchor) != replay.parse_ms(day.isoformat()+"T12:00:00Z"):
+        raise ValueError("INVALID_CALENDAR_ANCHOR")
+    days=[day+timedelta(days=i) for i in (-1,0,1)]
     raw=[]
     proof=[]
     try:
@@ -61,12 +70,12 @@ def run_symbol(symbol,download=source.read_url):
             raw.extend(rows)
             proof.append(detail)
         bars=raw[360:3960]
-        start=replay.parse_ms(ANCHOR)-30*3600_000
+        start=replay.parse_ms(anchor)-30*3600_000
         if len(bars)!=3600 or any(x[0]!=start+i*60_000 for i,x in enumerate(bars)):
             raise ValueError("INCOMPLETE_60H_REAL_ARCHIVE")
         obj={"symbol":symbol,"venue":"spot",
              "cohort":"STAGE12_PREREG_ALL_CURRENT_SPOT_USDT_CALENDAR",
-             "old_watch_utc":ANCHOR}
+             "old_watch_utc":anchor}
         case=replay.replay_case(obj,bars,include_zero_trade_ticks=True)
         profits=[]
         trade_states=Counter()
