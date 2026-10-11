@@ -1,0 +1,287 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "network": "bnb-mainnet",
+  "scope": "Exact 2 selected BSC token CAs IFML and Lobster; every ERC20 inbound/outbound with cursor to exhaustion, not entire wallet history",
+  "directions": [
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "dir": "in",
+      "pages": 2,
+      "complete": true,
+      "events": [
+        {
+          "block": 73336279,
+          "hash": "0xc0d75250a3970809e6a1e1287609cac4be09e59bf3ebe9b5016b1c1c38211653",
+          "id": "0xc0d75250a3970809e6a1e1287609cac4be09e59bf3ebe9b5016b1c1c38211653:log:789",
+          "raw": "36883643467552719000000000",
+          "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        },
+        {
+          "block": 73338992,
+          "hash": "0xfcee8bad9a488e0c0c46052903cc96ce52758ca46b6943a22edbe324add8007d",
+          "id": "0xfcee8bad9a488e0c0c46052903cc96ce52758ca46b6943a22edbe324add8007d:log:10",
+          "raw": "13763332025106610000000000",
+          "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        },
+        {
+          "block": 73658894,
+          "hash": "0x06173cdf3a8de2596440e8cf370324c15b3dd4fe1428b62925a58515d0b840eb",
+          "id": "0x06173cdf3a8de2596440e8cf370324c15b3dd4fe1428b62925a58515d0b840eb:log:108",
+          "raw": "8071344345554309000000000",
+          "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        },
+        {
+          "block": 73658909,
+          "hash": "0xd459f09283165d44a8d1784bd54604fe1f488fd7d176f8efbd1f88b2fb44830f",
+          "id": "0xd459f09283165d44a8d1784bd54604fe1f488fd7d176f8efbd1f88b2fb44830f:log:92",
+          "raw": "9453292053039410252790219",
+          "from": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        },
+        {
+          "block": 73660360,
+          "hash": "0x6ffb6389c7d24e708e40aef7fd5270f43e6ba67f3808727df4afb720f48c0804",
+          "id": "0x6ffb6389c7d24e708e40aef7fd5270f43e6ba67f3808727df4afb720f48c0804:log:22",
+          "raw": "586435579763265038773477",
+          "from": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        },
+        {
+          "block": 74360480,
+          "hash": "0x54bf67f75ad4edf7376877aed21ef59b076a17be18330e83d394d482cfd54e05",
+          "id": "0x54bf67f75ad4edf7376877aed21ef59b076a17be18330e83d394d482cfd54e05:log:6",
+          "raw": "152241093285911316311916",
+          "from": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        },
+        {
+          "block": 74460512,
+          "hash": "0xb19db9769e263071ebaa9a90d452aaac86cbc5ee5dcceae954996a334e1b8246",
+          "id": "0xb19db9769e263071ebaa9a90d452aaac86cbc5ee5dcceae954996a334e1b8246:log:3",
+          "raw": "196814410022627640097170",
+          "from": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        },
+        {
+          "block": 74473636,
+          "hash": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a",
+          "id": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a:log:983",
+          "raw": "91088412526212094717943",
+          "from": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        },
+        {
+          "block": 74473637,
+          "hash": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad",
+          "id": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad:log:61",
+          "raw": "89736767273195553619223",
+          "from": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        }
+      ],
+      "total_raw": "69287928154124259896309948"
+    },
+    {
+      "token": "我踏马来了",
+      "contract": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "dir": "out",
+      "pages": 3,
+      "complete": true,
+      "events": [
+        {
+          "block": 73336473,
+          "hash": "0xe9164404de7eeed8fab3c8c114de3d795bd06763f302dca59c7128f4d53dde61",
+          "id": "0xe9164404de7eeed8fab3c8c114de3d795bd06763f302dca59c7128f4d53dde61:log:25",
+          "raw": "18415563331780014000000000",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+        },
+        {
+          "block": 73336724,
+          "hash": "0xa4ef9760f32487730a0698c1b6d05553775340c39eb4e57494ee24de89a433b1",
+          "id": "0xa4ef9760f32487730a0698c1b6d05553775340c39eb4e57494ee24de89a433b1:log:511",
+          "raw": "4617020033943176000000000",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+        },
+        {
+          "block": 73336790,
+          "hash": "0xb42d32d5fc4dcbe447142d22a05271b4939c18c1bc0d953484d8b5b13f595982",
+          "id": "0xb42d32d5fc4dcbe447142d22a05271b4939c18c1bc0d953484d8b5b13f595982:log:17",
+          "raw": "6925530050914764000000000",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+        },
+        {
+          "block": 73350171,
+          "hash": "0x27288328876ed0bde49e35a99e2353210f0df8fd0c81fbd82e68bae1733244e6",
+          "id": "0x27288328876ed0bde49e35a99e2353210f0df8fd0c81fbd82e68bae1733244e6:log:6",
+          "raw": "10344431038010687000000000",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+        },
+        {
+          "block": 73473922,
+          "hash": "0x978e3cec0a8e0c59aa973b2f25f7e993e38ff38c59afdabdb20a8a4aad61f2a6",
+          "id": "0x978e3cec0a8e0c59aa973b2f25f7e993e38ff38c59afdabdb20a8a4aad61f2a6:log:444",
+          "raw": "10344431038010688000000000",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+        },
+        {
+          "block": 73658934,
+          "hash": "0xaf0d45f462a469f6fe9f14a595ba6a704d13b57d74cc5833e69b6ec2827fd897",
+          "id": "0xaf0d45f462a469f6fe9f14a595ba6a704d13b57d74cc5833e69b6ec2827fd897:log:41",
+          "raw": "8762318199296859626395109",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+        },
+        {
+          "block": 73658976,
+          "hash": "0x00df97a9523f8ce86272c90473bdafd19deebd2604865c0ee15ecf87285489d4",
+          "id": "0x00df97a9523f8ce86272c90473bdafd19deebd2604865c0ee15ecf87285489d4:log:20",
+          "raw": "4253981423867734613755598",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+        },
+        {
+          "block": 73659187,
+          "hash": "0xf9afe2d80fbec8a3fe812d5b202fc5f6295bc1e6842f2c719fcd48142010276a",
+          "id": "0xf9afe2d80fbec8a3fe812d5b202fc5f6295bc1e6842f2c719fcd48142010276a:log:868",
+          "raw": "2254168387714562506319756",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+        },
+        {
+          "block": 73689258,
+          "hash": "0x833262d874218a200b39312eb0550d44a53bf6af033adb23a03cbb066eae4844",
+          "id": "0x833262d874218a200b39312eb0550d44a53bf6af033adb23a03cbb066eae4844:log:9",
+          "raw": "2840603967477827545093233",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+        },
+        {
+          "block": 74377785,
+          "hash": "0x75865523c9c26955cc769b4c11f0fe14ac0c77e9f945d954338826e3ddb6347b",
+          "id": "0x75865523c9c26955cc769b4c11f0fe14ac0c77e9f945d954338826e3ddb6347b:log:56",
+          "raw": "152241093285911316311916",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+        },
+        {
+          "block": 74468389,
+          "hash": "0xaf25e6a23743c25bae818e760f16919fc7d1617451a34470e1f93fe7999a762e",
+          "id": "0xaf25e6a23743c25bae818e760f16919fc7d1617451a34470e1f93fe7999a762e:log:459",
+          "raw": "196814410022627640097170",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+        },
+        {
+          "block": 74473641,
+          "hash": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e",
+          "id": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e:log:102",
+          "raw": "180825179799407648337166",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+        }
+      ],
+      "total_raw": "69287928154124259896309948"
+    },
+    {
+      "token": "龙虾",
+      "contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "dir": "in",
+      "pages": 1,
+      "complete": true,
+      "events": [
+        {
+          "block": 83635776,
+          "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+          "id": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12:log:3",
+          "raw": "99069253510299993000000000",
+          "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        },
+        {
+          "block": 83792918,
+          "hash": "0xced27dd146159a8a34130a4e8e64bddd642c28773cc1514ad7ed5175c8529050",
+          "id": "0xced27dd146159a8a34130a4e8e64bddd642c28773cc1514ad7ed5175c8529050:log:3",
+          "raw": "195581662531433206271053",
+          "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127"
+        }
+      ],
+      "total_raw": "99264835172831426206271053"
+    },
+    {
+      "token": "龙虾",
+      "contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "dir": "out",
+      "pages": 1,
+      "complete": true,
+      "events": [
+        {
+          "block": 83635800,
+          "hash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+          "id": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219:log:170",
+          "raw": "99069253510299993000000000",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
+        },
+        {
+          "block": 84007473,
+          "hash": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8",
+          "id": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8:log:850",
+          "raw": "195581662531433206271053",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
+        }
+      ],
+      "total_raw": "99264835172831426206271053"
+    }
+  ],
+  "cohorts": [
+    {
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "in_events": 9,
+      "out_events": 12,
+      "in_raw": "69287928154124259896309948",
+      "out_raw": "69287928154124259896309948",
+      "net_raw": "0",
+      "closed": true,
+      "buy_first_block": 73336279,
+      "sell_last_block": 74473641,
+      "distinct_tx": 21,
+      "distinct_blocks": 21,
+      "source_fully_paginated": true
+    },
+    {
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "in_events": 2,
+      "out_events": 2,
+      "in_raw": "99264835172831426206271053",
+      "out_raw": "99264835172831426206271053",
+      "net_raw": "0",
+      "closed": true,
+      "buy_first_block": 83635776,
+      "sell_last_block": 84007473,
+      "distinct_tx": 4,
+      "distinct_blocks": 4,
+      "source_fully_paginated": true
+    }
+  ],
+  "errors": [],
+  "production": "NO_GO",
+  "limitations": [
+    "Tokens held without transfer within other contracts or untracked CAs not included",
+    "Closed inventory does not prove profitable BNB or USDT settlement",
+    "Signatures, success receipts and internal router proceeds must be checked separately"
+  ]
+}
