@@ -123,65 +123,129 @@
       "receipt_gas_wei": "55358600000000",
       "raw_tx_parsed": true,
       "receipt_truncated": true
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "我踏马来了",
       "block": 73540898,
       "hash": "0xe233c94baee5f6c6a7275013fb13cf9304235fcf28ce3241847548bef8b2dfe4",
       "dir": "in",
-      "wallet_block_native_delta_wei": "-10060696799999998"
+      "wallet_block_native_delta_wei": "-10060696799999998",
+      "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "signed_by_wallet": true,
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_native_input_wei": "10000000000000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "raw_tx_parsed": true,
+      "receipt_truncated": true
     },
     {
       "token": "我踏马来了",
       "block": 73672622,
       "hash": "0xbea723be6c07eaa73c12a56f804d1f067675b02b5134f8244c80ed2373c9251f",
       "dir": "out",
-      "wallet_block_native_delta_wei": "842670179564270327"
+      "wallet_block_native_delta_wei": "842670179564270327",
+      "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "signed_by_wallet": true,
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_native_input_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "raw_tx_parsed": true,
+      "receipt_truncated": true
     },
     {
       "token": "龙虾",
       "block": 83635788,
       "hash": "0xb76c737c5d71d98fcd09ee74cc3da4f68cc6b9a6fcea262d92faa8ca41bc7a35",
       "dir": "in",
-      "wallet_block_native_delta_wei": "-200034853639999997"
+      "wallet_block_native_delta_wei": "-200034853639999997",
+      "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "signed_by_wallet": true,
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_native_input_wei": "200000000000000000",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": null,
+      "raw_tx_parsed": true,
+      "receipt_truncated": true
     },
     {
       "token": "龙虾",
       "block": 83635915,
       "hash": "0x414995d11592ef55405faa38704a87df531da7afc7d371e05d321eb130ba2cc7",
       "dir": "out",
-      "wallet_block_native_delta_wei": "84725425658214791"
+      "wallet_block_native_delta_wei": "84725425658214791",
+      "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "signed_by_wallet": true,
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_native_input_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "25984080000000",
+      "raw_tx_parsed": true,
+      "receipt_truncated": false
     },
     {
       "token": "龙虾",
       "block": 83635928,
       "hash": "0x30fec9cd883773afc85662fff53991b9e814ce25305b98cacdea1ee84e7735e9",
       "dir": "out",
-      "wallet_block_native_delta_wei": "71102667856300221"
+      "wallet_block_native_delta_wei": "71102667856300221",
+      "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "signed_by_wallet": true,
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_native_input_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "25984080000000",
+      "raw_tx_parsed": true,
+      "receipt_truncated": false
     },
     {
       "token": "龙虾",
       "block": 83635944,
       "hash": "0x3f7c2bf231e4e69ac88a1b22dab8dcaea3735cd974f7644117ea06de95a42626",
       "dir": "out",
-      "wallet_block_native_delta_wei": "70144791353124333"
+      "wallet_block_native_delta_wei": "70144791353124333",
+      "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "signed_by_wallet": true,
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_native_input_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "25984080000000",
+      "raw_tx_parsed": true,
+      "receipt_truncated": false
     },
     {
       "token": "龙虾",
       "block": 83635959,
       "hash": "0x65664bff2ac647e8737ef1f7975bb0301f8362155286fca33df13da5dc8e11a3",
       "dir": "out",
-      "wallet_block_native_delta_wei": "63816889280422858"
+      "wallet_block_native_delta_wei": "63816889280422858",
+      "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "signed_by_wallet": true,
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_native_input_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "25984080000000",
+      "raw_tx_parsed": true,
+      "receipt_truncated": false
     },
     {
       "token": "龙虾",
       "block": 83636000,
       "hash": "0x6e53994782172907d3442e751d1755415a90156a0833dd584a3a00dfeea793cd",
       "dir": "out",
-      "wallet_block_native_delta_wei": "42483261054078016"
-    },
+      "wallet_block_native_delta_wei": "42483261054078016",
+      "original_signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "signed_by_wallet": true,
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_native_input_wei": "0",
+      "receipt_status": "0x1",
+      "receipt_gas_wei": "25984080000000",
+      "raw_tx_parsed": true,
+      "receipt_truncated": false
+    }
+  ],
+  "pending": [
     {
       "token": "龙虾",
       "block": 83636071,
@@ -344,7 +408,7 @@
       "wallet_block_native_delta_wei": "491079605708473115"
     }
   ],
-  "status": "PARTIAL_8_OF_39_ORIGINAL_TX_SIGNER_STATUS_CHECK",
+  "status": "PARTIAL_16_OF_39_ORIGINAL_TX_SIGNER_STATUS_CHECK",
   "caveats": [
     "Original RPC may truncate transaction input or receipt logs; null signer/status are UNVERIFIED not failures or proven success",
     "ERC20 events in successful chain transaction means execution was successful, but direct receipt status is kept null until independently read",
