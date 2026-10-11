@@ -48,60 +48,56 @@
       "balance_before_wei": "15756686919869343015",
       "balance_after_wei": "16735473932596607959",
       "delta_wei": "978787012727264944"
-    }
-  ],
-  "pending_tx": [
+    },
     {
-      "block": 79583894,
       "hash": "0x1ad96bfd805da434e55922c34055aef9daf4ef6ac298038f70f534871a92d6b6",
-      "id": "0x1ad96bfd805da434e55922c34055aef9daf4ef6ac298038f70f534871a92d6b6:log:30",
-      "raw": "0x26339060936659ce3414",
-      "from": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
-      "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "dir": "in"
+      "block": 79583894,
+      "dir": "in",
+      "balance_before_wei": "9599214045938973014",
+      "balance_after_wei": "6599186657258973014",
+      "delta_wei": "-3000027388680000000"
     },
     {
-      "block": 79584140,
       "hash": "0xdc2c0e92a5f8e9a45464c6cad2fd1c5e0748d15dbd114709f0fd41d166e089ae",
-      "id": "0xdc2c0e92a5f8e9a45464c6cad2fd1c5e0748d15dbd114709f0fd41d166e089ae:log:66",
-      "raw": "0x1319c83049b32ce71a0a",
-      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "to": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
-      "dir": "out"
+      "block": 79584140,
+      "dir": "out",
+      "balance_before_wei": "6598677456258973014",
+      "balance_after_wei": "8050816068888624051",
+      "delta_wei": "1452138612629651037"
     },
     {
-      "block": 79584153,
       "hash": "0xe3940f939f64c0812e3e64115ab8b71cf75d595a64d5f1d4d88c4f698552e0dc",
-      "id": "0xe3940f939f64c0812e3e64115ab8b71cf75d595a64d5f1d4d88c4f698552e0dc:log:300",
-      "raw": "0x1319c83049b32ce71a0a",
-      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "to": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
-      "dir": "out"
+      "block": 79584153,
+      "dir": "out",
+      "balance_before_wei": "8050816068888624051",
+      "balance_after_wei": "9495850315496860759",
+      "delta_wei": "1445034246608236708"
     },
     {
-      "block": 114902733,
       "hash": "0x7a75247a0888fd5eb44bebb59a4418a735c8755f2c4d28119d16efa51d560438",
-      "id": "0x7a75247a0888fd5eb44bebb59a4418a735c8755f2c4d28119d16efa51d560438:log:565",
-      "raw": "0x11f79470801182244",
-      "from": "0xfe3c316270b8fd7592b5c08957c127642185a62f",
-      "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "dir": "in"
+      "block": 114902733,
+      "dir": "in",
+      "balance_before_wei": "8680483846494526626",
+      "balance_after_wei": "8680483846494526626",
+      "delta_wei": "0"
     },
     {
-      "block": 115361864,
       "hash": "0x18d2d25689548eabb55ff92ea428f46614d85932105e19ac071ec453b25e8b69",
-      "id": "0x18d2d25689548eabb55ff92ea428f46614d85932105e19ac071ec453b25e8b69:log:201",
-      "raw": "0x65ce05327a83d6ff",
-      "from": "0xfe3c316270b8fd7592b5c08957c127642185a62f",
-      "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
-      "dir": "in"
+      "block": 115361864,
+      "dir": "in",
+      "balance_before_wei": "9698087280892376492",
+      "balance_after_wei": "9698087280892376492",
+      "delta_wei": "0"
     }
   ],
-  "status": "PARTIAL_5_OF_10_NATIVE_BALANCE",
+  "pending_tx": [],
+  "status": "10_OF_10_NATIVE_BLOCKS; QUOTE_SIGNER_RECEIPT_AUDIT_PENDING",
   "production": "NO_GO",
   "caveats": [
     "Open token quantity is not a realized loss nor zero exposure",
     "Native block delta can contain other same-block money movements",
     "Quote ERC20 assets and receipt status pending"
-  ]
+  ],
+  "complete_native_blocks": 10,
+  "native_net_wei": "317210430780095567"
 }
