@@ -134,9 +134,7 @@
       "venue": "PANCAKE_V2",
       "status": "SOURCE_EVENT_UNRESOLVED",
       "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 61)"
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "我踏马来了",
       "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
@@ -145,7 +143,9 @@
       "dir": "out",
       "amount_raw": "2286942506036897227740527",
       "source_peer": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
-      "venue": "PANCAKE_V2"
+      "venue": "PANCAKE_V2",
+      "status": "SOURCE_EVENT_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 59)"
     },
     {
       "token": "我踏马来了",
@@ -155,7 +155,14 @@
       "dir": "out",
       "amount_raw": "2286942506036897227740527",
       "source_peer": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
-      "venue": "PANCAKE_V2"
+      "venue": "PANCAKE_V2",
+      "status": "MATCHED_DIRECT_CHAIN_EVENT",
+      "v2_wbnb_in_wei": "0",
+      "v2_token_in_raw": "2286942506036897227740527",
+      "v2_wbnb_out_wei": "551732410307734461",
+      "v2_token_out_raw": "0",
+      "matches_wallet_token_amount": true,
+      "swap_direction_consistent": true
     },
     {
       "token": "我踏马来了",
@@ -165,7 +172,9 @@
       "dir": "in",
       "amount_raw": "2073172053220606867650188",
       "source_peer": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
-      "venue": "PANCAKE_V2"
+      "venue": "PANCAKE_V2",
+      "status": "SOURCE_EVENT_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 139 column 31)"
     },
     {
       "token": "我踏马来了",
@@ -175,7 +184,14 @@
       "dir": "out",
       "amount_raw": "1036586026610303433825094",
       "source_peer": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
-      "venue": "PANCAKE_V2"
+      "venue": "PANCAKE_V2",
+      "status": "MATCHED_DIRECT_CHAIN_EVENT",
+      "v2_wbnb_in_wei": "0",
+      "v2_token_in_raw": "1036586026610303433825094",
+      "v2_wbnb_out_wei": "523401222145074202",
+      "v2_token_out_raw": "0",
+      "matches_wallet_token_amount": true,
+      "swap_direction_consistent": true
     },
     {
       "token": "我踏马来了",
@@ -185,7 +201,9 @@
       "dir": "out",
       "amount_raw": "1036586026610303433825094",
       "source_peer": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
-      "venue": "PANCAKE_V2"
+      "venue": "PANCAKE_V2",
+      "status": "SOURCE_EVENT_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 57)"
     },
     {
       "token": "龙虾",
@@ -195,7 +213,14 @@
       "dir": "in",
       "amount_raw": "28568451086099504000000000",
       "source_peer": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
-      "venue": "MANAGER2"
+      "venue": "MANAGER2",
+      "status": "MATCHED_DIRECT_CHAIN_EVENT",
+      "manager_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "manager_account": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "manager_amount_raw": "28568451086099504000000000",
+      "manager_curve_cost_wei": "490099009900990090",
+      "manager_base_fee_wei": "4900990099009900",
+      "matches_wallet_token_amount": true
     },
     {
       "token": "龙虾",
@@ -205,8 +230,17 @@
       "dir": "in",
       "amount_raw": "7298344122854683000000000",
       "source_peer": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
-      "venue": "MANAGER2"
-    },
+      "venue": "MANAGER2",
+      "status": "MATCHED_DIRECT_CHAIN_EVENT",
+      "manager_token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "manager_account": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "manager_amount_raw": "7298344122854683000000000",
+      "manager_curve_cost_wei": "294059405940594047",
+      "manager_base_fee_wei": "2940594059405940",
+      "matches_wallet_token_amount": true
+    }
+  ],
+  "pending": [
     {
       "token": "龙虾",
       "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
@@ -278,7 +312,7 @@
       "venue": "PANCAKE_V2"
     }
   ],
-  "state": "8_OF_22_ORIGINAL_RAW_EVENT_PROBES",
+  "state": "15_OF_22_ORIGINAL_RAW_EVENT_PROBES",
   "production": "NO_GO",
   "limitations": [
     "Unmatched event must be preserved and independently resolved, never classified as profitable by assumption"
