@@ -1,0 +1,416 @@
+{
+  "schema": "MONSTER_STAGE12_ACTUAL_CI_504_SPOT_20260917_V1",
+  "source_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38115890710",
+  "ci_commit": "7e4fc8df0902005098d890621fc708b6cc484dfc",
+  "ci_conclusion": "success",
+  "raw_log_one_line_repro": "Read successful CI job frozen-full-current-spot-universe-official-archive-replay and parse line containing STAGE12_SUMMARY",
+  "source": "504 preregistered currently listed spot USDT symbols; official Binance daily 1m ZIP and publisher checksum; 3-day 60h bars; production D0/D1 replay",
+  "classification": "FULL_CURRENT_LISTED_UNIVERSE_ONE_12H_WINDOW",
+  "summary": {
+    "12h_symbol_windows": 487,
+    "assumed_20bps_per_side_net_negative": 4,
+    "assumed_20bps_per_side_net_positive": 2,
+    "assumed_20bps_per_side_net_return_median_pct": -6.396378,
+    "assumed_30usdt_24h_trade_proxy_cases": 6,
+    "assumed_entry_basis_for_watch_pnl": "FIRST_WATCH_PLUS_3MIN_NOT_D1_SETUP",
+    "case_count_executed": 504,
+    "completely_unbiased_false_positive_rate": null,
+    "d1_confirmed_20bps_net_median_pct": -4.066663,
+    "d1_confirmed_20bps_net_negative": 4,
+    "d1_confirmed_20bps_net_positive": 1,
+    "d1_confirmed_30usdt_24h_proxy_cases": 5,
+    "d1_confirmed_censored_24h_proxy_statuses": {
+      "CENSORED_MINUTE_QUOTE_LT_30_USDT": 2
+    },
+    "deployment": "NO_GO",
+    "full_60h_data_cases": 487,
+    "full_universe_attempted": true,
+    "nominal_symbol_hours": 5844,
+    "observed_3m_ticker_proxy_poll_count": 116880,
+    "pre_registered_total": 504,
+    "setup_episodes": 7,
+    "setup_symbol_count": 7,
+    "source_status_counts": {
+      "COMPLETE_60H": 487,
+      "SOURCE_MISSING": 15,
+      "SOURCE_PARTIAL_OR_NONCONTIGUOUS_HISTORICAL_CANDLES": 2
+    },
+    "verified_official_archive_1m_bars": 1753200,
+    "watch_episodes": 9,
+    "watch_symbol_count": 8,
+    "zero_trade_closed_minute_fraction": 0.318472
+  },
+  "signals": [
+    {
+      "24h_assumed_20bps_net_pct": [
+        4.043327
+      ],
+      "d1_queue": {
+        "EVALUATED": 1
+      },
+      "first_watch_utc": "2026-09-17T06:51:00Z",
+      "no_historical_l2_book": true,
+      "polls": 240,
+      "setup_triggered_24h_proxy_20bps": [
+        {
+          "proxy": {
+            "entry_utc": "2026-09-17T07:03:00Z",
+            "exit_utc": "2026-09-18T07:03:00Z",
+            "fee_per_side_bps_assumed": 10,
+            "gross_pct": -3.489235,
+            "historical_book_verified": false,
+            "max_high_excursion_pct": 23.236823,
+            "min_low_excursion_pct": -12.583519,
+            "net_pct": -4.066663,
+            "pnl_usdt_on_30": -1.219999,
+            "slippage_per_side_bps_assumed": 20,
+            "status": "PRICE_PROXY_ONLY"
+          },
+          "setup_utc": "2026-09-17T07:00:00Z"
+        }
+      ],
+      "setups": 1,
+      "signal_is_not_a_buy_order": true,
+      "status": "COMPLETE_60H",
+      "symbol": "AVAUSDT",
+      "trade_proxy_statuses": {
+        "PRICE_PROXY_ONLY": 1
+      },
+      "verified_minute_bars": 3600,
+      "watch_events": 1,
+      "zero_trade_poll_proxy": 0
+    },
+    {
+      "24h_assumed_20bps_net_pct": [],
+      "d1_queue": {
+        "EVALUATED": 1
+      },
+      "first_watch_utc": "2026-09-17T08:06:00Z",
+      "no_historical_l2_book": true,
+      "polls": 240,
+      "setup_triggered_24h_proxy_20bps": [
+        {
+          "proxy": {
+            "status": "CENSORED_MINUTE_QUOTE_LT_30_USDT"
+          },
+          "setup_utc": "2026-09-17T08:12:00Z"
+        }
+      ],
+      "setups": 1,
+      "signal_is_not_a_buy_order": true,
+      "status": "COMPLETE_60H",
+      "symbol": "DGBUSDT",
+      "trade_proxy_statuses": {
+        "CENSORED_ZERO_VOLUME_EXIT": 1
+      },
+      "verified_minute_bars": 3600,
+      "watch_events": 1,
+      "zero_trade_poll_proxy": 44
+    },
+    {
+      "24h_assumed_20bps_net_pct": [
+        -14.107945
+      ],
+      "d1_queue": {
+        "LATE": 1
+      },
+      "first_watch_utc": "2026-09-17T11:39:00Z",
+      "no_historical_l2_book": true,
+      "polls": 240,
+      "setup_triggered_24h_proxy_20bps": [],
+      "setups": 0,
+      "signal_is_not_a_buy_order": true,
+      "status": "COMPLETE_60H",
+      "symbol": "GENIUSUSDT",
+      "trade_proxy_statuses": {
+        "PRICE_PROXY_ONLY": 1
+      },
+      "verified_minute_bars": 3600,
+      "watch_events": 1,
+      "zero_trade_poll_proxy": 90
+    },
+    {
+      "24h_assumed_20bps_net_pct": [],
+      "d1_queue": {
+        "EVALUATED": 1
+      },
+      "first_watch_utc": "2026-09-17T11:39:00Z",
+      "no_historical_l2_book": true,
+      "polls": 240,
+      "setup_triggered_24h_proxy_20bps": [
+        {
+          "proxy": {
+            "status": "CENSORED_MINUTE_QUOTE_LT_30_USDT"
+          },
+          "setup_utc": "2026-09-17T11:42:00Z"
+        }
+      ],
+      "setups": 1,
+      "signal_is_not_a_buy_order": true,
+      "status": "COMPLETE_60H",
+      "symbol": "GLMRUSDT",
+      "trade_proxy_statuses": {
+        "CENSORED_ZERO_VOLUME_NEAR_EXIT": 1
+      },
+      "verified_minute_bars": 3600,
+      "watch_events": 1,
+      "zero_trade_poll_proxy": 10
+    },
+    {
+      "24h_assumed_20bps_net_pct": [
+        -4.304069
+      ],
+      "d1_queue": {
+        "EVALUATED": 1
+      },
+      "first_watch_utc": "2026-09-17T16:03:00Z",
+      "no_historical_l2_book": true,
+      "polls": 240,
+      "setup_triggered_24h_proxy_20bps": [
+        {
+          "proxy": {
+            "entry_utc": "2026-09-17T16:09:00Z",
+            "exit_utc": "2026-09-18T16:09:00Z",
+            "fee_per_side_bps_assumed": 10,
+            "gross_pct": -2.660754,
+            "historical_book_verified": false,
+            "max_high_excursion_pct": 11.973392,
+            "min_low_excursion_pct": -7.538803,
+            "net_pct": -3.243138,
+            "pnl_usdt_on_30": -0.972941,
+            "slippage_per_side_bps_assumed": 20,
+            "status": "PRICE_PROXY_ONLY"
+          },
+          "setup_utc": "2026-09-17T16:06:00Z"
+        }
+      ],
+      "setups": 1,
+      "signal_is_not_a_buy_order": true,
+      "status": "COMPLETE_60H",
+      "symbol": "KSMUSDT",
+      "trade_proxy_statuses": {
+        "PRICE_PROXY_ONLY": 1
+      },
+      "verified_minute_bars": 3600,
+      "watch_events": 1,
+      "zero_trade_poll_proxy": 74
+    },
+    {
+      "24h_assumed_20bps_net_pct": [
+        -8.488688
+      ],
+      "d1_queue": {
+        "EVALUATED": 1
+      },
+      "first_watch_utc": "2026-09-17T13:27:00Z",
+      "no_historical_l2_book": true,
+      "polls": 240,
+      "setup_triggered_24h_proxy_20bps": [
+        {
+          "proxy": {
+            "entry_utc": "2026-09-17T13:33:00Z",
+            "exit_utc": "2026-09-18T13:33:00Z",
+            "fee_per_side_bps_assumed": 10,
+            "gross_pct": -7.248908,
+            "historical_book_verified": false,
+            "max_high_excursion_pct": 9.082969,
+            "min_low_excursion_pct": -8.908297,
+            "net_pct": -7.803841,
+            "pnl_usdt_on_30": -2.341152,
+            "slippage_per_side_bps_assumed": 20,
+            "status": "PRICE_PROXY_ONLY"
+          },
+          "setup_utc": "2026-09-17T13:30:00Z"
+        }
+      ],
+      "setups": 1,
+      "signal_is_not_a_buy_order": true,
+      "status": "COMPLETE_60H",
+      "symbol": "MARSCOINUSDT",
+      "trade_proxy_statuses": {
+        "PRICE_PROXY_ONLY": 1
+      },
+      "verified_minute_bars": 3600,
+      "watch_events": 1,
+      "zero_trade_poll_proxy": 0
+    },
+    {
+      "24h_assumed_20bps_net_pct": [
+        34.420675
+      ],
+      "d1_queue": {
+        "EVALUATED": 2
+      },
+      "first_watch_utc": "2026-09-17T07:42:00Z",
+      "no_historical_l2_book": true,
+      "polls": 240,
+      "setup_triggered_24h_proxy_20bps": [
+        {
+          "proxy": {
+            "entry_utc": "2026-09-17T07:48:00Z",
+            "exit_utc": "2026-09-18T07:48:00Z",
+            "fee_per_side_bps_assumed": 10,
+            "gross_pct": 31.414357,
+            "historical_book_verified": false,
+            "max_high_excursion_pct": 69.864961,
+            "min_low_excursion_pct": -12.224591,
+            "net_pct": 30.6281,
+            "pnl_usdt_on_30": 9.18843,
+            "slippage_per_side_bps_assumed": 20,
+            "status": "PRICE_PROXY_ONLY"
+          },
+          "setup_utc": "2026-09-17T07:45:00Z"
+        }
+      ],
+      "setups": 1,
+      "signal_is_not_a_buy_order": true,
+      "status": "COMPLETE_60H",
+      "symbol": "ONEUSDT",
+      "trade_proxy_statuses": {
+        "OVERLAPPING_24H_HOLD_NO_NEW_POSITION": 1,
+        "PRICE_PROXY_ONLY": 1
+      },
+      "verified_minute_bars": 3600,
+      "watch_events": 2,
+      "zero_trade_poll_proxy": 0
+    },
+    {
+      "24h_assumed_20bps_net_pct": [
+        -13.064053
+      ],
+      "d1_queue": {
+        "EVALUATED": 1
+      },
+      "first_watch_utc": "2026-09-17T09:39:00Z",
+      "no_historical_l2_book": true,
+      "polls": 240,
+      "setup_triggered_24h_proxy_20bps": [
+        {
+          "proxy": {
+            "entry_utc": "2026-09-17T09:45:00Z",
+            "exit_utc": "2026-09-18T09:45:00Z",
+            "fee_per_side_bps_assumed": 10,
+            "gross_pct": -12.770871,
+            "historical_book_verified": false,
+            "max_high_excursion_pct": 14.579136,
+            "min_low_excursion_pct": -17.886099,
+            "net_pct": -13.292766,
+            "pnl_usdt_on_30": -3.98783,
+            "slippage_per_side_bps_assumed": 20,
+            "status": "PRICE_PROXY_ONLY"
+          },
+          "setup_utc": "2026-09-17T09:42:00Z"
+        }
+      ],
+      "setups": 1,
+      "signal_is_not_a_buy_order": true,
+      "status": "COMPLETE_60H",
+      "symbol": "SYNUSDT",
+      "trade_proxy_statuses": {
+        "PRICE_PROXY_ONLY": 1
+      },
+      "verified_minute_bars": 3600,
+      "watch_events": 1,
+      "zero_trade_poll_proxy": 0
+    }
+  ],
+  "excluded_sources": [
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "ADBEBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "AGPUBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "AMCBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "CYPHBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "FWDIBUSDT"
+    },
+    {
+      "error": "ValueError:GAPPED_ARCHIVE_DAY",
+      "status": "SOURCE_PARTIAL_OR_NONCONTIGUOUS_HISTORICAL_CANDLES",
+      "symbol": "GPROBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "HPEBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "HYPEUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "JPMBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "LLYBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "PDDBUSDT"
+    },
+    {
+      "error": "ValueError:GAPPED_ARCHIVE_DAY",
+      "status": "SOURCE_PARTIAL_OR_NONCONTIGUOUS_HISTORICAL_CANDLES",
+      "symbol": "RDDTBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "SECZBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "SHAZBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "USDEBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "WENBUSDT"
+    },
+    {
+      "error": "ValueError:SOURCE_NOT_HISTORICALLY_AVAILABLE_HTTP_404",
+      "status": "SOURCE_MISSING",
+      "symbol": "ZMBUSDT"
+    }
+  ],
+  "quality_limitations": [
+    "SURVIVOR_BIAS_FROM_OCT2026_CURRENT_LISTING_VS_SEP2026_HISTORY",
+    "ONLY_ONE_CALENDAR_DAY_12H",
+    "HISTORICAL_ACTUAL_24HR_TICKERS_NOT_ARCHIVED",
+    "HISTORICAL_ORDERBOOK_NOT_AVAILABLE",
+    "RESEARCH_20BPS_SLIPPAGE_PER_SIDE_AND_10BPS_FEE_SCENARIO",
+    "NOT_OUT_OF_SAMPLE",
+    "CURRENT_D0_NOT_PROFITABLE_VALIDATED"
+  ],
+  "live_state": "NO_GO",
+  "real_mail_sent": false,
+  "frank_modified": false
+}
