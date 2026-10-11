@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "token": "GIGGLE Fund",
+  "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+  "source_file": "BSC_MEME_DDAC_GIGGLE_FULL_ERC20_HISTORY_2026-10-11.json",
+  "full_paginated_transfer_count": 71,
+  "source_funding_peers": {
+    "0x2f7fe96e3d0308cdbf6143e7dc0bb05df73a4a83": {
+      "count": 70,
+      "raw": "1802947193566736067"
+    },
+    "0xb36300a1605bc618a916ad8b86f28b532a81cbfa": {
+      "count": 1,
+      "raw": "84762173679926445"
+    }
+  },
+  "token_raw_received": "1887709367246662512",
+  "token_raw_sold": "0",
+  "token_unclosed": true,
+  "latest_balanceOf_raw": "1887709367246662512",
+  "balance_matches_full_transfer_net": true,
+  "sample": [
+    {
+      "block": 105119593,
+      "hash": "0x4dc9a1a745f91ca189f0c4fb05ad2de6e919c1e9fa5a479d33239e5501314be0",
+      "from": null,
+      "to": "0x27863eda4014c127f3d74d2b0a00ba175d6867d0",
+      "native_delta_wei": "0",
+      "tx_json_truncated": true
+    },
+    {
+      "block": 105251545,
+      "hash": "0x377fc837c4471c9a1d4ae0166962a81d460d7f71edd3299575a54742d683e067",
+      "from": null,
+      "to": "0x27863eda4014c127f3d74d2b0a00ba175d6867d0",
+      "native_delta_wei": "0",
+      "tx_json_truncated": true
+    },
+    {
+      "block": 117554973,
+      "hash": "0x556322d52d00c7aa1bba706af7a37e6096af1a2798cf5898dd9ca92fd8bfc557",
+      "from": "0xdfa06e1f0e3f8ded7edf41673075fdc839d90b68",
+      "to": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "native_delta_wei": "0",
+      "tx_json_truncated": false
+    }
+  ],
+  "conclusion": "No ERC20 GIGGLE token transfers out observed, 71 token transfers in. Source peer is a contract for most, no evidence these are original signed buys or closed profitable trading episodes. Source-native samples have zero BNB delta. This may include reward distribution or external receipts; source operation and origin must not be assumed.",
+  "production": "NO_GO"
+}
