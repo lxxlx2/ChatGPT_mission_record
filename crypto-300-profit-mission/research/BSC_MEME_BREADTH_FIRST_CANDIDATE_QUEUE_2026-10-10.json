@@ -84,7 +84,9 @@
     "BSC_MEME_DDAC_MARSCOIN_FULL_TRANSFER_ANOMALY_2026-10-11.json",
     "BSC_MEME_DDAC_MARSCOIN_29_NATIVE_BLOCK_CASHFLOW_2026-10-11.json",
     "BSC_MEME_DDAC_MARSCOIN_29_TX_SIGNER_RECEIPT_ATTRIBUTION_2026-10-11.json",
-    "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json"
+    "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_18_POOL_TRADE_V2_V3_TAX_AND_QUOTE_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_TX_TWO_PAIR_CLASSIFICATION_FROZEN_2026-10-11.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -1125,7 +1127,7 @@
         "我踏马来了",
         "龙虾"
       ],
-      "current_research_priority": "HIGH_COMPARABLE_TWO_MAJOR_COINS_PLUS_MARS_29_TX_NATIVE_POSITIVE_WITH_UNKNOWN_ERC20_SOURCE; FULL_ROUTE_PNL_AND_GIGGLE_BINANCE_LIFE_PENDING; NO_GO",
+      "current_research_priority": "HIGH_REPEAT_EARLY_MARS_18_OWNER_TRADE_PROOFS_14_V2_PLUS_2_V3_RAW_SWAPS__ROUTER_BNB_EXIT_PNL_UNRESOLVED__GIGGLE_BINANCE_LIFE_NEXT__NO_GO",
       "material_2026_position_proof": {
         "MARSCOIN": {
           "complete_token_transfer_history": true,
@@ -1157,7 +1159,8 @@
         "mars_native_bnb_event_scope_net_wei": "3409712195316107766",
         "status": "NOT_ISOLATED_FINAL_PNL"
       },
-      "latest_mars_research": "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json"
+      "latest_mars_research": "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json",
+      "latest_mars_settlement_source": "BSC_MEME_DDAC_MARSCOIN_18_POOL_TRADE_V2_V3_TAX_AND_QUOTE_RECONCILIATION_2026-10-11.json"
     },
     {
       "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
@@ -1678,6 +1681,8 @@
     "8e6b 32 self-signed token-trade transactions across 3 fully reconciled 2026 major token quantities have +5.437877 BNB aggregate event-block wallet native changes (two positive, one negative), but internal-transaction attribution/finality, controller/followability and further 8-token losses remain unresolved."
   ],
   "next_work_order": [
+    "Complete DDAC GIGGLE and Binance Life original-signature and native settlement scopes before wallet ranking",
+    "Reconcile remaining MARS 2 truncated V2 raw swaps and multi-hop SPCXB/USDT-to-BNB settlement using appropriate original traces; keep fee evidence tiered",
     "Complete DDAC MARSCOIN 19 self-signed transactions quote-asset route and economic cost attribution; retain other-signed/unknown events and token residue",
     "Audit DDAC GIGGLE and Binance Life source-wide cashflow, and reconcile original 19-CA baseline with newly indexed full history",
     "Audit DDAC GIGGLE/MARSCOIN/Binance Life including incoming source and unclosed raw token balances before any wallet ranking",
@@ -1922,13 +1927,28 @@
     "receipt_success_status_explicit": 18,
     "unknown_receipt_header": 11,
     "erc20_inventory_residual_raw": "3050660512775076744",
-    "realized_net_profit": "UNRESOLVED_NON_BNB_COST_AND_ROUTER_ATTRIBUTION",
+    "realized_net_profit": "UNRESOLVED_FINAL_ROUTER_BNB_SETTLEMENT_AND_GAS_TRACE",
     "source_files": [
       "BSC_MEME_DDAC_MARSCOIN_FULL_TRANSFER_ANOMALY_2026-10-11.json",
       "BSC_MEME_DDAC_MARSCOIN_29_NATIVE_BLOCK_CASHFLOW_2026-10-11.json",
       "BSC_MEME_DDAC_MARSCOIN_29_TX_SIGNER_RECEIPT_ATTRIBUTION_2026-10-11.json",
       "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json"
     ],
-    "production": "NO_GO"
+    "production": "NO_GO",
+    "source_frozen_two_pair": "BSC_MEME_DDAC_MARSCOIN_29_TX_TWO_PAIR_CLASSIFICATION_FROZEN_2026-10-11.json",
+    "source_v2_v3_tax": "BSC_MEME_DDAC_MARSCOIN_18_POOL_TRADE_V2_V3_TAX_AND_QUOTE_RECONCILIATION_2026-10-11.json",
+    "owner_active_trade_count": 18,
+    "spcxb_mars_v2_trade_count": 16,
+    "usdt_mars_v3_trade_count": 2,
+    "spcxb_v2_direct_swaps": 14,
+    "spcxb_v2_quote_transfer_fallbacks": 2,
+    "spcxb_v2_3pct_token_tax_all_14_direct_swaps": true,
+    "usdt_v3_direct_swaps": 2,
+    "usdt_v3_token_transfer_tax": "0% on both observed source trades",
+    "usdt_v3_fee_tier_ppm": 10000,
+    "nonpool_owner_receipt": 1,
+    "nonowner_or_unknown_signer_nonpool_inbound": 10,
+    "current_mars_raw": "3050660512775076744",
+    "current_mars_balance_eth_call": "CONFIRMED_LATEST"
   }
 }
