@@ -235,3 +235,11 @@ Full source-backed report: `BSC_MEME_ADDRESS_MODEL_3_DDAC_MARS_GIGGLE_BINANCE_LI
 - The derived 4-wallet x 19 selected CA coverage matrix and 23-candidate queue were corrected with previous/new transfer counts and source-grade splits. Date-scoped historic snapshot remains untouched. Current state **OBSERVE_ONLY / NO_GO**; no local process, alert, email or trade changed.
 - Next: verify 9D1240 additional Binance Life and 239E 牛来, DDAC historical router quote traces and remaining other-signed distributions, then independently review a fully-paginated unbiased 23-wallet x 19-CA census before ranking addresses or starting out-of-sample replay.
 
+## 2026-10-11 address model 3: 9D Binance Life and 239E NiuLai passive evidence
+
+New evidence: `BSC_MEME_9D_BINANCE_LIFE_239E_NIULAI_PASSIVE_TRANSFER_CONTROL_2026-10-11.json`.
+
+- 9D1240 币安人生 first token transfer was in a successful tx originally signed by `0x679d8a...a0632` (other EOA) with zero owner native delta, followed by a wallet-signed successful exit associated with +0.006324727789539559 BNB owner native block delta. This **cannot be counted as an independently self-funded early buy**, despite token inventory closure.
+- 239E 牛来: all exact CA transfer history in 1, out 0; single transaction `0xac91b28e4e2833977db23172cc3a6020b66adf261251cf038331d952b8ff8808` block 116507952, sender of token Transfer `0x803b...`, success receipt, owner native BNB block change 0. `eth_call(balanceOf)` currently confirms raw holdings 16939109060931901978. Original transaction signer unreadable due to truncation; **no owner buy or realized sale proven**.
+- Updated candidate queue distinguishes passive/third-party signed inputs from actual self-initiated buys. Required follow-up: comprehensive 23x19 historical fixed-CA, cursor-complete audit with original signatures, route prices and out-of-sample market-wide opportunity denominator. `NO_GO` remains.
+
