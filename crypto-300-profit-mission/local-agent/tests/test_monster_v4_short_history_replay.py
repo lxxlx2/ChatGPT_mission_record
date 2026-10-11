@@ -45,7 +45,7 @@ class ShortHistoryReplayTests(unittest.TestCase):
         for i,item in enumerate(src["bars"]):
             t=item[0]
             if t in times:
-                src["bars"][i][4]="999999"
+                src["bars"][i][5]=str(float(item[5])+1.0)
                 break
             times[t]=i
         else:
