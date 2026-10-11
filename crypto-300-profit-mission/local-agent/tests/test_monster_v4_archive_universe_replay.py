@@ -67,6 +67,15 @@ class FullMarketArchiveReplayTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"NOT_A_MANIFEST_SUBSET"):
             m.run(["FAKEUSDT"],max_workers=1,worker=result)
 
+    def test_official_verified_but_incomplete_archive_day_is_censored_not_a_false_zero(self):
+        from unittest.mock import patch
+        with patch.object(m.source,"extract_verified_archive",
+                          side_effect=ValueError("GAPPED_ARCHIVE_DAY")):
+            actual=m.run_symbol("LTCUSDT",download=synthetic_downloader)
+        self.assertEqual(actual["status"],
+                         "SOURCE_PARTIAL_OR_NONCONTIGUOUS_HISTORICAL_CANDLES")
+        self.assertNotIn("watch_events",actual)
+
     def test_tampered_checksum_blocks_scoring(self):
         def forged(url,max_bytes=m.source.MAX_ZIP_BYTES):
             if url.endswith(".CHECKSUM"):
