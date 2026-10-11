@@ -93,3 +93,37 @@ def test_actual_mac_1720_signature_archive_replays_to_224_scoped_mints():
     assert by_mint[J7]["signature_observed_out_raw"] == "12508217470763"
     assert by_mint[J7]["sender_cost_basis_usd"] is None
     assert all(row["is_follow_signal"] is False for row in merged["rows"])
+
+
+def test_real_j7_ata_evidence_joins_main_wallet_archive_without_relabeling_buy():
+    from mission_agent.mission_control.ata_backfill import (
+        TOKEN_2022, derive_ata
+    )
+    root = Path(__file__).resolve().parents[4]
+    evidence_file = (root / "crypto-300-profit-mission" / "meme" / "evidence" /
+                     "frank-v2-ata-j7-and-five-account-chain-verification-2026-10-11.json")
+    documented = json.loads(evidence_file.read_text())
+    j7 = documented["j7"]
+    associated, _ = derive_ata(documented["frank_wallet"], j7["mint"], TOKEN_2022)
+    assert associated == j7["canonical_token2022_ata"]
+    assert j7["ata_successful_signatures"] == 4
+    assert j7["ata_failed_signatures"] == 13
+    rows = []
+    manifest = json.loads(_git(
+        f"{FRANK_PREFIX}/frank-transfer-history/{SNAPSHOT}.json"))
+    for part in manifest["parts"]:
+        packet = json.loads(_git(
+            f"{FRANK_PREFIX}/frank-transfer-history/{SNAPSHOT}/{part['file']}"))
+        rows.append(base64.b64decode(packet["payload_b64"]))
+    signatures = {x["signature"] for x in json.loads(b"".join(rows))["records"]}
+    found_in_owner_index, outside_owner_index = [], []
+    for transfer in j7["successful_receipts"]:
+        signature = transfer["signature"]
+        if signature in signatures:
+            found_in_owner_index.append(signature)
+        else:
+            outside_owner_index.append(signature)
+    assert len(found_in_owner_index) == 1
+    assert len(outside_owner_index) == 2
+    assert j7["newly_recovered_qty"] == "9661379.420528"
+    assert j7["source_cost_status"] == "UNVERIFIED"
