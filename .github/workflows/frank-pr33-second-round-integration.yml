@@ -5,7 +5,7 @@ on:
     branches:
       - review/frank-pr33-second-round-matrix-20261012
     paths:
-      - '.github/workflows/frank-pr31-pr32-pr33-integration.yml'
+      - '.github/workflows/frank-pr33-second-round-integration.yml'
       - 'crypto-300-profit-mission/meme/FRANK_PR31_PR32_PR33_INTEGRATION_2026-10-11.md'
   workflow_dispatch:
 
