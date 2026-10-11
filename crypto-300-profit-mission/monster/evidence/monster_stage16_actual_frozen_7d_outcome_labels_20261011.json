@@ -1,0 +1,267 @@
+{
+  "schema": "MONSTER_STAGE16_FROZEN_7D_2X5X10X_OFFICIAL_1H_ACTUAL_CI_V1",
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38125112694",
+  "conclusion": "SUCCESS_ALL_FIVE_JOBS",
+  "run_commit": "8d9dbfaf2a3747367eb16c1eca2a84569c8da8ba",
+  "universe_sha256": "0c2604d838fc3d7c28d0e8819fde1bb42deb6fb22360182a49c1b82bb6d25348",
+  "universe_size": 758,
+  "baseline": "UTC 06:00 first 1h OPEN on each frozen day",
+  "horizon_hours": 168,
+  "data_source": "Official Binance spot monthly 1h ZIP, SHA256 publisher checksum verified, 2025+ microseconds normalized",
+  "per_date": [
+    {
+      "date": "2025-11-17",
+      "artifact_id": 11696614152,
+      "zip_sha256": "96816a658ecf3931a913f9fea29e1d9a96bceb63bfa6088bb360ee8779f4a53e",
+      "json_sha256": "afa9777cd84471218b0c023e1f856921e98129b509ed4a98ed10a1c8acdaaf3b",
+      "valid": 439,
+      "missing": 315,
+      "gapped": 4,
+      "high2": 2,
+      "close2": 2,
+      "high5": 1,
+      "close5": 1
+    },
+    {
+      "date": "2026-02-17",
+      "artifact_id": 11696639128,
+      "zip_sha256": "de65fc78de008875a8d2ce7b6bd6d8a4f89ed58d0c61992634025b6abeb5bd49",
+      "json_sha256": "b0fbc983e66554b763ce37dc2cfd41026a70c1c1b5338462dd3311f85e7b185b",
+      "valid": 440,
+      "missing": 312,
+      "gapped": 6,
+      "high2": 1,
+      "close2": 0,
+      "high5": 0,
+      "close5": 0
+    },
+    {
+      "date": "2026-05-17",
+      "artifact_id": 11697050990,
+      "zip_sha256": "d2f3e071965a9ab6c3dd20c5ea5d18c34c28c5de6d3e91c69a3fa56a5c554975",
+      "json_sha256": "b1226587a4f1a6f9ebe1f3b23b4c53ecbaa7ca292317a6db4efe705f06f29afd",
+      "valid": 432,
+      "missing": 324,
+      "gapped": 2,
+      "high2": 2,
+      "close2": 2,
+      "high5": 0,
+      "close5": 0
+    },
+    {
+      "date": "2026-08-17",
+      "artifact_id": 11697330101,
+      "zip_sha256": "91aaf3f9a95214c9624f4784b1a02cc5a8a82b9c274748e348ade690707a4950",
+      "json_sha256": "08ff83c468f189051d2b180fb0b0e43d0ea13a629ca4ba9ea4028a7ca7febad2",
+      "valid": 483,
+      "missing": 268,
+      "gapped": 7,
+      "high2": 6,
+      "close2": 4,
+      "high5": 0,
+      "close5": 0
+    },
+    {
+      "date": "2026-09-17",
+      "artifact_id": 11696559327,
+      "zip_sha256": "a2a3064247176702855c8f9ed9257c8ef818a84bf1220417efc359aebeeab9e8",
+      "json_sha256": "0dbea52b2954d543dd0c74ea8f2247f2d3911398f26fcfac16f4e1b3bbfe3493",
+      "valid": 490,
+      "missing": 253,
+      "gapped": 15,
+      "high2": 9,
+      "close2": 8,
+      "high5": 0,
+      "close5": 0
+    }
+  ],
+  "totals": {
+    "attempted": 3790,
+    "complete_168h": 2284,
+    "missing_monthly_archive_404": 1472,
+    "censored_hourly_gap": 34,
+    "gross_high_2x": 20,
+    "gross_close_2x": 16,
+    "gross_high_5x": 1,
+    "gross_close_5x": 1,
+    "gross_high_10x": 0,
+    "gross_close_10x": 0
+  },
+  "gross_high_2x_event_register": [
+    {
+      "date": "2025-11-17",
+      "symbol": "DYMUSDT",
+      "base_open": "0.07930000",
+      "first_hourly_high_2x_index": 78,
+      "max_high_multiple": "2.837326607818411097099621690",
+      "max_close_multiple": "2.635561160151324085750315259"
+    },
+    {
+      "date": "2025-11-17",
+      "symbol": "TNSRUSDT",
+      "base_open": "0.04200000",
+      "first_hourly_high_2x_index": 55,
+      "max_high_multiple": "8.690476190476190476190476190",
+      "max_close_multiple": "7.059523809523809523809523810"
+    },
+    {
+      "date": "2026-02-17",
+      "symbol": "ENSOUSDT",
+      "base_open": "1.12600000",
+      "first_hourly_high_2x_index": 121,
+      "max_high_multiple": "2.021314387211367673179396092",
+      "max_close_multiple": "1.984902309058614564831261101"
+    },
+    {
+      "date": "2026-05-17",
+      "symbol": "EDENUSDT",
+      "base_open": "0.04060000",
+      "first_hourly_high_2x_index": 59,
+      "max_high_multiple": "4.307881773399014778325123153",
+      "max_close_multiple": "4.221674876847290640394088670"
+    },
+    {
+      "date": "2026-05-17",
+      "symbol": "FIDAUSDT",
+      "base_open": "0.01639000",
+      "first_hourly_high_2x_index": 85,
+      "max_high_multiple": "2.952410006101281269066503966",
+      "max_close_multiple": "2.829164124466137888956680903"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "ENAUSDT",
+      "base_open": "0.08360000",
+      "first_hourly_high_2x_index": 147,
+      "max_high_multiple": "2.194976076555023923444976077",
+      "max_close_multiple": "2.105263157894736842105263158"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "HEMIUSDT",
+      "base_open": "0.00637000",
+      "first_hourly_high_2x_index": 101,
+      "max_high_multiple": "2.508634222919937205651491366",
+      "max_close_multiple": "2.262166405023547880690737834"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "ONGUSDT",
+      "base_open": "0.05771000",
+      "first_hourly_high_2x_index": 86,
+      "max_high_multiple": "3.378963784439438572171200832",
+      "max_close_multiple": "2.979552937099289551204297349"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "STXUSDT",
+      "base_open": "0.12140000",
+      "first_hourly_high_2x_index": 151,
+      "max_high_multiple": "2.018121911037891268533772652",
+      "max_close_multiple": "1.981878088962108731466227348"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "TRUMPUSDT",
+      "base_open": "1.40600000",
+      "first_hourly_high_2x_index": 118,
+      "max_high_multiple": "2.617354196301564722617354196",
+      "max_close_multiple": "2.277382645803698435277382646"
+    },
+    {
+      "date": "2026-08-17",
+      "symbol": "TUTUSDT",
+      "base_open": "0.03893000",
+      "first_hourly_high_2x_index": 134,
+      "max_high_multiple": "2.064731569483688671975340354",
+      "max_close_multiple": "1.867968147957873105574107372"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "ARUSDT",
+      "base_open": "2.56800000",
+      "first_hourly_high_2x_index": 83,
+      "max_high_multiple": "2.059579439252336448598130841",
+      "max_close_multiple": "1.940809968847352024922118380"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "CELRUSDT",
+      "base_open": "0.00207300",
+      "first_hourly_high_2x_index": 66,
+      "max_high_multiple": "2.508441871683550410033767487",
+      "max_close_multiple": "2.367583212735166425470332851"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "GUSDT",
+      "base_open": "0.00423000",
+      "first_hourly_high_2x_index": 26,
+      "max_high_multiple": "3.576832151300236406619385343",
+      "max_close_multiple": "3.434988179669030732860520095"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "MUBARAKUSDT",
+      "base_open": "0.02902000",
+      "first_hourly_high_2x_index": 119,
+      "max_high_multiple": "3.016884906960716747070985527",
+      "max_close_multiple": "2.866988283942108890420399724"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "NILUSDT",
+      "base_open": "0.04052000",
+      "first_hourly_high_2x_index": 122,
+      "max_high_multiple": "3.689536031589338598223099704",
+      "max_close_multiple": "3.397087857847976307996051333"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "ONEUSDT",
+      "base_open": "0.00126100",
+      "first_hourly_high_2x_index": 44,
+      "max_high_multiple": "4.116574147501982553528945282",
+      "max_close_multiple": "3.831879460745440126883425852"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "PHAUSDT",
+      "base_open": "0.02830000",
+      "first_hourly_high_2x_index": 99,
+      "max_high_multiple": "2.349823321554770318021201413",
+      "max_close_multiple": "2.261484098939929328621908127"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "SAGAUSDT",
+      "base_open": "0.02147000",
+      "first_hourly_high_2x_index": 120,
+      "max_high_multiple": "2.444806707033069399161620866",
+      "max_close_multiple": "2.394038192827200745225896600"
+    },
+    {
+      "date": "2026-09-17",
+      "symbol": "ZAMAUSDT",
+      "base_open": "0.05125000",
+      "first_hourly_high_2x_index": 99,
+      "max_high_multiple": "2.104390243902439024390243902",
+      "max_close_multiple": "2.049560975609756097560975610"
+    }
+  ],
+  "only_5x": {
+    "date": "2025-11-17",
+    "symbol": "TNSRUSDT",
+    "baseline_open": "0.04200000",
+    "max_high_multiple": "8.690476190476190476190476190",
+    "max_close_multiple": "7.059523809523809523809523810",
+    "first_high_2x_hour_index": 55,
+    "first_high_5x_hour_index": 78
+  },
+  "important_causal_scope": "All 2x events first crossed after UTC-hour index 12 relative to frozen daily 06-18 observation, so NO valid 2x/5x early WATCH recall denominator inside that 12h research window; next event-aligned causal 1m replay is needed.",
+  "not_trading_pnl": true,
+  "not_point_in_time_listing": true,
+  "not_independent_out_of_sample": true,
+  "other_ai_review": false,
+  "mac_deployment": "NO_GO"
+}
