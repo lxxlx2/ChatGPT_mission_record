@@ -1,0 +1,66 @@
+name: Monster Stage28 Strict Six Original Production Shared SQLite D1 SHA Recompute
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage28_original_six_real_shared_sqlite_artifact_proof_20261011.json'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_aggregate.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage28_aggregate.py'
+      - '.github/workflows/monster-v4-stage28-six-real-D1-sha-recompute.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage28-real-shared-d1-strict-evidence-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  source-original-zip-sha-and-production-real-D1-outcomes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test true all-six WATCH and D1 baselines, SHA tamper rejection
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage28_aggregate.py tests/test_monster_v4_stage28_aggregate.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage28_aggregate.py
+      - name: Retrieve exactly six original Stage28 source artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' > /tmp/monster28_artifacts.tsv
+          import json
+          from pathlib import Path
+          p=Path("crypto-300-profit-mission/monster/evidence/monster_stage28_original_six_real_shared_sqlite_artifact_proof_20261011.json")
+          a=json.loads(p.read_text())
+          if a["source_ci_final_status"]!="SUCCESS_ALL_SIX" or len(a["artifacts"])!=6:
+              raise SystemExit("STAGE28_SOURCE_NOT_COMPLETE")
+          for x in sorted(a["artifacts"],key=lambda r:r["date"]):
+              print(x["date"],x["artifact_id"])
+          PY
+          while read -r day artifact; do
+            gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/"$artifact"/zip > "/tmp/monster28_${day}.zip"
+          done < /tmp/monster28_artifacts.tsv
+      - name: Rehash all six actual ZIP/JSON and aggregate 1132 original WATCH against unchanged production D1
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          args=()
+          while read -r day artifact; do
+            args+=("/tmp/monster28_${day}.zip")
+          done < /tmp/monster28_artifacts.tsv
+          python -B scripts/monster_v4_stage28_aggregate.py --original-zips "${args[@]}" --output /tmp/monster_stage28_recomputed_verified.json
+      - name: Retain all exact production D1 SETUPs and LATE classifications
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage28-real-shared-D1-original-six-SHA-recomputed
+          path: /tmp/monster_stage28_recomputed_verified.json
+          if-no-files-found: warn
+          retention-days: 30
