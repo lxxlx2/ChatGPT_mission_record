@@ -151,5 +151,104 @@
     "Token GIGGLE outward ERC20 events may settle as WBNB or other assets without native BNB increase",
     "Original signer, receipt statuses, quote token movements and internal call traces not complete",
     "Do not classify sum as realized PnL"
-  ]
+  ],
+  "transaction_audit": [
+    {
+      "hash": "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356",
+      "block": 62016808,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_wei": "1000000000000000000",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "6544659000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
+    },
+    {
+      "hash": "0x781dc7a0ebe9f96ab6845d13d26509a4fdc4d56fee7b7b2c7bbff067e13ee5de",
+      "block": 62018718,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "original_wei": "505000000000000000",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "2970960000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
+    },
+    {
+      "hash": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674",
+      "block": 62019177,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "3250336000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
+    },
+    {
+      "hash": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+      "block": 62020864,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "7620723000000000",
+      "receipt_complete": false,
+      "receipt_text_truncated": true
+    },
+    {
+      "hash": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+      "block": 62021192,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "2352141000000000",
+      "receipt_complete": false,
+      "receipt_text_truncated": true
+    },
+    {
+      "hash": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+      "block": 62021220,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "7056423000000000",
+      "receipt_complete": false,
+      "receipt_text_truncated": true
+    },
+    {
+      "hash": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+      "block": 62066886,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "2352141000000000",
+      "receipt_complete": false,
+      "receipt_text_truncated": true
+    },
+    {
+      "hash": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+      "block": 62067451,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "2467333000000000",
+      "receipt_complete": false,
+      "receipt_text_truncated": true
+    }
+  ],
+  "transaction_audit_status": "PARTIAL_8_OF_16"
 }
