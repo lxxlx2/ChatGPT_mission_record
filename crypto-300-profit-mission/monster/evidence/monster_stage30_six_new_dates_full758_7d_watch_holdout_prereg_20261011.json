@@ -1,0 +1,79 @@
+{
+  "schema": "MONSTER_STAGE30_NEW_SIX_DATE_758_FULL168H_ORIGINAL_V4_HOLDOUT_FROZEN_BEFORE_SOURCE_V1",
+  "frozen_at": "2026-10-11 Asia/Bangkok",
+  "parent_stage29_exploratory_result": "8plus 3m synchronous WATCH cluster 110 events but only two distinct exposed episodes, two-date model not validated",
+  "all_dates_prior_research_excluded": "Selected YYYY-MM-19 from six separated calendar months (19th distinct from earlier fixed 4/9/13/17/23 and existing Stage10 Jan01); no first source prices queried before freeze",
+  "new_dates_UTC": [
+    "2025-01-19",
+    "2025-04-19",
+    "2025-07-19",
+    "2025-10-19",
+    "2026-04-19",
+    "2026-07-19"
+  ],
+  "cohort_source": {
+    "original_stage24_known_758_universe_artifact_id": 11700651924,
+    "old_day": "2025-11-04",
+    "zip_sha256": "208983ef0aff92f7d955422c7a1c31a028f1bfcc493787c1066359d02bb4fced",
+    "json_sha256": "5ff32103c7e7c5125d0566f81ae190ad1bf1624df381fbae0e19aeda485da465",
+    "frozen_758_symbols": true,
+    "selection": "sorted original stage24 artifact `cases` symbol names, exactly same market + archive cohort, no BTC-only winner cherry picking",
+    "point_in_time_historical_exchangeinfo": "UNVERIFIED_20261011_COHORT_SURVIVOR_BIAS",
+    "missing_unicode_two": true
+  },
+  "official_price": {
+    "hourly": "Binance Spot monthly 1h ZIP and publisher CHECKSUM SHA verified, all168 continuous 1h from 06 UTC baseline; dates 19th avoid cross-month 7d issue",
+    "minute": "Binance Spot daily 1m ZIP and publisher CHECKSUM SHA, ten adjacent day archives covering prior24h +168h + subsequent24h",
+    "timestamp": "UTC 06:00 fixed day to following seven days, 3minute production V4 snapshots",
+    "hourly_future_multiples": [
+      2,
+      5,
+      10
+    ]
+  },
+  "original_frozen_code_blobs": {
+    "production_V4": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+    "stage26_scanner": "f085f00589ca40ab56036d9901127679ebda39d4",
+    "stage16_hourly_GT": "deb17a83b4a199477393430b46be5fec32cdc5aa",
+    "stage20_758_snapshot_universe": "93e2065e354182be3d2136be49c760674b485381",
+    "stage24_old_source_SHA_decoder": "b2b3818d0e7739799c9fbc47e397dbca38d5493e"
+  },
+  "precommitted_research_arms": [
+    "CONTROL_ISOLATED_WATCH_1",
+    "CONTROL_LOCAL_WATCH_2_TO_7",
+    "EXPLORE_BURST_WATCH_8PLUS",
+    "UNCONDITIONAL_WATCH_BASELINE"
+  ],
+  "watch_group_rule": "exact same UTC three-minute poll in same date; no rolling/future classification, original Stage29 unchanged",
+  "immediate_rule_vs_profit": "Only WATCH from original unchanged V4. D1 original per-symbol counts reported separately. No BUY permission or new model thresholds",
+  "cost_model": "Same Stage26 each independent WATCH, 3min delayed open proxy, fixed24h, 10bps fee per side +20/100bps slippage per side, hold same-symbol up to24h; actual L2 and fill unverified",
+  "funded_proxy": "Stage27 exact unchanged 30USDT one-slot and 300USDT ten-slot funded cash no overdraft, show censored principal 100% optimistic and 0% extreme stress; order UTC then lexical symbol, no selected future price ranking",
+  "primary_success_gates": {
+    "data_dates_verified": 6,
+    "historical_censored_not_negative": true,
+    "all_758_attempted_each_date": true,
+    "complete_minute_data_required": true,
+    "early_2x_recall_report_and_missing_source_cases": true,
+    "burst_distinct_market_poll_episodes_min_for_claim": 6,
+    "burst_distinct_calendar_dates_min_for_claim": 3,
+    "burst_evaluable_trade_proxies_min": 30,
+    "burst_positive_fraction_at_least": 0.55,
+    "burst_20bps_net_median_gt_zero": true,
+    "burst_20bps_300U_funded_optimistic_pnl_gt_zero": true,
+    "burst_100bps_stress_median_gt_zero": true,
+    "exit_censor_fraction_lte": 0.2,
+    "missing_exit_0percent_stress_must_be_disclosed": true,
+    "no_claim_of_real_fill_or_true_global_d1": true,
+    "no_cherrypicking_dates_after_test": true
+  },
+  "selection_bias_notice": "All 8plus mode was motivated by one winning historical 2026-02-06 burst and previously seen 2026-09-09; this Stage30 independent calendar exercise tests generalization of prior observation, not a statistically prospective trading trial",
+  "must_not_tune_after_new_data": true,
+  "fallback_if_no_burst": "NOT_ENOUGH_INDEPENDENT_EPISODES, preserve all original normal WATCH and 2x/5x missed, no choose new concurrency threshold",
+  "minimum_30U_decision": "Do not deploy unless financial + sources + truly independent AI review gates all pass",
+  "independent_other_AI_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "real_gmail": "OFF",
+  "trading": "NO_GO",
+  "frank": "UNCHANGED",
+  "new_monitor": false
+}
