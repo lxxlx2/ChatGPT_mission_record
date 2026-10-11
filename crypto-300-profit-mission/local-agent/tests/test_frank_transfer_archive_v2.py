@@ -192,7 +192,7 @@ def test_transfer_capture_source_error_does_not_block_core_publisher(tmp_path):
     assert report["capture"].startswith("SOURCE_UNAVAILABLE_")
     assert report["original"]["status"] == "SYNC_OK"
     assert report["transfer"]["status"] == "SYNC_OK"
-    assert report["fully_synced"] is True
+    assert report["fully_synced"] is False
 
 
 def test_background_transfer_integration_never_installs_a_monitor():
