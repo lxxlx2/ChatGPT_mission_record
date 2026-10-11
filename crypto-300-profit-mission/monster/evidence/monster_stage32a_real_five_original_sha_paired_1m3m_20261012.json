@@ -1,0 +1,125 @@
+{
+  "schema": "MONSTER_STAGE32A_TRUE_STAGE31_KNOWN_FIVE_1M_VS_3M_ORIGINAL_PAIRED_V1",
+  "research_date": "2026-10-12",
+  "stage32_prereg": "monster_stage32_6newdate_1m_vs3m_full758_prereg_20261012.json",
+  "source_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38159292959",
+  "source_commit": "9cda7e02ac3b68e643e4bf94e1354087f1e298d4",
+  "source_ci": "SUCCESS",
+  "source_tests": "3/3 PASS",
+  "artifact": {
+    "id": 11709394303,
+    "zip_sha256": "3595071ce1ab65024e9263336ded5706310a05260d06f8a6c2882d7afac5097d",
+    "uncompressed_json_sha256": "64f53c006905b7fdd8f6234d1fa5648f3c321e8f15b1424ad8e9cb2149f96c67",
+    "raw_bytes": 7679,
+    "member": "stage32a_original_known_five_1m3m_posthoc_diagnostic.json"
+  },
+  "all18_original_Stage30_ZIP_JSON_SHA_verified": true,
+  "all5_monthly_hourly_and10daily_1m_publisher_SHA_against_Stage30_original_equal": true,
+  "original_3m_WATCH_and_D1_exact_reproduced": true,
+  "five_cases": [
+    {
+      "symbol": "VTHOUSDT",
+      "multiple": 2,
+      "first_high_cross": "2025-01-21T10:00:00Z",
+      "original3m": {
+        "first_watch": "2025-01-21T10:03:00Z",
+        "WATCH": 9,
+        "D1": 7,
+        "classification": "LATE"
+      },
+      "candidate1m": {
+        "first_watch": "2025-01-21T10:01:00Z",
+        "WATCH": 7,
+        "D1": 5,
+        "classification": "LATE"
+      },
+      "note": "2-minute earlier after HIGH cross, not an ex-ante before-2x alert"
+    },
+    {
+      "symbol": "PENGUUSDT",
+      "multiple": 2,
+      "first_high_cross": "2025-04-25T13:08:00Z",
+      "original3m": {
+        "first_watch": null,
+        "WATCH": 0,
+        "D1": 0,
+        "classification": "NO_WATCH"
+      },
+      "candidate1m": {
+        "first_watch": "2025-04-22T23:35:00Z",
+        "WATCH": 1,
+        "D1": 0,
+        "classification": "EARLY",
+        "nearest_pre_cross_minutes": 3693
+      },
+      "note": "61.55 hours before future 2x, no D1; not evidence buying this WATCH profitable"
+    },
+    {
+      "symbol": "CETUSUSDT",
+      "multiple": 2,
+      "first_high_cross": "2025-04-25T01:10:00Z",
+      "original3m": {
+        "first_watch": "2025-04-25T06:30:00Z",
+        "WATCH": 1,
+        "D1": 1,
+        "classification": "LATE"
+      },
+      "candidate1m": {
+        "first_watch": "2025-04-25T06:30:00Z",
+        "WATCH": 1,
+        "D1": 1,
+        "classification": "LATE"
+      },
+      "note": "Original slow trend missed unchanged"
+    },
+    {
+      "symbol": "ALPACAUSDT",
+      "multiple": 5,
+      "first_high_cross": "2025-04-25T14:29:00Z",
+      "original3m": {
+        "WATCH": 13,
+        "D1": 9,
+        "classification": "EARLY",
+        "nearest_pre_cross_minutes": 182
+      },
+      "candidate1m": {
+        "WATCH": 12,
+        "D1": 7,
+        "classification": "EARLY",
+        "nearest_pre_cross_minutes": 182
+      },
+      "note": "Lead unchanged, fewer upgraded D1"
+    },
+    {
+      "symbol": "SPKUSDT",
+      "multiple": 5,
+      "first_high_cross": "2025-07-23T11:09:00Z",
+      "original3m": {
+        "WATCH": 10,
+        "D1": 8,
+        "classification": "EARLY",
+        "nearest_pre_cross_minutes": 12
+      },
+      "candidate1m": {
+        "WATCH": 10,
+        "D1": 7,
+        "classification": "EARLY",
+        "nearest_pre_cross_minutes": 20
+      },
+      "note": "Both detect, nearest watch 1m arm 8min further before high cross"
+    }
+  ],
+  "guardrails": [
+    "These FIVE cases selected after Stage30 price outcomes; not independent historical strategy holdout",
+    "Additional WATCH for PENGU was 61h55? exact 3693min=61h33m before HIGH cross; no D1; not tradable proof",
+    "Exact original V4 3360 polls retained, candidate same V4 at10080 polls with changed state/cooldown paths",
+    "No market-wide risk, portfolio, orderbook, real fills shown by these five examples",
+    "Stage32 full 758x6 separate run is necessary to determine reliable coverage and 300U net outcomes"
+  ],
+  "real_market_trial": "IN_PROGRESS",
+  "other_AI_independent_review": "NOT_DONE",
+  "Monster_deploy": "NO_GO",
+  "Frank": "UNCHANGED",
+  "trading": "NO_GO",
+  "Gmail": "OFF"
+}
