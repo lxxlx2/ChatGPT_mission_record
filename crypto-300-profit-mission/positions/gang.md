@@ -51,7 +51,6 @@ Directly decoded from the v0.7 launch account:
 - GANG v0.7 investor `claim()` is a transfer from launch token vault to funder ATA once `LaunchState::Complete`; no additional buyer vesting constraint in the method.
 - Additional recipient `53WKsoHAm2ztNF9xh68NC5dw8LWCroMsRt47x8JNvHTV` can claim 1,357,894 extra tokens after `Complete`, distinct from the team's 18-month performance lock.
 
-## Post-close operational checklist — STATUS PENDING
 ## 2026-10-12 post-window finalized on-chain milestone (SUPERSEDES pre-close operational snapshot)
 
 Research type: `DIRECT_CHAIN / SOLANA_FINALIZED`. Observation slot ~455735427 to 455735691 on October 12 Bangkok, after scheduled 00:30:01 close. Independent finalized confirmation transaction: https://solscan.io/tx/3gPviEWwUaSvtWd2mKRFat1ar7aHBBW7LPAUTiujjwqdfrCGg4LNG5ooWVFRqAikhH7zVg7nrc4aGpStjN7wX1E9 . Program logs contain `Instruction: CloseLaunch` and finalized success; blockTime 2026-10-11T17:30:17Z = 2026-10-12 00:30:17 Bangkok.
@@ -84,6 +83,8 @@ Research type: `DIRECT_CHAIN / SOLANA_FINALIZED`. Observation slot ~455735427 to
 
 **Next status gate:** finalized `Closed -> Complete` or `Closed -> Refunding`; personal `approved_amount` nonzero or final; actual `total_approved_amount`, LP/DAO accounts, liquidity depth, and confirmed claim/refund. Manual recheck on user request or meaningful authoritative event only. No monitor, signing, trade, claim or refund created or executed.
 
+
+## Post-close operational checklist — STATUS PENDING
 
 1. **At or after 2026-10-12 00:30:01 Bangkok:** verify `LaunchState` moved from `Live` to `Closed` or `Refunding`. Time is a scheduled end, **not** a guarantee claim is live at that instant.
 2. If `Closed`: inspect `FundingRecord.approved_amount`, `total_approved_amount`, and whether close/approval/complete transactions are finalized. v0.7 allows launch authority to record allocation approvals within two days after close.
