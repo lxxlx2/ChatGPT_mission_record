@@ -642,6 +642,7 @@ class DashboardState:
         if not self.control_db.is_file():
             health["manual_review_breakdown_available"] = False
             health["manual_review_breakdown_error"] = "CONTROL_DB_UNAVAILABLE"
+            health["manual_review_counts_stale"] = True
             return health
 
         # Read-only live breakdown for display. Keep all immutable delivery
@@ -660,12 +661,17 @@ class DashboardState:
                   ON o.channel='gmail' AND g.decision_id=o.decision_id
                 LEFT JOIN local_delivery AS l
                   ON o.channel='local' AND l.decision_id=o.decision_id
-                WHERE o.status IN ('MANUAL_REVIEW','SENDING','SENT_UNVERIFIED')
+                WHERE o.status IN (
+                    'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED',
+                    'PERMANENT_ERROR','CREDENTIAL_BLOCKED','RETRYABLE_ERROR',
+                    'RETRY_PENDING'
+                )
             """).fetchall()]
         except (OSError, sqlite3.DatabaseError) as exc:
             # No invented 0 pending count; stale legacy totals may omit sends.
             health["manual_review_breakdown_available"] = False
             health["manual_review_breakdown_error"] = type(exc).__name__
+            health["manual_review_counts_stale"] = True
             return health
         finally:
             if db is not None:
@@ -673,17 +679,17 @@ class DashboardState:
         breakdown = summarize_manual_reviews(rows)
         health.update(breakdown)
         health["manual_review_breakdown_error"] = None
+        health["manual_review_counts_stale"] = False
+        # Keep legacy counters exclusively scoped to actual MANUAL_REVIEW rows;
+        # terminal send errors are visible in the new actionable breakdown only.
         health["manual_review_gmail_count"] = (
-            breakdown["manual_review_expired_unsent_gmail_count"]
-            + breakdown["manual_review_actionable_gmail_count"]
+            breakdown["manual_review_manual_only_gmail_count"]
         )
         health["manual_review_local_count"] = (
-            breakdown["manual_review_expired_unsent_local_count"]
-            + breakdown["manual_review_actionable_local_count"]
+            breakdown["manual_review_manual_only_local_count"]
         )
         health["manual_review_total_count"] = (
-            breakdown["manual_review_expired_unsent_count"]
-            + breakdown["manual_review_actionable_count"]
+            breakdown["manual_review_manual_only_total_count"]
         )
         return health
 
