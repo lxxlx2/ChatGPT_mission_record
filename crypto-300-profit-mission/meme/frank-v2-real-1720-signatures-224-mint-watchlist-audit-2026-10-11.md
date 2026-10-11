@@ -30,6 +30,14 @@ Reconstructing the source yielded **1,720 normalized Frank signature records**. 
 
 Validated with actual ZIP offline arithmetic plus CI synthetic regression fixtures for **224 total / 33 original / 104 passive-only / 87 other activity**, negative source and missing two J7 transfer legs, and complete 224-row Git FakeGit readback. These CI tests do not constitute a real Mac new-version replay.
 
+### Confirmed collector coverage mechanism and actual remote replay
+
+Reading unchanged `local-agent/mission_agent/frank/rpc.py` verifies that its `signatures()` method asks Solana `getSignaturesForAddress` only for the fixed **Frank owner public key**, not for all Frank-owned token accounts. The original `collector.py` consumes that single owner signature stream. Third-party token transfers targeting an associated token account without including the Frank wallet address may be absent from that owner stream. This explains a specific architectural coverage hole, and J7's independently proved two omitted token-account signatures establish that the hole affects actual observed data. **The original collector and trading policy are frozen and were NOT edited**.
+
+The read-only solution shipped on the research branch is therefore a truthful *bounded local evidence view*, not full-chain GMGN equivalence. A future independent **token-account-indexed backfill** with provider pagination, signature deduplication, token authority/owner checks and verified post-state/fees is required for full J7 and other passive funding attribution. An inference from a balance change alone must not be labeled a market purchase.
+
+Additional research CI gate: [run 38123207046](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38123207046) at HEAD `5bca66d775e02adf086dbdfec4af2997737672d0` **SUCCESS**: 65 new focused tests + 80 original regression subset tests; complete `local-agent` suite **1,118 passed**. This includes `tests/research/test_frank_git_real_transfer_replay.py`, which fetches the exact real `evidence/frank-ca-local` 1,720-record source archive on CI at full Git history, validates all 12 part hashes and full SHA256, replays it through the actual `wallet_watch.merge_signature_activity` implementation, and checks **224 total / 33 original / 104 passive-only / 87 other**, plus the precise J7 one-receipt/local-sell gap. The test is *mandatory* in CI; it does not silently skip if the evidence ref is absent. Earlier full-suite attempt under shallow Git clone produced 16 historical-fixture errors; workflow was fixed to fetch full Git history and install optional NumPy, giving the successful 1,118 passing full-suite run.
+
 ### Acceptance and next blockers
 
 - Real uploaded archive and Git readback: **VERIFIED**.
