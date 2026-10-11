@@ -1,0 +1,74 @@
+name: Monster Stage30 Exact 36 New Date Original SHA Recompute and Real 30 300U
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_aggregate.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage30_aggregate.py'
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json'
+      - '.github/workflows/monster-v4-stage30-source-36-sha-aggregate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  unit_source_and_original_cash_gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source SHA fail closed, six dates untouched and 30 300U cash guards
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage30_aggregate.py tests/test_monster_v4_stage30_aggregate.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage30_aggregate.py
+  rehash_thirtysix_original_new_date_market_cases:
+    needs: unit_source_and_original_cash_gates
+    if: ${{ hashFiles('crypto-300-profit-mission/monster/evidence/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json') != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Gather exactly all 36 publisher-source complete original run Artifact IDs from committed evidence
+        run: |
+          python - <<'PY' > /tmp/stage30_artifacts.tsv
+          import json
+          from pathlib import Path
+          root=Path('crypto-300-profit-mission/monster/evidence')
+          p=json.loads((root/'monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json').read_text())
+          if p.get('source_ci_status')!='SUCCESS_ALL_36' or len(p['artifacts'])!=36:
+              raise SystemExit('STAGE30_INCOMPLETE_SOURCE_PROOF')
+          for a in sorted(p['artifacts'],key=lambda x:(x['date'],x['shard'])):
+              print(a['date'],a['shard'],a['artifact_id'])
+          PY
+      - name: Download unchanged 36 official-binance-sourced new date V4 research artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          while read -r day shard artifact; do
+            gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/"$artifact"/zip > "/tmp/monster_stage30_${day}_shard${shard}.zip"
+          done < /tmp/stage30_artifacts.tsv
+      - name: Verify all 36 ZIP and JSON SHA plus monthly and daily publisher source hashes, rebuild2x5x10x and funded outcomes
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          args=()
+          while read -r day shard artifact; do
+            args+=("/tmp/monster_stage30_${day}_shard${shard}.zip")
+          done < /tmp/stage30_artifacts.tsv
+          python -B scripts/monster_v4_stage30_aggregate.py --original-zips "${args[@]}" --output /tmp/monster_stage30_full758_6date_verified_168h_burst_300U.json
+      - name: Preserve full unreduced independent-calendar market and win loss data
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage30-real-original-six-new-full168h-2x5x10x-burst-cash-net
+          path: /tmp/monster_stage30_full758_6date_verified_168h_burst_300U.json
+          retention-days: 30
