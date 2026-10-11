@@ -173,7 +173,8 @@ def test_history_budget_cannot_be_interpreted_as_chain_complete():
     result = scan_ata_mints(rpc, [J7], known_signatures=set(),
                             page_size=4, max_pages_per_ata=1)
     assert result["complete_wallet_history"] is False
-    assert result["accounts"][1]["status"] == "BOUNDED"
+    assert result["accounts"][1]["status"] == "PAGE_LIMIT_REACHED"
+    assert result["scan_status"] == "PARTIAL_BUDGET_OR_PAGINATION"
 
 
 def test_no_implicit_wallet_history_or_signal_when_no_local_index():
@@ -423,3 +424,81 @@ def test_real_twelve_sell_only_source_accounts_have_provable_program_ata_match()
         legacy += record["verified_canonical_pda_program"] == TOKEN
         token2022 += record["verified_canonical_pda_program"] == TOKEN_2022
     assert (legacy, token2022) == (4, 8)
+
+
+
+def test_full_final_page_is_partial_even_with_all_transactions_verified():
+    entry = {"signature": SIGNATURES[0], "slot": 454705300,
+             "blockTime": 1791505760, "err": None}
+    rpc = FakeRPC({J7_ATA: [entry]}, {
+        SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0])})
+    report = scan_ata_mints(rpc, [J7], known_signatures=set(),
+                            page_size=1, max_pages_per_ata=1)
+    assert report["accounts"][1]["status"] == "PAGE_LIMIT_REACHED"
+    assert not report["accounts"][1]["provider_history_exhausted_in_bound"]
+    assert report["scan_status"] == "PARTIAL_BUDGET_OR_PAGINATION"
+    assert report["verified_missing_set_completeness"] == "INCOMPLETE"
+
+
+def test_null_transaction_fails_closed_and_lists_unverified_signature():
+    listed = {"signature": SIGNATURES[1], "slot": 454705824,
+              "blockTime": 1791505760, "err": None}
+    report = scan_ata_mints(
+        FakeRPC({J7_ATA: [listed]}, {SIGNATURES[1]: None}),
+        [J7], known_signatures=set(), page_size=50)
+    assert report["scan_status"] == "PARTIAL_TX_UNVERIFIED"
+    assert report["verified_nonzero_signatures_absent_from_local_index"] == []
+    assert report["unverified_successful_signature_count"] == 1
+    assert report["unverified_successful_signatures"][0]["signature"] == SIGNATURES[1]
+    assert report["unverified_successful_signatures"][0]["reason"] == "TRANSACTION_UNAVAILABLE"
+
+
+def test_nonjson_rpc_failure_preserves_previously_verified_rows():
+    from json import JSONDecodeError
+    other = "5PiBn5JdjJDnRGziiSfsu2affgBR3DyTTCR3CHpcode"
+    first_ata, _ = derive_ata(WALLET, other, TOKEN)
+    class BrokenJSON(FakeRPC):
+        def call(self, method, args):
+            if method == "getSignaturesForAddress" and args[0] == first_ata:
+                raise JSONDecodeError("invalid JSON", "<html>", 0)
+            return super().call(method, args)
+    rpc = BrokenJSON({
+        J7_ATA: [{"signature": SIGNATURES[0], "slot": 454705300,
+                  "blockTime": 1791505760, "err": None}],
+    }, {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0])})
+    report = scan_ata_mints(rpc, [J7, other], known_signatures=set())
+    assert report["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
+    assert report["interruption_type"] == "JSONDecodeError"
+    assert report["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
+    assert report["unscanned_canonical_accounts"] == 1
+
+
+def test_versioned_loaded_address_can_be_verified_without_silent_skips():
+    record = tx("0", "5000000", 454705824, signature=SIGNATURES[1])
+    message = record["transaction"]["message"]
+    # The ATA is loaded into index 2 following two static account keys.
+    message["accountKeys"] = message["accountKeys"][:2]
+    record["meta"]["loadedAddresses"] = {"writable": [J7_ATA], "readonly": []}
+    good = validate_transaction(record, SIGNATURES[1], J7_ATA, J7, TOKEN_2022)
+    assert good["status"] == "VERIFIED_ATA_BALANCE_DELTA"
+    assert good["raw_delta"] == "5000000"
+    assert good["wallet_signed"] is False
+    record["meta"]["loadedAddresses"] = {"writable": [], "readonly": []}
+    missing = validate_transaction(record, SIGNATURES[1], J7_ATA, J7, TOKEN_2022)
+    assert missing["status"] == "ATA_NOT_IN_TX_KEYS"
+    listed = {"signature": SIGNATURES[1], "slot": 454705824,
+              "blockTime": 1791505760, "err": None}
+    checked = scan_ata_mints(
+        FakeRPC({J7_ATA: [listed]}, {SIGNATURES[1]: record}),
+        [J7], known_signatures=set(), page_size=50)
+    assert checked["scan_status"] == "PARTIAL_TX_UNVERIFIED"
+    assert checked["unverified_successful_signature_count"] == 1
+
+
+def test_pagecap_and_failed_transaction_validation_exits_nonzero(monkeypatch):
+    from scripts import frank_ata_backfill
+    for state in ("PARTIAL_TX_UNVERIFIED", "PARTIAL_BUDGET_OR_PAGINATION"):
+        monkeypatch.setattr(frank_ata_backfill, "run",
+                            lambda argv=None, s=state: {"git_sync": "NOT_REQUESTED",
+                                                          "scan_status": s})
+        assert frank_ata_backfill.main([]) == 3
