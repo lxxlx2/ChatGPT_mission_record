@@ -1,0 +1,116 @@
+name: Frank PR31 PR32 PR33 isolated merge matrix
+
+on:
+  push:
+    branches:
+      - review/frank-pr33-second-round-matrix-20261012
+    paths:
+      - '.github/workflows/frank-pr31-pr32-pr33-integration.yml'
+      - 'crypto-300-profit-mission/meme/FRANK_PR31_PR32_PR33_INTEGRATION_2026-10-11.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  merge-matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [pr32, pr33, pr32-pr33, pr31-pr32-pr33]
+    env:
+      BASE_SHA: 'cdff373be343d5e61f21c17329aeaeca32651529'
+      PR31_SHA: 'c50e7e2259e85ce89e14641a4e1e98ca3e4a4bc7'
+      PR32_SHA: '85f1a792dd7d0fbf354c09ac83872887ed301c10'
+      PR33_SHA: 'b8b50d0624b5f746ee527e6b49b0a4aa8ac5814a'
+      FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Construct exact isolated git merge tree with no remote writes
+        shell: bash
+        env:
+          MODE: ${{ matrix.mode }}
+        run: |
+          set -euo pipefail
+          git config user.name 'Frank Research CI'
+          git config user.email 'frank-research-ci@users.noreply.github.com'
+          for name in BASE_SHA PR31_SHA PR32_SHA PR33_SHA; do
+            sha="${!name}"
+            git cat-file -e "$sha^{commit}" || { echo "MISSING_PINNED_COMMIT $name $sha"; exit 9; }
+          done
+          git fetch origin 'refs/heads/evidence/frank-ca-local:refs/remotes/origin/evidence/frank-ca-local'
+          git switch --detach "$BASE_SHA"
+          git switch -c "frank-merge-${MODE}"
+          merge_checked() {
+            local sha="$1"
+            local description="$2"
+            if git merge --no-ff --no-edit -m "$description" "$sha"; then return 0; fi
+            mapfile -t conflict_paths < <(git diff --name-only --diff-filter=U)
+            # Both PR32 and PR33 created the same CI file. Its duplicated
+            # research workflow is the *only* permitted conflict resolution.
+            # Every production or test-code conflict remains an explicit FAIL.
+            if [[ "${#conflict_paths[@]}" -eq 1 &&
+                  "${conflict_paths[0]}" == ".github/workflows/frank-pr32-pr33-review-tests.yml" ]]; then
+              git checkout --theirs -- "${conflict_paths[0]}"
+              git add -- "${conflict_paths[0]}"
+              git -c core.editor=true commit --no-edit
+              echo "RESOLVED_DUPLICATE_TEST_WORKFLOW_ONLY"
+            else
+              printf "UNRESOLVED_CODE_CONFLICTS=%s\\n" "${conflict_paths[*]}"
+              git status --short
+              exit 7
+            fi
+          }
+          if [[ "$MODE" == "pr32" || "$MODE" == "pr32-pr33" || "$MODE" == "pr31-pr32-pr33" ]]; then
+            merge_checked "$PR32_SHA" "CI-only merge PR32"
+          fi
+          if [[ "$MODE" == "pr33" || "$MODE" == "pr32-pr33" || "$MODE" == "pr31-pr32-pr33" ]]; then
+            merge_checked "$PR33_SHA" "CI-only merge PR33"
+          fi
+          if [[ "$MODE" == "pr31-pr32-pr33" ]]; then
+            merge_checked "$PR31_SHA" "CI-only merge PR31"
+          fi
+          test -z "$(git ls-files --unmerged)"
+          if git diff --name-only "$BASE_SHA" HEAD | grep -E '^crypto-300-profit-mission/local-agent/(mission_agent/frank/|mission_agent/signals/)' ; then
+            echo 'FROZEN_V1_FILE_CHANGED'; exit 8
+          fi
+          echo "MATRIX_MODE=$MODE" >> "$GITHUB_ENV"
+          echo "MERGED_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          printf "mode=%s\nbase=%s\npr31=%s\npr32=%s\npr33=%s\nresult=%s\n" "$MODE" "$BASE_SHA" "$PR31_SHA" "$PR32_SHA" "$PR33_SHA" "$(git rev-parse HEAD)" | tee merge-provenance.txt
+          git diff --name-status "$BASE_SHA" HEAD > merge-changed-files.txt
+          git status --porcelain
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install project dev requirements
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]' 'numpy>=2,<3' 'pyflakes==3.4.0'
+      - name: Syntax and independent static verification
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent scripts tests
+          for file in mission_agent/mission_control/delivery_review.py mission_agent/mission_control/server.py mission_agent/mission_control/service.py scripts/reauthorize_existing_gmail.py scripts/deploy_frank_dashboard_review_badge.py; do
+            if [ -f "$file" ]; then python -m pyflakes "$file"; fi
+          done
+          node --check mission_agent/mission_control/static/app.js
+      - name: Full regression suite against the actual CI merge tree
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pytest -q tests --junitxml="../../frank-integration-junit.xml"
+      - name: Upload immutable research evidence from ephemeral runner
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frank-merge-${{ matrix.mode }}-${{ github.sha }}
+          path: |
+            merge-provenance.txt
+            merge-changed-files.txt
+            frank-integration-junit.xml
+          if-no-files-found: warn
+          retention-days: 14
