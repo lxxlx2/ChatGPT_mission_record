@@ -1,0 +1,371 @@
+{
+  "schema": "MONSTER_STAGE14_REAL_31_D1_FROZEN_HORIZONS_GITHUB_CI_V1",
+  "pre_registered": "monster_stage14_frozen_31d1_horizon_study_20261011.json",
+  "ci_run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38123054002",
+  "ci_verified_conclusion": "SUCCESS_AFTER_FIXING_PRIOR_BRACKET_TEST_FAILURE",
+  "ci_commit": "5ddd9c8a0fd2bfff7a97e43a01d8f8ce20550404",
+  "full_artifact_id": 11695178960,
+  "full_artifact_zip_sha256": "8525f972949ba59a8067f795ed4106aa10d13fed57c32ed1cae5ea32b9a87a51",
+  "full_raw_json_sha256": "c8c5211f884e107aafd529afab24896d2324107032a30ba1cbc95669e1980f11",
+  "source": "Official Binance 1m 3-day ZIP+published SHA, 31 fixed D1 setups reproduced via production V4",
+  "horizons_minutes": [
+    30,
+    120,
+    360,
+    720,
+    1440
+  ],
+  "symbol_date_d1_proxy_pct_or_censor": [
+    [
+      "2025-11-17",
+      "BANANAS31USDT",
+      6.62092,
+      -20.683282,
+      -26.216125,
+      -39.233465,
+      -38.115528
+    ],
+    [
+      "2025-11-17",
+      "DUSKUSDT",
+      0.161648,
+      7.457186,
+      4.417378,
+      8.673108,
+      3.201455
+    ],
+    [
+      "2025-11-17",
+      "MAGICUSDT",
+      -8.990295,
+      -11.95643,
+      -16.152426,
+      -16.731184,
+      -17.526977
+    ],
+    [
+      "2025-11-17",
+      "NMRUSDT",
+      -7.112287,
+      -6.266315,
+      -7.02769,
+      -11.426744,
+      -12.949493
+    ],
+    [
+      "2025-11-17",
+      "USTCUSDT",
+      -5.350576,
+      -11.686939,
+      -13.931068,
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      -13.403037
+    ],
+    [
+      "2025-11-17",
+      "XNOUSDT",
+      0.0057,
+      9.497181,
+      3.716006,
+      -3.359462,
+      -1.547452
+    ],
+    [
+      "2026-02-17",
+      "ALLOUSDT",
+      -0.48943,
+      -0.162809,
+      -2.013662,
+      2.776781,
+      7.567225
+    ],
+    [
+      "2026-02-17",
+      "ATMUSDT",
+      1.31082,
+      -3.780176,
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      -6.643861,
+      -2.952889
+    ],
+    [
+      "2026-02-17",
+      "JTOUSDT",
+      -3.099325,
+      -3.405005,
+      -11.408273,
+      -8.240313,
+      -7.462217
+    ],
+    [
+      "2026-02-17",
+      "MMTUSDT",
+      -6.979647,
+      -9.249933,
+      -11.888373,
+      -14.833608,
+      -14.833608
+    ],
+    [
+      "2026-02-17",
+      "ORCAUSDT",
+      8.839125,
+      9.368326,
+      8.750924,
+      4.07631,
+      7.075119
+    ],
+    [
+      "2026-02-17",
+      "REZUSDT",
+      -1.475377,
+      "CENSORED_MINUTE_QUOTE_LT_30_USDT",
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      0.863486,
+      "CENSORED_ZERO_VOLUME_EXIT"
+    ],
+    [
+      "2026-05-17",
+      "EDENUSDT",
+      -2.081911,
+      21.019976,
+      16.569154,
+      4.912238,
+      15.933322
+    ],
+    [
+      "2026-05-17",
+      "FIDAUSDT",
+      3.915446,
+      -4.566435,
+      16.811874,
+      18.944745,
+      26.434593
+    ],
+    [
+      "2026-08-17",
+      "ACEUSDT",
+      -1.305789,
+      16.970917,
+      13.374533,
+      -5.78653,
+      9.778149
+    ],
+    [
+      "2026-08-17",
+      "CBRSBUSDT",
+      0.760588,
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      -9.601951
+    ],
+    [
+      "2026-08-17",
+      "EDENUSDT",
+      -8.30568,
+      -8.377881,
+      -15.561806,
+      -7.439277,
+      -3.378013
+    ],
+    [
+      "2026-08-17",
+      "GPSUSDT",
+      -8.220945,
+      -0.536831,
+      0.139371,
+      2.844179,
+      11.327441
+    ],
+    [
+      "2026-08-17",
+      "GUNUSDT",
+      -6.16949,
+      -10.274575,
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT"
+    ],
+    [
+      "2026-08-17",
+      "HAEDALUSDT",
+      -1.909973,
+      -3.848961,
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT"
+    ],
+    [
+      "2026-08-17",
+      "HEMIUSDT",
+      2.316702,
+      4.357206,
+      1.733701,
+      1.29645,
+      -4.387811
+    ],
+    [
+      "2026-08-17",
+      "MVLLBUSDT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      -14.625871
+    ],
+    [
+      "2026-08-17",
+      "RAREUSDT",
+      -0.989341,
+      -1.771416,
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      -5.916412
+    ],
+    [
+      "2026-08-17",
+      "TUTUSDT",
+      19.727805,
+      14.349502,
+      11.393858,
+      22.780355,
+      6.54854
+    ],
+    [
+      "2026-09-17",
+      "AVAUSDT",
+      -1.815919,
+      -10.080945,
+      13.570312,
+      5.600466,
+      -4.066663
+    ],
+    [
+      "2026-09-17",
+      "DGBUSDT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      -1.07505,
+      "CENSORED_MINUTE_QUOTE_LT_30_USDT"
+    ],
+    [
+      "2026-09-17",
+      "GLMRUSDT",
+      0.626861,
+      -1.872475,
+      "CENSORED_ZERO_VOLUME_NEAR_EXIT",
+      "CENSORED_ZERO_VOLUME_EXIT",
+      "CENSORED_MINUTE_QUOTE_LT_30_USDT"
+    ],
+    [
+      "2026-09-17",
+      "KSMUSDT",
+      5.132171,
+      1.164919,
+      -5.66757,
+      -4.785958,
+      -3.243138
+    ],
+    [
+      "2026-09-17",
+      "MARSCOINUSDT",
+      -3.029087,
+      -2.16095,
+      1.311598,
+      0.443461,
+      -7.803841
+    ],
+    [
+      "2026-09-17",
+      "ONEUSDT",
+      -5.826254,
+      -9.358652,
+      1.733079,
+      16.922393,
+      30.6281
+    ],
+    [
+      "2026-09-17",
+      "SYNUSDT",
+      -4.618135,
+      -4.505795,
+      -4.784204,
+      -7.783203,
+      -13.292766
+    ]
+  ],
+  "each_row_definition": [
+    "calendar_date_utc",
+    "spot_symbol",
+    "exit_30m",
+    "exit_120m",
+    "exit_360m",
+    "exit_720m",
+    "exit_1440m"
+  ],
+  "fee_bps_each_side": 10,
+  "slippage_bps_each_side": 20,
+  "per_trade_capital_usdt": 30,
+  "summary": {
+    "30": {
+      "evaluable": 29,
+      "positive": 11,
+      "negative": 18,
+      "censored": 2,
+      "median_net_pct": -1.475377,
+      "mean_net_pct": -0.977644,
+      "sum_30usdt_proxy_pnl": -8.505503
+    },
+    "120": {
+      "evaluable": 27,
+      "positive": 8,
+      "negative": 19,
+      "censored": 4,
+      "median_net_pct": -3.405005,
+      "mean_net_pct": -1.494837,
+      "sum_30usdt_proxy_pnl": -12.108178
+    },
+    "360": {
+      "evaluable": 22,
+      "positive": 12,
+      "negative": 10,
+      "censored": 9,
+      "median_net_pct": 0.725484,
+      "mean_net_pct": -0.960428,
+      "sum_30usdt_proxy_pnl": -6.338823
+    },
+    "720": {
+      "evaluable": 24,
+      "positive": 12,
+      "negative": 12,
+      "censored": 7,
+      "median_net_pct": -0.315795,
+      "mean_net_pct": -1.550195,
+      "sum_30usdt_proxy_pnl": -11.161405
+    },
+    "1440": {
+      "evaluable": 26,
+      "positive": 9,
+      "negative": 17,
+      "censored": 5,
+      "median_net_pct": -3.722338,
+      "mean_net_pct": -2.177451,
+      "sum_30usdt_proxy_pnl": -16.984117
+    }
+  },
+  "matched_6h_vs_24h": {
+    "n": 22,
+    "matched_6h_median_pct": 0.7254845,
+    "matched_24h_median_pct": -3.3105755,
+    "matched_6h_minus_24h_median_pct": 1.525178,
+    "matched_6h_minus_24h_mean_pct": 0.10850868181818173,
+    "matched_6h_better_count": 14,
+    "matched_6h_worse_count": 8
+  },
+  "full_horizon_observed_31events": 21,
+  "sample_bias": "This is exposed in-sample exit research, NOT out of sample; censored status must not be counted as zero PnL",
+  "strategy_validated": false,
+  "deploy_gate": "NO_GO"
+}
