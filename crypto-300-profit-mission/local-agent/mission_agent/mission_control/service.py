@@ -357,6 +357,7 @@ class MissionMemeService:
         upload_future = None
         last_poll_count = None
         transfer_capture_needed = True  # First opt-in run archives the existing local source.
+        last_transfer_snapshot_dispatch = 0.0  # Full-index archival is at most hourly.
         try:
             while True:
                 try:
@@ -391,11 +392,19 @@ class MissionMemeService:
                         if upload_future is None or upload_future.done():
                             # Network work runs in a separate worker. A slow GitHub
                             # connection never occupies the decision/Gmail loop.
+                            # Regular Frank poll buckets still capture each
+                            # observed writer scan. Only the potentially large
+                            # cumulative transfer-history snapshot is hourly.
+                            due = (transfer_capture_needed and
+                                   (not last_transfer_snapshot_dispatch or
+                                    time.monotonic() - last_transfer_snapshot_dispatch >= 3600))
                             upload_future = exporter.submit(
                                 publish_evidence_batch, spool, publisher,
-                                self.frank.database, transfer_capture_needed,
+                                self.frank.database, due,
                             )
-                            transfer_capture_needed = False
+                            if due:
+                                transfer_capture_needed = False
+                                last_transfer_snapshot_dispatch = time.monotonic()
                     except (OSError, ValueError, RuntimeError):
                         # Evidence is best effort; policy and delivery are unchanged.
                         pass
