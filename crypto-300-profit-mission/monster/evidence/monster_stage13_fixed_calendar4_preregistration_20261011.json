@@ -1,0 +1,29 @@
+{
+  "schema": "MONSTER_STAGE13_PRE_REGISTERED_MULTIDATE_CURRENT504_V1",
+  "frozen_before_stage13_source_fetch": true,
+  "source_symbol_registry": "monster_stage12_all504_spot_universe_preregistered_20261011.json",
+  "symbol_count": 504,
+  "manifest_universe_definition": "2026-10-11 current Spot USDT active pairs, historical survivor biased; does not include historical delisted",
+  "date_selection": "All calendar 17ths at 3-month intervals beginning November 2025 through August 2026; not selected from price, outcome, pumps, or known winners; compared with already completed September 17 2026 benchmark",
+  "frozen_dates_utc": [
+    "2025-11-17",
+    "2026-02-17",
+    "2026-05-17",
+    "2026-08-17"
+  ],
+  "observed_window_each": "06:00–18:00 UTC, exactly same Stage12 12 hours",
+  "anchor_each": "12:00:00Z calendar anchor (not signal)",
+  "source": "Binance official daily 1m Spot archive ZIP and publisher CHECKSUM; 3 archive days per symbol per date",
+  "method": "Unmodified production V4 D0 observe_snapshot / D1 process_queue, same 24h quote proxy, 3m 1m close poll, same filters, same per-side 10bps fee plus 20bps slippage hypothetical 24h exit",
+  "scope": "504 × 4 dates target, each 3,600 verified 1m history if listed; incomplete/censored kept as errors",
+  "research_risks": [
+    "D0/D1 prices are closed 1m snapshot proxy not actual historical ticker stream",
+    "Current survivor-bias 504 scope may lack delisted historical winners",
+    "Historical orderbook and funding unavailable",
+    "No fully novel out-of-sample because user research previously viewed some 2025-26 events",
+    "Study target false alert load, not sufficient to establish net profitability"
+  ],
+  "status": "PRE_REGISTERED_NOT_EXECUTED",
+  "trading_enabled": false,
+  "deployment": "NO_GO"
+}
