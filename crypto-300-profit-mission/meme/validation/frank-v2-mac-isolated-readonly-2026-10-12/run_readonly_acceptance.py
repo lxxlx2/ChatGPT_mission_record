@@ -166,7 +166,7 @@ def rpc_injection(temp: Path):
 def export_injection(temp: Path):
     from mission_agent.mission_control.evidence_sync import EvidenceSpool, GitEvidencePublisher
     spool = EvidenceSpool(temp / "drill")
-    pending = spool.ca_done(mint=J7, job_id="readonly-drill-20261012",
+    pending = spool.ca_done(mint=J7, job_id=hashlib.sha256(b"frank-pr31-mac-export-drill").hexdigest()[:32],
                             report={"mint": J7, "coverage": {"status": "SYNTHETIC"}})
     publisher = GitEvidencePublisher(spool, gh="/no-such-git-program")
     def failed_transport(*args, **kwargs):
@@ -290,7 +290,10 @@ def main():
                 checks["BROWSER_RENDER"] = "SKIPPED"
             print(f"BROWSER_RENDER={checks['BROWSER_RENDER']}", flush=True)
         finally:
-            stage = "CLEANUP"
+            # Preserve the real failing stage: a finally block also runs after
+            # an exception and must not overwrite the originating phase.
+            if sys.exc_info()[0] is None:
+                stage = "CLEANUP"
             if proc is not None:
                 proc.terminate()
                 try:
