@@ -1,6 +1,6 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-10-08 Asia/Bangkok
+Updated: 2026-10-11 Asia/Bangkok
 
 Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
@@ -91,6 +91,16 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - delivery_status: delivered_recovery
 - gmail_message_id: 1a0e149fa6d9718a
 - repeat_policy: suppress unchanged reminder; new official extension/reopen may alert once
+
+### Space SPC public-sale claim dApp sunset — October 15
+- event_key: space:spc_public_claim_dapp_sunset:2026-10-15
+- project: Space @intodotspace, NOT Spacecoin @spacecoin
+- source: https://t.me/intodotspace/919 (official channel, direct original checked in existing 2026-10-11 13:00 run)
+- evidence_tier: A for public-sale claim dApp deadline; personal eligibility and precise closing hour unverified
+- delivery_status: delivered_2026-10-11_manual_recovery
+- gmail_message_id: 1a129b8b2ddd1607
+- event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-11/040407-space-spc-claim-dapp-sunset.md
+- repeat_policy: permanently suppress this unchanged Oct 15 reminder; only new first-party deadline extension, eligibility/action/rights change may justify a fresh event
 
 ## Historical-only / no current ACTION baseline
 
