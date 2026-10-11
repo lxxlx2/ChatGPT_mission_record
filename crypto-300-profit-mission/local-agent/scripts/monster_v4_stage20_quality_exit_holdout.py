@@ -95,8 +95,8 @@ def _causal_features(symbol_bars,btc_bars,setup_ms):
         raise ValueError("STAGE20_BTC_TIME_MISMATCH")
     # Latest 1m bar that has FULLY CLOSED at D1 evaluation time.
     idx=(setup_ms-start)//60000-1
-    if idx<1450 or idx>=2168:
-        raise ValueError("STAGE20_SETUP_OUTSIDE_STUDY")
+    if idx<1440 or idx>=len(symbol_bars):
+        raise ValueError("STAGE20_SETUP_OUTSIDE_SOURCE")
     sym=symbol_bars
     btc=btc_bars
     if sym[idx][0]>=setup_ms or btc[idx][0]>=setup_ms:
