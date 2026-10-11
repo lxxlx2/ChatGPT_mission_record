@@ -1869,15 +1869,12 @@
     "state": "THREE_SELECTED_TOKEN_CAS_39_ORIGINAL_SELF_SIGNED_SUCCESS_39_NATIVE_BLOCKS_RECONCILED",
     "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
     "owner_buy_input_wei": "7600000000000000000",
-    "native_block_delta_wei": "2876709991955173502",
+    "native_block_delta_wei": "2876709991955173372",
     "ifml_and_lobster_native_scope_wei": "2977085388546442761",
-    "binance_life_native_scope_wei": "-100375396591269391",
+    "binance_life_native_scope_wei": "-100375396591269389",
     "ifml_and_lobster_closed_position_episodes": 6,
     "binance_life_in_tx_mirrored_transfers": 10,
     "binance_life_token_dust_residual_raw": "247691",
-    "panckake_v2_actions": 10,
-    "panckake_v2_pair_swap_logs": 3,
-    "panckake_v2_pair_router_wbnb_fallback_proofs": 7,
     "four_meme_raw_event_logs": 11,
     "four_meme_log_missing": 1,
     "product_followable": "UNRESOLVED",
@@ -1896,6 +1893,9 @@
       "BSC_MEME_FOUR_EOA_IFML_LOBSTER_CAPITAL_AND_EPISODE_COMPARISON_2026-10-11.json",
       "BSC_MEME_FOUR_WALLETS_19_CA_BREADTH_AND_EVIDENCE_GAPS_2026-10-11.json",
       "BSC_MEME_ADDRESS_MODEL_3_5C48_THREE_COIN_AND_FOUR_EOA_RESEARCH_REPORT_2026-10-11.md"
-    ]
+    ],
+    "pancake_v2_actions": 10,
+    "pancake_v2_pair_swap_logs": 3,
+    "pancake_v2_pair_router_wbnb_fallback_proofs": 7
   }
 }
