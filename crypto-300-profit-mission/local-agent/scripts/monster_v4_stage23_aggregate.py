@@ -59,11 +59,11 @@ def metrics(selected):
 def single_slot(candidates,arm):
     # Signals evaluated chronologically, no sorting by future price or success.
     queue=sorted((datetime.fromisoformat(r["first_v4_d1_utc"].replace("Z","+00:00")),
-                day,r) for day,r in candidates
+                day,r["symbol"],r) for day,r in candidates
                 if r["frozen_arm_proxies"][arm] is not None)
     free=datetime.min.replace(tzinfo=timezone.utc)
     kept=[];skipped=0
-    for signal,day,row in queue:
+    for signal,day,_,row in queue:
         entry=signal+timedelta(minutes=3)
         if entry<free:
             skipped+=1
