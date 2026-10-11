@@ -179,6 +179,11 @@ def test_mac_bootstrap_combines_local_model_and_explicit_dated_source_without_de
     with zipfile.ZipFile(output) as z:
         names = z.namelist()
         assert "frank-inventory-dated-reconciliation.json" in names
+        assert "frank-local-trade-inventory-gap-audit.json" in names
+        audit = json.loads(z.read("frank-local-trade-inventory-gap-audit.json"))
+        assert audit["wallet_pnl_usd"] is None
+        assert audit["chain_complete"] is False
+        assert audit["history_records"] == 0
         report = json.loads(z.read("frank-inventory-dated-reconciliation.json"))
         assert report["snapshot_reconciliation"]["matched_mints"] == 1
         assert report["snapshot_reconciliation"]["nonzero_at_snapshot"] == 1
