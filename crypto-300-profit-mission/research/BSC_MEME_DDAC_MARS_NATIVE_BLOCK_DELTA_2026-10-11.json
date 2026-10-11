@@ -137,12 +137,30 @@
     {
       "block": 119322364,
       "diff_wei": "0"
+    },
+    {
+      "block": 119938438,
+      "diff_wei": "0"
+    },
+    {
+      "block": 119938551,
+      "diff_wei": "40427384627832188"
+    },
+    {
+      "block": 120232161,
+      "diff_wei": "0"
     }
   ],
-  "remaining_blocks": [
-    119938438,
-    119938551,
-    120232161
-  ],
-  "status": "INCOMPLETE; BNB block deltas not isolated realized PnL"
+  "remaining_blocks": [],
+  "status": "INCOMPLETE; BNB block deltas not isolated realized PnL",
+  "results": {
+    "blocks_total": 29,
+    "blocks_verified": 29,
+    "all_block_deltas_checked": true,
+    "net_native_BNB_wei": "3409712195316107766",
+    "net_native_BNB_approx": 3.4097121953161076,
+    "realized_pnl_status": "UNVERIFIED_NATIVE_BLOCK_BALANCE_NET_NOT_ISOLATED_PNL",
+    "transaction_signer_status": "NOT_COMPLETE",
+    "quote_asset_status": "NOT_COMPLETE"
+  }
 }
