@@ -6,12 +6,13 @@ no silent partial loss, explicit retry and hard source identity.
 from __future__ import annotations
 import base64
 import json
+import sqlite3
 import pytest
 from mission_agent.mission_control.evidence_sync import (
     EvidenceSpool, GitEvidencePublisher, PREFIX
 )
 from mission_agent.mission_control.transfer_archive import (
-    queue_transfer_history, sync_transfer_history, _validated_parts
+    queue_transfer_history, sync_transfer_history, publish_evidence_batch, _validated_parts
 )
 from mission_agent.mission_control.wallet_transfers import SOURCE_SCOPE
 
@@ -153,3 +154,54 @@ def test_source_or_record_count_discrepancy_is_never_queued(tmp_path):
     with pytest.raises(ValueError):
         queue_transfer_history(spool, report)
     assert list((spool.pending/"frank-transfer-history").glob("*.json")) == []
+
+
+def test_existing_background_worker_archives_existing_signature_index(tmp_path):
+    spool = EvidenceSpool(tmp_path)
+    db = tmp_path / "forward.sqlite"
+    with sqlite3.connect(db) as cx:
+        cx.execute("CREATE TABLE signatures(wallet TEXT, person_id TEXT, signature TEXT, block_time INTEGER, body TEXT)")
+        evidence = {"classification": "PASSIVE_TRANSFER", "evidence": {
+            "wallet_is_signer": False, "slot": 454705300,
+            "wallet_token_transfer_flows": [{
+                "mint": MINT, "direction": "IN", "raw_amount": "2846838050235",
+                "decimals": 6, "source": "source-ata", "destination": "frank-ata"}]}}
+        cx.execute("INSERT INTO signatures VALUES(?,?,?,?,?)",
+                   (FRANK, "frank", "signature-001", 1791505760, json.dumps(evidence)))
+    publisher = FakeGit(spool)
+    result = publish_evidence_batch(spool, publisher, db, True)
+    assert result["capture"] == "QUEUED_CONTENT_ADDRESSED"
+    assert result["original"]["status"] == "SYNC_OK"
+    assert result["transfer"]["status"] == "SYNC_OK"
+    assert result["fully_synced"] is True
+    manifest_urls = [k for k in publisher.remote if
+                     "/frank-transfer-history/" in k and k.endswith(".json")
+                     and "/part-" not in k]
+    assert len(manifest_urls) == 1
+    manifest = json.loads(publisher.remote[manifest_urls[0]])
+    assert manifest["record_count"] == 1
+    next_run = publish_evidence_batch(spool, publisher, db, False)
+    assert next_run["capture"] == "NOT_REQUESTED"
+    assert next_run["transfer"]["uploaded"] == 0
+
+
+def test_transfer_capture_source_error_does_not_block_core_publisher(tmp_path):
+    spool = EvidenceSpool(tmp_path)
+    publisher = FakeGit(spool)
+    report = publish_evidence_batch(spool, publisher, tmp_path / "absent.sqlite", True)
+    assert report["capture"].startswith("SOURCE_UNAVAILABLE_")
+    assert report["original"]["status"] == "SYNC_OK"
+    assert report["transfer"]["status"] == "SYNC_OK"
+    assert report["fully_synced"] is True
+
+
+def test_background_transfer_integration_never_installs_a_monitor():
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1] / "mission_agent" / "mission_control"
+    service = (root / "service.py").read_text()
+    assert "transfer_capture_needed = True" in service
+    assert "upload_future = exporter.submit(" in service
+    assert "publish_evidence_batch, spool, publisher" in service
+    assert "MISSION_EVIDENCE_EXPORT_ENABLED" in service
+    assert "launchctl" not in service
+    assert "transfers" not in (root.parent / "frank" / "collector.py").read_text().split("import")[:1]
