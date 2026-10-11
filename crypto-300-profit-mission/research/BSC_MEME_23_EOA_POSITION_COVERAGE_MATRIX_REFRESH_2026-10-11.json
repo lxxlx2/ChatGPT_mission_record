@@ -9,12 +9,12 @@
   "stats": {
     "wallets": 23,
     "scanned_directions": 46,
-    "raw_transfer_events": 1021,
-    "pending_directions": 25,
-    "fully_paginated_wallets": 9,
-    "observed_wallet_token_pairs": 79,
-    "fully_reconciled_wallet_token_pairs": 26,
-    "exact_closed_inventories": 16
+    "raw_transfer_events": 1224,
+    "pending_directions": 23,
+    "fully_paginated_wallets": 11,
+    "observed_wallet_token_pairs": 82,
+    "fully_reconciled_wallet_token_pairs": 32,
+    "exact_closed_inventories": 22
   },
   "limitations": [
     "Only 19 known token contracts, not all BSC universe",
@@ -30,7 +30,7 @@
       "all_19_contracts_paginated": false,
       "in_complete": false,
       "out_complete": false,
-      "observed_19_scope_tokens": 8,
+      "observed_19_scope_tokens": 9,
       "token_positions": [
         {
           "token": "TUT",
@@ -156,15 +156,15 @@
         {
           "token": "哈基米 / HAJIMI",
           "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
-          "quantity_in_raw": "1977700934727343570070138",
+          "quantity_in_raw": "2034487075563709002212695",
           "quantity_out_raw": "1938608779749448557668940",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 15,
+          "token_transfers_in": 24,
           "token_transfers_out": 9,
-          "unique_hashes": 24,
+          "unique_hashes": 33,
           "first_block": 63839043,
-          "last_block": 68571094,
+          "last_block": 70719785,
           "from_address_examples": [
             "0xc33bacff9141da689875e6381c1932348ab4c5cb"
           ],
@@ -177,17 +177,34 @@
           "token": "我踏马来了",
           "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
           "quantity_in_raw": "0",
-          "quantity_out_raw": "10836974529892640575613753",
+          "quantity_out_raw": "12432912333902927675254986",
           "net_token_raw": null,
           "exact_closed_inventory": false,
           "token_transfers_in": 0,
-          "token_transfers_out": 10,
-          "unique_hashes": 10,
+          "token_transfers_out": 18,
+          "unique_hashes": 18,
           "first_block": 73659197,
-          "last_block": 74342285,
+          "last_block": 74506338,
           "from_address_examples": [],
           "to_address_examples": [
             "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+          ]
+        },
+        {
+          "token": "龙虾",
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "quantity_in_raw": "0",
+          "quantity_out_raw": "87583358863380264255543",
+          "net_token_raw": null,
+          "exact_closed_inventory": false,
+          "token_transfers_in": 0,
+          "token_transfers_out": 1,
+          "unique_hashes": 1,
+          "first_block": 83653515,
+          "last_block": 83653515,
+          "from_address_examples": [],
+          "to_address_examples": [
+            "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
           ]
         }
       ]
@@ -242,38 +259,41 @@
           "token": "币安人生",
           "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
           "quantity_in_raw": "842768218444143724288007",
-          "quantity_out_raw": "767783773667312819272184",
+          "quantity_out_raw": "842768218444143724288007",
           "net_token_raw": null,
           "exact_closed_inventory": false,
           "token_transfers_in": 2,
-          "token_transfers_out": 8,
-          "unique_hashes": 10,
+          "token_transfers_out": 13,
+          "unique_hashes": 15,
           "first_block": 63454409,
-          "last_block": 63577811,
+          "last_block": 63649991,
           "from_address_examples": [
             "0x66f289de31eef70d52186729d2637ac978cfc56b"
           ],
           "to_address_examples": [
-            "0x66f289de31eef70d52186729d2637ac978cfc56b"
+            "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff"
           ]
         },
         {
           "token": "哈基米 / HAJIMI",
           "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
           "quantity_in_raw": "684597900039906685620717",
-          "quantity_out_raw": "0",
+          "quantity_out_raw": "424696308436260992257823",
           "net_token_raw": null,
           "exact_closed_inventory": false,
           "token_transfers_in": 4,
-          "token_transfers_out": 0,
-          "unique_hashes": 4,
+          "token_transfers_out": 4,
+          "unique_hashes": 8,
           "first_block": 63838947,
           "last_block": 64231458,
           "from_address_examples": [
             "0xc33bacff9141da689875e6381c1932348ab4c5cb",
             "0x31d3f4016ff42be89468868ba3ee3f6d70ac6f49"
           ],
-          "to_address_examples": []
+          "to_address_examples": [
+            "0xc33bacff9141da689875e6381c1932348ab4c5cb"
+          ]
         }
       ]
     },
@@ -468,15 +488,15 @@
         {
           "token": "币安人生",
           "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
-          "quantity_in_raw": "412334028227945860145",
-          "quantity_out_raw": "872018098696765261496",
+          "quantity_in_raw": "1106763876692341156840",
+          "quantity_out_raw": "2236633101100899629903",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 11,
-          "token_transfers_out": 7,
-          "unique_hashes": 15,
+          "token_transfers_in": 20,
+          "token_transfers_out": 16,
+          "unique_hashes": 28,
           "first_block": 73343800,
-          "last_block": 93207736,
+          "last_block": 93210834,
           "from_address_examples": [
             "0x4f4055f490cea99c6a357855d5b3f288817a31a0",
             "0x1de460f363af910f51726def188f9004276bf4bc",
@@ -518,15 +538,15 @@
         {
           "token": "龙虾",
           "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
-          "quantity_in_raw": "5672331720802897096964294",
-          "quantity_out_raw": "4923912661861188966267405",
+          "quantity_in_raw": "6390482010683062575182317",
+          "quantity_out_raw": "5672331720802897096964294",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 30,
-          "token_transfers_out": 30,
-          "unique_hashes": 60,
+          "token_transfers_in": 39,
+          "token_transfers_out": 39,
+          "unique_hashes": 78,
           "first_block": 83636406,
-          "last_block": 83723235,
+          "last_block": 83922537,
           "from_address_examples": [
             "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
           ],
@@ -546,15 +566,15 @@
         {
           "token": "MARSCOIN",
           "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
-          "quantity_in_raw": "17536677389434984253341100",
-          "quantity_out_raw": "7734360876299197102042225",
+          "quantity_in_raw": "19418963428292064314548369",
+          "quantity_out_raw": "8378502296069029473441903",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 30,
-          "token_transfers_out": 30,
-          "unique_hashes": 45,
+          "token_transfers_in": 39,
+          "token_transfers_out": 38,
+          "unique_hashes": 58,
           "first_block": 112441470,
-          "last_block": 112633914,
+          "last_block": 112637878,
           "from_address_examples": [
             "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
           ],
@@ -596,15 +616,15 @@
         {
           "token": "BROCCOLI714",
           "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
-          "quantity_in_raw": "890041026986309455659009",
-          "quantity_out_raw": "1018699225475718782359356",
+          "quantity_in_raw": "1319616120956987480962177",
+          "quantity_out_raw": "1136699225475718782359356",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 15,
-          "token_transfers_out": 24,
-          "unique_hashes": 14,
+          "token_transfers_in": 20,
+          "token_transfers_out": 31,
+          "unique_hashes": 18,
           "first_block": 46647403,
-          "last_block": 46750790,
+          "last_block": 46759285,
           "from_address_examples": [
             "0x04cea5c400e0041e53c35330e89d2a32b95f8c85",
             "0x9eb0bc7a207f77811ee365729d00152622a745b7",
@@ -619,13 +639,13 @@
         {
           "token": "BROCCOLIF3B",
           "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
-          "quantity_in_raw": "409968274682924117854537",
+          "quantity_in_raw": "1619598119255191581543642",
           "quantity_out_raw": "1619598119255191581543641",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 4,
+          "token_transfers_in": 6,
           "token_transfers_out": 4,
-          "unique_hashes": 4,
+          "unique_hashes": 5,
           "first_block": 46693331,
           "last_block": 46714832,
           "from_address_examples": [
@@ -755,9 +775,9 @@
     },
     {
       "wallet": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
-      "all_19_contracts_paginated": false,
+      "all_19_contracts_paginated": true,
       "in_complete": true,
-      "out_complete": false,
+      "out_complete": true,
       "observed_19_scope_tokens": 2,
       "token_positions": [
         {
@@ -765,8 +785,8 @@
           "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
           "quantity_in_raw": "59168464635356470325107",
           "quantity_out_raw": "59168464635356470325107",
-          "net_token_raw": null,
-          "exact_closed_inventory": false,
+          "net_token_raw": "0",
+          "exact_closed_inventory": true,
           "token_transfers_in": 1,
           "token_transfers_out": 24,
           "unique_hashes": 25,
@@ -783,14 +803,14 @@
           "token": "币安人生",
           "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
           "quantity_in_raw": "224731044402913863093370",
-          "quantity_out_raw": "167569986482732498247680",
-          "net_token_raw": null,
-          "exact_closed_inventory": false,
+          "quantity_out_raw": "224731044402913863093370",
+          "net_token_raw": "0",
+          "exact_closed_inventory": true,
           "token_transfers_in": 3,
-          "token_transfers_out": 6,
-          "unique_hashes": 9,
+          "token_transfers_out": 11,
+          "unique_hashes": 14,
           "first_block": 63454410,
-          "last_block": 65257646,
+          "last_block": 65257705,
           "from_address_examples": [
             "0x66f289de31eef70d52186729d2637ac978cfc56b"
           ],
@@ -976,12 +996,12 @@
           "token": "TST",
           "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
           "quantity_in_raw": "80638943221394895516269255",
-          "quantity_out_raw": "77755572552509481906527608",
+          "quantity_out_raw": "80079290160935540671010806",
           "net_token_raw": null,
           "exact_closed_inventory": false,
           "token_transfers_in": 12,
-          "token_transfers_out": 23,
-          "unique_hashes": 35,
+          "token_transfers_out": 32,
+          "unique_hashes": 44,
           "first_block": 46411247,
           "last_block": 46591291,
           "from_address_examples": [
@@ -997,17 +1017,20 @@
         {
           "token": "BROCCOLI714",
           "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
-          "quantity_in_raw": "1273444814772327772917229",
+          "quantity_in_raw": "1339881145301253694057089",
           "quantity_out_raw": "0",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 16,
+          "token_transfers_in": 25,
           "token_transfers_out": 0,
-          "unique_hashes": 16,
+          "unique_hashes": 25,
           "first_block": 46627282,
-          "last_block": 46628456,
+          "last_block": 46646185,
           "from_address_examples": [
-            "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b"
+            "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+            "0xcd7529123f48a72b4b6c854734da5770c2dcbda9",
+            "0xd76203ef49085906bad0044e44ac18bedf5229e6",
+            "0x143713d3e7ddab2142c9f91a2b1bf7d58f2ac9eb"
           ],
           "to_address_examples": []
         }
@@ -1018,7 +1041,7 @@
       "all_19_contracts_paginated": false,
       "in_complete": false,
       "out_complete": false,
-      "observed_19_scope_tokens": 10,
+      "observed_19_scope_tokens": 11,
       "token_positions": [
         {
           "token": "BROCCOLIF3B",
@@ -1085,15 +1108,15 @@
         {
           "token": "TUT",
           "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
-          "quantity_in_raw": "1708873909183419291535742",
+          "quantity_in_raw": "1889275022957432025267602",
           "quantity_out_raw": "1708873909183419291535742",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 3,
+          "token_transfers_in": 4,
           "token_transfers_out": 2,
-          "unique_hashes": 5,
+          "unique_hashes": 6,
           "first_block": 47488546,
-          "last_block": 47575216,
+          "last_block": 79583894,
           "from_address_examples": [
             "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f"
           ],
@@ -1124,12 +1147,12 @@
           "token": "GIGGLE",
           "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
           "quantity_in_raw": "359697844369402752279",
-          "quantity_out_raw": "183005371678680143104",
+          "quantity_out_raw": "225420491326714799305",
           "net_token_raw": null,
           "exact_closed_inventory": false,
           "token_transfers_in": 4,
-          "token_transfers_out": 12,
-          "unique_hashes": 10,
+          "token_transfers_out": 15,
+          "unique_hashes": 12,
           "first_block": 62016808,
           "last_block": 63071724,
           "from_address_examples": [
@@ -1137,42 +1160,46 @@
           ],
           "to_address_examples": [
             "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
-            "0xd6b652aecb704b0aebec6317315afb90ba641d57"
+            "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+            "0xd9704dabefd6500b9b469ee02e00a0b3b0ab6f8a"
           ]
         },
         {
           "token": "4",
           "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
           "quantity_in_raw": "5936149086118771450764937",
-          "quantity_out_raw": "0",
+          "quantity_out_raw": "4964152737589366778893520",
           "net_token_raw": null,
           "exact_closed_inventory": false,
           "token_transfers_in": 2,
-          "token_transfers_out": 0,
-          "unique_hashes": 2,
+          "token_transfers_out": 5,
+          "unique_hashes": 7,
           "first_block": 63056884,
-          "last_block": 63057889,
+          "last_block": 63069490,
           "from_address_examples": [
             "0xf0a949d3d93b833c183a27ee067165b6f2c9625e"
           ],
-          "to_address_examples": []
+          "to_address_examples": [
+            "0xf0a949d3d93b833c183a27ee067165b6f2c9625e"
+          ]
         },
         {
           "token": "币安人生",
           "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
-          "quantity_in_raw": "10200996953679145521388474",
+          "quantity_in_raw": "10201006946954815355120130",
           "quantity_out_raw": "0",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 7,
+          "token_transfers_in": 9,
           "token_transfers_out": 0,
-          "unique_hashes": 7,
+          "unique_hashes": 9,
           "first_block": 63454427,
-          "last_block": 75087367,
+          "last_block": 93272008,
           "from_address_examples": [
             "0x66f289de31eef70d52186729d2637ac978cfc56b",
             "0x294094485cb4d4690654ba102c4b092ee544f37a",
-            "0x59d8f3f1467a5bf05f0fcc2288cda9006a103f95"
+            "0x59d8f3f1467a5bf05f0fcc2288cda9006a103f95",
+            "0x1de460f363af910f51726def188f9004276bf4bc"
           ],
           "to_address_examples": []
         },
@@ -1196,17 +1223,34 @@
         {
           "token": "哈基米 / HAJIMI",
           "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
-          "quantity_in_raw": "129258096390654177201047",
+          "quantity_in_raw": "289507669858177423854909",
           "quantity_out_raw": "0",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 1,
+          "token_transfers_in": 3,
           "token_transfers_out": 0,
-          "unique_hashes": 1,
+          "unique_hashes": 3,
           "first_block": 74741352,
-          "last_block": 74741352,
+          "last_block": 98200873,
           "from_address_examples": [
             "0xc33bacff9141da689875e6381c1932348ab4c5cb"
+          ],
+          "to_address_examples": []
+        },
+        {
+          "token": "龙虾",
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "quantity_in_raw": "5009100997023884061594785",
+          "quantity_out_raw": "0",
+          "net_token_raw": null,
+          "exact_closed_inventory": false,
+          "token_transfers_in": 4,
+          "token_transfers_out": 0,
+          "unique_hashes": 4,
+          "first_block": 83637088,
+          "last_block": 93584281,
+          "from_address_examples": [
+            "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
           ],
           "to_address_examples": []
         }
@@ -1223,12 +1267,12 @@
           "token": "GIGGLE",
           "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
           "quantity_in_raw": "5850188316208534451239",
-          "quantity_out_raw": "4393445304436016488578",
+          "quantity_out_raw": "4871244017427523855971",
           "net_token_raw": null,
           "exact_closed_inventory": false,
           "token_transfers_in": 26,
-          "token_transfers_out": 30,
-          "unique_hashes": 41,
+          "token_transfers_out": 38,
+          "unique_hashes": 46,
           "first_block": 61964958,
           "last_block": 62020382,
           "from_address_examples": [
@@ -1238,24 +1282,26 @@
           ],
           "to_address_examples": [
             "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
-            "0xd6b652aecb704b0aebec6317315afb90ba641d57"
+            "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+            "0xd9704dabefd6500b9b469ee02e00a0b3b0ab6f8a"
           ]
         },
         {
           "token": "4",
           "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
-          "quantity_in_raw": "19161880167856758795166648",
+          "quantity_in_raw": "22131511671742325649402571",
           "quantity_out_raw": "0",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 4,
+          "token_transfers_in": 13,
           "token_transfers_out": 0,
-          "unique_hashes": 4,
+          "unique_hashes": 13,
           "first_block": 63056804,
-          "last_block": 63081307,
+          "last_block": 63092061,
           "from_address_examples": [
             "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
-            "0xf0a949d3d93b833c183a27ee067165b6f2c9625e"
+            "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+            "0x457cf82866c345e0468b8ddedc6a03ef672f00de"
           ],
           "to_address_examples": []
         }
@@ -1383,15 +1429,15 @@
         {
           "token": "币安人生",
           "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
-          "quantity_in_raw": "13349624167214469437055",
-          "quantity_out_raw": "13313949410388827405781",
+          "quantity_in_raw": "13358874495706530250254",
+          "quantity_out_raw": "13398159054217476875424",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 12,
-          "token_transfers_out": 4,
-          "unique_hashes": 15,
+          "token_transfers_in": 17,
+          "token_transfers_out": 5,
+          "unique_hashes": 21,
           "first_block": 71923263,
-          "last_block": 105122376,
+          "last_block": 115522556,
           "from_address_examples": [
             "0x66f289de31eef70d52186729d2637ac978cfc56b",
             "0x1de460f363af910f51726def188f9004276bf4bc",
@@ -1448,15 +1494,15 @@
         {
           "token": "GIGGLE",
           "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
-          "quantity_in_raw": "858290285133229826",
+          "quantity_in_raw": "1055717101332915472",
           "quantity_out_raw": "0",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 7,
+          "token_transfers_in": 11,
           "token_transfers_out": 0,
-          "unique_hashes": 7,
+          "unique_hashes": 11,
           "first_block": 105119593,
-          "last_block": 105122383,
+          "last_block": 105124046,
           "from_address_examples": [
             "0x2f7fe96e3d0308cdbf6143e7dc0bb05df73a4a83"
           ],
@@ -1466,18 +1512,19 @@
           "token": "MARSCOIN",
           "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
           "quantity_in_raw": "0",
-          "quantity_out_raw": "1312711556400770781056719",
+          "quantity_out_raw": "1343947630961394997129807",
           "net_token_raw": null,
           "exact_closed_inventory": false,
           "token_transfers_in": 0,
-          "token_transfers_out": 12,
-          "unique_hashes": 6,
+          "token_transfers_out": 19,
+          "unique_hashes": 10,
           "first_block": 112442886,
-          "last_block": 112971917,
+          "last_block": 113975350,
           "from_address_examples": [],
           "to_address_examples": [
             "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
-            "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+            "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+            "0x4a4bea953813c118c260be9a26b2321e57aa62e5"
           ]
         }
       ]
@@ -1492,17 +1539,18 @@
         {
           "token": "GIGGLE",
           "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
-          "quantity_in_raw": "38699902337944690406",
+          "quantity_in_raw": "43459325434040764456",
           "quantity_out_raw": "43459325434040764456",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 2,
+          "token_transfers_in": 4,
           "token_transfers_out": 3,
-          "unique_hashes": 4,
+          "unique_hashes": 6,
           "first_block": 61967915,
           "last_block": 65814162,
           "from_address_examples": [
-            "0xd6b652aecb704b0aebec6317315afb90ba641d57"
+            "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+            "0xd9704dabefd6500b9b469ee02e00a0b3b0ab6f8a"
           ],
           "to_address_examples": [
             "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
@@ -1513,13 +1561,13 @@
         {
           "token": "币安人生",
           "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
-          "quantity_in_raw": "11972473880077726133641281",
+          "quantity_in_raw": "12027871855834644812284118",
           "quantity_out_raw": "12027871855834644812284118",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 28,
+          "token_transfers_in": 31,
           "token_transfers_out": 19,
-          "unique_hashes": 47,
+          "unique_hashes": 50,
           "first_block": 63454351,
           "last_block": 63465009,
           "from_address_examples": [
@@ -1534,16 +1582,19 @@
         {
           "token": "我踏马来了",
           "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
-          "quantity_in_raw": "0",
-          "quantity_out_raw": "24069432040766088596870998",
+          "quantity_in_raw": "13776330787143729506301272",
+          "quantity_out_raw": "32024763149069792814975842",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 0,
-          "token_transfers_out": 8,
-          "unique_hashes": 8,
-          "first_block": 73382696,
-          "last_block": 74023827,
-          "from_address_examples": [],
+          "token_transfers_in": 4,
+          "token_transfers_out": 17,
+          "unique_hashes": 21,
+          "first_block": 73382071,
+          "last_block": 74282741,
+          "from_address_examples": [
+            "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+            "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
+          ],
           "to_address_examples": [
             "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
             "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480"
@@ -1627,7 +1678,7 @@
       "all_19_contracts_paginated": false,
       "in_complete": false,
       "out_complete": false,
-      "observed_19_scope_tokens": 4,
+      "observed_19_scope_tokens": 5,
       "token_positions": [
         {
           "token": "龙虾",
@@ -1651,15 +1702,15 @@
         {
           "token": "币安人生",
           "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
-          "quantity_in_raw": "1681277571850099800806",
+          "quantity_in_raw": "1682827138464046546300",
           "quantity_out_raw": "1640010810122006475535",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 12,
+          "token_transfers_in": 13,
           "token_transfers_out": 2,
-          "unique_hashes": 12,
+          "unique_hashes": 13,
           "first_block": 93211743,
-          "last_block": 115364351,
+          "last_block": 117734663,
           "from_address_examples": [
             "0x1de460f363af910f51726def188f9004276bf4bc",
             "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
@@ -1673,15 +1724,15 @@
         {
           "token": "MARSCOIN",
           "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
-          "quantity_in_raw": "4546612752813073368788005",
-          "quantity_out_raw": "299988929282082206900870",
+          "quantity_in_raw": "4548816433176654725818385",
+          "quantity_out_raw": "581661702815918470476110",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 11,
-          "token_transfers_out": 7,
-          "unique_hashes": 15,
+          "token_transfers_in": 13,
+          "token_transfers_out": 12,
+          "unique_hashes": 19,
           "first_block": 112441411,
-          "last_block": 115362410,
+          "last_block": 117136811,
           "from_address_examples": [
             "0x1de460f363af910f51726def188f9004276bf4bc",
             "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
@@ -1696,15 +1747,15 @@
         {
           "token": "牛来",
           "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
-          "quantity_in_raw": "974436185476349089853",
+          "quantity_in_raw": "1231771444379684164116",
           "quantity_out_raw": "0",
           "net_token_raw": null,
           "exact_closed_inventory": false,
-          "token_transfers_in": 4,
+          "token_transfers_in": 9,
           "token_transfers_out": 0,
-          "unique_hashes": 4,
+          "unique_hashes": 9,
           "first_block": 116507899,
-          "last_block": 116630522,
+          "last_block": 117575804,
           "from_address_examples": [
             "0xa74a032562c9f5ceed0f1108d8bca6c5c23f6fe0",
             "0xeae1a85c36c36103eb4f0ef3dc4b973a3cf6c968",
@@ -1712,14 +1763,31 @@
             "0xa0b89dc4f348bdd7aebdf656a0c6a0f4b42979c8"
           ],
           "to_address_examples": []
+        },
+        {
+          "token": "哈基米 / HAJIMI",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "quantity_in_raw": "39124422501707414035",
+          "quantity_out_raw": "0",
+          "net_token_raw": null,
+          "exact_closed_inventory": false,
+          "token_transfers_in": 1,
+          "token_transfers_out": 0,
+          "unique_hashes": 1,
+          "first_block": 117006590,
+          "last_block": 117006590,
+          "from_address_examples": [
+            "0x0c1399d4f3e3162f4e95f0b36b2c61e82a164294"
+          ],
+          "to_address_examples": []
         }
       ]
     },
     {
       "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
-      "all_19_contracts_paginated": false,
+      "all_19_contracts_paginated": true,
       "in_complete": true,
-      "out_complete": false,
+      "out_complete": true,
       "observed_19_scope_tokens": 4,
       "token_positions": [
         {
@@ -1727,8 +1795,8 @@
           "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
           "quantity_in_raw": "2009071974686680878",
           "quantity_out_raw": "2009071974686680878",
-          "net_token_raw": null,
-          "exact_closed_inventory": false,
+          "net_token_raw": "0",
+          "exact_closed_inventory": true,
           "token_transfers_in": 3,
           "token_transfers_out": 1,
           "unique_hashes": 4,
@@ -1746,8 +1814,8 @@
           "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
           "quantity_in_raw": "17902714158602084000000000",
           "quantity_out_raw": "17902714158602084000000000",
-          "net_token_raw": null,
-          "exact_closed_inventory": false,
+          "net_token_raw": "0",
+          "exact_closed_inventory": true,
           "token_transfers_in": 7,
           "token_transfers_out": 3,
           "unique_hashes": 10,
@@ -1766,8 +1834,8 @@
           "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
           "quantity_in_raw": "33568840066278354346",
           "quantity_out_raw": "33568840066278354346",
-          "net_token_raw": null,
-          "exact_closed_inventory": false,
+          "net_token_raw": "0",
+          "exact_closed_inventory": true,
           "token_transfers_in": 1,
           "token_transfers_out": 1,
           "unique_hashes": 2,
@@ -1784,14 +1852,14 @@
           "token": "龙虾",
           "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
           "quantity_in_raw": "18861470183165681000000000",
-          "quantity_out_raw": "15668664823548734393265689",
-          "net_token_raw": null,
-          "exact_closed_inventory": false,
+          "quantity_out_raw": "18861470183165681000000000",
+          "net_token_raw": "0",
+          "exact_closed_inventory": true,
           "token_transfers_in": 1,
-          "token_transfers_out": 25,
-          "unique_hashes": 26,
+          "token_transfers_out": 28,
+          "unique_hashes": 29,
           "first_block": 83635788,
-          "last_block": 83636684,
+          "last_block": 83636718,
           "from_address_examples": [
             "0x5c952063c7fc8610ffdb798152d69f0b9550762b"
           ],
@@ -1802,5 +1870,17 @@
         }
       ]
     }
-  ]
+  ],
+  "checkpoint_before_cursor_repair": {
+    "wallets": 23,
+    "scanned_directions": 46,
+    "raw_transfer_events": 1021,
+    "pending_directions": 25,
+    "fully_paginated_wallets": 9,
+    "observed_wallet_token_pairs": 79,
+    "fully_reconciled_wallet_token_pairs": 26,
+    "exact_closed_inventories": 16
+  },
+  "pagination_policy": "Use fromBlock last verified block (inclusive), order asc, dedup event_id; opaque Alchemy pageKey may reset to historical first page across sessions",
+  "last_refresh": "2026-10-11 cursor repair"
 }
