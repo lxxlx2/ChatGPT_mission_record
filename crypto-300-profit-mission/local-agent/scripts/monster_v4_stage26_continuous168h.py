@@ -63,7 +63,7 @@ def frozen():
            "2026-04-04","2026-08-04","2026-09-04"]
     if m["frozen_dates_utc"]!=dates:
         raise ValueError("STAGE26_CALENDAR_CHANGED")
-    if m["source_contract"]["first_poll"]!="06:03:00 UTC relative to frozen date 06:00 start, 3m poll at closed minute with same 24h-start initialization as Stage24 baseline":
+    if m["source_contract"]["first_poll"]!="06:03:00 UTC relative to frozen date 06:00 start, 3m poll at closed minute with same 24h-start initialization as Stage24":
         raise ValueError("STAGE26_FIRST_POLL_CHANGED")
     return m
 
