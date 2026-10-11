@@ -339,21 +339,32 @@
       "receipt_status": "0x1",
       "receipt_truncated": false,
       "owner_signed": true
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "龙虾",
       "dir": "out",
       "block": 85952207,
       "hash": "0xc1b893b2f5a5ba09d3d12145b6249ef0ac178227eea429d069a8825362ec070c",
-      "native_block_delta_wei": "1245958889558796208"
+      "native_block_delta_wei": "1245958889558796208",
+      "original_value_wei": "0",
+      "signer": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "gas_price_wei": "120000000",
+      "gas_limit": "800000",
+      "gas_receipt_wei": null,
+      "receipt_status": "0x1",
+      "receipt_truncated": true,
+      "owner_signed": true
     }
   ],
-  "status": "PARTIAL_21_OF_22",
+  "pending": [],
+  "status": "22_OF_22_SIGNER_SUCCESS_AND_BUY_COST_AUDITED",
   "production": "NO_GO",
   "caveats": [
     "Signed successful transaction receipts and original costs help owner attribution but do not isolate other same-block quote funds.",
     "Receipt truncated state retains prefix status; gasUsed absent when hidden."
-  ]
+  ],
+  "signed": 22,
+  "success": 22,
+  "buy_input_wei": "3800000000000000000"
 }
