@@ -285,6 +285,55 @@ def merge_signature_activity(observed: dict, signature_rows: list[dict]) -> dict
     return observed
 
 
+
+def annotate_known_ata_gaps(observed: dict, source: dict | None) -> dict:
+    """Expose dated ATA facts without relabeling original owner-index trades."""
+    result = dict(observed)
+    rows = [dict(row) for row in observed.get("rows", [])]
+    result["rows"] = rows
+    for row in rows:
+        row["owner_index_gap_status"] = "NOT_AUDITED"
+        row["owner_index_missing_signatures"] = None
+        row["ata_verified_extra_passive_receipts"] = None
+        row["ata_gap_source_date"] = None
+    result["ata_gap_source_status"] = "EVIDENCE_NOT_PRESENT"
+    if source is None:
+        return result
+    if (not isinstance(source, dict) or source.get("schema_version") != 1 or
+        source.get("owner_wallet") !=
+        "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ" or
+        not isinstance(source.get("records"), list) or
+        len(source["records"]) > 300):
+        raise ValueError("INVALID_ATA_GAP_SOURCE")
+    by_mint = {row["mint"]: row for row in rows}
+    seen = set()
+    for entry in source["records"]:
+        if not isinstance(entry, dict):
+            raise ValueError("INVALID_ATA_GAP_RECORD")
+        mint = entry.get("mint")
+        gaps = entry.get("owner_index_missing_signatures")
+        verified = entry.get("verified_extra_passive_receipts")
+        if (not isinstance(mint, str) or not 32 <= len(mint) <= 44 or
+            mint in seen or type(gaps) is not int or gaps < 1 or
+            type(verified) is not int or verified < 0 or verified > gaps or
+            not isinstance(entry.get("source_date_utc"), str)):
+            raise ValueError("INVALID_ATA_GAP_RECORD")
+        seen.add(mint)
+        row = by_mint.get(mint)
+        if row is None:
+            continue
+        row["owner_index_gap_status"] = "CONFIRMED_HISTORICAL_GAP"
+        row["owner_index_missing_signatures"] = gaps
+        row["ata_verified_extra_passive_receipts"] = verified
+        row["ata_gap_source_date"] = entry["source_date_utc"]
+    result["ata_gap_source_status"] = "HISTORICAL_DATED_GIT_EVIDENCE"
+    result["summary"] = dict(observed.get("summary", {}))
+    result["summary"]["known_owner_index_gap_mints"] = sum(
+        row["owner_index_gap_status"] == "CONFIRMED_HISTORICAL_GAP"
+        for row in rows)
+    return result
+
+
 def from_sqlite(path: Path, *, person_id: str = PERSON, as_of: int | None = None) -> dict:
     """Read the existing immutable Frank SQLite through open_production_ro."""
     db = open_production_ro(Path(path))
