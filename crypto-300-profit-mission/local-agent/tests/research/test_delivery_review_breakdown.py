@@ -40,6 +40,36 @@ class DeliveryReviewClassificationTests(unittest.TestCase):
         self.assertEqual(s["manual_review_expired_unsent_local_count"], 1)
         self.assertEqual(s["manual_review_actionable_local_count"], 2)
 
+    def test_inflight_gmail_is_pending_not_actionable_or_historical(self):
+        rows = [example(outbox_status="SENDING", gmail_status="SENDING"),
+                example(outbox_status="SENT_UNVERIFIED", gmail_status="SENT_UNVERIFIED")]
+        summary = mod.summarize_manual_reviews(rows)
+        self.assertEqual(summary["manual_review_pending_count"], 2)
+        self.assertEqual(summary["manual_review_pending_gmail_count"], 2)
+        self.assertEqual(summary["manual_review_expired_unsent_count"], 0)
+        self.assertEqual(summary["manual_review_actionable_count"], 0)
+        self.assertEqual(summary["manual_review_visible_total_count"], 2)
+
+    def test_unknown_manual_review_channel_remains_actionable(self):
+        s = mod.summarize_manual_reviews([example("webhook", outbox_status="MANUAL_REVIEW")])
+        self.assertEqual(s["manual_review_actionable_other_count"], 1)
+        self.assertEqual(s["manual_review_visible_total_count"], 1)
+
+    def test_uncertain_unknown_channel_is_still_pending(self):
+        s = mod.summarize_manual_reviews([example("odd", outbox_status="SENDING")])
+        self.assertEqual(s["manual_review_pending_other_count"], 1)
+        self.assertEqual(s["manual_review_visible_total_count"], 1)
+
+    def test_pending_is_not_recounted_inside_legacy_manual_review_total(self):
+        s = mod.summarize_manual_reviews([
+            example(outbox_status="MANUAL_REVIEW"),
+            example(outbox_status="SENDING"),
+            example(outbox_status="SENT_UNVERIFIED"),
+        ])
+        self.assertEqual(s["manual_review_expired_unsent_count"] +
+                         s["manual_review_actionable_count"], 1)
+        self.assertEqual(s["manual_review_visible_total_count"], 3)
+
     def test_empty(self):
         s = mod.summarize_manual_reviews([])
         self.assertTrue(s["manual_review_breakdown_available"])
