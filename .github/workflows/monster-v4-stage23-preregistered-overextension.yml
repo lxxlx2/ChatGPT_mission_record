@@ -1,0 +1,48 @@
+name: Monster Stage23 10 Unseen 758 Spot V4 Overextension Holdout
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage23_overextension_holdout.py'
+      - '.github/workflows/monster-v4-stage23-preregistered-overextension.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: monster-stage23-untouched-holdout-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  original-v4-vs-12pp-pre-entry-filter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        date: ['2025-01-23','2025-02-23','2025-03-23','2025-04-23','2025-05-23','2025-06-23','2025-07-23','2025-08-23','2025-09-23','2025-10-23']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prove code blob lock, original D0 D1 preservation, exactly preregistered dates and causal 12pp quality filter
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage23_overextension_holdout.py tests/test_monster_v4_stage23_overextension_holdout.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage23_overextension_holdout.py
+      - name: Run actual original V4 and unchanged Stage20 exits on 758 publisher-verified Binance Spot pairs
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage23_overextension_holdout.py --date ${{ matrix.date }} --output /tmp/monster_stage23_${{ matrix.date }}.json
+      - name: Archive all source statuses, original D1s, filtered D1s, winning signals missed and fee-plus-slippage proxies
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage23-original758-vs-filter-${{ matrix.date }}
+          path: /tmp/monster_stage23_${{ matrix.date }}.json
+          if-no-files-found: warn
+          retention-days: 30
