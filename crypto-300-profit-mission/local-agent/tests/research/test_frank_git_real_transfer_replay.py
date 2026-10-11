@@ -127,3 +127,62 @@ def test_real_j7_ata_evidence_joins_main_wallet_archive_without_relabeling_buy()
     assert len(outside_owner_index) == 2
     assert j7["newly_recovered_qty"] == "9661379.420528"
     assert j7["source_cost_status"] == "UNVERIFIED"
+
+
+def test_real_bpxx_ata_pages_expose_preindex_and_inwindow_owner_index_misses():
+    """Audit actual 70 finalized BPxx ATA signatures against immutable 1720 Mac rows.
+
+    A missed *signature* is not automatically a token transfer, market trade
+    or profit. The one in-window failed transaction is explicitly excluded
+    from any potential successful missing-transfer classification.
+    """
+    from datetime import datetime, timezone
+    root = Path(__file__).resolve().parents[4]
+    source = json.loads((
+        root / "crypto-300-profit-mission" / "meme" / "evidence" /
+        "frank-v2-bpxx-ata-eight-page-bounded-signature-replay-2026-10-11.json"
+    ).read_text())
+    assert source["unique_signatures"] == 70
+    assert source["history_entirely_verified"] is False
+    assert source["acquisition_cost_usd"] is None
+    assert len(source["pages"]) == 7
+    assert [page["returned_count"] for page in source["pages"]] == [10] * 7
+    ata_rows = [row for page in source["pages"] for row in page["entries"]]
+    ata_signatures = [row["signature"] for row in ata_rows]
+    assert len(set(ata_signatures)) == 70
+    assert sum(row["err"] is not None for row in ata_rows) == 1
+
+    manifest = json.loads(_git(
+        f"{FRANK_PREFIX}/frank-transfer-history/{SNAPSHOT}.json"))
+    chunks = []
+    for part in manifest["parts"]:
+        packet = json.loads(_git(
+            f"{FRANK_PREFIX}/frank-transfer-history/{SNAPSHOT}/{part['file']}"))
+        payload = base64.b64decode(packet["payload_b64"], validate=True)
+        assert hashlib.sha256(payload).hexdigest() == part["sha256"]
+        chunks.append(payload)
+    normalized = b"".join(chunks)
+    assert hashlib.sha256(normalized).hexdigest() == SNAPSHOT
+    owner_records = json.loads(normalized)["records"]
+    assert len(owner_records) == 1720
+    owner_signatures = {row["signature"] for row in owner_records}
+    overlap = [row for row in ata_rows if row["signature"] in owner_signatures]
+    missing = [row for row in ata_rows if row["signature"] not in owner_signatures]
+    assert len(overlap) == 4
+    assert len(missing) == 66
+
+    index_start = int(datetime(2026, 10, 2, 22, 54, 44,
+                               tzinfo=timezone.utc).timestamp())
+    preindex = [row for row in missing if row["block_time_unix"] < index_start]
+    inwindow = [row for row in missing if row["block_time_unix"] >= index_start]
+    assert len(preindex) == 63
+    assert len(inwindow) == 3
+    assert sum(row["err"] is not None for row in inwindow) == 1
+    assert sum(row["err"] is None for row in inwindow) == 2
+    assert {row["signature"] for row in inwindow if row["err"] is None} == {
+        "4Gxq6UnNbqYvBYeGbN94Qa6Qyh8qLombBirUHsvszT4UXqDxQPhsQb5YBuQa2zsHHW9WWwm4DwY7M6Hbv8ios7ac",
+        "3knjrZuSocitUtSunifVFy1V1mYyAzz7NLJUf96Kqg77T85x4wU8wkoHSWBxPKh22xhBAGpCewARmHksQJABGXVU",
+    }
+    assert not source["transaction_balance_deltas_verified"]
+    assert not source["owner_signed_trades_verified"]
+    assert source["profit_usd"] is None
