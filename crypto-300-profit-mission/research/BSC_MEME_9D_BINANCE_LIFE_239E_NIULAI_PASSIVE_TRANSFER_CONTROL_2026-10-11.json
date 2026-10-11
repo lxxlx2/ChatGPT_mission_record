@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-11",
+  "status": "HISTORIC_SOURCE_PROVENANCE_WITH_CURRENT_BALANCE_CHECK",
+  "research_scope": "Complete previously indexed Binance Life 9d1240 two-transaction cohort and full 239e NiuLai inbound/outbound ERC20 stream. Do not assume ERC20 inbox means owner-signed buy.",
+  "nine_wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+  "nine_binance_life": {
+    "originals": [
+      {
+        "token": "币安人生",
+        "block": 74381368,
+        "hash": "0xbbe12e3cce1c7465b5959b769aa6ff08cd0351af5c20fee85612b4a38ae64387",
+        "signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+        "confirmed_wallet_signed": false,
+        "native_input_wei": "0",
+        "receipt_success_status": "0x1",
+        "gas_wei": "5533500000000",
+        "receipt_body_truncated": false
+      },
+      {
+        "token": "币安人生",
+        "block": 74382612,
+        "hash": "0xf95fba9cd055c59680a09c7f5b5c9103186bbf4a7e769183a229014e6be11a4f",
+        "signer": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+        "confirmed_wallet_signed": true,
+        "native_input_wei": "0",
+        "receipt_success_status": "0x1",
+        "gas_wei": null,
+        "receipt_body_truncated": true
+      }
+    ],
+    "block_native_records": [
+      {
+        "token": "币安人生",
+        "block": 74381368,
+        "hash": "0xbbe12e3cce1c7465b5959b769aa6ff08cd0351af5c20fee85612b4a38ae64387",
+        "dir": "in",
+        "before_wei": "1920751977603945811",
+        "after_wei": "1920751977603945811",
+        "delta_wei": "0"
+      },
+      {
+        "token": "币安人生",
+        "block": 74382612,
+        "hash": "0xf95fba9cd055c59680a09c7f5b5c9103186bbf4a7e769183a229014e6be11a4f",
+        "dir": "out",
+        "before_wei": "1982380840707955427",
+        "after_wei": "1988705568497494986",
+        "delta_wei": "6324727789539559"
+      }
+    ],
+    "signer_interpretation": "Original Binance Life inbound was a success transaction signed by another EOA and cost 0 native BNB for the wallet. Later outbound was wallet-signed, with +0.006324727789539559 BNB wallet native block delta. The 9D wallet did not demonstrably buy this position with its own BNB in the observed source tx.",
+    "inventory_closed": true
+  },
+  "twothree_wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "twothree_niu_lai": {
+    "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+    "transfer_in": [
+      {
+        "block": 116507952,
+        "hash": "0xac91b28e4e2833977db23172cc3a6020b66adf261251cf038331d952b8ff8808",
+        "from": "0x803bdbdec06681a2e437b3a6a561865e5eaa4036",
+        "to": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+        "raw": "16939109060931901978",
+        "receipt_status": "0x1",
+        "native_wallet_block_delta_wei": "0",
+        "original_signer": "UNCONFIRMED_ORIGINAL_TX_TRUNCATED"
+      }
+    ],
+    "outgoing_count": 0,
+    "outgoing_full_scan_complete": true,
+    "current_raw_balance": "16939109060931901978",
+    "source_reason": "UNRESOLVED_PASSIVE_OR_REWARD_TRANSFER",
+    "owner_buy_evidence": false,
+    "realized_exit_evidence": false
+  },
+  "limits": [
+    "9d Binance Life receipt source is prior signed original research; this work reuses it, not a fresh execution replay",
+    "239e NiuLai original sender field was truncated; transfer sender and direct wallet block balance verified, cannot assert original sender",
+    "No market-wide lifetime PnL or current USD mark; balances and source facts are not strategy alpha"
+  ],
+  "production": "NO_GO"
+}
