@@ -413,5 +413,7 @@ def test_existing_frank_time_bucket_may_append_without_mutating_immutable_source
 
 def test_sanitizer_cannot_silently_truncate_arrays_or_export_mac_home_path():
     assert safe({"path": "/Users/alice/private/state.db"})["path"] == "[LOCAL_PATH_REDACTED]"
+    assert safe("source=/home/alice/.config/token.json") == "[LOCAL_PATH_REDACTED]"
+    assert safe("file /Users/alice/private/state.db") == "[LOCAL_PATH_REDACTED]"
     with pytest.raises(ValueError, match="SAFE_ARRAY_EXCEEDS_LIMIT"):
         safe(list(range(200001)))
