@@ -238,6 +238,11 @@ class EvidenceSpool:
             "mint", "watch_state", "inventory_evidence", "local_model_state",
             "local_current_raw", "local_recognized_buys", "local_recognized_sells",
             "last_event_time", "last_event_signature", "last_event_side",
+            "origin_scope", "signature_activity_count", "passive_receipt_events",
+            "signature_received_events", "signature_sent_events", "signature_zero_events",
+            "last_signature_activity_time", "last_signature_activity_signature",
+            "signature_observed_in_raw", "signature_observed_out_raw",
+            "signature_token_amount_decimals", "transfer_counterparty_verified",
             "current_chain_balance_verified", "pnl_usd",
         )
         observed_rows = [
@@ -247,6 +252,10 @@ class EvidenceSpool:
         watch_meta = {
             "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
             "total_observed": (raw_watch.get("summary") or {}).get("total_observed"),
+            "original_trade_or_model_observed": (raw_watch.get("summary") or {}).get("original_trade_or_model_observed"),
+            "passive_receipt_only": (raw_watch.get("summary") or {}).get("passive_receipt_only"),
+            "other_account_activity_only": (raw_watch.get("summary") or {}).get("other_account_activity_only"),
+            "signature_activity_provenance": safe(raw_watch.get("signature_activity_provenance") or {}),
             "exported_count": len(observed_rows),
             "truncated": len(watch_rows) > 300,
             "rows": observed_rows,
