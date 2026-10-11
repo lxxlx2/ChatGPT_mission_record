@@ -22,7 +22,7 @@ Preexisting direct Alchemy finalized mint-by-mint owner account sample is dated 
 
 The newly discovered `2j5SaS7…nW2ZM` owner token account was independently queried with finalized RPC at slot **455530134**, and contains raw amount **886664587075** with 6 decimals, i.e. **886664.587075** tokens; compared with the earlier local BUY token units, the difference is **+1000.000000 tokens**. This difference may reflect transactions not in the local recognized-market trade history or other sources; no cause/profit/value inferred. This newer point-in-time balance must not be blended into an atomic Oct11 earlier 32-mint snapshot.
 
-Ten nonzero older snapshot tokens returned no supported USD price from Alchemy lookups. Follow the original user rule **exclude assets whose verifiable USD value is <$1**, but lack of price must remain **UNPRICED**, not presumptively excluded or valued at zero.
+Ten nonzero older snapshot tokens returned no supported USD price from Alchemy lookups. Keep values **UNPRICED**, not presumptively zero. The user's <$1 exclusion rule applies to **the user's own investment-asset inventory**, not to the Frank intelligence watchlist: Frank's historically traded tiny balances remain visible with materiality unknown.
 
 ## Source files and coding consequences
 
