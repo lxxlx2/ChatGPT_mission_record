@@ -28,6 +28,8 @@ on:
       - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/static/styles.css'
       - 'crypto-300-profit-mission/local-agent/tests/test_frank_wallet_watchlist_v2.py'
       - 'crypto-300-profit-mission/local-agent/tests/research/test_frank_git_real_transfer_replay.py'
+      - 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/ata_backfill.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_frank_ata_backfill_v1.py'
       - '.github/workflows/frank-ca-evidence-tests.yml'
   workflow_dispatch:
 
