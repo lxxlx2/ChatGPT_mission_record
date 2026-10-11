@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-11 15:58:48 Asia/Bangkok
+Updated: 2026-10-11 18:04:40 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-11 15:58:48 Asia/Bangkok
+- latest_actual_run: 2026-10-11 18:04:40 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-11/155848-final-retry.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-11/155800-attempt.md
-- latest_scheduled_shard: 3
-- latest_executed_shard: 0
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-11/180440-final-retry.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-11/180354-attempt.md (write blocked)
+- latest_scheduled_shard: 2
+- latest_executed_shard: 3
 - stale_shard_recovery: true
-- latest_candidate_count: 2
+- latest_candidate_count: 3
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 3
+- latest_source_failures: 6
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
@@ -37,3 +37,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-11 13:04:55: partial urgent + shard1, one Space public SPC claim dApp sunset ACTION (Oct 15) met official evidence gate. Scheduled Gmail was blocked by execution safety check, saved final-retry with pending_delivery. Existing event subsequently sent in explicit manual recovery after Gmail Sent dedupe, id 1a129b8b2ddd1607, readback PASS; archive 040407-space-spc-claim-dapp-sunset.md readback PASS; stable event_key now added to state/known-events.md and unchanged reminder suppressed. All other four candidates remain without eligible ACTION; four source gaps and one identity rejection; overall scheduler health remains DEGRADED_PARTIAL. This manual success does not prove scheduled Gmail write recovered.
 
 - 2026-10-11 15:58:48: partial urgent + oldest stale shard0, real attempt 155800-attempt.md and terminal 155848-final-retry.md committed; primary final write blocked. Two candidates: Concrete additional allocation unverified and Space Oct15 already delivered; three source gaps Concrete/TurboFlow/Space original Telegram. No new Tier A/B ACTION; Gmail/App silent. Historical attempt-only gaps remain. Schedule HH:00 unchanged; this invocation was at 15:58 and does not prove an HH:00 trigger.
+
+- 2026-10-11 18:04:40: partial urgent + stale shard3, 180440-final-retry.md committed. Attempt and primary final blocked by connector safety checks; 3 candidates, no new Tier A/B ACTION. Concrete additional allocation unverified; Space Oct15 already delivered; Cambria rumored TGE date unconfirmed. Six source gaps; no Gmail/App notification. Prior 17:00 attempt-only gap remains. Schedule HH:00 unchanged.
