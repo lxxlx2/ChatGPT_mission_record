@@ -156,7 +156,9 @@ def test_watch_page_has_source_and_accessibility_labels():
     assert "snapshot_inventory_state" in js
     assert "DATED_POINT_IN_TIME_NOT_LIVE" in js
     assert "实时余额已核实" not in js
-    assert 'value="PRIMARY" selected' in html
+    assert 'value="WATCH_NOW" selected' in html
+    assert 'value="PRIMARY"' in html
+    assert "filter === 'WATCH_NOW'" in js
     assert 'value="PASSIVE_RECEIPT_ONLY"' in html
     assert 'value="OTHER_ACCOUNT_ACTIVITY"' in html
     assert "passive_receipt_only" in js
