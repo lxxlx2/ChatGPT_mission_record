@@ -54,6 +54,7 @@ def frozen():
       "v4_production_functions":live.__file__,
       "v4_replayer_and_cost":replay.__file__,
       "official_spot_archive_parser":archive.source.__file__,
+      "official_spot_archive_wrapper":archive.__file__,
       "prior_stage24_verified_sha_aggregator":previous.__file__}
     for key,source in from_repo.items():
         if git_sha(source)!=m["original_blob_sha1"][key]:
