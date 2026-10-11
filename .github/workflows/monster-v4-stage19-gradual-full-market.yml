@@ -1,0 +1,47 @@
+name: Monster Stage19 Preregistered Gradual Watch Full Archived Spot Universe
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage19_gradual_watch.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage19_gradual_watch.py'
+      - '.github/workflows/monster-v4-stage19-gradual-full-market.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: monster-stage19-gradual-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  frozen-full-758-gradual-watch-versus-v4:
+    strategy:
+      fail-fast: false
+      matrix:
+        date: ['2025-11-17', '2026-02-17', '2026-05-17', '2026-08-17', '2026-09-17']
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Frozen 758-symbol universe and exploratory gradual gate fixture QA
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage19_gradual_watch.py tests/test_monster_v4_stage19_gradual_watch.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage19_gradual_watch.py
+      - name: Actual same-source unchanged production V4 vs frozen 6h gradual early Watch
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage19_gradual_watch.py --date ${{ matrix.date }} --output /tmp/monster_stage19_${{ matrix.date }}.json
+      - name: Preserve source SHA, old Watch and new Watch, cost and censoring for every symbol
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage19-full-758-gradual-watch-${{ matrix.date }}
+          path: /tmp/monster_stage19_${{ matrix.date }}.json
+          if-no-files-found: warn
+          retention-days: 30
