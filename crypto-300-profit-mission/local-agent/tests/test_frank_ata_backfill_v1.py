@@ -502,3 +502,53 @@ def test_pagecap_and_failed_transaction_validation_exits_nonzero(monkeypatch):
                             lambda argv=None, s=state: {"git_sync": "NOT_REQUESTED",
                                                           "scan_status": s})
         assert frank_ata_backfill.main([]) == 3
+
+
+def test_archived_raw_j7_rpc_responses_are_hash_bound_and_owner_verified():
+    import hashlib
+    import json
+    from pathlib import Path
+    archive = (Path(__file__).resolve().parents[2] / "meme" / "evidence" /
+               "frank-v2-j7-raw-rpc-responses-sha256-2026-10-11.json")
+    doc = json.loads(archive.read_text())
+    assert doc["source"].startswith("CONNECTED_ALCHEMY_SOLANA_MAINNET")
+    assert doc["wallet_history_complete"] is False
+    assert len(doc["records"]) == 2
+    expected = {
+        SIGNATURES[1]: "5000000000000",
+        SIGNATURES[2]: "4661379420528",
+    }
+    for entry in doc["records"]:
+        raw = entry["raw_getTransaction_result_text"]
+        assert hashlib.sha256(raw.encode("utf-8")).hexdigest() == (
+            entry["response_raw_utf8_sha256"])
+        tx_result = json.loads(raw)
+        sig = entry["requested_signature"]
+        assert sig in expected
+        checked = validate_transaction(
+            tx_result, sig, J7_ATA, J7, TOKEN_2022)
+        assert checked["status"] == "VERIFIED_ATA_BALANCE_DELTA"
+        assert checked["raw_delta"] == expected[sig]
+        assert checked["wallet_signed"] is False
+        assert checked["signer_identity_verified"] is True
+        assert checked["acquisition_cost_usd"] is None
+        assert checked["realized_pnl_usd"] is None
+
+
+def test_rpc_nondict_json_failure_stops_with_preserved_rows():
+    other = "5PiBn5JdjJDnRGziiSfsu2affgBR3DyTTCR3CHpcode"
+    other_account, _ = derive_ata(WALLET, other, TOKEN)
+    class NonDictRpc(FakeRPC):
+        def call(self, method, args):
+            if method == "getSignaturesForAddress" and args[0] == other_account:
+                raise AttributeError("RPC JSON root was not an object")
+            return super().call(method, args)
+    rpc = NonDictRpc(
+        {J7_ATA: [{"signature": SIGNATURES[0], "slot": TX_RAW[0][2],
+                   "blockTime": 1791505760, "err": None}]},
+        {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0])},
+    )
+    report = scan_ata_mints(rpc, [J7, other], known_signatures=set())
+    assert report["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
+    assert report["interruption_type"] == "AttributeError"
+    assert report["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
