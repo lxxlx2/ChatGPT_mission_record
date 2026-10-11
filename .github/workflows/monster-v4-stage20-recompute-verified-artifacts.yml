@@ -1,0 +1,50 @@
+name: Monster Stage20 Verify Frozen Four Artifact SHA and Paired Gate
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage20_aggregate.py'
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage20_actual_four_holdout_quality_exit_ci_20261011.json'
+      - '.github/workflows/monster-v4-stage20-recompute-verified-artifacts.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage20-verify-artifacts-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  source-verified-four-day-aggregate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile original SHA-enforcing four-artifact aggregate
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m py_compile scripts/monster_v4_stage20_aggregate.py
+      - name: Fetch all four original immutable CI artifact ZIP bytes using read-only Actions API
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11699220084/zip > /tmp/monster_stage20_dec.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11698939071/zip > /tmp/monster_stage20_jan.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11698844125/zip > /tmp/monster_stage20_apr.zip
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/11698919011/zip > /tmp/monster_stage20_jul.zip
+      - name: Recompute every pooled arm, paired trade and preregistered gate
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage20_aggregate.py --artifact-zips /tmp/monster_stage20_dec.zip /tmp/monster_stage20_jan.zip /tmp/monster_stage20_apr.zip /tmp/monster_stage20_jul.zip --output /tmp/monster_stage20_recomputed_verified.json
+      - name: Preserve verified pooled results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage20-verified-four-original-zip-pooled-results
+          path: /tmp/monster_stage20_recomputed_verified.json
+          if-no-files-found: warn
+          retention-days: 30
