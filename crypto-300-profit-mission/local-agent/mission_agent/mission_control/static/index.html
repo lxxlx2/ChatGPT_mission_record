@@ -30,14 +30,17 @@
       <div class="panel-title">
         <div>
           <h2>Frank 持续观察池 <span id="watch-total-count">0</span></h2>
-          <p>完整本地交易与模型状态观察，不等于买入信号或已核实的实时链上余额。</p>
+          <p>默认只看交易及模型重点观察；被动转入和其他账户活动单独筛选，防止垃圾空投淹没观察池。</p>
         </div>
         <span id="watch-scope">等待索引</span>
       </div>
       <div class="frank-watch-controls">
         <label for="watch-filter">类别</label>
         <select id="watch-filter">
-          <option value="ALL">全部观察</option>
+          <option value="PRIMARY" selected>交易及模型重点观察</option>
+          <option value="ALL">全部本地账户活动</option>
+          <option value="PASSIVE_RECEIPT_ONLY">仅被动转入（不代表值得买入）</option>
+          <option value="OTHER_ACCOUNT_ACTIVITY">其他账户活动（未核实）</option>
           <option value="SNAPSHOT_NONZERO">链上样本余额非零</option>
           <option value="MODEL_MISMATCH">模型与链上有差异</option>
           <option value="MODEL_OPEN">本地模型持有</option>
@@ -54,12 +57,12 @@
         <table class="frank-watch-table">
           <thead><tr>
             <th>代币 CA</th><th>观察分类</th><th>本地交易</th>
-            <th>最近链上动作</th><th>持仓证据</th><th>研究入口</th>
+            <th>最近已索引动作</th><th>余额及来源证据</th><th>研究入口</th>
           </tr></thead>
           <tbody id="watch-rows"></tbody>
         </table>
       </div>
-      <p class="frank-watch-footnote">数据来自 Frank 本地已有索引。OPEN、CLOSED 和 UNKNOWN 均为本地模型字段，未重新核实的钱包余额与收益保持未知。观察池不会触发新提醒。</p>
+      <p class="frank-watch-footnote">数据来自 Frank 本地已索引的买卖、模型状态及钱包代币余额变化；这不等于完整链史。被动转入不等于 Frank 主动买入；未核实转出方、实时余额、美元价值与成本均不能自行推断。观察池不触发提醒或交易。</p>
     </section>
 
     <section class="panel">
