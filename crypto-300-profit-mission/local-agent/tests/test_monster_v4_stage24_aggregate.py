@@ -15,7 +15,7 @@ DAYS=("2025-11-04","2025-12-04","2026-02-04","2026-04-04","2026-08-04","2026-09-
 def sample(symbol,day,positive=False,watch=False):
     status="VERIFIED_COMPLETE_168H"
     hour={"status":status,
-         "archive_sha256":"a"*64,
+         "archive_sha256":"a"*64,"maximum_high_multiple":"2.2" if positive else "1.1",
          "gross_high_ge_2x":positive,"gross_high_ge_5x":False,"gross_high_ge_10x":False,
          "gross_close_ge_2x":False,"gross_close_ge_5x":False,
          "gross_close_ge_10x":False}
