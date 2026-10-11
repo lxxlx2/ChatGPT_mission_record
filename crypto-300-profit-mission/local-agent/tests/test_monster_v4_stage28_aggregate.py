@@ -25,8 +25,7 @@ class Aggregation(unittest.TestCase):
             a.summarize({a.DATES[0]:mock(a.DATES[0],1,0,0)})
     def test_all_1132_watch_and_826_old_setups_hard_locked(self):
         old=[260,133,269,181,182,107]
-        individual=[219,1,2,3,4,5]
-        individual[-1]+=826-sum(individual)
+        individual=[219,100,180,120,125,82]
         reports={d:mock(d,w,i//3,i) for d,w,i in zip(a.DATES,old,individual)}
         result=a.summarize(reports)
         self.assertEqual(result["source_original_WATCH_count"],1132)
