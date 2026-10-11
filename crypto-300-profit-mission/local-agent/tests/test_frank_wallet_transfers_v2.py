@@ -44,6 +44,8 @@ def test_passive_transfer_preserves_public_evidence_only(tmp_path):
     x = report["records"][0]
     assert x["wallet_is_signer"] is False
     assert x["transfer_flows"][0]["raw_amount"] == "2846838050235"
+    assert x["counterparty_attribution_status"] == "PARSED_TOKEN_ACCOUNT_FLOW"
+    assert report["all_counterparties_verified"] is True
     assert len(x["wallet_owned_token_deltas"]) == 1
     assert x["wallet_owned_token_deltas"][0]["owner"] == FRANK
     assert "DO_NOT_EXPORT" not in json.dumps(report)
@@ -71,3 +73,33 @@ def test_missing_db_is_not_created(tmp_path):
     with pytest.raises((OSError,sqlite3.Error)):
         export_signature_evidence(p)
     assert not p.exists()
+
+
+def test_passive_balance_delta_without_parsed_source_is_explicitly_unattributed(tmp_path):
+    p = tmp_path / "forward.sqlite"
+    db = sqlite3.connect(p)
+    db.execute("CREATE TABLE signatures(wallet TEXT,person_id TEXT,signature TEXT,block_time INTEGER,body TEXT)")
+    body = {
+        "classification": "PASSIVE_TRANSFER",
+        "evidence": {
+            "wallet_is_signer": False,
+            "wallet_token_transfer_flows": [],
+            "token_balance_deltas": [{
+                "mint": MINT, "owner": FRANK, "wallet_owned": True,
+                "delta": "2846838050235", "pre_amount": "0",
+                "post_amount": "2846838050235", "decimals": 6
+            }],
+        },
+    }
+    db.execute("INSERT INTO signatures VALUES(?,?,?,?,?)",
+               (FRANK, "frank", "sig-passive-1", 1791505760, json.dumps(body)))
+    db.commit()
+    actual = export_signature_evidence(p)
+    assert actual["record_count"] == 1
+    assert actual["source_attribution_coverage"]["passive_nonzero_delta_without_parsed_counterparty"] == 1
+    assert actual["source_attribution_coverage"]["signature_rows_with_parsed_counterparty_flows"] == 0
+    assert actual["records"][0]["counterparty_attribution_status"] == (
+        "BALANCE_DELTA_ONLY_COUNTERPARTY_UNRESOLVED")
+    assert actual["all_counterparties_verified"] is False
+    assert actual["records"][0]["transfer_flows"] == []
+    db.close()
