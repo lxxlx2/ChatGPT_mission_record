@@ -147,6 +147,8 @@ def main(argv=None):
                     status["git_sync"] = (
                         "SYNC_OK" if data["git_sync_result"]["status"] == "SYNC_OK"
                         and transfer_result["status"] == "SYNC_OK"
+                        and status.get("frank_transfer_history") == "QUEUED_LOCALLY"
+                        and status.get("frank_history") == "QUEUED_LOCALLY"
                         else "SYNC_PARTIAL"
                     )
                 except (OSError, ValueError, RuntimeError):
