@@ -18,6 +18,7 @@ def summarize_manual_reviews(rows):
     pending = {"gmail": 0, "local": 0, "other": 0}
     blocked = {"gmail": 0, "local": 0, "other": 0}
     manual_total = 0
+    manual_channels = {"gmail": 0, "local": 0, "other": 0}
     for row in rows:
         channel = row.get("channel")
         channel = channel if channel in ("gmail", "local") else "other"
@@ -38,6 +39,7 @@ def summarize_manual_reviews(rows):
             blocked[channel] += 1
             continue
         manual_total += 1
+        manual_channels[channel] += 1
         if channel == "other":
             actionable["other"] += 1
             continue
@@ -73,6 +75,9 @@ def summarize_manual_reviews(rows):
         "manual_review_actionable_local_count": actionable["local"],
         "manual_review_actionable_other_count": actionable["other"],
         "manual_review_manual_only_total_count": manual_total,
+        "manual_review_manual_only_gmail_count": manual_channels["gmail"],
+        "manual_review_manual_only_local_count": manual_channels["local"],
+        "manual_review_manual_only_other_count": manual_channels["other"],
         "manual_review_blocked_count": sum(blocked.values()),
         "manual_review_blocked_gmail_count": blocked["gmail"],
         "manual_review_blocked_local_count": blocked["local"],
