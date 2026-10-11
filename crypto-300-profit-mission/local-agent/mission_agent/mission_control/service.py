@@ -357,6 +357,8 @@ class MissionMemeService:
         publisher = GitEvidencePublisher(spool) if export_enabled else None
         exporter = ThreadPoolExecutor(max_workers=1, thread_name_prefix="frank-evidence") if export_enabled else None
         upload_future = None
+        last_upload_failure_at = 0.0
+        inflight_full_history = False
         last_poll_count = None
         transfer_capture_needed = True  # First opt-in run archives the existing local source.
         last_transfer_snapshot_dispatch = 0.0  # Full-index archival is at most hourly.
@@ -392,10 +394,22 @@ class MissionMemeService:
                             if int(health.get("new_signatures") or 0) > 0:
                                 transfer_capture_needed = True
                         if upload_future is not None and upload_future.done():
-                            # Exceptions inside background futures must remain
-                            # observable without interrupting decision/Gmail.
-                            upload_future.result()
-                        if upload_future is None or upload_future.done():
+                            completed = upload_future
+                            upload_future = None
+                            try:
+                                completed.result()
+                            except Exception:
+                                last_upload_failure_at = time.monotonic()
+                                if inflight_full_history:
+                                    transfer_capture_needed = True
+                                    last_transfer_snapshot_dispatch = 0.0
+                                inflight_full_history = False
+                                raise
+                            last_upload_failure_at = 0.0
+                            inflight_full_history = False
+                        if (upload_future is None and
+                            (not last_upload_failure_at or
+                             time.monotonic() - last_upload_failure_at >= 60)):
                             # Network work runs in a separate worker. A slow GitHub
                             # connection never occupies the decision/Gmail loop.
                             # Regular Frank poll buckets still capture each
@@ -408,6 +422,7 @@ class MissionMemeService:
                                 publish_evidence_batch, spool, publisher,
                                 self.frank.database, due,
                             )
+                            inflight_full_history = due
                             if due:
                                 transfer_capture_needed = False
                                 last_transfer_snapshot_dispatch = time.monotonic()
