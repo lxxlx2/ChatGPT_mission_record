@@ -57,7 +57,7 @@ def safe(value: object, level: int = 0) -> object:
     if isinstance(value, float):
         return value if -1e308 < value < 1e308 else None
     if isinstance(value, str):
-        if re.search(r"(?i)(?:^|[\\s=])/(?:Users|home)/[^\\s]+", value):
+        if re.search(r"(?i)(?:^|[\s=])/(?:Users|home)/[^\s]+", value):
             return "[LOCAL_PATH_REDACTED]"
         if SENSITIVE_INLINE.search(value):
             return "[REDACTED]"
