@@ -35,12 +35,12 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           python -B -m compileall -q mission_agent scripts tests
-          python -m pyflakes mission_agent/mission_control/delivery_review.py mission_agent/mission_control/server.py scripts/frank_dashboard_readonly_acceptance.py scripts/deploy_frank_dashboard_review_badge.py tests/research/test_frank_dashboard_second_round.py
+          python -m pyflakes mission_agent/mission_control/delivery_review.py mission_agent/mission_control/server.py scripts/frank_dashboard_readonly_acceptance.py scripts/deploy_frank_dashboard_review_badge.py tests/research/test_frank_dashboard_second_round.py tests/research/test_frank_dashboard_rollback_second_round.py
           node --check mission_agent/mission_control/static/app.js
       - name: Review-focused regressions
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -m pytest -q tests/research/test_frank_dashboard_second_round.py tests/research/test_delivery_review_integration.py tests/research/test_delivery_review_breakdown.py tests/research/test_frank_dashboard_deploy.py tests/research/test_frank_dashboard_readonly_acceptance.py
+          python -m pytest -q tests/research/test_frank_dashboard_rollback_second_round.py tests/research/test_frank_dashboard_second_round.py tests/research/test_delivery_review_integration.py tests/research/test_delivery_review_breakdown.py tests/research/test_frank_dashboard_deploy.py tests/research/test_frank_dashboard_readonly_acceptance.py
       - name: Complete local-agent suite
         working-directory: crypto-300-profit-mission/local-agent
         run: python -m pytest -q tests
