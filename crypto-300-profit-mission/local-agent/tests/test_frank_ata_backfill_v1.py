@@ -132,6 +132,28 @@ def test_scanner_rejects_misbound_rpc_response_without_missing_signature_claim()
     assert result["complete_wallet_history"] is False
 
 
+
+def test_missing_signer_metadata_must_not_be_called_external_signed():
+    proof = tx("0", "5000000", 454705824, signature=SIGNATURES[1])
+    for key in proof["transaction"]["message"]["accountKeys"]:
+        key.pop("signer")
+    report = validate_transaction(proof, SIGNATURES[1], J7_ATA, J7, TOKEN_2022)
+    assert report["status"] == "VERIFIED_ATA_BALANCE_DELTA"
+    assert report["raw_delta"] == "5000000"
+    assert report["wallet_signed"] is None
+    assert report["signer_identity_verified"] is False
+
+
+def test_raw_message_header_fallback_recovers_external_signer_proof():
+    proof = tx("0", "5000000", 454705824, signature=SIGNATURES[1])
+    message = proof["transaction"]["message"]
+    message["accountKeys"] = [item["pubkey"] for item in message["accountKeys"]]
+    message["header"] = {"numRequiredSignatures": 1}
+    report = validate_transaction(proof, SIGNATURES[1], J7_ATA, J7, TOKEN_2022)
+    assert report["status"] == "VERIFIED_ATA_BALANCE_DELTA"
+    assert report["wallet_signed"] is False
+    assert report["signer_identity_verified"] is True
+
 def test_failed_transaction_is_never_a_transfer():
     data = tx("10000", "0", 454705824)
     data["meta"]["err"] = {"InstructionError": [0, "Custom"]}
