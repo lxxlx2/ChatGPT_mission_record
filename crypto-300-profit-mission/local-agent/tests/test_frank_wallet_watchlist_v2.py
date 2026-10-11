@@ -265,3 +265,36 @@ def test_passive_activity_never_overwrites_existing_closed_trade_status():
     assert row["watch_state"] == "HISTORICAL_EXIT"
     assert row["passive_receipt_events"] == 1
     assert row["origin_scope"] == "LOCAL_TRADE_OR_MODEL_WITH_SIGNATURE_DELTA"
+
+
+def test_known_ata_gap_overlay_does_not_relabel_owner_index_trades():
+    from mission_agent.mission_control.wallet_watch import annotate_known_ata_gaps
+    original = from_seed([{"mint": MINT1, "local_state": "UNKNOWN"}])
+    source = {"schema_version": 1,
+              "owner_wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+              "records": [{"mint": MINT1, "owner_index_missing_signatures": 2,
+                           "verified_extra_passive_receipts": 2,
+                           "source_date_utc": "2026-10-11"}]}
+    overlay = annotate_known_ata_gaps(original, source)
+    row = overlay["rows"][0]
+    assert row["owner_index_gap_status"] == "CONFIRMED_HISTORICAL_GAP"
+    assert row["owner_index_missing_signatures"] == 2
+    assert row["ata_verified_extra_passive_receipts"] == 2
+    assert row["local_recognized_buys"] == 0
+    assert row["local_recognized_sells"] == 0
+    assert not row["is_follow_signal"]
+    assert overlay["summary"]["known_owner_index_gap_mints"] == 1
+    missing = annotate_known_ata_gaps(original, None)
+    assert missing["rows"][0]["owner_index_gap_status"] == "NOT_AUDITED"
+
+
+def test_known_ata_gap_invalid_count_fails_closed():
+    from mission_agent.mission_control.wallet_watch import annotate_known_ata_gaps
+    observed = from_seed([{"mint": MINT1, "local_state": "UNKNOWN"}])
+    bad = {"schema_version": 1,
+           "owner_wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+           "records": [{"mint": MINT1, "owner_index_missing_signatures": 2,
+                        "verified_extra_passive_receipts": 3,
+                        "source_date_utc": "2026-10-11"}]}
+    with pytest.raises(ValueError, match="INVALID_ATA_GAP_RECORD"):
+        annotate_known_ata_gaps(observed, bad)
