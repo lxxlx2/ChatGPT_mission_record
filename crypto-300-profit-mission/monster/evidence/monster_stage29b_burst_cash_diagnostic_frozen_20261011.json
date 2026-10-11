@@ -1,0 +1,50 @@
+{
+  "schema": "MONSTER_STAGE29B_POSTHOC_FUNDED_BURST_SENSITIVITY_FROZEN_V1",
+  "date": "2026-10-11",
+  "context": "Burst >=8 observed favorable on fully exposed Stage29 outcome so entire exercise is POSTHOC_DIAGNOSTIC and can NEVER qualify as independent strategy proof",
+  "original_source_artifact_id": 11706590853,
+  "original_zip_sha256": "c620dd33c7eeddd0b9b9586dadf18f72a674be06f3598f254825aa184f27794d",
+  "original_JSON_sha256": "2cf87e0dc7eef83a8dd23a37e5233c243f88fe770438429d0ff5c291b905d65d",
+  "expected_original_WATCH": 1132,
+  "burst_threshold_from_previous_descriptive": "same WATCH 3m UTC + frozen day >=8; threshold originally predeclared as diagnostic bucket in Stage29, but candidate strategy idea was generated after results",
+  "expected_burst_events": 110,
+  "expected_market_bursts": 2,
+  "budget_USDT": [
+    30,
+    300
+  ],
+  "max_positions": [
+    1,
+    10
+  ],
+  "execution_sizes": [
+    "FIXED_30U",
+    "UP_TO_30U_FRACTIONAL"
+  ],
+  "min_lot_usdt": 1,
+  "fees_bps_side": 10,
+  "slippage_bps_side": [
+    20,
+    100
+  ],
+  "censored_exit_recovery_percent": [
+    0,
+    100
+  ],
+  "selection": "Original source order chronological, tied same-poll price signals lexicographically by symbol, never choose by future profit or volume",
+  "holding": "24 hours actual historical minute price proxy only, no intraday MTM",
+  "direct_code": "Re-use frozen Stage27 money_ledger, never reimplement cash math",
+  "required": [
+    "all 110 burst timestamps retained",
+    "source ZIP and JSON SHA actually rehashed",
+    "no negative available cash, no future-PnL selector",
+    "report 16 funded scenarios including source-censored price exits",
+    "single-date Feb and single-date Sep outcomes separated",
+    "No production or future profitability claims"
+  ],
+  "other_AI_review": "NOT_DONE",
+  "trading": "NO_GO",
+  "deployment": "NO_GO",
+  "real_gmail": "OFF",
+  "frank": "UNCHANGED"
+}
