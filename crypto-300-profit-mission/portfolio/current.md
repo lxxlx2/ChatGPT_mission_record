@@ -1,6 +1,6 @@
 # Mission Portfolio / Current Assets and Capital Classification
 
-Updated: 2026-10-10 Asia/Bangkok (read-only wallet refresh; price observations around 2026-10-10 16:14 UTC)
+Updated: 2026-10-12 Asia/Bangkok (GANG completion and new on-chain Solana wallet holdings; older snapshots retained dated)
 Timezone: Asia/Bangkok
 Portfolio authority: this file; operational status: `../state/latest.md`; performance attribution: `../performance/current.md`.
 
@@ -22,7 +22,26 @@ Portfolio authority: this file; operational status: `../state/latest.md`; perfor
 
 Only these already authorized canonical wallets are in the present sweep. Wallet discovery/other accounts have **not** been asserted complete.
 
-## 2026-10-10 independently rechecked on-chain material balances
+## Latest material Solana change — 2026-10-12 GANG completion
+
+Source: direct finalized Solana RPC observations around **01:31–01:41 Asia/Bangkok**, main account details in `../positions/gang.md`. This section **supersedes the older October 10 GANG escrow and 58.047629 USDC wallet snapshot below**; other historical asset sections remain their original dated evidence.
+
+| Wallet holding | Fresh direct balance | Mark treatment |
+| --- | ---: | --- |
+| Solana canonical USDC `AaHmxVnUryLCrSr32zxrDGzfafXTvuHATURZbBy6XQ6A` | **85.102445 USDC** (slot 455753009) | ≥$1, included in known direct chain wallet subtotal; not all change since Oct 10 is sale refund |
+| Solana GANG `5XBM2iEibBNAVBMjPYb9Deh8ibm4CCqZrbqk8n7TpGJo` | **8,008.208 GANG** (slot 455753009) | **ACTUAL OWNED**; real Futarchy reserve-ratio mark ~$0.05451837/GANG at ~slot 455753008, not a verified net-sell execution quote; *indicative* value ~$436.59 |
+| Solana SOL | 0.038163041 SOL **last checked October 10** | Stale quantity/price, needs fresh read before a complete current-NAV claim |
+| Binance Earn | 655.55477225 USDC; screenshot USDT-equivalent ~$656.07, **2026-10-09** | Historical user-confirmed, not reverified October 12 |
+| Bybit | 353.173611 USDC; screenshot 2026-10-09 | **EXCLUDED** personal living/rent cash |
+
+Backable GANG **finalized sale**: 500 USDC originally committed, 480.492480 USDC approved cost for 8008.208 now held, **19.507520 USDC unused funds refunded** as `FundingRecord.is_usdc_refunded=true`. `is_tokens_claimed=true`. Both user GANG wallet receipt and current USDC holding independently verified. **Do not add the old 500 USDC escrow as a separate asset or add the 19.507520 refund again on top of the wallet's 85.102445 USDC.** No manual claim/refund action taken by ChatGPT.
+
+Actual marked value of GANG depends on pool choice, fees and price impact; the ~0.05451837 price is the **Futarchy AMM reserve ratio**, not an actionable Jupiter/DEX exact-input quote. Because Binance/SOL/NFT snapshots are from different dates and some token inventories incomplete, **a fully current all-platform investment NAV remains UNVERIFIED**. For scale only, 85.102445 USDC + 8008.208 GANG at this spot reference is approximately **$521.70**, excluding stale SOL balance, other assets and CEX. The dated October 10 $718.38 table below is a **historical pre-settlement reference**; it must not be presented as the current portfolio total.
+
+User per-position **< $1 exclusion** remains in force. GANG is above the threshold and is now a real transferable SPL balance; it is no longer an unissued/pre-TGE right.
+
+
+## Historical snapshot: 2026-10-10 independently rechecked on-chain material balances
 
 ### Solana / finalized RPC
 
@@ -78,14 +97,14 @@ The latest explicit user-confirmed Sui account state remains **0**, with no fres
 - `USER_CONFIRMED_HISTORICAL_2026-10-09`. No live account read.
 - **BYBIT = EXCLUDED_FROM_INVESTMENT_CAPITAL** in its entirety, even if an individual position would otherwise exceed $1. Reserved for personal living and rent.
 
-## Material capital reference (not realized profit)
+## Historical pre-GANG-settlement material capital reference (2026-10-10; not today's NAV)
 
 | Bucket | USD reference | Freshness / status |
 | --- | ---: | --- |
 | Solana USDC + SOL (each >= $1) | **~$62.31** | 2026-10-10 finalized chain, contemporaneous approximate quotes |
 | Binance flexible Earn | **~$656.07** | 2026-10-09 user screenshot, NOT 2026-10-10 live |
 | **Cross-source indicative investment reference** | **~$718.38** | mixed freshness; **not** audited full NAV or Mission PnL |
-| GANG / The Syndicate escrow | **500 USDC historical commitment** | 2026-10-10 FundingRecord account re-read; illiquid/pending and excluded from above |
+| GANG / The Syndicate escrow (HISTORICAL ONLY) | **500 USDC originally committed** | Superseded by 2026-10-12 claimed 8008.208 GANG and 19.507520 refund above; not outstanding escrow |
 | Bybit living/rent cash | **~$353.42 historical UI mark** | excluded completely |
 
 The GANG FundingRecord `GgFwSstgG9e6XDEWAc4wrcD8EqVaqHpzo7ScvNGEEQot` was still present, owner `moontUzsdepotRGe5xsfip7vLPTJnVuafqdUWexVnPM`, at Solana finalized slot **455317963**. The stored funding amount's little-endian 8-byte field remains **500,000,000 raw USDC units = 500 USDC**. This confirms committed historical escrow; **final allocation/claim/refund and recoverability still UNCONFIRMED** pending the raise's settlement. The scheduled close remains **2026-10-12 00:30:01 Asia/Bangkok** per prior recorded launch contract, not a guaranteed claim time. See `positions/gang.md`.
@@ -104,7 +123,7 @@ These entries preserve unresolved economic rights/cost bases and are not added t
 
 | Project | User right / position | Historical cost / committed capital | Current state | Accounting treatment |
 |---|---|---:|---|---|
-| GANG / The Syndicate | Backable Solana v0.7 sale escrow, actual chain-verified 500 USDC committed on 2026-10-08; final GANG allocation and refundable excess pending sale completion | **$500** | Live until 2026-10-12 00:30:01 Bangkok; claim/refund only after contract state permits | Illiquid pre-settlement commitment; separate from wallet cash. See `positions/gang.md` |
+
 | Reya | CoinList token-sale allocation | **$5,000** | pre-TGE / unresolved distribution | cost basis only; exclude from liquid NAV |
 | Makina | Legion / ICO token allocation | **$1,000** | pre-TGE | cost basis only; exclude from liquid NAV |
 | Block Stranding | presale / future token rights | **100 SOL** | pre-TGE | preserve native-unit cost; do not convert without explicit valuation refresh |
@@ -121,7 +140,7 @@ These entries preserve unresolved economic rights/cost bases and are not added t
 | RepublicX / rTTOK / ByteDance economic exposure | 5,000 contingent payout notes, $1 principal each | **$5,000** | illiquid contractual note exposure | not direct ByteDance stock ownership; cost basis only |
 | Surf Limited Edition NFT #691 | 1 NFT, pending delivery / airdrop | **$228** | delivery not independently verified | historical acquisition cost only |
 
-Known dollar-denominated historical acquisition cost above: **$17,128**, plus **100 SOL** Block Stranding historical cost. JUMP is no longer included because the application was rejected and the 1,000 USDC deposit was refunded.
+Known dollar-denominated historical acquisition cost above: **$16,628** (the historical $500 GANG commitment has become an actual wallet holding and refund recorded in the current section), plus **100 SOL** Block Stranding historical cost. JUMP is no longer included because the application was rejected and the 1,000 USDC deposit was refunded.
 
 ### Points / rewards / potential token rights
 
