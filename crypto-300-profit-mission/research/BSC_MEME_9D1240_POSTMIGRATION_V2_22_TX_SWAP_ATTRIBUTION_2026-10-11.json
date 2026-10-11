@@ -279,16 +279,20 @@
       "amount_token_in_raw": "319280535961694660673431",
       "amount_wbnb_out_wei": "62904805748347438",
       "amount_token_out_raw": "0"
-    }
-  ],
-  "pending": [
+    },
     {
       "token": "龙虾",
       "block": 83636714,
       "hash": "0xd6b6d1b7be654133a1949389883a6c763cbfec74725288788d9687823099d5b3",
       "original_wallet_delta_wei": "55450516504983850",
       "gas_wei": null,
-      "owner_signed": true
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "287352482365525194606088",
+      "amount_wbnb_out_wei": "56030845035337222",
+      "amount_token_out_raw": "0"
     },
     {
       "token": "龙虾",
@@ -296,9 +300,31 @@
       "hash": "0x363852852e72d638e82ecbb508b851afd82030581cca57360932ee64a4626989",
       "original_wallet_delta_wei": "491079605708473115",
       "gas_wei": null,
-      "owner_signed": true
+      "owner_signed": true,
+      "event_status": "MATCHED_V2_SELL_SWAP",
+      "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "amount_wbnb_in_wei": "0",
+      "amount_token_in_raw": "2586172341289726751454792",
+      "amount_wbnb_out_wei": "496065264554013247",
+      "amount_token_out_raw": "0"
     }
   ],
-  "state": "PARTIAL_20_OF_22",
-  "production": "NO_GO"
+  "pending": [],
+  "state": "ALL_22_V2_PAIR_SWAP_PROBES_FINISHED_2_LOG_TRUNCATIONS_UNVERIFIED",
+  "production": "NO_GO",
+  "matched": 20,
+  "unresolved": [
+    {
+      "token": "龙虾",
+      "block": 83636145,
+      "hash": "0x5b1f8c1df73a64fc3a6ed502534626a6228548a376435415d80e7a5a4a9f1798",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 65)"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636158,
+      "hash": "0xbdfc82463f70a80bec7d49cbdae80e05655ebdacd56a433cfb0a8f9e847d7893",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 139 column 30)"
+    }
+  ]
 }
