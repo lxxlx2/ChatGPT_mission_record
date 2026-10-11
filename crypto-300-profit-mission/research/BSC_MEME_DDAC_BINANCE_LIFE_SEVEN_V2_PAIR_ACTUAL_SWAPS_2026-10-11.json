@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "source_file": "BSC_MEME_DDAC_BINANCE_LIFE_FULL_ERC20_HISTORY_2026-10-11.json",
+  "source_pair": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+  "pair_token0": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+  "pair_token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "method": "Read original owner wallet BNB N-1 and N balances, original transaction sender and native input, and V2 pair Swap event at exact block+tx hash; token0 Binance Life token1 WBNB. Some receipts or swap logs can truncate, preserve failures.",
+  "expected": 7,
+  "rows": [
+    {
+      "block": 71923263,
+      "hash": "0x2f791551bb634592fee05d06c45036fa134bd8f4836895b81183f86bf0e0f879",
+      "side": "in",
+      "token_wallet_transfer_raw": "6728840462565605620891",
+      "native_block_delta_wei": "-1000091024450000000",
+      "swap_status": "SAME_HASH_V2_SWAP",
+      "amount_binanceLife_in_raw": "0",
+      "amount_wbnb_in_wei": "990000000000000000",
+      "amount_binanceLife_out_raw": "6728840462565605620891",
+      "amount_wbnb_out_wei": "0",
+      "sender": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "1000000000000000000",
+      "self_signed": true
+    },
+    {
+      "block": 71923599,
+      "hash": "0xceefd32f74d7854464962c928107f4d3ead94ac172b050089ec8f722a4f9ba9a",
+      "side": "out",
+      "token_wallet_transfer_raw": "6728840462565605620891",
+      "native_block_delta_wei": "1001582369069233685",
+      "swap_status": "SAME_HASH_V2_SWAP",
+      "amount_binanceLife_in_raw": "6728840462565605620891",
+      "amount_wbnb_in_wei": "0",
+      "amount_binanceLife_out_raw": "0",
+      "amount_wbnb_out_wei": "1011741497847710792",
+      "sender": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "self_signed": true
+    },
+    {
+      "block": 74373427,
+      "hash": "0x834bdb0ef877aa7466e9a4de642a29e19a4c03a747f421d2d3e73fb100caaa3b",
+      "side": "in",
+      "token_wallet_transfer_raw": "5547937604075763851143",
+      "native_block_delta_wei": "-1000032988600000000",
+      "swap_status": "UNRESOLVED",
+      "swap_error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 66)",
+      "sender": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "1000000000000000000",
+      "self_signed": true
+    },
+    {
+      "block": 74374156,
+      "hash": "0xe3ecb57243f466a199e84dde8f152121a1fe6be66647c38e0736273357300a1a",
+      "side": "out",
+      "token_wallet_transfer_raw": "5547937604075763851143",
+      "native_block_delta_wei": "1063744362664591640",
+      "swap_status": "SAME_HASH_V2_SWAP",
+      "amount_binanceLife_in_raw": "5547937604075763851143",
+      "amount_wbnb_in_wei": "0",
+      "amount_binanceLife_out_raw": "0",
+      "amount_wbnb_out_wei": "1074529246529890545",
+      "sender": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "self_signed": true
+    }
+  ],
+  "pending": [
+    {
+      "block": 74374173,
+      "hash": "0x3c5a723a9406c1f2e2c30cd499fffdccfac43d058f22cea3196b157d5c1b9d4c",
+      "side": "in",
+      "token_wallet_transfer_raw": "505392375090042410804"
+    },
+    {
+      "block": 93216478,
+      "hash": "0xf5940d4a909aa92b0902aa7f94bdf3aa87bc33cb9abfc63e12955ebf95f6ba05",
+      "side": "out",
+      "token_wallet_transfer_raw": "531778968657415522943"
+    },
+    {
+      "block": 115522556,
+      "hash": "0x5c6f097181e2b6f8ab4172700d82965f17691495c27a2494c62814720ab2bd5e",
+      "side": "out",
+      "token_wallet_transfer_raw": "84209643828649469643"
+    }
+  ],
+  "status": "4_OF_7_PAIR_ACTION_CHECKS",
+  "production": "NO_GO"
+}
