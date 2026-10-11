@@ -1,0 +1,43 @@
+name: Monster Stage18 Frozen Seven Missed 2x Watch Gate Diagnosis
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage18_missed_gate_diagnostic.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage18_missed_gate_diagnostic.py'
+      - '.github/workflows/monster-v4-stage18-missed-gate-diagnostic.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: monster-stage18-research-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  causal-missed-event-gate-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify failure fixtures and causal frozen gate thresholds
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage18_missed_gate_diagnostic.py tests/test_monster_v4_stage18_missed_gate_diagnostic.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage18_missed_gate_diagnostic.py
+      - name: Replay real pre-first-cross price and quote gates from Binance original 1m SHA-checked archives
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage18_missed_gate_diagnostic.py --output /tmp/monster_stage18_missed_gate_diagnostic.json
+      - name: Preserve all source SHA and actual threshold-failure reasons
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage18-seven-frozen-missed-gates-actual
+          path: /tmp/monster_stage18_missed_gate_diagnostic.json
+          if-no-files-found: warn
+          retention-days: 30
