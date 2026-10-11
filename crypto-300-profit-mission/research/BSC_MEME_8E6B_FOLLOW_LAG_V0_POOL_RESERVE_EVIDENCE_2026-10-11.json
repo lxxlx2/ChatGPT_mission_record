@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "as_of": "2026-10-11",
+  "frozen_spec_path": "BSC_MEME_8E6B_FOLLOW_LAG_V0_FROZEN_SPEC_2026-10-11.json",
+  "frozen_spec_blob_sha": "3454698c3050cc65faab52e216e24471cd9338d5",
+  "production": "NO_GO",
+  "state": "IDENTITY_PARTIAL_4_OF_8",
+  "pool_identities": [
+    {
+      "token": "4",
+      "pair": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "token0": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token_contract": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "token_decimals": 18,
+      "underlying_order_valid": true,
+      "quote": "WBNB",
+      "quote_decimals": 18,
+      "underlying_index": 0,
+      "metadata_symbol": "4",
+      "errors": []
+    },
+    {
+      "token": "GIGGLE",
+      "pair": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "token0": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token_contract": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "token_decimals": 18,
+      "underlying_order_valid": true,
+      "quote": "WBNB",
+      "quote_decimals": 18,
+      "underlying_index": 0,
+      "metadata_symbol": "GIGGLE",
+      "errors": []
+    },
+    {
+      "token": "币安人生",
+      "pair": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "token0": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token_contract": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "token_decimals": 18,
+      "underlying_order_valid": true,
+      "quote": "WBNB",
+      "quote_decimals": 18,
+      "underlying_index": 0,
+      "metadata_symbol": "币安人生",
+      "errors": []
+    },
+    {
+      "token": "SIREN",
+      "pair": "0xa9b4493042830109b44e18ec3586ecd22bd032ed",
+      "token0": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token_contract": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "token_decimals": 18,
+      "underlying_order_valid": true,
+      "quote": "WBNB",
+      "quote_decimals": 18,
+      "underlying_index": 0,
+      "metadata_symbol": "SIREN",
+      "errors": []
+    }
+  ],
+  "snapshots": [],
+  "scenario_results": [],
+  "rpc_errors": []
+}
