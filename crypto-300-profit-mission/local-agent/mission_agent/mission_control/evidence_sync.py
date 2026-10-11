@@ -57,6 +57,8 @@ def safe(value: object, level: int = 0) -> object:
     if isinstance(value, float):
         return value if -1e308 < value < 1e308 else None
     if isinstance(value, str):
+        if re.search(r"(?i)(?:^|[\\s=])/(?:Users|home)/[^\\s]+", value):
+            return "[LOCAL_PATH_REDACTED]"
         if SENSITIVE_INLINE.search(value):
             return "[REDACTED]"
         if len(value) > MAX_TEXT:
@@ -70,7 +72,9 @@ def safe(value: object, level: int = 0) -> object:
                 return "[URL_INVALID]"
         return value
     if isinstance(value, list):
-        return [safe(x, level + 1) for x in value[:MAX_ARRAY]]
+        if len(value) > MAX_ARRAY:
+            raise ValueError("SAFE_ARRAY_EXCEEDS_LIMIT")
+        return [safe(x, level + 1) for x in value]
     if isinstance(value, dict):
         return {str(k): safe(v, level + 1) for k, v in value.items()
                 if isinstance(k, str) and not BANNED.search(k) and len(k) <= 90}
@@ -340,6 +344,16 @@ class GitEvidencePublisher:
             prior, sha = self._remote(remote)
             if prior == blob:
                 return
+            # The 15-minute Frank poll bucket is intentionally append/update
+            # material. All other evidence URLs are immutable observations.
+            # A divergent remote content-addressed file is a collision and
+            # must never be overwritten, even with a valid GitHub blob SHA.
+            mutable_frank_bucket = bool(re.fullmatch(
+                re.escape(PREFIX) + r"/frank/\\d{4}-\\d{2}-\\d{2}/\\d{4}\\.json",
+                remote,
+            ))
+            if sha and not mutable_frank_bucket:
+                raise ValueError("IMMUTABLE_GIT_EVIDENCE_COLLISION")
             args = {"message": "evidence: update " + remote.removeprefix(PREFIX + "/"),
                     "content": base64.b64encode(blob).decode("ascii"), "branch": BRANCH}
             if sha:
