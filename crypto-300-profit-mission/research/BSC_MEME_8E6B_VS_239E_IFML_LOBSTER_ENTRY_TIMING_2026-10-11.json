@@ -1,0 +1,89 @@
+{
+  "date_utc": "2026-10-11",
+  "analysis": "BSC_MEME_TWO_WALLET_FIRST_ENTRY_OPPORTUNITY_CAPTURE",
+  "chain": "bnb-mainnet",
+  "wallet_239e": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "wallet_8e6b": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "scope": "Two shared token contracts IFML and lobster. Pool reference is earliest sampled Pancake V2 transfer, not token genesis. Actual timestamps from ethGetBlockByNumber.",
+  "source_files": [
+    "BSC_MEME_239E_TWO_MAJOR_FULL_SIGNED_FLOW_SOURCE_2026-10-11.json",
+    "BSC_MEME_239E_IFML_ORIGINAL_TX_RECEIPT_PROVENANCE_2026-10-11.json",
+    "BSC_MEME_239E_LOBSTER_21_ORIGINAL_SIGNER_RECEIPT_AUDIT_2026-10-11.json",
+    "BSC_MEME_8E6B_ELEVEN_TOKEN_ENTRY_EXIT_BLOCK_TIMELINE_2026-10-11.json",
+    "BSC_MEME_239E_TWO_MAJOR_NATIVE_CASHFLOW_2026-10-11.json"
+  ],
+  "cohorts": [
+    {
+      "token": "我踏马来了",
+      "v2_sample_anchor_block": 73658907,
+      "v2_anchor_timestamp": 1767246411,
+      "wallet_239e_first_in": {
+        "block": 73658908,
+        "hash": "0x5eaf490ddad77bc6ddfc366f49c86b25fda316d6468a95cd3f5907fdcf39e347",
+        "timestamp": 1767246411,
+        "original_input_wei": "30300000000000000"
+      },
+      "wallet_239e_first_out": {
+        "block": 73659128,
+        "hash": "0x2413eaeadd4d7be589d9773bd4c53c2811254c1c641736ad1dacd6fd36137687",
+        "timestamp": 1767246576
+      },
+      "wallet_8e6b_first_in": {
+        "block": 74473655,
+        "hash": "0x992dd56c53a11a8f8396db4e766c1174db779fe6843962667efaeed4e2c1fee2",
+        "timestamp": 1767857541
+      },
+      "wallet_8e6b_first_out": {
+        "block": 74473726,
+        "timestamp": 1767857594
+      },
+      "lag_239e_vs_sample_seconds": 0,
+      "lag_8e6b_vs_sample_seconds": 611130,
+      "delay_239e_to_8e6b_entry_seconds": 611130,
+      "token_inventory_closed": true,
+      "wallet_239e_native_block_net_wei": "97366720524376562",
+      "verified_self_signed_success": 6,
+      "verified_signed_original_tx": 6
+    },
+    {
+      "token": "龙虾",
+      "v2_sample_anchor_block": 83636129,
+      "v2_anchor_timestamp": 1772182241,
+      "wallet_239e_first_in": {
+        "block": 83636130,
+        "hash": "0x5a697b7dc48c947f8f2a1f61677fadb04c2374ca38298302bfc94b8623aaa3fc",
+        "timestamp": 1772182241,
+        "original_input_wei": "20200000000000000"
+      },
+      "wallet_239e_first_out": {
+        "block": 83638195,
+        "hash": "0xbd99c6758d693e9613fcd63d1a0857f8f407ac329dff678734c66a5d70695d45",
+        "timestamp": 1772183170
+      },
+      "wallet_8e6b_first_in": {
+        "block": 83637088,
+        "hash": "0x22f2c3f6f029e7ab2f9f6af2760f5ad051330ca71fc09bb3b0be394223adcf71",
+        "timestamp": 1772182672
+      },
+      "wallet_8e6b_first_out": {
+        "block": 83638341,
+        "timestamp": 1772183236
+      },
+      "lag_239e_vs_sample_seconds": 0,
+      "lag_8e6b_vs_sample_seconds": 431,
+      "delay_239e_to_8e6b_entry_seconds": 431,
+      "token_inventory_closed": true,
+      "wallet_239e_native_block_net_wei": "199125593493335144",
+      "verified_self_signed_success": 21,
+      "verified_signed_original_tx": 21
+    }
+  ],
+  "limitations": [
+    "Earliest V2 sampled pool Transfer is not genesis/first tradable launchpad price",
+    "Wallet selection affected by observed performance and wallet funding may be correlated",
+    "Block-native deltas not transaction-level isolated profits",
+    "First EOA inbound token is not universally equivalent to executable external follower signal",
+    "No delayed follower replay across both wallets yet"
+  ],
+  "production": "NO_GO"
+}
