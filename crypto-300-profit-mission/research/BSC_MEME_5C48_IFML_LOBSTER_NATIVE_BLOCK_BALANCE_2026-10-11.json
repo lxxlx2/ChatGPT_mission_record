@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+  "source_file": "BSC_MEME_5C48_IFML_LOBSTER_FULL_TRANSFER_HISTORY_2026-10-11.json",
+  "expected": 22,
+  "rows": [
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "block": 73336244,
+      "hash": "0x74c5473f07968e866b7a49b77347691c60f84ee44bdf8f9ff6c097ac805bf3bb",
+      "raw": "46274555280040699000000000",
+      "native_before_wei": "1300429564730285278",
+      "native_after_wei": "879992604730285287",
+      "native_delta_wei": "-420436959999999991",
+      "status": "NATIVE_BALANCE_VERIFIED"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "block": 73336320,
+      "hash": "0x0609bcb63f65292b23ef638b3a817dcd4d9c6cd1e28926c887bf28d43d687741",
+      "raw": "23137277640020349000000000",
+      "native_before_wei": "879992604730285287",
+      "native_after_wei": "1250038645490518905",
+      "native_delta_wei": "370046040760233618",
+      "status": "NATIVE_BALANCE_VERIFIED"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "block": 73336411,
+      "hash": "0xf7ebceaac6c6ea89b97d886ccbca3252cedb1b2499e406a1a004e24b4b105d7d",
+      "raw": "23137277640020350000000000",
+      "native_before_wei": "1250038645490518905",
+      "native_after_wei": "1678528739831989213",
+      "native_delta_wei": "428490094341470308",
+      "status": "NATIVE_BALANCE_VERIFIED"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "block": 73349355,
+      "hash": "0x98cdc8d8334def70ef3f7dc226fb400416c5b4eb5519a0157396fd0c97a90dd1",
+      "raw": "11963499122893231000000000",
+      "native_before_wei": "1458153402081674024",
+      "native_after_wei": "1156859338081674036",
+      "native_delta_wei": "-301294063999999988",
+      "status": "NATIVE_BALANCE_VERIFIED"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "block": 73349545,
+      "hash": "0xe2ac1db23f1cc13e24e661b32552cd7b60369fb6bc942c400c7208121c2490eb",
+      "raw": "11963499122893231000000000",
+      "native_before_wei": "1156859338081674036",
+      "native_after_wei": "1505794855393086261",
+      "native_delta_wei": "348935517311412225",
+      "status": "NATIVE_BALANCE_VERIFIED"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "block": 73658892,
+      "hash": "0x05ea0065e3d2f4289826e91634ad84a768dc75289de9acec8f2c805ddf9975bb",
+      "raw": "5803987493966557000000000",
+      "native_before_wei": "1525252614416727608",
+      "native_after_wei": "1225213792496727641",
+      "native_delta_wei": "-300038821919999967",
+      "status": "NATIVE_BALANCE_VERIFIED"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "block": 73658932,
+      "hash": "0x1f9f5e9c6132146522cb26f1d118533e5f4a68a536ff801121ad7951dad0a392",
+      "raw": "2901993746983278500000000",
+      "native_before_wei": "1225213792496727641",
+      "native_after_wei": "1611844148023494882",
+      "native_delta_wei": "386630355526767241",
+      "status": "NATIVE_BALANCE_VERIFIED"
+    }
+  ],
+  "pending": [
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "block": 73658949,
+      "hash": "0x81ca25955f5323f86e4688da338789141fde743f138d63bfbb32813515fa43be",
+      "raw": "1671891265090515955481054"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "block": 73659009,
+      "hash": "0xa1d8a8bddc494e9f3c837d2a163128ceb85f8ad0587e00923bbfc9ae5cbf8c88",
+      "raw": "2286942506036897227740527"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "block": 73659051,
+      "hash": "0x8336b09fcf4697a85b958c0881bf4a479ca9fa91d4d882633fbf578337bcec2d",
+      "raw": "2286942506036897227740527"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "in",
+      "block": 73659129,
+      "hash": "0x0098e49a2c6ccf2b377e9f3187c78ac235790f1b494e188694eb4a3531a7050f",
+      "raw": "2073172053220606867650188"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "block": 73659284,
+      "hash": "0x929a77864034acae7de35bbe568f024758bf2c12547296ea18b6d902b482abff",
+      "raw": "1036586026610303433825094"
+    },
+    {
+      "token": "我踏马来了",
+      "dir": "out",
+      "block": 73659369,
+      "hash": "0xdbf42409c94269c4ec5e95e29631c549f072ff1151918b6f1131f3613ef308f8",
+      "raw": "1036586026610303433825094"
+    },
+    {
+      "token": "龙虾",
+      "dir": "in",
+      "block": 83635854,
+      "hash": "0xc73e2df907f59580fc27c7100ee94b877c452b019869a61cfe595761fd52177b",
+      "raw": "28568451086099504000000000"
+    },
+    {
+      "token": "龙虾",
+      "dir": "in",
+      "block": 83635885,
+      "hash": "0xde628d09c869cd86ff38f440d623cda55a8395f2e9b8049bc3ad52d07c48a71f",
+      "raw": "7298344122854683000000000"
+    },
+    {
+      "token": "龙虾",
+      "dir": "out",
+      "block": 83635968,
+      "hash": "0x46adc1bb441302aa49cb1de9aff8a3ca6569dd2324569491b513fa28eaa0b4cf",
+      "raw": "8966698802238546000000000"
+    },
+    {
+      "token": "龙虾",
+      "dir": "out",
+      "block": 83636000,
+      "hash": "0x21870257be05a174adfbebf956553dd460c28ed94185b8b5a12b1d17744a0ef5",
+      "raw": "13450048203357820000000000"
+    },
+    {
+      "token": "龙虾",
+      "dir": "out",
+      "block": 83636080,
+      "hash": "0xd129473c9d20ccdb8dfd102b19e7136fe0fed6ff5ce5b6ca86de1ccab3f78ed4",
+      "raw": "6725024101678910000000000"
+    },
+    {
+      "token": "龙虾",
+      "dir": "out",
+      "block": 83636094,
+      "hash": "0x4ad7226b748a5e227bd759bfd477e9eaab4b9b27546193718136d432088dde6e",
+      "raw": "3362512050839455000000000"
+    },
+    {
+      "token": "龙虾",
+      "dir": "out",
+      "block": 83636160,
+      "hash": "0xe9e3a8467fe9f5b9b1d3a858c5dccb3d911c9d031207cc0c1e2f11d30ee292c1",
+      "raw": "3362512050839456000000000"
+    },
+    {
+      "token": "龙虾",
+      "dir": "in",
+      "block": 85952169,
+      "hash": "0xf4b76043b40d268baa0fa76130b26621168aef0e99f34938f3dd19e74d59d28d",
+      "raw": "47919549090379631444458"
+    },
+    {
+      "token": "龙虾",
+      "dir": "out",
+      "block": 85952207,
+      "hash": "0xc1b893b2f5a5ba09d3d12145b6249ef0ac178227eea429d069a8825362ec070c",
+      "raw": "47919549090379631444458"
+    }
+  ],
+  "status": "PARTIAL_7_OF_22_NATIVE_BLOCKS",
+  "production": "NO_GO",
+  "caution": "Native wallet block delta may include unrelated same-block movements; token quantities from source ERC20 transfers."
+}
