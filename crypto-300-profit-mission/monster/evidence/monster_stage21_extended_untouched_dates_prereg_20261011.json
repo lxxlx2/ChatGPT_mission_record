@@ -1,0 +1,70 @@
+{
+  "schema": "MONSTER_STAGE21_FIXED_NEW_DATES_UNCHANGED_STAGE20_QUALITY_EXIT_V1",
+  "date_frozen_bangkok": "2026-10-11",
+  "before_historical_ohlcv_read": true,
+  "context": "Stage20 quality+six-hour bounded exit failed hard acceptance despite partial 20bps gain",
+  "research_only": true,
+  "new_date_selection_rule": "10 calendar 09th days in months not used as Stage12-20 studied 17th/13th days; 2025 Mar-Oct 8 consecutive months plus 2026 Mar and Jun, chosen BEFORE reading any outcome data",
+  "frozen_dates_utc": [
+    "2025-03-09",
+    "2025-04-09",
+    "2025-05-09",
+    "2025-06-09",
+    "2025-07-09",
+    "2025-08-09",
+    "2025-09-09",
+    "2025-10-09",
+    "2026-03-09",
+    "2026-06-09"
+  ],
+  "previous_stage20_dates": [
+    "2025-12-13",
+    "2026-01-13",
+    "2026-04-13",
+    "2026-07-13"
+  ],
+  "prior_exposed_stage12_19_dates": [
+    "2025-11-17",
+    "2026-02-17",
+    "2026-05-17",
+    "2026-08-17",
+    "2026-09-17"
+  ],
+  "exact_stage20_code_git_blob_sha1": "93e2065e354182be3d2136be49c760674b485381",
+  "exact_stage20_rules_manifest": "monster_stage20_quality_exit_holdout_prereg_20261011.json",
+  "source": "Official Binance daily Spot USDT 1m historical ZIP with publisher CHECKSUM SHA256, full 60h 1m verified",
+  "universe": "Same Stage12 frozen 504 USDT Spot current-list + Stage15 archived-only 254 ASCII USDT Spot",
+  "universe_count": 758,
+  "archived_universe_sha256": "0c2604d838fc3d7c28d0e8819fde1bb42deb6fb22360182a49c1b82bb6d25348",
+  "observation": "06:00-18:00 UTC fixed 3min snapshots, original D0/D1",
+  "strategy_immutable": "Call original exact Stage20 run_symbol quality features, 30USDT proxy, 24h fixed and bounded stop-first +18%/-8% or max6h, fee each side10bps, slippage each side20bps and100bps. No dynamic modifications or retry optimizations on outcome.",
+  "primary_precommitted": {
+    "qualified_arm": "D_QUALITY_D1_BOUNDED_6H_20BPS",
+    "minimum_evaluable": 30,
+    "minimum_nonoverlapping_unique_dates": 6,
+    "minimum_positive_fraction": 0.55,
+    "positive_net_median_required": true,
+    "positive_net_30usdt_sum_required": true,
+    "max_censor_fraction": 0.2,
+    "show_100bps_sensitivity": true,
+    "compare_actual_same_trade_A_B_and_C_D": true,
+    "preserve_preregistered_stage20_unfavorable_original_four_dates": true,
+    "no_switch_to_best_arm_or_best_month": true
+  },
+  "quality_gates_unchanged": true,
+  "future_gt_2x5x": "NOT_CHECKED_BY_THIS_EXIT_STUDY",
+  "risks": [
+    "Historical exact point-in-time Spot trading permission unavailable",
+    "2026-10 504 symbol snapshot yields historical survivor bias",
+    "No archived true L2 bid ask depth or queue position, OHLC stop-first is conservative proxy only",
+    "Each study window covers 12 hours and does not measure full-time live alert precision/recall",
+    "Monthly/date samples are not independent daily market regimes or independent tick-level order book fills",
+    "Even positive in-sample or retrospective historical validation needs independent AI review and true Mac shadow before production"
+  ],
+  "independent_other_ai_review": "NOT_DONE",
+  "new_monitor": false,
+  "live_deployment": "NO_GO",
+  "real_gmail": "OFF",
+  "trading": "NO_GO",
+  "frank": "UNTOUCHED"
+}
