@@ -1,0 +1,78 @@
+{
+  "schema": "MONSTER_STAGE23_NEW_CALENDAR_HOLDOUT_OVEREXTENSION_FROZEN_PRE_DATA_V1",
+  "frozen_before_price_source_requests": true,
+  "date_selection": "Ten unused UTC calendar 23rd days Jan-Oct 2025, not previously present in Stage12-22 date-specific OHLCV model tuning/evaluation",
+  "dates": [
+    "2025-01-23",
+    "2025-02-23",
+    "2025-03-23",
+    "2025-04-23",
+    "2025-05-23",
+    "2025-06-23",
+    "2025-07-23",
+    "2025-08-23",
+    "2025-09-23",
+    "2025-10-23"
+  ],
+  "code_lock": {
+    "prior_stage20_script_git_blob_sha1": "93e2065e354182be3d2136be49c760674b485381",
+    "entry": "Same original V4 D0/D1, first D1 per symbol/day, same 3min delayed 1m open",
+    "quality": "Stage20 first-D1 quality exactly unchanged",
+    "exit": "Stage20 bounded 8% stop,18% TP,6h timeout, stop-first intrabar; all source censoring unchanged"
+  },
+  "universe": {
+    "current_20261011_usdt_spot_count": 504,
+    "archived_only_usdt_spot_count": 254,
+    "all_symbols": 758,
+    "archive_only_set_sha256": "0c2604d838fc3d7c28d0e8819fde1bb42deb6fb22360182a49c1b82bb6d25348"
+  },
+  "experimental_filter": {
+    "stage20_quality_pass_required": true,
+    "new_condition": "Original Stage20 causal quality.relative_60m_return_pp <= 12.0 ; no other changed criteria",
+    "threshold_pp": 12,
+    "source_and_timing": "Only preceding 60m completed 1m from Binance Spot and matched BTCUSDT, both publisher SHA-verified; source from original Stage20 same-run features",
+    "motivation": "Prior Stage22 exposed STOP median +15.378 pp and relative rank AUC 0.792 vs 28 valid non-STOP, so 12pp is trained on prior data; disclose candidate in-sample design, test ONLY fresh dates",
+    "no_future_price_class_or_signal_time_features": true,
+    "original_d0_watch_unchanged": true,
+    "original_d1_setups_unchanged": true,
+    "selected_signal_requires_prior_quality": true
+  },
+  "arms": [
+    "D_BASELINE_STAGE20_QUALITY_BOUNDED6H_20BPS",
+    "F_OVEREXTENSION_FILTER_QUALITY_BOUNDED6H_20BPS",
+    "G_OVEREXTENSION_FILTER_QUALITY_BOUNDED6H_100BPS"
+  ],
+  "success_gate": {
+    "f_evaluable_min": 30,
+    "distinct_f_evaluable_dates_min": 6,
+    "f_winning_fraction_min": 0.55,
+    "f_median_pct_must_be_positive": true,
+    "f_simulated_independent_30usdt_pnl_must_be_positive": true,
+    "f_simulated_single_30usdt_slot_pnl_must_be_positive": true,
+    "f_censor_fraction_max": 0.2,
+    "save_baseline_d_all_10_unfiltered_cases": true,
+    "report_avoided_stop_and_lost_take_profit": true,
+    "report_100bps_slippage_sensitivity": true,
+    "no_parameter_selection_after_new_prices": true,
+    "no_selecting_good_dates": true
+  },
+  "slippage_and_fees": {
+    "slippage_bps_per_side": [
+      20,
+      100
+    ],
+    "fees_bps_per_side": 10,
+    "capital_usdt_per_proxy_entry": 30
+  },
+  "limitations": [
+    "Not true historic point-in-time exchangeInfo; archived 504 survivor bias",
+    "1m OHLC cannot verify actual L2 execution, stop or TP fill",
+    "10 isolated 12h windows still not all-day 2x/5x winner recall",
+    "Even a nominal positive result requires true independent other-AI review before any deployment"
+  ],
+  "independent_other_ai_review": "NOT_DONE",
+  "deployment": "NO_GO",
+  "frank": "UNTOUCHED",
+  "real_gmail": "OFF",
+  "trading": "NO_GO"
+}
