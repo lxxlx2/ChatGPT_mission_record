@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "token": "MARSCOIN",
+  "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "source_files": [
+    "BSC_MEME_DDAC_MARSCOIN_FULL_TRANSFER_ANOMALY_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_NATIVE_BLOCK_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_TX_SIGNER_RECEIPT_ATTRIBUTION_2026-10-11.json"
+  ],
+  "scope": "Latest fully paginated MARSCOIN ERC20 wallet in/out activity over 29 distinct historical transaction/block events. Includes 2026 source records beyond the earlier 23-wallet matrix scan. All 29 native BNB balance deltas are direct original chain state, but this is not a verified final isolated per-token realized PnL.",
+  "summary": {
+    "transactions": 29,
+    "uniqueBlocks": 29,
+    "confirmed_self_signed": 19,
+    "confirmed_other_signed": 4,
+    "unknown_signer": 6,
+    "receipt_success_explicit": 18,
+    "receipt_status_unknown": 11,
+    "erc20_in": 17,
+    "erc20_out": 23,
+    "source_pagination_complete": true,
+    "self_signed_native_input_wei": "2850000000000000000",
+    "scoped_native_block_delta_wei": "3409712195316107766",
+    "scoped_native_block_delta_self_signed_wei": "3409712195316107766",
+    "scoped_native_block_delta_other_or_unverified_wei": "0",
+    "raw_erc20_residual": "3050660512775076744"
+  },
+  "method": "Classify original onchain tx.from as owner, other or UNRESOLVED; do not count external/unknown receipt as owner signed; native block net from eth_getBalance before and after N, preserve unknown receipt status, strict big integers and ERC20 token balance residual.",
+  "checks": {
+    "distinct_blocks": true,
+    "source_quantities_preserved": true,
+    "native_partition": true,
+    "external_or_unknown_scoped_native_zero": true
+  },
+  "discrepancy_from_older_matrix": {
+    "earlier_matrix_in": 0,
+    "earlier_matrix_out": 19,
+    "earlier_matrix_unique_hashes": 10,
+    "updated_in": 17,
+    "updated_out": 23,
+    "updated_unique_hashes": 29,
+    "explanation": "The earlier limited scan omitted relevant transfer records. Preserve older matrix as dated historical evidence, refresh derived wallet comparison using current full pagination."
+  },
+  "limitations": [
+    "Six original tx payloads truncate before their signer; do not promote as owner signed",
+    "11 receipt headers unavailable/truncated; original ERC20 event inclusion confirms chain execution of event, but not independent explicit receipt status",
+    "Wallet-native N-1 to N delta can contain unrelated same-block native activity; only 2 token CA route tracing was done for other wallet",
+    "Latest residual tokens not marked zero or assigned unsupported USD value",
+    "Full market universe and independent wallet control not established"
+  ],
+  "production": "NO_GO"
+}
