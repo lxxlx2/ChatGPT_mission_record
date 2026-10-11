@@ -16,6 +16,7 @@ from .delivery import GmailDelivery, LocalDelivery
 from .frank import FrankReader
 from .wallet_watch import from_sqlite as read_frank_watchlist
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
+from .transfer_archive import publish_evidence_batch
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
 from .outcomes import OutcomeTracker
@@ -355,6 +356,7 @@ class MissionMemeService:
         exporter = ThreadPoolExecutor(max_workers=1, thread_name_prefix="frank-evidence") if export_enabled else None
         upload_future = None
         last_poll_count = None
+        transfer_capture_needed = True  # First opt-in run archives the existing local source.
         try:
             while True:
                 try:
@@ -384,10 +386,16 @@ class MissionMemeService:
                                 observed_watchlist=watch,
                             )
                             last_poll_count = count
+                            if int(health.get("new_signatures") or 0) > 0:
+                                transfer_capture_needed = True
                         if upload_future is None or upload_future.done():
                             # Network work runs in a separate worker. A slow GitHub
                             # connection never occupies the decision/Gmail loop.
-                            upload_future = exporter.submit(publisher.sync)
+                            upload_future = exporter.submit(
+                                publish_evidence_batch, spool, publisher,
+                                self.frank.database, transfer_capture_needed,
+                            )
+                            transfer_capture_needed = False
                     except (OSError, ValueError, RuntimeError):
                         # Evidence is best effort; policy and delivery are unchanged.
                         pass
