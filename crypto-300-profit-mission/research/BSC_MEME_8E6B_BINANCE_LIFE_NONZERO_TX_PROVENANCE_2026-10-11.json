@@ -83,45 +83,87 @@
       "gas_wei": "4181100000000000",
       "raw_tx_complete": true,
       "raw_receipt_complete": true
-    }
-  ],
-  "pending": [
+    },
     {
       "hash": "0x434d43caf89c673adec1fc381dca6c7063dc7ceab5c0d37d73d7a2b7893e2e08",
       "block": 63461901,
       "dir": "in",
-      "delta_wei": "-501422135000000000"
+      "delta_wei": "-501422135000000000",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "native_input_wei": "500000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "1422135000000000",
+      "raw_tx_complete": true,
+      "raw_receipt_complete": true
     },
     {
       "hash": "0x66d9842a712526f6591b95a4d82eb5d53f80466638b0cdc6549197217f81b0e7",
       "block": 63517157,
       "dir": "out",
-      "delta_wei": "1035525734562101893"
+      "delta_wei": "1035525734562101893",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "native_input_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "1567082000000000",
+      "raw_tx_complete": true,
+      "raw_receipt_complete": true
     },
     {
       "hash": "0xff7ea75ed85d74045716fc168c25a34f7d884403562d28bff0f1cb32907d675f",
       "block": 63536400,
       "dir": "out",
-      "delta_wei": "727402560436522076"
+      "delta_wei": "727402560436522076",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "native_input_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "1629870000000000",
+      "raw_tx_complete": true,
+      "raw_receipt_complete": true
     },
     {
       "hash": "0x5690539f6cad98d2131ded91e495d5c2a90a46080f6d8fe9dd38f1e0d965be5c",
       "block": 65257556,
       "dir": "in",
-      "delta_wei": "-3002107616000000000"
+      "delta_wei": "-3002107616000000000",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "native_input_wei": "3000000000000000000",
+      "receipt_status": "0x1",
+      "gas_wei": "2107616000000000",
+      "raw_tx_complete": true,
+      "raw_receipt_complete": true
     },
     {
       "hash": "0x729803b78bc155ff01859cdbe1cb440e117d408689f7d37014e4b200f8cfd46f",
       "block": 65259396,
       "dir": "out",
-      "delta_wei": "4005462757966069234"
+      "delta_wei": "4005462757966069234",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "native_input_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": "1393700000000000",
+      "raw_tx_complete": true,
+      "raw_receipt_complete": true
     },
     {
       "hash": "0x0dfbba352d33ad66bcc168c02049fefb2fe5cd8d17515ce8ad80d3792670f4d0",
       "block": 92491557,
       "dir": "out",
-      "delta_wei": "14475447770200993"
-    },
+      "delta_wei": "14475447770200993",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "native_input_wei": "0",
+      "receipt_status": "0x1",
+      "gas_wei": null,
+      "raw_tx_complete": true,
+      "raw_receipt_complete": false
+    }
+  ],
+  "pending": [
     {
       "hash": "0x39d26b1f5da930f1013861b709874e6c99ff511cd29353e39635f4c05f8fda04",
       "block": 93215567,
@@ -153,7 +195,7 @@
       "delta_wei": "25337587293196566"
     }
   ],
-  "status": "6_OF_17_NONZERO_NATIVE_BLOCK_TX_AUDITED",
+  "status": "12_OF_17_NONZERO_NATIVE_BLOCK_TX_AUDITED",
   "production": "NO_GO",
   "caveats": [
     "Nonzero BNB token-block activity does not show all token value movements",
