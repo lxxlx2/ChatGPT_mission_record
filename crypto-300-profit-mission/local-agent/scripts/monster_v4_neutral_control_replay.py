@@ -158,6 +158,8 @@ def main():
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(txt + "\n", encoding="utf-8")
     print(json.dumps({"STAGE10_NEUTRAL": result["summary"],
+                      "PER_CASE": [{k:v for k,v in case.items() if k!="trade_proxies"}
+                                   for case in result["cases"]],
                       "SOURCE_EXCLUDED": result["source_unavailable"],
                       "NO_GO": result["production_gate"]}, sort_keys=True))
 
