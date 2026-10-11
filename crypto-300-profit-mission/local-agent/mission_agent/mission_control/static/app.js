@@ -242,10 +242,27 @@ function renderRuntime(runtime, control) {
     ? `上次心跳 ${Math.round(heartbeat)} 秒前`
     : '心跳时间未知';
   const controlText = translated(runtimeLabel,control?.status,'未知');
-  const needsReview = Number(control?.manual_review_total_count);
-  const reviewText = Number.isFinite(needsReview) && needsReview > 0
-    ? `<span>· 通知待人工核对 ${esc(needsReview)}（邮件 ${esc(Number(control?.manual_review_gmail_count)||0)}，本地 ${esc(Number(control?.manual_review_local_count)||0)}）</span>`
-    : '';
+  const hasBreakdown = control?.manual_review_breakdown_available === true;
+  const actionable = Number(hasBreakdown
+    ? control?.manual_review_actionable_count
+    : control?.manual_review_total_count);
+  const expired = Number(hasBreakdown ? control?.manual_review_expired_unsent_count : 0);
+  const reviewParts = [];
+  if (Number.isFinite(actionable) && actionable > 0) {
+    const gmail = Number(hasBreakdown
+      ? control?.manual_review_actionable_gmail_count
+      : control?.manual_review_gmail_count) || 0;
+    const local = Number(hasBreakdown
+      ? control?.manual_review_actionable_local_count
+      : control?.manual_review_local_count) || 0;
+    reviewParts.push(`<span title="当前尚需确认投递结果的通知记录">· 通知异常待复核 ${esc(actionable)}（邮件 ${esc(gmail)}，本地 ${esc(local)}）</span>`);
+  }
+  if (Number.isFinite(expired) && expired > 0) {
+    const gmail = Number(control?.manual_review_expired_unsent_gmail_count) || 0;
+    const local = Number(control?.manual_review_expired_unsent_local_count) || 0;
+    reviewParts.push(`<span title="历史通知在首次投递前已过期，未发送；审计记录保留，不会自动重发">· 历史过期拦截 ${esc(expired)}（邮件 ${esc(gmail)}，本地 ${esc(local)}；未发送）</span>`);
+  }
+  const reviewText = reviewParts.join('');
 
   $('runtime').className = `runtime ${String(rawStatus).toLowerCase()}`;
   $('runtime').innerHTML = `
