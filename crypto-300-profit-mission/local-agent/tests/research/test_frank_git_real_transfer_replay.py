@@ -92,15 +92,21 @@ def test_actual_mac_1720_signature_archive_replays_to_224_scoped_mints():
     assert by_mint[J7]["passive_receipt_events"] == 1
     from mission_agent.mission_control.wallet_watch import annotate_known_ata_gaps
     gap_file = (Path(__file__).resolve().parents[3] / "meme" / "evidence" /
-                "frank-v2-known-ata-gap-summary-2026-10-11.json")
+                "frank-v2-ata-index-scope-correction-2026-10-11.json")
     source = json.loads(gap_file.read_text())
     annotated = annotate_known_ata_gaps(merged, source)
     covered = {x["mint"]: x for x in annotated["rows"]}
-    assert covered[J7]["owner_index_gap_status"] == "CONFIRMED_HISTORICAL_GAP"
+    assert covered[J7]["owner_index_gap_status"] == "DATED_ATA_VS_OWNER_INDEX_SCOPE"
+    assert covered[J7]["ata_outside_index_window_signatures"] == 0
+    assert covered[J7]["ata_inside_index_window_signatures"] == 2
     assert covered[J7]["owner_index_missing_signatures"] == 2
     assert covered[J7]["ata_verified_extra_passive_receipts"] == 2
     bp = "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy"
     assert covered[bp]["owner_index_missing_signatures"] == 66
+    assert covered[bp]["ata_outside_index_window_signatures"] == 63
+    assert covered[bp]["ata_inside_index_window_signatures"] == 3
+    assert covered[bp]["ata_inwindow_failed_signatures"] == 1
+    assert covered[bp]["ata_inwindow_success_unverified"] == 1
     assert covered[bp]["ata_verified_extra_passive_receipts"] == 1
     assert by_mint[J7]["signature_observed_in_raw"] == "2846838050235"
     assert by_mint[J7]["signature_observed_out_raw"] == "12508217470763"
