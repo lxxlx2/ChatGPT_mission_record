@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "observed_at_date_bangkok": "2026-10-12",
+  "source": "User-provided Mac one-shot readonly probe stdout; not remotely mounted Mac database",
+  "probe_ref": "b8b50d0624b5f746ee527e6b49b0a4aa8ac5814a",
+  "results": {
+    "operational_acceptance": "BLOCKED_DASHBOARD_HIDES_NONSUCCESS_ROWS",
+    "source_version": "LEGACY",
+    "database_access": "READ_ONLY_OK",
+    "dashboard_http": "OK",
+    "readonly_exit": 3,
+    "hidden_by_previous_probe_whitelist": 16,
+    "manual_review_expired_unsent_gmail": 15,
+    "manual_review_actionable_count": 0,
+    "manual_review_blocked_count": 0,
+    "manual_review_pending_count": 0,
+    "manual_review_visible_total_count": 15,
+    "http_matches_sqlite": false,
+    "http_mismatched_count_fields": [],
+    "http_missing_fields_count": 14,
+    "mac_rollout_performed": false,
+    "gmail_sent_readback_verified": false
+  },
+  "research": {
+    "finding": "Previous probe had a false-positive state classification: local notifications successfully delivered to macOS command are written by mission_agent/mission_control/delivery.py as COMMAND_ACCEPTED; this documented normal command-acceptance status was missing from the probe's success/known status whitelist.",
+    "confidence": "CODE_VERIFIED_MISSING_STATUS; REAL_MAC_16_STATUS_DISTRIBUTION_UNVERIFIED",
+    "corrected_probe_branch": "review/frank-pr33-second-round-fix-20261012",
+    "correction": "Whitelist now includes COMMAND_ACCEPTED and new outbox_status_counts_by_channel returns grouped counts with sanitized status keys, without wallet IDs, email addresses, row content, or paths.",
+    "next_check": "Run updated one-shot readonly probe to identify actual status group counts before classifying 16 rows as errors or successes."
+  },
+  "release_decision": "BLOCK_NO_MAC_DEPLOY",
+  "notes": [
+    "Status is a local notification command acceptance, not proof user saw it, not a Gmail Sent verification.",
+    "Old script output of 16 cannot distinguish accepted local notifications from unknown abnormal states.",
+    "No production SQLite writes or Mac deployment occurred in this exchange."
+  ]
+}
