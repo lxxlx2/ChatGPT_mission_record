@@ -1,0 +1,115 @@
+{
+  "schema": "MONSTER_STAGE29B_ACTUAL_POSTHOC_110_BURST_FUNDED_CASH_SOURCE_VERIFIED_V1",
+  "recorded_bangkok_date": "2026-10-11",
+  "historical_discovery_only": true,
+  "frozen_after_stage29_results_commit": "a988408d9173353a7f5b0279da1939e31718dc11",
+  "why_not_out_of_sample": "Burst8plus grouped after seeing 61/64 winners in already exposed Stage29, cannot be independent alpha validation.",
+  "source_stage29_artifact": {
+    "id": 11706590853,
+    "zip_sha256": "c620dd33c7eeddd0b9b9586dadf18f72a674be06f3598f254825aa184f27794d",
+    "raw_json_sha256": "2cf87e0dc7eef83a8dd23a37e5233c243f88fe770438429d0ff5c291b905d65d"
+  },
+  "source_stage26_original_zip_and_json_sha_verified_count": 36,
+  "source_burst_watch_events": 110,
+  "burst_times": [
+    {
+      "UTC": "2026-02-06T00:36:00Z",
+      "watches": 98
+    },
+    {
+      "UTC": "2026-09-09T22:12:00Z",
+      "watches": 12
+    }
+  ],
+  "original_proxy_20bps_evaluable": 64,
+  "original_same_symbol_overlap_skipped": 1,
+  "actual_funded_candidates": 109,
+  "original_cash_engine": "monster_v4_stage27_shared_queue_cash_ledger.py.money_ledger",
+  "selection_order": "historical WATCH UTC then original date then alphabetic symbol, no use of future outcomes for ranking",
+  "CI_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38150028333",
+  "CI_completed": "SUCCESS",
+  "CI_commit": "ab65c31805ca60eee57f429430bdcefa261b6d90",
+  "regression_tests": "6/6 PASS",
+  "artifacts": [
+    {
+      "id": 11706557490,
+      "zip_sha256": "bf3ce676e5f56eba2a292f048d8aedb4be983b4e0a408b680cfbb5c6b60c60a7",
+      "inner_json_sha256": "d5af9c8a402945b69b2eaa255d51f9ef2837b9933de5ea9844ab12c63976df8e",
+      "inner_json_bytes": 63459
+    }
+  ],
+  "fixed30U_account_20bps": {
+    "one_slot_100pct_censored_recovery": {
+      "entries": 2,
+      "evaluable": 2,
+      "wins": 1,
+      "losses": 1,
+      "final_cash_USDT": 33.242118,
+      "net_profit_USDT": 3.242118,
+      "watch_skipped_busy": 107
+    },
+    "ten_slots_300U_100pct_censored_recovery": {
+      "entries": 20,
+      "evaluable": 10,
+      "wins": 8,
+      "losses": 2,
+      "censored": 10,
+      "final_cash_USDT": 321.277639,
+      "net_profit_USDT": 21.277639,
+      "watch_skipped_busy": 89
+    },
+    "ten_slots_300U_zero_censored_recovery": {
+      "entries": 17,
+      "evaluable": 10,
+      "wins": 8,
+      "losses": 2,
+      "censored": 7,
+      "final_cash_USDT": 111.277639,
+      "net_profit_USDT": -188.722361,
+      "watch_skipped_busy": 87,
+      "watch_skipped_insufficient_cash": 5
+    }
+  },
+  "fixed30U_account_100bps": {
+    "one_slot_100pct_censored_recovery": {
+      "entries": 2,
+      "evaluable": 2,
+      "wins": 1,
+      "losses": 1,
+      "final_cash_USDT": 32.238255,
+      "net_profit_USDT": 2.238255
+    },
+    "ten_slots_300U_100pct_censored_recovery": {
+      "entries": 20,
+      "evaluable": 10,
+      "wins": 8,
+      "losses": 2,
+      "censored": 10,
+      "final_cash_USDT": 316.177893,
+      "net_profit_USDT": 16.177893
+    },
+    "ten_slots_300U_zero_censored_recovery": {
+      "entries": 17,
+      "evaluable": 10,
+      "wins": 8,
+      "losses": 2,
+      "censored": 7,
+      "final_cash_USDT": 106.177893,
+      "net_profit_USDT": -193.822107
+    }
+  },
+  "sensitivity_notes": [
+    "All 30/300U ledger outcomes are arithmetic using source price proxy and chosen scenarios, NOT real wallet PnL, no bid/ask L2 historical depth",
+    "If future censoring unknown, 100% principal recovery optimistic vs 0% stress are counterfactual assumptions, neither is a verified liquidation",
+    "98 of 110 candidate burst WATCHs come from one old Feb date, two 3-min independent episodes; no inference of reliable future winner",
+    "The 110 group had just 1 WATCH related to a week-base gross2x labeled coin, not a strong standalone early 2x detector",
+    "Simultaneous concurrent 98 burst hits real original D1 queue saturation and 91 LATE; standalone WATCH price proxies are not deployable 98 D1 orders",
+    "The 30U two-event selection yields only two evaluable trades; no statistical power"
+  ],
+  "source_production_V4_unchanged": true,
+  "other_AI_review": "NOT_DONE",
+  "deployment": "NO_GO",
+  "gmail": "OFF",
+  "trading": "NO_GO",
+  "frank": "UNCHANGED"
+}
