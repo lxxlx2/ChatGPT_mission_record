@@ -100,16 +100,16 @@
       "source_mars_wallet_out_raw": "0",
       "status": "SOURCE_EVENT_TRUNCATED_OR_UNRESOLVED",
       "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 139 column 34)"
-    }
-  ],
-  "pending": [
+    },
     {
       "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
       "block": 112964882,
       "venue": "SPCXB_PAIR",
       "side": "OUT",
       "source_mars_wallet_in_raw": "0",
-      "source_mars_wallet_out_raw": "63052455644524404240904"
+      "source_mars_wallet_out_raw": "63052455644524404240904",
+      "status": "SOURCE_EVENT_TRUNCATED_OR_UNRESOLVED",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 138 column 57)"
     },
     {
       "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6",
@@ -117,7 +117,15 @@
       "venue": "SPCXB_PAIR",
       "side": "OUT",
       "source_mars_wallet_in_raw": "0",
-      "source_mars_wallet_out_raw": "33517149669909257353852"
+      "source_mars_wallet_out_raw": "33517149669909257353852",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "32511635179811979633237",
+      "amount_quote_out_raw": "4396294429869024146",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "1005514490097277720615"
     },
     {
       "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
@@ -125,7 +133,15 @@
       "venue": "SPCXB_PAIR",
       "side": "IN",
       "source_mars_wallet_in_raw": "17916712949914776414738",
-      "source_mars_wallet_out_raw": "0"
+      "source_mars_wallet_out_raw": "0",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "2509122919803295381",
+      "amount_mars_in_raw": "0",
+      "amount_quote_out_raw": "0",
+      "amount_mars_out_raw": "18470838092695645788389",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "554125142780869373651"
     },
     {
       "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
@@ -133,7 +149,15 @@
       "venue": "SPCXB_PAIR",
       "side": "OUT",
       "source_mars_wallet_in_raw": "0",
-      "source_mars_wallet_out_raw": "23726009462264961650895"
+      "source_mars_wallet_out_raw": "23726009462264961650895",
+      "status": "EXACT_PAIR_SWAP_HASH_DIRECTION",
+      "quote_token": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "amount_quote_in_raw": "0",
+      "amount_mars_in_raw": "23014229178397012801369",
+      "amount_quote_out_raw": "4897742200782718467",
+      "amount_mars_out_raw": "0",
+      "direction_matches": true,
+      "mars_pair_vs_wallet_raw": "711780283867948849526"
     },
     {
       "hash": "0x1df1b31f9c0bef52268e8a6e908b96d99be0c998b8bfcfbe10b9910c1186f1a2",
@@ -141,7 +165,9 @@
       "venue": "USDT_PAIR",
       "side": "IN",
       "source_mars_wallet_in_raw": "7510065098359254422193",
-      "source_mars_wallet_out_raw": "0"
+      "source_mars_wallet_out_raw": "0",
+      "status": "SOURCE_EVENT_TRUNCATED_OR_UNRESOLVED",
+      "error": "Error: LOG_COUNT_0"
     },
     {
       "hash": "0xb5aadaa7350e902a40b94338332f50b6ec5fe47bc774f4da132d9bb0e62d5b55",
@@ -149,8 +175,12 @@
       "venue": "USDT_PAIR",
       "side": "OUT",
       "source_mars_wallet_in_raw": "0",
-      "source_mars_wallet_out_raw": "6247214912124843214617"
-    },
+      "source_mars_wallet_out_raw": "6247214912124843214617",
+      "status": "SOURCE_EVENT_TRUNCATED_OR_UNRESOLVED",
+      "error": "Error: LOG_COUNT_0"
+    }
+  ],
+  "pending": [
     {
       "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
       "block": 113003453,
@@ -200,6 +230,6 @@
       "source_mars_wallet_out_raw": "177675243581310770890"
     }
   ],
-  "status": "6_OF_18_PAIR_SWAP_PROBES",
+  "status": "12_OF_18_SWAP_PROBES",
   "production": "NO_GO"
 }
