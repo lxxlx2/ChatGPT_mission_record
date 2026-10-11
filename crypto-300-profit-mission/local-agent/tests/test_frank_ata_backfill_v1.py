@@ -645,3 +645,57 @@ def test_reviewer_f3_f7_dated_correction_and_raw_chain_archive():
         x if isinstance(x, str) else x["pubkey"]
         for x in tx["transaction"]["message"]["accountKeys"]
     ]
+
+@pytest.mark.parametrize("exc_factory", [
+    pytest.param(lambda: __import__("http.client", fromlist=["BadStatusLine"]).BadStatusLine("broken HTTP status"), id="bad-status-line"),
+    pytest.param(lambda: __import__("http.client", fromlist=["LineTooLong"]).LineTooLong("overlong HTTP header"), id="line-too-long"),
+    pytest.param(lambda: __import__("http.client", fromlist=["IncompleteRead"]).IncompleteRead(b"truncated", 10), id="incomplete-read"),
+])
+@pytest.mark.parametrize("fail_method", ["getSignaturesForAddress", "getTransaction"])
+def test_http_exception_family_always_retains_partial_artifact(tmp_path, exc_factory, fail_method):
+    """HTTP protocol errors must serialize prior verified evidence with a non-success status."""
+    import json
+    import sqlite3
+    from scripts.frank_ata_backfill import run, main
+    db_path = tmp_path / "local.sqlite"
+    with sqlite3.connect(db_path) as connection:
+        connection.execute("CREATE TABLE signatures(person_id TEXT, signature TEXT)")
+        connection.execute("INSERT INTO signatures VALUES ('frank', ?)", (SIGNATURES[0],))
+    other = SIGNATURES[1]
+    items = [
+        {"signature": SIGNATURES[0], "slot": TX_RAW[0][2],
+         "blockTime": 1791505760, "err": None},
+        {"signature": other, "slot": TX_RAW[1][2],
+         "blockTime": 1791505760, "err": None},
+    ]
+
+    class ProtocolFaultRPC(FakeRPC):
+        def call(self, method, args):
+            if fail_method == "getTransaction" and method == "getTransaction" and args[0] == other:
+                raise exc_factory()
+            if fail_method == "getSignaturesForAddress" and method == "getSignaturesForAddress" and args[0] == J7_ATA and args[1].get("before"):
+                raise exc_factory()
+            return super().call(method, args)
+
+    output = tmp_path / "incomplete-rpc.json"
+    rpc = ProtocolFaultRPC(
+        {J7_ATA: items},
+        {SIGNATURES[0]: tx(*TX_RAW[0], signature=SIGNATURES[0]),
+         other: tx(*TX_RAW[1], signature=other)})
+    args = ["--database", str(db_path), "--mint", J7,
+            "--output", str(output), "--page-size", "1" if fail_method == "getSignaturesForAddress" else "3",
+            "--pages-per-ata", "3"]
+    before = db_path.stat().st_mtime_ns
+    result = run(args, rpc=rpc)
+    evidence = json.loads(output.read_text())
+    assert result["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
+    assert evidence["scan_status"] == "PARTIAL_RPC_INTERRUPTED"
+    assert evidence["interruption_type"] == type(exc_factory()).__name__
+    assert evidence["statistics"]["VERIFIED_ATA_BALANCE_DELTA"] == 1
+    assert evidence["observations"][0]["signature"] == SIGNATURES[0]
+    assert evidence["complete_wallet_history"] is False
+    assert evidence["trading_signal_emitted"] is False
+    assert result["production_modified"] is False
+    assert db_path.stat().st_mtime_ns == before
+    assert (output.stat().st_mode & 0o777) == 0o600
+    assert result["git_sync"] == "NOT_REQUESTED"
