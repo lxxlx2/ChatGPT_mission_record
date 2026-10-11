@@ -39,6 +39,9 @@ class Stage10NeutralTests(unittest.TestCase):
         self.assertEqual(summary["source_not_historically_available"], 7)
         self.assertEqual(summary["nominal_window_symbol_hours"], 204)
         self.assertEqual(summary["intended_3m_poll_intervals"], 240 * 17)
+        self.assertEqual(summary["dense_ticker_continuity_observed_symbol_hours"], 204)
+        self.assertEqual(summary["sparse_zero_trade_skip_watches"],
+                         sum(x["sparse_policy_watches"] for x in results["cases"]))
         self.assertEqual(summary["actual_nonzero_trade_3m_polls"] +
                          summary["skipped_zero_trade_3m_polls"], 240 * 17)
         self.assertLessEqual(summary["actual_nonzero_trade_symbol_hours"], 204)
@@ -49,7 +52,9 @@ class Stage10NeutralTests(unittest.TestCase):
         self.assertFalse(results["independent_ai_review_completed"])
         for case in results["cases"]:
             self.assertEqual(case["intended_polls"], 240)
-            self.assertEqual(case["polls"] + case["polls_skipped_no_trade"], 240)
+            self.assertEqual(case["polls"], 240)
+            self.assertEqual(case["polls_skipped_no_trade"], 0)
+            self.assertEqual(case["sparse_policy_polls"] + case["zero_trade_last_minute_3m_polls"], 240)
             if case["first_watch_utc"]:
                 self.assertGreaterEqual(case["first_watch_utc"], case["replay_start_utc"])
                 self.assertLessEqual(case["first_watch_utc"], case["replay_end_utc"])
