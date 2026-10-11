@@ -58,9 +58,9 @@ def list_ever_spot_symbols(read=read_url):
             if not folder.startswith(ROOT) or not folder.endswith("/"):
                 raise ValueError("S3_LIST_INVALID_FOLDER")
             symbol = folder[len(ROOT):-1]
-            if (not symbol or "/" in symbol or not symbol.isascii()
-                    or not symbol.isalnum() or symbol.upper() != symbol):
-                raise ValueError("S3_LIST_INVALID_SYMBOL:" + repr(folder))
+            if (not symbol or "/" in symbol or len(symbol) > 150
+                    or any(ord(ch) < 32 for ch in symbol)):
+                raise ValueError("S3_LIST_INVALID_FOLDER:" + repr(folder))
             found.add(symbol)
             if len(found) > MAX_SYMBOLS:
                 raise ValueError("S3_LIST_TOO_MANY_SYMBOLS")
@@ -86,7 +86,10 @@ def inventory(read=read_url):
     ever = list_ever_spot_symbols(read)
     current = frozen_current504()
     ever_usdt = sorted(s for s in ever if s.endswith("USDT"))
-    historical_only = sorted(set(ever_usdt) - current)
+    historical_candidates = sorted(set(ever_usdt) - current)
+    historical_only = [s for s in historical_candidates
+                       if s.isascii() and s.isalnum() and s.upper() == s]
+    unsupported_names = sorted(set(historical_candidates) - set(historical_only))
     missing_current = sorted(current - set(ever_usdt))
     if len(missing_current) > max(50, len(current)//10):
         raise ValueError("S3_LIST_TOO_MANY_MISSING_CURRENT_SPOT_SYMBOLS")
@@ -104,7 +107,10 @@ def inventory(read=read_url):
         "frozen_current_count": len(current),
         "current_missing_archive_count": len(missing_current),
         "current_missing_archive_symbols": missing_current,
-        "archive_only_usdt_count": len(historical_only),
+        "archive_only_usdt_count": len(historical_candidates),
+        "replay_eligible_archive_only_count": len(historical_only),
+        "unsupported_archive_only_count": len(unsupported_names),
+        "unsupported_archive_only_symbols": unsupported_names,
         "archive_only_symbols": historical_only,
         "archive_only_sha256": hashlib.sha256(
             ("\n".join(historical_only) + "\n").encode()).hexdigest(),
