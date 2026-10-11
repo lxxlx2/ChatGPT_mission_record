@@ -1,0 +1,72 @@
+{
+  "schema": "MONSTER_STAGE24_FROZEN_FULL_758_SEVEN_DAY_2X5X_V4_CAUSAL_WATCH_AUDIT_V1",
+  "research_date_bangkok": "2026-10-11",
+  "committed_before_ohlcv_fetch": true,
+  "frozen_new_dates": [
+    "2025-11-04",
+    "2025-12-04",
+    "2026-02-04",
+    "2026-04-04",
+    "2026-08-04",
+    "2026-09-04"
+  ],
+  "date_selection": "UTC 4th of six unused months, different from previous Stage12-23 frozen research dates; all locked before returns",
+  "historical_universe": {
+    "symbols": 758,
+    "current_oct_2026_spot_usdt": 504,
+    "archive_only": 254,
+    "archive_only_sha256": "0c2604d838fc3d7c28d0e8819fde1bb42deb6fb22360182a49c1b82bb6d25348",
+    "unicode_archive_pairs_missing": 2,
+    "point_in_time_listing_status": "UNVERIFIED",
+    "missing_source_is_not_negative": true
+  },
+  "source": {
+    "ground_truth": "Binance official Spot monthly 1h Klines ZIP with published SHA256, 168 contiguous bars from date 06:00 UTC",
+    "baseline": "06:00 UTC first 1h OPEN",
+    "labels_gross_high": [
+      2,
+      5,
+      10
+    ],
+    "labels_gross_close": [
+      2,
+      5,
+      10
+    ],
+    "watch": "Binance official Spot daily 1m ZIP and publisher SHA256 for 60h, original V4 observe_snapshot/process_queue",
+    "watch_window": "Date 06:00–18:00 UTC only; never claim 168h watch window",
+    "trading_proxy": "V4 original 24h exit price proxy, 3m delayed entry, 10bps fee per side and 20bps slippage per side, not an actual fill"
+  },
+  "original_code_git_blobs_locked": {
+    "seven_day_hourly_label": "deb17a83b4a199477393430b46be5fec32cdc5aa",
+    "archived_symbol_inventory_evidence": "37b79e421097afe2b6986459459796b0ff5a6191",
+    "sixty_hour_minute_loader": "93e2065e354182be3d2136be49c760674b485381",
+    "original_v4_replayer": "95b2595281f5aa8675c6a95e542d40d36b78e847"
+  },
+  "predetermined_analysis": {
+    "all_758_daily_attempted": true,
+    "primary_denominator": "Both complete verified168h hourly ground truth and complete verified60h original V4 minute source",
+    "hourly_cross_time_rule": "WATCH time strictly earlier than START of first 2x/5x hour qualifies as unambiguous early; within same first-crossing hour is ambiguous, not early",
+    "recall_scope": "ONLY 06:00-18:00 fixed-window early discovery of FUTURE 7d 2x/5x; NOT full 7d alert recall",
+    "watch_volume": "All V4 WATCH episodes on valid 60h across universe and joint subset",
+    "non2x_watch": "REPORT WATCH without confirmed 7d gross2x, DO NOT auto-label trade false positive",
+    "source_missing": "Monthly GT 404 and 168h gaps, daily 1m 404 and 60h gaps separately censored",
+    "network_integrity": "All source integrity or transient API failures ABORT, never treat source errors as negatives",
+    "original_watch_24h_price_proxy": "Full cohort proxy cost metrics including zero-trade/censored, no orderbook or real fills",
+    "no_tuning": true
+  },
+  "acceptance": {
+    "required_valid_intersection_per_day": 100,
+    "minimum_2x_events_for_stable_interpretation": 10,
+    "required_six_dates": 6,
+    "strict_blob_SHA": true,
+    "strict_publisher_SHA": true,
+    "max_integrity_errors": 0,
+    "still_must_validate_positive_net_PnL_before_other_AI_review_and_deployment": true
+  },
+  "independent_other_ai_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "frank": "UNCHANGED",
+  "real_gmail": "OFF",
+  "trading": "NO_GO"
+}
