@@ -68,28 +68,60 @@
       "target": "0x1de460f363af910f51726def188f9004276bf4bc",
       "value_wei": "0",
       "self_signed": true
-    }
-  ],
-  "pending": [
+    },
     {
       "block": 74374173,
       "hash": "0x3c5a723a9406c1f2e2c30cd499fffdccfac43d058f22cea3196b157d5c1b9d4c",
       "side": "in",
-      "token_wallet_transfer_raw": "505392375090042410804"
+      "token_wallet_transfer_raw": "505392375090042410804",
+      "native_block_delta_wei": "-100164943000000000",
+      "swap_status": "SAME_HASH_V2_SWAP",
+      "amount_binanceLife_in_raw": "0",
+      "amount_wbnb_in_wei": "99000000000000000",
+      "amount_binanceLife_out_raw": "505392375090042410804",
+      "amount_wbnb_out_wei": "0",
+      "sender": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "100000000000000000",
+      "self_signed": true
     },
     {
       "block": 93216478,
       "hash": "0xf5940d4a909aa92b0902aa7f94bdf3aa87bc33cb9abfc63e12955ebf95f6ba05",
       "side": "out",
-      "token_wallet_transfer_raw": "531778968657415522943"
+      "token_wallet_transfer_raw": "531778968657415522943",
+      "native_block_delta_wei": "431428038862013205",
+      "swap_status": "SAME_HASH_V2_SWAP",
+      "amount_binanceLife_in_raw": "531778968657415522943",
+      "amount_wbnb_in_wei": "0",
+      "amount_binanceLife_out_raw": "0",
+      "amount_wbnb_out_wei": "435833784870720409",
+      "sender": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "self_signed": true
     },
     {
       "block": 115522556,
       "hash": "0x5c6f097181e2b6f8ab4172700d82965f17691495c27a2494c62814720ab2bd5e",
       "side": "out",
-      "token_wallet_transfer_raw": "84209643828649469643"
+      "token_wallet_transfer_raw": "84209643828649469643",
+      "native_block_delta_wei": "66154422100428996",
+      "swap_status": "SAME_HASH_V2_SWAP",
+      "amount_binanceLife_in_raw": "84209643828649469643",
+      "amount_wbnb_in_wei": "0",
+      "amount_binanceLife_out_raw": "0",
+      "amount_wbnb_out_wei": "66846041313564642",
+      "sender": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value_wei": "0",
+      "self_signed": true
     }
   ],
-  "status": "4_OF_7_PAIR_ACTION_CHECKS",
-  "production": "NO_GO"
+  "pending": [],
+  "status": "7_OF_7_PAIR_ASSOCIATED_TRANSACTION_AUDITS_WITH_SOURCE_TRUNCATION",
+  "production": "NO_GO",
+  "exact_swap_events": 6,
+  "owner_signed": 7,
+  "native_total_wei": "462620236646267526"
 }
