@@ -1,0 +1,55 @@
+{
+  "schema": "MONSTER_STAGE29_FROZEN_MME_STANDALONE_VS_SONIC_BURST_RETURNS_DIAGNOSTIC_V1",
+  "study_started_bangkok": "2026-10-11",
+  "study_area": "MONSTER_MÊME_AND_ANOMALOUS_SURGE_ONLY_NOT_FRANK_OR_NFT",
+  "data_exposure": "All six Stage26 source dates already exposed; this is descriptive root-cause NOT new out-of-sample prediction or buy-signal filtering",
+  "sources": "36 Stage26 actual original GitHub CI 168h full-minutely SHA verified artifacts, immutable 36 ZIP SHA+inner JSON SHA prior proof",
+  "original_proof": "monster_stage26_verified_sharded_168h_artifact_proof_20261011.json",
+  "expected_source_attempts": 4548,
+  "verified_complete": 2719,
+  "watch_events": 1132,
+  "definitions": {
+    "per_tick_group": "day/date + exact original WATCH UTC 3m poll; exact minute timestamp; no rolling adjacency",
+    "bucket_0": "ISOLATED_1 if exactly 1 currency WATCH in same original 3-minute timestamp",
+    "bucket_1": "LOCAL_2_TO_7 if 2 to 7 currencies WATCH in same 3-minute timestamp",
+    "bucket_2": "BURST_8PLUS if 8 or more currencies WATCH in same 3-minute timestamp",
+    "multiple_watches_same_symbol": "Count each original actual original WATCH event; do not duplicate same-symbol closed data across grouping",
+    "all_events_full_denominator": true,
+    "trade_proxy": "At most first non-overlapping same-symbol 24h lock from source; each subsequent overlap has explicit SKIP_SAME_SYMBOL_24H_CAPITAL_OCCUPIED and must be kept separate",
+    "returns": "Use only source-generated fixed24h buy 3min after WATCH, 10bps fee/side, 20bps or100bps slippage/side. Existing actual source censoring respected; no new history prices calculated or filled.",
+    "gross_2x": "Stage26 TRUE if high touched original frozen date06UTC open *2 sometime in 168h, not proof WATCH caused tradable2x; report first WATCH lead and 6h recency separately",
+    "censorship": "Keep 257 non-evaluable proxy trades, 326 same-symbol 24h overlapping events, and all 1,829 source failures unaltered",
+    "market_regime_independence": "Original calendar date is independent cluster, not individual watch symbol; report per-date bucket losses and 6-day distribution, do not treat 549 proxies as independent regime samples",
+    "missing_feature_limit": "Original Stage26 artifacts lack WATCH 24h volume, momentum trigger payload and bid/ask depth; do not infer them. Need fresh source collection or separate versioned model run for such features."
+  },
+  "hypotheses": [
+    "H0: model WATCH predictive 24h net outcomes do not reliably differ between 1,2-7,8+ concurrent signatures after fee/censoring",
+    "H1 diagnostic: synchronized 8+ WATCH clusters may have different net-price proxies, but six exposed dates insufficient to claim any profitable strategy",
+    "H2: a market-wide burst can make WATCH→D1 global latency inadequate without implying all late candidates lose"
+  ],
+  "mandatory_output": [
+    "1132 sample total, exact per-day and 3m bucket assignments, all source trade status",
+    "for each bucket: valid wins losses median mean, 20bps and100bps, censored fractions, gross2x and WATCH recency",
+    "day-held-out descriptive stability of sign, day bootstrap/no fake statistical n=549 independent",
+    "burst event 2026-02-06T00:36:00Z token list with price proxy and censoring (no manual selection)",
+    "eligible future test must include distinct unseen dates and normal symbols; NO threshold changes and no trading recommendation"
+  ],
+  "release_gates": {
+    "signal_only_WATCH_not_BUY": true,
+    "at_least_30_independent_candidate_signals_per_arm_in_future": true,
+    "at_least_6_unseen_dates": true,
+    "wins_fraction_ge": 0.55,
+    "net_median_positive": true,
+    "net_pnl_after_costs_positive": true,
+    "fee_stress_100bps_presentation": true,
+    "liquidity_censor_fraction_lte": 0.2,
+    "real_capital_30_300_no_overdraft": true,
+    "other_AI_independent_review_before_deploy": true
+  },
+  "no_model_threshold_updates": true,
+  "independent_other_AI_review": "NOT_DONE",
+  "mac_monster_deployment": "NO_GO",
+  "frank": "UNCHANGED",
+  "real_gmail": "OFF",
+  "trading": "NO_GO"
+}
