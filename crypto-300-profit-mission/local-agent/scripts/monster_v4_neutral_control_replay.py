@@ -65,6 +65,7 @@ def run():
     fetch = json.loads(FETCH.read_text(encoding="utf-8"))
     selected, unavailable = validate_registration(manifest, fetch)
     result = []
+    sparse_result = []
     excluded = []
     returned = []
     for item in selected:
@@ -83,7 +84,9 @@ def run():
             raise ValueError("SOURCE_IDENTITY_DOES_NOT_MATCH_MANIFEST")
         if src.get("anchor_semantics") != "HASH_PREREGISTERED_CALENDAR_ANCHOR_NOT_PRIOR_WATCH":
             raise ValueError("MISSING_ANCHOR_CAVEAT")
-        actual = replay.replay_case(src, bars)
+        sparse = replay.replay_case(src, bars)
+        actual = replay.replay_case(src, bars, include_zero_trade_ticks=True)
+        sparse_result.append(sparse)
         result.append(actual)
         for t in actual["trade_proxies"]:
             a = t["scenario_0_20_100bps"]["20"]
@@ -92,9 +95,10 @@ def run():
     if len(result) + len(excluded) != len(selected):
         raise ValueError("SILENT_DROPPED_PRE_REGISTERED_CASE")
     hours = 12 * len(result)
-    polled = sum(x["polls"] for x in result)
-    skipped_no_trade = sum(x["polls_skipped_no_trade"] for x in result)
-    if polled + skipped_no_trade != 240 * len(result):
+    polled = sum(x["polls"] for x in sparse_result)
+    skipped_no_trade = sum(x["polls_skipped_no_trade"] for x in sparse_result)
+    dense_polled = sum(x["polls"] for x in result)
+    if dense_polled != 240 * len(result) or polled + skipped_no_trade != 240 * len(result):
         raise ValueError("UNACCOUNTED_3MIN_OBSERVATIONS")
     counts = {}
     for case in result:
@@ -111,6 +115,13 @@ def run():
         "actual_nonzero_trade_3m_polls": polled,
         "skipped_zero_trade_3m_polls": skipped_no_trade,
         "actual_nonzero_trade_symbol_hours": round(polled * 3 / 60, 3),
+        "dense_ticker_continuity_observed_symbol_hours": round(dense_polled * 3 / 60, 3),
+        "dense_ticker_continuity_watches": sum(x["watch_count"] for x in result),
+        "sparse_zero_trade_skip_watches": sum(x["watch_count"] for x in sparse_result),
+        "dense_ticker_continuity_d1_setups": sum(x["d1_setups"] for x in result),
+        "sparse_zero_trade_skip_d1_setups": sum(x["d1_setups"] for x in sparse_result),
+        "new_watch_symbols_due_to_dense_policy": [x["symbol"] for x,old in zip(result,sparse_result)
+            if x["watch_count"] > 0 and old["watch_count"] == 0],
         "zero_trade_skip_ratio": round(skipped_no_trade / (240 * len(result)), 6),
         "watched_symbols": sum(v["watch_count"] > 0 for v in result),
         "watches": sum(v["watch_count"] for v in result),
@@ -127,6 +138,8 @@ def run():
         "classification": "SMALL_SURVIVOR_BIASED_MARKET_NEUTRAL_CONTROL",
         "data_source": "FROZEN_GENUINE_BINANCE_SPOT_1M",
         "method": "EXACT_PRODUCTION_D0_D1_CAUSAL_3M_CLOSE_PRICE_PLUS_1M_ROLLING_24H_QUOTE_PROXY",
+        "primary_zero_trade_policy": "DENSE_3M_TICKER_CONTINUITY_PROXY_NOT_ACTUAL_HISTORICAL_TICKER",
+        "secondary_zero_trade_policy": "SPARSE_SKIPS_ZERO_TRADE_MINUTE_SENSITIVITY_ONLY",
         "source_cutoff": "ALL_24_FIXED_REGISTRATIONS_INCLUDED_NO_SUBSTITUTION",
         "source_unavailable": excluded,
         "summary": summary,
@@ -135,9 +148,13 @@ def run():
             "replay_start_utc": x["replay_start_utc"], "replay_end_utc": x["replay_end_utc"],
             "intended_polls": 240,
             "polls": x["polls"], "polls_skipped_no_trade": x["polls_skipped_no_trade"],
+            "zero_trade_last_minute_3m_polls": x["polls_zero_trade_minute"],
+            "sparse_policy_polls": sparse_result[i]["polls"],
+            "sparse_policy_watches": sparse_result[i]["watch_count"],
+            "sparse_policy_setups": sparse_result[i]["d1_setups"],
             "watches": x["watch_count"], "first_watch_utc": x["first_watch_utc"],
             "d1_setups": x["d1_setups"], "trade_proxies": x["trade_proxies"],
-        } for x in result],
+        } for i,x in enumerate(result)],
         "unverified": [
             "FULL_HISTORICAL_UNIVERSE", "HISTORICAL_BINANCE_TRUE_24H_TICKER",
             "ACTUAL_HISTORICAL_DEPTH_AND_FEES", "REAL_TRADE_FILLS",
