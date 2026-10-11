@@ -33,7 +33,9 @@
     "BSC_MEME_DDAC_MARS_29_TX_ORIGIN_AND_SETTLEMENT_AUDIT_2026-10-11.json",
     "BSC_MEME_8E6B_THREE_CORE_EVENT_CASHFLOW_RECONCILIATION_2026-10-11.json",
     "BSC_MEME_8E6B_HAJIMI_LOBSTER_26_BLOCK_BALANCES_2026-10-11.json",
-    "BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json"
+    "BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json",
+    "BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_239E_TWO_MAJOR_NATIVE_CASHFLOW_2026-10-11.json"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -852,6 +854,50 @@
         "transaction_receipt_success_headers": "30/32; 2 龙虾 headers unavailable due truncation; ERC20 log exists",
         "quality": "QUOTE_TRACES_AND_SAME_BLOCK_OTHER_ACTIVITY_NOT_FULLY_EXCLUDED",
         "source": "BSC_MEME_8E6B_THREE_CORE_EVENT_CASHFLOW_RECONCILIATION_2026-10-11.json"
+      },
+      "latest_confirmed_scope_audit": {
+        "as_of": "2026-10-11",
+        "priority": "HIGH_MATERIAL_REPEATED_ONCHAIN_CASHFLOW_RESEARCH",
+        "status": "OBSERVE_ONLY_NO_GO",
+        "four_token": {
+          "token": "4",
+          "original_tx_self_signed": "19/19",
+          "receipt_status_success": "19/19",
+          "token_inventory_closed": true,
+          "buy_native_BNB": 0.8,
+          "sell_wbnb_withdraw_BNB": 14.004497756745366,
+          "gas_BNB": 0.030466745273120165,
+          "early_route_settlement_difference_BNB": 0.009043557869177855,
+          "exact_reconciled_native_delta_BNB": 13.164987453603066,
+          "classification": "STRONG_SCOPED_REALIZED_NATIVE_BNB_CASHFLOW, NOT LIFETIME_WALLET_PNL"
+        },
+        "other_complete_token_blocks": [
+          {
+            "token": "HAJIMI",
+            "native_delta_BNB": 1.2428992807984849,
+            "receipts": "13/13_SUCCESS",
+            "status": "BLOCK_DELTA_ONLY"
+          },
+          {
+            "token": "龙虾",
+            "native_delta_BNB": 4.794001707717377,
+            "receipts": "11_SUCCESS_2_UNCONFIRMED",
+            "status": "BLOCK_DELTA_ONLY"
+          },
+          {
+            "token": "我踏马来了",
+            "native_delta_BNB": -0.5990238168449055,
+            "receipts": "6/6_SUCCESS",
+            "status": "BLOCK_DELTA_ONLY"
+          }
+        ],
+        "four_scope_total_block_delta_BNB": 18.602864625274023,
+        "evidence": "BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
+        "caveats": [
+          "19 receipts and WBNB unwrapping reconcilable with onchain native balance, still no entire wallet history or independent followability test",
+          "Potential same-block unrelated native activity cannot formally be excluded without complete call trace",
+          "Cross-wallet beneficial owner independence not yet verified"
+        ]
       }
     },
     {
@@ -1566,5 +1612,6 @@
     "early_pool_per_venue": 50,
     "all_pages_complete": false
   },
-  "last_breadth_scan": "2026-10-11: all 23 candidate EOAs scanned both directions for 19 known tokens; 394 partial ERC20 events. Native funding sample 227 events; 7 signed candidate-to-candidate transfers verified with receipts."
+  "last_breadth_scan": "2026-10-11: all 23 candidate EOAs scanned both directions for 19 known tokens; 394 partial ERC20 events. Native funding sample 227 events; 7 signed candidate-to-candidate transfers verified with receipts.",
+  "last_8e6b_reconciliation": "2026-10-11 confirmed 19/19 self-signed and success receipts for token 4, gross 14.004497756745366 WBNB withdrawals and exact scoped native +13.164987453603066 BNB after buys, gas, 1%-consistent route differences. Three additional token native block changes +4.794001707717377, +1.2428992807984849, -0.5990238168449055 are still scoped and unisolated."
 }
