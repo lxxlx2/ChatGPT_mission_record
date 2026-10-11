@@ -1,0 +1,71 @@
+{
+  "schema": "MONSTER_STAGE22_POST_ENTRY_STOP_CAUSAL_AGGTRADES_FROZEN_DIAGNOSTIC_V1",
+  "task": "Investigate 34 actual Stage21 quality-D1 STOP cases against full cohort, using official Binance aggressor-side Spot aggTrades that had occurred BEFORE first D1 signal",
+  "source_provenance": {
+    "stage21_10_date_ci": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131455442",
+    "stage21_original_artifact_evidence": "monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+    "stage21_recalc_ci": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131848138",
+    "stage21_rule_blob_sha1": "93e2065e354182be3d2136be49c760674b485381",
+    "binance_official_spec": "https://github.com/binance/binance-public-data/blob/master/README.md",
+    "source_data": "Binance official daily Spot aggTrades CSV in ZIP plus .CHECKSUM published SHA-256, 2025+ microsecond timestamps",
+    "raw_url_contract": "https://data.binance.vision/data/spot/daily/aggTrades/{symbol}/{symbol}-aggTrades-{YYYY-MM-DD}.zip"
+  },
+  "frozen_cohort": {
+    "ten_dates": [
+      "2025-03-09",
+      "2025-04-09",
+      "2025-05-09",
+      "2025-06-09",
+      "2025-07-09",
+      "2025-08-09",
+      "2025-09-09",
+      "2025-10-09",
+      "2026-03-09",
+      "2026-06-09"
+    ],
+    "first_d1_quality_pass_symbol_dates": 65,
+    "unique_date_symbol_first_d1_keys_sha256": "89f62d524a23b82429ec6d19db63972766db13de82f2b6877ad99b37e1dfa3d8",
+    "valid_6h_exits": 62,
+    "valid_stop_8pct": 34,
+    "valid_takeprofit_18pct": 8,
+    "valid_timeout_6h": 20,
+    "excluded_quality_negative_first_d1": 12,
+    "censored_exits_kept_separate": 3
+  },
+  "features_predeclared": [
+    "last_5m_aggressor_buy_quote_share",
+    "last_15m_aggressor_buy_quote_share",
+    "last_60m_aggressor_buy_quote_share",
+    "last_15m_aggressor_buy_minus_sell_quote_usdt",
+    "last_60m_aggregated_trade_count",
+    "last_15m_aggressor_sell_trade_share",
+    "last_5m_total_quote_usdt",
+    "last_15m_total_quote_usdt",
+    "last_60m_total_quote_usdt",
+    "last_15m_trade_price_vwap",
+    "last_15m_vs_prior45m_quote_ratio"
+  ],
+  "timing": "Strictly event timestamp in [signal_ms-60minutes,signal_ms); never include same millisecond or future trades. Class labels from original Stage21 exits only. No new trading rule or threshold derived by looking at labels.",
+  "trade_direction": "Binance m=true (buyer is maker) means seller aggressor; m=false means buyer aggressor. AggTrade is aggregate at same price/taker, does NOT represent raw independent execution count or full orderbook depth.",
+  "validation": {
+    "archive_publisher_sha256_mandatory": true,
+    "all_65_cases_must_be_attempted": true,
+    "missing_zip_must_censor_not_zero": true,
+    "invalid_or_oversized_zip_must_censor_with_specific_reason": true,
+    "long_size_file_limit_megabytes": 120,
+    "count_only_validated_official_aggregated_trades": true,
+    "no_fake_liquidity_quote_from_kline": true,
+    "follow_on_exit_label_not_part_of_features": true,
+    "report_rate_of_missing_aggtrades_by_exit_class": true,
+    "cohort_comparisons": "STOP vs TAKE_PROFIT vs TIMEOUT with distribution medians, no posthoc tuned cutoff or unbiased p-value",
+    "v4_production_code_unchanged": true
+  },
+  "falsification": "If pre-entry taker-side composition fails to distinguish STOP from other historical valid exits, or sources are insufficient, label this feature family inconclusive/rejected; do not deploy or retroactively choose thresholds",
+  "next_stage_after_diagnostic": "If signal-side imbalance exhibits credible research signal, separately freeze a causal rule and run on different, previously unused full 758-symbol dates, measuring profit and miss rate, before independent other-AI review",
+  "historical_L2_executable_fill": "UNVERIFIED",
+  "independent_other_ai_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "gmail": "OFF",
+  "trading": "NO_GO",
+  "frank": "UNTOUCHED"
+}
