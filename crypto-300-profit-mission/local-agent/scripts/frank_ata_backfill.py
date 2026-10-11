@@ -18,6 +18,10 @@ from pathlib import Path
 from mission_agent.frank.rpc import SolanaRPC
 from mission_agent.mission_control.db import open_production_ro
 from mission_agent.mission_control.ata_backfill import scan_ata_mints
+from mission_agent.mission_control.evidence_sync import (
+    EvidenceSpool, GitEvidencePublisher, PREFIX, MAX_REMOTE_BYTES,
+    canonical, safe, digest,
+)
 
 
 def run(argv: list[str] | None = None, *, rpc=None) -> dict:
@@ -31,6 +35,8 @@ def run(argv: list[str] | None = None, *, rpc=None) -> dict:
     parser.add_argument("--page-size", type=int, default=50)
     parser.add_argument("--pages-per-ata", type=int, default=2)
     parser.add_argument("--max-transactions", type=int, default=40)
+    parser.add_argument("--sync-git", action="store_true",
+                        help="Opt-in readback verified publication to existing evidence Git branch")
     args = parser.parse_args(argv)
     if args.output.exists():
         raise FileExistsError("OUTPUT_ALREADY_EXISTS_NO_OVERWRITE")
@@ -61,18 +67,35 @@ def run(argv: list[str] | None = None, *, rpc=None) -> dict:
     except BaseException:
         args.output.unlink(missing_ok=True)
         raise
-    return {"output": str(args.output), "size": len(payload),
-            "sha256": hashlib.sha256(payload).hexdigest(),
-            "absent_verified_signatures": len(
-                snapshot["verified_nonzero_signatures_absent_from_local_index"] or []),
-            "wallet_history_complete": False,
-            "production_modified": False}
+    result = {"output": str(args.output), "size": len(payload),
+              "sha256": hashlib.sha256(payload).hexdigest(),
+              "absent_verified_signatures": len(
+                  snapshot["verified_nonzero_signatures_absent_from_local_index"] or []),
+              "wallet_history_complete": False,
+              "production_modified": False, "git_sync": "NOT_REQUESTED"}
+    if args.sync_git:
+        try:
+            cleaned = canonical(safe(snapshot))
+            if len(cleaned) > MAX_REMOTE_BYTES:
+                raise ValueError("GIT_ATA_EVIDENCE_OVER_REMOTE_LIMIT")
+            # Safe, immutable SHA-addressed output on the existing separate
+            # evidence branch, NOT main and NOT a live Frank service.
+            identifier = digest(cleaned)
+            spool = EvidenceSpool(args.output.parent / ".frank-ata-git-spool")
+            destination = f"{PREFIX}/frank-ata-backfill/{identifier}.json"
+            GitEvidencePublisher(spool)._upload(destination, cleaned)
+            result["git_sync"] = "SYNC_OK_READBACK_VERIFIED"
+            result["git_snapshot_id"] = identifier
+        except (OSError, RuntimeError, ValueError) as exc:
+            result["git_sync"] = "SYNC_FAILED_LOCAL_FILE_RETAINED"
+            result["git_error_type"] = type(exc).__name__
+    return result
 
 
 def main(argv: list[str] | None = None) -> int:
     result = run(argv)
     print(json.dumps(result, sort_keys=True))
-    return 0
+    return 2 if result["git_sync"] == "SYNC_FAILED_LOCAL_FILE_RETAINED" else 0
 
 
 if __name__ == "__main__":
