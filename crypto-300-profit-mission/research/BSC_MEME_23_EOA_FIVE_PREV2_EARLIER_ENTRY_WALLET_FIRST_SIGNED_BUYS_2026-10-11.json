@@ -1,0 +1,100 @@
+{
+  "as_of": "2026-10-11",
+  "chain": "bnb-mainnet",
+  "source": "Historic wallet contract ERC20 inbound Alchemy getAssetTransfers, ethGetTransactionByHash, ethGetTransactionReceipt read-only",
+  "universe": "23 preselected wallet EOA x 19 previously frozen major token contracts",
+  "hypothesis_precommit": "Earlier on both IFML and Lobster may indicate repeated launchpad detection but must cover liquidation, losses, idle and opportunity misses; output does not establish profitability, insider status or owner independence.",
+  "verification": "All 6 tx confirmed original from exact wallet, original value, successful receipt header 0x1; first wallet-specific ERC20 inbound block from 19-CA fully-paginated matrix.",
+  "rows": [
+    {
+      "token": "我踏马来了",
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "block": 73336244,
+      "hash": "0x74c5473f07968e866b7a49b77347691c60f84ee44bdf8f9ff6c097ac805bf3bb",
+      "native_in_wei": "400000000000000000",
+      "gas_price_wei": "60000000000",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "erc20_from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "original_signer_confirmed": true,
+      "receipt_status": "0x1",
+      "receipt_truncated": true
+    },
+    {
+      "token": "我踏马来了",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "block": 73336279,
+      "hash": "0xc0d75250a3970809e6a1e1287609cac4be09e59bf3ebe9b5016b1c1c38211653",
+      "native_in_wei": "500000000000000000",
+      "gas_price_wei": "1000000000",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "erc20_from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "original_signer_confirmed": true,
+      "receipt_status": "0x1",
+      "receipt_truncated": true
+    },
+    {
+      "token": "我踏马来了",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "block": 73336282,
+      "hash": "0xa0678662cd6ea430e95d8fd3e1d3521c133821e999dd317d101fb8015d19f710",
+      "native_in_wei": "60000000000000000",
+      "gas_price_wei": "500000000",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "erc20_from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "original_signer_confirmed": true,
+      "receipt_status": "0x1",
+      "receipt_truncated": true
+    },
+    {
+      "token": "龙虾",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "block": 83635776,
+      "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+      "native_in_wei": "800000000000000000",
+      "gas_price_wei": "31000000000",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "erc20_from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "original_signer_confirmed": true,
+      "receipt_status": "0x1",
+      "receipt_truncated": true
+    },
+    {
+      "token": "龙虾",
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "block": 83635783,
+      "hash": "0xd5f7328f403115fab8e1c9bf7eb95a442a0118fe477bfcf446185658dc79deee",
+      "native_in_wei": "88800000000000000",
+      "gas_price_wei": "120000000",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "erc20_from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "original_signer_confirmed": true,
+      "receipt_status": "0x1",
+      "receipt_truncated": true
+    },
+    {
+      "token": "龙虾",
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "block": 83635854,
+      "hash": "0xc73e2df907f59580fc27c7100ee94b877c452b019869a61cfe595761fd52177b",
+      "native_in_wei": "500000000000000000",
+      "gas_price_wei": "120000000",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "erc20_from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "original_signer_confirmed": true,
+      "receipt_status": "0x1",
+      "receipt_truncated": true
+    }
+  ],
+  "wallet_watch_priorities": [
+    "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+    "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+    "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+  ],
+  "caveats": [
+    "Selection retrospective to known token successes, not a chance-adjusted ranking",
+    "First ERC20 inbound of this token does not prove first wallet funding or earliest permitted trade",
+    "Refunds, later routing, realized profits, losses and multi-wallet controller clusters are not yet proven"
+  ],
+  "production": "NO_GO"
+}
