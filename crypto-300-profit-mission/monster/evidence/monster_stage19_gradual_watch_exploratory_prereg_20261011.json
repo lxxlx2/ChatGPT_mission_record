@@ -1,0 +1,50 @@
+{
+  "schema": "MONSTER_STAGE19_EXPLORATORY_GRADUAL_WATCH_FIXED_BEFORE_REAL_BULK_1M_REPLAY_V1",
+  "scope": "RESEARCH_ONLY_HYPOTHESIS_AFTER_STAGE18_EXPOSED_LOSSES",
+  "preregistered_by_design_before_stage19_bulk_archive_replay": true,
+  "universe": "2026-10-11 frozen current504 Spot USDT plus 254 ASCII Binance S3 archived-only historical Spot USDT pairs; 2 Unicode unsupported excluded with warning",
+  "archive_only_set_sha256": "0c2604d838fc3d7c28d0e8819fde1bb42deb6fb22360182a49c1b82bb6d25348",
+  "frozen_full_universe": 758,
+  "dates": [
+    "2025-11-17",
+    "2026-02-17",
+    "2026-05-17",
+    "2026-08-17",
+    "2026-09-17"
+  ],
+  "observation_window_utc": "06:00-18:00 UTC as Stage12/13; each 60h official verified 1m, 3m polling",
+  "candidate_v1": {
+    "source": "Only official Binance closed 1m Spot OHLCV prior to signal, no future GT labels and no direct orderbook",
+    "rolling_6h_close_return_min_pct": 10,
+    "rolling_2h_close_return_min_pct": 3,
+    "trailing_24h_quote_usdt_min": 250000,
+    "must_have_trade_in_last_closed_minute": true,
+    "signal_cooldown_minutes": 1440,
+    "capital_usdt": 30,
+    "entry_delay_min": 3,
+    "hold_minutes": 1440,
+    "assumed_fee_per_side_bps": 10,
+    "assumed_slippage_per_side_bps": 20,
+    "censoring": "Use exact old V4 _proxy_trade including min 30USDT at entry/exit minute, six-minute zero volume; no quote/fills invented",
+    "classification": "EXPLORATORY_WATCH_CANDIDATE_NOT_BUY"
+  },
+  "comparator": "unchanged exact V4 production observe_snapshot and process_queue via monster_v4_historical_replay.replay_case",
+  "primary_metrics": [
+    "n_valid_60h_universe",
+    "candidate_watch_episodes",
+    "candidate_incremental_before_V4_watch",
+    "candidate_24h_price_proxy_n_censored_wins_losses_median_mean_and_sum_30U",
+    "count_per_12h_sample",
+    "frozen_2x_case_early_lead_recall_diagnostic_posthoc_only"
+  ],
+  "refusal_gates": [
+    "Do not claim unbiased profitability even if positive on 5 disclosed dates",
+    "Do not retroactively adjust thresholds to make 7 missed known winners pass",
+    "Do not count missing archives as 0 signal",
+    "Do not increase production notification load or modify Frank/Monster runtime",
+    "Do not allow AI Review or Mac deployment until fully independent frozen out-of-sample, real execution uncertainty, and value/false-positive tests pass"
+  ],
+  "deployment": "NO_GO",
+  "trading": "NO_GO",
+  "real_gmail": "OFF"
+}
