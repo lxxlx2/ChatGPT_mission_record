@@ -22,7 +22,7 @@ J7 = "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump"
 
 
 def _git(path: str) -> bytes:
-    repo = Path(__file__).resolve().parents[3]
+    repo = Path(__file__).resolve().parents[4]
     p = subprocess.run(
         ["git", "-C", str(repo), "show", BRANCH + ":" + path],
         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False,
