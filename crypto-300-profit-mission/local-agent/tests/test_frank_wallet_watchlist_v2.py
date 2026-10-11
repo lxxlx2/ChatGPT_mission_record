@@ -277,13 +277,13 @@ def test_known_ata_gap_overlay_does_not_relabel_owner_index_trades():
                            "source_date_utc": "2026-10-11"}]}
     overlay = annotate_known_ata_gaps(original, source)
     row = overlay["rows"][0]
-    assert row["owner_index_gap_status"] == "CONFIRMED_HISTORICAL_GAP"
+    assert row["owner_index_gap_status"] == "LEGACY_UNSPLIT_ATA_INDEX_EVIDENCE"
     assert row["owner_index_missing_signatures"] == 2
     assert row["ata_verified_extra_passive_receipts"] == 2
     assert row["local_recognized_buys"] == 0
     assert row["local_recognized_sells"] == 0
     assert not row["is_follow_signal"]
-    assert overlay["summary"]["known_owner_index_gap_mints"] == 1
+    assert overlay["summary"]["known_ata_index_scope_mints"] == 1
     missing = annotate_known_ata_gaps(original, None)
     assert missing["rows"][0]["owner_index_gap_status"] == "NOT_AUDITED"
 
@@ -298,3 +298,40 @@ def test_known_ata_gap_invalid_count_fails_closed():
                         "source_date_utc": "2026-10-11"}]}
     with pytest.raises(ValueError, match="INVALID_ATA_GAP_RECORD"):
         annotate_known_ata_gaps(observed, bad)
+
+def test_v2_ata_scope_distinguishes_old_window_and_verified_passive_credit():
+    from mission_agent.mission_control.wallet_watch import annotate_known_ata_gaps
+    observed = from_seed([{"mint": MINT1, "local_state": "UNKNOWN"}])
+    entry = {
+        "mint": MINT1, "owner_index_missing_signatures": 66,
+        "missing_before_index_start": 63, "missing_during_index_window": 3,
+        "inwindow_failed": 1, "inwindow_success_unverified": 1,
+        "verified_extra_passive_receipts": 1,
+        "source_date_utc": "2026-10-11",
+        "scope_label": "ATA_VS_MAIN_WALLET_ACCOUNT_KEYS",
+    }
+    source = {"schema_version": 2,
+              "owner_wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+              "records": [entry]}
+    row = annotate_known_ata_gaps(observed, source)["rows"][0]
+    assert row["owner_index_gap_status"] == "DATED_ATA_VS_OWNER_INDEX_SCOPE"
+    assert row["ata_outside_index_window_signatures"] == 63
+    assert row["ata_inside_index_window_signatures"] == 3
+    assert row["ata_inwindow_failed_signatures"] == 1
+    assert row["ata_inwindow_success_unverified"] == 1
+    assert row["ata_verified_extra_passive_receipts"] == 1
+    assert row["local_recognized_buys"] == 0
+    assert row["pnl_usd"] is None
+    assert not row["is_follow_signal"]
+    # Inconsistent or malicious counts must not appear as confirmed evidence.
+    entry["missing_before_index_start"] = 62
+    with pytest.raises(ValueError, match="INVALID_ATA_GAP_WINDOW_BREAKDOWN"):
+        annotate_known_ata_gaps(observed, source)
+
+def test_dashboard_uses_window_split_evidence_without_old_gap_label():
+    root = Path(__file__).resolve().parents[1] / "mission_agent" / "mission_control"
+    ui = (root / "static" / "app.js").read_text()
+    server = (root / "server.py").read_text()
+    assert "窗口前" in ui and "窗口内" in ui
+    assert "历史索引缺口：" not in ui
+    assert "frank-v2-ata-index-scope-correction-2026-10-11.json" in server
