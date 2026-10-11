@@ -29,7 +29,6 @@ jobs:
           python -B -m unittest discover -v -s tests -p test_monster_v4_stage30_aggregate.py
   rehash_thirtysix_original_new_date_market_cases:
     needs: unit_source_and_original_cash_gates
-    if: ${{ hashFiles('crypto-300-profit-mission/monster/evidence/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -39,7 +38,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Detect frozen source proof availability on checked-out branch
+        id: source_proof
+        run: |
+          if test -s crypto-300-profit-mission/monster/evidence/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json; then
+            echo exists=true >> "$GITHUB_OUTPUT"
+          else
+            echo exists=false >> "$GITHUB_OUTPUT"
+            echo STAGE30_SOURCE_PROOF_NOT_COMMITTED_YET
+          fi
       - name: Gather exactly all 36 publisher-source complete original run Artifact IDs from committed evidence
+        if: steps.source_proof.outputs.exists == 'true'
         run: |
           python - <<'PY' > /tmp/stage30_artifacts.tsv
           import json
@@ -52,6 +61,7 @@ jobs:
               print(a['date'],a['shard'],a['artifact_id'])
           PY
       - name: Download unchanged 36 official-binance-sourced new date V4 research artifacts
+        if: steps.source_proof.outputs.exists == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -59,6 +69,7 @@ jobs:
             gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/"$artifact"/zip > "/tmp/monster_stage30_${day}_shard${shard}.zip"
           done < /tmp/stage30_artifacts.tsv
       - name: Verify all 36 ZIP and JSON SHA plus monthly and daily publisher source hashes, rebuild2x5x10x and funded outcomes
+        if: steps.source_proof.outputs.exists == 'true'
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           args=()
@@ -67,6 +78,7 @@ jobs:
           done < /tmp/stage30_artifacts.tsv
           python -B scripts/monster_v4_stage30_aggregate.py --original-zips "${args[@]}" --output /tmp/monster_stage30_full758_6date_verified_168h_burst_300U.json
       - name: Preserve full unreduced independent-calendar market and win loss data
+        if: steps.source_proof.outputs.exists == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: monster-stage30-real-original-six-new-full168h-2x5x10x-burst-cash-net
