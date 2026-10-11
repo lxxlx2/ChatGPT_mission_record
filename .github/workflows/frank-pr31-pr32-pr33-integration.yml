@@ -22,7 +22,7 @@ jobs:
         mode: [pr32, pr33, pr32-pr33, pr31-pr32-pr33]
     env:
       BASE_SHA: '383dddf517b221cc5366c6a2b67ca4f6779e597e'
-      PR31_SHA: 'c65d04a8f14d7efe6e0956fa2914781ec2d96b5f'
+      PR31_SHA: '2309beab75e890a22cc8483a274dfae1b9cdddcf'
       PR32_SHA: '85f1a792dd7d0fbf354c09ac83872887ed301c10'
       PR33_SHA: '646a257bae10fe102feed526c905c39134e0d069'
       FRANK_EXPECT_REAL_GIT_REPLAY: '1'
