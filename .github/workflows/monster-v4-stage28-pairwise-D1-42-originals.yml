@@ -1,0 +1,73 @@
+name: Monster Stage28 Exact D1 Pairwise 36 Plus 6 Original SHA Sources
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_pairwise_D1_compare.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage28_pairwise_D1_compare.py'
+      - '.github/workflows/monster-v4-stage28-pairwise-D1-42-originals.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage28-42-originals-D1-identity-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  immutable-stage26-stage28-event-identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm original test identity and delayed vs removed D1
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage28_pairwise_D1_compare.py tests/test_monster_v4_stage28_pairwise_D1_compare.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage28_pairwise_D1_compare.py
+      - name: Read 42 authentic prior original CI artifacts through read-only GitHub API
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' > /tmp/monster28_42_ids.tsv
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/monster/evidence")
+          a=json.loads((root/"monster_stage26_verified_sharded_168h_artifact_proof_20261011.json").read_text())
+          b=json.loads((root/"monster_stage28_original_six_real_shared_sqlite_artifact_proof_20261011.json").read_text())
+          if len(a["artifacts"])!=36 or len(b["artifacts"])!=6:
+              raise SystemExit("MISSING_42_SOURCE_FILES")
+          for x in sorted(a["artifacts"],key=lambda r:(r["date"],r["shard"])):
+              print("stage26",x["date"],x["shard"],x["artifact_id"])
+          for x in sorted(b["artifacts"],key=lambda r:r["date"]):
+              print("stage28",x["date"],"0",x["artifact_id"])
+          PY
+          while read -r stage day shard artifact; do
+            gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/"$artifact"/zip > "/tmp/${stage}_${day}_shard${shard}.zip"
+          done < /tmp/monster28_42_ids.tsv
+      - name: Rehash 42 exact ZIPs and JSON, reconcile 826 original and 828 shared D1 per symbol and UTC minute
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          original=()
+          shared=()
+          while read -r stage day shard artifact; do
+            if [ "$stage" = stage26 ]; then
+              original+=("/tmp/${stage}_${day}_shard${shard}.zip")
+            else
+              shared+=("/tmp/${stage}_${day}_shard${shard}.zip")
+            fi
+          done < /tmp/monster28_42_ids.tsv
+          python -B scripts/monster_v4_stage28_pairwise_D1_compare.py --stage26-original-zips "${original[@]}" --stage28-original-zips "${shared[@]}" --output /tmp/monster_stage28_pairwise_826_828_d1_reverified.json
+      - name: Retain all original-only and shared-only events for technical diagnosis
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage28-42-original-SHA-exact-D1-826vs828-comparison
+          path: /tmp/monster_stage28_pairwise_826_828_d1_reverified.json
+          if-no-files-found: warn
+          retention-days: 30
