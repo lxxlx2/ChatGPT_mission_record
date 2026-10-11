@@ -1,0 +1,65 @@
+name: Monster Stage26 Original V4 Continuous168h Six Date Full758 Research
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage26_continuous168h.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage26_continuous168h.py'
+      - '.github/workflows/monster-v4-stage26-168h-continuous-758x6.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: monster-stage26-168h-original-v4-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  official-10day-1m-original-v4-stateful:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        include:
+          - {day: '2025-11-04', artifact_id: 11700651924}
+          - {day: '2025-12-04', artifact_id: 11700023559}
+          - {day: '2026-02-04', artifact_id: 11700058433}
+          - {day: '2026-04-04', artifact_id: 11700786475}
+          - {day: '2026-08-04', artifact_id: 11700956514}
+          - {day: '2026-09-04', artifact_id: 11700382028}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile full-week scanner and regression; verify 216h archive and original V4 blob contract
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage26_continuous168h.py tests/test_monster_v4_stage26_continuous168h.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage26_continuous168h.py
+      - name: Fetch true entire 758-source original Stage24 day index, publisher-SHA historical GT
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -H 'Accept: application/vnd.github+json' repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/${{ matrix.artifact_id }}/zip > /tmp/stage26_previousGT_${{ matrix.day }}.zip
+      - name: Replay exact original V4 for seven days with one SQLite per symbol and ten source-verified minute ZIP days
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 0 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard0.json
+          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 1 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard1.json
+          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 2 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard2.json
+          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 3 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard3.json
+          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 4 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard4.json
+          python -B scripts/monster_v4_stage26_continuous168h.py --date ${{ matrix.day }} --shard 5 --stage24-original-zip /tmp/stage26_previousGT_${{ matrix.day }}.zip --output /tmp/monster_stage26_${{ matrix.day }}_shard5.json
+      - name: Save all six original full source status and causal WATCH trade proxy shards even if partial
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage26-originalV4-continuous168h-${{ matrix.day }}
+          path: /tmp/monster_stage26_${{ matrix.day }}_shard*.json
+          if-no-files-found: warn
+          retention-days: 30
