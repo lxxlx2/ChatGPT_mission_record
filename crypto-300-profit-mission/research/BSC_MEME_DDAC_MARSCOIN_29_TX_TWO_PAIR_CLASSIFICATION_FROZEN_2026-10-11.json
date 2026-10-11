@@ -1,0 +1,522 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "token": "MARSCOIN",
+  "token_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "token_decimals": 18,
+  "source_files": [
+    "BSC_MEME_DDAC_MARSCOIN_FULL_TRANSFER_ANOMALY_2026-10-11.json",
+    "BSC_MEME_DDAC_MARSCOIN_29_TX_SIGNER_RECEIPT_ATTRIBUTION_2026-10-11.json"
+  ],
+  "pools": {
+    "SPCXB_PAIR": {
+      "address": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "quote": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1"
+    },
+    "USDT_PAIR": {
+      "address": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+      "quote": "0x55d398326f99059ff775485246999027b3197955"
+    }
+  },
+  "verified_onchain_pool_tokens": "At eth_call latest: SPCXB/MARS token0 0xbe9... token1 0xfe189..., USDT/MARS token0 0x55d398... token1 0xfe189..., verified at current chain state; historical pair identity presumed consistent with immutable V2 token0/token1; verify actual source event quote.",
+  "source_scope": "29 distinct wallet MARS ERC20 tx hashes complete pagination, no selecting by profitable outcome",
+  "counts": {
+    "total": 29,
+    "owner_pool_buy": 6,
+    "owner_pool_sell": 12,
+    "owner_nonpool_receive": 1,
+    "external_nonpool_receive": 4,
+    "unknown_signer_nonpool_receive": 6
+  },
+  "inventory": {
+    "min_raw": "0",
+    "final_raw": "3050660512775076744",
+    "closed": false
+  },
+  "swap_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+  "tasks": [
+    {
+      "hash": "0xfd87fa6d585acdf047e96264ddfb1bb0c428c882449d72554a34ec6841b63824",
+      "block": 112441920,
+      "venue": "SPCXB_PAIR",
+      "kind": "IN",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "500000000000000000",
+      "native_wallet_block_delta_wei": "-500059367840000000",
+      "token_in_raw": "1011535330957146847160857",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "1011535330957146847160857"
+    },
+    {
+      "hash": "0x8f5386192f6f5da18185098556a2f93661211d59b63e6baaff6d66435647b35c",
+      "block": 112442886,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "551555614300395600",
+      "token_in_raw": "0",
+      "token_out_raw": "1011535330957146847160857",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "0"
+    },
+    {
+      "hash": "0xc13d9d1b476a6fa2ae56ed17518281101dde33e930572ce40ef46819e54bc989",
+      "block": 112635735,
+      "venue": "SPCXB_PAIR",
+      "kind": "IN",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "500000000000000000",
+      "native_wallet_block_delta_wei": "-500059380680000000",
+      "token_in_raw": "232502967133953547234570",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "232502967133953547234570"
+    },
+    {
+      "hash": "0x4323589f5edadbb49c6b1eefe5ab816af12993bccefe4d4c1fe2592f07be881d",
+      "block": 112639419,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "491450427852877528",
+      "token_in_raw": "0",
+      "token_out_raw": "129258254199897074065853",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "103244712934056473168717"
+    },
+    {
+      "hash": "0x5c771003a07ad6a04e570aa8b56e6fed209a8d12a37102c8e79743cf48d14c36",
+      "block": 112643175,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "523957088343946891",
+      "token_in_raw": "0",
+      "token_out_raw": "51622356467028236584358",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "51622356467028236584359"
+    },
+    {
+      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
+      "block": 112964866,
+      "venue": "SPCXB_PAIR",
+      "kind": "IN",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "1000000000000000000",
+      "native_wallet_block_delta_wei": "-1000060594840000000",
+      "token_in_raw": "74482554822020571897449",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "126104911289048808481808"
+    },
+    {
+      "hash": "0x2a4ff3f3c524e588990addefb24bde2ebe8278bdbe3a7e70ee8c5a94bdfdb43c",
+      "block": 112964882,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "1098252820781286592",
+      "token_in_raw": "0",
+      "token_out_raw": "63052455644524404240904",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "63052455644524404240904"
+    },
+    {
+      "hash": "0x865a996b0f89c833ace380bf5be35aa7ea9b7ddeee9b5ae8e6c13e3d6ac1a2f6",
+      "block": 112965110,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "858425086881459880",
+      "token_in_raw": "0",
+      "token_out_raw": "33517149669909257353852",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "29535305974615146887052"
+    },
+    {
+      "hash": "0x7625eef7dde05147172d5908d1d395d40d85e3625e4a8726fb1fbaa4f4626357",
+      "block": 112965118,
+      "venue": "SPCXB_PAIR",
+      "kind": "IN",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "500000000000000000",
+      "native_wallet_block_delta_wei": "-500052413360000000",
+      "token_in_raw": "17916712949914776414738",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "47452018924529923301790"
+    },
+    {
+      "hash": "0x07798b8822bd50ec49800565ea65bb768db83023ff6c3af9007bc6734e44f169",
+      "block": 112971917,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "953049126254362424",
+      "token_in_raw": "0",
+      "token_out_raw": "23726009462264961650895",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "23726009462264961650895"
+    },
+    {
+      "hash": "0x1df1b31f9c0bef52268e8a6e908b96d99be0c998b8bfcfbe10b9910c1186f1a2",
+      "block": 112972386,
+      "venue": "USDT_PAIR",
+      "kind": "IN",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "300000000000000000",
+      "native_wallet_block_delta_wei": "-300040698840000000",
+      "token_in_raw": "7510065098359254422193",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x4a4bea953813c118c260be9a26b2321e57aa62e5"
+      ],
+      "inventory_after_wei": "31236074560624216073088"
+    },
+    {
+      "hash": "0xb5aadaa7350e902a40b94338332f50b6ec5fe47bc774f4da132d9bb0e62d5b55",
+      "block": 112993813,
+      "venue": "USDT_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "332521602584285880",
+      "token_in_raw": "0",
+      "token_out_raw": "6247214912124843214617",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x4a4bea953813c118c260be9a26b2321e57aa62e5"
+      ],
+      "inventory_after_wei": "24988859648499372858471"
+    },
+    {
+      "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
+      "block": 113003453,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "305748699984736501",
+      "token_in_raw": "0",
+      "token_out_raw": "4997771929699874571694",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "19991087718799498286777"
+    },
+    {
+      "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
+      "block": 113137477,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "240689540005429088",
+      "token_in_raw": "0",
+      "token_out_raw": "3379529294261664489986",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "16611558424537833796791"
+    },
+    {
+      "hash": "0x3a27915a1c7ab25831fa2bb1fa3f63b783e7bac701aa037b1545c6f5a9ab9ede",
+      "block": 113975350,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "766961502238162131",
+      "token_in_raw": "0",
+      "token_out_raw": "16611558424537833796791",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "0"
+    },
+    {
+      "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854",
+      "block": 113986944,
+      "venue": "SPCXB_PAIR",
+      "kind": "IN",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "50000000000000000",
+      "native_wallet_block_delta_wei": "-50051364800000000",
+      "token_in_raw": "585322708923802449772",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "585322708923802449772"
+    },
+    {
+      "hash": "0x0af40b9fc2b323b36802ccf63c17b70e195d46838d332c1becdcca08d6a567cd",
+      "block": 114094942,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "OTHER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "171251311383940600753",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x15ffff6fb3652717229d684a4d39a2759e8db15f"
+      ],
+      "inventory_after_wei": "756574020307743050525"
+    },
+    {
+      "hash": "0x726e3ae1d2e3ad27f0143334b9184d8706555a1b7246e242042b6e5050bf0693",
+      "block": 114096341,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "OTHER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "116044437793616319300",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x15ffff6fb3652717229d684a4d39a2759e8db15f"
+      ],
+      "inventory_after_wei": "872618458101359369825"
+    },
+    {
+      "hash": "0x43e373611a22b92725a5434ad8b23c13d48d30e596c060173ec1b5e7afdd3f9c",
+      "block": 115356822,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "SIGNER_UNVERIFIED_TRUNCATED",
+      "original_native_input_wei": null,
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "54807650175882481571",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x31b5942f12546aad38c7a03bc4a25cd4dcbe50df"
+      ],
+      "inventory_after_wei": "927426108277241851396"
+    },
+    {
+      "hash": "0x4f3ecc60a2287fde41419a49cded3f8e1d2ff4b15d25f70a7abf1e380150ae03",
+      "block": 115356908,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "SIGNER_UNVERIFIED_TRUNCATED",
+      "original_native_input_wei": null,
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "52829744675927613017",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x8a3d8e2082cdcdd9dbf121df0ba2d71651013055"
+      ],
+      "inventory_after_wei": "980255852953169464413"
+    },
+    {
+      "hash": "0x1b8ebb303c3a50ef7a5aa4265c6253e694846a6ba1bcb06687170210b0b29ca9",
+      "block": 115357060,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "SIGNER_UNVERIFIED_TRUNCATED",
+      "original_native_input_wei": null,
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "50000075638322715171",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0xb8fada9dee4c0497d9a0cca78e72266759c20f98"
+      ],
+      "inventory_after_wei": "1030255928591492179584"
+    },
+    {
+      "hash": "0xb0ad6dcb2f5c57a46f89977407989c8eb5f6a03f0c5a834e3afa1166bcf21a51",
+      "block": 115359762,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "SIGNER_UNVERIFIED_TRUNCATED",
+      "original_native_input_wei": null,
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "17059311630011385082",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x15ffff6fb3652717229d684a4d39a2759e8db15f"
+      ],
+      "inventory_after_wei": "1047315240221503564666"
+    },
+    {
+      "hash": "0x9574a98294013648aef6e0c36aedf9fc055455bc3c4041738a12689ef859978a",
+      "block": 115362146,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "SIGNER_UNVERIFIED_TRUNCATED",
+      "original_native_input_wei": null,
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "6638640781764011745",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x409ed8c7ff49769e876a9da8067acf3435c83b0f"
+      ],
+      "inventory_after_wei": "1053953881003267576411"
+    },
+    {
+      "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
+      "block": 115522575,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "97103451021333063",
+      "token_in_raw": "0",
+      "token_out_raw": "1053953881003267576411",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "0"
+    },
+    {
+      "hash": "0xcb9d192eb9459e008f4d670f6eafef2a875e8d54e410d464820e2cb13f6fe945",
+      "block": 117201123,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "-106329200000000",
+      "token_in_raw": "50568799516974534288",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x1e85e818c59ff429d8b61765513588ea246dec13"
+      ],
+      "inventory_after_wei": "50568799516974534288"
+    },
+    {
+      "hash": "0x06441d6a56eb71fe11849e5984b40feb786dc1279dc0fe55714e5b42ca0dadba",
+      "block": 119322364,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "OTHER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "112787790916619248858",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0xee2f6506145910a8aa1a2df28ce992d9315d65d0"
+      ],
+      "inventory_after_wei": "163356590433593783146"
+    },
+    {
+      "hash": "0x84c1ea4080445c4f3e34daa441f692d9220c50aa8b25544bf1994521cd60c830",
+      "block": 119938438,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "OTHER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "14318653147716987744",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0xee2f6506145910a8aa1a2df28ce992d9315d65d0"
+      ],
+      "inventory_after_wei": "177675243581310770890"
+    },
+    {
+      "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
+      "block": 119938551,
+      "venue": "SPCXB_PAIR",
+      "kind": "OUT",
+      "signer_grade": "OWNER_SIGNED",
+      "original_native_input_wei": "0",
+      "native_wallet_block_delta_wei": "40427384627832188",
+      "token_in_raw": "0",
+      "token_out_raw": "177675243581310770890",
+      "token_transfer_count": 2,
+      "source_peers": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ],
+      "inventory_after_wei": "0"
+    },
+    {
+      "hash": "0xbd0bb6906165fd348b2ae064e4bb0a071202d9592bc1f0529d5a627cf69a342b",
+      "block": 120232161,
+      "venue": "NON_POOL",
+      "kind": "IN",
+      "signer_grade": "SIGNER_UNVERIFIED_TRUNCATED",
+      "original_native_input_wei": null,
+      "native_wallet_block_delta_wei": "0",
+      "token_in_raw": "3050660512775076744",
+      "token_out_raw": "0",
+      "token_transfer_count": 1,
+      "source_peers": [
+        "0x42b9f9a4cdeaeaa32db79b14e0187cef4f47551f"
+      ],
+      "inventory_after_wei": "3050660512775076744"
+    }
+  ],
+  "quote_method": "For exactly 18 owner-signed pair-related transaction hashes, require direct same-hash pair Swap event: MARS amount token1 input/output and token0 SPCXB/USDT input/output. Quote token units remain different from BNB! Do not add SPCXB and USDT quote amounts. Match raw MARS transfer side to pair Swap token1 only after accounting transfer tax, because token may burn or tax within tx.",
+  "caveats": [
+    "Ten non-owner/unknown signer ERC20 transfers have zero owner-native BNB delta; not owner trading inputs",
+    "Receipt headers may truncate; do not assume explicit success",
+    "BNB block net positive does not prove realized quote PnL without entire router route, taxes, dividends",
+    "MARS raw residual needs current balance check, do not assume same raw units are USD dust"
+  ],
+  "production": "NO_GO"
+}
