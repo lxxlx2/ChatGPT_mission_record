@@ -1,0 +1,325 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "source_files": [
+    "BSC_MEME_DDAC_IFML_LOBSTER_FULL_TRANSFER_HISTORY_2026-10-11.json",
+    "BSC_MEME_DDAC_IFML_LOBSTER_NATIVE_BLOCK_EVIDENCE_2026-10-11.json"
+  ],
+  "method": "Chronological exact integer ERC20 inventory from transfer logs; opening zero balance to next zero balance, sum original wallet N-1 to N native BNB block changes per signed token event. No more than 1 event in same block in this 25-block sample. BNB totals are bounded token-event block cashflow, not full wealth or all quote assets.",
+  "series": [
+    {
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episodes": [
+        {
+          "episode_num": 1,
+          "first_block": 73336279,
+          "last_block": 73473922,
+          "buy_count": 2,
+          "sell_count": 5,
+          "buy_input_wei": "700408027519999983",
+          "native_bnb_block_delta_wei": "859560536650076026",
+          "wallet_native_blocks": [
+            {
+              "block": 73336279,
+              "hash": "0xc0d75250a3970809e6a1e1287609cac4be09e59bf3ebe9b5016b1c1c38211653",
+              "dir": "in",
+              "delta_wei": "-500340615999999986",
+              "inventory_before_raw": "0",
+              "inventory_after_raw": "36883643467552719000000000"
+            },
+            {
+              "block": 73336473,
+              "hash": "0xe9164404de7eeed8fab3c8c114de3d795bd06763f302dca59c7128f4d53dde61",
+              "dir": "out",
+              "delta_wei": "506792231707749180",
+              "inventory_before_raw": "36883643467552719000000000",
+              "inventory_after_raw": "18468080135772705000000000"
+            },
+            {
+              "block": 73336724,
+              "hash": "0xa4ef9760f32487730a0698c1b6d05553775340c39eb4e57494ee24de89a433b1",
+              "dir": "out",
+              "delta_wei": "247577600015346807",
+              "inventory_before_raw": "18468080135772705000000000",
+              "inventory_after_raw": "13851060101829529000000000"
+            },
+            {
+              "block": 73336790,
+              "hash": "0xb42d32d5fc4dcbe447142d22a05271b4939c18c1bc0d953484d8b5b13f595982",
+              "dir": "out",
+              "delta_wei": "301654310510946522",
+              "inventory_before_raw": "13851060101829529000000000",
+              "inventory_after_raw": "6925530050914765000000000"
+            },
+            {
+              "block": 73338992,
+              "hash": "0xfcee8bad9a488e0c0c46052903cc96ce52758ca46b6943a22edbe324add8007d",
+              "dir": "in",
+              "delta_wei": "-200067411519999997",
+              "inventory_before_raw": "6925530050914765000000000",
+              "inventory_after_raw": "20688862076021375000000000"
+            },
+            {
+              "block": 73350171,
+              "hash": "0x27288328876ed0bde49e35a99e2353210f0df8fd0c81fbd82e68bae1733244e6",
+              "dir": "out",
+              "delta_wei": "302197279923851429",
+              "inventory_before_raw": "20688862076021375000000000",
+              "inventory_after_raw": "10344431038010688000000000"
+            },
+            {
+              "block": 73473922,
+              "hash": "0x978e3cec0a8e0c59aa973b2f25f7e993e38ff38c59afdabdb20a8a4aad61f2a6",
+              "dir": "out",
+              "delta_wei": "201747142012182071",
+              "inventory_before_raw": "10344431038010688000000000",
+              "inventory_after_raw": "0"
+            }
+          ],
+          "closed": true
+        },
+        {
+          "episode_num": 2,
+          "first_block": 73658894,
+          "last_block": 73689258,
+          "buy_count": 3,
+          "sell_count": 4,
+          "buy_input_wei": "2000268851905997982",
+          "native_bnb_block_delta_wei": "1866258476542856262",
+          "wallet_native_blocks": [
+            {
+              "block": 73658894,
+              "hash": "0x06173cdf3a8de2596440e8cf370324c15b3dd4fe1428b62925a58515d0b840eb",
+              "dir": "in",
+              "delta_wei": "-500073324901399966",
+              "inventory_before_raw": "0",
+              "inventory_after_raw": "8071344345554309000000000"
+            },
+            {
+              "block": 73658909,
+              "hash": "0xd459f09283165d44a8d1784bd54604fe1f488fd7d176f8efbd1f88b2fb44830f",
+              "dir": "in",
+              "delta_wei": "-1000047575004598016",
+              "inventory_before_raw": "8071344345554309000000000",
+              "inventory_after_raw": "17524636398593719252790219"
+            },
+            {
+              "block": 73658934,
+              "hash": "0xaf0d45f462a469f6fe9f14a595ba6a704d13b57d74cc5833e69b6ec2827fd897",
+              "dir": "out",
+              "delta_wei": "1218455232514658352",
+              "inventory_before_raw": "17524636398593719252790219",
+              "inventory_after_raw": "8762318199296859626395110"
+            },
+            {
+              "block": 73658976,
+              "hash": "0x00df97a9523f8ce86272c90473bdafd19deebd2604865c0ee15ecf87285489d4",
+              "dir": "out",
+              "delta_wei": "1059682197836568694",
+              "inventory_before_raw": "8762318199296859626395110",
+              "inventory_after_raw": "4508336775429125012639512"
+            },
+            {
+              "block": 73659187,
+              "hash": "0xf9afe2d80fbec8a3fe812d5b202fc5f6295bc1e6842f2c719fcd48142010276a",
+              "dir": "out",
+              "delta_wei": "1000591719010534076",
+              "inventory_before_raw": "4508336775429125012639512",
+              "inventory_after_raw": "2254168387714562506319756"
+            },
+            {
+              "block": 73660360,
+              "hash": "0x6ffb6389c7d24e708e40aef7fd5270f43e6ba67f3808727df4afb720f48c0804",
+              "dir": "in",
+              "delta_wei": "-500147952000000000",
+              "inventory_before_raw": "2254168387714562506319756",
+              "inventory_after_raw": "2840603967477827545093233"
+            },
+            {
+              "block": 73689258,
+              "hash": "0x833262d874218a200b39312eb0550d44a53bf6af033adb23a03cbb066eae4844",
+              "dir": "out",
+              "delta_wei": "587798179087093122",
+              "inventory_before_raw": "2840603967477827545093233",
+              "inventory_after_raw": "0"
+            }
+          ],
+          "closed": true
+        },
+        {
+          "episode_num": 3,
+          "first_block": 74360480,
+          "last_block": 74377785,
+          "buy_count": 1,
+          "sell_count": 1,
+          "buy_input_wei": "500035077400000000",
+          "native_bnb_block_delta_wei": "20075173076535722",
+          "wallet_native_blocks": [
+            {
+              "block": 74360480,
+              "hash": "0x54bf67f75ad4edf7376877aed21ef59b076a17be18330e83d394d482cfd54e05",
+              "dir": "in",
+              "delta_wei": "-500035077400000000",
+              "inventory_before_raw": "0",
+              "inventory_after_raw": "152241093285911316311916"
+            },
+            {
+              "block": 74377785,
+              "hash": "0x75865523c9c26955cc769b4c11f0fe14ac0c77e9f945d954338826e3ddb6347b",
+              "dir": "out",
+              "delta_wei": "520110250476535722",
+              "inventory_before_raw": "152241093285911316311916",
+              "inventory_after_raw": "0"
+            }
+          ],
+          "closed": true
+        },
+        {
+          "episode_num": 4,
+          "first_block": 74460512,
+          "last_block": 74468389,
+          "buy_count": 1,
+          "sell_count": 1,
+          "buy_input_wei": "500175387000000000",
+          "native_bnb_block_delta_wei": "30104517152956606",
+          "wallet_native_blocks": [
+            {
+              "block": 74460512,
+              "hash": "0xb19db9769e263071ebaa9a90d452aaac86cbc5ee5dcceae954996a334e1b8246",
+              "dir": "in",
+              "delta_wei": "-500175387000000000",
+              "inventory_before_raw": "0",
+              "inventory_after_raw": "196814410022627640097170"
+            },
+            {
+              "block": 74468389,
+              "hash": "0xaf25e6a23743c25bae818e760f16919fc7d1617451a34470e1f93fe7999a762e",
+              "dir": "out",
+              "delta_wei": "530279904152956606",
+              "inventory_before_raw": "196814410022627640097170",
+              "inventory_after_raw": "0"
+            }
+          ],
+          "closed": true
+        },
+        {
+          "episode_num": 5,
+          "first_block": 74473636,
+          "last_block": 74473641,
+          "buy_count": 2,
+          "sell_count": 1,
+          "buy_input_wei": "2000153143338397394",
+          "native_bnb_block_delta_wei": "-446324586902254802",
+          "wallet_native_blocks": [
+            {
+              "block": 74473636,
+              "hash": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a",
+              "dir": "in",
+              "delta_wei": "-1000080758910707647",
+              "inventory_before_raw": "0",
+              "inventory_after_raw": "91088412526212094717943"
+            },
+            {
+              "block": 74473637,
+              "hash": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad",
+              "dir": "in",
+              "delta_wei": "-1000072384427689747",
+              "inventory_before_raw": "91088412526212094717943",
+              "inventory_after_raw": "180825179799407648337166"
+            },
+            {
+              "block": 74473641,
+              "hash": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e",
+              "dir": "out",
+              "delta_wei": "1553828556436142592",
+              "inventory_before_raw": "180825179799407648337166",
+              "inventory_after_raw": "0"
+            }
+          ],
+          "closed": true
+        }
+      ],
+      "count": 5,
+      "quantity_closed": true,
+      "net_native_wei": "2329674116520169814",
+      "matches_25_block_scope": true,
+      "negative_episodes": 1,
+      "positive_episodes": 4
+    },
+    {
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episodes": [
+        {
+          "episode_num": 1,
+          "first_block": 83635776,
+          "last_block": 83635800,
+          "buy_count": 1,
+          "sell_count": 1,
+          "buy_input_wei": "809007576999999996",
+          "native_bnb_block_delta_wei": "-92169615514614272",
+          "wallet_native_blocks": [
+            {
+              "block": 83635776,
+              "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+              "dir": "in",
+              "delta_wei": "-809007576999999996",
+              "inventory_before_raw": "0",
+              "inventory_after_raw": "99069253510299993000000000"
+            },
+            {
+              "block": 83635800,
+              "hash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+              "dir": "out",
+              "delta_wei": "716837961485385724",
+              "inventory_before_raw": "99069253510299993000000000",
+              "inventory_after_raw": "0"
+            }
+          ],
+          "closed": true
+        },
+        {
+          "episode_num": 2,
+          "first_block": 83792918,
+          "last_block": 84007473,
+          "buy_count": 1,
+          "sell_count": 1,
+          "buy_input_wei": "800019789800000000",
+          "native_bnb_block_delta_wei": "-91373516413690456",
+          "wallet_native_blocks": [
+            {
+              "block": 83792918,
+              "hash": "0xced27dd146159a8a34130a4e8e64bddd642c28773cc1514ad7ed5175c8529050",
+              "dir": "in",
+              "delta_wei": "-800019789800000000",
+              "inventory_before_raw": "0",
+              "inventory_after_raw": "195581662531433206271053"
+            },
+            {
+              "block": 84007473,
+              "hash": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8",
+              "dir": "out",
+              "delta_wei": "708646273386309544",
+              "inventory_before_raw": "195581662531433206271053",
+              "inventory_after_raw": "0"
+            }
+          ],
+          "closed": true
+        }
+      ],
+      "count": 2,
+      "quantity_closed": true,
+      "net_native_wei": "-183543131928304728",
+      "matches_25_block_scope": true,
+      "negative_episodes": 2,
+      "positive_episodes": 0
+    }
+  ],
+  "production": "NO_GO",
+  "limitations": [
+    "No WBNB/ERC20 quote reconciliation yet; original signed receipt separately stored",
+    "Partial or same-block unrelated balance effects remain possible",
+    "No cross-wallet control attribution or full universe denominator"
+  ]
+}
