@@ -170,69 +170,98 @@
       "before_wei": "11791696487921101855",
       "after_wei": "11791696487921101855",
       "delta_wei": "0"
-    }
-  ],
-  "pending_tx": [
+    },
     {
       "hash": "0x7d4b83de58dd4428e251647e40e692b3a4310b6e5ff06aae0a1079048dac6bbb",
       "block": 108179701,
       "dir": "out",
-      "raw": "0xae65887bdbb8acf3"
+      "raw": "0xae65887bdbb8acf3",
+      "before_wei": "10227648970412318888",
+      "after_wei": "10244026961217523438",
+      "delta_wei": "16377990805204550"
     },
     {
       "hash": "0x328ce1615ca34df44e93707af60f540adad2be7615f13048d40e038d225feae7",
       "block": 111591822,
       "dir": "in",
-      "raw": "0x82d689fa98bc040"
+      "raw": "0x82d689fa98bc040",
+      "before_wei": "9786221811813548730",
+      "after_wei": "10626241067815548730",
+      "delta_wei": "840019256002000000"
     },
     {
       "hash": "0x94381b9a30883532bf84d553b7e4651a00340c6c9d14ca4810fbfa8d033317bf",
       "block": 114737225,
       "dir": "in",
-      "raw": "0xa2e706e395662ba"
+      "raw": "0xa2e706e395662ba",
+      "before_wei": "12348989993371507122",
+      "after_wei": "12348941249104985508",
+      "delta_wei": "-48744266521614"
     },
     {
       "hash": "0xca3001db73e7da665a2f39f9b63053f5a6961b5dfbd25a59fcb0b2b4a07fdf34",
       "block": 117949699,
       "dir": "in",
-      "raw": "0x7791fedcce542eb1"
+      "raw": "0x7791fedcce542eb1",
+      "before_wei": "10006112309320951796",
+      "after_wei": "10006112309320951796",
+      "delta_wei": "0"
     },
     {
       "hash": "0x8df84ca382cab8f48e7fd5f5bb977b59317bad4800992aa4c5e388d0b4535a4a",
       "block": 117951250,
       "dir": "in",
-      "raw": "0xaf342f4b89aed531"
+      "raw": "0xaf342f4b89aed531",
+      "before_wei": "10006112309320951796",
+      "after_wei": "10006112309320951796",
+      "delta_wei": "0"
     },
     {
       "hash": "0x31754cd547400566ff29e3df577634c3d477c29b66beb7c68f4909c15ee544db",
       "block": 117957650,
       "dir": "in",
-      "raw": "0x760afe00562012e4"
+      "raw": "0x760afe00562012e4",
+      "before_wei": "10006112309320951796",
+      "after_wei": "10006112309320951796",
+      "delta_wei": "0"
     },
     {
       "hash": "0x3c9a5ed4e4f3464585d36f2501a2a75cb564f20d6cc8b39b3ac824532f43f17f",
       "block": 118072403,
       "dir": "in",
-      "raw": "0x6e6348ea8d26bc29"
+      "raw": "0x6e6348ea8d26bc29",
+      "before_wei": "8992736441134303037",
+      "after_wei": "8992736441134303037",
+      "delta_wei": "0"
     },
     {
       "hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
       "block": 121966513,
       "dir": "out",
-      "raw": "0x21d904e211e2bf5e9"
+      "raw": "0x21d904e211e2bf5e9",
+      "before_wei": "5771517369306080363",
+      "after_wei": "5796854956599276929",
+      "delta_wei": "25337587293196566"
     },
     {
       "hash": "0x348554f16e7d856b14270efa19c9b3b9f87fe4967df18b50517ef49ab531e5de",
       "block": 122856244,
       "dir": "in",
-      "raw": "0x15f178c7439693"
+      "raw": "0x15f178c7439693",
+      "before_wei": "5447982047530395861",
+      "after_wei": "5447982047530395861",
+      "delta_wei": "0"
     }
   ],
-  "status": "PARTIAL_18_OF_27_NATIVE_BALANCES",
+  "pending_tx": [],
+  "status": "NATIVE_27_OF_27_COMPLETE; NOT_TX_ATTRIBUTION_OR_FINAL_PNL",
   "production": "NO_GO",
   "caveats": [
     "Native block deltas from token transfer event blocks not full-wallet realized profit",
     "Many later very small token events may be airdrops/transfer dust; verify economic significance",
     "Current token amount not equal realized PnL and other assets may settle per transaction"
-  ]
+  ],
+  "native_net_wei": "4853964166333634383",
+  "verified_native_blocks": 27,
+  "nonzero_native_blocks": 17
 }
