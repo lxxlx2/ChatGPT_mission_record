@@ -141,7 +141,7 @@
     }
   ],
   "pending": [],
-  "status": "NATIVE_BALANCE_16_OF_16_VERIFIED_TOKEN_TX_ATTRIBUTION_OUTSTANDING",
+  "status": "GIGGLE_ERC20_QUANTITY_CLOSED;_16_BLOCK_DELTA_RECONCILED;_16_SELF_SIGNED_AND_SUCCESS;_NON_BNB_QUOTES_UNISOLATED",
   "production": "NO_GO",
   "total_native_delta_wei": "5715925819273344974",
   "positive_blocks": 6,
@@ -248,7 +248,108 @@
       "gas_wei": "2467333000000000",
       "receipt_complete": false,
       "receipt_text_truncated": true
+    },
+    {
+      "hash": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
+      "block": 62154722,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "503946000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
+    },
+    {
+      "hash": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b",
+      "block": 62299083,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "867942000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
+    },
+    {
+      "hash": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
+      "block": 62485438,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "731736000000000",
+      "receipt_complete": false,
+      "receipt_text_truncated": true
+    },
+    {
+      "hash": "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb",
+      "block": 63071724,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "1000000000000000000",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "1778370000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
+    },
+    {
+      "hash": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
+      "block": 63204096,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "1966393000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
+    },
+    {
+      "hash": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
+      "block": 63274247,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "535398000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
+    },
+    {
+      "hash": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
+      "block": 63310363,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "503946000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
+    },
+    {
+      "hash": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f",
+      "block": 63310510,
+      "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+      "original_wei": "0",
+      "receipt_success": true,
+      "receipt_status": "0x1",
+      "gas_wei": "520998000000000",
+      "receipt_complete": true,
+      "receipt_text_truncated": false
     }
   ],
-  "transaction_audit_status": "PARTIAL_8_OF_16"
+  "transaction_audit_status": "COMPLETE_16_OF_16",
+  "self_signed_count": 16,
+  "success_count": 16,
+  "total_native_input_wei": "2505000000000000000",
+  "total_gas_wei": "42023445000000000",
+  "gas_entries": 16
 }
