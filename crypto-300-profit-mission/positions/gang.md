@@ -1,9 +1,9 @@
 # GANG / The Syndicate — Backable ICO operational position
 
-Updated: 2026-10-12 Asia/Bangkok (on-chain closure finalized and supply still in launch vault)
+Updated: 2026-10-12 Asia/Bangkok (600K chain approval and user 480.492480 USDC approved; payout pending)
 Network: Solana mainnet
 Source standard: direct finalized Solana state + actual MetaDAO v0.7 contract + user participation statement.
-State: `COMMITTED_ONCHAIN / SALE_CLOSED / ALLOCATION_PENDING / TOKEN_POOL_NOT_YET_DEPLOYED`
+State: `COMMITTED_ONCHAIN / SALE_CLOSED / APPROVED_ONCHAIN / PAYOUT_PENDING / LP_NOT_YET_DEPLOYED`
 Trading execution: `NO_GO` (record-only; no standing automation or monitor authorized).
 
 ## Canonical identity and contracts
@@ -83,6 +83,26 @@ Research type: `DIRECT_CHAIN / SOLANA_FINALIZED`. Observation slot ~455735427 to
 
 **Next status gate:** finalized `Closed -> Complete` or `Closed -> Refunding`; personal `approved_amount` nonzero or final; actual `total_approved_amount`, LP/DAO accounts, liquidity depth, and confirmed claim/refund. Manual recheck on user request or meaningful authoritative event only. No monitor, signing, trade, claim or refund created or executed.
 
+
+## 2026-10-12 official proposed settlement and chain-verified approvals
+
+Evidence time: **2026-10-12 ~01:25-01:27 Asia/Bangkok**, finalized Solana slot **455749368** (newer than last `Closed` milestone). User screenshot of X `@backabledotbiz` (Backable account; **issuer/platform statement presented by user, original tweet URL not independently fetched**) says:
+- "The Syndicate team has decided to accept $600,000."
+- "The starting token price will be $0.06, corresponding to an FDV of $1,629,473."
+- "Tokens and refunds will be processed on your behalf at 18:30 UTC." This corresponds to **2026-10-12 01:30 Asia/Bangkok** if posted on October 11 UTC; **announced planned action, not proof of completed transaction or exact execution deadline**.
+- Final pledged/committed raised shown **$631,771** rounded; chain directly says **631,770.75 USDC**.
+
+**Independently verified finalized on-chain, critical update:**
+- Launch PDA `EFUKEM6oaUMdCtVvgaqeV2E9baZ1ikkLng1kTakvjU7k`: `LaunchState=Closed`, `total_committed_amount=631770.75 USDC`, **`total_approved_amount=600000 USDC`**, `seq_num=444`, `unix_timestamp_completed=None` in finalized slot ~455749368; 600k statement is **ONCHAIN_CONFIRMED**.
+- User FundingRecord PDA `GgFwSstgG9e6XDEWAc4wrcD8EqVaqHpzo7ScvNGEEQot`: `committed_amount=500 USDC`, **`approved_amount=480.492480 USDC`**, `is_tokens_claimed=false`, `is_usdc_refunded=false`. This has actual chain evidence (not an allocation extrapolation). Approval transaction tied to user's FundingRecord: https://solscan.io/tx/35e3kcJKcNNnM38MMk9RLZ9fJ7ZMi2BaMb5H1Ycp7mBMtCnqjijCXKVHvoWJRAJPnobFgJKws6eHmDQrhUsZHaNi (2026-10-11T18:01:19Z). Some RPC transaction-detail responses truncated; FundingRecord current finalized bytes independently confirm the approved amount.
+- **Conditional claimable token amount at `Complete`** under v0.7 claim.rs: `480.492480 / 600000 * 10000000 = 8008.208 GANG`, subject to any in-window authority amendments before Complete. This is now an **onchain-derived approval-based quote**, still **not received in wallet**.
+- **Refund due once Complete**: `500 - 480.492480 = 19.507520 USDC`. Refund is **NOT YET PAID** according to live flags. Under `Refunding`, different logic would apply.
+- Price math `600000/10000000=$0.06 GANG`. Using 27,157,894 total issuance, `FDV=1,629,473.64 USD` (post rounds to $1,629,473).
+- `getTokenLargestAccounts` on official GANG mint `syQqkspvb2PRr1meJ5pJDmhgxwc4hUou2TMjjrTmeta` finalized slot ~455749292: **all 27,157,894 GANG still at launch vault** `8TCjFJznaFcQhJmWCk9P1NXU5QAGKNLRh95oWRb3dLR9`, wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` has no GANG token account. **No token distribution, official seeded LP pool, actual market opening, tradeable price or executed refund verified at snapshot.**
+- v0.7 source: https://github.com/metaDAOproject/programs/blob/develop/programs/v07_launchpad/src/instructions/claim.rs ; https://github.com/metaDAOproject/programs/blob/develop/programs/v07_launchpad/src/instructions/refund.rs ; https://github.com/metaDAOproject/programs/blob/develop/programs/v07_launchpad/src/instructions/complete_launch.rs .
+- The October 12 screenshot provides **OFFICIAL_STATEMENT** of intended 01:30 automated distribution. Even if processing is on behalf of participants, do not equate planned processing with success until finalized token account transfers, `Complete` state and wallet USDC/GANG readbacks are proven.
+- This supersedes any pre-close `approved_amount=0` or $631770.75 pro-rata estimate as **latest durable allocation authority**, while keeping those earlier dated snapshots as historical evidence.
+- No transaction signed/sent by ChatGPT; trading disabled; no new monitor/automation. **Next meaningful gate**: CompleteLaunch / Refunding and personal claim/refund confirmed, actual pool/LP liquidity and executable exit quotes. Only then update liquid portfolio balances and GANG mark.
 
 ## Post-close operational checklist — STATUS PENDING
 
