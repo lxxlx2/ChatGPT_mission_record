@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "as_of_date_bangkok": "2026-10-11",
+  "question": "Why do BPxx and J7 token-account histories differ from the 1720-signature Frank main-wallet index?",
+  "provenance": {
+    "owner_wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+    "owner_index_git_branch": "evidence/frank-ca-local",
+    "owner_index_source_sha256": "1cda7a289db31582f24d327c7dedd911c14475912346e1c4ff6e731a4f56a96a",
+    "owner_index_record_count": 1720,
+    "reconstructed_from_git_parts": 12,
+    "all_12_part_sha256_independently_retested_in_existing_CI": true,
+    "owner_index_start_utc": "2026-10-02T22:54:44Z",
+    "ata_signature_source_file": "meme/evidence/frank-v2-bpxx-ata-eight-page-bounded-signature-replay-2026-10-11.json",
+    "ata_source_rpc": "Alchemy Solana mainnet getSignaturesForAddress finalized",
+    "transaction_recheck_rpc": "Alchemy Solana mainnet getTransaction jsonParsed finalized"
+  },
+  "bpxx": {
+    "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+    "canonical_ata": "5WnoYgzTcSXVLfnGWNhYiZGYwSFk7PgBF6SUEHS1q6Qq",
+    "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "pages_read": 7,
+    "signatures_read": 70,
+    "successful_signatures": 69,
+    "failed_signatures": 1,
+    "replay_owner_index_matched": 4,
+    "replay_owner_index_missing": 66,
+    "missing_prior_to_index_start": 63,
+    "missing_during_owner_index_window": 3,
+    "missing_during_window_success": 2,
+    "missing_during_window_failed": 1,
+    "inwindow_missing_source": [
+      {
+        "signature": "58VtBeGKXrr4uCwmTU8hS1rLuX8cN56EKfiwCNQZYy7ASd14SiZvcGHASsRC92tKyv8p6WD8fSvcTK27mMr7Gtiu",
+        "slot": 454221070,
+        "block_time_utc": "2026-10-07T12:19:37Z",
+        "onchain_status": "FAILED",
+        "transaction_verification": "DIRECT_GET_TRANSACTION_PARSED",
+        "wallet_signed": false,
+        "token_ata_before_raw": "0",
+        "token_ata_after_raw": "0",
+        "cannot_count_as_transfer": true
+      },
+      {
+        "signature": "4Gxq6UnNbqYvBYeGbN94Qa6Qyh8qLombBirUHsvszT4UXqDxQPhsQb5YBuQa2zsHHW9WWwm4DwY7M6Hbv8ios7ac",
+        "slot": 453015552,
+        "block_time_utc": "2026-10-03T18:34:27Z",
+        "onchain_status": "SUCCESS",
+        "transaction_verification": "RAW_RESPONSE_TRUNCATED_UNVERIFIED",
+        "wallet_signed": null
+      },
+      {
+        "signature": "3knjrZuSocitUtSunifVFy1V1mYyAzz7NLJUf96Kqg77T85x4wU8wkoHSWBxPKh22xhBAGpCewARmHksQJABGXVU",
+        "slot": 452919433,
+        "block_time_utc": "2026-10-03T11:25:51Z",
+        "onchain_status": "SUCCESS",
+        "transaction_verification": "DIRECT_GET_TRANSACTION_JSON_FULL_PARSED",
+        "wallet_signed": false,
+        "transaction_primary_signature_matches": true,
+        "raw_before": "1001346785078260",
+        "raw_after": "1001347556621590",
+        "raw_delta": "771543330",
+        "decimals": 9,
+        "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "owner": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+        "frank_preexisting_qty": "1001346.785078260",
+        "successful_passive_receipt_units": "0.771543330",
+        "acquisition_cost_usd": null
+      }
+    ],
+    "pagination_provider_failure_on_next_page": true,
+    "complete_ata_history": false,
+    "balance_deltas_all_verified": false,
+    "missing_successful_signatures_do_not_imply_missing_buy_or_sell": true,
+    "verified_inwindow_nonzero_passive_receipts": 1,
+    "other_successful_missing_inwindow_tx_details": "UNVERIFIED_OUTPUT_TRUNCATED"
+  },
+  "j7": {
+    "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
+    "canonical_ata": "FjESMbdMaDapesMo889siXL1oQmgvQz8wsLTnHKeTNem",
+    "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "independent_finalized_tx_rechecked": 2,
+    "owner_signer": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+    "actual_external_signer": "VP4B4yj63FNP4BZLZdBJYRsTi1LqUuUENY8wfAdtSn8",
+    "both_exact_first_signature_match": true,
+    "transactions": [
+      {
+        "signature": "dveTCqqEWwbH2Xg6cXvgnvZ5C8qjtYQZoGfYToyD1N6yFGYxkwiQ2CfgQ3mGnXc1Ehq4Y4AtWjjpUnoQsWzkkej",
+        "slot": 454705824,
+        "block_time_unix": 1791505903,
+        "pre_raw": "2846838050235",
+        "post_raw": "7846838050235",
+        "delta_raw": "5000000000000",
+        "decimals": 6,
+        "frank_signed": false
+      },
+      {
+        "signature": "4JMFca46bpxkkVfykETjzwytqP9cNPtYFc9yKJD9cUnz1pKDf2MiHVgugTPxQp6HqVFpVCjpKXsYd243DCQi4LUU",
+        "slot": 454705939,
+        "block_time_unix": 1791505934,
+        "pre_raw": "7846838050235",
+        "post_raw": "12508217470763",
+        "delta_raw": "4661379420528",
+        "decimals": 6,
+        "frank_signed": false
+      }
+    ],
+    "two_independently_missing_receipts_units": "9661379.420528",
+    "source_acquisition_cost_usd": null,
+    "realized_pnl_usd": null
+  },
+  "release": {
+    "original_frank_writer_unchanged": true,
+    "mac_production_unchanged": true,
+    "other_ai_review_not_done": true,
+    "production_trading": "NO_GO"
+  },
+  "limitations": [
+    "Owner archive join proves missing signatures; does not automatically prove successful economic transfer for BPxx.",
+    "BPxx successful missing signatures still require exact getTransaction pre/post owner balance and source flow verification.",
+    "Only 70 BPxx bounded signatures observed; provider failure halted pagination, so complete history is UNKNOWN.",
+    "J7 verified token receipts do not prove sender purchase cost or market BUY.",
+    "All values are historical research, not current user investment account assets."
+  ]
+}

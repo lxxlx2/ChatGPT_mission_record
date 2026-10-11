@@ -1,0 +1,302 @@
+{
+  "schema_version": 1,
+  "subject": "Frank V2 six previously unscanned canonical ATAs: bounded finalized signature inventory",
+  "observed_date_bangkok": "2026-10-11",
+  "source": "Alchemy connected app Solana mainnet finalized getSignaturesForAddress, live actual read-only",
+  "original_evidence_source": "https://github.com/lxxlx2/ChatGPT_mission_record/blob/research/frank-wallet-v2-d0-readonly-20261011/crypto-300-profit-mission/meme/evidence/frank-v2-ata-j7-and-five-account-chain-verification-2026-10-11.json",
+  "original_verified_program_cohort": "12 canonical Mint/token-program/ATA records (8 Token-2022,4 Tokenkeg)",
+  "scope": "Only 6 previously incomplete ATA first pages, no pagination, transaction balance delta validation not performed",
+  "accounts": [
+    {
+      "mint": "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF",
+      "ata": "He6xeyX27KH3jFeqBYzEoP5fhwyGtqxXu4yc5XcsDqzc",
+      "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "query": {
+        "method": "getSignaturesForAddress",
+        "network": "solana-mainnet",
+        "limit": 10,
+        "commitment": "finalized"
+      },
+      "status": "FIRST_PAGE_LESS_THAN_LIMIT_HISTORY_NOT_PROVEN_COMPLETE",
+      "signatures": [
+        {
+          "signature": "5cHm2vqtUHmGE6pjor1Yn52WuayNao6ddLSsvHiewLoxSoGZf2mhbE8gLDapqwjU4iCmbEdzQgt1SCTT1n9UkAck",
+          "slot": 453176525,
+          "block_time_unix": 1791095520,
+          "err": null
+        },
+        {
+          "signature": "2MSqJrfZmgsdyDAHLKaYW3pMwJoN8LQ6cseZdLZw32GGzvHPWnWk78FFyewNkbcbtbYKCCtEHXk9m93MFCps9soE",
+          "slot": 452730443,
+          "block_time_unix": 1790976314,
+          "err": null
+        }
+      ],
+      "finalized_signature_count": 2,
+      "success_count": 2,
+      "failed_count": 0
+    },
+    {
+      "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+      "ata": "5WnoYgzTcSXVLfnGWNhYiZGYwSFk7PgBF6SUEHS1q6Qq",
+      "verified_canonical_pda_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "query": {
+        "method": "getSignaturesForAddress",
+        "network": "solana-mainnet",
+        "limit": 10,
+        "commitment": "finalized"
+      },
+      "status": "FIRST_PAGE_LIMIT_REACHED_HISTORY_NOT_COMPLETE",
+      "signatures": [
+        {
+          "signature": "58VtBeGKXrr4uCwmTU8hS1rLuX8cN56EKfiwCNQZYy7ASd14SiZvcGHASsRC92tKyv8p6WD8fSvcTK27mMr7Gtiu",
+          "slot": 454221070,
+          "block_time_unix": 1791375577,
+          "err": {
+            "InstructionError": [
+              2,
+              {
+                "Custom": 256
+              }
+            ]
+          }
+        },
+        {
+          "signature": "2KnSfp4YANKawov4b3UiMQXz23otdQJ7SqZiJe4D9E4KtZQfjspSpsMuWaPWZArDeDyujySvf7NzNGNE9sZoEUDY",
+          "slot": 454086101,
+          "block_time_unix": 1791339422,
+          "err": null
+        },
+        {
+          "signature": "3V5kguGdbbsphmnckq9yG4ETu8R4JsubzERTzj1B1BAvhneas4Vc4Hcm61rnyimQs2iY2Jcvui9ezwjg3ooH2PxJ",
+          "slot": 454086060,
+          "block_time_unix": 1791339410,
+          "err": null
+        },
+        {
+          "signature": "5UcyCVtxAn7xT8QASwuJHWn5kWwLBGhbShNT2YLpX83hoqyiKreygwtuJzMCv2Fgkhtt7MaLGMAfYCgMYPP9p6N2",
+          "slot": 454086030,
+          "block_time_unix": 1791339401,
+          "err": null
+        },
+        {
+          "signature": "ET7t8HFbCQepHPbTx9oWAsy6asR1SNeYyW2YPCwnWgD68EZqxejBBgveF7wAwaqPouxwKfD8uW9V2J5o7h17kCF",
+          "slot": 454085993,
+          "block_time_unix": 1791339391,
+          "err": null
+        },
+        {
+          "signature": "4Gxq6UnNbqYvBYeGbN94Qa6Qyh8qLombBirUHsvszT4UXqDxQPhsQb5YBuQa2zsHHW9WWwm4DwY7M6Hbv8ios7ac",
+          "slot": 453015552,
+          "block_time_unix": 1791052467,
+          "err": null
+        },
+        {
+          "signature": "3knjrZuSocitUtSunifVFy1V1mYyAzz7NLJUf96Kqg77T85x4wU8wkoHSWBxPKh22xhBAGpCewARmHksQJABGXVU",
+          "slot": 452919433,
+          "block_time_unix": 1791026751,
+          "err": null
+        },
+        {
+          "signature": "2caeoJJKyVWkZ5hRffw7GJeu9FP6WbcNxor9hrgE2ak9Yah1NpyKeMAgfNourivRW57jwgLowP1Fsj6RiH6fWWG5",
+          "slot": 452258057,
+          "block_time_unix": 1790849786,
+          "err": null
+        },
+        {
+          "signature": "61832GTq2SNpYGJAuaFKejfcHrbnLpUz9JyBDovYngWZa5kqazQxHgNbtwjN8kWH6RC5tBtuMfXFNfFnCCRdSbpo",
+          "slot": 451648294,
+          "block_time_unix": 1790686622,
+          "err": null
+        },
+        {
+          "signature": "48XL8fVVqt66hevswPk8ipUmCLDjfKXAqWoQMBNEQUNuQFApyqPJSVQxjx6FSmeM94599qNAqf8hNGSbW1WPmXqA",
+          "slot": 451457563,
+          "block_time_unix": 1790635636,
+          "err": null
+        }
+      ],
+      "finalized_signature_count": 10,
+      "success_count": 9,
+      "failed_count": 1
+    },
+    {
+      "mint": "EFn88CiiFHhihqdr1Y11XBDxbbYarBf1ij92DsrigYwR",
+      "ata": "5D91uUNoTqy337wjFxr1R9gZnwq6d5CuwPJeQ9oLtZvH",
+      "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "query": {
+        "method": "getSignaturesForAddress",
+        "network": "solana-mainnet",
+        "limit": 10,
+        "commitment": "finalized"
+      },
+      "status": "FIRST_PAGE_LESS_THAN_LIMIT_HISTORY_NOT_PROVEN_COMPLETE",
+      "signatures": [
+        {
+          "signature": "5LZEJDgvJNNS57f9Y8LkiKuKnmoS1FycBAHdpfWMkFoFoEVAZuDV69LqLxiwxBmaKNUrTwdxve73EgQPzZpYdGa6",
+          "slot": 454083399,
+          "block_time_unix": 1791338694,
+          "err": null
+        },
+        {
+          "signature": "3VCne139PQuDB5PgpLBtTo8X5UbaH37eEyuVF5shisQPUpBVMBmx5XcBGKna64bZueVFWaLvf6ENPhLQR2r3xxb3",
+          "slot": 454083398,
+          "block_time_unix": 1791338694,
+          "err": null
+        },
+        {
+          "signature": "4rU31XTfzfCvYCzC43XK9njeE5j4zeoAQQJsrCXzaMHyDiwFuXP96RnB8ksR34RUgj3JgTGpWRfHruKE9nCQhhxW",
+          "slot": 454007448,
+          "block_time_unix": 1791318208,
+          "err": null
+        },
+        {
+          "signature": "J2nxMbL8ShWqbJ2EFDepX3AM6Tnqr6Gf9HNKzVFxfekUmwum9vx2GsMjGnjz1XRG3fG9yjsS6Ak7cQkAR6SZMmM",
+          "slot": 454007422,
+          "block_time_unix": 1791318201,
+          "err": {
+            "InstructionError": [
+              3,
+              {
+                "Custom": 4
+              }
+            ]
+          }
+        },
+        {
+          "signature": "37pRiDJbLjaHKsnSKESneaZN1EwVHsMtrjtwMXNULAjeynk4CZf7DeEZc3j3X3Gppd4QjgKYVsMmeWRnkNG4ioDR",
+          "slot": 454007421,
+          "block_time_unix": 1791318201,
+          "err": {
+            "InstructionError": [
+              0,
+              {
+                "Custom": 6036
+              }
+            ]
+          }
+        },
+        {
+          "signature": "eZBJ4zam9dH5tEoyN67YpYUJiyRN5ZVY4cS7Sn482FNSCzy5QUxybp5uuxSv2Tdx54rrxTKzHA64vK32QaJvfR7",
+          "slot": 454007408,
+          "block_time_unix": 1791318198,
+          "err": {
+            "InstructionError": [
+              0,
+              {
+                "Custom": 6036
+              }
+            ]
+          }
+        }
+      ],
+      "finalized_signature_count": 6,
+      "success_count": 3,
+      "failed_count": 3
+    },
+    {
+      "mint": "GZw7LxHtQKSQ1YsGnpNH7SovnBF8X6poYgavHwrmRekp",
+      "ata": "6JcLVdUX1V86SdxRtUiiTDh78D7Kb699FDwo57WgX1g6",
+      "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "query": {
+        "method": "getSignaturesForAddress",
+        "network": "solana-mainnet",
+        "limit": 10,
+        "commitment": "finalized"
+      },
+      "status": "FIRST_PAGE_LESS_THAN_LIMIT_HISTORY_NOT_PROVEN_COMPLETE",
+      "signatures": [
+        {
+          "signature": "5NnZUQpUtueiKmgo9344KGr8eqcRYeJwVJqpyyfSdA9HRB1KeaYdS51X895SHfTsG3PWce85TfhoZ6oGT4zVjTp3",
+          "slot": 453176585,
+          "block_time_unix": 1791095536,
+          "err": null
+        },
+        {
+          "signature": "4PNg9wUJj1VnAj8zrY1SHhVnx6ENUU8aKAKFRYZxGbQkC2eQ6vmBgA4vYjUU9uCHdYVtM7buTZXrZtNgnmiB66fn",
+          "slot": 452660680,
+          "block_time_unix": 1790957579,
+          "err": null
+        },
+        {
+          "signature": "GHrPS9y7AHbNTyC4bi1LQo4EfusW5Xs4FuhJjDU1NP3XFh5XHiQ6MCZBFiuXgzc9go8LeG6pJKdQa3sfv6c6jfq",
+          "slot": 452660663,
+          "block_time_unix": 1790957575,
+          "err": null
+        }
+      ],
+      "finalized_signature_count": 3,
+      "success_count": 3,
+      "failed_count": 0
+    },
+    {
+      "mint": "GoADAwux19tGxb3W4ykPzZz8p5JCSYaxBRpuW7s9pump",
+      "ata": "3VHDNtApjrasS2sRLXZSDHZ6ahE8yyZvbqzJ1jSshtbU",
+      "verified_canonical_pda_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "query": {
+        "method": "getSignaturesForAddress",
+        "network": "solana-mainnet",
+        "limit": 10,
+        "commitment": "finalized"
+      },
+      "status": "FIRST_PAGE_LESS_THAN_LIMIT_HISTORY_NOT_PROVEN_COMPLETE",
+      "signatures": [
+        {
+          "signature": "wLmRLBvwcANvCQLAfBDrh5VzeAzB5yHMVvchg57kiN2SeGNx1ME8ri5m17AD5fTgRUJtT1MVTqNg8WHko5zj2B3",
+          "slot": 453312409,
+          "block_time_unix": 1791131858,
+          "err": null
+        },
+        {
+          "signature": "DoLLrkPzqjdB5ZxRMZ8geB98mefHC1tAuy7nUVq5ZUGM2eLHKiD4t1Gi1ctHyt3GmxKBou3KQ8CbGaoykKZtFPW",
+          "slot": 452409433,
+          "block_time_unix": 1790890397,
+          "err": null
+        }
+      ],
+      "finalized_signature_count": 2,
+      "success_count": 2,
+      "failed_count": 0
+    },
+    {
+      "mint": "wdysfTqUsJ8qAVB1796BXgGisThoBzu1keQmdgswdyt",
+      "ata": "G5GCbtGPu7V2dGCbXsoN8ET1JZqMX5N7uZniYitSWw8e",
+      "verified_canonical_pda_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "query": {
+        "method": "getSignaturesForAddress",
+        "network": "solana-mainnet",
+        "limit": 10,
+        "commitment": "finalized"
+      },
+      "status": "FIRST_PAGE_LESS_THAN_LIMIT_HISTORY_NOT_PROVEN_COMPLETE",
+      "signatures": [
+        {
+          "signature": "5TioPGzSkbuoNhmsjiEAzh9sZS2zpqD9yRsqYvVRJqdX9DspGJQm6BwAA4f6jAm1bzgLV8NVEDj73Zih7EfaUg2E",
+          "slot": 453097701,
+          "block_time_unix": 1791074475,
+          "err": null
+        },
+        {
+          "signature": "36ydS7qcFYEgFPWNWcDL3VUzxydQbut7UftXBX2SE39957Nn6ffpaPwsUL7Xdq2sTaUxSE3xKoenx4Z14vtGdgwe",
+          "slot": 452713557,
+          "block_time_unix": 1790971777,
+          "err": null
+        }
+      ],
+      "finalized_signature_count": 2,
+      "success_count": 2,
+      "failed_count": 0
+    }
+  ],
+  "completed_requests": 6,
+  "limitations": [
+    "Signature presence is not a verified Mint/owner balance delta or a Frank-signed market BUY.",
+    "BPxx first-page 10 cap does not prove older signatures absent.",
+    "Transaction getTransaction with exact signature, pre/post balance, Mint/owner/program verification and cost-source trace remains pending.",
+    "Remote provider 404/429/truncation should not be interpreted as no historical activity.",
+    "This evidence is unrelated to user holdings, active Frank alerts or realized PnL."
+  ],
+  "production_writer_changed": false,
+  "local_mac_deployment": false,
+  "independent_ai_review_completed": false
+}

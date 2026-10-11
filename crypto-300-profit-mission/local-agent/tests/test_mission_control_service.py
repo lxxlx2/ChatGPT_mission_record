@@ -372,3 +372,47 @@ def test_cycle_reports_wait_latency_and_manual_review_counts_without_sending(tmp
     assert health["pre_delivery_wait_seconds"]==0.4
     assert "email" not in health
     service.close()
+
+
+def test_optin_export_sqlite_error_never_kills_decision_loop(tmp_path, monkeypatch):
+    """The opt-in exporter is subordinate to the live decision/Gmail loop."""
+    from mission_agent.mission_control import service as service_module
+    root = tmp_path / "prod"
+    control = tmp_path / "control"
+    policy_file = tmp_path / "policy.json"
+    make_prod(root)
+    policy(policy_file)
+    health_path = root / "health.json"
+    health = json.loads(health_path.read_text())
+    health.update({"poll_count": 34, "last_poll_at": "2026-10-11T12:00:00Z",
+                   "new_signatures": 1})
+    health_path.write_text(json.dumps(health))
+    obj = MissionMemeService(production_root=root, control_root=control,
+                             policy_path=policy_file, live_delivery=False)
+    monkeypatch.setenv("MISSION_EVIDENCE_EXPORT_ENABLED", "1")
+    cycles = []
+    def fake_cycle():
+        cycles.append("ran")
+        obj._write_health("OK")
+    monkeypatch.setattr(obj, "cycle", fake_cycle)
+    def broken_read(*args, **kwargs):
+        raise sqlite3.OperationalError("simulated broken read-only SQLite")
+    monkeypatch.setattr(obj.frank, "activity_coverage", broken_read)
+    class EndControlledTest(BaseException):
+        pass
+    def sleep_and_stop(seconds):
+        if len(cycles) >= 2:
+            raise EndControlledTest()
+    monkeypatch.setattr(service_module.time, "sleep", sleep_and_stop)
+    try:
+        try:
+            obj.loop(interval_seconds=1)
+        except EndControlledTest:
+            pass
+        assert len(cycles) == 2
+        assert obj.evidence_export_last_error_type == "OperationalError"
+        heartbeat = json.loads(obj.health_path.read_text())
+        assert heartbeat["evidence_export_last_error_type"] == "OperationalError"
+        assert heartbeat["status"] == "OK"
+    finally:
+        obj.close()

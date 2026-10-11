@@ -274,6 +274,142 @@ function renderStats(candidates, runtime, coverage) {
   ).join('');
 }
 
+const watchLabels = {
+  MODEL_OPEN:'模型标记持有（未独立核实）',
+  NEEDS_INVENTORY_REVIEW:'持仓待核实',
+  HISTORICAL_EXIT:'历史退出',
+  WATCH_UNRESOLVED:'有买入，后续状态待核',
+  HISTORY_SELL_ONLY:'历史卖出，原仓位待核',
+  MODEL_STATE_ONLY:'仅有模型记录',
+  PASSIVE_RECEIPT_ONLY:'仅有被动转入，未见本地买卖',
+  OTHER_ACCOUNT_ACTIVITY:'仅有账户活动，缺少买卖证据',
+};
+
+let walletWatchData = {status:'LOADING',rows:[],summary:{}};
+
+function renderFrankWatchlist(payload) {
+  walletWatchData = payload || {status:'UNAVAILABLE',rows:[],summary:{}};
+  const all = Array.isArray(walletWatchData.rows) ? walletWatchData.rows : [];
+  const summary = walletWatchData.summary || {};
+  const reconciliation = walletWatchData.snapshot_reconciliation || null;
+  const filter = $('watch-filter')?.value || 'WATCH_NOW';
+  const search = ($('watch-search')?.value || '').trim().toLowerCase();
+  const rows = all.filter(x =>
+    (filter === 'ALL' || (
+      filter === 'WATCH_NOW' ? ['MODEL_OPEN', 'NEEDS_INVENTORY_REVIEW', 'WATCH_UNRESOLVED'].includes(x.watch_state) :
+      filter === 'PRIMARY' ? x.origin_scope !== 'SIGNATURE_TOKEN_DELTA_ONLY' :
+      filter === 'SNAPSHOT_NONZERO' ? x.snapshot_inventory_state === 'NONZERO_AT_SLOT' :
+      filter === 'MODEL_MISMATCH' ? !!x.model_chain_disagreement :
+      x.watch_state === filter
+    )) &&
+    (!search || String(x.mint || '').toLowerCase().includes(search))
+  );
+  const sortWeight = (x) => x.snapshot_inventory_state === 'NONZERO_AT_SLOT'
+    ? (x.watch_state === 'MODEL_OPEN' ? 0 : 1)
+    : (x.watch_state === 'MODEL_OPEN' ? 2 : 3);
+  rows.sort((a,b) => sortWeight(a)-sortWeight(b) ||
+    (Number(b.last_event_time || 0)-Number(a.last_event_time || 0)));
+  $('watch-total-count').textContent = String(summary.total_observed ?? all.length);
+  const datedSnapshot = walletWatchData.snapshot_status === 'DATED_POINT_IN_TIME_NOT_LIVE';
+  const sourceDate = datedSnapshot
+    ? String(walletWatchData.snapshot_date_bangkok || '未提供日期')
+    : '';
+  $('watch-scope').textContent = walletWatchData.status === 'SOURCE_UNAVAILABLE'
+    ? '本地索引暂不可读'
+    : datedSnapshot
+      ? '历史链上余额核验：' + sourceDate + '，非实时'
+      : '仅本地索引，链上余额未核实';
+  $('watch-summary').textContent = '已观察 ' + String(summary.total_observed ?? all.length) +
+    ' · 重点待观察 ' + String(all.filter(x =>
+      ['MODEL_OPEN', 'NEEDS_INVENTORY_REVIEW', 'WATCH_UNRESOLVED'].includes(x.watch_state)).length) +
+    ' · 模型持有 ' + String(summary.model_open ?? '—') +
+    ' · 待核 ' + String(summary.inventory_needs_review ?? '—') +
+    ' · 历史退出 ' + String(summary.historical_exit ?? '—') +
+    ' · 仅被动转入 ' + String(summary.passive_receipt_only ?? 0) +
+    ' · 其他账户活动 ' + String(summary.other_account_activity_only ?? 0) +
+    (reconciliation
+      ? ' · 样本核验非零 ' + String(reconciliation.nonzero_at_snapshot ?? '—') +
+        ' · 模型冲突 ' + String(
+          Number(reconciliation.model_closed_with_remaining_tokens || 0) +
+          Number(reconciliation.model_unknown_with_remaining_tokens || 0) +
+          Number(reconciliation.model_open_with_zero_tokens || 0) +
+          Number(reconciliation.model_uncertain_nonzero || 0))
+      : ' · 尚无链上余额样本') +
+    ' · 当前筛选 ' + rows.length;
+  if (walletWatchData.status === 'SOURCE_UNAVAILABLE') {
+    $('watch-rows').innerHTML = '<tr><td colspan="6">本地 Frank 历史库不可读取，未知状态没有按零仓位处理。</td></tr>';
+    return;
+  }
+  $('watch-rows').innerHTML = rows.map(x => {
+    const mint = x.mint || '';
+    const signatureIsLatest = Number(x.last_signature_activity_time || 0) >
+      Number(x.last_event_time || 0);
+    const sig = (signatureIsLatest ? x.last_signature_activity_signature : x.last_event_signature)
+      || x.last_signature_activity_signature || '';
+    const lastTime = signatureIsLatest ? x.last_signature_activity_time
+      : (x.last_event_time || x.last_signature_activity_time);
+    const last = lastTime
+      ? new Date(Number(lastTime) * 1000).toLocaleString('zh-CN')
+      : '时间未核实';
+    const txLink = sig
+      ? '<a href="https://solscan.io/tx/' + encodeURIComponent(sig) +
+        '" target="_blank" rel="noreferrer">交易 ↗</a>'
+      : '无交易签名';
+    const chainState = x.snapshot_inventory_state;
+    const balance = chainState === 'NONZERO_AT_SLOT'
+      ? '样本余额：' + esc(x.snapshot_token_quantity) + ' 代币'
+      : chainState === 'ZERO_AT_SLOT'
+        ? '样本余额：0'
+        : '链上余额未核实';
+    const proof = x.snapshot_verified_slot
+      ? ' · slot ' + esc(x.snapshot_verified_slot)
+      : '';
+    const mismatch = x.model_chain_disagreement
+      ? '<div class="watch-mismatch">模型与链上记录有差异，需追溯</div>'
+      : '';
+    const queryLink = 'https://gmgn.ai/sol/token/' + encodeURIComponent(mint);
+    return '<tr>' +
+      '<td><code title="' + esc(mint) + '">' + esc(short(mint,9,6)) + '</code> ' +
+        copyButton(mint,'复制 CA') + '</td>' +
+      '<td>' + esc(watchLabels[x.watch_state] || x.watch_state || '待核') +
+        mismatch +
+        (x.owner_index_gap_status === 'DATED_ATA_VS_OWNER_INDEX_SCOPE'
+          ? '<div class="watch-mismatch">ATA 与主钱包账户键索引覆盖范围不同：' +
+            '窗口前 ' + esc(x.ata_outside_index_window_signatures) + ' 条，窗口内 ' +
+            esc(x.ata_inside_index_window_signatures) + ' 条；窗口内失败 ' +
+            esc(x.ata_inwindow_failed_signatures) + ' 条、成功未验证 ' +
+            esc(x.ata_inwindow_success_unverified) + ' 条。' +
+            '以上均不直接代表买卖或索引故障（证据日期 ' +
+            esc(x.ata_gap_source_date || '未确认') + '）</div>'
+          : x.owner_index_gap_status === 'LEGACY_UNSPLIT_ATA_INDEX_EVIDENCE'
+          ? '<div class="watch-mismatch">旧版 ATA 签名对比 ' +
+            esc(x.owner_index_missing_signatures) +
+            ' 条（未区分窗口内外，不能判为索引故障）</div>' : '') +
+        '</td>' +
+      '<td>买 ' + esc(x.local_recognized_buys ?? 0) +
+        ' / 卖 ' + esc(x.local_recognized_sells ?? 0) + '</td>' +
+      '<td>' + (x.last_event_side && !signatureIsLatest
+        ? esc(translated(sideLabel,x.last_event_side,'未知'))
+        : '本地账户余额变动（未必是买卖）') +
+        ' · ' + esc(last) + '<div class="watch-tx">' + txLink +
+        (x.passive_receipt_events
+          ? '<div>本地主钱包被动转入 ' + esc(x.passive_receipt_events) + ' 笔</div>' : '') +
+        (['DATED_ATA_VS_OWNER_INDEX_SCOPE', 'LEGACY_UNSPLIT_ATA_INDEX_EVIDENCE']
+          .includes(x.owner_index_gap_status)
+          ? '<div>另有 ATA 验证被动转入 ' + esc(x.ata_verified_extra_passive_receipts) +
+            ' 笔（不计为主动买入，成本未知）</div>' : '') +
+        '</div></td>' +
+      '<td>' + balance + '<div class="watch-tx">美元价值未核实' + proof +
+        (x.passive_receipt_events && !x.transfer_counterparty_verified
+          ? '<div>转入方与成本未核实</div>' : '') +
+        '</div></td>' +
+      '<td><a href="https://solscan.io/token/' + encodeURIComponent(mint) +
+        '" target="_blank" rel="noreferrer">Solscan ↗</a> ' +
+        '<a href="' + queryLink + '" target="_blank" rel="noreferrer">GMGN ↗</a></td>' +
+    '</tr>';
+  }).join('') || '<tr><td colspan="6">当前筛选没有记录。尝试选择「全部观察」。</td></tr>';
+}
+
 function renderCoverage(coverage) {
   const node = $('coverage');
   if (!node) return;
@@ -511,14 +647,15 @@ function renderDecisions(rows) {
 
 async function refresh() {
   try {
-    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage] = await Promise.all([
+    const [runtime,control,candidates,trades,reviewActivity,decisions,coverage,watch] = await Promise.all([
       get('/api/runtime'),
       get('/api/control-health'),
       get('/api/candidates'),
       get('/api/trades'),
       get('/api/review-activity'),
       get('/api/decisions'),
-      get('/api/coverage')
+      get('/api/coverage'),
+      get('/api/frank-observed-watchlist').catch(() => ({status:'SOURCE_UNAVAILABLE',rows:[],summary:{}}))
     ]);
     const activeCandidates = candidates.filter(x => x.position_state !== 'CLOSED');
     const endedCandidates = candidates.filter(x => x.position_state === 'CLOSED');
@@ -526,6 +663,7 @@ async function refresh() {
     renderRuntime(runtime,control);
     renderStats(activeCandidates,runtime,coverage);
     renderCoverage(coverage);
+    renderFrankWatchlist(watch);
     renderCandidates(activeCandidates);
     renderEnded(endedCandidates);
     renderTrades(trades);
@@ -1090,6 +1228,9 @@ function renderClusterReport(report) {
   clusterStatus('done','分析已更新', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
 }
 
+
+$('watch-filter').addEventListener('change', () => renderFrankWatchlist(walletWatchData));
+$('watch-search').addEventListener('input', () => renderFrankWatchlist(walletWatchData));
 
 let clusterPollTimer = null;
 

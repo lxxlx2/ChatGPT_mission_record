@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "date_bangkok": "2026-10-11",
+  "source_type": "DIRECT_CHAIN_FINALIZED",
+  "source_method": "Alchemy Solana getTokenAccountsByOwner filtered by mint",
+  "wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+  "selected_from": "User Mac frank-d0-local-index.json 2026-10-11, 5 OPEN and 2 INVENTORY_UNDETERMINED",
+  "records": [
+    {
+      "mint": "4mkNDiEALDutn8Py1GmJnvVuTdHVuL9y6AmcL9KTZx7F",
+      "local_model_state": "OPEN",
+      "raw_balance": "7263953506555",
+      "decimals": 6,
+      "ui_amount": "7263953.506555",
+      "slot": 455426889,
+      "has_nonzero_quantity": true,
+      "usd_price_status": "NOT_VERIFIED",
+      "chain_program": "SPL_TOKEN"
+    },
+    {
+      "mint": "9bsHPggRK5Drw8sR7QBcx5pXrHH7Mc6haLmiR2d7aY2a",
+      "local_model_state": "OPEN",
+      "raw_balance": "12043213758361",
+      "decimals": 6,
+      "ui_amount": "12043213.758361",
+      "slot": 455426892,
+      "has_nonzero_quantity": true,
+      "usd_price_status": "NOT_VERIFIED",
+      "chain_program": "SPL_TOKEN"
+    },
+    {
+      "mint": "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd",
+      "local_model_state": "OPEN",
+      "raw_balance": "7967525238859",
+      "decimals": 6,
+      "ui_amount": "7967525.238859",
+      "slot": 455426892,
+      "has_nonzero_quantity": true,
+      "usd_price_status": "NOT_VERIFIED",
+      "chain_program": "SPL_TOKEN"
+    },
+    {
+      "mint": "9fJAWKQpkY93hfuZxrHfh5wEh2AV9vjkWNQfzfbziHd2",
+      "local_model_state": "OPEN",
+      "raw_balance": "766517842433",
+      "decimals": 6,
+      "ui_amount": "766517.842433",
+      "slot": 455426892,
+      "has_nonzero_quantity": true,
+      "usd_price_status": "NOT_VERIFIED",
+      "chain_program": "SPL_TOKEN"
+    },
+    {
+      "mint": "CbcyNo7m1amFWqEQm2m4PLv1UNvpcL3C1Ujm6AkzpKoU",
+      "local_model_state": "INVENTORY_UNDETERMINED",
+      "raw_balance": "0",
+      "decimals": 6,
+      "ui_amount": "0",
+      "slot": 455426892,
+      "has_nonzero_quantity": false,
+      "usd_price_status": "NOT_VERIFIED",
+      "chain_program": "SPL_TOKEN"
+    },
+    {
+      "mint": "GTBxUiw6wJdmmkCGZgRHLyYxqu1vG4KtRpeox6yDpump",
+      "local_model_state": "INVENTORY_UNDETERMINED",
+      "raw_balance": "50017498",
+      "decimals": 6,
+      "ui_amount": "50.017498",
+      "slot": 455426892,
+      "has_nonzero_quantity": true,
+      "usd_price_status": "NOT_VERIFIED",
+      "chain_program": "SPL_TOKEN"
+    },
+    {
+      "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
+      "local_model_state": "OPEN",
+      "raw_balance": "3411999978741",
+      "decimals": 6,
+      "ui_amount": "3411999.978741",
+      "slot": 455426895,
+      "has_nonzero_quantity": true,
+      "usd_price_status": "NOT_VERIFIED",
+      "chain_program": "SPL_TOKEN"
+    }
+  ],
+  "summary": {
+    "checked": 7,
+    "local_open": 5,
+    "local_open_nonzero": 5,
+    "local_inventory_uncertain": 2,
+    "local_inventory_uncertain_nonzero": 1,
+    "local_inventory_uncertain_zero": 1
+  },
+  "caveats": [
+    "The direct chain quantities are point-in-time finalized account values. Not USD pricing nor verified cost basis.",
+    "Local V1 model OPEN and INVENTORY_UNDETERMINED are independent from current chain balance; they must not be silently overwritten.",
+    "Unpriced token amount greater than zero does not establish material investment, executable liquidity, or buy recommendation.",
+    "No user Mac runtime query, transaction, monitor, or notification executed during this direct chain read."
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "status": "DIRECT_FINALIZED_RPC_BALANCE_DELTA_VERIFIED",
+  "wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+  "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
+  "source_wallet": "VP4B4yj63FNP4BZLZdBJYRsTi1LqUuUENY8wfAdtSn8",
+  "source_wallet_cost_basis": "NOT_VERIFIED",
+  "source_wallet_initial_acquisition": "NOT_VERIFIED",
+  "all_three_transfers_signed_by_source": true,
+  "frank_signed_transfers": false,
+  "source_transaction_direction": "THIRD_PARTY_SIGNED_TOKEN_TRANSFER_IN",
+  "transfers": [
+    {
+      "signature": "3opgLQn1cfQPPoKHNnU986rA9QyAzdmSoLPAXFwxA1tP7Vbx7J3MEHSoAczvcmHPpH7X1pxV3kmE4cGewJnxyR5n",
+      "block_time_utc": "2026-10-09T00:29:20Z",
+      "finalized_slot": 454705300,
+      "err": null,
+      "signer": "VP4B4yj63FNP4BZLZdBJYRsTi1LqUuUENY8wfAdtSn8",
+      "frank_signed": false,
+      "source_balance_raw_before": "2846838050235",
+      "source_balance_raw_after": "0",
+      "frank_balance_raw_before": "0",
+      "frank_balance_raw_after": "2846838050235",
+      "received_raw": "2846838050235",
+      "token_decimals": 6
+    },
+    {
+      "signature": "dveTCqqEWwbH2Xg6cXvgnvZ5C8qjtYQZoGfYToyD1N6yFGYxkwiQ2CfgQ3mGnXc1Ehq4Y4AtWjjpUnoQsWzkkej",
+      "block_time_utc": "2026-10-09T00:31:43Z",
+      "finalized_slot": 454705824,
+      "err": null,
+      "signer": "VP4B4yj63FNP4BZLZdBJYRsTi1LqUuUENY8wfAdtSn8",
+      "frank_signed": false,
+      "source_balance_raw_before": "9661379420528",
+      "source_balance_raw_after": "4661379420528",
+      "frank_balance_raw_before": "2846838050235",
+      "frank_balance_raw_after": "7846838050235",
+      "received_raw": "5000000000000",
+      "token_decimals": 6
+    },
+    {
+      "signature": "4JMFca46bpxkkVfykETjzwytqP9cNPtYFc9Unz1pKDf2MiHVgugTPxQp6HqVFpVCjpKXsYd243DCQi4LUU",
+      "block_time_utc": "2026-10-09T00:32:14Z",
+      "finalized_slot": 454705939,
+      "err": null,
+      "signer": "VP4B4yj63FNP4BZLZdBJYRsTi1LqUuUENY8wfAdtSn8",
+      "frank_signed": false,
+      "source_balance_raw_before": "4661379420528",
+      "source_balance_raw_after": "0",
+      "frank_balance_raw_before": "7846838050235",
+      "frank_balance_raw_after": "12508217470763",
+      "received_raw": "4661379420528",
+      "token_decimals": 6
+    }
+  ],
+  "aggregate_received_raw": "12508217470763",
+  "aggregate_received_token_qty": "12508217.470763",
+  "subsequent_local_recognized_sell": {
+    "signature": "Tk5zC6cZNLC4Jsbypi7gQkqD1FdA2YUvqRcaRx7ETGDyUsdyKHnooYqmcC5Lq5VrSSccQZiQUUCogUsxgpu3jDq",
+    "block_time_utc": "2026-10-09T01:26:53Z",
+    "local_sold_token_qty": "12508217.470763",
+    "local_sale_usdc": "2232.343956",
+    "local_trade_status": "SELL_POSITION_UNRESOLVED",
+    "chain_transaction_finalized_success": true
+  },
+  "tokens_received_equal_local_sold_units": true,
+  "profitability_status": "COST_BASIS_UNKNOWN_NO_PNL",
+  "source": "Alchemy Solana getTransaction(version0,json) 3 original transfers + previously archived Mac 78 local trades; getSignatureStatuses for later sale",
+  "further_work": "Follow source wallet token acquisition and any economic consideration independently, then actual market quote and fees."
+}

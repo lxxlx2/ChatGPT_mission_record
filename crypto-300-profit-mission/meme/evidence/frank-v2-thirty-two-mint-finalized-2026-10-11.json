@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "status": "VERIFIED_POINT_IN_TIME_MINT_FILTERED_SOLANA_ACCOUNT_READS",
+  "wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+  "network": "solana-mainnet",
+  "commitment": "finalized",
+  "date_bangkok": "2026-10-11",
+  "source_method": "Alchemy Solana official JSON-RPC getTokenAccountsByOwner(owner,mint)",
+  "precise_wall_clock_utc": "NOT_CAPTURED",
+  "slot_range": [
+    455426889,
+    455430371
+  ],
+  "query_scope": "EXACT_32_MINTS_FROM_MAC_D0_LOCAL_TRADE_AND_MODEL_UNION",
+  "records": [
+    {
+      "mint": "2AVjqmGbMqg7rSyHVv2deVdggsBgBtu1Bi69BUvE5WRv",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430037,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "31k88G5Mq7ptbRDf3AM13HAq6wRQHXHikR8hik7wPygk",
+      "raw_amount": "0",
+      "decimals": 9,
+      "slot": 455430036,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "39ahtL8ynzE4amH26J29C93PA5172V3ft9UuUcqQS8fz",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430036,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "3Dgwn5E7H5a8k6iGrz3qirkaJqUaJrKHEZ2xPcLRpump",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430037,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "4mkNDiEALDutn8Py1GmJnvVuTdHVuL9y6AmcL9KTZx7F",
+      "raw_amount": "7263953506555",
+      "decimals": 6,
+      "slot": 455426889,
+      "amount_units": "7263953.506555",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "55Vr2VpSwxsDkB6uGGHAvRv86K6zax2Zb4TT8ivwDEzW",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430039,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "5PiBn5JdjJDnRGziiSfsu2affgBR3DyTTCR3CHpcode",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430072,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "6e8LLHkqCTa4mzGuL1PoUxSfeHmDeceJ3DaJSSUNg937",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430072,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "7KEPApdbBMByrmqihz3bht2uMhFQcatjfSFQCKq66kH3",
+      "raw_amount": "22246999",
+      "decimals": 6,
+      "slot": 455430072,
+      "amount_units": "22.246999",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+      "raw_amount": "29551841",
+      "decimals": 6,
+      "slot": 455430072,
+      "amount_units": "29.551841",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "7Xgc5RacHtGzfhw2HukUBk5V986yBbvshr7rrCoopump",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430072,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "8dBnKHwNYH3hz2fFTJczVwzBTpJFAMtc53k3uA4zpump",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430106,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430103,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "9bsHPggRK5Drw8sR7QBcx5pXrHH7Mc6haLmiR2d7aY2a",
+      "raw_amount": "12043213758361",
+      "decimals": 6,
+      "slot": 455426892,
+      "amount_units": "12043213.758361",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd",
+      "raw_amount": "7967525238859",
+      "decimals": 6,
+      "slot": 455426892,
+      "amount_units": "7967525.238859",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "9fJAWKQpkY93hfuZxrHfh5wEh2AV9vjkWNQfzfbziHd2",
+      "raw_amount": "766517842433",
+      "decimals": 6,
+      "slot": 455426892,
+      "amount_units": "766517.842433",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+      "raw_amount": "0",
+      "decimals": 9,
+      "slot": 455430106,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "BXoHJddsWJLHtAopeiSbKUSELsu8hSFMs8baGMDkpump",
+      "raw_amount": "52736752",
+      "decimals": 6,
+      "slot": 455430107,
+      "amount_units": "52.736752",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "CWKbSd7jwMXXexP3pbwLAWMzr4HXAXTvt4R9pk2Vyyyc",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430107,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "CbcyNo7m1amFWqEQm2m4PLv1UNvpcL3C1Ujm6AkzpKoU",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455426892,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "EFn88CiiFHhihqdr1Y11XBDxbbYarBf1ij92DsrigYwR",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430137,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "F5WvFdG9sCfhv3bVYAMJNWiwpx5e3X2uvpXDtLtdsDJs",
+      "raw_amount": "9090666",
+      "decimals": 6,
+      "slot": 455430137,
+      "amount_units": "9.090666",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "GKboyzRdB93iEpfr6Gjs8A2wXe7Tp4kVD5WwkNfepump",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430137,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "GTBxUiw6wJdmmkCGZgRHLyYxqu1vG4KtRpeox6yDpump",
+      "raw_amount": "50017498",
+      "decimals": 6,
+      "slot": 455426892,
+      "amount_units": "50.017498",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "GZw7LxHtQKSQ1YsGnpNH7SovnBF8X6poYgavHwrmRekp",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430138,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "GoADAwux19tGxb3W4ykPzZz8p5JCSYaxBRpuW7s9pump",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430137,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
+      "raw_amount": "3411999978741",
+      "decimals": 6,
+      "slot": 455426895,
+      "amount_units": "3411999.978741",
+      "balance_class": "NONZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "HzYCHqAN2uoHGRnL9v2ChCfFQX3bvJuJd5zu2Hd5MZQy",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430371,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430168,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "JCsKWhELRJ8MhEZjUDdCL49mntw8fx27bKAgCMgSGhcQ",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430168,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "METAewgxyPbgwsseH8T16a39CQ5VyVxZi9zXiDPY18m",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430167,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    },
+    {
+      "mint": "wdysfTqUsJ8qAVB1796BXgGisThoBzu1keQmdgswdyt",
+      "raw_amount": "0",
+      "decimals": 6,
+      "slot": 455430168,
+      "amount_units": "0",
+      "balance_class": "ZERO_AT_SLOT",
+      "usd_value_status": "UNPRICED",
+      "source": "ALCHEMY_SOLANA_FINALIZED"
+    }
+  ],
+  "summary": {
+    "checked": 32,
+    "nonzero": 10,
+    "zero": 22
+  },
+  "limitations": [
+    "One-mint filtered owner-account call for each of the 32 tokens: this is not wallet-wide token-account enumeration, and passive-only/older unindexed assets may be absent.",
+    "Read slot differs by record; not an atomic simultaneous snapshot. No USD prices, liquidity or complete funding history were inferred.",
+    "A zero at an observed finalized slot is not a proof of never owning the token, and a model CLOSED state is not a proof of zero chain balance.",
+    "Do not use snapshot as live wallet balance after its capture date. Source program and Solana signer not altered.",
+    "Market value per mint remains UNPRICED; no >=$1 or <$1 conclusion is possible."
+  ]
+}
