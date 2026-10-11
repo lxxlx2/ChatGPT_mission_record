@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+  "source_file": "BSC_MEME_5C48_TWO_VENUE_22_RAW_EVENT_RECONCILIATION_2026-10-11.json",
+  "expected": 7,
+  "chain": "bnb-mainnet",
+  "method": "Direct ERC20 WBNB transfer exact transaction hash and expected pair-router direction at original block, fall back only when complete pair Swap event log truncates. WBNB transfer validates gross pool funding or payout but not Swap event token amounts or final wallet proceeds.",
+  "pair": {
+    "我踏马来了": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+    "龙虾": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
+  },
+  "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+  "wbnb": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "rows": [
+    {
+      "token": "我踏马来了",
+      "block": 73658949,
+      "hash": "0x81ca25955f5323f86e4688da338789141fde743f138d63bfbb32813515fa43be",
+      "dir": "in",
+      "status": "WBNB_TRANSFER_SAME_HASH_VERIFIED_SWAP_LOG_UNREADABLE",
+      "wbnb_transfer_raw": "297000000000000000",
+      "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "uniqueId": "0x81ca25955f5323f86e4688da338789141fde743f138d63bfbb32813515fa43be:log:255"
+    },
+    {
+      "token": "我踏马来了",
+      "block": 73659009,
+      "hash": "0xa1d8a8bddc494e9f3c837d2a163128ceb85f8ad0587e00923bbfc9ae5cbf8c88",
+      "dir": "out",
+      "status": "WBNB_TRANSFER_SAME_HASH_VERIFIED_SWAP_LOG_UNREADABLE",
+      "wbnb_transfer_raw": "739250649358045964",
+      "from": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "uniqueId": "0xa1d8a8bddc494e9f3c837d2a163128ceb85f8ad0587e00923bbfc9ae5cbf8c88:log:70"
+    },
+    {
+      "token": "我踏马来了",
+      "block": 73659129,
+      "hash": "0x0098e49a2c6ccf2b377e9f3187c78ac235790f1b494e188694eb4a3531a7050f",
+      "dir": "in",
+      "status": "WBNB_TRANSFER_SAME_HASH_VERIFIED_SWAP_LOG_UNREADABLE",
+      "wbnb_transfer_raw": "693000000000000000",
+      "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "to": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "uniqueId": "0x0098e49a2c6ccf2b377e9f3187c78ac235790f1b494e188694eb4a3531a7050f:log:58"
+    },
+    {
+      "token": "我踏马来了",
+      "block": 73659369,
+      "hash": "0xdbf42409c94269c4ec5e95e29631c549f072ff1151918b6f1131f3613ef308f8",
+      "dir": "out",
+      "status": "WBNB_TRANSFER_SAME_HASH_VERIFIED_SWAP_LOG_UNREADABLE",
+      "wbnb_transfer_raw": "379707878370770809",
+      "from": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "uniqueId": "0xdbf42409c94269c4ec5e95e29631c549f072ff1151918b6f1131f3613ef308f8:log:306"
+    },
+    {
+      "token": "龙虾",
+      "block": 83636160,
+      "hash": "0xe9e3a8467fe9f5b9b1d3a858c5dccb3d911c9d031207cc0c1e2f11d30ee292c1",
+      "dir": "out",
+      "status": "WBNB_TRANSFER_SAME_HASH_VERIFIED_SWAP_LOG_UNREADABLE",
+      "wbnb_transfer_raw": "315338022580036720",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "uniqueId": "0xe9e3a8467fe9f5b9b1d3a858c5dccb3d911c9d031207cc0c1e2f11d30ee292c1:log:138"
+    },
+    {
+      "token": "龙虾",
+      "block": 85952169,
+      "hash": "0xf4b76043b40d268baa0fa76130b26621168aef0e99f34938f3dd19e74d59d28d",
+      "dir": "in",
+      "status": "WBNB_FALLBACK_UNRESOLVED",
+      "error": "SyntaxError: Expected property name or '}' in JSON at position 8002 (line 227 column 1)"
+    },
+    {
+      "token": "龙虾",
+      "block": 85952207,
+      "hash": "0xc1b893b2f5a5ba09d3d12145b6249ef0ac178227eea429d069a8825362ec070c",
+      "dir": "out",
+      "status": "WBNB_TRANSFER_SAME_HASH_VERIFIED_SWAP_LOG_UNREADABLE",
+      "wbnb_transfer_raw": "1258568469614945664",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "uniqueId": "0xc1b893b2f5a5ba09d3d12145b6249ef0ac178227eea429d069a8825362ec070c:log:366"
+    }
+  ],
+  "verified": 6,
+  "production": "NO_GO"
+}
