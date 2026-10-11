@@ -1,0 +1,25 @@
+{
+  "address": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "chain": "bnb-mainnet",
+  "scope": "19 tracked meme CAs with fully paginated token history",
+  "method": "Historical eth_getBalance(block) - eth_getBalance(block-1) for all ERC20 token activity blocks; not isolated final profit",
+  "positions": [
+    {
+      "token": "我踏马来了",
+      "checked_blocks": 6,
+      "native_BNB_delta_wei": "97366720524376562",
+      "in_token_events": 1,
+      "out_token_events": 5
+    },
+    {
+      "token": "龙虾",
+      "checked_blocks": 21,
+      "native_BNB_delta_wei": "199125593493335144",
+      "in_token_events": 7,
+      "out_token_events": 14
+    }
+  ],
+  "total_native_delta_wei": "296492314017711706",
+  "limitations": "Full internal-trace / same-block transaction attribution / signer receipts remain outstanding",
+  "status": "EVIDENCE_COMPLETE_FOR_BLOCK_BALANCES_ONLY"
+}
