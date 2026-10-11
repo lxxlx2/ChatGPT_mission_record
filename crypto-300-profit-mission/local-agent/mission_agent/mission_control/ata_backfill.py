@@ -118,9 +118,11 @@ def _balance(rows: list, pubkeys: list[str], ata: str,
              mint: str, program: str, owner: str) -> dict | None:
     found = []
     for item in rows or []:
+        if not isinstance(item, dict):
+            raise ValueError("INVALID_TOKEN_BALANCE_ROW")
         idx = item.get("accountIndex")
-        if type(idx) is not int or not 0 <= idx < len(pubkeys):
-            continue
+        if type(idx) is not int or idx < 0 or idx >= len(pubkeys):
+            raise ValueError("TOKEN_BALANCE_ACCOUNT_INDEX_UNRESOLVED")
         if pubkeys[idx] != ata or item.get("mint") != mint:
             continue
         if item.get("owner") != owner or item.get("programId") != program:
@@ -158,6 +160,17 @@ def validate_transaction(tx: dict, signature: str, ata: str, mint: str,
     try:
         message = tx["transaction"]["message"]
         pubkeys, signers = _keys(message)
+        # Raw/versioned replies can place ALT-loaded addresses after static keys.
+        # Parsed responses may already include them. Never silently discard
+        # an accountIndex beyond the keys returned by the provider.
+        loaded = tx["meta"].get("loadedAddresses") or {}
+        if not isinstance(loaded, dict):
+            raise ValueError("INVALID_LOADED_ADDRESSES")
+        extra = (loaded.get("writable") or []) + (loaded.get("readonly") or [])
+        if not isinstance(extra, list) or any(not isinstance(k, str) for k in extra):
+            raise ValueError("INVALID_LOADED_ADDRESS_KEYS")
+        if extra and not set(extra).issubset(set(pubkeys)):
+            pubkeys = pubkeys + extra
         if ata not in pubkeys:
             return {"signature": signature, "slot": slot, "status": "ATA_NOT_IN_TX_KEYS"}
         pre = _balance(tx["meta"].get("preTokenBalances"), pubkeys,
@@ -231,7 +244,7 @@ def scan_ata_mints(
                 # Same official method used by collector, but ATA NOT main wallet.
                 try:
                     items = rpc.call("getSignaturesForAddress", [account, opts])
-                except (OSError, RuntimeError) as exc:
+                except (OSError, RuntimeError, ValueError, AttributeError) as exc:
                     status = "RPC_INTERRUPTED_PARTIAL"
                     interruption = type(exc).__name__
                     break
@@ -278,7 +291,7 @@ def scan_ata_mints(
                                     "maxSupportedTransactionVersion": 1,
                                 },
                             ])
-                        except (OSError, RuntimeError) as exc:
+                        except (OSError, RuntimeError, ValueError, AttributeError) as exc:
                             status = "RPC_INTERRUPTED_PARTIAL"
                             interruption = type(exc).__name__
                             evidence.append({
@@ -306,6 +319,9 @@ def scan_ata_mints(
                     status = "CURSOR_STALLED"
                     break
                 before = previous
+            if status == "BOUNDED":
+                # A full final page does not prove the following page is empty.
+                status = "PAGE_LIMIT_REACHED"
             scanned.append({
                 "mint": mint, "token_program": program, "ata": account,
                 "pda_bump": bump, "status": status,
@@ -316,11 +332,24 @@ def scan_ata_mints(
         if interruption is not None:
             break
     partial_account_work = any(row["status"] in (
-        "TX_FETCH_BUDGET_REACHED", "CURSOR_STALLED") for row in scanned)
+        "TX_FETCH_BUDGET_REACHED", "CURSOR_STALLED", "PAGE_LIMIT_REACHED")
+        for row in scanned)
+    # Successful ATA signatures with unverified transaction provenance are
+    # explicit unknowns. An empty confirmed-missing set cannot establish that
+    # no signature was missed in the main-owner index.
+    unresolved = sorted({
+        (row["signature"], row.get("mint") or "", row.get("ata") or "",
+         row["status"])
+        for row in evidence
+        if row.get("signature") and
+        row.get("status") not in ("VERIFIED_ATA_BALANCE_DELTA",
+                                 "FAILED_TX_NO_BALANCE_PROOF")
+    })
     scan_status = (
         "PARTIAL_SOURCE_INVALID" if interruption and interruption.startswith("INVALID_")
         else "PARTIAL_RPC_INTERRUPTED" if interruption
         else "PARTIAL_BUDGET_OR_PAGINATION" if partial_account_work
+        else "PARTIAL_TX_UNVERIFIED" if unresolved
         else "BOUNDED_COMPLETED"
     )
     missing = sorted({
@@ -337,6 +366,14 @@ def scan_ata_mints(
         "accounts": scanned, "observations": evidence,
         "scan_status": scan_status,
         "interruption_type": interruption,
+        "unverified_successful_signatures": [
+            {"signature": sig, "mint": mint, "ata": ata, "reason": status}
+            for sig, mint, ata, status in unresolved
+        ],
+        "unverified_successful_signature_count": len(unresolved),
+        "verified_missing_set_completeness": (
+            "INCOMPLETE" if scan_status != "BOUNDED_COMPLETED" else
+            "BOUNDED_VERIFIED_SIGNATURES_ONLY"),
         "unscanned_canonical_accounts": len(uniq) * len(PROGRAMS) - len(scanned),
         "known_main_wallet_signatures_supplied": known_signatures is not None,
         "verified_nonzero_signatures_absent_from_local_index": (
