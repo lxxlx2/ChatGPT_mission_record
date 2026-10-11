@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "audit_date_bangkok": "2026-10-11",
+  "source_file": "frank-v2-transfer-evidence-20261011-142445.zip",
+  "source_file_sha256": "552474f2899225e2376945b1e017ba97f40dd341bf59878c7b0a0c2c6eb4615b",
+  "source_as_of_utc": "2026-10-11T07:24:45+00:00",
+  "transfer_archive": {
+    "git_branch": "evidence/frank-ca-local",
+    "snapshot_id": "1cda7a289db31582f24d327c7dedd911c14475912346e1c4ff6e731a4f56a96a",
+    "source_scope": "LOCAL_NORMALIZED_SIGNATURE_TRANSFER_EVIDENCE_NOT_FULL_CHAIN",
+    "parts": 12,
+    "manifest_plus_parts_exact_git_blob_matches": 13,
+    "reconstructed_cleaned_bytes_sha256": "1cda7a289db31582f24d327c7dedd911c14475912346e1c4ff6e731a4f56a96a"
+  },
+  "signature_records": 1720,
+  "market_trade_records": 78,
+  "source_signature_classes": {
+    "ACTIVE_TRADE": 78,
+    "ATA_CREATE": 81,
+    "FAILED_TX": 98,
+    "PASSIVE_TRANSFER": 1393,
+    "UNKNOWN_NEEDS_REVIEW": 70
+  },
+  "transfer_attribution": {
+    "rows_with_wallet_owned_token_deltas": 1454,
+    "rows_with_nonzero_wallet_token_deltas": 1370,
+    "passive_transfer_rows_with_nonzero_wallet_delta": 1259,
+    "passive_transfer_rows_without_nonzero_wallet_delta": 134,
+    "rows_with_parsed_wallet_token_transfer_flows": 0,
+    "source_destination_wallet_attribution_from_local_index": "UNAVAILABLE_ALL_1720",
+    "reason": "Normalized balance pre/post changes exist but instruction-level transfer source/destination arrays are empty for every signature. Do not invent sender/recipient addresses."
+  },
+  "wallet_observation": {
+    "original_trade_or_model_mints": 33,
+    "unique_wallet_owned_delta_mints": 224,
+    "signature_only_extra_mints": 191,
+    "signature_only_with_verified_local_passive_increase": 104,
+    "signature_only_other_account_activity_or_zero": 87,
+    "each_extra_is_a_follow_signal": false,
+    "usd_market_value_verified": false,
+    "chain_history_complete": false
+  },
+  "j7": {
+    "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
+    "local_indexed_passive_receipts": 1,
+    "local_indexed_passive_receipt_tokens": "2846838.050235",
+    "local_sell_signature": "Tk5zC6cZNLC4Jsbypi7gQkqD1FdA2YUvqRcaRx7ETGDyUsdyKHnooYqmcC5Lq5VrSSccQZiQUUCogUsxgpu3jDq",
+    "local_sell_tokens": "12508217.470763",
+    "independent_finalized_transfer_receipts": 3,
+    "independent_finalized_transfer_total_tokens": "12508217.470763",
+    "external_transfers_missing_from_local_signature_archive": 2,
+    "missing_quantity_tokens": "9661379.420528",
+    "external_source_evidence_ref": "meme/evidence/frank-v2-j7-onchain-three-transfer-origin-2026-10-11.json",
+    "acquisition_cost": "NOT_VERIFIED",
+    "pnl_usd": null
+  },
+  "bpxx": {
+    "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+    "local_signed_market_sell_rows": 4,
+    "local_signature_archive_contains_prior_initial_acquisition": false,
+    "observed_first_sell_pre_balance_tokens": "1001348.120351595",
+    "historical_cost": "NOT_VERIFIED",
+    "note": "Early source holding independently proven at prior finalized slot; no basis inferred."
+  },
+  "design": {
+    "default_watchlist": "TRADES_AND_MODEL_PRIMARY_ONLY",
+    "passive_only_filter": "PASSIVE_RECEIPT_ONLY",
+    "other_account_activity_filter": "OTHER_ACCOUNT_ACTIVITY",
+    "all_filter": "ALL",
+    "immutable_production_policy": true,
+    "source_labels_explicit": true,
+    "signal_engine_changed": false,
+    "pnl_inferred": false
+  },
+  "limitations": [
+    "224 is indexed historical token-account activity, NOT 224 current holdings or 224 investment candidates.",
+    "104 extra passive receipts include unknown value, potential dust and spam; do not mark safe, tradable, or above $1.",
+    "Account owner pre/post balance changes do not establish counterparty wallet identities when decoded transfer_flows are empty.",
+    "J7 independently verified missing two signatures show local archive is not full chain history.",
+    "Mac production not upgraded; this audit is from the user ZIP plus separately verified prior on-chain evidence."
+  ]
+}
