@@ -281,6 +281,8 @@ const watchLabels = {
   WATCH_UNRESOLVED:'有买入，后续状态待核',
   HISTORY_SELL_ONLY:'历史卖出，原仓位待核',
   MODEL_STATE_ONLY:'仅有模型记录',
+  PASSIVE_RECEIPT_ONLY:'仅有被动转入，未见本地买卖',
+  OTHER_ACCOUNT_ACTIVITY:'仅有账户活动，缺少买卖证据',
 };
 
 let walletWatchData = {status:'LOADING',rows:[],summary:{}};
@@ -290,10 +292,11 @@ function renderFrankWatchlist(payload) {
   const all = Array.isArray(walletWatchData.rows) ? walletWatchData.rows : [];
   const summary = walletWatchData.summary || {};
   const reconciliation = walletWatchData.snapshot_reconciliation || null;
-  const filter = $('watch-filter')?.value || 'ALL';
+  const filter = $('watch-filter')?.value || 'PRIMARY';
   const search = ($('watch-search')?.value || '').trim().toLowerCase();
   const rows = all.filter(x =>
     (filter === 'ALL' || (
+      filter === 'PRIMARY' ? x.origin_scope !== 'SIGNATURE_TOKEN_DELTA_ONLY' :
       filter === 'SNAPSHOT_NONZERO' ? x.snapshot_inventory_state === 'NONZERO_AT_SLOT' :
       filter === 'MODEL_MISMATCH' ? !!x.model_chain_disagreement :
       x.watch_state === filter
@@ -319,6 +322,8 @@ function renderFrankWatchlist(payload) {
     ' · 模型持有 ' + String(summary.model_open ?? '—') +
     ' · 待核 ' + String(summary.inventory_needs_review ?? '—') +
     ' · 历史退出 ' + String(summary.historical_exit ?? '—') +
+    ' · 仅被动转入 ' + String(summary.passive_receipt_only ?? 0) +
+    ' · 其他账户活动 ' + String(summary.other_account_activity_only ?? 0) +
     (reconciliation
       ? ' · 样本核验非零 ' + String(reconciliation.nonzero_at_snapshot ?? '—') +
         ' · 模型冲突 ' + String(
@@ -334,9 +339,10 @@ function renderFrankWatchlist(payload) {
   }
   $('watch-rows').innerHTML = rows.map(x => {
     const mint = x.mint || '';
-    const sig = x.last_event_signature || '';
-    const last = x.last_event_time
-      ? new Date(Number(x.last_event_time) * 1000).toLocaleString('zh-CN')
+    const sig = x.last_event_signature || x.last_signature_activity_signature || '';
+    const lastTime = x.last_event_time || x.last_signature_activity_time;
+    const last = lastTime
+      ? new Date(Number(lastTime) * 1000).toLocaleString('zh-CN')
       : '时间未核实';
     const txLink = sig
       ? '<a href="https://solscan.io/tx/' + encodeURIComponent(sig) +
@@ -362,9 +368,17 @@ function renderFrankWatchlist(payload) {
         mismatch + '</td>' +
       '<td>买 ' + esc(x.local_recognized_buys ?? 0) +
         ' / 卖 ' + esc(x.local_recognized_sells ?? 0) + '</td>' +
-      '<td>' + esc(translated(sideLabel,x.last_event_side,'未知')) +
-        ' · ' + esc(last) + '<div class="watch-tx">' + txLink + '</div></td>' +
-      '<td>' + balance + '<div class="watch-tx">美元价值未核实' + proof + '</div></td>' +
+      '<td>' + (x.last_event_side
+        ? esc(translated(sideLabel,x.last_event_side,'未知'))
+        : '本地账户余额变动') +
+        ' · ' + esc(last) + '<div class="watch-tx">' + txLink +
+        (x.passive_receipt_events
+          ? '<div>被动转入记录 ' + esc(x.passive_receipt_events) + ' 笔</div>' : '') +
+        '</div></td>' +
+      '<td>' + balance + '<div class="watch-tx">美元价值未核实' + proof +
+        (x.passive_receipt_events && !x.transfer_counterparty_verified
+          ? '<div>转入方与成本未核实</div>' : '') +
+        '</div></td>' +
       '<td><a href="https://solscan.io/token/' + encodeURIComponent(mint) +
         '" target="_blank" rel="noreferrer">Solscan ↗</a> ' +
         '<a href="' + queryLink + '" target="_blank" rel="noreferrer">GMGN ↗</a></td>' +
