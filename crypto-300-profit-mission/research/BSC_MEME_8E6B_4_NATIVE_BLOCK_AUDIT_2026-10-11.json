@@ -1,0 +1,12 @@
+{
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "token": "4",
+  "chain": "bnb-mainnet",
+  "erc20_full_in": 2,
+  "erc20_full_out": 17,
+  "erc20_quantity_equal": true,
+  "native_balances_checked": 19,
+  "native_wallet_delta_wei": "13164987453603066615",
+  "native_wallet_delta_BNB": 13.164987453603066,
+  "pnl_state": "NATIVE_BLOCK_CASHFLOW_ONLY; ORIGINAL_TX_AND_RECEIPTS_NOT_YET_VERIFIED"
+}
