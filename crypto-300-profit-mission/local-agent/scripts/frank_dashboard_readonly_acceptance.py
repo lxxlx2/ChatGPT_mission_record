@@ -90,20 +90,41 @@ def summary_from_database(root: Path):
               ON o.channel='gmail' AND g.decision_id=o.decision_id
             LEFT JOIN local_delivery l
               ON o.channel='local' AND l.decision_id=o.decision_id
-            WHERE o.status IN ('MANUAL_REVIEW','SENDING','SENT_UNVERIFIED')
+            WHERE o.status IN (
+              'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED','PERMANENT_ERROR',
+              'CREDENTIAL_BLOCKED','RETRYABLE_ERROR','RETRY_PENDING'
+            )
         """).fetchall()]
+        hidden = db.execute("""
+            SELECT COUNT(*) FROM decision_outbox
+            WHERE status NOT IN (
+              'PENDING','SENT_VERIFIED','DELIVERED','DRY_RUN_AUDIT',
+              'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED','PERMANENT_ERROR',
+              'CREDENTIAL_BLOCKED','RETRYABLE_ERROR','RETRY_PENDING'
+            )
+        """).fetchone()[0]
     finally:
         db.close()
     pending = {"gmail": 0, "local": 0, "other": 0}
+    blocked = {"gmail": 0, "local": 0, "other": 0}
+    manual_channels = {"gmail": 0, "local": 0, "other": 0}
     expired = {"gmail": 0, "local": 0}
     actionable = {"gmail": 0, "local": 0, "other": 0}
     for entry in records:
         channel = entry.get("channel")
         if channel not in ("gmail", "local"):
             channel = "other"
-        if entry.get("status") in ("SENDING", "SENT_UNVERIFIED"):
+        state = entry.get("status")
+        if state in ("SENDING", "SENT_UNVERIFIED"):
             pending[channel] += 1
             continue
+        if state in ("CREDENTIAL_BLOCKED", "RETRYABLE_ERROR", "RETRY_PENDING"):
+            blocked[channel] += 1
+            continue
+        if state == "PERMANENT_ERROR":
+            actionable[channel] += 1
+            continue
+        manual_channels[channel] += 1
         if channel == "other":
             actionable[channel] += 1
             continue
@@ -126,7 +147,7 @@ def summary_from_database(root: Path):
                    and oa == 0 and not entry.get("local_delivered_at"))
         (expired if old else actionable)[channel] += 1
     return {
-        "manual_review_total_count": sum(expired.values()) + sum(actionable.values()),
+        "manual_review_total_count": sum(manual_channels.values()),
         "manual_review_expired_unsent_count": sum(expired.values()),
         "manual_review_expired_unsent_gmail_count": expired["gmail"],
         "manual_review_expired_unsent_local_count": expired["local"],
@@ -134,11 +155,20 @@ def summary_from_database(root: Path):
         "manual_review_actionable_gmail_count": actionable["gmail"],
         "manual_review_actionable_local_count": actionable["local"],
         "manual_review_actionable_other_count": actionable["other"],
+        "manual_review_manual_only_total_count": sum(manual_channels.values()),
+        "manual_review_manual_only_gmail_count": manual_channels["gmail"],
+        "manual_review_manual_only_local_count": manual_channels["local"],
+        "manual_review_manual_only_other_count": manual_channels["other"],
+        "manual_review_blocked_count": sum(blocked.values()),
+        "manual_review_blocked_gmail_count": blocked["gmail"],
+        "manual_review_blocked_local_count": blocked["local"],
+        "manual_review_blocked_other_count": blocked["other"],
         "manual_review_pending_count": sum(pending.values()),
         "manual_review_pending_gmail_count": pending["gmail"],
         "manual_review_pending_local_count": pending["local"],
         "manual_review_pending_other_count": pending["other"],
         "manual_review_visible_total_count": len(records),
+        "dashboard_hidden_nonsuccess_rows": hidden,
     }
 
 
@@ -190,10 +220,26 @@ def main():
             http.get("manual_review_breakdown_available") is True
             and not http.get("manual_review_breakdown_error")
             and all(type(http.get(key)) is int and http[key] == value
-                    for key, value in counts.items())
+                    for key, value in counts.items()
+                    if key != "dashboard_hidden_nonsuccess_rows")
         )
-        if result["source_matches_target"] and result["http_matches_sqlite"]:
+        required_http_fields = [
+            k for k in counts if k != "dashboard_hidden_nonsuccess_rows"
+        ]
+        result["http_missing_count_fields"] = sorted(
+            k for k in required_http_fields if type(http.get(k)) is not int
+        )
+        result["http_mismatched_count_fields"] = sorted(
+            k for k in required_http_fields
+            if type(http.get(k)) is int and http[k] != counts[k]
+        )
+        result["dashboard_hidden_nonsuccess_rows"] = counts["dashboard_hidden_nonsuccess_rows"]
+        if counts["dashboard_hidden_nonsuccess_rows"]:
+            result["operational_acceptance"] = "BLOCKED_DASHBOARD_HIDES_NONSUCCESS_ROWS"
+        elif result["source_matches_target"] and result["http_matches_sqlite"]:
             result["operational_acceptance"] = "READ_ONLY_COUNTS_PASS_BROWSER_PENDING"
+        elif result["http_missing_count_fields"]:
+            result["operational_acceptance"] = "BLOCKED_BACKEND_SCHEMA_MISSING_FIELDS"
         else:
             result["operational_acceptance"] = "BLOCKED_VERSION_OR_COUNTS"
     except (OSError, ValueError, sqlite3.Error, TypeError, KeyError) as exc:
