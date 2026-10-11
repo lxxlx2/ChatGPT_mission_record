@@ -1,0 +1,88 @@
+{
+  "schema": "MONSTER_STAGE13_IN_PROGRESS_2DATES_VERIFIED_CI_V1",
+  "research_state": "PARTIAL_RUN_TWO_OF_FOUR_COMPLETE",
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38122346432",
+  "run_head": "3028b126ae0e4aa3c9f4cf68083b717a3eef120b",
+  "pre_registered": "monster_stage13_fixed_calendar4_preregistration_20261011.json",
+  "model": "UNMODIFIED_PRODUCTION_V4_D0_D1",
+  "cases": [
+    {
+      "job": "archived-true-minute-ohlcv-v4-replay (2025-11-17)",
+      "job_id": 114419503821,
+      "conclusion": "success",
+      "metrics": {
+        "D1": 6,
+        "D1_30usd_median": -13.176265,
+        "D1_30usd_proxy_count": 6,
+        "D1_censored": {},
+        "D1_negative": 5,
+        "D1_positive": 1,
+        "WATCH": 9,
+        "attempted": 504,
+        "complete": 384,
+        "date": "2025-11-17",
+        "full_log_artifact": "/tmp/monster_stage13_2025-11-17.json",
+        "not_proven": "ACTUAL_EXECUTION_OR_TRUE_POSITIVE_RATE",
+        "observations": 92160,
+        "source_status_counts": {
+          "COMPLETE_60H": 384,
+          "SOURCE_MISSING": 120
+        },
+        "status": "STAGE13_REAL_HISTORICAL_REPLAY_COMPLETED",
+        "watch_30usd_median": -12.358262,
+        "watch_30usd_proxy_count": 7,
+        "watch_symbols": [
+          "BANANAS31USDT",
+          "DUSKUSDT",
+          "EPICUSDT",
+          "MAGICUSDT",
+          "NMRUSDT",
+          "USTCUSDT",
+          "XNOUSDT"
+        ]
+      }
+    },
+    {
+      "job": "archived-true-minute-ohlcv-v4-replay (2026-02-17)",
+      "job_id": 114419503789,
+      "conclusion": "success",
+      "metrics": {
+        "D1": 6,
+        "D1_30usd_median": -2.952889,
+        "D1_30usd_proxy_count": 5,
+        "D1_censored": {
+          "CENSORED_ZERO_VOLUME_EXIT": 1
+        },
+        "D1_negative": 3,
+        "D1_positive": 2,
+        "WATCH": 6,
+        "attempted": 504,
+        "complete": 395,
+        "date": "2026-02-17",
+        "full_log_artifact": "/tmp/monster_stage13_2026-02-17.json",
+        "not_proven": "ACTUAL_EXECUTION_OR_TRUE_POSITIVE_RATE",
+        "observations": 94800,
+        "source_status_counts": {
+          "COMPLETE_60H": 395,
+          "SOURCE_MISSING": 109
+        },
+        "status": "STAGE13_REAL_HISTORICAL_REPLAY_COMPLETED",
+        "watch_30usd_median": -3.097454,
+        "watch_30usd_proxy_count": 5,
+        "watch_symbols": [
+          "ALLOUSDT",
+          "ATMUSDT",
+          "JTOUSDT",
+          "MMTUSDT",
+          "ORCAUSDT",
+          "REZUSDT"
+        ]
+      }
+    }
+  ],
+  "missing_dates": [
+    "2026-05-17",
+    "2026-08-17"
+  ],
+  "caution": "Current Oct2026 listing survivor cohort and assumed 10bps fee/20bps slippage; no independent OOS or true historical depth; NO_GO"
+}
