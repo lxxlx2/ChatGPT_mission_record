@@ -168,4 +168,6 @@ def publish_evidence_batch(
         transfer = {"status": "SYNC_PARTIAL", "error_type": type(exc).__name__}
     return {"capture": capture, "original": core, "transfer": transfer,
             "fully_synced": (core["status"] == "SYNC_OK"
-                             and transfer["status"] == "SYNC_OK")}
+                             and transfer["status"] == "SYNC_OK"
+                             and (not capture_transfer or
+                                  capture == "QUEUED_CONTENT_ADDRESSED"))}
