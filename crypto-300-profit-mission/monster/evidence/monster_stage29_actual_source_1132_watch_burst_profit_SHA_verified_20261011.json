@@ -1,0 +1,109 @@
+{
+  "schema": "MONSTER_STAGE29_GENUINE_ORIGINAL36_SHA_WATCH_GROUP_OUTCOME_REGISTER_V1",
+  "study_date": "2026-10-11",
+  "research_scope": "Monster meme anomalous-runup signals, descriptive outcomes only",
+  "immutable_preregistered_commit": "4a3339c6d0071252a2b4f14ed93f4dccaaecdc19",
+  "preregistered_manifest": "monster_stage29_frozen_watch_burst_vs_24h_net_profit_diagnostic_20261011.json",
+  "source": "Stage26 all 36 original successful SHA256-proven published historical Binance Spot 1m archive replay artifacts",
+  "CI_run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38149533165",
+  "CI_run_commit": "ab685bf08a0a0aaea9e40f481546f3ada3f1e9f1",
+  "CI_conclusion": "SUCCESS",
+  "tests": "7/7 PASS",
+  "all_36_original_ZIP_and_JSON_verified": true,
+  "reproduced_original_price_proxy_cases": 1132,
+  "verified_complete_symbol_dates": 2719,
+  "full758x6_attempts": 4548,
+  "evaluable_fixed24h_20bps_proxy": 549,
+  "wins": 206,
+  "losses": 343,
+  "old_same_symbol_24h_overlap_skipped": 326,
+  "censored_original_24h_proxy_no_fills": 257,
+  "independent30USDT_all_pnl_proxy": -213.307734,
+  "group_results": {
+    "ISOLATED_1": {
+      "watches": 921,
+      "evaluable": 433,
+      "wins": 132,
+      "losses": 301,
+      "censored": 192,
+      "overlap": 296,
+      "median_20bps_pct": -6.800841,
+      "median_100bps_pct": -8.280222,
+      "independent30U_20bps_pnl": -310.853898,
+      "nonzero_watch_dates": 6,
+      "positive_median_watch_dates": 0,
+      "related_future2x_watch_events": 224
+    },
+    "LOCAL_2_TO_7": {
+      "watches": 101,
+      "evaluable": 52,
+      "wins": 13,
+      "losses": 39,
+      "censored": 20,
+      "overlap": 29,
+      "median_20bps_pct": -8.386457,
+      "median_100bps_pct": -9.84067,
+      "independent30U_20bps_pnl": -91.748402,
+      "nonzero_watch_dates": 6,
+      "positive_median_watch_dates": 1,
+      "related_future2x_watch_events": 13
+    },
+    "BURST_8PLUS": {
+      "watches": 110,
+      "evaluable": 64,
+      "wins": 61,
+      "losses": 3,
+      "censored": 45,
+      "overlap": 1,
+      "median_20bps_pct": 10.542277,
+      "median_100bps_pct": 8.787603,
+      "independent30U_20bps_pnl": 189.294566,
+      "nonzero_watch_dates": 2,
+      "positive_median_watch_dates": 1,
+      "related_future2x_watch_events": 1
+    }
+  },
+  "burst_full_breakdown": {
+    "2026-02-06T00:36:00Z": {
+      "WATCH": 98,
+      "valid_price_proxies": 60,
+      "positive_price_proxies": 59,
+      "negative_price_proxies": 1,
+      "censored": 37,
+      "overlap": 1,
+      "median_20bps_pct": 10.741955,
+      "independent30U_sum_proxy_pnl": 188.002572
+    },
+    "2026-09-09T22:12:00Z": {
+      "WATCH": 12,
+      "valid_price_proxies": 4,
+      "positive_price_proxies": 2,
+      "negative_price_proxies": 2,
+      "censored": 8,
+      "overlap": 0,
+      "median_20bps_pct": -0.940697,
+      "independent30U_sum_proxy_pnl": 1.291994
+    }
+  },
+  "artifact": {
+    "id": 11706590853,
+    "zip_sha256": "c620dd33c7eeddd0b9b9586dadf18f72a674be06f3598f254825aa184f27794d",
+    "unzipped_json_sha256": "2cf87e0dc7eef83a8dd23a37e5233c243f88fe770438429d0ff5c291b905d65d",
+    "unzipped_json_bytes": 85016
+  },
+  "caveats": [
+    "Any 8plus BUY filter would be newly data-mined from an EXPOSED training date, not validated forward and cannot be activated",
+    "Burst8plus effectively only two independent historical 3-minute poll clusters, with 98 of110 signals in Feb2026",
+    "The 98 concurrent Feb watch required global shared D1 queue and only 7 first candidates evaluated; the 59 profitable historical price proxies do not imply 59 executable D1 setups",
+    "21 24h price proxies from low liquidity source? Censoring retained exactly; no historical L2 ask/bid actual filled price",
+    "Gross 2x association is with future price high of original weekly anchor, not wallet realized multiple; among 110 >=8 burst WATCH events only 1 related to GT2x coin",
+    "Multiple symbols in one market-wide synchronous poll are not 64 independent market regimes",
+    "30/300U actual funded balance would cap simultaneous trade count; every30U independent aggregate sum is not a funded ledger",
+    "Two historical dates were already exposed before this diagnostic"
+  ],
+  "production_status": "NO_GO",
+  "other_AI_review": "NOT_DONE",
+  "real_gmail": "OFF",
+  "auto_trading": "OFF",
+  "frank": "UNCHANGED"
+}
