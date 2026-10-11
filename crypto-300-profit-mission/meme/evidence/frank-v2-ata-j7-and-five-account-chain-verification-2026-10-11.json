@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "date_bangkok": "2026-10-11",
+  "source": "Alchemy selected Solana mainnet finalized getSignaturesForAddress + getTransaction(json); local canonical PDA derivation from owner, token program and mint",
+  "frank_wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+  "lookup_is_live_completed_at_research_time": true,
+  "portfolio_cost_or_profit_verified": false,
+  "program_cohort": {
+    "mints_derived": 12,
+    "legacy_spl_token_canonical_ata": 4,
+    "token2022_canonical_ata": 8,
+    "cohort_scope": "12 local sell-only mints with previously recorded ATA public keys",
+    "noncanonical_token_accounts_covered": false
+  },
+  "j7": {
+    "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
+    "canonical_token2022_ata": "FjESMbdMaDapesMo889siXL1oQmgvQz8wsLTnHKeTNem",
+    "derived_traditional_ata": "DbEAuRyJKJYcs6DS1TeLNph7snPDcXqwTqXVrmNyNhLe",
+    "account_owner_token_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "token2022_bump": 255,
+    "traditional_bump": 253,
+    "ata_returned_signatures": 17,
+    "ata_successful_signatures": 4,
+    "ata_failed_signatures": 13,
+    "ata_history_request_limit": 100,
+    "ata_page_exhausted_as_reported_by_provider": true,
+    "original_local_signature_records_for_receipts": 1,
+    "successful_receipts": [
+      {
+        "signature": "3opgLQn1cfQPPoKHNnU986rA9QyAzdmSoLPAXFwxA1tP7Vbx7J3MEHSoAczvcmHPpH7X1pxV3kmE4cGewJnxyR5n",
+        "slot": 454705300,
+        "token_qty": "2846838.050235",
+        "local_signature_present": true
+      },
+      {
+        "signature": "dveTCqqEWwbH2Xg6cXvgnvZ5C8qjtYQZoGfYToyD1N6yFGYxkwiQ2CfgQ3mGnXc1Ehq4Y4AtWjjpUnoQsWzkkej",
+        "slot": 454705824,
+        "raw_before": "2846838050235",
+        "raw_after": "7846838050235",
+        "token_qty": "5000000.000000",
+        "local_signature_present": false,
+        "frank_signed": false
+      },
+      {
+        "signature": "4JMFca46bpxkkVfykETjzwytqP9cNPtYFc9yKJD9cUnz1pKDf2MiHVgugTPxQp6HqVFpVCjpKXsYd243DCQi4LUU",
+        "slot": 454705939,
+        "raw_before": "7846838050235",
+        "raw_after": "12508217470763",
+        "token_qty": "4661379.420528",
+        "local_signature_present": false,
+        "frank_signed": false
+      }
+    ],
+    "actual_total_external_incoming_qty": "12508217.470763",
+    "newly_recovered_qty": "9661379.420528",
+    "local_later_sale_signature": "Tk5zC6cZNLC4Jsbypi7gQkqD1FdA2YUvqRcaRx7ETGDyUsdyKHnooYqmcC5Lq5VrSSccQZiQUUCogUsxgpu3jDq",
+    "source_wallet": "VP4B4yj63FNP4BZLZdBJYRsTi1LqUuUENY8wfAdtSn8",
+    "source_cost_status": "UNVERIFIED",
+    "current_balance_status": "NOT_CHECKED_BY_ATA_HISTORY"
+  },
+  "first_batch": [
+    {
+      "mint_prefix": "31k88G5",
+      "signatures": 4,
+      "successful": 4,
+      "failed": 0,
+      "earliest_utc": "2026-10-01T15:30:16Z"
+    },
+    {
+      "mint_prefix": "5PiBn5J",
+      "signatures": 2,
+      "successful": 2,
+      "failed": 0,
+      "earliest_utc": "2026-10-02T16:05:58Z"
+    },
+    {
+      "mint_prefix": "6e8LLHk",
+      "signatures": 3,
+      "successful": 2,
+      "failed": 1,
+      "earliest_utc": "2026-10-02T16:22:42Z"
+    },
+    {
+      "mint_prefix": "7KEPApd",
+      "signatures": 3,
+      "successful": 3,
+      "failed": 0,
+      "earliest_utc": "2026-10-02T16:18:28Z"
+    },
+    {
+      "mint_prefix": "8dBnKHw",
+      "signatures": 2,
+      "successful": 2,
+      "failed": 0,
+      "earliest_utc": "2026-10-02T16:43:36Z"
+    }
+  ],
+  "provider_limit": {
+    "mint_prefix": "8nnaeWC",
+    "failure": "RPC_429_RATE_LIMIT",
+    "after_five_successful_accounts": true,
+    "remaining_accounts_not_fully_scanned": true
+  },
+  "limitations": [
+    "Provider ATA history under the requested window is not proof of complete original wallet acquisition cost, closed/noncanonical token accounts, or all token programs.",
+    "No private key used; only finalized signature and transaction evidence.",
+    "Per-signature dedupe with the existing main-wallet index is required before joining this data.",
+    "The 12 derived canonical ATAs include Token-2022, which is why using only legacy Tokenkeg for J7 misses the actual source."
+  ]
+}
