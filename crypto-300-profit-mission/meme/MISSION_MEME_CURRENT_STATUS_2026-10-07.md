@@ -1087,3 +1087,15 @@ A tightly filtered 10-case local buy/sell balance-offset cohort has nominal USDC
 **Actual CI**: [38114457238](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38114457238) PASS, 46 new tests + 80 existing Dashboard/Control/Delivery regression tests **126 passed**, source compile and JS syntax PASS.
 
 **GATES**: `FIRST_FULL_LOCAL_HISTORY=VERIFIED_AND_GIT_READBACK`, `ALL_HISTORY_CHAIN_COMPLETENESS=NOT_PROVEN`, `FEE_COST_PNL=NOT_VERIFIED`, `INDEPENDENT_EXTERNAL_AI_REVIEW=NOT_RUN`, `MAC_NEW_UI_DEPLOYMENT=NO`, `CONTINUOUS_GIT_UPLOAD=OFF`, `PR31_DRAFT=YES`, `PRODUCTION_TRADING=NO_GO`. No account signing, Git production merge, Mac service restart or new automation. User's <USD1 exclusion rule concerns user's own investment assets and must **not** remove the Frank observation universe.
+
+## 59. 2026-10-11 sell-only source breadth verification: 10 pre-index, 2 in-index
+
+Actual finalized Solana RPC for the **12 local sell-only Frank mints** confirms **10 owner-token accounts show signatures predating local index start `2026-10-02T22:54:44Z`**; two (`EFn88…`, `J7bh…`) did not show earlier account history in bounded/provider pagination. This is **pre-index activity**, not proof of buy price.
+
+Full J7 forensic breakthrough: **three external-source-signed transfers** on 2026-10-09 UTC 00:29:20, 00:31:43, 00:32:14 from `VP4B4yj63FNP4BZLZdBJYRsTi1LqUuUENY8wfAdtSn8` total **12508217.470763 J7**, exactly matching later locally recognized `SELL_POSITION_UNRESOLVED` token units. Frank signed **none** of the three transfers. Source of units **VERIFIED_PASSIVE_TRANSFER_IN**, acquisition cost/consideration **UNKNOWN**, PnL **UNKNOWN**. Exact tx pre/post balances and slots on research PR #31: `meme/evidence/frank-v2-j7-onchain-three-transfer-origin-2026-10-11.json`.
+
+BPxx: actual finalized Oct3 11:25 UTC slot 452919433 transaction proves Frank already had **1001346.785078260** BPxx units before passive +0.771543330, no Frank signature in that tx. The huge Oct7 local sale receipts **1028942.996687 USDC** still lack proven original cost. All 12 mint ATA latest/earliest evidence on PR #31: `meme/evidence/frank-v2-12-sell-only-mint-account-history-2026-10-11.json`.
+
+Code candidate `wallet_transfers.py` (PR #31) now reads local signatures' already-normalized `wallet_token_transfer_flows` and wallet-owned token balance deltas with strict public-field whitelist, no mutation or raw secret export. **This new module is not yet integrated with the Git sync loop or user Mac**; it is the needed data extraction source for later provenance coverage. Actual [CI run 38115180075](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38115180075) passed **49 new + 80 existing = 129** tests, Python compile and JS syntax. Independent external AI Review, production deployment and continuous full-transfer evidence sync remain NOT DONE; `PRODUCTION_TRADING=NO_GO`.
+
+Durable detailed audit and links: `meme/frank-v2-full-history-source-audit-2026-10-11.md`.
