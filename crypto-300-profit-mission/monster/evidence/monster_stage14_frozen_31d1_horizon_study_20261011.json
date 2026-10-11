@@ -1,0 +1,76 @@
+{
+  "schema": "MONSTER_STAGE14_PRE_REGISTERED_D1_HOLD_HORIZONS_V1",
+  "status": "FROZEN_BEFORE_READING_ANY_STAGE14_HORIZON_COMPARISON",
+  "source_event_definition": "Every production D1 SETUP in five already executed full504 current-spot-symbol dates, independent of profitability or previous exit censoring; WATCH-only cases excluded",
+  "source_replays": [
+    "Stage13 success https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38122346432",
+    "Stage12 success https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38115890710"
+  ],
+  "expected_d1_cases": 31,
+  "date_symbols": {
+    "2025-11-17": [
+      "BANANAS31USDT",
+      "DUSKUSDT",
+      "MAGICUSDT",
+      "NMRUSDT",
+      "USTCUSDT",
+      "XNOUSDT"
+    ],
+    "2026-02-17": [
+      "ALLOUSDT",
+      "ATMUSDT",
+      "JTOUSDT",
+      "MMTUSDT",
+      "ORCAUSDT",
+      "REZUSDT"
+    ],
+    "2026-05-17": [
+      "EDENUSDT",
+      "FIDAUSDT"
+    ],
+    "2026-08-17": [
+      "ACEUSDT",
+      "CBRSBUSDT",
+      "EDENUSDT",
+      "GPSUSDT",
+      "GUNUSDT",
+      "HAEDALUSDT",
+      "HEMIUSDT",
+      "MVLLBUSDT",
+      "RAREUSDT",
+      "TUTUSDT"
+    ],
+    "2026-09-17": [
+      "AVAUSDT",
+      "DGBUSDT",
+      "GLMRUSDT",
+      "KSMUSDT",
+      "MARSCOINUSDT",
+      "ONEUSDT",
+      "SYNUSDT"
+    ]
+  },
+  "horizons_minutes": [
+    30,
+    120,
+    360,
+    720,
+    1440
+  ],
+  "entry_delay_ms": 180000,
+  "capital_usdt": 30,
+  "assumed_fee_bps_per_side": 10,
+  "assumed_slippage_bps_per_side": 20,
+  "price_basis": "ENTRY_AND_EXIT_1M_OPEN_UTC_PLUS_DELAY_NOT_INTRABAR_HIGH",
+  "liquidity_checks": "Same Stage12 historical quote>=30 on entry and exit, nonzero trades/quote both sides, no zero-trade closed 1m in last6m before exit",
+  "replay": "Same production Monster V4 D0 and D1 on verified official 1m, no new threshold tuning; compare only fixed horizons",
+  "analysis_intent": "exploratory diagnostic whether 24h holding is responsible for mean reversion; not a tested live strategy",
+  "cautions": [
+    "Each outcome from already exposed and strategy-selected D1 cases; tests of exits here are in-sample",
+    "Survivorship and historical listing bias remain",
+    "No historically verified L2 execution, spreads, actual user fees, smart routing, or stop orders",
+    "No historical date removed, even if exit is untradeable",
+    "No real trading, no email, no deployment"
+  ],
+  "deploy_gate": "NO_GO"
+}
