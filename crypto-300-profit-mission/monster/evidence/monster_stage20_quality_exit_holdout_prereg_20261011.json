@@ -1,0 +1,95 @@
+{
+  "schema": "MONSTER_STAGE20_FROZEN_HOLDOUT_QUALITY_EXIT_COMPARISON_V1",
+  "prereg_date_bangkok": "2026-10-11",
+  "research_only": true,
+  "purpose": "Out-of-sample relative to Stage12-19 calendar dates for frozen V4 D1 quality filter and bounded risk exit; no in-run tuning",
+  "train_development_dates_seen": [
+    "2025-11-17",
+    "2026-02-17",
+    "2026-05-17",
+    "2026-08-17",
+    "2026-09-17"
+  ],
+  "holdout_dates_utc": [
+    "2025-12-13",
+    "2026-01-13",
+    "2026-04-13",
+    "2026-07-13"
+  ],
+  "date_rule": "Fixed four calendar 13th days in months absent from Stage12-19; no return or signal data consulted",
+  "symbol_universe": "Frozen Stage12 504 current Spot USDT plus Stage15 254 archive-only ASCII USDT Spot, 758 symbols total; not historical point-in-time exchangeInfo",
+  "archive_only_sha256": "0c2604d838fc3d7c28d0e8819fde1bb42deb6fb22360182a49c1b82bb6d25348",
+  "expected_symbols": 758,
+  "expected_per_date_utc_window": "06:00-18:00",
+  "historical_input": "Official Binance daily Spot 1m ZIP with publisher SHA256, 60h contiguous warmup/forward, same production V4 D0/D1",
+  "baseline": {
+    "trigger": "V4 production SETUP_ACTIVE from full calendar replay",
+    "entry_lag_min": 3,
+    "exit_fixed_min": 1440,
+    "fee_bps_per_side": 10,
+    "slippage_bps_per_side": 20,
+    "capital_usdt": 30
+  },
+  "quality_gate": {
+    "first_d1_setup_per_symbol_per_date_only": true,
+    "signal_causal_end": "Last completed 1m close <= D1 observed_ms",
+    "last_15m_quote_ratio_against_prior_45m_normalized_min": 1.5,
+    "last_1m_quote_min_usdt": 30,
+    "all_last_6_closed_minutes_have_positive_trades": true,
+    "last_close_vs_previous_60m_high_drawdown_max_pct": 8,
+    "relative_60m_return_minus_btc_60m_min_percentage_points": 4,
+    "max_symbol_60m_return_pct": 70,
+    "unknown_or_invalid_features": "REJECT_QUALITY_NO_ASSUMED_VALUE",
+    "btc_source": "Same verified Binance BTCUSDT official 1m archive, only past 60m returns",
+    "excluded_from_production": true
+  },
+  "risk_exit": {
+    "start": "D1 SETUP + 3 min 1m OPEN entry proxy",
+    "stop_loss_pct": 8,
+    "take_profit_pct": 18,
+    "timeout_min": 360,
+    "same_candle_stop_and_take_profit": "STOP_FIRST_CONSERVATIVE",
+    "stop_gap_execution": "MIN(first_1m_open, target_stop), never better than target_stop",
+    "take_profit_execution": "TARGET_TP even if open above",
+    "limit_order_fills_verified": false,
+    "exit_minute_quote_min_usdt": 30,
+    "last_6_exit_minutes_nonzero_trades": true,
+    "execution_scenarios_bps_per_side": [
+      20,
+      100
+    ],
+    "fixed_fee_bps_per_side": 10,
+    "no_orderbook_unverified_fills": true
+  },
+  "arms": [
+    "A_ALL_D1_FIXED_24H_20BPS",
+    "B_ALL_D1_BOUNDED_6H_20BPS",
+    "C_QUALITY_D1_FIXED_24H_20BPS",
+    "D_QUALITY_D1_BOUNDED_6H_20BPS",
+    "E_QUALITY_D1_BOUNDED_6H_100BPS"
+  ],
+  "gate_for_further_research": {
+    "minimum_nonoverlapping_evaluable_quality_trades": 30,
+    "minimum_distinct_holdout_dates": 4,
+    "median_net_pct_min_exclusive": 0,
+    "winning_fraction_min": 0.55,
+    "proxy_sum_30usdt_pnl_min_exclusive": 0,
+    "censored_frac_max": 0.2,
+    "exceptional_drawdown_threshold_pct": 15,
+    "notify_increase_over_baseline": "NONE: applied only to existing D1, WATCH remains unchanged",
+    "independent_other_ai_review_after_pass": true
+  },
+  "failure_rule": "Record all holdouts; NO_GO if inadequate n, negative median, profitability not robust at 100bps, integrity failure or excessive censoring; no parameter switches after viewing results",
+  "limitations": [
+    "2026-10 inventory is survivor-listed, not exact historical tradability",
+    "1m high/low stop-first simulated exit is not executable fill",
+    "Only four holdout day slices, not year-round GT recall or real FPR",
+    "All 100bps scenarios separately reported without replacing 20bps prereg baseline",
+    "Independent AI review, Mac install, Gmail and trading stay disabled"
+  ],
+  "independent_other_ai_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "gmail": "OFF",
+  "automatic_trading": "NO_GO",
+  "frank": "UNTOUCHED"
+}
