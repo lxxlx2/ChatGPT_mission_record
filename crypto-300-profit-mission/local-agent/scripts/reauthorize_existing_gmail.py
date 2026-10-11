@@ -133,10 +133,12 @@ def api_get(token, endpoint):
 def atomic_write_credentials(path, old, token):
     new = dict(old)
     new["refresh_token"] = token["refresh_token"]
-    new["token"] = token["access_token"]
+    # A short-lived bearer is not needed by the existing production refresh flow.
+    new.pop("token", None)
+    new.pop("access_token", None)
     new["token_uri"] = TOKEN_ENDPOINT
     new["scopes"] = list(SCOPES)
-    backup = path.with_name(path.name + ".pre-reauth-" + time.strftime("%Y%m%d-%H%M%S"))
+    backup = path.with_name(path.name + ".pre-reauth-" + time.strftime("%Y%m%d-%H%M%S") + "-" + secrets.token_hex(8))
     original_bytes = path.read_bytes()
     backup_fd = os.open(backup, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(backup_fd, "wb") as out:
@@ -175,6 +177,11 @@ def main(argv=None):
     print("REQUIRED_GMAIL_SCOPES=SEND_READONLY", flush=True)
     if args.check_only:
         return
+    # Require the intended account before opening a browser or requesting a
+    # new refresh token; otherwise the consented Google account is arbitrary.
+    if not isinstance(recipient, str) or not recipient.strip():
+        raise RecoveryError("RECIPIENT_REQUIRED_FOR_ACCOUNT_CHECK")
+    recipient = recipient.strip()
     print("DESKTOP_OAUTH_CLIENT_REQUIRED=YES", flush=True)
     state = secrets.token_urlsafe(32)
     verifier = secrets.token_urlsafe(64)
@@ -213,7 +220,7 @@ def main(argv=None):
     profile = api_get(token["access_token"], "profile")
     if not profile.get("emailAddress"):
         raise RecoveryError("GMAIL_PROFILE_UNAVAILABLE_NO_FILE_CHANGE")
-    if recipient and profile["emailAddress"].casefold() != recipient.casefold():
+    if profile["emailAddress"].casefold() != recipient.casefold():
         raise RecoveryError("WRONG_GMAIL_ACCOUNT_NO_FILE_CHANGE")
     api_get(token["access_token"], "messages?" + parse.urlencode({"q": "in:sent", "maxResults": 1}))
     print("GMAIL_PROFILE_AND_SENT_READ=PASS", flush=True)
