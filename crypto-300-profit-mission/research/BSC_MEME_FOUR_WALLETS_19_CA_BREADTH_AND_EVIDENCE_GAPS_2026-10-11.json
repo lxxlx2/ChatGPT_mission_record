@@ -395,12 +395,13 @@
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
       "token": "GIGGLE",
       "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
-      "status": "TRANSFER_OBSERVED_SIGNER_OR_COST_NOT_FULLY_AUDITED",
+      "status": "71_INBOUND_0_OUT_OPEN_INVENTORY_NO_SELF_BUY_PROVEN",
       "first_transfer_block": 105119593,
-      "last_transfer_block": 105124046,
-      "in_transfer_count": 11,
+      "last_transfer_block": 117554973,
+      "in_transfer_count": 71,
       "out_transfer_count": 0,
-      "inventory_net_raw": null
+      "inventory_net_raw": "1887709367246662512",
+      "full_scan_source": "BSC_MEME_DDAC_GIGGLE_71_PASSIVE_OR_REWARD_INBOUND_CONTROL_2026-10-11.json"
     },
     {
       "label": "DDAC",
@@ -483,12 +484,13 @@
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
       "token": "币安人生",
       "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
-      "status": "TRANSFER_OBSERVED_SIGNER_OR_COST_NOT_FULLY_AUDITED",
+      "status": "82_HASHES_69_SHARED_DISTRIBUTOR_INPUTS_7_OWNER_SIGNED_POOL_ACTIONS_PNL_UNRESOLVED",
       "first_transfer_block": 71923263,
-      "last_transfer_block": 115522556,
-      "in_transfer_count": 17,
+      "last_transfer_block": 118037605,
+      "in_transfer_count": 78,
       "out_transfer_count": 5,
-      "inventory_net_raw": null
+      "inventory_net_raw": "21665763559661594798",
+      "full_scan_source": "BSC_MEME_DDAC_BINANCE_LIFE_82_TX_DISTRIBUTION_VS_7_POOL_SETTLEMENT_QA_2026-10-11.json"
     },
     {
       "label": "DDAC",
@@ -1002,11 +1004,33 @@
       "new_first_block": 112441920,
       "previous_last_block": 113975350,
       "new_last_block": 120232161
+    },
+    {
+      "token": "GIGGLE",
+      "in": 11,
+      "out": 0,
+      "last": 105124046,
+      "updated_in": 71,
+      "updated_out": 0,
+      "updated_last": 117554973
+    },
+    {
+      "token": "币安人生",
+      "in": 17,
+      "out": 5,
+      "last": 115522556,
+      "updated_in": 78,
+      "updated_out": 5,
+      "updated_last": 118037605
     }
   ],
   "additional_sources": [
     "BSC_MEME_DDAC_MARSCOIN_FULL_TRANSFER_ANOMALY_2026-10-11.json",
-    "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json"
+    "BSC_MEME_DDAC_MARSCOIN_29_EVENT_PROVENANCE_AND_NATIVE_SCOPE_QA_2026-10-11.json",
+    "BSC_MEME_DDAC_GIGGLE_FULL_ERC20_HISTORY_2026-10-11.json",
+    "BSC_MEME_DDAC_BINANCE_LIFE_FULL_ERC20_HISTORY_2026-10-11.json",
+    "BSC_MEME_DDAC_GIGGLE_71_PASSIVE_OR_REWARD_INBOUND_CONTROL_2026-10-11.json",
+    "BSC_MEME_DDAC_BINANCE_LIFE_82_TX_DISTRIBUTION_VS_7_POOL_SETTLEMENT_QA_2026-10-11.json"
   ],
-  "correction_note": "New full historical paginator supersedes the older sparse DDAC MARS cell. 19 DDAC signed txs but 10 remain external/unknown and quote/profit remain unresolved. MARS not promoted to independently verified realized PnL."
+  "correction_note": "DDAC source full pagination corrected MARS, GIGGLE and Binance Life sparse matrix cells; raw transfer count cannot be used as wallet buy count. 69 Binance Life and 70 GIGGLE receipts from same 0x2f7fe... source contract, without same hash and without all owner signers verified. Preserve legacy matrix snapshot separately."
 }
