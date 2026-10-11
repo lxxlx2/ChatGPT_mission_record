@@ -25,6 +25,8 @@ from mission_agent.mission_control.wallet_history import export_history
 from mission_agent.mission_control.wallet_watch import from_seed
 from mission_agent.mission_control.wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from mission_agent.mission_control.wallet_reconciliation import analyze as analyze_frank_gap
+from mission_agent.mission_control.wallet_transfers import export_signature_evidence
+from mission_agent.mission_control.transfer_archive import queue_transfer_history, sync_transfer_history
 
 
 def refresh_zip_summary(packet: Path, status: dict) -> None:
@@ -70,6 +72,13 @@ def main(argv=None):
         status["frank_history_records"] = data["frank_full_local_history"]["record_count"]
     except (OSError, ValueError, sqlite3.Error) as exc:
         status["frank_history"] = "UNAVAILABLE_" + type(exc).__name__
+    try:
+        transfer_report = export_signature_evidence(args.production_root / "forward.sqlite")
+        queue_transfer_history(spool, transfer_report)
+        status["frank_transfer_history"] = "QUEUED_LOCALLY"
+        status["frank_transfer_signature_records"] = transfer_report["record_count"]
+    except (OSError, ValueError, sqlite3.Error, TypeError) as exc:
+        status["frank_transfer_history"] = "UNAVAILABLE_" + type(exc).__name__
     if args.inventory_evidence is not None:
         try:
             if "d0_local_audit" not in data:
@@ -114,7 +123,7 @@ def main(argv=None):
             archive.writestr("frank-local-trade-inventory-gap-audit.json",
                              json.dumps(data["local_trade_inventory_gap_audit"],
                                         ensure_ascii=False, indent=2))
-        for folder in ("ca", "ca-parts", "frank", "frank-history", "frank-history-parts"):
+        for folder in ("ca", "ca-parts", "frank", "frank-history", "frank-history-parts", "frank-transfer-history", "frank-transfer-history-parts"):
             for source in sorted((spool.pending / folder).rglob("*.json")):
                 archive.write(source, "sanitized-pending/" + source.relative_to(spool.pending).as_posix())
     if args.sync:
@@ -129,8 +138,17 @@ def main(argv=None):
                 authenticated = False
             if authenticated:
                 try:
-                    data["git_sync_result"] = GitEvidencePublisher(spool).sync(force=True)
-                    status["git_sync"] = data["git_sync_result"]["status"]
+                    publisher = GitEvidencePublisher(spool)
+                    data["git_sync_result"] = publisher.sync(force=True)
+                    transfer_result = sync_transfer_history(spool, publisher)
+                    status["transfer_git_sync"] = transfer_result["status"]
+                    status["transfer_remote_uploaded"] = transfer_result["uploaded"]
+                    status["transfer_pending"] = transfer_result["pending"]
+                    status["git_sync"] = (
+                        "SYNC_OK" if data["git_sync_result"]["status"] == "SYNC_OK"
+                        and transfer_result["status"] == "SYNC_OK"
+                        else "SYNC_PARTIAL"
+                    )
                 except (OSError, ValueError, RuntimeError):
                     status["git_sync"] = "GIT_SYNC_FAILED_PENDING_RETAINED"
             else:
