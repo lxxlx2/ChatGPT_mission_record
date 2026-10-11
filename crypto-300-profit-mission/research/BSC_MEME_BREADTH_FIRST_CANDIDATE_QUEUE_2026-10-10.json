@@ -68,7 +68,19 @@
     "BSC_MEME_8E6B_4_ORIGINAL_TWO_EPISODE_EXACT_SETTLEMENT_2026-10-11.json",
     "BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
     "BSC_MEME_239E_19_CA_ELIGIBLE_OPPORTUNITY_COVERAGE_2026-10-11.json",
-    "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md"
+    "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md",
+    "BSC_MEME_5C48_TWO_VENUE_22_FROZEN_RECONCILIATION_SPEC_2026-10-11.json",
+    "BSC_MEME_5C48_TWO_VENUE_22_RAW_EVENT_RECONCILIATION_2026-10-11.json",
+    "BSC_MEME_5C48_V2_TRUNCATED_WBNB_ROUTER_EVIDENCE_2026-10-11.json",
+    "BSC_MEME_5C48_22_TX_TWO_VENUE_SETTLEMENT_QA_2026-10-11.json",
+    "BSC_MEME_5C48_IFML_LOBSTER_22_CLOSED_EPISODES_2026-10-11.json",
+    "BSC_MEME_5C48_BINANCE_LIFE_FULL_ERC20_HISTORY_2026-10-11.json",
+    "BSC_MEME_5C48_BINANCE_LIFE_17_NATIVE_BLOCK_CASHFLOW_2026-10-11.json",
+    "BSC_MEME_5C48_BINANCE_LIFE_17_ORIGINAL_SIGNER_RECEIPT_PROVENANCE_2026-10-11.json",
+    "BSC_MEME_5C48_THREE_TOKEN_SCOPE_INCLUDE_NEGATIVE_CONTROL_2026-10-11.json",
+    "BSC_MEME_FOUR_EOA_IFML_LOBSTER_CAPITAL_AND_EPISODE_COMPARISON_2026-10-11.json",
+    "BSC_MEME_FOUR_WALLETS_19_CA_BREADTH_AND_EVIDENCE_GAPS_2026-10-11.json",
+    "BSC_MEME_ADDRESS_MODEL_3_5C48_THREE_COIN_AND_FOUR_EOA_RESEARCH_REPORT_2026-10-11.md"
   ],
   "statistics": {
     "token_contracts": 19,
@@ -430,7 +442,7 @@
         "combined_native_bnb_event_scope_net_wei": "296492314017711706",
         "status": "SIGNED_SUCCESS_SCOPED_NATIVE_BALANCES; LOWER_ABSOLUTE_BNB_CAPTURE; NO_GO"
       },
-      "current_research_priority": "HIGH_EARLY_ENTRY_BUT_PNL_CONCENTRATED_ONE_LOBSTER_EPISODE; 2_SIGNED_TOKEN_POSITIONS_OVER_19_CA; 239e_SCOPE_NO_GO",
+      "current_research_priority": "EARLY_PANCAKE_V2_AFTER_LAUNCH_MIGRATION_TWO_SCOPE_SAMPLES; NIULAI_INBOUND_ONLY_UNRESOLVED; NO_GO",
       "latest_entry_timing_source": "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json",
       "latest_v1": "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md"
     },
@@ -1109,7 +1121,7 @@
         "我踏马来了",
         "龙虾"
       ],
-      "current_research_priority": "HIGHER_PRIORITY_RECONCILE_REALIZED_ONCHAIN_MARS_PNL",
+      "current_research_priority": "HIGH_BREADTH_UNRESOLVED_OTHER_COINS_GIGGLE_MARSCOIN_BINANCE_LIFE; IFML_5_EPISODES_AND_LOBSTER_2_NEGATIVE; NO_GO",
       "material_2026_position_proof": {
         "MARSCOIN": {
           "complete_token_transfer_history": true,
@@ -1228,11 +1240,14 @@
           "signer_status": "DIRECT_SIGNED"
         }
       ],
-      "pnl_not_recomputed": true,
+      "pnl_not_recomputed": false,
       "latest_genesis_plus_pool_overlap_tokens": [
         "我踏马来了",
         "龙虾"
-      ]
+      ],
+      "current_research_priority": "HIGH_REPEAT_EARLY_LAUNCH_PARTICIPATION_WITH_THIRD_TOKEN_NEGATIVE_CONTROL; QUOTE_ROUTES_PARTIAL; LIFETIME_AND_COPY_NO_GO",
+      "latest_three_coin_report": "BSC_MEME_ADDRESS_MODEL_3_5C48_THREE_COIN_AND_FOUR_EOA_RESEARCH_REPORT_2026-10-11.md",
+      "pnl_scope_note": "3 selected token CA 39 signed success native event-block deltas, NOT lifetime or fully isolated realized PnL"
     },
     {
       "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
@@ -1330,7 +1345,8 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "我踏马来了",
         "龙虾"
-      ]
+      ],
+      "current_research_priority": "HIGH_EARLY_LAUNCH_BUT_BINANCE_LIFE_AND_FULL_LIFETIME_AUDIT_OPEN; NO_GO"
     }
   ],
   "overlapping_contract_recipients": [
@@ -1657,6 +1673,9 @@
     "8e6b 32 self-signed token-trade transactions across 3 fully reconciled 2026 major token quantities have +5.437877 BNB aggregate event-block wallet native changes (two positive, one negative), but internal-transaction attribution/finality, controller/followability and further 8-token losses remain unresolved."
   ],
   "next_work_order": [
+    "Audit DDAC GIGGLE/MARSCOIN/Binance Life including incoming source and unclosed raw token balances before any wallet ranking",
+    "Audit 9D Binance Life original receipts and quote settlements, 239e NiuLai passive inbound, and any 5C48 Binance Life non-native quote proceeds",
+    "Define a chronology-frozen unbiased BSC launch CA opportunity universe and wallet-active-window denominator; independent model QA then untouched validation",
     "Expand independent BSC major token opportunity denominator to later launches and 23 wallets with identical original tx proof, including zero participation and missing/counterparty-led tokens",
     "Add persistent follower reserve impact and actual token/quote settlement routing; preregister untouched validation and independent code review",
     "Audit 239e 2026 early sample ownership/funding and 9d1240 overlapping wallet as independent comparator",
@@ -1845,5 +1864,38 @@
       "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md"
     ],
     "production": "NO_GO"
+  },
+  "address_model_3_fivec48_2026_10_11": {
+    "state": "THREE_SELECTED_TOKEN_CAS_39_ORIGINAL_SELF_SIGNED_SUCCESS_39_NATIVE_BLOCKS_RECONCILED",
+    "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+    "owner_buy_input_wei": "7600000000000000000",
+    "native_block_delta_wei": "2876709991955173502",
+    "ifml_and_lobster_native_scope_wei": "2977085388546442761",
+    "binance_life_native_scope_wei": "-100375396591269391",
+    "ifml_and_lobster_closed_position_episodes": 6,
+    "binance_life_in_tx_mirrored_transfers": 10,
+    "binance_life_token_dust_residual_raw": "247691",
+    "panckake_v2_actions": 10,
+    "panckake_v2_pair_swap_logs": 3,
+    "panckake_v2_pair_router_wbnb_fallback_proofs": 7,
+    "four_meme_raw_event_logs": 11,
+    "four_meme_log_missing": 1,
+    "product_followable": "UNRESOLVED",
+    "out_of_sample": "NOT_TESTED",
+    "production": "NO_GO",
+    "source_files": [
+      "BSC_MEME_5C48_TWO_VENUE_22_FROZEN_RECONCILIATION_SPEC_2026-10-11.json",
+      "BSC_MEME_5C48_TWO_VENUE_22_RAW_EVENT_RECONCILIATION_2026-10-11.json",
+      "BSC_MEME_5C48_V2_TRUNCATED_WBNB_ROUTER_EVIDENCE_2026-10-11.json",
+      "BSC_MEME_5C48_22_TX_TWO_VENUE_SETTLEMENT_QA_2026-10-11.json",
+      "BSC_MEME_5C48_IFML_LOBSTER_22_CLOSED_EPISODES_2026-10-11.json",
+      "BSC_MEME_5C48_BINANCE_LIFE_FULL_ERC20_HISTORY_2026-10-11.json",
+      "BSC_MEME_5C48_BINANCE_LIFE_17_NATIVE_BLOCK_CASHFLOW_2026-10-11.json",
+      "BSC_MEME_5C48_BINANCE_LIFE_17_ORIGINAL_SIGNER_RECEIPT_PROVENANCE_2026-10-11.json",
+      "BSC_MEME_5C48_THREE_TOKEN_SCOPE_INCLUDE_NEGATIVE_CONTROL_2026-10-11.json",
+      "BSC_MEME_FOUR_EOA_IFML_LOBSTER_CAPITAL_AND_EPISODE_COMPARISON_2026-10-11.json",
+      "BSC_MEME_FOUR_WALLETS_19_CA_BREADTH_AND_EVIDENCE_GAPS_2026-10-11.json",
+      "BSC_MEME_ADDRESS_MODEL_3_5C48_THREE_COIN_AND_FOUR_EOA_RESEARCH_REPORT_2026-10-11.md"
+    ]
   }
 }
