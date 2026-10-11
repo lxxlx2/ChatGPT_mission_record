@@ -92,6 +92,10 @@ def run():
     if len(result) + len(excluded) != len(selected):
         raise ValueError("SILENT_DROPPED_PRE_REGISTERED_CASE")
     hours = 12 * len(result)
+    polled = sum(x["polls"] for x in result)
+    skipped_no_trade = sum(x["polls_skipped_no_trade"] for x in result)
+    if polled + skipped_no_trade != 240 * len(result):
+        raise ValueError("UNACCOUNTED_3MIN_OBSERVATIONS")
     counts = {}
     for case in result:
         day = case["old_research_watch_utc"][:10]
@@ -102,7 +106,12 @@ def run():
     summary = {
         "frozen_candidates": len(selected), "valid_contiguous_60h": len(result),
         "source_not_historically_available": len(excluded),
-        "scanned_symbol_hours": hours,
+        "nominal_window_symbol_hours": hours,
+        "intended_3m_poll_intervals": 240 * len(result),
+        "actual_nonzero_trade_3m_polls": polled,
+        "skipped_zero_trade_3m_polls": skipped_no_trade,
+        "actual_nonzero_trade_symbol_hours": round(polled * 3 / 60, 3),
+        "zero_trade_skip_ratio": round(skipped_no_trade / (240 * len(result)), 6),
         "watched_symbols": sum(v["watch_count"] > 0 for v in result),
         "watches": sum(v["watch_count"] for v in result),
         "d1_setup_symbols": sum(v["d1_setups"] > 0 for v in result),
@@ -124,6 +133,7 @@ def run():
         "cases": [{
             "symbol": x["symbol"], "anchor_utc": x["old_research_watch_utc"],
             "replay_start_utc": x["replay_start_utc"], "replay_end_utc": x["replay_end_utc"],
+            "intended_polls": 240,
             "polls": x["polls"], "polls_skipped_no_trade": x["polls_skipped_no_trade"],
             "watches": x["watch_count"], "first_watch_utc": x["first_watch_utc"],
             "d1_setups": x["d1_setups"], "trade_proxies": x["trade_proxies"],
