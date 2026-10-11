@@ -73,3 +73,9 @@
 Stage19渐进上涨广撒网失败，Stage20原D1+质量规则实际只过滤2/20且没有证明能区分有效机会。更值得研究的是将**早期WATCH发现**和**可执行退出**明确分离：保留D0较高召回用于可追踪WATCH，D1与盘口成交门槛只用于风险排序；用真正历史逐笔或L2市场数据重建进出场成本和风控成交可能性；在新的、尚未查看结果的自然日期上做足够数量的D1/2×机会逐时间检验，同时按真实持仓资金约束组合净值，避免独立30U重复占资。受限于真实盘口历史归档可得性及CI执行环境，不得以额外乱改阈值代替数据或样本量。
 
 提交状态：阶段源数据、研究代码、回归测试、四日期GitHub CI、逐笔组合复核、结论文档已写原Monster研究分支；**独立其他AI Review、真实Mac与Frank并行验收、Gmail真实投递均未执行**。保持 \`STRATEGY_POSITIVE_PNL_VALIDATED=FALSE\`、\`MONSTER_DEPLOYMENT=NO_GO\`、\`REAL_GMAIL=OFF\`、\`PRODUCTION_TRADING=NO_GO\`，不修改现有Frank。
+
+## 7. 第二次独立于主回测Job的归档字节级复算
+
+已通过另一个GitHub Actions [Stage20原始Artifact SHA校验及重算 #38131123057](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131123057)：执行[合并与配对复算器](../local-agent/scripts/monster_v4_stage20_aggregate.py)，从GitHub Actions官方API重新下载原先四日期完整ZIP，严格逐个核对原始ZIP和解压JSON的SHA-256，全部匹配后独立重算3032尝试、1764完整、24 WATCH、21 D1、20唯一首笔D1、18质量通过；六个**原冻结放行关口**中通过3个，失败3个（样本量、胜率、退出删失率）。
+
+该复算CI结论 `success`，原始聚合产物ID `11698108818`，ZIP SHA256 `8313647b78a0dab1e2014554e957aa6e0028fe67de27949b9cc5dea642d97440`。此复算属于工程复核，**绝不能冒充另一AI独立Review**。100bps滑点始终是原预登记的压力测试情景，并未事后升级为新的硬性放行标准，现有硬性关口已经不足以放行。
