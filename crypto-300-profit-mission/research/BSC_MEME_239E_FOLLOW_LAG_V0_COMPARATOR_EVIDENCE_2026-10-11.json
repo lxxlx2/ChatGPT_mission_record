@@ -4,7 +4,7 @@
   "frozen_spec_sha": "2b82bc80c773e9f4e1597453ee7a13d843ec1259",
   "pool_identity_from": "BSC_MEME_8E6B_FOLLOW_LAG_V0_POOL_RESERVE_EVIDENCE_2026-10-11.json",
   "mode": "Exploratory two snapshot zero fee V2 constant product upper-bound only, not executable live backtest",
-  "status": "RESERVE_SNAPSHOTS_DONE_RESULTS_NOT_CALCULATED",
+  "status": "ALL_16_SCENARIOS_COMPUTED_IN_SAMPLE_NO_PRODUCTION_GATE",
   "snapshots": [
     {
       "token": "我踏马来了",
@@ -231,6 +231,349 @@
       "last_sync_timestamp": 1772183197
     }
   ],
-  "scenarios": [],
-  "production": "NO_GO"
+  "scenarios": [
+    {
+      "token": "我踏马来了",
+      "lag_blocks": 0,
+      "input_wei": "50000000000000000",
+      "buy_block": 73658908,
+      "sell_block": 73659128,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "530162355915157895835675",
+      "proceeds_wei": "167188472989923603",
+      "net_wei": "117188472989923603",
+      "return_pct_approx": 234.3769,
+      "buy_pool_wbnb_wei": "18216680580670290779",
+      "sell_pool_wbnb_wei": "33984464694577384223",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "我踏马来了",
+      "lag_blocks": 0,
+      "input_wei": "100000000000000000",
+      "buy_block": 73658908,
+      "sell_block": 73659128,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "1057430288064065035551951",
+      "proceeds_wei": "331840584150356639",
+      "net_wei": "231840584150356639",
+      "return_pct_approx": 231.8405,
+      "buy_pool_wbnb_wei": "18216680580670290779",
+      "sell_pool_wbnb_wei": "33984464694577384223",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "我踏马来了",
+      "lag_blocks": 10,
+      "input_wei": "50000000000000000",
+      "buy_block": 73658918,
+      "sell_block": 73659138,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "424477484577895357260719",
+      "proceeds_wei": "175905330572495901",
+      "net_wei": "125905330572495901",
+      "return_pct_approx": 251.8106,
+      "buy_pool_wbnb_wei": "20389132743032605814",
+      "sell_pool_wbnb_wei": "38978748197148274152",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "我踏马来了",
+      "lag_blocks": 10,
+      "input_wei": "100000000000000000",
+      "buy_block": 73658918,
+      "sell_block": 73659138,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "846883249040051602702981",
+      "proceeds_wei": "349383112259353241",
+      "net_wei": "249383112259353241",
+      "return_pct_approx": 249.3831,
+      "buy_pool_wbnb_wei": "20389132743032605814",
+      "sell_pool_wbnb_wei": "38978748197148274152",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "我踏马来了",
+      "lag_blocks": 30,
+      "input_wei": "50000000000000000",
+      "buy_block": 73658938,
+      "sell_block": 73659158,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "335373459617137336838037",
+      "proceeds_wei": "123931918818188057",
+      "net_wei": "73931918818188057",
+      "return_pct_approx": 147.8638,
+      "buy_pool_wbnb_wei": "22991499016406539455",
+      "sell_pool_wbnb_wei": "36830246932917063096",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "我踏马来了",
+      "lag_blocks": 30,
+      "input_wei": "100000000000000000",
+      "buy_block": 73658938,
+      "sell_block": 73659158,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "669294551592923828212434",
+      "proceeds_wei": "246501266092668038",
+      "net_wei": "146501266092668038",
+      "return_pct_approx": 146.5012,
+      "buy_pool_wbnb_wei": "22991499016406539455",
+      "sell_pool_wbnb_wei": "36830246932917063096",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "我踏马来了",
+      "lag_blocks": 60,
+      "input_wei": "50000000000000000",
+      "buy_block": 73658968,
+      "sell_block": 73659188,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "271327026099611608907986",
+      "proceeds_wei": "105264618097067754",
+      "net_wei": "55264618097067754",
+      "return_pct_approx": 110.5292,
+      "buy_pool_wbnb_wei": "25622683400207230077",
+      "sell_pool_wbnb_wei": "37795397303015899259",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "我踏马来了",
+      "lag_blocks": 60,
+      "input_wei": "100000000000000000",
+      "buy_block": 73658968,
+      "sell_block": 73659188,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "541599236020529257322999",
+      "proceeds_wei": "209538686371881343",
+      "net_wei": "109538686371881343",
+      "return_pct_approx": 109.5386,
+      "buy_pool_wbnb_wei": "25622683400207230077",
+      "sell_pool_wbnb_wei": "37795397303015899259",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "龙虾",
+      "lag_blocks": 0,
+      "input_wei": "50000000000000000",
+      "buy_block": 83636130,
+      "sell_block": 83638195,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "601611037680976141077860",
+      "proceeds_wei": "288377760403194085",
+      "net_wei": "238377760403194085",
+      "return_pct_approx": 476.7555,
+      "buy_pool_wbnb_wei": "17099195640444077296",
+      "sell_pool_wbnb_wei": "42816200395335845959",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "龙虾",
+      "lag_blocks": 0,
+      "input_wei": "100000000000000000",
+      "buy_block": 83636130,
+      "sell_block": 83638195,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "1199724173191072372613040",
+      "proceeds_wei": "571253662429690682",
+      "net_wei": "471253662429690682",
+      "return_pct_approx": 471.2536,
+      "buy_pool_wbnb_wei": "17099195640444077296",
+      "sell_pool_wbnb_wei": "42816200395335845959",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "龙虾",
+      "lag_blocks": 10,
+      "input_wei": "50000000000000000",
+      "buy_block": 83636140,
+      "sell_block": 83638205,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "618654558794587917725161",
+      "proceeds_wei": "291551160160338199",
+      "net_wei": "241551160160338199",
+      "return_pct_approx": 483.1023,
+      "buy_pool_wbnb_wei": "16872426191287200216",
+      "sell_pool_wbnb_wei": "42463472994332608767",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "龙虾",
+      "lag_blocks": 10,
+      "input_wei": "100000000000000000",
+      "buy_block": 83636140,
+      "sell_block": 83638205,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "1233664060884718493868847",
+      "proceeds_wei": "577443203192739373",
+      "net_wei": "477443203192739373",
+      "return_pct_approx": 477.4432,
+      "buy_pool_wbnb_wei": "16872426191287200216",
+      "sell_pool_wbnb_wei": "42463472994332608767",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "龙虾",
+      "lag_blocks": 30,
+      "input_wei": "50000000000000000",
+      "buy_block": 83636160,
+      "sell_block": 83638225,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "512741245481643695972067",
+      "proceeds_wei": "232251305326448491",
+      "net_wei": "182251305326448491",
+      "return_pct_approx": 364.5026,
+      "buy_pool_wbnb_wei": "18566169772585025898",
+      "sell_pool_wbnb_wei": "41614357899556847283",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "龙虾",
+      "lag_blocks": 30,
+      "input_wei": "100000000000000000",
+      "buy_block": 83636160,
+      "sell_block": 83638225,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "1022735589741834311867466",
+      "proceeds_wei": "460700959229236736",
+      "net_wei": "360700959229236736",
+      "return_pct_approx": 360.7009,
+      "buy_pool_wbnb_wei": "18566169772585025898",
+      "sell_pool_wbnb_wei": "41614357899556847283",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "龙虾",
+      "lag_blocks": 60,
+      "input_wei": "50000000000000000",
+      "buy_block": 83636190,
+      "sell_block": 83638255,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "449219214532899563180370",
+      "proceeds_wei": "215322829813372792",
+      "net_wei": "165322829813372792",
+      "return_pct_approx": 330.6456,
+      "buy_pool_wbnb_wei": "19861684968904055267",
+      "sell_pool_wbnb_wei": "42817493658001232921",
+      "depth_warning": "NONE"
+    },
+    {
+      "token": "龙虾",
+      "lag_blocks": 60,
+      "input_wei": "100000000000000000",
+      "buy_block": 83636190,
+      "sell_block": 83638255,
+      "status": "COMPUTED_ZERO_FEE_SNAPSHOT_WHAT_IF",
+      "token_bought_raw": "896188021771862342108458",
+      "proceeds_wei": "427428273549174457",
+      "net_wei": "327428273549174457",
+      "return_pct_approx": 327.4282,
+      "buy_pool_wbnb_wei": "19861684968904055267",
+      "sell_pool_wbnb_wei": "42817493658001232921",
+      "depth_warning": "NONE"
+    }
+  ],
+  "production": "NO_GO",
+  "summary_by_token": [
+    {
+      "token": "我踏马来了",
+      "small_input_scenarios": [
+        {
+          "lag": 0,
+          "return_pct": 234.3769,
+          "depth": "NONE"
+        },
+        {
+          "lag": 10,
+          "return_pct": 251.8106,
+          "depth": "NONE"
+        },
+        {
+          "lag": 30,
+          "return_pct": 147.8638,
+          "depth": "NONE"
+        },
+        {
+          "lag": 60,
+          "return_pct": 110.5292,
+          "depth": "NONE"
+        }
+      ],
+      "large_input_scenarios": [
+        {
+          "lag": 0,
+          "return_pct": 231.8405,
+          "depth": "NONE"
+        },
+        {
+          "lag": 10,
+          "return_pct": 249.3831,
+          "depth": "NONE"
+        },
+        {
+          "lag": 30,
+          "return_pct": 146.5012,
+          "depth": "NONE"
+        },
+        {
+          "lag": 60,
+          "return_pct": 109.5386,
+          "depth": "NONE"
+        }
+      ]
+    },
+    {
+      "token": "龙虾",
+      "small_input_scenarios": [
+        {
+          "lag": 0,
+          "return_pct": 476.7555,
+          "depth": "NONE"
+        },
+        {
+          "lag": 10,
+          "return_pct": 483.1023,
+          "depth": "NONE"
+        },
+        {
+          "lag": 30,
+          "return_pct": 364.5026,
+          "depth": "NONE"
+        },
+        {
+          "lag": 60,
+          "return_pct": 330.6456,
+          "depth": "NONE"
+        }
+      ],
+      "large_input_scenarios": [
+        {
+          "lag": 0,
+          "return_pct": 471.2536,
+          "depth": "NONE"
+        },
+        {
+          "lag": 10,
+          "return_pct": 477.4432,
+          "depth": "NONE"
+        },
+        {
+          "lag": 30,
+          "return_pct": 360.7009,
+          "depth": "NONE"
+        },
+        {
+          "lag": 60,
+          "return_pct": 327.4282,
+          "depth": "NONE"
+        }
+      ]
+    }
+  ],
+  "integrity": {
+    "expected_scenarios": 16,
+    "observed": 16,
+    "valid_reserves": 16,
+    "unresolved": 0
+  }
 }
