@@ -78,7 +78,7 @@ class SharedProcessor(unittest.TestCase):
             m.shared_production_replay([(t,"TESTUSDT")],"2026-02-04",market=CandleSource())
     def test_bad_source_fails_instead_of_claiming_no_setup(self):
         t=moment("2026-02-06T00:36:00Z")
-        with self.assertRaisesRegex(ValueError,"NO_GENUINE_5M_SOURCE"):
+        with self.assertRaisesRegex(RuntimeError,"STAGE28_VERIFIED_5M_SOURCE_FAILED:ValueError:NO_GENUINE_5M_SOURCE"):
             m.shared_production_replay([(t,"TESTUSDT")],"2026-02-04",
                                     market=CandleSource(raise_on_load=True))
     def test_source_parser_rejects_unsupported_timestamp_units(self):
