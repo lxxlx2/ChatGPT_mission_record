@@ -287,7 +287,11 @@ def merge_signature_activity(observed: dict, signature_rows: list[dict]) -> dict
 
 
 def annotate_known_ata_gaps(observed: dict, source: dict | None) -> dict:
-    """Expose dated ATA facts without relabeling original owner-index trades."""
+    """Dated ATA-vs-owner-accountKeys scope audit, never inferred market trades.
+
+    Legacy v1 evidence is only a total count, never a verified owner-index defect.
+    v2 separates pre-index observations from in-window evidence.
+    """
     result = dict(observed)
     rows = [dict(row) for row in observed.get("rows", [])]
     result["rows"] = rows
@@ -296,10 +300,14 @@ def annotate_known_ata_gaps(observed: dict, source: dict | None) -> dict:
         row["owner_index_missing_signatures"] = None
         row["ata_verified_extra_passive_receipts"] = None
         row["ata_gap_source_date"] = None
+        row["ata_outside_index_window_signatures"] = None
+        row["ata_inside_index_window_signatures"] = None
+        row["ata_inwindow_failed_signatures"] = None
+        row["ata_inwindow_success_unverified"] = None
     result["ata_gap_source_status"] = "EVIDENCE_NOT_PRESENT"
     if source is None:
         return result
-    if (not isinstance(source, dict) or source.get("schema_version") != 1 or
+    if (not isinstance(source, dict) or source.get("schema_version") not in (1, 2) or
         source.get("owner_wallet") !=
         "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ" or
         not isinstance(source.get("records"), list) or
@@ -307,6 +315,7 @@ def annotate_known_ata_gaps(observed: dict, source: dict | None) -> dict:
         raise ValueError("INVALID_ATA_GAP_SOURCE")
     by_mint = {row["mint"]: row for row in rows}
     seen = set()
+    schema = source["schema_version"]
     for entry in source["records"]:
         if not isinstance(entry, dict):
             raise ValueError("INVALID_ATA_GAP_RECORD")
@@ -318,19 +327,41 @@ def annotate_known_ata_gaps(observed: dict, source: dict | None) -> dict:
             type(verified) is not int or verified < 0 or verified > gaps or
             not isinstance(entry.get("source_date_utc"), str)):
             raise ValueError("INVALID_ATA_GAP_RECORD")
+        if schema == 2:
+            outside = entry.get("missing_before_index_start")
+            inside = entry.get("missing_during_index_window")
+            failed = entry.get("inwindow_failed")
+            success_unverified = entry.get("inwindow_success_unverified")
+            verified_in = entry.get("verified_extra_passive_receipts")
+            if (any(type(v) is not int or v < 0 for v in
+                    (outside, inside, failed, success_unverified, verified_in))
+                or outside + inside != gaps
+                or failed + success_unverified + verified_in > inside
+                or entry.get("scope_label") != "ATA_VS_MAIN_WALLET_ACCOUNT_KEYS"):
+                raise ValueError("INVALID_ATA_GAP_WINDOW_BREAKDOWN")
         seen.add(mint)
         row = by_mint.get(mint)
         if row is None:
             continue
-        row["owner_index_gap_status"] = "CONFIRMED_HISTORICAL_GAP"
+        row["owner_index_gap_status"] = (
+            "DATED_ATA_VS_OWNER_INDEX_SCOPE" if schema == 2
+            else "LEGACY_UNSPLIT_ATA_INDEX_EVIDENCE"
+        )
         row["owner_index_missing_signatures"] = gaps
         row["ata_verified_extra_passive_receipts"] = verified
         row["ata_gap_source_date"] = entry["source_date_utc"]
-    result["ata_gap_source_status"] = "HISTORICAL_DATED_GIT_EVIDENCE"
+        if schema == 2:
+            row["ata_outside_index_window_signatures"] = outside
+            row["ata_inside_index_window_signatures"] = inside
+            row["ata_inwindow_failed_signatures"] = failed
+            row["ata_inwindow_success_unverified"] = success_unverified
+    result["ata_gap_source_status"] = (
+        "DATED_ATA_INDEX_SCOPE_V2" if schema == 2 else
+        "LEGACY_UNSPLIT_ATA_INDEX_SCOPE"
+    )
     result["summary"] = dict(observed.get("summary", {}))
-    result["summary"]["known_owner_index_gap_mints"] = sum(
-        row["owner_index_gap_status"] == "CONFIRMED_HISTORICAL_GAP"
-        for row in rows)
+    result["summary"]["known_ata_index_scope_mints"] = sum(
+        row["owner_index_gap_status"] != "NOT_AUDITED" for row in rows)
     return result
 
 
