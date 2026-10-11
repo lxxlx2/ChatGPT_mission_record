@@ -1,0 +1,209 @@
+{
+  "schema": "MONSTER_STAGE23_NEW_DATE_758_SPOT_FULL_10_SOURCE_SHA_REPORT_V1",
+  "preregistered_file": "monster_stage23_unseen_overextension_filter_prereg_20261011.json",
+  "preregistered_commit": "758ac33eafc4277949d95b29044d9511848b725c",
+  "actual_ci_run": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38133421862",
+  "actual_ci_sha": "45e0cd74648ee75f63a6f1c717c3723e76198eeb",
+  "conclusion": "SUCCESS_ALL_TEN_JOBS",
+  "all_original_zip_sha256_locally_verified_again": true,
+  "all_extracted_raw_json_sha256_locally_verified_again": true,
+  "all_758_case_ids_per_day_checked": true,
+  "stage20_v4_code_git_blob_sha1": "93e2065e354182be3d2136be49c760674b485381",
+  "official_source": "Binance Spot publisher-SHA256 daily 1m ZIP, unchanged Stage20 D1 model",
+  "artifacts": [
+    {
+      "date": "2025-01-23",
+      "artifact_id": 11699674179,
+      "zip_sha256": "21a3791a9c9611d0b3b957bc45d9fa50f726bc42f1976ec2bd47912dd3f87b40",
+      "raw_json_sha256": "30be8a339276026f449d252de7dcd0180b47bb1eb96af673c671d994e1eb48dd",
+      "complete_60h": 393,
+      "old_quality_selected": 9,
+      "new_filtered_selected": 8
+    },
+    {
+      "date": "2025-02-23",
+      "artifact_id": 11700440106,
+      "zip_sha256": "5d88caea22b2e8a93b92b0820298d835086061b10cbb0214d23a7700d0e9fad4",
+      "raw_json_sha256": "82f2be7a089dc869fe0eeb3cfc3bf360da5d94b2046d5a5c2e64232a0c021dab",
+      "complete_60h": 395,
+      "old_quality_selected": 5,
+      "new_filtered_selected": 5
+    },
+    {
+      "date": "2025-03-23",
+      "artifact_id": 11700196580,
+      "zip_sha256": "9048260219b2c14bdf5f6570b5590c0cec3319af7d96da623434c1acff7527f3",
+      "raw_json_sha256": "f8d302dfd614c557961558bdbbb51baadfa1844cf04fb893591325e5e58cf85e",
+      "complete_60h": 400,
+      "old_quality_selected": 4,
+      "new_filtered_selected": 3
+    },
+    {
+      "date": "2025-04-23",
+      "artifact_id": 11699379740,
+      "zip_sha256": "7226257779bf9837a53fe4ce6bb1aef8a28da17668fddd92f6557cf6f8986c5c",
+      "raw_json_sha256": "8a96890342f260ebcd7de03ec682c54d52fff00751b0816ff1e9e31bd59eecd6",
+      "complete_60h": 394,
+      "old_quality_selected": 10,
+      "new_filtered_selected": 4
+    },
+    {
+      "date": "2025-05-23",
+      "artifact_id": 11699479683,
+      "zip_sha256": "308e018b6bc90535c40b9ae25834e1cf818f15b02e2e1d822d45fddbfcbb688d",
+      "raw_json_sha256": "5cca3f382ef3354f8863701c1fefa8349a37d2fafadac4452ca547c485c573e0",
+      "complete_60h": 399,
+      "old_quality_selected": 1,
+      "new_filtered_selected": 1
+    },
+    {
+      "date": "2025-06-23",
+      "artifact_id": 11699927392,
+      "zip_sha256": "861b4a7118bf948ee2d9291a95399b2783217c44492c4dcc57e2c17207a1c8f1",
+      "raw_json_sha256": "bdf81b5d0d289a92e8ca3b012655f3ba55394675698c60844ed11677bc26fda8",
+      "complete_60h": 405,
+      "old_quality_selected": 5,
+      "new_filtered_selected": 2
+    },
+    {
+      "date": "2025-07-23",
+      "artifact_id": 11700326406,
+      "zip_sha256": "ce8c43b6004e9d9e11b54181dd8dec4c0c18677f2004517e2f2f277f4c995190",
+      "raw_json_sha256": "9d06f35350e0f4020a865b6a89a777c16a98934b9571fe44bfc643660250fa59",
+      "complete_60h": 405,
+      "old_quality_selected": 9,
+      "new_filtered_selected": 4
+    },
+    {
+      "date": "2025-08-23",
+      "artifact_id": 11700306455,
+      "zip_sha256": "2c9122084b31720866ee735973ae1b9726eaa8c4590477f4695a6fa1db42944b",
+      "raw_json_sha256": "bdefe7f2e8a72239433f99f64a387426f7023ff6ba4d1cf20f382cf9956ce123",
+      "complete_60h": 410,
+      "old_quality_selected": 2,
+      "new_filtered_selected": 2
+    },
+    {
+      "date": "2025-09-23",
+      "artifact_id": 11700385963,
+      "zip_sha256": "1f313a2a138579d1232feab08e3c951c0a69c525e0f204acd5a5d23ffa356660",
+      "raw_json_sha256": "00fcb4cc528475b96258bec989adc7587fdbd021e9ef586e063fd8238a943afc",
+      "complete_60h": 419,
+      "old_quality_selected": 6,
+      "new_filtered_selected": 4
+    },
+    {
+      "date": "2025-10-23",
+      "artifact_id": 11699774296,
+      "zip_sha256": "69f3212738f4a5198a3ec589b07321240f58d4913bc86cbf815d0d2e2e585255",
+      "raw_json_sha256": "3af5005a12d0ff001ed0bde5e3a71cd9e4e7749379234e7906f820543a79aad7",
+      "complete_60h": 433,
+      "old_quality_selected": 4,
+      "new_filtered_selected": 4
+    }
+  ],
+  "cohort": {
+    "attempted": 7580,
+    "verified_complete_60h": 4053,
+    "official_minute_bars": 14590800,
+    "watch_events": 74,
+    "d1_episodes": 67,
+    "unique_first_d1_symbol_days": 65,
+    "old_quality_selected": 55,
+    "new_filtered_selected": 37
+  },
+  "frozen_arms": {
+    "D_original_quality6h_20bps": {
+      "selected": 55,
+      "evaluable": 53,
+      "wins": 12,
+      "losses": 41,
+      "median_pct": -6.835021,
+      "simulated_sum_independent_30usdt": -42.107067,
+      "censored": 2,
+      "exit_reasons": {
+        "STOP": 26,
+        "TAKE_PROFIT": 6,
+        "TIMEOUT_6H": 21
+      }
+    },
+    "F_filtered_quality6h_20bps": {
+      "selected": 37,
+      "evaluable": 35,
+      "wins": 8,
+      "losses": 27,
+      "median_pct": -5.936741,
+      "simulated_sum_independent_30usdt": -28.979089,
+      "censored": 2,
+      "exit_reasons": {
+        "STOP": 15,
+        "TAKE_PROFIT": 3,
+        "TIMEOUT_6H": 17
+      }
+    },
+    "G_filtered_quality6h_100bps": {
+      "selected": 37,
+      "evaluable": 35,
+      "wins": 8,
+      "losses": 27,
+      "median_pct": -7.429838,
+      "simulated_sum_independent_30usdt": -45.186091,
+      "censored": 2,
+      "exit_reasons": {
+        "STOP": 15,
+        "TAKE_PROFIT": 3,
+        "TIMEOUT_6H": 17
+      }
+    }
+  },
+  "filtered_out_of_original_55": {
+    "count": 18,
+    "original_would_stop": 11,
+    "original_would_take_profit": 3,
+    "original_would_timeout": 4,
+    "original_simulated_net_positive": 4
+  },
+  "single_capital_slot_30usdt": {
+    "F_20bps": {
+      "selected_chronological": 21,
+      "skipped_occupied": 16,
+      "evaluable": 21,
+      "wins": 3,
+      "losses": 18,
+      "sum_usdt": -22.996773
+    },
+    "G_100bps": {
+      "selected_chronological": 21,
+      "skipped_occupied": 16,
+      "evaluable": 21,
+      "wins": 3,
+      "losses": 18,
+      "sum_usdt": -32.631935
+    }
+  },
+  "gate": {
+    "min_30_valid": true,
+    "min_six_dates": true,
+    "winrate_ge_55pct": false,
+    "positive_net_median": false,
+    "positive_independent_30usdt_sum": false,
+    "positive_single_30usdt_slot": false,
+    "censoring_le_20pct": true,
+    "overall": "FAIL_NO_GO"
+  },
+  "quality_caveat": "Strong 12pp filter was preregistered as development hypothesis after seeing Stage22 outcomes, evaluation dates 2025 Jan-Oct 23 were not in Stage12-22",
+  "limitations": [
+    "Binance current as-of 2026-10 symbol list historic survivor bias",
+    "Not exact historical 2025 point-in-time permitted spot trade universe",
+    "1m stop-first exit and delayed entry are price/cost proxy, not historical L2 executable fills",
+    "Only ten isolated 12h day windows, not continuous market signal evaluation",
+    "No tuning to rescue this failed preregistered threshold",
+    "No other AI independent review because profitability not validated"
+  ],
+  "status": "REJECT_STAGE23_FILTER_FOR_PRODUCTION",
+  "independent_other_ai_review": "NOT_DONE",
+  "deployment": "NO_GO",
+  "gmail": "OFF",
+  "trading": "NO_GO",
+  "frank": "UNCHANGED"
+}
