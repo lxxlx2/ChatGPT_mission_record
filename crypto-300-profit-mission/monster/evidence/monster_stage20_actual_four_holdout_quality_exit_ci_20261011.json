@@ -1,0 +1,230 @@
+{
+  "schema": "MONSTER_STAGE20_REAL_FOUR_HELDOUT_758SPOT_1M_QUALITY_EXIT_CONSOLIDATED_V1",
+  "preregistered_file": "monster_stage20_quality_exit_holdout_prereg_20261011.json",
+  "preregistered_commit": "17f8cfb30f5ec59ba64f2ee07b69b99b5b137680",
+  "run_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38130576819",
+  "ci_commit": "9b666ea9c1ea344c435065a849dc9e4ade68878f",
+  "ci_status": "COMPLETED_SUCCESS_FOUR_JOBS",
+  "unit_tests_per_job": "10/10 PASS",
+  "source": "Binance official publisher-SHA256 verified Spot 1m daily ZIP, four months fixed before reading holdout OHLCV",
+  "holdout_dates": [
+    "2025-12-13",
+    "2026-01-13",
+    "2026-04-13",
+    "2026-07-13"
+  ],
+  "universe": "Stage12 frozen 504 present USDT Spot + Stage15 frozen 254 archived-only ASCII USDT Spot; 758 attempts each date",
+  "archive_only_sha256": "0c2604d838fc3d7c28d0e8819fde1bb42deb6fb22360182a49c1b82bb6d25348",
+  "artifacts": [
+    {
+      "date": "2025-12-13",
+      "id": 11699220084,
+      "zip_sha256": "dd6763144409b832389a48d0a733e1aa1d59bd1dbae11b8f8a52fb1046801354",
+      "raw_json_sha256": "3f82238e0937307affd35e3031884cb619c77880882c662cfb6baa5c4cfbe7e6"
+    },
+    {
+      "date": "2026-01-13",
+      "id": 11698939071,
+      "zip_sha256": "11c989669a12b690dafdbbf758c27e42908972a506a7e8f21e61c73c65a027f6",
+      "raw_json_sha256": "95a805509e67ff9efd7e3d7c22400e7c40df85a9f7c727e13dc5d403c8a07e90"
+    },
+    {
+      "date": "2026-04-13",
+      "id": 11698844125,
+      "zip_sha256": "e1c9878148cdd7b6f184fa2197092e19e407c4fb3a665d0e617d8475005769f3",
+      "raw_json_sha256": "4662fe944e91a48cc4bcbf3447f7e34846eb20b64940462293593428c6f43b80"
+    },
+    {
+      "date": "2026-07-13",
+      "id": 11698919011,
+      "zip_sha256": "c7abe30a859f6cb075dbf22314aa43d81cbc409bb49584c69bdb8ea320544804",
+      "raw_json_sha256": "dbb131d6cd40d405fa4ee50bc3702bd384c6bcdea8f8e86b253242ccc97d7353"
+    }
+  ],
+  "per_date": [
+    {
+      "date": "2025-12-13",
+      "attempted": 758,
+      "valid_60h": 440,
+      "source_missing": 318,
+      "partial": 0,
+      "watch": 3,
+      "d1": 3,
+      "unique_d1": 3,
+      "quality_pass": 2,
+      "quality_evaluable_6h": 2,
+      "quality_6h_win": 1,
+      "quality_6h_loss": 1,
+      "quality_6h_median_pct": 1.993182
+    },
+    {
+      "date": "2026-01-13",
+      "attempted": 758,
+      "valid_60h": 439,
+      "source_missing": 318,
+      "partial": 1,
+      "watch": 8,
+      "d1": 6,
+      "unique_d1": 6,
+      "quality_pass": 6,
+      "quality_evaluable_6h": 4,
+      "quality_6h_win": 1,
+      "quality_6h_loss": 3,
+      "quality_6h_median_pct": -6.471704
+    },
+    {
+      "date": "2026-04-13",
+      "attempted": 758,
+      "valid_60h": 438,
+      "source_missing": 319,
+      "partial": 1,
+      "watch": 10,
+      "d1": 10,
+      "unique_d1": 9,
+      "quality_pass": 8,
+      "quality_evaluable_6h": 6,
+      "quality_6h_win": 4,
+      "quality_6h_loss": 2,
+      "quality_6h_median_pct": 17.294002
+    },
+    {
+      "date": "2026-07-13",
+      "attempted": 758,
+      "valid_60h": 447,
+      "source_missing": 311,
+      "partial": 0,
+      "watch": 3,
+      "d1": 2,
+      "unique_d1": 2,
+      "quality_pass": 2,
+      "quality_evaluable_6h": 2,
+      "quality_6h_win": 1,
+      "quality_6h_loss": 1,
+      "quality_6h_median_pct": -1.899382
+    }
+  ],
+  "aggregate": {
+    "attempted": 3032,
+    "verified_complete_60h": 1764,
+    "source_missing_404": 1266,
+    "source_partial_or_noncontiguous": 2,
+    "verified_minute_bars": 6350400,
+    "watch_episodes": 24,
+    "d1_episodes": 21,
+    "first_setup_symbol_dates": 20,
+    "quality_pass": 18,
+    "quality_rejected_reasons": {
+      "within_8pct_60m_high": 1,
+      "btc_relative_60m_gte_4_percentage_points": 1
+    },
+    "A_all_d1_fixed24h_20bps": {
+      "selected": 20,
+      "evaluable": 16,
+      "positive": 4,
+      "negative": 12,
+      "median_net_pct": -4.276104,
+      "mean_net_pct": -2.14507225,
+      "independent_30usdt_sum": -10.2963468,
+      "censored": 4
+    },
+    "B_all_d1_bounded6h_20bps": {
+      "selected": 20,
+      "evaluable": 15,
+      "positive": 7,
+      "negative": 8,
+      "median_net_pct": -0.919273,
+      "mean_net_pct": 2.4032816,
+      "independent_30usdt_sum": 10.8147672,
+      "censored": 5
+    },
+    "C_quality_d1_fixed24h_20bps": {
+      "selected": 18,
+      "evaluable": 15,
+      "positive": 4,
+      "negative": 11,
+      "median_net_pct": -4.153655,
+      "mean_net_pct": -1.7828264,
+      "independent_30usdt_sum": -8.0227188,
+      "censored": 3
+    },
+    "D_quality_d1_bounded6h_20bps": {
+      "selected": 18,
+      "evaluable": 14,
+      "positive": 7,
+      "negative": 7,
+      "median_net_pct": 0.375359,
+      "mean_net_pct": 3.1856902143,
+      "independent_30usdt_sum": 13.3798989,
+      "censored": 4,
+      "exit_reasons": {
+        "STOP": 3,
+        "TIMEOUT_6H": 7,
+        "TAKE_PROFIT": 4
+      }
+    },
+    "E_quality_d1_bounded6h_100bps": {
+      "selected": 18,
+      "evaluable": 14,
+      "positive": 7,
+      "negative": 7,
+      "median_net_pct": -1.2179325,
+      "mean_net_pct": 1.5477895,
+      "independent_30usdt_sum": 6.5007159,
+      "censored": 4
+    }
+  },
+  "matched_comparison": {
+    "all_v4_24h_vs_bounded6h": {
+      "n": 14,
+      "median_6h_minus_24h_pp": 4.667692,
+      "mean_6h_minus_24h_pp": 4.6289970714,
+      "six_hour_better": 9,
+      "worse": 5,
+      "paired_30usdt_difference": 19.4417877
+    },
+    "quality_24h_vs_bounded6h": {
+      "n": 13,
+      "median_6h_minus_24h_pp": 6.101002,
+      "mean_6h_minus_24h_pp": 5.0598183077,
+      "six_hour_better": 9,
+      "worse": 4,
+      "paired_30usdt_difference": 19.7332914
+    }
+  },
+  "preregistered_quality_acceptance": {
+    "evaluable_minimum": 30,
+    "distinct_holdout_dates_required": 4,
+    "winning_fraction_min": 0.55,
+    "proxy_positive_median_required": true,
+    "proxy_positive_sum_required": true,
+    "censoring_fraction_max": 0.2,
+    "robustness_at_100bps_required": true
+  },
+  "gate_result": {
+    "evaluated_20bps": 14,
+    "positive_fraction": 0.5,
+    "censoring_fraction": 0.2222222222222222,
+    "two_sided_100bps_median_pct": -1.2179325,
+    "sample_requirement_met": false,
+    "winrate_requirement_met": false,
+    "censoring_requirement_met": false,
+    "high_slippage_robustness_met": false,
+    "overall": "FAIL_NO_GO"
+  },
+  "caveats": [
+    "These are four new calendar dates relative to Stage12-19, not actual future shadow or historical true point-in-time listings",
+    "Quality acceptance 18/20 barely filters and cannot infer broad-market precision",
+    "Fee per side fixed 10bps, slippage per side scenarios 20 and 100bps; historical actual spreads and depth unavailable",
+    "Stop-first same 1m conservative intrabar priority but stop/limit fill is not verified",
+    "All exited proxy trades represent hypothetical independent 30USDT allocation, not portfolio realized PnL",
+    "Four entire 12h windows cannot validate full 2x/5x market-wide recall or independent event count",
+    "At most first D1 per symbol/day used for trade simulation; second D1 episode retained as signal evidence",
+    "No strategy tuning after seeing holdout results; any next proposal requires new unused dates"
+  ],
+  "strategy_pass": false,
+  "independent_other_ai_review": "NOT_DONE",
+  "mac_deployment": "NO_GO",
+  "real_email": "OFF",
+  "production_trading": "NO_GO",
+  "frank": "UNTOUCHED"
+}
