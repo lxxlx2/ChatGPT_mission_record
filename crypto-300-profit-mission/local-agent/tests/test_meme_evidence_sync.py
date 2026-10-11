@@ -417,3 +417,33 @@ def test_sanitizer_cannot_silently_truncate_arrays_or_export_mac_home_path():
     assert safe("file /Users/alice/private/state.db") == "[LOCAL_PATH_REDACTED]"
     with pytest.raises(ValueError, match="SAFE_ARRAY_EXCEEDS_LIMIT"):
         safe(list(range(200001)))
+
+def test_sanitizer_blocks_wrapped_file_paths_and_secrets_in_urls():
+    from mission_agent.mission_control.evidence_sync import safe
+    private_values = [
+        'file:///Users/alice/.config/token.json',
+        'note=(file:///home/alice/key)',
+        'prefix ("/Users/alice/Library/secret.json") suffix',
+        "~/Library/Application Support/FrankMeme/token.json",
+        "report user.person+key@example.org today",
+        '"https://source.invalid/assets/access_token/sensitive-piece"',
+        "https://rpc.example/v1/secret-token-ABCDEF01234567890",
+        "The path is (https://api.example.com/user/secret?token=abc)",
+    ]
+    for item in private_values:
+        result = safe(item)
+        assert result in (
+            "[LOCAL_PATH_REDACTED]", "[EMAIL_REDACTED]",
+            "[REDACTED]", "[URL_REDACTED]"
+        ), item
+        assert "alice" not in result and "example.org" not in result
+    assert safe("https://safe.example/path?wallet=abc") == "https://safe.example/path"
+    assert safe("https://safe.example/") == "https://safe.example/"
+    assert safe({"refresh_token": "private-value", "safe": "ok"}) == {"safe": "ok"}
+
+
+def test_sanitizer_no_secret_retained_in_framed_url_path():
+    from mission_agent.mission_control.evidence_sync import safe
+    uri = '(https://server.example.com/messaging/bearer/SUPERSECRETTOKENKEY)'
+    assert safe(uri) == "[URL_REDACTED]"
+    assert safe("http://server.example.com/path/mykey@provider.example") == "[EMAIL_REDACTED]"
