@@ -1,10 +1,41 @@
 # GANG / The Syndicate — Backable ICO operational position
 
-Updated: 2026-10-12 Asia/Bangkok (600K chain approval and user 480.492480 USDC approved; payout pending)
+Updated: 2026-10-12 Asia/Bangkok (Complete and automatic claim/refund finalized; live GANG pools)
 Network: Solana mainnet
 Source standard: direct finalized Solana state + actual MetaDAO v0.7 contract + user participation statement.
-State: `COMMITTED_ONCHAIN / SALE_CLOSED / APPROVED_ONCHAIN / PAYOUT_PENDING / LP_NOT_YET_DEPLOYED`
-Trading execution: `NO_GO` (record-only; no standing automation or monitor authorized).
+State: `COMPLETE_ONCHAIN / RECEIVED_8008_208_GANG / REFUNDED_19_507520_USDC / LIVE_POOL`
+Trading execution: `NO_GO` (research/read-only only; no standing automation or monitor authorized).
+
+## 2026-10-12 finalized COMPLETE / automatic distribution / live pool evidence
+
+Observed ~01:31-01:41 Asia/Bangkok on Solana mainnet **finalized** (independent account reads; changing AMM reserves are timestamped point-in-time observations).
+
+### Actual settlement
+
+- Launch PDA `EFUKEM6oaUMdCtVvgaqeV2E9baZ1ikkLng1kTakvjU7k`: **`state=Complete`**, approved total **600,000 USDC**, pledged total **631,770.75 USDC**. The planned 01:30 distribution has **actually executed**.
+- User's FundingRecord `GgFwSstgG9e6XDEWAc4wrcD8EqVaqHpzo7ScvNGEEQot`: `committed=500 USDC`; `approved=480.492480 USDC`; `is_tokens_claimed=true`; `is_usdc_refunded=true` (read around finalized slot 455751011).
+- User's Solana wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp` genuinely holds **8,008.208 GANG**, Token Account `5XBM2iEibBNAVBMjPYb9Deh8ibm4CCqZrbqk8n7TpGJo` (finalized slot 455750937, rechecked 455753009). Quantity = approved 480.49248 / 600000 × 10m. Actual cost basis **480.492480 USDC**, **$0.06 per GANG**; unused sale deposit **19.507520 USDC** refunded per contract `is_usdc_refunded=true`; user USDC account `AaHmxVnUryLCrSr32zxrDGzfafXTvuHATURZbBy6XQ6A` read as **85.102445 USDC** at slot ~455752xxx/455753009. Do not attribute *all* increase from October 10's 58.047629 to sale refund: unclassified external movements may exist.
+- Personal claim/refund affected transaction in FundingRecord history: https://solscan.io/tx/u5TANZxqCbct3SNHd13F5wuabhLYein8ov4FSke6rFUKAEWcDZCLP2sTXkSstoX6vWu3F933Xn4r4qKLtcRNzAE (finalized 2026-10-11T18:30:18Z). Finalized decoded flags and wallet transfer provide primary evidence regardless of transaction detail API truncation.
+- Mint supply **27,157,894 GANG**. `mintAuthority` changed from launch signer to DAO controller `59Km6UTvKMNmww5iwiVQ7iTKUy6Eoug1ytsMPhd36e8z`; freeze authority remains null. This authority is **not renounced**, so do not claim supply immutable.
+
+### Live onchain pools: separate direct observations and simulations
+
+- **Futarchy AMM live spot pool** account `7YktVLcciZ12HnsM2VektRZuxaPE9VRSyYhGBid47b2A` owned by `FUTARELBfJfQ8RDGhg1wdhddq1odMAJUePHFuBYfUxKq`, token vaults: GANG `6D61o3o82qCjFrLo5J9MVCU6iKuDP1ApjV8jDHPwwKqT`; USDC `HEedE6VTuuNAnQkuk2t8V9cHuYfuDvJ9vbUKrSomok1i`. Finalized snapshot slot 455753008: **2,099,533.808242 GANG** and **114,463.155810 USDC**. Mid reserve-ratio price (indicative, not router quote) **~0.05451837 USDC/GANG**, implies FDV **~$1,480,604.05**, and notional two-sided reserve TVL ~$228,926.31 if this spot ratio applied to GANG; both sides amount known. At this exact snapshot, *simplified* constant-product exact-input zero-fee full sale of 8008.208 GANG would yield ~434.94 USDC from this pool alone, plus 19.50752 refund => ~$454.44 total, ~-$45.56 vs 500; excludes real AMM, DEX/router, priority/gas fees and alternative pools. **Never claim this is an executable quote**.
+- **Meteora DAMM v2** confirmed running; GANG token vault `7fugxJgmtgA3gL6DEWSuZmNK7qxGKEqvXJXg97XzSY55` owned by the program's canonical pool authority `HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC` (onchain). GANG vault around **900k tokens**, and `getSignaturesForAddress` returns successful fresh swaps, e.g. https://solscan.io/tx/2VCCjcPmKZifX5ZrXABQ7dJ5Gku58jB4y2ZFV5PUNjG71N1KXgQ3Zi1TdZ7hQNpXAYwos4o1DdygQ2tLJNmxccc6 . Canonical program `cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG`. Program pool listing queries triggered Alchemy RPC 429 compute budget limit; matching USDC vault / full pool pubkey / current tick price / exact curve exit quote **UNVERIFIED**. Do not impute USDC reserves from the GANG side.
+- Backable/Meteora complete code: https://github.com/metaDAOproject/programs/blob/develop/programs/v07_launchpad/src/instructions/complete_launch.rs ; protocol docs https://github.com/MeteoraAg/docs/blob/main/developer-guides/damm-v2/index.mdx . No automatic production trade, monitor, or sell simulation executed on a live transaction.
+
+### Holder concentration and economics
+
+- Largest GANG token account `4MgMwGb82egP7g5KoRwL6TSABjab9Bdm96SdCK1B5mFn` contains **12,900,000 GANG (47.5% supply)**; owner `7zvz5fPSYvk8nDhkM4osTZJpM71tqw7biVMMgjV6LAmN` is owned by price-based performance package program `pbPPQH7jyKoSLu8QYs3rSY3YkDRXEBojKbTgnUg7NDS`. Protocol launch records **18-month insider lock parameter**, but do not infer this entire package is released on a fixed calendar or freely salable.
+- Futarchy AMM GANG ~2.10m (~7.73% of total), DAMM v2 GANG ~0.90m (~3.3%), both **contract-controlled trading liquidity**, not one retail whale.
+- Old launch signer GANG Token Account `8TCjFJznaFcQhJmWCk9P1NXU5QAGKNLRh95oWRb3dLR9` retained about **1,357,902 GANG** at an earlier finalized snapshot, approximately the additional designated allocation; owner/withdrawable distribution needs further checking. Other top accounts include about 1,000,000; 974,302; 833,333; 833,333 GANG, but these are **unattributed wallet or pool accounts**, cannot label insiders or dumpers solely from balances.
+- Under full-supply **FDV** convention, **break-even price=$0.06, break-even FDV=$1,629,473.64** before fees. If excluding only the 12.9m performance-package mint (14,257,894 residual) the *simplified circulating value at cost price* is $855,473.64, but real tradable float may differ and is **not independently audited**.
+- PnL accounting after claim: original 500 USDC = **480.492480 USDC GANG cost + 19.507520 USDC refund**. No further escrow remains; **do not double-count old 500 USDC historical escrow**. The GANG is now an actual transferable wallet holding with non-guaranteed current resale value. Do not turn unrealized PnL into realized PnL.
+
+### Historical sections below
+
+Earlier `SALE_LIVE / Closed / payout_pending`, `wallet_GANG=0` and escrow statements are dated snapshots **SUPERSEDED** by this section. Preserve those observations for audit, but always take this latest finalized `Complete` read as current. There is no guaranteed standing alert; manual update performed because real state materially changed.
+
 
 ## Canonical identity and contracts
 
