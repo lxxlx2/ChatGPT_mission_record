@@ -1,0 +1,47 @@
+name: Monster Stage16 Frozen 7-day Spot 2x 5x 10x Source Truth
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage16_seven_day_labels.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage16_seven_day_labels.py'
+      - '.github/workflows/monster-v4-stage16-frozen-seven-day-ground-truth.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: monster-stage16-research-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  complete-frozen-spot-archive-ground-truth:
+    strategy:
+      fail-fast: false
+      matrix:
+        date: ['2025-11-17', '2026-02-17', '2026-05-17', '2026-08-17', '2026-09-17']
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate checksum and future-label contracts
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/monster_v4_stage16_seven_day_labels.py tests/test_monster_v4_stage16_seven_day_labels.py
+          python -B -m unittest discover -v -s tests -p test_monster_v4_stage16_seven_day_labels.py
+      - name: Read fixed archived and current Spot symbols using official 1h monthly SHA archives
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B scripts/monster_v4_stage16_seven_day_labels.py --date ${{ matrix.date }} --output /tmp/monster_stage16_${{ matrix.date }}.json
+      - name: Retain full 7d denominators and censored sources without implying fills
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monster-stage16-frozen-7d-hourly-${{ matrix.date }}
+          path: /tmp/monster_stage16_${{ matrix.date }}.json
+          if-no-files-found: warn
+          retention-days: 30
