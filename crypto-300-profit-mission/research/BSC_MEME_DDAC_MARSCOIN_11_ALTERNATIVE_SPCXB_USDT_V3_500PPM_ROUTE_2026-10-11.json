@@ -69,40 +69,81 @@
       "spcxb_signed_pool_delta_raw": "4897742200782718467",
       "spcxb_matches_mars_gross_exact": true,
       "direction_consistent": true
-    }
-  ],
-  "pending": [
+    },
     {
       "hash": "0x94685aa417774194eec2d5f1871d03a7c70e2c701ec2a081d1a3de36742004d8",
       "block": 113003453,
       "mars_side": "OUT",
-      "spcxb_from_mars_venue_raw": "1586628955375493302"
+      "spcxb_from_mars_venue_raw": "1586628955375493302",
+      "status": "EXACT_CROSS_POOL_SPCXB_PATH",
+      "usdt_signed_pool_delta_raw": "-181725625196621655492",
+      "spcxb_signed_pool_delta_raw": "1586628955375493302",
+      "spcxb_matches_mars_gross_exact": true,
+      "direction_consistent": true
     },
     {
       "hash": "0xd62f7b94713db2d7e1afac6dbf6c79fccd7f9cd95e753c8e242f599a2ec59870",
       "block": 113137477,
       "mars_side": "OUT",
-      "spcxb_from_mars_venue_raw": "1259542899259174267"
+      "spcxb_from_mars_venue_raw": "1259542899259174267",
+      "status": "EXACT_CROSS_POOL_SPCXB_PATH",
+      "usdt_signed_pool_delta_raw": "-143245703021129596223",
+      "spcxb_signed_pool_delta_raw": "1259542899259174267",
+      "spcxb_matches_mars_gross_exact": true,
+      "direction_consistent": true
     },
     {
       "hash": "0xe665f2c6d421305f26868d5b37ed15be5917c20d22576f5194b027870ce68854",
       "block": 113986944,
       "mars_side": "IN",
-      "spcxb_from_mars_venue_raw": "247659216316843169"
+      "spcxb_from_mars_venue_raw": "247659216316843169",
+      "status": "EXACT_CROSS_POOL_SPCXB_PATH",
+      "usdt_signed_pool_delta_raw": "29330858798862319657",
+      "spcxb_signed_pool_delta_raw": "-247659216316843169",
+      "spcxb_matches_mars_gross_exact": true,
+      "direction_consistent": true
     },
     {
       "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
       "block": 115522575,
       "mars_side": "OUT",
-      "spcxb_from_mars_venue_raw": "428928551809892176"
+      "spcxb_from_mars_venue_raw": "428928551809892176",
+      "status": "NO_EXACT_SWAP_OR_DECODE_ERROR",
+      "error": "Error: SWAP_MATCH_COUNT_0"
     },
     {
       "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
       "block": 119938551,
       "mars_side": "OUT",
-      "spcxb_from_mars_venue_raw": "195729087522878178"
+      "spcxb_from_mars_venue_raw": "195729087522878178",
+      "status": "NO_EXACT_SWAP_OR_DECODE_ERROR",
+      "error": "Error: SWAP_MATCH_COUNT_0"
     }
   ],
-  "status": "6_OF_11_ALTERNATIVE_FEE_TIER_SWAP_PROBES",
-  "production": "NO_GO"
+  "pending": [],
+  "status": "11_OF_11_ALTERNATIVE_FEE_TIER_PAIR_PROBES",
+  "production": "NO_GO",
+  "matched": 7,
+  "unresolved": [
+    {
+      "block": 112643175,
+      "hash": "0x5c771003a07ad6a04e570aa8b56e6fed209a8d12a37102c8e79743cf48d14c36",
+      "error": "Error: SWAP_MATCH_COUNT_0"
+    },
+    {
+      "block": 112964866,
+      "hash": "0x0f366190d2a2029ad50fcdd2b049f23b5a92aab9d1d951ed4b2343b1fb3eb5c9",
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 133 column 62)"
+    },
+    {
+      "block": 115522575,
+      "hash": "0xa614d6d6048a742b142d3b3f13bca1adfa913f952ed64cb973518852ff1cd9c3",
+      "error": "Error: SWAP_MATCH_COUNT_0"
+    },
+    {
+      "block": 119938551,
+      "hash": "0xe23e24538abaece627ef2ab3dc05136e9100b74b1776ff91932110d63a2c93fa",
+      "error": "Error: SWAP_MATCH_COUNT_0"
+    }
+  ]
 }
