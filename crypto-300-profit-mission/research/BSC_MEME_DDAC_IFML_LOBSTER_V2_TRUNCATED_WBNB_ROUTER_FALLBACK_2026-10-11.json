@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-11",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "source_file": "BSC_MEME_DDAC_IFML_LOBSTER_25_ROUTER_MANAGER2_V2_SETTLEMENT_EVENTS_2026-10-11.json",
+  "method": "For unreadable V2 pool Swap log in dense blocks, get native BSC WBNB ERC20 Transfer from exact router to pair on buy or pair to router on sell, same tx hash and block. One transfer matching per action. This confirms quote amount, NOT a full Swap log or gas-used receipt.",
+  "wbnb_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+  "expected": 7,
+  "rows": [
+    {
+      "token": "我踏马来了",
+      "block": 73658909,
+      "hash": "0xd459f09283165d44a8d1784bd54604fe1f488fd7d176f8efbd1f88b2fb44830f",
+      "dir": "in",
+      "kind": "WBNB_TRANSFER_FALLBACK",
+      "status": "EXACT_TX_WBNB_POOL_ROUTER_TRANSFER",
+      "wbnb_raw": "990000000000000000",
+      "transfer_id": "0xd459f09283165d44a8d1784bd54604fe1f488fd7d176f8efbd1f88b2fb44830f:log:91"
+    },
+    {
+      "token": "我踏马来了",
+      "block": 73658934,
+      "hash": "0xaf0d45f462a469f6fe9f14a595ba6a704d13b57d74cc5833e69b6ec2827fd897",
+      "dir": "out",
+      "kind": "WBNB_TRANSFER_FALLBACK",
+      "status": "EXACT_TX_WBNB_POOL_ROUTER_TRANSFER",
+      "wbnb_raw": "1230856487388543789",
+      "transfer_id": "0xaf0d45f462a469f6fe9f14a595ba6a704d13b57d74cc5833e69b6ec2827fd897:log:42"
+    },
+    {
+      "token": "我踏马来了",
+      "block": 73658976,
+      "hash": "0x00df97a9523f8ce86272c90473bdafd19deebd2604865c0ee15ecf87285489d4",
+      "dir": "out",
+      "kind": "WBNB_TRANSFER_FALLBACK",
+      "status": "EXACT_TX_WBNB_POOL_ROUTER_TRANSFER",
+      "wbnb_raw": "1070451819618292741",
+      "transfer_id": "0x00df97a9523f8ce86272c90473bdafd19deebd2604865c0ee15ecf87285489d4:log:21"
+    },
+    {
+      "token": "我踏马来了",
+      "block": 73659187,
+      "hash": "0xf9afe2d80fbec8a3fe812d5b202fc5f6295bc1e6842f2c719fcd48142010276a",
+      "dir": "out",
+      "kind": "WBNB_TRANSFER_FALLBACK",
+      "status": "EXACT_TX_WBNB_POOL_ROUTER_TRANSFER",
+      "wbnb_raw": "1011107756576297046",
+      "transfer_id": "0xf9afe2d80fbec8a3fe812d5b202fc5f6295bc1e6842f2c719fcd48142010276a:log:869"
+    },
+    {
+      "token": "我踏马来了",
+      "block": 74473636,
+      "hash": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a",
+      "dir": "in",
+      "kind": "WBNB_TRANSFER_FALLBACK",
+      "status": "EXACT_TX_WBNB_POOL_ROUTER_TRANSFER",
+      "wbnb_raw": "990000000000000000",
+      "transfer_id": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a:log:982"
+    },
+    {
+      "token": "我踏马来了",
+      "block": 74473637,
+      "hash": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad",
+      "dir": "in",
+      "kind": "WBNB_TRANSFER_FALLBACK",
+      "status": "EXACT_TX_WBNB_POOL_ROUTER_TRANSFER",
+      "wbnb_raw": "990000000000000000",
+      "transfer_id": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad:log:60"
+    },
+    {
+      "token": "我踏马来了",
+      "block": 74473641,
+      "hash": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e",
+      "dir": "out",
+      "kind": "WBNB_TRANSFER_FALLBACK",
+      "status": "EXACT_TX_WBNB_POOL_ROUTER_TRANSFER",
+      "wbnb_raw": "1569563786501154133",
+      "transfer_id": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e:log:103"
+    }
+  ],
+  "confirmed": 7,
+  "scope": "seven originally truncated V2 pair event hashes, not the two truncated Manager2 curve events",
+  "production": "NO_GO"
+}
