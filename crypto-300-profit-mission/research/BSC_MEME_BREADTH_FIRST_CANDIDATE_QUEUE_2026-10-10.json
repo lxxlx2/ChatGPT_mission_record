@@ -2035,5 +2035,33 @@
     ],
     "remaining": "REALIZED_PNL_UNRESOLVED; SOURCE_PAYOUT_CAUSE_UNCONFIRMED; MARS_4_UNRESOLVED_MULTIHOP_ROUTES; MODEL_FOLLOWABILITY_NOT_VALIDATED",
     "production": "NO_GO"
+  },
+  "address_model_4_ddac_mars_16_route_closure_2026_10_12": {
+    "status": "16_OF_16_SPCXB_MARS_OWNER_ACTIONS_UPSTREAM_ROUTE_IDS_RECONCILED_RESEARCH_ONLY",
+    "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "source_history": "2026-10-11 frozen 16 SPCXB/MARS owner-signed actions; 2 other original USDT/MARS V3 owner pool trades remain a different venue",
+    "route_counts": {
+      "usdt_spcxb_v3": 13,
+      "wbnb_spcxb_v3": 2,
+      "uniswap_v4_spcxb_usdt_v3_wbnb": 1,
+      "unassigned": 0
+    },
+    "newly_reconciled_2026_10_12": 4,
+    "direct_new_transfers": 15,
+    "new_v3_swap_events": 2,
+    "fee_model": "1pct output floor plus inferred gasUsed exactly reconciles 3 sell BNB wallet deltas; gasUsed receipts still independent verification pending",
+    "remaining": [
+      "UNISWAP_V4_SWAP_POOLID_UNREAD",
+      "DENSE_BLOCK_V3_SWAP_UNREAD",
+      "COMPLETE_RECEIPT_GAS_USED_UNREAD",
+      "MARS_SOURCE_TWO_V2_SWAP_UNREAD",
+      "MARS_TOTAL_REALIZED_PNL_AND_OPEN_INVENTORY_NOT_COMPLETE",
+      "UNBIASED_23X19_OPPORTUNITY_DENOMINATOR_NOT_VALIDATED"
+    ],
+    "research_files": [
+      "BSC_MEME_DDAC_MARSCOIN_FOUR_OPEN_UPSTREAM_ROUTES_V3_V4_EVIDENCE_2026-10-12.json",
+      "BSC_MEME_ADDRESS_MODEL_4_DDAC_MARSCOIN_UPSTREAM_COMPLETION_REPORT_2026-10-12.md"
+    ],
+    "production": "OBSERVE_ONLY / NO_GO"
   }
 }
