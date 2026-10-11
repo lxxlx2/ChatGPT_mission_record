@@ -103,8 +103,13 @@ def test_verify_dashboard_rechecks_database_on_each_retry(prepared, monkeypatch)
     folder, originals, target, restarts = prepared
     monkeypatch.setattr(app, "control_root", lambda: folder)
     monkeypatch.setattr(app, "health_endpoint", lambda control: "http://127.0.0.1/health")
-    first = {"manual_review_total_count": 4, "manual_review_visible_total_count": 4}
-    second = {"manual_review_total_count": 5, "manual_review_visible_total_count": 5}
+    basic = {"manual_review_expired_unsent_count": 0,
+             "manual_review_actionable_count": 0,
+             "manual_review_pending_count": 0}
+    first = {**basic, "manual_review_total_count": 4,
+             "manual_review_visible_total_count": 4}
+    second = {**basic, "manual_review_total_count": 5,
+              "manual_review_visible_total_count": 5}
     count_calls = []
     def read_db(control):
         count_calls.append(True)
