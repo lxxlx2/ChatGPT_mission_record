@@ -1,0 +1,100 @@
+name: Monster Stage45 Original36 SHA Blind Date P1v02 Gates and Git Evidence
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage45_original36_blind_P1v02_sha_aggregate.py'
+      - '.github/workflows/monster-v4-stage45-original36-sha-blind-P1v02-aggregate.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  exact_original36_sha_5400_market_p1_before_gt_truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 95
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require all36 frozen original source-replay jobs to complete SUCCESS
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 260); do
+            gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38213103621 > /tmp/monster45_source_run.json
+            status=$(python -c 'import json;print(json.load(open("/tmp/monster45_source_run.json"))["status"])')
+            if test "$status" = completed; then
+              python - <<'PY'
+          import json
+          run=json.load(open('/tmp/monster45_source_run.json'))
+          if run['conclusion']!='success':raise SystemExit('STAGE45_ORIGINAL36_SOURCE_NOT_SUCCESS')
+          print('STAGE45_ORIGINAL36_REAL_MINUTE_SHA_SOURCE_PASS')
+          PY
+              break
+            fi
+            sleep 15
+          done
+          test "$status" = completed
+      - name: Require exact 36 original GitHub artifacts and SHA256 digests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38213103621/artifacts?per_page=100' >/tmp/monster45_artifacts.json
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          arr=json.load(open('/tmp/monster45_artifacts.json'))['artifacts']
+          if len(arr)!=36:raise SystemExit('STAGE45_NOT_ALL_ORIGINAL36_ARTIFACTS')
+          keys=set();pieces=[]
+          for a in arr:
+            m=re.fullmatch(r'monster-stage45-real1m-blind-(\d{4}-\d\d-\d\d)-shard([0-5])-V4-P1v02-SHA',a['name'])
+            if not m or a.get('expired') or not a.get('digest','').startswith('sha256:'):
+                raise SystemExit('STAGE45_WRONG_ARTIFACT_OR_PUBLISHER_SHA')
+            key=m.group(1),int(m.group(2))
+            if key in keys:raise SystemExit('STAGE45_DUPLICATE_SOURCE')
+            keys.add(key)
+            pieces.append({'date':key[0],'shard':key[1],'artifact_id':a['id'],'zip_sha256':a['digest'].split(':')[1]})
+          Path('/tmp/monster45_manifest.json').write_text(json.dumps({'source_run_id':38213103621,'artifacts':pieces}))
+          Path('/tmp/monster45_ids').write_text('\n'.join(str(p['artifact_id']) for p in pieces)+'\n')
+          print('STAGE45_ALL36_SOURCE_SHA_FROZEN_FOR_RECOMPUTE')
+          PY
+      - name: Independently redownload all36 genuine original byte artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster45_original36
+          while read -r aid; do
+            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$aid/zip" > "/tmp/monster45_original36/$aid.zip"
+          done </tmp/monster45_ids
+      - name: No-future original D0 and P1v02 full market gates with source SHA, normal coins, 5x and 10x
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage45_original36_blind_P1v02_sha_aggregate.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage45_original36_blind_P1v02_sha_aggregate.py \
+            --manifest /tmp/monster45_manifest.json \
+            --zip-dir /tmp/monster45_original36 \
+            --out /tmp/monster45_output
+      - name: Retain full all5400 original SHA evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage45-original36-sourceSHA-blind900x6-P1v02-gates
+          path: /tmp/monster45_output/*
+          retention-days: 30
+      - name: Persist actual passed OR failed gates with all cases into original Monster Draft PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster45_output/monster_stage45_* "$dest/"
+          git add "$dest/monster_stage45_blind_900x6_SHA_P1v02_metrics_and_gates.json" "$dest/monster_stage45_blind_all5400_originalV4_P1v02_cases.jsonl"
+          if git diff --cached --quiet; then
+            echo STAGE45_ALREADY_IDENTICAL_SOURCES
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: Stage45 preserve frozen all900x6 originalV4 and P1v02 true gate results source SHA'
+          git push origin "HEAD:$GITHUB_REF_NAME"
