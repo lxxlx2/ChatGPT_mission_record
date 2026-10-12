@@ -262,7 +262,7 @@ function renderRuntime(runtime, control) {
   if (control?.manual_review_breakdown_available === true && !contractAvailable) {
     reviewParts.push('<span>· 接口版本不匹配：投递确认及异常数量不可用，请先升级后端</span>');
   } else if (!hasBreakdown) {
-    reviewParts.push('<span>· 通知分类暂不可用；下列历史总数为心跳陈旧值，需核查数据库</span>');
+    reviewParts.push('<span>· 通知分类暂不可用；心跳中的历史统计可能已过期，当前不展示未经实时核实的数量</span>');
   }
   if (hasBreakdown && Number.isFinite(queued) && queued > 0) {
     const gmail = Number(control?.manual_review_queued_gmail_count) || 0;
@@ -284,7 +284,7 @@ function renderRuntime(runtime, control) {
     const gmail = Number(control?.manual_review_blocked_gmail_count) || 0;
     const local = Number(control?.manual_review_blocked_local_count) || 0;
     const other = Number(control?.manual_review_blocked_other_count) || 0;
-    reviewParts.push('<span title="凭证阻塞、重试错误或重试排队；当前仅显示，不修改重试规则">· 运行阻塞待处理 ' +
+    reviewParts.push('<span title="包括凭证阻塞、重试错误、排队及未知或跨渠道错配状态；不代表正在自动重试，当前仅显示">· 运行阻塞或状态异常待核查 ' +
       esc(blocked) + '（邮件 ' + esc(gmail) + '，本地 ' + esc(local) +
       '，其他 ' + esc(other) + '）</span>');
   }
