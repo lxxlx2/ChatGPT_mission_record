@@ -1,0 +1,50 @@
+{
+  "schema": "BSC_MEME_ADFF_IFML_AND_0ABB_GIGGLE_FIRST_TRADE_NATIVE_QA_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "source_file": "BSC_MEME_23_EOA_REMAINING_WALLETS_TRIAGE_B02_2026-10-12.json",
+  "source_blob_sha": "be2dc6e37a798f20e798f2cfd504c109f3c38af0",
+  "method": "Two original self-signed first buy/sell actions per wallet independently checked via BSC eth_getTransactionByHash; wallet BNB native balances at N and N−1, original first ERC20 inbound/outbound quantities read from first pages of 19CA transfer scan. Full pagination NOT DONE.",
+  "rows": [
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "source_buy_tx": "0xa0678662cd6ea430e95d8fd3e1d3521c133821e999dd317d101fb8015d19f710",
+      "source_sell_tx": "0xbd7191a8d616e9497e58026ea59970c4f682ac18d81786e38a059a9697567a03",
+      "source_buy_block": 73336282,
+      "source_sell_block": 73336293,
+      "original_buy_msg_value_wei": "60000000000000000",
+      "original_owner_signer_confirmed_both": true,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "first_buy_erc20_raw": "4647484245769389000000000",
+      "first_sell_erc20_raw": "2323742122884694000000000",
+      "first_sell_raw_vs_first_buy_percent_approx": 49.9999,
+      "initial_buy_native_block_wei": "-60170301999999986",
+      "initial_sell_native_block_wei": "37140173856831172",
+      "first_two_native_block_sum_wei": "-23030128143168814",
+      "evidence_reference": "DDAC_FIRST_IFML_BLOCK_73336279; THIS_WALLET_ENTERED_3_BLOCKS_LATER",
+      "global_position_PnL": "NOT_VERIFIED_FIRST_SELL_MAY_BE_PARTIAL"
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "GIGGLE",
+      "source_buy_tx": "0x7466bbc7d4d45c39212d5d5801052340acad047e9b91a15ca56063713d6e8cf9",
+      "source_sell_tx": "0x75ea4769a2644edff73f3f72b24d50431a4707274dfa0d56e6d13b2fe9e33b7d",
+      "source_buy_block": 61967915,
+      "source_sell_block": 61970077,
+      "original_buy_msg_value_wei": "100000000000000000",
+      "original_owner_signer_confirmed_both": true,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "first_buy_erc20_raw": "25166978479998335937",
+      "first_sell_erc20_raw": "1934995116897234520",
+      "first_sell_raw_vs_first_buy_percent_approx": 7.6886,
+      "initial_buy_native_block_wei": "-100198323000000000",
+      "initial_sell_native_block_wei": "248962532579754519",
+      "first_two_native_block_sum_wei": "148764209579754519",
+      "evidence_reference": "FIRST_SAMPLED_GIGGLE_POOL_BLOCK_61963755; THIS_ENTRY_IS_4160_BLOCKS_LATER",
+      "global_position_PnL": "NOT_VERIFIED_FIRST_SELL_MAY_BE_PARTIAL"
+    }
+  ],
+  "interpretation": "ADFF first owner buy block only 3 blocks after DDAC historical first owner buy of IFML. Both sample initial native deltas include exposure and do NOT prove episode PnL. 0ABB first GIGGLE sale is self signed, but further participation, same-block contamination and residual inventory require complete cursor.",
+  "production": "NO_GO"
+}
