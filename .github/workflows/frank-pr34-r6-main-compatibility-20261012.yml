@@ -1,0 +1,66 @@
+name: Frank PR34 R6 exact main compatibility
+
+on:
+  push:
+    branches:
+      - review/frank-pr31-pr32-pr33-mergegate-20261012
+    paths:
+      - '.github/workflows/frank-pr34-r6-main-compatibility-20261012.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  clean-merged-tree:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    env:
+      MAIN_PIN: "981fecc5a0d248c049dd51a728bac8624a3cff3d"
+      REVIEW_PIN: "b637361154863f492b31a636de8e77381bc8156b"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Merge exact R6 PR34 into pinned current main only inside clean worktree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "$MAIN_PIN^{commit}"
+          git cat-file -e "$REVIEW_PIN^{commit}"
+          git worktree add --detach "$RUNNER_TEMP/frank-r6-main-merge" "$MAIN_PIN"
+          cd "$RUNNER_TEMP/frank-r6-main-merge"
+          test "$(git rev-parse HEAD)" = "$MAIN_PIN"
+          echo "REVIEWED_MAIN_SHA=$MAIN_PIN"
+          echo "REVIEWED_PR34_SHA=$REVIEW_PIN"
+          if ! git -c user.name='CI Readonly Test' -c user.email='ci-readonly@example.invalid' merge --no-ff --no-commit "$REVIEW_PIN"; then
+            echo "REAL_MERGE_CONFLICTS_BEGIN"
+            git diff --name-only --diff-filter=U
+            echo "REAL_MERGE_CONFLICTS_END"
+            exit 3
+          fi
+          git -c user.name='CI Readonly Test' -c user.email='ci-readonly@example.invalid' commit -q -m "CI-only main + R6 PR34 merge"
+          test "$(git rev-parse HEAD^1)" = "$MAIN_PIN"
+          test "$(git rev-parse HEAD^2)" = "$REVIEW_PIN"
+          test -z "$(git status --porcelain)"
+          echo "EXACT_MERGE_PARENTS=PASS"
+          echo "TEMP_MERGED_TREE=$(git rev-parse HEAD^{tree})"
+      - name: Install dependencies for merged source tree
+        working-directory: ${{ runner.temp }}/frank-r6-main-merge/crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Check frontend and Python syntax on merged tree
+        working-directory: ${{ runner.temp }}/frank-r6-main-merge/crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent/mission_control scripts tests
+          node --check mission_agent/mission_control/static/app.js
+      - name: Full merged-tree local-agent regression including actual Git archive replay
+        working-directory: ${{ runner.temp }}/frank-r6-main-merge/crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: "1"
+        run: python -B -m pytest -q -p no:cacheprovider tests
