@@ -205,7 +205,7 @@ def build_economic_comparison(baseline: dict, ledger: dict) -> dict:
             "any_ranked_wallet": False,
         },
         "ranking_safety": {
-            "wallet_order_remains_P1_RESEARCH_PRIORITY_NOT_PROFIT_RANK",
+            "wallet_order_remains_P1_RESEARCH_PRIORITY_NOT_PROFIT_RANK": True,
             "incomparable_selective_coverage_must_not_determine_winner": True,
             "unreviewed_native_delta_cannot_be_traded": True,
             "simulated_spot_price_is_not_real_USDT_conversion": True,
