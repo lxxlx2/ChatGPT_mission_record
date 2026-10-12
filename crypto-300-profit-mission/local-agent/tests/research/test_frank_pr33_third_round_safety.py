@@ -92,7 +92,7 @@ def test_actual_dashboard_runtime_dom_renderer_handles_legacy_and_pending():
 const fs=require('fs'),vm=require('vm');
 const code=fs.readFileSync(process.argv[1],'utf8');
 const start=code.indexOf('function renderRuntime(');
-const end=code.indexOf('\\nfunction renderStats(',start);
+const end=code.indexOf('function renderStats(',start);
 if (start<0||end<start) throw new Error('RUNTIME_RENDERER_NOT_FOUND');
 const node={innerHTML:'',className:''};
 const scope={
