@@ -1,0 +1,75 @@
+{
+  "ALPHA_ANNOUNCEMENT_IS_NOT_EXECUTABLE_FILL": true,
+  "AUTOTRADE": "NO_GO",
+  "FRANK": "UNCHANGED",
+  "GMAIL": "OFF",
+  "MONSTER_DEPLOY": "NO_GO",
+  "NEW_STRATEGY_OR_PRIORITY_CHANGE": false,
+  "NO_ASSUMED_NOTIONAL": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1_V03": "REJECTED",
+  "UNKNOWN_IS_NOT_PROOF_UNTRADABLE": true,
+  "all_original_usdm_candidates": 166,
+  "by_posthoc_label_for_descriptive_analysis_only": {
+    "FUTURE_2X_AND_CANDIDATE_BEFORE_5MIN": {
+      "n": 27,
+      "venue_evidence_counts": {
+        "BINANCE_ALPHA_ANNOUNCED_BEFORE_SIGNAL_NO_FILL_VERIFICATION": 3,
+        "HISTORIC_BINANCE_SPOT_REAL_TRADES_SHA_VERIFIED": 7,
+        "UNKNOWN_ALTERNATIVE_VENUE_NOT_CHECKED": 17
+      }
+    },
+    "FUTURE_2X_BUT_CANDIDATE_LATE": {
+      "n": 2,
+      "venue_evidence_counts": {
+        "UNKNOWN_ALTERNATIVE_VENUE_NOT_CHECKED": 2
+      }
+    },
+    "ORDINARY_NOT_CALENDAR_2X": {
+      "n": 137,
+      "venue_evidence_counts": {
+        "HISTORIC_BINANCE_SPOT_REAL_TRADES_SHA_VERIFIED": 69,
+        "UNKNOWN_ALTERNATIVE_VENUE_NOT_CHECKED": 68
+      }
+    }
+  },
+  "historical_5x_10x_critical_events": [
+    {
+      "date": "2025-08-01",
+      "executability_at_signal_UNVERIFIED": true,
+      "historical_future_high_gt10x": true,
+      "historical_future_high_gt5x": true,
+      "publisher": "https://www.binance.com/en-IN/support/announcement/detail/9801625522154e098d73b8245ad70646",
+      "symbol": "MYXUSDT",
+      "venue_announcement_pre_signal": true
+    },
+    {
+      "date": "2025-10-02",
+      "executability_at_signal_UNVERIFIED": true,
+      "historical_future_high_gt10x": false,
+      "historical_future_high_gt5x": true,
+      "publisher": "https://www.binance.com/en/support/announcement/detail/aadbfbfee34c404c896f93957a0c08c7",
+      "symbol": "AIAUSDT",
+      "venue_announcement_pre_signal": true
+    },
+    {
+      "date": "2025-10-02",
+      "executability_at_signal_UNVERIFIED": true,
+      "historical_future_high_gt10x": true,
+      "historical_future_high_gt5x": true,
+      "publisher": "https://www.binance.com/en/support/announcement/detail/89921e2281204d32a5fead5b711f6770",
+      "symbol": "COAIUSDT",
+      "venue_announcement_pre_signal": true
+    }
+  ],
+  "schema": "MONSTER_STAGE59_EXPOSED_166_VENUE_AT_SIGNAL_DOCUMENTARY_EVIDENCE_V1",
+  "source_pin_git_blobs": {
+    "monster_stage57_all166_exact_symbol_spot_asof_source_SHA.jsonl": "561b5a7dd5b894565d01b24671aa6d96d921bda8",
+    "monster_stage58_exposed_spot_only_cap5_counterfactual_summary.json": "a0f377027ec49e8ec572fba53a2c8cf8872b3180"
+  },
+  "venue_evidence_counts": {
+    "BINANCE_ALPHA_ANNOUNCED_BEFORE_SIGNAL_NO_FILL_VERIFICATION": 3,
+    "HISTORIC_BINANCE_SPOT_REAL_TRADES_SHA_VERIFIED": 76,
+    "UNKNOWN_ALTERNATIVE_VENUE_NOT_CHECKED": 87
+  }
+}
