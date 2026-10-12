@@ -181,3 +181,73 @@ def test_legacy_source_mtimes_are_measured_without_altering_live_data(tmp_path, 
     assert report["files_not_proven_to_predate_process_count"] == int(late)
     assert (report["late_source_files"] == []) is (not late)
     assert str(tmp_path) not in json.dumps(report)
+
+
+
+def test_xnu_proc_bsdinfo_layout_and_verified_microsecond_birth(monkeypatch):
+    import ctypes
+
+    assert ctypes.sizeof(release._DarwinProcBSDInfo) == 136
+    ps_second = 1791856800
+    pid = 4321
+
+    class FakeProcPidInfo:
+        def __call__(self, supplied_pid, flavor, arg, buffer, supplied_size):
+            assert supplied_pid == pid and flavor == 3 and arg == 0
+            assert supplied_size == 136
+            info = ctypes.cast(buffer, ctypes.POINTER(release._DarwinProcBSDInfo)).contents
+            info.pbi_pid = pid
+            info.pbi_start_tvsec = ps_second
+            info.pbi_start_tvusec = 765432
+            return supplied_size
+
+    fake = SimpleNamespace(proc_pidinfo=FakeProcPidInfo())
+    monkeypatch.setattr(release.sys, "platform", "darwin")
+    monkeypatch.setattr(release.ctypes, "CDLL", lambda *a, **kw: fake)
+    observed = release.darwin_precise_process_start(pid, ps_second)
+    assert abs(observed - (ps_second + .765432)) < .000002
+    with pytest.raises(RuntimeError, match="PROCESS_BIRTH_VS_PS_MISMATCH"):
+        release.darwin_precise_process_start(pid, ps_second + 5)
+
+
+def test_mac_precise_birth_can_disambiguate_same_second_old_runner(tmp_path, monkeypatch):
+    runner = tmp_path / "dashboard.sh"
+    runner.write_text("safe")
+    started = int(time.time()) - 300
+    os.utime(runner, (started + .57, started + .57))
+    mac = SimpleNamespace(runners={"dashboard": runner},
+                          labels={"dashboard": "fake.dashboard"},
+                          launch=lambda _: (322, "loaded"))
+    stamp = time.strftime("%a %b %d %H:%M:%S %Y", time.localtime(started))
+    def fake_run(argv, **kw):
+        if argv[:2] == ["/bin/ps", "-p"]:
+            return stamp
+        raise AssertionError("unexpected command")
+    monkeypatch.setattr(release, "run", fake_run)
+    monkeypatch.setattr(release.sys, "platform", "darwin")
+    monkeypatch.setattr(release, "darwin_precise_process_start",
+                        lambda pid, second: float(second) + .85)
+    result = release.runner_start_time_diagnostic(mac, "dashboard", runner.read_text())
+    assert result["kernel_birth_check"] == "VERIFIED_AGAINST_PS_SECOND"
+    assert result["status"] == "RUNNER_OLDER_THAN_PROCESS"
+    assert result["runner_minus_precise_process_start_seconds"] < 0
+    assert result["timestamp_resolution"] == "kernel_microsecond"
+
+
+def test_mac_kernel_birth_unavailable_preserves_ambiguous_block(tmp_path, monkeypatch):
+    runner = tmp_path / "dashboard.sh"
+    runner.write_text("safe")
+    started = int(time.time()) - 300
+    os.utime(runner, (started + .57, started + .57))
+    mac = SimpleNamespace(runners={"dashboard": runner},
+                          labels={"dashboard": "fake.dashboard"},
+                          launch=lambda _: (322, "loaded"))
+    stamp = time.strftime("%a %b %d %H:%M:%S %Y", time.localtime(started))
+    monkeypatch.setattr(release, "run", lambda *_a, **_kw: stamp)
+    monkeypatch.setattr(release.sys, "platform", "darwin")
+    def unavailable(_pid, _reported):
+        raise RuntimeError("KERNEL_PROCESS_BIRTH_UNAVAILABLE")
+    monkeypatch.setattr(release, "darwin_precise_process_start", unavailable)
+    result = release.runner_start_time_diagnostic(mac, "dashboard", runner.read_text())
+    assert result["kernel_birth_check"] == "KERNEL_PROCESS_BIRTH_UNAVAILABLE"
+    assert result["status"] == "UNVERIFIED_SAME_SECOND"
