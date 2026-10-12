@@ -1,0 +1,261 @@
+{
+  "schema": "BSC_MEME_A83B_TST_CHEEMS_SIREN_BANANAS_FULL_SOURCE_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+  "method": "Positive ERC20 exact-CA transfer pagination in/out ascending page8, uniqueId deduplication, latest ethCall balanceOf raw integer",
+  "rows": [
+    {
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "in": {
+        "events": [
+          {
+            "tx": "0x3e7d7baf9d2be698efac71bbf114e51bdabe5a1b354a61ee772c484cb0b21a06",
+            "uid": "0x3e7d7baf9d2be698efac71bbf114e51bdabe5a1b354a61ee772c484cb0b21a06:log:2",
+            "block": "0x58627d3",
+            "raw": "0x914af5926c01cb90e0a",
+            "from": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          },
+          {
+            "tx": "0x88bbd1daefd55504a5d0e7bec4c2372f102f77c1d070ec8a3d537d2094ea7834",
+            "uid": "0x88bbd1daefd55504a5d0e7bec4c2372f102f77c1d070ec8a3d537d2094ea7834:log:179",
+            "block": "0x7323f73",
+            "raw": "0x4faf624adec716e30",
+            "from": "0x00e6812a707979a66b6d9f680b4eef9c4a25bcc3",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "42974739058115125869626"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0x0b79fb144e5756f7133a690ac4d2120120e7889bb99aad17612215082b3d69fb",
+            "uid": "0x0b79fb144e5756f7133a690ac4d2120120e7889bb99aad17612215082b3d69fb:log:3",
+            "block": "0x58627d9",
+            "raw": "0x32da3c59a5cd6da5e83",
+            "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "to": "0x16969fa79651bae11736f2f6576a86fe2726b42b"
+          },
+          {
+            "tx": "0x8a4a236aefd3cd38d911d376248115af6434dd4150b86e22c8708a0a96fb3407",
+            "uid": "0x8a4a236aefd3cd38d911d376248115af6434dd4150b86e22c8708a0a96fb3407:log:3",
+            "block": "0x58627de",
+            "raw": "0x2f385c9c631a2ef57c3",
+            "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "to": "0x16969fa79651bae11736f2f6576a86fe2726b42b"
+          },
+          {
+            "tx": "0xd4ea0e8798f1be45c1980d1e88394c9273f4a0be9d535c5609899821c2990f06",
+            "uid": "0xd4ea0e8798f1be45c1980d1e88394c9273f4a0be9d535c5609899821c2990f06:log:3",
+            "block": "0x58627e1",
+            "raw": "0x2f385c9c631a2ef57c4",
+            "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "to": "0x16969fa79651bae11736f2f6576a86fe2726b42b"
+          },
+          {
+            "tx": "0xcfcc99e6a8d6900fa805cf5b8da72761e9d175455914772ebf394778d9d8aed4",
+            "uid": "0xcfcc99e6a8d6900fa805cf5b8da72761e9d175455914772ebf394778d9d8aed4:log:60",
+            "block": "0x79488a3",
+            "raw": "0x4faf624adec716e30",
+            "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "to": "0x16969fa79651bae11736f2f6576a86fe2726b42b"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "42974739058115125869626"
+      },
+      "rawBalance": "0",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "token": "CHEEMS",
+      "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "in": {
+        "events": [
+          {
+            "tx": "0x0f9bb71bf00e3fb71c9dad61406b1432766e81668efe4a340c91f6bddea906f2",
+            "uid": "0x0f9bb71bf00e3fb71c9dad61406b1432766e81668efe4a340c91f6bddea906f2:log:82",
+            "block": "0x3efab45",
+            "raw": "0xecef2bb738ab0a778142d5",
+            "from": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          },
+          {
+            "tx": "0x040ac6d6b67b756073a1861fe90d83c96edd1973ca83b64cad523a0ccc53ef8a",
+            "uid": "0x040ac6d6b67b756073a1861fe90d83c96edd1973ca83b64cad523a0ccc53ef8a:log:73",
+            "block": "0x3efab75",
+            "raw": "0xecee1d698c64a97e2aa9c4",
+            "from": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          },
+          {
+            "tx": "0x94d459a2638b8ac47df554611eb70b29c6e6cb2faa5e5ff7eedb2d5676fa200d",
+            "uid": "0x94d459a2638b8ac47df554611eb70b29c6e6cb2faa5e5ff7eedb2d5676fa200d:log:851",
+            "block": "0x6dfae4a",
+            "raw": "0x106d77e162450aa6ca0cf2",
+            "from": "0x52c456d80dba8e15b0e65f51187c3a5c87268b6e",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          },
+          {
+            "tx": "0x29b1be890337cad7325b419da22b0dd272945dba84855b39c13f515306a55405",
+            "uid": "0x29b1be890337cad7325b419da22b0dd272945dba84855b39c13f515306a55405:log:565",
+            "block": "0x77937ab",
+            "raw": "0x4040723edf444851f8856",
+            "from": "0xcfc0b770a9042d21e526192e1a7c50d9a8bf3de3",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "597581391568285212291203553"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0x8165a61fef3aa90044761711ab6494028cd4967f845c21e8edbf1b60f83a39b7",
+            "uid": "0x8165a61fef3aa90044761711ab6494028cd4967f845c21e8edbf1b60f83a39b7:log:2",
+            "block": "0x3efacc9",
+            "raw": "0x1d9dd4920c50fb3f5abec99",
+            "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "to": "0x38231d4ef9d33ebea944c75a21301ff6986499c3"
+          },
+          {
+            "tx": "0x6875c13bfba6382f1078ea29d26a5e261ba662c52a00131583017f4b326ef7b6",
+            "uid": "0x6875c13bfba6382f1078ea29d26a5e261ba662c52a00131583017f4b326ef7b6:log:11",
+            "block": "0x789c12a",
+            "raw": "0x14717f0550394f2be99548",
+            "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "to": "0xaf0eb8f2f114917ef0026105c070cf08423f488e"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "597581391568285212291203553"
+      },
+      "rawBalance": "0",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "in": {
+        "events": [
+          {
+            "tx": "0xf4719ad82cdb431326dcd3e873a456a312fac3c1e9614e80b074e4894bddbca6",
+            "uid": "0xf4719ad82cdb431326dcd3e873a456a312fac3c1e9614e80b074e4894bddbca6:log:2",
+            "block": "0x56e4e34",
+            "raw": "0x845301dd89f17fa5",
+            "from": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          },
+          {
+            "tx": "0x154bb6fefe281155ac041b56530517f125f8266c5e7d855e547b2dfd14ff3825",
+            "uid": "0x154bb6fefe281155ac041b56530517f125f8266c5e7d855e547b2dfd14ff3825:log:835",
+            "block": "0x72ed408",
+            "raw": "0xc821544455f446d3a",
+            "from": "0xbbeb47f3f682a375ce43460b30608cc76299dc6d",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "240269369035785104607"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0x7e99ce080ae8f34798f427d1a6eb4f340c545e15ae006c43193d970cafa8a3de",
+            "uid": "0x7e99ce080ae8f34798f427d1a6eb4f340c545e15ae006c43193d970cafa8a3de:log:411",
+            "block": "0x56e4e42",
+            "raw": "0x845301dd89f17fa5",
+            "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "to": "0xb2af49dbf526054faf19602860a5e298a79f3d05"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "9534966887087177637"
+      },
+      "rawBalance": "230734402148697926970",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "token": "BANANAS31",
+      "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "in": {
+        "events": [
+          {
+            "tx": "0x789c89cc5b86b4c789bb90bf2cec6df8d3c176088fcd3c283ecaa62d25c2c0ad",
+            "uid": "0x789c89cc5b86b4c789bb90bf2cec6df8d3c176088fcd3c283ecaa62d25c2c0ad:log:1",
+            "block": "0x423826b",
+            "raw": "0x2187ce862ab17f660359",
+            "from": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          },
+          {
+            "tx": "0x37f551a7c8a5f8e7fd2e84d1fdb4ff8959bbe59d38709fad6b99bfeb564f1cd7",
+            "uid": "0x37f551a7c8a5f8e7fd2e84d1fdb4ff8959bbe59d38709fad6b99bfeb564f1cd7:log:1245",
+            "block": "0x77545f0",
+            "raw": "0x3f00849edd7bb0ba08",
+            "from": "0xc25a74387f404b085d003bd3006128de45afbd76",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          },
+          {
+            "tx": "0x93e784e8a88c3ebe3a6c2c307d2e35074cd7d255d900f9dc33d2d015cd2a52fc",
+            "uid": "0x93e784e8a88c3ebe3a6c2c307d2e35074cd7d255d900f9dc33d2d015cd2a52fc:log:772",
+            "block": "0x7754b52",
+            "raw": "0x2b306bdd825308a80e",
+            "from": "0xc25a74387f404b085d003bd3006128de45afbd76",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "160302167340681984435567"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0x88850c26a3b05dd973b1338ddc2ce6ffc03d2d7424e39cbb51bb5c5ff1c903c4",
+            "uid": "0x88850c26a3b05dd973b1338ddc2ce6ffc03d2d7424e39cbb51bb5c5ff1c903c4:log:87",
+            "block": "0x423826e",
+            "raw": "0x2187ce862ab17f660359",
+            "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "to": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d"
+          },
+          {
+            "tx": "0x0688c737243ad718ab3f9fae4ee4d1fbcf3208dd092fb5af3f7a66e47bc61929",
+            "uid": "0x0688c737243ad718ab3f9fae4ee4d1fbcf3208dd092fb5af3f7a66e47bc61929:log:39",
+            "block": "0x789bedc",
+            "raw": "0x6a30f07c5fceb96216",
+            "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "to": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "160302167340681984435567"
+      },
+      "rawBalance": "0",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    }
+  ],
+  "production": "NO_GO",
+  "limitations": [
+    "owner-signed trades and quote PnL unresolved"
+  ]
+}
