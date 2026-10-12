@@ -1,0 +1,2216 @@
+{
+  "Frank": "UNCHANGED",
+  "Gmail": "OFF",
+  "audit_includes": "monster reports, preregistered JSON, GitHub workflows and source scripts only",
+  "audited_source_documents": 218,
+  "date_mentions_conservatively_exposed_NOT_proven_prior_7d_anchor": true,
+  "deployment": "NO_GO",
+  "frozen_git_sha": "2c6d9c1b3f4a9f99a236b015603f517c22afff69",
+  "historical_exposed_or_potentially_exposed_ISO_dates": {
+    "2025-01-01": {
+      "file_count": 4,
+      "files": [
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_baseline_audit.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage34_full18date_discovery_census.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE10_11_NEUTRAL_CONTROLS_AND_ARCHIVE_PARITY_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_V4_DATA_BASELINE_2026-10-10.md"
+      ]
+    },
+    "2025-01-19": {
+      "file_count": 34,
+      "files": [
+        ".github/workflows/monster-v4-stage30-six-new-7d-758-spot-original.yml",
+        ".github/workflows/monster-v4-stage31-five-real-meme-causal-miss.yml",
+        ".github/workflows/monster-v4-stage32a-old-five-paired-diagnostic.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        ".github/workflows/monster-v4-stage37-sixdate-futures-900-1h-truth.yml",
+        ".github/workflows/monster-v4-stage38-usdm-original-v4-causal-1m-pilot.yml",
+        ".github/workflows/monster-v4-stage39-futures-full900-sixday-real1m-v4.yml",
+        ".github/workflows/monster-v4-stage42-all483-exposed-P1-causal-1m.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_newdates_full168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage31_five_case_causal_trace.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py"
+      ]
+    },
+    "2025-01-21": {
+      "file_count": 4,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE30_SIX_NEW_DATES_758_MEME_FULL168H_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE31_5CASE_CAUSAL_D0_WATCH_MISSES_WINNERS_ACTUAL_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE34_18DATE_ALL108_ORIGINAL_SHA_EARLY_DISCOVERY_DATA_ANALYSIS_20261012.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage31_five_meme_case_causal_d0_missed_winner_prereg_20261011.json"
+      ]
+    },
+    "2025-01-23": {
+      "file_count": 7,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_usdm_sixdate_full900_hourly_labels.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE23_UNSEEN_OVEREXTENSION_758_SPOT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+      ]
+    },
+    "2025-02-14": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2025-02-23": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+      ]
+    },
+    "2025-03-02": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_V4_MODEL_BACKTEST_REMEDIATION_20261011.md"
+      ]
+    },
+    "2025-03-09": {
+      "file_count": 8,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2025-03-19": {
+      "file_count": 11,
+      "files": [
+        ".github/workflows/monster-v4-stage32-six-fresh-date-1m-vs3m-full758.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_paired_1m_vs3m.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_1MIN_VS_ORIGINAL3MIN_SIX_NEW_DATE_EXPERIMENT_PROTOCOL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE33_ORIGINAL36_FUNDED_LOSS_ATTRIBUTION_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE35_FIRST_WATCH_REAL_ONE_MINUTE_FEATURES_18DATE_CAUSAL_ANALYSIS_20261012.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_6newdate_1m_vs3m_full758_prereg_20261012.json"
+      ]
+    },
+    "2025-03-23": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+      ]
+    },
+    "2025-04-09": {
+      "file_count": 8,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2025-04-19": {
+      "file_count": 35,
+      "files": [
+        ".github/workflows/monster-v4-stage30-six-new-7d-758-spot-original.yml",
+        ".github/workflows/monster-v4-stage31-five-real-meme-causal-miss.yml",
+        ".github/workflows/monster-v4-stage32a-old-five-paired-diagnostic.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        ".github/workflows/monster-v4-stage37-sixdate-futures-900-1h-truth.yml",
+        ".github/workflows/monster-v4-stage38-usdm-original-v4-causal-1m-pilot.yml",
+        ".github/workflows/monster-v4-stage39-futures-full900-sixday-real1m-v4.yml",
+        ".github/workflows/monster-v4-stage42-all483-exposed-P1-causal-1m.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_newdates_full168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage31_five_case_causal_trace.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py"
+      ]
+    },
+    "2025-04-23": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+      ]
+    },
+    "2025-04-24": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-04-25": {
+      "file_count": 6,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE30_SIX_NEW_DATES_758_MEME_FULL168H_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE31_5CASE_CAUSAL_D0_WATCH_MISSES_WINNERS_ACTUAL_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE34_18DATE_ALL108_ORIGINAL_SHA_EARLY_DISCOVERY_DATA_ANALYSIS_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE38_USDM_REAL_1M_ORIGINAL_V4_52_WINNERS_AND_CONTROLS_REPLAY_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE39_FULL900_SIXDATE_ORIGINAL_V4_REAL1M_SHA_MARKET_DISCOVERY_FINAL_20261012.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage31_five_meme_case_causal_d0_missed_winner_prereg_20261011.json"
+      ]
+    },
+    "2025-04-27": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-04-30": {
+      "file_count": 3,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE3_PB_WINNER_VS_MARKET_5M_AUDIT_2026-10-10.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE4_CAUSAL_COHORT_EXPLORATION_2026-10-10.md"
+      ]
+    },
+    "2025-05-09": {
+      "file_count": 8,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2025-05-23": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+      ]
+    },
+    "2025-06-09": {
+      "file_count": 8,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2025-06-13": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-06-16": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2025-06-17": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/evidence/monster_stage10_neutral_preregistered_24case_20261011.json"
+      ]
+    },
+    "2025-06-19": {
+      "file_count": 10,
+      "files": [
+        ".github/workflows/monster-v4-stage32-six-fresh-date-1m-vs3m-full758.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_paired_1m_vs3m.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_1MIN_VS_ORIGINAL3MIN_SIX_NEW_DATE_EXPERIMENT_PROTOCOL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE33_ORIGINAL36_FUNDED_LOSS_ATTRIBUTION_20261012.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_6newdate_1m_vs3m_full758_prereg_20261012.json"
+      ]
+    },
+    "2025-06-21": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md"
+      ]
+    },
+    "2025-06-23": {
+      "file_count": 6,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+      ]
+    },
+    "2025-07-07": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-07-09": {
+      "file_count": 8,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2025-07-19": {
+      "file_count": 32,
+      "files": [
+        ".github/workflows/monster-v4-stage30-six-new-7d-758-spot-original.yml",
+        ".github/workflows/monster-v4-stage31-five-real-meme-causal-miss.yml",
+        ".github/workflows/monster-v4-stage32a-old-five-paired-diagnostic.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        ".github/workflows/monster-v4-stage37-sixdate-futures-900-1h-truth.yml",
+        ".github/workflows/monster-v4-stage38-usdm-original-v4-causal-1m-pilot.yml",
+        ".github/workflows/monster-v4-stage39-futures-full900-sixday-real1m-v4.yml",
+        ".github/workflows/monster-v4-stage42-all483-exposed-P1-causal-1m.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_newdates_full168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage31_five_case_causal_trace.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py"
+      ]
+    },
+    "2025-07-23": {
+      "file_count": 8,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE30_SIX_NEW_DATES_758_MEME_FULL168H_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE31_5CASE_CAUSAL_D0_WATCH_MISSES_WINNERS_ACTUAL_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage31_five_meme_case_causal_d0_missed_winner_prereg_20261011.json"
+      ]
+    },
+    "2025-08-09": {
+      "file_count": 8,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2025-08-17": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2025-08-22": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2025-08-23": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+      ]
+    },
+    "2025-09-09": {
+      "file_count": 10,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md",
+        "crypto-300-profit-mission/monster/MONSTER_3904_EVENT_GT_AUDIT_AND_40_CAUSAL_WATCH_REPLAY_20261010.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2025-09-15": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-09-18": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-09-19": {
+      "file_count": 10,
+      "files": [
+        ".github/workflows/monster-v4-stage32-six-fresh-date-1m-vs3m-full758.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_paired_1m_vs3m.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_1MIN_VS_ORIGINAL3MIN_SIX_NEW_DATE_EXPERIMENT_PROTOCOL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE33_ORIGINAL36_FUNDED_LOSS_ATTRIBUTION_20261012.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_6newdate_1m_vs3m_full758_prereg_20261012.json"
+      ]
+    },
+    "2025-09-22": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE35_FIRST_WATCH_REAL_ONE_MINUTE_FEATURES_18DATE_CAUSAL_ANALYSIS_20261012.md"
+      ]
+    },
+    "2025-09-23": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+      ]
+    },
+    "2025-10-09": {
+      "file_count": 8,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2025-10-10": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-10-11": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-10-13": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-10-14": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-10-16": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2025-10-17": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/evidence/monster_stage10_neutral_preregistered_24case_20261011.json"
+      ]
+    },
+    "2025-10-19": {
+      "file_count": 27,
+      "files": [
+        ".github/workflows/monster-v4-stage30-six-new-7d-758-spot-original.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        ".github/workflows/monster-v4-stage37-sixdate-futures-900-1h-truth.yml",
+        ".github/workflows/monster-v4-stage38-usdm-original-v4-causal-1m-pilot.yml",
+        ".github/workflows/monster-v4-stage39-futures-full900-sixday-real1m-v4.yml",
+        ".github/workflows/monster-v4-stage42-all483-exposed-P1-causal-1m.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_newdates_full168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_full36_usdm_GT_aggregate.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_usdm_sixdate_full900_hourly_labels.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_original12_source_sha_discovery_aggregate.py"
+      ]
+    },
+    "2025-10-21": {
+      "file_count": 2,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE38_USDM_REAL_1M_ORIGINAL_V4_52_WINNERS_AND_CONTROLS_REPLAY_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE39_FULL900_SIXDATE_ORIGINAL_V4_REAL1M_SHA_MARKET_DISCOVERY_FINAL_20261012.md"
+      ]
+    },
+    "2025-10-23": {
+      "file_count": 6,
+      "files": [
+        ".github/workflows/monster-v4-stage23-preregistered-overextension.yml",
+        ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE23_UNSEEN_OVEREXTENSION_758_SPOT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+      ]
+    },
+    "2025-10-28": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-11-04": {
+      "file_count": 31,
+      "files": [
+        ".github/workflows/monster-v4-stage24-six-original-zip-recompute.yml",
+        ".github/workflows/monster-v4-stage24-six-untouched-7d-watch-gt.yml",
+        ".github/workflows/monster-v4-stage25-first-cross-minute-40.yml",
+        ".github/workflows/monster-v4-stage26-168h-continuous-758x6.yml",
+        ".github/workflows/monster-v4-stage26-derive-source-proof.yml",
+        ".github/workflows/monster-v4-stage28-real-production-shared-d1.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_full_market_7d_watch_audit.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage26_continuous168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_aggregate.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-11-05": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE25_ALL40_KNOWN_2X_TRUE_1M_FIRSTCROSS_V4_DIAGNOSIS_20261011.md"
+      ]
+    },
+    "2025-11-06": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2025-11-07": {
+      "file_count": 2,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE28_REAL_SHARED_SQLITE_D1_826_828_PAIRWISE_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2025-11-17": {
+      "file_count": 20,
+      "files": [
+        ".github/workflows/monster-v4-stage13-preregistered-multidate.yml",
+        ".github/workflows/monster-v4-stage15-historical-archive-only.yml",
+        ".github/workflows/monster-v4-stage16-frozen-seven-day-ground-truth.yml",
+        ".github/workflows/monster-v4-stage19-gradual-full-market.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage13_multiday.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage15_archive_only.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage17_event_aligned_replay.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_FULL_504_REPLAY_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_PROTOCOL_AND_GATE_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE14_D1_EXIT_HORIZON_RESEARCH_FINDINGS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE15_ARCHIVED_SPOT_UNIVERSE_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_SEVENDAY_GROUND_TRUTH_PROTOCOL_20261011.md"
+      ]
+    },
+    "2025-11-19": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_TO_18_REAL_GT_EARLY_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2025-11-20": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_TO_18_REAL_GT_EARLY_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2025-12-04": {
+      "file_count": 21,
+      "files": [
+        ".github/workflows/monster-v4-stage24-six-original-zip-recompute.yml",
+        ".github/workflows/monster-v4-stage24-six-untouched-7d-watch-gt.yml",
+        ".github/workflows/monster-v4-stage25-first-cross-minute-40.yml",
+        ".github/workflows/monster-v4-stage26-168h-continuous-758x6.yml",
+        ".github/workflows/monster-v4-stage26-derive-source-proof.yml",
+        ".github/workflows/monster-v4-stage28-real-production-shared-d1.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_full_market_7d_watch_audit.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage26_continuous168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_aggregate.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE24_FROZEN_FULLMARKET_7D_GT_V4_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2025-12-13": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage20-frozen-holdout-quality-exits.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage20_quality_exit_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE20_QUALITY_EXIT_HELDOUT_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage20_quality_exit_holdout_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json"
+      ]
+    },
+    "2025-12-17": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2025-12-19": {
+      "file_count": 11,
+      "files": [
+        ".github/workflows/monster-v4-stage32-six-fresh-date-1m-vs3m-full758.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_paired_1m_vs3m.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_1MIN_VS_ORIGINAL3MIN_SIX_NEW_DATE_EXPERIMENT_PROTOCOL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE33_ORIGINAL36_FUNDED_LOSS_ATTRIBUTION_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE34_18DATE_ALL108_ORIGINAL_SHA_EARLY_DISCOVERY_DATA_ANALYSIS_20261012.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_6newdate_1m_vs3m_full758_prereg_20261012.json"
+      ]
+    },
+    "2025-12-23": {
+      "file_count": 2,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_3904_EVENT_GT_AUDIT_AND_40_CAUSAL_WATCH_REPLAY_20261010.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2025-12-24": {
+      "file_count": 2,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2025-12-26": {
+      "file_count": 2,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE34_18DATE_ALL108_ORIGINAL_SHA_EARLY_DISCOVERY_DATA_ANALYSIS_20261012.md"
+      ]
+    },
+    "2025-12-31": {
+      "file_count": 2,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_3904_EVENT_GT_AUDIT_AND_40_CAUSAL_WATCH_REPLAY_20261010.md",
+        "crypto-300-profit-mission/monster/MONSTER_V4_MODEL_BACKTEST_REMEDIATION_20261011.md"
+      ]
+    },
+    "2026-01-13": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage20-frozen-holdout-quality-exits.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage20_quality_exit_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE20_QUALITY_EXIT_HELDOUT_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage20_quality_exit_holdout_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json"
+      ]
+    },
+    "2026-01-17": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/evidence/monster_stage10_neutral_preregistered_24case_20261011.json"
+      ]
+    },
+    "2026-01-19": {
+      "file_count": 10,
+      "files": [
+        ".github/workflows/monster-v4-stage32-six-fresh-date-1m-vs3m-full758.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_paired_1m_vs3m.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_1MIN_VS_ORIGINAL3MIN_SIX_NEW_DATE_EXPERIMENT_PROTOCOL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE33_ORIGINAL36_FUNDED_LOSS_ATTRIBUTION_20261012.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_6newdate_1m_vs3m_full758_prereg_20261012.json"
+      ]
+    },
+    "2026-02-04": {
+      "file_count": 24,
+      "files": [
+        ".github/workflows/monster-v4-stage24-six-original-zip-recompute.yml",
+        ".github/workflows/monster-v4-stage24-six-untouched-7d-watch-gt.yml",
+        ".github/workflows/monster-v4-stage25-first-cross-minute-40.yml",
+        ".github/workflows/monster-v4-stage26-168h-continuous-758x6.yml",
+        ".github/workflows/monster-v4-stage26-derive-source-proof.yml",
+        ".github/workflows/monster-v4-stage28-real-production-shared-d1.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_full_market_7d_watch_audit.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage26_continuous168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_aggregate.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE24_FROZEN_FULLMARKET_7D_GT_V4_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2026-02-06": {
+      "file_count": 14,
+      "files": [
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage29_watch_burst_price_research.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage29b_posthoc_burst_cash.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE26_FULL168H_CONTINUOUS_758x6_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE27_SHARED_D1_QUEUE_AND_CASH_LEDGER_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE28_REAL_SHARED_SQLITE_D1_826_828_PAIRWISE_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE29_MEME_WATCH_BURST_VS_PROFIT_AND_300U_CASH_REAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE30_SIX_UNSEEN_FULL168H_758_MEME_MODEL_PROTOCOL_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE34_18DATE_ALL108_ORIGINAL_SHA_EARLY_DISCOVERY_DATA_ANALYSIS_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE35_FIRST_WATCH_REAL_ONE_MINUTE_FEATURES_18DATE_CAUSAL_ANALYSIS_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_V4_MODEL_AND_LOCAL_ARCHITECTURE.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage27_shared_queue_cash_budget_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage28_exact_shared_d1_production_queue_prereg_20261011.json"
+      ]
+    },
+    "2026-02-08": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE28_REAL_SHARED_SQLITE_D1_826_828_PAIRWISE_ACTUAL_RESULTS_20261011.md"
+      ]
+    },
+    "2026-02-17": {
+      "file_count": 19,
+      "files": [
+        ".github/workflows/monster-v4-stage13-preregistered-multidate.yml",
+        ".github/workflows/monster-v4-stage15-historical-archive-only.yml",
+        ".github/workflows/monster-v4-stage16-frozen-seven-day-ground-truth.yml",
+        ".github/workflows/monster-v4-stage19-gradual-full-market.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage13_multiday.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage15_archive_only.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_FULL_504_REPLAY_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_PROTOCOL_AND_GATE_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE14_D1_EXIT_HORIZON_RESEARCH_FINDINGS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE15_ARCHIVED_SPOT_UNIVERSE_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_SEVENDAY_GROUND_TRUTH_PROTOCOL_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_TO_18_REAL_GT_EARLY_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2026-03-09": {
+      "file_count": 8,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2026-03-19": {
+      "file_count": 10,
+      "files": [
+        ".github/workflows/monster-v4-stage32-six-fresh-date-1m-vs3m-full758.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_paired_1m_vs3m.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_1MIN_VS_ORIGINAL3MIN_SIX_NEW_DATE_EXPERIMENT_PROTOCOL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE33_ORIGINAL36_FUNDED_LOSS_ATTRIBUTION_20261012.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage32_6newdate_1m_vs3m_full758_prereg_20261012.json"
+      ]
+    },
+    "2026-04-04": {
+      "file_count": 21,
+      "files": [
+        ".github/workflows/monster-v4-stage24-six-original-zip-recompute.yml",
+        ".github/workflows/monster-v4-stage24-six-untouched-7d-watch-gt.yml",
+        ".github/workflows/monster-v4-stage25-first-cross-minute-40.yml",
+        ".github/workflows/monster-v4-stage26-168h-continuous-758x6.yml",
+        ".github/workflows/monster-v4-stage26-derive-source-proof.yml",
+        ".github/workflows/monster-v4-stage28-real-production-shared-d1.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_full_market_7d_watch_audit.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage26_continuous168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_aggregate.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE24_FROZEN_FULLMARKET_7D_GT_V4_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2026-04-05": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE28_REAL_SHARED_SQLITE_D1_826_828_PAIRWISE_ACTUAL_RESULTS_20261011.md"
+      ]
+    },
+    "2026-04-06": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2026-04-13": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage20-frozen-holdout-quality-exits.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage20_quality_exit_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE20_QUALITY_EXIT_HELDOUT_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage20_quality_exit_holdout_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json"
+      ]
+    },
+    "2026-04-17": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/evidence/monster_stage10_neutral_preregistered_24case_20261011.json"
+      ]
+    },
+    "2026-04-19": {
+      "file_count": 26,
+      "files": [
+        ".github/workflows/monster-v4-stage30-six-new-7d-758-spot-original.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        ".github/workflows/monster-v4-stage37-sixdate-futures-900-1h-truth.yml",
+        ".github/workflows/monster-v4-stage38-usdm-original-v4-causal-1m-pilot.yml",
+        ".github/workflows/monster-v4-stage39-futures-full900-sixday-real1m-v4.yml",
+        ".github/workflows/monster-v4-stage42-all483-exposed-P1-causal-1m.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_newdates_full168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_full36_usdm_GT_aggregate.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_usdm_sixdate_full900_hourly_labels.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_original12_source_sha_discovery_aggregate.py"
+      ]
+    },
+    "2026-04-25": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2026-04-27": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2026-05-01": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2026-05-17": {
+      "file_count": 19,
+      "files": [
+        ".github/workflows/monster-v4-stage13-preregistered-multidate.yml",
+        ".github/workflows/monster-v4-stage15-historical-archive-only.yml",
+        ".github/workflows/monster-v4-stage16-frozen-seven-day-ground-truth.yml",
+        ".github/workflows/monster-v4-stage19-gradual-full-market.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage13_multiday.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage15_archive_only.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_FULL_504_REPLAY_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_PROTOCOL_AND_GATE_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE14_D1_EXIT_HORIZON_RESEARCH_FINDINGS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE15_ARCHIVED_SPOT_UNIVERSE_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_SEVENDAY_GROUND_TRUTH_PROTOCOL_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_TO_18_REAL_GT_EARLY_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2026-05-29": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+      ]
+    },
+    "2026-06-04": {
+      "file_count": 3,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md",
+        "crypto-300-profit-mission/monster/MONSTER_3904_EVENT_GT_AUDIT_AND_40_CAUSAL_WATCH_REPLAY_20261010.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2026-06-05": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2026-06-09": {
+      "file_count": 9,
+      "files": [
+        ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml",
+        ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml",
+        ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+      ]
+    },
+    "2026-07-02": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2026-07-13": {
+      "file_count": 5,
+      "files": [
+        ".github/workflows/monster-v4-stage20-frozen-holdout-quality-exits.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage20_quality_exit_holdout.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE20_QUALITY_EXIT_HELDOUT_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage20_quality_exit_holdout_prereg_20261011.json",
+        "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json"
+      ]
+    },
+    "2026-07-14": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2026-07-17": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/evidence/monster_stage10_neutral_preregistered_24case_20261011.json"
+      ]
+    },
+    "2026-07-19": {
+      "file_count": 27,
+      "files": [
+        ".github/workflows/monster-v4-stage30-six-new-7d-758-spot-original.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        ".github/workflows/monster-v4-stage37-sixdate-futures-900-1h-truth.yml",
+        ".github/workflows/monster-v4-stage38-usdm-original-v4-causal-1m-pilot.yml",
+        ".github/workflows/monster-v4-stage39-futures-full900-sixday-real1m-v4.yml",
+        ".github/workflows/monster-v4-stage42-all483-exposed-P1-causal-1m.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_make_real_source_proof.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_newdates_full168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_full36_usdm_GT_aggregate.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_usdm_sixdate_full900_hourly_labels.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_original12_source_sha_discovery_aggregate.py"
+      ]
+    },
+    "2026-08-04": {
+      "file_count": 23,
+      "files": [
+        ".github/workflows/monster-v4-stage24-six-original-zip-recompute.yml",
+        ".github/workflows/monster-v4-stage24-six-untouched-7d-watch-gt.yml",
+        ".github/workflows/monster-v4-stage25-first-cross-minute-40.yml",
+        ".github/workflows/monster-v4-stage26-168h-continuous-758x6.yml",
+        ".github/workflows/monster-v4-stage26-derive-source-proof.yml",
+        ".github/workflows/monster-v4-stage28-real-production-shared-d1.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_full_market_7d_watch_audit.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage26_continuous168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_aggregate.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE24_FROZEN_FULLMARKET_7D_GT_V4_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2026-08-05": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE25_ALL40_KNOWN_2X_TRUE_1M_FIRSTCROSS_V4_DIAGNOSIS_20261011.md"
+      ]
+    },
+    "2026-08-06": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE25_ALL40_KNOWN_2X_TRUE_1M_FIRSTCROSS_V4_DIAGNOSIS_20261011.md"
+      ]
+    },
+    "2026-08-08": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE25_ALL40_KNOWN_2X_TRUE_1M_FIRSTCROSS_V4_DIAGNOSIS_20261011.md"
+      ]
+    },
+    "2026-08-09": {
+      "file_count": 2,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE25_ALL40_KNOWN_2X_TRUE_1M_FIRSTCROSS_V4_DIAGNOSIS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE28_REAL_SHARED_SQLITE_D1_826_828_PAIRWISE_ACTUAL_RESULTS_20261011.md"
+      ]
+    },
+    "2026-08-17": {
+      "file_count": 19,
+      "files": [
+        ".github/workflows/monster-v4-stage13-preregistered-multidate.yml",
+        ".github/workflows/monster-v4-stage15-historical-archive-only.yml",
+        ".github/workflows/monster-v4-stage16-frozen-seven-day-ground-truth.yml",
+        ".github/workflows/monster-v4-stage19-gradual-full-market.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage13_multiday.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage15_archive_only.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_FULL_504_REPLAY_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_PROTOCOL_AND_GATE_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE14_D1_EXIT_HORIZON_RESEARCH_FINDINGS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE15_ARCHIVED_SPOT_UNIVERSE_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_SEVENDAY_GROUND_TRUTH_PROTOCOL_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_TO_18_REAL_GT_EARLY_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2026-08-20": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+      ]
+    },
+    "2026-09-01": {
+      "file_count": 3,
+      "files": [
+        "crypto-300-profit-mission/local-agent/scripts/monster_archive_contract_supplement.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_archive_current_supplement.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_archive_stage_a.py"
+      ]
+    },
+    "2026-09-04": {
+      "file_count": 23,
+      "files": [
+        ".github/workflows/monster-v4-stage24-six-original-zip-recompute.yml",
+        ".github/workflows/monster-v4-stage24-six-untouched-7d-watch-gt.yml",
+        ".github/workflows/monster-v4-stage25-first-cross-minute-40.yml",
+        ".github/workflows/monster-v4-stage26-168h-continuous-758x6.yml",
+        ".github/workflows/monster-v4-stage26-derive-source-proof.yml",
+        ".github/workflows/monster-v4-stage28-real-production-shared-d1.yml",
+        ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_full_market_7d_watch_audit.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage26_continuous168h.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_aggregate.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE24_FROZEN_FULLMARKET_7D_GT_V4_WATCH_RESULTS_20261011.md"
+      ]
+    },
+    "2026-09-09": {
+      "file_count": 7,
+      "files": [
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage29b_posthoc_burst_cash.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE28_REAL_SHARED_SQLITE_D1_826_828_PAIRWISE_ACTUAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE29_MEME_WATCH_BURST_VS_PROFIT_AND_300U_CASH_REAL_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE30_SIX_UNSEEN_FULL168H_758_MEME_MODEL_PROTOCOL_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE35_FIRST_WATCH_REAL_ONE_MINUTE_FEATURES_18DATE_CAUSAL_ANALYSIS_20261012.md",
+        "crypto-300-profit-mission/monster/MONSTER_V4_MODEL_AND_LOCAL_ARCHITECTURE.md",
+        "crypto-300-profit-mission/monster/evidence/monster_stage30_six_new_dates_full758_7d_watch_holdout_prereg_20261011.json"
+      ]
+    },
+    "2026-09-16": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/evidence/monster_stage12_all504_spot_universe_preregistered_20261011.json"
+      ]
+    },
+    "2026-09-17": {
+      "file_count": 21,
+      "files": [
+        ".github/workflows/monster-v4-stage15-historical-archive-only.yml",
+        ".github/workflows/monster-v4-stage16-frozen-seven-day-ground-truth.yml",
+        ".github/workflows/monster-v4-stage19-gradual-full-market.yml",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_archive_crosscheck.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_archive_universe_replay.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage15_archive_only.py",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE10_11_NEUTRAL_CONTROLS_AND_ARCHIVE_PARITY_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE12_REAL_FULL504_SPOT_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_FULL_504_REPLAY_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE14_D1_EXIT_HORIZON_RESEARCH_FINDINGS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE15_ARCHIVED_SPOT_UNIVERSE_RESULTS_20261011.md",
+        "crypto-300-profit-mission/monster/MONSTER_STAGE16_SEVENDAY_GROUND_TRUTH_PROTOCOL_20261011.md"
+      ]
+    },
+    "2026-09-18": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/evidence/monster_stage12_all504_spot_universe_preregistered_20261011.json"
+      ]
+    },
+    "2026-09-27": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_V4_DATA_BASELINE_2026-10-10.md"
+      ]
+    },
+    "2026-09-28": {
+      "file_count": 2,
+      "files": [
+        "crypto-300-profit-mission/monster/MONSTER_V4_DATA_BASELINE_2026-10-10.md",
+        "crypto-300-profit-mission/monster/MONSTER_V4_MODEL_AND_LOCAL_ARCHITECTURE.md"
+      ]
+    },
+    "2026-09-29": {
+      "file_count": 2,
+      "files": [
+        "crypto-300-profit-mission/local-agent/scripts/monster_archive_contract_supplement.py",
+        "crypto-300-profit-mission/local-agent/scripts/monster_archive_current_supplement.py"
+      ]
+    },
+    "2026-09-30": {
+      "file_count": 1,
+      "files": [
+        "crypto-300-profit-mission/local-agent/scripts/monster_archive_stage_a.py"
+      ]
+    }
+  },
+  "market_data_queried_in_this_run": false,
+  "not_includes": "binary official price files and event-labelled JSONL; NOT complete historical point-in-time exchange listings",
+  "other_AI_review": "NOT_DONE",
+  "schema": "MONSTER_STAGE43_STAGE42_PINNED_GIT_EXPOSURE_LEDGER_V1",
+  "selection": {
+    "blocked_by_any_research_or_example_date": 566,
+    "covered_range_utc": [
+      "2025-01-01",
+      "2026-09-30"
+    ],
+    "historical_seven_day_window_possible_start_days": 631,
+    "holdout_rule": "SEED_SHA256(date), no 7d intersection with any 2025-2026 historical ISO date in pinned Monster docs/code/protocols; 21d minimum spacing between chosen starts",
+    "holdout_selected_blind_by_hashed_date_only": [
+      "2025-01-09",
+      "2025-09-02",
+      "2026-01-26",
+      "2026-02-24",
+      "2026-03-28",
+      "2026-05-10"
+    ],
+    "no_future_prices_or_labels_read_to_choose_dates": true,
+    "no_overlap_start_dates_all_recorded_source_dates": 65,
+    "selection_status": "FROZEN_CANDIDATE_UNDER_DATE_AUDIT"
+  },
+  "source_SHA256_receipts": [
+    {
+      "git_blob_SHA256": "47b6f1767ee426284a1bf5cbca115d6a94310ea63b8498aae1a5d4e4fb859d9c",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-research-baseline.yml"
+    },
+    {
+      "git_blob_SHA256": "2152e9a50fbf45b059c76be60833a0b8180573baaa1f5087361fce92463ef95c",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage11-archive-crosscheck.yml"
+    },
+    {
+      "git_blob_SHA256": "39465b269c95b8ad111ed1562c155afaa76afa33dee33c5f522c953dc771e84d",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage12-full-spot-hourly-window.yml"
+    },
+    {
+      "git_blob_SHA256": "deb28f55c04fa2b863aa10c37da490750d13cf33a8539d6bea7bfb38671475e4",
+      "historical_ISO_date_count": 4,
+      "path": ".github/workflows/monster-v4-stage13-preregistered-multidate.yml"
+    },
+    {
+      "git_blob_SHA256": "f56796ab4d3dedc7389fcb87dc77e967c1a2b7a5b16bf4db22376b5549a5ac2b",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage14-frozen-d1-exit-horizons.yml"
+    },
+    {
+      "git_blob_SHA256": "a83cac48c4d62cd60bcabf337ea05ea654d2607e58807e65cdf88ad17d170b36",
+      "historical_ISO_date_count": 5,
+      "path": ".github/workflows/monster-v4-stage15-historical-archive-only.yml"
+    },
+    {
+      "git_blob_SHA256": "789442ef535eb4320c6662bd073892378758d4c1b3a89c35fee5ae5d591a4a21",
+      "historical_ISO_date_count": 5,
+      "path": ".github/workflows/monster-v4-stage16-frozen-seven-day-ground-truth.yml"
+    },
+    {
+      "git_blob_SHA256": "b6aa2af1e16630521d2da89bcddcad66445975b8c0341641a18afd2927df27a3",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage17-exposed-event-aligned.yml"
+    },
+    {
+      "git_blob_SHA256": "9818fe7d33443290ad2c06f5409a12e80ea12d399959f96352e00bd92fe6bb6f",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage18-missed-gate-diagnostic.yml"
+    },
+    {
+      "git_blob_SHA256": "1a25b73e034afdc7becdc35bd1a80578c5e23b6554d9e48b96a4ace275013954",
+      "historical_ISO_date_count": 5,
+      "path": ".github/workflows/monster-v4-stage19-gradual-full-market.yml"
+    },
+    {
+      "git_blob_SHA256": "41d0cafbef45e31a0bbd7cacf79f380e63f412b03beac39623905d937c7005ed",
+      "historical_ISO_date_count": 4,
+      "path": ".github/workflows/monster-v4-stage20-frozen-holdout-quality-exits.yml"
+    },
+    {
+      "git_blob_SHA256": "3cfd8b86524ae433cfbf2f239ff80be4b1633d70f1de3fbd0b07a4c1809dd7b4",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage20-recompute-verified-artifacts.yml"
+    },
+    {
+      "git_blob_SHA256": "abae3804a76c0a986d3dbc5f13f69995d6ca04dfe7324cb17c1a5afd677f8ba9",
+      "historical_ISO_date_count": 10,
+      "path": ".github/workflows/monster-v4-stage21-extended-unchanged-holdout.yml"
+    },
+    {
+      "git_blob_SHA256": "60cff025672ca453c352f3d8d5db4ed155a5f93ab7dd746a175e769f3c2cced5",
+      "historical_ISO_date_count": 10,
+      "path": ".github/workflows/monster-v4-stage21-verify-ten-official-artifacts.yml"
+    },
+    {
+      "git_blob_SHA256": "4f92834ba618d9ea637ae1dc278c71f846d59645e60a9a567662f6acca480701",
+      "historical_ISO_date_count": 10,
+      "path": ".github/workflows/monster-v4-stage22-aggtrades-stop-diagnostic.yml"
+    },
+    {
+      "git_blob_SHA256": "ba6c3ebd4dcab0a6d66fea9b4c09242f2f064d13a1cd8c3243b2fe79b8c257e3",
+      "historical_ISO_date_count": 10,
+      "path": ".github/workflows/monster-v4-stage23-preregistered-overextension.yml"
+    },
+    {
+      "git_blob_SHA256": "145951d8f7c901b4f456971060e1ecd272f90fdccba900323af26263a3240a4c",
+      "historical_ISO_date_count": 10,
+      "path": ".github/workflows/monster-v4-stage23-verify-original-artifacts.yml"
+    },
+    {
+      "git_blob_SHA256": "f4590862693eb82d046cc4672c2c3862df90f954749dc6c3e80c764cf7f0264f",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage24-six-original-zip-recompute.yml"
+    },
+    {
+      "git_blob_SHA256": "4b5f3f9c5c48317978a38ab6237d06632951a8c140a9e244186cb08a4899e181",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage24-six-untouched-7d-watch-gt.yml"
+    },
+    {
+      "git_blob_SHA256": "31e750f830e41513b73ca570aebf9ba7d542b51cbbbfe5764238f7ea07ea397f",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage25-first-cross-minute-40.yml"
+    },
+    {
+      "git_blob_SHA256": "237e2b6acb9c96612dbe868c204853f511a5879c920efc7d165f0b767b1f80d4",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage26-168h-continuous-758x6.yml"
+    },
+    {
+      "git_blob_SHA256": "da0faa9bd57caa6049221cc93174bfaf1ceae7a154577dde228e2936a5107e7d",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage26-derive-source-proof.yml"
+    },
+    {
+      "git_blob_SHA256": "cd3df323086569e9162a20a042230b6fb0ad477085d0e861e9de31c3dc5a8097",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage26-verify-36-original-zip-sha.yml"
+    },
+    {
+      "git_blob_SHA256": "6c29777952f4f98f151e25cc8bd88b9b58aba59b18b75dab8d7b2c3bd8a58555",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage27-shared-queue-funded-cash-ledger.yml"
+    },
+    {
+      "git_blob_SHA256": "d08a5a60005b5655a6efffe7a2283bd040ddb943c59fa5f5b92dfc7c3732243f",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage28-pairwise-D1-42-originals.yml"
+    },
+    {
+      "git_blob_SHA256": "1dfc8f72540d52089d5506fd6f6d39c7b5d2a7f3e571befb3f234ec16b74071d",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage28-real-production-shared-d1.yml"
+    },
+    {
+      "git_blob_SHA256": "f4caf1c9939d585714fab8f56e8526e0b8900579acedff3c4ec10f6cdf88db15",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage28-six-real-D1-sha-recompute.yml"
+    },
+    {
+      "git_blob_SHA256": "d6aa205fb030965dd83ed8179c233bdd38317c6c72d41faf8998ea41b340a0e7",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage29-meme-watch-regime-source-audit.yml"
+    },
+    {
+      "git_blob_SHA256": "c63867ac52264f68e7e736d39e269570820c8780ff990fc0d2a851209322ddd1",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage29b-exposed-burst-funded-cash.yml"
+    },
+    {
+      "git_blob_SHA256": "6de8fcfb3666acf36a09d136a61f66ebc7124df530fc9873fc3c66ed88d1c9da",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage30-derive-original36-source-proof.yml"
+    },
+    {
+      "git_blob_SHA256": "5d702531cc9613eafb5d42cd6af7787161b81846d6b93a4234804a2aca3be5aa",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage30-six-new-7d-758-spot-original.yml"
+    },
+    {
+      "git_blob_SHA256": "b9a147d93969a22914cb2909f76549099c4d6c4c922f0eb21f23a179ce7102c6",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage30-source-36-sha-aggregate.yml"
+    },
+    {
+      "git_blob_SHA256": "d9ec7a92ab81fab2060957dc2aab221bacf1b7a75f427c233306fe4243e14613",
+      "historical_ISO_date_count": 3,
+      "path": ".github/workflows/monster-v4-stage31-five-real-meme-causal-miss.yml"
+    },
+    {
+      "git_blob_SHA256": "556f5339236d6fac298464252c4601cdbb6394be4f3d57c9d26e361a9a977ad5",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage32-exact-original36-SHA-aggregate.yml"
+    },
+    {
+      "git_blob_SHA256": "ce2483be532c951788b302107f152e7aa00523cb77004b516b0dc396a4824511",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage32-six-fresh-date-1m-vs3m-full758.yml"
+    },
+    {
+      "git_blob_SHA256": "10d2428b7b50092f7754b1520b18b5fa313bb9f32b486b0378c9e810e3daae2e",
+      "historical_ISO_date_count": 3,
+      "path": ".github/workflows/monster-v4-stage32a-old-five-paired-diagnostic.yml"
+    },
+    {
+      "git_blob_SHA256": "6567942262f553bb567f2c603330f3d66048ea25c0961ac17004f2f7ecff7eaa",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage33-original36-readonly-loss-attribution.yml"
+    },
+    {
+      "git_blob_SHA256": "b94f80cfde20fd859894a93a03e41476bda4b7b84b207d72fef46e5d37fcef60",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage34-full18date-discovery-census.yml"
+    },
+    {
+      "git_blob_SHA256": "be3b4c58fbc380a3f065200fdab192cf8c49b7a468a463ec4bc1dd0bd45ffc57",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage35-aggregate-original18-sha.yml"
+    },
+    {
+      "git_blob_SHA256": "33fb22b8f0c0aa2166d63b169021daede589e84edcebbe76789be0671600e132",
+      "historical_ISO_date_count": 18,
+      "path": ".github/workflows/monster-v4-stage35-first-watch-causal-features.yml"
+    },
+    {
+      "git_blob_SHA256": "ab4e09ff1b0a2537cdb1b1d889a3c37d61cf3229ec3405069624f4a5afd12a3b",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage36-official-usdm-universe-inventory.yml"
+    },
+    {
+      "git_blob_SHA256": "ccaed071029e73037da1608cca59f7ecaa87764098d4b064f7bdf24723be8130",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage37-real36-source-sha-aggregate.yml"
+    },
+    {
+      "git_blob_SHA256": "49d522bc9b4d57c0def2591ec7efff04967558ff622e0b29858b91dbe3723a7c",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage37-sixdate-futures-900-1h-truth.yml"
+    },
+    {
+      "git_blob_SHA256": "0d70d0193ae70062cbd7d975e97b018a3350465170963113331dc729907c053f",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage38-original12-sha-causal-pilot-aggregate.yml"
+    },
+    {
+      "git_blob_SHA256": "6d5ce655ae9285a43ce2479e213ac607cb23b2875936de873104ca241c58ef09",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage38-usdm-original-v4-causal-1m-pilot.yml"
+    },
+    {
+      "git_blob_SHA256": "d6e1da395ec29e89cf5376293cf566480011e7a66e5146ee41b417f8b2fed3fb",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage39-futures-full900-sixday-real1m-v4.yml"
+    },
+    {
+      "git_blob_SHA256": "208b93e4b8d579901c454ec55116a8b6c192f7dd941bb1c4d64bb58af6d30ad5",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage39-original36-sha-full-market-aggregate.yml"
+    },
+    {
+      "git_blob_SHA256": "d3c354d1ed3780207e7642f8627434cf43883d43c195170dcbcd66f77ef02a72",
+      "historical_ISO_date_count": 6,
+      "path": ".github/workflows/monster-v4-stage42-all483-exposed-P1-causal-1m.yml"
+    },
+    {
+      "git_blob_SHA256": "2c805cb2c72f8cd5a09485c8bc43ce62bc014b26f9bcdf798c30c857633e8686",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage42-original12-sha-all483-aggregate.yml"
+    },
+    {
+      "git_blob_SHA256": "a18b344a4534c91804e204071cbeb6e2b3c3944f3a0aafa3d44b0fb02d17750e",
+      "historical_ISO_date_count": 0,
+      "path": ".github/workflows/monster-v4-stage42-p1-priority-causal-tests.yml"
+    },
+    {
+      "git_blob_SHA256": "8494d55c9415068cedf3d90d9c7b5797e7e0fd694524be20aae3c2005868e7b1",
+      "historical_ISO_date_count": 2,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_archive_contract_supplement.py"
+    },
+    {
+      "git_blob_SHA256": "af5addfe2ab165e24d5017b6d5791951132f3ed18439e83b1f6a4c7af9bf7bf1",
+      "historical_ISO_date_count": 2,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_archive_current_supplement.py"
+    },
+    {
+      "git_blob_SHA256": "656952349cd89c91c83a1d368fa09cfcbabcf0532b870557c8fe4b1c836f4e55",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_archive_finalize.py"
+    },
+    {
+      "git_blob_SHA256": "1f616ac0378be62d4e888e6c715e23e7d22140aba6cbdb29b933d29d3f9a0b6c",
+      "historical_ISO_date_count": 2,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_archive_stage_a.py"
+    },
+    {
+      "git_blob_SHA256": "09f21a7dd367aa36b51c5442f48f98e9f9c0b7fb73cb5fcf1e4cd21d217de364",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_d1_frozen.py"
+    },
+    {
+      "git_blob_SHA256": "a19b663f6aa84ce7235af497bedc71a2edbf82d822aa3978988088cfd538bbd0",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_d2_source_audit.py"
+    },
+    {
+      "git_blob_SHA256": "c4d7a7ef27c7602ea55018173ffc0d78dfda938c97b6dd665605c04d69cecf71",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_full_market_history_diagnostic.py"
+    },
+    {
+      "git_blob_SHA256": "389532e5be4afcba8127459f03a05f346fbaf6c00a9aa1a9eb89bbe0504c19ea",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_historical_inventory.py"
+    },
+    {
+      "git_blob_SHA256": "7a940304dad1b39924b2e08527d0fe2538ee92eab157798bff92c1911d8a14ad",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_stage5_integrity.py"
+    },
+    {
+      "git_blob_SHA256": "d1a3a2d12ab772b382ca0b3bd9d66efe65c946a14936d7177f132ce1c620d33d",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_stage_b_windows.py"
+    },
+    {
+      "git_blob_SHA256": "2612867898436aecde8f43bea3ab8bc5b183c2c4361b4d6a2ed7b6bb34c3a4e4",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_universe_probe.py"
+    },
+    {
+      "git_blob_SHA256": "23a9135392e7c61c8c5d377bde385a4b78cf34bf4991b696d23bb248e1ac3f2d",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v2_exposed_diagnostics.py"
+    },
+    {
+      "git_blob_SHA256": "ad0759d5a06bc43761d26650a89aa53c192be1551c94395fa5a886f5dc2864fa",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v2_history.py"
+    },
+    {
+      "git_blob_SHA256": "4173beab7750dfbc434f84ce347f083c00a3bf148f322e3947048b48d7a9f33d",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v2_memory_probe.py"
+    },
+    {
+      "git_blob_SHA256": "4798a1b68c894a819b9dac6fde2bb6d8d263711e7dfe5152f052a7422c3a696b",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v2_replay.py"
+    },
+    {
+      "git_blob_SHA256": "898fb0b42b7e225b41a203eff2f1cb5274593dbfc08ecda94cc9b6619a3d8de6",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v3_exposed_diagnostics.py"
+    },
+    {
+      "git_blob_SHA256": "e6ab58a0d4b04e62ead811bbb345c56c6fdc914a575f69110ad5152c4b106b20",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v3_outcome_audit.py"
+    },
+    {
+      "git_blob_SHA256": "f500592cd929212c1c756d35d8b783cc64f00316e9ef0749a7d0d418cb2231e8",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v3_replay.py"
+    },
+    {
+      "git_blob_SHA256": "2edb17889b166f3ce614ff012352722aff5ebadf3f5074d852445b8f90423781",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_archive_crosscheck.py"
+    },
+    {
+      "git_blob_SHA256": "a3e39f64215311ceaa4ab445bef7ad89385efcfaf5d4a946f548b1aa4ca71c57",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_archive_universe_replay.py"
+    },
+    {
+      "git_blob_SHA256": "de5a3f16638217ccadb79574829c59e3ede424ad35d8c43ccc0e46a8e7bee945",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_baseline_audit.py"
+    },
+    {
+      "git_blob_SHA256": "4be2edb4b15543516da70e0d04d1fd5bd1c7937e8a6c805977eefffc0b10aa3d",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_causal_feature_research.py"
+    },
+    {
+      "git_blob_SHA256": "0af32b794f235bcaa33aa9d87e4ea581591eec16cc4f11bab92434a5d94bddb8",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_d2.py"
+    },
+    {
+      "git_blob_SHA256": "13e262838ef739e690a90e0d3e6bb501789a759cdcdfceb7ee0d06435105d9fd",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_d2_evidence.py"
+    },
+    {
+      "git_blob_SHA256": "14b90c8dedab3902cdafe4f32a8edb48383ecdbfd95ad4545066483070e56144",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_export_event_packet.py"
+    },
+    {
+      "git_blob_SHA256": "592cd29e2afd43218109bf7e4c2396d307abe631e23bbf80f8781a03890e1939",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_price_probe.py"
+    },
+    {
+      "git_blob_SHA256": "3acabdca5a01431442d867275b9649bca0d5b764adcd9eb300ff6e6e8dcded13",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_replay.py"
+    },
+    {
+      "git_blob_SHA256": "f3f7cd1b8240f284c93a5ac40bc5bf21961569c289b120f1f9ea3a29161ba835",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_history_source_quality.py"
+    },
+    {
+      "git_blob_SHA256": "2b6f33a68230e81bce0905797549c560cd79ce787fa46a94eb6fb2a14f6acf4e",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_mac_service.py"
+    },
+    {
+      "git_blob_SHA256": "636af45ecb735f6eb624d04d0c9f95aeba07bb31b0415450ae8a1ea6259db616",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_neutral_control_replay.py"
+    },
+    {
+      "git_blob_SHA256": "98b4e88f71ef947474a3326d5db908600e1147657ce67ade30fcc1889a310300",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py"
+    },
+    {
+      "git_blob_SHA256": "1c6134dc2698b3e59065b217f28793447274ee83937fb497c15f15406c6b94c2",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_short_history_replay.py"
+    },
+    {
+      "git_blob_SHA256": "b4445a7a3569e984e6558b0fc19292f6b6d75de79164c48369b6111946346e47",
+      "historical_ISO_date_count": 4,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage13_multiday.py"
+    },
+    {
+      "git_blob_SHA256": "7210347ecfb9bfb0411c5a54ab07976b1112eece45d2cdecf3aed157991150d5",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage14_d1_exit_horizons.py"
+    },
+    {
+      "git_blob_SHA256": "103f35abc6dc94d9132ce277fd3af93010ab8a1bd6e02cec886d032fcf77e4d3",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage15_archive_only.py"
+    },
+    {
+      "git_blob_SHA256": "25e23561af856a253f03bc84da364a846c008c676c1224109304e7ea41d47a4d",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage16_seven_day_labels.py"
+    },
+    {
+      "git_blob_SHA256": "6bcb0ec732aabfbc500f308cea891dbfd9ae48d341ebc20f9f3412f37bf4b1ce",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage17_event_aligned_replay.py"
+    },
+    {
+      "git_blob_SHA256": "9b45be3cfa70bdb38802a03bdf59e40d899178c59e535ff36457051990d03e4a",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage18_missed_gate_diagnostic.py"
+    },
+    {
+      "git_blob_SHA256": "6ebe0b10e041e5ac01f4f4072a0cdc6040f3d4ff9a63e1e1bf3c5c06adf0b868",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage19_gradual_watch.py"
+    },
+    {
+      "git_blob_SHA256": "cb5590d106b69e5d40cac567732ea4484a67fb0230cd98aedc4b174bedf56c94",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage20_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "f338fafe6d7c6e87b199f2f5b13bfc96e2e366a990b9cccf0b9083ed9aec97c3",
+      "historical_ISO_date_count": 4,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage20_quality_exit_holdout.py"
+    },
+    {
+      "git_blob_SHA256": "2730e904d457a8633f0beb8787540fe8bc4d662ea34dedb39b25629d73cf44de",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "2030269c98742766c62abdfb7fe5cef7fb71efc48f27a6193f7c1dd8103ac377",
+      "historical_ISO_date_count": 10,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage21_extended_holdout.py"
+    },
+    {
+      "git_blob_SHA256": "f1b39f80d1367e1580aaf9ef26b7c9f723a6255de98baa99d97a0201725a7099",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage22_aggtrade_flow.py"
+    },
+    {
+      "git_blob_SHA256": "b5c6acf66003a45bd8417ca3c9e80ce835a4811de708f867d8a285677394e63c",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "77954a12664cf2837914db372d56713fb62fb8431223d12a8448f9d14a821ac9",
+      "historical_ISO_date_count": 10,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage23_overextension_holdout.py"
+    },
+    {
+      "git_blob_SHA256": "540af6014e949df2f228ff501f02774d032359607929c9be386410da18e280cb",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "b4b51c29c6b87cc2b93bc17d3f6756d8da6685de94bc2a1fae2e239c7ff1bb72",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage24_full_market_7d_watch_audit.py"
+    },
+    {
+      "git_blob_SHA256": "5e3749e4344b3220037d108b7509292564b5770da0d3d27a04f1edad90153020",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage25_event_time_diagnostic.py"
+    },
+    {
+      "git_blob_SHA256": "9e2028818b26ff73989e928f30f6916a314fe891de2090ef1a5afc1e27f696fe",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage26_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "9a879b0cfe14659d6ef9dd6532b09544d5e13de7a7c1b67fe9dfffb988ead786",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage26_continuous168h.py"
+    },
+    {
+      "git_blob_SHA256": "ac73e155a79dc8344583bf2ed0d522f1fdfd03c36a048bd24ff04cc695a1345b",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage27_shared_queue_cash_ledger.py"
+    },
+    {
+      "git_blob_SHA256": "d13dc4b529315f0b04a38e6dda05a4264a58efc59b7df9eb22ff3b874fa86aea",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "ca71e96db6c53ba312811c99ef8cf005916dde71f700bbe9d7e959808e8fc842",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_pairwise_D1_compare.py"
+    },
+    {
+      "git_blob_SHA256": "440f61aa7022fb3afd287d4a50008a49eed419782584126d2e9830c84a0c8e78",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage28_real_shared_sqlite_d1.py"
+    },
+    {
+      "git_blob_SHA256": "20ee7493fb270b31eeca41324163ba38559a7a5eb18001e61810da2e788f5e3d",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage29_watch_burst_price_research.py"
+    },
+    {
+      "git_blob_SHA256": "3bb30350fde3f4c27331c982dc1f2c7880c18d4ba3e07f9505f9be29df470a0e",
+      "historical_ISO_date_count": 2,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage29b_posthoc_burst_cash.py"
+    },
+    {
+      "git_blob_SHA256": "5ba44c68590c035cb5b36d4bd3a73d9ed776f29b83b557e526c4cf3ef9957b73",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "bf6e10ac1858dbc4fafb2ea27bbc350c6c19b08d2a5b95451999f07a0e44e7ab",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_make_real_source_proof.py"
+    },
+    {
+      "git_blob_SHA256": "a03203c7b4ae9bf30a0ff9da78783a7ee76b9ce9add970f6a9d9bbcd57fadabf",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage30_newdates_full168h.py"
+    },
+    {
+      "git_blob_SHA256": "a4caf23b2574ddcefbb89343a7306a85e56b4269b7fe5c9dab4b52bd3a8e395a",
+      "historical_ISO_date_count": 3,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage31_five_case_causal_trace.py"
+    },
+    {
+      "git_blob_SHA256": "55562a76a3dbcda7ef3983780275b850be3c801316fba8aeaf26b656e9118e8a",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "a38213673e6db5aee5c901a850f094a75014f0737527c8b792156450fa84812f",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_make_real_source_proof.py"
+    },
+    {
+      "git_blob_SHA256": "48d04ce42a5a513d4ad0f7592db29e06491201ce8dbcc8f08190bb10e5ae1582",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32_paired_1m_vs3m.py"
+    },
+    {
+      "git_blob_SHA256": "646cb464e411b711d2e951dd0bf654601dc2d74a2dd43e50249a99b9a376d327",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage32a_known5_1m_cadence_diagnosis.py"
+    },
+    {
+      "git_blob_SHA256": "9bdf53902d21f6713de2e0d517fc993536d746c6e24c512b9e6b19a11dab1bba",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage33_readonly_loss_attribution.py"
+    },
+    {
+      "git_blob_SHA256": "394a3eb810ce7f5f8b8e332f7829e6cedadbc75e64c0bac98feafe4039d937b7",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage34_full18date_discovery_census.py"
+    },
+    {
+      "git_blob_SHA256": "1f67e0255cc9f9744e322b0b2cb6ad785e9b18ce7654e6c92b55a8ac7e479f6b",
+      "historical_ISO_date_count": 18,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py"
+    },
+    {
+      "git_blob_SHA256": "901fdc9facf20685ef9f7685e069bffe8b22285b5f20e4661dae886d10105aac",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_first_watch_features.py"
+    },
+    {
+      "git_blob_SHA256": "50998424fa44c0bb71b962b8272750dd218b4c0b9784b46886a09398b240b6d9",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage36_usdm_archive_universe_inventory.py"
+    },
+    {
+      "git_blob_SHA256": "871a914ad4b81c472d4f8d4b8370fcb88c34ee6038bfa6cea51725b1e58bd6ef",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_full36_usdm_GT_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "e6b40085e288080129d331bcf9f930a411ac075356dd769e4af71fdf76e072ea",
+      "historical_ISO_date_count": 7,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_usdm_sixdate_full900_hourly_labels.py"
+    },
+    {
+      "git_blob_SHA256": "17123a57588e3c67d8d4cd6924952716aed4f11874413941c58c1dfb90dcd544",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_original12_source_sha_discovery_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "967325ae3345ff2ed04e9b0f2bfe1931f19a13bf191b252a70f7df02c3583182",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py"
+    },
+    {
+      "git_blob_SHA256": "a018b3afee7e6f29702a1d5c05fe788765058c26ff41c6d3c292688c4c66963a",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_original36_source_sha_full_market_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "00255a3c0a3918a58f149fb02a9ed4675c940b408ea07637527343008a804705",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_usdm_all900_sixday_original_1m.py"
+    },
+    {
+      "git_blob_SHA256": "1d0b31d34f400da0f33236ecefff698366da3c0403e9e734d0bc06f17430193c",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_original12_sha_all483_priority_aggregate.py"
+    },
+    {
+      "git_blob_SHA256": "c92ce65f6acc41f811641a496ce71d075bf21f8c268c1c83c14e0a3c16440e21",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_all483_official1m_pilot.py"
+    },
+    {
+      "git_blob_SHA256": "fdb6d4a9fc4fb3bf3fc48bddc99b93f3430b963f8d1a4a30547355180e03be18",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_priority_v01.py"
+    },
+    {
+      "git_blob_SHA256": "9783ac3e58049d2d2373802c869e7bd903ebd96f7309292d43f06001e3a921a6",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/AGENTS.md"
+    },
+    {
+      "git_blob_SHA256": "fee38ff6c892a85f17aba146f4f2f2a93e8c0514af4ce150ccff92640e7b73ce",
+      "historical_ISO_date_count": 20,
+      "path": "crypto-300-profit-mission/monster/MONSTER_2021_2026_5X_EVENT_REGISTER_2026-10-10.md"
+    },
+    {
+      "git_blob_SHA256": "859df818ffd0497a0bed1ca7e243707f8be30d4810522988693d5af5639b9a62",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/monster/MONSTER_3904_EVENT_GT_AUDIT_AND_40_CAUSAL_WATCH_REPLAY_20261010.md"
+    },
+    {
+      "git_blob_SHA256": "1d0d36bf442b8ca681793de450c4895dee1a4006605c8280dc99e4d72180cb17",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_40_EVENT_OHLCV_REAL_PACKET_AUDIT_20261010.md"
+    },
+    {
+      "git_blob_SHA256": "123b1f3bf359a0eba0b277842dc21388831d5f41bf44bf572325fd09470dd8c0",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/monster/MONSTER_FULL_UNIVERSE_33M_BARS_REAL_REPLAY_2026-10-10.md"
+    },
+    {
+      "git_blob_SHA256": "aaacf38ea494c2ffb75ca24bc17bdd9e292cb6fbf45842916c22477f3ed37c7a",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_INDEPENDENT_AI_REVIEW_PACKET_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "edd63a3cb55dce821e8fb697671cb096e8d8eae5883e3fbbe9aec20825b74c2c",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_LOCAL_UPLOAD_CONVENTION.md"
+    },
+    {
+      "git_blob_SHA256": "8345e69c428aa7f1e3b33306402e1252efca6a60766656257d95a8bd73f066fb",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_MAC_SHADOW_DEPLOYMENT_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "4637a7bc7f99be73b78b5d6709b039aacee5c9ca8c8b5cee4f39a6d109c79b6e",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_MODULE_DEVELOPMENT_RULES.md"
+    },
+    {
+      "git_blob_SHA256": "283059c9ce21f13c9d84cc11f7eb68e12a40e7211a1776495041d7670f65b89b",
+      "historical_ISO_date_count": 2,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE10_11_NEUTRAL_CONTROLS_AND_ARCHIVE_PARITY_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "c139f38f38a26f727d5f5a2c97d50d0cad8dbe799b6d42f7fff1663c0a3d7596",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE12_REAL_FULL504_SPOT_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "fd2e5b6ffc660a298794a2c9d8b3582620c313e7ca66ccf8c7031ea84722bceb",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_FULL_504_REPLAY_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "b6c1918a5b93f6710f4260d7e8e1dd8976d1518e2dd7a2007ab1b7b1de2d8a94",
+      "historical_ISO_date_count": 4,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE13_MULTIDATE_PROTOCOL_AND_GATE_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "da63b6cf7492f7c342652b9bb414699bbcd7aab1d292e0657aa0e5f83c18893c",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE14_D1_EXIT_HORIZON_RESEARCH_FINDINGS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "118ccf9a625b1c9ca3ad9701e8229b159a84d85b1b43b2d106c02b7482c6ffca",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE15_ARCHIVED_SPOT_UNIVERSE_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "e9ce27285aa5661c7daeedd1878839be2bce101f59c816125e222a647388b5a8",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE16_SEVENDAY_GROUND_TRUTH_PROTOCOL_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "9a073c799acf76e096679c7f9115b4b88d5f74827dce78ec37e48ab2bfc01d5a",
+      "historical_ISO_date_count": 7,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE16_TO_18_REAL_GT_EARLY_WATCH_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "cbbc58b01332d17dcbbacc41034dd20f7b5f987aceaa22fac8e7a30b337ca1da",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE19_GRADUAL_WATCH_FULL758_REPLAY_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "93b4db0f7e06740c065460c55317c93c1b4cc108273a679ced5f0275be86487b",
+      "historical_ISO_date_count": 4,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE20_QUALITY_EXIT_HELDOUT_ACTUAL_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "fdfdda1ca2b5ef7612f4b0b482277e99eec2739a53d0cc2c329cc72b58b66934",
+      "historical_ISO_date_count": 10,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE21_EXTENDED_10DATE_EXIT_HOLDOUT_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "6177ffae693060a63392cf01c91751329e894367a27f16994391b6a6deb84d31",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE22_REAL_AGGTRADES_34_STOPS_DIAGNOSIS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "b90570d15e970f1c57589e10b8811403da87899a241e922081195774b0f824f6",
+      "historical_ISO_date_count": 2,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE23_UNSEEN_OVEREXTENSION_758_SPOT_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "50a476267020e0e275601737af4286740137943c99b347048aa721709699c805",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE24_FROZEN_FULLMARKET_7D_GT_V4_WATCH_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "d7955d879f3939cc84216f348c2ec31dd6144093b0057f0cd551593865c93a10",
+      "historical_ISO_date_count": 8,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE25_ALL40_KNOWN_2X_TRUE_1M_FIRSTCROSS_V4_DIAGNOSIS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "96803d0fcb83827bd86fb6c04a1edf1932d0d07082e1b406a9c1267dc7e8633c",
+      "historical_ISO_date_count": 7,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE26_FULL168H_CONTINUOUS_758x6_ACTUAL_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "bf565411a55153c8064aa36e9dace586b4279d5ef7d9930e0b6498d6fe6a3844",
+      "historical_ISO_date_count": 2,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE26_FULL168H_CONTINUOUS_ORIGINAL_V4_DESIGN_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "2fe1f8ef76909326e697041d23a530719716f21b63311191c6a35b4071105ae8",
+      "historical_ISO_date_count": 7,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE27_SHARED_D1_QUEUE_AND_CASH_LEDGER_ACTUAL_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "0098308107e9a05d5197789ec0ccf42dfb678f3d5943bbccdbc5010657cd0988",
+      "historical_ISO_date_count": 12,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE28_REAL_SHARED_SQLITE_D1_826_828_PAIRWISE_ACTUAL_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "b2f8566eb8ea37e3e6ac5b54f65fb4129b6259ccd43ce034f93dafd5517bfb9c",
+      "historical_ISO_date_count": 4,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE29_MEME_WATCH_BURST_VS_PROFIT_AND_300U_CASH_REAL_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "8858fc704a7a6f74e980ae42a3181ec6227270d4b6b112944e2c9852e5903918",
+      "historical_ISO_date_count": 18,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE2_FULL_MARKET_FILTER_AND_5M_DIRECT_BINANCE_AUDIT_2026-10-10.md"
+    },
+    {
+      "git_blob_SHA256": "417d655e61034af978285b5269c70d4df187ca3c489f1acb20282e497176715e",
+      "historical_ISO_date_count": 9,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE30_SIX_NEW_DATES_758_MEME_FULL168H_ACTUAL_RESULTS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "cf8b71ad0605d000cb978903b226c3bde74b858fea2468864a0a98ff5ee6dec7",
+      "historical_ISO_date_count": 8,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE30_SIX_UNSEEN_FULL168H_758_MEME_MODEL_PROTOCOL_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "ca0f67b1e152b86a54bb21ee83f1c5a067e811debf2e17b63ebb5562d22ffbe6",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE31_5CASE_CAUSAL_D0_WATCH_MISSES_WINNERS_ACTUAL_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "6a1751ba16a987e13eca59647911ef5788e1bf3e567bf57fe24b3ad1327ca5a2",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE32_1MIN_VS_ORIGINAL3MIN_SIX_NEW_DATE_EXPERIMENT_PROTOCOL_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "3cce207d63ca97dc17b5560532a0beb773f218d01c33c5d58dc4c0c82fb1f248",
+      "historical_ISO_date_count": 9,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE32_SIX_FRESH_758_1M_VS_3M_FULL36_SHA_FUNDED_FINAL_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "1d5bdf8ce13944cae60d78e1ea0e924cbb9d7a4fceb6602996f8cca729b0e1d9",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE33_ORIGINAL36_FUNDED_LOSS_ATTRIBUTION_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "767bcbf97087cac77eb49ad43d9d0c1bc3e46098a5e99c2a77895fc23703efe4",
+      "historical_ISO_date_count": 12,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE34_18DATE_ALL108_ORIGINAL_SHA_EARLY_DISCOVERY_DATA_ANALYSIS_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "06743f8b8f231c49e5aafda52cd41ba768b9199cf3fb8a0fd5f7bd1e61b20007",
+      "historical_ISO_date_count": 4,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE35_FIRST_WATCH_REAL_ONE_MINUTE_FEATURES_18DATE_CAUSAL_ANALYSIS_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "e9bed44a9a0dbaa61b78dfb86bdd7c555c33117ebd3cf61058cfd644efc9ec88",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE36_OFFICIAL_USDM_FUTURES_HISTORICAL_UNIVERSE_DATA_AUDIT_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "cd17c9e76ce3f8f86be2ff9da9c156d447cd12274998991c56f0f878bc41d53c",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE37_FUTURES_FULL900_SIX_DATES_2X_5X_10X_GROUND_TRUTH_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "91e5e34ab1a19606c2bf25dd339c752afe124ce0fe2e62d5ffc479b3f30e2f3d",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE38_USDM_REAL_1M_ORIGINAL_V4_52_WINNERS_AND_CONTROLS_REPLAY_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "b18a8d2342477c133a1141a75d0d47af3527216ad2e36500c75d27ef4d235832",
+      "historical_ISO_date_count": 8,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE39_FULL900_SIXDATE_ORIGINAL_V4_REAL1M_SHA_MARKET_DISCOVERY_FINAL_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "fa362f35b65f3f825ad121c2f0ffad718f055859783f1050ce934feeb53baa7f",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE3_CAUSAL_5M_PULLBACK_60_CASE_RESEARCH_20261010.md"
+    },
+    {
+      "git_blob_SHA256": "778028a6ef81e95222232ea25ceee548824c34a151691aacf612e31b366e6273",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE3_PB_WINNER_VS_MARKET_5M_AUDIT_2026-10-10.md"
+    },
+    {
+      "git_blob_SHA256": "2d8070e9b9d56f1837f230ede45109535f223494c5b46f81d2dcd6d87ba8c9a7",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE3_PULLBACK_PRECOMMITTED_PROTOCOL_2026-10-10.md"
+    },
+    {
+      "git_blob_SHA256": "e2b31d0c9708df0480f08bb5fc433cd566dd6442bc65e2303bdb74521c8f73f9",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE40_WATCH_PRIORITY_IGNITION_KPI_AND_STRATEGY_PROPOSAL_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "956841de99c96e6af3f4bb404f57737b48091a7d5e4688cfd4752d4f3d2bb2ee",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE41_P1_PRIORITY_CAUSAL_TECHNICAL_DESIGN_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "0c7fc40569041a1d854f3c37d4a4b2028d562558ba2bfe7220d07fc3eec7d121",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE42_FIRST483_FROZEN_P1_ACTUAL_SHA_FAILED_GATE_20261012.md"
+    },
+    {
+      "git_blob_SHA256": "f501df5e00b70a3b66467fc08dd8de0607c9824d574efe2305aa0965568ae113",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE4_CAUSAL_COHORT_EXPLORATION_2026-10-10.md"
+    },
+    {
+      "git_blob_SHA256": "f4506c1cb2d2afc299eb33204c5122ebc4bd54fc2586caec5db62041611ca8e3",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE5_FIRST_WATCH_PRESTATE_PROTOCOL_20261010.md"
+    },
+    {
+      "git_blob_SHA256": "c628705a891d51ec0a1cb76b8d9bdbe2ec860d6865a3af4598258a680ad6fe42",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE6_D2_SPOT_EXECUTION_AND_MAC_SHADOW_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "1d0ebad02dbb9b0e1553cafd1deab211fb8637e3115dbcb03cadf3323e0a50ce",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/MONSTER_STAGE7_TO_STAGE9_ACTUAL_REPLAY_FINDINGS_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "082678e2db32e6e65cb8c6985555f9a553683392d7099b0164a18f21d8e3de21",
+      "historical_ISO_date_count": 3,
+      "path": "crypto-300-profit-mission/monster/MONSTER_V4_DATA_BASELINE_2026-10-10.md"
+    },
+    {
+      "git_blob_SHA256": "7b965c7082977dfcf26172e0b718d819e28b51a4a3bc159f51044b1e413c41c7",
+      "historical_ISO_date_count": 3,
+      "path": "crypto-300-profit-mission/monster/MONSTER_V4_MODEL_AND_LOCAL_ARCHITECTURE.md"
+    },
+    {
+      "git_blob_SHA256": "3c3351e7ee9f94f29f01192aba4772619b10e08c3d816dc17977b89cd3d8a78e",
+      "historical_ISO_date_count": 2,
+      "path": "crypto-300-profit-mission/monster/MONSTER_V4_MODEL_BACKTEST_REMEDIATION_20261011.md"
+    },
+    {
+      "git_blob_SHA256": "f6adfdc076f80e69c5a2eaae4e0c3076e451b335440474481220c420d2f976c2",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage10_neutral_preregistered_24case_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "2ce492aae1f4fdfabb3da07ad0dad1d8264f24219f6c3ac46ae8d80b94ce8e53",
+      "historical_ISO_date_count": 3,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage12_all504_spot_universe_preregistered_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "513894e95891f3a82fe87b6870d01594585debdb6703d8ed8cce75fdf20f4738",
+      "historical_ISO_date_count": 4,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage13_fixed_calendar4_preregistration_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "1e44b1669052b27ade4287cc0d7d061929df6741d376e6a971f9a0bc55a3fb2c",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage14_frozen_31d1_horizon_study_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "b8acd91cb05400565b8d112466be306d18a7b39e57d7f7c8b4223158c6bd7c01",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage16_actual_frozen_7d_outcome_labels_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "3b075a2f191a55407e32f532767080bf6995ebcbf6f465d7455d228e90e1fb64",
+      "historical_ISO_date_count": 5,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage19_gradual_watch_exploratory_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "7ab10e17b3064c6ff40f96e83bd801f2a57a959050530724e6c52a134ca479eb",
+      "historical_ISO_date_count": 9,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage20_quality_exit_holdout_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "8ea10f182d99e01624b4a71257991d9ad7bc09b59789d83c86a35f66b9f13dd9",
+      "historical_ISO_date_count": 19,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage21_extended_untouched_dates_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "9a062b614a0060276a8e8fbaf8951be84e873a1fe0a6e747fd7fd9b667425782",
+      "historical_ISO_date_count": 10,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage21_real_10date_ci_artifact_proof_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "fed3b3e543d7e9d61180df48c4df6a1cd8fe5cd802c9c14424202b857a21f017",
+      "historical_ISO_date_count": 10,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage22_aggressor_flow_stop_rootcause_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "35f6a2c3d438eba0098f77fc489b8366bd0d6ae01f6978b4ce3043ad4ddbcb46",
+      "historical_ISO_date_count": 10,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage23_real10_frozen_d1_overextension_artifact_proof_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "92605957c060213970c3bc2322686c92166fee5c0e9c9e015031cb425ca43c63",
+      "historical_ISO_date_count": 10,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage23_unseen_overextension_filter_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "adc6c82afab4d75b7d2dcdddf9d46ffdf460e8cde9382a995f2f2e2982f742f2",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage24_unseen_7d_whole_market_watch_gt_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "0c356824b203447cdae4da401e183848cdc2ec0d32ea2ae582f05387b6088602",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage25_known_2x5x10x_event_time_diagnostic_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "932270e6911bcd9ff6dd49d61e152798515c7e7c77f596cfc77447deca699266",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage26_full168h_original_v4_continuous_758x6_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "251c007ad93c8eda937d3b7bf6c8a5605e92b42c091c52cfe99271376899d283",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage26_verified_sharded_168h_artifact_proof_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "f31542210a349cc15200ba4e7d337b24ae085e8e28b12ea58b5ffe20b31b1086",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage27_shared_queue_cash_budget_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "d7b6392f21e1aa3df575be28e1b73d9b221f71b88278eb57563e01759f8c4915",
+      "historical_ISO_date_count": 7,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage28_exact_shared_d1_production_queue_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "481ad0a725a43ac6b892ef9af663dea6daccc55b4d315a74b153f6c315d82446",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage28_original_six_real_shared_sqlite_artifact_proof_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "450836f74fd200c97357e7245bab3045393a34fc79602e0ac0d874d2a1ed2dfb",
+      "historical_ISO_date_count": 1,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage29_frozen_watch_burst_vs_24h_net_profit_diagnostic_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "a10bd7ef4f372833d3abf0d4ed27221cc879d19ef35594afa04c9764a03a4943",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage29b_burst_cash_diagnostic_frozen_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "14f9a4349afd78edcd440b8a9e15a5f80003793162eb564f22895367b3c2b1c7",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "14ee067287e90763684e17c3ef1d2fcd73cb2be66c5b866383180831c1a0a923",
+      "historical_ISO_date_count": 9,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage30_six_new_dates_full758_7d_watch_holdout_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "7651b81d76e3d9be62a949a74145598733624f81a30d750ce663e5f5ba9ad3df",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage31_five_meme_case_causal_d0_missed_winner_prereg_20261011.json"
+    },
+    {
+      "git_blob_SHA256": "d8e470b9c0fb3454eb96d6772016c7deeab7b1328de19a82079754e9addea279",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json"
+    },
+    {
+      "git_blob_SHA256": "0008ebc32dba1485ca98c03350ea4d9f282394f45a28e76c2ec3c867e0deb279",
+      "historical_ISO_date_count": 7,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage32_6newdate_1m_vs3m_full758_prereg_20261012.json"
+    },
+    {
+      "git_blob_SHA256": "bba630318b05e61d08d051e965a2044924a556cf743e0d728da08e409593244d",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage35_18date_first_watch_causal_feature_census_prereg_20261012.json"
+    },
+    {
+      "git_blob_SHA256": "163a851d2fde5b8c1e42cfd8df3379f3e68fd374b1f06ed9dad8ae9ce3404fa3",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage36_official_usdm_archive_vs_spot758.json"
+    },
+    {
+      "git_blob_SHA256": "aaa6215bd9cce77299f6b05d739f97779ec976cd4e0d8510e0d050b314e3c34f",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage36_usdm_historical_archive_universe_prereg_20261012.json"
+    },
+    {
+      "git_blob_SHA256": "28555815c905a591903434b83a11e031aaa3787cc2f981dc83a0120edc8fb44f",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage37_all900_usdm_sixdate_7d_GT_prereg_20261012.json"
+    },
+    {
+      "git_blob_SHA256": "664b847ac0206d4b9e3bb84df0389224951496578aab76d2e4283841b5229df8",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage38_futures_original_v4_causal_pilot_prereg_20261012.json"
+    },
+    {
+      "git_blob_SHA256": "4768dc2b682368a02c7d5a94492f17a1c59c676ac00257016867bc52e1cf3d43",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage39_usdm_full900_sixdate_1m_original_v4_prereg_20261012.json"
+    },
+    {
+      "git_blob_SHA256": "f342ed8e5857b80ea3c55189478c777367d0fe4e1e52ec116dc85f161b2c3f61",
+      "historical_ISO_date_count": 0,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage40_candidate_priority_v01_frozen_before_any_holdout_20261012.json"
+    },
+    {
+      "git_blob_SHA256": "79bae6f6b8b90b579378da1f3f24a2e8f388deac7d6e09e165b9a34509a2c029",
+      "historical_ISO_date_count": 6,
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage42_all483_exposed_firstwatch_p1_pilot_prereg_20261012.json"
+    }
+  ],
+  "strategy_p1_v01": "REJECTED_15_OF_48_FROM_STAGE42"
+}
