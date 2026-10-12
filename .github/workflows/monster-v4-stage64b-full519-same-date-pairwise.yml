@@ -1,0 +1,54 @@
+name: Monster Stage64b Full519 As-of Global vs Within-Day Ranking Confounding
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64b_exposed519_venue_asof_within_date_rank_diagnostic.py'
+      - '.github/workflows/monster-v4-stage64b-full519-same-date-pairwise.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage64b-exposed-asof-pairwise-only
+  cancel-in-progress: false
+jobs:
+  all519_real_asof_exposed_label_diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source SHA, pairwise ties and non-selection
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64b_exposed519_venue_asof_within_date_rank_diagnostic.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64b_exposed519_venue_asof_within_date_rank_diagnostic.py --selftest
+      - name: Full519 global and within-calendar-date matched historical feature ranking
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64b_exposed519_venue_asof_within_date_rank_diagnostic.py --out /tmp/monster_stage64b
+      - name: Retain complete source-locked pairwise evaluation
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage64b-full519-exposed-global-vs-same-date
+          path: /tmp/monster_stage64b/*
+          retention-days: 30
+      - name: Persist pairwise source evidence to same Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage64b/monster_stage64b_* "$dest/"
+          git add "$dest/monster_stage64b_all519_global_vs_within_date_asof_feature_pairwise_evaluation.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: preserve Stage64b global and same-date confounded asof feature comparison'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          exit 1
