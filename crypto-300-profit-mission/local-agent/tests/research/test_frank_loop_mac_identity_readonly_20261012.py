@@ -116,3 +116,47 @@ def test_diagnostic_source_has_no_live_write_or_gmail_actions():
         assert prohibited not in src
     assert "production_database_modified" in src
     assert "running_python_code_bytes_proven" in src
+
+
+
+def test_shared_venv_and_pinned_version_are_readonly(monkeypatch, tmp_path):
+    venv = tmp_path / "venv"
+    put(venv, "bin/python", "nonexecuted-fixture")
+    runner = f'VENV="{venv}"\n'
+    called = []
+    def fake_execute(cmd, *, seconds=12):
+        called.append(cmd)
+        return SimpleNamespace(returncode=0, stdout="3 12 15.0.1\n", stderr="")
+    monkeypatch.setattr(ops, "execute", fake_execute)
+    monkeypatch.setattr(ops, "checks", {})
+    monkeypatch.setattr(ops, "details", {})
+    ops.dependency_identity(runner, runner)
+    assert all(v == "PASS" for v in ops.checks.values())
+    assert ops.details["websockets_version"] == "15.0.1"
+    assert called[0][1:3] == ["-B", "-c"]
+    assert "mission_agent" not in called[0][3]
+    assert "send" not in called[0][3]
+
+
+def test_mismatched_venv_blocks_without_running_python(monkeypatch, tmp_path):
+    a = put(tmp_path / "a", "bin/python", "fake-a")
+    b = put(tmp_path / "b", "bin/python", "fake-b")
+    monkeypatch.setattr(ops, "execute", lambda *a, **k: SimpleNamespace(
+        returncode=0, stdout="3 12 15.0.1\n"))
+    monkeypatch.setattr(ops, "checks", {})
+    monkeypatch.setattr(ops, "details", {})
+    ops.dependency_identity(f'VENV="{a.parent.parent}"\n',
+                            f'VENV="{b.parent.parent}"\n')
+    assert ops.checks["SHARED_VENV_PATH_IDENTICAL"] == "FAIL"
+
+
+def test_wrong_websockets_version_never_accepted(monkeypatch, tmp_path):
+    venv = tmp_path / "venv"
+    put(venv, "bin/python", "fake")
+    monkeypatch.setattr(ops, "execute", lambda *a, **k: SimpleNamespace(
+        returncode=0, stdout="3 12 14.0.0\n"))
+    monkeypatch.setattr(ops, "checks", {})
+    monkeypatch.setattr(ops, "details", {})
+    runner = f'VENV="{venv}"\n'
+    ops.dependency_identity(runner, runner)
+    assert ops.checks["RELEASE_WEBSOCKETS_DEPENDENCY_PIN"] == "FAIL"
