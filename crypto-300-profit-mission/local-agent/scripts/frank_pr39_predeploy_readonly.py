@@ -42,11 +42,14 @@ def approved_source_check(root: Path) -> dict:
     changes = _git(root, "diff", "--name-only", APPROVED_PRODUCT, head, "--", *REVIEWED_DIRS)
     if not clean or changes:
         raise ValueError("REVIEWED_PRODUCT_DIFF_OR_WORKTREE_DIRTY")
+    # Git's <rev>:<path> syntax is always relative to the repository root,
+    # even when 'git -C' starts from a nested local-agent directory.
+    prefix = _git(root, "rev-parse", "--show-prefix")
     for relative in ("mission_agent/mission_control/frank.py",
                      "mission_agent/mission_control/service.py",
                      "mission_agent/mission_control/delivery.py",
                      "mission_agent/mission_control/static/app.js"):
-        expected = _git(root, "rev-parse", APPROVED_PRODUCT + ":" + relative)
+        expected = _git(root, "rev-parse", APPROVED_PRODUCT + ":" + prefix + relative)
         observed = _git(root, "hash-object", relative)
         if observed != expected:
             raise ValueError("REVIEWED_PRODUCT_BLOB_MISMATCH")
