@@ -1,0 +1,231 @@
+{
+  "D0_FIRST5": "REJECTED",
+  "MONSTER": "NO_GO",
+  "NEW_INDEPENDENT_DATE_VALIDATION": "NOT_STARTED",
+  "NO_DEPLOY_OR_TRADE": true,
+  "NO_OTHER_AI_REVIEW_DONE": true,
+  "NO_REALIZED_NET_PROFIT_OR_ORDER_NOTIONAL": true,
+  "P1_V03": "REJECTED",
+  "P2_2x_early5min_count": 4,
+  "P2_urgent_half_day_paced": 48,
+  "REAL_SPOT_ALPHA_DEX_EXECUTION": "UNVERIFIED",
+  "by_date": {
+    "2025-03-30": {
+      "P1_queued_or_cap_deferred": 0,
+      "P1_upgrade_candidates": 12,
+      "P2_research_urgent": 12,
+      "old_P1_urgent": 12,
+      "per_slot": [
+        {
+          "P2_first_half": 1,
+          "P2_total": 2,
+          "utc06_slot": 0
+        },
+        {
+          "P2_first_half": 1,
+          "P2_total": 2,
+          "utc06_slot": 1
+        },
+        {
+          "P2_first_half": 2,
+          "P2_total": 4,
+          "utc06_slot": 2
+        },
+        {
+          "P2_first_half": 0,
+          "P2_total": 1,
+          "utc06_slot": 3
+        },
+        {
+          "P2_first_half": 1,
+          "P2_total": 2,
+          "utc06_slot": 4
+        },
+        {
+          "P2_first_half": 1,
+          "P2_total": 1,
+          "utc06_slot": 5
+        },
+        {
+          "P2_first_half": 0,
+          "P2_total": 0,
+          "utc06_slot": 6
+        }
+      ],
+      "watch_events": 44
+    },
+    "2025-06-30": {
+      "P1_queued_or_cap_deferred": 0,
+      "P1_upgrade_candidates": 15,
+      "P2_research_urgent": 15,
+      "old_P1_urgent": 15,
+      "per_slot": [
+        {
+          "P2_first_half": 2,
+          "P2_total": 3,
+          "utc06_slot": 0
+        },
+        {
+          "P2_first_half": 2,
+          "P2_total": 3,
+          "utc06_slot": 1
+        },
+        {
+          "P2_first_half": 2,
+          "P2_total": 4,
+          "utc06_slot": 2
+        },
+        {
+          "P2_first_half": 1,
+          "P2_total": 2,
+          "utc06_slot": 3
+        },
+        {
+          "P2_first_half": 0,
+          "P2_total": 1,
+          "utc06_slot": 4
+        },
+        {
+          "P2_first_half": 1,
+          "P2_total": 1,
+          "utc06_slot": 5
+        },
+        {
+          "P2_first_half": 1,
+          "P2_total": 1,
+          "utc06_slot": 6
+        }
+      ],
+      "watch_events": 49
+    },
+    "2025-11-27": {
+      "P1_queued_or_cap_deferred": 8,
+      "P1_upgrade_candidates": 29,
+      "P2_research_urgent": 21,
+      "old_P1_urgent": 23,
+      "per_slot": [
+        {
+          "P2_first_half": 2,
+          "P2_total": 5,
+          "utc06_slot": 0
+        },
+        {
+          "P2_first_half": 1,
+          "P2_total": 2,
+          "utc06_slot": 1
+        },
+        {
+          "P2_first_half": 0,
+          "P2_total": 2,
+          "utc06_slot": 2
+        },
+        {
+          "P2_first_half": 2,
+          "P2_total": 4,
+          "utc06_slot": 3
+        },
+        {
+          "P2_first_half": 1,
+          "P2_total": 3,
+          "utc06_slot": 4
+        },
+        {
+          "P2_first_half": 2,
+          "P2_total": 3,
+          "utc06_slot": 5
+        },
+        {
+          "P2_first_half": 2,
+          "P2_total": 2,
+          "utc06_slot": 6
+        }
+      ],
+      "watch_events": 103
+    }
+  },
+  "censored_not_mislabeled_negative": 1203,
+  "five_2x_event_outcomes": [
+    {
+      "2x_HISTORIC_MINUTE_HIGH_UTC_NOT_A_FILL": "2025-06-30T21:55:00Z",
+      "D0_first_UTC": "2025-06-30T17:00:00Z",
+      "P1_UTC": "2025-06-30T20:54:00Z",
+      "P1_to_first2x_lead_minutes": 61,
+      "P2_12h_paced_early5min_2x": true,
+      "P2_12h_paced_research_urgent": true,
+      "date": "2025-06-30",
+      "old_P1_early5min_2x": true,
+      "old_P1_uncapped_halfday_research_urgent": true,
+      "symbol": "HFTUSDT"
+    },
+    {
+      "2x_HISTORIC_MINUTE_HIGH_UTC_NOT_A_FILL": "2025-07-02T04:42:00Z",
+      "D0_first_UTC": "2025-07-01T14:36:00Z",
+      "P1_UTC": "2025-07-01T19:27:00Z",
+      "P1_to_first2x_lead_minutes": 555,
+      "P2_12h_paced_early5min_2x": true,
+      "P2_12h_paced_research_urgent": true,
+      "date": "2025-06-30",
+      "old_P1_early5min_2x": true,
+      "old_P1_uncapped_halfday_research_urgent": true,
+      "symbol": "HUSDT"
+    },
+    {
+      "2x_HISTORIC_MINUTE_HIGH_UTC_NOT_A_FILL": "2025-11-30T06:30:00Z",
+      "D0_first_UTC": "2025-11-27T08:33:00Z",
+      "P1_UTC": "2025-11-28T04:33:00Z",
+      "P1_to_first2x_lead_minutes": 2997,
+      "P2_12h_paced_early5min_2x": true,
+      "P2_12h_paced_research_urgent": true,
+      "date": "2025-11-27",
+      "old_P1_early5min_2x": false,
+      "old_P1_uncapped_halfday_research_urgent": false,
+      "symbol": "PIPPINUSDT"
+    },
+    {
+      "2x_HISTORIC_MINUTE_HIGH_UTC_NOT_A_FILL": "2025-11-27T19:45:00Z",
+      "D0_first_UTC": "2025-11-27T19:30:00Z",
+      "P1_UTC": "2025-11-27T19:36:00Z",
+      "P1_to_first2x_lead_minutes": 9,
+      "P2_12h_paced_early5min_2x": true,
+      "P2_12h_paced_research_urgent": true,
+      "date": "2025-11-27",
+      "old_P1_early5min_2x": false,
+      "old_P1_uncapped_halfday_research_urgent": false,
+      "symbol": "TANSSIUSDT"
+    },
+    {
+      "2x_HISTORIC_MINUTE_HIGH_UTC_NOT_A_FILL": "2025-11-28T19:47:00Z",
+      "D0_first_UTC": "2025-11-27T16:00:00Z",
+      "P1_UTC": "2025-11-27T16:21:00Z",
+      "P1_to_first2x_lead_minutes": 1646,
+      "P2_12h_paced_early5min_2x": false,
+      "P2_12h_paced_research_urgent": false,
+      "date": "2025-11-27",
+      "old_P1_early5min_2x": false,
+      "old_P1_uncapped_halfday_research_urgent": false,
+      "symbol": "TRADOORUSDT"
+    }
+  ],
+  "full_market_universe": 2700,
+  "gates": {
+    "P2_urgent_2x_retain_80pct_original_first_D0_5m_early": true,
+    "min_20_true_future2x": false,
+    "no_fabricated_buy_or_notional": true,
+    "no_research_urgent_over5_or_first_half_over2": true,
+    "sample_still_exposed": true
+  },
+  "old_P1_2x_early5min_count": 2,
+  "old_P1_candidates_all_preserved": 56,
+  "old_P1_urgent_cap5": 50,
+  "raw_D0_WATCH_preserved": 196,
+  "real_original_2x_events": 5,
+  "schema": "MONSTER_STAGE68_P2_IMMEDIATE_WATCH_P1_FIRST_HALF2_DAY5_CAUSAL_LEDGER_V1",
+  "source_blobs": {
+    "MONSTER_STAGE68_P2_EARLY_WATCH_P1_HALF_DAY_CAP_PREDECLARED_DESIGN_20261012.md": "7d3d0b90e2987df6fec02bdf0dc65d7c130f5301",
+    "monster_stage66_firstD0_first5_full2700_vs_oldP1_urgent_fates.jsonl": "9b4b64f133853f0effc7e47d8b1b8c35cb6d5d81",
+    "monster_stage66_full2700_originalV4_D0_and_P1v03_source_SHA.jsonl": "9eb19c22ae8d34d030ccabd7176c3cd4d2e2e3f8",
+    "monster_stage66_new3_full2700_global_cap5_firstD0_vs_P1v03_summary.json": "5305f0cbe482691a01575a6bb368dbe8422035e8"
+  },
+  "valid_original_futures_minute_cases": 1497,
+  "verdict": "EXPOSED_MECHANISM_UNDERPOWERED_NOT_VALIDATED"
+}
