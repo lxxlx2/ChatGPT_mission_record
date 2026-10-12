@@ -1,0 +1,62 @@
+{
+  "schema": "BSC_MEME_DDAC_MARSCOIN_SELL1_EXACT_FEE_WITHDRAW_WALLET_GAS_INFERENCE_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "manager": "0x1de460f363af910f51726def188f9004276bf4bc",
+  "quote_token": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "original_sell_tx": "0x8f5386192f6f5da18185098556a2f93661211d59b63e6baaff6d66435647b35c",
+  "other_owner_original_tx_same_block": "0xbb8b170d839ee5a314f6fe7b05c2b9314bc5a697ed8c08e99a86352d0121d982",
+  "block": 112442886,
+  "original_signer": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "original_msg_value_wei": "0",
+  "gas_price_wei": "120000000",
+  "gas_limit": "3300000",
+  "manager_event": {
+    "topic0": "0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92",
+    "indexed_wallet": "0x000000000000000000000000ddac928a240bdace3994c2cc0783d4e29a002127",
+    "logIndex": "0x3b",
+    "data": "0x0000000000000000000000000000000000000000000000000013cba3c60ddee4000000000000000000000000000000000000000000000000000000006a675e41",
+    "first_data_word_fee_like_wei": "5571928820408036",
+    "ABI_meaning": "NOT_INDEPENDENTLY_DECODED",
+    "fraction_of_WBNB_withdraw": "1% floor integer"
+  },
+  "wbnb_withdraw_event": {
+    "tx": "0x8f5386192f6f5da18185098556a2f93661211d59b63e6baaff6d66435647b35c",
+    "topics": [
+      "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+      "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+    ],
+    "data": "0x00000000000000000000000000000000000000000000000007bb8bf95d6b1134",
+    "logIndex": "0x3a",
+    "gross_wei": "557192882040803636"
+  },
+  "wallet_native_balance": {
+    "before_wei": "22442665722408665210",
+    "after_wei": "22994221336709060810",
+    "delta_wei": "551555614300395600"
+  },
+  "same_block_other_owner_tx": {
+    "tx": "0xbb8b170d839ee5a314f6fe7b05c2b9314bc5a697ed8c08e99a86352d0121d982",
+    "receipt_status": "0x1",
+    "gasUsed": "48984",
+    "gasPriceWei": "120000000",
+    "gasFeeWei": "5878080000000",
+    "native_msg_value": "0"
+  },
+  "derived_conditional": {
+    "gross_minus_manager_event_fee_wei": "551620953220395600",
+    "gross_minus_event_fee_minus_native_wallet_increase_minus_other_gas_wei": "59460840000000",
+    "implied_sale_gas_used": "495507",
+    "gas_divisible": true,
+    "under_gas_limit": true,
+    "native_WBNB_wallet_ledger_exact_equality": true
+  },
+  "limitations": [
+    "Manager event amount is independently observed and exactly 1% of matching WBNB Withdrawal; ABI semantic label is not independently audited; do not assert 1% contractual tax law.",
+    "Sale receipt is truncated at ~8098 bytes; implied gasUsed is inferred from block conservation, not independently read from receipt.",
+    "Native internal BNB calls not traceable via Alchemy BSC internal category; external original other transaction accounted as gas; unmatched hidden flows not excluded.",
+    "No statement on full DDAC MARSCOIN PnL beyond the two-block observed first cycle."
+  ],
+  "production": "NO_GO"
+}
