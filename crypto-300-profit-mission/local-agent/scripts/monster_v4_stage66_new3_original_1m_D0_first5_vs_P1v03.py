@@ -367,7 +367,13 @@ def selftest():
         a=datetime.fromtimestamp((t0+seconds*60000)/1000,timezone.utc).isoformat().replace("+00:00","Z")
         return {"date":"2025-03-30","symbol":s,"minute_source_status":GOOD,
                 "original_D0_first_UTC":a,"D0_first_quote15_USDM_asof":str(quote),
-                "P1v03_original_unbudgeted_candidate":p1}
+                "P1v03_original_unbudgeted_candidate":p1,
+                "hourly_gt2x_EVALUATION_ONLY":False,
+                "hourly_gt5x_EVALUATION_ONLY":False,
+                "hourly_gt10x_EVALUATION_ONLY":False,
+                "original_GT2x_first_real_1m_HIGH_UTC":None,
+                "original_GT5x_first_real_1m_HIGH_UTC":None,
+                "original_GT10x_first_real_1m_HIGH_UTC":None}
     a=[r("AUSDT",0,2),r("BUSDT",0,3),r("CUSDT",3,6),r("DUSDT",3,2),
        r("EUSDT",6,4),r("FUSDT",9,4)]
     out,cap=allocate(a,"FIRST_D0")
