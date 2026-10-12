@@ -1,0 +1,267 @@
+{
+  "D2_real_executable_net_pnl": "UNKNOWN",
+  "G0_point_in_time_market_listing_and_crypto_population_proven": false,
+  "G1": {
+    "d0_early5": 28,
+    "d0_early5_fraction": "0.9655172413793103448275862069",
+    "d0_strict_early": 28,
+    "d0_strict_early_fraction": "0.9655172413793103448275862069",
+    "n_2x": 29,
+    "n_2x_windows": 4,
+    "research_thresholds_numerically_met": true
+  },
+  "G2": {
+    "d1_early5_2x": 27,
+    "d1_retained_fraction": "0.9642857142857142857142857143",
+    "eligible_d0_early5_2x": 28,
+    "missed_symbol_dates": [
+      {
+        "date": "2025-10-02",
+        "symbol": "SOONUSDT"
+      }
+    ],
+    "research_threshold_numerically_met": true
+  },
+  "G3": {
+    "D1_first_upgrades": 305,
+    "daily": [
+      {
+        "D1_FIRST_UPGRADES": 3,
+        "date": "2025-01-30",
+        "utc06_day_index": 0
+      },
+      {
+        "D1_FIRST_UPGRADES": 6,
+        "date": "2025-01-30",
+        "utc06_day_index": 1
+      },
+      {
+        "D1_FIRST_UPGRADES": 2,
+        "date": "2025-01-30",
+        "utc06_day_index": 2
+      },
+      {
+        "D1_FIRST_UPGRADES": 10,
+        "date": "2025-01-30",
+        "utc06_day_index": 3
+      },
+      {
+        "D1_FIRST_UPGRADES": 52,
+        "date": "2025-01-30",
+        "utc06_day_index": 4
+      },
+      {
+        "D1_FIRST_UPGRADES": 1,
+        "date": "2025-01-30",
+        "utc06_day_index": 5
+      },
+      {
+        "D1_FIRST_UPGRADES": 1,
+        "date": "2025-01-30",
+        "utc06_day_index": 6
+      },
+      {
+        "D1_FIRST_UPGRADES": 4,
+        "date": "2025-06-02",
+        "utc06_day_index": 0
+      },
+      {
+        "D1_FIRST_UPGRADES": 3,
+        "date": "2025-06-02",
+        "utc06_day_index": 1
+      },
+      {
+        "D1_FIRST_UPGRADES": 2,
+        "date": "2025-06-02",
+        "utc06_day_index": 2
+      },
+      {
+        "D1_FIRST_UPGRADES": 3,
+        "date": "2025-06-02",
+        "utc06_day_index": 3
+      },
+      {
+        "D1_FIRST_UPGRADES": 3,
+        "date": "2025-06-02",
+        "utc06_day_index": 4
+      },
+      {
+        "D1_FIRST_UPGRADES": 1,
+        "date": "2025-06-02",
+        "utc06_day_index": 5
+      },
+      {
+        "D1_FIRST_UPGRADES": 0,
+        "date": "2025-06-02",
+        "utc06_day_index": 6
+      },
+      {
+        "D1_FIRST_UPGRADES": 2,
+        "date": "2025-08-01",
+        "utc06_day_index": 0
+      },
+      {
+        "D1_FIRST_UPGRADES": 5,
+        "date": "2025-08-01",
+        "utc06_day_index": 1
+      },
+      {
+        "D1_FIRST_UPGRADES": 4,
+        "date": "2025-08-01",
+        "utc06_day_index": 2
+      },
+      {
+        "D1_FIRST_UPGRADES": 10,
+        "date": "2025-08-01",
+        "utc06_day_index": 3
+      },
+      {
+        "D1_FIRST_UPGRADES": 2,
+        "date": "2025-08-01",
+        "utc06_day_index": 4
+      },
+      {
+        "D1_FIRST_UPGRADES": 9,
+        "date": "2025-08-01",
+        "utc06_day_index": 5
+      },
+      {
+        "D1_FIRST_UPGRADES": 13,
+        "date": "2025-08-01",
+        "utc06_day_index": 6
+      },
+      {
+        "D1_FIRST_UPGRADES": 17,
+        "date": "2025-10-02",
+        "utc06_day_index": 0
+      },
+      {
+        "D1_FIRST_UPGRADES": 11,
+        "date": "2025-10-02",
+        "utc06_day_index": 1
+      },
+      {
+        "D1_FIRST_UPGRADES": 5,
+        "date": "2025-10-02",
+        "utc06_day_index": 2
+      },
+      {
+        "D1_FIRST_UPGRADES": 6,
+        "date": "2025-10-02",
+        "utc06_day_index": 3
+      },
+      {
+        "D1_FIRST_UPGRADES": 7,
+        "date": "2025-10-02",
+        "utc06_day_index": 4
+      },
+      {
+        "D1_FIRST_UPGRADES": 9,
+        "date": "2025-10-02",
+        "utc06_day_index": 5
+      },
+      {
+        "D1_FIRST_UPGRADES": 4,
+        "date": "2025-10-02",
+        "utc06_day_index": 6
+      },
+      {
+        "D1_FIRST_UPGRADES": 15,
+        "date": "2026-06-21",
+        "utc06_day_index": 0
+      },
+      {
+        "D1_FIRST_UPGRADES": 5,
+        "date": "2026-06-21",
+        "utc06_day_index": 1
+      },
+      {
+        "D1_FIRST_UPGRADES": 8,
+        "date": "2026-06-21",
+        "utc06_day_index": 2
+      },
+      {
+        "D1_FIRST_UPGRADES": 9,
+        "date": "2026-06-21",
+        "utc06_day_index": 3
+      },
+      {
+        "D1_FIRST_UPGRADES": 7,
+        "date": "2026-06-21",
+        "utc06_day_index": 4
+      },
+      {
+        "D1_FIRST_UPGRADES": 5,
+        "date": "2026-06-21",
+        "utc06_day_index": 5
+      },
+      {
+        "D1_FIRST_UPGRADES": 7,
+        "date": "2026-06-21",
+        "utc06_day_index": 6
+      },
+      {
+        "D1_FIRST_UPGRADES": 11,
+        "date": "2026-07-28",
+        "utc06_day_index": 0
+      },
+      {
+        "D1_FIRST_UPGRADES": 7,
+        "date": "2026-07-28",
+        "utc06_day_index": 1
+      },
+      {
+        "D1_FIRST_UPGRADES": 14,
+        "date": "2026-07-28",
+        "utc06_day_index": 2
+      },
+      {
+        "D1_FIRST_UPGRADES": 6,
+        "date": "2026-07-28",
+        "utc06_day_index": 3
+      },
+      {
+        "D1_FIRST_UPGRADES": 4,
+        "date": "2026-07-28",
+        "utc06_day_index": 4
+      },
+      {
+        "D1_FIRST_UPGRADES": 7,
+        "date": "2026-07-28",
+        "utc06_day_index": 5
+      },
+      {
+        "D1_FIRST_UPGRADES": 5,
+        "date": "2026-07-28",
+        "utc06_day_index": 6
+      }
+    ],
+    "daily_mean": "7.261904761904761904761904762",
+    "daily_peak": 52,
+    "full_calendar_utc06_days": 42,
+    "research_thresholds_numerically_met": false
+  },
+  "G5_G10": {
+    "10x": {
+      "d0_early5": 2,
+      "d1_early5": 2,
+      "n": 2
+    },
+    "5x": {
+      "d0_early5": 3,
+      "d1_early5": 3,
+      "n": 3
+    }
+  },
+  "OOS_verdict": "EXPOSED_HISTORICAL_ONLY",
+  "autotrade": "NO_GO",
+  "censored_source": 0,
+  "deployment": "NO_GO",
+  "frank": "UNCHANGED",
+  "full_minute_verified": 519,
+  "gmail": "OFF",
+  "historically_exposed": true,
+  "other_AI_review": "NOT_DONE",
+  "population": 519,
+  "schema": "MONSTER_STAGE92_G1_G2_G3_FULLCOHORT_EVALUATOR_V1"
+}
