@@ -1,0 +1,94 @@
+{
+  "DO_NOT_USE_FUTURE_GT_AS_RANKING_FEATURE": true,
+  "Frank": "UNCHANGED",
+  "Gmail": "OFF",
+  "all_2x_source_cases_eligible_pre_5min": 27,
+  "all_v03_eligible_asof_candidates": 166,
+  "data_is_already_exposed_and_NOT_holdout_for_next_threshold": true,
+  "deploy": "NO_GO",
+  "groups_by_POSTHOC_label": {
+    "FUTURE_2X_AND_CANDIDATE_BEFORE_5MIN": {
+      "actual_research_delivered": 21,
+      "initial_urgent_candidates": 6,
+      "n": 27,
+      "ongoing_reignition_candidates": 21,
+      "quote15_USDT_median_asof": "5685568.0830700",
+      "quote15_USDT_n": 27,
+      "quote15_normalized_prev45_median_asof": "2.654652586767311899833606730",
+      "quote15_normalized_prev45_n": 27,
+      "ret60_pct_median_asof": "13.23792486583184257602862250",
+      "ret60_pct_n": 27,
+      "ret_from_first_D0_pct_median_asof": "16.54676258992805755395683450",
+      "ret_from_first_D0_pct_n": 27
+    },
+    "FUTURE_2X_BUT_CANDIDATE_LATE": {
+      "actual_research_delivered": 2,
+      "initial_urgent_candidates": 0,
+      "n": 2,
+      "ongoing_reignition_candidates": 2,
+      "quote15_USDT_median_asof": "9311801.9591550",
+      "quote15_USDT_n": 2,
+      "quote15_normalized_prev45_median_asof": "1.910837693217275692667754758",
+      "quote15_normalized_prev45_n": 2,
+      "ret60_pct_median_asof": "13.37328266126886143576049915",
+      "ret60_pct_n": 2,
+      "ret_from_first_D0_pct_median_asof": "16.20148925382561415907092475",
+      "ret_from_first_D0_pct_n": 2
+    },
+    "ORDINARY_NOT_CALENDAR_2X": {
+      "actual_research_delivered": 104,
+      "initial_urgent_candidates": 40,
+      "n": 137,
+      "ongoing_reignition_candidates": 97,
+      "quote15_USDT_median_asof": "5219135.5409000",
+      "quote15_USDT_n": 137,
+      "quote15_normalized_prev45_median_asof": "3.059149972448746580593250039",
+      "quote15_normalized_prev45_n": 137,
+      "ret60_pct_median_asof": "15.00757958564931783729156140",
+      "ret60_pct_n": 137,
+      "ret_from_first_D0_pct_median_asof": "17.03283139965440631942730190",
+      "ret_from_first_D0_pct_n": 137
+    }
+  },
+  "groups_by_REAL_global_budget_fate": {
+    "CAP_DELIVERED_RESEARCH": {
+      "actual_research_delivered": 127,
+      "initial_urgent_candidates": 44,
+      "n": 127,
+      "ongoing_reignition_candidates": 83,
+      "quote15_USDT_median_asof": "5504637.5673000",
+      "quote15_USDT_n": 127,
+      "quote15_normalized_prev45_median_asof": "3.059149972448746580593250039",
+      "quote15_normalized_prev45_n": 127,
+      "ret60_pct_median_asof": "15.10779961953075459733671530",
+      "ret60_pct_n": 127,
+      "ret_from_first_D0_pct_median_asof": "15.93291404612159329140461220",
+      "ret_from_first_D0_pct_n": 127
+    },
+    "OVER_BUDGET_RESEARCH_NOT_DELIVERED": {
+      "actual_research_delivered": 0,
+      "initial_urgent_candidates": 2,
+      "n": 39,
+      "ongoing_reignition_candidates": 37,
+      "quote15_USDT_median_asof": "5111364.7610400",
+      "quote15_USDT_n": 39,
+      "quote15_normalized_prev45_median_asof": "2.608676641309929880885236067",
+      "quote15_normalized_prev45_n": 39,
+      "ret60_pct_median_asof": "11.82384226229082890128421330",
+      "ret60_pct_n": 39,
+      "ret_from_first_D0_pct_median_asof": "22.55968815981809322722104920",
+      "ret_from_first_D0_pct_n": 39
+    }
+  },
+  "historical_high_is_not_trade_profit": true,
+  "locked_original_source_Git_blobs": {
+    "monster_stage52_all5400_originalV4_P1v03_true_minute_source_cases.jsonl": "ad7544f97e8a0d6c1f2635aa54052cca42d08cf1",
+    "monster_stage52_all_real_v03_eligible_and_global_budget_fates.jsonl": "95ab2eda27880fc53dee7e5fe2d53007e9b9456f",
+    "monster_stage52_pinned_v03_all5400_36SHA_true_global_cap_metrics.json": "42d455a6cc9d0164a8dd94aa12a475bad5ed126e"
+  },
+  "no_new_P1_threshold_selected": true,
+  "original_source_verified_case_count": 5400,
+  "other_AI_review": "NOT_DONE",
+  "schema": "MONSTER_STAGE55_PINNED_ORIGINAL36_SHA_166_ASOF_CANDIDATES_NORMAL_BASELINE_V1",
+  "source_verified_original_sha_receipts": 36
+}
