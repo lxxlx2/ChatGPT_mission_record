@@ -37,7 +37,9 @@ The 15 `MANUAL_REVIEW` reasons are not verified by the aggregate report.
 
 ## Tests and outstanding blockers
 
-The separate review branch adds real-Git immutable staging tests for root and nested layouts, read-only source bits, tampered files, injected files, existing incompatible release and unsafe tar paths. CI result and exact SHA must be appended only after GitHub confirms completion.
+The separate review branch adds real-Git immutable staging tests for root and nested layouts, read-only source bits, tampered files, injected files, existing incompatible release, writable existing release and unsafe tar paths. The initial upstream ZIP patch failed GitHub CI as a normal non-root user: chmod on the nested staging parent prevented `rename`, and tampering fixtures could not write locked files. The reviewed implementation was corrected to rename verified source **before** locking directory permissions, to fail closed on reusing a writable existing release, and to explicitly grant test-only permissions to simulate deliberate tampering.
+
+CI evidence: [GitHub Actions 38319496576](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38319496576) on head `1ecee84656e84ef945d856bf6308aa24b081518c`, **SUCCESS** with **117 targeted passed** and **1,344 full local-agent tests passed**, including real Git replay. Subsequent documentation-only commits must be checked on their exact HEAD before final release assessment.
 
 Still required **before any production source switch**:
 1. GitHub CI on the exact ops review branch and any further independent review of its new release logic.
