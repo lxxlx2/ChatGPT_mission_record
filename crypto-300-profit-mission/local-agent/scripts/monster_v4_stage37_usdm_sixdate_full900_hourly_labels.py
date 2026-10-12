@@ -67,8 +67,11 @@ def monthly_source(symbol,month,fetch=read_public):
             raise ValueError("STAGE37_WRONG_OR_OVERSIZED_ARCHIVE")
         rows=list(csv.reader(io.TextIOWrapper(z.open(member),encoding="utf-8")))
     bars={}
-    for r in rows:
-        if len(r)<9 or not r[0].isdigit():raise ValueError("STAGE37_BAD_CSV_ROW")
+    for row_index,r in enumerate(rows):
+        if row_index==0 and len(r)>=9 and r[0].lstrip("\ufeff").strip().lower() in ("open_time","open time","opentime"):
+            continue
+        if len(r)<9 or not r[0].isdigit():
+            raise ValueError("STAGE37_BAD_CSV_ROW index="+str(row_index)+" fields="+repr(r[:4]))
         stamp=int(r[0])
         if stamp>=10**15:
             if stamp%1000:raise ValueError("STAGE37_BAD_MICRO_TIMESTAMP")
@@ -158,6 +161,19 @@ def selftest():
     assert r["status"]=="CENSORED_NOT_168_CONTIGUOUS_HOURS"
     r=evaluate("MUSDT","2025-01-19",source=lambda *args:(None,"SOURCE_404_MONTHLY_1H_NOT_OBSERVABLE"))
     assert "gt2x" not in r
+    # USD-M official monthly archives can contain a CSV header unlike the Spot parser.
+    fake=io.BytesIO()
+    with zipfile.ZipFile(fake,"w") as z:
+        z.writestr("MUSDT-1h-2025-01.csv",
+          "open_time,open,high,low,close,volume,close_time,quote_volume,num_trades\n"+
+          "1735689600000,1,2,1,1.5,100,1735693199999,150,25\n"+
+          "1735693200000,1.5,1.6,1.4,1.5,50,1735696799999,75,15\n")
+    zipdata=fake.getvalue()
+    fake_digest=hashlib.sha256(zipdata).hexdigest()
+    parsed,err=monthly_source("MUSDT","2025-01",fetch=lambda uri,limit=3000000:(
+        (fake_digest+"  MUSDT-1h-2025-01.zip\n").encode() if uri.endswith(".CHECKSUM") else zipdata))
+    assert err is None and len(parsed["bars"])==2
+    assert parsed["publisher_zip_sha256"]==fake_digest
     print("STAGE37_HOURLY_GT_AND_MISSING_SOURCE_SELFTEST_PASS")
 
 def main():
