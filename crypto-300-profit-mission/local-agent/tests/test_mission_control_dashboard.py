@@ -78,6 +78,9 @@ def test_composite_usdc_event_is_never_used_as_frank_follow_price(tmp_path):
     projected=MissionMemeService._decision_inputs(candidate,{})
     assert projected["latest_buy_amount_predicate"]=="UNDETERMINED"
     assert projected["latest_buy_amount_predicate_reason"]=="COMPOSITE_QUOTE_LEGS"
+    dashboard_row=DashboardState(prod,tmp_path/"control").candidates()[0]
+    assert dashboard_row["latest_buy_amount_predicate"]=="UNDETERMINED"
+    assert dashboard_row["latest_buy_amount_predicate_reason"]=="COMPOSITE_QUOTE_LEGS"
 
 
 def test_stale_wait_still_exposes_quote_and_frank_price_for_research(tmp_path):
@@ -172,6 +175,8 @@ def test_routed_usdc_event_is_never_used_as_frank_follow_price(tmp_path):
     presentation=latest_buy_payment_evidence(candidate)
     assert presentation["latest_buy_amount_predicate"]=="UNDETERMINED"
     assert presentation["latest_buy_amount_predicate_reason"]=="ROUTED_RESIDUAL_ASSETS"
+    dashboard_row=DashboardState(prod,tmp_path/"control").candidates()[0]
+    assert dashboard_row["latest_buy_amount_predicate_reason"]=="ROUTED_RESIDUAL_ASSETS"
 
 
 def test_cluster_frank_snapshot_failure_is_nonfatal(tmp_path):
