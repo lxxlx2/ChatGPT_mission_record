@@ -1,0 +1,68 @@
+{
+  "schema": "MONSTER_STAGE35_FULL18_DATE_FIRST_WATCH_CAUSAL_FEATURE_CENSUS_PRE_SOURCE_V1",
+  "created_date": "2026-10-12",
+  "timezone": "Asia/Bangkok",
+  "scope": "DESCRIPTIVE_RESEARCH_ONLY_NO_NEW_STRATEGY_OR_BUY",
+  "immutable_stage34_source": {
+    "path": "crypto-300-profit-mission/monster/evidence/monster_stage34_full18date_13644_coin_date_controls.csv",
+    "git_blob_sha1": "f94f881e3ef13f8ac33e92aa68542d45a8069384",
+    "attempted_symbol_dates": 13644,
+    "joint_complete": 7776,
+    "watch_symbol_dates": 1227,
+    "gt2x": 88,
+    "cohorts": 18,
+    "venues": [
+      "BINANCE_SPOT_USDT_ONLY"
+    ],
+    "data_censored": 5868
+  },
+  "cohort_selection": {
+    "primary": "ALL_1227_JOINT_COMPLETE_SYMBOL_DATE_WITH_ANY_ORIGINAL_V4_WATCH; FIRST_WATCH_UTC_ONLY",
+    "control": "EACH_FROZEN_DATE_20_SMALLEST_SHA256(date|symbol)_JOINT_COMPLETE_NO_WATCH_SYMBOL_DATES_INDEPENDENT_OF_FUTURE_2X_LABEL",
+    "control_observation_clock": "THE_SAME_DATE_OTHER_SYMBOL_WATCH_UTC_LIST_SORTED_THEN_DETERMINISTIC_SHA256(date|symbol) MOD COUNT; NEVER_USE_FUTURE_PRICE_TO_PICK_TIMESTAMP",
+    "controls_per_date": 20,
+    "unique_baseline_clocks": "First-WATCH timestamps of all WATCH symbols in the same frozen date",
+    "no_profitability_model_or_coefficient_fit": true
+  },
+  "features_and_source": {
+    "official": "https://data.binance.vision/data/spot/daily/klines/",
+    "archive": "daily 1m per necessary UTC date, always matching official publisher SHA256 .CHECKSUM",
+    "each_bar": "open/high/low/close/quoteVolume/trades; timestamp microsecond normalized to ms",
+    "asof": "ONLY_CLOSED_1MIN_BEFORE_OR_AT_observation_UTC",
+    "windows_minutes": [
+      1,
+      3,
+      15,
+      60
+    ],
+    "momentum": "percentage close change vs 3/15/60 complete minutes earlier",
+    "liquidity": "quote volume 1/3/15/60min, ratio recent15min vs prior45min normalized, trade counts 1/15/60, 60min nonzero-minute share",
+    "wick": "last1m (high-max(open,close))/(high-low); no future",
+    "excluded": "BTC indicators, future GT, future HIGH, future volume, trade executions, future price from feature row",
+    "label": "FROM_EXISTING_FROZEN_STAGE34_GT_2X_CALENDAR_BASELINE; retrospective ONLY; compare EARLY_STRICT/NOT_2X/NO_WATCH only"
+  },
+  "output": {
+    "per_date": "all WATCH first watch +20 no-WATCH reference-clock controls, each with source SHA and feature identity",
+    "aggregate": "stage/cohort/date coverage + blinded descriptive medians/quartiles and missing rates + multiple comparisons caveat",
+    "checks": "no future, source hashes verified, counts per date and all 1227 WATCH, 360 control, 18 dates, immutable input checksum"
+  },
+  "limitations": [
+    "All calendar windows and winner labels already exposed; cannot perform independent model selection validation",
+    "Historical 758 snapshot is not point-in-time listing universe",
+    "Control clock is sampled from other symbols' WATCH moments, not a random independent market day",
+    "Historical Spot OHLCV cannot prove 30USDT executable bid/ask or true fills",
+    "No Futures/DEX source included in this stage"
+  ],
+  "must_not_touch": [
+    "Frank",
+    "Gmail",
+    "Monster Mac",
+    "live tasks",
+    "trading",
+    "V4 thresholds",
+    "conversation title"
+  ],
+  "stage_gate": "FACTUAL_CAUSAL_FEATURE_DATA_ANALYSIS_ONLY",
+  "deployment": "NO_GO",
+  "review": "NOT_DONE"
+}
