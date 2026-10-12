@@ -1,0 +1,44 @@
+name: Monster Stage35 All18 Source-SHA First WATCH Causal Features
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_first_watch_features.py'
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage35_18date_first_watch_causal_feature_census_prereg_20261012.json'
+      - '.github/workflows/monster-v4-stage35-first-watch-causal-features.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  historical_first_watch_ordinary_control_real_1m:
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        date: ["2025-01-19","2025-03-19","2025-04-19","2025-06-19","2025-07-19","2025-09-19","2025-10-19","2025-11-04","2025-12-04","2025-12-19","2026-01-19","2026-02-04","2026-03-19","2026-04-04","2026-04-19","2026-07-19","2026-08-04","2026-09-04"]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify causal feature code and frozen Stage34 Git blob
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_first_watch_features.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_first_watch_features.py --selftest
+      - name: Read official Binance publisher-SHA daily 1m, every 1st WATCH and twenty label-blind controls
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_first_watch_features.py \
+            --date "${{ matrix.date }}" \
+            --workers 4 \
+            --output "/tmp/monster_stage35_${{ matrix.date }}_original_SHA_causal_features.json"
+      - name: Upload complete source verified cases, without deploying
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage35-original1m-${{ matrix.date }}-sha-watch-vs-control
+          path: /tmp/monster_stage35_${{ matrix.date }}_original_SHA_causal_features.json
+          retention-days: 30
