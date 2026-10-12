@@ -1,0 +1,280 @@
+{
+  "HISTORIC_LABEL_ONLY_NOT_CROSS_VALIDATED": true,
+  "MONSTER_DEPLOY": "NO_GO",
+  "NOT_REALIZED_BUY_SELL_PNL": true,
+  "NO_ASSUMED_NOTIONAL": true,
+  "NO_NEW_THRESHOLDS": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1V03": "REJECTED",
+  "descriptive_only_pairwise_feature_distinctions": {
+    "quote15_USDT": {
+      "global_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 14210,
+        "pairwise_rank_concordance": "0.5404644616467276565798733286",
+        "twice_concordant_pair_score": 15360
+      },
+      "same_date_counts": {
+        "2025-01-30": {
+          "ordinary_cases": 161,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-06-02": {
+          "ordinary_cases": 34,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-08-01": {
+          "ordinary_cases": 48,
+          "rank_concordance": "0.6284722222222222222222222222",
+          "same_date_pairs": 288,
+          "winner_cases": 6
+        },
+        "2025-10-02": {
+          "ordinary_cases": 62,
+          "rank_concordance": "0.5905707196029776674937965261",
+          "same_date_pairs": 806,
+          "winner_cases": 13
+        },
+        "2026-06-21": {
+          "ordinary_cases": 97,
+          "rank_concordance": "0.7388316151202749140893470790",
+          "same_date_pairs": 291,
+          "winner_cases": 3
+        },
+        "2026-07-28": {
+          "ordinary_cases": 88,
+          "rank_concordance": "0.5698051948051948051948051948",
+          "same_date_pairs": 616,
+          "winner_cases": 7
+        }
+      },
+      "same_date_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 2001,
+        "pairwise_rank_concordance": "0.6111944027986006996501749125",
+        "twice_concordant_pair_score": 2446
+      }
+    },
+    "quote15_normalized_prev45": {
+      "global_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 14210,
+        "pairwise_rank_concordance": "0.5139338494018296973961998593",
+        "twice_concordant_pair_score": 14606
+      },
+      "same_date_counts": {
+        "2025-01-30": {
+          "ordinary_cases": 161,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-06-02": {
+          "ordinary_cases": 34,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-08-01": {
+          "ordinary_cases": 48,
+          "rank_concordance": "0.5555555555555555555555555556",
+          "same_date_pairs": 288,
+          "winner_cases": 6
+        },
+        "2025-10-02": {
+          "ordinary_cases": 62,
+          "rank_concordance": "0.3598014888337468982630272953",
+          "same_date_pairs": 806,
+          "winner_cases": 13
+        },
+        "2026-06-21": {
+          "ordinary_cases": 97,
+          "rank_concordance": "0.1477663230240549828178694158",
+          "same_date_pairs": 291,
+          "winner_cases": 3
+        },
+        "2026-07-28": {
+          "ordinary_cases": 88,
+          "rank_concordance": "0.5551948051948051948051948052",
+          "same_date_pairs": 616,
+          "winner_cases": 7
+        }
+      },
+      "same_date_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 2001,
+        "pairwise_rank_concordance": "0.4172913543228385807096451774",
+        "twice_concordant_pair_score": 1670
+      }
+    },
+    "ret60_pct": {
+      "global_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 14210,
+        "pairwise_rank_concordance": "0.6906403940886699507389162562",
+        "twice_concordant_pair_score": 19628
+      },
+      "same_date_counts": {
+        "2025-01-30": {
+          "ordinary_cases": 161,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-06-02": {
+          "ordinary_cases": 34,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-08-01": {
+          "ordinary_cases": 48,
+          "rank_concordance": "0.5590277777777777777777777778",
+          "same_date_pairs": 288,
+          "winner_cases": 6
+        },
+        "2025-10-02": {
+          "ordinary_cases": 62,
+          "rank_concordance": "0.6401985111662531017369727047",
+          "same_date_pairs": 806,
+          "winner_cases": 13
+        },
+        "2026-06-21": {
+          "ordinary_cases": 97,
+          "rank_concordance": "0.2577319587628865979381443299",
+          "same_date_pairs": 291,
+          "winner_cases": 3
+        },
+        "2026-07-28": {
+          "ordinary_cases": 88,
+          "rank_concordance": "0.5438311688311688311688311688",
+          "same_date_pairs": 616,
+          "winner_cases": 7
+        }
+      },
+      "same_date_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 2001,
+        "pairwise_rank_concordance": "0.5432283858070964517741129435",
+        "twice_concordant_pair_score": 2174
+      }
+    },
+    "taker_buy_share15": {
+      "global_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 14210,
+        "pairwise_rank_concordance": "0.6301900070372976776917663617",
+        "twice_concordant_pair_score": 17910
+      },
+      "same_date_counts": {
+        "2025-01-30": {
+          "ordinary_cases": 161,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-06-02": {
+          "ordinary_cases": 34,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-08-01": {
+          "ordinary_cases": 48,
+          "rank_concordance": "0.4479166666666666666666666667",
+          "same_date_pairs": 288,
+          "winner_cases": 6
+        },
+        "2025-10-02": {
+          "ordinary_cases": 62,
+          "rank_concordance": "0.5248138957816377171215880893",
+          "same_date_pairs": 806,
+          "winner_cases": 13
+        },
+        "2026-06-21": {
+          "ordinary_cases": 97,
+          "rank_concordance": "0.5841924398625429553264604811",
+          "same_date_pairs": 291,
+          "winner_cases": 3
+        },
+        "2026-07-28": {
+          "ordinary_cases": 88,
+          "rank_concordance": "0.4918831168831168831168831169",
+          "same_date_pairs": 616,
+          "winner_cases": 7
+        }
+      },
+      "same_date_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 2001,
+        "pairwise_rank_concordance": "0.5122438780609695152423788106",
+        "twice_concordant_pair_score": 2050
+      }
+    },
+    "trade_count60": {
+      "global_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 14210,
+        "pairwise_rank_concordance": "0.5663265306122448979591836735",
+        "twice_concordant_pair_score": 16095
+      },
+      "same_date_counts": {
+        "2025-01-30": {
+          "ordinary_cases": 161,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-06-02": {
+          "ordinary_cases": 34,
+          "rank_concordance": null,
+          "same_date_pairs": 0,
+          "winner_cases": 0
+        },
+        "2025-08-01": {
+          "ordinary_cases": 48,
+          "rank_concordance": "0.5451388888888888888888888889",
+          "same_date_pairs": 288,
+          "winner_cases": 6
+        },
+        "2025-10-02": {
+          "ordinary_cases": 62,
+          "rank_concordance": "0.6265508684863523573200992556",
+          "same_date_pairs": 806,
+          "winner_cases": 13
+        },
+        "2026-06-21": {
+          "ordinary_cases": 97,
+          "rank_concordance": "0.8350515463917525773195876289",
+          "same_date_pairs": 291,
+          "winner_cases": 3
+        },
+        "2026-07-28": {
+          "ordinary_cases": 88,
+          "rank_concordance": "0.5113636363636363636363636364",
+          "same_date_pairs": 616,
+          "winner_cases": 7
+        }
+      },
+      "same_date_pairwise": {
+        "missing_feature_pairs": 0,
+        "pairs_compared": 2001,
+        "pairwise_rank_concordance": "0.6096951524237881059470264868",
+        "twice_concordant_pair_score": 2440
+      }
+    }
+  },
+  "exposed_first_D0_candidate_count": 519,
+  "future_calendar_2x_negative_count": 490,
+  "future_calendar_2x_positive_count": 29,
+  "original519_sha_locked": {
+    "monster_stage64_all519_D0_asof61m_official_1m_taker_trades_SHA.jsonl": "8ebe53acfdfe10413ac1e6f03457d6ace25d9d5a",
+    "monster_stage64_all519_asof61m_quote_taker_tradecount_summary.json": "e72d678e548e182c7edc8ab43191515c13b7f4ad"
+  },
+  "schema": "MONSTER_STAGE64B_FULL519_EXPOSED_GLOBAL_VS_WITHIN_DATE_2X_PAIRWISE_ASOF_DIAGNOSTIC_V1",
+  "source_verified_asof_real_1m": true
+}
