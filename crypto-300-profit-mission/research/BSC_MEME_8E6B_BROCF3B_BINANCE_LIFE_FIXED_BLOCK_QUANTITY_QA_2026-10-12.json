@@ -1,0 +1,328 @@
+{
+  "schema": "BSC_MEME_8E6B_BROCF3B_BINANCE_LIFE_FIXED_BLOCK_QUANTITY_QA_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "to_block": "0x79549a0",
+  "rows": [
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "raw_balance": "370296597800344225867",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "tx": "0xc44a801bd394f3dd2c0153db941547a97dbbacf8ca16639ac62927bb82657393",
+            "block": "0x2c779f8",
+            "uid": "0xc44a801bd394f3dd2c0153db941547a97dbbacf8ca16639ac62927bb82657393:log:156",
+            "from": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x4fc95fbeecd9dc7cc953"
+          },
+          {
+            "tx": "0x41b4054c5ce5c46e7cffa3cc0b009b061b90c08814ab42bdea7ea323515e3738",
+            "block": "0x2d6b406",
+            "uid": "0x41b4054c5ce5c46e7cffa3cc0b009b061b90c08814ab42bdea7ea323515e3738:log:303",
+            "from": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0xd8ba2a5a883cda5dfaf"
+          },
+          {
+            "tx": "0xac223c5e2dd8868f104013b75eb82135b831d610a861c004305e1d505afd786c",
+            "block": "0x2d6b4c6",
+            "uid": "0xac223c5e2dd8868f104013b75eb82135b831d610a861c004305e1d505afd786c:log:411",
+            "from": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x76668a51c73561ad6c7"
+          },
+          {
+            "tx": "0x145955921cb1baceccc109fdf3753c4e5e79e258c354de6e5cbb445ddfe06212",
+            "block": "0x7398054",
+            "uid": "0x145955921cb1baceccc109fdf3753c4e5e79e258c354de6e5cbb445ddfe06212:log:286",
+            "from": "0xff497ca7118bd4b09435168372d188dc2d670f9d",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x1412e5c9c8b136084b"
+          }
+        ],
+        "sum_raw": "476064198917896610744340"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "tx": "0x441c6c65bcdbaee092e14019ec52c27ea79a7fc65b450652d90948bf02bce40f",
+            "block": "0x2c77ed4",
+            "uid": "0x441c6c65bcdbaee092e14019ec52c27ea79a7fc65b450652d90948bf02bce40f:log:168",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+            "raw": "0x37d9c305a5cbb3f0f353"
+          },
+          {
+            "tx": "0x552e4daf2e5af678084f07ffe38b0220540a0a5f908aead6401ed64d172a8bff",
+            "block": "0x2c7d947",
+            "uid": "0x552e4daf2e5af678084f07ffe38b0220540a0a5f908aead6401ed64d172a8bff:log:248",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+            "raw": "0x17ef9cb9470e288bd600"
+          },
+          {
+            "tx": "0xae314cd93a33ccfd644ed387deb939887a320fd635d03f163c38975cbe89122e",
+            "block": "0x2d6c8e7",
+            "uid": "0xae314cd93a33ccfd644ed387deb939887a320fd635d03f163c38975cbe89122e:log:122",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+            "raw": "0x14f20b4ac4f723c0b676"
+          }
+        ],
+        "sum_raw": "475693902320096266518473"
+      },
+      "fully_paginated": true,
+      "reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "raw_balance": "6176475552388755",
+      "in": {
+        "complete": true,
+        "pages": 2,
+        "events": [
+          {
+            "tx": "0x534c03a24c825229776e91b9d595d0730183b93a1067a67394b981bb4229854b",
+            "block": "0x3c83cdb",
+            "uid": "0x534c03a24c825229776e91b9d595d0730183b93a1067a67394b981bb4229854b:log:183",
+            "from": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x4e00a77c75aa25116325b"
+          },
+          {
+            "tx": "0x6a877babffca52487d1a870aca2241d4e90ea1bf7b929cd24d184b2fe43cf96c",
+            "block": "0x3c8434e",
+            "uid": "0x6a877babffca52487d1a870aca2241d4e90ea1bf7b929cd24d184b2fe43cf96c:log:199",
+            "from": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x32de7d5e0ee3f8c843960"
+          },
+          {
+            "tx": "0x434d43caf89c673adec1fc381dca6c7063dc7ceab5c0d37d73d7a2b7893e2e08",
+            "block": "0x3c85a0d",
+            "uid": "0x434d43caf89c673adec1fc381dca6c7063dc7ceab5c0d37d73d7a2b7893e2e08:log:317",
+            "from": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x5e9b51bb6cf0d0bc64d5"
+          },
+          {
+            "tx": "0x4beb608330db2a3762c21db876e20da1a6cd0db78dce68e3422fb6bae61e4c69",
+            "block": "0x3defc49",
+            "uid": "0x4beb608330db2a3762c21db876e20da1a6cd0db78dce68e3422fb6bae61e4c69:log:763",
+            "from": "0x294094485cb4d4690654ba102c4b092ee544f37a",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x88175d1bf9d99717a"
+          },
+          {
+            "tx": "0x5690539f6cad98d2131ded91e495d5c2a90a46080f6d8fe9dd38f1e0d965be5c",
+            "block": "0x3e3c054",
+            "uid": "0x5690539f6cad98d2131ded91e495d5c2a90a46080f6d8fe9dd38f1e0d965be5c:log:231",
+            "from": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x38d90983f0a27946538"
+          },
+          {
+            "tx": "0xc04355b90193bead38e761a84e11bf325025dfbfabd52ee64975159946eadbbe",
+            "block": "0x3f22cdf",
+            "uid": "0xc04355b90193bead38e761a84e11bf325025dfbfabd52ee64975159946eadbbe:log:371",
+            "from": "0x294094485cb4d4690654ba102c4b092ee544f37a",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x42b4ef9a7061f09"
+          },
+          {
+            "tx": "0xc89384c25c674888c1560518ed3a51487aa2bd2e726d2c2fdc7bfc3acf219426",
+            "block": "0x479be07",
+            "uid": "0xc89384c25c674888c1560518ed3a51487aa2bd2e726d2c2fdc7bfc3acf219426:log:545",
+            "from": "0x59d8f3f1467a5bf05f0fcc2288cda9006a103f95",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x17189a760a805556f"
+          },
+          {
+            "tx": "0x39d26b1f5da930f1013861b709874e6c99ff511cd29353e39635f4c05f8fda04",
+            "block": "0x58e5b4f",
+            "uid": "0x39d26b1f5da930f1013861b709874e6c99ff511cd29353e39635f4c05f8fda04:log:761",
+            "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x10948"
+          },
+          {
+            "tx": "0xfedd38ea7721433dfa60170a1e8f82d57b1719fb801b830ef1b7e2282b1714d5",
+            "block": "0x58f37c8",
+            "uid": "0xfedd38ea7721433dfa60170a1e8f82d57b1719fb801b830ef1b7e2282b1714d5:log:654",
+            "from": "0x4f4055f490cea99c6a357855d5b3f288817a31a0",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x8aaf3f466afd4500"
+          },
+          {
+            "tx": "0x370c3fe3e62e4b7a41280fc9a8fcbfe9b3b0a1f18683905904f0d7d3fa28b3e1",
+            "block": "0x654f7b1",
+            "uid": "0x370c3fe3e62e4b7a41280fc9a8fcbfe9b3b0a1f18683905904f0d7d3fa28b3e1:log:169",
+            "from": "0x59d8f3f1467a5bf05f0fcc2288cda9006a103f95",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x23b6493570ba5eab"
+          },
+          {
+            "tx": "0x328ce1615ca34df44e93707af60f540adad2be7615f13048d40e038d225feae7",
+            "block": "0x6a6c18e",
+            "uid": "0x328ce1615ca34df44e93707af60f540adad2be7615f13048d40e038d225feae7:log:81",
+            "from": "0x2b6e6e4def77583229299cf386438a227e683b28",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x82d689fa98bc040"
+          },
+          {
+            "tx": "0x94381b9a30883532bf84d553b7e4651a00340c6c9d14ca4810fbfa8d033317bf",
+            "block": "0x6d6c049",
+            "uid": "0x94381b9a30883532bf84d553b7e4651a00340c6c9d14ca4810fbfa8d033317bf:log:190",
+            "from": "0x59d8f3f1467a5bf05f0fcc2288cda9006a103f95",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0xa2e706e395662ba"
+          },
+          {
+            "tx": "0xca3001db73e7da665a2f39f9b63053f5a6961b5dfbd25a59fcb0b2b4a07fdf34",
+            "block": "0x707c503",
+            "uid": "0xca3001db73e7da665a2f39f9b63053f5a6961b5dfbd25a59fcb0b2b4a07fdf34:log:178",
+            "from": "0x3871aa91e3ce2a084abe58c5f2314b28c36bf81e",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x7791fedcce542eb1"
+          },
+          {
+            "tx": "0x8df84ca382cab8f48e7fd5f5bb977b59317bad4800992aa4c5e388d0b4535a4a",
+            "block": "0x707cb12",
+            "uid": "0x8df84ca382cab8f48e7fd5f5bb977b59317bad4800992aa4c5e388d0b4535a4a:log:90",
+            "from": "0x3871aa91e3ce2a084abe58c5f2314b28c36bf81e",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0xaf342f4b89aed531"
+          },
+          {
+            "tx": "0x31754cd547400566ff29e3df577634c3d477c29b66beb7c68f4909c15ee544db",
+            "block": "0x707e412",
+            "uid": "0x31754cd547400566ff29e3df577634c3d477c29b66beb7c68f4909c15ee544db:log:666",
+            "from": "0x3871aa91e3ce2a084abe58c5f2314b28c36bf81e",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x760afe00562012e4"
+          },
+          {
+            "tx": "0x3c9a5ed4e4f3464585d36f2501a2a75cb564f20d6cc8b39b3ac824532f43f17f",
+            "block": "0x709a453",
+            "uid": "0x3c9a5ed4e4f3464585d36f2501a2a75cb564f20d6cc8b39b3ac824532f43f17f:log:95",
+            "from": "0x3871aa91e3ce2a084abe58c5f2314b28c36bf81e",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x6e6348ea8d26bc29"
+          },
+          {
+            "tx": "0x348554f16e7d856b14270efa19c9b3b9f87fe4967df18b50517ef49ab531e5de",
+            "block": "0x752a334",
+            "uid": "0x348554f16e7d856b14270efa19c9b3b9f87fe4967df18b50517ef49ab531e5de:log:285",
+            "from": "0x294094485cb4d4690654ba102c4b092ee544f37a",
+            "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "raw": "0x15f178c7439693"
+          }
+        ],
+        "sum_raw": "10201048550232697182115113"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "tx": "0xcc92b0ea2dfe5323a3b1bdaa0afd301a335213d7ce526d6f5d273f4965af46b6",
+            "block": "0x3c83d0c",
+            "uid": "0xcc92b0ea2dfe5323a3b1bdaa0afd301a335213d7ce526d6f5d273f4965af46b6:log:260",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0x4e00a77c75aa25116325b"
+          },
+          {
+            "tx": "0xa9378739dc9e0c7bdaa1e9cd657aef1665bbe216cf34e4e0741cd4b7a5c2ce7b",
+            "block": "0x3c84ba5",
+            "uid": "0xa9378739dc9e0c7bdaa1e9cd657aef1665bbe216cf34e4e0741cd4b7a5c2ce7b:log:197",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0x196f3eaf0771fc6421cb0"
+          },
+          {
+            "tx": "0x07bea40c7dde48e65181ebcc27a4e3057d8f590c1e55b879704e83eb714b89fd",
+            "block": "0x3c84e2d",
+            "uid": "0x07bea40c7dde48e65181ebcc27a4e3057d8f590c1e55b879704e83eb714b89fd:log:164",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0xcb79f5783b8fe3210e58"
+          },
+          {
+            "tx": "0x891ea8b69f48ce9996174c871af616ef30926d85a6322f045af0acc4da9aa1dc",
+            "block": "0x3c859cb",
+            "uid": "0x891ea8b69f48ce9996174c871af616ef30926d85a6322f045af0acc4da9aa1dc:log:134",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0xcb79f5783b8fe3210e58"
+          },
+          {
+            "tx": "0x66d9842a712526f6591b95a4d82eb5d53f80466638b0cdc6549197217f81b0e7",
+            "block": "0x3c931e5",
+            "uid": "0x66d9842a712526f6591b95a4d82eb5d53f80466638b0cdc6549197217f81b0e7:log:774",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0x2f4da8d65af4d88b0000"
+          },
+          {
+            "tx": "0xff7ea75ed85d74045716fc168c25a34f7d884403562d28bff0f1cb32907d675f",
+            "block": "0x3c97d10",
+            "uid": "0xff7ea75ed85d74045716fc168c25a34f7d884403562d28bff0f1cb32907d675f:log:0",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0x2f4da8e511fbf83164d5"
+          },
+          {
+            "tx": "0x729803b78bc155ff01859cdbe1cb440e117d408689f7d37014e4b200f8cfd46f",
+            "block": "0x3e3c784",
+            "uid": "0x729803b78bc155ff01859cdbe1cb440e117d408689f7d37014e4b200f8cfd46f:log:239",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0x396120e10c9c52dd6b2"
+          },
+          {
+            "tx": "0x0dfbba352d33ad66bcc168c02049fefb2fe5cd8d17515ce8ad80d3792670f4d0",
+            "block": "0x5834f25",
+            "uid": "0x0dfbba352d33ad66bcc168c02049fefb2fe5cd8d17515ce8ad80d3792670f4d0:log:29",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0x175b4f65a4f0b7478"
+          },
+          {
+            "tx": "0x7d4b83de58dd4428e251647e40e692b3a4310b6e5ff06aae0a1079048dac6bbb",
+            "block": "0x672b0f5",
+            "uid": "0x7d4b83de58dd4428e251647e40e692b3a4310b6e5ff06aae0a1079048dac6bbb:log:76",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0xae65887bdbb8acf3"
+          },
+          {
+            "tx": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+            "block": "0x7450fb1",
+            "uid": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1:log:395",
+            "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "raw": "0x21d904e211e2bf5e9"
+          }
+        ],
+        "sum_raw": "10201048544056221629726358"
+      },
+      "fully_paginated": true,
+      "reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    }
+  ],
+  "method": "Full positive ERC20 exact contract incoming/outgoing history to fixed block 0x79549a0; independent integer in-out and balanceOf same block. No purchase or PnL inference.",
+  "production": "NO_GO"
+}
