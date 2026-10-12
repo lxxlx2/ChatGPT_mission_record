@@ -1,0 +1,252 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_4_5C0C_FIVE_TOKEN_ORIGIN_AND_NATIVE_SCOPE_V1",
+  "date": "2026-10-12",
+  "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+  "network": "bnb-mainnet",
+  "scope": "Five independently full ERC20 histories, original signers for selected boundary and control hashes, raw BNB balance differences on four blocks. These are not exhaustive wallet signed trades.",
+  "source_files": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_5C0C_BROCCOLIF3B_FULL_ERC20_BALANCE_CENSUS_2026-10-12.json",
+      "sha": "743b5b0fddb1ced0633581869a79feb466fcd08e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_5C0C_TUT_FULL_ERC20_BALANCE_CENSUS_2026-10-12.json",
+      "sha": "35b205a576e159b2d71ceba28f4876cc7f92ad49"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_5C0C_CHEEMS_FULL_ERC20_BALANCE_CENSUS_2026-10-12.json",
+      "sha": "e743126b0d8cefecc6150a8e5ed40ca6bee1cc06"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_5C0C_MUBARAK_FULL_ERC20_BALANCE_CENSUS_2026-10-12.json",
+      "sha": "f9d82f3bd669bc4ced974b38aa98323a93550fe2"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_5C0C_BROCCOLI714_FULL_ERC20_BALANCE_CENSUS_2026-10-12.json",
+      "sha": "0d2928744de596139b8b2270fc41370732140ae5"
+    }
+  ],
+  "sampled_original_transactions": [
+    {
+      "token": "BROCCOLIF3B",
+      "role": "first_in",
+      "hash": "0x9d9d4dd76813dfaba176befea22dee0dd933bef47bf2483afd9da2ff1f707f71",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x9333c74bdd1e118634fe5664aca7a9710b108bab",
+      "original_selector": "0xb80c2f09",
+      "transaction_native_msg_value_wei": "1800000000000000000",
+      "original_block_when_read": 46693331,
+      "classification": "SELF_SIGNED_TRANSACTION_TOKEN_MOVEMENT_NO_QUOTE_PNL"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "role": "first_out",
+      "hash": "0x086ed416009ea99a2e05fd5ca7e195ad63091536d6305b9723d005da573101d1",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x9333c74bdd1e118634fe5664aca7a9710b108bab",
+      "original_selector": "0xb80c2f09",
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": 46705262,
+      "classification": "SELF_SIGNED_TRANSACTION_TOKEN_MOVEMENT_NO_QUOTE_PNL"
+    },
+    {
+      "token": "TUT",
+      "role": "first_in",
+      "hash": "0x16e655d2e80bb672ed8ca71b2211df60fe5aab58269ffb6f48eaead4047faede",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x9333c74bdd1e118634fe5664aca7a9710b108bab",
+      "original_selector": "0xb80c2f09",
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": 47172686,
+      "classification": "SELF_SIGNED_TRANSACTION_TOKEN_MOVEMENT_NO_QUOTE_PNL"
+    },
+    {
+      "token": "TUT",
+      "role": "first_out",
+      "hash": "0x1dd416287decf61058d4a53d8ec82e1468c755143070ea18774c80a248105ce1",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x9333c74bdd1e118634fe5664aca7a9710b108bab",
+      "original_selector": "0xb80c2f09",
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": 47174494,
+      "classification": "SELF_SIGNED_TRANSACTION_TOKEN_MOVEMENT_NO_QUOTE_PNL"
+    },
+    {
+      "token": "CHEEMS",
+      "role": "first_in",
+      "hash": "0xfbe0e256971a2e6a0e0379f734269a740c18d85c2fcd899099a4e0c532992045",
+      "origin_signer_status": "UNCONFIRMED_RPC_TRUNCATED",
+      "owner_signed": null,
+      "original_target": "0xb950d6e213168c6feb5996717e69542bc3364fd9",
+      "original_selector": null,
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": null,
+      "classification": "UNVERIFIED_SIGNER"
+    },
+    {
+      "token": "CHEEMS",
+      "role": "second_in",
+      "hash": "0xf70a52b408bf9f8f0a3df4e2ab0333177f5fca462266972bf7a52ac95da06dea",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x1a0a18ac4becddbd6389559687d1a73d8927e416",
+      "original_selector": "0x3593564c",
+      "transaction_native_msg_value_wei": "10257700500000000000",
+      "original_block_when_read": 42750954,
+      "classification": "SELF_SIGNED_TRANSACTION_TOKEN_MOVEMENT_NO_QUOTE_PNL"
+    },
+    {
+      "token": "CHEEMS",
+      "role": "first_out",
+      "hash": "0x3e5ffefe1e920c5ae5557fd1b3219d7107027bef73a672019cd020ac9c2131f6",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "original_selector": "0xa9059cbb",
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": 43918569,
+      "classification": "ERC20_TRANSFER_METHOD_NO_SALE_PROOF"
+    },
+    {
+      "token": "CHEEMS",
+      "role": "last_out",
+      "hash": "0xa803a28cb8cbf6f92d5ea7e8a9ed8e3085b6d8a643038b5ab855b1ddaade0d77",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "original_selector": "0xa9059cbb",
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": 43918620,
+      "classification": "ERC20_TRANSFER_METHOD_NO_SALE_PROOF"
+    },
+    {
+      "token": "MUBARAK",
+      "role": "first_in",
+      "hash": "0xe2fe41b715bf1e8532fbdff05642433e1a88536f4093f6c9e51406ee8ae4f9b5",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x9333c74bdd1e118634fe5664aca7a9710b108bab",
+      "original_selector": "0xb80c2f09",
+      "transaction_native_msg_value_wei": "39000000000000000000",
+      "original_block_when_read": 47460891,
+      "classification": "SELF_SIGNED_TRANSACTION_TOKEN_MOVEMENT_NO_QUOTE_PNL"
+    },
+    {
+      "token": "MUBARAK",
+      "role": "first_out",
+      "hash": "0x91a890c74b70fe1a3b8b4b468b501047b00f1f72489404bbfa5acc2defb659a4",
+      "origin_signer_status": "UNCONFIRMED_RPC_TRUNCATED",
+      "owner_signed": null,
+      "original_target": "0x9333c74bdd1e118634fe5664aca7a9710b108bab",
+      "original_selector": null,
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": null,
+      "classification": "UNVERIFIED_SIGNER"
+    },
+    {
+      "token": "MUBARAK",
+      "role": "second_out",
+      "hash": "0xef507509e6af866698f77b29e6e65456ed622199d85fb86ba2b2df55bbd16a2b",
+      "origin_signer_status": "UNCONFIRMED_RPC_TRUNCATED",
+      "owner_signed": null,
+      "original_target": "0x9333c74bdd1e118634fe5664aca7a9710b108bab",
+      "original_selector": null,
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": null,
+      "classification": "UNVERIFIED_SIGNER"
+    },
+    {
+      "token": "MUBARAK",
+      "role": "last_out",
+      "hash": "0xbf52c954489eacd9190355a65dbcbcdb422e54d8849c47e01200863bed26c81e",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "original_selector": "0xa9059cbb",
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": 47586058,
+      "classification": "ERC20_TRANSFER_METHOD_NO_SALE_PROOF"
+    },
+    {
+      "token": "BROCCOLI714",
+      "role": "first_in",
+      "hash": "0x391ab95735f4db31cc79bd12618c5bf024911b17b098122eead4927deeb7885e",
+      "origin_signer_status": "OTHER_SIGNED",
+      "owner_signed": false,
+      "original_target": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "original_selector": "0xa9059cbb",
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": 46647403,
+      "classification": "ERC20_TRANSFER_METHOD_NO_SALE_PROOF"
+    },
+    {
+      "token": "BROCCOLI714",
+      "role": "first_out",
+      "hash": "0x48c1b94458dc52e534d1520e94f166bb87caac3a936f69ae8f48c4fb10d644bc",
+      "origin_signer_status": "WALLET_SIGNED",
+      "owner_signed": true,
+      "original_target": "0x9333c74bdd1e118634fe5664aca7a9710b108bab",
+      "original_selector": "0xb80c2f09",
+      "transaction_native_msg_value_wei": "0",
+      "original_block_when_read": 46675355,
+      "classification": "SELF_SIGNED_TRANSACTION_TOKEN_MOVEMENT_NO_QUOTE_PNL"
+    }
+  ],
+  "sampled_native_blocks": [
+    {
+      "token": "MUBARAK",
+      "role": "first_in",
+      "block": 47460891,
+      "owner_input_wei": "39000000000000000000",
+      "wallet_native_block_delta_wei": "-39000437542600000000"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "role": "first_in",
+      "block": 46693331,
+      "owner_input_wei": "1800000000000000000",
+      "wallet_native_block_delta_wei": "-1800246421820000000"
+    },
+    {
+      "token": "CHEEMS",
+      "role": "second_in",
+      "block": 42750954,
+      "owner_input_wei": "10257700500000000000",
+      "wallet_native_block_delta_wei": "-10257915951500000000"
+    },
+    {
+      "token": "TUT",
+      "role": "first_in",
+      "block": 47172686,
+      "owner_input_wei": "0",
+      "wallet_native_block_delta_wei": "-583318010000000"
+    }
+  ],
+  "samples_summary": {
+    "original_tx_hashes": 14,
+    "wallet_signed": 10,
+    "other_signed": 1,
+    "signer_not_confirmed": 3,
+    "direct_transfer_method_not_swap": 4
+  },
+  "critical_findings": [
+    "CHEEMS first and last outgoing events are both original owner-signed ERC20 transfer selector 0xa9059cbb, not independently proven market sales. Token net zero does NOT mean realized profit.",
+    "BROCCOLI714 first inbound is another EOA's signed transfer to token contract, not wallet-signed purchase.",
+    "MUBARAK first inbound original wallet transaction sent 39 BNB to router 0x9333c74... and historical net wallet BNB block was -39.0004375426 BNB; classification limited to signed input and token receipt.",
+    "BROCCOLIF3B first inbound original wallet transaction value 1.8 BNB; historical native wallet block net -1.80024642182 BNB.",
+    "CHEEMS second inbound original owner transaction value 10.2577005 BNB with router selector 0x3593564c; raw native wallet net -10.2579159515 BNB.",
+    "TUT first inbound self-signed and original native msg.value zero; historical block BNB delta -0.00058331801 BNB, indicating the native input field alone is not full trade cost when wrapped or quote tokens may move."
+  ],
+  "limitations": [
+    "Provider 8KB response truncated origin signer for CHEEMS first inbound and two MUBARAK outgoing samples.",
+    "Per-block balance changes may include other transactions in that block; do not allocate to one transaction without original receipts/traces.",
+    "No historical WBNB, USDT, USDC, BUSD asset route or owner gasUsed complete per tx, hence no validated PnL, ROI, or net dollar amounts.",
+    "Exact token quantity closure is not equivalent to complete economic disposal; both CHEEMS direct token transfers clearly illustrate risk.",
+    "No ranking as reliable profit trader or live follow; 19 token corpus only."
+  ],
+  "production": "OBSERVE_ONLY_NO_GO"
+}
