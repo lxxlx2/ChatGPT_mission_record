@@ -10,7 +10,9 @@
 - 定时器仅在指定日期启动一次`python3 ... runner run --window ...`，launchd plist `KeepAlive=false`、`RunAtLoad=false`、无WatchPaths/StartInterval；每个任务完成后清除自己的plist并卸载，不继续运行。三个窗口都用同一安装命令完成；不是独立交易/价格通知监控。Mac需保持开机、联网、唤醒；OS休眠或网络中断会使该次窗口`MISSED`，不能声称已采集。
 - 每次在窗口内复用**Stage97原`capture_one`**：`/fapi/v1/time`→`/fapi/v1/exchangeInfo`→`/fapi/v1/time`，原始UTF8、SHA256、客户端时间、原始时点完整名单验证。成功后自动写 `crypto-300-profit-mission/monster/evidence/monster_stage97_point_in_time_usdm_YYYY-MM-DD_raw_https.json`，`git add/commit/push`至原PR30分支。远端已有同名不同内容必须拒绝覆盖。失败保存本机日志和状态供用户复核，不向Git写伪造成功或缺失填零。
 - 唯一需要用户的操作是**review通过后执行一条zsh命令安装一次性调度**，GitHub远端push使用用户本机现有GitHub Git凭证；绝不要求用户贴token，也不在日志泄漏账号凭据。安装时检查macOS、git/Python3/launchctl、三次日期未来/权限、origin分支存在、独立目录安全，Mac本机时钟有合理UTC窗口约束；已过期的日期直接拒装并可明确改为只装未来日期，但不能将其标成成功。
-- 预安装阶段必须完整完成：设计先Git → 代码在Git → 独立其他AI实际Review（reviewer/commit/意见）→修复→CI（至少模拟新旧文件、push失败、网络失败、时间过期、重复执行、不同本地时区、隔离/自动退出）→再提供安装命令。本任务只能为**证据采集器**做安装放行，原Monster策略部署依旧`NO_GO`。
+- 预安装阶段必须完整完成：设计先Git → 代码在Git → GitHub Actions Ubuntu/macOS离线测试 → 独立其他AI实际Review（reviewer/commit/意见）→修复后重新测试/Review → 用户主动执行一条zsh命令安装。真正其他AI由用户已登录的**Claude Code CLI**以`-p --output-format json --json-schema ... --tools Read,Glob,Grep`只读模式完成，审查报告原样留在原PR#30；只要Claude报告`BLOCK`、无法启动、账户未登录、代码被更改或 Git push失败，**禁止安装**。独立review没有运行前不能把CI模拟测试写作通过其他AI Review。本任务只为**研究证据采集器**做 narrow installation，原Monster策略部署依旧`NO_GO`。
+- 用户单次运行`review-install`会先通过Claude真实Review并自动提交审查结果；只有审查结果显式 APPROVE、无阻塞项、源Git blobs一致，才安装三个独立launchd一次性任务。之前被阻塞的review保留到带哈希名称的归档，不覆盖审查历史。
+- 安装所需私有环境：Mac已登录的Claude Code CLI `claude`、可直接push目标PR30分支的Git凭据、可用的Python3与git，以及接下来各采集时刻Mac未关机并有网络。缺任一项fail-closed。**不会让用户提供API Key/token给聊天**。
 - 异常优先级：真实性>采集成功率。记录`SCHEDULE_INSTALLED / CAPTURE_VALIDATED / GIT_PUSH_CONFIRMED / MISSED_WINDOW / AUTH_FAILED / SOURCE_FAILED / REVIEW_PENDING`，且`CAPTURE_VALIDATED`不得当成Git成功。GitHub原分支变化安全重试，不以reset覆盖他人提交。若窗口内已抓取有效原始证据但Git push失败，保留本机完整sha证据，允许事后**仅重试上传当时已保存的字节**，不得事后重新抓取。
 - `launchd`定时仅保存起始快照，不证明窗口内新上架或停牌覆盖。Crypto身份、D0/D1效果、真实盘口与回报仍未验证。采集完整不等于`G0/G1/G4 PASS`。
 
