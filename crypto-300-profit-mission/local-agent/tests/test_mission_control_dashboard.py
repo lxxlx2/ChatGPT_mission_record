@@ -70,8 +70,10 @@ def test_composite_usdc_event_is_never_used_as_frank_follow_price(tmp_path):
     assert candidate["latest_buy_quote_asset"]=="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
     assert candidate["latest_buy_quote_quantity"]=="1"
     assert candidate["latest_buy_usdc_equivalent"] is None
-    assert candidate["latest_buy_amount_predicate"]=="UNDETERMINED"
-    assert candidate["latest_buy_amount_predicate_reason"]=="COMPOSITE_QUOTE_LEGS"
+    from mission_agent.mission_control.payment_evidence import latest_buy_payment_evidence
+    presentation=latest_buy_payment_evidence(candidate)
+    assert presentation["latest_buy_amount_predicate"]=="UNDETERMINED"
+    assert presentation["latest_buy_amount_predicate_reason"]=="COMPOSITE_QUOTE_LEGS"
     from mission_agent.mission_control.service import MissionMemeService
     projected=MissionMemeService._decision_inputs(candidate,{})
     assert projected["latest_buy_amount_predicate"]=="UNDETERMINED"
@@ -166,8 +168,10 @@ def test_routed_usdc_event_is_never_used_as_frank_follow_price(tmp_path):
     assert candidate["latest_buy_price_usdc"] is None
     assert candidate["latest_buy_price_status"]=="ROUTED_QUOTE_PRICE_UNAVAILABLE"
     assert candidate["latest_buy_usdc_equivalent"] is None
-    assert candidate["latest_buy_amount_predicate"]=="UNDETERMINED"
-    assert candidate["latest_buy_amount_predicate_reason"]=="ROUTED_RESIDUAL_ASSETS"
+    from mission_agent.mission_control.payment_evidence import latest_buy_payment_evidence
+    presentation=latest_buy_payment_evidence(candidate)
+    assert presentation["latest_buy_amount_predicate"]=="UNDETERMINED"
+    assert presentation["latest_buy_amount_predicate_reason"]=="ROUTED_RESIDUAL_ASSETS"
 
 
 def test_cluster_frank_snapshot_failure_is_nonfatal(tmp_path):
