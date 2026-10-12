@@ -689,9 +689,14 @@ class DashboardState:
             "manual_only": ("gmail", "local", "other"),
         }
         prefix = "manual_review_"
+        def total_field(bucket):
+            # Legacy semantics use manual_only_total_count (not
+            # manual_only_count). Check the documented field literally.
+            return prefix + bucket + (
+                "_total_count" if bucket == "manual_only" else "_count")
         required = {"manual_review_visible_total_count"}
         for bucket, channels in buckets.items():
-            required.add(prefix + bucket + "_count")
+            required.add(total_field(bucket))
             for channel in channels:
                 required.add(prefix + bucket + "_" + channel + "_count")
         valid = (
@@ -702,7 +707,7 @@ class DashboardState:
         )
         if valid:
             valid = all(
-                breakdown[prefix + bucket + "_count"] ==
+                breakdown[total_field(bucket)] ==
                 sum(breakdown[prefix + bucket + "_" + channel + "_count"]
                     for channel in channels)
                 for bucket, channels in buckets.items()
