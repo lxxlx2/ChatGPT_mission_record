@@ -1,0 +1,53 @@
+name: Monster Stage81 Official Continuous 3m Pilot
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage81-official-continuous3m-pilot.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage81_continuous3m_official_pilot.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE81_EXPOSED_3M_CONTINUOUS_CAUSAL_PILOT_PROTOCOL_20261013.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prereg_contract_tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source code syntax compile
+        run: python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage81_continuous3m_official_pilot.py
+      - name: Predeclared no-label cohort and frozen source SHA
+        run: python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage81_continuous3m_official_pilot.py --selftest
+      - name: Original Stage80 causal core regression
+        run: python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+
+  real_official_minute_replay:
+    needs: prereg_contract_tests
+    strategy:
+      fail-fast: false
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run two label-blind cases and check publisher SHA
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage81_continuous3m_official_pilot.py --date ${{ matrix.date }} --out /tmp/monster-stage81-${{ matrix.date }}.json
+          python -m json.tool /tmp/monster-stage81-${{ matrix.date }}.json > /dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage81-${{ matrix.date }}
+          path: /tmp/monster-stage81-${{ matrix.date }}.json
+          retention-days: 30
