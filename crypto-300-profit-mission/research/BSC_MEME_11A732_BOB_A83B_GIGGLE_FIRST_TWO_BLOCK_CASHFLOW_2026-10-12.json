@@ -24,7 +24,10 @@
       "firstSellOwnerSignedConfirmed": true,
       "firstBuyMsgValueWei": "139320442060087755",
       "originalTarget": "0x013bb8a204499523ddf717e0abaa14e6dc849060",
-      "netFeeOrAssetPnLStatus": "NOT_VERIFIED_SEPARATE_EPISODE_NEEDS_ALL_TRADES_AND_QUOTE_FLOWS"
+      "netFeeOrAssetPnLStatus": "NOT_VERIFIED_SEPARATE_EPISODE_NEEDS_ALL_TRADES_AND_QUOTE_FLOWS",
+      "first_sell_as_pct_of_first_buy": "50.00",
+      "first_sale_partial": true,
+      "first_two_block_native_significance": "SCOPED_TWO_BLOCK_NET_ONLY; FIRST_SALE_IS_PARTIAL; POSITION_PNL_UNVERIFIED"
     },
     {
       "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
@@ -42,13 +45,16 @@
       "firstSellOwnerSignedConfirmed": true,
       "firstBuyMsgValueWei": "500000000000000000",
       "originalTarget": "0x1de460f363af910f51726def188f9004276bf4bc",
-      "netFeeOrAssetPnLStatus": "NOT_VERIFIED_SEPARATE_EPISODE_NEEDS_ALL_TRADES_AND_QUOTE_FLOWS"
+      "netFeeOrAssetPnLStatus": "NOT_VERIFIED_SEPARATE_EPISODE_NEEDS_ALL_TRADES_AND_QUOTE_FLOWS",
+      "first_sell_as_pct_of_first_buy": "5.00",
+      "first_sale_partial": true,
+      "first_two_block_native_significance": "SCOPED_TWO_BLOCK_NET_ONLY; FIRST_SALE_IS_PARTIAL; POSITION_PNL_UNVERIFIED"
     }
   ],
   "conclusions": [
-    "BOB first two observed blocks have positive native block net, while GIGGLE first two have negative native block net, demonstrating early attractive token is not automatically a positive trade outcome.",
-    "These are first two isolated block balance changes, not complete position episode; no final wallet PnL or full quote asset attribution.",
-    "Both wallets have open pagination in broader 19 CA census. No trading signal endorsement."
+    "First sell receipts are partial: BOB first sold about 50% of first buy quantity; GIGGLE first sold about 5%. Neither positive nor negative BNB net over the two blocks represents closed position realized profit.",
+    "Same-block native BNB balance changes are precise for those blocks but can include co-occurring transactions. No attribution to individual swap without full trace.",
+    "Both are original owner-signed first buy and first sell based on direct ethGetTransactionByHash; remaining 19-CA pagination is incomplete."
   ],
   "production": "NO_GO"
 }
