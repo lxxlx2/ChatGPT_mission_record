@@ -1,0 +1,126 @@
+{
+  "schema": "BSC_MEME_A83B_LAST11_BALANCE_QA_BATCH_A_V1",
+  "date": "2026-10-12",
+  "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+  "network": "bnb-mainnet",
+  "method": "Source files read back and checked bidirectional cursor exhaustion and exact raw-token integer conservation, cross-batch uniqueId disjoint; independent latest balanceOf for both split cases; prior single-case balanceOf was also verified on original chain",
+  "rows": [
+    {
+      "token": "TUT",
+      "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "in_count": 14,
+      "out_count": 3,
+      "raw_in": "50425298514538609725080",
+      "raw_out": "50043610690083085383038",
+      "balance_raw": "381687824455524342042",
+      "balance_verified": true,
+      "fully_paginated": true
+    },
+    {
+      "token": "BROCCOLI714",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "in_count": 3,
+      "out_count": 2,
+      "raw_in": "115320014509739900436902",
+      "raw_out": "115320014509739900436902",
+      "balance_raw": "0",
+      "balance_verified": true,
+      "fully_paginated": true
+    },
+    {
+      "token": "BOB",
+      "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "in_count": 2,
+      "out_count": 1,
+      "raw_in": "13018524688101226887343237202",
+      "raw_out": "12725173389955790554717953669",
+      "balance_raw": "293351298145436332625283533",
+      "balance_verified": true,
+      "fully_paginated": true
+    },
+    {
+      "token": "4",
+      "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "in_count": 24,
+      "out_count": 37,
+      "raw_in": "22869742493343715354896707",
+      "raw_out": "22869742493343715354896707",
+      "balance_raw": "0",
+      "balance_verified": true,
+      "fully_paginated": true
+    },
+    {
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "in_count": 37,
+      "out_count": 82,
+      "raw_in": "5911612263168618850685",
+      "raw_out": "5909976180899725235992",
+      "balance_raw": "1636082268893614693",
+      "balance_verified": true,
+      "fully_paginated": true
+    },
+    {
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "in_count": 164,
+      "out_count": 180,
+      "raw_in": "115452832307847944423513506",
+      "raw_out": "115452832307847944423513506",
+      "balance_raw": "0",
+      "balance_verified": true,
+      "fully_paginated": true
+    },
+    {
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "in_count": 154,
+      "out_count": 118,
+      "raw_in": "194042752489896014978787819",
+      "raw_out": "194042752489896014978787819",
+      "balance_raw": "0",
+      "balance_verified": true,
+      "fully_paginated": true
+    }
+  ],
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_TUT_B714_BOB_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "sha": "38ee993cc767184eee31b4d702712a81a87769e6"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_4_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "sha": "6400b9af285a250fa5f9e242ca89c9ee368f5b4c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_GIGGLE_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "sha": "1ec14ad6f28c76ebdc46992fea995b28b2615c4a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_BINANCE_LIFE_INBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "497c41641ed019ea4140b8d62b9985fb4cbf6ede"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_BINANCE_LIFE_OUT_PREFIX_A_2026-10-12.json",
+      "sha": "d51522f2c1216e23f438fdbe048c09850c1d033a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_BINANCE_LIFE_OUT_PREFIX_B_2026-10-12.json",
+      "sha": "2d4e11a5e66392aec1c9ac4f6e96a9ca8f9a6a0a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_WOTAMALA_INBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "af07010123d96da8de5ca917af2fc5ede1712bb8"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_WOTAMALA_INBOUND_CURSOR_B_2026-10-12.json",
+      "sha": "709836c14ddadcd0da41253c104296dfc9c19f1e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_WOTAMALA_OUTBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "b652f5a4c879782c90dc9470040fc79d5ac50723"
+    }
+  ],
+  "realized_PnL": "UNVERIFIED",
+  "production": "NO_GO"
+}
