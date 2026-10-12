@@ -42,7 +42,7 @@ def test_live_response_must_show_new_layout_before_deployment_success(monkeypatc
             ],
             "ata_gap_source_status": "DATED_ATA_INDEX_SCOPE_V2"
         }).encode("utf-8"),
-        "/static/app.js": b'data="\\xe6\\x95\\xb0\\xe6\\x8d\\xae\\xe5\\xba\\x93\\xe6\\x97\\xa0\\xe5\\x8f\\x91\\xe9\\x80\\x81\\xe5\\xb0\\x9d\\xe8\\xaf\\x95\\xe8\\xae\\xb0\\xe5\\xbd\\x95";v="\\xe7\\xaa\\x97\\xe5\\x8f\\xa3\\xe5\\x89\\x8d";',
+        "/static/app.js": "数据库无发送尝试记录 窗口前".encode("utf-8"),
         "/api/control-health": b'{}',
     }
     monkeypatch.setattr(ops, "get", lambda port, path, attempts=1: fake[path])
