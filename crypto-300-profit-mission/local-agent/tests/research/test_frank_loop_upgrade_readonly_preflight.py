@@ -145,3 +145,49 @@ def test_all_authorization_artifacts_present(tmp_path, monkeypatch):
     assert ops.inspect_authorization_artifacts(paths) is True
     assert all(status == "PASS" for status in ops.checks.values())
     assert ops.details["missing_authorization_artifacts"] == []
+
+
+
+def test_post_clone_reopen_reports_stage_and_sqlite_error_name_without_paths(tmp_path, monkeypatch, capsys):
+    from pathlib import Path
+    import sqlite3
+    monkeypatch.setattr(ops, "details", {})
+    monkeypatch.setattr(ops, "checks", {})
+    private = tmp_path / "private-auth-data"
+    def raise_cantopen(_path):
+        raise sqlite3.OperationalError("unable to open database file: SECRET_NEVER_PRINT")
+    monkeypatch.setattr(ops, "query_ro", raise_cantopen)
+    with pytest.raises(sqlite3.OperationalError):
+        ops.check_post_clone_status(private, {})
+    assert ops.details["clone_stage"] == "POST_CLONE_OPEN_READONLY"
+    assert ops.details["clone_sqlite_error_name"] == "OperationalError"
+    assert "SECRET_NEVER_PRINT" not in capsys.readouterr().out
+    assert str(tmp_path) not in capsys.readouterr().out
+
+
+def test_post_clone_checks_valid_sqlite_rows_unchanged(tmp_path, monkeypatch):
+    from mission_agent.mission_control.db import ControlDB
+    monkeypatch.setattr(ops, "details", {})
+    monkeypatch.setattr(ops, "checks", {})
+    p = tmp_path / "control-copy.sqlite"
+    writer = ControlDB(p)
+    writer.close()
+    with ops.closing(ops.query_ro(p)) as ro:
+        before = ops.counters(ro)
+    ops.check_post_clone_status(p, before)
+    assert ops.details["clone_stage"] == "COMPLETE"
+    assert ops.checks["POST_CLONE_READONLY_REOPEN"] == "PASS"
+    assert ops.checks["POST_CLONE_INTEGRITY"] == "PASS"
+    assert ops.checks["EXISTING_EVENTS_AND_DELIVERY_UNCHANGED"] == "PASS"
+
+
+def test_cloned_database_error_code_does_not_allow_fake_success(tmp_path, monkeypatch):
+    from pathlib import Path
+    monkeypatch.setattr(ops, "details", {})
+    monkeypatch.setattr(ops, "checks", {})
+    p = tmp_path / "missing.sqlite"
+    with pytest.raises(ops.sqlite3.Error):
+        ops.check_post_clone_status(p, {})
+    assert ops.details["clone_stage"] == "POST_CLONE_OPEN_READONLY"
+    assert "POST_CLONE_INTEGRITY" not in ops.checks
+    assert "EXISTING_EVENTS_AND_DELIVERY_UNCHANGED" not in ops.checks
