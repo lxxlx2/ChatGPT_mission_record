@@ -54,3 +54,11 @@ The earlier CI run `38162884440` is a valid record that a workflow from a separa
 - Temporary merged Git tree SHA `6c8e525a7fdf2fc94de88e48f5142f62e7c4f78a`.
 - Full combined local-agent suite with real Git archive replay: **1223 passed, zero skipped**, successful Python compile and frontend JS syntax checks.
 - This is a local-only CI merge, not a push/merge to main. The main SHA is a point-in-time source; new unrelated commits arriving later require a final fast comparison before a real merge.
+
+
+## R6 value-redaction archive compatibility
+
+- [GitHub Actions 38189809656](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38189809656) **SUCCESS**. Independently checks pinned final PR #34 source `b637361154863f492b31a636de8e77381bc8156b` against original `dafb126e33338523630bb48d4fe838ddd9c7fb95` in a read-only ephemeral checkout.
+- Actual archive scan: **21 committed evidence JSON files, 44,438 strings, 0 sanitized-output differences**. Excludes values of banned keys as both sanitizers would exclude those from a sanitized export.
+- Three synthetic Google secret-shaped strings (`1//...`, `GOCSPX-...`, `ya29....`) remained unredacted by the previous code but are **[REDACTED]** by the new implementation.
+- Script explicitly reported `ARCHIVE_COMPATIBILITY=PASS` and `R6_SECRET_REVERSE_REGRESSION=PASS`; it did not access Gmail, Mac, any live RPC, or GitHub write API.
