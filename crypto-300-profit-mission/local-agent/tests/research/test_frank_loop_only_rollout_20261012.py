@@ -259,6 +259,17 @@ def test_decision_scope_covers_store_and_every_package_module(tmp_path):
     assert not hasattr(ops, "SIGNAL_FILES")
 
 
+def test_decision_scope_tracks_dispatcher_code_and_safely_lists_deltas(tmp_path):
+    old, new = tmp_path / "old", tmp_path / "new"
+    for root in (old, new):
+        _write(root, "mission_agent/__init__.py", "")
+        _write(root, "scripts/mission_meme_v1.py", "def main(): return 1\n")
+    assert ops.decision_scope_diff(old, new) == []
+    _write(new, "scripts/mission_meme_v1.py", "def main(): return 2\n")
+    assert ops.decision_scope_diff(old, new) == ["scripts/mission_meme_v1.py"]
+    assert 'DECISION_MODULE_CHANGED=' in SCRIPT.read_text(encoding="utf-8")
+
+
 def test_slow_old_exit_is_waited_for_not_reported_as_failure(monkeypatch):
     monkeypatch.setattr(ops, "WAIT_SECONDS", 8)
     monkeypatch.setattr(ops, "launch_pid", lambda label: 2222)
