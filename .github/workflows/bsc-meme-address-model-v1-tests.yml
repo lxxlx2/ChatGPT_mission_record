@@ -60,6 +60,22 @@ jobs:
           for source in ledger["source_manifest"]:
               actual = subprocess.check_output(["git", "hash-object", source["path"]], text=True).strip()
               assert actual == source["blob_sha"], f"source drift: {source['path']}"
+          blockers = json.loads((p / "bsc-meme-address-model-v1-p2-2026-eligibility-blocker-queue-2026-10-13.json").read_text(encoding="utf-8"))
+          episodes = {(e["wallet"], e["exact_ca"]) for e in ledger["episodes"]}
+          baseline = json.loads(p1.read_text(encoding="utf-8"))
+          cohort = {w["wallet"]: {c["ca"] for c in w["cells"] if c["ERC20_presence"] == "PRESENT"}
+                    for w in baseline["wallets"]}
+          for source in blockers["source_manifest"].values():
+              actual = subprocess.check_output(["git", "hash-object", source["path"]], text=True).strip()
+              assert actual == source["git_blob_sha"], f"blocker source drift: {source['path']}"
+          assert len(blockers["items"]) == 8
+          for item in blockers["items"]:
+              assert item["wallet"] in cohort and item["ca"] in cohort[item["wallet"]]
+              assert (item["wallet"], item["ca"]) not in episodes, (
+                  "blocked partial/unsigned/open case falsely counted in realized round"
+              )
+              assert item["realized_final_PnL"] == "UNRESOLVED"
+          print("PASS eight high-priority partial/open/signature-unknown P2 exclusions source-pinned")
           print("PASS P2 source Git blobs pinned to exact evidence originals")
           PY
       - name: Recompute P2 23-wallet economic overlay
