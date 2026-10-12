@@ -126,10 +126,25 @@ def real_source_case(row, survivor, collector=m60.source_case):
         }
     receipts=case["source_SHA_receipts_for_available_days"]
     src_by_date={x["date"]:x["zip_sha256"] for x in row["source_daily_minute_official_SHA"]}
+    # Stage52's nine official days include one warmup and do NOT cover the
+    # after-window 24h follow-up for original D0 signals on the last UTC06 day.
+    # New extra-day official ZIPs are valid ONLY with independently verified
+    # publisher SHA, are explicitly isolated from the original Stage52 proofs,
+    # and cannot silently overwrite a pinned original-day ZIP.
+    extra_days=[]
     for receipt in receipts:
+        verified=receipt["verified_official_publisher_SHA256"]
+        if not verified:
+            raise ValueError("STAGE63_UNVERIFIED_PUBLISHER_SHA")
         expect=src_by_date.get(receipt["date"])
-        if expect is None or expect!=receipt["zip_sha256"] or not receipt["verified_official_publisher_SHA256"]:
-            raise ValueError("STAGE63_RELOADED_OFFICIAL_SOURCE_DISAGREES_STAGE52_ORIGINAL_36_SHA " + str((row["date"],row["symbol"],receipt["date"])))
+        if expect is not None:
+            if expect!=receipt["zip_sha256"]:
+                raise ValueError("STAGE63_RELOADED_OFFICIAL_SOURCE_DISAGREES_STAGE52_ORIGINAL_36_SHA " + str((row["date"],row["symbol"],receipt["date"])))
+        else:
+            allowed=(datetime.fromisoformat(row["date"]).date()+timedelta(days=8)).isoformat()
+            if receipt["date"]!=allowed:
+                raise ValueError("STAGE63_UNEXPECTED_EXTRA_DAY_OUTSIDE_ORIGINAL_SOURCES " + str((row["date"],row["symbol"],receipt["date"])))
+            extra_days.append(receipt)
     if reached:
         prior=survivor
         if prior["source_status"]!=PRICE_OK or prior["earliest_D0_watch_UTC"]!=first:
@@ -161,6 +176,7 @@ def real_source_case(row, survivor, collector=m60.source_case):
         "first_D0_price_PROXY":case["entry_price_first_post_signal_close_PROXY"],
         "D0_price_path":case["forward_horizons"],
         "official_USDM_1m_publisher_SHA_receipts":receipts,
+        "new_publisher_SHA_days_outside_original_Stage52_36_artifacts":extra_days,
         "original_P1_survivor_independent_166_parity":True if reached else None,
         "NOT_SPOT_EXECUTION_PROOF":True,"USER_ORDER_NOTIONAL":None,
         "NOT_RECOMPUTED_V4_OR_P1":True,
@@ -210,6 +226,8 @@ def aggregate(rows):
             "original_166_paired_source_price_and_SHA_matches":sum(r.get("original_P1_survivor_independent_166_parity")==True for r in rows),
         },
         "groups":totals,
+        "extended_post_original_window_candidates_with_new_publisher_SHA":sum(bool(r.get("new_publisher_SHA_days_outside_original_Stage52_36_artifacts")) for r in rows),
+        "extended_post_original_window_is_separately_proved_not_old_stage52_source":True,
         "HISTORICAL_SOURCE_NOT_HOLDOUT":True,
         "P1_V03":"REJECTED","NO_ASSUMED_ORDER_SIZE":True,
         "ALL_PRICE_IS_USDM_FUTURES_NOT_REAL_SPOT_OR_ALPHA_FILL":True,
@@ -256,6 +274,29 @@ def selftest():
         assert "DISAGREES_STAGE52" in str(e)
     else:
         raise AssertionError("STAGE63_ORIGINAL_PUBLISHER_SHA_NOT_ENFORCED")
+    # A missing Stage52 proof is acceptable ONLY for date+8 extension,
+    # after independently verifying the new publisher .CHECKSUM.
+    extra=dict(row,source_daily_minute_official_SHA=row["source_daily_minute_official_SHA"])
+    class ExtraSource:
+        def __call__(self,dummy,venue):
+            q=Source()(dummy,venue)
+            q["source_SHA_receipts_for_available_days"]=q["source_SHA_receipts_for_available_days"] + [{
+                "date":"2025-02-07","zip_sha256":"c"*64,"verified_official_publisher_SHA256":True
+            }]
+            return q
+    assert len(real_source_case(extra,None,ExtraSource())[
+        "new_publisher_SHA_days_outside_original_Stage52_36_artifacts"]) == 1
+    class InvalidExtra:
+        def __call__(self,dummy,venue):
+            q=ExtraSource()(dummy,venue)
+            q["source_SHA_receipts_for_available_days"][-1]["date"]="2025-02-08"
+            return q
+    try:
+        real_source_case(extra,None,InvalidExtra())
+    except ValueError as e:
+        assert "UNEXPECTED_EXTRA_DAY" in str(e)
+    else:
+        raise AssertionError("STAGE63_EXTRA_DAY_UNBOUNDED")
     print("STAGE63_P1_NONSURVIVOR_SOURCE_SHA_AND_FULL519_SELECTION_SELFTEST_PASS")
 
 
