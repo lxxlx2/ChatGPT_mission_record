@@ -1,0 +1,25 @@
+{
+  "schema": "BSC_MEME_STAGE15_877AF_NIULAI_QUANTITY_QA_V1",
+  "date": "2026-10-12",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+  "fixed_block": "0x79549a0",
+  "in": 124,
+  "out": 115,
+  "in_sum_raw": "3253876744758014136734393",
+  "out_sum_raw": "3253737866340751812661844",
+  "balance_raw": "138878417262324072549",
+  "quantity_reconciled": true,
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE15_877AF_NIULAI_INBOUND_2026-10-12.json",
+      "sha": "7b4440bed0439881af7ae75a535d47e196e4cc5b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE15_877AF_NIULAI_OUTBOUND_2026-10-12.json",
+      "sha": "0539e204aa47a71907210fb44419252b5aaf02d7"
+    }
+  ],
+  "realized_pnl": "UNVERIFIED",
+  "production": "NO_GO"
+}
