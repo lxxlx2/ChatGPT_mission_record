@@ -157,7 +157,8 @@ class MissionMemeService:
             "position_state","current_raw","buy_count","sell_count","latest_side","latest_signature","latest_at",
             "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset","latest_buy_quote_quantity",
             "latest_buy_original_quote_asset","latest_buy_original_quote_quantity","latest_buy_quote_was_normalized",
-            "latest_buy_usdc_equivalent","latest_buy_model_quote_asset","latest_buy_model_quote_quantity","candidate_source","token_decimals"
+            "latest_buy_usdc_equivalent","latest_buy_amount_predicate","latest_buy_amount_predicate_reason",
+            "latest_buy_model_quote_asset","latest_buy_model_quote_quantity","candidate_source","token_decimals"
         )} | {
             "quote":cls._stable_quote_inputs(quote),
             # Preserve the actual Jupiter observation for the frozen Gmail body.
