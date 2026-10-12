@@ -1,0 +1,277 @@
+{
+  "D0_first_watch_ge5min_future2x_base_denominator": 48,
+  "Frank": "UNCHANGED",
+  "Gmail": "OFF",
+  "P1_alerts_per_42_utc_days": [
+    3,
+    2,
+    3,
+    0,
+    2,
+    0,
+    0,
+    8,
+    4,
+    5,
+    4,
+    5,
+    3,
+    3,
+    2,
+    10,
+    0,
+    1,
+    5,
+    4,
+    1,
+    4,
+    2,
+    1,
+    0,
+    2,
+    2,
+    2,
+    7,
+    5,
+    4,
+    1,
+    5,
+    3,
+    4,
+    4,
+    0,
+    4,
+    2,
+    2,
+    1,
+    0
+  ],
+  "P1_at_least_80pct_of_baseline_first_D0_gt2x_ge5min_gate": false,
+  "P1_daily_max_le12_gate": true,
+  "P1_eligible": 120,
+  "P1_eligible_future10x": 0,
+  "P1_eligible_future5x": 0,
+  "P1_eligible_historical_future2x": 17,
+  "P1_eligible_historical_not2x": 103,
+  "P1_late_or_equal_to_cross": 2,
+  "P1_max_per_day": 10,
+  "P1_mean_le5_per_day_gate": true,
+  "P1_mean_per_day": 2.857143,
+  "P1_not_eligible": 363,
+  "P1_retains_baseline_first_D0_lead_ge5min_cases": 15,
+  "P1_strictly_pre_1m_cross_at_least_5min": 15,
+  "P1_strictly_pre_1m_cross_gt2x": 15,
+  "deploy": "NO_GO",
+  "exposed_historical_only_not_out_of_sample": true,
+  "frozen_original_WATCH_without_calendar2x": 433,
+  "frozen_original_future2x_in_WATCH_cohort": 50,
+  "frozen_original_v4_first_watch_strict_early_future2x": 48,
+  "frozen_original_v4_full6date_source_watch_cohort": 483,
+  "future_executable_net_return": "UNVERIFIED_NO_HISTORICAL_L2",
+  "old_dataset_thresholds_unchanged": true,
+  "original12_source_artifact_SHA_receipts": [
+    {
+      "artifact_id": 11728244698,
+      "date": "2025-01-19",
+      "first_watch_cases": 18,
+      "original_json_sha256": "37c0ee22315b7e0b9e4b323236f7517c46363a9420185264e509345f6714c5aa",
+      "original_zip_sha256": "3bdf3555517ab78dd055d95965739141c1e0aa3f5bf5e7ec20005bd6210d9b23",
+      "shard": 0
+    },
+    {
+      "artifact_id": 11728488886,
+      "date": "2025-01-19",
+      "first_watch_cases": 18,
+      "original_json_sha256": "a0a275e7533ea8a95c33cdbd69aebdc4abc8a65997e13225233f334355e7414d",
+      "original_zip_sha256": "93f16b48cef822885a5e61912d8eb65ee33b524b8fd1edac201431328db07905",
+      "shard": 1
+    },
+    {
+      "artifact_id": 11729490511,
+      "date": "2025-04-19",
+      "first_watch_cases": 50,
+      "original_json_sha256": "c80a7cf75866e7d48133228df622d573f810941dffbd2ee85d708ca41e70a074",
+      "original_zip_sha256": "60dd6a9be9d41637d7285dad4d632ef79cbd3a802696b416d97abbb1d50fca35",
+      "shard": 0
+    },
+    {
+      "artifact_id": 11729054516,
+      "date": "2025-04-19",
+      "first_watch_cases": 50,
+      "original_json_sha256": "2b14bab230c9edbd74f98d97832b054acf554f35ed1cee367af2a077995ced83",
+      "original_zip_sha256": "e703ca3d058eca7305f058816c48bcd02d268515ea3f8aebe57803fe767f2e84",
+      "shard": 1
+    },
+    {
+      "artifact_id": 11728859964,
+      "date": "2025-07-19",
+      "first_watch_cases": 38,
+      "original_json_sha256": "e12b693e85b4d5b7aee246268867600f96a1dfbc353f78877093a06225135300",
+      "original_zip_sha256": "ccd50abb4fe06600d9745cb329a6fc39af2f2e235079e8ea079b0ead5ba03c8d",
+      "shard": 0
+    },
+    {
+      "artifact_id": 11729495459,
+      "date": "2025-07-19",
+      "first_watch_cases": 37,
+      "original_json_sha256": "ff77f27046c34f587e37b8db19663b1293848a562699baf0f373d6a79c742d38",
+      "original_zip_sha256": "430fac04989aff2a654ba0d2b96b1c1a575795ea9f6ac3aac48b0c06b2672c62",
+      "shard": 1
+    },
+    {
+      "artifact_id": 11729213957,
+      "date": "2025-10-19",
+      "first_watch_cases": 40,
+      "original_json_sha256": "36d0437755d2c2b693dba18cd6db7ac7e1358b29571647b9a3c296540af96414",
+      "original_zip_sha256": "0504dc0e237cbba210d7cf2eb7ef1334572022eeeee6f1684343c3f947080606",
+      "shard": 0
+    },
+    {
+      "artifact_id": 11729248864,
+      "date": "2025-10-19",
+      "first_watch_cases": 40,
+      "original_json_sha256": "d619b9ebbc9b93724276159026a4e2183fbde1ad6ec94c4757da6b4cc86b453d",
+      "original_zip_sha256": "ed323bc1f1bf2ab0246d98c0f665cc0af483a14a11888e9c27082f25f4619af0",
+      "shard": 1
+    },
+    {
+      "artifact_id": 11728214806,
+      "date": "2026-04-19",
+      "first_watch_cases": 57,
+      "original_json_sha256": "d4b8adc5fc6676fd6622295c4beeeee7ec09cd0e999217ad6a04282a61902a5b",
+      "original_zip_sha256": "8472f98ccb6102495e7766ecb7fc6da312300095cfaceb04e330767cc732fd05",
+      "shard": 0
+    },
+    {
+      "artifact_id": 11728989875,
+      "date": "2026-04-19",
+      "first_watch_cases": 56,
+      "original_json_sha256": "dfea570dd83d3a5d27b0e7d856dc3f0227fc404a744f74932773ba630b53ff53",
+      "original_zip_sha256": "36a660bb748f8d635bca1e6fe19f3c1696ae70659478196bdd6ef64585297705",
+      "shard": 1
+    },
+    {
+      "artifact_id": 11728643638,
+      "date": "2026-07-19",
+      "first_watch_cases": 40,
+      "original_json_sha256": "b5f99b5aa469b425d17423bb1b7429e8e20342c7eb7cfeebcb69faf6cd6b8011",
+      "original_zip_sha256": "edae5e83c60f8512439a6d889ec2e92627afeda3bee322f1f3a29abefb644a12",
+      "shard": 0
+    },
+    {
+      "artifact_id": 11729343429,
+      "date": "2026-07-19",
+      "first_watch_cases": 39,
+      "original_json_sha256": "1689651978333ed2885200d01e39a3ff9dca3be7bd34382a7ceef2b3a4783046",
+      "original_zip_sha256": "d0dee5014c751102dfa5e9dae38955b5e22562c2ff1dcd35ed3cff1beea7fcf6",
+      "shard": 1
+    }
+  ],
+  "otherAIreview": "NOT_DONE",
+  "per_date": [
+    {
+      "P1_eligible": 10,
+      "P1_future2x_coin_dates": 0,
+      "P1_not_calendar2x": 10,
+      "P1_upgrades_per_each_utc_anchor_day": [
+        3,
+        2,
+        3,
+        0,
+        2,
+        0,
+        0
+      ],
+      "date": "2025-01-19",
+      "future2x_with_D0": 0,
+      "original_v4_FIRST_WATCH_coin_dates": 36
+    },
+    {
+      "P1_eligible": 32,
+      "P1_future2x_coin_dates": 6,
+      "P1_not_calendar2x": 26,
+      "P1_upgrades_per_each_utc_anchor_day": [
+        8,
+        4,
+        5,
+        4,
+        5,
+        3,
+        3
+      ],
+      "date": "2025-04-19",
+      "future2x_with_D0": 18,
+      "original_v4_FIRST_WATCH_coin_dates": 100
+    },
+    {
+      "P1_eligible": 23,
+      "P1_future2x_coin_dates": 4,
+      "P1_not_calendar2x": 19,
+      "P1_upgrades_per_each_utc_anchor_day": [
+        2,
+        10,
+        0,
+        1,
+        5,
+        4,
+        1
+      ],
+      "date": "2025-07-19",
+      "future2x_with_D0": 8,
+      "original_v4_FIRST_WATCH_coin_dates": 75
+    },
+    {
+      "P1_eligible": 13,
+      "P1_future2x_coin_dates": 2,
+      "P1_not_calendar2x": 11,
+      "P1_upgrades_per_each_utc_anchor_day": [
+        4,
+        2,
+        1,
+        0,
+        2,
+        2,
+        2
+      ],
+      "date": "2025-10-19",
+      "future2x_with_D0": 10,
+      "original_v4_FIRST_WATCH_coin_dates": 80
+    },
+    {
+      "P1_eligible": 29,
+      "P1_future2x_coin_dates": 3,
+      "P1_not_calendar2x": 26,
+      "P1_upgrades_per_each_utc_anchor_day": [
+        7,
+        5,
+        4,
+        1,
+        5,
+        3,
+        4
+      ],
+      "date": "2026-04-19",
+      "future2x_with_D0": 9,
+      "original_v4_FIRST_WATCH_coin_dates": 113
+    },
+    {
+      "P1_eligible": 13,
+      "P1_future2x_coin_dates": 2,
+      "P1_not_calendar2x": 11,
+      "P1_upgrades_per_each_utc_anchor_day": [
+        4,
+        0,
+        4,
+        2,
+        2,
+        1,
+        0
+      ],
+      "date": "2026-07-19",
+      "future2x_with_D0": 5,
+      "original_v4_FIRST_WATCH_coin_dates": 79
+    }
+  ],
+  "schema": "MONSTER_STAGE42_ORIGINAL12_SHA_ALL483_EXPOSED_PRIORITY_RESEARCH_AGGREGATE_V1",
+  "trading": "NO_GO"
+}
