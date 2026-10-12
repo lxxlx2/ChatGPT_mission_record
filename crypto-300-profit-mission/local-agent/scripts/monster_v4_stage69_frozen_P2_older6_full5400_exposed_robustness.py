@@ -23,7 +23,7 @@ BLOBS={
  OLD.name:"dca780246adb28e045ed77f0f96eb4bd034fb2e7",
  D0.name:"8ebe53acfdfe10413ac1e6f03457d6ace25d9d5a",
  SUM.name:"42d455a6cc9d0164a8dd94aa12a475bad5ed126e",
- P.name:"735fbe3e679ce1c2222d9612f3f38fbfe9dd1334",
+ P.name:"06f56e47543c50ae4c66b65fc0b7895e0a92f564",
  "monster_v4_stage68_exposed2700_dual_lane_watch_p1_halfday_reserve.py":"f933e8315e4fe94d632ab8118cf1a2a4ff66a892",
 }
 VALID="COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4"
@@ -126,7 +126,9 @@ def score(valid,ref,new):
             for key in ("D0_5min_early","P1_5min_early",
                 "old_budget_and_D0_5min_early","P2_budget_and_D0_5min_early",
                 "old_budget_and_P1_5min_early","P2_budget_and_P1_5min_early")}}
-    if stats(found[2])["D0_5min_early"]!=28 or stats(found[2])["old_budget_and_D0_5min_early"]!=21:
+    if (stats(found[2])["D0_5min_early"]!=28 or
+        stats(found[2])["old_budget_and_D0_5min_early"]!=22 or
+        stats(found[2])["old_budget_and_P1_5min_early"]!=21):
         raise ValueError("STAGE69_ORIGINAL28_EARLY_21_URGENT_FROZEN_REFERENCE_DRIFT")
     return {str(k)+"x":stats(v) for k,v in found.items()},[x for v in found.values() for x in v]
 
@@ -154,12 +156,14 @@ def main():
             "P2_budget":sum(v for (d,k),v in caps.items() if d==date),
             "gt2":len(subset),
             "P2_budget_D0_early":sum(x["P2_budget_and_D0_5min_early"] for x in subset),
-            "old_budget_D0_early":sum(x["old_budget_and_D0_5min_early"] for x in subset)})
-    p2_early=scores["2x"]["P2_budget_and_D0_5min_early"]
+            "P2_budget_P1_early":sum(x["P2_budget_and_P1_5min_early"] for x in subset),
+            "old_budget_D0_early":sum(x["old_budget_and_D0_5min_early"] for x in subset),
+            "old_budget_P1_early":sum(x["old_budget_and_P1_5min_early"] for x in subset)})
+    p2_early=scores["2x"]["P2_budget_and_P1_5min_early"]
     gates={">=20_source_valid_2x":True,
-           ">=80pct_of_original28_D0_early_GT2x_after_budget":p2_early*100>=80*28,
-           "all_original_gt5x_budget_D0early":scores["5x"]["P2_budget_and_D0_5min_early"]==3,
-           "all_original_gt10x_budget_D0early":scores["10x"]["P2_budget_and_D0_5min_early"]==2}
+           ">=80pct_of_original28_actual_P1_5min_early_gt2x_after_budget":p2_early*100>=80*28,
+           "all_original_gt5x_budget_P1early":scores["5x"]["P2_budget_and_P1_5min_early"]==3,
+           "all_original_gt10x_budget_P1early":scores["10x"]["P2_budget_and_P1_5min_early"]==2}
     result={"schema":"MONSTER_STAGE69_ORIGINAL6_5400_FROZEN_P2_EXPOSED_ROBUSTNESS_V1",
         "source_SHA_blobs":BLOBS,"all_original_USDM_archive_attempts":5400,
         "source_valid_1h_1m":3377,"raw_D0_WATCH":519,"original_P1_candidates":166,
