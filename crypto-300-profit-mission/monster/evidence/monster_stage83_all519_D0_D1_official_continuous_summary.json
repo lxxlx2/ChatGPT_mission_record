@@ -1,0 +1,384 @@
+{
+  "D1_direct": 164,
+  "D1_non2x_upgrades": 277,
+  "D1_recall_early5_fraction_of_full_original_2x": 0.9642857142857143,
+  "D1_recall_early5_fraction_of_scored_2x": 0.9642857142857143,
+  "D1_reignition": 141,
+  "D1_retain_early5_GT2": 27,
+  "D1_total_first_upgrades": 305,
+  "Frank": "UNCHANGED",
+  "Gmail": "OFF",
+  "actual_executable_net_profit": "UNKNOWN",
+  "all42_real_UTC06_day_slots": [
+    {
+      "D1_candidates": 3,
+      "date": "2025-01-30",
+      "slot": 0
+    },
+    {
+      "D1_candidates": 6,
+      "date": "2025-01-30",
+      "slot": 1
+    },
+    {
+      "D1_candidates": 2,
+      "date": "2025-01-30",
+      "slot": 2
+    },
+    {
+      "D1_candidates": 10,
+      "date": "2025-01-30",
+      "slot": 3
+    },
+    {
+      "D1_candidates": 52,
+      "date": "2025-01-30",
+      "slot": 4
+    },
+    {
+      "D1_candidates": 1,
+      "date": "2025-01-30",
+      "slot": 5
+    },
+    {
+      "D1_candidates": 1,
+      "date": "2025-01-30",
+      "slot": 6
+    },
+    {
+      "D1_candidates": 4,
+      "date": "2025-06-02",
+      "slot": 0
+    },
+    {
+      "D1_candidates": 3,
+      "date": "2025-06-02",
+      "slot": 1
+    },
+    {
+      "D1_candidates": 2,
+      "date": "2025-06-02",
+      "slot": 2
+    },
+    {
+      "D1_candidates": 3,
+      "date": "2025-06-02",
+      "slot": 3
+    },
+    {
+      "D1_candidates": 3,
+      "date": "2025-06-02",
+      "slot": 4
+    },
+    {
+      "D1_candidates": 1,
+      "date": "2025-06-02",
+      "slot": 5
+    },
+    {
+      "D1_candidates": 0,
+      "date": "2025-06-02",
+      "slot": 6
+    },
+    {
+      "D1_candidates": 2,
+      "date": "2025-08-01",
+      "slot": 0
+    },
+    {
+      "D1_candidates": 5,
+      "date": "2025-08-01",
+      "slot": 1
+    },
+    {
+      "D1_candidates": 4,
+      "date": "2025-08-01",
+      "slot": 2
+    },
+    {
+      "D1_candidates": 10,
+      "date": "2025-08-01",
+      "slot": 3
+    },
+    {
+      "D1_candidates": 2,
+      "date": "2025-08-01",
+      "slot": 4
+    },
+    {
+      "D1_candidates": 9,
+      "date": "2025-08-01",
+      "slot": 5
+    },
+    {
+      "D1_candidates": 13,
+      "date": "2025-08-01",
+      "slot": 6
+    },
+    {
+      "D1_candidates": 17,
+      "date": "2025-10-02",
+      "slot": 0
+    },
+    {
+      "D1_candidates": 11,
+      "date": "2025-10-02",
+      "slot": 1
+    },
+    {
+      "D1_candidates": 5,
+      "date": "2025-10-02",
+      "slot": 2
+    },
+    {
+      "D1_candidates": 6,
+      "date": "2025-10-02",
+      "slot": 3
+    },
+    {
+      "D1_candidates": 7,
+      "date": "2025-10-02",
+      "slot": 4
+    },
+    {
+      "D1_candidates": 9,
+      "date": "2025-10-02",
+      "slot": 5
+    },
+    {
+      "D1_candidates": 4,
+      "date": "2025-10-02",
+      "slot": 6
+    },
+    {
+      "D1_candidates": 15,
+      "date": "2026-06-21",
+      "slot": 0
+    },
+    {
+      "D1_candidates": 5,
+      "date": "2026-06-21",
+      "slot": 1
+    },
+    {
+      "D1_candidates": 8,
+      "date": "2026-06-21",
+      "slot": 2
+    },
+    {
+      "D1_candidates": 9,
+      "date": "2026-06-21",
+      "slot": 3
+    },
+    {
+      "D1_candidates": 7,
+      "date": "2026-06-21",
+      "slot": 4
+    },
+    {
+      "D1_candidates": 5,
+      "date": "2026-06-21",
+      "slot": 5
+    },
+    {
+      "D1_candidates": 7,
+      "date": "2026-06-21",
+      "slot": 6
+    },
+    {
+      "D1_candidates": 11,
+      "date": "2026-07-28",
+      "slot": 0
+    },
+    {
+      "D1_candidates": 7,
+      "date": "2026-07-28",
+      "slot": 1
+    },
+    {
+      "D1_candidates": 14,
+      "date": "2026-07-28",
+      "slot": 2
+    },
+    {
+      "D1_candidates": 6,
+      "date": "2026-07-28",
+      "slot": 3
+    },
+    {
+      "D1_candidates": 4,
+      "date": "2026-07-28",
+      "slot": 4
+    },
+    {
+      "D1_candidates": 7,
+      "date": "2026-07-28",
+      "slot": 5
+    },
+    {
+      "D1_candidates": 5,
+      "date": "2026-07-28",
+      "slot": 6
+    }
+  ],
+  "all_major_cases": [
+    {
+      "D0_FIRST_UTC": "2025-08-03T18:12:00Z",
+      "D0_PRESERVED": true,
+      "D0_at_least_5m_before_2x": true,
+      "D1_FIRST_UTC": "2025-08-03T20:27:00Z",
+      "D1_PATH": "REIGNITION_AFTER_D0",
+      "D1_at_least_5m_before_10x": true,
+      "D1_at_least_5m_before_2x": true,
+      "D1_at_least_5m_before_5x": true,
+      "date": "2025-08-01",
+      "historical_anchor_GT10": true,
+      "historical_anchor_GT2": true,
+      "historical_anchor_GT5": true,
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "source_day_sha256_receipts": [
+        {
+          "bars": 1440,
+          "date": "2025-08-03",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "f3401a5474cae1d95297abcc7487c4d5633b3db08843d277b9cc9bb826b6c407"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-08-04",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "5c0dc23826f7ca2879b54a8bf3cedecb7dde22aed27d8003d82655752b14977d"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-08-05",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "57c038cf75adb7b1da5bd66e8b672eb9ad3febc0ec97c36542fdcad592ed3ec2"
+        }
+      ],
+      "source_missing_official_day": null,
+      "source_status": "COMPLETE_OFFICIAL_PREFIX_SHA_VERIFIED_3M_48H",
+      "symbol": "MYXUSDT",
+      "true_first_10x_HIGH_UTC_EVALUATION_ONLY": "2025-08-05T08:46:00Z",
+      "true_first_2x_HIGH_UTC_EVALUATION_ONLY": "2025-08-04T03:20:00Z",
+      "true_first_5x_HIGH_UTC_EVALUATION_ONLY": "2025-08-05T03:44:00Z"
+    },
+    {
+      "D0_FIRST_UTC": "2025-10-02T11:27:00Z",
+      "D0_PRESERVED": true,
+      "D0_at_least_5m_before_2x": true,
+      "D1_FIRST_UTC": "2025-10-02T12:12:00Z",
+      "D1_PATH": "REIGNITION_AFTER_D0",
+      "D1_at_least_5m_before_10x": false,
+      "D1_at_least_5m_before_2x": true,
+      "D1_at_least_5m_before_5x": true,
+      "date": "2025-10-02",
+      "historical_anchor_GT10": false,
+      "historical_anchor_GT2": true,
+      "historical_anchor_GT5": true,
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "source_day_sha256_receipts": [
+        {
+          "bars": 1440,
+          "date": "2025-10-02",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "e2775f6a1dd6633121a3074c447ff5a3760fff235ea90257a898e1e9643212a4"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-10-03",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "d7c17bfd3c02f09d5bc56b2e5cb4701e50ab2170d71dee940f4290a524f2a5bc"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-10-04",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "b4801437c8c7cfeeb73c8c45e63896e75560d206e9e92d0e4fcdee8c8cfd92de"
+        }
+      ],
+      "source_missing_official_day": null,
+      "source_status": "COMPLETE_OFFICIAL_PREFIX_SHA_VERIFIED_3M_48H",
+      "symbol": "AIAUSDT",
+      "true_first_10x_HIGH_UTC_EVALUATION_ONLY": null,
+      "true_first_2x_HIGH_UTC_EVALUATION_ONLY": "2025-10-02T16:18:00Z",
+      "true_first_5x_HIGH_UTC_EVALUATION_ONLY": "2025-10-02T22:56:00Z"
+    },
+    {
+      "D0_FIRST_UTC": "2025-10-02T07:03:00Z",
+      "D0_PRESERVED": true,
+      "D0_at_least_5m_before_2x": true,
+      "D1_FIRST_UTC": "2025-10-02T07:03:00Z",
+      "D1_PATH": "DIRECT_AT_FIRST_D0",
+      "D1_at_least_5m_before_10x": true,
+      "D1_at_least_5m_before_2x": true,
+      "D1_at_least_5m_before_5x": true,
+      "date": "2025-10-02",
+      "historical_anchor_GT10": true,
+      "historical_anchor_GT2": true,
+      "historical_anchor_GT5": true,
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "source_day_sha256_receipts": [
+        {
+          "bars": 1440,
+          "date": "2025-10-02",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "27f92591e063f5f4a04af0c29ce67a0662ad25c0ba8949186af23a7af98d41d9"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-10-03",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "2910caa502334f5eec15ab00507885bd3323643638c98cb4c79ae21e30c054b1"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-10-04",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "d9e6334a859388b6ecb6b5b8a4915fd8d782c3b39ab70540b061fef591ac6a0e"
+        }
+      ],
+      "source_missing_official_day": null,
+      "source_status": "COMPLETE_OFFICIAL_PREFIX_SHA_VERIFIED_3M_48H",
+      "symbol": "COAIUSDT",
+      "true_first_10x_HIGH_UTC_EVALUATION_ONLY": "2025-10-06T10:22:00Z",
+      "true_first_2x_HIGH_UTC_EVALUATION_ONLY": "2025-10-06T06:31:00Z",
+      "true_first_5x_HIGH_UTC_EVALUATION_ONLY": "2025-10-06T08:23:00Z"
+    }
+  ],
+  "attempted": 519,
+  "autotrade": "NO_GO",
+  "daily_average_including_zero_days": 7.2619,
+  "deployment": "NO_GO",
+  "g2_exposed_historical": "PASS_EXPOSED_ONLY",
+  "g3_exposed_historical": "REJECTED_EXPOSED",
+  "gates": {
+    "G0_all519_confirmed_as_crypto": false,
+    "G0_all519_source_complete": true,
+    "G2_retention_at_least_80_percent_for_28": true,
+    "G3_daily_peak_at_most_12": false,
+    "G3_mean_at_most_5": false
+  },
+  "historical_GT10_cases": 2,
+  "historical_GT2_population": 29,
+  "historical_GT5_cases": 3,
+  "identity_status_counts": {
+    "CONFIRMED_TRADFI_OUT_OF_CRYPTO_SCOPE": 3,
+    "CRYPTO_IDENTITY_UNVERIFIED": 501,
+    "MULTIPLIER_MAPPING_UNVERIFIED": 15
+  },
+  "independent_future_OOS": "NOT_DONE",
+  "market_scope": "MIXED_USDM_CRYPTO_CLASSIFICATION_PARTIAL",
+  "official_valid": 519,
+  "original_D0_2x_early5": 28,
+  "original_D0_2x_early5_censored": 0,
+  "original_D0_2x_early5_scored_complete": 28,
+  "other_ai_independent_review": "NOT_DONE",
+  "peak_UTC06_day": 52,
+  "population": "STAGE64_EXPOSED_USDM_MIXED_INSTRUMENT_519_FIRST_D0",
+  "schema": "MONSTER_STAGE83_REAL519_STAGE52_ANCHOR_AND_STAGE81_PARITY_V1",
+  "source_censored": 0,
+  "source_status_counts": {
+    "COMPLETE_OFFICIAL_PREFIX_SHA_VERIFIED_3M_48H": 519
+  }
+}
