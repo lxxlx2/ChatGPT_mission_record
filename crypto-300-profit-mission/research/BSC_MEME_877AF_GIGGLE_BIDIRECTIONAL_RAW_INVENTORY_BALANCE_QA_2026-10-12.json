@@ -1,0 +1,44 @@
+{
+  "schema": "BSC_MEME_877AF_GIGGLE_INDEPENDENT_SOURCE_INVENTORY_V1",
+  "date": "2026-10-12",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "token": "GIGGLE",
+  "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+  "chain": "bnb-mainnet",
+  "fixed_block": "0x79549a0",
+  "method": "Alchemy exact CA positive ERC20 in/out full ascending cursor to fixed historical block; independent balanceOf same block; exact integer raw sums",
+  "in": {
+    "events": [
+      {
+        "hash": "0xb91fcc8bfa951eb473941128fa79759a9e7906bb9d3bd9d66f9ed8ec32d975b9",
+        "uid": "0xb91fcc8bfa951eb473941128fa79759a9e7906bb9d3bd9d66f9ed8ec32d975b9:log:1400",
+        "block": "0x77fe7ba",
+        "raw": "0x6fd483128a79242",
+        "from": "0x63ea8724874989c4763bf765709b3854412bff88",
+        "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac"
+      },
+      {
+        "hash": "0x41d1b44d7f17218ed671609bab4cbd6dbe9eb613ed79540ff9d0be0d905fd230",
+        "uid": "0x41d1b44d7f17218ed671609bab4cbd6dbe9eb613ed79540ff9d0be0d905fd230:log:49",
+        "block": "0x78f6d49",
+        "raw": "0x7ac3bbc694cd56",
+        "from": "0x63ea8724874989c4763bf765709b3854412bff88",
+        "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac"
+      }
+    ],
+    "pages": 1,
+    "exhausted": true,
+    "raw_total": "538193267724672920"
+  },
+  "out": {
+    "events": [],
+    "pages": 1,
+    "exhausted": true,
+    "raw_total": "0"
+  },
+  "balanceOf_raw": "538193267724672920",
+  "netTransfer_raw": "538193267724672920",
+  "quantity_reconciled": true,
+  "economic_pnl": "UNVERIFIED",
+  "production": "NO_GO"
+}
