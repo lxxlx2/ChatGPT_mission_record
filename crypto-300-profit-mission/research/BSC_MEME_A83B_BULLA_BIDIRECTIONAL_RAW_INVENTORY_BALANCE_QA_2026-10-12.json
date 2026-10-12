@@ -1,0 +1,36 @@
+{
+  "schema": "BSC_MEME_A83B_BULLA_INDEPENDENT_SOURCE_INVENTORY_V1",
+  "date": "2026-10-12",
+  "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+  "token": "BULLA",
+  "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+  "chain": "bnb-mainnet",
+  "fixed_block": "0x79549a0",
+  "method": "Alchemy exact CA positive ERC20 in/out full ascending cursor to fixed historical block; independent balanceOf same block; exact integer raw sums",
+  "in": {
+    "events": [
+      {
+        "hash": "0x7b13cb2e8463f8b6bd4f829470a823c9a213076d6537a1c4417e702301fc218b",
+        "uid": "0x7b13cb2e8463f8b6bd4f829470a823c9a213076d6537a1c4417e702301fc218b:log:864",
+        "block": "0x73390a8",
+        "raw": "0x81a0a167313c17d0a",
+        "from": "0x5400d579fb0ac43f513b61c42979829834f6b84b",
+        "to": "0xa83b73f5644cde337b61da79589f10ea15548811"
+      }
+    ],
+    "pages": 1,
+    "exhausted": true,
+    "raw_total": "149450289467938143498"
+  },
+  "out": {
+    "events": [],
+    "pages": 1,
+    "exhausted": true,
+    "raw_total": "0"
+  },
+  "balanceOf_raw": "149450289467938143498",
+  "netTransfer_raw": "149450289467938143498",
+  "quantity_reconciled": true,
+  "economic_pnl": "UNVERIFIED",
+  "production": "NO_GO"
+}
