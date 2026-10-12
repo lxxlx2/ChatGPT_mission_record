@@ -661,10 +661,9 @@ class DashboardState:
                   ON o.channel='gmail' AND g.decision_id=o.decision_id
                 LEFT JOIN local_delivery AS l
                   ON o.channel='local' AND l.decision_id=o.decision_id
-                WHERE o.status IN (
-                    'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED',
-                    'PERMANENT_ERROR','CREDENTIAL_BLOCKED','RETRYABLE_ERROR',
-                    'RETRY_PENDING'
+                WHERE NOT (
+                    (o.channel='gmail' AND o.status IN ('SENT_VERIFIED','DRY_RUN_AUDIT'))
+                    OR (o.channel='local' AND o.status IN ('COMMAND_ACCEPTED','DRY_RUN_AUDIT'))
                 )
             """).fetchall()]
         except (OSError, sqlite3.DatabaseError) as exc:
