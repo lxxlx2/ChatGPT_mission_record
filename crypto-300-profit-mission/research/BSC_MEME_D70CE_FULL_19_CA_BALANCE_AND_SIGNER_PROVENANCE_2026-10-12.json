@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-12",
+  "schema": "BSC_MEME_D70CE_19_CA_BALANCE_AND_BOUNDARY_SIGNER_V1",
+  "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+  "source": {
+    "path": "BSC_MEME_D70CE_19_CA_BIDIRECTIONAL_FULL_CURSOR_2026-10-12.json",
+    "sha": "8e3abfa0677a57dc12e54379daa068b2f22fdaa1"
+  },
+  "scope": "Four token CAs with exhaustive bidirectional ERC20 histories; each balanceOf contract checked on original BSC mainnet; original first inbound/outbound tx signer samples, not comprehensive owner controls",
+  "all_four_latest_balanceOf_equal_erc20_net": true,
+  "rows": [
+    {
+      "token": "4",
+      "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "in": 1,
+      "out": 31,
+      "net_raw": "160934",
+      "onchain_balanceOf_latest_raw": "160934",
+      "balance_proof_note": "DIRECT_BNB_MAINNET_ETH_CALL_BALANCE_OF_CHECKED_TODAY_EQUAL_EXACT",
+      "probes": [
+        {
+          "side": "in",
+          "tx": "0x035aa1476b0da70d2dd31865cd50a2e073053c70df2f94bdba22dfa12f6aa17a",
+          "block": "0x3c22bf1",
+          "origin_signer": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "owner_self_signed": true,
+          "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+          "selector": "0xb6f9de95",
+          "msg_value_wei": "100000000000000000"
+        },
+        {
+          "side": "out",
+          "tx": "0xaf8f4e3f8213ee9c74774e5d093f99e5bf6a39cd479a165c4a422b38e878718b",
+          "block": "0x3c23917",
+          "origin_signer": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "owner_self_signed": true,
+          "to": "0x6015126d7d23648c2e4466693b8deab005ffaba8",
+          "selector": "0xb80c2f09",
+          "msg_value_wei": "0"
+        }
+      ]
+    },
+    {
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "in": 2,
+      "out": 13,
+      "net_raw": "0",
+      "onchain_balanceOf_latest_raw": "0",
+      "balance_proof_note": "DIRECT_BNB_MAINNET_ETH_CALL_BALANCE_OF_CHECKED_TODAY_EQUAL_EXACT",
+      "probes": [
+        {
+          "side": "in",
+          "tx": "0x3b079eb6cfc2821b9421f94d01132b57808209d31c728f93e7226ced0e58cc50",
+          "block": "0x3c83cc9",
+          "origin_signer": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "owner_self_signed": true,
+          "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+          "selector": "0xb6f9de95",
+          "msg_value_wei": "60000000000000000"
+        },
+        {
+          "side": "out",
+          "tx": "0x13d99c0f4e75708cc61fb10f08b76d46a4889df9d8e861361eadb7bfaf087a0b",
+          "block": "0x3c842da",
+          "origin_signer": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "owner_self_signed": true,
+          "to": "0x6015126d7d23648c2e4466693b8deab005ffaba8",
+          "selector": "0xb80c2f09",
+          "msg_value_wei": "0"
+        }
+      ]
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "in": 4,
+      "out": 29,
+      "net_raw": "0",
+      "onchain_balanceOf_latest_raw": "0",
+      "balance_proof_note": "DIRECT_BNB_MAINNET_ETH_CALL_BALANCE_OF_CHECKED_TODAY_EQUAL_EXACT",
+      "probes": [
+        {
+          "side": "in",
+          "tx": "0x36375328e7d51f70e804ffc9431445ab1f387ba7c3f05db386c6de73ccd5f18d",
+          "block": "0x3ce1ae3",
+          "origin_signer": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "owner_self_signed": true,
+          "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+          "selector": "0xb6f9de95",
+          "msg_value_wei": "60000000000000000"
+        },
+        {
+          "side": "out",
+          "tx": "0xf247994e0f8629b72de8fbbd69320b3aac7c53a5899c9b53073747bcf78059c6",
+          "block": "0x3ce43db",
+          "origin_signer": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "owner_self_signed": true,
+          "to": "0x6015126d7d23648c2e4466693b8deab005ffaba8",
+          "selector": "0xb80c2f09",
+          "msg_value_wei": "0"
+        }
+      ]
+    },
+    {
+      "token": "BUBB",
+      "ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "in": 1,
+      "out": 1,
+      "net_raw": "0",
+      "onchain_balanceOf_latest_raw": "0",
+      "balance_proof_note": "DIRECT_BNB_MAINNET_ETH_CALL_BALANCE_OF_CHECKED_TODAY_EQUAL_EXACT",
+      "probes": [
+        {
+          "side": "in",
+          "tx": "0x63d09053b6df6f46dc8e4c942cc733e446fe9bf72c9dc70ca76d7c289f601c38",
+          "block": "0x2d68220",
+          "origin_signer": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "owner_self_signed": true,
+          "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+          "selector": "0x04e45aaf",
+          "msg_value_wei": "300000000000000000"
+        },
+        {
+          "side": "out",
+          "tx": "0xa1e0683eed37d869d6a444bea0fb7e37cf3a941217f389bbb58f87fb2f8bcdbb",
+          "block": "0x2d68237",
+          "origin_signer": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "owner_self_signed": true,
+          "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+          "selector": "0x04e45aaf",
+          "msg_value_wei": "0"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Balance values sourced from direct chain read in this turn, preserved as decimals raw values without unsupported USD pricing.",
+    "First boundary original signer samples cannot prove all 74 outgoing events are owner trades; token tax often produces multiple outgoing logs per signed tx.",
+    "No historical quote token and transaction gas reconciliation to PnL. Controlled-wallet and missed-opportunity denominator still open."
+  ],
+  "production": "NO_GO"
+}
