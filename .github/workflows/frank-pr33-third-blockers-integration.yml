@@ -21,10 +21,10 @@ jobs:
       matrix:
         mode: [pr32, pr33, pr32-pr33, pr31-pr32-pr33]
     env:
-      BASE_SHA: '3d34b69dedc24dd15f53d012f811d8e059a25af2'
+      BASE_SHA: '380a2d5aa2310c6f41915fdc1ed8ad68686bfc7a'
       PR31_SHA: 'c50e7e2259e85ce89e14641a4e1e98ca3e4a4bc7'
       PR32_SHA: '85f1a792dd7d0fbf354c09ac83872887ed301c10'
-      PR33_SHA: 'd15527434260ac0d45dd1f7e6c39a411b2684e1a'
+      PR33_SHA: '884ed7cd5b4ba6b480e9ad8dfac908b8e1facf42'
       FRANK_EXPECT_REAL_GIT_REPLAY: '1'
     steps:
       - uses: actions/checkout@v4
