@@ -557,7 +557,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 4,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 3,
       "cells": [
         {
           "token": "TST",
@@ -927,7 +927,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 3,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 2,
       "cells": [
         {
           "token": "TST",
@@ -1221,7 +1221,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 2,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 2,
       "cells": [
         {
           "token": "TST",
@@ -1515,7 +1515,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 2,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 1,
       "cells": [
         {
           "token": "TST",
@@ -1809,7 +1809,7 @@
       "snapshot_full19": false,
       "complete_cells": 10,
       "observed_cells": 14,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 2,
       "cells": [
         {
           "token": "TST",
@@ -2167,7 +2167,7 @@
       "snapshot_full19": false,
       "complete_cells": 19,
       "observed_cells": 12,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 4,
       "cells": [
         {
           "token": "TST",
@@ -2536,7 +2536,7 @@
       "snapshot_full19": false,
       "complete_cells": 19,
       "observed_cells": 7,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 4,
       "cells": [
         {
           "token": "TST",
@@ -2875,7 +2875,7 @@
       "snapshot_full19": false,
       "complete_cells": 19,
       "observed_cells": 7,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 4,
       "cells": [
         {
           "token": "TST",
@@ -3500,7 +3500,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 2,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 2,
       "cells": [
         {
           "token": "TST",
@@ -3794,7 +3794,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 2,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 1,
       "cells": [
         {
           "token": "TST",
@@ -4088,7 +4088,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 2,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 1,
       "cells": [
         {
           "token": "TST",
@@ -4382,7 +4382,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 2,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 2,
       "cells": [
         {
           "token": "TST",
@@ -5008,7 +5008,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 13,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 8,
       "cells": [
         {
           "token": "TST",
@@ -5788,7 +5788,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 5,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 5,
       "cells": [
         {
           "token": "TST",
@@ -6082,7 +6082,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 6,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 3,
       "cells": [
         {
           "token": "TST",
@@ -6405,7 +6405,7 @@
       "snapshot_full19": false,
       "complete_cells": 11,
       "observed_cells": 10,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 1,
       "cells": [
         {
           "token": "TST",
@@ -6748,7 +6748,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 3,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 2,
       "cells": [
         {
           "token": "TST",
@@ -7042,7 +7042,7 @@
       "snapshot_full19": false,
       "complete_cells": 19,
       "observed_cells": 6,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 5,
       "cells": [
         {
           "token": "TST",
@@ -7353,7 +7353,7 @@
       "snapshot_full19": true,
       "complete_cells": 19,
       "observed_cells": 4,
-      "closed_token_quantities": 0,
+      "closed_token_quantities": 4,
       "cells": [
         {
           "token": "TST",
