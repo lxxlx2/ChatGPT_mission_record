@@ -7,6 +7,7 @@ All output is aggregate/redacted. Private journal enables fail-closed recovery.
 """
 from __future__ import annotations
 import argparse
+import ctypes
 from collections import Counter
 from contextlib import closing
 from datetime import datetime, timezone
@@ -323,6 +324,50 @@ def source_drift_diagnostic(root, *, limit=30):
             'note': 'Diagnostic only; does not relax runtime/source release gate'}
 
 
+class _DarwinProcBSDInfo(ctypes.Structure):
+    """Apple XNU sys/proc_info.h struct proc_bsdinfo (public ABI)."""
+    _fields_ = ([(name, ctypes.c_uint32) for name in (
+        'pbi_flags', 'pbi_status', 'pbi_xstatus', 'pbi_pid', 'pbi_ppid',
+        'pbi_uid', 'pbi_gid', 'pbi_ruid', 'pbi_rgid',
+        'pbi_svuid', 'pbi_svgid', 'rfu_1')] +
+        [('pbi_comm', ctypes.c_char * 16),
+         ('pbi_name', ctypes.c_char * 32)] +
+        [(name, ctypes.c_uint32) for name in (
+            'pbi_nfiles', 'pbi_pgid', 'pbi_pjobc',
+            'e_tdev', 'e_tpgid')] +
+        [('pbi_nice', ctypes.c_int32),
+         ('pbi_start_tvsec', ctypes.c_uint64),
+         ('pbi_start_tvusec', ctypes.c_uint64)])
+
+
+def darwin_precise_process_start(pid, ps_second):
+    """Independent, microsecond-resolution process birth; fail closed if invalid.
+
+    libproc.proc_pidinfo(PROC_PIDTBSDINFO=3) returns a fixed-size BSD info
+    structure with pbi_start_tvsec/pbi_start_tvusec. Cross-check against
+    /bin/ps's rounded-down lstart second to avoid misreading ABI offsets,
+    race/PID reuse, or unrecognized macOS layouts. NEVER restart processes.
+    """
+    require(sys.platform == 'darwin', 'KERNEL_PROCESS_BIRTH_UNAVAILABLE')
+    try:
+        lib = ctypes.CDLL('/usr/lib/libproc.dylib', use_errno=True)
+        read = lib.proc_pidinfo
+        read.argtypes = (ctypes.c_int, ctypes.c_int, ctypes.c_uint64,
+                         ctypes.c_void_p, ctypes.c_int)
+        read.restype = ctypes.c_int
+        info = _DarwinProcBSDInfo()
+        size = ctypes.sizeof(info)
+        count = read(int(pid), 3, 0, ctypes.byref(info), size)
+    except (OSError, ValueError, AttributeError) as exc:
+        raise RuntimeError('KERNEL_PROCESS_BIRTH_UNAVAILABLE') from exc
+    require(count == size and info.pbi_pid == int(pid)
+            and 0 <= info.pbi_start_tvusec < 1_000_000,
+            'KERNEL_PROCESS_BIRTH_UNVERIFIED')
+    observed = float(info.pbi_start_tvsec) + info.pbi_start_tvusec / 1_000_000
+    require(int(observed) == int(ps_second), 'PROCESS_BIRTH_VS_PS_MISMATCH')
+    return observed
+
+
 def runner_start_time_diagnostic(mac, key, text):
     """Only measure second-granularity ps/runner timestamp ambiguity; never clear it."""
     runner = mac.runners[key]
@@ -333,13 +378,26 @@ def runner_start_time_diagnostic(mac, key, text):
         command, '%a %b %d %H:%M:%S %Y'))
     runner_mtime = runner.stat().st_mtime
     delta = runner_mtime - process_start_second
-    return {'pid': pid, 'runner_hash_sha256': sha(runner),
-            'runner_minus_process_start_seconds': round(delta, 6),
-            'timestamp_resolution': 'ps_lstart_one_second',
-            'status': ('UNVERIFIED_SAME_SECOND' if 0 <= delta < 1
-                       else 'RUNNER_NEWER_THAN_PROCESS' if delta >= 1
-                       else 'RUNNER_OLDER_THAN_PROCESS'),
-            'note': 'Read-only diagnostic; time alone cannot prove loaded runner bytes'}
+    result = {'pid': pid, 'runner_hash_sha256': sha(runner),
+              'runner_minus_process_start_seconds': round(delta, 6),
+              'timestamp_resolution': 'ps_lstart_one_second',
+              'status': ('UNVERIFIED_SAME_SECOND' if 0 <= delta < 1
+                         else 'RUNNER_NEWER_THAN_PROCESS' if delta >= 1
+                         else 'RUNNER_OLDER_THAN_PROCESS'),
+              'note': 'Read-only diagnostic; time alone cannot prove loaded runner bytes'}
+    if sys.platform == 'darwin':
+        try:
+            birth = darwin_precise_process_start(pid, process_start_second)
+            difference = runner_mtime - birth
+            result['kernel_birth_check'] = 'VERIFIED_AGAINST_PS_SECOND'
+            result['runner_minus_precise_process_start_seconds'] = round(difference, 6)
+            result['status'] = ('RUNNER_NEWER_THAN_PROCESS' if difference >= 0
+                                else 'RUNNER_OLDER_THAN_PROCESS')
+            result['timestamp_resolution'] = 'kernel_microsecond'
+        except RuntimeError as exc:
+            result['kernel_birth_check'] = str(exc)
+            result['note'] = 'No valid kernel timestamp; old coarse ambiguity remains blocking'
+    return result
 
 
 def source_start_temporal_diagnostic(mac, key):
@@ -544,6 +602,14 @@ class Mac:
         require('n' + str(agent) in cwd.splitlines(), 'RUNTIME_CWD')
         start = run(['/bin/ps', '-p', str(pid), '-o', 'lstart='], env={**os.environ, 'LC_ALL': 'C'})
         started = time.mktime(time.strptime(start, '%a %b %d %H:%M:%S %Y'))
+        if sys.platform == 'darwin':
+            try:
+                started = darwin_precise_process_start(pid, started)
+            except RuntimeError as exc:
+                # If precise evidence is unavailable, retain the existing
+                # *stricter* whole-second rule; never infer an earlier runner.
+                require(str(exc) == 'KERNEL_PROCESS_BIRTH_UNAVAILABLE',
+                        'KERNEL_PROCESS_BIRTH_UNVERIFIED')
         manifest = source_manifest(agent)
         require(all((agent / p).stat().st_mtime < started for p in manifest),
                 'SOURCE_MODIFIED_SINCE_PROCESS_START')
