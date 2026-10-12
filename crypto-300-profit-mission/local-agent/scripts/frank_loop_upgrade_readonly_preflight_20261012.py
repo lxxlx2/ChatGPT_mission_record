@@ -169,19 +169,50 @@ def classify_pending(db: sqlite3.Connection, max_age_seconds: int, now: datetime
     return dict(sorted(result.items()))
 
 
+def compare_cloned_aggregates(before: dict, after: dict) -> None:
+    """Fail closed: compare every required table and delivery status aggregate."""
+    check("CLONED_AGGREGATE_SCHEMA",
+          isinstance(after, dict) and set(after) == set(before))
+    # JSON delivery status pairs are lists; parent SQL tuples require a
+    # deterministic JSON-normalized comparison. Do not ignore any count/key.
+    baseline = json.loads(json.dumps(before))
+    check("EXISTING_EVENTS_AND_DELIVERY_UNCHANGED", baseline == after)
+
+
 def isolated_schema_probe(venv_python: Path, agent: Path, control_snapshot: Path):
-    # New code initializes its ControlDB only against a throw-away SQLite copy.
-    # No decision cycle, no Gmail credentials, no network clients are created.
+    """Open only the disposable clone, validate integrity and count in one process.
+
+    A separate mode=ro connection on macOS failed to READ the just-closed
+    WAL-mode clone after ControlDB initialized it. The child ControlDB owns
+    this disposable copy only; its own connection validates each table and
+    returns a JSON aggregate while it remains open. No cycle/Gmail/RPC.
+    """
     source = """
-import json, sqlite3, sys
+import json, sys
+from pathlib import Path
 from mission_agent.mission_control.db import ControlDB
-path = sys.argv[1]
-db = ControlDB(path)
+
+names = ("decision_outbox", "gmail_delivery", "local_delivery",
+         "decision_events", "decision_snapshots", "candidate_latest")
+db = ControlDB(Path(sys.argv[1]))
 try:
-    print(json.dumps({
-        "control_integrity": db.db.execute("PRAGMA integrity_check").fetchone()[0],
-        "table_count": db.db.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table'").fetchone()[0]
-    }))
+    integrity = db.db.execute("PRAGMA integrity_check").fetchone()[0]
+    tables = {r[0] for r in db.db.execute(
+        "SELECT name FROM sqlite_master WHERE type='table'")}
+    if not set(names).issubset(tables):
+        raise RuntimeError("CLONE_MISSING_REQUIRED_TABLES")
+    counts = {}
+    for name in names:
+        counts[name] = int(db.db.execute(
+            "SELECT COUNT(*) FROM " + name).fetchone()[0])
+    for name in ("decision_outbox", "gmail_delivery", "local_delivery"):
+        counts[name + "_by_status"] = sorted(
+            [str(status), int(n)]
+            for status, n in db.db.execute(
+                "SELECT status, COUNT(*) FROM " + name + " GROUP BY status"))
+    print(json.dumps({"control_integrity": integrity,
+                      "table_count": len(tables),
+                      "aggregates": counts}, sort_keys=True))
 finally:
     db.close()
 """
@@ -194,46 +225,15 @@ finally:
     proc = subprocess.run([str(venv_python), "-c", source, str(control_snapshot)],
                           capture_output=True, text=True, timeout=25,
                           env=env, cwd=agent)
+    # Do not surface stdout/stderr: future dependencies may print private paths.
     check("CLONED_NEW_SCHEMA_BOOTSTRAP", proc.returncode == 0)
     parsed = json.loads(proc.stdout)
     check("CLONED_NEW_SCHEMA_INTEGRITY", parsed.get("control_integrity") == "ok")
-
-
-def check_post_clone_status(clone_path: Path, before: dict) -> None:
-    """Read only disposable copied DB; expose sanitized error codes, not paths."""
-    sidecar = clone_path.parent
-    details["clone_wal_sidecar_present"] = (
-        sidecar / (clone_path.name + "-wal")).is_file()
-    details["clone_shm_sidecar_present"] = (
-        sidecar / (clone_path.name + "-shm")).is_file()
-    details["clone_stage"] = "POST_CLONE_OPEN_READONLY"
-    try:
-        with closing(query_ro(clone_path)) as db:
-            check("POST_CLONE_READONLY_REOPEN", True)
-            # The subprocess just validated PRAGMA integrity_check=ok on this
-            # exact disposable clone after initializing the new ControlDB.
-            # Do not issue a redundant expensive integrity pragma through a
-            # new query_only SQLite connection (macOS WAL/read-only edge);
-            # validate readable rows and unchanged decision/delivery state.
-            details["clone_stage"] = "POST_CLONE_ROW_READABILITY"
-            check("POST_CLONE_ROW_READABLE",
-                  db.execute("SELECT COUNT(*) FROM sqlite_master").fetchone()[0] > 0)
-            details["clone_stage"] = "POST_CLONE_STATUS_COUNTS"
-            after = counters(db)
-        details["clone_stage"] = "POST_CLONE_COMPARE_COUNTS"
-        check("EXISTING_EVENTS_AND_DELIVERY_UNCHANGED",
-              all(before[k] == after[k] for k in before))
-        details["clone_stage"] = "COMPLETE"
-    except sqlite3.Error as exc:
-        details["clone_sqlite_error_name"] = getattr(
-            exc, "sqlite_errorname", type(exc).__name__)
-        details["clone_sqlite_error_code"] = getattr(
-            exc, "sqlite_errorcode", None)
-        print("CLONE_SQLITE_ERROR_NAME=" +
-              str(details["clone_sqlite_error_name"]), flush=True)
-        print("CLONE_FAILED_STAGE=" +
-              details["clone_stage"], flush=True)
-        raise
+    check("CLONED_NEW_SCHEMA_REQUIRED_TABLES",
+          isinstance(parsed.get("table_count"), int)
+          and parsed["table_count"] >= len(REQUIRED_TABLES))
+    check("CLONED_AGGREGATES_READ", isinstance(parsed.get("aggregates"), dict))
+    return parsed["aggregates"]
 
 
 def main():
@@ -332,8 +332,10 @@ print(json.dumps({"authorized":live_delivery_policy_authorized(p,h,expected),
         details["local_status_totals"] = before["local_delivery_by_status"]
         details["delivery_risk_totals"] = risk
         phase = "UPGRADE_CLONE_COMPATIBILITY"
-        isolated_schema_probe(current["VENV"] / "bin/python", from_source, tmp / "mission-control.sqlite")
-        check_post_clone_status(tmp / "mission-control.sqlite", before)
+        after = isolated_schema_probe(
+            current["VENV"] / "bin/python", from_source,
+            tmp / "mission-control.sqlite")
+        compare_cloned_aggregates(before, after)
     phase = "NOTIFICATION_REPLAY_GATE"
     check("NO_FRESH_SENDABLE_LEGACY_GMAIL",
           risk.get("gmail_potential_fresh_send", 0) == 0
