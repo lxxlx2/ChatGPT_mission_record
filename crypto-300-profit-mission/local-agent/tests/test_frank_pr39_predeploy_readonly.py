@@ -128,3 +128,52 @@ def test_last_buy_only_and_uncertain_fields(tmp_path):
     assert stats["states_with_buy"]==1
     assert stats["latest_buy_explicitly_uncertain"]==1
     assert stats["latest_buy_direct_usdc_verified"]==0
+
+
+def test_nested_local_agent_git_pin_uses_repository_relative_blob_paths(tmp_path,monkeypatch):
+    """Actual git checkout: older implementation failed with 'fatal: invalid object name'."""
+    import subprocess
+
+    repo=tmp_path/"source"
+    repo.mkdir()
+    def git(*args):
+        return subprocess.run(
+            ["git","-C",str(repo),*args],check=True,capture_output=True,
+            text=True,timeout=10,
+        ).stdout.strip()
+
+    git("init","-q")
+    git("config","user.name","PR39 Test")
+    git("config","user.email","pr39@example.invalid")
+    agent=repo/"crypto-300-profit-mission/local-agent"
+    reviewed=[
+        "mission_agent/mission_control/frank.py",
+        "mission_agent/mission_control/service.py",
+        "mission_agent/mission_control/delivery.py",
+        "mission_agent/mission_control/static/app.js",
+    ]
+    for item in reviewed:
+        dst=agent/item
+        dst.parent.mkdir(parents=True,exist_ok=True)
+        dst.write_text("approved content: "+item+"\\n",encoding="utf-8")
+    git("add",".")
+    git("commit","-qm","approved product")
+    approved=git("rev-parse","HEAD")
+    monkeypatch.setattr(audit,"APPROVED_PRODUCT",approved)
+
+    release=repo/"crypto-300-profit-mission/meme/ops-only.md"
+    release.parent.mkdir(parents=True)
+    release.write_text("release documentation only",encoding="utf-8")
+    git("add",".")
+    git("commit","-qm","release documentation only")
+    result=audit.approved_source_check(agent)
+    assert result["reviewed_product_unchanged"] is True
+    assert result["worktree_clean"] is True
+    assert result["release_branch_head"]==git("rev-parse","HEAD")
+
+    code=agent/"mission_agent/mission_control/delivery.py"
+    code.write_text("changed product semantics\\n",encoding="utf-8")
+    git("add",".")
+    git("commit","-qm","accidental product change")
+    with pytest.raises(ValueError,match="REVIEWED_PRODUCT_DIFF_OR_WORKTREE_DIRTY"):
+        audit.approved_source_check(agent)
