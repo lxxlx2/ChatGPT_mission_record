@@ -8,6 +8,7 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p2.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p2.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_stage4.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.md"
       - "crypto-300-profit-mission/research/README_BSC_MEME_TOP_TRADERS.md"
@@ -62,7 +63,7 @@ jobs:
               actual = subprocess.check_output(["git", "hash-object", source["path"]], text=True).strip()
               assert actual == source["blob_sha"], f"source drift: {source['path']}"
           blockers = json.loads((p / "bsc-meme-address-model-v1-p2-2026-eligibility-blocker-queue-2026-10-13.json").read_text(encoding="utf-8"))
-          episodes = {(e["wallet"], e["exact_ca"]) for e in ledger["episodes"]}
+          episodes = {(e["wallet"], e["exact_ca"], e["episode_index"]) for e in ledger["episodes"]}
           baseline = json.loads(p1.read_text(encoding="utf-8"))
           cohort = {w["wallet"]: {c["ca"] for c in w["cells"] if c["ERC20_presence"] == "PRESENT"}
                     for w in baseline["wallets"]}
@@ -72,10 +73,16 @@ jobs:
           assert len(blockers["items"]) == 8
           for item in blockers["items"]:
               assert item["wallet"] in cohort and item["ca"] in cohort[item["wallet"]]
-              assert (item["wallet"], item["ca"]) not in episodes, (
-                  "blocked partial/unsigned/open case falsely counted in realized round"
+              admitted = {i for wallet, ca, i in episodes
+                          if wallet == item["wallet"] and ca == item["ca"]}
+              assert admitted == set(item["audited_closed_episode_indices"]), (
+                  "Only explicitly verified signed same-CA episodes may enter P2"
+              )
+              assert admitted.isdisjoint(item["blocked_specific_episode_indices"]), (
+                  "Unverified episodes falsely counted as owner-signed settled trades"
               )
               assert item["realized_final_PnL"] == "UNRESOLVED"
+              assert item["entire_CA_profit_pnl_state"] == "UNRESOLVED"
           print("PASS eight high-priority partial/open/signature-unknown P2 exclusions source-pinned")
           stage3 = json.loads((p / "bsc-meme-address-model-v1-p2-stage3-adff-2adf-owner-closed-rounds-2026-10-13.json").read_text(encoding="utf-8"))
           assert len(stage3["sample_rounds"]) == 3
@@ -85,6 +92,18 @@ jobs:
               actual = subprocess.check_output(["git", "hash-object", src["path"]], text=True).strip()
               assert actual == src["blob_sha"], f"Stage3 raw source drift: {src['path']}"
           print("PASS Stage3 exactly 3 signer-verified rounds, 25 other raw-only segments disallowed")
+          stage4_plan = json.loads((p / "bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json").read_text(encoding="utf-8"))
+          stage4 = json.loads((p / "bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json").read_text(encoding="utf-8"))
+          for src in stage4_plan["source_manifest"]:
+              actual = subprocess.check_output(["git", "hash-object", src["path"]], text=True).strip()
+              assert actual == src["git_blob_sha"], f"Stage4 input source drift: {src['path']}"
+          assert stage4["selection_git_sha"] == subprocess.check_output(
+              ["git", "hash-object", str(p / "bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json")],
+              text=True).strip()
+          assert len(stage4["rounds"]) == 2
+          assert stage4["summary"]["original_owner_successful_txs"] == 6
+          assert stage4["summary"]["unique_native_account_blocks"] == 5
+          print("PASS Stage4 source precommit, two negative signed rounds and unique native block de-dup")
           print("PASS P2 source Git blobs pinned to exact evidence originals")
           PY
       - name: Recompute P2 23-wallet economic overlay
@@ -124,11 +143,11 @@ jobs:
           assert p2_actual == p2_expected, "P2 source-vs-Git artifact mismatch: STOP"
           s = p2_actual["summary"]
           assert (s["wallets_included"], s["signed_closed_episodes_imported"],
-                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 35, 6, 17)
-          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (23, 12)
+                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 37, 7, 16)
+          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (23, 14)
           assert all(w["realized_profit_rank"] is None for w in p2_actual["wallets"])
           assert all(w["recent_30d_signed_meme_swap"] == "UNRESOLVED" for w in p2_actual["wallets"])
           assert p2_actual["production"] == "NO_GO"
-          print("PASS P2 23 wallets / 35 curated rounds / 23 pos, 12 neg / 17 unknown; no fake rank")
+          print("PASS P2 23 wallets / 37 curated rounds / 23 pos, 14 neg / 16 unknown; no fake rank")
           print("PASS 437/437, 148/289, 8 source exceptions, no fake PnL/ranking/recent signers")
           PY
