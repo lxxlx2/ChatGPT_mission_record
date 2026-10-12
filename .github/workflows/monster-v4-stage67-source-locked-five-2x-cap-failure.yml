@@ -1,0 +1,53 @@
+name: Monster Stage67 Real Five GT2x Cap Miss Root Cause and Dual Rejection
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage67_frozen_newdate_cap_failure_event_audit.py'
+      - '.github/workflows/monster-v4-stage67-source-locked-five-2x-cap-failure.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage67-source-locked-new3-result-audit
+  cancel-in-progress: false
+jobs:
+  independent_five_GT2x_source_and_UTC06_budget_reason_audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify pre-frozen real five-event time lead and independent failure gate logic
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage67_frozen_newdate_cap_failure_event_audit.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage67_frozen_newdate_cap_failure_event_audit.py --selftest
+      - name: Strict source blob exact-2700 original population and every real 2x cap-fate audit
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage67_frozen_newdate_cap_failure_event_audit.py --out /tmp/monster_stage67
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage67-source-locked-2700-five-true-2x-cap-audit-and-rejected-underpowered
+          path: /tmp/monster_stage67/*
+          retention-days: 30
+      - name: Record honest rejected plus underpowered result in existing Monster research PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage67/monster_stage67_* "$dest/"
+          git add "$dest/monster_stage67_five_gt2x_global_cap_miss_reason_and_release_verdict.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: preserve Stage67 actual new-date five-event cap loss and reject plus underpower release assessment'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE67_PROVENANCE_PERSISTENCE_FAILED
+          exit 1
