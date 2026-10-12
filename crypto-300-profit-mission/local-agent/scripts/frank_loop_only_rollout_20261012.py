@@ -463,6 +463,14 @@ def main():
                     pass
                 if current is not None and current != context["loop_pid"] and process_alive(current):
                     print("ROLLBACK=MANUAL_NEW_LOOP_STILL_RUNNING", flush=True)
+                elif current == context["loop_pid"] and process_alive(context["loop_pid"]):
+                    # Interrupted after replacing the runner but before the
+                    # existing Loop was terminated: restore original file
+                    # bytes ONLY, never kickstart an extra worker.
+                    atomic_runner(LOOP_RUNNER, context["original_bytes"], context["mode"])
+                    ensure("RUNNER_ROLLBACK_EXACT_BYTES",
+                           file_sha256(LOOP_RUNNER) == context["runner_sha"])
+                    print("LOOP_RUNNER_ROLLED_BACK=YES_OLD_LOOP_UNTOUCHED", flush=True)
                 elif process_alive(context["loop_pid"]):
                     print("ROLLBACK=MANUAL_OLD_LOOP_STILL_RUNNING", flush=True)
                 elif not context["legacy_delivery_verified"]:
