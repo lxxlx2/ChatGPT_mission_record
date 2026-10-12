@@ -10,7 +10,7 @@ on:
 permissions:
   contents: write
 jobs:
-  42_frozen_24h_cohorts_with_real_original_SHA_and_hindsight_only_upper_bound:
+  audit_42_frozen_24h_cohorts_with_real_original_SHA_and_hindsight_only_upper_bound:
     runs-on: ubuntu-latest
     timeout-minutes: 18
     steps:
