@@ -1,0 +1,45 @@
+name: Monster Stage50 Six Newly Frozen Dates All900 USD-M PublisherSHA Real Hourly GT
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage50_six_pinfresh_all900_usdm_hourly_GT.py'
+      - '.github/workflows/monster-v4-stage50-fresh6-full900-official-usdm-hourly-truth.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual_full5400_new_dates_source_publisher_sha_gt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: [2025-01-30, 2025-06-02, 2025-08-01, 2025-10-02, 2026-06-21, 2026-07-28]
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit prove original hourly 168h official cross-month GT and exact frozen source protocol
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage50_six_pinfresh_all900_usdm_hourly_GT.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage50_six_pinfresh_all900_usdm_hourly_GT.py --selftest
+      - name: Enumerate every original150 archived source symbols per shard, check genuine monthly ZIP publisher SHA
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage50_six_pinfresh_all900_usdm_hourly_GT.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 4 \
+            --out "/tmp/monster_stage50_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - name: Retain every official SHA source and censored row
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage50-newdate-900x6-${{ matrix.date }}-shard${{ matrix.shard }}-SHA
+          path: /tmp/monster_stage50_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
