@@ -1,0 +1,49 @@
+name: Frank PR33 R5 classifier exception pre-fix red proof
+
+on:
+  push:
+    branches:
+      - review/frank-pr33-r5-classifier-guard-remediation-20261012
+    paths:
+      - '.github/workflows/frank-pr33-r5-classifier-red-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  old-http-disconnect-must-fail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install isolated dev requirements
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]' 'numpy>=2,<3'
+      - name: Exercise genuine old M13 defect on live HTTP, require red cases
+        shell: bash
+        run: |
+          set -euo pipefail
+          p="crypto-300-profit-mission/local-agent"
+          cp "$p/tests/research/test_frank_pr33_r5_classifier_exception.py" /tmp/frank-m13-new-regression.py
+          git switch --detach 10b98ee10d5d84ea187041821cd9fe0d977ecf09
+          cp /tmp/frank-m13-new-regression.py "$p/tests/research/test_frank_pr33_r5_classifier_exception.py"
+          set +e
+          (cd "$p" && python -m pytest -q             tests/research/test_frank_pr33_r5_classifier_exception.py::test_real_loopback_http_does_not_disconnect_on_classifier_failure             tests/research/test_frank_pr33_r5_classifier_exception.py::test_valid_classifier_still_surfaces_pending_and_expired) > /tmp/frank-m13-red.log 2>&1
+          RC=$?
+          set -e
+          tail -n 45 /tmp/frank-m13-red.log
+          if [ "$RC" -eq 0 ]; then echo "OLD_M13_DEFECT_NOT_REPRODUCED"; exit 7; fi
+          if ! grep -q "2 failed, 1 passed" /tmp/frank-m13-red.log; then
+            echo "OLD_M13_FAILED_FOR_DIFFERENT_REASON"; exit 8
+          fi
+          if ! grep -Eq "RemoteDisconnected|ConnectionError" /tmp/frank-m13-red.log; then
+            echo "OLD_M13_HTTP_SYMPTOM_NOT_OBSERVED"; exit 9
+          fi
+          echo "M13_OLD_CODE_RED_TWO_LIVE_HTTP_FAILURES=PASS"
