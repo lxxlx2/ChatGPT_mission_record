@@ -3,10 +3,12 @@ on:
   push:
     branches:
       - ops/frank-pr39-controlled-release-20261013
+      - review/frank-pr39-controlled-release-20261013
   pull_request:
     paths:
       - crypto-300-profit-mission/local-agent/scripts/frank_pr39_controlled_release.py
       - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_controlled_release.py
+      - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_immutable_release.py
       - .github/workflows/frank-pr39-controlled-release.yml
   workflow_dispatch:
 permissions:
@@ -32,7 +34,7 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           node --check mission_agent/mission_control/static/app.js
-          python -B -m pytest -q -p no:cacheprovider tests/test_frank_pr39_controlled_release.py tests/test_frank_pr39_predeploy_readonly.py tests/research/test_frank_dashboard_priority_layout.py tests/test_mission_control_delivery.py
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_pr39_controlled_release.py tests/test_frank_pr39_immutable_release.py tests/test_frank_pr39_predeploy_readonly.py tests/research/test_frank_dashboard_priority_layout.py tests/test_mission_control_delivery.py
       - name: Full regression with real Git replay
         working-directory: crypto-300-profit-mission/local-agent
         env:
