@@ -1,0 +1,50 @@
+name: Monster Stage36 Official USD-M Archive Historical Universe
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage36_usdm_archive_universe_inventory.py'
+      - '.github/workflows/monster-v4-stage36-official-usdm-universe-inventory.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  official_futures_directory_factual_source_audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and verify binance S3 XML/listing classification
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage36_usdm_archive_universe_inventory.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage36_usdm_archive_universe_inventory.py --selftest
+      - name: Fetch REAL public Binance USD-M historical directories, compare frozen Spot758
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage36_usdm_archive_universe_inventory.py \
+            --output /tmp/monster_stage36_official_usdm_archive_vs_spot758.json
+      - name: Retain raw verified results
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage36-official-usdm-historical-directory-vs-Spot758
+          path: /tmp/monster_stage36_official_usdm_archive_vs_spot758.json
+          retention-days: 30
+      - name: Persist official observed symbol inventory and source-page digests to same research PR
+        run: |
+          test "$GITHUB_REF_NAME" = "research/monster-v4-local-discovery-20261010"
+          cp /tmp/monster_stage36_official_usdm_archive_vs_spot758.json \
+            crypto-300-profit-mission/monster/evidence/monster_stage36_official_usdm_archive_vs_spot758.json
+          git add crypto-300-profit-mission/monster/evidence/monster_stage36_official_usdm_archive_vs_spot758.json
+          if git diff --cached --quiet; then
+            echo "STAGE36_VERIFIED_SOURCE_ALREADY_IDENTICAL"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "monster: persist official Stage36 USD-M archive symbol inventory and Spot overlap"
+          git push origin "HEAD:$GITHUB_REF_NAME"
