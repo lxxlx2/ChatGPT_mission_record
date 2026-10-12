@@ -594,11 +594,173 @@
           "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
           "raw": "0x3e00b845271d0700000",
           "uniqueId": "0x8b142b9e04e6017c7c8792367d38bbd8f0477a5134b2c1051fb4effcc90ea6ab:log:264"
+        },
+        {
+          "tx": "0x49fdf96da1d93fe3447e94cd1d91358e67952e5c0c96a1e8147e6d294165b89f",
+          "block": "0x3cfeba1",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0x21e19e0c9bab2400000",
+          "uniqueId": "0x49fdf96da1d93fe3447e94cd1d91358e67952e5c0c96a1e8147e6d294165b89f:log:499"
+        },
+        {
+          "tx": "0x1b2b8547bb22c013baf8bf212480e5bdd9f21f82a0baf8190c6838a68ffd5de9",
+          "block": "0x3d09cad",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0x9e908782af91944d008",
+          "uniqueId": "0x1b2b8547bb22c013baf8bf212480e5bdd9f21f82a0baf8190c6838a68ffd5de9:log:865"
+        },
+        {
+          "tx": "0x9d5c3cbf38ad60c46254711747f1c5ee9d660c4d99920a8b80f83d7870036dc0",
+          "block": "0x3d0c787",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0x5f68e8131ecf800000",
+          "uniqueId": "0x9d5c3cbf38ad60c46254711747f1c5ee9d660c4d99920a8b80f83d7870036dc0:log:562"
+        },
+        {
+          "tx": "0x9d5c3cbf38ad60c46254711747f1c5ee9d660c4d99920a8b80f83d7870036dc0",
+          "block": "0x3d0c787",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff",
+          "raw": "0x4e1003b28d92800000",
+          "uniqueId": "0x9d5c3cbf38ad60c46254711747f1c5ee9d660c4d99920a8b80f83d7870036dc0:log:566"
+        },
+        {
+          "tx": "0xaff9e5b87cf47ce0c1861150f87a0a44e5a9bfe1203813056cffb1e314b715e8",
+          "block": "0x3d11904",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0x29199567189e28158db",
+          "uniqueId": "0xaff9e5b87cf47ce0c1861150f87a0a44e5a9bfe1203813056cffb1e314b715e8:log:1048"
+        },
+        {
+          "tx": "0xaff9e5b87cf47ce0c1861150f87a0a44e5a9bfe1203813056cffb1e314b715e8",
+          "block": "0x3d11904",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff",
+          "raw": "0xffbba19dee82c0861c",
+          "uniqueId": "0xaff9e5b87cf47ce0c1861150f87a0a44e5a9bfe1203813056cffb1e314b715e8:log:1052"
+        },
+        {
+          "tx": "0xaff9e5b87cf47ce0c1861150f87a0a44e5a9bfe1203813056cffb1e314b715e8",
+          "block": "0x3d11904",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xa0d62be88fa3e42b607b8252d828df6dfcd3dbe1",
+          "raw": "0x9a90593db1e9c0510e",
+          "uniqueId": "0xaff9e5b87cf47ce0c1861150f87a0a44e5a9bfe1203813056cffb1e314b715e8:log:1056"
+        },
+        {
+          "tx": "0xaff9e5b87cf47ce0c1861150f87a0a44e5a9bfe1203813056cffb1e314b715e8",
+          "block": "0x3d11904",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff",
+          "raw": "0x670ae6292146803609",
+          "uniqueId": "0xaff9e5b87cf47ce0c1861150f87a0a44e5a9bfe1203813056cffb1e314b715e8:log:1060"
+        },
+        {
+          "tx": "0x3fd4ec014a40de3ee8d399038dc4981d5f907eceaf728fe22910344251cf96af",
+          "block": "0x3d2f06b",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0xd5c2c07eed62ce5cc0",
+          "uniqueId": "0x3fd4ec014a40de3ee8d399038dc4981d5f907eceaf728fe22910344251cf96af:log:483"
+        },
+        {
+          "tx": "0x6134259e831a83ee6cd5463274ac21316f889e94adabd70d6271d59041226388",
+          "block": "0x3d3bd12",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff",
+          "raw": "0xc146abc2025358ef00",
+          "uniqueId": "0x6134259e831a83ee6cd5463274ac21316f889e94adabd70d6271d59041226388:log:356"
+        },
+        {
+          "tx": "0xc92b5a89c907faf10f7546f13ec9bf30348439658192f682c21c84335e718dd7",
+          "block": "0x3d59cc7",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0x12349e4f0cac579e31c",
+          "uniqueId": "0xc92b5a89c907faf10f7546f13ec9bf30348439658192f682c21c84335e718dd7:log:501"
+        },
+        {
+          "tx": "0x9e78d388979d816dfceb9f108152003009d38f23ec1b9ae6dafbe35f7b38dea0",
+          "block": "0x3d64e1d",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0x5762f7e1d66e715dbb",
+          "uniqueId": "0x9e78d388979d816dfceb9f108152003009d38f23ec1b9ae6dafbe35f7b38dea0:log:605"
+        },
+        {
+          "tx": "0x6e2ce2f45adddbebe9a6597651654d8a6a9961b6994621ed148eee8263e0ce1a",
+          "block": "0x3d817ca",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xa0d62be88fa3e42b607b8252d828df6dfcd3dbe1",
+          "raw": "0x51bf791d7d93d17000",
+          "uniqueId": "0x6e2ce2f45adddbebe9a6597651654d8a6a9961b6994621ed148eee8263e0ce1a:log:106"
+        },
+        {
+          "tx": "0xb00c57729f69424dc4238cd98c72d7f7ec2b967bead6ebdabc6c4b17837e4085",
+          "block": "0x3d81dc7",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff",
+          "raw": "0xb02ecf74c3138ab6e6",
+          "uniqueId": "0xb00c57729f69424dc4238cd98c72d7f7ec2b967bead6ebdabc6c4b17837e4085:log:391"
+        },
+        {
+          "tx": "0x533797dc2f7cf2a50c61b32f3192a21094ce68a8e88c82deeec5e9773fecf304",
+          "block": "0x3d82103",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0x28a857425466f80000",
+          "uniqueId": "0x533797dc2f7cf2a50c61b32f3192a21094ce68a8e88c82deeec5e9773fecf304:log:668"
+        },
+        {
+          "tx": "0x5f80e1375fba459c780cd1657daa35b95243f8a1d10f996217109a7452e76da2",
+          "block": "0x3d824b8",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xa0d62be88fa3e42b607b8252d828df6dfcd3dbe1",
+          "raw": "0x79f905c6fd34ea092d",
+          "uniqueId": "0x5f80e1375fba459c780cd1657daa35b95243f8a1d10f996217109a7452e76da2:log:1316"
+        },
+        {
+          "tx": "0xdcfd703dfa4bdd3e3aba4c4d3ec0f64ce5980b23979264e0037d4039fbb5e73b",
+          "block": "0x3d8d56d",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0xb6f588aa7bcf5f0dc4",
+          "uniqueId": "0xdcfd703dfa4bdd3e3aba4c4d3ec0f64ce5980b23979264e0037d4039fbb5e73b:log:434"
+        },
+        {
+          "tx": "0xa45b2c4f3bf6569c3e4899d031e55568e5eca006ddb6fbcdb66335c611d02965",
+          "block": "0x3d92e5b",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "0xb6f588aa7bcf5f0dc4",
+          "uniqueId": "0xa45b2c4f3bf6569c3e4899d031e55568e5eca006ddb6fbcdb66335c611d02965:log:213"
         }
       ],
-      "next_page_key": "18e52193-a573-48dc-93ee-d15f8bf5be22",
-      "complete": false,
-      "pages": 7,
+      "next_page_key": null,
+      "complete": true,
+      "pages": 10,
       "errors": []
     }
   ],
@@ -608,136 +770,136 @@
       "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "CHEEMS",
       "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "MUBARAK",
       "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "TUT",
       "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "BROCCOLI714",
       "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "BROCCOLIF3B",
       "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "SIREN",
       "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "BANANAS31",
       "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "BOB",
       "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "BULLA",
       "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "4",
       "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
       "in": 1,
       "out": 31,
-      "netRaw": null
+      "netRaw": "160934"
     },
     {
       "token": "GIGGLE",
       "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "币安人生",
       "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
       "in": 2,
       "out": 13,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "我踏马来了",
       "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "龙虾",
       "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "牛来",
       "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "MARSCOIN",
       "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
       "in": 0,
       "out": 0,
-      "netRaw": null
+      "netRaw": "0"
     },
     {
       "token": "哈基米 / HAJIMI",
       "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
       "in": 4,
-      "out": 11,
-      "netRaw": null
+      "out": 29,
+      "netRaw": "0"
     },
     {
       "token": "BUBB",
       "ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
       "in": 1,
       "out": 1,
-      "netRaw": null
+      "netRaw": "0"
     }
   ],
-  "all_19_CAs_paginated": false,
+  "all_19_CAs_paginated": true,
   "scope": "Exact 19 CA ERC20 both directions across full block history, no inferred buying, sold or PnL from transfers",
   "production": "NO_GO"
 }
