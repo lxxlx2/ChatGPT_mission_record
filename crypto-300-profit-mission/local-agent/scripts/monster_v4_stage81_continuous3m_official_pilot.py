@@ -141,10 +141,13 @@ def main():
     p=a.parse_args()
     if p.selftest:selftest();return
     selected=choose(load_population())
-    if p.date or p.symbol:
-        if not p.date or not p.symbol:raise ValueError("STAGE81_DATE_AND_SYMBOL_MUST_BE_TOGETHER")
-        selected=[r for r in selected if r["date"]==p.date and r["symbol"]==p.symbol]
-        if len(selected)!=1:raise ValueError("STAGE81_NOT_A_PREDECLARED_SYMBOL_DAY")
+    if p.date:
+        selected=[r for r in selected if r["date"]==p.date and
+                  (p.symbol is None or r["symbol"]==p.symbol)]
+        if len(selected)!=(1 if p.symbol is not None else 2):
+            raise ValueError("STAGE81_NOT_THE_FROZEN_ONE_OR_TWO_PREDECLARED_CASES")
+    elif p.symbol:
+        raise ValueError("STAGE81_SYMBOL_REQUIRES_DATE")
     results=[]
     for row in selected:
         value=replay_one(row)
