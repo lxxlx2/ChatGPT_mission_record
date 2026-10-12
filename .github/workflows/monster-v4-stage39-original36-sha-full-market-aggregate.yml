@@ -1,0 +1,103 @@
+name: Monster Stage39 Full900 Futures Original36 SHA Global WATCH Aggregate
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_original36_source_sha_full_market_aggregate.py'
+      - '.github/workflows/monster-v4-stage39-original36-sha-full-market-aggregate.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  require_all36_source_sha_and_commit_market_level_discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Wait for actual Stage39 full900 x six source matrix to complete SUCCESS
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 220); do
+            gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38208358036 > /tmp/monster39_frozen_source_run.json
+            state=$(python -c 'import json;print(json.load(open("/tmp/monster39_frozen_source_run.json"))["status"])')
+            if test "$state" = completed; then
+              python - <<'PY'
+          import json
+          j=json.load(open('/tmp/monster39_frozen_source_run.json'))
+          if j['conclusion']!='success':
+              raise SystemExit('STAGE39_FULL900_ORIGINAL36_SOURCE_NOT_SUCCESS')
+          print('STAGE39_REAL_SOURCE_36_OF_36_SUCCESS')
+          PY
+              break
+            fi
+            sleep 15
+          done
+          test "$state" = completed
+      - name: Freeze exactly36 real original artifacts with GitHub SHA256 receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38208358036/artifacts?per_page=100' > /tmp/monster39_artifacts.json
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          obj=json.loads(Path('/tmp/monster39_artifacts.json').read_text())
+          arts=obj['artifacts']
+          if len(arts)!=36:raise SystemExit('STAGE39_NOT_ALL36_SOURCE_ARTIFACTS')
+          names=set();entries=[]
+          for a in arts:
+              m=re.fullmatch(r'monster-stage39-original-futuresV4-(\d{4}-\d\d-\d\d)-shard([0-5])-SHA',a['name'])
+              if not m or a.get('expired') or not a.get('digest','').startswith('sha256:'):
+                  raise SystemExit('STAGE39_ORIGINAL_ARTIFACT_ID_OR_SHA_BAD')
+              key=(m.group(1),int(m.group(2)))
+              if key in names:raise SystemExit('STAGE39_DUPLICATE_SOURCE')
+              names.add(key)
+              entries.append({'date':key[0],'shard':key[1],
+                  'artifact_id':a['id'],'zip_sha256':a['digest'].split(':')[1]})
+          Path('/tmp/monster39_manifest.json').write_text(json.dumps({'run_id':38208358036,'artifacts':entries}))
+          Path('/tmp/monster39_ids').write_text('\n'.join(str(a['artifact_id']) for a in entries)+'\n')
+          print('STAGE39_ORIGINAL36_GITHUB_SHA_RECEIPTS_LOCKED')
+          PY
+      - name: Redownload every exact original36 source ZIP to verify bytes independently
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster39_original36_zips
+          while read -r aid; do
+            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$aid/zip" > "/tmp/monster39_original36_zips/$aid.zip"
+          done </tmp/monster39_ids
+      - name: Independently recompute full5400 original V4 WATCH and compare 172 earlier Stage38 cases
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_original36_source_sha_full_market_aggregate.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_original36_source_sha_full_market_aggregate.py \
+            --manifest /tmp/monster39_manifest.json \
+            --zip-dir /tmp/monster39_original36_zips \
+            --out /tmp/monster39_result
+      - name: Persist full genuine original36 result as a downloadable source artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage39-original36-sourceSHA-full5400-FuturesV4-discovery
+          path: /tmp/monster39_result/*
+          retention-days: 30
+      - name: Commit full market normal and positive sample with source ledger to existing Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster39_result/monster_stage39_* "$dest/"
+          git add "$dest/monster_stage39_36original_SHA_all5400_futures_discovery_summary.json" "$dest/monster_stage39_all5400_usdm_real1m_originalV4_cases.jsonl" "$dest/monster_stage39_realminute_gt2x_event_registry.csv"
+          if git diff --cached --quiet; then
+            echo STAGE39_IDENTICAL_ALREADY_GIT
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: Stage39 persist full 900x6 USD-M genuine original V4 source-SHA WATCH census'
+          git push origin "HEAD:$GITHUB_REF_NAME"
