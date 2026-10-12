@@ -230,8 +230,13 @@ def main():
             raise ValueError("STAGE70_REPLAY_RESTART_NOT_IDEMPOTENT")
         if counts(conn)!=audit or snapshot(conn)!=first:
             raise ValueError("STAGE70_RESTART_PROJECTION_DIGEST_CHANGED")
-    if (n,audit["journal_events"],audit["unique_first_D0_watch"],
-        audit["P1_upgraded"])!=(937,937,715,222):
+    # An idempotent CLI recovery may insert 0 events when the original 937
+    # journal entries are already present. Validate the complete immutable
+    # resulting population, not the delta from this invocation.
+    if not 0 <= n <= len(data):
+        raise ValueError("STAGE70_INVALID_NEWLY_INGESTED_EVENT_DELTA")
+    if (audit["journal_events"],audit["unique_first_D0_watch"],
+        audit["P1_upgraded"])!=(937,715,222):
         raise ValueError("STAGE70_INPUT_EVENTS_OR_WATCH_DROPPED")
     if audit["stage_counts"]!={"WATCH":493,"URGENT_RESEARCH":161,"CAP_DEFERRED_RESEARCH":61}:
         raise ValueError("STAGE70_P2_HISTORIC_RESEARCH_BUDGET_STATES_DRIFT")
@@ -246,7 +251,8 @@ def main():
     (args.out/"monster_stage70_offline_readonly_715_watch_items.jsonl").write_text(
         "".join(json.dumps(x,sort_keys=True,ensure_ascii=False)+"\n" for x in first),encoding="utf-8")
     print("STAGE70_EXACT_715_WATCH_937_EVENTS_NO_LOSS_RESTART "+
-          json.dumps(audit,sort_keys=True))
+          json.dumps({**audit,"newly_ingested_this_invocation":n,
+                      "source_events_expected":len(data)},sort_keys=True))
 
 
 if __name__=="__main__":
