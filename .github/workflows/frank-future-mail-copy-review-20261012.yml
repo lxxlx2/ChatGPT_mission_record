@@ -1,0 +1,44 @@
+name: Frank future mail copy safety review
+
+on:
+  push:
+    branches:
+      - review/frank-notification-copy-20261012
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  future-only-mail-format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify HEAD
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "EXACT_MAIL_HEAD=$GITHUB_SHA"
+      - name: Install Frank dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3 pyflakes==3.4.0
+      - name: Deterministic future mail formatter and frozen row tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile mission_agent/mission_control/delivery.py
+          python -m pyflakes mission_agent/mission_control/delivery.py
+          python -B -m pytest -q -p no:cacheprovider tests/research/test_frank_mail_semantics_20261012.py tests/test_mission_control_delivery.py
+      - name: Full regression including archived Git playback
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
