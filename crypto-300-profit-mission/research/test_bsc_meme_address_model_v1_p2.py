@@ -218,6 +218,49 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
             self.assertEqual(len(pending), 0)
             self.assertEqual(len(closed), len(c["original_episodes"]))
 
+    def test_eight_frozen_open_or_partial_cases_not_promoted_to_profit(self):
+        block = json.loads((HERE / "bsc-meme-address-model-v1-p2-2026-eligibility-blocker-queue-2026-10-13.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(block["items"]), 8)
+        b, ledger = fixtures()
+        known_wallets = {w["wallet"]: w for w in b["wallets"]}
+        economics = {(e["wallet"], e["exact_ca"]) for e in ledger["episodes"]}
+        for item in block["items"]:
+            self.assertIn(item["wallet"], known_wallets)
+            self.assertTrue(any(c["ca"] == item["ca"] and c["ERC20_presence"] == "PRESENT"
+                                for c in known_wallets[item["wallet"]]["cells"]))
+            self.assertNotIn((item["wallet"], item["ca"]), economics)
+            self.assertEqual(item["realized_final_PnL"], "UNRESOLVED")
+            self.assertGreaterEqual(len(item["record_provenance"]), 1)
+            for proof in item["record_provenance"]:
+                self.assertIn(proof["path"].split("/")[-1], block["source_manifest"])
+                self.assertEqual(proof["git_blob_sha"],
+                                 block["source_manifest"][proof["path"].split("/")[-1]]["git_blob_sha"])
+
+    def test_5c0c_untraced_native_66bnb_is_not_importable_as_strict_cash_profit(self):
+        block = json.loads((HERE / "bsc-meme-address-model-v1-p2-2026-eligibility-blocker-queue-2026-10-13.json").read_text(encoding="utf-8"))
+        item = next(item for item in block["items"] if item["wallet"].startswith("0x5c0c"))
+        self.assertEqual(item["audit_state"],
+                         "TWELVE_OWNER_SIGNED_RAW_CLOSED_BUT_INTERNAL_NATIVE_66_BNB_CAUSAL_UNVERIFIED")
+        self.assertEqual(item["native_wallet_block_scope_net_wei"], "66379663211351567593")
+        self.assertEqual(item["realized_final_PnL"], "UNRESOLVED")
+        self.assertEqual(
+            next(w for w in self.build()["wallets"] if w["wallet"].startswith("0x5c0c"))
+            ["completed_full_wallet_all_CA_PnL"], "UNRESOLVED",
+        )
+
+    def test_2026_niulai_open_or_unsigned_is_not_realized(self):
+        block = json.loads((HERE / "bsc-meme-address-model-v1-p2-2026-eligibility-blocker-queue-2026-10-13.json").read_text(encoding="utf-8"))
+        niu = [x for x in block["items"] if x["token"] == "牛来"]
+        self.assertEqual(len(niu), 4)
+        self.assertEqual(
+            next(x for x in niu if x["wallet"].startswith("0x8e6b"))["remaining_token_raw"],
+            "65856455282881733964",
+        )
+        self.assertEqual(
+            next(x for x in niu if x["wallet"].startswith("0xddac"))["audit_state"],
+            "TOKEN_RAW_CLOSED_22_WALLET_BLOCKS_BUT_ORIGINAL_SIGNERS_NOT_AUDITED",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
