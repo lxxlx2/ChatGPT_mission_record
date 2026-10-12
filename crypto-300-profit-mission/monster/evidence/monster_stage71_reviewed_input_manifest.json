@@ -1,5 +1,6 @@
 {
   "baseline": "2cfaea7064012869ae264a16d776b2cb7e6b52a9",
+  "every_listed_file_exact_baseline_blob": true,
   "files": {
     "crypto-300-profit-mission/local-agent/scripts/monster_v4_historical_replay.py": {
       "git_blob": "95b2595281f5aa8675c6a95e542d40d36b78e847",
@@ -53,9 +54,69 @@
       "git_blob": "c9de9055c4133927dbdd3b684819c09e55066802",
       "sha256": "257f2f6764c766726070c7b0633f1638a400badb7d3b6d7a8dc5c92b7d4c3724"
     },
+    "crypto-300-profit-mission/monster/AGENTS.md": {
+      "git_blob": "b264ea1c1332cbcb8e504edd26c698a8724f8457",
+      "sha256": "9783ac3e58049d2d2373802c869e7bd903ebd96f7309292d43f06001e3a921a6"
+    },
     "crypto-300-profit-mission/monster/MONSTER_MODULE_DEVELOPMENT_RULES.md": {
       "git_blob": "48f771051ad9ba7d6c19aa9dda34fb04cd282c63",
       "sha256": "39ee0817c9f6023ffc221e459841aa6f08e5f0d62b1f43e8fbf7ae59962470ca"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_STAGE65_PREDECLARED_NEW3_FULL900_FIRSTD0_CAP5_HOLDOUT_PROTOCOL_20261012.md": {
+      "git_blob": "49669c734ec4add4f5134e5ea49559f353b44931",
+      "sha256": "c770296be209f0ae28df830313cda87f4860506538c5e88ef5ac98b2963a389b"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_STAGE65_REAL2700_OFFICIAL_SHA_AND_STAGE66_MINUTE_IMPLEMENTATION_CONTRACT_20261012.md": {
+      "git_blob": "60704eb0517c6ae689c8924c8c24074cdd9366e4",
+      "sha256": "cdc9fb7d594e7992ce31e644f61e57ea5a5964210806da63aef7f78b1fb5b548"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_STAGE66_67_TRUE_NEW3_FULL2700_GLOBAL_CAP_FAILURE_ROOT_CAUSE_20261012.md": {
+      "git_blob": "f499c819eb115e973f586640094ff81ef2ae4b67",
+      "sha256": "3db17970ed9b4b87b24d00cc38413ceab35caa7afb1e1b60b1967713c1ad7ad7"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_STAGE68_69_P2_HALF_DAY_PACING_FAILS_OLD6_AIA_GT5X_REAL_RESULTS_20261012.md": {
+      "git_blob": "e185826c084c7bc44e3646cab5e14d3a5134451e",
+      "sha256": "4961ba5607dd1682b0865e24ed5b341de08fd46e1d2431c6f2970a62292bbaa2"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_STAGE68_P2_EARLY_WATCH_P1_HALF_DAY_CAP_PREDECLARED_DESIGN_20261012.md": {
+      "git_blob": "7d3d0b90e2987df6fec02bdf0dc65d7c130f5301",
+      "sha256": "d77a601fe0ac3065a7e2ffe4c41eb4888e80ae8b36ae1adb5adffe769253637d"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_STAGE69_P2_FROZEN_OLDER6_FULL5400_ROBUSTNESS_CONTRACT_20261012.md": {
+      "git_blob": "06f56e47543c50ae4c66b65fc0b7895e0a92f564",
+      "sha256": "c6b519b2e67e16bb512cca48a47e5da5ef0d3f7013b50c85c571f0b6deb46601"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_STAGE70_INDEPENDENT_OTHER_AI_REVIEW_REQUEST_20261012.md": {
+      "git_blob": "0c72b0b9ee6b98c6407172293b07592bdabff7f9",
+      "sha256": "1cff4ce16af78fb629e701db4ac95228e803c453b44a4dd696c87817f19d101e"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_STAGE70_SOURCE_LOCKED_SQLITE715_WATCH_NO_LOSS_REAL_CI_20261012.md": {
+      "git_blob": "516faf576047d722472dd831a32e3a899ce77bc0",
+      "sha256": "5f4d875205675e317dae4f0b48550bf1426b2311889be1240b08a64d6171093b"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_STAGE70_WATCH_NEVER_DROPPED_SQLITE_PROJECTION_TECH_DESIGN_20261012.md": {
+      "git_blob": "2cf1588cfb7f6bce935b5be528aaa6e57daedbc1",
+      "sha256": "f28da32d2ff3738159a89f9b49ae11774a40312c1b4ebce4eca148e2e382225c"
+    },
+    "crypto-300-profit-mission/monster/MONSTER_V4_MODEL_AND_LOCAL_ARCHITECTURE.md": {
+      "git_blob": "04e7c91ba9665856624f98fdc7afb6133e25395d",
+      "sha256": "52ccd79c636ddee2ccd1214734f8dff87e483b357b3fd995b81847fae2de8dab"
+    },
+    "crypto-300-profit-mission/monster/evidence/monster_stage36_official_usdm_archive_vs_spot758.json": {
+      "git_blob": "91b0f99ef85adb48494c5be5c7cc13a7cedcb686",
+      "sha256": "163a851d2fde5b8c1e42cfd8df3379f3e68fd374b1f06ed9dad8ae9ce3404fa3"
+    },
+    "crypto-300-profit-mission/monster/evidence/monster_stage49_frozen_after_stage48_exposure_and_new_dates.json": {
+      "git_blob": "a2d360e5326f9d9befc679b752e9e6df366f4998",
+      "sha256": "c76da2f5b8685f461d3a6c289eaa126306fecd122f1b6ac89cf1524a794057e6"
+    },
+    "crypto-300-profit-mission/monster/evidence/monster_stage52_all5400_originalV4_P1v03_true_minute_source_cases.jsonl": {
+      "git_blob": "ad7544f97e8a0d6c1f2635aa54052cca42d08cf1",
+      "sha256": "47ecbf793e293af6f1ec0fb4951ad2dad9054c25aa1534715de5acb40cfed604"
+    },
+    "crypto-300-profit-mission/monster/evidence/monster_stage64_all519_D0_asof61m_official_1m_taker_trades_SHA.jsonl": {
+      "git_blob": "8ebe53acfdfe10413ac1e6f03457d6ace25d9d5a",
+      "sha256": "011fa36caca0194f105563f4e8d8a57707339d0f4bfe2ac6bfaf5782247e1a7c"
     },
     "crypto-300-profit-mission/monster/evidence/monster_stage65_new3_full2700_hourly_official_source_SHA.jsonl": {
       "git_blob": "98ea5137d97307da9fb614b7707f435997d9bee9",

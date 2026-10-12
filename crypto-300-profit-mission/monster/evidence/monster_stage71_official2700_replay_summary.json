@@ -1,0 +1,790 @@
+{
+  "all_source_attempts_retained": true,
+  "attempted": 2700,
+  "baseline": "2cfaea7064012869ae264a16d776b2cb7e6b52a9",
+  "errors": [],
+  "exact_prior_parity": 2700,
+  "fresh_recalculation": {
+    "allocation": [
+      {
+        "at": "2025-03-30T09:48:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "4193668.0792000",
+        "slot": 0,
+        "symbol": "ALCHUSDT"
+      },
+      {
+        "at": "2025-03-31T04:48:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "18840469.6931100",
+        "slot": 0,
+        "symbol": "VINEUSDT"
+      },
+      {
+        "at": "2025-03-31T14:54:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "15390398.4977500",
+        "slot": 1,
+        "symbol": "TUTUSDT"
+      },
+      {
+        "at": "2025-04-01T02:51:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "24536953.5969400",
+        "slot": 1,
+        "symbol": "REZUSDT"
+      },
+      {
+        "at": "2025-04-01T07:06:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "12503130.32243",
+        "slot": 2,
+        "symbol": "COMPUSDT"
+      },
+      {
+        "at": "2025-04-01T14:42:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "4069955.1083700",
+        "slot": 2,
+        "symbol": "HIPPOUSDT"
+      },
+      {
+        "at": "2025-04-02T03:15:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "6618660.57357000",
+        "slot": 2,
+        "symbol": "DEXEUSDT"
+      },
+      {
+        "at": "2025-04-02T03:48:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "49369546.2880",
+        "slot": 2,
+        "symbol": "EOSUSDT"
+      },
+      {
+        "at": "2025-04-03T04:18:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "7239195.3850000",
+        "slot": 3,
+        "symbol": "BIGTIMEUSDT"
+      },
+      {
+        "at": "2025-04-03T07:12:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "10779039.2078000",
+        "slot": 4,
+        "symbol": "RAREUSDT"
+      },
+      {
+        "at": "2025-04-04T04:18:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "14800984.2342000",
+        "slot": 4,
+        "symbol": "USUALUSDT"
+      },
+      {
+        "at": "2025-04-04T15:48:00Z",
+        "date": "2025-03-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "2371192.8034290",
+        "slot": 5,
+        "symbol": "BROCCOLIF3BUSDT"
+      },
+      {
+        "at": "2025-06-30T06:48:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "10127030.3420330",
+        "slot": 0,
+        "symbol": "LEVERUSDT"
+      },
+      {
+        "at": "2025-06-30T16:15:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "6940387.0610200",
+        "slot": 0,
+        "symbol": "SWARMSUSDT"
+      },
+      {
+        "at": "2025-06-30T20:54:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "28924396.5567400",
+        "slot": 0,
+        "symbol": "HFTUSDT"
+      },
+      {
+        "at": "2025-07-01T08:21:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "10618491.9505900",
+        "slot": 1,
+        "symbol": "MAVUSDT"
+      },
+      {
+        "at": "2025-07-01T16:00:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "8606007.1056800",
+        "slot": 1,
+        "symbol": "MYXUSDT"
+      },
+      {
+        "at": "2025-07-01T19:27:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "48927524.9170800",
+        "slot": 1,
+        "symbol": "HUSDT"
+      },
+      {
+        "at": "2025-07-02T12:45:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "11553806.1328600",
+        "slot": 2,
+        "symbol": "AWEUSDT"
+      },
+      {
+        "at": "2025-07-02T16:54:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "6698993.5188100",
+        "slot": 2,
+        "symbol": "SKYAIUSDT"
+      },
+      {
+        "at": "2025-07-03T04:48:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "26614929.7206300",
+        "slot": 2,
+        "symbol": "MOODENGUSDT"
+      },
+      {
+        "at": "2025-07-03T04:54:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "15572928.9615900",
+        "slot": 2,
+        "symbol": "FUNUSDT"
+      },
+      {
+        "at": "2025-07-03T13:09:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "2910870.61697900",
+        "slot": 3,
+        "symbol": "PORTALUSDT"
+      },
+      {
+        "at": "2025-07-03T21:21:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "18570386.5032600",
+        "slot": 3,
+        "symbol": "BRUSDT"
+      },
+      {
+        "at": "2025-07-05T02:18:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "3212380.81436",
+        "slot": 4,
+        "symbol": "ALPHAUSDT"
+      },
+      {
+        "at": "2025-07-05T11:48:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "5576181.6532100",
+        "slot": 5,
+        "symbol": "QUICKUSDT"
+      },
+      {
+        "at": "2025-07-06T14:48:00Z",
+        "date": "2025-06-30",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "2520074.1268700",
+        "slot": 6,
+        "symbol": "BSWUSDT"
+      },
+      {
+        "at": "2025-11-27T07:36:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "20750587.35970000",
+        "slot": 0,
+        "symbol": "ORCAUSDT"
+      },
+      {
+        "at": "2025-11-27T07:45:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "4808993.8023000",
+        "slot": 0,
+        "symbol": "TRUSTUSDT"
+      },
+      {
+        "at": "2025-11-27T08:39:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": false,
+        "old_urgent": true,
+        "quote": "3268358.8742000",
+        "slot": 0,
+        "symbol": "ATUSDT"
+      },
+      {
+        "at": "2025-11-27T10:03:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": false,
+        "old_urgent": true,
+        "quote": "5407423.36041900",
+        "slot": 0,
+        "symbol": "ACEUSDT"
+      },
+      {
+        "at": "2025-11-27T11:24:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": false,
+        "old_urgent": true,
+        "quote": "9988350.1422000",
+        "slot": 0,
+        "symbol": "SUPERUSDT"
+      },
+      {
+        "at": "2025-11-27T15:18:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": false,
+        "old_urgent": false,
+        "quote": "5767244.0478000",
+        "slot": 0,
+        "symbol": "SQDUSDT"
+      },
+      {
+        "at": "2025-11-27T16:21:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": false,
+        "old_urgent": false,
+        "quote": "8480425.9380000",
+        "slot": 0,
+        "symbol": "TRADOORUSDT"
+      },
+      {
+        "at": "2025-11-27T17:42:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": false,
+        "old_urgent": false,
+        "quote": "4746813.5513000",
+        "slot": 0,
+        "symbol": "CLOUSDT"
+      },
+      {
+        "at": "2025-11-27T19:09:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": false,
+        "quote": "2243744.6092600",
+        "slot": 0,
+        "symbol": "BIDUSDT"
+      },
+      {
+        "at": "2025-11-27T19:36:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": false,
+        "quote": "3234672.2224100",
+        "slot": 0,
+        "symbol": "TANSSIUSDT"
+      },
+      {
+        "at": "2025-11-28T04:33:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": false,
+        "quote": "12308375.2034200",
+        "slot": 0,
+        "symbol": "PIPPINUSDT"
+      },
+      {
+        "at": "2025-11-28T11:39:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "14998880.3184617",
+        "slot": 1,
+        "symbol": "TURBOUSDT"
+      },
+      {
+        "at": "2025-11-28T23:03:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "2888533.6193000",
+        "slot": 1,
+        "symbol": "RIVERUSDT"
+      },
+      {
+        "at": "2025-11-29T19:21:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "6490672.3040100",
+        "slot": 2,
+        "symbol": "ALCHUSDT"
+      },
+      {
+        "at": "2025-11-30T04:18:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "10237838.784000",
+        "slot": 2,
+        "symbol": "LSKUSDT"
+      },
+      {
+        "at": "2025-11-30T07:57:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "2081399.3637000",
+        "slot": 3,
+        "symbol": "LIGHTUSDT"
+      },
+      {
+        "at": "2025-11-30T13:42:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "5676970.7453900",
+        "slot": 3,
+        "symbol": "PARTIUSDT"
+      },
+      {
+        "at": "2025-11-30T17:24:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": false,
+        "old_urgent": true,
+        "quote": "2121516.7977000",
+        "slot": 3,
+        "symbol": "PIEVERSEUSDT"
+      },
+      {
+        "at": "2025-11-30T19:24:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "8713508.73957800",
+        "slot": 3,
+        "symbol": "TNSRUSDT"
+      },
+      {
+        "at": "2025-12-01T03:42:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "3777532.2884500",
+        "slot": 3,
+        "symbol": "GRIFFAINUSDT"
+      },
+      {
+        "at": "2025-12-01T11:57:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "3191778.4061200",
+        "slot": 4,
+        "symbol": "CHESSUSDT"
+      },
+      {
+        "at": "2025-12-01T20:15:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "5504141.7650800",
+        "slot": 4,
+        "symbol": "JELLYJELLYUSDT"
+      },
+      {
+        "at": "2025-12-02T00:00:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "8335888.6165400",
+        "slot": 4,
+        "symbol": "MONUSDT"
+      },
+      {
+        "at": "2025-12-02T14:36:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "3665908.7687400",
+        "slot": 5,
+        "symbol": "BEATUSDT"
+      },
+      {
+        "at": "2025-12-02T15:42:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "126767073.33659",
+        "slot": 5,
+        "symbol": "ZECUSDT"
+      },
+      {
+        "at": "2025-12-03T02:36:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "3349662.3748340",
+        "slot": 5,
+        "symbol": "BOBUSDT"
+      },
+      {
+        "at": "2025-12-03T11:51:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "4726500.3095200",
+        "slot": 6,
+        "symbol": "SKYAIUSDT"
+      },
+      {
+        "at": "2025-12-03T12:51:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": true,
+        "old_urgent": true,
+        "quote": "2394399.3836900",
+        "slot": 6,
+        "symbol": "VOXELUSDT"
+      },
+      {
+        "at": "2025-12-03T14:45:00Z",
+        "date": "2025-11-27",
+        "kind": "P1_FIRST_ASOF_ELIGIBLE",
+        "new_urgent": false,
+        "old_urgent": true,
+        "quote": "10083960.6210500",
+        "slot": 6,
+        "symbol": "SAPIENUSDT"
+      }
+    ],
+    "baseline": "2cfaea7064012869ae264a16d776b2cb7e6b52a9",
+    "cases": [
+      {
+        "D0": "2025-06-30T17:00:00Z",
+        "P1": "2025-06-30T20:54:00Z",
+        "P1_lead_min": 61,
+        "date": "2025-06-30",
+        "first_2x": "2025-06-30T21:55:00Z",
+        "new_early": true,
+        "new_urgent": true,
+        "old_early": true,
+        "old_urgent": true,
+        "symbol": "HFTUSDT"
+      },
+      {
+        "D0": "2025-07-01T14:36:00Z",
+        "P1": "2025-07-01T19:27:00Z",
+        "P1_lead_min": 555,
+        "date": "2025-06-30",
+        "first_2x": "2025-07-02T04:42:00Z",
+        "new_early": true,
+        "new_urgent": true,
+        "old_early": true,
+        "old_urgent": true,
+        "symbol": "HUSDT"
+      },
+      {
+        "D0": "2025-11-27T08:33:00Z",
+        "P1": "2025-11-28T04:33:00Z",
+        "P1_lead_min": 2997,
+        "date": "2025-11-27",
+        "first_2x": "2025-11-30T06:30:00Z",
+        "new_early": true,
+        "new_urgent": true,
+        "old_early": false,
+        "old_urgent": false,
+        "symbol": "PIPPINUSDT"
+      },
+      {
+        "D0": "2025-11-27T19:30:00Z",
+        "P1": "2025-11-27T19:36:00Z",
+        "P1_lead_min": 9,
+        "date": "2025-11-27",
+        "first_2x": "2025-11-27T19:45:00Z",
+        "new_early": true,
+        "new_urgent": true,
+        "old_early": false,
+        "old_urgent": false,
+        "symbol": "TANSSIUSDT"
+      },
+      {
+        "D0": "2025-11-27T16:00:00Z",
+        "P1": "2025-11-27T16:21:00Z",
+        "P1_lead_min": 1646,
+        "date": "2025-11-27",
+        "first_2x": "2025-11-28T19:47:00Z",
+        "new_early": false,
+        "new_urgent": false,
+        "old_early": false,
+        "old_urgent": false,
+        "symbol": "TRADOORUSDT"
+      }
+    ],
+    "new_early": 4,
+    "new_urgent": 48,
+    "old_early": 2,
+    "old_urgent": 50,
+    "p1": 56,
+    "population": 2700,
+    "slots": [
+      {
+        "date": "2025-03-30",
+        "first_half": 1,
+        "new": 2,
+        "old": 2,
+        "slot": 0
+      },
+      {
+        "date": "2025-03-30",
+        "first_half": 1,
+        "new": 2,
+        "old": 2,
+        "slot": 1
+      },
+      {
+        "date": "2025-03-30",
+        "first_half": 2,
+        "new": 4,
+        "old": 4,
+        "slot": 2
+      },
+      {
+        "date": "2025-03-30",
+        "first_half": 0,
+        "new": 1,
+        "old": 1,
+        "slot": 3
+      },
+      {
+        "date": "2025-03-30",
+        "first_half": 1,
+        "new": 2,
+        "old": 2,
+        "slot": 4
+      },
+      {
+        "date": "2025-03-30",
+        "first_half": 1,
+        "new": 1,
+        "old": 1,
+        "slot": 5
+      },
+      {
+        "date": "2025-06-30",
+        "first_half": 2,
+        "new": 3,
+        "old": 3,
+        "slot": 0
+      },
+      {
+        "date": "2025-06-30",
+        "first_half": 2,
+        "new": 3,
+        "old": 3,
+        "slot": 1
+      },
+      {
+        "date": "2025-06-30",
+        "first_half": 2,
+        "new": 4,
+        "old": 4,
+        "slot": 2
+      },
+      {
+        "date": "2025-06-30",
+        "first_half": 1,
+        "new": 2,
+        "old": 2,
+        "slot": 3
+      },
+      {
+        "date": "2025-06-30",
+        "first_half": 0,
+        "new": 1,
+        "old": 1,
+        "slot": 4
+      },
+      {
+        "date": "2025-06-30",
+        "first_half": 1,
+        "new": 1,
+        "old": 1,
+        "slot": 5
+      },
+      {
+        "date": "2025-06-30",
+        "first_half": 1,
+        "new": 1,
+        "old": 1,
+        "slot": 6
+      },
+      {
+        "date": "2025-11-27",
+        "first_half": 2,
+        "new": 5,
+        "old": 5,
+        "slot": 0
+      },
+      {
+        "date": "2025-11-27",
+        "first_half": 1,
+        "new": 2,
+        "old": 2,
+        "slot": 1
+      },
+      {
+        "date": "2025-11-27",
+        "first_half": 0,
+        "new": 2,
+        "old": 2,
+        "slot": 2
+      },
+      {
+        "date": "2025-11-27",
+        "first_half": 2,
+        "new": 4,
+        "old": 5,
+        "slot": 3
+      },
+      {
+        "date": "2025-11-27",
+        "first_half": 1,
+        "new": 3,
+        "old": 3,
+        "slot": 4
+      },
+      {
+        "date": "2025-11-27",
+        "first_half": 2,
+        "new": 3,
+        "old": 3,
+        "slot": 5
+      },
+      {
+        "date": "2025-11-27",
+        "first_half": 2,
+        "new": 2,
+        "old": 3,
+        "slot": 6
+      }
+    ],
+    "statuses": {
+      "CENSORED_OFFICIAL_1M_SOURCE_GAP": 1,
+      "CENSORED_ORIGINAL_MONTHLY_1H_UNAVAILABLE": 1201,
+      "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 1,
+      "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 1497
+    },
+    "watch": 196
+  },
+  "official_source": "https://data.binance.vision/data/futures/um/"
+}
