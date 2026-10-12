@@ -1,0 +1,67 @@
+name: Frank Loop only rollout independent release gate
+
+on:
+  push:
+    branches:
+      - ops/frank-mission-loop-readonly-preflight-20261012
+    paths:
+      - '.github/workflows/frank-loop-only-rollout-review-20261012.yml'
+      - 'crypto-300-profit-mission/local-agent/scripts/frank_loop_only_rollout_20261012.py'
+      - 'crypto-300-profit-mission/local-agent/tests/research/test_frank_loop_only_rollout_20261012.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dry-run-only-reviewed-script:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source SHA and no server mutation
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 6a5b7e8a533f99c871e31f9674329fcb4f929cc2 HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "EXACT_OPS_HEAD=$GITHUB_SHA"
+      - name: Install dev dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3 pyflakes==3.4.0
+      - name: Static gate and never call live launchd
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/frank_loop_only_rollout_20261012.py
+          python -m pyflakes scripts/frank_loop_only_rollout_20261012.py
+          python scripts/frank_loop_only_rollout_20261012.py --help
+          python - <<'PY'
+          from pathlib import Path
+          x = Path("scripts/frank_loop_only_rollout_20261012.py").read_text()
+          assert '6a5b7e8a533f99c871e31f9674329fcb4f929cc2' in x
+          assert '757045184a39467e8e33804450fafdc8b475fe6c' in x
+          assert '--approve-fresh-alerts' in x and '--apply-loop' in x
+          assert 'MISSION_EVIDENCE_EXPORT_ENABLED=0' in x
+          assert 'FRESH_LOOP_PREFLIGHT=PASS' in x
+          assert '"kickstart", "-k", DASH_LABEL' not in x
+          assert "assert_legacy_receipts_unchanged" in x
+          assert "sqlite_backup" in x and "?mode=ro" in x
+          assert "LOOP_ROLLBACK_SERVICE=RECOVERED" in x
+          print("NO_PRODUCTION_MUTATION_IN_CI=PASS")
+          PY
+      - name: Synthetic rollback and anti-replay tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/research/test_frank_loop_only_rollout_20261012.py
+      - name: All Frank mission tests including real archived Git replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
