@@ -1,0 +1,50 @@
+{
+  "schema": "MONSTER_STAGE40_RESEARCH_ONLY_D0_WATCH_PRIORITY_P1_CANDIDATE_V01_PRE_HOLDOUT_V1",
+  "research_branch": "research/monster-v4-local-discovery-20261010",
+  "created_date": "2026-10-12",
+  "stage": "STRATEGY_AND_KPI_PROPOSAL_ONLY",
+  "hypothesis": "Preserve original V4 D0 recall, test whether simple continuation and quote flow shrink human urgent alert burden without losing useful strict early 2x discoveries.",
+  "exposed_sources": [
+    "crypto-300-profit-mission/monster/evidence/monster_stage34_18date_discovery_census_verified.json",
+    "crypto-300-profit-mission/monster/evidence/monster_stage35_18date_SHA_verified_first_watch_feature_summary.json",
+    "crypto-300-profit-mission/monster/evidence/monster_stage39_36original_SHA_all5400_futures_discovery_summary.json"
+  ],
+  "original_V4_git_blob_sha1": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+  "candidate": {
+    "type": "RESEARCH_HYPOTHESIS_ONLY_NOT_PRODUCTION_SIGNAL",
+    "D0": "UNCHANGED_ORIGINAL_V4_WATCH_EVENT",
+    "D0_all_events_persist": true,
+    "price_basis": "CLOSED_ONE_MINUTE_PRICE_AS_OF_3MIN_POLL_ONLY",
+    "P1_decision_minutes_after_first_D0": 6,
+    "P1_consecutive_3min_confirmations": 2,
+    "each_confirmation_closed_price_at_least_first_D0_close": true,
+    "ret60m_at_first_D0_min_percent": "8.0",
+    "quote15m_at_P1_min_USDT": "250000",
+    "quote15m_normalized_vs_previous45_min": "1.5",
+    "source_gap_behavior": "DO_NOT_ESCALATE_AND_PRESERVE_D0",
+    "no_p1_if_historical_symbol_type_unknown_or_dual_archive_conflict": true,
+    "same_coin_priority_upgrade_dedup": "one_event_per_P1_eligibility_anchor",
+    "P1_no_purchase_action": true
+  },
+  "gates": {
+    "D0_full_market_GT2x_strict_early_pct_at_least": 90,
+    "D0_full_market_GT2x_pre_cross_ge5min_pct_at_least": 85,
+    "P1_recall_of_D0_pre_cross_ge5min_2x_at_least_pct": 80,
+    "P1_alerts_mean_per_day_at_most": 5,
+    "P1_alerts_max_single_day_at_most": 12,
+    "no_future_GT_used_to_evaluate_ASOF": true,
+    "no_retraining_or_threshold_adjustment_on_exposed_dates": true,
+    "insufficient_positive_events": "INCONCLUSIVE_NOT_PASS",
+    "source_missing": "CENSORED_NOT_NEGATIVE",
+    "future_5x_or_10x_zero": "UNSCORABLE_NOT_SUCCESS",
+    "real_orderbook_unavailable": "EXECUTION_UNVERIFIED_NO_BUY"
+  },
+  "holdout_status": "NOT_SELECTED_AUDIT_EXPOSED_DATE_MANIFESTS_FIRST",
+  "historical_2025_2026_exposed_sample_marketing": "FORBIDDEN",
+  "independent_AI_review": "NOT_DONE",
+  "technical_implementation": "NOT_DONE",
+  "Monster_Deployment": "NO_GO",
+  "Gmail": "OFF",
+  "Frank": "UNCHANGED",
+  "auto_trading": "NO_GO"
+}
