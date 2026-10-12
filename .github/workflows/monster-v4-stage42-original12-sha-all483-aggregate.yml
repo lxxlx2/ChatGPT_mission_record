@@ -1,0 +1,86 @@
+name: Monster Stage42 Original12 SHA All483 Frozen P1 Aggregate
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_original12_sha_all483_priority_aggregate.py'
+      - '.github/workflows/monster-v4-stage42-original12-sha-all483-aggregate.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  frozen_p1_original12_full483_strict_source_and_repo_persist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require original12 full483 actual source pilot already SUCCESS
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38211198743 > /tmp/monster42_original_run.json
+          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38211198743/artifacts?per_page=100' > /tmp/monster42_original_artifacts.json
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          run=json.loads(Path('/tmp/monster42_original_run.json').read_text())
+          if run['status']!='completed' or run['conclusion']!='success':
+              raise SystemExit('STAGE42_FIRST_WATCH_ALL12_SOURCE_NOT_SUCCESS')
+          arr=json.loads(Path('/tmp/monster42_original_artifacts.json').read_text())['artifacts']
+          if len(arr)!=12:raise SystemExit('STAGE42_NOT_12_ORIGINAL_SOURCES')
+          out=[];seen=set()
+          for a in arr:
+              m=re.fullmatch(r'monster-stage42-firstwatch-P1-(\d{4}-\d\d-\d\d)-shard([01])-SHA',a['name'])
+              if not m or a.get('expired') or not a.get('digest','').startswith('sha256:'):
+                  raise SystemExit('STAGE42_BAD_PROVENANCE')
+              key=m.group(1),int(m.group(2))
+              if key in seen:raise SystemExit('STAGE42_DUPLICATE_ARTIFACT')
+              seen.add(key)
+              out.append({'date':key[0],'shard':key[1],
+                  'artifact_id':a['id'],'zip_sha256':a['digest'].split(':')[1]})
+          Path('/tmp/monster42_manifest.json').write_text(json.dumps({'run_id':38211198743,'artifacts':out}))
+          Path('/tmp/monster42_ids').write_text('\n'.join(str(r['artifact_id']) for r in out)+'\n')
+          print('STAGE42_483_ORIGINAL12_SHA_RECEIPTS_LOCKED')
+          PY
+      - name: Redownload the exact12 original published ZIPs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster42_original12
+          while read -r aid; do
+            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$aid/zip" > "/tmp/monster42_original12/$aid.zip"
+          done </tmp/monster42_ids
+      - name: Recalculate all P1 source integrity and honestly compare exposed historical gates
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_original12_sha_all483_priority_aggregate.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_original12_sha_all483_priority_aggregate.py \
+            --manifest /tmp/monster42_manifest.json \
+            --zips /tmp/monster42_original12 \
+            --out /tmp/monster42_final
+      - name: Preserve original12 publisher verified P1 study artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage42-sourceSHA-all483-frozenP1-exposed-validation
+          path: /tmp/monster42_final/*
+          retention-days: 30
+      - name: Commit actual experimental evidence, including failed gates, to original Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster42_final/monster_stage42_* "$dest/"
+          git add "$dest/monster_stage42_original12_SHA_first483_P1_metrics.json" "$dest/monster_stage42_all483_firstWATCH_priority_source_cases.jsonl"
+          if git diff --cached --quiet; then
+            echo STAGE42_ALREADY_SAME_GIT
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: record frozen Stage42 all483 P1 exposed historical truth and original12 source SHA'
+          git push origin "HEAD:$GITHUB_REF_NAME"
