@@ -1,0 +1,84 @@
+name: Monster Stage75 All95 Four Alternative Spot Quotes Publisher SHA
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-stage75-all95-alt-spot-quotes.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage75-all95-four-quote-source-replay
+  cancel-in-progress: false
+jobs:
+  full_95_original_non_usdt_verified_d0_all_four_alt_quote_sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        shard: [0, 1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Original95 SHAs and four quote prior-closed-minute causality
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py --selftest
+      - name: Official Binance Spot t-minus-one minute ZIP SHA all19 original D0 times4 frozen alternative quotes
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py \
+            --shard ${{ matrix.shard }} --workers 5 \
+            --out /tmp/monster_stage75_original95_shard${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage75-original95-shard${{ matrix.shard }}
+          path: /tmp/monster_stage75_original95_shard${{ matrix.shard }}.json
+          retention-days: 30
+  audit_all_380_pair_events_and_persist_same_PR:
+    needs: full_95_original_non_usdt_verified_d0_all_four_alt_quote_sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage75-original95-shard*
+          merge-multiple: true
+          path: /tmp/monster_stage75_parts
+      - name: Verify exact original95 ids and four alternative quotes every event against true Stage74 source
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py \
+            --aggregate-dir /tmp/monster_stage75_parts --out /tmp/monster_stage75_evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage75-full95-all380-spot-quote-source-proof
+          path: /tmp/monster_stage75_evidence/*
+          retention-days: 30
+      - name: Commit immutable 95x4 Spot official publisher SHA evidence in original Monster PR30
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage75_evidence/monster_stage75_original95_* "$dest/"
+          git add "$dest/monster_stage75_original95_all380_spot_four_quote_SHA_asof_rows.jsonl" "$dest/monster_stage75_original95_four_quote_spot_source_summary.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: preserve Stage75 95x4 original D0 alternate Spot quote official 1m SHA asof records'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE75_SOURCE_GIT_PERSIST_FAILED
+          exit 1
