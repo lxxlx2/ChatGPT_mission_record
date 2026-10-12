@@ -1,5 +1,8 @@
 # Monster Stage57–58：全166候选历史Spot可成交证据与5×不可直接Spot-only过滤
 
+
+> **2026-10-12金额约束更正：** 本报告中任何“30美元/30U可执行”等表述均为早期研究假设，**不代表用户指定的Monster妖币单笔交易金额**。当前单笔交易额未指定。后续可成交性取证应在金额未知的情况下保持深度/滑点金额结论UNKNOWN，不应设置固定金额筛选；完整生效规则参见 [Stage59新报告](MONSTER_STAGE59_FULL166_CROSS_VENUE_EVIDENCE_NO_FIXED_NOTIONAL_20261012.md) 和 [Monster开发规则](MONSTER_MODULE_DEVELOPMENT_RULES.md)。此前原始历史回测参数和指标保留不变。
+
 日期：2026-10-12（Asia/Bangkok）。沿用 [原Monster Draft PR #30](https://github.com/lxxlx2/ChatGPT_mission_record/pull/30) 和 [开发规则](MONSTER_MODULE_DEVELOPMENT_RULES.md)。研究数据已完成，未经独立AI review的新优先级/买卖策略不可部署。
 
 ## 一、真实官方历史资料和复算
