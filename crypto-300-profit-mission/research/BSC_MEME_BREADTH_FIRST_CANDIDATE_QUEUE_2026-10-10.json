@@ -545,7 +545,18 @@
       "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
       "early_sample_tokens": [],
       "verified_direct_sample_signers": [],
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "address_model_4_2026_10_12_early_entry_qa": {
+        "observed": "LOBSTER first 56 in and 56 out ERC20 prefix, cursors remain open",
+        "owner_sample": "First LOBSTER buy 0.14 BNB and first sale original owner signed",
+        "first_venue_anchor_gap_blocks": 277,
+        "first_owner_buy_block": 83636406,
+        "relative_priority": "REVIEW_REPEAT_TRADE_LARGE_SAMPLE_NO_PNL",
+        "PnL": "UNKNOWN",
+        "source": "BSC_MEME_877AF_19_CA_FULL_CURSOR_2026-10-12.json",
+        "census_status": "INCOMPLETE_DIRECTION_CURSORS",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
@@ -553,7 +564,18 @@
       "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
       "early_sample_tokens": [],
       "verified_direct_sample_signers": [],
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "address_model_4_2026_10_12_early_entry_qa": {
+        "observed": "MARSCOIN 56 in + 56 out ERC20 prefix, both directions have unread cursors",
+        "owner_sample": "3 owner-signed MARS buys in blocks 112441470-471 each 0.2 BNB; first sell signed and raw tax floor(3%)",
+        "first_venue_anchor_gap_blocks": 10,
+        "first_owner_buy_block": 112441470,
+        "relative_priority": "HIGH_PRIORITY_EARLIEST_FOURMEME_PRE_V2_SAMPLED_OWNER_SIGNED_ENTRY_AMONG_CURRENT_CORE_PROBES",
+        "PnL": "UNKNOWN",
+        "source": "BSC_MEME_498528_MARSCOIN_FIRST_TEN_BLOCK_EARLY_BUYS_AND_TAX_QA_2026-10-12.json",
+        "census_status": "INCOMPLETE_DIRECTION_CURSORS",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
@@ -850,7 +872,18 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "TST",
         "BOB"
-      ]
+      ],
+      "address_model_4_2026_10_12_early_entry_qa": {
+        "observed": "BOB first-page 8 each way, cursors open",
+        "owner_sample": "First BOB buy 0.139320442060087755 BNB and first sell both owner signed; first exit approx 50% of initial bought tokens",
+        "first_venue_anchor_gap_blocks": 22,
+        "first_owner_buy_block": 44007594,
+        "relative_priority": "REVIEW_EARLY_BOB_ENTRY_PARTIAL_EXIT",
+        "PnL": "UNKNOWN",
+        "source": "BSC_MEME_11A732_BOB_A83B_GIGGLE_FIRST_TWO_BLOCK_CASHFLOW_2026-10-12.json",
+        "census_status": "INCOMPLETE_DIRECTION_CURSORS",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -1041,7 +1074,18 @@
         "4",
         "我踏马来了",
         "MARSCOIN"
-      ]
+      ],
+      "address_model_4_2026_10_12_early_entry_qa": {
+        "observed": "GIGGLE first-page 8 each way, cursors open",
+        "owner_sample": "First GIGGLE buy 0.5 BNB and first sell both owner signed; first exit approx 5% of initial bought tokens",
+        "first_venue_anchor_gap_blocks": 1203,
+        "first_owner_buy_block": 61964958,
+        "relative_priority": "REVIEW_GIGGLE_PARTIAL_EXIT_NATIVE_FIRST_TWO_BLOCK_NET_NEGATIVE_NOT_POSITION_PNL",
+        "PnL": "UNKNOWN",
+        "source": "BSC_MEME_11A732_BOB_A83B_GIGGLE_FIRST_TWO_BLOCK_CASHFLOW_2026-10-12.json",
+        "census_status": "INCOMPLETE_DIRECTION_CURSORS",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
@@ -2139,5 +2183,27 @@
       "NO_OUT_OF_SAMPLE_FOLLOW_TRADING_VALIDATION"
     ],
     "production": "NO_GO"
+  },
+  "address_model_4_new_early_entry_2026_10_12": {
+    "status": "FOUR_NEW_OWNER_SIGNED_BOUNDARY_TRADERS_VERIFIED; PREFIX_HISTORY_ONLY; NO_GO",
+    "date": "2026-10-12",
+    "anchor_rule": "from preselected earliest sampled pool event; not first tradable timestamp",
+    "newly_verified_wallets": [
+      "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "0xa83b73f5644cde337b61da79589f10ea15548811"
+    ],
+    "high_priority_wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+    "newly_checked_source_paths": [
+      "BSC_MEME_498528_19_CA_CURSOR_V1_2026-10-12.json",
+      "BSC_MEME_877AF_19_CA_FULL_CURSOR_2026-10-12.json",
+      "BSC_MEME_23_EOA_REMAINING_WALLETS_TRIAGE_B01_2026-10-12.json",
+      "BSC_MEME_498528_MARSCOIN_FIRST_TEN_BLOCK_EARLY_BUYS_AND_TAX_QA_2026-10-12.json",
+      "BSC_MEME_11A732_BOB_A83B_GIGGLE_FIRST_TWO_BLOCK_CASHFLOW_2026-10-12.json",
+      "BSC_MEME_ADDRESS_MODEL_4_NEW_EARLY_TRADER_FOUR_WALLET_SIGNER_COMPARATOR_2026-10-12.json"
+    ],
+    "complete_wallets_remaining": 13,
+    "production": "OBSERVE_ONLY / NO_GO"
   }
 }
