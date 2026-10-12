@@ -156,6 +156,7 @@ def test_mission_control_email_mobile_readable_amounts_keep_full_ca(tmp_path):
     body["mint"]=mint
     body["inputs"]["latest_buy_original_quote_asset"]="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
     body["inputs"]["latest_buy_original_quote_quantity"]="40300.819981"
+    body["inputs"]["latest_buy_amount_predicate"]="USDC_DIRECT_NUMERIC"
     body["metrics"]["frank_latest_buy_price_usdc"]="0.06281989977852861423955923621"
     body["metrics"]["price_impact_pct"]="0.123456789"
     rendered=render({"body":body})
@@ -185,6 +186,7 @@ def test_non_actionable_multiple_with_latest_sell_does_not_present_historical_pa
     body["inputs"]["latest_side"]="SELL"
     body["inputs"]["latest_buy_original_quote_asset"]="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
     body["inputs"]["latest_buy_original_quote_quantity"]="15000"
+    body["inputs"]["latest_buy_amount_predicate"]="USDC_DIRECT_NUMERIC"
     content=render({"body":body})
     assert "[Meme提醒] 不跟 | 多次强加仓（历史模型记录）" in content["subject"]
     assert "结论：不跟" in content["body"]
@@ -203,8 +205,94 @@ def test_unknown_recent_buy_payment_is_not_backfilled_from_pattern(tmp_path):
     body["inputs"]["latest_buy_original_quote_quantity"]=None
     body["inputs"]["latest_buy_quote_quantity"]=None
     text=render({"body":body})["body"]
-    assert "Frank 最近一次买入支付（历史）：暂无" in text
+    assert "Frank 最近一次买入支付（历史）：未确认（原始支付数据不足）" in text
     assert "15,000" not in text
+
+
+@pytest.mark.parametrize("predicate,reason,quantity,expected", [
+    ("UNDETERMINED","COMPOSITE_QUOTE_LEGS","10000","复合报价可能含其他资金腿"),
+    ("UNDETERMINED","ROUTED_RESIDUAL_ASSETS","2500","多资产路线的最终目标成本不可核实"),
+    (None,None,"7000","完整支付成本缺少验证"),
+])
+def test_composite_routed_and_legacy_amounts_never_claim_complete_payment(tmp_path,predicate,reason,quantity,expected):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"])
+    data=body["inputs"]
+    data["latest_buy_original_quote_asset"]="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    data["latest_buy_original_quote_quantity"]=quantity
+    data["latest_buy_amount_predicate"]=predicate
+    data["latest_buy_amount_predicate_reason"]=reason
+    rendered=render({"body":body})["body"]
+    line=next(l for l in rendered.splitlines() if l.startswith("Frank 最近一次买入支付（历史）："))
+    assert line.startswith("Frank 最近一次买入支付（历史）：未确认（已识别资金腿：")
+    assert expected in line and "不代表完整支付" in line
+    assert quantity.replace("000","") != "__impossible__"
+    db.close()
+
+
+def test_desktop_new_queue_freezes_summary_across_renderer_change(monkeypatch,tmp_path):
+    import mission_agent.mission_control.delivery as delivery
+    from types import SimpleNamespace
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    dispatched=[]
+    local=LocalDelivery(db,run=lambda args,**kw: (dispatched.append(args),SimpleNamespace(returncode=0))[1])
+    monkeypatch.setattr(delivery.shutil,"which",lambda _: "/usr/local/bin/terminal-notifier")
+    local.enqueue(e,forbidden=False)
+    frozen=db.db.execute("SELECT * FROM local_delivery_presentation WHERE decision_id=?",(e["decision_id"],)).fetchone()
+    assert frozen and "可跟" in frozen["title"]
+    monkeypatch.setattr(delivery,"render",lambda _: pytest.fail("desktop notification rerendered"))
+    local.drain()
+    assert len(dispatched)==1
+    assert dispatched[0][dispatched[0].index("-title")+1]==frozen["title"]
+    assert dispatched[0][dispatched[0].index("-message")+1]==frozen["summary"]
+    assert db.db.execute("SELECT status FROM local_delivery").fetchone()[0]=="COMMAND_ACCEPTED"
+    db.close()
+
+
+def test_desktop_legacy_pending_recovers_only_verified_frozen_gmail_body(monkeypatch,tmp_path):
+    import mission_agent.mission_control.delivery as delivery
+    from mission_agent.hashing import digest
+    from types import SimpleNamespace
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    local=LocalDelivery(db)
+    local.enqueue(e,forbidden=False)
+    GmailDelivery(db).enqueue(e,mode="LIVE",forbidden=False)
+    old_title="[Meme提醒] 可跟 | 多次强加仓 | Mint"
+    old_body="结论：可跟  |  多次强加仓\\n原因：Frank 当前处于多次强加仓模式\\n旧文案其他内容"
+    old_hash=digest({"subject":old_title,"body":old_body})
+    db.db.execute("DELETE FROM local_delivery_presentation WHERE decision_id=?",(e["decision_id"],))
+    db.db.execute("UPDATE local_delivery SET content_hash=? WHERE decision_id=?",(old_hash,e["decision_id"]))
+    db.db.execute("UPDATE gmail_delivery SET subject=?,body=?,content_hash=? WHERE decision_id=?",
+                  (old_title,old_body,old_hash,e["decision_id"]))
+    seen=[]
+    local.run=lambda args,**kw:(seen.append(args),SimpleNamespace(returncode=0))[1]
+    monkeypatch.setattr(delivery.shutil,"which",lambda _: "/usr/local/bin/terminal-notifier")
+    local.drain()
+    assert len(seen)==1
+    assert seen[0][seen[0].index("-title")+1]==old_title
+    assert "多次强加仓模式" in seen[0][seen[0].index("-message")+1]
+    assert "（历史模型记录）" not in seen[0][seen[0].index("-message")+1]
+    row=db.db.execute("SELECT title,content_hash FROM local_delivery_presentation").fetchone()
+    assert row["title"]==old_title and row["content_hash"]==old_hash
+    db.close()
+
+
+def test_desktop_legacy_pending_unverifiable_is_not_sent(monkeypatch,tmp_path):
+    import mission_agent.mission_control.delivery as delivery
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    local=LocalDelivery(db,run=lambda *a,**kw: pytest.fail("unverifiable notification sent"))
+    local.enqueue(e,forbidden=False)
+    db.db.execute("DELETE FROM local_delivery_presentation WHERE decision_id=?",(e["decision_id"],))
+    db.db.execute("UPDATE local_delivery SET content_hash='old-frozen-content' WHERE decision_id=?",(e["decision_id"],))
+    local.drain()
+    row=db.db.execute("SELECT status,last_error FROM local_delivery").fetchone()
+    assert row["status"]=="MANUAL_REVIEW" and "UNVERIFIABLE" in row["last_error"]
+    assert db.db.execute("SELECT status FROM decision_outbox WHERE channel='local'").fetchone()[0]=="MANUAL_REVIEW"
+    db.close()
 
 @pytest.mark.parametrize("delivery_status", ["PENDING", "CREDENTIAL_BLOCKED", "RETRYABLE_ERROR"])
 def test_old_decision_is_never_sent_when_gmail_credentials_recover(tmp_path, delivery_status):
