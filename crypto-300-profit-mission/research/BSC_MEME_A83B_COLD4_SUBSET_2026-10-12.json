@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-12",
+  "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+  "source": {
+    "file": "BSC_MEME_A83B_COLD6_SUBSET_2026-10-12.json",
+    "sha": "c13bd01dbbaddf19fe12ce5c548982d9d34f4fc5"
+  },
+  "queries": [
+    {
+      "side": "in",
+      "events": [
+        {
+          "tx": "0x88bbd1daefd55504a5d0e7bec4c2372f102f77c1d070ec8a3d537d2094ea7834",
+          "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+          "block": "0x7323f73",
+          "raw": "0x4eb5119f39895d228",
+          "from": "0xb26a86df4ef693cebd6e05f8199dc81df91c4e98",
+          "to": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "id": "0x88bbd1daefd55504a5d0e7bec4c2372f102f77c1d070ec8a3d537d2094ea7834:log:140"
+        },
+        {
+          "tx": "0x7b13cb2e8463f8b6bd4f829470a823c9a213076d6537a1c4417e702301fc218b",
+          "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+          "block": "0x73390a8",
+          "raw": "0x81a0a167313c17d0a",
+          "from": "0x5400d579fb0ac43f513b61c42979829834f6b84b",
+          "to": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "id": "0x7b13cb2e8463f8b6bd4f829470a823c9a213076d6537a1c4417e702301fc218b:log:864"
+        }
+      ],
+      "pages": 1,
+      "complete": true,
+      "key": null,
+      "error": null
+    },
+    {
+      "side": "out",
+      "events": [],
+      "pages": 1,
+      "complete": true,
+      "key": null,
+      "error": null
+    }
+  ],
+  "counts": [
+    {
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "in": 1,
+      "out": 0
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "in": 1,
+      "out": 0
+    },
+    {
+      "token": "BUBB",
+      "ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "in": 0,
+      "out": 0
+    }
+  ],
+  "complete": true,
+  "production": "NO_GO"
+}
