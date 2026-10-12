@@ -57,6 +57,9 @@ def calculate(venue,symbol,watch_utc,bar_sequence,original_v4_watch_event_id="")
     for row in bar_sequence:
         if len(row)<7:raise ValueError("P1_BAR_MISSING_FIELDS")
         t=int(row[0])
+        # The result must be unchanged by any candles from/after decision UTC.
+        # Ignore future bars before reading/validating their price or volume.
+        if t>=watch_ms+AFTER_POLL_6M_MS:continue
         if t<=0 or t%BAR_MS or t in bars:raise ValueError("P1_DUP_OR_BAD_1M_TIME")
         o,h,l,c=map(lambda x:amount(x,True),row[1:5])
         q=amount(row[5])
@@ -108,6 +111,8 @@ def selftest():
     assert calculate("futures","ABCUSDT","2025-04-19T09:00:00Z",seq[:-1],"original_v4_event")["status"]=="UNSCORABLE_SOURCE"
     # Modifying minute at +6m is FUTURE relative to decision, thus may not enter eligibility.
     modified=seq+[(at+6*BAR_MS,Decimal("1"),Decimal("1000"),Decimal("1"),Decimal("1000"),Decimal("999999"),9)]
+    assert calculate("futures","ABCUSDT","2025-04-19T09:00:00Z",modified,"original_v4_event")["status"]=="P1_RESEARCH_ELIGIBLE"
+    modified[-1]=(at+6*BAR_MS,Decimal("-1"),Decimal("-1"),Decimal("-1"),Decimal("-1"),Decimal("-1"),-1)
     assert calculate("futures","ABCUSDT","2025-04-19T09:00:00Z",modified,"original_v4_event")["status"]=="P1_RESEARCH_ELIGIBLE"
     # A fall at the second confirmation invalidates P1.
     bad=list(seq)
