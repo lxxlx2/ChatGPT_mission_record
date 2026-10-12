@@ -203,7 +203,12 @@ def safe_git_commit_and_push_for_review():
     """Push one actual other-AI review result to original PR before installation."""
     review="crypto-300-profit-mission/monster/evidence/monster_stage99_actual_external_claude_ai_review.json"
     staged=git("diff","--cached","--name-only",capture=True)
-    if staged.strip()!=review:
+    names=staged.splitlines()
+    prefix=review.removesuffix(".json")+"_archive_"
+    if (review not in names or len(names)>2
+        or any(name!=review and not (
+            name.startswith(prefix) and name.endswith(".json")
+            ) for name in names)):
         raise RuntimeError("STAGE99_CLAUDE_REVIEW_IS_ONLY_ALLOWED_STAGED_FILE")
     git("-c","user.name=monster-independent-review",
         "-c","user.email=41898282+github-actions[bot]@users.noreply.github.com",
