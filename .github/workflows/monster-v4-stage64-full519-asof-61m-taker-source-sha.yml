@@ -1,0 +1,60 @@
+name: Monster Stage64 Full519 Original First D0 As-of Taker Quote 61m SHA
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64_all519_first_d0_asof61m_official_taker.py'
+      - '.github/workflows/monster-v4-stage64-full519-asof-61m-taker-source-sha.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage64-full519-real-asof-research
+  cancel-in-progress: false
+jobs:
+  all_519_original_first_D0_official_publisher_source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Original full-market source-locked causal as-of no future-minute tests
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64_all519_first_d0_asof61m_official_taker.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64_all519_first_d0_asof61m_official_taker.py --selftest
+      - name: Fetch historical true Binance official SHA 61m before all519 first D0 and compare original 46 immediate P1
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64_all519_first_d0_asof61m_official_taker.py \
+            --out /tmp/monster_stage64 \
+            --workers 6
+      - name: Preserve source receipts and all 519 as-of features for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage64-all519-official-asof-futures-trades-taker-SHA
+          path: /tmp/monster_stage64/*
+          retention-days: 30
+      - name: Commit source-verified as-of data to existing Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage64/monster_stage64_* "$dest/"
+          git add "$dest/monster_stage64_all519_D0_asof61m_official_1m_taker_trades_SHA.jsonl" "$dest/monster_stage64_all519_asof61m_quote_taker_tradecount_summary.json"
+          if git diff --cached --quiet; then
+            echo STAGE64_EVIDENCE_ALREADY_PERSISTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage64 official SHA 519 original D0 asof61 quote/trade/taker features'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE64_SOURCE_SHA_GIT_PERSISTENCE_FAILED
+          exit 1
