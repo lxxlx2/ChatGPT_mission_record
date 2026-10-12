@@ -1,0 +1,60 @@
+name: Monster Stage57 Historic Spot Exact-Symbol Eligibility All166 SHA
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage57_asof_spot_trade_eligibility_official_sha.py'
+      - '.github/workflows/monster-v4-stage57-full166-spot-asof-publisher-sha.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-v4-stage57-spot-source
+  cancel-in-progress: false
+jobs:
+  official_historic_spot_exact_symbol_all166:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify sources and time-locked spot 15m classifier
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage57_asof_spot_trade_eligibility_official_sha.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage57_asof_spot_trade_eligibility_official_sha.py --selftest
+      - name: Fetch official historic Spot 1m publisher SHA for all 166 futures P1 events; preserve unknown Spot histories
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage57_asof_spot_trade_eligibility_official_sha.py \
+            --out /tmp/monster_stage57_spot_asof \
+            --workers 6
+      - name: Preserve all 166 source receipts for independent audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage57-official-spot-exact-symbol-asof-166-sourceSHA
+          path: /tmp/monster_stage57_spot_asof/*
+          retention-days: 30
+      - name: Persist 166 real Spot evidence and source status to original Draft PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage57_spot_asof/monster_stage57_* "$dest/"
+          git add "$dest/monster_stage57_all166_exact_symbol_spot_asof_source_SHA.jsonl" "$dest/monster_stage57_all166_spot_trade_activity_source_classification_summary.json"
+          if git diff --cached --quiet; then
+            echo STAGE57_SPOT_SOURCE_ALREADY_PERSISTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage57 verified spot archives and all166 unknown statuses'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE57_FULL166_SPOT_SHA_PERSISTENCE_FAILED
+          exit 1
