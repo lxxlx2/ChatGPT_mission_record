@@ -1,0 +1,93 @@
+name: Monster Stage34 Original 108 Full 18-Date Discovery Census
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage34_full18date_discovery_census.py'
+      - '.github/workflows/monster-v4-stage34-full18date-discovery-census.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  stage34_whole_universe_discovery_not_trading:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      REPO: lxxlx2/ChatGPT_mission_record
+      LOCAL: crypto-300-profit-mission/local-agent/scripts/monster_v4_stage34_full18date_discovery_census.py
+      SOURCE: crypto-300-profit-mission/monster/evidence
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate minute crossing order and missing-source labels
+        run: |
+          python -B -m py_compile "$LOCAL"
+          python -B "$LOCAL" --selftest
+      - name: Require exact source identities from three frozen original36 proof files
+        run: |
+          python - <<'PY' >/tmp/monster34_108.tsv
+          import json
+          from pathlib import Path
+          files={
+            26:Path("crypto-300-profit-mission/monster/evidence/monster_stage26_verified_sharded_168h_artifact_proof_20261011.json"),
+            30:Path("crypto-300-profit-mission/monster/evidence/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json"),
+            32:Path("crypto-300-profit-mission/monster/evidence/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json"),
+          }
+          seen=set()
+          for stage,p in sorted(files.items()):
+            doc=json.loads(p.read_text())
+            rows=doc["artifacts"]
+            if len(rows)!=36:
+              raise SystemExit("STAGE34_INCOMPLETE_36_SOURCE")
+            for r in sorted(rows,key=lambda x:(x["date"],x["shard"])):
+              k=(stage,r["date"],r["shard"])
+              if k in seen:
+                raise SystemExit("STAGE34_DUPLICATE_SOURCE")
+              seen.add(k)
+              print(stage,r["date"],r["shard"],r["artifact_id"])
+          if len(seen)!=108:
+            raise SystemExit("STAGE34_MISSING_SOURCE")
+          PY
+      - name: Download exact 108 original publisher-verified history replay artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster34_originals
+          while read -r stage day shard artifact; do
+            gh api -H 'Accept: application/vnd.github+json' "repos/$REPO/actions/artifacts/$artifact/zip" > "/tmp/monster34_originals/$artifact.zip"
+          done </tmp/monster34_108.tsv
+      - name: Recompute 13644 source statuses, 88 true 2x events, lead times and ordinary-token controls
+        run: |
+          python -B "$LOCAL" \
+            --stage26-proof "$SOURCE/monster_stage26_verified_sharded_168h_artifact_proof_20261011.json" \
+            --stage30-proof "$SOURCE/monster_stage30_original36_newdates_artifact_SHA_proof_20261011.json" \
+            --stage32-proof "$SOURCE/monster_stage32_36_actual_fresh_dual_poll_artifact_proof_20261012.json" \
+            --artifacts-dir /tmp/monster34_originals \
+            --out /tmp/monster34_outputs
+      - name: Retain source-locked research artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage34-13644-coin-dates-108-original-SHA-discovery-census
+          path: /tmp/monster34_outputs/*
+          retention-days: 30
+      - name: Persist verified evidence CSVs and JSON to original Monster PR research branch
+        run: |
+          test "$GITHUB_REF_NAME" = "research/monster-v4-local-discovery-20261010"
+          mkdir -p "$SOURCE"
+          cp /tmp/monster34_outputs/monster_stage34_*.csv "$SOURCE/"
+          cp /tmp/monster34_outputs/monster_stage34_*.json "$SOURCE/"
+          git add "$SOURCE/monster_stage34_full18date_13644_coin_date_controls.csv" "$SOURCE/monster_stage34_88_gt2x_first_cross_watch_registry.csv" "$SOURCE/monster_stage34_18date_discovery_census_verified.json"
+          if git diff --cached --quiet; then
+            echo 'STAGE34_ALREADY_COMMITTED_IDENTICAL'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage34 complete 108-SHA 18-date discovery and nonwinner census'
+          git push origin "HEAD:$GITHUB_REF_NAME"
