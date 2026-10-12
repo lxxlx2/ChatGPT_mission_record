@@ -1,0 +1,90 @@
+{
+  "schema": "BSC_MEME_2ADF_BOB_TWO_ORIGINAL_TX_SETTLEMENT_WALLET_BLOCK_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "mode": "OBSERVE_ONLY_NO_GO",
+  "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+  "token": "BOB",
+  "token_ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+  "venue": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+  "manager": "0x1de460f363af910f51726def188f9004276bf4bc",
+  "WBNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "primary_chain_methods": [
+    "ethGetTransactionByHash",
+    "ethGetTransactionReceipt",
+    "historical ethGetBalance at block-1 and block",
+    "getAssetTransfers external exact block",
+    "getAssetTransfers ERC20 exact token CA and balanceOf"
+  ],
+  "buy": {
+    "hash": "0x4757e958e668e478fc98164925705dd60e63d58f58c695409123ca3d69066dd3",
+    "block": 47518912,
+    "msgValueWei": "500000000000000000",
+    "gasUsedHex": "0x2e269",
+    "effectiveGasPriceHex": "0x2540be400",
+    "nativeBlockDeltaWei": "-501890330000000000",
+    "WBNBToPoolWei": "495000000000000000",
+    "managerEventRaw": "0x11c37937e080000",
+    "original_signer_wallet": true,
+    "receipt_success": true,
+    "gasPaidWei": "1890330000000000",
+    "balanceBeforeWei": "7702595998458554192",
+    "balanceAfterWei": "7200705668458554192"
+  },
+  "sell": {
+    "hash": "0x867402eacf59553cd7394a666af8376cdeb73db57c7f765babc2e331b9f99aa3",
+    "block": 47519001,
+    "msgValueWei": "0",
+    "gasUsedHex": "0x2b8af",
+    "effectiveGasPriceHex": "0x2540be400",
+    "nativeBlockDeltaWei": "511405940472872943",
+    "WBNBFromPoolWei": "518373182295831255",
+    "managerEventRaw": "0x126a939deb16e8",
+    "original_signer_wallet": true,
+    "receipt_success": true,
+    "gasPaidWei": "1783510000000000",
+    "balanceBeforeWei": "7200658480458554192",
+    "balanceAfterWei": "7712064420931427135"
+  },
+  "exact_int_ledger": {
+    "buyNativeInputWei": "500000000000000000",
+    "buyGasWei": "1890330000000000",
+    "buyTotalWalletBNBOutWei": "501890330000000000",
+    "buyWBNBToPoolWei": "495000000000000000",
+    "buyNativeValueNotSentToPoolWei": "5000000000000000",
+    "salePoolWBNBWei": "518373182295831255",
+    "saleManagerEventIntWei": "5183731822958312",
+    "saleNativeReceivedInferredWei": "513189450472872943",
+    "saleGasWei": "1783510000000000",
+    "twoBlockWalletBNBNetWei": "9515610472872943",
+    "twoBlockNetBNB": "0.009515610472872943",
+    "tokenRawIn": "69667834374233483998598529923",
+    "tokenRawOut": "69667834374233483998598529923",
+    "latestRawBalance": "0"
+  },
+  "proven_equalities": [
+    "buy native block delta == -1*(original msg.value + gasUsed*effectiveGasPrice)",
+    "sale native block delta + gasUsed*effectiveGasPrice == sale pool WBNB out - transaction manager event amount",
+    "full ERC20 raw token inflow equals full ERC20 raw token outflow; independent balanceOf = 0"
+  ],
+  "same_block_original_external_wallet_transactions": {
+    "buy_outgoing": [
+      "0x4757e958e668e478fc98164925705dd60e63d58f58c695409123ca3d69066dd3"
+    ],
+    "buy_incoming": [],
+    "sell_outgoing": [
+      "0x867402eacf59553cd7394a666af8376cdeb73db57c7f765babc2e331b9f99aa3"
+    ],
+    "sell_incoming": [],
+    "cursor_exhausted": true
+  },
+  "provenance_caveats": [
+    "The BOB owner made one original signed buy transaction and one original signed sell transaction, both successful with exact receipt gas fields.",
+    "Buy native input minus WBNB-to-pool equals 0.005 BNB; attribution of this difference to protocol fee specifically is inferred, no contract source verified.",
+    "Sale pool WBNB output minus native received = 0.005183731822958312 BNB and matches manager event amount; economic characterization of event is inferred.",
+    "BSC debug_traceTransaction returned free-tier unavailable error -32600; whole-block BNB balance differences might include unobserved unrelated internal/native receipts despite only one original external outgoing in each block.",
+    "The +0.009515610472872943 BNB is exact historical two-block wallet net delta; causal attribution to token trade is strongly supported but not fully traced. Do not generalize to other tokens, full wallet PnL or strategy return."
+  ],
+  "decision": "PROVISIONAL_RECONCILED_SCOPED_BNB_POSITIVE_FULL_INTERNAL_TRACE_UNAVAILABLE",
+  "production": "NO_GO"
+}
