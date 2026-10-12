@@ -26,12 +26,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           for i in $(seq 1 220); do
-            gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38218172004 > /tmp/monster44_run.json
-            status=$(python -c 'import json;print(json.load(open("/tmp/monster44_run.json"))["status"])')
+            gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38218172004 > /tmp/monster50_run.json
+            status=$(python -c 'import json;print(json.load(open("/tmp/monster50_run.json"))["status"])')
             if test "$status" = completed; then
               python - <<'PY'
           import json
-          j=json.load(open('/tmp/monster44_run.json'))
+          j=json.load(open('/tmp/monster50_run.json'))
           if j['conclusion']!='success':raise SystemExit('STAGE50_NOT_ALL36_SOURCE_SHA_SUCCESS')
           print('STAGE50_ALL36_SOURCE_SHA_SUCCESS')
           PY
@@ -44,11 +44,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38218172004/artifacts?per_page=100' >/tmp/monster44_artifacts.json
+          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38218172004/artifacts?per_page=100' >/tmp/monster50_artifacts.json
           python - <<'PY'
           import json,re
           from pathlib import Path
-          arr=json.load(open('/tmp/monster44_artifacts.json'))['artifacts']
+          arr=json.load(open('/tmp/monster50_artifacts.json'))['artifacts']
           if len(arr)!=36:raise SystemExit('STAGE50_NOT_ALL36_ORIGINAL_SOURCE_ARCHIVES')
           items=[];seen=set()
           for a in arr:
@@ -60,36 +60,36 @@ jobs:
             seen.add(identity)
             items.append({'date':identity[0],'shard':identity[1],
               'artifact_id':a['id'],'sha256':a['digest'].split(':')[1]})
-          Path('/tmp/monster44_manifest.json').write_text(json.dumps({'source_run_id':38218172004,'artifacts':items}))
-          Path('/tmp/monster44_ids').write_text('\n'.join(str(x['artifact_id']) for x in items)+'\n')
+          Path('/tmp/monster50_manifest.json').write_text(json.dumps({'source_run_id':38218172004,'artifacts':items}))
+          Path('/tmp/monster50_ids').write_text('\n'.join(str(x['artifact_id']) for x in items)+'\n')
           print('STAGE50_ORIGINAL_SHA36_FROZEN')
           PY
       - name: Download original36 publisher-verified raw source artifacts
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          mkdir -p /tmp/monster44_original36
+          mkdir -p /tmp/monster50_original36
           while read -r aid; do
-            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$aid/zip" > "/tmp/monster44_original36/$aid.zip"
-          done </tmp/monster44_ids
+            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$aid/zip" > "/tmp/monster50_original36/$aid.zip"
+          done </tmp/monster50_ids
       - name: Verify byte SHA and blind source-censored full900 GT in all six dates
         run: |
           python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage50_original36_sha_newdates_historical_GT_aggregate.py
           python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage50_original36_sha_newdates_historical_GT_aggregate.py \
-            --manifest /tmp/monster44_manifest.json \
-            --zip-dir /tmp/monster44_original36 \
-            --out /tmp/monster44_out
+            --manifest /tmp/monster50_manifest.json \
+            --zip-dir /tmp/monster50_original36 \
+            --out /tmp/monster50_out
       - name: Preserve strict independent original36 evidence artifact
         uses: actions/upload-artifact@v4
         with:
           name: monster-stage50-original36-sha-six-blind-900x6-futures-GT
-          path: /tmp/monster44_out/*
+          path: /tmp/monster50_out/*
           retention-days: 30
       - name: Commit full publisher-SHA actual blind GT without leakage to same research PR
         run: |
           test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
           dest=crypto-300-profit-mission/monster/evidence
-          cp /tmp/monster44_out/monster_stage50_* "$dest/"
+          cp /tmp/monster50_out/monster_stage50_* "$dest/"
           git add "$dest/monster_stage50_original36_sha_six_blind_900x6_hourly_GT_summary.json" "$dest/monster_stage50_all5400_blind_dates_source_status_and_GT.csv" "$dest/monster_stage50_actual_complete_GT2x_registry.csv" "$dest/monster_stage50_full5400_blind_source_publisher_hourly_SHA.jsonl"
           if git diff --cached --quiet; then
             echo STAGE50_ALREADY_IDENTICAL_COMMIT
@@ -98,4 +98,10 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'monster: persist Stage50 original36 SHA six frozen new-date official futures hourly truth'
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE50_SOURCE_SHA_PERSISTENCE_FAILED_NO_FORCE
+          exit 1
