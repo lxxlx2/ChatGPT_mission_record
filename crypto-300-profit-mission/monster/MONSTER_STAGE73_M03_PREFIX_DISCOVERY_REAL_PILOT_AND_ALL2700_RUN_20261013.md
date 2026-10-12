@@ -23,6 +23,12 @@ Stage71其他AI审查发现M03：旧源入口先强制加载完整未来192h及�
 
 注意：BROCCOLIF3B的真实1m行情完整不意味着原两种出版社价格结算分歧解决，不能据此给2×收益标签；IRYS首个预热日缺档也不能用杜撰虚拟K线重建WATCH。这两项区分真正的`ASOF_PREFIX_OBSERVABILITY`与`FUTURE_LABEL_SCOREABILITY`。
 
+## 对“当时可交易”的独立来源边界（官方定义）
+
+Binance [官方公开行情归档说明](https://github.com/binance/binance-public-data)明确：日度文件通常在**次日**提供、月度文件在月初首个周一提供，ZIP还可能被后续更正。因此通过今日获取的ZIP/.CHECKSUM能证明**历史OHLCV字节的发布来源及完整性**，不能证明历史信号发生当时这份ZIP文件已发布，也不能以此证明当时盘口可下单。这里的“asof”严格指**策略只读取信号前已闭合的数据字段**，不是声称回测当天真有归档包。
+
+Binance官方USD-M [当前Exchange Information接口](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Exchange-Information)描述的是**当前交易规则/符号信息**，不能直接作为2025年特定UTC分钟的历史上市与可交易市场快照。本轮2700历史归档名字不据此改变，也不猜测全市场召回分母；这部分仍为M03独立未完成证据项。即使能重放历史USD-M期货成交事件，也不能替代当时Spot/Alpha/DEX上市、CA归属、盘口价差/深度和净收益验证。
+
 ## 正式全市场回放正在执行
 
 [Stage73三个UTC06日期×六个固定150档案 symbol 分片的真实官方ZIP核对](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38291522405) 已由仓库启动。其技术验收为：必须保存原2700全部身份，即使源不可用；Stage66原1497个全量可评分币的所有WATCH时间全表逐币精确一致；每个prefix源日SHA与旧有效官方SHA收据相同；额外新观察到的WATCH属于原1203被条件删选案例的**未评分历史前缀事件**，不能编入原2×预测成功分母，不能冒充已经有可买现货。
