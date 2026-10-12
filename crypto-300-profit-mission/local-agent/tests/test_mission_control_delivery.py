@@ -162,8 +162,8 @@ def test_email_title_prioritizes_decision_action_inventory_and_archives_signatur
     assert result["body"].splitlines()[0].startswith("结论：不跟  |  最近已识别动作：卖出")
     assert "原因：" in result["body"].splitlines()[1]
     assert "历史观察模式：多次强加仓（历史模型记录）" in result["body"]
-    assert "CA（单独一行，便于长按复制）\\nMint111111111111111\\n" in result["body"]
-    assert result["body"].endswith("技术审计信息（非实时跟单依据）\\n最近已识别交易哈希：\\nsigned-example-tx-123")
+    assert "CA（单独一行，便于长按复制）\nMint111111111111111\n" in result["body"]
+    assert result["body"].endswith("技术审计信息（非实时跟单依据）\n最近已识别交易哈希：\nsigned-example-tx-123")
     assert result["body"].index("Frank 最近一次买入支付（历史）") < result["body"].index("技术审计信息")
     db.close()
 
