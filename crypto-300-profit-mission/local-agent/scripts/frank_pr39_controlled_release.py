@@ -172,6 +172,8 @@ def stage_immutable_release(mac, root, expected, source):
     final = mac.support / 'pr39-immutable-releases' / expected[:12]
     if final.exists():
         require(release_manifest(final) == source, 'EXISTING_IMMUTABLE_RELEASE_MISMATCH')
+        require(all(not (path.stat().st_mode & 0o222)
+                    for path in [final, *final.rglob('*')]), 'EXISTING_RELEASE_NOT_READ_ONLY')
         return final
     staging = final.with_name(final.name + '.staging-%d' % os.getpid())
     require(not staging.exists(), 'RELEASE_STAGING_EXISTS')
@@ -194,10 +196,14 @@ def stage_immutable_release(mac, root, expected, source):
         require(staged == source, 'STAGED_RELEASE_SOURCE_MISMATCH')
         (local / RELEASE_MARKER).write_text(json.dumps({'expected': expected, 'files': staged}, sort_keys=True), encoding='utf-8')
         require(release_manifest(local) == source, 'STAGED_RELEASE_MARKER_MISMATCH')
-        for path in sorted(local.rglob('*'), reverse=True):
-            os.chmod(path, 0o555 if path.is_dir() else 0o444)
-        os.chmod(local, 0o555)
+        # Publish the fully verified bytes *before* removing directory write
+        # permission: rename needs permission on the nested source's parent.
         local.rename(final)
+        for path in sorted(final.rglob('*'), reverse=True):
+            os.chmod(path, 0o555 if path.is_dir() else 0o444)
+        os.chmod(final, 0o555)
+        require(all(not (path.stat().st_mode & 0o222)
+                    for path in [final, *final.rglob('*')]), 'STAGED_RELEASE_NOT_READ_ONLY')
     except BaseException:
         shutil.rmtree(staging, ignore_errors=True)
         raise
