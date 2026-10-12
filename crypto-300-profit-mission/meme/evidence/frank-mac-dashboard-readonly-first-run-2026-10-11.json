@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "observation_date_bangkok": "2026-10-11",
+  "provenance": "User-pasted stdout from user Mac running one-shot read-only acceptance tool; directly observed stdout, not independently read from Mac by connected tool",
+  "script_sha": "646a257bae10fe102feed526c905c39134e0d069",
+  "action_performed": "ONE_SHOT_READ_ONLY",
+  "observed": {
+    "check": "FRANK_DASHBOARD_ONE_SHOT_READ_ONLY",
+    "source_version": "LEGACY",
+    "source_matches_target": false,
+    "database_access": "READ_ONLY_OK",
+    "dashboard_http": "OK",
+    "http_matches_sqlite": false,
+    "operational_acceptance": "BLOCKED_VERSION_OR_COUNTS",
+    "readonly_exit_code": 3,
+    "database_counts": {
+      "manual_review_actionable_count": 0,
+      "manual_review_actionable_gmail_count": 0,
+      "manual_review_actionable_local_count": 0,
+      "manual_review_actionable_other_count": 0,
+      "manual_review_expired_unsent_count": 15,
+      "manual_review_expired_unsent_gmail_count": 15,
+      "manual_review_expired_unsent_local_count": 0,
+      "manual_review_pending_count": 0,
+      "manual_review_pending_gmail_count": 0,
+      "manual_review_pending_local_count": 0,
+      "manual_review_pending_other_count": 0,
+      "manual_review_total_count": 15,
+      "manual_review_visible_total_count": 15
+    },
+    "gmail_sent": false,
+    "gmail_sent_readback_verified": false,
+    "mac_browser_ui_rendered": false,
+    "mac_rollout_performed": false,
+    "production_sqlite_modified": false
+  },
+  "independent_code_review": {
+    "legacy_backend_ref": "dbd2dae5",
+    "legacy_backend_blob_sha": "f5e00781ea4af45b4d6b15a09b8cb000f5b744f4",
+    "legacy_has_manual_review_pending_count": false,
+    "legacy_has_manual_review_visible_total_count": false,
+    "legacy_has_manual_review_breakdown_available": false,
+    "target_product_commit": "1014c14b4df00757593f7ca4de8cedae0f09afaa",
+    "target_backend_blob_sha": "9dcf26fe03dadd43f75c401d38ba0e412101be41",
+    "target_requires_independent_database_http_count_parity": true,
+    "likely_reason_for_http_mismatch": "Legacy backend lacks required pending/visible-total/breakdown-available fields; no evidence of actual numeric drift from these observations",
+    "legacy_verification_mechanism": "Current local Git blob matching in user-run probe; GitHub independent fetch_file against dbd2dae5"
+  },
+  "limitations": [
+    "The 15 records satisfy local database classification for unsent-before-attempt, not a Gmail Sent-folder verification.",
+    "Pending=0 is only for current SQLite status membership SENDING or SENT_UNVERIFIED at check instant.",
+    "http_matches_sqlite false is expected for legacy source and does not alone prove count inaccuracy.",
+    "No authorization to deploy, restart Dashboard, merge any PR, change Gmail state machine or send mail.",
+    "No users' account IDs, email addresses, local paths, secrets or raw row content stored."
+  ],
+  "release": {
+    "mac_production_dashboard_updated": false,
+    "read_only_evidence_pass": true,
+    "new_dashboard_http_contract_pass": false,
+    "native_browser_render_verified": false,
+    "independent_other_ai_latest_review": false,
+    "deploy_allowed": false
+  }
+}

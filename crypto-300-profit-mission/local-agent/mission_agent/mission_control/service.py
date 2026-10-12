@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 import time
+from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
 from pathlib import Path
 
@@ -12,6 +14,9 @@ from .db import ControlDB, utc
 from .debounce import TransitionDebounce
 from .delivery import GmailDelivery, LocalDelivery
 from .frank import FrankReader
+from .wallet_watch import from_sqlite as read_frank_watchlist
+from .evidence_sync import EvidenceSpool, GitEvidencePublisher
+from .transfer_archive import publish_evidence_batch
 from .jupiter import JupiterQuoteClient
 from .observations import ObservationStore
 from .outcomes import OutcomeTracker
@@ -74,6 +79,7 @@ class MissionMemeService:
             max_decision_age_seconds=int(self.policy["decision"].get("initial_notification_max_age_seconds", 600)),
         )
         self.health_path = self.control_root / "mission-control-health.json"
+        self.evidence_export_last_error_type = None
 
     def close(self):
         self.sol_mirror.close()
@@ -96,6 +102,7 @@ class MissionMemeService:
             "policy_id": self.policy.get("policy_id"),
             "policy_hash": self.policy_hash,
             "delivery_allowed": self.delivery_allowed,
+            "evidence_export_last_error_type": self.evidence_export_last_error_type,
             **extra,
         }
         tmp = self.health_path.with_suffix(".tmp")
@@ -343,9 +350,90 @@ class MissionMemeService:
         return result
 
     def loop(self, interval_seconds: int = 5):
-        while True:
-            try:
-                self.cycle()
-            except Exception as exc:
-                self._write_health("ERROR", error=type(exc).__name__, message="MISSION_CYCLE_FAILED")
-            time.sleep(max(1,interval_seconds))
+        # An existing Mission Control loop may observe the completed Frank poll
+        # without touching the writer or scheduling another monitor.
+        export_enabled = os.environ.get("MISSION_EVIDENCE_EXPORT_ENABLED") == "1"
+        spool = EvidenceSpool(self.control_root) if export_enabled else None
+        publisher = GitEvidencePublisher(spool) if export_enabled else None
+        exporter = ThreadPoolExecutor(max_workers=1, thread_name_prefix="frank-evidence") if export_enabled else None
+        upload_future = None
+        last_upload_failure_at = 0.0
+        inflight_full_history = False
+        last_poll_count = None
+        transfer_capture_needed = True  # First opt-in run archives the existing local source.
+        last_transfer_snapshot_dispatch = 0.0  # Full-index archival is at most hourly.
+        try:
+            while True:
+                try:
+                    self.cycle()
+                except Exception as exc:
+                    self._write_health("ERROR", error=type(exc).__name__, message="MISSION_CYCLE_FAILED")
+                if export_enabled:
+                    try:
+                        # Use the writer's exact health record for deterministic
+                        # identical evidence in both automatic and manual export.
+                        health = json.loads(self.frank.health_path.read_text(encoding="utf-8"))
+                        count = health.get("poll_count")
+                        if type(count) is int and count >= 0 and count != last_poll_count and health.get("last_poll_at"):
+                            # Every completed poll receives one small audit row.
+                            # Repeat trade/position samples only on new evidence
+                            # or a periodic checkpoint, keeping Git buckets compact.
+                            material = int(health.get("new_signatures") or 0) > 0 or count % 30 == 0
+                            try:
+                                watch = read_frank_watchlist(self.frank.database) if material else None
+                            except (OSError, ValueError, sqlite3.Error):
+                                watch = {"summary": {"status": "SOURCE_UNAVAILABLE"}, "rows": []}
+                            spool.frank_scan(
+                                poll_count=count, health=health,
+                                coverage=self.frank.activity_coverage() if material else None,
+                                recent_trades=self.frank.recent_trades(40) if material else None,
+                                signal_candidates=self.frank.candidates() if material else None,
+                                observed_watchlist=watch,
+                            )
+                            last_poll_count = count
+                            if int(health.get("new_signatures") or 0) > 0:
+                                transfer_capture_needed = True
+                        if upload_future is not None and upload_future.done():
+                            completed = upload_future
+                            upload_future = None
+                            try:
+                                completed.result()
+                            except Exception:
+                                last_upload_failure_at = time.monotonic()
+                                if inflight_full_history:
+                                    transfer_capture_needed = True
+                                    last_transfer_snapshot_dispatch = 0.0
+                                inflight_full_history = False
+                                raise
+                            last_upload_failure_at = 0.0
+                            inflight_full_history = False
+                        if (upload_future is None and
+                            (not last_upload_failure_at or
+                             time.monotonic() - last_upload_failure_at >= 60)):
+                            # Network work runs in a separate worker. A slow GitHub
+                            # connection never occupies the decision/Gmail loop.
+                            # Regular Frank poll buckets still capture each
+                            # observed writer scan. Only the potentially large
+                            # cumulative transfer-history snapshot is hourly.
+                            due = (transfer_capture_needed and
+                                   (not last_transfer_snapshot_dispatch or
+                                    time.monotonic() - last_transfer_snapshot_dispatch >= 3600))
+                            upload_future = exporter.submit(
+                                publish_evidence_batch, spool, publisher,
+                                self.frank.database, due,
+                            )
+                            inflight_full_history = due
+                            if due:
+                                transfer_capture_needed = False
+                                last_transfer_snapshot_dispatch = time.monotonic()
+                        self.evidence_export_last_error_type = None
+                    except Exception as exc:
+                        # This opt-in evidence path touches readonly SQLite,
+                        # files and a Future. No failure may kill the real
+                        # decision/Gmail loop. Publish the error TYPE only in
+                        # the next heartbeat, never secrets or raw paths.
+                        self.evidence_export_last_error_type = type(exc).__name__
+                time.sleep(max(1, interval_seconds))
+        finally:
+            if exporter is not None:
+                exporter.shutdown(wait=False, cancel_futures=True)

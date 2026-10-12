@@ -26,6 +26,46 @@
 
     <details class="panel ended-panel" id="coverage-details"><summary>数据来源与覆盖范围</summary><div class="coverage-strip" id="coverage">正在读取本地索引范围…</div></details>
 
+    <section class="panel frank-watch-panel" id="frank-watch-panel">
+      <div class="panel-title">
+        <div>
+          <h2>Frank 持续观察池 <span id="watch-total-count">0</span></h2>
+          <p>默认聚焦模型持有及仓位待核对象；历史买卖、被动转入和其他账户活动可分别筛选，不把空投当买入信号。</p>
+        </div>
+        <span id="watch-scope">等待索引</span>
+      </div>
+      <div class="frank-watch-controls">
+        <label for="watch-filter">类别</label>
+        <select id="watch-filter">
+          <option value="WATCH_NOW" selected>当前待观察（模型持有/仓位待核）</option>
+          <option value="PRIMARY">全部交易及模型历史</option>
+          <option value="ALL">全部本地账户活动</option>
+          <option value="PASSIVE_RECEIPT_ONLY">仅被动转入（不代表值得买入）</option>
+          <option value="OTHER_ACCOUNT_ACTIVITY">其他账户活动（未核实）</option>
+          <option value="SNAPSHOT_NONZERO">链上样本余额非零</option>
+          <option value="MODEL_MISMATCH">模型与链上有差异</option>
+          <option value="MODEL_OPEN">本地模型持有</option>
+          <option value="NEEDS_INVENTORY_REVIEW">持仓待核实</option>
+          <option value="WATCH_UNRESOLVED">继续观察</option>
+          <option value="HISTORICAL_EXIT">历史退出</option>
+          <option value="HISTORY_SELL_ONLY">只有卖出记录</option>
+        </select>
+        <label for="watch-search">搜索 CA</label>
+        <input id="watch-search" type="search" autocomplete="off" placeholder="输入代币 CA"/>
+      </div>
+      <div class="frank-watch-summary" id="watch-summary">正在读取观察代币…</div>
+      <div class="frank-watch-table-wrap">
+        <table class="frank-watch-table">
+          <thead><tr>
+            <th>代币 CA</th><th>观察分类</th><th>本地交易</th>
+            <th>最近已索引动作</th><th>余额及来源证据</th><th>研究入口</th>
+          </tr></thead>
+          <tbody id="watch-rows"></tbody>
+        </table>
+      </div>
+      <p class="frank-watch-footnote">数据来自 Frank 本地已索引的买卖、模型状态及钱包代币余额变化；这不等于完整链史。被动转入不等于 Frank 主动买入；未核实转出方、实时余额、美元价值与成本均不能自行推断。观察池不触发提醒或交易。</p>
+    </section>
+
     <section class="panel">
       <div class="panel-title">
         <div><h2>当前跟单机会</h2></div>

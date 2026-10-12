@@ -21,7 +21,11 @@ from urllib.parse import parse_qs, urlparse
 from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
 from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
+from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
+from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
+from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
+from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
 
 
@@ -184,6 +188,13 @@ class ClusterJobManager:
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
         self.max_retained_jobs = 64
+        # Explicit opt-in, isolated from the existing CA report worker.
+        self.evidence_enabled = os.environ.get("MISSION_EVIDENCE_EXPORT_ENABLED") == "1"
+        self.evidence_spool = EvidenceSpool(self.control_root) if self.evidence_enabled else None
+        self.evidence_executor = (
+            ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-evidence")
+            if self.evidence_enabled else None
+        )
 
     @staticmethod
     def validate_mint(mint: str) -> str:
@@ -565,6 +576,15 @@ class ClusterJobManager:
             _atomic_write_text(out / f"{stamp}.json", payload)
             _atomic_write_text(out / f"{stamp}.md", markdown(report))
             _atomic_write_text(out / "latest.json", payload)
+            if self.evidence_enabled:
+                try:
+                    self.evidence_spool.ca_done(mint=mint, job_id=job_id, report=report)
+                    self.evidence_executor.submit(
+                        GitEvidencePublisher(self.evidence_spool).sync
+                    )
+                except (OSError, ValueError, RuntimeError):
+                    # Finished CA report remains valid even if export fails.
+                    pass
             with self.lock:
                 job = self.jobs[job_id]
                 job["status"] = "DONE"
@@ -633,9 +653,58 @@ class DashboardState:
         if not self.control_health.is_file():
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_MISSING"}
         try:
-            return json.loads(self.control_health.read_text())
+            health = json.loads(self.control_health.read_text())
         except (OSError, ValueError):
             return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_UNREADABLE"}
+        if not isinstance(health, dict):
+            return {"status": "UNKNOWN", "reason": "MISSION_CONTROL_HEARTBEAT_INVALID"}
+        if not self.control_db.is_file():
+            health["manual_review_breakdown_available"] = False
+            health["manual_review_breakdown_error"] = "CONTROL_DB_UNAVAILABLE"
+            return health
+
+        # Read-only live breakdown for display. Keep all immutable delivery
+        # records and leave the Mission Loop's health file untouched.
+        db = None
+        try:
+            db = open_control_ro(self.control_db)
+            rows = [dict(row) for row in db.execute("""
+                SELECT o.channel, o.status AS outbox_status,
+                       o.last_error, o.attempts AS outbox_attempts,
+                       g.status AS gmail_status, g.attempt_count AS gmail_attempts,
+                       g.sent_at, g.gmail_message_id,
+                       l.status AS local_status, l.delivered_at AS local_delivered_at
+                FROM decision_outbox AS o
+                LEFT JOIN gmail_delivery AS g
+                  ON o.channel='gmail' AND g.decision_id=o.decision_id
+                LEFT JOIN local_delivery AS l
+                  ON o.channel='local' AND l.decision_id=o.decision_id
+                WHERE o.status IN ('MANUAL_REVIEW','SENDING','SENT_UNVERIFIED')
+            """).fetchall()]
+        except (OSError, sqlite3.DatabaseError) as exc:
+            # No invented 0 pending count; stale legacy totals may omit sends.
+            health["manual_review_breakdown_available"] = False
+            health["manual_review_breakdown_error"] = type(exc).__name__
+            return health
+        finally:
+            if db is not None:
+                db.close()
+        breakdown = summarize_manual_reviews(rows)
+        health.update(breakdown)
+        health["manual_review_breakdown_error"] = None
+        health["manual_review_gmail_count"] = (
+            breakdown["manual_review_expired_unsent_gmail_count"]
+            + breakdown["manual_review_actionable_gmail_count"]
+        )
+        health["manual_review_local_count"] = (
+            breakdown["manual_review_expired_unsent_local_count"]
+            + breakdown["manual_review_actionable_local_count"]
+        )
+        health["manual_review_total_count"] = (
+            breakdown["manual_review_expired_unsent_count"]
+            + breakdown["manual_review_actionable_count"]
+        )
+        return health
 
     def candidates(self):
         candidates = self.frank.candidates()
@@ -686,6 +755,50 @@ class DashboardState:
             candidates.append(item)
         candidates.sort(key=lambda x:int(x.get("latest_at") or 0),reverse=True)
         return candidates
+
+    def frank_observed_watchlist(self):
+        try:
+            observed = read_frank_watchlist(
+                self.frank.database, person_id=self.frank.person_id, as_of=int(time.time()))
+        except (OSError, ValueError, sqlite3.Error):
+            return {
+                "schema_version": 1, "status": "SOURCE_UNAVAILABLE",
+                "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
+                "chain_completeness_verified": False,
+                "summary": {}, "rows": [],
+            }
+        # Historical, dated on-chain ATA gap evidence is a separate overlay.
+        # It does not feed the frozen signal/writer or modify local BUY/SELL
+        # counts. A missing/invalid file leaves each mint as NOT_AUDITED.
+        gap_file = (Path(__file__).resolve().parents[3] / "meme" / "evidence" /
+                    "frank-v2-ata-index-scope-correction-2026-10-11.json")
+        override = self.control_root / "frank-ata-gap-evidence.json"
+        if override.is_file():
+            gap_file = override
+        try:
+            source = None
+            if gap_file.is_file():
+                if gap_file.stat().st_size > 100_000:
+                    raise ValueError("ATA_GAP_FILE_OVER_LIMIT")
+                source = json.loads(gap_file.read_text(encoding="utf-8"))
+            observed = annotate_known_ata_gaps(observed, source)
+        except (OSError, ValueError, TypeError):
+            observed = annotate_known_ata_gaps(observed, None)
+            observed["ata_gap_source_status"] = "INVALID_EVIDENCE_IGNORED"
+        # Optional dated, manually imported read-only provenance. No network
+        # call, balance scan, writer intervention, or automatic deployment.
+        snapshot = self.control_root / "frank-inventory-snapshot.json"
+        if not snapshot.is_file():
+            observed["snapshot_status"] = "SNAPSHOT_NOT_PRESENT"
+            return observed
+        try:
+            if snapshot.stat().st_size > 500_000:
+                raise InventoryEvidenceError("OVERSIZED_SNAPSHOT")
+            source = json.loads(snapshot.read_text(encoding="utf-8"))
+            return reconcile_watchlist(observed, source)
+        except (OSError, ValueError, InventoryEvidenceError, TypeError):
+            observed["snapshot_status"] = "SNAPSHOT_INVALID_READ_ONLY_IGNORED"
+            return observed
 
     def recent_trades(self):
         return self.frank.recent_trades(100)
@@ -744,6 +857,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.state.mission_control_health())
         if path == "/api/candidates":
             return self._json(self.state.candidates())
+        if path == "/api/frank-observed-watchlist":
+            return self._json(self.state.frank_observed_watchlist())
         if path == "/api/trades":
             return self._json(self.state.recent_trades())
         if path == "/api/coverage":

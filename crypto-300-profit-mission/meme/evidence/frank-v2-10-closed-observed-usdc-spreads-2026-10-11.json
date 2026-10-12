@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "audit_date_bangkok": "2026-10-11",
+  "history_sha256": "7b282349a9daf10fab8062137ab6d8a10e87d6831d783e59c51e6e77ab872232",
+  "selection_criteria": "A locally recognized buy and sell, locally recognized token buy/sell raw units exactly offset, older Alchemy finalized sample zero token, no SELL_POSITION_UNRESOLVED for this mint.",
+  "not_full_chain_coverage": true,
+  "case_count": 10,
+  "positive_cashflow_cases": 3,
+  "negative_cashflow_cases": 7,
+  "gross_buy_usdc": "162725.238694",
+  "gross_sell_usdc": "165582.433295",
+  "nominal_usdc_spread": "2857.194601",
+  "verified_realized_pnl_usd": null,
+  "largest_case_excluded_spread": "-17844.063583",
+  "disclaimer": "This is nominal observed local USDC spread only. Chain raw legs, all fees, previous positions, deposit transfers and source completeness not fully independently verified. Historical selection is not tradeable signal accuracy.",
+  "cases": [
+    {
+      "mint": "39ahtL8ynzE4amH26J29C93PA5172V3ft9UuUcqQS8fz",
+      "locally_recorded_buys": 1,
+      "locally_recorded_sells": 1,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430036,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "14196.933364",
+      "observed_sell_usdc": "34898.191548",
+      "nominal_usdc_cashflow_spread": "20701.258184",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "4S9eB3YhF6JR7XoU6Jr64Db4SJ6NSmn1RMUqRsHRxcewgzBhkFPyJrdh2p9TEzHtbZRUwjkokei8f6wni87MgZKY"
+      ],
+      "sell_signatures": [
+        "3t99QxqNhkavQSgNFCgoPyE6kmjxrDP4TQrAfNxL6fHLZMgESngGujNR1TckEDHmPqMyM82sBQh7aVNFPKFQw7AD"
+      ]
+    },
+    {
+      "mint": "CWKbSd7jwMXXexP3pbwLAWMzr4HXAXTvt4R9pk2Vyyyc",
+      "locally_recorded_buys": 1,
+      "locally_recorded_sells": 1,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430107,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "3300.000000",
+      "observed_sell_usdc": "3861.174174",
+      "nominal_usdc_cashflow_spread": "561.174174",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "23PV54NFD7R1NXJ7r3UZMM6Xo38z9u7KJ3D7Rn2my25pVhegZAbtJCTnEVmQ8JB7aVjeDhcMSMvmifWmgHRp5hiJ"
+      ],
+      "sell_signatures": [
+        "4v5BoQT55vjdfaFv3LHEmnwpH3AqTsR96vx5M5Wq6rBjeRaqnoQfnsJS7koVkuGfuSEM99mxxXawTKTT2RCdMnJP"
+      ]
+    },
+    {
+      "mint": "HzYCHqAN2uoHGRnL9v2ChCfFQX3bvJuJd5zu2Hd5MZQy",
+      "locally_recorded_buys": 1,
+      "locally_recorded_sells": 1,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430371,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "6715.734492",
+      "observed_sell_usdc": "7031.556770",
+      "nominal_usdc_cashflow_spread": "315.822278",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "4sP6iSpctgnnbKsLcGRn1YvaPB7TF9EGc1A6KL4G7gGwLKdP1Jm6LfEH3fs9UhQLMFNPwJ6tmS4FaEAaGT9XCC9S"
+      ],
+      "sell_signatures": [
+        "5wqKv5YuurRKUaJAK5fZtFrNg6GocVZuTTiAPWYrYDaswyUArwAZurpbZFU6WBjHp5z5Bt5bPCkLNKVQHfS6yigx"
+      ]
+    },
+    {
+      "mint": "METAewgxyPbgwsseH8T16a39CQ5VyVxZi9zXiDPY18m",
+      "locally_recorded_buys": 2,
+      "locally_recorded_sells": 2,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430167,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "80598.103472",
+      "observed_sell_usdc": "80352.727116",
+      "nominal_usdc_cashflow_spread": "-245.376356",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "5bxqBuBP57Dby3n3g1bqmyYPr1fGqygBcDaLJ2Cmv4Ui14SiUWH2emrq7y96JgWEAUhBTP64G2U1vKE2be33Adz5",
+        "3noKCBKrs5cegxeg4pAUHKLQ5RyUoi8k8cokSFVG3dCtgBbe9vD4fXtp9LZrWdkZRBY6cmY8jjNRKQyuFspsheGq"
+      ],
+      "sell_signatures": [
+        "S1kvsy8uhxURHxGhkr7QQ1vULUkLB7Y1KpHm9aBHUoBQW2yxeYjevJdVETXoD9y783jAnQyJSGQyDWQd4hSt2Ca",
+        "5c63HNAZu4VR5kU7qm7BweCeG3R1DciXHQtmaLcRkRp9gcmarfS1xYXs3g9vbcwDK49RoAL5e19Hez1ptSyUBQDS"
+      ]
+    },
+    {
+      "mint": "GKboyzRdB93iEpfr6Gjs8A2wXe7Tp4kVD5WwkNfepump",
+      "locally_recorded_buys": 1,
+      "locally_recorded_sells": 1,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430137,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "4500.000000",
+      "observed_sell_usdc": "3054.030258",
+      "nominal_usdc_cashflow_spread": "-1445.969742",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "4snDRASBRm79dSR1s2TB1WQYtYNF5VtsH4hgJUGYFw8Xi9248RR9Qu68t3guwv3rQ4eq1SLXzFsRMPVhbwJPzqJ2"
+      ],
+      "sell_signatures": [
+        "5jmkDkcQWeLWCcbPESVecsNmHP1CNW2vS4YBpq7RkCWLtPc4diwqLWJtwtUn4A4jnU46Qntqi1wxmAsVgJ9Kaujp"
+      ]
+    },
+    {
+      "mint": "55Vr2VpSwxsDkB6uGGHAvRv86K6zax2Zb4TT8ivwDEzW",
+      "locally_recorded_buys": 1,
+      "locally_recorded_sells": 1,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430039,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "10046.015546",
+      "observed_sell_usdc": "7921.477716",
+      "nominal_usdc_cashflow_spread": "-2124.537830",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "axKxAiytiWufABmH7mm4Hwt5b5J3wFjEw2qT1cutqPwwq2ChEefHVWJS4JYAfAGsMrLMoCqEYJthdoGxCFnSTMZ"
+      ],
+      "sell_signatures": [
+        "3h7iNTnJGWfbkdHUiXoZphThXc84C9ifKxsfstapSkX1ET1x5LdcdsL7KWSVjc4bZo26LsX2RNNhEdmQrgZZtfC2"
+      ]
+    },
+    {
+      "mint": "2AVjqmGbMqg7rSyHVv2deVdggsBgBtu1Bi69BUvE5WRv",
+      "locally_recorded_buys": 2,
+      "locally_recorded_sells": 2,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430037,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "20000.000000",
+      "observed_sell_usdc": "17160.218727",
+      "nominal_usdc_cashflow_spread": "-2839.781273",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "5josWQ4zaoj8U8KdXnZ5ciNzDyK24o6deF5KPX6455aVSH9AzrayJEdoQnz8zR7nFjccTeqJqX5iZPQBTAsDUAdg",
+        "5yMFJveFDdTbsCHHB1tiUURTpfjyDby756WT4rCZTRmMUt6vDU8Eb6HJubqhjYSdYYSD1unQZMbaWNzwoe2EgAcD"
+      ],
+      "sell_signatures": [
+        "4CayvnzaZKRDL49c36jBrYXVMWQHNeNvmfPFrjMSWwAvrpNZsFnKfevxcVeLZheqp5VEdKHb2eZALjGMBBP2Ncsk",
+        "2v1ZRSvTAeWJcNN4DjEa34s4qbkYupeRJEc9qdZk4tE82ftaf8hBJ5zkJnmZFxDcYiGZPvJ9ECTAHdpsfPy3gFna"
+      ]
+    },
+    {
+      "mint": "7Xgc5RacHtGzfhw2HukUBk5V986yBbvshr7rrCoopump",
+      "locally_recorded_buys": 1,
+      "locally_recorded_sells": 1,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430072,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "5000.000000",
+      "observed_sell_usdc": "2123.210964",
+      "nominal_usdc_cashflow_spread": "-2876.789036",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "42HYvWZ2hxZhoKvC6S39kbDooVMFnNLZNddyCLFsKzDH9WUzApqGg6pcuJu3ZS8AmGBta2BC8m3XRzmthaecZs7L"
+      ],
+      "sell_signatures": [
+        "s2hXR1wazcKCCHs4Vfu3AgGL5iwYDVGyVyZ8Mw772MCxXAiQ7HLvW6LMHZPXtL3JJRH51CJ2nuSbGzwXVfG5988"
+      ]
+    },
+    {
+      "mint": "JCsKWhELRJ8MhEZjUDdCL49mntw8fx27bKAgCMgSGhcQ",
+      "locally_recorded_buys": 2,
+      "locally_recorded_sells": 1,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430168,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "6099.711524",
+      "observed_sell_usdc": "2183.412433",
+      "nominal_usdc_cashflow_spread": "-3916.299091",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "3sNoEfEqL6V5SYSZMJommh3iV3HqwMcENY5jdrFLB3KkkYbot88zXEQ72XRTJFKxmEhLg8xtdEgZj3J6JjGWUac7",
+        "4KawwSP9SBrPdauhWW72b9KPsaM1AmKeTTW12ew2XTAgkRLJKk73MQs6zXCHiLbXtLH86Zs5AELVy4nbeeTYwDXj"
+      ],
+      "sell_signatures": [
+        "2EUZGczK7huvnTYfH3Vrv9yH18a55HrFpYpCX78wXs3ZkR7HtJkYRAuV4Do2JWzucUh7UK8D7AQLMTyvRm4tnjEV"
+      ]
+    },
+    {
+      "mint": "3Dgwn5E7H5a8k6iGrz3qirkaJqUaJrKHEZ2xPcLRpump",
+      "locally_recorded_buys": 2,
+      "locally_recorded_sells": 1,
+      "all_locally_recorded_token_units_offset": true,
+      "earlier_sample_finalized_slot": 455430037,
+      "earlier_sample_raw_balance": "0",
+      "observed_buy_usdc": "12268.740296",
+      "observed_sell_usdc": "6996.433589",
+      "nominal_usdc_cashflow_spread": "-5272.306707",
+      "full_cashflow_verified": false,
+      "realized_profit_verified": false,
+      "gas_and_external_costs_complete": false,
+      "buy_signatures": [
+        "4HvG9irXVR65oXdgQyBRsbnACTFV3rcjtsbrSX2bKyBhVXRNFqR1VzUGjcwarWNb8snvktmhCYsdrEQZUdCutUGy",
+        "3PEFXxpjCQn9QQJvKfES2hgQd16CA6AtcFSBn4KdpYHedqFLBp2aFwQQbJ6BrZshzTAyLWBLJFuyDGFJzMXNGnDR"
+      ],
+      "sell_signatures": [
+        "5YoFK8LprHciCuxX8vhkkSx8nC6S9igcsPKdeP9kkh6Ltutq292VrX7s2W898RTjSkeE9Vdqest86H9SNPpFnX7p"
+      ]
+    }
+  ]
+}

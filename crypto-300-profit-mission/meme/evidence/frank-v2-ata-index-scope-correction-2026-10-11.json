@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "source_date_utc": "2026-10-11",
+  "source_scope": "DATED_READ_ONLY_ATA_VS_MAIN_WALLET_ACCOUNT_KEYS_NOT_FULL_CHAIN",
+  "owner_wallet": "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ",
+  "owner_index_start_utc": "2026-10-02T22:54:44Z",
+  "scope_note": "The owner-only getSignaturesForAddress index covers signatures where the owner account key appears, not all ATA-only transactions. A non-match must not automatically be called an indexing defect, nor a BUY.",
+  "supersedes_display_only": "frank-v2-known-ata-gap-summary-2026-10-11.json",
+  "original_evidence_immutable": true,
+  "records": [
+    {
+      "mint": "J7bhFegCHZAeRzdYDwmbSp1CJ1bDJkutSg26B4SXpump",
+      "owner_index_missing_signatures": 2,
+      "missing_before_index_start": 0,
+      "missing_during_index_window": 2,
+      "inwindow_failed": 0,
+      "inwindow_success_unverified": 0,
+      "verified_extra_passive_receipts": 2,
+      "source_date_utc": "2026-10-11",
+      "scope_label": "ATA_VS_MAIN_WALLET_ACCOUNT_KEYS",
+      "account_keys_owner_absent_direct_rpc_verified": true,
+      "associated_token_account": "FjESMbdMaDapesMo889siXL1oQmgvQz8wsLTnHKeTNem",
+      "chain_verified_received_tokens": "9661379.420528",
+      "claim": "Two successful third-party-signed ATA receipts (not market BUY); source wallet absent from accountKeys; costs and PnL unverified."
+    },
+    {
+      "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+      "owner_index_missing_signatures": 66,
+      "missing_before_index_start": 63,
+      "missing_during_index_window": 3,
+      "inwindow_failed": 1,
+      "inwindow_success_unverified": 1,
+      "verified_extra_passive_receipts": 1,
+      "source_date_utc": "2026-10-11",
+      "scope_label": "ATA_VS_MAIN_WALLET_ACCOUNT_KEYS",
+      "account_keys_owner_absent_direct_rpc_verified_for": "3knjrZuSocitUtSunifVFy1V1mYyAzz7NLJUf96Kqg77T85x4wU8wkoHSWBxPKh22xhBAGpCewARmHksQJABGXVU",
+      "chain_verified_received_tokens": "0.771543330",
+      "claim": "70 ATA-list signatures, four present in owner index. Of 66 absent, 63 predate index window and only 3 in window (1 failed, 1 successful verified passive receipt, 1 successful but unverified). The 66 are not all index defects or transfers."
+    }
+  ],
+  "f3_signature_correction": {
+    "affected_original_file": "frank-v2-j7-onchain-three-transfer-origin-2026-10-11.json",
+    "corrupted_82_character_signature": "4JMFca46bpxkkVfykETjzwytqP9cNPtYFc9Unz1pKDf2MiHVgugTPxQp6HqVFpVCjpKXsYd243DCQi4LUU",
+    "verified_88_character_signature": "4JMFca46bpxkkVfykETjzwytqP9cNPtYFc9yKJD9cUnz1pKDf2MiHVgugTPxQp6HqVFpVCjpKXsYd243DCQi4LUU",
+    "slot": 454705939,
+    "direct_mainnet_rpc_corrupted_lookup": "RPC_ERROR_-32602_WRONGSIZE",
+    "direct_mainnet_rpc_corrected_lookup": "FINALIZED_SUCCESS_META_ERR_NULL_SIGNATURES_0_MATCH",
+    "owner_token_raw_before": "7846838050235",
+    "owner_token_raw_after": "12508217470763",
+    "decimals": 6,
+    "direct_mainnet_verification_date": "2026-10-11",
+    "correction_policy": "Do not silently rewrite existing immutable cited evidence. New dated correction controls future interpretation."
+  },
+  "f7_bpxx_receipt": {
+    "signature": "3knjrZuSocitUtSunifVFy1V1mYyAzz7NLJUf96Kqg77T85x4wU8wkoHSWBxPKh22xhBAGpCewARmHksQJABGXVU",
+    "slot": 452919433,
+    "meta_err": null,
+    "main_owner_present_in_account_keys": false,
+    "raw_before": "1001346785078260",
+    "raw_after": "1001347556621590",
+    "delta_raw": "771543330",
+    "decimals": 9,
+    "raw_rpc_proof_file": "frank-v2-bpxx-3knj-raw-getTransaction-2026-10-11.json"
+  },
+  "limitations": [
+    "The historical window scope is bounded by the 1720-record user archive, not full Solana chain coverage.",
+    "Third-party ATA receipts do not determine how sender acquired tokens, nor market acquisition cost.",
+    "Do not infer missing BUY, strategy alerts, or profit.",
+    "The BPxx direct RPC observation is one transaction; other successful missing signatures remain unverified."
+  ]
+}
