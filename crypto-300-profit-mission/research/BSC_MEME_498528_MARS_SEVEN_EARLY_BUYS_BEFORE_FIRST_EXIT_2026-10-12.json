@@ -1,0 +1,104 @@
+{
+  "schema": "BSC_MEME_498528_MARS_SEVEN_ENTRIES_BEFORE_FIRST_EXIT_V1",
+  "date": "2026-10-12",
+  "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+  "network": "bnb-mainnet",
+  "source": {
+    "file": "BSC_MEME_498528_19_CA_CURSOR_V1_2026-10-12.json",
+    "sha": "6d29e760df30553e6518baf2fe67790924f5eda5"
+  },
+  "owner_buy_entries": [
+    {
+      "hash": "0x852eaadad2099c485891d5bbdf4f12c890f6e491eaee2987b6c692595ebc804b",
+      "block": 112441470,
+      "original_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "owner_signed": true,
+      "original_msg_value_wei": "200000000000000000",
+      "token_raw_in": "2031615391715767342775541",
+      "selector": "0x4d819a2a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc"
+    },
+    {
+      "hash": "0xe8ad5d3d04ea4a474f4566fdb75bebc0e64aa98e8be4f346f0413b9fda932069",
+      "block": 112441470,
+      "original_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "owner_signed": true,
+      "original_msg_value_wei": "200000000000000000",
+      "token_raw_in": "1987916229879336665660648",
+      "selector": "0x4d819a2a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc"
+    },
+    {
+      "hash": "0xa722384f8e8edf7c9c0c454a6b616885429d857d6a716c308204d5e5431bdd83",
+      "block": 112441471,
+      "original_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "owner_signed": true,
+      "original_msg_value_wei": "200000000000000000",
+      "token_raw_in": "1915215914830339980016684",
+      "selector": "0x4d819a2a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc"
+    },
+    {
+      "hash": "0xb7d3c9c5bc90280abd430b2959b558d9f0854924d49fcce81f2cbff37379e9f4",
+      "block": 112441555,
+      "original_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "owner_signed": true,
+      "original_msg_value_wei": "200000000000000000",
+      "token_raw_in": "1079093049998196100062723",
+      "selector": "0x4d819a2a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc"
+    },
+    {
+      "hash": "0x20b5f818b4845f4d846fdeda5e48b2af1a735cef47d72703a897159f7b17141a",
+      "block": 112441555,
+      "original_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "owner_signed": true,
+      "original_msg_value_wei": "200000000000000000",
+      "token_raw_in": "1062221432414637355320066",
+      "selector": "0x4d819a2a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc"
+    },
+    {
+      "hash": "0xdcdde5397242690cd7bcc6f1ca500875f848a1ce864cbf2980db7e3c92b9fa16",
+      "block": 112441584,
+      "original_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "owner_signed": true,
+      "original_msg_value_wei": "200000000000000000",
+      "token_raw_in": "665541109247226206169028",
+      "selector": "0x4d819a2a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc"
+    },
+    {
+      "hash": "0xf018b14832af883b961607ca95eb17e42cf11e1951428098d5dab75e395ca2c3",
+      "block": 112441585,
+      "original_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "owner_signed": true,
+      "original_msg_value_wei": "200000000000000000",
+      "token_raw_in": "697837977016190905742567",
+      "selector": "0x4d819a2a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc"
+    }
+  ],
+  "summary": {
+    "buys": 7,
+    "self_signed_buys": 7,
+    "original_native_input_wei": "1400000000000000000",
+    "first_owner_sell_block": 112442022,
+    "raw_mars_received_before_first_exit": "9439441105101694555747257",
+    "first_sale_token_gross_out_raw": "943944110510169455574725",
+    "first_sale_fraction_of_early_buys_pct": "9.9999",
+    "early_buy_blocks": [
+      112441470,
+      112441471,
+      112441555,
+      112441584,
+      112441585
+    ]
+  },
+  "caveats": [
+    "Full ERC20 MARS token history not exhausted. Early window source prefix includes later blocks, providing earlier-segment completeness only.",
+    "First sale uses token 3% transfer fee; leaving 90% of early bought tokens does not mean 90% original capital retained.",
+    "Original msg.value totals do not subtract router buy fees or include gas; no realized terminal PnL."
+  ],
+  "production": "NO_GO"
+}
