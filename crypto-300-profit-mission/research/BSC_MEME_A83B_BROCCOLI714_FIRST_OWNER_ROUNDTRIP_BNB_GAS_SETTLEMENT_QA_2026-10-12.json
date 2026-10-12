@@ -1,0 +1,83 @@
+{
+  "schema": "BSC_MEME_A83B_BROCCOLI714_TWO_TX_OWNER_ROUNDTRIP_ECONOMIC_QA_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "scope": "FIRST_OWNER_SIGNED_PAIRED_BUY_AND_SELL_ONLY",
+  "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+  "token": "BROCCOLI714",
+  "contract": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+  "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+  "manager": "0x1de460f363af910f51726def188f9004276bf4bc",
+  "quote_WBNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "source": {
+    "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_TUT_B714_BOB_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+    "sha": "38ee993cc767184eee31b4d702712a81a87769e6"
+  },
+  "buy": {
+    "tx": "0x30423e5434cb7997e4a89ed2204a18152cd73b887fff2f185ad65e82336d1c65",
+    "block": 63777092,
+    "token_raw": "114279653849051648232736",
+    "origin_owner_signed": true,
+    "tx_success": true,
+    "native_msg_value_wei": "5000000000000000000",
+    "gas_fee_wei": "2100970000000000",
+    "pool_WBNB_received_wei": "4950000000000000000",
+    "native_wallet_block_delta_wei": "-5002100970000000000",
+    "balance_before_wei": "55413659995676064893",
+    "balance_after_wei": "50411559025676064893"
+  },
+  "sell": {
+    "tx": "0x6d2a53f9abc6aeb877fb9af4428ae0821caad2b66641d2cc6e603f14723bf5e1",
+    "block": 63777162,
+    "token_raw": "114279653849051648232736",
+    "origin_owner_signed": true,
+    "tx_success": true,
+    "native_msg_value_wei": "0",
+    "gas_fee_wei": "203203000000000",
+    "pool_WBNB_sent_wei": "4810521899562509066",
+    "manager_event_amount_wei": "48105218995625090",
+    "native_proceeds_before_gas_wei": "4762416680566883976",
+    "native_wallet_block_delta_wei": "4762213477566883976",
+    "balance_before_wei": "40409499895676064893",
+    "balance_after_wei": "45171713373242948869"
+  },
+  "result": {
+    "scoped_initial_cycle_token_raw_remaining": "0",
+    "scoped_buy_block_BNB_total_out_wei": "5002100970000000000",
+    "scoped_sell_block_BNB_net_in_wei": "4762213477566883976",
+    "scoped_two_block_BNB_net_wei": "-239887492433116024",
+    "scoped_two_block_BNB_net_decimal": "-0.239887492433116024",
+    "scoped_BNB_return_percent_approx": "-4.7957%",
+    "wallet_native_block_ledger_equalities": true,
+    "original_external_wallet_tx_per_buy_and_sell_block": "ONE_OWNER_ORIGIN_TX_EACH",
+    "original_external_to_wallet_per_buy_and_sell_block": "NONE",
+    "causal_status": "STRONGLY_CONSISTENT_BUT_NATIVE_INTERNAL_TRACE_UNAVAILABLE",
+    "whole_wallet_token_PnL": "UNVERIFIED"
+  },
+  "other_b714_activity": {
+    "other_received_transfers": 2,
+    "received_hashes": [
+      "0x9b54a41eabe1db349b5f413b1fbad5b4c2c6adaa5e56d9decf7ac4a3cdfa5391",
+      "0xaaf9e052310cb6b45f7929120c5cc83d4dcd85ceaab59e8db8ce9b97e528e0c1"
+    ],
+    "original_tx_by_hash": "RETURN_TRUNCATED",
+    "wallet_origin_external_exact_block": "NO_MATCHING_OWNER_SIGNED_EXTERNAL_TRANSACTION_RETRIEVED",
+    "later_owner_signed_sale_tx": "0xe651156fb79e04c22e6e3740e1930e657ba106c0134dd79fcc59563711de1db1",
+    "later_owner_signed_sale_status": "SUCCESS_WITH_ERC20_WBNB_RECEIPT",
+    "full_later_received_cost_basis": "UNVERIFIED"
+  },
+  "method": [
+    "Original individual ethGetTransactionByHash confirmed owner signer and msg.value for paired first acquisition and disposition",
+    "Individual ethGetTransactionReceipt confirmed status, gasUsed, effectiveGasPrice and WBNB pool transfer with fee event",
+    "Historical ethGetBalance at N-1 and N obtained twice for both exact blocks",
+    "Exact block Alchemy getAssetTransfers external from/to wallet excludeZeroValue false found exactly one owner origin direct tx and zero native external incoming each",
+    "Original B714 inbound/outbound raw token units of this first matched round trip are exactly equal, and occurred before two later token receipts"
+  ],
+  "limitations": [
+    "No BNB internal call trace available on connected free-tier provider, cannot categorically exclude unsolicited same-block internal native changes.",
+    "Net BNB result corresponds solely to first two blocks, not the whole wallet or full B714 multi-episode PnL.",
+    "Two later B714 receipts are original-signer-unverified due 8KB truncation, and should not be classified as owner buys until independent signer/quote path confirmed.",
+    "No copy-trade fill simulation, follower latency, independent opportunity denominator or exchange price conversion performed."
+  ],
+  "production": "NO_GO"
+}
