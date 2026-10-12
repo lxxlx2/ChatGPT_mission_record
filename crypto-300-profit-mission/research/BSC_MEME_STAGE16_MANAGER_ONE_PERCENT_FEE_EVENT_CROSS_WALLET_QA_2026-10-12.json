@@ -1,0 +1,83 @@
+{
+  "schema": "BSC_MEME_MANAGER_SWAP_FEE_EVENT_CROSS_WALLET_MULTITOKEN_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "manager": "0x1de460f363af910f51726def188f9004276bf4bc",
+  "WBNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "manager_fee_like_topic": "0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92",
+  "rows": [
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "BOB",
+      "side": "buy",
+      "block": 47518912,
+      "hash": "0x4757e958e668e478fc98164925705dd60e63d58f58c695409123ca3d69066dd3",
+      "fee_topic": "0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92",
+      "manager_log_index": "0x43",
+      "fee_like_event_wei": "5000000000000000",
+      "gross_native_input_wei": "500000000000000000",
+      "WBNB_pool_transfer_wei": "495000000000000000",
+      "WBNB_other_party": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "WBNB_uniqueId": "0x4757e958e668e478fc98164925705dd60e63d58f58c695409123ca3d69066dd3:log:69",
+      "ratio_floor_1percent_exact": true
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "BOB",
+      "side": "sell",
+      "block": 47519001,
+      "hash": "0x867402eacf59553cd7394a666af8376cdeb73db57c7f765babc2e331b9f99aa3",
+      "fee_topic": "0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92",
+      "manager_log_index": "0x20",
+      "fee_like_event_wei": "5183731822958312",
+      "gross_native_input_wei": "0",
+      "WBNB_pool_transfer_wei": "518373182295831255",
+      "WBNB_other_party": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "WBNB_uniqueId": "0x867402eacf59553cd7394a666af8376cdeb73db57c7f765babc2e331b9f99aa3:log:28",
+      "ratio_floor_1percent_exact": true
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "BROCCOLI714",
+      "side": "buy",
+      "block": 63777092,
+      "hash": "0x30423e5434cb7997e4a89ed2204a18152cd73b887fff2f185ad65e82336d1c65",
+      "fee_topic": "0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92",
+      "manager_log_index": "0x87",
+      "fee_like_event_wei": "50000000000000000",
+      "gross_native_input_wei": "5000000000000000000",
+      "WBNB_pool_transfer_wei": "4950000000000000000",
+      "WBNB_other_party": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "WBNB_uniqueId": "0x30423e5434cb7997e4a89ed2204a18152cd73b887fff2f185ad65e82336d1c65:log:138",
+      "ratio_floor_1percent_exact": true
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "BROCCOLI714",
+      "side": "sell",
+      "block": 63777162,
+      "hash": "0x6d2a53f9abc6aeb877fb9af4428ae0821caad2b66641d2cc6e603f14723bf5e1",
+      "fee_topic": "0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92",
+      "manager_log_index": "0xeb",
+      "fee_like_event_wei": "48105218995625090",
+      "gross_native_input_wei": "0",
+      "WBNB_pool_transfer_wei": "4810521899562509066",
+      "WBNB_other_party": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "WBNB_uniqueId": "0x6d2a53f9abc6aeb877fb9af4428ae0821caad2b66641d2cc6e603f14723bf5e1:log:231",
+      "ratio_floor_1percent_exact": true
+    }
+  ],
+  "scope": "Four independently original owner-signed trades across 2 EOAs and 2 distinct meme tokens compared with DDAC original 4 other examples; WBNB pool transfer vs indexed manager event integer ratio.",
+  "cross_source": [
+    "BSC_MEME_STAGE16_DDAC_MARS_TWO_BUYS_WBNB_MANAGER_FEE_GAS_QA_2026-10-12.json",
+    "BSC_MEME_STAGE16_DDAC_MARS_SELL1_WBNB_FEE_GAS_RECONCILIATION_2026-10-12.json",
+    "BSC_MEME_STAGE16_DDAC_MARS_SELL2_WBNB_FEE_GAS_RECONCILIATION_2026-10-12.json"
+  ],
+  "method": "Exact block ethGetLogs manager topic with indexed original EOA then match transaction hash; getAssetTransfers exact BNB Chain WBNB contract directed to/from manager and tx hash; original ethGetTransactionByHash signer/input value independently checked; compare integer fee event= floor(1% native input on buys; 1% WBNB gross on sells).",
+  "limitations": [
+    "Event ABI semantic meaning is not independently decoded, although event ratio and conservation consistent with 1% fee; label fee-like not verified contract-defined fee.",
+    "A1 sale native internal BNB, wallet gas and net realized PnL must be separately proven; fee ratio does not grant repeatable profitability.",
+    "Historical contract upgrades / routing changes might make observed examples inapplicable to other tokens or later dates."
+  ],
+  "production": "NO_GO"
+}
