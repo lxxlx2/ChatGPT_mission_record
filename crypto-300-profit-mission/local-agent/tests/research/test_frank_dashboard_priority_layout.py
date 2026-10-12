@@ -144,3 +144,48 @@ assert(!html.includes('当前跟单结论：“可跟”'));
     subprocess.run(["node", "-e", script, str(STATIC / "app.js")],
                    check=True, capture_output=True, text=True, timeout=10)
 
+
+
+def test_quote_certainty_with_real_js_formatting_and_timestamp():
+    import subprocess
+    script = r"""
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const js=fs.readFileSync(process.argv[1],'utf8');
+const cut=(a,b)=> {
+  const i=js.indexOf(a), j=js.indexOf(b,i+1);
+  assert(i>=0 && j>i,'source function missing');
+  return js.slice(i,j);
+};
+const constants=js.slice(0,js.indexOf('const esc ='));
+const ctx={Date,Intl};
+vm.createContext(ctx);
+vm.runInContext(constants+cut('const esc =','const decisionLabel'),ctx);
+vm.runInContext(cut('function quoteAsset','function reasonFor(x) {'),ctx);
+function rendered(fields) {
+  return vm.runInContext('frankQuote('+JSON.stringify({
+    latest_buy_original_quote_asset:'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    latest_buy_at:1699999000,
+    ...fields
+  })+')',ctx);
+}
+const direct=rendered({latest_buy_original_quote_quantity:'15000',
+  latest_buy_amount_predicate:'USDC_DIRECT_NUMERIC'});
+assert(direct.includes('15,000 USDC') && !direct.includes('未确认'));
+assert(direct.includes('已识别买入时间：'));
+const multi=rendered({latest_buy_original_quote_quantity:'10000',
+  latest_buy_amount_predicate:'UNDETERMINED',latest_buy_amount_predicate_reason:'COMPOSITE_QUOTE_LEGS'});
+assert(multi.includes('未确认（已识别资金腿：10,000 USDC'));
+assert(multi.includes('复合报价可能含其他资金腿'));
+const routed=rendered({latest_buy_original_quote_quantity:'2500',
+  latest_buy_amount_predicate:'UNDETERMINED',latest_buy_amount_predicate_reason:'ROUTED_RESIDUAL_ASSETS'});
+assert(routed.includes('未确认（已识别资金腿：2,500 USDC'));
+assert(routed.includes('最终目标成本不可核实'));
+const fallback=rendered({latest_buy_original_quote_quantity:'',
+  latest_buy_quote_quantity:'7000',latest_buy_amount_predicate:'USDC_DIRECT_NUMERIC'});
+assert(fallback.includes('7,000 USDC') && !fallback.includes('暂无'));
+const missing=rendered({latest_buy_original_quote_quantity:null,
+  latest_buy_quote_quantity:null,latest_buy_amount_predicate:'USDC_DIRECT_NUMERIC'});
+assert(missing.includes('未确认（原始支付数据不足）') && !missing.includes('0 USDC'));
+"""
+    subprocess.run(["node", "-e", script, str(STATIC / "app.js")],
+                   check=True, capture_output=True, text=True, timeout=10)
