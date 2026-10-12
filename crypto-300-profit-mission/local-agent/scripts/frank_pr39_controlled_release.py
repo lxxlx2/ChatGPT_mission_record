@@ -146,6 +146,23 @@ def review_reasons(state):
 
 RELEASE_MARKER = '.pr39-release-manifest.json'
 
+# Provenance: scripts/deploy_frank_dashboard_review_badge.py PATCHES
+# from the committed Mission repo. These are known legacy UI overlays,
+# NOT authorization to trust a running process or bypass any rollout gate.
+HISTORICAL_UI_LEGACY_BLOBS = {
+    'mission_agent/mission_control/server.py': (
+        'b5eb4af5c945cc1b62337d48393fe02243f9505f',
+        'f5e00781ea4af45b4d6b15a09b8cb000f5b744f4'),
+    'mission_agent/mission_control/static/app.js': (
+        '8f0ac1beace94f01894c151576bc276f48f1b4a4',
+        '14985b35b019054d5ff9871e002c32421345ff17'),
+}
+HISTORICAL_UI_LEGACY_EXTRA = {
+    'mission_agent/mission_control/delivery_review.py':
+        '62f5fa85bf41cd95e4a31a373910f81970368ea6',
+}
+
+
 
 def release_manifest(root):
     """Immutable staged release: verify every file byte and reject any extra source."""
@@ -269,6 +286,7 @@ def source_drift_diagnostic(root, *, limit=30):
     known = {p[len(prefix):] for p in raw_paths}
     extra_count = 0
     extras = []
+    extra_blobs = {}
     for base in ('mission_agent', 'config'):
         for local in (root / base).rglob('*'):
             if local.is_file() and local.suffix in {'.py', '.js', '.css', '.html', '.json'}:
@@ -277,10 +295,30 @@ def source_drift_diagnostic(root, *, limit=30):
                     extra_count += 1
                     if len(extras) < limit:
                         extras.append(relative)
+                        extra_blobs[relative] = (
+                            run(['git', '-C', str(repo), 'hash-object', str(local)])
+                            if not local.is_symlink() else None)
+    # Classification is strictly explanatory. A match cannot prove the
+    # old loop actually loaded these bytes or the current runner settings.
+    expected_mismatches = {
+        rel: {'file': rel, 'expected_git_blob': pair[0],
+              'observed_git_blob': pair[1], 'reason': 'BYTES_DIFFER'}
+        for rel, pair in HISTORICAL_UI_LEGACY_BLOBS.items()
+    }
+    legacy_exact = (
+        changes == len(expected_mismatches) and
+        {x['file']: x for x in mismatches} == expected_mismatches and
+        extra_count == len(HISTORICAL_UI_LEGACY_EXTRA) and
+        extra_blobs == HISTORICAL_UI_LEGACY_EXTRA
+    )
     return {'status': 'BYTES_VERIFIED' if not (changes or extra_count) else 'UNVERIFIED_SOURCE_DRIFT',
+            'historical_overlay_classification': (
+                'DOCUMENTED_LEGACY_DISK_BYTES_RUNTIME_UNVERIFIED' if legacy_exact
+                else 'NO_EXACT_LEGACY_MATCH'),
             'tracked_files': len(raw_paths), 'different_or_missing_count': changes,
             'untracked_executable_count': extra_count,
             'mismatches': mismatches, 'unexpected_source_paths': extras,
+            'unexpected_source_git_blobs': extra_blobs,
             'results_truncated': changes > limit or extra_count > limit,
             'note': 'Diagnostic only; does not relax runtime/source release gate'}
 
@@ -302,6 +340,41 @@ def runner_start_time_diagnostic(mac, key, text):
                        else 'RUNNER_NEWER_THAN_PROCESS' if delta >= 1
                        else 'RUNNER_OLDER_THAN_PROCESS'),
             'note': 'Read-only diagnostic; time alone cannot prove loaded runner bytes'}
+
+
+def source_start_temporal_diagnostic(mac, key):
+    """Source-file mtimes against process start, even for legacy overlays.
+
+    This cannot prove which modules Python imported. It can, however,
+    establish whether bytes may have been changed after a process started.
+    Purely read-only and never used to waive mac.runtime's strict checks.
+    """
+    text = mac.runners[key].read_text(encoding='utf-8')
+    root = field(text, 'LOCAL_AGENT')
+    pid, _ = mac.launch(mac.labels[key])
+    raw = run(['/bin/ps', '-p', str(pid), '-o', 'lstart='],
+              env={**os.environ, 'LC_ALL': 'C'})
+    started = time.mktime(time.strptime(raw, '%a %b %d %H:%M:%S %Y'))
+    files = []
+    for base in ('mission_agent', 'config'):
+        for path in (root / base).rglob('*'):
+            if path.is_file() and path.suffix in {'.py', '.js', '.css', '.html', '.json'}:
+                files.append(path)
+    entry = root / 'scripts/mission_meme_v1.py'
+    if entry.is_file(): files.append(entry)
+    late = []
+    for path in files:
+        delta = path.stat().st_mtime - started
+        if delta >= 0:
+            late.append({'file': path.relative_to(root).as_posix(),
+                         'seconds_after_reported_start': round(delta, 6)})
+    return {'pid': pid, 'source_file_count': len(files),
+            'files_not_proven_to_predate_process_count': len(late),
+            'late_source_files': late[:30],
+            'results_truncated': len(late) > 30,
+            'status': ('SOURCE_FILES_MAY_HAVE_CHANGED_AFTER_START' if late
+                       else 'ALL_OBSERVED_SOURCE_FILES_PREDATE_PROCESS_SECOND'),
+            'note': 'Diagnostic only: source mtime cannot establish imported Python bytes'}
 
 
 def candidate(root, expected):
@@ -831,6 +904,8 @@ def collect_evidence(mac, root, expected, scanner_label):
             return runner_start_time_diagnostic(mac, key,
                                                 mac.runners[key].read_text(encoding='utf-8'))
         probe(key + '_start_time_diagnostic', timing_detail)
+        probe(key + '_source_mtime_diagnostic',
+              lambda key=key: source_start_temporal_diagnostic(mac, key))
     def db_facts():
         text = mac.runners['loop'].read_text()
         pointer = field(text, 'CONTROL_POINTER')
