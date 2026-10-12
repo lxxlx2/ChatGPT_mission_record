@@ -23,7 +23,6 @@ import sys
 import tempfile
 import time
 import urllib.request
-import zipfile
 
 PIN = "6a5b7e8a533f99c871e31f9674329fcb4f929cc2"
 REMOTE = "https://github.com/lxxlx2/ChatGPT_mission_record.git"
@@ -286,23 +285,33 @@ def main():
                               'LOCAL_AGENT="' + str(old_agent) + '"', 1) == current)
     baseline = None
     port_file = SUPPORT / "dashboard_port"
-    if port_file.is_file():
-        port = int(port_file.read_text().strip())
-        baseline = verify_api(port, strict=False)
+    check("PRODUCTION_DASHBOARD_PORT_CONFIGURED", port_file.is_file())
+    port = int(port_file.read_text().strip())
+    check("PRODUCTION_DASHBOARD_PORT_VALID", 1024 <= port <= 65535)
+    baseline = verify_api(port, strict=False)
     mode = DASH_RUNNER.stat().st_mode & 0o777
     switched = False
     try:
         atomic_runner(DASH_RUNNER, changed.encode("utf-8"), mode)
         switched = True
         dashboard_restart()
-        check("DASHBOARD_PID_REPLACED", launch_pid(DASH_LABEL) != dash_pid_before)
+        active_pid = None
+        for _ in range(35):
+            try:
+                active_pid = launch_pid(DASH_LABEL)
+                if active_pid != dash_pid_before:
+                    break
+            except RuntimeError:
+                pass
+            time.sleep(0.3)
+        check("DASHBOARD_PID_REPLACED", active_pid is not None and active_pid != dash_pid_before)
         live = verify_api(port, strict=True)
         check("DASHBOARD_STILL_LIVE", live["watchlist_count"] > 0)
         check("MISSION_LOOP_PID_UNCHANGED", launch_pid(LOOP_LABEL) == live_loop_pid_before)
         check("MISSION_LOOP_FILE_UNCHANGED", sha(LOOP_RUNNER) == loop_sha_before)
         print("DASHBOARD_RELEASE=SUCCESS")
         print("DASHBOARD_RESTART=YES MISSION_LOOP_RESTART=NO")
-        print("GMAIL_SEND=NO EVIDENCE_AUTO_EXPORT=OFF")
+        print("NO_GMAIL_SEND_INITIATED=YES LOOP_EXPORT_CONFIGURATION_UNCHANGED=YES")
     except Exception:
         if switched:
             atomic_runner(DASH_RUNNER, current.encode("utf-8"), mode)
