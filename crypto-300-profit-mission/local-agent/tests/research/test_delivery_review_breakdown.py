@@ -93,3 +93,13 @@ class DeliveryReviewClassificationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_r6_dashboard_text_only_claims_sqlite_record():
+    frontend = (Path(__file__).resolve().parents[2] /
+                "mission_agent/mission_control/static/app.js").read_text(encoding="utf-8")
+    assert "历史过期拦截" in frontend
+    assert "数据库无发送尝试记录" in frontend
+    assert "未独立核实 Gmail Sent" in frontend
+    assert "；未发送）" not in frontend
+    assert "历史通知在首次投递前已过期，未发送" not in frontend
