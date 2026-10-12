@@ -234,6 +234,19 @@ def render(event:dict)->dict:
     return {"subject":subject,"body":text,"content_hash":digest({"subject":subject,"body":text})}
 
 
+
+def _local_summary(title: str, body: str, event_body: dict) -> str:
+    """Render a short notification from a *frozen* decision presentation."""
+    lines=body.splitlines()
+    if len(lines)<2 or not lines[0].startswith("结论：") or not lines[1].startswith("原因："):
+        raise ValueError("LOCAL_FROZEN_PRESENTATION_MALFORMED")
+    return " | ".join((
+        lines[0],lines[1],
+        "CA："+event_body["mint"],
+        "决策时间："+_utc_decision(event_body.get("created_at")),
+    ))
+
+
 class LocalDelivery:
     def __init__(self,control:ControlDB,run=subprocess.run,*,max_decision_age_seconds:int=600):
         if type(max_decision_age_seconds) is not int or max_decision_age_seconds<=0:
@@ -242,8 +255,67 @@ class LocalDelivery:
         self.max_decision_age_seconds=max_decision_age_seconds
     def enqueue(self,event:dict,*,forbidden:bool)->None:
         content=render(event);status="DRY_RUN_AUDIT" if forbidden else "PENDING"
-        self.control.enqueue(event["decision_id"],"local",content["content_hash"],status)
-        self.control.db.execute("INSERT OR IGNORE INTO local_delivery(decision_id,status,content_hash,created_at) VALUES(?,?,?,?)",(event["decision_id"],status,content["content_hash"],utc()))
+        decision_id=event["decision_id"]
+        event_body=json.loads(event["body"]) if isinstance(event["body"],str) else event["body"]
+        summary=_local_summary(content["subject"],content["body"],event_body)
+        self.control.enqueue(decision_id,"local",content["content_hash"],status)
+        self.control.db.execute("INSERT OR IGNORE INTO local_delivery(decision_id,status,content_hash,created_at) VALUES(?,?,?,?)",(decision_id,status,content["content_hash"],utc()))
+        self.control.db.execute(
+            "INSERT OR IGNORE INTO local_delivery_presentation(decision_id,title,summary,content_hash) VALUES(?,?,?,?)",
+            (decision_id,content["subject"],summary,content["content_hash"]),
+        )
+        saved=self.control.db.execute(
+            "SELECT d.content_hash AS original_hash,p.title,p.summary,p.content_hash AS presentation_hash "
+            "FROM local_delivery d JOIN local_delivery_presentation p USING(decision_id) WHERE d.decision_id=?",
+            (decision_id,),
+        ).fetchone()
+        if (saved["original_hash"]!=content["content_hash"]
+                or saved["presentation_hash"]!=content["content_hash"]
+                or saved["title"]!=content["subject"] or saved["summary"]!=summary):
+            raise ValueError("IMMUTABLE_LOCAL_PRESENTATION_IDENTITY_CONFLICT")
+
+    def _frozen_presentation(self,row:dict,event_body:dict)->tuple[str,str]:
+        """Use stored local text; recover legacy pending alerts only from verified content."""
+        stored=self.control.db.execute(
+            "SELECT title,summary,content_hash FROM local_delivery_presentation WHERE decision_id=?",
+            (row["decision_id"],),
+        ).fetchone()
+        if stored:
+            if stored["content_hash"]!=row["content_hash"]:
+                raise ValueError("LOCAL_PRESENTATION_HASH_MISMATCH")
+            return stored["title"],stored["summary"]
+        legacy=self.control.db.execute(
+            "SELECT subject,body,content_hash FROM gmail_delivery WHERE decision_id=?",
+            (row["decision_id"],),
+        ).fetchone()
+        if (legacy and legacy["content_hash"]==row["content_hash"]
+                and digest({"subject":legacy["subject"],"body":legacy["body"]})==row["content_hash"]):
+            title=legacy["subject"]
+            summary=_local_summary(title,legacy["body"],event_body)
+        else:
+            # Older local-only alerts may lack a matching Gmail snapshot.
+            # Permit them only when their original content hash still matches.
+            rerender=render({"body":event_body})
+            if rerender["content_hash"]!=row["content_hash"]:
+                raise ValueError("LOCAL_PENDING_LEGACY_PRESENTATION_UNVERIFIABLE")
+            title=rerender["subject"]
+            summary=_local_summary(title,rerender["body"],event_body)
+        self.control.db.execute(
+            "INSERT OR IGNORE INTO local_delivery_presentation(decision_id,title,summary,content_hash) VALUES(?,?,?,?)",
+            (row["decision_id"],title,summary,row["content_hash"]),
+        )
+        return title,summary
+
+    def _review_unverifiable(self,decision_id:str,error:str)->None:
+        self.control.db.execute(
+            "UPDATE local_delivery SET status='MANUAL_REVIEW',last_error=? WHERE decision_id=?",
+            (error,decision_id),
+        )
+        self.control.db.execute(
+            "UPDATE decision_outbox SET status='MANUAL_REVIEW',last_error=? WHERE decision_id=? AND channel='local'",
+            (error,decision_id),
+        )
+
     def _expire(self,decision_id:str)->None:
         reason="LOCAL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
         self.control.db.execute(
@@ -267,21 +339,16 @@ class LocalDelivery:
             if age is None or age>self.max_decision_age_seconds:
                 self._expire(row["decision_id"])
                 continue
-            event={"decision_id":row["decision_id"],"body":json.loads(row["body"])}
-            content=render(event)
-            # Keep the actionable CA in short macOS alerts even when the full
-            # frozen Gmail template gains quote times and disclaimer lines.
-            title_lines=content["body"].splitlines()
-            summary=" | ".join((
-                title_lines[0],
-                title_lines[1],
-                "CA："+event["body"]["mint"],
-                "决策时间："+_utc_decision(event["body"].get("created_at")),
-            ))
+            event_body=json.loads(row["body"])
+            try:
+                title,summary=self._frozen_presentation(dict(row),event_body)
+            except (ValueError,TypeError,KeyError) as exc:
+                self._review_unverifiable(row["decision_id"],str(exc))
+                continue
             binary=shutil.which("terminal-notifier")
-            if binary:args=[binary,"-title",content["subject"],"-message",summary,"-group",row["decision_id"]];mechanism="terminal-notifier-group"
+            if binary:args=[binary,"-title",title,"-message",summary,"-group",row["decision_id"]];mechanism="terminal-notifier-group"
             else:
-                script="display notification "+json.dumps(summary,ensure_ascii=False)+" with title "+json.dumps(content["subject"],ensure_ascii=False);args=["/usr/bin/osascript","-e",script];mechanism="osascript-notification"
+                script="display notification "+json.dumps(summary,ensure_ascii=False)+" with title "+json.dumps(title,ensure_ascii=False);args=["/usr/bin/osascript","-e",script];mechanism="osascript-notification"
             try:
                 # Rendering/desktop utility lookup can take time; do not present
                 # a historical follow decision as live after its expiry.
