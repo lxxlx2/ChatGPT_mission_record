@@ -1,0 +1,114 @@
+name: Monster Stage85 All305 D1 AsOf Official Evidence
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage85-all305-asof-d1-evidence.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage85_305_d1_asof_evidence.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage85_aggregate_asof305.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE85_ALL305_D1_ASOF_FEATURE_EVIDENCE_PROTOCOL_20261013.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monster-stage85-official-asof-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  source_prereg_and_selftests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original 519 SHA and all 305 D1 unmodified source
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage85_305_d1_asof_evidence.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage85_aggregate_asof305.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage85_305_d1_asof_evidence.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage85_aggregate_asof305.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+
+  official_publisher_1m_shards:
+    needs: source_prereg_and_selftests
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+        shard: [0,1,2,3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve real Binance USDM publisher-SHA source and recompute D1 causally
+        run: |
+          mkdir -p /tmp/stage85
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage85_305_d1_asof_evidence.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --workers 3 --out /tmp/stage85/monster-stage85-${{ matrix.date }}-s${{ matrix.shard }}.json
+          python -m json.tool /tmp/stage85/monster-stage85-${{ matrix.date }}-s${{ matrix.shard }}.json > /dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage85-${{ matrix.date }}-s${{ matrix.shard }}
+          path: /tmp/stage85/monster-stage85-${{ matrix.date }}-s${{ matrix.shard }}.json
+          retention-days: 30
+
+  aggregate_and_persist_original_pr:
+    needs: official_publisher_1m_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage85-*
+          merge-multiple: true
+          path: /tmp/stage85-shards
+      - name: Audit exactly all 305 D1 event identities, true source hashes and feature medians
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage85_aggregate_asof305.py --artifact-dir /tmp/stage85-shards --out /tmp/stage85-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage85-source-verified-all305-asof-results
+          path: /tmp/stage85-final/*
+          retention-days: 60
+      - name: Persist exact results on Monster PR30
+        run: |
+          set -eu
+          dst=crypto-300-profit-mission/monster/evidence
+          cp /tmp/stage85-final/monster_stage85_all305_official_D1_asof_features.jsonl "$dst/"
+          cp /tmp/stage85-final/monster_stage85_all305_official_asof_summary.json "$dst/"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dst/monster_stage85_all305_official_D1_asof_features.jsonl" "$dst/monster_stage85_all305_official_asof_summary.json"
+          if git diff --cached --quiet; then
+            echo "STAGE85_ALREADY_PERSISTED_IDENTICAL"
+            exit 0
+          fi
+          git commit -m "monster: persist official Stage85 all305 D1 point-in-time feature evidence"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE85_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE85_GIT_PUSH_FAILED"
+          exit 1
