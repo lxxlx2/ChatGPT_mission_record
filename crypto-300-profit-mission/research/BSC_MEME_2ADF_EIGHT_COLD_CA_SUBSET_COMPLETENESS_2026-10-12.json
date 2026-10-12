@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-12",
+  "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+  "source": {
+    "file": "BSC_MEME_2ADF_TEN_UNKNOWN_CA_TARGETED_CENSUS_2026-10-12.json",
+    "sha": "5697959e9d20a1ec27e0c4770b4f785107c7af6f"
+  },
+  "subset_CAs": [
+    {
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429"
+    },
+    {
+      "token": "CHEEMS",
+      "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413"
+    },
+    {
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6"
+    },
+    {
+      "token": "BROCCOLI714",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b"
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1"
+    },
+    {
+      "token": "BANANAS31",
+      "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760"
+    },
+    {
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511"
+    }
+  ],
+  "directions": [
+    {
+      "side": "in",
+      "events": [
+        {
+          "hash": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874",
+          "block": "0x754a5db",
+          "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+          "raw": "0x33662faed156019db",
+          "from": "0xff497ca7118bd4b09435168372d188dc2d670f9d",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "id": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874:log:360"
+        }
+      ],
+      "pages": 1,
+      "complete": true,
+      "cursor": null,
+      "error": null
+    },
+    {
+      "side": "out",
+      "events": [],
+      "pages": 1,
+      "complete": true,
+      "cursor": null,
+      "error": null
+    }
+  ],
+  "counts": [
+    {
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "CHEEMS",
+      "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BROCCOLI714",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "in": 1,
+      "out": 0
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BANANAS31",
+      "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "in": 0,
+      "out": 0
+    }
+  ],
+  "complete": true,
+  "production": "NO_GO"
+}
