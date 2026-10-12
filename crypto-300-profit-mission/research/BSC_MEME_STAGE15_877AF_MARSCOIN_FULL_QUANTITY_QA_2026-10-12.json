@@ -1,0 +1,25 @@
+{
+  "schema": "BSC_MEME_STAGE15_877AF_MARSCOIN_QUANTITY_QA_V1",
+  "date": "2026-10-12",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "fixed_block": "0x79549a0",
+  "in": 73,
+  "out": 97,
+  "in_sum_raw": "28813941083843918852586861",
+  "out_sum_raw": "28813872383572322368930214",
+  "balance_raw": "68700271596483656647",
+  "quantity_reconciled": true,
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE15_877AF_MARSCOIN_INBOUND_2026-10-12.json",
+      "sha": "7d35046473d01c39dcd465442d4ab3ffa521af38"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE15_877AF_MARSCOIN_OUTBOUND_2026-10-12.json",
+      "sha": "9ac3189dfedc5c274829bae6db6997ce17239059"
+    }
+  ],
+  "realized_pnl": "UNVERIFIED",
+  "production": "NO_GO"
+}
