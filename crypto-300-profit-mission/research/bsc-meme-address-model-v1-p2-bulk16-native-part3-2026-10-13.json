@@ -1,0 +1,100 @@
+{
+  "schema": "BSC_MEME_V1_P2_16_BULK_NATIVE_WALLET_BLOCK_PROOFS",
+  "part": 3,
+  "range": [
+    16,
+    23
+  ],
+  "source_gate_git_blob_sha": "b2df6c0fa23c735bf453c643e3bfe818a79fdb16",
+  "production": "NO_GO",
+  "blocks": [
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112642708,
+      "related_sample_indices": [
+        4
+      ],
+      "n_minus_1_raw_balance_wei": "19413958796973976938",
+      "n_raw_balance_wei": "19844740842169606533",
+      "native_delta_wei": "430782045195629595",
+      "RPC": "BOTH_BLOCKS_NATIVE_WALLET_BALANCE_VERIFIED"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 83720393,
+      "related_sample_indices": [
+        13
+      ],
+      "n_minus_1_raw_balance_wei": "61123469541251570227",
+      "n_raw_balance_wei": "58722645566251570227",
+      "native_delta_wei": "-2400823975000000000",
+      "RPC": "BOTH_BLOCKS_NATIVE_WALLET_BALANCE_VERIFIED"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 83720398,
+      "related_sample_indices": [
+        13
+      ],
+      "n_minus_1_raw_balance_wei": "58722645566251570227",
+      "n_raw_balance_wei": "60948841476332641298",
+      "native_delta_wei": "2226195910081071071",
+      "RPC": "BOTH_BLOCKS_NATIVE_WALLET_BALANCE_VERIFIED"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 93584296,
+      "related_sample_indices": [
+        14
+      ],
+      "n_minus_1_raw_balance_wei": "65785540297005511889",
+      "n_raw_balance_wei": "65765013272005511889",
+      "native_delta_wei": "-20527025000000000",
+      "RPC": "BOTH_BLOCKS_NATIVE_WALLET_BALANCE_VERIFIED"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 93584365,
+      "related_sample_indices": [
+        14
+      ],
+      "n_minus_1_raw_balance_wei": "65765013272005511889",
+      "n_raw_balance_wei": "65783780770840527390",
+      "native_delta_wei": "18767498835015501",
+      "RPC": "BOTH_BLOCKS_NATIVE_WALLET_BALANCE_VERIFIED"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "block": 73336433,
+      "related_sample_indices": [
+        5
+      ],
+      "n_minus_1_raw_balance_wei": "550803476352537915",
+      "n_raw_balance_wei": "490641724352537935",
+      "native_delta_wei": "-60161751999999980",
+      "RPC": "BOTH_BLOCKS_NATIVE_WALLET_BALANCE_VERIFIED"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "block": 73336473,
+      "related_sample_indices": [
+        5
+      ],
+      "n_minus_1_raw_balance_wei": "490641724352537935",
+      "n_raw_balance_wei": "553854238183424524",
+      "native_delta_wei": "63212513830886589",
+      "RPC": "BOTH_BLOCKS_NATIVE_WALLET_BALANCE_VERIFIED"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "block": 73338331,
+      "related_sample_indices": [
+        6
+      ],
+      "n_minus_1_raw_balance_wei": "507066586870555304",
+      "n_raw_balance_wei": "446904834870555315",
+      "native_delta_wei": "-60161751999999989",
+      "RPC": "BOTH_BLOCKS_NATIVE_WALLET_BALANCE_VERIFIED"
+    }
+  ]
+}
