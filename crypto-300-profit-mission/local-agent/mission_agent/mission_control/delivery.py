@@ -69,8 +69,8 @@ def _utc_decision(value) -> str:
 
 
 DECISION_ZH={"BUY":"可跟","SMALL_BUY":"小仓跟","WAIT":"等待","NO_BUY":"不跟"}
-PATTERN_ZH={"MULTIPLE":"多次强加仓","ACCUMULATION":"持续建仓","REENTRY_WATCH":"重新建仓观察","NONE":"无模式"}
-STATE_ZH={"OPEN":"持仓中","CLOSED":"已退出","INVENTORY_UNDETERMINED":"仓位不明"}
+PATTERN_ZH={"MULTIPLE":"多次强加仓（历史模型记录）","ACCUMULATION":"持续建仓（历史模型记录）","REENTRY_WATCH":"重新建仓观察","NONE":"无模式"}
+STATE_ZH={"OPEN":"模型标记持有（未独立核实）","CLOSED":"模型标记已退出","INVENTORY_UNDETERMINED":"仓位不明"}
 ACTION_ZH={"BUY":"买入","ADD":"加仓","REENTRY":"重新建仓","SELL":"卖出","EXIT":"清仓","SELL_POSITION_UNRESOLVED":"卖出后仓位待确认"}
 REASON_ZH={
     "FRANK_RUNTIME_NOT_LIVE":"Frank 实时监控不在线",
@@ -86,7 +86,7 @@ REASON_ZH={
     "NO_EXECUTABLE_JUPITER_ROUTE":"Jupiter 当前无可执行路径",
     "PRICE_TOO_FAR_FROM_FRANK":"当前价格离 Frank 买入价过远",
     "EXECUTION_IMPACT_TOO_HIGH":"当前 30 USDC 跟单价格冲击过高",
-    "FRANK_MULTIPLE_ACTIVE":"Frank 当前处于多次强加仓模式",
+    "FRANK_MULTIPLE_ACTIVE":"Frank 已观察到多次强加仓模型事件，是否可以跟随以本次结论为准",
     "PRICE_STILL_CLOSE_TO_FRANK":"当前成交价仍接近 Frank 参考买入价",
     "EXECUTION_IMPACT_ACCEPTABLE":"当前预计价格冲击可接受",
     "FRANK_PATTERN_ACTIVE":"Frank 当前仍处于可跟随建仓模式",
@@ -194,9 +194,14 @@ def render(event:dict)->dict:
         "CA（单独一行，便于长按复制）",
         body["mint"],
         "",
-        "Frank 动作："+action+"  |  仓位："+position,
-        "最近买入投入："+payment,
+        "Frank 最近已识别动作："+action+"  |  Frank 模型仓位："+position,
+        "Frank 最近一次买入支付（历史）："+payment,
+        "上述金额仅对应最近一笔已识别买入的历史资金腿，不代表当前持仓市值、持有金额或全部建仓成本。",
     ]
+    if inputs.get("latest_side") in {"SELL","EXIT","SELL_POSITION_UNRESOLVED"}:
+        lines.append("最新已识别动作是卖出或退出，不能凭历史模型信号推断仍在加仓。")
+    if decision in {"NO_BUY","WAIT"}:
+        lines.append("当前跟单结论不支持立即买入。")
     if frank_price not in (None,""):
         lines.append("Frank 参考买价："+_compact_price(frank_price)+" USDC")
     if exec_price not in (None,""):
