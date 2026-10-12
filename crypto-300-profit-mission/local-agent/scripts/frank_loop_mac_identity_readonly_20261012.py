@@ -114,6 +114,40 @@ def process_identity(pid, old_agent):
             "cwd_checked": cwd_checked}
 
 
+def dependency_identity(loop_raw, dash_raw):
+    """Inspect shared venv metadata only; do not import Frank or install anything."""
+    old_venv = field(loop_raw, "VENV")
+    dash_venv = field(dash_raw, "VENV")
+    check("SHARED_VENV_PATH_IDENTICAL",
+          old_venv is not None and dash_venv is not None and
+          old_venv == dash_venv)
+    python_bin = old_venv / "bin/python" if old_venv else None
+    check("VENV_PYTHON_PRESENT", python_bin is not None and python_bin.is_file())
+    if python_bin is None or not python_bin.is_file():
+        return
+    # Python stdlib metadata only. No import mission_agent, Gmail or RPC client.
+    code = ("import sys,importlib.metadata as m;"
+            "print(sys.version_info.major,sys.version_info.minor,"
+            "m.version('websockets'))")
+    try:
+        result = execute([str(python_bin), "-B", "-c", code], seconds=15)
+        tokens = result.stdout.strip().split()
+        valid = result.returncode == 0 and len(tokens) == 3
+        if valid:
+            major, minor = int(tokens[0]), int(tokens[1])
+            websockets = tokens[2]
+            details["venv_python_version"] = f"{major}.{minor}"
+            details["websockets_version"] = websockets
+            check("VENV_PYTHON_SUPPORTED", (major, minor) >= (3, 11))
+            check("RELEASE_WEBSOCKETS_DEPENDENCY_PIN", websockets == "15.0.1")
+        else:
+            check("VENV_PYTHON_SUPPORTED", False)
+            check("RELEASE_WEBSOCKETS_DEPENDENCY_PIN", False)
+    except (OSError, subprocess.TimeoutExpired, ValueError):
+        check("VENV_PYTHON_SUPPORTED", False)
+        check("RELEASE_WEBSOCKETS_DEPENDENCY_PIN", False)
+
+
 def metadata_of_runtime(loop_raw, dash_raw):
     old_agent, release = field(loop_raw, "LOCAL_AGENT"), field(dash_raw, "LOCAL_AGENT")
     check("RUNNER_AGENT_FIELDS_PRESENT", old_agent is not None and release is not None)
@@ -169,6 +203,7 @@ def main():
           and "--approved-policy-sha256" in loop_raw
           and "mission_meme_v1.py loop" in loop_raw)
     metadata_of_runtime(loop_raw, dash_raw)
+    dependency_identity(loop_raw, dash_raw)
     ident = process_identity(loop_start, old_agent) if old_agent else {}
     details["process_identity"] = ident
     check("LOOP_PROCESS_ARGUMENTS_MATCH", ident.get("process_args_match_loop") is True)
