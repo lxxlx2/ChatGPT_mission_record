@@ -6,7 +6,7 @@ Date: 2026-10-12 (Bangkok). **This is a separate research-branch implementation*
 
 The user supplied an independent fourth-round review transcript concluding **CONDITIONAL_PASS only for review**, with unresolved **M-11**, **M-12**, **L-9**, **L-10–L-13**. Its external reviewer said the local report was **not committed**, no JSON was produced, and no source patch was pushed. Do **not** claim its files or exact unpublished results are available on GitHub.
 
-Before remediation, the actual connected GitHub source `review/frank-pr33-third-blockers-fix-20261012` HEAD was `7d4c3972b3a2f86c794057f1b915e407763417ab`; official PR #33 `48f53a71f692f5dc62f67198f4794e79c45402d2` (still marked Draft, not PR-merged). Research fix branch: `review/frank-pr33-r4-medium-remediation-20261012` based on exactly `7d4c3972...`.
+Before remediation, the actual connected GitHub source `review/frank-pr33-third-blockers-fix-20261012` HEAD was `7d4c3972b3a2f86c794057f1b915e407763417ab`; official PR #33 original head `48f53a71f692f5dc62f67198f4794e79c45402d2` (merged by another actor at 2026-10-12 04:47:28 UTC, **without the newer research fixes**). Research fix branch: `review/frank-pr33-r4-medium-remediation-20261012` based on exactly `7d4c3972...`.
 
 ## What was reproduced
 
@@ -49,6 +49,15 @@ The research branch's dry-run/deploy script now pins this full Git commit and th
   - CI merge trees are ephemeral, generated with read-only checkout permissions; no live agent deployment, Gmail, write to main or production SQLite.
 
 **IMPORTANT CHANGE TO MAIN:** The main baseline `c730b709...` **already contains PR31, PR32, PR33 old commits as ancestors**. GitHub compare: each original PR head was **behind** this main SHA with `ahead_by=0`. GitHub PR metadata nevertheless marks each PR Draft/unmerged. Thus the 1,270 matrix is principally a test of main + new research fix, **not** proof of first-time merger of three independent outstanding PRs. This main state arose independently of these research branch changes. Future integrators must inspect current main and avoid replaying or overwriting existing product files.
+
+## Subsequent verified upstream PR merges — independent of this work
+
+At the beginning of this research work, PR #31, #32 and #33 were still reported Draft/unmerged, although their commits were already ancestors of the tested main branch. During this work, **GitHub PR metadata changed externally**: all three were actually marked merged and closed at **2026-10-12T04:47:28Z**:
+- PR31 head `c50e7e2259e85ce89e14641a4e1e98ca3e4a4bc7`, merge_commit_sha `b16dcbcb7afb056b8afe0b80c82cf28e01e79abf`
+- PR32 head `85f1a792dd7d0fbf354c09ac83872887ed301c10`, merge_commit_sha `7df82057f3cab7dd85d4c076dd49b86db3e93fb8`
+- PR33 head `48f53a71f692f5dc62f67198f4794e79c45402d2`, merge_commit_sha `dafb126e33338523630bb48d4fe838ddd9c7fb95`
+
+None of these merges was executed by this fourth-round research fix. Current main was observed at `472be406a66468b52e9b5b3319c867b0ad7485eb` after these remote merges. **Merged official PR33 is older source**, not the present M-11/M-12 fix branch; the formal PR is closed, so integrating the repaired product now means a **new** carefully reviewed follow-up PR against current main, not simply updating the old PR33 branch. It also must account for previous H-5/H-6/M-8/M-9 work that was only on research branches. Do not assume any user Mac deployment resulted from GitHub merges.
 
 ## Residual issues and release gate
 
