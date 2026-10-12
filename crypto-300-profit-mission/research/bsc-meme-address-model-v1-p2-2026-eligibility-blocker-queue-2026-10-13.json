@@ -6,7 +6,7 @@
   "purpose": "Explicitly refuse to promote selected partial, non-owner, mixed-quote or open-position evidence to an economically settled zero-inventory round; focus 2026 opportunity breadth. Stage3 resolves ADFF initial IFML partial and 2ADF first Niulai round; unresolved entire CA token remainders for ADFF MARS/Niulai retain eight audited economic exclusion cases. Stage4 explicitly corrects previous blocker design bug: a single unaudited partial first exit must not forbid a different fully proven later round in the same wallet and exact CA; stage4 R2 A83B and R4 877AF are NEGATIVE controls.",
   "original_frozen_23_wallets": true,
   "all_entry_wallets_from_P1_baseline": true,
-  "base_P2_ledger_rounds": 37,
+  "base_P2_ledger_rounds": 50,
   "ranked_returns_enabled": false,
   "items": [
     {
@@ -53,7 +53,7 @@
         "proof_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
         "proof_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
       },
-      "notes": "The same wallet×CA may legitimately have ONE source-audited negative closed round while other raw inventory cycles / later open remainder remain UNRESOLVED. Block on exact EPISODE indices, not entire CA; profit rank remains disallowed."
+      "notes": "R2 owner-signed native scope is audited, R8 exact input tx too long to verify original signer, R12 has third-party original tx: remaining 11 original raw zero rounds unknown, no blanket CA profitability claim."
     },
     {
       "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
@@ -101,22 +101,26 @@
         {
           "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
           "git_blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
+        },
+        {
+          "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+          "git_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568"
         }
       ],
       "next": "Use the full previously paginated MARS token history, segment exact zero-inventory cycles and all signed cashflows. First exit is not a full round and same block contains 3 original wallet external tx.",
       "audited_closed_episode_indices": [
-        4
+        4,
+        5,
+        6,
+        10
       ],
       "blocked_specific_episode_indices": [
         1,
         2,
         3,
-        5,
-        6,
         7,
         8,
         9,
-        10,
         11,
         12,
         13,
@@ -136,7 +140,7 @@
         "proof_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
         "proof_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
       },
-      "notes": "The same wallet×CA may legitimately have ONE source-audited negative closed round while other raw inventory cycles / later open remainder remain UNRESOLVED. Block on exact EPISODE indices, not entire CA; profit rank remains disallowed."
+      "notes": "R4 R5 R6 R10 owner-signed BNB native block scoped economic signs independently audited; 17 other original raw cycles and nonzero end token inventory are still UNKNOWN, NOT zero profit. Partial first R1 remains blocked."
     },
     {
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
@@ -293,6 +297,10 @@
     "bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json": {
       "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json",
       "git_blob_sha": "c4477d02dac3de5fda2435c8a1ba226313a3c52c"
+    },
+    "bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json": {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+      "git_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568"
     }
   },
   "disqualification_rules": [
@@ -310,5 +318,32 @@
     "former_2ADF_NIULAI_first_unaudited": "First raw inventory closed Niulai R1 is now confirmed original EOA signed successful 2 tx and N-1/N native scope NEGATIVE; other nine raw cycles remain unaudited; no promotion of whole 2ADF Niulai position."
   },
   "previous_absolute_CA_exclusion_policy_is_invalid": true,
-  "ca_ledger_policy": "Blocker means at least one remaining UNVERIFIED same-CA episode or unresolved entire position. P2 ledger may contain other confirmed signed closed episodes of same CA. Enforce disjoint (wallet, exact CA, episode_index) blocker vs ledger; unrelated wallet×CA cannot be promoted as audited."
+  "ca_ledger_policy": "Blocker means at least one remaining UNVERIFIED same-CA episode or unresolved entire position. P2 ledger may contain other confirmed signed closed episodes of same CA. Enforce disjoint (wallet, exact CA, episode_index) blocker vs ledger; unrelated wallet×CA cannot be promoted as audited.",
+  "remaining_MARS_877AF_unverified_17_after_bulk16": true,
+  "bulk16_disqualifications": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode": 8,
+      "reason": "TRUNCATED_RPC_ORIGINAL_SENDER_UNVERIFIED",
+      "source_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode": 12,
+      "reason": "THIRD_PARTY_OR_NONOWNER_ORIGINAL_TX",
+      "source_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode": 5,
+      "reason": "THIRD_PARTY_OR_NONOWNER_ORIGINAL_TX",
+      "source_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    }
+  ]
 }
