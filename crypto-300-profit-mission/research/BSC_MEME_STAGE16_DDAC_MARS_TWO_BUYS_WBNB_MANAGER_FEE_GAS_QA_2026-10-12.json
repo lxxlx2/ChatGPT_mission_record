@@ -1,0 +1,71 @@
+{
+  "schema": "BSC_MEME_DDAC_MARS_TWO_BUY_OWNER_NATIVE_1PCT_POOL_EVENT_QA_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "manager": "0x1de460f363af910f51726def188f9004276bf4bc",
+  "wbnb": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "rows": [
+    {
+      "label": "BUY1",
+      "hash": "0xfd87fa6d585acdf047e96264ddfb1bb0c428c882449d72554a34ec6841b63824",
+      "block": 112441920,
+      "owner_signed": true,
+      "original_msg_value_wei": "500000000000000000",
+      "manager_fee_like_event": {
+        "topic0": "0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92",
+        "data": "0x0000000000000000000000000000000000000000000000000011c37937e08000000000000000000000000000000000000000000000000000000000006a675c8e",
+        "amount_wei": "5000000000000000",
+        "logIndex": "0x1d3"
+      },
+      "wbnb_to_pool": {
+        "pool": "0x172fcd41e0913e95784454622d1c3724f546f849",
+        "transfer_raw_wei": "495000000000000000",
+        "uniqueId": "0xfd87fa6d585acdf047e96264ddfb1bb0c428c882449d72554a34ec6841b63824:log:470"
+      },
+      "native_balance_before_wei": "23536132035966976745",
+      "native_balance_after_wei": "23036072668126976745",
+      "native_delta_wei": "-500059367840000000",
+      "gasPriceWei": "120000000",
+      "gas_limit_units": "2900000",
+      "inferred_gas_wei": "59367840000000",
+      "inferred_gas_units": "494732",
+      "fee_like_equals_1pct": true,
+      "match": true
+    },
+    {
+      "label": "BUY2",
+      "hash": "0xc13d9d1b476a6fa2ae56ed17518281101dde33e930572ce40ef46819e54bc989",
+      "block": 112635735,
+      "owner_signed": true,
+      "original_msg_value_wei": "500000000000000000",
+      "manager_fee_like_event": {
+        "topic0": "0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92",
+        "data": "0x0000000000000000000000000000000000000000000000000011c37937e08000000000000000000000000000000000000000000000000000000000006a68b16f",
+        "amount_wei": "5000000000000000",
+        "logIndex": "0x2b"
+      },
+      "wbnb_to_pool": {
+        "pool": "0x172fcd41e0913e95784454622d1c3724f546f849",
+        "transfer_raw_wei": "495000000000000000",
+        "uniqueId": "0xc13d9d1b476a6fa2ae56ed17518281101dde33e930572ce40ef46819e54bc989:log:46"
+      },
+      "native_balance_before_wei": "24487766878118910847",
+      "native_balance_after_wei": "23987707497438910847",
+      "native_delta_wei": "-500059380680000000",
+      "gasPriceWei": "120000000",
+      "gas_limit_units": "1450000",
+      "inferred_gas_wei": "59380680000000",
+      "inferred_gas_units": "494839",
+      "fee_like_equals_1pct": true,
+      "match": true
+    }
+  ],
+  "method": "Independent exact tx original from/value, manager per-wallet indexed fee-like log, WBNB actual Transfer to pool, historical native wallet block delta. Fee-like event is EXACT 1% raw wei of msg.value on both buys. Gas inferred by conditional block conservation and bounded by original gasLimit at original gasPrice.",
+  "limitations": [
+    "Manager event data amount is on-chain, but ABI event semantics is not independently confirmed; use fee-like wording rather than audited fee.",
+    "The gasUsed is inferred from native BNB difference and not independently read from source receipt; other internal native flows cannot be ruled out without trace.",
+    "These owner-origin buy quantities not enough to label whole DDAC MARSCOIN token lifetime profitable."
+  ],
+  "production": "NO_GO"
+}
