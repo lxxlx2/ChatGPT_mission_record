@@ -130,13 +130,23 @@ def build_baseline(
             state = cell.get("state")
             _require(state in (FULL_OBSERVED, FULL_ZERO),
                      f"{wallet} {name}: partial or unrecognized cell state {state!r}")
-            count_in = _nonnegative_int(cell.get("complete_in_events"),
-                                        f"{wallet} {name} inbound")
-            count_out = _nonnegative_int(cell.get("complete_out_events"),
-                                         f"{wallet} {name} outbound")
             present = state == FULL_OBSERVED
-            _require((count_in + count_out > 0) == present,
-                     f"{wallet} {name}: transfer presence/count conflict")
+            count_in = cell.get("complete_in_events")
+            count_out = cell.get("complete_out_events")
+            # V21 has eight PREVIOUSLY-RECONCILED 8E6B cells whose overlay
+            # complete_* event count fields are both null, even though the
+            # original full cursor exists elsewhere. Do NOT backfill with
+            # the stale original_in/out sample counts or invent 0.
+            if count_in is None or count_out is None:
+                _require(count_in is None and count_out is None and present,
+                         f"{wallet} {name}: incomplete or zero-ERC20 count is null")
+                count_status = "PRESENT_WITH_NULL_COMPLETE_COUNTS_IN_V21_OVERLAY"
+            else:
+                _nonnegative_int(count_in, f"{wallet} {name} inbound")
+                _nonnegative_int(count_out, f"{wallet} {name} outbound")
+                _require((count_in + count_out > 0) == present,
+                         f"{wallet} {name}: transfer presence/count conflict")
+                count_status = "COMPLETE_COUNTS_PRESENT_IN_V21_OVERLAY"
             observed_total += int(present)
             record = {
                 "wallet": wallet,
@@ -146,6 +156,7 @@ def build_baseline(
                 "ERC20_presence": "PRESENT" if present else "ABSENT_IN_FROZEN_CA",
                 "complete_in_events": count_in,
                 "complete_out_events": count_out,
+                "complete_event_count_state": count_status,
                 "original_evidence": cell.get("evidence"),
                 "token_quantity_audit_state": (
                     "RECONCILED_TRANSFER_QUANTITY_NOT_TRADE_CLOSE" if present else "NO_POSITIVE_ERC20_TRANSFER"
@@ -201,6 +212,13 @@ def build_baseline(
 
     _require(observed_total == expected_observed,
              f"transfer present total {observed_total} != {expected_observed}")
+    null_count_rows = [
+        {"wallet": c["wallet"], "token": c["token"], "ca": c["ca"],
+         "source_evidence": c["original_evidence"]}
+        for c in all_cells
+        if c["complete_event_count_state"]
+        == "PRESENT_WITH_NULL_COMPLETE_COUNTS_IN_V21_OVERLAY"
+    ]
 
     # Coverage order is an evidence-investigation queue, not a profitability score.
     records.sort(key=lambda w: (
@@ -227,6 +245,8 @@ def build_baseline(
             "cells": expected_wallets * expected_tokens,
             "ERC20_present": expected_observed,
             "ERC20_absent": expected_wallets * expected_tokens - expected_observed,
+            "observed_cells_with_null_complete_event_counts": len(null_count_rows),
+            "null_complete_event_count_cell_refs": null_count_rows,
             "source_is_exhaustive_BSC_top_profit_traders": False,
             "completed_transaction_PnL_cells": 0,
             "completed_transaction_PnL_cells_note":
