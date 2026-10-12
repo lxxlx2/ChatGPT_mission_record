@@ -66,8 +66,7 @@
           "elapsed_seconds_since_entry": -3,
           "reserve_token_wei": "8380363078531760035486",
           "reserve_WBNB_wei": "110886990566830698",
-          "spot_WBNB_per_token": 110886990566830700,
-          "actual_block_height": 46627716
+          "spot_WBNB_per_token": 0.000013231764486540374
         },
         {
           "block": 46627717,
@@ -75,8 +74,7 @@
           "elapsed_seconds_since_entry": 0,
           "reserve_token_wei": "6122708828128580301188",
           "reserve_WBNB_wei": "151970701851567928",
-          "spot_WBNB_per_token": 151970701851567940,
-          "actual_block_height": 46627717
+          "spot_WBNB_per_token": 0.000024820827858642122
         },
         {
           "block": 46627816,
@@ -84,8 +82,7 @@
           "elapsed_seconds_since_entry": 297,
           "reserve_token_wei": "4932928375010554428769",
           "reserve_WBNB_wei": "231952997960399546",
-          "spot_WBNB_per_token": 231952997960399550,
-          "actual_block_height": 46627816
+          "spot_WBNB_per_token": 0.000047021359388763326
         },
         {
           "block": 46628016,
@@ -93,8 +90,7 @@
           "elapsed_seconds_since_entry": 897,
           "reserve_token_wei": "76119102389005858708128",
           "reserve_WBNB_wei": "8357654265771130909",
-          "spot_WBNB_per_token": 8357654265771131000,
-          "actual_block_height": 46628016
+          "spot_WBNB_per_token": 0.00010979706806130515
         },
         {
           "block": 46628316,
@@ -102,8 +98,7 @@
           "elapsed_seconds_since_entry": 1797,
           "reserve_token_wei": "1357663803118804034408564",
           "reserve_WBNB_wei": "148582576076141244321",
-          "spot_WBNB_per_token": 148582576076141230000,
-          "actual_block_height": 46628316
+          "spot_WBNB_per_token": 0.00010943988912042853
         },
         {
           "block": 46628916,
@@ -111,8 +106,7 @@
           "elapsed_seconds_since_entry": 3597,
           "reserve_token_wei": "2133773934120808616590094",
           "reserve_WBNB_wei": "310892815284666928945",
-          "spot_WBNB_per_token": 310892815284666960000,
-          "actual_block_height": 46628916
+          "spot_WBNB_per_token": 0.00014570091531873827
         }
       ],
       "scenarios": [
@@ -264,8 +258,7 @@
           "elapsed_seconds_since_entry": -3,
           "reserve_token_wei": "124923454497213432712777",
           "reserve_WBNB_wei": "592868474481371230",
-          "spot_WBNB_per_token": 592868474481371300,
-          "actual_block_height": 47620848
+          "spot_WBNB_per_token": 0.000004745853986087103
         },
         {
           "block": 47620849,
@@ -273,8 +266,7 @@
           "elapsed_seconds_since_entry": 0,
           "reserve_token_wei": "124923454497213432712777",
           "reserve_WBNB_wei": "592868474481371230",
-          "spot_WBNB_per_token": 592868474481371300,
-          "actual_block_height": 47620849
+          "spot_WBNB_per_token": 0.000004745853986087103
         },
         {
           "block": 47620948,
@@ -282,8 +274,7 @@
           "elapsed_seconds_since_entry": 297,
           "reserve_token_wei": "131051274562472823514542",
           "reserve_WBNB_wei": "565660734123419953",
-          "spot_WBNB_per_token": 565660734123419970,
-          "actual_block_height": 47620948
+          "spot_WBNB_per_token": 0.000004316331420750636
         },
         {
           "block": 47621148,
@@ -291,8 +282,7 @@
           "elapsed_seconds_since_entry": 897,
           "reserve_token_wei": "140211269514044183435158",
           "reserve_WBNB_wei": "531138507084749370",
-          "spot_WBNB_per_token": 531138507084749400,
-          "actual_block_height": 47621148
+          "spot_WBNB_per_token": 0.000003788129933675183
         },
         {
           "block": 47621448,
@@ -300,8 +290,7 @@
           "elapsed_seconds_since_entry": 1797,
           "reserve_token_wei": "151796733446678928403144",
           "reserve_WBNB_wei": "491944367496572693",
-          "spot_WBNB_per_token": 491944367496572700,
-          "actual_block_height": 47621448
+          "spot_WBNB_per_token": 0.0000032408099721683153
         },
         {
           "block": 47622048,
@@ -309,8 +298,7 @@
           "elapsed_seconds_since_entry": 3597,
           "reserve_token_wei": "148814513687119149641294",
           "reserve_WBNB_wei": "512564527291885517",
-          "spot_WBNB_per_token": 512564527291885500,
-          "actual_block_height": 47622048
+          "spot_WBNB_per_token": 0.0000034443181286036837
         }
       ],
       "scenarios": [
@@ -462,8 +450,7 @@
           "elapsed_seconds_since_entry": -1,
           "reserve_token_wei": "2806873793672709940984",
           "reserve_WBNB_wei": "787021980956102340",
-          "spot_WBNB_per_token": 787021980956102400,
-          "actual_block_height": 50982375
+          "spot_WBNB_per_token": 0.0002803909398171792
         },
         {
           "block": 50982376,
@@ -471,8 +458,7 @@
           "elapsed_seconds_since_entry": 0,
           "reserve_token_wei": "2806873793672709940984",
           "reserve_WBNB_wei": "787021980956102340",
-          "spot_WBNB_per_token": 787021980956102400,
-          "actual_block_height": 50982376
+          "spot_WBNB_per_token": 0.0002803909398171792
         },
         {
           "block": 50982475,
@@ -480,8 +466,7 @@
           "elapsed_seconds_since_entry": 149,
           "reserve_token_wei": "2833356092666032634151",
           "reserve_WBNB_wei": "779901638231312758",
-          "spot_WBNB_per_token": 779901638231312800,
-          "actual_block_height": 50982475
+          "spot_WBNB_per_token": 0.0002752571906687056
         },
         {
           "block": 50982675,
@@ -489,8 +474,7 @@
           "elapsed_seconds_since_entry": 449,
           "reserve_token_wei": "243690159815617078",
           "reserve_WBNB_wei": "70117199269378",
-          "spot_WBNB_per_token": 70117199269378,
-          "actual_block_height": 50982675
+          "spot_WBNB_per_token": 0.00028773094212105515
         },
         {
           "block": 50982975,
@@ -498,8 +482,7 @@
           "elapsed_seconds_since_entry": 899,
           "reserve_token_wei": "243690159815617078",
           "reserve_WBNB_wei": "70117199269378",
-          "spot_WBNB_per_token": 70117199269378,
-          "actual_block_height": 50982975
+          "spot_WBNB_per_token": 0.00028773094212105515
         },
         {
           "block": 50983575,
@@ -507,8 +490,7 @@
           "elapsed_seconds_since_entry": 1799,
           "reserve_token_wei": "243690159815617078",
           "reserve_WBNB_wei": "70117199269378",
-          "spot_WBNB_per_token": 70117199269378,
-          "actual_block_height": 50983575
+          "spot_WBNB_per_token": 0.00028773094212105515
         }
       ],
       "scenarios": [
@@ -640,5 +622,6 @@
     "Counterfactual 1 BNB buying against <1 BNB reserves is economically unrealistic for a follower; reserve fraction is printed per scenario.",
     "BULLA V2 pair at early +300 block holds extremely low WBNB reserves; model is a local pool quote not the asset's global best executable market.",
     "No pass on multiple-profit major opportunity trader identification; further evidence needed."
-  ]
+  ],
+  "fix_note": "Corrected the display-only spot_WBNB_per_token to the ratio of native 18-decimal raw reserves (WBNB / token), removing the accidental raw WBNB reserve copy; all raw reserves, exact fee proofs and scenario integer outputs UNCHANGED."
 }
