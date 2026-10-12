@@ -1,0 +1,723 @@
+{
+  "all_original_D1_events": 305,
+  "autotrade": "NO_GO",
+  "benchmark_complete": 305,
+  "benchmark_unknown": 0,
+  "deployment": "NO_GO",
+  "frank": "UNCHANGED",
+  "gmail": "OFF",
+  "historical_305_denominator_kept_unchanged": true,
+  "new_oos": "NOT_DONE",
+  "new_strategy_thresholds": "NONE",
+  "no_new_reference_monitor_or_new_alert": true,
+  "original_2x_early5_of_305": 27,
+  "original_stage85_git_blob": "622299fec16400e189cb8fa668ecbc8bc31ec630",
+  "other_ai_review": "NOT_DONE",
+  "profit_actual": "UNKNOWN",
+  "raw_D1_overlapping_reference_asset_count": 1,
+  "raw_D1_overlapping_reference_asset_events": [
+    {
+      "D1_UTC": "2025-02-03T22:09:00Z",
+      "date": "2025-01-30",
+      "symbol": "ETHUSDT"
+    }
+  ],
+  "reference_asset_names_BENCHMARK_ONLY": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "reference_results": {
+    "comparison_unadjusted_stage86_quote15_accel_same_date_auc": "0.485389",
+    "comparison_unadjusted_stage86_ret60_same_date_auc": "0.426901",
+    "excess_feature_auc_date_matched": {
+      "candidate_excess_quote_ratio_vs_BTCETH_mean": {
+        "global_cross_day_auc": 0.549806,
+        "same_date_equal_date_auc": 0.477868,
+        "same_date_evaluable_count": 4,
+        "same_date_individual": {
+          "2025-01-30": null,
+          "2025-06-02": null,
+          "2025-08-01": 0.568376,
+          "2025-10-02": 0.381206,
+          "2026-06-21": 0.40566,
+          "2026-07-28": 0.556231
+        }
+      },
+      "candidate_excess_ret60_vs_BTCETH_mean_pct": {
+        "global_cross_day_auc": 0.559032,
+        "same_date_equal_date_auc": 0.419461,
+        "same_date_evaluable_count": 4,
+        "same_date_individual": {
+          "2025-01-30": null,
+          "2025-06-02": null,
+          "2025-08-01": 0.534188,
+          "2025-10-02": 0.608156,
+          "2026-06-21": 0.198113,
+          "2026-07-28": 0.337386
+        }
+      },
+      "candidate_excess_ret60_vs_BTC_pct": {
+        "global_cross_day_auc": 0.559968,
+        "same_date_equal_date_auc": 0.415591,
+        "same_date_evaluable_count": 4,
+        "same_date_individual": {
+          "2025-01-30": null,
+          "2025-06-02": null,
+          "2025-08-01": 0.529915,
+          "2025-10-02": 0.606383,
+          "2026-06-21": 0.188679,
+          "2026-07-28": 0.337386
+        }
+      },
+      "candidate_excess_ret60_vs_ETH_pct": {
+        "global_cross_day_auc": 0.559032,
+        "same_date_equal_date_auc": 0.426354,
+        "same_date_evaluable_count": 4,
+        "same_date_individual": {
+          "2025-01-30": null,
+          "2025-06-02": null,
+          "2025-08-01": 0.538462,
+          "2025-10-02": 0.602837,
+          "2026-06-21": 0.235849,
+          "2026-07-28": 0.328267
+        }
+      }
+    },
+    "note": "Same exposed date cohorts, descriptive label-open. If source missing, AUC subset not all305.",
+    "status": "COMPLETE_SOURCE"
+  },
+  "research_exposure": "HISTORICAL_EXPOSED_NOT_OOS",
+  "schema": "MONSTER_STAGE87_FULL305_ASOF_MARKET_RELATIVE_SAME_DATE_DIAGNOSTIC_V1",
+  "source_reference_official_SHA_receipts": [
+    {
+      "bars": 1440,
+      "date": "2025-01-30",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "b2d04acc3b52c44d15cbd91beac845420b6715649fdbd7ed344a40248c7f645f"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-01-31",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "02d6601a048c8e3956c3d67103ea4239cf55154c6cf013cb99030d02f77d0ba2"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-01",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "2503165e4ddfce5cb8017131fca0626b12b92b2728540bb745c742ac73788526"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-02",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "0917eed55e52c24d924cd2e6f4e6af0484eb5f0578b1b043d496b20abcfaf9a0"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-03",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "d9d35b1ff751290859ba5e3696c24a7df735918251e0bd19b169e2be3530ebd6"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-04",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "833976de40cd7cd12d4901d0e444285caecedaf3cbc2ba52bb2c13e876fb3bea"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-06",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "a9ef0e3562993eb8f33cdc5a31ab25775cbac8ef21920af78ef7b94d0aba1a84"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-01-30",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "0ab4bb543f94e75587eccbbed8b31696a1beedfa581f8d624ea996ad15afd7d7"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-01-31",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "4a10674fa8fef9a7590221d55c733387ad0b7559a23842ea71da323d375157b3"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-01",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "e7c6489ca666809fa0585aa43aa6ad76722325aa59cfa1cd69f5eba4acf4c4d0"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-02",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "c1552acef92c2a9286e403bd14d75e095fee0d4ed95e6ab02818977f06944ea0"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-03",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "874c0ff988926e3bee9001aa135c9adef15e594255f27ca0def11fbfd4baffb6"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-04",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "44c97cce4c6bab62e5ba8e71879b1e15cf7ffbf64f2bc7c20707a7703e852cab"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-02-06",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "1904f9f61574589bc187eea2635d2c94edfdb31f5298194762a21de6da4a6848"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-02",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "c32dde9a0a201620e34bed3d15c125b7cf53546bd6cc969ef288fa1d684fd5ea"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-03",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "386cba9e3e6742cd4b085951000fd08fe28970631dbcafbe6ce1608e82855893"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-04",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "cbc00e6af82d8949c8fb378208a70f62268600ace3e4391569bd69cfbc99ea33"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-05",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "2f48eaae77b1777cb5073db3e5db84c644a7ec34f74fad0cf1e5eff26b4cd8fe"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-06",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "92673257e69e891de3d41a34e6f143a97ab5b45fbefbfbc1ba3428d25c4fb086"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-07",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "d30f33c32078d98a62a40194bac62fbad95451a53a90dcb7bd0affa0dc3d243b"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-02",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "f217260ddc0c19e011f02682ed2096ecf117ba65af658a5ac9cbec622fdd2be4"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-03",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "d194ac2fd1b39ad9fa94d3b53d14c36d76160783ecb7a90dcbe89fc45c33f9a7"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-04",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "64046122e007dfcbd1bcc11d418759e373bde7ba7caaee9dfd795a63a97f59b3"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-05",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "336b06c6f7da279ca3655ab20cc0e8ca6389cb183d40872b3f444c992593c2d6"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-06",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "95507d6f2ddf8502317cd692fcaca77ff151ff46741a8945fb4cfb0f66eb6c74"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-06-07",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "b0ed056ef46c9065bcce397f557dba53cfdadd2414bb5f73474a5cea170fcbe5"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-01",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "361dd0a690f049d5a34b179e572311bbf129b4f2180e8b9feb5afd7a44766e49"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-02",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "1a391c399326ac7a4ff1b53cdd875f0d54b1de057be33d353b4097bdebfb5a1b"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-03",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "b50bce589592406e1f04568c39f3f49f0e0933f322c3c0f8afc12d490886b730"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-04",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "13813f44ee3bd7a92ddc3f8bf2fe69f6d64f8039af34b1bd5db593d4747898c4"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-05",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "42198e297e62e22263c1dd6e969432109cae9131385d0fdc4c14dc146369d6e8"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-06",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "7b29b23d7e678b55de23cca7b41661ef07aa8f92d10020c2d91b985df15817cb"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-07",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "ed94aa535d54332177f1ea9fee54c1992aaa127848aa356b9d26632e81bf73fa"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-08",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "afd829d85e70524b60b64dbc4746fad0d6b256472547c85233c3b5517c8a05dc"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-01",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "88473a85a8c11972c2798cc7877759906e996194b59abba0f53e8fe4f06ee365"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-02",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "b1893ffb4f8a8efb222c219e5e8518218c2816fc04ce10332f6fd6e433b010fd"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-03",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "42a2dda4071e8e27d967538ce0c0d113b5ba0304f5bb0fdf1695f8d4a55928fb"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-04",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "10a771f7f894a9a8ba3c7790e3d3f993fcab103d00740f0cec3e966d286b4c16"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-05",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "2482522c12aaed76e5461f7867b81c088364596c91897b6395c215d54c291608"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-06",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "097b69873c5546c0f3fd5c05eaefd187a217b1dcfdc23c5de473662bcc95a0e9"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-07",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "fa923595e24b85609c6beeed06b920dc44741211c8668a5f964b4d7f68b7a6c1"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-08-08",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "08478393e6ce3f2cf7ac396d2cbd73b24f0dc0bd4bf7f6ed39e487d17fa6aa52"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-02",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "4c558b21bce63dc3749d4461a17a342f186561b832a8225c1527b864a53c2748"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-03",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "51638971693dee0519f8cc173e497015019b7a9796f2249ac70fd367d3925bda"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-04",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "1d5ad1d1f0773dcfaf18f4438ba7a02b136a30a68cba23e9990d46bd063fc715"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-05",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "44ca5272b33ca8f86c60278b27345ae4a78222eb456d6b7e7fb6e0a05363f487"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-06",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "6549dbd5a29073970fc8ef55af10a34b9c8b1036f117e6997ffa47745079d453"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-07",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "f52d74a63fa9a433da534107a89487b0c5c996fb03119a509897faa0b25884d8"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-08",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "2e75d30145072e5e8bbc30a5eed3fdeac84a00273fe000bd666ce11fe076c0e0"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-09",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "a31b51dbba72397b026482c93e93884f341af64ed8deca66ea735f58eef99936"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-02",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "e1b56084c73e6bc03f42fc5904105ec2ef4916c3d8feca889fcc3584c496e4fd"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-03",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "607d9065df5b276114fc208245e7b3d88524aca0a3b1c3450112045b101d52e6"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-04",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "06aa1da3aa4ac8bff1864e2a1a60d93e1aa0086ea35bf793890b91da973c04bd"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-05",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "47e451d1127f8add2541de7b2f55cf9e41aa5310d1f28cdb773cac6aec0bfa06"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-06",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "ab122745653e2264de8a4e91c0be54cb69b303880472e1b61ba6bfa55feac8ff"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-07",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "525b5d839bb3b95c43030037afc813058a1dc19084af85315efb109b4f6b7667"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-08",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "e54a9319f95c7fef50e47d216901471b487e659df7385faa55f3b14e7f5f7663"
+    },
+    {
+      "bars": 1440,
+      "date": "2025-10-09",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "0b5322391db5c05e7119a2684759a9f551263ab0063cc3f418c758717bdca1ac"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-21",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "5091ec31be8be924ed81f81fc066b527f6846b1858dc7abaf44fa1991442c43d"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-22",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "8ebac0e4daeee32f603a2754905e0853061671d4e46f437a2863f6001b42906c"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-23",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "f096cff5682351bc6f13d3b05d9065b4a142e52e03a6623c58d7e10eeba7c436"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-24",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "0eec81ec95a7b83274f5cc2de611a609c1112f68d1a18b3b920577a1a36ca8fe"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-25",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "f876e30759cdea92a2f2c060e51ace5ba76a58b9cf7453bee73039e5d6ab05de"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-26",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "49c50d19ae954a69547ee4e4e18336eba9776b7603a39bb512f025cf31e44489"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-27",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "cd5b2f34ce6416edbfbede92ce1f589d8401af8ea8be0a9e5efb72e2732507eb"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-28",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "fce6c076be27e519eb17d03fe4b9481c134251013fa54d7b6b89f2d9c51dffe6"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-21",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "90598182719d99cf9be5ceec994a42cfa5e87adc04d8aef86a5a5e6eb1c68001"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-22",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "879a5a16cf841eeea04d3c7d678c8231da83b48dc158c5725f33242b7bed9144"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-23",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "119807ae2f3fff0cd8c27d9eb2735f76bae1337f523394224afc3655c1322f20"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-24",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "60913a57636a274c1b6d8eefb645898ec96d17c9f563e7ccd08708bd0a6db737"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-25",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "c0d96b13e26819e40d50a4110d4d9284935c19003ae3205927000a522dc10bb3"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-26",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "cb2762a5e495ff01f4b7441893399215f287dcc2cf1cda53262ba7c4b1bfe48d"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-27",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "f2a08a3acf2a4718f9a013a7113a4261f590da08a27ecd17f34f041344ea21a6"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-06-28",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "1296253211f92fe9d7b4687fac6539c052d14aa898cad9b94645f4595169b692"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-07-28",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "85491f3f892638977a93e5abeb32a7e837a4360b34b2a4aedc02f670523be08f"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-07-29",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "16606c429cba1d67cb3af519046238f99d416c6dff21102c62f653cc953cc09d"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-07-30",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "02df0f2c8dc2c31313d5b78c31e6e37d84ca037521b118b0b9c4c0bac770e227"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-07-31",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "a156d6855e7a8061a24616ed25af58dff25b5840ef3a108c11fbf80e32b78ab5"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-08-01",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "988c5973871e83042ae41a34df250e74d67668305289d69a7d8c49e43e17fae2"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-08-02",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "0b962494671d82f089539e51892a3c860e59626a683a34470b4390f0256b381d"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-08-03",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "5608f4d05367d28333202ea8abdbc60d541edf7585903bf4d0609399c1d949c1"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-08-04",
+      "symbol": "BTCUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "45cbc2cd37fb9b46c41163a04fddfe015a91506afa42e89c6d23c5346e7c6dac"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-07-28",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "1f2c49d0d5db8fd1964028c6e7c95f4a7d5ec7c344cf61ccd5794a0768a9a881"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-07-29",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "97e91c311175e75138e247a136160f9bcca53bd3f9fc65395e03123d0c05b0cc"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-07-30",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "da92deb5e9ff70ad7b373ceeed8cfad6411dc135d256e65237f9e9c2f9a30830"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-07-31",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "896661d9d303a0e263dfb59833b9a4f8659d657a01cf246c6b7cd48ab63d14dc"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-08-01",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "25f25e87c8b1823afc0ed03160d87517cc8acd1c8a994fb73b01fbf3dc3ff14f"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-08-02",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "ee474d4d9f5d76cc4d05208d3b5015e06d087ee5dd0981d111cf80075d1e000c"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-08-03",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "a239ac95a600236c2991aa5a0659c888da2831726a16392819d16cc83b829c11"
+    },
+    {
+      "bars": 1440,
+      "date": "2026-08-04",
+      "symbol": "ETHUSDT",
+      "verified_official_publisher_SHA256": true,
+      "zip_sha256": "67f24532257f10ee408758979d92a2463f9fbdc3d22fd9a15b19c98300c6dbf7"
+    }
+  ]
+}
