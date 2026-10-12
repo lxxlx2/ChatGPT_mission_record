@@ -20,7 +20,7 @@ PINNED = {
     "server.py": {
         "baseline": "b5eb4af5c945cc1b62337d48393fe02243f9505f",
         "legacy": "f5e00781ea4af45b4d6b15a09b8cb000f5b744f4",
-        "target": "8f5124bf46a660fb618371eb113da208b28c775b",
+        "target": "916be9bc6862c7fa9d602c6d1dfce26b5af53968",
     },
     "static/app.js": {
         "baseline": "8f0ac1beace94f01894c151576bc276f48f1b4a4",
