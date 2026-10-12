@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-12 17:57:23 Asia/Bangkok
+Updated: 2026-10-12 20:27:06 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-12 17:57:23 Asia/Bangkok
+- latest_actual_run: 2026-10-12 20:27:06 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-12/175723-final-retry.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-12/175630-attempt.md
-- latest_scheduled_shard: 1
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-12/202706-final-retry.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-12/202618-attempt.md
+- latest_scheduled_shard: 0
 - latest_executed_shard: 1
 - stale_shard_recovery: true
-- latest_candidate_count: 4
+- latest_candidate_count: 5
 - latest_triggered_events: 0
-- latest_identity_failures: 1
-- latest_source_failures: 5
+- latest_identity_failures: 2
+- latest_source_failures: 4
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
@@ -51,3 +51,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-12 17:00:52: 16:59:56 attempt committed; primary final blocked; 170052-final-retry.md committed. Urgent + oldest stale shard1 (scheduled shard0 at attempt time), 13 projects attempted, 9 checked_no_update, 4 unresolved source gaps, 1 unrelated Theo/Autheo identity rejection, 4 candidates, 0 new ACTION. Space Oct15 delivered/deduped; Concrete extra allocation unverified. No Gmail/App notice. Earlier 15:15 and 16:04 attempt-only gaps remain. Schedule HH:00 unchanged; no task changes.
 
 - 2026-10-12 17:57:23: off-minute explicit invocation, attempt 175630-attempt.md and terminal 175723-final-retry.md committed (primary final write blocked). Urgent + only shard1; 13 distinct projects attempted, 8 official surfaces accessible, 5 unresolved source gaps, 4 candidate reviews, 1 Theo/Autheo identity rejection, 0 Tier A/B new ACTION. No Gmail/App output. This partial is not an authoritative full-success shard and not an HH:00 scheduler trigger. Existing task schedule remains HH:00, no task changes.
+
+- 2026-10-12 20:27:06: actual off-minute invocation 20:26, append-only attempt 202618-attempt.md committed; scheduled shard0 replaced by oldest stale shard1 (only one full shard). 13 unique projects attempted; 9 checked_no_update, 4 unresolved source gaps, 5 candidate reviews, 2 identity rejections, 0 verified new ACTION. Main final and first compact retry were blocked; terminal 202706-final-retry.md committed as partial. No Gmail/App notice. Earlier attempt-only gaps remain. Hourly HH:00 schedule unchanged; this invocation is not proof of an on-time trigger.
