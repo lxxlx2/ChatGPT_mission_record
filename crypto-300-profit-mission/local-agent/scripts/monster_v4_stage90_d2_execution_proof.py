@@ -50,6 +50,33 @@ def sha_ok(value) -> bool:
     return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
 
 
+def verified_raw_book(book: dict, venue: str) -> bool:
+    """Require the exact archived REST payload bytes; no trust in asserted SHA alone."""
+    raw = book.get("raw_json")
+    if not isinstance(raw, str) or not raw:
+        return False
+    if hashlib.sha256(raw.encode("utf-8")).hexdigest() != book.get("raw_response_sha256"):
+        return False
+    try:
+        payload = json.loads(raw)
+    except (json.JSONDecodeError, ValueError):
+        return False
+    if not isinstance(payload, dict):
+        return False
+    if (payload.get("lastUpdateId") != book.get("lastUpdateId")
+        or payload.get("bids") != book.get("bids")
+        or payload.get("asks") != book.get("asks")):
+        return False
+    # Futures: Binance's raw REST book includes E and T.
+    # Spot REST book lacks exchange event time; do not manufacture one.
+    if venue == "BINANCE_USDM":
+        return (isinstance(payload.get("T"), int)
+                and payload["T"] == book.get("event_ms")
+                and isinstance(payload.get("E"), int)
+                and payload["T"] <= payload["E"] <= book.get("capture_ms", 0))
+    return False
+
+
 def levels(items, desc: bool) -> list[tuple[Decimal, Decimal]]:
     if not isinstance(items, list) or not 1 <= len(items) <= 1000:
         raise ValueError("INVALID_ORDERBOOK_LEVEL_COUNT")
@@ -152,6 +179,8 @@ def evaluate(candidate: dict, evidence: dict | None, *, notional_quote=None) -> 
         or not sha_ok(book.get("raw_response_sha256"))
         or not isinstance(book.get("lastUpdateId"), int)):
         return result("BOOK_INVALID", "book source, identity, sequence or raw provenance invalid")
+    if not verified_raw_book(book, venue):
+        return result("BOOK_INVALID", "raw Binance REST response/SHA/levels/event time cannot be cross-verified")
     cap, event = book.get("capture_ms"), book.get("event_ms")
     if not isinstance(cap, int) or not isinstance(event, int):
         return result("BOOK_UNKNOWN", "capture and exchange-event timestamps missing")
@@ -228,12 +257,23 @@ def synthetic_fixture():
       "fees":{"source_sha256":sha,"effective_from_ms":t-100,
               "entry_taker_bps":"10","exit_taker_bps":"10"}
     }
+    raw = json.dumps({
+        "lastUpdateId": proof["book"]["lastUpdateId"],
+        "E": t + 1900, "T": proof["book"]["event_ms"],
+        "bids": proof["book"]["bids"], "asks": proof["book"]["asks"],
+    }, separators=(",", ":"))
+    proof["book"]["raw_json"] = raw
+    proof["book"]["raw_response_sha256"] = hashlib.sha256(raw.encode("utf-8")).hexdigest()
     return c, proof
 
 
 def selftest():
     c, p = synthetic_fixture()
     assert evaluate(c, p)["status"] == "NOTIONAL_UNKNOWN"
+    forged=json.loads(json.dumps(p));forged["book"]["asks"][0][0]="999"
+    assert evaluate(c,forged,notional_quote=100)["status"]=="BOOK_INVALID"
+    no_raw=json.loads(json.dumps(p));no_raw["book"].pop("raw_json")
+    assert evaluate(c,no_raw,notional_quote=100)["status"]=="BOOK_INVALID"
     assert evaluate(c, p, notional_quote=100)["status"] == "SNAPSHOT_COST_EVIDENCE_ONLY"
     assert dec(evaluate(c,p,notional_quote=100)["same_snapshot_immediate_roundtrip_cost_quote"]) > 0
     assert evaluate(c,dict(p,fees=None),notional_quote=100)["status"]=="FEE_UNKNOWN"
@@ -241,7 +281,7 @@ def selftest():
     stale=json.loads(json.dumps(p));stale["book"]["capture_ms"] += 20000
     assert evaluate(c,stale,notional_quote=100)["status"]=="BOOK_STALE"
     future=json.loads(json.dumps(p));future["book"]["event_ms"] = c["observed_ms"]-1
-    assert evaluate(c,future,notional_quote=100)["status"]=="BOOK_STALE"
+    assert evaluate(c,future,notional_quote=100)["status"]=="BOOK_INVALID"
     crossed=json.loads(json.dumps(p));crossed["book"]["bids"][0][0]="102"
     assert evaluate(c,crossed,notional_quote=100)["status"]=="BOOK_INVALID"
     mixed=json.loads(json.dumps(p));mixed["book"]["symbol"]="OTHERUSDT"
@@ -257,7 +297,7 @@ def selftest():
     nohist=json.loads(json.dumps(p));nohist["book"]=None
     assert evaluate(c,nohist,notional_quote=100)["status"]=="BOOK_UNKNOWN"
     assert evaluate(c,{},notional_quote=100)["status"]=="IDENTITY_UNKNOWN"
-    print("STAGE90_D2_READ_ONLY_CAUSAL_ORDERBOOK_SYNTHETIC_15_CASES_PASS")
+    print("STAGE90_D2_RAW_SHA_CAUSAL_ORDERBOOK_SYNTHETIC_TESTS_PASS")
 
 
 def audit_historical_305():
