@@ -87,3 +87,60 @@ def test_ca_research_form_and_history_sections_not_removed():
     assert "Frank 持续观察池" in markup
     assert "当前跟单机会" in markup
     assert "cluster-form" in page.identifiers
+
+
+def test_nonactionable_sell_candidate_marks_model_and_historical_payment():
+    import subprocess
+    js = (STATIC / "app.js").read_text(encoding="utf-8")
+    assert "MULTIPLE:'多次强加仓（本轮历史模型记录）'" in js
+    assert "Frank 最近一次买入支付（历史）" in js
+    script = r"""
+const fs=require('fs'), vm=require('vm'), assert=require('assert');
+const js=fs.readFileSync(process.argv[1],'utf8');
+const extract=(a,b)=> {
+  const i=js.indexOf(a), j=js.indexOf(b,i+1);
+  assert(i>=0 && j>i,'source function missing');
+  return js.slice(i,j);
+};
+const elements={candidates:{innerHTML:''}};
+const ctx={
+  '$':id=>elements[id],
+  esc:x=>String(x??''),
+  translated:(dict,key,defaultValue)=>dict[key]||key||defaultValue,
+  decisionLabel:{NO_BUY:'不跟',BUY:'可跟'},
+  patternLabel:{MULTIPLE:'多次强加仓（本轮历史模型记录）'},
+  stateLabel:{INVENTORY_UNDETERMINED:'仓位不明'},
+  sideLabel:{SELL:'卖出'},
+  badge:x=>String(x),
+  age:()=> '5分钟前',
+  reasonFor:()=> 'Frank 最新动作是卖出',
+  tokenIdentity:()=> 'CA',
+  metric:(label,value)=>'<p>'+label+': '+value+'</p>',
+  n:x=>String(x),
+  money:x=>String(x),
+  quoteAsset:()=> 'USDC',
+  frankPriceText:()=> '参考价未确认',
+  quoteUnavailableText:()=> '未请求',
+};
+vm.createContext(ctx);
+vm.runInContext(extract('function frankQuote(x) {','function reasonFor(x) {'),ctx);
+vm.runInContext(extract('function renderCandidates(rows) {','function withinHours('),ctx);
+ctx.renderCandidates([{
+  mint:'mint-test',pattern:'MULTIPLE',decision:'NO_BUY',
+  position_state:'INVENTORY_UNDETERMINED',latest_side:'SELL',
+  latest_at:1700000000, latest_buy_at:1699999000,
+  latest_buy_original_quote_asset:'USDC',latest_buy_original_quote_quantity:'15000',
+  buy_count:3,sell_count:1,metrics:{},decision_quote:{}
+}]);
+const html=elements.candidates.innerHTML;
+assert(html.includes('当前跟单结论：“不跟”'));
+assert(html.includes('Frank模型仓位：仓位不明'));
+assert(html.includes('模式与买入金额是历史记录'));
+assert(html.includes('Frank 最近一次买入支付（历史）'));
+assert(html.includes('15000 USDC'));
+assert(html.includes('最近动作：卖出'));
+assert(!html.includes('当前跟单结论：“可跟”'));
+"""
+    subprocess.run(["node", "-e", script, str(STATIC / "app.js")],
+                   check=True, capture_output=True, text=True, timeout=10)
+
