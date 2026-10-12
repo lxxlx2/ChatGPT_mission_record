@@ -47,13 +47,13 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
 
     def test_curated_positive_and_negative_cases_preserved(self):
         s = self.build()["summary"]
-        self.assertEqual(s["signed_closed_episodes_imported"], 25)
-        self.assertEqual(s["selected_positive_episodes"], 16)
-        self.assertEqual(s["selected_negative_episodes"], 9)
-        self.assertEqual(s["wallets_with_curated_evidence"], 4)
-        self.assertEqual(s["wallets_not_yet_economically_curated"], 19)
+        self.assertEqual(s["signed_closed_episodes_imported"], 32)
+        self.assertEqual(s["selected_positive_episodes"], 21)
+        self.assertEqual(s["selected_negative_episodes"], 11)
+        self.assertEqual(s["wallets_with_curated_evidence"], 5)
+        self.assertEqual(s["wallets_not_yet_economically_curated"], 18)
 
-    def test_19_uncurated_wallets_are_not_zero_profit(self):
+    def test_18_uncurated_wallets_are_not_zero_profit(self):
         for w in self.build()["wallets"]:
             if w["source_episodes_imported"] == 0:
                 self.assertIsNone(w["native_only_event_block_scope_sum_wei"])
@@ -155,6 +155,68 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
         d["episodes"][0]["last_block"] = 800
         with self.assertRaisesRegex(EvidenceError, "inverted"):
             self.build(b, d)
+
+    def test_239e_new_cross_major_positive_and_negative_controls(self):
+        w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0x239e"))
+        self.assertEqual(w["source_episodes_imported"], 7)
+        self.assertEqual(w["selected_positive_episode_count"], 5)
+        self.assertEqual(w["selected_negative_episode_count"], 2)
+        self.assertEqual(w["selected_positive_distinct_major_CAs_count"], 2)
+        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "296492314017711706")
+        self.assertEqual(w["native_only_scope_excluding_largest_positive_wei"],
+                         "100318745376932943")
+        self.assertEqual(w["mixed_source_episodes"], 0)
+        self.assertIsNone(w["realized_profit_rank"])
+        self.assertEqual(w["recent_30d_signed_meme_swap"], "UNRESOLVED")
+
+    def test_239e_27_signer_receipts_match_raw_closed_quantity_and_native_episodes(self):
+        p = HERE
+        tx = json.loads((p / "BSC_MEME_239E_TWO_MAJOR_FULL_SIGNED_FLOW_SOURCE_2026-10-11.json").read_text(encoding="utf-8"))
+        rounds = json.loads((p / "BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json").read_text(encoding="utf-8"))
+        ifml = json.loads((p / "BSC_MEME_239E_IFML_ORIGINAL_TX_RECEIPT_PROVENANCE_2026-10-11.json").read_text(encoding="utf-8"))
+        lobster = json.loads((p / "BSC_MEME_239E_LOBSTER_21_ORIGINAL_SIGNER_RECEIPT_AUDIT_2026-10-11.json").read_text(encoding="utf-8"))
+        wallet = rounds["wallet"]
+        self.assertEqual(sum(len(t["rows"]) for t in tx["tokens"][0]["scopes"]) +
+                         sum(len(t["rows"]) for t in tx["tokens"][1]["scopes"]), 27)
+        self.assertEqual((ifml["self_signed_count"], ifml["receipt_success_count"]), (6, 6))
+        self.assertEqual((lobster["self_signed"], lobster["success"]), (21, 21))
+        for c in rounds["cohorts"]:
+            source = next(t for t in tx["tokens"] if t["token"] == c["token"])
+            self.assertTrue(source["summary"]["complete"])
+            self.assertEqual(source["summary"]["diff_raw"], "0")
+            proof = lobster["rows"] if c["token"] == "龙虾" else ifml["rows"]
+            by_hash = {t["hash"]: t for t in proof}
+            self.assertEqual(len(by_hash), source["summary"]["unique_tx"])
+            movements = sorted(
+                [(t["block"], t["hash"], int(t["raw"], 16) * (1 if s["direction"] == "in" else -1))
+                 for s in source["scopes"] for t in s["rows"]],
+                key=lambda x: x[0],
+            )
+            inventory = 0
+            pending = []
+            closed = []
+            for block, h, delta in movements:
+                self.assertEqual(by_hash[h]["signer"], wallet)
+                self.assertEqual(by_hash[h]["receipt_status"], "0x1")
+                inventory += delta
+                self.assertGreaterEqual(inventory, 0)
+                pending.append((block, h))
+                if inventory == 0:
+                    ep = c["original_episodes"][len(closed)]
+                    self.assertTrue(ep["closed"])
+                    self.assertEqual((ep["first_block"], ep["last_block"], ep["tx_count"]),
+                                     (pending[0][0], pending[-1][0], len(pending)))
+                    current_net = (
+                        sum(int(by_hash[h]["block_native_delta_wei"]) for _, h in pending)
+                        if c["token"] == "龙虾"
+                        else sum(int(x["delta_wei"]) for x in ep["native_wei_ledger"])
+                    )
+                    self.assertEqual(current_net, int(ep["block_native_delta_wei"]))
+                    closed.append(ep)
+                    pending = []
+            self.assertEqual(inventory, 0)
+            self.assertEqual(len(pending), 0)
+            self.assertEqual(len(closed), len(c["original_episodes"]))
 
 
 if __name__ == "__main__":
