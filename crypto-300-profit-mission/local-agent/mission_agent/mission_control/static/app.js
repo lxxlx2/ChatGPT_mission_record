@@ -55,14 +55,14 @@ const decisionLabel = {
 
 const patternLabel = {
   ACCUMULATION:'持续建仓',
-  MULTIPLE:'多次强加仓',
+  MULTIPLE:'多次强加仓（本轮历史模型记录）',
   REENTRY_WATCH:'重新建仓观察',
   NONE:'无跟单模式',
 };
 
 const stateLabel = {
-  OPEN:'持仓中',
-  CLOSED:'已退出',
+  OPEN:'模型标记持有（未独立核实）',
+  CLOSED:'模型标记已退出',
   INVENTORY_UNDETERMINED:'仓位不明',
 };
 
@@ -102,7 +102,7 @@ const reasonText = {
   NO_EXECUTABLE_JUPITER_ROUTE:'Jupiter 当前没有可执行的跟单路径，不跟。',
   PRICE_TOO_FAR_FROM_FRANK:'当前价格已经离 Frank 买入价太远，暂时不追。',
   EXECUTION_IMPACT_TOO_HIGH:'当前 $30 跟单的预计价格冲击太高，暂时不追。',
-  FRANK_MULTIPLE_ACTIVE:'Frank 当前处于多次强加仓模式。',
+  FRANK_MULTIPLE_ACTIVE:'Frank 已观察到多次强加仓模型事件；是否可以跟随以本次结论为准。',
   PRICE_STILL_CLOSE_TO_FRANK:'当前成交价仍接近 Frank 的参考买入价。',
   EXECUTION_IMPACT_ACCEPTABLE:'当前预计价格冲击在可接受范围。',
   FRANK_PATTERN_ACTIVE:'Frank 当前仍处于可跟随建仓模式。',
@@ -143,10 +143,14 @@ function quoteAsset(asset) {
 function frankQuote(x) {
   const asset = x.latest_buy_original_quote_asset || x.latest_buy_quote_asset;
   const qty = x.latest_buy_original_quote_quantity ?? x.latest_buy_quote_quantity;
-  if (!asset || qty == null) return '暂无';
+  if (!asset || qty == null) return '暂无（原始支付数据不足）';
   const original = `${n(qty,6)} ${esc(quoteAsset(asset))}`;
-  if (!x.latest_buy_quote_was_normalized) return original;
-  return `${original}<span class="subvalue">≈ ${n(x.latest_buy_usdc_equivalent,2)} USDC（历史换算）</span>`;
+  const at = Number(x.latest_buy_at);
+  const when = x.latest_buy_at != null && Number.isFinite(at) && at > 0
+    ? new Date(at * 1000).toLocaleString('zh-CN') : '时间未确认';
+  const conversion = x.latest_buy_quote_was_normalized && x.latest_buy_usdc_equivalent != null
+    ? `<span class="subvalue">≈ ${n(x.latest_buy_usdc_equivalent,2)} USDC（历史换算）</span>` : '';
+  return `${original}${conversion}<span class="subvalue">已识别买入时间：${esc(when)}</span>`;
 }
 
 function reasonFor(x) {
@@ -510,13 +514,17 @@ function renderCandidates(rows) {
     const execPrice = execRaw != null ? `${money(execRaw,8)}` : quoteUnavailableText(x,q);
     const buys = x.buy_count ?? 0;
     const sells = x.sell_count ?? 0;
+    const followable = (decision === 'BUY' || decision === 'SMALL_BUY') && x.position_state === 'OPEN' && !['SELL','EXIT','SELL_POSITION_UNRESOLVED'].includes(x.latest_side);
+    const historyNote = followable
+      ? '模式来自已观察到的建仓序列；实际操作前仍需重新确认价格和 Frank 状态。'
+      : '模型模式与买入金额是历史记录；当前没有可执行的买入结论。';
 
     return `<article class="candidate-card decision-${esc(decision.toLowerCase().replaceAll('_','-'))}">
       <div class="candidate-head">
         <div class="candidate-title">
           ${badge(decision)}
           <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
-          <span class="state-text">Frank仓位：${esc(translated(stateLabel,x.position_state,'未知'))}</span>
+          <span class="state-text">Frank模型仓位：${esc(translated(stateLabel,x.position_state,'未知'))}</span>
         </div>
         <div class="candidate-time">最近动作：${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}</div>
       </div>
@@ -524,14 +532,14 @@ function renderCandidates(rows) {
       ${tokenIdentity(x.mint)}
 
       <div class="decision-reason">
-        <span>为什么是“${esc(translated(decisionLabel,decision,decision))}”</span>
-        <strong>${esc(reason)}</strong>
+        <span>当前跟单结论：“${esc(translated(decisionLabel,decision,decision))}”</span>
+        <strong>${esc(reason)} ${esc(historyNote)}</strong>
       </div>
 
       <div class="metrics-grid">
         ${metric('Frank 买/卖次数',`买 ${esc(buys)} · 卖 ${esc(sells)}`,'当前观察到的建仓序列内买入/卖出次数，不代表钱包终身累计。')}
         ${metric('Frank 最近动作',`${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}`)}
-        ${metric('Frank 原始支付',frankQuote(x),'Frank 真实交易使用的报价资产和数量。')}
+        ${metric('Frank 最近一次买入支付（历史）',frankQuote(x),'仅对应本轮最近一笔已识别买入的资金腿；不代表 Frank 当前持仓、当前市值、全部建仓成本或净投入。')}
         ${metric('Frank 参考买入价',frankPrice,'直接来自 Frank 最近买入事件；即使当前 Decision 因超时提前结束，也尽量展示。')}
         ${metric('当前 $30 成交价',execPrice,'Jupiter 已经请求过就展示真实报价；只有明确跳过/失败才显示原因。')}
         ${metric('相对 Frank 偏离',esc(delta),'如果决策提前返回但 Frank 参考价和 Jupiter 报价都存在，Dashboard 会独立计算偏离供研究。')}
