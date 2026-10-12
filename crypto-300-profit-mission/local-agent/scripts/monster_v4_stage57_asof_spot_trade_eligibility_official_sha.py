@@ -72,7 +72,7 @@ def clock_ms(ts):
 
 
 def spot_url(symbol, day):
-    if not re.fullmatch(r"[A-Z0-9]{2,35}USDT", symbol):
+    if not re.fullmatch(r"[A-Z0-9]{1,35}USDT", symbol):
         raise ValueError("STAGE57_NOT_EXACT_USDT_SYMBOL")
     filename = f"{symbol}-1m-{day.isoformat()}.zip"
     return f"{BASE}/{symbol}/1m/{filename}"
