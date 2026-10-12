@@ -22,9 +22,10 @@
     "quote15m_at_P1_min_USDT": "250000",
     "quote15m_normalized_vs_previous45_min": "1.5",
     "source_gap_behavior": "DO_NOT_ESCALATE_AND_PRESERVE_D0",
-    "no_p1_if_historical_symbol_type_unknown_or_dual_archive_conflict": true,
     "same_coin_priority_upgrade_dedup": "one_event_per_P1_eligibility_anchor",
-    "P1_no_purchase_action": true
+    "P1_no_purchase_action": true,
+    "no_P1_on_publisher_price_conflict_or_missing_closed_minutes": true,
+    "unverified_contract_type": "RESEARCH_SCORE_ALLOWED_BUT_REAL_ALERT_OR_BUY_NOT_AUTHORIZED"
   },
   "gates": {
     "D0_full_market_GT2x_strict_early_pct_at_least": 90,
