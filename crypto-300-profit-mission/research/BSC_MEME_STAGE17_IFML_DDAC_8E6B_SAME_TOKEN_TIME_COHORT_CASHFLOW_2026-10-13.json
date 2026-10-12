@@ -1,0 +1,160 @@
+{
+  "schema": "BSC_MEME_STAGE17_TWO_EOA_IFML_COHORT_PROFITABILITY_SPLIT_V1",
+  "date": "2026-10-13",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "token": "我踏马来了",
+  "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+  "original_sources": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE17_8E6B_IFML_SIX_OWNER_RECEIPTS_TWO_CLOSED_EPISODES_2026-10-13.json",
+      "git_blob_sha": "949ff00fff47d9839d18da93fb5c0ae5ce5fa1aa"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_IFML_LOBSTER_CLOSED_EPISODES_NATIVE_CASHFLOW_2026-10-11.json",
+      "git_blob_sha": "9fde267e8f85dbe44705789f19f4884f25aafc51"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_IFML_LOBSTER_25_TX_TWO_VENUE_RECONCILIATION_QA_2026-10-11.json",
+      "git_blob_sha": "1cd0f2ba706f36d3456d15a8d52918ce8277db2b"
+    }
+  ],
+  "cohort_8e6b": {
+    "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+    "all_original_tx_count": 6,
+    "all_original_sigs_verified": true,
+    "all_receipt_success_headers_verified": true,
+    "full_receipts_parsed": 5,
+    "raw_token_two_episodes_closed": true,
+    "episodes": [
+      {
+        "episode": 1,
+        "first_block": 74473655,
+        "last_block": 74473726,
+        "first_UTC": "2026-01-08T07:32:21Z",
+        "last_UTC": "2026-01-08T07:33:14Z",
+        "raw_in": "127339804905607154158371",
+        "raw_out": "127339804905607154158371",
+        "native_block_net_wei": "-231346571585353217",
+        "original_owner_input_wei": "1000000000000000000",
+        "manager_buy_WBNB_to_pool_wei": "990000000000000000",
+        "manager_buy_fee_like_event_wei": "10000000000000000",
+        "first_sell_WBNB_withdraw_wei": "783399084863279578",
+        "first_sell_manager_fee_like_wei": "7833990848632795",
+        "first_sell_wallet_native_increase_wei": "768686409014646783",
+        "same_sell_block_approval_hash": "0xdbbe6194c58515bf8757b733a93674a41ee4a31445bd3a709eff7e1707f05604",
+        "same_sell_block_approval_gas_wei": "1528791000000000",
+        "first_sell_original_gas_wei_inferred": "5349894000000000",
+        "first_sell_original_gas_used_inferred": "162118",
+        "arithmetic_equality": true,
+        "first_sell_complete_receipt": "TRUNCATED_STATUS_HEADER_SUCCESS",
+        "causal_status": "HIGHLY_RECONCILED_SCOPED_NEGATIVE_NOT_FULL_INTERNAL_TRACE"
+      },
+      {
+        "episode": 2,
+        "first_block": 76554500,
+        "last_block": 76582674,
+        "first_UTC": "2026-01-21T11:18:34Z",
+        "last_UTC": "2026-01-21T14:49:56Z",
+        "raw_in": "117271346098059069627440",
+        "raw_out": "117271346098059069627440",
+        "native_block_net_wei": "-367677245259552299",
+        "manager_purchase_native_input_wei": "3000000000000000000",
+        "manager_purchase_WBNB_to_pool_wei": "2970000000000000000",
+        "manager_buy_fee_like_event_wei": "30000000000000000",
+        "router_purchase_native_input_wei": "1000000000000000000",
+        "router_purchase_WBNB_to_pool_wei": "1000000000000000000",
+        "router_exits_WBNB_gross_wei": [
+          "1958734169273289132",
+          "1682109495467158569"
+        ],
+        "router_exits_receipt_gas_wei": [
+          "1446918000000000",
+          "1509574000000000"
+        ],
+        "route_withdraw_matches_native_after_gas": true,
+        "causal_status": "QUOTE_AND_GAS_MATCH_SCOPED_NEGATIVE_NOT_FULL_INTERNAL_TRACE"
+      }
+    ],
+    "total_native_wei": "-599023816844905516"
+  },
+  "cohort_ddac": {
+    "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "original_signed_successful_transactions_in_two_tokens": 25,
+    "ifml_closed_episodes": [
+      {
+        "episode": 1,
+        "start_block": 73336279,
+        "end_block": 73473922,
+        "buy_count": 2,
+        "sell_count": 5,
+        "raw_ending_zero": true,
+        "native_block_net_wei": "859560536650076026"
+      },
+      {
+        "episode": 2,
+        "start_block": 73658894,
+        "end_block": 73689258,
+        "buy_count": 3,
+        "sell_count": 4,
+        "raw_ending_zero": true,
+        "native_block_net_wei": "1866258476542856262"
+      },
+      {
+        "episode": 3,
+        "start_block": 74360480,
+        "end_block": 74377785,
+        "buy_count": 1,
+        "sell_count": 1,
+        "raw_ending_zero": true,
+        "native_block_net_wei": "20075173076535722"
+      },
+      {
+        "episode": 4,
+        "start_block": 74460512,
+        "end_block": 74468389,
+        "buy_count": 1,
+        "sell_count": 1,
+        "raw_ending_zero": true,
+        "native_block_net_wei": "30104517152956606"
+      },
+      {
+        "episode": 5,
+        "start_block": 74473636,
+        "end_block": 74473641,
+        "buy_count": 2,
+        "sell_count": 1,
+        "raw_ending_zero": true,
+        "native_block_net_wei": "-446324586902254802"
+      }
+    ],
+    "ifml_closed_episode_positive_count": 4,
+    "ifml_closed_episode_negative_count": 1,
+    "ifml_native_scope_net_wei": "2329674116520169814",
+    "late_loss_episode_number": 5,
+    "late_loss_start_block": 74473636,
+    "late_loss_exit_block": 74473641,
+    "late_loss_first_UTC": "2026-01-08T07:32:06Z",
+    "late_loss_exit_UTC": "2026-01-08T07:32:10Z",
+    "late_loss_native_scope_wei": "-446324586902254802",
+    "same_exit_block_other_zero_native_owner_approval_tx": "0xb091050f240dd3d387eeea2daa8c5187566589fa0e89cd041e2ca834299018ba",
+    "same_exit_block_other_approval_gas_wei": "9265400000000"
+  },
+  "timing": {
+    "DDAC_last_losing_episode_closed_at_UTC": "2026-01-08T07:32:10Z",
+    "eight_early_losing_episode_owner_entry_at_UTC": "2026-01-08T07:32:21Z",
+    "between_DDAC_loss_exit_and_8E6B_entry_seconds": 11,
+    "DDAC_last_buy_to_8E6B_entry_seconds": 15,
+    "causal_copy_or_follower_relation": "NOT_ESTABLISHED",
+    "token_genesis_or_first_tradable_anchor": "NOT_ESTABLISHED"
+  },
+  "evidence_interpretation": [
+    "Both wallets held the exact same token but the isolated historical episode windows differ; aggregate IFML outcome for DDAC was positive across earlier rounds, 8E6B had two later losing rounds.",
+    "8E6B first negative episode was after DDAC completed a losing episode 11 seconds earlier, but temporal sequencing does not imply 8E6B followed DDAC.",
+    "8E6B first sale included an additional owner-origin approval tx in the same block; its native gas was independently confirmed and separated from implied manager sale gas.",
+    "8E6B second episode bridges manager buy and router direct buy/sells, with WBNB receipts and full gas values; do not apply manager 1% fee to direct router orders.",
+    "All raw inventory episodes close to zero but economic internal native trace remains unavailable; do not convert scoped BNB net into independently verified realized PnL, all-market historical win rates or 5/15/30-minute executable follower results.",
+    "Wallets were selected for observed big opportunities; the seven closed episodes here are a conditional study sample, not an unbiased set of all tradable opportunities."
+  ],
+  "no_auto_trading": true
+}
