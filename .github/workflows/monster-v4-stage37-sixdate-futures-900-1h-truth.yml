@@ -1,0 +1,45 @@
+name: Monster Stage37 Futures Full900 Six Dates Publisher SHA 2x 5x 10x
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_usdm_sixdate_full900_hourly_labels.py'
+      - '.github/workflows/monster-v4-stage37-sixdate-futures-900-1h-truth.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  six_date_original900_futures_real_1h_shards:
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: [2025-01-19, 2025-04-19, 2025-07-19, 2025-10-19, 2026-04-19, 2026-07-19]
+        shard: [0, 1, 2, 3, 4, 5]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and verify official GT labels, future hourly causality and censoring
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_usdm_sixdate_full900_hourly_labels.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_usdm_sixdate_full900_hourly_labels.py --selftest
+      - name: Actually read original Binance USD-M monthly 1h publisher SHA and replay all chosen symbols
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage37_usdm_sixdate_full900_hourly_labels.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 4 \
+            --output "/tmp/monster_stage37_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - name: Retain complete cohort plus publisher source SHAs
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage37-real-usdm-${{ matrix.date }}-shard${{ matrix.shard }}-1hSHA
+          path: /tmp/monster_stage37_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
