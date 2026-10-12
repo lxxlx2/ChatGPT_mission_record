@@ -1,0 +1,113 @@
+{
+  "ALL_SAMPLE_ALREADY_EXPOSED": true,
+  "AUTOTRADE": "NO_GO",
+  "GMAIL": "OFF",
+  "MONSTER_DEPLOY": "NO_GO",
+  "NO_ASSUMED_ORDER_SIZE": true,
+  "NO_NEW_DELAY_OR_ALERT_THRESHOLD": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1_V03": "REJECTED",
+  "SOURCE_IS_VERIFIED_USDM_NOT_EXECUTABLE_SPOT": true,
+  "first_vs_ongoing_counts": {
+    "immediate": 46,
+    "ongoing": 120
+  },
+  "group_descriptive_only": {
+    "ALL_166": {
+      "delay_minutes_max": 7482,
+      "delay_minutes_median": "418.5",
+      "n": 166,
+      "post_P1_proxy_24h_positive_cases": 62,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 5,
+      "post_P1_proxy_close_24h_pct_median": "-5.580014270149856168106132745",
+      "price_change_first_D0_to_P1_asof_pct_median": "16.96185665647892214327119955"
+    },
+    "D0_WAIT_OVER_1440_MIN": {
+      "delay_minutes_max": 7482,
+      "delay_minutes_median": "3156",
+      "n": 30,
+      "post_P1_proxy_24h_positive_cases": 10,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 1,
+      "post_P1_proxy_close_24h_pct_median": "-10.16641128466320252982228941",
+      "price_change_first_D0_to_P1_asof_pct_median": "18.49744979645463414647678945"
+    },
+    "D0_WAIT_OVER_360_MIN": {
+      "delay_minutes_max": 7482,
+      "delay_minutes_median": "1170",
+      "n": 87,
+      "post_P1_proxy_24h_positive_cases": 30,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 1,
+      "post_P1_proxy_close_24h_pct_median": "-8.520749665327978580990629180",
+      "price_change_first_D0_to_P1_asof_pct_median": "21.27943878403206948388174380"
+    },
+    "D0_WAIT_OVER_60_MIN": {
+      "delay_minutes_max": 7482,
+      "delay_minutes_median": "948",
+      "n": 108,
+      "post_P1_proxy_24h_positive_cases": 40,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 4,
+      "post_P1_proxy_close_24h_pct_median": "-6.56666088961372162965841416",
+      "price_change_first_D0_to_P1_asof_pct_median": "20.61971803452543712712393505"
+    },
+    "FIRST_D0_IMMEDIATE": {
+      "delay_minutes_max": 0,
+      "delay_minutes_median": "0",
+      "n": 46,
+      "post_P1_proxy_24h_positive_cases": 19,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 1,
+      "post_P1_proxy_close_24h_pct_median": "-2.327235731814429147397675810",
+      "price_change_first_D0_to_P1_asof_pct_median": "0"
+    },
+    "ONGOING_SECOND_IGNITION": {
+      "delay_minutes_max": 7482,
+      "delay_minutes_median": "808.5",
+      "n": 120,
+      "post_P1_proxy_24h_positive_cases": 43,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 4,
+      "post_P1_proxy_close_24h_pct_median": "-6.687951166967563559437112345",
+      "price_change_first_D0_to_P1_asof_pct_median": "19.70640471986699925400156850"
+    },
+    "ORIGINAL_URGENT_DELIVERED": {
+      "delay_minutes_max": 7482,
+      "delay_minutes_median": "156",
+      "n": 127,
+      "post_P1_proxy_24h_positive_cases": 48,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 5,
+      "post_P1_proxy_close_24h_pct_median": "-5.242566510172143974960876370",
+      "price_change_first_D0_to_P1_asof_pct_median": "15.93291404612159329140461220"
+    },
+    "ORIGINAL_URGENT_OVER_BUDGET": {
+      "delay_minutes_max": 6516,
+      "delay_minutes_median": "819",
+      "n": 39,
+      "post_P1_proxy_24h_positive_cases": 14,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 0,
+      "post_P1_proxy_close_24h_pct_median": "-6.688417618270799347471451880",
+      "price_change_first_D0_to_P1_asof_pct_median": "22.55968815981809322722104920"
+    },
+    "POSTHOC_EARLY_CALENDAR_2X": {
+      "delay_minutes_max": 5751,
+      "delay_minutes_median": "261",
+      "n": 27,
+      "post_P1_proxy_24h_positive_cases": 19,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 5,
+      "post_P1_proxy_close_24h_pct_median": "16.46596215286311132956500370",
+      "price_change_first_D0_to_P1_asof_pct_median": "16.54676258992805755395683450"
+    },
+    "POSTHOC_ORDINARY": {
+      "delay_minutes_max": 7482,
+      "delay_minutes_median": "534",
+      "n": 137,
+      "post_P1_proxy_24h_positive_cases": 42,
+      "post_P1_proxy_HIGH_at_least_2x_24h_NOT_FILL": 0,
+      "post_P1_proxy_close_24h_pct_median": "-7.546148758342853706932836270",
+      "price_change_first_D0_to_P1_asof_pct_median": "17.03283139965440631942730190"
+    }
+  },
+  "locked_source_blobs": {
+    "monster_stage55_all166_candidate_asof_features_and_fate.csv": "dca780246adb28e045ed77f0f96eb4bd034fb2e7",
+    "monster_stage60_all166_signal_to_24h_verified_futures_price_proxy.jsonl": "c76b9b73c11924cb3fdc36fb852074ff9b49b3b8"
+  },
+  "original_count": 166,
+  "schema": "MONSTER_STAGE61_ORIGINAL166_FIRST_D0_TO_P1_3MIN_POLL_LATENCY_V1"
+}
