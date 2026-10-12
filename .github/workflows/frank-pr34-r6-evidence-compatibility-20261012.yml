@@ -1,0 +1,86 @@
+name: Frank R6 sanitizer archival compatibility audit
+
+on:
+  push:
+    branches:
+      - review/frank-pr31-pr32-pr33-mergegate-20261012
+    paths:
+      - '.github/workflows/frank-pr34-r6-evidence-compatibility-20261012.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archived-evidence-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b637361154863f492b31a636de8e77381bc8156b
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Confirm pinned R6 and old-source archive context
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "b637361154863f492b31a636de8e77381bc8156b"
+          git cat-file -e dafb126e33338523630bb48d4fe838ddd9c7fb95^{commit}
+          echo "R6_PINNED_COMMIT=PASS"
+      - name: Independently compare sanitized committed evidence strings and synthetic OAuth secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          old="$(mktemp -d)"
+          git show "dafb126e33338523630bb48d4fe838ddd9c7fb95:crypto-300-profit-mission/local-agent/mission_agent/mission_control/evidence_sync.py" > "$old/old.py"
+          OLD_SOURCE="$old/old.py" python - <<'PY'
+          import glob
+          import importlib.util
+          import json
+          import os
+          from pathlib import Path
+          def load(name, path):
+              spec = importlib.util.spec_from_file_location(name, path)
+              mod = importlib.util.module_from_spec(spec)
+              spec.loader.exec_module(mod)
+              return mod
+          old = load('old_sanitizer', os.environ['OLD_SOURCE'])
+          new = load('new_sanitizer', 'crypto-300-profit-mission/local-agent/mission_agent/mission_control/evidence_sync.py')
+          base = Path('crypto-300-profit-mission/meme/evidence')
+          paths = sorted(base.rglob('*.json'))
+          count = 0
+          changes = []
+          def walk(value, src):
+              global count
+              if isinstance(value, dict):
+                  for k,v in value.items():
+                      if isinstance(k, str) and not old.BANNED.search(k):
+                          walk(v,src)
+              elif isinstance(value, list):
+                  for child in value:
+                      walk(child,src)
+              elif isinstance(value, str):
+                  count += 1
+                  if old.safe(value) != new.safe(value):
+                      changes.append(src)
+          for path in paths:
+              with path.open(encoding='utf-8') as f:
+                  walk(json.load(f),path.name)
+          print(f"ARCHIVE_JSON_FILES={len(paths)}")
+          print(f"ARCHIVE_STRINGS_CHECKED={count}")
+          print(f"ARCHIVE_OUTPUT_DIFFERENCES={len(changes)}")
+          if changes:
+              print("DIFFERENT_FILE_NAMES=", sorted(set(changes))[:20])
+              raise SystemExit("ARCHIVE_COMPATIBILITY=FAIL")
+          samples = [
+              "1//0gSYNTHETIC_refreshToken_TesterOnly12345",
+              "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56789",
+              "ya29.a0SYNTHETIC_ACCESS_TOKEN_123456789",
+          ]
+          for sample in samples:
+              assert old.safe(sample) == sample
+              assert new.safe(sample) == '[REDACTED]'
+          print("R6_SECRET_REVERSE_REGRESSION=PASS")
+          print("ARCHIVE_COMPATIBILITY=PASS")
+          PY
