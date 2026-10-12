@@ -271,6 +271,64 @@ def run(window, *,clock=None,capture=None,git_push=None):
     return "GIT_PUSH_CONFIRMED"
 
 
+def retry_saved_push(window: str):
+    """Never re-download historical data; only publish a previously captured SHA."""
+    stage91.verify_window(window)
+    isolated_checkout_preflight_for_saved()
+    path=CLONE/expected_path(window)
+    status_file=STATES/(window[:10]+".json")
+    if not path.is_file() or not status_file.is_file():
+        raise RuntimeError("STAGE99_NO_PREVIOUS_VERIFIED_CAPTURE_TO_RETRY")
+    status=json.loads(status_file.read_text())
+    saved_sha=status.get("source_sha256")
+    if saved_sha is None:
+        raise RuntimeError("STAGE99_NO_SAVED_SHA_FOR_PUSH_RETRY")
+    original=path.read_bytes()
+    if stage97.sha(original)!=saved_sha:
+        raise RuntimeError("STAGE99_LOCAL_RAW_CAPTURE_MODIFIED_SHA")
+    evidence=json.loads(original.decode("utf-8"))
+    if evidence.get("window_start_utc")!=window or evidence.get(
+        "source_authenticity")!="RECORDED_HTTPS_BINANCE_REQUEST_AND_RESPONSE_CLOCK_PROOF":
+        raise RuntimeError("STAGE99_WRONG_PREVIOUS_CAPTURE")
+    packet=evidence["raw_market_packet"]
+    def time_body(key):
+        part=dict(evidence[key])
+        part["json"]=json.loads(part["raw"])
+        return part
+    raw=packet["raw_exchangeInfo_json"]
+    market=dict(evidence["exchange_info_http_capture"])
+    market["raw"]=raw
+    market["json"]=json.loads(raw)
+    verified=stage97.verify_time_proof(
+        time_body("before_official_time"),
+        time_body("after_official_time"),market,window)
+    if verified["raw_market_packet"]!=packet:
+        raise RuntimeError("STAGE99_SAVED_CAPTURE_VERIFICATION_CONFLICT")
+    git("add","--",expected_path(window))
+    committed=safe_git_commit_and_push(window)
+    store_status(window,"GIT_PUSH_CONFIRMED",git_commit=committed,
+                 branch=BRANCH,evidence_path=expected_path(window),
+                 source_sha256=saved_sha,
+                 uploaded_from_original_official_raw_without_recapture=True)
+    return committed
+
+
+def isolated_checkout_preflight_for_saved():
+    """The only permitted dirty item is our own previously captured archive."""
+    if not CLONE.exists() or not (CLONE/".git").is_dir():
+        raise RuntimeError("STAGE99_NO_ISOLATED_CLONE_FOR_RETRY")
+    if Path(__file__).resolve()!= (CLONE/SCRIPT_IN_CLONE).resolve():
+        raise RuntimeError("STAGE99_NOT_RUNNING_IN_ISOLATED_CLONE")
+    if git("branch","--show-current",capture=True)!=BRANCH:
+        raise RuntimeError("STAGE99_WRONG_BRANCH_FOR_SAVED_CAPTURE")
+    remote=git("remote","get-url","origin",capture=True)
+    if remote not in ("https://github.com/"+REPO_NAME+".git",
+                      "https://github.com/"+REPO_NAME,
+                      "git@github.com:"+REPO_NAME+".git"):
+        raise RuntimeError("STAGE99_UNEXPECTED_REMOTE_FOR_RETRY")
+    git("ls-remote","--exit-code","origin","refs/heads/"+BRANCH,timeout=35)
+
+
 def execute(window):
     try:
         status=run(window)
@@ -329,7 +387,7 @@ def selftest():
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("action",choices=("install","run","status","uninstall","selftest"))
+    p.add_argument("action",choices=("install","run","retry-push","status","uninstall","selftest"))
     p.add_argument("--window")
     p.add_argument("--dry-run",action="store_true")
     args=p.parse_args()
@@ -342,6 +400,10 @@ def main():
         if args.window is None:
             p.error("run requires --window from frozen Stage91 windows")
         sys.exit(execute(args.window))
+    elif args.action=="retry-push":
+        if args.window is None:
+            p.error("retry-push requires --window")
+        print("STAGE99_SAVED_OFFICIAL_BYTES_PUSHED "+retry_saved_push(args.window))
     elif args.action=="status":
         print(json.dumps(status(),sort_keys=True,ensure_ascii=False,indent=2))
     else:
