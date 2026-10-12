@@ -30,7 +30,7 @@
       "blob_sha": "2d7afc87b89b1426a329270b320d35b6eaadad2f"
     }
   ],
-  "unit_policy": "Store actual original BNB wallet event-block wei and actual ERC20 USDT separately. Historical pool USDT marks are not real USD settlements. No conversion of quote units to trading score.",
+  "unit_policy": "Store actual original BNB wallet event-block wei and actual ERC20 USDT separately. Historical pool USDT marks are not real USD settlements. No conversion of quote units to trading score. For native-only episodes unverified USDT quote legs are NULL (UNKNOWN), never fake audited zero.",
   "grade_policy": {
     "SETTLED_NATIVE_DIRECT_WBNB_GAS": "Selected owner buy/sell with quote WBNB receipt and gas reconciled; full internal trace not implied.",
     "SIGNED_NATIVE_BLOCK_SCOPE": "Signed original CA round raw token closes, BNB N-1/N block differences known; internal quote attribution might remain incomplete.",
@@ -47,7 +47,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "859560536650076026",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -61,7 +61,8 @@
       "internal_tracing_status": "PARTIAL_SAME_BLOCK_OWNER_APPROVAL_GAS_QA",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
@@ -73,7 +74,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "1866258476542856262",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -87,7 +88,8 @@
       "internal_tracing_status": "PARTIAL_SAME_BLOCK_OWNER_APPROVAL_GAS_QA",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
@@ -99,7 +101,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "20075173076535722",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -113,7 +115,8 @@
       "internal_tracing_status": "PARTIAL_SAME_BLOCK_OWNER_APPROVAL_GAS_QA",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
@@ -125,7 +128,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "30104517152956606",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -139,7 +142,8 @@
       "internal_tracing_status": "PARTIAL_SAME_BLOCK_OWNER_APPROVAL_GAS_QA",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
@@ -151,7 +155,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "-446324586902254802",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "NEGATIVE_NATIVE_SCOPE",
@@ -165,7 +169,8 @@
       "internal_tracing_status": "PARTIAL_SAME_BLOCK_OWNER_APPROVAL_GAS_QA",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
@@ -177,7 +182,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "51496246460395600",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -191,7 +196,8 @@
       "internal_tracing_status": "BLOCK_SCOPED_STRONGLY_CONSISTENT_NO_NATIVE_INTERNAL_TRACE",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
@@ -203,7 +209,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "9515610472872943",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -217,7 +223,8 @@
       "internal_tracing_status": "BLOCK_SCOPED_STRONGLY_CONSISTENT_NO_NATIVE_INTERNAL_TRACE",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
@@ -229,7 +236,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "-239887492433116024",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "NEGATIVE_NATIVE_SCOPE",
@@ -243,7 +250,8 @@
       "internal_tracing_status": "BLOCK_SCOPED_STRONGLY_CONSISTENT_NO_NATIVE_INTERNAL_TRACE",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -255,7 +263,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "268592992917629933",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -269,7 +277,8 @@
       "internal_tracing_status": "PRIOR_STUDY_HAS_SELECTED_RECEIPT_SETTLEMENT_PROOFS",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -281,7 +290,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "-141716957486616687",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "NEGATIVE_NATIVE_SCOPE",
@@ -295,7 +304,8 @@
       "internal_tracing_status": "PRIOR_STUDY_HAS_SELECTED_RECEIPT_SETTLEMENT_PROOFS",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -307,7 +317,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "935157578391160618",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -321,7 +331,8 @@
       "internal_tracing_status": "PRIOR_STUDY_HAS_SELECTED_RECEIPT_SETTLEMENT_PROOFS",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -333,7 +344,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "180865666976311244",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -347,7 +358,8 @@
       "internal_tracing_status": "PRIOR_STUDY_HAS_SELECTED_RECEIPT_SETTLEMENT_PROOFS",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -359,7 +371,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "4540701425397987363",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -373,7 +385,8 @@
       "internal_tracing_status": "PRIOR_STUDY_HAS_SELECTED_RECEIPT_SETTLEMENT_PROOFS",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -385,7 +398,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "253300282319389315",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -399,7 +412,8 @@
       "internal_tracing_status": "PRIOR_STUDY_HAS_SELECTED_RECEIPT_SETTLEMENT_PROOFS",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -411,7 +425,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "-231346571585353217",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "NEGATIVE_NATIVE_SCOPE",
@@ -425,7 +439,8 @@
       "internal_tracing_status": "PRIOR_STUDY_HAS_SELECTED_RECEIPT_SETTLEMENT_PROOFS",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -437,7 +452,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "-367677245259552299",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "NEGATIVE_NATIVE_SCOPE",
@@ -451,7 +466,8 @@
       "internal_tracing_status": "PRIOR_STUDY_HAS_SELECTED_RECEIPT_SETTLEMENT_PROOFS",
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -463,7 +479,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "-117977426190152496",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "NEGATIVE_NATIVE_SCOPE",
@@ -477,7 +493,8 @@
       "internal_tracing_status": "19_OF_19_ORIGINAL_OWNER_TX_COMPONENT_EQUALITIES",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -489,7 +506,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "13282964879793219111",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -503,7 +520,8 @@
       "internal_tracing_status": "19_OF_19_ORIGINAL_OWNER_TX_COMPONENT_EQUALITIES",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -529,7 +547,8 @@
       "internal_tracing_status": "USD_BNB_CONVERSION_NOT_EXECUTED; SAME_BLOCK_MINOR_RESIDUAL",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "QUOTED_ACTUAL_USDT_ERC20_EVENTS_VERIFIED"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -555,7 +574,8 @@
       "internal_tracing_status": "USD_BNB_CONVERSION_NOT_EXECUTED; SAME_BLOCK_MINOR_RESIDUAL",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "QUOTED_ACTUAL_USDT_ERC20_EVENTS_VERIFIED"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -567,7 +587,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "5487703712629279872",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -581,7 +601,8 @@
       "internal_tracing_status": "ONE_LARGE_SELL_MISSING_DIRECT_WBNB_WITHDRAW",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -593,7 +614,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "6715982175564136",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "POSITIVE_NATIVE_SCOPE",
@@ -607,7 +628,8 @@
       "internal_tracing_status": "ONE_LARGE_SELL_MISSING_DIRECT_WBNB_WITHDRAW",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -619,7 +641,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "-169122457028181235",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "NEGATIVE_NATIVE_SCOPE",
@@ -633,7 +655,8 @@
       "internal_tracing_status": "ONE_LARGE_SELL_MISSING_DIRECT_WBNB_WITHDRAW",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -645,7 +668,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "-10906490558303517",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "NEGATIVE_NATIVE_SCOPE",
@@ -659,7 +682,8 @@
       "internal_tracing_status": "ONE_LARGE_SELL_MISSING_DIRECT_WBNB_WITHDRAW",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     },
     {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
@@ -671,7 +695,7 @@
       "owner_signed_success_source_record": true,
       "raw_token_round_closed": true,
       "net_native_BNB_wallet_event_blocks_wei": "-15287417746697438",
-      "actual_USDT_delta_raw": "0",
+      "actual_USDT_delta_raw": null,
       "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
       "mark_USDT_equivalent_spot_reference_raw": null,
       "net_classification": "NEGATIVE_NATIVE_SCOPE",
@@ -685,7 +709,8 @@
       "internal_tracing_status": "ONE_LARGE_SELL_MISSING_DIRECT_WBNB_WITHDRAW",
       "is_2026_major_priority": false,
       "is_full_wallet_PnL": false,
-      "is_followable_alpha": false
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     }
   ],
   "aggregation_check": {
