@@ -1,0 +1,58 @@
+name: Monster Stage70 Offline SQLite Never Drop WATCH Read-Only Research
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage70_historical_watch_projection_sqlite.py'
+      - '.github/workflows/monster-v4-stage70-historical-watch-isolated-sqlite.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage70-isolated-watch-source-937
+  cancel-in-progress: false
+jobs:
+  isolated_unchanged_937_verified_watch_and_P1_research_events:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify strict offline SQLite ACID, earliest watch, idempotence, conflict and restart rollback
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage70_historical_watch_projection_sqlite.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage70_historical_watch_projection_sqlite.py --selftest
+      - name: Replay frozen 937 historic events into separate temporary monster-only SQLite with all715 watch statuses
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage70_historical_watch_projection_sqlite.py \
+            --db /tmp/monster_stage70_offline_research_only.sqlite3 \
+            --out /tmp/monster_stage70_report
+      - name: Full isolated SQLite and read-only JSON historical research artifact (NOT installed)
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage70-offline-watch-715-source937-sqlite-no-gmail-no-frank
+          path: |
+            /tmp/monster_stage70_report/*
+            /tmp/monster_stage70_offline_research_only.sqlite3
+          retention-days: 30
+      - name: Persist JSON source-backed projection audit and watch items in original Monster research PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage70_report/monster_stage70_* "$dest/"
+          git add "$dest/monster_stage70_offline_sqlite_watch_projection_summary.json" "$dest/monster_stage70_offline_readonly_715_watch_items.jsonl"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage70 offline watch journal 715 source-backed items, ACID restart proof, no live deployment'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE70_WATCH_EVIDENCE_GIT_PERSIST_FAIL
+          exit 1
