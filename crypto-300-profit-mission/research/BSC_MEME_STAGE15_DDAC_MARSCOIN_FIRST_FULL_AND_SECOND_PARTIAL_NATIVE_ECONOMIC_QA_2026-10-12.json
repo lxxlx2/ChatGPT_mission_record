@@ -1,0 +1,85 @@
+{
+  "schema": "BSC_MEME_DDAC_MARSCOIN_TWO_EPISODES_OWNER_ORIGIN_NATIVE_NEGATIVE_CONTROL_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "token": "MARSCOIN",
+  "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "source": {
+    "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE15_DDAC_MARSCOIN_TRANSFER_BALANCE_DISCREPANCY_2026-10-12.json",
+    "sha": "8ebe6dece103383f8ba3924a643181922d9a413b"
+  },
+  "full_token_inventory_history": {
+    "in": 17,
+    "out": 23,
+    "raw_balance": "3050660512775076744",
+    "quantity_reconciled": true
+  },
+  "first_trade_episode": {
+    "buy_hash": "0xfd87fa6d585acdf047e96264ddfb1bb0c428c882449d72554a34ec6841b63824",
+    "buy_block": 112441920,
+    "buy_token_raw": "0xd63370aee1a6898faa19",
+    "buy_native_msg_value_wei": "500000000000000000",
+    "buy_native_block_delta_wei": "-500059367840000000",
+    "sell_hash": "0x8f5386192f6f5da18185098556a2f93661211d59b63e6baaff6d66435647b35c",
+    "sell_block": 112442886,
+    "sold_token_raw": "1011535330957146847160857",
+    "first_episode_token_exactly_fully_exited": true,
+    "sell_block_native_delta_wei": "551555614300395600",
+    "buy_and_sell_two_block_native_net_wei": "51496246460395600",
+    "approx_native_block_return_percent": 10.29802654889418,
+    "owner_original_external_tx_counts_by_block": [
+      1,
+      2
+    ],
+    "extra_original_sell_block_token_contract_call_hash": "0xbb8b170d839ee5a314f6fe7b05c2b9314bc5a697ed8c08e99a86352d0121d982",
+    "extra_call_success": true,
+    "extra_call_gas_fee_wei": "5878080000000",
+    "direct_native_external_in_both_blocks": 0,
+    "trade_receipt_headers_success": true,
+    "trade_full_receipts": "TRUNCATED_8098_BYTES",
+    "classification": "OWNER_SIGNED_FULL_TOKEN_QUANTITY_ROUNDTRIP_WITH_POSITIVE_NATIVE_SCOPE_DELTA_NOT_VERIFIED_FULL_CAUSAL_PNL"
+  },
+  "second_episode": {
+    "buy_hash": "0xc13d9d1b476a6fa2ae56ed17518281101dde33e930572ce40ef46819e54bc989",
+    "buy_block": 112635735,
+    "buy_token_raw": "0x313c02d7b2d0e67eed0a",
+    "buy_native_msg_value_wei": "500000000000000000",
+    "buy_native_block_delta_wei": "-500059380680000000",
+    "first_sell_hash": "0x4323589f5edadbb49c6b1eefe5ab816af12993bccefe4d4c1fe2592f07be881d",
+    "sell_block": 112639419,
+    "sold_token_raw": "129258254199897074065853",
+    "remaining_from_that_buy_after_this_sell_raw": "103244712934056473168717",
+    "first_sell_block_native_delta_wei": "491450427852877528",
+    "two_block_native_net_wei": "-8608952827122472",
+    "owner_original_external_tx_counts_by_block": [
+      1,
+      2
+    ],
+    "extra_sell_block_token_contract_call_hash": "0x8529f4417b0f797b77a648f32dd5019cbf6bcb17d318e586abb3ef9886e384b1",
+    "extra_call_success": true,
+    "extra_call_gas_fee_wei": "5878080000000",
+    "direct_native_external_in_both_blocks": 0,
+    "classification": "PARTIAL_SELL_ONLY_CANNOT_TREAT_NEGATIVE_NATIVE_BLOCK_NET_AS_FINAL_LOSS"
+  },
+  "two_episode_four_distinct_block_scope": {
+    "native_net_wei": "42887293633273128",
+    "distinct_blocks": [
+      112441920,
+      112442886,
+      112635735,
+      112639419
+    ],
+    "same_block_native_external_other_sell_call_count": 2,
+    "native_internal_trace_available": false,
+    "causal_realized_pnl": "UNVERIFIED"
+  },
+  "limitations": [
+    "Historical BNB balances compare before/after exact block, not transaction-index state; each sell block includes another owner-origin transaction and potential unsupported internal native value movements.",
+    "Main trade receipt requests were truncated after about 8098 bytes; only status prefixes are available; original gas and manager fee cannot be independently reconstructed from whole trade receipt.",
+    "The first token purchase and sale raw balances exactly match in one episode but matching token quantity does not by itself rule out all third-party transfers or economic quote sources.",
+    "Second observed trade sells less than the second purchase and later events exist; that round cannot be classified as a realized net loss from four native block deltas.",
+    "Do not extrapolate this two-episode sample to overall DDAC trading skill, net dollar PnL, or copyability."
+  ]
+}
