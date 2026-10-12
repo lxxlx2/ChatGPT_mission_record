@@ -1,0 +1,126 @@
+{
+  "schema": "BSC_MEME_STAGE15_FOUR_FIXED_BLOCK_QUANTITY_CLOSURES_V1",
+  "date": "2026-10-12",
+  "chain": "bnb-mainnet",
+  "fixed_block": "0x79549a0",
+  "rows": [
+    {
+      "w": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874",
+            "uid": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874:log:360",
+            "block": "0x754a5db",
+            "raw": "0x33662faed156019db",
+            "from": "0xff497ca7118bd4b09435168372d188dc2d670f9d",
+            "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba"
+          }
+        ],
+        "raw_sum": "59259202743067220443"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "raw_sum": "0"
+      },
+      "balance_raw": "59259202743067220443",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    },
+    {
+      "w": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0xac91b28e4e2833977db23172cc3a6020b66adf261251cf038331d952b8ff8808",
+            "uid": "0xac91b28e4e2833977db23172cc3a6020b66adf261251cf038331d952b8ff8808:log:509",
+            "block": "0x6f1c530",
+            "raw": "0xeb13cdf194725a1a",
+            "from": "0x803bdbdec06681a2e437b3a6a561865e5eaa4036",
+            "to": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337"
+          }
+        ],
+        "raw_sum": "16939109060931901978"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "raw_sum": "0"
+      },
+      "balance_raw": "16939109060931901978",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    },
+    {
+      "w": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0xa3385ac17ce92e34a94bb400d7a2e7afe168979e806f4878a2db9fe3e8a2f11b",
+            "uid": "0xa3385ac17ce92e34a94bb400d7a2e7afe168979e806f4878a2db9fe3e8a2f11b:log:80",
+            "block": "0x73da7cc",
+            "raw": "0x595cea58bc68d6bb5",
+            "from": "0xb26a86df4ef693cebd6e05f8199dc81df91c4e98",
+            "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac"
+          }
+        ],
+        "raw_sum": "103028467745151609781"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "raw_sum": "0"
+      },
+      "balance_raw": "103028467745151609781",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    },
+    {
+      "w": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x40a318f071fc8517d5af076dff63160be09246924f93b7b19d3be0c53b036b7a",
+            "uid": "0x40a318f071fc8517d5af076dff63160be09246924f93b7b19d3be0c53b036b7a:log:717",
+            "block": "0x733d473",
+            "raw": "0x2c7c7e393dfb80818",
+            "from": "0x5400d579fb0ac43f513b61c42979829834f6b84b",
+            "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac"
+          }
+        ],
+        "raw_sum": "51289213105585260568"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "raw_sum": "0"
+      },
+      "balance_raw": "51289213105585260568",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    }
+  ],
+  "method": "Complete exact CA positive ERC20 bidirectional cursor to fixed block 0x79549a0 with uniqueId dedupe, raw integer in minus out equals independently ethCall balanceOf same block",
+  "production": "NO_GO"
+}
