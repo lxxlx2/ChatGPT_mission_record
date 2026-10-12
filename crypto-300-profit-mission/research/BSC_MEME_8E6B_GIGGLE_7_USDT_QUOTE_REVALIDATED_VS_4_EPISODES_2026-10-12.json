@@ -1,0 +1,174 @@
+{
+  "schema": "BSC_MEME_8E6B_TWO_MAJORS_ASSET_SEPARATED_ECONOMIC_PROVENANCE_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "production": "NO_GO",
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_GIGGLE_MIXED_BNB_USDT_SETTLEMENT_2026-10-11.json",
+      "sha": "08375361eacdc5c7b0da109e283f1232ccb13b6f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
+      "sha": "69cc2ec8e27d3d8427645cdbfdfe5c8043376fe1"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_4_ORIGINAL_TWO_EPISODE_EXACT_SETTLEMENT_2026-10-11.json",
+      "sha": "4b52a993b925b12738f0851fb182f87b81bb078c"
+    }
+  ],
+  "giggle": {
+    "token": "GIGGLE",
+    "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+    "original_transaction_count": 16,
+    "exact_owner_receipts_successful_in_prior_source": 16,
+    "native_scope_wallet_BNB_delta_wei": "5715925819273344974",
+    "native_scope_BNB_decimal": "5.715925819273344974",
+    "native_exception_wei": "600000000000000",
+    "USDT18": {
+      "token_contract": "0x55d398326f99059ff775485246999027b3197955",
+      "incoming_events": 6,
+      "outgoing_events": 1,
+      "gross_in_raw": "5061629806775951927704",
+      "gross_out_raw": "1000000000000000000000",
+      "net_raw": "4061629806775951927704",
+      "net_decimal": "4061.629806775951927704",
+      "quote_probes": [
+        {
+          "tx": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+          "block": 62020864,
+          "direction": "in",
+          "sourceRaw": "1027097731411102341812",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "asset": "USDT",
+          "result": "EXACT_RAW_MATCH",
+          "onchainRaw": "1027097731411102341812",
+          "rawTransferLogs": [
+            "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6:log:171"
+          ],
+          "cursorExhausted": true
+        },
+        {
+          "tx": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+          "block": 62021192,
+          "direction": "in",
+          "sourceRaw": "1061682542946597130785",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "asset": "USDT",
+          "result": "EXACT_RAW_MATCH",
+          "onchainRaw": "1061682542946597130785",
+          "rawTransferLogs": [
+            "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b:log:147"
+          ],
+          "cursorExhausted": true
+        },
+        {
+          "tx": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+          "block": 62021220,
+          "direction": "in",
+          "sourceRaw": "933396321040056363365",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "asset": "USDT",
+          "result": "EXACT_RAW_MATCH",
+          "onchainRaw": "933396321040056363365",
+          "rawTransferLogs": [
+            "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047:log:23"
+          ],
+          "cursorExhausted": true
+        },
+        {
+          "tx": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+          "block": 62066886,
+          "direction": "in",
+          "sourceRaw": "845408310895712319857",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "asset": "USDT",
+          "result": "EXACT_RAW_MATCH",
+          "onchainRaw": "845408310895712319857",
+          "rawTransferLogs": [
+            "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d:log:173"
+          ],
+          "cursorExhausted": true
+        },
+        {
+          "tx": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+          "block": 62067451,
+          "direction": "in",
+          "sourceRaw": "636452428614636082051",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "asset": "USDT",
+          "result": "EXACT_RAW_MATCH",
+          "onchainRaw": "636452428614636082051",
+          "rawTransferLogs": [
+            "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d:log:240"
+          ],
+          "cursorExhausted": true
+        },
+        {
+          "tx": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b",
+          "block": 62299083,
+          "direction": "in",
+          "sourceRaw": "557592471867847689834",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "asset": "USDT",
+          "result": "EXACT_RAW_MATCH",
+          "onchainRaw": "557592471867847689834",
+          "rawTransferLogs": [
+            "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b:log:96"
+          ],
+          "cursorExhausted": true
+        },
+        {
+          "tx": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
+          "block": 62485438,
+          "direction": "out",
+          "sourceRaw": "1000000000000000000000",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "asset": "USDT",
+          "result": "EXACT_RAW_MATCH",
+          "onchainRaw": "1000000000000000000000",
+          "rawTransferLogs": [
+            "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450:log:116"
+          ],
+          "cursorExhausted": true
+        }
+      ]
+    },
+    "genuine_realized_profit": "UNVERIFIED_ASSET_SEPARATED_QUOTE_AND_NATIVE_SCOPE"
+  },
+  "four": {
+    "token": "4",
+    "original_transactions": 19,
+    "original_2_episodes": [
+      {
+        "episode": 1,
+        "start": 63056884,
+        "end": 63056949,
+        "net_wei": "-117977426190152496",
+        "closed": true
+      },
+      {
+        "episode": 2,
+        "start": 63057889,
+        "end": 64458294,
+        "net_wei": "13282964879793219111",
+        "closed": true
+      }
+    ],
+    "both_episodes_native_scope_total_wei": "13164987453603066615",
+    "native_scope_total_BNB": "13.164987453603066615",
+    "original_episode_1_negative": true,
+    "original_episode_2_positive": true,
+    "uncertain_internal_trace": true
+  },
+  "truth_gates": [
+    "All seven prior GIGGLE USDT quote movement evidence rows independently re-queried in exact block against fixed wallet/USDT CA: raw integer matches original source, all exact block queries cursor exhausted.",
+    "16 prior self-signed GIGGLE source transaction native block deltas sum exactly to documented native scoped net; 19 prior 4 trade rows sum to documented 2 episodes and exact net.",
+    "BNB native scope and USDT ERC20 scope are separate dimensions; NEVER sum their nominal decimal values or imply a single USD profit without historical conversion and causality.",
+    "GIGGLE native scope includes an independently recorded 0.0006 BNB nontrade exception, which cannot be silently attributed to GIGGLE swap.",
+    "Token quantity complete and successful owner signed transactions alone cannot verify full quote and internal trade causality, fees, or historical followability.",
+    "At least one original 4 episode is negative; no claim that every major opportunity captured is profitable."
+  ],
+  "label": "CROSS_MAJOR_CANDIDATE_WITH_POSITIVE_SCOPED_FINANCIAL_EVIDENCE_AND_UNVERIFIED_FINAL_PNL"
+}
