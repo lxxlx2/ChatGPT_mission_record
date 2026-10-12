@@ -245,17 +245,18 @@ function renderRuntime(runtime, control) {
   const requiredBreakdown = [
     'manual_review_actionable_count', 'manual_review_pending_count',
     'manual_review_blocked_count', 'manual_review_expired_unsent_count',
-    'manual_review_visible_total_count',
+    'manual_review_queued_count', 'manual_review_visible_total_count',
   ];
   const contractAvailable = requiredBreakdown.every(k =>
     Number.isInteger(control?.[k]) && control[k] >= 0);
   const hasBreakdown = control?.manual_review_breakdown_available === true &&
     contractAvailable;
-  const actionable = Number(hasBreakdown
-    ? control?.manual_review_actionable_count
-    : control?.manual_review_total_count);
+  // A stale legacy manual-review total cannot be presented as actionable.
+  const actionable = hasBreakdown
+    ? Number(control?.manual_review_actionable_count) : NaN;
   const expired = Number(hasBreakdown ? control?.manual_review_expired_unsent_count : 0);
   const pending = Number(hasBreakdown ? control?.manual_review_pending_count : 0);
+  const queued = Number(hasBreakdown ? control?.manual_review_queued_count : 0);
   const blocked = Number(hasBreakdown ? control?.manual_review_blocked_count : 0);
   const reviewParts = [];
   if (control?.manual_review_breakdown_available === true && !contractAvailable) {
@@ -263,7 +264,15 @@ function renderRuntime(runtime, control) {
   } else if (!hasBreakdown) {
     reviewParts.push('<span>· 通知分类暂不可用；下列历史总数为心跳陈旧值，需核查数据库</span>');
   }
-  if (Number.isFinite(pending) && pending > 0) {
+  if (hasBreakdown && Number.isFinite(queued) && queued > 0) {
+    const gmail = Number(control?.manual_review_queued_gmail_count) || 0;
+    const local = Number(control?.manual_review_queued_local_count) || 0;
+    const other = Number(control?.manual_review_queued_other_count) || 0;
+    reviewParts.push('<span title="待发送队列中尚未完成的通知，包括可能已过期的 PENDING；仅显示，不会触发投递">· 待发送未完成 ' +
+      esc(queued) + '（邮件 ' + esc(gmail) + '，本地 ' + esc(local) +
+      '，其他 ' + esc(other) + '）</span>');
+  }
+  if (hasBreakdown && Number.isFinite(pending) && pending > 0) {
     const gmail = Number(control?.manual_review_pending_gmail_count) || 0;
     const local = Number(control?.manual_review_pending_local_count) || 0;
     const other = Number(control?.manual_review_pending_other_count) || 0;
