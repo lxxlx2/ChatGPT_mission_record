@@ -1,0 +1,79 @@
+{
+  "schema": "BSC_MEME_23X19_42_OPEN_INVENTORY_SNAPSHOT_QA_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "snapshot_block_hex": "0x79549a0",
+  "source_matrix": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V18_2026-10-12.json",
+  "source_matrix_sha": "1a24b8067100db2e23453527ea290a5ee10e4b73",
+  "snapshot_source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_23X19_UNCLOSED42_BALANCE_SNAPSHOT_BATCH_A_2026-10-12.json",
+      "sha": "7751e065174fbcd1cabdb08ceb20692218b5cdd1"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_23X19_UNCLOSED42_BALANCE_SNAPSHOT_BATCH_B_2026-10-12.json",
+      "sha": "928c2a28b432283675323f0affe2e2c2592efe13"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_23X19_UNCLOSED42_BALANCE_SNAPSHOT_BATCH_C_2026-10-12.json",
+      "sha": "60dd6ec52e8c1d351d7ef3a3a1b5b58239b4af4b"
+    }
+  ],
+  "frozen_scope": {
+    "wallets": 23,
+    "ca": 19,
+    "matrix_cells": 437,
+    "observed_transfer_cells": 148,
+    "previous_quantity_reconciled_cells": 106,
+    "quantity_reconciliation_pending_cells": 42
+  },
+  "validation": {
+    "rows": 42,
+    "unique_wallet_ca": 42,
+    "query_success": 42,
+    "nonzero_raw_balance_count": 42,
+    "zero_balance_count": 0,
+    "raw_positive_lte2_count": 5,
+    "prior_states": {
+      "OPEN_TOKEN_REMAINDER": 32,
+      "NONZERO_OR_UNRESOLVED": 10
+    },
+    "alignment_with_V18_exact": true,
+    "same_fixed_chain_block": true
+  },
+  "raw_unit_tiny_rows": [
+    {
+      "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+      "token": "BROCCOLIF3B",
+      "balance_raw": "1"
+    },
+    {
+      "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+      "token": "BROCCOLI714",
+      "balance_raw": "1"
+    },
+    {
+      "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+      "token": "TST",
+      "balance_raw": "2"
+    },
+    {
+      "wallet": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "token": "币安人生",
+      "balance_raw": "1"
+    },
+    {
+      "wallet": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+      "token": "币安人生",
+      "balance_raw": "1"
+    }
+  ],
+  "qualifications": [
+    "Independent fixed-block balance only, NOT yet independently reconciled gross raw ERC20 inbound/outbound sums for these 42 cells.",
+    "Nonzero raw integer units can be economically negligible depending on decimals and market price; dust must not be misrepresented as an economically active position.",
+    "Account activity after the date of V18 historical source capture can make historical raw-quantity differences diverge from this later fixed-block balance.",
+    "No owner signer / trade route / quote proceeds / commission / gas / full realized PnL evidence is established for these 42 by the balance snapshot.",
+    "Do not increment V18 quantity-reconciliation counter from 106 to 148 based only on these balance calls."
+  ],
+  "production": "NO_GO"
+}
