@@ -840,6 +840,20 @@
         "remaining_native_quote_PnL": "UNVERIFIED",
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V11_2026-10-12.json",
         "production": "NO_GO"
+      },
+      "address_model_4_stage8_mubarak_2026_10_12": {
+        "token": "MUBARAK",
+        "full_original_ERC20_history": true,
+        "original_self_signed_buy_tx": 5,
+        "original_self_signed_out_tx": 7,
+        "original_buy_msg_value_total_wei": "69000000000000000000",
+        "positive_12_block_native_balance_scope_wei": "66379663211351567593",
+        "raw_token_remainder": "0",
+        "native_scope_not_final_PnL": true,
+        "high_capital_follower_not_validated": true,
+        "rank_for_further_research": "HIGH_PRIORITY_CAUSAL_PNL_AND_CROSS_OPPORTUNITY_REVIEW",
+        "source": "BSC_MEME_5C0C_MUBARAK_ALL12_OWNER_SIGNED_66BNB_NATIVE_SCOPE_AUDIT_2026-10-12.json",
+        "production": "NO_GO"
       }
     },
     {
@@ -2867,6 +2881,29 @@
     },
     "remaining_partial_ERC20_cells": 50,
     "profit_status": "UNVERIFIED",
+    "production": "NO_GO"
+  },
+  "address_model_4_stage8_5c0c_mubarak_signed_66bnbscope_2026_10_12": {
+    "date": "2026-10-12",
+    "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+    "status": "ORIGINAL_SIGNERS_12_OF_12_CONFIRMED; NET_12_MUBARAK_EVENT_BLOCKS_POSITIVE_BNB; FINAL_PNL_UNVERIFIED",
+    "report_file": "BSC_MEME_ADDRESS_MODEL_4_STAGE8_V11_5C0C_MUBARAK_66BNB_NATIVE_SCOPE_2026-10-12.md",
+    "report_blob": "12f51f45dc769836fcdda04bf08dcde5aec70b22",
+    "full_evidence_file": "BSC_MEME_5C0C_MUBARAK_ALL12_OWNER_SIGNED_66BNB_NATIVE_SCOPE_AUDIT_2026-10-12.json",
+    "evidence_sha": "3bfcb838a2222dd470fc99171e991e82f2bf4037",
+    "signed_original_buy_tx": 5,
+    "signed_original_out_tx": 7,
+    "raw_original_bnb_input_wei": "69000000000000000000",
+    "native_block_scope_wei": "66379663211351567593",
+    "scope_ratio_not_roi": "96.1997%",
+    "original_ERC20_raw_remainder": "0",
+    "blocking": [
+      "NO_INDEPENDENT_INTERNAL_TRACE",
+      "NO_RECEIPT_GAS_USED_FULL",
+      "NO_OUTSIDE_QUOTE_CA_COMPLETE",
+      "NO_ALL_MAJOR_ELIGIBLE_OPPORTUNITY_DENOMINATOR",
+      "NO_HOLDOUT_FOLLOWABILITY_SIMULATION"
+    ],
     "production": "NO_GO"
   }
 }
