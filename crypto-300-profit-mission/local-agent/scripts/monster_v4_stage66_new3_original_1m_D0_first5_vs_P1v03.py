@@ -21,10 +21,14 @@ try:
     import monster_v4_stage38_usdm_original_v4_1m_pilot as src
     import monster_v4_stage39_usdm_all900_sixday_original_1m as baseline
     import monster_v4_stage51_pinnedP1v03_full900_causal_minute_replay as oldp1
+    import monster_v4_stage65_new3_full900_official_hourly_SHA as hourly_original
+    import monster_v4_stage72_imported_dependency_integrity as integrity
 except ImportError:
     from scripts import monster_v4_stage38_usdm_original_v4_1m_pilot as src
     from scripts import monster_v4_stage39_usdm_all900_sixday_original_1m as baseline
     from scripts import monster_v4_stage51_pinnedP1v03_full900_causal_minute_replay as oldp1
+    from scripts import monster_v4_stage65_new3_full900_official_hourly_SHA as hourly_original
+    from scripts import monster_v4_stage72_imported_dependency_integrity as integrity
 
 E=Path(__file__).resolve().parents[2]/"monster"/"evidence"
 HOURLY=E/"monster_stage65_new3_full2700_hourly_official_source_SHA.jsonl"
@@ -35,6 +39,8 @@ LOCK={
     SUMMARY.name:"c379912183a1138be411190a35615d91573a0f01",
     PRE.name:"49669c734ec4add4f5134e5ea49559f353b44931",
     "monster_v4_stage51_pinnedP1v03_full900_causal_minute_replay.py":"fdd0d0820afbed4fa7b400dc6a28660057e27024",
+    "monster_v4_stage65_new3_full900_official_hourly_SHA.py":"f90412646fb093eb5a2d40530ebcf1c80a1b6c3b",
+    "monster_v4_stage72_imported_dependency_integrity.py":"8ae3066afa9b01d419b735ae4045ef2fb8d10264",
 }
 D=Decimal
 DATES=("2025-03-30","2025-06-30","2025-11-27")
@@ -50,9 +56,12 @@ def blob(path):
 
 
 def frozen():
-    for file in (HOURLY,SUMMARY,PRE,Path(oldp1.__file__)):
+    for file in (HOURLY,SUMMARY,PRE,Path(oldp1.__file__),
+                 Path(hourly_original.__file__),Path(integrity.__file__)):
         if blob(file)!=LOCK[file.name]:
             raise ValueError("STAGE66_PRICE_BLIND_PRE_FREEZE_OR_OLD_CORE_CHANGED "+file.name)
+    integrity.assert_integrity_stage66(src,baseline,oldp1,hourly_original.orig44)
+    hourly_original.frozen()
     if src.blob(src.production.__file__)!=src.ORIGINAL_V4_GIT_BLOB:
         raise ValueError("STAGE66_ORIGINAL_V4_PRODUCTION_CORE_CHANGED")
     original=[json.loads(line) for line in HOURLY.read_text(encoding="utf-8").splitlines() if line]
