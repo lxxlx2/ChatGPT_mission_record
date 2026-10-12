@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-12",
+  "schema": "BSC_MEME_ADFF_COLD10_5_ACTIVE_BALANCE_QA",
+  "source": {
+    "file": "BSC_MEME_ADFF_COLD10_SUBSET_2026-10-12.json",
+    "sha": "b1d96a7ffe9e1bcc88d6819bfddf31d7b286079c"
+  },
+  "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+  "all_complete_CAs": 10,
+  "active": [
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "in_count": 1,
+      "out_count": 0,
+      "in_raw": "10344728484569536266",
+      "out_raw": "0",
+      "net_raw": "10344728484569536266",
+      "current_balance_raw": "10344728484569536266",
+      "matches": true,
+      "first_in_tx": "0x6c7f28fe04982f805eca509287ce053260ed1133a89c7fe937608a7d4baed9f7"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "in_count": 1,
+      "out_count": 0,
+      "in_raw": "4924907839683881206",
+      "out_raw": "0",
+      "net_raw": "4924907839683881206",
+      "current_balance_raw": "4924907839683881206",
+      "matches": true,
+      "first_in_tx": "0x9efbbbbb6ee461ae77fa49e2bcb3a7327d76d84e6352b47213b43c7226d29f1e"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "in_count": 1,
+      "out_count": 0,
+      "in_raw": "16743278217930406214",
+      "out_raw": "0",
+      "net_raw": "16743278217930406214",
+      "current_balance_raw": "16743278217930406214",
+      "matches": true,
+      "first_in_tx": "0x32d3eb317be12a7eb1d80d2cfe09c8dbc678fa03952031be6b33c260b31486e9"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "BOB",
+      "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "in_count": 1,
+      "out_count": 1,
+      "in_raw": "54955344112037612385974447",
+      "out_raw": "54955344112037612385974447",
+      "net_raw": "0",
+      "current_balance_raw": "0",
+      "matches": true,
+      "first_in_tx": "0x6b411510ce6ddb3d38b124c232fd059c431f1623c2528113f84fdb58bfbc80ae",
+      "first_out_tx": "0x87176f7f43cd9b1e48832683a706238b1beecf072bb590709d85bd2988fa2514"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "in_count": 1,
+      "out_count": 1,
+      "in_raw": "18155547355160309906",
+      "out_raw": "18155547355160309906",
+      "net_raw": "0",
+      "current_balance_raw": "0",
+      "matches": true,
+      "first_in_tx": "0x4a18f58c5ba012e00d971cb0ef1fe1c8294adf407d40e71524c940a28d449028",
+      "first_out_tx": "0x491423b80f4985b58a5cf912aeb444718d778a566ebfcac4ceade4e65f9206ec"
+    }
+  ],
+  "zero_CAs": [
+    {
+      "token": "TUT",
+      "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3"
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1"
+    },
+    {
+      "token": "BANANAS31",
+      "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760"
+    },
+    {
+      "token": "4",
+      "ca": "0x0a43fc31a73013089df59194872ecae4cae14444"
+    },
+    {
+      "token": "BUBB",
+      "ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b"
+    }
+  ],
+  "all_exact_balance_matches": true,
+  "scope": "10 cold CAs only excluding actively trafficked tokens; current balanceOf equals all indexed ERC20 in minus out; no trader profit inference",
+  "production": "NO_GO"
+}
