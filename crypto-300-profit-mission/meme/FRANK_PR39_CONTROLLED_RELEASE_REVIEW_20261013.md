@@ -49,3 +49,39 @@ Still required **before any production source switch**:
 5. Verify post-switch source version, HTTP UI/API, immutable delivery rows, scanner cursor and heartbeat without emitting synthetic signals or Gmail.
 
 **No merge, no Mac restart, no Gmail send, no database mutation, and no live trading was authorized or performed by this review.**
+
+
+## Actual Mac controlled read-only inventory (2026-10-13 Bangkok)
+
+The operator executed the reviewed ops `--collect-evidence` against the
+running Mac and uploaded a JSON report. Overall **UNVERIFIED_RELEASE_BLOCKED**.
+No production mutation, restart, Gmail send, or merge was performed.
+
+- `manual_review_reasons=PASS`: **15** historical LIVE Gmail MANUAL_REVIEW,
+  all **15** are `GMAIL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND`
+  with zero recorded send attempts / no receipt; **0 require private review**
+  under the instrumented checks. Preserve their ledger rows and do not resend.
+- `databases_and_scanner=PASS`: Frank latest BUY predicate coverage is **26/26**
+  `USDC_DIRECT_NUMERIC`, 0 missing. SQLite record counts are **35**
+  decision events and snapshots, **36** outbox, **18** Gmail, **18** local,
+  **0** local presentation. Frank scanner running-source fingerprint and
+  PID were retrieved, but full scanner lifecycle proof remains dependent
+  on the complete preflight.
+- `loop_actual_runtime=UNVERIFIED(SOURCE_MIXED_BYTES)`.
+- `dashboard_actual_runtime=UNVERIFIED(RUNNER_START_SECOND_AMBIGUOUS)`.
+- `complete_release_preflight=UNVERIFIED(SOURCE_MIXED_BYTES)`.
+
+**Do not suppress either runtime guard.** A historical authorized UI/runtime
+overlay may explain a Git HEAD mismatch, but source provenance is unproven
+until the exact differing filenames and actual Git blob identities are
+collected. The Dashboard runner's mtime lies in the same coarse one-second
+bucket as the process start; this by itself does not prove whether the
+running process loaded the before or after text. The new isolated read-only
+`source_drift_diagnostic` and `runner_start_time_diagnostic` return
+repository-relative paths, Git content identities, and timestamp deltas
+without exposing private root paths or local source/credentials. They **do
+not** change the production gate or authorize a restart.
+
+A subsequent Mac run of this updated review branch must verify these
+diagnostic values, then any acceptance of explicitly reviewed legacy
+overlays needs its own exact hash allowlist and independent test.
