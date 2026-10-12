@@ -1,0 +1,75 @@
+{
+  "schema": "BSC_MEME_8E6B_MUBARAK_16_BLOCK_NATIVE_EXTERNAL_EXCLUSION_D",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "source": {
+    "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_MUBARAK_16_BLOCK_NATIVE_RECONCILIATION_2026-10-11.json",
+    "sha": "e739ced8c1ba956ba830ac0424e16d5dbac6af99"
+  },
+  "batch": "D",
+  "rows": [
+    {
+      "hash": "0xeba08abea107e87eaed81e4f76fe7de999a7867a0d3382ad22d7e4701cadd487",
+      "block": 47476115,
+      "original_owner_out": [
+        {
+          "hash": "0xeba08abea107e87eaed81e4f76fe7de999a7867a0d3382ad22d7e4701cadd487",
+          "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "wei": "1010000000000000000"
+        }
+      ],
+      "other_external_wallet_out": [],
+      "wallet_in": [],
+      "cursor_closed": true
+    },
+    {
+      "hash": "0x3a7421e824c446a875114d4ab9f950d54e8a83515dd3a235222b31044610fc7f",
+      "block": 47476125,
+      "original_owner_out": [
+        {
+          "hash": "0x3a7421e824c446a875114d4ab9f950d54e8a83515dd3a235222b31044610fc7f",
+          "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "wei": "0"
+        }
+      ],
+      "other_external_wallet_out": [],
+      "wallet_in": [],
+      "cursor_closed": true
+    },
+    {
+      "hash": "0x13da50c585e8b67caad158bbfa1fa4a0605b3725c4122cf3b350e4ff41f40484",
+      "block": 47537139,
+      "original_owner_out": [
+        {
+          "hash": "0x13da50c585e8b67caad158bbfa1fa4a0605b3725c4122cf3b350e4ff41f40484",
+          "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "wei": "303000000000000000"
+        }
+      ],
+      "other_external_wallet_out": [],
+      "wallet_in": [],
+      "cursor_closed": true
+    },
+    {
+      "hash": "0xaad12c4338b60fb4fd79e805ee40f80cca224518575928bdcdc5d7c45d643dd2",
+      "block": 47537150,
+      "original_owner_out": [
+        {
+          "hash": "0xaad12c4338b60fb4fd79e805ee40f80cca224518575928bdcdc5d7c45d643dd2",
+          "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "wei": "0"
+        }
+      ],
+      "other_external_wallet_out": [],
+      "wallet_in": [],
+      "cursor_closed": true
+    }
+  ],
+  "production": "NO_GO",
+  "limitation": "Native external only; cannot exclude same-block native internal calls or other asset flows."
+}
