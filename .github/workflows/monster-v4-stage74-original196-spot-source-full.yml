@@ -1,0 +1,84 @@
+name: Monster Stage74 Original196 All D0 Historical Spot Closed 1m Publisher SHA
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-stage74-original196-spot-source-full.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage74-original196-spot-source-lock
+  cancel-in-progress: false
+jobs:
+  unchanged_original196_all_spot_prior_minutes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin all196 and Spot 2025 1m checksum no lookahead
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage74_original196_spot_asof_prior_minute_SHA.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage74_original196_spot_asof_prior_minute_SHA.py --selftest
+      - name: Obtain all original 49 D0 coin-days Spot one minute before WATCH from publisher-verified ZIP regardless of future 2x
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage74_original196_spot_asof_prior_minute_SHA.py \
+            --shard "${{ matrix.shard }}" --workers 4 \
+            --out "/tmp/monster_stage74_original196_shard${{ matrix.shard }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage74-original196-shard${{ matrix.shard }}
+          path: /tmp/monster_stage74_original196_shard${{ matrix.shard }}.json
+          retention-days: 30
+  actual_global_196_original_identity_sha_trades_and_unknowns:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: unchanged_original196_all_spot_prior_minutes
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage74-original196-shard*
+          merge-multiple: true
+          path: /tmp/monster_stage74_four_shards
+      - name: Verify 196 unique original first D0 and original three window 44 49 103 with no future labels used
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage74_original196_spot_asof_prior_minute_SHA.py \
+            --aggregate-dir /tmp/monster_stage74_four_shards \
+            --out /tmp/monster_stage74_196_evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage74-all196-real-spot-asof-one-minute-checksum-summary
+          path: /tmp/monster_stage74_196_evidence/*
+          retention-days: 30
+      - name: Persist full real official Spot SHA evidence in original Monster PR30
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage74_196_evidence/monster_stage74_original196_* "$dest/"
+          git add "$dest/monster_stage74_original196_exact_asof_spot_prior_trades_source_SHA.jsonl" "$dest/monster_stage74_original196_spot_trading_source_summary.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: preserve exact196 all original D0 Spot preceding 1m source SHA venue availability audit'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE74_GIT_ARCHIVE_FAILED
+          exit 1
