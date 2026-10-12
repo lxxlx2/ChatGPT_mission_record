@@ -1,0 +1,46 @@
+name: Monster Stage42 Frozen P1 All483 V4 First WATCH Real1m SHA
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_all483_official1m_pilot.py'
+      - '.github/workflows/monster-v4-stage42-all483-exposed-P1-causal-1m.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original_first_watch_all483_real_1m_publisher_SHA:
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        date: [2025-01-19, 2025-04-19, 2025-07-19, 2025-10-19, 2026-04-19, 2026-07-19]
+        shard: [0, 1]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Strict closed minute threshold and frozen cohort selftests
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_all483_official1m_pilot.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_priority_v01.py --selftest
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_all483_official1m_pilot.py --selftest
+      - name: Apply exact frozen priority rule on original V4 first WATCH using official USD-M daily1m checksum
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_all483_official1m_pilot.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 3 \
+            --output "/tmp/monster_stage42_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - name: Retain original source-backed causal P1 candidate cases; no alerts or trades
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage42-firstwatch-P1-${{ matrix.date }}-shard${{ matrix.shard }}-SHA
+          path: /tmp/monster_stage42_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
