@@ -237,6 +237,73 @@ def source_manifest(root):
     return result
 
 
+def source_drift_diagnostic(root, *, limit=30):
+    """Read-only forensic facts for an unverified live checkout.
+
+    Diagnoses but NEVER authorizes SOURCE_MIXED_BYTES. Git HEAD is not enough
+    to prove what a previously patched macOS production worktree is executing.
+    Only repository-relative code paths and hashes are reported; no file bodies,
+    home paths, credentials, wallet data or identifiers leave this function.
+    """
+    root = Path(root).resolve()
+    repo = Path(run(['git', '-C', str(root), 'rev-parse', '--show-toplevel']))
+    prefix = '' if root == repo else root.relative_to(repo).as_posix() + '/'
+    raw_paths = run(['git', '-C', str(repo), 'ls-tree', '-r', '--name-only', 'HEAD', '--',
+                     prefix + 'mission_agent', prefix + 'config',
+                     prefix + 'scripts/mission_meme_v1.py']).splitlines()
+    require(raw_paths, 'EMPTY_SOURCE')
+    mismatches = []
+    changes = 0
+    for repository_path in raw_paths:
+        relative = repository_path[len(prefix):]
+        local = root / relative
+        expected = run(['git', '-C', str(repo), 'rev-parse', 'HEAD:' + repository_path])
+        observed = (run(['git', '-C', str(repo), 'hash-object', str(local)])
+                    if local.is_file() and not local.is_symlink() else None)
+        if expected != observed:
+            changes += 1
+            if len(mismatches) < limit:
+                mismatches.append({'file': relative, 'expected_git_blob': expected,
+                                   'observed_git_blob': observed, 'reason':
+                                   'BYTES_DIFFER' if observed else 'MISSING_OR_SYMLINK'})
+    known = {p[len(prefix):] for p in raw_paths}
+    extra_count = 0
+    extras = []
+    for base in ('mission_agent', 'config'):
+        for local in (root / base).rglob('*'):
+            if local.is_file() and local.suffix in {'.py', '.js', '.css', '.html', '.json'}:
+                relative = local.relative_to(root).as_posix()
+                if relative not in known:
+                    extra_count += 1
+                    if len(extras) < limit:
+                        extras.append(relative)
+    return {'status': 'BYTES_VERIFIED' if not (changes or extra_count) else 'UNVERIFIED_SOURCE_DRIFT',
+            'tracked_files': len(raw_paths), 'different_or_missing_count': changes,
+            'untracked_executable_count': extra_count,
+            'mismatches': mismatches, 'unexpected_source_paths': extras,
+            'results_truncated': changes > limit or extra_count > limit,
+            'note': 'Diagnostic only; does not relax runtime/source release gate'}
+
+
+def runner_start_time_diagnostic(mac, key, text):
+    """Only measure second-granularity ps/runner timestamp ambiguity; never clear it."""
+    runner = mac.runners[key]
+    pid, _ = mac.launch(mac.labels[key])
+    command = run(['/bin/ps', '-p', str(pid), '-o', 'lstart='],
+                  env={**os.environ, 'LC_ALL': 'C'})
+    process_start_second = time.mktime(time.strptime(
+        command, '%a %b %d %H:%M:%S %Y'))
+    runner_mtime = runner.stat().st_mtime
+    delta = runner_mtime - process_start_second
+    return {'pid': pid, 'runner_hash_sha256': sha(runner),
+            'runner_minus_process_start_seconds': round(delta, 6),
+            'timestamp_resolution': 'ps_lstart_one_second',
+            'status': ('UNVERIFIED_SAME_SECOND' if 0 <= delta < 1
+                       else 'RUNNER_NEWER_THAN_PROCESS' if delta >= 1
+                       else 'RUNNER_OLDER_THAN_PROCESS'),
+            'note': 'Read-only diagnostic; time alone cannot prove loaded runner bytes'}
+
+
 def candidate(root, expected):
     require(re.fullmatch('[a-f0-9]{40}', expected or '') is not None, 'EXACT_SHA_REQUIRED')
     require(run(['git', '-C', str(root), 'rev-parse', 'HEAD']) == expected, 'RELEASE_SHA')
@@ -753,6 +820,17 @@ def collect_evidence(mac, root, expected, scanner_label):
             state = {'gmail_delivery': [dict(r) for r in conn.execute('SELECT * FROM gmail_delivery')]}
         return review_reasons(state)
     probe('manual_review_reasons', manual)
+    # Collect diagnostic facts separately: a legacy production tree may have
+    # explicitly reviewed on-disk overlays. Never silently accept such drift.
+    for key in mac.runners:
+        def source_detail(key=key):
+            runner_text = mac.runners[key].read_text(encoding='utf-8')
+            return source_drift_diagnostic(field(runner_text, 'LOCAL_AGENT'))
+        probe(key + '_source_drift_diagnostic', source_detail)
+        def timing_detail(key=key):
+            return runner_start_time_diagnostic(mac, key,
+                                                mac.runners[key].read_text(encoding='utf-8'))
+        probe(key + '_start_time_diagnostic', timing_detail)
     def db_facts():
         text = mac.runners['loop'].read_text()
         pointer = field(text, 'CONTROL_POINTER')
