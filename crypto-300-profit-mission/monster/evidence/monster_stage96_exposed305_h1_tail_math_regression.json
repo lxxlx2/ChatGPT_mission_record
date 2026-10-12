@@ -5,6 +5,90 @@
   "OOS": "NOT_DONE",
   "autotrade": "NO_GO",
   "deployment": "NO_GO",
+  "entry_path_robustness_exposed_or_forward_descriptive_only": {
+    "DIRECT_AT_FIRST_D0": {
+      "global_auc": "0.5",
+      "n": 164,
+      "negative": 163,
+      "per_date": {
+        "2025-01-30": {
+          "auc": null,
+          "control": 16,
+          "positive": 0
+        },
+        "2025-06-02": {
+          "auc": null,
+          "control": 10,
+          "positive": 0
+        },
+        "2025-08-01": {
+          "auc": null,
+          "control": 37,
+          "positive": 0
+        },
+        "2025-10-02": {
+          "auc": null,
+          "control": 42,
+          "positive": 0
+        },
+        "2026-06-21": {
+          "auc": null,
+          "control": 31,
+          "positive": 0
+        },
+        "2026-07-28": {
+          "auc": "0.5",
+          "control": 27,
+          "positive": 1
+        }
+      },
+      "positive": 1,
+      "positive_date_count": 1,
+      "posthoc_secondary_diagnostic_not_primary_H1": true,
+      "same_date_equal_date_auc": "0.5"
+    },
+    "REIGNITION_AFTER_D0": {
+      "global_auc": "0.7956204379562043795620437956",
+      "n": 141,
+      "negative": 137,
+      "per_date": {
+        "2025-01-30": {
+          "auc": null,
+          "control": 59,
+          "positive": 0
+        },
+        "2025-06-02": {
+          "auc": null,
+          "control": 6,
+          "positive": 0
+        },
+        "2025-08-01": {
+          "auc": "1",
+          "control": 7,
+          "positive": 1
+        },
+        "2025-10-02": {
+          "auc": "0.625",
+          "control": 16,
+          "positive": 1
+        },
+        "2026-06-21": {
+          "auc": "0.9166666666666666666666666667",
+          "control": 24,
+          "positive": 1
+        },
+        "2026-07-28": {
+          "auc": "1",
+          "control": 25,
+          "positive": 1
+        }
+      },
+      "positive": 4,
+      "positive_date_count": 4,
+      "posthoc_secondary_diagnostic_not_primary_H1": true,
+      "same_date_equal_date_auc": "0.8854166666666666666666666668"
+    }
+  },
   "exposed_source_blobs": {
     "monster_stage85_all305_official_D1_asof_features.jsonl": "622299fec16400e189cb8fa668ecbc8bc31ec630",
     "monster_stage88_all305_D1_post_signal_24h72h_price_paths.jsonl": "86e96b726f677a15f5a7c8d740e3caca5c83e3fc"
