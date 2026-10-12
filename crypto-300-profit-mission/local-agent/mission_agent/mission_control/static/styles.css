@@ -473,12 +473,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 .frank-watch-controls input{min-width:220px;flex:1}
 .frank-watch-summary{font-size:12px;color:#bcc9d3;padding:8px 14px 12px}
 .frank-watch-table-wrap{overflow-x:auto;max-height:610px;overflow-y:auto}
-.frank-watch-table{border-collapse:collapse;width:100%;min-width:840px;font-size:12px}
+.frank-watch-table{border-collapse:collapse;width:100%;min-width:840px;font-size:13px;line-height:1.5}
 .frank-watch-table th,.frank-watch-table td{padding:12px 10px;text-align:left;border-top:1px solid var(--line);vertical-align:top}
 .frank-watch-table th{background:#10161b;color:#93a1b0;position:sticky;top:0;z-index:1}
 .frank-watch-table tr:hover td{background:#141d26}
 .frank-watch-table a{color:#9fc2e2;text-decoration:none;margin-right:8px}
-.frank-watch-table code{font-size:11px}
+.frank-watch-table code{font-size:12px}
 .frank-watch-footnote{font-size:11px;color:#98a5b2;padding:10px 14px}
 .watch-tx{margin-top:5px;font-size:11px;color:#8da0b2}
 @media(max-width:680px){.frank-watch-controls input{min-width:100%}}
