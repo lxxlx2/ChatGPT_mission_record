@@ -47,9 +47,9 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
 
     def test_curated_positive_and_negative_cases_preserved(self):
         s = self.build()["summary"]
-        self.assertEqual(s["signed_closed_episodes_imported"], 37)
-        self.assertEqual(s["selected_positive_episodes"], 23)
-        self.assertEqual(s["selected_negative_episodes"], 14)
+        self.assertEqual(s["signed_closed_episodes_imported"], 50)
+        self.assertEqual(s["selected_positive_episodes"], 32)
+        self.assertEqual(s["selected_negative_episodes"], 18)
         self.assertEqual(s["wallets_with_curated_evidence"], 7)
         self.assertEqual(s["wallets_not_yet_economically_curated"], 16)
 
@@ -63,8 +63,8 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
 
     def test_a83b_broccoli_negative_retained(self):
         w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0xa83b"))
-        self.assertEqual((w["source_episodes_imported"], w["selected_negative_episode_count"]), (2, 2))
-        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "-453486449245781063")
+        self.assertEqual((w["source_episodes_imported"], w["selected_negative_episode_count"]), (4, 4))
+        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "-629874040329694491")
         self.assertIsNone(w["native_only_largest_positive_episode_wei"])
 
     def test_ddac_with_ifml_losses_and_MARS_earnings(self):
@@ -87,10 +87,10 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
 
     def test_2adf_BOB_positive_and_Niulai_negative_kept_separate(self):
         w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0x2adf"))
-        self.assertEqual(w["source_episodes_imported"], 2)
+        self.assertEqual(w["source_episodes_imported"], 5)
         self.assertEqual((w["selected_positive_episode_count"],
-                          w["selected_negative_episode_count"]), (1, 1))
-        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "-12788167805595559")
+                          w["selected_negative_episode_count"]), (4, 1))
+        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "242741218967958843")
         self.assertIsNone(w["mixed_quote_actual_BNB_delta_sum_wei"])
         self.assertIsNone(w["realized_profit_rank"])
         self.assertEqual(w["recent_30d_signed_meme_swap"], "UNRESOLVED")
@@ -318,12 +318,13 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
 
     def test_adff_two_major_native_positive_not_profit_rank(self):
         w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0xadff"))
-        self.assertEqual(w["source_episodes_imported"], 2)
-        self.assertEqual(w["selected_positive_episode_count"], 2)
+        self.assertEqual(w["source_episodes_imported"], 7)
+        self.assertEqual(w["selected_positive_episode_count"], 6)
+        self.assertEqual(w["selected_negative_episode_count"], 1)
         self.assertEqual(w["selected_positive_distinct_major_CAs_count"], 2)
-        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "19799045333124176")
-        self.assertEqual(w["native_only_scope_excluding_largest_positive_wei"],
-                         "4522437855804654")
+        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "36739402732955246")
+        self.assertEqual(w["native_only_largest_positive_episode_wei"],
+                         "15276607477319522")
         self.assertIsNone(w["realized_profit_rank"])
         self.assertEqual(w["recent_30d_signed_meme_swap"], "UNRESOLVED")
 
