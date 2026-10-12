@@ -1,0 +1,88 @@
+name: Monster Stage73 M03 Original2700 Official SHA AsOf Prefix versus Future Scoring
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - '.github/workflows/monster-v4-stage73-m03-all2700-prefix-official-SHA.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage73-original2700-independent-source-prefix
+  cancel-in-progress: false
+jobs:
+  original3x900_daily_source_before_future_label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        date: [2025-03-30, 2025-06-30, 2025-11-27]
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Immutable original code, prereg and strict prefix source guards
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_m03_all2700_verified_prefix_discovery.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_m03_all2700_verified_prefix_discovery.py --selftest
+      - name: Original 150 archived symbols regardless of future monthly-hourly source status
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_m03_all2700_verified_prefix_discovery.py \
+            --date "${{ matrix.date }}" --shard "${{ matrix.shard }}" --workers 2 \
+            --out "/tmp/monster_stage73_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage73-original-${{ matrix.date }}-shard${{ matrix.shard }}
+          path: /tmp/monster_stage73_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
+  enforce_exact2700_population_full1497_parity_and_persist:
+    needs: original3x900_daily_source_before_future_label
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage73-original-*
+          merge-multiple: true
+          path: /tmp/monster_stage73_raw18
+      - name: Global audit 2700 unique original archive names and 1497 exact frozen Stage66 signal lists
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_m03_all2700_verified_prefix_discovery.py \
+            --aggregate-dir /tmp/monster_stage73_raw18 --out /tmp/monster_stage73_evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage73-original2700-real-asof-watch-before-future-source-GT
+          path: /tmp/monster_stage73_evidence/*
+          retention-days: 30
+      - name: Persist original2700 source-prefix WATCH separate from future labels to Monster Draft PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage73_evidence/monster_stage73_* "$dest/"
+          git add "$dest/monster_stage73_original2700_prefix_watch_separate_from_future_labels.jsonl" "$dest/monster_stage73_original2700_asof_prefix_vs_future_scoreability_summary.json"
+          if git diff --cached --quiet; then
+            echo STAGE73_SOURCE_ALREADY_ARCHIVED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: archive Stage73 all2700 SHA-vetted asof WATCH independent of future window and original1497 parity'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE73_SOURCE_BLOB_GIT_PERSISTENCE_FAIL
+          exit 1
