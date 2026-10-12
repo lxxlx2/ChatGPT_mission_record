@@ -242,6 +242,7 @@ def test_sigterm_handler_raises_catchable_keyboard_interrupt():
 
 def test_signal_code_files_captured_by_expected_scope():
     assert "mission_agent/mission_control/policy.py" in ops.SIGNAL_FILES
+    assert "mission_agent/mission_control/service.py" in ops.SIGNAL_FILES
     assert "mission_agent/signals/classifier.py" in ops.SIGNAL_FILES
     assert "mission_agent/signals/engine.py" in ops.SIGNAL_FILES
     assert "mission_agent/signals/evaluator.py" in ops.SIGNAL_FILES
