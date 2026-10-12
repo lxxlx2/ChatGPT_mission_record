@@ -129,3 +129,28 @@ convert either old runtime guard to PASS automatically. Explicit source
 provenance and runner/pid identity evidence remain required before any
 release. Any uploaded output must be treated as a dated observation, not
 permission to send mail, restart the loop or modify SQLite.
+
+## Additional release-only read-only diagnostics
+
+The exact historical legacy blobs from the committed
+`scripts/deploy_frank_dashboard_review_badge.py` are now a narrowly scoped
+**diagnostic fingerprint**, including an actual hash check of the additional
+`delivery_review.py`. Even when all three match, the result explicitly says
+`DOCUMENTED_LEGACY_DISK_BYTES_RUNTIME_UNVERIFIED`, **not PASS** and not
+permission to replace or restart Mission Loop. A source modification-time
+inventory shows whether any executable code may have changed after the
+recorded process start.
+
+The Dashboard runner's 0.570427-second coarse-time ambiguity prompted an
+additional read-only macOS `libproc.proc_pidinfo(PROC_PIDTBSDINFO)` probe,
+using the public Apple XNU `struct proc_bsdinfo` with microsecond birth
+fields. The result must match the independent `ps lstart` whole second and
+PID, or it remains unverified. A valid kernel birth before/after the runner
+mtime can resolve the **timestamp ordering only**; it cannot prove any
+unrecorded shell content or relax checks on Loop's runner, whose modification
+time is about 45 hours later than the current PID start. Runtime checks still
+fail closed if kernel proof is unavailable or contradictory.
+
+These changes are confined to the controlled release ops tool, isolated tests,
+CI and this report; they do not modify Frank strategy, Mission delivery
+semantics, live services or database. Mac-only acceptance remains pending.
