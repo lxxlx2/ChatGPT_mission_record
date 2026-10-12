@@ -14,3 +14,12 @@
 - Mac用户现在不需要运行旧命令、下载散落脚本或创建后台任务。若10月14日窗口前无法完成真实其他AI审查及正确单次采集安装，必须标`WINDOW_20261014_POINT_IN_TIME_UNIVERSE_NOT_CAPTURED`，不能补抓，也不能称全市场OOS通过；仍可正常推进历史研发和后两窗口。
 
 状态：`STAGE99_CI_ENGINEERING=PASS`、`OTHER_AI_CHAT_REVIEW=NOT_DONE`、`STAGE99_CORRECT_NON_CLI_INSTALLER=NOT_DONE`、`USER_MAC_INSTALL=NOT_DONE`、`FUTURE_SNAPSHOT=NOT_DONE`、`D1_G3=REJECTED_EXPOSED`、`MONSTER_DEPLOYMENT=NO_GO`、`GMAIL=OFF`、`AUTOTRADE=NO_GO`、`FRANK=UNCHANGED`。
+
+
+## 2026-10-13 二次更新：用户明确采集必须后台化，主线立即继续历史建模
+
+按用户新指示，已另行创建**三次定时运行后自动结束的ChatGPT后台任务**，不再依赖Mac LaunchAgent或Claude CLI。2026-10-14、2026-10-28、2026-11-11曼谷时间12:48，尝试通过GitHub连接器向本Monster PR30分支提交一次性采集request，commit带`[MONSTER_USDM_CAPTURE]`，触发已有Stage97 GitHub Actions使用官方Binance USD-M `/fapi/v1/time→/fapi/v1/exchangeInfo→/fapi/v1/time`采真实原始数据并推送原始证据。每次必须核验真实远端Git文件、SHA和实际CI；延迟到窗口外、权限失败或官方接口失败，一律标`MISSED`，绝不补抓或伪造。`TASK_SCHEDULED` ≠ `CAPTURE_COMPLETED`。该方案不安装任何用户Mac进程、没有持久化交易/邮件权限，真实CI执行与采集结果需要届时核实。
+
+**优先级改变：历史Monster模型是MAIN，未来市场名单采集是SIDE_TASK**。Stage100已经用先前305条官方历史D1数据建立确定性训练/按时间递进四折模型，真实CI成功且候选`REJECTED`；Stage101正使用同批官方1m因果重放检验不同退出路径。**任何一个未来窗口还未成熟都不能阻塞这些旧数据研究、策略/技术设计、开发、真实历史回测和其他AI审查。** 未部署生产Monster，Frank不变。
+
+原Mac `review-install` 的撤回继续有效，用户不需要运行旧命令。其他AI在正式模型上线前仍必须真实通过，不允许将后台采集任务当成其他AI审查或生产模型部署。
