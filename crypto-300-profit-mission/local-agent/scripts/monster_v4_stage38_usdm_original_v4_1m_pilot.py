@@ -208,6 +208,21 @@ def analyze_case(row,minute_get=minute_source,scanner=production_scan):
             x.update(source_status="CENSORED_DAILY_1M_GAP",source_reason=str(e))
             return x
         raise
+    # Some RWA/stock-named futures have publisher-verified 1h and 1m files
+    # with conflicting candle anchors. This is a scored-data SOURCE CONFLICT,
+    # not a failed WATCH / negative future label. Preserve both actual inputs.
+    anchor_open=bars[WARMUP][1]
+    max_minute_high=max(v[2] for v in bars[WARMUP:WARMUP+ACTIVE])
+    if (anchor_open!=Decimal(row["baseline_1h_open"]) or
+        max_minute_high/Decimal(row["baseline_1h_open"])!=Decimal(row["max_high_multiple"])):
+        x.update(source_status="CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT",
+           original_1h_baseline_open=row["baseline_1h_open"],
+           original_1h_max_high_multiple=row["max_high_multiple"],
+           daily_1m_baseline_open=str(anchor_open),
+           daily_1m_max_high_multiple_vs_1h_baseline=str(max_minute_high/Decimal(row["baseline_1h_open"])),
+           official_9_daily_1m_publisher_SHA256=proof,
+           conflict_reason="ALREADY_VERIFIED_OFFICIAL_HOURLY_AND_MINUTE_DISAGREE_NO_MODEL_SCORE")
+        return x
     actual=scanner(row["symbol"],row["date"],bars)
     label=score(row,bars,actual)
     x.update(source_status="COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4",
