@@ -30,20 +30,36 @@
       {
         "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE26_8E6B_MUBARAK_FIVE_CLOSED_ROUNDS_NEGATIVE_CONTROLS_2026-10-13.json",
         "blob_sha": "2d7afc87b89b1426a329270b320d35b6eaadad2f"
+      },
+      {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_239E_TWO_MAJOR_FULL_SIGNED_FLOW_SOURCE_2026-10-11.json",
+        "blob_sha": "5728b4e277cd814bf4b877f9e4a2aff9ec53f92a"
+      },
+      {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+        "blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c"
+      },
+      {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_239E_IFML_ORIGINAL_TX_RECEIPT_PROVENANCE_2026-10-11.json",
+        "blob_sha": "10973a7aaf392e432ac73b1bb677bcb3d28bb3c0"
+      },
+      {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_239E_LOBSTER_21_ORIGINAL_SIGNER_RECEIPT_AUDIT_2026-10-11.json",
+        "blob_sha": "d5412d4d4167e33d440a3aa98e6b6753462d02ee"
       }
     ]
   },
   "summary": {
     "wallets_included": 23,
-    "signed_closed_episodes_imported": 25,
-    "wallets_with_curated_evidence": 4,
-    "wallets_not_yet_economically_curated": 19,
-    "selected_positive_episodes": 16,
-    "selected_negative_episodes": 9,
+    "signed_closed_episodes_imported": 32,
+    "wallets_with_curated_evidence": 5,
+    "wallets_not_yet_economically_curated": 18,
+    "selected_positive_episodes": 21,
+    "selected_negative_episodes": 11,
     "evidence_by_grade": {
       "MIXED_BNB_USDT_SPOT_REFERENCE": 2,
       "SETTLED_NATIVE_DIRECT_WBNB_GAS": 4,
-      "SIGNED_NATIVE_BLOCK_SCOPE": 19
+      "SIGNED_NATIVE_BLOCK_SCOPE": 26
     },
     "all_23_comparable_full_PnL_ready": false,
     "any_ranked_wallet": false
@@ -571,31 +587,102 @@
       "research_priority_in_P1": 9,
       "major_2026_transfer_present_count": 3,
       "all_19_transfer_present_count": 3,
-      "source_episodes_imported": 0,
-      "source_distinct_CAs_imported": 0,
-      "selected_positive_episode_count": 0,
-      "selected_negative_episode_count": 0,
-      "selected_positive_distinct_CAs": [],
-      "selected_negative_distinct_CAs": [],
-      "selected_positive_distinct_major_CAs_count": 0,
-      "native_only_source_episodes": 0,
+      "source_episodes_imported": 7,
+      "source_distinct_CAs_imported": 2,
+      "selected_positive_episode_count": 5,
+      "selected_negative_episode_count": 2,
+      "selected_positive_distinct_CAs": [
+        "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "selected_negative_distinct_CAs": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "selected_positive_distinct_major_CAs_count": 2,
+      "native_only_source_episodes": 7,
       "mixed_source_episodes": 0,
-      "native_only_event_block_scope_sum_wei": null,
-      "native_only_positive_gross_wei": null,
-      "native_only_largest_positive_episode_wei": null,
-      "native_only_scope_excluding_largest_positive_wei": null,
-      "native_only_biggest_win_fraction_of_positive_gross": null,
+      "native_only_event_block_scope_sum_wei": "296492314017711706",
+      "native_only_positive_gross_wei": "355941400117203582",
+      "native_only_largest_positive_episode_wei": "196173568640778763",
+      "native_only_scope_excluding_largest_positive_wei": "100318745376932943",
+      "native_only_biggest_win_fraction_of_positive_gross": 0.55114,
       "mixed_quote_actual_USDT_delta_sum_raw": null,
       "mixed_quote_actual_BNB_delta_sum_wei": null,
       "mixed_quote_historical_spot_reference_sum_raw": null,
-      "economic_evidence_grade": "NO_CURATED_P2_EPISODES_NOT_ZERO_PROFIT",
+      "economic_evidence_grade": "SOME_CURATED_CLOSED_ROUNDS_NOT_FULL_WALLET",
       "completed_full_wallet_all_CA_PnL": "UNRESOLVED",
       "realized_profit_rank": null,
       "can_rank_by_profit": false,
       "recent_30d_signed_meme_swap": "UNRESOLVED",
       "followable_alpha_approved": false,
-      "source_refs": [],
-      "source_rounds": []
+      "source_refs": [
+        "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json"
+      ],
+      "source_rounds": [
+        {
+          "token": "我踏马来了",
+          "episode_index": 1,
+          "first_block": 73658908,
+          "last_block": 73664688,
+          "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+          "classification": "POSITIVE_NATIVE_SCOPE",
+          "source": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json"
+        },
+        {
+          "token": "龙虾",
+          "episode_index": 1,
+          "first_block": 83636130,
+          "last_block": 84188954,
+          "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+          "classification": "POSITIVE_NATIVE_SCOPE",
+          "source": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json"
+        },
+        {
+          "token": "龙虾",
+          "episode_index": 2,
+          "first_block": 85589795,
+          "last_block": 85602706,
+          "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+          "classification": "POSITIVE_NATIVE_SCOPE",
+          "source": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json"
+        },
+        {
+          "token": "龙虾",
+          "episode_index": 3,
+          "first_block": 85767531,
+          "last_block": 85952403,
+          "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+          "classification": "POSITIVE_NATIVE_SCOPE",
+          "source": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json"
+        },
+        {
+          "token": "龙虾",
+          "episode_index": 4,
+          "first_block": 85954137,
+          "last_block": 85957578,
+          "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+          "classification": "NEGATIVE_NATIVE_SCOPE",
+          "source": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json"
+        },
+        {
+          "token": "龙虾",
+          "episode_index": 5,
+          "first_block": 85959961,
+          "last_block": 85961371,
+          "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+          "classification": "POSITIVE_NATIVE_SCOPE",
+          "source": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json"
+        },
+        {
+          "token": "龙虾",
+          "episode_index": 6,
+          "first_block": 86649314,
+          "last_block": 87876365,
+          "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+          "classification": "NEGATIVE_NATIVE_SCOPE",
+          "source": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json"
+        }
+      ]
     },
     {
       "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
