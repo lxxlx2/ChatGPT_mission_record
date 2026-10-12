@@ -1,0 +1,53 @@
+name: Frank PR33 R4 mixed-version pre-fix must fail
+
+on:
+  push:
+    branches:
+      - review/frank-pr33-r4-medium-remediation-20261012
+    paths:
+      - '.github/workflows/frank-pr33-r4-mixed-version-red-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pre-r4-real-legacy-must-fail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install project test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]' 'numpy>=2,<3'
+      - name: Actual pre-fix mixed-version and UI regressions MUST FAIL
+        shell: bash
+        run: |
+          set -euo pipefail
+          p="crypto-300-profit-mission/local-agent"
+          cp "$p/tests/research/test_frank_pr33_r4_mixed_compat.py" /tmp/r4-mixed-tests.py
+          cp "$p/tests/research/fixtures/frank_delivery_review_legacy_dbd2dae5.py" /tmp/r4-legacy-source.py
+          git switch --detach 7d4c3972b3a2f86c794057f1b915e407763417ab
+          mkdir -p "$p/tests/research/fixtures"
+          cp /tmp/r4-mixed-tests.py "$p/tests/research/test_frank_pr33_r4_mixed_compat.py"
+          cp /tmp/r4-legacy-source.py "$p/tests/research/fixtures/frank_delivery_review_legacy_dbd2dae5.py"
+          set +e
+          (cd "$p" && python -m pytest -q             tests/research/test_frank_pr33_r4_mixed_compat.py::test_real_legacy_module_new_backend_http_is_200_with_explicit_block             tests/research/test_frank_pr33_r4_mixed_compat.py::test_real_js_renders_unknown_as_status_anomaly_not_auto_retry) > /tmp/r4-red.log 2>&1
+          code=$?
+          set -e
+          tail -n 65 /tmp/r4-red.log
+          if [ "$code" -eq 0 ]; then echo "R4_EXPECTED_RED_NOT_REPRODUCED"; exit 7; fi
+          if ! grep -q "2 failed" /tmp/r4-red.log; then echo "R4_BOTH_FAILURES_NOT_REPRODUCED"; exit 8; fi
+          if ! grep -Eq "KeyError|RemoteDisconnected|ConnectionError|IncompleteRead" /tmp/r4-red.log; then
+            echo "R4_M12_MIXED_HTTP_FAILURE_NOT_REPRODUCED"; exit 9
+          fi
+          if ! grep -Eq "UNKNOWN_STATE_LABEL_HIDDEN|UNKNOWN_STATE_TOOLTIP_MISSING|RETRY_DISCLAIMER_MISSING" /tmp/r4-red.log; then
+            echo "R4_M11_UI_FAILURE_NOT_REPRODUCED"; exit 10
+          fi
+          echo "M11_M12_OLD_CODE_EXPECTED_RED=PASS"
