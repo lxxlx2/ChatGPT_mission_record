@@ -1,0 +1,169 @@
+{
+  "schema": "BSC_MEME_498528_877AF_FULL_MARS_SIGNER_SPOT_CHECKS_V1",
+  "date": "2026-10-12",
+  "sources": [
+    {
+      "path": "BSC_MEME_498528_MARS_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json",
+      "sha": "b759fb0b8e9a51ee568e3af3325994ab1939a436"
+    },
+    {
+      "path": "BSC_MEME_877AF_MARS_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json",
+      "sha": "8ccb13babfefb726a3a6a44ea5b766ce3628dd28"
+    }
+  ],
+  "method": "First, chronological median, last distinct ERC20 in/out transaction hashes from each fully paginated wallet's exact MARS token ledger. Original tx signer/target/value/method queried using eth_getTransactionByHash. Six per wallet (not entire owner-signed ledger).",
+  "probes": [
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x852eaadad2099c485891d5bbdf4f12c890f6e491eaee2987b6c692595ebc804b",
+      "side": "in",
+      "block": "0x6b3b87e",
+      "origin_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "origin_matches_wallet": true,
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "original_msg_value_wei": "200000000000000000",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x9688997003c2efbe40059aba410211089d458c82c2c1d85bf874207b0ac9e66b",
+      "side": "in",
+      "block": "0x6b6b7b6",
+      "origin_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "origin_matches_wallet": true,
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "original_msg_value_wei": "200000000000000000",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x5a892f6cf9dd394e1d3f78bb12d7f5a6bbec4414f587a81079ddecc10fc9c6e1",
+      "side": "in",
+      "block": "0x754b033",
+      "origin_signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "origin_matches_wallet": false,
+      "tx_target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "method_selector": "0x84da2c7b",
+      "original_msg_value_wei": "0",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0xf95308060af7555e8a16004815c8ef1f9bdc9920ebc873e3b01b1999d7b6388c",
+      "side": "out",
+      "block": "0x6b3baa6",
+      "origin_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "origin_matches_wallet": true,
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "original_msg_value_wei": "0",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0xdace2c3ded9e2a63aa941f91797f26764f0fb0a230a3839b79db494ce29d552b",
+      "side": "out",
+      "block": "0x6b6b452",
+      "origin_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "origin_matches_wallet": true,
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "original_msg_value_wei": "0",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x49748cf3ec185c54bc3b46dc4bb6c92e225d2bcbf0a1aadf1a49c0fb093f53ca",
+      "side": "out",
+      "block": "0x75c8de5",
+      "origin_signer": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "origin_matches_wallet": true,
+      "tx_target": "0x5994814f2c4040b863a0125a45de152a8c2a4dec",
+      "method_selector": "0x0c307f76",
+      "original_msg_value_wei": "0",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x15141bf698d2c2c4e07efd6c0cb54babfa7421621b1f48e4ace1727cf6be2cfa",
+      "side": "in",
+      "block": "0x6b3b874",
+      "origin_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "origin_matches_wallet": true,
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "original_msg_value_wei": "550000000000000000",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0xacf3fad9467f99a3669d2349c6f1b65a5230c0109410fb60bb9fcd37392b47a5",
+      "side": "in",
+      "block": "0x6be53e1",
+      "origin_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "origin_matches_wallet": true,
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "original_msg_value_wei": "4400000000000000000",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x0245294448b6197e70660a0fdc5fb9186f8c5b98919567d22915c552dbca9be6",
+      "side": "in",
+      "block": "0x78f6d32",
+      "origin_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "origin_matches_wallet": true,
+      "tx_target": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "method_selector": "0x84da2c7b",
+      "original_msg_value_wei": "0",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x1512bc06ea2aa91817cc0606c65fa3f31fbbd3712955cd8bb99eb4bad6c8f1df",
+      "side": "out",
+      "block": "0x6b3b897",
+      "origin_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "origin_matches_wallet": true,
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "original_msg_value_wei": "0",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0xac694d29583f32a511df85553be3f76411519b9d5ea1263b3549870a5aa7bbbc",
+      "side": "out",
+      "block": "0x6b6b3bc",
+      "origin_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "origin_matches_wallet": true,
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "original_msg_value_wei": "0",
+      "full_transaction_parsed": true
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x35d29b7a41f3d079209cf41255dac2520d85e21adf45685eddfd1e6663224d2e",
+      "side": "out",
+      "block": "0x6febc68",
+      "origin_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "origin_matches_wallet": true,
+      "tx_target": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "original_msg_value_wei": "0",
+      "full_transaction_parsed": true
+    }
+  ],
+  "summary": {
+    "probes": 12,
+    "signed_by_wallet": 11,
+    "other_signed": 1,
+    "unknown": 0
+  },
+  "warning": "One passive or externally signed ERC20 receipt among sampled 498528 inflows proves full positive-volume MARS transfer count is NOT necessarily original wallet buy count. Other 498 last out is via distinct router 0x5994...; not all sends are proven economic sells.",
+  "production": "NO_GO"
+}
