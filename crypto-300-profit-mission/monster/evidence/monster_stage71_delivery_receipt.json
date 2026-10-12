@@ -1,0 +1,56 @@
+{
+  "PR": "https://github.com/lxxlx2/ChatGPT_mission_record/pull/30",
+  "baseline": "2cfaea7064012869ae264a16d776b2cb7e6b52a9",
+  "branch": "research/monster-v4-local-discovery-20261010",
+  "created_UTC": "2026-10-12T18:00:33.026389+00:00",
+  "deployment": "NO_GO",
+  "exact_service_model_snapshot": "UNKNOWN_NOT_EXPOSED",
+  "gmail": "OFF",
+  "original_production_strategy_untouched": true,
+  "receipt_commit_lookup": "git log -1 --format=%H -- crypto-300-profit-mission/monster/evidence/monster_stage71_delivery_receipt.json",
+  "report_commit": "e9ff5d06d1ceb8470818255a7f084af2bacfc771",
+  "report_commit_research_baseline_CI": {
+    "conclusion": "success",
+    "headSha": "e9ff5d06d1ceb8470818255a7f084af2bacfc771",
+    "run_id": 38287948914,
+    "status": "completed",
+    "url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38287948914"
+  },
+  "report_path": "crypto-300-profit-mission/monster/MONSTER_STAGE71_INDEPENDENT_AI_REVIEW_STAGE65_70_20261013.md",
+  "report_sha256": "d6eac8867a0ca909b3caf277d9a405f7c29b2a0ef373f3252e46347148b3592e",
+  "reviewer": "GPT-6 / Codex",
+  "reviewer_implementation_commits": [
+    "1fce32d20f18f427d2b501ab1f271f79573f2120",
+    "3d00bc0fa2880df4710e5f78896fd99908dea17a"
+  ],
+  "scope_paths_checked": [
+    ".github/workflows/monster-v4-stage71-independent-review-tests.yml",
+    "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage71_independent_review_recompute.py",
+    "crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage71_independent_review.py",
+    "crypto-300-profit-mission/monster/MONSTER_STAGE71_INDEPENDENT_AI_REVIEW_STAGE65_70_20261013.md",
+    "crypto-300-profit-mission/monster/evidence/monster_stage71_five_official_raw_independent_oracle.json",
+    "crypto-300-profit-mission/monster/evidence/monster_stage71_independent2700_scheduler_recalculation.json",
+    "crypto-300-profit-mission/monster/evidence/monster_stage71_independent_older5400_counterexample.json",
+    "crypto-300-profit-mission/monster/evidence/monster_stage71_official2700_replay_receipts.jsonl",
+    "crypto-300-profit-mission/monster/evidence/monster_stage71_official2700_replay_summary.json",
+    "crypto-300-profit-mission/monster/evidence/monster_stage71_review_execution.json",
+    "crypto-300-profit-mission/monster/evidence/monster_stage71_reviewed_input_manifest.json"
+  ],
+  "source_replay": {
+    "attempts": 2700,
+    "exact_prior_row_parity": 2700,
+    "unresolved_errors": 0
+  },
+  "tests": {
+    "local_and_CI_PASS": 58,
+    "reviewer_CI_commit": "3d00bc0fa2880df4710e5f78896fd99908dea17a",
+    "reviewer_CI_run": 38286409683
+  },
+  "trading": "NO_GO",
+  "unresolved_findings": [
+    "H01_P2_STRATEGY_REJECTED",
+    "M01_DEPENDENCY_LOCK_INCOMPLETE",
+    "M02_EXISTING_DB_CLI_FALSE_FAILURE",
+    "M03_CONDITIONAL_SOURCE_POPULATION"
+  ]
+}
