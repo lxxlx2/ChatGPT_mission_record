@@ -19,6 +19,8 @@ class AuditHTML(HTMLParser):
             self.stack.append(tag)
 
     def handle_endtag(self, tag):
+        if tag in {"meta", "link", "input", "img", "br", "hr", "source"}:
+            return
         if not self.stack or self.stack[-1] != tag:
             self.errors.append(tag)
         else:
