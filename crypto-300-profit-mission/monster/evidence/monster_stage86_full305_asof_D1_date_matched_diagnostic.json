@@ -1,0 +1,329 @@
+{
+  "autotrade": "NO_GO",
+  "calendar2x_positive_by_date": {
+    "2025-08-01": 6,
+    "2025-10-02": 12,
+    "2026-06-21": 2,
+    "2026-07-28": 7
+  },
+  "caution": "descriptive label-exposed asof ranking only; pairs share dates and subjects; no confidence as predictive, cannot optimize thresholds from these historical labels",
+  "deployment": "NO_GO",
+  "excluded_post_first2x_candidate": 1,
+  "frank": "UNCHANGED",
+  "global_unmatched_pairwise_auc": {
+    "delay_since_first_D0_minutes": {
+      "auc": 0.432611,
+      "negative_count": 277,
+      "pairs": 7479,
+      "positive_count": 27
+    },
+    "normalized_quote15_prev45": {
+      "auc": 0.552347,
+      "negative_count": 277,
+      "pairs": 7479,
+      "positive_count": 27
+    },
+    "quote15_USDT": {
+      "auc": 0.496858,
+      "negative_count": 277,
+      "pairs": 7479,
+      "positive_count": 27
+    },
+    "relative_from_first_D0_pct": {
+      "auc": 0.455475,
+      "negative_count": 277,
+      "pairs": 7479,
+      "positive_count": 27
+    },
+    "ret60_pct": {
+      "auc": 0.556224,
+      "negative_count": 277,
+      "pairs": 7479,
+      "positive_count": 27
+    },
+    "trade15": {
+      "auc": 0.530017,
+      "negative_count": 277,
+      "pairs": 7479,
+      "positive_count": 27
+    }
+  },
+  "gmail": "OFF",
+  "label_definition": "historic calendar anchor 2x; positives D1 at least 5min before real first2x HIGH",
+  "new_oos": "NOT_DONE",
+  "no_new_signal_thresholds": true,
+  "non2x_controls": 277,
+  "per_date": {
+    "2025-01-30": {
+      "asof_feature_auc": {
+        "delay_since_first_D0_minutes": null,
+        "normalized_quote15_prev45": null,
+        "quote15_USDT": null,
+        "relative_from_first_D0_pct": null,
+        "ret60_pct": null,
+        "trade15": null
+      },
+      "d1_candidates": 75,
+      "early5_2x": 0,
+      "non2x_controls": 75
+    },
+    "2025-06-02": {
+      "asof_feature_auc": {
+        "delay_since_first_D0_minutes": null,
+        "normalized_quote15_prev45": null,
+        "quote15_USDT": null,
+        "relative_from_first_D0_pct": null,
+        "ret60_pct": null,
+        "trade15": null
+      },
+      "d1_candidates": 16,
+      "early5_2x": 0,
+      "non2x_controls": 16
+    },
+    "2025-08-01": {
+      "asof_feature_auc": {
+        "delay_since_first_D0_minutes": {
+          "auc": 0.487179,
+          "negative_count": 39,
+          "pairs": 234,
+          "positive_count": 6
+        },
+        "normalized_quote15_prev45": {
+          "auc": 0.551282,
+          "negative_count": 39,
+          "pairs": 234,
+          "positive_count": 6
+        },
+        "quote15_USDT": {
+          "auc": 0.581197,
+          "negative_count": 39,
+          "pairs": 234,
+          "positive_count": 6
+        },
+        "relative_from_first_D0_pct": {
+          "auc": 0.508547,
+          "negative_count": 39,
+          "pairs": 234,
+          "positive_count": 6
+        },
+        "ret60_pct": {
+          "auc": 0.525641,
+          "negative_count": 39,
+          "pairs": 234,
+          "positive_count": 6
+        },
+        "trade15": {
+          "auc": 0.547009,
+          "negative_count": 39,
+          "pairs": 234,
+          "positive_count": 6
+        }
+      },
+      "d1_candidates": 45,
+      "early5_2x": 6,
+      "non2x_controls": 39
+    },
+    "2025-10-02": {
+      "asof_feature_auc": {
+        "delay_since_first_D0_minutes": {
+          "auc": 0.539894,
+          "negative_count": 47,
+          "pairs": 564,
+          "positive_count": 12
+        },
+        "normalized_quote15_prev45": {
+          "auc": 0.379433,
+          "negative_count": 47,
+          "pairs": 564,
+          "positive_count": 12
+        },
+        "quote15_USDT": {
+          "auc": 0.491135,
+          "negative_count": 47,
+          "pairs": 564,
+          "positive_count": 12
+        },
+        "relative_from_first_D0_pct": {
+          "auc": 0.569149,
+          "negative_count": 47,
+          "pairs": 564,
+          "positive_count": 12
+        },
+        "ret60_pct": {
+          "auc": 0.618794,
+          "negative_count": 47,
+          "pairs": 564,
+          "positive_count": 12
+        },
+        "trade15": {
+          "auc": 0.514184,
+          "negative_count": 47,
+          "pairs": 564,
+          "positive_count": 12
+        }
+      },
+      "d1_candidates": 59,
+      "early5_2x": 12,
+      "non2x_controls": 47
+    },
+    "2026-06-21": {
+      "asof_feature_auc": {
+        "delay_since_first_D0_minutes": {
+          "auc": 0.632075,
+          "negative_count": 53,
+          "pairs": 106,
+          "positive_count": 2
+        },
+        "normalized_quote15_prev45": {
+          "auc": 0.415094,
+          "negative_count": 53,
+          "pairs": 106,
+          "positive_count": 2
+        },
+        "quote15_USDT": {
+          "auc": 0.320755,
+          "negative_count": 53,
+          "pairs": 106,
+          "positive_count": 2
+        },
+        "relative_from_first_D0_pct": {
+          "auc": 0.622642,
+          "negative_count": 53,
+          "pairs": 106,
+          "positive_count": 2
+        },
+        "ret60_pct": {
+          "auc": 0.207547,
+          "negative_count": 53,
+          "pairs": 106,
+          "positive_count": 2
+        },
+        "trade15": {
+          "auc": 0.433962,
+          "negative_count": 53,
+          "pairs": 106,
+          "positive_count": 2
+        }
+      },
+      "d1_candidates": 56,
+      "early5_2x": 2,
+      "non2x_controls": 53
+    },
+    "2026-07-28": {
+      "asof_feature_auc": {
+        "delay_since_first_D0_minutes": {
+          "auc": 0.524316,
+          "negative_count": 47,
+          "pairs": 329,
+          "positive_count": 7
+        },
+        "normalized_quote15_prev45": {
+          "auc": 0.595745,
+          "negative_count": 47,
+          "pairs": 329,
+          "positive_count": 7
+        },
+        "quote15_USDT": {
+          "auc": 0.6231,
+          "negative_count": 47,
+          "pairs": 329,
+          "positive_count": 7
+        },
+        "relative_from_first_D0_pct": {
+          "auc": 0.493921,
+          "negative_count": 47,
+          "pairs": 329,
+          "positive_count": 7
+        },
+        "ret60_pct": {
+          "auc": 0.355623,
+          "negative_count": 47,
+          "pairs": 329,
+          "positive_count": 7
+        },
+        "trade15": {
+          "auc": 0.522796,
+          "negative_count": 47,
+          "pairs": 329,
+          "positive_count": 7
+        }
+      },
+      "d1_candidates": 54,
+      "early5_2x": 7,
+      "non2x_controls": 47
+    }
+  },
+  "positive_early5_historic_2x": 27,
+  "real_executable_net_pnl": "UNKNOWN",
+  "schema": "MONSTER_STAGE86_EXPOSED_ALL305_SAME_DATE_D1_FEATURE_DIAGNOSTIC_V1",
+  "source_git_blob": "622299fec16400e189cb8fa668ecbc8bc31ec630",
+  "source_total": 305,
+  "within_date_equal_weight_auc": {
+    "delay_since_first_D0_minutes": {
+      "date_auc_values": {
+        "2025-08-01": 0.487179,
+        "2025-10-02": 0.539894,
+        "2026-06-21": 0.632075,
+        "2026-07-28": 0.524316
+      },
+      "date_pair_pooled_auc": 0.533658,
+      "eligible_dates": 4,
+      "macro_equal_date_auc": 0.545866
+    },
+    "normalized_quote15_prev45": {
+      "date_auc_values": {
+        "2025-08-01": 0.551282,
+        "2025-10-02": 0.379433,
+        "2026-06-21": 0.415094,
+        "2026-07-28": 0.595745
+      },
+      "date_pair_pooled_auc": 0.472831,
+      "eligible_dates": 4,
+      "macro_equal_date_auc": 0.485389
+    },
+    "quote15_USDT": {
+      "date_auc_values": {
+        "2025-08-01": 0.581197,
+        "2025-10-02": 0.491135,
+        "2026-06-21": 0.320755,
+        "2026-07-28": 0.6231
+      },
+      "date_pair_pooled_auc": 0.528792,
+      "eligible_dates": 4,
+      "macro_equal_date_auc": 0.504047
+    },
+    "relative_from_first_D0_pct": {
+      "date_auc_values": {
+        "2025-08-01": 0.508547,
+        "2025-10-02": 0.569149,
+        "2026-06-21": 0.622642,
+        "2026-07-28": 0.493921
+      },
+      "date_pair_pooled_auc": 0.542174,
+      "eligible_dates": 4,
+      "macro_equal_date_auc": 0.548565
+    },
+    "ret60_pct": {
+      "date_auc_values": {
+        "2025-08-01": 0.525641,
+        "2025-10-02": 0.618794,
+        "2026-06-21": 0.207547,
+        "2026-07-28": 0.355623
+      },
+      "date_pair_pooled_auc": 0.495539,
+      "eligible_dates": 4,
+      "macro_equal_date_auc": 0.426901
+    },
+    "trade15": {
+      "date_auc_values": {
+        "2025-08-01": 0.547009,
+        "2025-10-02": 0.514184,
+        "2026-06-21": 0.433962,
+        "2026-07-28": 0.522796
+      },
+      "date_pair_pooled_auc": 0.515815,
+      "eligible_dates": 4,
+      "macro_equal_date_auc": 0.504488
+    }
+  }
+}
