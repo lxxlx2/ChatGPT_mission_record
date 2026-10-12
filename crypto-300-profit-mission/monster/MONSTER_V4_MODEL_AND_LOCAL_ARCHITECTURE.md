@@ -22,7 +22,7 @@
 
 > **Stage20最新（2026-10-11）**：[四个未使用日期的758币质量筛选与保守退出实际验证](MONSTER_STAGE20_QUALITY_EXIT_HELDOUT_ACTUAL_RESULTS_20261011.md)，[官方CI #38130576819](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38130576819)及[全ZIP+JSON SHA独立复算CI #38131123057](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38131123057)全部Success。20个唯一D1中18个通过质量筛选，6h策略14笔有效7盈7亏、中位+0.375359%，100bps滑点中位-1.217933%；冻结的样本量、胜率、删失率关口全部失败。**Stage20判定 FAIL_NO_GO**，不得部署Monster、改Frank、发真实Gmail或宣称另一AI Review完成。
 
-> **最新跟进（2026-10-11，Stage16–19）：** [Stage16–18 七日真实2×/5×标签、因果WATCH及七个漏报根因](MONSTER_STAGE16_TO_18_REAL_GT_EARLY_WATCH_RESULTS_20261011.md)；[Stage19 全部758币×五日期渐进上涨候选研究结果](MONSTER_STAGE19_GRADUAL_WATCH_FULL758_REPLAY_RESULTS_20261011.md)。历史源验证了6/20已知2×事件可由新路径在固定12h初始窗口观察，但79个新WATCH有73个后续七天未达2×，67笔30USDT假设交易23盈44亏、中位-5.482202%，新增规则正式研究判定 `REJECT_GRADUAL_CANDIDATE`。整体V4尚未达到稳定正收益与独立其他AI Review门槛，`MONSTER_DEPLOYMENT=NO_GO`；Frank现有实例不受影响。
+> **最新跟进（2026-10-11，Stage16–19）：** [Stage16–18 七日真实2×/5×标签、因果WATCH及七个漏报根因](MONSTER_STAGE16_TO_18_REAL_GT_EARLY_WATCH_RESULTS_20261011.md)；[Stage19 全部758币×五日期渐进上涨候选研究结果](MONSTER_STAGE19_GRADUAL_WATCH_FULL758_REPLAY_RESULTS_20261011.md)。历史源验证了6/20已知2×事件可由新路径在固定12h初始窗口观察，但79个新WATCH有73个后续七天未达2×，67笔用户指定金额T假设交易23盈44亏、中位-5.482202%，新增规则正式研究判定 `REJECT_GRADUAL_CANDIDATE`。整体V4尚未达到稳定正收益与独立其他AI Review门槛，`MONSTER_DEPLOYMENT=NO_GO`；Frank现有实例不受影响。
 
 > **模块开发硬性规则：** [MONSTER_MODULE_DEVELOPMENT_RULES.md](MONSTER_MODULE_DEVELOPMENT_RULES.md)（同时由 [AGENTS.md](AGENTS.md) 引用）。
 >
@@ -41,12 +41,16 @@
 
 本模型的**工程目标**（不是已测 SLA）：全市场 1–3 分钟广扫、重大早期事件从可用市场数据出现至本地事件写入 <2 分钟、自然状态更新至本地通知/Gmail <5 分钟；数据源失败时展示最后成功时间，不声称实时覆盖。初始前向 shadow 会以真实延迟分布决定是否能达到这些数字。
 
+## 当前金额授权修订（2026-10-12）
+
+Monster 妖币模块的用户单笔交易金额**未指定**。旧历史实验出现的 30U / 300U 是当时的实验假设，历史回测数值必须原样保留，不得解释成用户当前仓位或真实资金授权。以后新的可执行性评估以 `notional_quote` 为显式输入，由用户未来决定；缺少输入时仍能开展全市场妖币发现、真实成交与流动性分析，但输出 `EXECUTION_NOTIONAL_UNSPECIFIED`，不能声称某笔订单可买或获得某个具体滑点。不得以单一金额过滤早期妖币 WATCH。只研究 Monster，不改其他模块。
+
 ## 1. 交易所与标的范围
 
 首期仅 Binance USDT **Spot** + **USD-M Perpetual** 的活跃及近期退市历史标的，按官方 exchangeInfo 分类：
 
-- `CEX_SPOT_BUYABLE`：当前开放真实 Spot 成交、交易规则与深度有效，可作为不加杠杆的 30USD 实际跟随性评估。
-- `CEX_FUTURES_ONLY`：只有合约或已停止 Spot 的标的；允许妖币异动预警，**不能**写成“30USDC 现货可以买”。不能将保证金需求/资金费率忽略。
+- `CEX_SPOT_BUYABLE`：当前开放真实 Spot 成交、交易规则与深度有效，可作为不加杠杆、交易金额由用户另行指定的实际跟随性评估。
+- `CEX_FUTURES_ONLY`：只有合约或已停止 Spot 的标的；允许妖币异动预警，**不能**写成“用户指定金额 现货可以买”。不能将保证金需求/资金费率忽略。
 - `ENTITY_AMBIGUOUS`：Spot/Futures symbol / prefix / 合约更替有歧义时，分开显示与独立监测，不人工强合并。
 - 不把 Solana 链 meme、Binance Alpha、BSC DEX 与 CEX 行情强行合并到同一个验证结果。后续可接独立 onchain source，再按链+mint/pool 做验证。
 
@@ -70,13 +74,13 @@ D0 捕获事件可以是：1h 出现 V2 A–E 任一触发、15m/5m 突然量价
 2. **Volume / trades**：15m/1h quote volume 相对之前 24h 同单位历史中位数倍数、独立 trade count、最近 taker buy share；当前段不提前当作已完成。
 3. **Persistence**：5/15m 连续跟进、回踩保持、同向上涨非单根极端 high wick。
 4. **Squeeze**（可选 Futures）：公开 OI、OI 变化、funding、top/global long/short 与实际 price 同向性。OI/funding 无数据可以 WATCH，但不能声称“已确认逼空”。
-5. **Execution**：Spot best bid/ask spread、指定 30USD 深度估算、ticker freshness、交易状态，合约仅附风险不提供 30USD spot 执行结论。
+5. **Execution**：Spot best bid/ask spread、按实际订单金额计算的深度估算（金额未指定时不填具体值）、ticker freshness、交易状态，合约仅附风险不提供Spot现货执行结论。
 6. **Cross-venue + lifecycle**：同一 verified entity 的 contemporaneous Spot/Futures 同向表现、上新年龄、旧币复活历史。年龄未知明确 unknown，不用“缺 30d 数据”排除新上市。
 
 重要消息分级：
 - `WATCH_EARLY`：两个不同类别的当时证据指向异常，或新上市/异常成交单一路径强烈，立刻给 **观察级预警**；绝不伪称 confirmed buy。
 - `SETUP_ACTIVE`：更多独立佐证（例如成交额、突破站稳和持续性），继续实时监测，发“增强/减弱”更新，而非持续沉默。
-- `IGNITION_ACTIONABLE_SPOT`：实际 Spot 可交易 + 30USD 深度/价差不差 + 信号发生时效有效 + 未过度追高。标注仅是交易“候选机会”，**不是**已证明盈利或自动购买。
+- `IGNITION_ACTIONABLE_SPOT`：实际 Spot 可交易 + 对目标订单金额有真实盘口深度/价差证据 + 信号发生时效有效 + 未过度追高。标注仅是交易“候选机会”，**不是**已证明盈利或自动购买。
 - `IGNITION_FUTURES_ONLY`：满足技术条件但无 Spot；提醒与现货机会明显分开。
 - `EXHAUSTION` / `INVALIDATED`：量能/价位/结构转弱、交易所停牌、突发大幅价差、历史 WATCH 被追涨/超时，及时发布失效更新。
 
@@ -141,7 +145,7 @@ Binance Spot + USD-M exchangeInfo / ticker / klines / optional WS
 1. Baseline audit（本阶段）：原 72 组 TRAIN 汇总、2024 固定 VALIDATION、已暴露 MMT/AVNT/BTW、BTW 漏报归因，结果可重现。
 2. 数据层：现存 Binance ZIP 校验和、断档、时间戳单位，取真实 2025–2026 曝露阶段做回顾研究；记录币种覆盖率而不只挑赢家。
 3. 离线研究：D0 相比历史 5x/10x 的首次提前性、每日日 WATCH / IGNITION 量、谁漏了、耗时、非2x 的无效通知；全部以分钟或小时为单位，不把未来的 7d high 当成交价。
-4. 交易近似：历史只有 OHLCV 时，按触发后的**下一完整5m bar**给出可观察 proxy，并单列费/冲击假设；不能称为实际可成交收益。样本有盘口时用真实 timestamp orderbook /30USDC 模拟。
+4. 交易近似：历史只有 OHLCV 时，按触发后的**下一完整5m bar**给出可观察 proxy，并单列费/冲击假设；不能称为实际可成交收益。样本有盘口时用真实 timestamp orderbook /实际指定金额 模拟。
 5. 未来真 forward（V4 首次未暴露）：固定候选规则后连跑至少14天 shadow，覆盖低成交日/高波动；高风险改动与少数独立典型样本需独立复审；适当延长到30天观察 5x 基率，不能承诺恰有大涨币。
 6. 先接 WATCH / IGNITION `DRY_RUN_LOCAL`，压测断网、429、Gmail/OAuth 恢复、重复重启、旧报延迟、安全回滚。测试全部通过、人工确认后再启用真实 Gmail。**重点是用户收得到及时且能解释的早报**，不用永无止境增加和收益无关的异常边界测试。
 7. 最后才给 Mac 一段无注释的固定版本部署命令；不提前改已有 Frank/Price/NFT/Portfolio/ChatGPT 任务，不提前启用 production trading。
@@ -192,7 +196,7 @@ Binance Spot + USD-M exchangeInfo / ticker / klines / optional WS
 3. 尚无其它独立 AI 完成的代码审阅。当前只有 CI 和实现者自查，不可伪称外部review已通过。
 4. 本地安装、连续至少14日 Shadow、真实 Monster Gmail（及 Sent readback）需要后续安全关口。生产交易始终 NO_GO，现有 Frank 不受影响。
 
-下一顺序：前瞻真实数据捕获和覆盖监控、D0阈值与早期赢家区分、D2 Spot 30USDT 盘口验证、独立审阅和回归测试、独立部署验收、用户授权后通知发送测试。
+下一顺序：前瞻真实数据捕获和覆盖监控、D0阈值与早期赢家区分、D2 Spot 用户指定金额T 盘口验证、独立审阅和回归测试、独立部署验收、用户授权后通知发送测试。
 
 
 ## 8. 2026-10-11 接手连续性核验与第二批 Shadow 实现（PR #30）
@@ -217,6 +221,6 @@ Binance Spot + USD-M exchangeInfo / ticker / klines / optional WS
 
 ### 放行仍被阻止的项目
 
-`NOT_DONE`：独立其它AI正式代码review、独立前瞻14日连续shadow实测、生产真实数据API长周期429/恢复和延迟分布、D2 30USD现货盘口/手续费/成交验证、用户Mac部署与真实Monster Gmail Sent-readback。22项密封测试覆盖回归合同，但不能证明用户本机真实实时通知已生效。
+`NOT_DONE`：独立其它AI正式代码review、独立前瞻14日连续shadow实测、生产真实数据API长周期429/恢复和延迟分布、D2 用户指定金额现货盘口/手续费/成交验证、用户Mac部署与真实Monster Gmail Sent-readback。22项密封测试覆盖回归合同，但不能证明用户本机真实实时通知已生效。
 
 `FRANK_UNCHANGED`；`MONSTER_SHADOW_ONLY`；`NO_NEW_MONITOR_OR_AUTOMATION`；`PRODUCTION_TRADING=NO_GO`。
