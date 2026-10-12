@@ -1,0 +1,624 @@
+{
+  "D0_WATCH_distinct_coin_dates": 437,
+  "D0_WATCH_event_total": 936,
+  "D0_late_watch_2x": 0,
+  "D0_no_watch_2x": 1,
+  "D0_pre_gt2x_ge5min": 40,
+  "D0_same_minute_2x": 0,
+  "D0_strict_early10x": 3,
+  "D0_strict_early2x": 40,
+  "D0_strict_early5x": 6,
+  "Frank": "UNCHANGED",
+  "GT10x_source_complete": 3,
+  "GT2x_source_complete": 41,
+  "GT5x_source_complete": 6,
+  "Gmail": "OFF",
+  "Mac_deployment": "NO_GO",
+  "P1_42_anchored_24h_alert_blocks": [
+    {
+      "block": 0,
+      "count": 1,
+      "date_window": "2025-01-09"
+    },
+    {
+      "block": 1,
+      "count": 6,
+      "date_window": "2025-01-09"
+    },
+    {
+      "block": 2,
+      "count": 0,
+      "date_window": "2025-01-09"
+    },
+    {
+      "block": 3,
+      "count": 3,
+      "date_window": "2025-01-09"
+    },
+    {
+      "block": 4,
+      "count": 6,
+      "date_window": "2025-01-09"
+    },
+    {
+      "block": 5,
+      "count": 0,
+      "date_window": "2025-01-09"
+    },
+    {
+      "block": 6,
+      "count": 11,
+      "date_window": "2025-01-09"
+    },
+    {
+      "block": 0,
+      "count": 7,
+      "date_window": "2025-09-02"
+    },
+    {
+      "block": 1,
+      "count": 3,
+      "date_window": "2025-09-02"
+    },
+    {
+      "block": 2,
+      "count": 9,
+      "date_window": "2025-09-02"
+    },
+    {
+      "block": 3,
+      "count": 2,
+      "date_window": "2025-09-02"
+    },
+    {
+      "block": 4,
+      "count": 2,
+      "date_window": "2025-09-02"
+    },
+    {
+      "block": 5,
+      "count": 8,
+      "date_window": "2025-09-02"
+    },
+    {
+      "block": 6,
+      "count": 12,
+      "date_window": "2025-09-02"
+    },
+    {
+      "block": 0,
+      "count": 23,
+      "date_window": "2026-01-26"
+    },
+    {
+      "block": 1,
+      "count": 8,
+      "date_window": "2026-01-26"
+    },
+    {
+      "block": 2,
+      "count": 14,
+      "date_window": "2026-01-26"
+    },
+    {
+      "block": 3,
+      "count": 5,
+      "date_window": "2026-01-26"
+    },
+    {
+      "block": 4,
+      "count": 5,
+      "date_window": "2026-01-26"
+    },
+    {
+      "block": 5,
+      "count": 15,
+      "date_window": "2026-01-26"
+    },
+    {
+      "block": 6,
+      "count": 14,
+      "date_window": "2026-01-26"
+    },
+    {
+      "block": 0,
+      "count": 20,
+      "date_window": "2026-02-24"
+    },
+    {
+      "block": 1,
+      "count": 12,
+      "date_window": "2026-02-24"
+    },
+    {
+      "block": 2,
+      "count": 17,
+      "date_window": "2026-02-24"
+    },
+    {
+      "block": 3,
+      "count": 10,
+      "date_window": "2026-02-24"
+    },
+    {
+      "block": 4,
+      "count": 7,
+      "date_window": "2026-02-24"
+    },
+    {
+      "block": 5,
+      "count": 6,
+      "date_window": "2026-02-24"
+    },
+    {
+      "block": 6,
+      "count": 5,
+      "date_window": "2026-02-24"
+    },
+    {
+      "block": 0,
+      "count": 13,
+      "date_window": "2026-03-28"
+    },
+    {
+      "block": 1,
+      "count": 8,
+      "date_window": "2026-03-28"
+    },
+    {
+      "block": 2,
+      "count": 6,
+      "date_window": "2026-03-28"
+    },
+    {
+      "block": 3,
+      "count": 8,
+      "date_window": "2026-03-28"
+    },
+    {
+      "block": 4,
+      "count": 11,
+      "date_window": "2026-03-28"
+    },
+    {
+      "block": 5,
+      "count": 21,
+      "date_window": "2026-03-28"
+    },
+    {
+      "block": 6,
+      "count": 8,
+      "date_window": "2026-03-28"
+    },
+    {
+      "block": 0,
+      "count": 8,
+      "date_window": "2026-05-10"
+    },
+    {
+      "block": 1,
+      "count": 12,
+      "date_window": "2026-05-10"
+    },
+    {
+      "block": 2,
+      "count": 7,
+      "date_window": "2026-05-10"
+    },
+    {
+      "block": 3,
+      "count": 12,
+      "date_window": "2026-05-10"
+    },
+    {
+      "block": 4,
+      "count": 7,
+      "date_window": "2026-05-10"
+    },
+    {
+      "block": 5,
+      "count": 5,
+      "date_window": "2026-05-10"
+    },
+    {
+      "block": 6,
+      "count": 2,
+      "date_window": "2026-05-10"
+    }
+  ],
+  "P1_max_alerts_one_anchored_24h_block": 23,
+  "P1_mean_alerts_per_42_anchored_24h_blocks": 8.547619,
+  "P1_retained_early_gt2x_ge5min": 36,
+  "P1_strict_early10x": 2,
+  "P1_strict_early5x": 5,
+  "P1_upgraded_and_10x_GT": 2,
+  "P1_upgraded_and_2x_GT": 36,
+  "P1_upgraded_and_5x_GT": 5,
+  "P1_upgraded_and_non2x": 323,
+  "P1_upgraded_distinct_coin_dates": 359,
+  "analysis_uses_future_prices_only_in_scoring": true,
+  "attempted": 5400,
+  "automated_trading": "NO_GO",
+  "frozen_P1_v02_gates": {
+    "D0_early_gt2x_lead_ge5min_ge85pct": true,
+    "D0_strict_early_2x_ge90pct": true,
+    "P1_mean_per_24h_block_le5": false,
+    "P1_peak_per_24h_block_le12": false,
+    "P1_retained_D0_early_ge5min_gt2x_ge80pct": true,
+    "sufficient_2x_events_at_least20": true
+  },
+  "historical_market_execution_profit": "UNVERIFIED",
+  "independent_other_AI_review": "NOT_DONE",
+  "normal_gt2x_FALSE": 3424,
+  "normal_with_D0_WATCH": 397,
+  "original36_verified_GitHub_SHA_receipts": [
+    {
+      "artifact_id": 11730497312,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "146ce18f22b2847100dec45cc20b6b384ffc137ec41edaf7deac0af94c2dc5b1",
+      "original_JSON_SHA256": "2ed516e0f1252542fae00b9e2fc11297332a7d34af2ad53a9200812099539610",
+      "shard": 0,
+      "source_complete": 65
+    },
+    {
+      "artifact_id": 11729494645,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "c262de06a5d732afa8d30a3f5571de107ee84d5dbfc383f53efff1b6227d9169",
+      "original_JSON_SHA256": "45251d614d7b57bdbd78151030cffd5ce7575516bbd20d4fdfa974e65e2072f5",
+      "shard": 1,
+      "source_complete": 66
+    },
+    {
+      "artifact_id": 11729544438,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "6036a97ad0a35d32f0d74792dca45b92d664745d54971cffb5fc7d289429b36c",
+      "original_JSON_SHA256": "56796e17f44149a50d14ab598bf4c4a54679fc1be0069a1ca10a5b429cdd182c",
+      "shard": 2,
+      "source_complete": 53
+    },
+    {
+      "artifact_id": 11729529302,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "0e2c11786643fdd86a7d429270238a79281055896bd955d79111165423b07384",
+      "original_JSON_SHA256": "85267c1a20bc2a7cc0050d82025e8fd86370d0daae1bda17517b9bc3e7925b94",
+      "shard": 3,
+      "source_complete": 62
+    },
+    {
+      "artifact_id": 11729788826,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "3f20275a1f656511061450a67aa7ca6157841d16a65c1cdcb443e52e4bc51532",
+      "original_JSON_SHA256": "ec6b025550722aba39ac8118dbf2e2cb9db5375f1eb166e59f6a8f53756c7637",
+      "shard": 4,
+      "source_complete": 66
+    },
+    {
+      "artifact_id": 11729793906,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "cdea246a8f762d77e4a796a7e20e07f4c9aea185b65bf39bf82531ae36baa444",
+      "original_JSON_SHA256": "7661d9753800c7df4be422860ac506b664fe5db71a4126b36174f768e59b8667",
+      "shard": 5,
+      "source_complete": 65
+    },
+    {
+      "artifact_id": 11729639326,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "ca76250e9a906e65d30c83e2176dfe87109e2a3adcb7cedc182c514929aeff37",
+      "original_JSON_SHA256": "9b8ee4272fc2d26916cca0954333fcde9791888ab9eefcda300a8cfa300177c4",
+      "shard": 0,
+      "source_complete": 86
+    },
+    {
+      "artifact_id": 11730002286,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "20250073a72d49f6a5190996f8ab746d6e241e590a969d9f81cc580d8d903b2b",
+      "original_JSON_SHA256": "3bee1dc572f82efa717eb0c2f791e07b0d2c61551d2f14c9c742d8c2ef91871d",
+      "shard": 1,
+      "source_complete": 90
+    },
+    {
+      "artifact_id": 11730635211,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "3d0d17671ebb952c9b37cb0284e5ac5e462c1fee12fe5eaae5372c833c749f89",
+      "original_JSON_SHA256": "503b3da80d6419d486db969753f42f092dac8ca8cfb99931c80d65154a2bfaa4",
+      "shard": 2,
+      "source_complete": 75
+    },
+    {
+      "artifact_id": 11729734256,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "1973f2ebe226bf2ea2aa9d48e0f420f3bd79b127e8bba9452dda2b5df4824a65",
+      "original_JSON_SHA256": "fb9269817dc905e3ba62d6fdcc71632eb353ab200d97a30fa37fa32bc0ecbfa0",
+      "shard": 3,
+      "source_complete": 92
+    },
+    {
+      "artifact_id": 11730152083,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "1a7c8385b8be8f647377093959f7ab04b63dd5c453a37c0c04ec30652a786b10",
+      "original_JSON_SHA256": "d6f612c3e162ffb28c01df6c3b0edcbab73299855028ff0eb77c460f2508cb2c",
+      "shard": 4,
+      "source_complete": 91
+    },
+    {
+      "artifact_id": 11730615380,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "09c4e546ddc7d68875067f52e1a030b453d48312a79e67445bde68615aa7ebf8",
+      "original_JSON_SHA256": "f37fa64fe23003ed91558fb9a7c3fde15e968cd1a726e58df4eb005f00d92d7d",
+      "shard": 5,
+      "source_complete": 87
+    },
+    {
+      "artifact_id": 11729674849,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "ca89b156f148dba1399b4f1e3befd8430082cac7c698b14d3522fa2a4e83e130",
+      "original_JSON_SHA256": "dd34bf77944b5f8c9ba5c8f24a640240634903e5ee87df5c7baec8c97f4f130b",
+      "shard": 0,
+      "source_complete": 103
+    },
+    {
+      "artifact_id": 11730173928,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "a3b6b781eb000c564bd8bd36cccf59dec70d8e7ec345d706e57202f3a22d8162",
+      "original_JSON_SHA256": "cb2aaa49273fe5e0d16cfb699f84c1f5112401ec9e2092217632828f8decb865",
+      "shard": 1,
+      "source_complete": 108
+    },
+    {
+      "artifact_id": 11730079094,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "bdeffdd0b38df99d95ad0027af4d7c958c2c5ac15b0fc744b3378ccd6fa2c21a",
+      "original_JSON_SHA256": "4b7eb05b124833b2a09e5ea442360c50c9799e3fdf001c6daef507d9820e5178",
+      "shard": 2,
+      "source_complete": 93
+    },
+    {
+      "artifact_id": 11729904535,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "eb58d3014a06ea50e263336b51cfe9a288fa5960ee3da9d778e9b11a9dd9dbf7",
+      "original_JSON_SHA256": "1f30c028ed7df7537937f91eab2dcb126f5df153e1d45722a419e17e48306465",
+      "shard": 3,
+      "source_complete": 103
+    },
+    {
+      "artifact_id": 11731525142,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "299ea81de4aa4e8f6838da73077b68cdc45ef477eb1e7f3bd72023e5b9033486",
+      "original_JSON_SHA256": "1691edf4ff84699ec96fe04d6965be7ab85683b7b3571786a38dbf1df3249f15",
+      "shard": 4,
+      "source_complete": 106
+    },
+    {
+      "artifact_id": 11730730545,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "0559078ed00a1fa6a92d592d96f5e8515ba33fa69b8b67f7e13f4ddb4d4c4473",
+      "original_JSON_SHA256": "bfe7d3c239ac4cd8b96d3be6d3d6bcce58fad8c4865ea2b0c3cddee011460ddc",
+      "shard": 5,
+      "source_complete": 107
+    },
+    {
+      "artifact_id": 11730174046,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "8dd6d63397ac97883287b852cc1abb98f47a82bfd52e3c9df49f79904ae36aba",
+      "original_JSON_SHA256": "4a3b71eb58cc65488adca9c000afea64b97de80bcc8bd8ed43c742236756b980",
+      "shard": 0,
+      "source_complete": 106
+    },
+    {
+      "artifact_id": 11731220528,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "a9ac07d2603daf3db1666cbceae06d901713d9436a62615405ff5adf71217226",
+      "original_JSON_SHA256": "f1f5d6b154c088e9416bd6222805c61426341cfe761bda4e2049e63c3826c358",
+      "shard": 1,
+      "source_complete": 110
+    },
+    {
+      "artifact_id": 11730144353,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "4aa83dc622c6acae557ba1ecd27d8cc1296bbf35b251fe58bfcdd442da45a48f",
+      "original_JSON_SHA256": "9af17dcbc0e45365fb6ebbb43805b532d6820e2407b0af390de05573e2518206",
+      "shard": 2,
+      "source_complete": 94
+    },
+    {
+      "artifact_id": 11730596960,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "b509e08f0eaf2f7927849cb07a3762a2fa4734f080aa928f82f5c4fdba727c9d",
+      "original_JSON_SHA256": "de18833d45ca978a34f7f6c7d85f2e11ba5f7422bb832d6aac3e1fb80664839f",
+      "shard": 3,
+      "source_complete": 107
+    },
+    {
+      "artifact_id": 11729934836,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "c7d5b710c90ecc1656c44da171c3c1de328e61240db0a5a97627351b78ecc4ad",
+      "original_JSON_SHA256": "ae21668900cc2c0aaf64e7a74e5365f37f693ebf2632406cdb509ebc16505a3c",
+      "shard": 4,
+      "source_complete": 109
+    },
+    {
+      "artifact_id": 11730676248,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "9864f28c4dbbd003c3fcdf7ca8dbef860b83616a4fe536c506dff9a8b91b268b",
+      "original_JSON_SHA256": "5a3af23e354ff4b95c5bd5cb27eb20e1846fb1eddca96090bd063d0e38749da7",
+      "shard": 5,
+      "source_complete": 109
+    },
+    {
+      "artifact_id": 11730672366,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "468beb22d70557b69bdd1a12b1a858fbc58a38d8f9f7b07229e621e9dab35c12",
+      "original_JSON_SHA256": "73858838c916917674caa49528ccb9eeaa1b5a309af20fba03a75001b8712943",
+      "shard": 0,
+      "source_complete": 110
+    },
+    {
+      "artifact_id": 11730985260,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "17c6231a0f9d02bc6b3d4278bf36f21eb225db681c880b3b72d9a92d84d832e2",
+      "original_JSON_SHA256": "89d459910787798048fc323ee5e0d8573ea6515edc62735c75f5032b7266d45d",
+      "shard": 1,
+      "source_complete": 112
+    },
+    {
+      "artifact_id": 11730860726,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "2eaa085a5d98cbcfd25df58e01945a578da12b89cd92cc960d1c733151a10621",
+      "original_JSON_SHA256": "165b1ea076b985ea001ee9104a55adc2cfabe09a0d72d3c1c6220e06a2a953e4",
+      "shard": 2,
+      "source_complete": 98
+    },
+    {
+      "artifact_id": 11730657588,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "9273402fbce5d8a5f504dc85fddbed0e5a5909f34a865f26bd3901842a727b33",
+      "original_JSON_SHA256": "0f37c3416ea95a98c487c8c4463c607354578ab94d699f97bef298ffd2cbd26b",
+      "shard": 3,
+      "source_complete": 104
+    },
+    {
+      "artifact_id": 11731005450,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "3819afb8da9f3cb98cd4a476aeaaeff62f29efd4f09a3630ca5db767aa2d8021",
+      "original_JSON_SHA256": "4ff8f40759921a33662a055f31a26f5a798175ef6fb09a9ec5efbd22d54a6722",
+      "shard": 4,
+      "source_complete": 110
+    },
+    {
+      "artifact_id": 11731915256,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "93f7544a3b7c561824f6430d4b3801513ec07df7dfc9c3c6d2cff585ad00f6e1",
+      "original_JSON_SHA256": "1785ba1be8e4ad57e8677f78b6db40a39b30a07ce2342d1f96c098e1c0e5ddff",
+      "shard": 5,
+      "source_complete": 109
+    },
+    {
+      "artifact_id": 11731231127,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "e16e6acfc7b82ab4422ba2e878db3c728fde69db6f6f572a01cea997b21bc741",
+      "original_JSON_SHA256": "b45cfc8298ab35aee810abda4d075bb2883356be67c87237e0a54808ed6e0af7",
+      "shard": 0,
+      "source_complete": 112
+    },
+    {
+      "artifact_id": 11732430357,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "cbc106444247c21d744fef61b4878aa3b3cbfd1f80e8dc2dc0e45f63bc5d49ae",
+      "original_JSON_SHA256": "5f62c4a9582da99f1295e204d4d998a1b0529494fbb632416fb5b752a2fddfbe",
+      "shard": 1,
+      "source_complete": 117
+    },
+    {
+      "artifact_id": 11731176102,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "336d01c3da535cc92eff04a6f63b04066b7764028e0449c7a2c0c70904fa5edb",
+      "original_JSON_SHA256": "f638b6a44663005da9df477834ed8b299998f8410e06c9c572f89cd2d6fbcc58",
+      "shard": 2,
+      "source_complete": 102
+    },
+    {
+      "artifact_id": 11731640869,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "dc2463423a8d79165f4e5853fd02d802a4b0eb5a8f078dcbc9b43e448ada1adc",
+      "original_JSON_SHA256": "5f265d50de932044fdb106ea378779429a2e3e8507c731558448dbba22e95347",
+      "shard": 3,
+      "source_complete": 111
+    },
+    {
+      "artifact_id": 11731576173,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "fdb719466da3bd8db6209e24f18d43f5ba42ecbc4fc89dd7e6bcc31de8433f3e",
+      "original_JSON_SHA256": "9df54664522985b69494f5afd871abceeed008b76270f38a799f21de1054d9b1",
+      "shard": 4,
+      "source_complete": 112
+    },
+    {
+      "artifact_id": 11732455243,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "031e1b3cbd57b90042f3f8674c1c6d70d41c86a2e620194d28b7f769a1bdb618",
+      "original_JSON_SHA256": "07fb5449f2dc19eb4fbef6d5c06865c843a7feee1dd1da9f6e99fc0cf4fa71d8",
+      "shard": 5,
+      "source_complete": 115
+    }
+  ],
+  "per_date": [
+    {
+      "D0_WATCH_events": 42,
+      "D0_strict_early2x": 2,
+      "P1_upgrades": 27,
+      "date": "2025-01-09",
+      "gt10x": 0,
+      "gt2x": 2,
+      "gt5x": 0,
+      "non2x_P1_upgrades": 25,
+      "source_valid": 377
+    },
+    {
+      "D0_WATCH_events": 101,
+      "D0_strict_early2x": 10,
+      "P1_upgrades": 43,
+      "date": "2025-09-02",
+      "gt10x": 1,
+      "gt2x": 10,
+      "gt5x": 1,
+      "non2x_P1_upgrades": 33,
+      "source_valid": 521
+    },
+    {
+      "D0_WATCH_events": 213,
+      "D0_strict_early2x": 4,
+      "P1_upgrades": 84,
+      "date": "2026-01-26",
+      "gt10x": 1,
+      "gt2x": 4,
+      "gt5x": 1,
+      "non2x_P1_upgrades": 82,
+      "source_valid": 620
+    },
+    {
+      "D0_WATCH_events": 196,
+      "D0_strict_early2x": 6,
+      "P1_upgrades": 77,
+      "date": "2026-02-24",
+      "gt10x": 0,
+      "gt2x": 7,
+      "gt5x": 1,
+      "non2x_P1_upgrades": 72,
+      "source_valid": 635
+    },
+    {
+      "D0_WATCH_events": 236,
+      "D0_strict_early2x": 10,
+      "P1_upgrades": 75,
+      "date": "2026-03-28",
+      "gt10x": 1,
+      "gt2x": 10,
+      "gt5x": 3,
+      "non2x_P1_upgrades": 65,
+      "source_valid": 643
+    },
+    {
+      "D0_WATCH_events": 148,
+      "D0_strict_early2x": 8,
+      "P1_upgrades": 53,
+      "date": "2026-05-10",
+      "gt10x": 0,
+      "gt2x": 8,
+      "gt5x": 0,
+      "non2x_P1_upgrades": 46,
+      "source_valid": 669
+    }
+  ],
+  "schema": "MONSTER_STAGE45_ORIGINAL36_SHA_FROZEN_SIX_DAY_P1V02_FUTURES_TRUTH_V1",
+  "source_censored": 1935,
+  "source_cohort_overlap_date_audit_not_absolute_novelty": true,
+  "source_complete": 3465,
+  "source_stage45_run_id": 38213103621,
+  "status_counts": {
+    "CENSORED_DAILY_1M_GAP": 2,
+    "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 17,
+    "CENSORED_STAGE44_HOURLY_SOURCE": 1916,
+    "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 3465
+  },
+  "verdict": "REJECTED_FAIL_GATE"
+}
