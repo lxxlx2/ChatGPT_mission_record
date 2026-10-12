@@ -1,0 +1,51 @@
+name: Frank PR33 third-round red proof on pre-fix code
+
+on:
+  push:
+    branches:
+      - review/frank-pr33-third-blockers-fix-20261012
+    paths:
+      - '.github/workflows/frank-pr33-third-blockers-red-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pre-fix-must-fail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install development dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]' 'numpy>=2,<3'
+      - name: Run new tests against the actual pre-H6/M9 source as EXPECTED RED
+        shell: bash
+        run: |
+          set -euo pipefail
+          p="crypto-300-profit-mission/local-agent"
+          cp "$p/tests/research/test_frank_pr33_third_round.py" /tmp/frank-third-red-sqlite.py
+          cp "$p/tests/research/test_frank_pr33_third_round_safety.py" /tmp/frank-third-red-ui.py
+          git switch --detach ae854ef8653cb94d6f804b04c83df66fb14cddef
+          cp /tmp/frank-third-red-sqlite.py "$p/tests/research/test_frank_pr33_third_round.py"
+          cp /tmp/frank-third-red-ui.py "$p/tests/research/test_frank_pr33_third_round_safety.py"
+          set +e
+          (cd "$p" && python -m pytest -q             tests/research/test_frank_pr33_third_round.py::test_old_pending_and_manual_history_do_not_double_count             tests/research/test_frank_pr33_third_round_safety.py::test_actual_dashboard_runtime_dom_renderer_handles_legacy_and_pending) > /tmp/frank-third-red.log 2>&1
+          code=$?
+          set -e
+          cat /tmp/frank-third-red.log | tail -n 45
+          if [ "$code" -eq 0 ]; then echo "EXPECTED_RED_NOT_REPRODUCED"; exit 7; fi
+          if ! grep -Eq "manual_review_queued_count|M9_LEGACY_FALSE_ACTIONABLE" /tmp/frank-third-red.log; then
+            echo "RED_FAILED_FOR_WRONG_REASON"; exit 8
+          fi
+          if ! grep -Eq "2 failed" /tmp/frank-third-red.log; then
+            echo "NOT_BOTH_EXPECTED_FAILURES"; exit 9
+          fi
+          echo "H6_M9_PRE_FIX_RED=PASS_TWO_EXPECTED_FAILURES"
