@@ -68,7 +68,9 @@ def test_immutable_release_is_exact_marker_verified_and_read_only(tmp_path, pref
 def test_tampered_immutable_file_is_rejected_by_runtime_manifest(tmp_path):
     repo, root, sha, source = _make_repo(tmp_path, "")
     final = rel.stage_immutable_release(_mac(tmp_path), root, sha, source)
-    (final / "mission_agent/mission_control/static/app.js").write_text("tampered\n", encoding="utf-8")
+    target = final / "mission_agent/mission_control/static/app.js"
+    os.chmod(target, 0o644)
+    target.write_text("tampered\n", encoding="utf-8")
     with pytest.raises(RuntimeError, match="RELEASE_MANIFEST_MISMATCH"):
         rel.source_manifest(final)
 
@@ -76,6 +78,7 @@ def test_tampered_immutable_file_is_rejected_by_runtime_manifest(tmp_path):
 def test_extra_source_file_in_immutable_release_is_rejected(tmp_path):
     repo, root, sha, source = _make_repo(tmp_path, "")
     final = rel.stage_immutable_release(_mac(tmp_path), root, sha, source)
+    os.chmod(final / "mission_agent", 0o755)
     (final / "mission_agent/injected.py").write_text("X = 1\n", encoding="utf-8")
     with pytest.raises(RuntimeError, match="RELEASE_EXTRA_FILE"):
         rel.source_manifest(final)
@@ -109,3 +112,14 @@ def test_unsafe_archive_member_cannot_be_staged(tmp_path, monkeypatch):
     with pytest.raises(RuntimeError, match="ARCHIVE_MEMBER_UNSAFE"):
         rel.stage_immutable_release(_mac(tmp_path), root, sha, source)
     assert not (tmp_path / "escape.txt").exists()
+
+
+
+def test_existing_source_with_writeable_permissions_is_rejected(tmp_path):
+    _, root, commit, source = _make_repo(tmp_path, "")
+    mac = _mac(tmp_path)
+    final = rel.stage_immutable_release(mac, root, commit, source)
+    target = final / "mission_agent/mission_control/static/app.js"
+    os.chmod(target, 0o644)
+    with pytest.raises(RuntimeError, match="EXISTING_RELEASE_NOT_READ_ONLY"):
+        rel.stage_immutable_release(mac, root, commit, source)
