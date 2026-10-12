@@ -1,0 +1,215 @@
+{
+  "CANNOT_CLAIM": "FULL_USDM_RECALL_OR_PRECISION_52_WINNERS_ENRICHED_120_CONTROLS_ONLY",
+  "Frank": "UNCHANGED",
+  "Gmail": "OFF",
+  "Monster_deployment": "NO_GO",
+  "VENUE": "BINANCE_USDM_FUTURES",
+  "all_six_dates": [
+    {
+      "date": "2025-01-19",
+      "frozen_GT2x": 1,
+      "minute_source_censored": 1,
+      "official_1m_verified": 20,
+      "ordinary_control_with_watch": 2,
+      "original_V4_strict_early": 0,
+      "selected_control": 20
+    },
+    {
+      "date": "2025-04-19",
+      "frozen_GT2x": 19,
+      "minute_source_censored": 0,
+      "official_1m_verified": 39,
+      "ordinary_control_with_watch": 5,
+      "original_V4_strict_early": 17,
+      "selected_control": 20
+    },
+    {
+      "date": "2025-07-19",
+      "frozen_GT2x": 8,
+      "minute_source_censored": 0,
+      "official_1m_verified": 28,
+      "ordinary_control_with_watch": 3,
+      "original_V4_strict_early": 8,
+      "selected_control": 20
+    },
+    {
+      "date": "2025-10-19",
+      "frozen_GT2x": 10,
+      "minute_source_censored": 0,
+      "official_1m_verified": 30,
+      "ordinary_control_with_watch": 2,
+      "original_V4_strict_early": 9,
+      "selected_control": 20
+    },
+    {
+      "date": "2026-04-19",
+      "frozen_GT2x": 9,
+      "minute_source_censored": 0,
+      "official_1m_verified": 29,
+      "ordinary_control_with_watch": 2,
+      "original_V4_strict_early": 9,
+      "selected_control": 20
+    },
+    {
+      "date": "2026-07-19",
+      "frozen_GT2x": 5,
+      "minute_source_censored": 4,
+      "official_1m_verified": 21,
+      "ordinary_control_with_watch": 1,
+      "original_V4_strict_early": 5,
+      "selected_control": 20
+    }
+  ],
+  "control_WATCH_total": 21,
+  "control_has_any_WATCH": 15,
+  "frozen_GT2x_selected": 52,
+  "historical_actual_orderbook_or_fills": "UNVERIFIED",
+  "historical_anchor_UTC_06": true,
+  "historical_complete_1h_2x_count": 52,
+  "historical_complete_1h_GT_universe": 3333,
+  "historical_contract_type": "UNKNOWN",
+  "independent_other_AI_review": "NOT_DONE",
+  "label_blind_no2x_controls_selected": 120,
+  "late_watch_2x_count": 1,
+  "minute_source_censored": 5,
+  "minute_source_censored_positive_2x": 1,
+  "no_watch_2x_count": 1,
+  "original12_artifact_SHA_receipts": [
+    {
+      "artifact_id": 11727793725,
+      "attempted": 11,
+      "date": "2025-01-19",
+      "minute_complete": 10,
+      "minute_source_censored": 1,
+      "shard": 0,
+      "source_original_inner_JSON_SHA256": "dac36808b1262b600602610911c184c51f63f83125a21ccd372042951b3f6b1d",
+      "source_original_zip_SHA256": "04a3f6434248747a1b15125163406b0af16d5f60d2363ce731945f5136b72aaa"
+    },
+    {
+      "artifact_id": 11728275200,
+      "attempted": 10,
+      "date": "2025-01-19",
+      "minute_complete": 10,
+      "minute_source_censored": 0,
+      "shard": 1,
+      "source_original_inner_JSON_SHA256": "f42eeb764703d5917fb49047d1a115f9fd360f6475603e07bc48e2881f790f26",
+      "source_original_zip_SHA256": "3e7f7d3a474b6d0ca1fc2d0c076310559d6b9baf0f940678981cbb214c44d441"
+    },
+    {
+      "artifact_id": 11727549633,
+      "attempted": 20,
+      "date": "2025-04-19",
+      "minute_complete": 20,
+      "minute_source_censored": 0,
+      "shard": 0,
+      "source_original_inner_JSON_SHA256": "82d2563f3d5446c82f0e59ac596032ed022241ea9d14254727b33de9b4b8dd57",
+      "source_original_zip_SHA256": "1cec7347588c5d8187c338c865ac3de5bccf3c2361cf3f795fa529f4a360bc3a"
+    },
+    {
+      "artifact_id": 11728285291,
+      "attempted": 19,
+      "date": "2025-04-19",
+      "minute_complete": 19,
+      "minute_source_censored": 0,
+      "shard": 1,
+      "source_original_inner_JSON_SHA256": "c042c641d36731d80ee5afa462db8b3f0cd6a27b4dbbded612747b44282ecf50",
+      "source_original_zip_SHA256": "2487dbebbb3f58321d5b45c5ebf13b3755e9574b9adc8702e4537540c99ff8f1"
+    },
+    {
+      "artifact_id": 11728300580,
+      "attempted": 14,
+      "date": "2025-07-19",
+      "minute_complete": 14,
+      "minute_source_censored": 0,
+      "shard": 0,
+      "source_original_inner_JSON_SHA256": "7a9d675cfe6a3fea918077756f16f0ef56d931cf51652a9b5d39c01a40e440e4",
+      "source_original_zip_SHA256": "c8a4d6698a886a0435e62b5343c577c6970c68b0cd074bdda319c06ed6095fdb"
+    },
+    {
+      "artifact_id": 11727818540,
+      "attempted": 14,
+      "date": "2025-07-19",
+      "minute_complete": 14,
+      "minute_source_censored": 0,
+      "shard": 1,
+      "source_original_inner_JSON_SHA256": "9180ad2325a253f45e5b07f1dfb8c7092810a8ecfb9167c5a015ebefd3708bad",
+      "source_original_zip_SHA256": "36671b08f7febd0fa71a1aa20eb0b2305bf5339a10ca8b14826e1f73d8590cea"
+    },
+    {
+      "artifact_id": 11727758794,
+      "attempted": 15,
+      "date": "2025-10-19",
+      "minute_complete": 15,
+      "minute_source_censored": 0,
+      "shard": 0,
+      "source_original_inner_JSON_SHA256": "7b19ca26525794a218087551f97043a7dcef91958cf4b0efc4c127d2093e302a",
+      "source_original_zip_SHA256": "60fbd9b67b510f4f7990e48b3cc495b4d1c2bf7d557799d0356078f88c53deae"
+    },
+    {
+      "artifact_id": 11727788751,
+      "attempted": 15,
+      "date": "2025-10-19",
+      "minute_complete": 15,
+      "minute_source_censored": 0,
+      "shard": 1,
+      "source_original_inner_JSON_SHA256": "ca8df62fbaccf58fa47a5ef1b88e8c05500df81c696bd04c45de8653205d2f0c",
+      "source_original_zip_SHA256": "6425d0c7d244b348340e5bd23bffe9d11b8ce3fa445827699db8bd66fa859f80"
+    },
+    {
+      "artifact_id": 11728405327,
+      "attempted": 15,
+      "date": "2026-04-19",
+      "minute_complete": 15,
+      "minute_source_censored": 0,
+      "shard": 0,
+      "source_original_inner_JSON_SHA256": "ef792985df8a2c10ed62d649703ea434b65dc5974ccb459e0b1553ae864f6d3c",
+      "source_original_zip_SHA256": "ecf4d1e9efb4f7280b9ab2dad44cfd51e0b2545868f69e780af65b994cb4ce6a"
+    },
+    {
+      "artifact_id": 11728235464,
+      "attempted": 14,
+      "date": "2026-04-19",
+      "minute_complete": 14,
+      "minute_source_censored": 0,
+      "shard": 1,
+      "source_original_inner_JSON_SHA256": "72dd08532e50677144a07cecd79cc713ceac6be55e635bf30cc5690f7f732fc2",
+      "source_original_zip_SHA256": "c7fa5adcb342ce3ee47d2a3971467477d1dcd1be910f923ed056efb46ef08efa"
+    },
+    {
+      "artifact_id": 11728280809,
+      "attempted": 13,
+      "date": "2026-07-19",
+      "minute_complete": 12,
+      "minute_source_censored": 1,
+      "shard": 0,
+      "source_original_inner_JSON_SHA256": "051f8ff36438ac2baaf9f2afbdf75e72c66a236eb4240c53f074690eced6da59",
+      "source_original_zip_SHA256": "8bb7a0d400b9a73c02be63dfc314c1638a1b776d3b6fc500dd6eb57ffd1734e5"
+    },
+    {
+      "artifact_id": 11728310291,
+      "attempted": 12,
+      "date": "2026-07-19",
+      "minute_complete": 9,
+      "minute_source_censored": 3,
+      "shard": 1,
+      "source_original_inner_JSON_SHA256": "d0c0204e389000fd33987808f4181e6ee3f84c3d041a0136a739455b4ba9d100",
+      "source_original_zip_SHA256": "22e41368ff0f5a12979fa0d609092a8244c715310badd1b3b4d8d9a9aee9f42c"
+    }
+  ],
+  "original_production_V4_replayed_without_threshold_changes": true,
+  "positive_WATCH_total": 273,
+  "retrospectively_enriched_and_exposed": true,
+  "same_minute_not_early_2x_count": 1,
+  "schema": "MONSTER_STAGE38_ORIGINAL12_USDM_V4_REAL_1M_CAUSAL_SHA_AGGREGATE_V1",
+  "source": "BINANCE_9_DAILY_USDM_1M_PUBLISHER_SHA_AND_PRIOR_STAGE37_1H_SHA",
+  "source_complete_cases": 167,
+  "source_complete_negative_controls": 116,
+  "source_complete_positive_2x": 51,
+  "strict_early_nearest_1m_cross_lead_ge15_minutes": 39,
+  "strict_early_nearest_1m_cross_lead_ge5_minutes": 46,
+  "strict_early_nearest_1m_cross_lead_ge60_minutes": 30,
+  "strict_early_nearest_1m_cross_median_lead_minutes": 107.0,
+  "strictly_early_2x_count": 48,
+  "trading": "NO_GO",
+  "true_global_shared_D1_queue": "NOT_REPLAYED"
+}
