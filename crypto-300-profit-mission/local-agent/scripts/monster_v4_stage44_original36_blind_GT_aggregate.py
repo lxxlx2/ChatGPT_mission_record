@@ -94,6 +94,11 @@ def main():
     a.out.mkdir(parents=True,exist_ok=True)
     (a.out/"monster_stage44_original36_sha_six_blind_900x6_hourly_GT_summary.json").write_text(
         json.dumps(report,indent=2,sort_keys=True,ensure_ascii=False)+"\n")
+    # The CSV is compact. Preserve every original source-month SHA per symbol
+    # in Git before Stage45 uses the ground truth; never fabricate SHA receipts.
+    with (a.out/"monster_stage44_full5400_blind_source_publisher_hourly_SHA.jsonl").open("w",encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps(row,ensure_ascii=False,sort_keys=True)+"\n")
     cols=["date","symbol","source_status","baseline_1h_open","max_high_multiple","gt2x","gt5x","gt10x",
           "first_gt2x_1h_utc","first_gt5x_1h_utc","first_gt10x_1h_utc"]
     for name,selected in (
