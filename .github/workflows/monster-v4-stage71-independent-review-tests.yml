@@ -1,0 +1,37 @@
+name: Monster Stage71 Independent Reviewer Reproductions
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage71_independent_review_recompute.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage71_independent_review.py'
+      - '.github/workflows/monster-v4-stage71-independent-review-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reviewer_tests_only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: crypto-300-profit-mission/local-agent/scripts:crypto-300-profit-mission/local-agent
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Independent tests including explicit unremediated defect reproductions
+        run: |
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_stage71_independent_review.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_shadow.py -v
+          python -B -m unittest discover -s crypto-300-profit-mission/local-agent/tests -p test_monster_v4_historical_replay.py -v
+      - name: Independently recalculate all2700 archived source records
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage71_independent_review_recompute.py --out /tmp/monster71-ci
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage71-independent-scheduler-recalculation
+          path: /tmp/monster71-ci/*
+          retention-days: 30
