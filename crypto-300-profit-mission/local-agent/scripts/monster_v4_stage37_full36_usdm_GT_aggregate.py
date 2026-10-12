@@ -17,7 +17,7 @@ def sha(b):return hashlib.sha256(b).hexdigest()
 
 def read_all(manifest,path):
     a=manifest.get("artifacts",[])
-    if manifest.get("source_run_id")!=38205975221 or len(a)!=36:
+    if manifest.get("source_run_id")!=38206141845 or len(a)!=36:
         raise ValueError("STAGE37_EXACT_ORIGINAL36_SOURCE_RUN_REQUIRED")
     result=[];receipts=[]
     for item in a:
