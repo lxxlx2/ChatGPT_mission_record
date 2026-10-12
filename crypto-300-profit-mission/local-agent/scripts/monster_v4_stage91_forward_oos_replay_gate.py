@@ -76,13 +76,12 @@ def freeze_universe(packet: dict) -> dict:
         raise ValueError("STAGE91_EXCHANGE_INFO_MISSING_SYMBOLS")
     if not payload["symbols"]:
         raise ValueError("STAGE91_EMPTY_MARKET_POPULATION")
-    # Binance serverTime, if available, is point-in-time corroboration, not
-    # third-party attestation that an untrusted supplied JSON truly came from TLS.
+    # Binance's USD-M exchangeInfo official docs explicitly say to IGNORE its
+    # serverTime for clock verification; use a separately fetched /fapi/v1/time
+    # HTTP body in the Stage97 authenticated capture validator instead.
     server_time = payload.get("serverTime")
     if server_time is not None:
         num(server_time)
-        if not cap - FRESH_MAX_MS <= server_time <= cap:
-            raise ValueError("STAGE91_EXCHANGE_SERVER_TIME_INCONSISTENT")
     seen, rows = set(), []
     for item in payload["symbols"]:
         if not isinstance(item, dict):
@@ -126,6 +125,7 @@ def freeze_universe(packet: dict) -> dict:
         "rows":rows,
         "market_population_archive_consistency":"PASS_UNTRUSTED_ORIGIN",
         "source_authenticity":"UNVERIFIED_EXTERNAL_CAPTURE",
+        "exchangeInfo_serverTime_clock_authority":"NONE_OFFICIAL_DOCS_SAY_IGNORE",
         "historical_or_forward_replay":"NOT_RUN",
         "G0_point_in_time_crypto_only":"NOT_DONE",
         "OOS":"NOT_DONE",
@@ -280,6 +280,12 @@ def selftest():
     assert result["population_all_exchange_symbols"]==3
     assert result["usd_m_usdt_perpetual_asof_candidates"]==2
     assert result["rows"][1]["crypto_identity"].startswith("UNKNOWN")
+    # Real Binance exchangeInfo.serverTime may be stale by design.
+    stale_server=json.dumps({"serverTime":t-86_400_000,
+         "symbols":json.loads(raw)["symbols"]},separators=(",",":"))
+    dated=dict(template,raw_exchangeInfo_json=stale_server,
+               raw_sha256=sha256_raw(stale_server))
+    assert freeze_universe(dated)["source_authenticity"]=="UNVERIFIED_EXTERNAL_CAPTURE"
     assert result["OOS"]=="NOT_DONE"
     changed=dict(template,window_start_utc="2025-01-30T06:00:00Z")
     try:freeze_universe(changed)
