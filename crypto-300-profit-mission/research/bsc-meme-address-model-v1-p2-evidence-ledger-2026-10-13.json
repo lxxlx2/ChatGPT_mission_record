@@ -3,7 +3,7 @@
   "as_of": "2026-10-13",
   "authority": "CURATED_EXISTING_SOURCE_ROUNDS_NOT_COMPLETE_WALLET_LIFETIME",
   "production": "NO_GO",
-  "frozen_source_sha": "e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a",
+  "frozen_source_sha": "3761b9140d0c64b1ffd8d8d243d63a2a1a4fc690",
   "source_manifest": [
     {
       "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE16_3_EOA_ROUTER_FEE_AND_SIGNED_ROUNDTRIP_QA_2026-10-12.json",
@@ -779,5 +779,6 @@
     "IFML/DDAC and IFML/8E6B episode scopes and 2025 vs 2026 opportunities must be compared on a controlled denominator.",
     "No current activity claims, no first observable signal, no 1/5/15 minute executable follower test.",
     "No source was re-fetched from chain in this P2 mapping; these are original Git evidence references (SHA pinned)."
-  ]
+  ],
+  "baseline_artifact_git_blob_sha": "e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a"
 }
