@@ -1,0 +1,151 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "BNB_and_BTC_quote_volumes_not_converted_to_USD": true,
+  "GMAIL": "OFF",
+  "INDEPENDENT_OTHER_AI_REVIEW_OF_NEW_STAGE75": "NOT_DONE",
+  "MONSTER_DEPLOYMENT": "NO_GO",
+  "ORDER_NOTIONAL": "UNSPECIFIED",
+  "P1_P2": "REJECTED",
+  "SPOT_LISTING_HISTORICAL_ORDERBOOK_ALPHA_DEX_CA_FILLS": "UNKNOWN",
+  "all95": {
+    "all_original_D0_without_USDT_1m_prior_trade": 95,
+    "any_of_four_alt_quote_assets_positive": 0,
+    "four_alt_quote_pair_test_attempts": 380,
+    "none_of_four_alt_quote_assets_positive_NOT_PROOF_UNBUYABLE": 95,
+    "per_quote_alternative_pair_status": {
+      "BNB": {
+        "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 1,
+        "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 94,
+        "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+        "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+      },
+      "BTC": {
+        "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+        "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 95,
+        "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+        "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+      },
+      "FDUSD": {
+        "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+        "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 95,
+        "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+        "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+      },
+      "USDC": {
+        "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 1,
+        "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 94,
+        "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+        "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+      }
+    },
+    "positive_quote_pair_occurrences": 0
+  },
+  "all_4_quotes_are_exact_original_futures_base_string_only": true,
+  "all_original95_coin_date_signal_identities_verified": true,
+  "all_spot_positive_quotes_only_prior_1m_real_trades_not_buyable_ask": true,
+  "by_original_UTC06_window": {
+    "2025-03-30": {
+      "all_original_D0_without_USDT_1m_prior_trade": 14,
+      "any_of_four_alt_quote_assets_positive": 0,
+      "four_alt_quote_pair_test_attempts": 56,
+      "none_of_four_alt_quote_assets_positive_NOT_PROOF_UNBUYABLE": 14,
+      "per_quote_alternative_pair_status": {
+        "BNB": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 14,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        },
+        "BTC": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 14,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        },
+        "FDUSD": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 14,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        },
+        "USDC": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 14,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        }
+      },
+      "positive_quote_pair_occurrences": 0
+    },
+    "2025-06-30": {
+      "all_original_D0_without_USDT_1m_prior_trade": 22,
+      "any_of_four_alt_quote_assets_positive": 0,
+      "four_alt_quote_pair_test_attempts": 88,
+      "none_of_four_alt_quote_assets_positive_NOT_PROOF_UNBUYABLE": 22,
+      "per_quote_alternative_pair_status": {
+        "BNB": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 22,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        },
+        "BTC": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 22,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        },
+        "FDUSD": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 22,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        },
+        "USDC": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 22,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        }
+      },
+      "positive_quote_pair_occurrences": 0
+    },
+    "2025-11-27": {
+      "all_original_D0_without_USDT_1m_prior_trade": 59,
+      "any_of_four_alt_quote_assets_positive": 0,
+      "four_alt_quote_pair_test_attempts": 236,
+      "none_of_four_alt_quote_assets_positive_NOT_PROOF_UNBUYABLE": 59,
+      "per_quote_alternative_pair_status": {
+        "BNB": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 1,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 58,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        },
+        "BTC": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 59,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        },
+        "FDUSD": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 59,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        },
+        "USDC": {
+          "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 1,
+          "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 58,
+          "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+          "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 0
+        }
+      },
+      "positive_quote_pair_occurrences": 0
+    }
+  },
+  "old_all196_source_git_blob": "c9002d380d0b2db786e58461579b862e7afab054",
+  "preregistered_contract_git_blob": "696e5d041556e18c331d33ef3f9a8fe95ffbf433",
+  "schema": "MONSTER_STAGE75_ORIGINAL95_FOUR_ALT_SPOT_QUOTE_TMINUS1_OFFICIAL_PUBLISHER_SHA_V1",
+  "stage74_parser_git_blob": "02aea897fa59598e28fb37d0c32cd718d590a816"
+}
