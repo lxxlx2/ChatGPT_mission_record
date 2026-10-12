@@ -13,6 +13,8 @@ from datetime import datetime, timezone
 import fcntl
 import getpass
 import hashlib
+import tarfile
+import io
 import json
 import os
 from pathlib import Path
@@ -141,9 +143,74 @@ def review_reasons(state):
             'requires_private_review': len(rows) - stale_unsent}
 
 
+
+RELEASE_MARKER = '.pr39-release-manifest.json'
+
+
+def release_manifest(root):
+    """Immutable staged release: verify every file byte and reject any extra source."""
+    marker = root / RELEASE_MARKER
+    require(marker.is_file() and not marker.is_symlink(), 'RELEASE_MARKER_MISSING')
+    expected = json.loads(marker.read_text(encoding='utf-8'))['files']
+    for rel, expected_digest in expected.items():
+        local = root / rel
+        require(local.is_file() and not local.is_symlink(), 'RELEASE_FILE_MISSING')
+        require(sha(local) == expected_digest, 'RELEASE_MANIFEST_MISMATCH')
+    for base in ('mission_agent', 'config'):
+        for local in (root / base).rglob('*'):
+            if local.is_file() and local.suffix in {'.py', '.js', '.css', '.html', '.json'}:
+                require(local.relative_to(root).as_posix() in expected, 'RELEASE_EXTRA_FILE')
+    return dict(expected)
+
+
+def stage_immutable_release(mac, root, expected, source):
+    """Copy the exact approved SHA into a private read-only directory. Production runners
+    never point at the operator's mutable checkout or cache clone."""
+    root = Path(root).resolve()
+    repo = Path(run(['git', '-C', str(root), 'rev-parse', '--show-toplevel']))
+    prefix = '' if root == repo else root.relative_to(repo).as_posix() + '/'
+    final = mac.support / 'pr39-immutable-releases' / expected[:12]
+    if final.exists():
+        require(release_manifest(final) == source, 'EXISTING_IMMUTABLE_RELEASE_MISMATCH')
+        return final
+    staging = final.with_name(final.name + '.staging-%d' % os.getpid())
+    require(not staging.exists(), 'RELEASE_STAGING_EXISTS')
+    staging.mkdir(parents=True, mode=0o700)
+    try:
+        args = ['git', '-C', str(repo), 'archive', '--format=tar', expected]
+        if prefix:
+            args += ['--', prefix.rstrip('/')]
+        data = subprocess.run(args, capture_output=True, check=True).stdout
+        with tarfile.open(fileobj=io.BytesIO(data)) as archive:
+            for member in archive.getmembers():
+                require(not (member.issym() or member.islnk() or member.name.startswith('/')
+                             or '..' in Path(member.name).parts), 'ARCHIVE_MEMBER_UNSAFE')
+            if hasattr(tarfile, 'data_filter'):
+                archive.extractall(staging, filter='data')
+            else:
+                archive.extractall(staging)
+        local = staging / prefix.rstrip('/') if prefix else staging
+        staged = {rel: sha(local / rel) for rel in source if (local / rel).is_file()}
+        require(staged == source, 'STAGED_RELEASE_SOURCE_MISMATCH')
+        (local / RELEASE_MARKER).write_text(json.dumps({'expected': expected, 'files': staged}, sort_keys=True), encoding='utf-8')
+        require(release_manifest(local) == source, 'STAGED_RELEASE_MARKER_MISMATCH')
+        for path in sorted(local.rglob('*'), reverse=True):
+            os.chmod(path, 0o555 if path.is_dir() else 0o444)
+        os.chmod(local, 0o555)
+        local.rename(final)
+    except BaseException:
+        shutil.rmtree(staging, ignore_errors=True)
+        raise
+    if staging.exists():
+        shutil.rmtree(staging, ignore_errors=True)
+    return final
+
+
 def source_manifest(root):
     """Check actual bytes, including ignored extra executable sources, not only HEAD."""
     root = Path(root).resolve()
+    if (root / RELEASE_MARKER).is_file():
+        return release_manifest(root)
     repo = Path(run(['git', '-C', str(root), 'rev-parse', '--show-toplevel']))
     prefix = '' if root == repo else root.relative_to(repo).as_posix() + '/'
     paths = run(['git', '-C', str(repo), 'ls-tree', '-r', '--name-only', 'HEAD', '--',
@@ -174,11 +241,13 @@ def candidate(root, expected):
     remote = run(['git', 'ls-remote', 'https://github.com/lxxlx2/ChatGPT_mission_record.git',
                   'refs/heads/main', 'refs/pull/39/head'])
     pins = dict(line.split()[::-1] for line in remote.splitlines())
-    require(pins.get('refs/heads/main') == MAIN and pins.get('refs/pull/39/head') == PR39,
-            'REMOTE_BASE_OR_PR_DRIFT_REVIEW_REQUIRED')
+    require(pins.get('refs/pull/39/head') == PR39, 'REMOTE_PR39_HEAD_DRIFT_REVIEW_REQUIRED')
     repo = Path(run(['git', '-C', str(root), 'rev-parse', '--show-toplevel']))
-    merged = run(['git', '-C', str(repo), 'merge-tree', '--write-tree', MAIN, PR39]).splitlines()[0]
-    changed = run(['git', '-C', str(repo), 'diff', '--name-only', MAIN, merged]).splitlines()
+    run(['git', '-C', str(repo), 'fetch', '-q', 'origin', '+refs/heads/main:refs/remotes/origin/main'])
+    require(run(['git', '-C', str(repo), 'rev-parse', 'refs/remotes/origin/main']) == pins.get('refs/heads/main'),
+            'REMOTE_MAIN_MOVED_DURING_CHECK')
+    merged = run(['git', '-C', str(repo), 'merge-tree', '--write-tree', 'refs/remotes/origin/main', PR39]).splitlines()[0]
+    changed = run(['git', '-C', str(repo), 'diff', '--name-only', 'refs/remotes/origin/main', merged]).splitlines()
     require(all(p.startswith(PREFIX) or p.startswith('crypto-300-profit-mission/meme/FRANK_PR39_')
                 or p == '.github/workflows/frank-presentation-semantics-tests-20261012.yml'
                 for p in changed), 'OTHER_MISSION_MERGE_DIFF')
@@ -765,6 +834,9 @@ def main(argv=None):
         require(context['reasons']['requires_private_review'] == 0 and
                 'UNVERIFIED_OTHER_REASON' not in context['reasons']['reason_counts'],
                 'MANUAL_REVIEW_REASONS_REQUIRE_ACCEPTANCE')
+        staged = stage_immutable_release(mac, root, args.expected_release_sha, context['new_source'])
+        context['new_agent'] = str(staged)
+        context['new_texts'] = {k: replace_source(v, staged) for k, v in context['old_texts'].items()}
         location = release_dir / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + str(os.getpid()))
         location.mkdir(mode=0o700)
         for sig in (signal.SIGTERM, signal.SIGINT): signal.signal(sig, interrupted)
