@@ -90,7 +90,7 @@ jobs:
           test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
           dest=crypto-300-profit-mission/monster/evidence
           cp /tmp/monster44_out/monster_stage44_* "$dest/"
-          git add "$dest/monster_stage44_original36_sha_six_blind_900x6_hourly_GT_summary.json" "$dest/monster_stage44_all5400_blind_dates_source_status_and_GT.csv" "$dest/monster_stage44_actual_complete_GT2x_registry.csv"
+          git add "$dest/monster_stage44_original36_sha_six_blind_900x6_hourly_GT_summary.json" "$dest/monster_stage44_all5400_blind_dates_source_status_and_GT.csv" "$dest/monster_stage44_actual_complete_GT2x_registry.csv" "$dest/monster_stage44_full5400_blind_source_publisher_hourly_SHA.jsonl"
           if git diff --cached --quiet; then
             echo STAGE44_ALREADY_IDENTICAL_COMMIT
             exit 0
