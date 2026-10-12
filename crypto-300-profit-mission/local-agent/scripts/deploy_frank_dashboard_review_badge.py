@@ -152,19 +152,21 @@ def actual_delivery_counts(control: Path):
               ON o.channel='gmail' AND o.decision_id=g.decision_id
             LEFT JOIN local_delivery AS l
               ON o.channel='local' AND o.decision_id=l.decision_id
-            WHERE o.status IN (
-                'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED',
-                'PERMANENT_ERROR','CREDENTIAL_BLOCKED',
-                'RETRYABLE_ERROR','RETRY_PENDING'
+            WHERE NOT (
+                (o.channel='gmail' AND o.status IN ('SENT_VERIFIED','DRY_RUN_AUDIT'))
+                OR (o.channel='local' AND o.status IN ('COMMAND_ACCEPTED','DRY_RUN_AUDIT'))
             )
         """).fetchall()
         unknown = db.execute("""
             SELECT COUNT(*) FROM decision_outbox
-            WHERE status NOT IN (
-                'PENDING','SENT_VERIFIED','DELIVERED','DRY_RUN_AUDIT',
-                'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED',
-                'PERMANENT_ERROR','CREDENTIAL_BLOCKED',
-                'RETRYABLE_ERROR','RETRY_PENDING'
+            WHERE NOT (
+                (channel='gmail' AND status IN ('SENT_VERIFIED','DRY_RUN_AUDIT'))
+                OR (channel='local' AND status IN ('COMMAND_ACCEPTED','DRY_RUN_AUDIT'))
+                OR status IN (
+                    'PENDING','MANUAL_REVIEW','SENDING','SENT_UNVERIFIED',
+                    'PERMANENT_ERROR','CREDENTIAL_BLOCKED',
+                    'RETRYABLE_ERROR','RETRY_PENDING'
+                )
             )
         """).fetchone()[0]
     finally:
@@ -174,6 +176,7 @@ def actual_delivery_counts(control: Path):
     expired = {"gmail": 0, "local": 0}
     actionable = {"gmail": 0, "local": 0, "other": 0}
     pending = {"gmail": 0, "local": 0, "other": 0}
+    queued = {"gmail": 0, "local": 0, "other": 0}
     blocked = {"gmail": 0, "local": 0, "other": 0}
     manual = {"gmail": 0, "local": 0, "other": 0}
     for row in rows:
@@ -182,12 +185,17 @@ def actual_delivery_counts(control: Path):
         if status in ("SENDING", "SENT_UNVERIFIED"):
             pending[channel] += 1
             continue
+        if status == "PENDING":
+            queued[channel] += 1
+            continue
         if status in ("CREDENTIAL_BLOCKED", "RETRYABLE_ERROR", "RETRY_PENDING"):
             blocked[channel] += 1
             continue
         if status == "PERMANENT_ERROR":
             actionable[channel] += 1
             continue
+        if status != "MANUAL_REVIEW":
+            raise RuntimeError("UNCLASSIFIED_OUTBOX_STATUS_REQUIRES_REVIEW")
         manual[channel] += 1
         if channel == "other":
             actionable[channel] += 1
@@ -228,6 +236,10 @@ def actual_delivery_counts(control: Path):
         "manual_review_pending_gmail_count": pending["gmail"],
         "manual_review_pending_local_count": pending["local"],
         "manual_review_pending_other_count": pending["other"],
+        "manual_review_queued_count": sum(queued.values()),
+        "manual_review_queued_gmail_count": queued["gmail"],
+        "manual_review_queued_local_count": queued["local"],
+        "manual_review_queued_other_count": queued["other"],
         "manual_review_blocked_count": sum(blocked.values()),
         "manual_review_blocked_gmail_count": blocked["gmail"],
         "manual_review_blocked_local_count": blocked["local"],
