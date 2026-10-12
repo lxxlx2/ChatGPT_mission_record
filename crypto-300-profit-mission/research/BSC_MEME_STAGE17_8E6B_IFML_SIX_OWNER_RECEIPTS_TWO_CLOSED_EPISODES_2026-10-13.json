@@ -1,0 +1,202 @@
+{
+  "schema": "BSC_MEME_STAGE17_8E6B_IFML_SIX_SIGNED_RECEIPTS_TWO_CLOSED_CYCLES_V1",
+  "date": "2026-10-13",
+  "network": "bnb-mainnet",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "token": "我踏马来了",
+  "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_2026_SIX_CORE_POSITION_TRANSFER_HISTORY_2026-10-11.json",
+      "sha": "e09082133b6483db00470c15ff569e0d9489335f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_SIX_CORE_NATIVE_BALANCE_AUDIT_2026-10-11.json",
+      "sha": "989681c710e896206d50999787acc21b4ea888cb"
+    }
+  ],
+  "method": "Original transaction signer and block independently checked in a preceding RPC pass for six exact hashes; individual receipts rechecked here. Raw ERC20 inventory events from fully paginated original source, historical native wallet block N-1 to N from original balance QA. Receipt gas from full receipt only.",
+  "rows": [
+    {
+      "dir": "in",
+      "hash": "0x992dd56c53a11a8f8396db4e766c1174db779fe6843962667efaeed4e2c1fee2",
+      "block": 74473655,
+      "raw": "127339804905607154158371",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "owner_signed_original_tx_confirmed_in_current_pass": true,
+      "receipt_rpc_state": "RETURNED",
+      "receipt_success_header": true,
+      "receipt_parseable": true,
+      "receipt_raw_bytes": 7484,
+      "receipt_gas_paid_wei": "32980600000000",
+      "native_block_delta_wei": "-1000032980600000000",
+      "wbnb_logs": [
+        {
+          "topic0": "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+          "topic1": "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+          "topic2": null,
+          "raw": "990000000000000000"
+        },
+        {
+          "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "topic1": "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+          "topic2": "0x000000000000000000000000a651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "raw": "990000000000000000"
+        }
+      ]
+    },
+    {
+      "dir": "out",
+      "hash": "0x820a196cfd5080b78e468fed18113a697327b7b51de789f8e11f7d9fcfd6a6ed",
+      "block": 74473726,
+      "raw": "127339804905607154158371",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "owner_signed_original_tx_confirmed_in_current_pass": true,
+      "receipt_rpc_state": "RETURNED",
+      "receipt_success_header": true,
+      "receipt_parseable": false,
+      "receipt_raw_bytes": 8098,
+      "receipt_gas_paid_wei": null,
+      "native_block_delta_wei": "768686409014646783",
+      "wbnb_logs": null
+    },
+    {
+      "dir": "in",
+      "hash": "0x63fac2b371a445d96fc58348c8fee7ddb8f3c753041f863b9de122f25381c1d7",
+      "block": 76554500,
+      "raw": "86686471635733901107074",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "owner_signed_original_tx_confirmed_in_current_pass": true,
+      "receipt_rpc_state": "RETURNED",
+      "receipt_success_header": true,
+      "receipt_parseable": true,
+      "receipt_raw_bytes": 7486,
+      "receipt_gas_paid_wei": "5441799000000000",
+      "native_block_delta_wei": "-3005441799000000000",
+      "wbnb_logs": [
+        {
+          "topic0": "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+          "topic1": "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+          "topic2": null,
+          "raw": "2970000000000000000"
+        },
+        {
+          "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "topic1": "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+          "topic2": "0x000000000000000000000000a651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "raw": "2970000000000000000"
+        }
+      ]
+    },
+    {
+      "dir": "in",
+      "hash": "0xa89856fd61e59b8c34c425ca7f36100f5ed2ddf9b300ff02b3bd93618b7a4fb7",
+      "block": 76579819,
+      "raw": "30584874462325168520366",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "owner_signed_original_tx_confirmed_in_current_pass": true,
+      "receipt_rpc_state": "RETURNED",
+      "receipt_success_header": true,
+      "receipt_parseable": true,
+      "receipt_raw_bytes": 4873,
+      "receipt_gas_paid_wei": "122619000000000",
+      "native_block_delta_wei": "-1000122619000000000",
+      "wbnb_logs": [
+        {
+          "topic0": "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+          "topic1": "0x00000000000000000000000013f4ea83d0bd40e75c8222255bc855a974568dd4",
+          "topic2": null,
+          "raw": "1000000000000000000"
+        },
+        {
+          "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "topic1": "0x00000000000000000000000013f4ea83d0bd40e75c8222255bc855a974568dd4",
+          "topic2": "0x000000000000000000000000a651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "raw": "1000000000000000000"
+        }
+      ]
+    },
+    {
+      "dir": "out",
+      "hash": "0x14cf70e39f00d8ed6da835d9cc9c71f901b2ff2948216e5adf74c8423c3fd467",
+      "block": 76580056,
+      "raw": "58635673049029534813720",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "owner_signed_original_tx_confirmed_in_current_pass": true,
+      "receipt_rpc_state": "RETURNED",
+      "receipt_success_header": true,
+      "receipt_parseable": true,
+      "receipt_raw_bytes": 5633,
+      "receipt_gas_paid_wei": "1446918000000000",
+      "native_block_delta_wei": "1957287251273289132",
+      "wbnb_logs": [
+        {
+          "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "topic1": "0x000000000000000000000000a651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "topic2": "0x00000000000000000000000013f4ea83d0bd40e75c8222255bc855a974568dd4",
+          "raw": "1958734169273289132"
+        },
+        {
+          "topic0": "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+          "topic1": "0x00000000000000000000000013f4ea83d0bd40e75c8222255bc855a974568dd4",
+          "topic2": null,
+          "raw": "1958734169273289132"
+        }
+      ]
+    },
+    {
+      "dir": "out",
+      "hash": "0x863688f507d05b6fbd24f21036c90b80675c9a4702c971a7e5efd1f23412fd5f",
+      "block": 76582674,
+      "raw": "58635673049029534813720",
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "owner_signed_original_tx_confirmed_in_current_pass": true,
+      "receipt_rpc_state": "RETURNED",
+      "receipt_success_header": true,
+      "receipt_parseable": true,
+      "receipt_raw_bytes": 5619,
+      "receipt_gas_paid_wei": "1509574000000000",
+      "native_block_delta_wei": "1680599921467158569",
+      "wbnb_logs": [
+        {
+          "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "topic1": "0x000000000000000000000000a651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "topic2": "0x00000000000000000000000013f4ea83d0bd40e75c8222255bc855a974568dd4",
+          "raw": "1682109495467158569"
+        },
+        {
+          "topic0": "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+          "topic1": "0x00000000000000000000000013f4ea83d0bd40e75c8222255bc855a974568dd4",
+          "topic2": null,
+          "raw": "1682109495467158569"
+        }
+      ]
+    }
+  ],
+  "episodes": [
+    {
+      "episode": 1,
+      "buy_raw": "127339804905607154158371",
+      "sell_raw": "127339804905607154158371",
+      "scoped_wallet_native_delta_wei": "-231346571585353217",
+      "first_block": 74473655,
+      "last_block": 74473726,
+      "transaction_count": 2
+    },
+    {
+      "episode": 2,
+      "buy_raw": "117271346098059069627440",
+      "sell_raw": "117271346098059069627440",
+      "scoped_wallet_native_delta_wei": "-367677245259552299",
+      "first_block": 76554500,
+      "last_block": 76582674,
+      "transaction_count": 4
+    }
+  ],
+  "limitations": [
+    "One first-episode sell receipt JSON truncated, only explicit successful status header recovered; its gas requires independent exact WBNB-manager fee and wallet-native reconciliation.",
+    "Native block deltas are scoped, not necessarily fully isolated trade PnL without internal trace.",
+    "Zero-to-zero ERC20 holdings do not by themselves prove economic trade settlement."
+  ],
+  "production": "NO_GO"
+}
