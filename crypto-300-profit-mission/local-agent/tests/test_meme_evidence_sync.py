@@ -471,3 +471,20 @@ def test_r5_secret_path_and_local_path_redaction_remains_active():
     assert _s("https://solana-mainnet.g.alchemy.com/v2/FAKE_TEST_KEY_1234567890abcdef") == "[URL_REDACTED]"
     assert _s("https://api.example.com/v1/token/abc") == "[URL_REDACTED]"
     assert _s("https://github.com/x/y/private/notes") == "[URL_REDACTED]"
+
+
+def test_r6_unkeyed_google_oauth_material_is_redacted():
+    from mission_agent.mission_control.evidence_sync import safe
+    samples = [
+        "1//0gSYNTHETIC_refreshToken_TesterOnly12345",
+        "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56789",
+        "ya29.a0SYNTHETIC_ACCESS_TOKEN_123456789",
+        "token seen: 1//0gSYNTHETIC_refreshToken_TesterOnly12345",
+    ]
+    for token in samples:
+        assert safe(token) == "[REDACTED]"
+        assert safe({"note": token})["note"] == "[REDACTED]"
+    assert safe({"refresh_token": samples[0], "client_secret": samples[1],
+                 "access_token": samples[2], "status": "ok"}) == {"status": "ok"}
+    assert safe("https://github.com/lxxlx2/ChatGPT_mission_record/blob/research/frank-wallet-v2-d0-readonly-20261011/x.json").startswith("https://github.com/")
+    assert safe("profile: ok") == "profile: ok"
