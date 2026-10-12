@@ -1,0 +1,52 @@
+name: Monster Stage72 Reviewer Blocker Repairs Offline CI
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage70_historical_watch_projection_sqlite.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage65_new3_full900_official_hourly_SHA.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage72_imported_dependency_integrity.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage71_independent_review.py'
+      - 'crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage72_review_remediation.py'
+      - '.github/workflows/monster-v4-stage72-independent-review-engineering-remediation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline_stage70_recovery_and_stage66_closed_source_manifest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check no illegal syntax in original historical rules or repair code
+        run: |
+          python -B -m py_compile \
+            crypto-300-profit-mission/local-agent/scripts/monster_v4_stage70_historical_watch_projection_sqlite.py \
+            crypto-300-profit-mission/local-agent/scripts/monster_v4_stage65_new3_full900_official_hourly_SHA.py \
+            crypto-300-profit-mission/local-agent/scripts/monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03.py \
+            crypto-300-profit-mission/local-agent/scripts/monster_v4_stage72_imported_dependency_integrity.py \
+            crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage71_independent_review.py \
+            crypto-300-profit-mission/local-agent/tests/test_monster_v4_stage72_review_remediation.py
+      - name: Original Stage70 SQLite transaction and unchanged historical read-only projection selftest
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage70_historical_watch_projection_sqlite.py --selftest
+      - name: Source-locked Stage65 true original 900 futures symbol universe and source imports
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage65_new3_full900_official_hourly_SHA.py --selftest
+      - name: Stage66 frozen original-first5 and historic P1 global 5 slots unchanged
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03.py --selftest
+      - name: Seven fresh Stage72 remediation regression tests including same CLI run twice
+        run: |
+          python -B -m unittest discover \
+            -s crypto-300-profit-mission/local-agent/tests \
+            -p 'test_monster_v4_stage72_review_remediation.py' -v
+      - name: All independent reviewer Stage71 regression tests after repairing reproduced flaws
+        run: |
+          python -B -m unittest discover \
+            -s crypto-300-profit-mission/local-agent/tests \
+            -p 'test_monster_v4_stage71_independent_review.py' -v
