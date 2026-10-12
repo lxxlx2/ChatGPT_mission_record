@@ -1,0 +1,97 @@
+name: Monster Stage38 Original12 SHA Futures V4 Causal Discovery Aggregate
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_original12_source_sha_discovery_aggregate.py'
+      - '.github/workflows/monster-v4-stage38-original12-sha-causal-pilot-aggregate.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  require_original12_sources_and_git_persist_actual_discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require source pilot 12 GitHub jobs and source signed original artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 70); do
+            gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38207595586 > /tmp/monster38_pilot_run.json
+            status=$(python -c 'import json; print(json.load(open("/tmp/monster38_pilot_run.json"))["status"])')
+            if test "$status" = completed; then
+              python - <<'PY'
+          import json
+          r=json.load(open('/tmp/monster38_pilot_run.json'))
+          if r['conclusion']!='success':
+            raise SystemExit('STAGE38_ORIGINAL12_SOURCE_PILOT_NOT_ALL_SUCCESS')
+          print('STAGE38_ORIGINAL12_REAL_MINUTE_SOURCE_CI_PASS')
+          PY
+              break
+            fi
+            sleep 12
+          done
+          test "$status" = completed
+          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38207595586/artifacts?per_page=100' >/tmp/monster38_original_artifacts.json
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          data=json.load(open('/tmp/monster38_original_artifacts.json'))['artifacts']
+          if len(data)!=12:raise SystemExit('STAGE38_NOT_ALL_ORIGINAL12_ARTIFACTS')
+          items=[];keys=set()
+          for a in data:
+            m=re.fullmatch(r'monster-stage38-original-V4-futures-(\d{4}-\d\d-\d\d)-shard([01])-sha',a['name'])
+            if not m or a.get('expired') or not a.get('digest','').startswith('sha256:'):
+              raise SystemExit('STAGE38_BAD_ORIGINAL_SOURCE_IDENTITY_OR_HASH')
+            k=m.group(1),int(m.group(2))
+            if k in keys:raise SystemExit('STAGE38_DUPLICATE')
+            keys.add(k)
+            items.append({'date':k[0],'shard':k[1],'artifact_id':a['id'],'zip_sha256':a['digest'].split(':')[1]})
+          Path('/tmp/monster38_manifest.json').write_text(json.dumps({'run_id':38207595586,'artifacts':items}))
+          Path('/tmp/monster38_ids').write_text('\n'.join(str(i['artifact_id']) for i in items)+'\n')
+          print('STAGE38_SHA_ORIGINAL12_MANIFEST_READY')
+          PY
+      - name: Download exact original12 SHA-pinned artifact bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster38_original12
+          while read -r aid; do
+            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$aid/zip" > "/tmp/monster38_original12/$aid.zip"
+          done </tmp/monster38_ids
+      - name: Reconcile source SHA, 52 original winner labels, 120 fixed controls, 1m HIGH order and original V4 WATCH times
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_original12_source_sha_discovery_aggregate.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_original12_source_sha_discovery_aggregate.py \
+            --manifest /tmp/monster38_manifest.json \
+            --dir /tmp/monster38_original12 \
+            --output-dir /tmp/monster38_final
+      - name: Retain source-validated full research result
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage38-real-futures-originalV4-172cases-source-sha-discovery
+          path: /tmp/monster38_final/*
+          retention-days: 30
+      - name: Save full original first WATCH evidence in same Monster research branch
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster38_final/monster_stage38_original12_* "$dest/"
+          git add "$dest/monster_stage38_original12_sha_full172_causal_summary.json" "$dest/monster_stage38_original12_full172_futures_causal_cases.jsonl"
+          if git diff --cached --quiet; then
+            echo STAGE38_ALREADY_COMMITTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist original12 official USD-M 1m SHA V4 WATCH 52x2x+120 controls'
+          git push origin "HEAD:$GITHUB_REF_NAME"
