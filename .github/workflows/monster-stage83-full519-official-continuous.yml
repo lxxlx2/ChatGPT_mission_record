@@ -1,0 +1,116 @@
+name: Monster Stage83 Full519 Official Continuous D1
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage83-full519-official-continuous.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage83_full519_official_continuous.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage83_aggregate_full519.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE83_FULL519_CONTINUOUS_D1_CAUSAL_REPLAY_PROTOCOL_20261013.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monster-stage83-full519-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prereg_integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Stage79 core unchanged
+        run: python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+      - name: Stage83 full519 shard census
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage83_full519_official_continuous.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage83_aggregate_full519.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage83_full519_official_continuous.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage83_aggregate_full519.py --selftest
+
+  publisher_sha_shards:
+    needs: prereg_integrity
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+        shard: [0,1,2,3,4,5]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: All original D0 and official closed-minute evidence (no send or BUY)
+        run: |
+          mkdir -p /tmp/stage83
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage83_full519_official_continuous.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --workers 3 --out /tmp/stage83/monster-stage83-${{ matrix.date }}-s${{ matrix.shard }}.json
+          python -m json.tool /tmp/stage83/monster-stage83-${{ matrix.date }}-s${{ matrix.shard }}.json > /dev/null
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: monster-stage83-${{ matrix.date }}-s${{ matrix.shard }}
+          path: /tmp/stage83/monster-stage83-${{ matrix.date }}-s${{ matrix.shard }}.json
+          retention-days: 30
+
+  aggregate_source_pinned_and_persist:
+    needs: publisher_sha_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage83-*
+          merge-multiple: true
+          path: /tmp/stage83-shards
+      - name: Reconcile all 519 to frozen Stage52 real first crossings and Stage81 exact twelve
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage83_aggregate_full519.py --artifact-dir /tmp/stage83-shards --out /tmp/stage83-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage83-verified-full519-aggregate
+          path: /tmp/stage83-final/*
+          retention-days: 60
+      - name: Persist source-verified results to the original Monster PR
+        run: |
+          set -eu
+          dst=crypto-300-profit-mission/monster/evidence
+          cp /tmp/stage83-final/monster_stage83_all519_source_and_D1_result.jsonl "$dst/"
+          cp /tmp/stage83-final/monster_stage83_all519_D0_D1_official_continuous_summary.json "$dst/"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dst/monster_stage83_all519_source_and_D1_result.jsonl" "$dst/monster_stage83_all519_D0_D1_official_continuous_summary.json"
+          if git diff --cached --quiet; then
+            echo "STAGE83_ALREADY_PERSISTED_EXACT_ROWS"
+            exit 0
+          fi
+          git commit -m "monster: persist official Stage83 full519 continuous historical result"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE83_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE83_GIT_PUSH_FAILED"
+          exit 1
