@@ -1,0 +1,52 @@
+{
+  "schema": "MONSTER_STAGE79_FROZEN_DUAL_ENTRY_D1_RESEARCH_CONTRACT_V1",
+  "asof_date_utc": "2026-10-12",
+  "decision_cadence_minutes": 3,
+  "rolling_features_minutes": 60,
+  "d0_unchanged": true,
+  "entry_first": {
+    "ret60_pct_gte": "8",
+    "quote15_usdt_gte": "1000000",
+    "trades15_gte": 10000,
+    "quote15_normalized_prev45_gte": "1.3"
+  },
+  "entry_reignition": {
+    "price_relative_first_pct_gte": "8",
+    "ret60_pct_gte": "5",
+    "quote15_usdt_gte": "1000000",
+    "trades15_gte": 10000,
+    "quote15_normalized_prev45_gte": "1.3"
+  },
+  "from_first_d0_expiration_hours": 48,
+  "max_first_d1_per_coin_date": 1,
+  "low_confidence_on_missing_source": "SOURCE_UNKNOWN_RETAIN_D0",
+  "daily_urgent_gate": {
+    "average_at_most": 5,
+    "max_per_day": 12,
+    "no_silent_cap": true
+  },
+  "d0_recall_gate": {
+    "event_count_at_least": 20,
+    "nonoverlap_windows_at_least": 3,
+    "strictly_early_gt2_pct_gte": 90,
+    "first_watch_early5_gt2_pct_gte": 85
+  },
+  "d1_recall_gate": {
+    "retained_eligible_gt2_pct_gte": 80
+  },
+  "all_5x_10x_misses_reported": true,
+  "forward_utc06_start_dates": [
+    "2026-10-14",
+    "2026-10-28",
+    "2026-11-11"
+  ],
+  "forward_window_days": 7,
+  "historical_observed_event_pilot_only": true,
+  "order_notional": "UNSPECIFIED",
+  "history_d0_p1_p2": "UNCHANGED_REJECTED",
+  "model_tuning_on_pilot": "FORBIDDEN",
+  "independent_other_ai_review": "NOT_DONE",
+  "deployment": "NO_GO",
+  "gmail": "OFF",
+  "autotrade": "NO_GO"
+}
