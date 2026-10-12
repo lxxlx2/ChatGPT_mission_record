@@ -16,6 +16,7 @@ def summarize_manual_reviews(rows):
     historical = {"gmail": 0, "local": 0}
     actionable = {"gmail": 0, "local": 0, "other": 0}
     pending = {"gmail": 0, "local": 0, "other": 0}
+    queued = {"gmail": 0, "local": 0, "other": 0}
     blocked = {"gmail": 0, "local": 0, "other": 0}
     manual_total = 0
     manual_channels = {"gmail": 0, "local": 0, "other": 0}
@@ -27,6 +28,12 @@ def summarize_manual_reviews(rows):
         status = row.get("outbox_status", "MANUAL_REVIEW")
         if status in ("SENDING", "SENT_UNVERIFIED"):
             pending[channel] += 1
+            continue
+        if status == "PENDING":
+            # This has not reached the send attempt yet. In particular an old
+            # PENDING must NOT disappear from Dashboard/acceptance. Visibility
+            # does not authorize retry, expiry or any send-side transition.
+            queued[channel] += 1
             continue
         if status in ("CREDENTIAL_BLOCKED", "RETRYABLE_ERROR", "RETRY_PENDING"):
             blocked[channel] += 1
@@ -86,8 +93,12 @@ def summarize_manual_reviews(rows):
         "manual_review_pending_gmail_count": pending["gmail"],
         "manual_review_pending_local_count": pending["local"],
         "manual_review_pending_other_count": pending["other"],
+        "manual_review_queued_count": sum(queued.values()),
+        "manual_review_queued_gmail_count": queued["gmail"],
+        "manual_review_queued_local_count": queued["local"],
+        "manual_review_queued_other_count": queued["other"],
         "manual_review_visible_total_count": (
             sum(historical.values()) + sum(actionable.values())
-            + sum(pending.values()) + sum(blocked.values())
+            + sum(pending.values()) + sum(queued.values()) + sum(blocked.values())
         ),
     }
