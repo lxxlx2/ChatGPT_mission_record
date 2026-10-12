@@ -1,0 +1,650 @@
+{
+  "BULLA_FIRST_AND_PRE2X_SECOND_REAL_MINUTE_FEATURES": [
+    {
+      "actual_1m_official_source_closes_before_D0_utc": true,
+      "asof_D0_WATCH_UTC": "2026-01-28T11:33:00Z",
+      "cohort": "2X_FIRST_EARLY",
+      "date": "2026-01-26",
+      "historical_2x_from_window_anchor": true,
+      "historical_gt10x": true,
+      "historical_gt5x": true,
+      "is_repeated_original_watch": false,
+      "label_only_after_or_at_first_2x_utc": false,
+      "label_only_strictly_before_first_2x_utc": true,
+      "last_closed_close": "0.0345300",
+      "minutes_since_previous_D0": null,
+      "normalized_quote15_vs_prior45": "2.708282517515330162715072201",
+      "quote15_USDT": "272526.7232100",
+      "quote_prev45_USDT": "301881.4190700",
+      "ret60_pct": "2.159763313609467455621301800",
+      "ret_from_first_WATCH_last_close_pct": "0",
+      "symbol": "BULLAUSDT",
+      "trades15": 3886,
+      "watch_ordinal": 1
+    },
+    {
+      "actual_1m_official_source_closes_before_D0_utc": true,
+      "asof_D0_WATCH_UTC": "2026-01-29T05:42:00Z",
+      "cohort": "2X_REPEAT_BEFORE_FIRST_2X",
+      "date": "2026-01-26",
+      "historical_2x_from_window_anchor": true,
+      "historical_gt10x": true,
+      "historical_gt5x": true,
+      "is_repeated_original_watch": true,
+      "label_only_after_or_at_first_2x_utc": false,
+      "label_only_strictly_before_first_2x_utc": true,
+      "last_closed_close": "0.0473200",
+      "minutes_since_previous_D0": 1089,
+      "normalized_quote15_vs_prior45": "71.09440257909289658809106078",
+      "quote15_USDT": "2418786.7058600",
+      "quote_prev45_USDT": "102066.5460900",
+      "ret60_pct": "41.50717703349282296650717700",
+      "ret_from_first_WATCH_last_close_pct": "37.04025485085432956849116710",
+      "symbol": "BULLAUSDT",
+      "trades15": 20343,
+      "watch_ordinal": 2
+    }
+  ],
+  "Frank": "UNCHANGED",
+  "Gmail": "OFF",
+  "Monster_deploy": "NO_GO",
+  "actual_original_D0_events": 936,
+  "all5400_original_coin_date_status": {
+    "CENSORED_DAILY_1M_GAP": 2,
+    "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 17,
+    "CENSORED_STAGE44_HOURLY_SOURCE": 1916,
+    "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 3465
+  },
+  "date_scoped_background_and_2x": [
+    {
+      "2x_early_repeat_WATCH_events": 5,
+      "WATCH_event_count": 42,
+      "all_symbol_date": 900,
+      "date": "2025-01-09",
+      "normal_repeat_WATCH_events": 9,
+      "original_WATCH_coin_dates": 27,
+      "source_valid": 377
+    },
+    {
+      "2x_early_repeat_WATCH_events": 7,
+      "WATCH_event_count": 101,
+      "all_symbol_date": 900,
+      "date": "2025-09-02",
+      "normal_repeat_WATCH_events": 17,
+      "original_WATCH_coin_dates": 48,
+      "source_valid": 521
+    },
+    {
+      "2x_early_repeat_WATCH_events": 5,
+      "WATCH_event_count": 213,
+      "all_symbol_date": 900,
+      "date": "2026-01-26",
+      "normal_repeat_WATCH_events": 72,
+      "original_WATCH_coin_dates": 109,
+      "source_valid": 620
+    },
+    {
+      "2x_early_repeat_WATCH_events": 15,
+      "WATCH_event_count": 196,
+      "all_symbol_date": 900,
+      "date": "2026-02-24",
+      "normal_repeat_WATCH_events": 68,
+      "original_WATCH_coin_dates": 88,
+      "source_valid": 635
+    },
+    {
+      "2x_early_repeat_WATCH_events": 16,
+      "WATCH_event_count": 236,
+      "all_symbol_date": 900,
+      "date": "2026-03-28",
+      "normal_repeat_WATCH_events": 88,
+      "original_WATCH_coin_dates": 94,
+      "source_valid": 643
+    },
+    {
+      "2x_early_repeat_WATCH_events": 8,
+      "WATCH_event_count": 148,
+      "all_symbol_date": 900,
+      "date": "2026-05-10",
+      "normal_repeat_WATCH_events": 56,
+      "original_WATCH_coin_dates": 71,
+      "source_valid": 669
+    }
+  ],
+  "early_repeat_positive_2x": 31,
+  "feature_cohort_statistics": {
+    "2X_FIRST_EARLY": {
+      "event_count": 40,
+      "minutes_since_previous_D0": {
+        "median": null,
+        "n": 0,
+        "p25": null,
+        "p75": null
+      },
+      "normalized_quote15_vs_prior45": {
+        "median": 6.108989,
+        "n": 40,
+        "p25": 3.147661,
+        "p75": 16.817144
+      },
+      "quote15_USDT": {
+        "median": 2627119.464026,
+        "n": 40,
+        "p25": 1339704.080395,
+        "p75": 6448550.15473
+      },
+      "ret60_pct": {
+        "median": 11.072671,
+        "n": 40,
+        "p25": 8.104445,
+        "p75": 15.089869
+      },
+      "ret_from_first_WATCH_last_close_pct": {
+        "median": 0.0,
+        "n": 40,
+        "p25": 0.0,
+        "p75": 0.0
+      },
+      "trades15": {
+        "median": 26722.5,
+        "n": 40,
+        "p25": 14496.75,
+        "p75": 64000.5
+      }
+    },
+    "2X_REPEAT_AFTER_OR_AT_2X": {
+      "event_count": 133,
+      "minutes_since_previous_D0": {
+        "median": 474.0,
+        "n": 133,
+        "p25": 360.0,
+        "p75": 909.0
+      },
+      "normalized_quote15_vs_prior45": {
+        "median": 1.897649,
+        "n": 133,
+        "p25": 1.271847,
+        "p75": 2.968995
+      },
+      "quote15_USDT": {
+        "median": 9813356.62018,
+        "n": 133,
+        "p25": 4444509.853293,
+        "p75": 22301082.070369
+      },
+      "ret60_pct": {
+        "median": 6.561983,
+        "n": 133,
+        "p25": -5.608197,
+        "p75": 12.264151
+      },
+      "ret_from_first_WATCH_last_close_pct": {
+        "median": 80.475088,
+        "n": 133,
+        "p25": 32.254995,
+        "p75": 168.732844
+      },
+      "trades15": {
+        "median": 99031.0,
+        "n": 133,
+        "p25": 51077.0,
+        "p75": 224237.0
+      }
+    },
+    "2X_REPEAT_BEFORE_FIRST_2X": {
+      "event_count": 56,
+      "minutes_since_previous_D0": {
+        "median": 979.5,
+        "n": 56,
+        "p25": 456.0,
+        "p75": 2148.75
+      },
+      "normalized_quote15_vs_prior45": {
+        "median": 3.205898,
+        "n": 56,
+        "p25": 2.127851,
+        "p75": 5.863964
+      },
+      "quote15_USDT": {
+        "median": 5342211.692422,
+        "n": 56,
+        "p25": 2296566.580225,
+        "p75": 11595686.728583
+      },
+      "ret60_pct": {
+        "median": 10.29329,
+        "n": 56,
+        "p25": 6.282962,
+        "p75": 12.722593
+      },
+      "ret_from_first_WATCH_last_close_pct": {
+        "median": 22.239553,
+        "n": 56,
+        "p25": 10.940704,
+        "p75": 34.137434
+      },
+      "trades15": {
+        "median": 47482.5,
+        "n": 56,
+        "p25": 20698.5,
+        "p75": 130153.0
+      }
+    },
+    "NORMAL_FIRST": {
+      "event_count": 397,
+      "minutes_since_previous_D0": {
+        "median": null,
+        "n": 0,
+        "p25": null,
+        "p75": null
+      },
+      "normalized_quote15_vs_prior45": {
+        "median": 7.350264,
+        "n": 397,
+        "p25": 2.658011,
+        "p75": 21.193276
+      },
+      "quote15_USDT": {
+        "median": 1622985.0138,
+        "n": 397,
+        "p25": 678794.45117,
+        "p75": 3430438.6509
+      },
+      "ret60_pct": {
+        "median": 9.190297,
+        "n": 397,
+        "p25": 5.511811,
+        "p75": 12.14511
+      },
+      "ret_from_first_WATCH_last_close_pct": {
+        "median": 0.0,
+        "n": 397,
+        "p25": 0.0,
+        "p75": 0.0
+      },
+      "trades15": {
+        "median": 17536.0,
+        "n": 397,
+        "p25": 8805.0,
+        "p75": 39786.0
+      }
+    },
+    "NORMAL_REPEAT": {
+      "event_count": 310,
+      "minutes_since_previous_D0": {
+        "median": 1015.5,
+        "n": 310,
+        "p25": 531.0,
+        "p75": 2312.25
+      },
+      "normalized_quote15_vs_prior45": {
+        "median": 3.167296,
+        "n": 310,
+        "p25": 1.586724,
+        "p75": 5.980903
+      },
+      "quote15_USDT": {
+        "median": 2362746.172031,
+        "n": 310,
+        "p25": 1000826.84549,
+        "p75": 7518585.320775
+      },
+      "ret60_pct": {
+        "median": 7.107024,
+        "n": 310,
+        "p25": -0.126067,
+        "p75": 11.078889
+      },
+      "ret_from_first_WATCH_last_close_pct": {
+        "median": -1.026626,
+        "n": 310,
+        "p25": -20.421314,
+        "p75": 14.655469
+      },
+      "trades15": {
+        "median": 33679.5,
+        "n": 310,
+        "p25": 14004.5,
+        "p75": 77736.75
+      }
+    }
+  },
+  "features_computed_from_only_closed_1m_before_original_WATCH": true,
+  "historical_2x": 41,
+  "independent_other_AI_review": "NOT_DONE",
+  "no_new_strategy_thresholds_or_BUY": true,
+  "original36_GitHub_SHA_receipts": [
+    {
+      "actual_events": 4,
+      "actual_watch_coin_dates": 4,
+      "artifact_id": 11731433886,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "3d37f242d05a78649786e6653bfbfea5d0f61d6489dd55614877991550310372",
+      "original_internal_JSON_SHA256": "97b0c433df62754da302c02e45ee6fa833f9fce1d4577a709f35f5d94d5e5726",
+      "shard": 0
+    },
+    {
+      "actual_events": 8,
+      "actual_watch_coin_dates": 5,
+      "artifact_id": 11732209129,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "7d132b7239ea9470c28386b5d3f9a6acb1a897f40e11bb2921cdf8caa8dc39ba",
+      "original_internal_JSON_SHA256": "bb8aa0fce0c1cffd0bea4eb332b2ff614a0e4f2ac179d9c6735644ec6922c005",
+      "shard": 1
+    },
+    {
+      "actual_events": 4,
+      "actual_watch_coin_dates": 3,
+      "artifact_id": 11732254094,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "cc72fb95f61dce9ee9bf86316eedaa04c974d69d37ac7b23169ef3723a77c46a",
+      "original_internal_JSON_SHA256": "6cdeadc5f714710639e5f25991c9705f88255f236a11dd3119362f78439fc6a3",
+      "shard": 2
+    },
+    {
+      "actual_events": 5,
+      "actual_watch_coin_dates": 4,
+      "artifact_id": 11732419013,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "beeeab28dc75b393741989c8c4707c4e889882cd6931c1a8c970b9bc661dc18c",
+      "original_internal_JSON_SHA256": "2f06a82685c2d969141eb8c5bbca374daf309cea111f37dca9ae21b6fa6e2e05",
+      "shard": 3
+    },
+    {
+      "actual_events": 11,
+      "actual_watch_coin_dates": 7,
+      "artifact_id": 11732373993,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "d616513b595dcd53fcd0ecf44f7b8b13bdab4406da9d174ad5b88d334454da04",
+      "original_internal_JSON_SHA256": "5bb52e3e5cef6fe223c4e6aca00242fead7953a99360967014be50a894c7b64f",
+      "shard": 4
+    },
+    {
+      "actual_events": 10,
+      "actual_watch_coin_dates": 4,
+      "artifact_id": 11732354133,
+      "date": "2025-01-09",
+      "original_GitHub_zip_SHA256": "68bcd22c1d36a81cd7f36bbdd2a1ea2c448097eaecfccfd9ce8136e28d7f55a1",
+      "original_internal_JSON_SHA256": "844f953a09e702ef1d75a70a85bc9a832f66ccb6abbba90cc7afafb85d758f32",
+      "shard": 5
+    },
+    {
+      "actual_events": 23,
+      "actual_watch_coin_dates": 11,
+      "artifact_id": 11732164184,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "ac6eb2e89598332d48cacf559d4729bc248b6ab08676b5d0dd16c301aba978f5",
+      "original_internal_JSON_SHA256": "649b514a012e3a940ae6af7ea4c405f9b2ac44c34ef72eed50ec59deb1067733",
+      "shard": 0
+    },
+    {
+      "actual_events": 13,
+      "actual_watch_coin_dates": 6,
+      "artifact_id": 11731859273,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "077a5d357db8678e09345ae5dd32dde86d2a09626164bab5776cf5e6444ea749",
+      "original_internal_JSON_SHA256": "8209a4a6fe94156f2aecf2508c8dd426a54bec5c71bf439d0da4389601d7cc03",
+      "shard": 1
+    },
+    {
+      "actual_events": 21,
+      "actual_watch_coin_dates": 4,
+      "artifact_id": 11731333964,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "2e5df5a2fc06454f01f7ef39c8b5d0d27cf84cf87bcfa16906ed865872738e8b",
+      "original_internal_JSON_SHA256": "665aef6b03e7dc727790ce2ebf93c76c1c36bbd68a313f450ffb7e7fe6e60c57",
+      "shard": 2
+    },
+    {
+      "actual_events": 13,
+      "actual_watch_coin_dates": 9,
+      "artifact_id": 11731268884,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "388ae6827dca71ee3725a8c1425ae0cfb3ccd35c25f7ce991fb4e370507bdd43",
+      "original_internal_JSON_SHA256": "484beb97f02a696c8bce0fc847a6a514d0095a4b65b2c9265657a010c2ab5c5b",
+      "shard": 3
+    },
+    {
+      "actual_events": 14,
+      "actual_watch_coin_dates": 10,
+      "artifact_id": 11732304015,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "851597fb178038fba4e3832355bddda1b825bd14dd4df055f0cacfbbbabfafee",
+      "original_internal_JSON_SHA256": "60c4d567f604d9a152e6d38d10bdc4055a84b4fc126be0ef9134d5b3f9e05b90",
+      "shard": 4
+    },
+    {
+      "actual_events": 17,
+      "actual_watch_coin_dates": 8,
+      "artifact_id": 11731844216,
+      "date": "2025-09-02",
+      "original_GitHub_zip_SHA256": "c452bbbdbaf5310e6f009edda508ba24607a43cbee8827d4046748fce527cd62",
+      "original_internal_JSON_SHA256": "929c1ae6e1e5bb93ab3aaac9abe14fe37c640e86171d7cf6e6d41439a06bd72e",
+      "shard": 5
+    },
+    {
+      "actual_events": 37,
+      "actual_watch_coin_dates": 14,
+      "artifact_id": 11731288976,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "ee33935811a8ec3df98a0311cb7853afcc2829b7358cf84671475bc239555940",
+      "original_internal_JSON_SHA256": "49b137b01196768355b8ba2c94cdc5994c9ed5693439349eb9ab64292473bee7",
+      "shard": 0
+    },
+    {
+      "actual_events": 39,
+      "actual_watch_coin_dates": 23,
+      "artifact_id": 11732199211,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "a8dca29b5d023f0de7ba80452436616034a2617afe2cbb61462f28c94100dc85",
+      "original_internal_JSON_SHA256": "6d4a23608352f99e572129f06c24d646ab4e5ef3f417506e118faf43bfc1265c",
+      "shard": 1
+    },
+    {
+      "actual_events": 40,
+      "actual_watch_coin_dates": 14,
+      "artifact_id": 11732229025,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "65308b6e1ddb7fdc3cd823d10616fff719f4bef2bbaec875cd9a03819fba4cb7",
+      "original_internal_JSON_SHA256": "bd13780fba4de8fbd1dba84207cb727a9e5e1c5a2147b269c81ddbd3b800f07d",
+      "shard": 2
+    },
+    {
+      "actual_events": 27,
+      "actual_watch_coin_dates": 17,
+      "artifact_id": 11731363882,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "43726f3af429c78642640338602ad5fabe749909e03498d832fa6d2c62c7e64d",
+      "original_internal_JSON_SHA256": "597b8986d44df895b16d1cc0ff846919d469aa3c80fbbafaf111d0abf1f58d24",
+      "shard": 3
+    },
+    {
+      "actual_events": 24,
+      "actual_watch_coin_dates": 17,
+      "artifact_id": 11731473973,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "deb23c40b9116497dccf30bab9e95e85658278cddf75c721c0a9884560940970",
+      "original_internal_JSON_SHA256": "cd50051bb95fa7f04cc8b6807e3471ef0ede80250aff16e87841b9db834deac1",
+      "shard": 4
+    },
+    {
+      "actual_events": 46,
+      "actual_watch_coin_dates": 24,
+      "artifact_id": 11731614023,
+      "date": "2026-01-26",
+      "original_GitHub_zip_SHA256": "a5b737df3947936ace81908cf2e58b0dedbcd16fa7dc13fb27fe1243a50763d2",
+      "original_internal_JSON_SHA256": "dd254b8fae28ec845ad248d0d0c1a078102ae64c746538a097b08bb2aa427f34",
+      "shard": 5
+    },
+    {
+      "actual_events": 27,
+      "actual_watch_coin_dates": 16,
+      "artifact_id": 11731123939,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "4e5d02b09ada29d006b467c2b5d305e65c9045ee481d15e74354d43df17faceb",
+      "original_internal_JSON_SHA256": "5fecc1bb349dcc39d68f4b79947ac1ff487fda074b1c2394e540ada4c68e1ed7",
+      "shard": 0
+    },
+    {
+      "actual_events": 59,
+      "actual_watch_coin_dates": 15,
+      "artifact_id": 11731138969,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "c212acae4fb0330c18621b8d235464ffc8b49778071874c076f8a75deea0da28",
+      "original_internal_JSON_SHA256": "8d1122e7ca05cf592b65e4e7974575f561fe3b71b98650af6c19b3720a62d270",
+      "shard": 1
+    },
+    {
+      "actual_events": 33,
+      "actual_watch_coin_dates": 16,
+      "artifact_id": 11732299116,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "5f6be0728aa1236292fb5d410445499a5b95a38fa5d5572c26474277e4d10908",
+      "original_internal_JSON_SHA256": "bd645d76251741b4518716781af24b650daffcc6309addb4e7d027181840500c",
+      "shard": 2
+    },
+    {
+      "actual_events": 31,
+      "actual_watch_coin_dates": 15,
+      "artifact_id": 11731204136,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "e14222ceaec2a36016caddb6ff9970ef707d2f2d1265606c1211524110b059ca",
+      "original_internal_JSON_SHA256": "fbe19dd6f30651b87d568c6a913a011c85d89cd74791591a86071a92f046f0b4",
+      "shard": 3
+    },
+    {
+      "actual_events": 15,
+      "actual_watch_coin_dates": 13,
+      "artifact_id": 11731849392,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "3efb21d6af580c7b32169db012dc2958f1a99f87e59b1d800ad765c8f9b3f33b",
+      "original_internal_JSON_SHA256": "9bed8384427dab4ebdd05be106aae05a417fec724ebff6afc0525cc997b0e2c0",
+      "shard": 4
+    },
+    {
+      "actual_events": 31,
+      "actual_watch_coin_dates": 13,
+      "artifact_id": 11731964280,
+      "date": "2026-02-24",
+      "original_GitHub_zip_SHA256": "592923045efe88b75ec51b1af33afac0e4c75c149286d307c8445dd59a68c03f",
+      "original_internal_JSON_SHA256": "20c80f3f32d255880246daf575d45dedf39c2b3b7819055764875d14c52e1ecc",
+      "shard": 5
+    },
+    {
+      "actual_events": 40,
+      "actual_watch_coin_dates": 16,
+      "artifact_id": 11731994278,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "4ec0b9fec78f82a75e4cda0f4c6f35d8216bb1e6e2986306d50f5a5945c88266",
+      "original_internal_JSON_SHA256": "4fb523ed556ce06587dd42df5f5454987cb2be80681e67ab5d2b7321a8862f6c",
+      "shard": 0
+    },
+    {
+      "actual_events": 56,
+      "actual_watch_coin_dates": 17,
+      "artifact_id": 11731658934,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "d67a19ff8dd0812dc77c65d8065b8f9c854a181b3960a276bf66820830f798cd",
+      "original_internal_JSON_SHA256": "b617a67220ad5fcd0fb34b6619e69ac5c9033976d23ead1d4a9fa8682e754ed3",
+      "shard": 1
+    },
+    {
+      "actual_events": 38,
+      "actual_watch_coin_dates": 15,
+      "artifact_id": 11732229075,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "687e557893f619109b75e705b615c5dff1e36d60a11ac1374ccf439400495b8b",
+      "original_internal_JSON_SHA256": "a84ddc56357c256bcd389eda5cd4d18ddbe81cb8162b554fe18a99d7907e8f8d",
+      "shard": 2
+    },
+    {
+      "actual_events": 42,
+      "actual_watch_coin_dates": 18,
+      "artifact_id": 11732294045,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "85d5c396d859b6ff055d39210f1d81e85bc3e105b2772d35344254e11cebd2ea",
+      "original_internal_JSON_SHA256": "34077e4640bea88b0ef5dc91c3f628a78164c977d2ffda92ff1eab3fefc8b99d",
+      "shard": 3
+    },
+    {
+      "actual_events": 22,
+      "actual_watch_coin_dates": 11,
+      "artifact_id": 11732189230,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "f3ddd747d0cd80d9c4e0771501e2b69f5841ea162e3e67f4f1d223a027eca970",
+      "original_internal_JSON_SHA256": "f3954b313f8a96cfd049d4f8f70fe3a134f8b69b244bcc205e989f38582881b2",
+      "shard": 4
+    },
+    {
+      "actual_events": 38,
+      "actual_watch_coin_dates": 17,
+      "artifact_id": 11732454072,
+      "date": "2026-03-28",
+      "original_GitHub_zip_SHA256": "bcff6116391f67c504091920225381a55845d57ebe944beb4be80c2fb3f248c8",
+      "original_internal_JSON_SHA256": "dbe00b1e2c97dccef4adf685a1c2a38d78fe88882c3e38a2747f9a7c7807aa0d",
+      "shard": 5
+    },
+    {
+      "actual_events": 32,
+      "actual_watch_coin_dates": 13,
+      "artifact_id": 11731413863,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "d9764595d3b3655621531e1a68d251f0d7a46389e19923232c4afbf2dafc229c",
+      "original_internal_JSON_SHA256": "1a1d871003178e636b9a11facfcd1534e4c6cfeed83562fc97e1a779aa457da8",
+      "shard": 0
+    },
+    {
+      "actual_events": 42,
+      "actual_watch_coin_dates": 16,
+      "artifact_id": 11732189242,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "bdec3998e2dbcb0f893ec3268b9bf3a605b3dfdd61f01085c14fbcb38258a257",
+      "original_internal_JSON_SHA256": "3c675053cce27865c5a8bac3069b6ef727c008f6a412a284b74636b5ca66dd95",
+      "shard": 1
+    },
+    {
+      "actual_events": 17,
+      "actual_watch_coin_dates": 11,
+      "artifact_id": 11732129144,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "5907da4e48e2a9f482c7306e60b8addbad8679846200999b3b7b35d3d31aa36b",
+      "original_internal_JSON_SHA256": "140284511211f9f6a70cb1af7cb86af6b2752595312f16be31a49f0dcf2dfea1",
+      "shard": 2
+    },
+    {
+      "actual_events": 27,
+      "actual_watch_coin_dates": 11,
+      "artifact_id": 11731249115,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "bea9f6a45148c297d0b23332b017e05304d92c36b0013bc2541452dae36bd247",
+      "original_internal_JSON_SHA256": "10ee38e74191c2cb1156f7773b99e755060ee749f7037d367c139453fc96695c",
+      "shard": 3
+    },
+    {
+      "actual_events": 19,
+      "actual_watch_coin_dates": 11,
+      "artifact_id": 11732094318,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "175f8bc53e4e81be7f441f68d8c6a584725ee2c42b46f7acd70715bb84516d63",
+      "original_internal_JSON_SHA256": "14dcbb3a2ae4423039b230ba181d8999f5b2148fed217a48be05f5f98dab01f8",
+      "shard": 4
+    },
+    {
+      "actual_events": 11,
+      "actual_watch_coin_dates": 9,
+      "artifact_id": 11732299167,
+      "date": "2026-05-10",
+      "original_GitHub_zip_SHA256": "60b69dcdebcce5df7b9777a7aad8a8d14754340b6c71ea78de839767836be906",
+      "original_internal_JSON_SHA256": "4ca2240b5fd452190a881f6b532b67beb97805af181479751d4655b865d1bb9c",
+      "shard": 5
+    }
+  ],
+  "original_repeated_events": 499,
+  "original_source_run_id": 38216755205,
+  "original_watch_coin_dates": 437,
+  "schema": "MONSTER_STAGE48_ORIGINAL36_GITHUB_SHA_936_REAL_ASOF_D0_EVENT_FEATURES_V1",
+  "source_and_strategy_scope": "EXPLORATORY_DESCRIPTIVE_EXISTING_SIX_EXPOSED_DATES_NOT_NEW_VALIDATION",
+  "total_full_source": 3465,
+  "trading": "NO_GO",
+  "true_orderbook_fill": "UNVERIFIED"
+}
