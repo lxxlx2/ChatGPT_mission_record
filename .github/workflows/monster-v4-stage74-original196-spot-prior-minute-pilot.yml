@@ -1,0 +1,32 @@
+name: Monster Stage74 Historical Binance Spot Real Closed-Minute Pilot
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage74_original196_spot_asof_prior_minute_SHA.py'
+      - '.github/workflows/monster-v4-stage74-original196-spot-prior-minute-pilot.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source_publisher_SHA_then_asof_t_minus_one_real_trades:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check Spot 2025 microseconds, causality and checksum
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage74_original196_spot_asof_prior_minute_SHA.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage74_original196_spot_asof_prior_minute_SHA.py --selftest
+      - name: Actual original six futures D0 dates checked against same-day official Spot daily 1m ZIP and publisher SHA
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage74_original196_spot_asof_prior_minute_SHA.py \
+            --pilot --workers 4 --out /tmp/monster_stage74_original6_real_spot_official_SHA_pilot.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage74-original6-Spot-official-archive-source-pilot
+          path: /tmp/monster_stage74_original6_real_spot_official_SHA_pilot.json
+          retention-days: 30
