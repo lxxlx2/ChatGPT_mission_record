@@ -148,6 +148,47 @@ def test_mission_control_notification_is_chinese_and_research_friendly(tmp_path)
     assert "Policy：" not in rendered["body"]
 
 
+def test_email_title_prioritizes_decision_action_inventory_and_archives_signature(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"])
+    body["decision"]="NO_BUY"
+    body["inputs"]["latest_side"]="SELL"
+    body["inputs"]["position_state"]="INVENTORY_UNDETERMINED"
+    body["inputs"]["latest_signature"]="signed-example-tx-123"
+    result=render({"body":body})
+    assert result["subject"].startswith("[Meme提醒] 不跟 | Frank 最近卖出 | 仓位未确认 | ")
+    assert "多次强加仓" not in result["subject"]
+    assert result["body"].splitlines()[0].startswith("结论：不跟  |  最近已识别动作：卖出")
+    assert "原因：" in result["body"].splitlines()[1]
+    assert "历史观察模式：多次强加仓（历史模型记录）" in result["body"]
+    assert "CA（单独一行，便于长按复制）\\nMint111111111111111\\n" in result["body"]
+    assert result["body"].endswith("技术审计信息（非实时跟单依据）\\n最近已识别交易哈希：\\nsigned-example-tx-123")
+    assert result["body"].index("Frank 最近一次买入支付（历史）") < result["body"].index("技术审计信息")
+    db.close()
+
+
+@pytest.mark.parametrize("side,state,expected_action,expected_state", [
+    ("BUY","OPEN","Frank 最近买入","模型持仓待核"),
+    ("SELL","CLOSED","Frank 最近卖出","模型已退出"),
+    ("EXIT","CLOSED","Frank 最近退出","模型已退出"),
+    ("SELL_POSITION_UNRESOLVED","INVENTORY_UNDETERMINED","Frank 最近卖出待确认","仓位未确认"),
+    (None,None,"Frank 动作未核实","仓位未核实"),
+])
+def test_email_title_never_uses_historical_pattern_as_current_action(tmp_path,side,state,expected_action,expected_state):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"])
+    body["inputs"]["latest_side"]=side
+    body["inputs"]["position_state"]=state
+    rendered=render({"body":body})
+    subject=rendered["subject"]
+    assert subject.startswith("[Meme提醒] 可跟 | "+expected_action+" | "+expected_state+" | ")
+    assert "多次强加仓" not in subject
+    assert "历史观察模式：多次强加仓（历史模型记录）" in rendered["body"]
+    db.close()
+
+
 def test_mission_control_email_mobile_readable_amounts_keep_full_ca(tmp_path):
     db=ControlDB(tmp_path/"mission-control.sqlite")
     e=event(db)
@@ -188,7 +229,9 @@ def test_non_actionable_multiple_with_latest_sell_does_not_present_historical_pa
     body["inputs"]["latest_buy_original_quote_quantity"]="15000"
     body["inputs"]["latest_buy_amount_predicate"]="USDC_DIRECT_NUMERIC"
     content=render({"body":body})
-    assert "[Meme提醒] 不跟 | 多次强加仓（历史模型记录）" in content["subject"]
+    assert "[Meme提醒] 不跟 | Frank 最近卖出 | 仓位未确认 | " in content["subject"]
+    assert "多次强加仓" not in content["subject"]
+    assert "历史观察模式：多次强加仓（历史模型记录）" in content["body"]
     assert "结论：不跟" in content["body"]
     assert "Frank 最近已识别动作：卖出  |  Frank 模型仓位：仓位不明" in content["body"]
     assert "Frank 最近一次买入支付（历史）：15,000.00 USDC" in content["body"]
