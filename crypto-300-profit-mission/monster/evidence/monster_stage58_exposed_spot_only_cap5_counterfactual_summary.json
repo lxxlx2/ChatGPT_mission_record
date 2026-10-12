@@ -1,0 +1,58 @@
+{
+  "AUTO_TRADE": "NO_GO",
+  "BINANCE_ALPHA_AND_CHAIN_DEX_EXECUTION_NOT_MEASURED": true,
+  "FRANK": "UNCHANGED",
+  "GMAIL": "OFF",
+  "LOCKED_ORIGINAL_GIT_BLOBS": {
+    "monster_stage52_pinned_v03_all5400_36SHA_true_global_cap_metrics.json": "42d455a6cc9d0164a8dd94aa12a475bad5ed126e",
+    "monster_stage55_all166_candidate_asof_features_and_fate.csv": "dca780246adb28e045ed77f0f96eb4bd034fb2e7",
+    "monster_stage57_all166_exact_symbol_spot_asof_source_SHA.jsonl": "561b5a7dd5b894565d01b24671aa6d96d921bda8"
+  },
+  "MONSTER": "NO_GO",
+  "NO_ACTUAL_SPOT_BUY_PROFIT": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1V03": "REJECTED",
+  "SAMPLE_EXPOSED_NO_NEW_MODEL_TEST": true,
+  "UNKNOWN_SPOT_ARCHIVE_CANNOT_BE_FILTERED_AS_NEVER_TRADEABLE": true,
+  "conclusion": "SPOT_ONLY_GATE_CANNOT_BE_APPROVED_FROM_EXPOSED_DATA_LOSES_ALL_HISTORIC_5X",
+  "confirmed_exact_symbol_spot_subcohort": 76,
+  "high5x10x_exposed_original_source_cases": [
+    {
+      "actual_GT10_HISTORIC": true,
+      "actual_GT5_HISTORIC": true,
+      "date": "2025-08-01",
+      "historic_spot_record": "EXACT_SYMBOL_SPOT_ARCHIVE_MISSING_OR_NOT_PUBLISHED_UNKNOWN",
+      "original_V03_gt5_alert_early": true,
+      "source_verified_exact_symbol_spot15m": false,
+      "symbol": "MYXUSDT"
+    },
+    {
+      "actual_GT10_HISTORIC": false,
+      "actual_GT5_HISTORIC": true,
+      "date": "2025-10-02",
+      "historic_spot_record": "EXACT_SYMBOL_SPOT_ARCHIVE_MISSING_OR_NOT_PUBLISHED_UNKNOWN",
+      "original_V03_gt5_alert_early": true,
+      "source_verified_exact_symbol_spot15m": false,
+      "symbol": "AIAUSDT"
+    },
+    {
+      "actual_GT10_HISTORIC": true,
+      "actual_GT5_HISTORIC": true,
+      "date": "2025-10-02",
+      "historic_spot_record": "EXACT_SYMBOL_SPOT_ARCHIVE_MISSING_OR_NOT_PUBLISHED_UNKNOWN",
+      "original_V03_gt5_alert_early": true,
+      "source_verified_exact_symbol_spot15m": false,
+      "symbol": "COAIUSDT"
+    }
+  ],
+  "high5x_spot_only_counterfactual_alerts": 0,
+  "historical_original_V03_cap_delivered_spot_subcohort": 58,
+  "input_usdm_all_166": 166,
+  "original_V03_early2x_spot_delivered": 4,
+  "schema": "MONSTER_STAGE58_EXPOSED_ORIGINAL166_SPOT_ONLY_CAP5_COUNTERFACTUAL_INVALID_AS_NEW_GATE_V1",
+  "spot_early2x_candidates": 7,
+  "spot_only_counterfactual_cap_delivered": 68,
+  "spot_only_counterfactual_cap_not_delivered": 8,
+  "spot_only_counterfactual_early2x_spot_delivered": 7,
+  "spot_only_counterfactual_noncalendar2x_delivered": 61
+}
