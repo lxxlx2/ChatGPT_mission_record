@@ -1,0 +1,25 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "EXECUTION_AND_REAL_NOTIONAL": "UNKNOWN",
+  "GMAIL": "OFF",
+  "HISTORICAL_RESEARCH_ONLY": true,
+  "MONSTER_DEPLOY": "NO_GO",
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1_upgraded": 222,
+  "input_git_blobs": {
+    "MONSTER_STAGE70_WATCH_NEVER_DROPPED_SQLITE_PROJECTION_TECH_DESIGN_20261012.md": "2cf1588cfb7f6bce935b5be528aaa6e57daedbc1",
+    "monster_stage68_original2700_all252_D0_P1_watch_and_research_urgency_states.jsonl": "8e5d3247aaf04ffd00e44d1ef214e4939d75fa6b",
+    "monster_stage69_older6_all685_WATCH_P1_replayed_budget_events.jsonl": "d34ff59b559023af0b0db67c818fb9b2649c0363"
+  },
+  "journal_events": 937,
+  "reimported_937_idempotent": true,
+  "schema": "MONSTER_STAGE70_ISOLATED_SQLITE_HISTORIC_FIRST_D0_AND_P1_READ_MODEL_V1",
+  "source_censored_were_not_declared_negative": true,
+  "sqlite_restart_exact_snapshot_parity": true,
+  "stage_counts": {
+    "CAP_DEFERRED_RESEARCH": 61,
+    "URGENT_RESEARCH": 161,
+    "WATCH": 493
+  },
+  "unique_first_D0_watch": 715
+}
