@@ -1,0 +1,57 @@
+{
+  "schema": "MONSTER_STAGE38_FROZEN_USDM_52_GT2X_PLUS_120_BLIND_NON2X_CAUSAL_V4_PILOT_V1",
+  "preregistered_utc_date": "2026-10-12",
+  "study": "DATA_ANALYSIS_PILOT_ORIGINAL_V4_FUTURES_FIRST_WATCH_NOT_PROFIT",
+  "original_stage37_source": {
+    "path": "crypto-300-profit-mission/monster/evidence/monster_stage37_sixdate_all5400_usdm_source_and_GT.csv",
+    "git_blob_sha1": "4b02019195a7a48ef6d33606db9b57d6a3429f4b",
+    "attempted": 5400,
+    "source_complete": 3333,
+    "gt2x": 52,
+    "dates": 6
+  },
+  "locked_production_v4_git_blob_sha1": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+  "frozen_dates": [
+    "2025-01-19",
+    "2025-04-19",
+    "2025-07-19",
+    "2025-10-19",
+    "2026-04-19",
+    "2026-07-19"
+  ],
+  "selected_symbols_per_date": "ALL_SOURCE_COMPLETE_GT2X_CASES (52 across dates) PLUS FIRST20_SHA256_ASCII(date|symbol)_NON2X_COMPLETE_FOR_EACH_DATE (120 in total)",
+  "control_sampling": "DO_NOT_USE_OUTCOME_TO_RANK_OR_PICK_20_NEGATIVE_CANDIDATES_ONCE_NON2X_GROUP_IDENTIFIED; stratified retrospective enriched cohort, NOT full-universe false positive rate or prospective accuracy",
+  "shards_per_date": 2,
+  "original_52_positives_plus_120_controls_expected": 172,
+  "minute_market_source": "BINANCE_OFFICIAL_UM_FUTURES_DAILY_1M_ARCHIVE_ZIP_PLUS_SHA256_CHECKSUM",
+  "asof": "168h active scan UTC06:00 start, 24h preceding 1m quote-vol warmup; real OHLC close and rolling quote at 3m closed minute; 11520 bars from start minus 24h; never later than observed UTC",
+  "high_gt": "Frozen Stage37 1h source HIGH 2x label; independent true first matching 1m HIGH minute checked when source complete; no future HIGH fed to D0",
+  "source_missing": "All missing daily 1m marked censored, including 404. Transient source/network/integrity failure FAILS closed, never equates to no WATCH.",
+  "observed_signal": "Original production V4 observe_snapshot+process_queue exact unchanged blob, venue=futures, independent per symbol SQLite; full cross-symbol live queue NOT replicated",
+  "outputs": [
+    "All selected symbol-date source status",
+    "watch_event_timestamps",
+    "strictly-before-first-1m-HIGH 2x lead and misses",
+    "D1 setup counts",
+    "ordinary control WATCH load",
+    "raw publisher checksums, Stage37 verified 1h SHA"
+  ],
+  "primary_gate": "SOURCE_AND_V4_PARITY_AUDIT_ONLY; no new model threshold or buy decision",
+  "non_authorized": [
+    "production run",
+    "Gmail",
+    "Frank change",
+    "Mac deploy",
+    "crypto trading",
+    "conversation title change"
+  ],
+  "unresolved": [
+    "global shared D1 queue",
+    "historical exchangeInfo, contract multiplier",
+    "true book L2 fills",
+    "unselected 3,161 source-complete futures normal pairs not analyzed in this pilot",
+    "already exposed GT outcomes means NOT independent forward validation"
+  ],
+  "independent_other_ai_review": "NOT_DONE",
+  "deployment": "NO_GO"
+}
