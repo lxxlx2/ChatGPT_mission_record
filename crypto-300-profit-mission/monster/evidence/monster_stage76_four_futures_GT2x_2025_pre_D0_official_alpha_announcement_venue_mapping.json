@@ -1,0 +1,68 @@
+{
+  "schema": "MONSTER_STAGE76_FOUR_FIXED_FUTURES_GT2X_PRE_D0_BINANCE_OFFICIAL_ALPHA_DOCUMENTARY_PROOF_V1",
+  "date_researched": "2026-10-13 Asia/Bangkok",
+  "evidence_provenance": "Pre-D0 dated Binance official English support announcement pages; not historical minute trades or order book",
+  "original_first_D0_source_git_blob": "c9002d380d0b2db786e58461579b862e7afab054",
+  "stage75_alt_four_quote_source_git_blob": "13380febf0d03816bf9e7a1581055cfc05fcb595",
+  "known_gt2x_missing_same_name_spot_usdt": 4,
+  "rows": [
+    {
+      "date": "2025-06-30",
+      "symbol": "HUSDT",
+      "first_D0_UTC": "2025-07-01T14:36:00Z",
+      "asset_name": "Humanity Protocol",
+      "proof_type": "OFFICIAL_ALPHA_TRADING_OPEN_UTC",
+      "official_alpha_event_UTC": "2025-06-25T09:00:00Z",
+      "official_document_published_UTC": "2025-06-22T09:00:00Z",
+      "official_link": "https://www.binance.com/en/support/announcement/detail/07bb9af17419439692874d9dba12871f",
+      "official_chain_CA": "UNKNOWN_NOT_STATED_IN_THIS_ANNOUNCEMENT"
+    },
+    {
+      "date": "2025-11-27",
+      "symbol": "PIPPINUSDT",
+      "first_D0_UTC": "2025-11-27T08:33:00Z",
+      "asset_name": "pippin",
+      "proof_type": "OFFICIAL_CONFIRMED_ALREADY_ALPHA_LISTED_BY_PUBLICATION",
+      "official_alpha_event_UTC": "UNKNOWN_ALREADY_LISTED_AS_OF_2025-01-24T07:10:00Z",
+      "official_document_published_UTC": "2025-01-24T07:10:00Z",
+      "official_link": "https://www.binance.com/en/support/announcement/detail/75d358bf598e4c8d9b841961d78c14c2",
+      "official_chain": "Solana",
+      "official_chain_CA": "Dfh5DzRgSvvCFDoYc2ciTkMrbDfRKybA4SoFbPmApump"
+    },
+    {
+      "date": "2025-11-27",
+      "symbol": "TANSSIUSDT",
+      "first_D0_UTC": "2025-11-27T19:30:00Z",
+      "asset_name": "Tanssi Network",
+      "proof_type": "OFFICIAL_ALPHA_TRADING_OPEN_UTC",
+      "official_alpha_event_UTC": "2025-07-09T11:05:00Z",
+      "official_document_published_UTC": "2025-07-08T16:15:00Z",
+      "official_link": "https://www.binance.com/en/support/announcement/detail/3608fb87042e4283b90787a25436676b",
+      "official_chain_CA": "UNKNOWN_NOT_STATED_IN_THIS_ANNOUNCEMENT"
+    },
+    {
+      "date": "2025-11-27",
+      "symbol": "TRADOORUSDT",
+      "first_D0_UTC": "2025-11-27T16:00:00Z",
+      "asset_name": "Tradoor",
+      "proof_type": "OFFICIAL_CONFIRMED_ALREADY_ALPHA_LISTED_BY_PUBLICATION_AND_PRIOR_ALPHA_TRADING_PROMOTION",
+      "official_alpha_event_UTC": "UNKNOWN_ALREADY_LISTED_BY_2025-09-19T10:57:00Z",
+      "official_document_published_UTC": "2025-09-19T10:57:00Z",
+      "official_link": "https://www.binance.com/en/support/announcement/detail/5d5ed7be7602470c96290178cdcc614c",
+      "supplementary_official_alpha_trading_competition_link": "https://www.binance.com/en/support/announcement/detail/397345ed2e9a4179a6fcd5e9d7003902",
+      "official_chain": "BNB Smart Chain",
+      "official_chain_CA": "0x9123400446a56176eb1b6be9ee5cf703e409f492"
+    }
+  ],
+  "constraints": {
+    "announcement_before_signal_not_active_market_at_exact_signal": "UNVERIFIED",
+    "historical_minute_alpha_trades": "NOT_PROVEN",
+    "historical_quote_spread_depth_fee_exit": "UNKNOWN",
+    "real_executable_2x": "NOT_PROVEN",
+    "user_notional": "UNKNOWN",
+    "historical_GTs_based_on_USDM_HIGH": "NOT_REAL_BUY_SELL",
+    "deployment": "NO_GO",
+    "gmail": "OFF",
+    "autotrade": "NO_GO"
+  }
+}
