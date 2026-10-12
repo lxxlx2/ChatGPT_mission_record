@@ -675,7 +675,16 @@ class DashboardState:
         finally:
             if db is not None:
                 db.close()
-        breakdown = summarize_manual_reviews(rows)
+        try:
+            breakdown = summarize_manual_reviews(rows)
+        except Exception:
+            # The classifier can itself fail under mixed/partial upgrades.
+            # Keep error details out of the health endpoint, and do not publish
+            # stale heartbeat counts as fresh results or trigger any delivery.
+            health["manual_review_breakdown_available"] = False
+            health["manual_review_breakdown_error"] = "DELIVERY_REVIEW_CLASSIFIER_ERROR"
+            health["manual_review_counts_stale"] = True
+            return health
         # An interrupted upgrade can start this server.py alongside an older
         # delivery_review.py. Validate the entire expected breakdown contract
         # *before* accessing keys or merging it into the heartbeat response.
