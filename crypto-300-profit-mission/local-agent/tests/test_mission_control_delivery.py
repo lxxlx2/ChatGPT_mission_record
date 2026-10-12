@@ -144,7 +144,7 @@ def test_mission_control_notification_is_chinese_and_research_friendly(tmp_path)
     assert "决策时间：" in rendered["body"]
     assert "Jupiter 报价观察时间：未记录（不可当作实时报价）" in rendered["body"]
     assert "报价为决策时历史快照" in rendered["body"]
-    assert "原因：Frank 当前处于多次强加仓模式" in rendered["body"]
+    assert "原因：Frank 已观察到多次强加仓模型事件，是否可以跟随以本次结论为准" in rendered["body"]
     assert "Policy：" not in rendered["body"]
 
 
@@ -160,7 +160,7 @@ def test_mission_control_email_mobile_readable_amounts_keep_full_ca(tmp_path):
     body["metrics"]["price_impact_pct"]="0.123456789"
     rendered=render({"body":body})
     assert f"\n{mint}\n" in rendered["body"]
-    assert "最近买入投入：40,300.82 USDC" in rendered["body"]
+    assert "Frank 最近一次买入支付（历史）：40,300.82 USDC" in rendered["body"]
     assert "Frank 参考买价：0.06282 USDC" in rendered["body"]
     assert "预计价格冲击：0.1%" in rendered["body"]
     assert "Decision ID：" not in rendered["body"]
@@ -174,6 +174,37 @@ def test_mission_control_email_tiny_prices_remain_nonzero(tmp_path):
     assert "Frank 参考买价：1.23e-9 USDC" in render({"body":body})["body"]
 
 
+
+
+def test_non_actionable_multiple_with_latest_sell_does_not_present_historical_payment_as_current(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"]) if isinstance(e["body"],str) else e["body"]
+    body["decision"]="NO_BUY"
+    body["inputs"]["position_state"]="INVENTORY_UNDETERMINED"
+    body["inputs"]["latest_side"]="SELL"
+    body["inputs"]["latest_buy_original_quote_asset"]="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    body["inputs"]["latest_buy_original_quote_quantity"]="15000"
+    content=render({"body":body})
+    assert "[Meme提醒] 不跟 | 多次强加仓（历史模型记录）" in content["subject"]
+    assert "结论：不跟" in content["body"]
+    assert "Frank 最近已识别动作：卖出  |  Frank 模型仓位：仓位不明" in content["body"]
+    assert "Frank 最近一次买入支付（历史）：15,000.00 USDC" in content["body"]
+    assert "不代表当前持仓市值、持有金额或全部建仓成本" in content["body"]
+    assert "最新已识别动作是卖出或退出" in content["body"]
+    assert "当前跟单结论不支持立即买入" in content["body"]
+    assert content["content_hash"]
+
+
+def test_unknown_recent_buy_payment_is_not_backfilled_from_pattern(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"]) if isinstance(e["body"],str) else e["body"]
+    body["inputs"]["latest_buy_original_quote_quantity"]=None
+    body["inputs"]["latest_buy_quote_quantity"]=None
+    text=render({"body":body})["body"]
+    assert "Frank 最近一次买入支付（历史）：暂无" in text
+    assert "15,000" not in text
 
 @pytest.mark.parametrize("delivery_status", ["PENDING", "CREDENTIAL_BLOCKED", "RETRYABLE_ERROR"])
 def test_old_decision_is_never_sent_when_gmail_credentials_recover(tmp_path, delivery_status):
