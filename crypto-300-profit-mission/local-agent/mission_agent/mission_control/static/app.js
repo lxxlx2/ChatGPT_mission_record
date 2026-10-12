@@ -273,7 +273,7 @@ function renderRuntime(runtime, control) {
   if (Number.isFinite(expired) && expired > 0) {
     const gmail = Number(control?.manual_review_expired_unsent_gmail_count) || 0;
     const local = Number(control?.manual_review_expired_unsent_local_count) || 0;
-    reviewParts.push(`<span title="历史通知在首次投递前已过期，未发送；审计记录保留，不会自动重发">· 历史过期拦截 ${esc(expired)}（邮件 ${esc(gmail)}，本地 ${esc(local)}；未发送）</span>`);
+    reviewParts.push(`<span title="SQLite 记录显示首次投递前已过期、未记录发送尝试；未独立核实 Gmail Sent；审计记录保留，不会自动重发">· 历史过期拦截 ${esc(expired)}（邮件 ${esc(gmail)}，本地 ${esc(local)}；数据库无发送尝试记录）</span>`);
   }
   const reviewText = reviewParts.join('');
 
