@@ -60,7 +60,7 @@ jobs:
           for source in ledger["source_manifest"]:
               actual = subprocess.check_output(["git", "hash-object", source["path"]], text=True).strip()
               assert actual == source["blob_sha"], f"source drift: {source['path']}"
-          print("PASS P2 six source Git blobs pinned to exact evidence originals")
+          print("PASS P2 source Git blobs pinned to exact evidence originals")
           PY
       - name: Recompute P2 23-wallet economic overlay
         shell: bash
@@ -99,11 +99,11 @@ jobs:
           assert p2_actual == p2_expected, "P2 source-vs-Git artifact mismatch: STOP"
           s = p2_actual["summary"]
           assert (s["wallets_included"], s["signed_closed_episodes_imported"],
-                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 25, 4, 19)
-          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (16, 9)
+                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 32, 5, 18)
+          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (21, 11)
           assert all(w["realized_profit_rank"] is None for w in p2_actual["wallets"])
           assert all(w["recent_30d_signed_meme_swap"] == "UNRESOLVED" for w in p2_actual["wallets"])
           assert p2_actual["production"] == "NO_GO"
-          print("PASS P2 23 wallets / 25 curated rounds / 16 pos, 9 neg / 19 unknown; no fake rank")
+          print("PASS P2 23 wallets / 32 curated rounds / 21 pos, 11 neg / 18 unknown; no fake rank")
           print("PASS 437/437, 148/289, 8 source exceptions, no fake PnL/ranking/recent signers")
           PY
