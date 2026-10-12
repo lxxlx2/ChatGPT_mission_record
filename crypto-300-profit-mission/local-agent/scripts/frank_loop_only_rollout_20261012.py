@@ -179,12 +179,32 @@ def confirm_rollback_safe(db_path):
 
 
 def process_alive(pid):
-    """Guard against overlapping Loop workers; exclude zombie subprocesses."""
+    """Conservative process check: ps failures never certify old Loop exit."""
     if type(pid) is not int or pid <= 0:
+        raise RuntimeError("PID_IDENTITY_UNVERIFIED")
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
         return False
+    except PermissionError:
+        return True
     result = subprocess.run(["/bin/ps", "-p", str(pid), "-o", "stat="],
                             capture_output=True, text=True, timeout=8)
-    return result.returncode == 0 and bool(result.stdout.strip()) and not result.stdout.strip().startswith("Z")
+    if result.returncode != 0 or not result.stdout.strip():
+        raise RuntimeError("PROCESS_LIVENESS_UNVERIFIED")
+    return not result.stdout.strip().startswith("Z")
+
+
+def legacy_delivery_code_verified(old_agent, new_agent):
+    """Only allow automatic old-code rollback when delivery code is byte-identical.
+
+    Older code may lack the 600s stale-mail guard. Source equivalence is a
+    conservative fail-closed gate; it does NOT authorize source/API drift.
+    """
+    relative = "mission_agent/mission_control/delivery.py"
+    old = old_agent / relative
+    new = new_agent / relative
+    return old.is_file() and new.is_file() and file_sha256(old) == file_sha256(new)
 
 
 def interrupted(_signum, _frame):
@@ -306,6 +326,9 @@ def prepare(args):
            old_version.returncode == 0 and
            re.fullmatch(r"[0-9a-f]{40}", old_version.stdout.strip()) is not None)
     old_sha = old_version.stdout.strip()
+    legacy_delivery_verified = legacy_delivery_code_verified(old_agent, new_agent)
+    print("OLD_DELIVERY_CODE_EQUIVALENT=" +
+          ("YES" if legacy_delivery_verified else "NO"), flush=True)
     changed_signal_files = []
     for rel in SIGNAL_FILES:
         old_file = old_agent / rel
@@ -350,6 +373,7 @@ def prepare(args):
     return {
         "original": original, "original_bytes": original_bytes,
         "old_sha": old_sha, "changed_signal_files": changed_signal_files,
+        "legacy_delivery_verified": legacy_delivery_verified,
         "candidate": change,
         "db": db, "prod": prod, "control": control,
         "old_agent": old_agent, "new_agent": new_agent,
@@ -441,6 +465,8 @@ def main():
                     print("ROLLBACK=MANUAL_NEW_LOOP_STILL_RUNNING", flush=True)
                 elif process_alive(context["loop_pid"]):
                     print("ROLLBACK=MANUAL_OLD_LOOP_STILL_RUNNING", flush=True)
+                elif not context["legacy_delivery_verified"]:
+                    print("ROLLBACK=MANUAL_OLD_DELIVERY_CODE_UNVERIFIED", flush=True)
                 else:
                     try:
                         confirm_rollback_safe(context["db"])
