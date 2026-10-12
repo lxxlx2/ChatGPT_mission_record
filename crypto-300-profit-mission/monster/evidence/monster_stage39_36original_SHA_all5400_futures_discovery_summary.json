@@ -1,0 +1,598 @@
+{
+  "Frank": "UNCHANGED",
+  "Gmail": "OFF",
+  "Monster_deployment": "NO_GO",
+  "all_D1_setups_from_isolated_per_symbol_replay": 895,
+  "all_WATCH_events": 1108,
+  "all_source_complete_with_any_WATCH_coin_dates": 483,
+  "complete_stage37_1h_before_minutes": 3333,
+  "cross_symbol_global_8_capacity_D1_queue": "NOT_REPLAYED",
+  "first_WATCH_same_minute_bursts_min6": [],
+  "full_NOT2x_source_complete": 3232,
+  "full_NOT2x_with_WATCH_coin_dates": 433,
+  "full_stage37_hourly_source_attempts": 5400,
+  "futures_1000x_symbol_underlying_mapping": "UNVERIFIED",
+  "futures_not_in_frozen_spot758_2x_early": 21,
+  "futures_not_in_frozen_spot758_2x_source_complete": 21,
+  "futures_not_in_frozen_spot758_source_complete": 894,
+  "gt10x_early_strict": 0,
+  "gt10x_full_source": 0,
+  "gt2x_early_strict": 48,
+  "gt2x_full_source": 51,
+  "gt2x_late_watch": 1,
+  "gt2x_no_watch": 1,
+  "gt2x_same_minute_not_early": 1,
+  "gt5x_early_strict": 1,
+  "gt5x_full_source": 1,
+  "historical_exchangeinfo_and_stock_RWA_types": "UNVERIFIED",
+  "historical_replay_is_not_independent_forward_prediction": true,
+  "independent_other_AI_review": "NOT_DONE",
+  "model_threshold_changed": false,
+  "nearest_strict_pre_cross_ge15_min": 39,
+  "nearest_strict_pre_cross_ge5_min": 46,
+  "nearest_strict_pre_cross_ge60_min": 30,
+  "nearest_strict_pre_cross_median_lead_min": 107.0,
+  "original36_artifact_source_sha_receipts": [
+    {
+      "artifact_id": 11728515590,
+      "date": "2025-01-19",
+      "original_internal_JSON_sha256": "cfdcf485a75f512337004bf08a74aaf3ea90132ff585c26575e8d68e69fb778d",
+      "original_zip_sha256": "92f89a5055648a49e79d69672e33726f0c8ec3719259260a46ab86312860793c",
+      "shard": 0,
+      "shard_source_complete": 65,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 85,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 65
+      }
+    },
+    {
+      "artifact_id": 11727804990,
+      "date": "2025-01-19",
+      "original_internal_JSON_sha256": "34402fe80d22e6ce60132e63a582741559b9c10b8ea1b7e27a8cffb7945b9d68",
+      "original_zip_sha256": "a915bb36aa0c5dc0b55a67c6f59e53403ed778639dac8b0439e1b53c4608a03a",
+      "shard": 1,
+      "shard_source_complete": 67,
+      "source_status": {
+        "CENSORED_DAILY_1M_GAP": 1,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 82,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 67
+      }
+    },
+    {
+      "artifact_id": 11728128677,
+      "date": "2025-01-19",
+      "original_internal_JSON_sha256": "2b50bf3f7e1debbc729bacf4c0f981861829edde8dbb5aec16e050d999fd0e8c",
+      "original_zip_sha256": "ee9ce98fff3d91fcf3747be42a24b41b2272a3a8d50ef660785f8b9e9ee4f196",
+      "shard": 2,
+      "shard_source_complete": 54,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 96,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 54
+      }
+    },
+    {
+      "artifact_id": 11728576134,
+      "date": "2025-01-19",
+      "original_internal_JSON_sha256": "d2142cc678d14f3bcd52ce83ddbb2fe81e167e73c632ed14c20d37b3f38d7e0e",
+      "original_zip_sha256": "ec78b4a4d71bf0afc0dd9a9e486d840a38b280f074fcd6a30026bad78bd0f17d",
+      "shard": 3,
+      "shard_source_complete": 63,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 87,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 63
+      }
+    },
+    {
+      "artifact_id": 11727929888,
+      "date": "2025-01-19",
+      "original_internal_JSON_sha256": "e37b99f552205c11af3d3f6e326cc3c21a9c456d2e31f6f8266451948353e872",
+      "original_zip_sha256": "67201e126f4fd3c9048f84e6bbc8a212917b0cae2471c72b7e12c0222119ed53",
+      "shard": 4,
+      "shard_source_complete": 67,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 83,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 67
+      }
+    },
+    {
+      "artifact_id": 11727899896,
+      "date": "2025-01-19",
+      "original_internal_JSON_sha256": "8882c66900cb8fae29eea0beb81e77652d99a044d04ef7287e9217da1f3329b6",
+      "original_zip_sha256": "b30336682a9a6a48d1a78f4b8f9058ac87cefdf3de96f0f482926a29cf986e79",
+      "shard": 5,
+      "shard_source_complete": 68,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 82,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 68
+      }
+    },
+    {
+      "artifact_id": 11728147081,
+      "date": "2025-04-19",
+      "original_internal_JSON_sha256": "785da90a8b1ca944e02860f88070966ed41403a20d04ecb1962c19689058e230",
+      "original_zip_sha256": "9f6fd34996d69f0b67063e4c7aee38b0c9fac9f836df1daefa20123e0814601b",
+      "shard": 0,
+      "shard_source_complete": 69,
+      "source_status": {
+        "CENSORED_DAILY_1M_GAP": 1,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 80,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 69
+      }
+    },
+    {
+      "artifact_id": 11728034271,
+      "date": "2025-04-19",
+      "original_internal_JSON_sha256": "9234e79548d5e8ad3285d4c702be4b661cbb2dc0f9e458e28491841b928bd497",
+      "original_zip_sha256": "113cbe8d63c34cc3c669762bde8e4a33abf7718c10a76960a801512d93baa30a",
+      "shard": 1,
+      "shard_source_complete": 78,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 72,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 78
+      }
+    },
+    {
+      "artifact_id": 11728196473,
+      "date": "2025-04-19",
+      "original_internal_JSON_sha256": "45fa97ad969893ff9c7a4d26b6ef9916bbf7ef8c77baa5d2fe5d5a5167d47237",
+      "original_zip_sha256": "444e12a4e08a088072d6c4e458d5f948f515f0792793714c78eadf691d8a15a3",
+      "shard": 2,
+      "shard_source_complete": 60,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 90,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 60
+      }
+    },
+    {
+      "artifact_id": 11728650973,
+      "date": "2025-04-19",
+      "original_internal_JSON_sha256": "6094f403c03d059814e1b6d2e2b779db0951087735c96e21bd59855a1362d6ad",
+      "original_zip_sha256": "789aae31da835d6ae0638e7b964a6b913d8d39acb929a9350d1015bdc4e5a0f4",
+      "shard": 3,
+      "shard_source_complete": 73,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 77,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 73
+      }
+    },
+    {
+      "artifact_id": 11728780639,
+      "date": "2025-04-19",
+      "original_internal_JSON_sha256": "775c8812499f989fedd65ad20d4220d5dbd3ca32210889359c0233afcad2b7fd",
+      "original_zip_sha256": "b8d18270122268139c2c7351e3f3f6fc8f232457b8b9b33148aac4ea118cc7fe",
+      "shard": 4,
+      "shard_source_complete": 78,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 72,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 78
+      }
+    },
+    {
+      "artifact_id": 11728296181,
+      "date": "2025-04-19",
+      "original_internal_JSON_sha256": "2173a0365af749a747e96a4eb58020438cff9d023d38857c3239c2558ffe9730",
+      "original_zip_sha256": "abda8c16b83e4310ef644153210520e2852a3b24559d7f6bfce266fa0f518041",
+      "shard": 5,
+      "shard_source_complete": 75,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 75,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 75
+      }
+    },
+    {
+      "artifact_id": 11728034750,
+      "date": "2025-07-19",
+      "original_internal_JSON_sha256": "415e9f68820b0c6aedf64accdda7a2679072a9fc1f656efd534651fc314140e5",
+      "original_zip_sha256": "abb695b00d28051c2dff0a9d2c29427c30bcd2e78e7da6b79b1fe8b48214bc96",
+      "shard": 0,
+      "shard_source_complete": 79,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 71,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 79
+      }
+    },
+    {
+      "artifact_id": 11728134209,
+      "date": "2025-07-19",
+      "original_internal_JSON_sha256": "ddf0055a585d652142f6e9853737ceae4e8ac8771f84a8d3639a09c49321b550",
+      "original_zip_sha256": "b417e422424c446975031f1577c278fafbdd7e4e834251801045f29080683459",
+      "shard": 1,
+      "shard_source_complete": 87,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 63,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 87
+      }
+    },
+    {
+      "artifact_id": 11729155145,
+      "date": "2025-07-19",
+      "original_internal_JSON_sha256": "ea1bd9dd7ebc792f64e8c9e7634e4b0561b6392d0548d28be455eeaed13a01ab",
+      "original_zip_sha256": "77c1d7e31ef2ae555dd130ee2d09a96582fc1218c33f1baf87a61b7aa3689ee3",
+      "shard": 2,
+      "shard_source_complete": 71,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 79,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 71
+      }
+    },
+    {
+      "artifact_id": 11728099473,
+      "date": "2025-07-19",
+      "original_internal_JSON_sha256": "bf9401377c1e3e6ccb5c661358fdbc8e2df065116b940f5ab35f55619deddb9d",
+      "original_zip_sha256": "2b5fe9deaaae482384d328e393f2d1ada5c157ef5fc41b59100a0d2de9ddad56",
+      "shard": 3,
+      "shard_source_complete": 88,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 62,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 88
+      }
+    },
+    {
+      "artifact_id": 11728865924,
+      "date": "2025-07-19",
+      "original_internal_JSON_sha256": "140db3a7a1a695c4ebc2ea800ad03b75921800d4d4d2939590af649f9f7b9ee5",
+      "original_zip_sha256": "3fc02dad96b9f6ebc02982e6a4192de14b21677a4cbe67338f773a707ed480fc",
+      "shard": 4,
+      "shard_source_complete": 84,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 66,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 84
+      }
+    },
+    {
+      "artifact_id": 11729140437,
+      "date": "2025-07-19",
+      "original_internal_JSON_sha256": "5327740186a878d4c84f082329c971fbe0c68e8a62bcbeb167e0031e022ac4e6",
+      "original_zip_sha256": "ad20c2a66f8fb56ed06ad069b1f444b337bfef5ac1615a2c2f94f5379f6294f9",
+      "shard": 5,
+      "shard_source_complete": 84,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 66,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 84
+      }
+    },
+    {
+      "artifact_id": 11729125478,
+      "date": "2025-10-19",
+      "original_internal_JSON_sha256": "96574c6b2afee0085dc3f0ee2d11a2e7a26554e0bdd5e048c483711fa9045f42",
+      "original_zip_sha256": "7db4327f5d2d4cf41e34ca805303556fe3e3e106294594e75db005b732a22e8f",
+      "shard": 0,
+      "shard_source_complete": 94,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 56,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 94
+      }
+    },
+    {
+      "artifact_id": 11728192052,
+      "date": "2025-10-19",
+      "original_internal_JSON_sha256": "e90c63bf5a24443c123572a73555680658d71168fd582559120b729d3a54381f",
+      "original_zip_sha256": "dffd5f3b162d0364b372bc762f14fabf6f381f123cee2aec387f00c51bf16437",
+      "shard": 1,
+      "shard_source_complete": 96,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 54,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 96
+      }
+    },
+    {
+      "artifact_id": 11728511823,
+      "date": "2025-10-19",
+      "original_internal_JSON_sha256": "9281d6ccf21f6764acd6809b03a67688696c7d6371112e321178d7d9583516ba",
+      "original_zip_sha256": "7e64755ab5bac7c8e07870558dd4d47504c107b980174793d806403963d67f11",
+      "shard": 2,
+      "shard_source_complete": 85,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 65,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 85
+      }
+    },
+    {
+      "artifact_id": 11728576757,
+      "date": "2025-10-19",
+      "original_internal_JSON_sha256": "e6fb9bf6fbf681bbc707925900b882275c72e36192ca8f292c9cf8072ee22424",
+      "original_zip_sha256": "75575b0a5941acce1f23b1bd36b2463c5ede3048d312395ee623490fa828f095",
+      "shard": 3,
+      "shard_source_complete": 99,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 51,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 99
+      }
+    },
+    {
+      "artifact_id": 11728386911,
+      "date": "2025-10-19",
+      "original_internal_JSON_sha256": "fc9bc355e72bdef664e9d3c472b2e3117678e20fbeee3848a56a4991c90cc50c",
+      "original_zip_sha256": "a59ee56f2163b68174db32c14c61ece01fdf088e32f1f45878090c7a204c8021",
+      "shard": 4,
+      "shard_source_complete": 101,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 49,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 101
+      }
+    },
+    {
+      "artifact_id": 11728282921,
+      "date": "2025-10-19",
+      "original_internal_JSON_sha256": "fc730ba5abc63c8b5112273b38ea9d8cec582e787d2b6ef94fb56bb59aa529d2",
+      "original_zip_sha256": "5a248ee9f79458c0b65c11bc1f856dc5b97dfb3f3388dd535b49ec3d1f393078",
+      "shard": 5,
+      "shard_source_complete": 97,
+      "source_status": {
+        "CENSORED_DAILY_1M_GAP": 1,
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 1,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 51,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 97
+      }
+    },
+    {
+      "artifact_id": 11728496659,
+      "date": "2026-04-19",
+      "original_internal_JSON_sha256": "e6a7513f2f25820caea997930738294b6a4f86826ebd0fbb8945648ff9058319",
+      "original_zip_sha256": "8a5a456e2af61f5f29299d3c7434e402c0ba23494ce5d4380e30bda453eb6a1b",
+      "shard": 0,
+      "shard_source_complete": 111,
+      "source_status": {
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 1,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 38,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 111
+      }
+    },
+    {
+      "artifact_id": 11729315240,
+      "date": "2026-04-19",
+      "original_internal_JSON_sha256": "bf629b0f77d031ee59711e98027df6976dcb0006cd91fd64bd20a79c31768433",
+      "original_zip_sha256": "0cf5794be4928547c73a083eaa2e88053441f9b5775fd0618b0b06d3ac3cb985",
+      "shard": 1,
+      "shard_source_complete": 117,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 33,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 117
+      }
+    },
+    {
+      "artifact_id": 11729011159,
+      "date": "2026-04-19",
+      "original_internal_JSON_sha256": "ebbd01eed36532ae38dc4ecbc1c4fce8530b465303019d293235a2184157d052",
+      "original_zip_sha256": "59542ca3b899aca18f2eb8f90d4c4390ded3ab8a4a7926858e5ac2b3c2e3c705",
+      "shard": 2,
+      "shard_source_complete": 100,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 50,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 100
+      }
+    },
+    {
+      "artifact_id": 11728312221,
+      "date": "2026-04-19",
+      "original_internal_JSON_sha256": "9609470cacae132480831473af89f23b26ba2e86b07e7df900681a14e9fbb47f",
+      "original_zip_sha256": "7045df74db29cde89756b612ada84f5331f3e375f45f13666d559440d67ffa5f",
+      "shard": 3,
+      "shard_source_complete": 110,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 40,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 110
+      }
+    },
+    {
+      "artifact_id": 11729270579,
+      "date": "2026-04-19",
+      "original_internal_JSON_sha256": "b4ec4830b9f6680fc6a49eb08a4b3b3edcfee8d5ffb1766eeb5f76e96cb229e8",
+      "original_zip_sha256": "d0940c328ff92b97ec73b0e056a80613af6984b32b45b1bc0214115e0044762b",
+      "shard": 4,
+      "shard_source_complete": 111,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 39,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 111
+      }
+    },
+    {
+      "artifact_id": 11729310213,
+      "date": "2026-04-19",
+      "original_internal_JSON_sha256": "917cacc32c7194d37332f49a38943a383f22a9f243a9160b5bc15125047d618b",
+      "original_zip_sha256": "08ac9055f386210b1a9acb0cbd6085910e343999f7fbe77fcaae87248fc3f384",
+      "shard": 5,
+      "shard_source_complete": 114,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 36,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 114
+      }
+    },
+    {
+      "artifact_id": 11728947044,
+      "date": "2026-07-19",
+      "original_internal_JSON_sha256": "a37c816aaf4da85eb86f87bc45129a53cfaec224a603f2aaf6d887d0d6a7a833",
+      "original_zip_sha256": "a9333f6a77e4c63baa0223b188461fbaed9dcf06bb16bb554e53f3afe0c207fb",
+      "shard": 0,
+      "shard_source_complete": 123,
+      "source_status": {
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 7,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 20,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 123
+      }
+    },
+    {
+      "artifact_id": 11728398289,
+      "date": "2026-07-19",
+      "original_internal_JSON_sha256": "eae8d87a7fcf492e78fe34bc7689f0e4f1e5235b95ec95cde6f0c3ee0152121d",
+      "original_zip_sha256": "063c5f8d5ea2f3897bf5365e939b8bacab2415ff9a37b8ded10a5b07b643c8c6",
+      "shard": 1,
+      "shard_source_complete": 129,
+      "source_status": {
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 7,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 14,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 129
+      }
+    },
+    {
+      "artifact_id": 11729156346,
+      "date": "2026-07-19",
+      "original_internal_JSON_sha256": "a2c5a735db98c74a4f9f8a81ccb229c405e8b17bcb0f85106d8e4855fddb05e2",
+      "original_zip_sha256": "b3ad07fe97bb31eaa3c8918c07a1e05572973421e1df9e94456a7924865ec9d1",
+      "shard": 2,
+      "shard_source_complete": 120,
+      "source_status": {
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 7,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 23,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 120
+      }
+    },
+    {
+      "artifact_id": 11728173284,
+      "date": "2026-07-19",
+      "original_internal_JSON_sha256": "17822c101c3256ad4f9b769a97049e8a62b6ffbd2ad774299e958cbd38ee3518",
+      "original_zip_sha256": "3ad521c1aca90350ee3d65eb01dee1464bf02dd4e0229b91f01e10d7a4c229f5",
+      "shard": 3,
+      "shard_source_complete": 117,
+      "source_status": {
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 9,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 24,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 117
+      }
+    },
+    {
+      "artifact_id": 11728572856,
+      "date": "2026-07-19",
+      "original_internal_JSON_sha256": "2bde23b41edd14b2d50417433f9d71093c271d6dfbf8d4581985f8a352024399",
+      "original_zip_sha256": "b546d90dd0bab2321a0cc2512818a62fab5bbd1f6a4464d50189d82ab8c13c5e",
+      "shard": 4,
+      "shard_source_complete": 120,
+      "source_status": {
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 12,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 18,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 120
+      }
+    },
+    {
+      "artifact_id": 11728417415,
+      "date": "2026-07-19",
+      "original_internal_JSON_sha256": "df01e8d78ec940db1c548253201c027eb2fce151a3ff6071dff83025ae6aed22",
+      "original_zip_sha256": "67ed6cf35391de319f7014cd3f1950193ce6a9b6682e08891db087f6e5a475ff",
+      "shard": 5,
+      "shard_source_complete": 129,
+      "source_status": {
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 3,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 18,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 129
+      }
+    }
+  ],
+  "original_source_SHA_verified_36": true,
+  "per_date": [
+    {
+      "D1_setup_events_per_symbol_persistent": 64,
+      "WATCH_events": 78,
+      "attempted": 900,
+      "date": "2025-01-19",
+      "distinct_WATCH_coin_dates": 36,
+      "gt2x_strict_early": 0,
+      "gt2x_verified_full1m": 0,
+      "gt5x_verified_full1m": 0,
+      "not_2x_but_anyWATCH_coin_dates": 36,
+      "official_full1m_and1h": 384,
+      "source_status": {
+        "CENSORED_DAILY_1M_GAP": 1,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 515,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 384
+      }
+    },
+    {
+      "D1_setup_events_per_symbol_persistent": 210,
+      "WATCH_events": 241,
+      "attempted": 900,
+      "date": "2025-04-19",
+      "distinct_WATCH_coin_dates": 100,
+      "gt2x_strict_early": 17,
+      "gt2x_verified_full1m": 19,
+      "gt5x_verified_full1m": 1,
+      "not_2x_but_anyWATCH_coin_dates": 82,
+      "official_full1m_and1h": 433,
+      "source_status": {
+        "CENSORED_DAILY_1M_GAP": 1,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 466,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 433
+      }
+    },
+    {
+      "D1_setup_events_per_symbol_persistent": 114,
+      "WATCH_events": 129,
+      "attempted": 900,
+      "date": "2025-07-19",
+      "distinct_WATCH_coin_dates": 75,
+      "gt2x_strict_early": 8,
+      "gt2x_verified_full1m": 8,
+      "gt5x_verified_full1m": 0,
+      "not_2x_but_anyWATCH_coin_dates": 67,
+      "official_full1m_and1h": 493,
+      "source_status": {
+        "CENSORED_STAGE37_HOURLY_SOURCE": 407,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 493
+      }
+    },
+    {
+      "D1_setup_events_per_symbol_persistent": 146,
+      "WATCH_events": 197,
+      "attempted": 900,
+      "date": "2025-10-19",
+      "distinct_WATCH_coin_dates": 80,
+      "gt2x_strict_early": 9,
+      "gt2x_verified_full1m": 10,
+      "gt5x_verified_full1m": 0,
+      "not_2x_but_anyWATCH_coin_dates": 70,
+      "official_full1m_and1h": 572,
+      "source_status": {
+        "CENSORED_DAILY_1M_GAP": 1,
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 1,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 326,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 572
+      }
+    },
+    {
+      "D1_setup_events_per_symbol_persistent": 207,
+      "WATCH_events": 261,
+      "attempted": 900,
+      "date": "2026-04-19",
+      "distinct_WATCH_coin_dates": 113,
+      "gt2x_strict_early": 9,
+      "gt2x_verified_full1m": 9,
+      "gt5x_verified_full1m": 0,
+      "not_2x_but_anyWATCH_coin_dates": 104,
+      "official_full1m_and1h": 663,
+      "source_status": {
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 1,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 236,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 663
+      }
+    },
+    {
+      "D1_setup_events_per_symbol_persistent": 154,
+      "WATCH_events": 202,
+      "attempted": 900,
+      "date": "2026-07-19",
+      "distinct_WATCH_coin_dates": 79,
+      "gt2x_strict_early": 5,
+      "gt2x_verified_full1m": 5,
+      "gt5x_verified_full1m": 0,
+      "not_2x_but_anyWATCH_coin_dates": 74,
+      "official_full1m_and1h": 738,
+      "source_status": {
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 45,
+        "CENSORED_STAGE37_HOURLY_SOURCE": 117,
+        "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 738
+      }
+    }
+  ],
+  "publisher_1m_and_1h_agree_full": 3283,
+  "real_trade_fill_or_L2_orderbook": "UNVERIFIED",
+  "schema": "MONSTER_STAGE39_ORIGINAL36_SHA_5400_USDM_MARKET_WATCH_AND_GT_FACTUAL_V1",
+  "source_censored_total": 2117,
+  "source_original_run_id": 38208358036,
+  "stage38_original_172_pilot_signal_parity_verified": true,
+  "status_counts": {
+    "CENSORED_DAILY_1M_GAP": 3,
+    "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 47,
+    "CENSORED_STAGE37_HOURLY_SOURCE": 2067,
+    "COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4": 3283
+  },
+  "trading": "NO_GO"
+}
