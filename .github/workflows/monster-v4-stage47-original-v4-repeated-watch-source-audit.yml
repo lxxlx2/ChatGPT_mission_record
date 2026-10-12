@@ -1,0 +1,53 @@
+name: Monster Stage47 All Market Original D0 Repeated WATCH Causal Facts
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage47_fullmarket_repeat_watch_second_ignition_data_audit.py'
+      - '.github/workflows/monster-v4-stage47-original-v4-repeated-watch-source-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify_all_5400_first_and_later_WATCH_vs_true_2x:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Strict source SHA and all coin-date repeat D0 true minute chronology
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage47_fullmarket_repeat_watch_second_ignition_data_audit.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage47_fullmarket_repeat_watch_second_ignition_data_audit.py \
+            --output /tmp/monster_stage47_allmarket_true_caused_repeat_WATCH_source_audit.json
+      - name: Retain exact pinned original Stage45 source analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage47-frozen-stage45-5400-repeatD0-watch-actual
+          path: /tmp/monster_stage47_allmarket_true_caused_repeat_WATCH_source_audit.json
+          retention-days: 30
+      - name: Git persist actual source-backed second-ignition research baseline
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage47_all_market_first_and_repeated_D0_watch_vs_real2x_audit.json
+          cp /tmp/monster_stage47_allmarket_true_caused_repeat_WATCH_source_audit.json "$dest"
+          git add "$dest"
+          if git diff --cached --quiet; then
+            echo STAGE47_ALREADY_IDENTICAL
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage47 all-market real repeated D0 vs ordinary-source audit'
+          for i in 1 2 3; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE47_CONCURRENT_PUSH_NOT_VERIFIED
+          exit 1
