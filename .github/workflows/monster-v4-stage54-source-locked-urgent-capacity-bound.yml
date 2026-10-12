@@ -1,0 +1,56 @@
+name: Monster Stage54 Original SHA Frozen Urgent Capacity Feasibility Bound
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage54_frozen_v03_urgent_capacity_feasibility_oracle.py'
+      - '.github/workflows/monster-v4-stage54-source-locked-urgent-capacity-bound.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  42_frozen_24h_cohorts_with_real_original_SHA_and_hindsight_only_upper_bound:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Selftest timestamp cohort identity, capacity and source SHA code
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage54_frozen_v03_urgent_capacity_feasibility_oracle.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage54_frozen_v03_urgent_capacity_feasibility_oracle.py --selftest
+      - name: Evaluate each true urgent 24h capacity and HINDSIGHT ONLY mathematical upper bound
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage54_frozen_v03_urgent_capacity_feasibility_oracle.py \
+            --out /tmp/monster_stage54_verified_bound
+      - name: Retain all 42 actual vs hypothetical capacity evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage54-real-42-day-capacity-vs-hindsight-upper-bound-not-strategy
+          path: /tmp/monster_stage54_verified_bound/*
+          retention-days: 30
+      - name: Commit factual feasibility bounds to original Draft Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage54_verified_bound/monster_stage54_* "$dest/"
+          git add "$dest/monster_stage54_source_sha_global5_day_feasibility_oracle_upper_bound.json" "$dest/monster_stage54_real42_24h_source_completed_budget_and_oracle.csv"
+          if git diff --cached --quiet; then
+            echo STAGE54_IDENTICAL_SOURCE_EVIDENCE
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: Stage54 persist frozen global5 real capacity bottleneck and explicit hindsight-only upper bound'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE54_NONFASTFORWARD_NO_FORCE
+          exit 1
