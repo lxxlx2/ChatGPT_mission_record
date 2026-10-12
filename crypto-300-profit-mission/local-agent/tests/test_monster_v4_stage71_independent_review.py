@@ -45,6 +45,20 @@ class Review(unittest.TestCase):
         for r in rows:
             if r['minute_source_status']!=p2.VALID:
                 self.assertIsNone(r['original_D0_first_UTC']);self.assertIsNone(r['P1v03_original_unbudgeted_candidate'])
+    def test_future_source_gap_erases_whole_discovery_record_current_limitation(self):
+        import monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03 as source
+        hourly={'date':'2025-03-30','symbol':'SYNTHETICUSDT','source_status':source.HOUR_GOOD}
+        def unavailable_after_early_valid_observations(symbol,date):
+            raise FileNotFoundError('SYNTHETIC_ONLY: future source day missing after a valid early signal')
+        result=source.process(hourly,loader=unavailable_after_early_valid_observations)
+        self.assertIsNone(result['original_D0_first_UTC']);self.assertEqual(result['minute_source_status'],'CENSORED_OFFICIAL_1M_PUBLISHER_404')
+    def test_older5400_counterexample_independently_recalculated(self):
+        import json
+        with tempfile.TemporaryDirectory() as td:
+            audit.older6(Path(td));result=json.loads((Path(td)/'monster_stage71_independent_older5400_counterexample.json').read_text())
+        self.assertEqual((result['old_urgent'],result['new_urgent'],result['old_early'],result['new_early'],result['D0_pre5_2x_denominator']),(127,113,21,20,28))
+        aia=next(x for x in result['5x10x_cases'] if x['symbol']=='AIAUSDT')
+        self.assertTrue(aia['old_early']);self.assertFalse(aia['new_early'])
     def test_stage68_changed_source_bytes_fail_closed(self):
         from unittest.mock import patch
         with tempfile.TemporaryDirectory() as td:

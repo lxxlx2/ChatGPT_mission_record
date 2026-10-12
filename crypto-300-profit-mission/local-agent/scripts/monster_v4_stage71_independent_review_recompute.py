@@ -109,6 +109,27 @@ def recalculate(rows):
         cases.append(dict(date=r['date'],symbol=r['symbol'],D0=watch.get(key),P1=p['at_UTC'] if p else None,first_2x=high,P1_lead_min=lead,old_urgent=old.get(key,False),new_urgent=new.get(key,False),old_early=bool(old.get(key) and lead>=5),new_early=bool(new.get(key) and lead>=5)))
     return dict(baseline=BASELINE,population=len(rows),statuses=dict(collections.Counter(r['minute_source_status'] for r in rows)),watch=len(watch),p1=len(old),old_urgent=sum(old.values()),new_urgent=sum(new.values()),old_early=sum(c['old_early'] for c in cases),new_early=sum(c['new_early'] for c in cases),cases=cases,slots=[dict(date=k[0],slot=k[1],old=used_old[k],new=used_new[k],first_half=early[k]) for k in sorted(set(used_old)|set(used_new))],allocation=ledger)
 
+def older6(out):
+    # Original Stage52+64 inputs, never Stage69 summary or fate decisions.
+    source=read('monster_stage52_all5400_originalV4_P1v03_true_minute_source_cases.jsonl')
+    quotes={(r['date'],r['symbol']):r['features_ASOF_ONLY']['quote15_USDT'] for r in read('monster_stage64_all519_D0_asof61m_official_1m_taker_trades_SHA.jsonl')}
+    mapped=[]
+    for r in source:
+        first=r.get('WATCH_UTC',[None])[0] if r.get('WATCH_UTC') else None
+        mapped.append(dict(date=r['date'],symbol=r['symbol'],minute_source_status=r['source_status'],original_D0_first_UTC=first,D0_first_quote15_USDM_asof=quotes.get((r['date'],r['symbol'])),P1v03_original_unbudgeted_candidate=r.get('p1v03_eligible_unbudgeted'),hourly_gt2x_EVALUATION_ONLY=r.get('hourly_gt2x'),original_GT2x_first_real_1m_HIGH_UTC=r.get('first_true_2x_HIGH_minute_UTC')))
+    result=recalculate(mapped);allocated={(e['date'],e['symbol']):e for e in result['allocation']}
+    cases=[]
+    for r in source:
+        if r['source_status']!='COMPLETE_REAL_USDM_1M_SHA_CAUSAL_V4':continue
+        for n,field in ((5,'first_real_1m_HIGH_gt5x_UTC'),(10,'first_real_1m_HIGH_gt10x_UTC')):
+            if not r['hourly_gt'+str(n)+'x']:continue
+            e=allocated.get((r['date'],r['symbol']));lead=minute(r[field])-minute(e['at']) if e else None
+            cases.append(dict(date=r['date'],symbol=r['symbol'],multiple=n,first_high=r[field],P1=e['at'] if e else None,old_early=bool(e and e['old_urgent'] and lead>=5),new_early=bool(e and e['new_urgent'] and lead>=5)))
+    result['5x10x_cases']=cases
+    result['D0_pre5_2x_denominator']=sum(c['D0'] is not None and minute(c['first_2x'])-minute(c['D0'])>=5 for c in result['cases'])
+    (out/'monster_stage71_independent_older5400_counterexample.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
+    print('INDEPENDENT_OLDER6',result['old_urgent'],result['new_urgent'],result['old_early'],result['new_early'],result['D0_pre5_2x_denominator'],flush=True)
+
 def official(out,workers):
     import monster_v4_stage65_new3_full900_official_hourly_SHA as s65
     import monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03 as s66
@@ -146,11 +167,12 @@ def official(out,workers):
     assert len(records)==2700, 'OFFICIAL_REPLAY_HAS_UNRESOLVED_ERRORS'
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--official',action='store_true');ap.add_argument('--five-oracle',action='store_true');ap.add_argument('--workers',type=int,default=8)
+    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--official',action='store_true');ap.add_argument('--five-oracle',action='store_true');ap.add_argument('--older6',action='store_true');ap.add_argument('--workers',type=int,default=8)
     a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True)
     r=recalculate(read('monster_stage66_full2700_originalV4_D0_and_P1v03_source_SHA.jsonl'))
     (a.out/'monster_stage71_independent2700_scheduler_recalculation.json').write_text(json.dumps(r,indent=2,sort_keys=True)+'\n')
     print(json.dumps({k:v for k,v in r.items() if k not in ('allocation','slots')},sort_keys=True),flush=True)
     if a.official:official(a.out,a.workers)
     if a.five_oracle:five_oracle(a.out)
+    if a.older6:older6(a.out)
 if __name__=='__main__':main()

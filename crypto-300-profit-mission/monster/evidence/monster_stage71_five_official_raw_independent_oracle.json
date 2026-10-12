@@ -1,0 +1,367 @@
+{
+  "baseline": "2cfaea7064012869ae264a16d776b2cb7e6b52a9",
+  "cases": [
+    {
+      "P1": "2025-06-30T20:54:00Z",
+      "WATCH_UTC": [
+        "2025-06-30T17:00:00Z",
+        "2025-07-01T06:51:00Z",
+        "2025-07-01T20:45:00Z",
+        "2025-07-02T16:15:00Z"
+      ],
+      "date": "2025-06-30",
+      "first_2x": "2025-06-30T21:55:00Z",
+      "official_daily_sha": [
+        {
+          "bars": 1440,
+          "date": "2025-06-29",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "b08bdba46f0eba4c1ae6eb4b521a7d292e2744a64496453866ea9de4828c5aee"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-06-30",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "ff2842121c394ff6197b545cd732c93e96a1424a4ddcf52ff826d5d6b26ced21"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-01",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "e3d699a92e5564d18575d2ab8b017478fa09d36128d5cbdcaa04d651f7286da3"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-02",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "7d88528088af8ffa4ae90fbb7a8ed5e62791b46595e89059d844b4df82268546"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-03",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "ed5cfc35ca155b3ddecbfa819d61f0e86ae3c621fc346600b6189e1a193a02a9"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-04",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "dd95b4430b7591dfa48615c1664ef5b14f3a613200bc1c845afb681acad61d85"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-05",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "fb066c626cf816dbdc492d76abd370076603d3461e8427241d8a0d19c8de67bc"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-06",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "48538504ad09070a573c5cceccf111f94ef4e62b5002a6da4ce5bfa80e149a8c"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-07",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "69b0c15f52a8efbe9cabb2aa4efd5409b31bbd087dc12ba7984f8969ead637a0"
+        }
+      ],
+      "symbol": "HFTUSDT"
+    },
+    {
+      "P1": "2025-07-01T19:27:00Z",
+      "WATCH_UTC": [
+        "2025-07-01T14:36:00Z",
+        "2025-07-02T02:57:00Z",
+        "2025-07-02T06:30:00Z",
+        "2025-07-03T07:54:00Z",
+        "2025-07-03T23:24:00Z",
+        "2025-07-04T10:24:00Z"
+      ],
+      "date": "2025-06-30",
+      "first_2x": "2025-07-02T04:42:00Z",
+      "official_daily_sha": [
+        {
+          "bars": 1440,
+          "date": "2025-06-29",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "cb6a8ae18265a2c1befd636dfff3a7992c255f64ac18d683218b7d646f5f28ff"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-06-30",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "652e205500f36053acb5053de09be5e66cb64ed6eb3124d10845bd4769b2f1c9"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-01",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "6b2e5c43cce47fccd4a0bb949b05c9c9c131952fbd1ffb356bc8a537be572a28"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-02",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "14ebb0f1347fd7c3173cdf47025e02afa9426c91c257a869d69d37160795ab73"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-03",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "e9b47f593fbf6d0ec0233cee87635ede87574e83a96dcc2f15fbab34da425b87"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-04",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "1b09c7751d24a6f9a3c97ac0ca3f5ca1dcb5b111496a8c7089ee5d86aaaf4546"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-05",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "c2237f9c1d96fa22350daa3536a47855ba38dab1ec29ac5cd032c41a987110ba"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-06",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "acdc013d62caa76ebddf2cf14510dbb4e356a563303f8a2c6467ee3e1a3a09af"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-07",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "75954e37f02c4dd2a9af160b4b79c01794c644a5b5f75e8a97b6b3f10929498f"
+        }
+      ],
+      "symbol": "HUSDT"
+    },
+    {
+      "P1": "2025-11-28T04:33:00Z",
+      "WATCH_UTC": [
+        "2025-11-27T08:33:00Z",
+        "2025-11-28T04:33:00Z",
+        "2025-11-28T11:42:00Z",
+        "2025-11-28T12:18:00Z",
+        "2025-11-28T17:09:00Z",
+        "2025-11-28T19:06:00Z",
+        "2025-11-29T07:45:00Z",
+        "2025-11-29T17:42:00Z",
+        "2025-11-30T00:33:00Z",
+        "2025-11-30T06:33:00Z",
+        "2025-11-30T16:18:00Z",
+        "2025-12-01T02:00:00Z",
+        "2025-12-01T10:03:00Z",
+        "2025-12-01T21:18:00Z",
+        "2025-12-02T18:42:00Z",
+        "2025-12-03T17:12:00Z"
+      ],
+      "date": "2025-11-27",
+      "first_2x": "2025-11-30T06:30:00Z",
+      "official_daily_sha": [
+        {
+          "bars": 1440,
+          "date": "2025-11-26",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "a5924411e38e0edb318a07c29123135d9c483e02d4ec8453a034a3231df5e9e1"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-27",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "7877efb4af4ba637f214ea99b24232a6cc0212f0f2b38abd3bd8d1a2dc45f613"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-28",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "46d7bd82ea63668a766a05626f807381f2f1ec1f32c4916c227e65880e76b196"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-29",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "a7ceaf9766bf175cf8cf3efb06e99e10110e9f9012cf8e9b90fb73c602787096"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-30",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "d13cd6d93304c888f586582cc2ab2d99023866224e3287a4808a51f2db3609d3"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-01",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "6eaaaa521c873a718fd148c3ef65c5bcf8df77d6b13691488138eda68d75705a"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-02",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "40084997e4f35cb9b7f31da6514e7a35e2083fd7ac13313c1184970e9b21d1f0"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-03",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "a124a0348d99ab9e355a70cf74dcd4f0dc5f9e6a0ea65c943287cc0b8fd7790c"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-04",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "27a9e0cc828636baa1083e1a2fd3e793bbce5ba4c30aaab3de21013651fa0d52"
+        }
+      ],
+      "symbol": "PIPPINUSDT"
+    },
+    {
+      "P1": "2025-11-27T19:36:00Z",
+      "WATCH_UTC": [
+        "2025-11-27T19:30:00Z"
+      ],
+      "date": "2025-11-27",
+      "first_2x": "2025-11-27T19:45:00Z",
+      "official_daily_sha": [
+        {
+          "bars": 1440,
+          "date": "2025-11-26",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "ab060ca1c8fa1090a1e12b10bfa35547e19cc637306248a8be8e8fc149da4860"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-27",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "fbdcc34a23c9e3fb4d38efdac4f356de4b057727181b2ce6b9a4a3b807e99758"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-28",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "194a7b5533fca246d3f9dd7f5165a35e53dffff7d2594638f6c103ccc1905dca"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-29",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "04b2868a23d8b850308287ad4347b8c879a28a6bd863b684e7696c8db2c494ab"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-30",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "ddd927928ec481c02637ef3a4ed228e831d2df635a6394203029b0a770b7ef77"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-01",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "81e4fc33b30e62c9fc0fc37ccf72a7a46c806e37cc4a78b26479090dc5d60abc"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-02",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "bc1fbeab14c10ebb98733996e7d1d63924d98135f7aa8a7b1af7e18acad2f0b6"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-03",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "4632d76d968b20770fb47c2fffcfeb441463ab3c8a3a7cd295142736bdd08b54"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-04",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "c6351d561ae5e5ab120772357de7c2b75d2a68a2d25c4c7749b8e8035676f96e"
+        }
+      ],
+      "symbol": "TANSSIUSDT"
+    },
+    {
+      "P1": "2025-11-27T16:21:00Z",
+      "WATCH_UTC": [
+        "2025-11-27T16:00:00Z",
+        "2025-11-28T11:03:00Z",
+        "2025-11-28T23:42:00Z",
+        "2025-11-29T11:48:00Z",
+        "2025-11-29T17:42:00Z",
+        "2025-11-30T20:15:00Z",
+        "2025-12-01T05:51:00Z",
+        "2025-12-01T10:03:00Z",
+        "2025-12-01T19:54:00Z",
+        "2025-12-01T20:24:00Z",
+        "2025-12-01T20:33:00Z",
+        "2025-12-01T22:00:00Z",
+        "2025-12-01T23:09:00Z",
+        "2025-12-02T05:21:00Z",
+        "2025-12-02T16:09:00Z"
+      ],
+      "date": "2025-11-27",
+      "first_2x": "2025-11-28T19:47:00Z",
+      "official_daily_sha": [
+        {
+          "bars": 1440,
+          "date": "2025-11-26",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "83e7d20dc9aab6ed1cd9fa807c4c9799e2776b431c409873c62a7fecdf17bcd9"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-27",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "dc07cd49738023f60b60c008f14760fac192dfe88577797b042665900c91c02b"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-28",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "cf24acf48b5e8bdd4f1a81f9d30be794b938dc11073f9d5479845834600f0414"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-29",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "252a6074147d6905e182f672a55d8829dfe13865d10755fb3f9ab8cf3f6c50db"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-30",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "db276528d3a44a29c4616adb61dd2edd489670f61ffc5e27340312f8dbf9d8d2"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-01",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "71b9d732574cc84d70d140b04ea123efcb2a5e0a89cecefb8a0f8e88abb53e82"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-02",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "0bfd60144add5f1e88c3c74b5726b8c0f97cb0b48a337cc9f0a779889f6cec3e"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-03",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "5cf06bf5000b569cbd14ce21033ed3a455e436ae99d7729134a08b9689a8f4a4"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-12-04",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "65a8a4fbf1491ac1d5aeb609d94d1850eb032519059b02db7b26475f2f8f7b3b"
+        }
+      ],
+      "symbol": "TRADOORUSDT"
+    }
+  ]
+}
