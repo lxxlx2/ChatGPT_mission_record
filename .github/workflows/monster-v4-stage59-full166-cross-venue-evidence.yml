@@ -1,0 +1,58 @@
+name: Monster Stage59 All166 Cross-Venue Source-Locked Alpha Documentary Ledger
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage59_all166_cross_venue_evidence_matrix.py'
+      - '.github/workflows/monster-v4-stage59-full166-cross-venue-evidence.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage59-all166-cross-venue
+  cancel-in-progress: false
+jobs:
+  original_full166_documentary_venue_evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Strict source-locked time-prior announcement and notional-unset tests
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage59_all166_cross_venue_evidence_matrix.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage59_all166_cross_venue_evidence_matrix.py --selftest
+      - name: Derive venue evidence for all historical 166; do not select strategy or assume an order size
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage59_all166_cross_venue_evidence_matrix.py --out /tmp/monster_stage59
+      - name: Preserve all166 venue matrix plus aggregate
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage59-all166-source-locked-venue-evidence-no-notional
+          path: /tmp/monster_stage59/*
+          retention-days: 30
+      - name: Persist Stage59 into original Monster draft research PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage59/monster_stage59_* "$dest/"
+          git add "$dest/monster_stage59_all166_cross_venue_evidence_matrix.jsonl" "$dest/monster_stage59_all166_venue_evidence_coverage_summary.json"
+          if git diff --cached --quiet; then
+            echo STAGE59_EVIDENCE_ALREADY_PRESENT
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: retain Stage59 official pre-signal Alpha announcements in all166 evidence'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE59_EVIDENCE_PERSISTENCE_FAILED
+          exit 1
