@@ -1,14 +1,17 @@
 {
   "D2_real_executable_net_pnl": "UNKNOWN",
+  "G0_intrawindow_listings_and_status_changes_proven": false,
   "G0_point_in_time_market_listing_and_crypto_population_proven": false,
   "G1": {
+    "conditional_on_present_D0_population": true,
     "d0_early5": 28,
     "d0_early5_fraction": "0.9655172413793103448275862069",
     "d0_strict_early": 28,
     "d0_strict_early_fraction": "0.9655172413793103448275862069",
     "n_2x": 29,
     "n_2x_windows": 4,
-    "research_thresholds_numerically_met": true
+    "observed_subcohort_thresholds_descriptive_only": true,
+    "research_thresholds_numerically_met": null
   },
   "G2": {
     "d1_early5_2x": 27,
@@ -241,6 +244,7 @@
     "full_calendar_utc06_days": 42,
     "research_thresholds_numerically_met": false
   },
+  "G3_scope_note": "lower bound when source cohort contains WATCH-only symbols",
   "G5_G10": {
     "10x": {
       "d0_early5": 2,
