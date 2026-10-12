@@ -182,6 +182,42 @@ class OneShotIsolatedTests(unittest.TestCase):
                               git_push=Mock(return_value="a"*40))
         self.assertEqual(status,"MISSED_WINDOW")
 
+    def test_real_install_is_hard_blocked_without_other_ai_review(self):
+        from unittest.mock import patch
+        try:
+            import monster_v4_stage99_external_ai_review as external_ai
+        except ImportError:
+            from scripts import monster_v4_stage99_external_ai_review as external_ai
+        with patch.object(module.sys,"platform","darwin"), \
+             patch.object(external_ai,"verify_approved",
+                 side_effect=RuntimeError("STAGE99_OTHER_AI_REVIEW_REQUIRED")) as review, \
+             patch.object(module,"isolated_checkout_preflight") as checkout, \
+             patch.object(module,"launchctl") as launch:
+            with self.assertRaisesRegex(RuntimeError,"REVIEW_REQUIRED"):
+                module.install(now=self.start-15*60000,dry_run=False)
+            review.assert_called_once()
+            checkout.assert_not_called()
+            launch.assert_not_called()
+
+    def test_external_ai_mock_result_never_counts_as_approval(self):
+        try:
+            import monster_v4_stage99_external_ai_review as external_ai
+        except ImportError:
+            from scripts import monster_v4_stage99_external_ai_review as external_ai
+        with self.assertRaises(RuntimeError):
+            external_ai.verify_approved()
+        fake={"structured_output":{
+            "decision":"BLOCK","blocking_findings":["unsafe"],
+            "nonblocking_findings":[],"reviewed_files":[],
+            "tests_and_security_evidence":[],"review_summary":"synthetic"}}
+        outcome,_=external_ai.parse_cli_response(json.dumps(fake))
+        self.assertEqual(outcome["decision"],"BLOCK")
+        approve=dict(fake)
+        approve["structured_output"]={**fake["structured_output"],
+            "decision":"APPROVE","blocking_findings":[]}
+        with self.assertRaises(ValueError):
+            external_ai.parse_cli_response(json.dumps(approve))
+
     def test_uninstall_can_only_mention_our_exact_three_labels(self):
         for w in freeze.WINDOWS:
             self.assertTrue(module.label_for(w).startswith(
