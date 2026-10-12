@@ -1,0 +1,56 @@
+name: Monster Stage55 Frozen All166 As-of 1m Candidates Vs Normal Signals
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage55_asof_166_candidate_vs_normal_priority_feature_audit.py'
+      - '.github/workflows/monster-v4-stage55-asof-full166-signal-vs-normal-source-SHA.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_frozen_all_166_asof_candidate_features_not_strategy_fit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Decimal as-of source feature research code
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage55_asof_166_candidate_vs_normal_priority_feature_audit.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage55_asof_166_candidate_vs_normal_priority_feature_audit.py --selftest
+      - name: Assess source SHA locked normal and future winner groups at true original closed-minute decisions
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage55_asof_166_candidate_vs_normal_priority_feature_audit.py \
+            --out /tmp/monster_stage55_full166_asof
+      - name: Retain all 166 official candidate observed as-of values with posthoc labels
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage55-all166-original-sha-asof-quote-momentum-vs-normal
+          path: /tmp/monster_stage55_full166_asof/*
+          retention-days: 30
+      - name: Persist original source SHA 166 as-of factual research on Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage55_full166_asof/monster_stage55_* "$dest/"
+          git add "$dest/monster_stage55_all166_asof_closed_1m_vs_posthoc_GT2x_descriptive_summary.json" "$dest/monster_stage55_all166_candidate_asof_features_and_fate.csv"
+          if git diff --cached --quiet; then
+            echo STAGE55_ORIGINAL_SOURCE_ALREADY_COMMITTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage55 all166 real P1v03 as-of feature candidate vs normal venue facts'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE55_SOURCE_SHA_PERSISTENCE_FAILED
+          exit 1
