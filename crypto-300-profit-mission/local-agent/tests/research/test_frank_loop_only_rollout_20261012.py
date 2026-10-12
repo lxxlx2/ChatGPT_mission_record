@@ -240,14 +240,44 @@ def test_sigterm_handler_raises_catchable_keyboard_interrupt():
         ops.interrupted(15, None)
 
 
+def _write(root, rel, text):
+    path = root / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def test_decision_scope_covers_store_and_every_package_module(tmp_path):
+    old, new = tmp_path / "old", tmp_path / "new"
+    for root in (old, new):
+        _write(root, "mission_agent/signals/store.py", "SAME = 1\n")
+        _write(root, "mission_agent/mission_control/delivery.py", "SAME = 2\n")
+    assert ops.decision_scope_diff(old, new) == []
+    _write(new, "mission_agent/signals/store.py", "SAME = 1\nUSDC_PREDICATE_CHANGED = True\n")
+    _write(new, "mission_agent/frank/extra.py", "NEW_MODULE = True\n")
+    assert ops.decision_scope_diff(old, new) == [
+        "mission_agent/frank/extra.py", "mission_agent/signals/store.py"]
+    assert not hasattr(ops, "SIGNAL_FILES")
+
+
+def test_slow_old_exit_is_waited_for_not_reported_as_failure(monkeypatch):
+    monkeypatch.setattr(ops, "WAIT_SECONDS", 8)
+    monkeypatch.setattr(ops, "launch_pid", lambda label: 2222)
+    calls = {"n": 0}
+    def still_exiting(pid):
+        calls["n"] += 1
+        return calls["n"] <= 3
+    monkeypatch.setattr(ops, "process_alive", still_exiting)
+    monkeypatch.setattr(ops.time, "sleep", lambda _: None)
+    monkeypatch.setattr(ops, "heartbeat", lambda control, *, since=None: {"status": "OK"})
+    pid, state = ops.wait_for_new_loop(1111, Path("/fake-control"), 123.0)
+    assert pid == 2222 and state["status"] == "OK"
+    assert calls["n"] >= 4
+
+
 def test_signal_code_files_captured_by_expected_scope():
-    assert "mission_agent/mission_control/policy.py" in ops.SIGNAL_FILES
-    assert "mission_agent/mission_control/service.py" in ops.SIGNAL_FILES
-    assert "mission_agent/signals/classifier.py" in ops.SIGNAL_FILES
-    assert "mission_agent/signals/engine.py" in ops.SIGNAL_FILES
-    assert "mission_agent/signals/evaluator.py" in ops.SIGNAL_FILES
-    assert ops.WAIT_SECONDS >= 600
     source = SCRIPT.read_text(encoding="utf-8")
+    assert "decision_scope_diff(old_agent, new_agent)" in source
+    assert ops.WAIT_SECONDS >= 600
     assert '"--approve-signal-code-change"' in source
     assert "SIGNAL_CODE_DELTA_EXPLICITLY_APPROVED" in source
     assert "except BaseException:" in source
