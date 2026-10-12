@@ -1,0 +1,870 @@
+{
+  "G3_D1": "REJECTED_EXPOSED",
+  "OOS": "NOT_DONE",
+  "autotrade": "NO_GO",
+  "date_correlated_population": true,
+  "deployment": "NO_GO",
+  "features_only_at_or_before_D1": [
+    "ret60_pct",
+    "quote15_USDT",
+    "trade15",
+    "quote_ratio_prev45",
+    "return_from_first_D0_pct",
+    "minutes_since_first_D0"
+  ],
+  "fixed_all305_D1": 305,
+  "frank": "UNCHANGED",
+  "gmail": "OFF",
+  "market_scope": "MIXED_BINANCE_USDM_CENSUS_NOT_CRYPTO_ONLY",
+  "no_claim_predictive_power_from_exposed_dates": true,
+  "no_retuned_strategy": true,
+  "original_source_git_blobs": {
+    "monster_stage85_all305_official_D1_asof_features.jsonl": "622299fec16400e189cb8fa668ecbc8bc31ec630",
+    "monster_stage88_all305_D1_post_signal_24h72h_price_paths.jsonl": "86e96b726f677a15f5a7c8d740e3caca5c83e3fc"
+  },
+  "other_ai_review": "NOT_DONE",
+  "post_signal_only_fixed_exit_labels": {
+    "h24_gross_ge100": {
+      "auc": {
+        "minutes_since_first_D0": {
+          "global_auc_including_cross_date_pairs": "0.64",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.6511627906976744186046511628",
+            "2025-10-02": "0.8275862068965517241379310345",
+            "2026-06-21": "0.9818181818181818181818181818",
+            "2026-07-28": "0.6415094339622641509433962264"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.7755191533436680279669491512"
+        },
+        "quote15_USDT": {
+          "global_auc_including_cross_date_pairs": "0.5346666666666666666666666667",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.8139534883720930232558139535",
+            "2025-10-02": "0.9137931034482758620689655172",
+            "2026-06-21": "0.03636363636363636363636363636",
+            "2026-07-28": "0.1886792452830188679245283019"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.4881973683667560292214178522"
+        },
+        "quote_ratio_prev45": {
+          "global_auc_including_cross_date_pairs": "0.5086666666666666666666666667",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.5697674418604651162790697674",
+            "2025-10-02": "0.1034482758620689655172413793",
+            "2026-06-21": "0.4727272727272727272727272727",
+            "2026-07-28": "0.4905660377358490566037735849"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.409127257046413966418203001"
+        },
+        "ret60_pct": {
+          "global_auc_including_cross_date_pairs": "0.628",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.7441860465116279069767441860",
+            "2025-10-02": "0.9310344827586206896551724138",
+            "2026-06-21": "0.1090909090909090909090909091",
+            "2026-07-28": "0.3773584905660377358490566038"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.5404174822317988558475160282"
+        },
+        "return_from_first_D0_pct": {
+          "global_auc_including_cross_date_pairs": "0.7256666666666666666666666667",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.7093023255813953488372093023",
+            "2025-10-02": "0.8965517241379310344827586207",
+            "2026-06-21": "0.9636363636363636363636363636",
+            "2026-07-28": "0.7169811320754716981132075472"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.8216178863577904294492029585"
+        },
+        "trade15": {
+          "global_auc_including_cross_date_pairs": "0.6353333333333333333333333333",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.8372093023255813953488372093",
+            "2025-10-02": "1",
+            "2026-06-21": "0.2545454545454545454545454545",
+            "2026-07-28": "0.2452830188679245283018867925"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.584259443934740117276317364"
+        }
+      },
+      "count_by_date": {
+        "2025-01-30": {
+          "controls": 75,
+          "positives": 0
+        },
+        "2025-06-02": {
+          "controls": 16,
+          "positives": 0
+        },
+        "2025-08-01": {
+          "controls": 43,
+          "positives": 2
+        },
+        "2025-10-02": {
+          "controls": 58,
+          "positives": 1
+        },
+        "2026-06-21": {
+          "controls": 55,
+          "positives": 1
+        },
+        "2026-07-28": {
+          "controls": 53,
+          "positives": 1
+        }
+      },
+      "negative": 300,
+      "positive": 5,
+      "status": "DESCRIPTIVE_EXPOSED_PRICE_ONLY"
+    },
+    "h24_gross_ge50": {
+      "auc": {
+        "minutes_since_first_D0": {
+          "global_auc_including_cross_date_pairs": "0.5987940630797773654916512059",
+          "global_pair_count": 3234,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.7837837837837837837837837838",
+            "2025-06-02": null,
+            "2025-08-01": "0.5714285714285714285714285714",
+            "2025-10-02": "0.8275862068965517241379310345",
+            "2026-06-21": "0.7295597484276729559748427673",
+            "2026-07-28": "0.5392156862745098039215686275"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.6903147993622179392779109568"
+        },
+        "quote15_USDT": {
+          "global_auc_including_cross_date_pairs": "0.3998144712430426716141001855",
+          "global_pair_count": 3234,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.3783783783783783783783783784",
+            "2025-06-02": null,
+            "2025-08-01": "0.5714285714285714285714285714",
+            "2025-10-02": "0.9137931034482758620689655172",
+            "2026-06-21": "0.2578616352201257861635220126",
+            "2026-07-28": "0.3398692810457516339869281046"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.492266193904220617833844517"
+        },
+        "quote_ratio_prev45": {
+          "global_auc_including_cross_date_pairs": "0.5083487940630797773654916512",
+          "global_pair_count": 3234,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.09459459459459459459459459459",
+            "2025-06-02": null,
+            "2025-08-01": "0.6190476190476190476190476190",
+            "2025-10-02": "0.1034482758620689655172413793",
+            "2026-06-21": "0.5471698113207547169811320755",
+            "2026-07-28": "0.4117647058823529411764705882"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.3552050013414780531776972512"
+        },
+        "ret60_pct": {
+          "global_auc_including_cross_date_pairs": "0.5788497217068645640074211503",
+          "global_pair_count": 3234,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.9189189189189189189189189189",
+            "2025-06-02": null,
+            "2025-08-01": "0.5873015873015873015873015873",
+            "2025-10-02": "0.9310344827586206896551724138",
+            "2026-06-21": "0.1446540880503144654088050314",
+            "2026-07-28": "0.6339869281045751633986928105"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.6431792010268033077937781524"
+        },
+        "return_from_first_D0_pct": {
+          "global_auc_including_cross_date_pairs": "0.6277056277056277056277056277",
+          "global_pair_count": 3234,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.2432432432432432432432432432",
+            "2025-06-02": null,
+            "2025-08-01": "0.6111111111111111111111111111",
+            "2025-10-02": "0.8965517241379310344827586207",
+            "2026-06-21": "0.7484276729559748427672955975",
+            "2026-07-28": "0.6372549019607843137254901961"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.6273177306818089090659797536"
+        },
+        "trade15": {
+          "global_auc_including_cross_date_pairs": "0.5021645021645021645021645022",
+          "global_pair_count": 3234,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.5675675675675675675675675676",
+            "2025-06-02": null,
+            "2025-08-01": "0.5714285714285714285714285714",
+            "2025-10-02": "1",
+            "2026-06-21": "0.2830188679245283018867924528",
+            "2026-07-28": "0.5098039215686274509803921569"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.5863637856978589498012361498"
+        }
+      },
+      "count_by_date": {
+        "2025-01-30": {
+          "controls": 74,
+          "positives": 1
+        },
+        "2025-06-02": {
+          "controls": 16,
+          "positives": 0
+        },
+        "2025-08-01": {
+          "controls": 42,
+          "positives": 3
+        },
+        "2025-10-02": {
+          "controls": 58,
+          "positives": 1
+        },
+        "2026-06-21": {
+          "controls": 53,
+          "positives": 3
+        },
+        "2026-07-28": {
+          "controls": 51,
+          "positives": 3
+        }
+      },
+      "negative": 294,
+      "positive": 11,
+      "status": "DESCRIPTIVE_EXPOSED_PRICE_ONLY"
+    },
+    "h24_gross_loss_le20": {
+      "auc": {
+        "minutes_since_first_D0": {
+          "global_auc_including_cross_date_pairs": "0.4708480565371024734982332155",
+          "global_pair_count": 6226,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.3116197183098591549295774648",
+            "2025-06-02": null,
+            "2025-08-01": "0.525",
+            "2025-10-02": "0.6181818181818181818181818182",
+            "2026-06-21": "0.3701923076923076923076923077",
+            "2026-07-28": "0.6510204081632653061224489796"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.4952028504694500670355801142"
+        },
+        "quote15_USDT": {
+          "global_auc_including_cross_date_pairs": "0.6182139415354963058143270157",
+          "global_pair_count": 6226,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.7147887323943661971830985915",
+            "2025-06-02": null,
+            "2025-08-01": "0.63",
+            "2025-10-02": "0.75",
+            "2026-06-21": "0.6298076923076923076923076923",
+            "2026-07-28": "0.5346938775510204081632653061"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.651858060450615782607734318"
+        },
+        "quote_ratio_prev45": {
+          "global_auc_including_cross_date_pairs": "0.4084484420173466109861869579",
+          "global_pair_count": 6226,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.7147887323943661971830985915",
+            "2025-06-02": null,
+            "2025-08-01": "0.32",
+            "2025-10-02": "0.2045454545454545454545454545",
+            "2026-06-21": "0.08653846153846153846153846154",
+            "2026-07-28": "0.4285714285714285714285714286"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.3508888154099421705055507874"
+        },
+        "ret60_pct": {
+          "global_auc_including_cross_date_pairs": "0.6191776421458400256986829425",
+          "global_pair_count": 6226,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.8485915492957746478873239437",
+            "2025-06-02": null,
+            "2025-08-01": "0.465",
+            "2025-10-02": "0.5363636363636363636363636364",
+            "2026-06-21": "0.6730769230769230769230769231",
+            "2026-07-28": "0.5265306122448979591836734694"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.6099125441962464095260875944"
+        },
+        "return_from_first_D0_pct": {
+          "global_auc_including_cross_date_pairs": "0.4653870864118213941535496306",
+          "global_pair_count": 6226,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.2482394366197183098591549296",
+            "2025-06-02": null,
+            "2025-08-01": "0.515",
+            "2025-10-02": "0.5545454545454545454545454545",
+            "2026-06-21": "0.4086538461538461538461538462",
+            "2026-07-28": "0.6836734693877551020408163265"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.4820224413413548222401341112"
+        },
+        "trade15": {
+          "global_auc_including_cross_date_pairs": "0.6249598458079023450048185031",
+          "global_pair_count": 6226,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.6373239436619718309859154930",
+            "2025-06-02": null,
+            "2025-08-01": "0.57",
+            "2025-10-02": "0.8227272727272727272727272727",
+            "2026-06-21": "0.6490384615384615384615384615",
+            "2026-07-28": "0.5306122448979591836734693878"
+          },
+          "same_date_eligible_window_count": 5,
+          "within_date_macro_equal_date_auc": "0.6419403845651330560787301232"
+        }
+      },
+      "count_by_date": {
+        "2025-01-30": {
+          "controls": 71,
+          "positives": 4
+        },
+        "2025-06-02": {
+          "controls": 16,
+          "positives": 0
+        },
+        "2025-08-01": {
+          "controls": 40,
+          "positives": 5
+        },
+        "2025-10-02": {
+          "controls": 55,
+          "positives": 4
+        },
+        "2026-06-21": {
+          "controls": 52,
+          "positives": 4
+        },
+        "2026-07-28": {
+          "controls": 49,
+          "positives": 5
+        }
+      },
+      "negative": 283,
+      "positive": 22,
+      "status": "DESCRIPTIVE_EXPOSED_PRICE_ONLY"
+    },
+    "h24_up": {
+      "auc": {
+        "minutes_since_first_D0": {
+          "global_auc_including_cross_date_pairs": "0.5709695751005420528064346914",
+          "global_pair_count": 22876,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.4420821114369501466275659824",
+            "2025-06-02": "0.6181818181818181818181818182",
+            "2025-08-01": "0.4700460829493087557603686636",
+            "2025-10-02": "0.5875",
+            "2026-06-21": "0.4625668449197860962566844920",
+            "2026-07-28": "0.5291666666666666666666666667"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.5182572540257549745215779373"
+        },
+        "quote15_USDT": {
+          "global_auc_including_cross_date_pairs": "0.4887218045112781954887218045",
+          "global_pair_count": 22876,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.4200879765395894428152492669",
+            "2025-06-02": "0.4363636363636363636363636364",
+            "2025-08-01": "0.5391705069124423963133640553",
+            "2025-10-02": "0.4714285714285714285714285714",
+            "2026-06-21": "0.5093582887700534759358288770",
+            "2026-07-28": "0.4736111111111111111111111111"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.4750033485209007030638909197"
+        },
+        "quote_ratio_prev45": {
+          "global_auc_including_cross_date_pairs": "0.3984088127294981640146878825",
+          "global_pair_count": 22876,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.3152492668621700879765395894",
+            "2025-06-02": "0.2727272727272727272727272727",
+            "2025-08-01": "0.4354838709677419354838709677",
+            "2025-10-02": "0.5059523809523809523809523810",
+            "2026-06-21": "0.4358288770053475935828877005",
+            "2026-07-28": "0.5402777777777777777777777778"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.4175865743821151790791259483"
+        },
+        "ret60_pct": {
+          "global_auc_including_cross_date_pairs": "0.4478492743486623535583143906",
+          "global_pair_count": 22876,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.5007331378299120234604105572",
+            "2025-06-02": "0.3272727272727272727272727273",
+            "2025-08-01": "0.5552995391705069124423963134",
+            "2025-10-02": "0.6785714285714285714285714286",
+            "2026-06-21": "0.3302139037433155080213903743",
+            "2026-07-28": "0.4597222222222222222222222222"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.4753021598016854183837106038"
+        },
+        "return_from_first_D0_pct": {
+          "global_auc_including_cross_date_pairs": "0.5750786850848050358454275223",
+          "global_pair_count": 22876,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.5142961876832844574780058651",
+            "2025-06-02": "0.6909090909090909090909090909",
+            "2025-08-01": "0.4792626728110599078341013825",
+            "2025-10-02": "0.6178571428571428571428571429",
+            "2026-06-21": "0.4532085561497326203208556150",
+            "2026-07-28": "0.4847222222222222222222222222"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.5400426454387554956814918863"
+        },
+        "trade15": {
+          "global_auc_including_cross_date_pairs": "0.4774873229585591886693477881",
+          "global_pair_count": 22876,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.4222873900293255131964809384",
+            "2025-06-02": "0.5454545454545454545454545455",
+            "2025-08-01": "0.5668202764976958525345622120",
+            "2025-10-02": "0.4821428571428571428571428571",
+            "2026-06-21": "0.5307486631016042780748663102",
+            "2026-07-28": "0.4694444444444444444444444444"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.5028163627784121142754918845"
+        }
+      },
+      "count_by_date": {
+        "2025-01-30": {
+          "controls": 31,
+          "positives": 44
+        },
+        "2025-06-02": {
+          "controls": 11,
+          "positives": 5
+        },
+        "2025-08-01": {
+          "controls": 31,
+          "positives": 14
+        },
+        "2025-10-02": {
+          "controls": 35,
+          "positives": 24
+        },
+        "2026-06-21": {
+          "controls": 34,
+          "positives": 22
+        },
+        "2026-07-28": {
+          "controls": 30,
+          "positives": 24
+        }
+      },
+      "negative": 172,
+      "positive": 133,
+      "status": "DESCRIPTIVE_EXPOSED_PRICE_ONLY"
+    },
+    "h72_gross_ge100": {
+      "auc": {
+        "minutes_since_first_D0": {
+          "global_auc_including_cross_date_pairs": "0.698",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.8863636363636363636363636364",
+            "2025-10-02": "0.8275862068965517241379310345",
+            "2026-06-21": "0.9818181818181818181818181818",
+            "2026-07-28": "0.5913461538461538461538461538"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.8217785447311309380274897518"
+        },
+        "quote15_USDT": {
+          "global_auc_including_cross_date_pairs": "0.504",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.9318181818181818181818181818",
+            "2025-10-02": "0.9137931034482758620689655172",
+            "2026-06-21": "0.03636363636363636363636363636",
+            "2026-07-28": "0.5673076923076923076923076923"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.6123206534844465878948637568"
+        },
+        "quote_ratio_prev45": {
+          "global_auc_including_cross_date_pairs": "0.4346666666666666666666666667",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.1363636363636363636363636364",
+            "2025-10-02": "0.1034482758620689655172413793",
+            "2026-06-21": "0.4727272727272727272727272727",
+            "2026-07-28": "0.5576923076923076923076923077"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.317557873161321437183506149"
+        },
+        "ret60_pct": {
+          "global_auc_including_cross_date_pairs": "0.6126666666666666666666666667",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.5227272727272727272727272727",
+            "2025-10-02": "0.9310344827586206896551724138",
+            "2026-06-21": "0.1090909090909090909090909091",
+            "2026-07-28": "0.6153846153846153846153846154"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.5445593199903544731130938025"
+        },
+        "return_from_first_D0_pct": {
+          "global_auc_including_cross_date_pairs": "0.7796666666666666666666666667",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "1",
+            "2025-10-02": "0.8965517241379310344827586207",
+            "2026-06-21": "0.9636363636363636363636363636",
+            "2026-07-28": "0.6298076923076923076923076923"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.8724989450204967446346756692"
+        },
+        "trade15": {
+          "global_auc_including_cross_date_pairs": "0.634",
+          "global_pair_count": 1500,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.9772727272727272727272727273",
+            "2025-10-02": "1",
+            "2026-06-21": "0.2545454545454545454545454545",
+            "2026-07-28": "0.4711538461538461538461538462"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.675743006993006993006993007"
+        }
+      },
+      "count_by_date": {
+        "2025-01-30": {
+          "controls": 75,
+          "positives": 0
+        },
+        "2025-06-02": {
+          "controls": 16,
+          "positives": 0
+        },
+        "2025-08-01": {
+          "controls": 44,
+          "positives": 1
+        },
+        "2025-10-02": {
+          "controls": 58,
+          "positives": 1
+        },
+        "2026-06-21": {
+          "controls": 55,
+          "positives": 1
+        },
+        "2026-07-28": {
+          "controls": 52,
+          "positives": 2
+        }
+      },
+      "negative": 300,
+      "positive": 5,
+      "status": "DESCRIPTIVE_EXPOSED_PRICE_ONLY"
+    },
+    "h72_gross_ge50": {
+      "auc": {
+        "minutes_since_first_D0": {
+          "global_auc_including_cross_date_pairs": "0.4903448275862068965517241379",
+          "global_pair_count": 4350,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.5304878048780487804878048780",
+            "2025-10-02": "0.5921052631578947368421052632",
+            "2026-06-21": "0.7106918238993710691823899371",
+            "2026-07-28": "0.4739583333333333333333333333"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.5768108063171619799614083528"
+        },
+        "quote15_USDT": {
+          "global_auc_including_cross_date_pairs": "0.4977011494252873563218390805",
+          "global_pair_count": 4350,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.7012195121951219512195121951",
+            "2025-10-02": "0.7894736842105263157894736842",
+            "2026-06-21": "0.2704402515723270440251572327",
+            "2026-07-28": "0.6076388888888888888888888889"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.5921930842167160499807580002"
+        },
+        "quote_ratio_prev45": {
+          "global_auc_including_cross_date_pairs": "0.6282758620689655172413793103",
+          "global_pair_count": 4350,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.5",
+            "2025-10-02": "0.3947368421052631578947368421",
+            "2026-06-21": "0.5660377358490566037735849057",
+            "2026-07-28": "0.6388888888888888888888888889"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.5249158667108021626393026592"
+        },
+        "ret60_pct": {
+          "global_auc_including_cross_date_pairs": "0.5912643678160919540229885057",
+          "global_pair_count": 4350,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.6768292682926829268292682927",
+            "2025-10-02": "0.9122807017543859649122807018",
+            "2026-06-21": "0.1509433962264150943396226415",
+            "2026-07-28": "0.5416666666666666666666666667"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.5704300082350376631869595758"
+        },
+        "return_from_first_D0_pct": {
+          "global_auc_including_cross_date_pairs": "0.5229885057471264367816091954",
+          "global_pair_count": 4350,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.5609756097560975609756097561",
+            "2025-10-02": "0.6271929824561403508771929825",
+            "2026-06-21": "0.6918238993710691823899371069",
+            "2026-07-28": "0.5017361111111111111111111111"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.5954321506736045513384627392"
+        },
+        "trade15": {
+          "global_auc_including_cross_date_pairs": "0.6236781609195402298850574713",
+          "global_pair_count": 4350,
+          "same_date_auc_by_window": {
+            "2025-01-30": null,
+            "2025-06-02": null,
+            "2025-08-01": "0.7012195121951219512195121951",
+            "2025-10-02": "0.9122807017543859649122807018",
+            "2026-06-21": "0.4905660377358490566037735849",
+            "2026-07-28": "0.5555555555555555555555555556"
+          },
+          "same_date_eligible_window_count": 4,
+          "within_date_macro_equal_date_auc": "0.6649054518102281320727805095"
+        }
+      },
+      "count_by_date": {
+        "2025-01-30": {
+          "controls": 75,
+          "positives": 0
+        },
+        "2025-06-02": {
+          "controls": 16,
+          "positives": 0
+        },
+        "2025-08-01": {
+          "controls": 41,
+          "positives": 4
+        },
+        "2025-10-02": {
+          "controls": 57,
+          "positives": 2
+        },
+        "2026-06-21": {
+          "controls": 53,
+          "positives": 3
+        },
+        "2026-07-28": {
+          "controls": 48,
+          "positives": 6
+        }
+      },
+      "negative": 290,
+      "positive": 15,
+      "status": "DESCRIPTIVE_EXPOSED_PRICE_ONLY"
+    },
+    "h72_up": {
+      "auc": {
+        "minutes_since_first_D0": {
+          "global_auc_including_cross_date_pairs": "0.4745986734595789676054984139",
+          "global_pair_count": 20806,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.3623120300751879699248120301",
+            "2025-06-02": "0.4818181818181818181818181818",
+            "2025-08-01": "0.6150793650793650793650793651",
+            "2025-10-02": "0.3794037940379403794037940379",
+            "2026-06-21": "0.46796875",
+            "2026-07-28": "0.5512265512265512265512265512"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.4763014453728710789044550277"
+        },
+        "quote15_USDT": {
+          "global_auc_including_cross_date_pairs": "0.4376141497644910122080169182",
+          "global_pair_count": 20806,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.3665413533834586466165413534",
+            "2025-06-02": "0.3454545454545454545454545455",
+            "2025-08-01": "0.3353174603174603174603174603",
+            "2025-10-02": "0.4430894308943089430894308943",
+            "2026-06-21": "0.5203125",
+            "2026-07-28": "0.4978354978354978354978354978"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.4180917979808785328682632918"
+        },
+        "quote_ratio_prev45": {
+          "global_auc_including_cross_date_pairs": "0.5208113044314140151879265596",
+          "global_pair_count": 20806,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.3308270676691729323308270677",
+            "2025-06-02": "0.5090909090909090909090909091",
+            "2025-08-01": "0.4543650793650793650793650794",
+            "2025-10-02": "0.4607046070460704607046070461",
+            "2026-06-21": "0.515625",
+            "2026-07-28": "0.6334776334776334776334776335"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.4840150494414775544428946227"
+        },
+        "ret60_pct": {
+          "global_auc_including_cross_date_pairs": "0.4689993271171777371911948476",
+          "global_pair_count": 20806,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.2575187969924812030075187970",
+            "2025-06-02": "0.5090909090909090909090909091",
+            "2025-08-01": "0.4920634920634920634920634921",
+            "2025-10-02": "0.5311653116531165311653116531",
+            "2026-06-21": "0.3484375",
+            "2026-07-28": "0.5036075036075036075036075036"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.4403139189012504160129320592"
+        },
+        "return_from_first_D0_pct": {
+          "global_auc_including_cross_date_pairs": "0.4889214649620301836008843603",
+          "global_pair_count": 20806,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.4816729323308270676691729323",
+            "2025-06-02": "0.5",
+            "2025-08-01": "0.6170634920634920634920634921",
+            "2025-10-02": "0.3794037940379403794037940379",
+            "2026-06-21": "0.4859375",
+            "2026-07-28": "0.5613275613275613275613275613"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.5042342132933034730210596705"
+        },
+        "trade15": {
+          "global_auc_including_cross_date_pairs": "0.4455445544554455445544554455",
+          "global_pair_count": 20806,
+          "same_date_auc_by_window": {
+            "2025-01-30": "0.4304511278195488721804511278",
+            "2025-06-02": "0.4181818181818181818181818182",
+            "2025-08-01": "0.3214285714285714285714285714",
+            "2025-10-02": "0.3970189701897018970189701897",
+            "2026-06-21": "0.4609375",
+            "2026-07-28": "0.5858585858585858585858585859"
+          },
+          "same_date_eligible_window_count": 6,
+          "within_date_macro_equal_date_auc": "0.4356460955797043730291483822"
+        }
+      },
+      "count_by_date": {
+        "2025-01-30": {
+          "controls": 56,
+          "positives": 19
+        },
+        "2025-06-02": {
+          "controls": 11,
+          "positives": 5
+        },
+        "2025-08-01": {
+          "controls": 21,
+          "positives": 24
+        },
+        "2025-10-02": {
+          "controls": 41,
+          "positives": 18
+        },
+        "2026-06-21": {
+          "controls": 40,
+          "positives": 16
+        },
+        "2026-07-28": {
+          "controls": 33,
+          "positives": 21
+        }
+      },
+      "negative": 202,
+      "positive": 103,
+      "status": "DESCRIPTIVE_EXPOSED_PRICE_ONLY"
+    }
+  },
+  "price_only_return_summary": {
+    "h24": {
+      "ge100_fixed_exit_count": 5,
+      "ge50_fixed_exit_count": 11,
+      "max_price_proxy_pct": "206.1145080600333518621456365",
+      "median_gross_price_change_pct": "-2.799212871366329452796279800",
+      "min_price_proxy_pct": "-47.85011331532706218372605632",
+      "positive_fixed_exit_count": 133,
+      "total": 305
+    },
+    "h72": {
+      "ge100_fixed_exit_count": 5,
+      "ge50_fixed_exit_count": 15,
+      "max_price_proxy_pct": "815.9915079182924030296075281",
+      "median_gross_price_change_pct": "-6.353629698867877147580549530",
+      "min_price_proxy_pct": "-80.14032473378659464158206824",
+      "positive_fixed_exit_count": 103,
+      "total": 305
+    }
+  },
+  "real_executable_net_pnl": "UNKNOWN",
+  "schema": "MONSTER_STAGE94_ALL305_ASOF_FEATURE_VS_POST_SIGNAL_GROSS_PRICE_AUC_V1",
+  "source_verified_both_horizons": 305
+}
