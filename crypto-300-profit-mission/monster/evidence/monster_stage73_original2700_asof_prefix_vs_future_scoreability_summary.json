@@ -1,0 +1,154 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "FACTUAL_MARKET_TRADABILITY_DENOMINATOR": "UNKNOWN_NOT_COVERED_BY_HISTORICAL_ARCHIVE_SYMBOLS",
+  "FUTURE_EVENT_LABEL_IN_SOURCE_CENSORED": "UNSCORED_NOT_NEGATIVE",
+  "GMAIL": "OFF",
+  "INDEPENDENT_REVIEW_OF_THIS_CHANGE": "NOT_DONE",
+  "M03": "PREFIX_DISCOVERY_ACCOUNTED_LISTING_DENOMINATOR_OPEN",
+  "MONSTER_DEPLOY": "NO_GO",
+  "ORDER_NOTIONAL": "UNSPECIFIED",
+  "ORIGINAL_CONDITIONED_FUTURE_2X_RECALL": "UNCHANGED_NOT_RECALCULATED",
+  "P2": "REJECTED",
+  "by_date": {
+    "2025-03-30": {
+      "first_missing_days": {
+        "2025-03-29": 481
+      },
+      "frozen_attempts": 900,
+      "new_prefix_has_at_least_one_causal_3m_tick": 419,
+      "old_complete_event_parity": 419,
+      "orig_unscored_no_prefix": 481,
+      "original_future_label_scoreable": 419,
+      "original_unscored_with_real_watch": 0,
+      "original_unscored_with_verified_causal_ticks": 0
+    },
+    "2025-06-30": {
+      "first_missing_days": {
+        "2025-06-29": 416
+      },
+      "frozen_attempts": 900,
+      "new_prefix_has_at_least_one_causal_3m_tick": 484,
+      "old_complete_event_parity": 484,
+      "orig_unscored_no_prefix": 416,
+      "original_future_label_scoreable": 484,
+      "original_unscored_with_real_watch": 0,
+      "original_unscored_with_verified_causal_ticks": 0
+    },
+    "2025-11-27": {
+      "first_missing_days": {
+        "2025-11-26": 305,
+        "ALL_9_DAYS_COMPLETE": 1
+      },
+      "frozen_attempts": 900,
+      "new_prefix_has_at_least_one_causal_3m_tick": 595,
+      "old_complete_event_parity": 594,
+      "orig_unscored_no_prefix": 305,
+      "original_future_label_scoreable": 594,
+      "original_unscored_with_real_watch": 0,
+      "original_unscored_with_verified_causal_ticks": 1
+    }
+  },
+  "original18_shard_SHA256_receipts": [
+    {
+      "date": "2025-03-30",
+      "shard": 0,
+      "source_file_sha256": "e3144f73d868763cfdf14d4844a2a226c3da4ffb1e0bf33146bc098c9c9f7657"
+    },
+    {
+      "date": "2025-03-30",
+      "shard": 1,
+      "source_file_sha256": "78a1061e50e895258b17f74f078637d4d4f3247f48c59b2111e6d59ae1dfb1f4"
+    },
+    {
+      "date": "2025-03-30",
+      "shard": 2,
+      "source_file_sha256": "b58c1849eaaaeed889dfbea3f4518e75e2d81f093697eb06d8ef1f86e71437dc"
+    },
+    {
+      "date": "2025-03-30",
+      "shard": 3,
+      "source_file_sha256": "385ee1b5c5549f566351526aff4ebd78b76a36353e21205f9ef7b077ae6eeff8"
+    },
+    {
+      "date": "2025-03-30",
+      "shard": 4,
+      "source_file_sha256": "ff98a0aed3a02c63cce9e86108271d07eb922557c4698e9c9a8c2d98c43f8f56"
+    },
+    {
+      "date": "2025-03-30",
+      "shard": 5,
+      "source_file_sha256": "3e9034f9990bec656b9c02719f771a5b83827dc6beec020686251bb0b1067f9e"
+    },
+    {
+      "date": "2025-06-30",
+      "shard": 0,
+      "source_file_sha256": "9d1935a38cf3e2121f306759ad92a9825ca787425adb147118dd0517e1068f2b"
+    },
+    {
+      "date": "2025-06-30",
+      "shard": 1,
+      "source_file_sha256": "5ab40c6cfedf149b093d85793079e8eaf7e82f35b9b6e9b85678f774d515d0d2"
+    },
+    {
+      "date": "2025-06-30",
+      "shard": 2,
+      "source_file_sha256": "e063924b1412624a9ef3188508cb4214a41ae0de98818093f18aaaa0195a24a8"
+    },
+    {
+      "date": "2025-06-30",
+      "shard": 3,
+      "source_file_sha256": "8775db05761bac5abd89d1a3c72bc212174560068e2b76c6f23dace6b7d8b00d"
+    },
+    {
+      "date": "2025-06-30",
+      "shard": 4,
+      "source_file_sha256": "26833899681d4d48758e7f00b0f5b5d9e279cd4c49f15fa17e764bf818f6ca1a"
+    },
+    {
+      "date": "2025-06-30",
+      "shard": 5,
+      "source_file_sha256": "01b184b249a502560f7a9de42198dcd35aeacfbc2ea509d406ba07d6a92deda8"
+    },
+    {
+      "date": "2025-11-27",
+      "shard": 0,
+      "source_file_sha256": "f6af4f085e08daafe9326ef4e02b0195c130affd0b7e005425ee79e74663cd0b"
+    },
+    {
+      "date": "2025-11-27",
+      "shard": 1,
+      "source_file_sha256": "b085fcd053b0a09d9aef629344a2fb523d677f2e43279ba1cf13d9374aab1e0f"
+    },
+    {
+      "date": "2025-11-27",
+      "shard": 2,
+      "source_file_sha256": "1e971c9fb2a6c0c27d8a7c001380837110143279c72ea2bb468916dec73eeddf"
+    },
+    {
+      "date": "2025-11-27",
+      "shard": 3,
+      "source_file_sha256": "4b235248d30507dfd8f6d98a8eacf60d1b7c0cd17ca24f56fd7574c08781669b"
+    },
+    {
+      "date": "2025-11-27",
+      "shard": 4,
+      "source_file_sha256": "c6734cff45c4632b3c81075a61780afb56755dcd053700df509087b3049c7572"
+    },
+    {
+      "date": "2025-11-27",
+      "shard": 5,
+      "source_file_sha256": "94718e0fb0e0ea6b787cbd7857fdde630cfbdf37cb1d399ed9d1b70b57cfeb6b"
+    }
+  ],
+  "original_future_scoreable_1497_matches": 1497,
+  "original_source_git_blobs": {
+    "MONSTER_STAGE73_M03_ASOF_WATCH_VS_FUTURE_SCOREABILITY_2700_PREREG_20261013.md": "5a055042777593ade4eaf52c0175679ffd57e7fb",
+    "monster_stage66_full2700_originalV4_D0_and_P1v03_source_SHA.jsonl": "9eb19c22ae8d34d030ccabd7176c3cd4d2e2e3f8"
+  },
+  "original_unscored_1203_count": 1203,
+  "original_unscored_no_valid_D0_tick": 1202,
+  "original_unscored_with_real_prefix_discovery": 0,
+  "original_unscored_with_verified_V4_ticks": 1,
+  "research_frozen2700_population": 2700,
+  "schema": "MONSTER_STAGE73_ALL2700_M03_SOURCE_PREFIX_WATCH_WITHOUT_FUTURE_SCOREABILITY_V1"
+}
