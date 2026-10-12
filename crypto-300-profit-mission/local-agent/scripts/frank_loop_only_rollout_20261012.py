@@ -20,9 +20,7 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import sqlite3
-import stat
 import subprocess
 import sys
 import tempfile
@@ -83,7 +81,7 @@ def file_sha256(path):
 
 
 def run_strict_preflight(script, python_bin):
-    ensure("PREFLIGHT_SCRIPT_PRESENT", script.is_file() and script.is_file() and not script.is_symlink())
+    ensure("PREFLIGHT_SCRIPT_PRESENT", script.is_file() and not script.is_symlink())
     data = script.read_bytes()
     blob = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
     ensure("PREFLIGHT_EXACT_GIT_BLOB", blob == CHECK_BLOB)
