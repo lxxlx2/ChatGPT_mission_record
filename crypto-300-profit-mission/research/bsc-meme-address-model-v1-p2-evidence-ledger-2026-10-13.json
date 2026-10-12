@@ -28,6 +28,22 @@
     {
       "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE26_8E6B_MUBARAK_FIVE_CLOSED_ROUNDS_NEGATIVE_CONTROLS_2026-10-13.json",
       "blob_sha": "2d7afc87b89b1426a329270b320d35b6eaadad2f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_239E_TWO_MAJOR_FULL_SIGNED_FLOW_SOURCE_2026-10-11.json",
+      "blob_sha": "5728b4e277cd814bf4b877f9e4a2aff9ec53f92a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+      "blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_239E_IFML_ORIGINAL_TX_RECEIPT_PROVENANCE_2026-10-11.json",
+      "blob_sha": "10973a7aaf392e432ac73b1bb677bcb3d28bb3c0"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_239E_LOBSTER_21_ORIGINAL_SIGNER_RECEIPT_AUDIT_2026-10-11.json",
+      "blob_sha": "d5412d4d4167e33d440a3aa98e6b6753462d02ee"
     }
   ],
   "unit_policy": "Store actual original BNB wallet event-block wei and actual ERC20 USDT separately. Historical pool USDT marks are not real USD settlements. No conversion of quote units to trading score. For native-only episodes unverified USDT quote legs are NULL (UNKNOWN), never fake audited zero.",
@@ -711,11 +727,200 @@
       "is_full_wallet_PnL": false,
       "is_followable_alpha": false,
       "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 1,
+      "first_block": 73658908,
+      "last_block": 73664688,
+      "owner_signed_success_source_record": true,
+      "raw_token_round_closed": true,
+      "net_native_BNB_wallet_event_blocks_wei": "97366720524376562",
+      "actual_USDT_delta_raw": null,
+      "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
+      "mark_USDT_equivalent_spot_reference_raw": null,
+      "net_classification": "POSITIVE_NATIVE_SCOPE",
+      "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "claim_semantics": "SIGNED_NATIVE_WALLET_BLOCK_SCOPE, actual quote attribution and unrelated internal movements not fully audited",
+      "provenance": {
+        "source_path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+        "source_git_blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c",
+        "record_selector": "cohorts[token=我踏马来了].original_episodes[episode_num=1]"
+      },
+      "internal_tracing_status": "SELF_SIGNED_RECEIPT_SUCCESS_27_OF_27; N_MINUS_1_NATIVE_BLOCK_SCOPE_ONLY; LAST_LOBSTER_RECEIPT_GAS_PARTIAL",
+      "is_2026_major_priority": true,
+      "is_full_wallet_PnL": false,
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 1,
+      "first_block": 83636130,
+      "last_block": 84188954,
+      "owner_signed_success_source_record": true,
+      "raw_token_round_closed": true,
+      "net_native_BNB_wallet_event_blocks_wei": "196173568640778763",
+      "actual_USDT_delta_raw": null,
+      "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
+      "mark_USDT_equivalent_spot_reference_raw": null,
+      "net_classification": "POSITIVE_NATIVE_SCOPE",
+      "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "claim_semantics": "SIGNED_NATIVE_WALLET_BLOCK_SCOPE, actual quote attribution and unrelated internal movements not fully audited",
+      "provenance": {
+        "source_path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+        "source_git_blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c",
+        "record_selector": "cohorts[token=龙虾].original_episodes[episode_num=1]"
+      },
+      "internal_tracing_status": "SELF_SIGNED_RECEIPT_SUCCESS_27_OF_27; N_MINUS_1_NATIVE_BLOCK_SCOPE_ONLY; LAST_LOBSTER_RECEIPT_GAS_PARTIAL",
+      "is_2026_major_priority": true,
+      "is_full_wallet_PnL": false,
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 2,
+      "first_block": 85589795,
+      "last_block": 85602706,
+      "owner_signed_success_source_record": true,
+      "raw_token_round_closed": true,
+      "net_native_BNB_wallet_event_blocks_wei": "16753101677791856",
+      "actual_USDT_delta_raw": null,
+      "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
+      "mark_USDT_equivalent_spot_reference_raw": null,
+      "net_classification": "POSITIVE_NATIVE_SCOPE",
+      "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "claim_semantics": "SIGNED_NATIVE_WALLET_BLOCK_SCOPE, actual quote attribution and unrelated internal movements not fully audited",
+      "provenance": {
+        "source_path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+        "source_git_blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c",
+        "record_selector": "cohorts[token=龙虾].original_episodes[episode_num=2]"
+      },
+      "internal_tracing_status": "SELF_SIGNED_RECEIPT_SUCCESS_27_OF_27; N_MINUS_1_NATIVE_BLOCK_SCOPE_ONLY; LAST_LOBSTER_RECEIPT_GAS_PARTIAL",
+      "is_2026_major_priority": true,
+      "is_full_wallet_PnL": false,
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 3,
+      "first_block": 85767531,
+      "last_block": 85952403,
+      "owner_signed_success_source_record": true,
+      "raw_token_round_closed": true,
+      "net_native_BNB_wallet_event_blocks_wei": "23000070376003879",
+      "actual_USDT_delta_raw": null,
+      "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
+      "mark_USDT_equivalent_spot_reference_raw": null,
+      "net_classification": "POSITIVE_NATIVE_SCOPE",
+      "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "claim_semantics": "SIGNED_NATIVE_WALLET_BLOCK_SCOPE, actual quote attribution and unrelated internal movements not fully audited",
+      "provenance": {
+        "source_path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+        "source_git_blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c",
+        "record_selector": "cohorts[token=龙虾].original_episodes[episode_num=3]"
+      },
+      "internal_tracing_status": "SELF_SIGNED_RECEIPT_SUCCESS_27_OF_27; N_MINUS_1_NATIVE_BLOCK_SCOPE_ONLY; LAST_LOBSTER_RECEIPT_GAS_PARTIAL",
+      "is_2026_major_priority": true,
+      "is_full_wallet_PnL": false,
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 4,
+      "first_block": 85954137,
+      "last_block": 85957578,
+      "owner_signed_success_source_record": true,
+      "raw_token_round_closed": true,
+      "net_native_BNB_wallet_event_blocks_wei": "-15332805033002259",
+      "actual_USDT_delta_raw": null,
+      "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
+      "mark_USDT_equivalent_spot_reference_raw": null,
+      "net_classification": "NEGATIVE_NATIVE_SCOPE",
+      "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "claim_semantics": "SIGNED_NATIVE_WALLET_BLOCK_SCOPE, actual quote attribution and unrelated internal movements not fully audited",
+      "provenance": {
+        "source_path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+        "source_git_blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c",
+        "record_selector": "cohorts[token=龙虾].original_episodes[episode_num=4]"
+      },
+      "internal_tracing_status": "SELF_SIGNED_RECEIPT_SUCCESS_27_OF_27; N_MINUS_1_NATIVE_BLOCK_SCOPE_ONLY; LAST_LOBSTER_RECEIPT_GAS_PARTIAL",
+      "is_2026_major_priority": true,
+      "is_full_wallet_PnL": false,
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 5,
+      "first_block": 85959961,
+      "last_block": 85961371,
+      "owner_signed_success_source_record": true,
+      "raw_token_round_closed": true,
+      "net_native_BNB_wallet_event_blocks_wei": "22647938898252522",
+      "actual_USDT_delta_raw": null,
+      "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
+      "mark_USDT_equivalent_spot_reference_raw": null,
+      "net_classification": "POSITIVE_NATIVE_SCOPE",
+      "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "claim_semantics": "SIGNED_NATIVE_WALLET_BLOCK_SCOPE, actual quote attribution and unrelated internal movements not fully audited",
+      "provenance": {
+        "source_path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+        "source_git_blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c",
+        "record_selector": "cohorts[token=龙虾].original_episodes[episode_num=5]"
+      },
+      "internal_tracing_status": "SELF_SIGNED_RECEIPT_SUCCESS_27_OF_27; N_MINUS_1_NATIVE_BLOCK_SCOPE_ONLY; LAST_LOBSTER_RECEIPT_GAS_PARTIAL",
+      "is_2026_major_priority": true,
+      "is_full_wallet_PnL": false,
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 6,
+      "first_block": 86649314,
+      "last_block": 87876365,
+      "owner_signed_success_source_record": true,
+      "raw_token_round_closed": true,
+      "net_native_BNB_wallet_event_blocks_wei": "-44116281066489617",
+      "actual_USDT_delta_raw": null,
+      "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
+      "mark_USDT_equivalent_spot_reference_raw": null,
+      "net_classification": "NEGATIVE_NATIVE_SCOPE",
+      "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "claim_semantics": "SIGNED_NATIVE_WALLET_BLOCK_SCOPE, actual quote attribution and unrelated internal movements not fully audited",
+      "provenance": {
+        "source_path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+        "source_git_blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c",
+        "record_selector": "cohorts[token=龙虾].original_episodes[episode_num=6]"
+      },
+      "internal_tracing_status": "SELF_SIGNED_RECEIPT_SUCCESS_27_OF_27; N_MINUS_1_NATIVE_BLOCK_SCOPE_ONLY; LAST_LOBSTER_RECEIPT_GAS_PARTIAL",
+      "is_2026_major_priority": true,
+      "is_full_wallet_PnL": false,
+      "is_followable_alpha": false,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM"
     }
   ],
   "aggregation_check": {
-    "episode_count": 25,
-    "distinct_wallets_with_any_curated_signed_rounds": 4,
+    "episode_count": 32,
+    "distinct_wallets_with_any_curated_signed_rounds": 5,
     "all_23_wallets_are_in_frozen_baseline": true,
     "has_negative_episodes": true,
     "per_wallet": {
@@ -770,6 +975,19 @@
           "4",
           "MUBARAK"
         ]
+      },
+      "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337": {
+        "rounds": 7,
+        "native_positive": 5,
+        "native_negative": 2,
+        "mixed_positive": 0,
+        "positive_tokens": [
+          "我踏马来了",
+          "龙虾"
+        ],
+        "negative_tokens": [
+          "龙虾"
+        ]
       }
     }
   },
@@ -778,7 +996,35 @@
     "No statistical PnL ranking. Evidence count differs sharply by wallet; never reward wallet with many curated prior studies as more profitable.",
     "IFML/DDAC and IFML/8E6B episode scopes and 2025 vs 2026 opportunities must be compared on a controlled denominator.",
     "No current activity claims, no first observable signal, no 1/5/15 minute executable follower test.",
-    "No source was re-fetched from chain in this P2 mapping; these are original Git evidence references (SHA pinned)."
+    "No source was re-fetched from chain in this P2 mapping; these are original Git evidence references (SHA pinned).",
+    "239E 7 selected full inventory rounds from IFML (1) and Lobster (6) match ALL 27 original signer/receipt success records and archived native balances; BNB event-block deltas not transaction-isolated causal PnL. Full coverage for remaining 17 CAs still unresolved."
   ],
-  "baseline_artifact_git_blob_sha": "e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a"
+  "baseline_artifact_git_blob_sha": "e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a",
+  "additional_signed_source_identity_check": {
+    "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+    "fully_paginated_ca_count": 2,
+    "source_erc20_counts": {
+      "我踏马来了": {
+        "in": 1,
+        "out": 5
+      },
+      "龙虾": {
+        "in": 7,
+        "out": 14
+      }
+    },
+    "owner_signed_success_original_tx": 27,
+    "zero_inventory_closed_rounds": 7,
+    "new_native_wallet_scope_net_wei": "296492314017711706",
+    "live_independent_spot_recheck_2026_10_13": {
+      "original_transactions_checked": 4,
+      "original_signer_success_4_of_4": true,
+      "archive_native_N_to_N_minus_1_delta_4_of_4": true,
+      "full_receipt_parse_3_of_4": true,
+      "first_trade_utc": "2026-01-01T05:46:51Z",
+      "lobster_first_buy_utc": "2026-02-27T08:50:41Z",
+      "lobster_last_exit_utc": "2026-03-21T11:36:16Z"
+    },
+    "not_full_quote_pnl": true
+  }
 }
