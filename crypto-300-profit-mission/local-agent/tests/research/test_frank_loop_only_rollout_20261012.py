@@ -338,6 +338,9 @@ def _fake_mac_rollout(tmp_path, monkeypatch, *, mode="success",
         runtime["pid"] = 222 if runtime["restarts"] == 1 else 333
         if mode in ("crash", "interrupt") and runtime["restarts"] == 1:
             runtime["pid"] = None
+        if mode == "pre_kickstart" and runtime["restarts"] == 1:
+            runtime["pid"] = 111
+            raise KeyboardInterrupt("BEFORE_OLD_LOOP_STOPPED")
     monkeypatch.setattr(ops, "loop_restart", restart)
     def pid(label):
         if label == ops.DASH_LABEL:
@@ -347,7 +350,8 @@ def _fake_mac_rollout(tmp_path, monkeypatch, *, mode="success",
         return runtime["pid"]
     monkeypatch.setattr(ops, "launch_pid", pid)
     monkeypatch.setattr(ops, "process_alive", lambda pid: (
-        mode == "no-heartbeat" and pid == 222
+        (mode == "no-heartbeat" and pid == 222) or
+        (mode == "pre_kickstart" and pid == 111)
     ))
     def wait(old_pid, control, started_at):
         runtime["wait_calls"].append(old_pid)
@@ -438,3 +442,17 @@ def test_end_to_end_signal_delta_is_hard_apply_gate(tmp_path, monkeypatch):
         ops.main()
     assert trace["restarts"] == 0
     assert loop.read_bytes() == b"OLD_RUNNER_EXACT_BYTES\n"
+
+
+
+def test_interrupt_before_kickstart_restores_file_without_restarting_running_old_loop(
+        tmp_path, monkeypatch, capsys):
+    loop, dash, trace = _fake_mac_rollout(
+        tmp_path, monkeypatch, mode="pre_kickstart", legacy_safe=False)
+    with pytest.raises(KeyboardInterrupt):
+        ops.main()
+    assert trace["restarts"] == 1
+    assert trace["pid"] == 111
+    assert loop.read_bytes() == b"OLD_RUNNER_EXACT_BYTES\n"
+    assert dash.read_bytes() == b"DASHBOARD_PRESERVED\n"
+    assert "LOOP_RUNNER_ROLLED_BACK=YES_OLD_LOOP_UNTOUCHED" in capsys.readouterr().out
