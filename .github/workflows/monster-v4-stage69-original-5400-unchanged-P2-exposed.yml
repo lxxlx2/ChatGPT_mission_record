@@ -1,0 +1,54 @@
+name: Monster Stage69 Older Six Exposed5400 Original P2 Frozen Robustness
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage69_frozen_P2_older6_full5400_exposed_robustness.py'
+      - '.github/workflows/monster-v4-stage69-original-5400-unchanged-P2-exposed.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage69-exposed-original5400-unchanged-p2
+  cancel-in-progress: false
+jobs:
+  original_all5400_exposed_unmodified_P2_source_locked_history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Original Stage68 pure-state chronological cap and no future unit test
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage69_frozen_P2_older6_full5400_exposed_robustness.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage69_frozen_P2_older6_full5400_exposed_robustness.py --selftest
+      - name: Verify immutable old5400, source valid3377, D0 519, P1 166, old reference127 and real 29x2 3x5 2x10
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage69_frozen_P2_older6_full5400_exposed_robustness.py \
+            --out /tmp/monster_stage69
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage69-exposed-old6-source-locked-5400-P2-29x2-3x5-2x10
+          path: /tmp/monster_stage69/*
+          retention-days: 30
+      - name: Commit old six date P2 robustness audit to original Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage69/monster_stage69_* "$dest/"
+          git add "$dest/monster_stage69_older6_all685_WATCH_P1_replayed_budget_events.jsonl" "$dest/monster_stage69_older6_all29GT2_3GT5_2GT10_individual_fates.jsonl" "$dest/monster_stage69_older6_full5400_exposed_P2_robustness_summary.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: archive Stage69 5400 original known dates source locked P2 robustness and source127 original alerts'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE69_HISTORIC_EVIDENCE_GIT_PERSIST_FAILURE
+          exit 1
