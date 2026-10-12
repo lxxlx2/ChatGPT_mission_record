@@ -142,15 +142,30 @@ function quoteAsset(asset) {
 
 function frankQuote(x) {
   const asset = x.latest_buy_original_quote_asset || x.latest_buy_quote_asset;
-  const qty = x.latest_buy_original_quote_quantity ?? x.latest_buy_quote_quantity;
-  if (!asset || qty == null) return '暂无（原始支付数据不足）';
-  const original = `${n(qty,6)} ${esc(quoteAsset(asset))}`;
+  const qty = x.latest_buy_original_quote_quantity || x.latest_buy_quote_quantity;
+  const parsed = Number(qty);
+  const hasAmount = Boolean(asset) && qty != null && qty !== '' && Number.isFinite(parsed) && parsed > 0;
+  const predicate = x.latest_buy_amount_predicate;
+  const verified = (predicate === 'USDC_DIRECT_NUMERIC' && asset === USDC_MINT) ||
+    (predicate === 'SOL_EVENT_TIME_USDC_VERIFIED' && x.latest_buy_quote_was_normalized === true);
   const at = Number(x.latest_buy_at);
-  const when = x.latest_buy_at != null && Number.isFinite(at) && at > 0
+  const when = x.latest_buy_at != null && x.latest_buy_at !== '' && Number.isFinite(at) && at > 0
     ? new Date(at * 1000).toLocaleString('zh-CN') : '时间未确认';
+  const timestamp = `<span class="subvalue">已识别买入时间：${esc(when)}</span>`;
+  if (!hasAmount) return `未确认（原始支付数据不足）${timestamp}`;
+  const observed = `${n(qty,6)} ${esc(quoteAsset(asset))}`;
+  if (!verified) {
+    const explanation = ({
+      COMPOSITE_QUOTE_LEGS:'复合报价可能含其他资金腿',
+      ROUTED_RESIDUAL_ASSETS:'多资产路线的最终目标成本不可核实',
+      ROUTE_EVIDENCE_UNVERIFIED:'交易路线证据不足',
+      NON_USDC_QUOTE:'非 USDC 报价尚未确认完整成本'
+    })[x.latest_buy_amount_predicate_reason] || '完整支付成本缺少验证';
+    return `未确认（已识别资金腿：${observed}；${esc(explanation)}，不代表完整支付）${timestamp}`;
+  }
   const conversion = x.latest_buy_quote_was_normalized && x.latest_buy_usdc_equivalent != null
     ? `<span class="subvalue">≈ ${n(x.latest_buy_usdc_equivalent,2)} USDC（历史换算）</span>` : '';
-  return `${original}${conversion}<span class="subvalue">已识别买入时间：${esc(when)}</span>`;
+  return `${observed}${conversion}${timestamp}`;
 }
 
 function reasonFor(x) {
@@ -539,7 +554,7 @@ function renderCandidates(rows) {
       <div class="metrics-grid">
         ${metric('Frank 买/卖次数',`买 ${esc(buys)} · 卖 ${esc(sells)}`,'当前观察到的建仓序列内买入/卖出次数，不代表钱包终身累计。')}
         ${metric('Frank 最近动作',`${esc(translated(sideLabel,x.latest_side,'未知'))} · ${esc(age(x.latest_at))}`)}
-        ${metric('Frank 最近一次买入支付（历史）',frankQuote(x),'仅对应本轮最近一笔已识别买入的资金腿；不代表 Frank 当前持仓、当前市值、全部建仓成本或净投入。')}
+        ${metric('Frank 最近一次买入支付（历史）',frankQuote(x),'仅对应本轮最近一笔已识别买入事件；金额是否为完整支付由原始资金腿证据决定。不代表 Frank 当前持仓、当前市值、全部建仓成本或净投入。')}
         ${metric('Frank 参考买入价',frankPrice,'直接来自 Frank 最近买入事件；即使当前 Decision 因超时提前结束，也尽量展示。')}
         ${metric('当前 $30 成交价',execPrice,'Jupiter 已经请求过就展示真实报价；只有明确跳过/失败才显示原因。')}
         ${metric('相对 Frank 偏离',esc(delta),'如果决策提前返回但 Frank 参考价和 Jupiter 报价都存在，Dashboard 会独立计算偏离供研究。')}
