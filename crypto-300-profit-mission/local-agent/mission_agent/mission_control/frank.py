@@ -236,6 +236,8 @@ class FrankReader:
                     "latest_buy_original_quote_quantity": quote_display["quantity"],
                     "latest_buy_quote_was_normalized": quote_display["normalized"],
                     "latest_buy_usdc_equivalent": quote_display["usdc_equivalent"],
+                    "latest_buy_amount_predicate": latest_buy.get("amount_predicate") if latest_buy else None,
+                    "latest_buy_amount_predicate_reason": latest_buy.get("amount_predicate_reason") if latest_buy else None,
                     # Synthetic model fields are explicit so API consumers cannot confuse them with payment evidence.
                     "latest_buy_model_quote_asset": model_quote_asset,
                     "latest_buy_model_quote_quantity": model_quote_quantity,
