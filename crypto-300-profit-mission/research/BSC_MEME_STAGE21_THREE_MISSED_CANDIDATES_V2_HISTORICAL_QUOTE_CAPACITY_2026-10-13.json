@@ -34,7 +34,9 @@
     "sample_snapshots_total": 18,
     "entry_scenarios_total": 9,
     "exit_what_if_quotes_total": 36,
-    "verified_missed_profitable_trades": 0
+    "verified_missed_profitable_trades": 0,
+    "confirmed_pair_liquidity_removal_events": 1,
+    "causal_BULLA_pool_depletion_verified": true
   },
   "pairs": [
     {
@@ -611,7 +613,35 @@
             }
           ]
         }
-      ]
+      ],
+      "major_liquidity_event": {
+        "transaction_hash": "0xe95b4a39f3ac23adb0558397756c32a0fe25d2a728453647e9b21e9705db85c4",
+        "block": 50982590,
+        "unix_timestamp": 1749217890,
+        "transaction_from": "0x002181303239d3b4bebd61dfb03f148661bf21a3",
+        "transaction_to_PancakeRouter": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+        "receipt_status": "0x1",
+        "gasUsed_hex": "0x30736",
+        "pancake_v2_Burn_topic0": "0xdccd412f0b1252819cb1fd330b93224ca42612892bb3f4f789976e6d81936496",
+        "withdrawn_BULLA_raw": "2811340719556205557577",
+        "withdrawn_WBNB_wei": "786029196188867674",
+        "reserve_before": {
+          "block": 50982589,
+          "reserve_token_raw": "2811587926654453079168",
+          "reserve_WBNB_wei": "786098313388137052",
+          "last_pair_sync_unix_s": 1749217824
+        },
+        "reserve_after": {
+          "block": 50982590,
+          "reserve_token_raw": "247207098247521591",
+          "reserve_WBNB_wei": "69117199269378",
+          "last_pair_sync_unix_s": 1749217890
+        },
+        "raw_reserve_token_delta_equals_burn": true,
+        "raw_reserve_WBNB_delta_equals_burn": true,
+        "withdrawal_of_pre_Burn_pool_percent_approx": 99.991207562961,
+        "conclusion": "POOL_LP_BURN_REMOVAL_NOT_TRADE_DUMP; CANNOT EQUATE A DEPLETED SINGLE POOL WITH GLOBAL TOKEN PRICE OR GLOBAL EXIT VALUE"
+      }
     }
   ],
   "caveats": [
@@ -621,7 +651,8 @@
     "Reserve movements can include LP additions/withdrawals; not solely market price discovery.",
     "Counterfactual 1 BNB buying against <1 BNB reserves is economically unrealistic for a follower; reserve fraction is printed per scenario.",
     "BULLA V2 pair at early +300 block holds extremely low WBNB reserves; model is a local pool quote not the asset's global best executable market.",
-    "No pass on multiple-profit major opportunity trader identification; further evidence needed."
+    "No pass on multiple-profit major opportunity trader identification; further evidence needed.",
+    "BULLA pool WBNB 0.786098313388137052 -> 0.000069117199269378 at exact block 50982590 is **99.9912% V2 LP Burn** (amount0 and amount1 EXACTLY match before-after reserves), not inferred trader selling/token price crash. Treat post-burn pool exit quote as pool-specific liquidity lock, NOT global BULLA PnL."
   ],
   "fix_note": "Corrected the display-only spot_WBNB_per_token to the ratio of native 18-decimal raw reserves (WBNB / token), removing the accidental raw WBNB reserve copy; all raw reserves, exact fee proofs and scenario integer outputs UNCHANGED."
 }
