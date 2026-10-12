@@ -1,0 +1,459 @@
+{
+  "ALL_PRICE_IS_USDM_FUTURES_NOT_REAL_SPOT_OR_ALPHA_FILL": true,
+  "AUTOTRADE": "NO_GO",
+  "GMAIL": "OFF",
+  "HISTORICAL_SOURCE_NOT_HOLDOUT": true,
+  "MONSTER_DEPLOY": "NO_GO",
+  "NEW_MODEL_AND_PROFIT_REPLAY": "NOT_DONE",
+  "NO_ASSUMED_ORDER_SIZE": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1_V03": "REJECTED",
+  "counts": {
+    "D0_without_P1": 353,
+    "P1_survivors": 166,
+    "original_166_paired_source_price_and_SHA_matches": 166,
+    "original_D0_coin_dates": 519,
+    "original_all_market_attempted": 5400,
+    "original_valid_1h_and_1m": 3377
+  },
+  "extended_post_original_window_candidates_with_new_publisher_SHA": 10,
+  "extended_post_original_window_is_separately_proved_not_old_stage52_source": true,
+  "frozen_original_source_blobs": {
+    "monster_stage52_all5400_originalV4_P1v03_true_minute_source_cases.jsonl": "ad7544f97e8a0d6c1f2635aa54052cca42d08cf1",
+    "monster_stage52_pinned_v03_all5400_36SHA_true_global_cap_metrics.json": "42d455a6cc9d0164a8dd94aa12a475bad5ed126e",
+    "monster_stage62_all166_first_D0_vs_P1_official_24h_pair_source_SHA.jsonl": "962b1ae289aa0af3f612499e169a686fc63645a1",
+    "monster_v4_stage60_exposed_all166_post_signal_futures_price_paths.py": "6a638e84cf837ffc84a301649612e8f2f5dc1deb"
+  },
+  "groups": {
+    "ALL_ORIGINAL_519_D0_WATCH": {
+      "censored_by_status": {},
+      "complete": 519,
+      "horizons": {
+        "1440": {
+          "complete": 519,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 9,
+          "futures_high_upside_pct_median_NOT_FILL": "14.85916713193816060530216980",
+          "futures_low_adverse_pct_median_NOT_FILL": "-6.958762886597938144329896910",
+          "terminal_close_positive_count": 284,
+          "terminal_close_return_pct_median_PROXY": "2.556591211717709720372836200"
+        },
+        "15": {
+          "complete": 519,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "2.064359441408621736490588900",
+          "futures_low_adverse_pct_median_NOT_FILL": "-2.061855670103092783505154640",
+          "terminal_close_positive_count": 227,
+          "terminal_close_return_pct_median_PROXY": "-0.4120879120879120879120879100"
+        },
+        "360": {
+          "complete": 519,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "7.835662854722575180008471000",
+          "futures_low_adverse_pct_median_NOT_FILL": "-5.208021550434001795869500150",
+          "terminal_close_positive_count": 272,
+          "terminal_close_return_pct_median_PROXY": "0.780168036192410673068045400"
+        },
+        "60": {
+          "complete": 519,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "3.294573643410852713178294600",
+          "futures_low_adverse_pct_median_NOT_FILL": "-3.779187474692941017681198540",
+          "terminal_close_positive_count": 259,
+          "terminal_close_return_pct_median_PROXY": "0"
+        }
+      },
+      "n": 519
+    },
+    "DAY_2025-01-30": {
+      "censored_by_status": {},
+      "complete": 161,
+      "horizons": {
+        "1440": {
+          "complete": 161,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "26.06205250596658711217183770",
+          "futures_low_adverse_pct_median_NOT_FILL": "-4.056744649079143852663016430",
+          "terminal_close_positive_count": 142,
+          "terminal_close_return_pct_median_PROXY": "20.56950831269897417757339940"
+        },
+        "15": {
+          "complete": 161,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "2.344924341116344323078464800",
+          "futures_low_adverse_pct_median_NOT_FILL": "-1.124085998035577867510640620",
+          "terminal_close_positive_count": 92,
+          "terminal_close_return_pct_median_PROXY": "0.284507910044760161643984600"
+        },
+        "360": {
+          "complete": 161,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "10.63879755753875058713010800",
+          "futures_low_adverse_pct_median_NOT_FILL": "-3.882657463330457290767903360",
+          "terminal_close_positive_count": 137,
+          "terminal_close_return_pct_median_PROXY": "7.698607698607698607698607700"
+        },
+        "60": {
+          "complete": 161,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "3.159012476771967082559065600",
+          "futures_low_adverse_pct_median_NOT_FILL": "-3.267587467082280862041167300",
+          "terminal_close_positive_count": 113,
+          "terminal_close_return_pct_median_PROXY": "1.524390243902439024390243900"
+        }
+      },
+      "n": 161
+    },
+    "DAY_2025-06-02": {
+      "censored_by_status": {},
+      "complete": 34,
+      "horizons": {
+        "1440": {
+          "complete": 34,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "6.62376237890544285371589650",
+          "futures_low_adverse_pct_median_NOT_FILL": "-6.96096245781536107754038890",
+          "terminal_close_positive_count": 12,
+          "terminal_close_return_pct_median_PROXY": "-2.904579553112551652025430905"
+        },
+        "15": {
+          "complete": 34,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "1.987727479425167143685342150",
+          "futures_low_adverse_pct_median_NOT_FILL": "-2.917187429609302859151646090",
+          "terminal_close_positive_count": 12,
+          "terminal_close_return_pct_median_PROXY": "-1.543121339925826808692858790"
+        },
+        "360": {
+          "complete": 34,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "4.743142960220356788130562300",
+          "futures_low_adverse_pct_median_NOT_FILL": "-5.58619597986456709269029485",
+          "terminal_close_positive_count": 15,
+          "terminal_close_return_pct_median_PROXY": "-0.649692573777765704092073930"
+        },
+        "60": {
+          "complete": 34,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "3.304661849229185843401874300",
+          "futures_low_adverse_pct_median_NOT_FILL": "-4.190185327923289849381674690",
+          "terminal_close_positive_count": 15,
+          "terminal_close_return_pct_median_PROXY": "-0.925810496408665589145545080"
+        }
+      },
+      "n": 34
+    },
+    "DAY_2025-08-01": {
+      "censored_by_status": {},
+      "complete": 54,
+      "horizons": {
+        "1440": {
+          "complete": 54,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 3,
+          "futures_high_upside_pct_median_NOT_FILL": "10.33991530167799721328218500",
+          "futures_low_adverse_pct_median_NOT_FILL": "-9.649679142614704555077178265",
+          "terminal_close_positive_count": 20,
+          "terminal_close_return_pct_median_PROXY": "-2.659132442515658943819747855"
+        },
+        "15": {
+          "complete": 54,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "2.780236701237203853766547750",
+          "futures_low_adverse_pct_median_NOT_FILL": "-2.703647869576268370251217650",
+          "terminal_close_positive_count": 19,
+          "terminal_close_return_pct_median_PROXY": "-1.078634926383323650095554855"
+        },
+        "360": {
+          "complete": 54,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "7.29895876045277767423367010",
+          "futures_low_adverse_pct_median_NOT_FILL": "-7.147283885502810569451713255",
+          "terminal_close_positive_count": 23,
+          "terminal_close_return_pct_median_PROXY": "-2.943272041699899736791228925"
+        },
+        "60": {
+          "complete": 54,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "4.219220419159560031536093600",
+          "futures_low_adverse_pct_median_NOT_FILL": "-4.542547671895308523998568205",
+          "terminal_close_positive_count": 27,
+          "terminal_close_return_pct_median_PROXY": "0.1021785459407783020347685800"
+        }
+      },
+      "n": 54
+    },
+    "DAY_2025-10-02": {
+      "censored_by_status": {},
+      "complete": 75,
+      "horizons": {
+        "1440": {
+          "complete": 75,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 2,
+          "futures_high_upside_pct_median_NOT_FILL": "9.823389021479713603818615800",
+          "futures_low_adverse_pct_median_NOT_FILL": "-11.18500120182677670058488903",
+          "terminal_close_positive_count": 28,
+          "terminal_close_return_pct_median_PROXY": "-3.295012953367875647668393780"
+        },
+        "15": {
+          "complete": 75,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "2.167085427135678391959799000",
+          "futures_low_adverse_pct_median_NOT_FILL": "-2.804752656232148977493430820",
+          "terminal_close_positive_count": 30,
+          "terminal_close_return_pct_median_PROXY": "-0.6452575762896372511149348600"
+        },
+        "360": {
+          "complete": 75,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "6.975933031042901988140913800",
+          "futures_low_adverse_pct_median_NOT_FILL": "-7.518296739853626081170991350",
+          "terminal_close_positive_count": 23,
+          "terminal_close_return_pct_median_PROXY": "-2.860944777112441783100465740"
+        },
+        "60": {
+          "complete": 75,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "3.294573643410852713178294600",
+          "futures_low_adverse_pct_median_NOT_FILL": "-4.545454545454545454545454550",
+          "terminal_close_positive_count": 29,
+          "terminal_close_return_pct_median_PROXY": "-1.570458404074702886247877760"
+        }
+      },
+      "n": 75
+    },
+    "DAY_2026-06-21": {
+      "censored_by_status": {},
+      "complete": 100,
+      "horizons": {
+        "1440": {
+          "complete": 100,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 1,
+          "futures_high_upside_pct_median_NOT_FILL": "7.17311253398710283176954630",
+          "futures_low_adverse_pct_median_NOT_FILL": "-11.10696789137714838080246119",
+          "terminal_close_positive_count": 37,
+          "terminal_close_return_pct_median_PROXY": "-4.570683895780106467301530005"
+        },
+        "15": {
+          "complete": 100,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "1.787427643635717118669566050",
+          "futures_low_adverse_pct_median_NOT_FILL": "-2.448282282979746491896525855",
+          "terminal_close_positive_count": 34,
+          "terminal_close_return_pct_median_PROXY": "-0.997575012695305312893278480"
+        },
+        "360": {
+          "complete": 100,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "5.27156581118580577383257905",
+          "futures_low_adverse_pct_median_NOT_FILL": "-7.087256250586310267506913275",
+          "terminal_close_positive_count": 36,
+          "terminal_close_return_pct_median_PROXY": "-4.074847912733375288441367735"
+        },
+        "60": {
+          "complete": 100,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "3.492322954066852752261167400",
+          "futures_low_adverse_pct_median_NOT_FILL": "-3.938737322415567496357157800",
+          "terminal_close_positive_count": 39,
+          "terminal_close_return_pct_median_PROXY": "-1.432310542555676849254825185"
+        }
+      },
+      "n": 100
+    },
+    "DAY_2026-07-28": {
+      "censored_by_status": {},
+      "complete": 95,
+      "horizons": {
+        "1440": {
+          "complete": 95,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 3,
+          "futures_high_upside_pct_median_NOT_FILL": "10.23260176327143125117238790",
+          "futures_low_adverse_pct_median_NOT_FILL": "-8.349197715528963829208593960",
+          "terminal_close_positive_count": 45,
+          "terminal_close_return_pct_median_PROXY": "-2.049605645496056454960564550"
+        },
+        "15": {
+          "complete": 95,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "1.828505437397748051198152200",
+          "futures_low_adverse_pct_median_NOT_FILL": "-2.525159265072477148924383710",
+          "terminal_close_positive_count": 40,
+          "terminal_close_return_pct_median_PROXY": "-0.6615598885793871866295264600"
+        },
+        "360": {
+          "complete": 95,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "5.482954545454545454545454500",
+          "futures_low_adverse_pct_median_NOT_FILL": "-6.359011627906976744186046510",
+          "terminal_close_positive_count": 38,
+          "terminal_close_return_pct_median_PROXY": "-1.469387755102040816326530610"
+        },
+        "60": {
+          "complete": 95,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "2.993396918561995597945708000",
+          "futures_low_adverse_pct_median_NOT_FILL": "-3.591713999331774139659204810",
+          "terminal_close_positive_count": 36,
+          "terminal_close_return_pct_median_PROXY": "-0.8985200845665961945031712500"
+        }
+      },
+      "n": 95
+    },
+    "HISTORICAL_7DAY_CALENDAR_2X_EVAL_ONLY": {
+      "censored_by_status": {},
+      "complete": 29,
+      "horizons": {
+        "1440": {
+          "complete": 29,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 8,
+          "futures_high_upside_pct_median_NOT_FILL": "50.03686409437208159252887690",
+          "futures_low_adverse_pct_median_NOT_FILL": "-5.262278650183762111593718680",
+          "terminal_close_positive_count": 24,
+          "terminal_close_return_pct_median_PROXY": "19.19739696312364425162689800"
+        },
+        "15": {
+          "complete": 29,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "3.235294117647058823529411800",
+          "futures_low_adverse_pct_median_NOT_FILL": "-1.999059266227657572906867360",
+          "terminal_close_positive_count": 18,
+          "terminal_close_return_pct_median_PROXY": "0.667880995749848208864602300"
+        },
+        "360": {
+          "complete": 29,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "17.59172154280338664158043270",
+          "futures_low_adverse_pct_median_NOT_FILL": "-5.262278650183762111593718680",
+          "terminal_close_positive_count": 19,
+          "terminal_close_return_pct_median_PROXY": "6.617002629272567922874671300"
+        },
+        "60": {
+          "complete": 29,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "7.236396809982048791971984300",
+          "futures_low_adverse_pct_median_NOT_FILL": "-4.263148211422714011617210290",
+          "terminal_close_positive_count": 17,
+          "terminal_close_return_pct_median_PROXY": "2.630497328401150842581175500"
+        }
+      },
+      "n": 29
+    },
+    "NEVER_REACHED_P1_353": {
+      "censored_by_status": {},
+      "complete": 353,
+      "horizons": {
+        "1440": {
+          "complete": 353,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "10.36789297658862876254180600",
+          "futures_low_adverse_pct_median_NOT_FILL": "-6.742881337990896580925161430",
+          "terminal_close_positive_count": 175,
+          "terminal_close_return_pct_median_PROXY": "-0.5388692579505300353356890500"
+        },
+        "15": {
+          "complete": 353,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "1.836077985992807117168275600",
+          "futures_low_adverse_pct_median_NOT_FILL": "-1.994167595848700574663350200",
+          "terminal_close_positive_count": 143,
+          "terminal_close_return_pct_median_PROXY": "-0.5085977234197142165173165400"
+        },
+        "360": {
+          "complete": 353,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "6.273830155979202772963604900",
+          "futures_low_adverse_pct_median_NOT_FILL": "-4.796867351933431228585413610",
+          "terminal_close_positive_count": 176,
+          "terminal_close_return_pct_median_PROXY": "-0.0733205022454403812666116800"
+        },
+        "60": {
+          "complete": 353,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "2.816901408450704225352112700",
+          "futures_low_adverse_pct_median_NOT_FILL": "-3.835890593729152768512341560",
+          "terminal_close_positive_count": 164,
+          "terminal_close_return_pct_median_PROXY": "-0.3355704697986577181208053700"
+        }
+      },
+      "n": 353
+    },
+    "ORDINARY_NO_CALENDAR_2X_EVAL_ONLY": {
+      "censored_by_status": {},
+      "complete": 490,
+      "horizons": {
+        "1440": {
+          "complete": 490,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 1,
+          "futures_high_upside_pct_median_NOT_FILL": "13.66868991505842168173253755",
+          "futures_low_adverse_pct_median_NOT_FILL": "-7.207307900360068386158635445",
+          "terminal_close_positive_count": 260,
+          "terminal_close_return_pct_median_PROXY": "1.777176044092635858743436900"
+        },
+        "15": {
+          "complete": 490,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "2.000277448624720965450059950",
+          "futures_low_adverse_pct_median_NOT_FILL": "-2.070563962406971992792213445",
+          "terminal_close_positive_count": 209,
+          "terminal_close_return_pct_median_PROXY": "-0.4618037652661164600835562900"
+        },
+        "360": {
+          "complete": 490,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "7.67598210957438581522901290",
+          "futures_low_adverse_pct_median_NOT_FILL": "-5.13087357608890547755224514",
+          "terminal_close_positive_count": 253,
+          "terminal_close_return_pct_median_PROXY": "0.533102345433811039854884900"
+        },
+        "60": {
+          "complete": 490,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "3.216640056493611294664435900",
+          "futures_low_adverse_pct_median_NOT_FILL": "-3.774614351180643665047653780",
+          "terminal_close_positive_count": 242,
+          "terminal_close_return_pct_median_PROXY": "-0.0496452502470556633044095450"
+        }
+      },
+      "n": 490
+    },
+    "REACHED_P1_SURVIVOR_166": {
+      "censored_by_status": {},
+      "complete": 166,
+      "horizons": {
+        "1440": {
+          "complete": 166,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 9,
+          "futures_high_upside_pct_median_NOT_FILL": "28.52948034541369610362060245",
+          "futures_low_adverse_pct_median_NOT_FILL": "-7.71832394697675343659982962",
+          "terminal_close_positive_count": 109,
+          "terminal_close_return_pct_median_PROXY": "8.19984475029218343886824705"
+        },
+        "15": {
+          "complete": 166,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "2.997416502401973128765874200",
+          "futures_low_adverse_pct_median_NOT_FILL": "-2.357229157518496453587113665",
+          "terminal_close_positive_count": 84,
+          "terminal_close_return_pct_median_PROXY": "0.074335713338762523437056100"
+        },
+        "360": {
+          "complete": 166,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "11.93900863082353589744836990",
+          "futures_low_adverse_pct_median_NOT_FILL": "-5.65596177643644392215515553",
+          "terminal_close_positive_count": 96,
+          "terminal_close_return_pct_median_PROXY": "2.389594416985705379908137400"
+        },
+        "60": {
+          "complete": 166,
+          "futures_high_at_least_2x_from_first_D0_proxy_NOT_FILL": 0,
+          "futures_high_upside_pct_median_NOT_FILL": "5.96383061271812352837159850",
+          "futures_low_adverse_pct_median_NOT_FILL": "-3.706996931820311315467135040",
+          "terminal_close_positive_count": 95,
+          "terminal_close_return_pct_median_PROXY": "1.281837417283468624426114050"
+        }
+      },
+      "n": 166
+    }
+  },
+  "schema": "MONSTER_STAGE63_ALL519_ORIGINAL_FULLMARKET_D0_WATCH_SHA_PAIRED166_V1"
+}
