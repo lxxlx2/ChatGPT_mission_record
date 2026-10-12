@@ -251,3 +251,36 @@ def test_signal_code_files_captured_by_expected_scope():
     assert "SIGNAL_CODE_DELTA_EXPLICITLY_APPROVED" in source
     assert "except BaseException:" in source
     assert "signal.signal(signal.SIGTERM, previous_sigterm)" in source
+
+
+
+def test_legacy_delivery_auto_rollback_requires_identical_version(tmp_path):
+    old = tmp_path / "old"
+    new = tmp_path / "new"
+    rel = Path("mission_agent/mission_control/delivery.py")
+    (old / rel).parent.mkdir(parents=True)
+    (new / rel).parent.mkdir(parents=True)
+    (old / rel).write_bytes(b"safe-stale-age-guard-fixture")
+    (new / rel).write_bytes(b"safe-stale-age-guard-fixture")
+    assert ops.legacy_delivery_code_verified(old, new) is True
+    (old / rel).write_bytes(b"legacy-expired-mail-can-send")
+    assert ops.legacy_delivery_code_verified(old, new) is False
+    (old / rel).unlink()
+    assert ops.legacy_delivery_code_verified(old, new) is False
+
+
+def test_old_process_status_unavailable_never_proves_exit(monkeypatch):
+    monkeypatch.setattr(ops.os, "kill", lambda pid, sig: None)
+    with patch.object(ops.subprocess, "run", return_value=type(
+        "Result", (), {"returncode": 1, "stdout": ""})()):
+        with pytest.raises(RuntimeError, match="PROCESS_LIVENESS_UNVERIFIED"):
+            ops.process_alive(1111)
+
+
+def test_only_process_lookup_error_means_pid_is_absent(monkeypatch):
+    def missing(pid, sig):
+        raise ProcessLookupError()
+    monkeypatch.setattr(ops.os, "kill", missing)
+    assert ops.process_alive(1111) is False
+    with pytest.raises(RuntimeError, match="PID_IDENTITY_UNVERIFIED"):
+        ops.process_alive(-1)
