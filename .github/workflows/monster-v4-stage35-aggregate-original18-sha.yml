@@ -1,0 +1,87 @@
+name: Monster Stage35 Original 18 SHA Feature Aggregate and Git Commit
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py'
+      - '.github/workflows/monster-v4-stage35-aggregate-original18-sha.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  verify_original18_and_persist_1587:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm original 18 matrix succeeded and locate exactly its artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38205179145 > /tmp/monster35_run.json
+          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38205179145/artifacts?per_page=100' > /tmp/monster35_artifacts.json
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          run=json.loads(Path('/tmp/monster35_run.json').read_text())
+          if run['status']!='completed' or run['conclusion']!='success':
+              raise SystemExit('STAGE35_ORIGINAL_18_SOURCE_RUN_NOT_SUCCESS')
+          raw=json.loads(Path('/tmp/monster35_artifacts.json').read_text())
+          arr=raw['artifacts']
+          if len(arr)!=18:raise SystemExit('STAGE35_ORIGINAL_ARTIFACTS_NOT_ALL18')
+          days=set();out=[]
+          for a in arr:
+              m=re.fullmatch(r'monster-stage35-original1m-(\d{4}-\d\d-\d\d)-sha-watch-vs-control',a['name'])
+              if not m or m.group(1) in days or not a.get('digest','').startswith('sha256:') or a.get('expired'):
+                  raise SystemExit('STAGE35_BAD_ARTIFACT_PROOF')
+              days.add(m.group(1))
+              out.append({'date':m.group(1),'artifact_id':a['id'],'original_zip_sha256':a['digest'].split(':')[1]})
+          if len(days)!=18:raise SystemExit('STAGE35_INCOMPLETE_DATES')
+          Path('/tmp/monster35_manifest.json').write_text(json.dumps({'source_run_id':38205179145,'original_artifacts':sorted(out,key=lambda x:x['date'])}))
+          with Path('/tmp/monster35_artifacts.tsv').open('w') as f:
+              for x in out:f.write(str(x['artifact_id'])+'\n')
+          print('STAGE35_ALL18_ORIGINAL_ARTIFACT_PROOFS_LOCKED')
+          PY
+      - name: Download 18 exact original successful source-verification ZIPs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster35_original_18_zips
+          while read -r artifact; do
+            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$artifact/zip" > "/tmp/monster35_original_18_zips/$artifact.zip"
+          done </tmp/monster35_artifacts.tsv
+      - name: Validate every original bytes SHA, real publisher source proofs, immutable 1587 selection and compute descriptive distributions
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage35_aggregate_causal_features.py \
+            --manifest /tmp/monster35_manifest.json \
+            --zips-dir /tmp/monster35_original_18_zips \
+            --output-dir /tmp/monster35_summary
+      - name: Preserve aggregated original-SHA evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage35-18day-original-sha-1587-first-watch-control-features
+          path: /tmp/monster35_summary/*
+          retention-days: 30
+      - name: Commit auditable real feature cohort and descriptive result to same Monster research PR
+        run: |
+          test "$GITHUB_REF_NAME" = "research/monster-v4-local-discovery-20261010"
+          target=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster35_summary/monster_stage35_*.json "$target/"
+          cp /tmp/monster35_summary/monster_stage35_*.jsonl "$target/"
+          git add "$target/monster_stage35_18date_SHA_verified_first_watch_feature_summary.json" "$target/monster_stage35_1587_first_watch_and_control_features.jsonl"
+          if git diff --cached --quiet; then
+            echo 'STAGE35_ALREADY_COMMITTED_IDENTICAL'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage35 original18 source-SHA 1587 first-WATCH features and controls'
+          git push origin "HEAD:$GITHUB_REF_NAME"
