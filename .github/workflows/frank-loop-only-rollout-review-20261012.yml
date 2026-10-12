@@ -3,7 +3,7 @@ name: Frank Loop only rollout independent release gate
 on:
   push:
     branches:
-      - ops/frank-mission-loop-readonly-preflight-20261012
+      - review/frank-loop-only-rollback-20261012
     paths:
       - '.github/workflows/frank-loop-only-rollout-review-20261012.yml'
       - 'crypto-300-profit-mission/local-agent/scripts/frank_loop_only_rollout_20261012.py'
