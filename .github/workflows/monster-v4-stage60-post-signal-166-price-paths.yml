@@ -1,0 +1,60 @@
+name: Monster Stage60 Full166 Post-Signal 24h Official Futures Price Paths
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage60_exposed_all166_post_signal_futures_price_paths.py'
+      - '.github/workflows/monster-v4-stage60-post-signal-166-price-paths.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage60-post-signal-all166-research
+  cancel-in-progress: false
+jobs:
+  publisher_SHA_all166_15_60_360_1440_price_path_only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate immutable cohort contract, bar causality and no fill assertions
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage60_exposed_all166_post_signal_futures_price_paths.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage60_exposed_all166_post_signal_futures_price_paths.py --selftest
+      - name: Read original all166 signals then Binance USD-M official 1m + publisher checksums for 24h after each
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage60_exposed_all166_post_signal_futures_price_paths.py \
+            --out /tmp/monster_stage60 \
+            --workers 6
+      - name: Retain whole 166 case source receipts and 4 horizon descriptive results
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage60-all166-post-signal-verified-futures-price-paths-no-trading
+          path: /tmp/monster_stage60/*
+          retention-days: 30
+      - name: Commit original 166 actual source-verified post-signal paths to original research PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage60/monster_stage60_* "$dest/"
+          git add "$dest/monster_stage60_all166_signal_to_24h_verified_futures_price_proxy.jsonl" "$dest/monster_stage60_full166_signal_price_paths_summary.json"
+          if git diff --cached --quiet; then
+            echo STAGE60_SOURCE_ALREADY_COMMITTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage60 166 official SHA real post-signal 15m 1h 6h 24h futures paths'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE60_PUBLISHER_EVIDENCE_GIT_WRITE_FAILED
+          exit 1
