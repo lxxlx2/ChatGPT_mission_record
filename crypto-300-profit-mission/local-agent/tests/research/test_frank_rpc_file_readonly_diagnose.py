@@ -1,7 +1,6 @@
 """No credential reads or real launchctl invocation. Test only synthetic fixtures."""
 import importlib.util
 from pathlib import Path
-from unittest.mock import patch
 
 SCRIPT = Path(__file__).resolve().parents[2] / "scripts/frank_rpc_file_readonly_diagnose_20261012.py"
 SPEC = importlib.util.spec_from_file_location("frank_rpc_file_readonly_diagnose", SCRIPT)
