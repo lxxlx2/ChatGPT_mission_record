@@ -1,0 +1,57 @@
+{
+  "schema": "MONSTER_STAGE39_FROZEN_ALL900x6_USDM_GROSS_GT_AND_UNCHANGED_V4_FUTURES_MINUTE_1M_CENSUS_V1",
+  "study_date": "2026-10-12",
+  "authoritative_pr": "https://github.com/lxxlx2/ChatGPT_mission_record/pull/30",
+  "research_purpose": "FILL_ALL_FUTURES_NORMAL_PAIR_WATCH_AND_REAL_1M_GT_DISCOVERY_DENOMINATOR_NOT_OPTIMIZE_MODEL",
+  "original_dataset": {
+    "path": "crypto-300-profit-mission/monster/evidence/monster_stage37_sixdate_all5400_usdm_source_and_GT.csv",
+    "git_blob_sha1": "4b02019195a7a48ef6d33606db9b57d6a3429f4b",
+    "attempted": 5400,
+    "publisher_1h_verified": 3333,
+    "source_censored_1h": 2067,
+    "actual_future_hour_high_2x": 52,
+    "actual_future_hour_high_5x": 1
+  },
+  "dates": [
+    "2025-01-19",
+    "2025-04-19",
+    "2025-07-19",
+    "2025-10-19",
+    "2026-04-19",
+    "2026-07-19"
+  ],
+  "cohort": "ALL_900_ARCHIVED_PLAIN_USDT_FUTURES_NAMES_EACH_DATE_INCLUDING_404_AND_NOT_2X; ORIGINAL_STAGE37_SHA_LOCKED; NO_OUTCOME_SELECTION",
+  "shard": "6_SHARDS_EACH_150_SYMBOLS_PER_DATE; 36_GITHUB_SOURCE_ARTIFACTS",
+  "official_source": "BINANCE_FUTURES_UM_DAILY_1MIN_9_DAYS_OFFICIAL_ZIP_PUBLISHER_SHA256_PER_REQUIRED_CASE",
+  "asof_observation": "24h rolling volume warmup + 168h continuous original futures V4 3m polling, 3360 times, SAME locked production observe_snapshot/process_queue",
+  "locked_original_V4_git_blob": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+  "locked_minute_parser": "STAGE38_publisher_SHA_verified_replay_source_and_caused_minute_cross; Stage38 pilot SHA pass, exposed_not_fresh_validation",
+  "censor": [
+    "Prior 1h source missing/gapped -> CENSORED_ALREADY_STAGE37, no extra 1m call, do not score",
+    "New 1m missing/gapped -> CENSORED_MINUTE_SOURCE",
+    "Publisher SHA/invalid ZIP/transport failure -> FAIL_CLOSED",
+    "Official publisher-verified conflicting 1h-vs-1m candles -> explicit CENSORED_DUAL_SOURCE_PRICE_CONFLICT, retain both",
+    "Historical listing/contract multiplier/true fills remain UNKNOWN"
+  ],
+  "result_metric": [
+    "full 5400 count, source statuses",
+    "all 1m complete 2x before-time watch recall + misses",
+    "all 1m complete non2x watch event count/coin-date count",
+    "per-date WATCH and simultaneous first alarms",
+    "genuine price first 1m HIGH events and matched WATCH times"
+  ],
+  "limitations": [
+    "Not true point-in-time exchangeInfo/perpetual universe",
+    "Different Spot + Future market bases",
+    "All dates previously exposed Stage37, no out-of-sample performance claim",
+    "No real L2/fills/no shared cross-symbol 8-candidate D1 queue replay",
+    "No target-specific threshold/exit changes"
+  ],
+  "permissions": {
+    "Gmail": "OFF",
+    "Frank": "UNCHANGED",
+    "Mac": "NO_GO",
+    "trading": "NO_GO",
+    "independentAIreview": "NOT_DONE"
+  }
+}
