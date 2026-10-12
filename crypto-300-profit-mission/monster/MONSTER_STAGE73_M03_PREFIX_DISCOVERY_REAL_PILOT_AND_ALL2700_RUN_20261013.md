@@ -29,6 +29,18 @@ Binance [官方公开行情归档说明](https://github.com/binance/binance-publ
 
 Binance官方USD-M [当前Exchange Information接口](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Exchange-Information)描述的是**当前交易规则/符号信息**，不能直接作为2025年特定UTC分钟的历史上市与可交易市场快照。本轮2700历史归档名字不据此改变，也不猜测全市场召回分母；这部分仍为M03独立未完成证据项。即使能重放历史USD-M期货成交事件，也不能替代当时Spot/Alpha/DEX上市、CA归属、盘口价差/深度和净收益验证。
 
+## 实际官方分钟数据上故意移除未来日的三币因果回归
+
+[真正原始日度ZIP SHA的故障注入CI #38292380586](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38292380586) **SUCCESS**。新[目标测试脚本](../local-agent/scripts/monster_v4_stage73_real_future_day_gap_does_not_erase_watch.py) 从旧Stage66真实2700记录读取已知首次D0，独立取得已经通过发行方SHA的历史日度分钟资料，在首次WATCH已经发生**之后**刻意模拟未来某日 FileNotFoundError。重放所有可观测的已闭合分钟tick，并与原完整历史事件列表按**每一条事件原UTC相等**比对，不只比较first WATCH。结果：[逐日SHA来源、故障注入、精确事件匹配Git证据](evidence/monster_stage73_verified_real_3_source_gaps.json) blob `76e7f04a63c8641426e9aca609a892bf096d6f3c`：
+
+| 原已发生WATCH的币 | 首次WATCH UTC | 人为移除的**未来**日（原发行方并非实际缺失） | 官方SHA完整历史源日前缀 | 原V4实际成功3m轮询 | 先前所有WATCH精确匹配 |
+|---|---|---|---:|---:|---|
+| HFTUSDT | 2025-06-30 17:00 | 2025-07-02 | 3 | 840 | PASS |
+| HUSDT | 2025-07-01 14:36 | 2025-07-03 | 4 | 1320 | PASS |
+| PIPPINUSDT | 2025-11-27 08:33 | 2025-11-29 | 3 | 840 | PASS |
+
+三个币均属已曝光历史案例，**是纠正M03源选择偏差的回归测试，不是新策略验证**。这些未来日只是测试注入缺失，不能把真正存在的历史ZIP写成404事实。未来分数故意不可算，但首次WATCH仍在原时刻出现，证明数据读取层能保留真实已发生的早期信号。
+
 ## 正式全市场回放正在执行
 
 [Stage73三个UTC06日期×六个固定150档案 symbol 分片的真实官方ZIP核对](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38291522405) 已由仓库启动。其技术验收为：必须保存原2700全部身份，即使源不可用；Stage66原1497个全量可评分币的所有WATCH时间全表逐币精确一致；每个prefix源日SHA与旧有效官方SHA收据相同；额外新观察到的WATCH属于原1203被条件删选案例的**未评分历史前缀事件**，不能编入原2×预测成功分母，不能冒充已经有可买现货。
