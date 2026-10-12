@@ -20,17 +20,17 @@ PINNED = {
     "server.py": {
         "baseline": "b5eb4af5c945cc1b62337d48393fe02243f9505f",
         "legacy": "f5e00781ea4af45b4d6b15a09b8cb000f5b744f4",
-        "target": "03dce99acd5fa3844444f588eb2965bb4a419a75",
+        "target": "09a0b66b9fc8ea6f8bf0f8137a6b667ad57f24fd",
     },
     "static/app.js": {
         "baseline": "8f0ac1beace94f01894c151576bc276f48f1b4a4",
         "legacy": "14985b35b019054d5ff9871e002c32421345ff17",
-        "target": "8c8071babf34c4174b90a6699e34565575f4b7a8",
+        "target": "ade294d383c4b2acc172d257bf6e22051fc43075",
     },
     "delivery_review.py": {
         "baseline": None,
         "legacy": "62f5fa85bf41cd95e4a31a373910f81970368ea6",
-        "target": "0f2032b8027f17a7e27da55d92468bbe524bbc14",
+        "target": "643fa250e9cdb08cec1c851f769c787fa2279741",
     },
 }
 STATES = frozenset(("MANUAL_REVIEW", "SENDING", "SENT_UNVERIFIED"))
