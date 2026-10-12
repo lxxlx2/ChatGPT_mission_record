@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "date_bangkok": "2026-10-12",
+  "basis": "Connected GitHub verified refs, file Git blobs, raw content, GitHub Actions logs and user-submitted Claude fifth-review transcript; no direct user Mac access",
+  "historical_reviewer": {
+    "reviewed_head": "10b98ee10d5d84ea187041821cd9fe0d977ecf09",
+    "local_reported_fix": "581f559a (NOT_PUSHED, not incorporated as exact bytes)",
+    "key_defect": "M-13: actual live HTTP disconnect when summarize_manual_reviews raises KeyError or ValueError",
+    "reviewer_ci_or_production_claims_not_adopted": true
+  },
+  "remote_research": {
+    "branch": "review/frank-pr33-r5-classifier-guard-remediation-20261012",
+    "immutable_product_commit": "8ed805e90026397ae1b67f35a3a03ca407226106",
+    "fixed_call": "DashboardState.mission_control_health classifier invocation",
+    "behavior": "Except Exception returns DELIVERY_REVIEW_CLASSIFIER_ERROR; breakdown unavailable; counts stale; no error detail in response",
+    "product_blobs": {
+      "mission_control/server.py": "916be9bc6862c7fa9d602c6d1dfce26b5af53968",
+      "mission_control/static/app.js": "e3aec8f0e0866cc445406562c10bfb78bb5f28e7",
+      "mission_control/delivery_review.py": "643fa250e9cdb08cec1c851f769c787fa2279741"
+    },
+    "raw_github_content_exact_to_source": true,
+    "deploy_script_product_pin_updated": true,
+    "readonly_script_product_pin_updated": true,
+    "no_main_modification": true,
+    "no_mac_install": true,
+    "no_gmail_send": true,
+    "no_production_sqlite_write": true,
+    "no_frank_v1_change": true
+  },
+  "ci": {
+    "pre_fix_red": {
+      "id": 38212141503,
+      "status": "success_when_expected_red",
+      "tested_code": "10b98ee10d5d84ea187041821cd9fe0d977ecf09",
+      "test_result": {
+        "failed": 2,
+        "passed": 1
+      },
+      "symptom": "http.client.RemoteDisconnected on two live HTTP classifier exception cases",
+      "control_passed": true
+    },
+    "isolated": {
+      "id": 38212099772,
+      "status": "success",
+      "head": "0b6a77c05c14760c11a10239b48c9b90b9e60b03",
+      "focused_passed": 88,
+      "full_suite_passed": 1135,
+      "python_syntax_static": "pass",
+      "javascript_syntax": "pass"
+    },
+    "merged_ephemeral": {
+      "id": 38212349915,
+      "status": "success",
+      "base_main": "8aca0b3ff558e17ca1cbce13ceba27aaf9fad8d4",
+      "repair_head": "a64d4c2010091574ec6280e140cfa6d06369e743",
+      "baseline_suite_passed": 1223,
+      "merged_suite_passed": 1276,
+      "auto_merge_no_code_conflict": true,
+      "merge_tree_only_not_pushed": true,
+      "main_baseline_blobs": {
+        "server.py": "f2976007abca4934dc9766b75ca3667635930f89",
+        "static/app.js": "61e37dfe5ce74e1a11c8a70b72624e7b2de417eb",
+        "delivery_review.py": "afa98794136f48762f15fc3cd627866c7f90386a"
+      },
+      "merged_blobs": {
+        "server.py": "1057800fa3d515177c8a820de26e2c60737e8f9a",
+        "static/app.js": "14c21487bab0234fc45270dd759b641d4f9f05e3",
+        "delivery_review.py": "643fa250e9cdb08cec1c851f769c787fa2279741"
+      },
+      "research_product_pin_matches_ephemeral_merge": false
+    }
+  },
+  "release_gates": {
+    "research_m13_code_ci": "PASS",
+    "merge_compatibility": "CI_PASS_BUT_TARGET_PRODUCT_PIN_NOT_READY",
+    "persisted_follow_up_integration_branch": "NOT_DONE",
+    "new_fresh_independent_ai_review": "NOT_DONE",
+    "mac_readonly_target_validation": "NOT_DONE",
+    "gmail_sent_mailbox_readback": "NOT_DONE",
+    "mac_dashboard_deploy": "NO",
+    "main_product_merge_by_this_turn": "NO",
+    "production_trading": "NO_GO",
+    "release": "BLOCK"
+  },
+  "privacy": "No mailbox address, user ID, decision ID, wallet address, private file paths or secrets saved"
+}
