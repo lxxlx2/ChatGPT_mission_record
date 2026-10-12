@@ -155,10 +155,8 @@ def original_case(row,older,reader=None,scanner=scan_verified_prefix):
             raise ValueError("STAGE73_1497_ORIGINAL_PUBLISHER_SHA_RECEIPT_DRIFT")
         if realwatch!=older["original_D0_all_WATCH_UTC"]:
             raise ValueError("STAGE73_ORIGINAL1497_FULL_WATCH_LIST_PARITY_FAILED")
-        if current["SETUP_UTC"]!=older["SETUP_UTC"]:
-            # Stage66 keeps original scan SETUP_UTC in its base truth?
-            if "SETUP_UTC" in older:
-                raise ValueError("STAGE73_ORIGINAL1497_FULL_SETUP_LIST_PARITY_FAILED")
+        if "SETUP_UTC" in older and current["SETUP_UTC"]!=older["SETUP_UTC"]:
+            raise ValueError("STAGE73_ORIGINAL1497_FULL_SETUP_LIST_PARITY_FAILED")
     observable=current["polls"]>0
     return {
         "date":row["date"],"symbol":row["symbol"],
@@ -222,7 +220,7 @@ def summary(rows):
 
 def pilot(rows,old):
     wanted=[
-        ("2025-03-30","HFTUSDT"),
+        ("2025-06-30","HFTUSDT"),
         ("2025-06-30","HUSDT"),
         ("2025-11-27","IRYSUSDT"),
         ("2025-11-27","BROCCOLIF3BUSDT"),
