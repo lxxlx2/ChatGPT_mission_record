@@ -1,0 +1,42 @@
+name: Monster Stage80 Dual Entry Exposed Pilot
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage80-dual-entry-exposed-pilot.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_exposed_asof_event_pilot.py
+      - crypto-300-profit-mission/monster/evidence/monster_stage79_dual_entry_d1_frozen_contract_20261013.json
+      - crypto-300-profit-mission/monster/MONSTER_STAGE79_DUAL_ENTRY_D1_FROZEN_STRATEGY_AND_TECHNICAL_CONTRACT_20261013.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stage80_exposed_only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile both scripts
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_exposed_asof_event_pilot.py
+      - name: Verify frozen contract and causal bar tests
+        run: python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+      - name: Verify exact boundaries on constructed as-of events
+        run: python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_exposed_asof_event_pilot.py --selftest
+      - name: Complete archived event-only exploratory pilot
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_exposed_asof_event_pilot.py --out /tmp/monster-stage80-event-only.json
+          python -m json.tool /tmp/monster-stage80-event-only.json > /dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage80-exposed-pilot
+          path: /tmp/monster-stage80-event-only.json
+          retention-days: 30
