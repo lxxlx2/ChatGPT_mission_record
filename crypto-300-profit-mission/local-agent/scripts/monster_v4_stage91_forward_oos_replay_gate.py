@@ -173,6 +173,9 @@ def replay_raw_symbol(symbol: str, start_utc: str, bars: list, receipts: list,
                       d1_core=d1.evaluate) -> dict:
     """Original V4 first WATCH + frozen Stage79 D1 exactly every 3m, all normal cases."""
     source_ready(symbol,start_utc,bars,receipts)
+    if v4.blob(v4.production.__file__) != v4.ORIGINAL_V4_GIT_BLOB:
+        raise ValueError("STAGE91_ORIGINAL_D0_PRODUCTION_BLOB_NOT_LOCKED")
+    d1.load_contract()
     anchor=verify_window(start_utc)
     scan=runner(symbol,start_utc,bars)
     if scan["polls"]!=3360:
@@ -247,7 +250,10 @@ def gate_cohort(window_groups: dict[str,list[dict]], frozen_universes: dict):
     if any(x["source_status"]!="COMPLETE_REAL_1M_PUBLISHER_SHA_MODEL_REPLAY"
            for x in rows):
         return {"OOS":"BLOCKED_CENSORED_OR_UNVERIFIED_SOURCE"}
-    if any(x["Crypto_identity"]!="VERIFIED_CRYPTO_ASOF" for x in rows):
+    # The raw venue census retains verified out-of-scope securities and
+    # non-crypto rows for audit. Score only certified Crypto; unknown is blocked.
+    recognized={"VERIFIED_CRYPTO_ASOF","CONFIRMED_NONCRYPTO_OUT_OF_SCOPE"}
+    if any(x["Crypto_identity"] not in recognized for x in rows):
         return {"OOS":"BLOCKED_CRYPTO_IDENTITY_NOT_VERIFIED"}
     if any(x["D2_execution"]!="VERIFIED_2_SIDED_REAL_FILLS" for x in rows):
         return {"OOS":"BLOCKED_EXECUTION_EVIDENCE_INCOMPLETE"}
@@ -297,7 +303,42 @@ def selftest():
     assert early5(t,t+5*MIN) and not early5(t,t+4*MIN)
     assert not early5(None,t+8*MIN)
     assert MODEL_SOURCE_V4 and D1_SOURCE_CONTRACT
-    print("STAGE91_FROZEN_POPULATION_CAUSAL_OOS_REJECTION_SELFTEST_PASS")
+    assert v4.blob(v4.production.__file__)==v4.ORIGINAL_V4_GIT_BLOB
+    from decimal import Decimal
+    zero=Decimal("100")
+    anchor=verify_window(WINDOWS[0])
+    begin=anchor-24*3600_000
+    ticks=[]
+    for i in range(v4.BARS):
+        q=Decimal("100000") if v4.WARMUP-12<=i<=v4.WARMUP+2 else Decimal("60000")
+        close=Decimal("110") if v4.WARMUP-12<=i<=v4.WARMUP+2 else zero
+        high=Decimal("210") if i==v4.WARMUP+300 else max(zero,close)
+        ticks.append((begin+i*MIN,zero,high,zero,close,q,1000))
+    receipts=[
+        {"date":date.fromordinal(date.fromisoformat(WINDOWS[0][:10]).toordinal()+n).isoformat(),
+         "zip_sha256":"a"*64,"verified_official_publisher_SHA256":True,"bars":1440}
+        for n in range(-1,8)
+    ]
+    first=v4.stamp(anchor+3*MIN)
+    def fake_original_scanner(_symbol,_date,_bars):
+        return {"polls":3360,"WATCH_UTC":[first],"watch_count":1}
+    score1=replay_raw_symbol("CATUSDT",WINDOWS[0],ticks,receipts,
+                             runner=fake_original_scanner)
+    assert score1["D0_first_UTC"]==first
+    assert score1["D1_first_UTC"]==first
+    assert score1["D1_entry_path"]=="DIRECT_AT_FIRST_D0"
+    assert score1["gross_future_labels_not_real_profit"]["D0_first_pre_GT2x_5m"]
+    future=list(ticks)
+    future[v4.WARMUP+300]=(future[v4.WARMUP+300][0],
+                             zero,zero,zero,zero,Decimal("60000"),1000)
+    future[v4.WARMUP+400]=(future[v4.WARMUP+400][0],
+                             zero,Decimal("210"),zero,zero,Decimal("60000"),1000)
+    score2=replay_raw_symbol("CATUSDT",WINDOWS[0],future,receipts,
+                             runner=fake_original_scanner)
+    assert score2["D1_first_UTC"]==score1["D1_first_UTC"]
+    assert (score2["gross_future_labels_not_real_profit"]["first_GT2x_HIGH_UTC_EVALUATION_ONLY"]
+            !=score1["gross_future_labels_not_real_profit"]["first_GT2x_HIGH_UTC_EVALUATION_ONLY"])
+    print("STAGE91_FROZEN_POPULATION_AND_SYNTHETIC_SAME_CORE_CAUSAL_REPLAY_SELFTEST_PASS")
 
 
 def main():
