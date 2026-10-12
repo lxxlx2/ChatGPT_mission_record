@@ -1,0 +1,109 @@
+name: Monster Stage88 Full305 D1 Gross Price Paths
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage88-full305-post-d1-price-paths.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage88_d1_24h72h_official_paths.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage88_aggregate_305_paths.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE88_ALL305_D1_POST_SIGNAL_24H_72H_PRICE_PATH_PROTOCOL_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage88-full305-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  frozen_contract_and_paths:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Frozen 305 source and 24h/72h synthetic minute test
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage88_d1_24h72h_official_paths.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage88_aggregate_305_paths.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage88_d1_24h72h_official_paths.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage88_aggregate_305_paths.py --selftest
+  official_post_signal_path_shards:
+    needs: frozen_contract_and_paths
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+        shard: [0,1,2,3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch Binance SHA checked future 1m bars, compute gross path only
+        run: |
+          mkdir -p /tmp/stage88
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage88_d1_24h72h_official_paths.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --workers 3 --out /tmp/stage88/monster-stage88-${{ matrix.date }}-s${{ matrix.shard }}.json
+          python -m json.tool /tmp/stage88/monster-stage88-${{ matrix.date }}-s${{ matrix.shard }}.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: monster-stage88-${{ matrix.date }}-s${{ matrix.shard }}
+          path: /tmp/stage88/monster-stage88-${{ matrix.date }}-s${{ matrix.shard }}.json
+          retention-days: 30
+  aggregate_and_persist_pr30:
+    needs: official_post_signal_path_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage88-*
+          merge-multiple: true
+          path: /tmp/stage88-all
+      - name: Reconcile exact 305 cases and horizon source censoring
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage88_aggregate_305_paths.py --artifact-dir /tmp/stage88-all --out /tmp/stage88-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage88-frozen305-gross-24h72h-results
+          path: /tmp/stage88-final/*
+          retention-days: 60
+      - name: Persist auditable source result on original Monster PR
+        run: |
+          set -eu
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/stage88-final/monster_stage88_all305_D1_post_signal_24h72h_price_paths.jsonl "$dest/"
+          cp /tmp/stage88-final/monster_stage88_all305_D1_24h72h_price_only_summary.json "$dest/"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dest/monster_stage88_all305_D1_post_signal_24h72h_price_paths.jsonl" "$dest/monster_stage88_all305_D1_24h72h_price_only_summary.json"
+          if git diff --cached --quiet; then
+            echo "STAGE88_IDENTICAL_RESULT_ALREADY_PERSISTED"
+            exit 0
+          fi
+          git commit -m "monster: persist original305 SHA-verified D1 post-signal 24h72h gross paths"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE88_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE88_GIT_PUSH_FAILED"
+          exit 1
