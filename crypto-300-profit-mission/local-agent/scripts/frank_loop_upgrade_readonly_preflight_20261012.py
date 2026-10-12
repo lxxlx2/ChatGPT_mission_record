@@ -199,6 +199,38 @@ finally:
     check("CLONED_NEW_SCHEMA_INTEGRITY", parsed.get("control_integrity") == "ok")
 
 
+def check_post_clone_status(clone_path: Path, before: dict) -> None:
+    """Read only disposable copied DB; expose sanitized error codes, not paths."""
+    sidecar = clone_path.parent
+    details["clone_wal_sidecar_present"] = (
+        sidecar / (clone_path.name + "-wal")).is_file()
+    details["clone_shm_sidecar_present"] = (
+        sidecar / (clone_path.name + "-shm")).is_file()
+    details["clone_stage"] = "POST_CLONE_OPEN_READONLY"
+    try:
+        with closing(query_ro(clone_path)) as db:
+            check("POST_CLONE_READONLY_REOPEN", True)
+            details["clone_stage"] = "POST_CLONE_SQLITE_INTEGRITY"
+            check("POST_CLONE_INTEGRITY",
+                  db.execute("PRAGMA integrity_check").fetchone()[0] == "ok")
+            details["clone_stage"] = "POST_CLONE_STATUS_COUNTS"
+            after = counters(db)
+        details["clone_stage"] = "POST_CLONE_COMPARE_COUNTS"
+        check("EXISTING_EVENTS_AND_DELIVERY_UNCHANGED",
+              all(before[k] == after[k] for k in before))
+        details["clone_stage"] = "COMPLETE"
+    except sqlite3.Error as exc:
+        details["clone_sqlite_error_name"] = getattr(
+            exc, "sqlite_errorname", type(exc).__name__)
+        details["clone_sqlite_error_code"] = getattr(
+            exc, "sqlite_errorcode", None)
+        print("CLONE_SQLITE_ERROR_NAME=" +
+              str(details["clone_sqlite_error_name"]), flush=True)
+        print("CLONE_FAILED_STAGE=" +
+              details["clone_stage"], flush=True)
+        raise
+
+
 def main():
     global phase
     phase = "LIVE_READONLY_PREFLIGHT"
@@ -296,34 +328,7 @@ print(json.dumps({"authorized":live_delivery_policy_authorized(p,h,expected),
         details["delivery_risk_totals"] = risk
         phase = "UPGRADE_CLONE_COMPATIBILITY"
         isolated_schema_probe(current["VENV"] / "bin/python", from_source, tmp / "mission-control.sqlite")
-        clone_path = tmp / "mission-control.sqlite"
-        details["clone_wal_sidecar_present"] = (
-            tmp / "mission-control.sqlite-wal").is_file()
-        details["clone_shm_sidecar_present"] = (
-            tmp / "mission-control.sqlite-shm").is_file()
-        details["clone_stage"] = "POST_CLONE_OPEN_READONLY"
-        try:
-            with closing(query_ro(clone_path)) as db:
-                check("POST_CLONE_READONLY_REOPEN", True)
-                details["clone_stage"] = "POST_CLONE_SQLITE_INTEGRITY"
-                check("POST_CLONE_INTEGRITY",
-                      db.execute("PRAGMA integrity_check").fetchone()[0] == "ok")
-                details["clone_stage"] = "POST_CLONE_STATUS_COUNTS"
-                after = counters(db)
-            details["clone_stage"] = "POST_CLONE_COMPARE_COUNTS"
-            check("EXISTING_EVENTS_AND_DELIVERY_UNCHANGED",
-                  all(before[k] == after[k] for k in before))
-            details["clone_stage"] = "COMPLETE"
-        except sqlite3.Error as exc:
-            details["clone_sqlite_error_name"] = getattr(
-                exc, "sqlite_errorname", type(exc).__name__)
-            details["clone_sqlite_error_code"] = getattr(
-                exc, "sqlite_errorcode", None)
-            print("CLONE_SQLITE_ERROR_NAME=" +
-                  str(details["clone_sqlite_error_name"]), flush=True)
-            print("CLONE_FAILED_STAGE=" +
-                  details["clone_stage"], flush=True)
-            raise
+        check_post_clone_status(tmp / "mission-control.sqlite", before)
     phase = "NOTIFICATION_REPLAY_GATE"
     check("NO_FRESH_SENDABLE_LEGACY_GMAIL",
           risk.get("gmail_potential_fresh_send", 0) == 0
