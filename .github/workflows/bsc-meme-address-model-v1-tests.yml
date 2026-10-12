@@ -10,6 +10,7 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p2.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.md"
+      - "crypto-300-profit-mission/research/README_BSC_MEME_TOP_TRADERS.md"
       - "crypto-300-profit-mission/research/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json"
   workflow_dispatch:
 
