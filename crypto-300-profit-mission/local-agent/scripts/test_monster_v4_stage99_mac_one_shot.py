@@ -77,6 +77,38 @@ class OneShotIsolatedTests(unittest.TestCase):
         self.assertFalse(module.AGENTS.exists())
         self.assertTrue(all(x in out for x in freeze.WINDOWS))
 
+    def test_approved_review_installs_exact_three_isolated_launchd_jobs(self):
+        try:
+            import monster_v4_stage99_external_ai_review as external_ai
+        except ImportError:
+            from scripts import monster_v4_stage99_external_ai_review as external_ai
+        now=self.start-20*60000
+        with patch.object(module.sys,"platform","darwin"), \
+             patch.object(external_ai,"verify_approved",return_value=True) as review, \
+             patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"git"), \
+             patch.object(module,"launchctl",return_value=0) as launch, \
+             patch.object(module.shutil,"which",return_value="/bin/launchctl"):
+            installed=module.install(now=now,dry_run=False)
+        review.assert_called_once()
+        self.assertEqual(len(installed),3)
+        self.assertEqual(launch.call_count,3)
+        for w in freeze.WINDOWS:
+            plist=module.plist_path(w)
+            self.assertTrue(plist.exists())
+            with open(plist,"rb") as f:
+                import plistlib
+                data=plistlib.load(f)
+            self.assertFalse(data["KeepAlive"])
+            self.assertFalse(data["RunAtLoad"])
+            self.assertEqual(data["ProgramArguments"][-1],w)
+            self.assertTrue(data["Label"].startswith("com.lxxlx2.monster.stage99."))
+            self.assertEqual(module.status()[w]["status"],"SCHEDULE_INSTALLED")
+        with patch.object(module,"launchctl",return_value=0) as boot:
+            for w in freeze.WINDOWS:module.bootout(w)
+        self.assertEqual(boot.call_count,3)
+        self.assertTrue(all(not module.plist_path(w).exists() for w in freeze.WINDOWS))
+
     def test_no_frozen_date_can_be_replaced(self):
         with self.assertRaises(ValueError):
             module.label_for("2026-10-15T06:00:00Z")
