@@ -177,7 +177,7 @@ def test_post_clone_checks_valid_sqlite_rows_unchanged(tmp_path, monkeypatch):
     ops.check_post_clone_status(p, before)
     assert ops.details["clone_stage"] == "COMPLETE"
     assert ops.checks["POST_CLONE_READONLY_REOPEN"] == "PASS"
-    assert ops.checks["POST_CLONE_INTEGRITY"] == "PASS"
+    assert ops.checks["POST_CLONE_ROW_READABLE"] == "PASS"
     assert ops.checks["EXISTING_EVENTS_AND_DELIVERY_UNCHANGED"] == "PASS"
 
 
@@ -189,5 +189,64 @@ def test_cloned_database_error_code_does_not_allow_fake_success(tmp_path, monkey
     with pytest.raises(ops.sqlite3.Error):
         ops.check_post_clone_status(p, {})
     assert ops.details["clone_stage"] == "POST_CLONE_OPEN_READONLY"
-    assert "POST_CLONE_INTEGRITY" not in ops.checks
+    assert "POST_CLONE_ROW_READABLE" not in ops.checks
     assert "EXISTING_EVENTS_AND_DELIVERY_UNCHANGED" not in ops.checks
+
+
+
+def test_post_clone_redundant_integrity_pragma_not_executed(tmp_path, monkeypatch):
+    """Fail if second read-only pass attempts PRAGMA integrity_check.
+
+    The new ControlDB bootstrap already checked the disposable clone's
+    integrity. This pass must only demonstrate table read and exact counts.
+    """
+    from mission_agent.mission_control.db import ControlDB
+
+    p = tmp_path / "control-copy.sqlite"
+    writer = ControlDB(p)
+    writer.close()
+    with ops.closing(ops.query_ro(p)) as ro:
+        old = ops.counters(ro)
+
+    original_query_ro = ops.query_ro
+
+    class NoIntegrityPragma:
+        def __init__(self, wrapped):
+            self.wrapped = wrapped
+
+        def execute(self, sql, *args):
+            assert "integrity_check" not in sql.lower()
+            return self.wrapped.execute(sql, *args)
+
+        def close(self):
+            self.wrapped.close()
+
+    def patched_query(path):
+        return NoIntegrityPragma(original_query_ro(path))
+
+    monkeypatch.setattr(ops, "query_ro", patched_query)
+    monkeypatch.setattr(ops, "details", {})
+    monkeypatch.setattr(ops, "checks", {})
+    ops.check_post_clone_status(p, old)
+    assert ops.details["clone_stage"] == "COMPLETE"
+    assert ops.checks["EXISTING_EVENTS_AND_DELIVERY_UNCHANGED"] == "PASS"
+
+
+def test_post_clone_counts_difference_is_hard_failure(tmp_path, monkeypatch):
+    """Do not silently waive the invariant when the clone status changed."""
+    from mission_agent.mission_control.db import ControlDB
+
+    p = tmp_path / "control-copy.sqlite"
+    writer = ControlDB(p)
+    writer.close()
+    with ops.closing(ops.query_ro(p)) as ro:
+        original_counts = ops.counters(ro)
+    changed_counts = dict(original_counts)
+    changed_counts["decision_events"] = original_counts["decision_events"] + 1
+
+    monkeypatch.setattr(ops, "details", {})
+    monkeypatch.setattr(ops, "checks", {})
+    with pytest.raises(RuntimeError, match="FAILED_EXISTING_EVENTS_AND_DELIVERY_UNCHANGED"):
+        ops.check_post_clone_status(p, changed_counts)
+    assert ops.checks["POST_CLONE_ROW_READABLE"] == "PASS"
+    assert ops.checks["EXISTING_EVENTS_AND_DELIVERY_UNCHANGED"] == "FAIL"
