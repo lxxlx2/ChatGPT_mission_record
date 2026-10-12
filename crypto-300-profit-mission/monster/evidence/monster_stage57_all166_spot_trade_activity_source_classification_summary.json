@@ -1,0 +1,142 @@
+{
+  "AUTO_TRADE": "NO_GO",
+  "BTCUSDT_spot_positive_archive_controls": [
+    {
+      "frozen_date": "2025-01-30",
+      "spot_archive_receipts": [
+        {
+          "archive_SHA256": "f9c7e4c0628e475629dbd3843814d034c33bfd92200e56fcb7007b7a715b3c10",
+          "bars_in_day": 1440,
+          "date": "2025-02-03",
+          "publisher_sha256_verified": true,
+          "status": "VERIFIED_ORIGINAL_BINANCE_SPOT_1M",
+          "symbol": "BTCUSDT",
+          "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2025-02-03.zip"
+        }
+      ],
+      "timestamp": "2025-02-03T15:30:00Z",
+      "trades15": 227931
+    },
+    {
+      "frozen_date": "2025-06-02",
+      "spot_archive_receipts": [
+        {
+          "archive_SHA256": "9ae51f86f93f9433086a3a62bd3c4fd3ad429bf789cc0419b6feacaed29eb85c",
+          "bars_in_day": 1440,
+          "date": "2025-06-07",
+          "publisher_sha256_verified": true,
+          "status": "VERIFIED_ORIGINAL_BINANCE_SPOT_1M",
+          "symbol": "BTCUSDT",
+          "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2025-06-07.zip"
+        }
+      ],
+      "timestamp": "2025-06-07T18:06:00Z",
+      "trades15": 14279
+    },
+    {
+      "frozen_date": "2025-08-01",
+      "spot_archive_receipts": [
+        {
+          "archive_SHA256": "85ab24399bb6a4298969ba2af282984fe41ae06f219956c078acc65a66c86cb0",
+          "bars_in_day": 1440,
+          "date": "2025-08-07",
+          "publisher_sha256_verified": true,
+          "status": "VERIFIED_ORIGINAL_BINANCE_SPOT_1M",
+          "symbol": "BTCUSDT",
+          "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2025-08-07.zip"
+        }
+      ],
+      "timestamp": "2025-08-07T18:48:00Z",
+      "trades15": 9925
+    },
+    {
+      "frozen_date": "2025-10-02",
+      "spot_archive_receipts": [
+        {
+          "archive_SHA256": "62cece2581dc67b5dcd42ad5bdc0c9eddf8a4d5a65cd707354b35aaacb471f4e",
+          "bars_in_day": 1440,
+          "date": "2025-10-08",
+          "publisher_sha256_verified": true,
+          "status": "VERIFIED_ORIGINAL_BINANCE_SPOT_1M",
+          "symbol": "BTCUSDT",
+          "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2025-10-08.zip"
+        }
+      ],
+      "timestamp": "2025-10-08T13:21:00Z",
+      "trades15": 36191
+    },
+    {
+      "frozen_date": "2026-06-21",
+      "spot_archive_receipts": [
+        {
+          "archive_SHA256": "a13d5870bc5f0c2287a7211eba8c5d443267dd14ebf8d93b5c9507baed1c1199",
+          "bars_in_day": 1440,
+          "date": "2026-06-21",
+          "publisher_sha256_verified": true,
+          "status": "VERIFIED_ORIGINAL_BINANCE_SPOT_1M",
+          "symbol": "BTCUSDT",
+          "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2026-06-21.zip"
+        }
+      ],
+      "timestamp": "2026-06-21T18:36:00Z",
+      "trades15": 24450
+    },
+    {
+      "frozen_date": "2026-07-28",
+      "spot_archive_receipts": [
+        {
+          "archive_SHA256": "f8bb0d352831f4d9e1c264d9771786c80ee7552bd9d249b297e5c0de6739d0ca",
+          "bars_in_day": 1440,
+          "date": "2026-07-31",
+          "publisher_sha256_verified": true,
+          "status": "VERIFIED_ORIGINAL_BINANCE_SPOT_1M",
+          "symbol": "BTCUSDT",
+          "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2026-07-31.zip"
+        }
+      ],
+      "timestamp": "2026-07-31T14:06:00Z",
+      "trades15": 92267
+    }
+  ],
+  "DEPLOYMENT": "NO_GO",
+  "EXACT_SYMBOL_ONLY": true,
+  "FRANK": "UNCHANGED",
+  "GMAIL": "OFF",
+  "NEVER_INFER_NO_LISTING_FROM_ARCHIVE_404": true,
+  "NEW_PRIORITY_RANKER": "NOT_DESIGNED",
+  "NO_HISTORIC_ORDERBOOK_OR_TRADEABLE_BUY_CLAIM": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1V03": "REJECTED",
+  "all_historic_USDM_futures_candidates": 166,
+  "original166_locked_input_blobs": {
+    "monster_stage56_all166_61m_asof_taker_trades_official_SHA.jsonl": "982bddbf05f263423f9cab4f40c0992688cc3499",
+    "monster_stage56_all166_taker_trades_descriptive_summary.json": "50879caf60f7a3795519d5508594e52835be501d"
+  },
+  "posthoc_groups_only_for_descriptive_audit": {
+    "FUTURE_2X_AND_CANDIDATE_BEFORE_5MIN": {
+      "count": 27,
+      "spot_evidence_by_status": {
+        "EXACT_SYMBOL_SPOT_15M_SOURCE_COMPLETE_WITH_TRADES": 7,
+        "EXACT_SYMBOL_SPOT_ARCHIVE_MISSING_OR_NOT_PUBLISHED_UNKNOWN": 20
+      }
+    },
+    "FUTURE_2X_BUT_CANDIDATE_LATE": {
+      "count": 2,
+      "spot_evidence_by_status": {
+        "EXACT_SYMBOL_SPOT_ARCHIVE_MISSING_OR_NOT_PUBLISHED_UNKNOWN": 2
+      }
+    },
+    "ORDINARY_NOT_CALENDAR_2X": {
+      "count": 137,
+      "spot_evidence_by_status": {
+        "EXACT_SYMBOL_SPOT_15M_SOURCE_COMPLETE_WITH_TRADES": 69,
+        "EXACT_SYMBOL_SPOT_ARCHIVE_MISSING_OR_NOT_PUBLISHED_UNKNOWN": 68
+      }
+    }
+  },
+  "schema": "MONSTER_STAGE57_ORIGINAL_166_PINNED_EXACT_SYMBOL_OFFICIAL_SPOT_1M_ASOF_15M_V1",
+  "spot_evidence_counts_by_status": {
+    "EXACT_SYMBOL_SPOT_15M_SOURCE_COMPLETE_WITH_TRADES": 76,
+    "EXACT_SYMBOL_SPOT_ARCHIVE_MISSING_OR_NOT_PUBLISHED_UNKNOWN": 90
+  }
+}
