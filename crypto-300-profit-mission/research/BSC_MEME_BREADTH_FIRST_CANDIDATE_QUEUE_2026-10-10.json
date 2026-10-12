@@ -130,15 +130,15 @@
     "verified_direct_candidate_bnb_transfers": 7,
     "latest_2026_10_11_erc20_sample_rows": 1224,
     "latest_2026_10_11_unread_directions": 23,
-    "wallets_with_complete_19_ca_direction_history": 16,
-    "latest_2026_10_12_complete_wallet_ca_cells": 381,
+    "wallets_with_complete_19_ca_direction_history": 17,
+    "latest_2026_10_12_complete_wallet_ca_cells": 382,
     "latest_2026_10_12_complete_zero_transfer_cells": 289,
     "latest_2026_10_12_unknown_incomplete_cells": 0,
     "latest_2026_10_12_observed_wallet_ca_pairs": 148,
-    "latest_2026_10_12_complete_quantity_closed_cells": 52,
-    "latest_2026_10_12_complete_observed_wallet_ca_pairs": 92,
-    "latest_2026_10_12_partial_observed_wallet_ca_pairs": 56,
-    "latest_2026_10_12_nonexhausted_transfer_wallet_ca_cells": 56
+    "latest_2026_10_12_complete_quantity_closed_cells": 53,
+    "latest_2026_10_12_complete_observed_wallet_ca_pairs": 93,
+    "latest_2026_10_12_partial_observed_wallet_ca_pairs": 55,
+    "latest_2026_10_12_nonexhausted_transfer_wallet_ca_cells": 55
   },
   "venue_coverage": [
     {
@@ -1828,6 +1828,20 @@
         "report": "BSC_MEME_ADDRESS_MODEL_4_STAGE7_V9_TWO_19CA_WALLETS_AND_ECONOMIC_TRUTH_GATES_2026-10-12.md",
         "source_matrix": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V9_2026-10-12.json",
         "production": "NO_GO"
+      },
+      "address_model_4_stage8_2026_10_12": {
+        "full_frozen_19CA": true,
+        "observed_transfer_tokens": 6,
+        "complete_CAs": 19,
+        "quantity_closed_CAs": 5,
+        "token": "MARSCOIN",
+        "latest_full_mars_in_out": [
+          14,
+          180
+        ],
+        "raw_token_balance": "0",
+        "status": "READ_ONLY_PNL_UNRESOLVED_NO_GO",
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V10_2026-10-12.json"
       }
     },
     {
@@ -2808,5 +2822,18 @@
     "total_eligible_trade_denominator": "NOT_ESTABLISHED",
     "realized_PnL": "UNVERIFIED_NO_GO",
     "runtime_changes": "NONE"
+  },
+  "address_model_4_stage8_v10_8d8c_full_2026_10_12": {
+    "date": "2026-10-12",
+    "status": "17_23_COMPLETE_382_437_FULL_CA_HISTORIES_NO_GO",
+    "matrix_blob_sha": "dffda99668ac40de4230d3466ad9827db3b091fc",
+    "report_source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V10_2026-10-12.json",
+    "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+    "MARS_in": 14,
+    "MARS_out": 180,
+    "MARS_net_balance_raw": "0",
+    "remaining_partial_active_CA_cells": 55,
+    "original_signers_and_quote_pnl": "UNVERIFIED",
+    "production": "NO_GO"
   }
 }
