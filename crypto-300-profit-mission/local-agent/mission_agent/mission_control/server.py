@@ -676,6 +676,46 @@ class DashboardState:
             if db is not None:
                 db.close()
         breakdown = summarize_manual_reviews(rows)
+        # An interrupted upgrade can start this server.py alongside an older
+        # delivery_review.py. Validate the entire expected breakdown contract
+        # *before* accessing keys or merging it into the heartbeat response.
+        # Never crash /api/control-health or show a partial, falsely healthy UI.
+        buckets = {
+            "expired_unsent": ("gmail", "local"),
+            "actionable": ("gmail", "local", "other"),
+            "pending": ("gmail", "local", "other"),
+            "queued": ("gmail", "local", "other"),
+            "blocked": ("gmail", "local", "other"),
+            "manual_only": ("gmail", "local", "other"),
+        }
+        prefix = "manual_review_"
+        required = {"manual_review_visible_total_count"}
+        for bucket, channels in buckets.items():
+            required.add(prefix + bucket + "_count")
+            for channel in channels:
+                required.add(prefix + bucket + "_" + channel + "_count")
+        valid = (
+            isinstance(breakdown, dict)
+            and breakdown.get("manual_review_breakdown_available") is True
+            and all(type(breakdown.get(field)) is int and breakdown[field] >= 0
+                    for field in required)
+        )
+        if valid:
+            valid = all(
+                breakdown[prefix + bucket + "_count"] ==
+                sum(breakdown[prefix + bucket + "_" + channel + "_count"]
+                    for channel in channels)
+                for bucket, channels in buckets.items()
+            )
+        if valid:
+            valid = (breakdown["manual_review_visible_total_count"] ==
+                     sum(breakdown[prefix + bucket + "_count"] for bucket in (
+                         "expired_unsent", "actionable", "pending", "queued", "blocked")))
+        if not valid:
+            health["manual_review_breakdown_available"] = False
+            health["manual_review_breakdown_error"] = "DELIVERY_REVIEW_CONTRACT_MISMATCH"
+            health["manual_review_counts_stale"] = True
+            return health
         health.update(breakdown)
         health["manual_review_breakdown_error"] = None
         health["manual_review_counts_stale"] = False
