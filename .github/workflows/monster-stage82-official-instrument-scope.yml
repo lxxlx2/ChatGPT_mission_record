@@ -1,0 +1,35 @@
+name: Monster Stage82 Official Instrument Scope
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage82-official-instrument-scope.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage82_official_instrument_scope.py
+      - crypto-300-profit-mission/monster/evidence/monster_stage82_official_tradfi_instrument_scope_20261013.json
+      - crypto-300-profit-mission/monster/evidence/monster_stage81_official_12_continuous3m_source_replay_summary_20261013.json
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  category_causal_and_pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and source-locked selftest
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage82_official_instrument_scope.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage82_official_instrument_scope.py --selftest
+      - name: Official classification of all 12 original, no dropping
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage82_official_instrument_scope.py --out /tmp/monster-stage82-scope.json
+          python -m json.tool /tmp/monster-stage82-scope.json > /dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage82-source-category-pilot
+          path: /tmp/monster-stage82-scope.json
+          retention-days: 30
