@@ -1,0 +1,46 @@
+name: Frank dashboard-only rollout script static gate
+
+on:
+  push:
+    branches:
+      - ops/frank-dashboard-only-pinned-rollout-20261012
+
+permissions:
+  contents: read
+
+jobs:
+  safe-rollout-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and check isolated operations helper
+        run: |
+          set -euo pipefail
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/rollout_frank_combined_dashboard_only_20261012.py
+          python -m pip install pyflakes==3.4.0
+          python -m pyflakes crypto-300-profit-mission/local-agent/scripts/rollout_frank_combined_dashboard_only_20261012.py
+          python crypto-300-profit-mission/local-agent/scripts/rollout_frank_combined_dashboard_only_20261012.py --help
+      - name: Assert production rollout has opt-in and cannot restart Frank loop
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          script = Path('crypto-300-profit-mission/local-agent/scripts/rollout_frank_combined_dashboard_only_20261012.py').read_text()
+          assert '6a5b7e8a533f99c871e31f9674329fcb4f929cc2' in script
+          assert 'parser.add_argument("--apply-dashboard"' in script
+          assert 'sqlite_snapshot' not in script or 'mode=ro' in script
+          assert 'mode=ro' in script
+          assert 'MISSION_LOOP_PID_UNCHANGED' in script
+          assert 'LOOP_RUNNER' in script and 'sha(LOOP_RUNNER)' in script
+          assert 'DASH_LABEL' in script and 'kickstart' in script
+          assert 'LOOP_LABEL' in script and 'kickstart", "-k", LOOP_LABEL' not in script
+          assert 'MISSION_EVIDENCE_EXPORT_ENABLED"] = "0"' in script
+          assert '--live-delivery' not in script
+          assert 'database_write' not in script.lower()
+          assert 'GMAIL_SEND_INITIATED' in script
+          print('OPS_STATIC_SAFETY_GATE=PASS')
+          PY
