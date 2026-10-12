@@ -1,0 +1,58 @@
+name: Monster Stage61 Original All166 First D0 to P1 Waiting vs Forward Price
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage61_first_d0_to_p1_waittime_all166.py'
+      - '.github/workflows/monster-v4-stage61-all166-d0-p1-latency.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-v4-stage61-exposed-latency
+  cancel-in-progress: false
+jobs:
+  original_3min_first_watch_to_P1_latency_all166:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify as-of first-watch clock, no notional and original frozen source
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage61_first_d0_to_p1_waittime_all166.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage61_first_d0_to_p1_waittime_all166.py --selftest
+      - name: Evaluate original 166 first-watch waiting and later real official-source price paths
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage61_first_d0_to_p1_waittime_all166.py --out /tmp/monster_stage61
+      - name: Preserve original166 complete waiting-time evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage61-original166-firstD0-to-P1-wait-research
+          path: /tmp/monster_stage61/*
+          retention-days: 30
+      - name: Persist immutable descriptive timing results to Monster original PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage61/monster_stage61_* "$dest/"
+          git add "$dest/monster_stage61_original166_firstD0_to_P1_latency_and_24h_proxy.jsonl" "$dest/monster_stage61_original166_D0_to_P1_waittime_summary.json"
+          if git diff --cached --quiet; then
+            echo STAGE61_ALREADY_COMMITTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: preserve Stage61 actual original166 D0-to-P1 waiting and 24h follow-up source'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE61_GIT_EVIDENCE_WRITE_FAILED
+          exit 1
