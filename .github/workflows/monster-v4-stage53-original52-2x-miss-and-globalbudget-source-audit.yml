@@ -1,0 +1,59 @@
+name: Monster Stage53 Frozen v03 All 29 Real 2x Misses and Ordinary Urgent Audit
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage53_rejected_v03_global_budget_false_negative_attribution.py'
+      - '.github/workflows/monster-v4-stage53-original52-2x-miss-and-globalbudget-source-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  stage52_publisher_Sha_fate_attribution_no_threshold_changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile original SHA-locked case diagnosis and negative controls
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage53_rejected_v03_global_budget_false_negative_attribution.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage53_rejected_v03_global_budget_false_negative_attribution.py --selftest
+      - name: Recompute every 29 2x true case and all 166 candidate budget fates from pinned Stage52 Git bytes
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage53_rejected_v03_global_budget_false_negative_attribution.py \
+            --out /tmp/monster_stage53_true_global_2x_miss_attribution
+      - name: Retain actual original-SHA audits and 29 winner timelines
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage53-29-real-2x-case-global5-budget-and-normal-source-diagnostics
+          path: /tmp/monster_stage53_true_global_2x_miss_attribution/*
+          retention-days: 30
+      - name: Commit source SHA-locked descriptive audit to same Monster Draft PR only
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage53_true_global_2x_miss_attribution/monster_stage53_* "$dest/"
+          git add "$dest/monster_stage53_rejected_v03_full29_2x_fate_reasons_and_global_budget.json" "$dest/monster_stage53_all29_real_gt2x_D0_P1v03_budget_failure.csv"
+          if git diff --cached --quiet; then
+            echo STAGE53_IDENTICAL_AUDIT_ALREADY_COMMITTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage53 real 29 2x v03 urgent cap vs signal missed causes and normal alerts'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then
+              echo STAGE53_EVIDENCE_PERSISTED_FAST_FORWARD
+              exit 0
+            fi
+          done
+          echo STAGE53_GIT_WRITE_NOT_VERIFIED
+          exit 1
