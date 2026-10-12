@@ -148,7 +148,7 @@ def build_baseline(
                 "complete_out_events": count_out,
                 "original_evidence": cell.get("evidence"),
                 "token_quantity_audit_state": (
-                    "CLOSED_PER_FROZEN_V21" if present else "NO_POSITIVE_ERC20_TRANSFER"
+                    "RECONCILED_TRANSFER_QUANTITY_NOT_TRADE_CLOSE" if present else "NO_POSITIVE_ERC20_TRANSFER"
                 ),
                 "major_2026_research_priority": name in priority_2026_names,
                 # Never infer a signer, economic outcome, recent activity or lost opportunity
