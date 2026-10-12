@@ -1,0 +1,103 @@
+name: Monster Stage87 D1 Market Relative AsOf Diagnostic
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage87-relative-d1-benchmark.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage87_d1_market_relative_official.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage87_aggregate_market_relative.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE87_CAUSAL_MARKET_RELATIVE_D1_RESEARCH_PROTOCOL_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  scope_and_source_contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check all305 and benchmark-only status
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage87_d1_market_relative_official.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage87_aggregate_market_relative.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage87_d1_market_relative_official.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage87_aggregate_market_relative.py --selftest
+  publisher_reference_shards:
+    needs: scope_and_source_contract
+    strategy:
+      fail-fast: false
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Causal publisher SHA BTC ETH background only
+        run: |
+          mkdir -p /tmp/stage87
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage87_d1_market_relative_official.py --date ${{ matrix.date }} --out /tmp/stage87/monster-stage87-${{ matrix.date }}.json
+          python -m json.tool /tmp/stage87/monster-stage87-${{ matrix.date }}.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage87-${{ matrix.date }}
+          path: /tmp/stage87/monster-stage87-${{ matrix.date }}.json
+          retention-days: 30
+  full305_diagnostic_persist:
+    needs: publisher_reference_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage87-*
+          merge-multiple: true
+          path: /tmp/stage87-shards
+      - name: Reconcile 305 original D1 and compute predeclared date matched analysis
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage87_aggregate_market_relative.py --artifact-dir /tmp/stage87-shards --out /tmp/stage87-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage87-full305-market-benchmark-results
+          path: /tmp/stage87-final/*
+          retention-days: 60
+      - name: Persist to original Monster PR, report failure if Git cannot push
+        run: |
+          set -eu
+          dst=crypto-300-profit-mission/monster/evidence
+          cp /tmp/stage87-final/monster_stage87_all305_market_relative_D1_features.jsonl "$dst/"
+          cp /tmp/stage87-final/monster_stage87_full305_market_relative_diagnostic.json "$dst/"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dst/monster_stage87_all305_market_relative_D1_features.jsonl" "$dst/monster_stage87_full305_market_relative_diagnostic.json"
+          if git diff --cached --quiet; then
+            echo "STAGE87_ALREADY_PERSISTED_IDENTICAL"
+            exit 0
+          fi
+          git commit -m "monster: persist Stage87 asof market-relative D1 source facts"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE87_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE87_GIT_PUSH_FAILED"
+          exit 1
