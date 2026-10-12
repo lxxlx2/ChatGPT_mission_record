@@ -25,7 +25,7 @@ PREFIX = "crypto-300-profit-mission/meme/local-evidence"
 PUBKEY = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
 SAFE_ID = re.compile(r"^[a-f0-9]{16,64}$")
 BANNED = re.compile(r"secret|password|passphrase|private|seed|bearer|authorization|cookie|credential|webhook|rpc_url|endpoint_url|gmail|email|local_path|home_dir|api[_-]?key|access_token|refresh_token|auth_token|^key$|_token$", re.I)
-SENSITIVE_INLINE = re.compile(r"(?i)(bearer\s+[a-z0-9._~+/-]+|(?:api[_-]?key|token|password|secret)\s*[:=]\s*[^\s&,;]+)")
+SENSITIVE_INLINE = re.compile(r"(?i)(bearer\s+[a-z0-9._~+/-]+|(?:api[_-]?key|token|password|secret)\s*[:=]\s*[^\s&,;]+|(?<![a-z0-9/])(?:1//[a-z0-9._~+/-]{8,}|GOCSPX-[a-z0-9_-]{8,}|ya29\.[a-z0-9._~+/-]{8,}))")
 LOCAL_PATH_INLINE = re.compile(r"(?i)(?:(?<![a-z])file:/{1,3}|(?<![a-z0-9_])~[/\\]|(?<![a-z0-9_])/(?:Users|home)/)")
 EMAIL_INLINE = re.compile(r"(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}")
 EMBEDDED_URL = re.compile(r"(?i)\b(?:https?|ftp)://")
