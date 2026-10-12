@@ -129,7 +129,7 @@ class Review(unittest.TestCase):
         decision={(e['date'],e['symbol']):e['budget_action']=='RESEARCH_URGENT_P2_CAP_CONSUMED' for e in log if e['kind']=='P1_FIRST_ASOF_ELIGIBLE'}
         self.assertEqual(decision,{(e['date'],e['symbol']):e['new_urgent'] for e in result['allocation']})
         self.assertEqual((result['watch'],result['p1'],result['old_urgent'],result['new_urgent'],result['old_early'],result['new_early']),(196,56,50,48,2,4))
-    def test_upstream_blob_guard_missing_dependency_reproduction(self):
+    def test_upstream_blob_guard_rejects_mutated_stage39_after_stage72(self):
         # Synthetic mutation outside the real checkout, before importing modules.
         with tempfile.TemporaryDirectory() as td:
             dst=Path(td)/'crypto-300-profit-mission'/'local-agent'/'scripts';dst.parent.mkdir(parents=True)
@@ -137,7 +137,9 @@ class Review(unittest.TestCase):
             changed=dst/'monster_v4_stage39_usdm_all900_sixday_original_1m.py'
             changed.write_text(changed.read_text()+"\n_original_evaluate=evaluate\ndef evaluate(*args,**kwargs):\n    result=_original_evaluate(*args,**kwargs)\n    result['WATCH_UTC']=[]\n    return result\n")
             result=subprocess.run([sys.executable,'-B','-c','import monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03 as s; s.frozen(); print("MUTATED_STAGE39_ACCEPTED_BY_STAGE66_FROZEN")'],cwd=dst,text=True,capture_output=True)
-            self.assertEqual(result.returncode,0,result.stderr);self.assertIn('MUTATED_STAGE39_ACCEPTED',result.stdout)
+            self.assertNotEqual(result.returncode,0,result.stdout)
+            self.assertIn('STAGE72_MUTATED_IMPORTED_DEPENDENCY_SOURCE',result.stderr)
+            self.assertNotIn('MUTATED_STAGE39_ACCEPTED',result.stdout)
     def test_sqlite_persistence_duplicate_and_atomic_rollback(self):
         data=proj.source()
         with tempfile.TemporaryDirectory() as td:
