@@ -21,7 +21,7 @@ def fake_existing(port, path, attempts=1):
 
 def test_legacy_api_absent_does_not_block_valid_identified_running_dashboard():
     with patch.object(ops.shutil, "which", return_value="/usr/sbin/lsof"), \
-         patch.object(ops, "run", return_value=SimpleNamespace(stdout="p14077\\n")), \
+         patch.object(ops, "run", return_value=SimpleNamespace(stdout="p14077")), \
          patch.object(ops, "get", side_effect=fake_existing):
         result = ops.existing_dashboard_baseline(8766, 14077)
     assert result["existing_watchlist_api"] == "LEGACY_UNAVAILABLE"
@@ -35,7 +35,7 @@ def test_live_new_api_is_read_back_and_counted():
             return b"<html>Frank</html>"
         return b'{"rows":[{}, {}, {}]}'
     with patch.object(ops.shutil, "which", return_value="/usr/sbin/lsof"), \
-         patch.object(ops, "run", return_value=SimpleNamespace(stdout="p32071\\n")), \
+         patch.object(ops, "run", return_value=SimpleNamespace(stdout="p32071")), \
          patch.object(ops, "get", side_effect=request):
         result = ops.existing_dashboard_baseline(8766, 32071)
     assert result["existing_watchlist_count"] == 3
@@ -44,7 +44,7 @@ def test_live_new_api_is_read_back_and_counted():
 
 def test_unrelated_port_listener_blocks_before_any_network_query():
     with patch.object(ops.shutil, "which", return_value="/usr/sbin/lsof"), \
-         patch.object(ops, "run", return_value=SimpleNamespace(stdout="p81777\\n")), \
+         patch.object(ops, "run", return_value=SimpleNamespace(stdout="p81777")), \
          patch.object(ops, "get") as fetch:
         with pytest.raises(RuntimeError, match="CONFIGURED_PORT_OWNED_BY_DASHBOARD=BLOCKED"):
             ops.existing_dashboard_baseline(8766, 14077)
@@ -53,7 +53,7 @@ def test_unrelated_port_listener_blocks_before_any_network_query():
 
 def test_bad_root_html_blocks_even_if_listener_matches():
     with patch.object(ops.shutil, "which", return_value="/usr/sbin/lsof"), \
-         patch.object(ops, "run", return_value=SimpleNamespace(stdout="p14077\\n")), \
+         patch.object(ops, "run", return_value=SimpleNamespace(stdout="p14077")), \
          patch.object(ops, "get", return_value=b"unrelated service") as fetch:
         with pytest.raises(RuntimeError, match="EXISTING_DASHBOARD_HTML=BLOCKED"):
             ops.existing_dashboard_baseline(8766, 14077)
