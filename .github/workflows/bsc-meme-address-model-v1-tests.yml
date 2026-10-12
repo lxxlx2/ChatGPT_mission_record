@@ -1,0 +1,69 @@
+name: BSC address model V1 (read-only research)
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/bsc-meme-address-model-v1-tests.yml"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.json"
+      - "crypto-300-profit-mission/research/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof_only:
+    name: Frozen source and model output QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      MODEL_DIR: crypto-300-profit-mission/research
+      FROZEN_BLOB_SHA: 3761b9140d0c64b1ffd8d8d243d63a2a1a4fc690
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Confirm frozen Git input blob
+        shell: bash
+        run: |
+          actual="$(git hash-object "$MODEL_DIR/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json")"
+          test "$actual" = "$FROZEN_BLOB_SHA"
+      - name: Unit tests (stdlib only; no RPC/no secrets)
+        run: |
+          python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1.py" -v
+      - name: Recompute 23x19 baseline deterministically
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1.py" \
+            --input "$MODEL_DIR/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json" \
+            --output /tmp/bsc-model-v1-actual.json \
+            --source-git-blob-sha "$FROZEN_BLOB_SHA"
+      - name: Exact semantic Git artifact comparison and invariants
+        shell: bash
+        run: |
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+
+          d = Path("crypto-300-profit-mission/research")
+          expected = json.loads((d / "bsc-meme-address-model-v1-baseline-2026-10-13.json").read_text(encoding="utf-8"))
+          actual = json.loads(Path("/tmp/bsc-model-v1-actual.json").read_text(encoding="utf-8"))
+          assert expected == actual, "Non-deterministic model artifact vs source: STOP"
+          assert actual["cohort"]["cells"] == 437
+          assert actual["cohort"]["ERC20_present"] == 148
+          assert actual["cohort"]["ERC20_absent"] == 289
+          assert actual["cohort"]["observed_cells_with_null_complete_event_counts"] == 8
+          assert len(actual["wallets"]) == 23
+          assert all(w["profit_rank"] is None for w in actual["wallets"])
+          assert all(w["recent_30d_activity_state"] == "UNRESOLVED" for w in actual["wallets"])
+          assert all(
+              c["realized_cashflow_and_profit"] == "UNRESOLVED"
+              and c["owner_signed_buy_state"] == "UNRESOLVED"
+              and c["major_opportunity_eligible_miss"] == "UNRESOLVED"
+              for wallet in actual["wallets"] for c in wallet["cells"]
+          )
+          assert actual["production"] == "NO_GO"
+          print("PASS 437/437, 148/289, 8 source exceptions, no fake PnL/ranking/recent signers")
+          PY
