@@ -150,10 +150,21 @@ class Review(unittest.TestCase):
                 self.assertEqual(proj.snapshot(db),snapshot);self.assertEqual(proj.counts(db)['journal_events'],937)
             with sqlite3.connect(path,isolation_level=None) as db:
                 self.assertEqual(proj.snapshot(db),snapshot);self.assertEqual(proj.ingest(db,data),0)
-    def test_cli_existing_sqlite_reimport_false_failure_reproduction(self):
+    def test_cli_existing_sqlite_reimport_stage72_fixed_regression(self):
+        # Stage71 original review deliberately demonstrated a previous defect.
+        # Stage72 remediation must now pass twice and produce identical exports.
         with tempfile.TemporaryDirectory() as td:
             command=[sys.executable,'-B',str(S/'monster_v4_stage70_historical_watch_projection_sqlite.py'),'--db',td+'/review.sqlite','--out',td+'/out']
-            a=subprocess.run(command,text=True,capture_output=True);b=subprocess.run(command,text=True,capture_output=True)
-            self.assertEqual(a.returncode,0,a.stderr);self.assertNotEqual(b.returncode,0);self.assertIn('INPUT_EVENTS_OR_WATCH_DROPPED',b.stderr)
-            with sqlite3.connect(td+'/review.sqlite') as db:self.assertEqual(proj.counts(db)['journal_events'],937)
+            a=subprocess.run(command,text=True,capture_output=True)
+            self.assertEqual(a.returncode,0,a.stderr)
+            out=Path(td)/'out'
+            paths=sorted(out.glob('monster_stage70_*'))
+            self.assertEqual(len(paths),2)
+            first={p.name:p.read_bytes() for p in paths}
+            b=subprocess.run(command,text=True,capture_output=True)
+            self.assertEqual(b.returncode,0,b.stderr)
+            self.assertIn('"newly_ingested_this_invocation": 0',b.stdout)
+            self.assertEqual(first,{p.name:p.read_bytes() for p in paths})
+            with sqlite3.connect(td+'/review.sqlite') as db:
+                self.assertEqual(proj.counts(db)['journal_events'],937)
 if __name__=='__main__':unittest.main()
