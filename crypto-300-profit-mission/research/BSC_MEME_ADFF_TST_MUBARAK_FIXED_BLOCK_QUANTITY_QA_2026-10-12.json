@@ -1,0 +1,69 @@
+{
+  "schema": "BSC_MEME_ADFF_TST_MUBARAK_FIXED_BLOCK_QUANTITY_QA_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+  "to_block": "0x79549a0",
+  "rows": [
+    {
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "raw_balance": "10344728484569536266",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "tx": "0x6c7f28fe04982f805eca509287ce053260ed1133a89c7fe937608a7d4baed9f7",
+            "block": "0x748d39d",
+            "uid": "0x6c7f28fe04982f805eca509287ce053260ed1133a89c7fe937608a7d4baed9f7:log:318",
+            "from": "0x31704f4b3ff245753d4a7b0239d6fa252aee9bb5",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "raw": "0x8f8fdbbf7ca1d70a"
+          }
+        ],
+        "sum_raw": "10344728484569536266"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "sum_raw": "0"
+      },
+      "fully_paginated": true,
+      "reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "raw_balance": "4924907839683881206",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "tx": "0x9efbbbbb6ee461ae77fa49e2bcb3a7327d76d84e6352b47213b43c7226d29f1e",
+            "block": "0x72eddaf",
+            "uid": "0x9efbbbbb6ee461ae77fa49e2bcb3a7327d76d84e6352b47213b43c7226d29f1e:log:261",
+            "from": "0xb26a86df4ef693cebd6e05f8199dc81df91c4e98",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "raw": "0x4458c9963fe4e8f6"
+          }
+        ],
+        "sum_raw": "4924907839683881206"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "sum_raw": "0"
+      },
+      "fully_paginated": true,
+      "reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    }
+  ],
+  "method": "Full positive ERC20 exact contract incoming/outgoing history up to fixed block 0x79549a0; cross-check integer in-out vs balanceOf at same block. Proves inventory, not purchase or profit.",
+  "production": "NO_GO"
+}
