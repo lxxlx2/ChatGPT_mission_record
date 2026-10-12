@@ -171,7 +171,7 @@ def confirm_rollback_safe(db_path):
     """Never restart old unverified code if historical sendable rows are present."""
     try:
         count = legacy_stale_sendable_count(db_path)
-    except (OSError, sqlite3.Error, RuntimeError, ValueError) as exc:
+    except (OSError, sqlite3.Error, RuntimeError, ValueError):
         print("OLD_LOOP_ROLLBACK=BLOCKED_UNREADABLE_DELIVERY_STATE", flush=True)
         raise RuntimeError("ROLLBACK_LEGACY_STATE_UNREADABLE") from None
     print("LEGACY_STALE_SENDABLE_COUNT=" + str(count), flush=True)
