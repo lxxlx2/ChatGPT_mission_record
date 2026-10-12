@@ -150,7 +150,7 @@ def selftest():
         (r["date"], r["symbol"]) for r in all_rows)
     first = utc_ms("2025-01-30T06:00:00Z")
     need, final_end = days_needed("2025-01-30", first, 48)
-    assert len(need) == 3 and need[0].isoformat() == "2025-01-29"
+    assert len(need) == 4 and need[0].isoformat() == "2025-01-29" and need[-1].isoformat() == "2025-02-01"
     assert final_end == first + 48 * 3600000
     print("STAGE83_FROZEN_COMPLETE_519_COIN_DATE_SHARDS_TEST_PASS")
 
