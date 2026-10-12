@@ -256,6 +256,18 @@ print(json.dumps({"authorized":live_delivery_policy_authorized(p,h,expected),
     except (OSError, ValueError, KeyError, TypeError):
         allowed = False
     check("OAUTH_FILE_OWNER_ONLY_PERMISSION", allowed)
+    health = control / "mission-control-health.json"
+    check("LIVE_LOOP_HEALTH_PRESENT", health.is_file())
+    try:
+        health_info = json.loads(health.read_text(encoding="utf-8"))
+        heartbeat_age = decision_age_seconds(
+            health_info.get("updated_at"), datetime.now(timezone.utc))
+    except (OSError, ValueError, TypeError, AttributeError):
+        heartbeat_age = None
+        health_info = {}
+    check("LIVE_LOOP_HEALTH_FRESH",
+          heartbeat_age is not None and 0 <= heartbeat_age <= 120
+          and health_info.get("status") in {"OK", "DEGRADED"})
     phase = "CONSISTENT_SQLITE_SNAPSHOTS"
     with tempfile.TemporaryDirectory(prefix="frank-loop-preflight-") as td:
         tmp = Path(td)
