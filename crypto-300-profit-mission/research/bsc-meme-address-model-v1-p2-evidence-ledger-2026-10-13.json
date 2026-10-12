@@ -48,6 +48,10 @@
     {
       "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage3-adff-2adf-owner-closed-rounds-2026-10-13.json",
       "blob_sha": "a1e3b6b50ae29cc91f1db5f0708c1f42ef771996"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+      "blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
     }
   ],
   "unit_policy": "Store actual original BNB wallet event-block wei and actual ERC20 USDT separately. Historical pool USDT marks are not real USD settlements. No conversion of quote units to trading score. For native-only episodes unverified USDT quote legs are NULL (UNKNOWN), never fake audited zero.",
@@ -1007,11 +1011,69 @@
       "is_2026_major_priority": true,
       "is_full_wallet_PnL": false,
       "is_followable_alpha": false
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 2,
+      "first_block": 116113193,
+      "last_block": 116113197,
+      "first_UTC": "2026-08-15T16:34:02Z",
+      "last_UTC": "2026-08-15T16:34:03Z",
+      "owner_signed_success_source_record": true,
+      "raw_token_round_closed": true,
+      "net_native_BNB_wallet_event_blocks_wei": "-213598956812665039",
+      "actual_USDT_delta_raw": null,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM",
+      "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
+      "mark_USDT_equivalent_spot_reference_raw": null,
+      "net_classification": "NEGATIVE_NATIVE_SCOPE",
+      "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "claim_semantics": "Original signer successful EOA tx, exact zero inventory, historical native N−1/N unique-block balance delta. All receipts partially truncated, not direct quote causal PnL.",
+      "provenance": {
+        "source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+        "source_git_blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985",
+        "record_selector": "rounds[scope=A83B_NIULAI]"
+      },
+      "internal_tracing_status": "UNVERIFIED_RECEIPT_BODY_TRUNCATED; unique block deltas only",
+      "is_2026_major_priority": true,
+      "is_full_wallet_PnL": false,
+      "is_followable_alpha": false
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 4,
+      "first_block": 112475764,
+      "last_block": 112476616,
+      "first_UTC": "2026-07-27T17:40:47Z",
+      "last_UTC": "2026-07-27T17:47:11Z",
+      "owner_signed_success_source_record": true,
+      "raw_token_round_closed": true,
+      "net_native_BNB_wallet_event_blocks_wei": "-26064663781901692",
+      "actual_USDT_delta_raw": null,
+      "actual_USDT_leg_state": "UNVERIFIED_NO_NON_NATIVE_ASSET_CLAIM",
+      "asset_settlement_mode": "NATIVE_BNB_ACCOUNT_BLOCK_SCOPE",
+      "mark_USDT_equivalent_spot_reference_raw": null,
+      "net_classification": "NEGATIVE_NATIVE_SCOPE",
+      "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "claim_semantics": "Original signer successful EOA tx, exact zero inventory, historical native N−1/N unique-block balance delta. All receipts partially truncated, not direct quote causal PnL.",
+      "provenance": {
+        "source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+        "source_git_blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985",
+        "record_selector": "rounds[scope=877AF_MARSCOIN]"
+      },
+      "internal_tracing_status": "UNVERIFIED_RECEIPT_BODY_TRUNCATED; unique block deltas only",
+      "is_2026_major_priority": true,
+      "is_full_wallet_PnL": false,
+      "is_followable_alpha": false
     }
   ],
   "aggregation_check": {
-    "episode_count": 35,
-    "distinct_wallets_with_any_curated_signed_rounds": 6,
+    "episode_count": 37,
+    "distinct_wallets_with_any_curated_signed_rounds": 7,
     "all_23_wallets_are_in_frozen_baseline": true,
     "has_negative_episodes": true,
     "per_wallet": {
@@ -1041,13 +1103,14 @@
         ]
       },
       "0xa83b73f5644cde337b61da79589f10ea15548811": {
-        "rounds": 1,
+        "rounds": 2,
         "native_positive": 0,
-        "native_negative": 1,
+        "native_negative": 2,
         "mixed_positive": 0,
         "positive_tokens": [],
         "negative_tokens": [
-          "BROCCOLI714"
+          "BROCCOLI714",
+          "牛来"
         ]
       },
       "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0": {
@@ -1092,6 +1155,16 @@
           "龙虾"
         ],
         "negative_tokens": []
+      },
+      "0x877af245c61289b24f0c619a4346cdbc68f1aaac": {
+        "rounds": 1,
+        "native_positive": 0,
+        "native_negative": 1,
+        "mixed_positive": 0,
+        "positive_tokens": [],
+        "negative_tokens": [
+          "MARSCOIN"
+        ]
       }
     }
   },
@@ -1102,7 +1175,8 @@
     "No current activity claims, no first observable signal, no 1/5/15 minute executable follower test.",
     "No source was re-fetched from chain in this P2 mapping; these are original Git evidence references (SHA pinned).",
     "239E 7 selected full inventory rounds from IFML (1) and Lobster (6) match ALL 27 original signer/receipt success records and archived native balances; BNB event-block deltas not transaction-isolated causal PnL. Full coverage for remaining 17 CAs still unresolved.",
-    "Stage3 three new sampled source-signer/receipt-positive zero-inventory episodes, 8 original tx, 2025-12-29 ADFF IFML, 2026-02-27 ADFF Lobster, 2026-08-14 2ADF Niulai. Remaining 25 inventory segments NOT economically attributed."
+    "Stage3 three new sampled source-signer/receipt-positive zero-inventory episodes, 8 original tx, 2025-12-29 ADFF IFML, 2026-02-27 ADFF Lobster, 2026-08-14 2ADF Niulai. Remaining 25 inventory segments NOT economically attributed.",
+    "Precommitted breadth-first stage4 selection A83B Niulai R2 and 877AF MARS R4: both 2026 negative original self-signed EOA zero-inventory rounds. A83B has TWO owner buy tx same block, unique native scope once. 6 receipts success headers but truncated bodies; 11/20 other raw cycles unreviewed."
   ],
   "baseline_artifact_git_blob_sha": "e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a",
   "additional_signed_source_identity_check": {
@@ -1143,5 +1217,18 @@
     "live_archive_balance_pairs_rechecked": 8,
     "partial_receipts": 4,
     "one_round_december_2025_but_priority_token": "我踏马来了"
+  },
+  "stage4_source_verification": {
+    "source": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+    "source_git_blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985",
+    "precommit_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json",
+    "precommit_sha": "c4477d02dac3de5fda2435c8a1ba226313a3c52c",
+    "selected_raw_cycles": 2,
+    "source_original_signer_success": 6,
+    "owner_signed_txs_same_block_A83B": 2,
+    "actual_unique_wallet_BNB_Nminus1_N_blocks": 5,
+    "all_selected_receipt_bodies_truncated": 6,
+    "preselected_both_negative": true,
+    "not_full_CA_PnL": true
   }
 }
