@@ -115,7 +115,7 @@ def test_actual_restart_requires_both_explicit_switch_and_alert_acknowledgment()
     assert "MISSION_EVIDENCE_EXPORT_ENABLED=0" in source
     assert '"kickstart", "-k", LOOP_LABEL' in source
     assert '"kickstart", "-k", DASH_LABEL' not in source
-    assert ".sqlite")\n" in source or "sqlite_backup(" in source
+    assert "sqlite_backup(" in source
     assert "old_control = " not in source
 
 
