@@ -1,0 +1,63 @@
+{
+  "schema": "BSC_MEME_877AF_GIGGLE_TWO_INBOUNDS_OWNER_ORIGIN_AND_QUOTE_NEGATIVE_CONTROL_V1",
+  "date": "2026-10-12",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "token": "GIGGLE",
+  "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+  "network": "bnb-mainnet",
+  "fixed_block": "0x79549a0",
+  "source": {
+    "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_GIGGLE_BIDIRECTIONAL_RAW_INVENTORY_BALANCE_QA_2026-10-12.json",
+    "sha": "8e2ff31436baf14c9a53567d2eb2234f3056a692"
+  },
+  "history": "Full positive ERC20 source complete: two inbound transfer logs, zero outbound, independent fixed-block latest raw balance exactly matches inbound total",
+  "inbound_original_transactions": [
+    {
+      "hash": "0xb91fcc8bfa951eb473941128fa79759a9e7906bb9d3bd9d66f9ed8ec32d975b9",
+      "block": "0x77fe7ba",
+      "token_received_raw": "503638109308031554",
+      "original_signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+      "recipient": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "input_selector": "0x84da2c7b",
+      "native_msg_value_wei": "0",
+      "owner_signed": false,
+      "success_status": "NOT_CHECKED",
+      "asset_cost": "UNVERIFIED"
+    },
+    {
+      "hash": "0x41d1b44d7f17218ed671609bab4cbd6dbe9eb613ed79540ff9d0be0d905fd230",
+      "block": "0x78f6d49",
+      "token_received_raw": "34555158416641366",
+      "original_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "recipient": "0xeb91d9ed63a060077d51678248ae11dc784ab735",
+      "input_selector": "0x84da2c7b",
+      "native_msg_value_wei": "0",
+      "owner_signed": true,
+      "success_status": "NOT_CHECKED",
+      "asset_cost": "UNVERIFIED"
+    }
+  ],
+  "negative_control": {
+    "first_transaction_signed_by_other_eoa": true,
+    "first_exact_block_wallet_original_native_external_out_count": 0,
+    "first_exact_block_wallet_erc20_out_count": 0,
+    "first_transfer_does_not_prove_owner_purchase": true,
+    "second_transaction_signed_by_owner": true,
+    "second_native_original_msg_value_wei": "0",
+    "second_exact_block_wallet_erc20_out_count": 0,
+    "second_original_native_external_count": 1,
+    "second_original_selector": "0x84da2c7b",
+    "second_transaction_buy_vs_claim_or_distribution": "UNVERIFIED",
+    "owner_executed_GIGGLE_market_purchase_count_verified": 0,
+    "verified_GIGGLE_sale_count": 0
+  },
+  "wallet_raw_balance_at_fixed_block": "538193267724672920",
+  "classification": "ONE_OTHER_SIGNED_INBOUND_AND_ONE_SELF_SIGNED_ZERO_NATIVE_VALUE_INBOUND; TRUE_BUY_COST_UNVERIFIED",
+  "production": "NO_GO",
+  "limitations": [
+    "The second wallet-signed zero-native-value contract call might involve protocol/internal accounting not identified in this audit.",
+    "The first other-signed inbound might be a distribution, transfer or another causal path; it cannot count as a verified wallet-initiated trade.",
+    "No receipts or full internal calls verified. Not a wallet profit or active 2-trade GIGGLE execution proof.",
+    "Only fixed 19 CA universe, no implication about other GIGGLE venues or account swaps off-chain."
+  ]
+}
