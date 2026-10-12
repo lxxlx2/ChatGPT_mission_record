@@ -1,0 +1,46 @@
+name: Monster Stage39 Futures All900 x Six Dates Real1m Unchanged V4
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_usdm_all900_sixday_original_1m.py'
+      - '.github/workflows/monster-v4-stage39-futures-full900-sixday-real1m-v4.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original_unmodified_futuresV4_full900_x6:
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: [2025-01-19, 2025-04-19, 2025-07-19, 2025-10-19, 2026-04-19, 2026-07-19]
+        shard: [0, 1, 2, 3, 4, 5]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate original V4 version and actual GT5 GT10 causal cross-time unit tests
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_usdm_all900_sixday_original_1m.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_usdm_all900_sixday_original_1m.py --selftest
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py --selftest
+      - name: Replay full source-unfiltered 150 USD-M pairs at real official published 1m with frozen original V4
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_usdm_all900_sixday_original_1m.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 2 \
+            --output "/tmp/monster_stage39_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - name: Preserve complete valid and censored original-source data with watch times
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage39-original-futuresV4-${{ matrix.date }}-shard${{ matrix.shard }}-SHA
+          path: /tmp/monster_stage39_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
