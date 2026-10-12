@@ -79,3 +79,17 @@ Surf 官方主站：https://asksurf.ai/
 - Kaito collection：在 OpenSea 官方 collection 页面核价（流动性、真实成交与挂单须区分）。
 
 以上只包含公开资料，未包括用户钱包和私密信息。
+
+## 6. 2026-10-12 NFT 研究接手复核：#691 资产身份与新 SurfBoards 权益不得混同
+
+资料口径：Git `crypto-300-profit-mission/portfolio/current.md` 的 2026-10-12 状态，官方 Surf 页面及上述公开证据；这是一项**研究口径纠偏**，未操作钱包、监控、交易或自动化。
+
+- 现有资产台账把 **Surf Limited Edition NFT #691** 记为 **1 枚待交付的 NFT 权利**，历史成本 **USD 228**，交付/空投尚未独立核实。另有 **Surf 28,600 Points** 记录。该点数是独立权益，不能自动折算为 NFT 分配或现金价值。
+- 新的 **SurfBoards / The Genesis of Surf** 官网明确写有 `Trading and member claims open in ...`，Surf 主站也直接链接至这个入口。这仅确认项目页面与官方关联、领取/交易倒计时宣传存在，**未证明用户的 #691 与 SurfBoards 是同一种 NFT、#691 是 ERC-721 token ID、已铸造、已到账或包含股票代币收益权**。
+- 官方公开网页中仍缺少：SurfBoards 的 canonical chain/contract、总量、#691 的发行/交付映射、会员权益与股票代币分配的法定和合约条款、实际可执行卖出报价。前述 Robinhood Chain 两份同名合约只属于**未确认官方身份的链上候选**。在本次接手时使用 Blockscout 连接器重查遭遇 session authorization 错误，因而本条**未声称重新得到直接链上确认**。
+- 2026-10-12 重新查阅 Surf 的 2025-12-11 融资公告，确认公告称募资 USD 15M、Pantera 领投、Coinbase Ventures 与 DCG 参与；2026-09-01 Bithumb 产品材料所列活跃用户和生产指标均为项目/合作方披露，**不能推导 Surf NFT 的利润分配、公司股权或保底回报**。
+- Kaito Yapybaras 的 1,500 总量及约 USD 240 至 270 地板参考为历史公开页面快照；历史页面还展示真实成交和 top offer，随时会变化。对 Surf 的比较必须按同时间点的**最高真实买单、实际成交、挂牌地板**三种不同口径，不把挂牌总估值当作可清算市值。
+- 研究状态：**Surf 产品基本面有实际发布和融资公告，但 SurfBoards 的资产身份、兑付权益与交易市场仍属于 `WATCH / IDENTITY_UNRESOLVED`。用户 #691 是台账中的待交付历史成本权益，不能计入有可执行报价的 NFT 流动 NAV。** `ACTIVE` 仅可描述用户已有经济敞口，绝不授予任何交易或授权权限。
+- 相关历史状态纠正：`research/nfts/jack-credits/jack-credits-nft-position.md` 是 2026-09-27 快照，其中写的“2 active”已经被 2026-10-10 直接链上核查的 **Credits 0 枚持有**覆盖；UNICRED #230 也已在 2026-10-10 标记 `CLOSED / NOT_OWNED`。此处不修改历史成交和当时报告。
+
+后续研究核验顺序：**官方 #691 交付合同/凭据及 NFT 类型 → 官方 SurfBoards chainId 和 contract → 总供应和领取资格 → 股票代币的每枚金额、法律属性、领取与锁定条款 → 真实订单簿和成交 → 按用户的 USD 228 成本计算可执行净回款**。不据此开启 NFT 监控任务。
