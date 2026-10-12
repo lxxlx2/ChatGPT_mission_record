@@ -1,0 +1,63 @@
+name: Monster Stage100 Historical D1 Priority Model
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage100-historical-d1-priority-walkforward.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage100_historical_d1_priority_walkforward.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE100_HISTORICAL_D1_PRIORITY_MODEL_WALK_FORWARD_PROTOCOL_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  historical305_frozen_4fold_no_future_labels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and verify no-test-date-training and no future price feature
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage100_historical_d1_priority_walkforward.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage100_historical_d1_priority_walkforward.py --selftest
+      - name: Train only earlier actual dates and replay all subsequent original D1
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage100_historical_d1_priority_walkforward.py --backtest --out /tmp/monster-stage100-historical-walkforward.json
+          python -m json.tool /tmp/monster-stage100-historical-walkforward.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage100-historical-source305-4fold-priority-price-risk
+          path: /tmp/monster-stage100-historical-walkforward.json
+          retention-days: 60
+      - name: Preserve actual model parameters, every holdout score and missed major cases in PR30
+        run: |
+          set -eu
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage100_real305_D1_chronological_walkforward_priority_results.json
+          cp /tmp/monster-stage100-historical-walkforward.json "$dest"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dest"
+          if git diff --cached --quiet; then
+            echo "STAGE100_RESULT_ALREADY_IDENTICAL"
+            exit 0
+          fi
+          git commit -m "monster: archive Stage100 original305 fourfold historical priority model returns and failure cases"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE100_RESEARCH_RESULTS_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE100_PUSH_FAILED"
+          exit 1
