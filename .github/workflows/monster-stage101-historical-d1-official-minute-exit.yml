@@ -1,0 +1,108 @@
+name: Monster Stage101 All305 Historical D1 Minute Exits
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage101-historical-d1-official-minute-exit.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage101_exit_minute_backtest.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage101_aggregate_exit_paths.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE101_HISTORICAL_D1_EXIT_PATH_RESEARCH_PROTOCOL_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  first_minute_causal_stop_simulation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Same-minute adverse-first, prior-minute trailing and open gap test
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage101_exit_minute_backtest.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage101_aggregate_exit_paths.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage101_exit_minute_backtest.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage101_aggregate_exit_paths.py --selftest
+
+  official_real1m_original305:
+    needs: first_minute_causal_stop_simulation
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+        shard: [0,1,2,3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Real Binance checksum daily 1m SHA, verify Stage88 identical, test fixed6/12h and conservative stop
+        run: |
+          mkdir -p /tmp/stage101
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage101_exit_minute_backtest.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --workers 3 --out /tmp/stage101/monster-stage101-${{ matrix.date }}-s${{ matrix.shard }}.json
+          python -m json.tool /tmp/stage101/monster-stage101-${{ matrix.date }}-s${{ matrix.shard }}.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage101-${{ matrix.date }}-s${{ matrix.shard }}
+          path: /tmp/stage101/monster-stage101-${{ matrix.date }}-s${{ matrix.shard }}.json
+          retention-days: 30
+
+  aggregate_and_persist:
+    needs: official_real1m_original305
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage101-*
+          merge-multiple: true
+          path: /tmp/stage101-shards
+      - name: Reconcile all305 original D1 and archive fixed/early/trail price results
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage101_aggregate_exit_paths.py --artifact-dir /tmp/stage101-shards --out /tmp/stage101-results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage101-original305-full-official-1m-exit-summary
+          path: /tmp/stage101-results/*
+          retention-days: 60
+      - name: Preserve raw historical results in original Monster PR30
+        run: |
+          set -eu
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/stage101-results/monster_stage101_all305_real1m_historic_exit_paths.jsonl "$dest/"
+          cp /tmp/stage101-results/monster_stage101_real305_exit_time_stop_comparison.json "$dest/"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dest/monster_stage101_all305_real1m_historic_exit_paths.jsonl" "$dest/monster_stage101_real305_exit_time_stop_comparison.json"
+          if git diff --cached --quiet; then
+            echo "STAGE101_SAME_SOURCE_RESULTS_ALREADY_PERSISTED"
+            exit 0
+          fi
+          git commit -m "monster: archive real original305 1m exit/time/stop comparison after D1"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE101_RESULTS_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE101_RESULTS_NOT_IN_GIT"
+          exit 1
