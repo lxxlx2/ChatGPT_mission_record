@@ -1,0 +1,45 @@
+name: Monster Stage38 Futures Original V4 Minute SHA True2x Discovery Pilot
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py'
+      - '.github/workflows/monster-v4-stage38-usdm-original-v4-causal-1m-pilot.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pilot_full_52_gt2x_plus_120_blind_controls:
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        date: [2025-01-19, 2025-04-19, 2025-07-19, 2025-10-19, 2026-04-19, 2026-07-19]
+        shard: [0, 1]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate original V4 locked blob, closed-bar SOURCE and causal label regression
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py --selftest
+      - name: Original production V4 futures 3min WATCH from official checksum-verified USD-M 1m nine days
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 2 \
+            --output "/tmp/monster_stage38_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - name: Publish research-only real original V4 causal evidence, keep all controls
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage38-original-V4-futures-${{ matrix.date }}-shard${{ matrix.shard }}-sha
+          path: /tmp/monster_stage38_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
