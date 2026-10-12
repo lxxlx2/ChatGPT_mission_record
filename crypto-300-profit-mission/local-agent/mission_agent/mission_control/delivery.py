@@ -72,6 +72,8 @@ DECISION_ZH={"BUY":"可跟","SMALL_BUY":"小仓跟","WAIT":"等待","NO_BUY":"�
 PATTERN_ZH={"MULTIPLE":"多次强加仓（历史模型记录）","ACCUMULATION":"持续建仓（历史模型记录）","REENTRY_WATCH":"重新建仓观察","NONE":"无模式"}
 STATE_ZH={"OPEN":"模型标记持有（未独立核实）","CLOSED":"模型标记已退出","INVENTORY_UNDETERMINED":"仓位不明"}
 ACTION_ZH={"BUY":"买入","ADD":"加仓","REENTRY":"重新建仓","SELL":"卖出","EXIT":"清仓","SELL_POSITION_UNRESOLVED":"卖出后仓位待确认"}
+ACTION_SUBJECT_ZH={"BUY":"Frank 最近买入","ADD":"Frank 最近加仓","REENTRY":"Frank 最近重新建仓","SELL":"Frank 最近卖出","EXIT":"Frank 最近退出","SELL_POSITION_UNRESOLVED":"Frank 最近卖出待确认"}
+STATE_SUBJECT_ZH={"OPEN":"模型持仓待核","CLOSED":"模型已退出","INVENTORY_UNDETERMINED":"仓位未确认"}
 REASON_ZH={
     "FRANK_RUNTIME_NOT_LIVE":"Frank 实时监控不在线",
     "POSITION_STATE_CLOSED":"Frank 已退出该仓位",
@@ -169,7 +171,10 @@ def render(event:dict)->dict:
     body=json.loads(event["body"]) if isinstance(event.get("body"),str) else event["body"]
     metrics=body.get("metrics") or {};inputs=body["inputs"];quote=inputs.get("quote") or {}
     decision=body["decision"];pattern=inputs.get("pattern")
-    subject=f"[Meme提醒] {_zh(DECISION_ZH,decision,decision)} | {_zh(PATTERN_ZH,pattern,pattern)} | {_short(body['mint'])}"
+    subject=(f"[Meme提醒] {_zh(DECISION_ZH,decision,decision)} | "
+             f"{_zh(ACTION_SUBJECT_ZH,inputs.get('latest_side'),'Frank 动作未核实')} | "
+             f"{_zh(STATE_SUBJECT_ZH,inputs.get('position_state'),'仓位未核实')} | "
+             f"{_short(body['mint'])}")
     original_asset=inputs.get("latest_buy_original_quote_asset") or inputs.get("latest_buy_quote_asset")
     original_qty=inputs.get("latest_buy_original_quote_quantity") or inputs.get("latest_buy_quote_quantity")
     observed_payment=_payment_display(original_qty,original_asset)
@@ -201,7 +206,7 @@ def render(event:dict)->dict:
     action=_zh(ACTION_ZH,inputs.get("latest_side"),str(inputs.get("latest_side") or "未知"))
     position=_zh(STATE_ZH,inputs.get("position_state"),str(inputs.get("position_state") or "未知"))
     lines=[
-        "结论："+_zh(DECISION_ZH,decision,decision)+"  |  "+_zh(PATTERN_ZH,pattern,pattern),
+        "结论："+_zh(DECISION_ZH,decision,decision)+"  |  最近已识别动作："+action+"  |  仓位："+position,
         "原因："+reasons,
         "决策时间："+_utc_decision(body.get("created_at")),
         "Jupiter 报价观察时间："+_utc_observation(inputs.get("quote_observed_at")),
@@ -211,6 +216,7 @@ def render(event:dict)->dict:
         body["mint"],
         "",
         "Frank 最近已识别动作："+action+"  |  Frank 模型仓位："+position,
+        "历史观察模式："+_zh(PATTERN_ZH,pattern,pattern)+"（仅作为历史模式证据，不代表当前仍在加仓）",
         "Frank 最近一次买入支付（历史）："+payment,
         "上述金额仅对应最近一笔已识别买入的历史资金腿，不代表当前持仓市值、持有金额或全部建仓成本。",
     ]
@@ -229,7 +235,7 @@ def render(event:dict)->dict:
     if missing!="无":
         lines.append("需要核实："+missing)
     if sig:
-        lines += ["","交易哈希："+sig]
+        lines += ["", "技术审计信息（非实时跟单依据）", "最近已识别交易哈希：", sig]
     text="\n".join(lines)
     return {"subject":subject,"body":text,"content_hash":digest({"subject":subject,"body":text})}
 
