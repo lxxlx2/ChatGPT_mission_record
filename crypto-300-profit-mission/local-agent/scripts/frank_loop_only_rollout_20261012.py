@@ -20,6 +20,7 @@ import json
 import os
 from pathlib import Path
 import re
+import signal
 import sqlite3
 import subprocess
 import sys
@@ -37,7 +38,15 @@ LABEL_PREFIX = f"gui/{os.getuid()}/com.{getpass.getuser()}.frank-meme."
 LOOP_LABEL = LABEL_PREFIX + "loop"
 DASH_LABEL = LABEL_PREFIX + "dashboard"
 BACKUPS = SUPPORT / "release-backups"
-WAIT_SECONDS = 50
+WAIT_SECONDS = 600
+GMAIL_STATES_ACTIVE = {"PENDING", "RETRYABLE_ERROR", "CREDENTIAL_BLOCKED"}
+LOCAL_STATES_ACTIVE = {"PENDING", "RETRY_PENDING"}
+GMAIL_TERMINAL = {"SENT_VERIFIED", "MANUAL_REVIEW", "DRY_RUN_AUDIT", "PERMANENT_ERROR"}
+LOCAL_TERMINAL = {"COMMAND_ACCEPTED", "MANUAL_REVIEW", "DRY_RUN_AUDIT"}
+SIGNAL_FILES = ("mission_agent/mission_control/policy.py",
+                "mission_agent/signals/classifier.py",
+                "mission_agent/signals/engine.py",
+                "mission_agent/signals/evaluator.py")
 
 
 def ensure(name, condition):
@@ -113,13 +122,73 @@ def delivery_state(db_path):
 
 
 def assert_legacy_receipts_unchanged(original, new):
+    """Permit forward progress; prohibit missing rows or terminal-to-sendable."""
+    advanced = 0
     for table in ("gmail_delivery", "local_delivery"):
         now = new[table]
+        terminal = GMAIL_TERMINAL if table == "gmail_delivery" else LOCAL_TERMINAL
         for old_id, old_status in original[table].items():
-            ensure_row = old_id in now and now[old_id] == old_status
-            if not ensure_row:
-                raise RuntimeError("LEGACY_DELIVERY_STATUS_CHANGED_" + table)
-    print("LEGACY_DELIVERY_STATUS_UNCHANGED=PASS", flush=True)
+            if old_id not in now:
+                raise RuntimeError("LEGACY_DELIVERY_ROW_MISSING_" + table)
+            current_status = now[old_id]
+            if old_status in terminal and current_status not in terminal:
+                raise RuntimeError("LEGACY_TERMINAL_REGRESSED_" + table)
+            if old_status != current_status:
+                advanced += 1
+    print("LEGACY_DELIVERY_TERMINAL_SAFE=PASS", flush=True)
+    print("LEGACY_DELIVERY_PROGRESS_OBSERVED=" + str(advanced), flush=True)
+
+
+def legacy_stale_sendable_count(db_path, max_age_seconds=600):
+    """Read-only rollback gate, fail-closed on unparseable ages or SQL errors."""
+    now = datetime.now(timezone.utc)
+    total = 0
+    with closing(sqlite_ro(db_path)) as db:
+        for table, eligible in (("gmail_delivery", GMAIL_STATES_ACTIVE),
+                                ("local_delivery", LOCAL_STATES_ACTIVE)):
+            rows = db.execute("""
+                SELECT d.status, e.created_at
+                FROM """ + table + """ AS d
+                LEFT JOIN decision_events AS e USING(decision_id)
+            """).fetchall()
+            for row in rows:
+                if row["status"] not in eligible:
+                    continue
+                raw = row["created_at"]
+                try:
+                    stamp = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+                    age = (now - stamp).total_seconds()
+                    # Naive, future and malformed ages cannot be established safe.
+                    stale = stamp.utcoffset() is None or age < 0 or age > max_age_seconds
+                except (ValueError, TypeError, OverflowError, AttributeError):
+                    stale = True
+                if stale:
+                    total += 1
+    return total
+
+
+def confirm_rollback_safe(db_path):
+    """Never restart old unverified code if historical sendable rows are present."""
+    try:
+        count = legacy_stale_sendable_count(db_path)
+    except (OSError, sqlite3.Error, RuntimeError, ValueError) as exc:
+        print("OLD_LOOP_ROLLBACK=BLOCKED_UNREADABLE_DELIVERY_STATE", flush=True)
+        raise RuntimeError("ROLLBACK_LEGACY_STATE_UNREADABLE") from None
+    print("LEGACY_STALE_SENDABLE_COUNT=" + str(count), flush=True)
+    ensure("LEGACY_ROLLBACK_STALE_GATE", count == 0)
+
+
+def process_alive(pid):
+    """Guard against overlapping Loop workers; exclude zombie subprocesses."""
+    if type(pid) is not int or pid <= 0:
+        return False
+    result = subprocess.run(["/bin/ps", "-p", str(pid), "-o", "stat="],
+                            capture_output=True, text=True, timeout=8)
+    return result.returncode == 0 and bool(result.stdout.strip()) and not result.stdout.strip().startswith("Z")
+
+
+def interrupted(_signum, _frame):
+    raise KeyboardInterrupt("RELEASE_INTERRUPTED")
 
 
 def sqlite_backup(src, dest):
@@ -183,29 +252,70 @@ def loop_restart():
 
 
 def wait_for_new_loop(old_pid, control, started_at):
-    last_problem = "MISSING_NEW_HEARTBEAT"
+    """New PID + old process definitely gone + post-exit heartbeat.
+
+    Never call rollback simply because a new process is alive but its first
+    cycle (including Gmail readiness) exceeded the wait window.
+    """
+    old_gone_at = None
+    successor_pid = None
     for _ in range(WAIT_SECONDS):
         try:
             current_pid = launch_pid(LOOP_LABEL)
             if current_pid != old_pid:
-                state = heartbeat(control, since=started_at)
-                return current_pid, state
-            last_problem = "STILL_OLD_PID"
-        except (OSError, RuntimeError, ValueError, KeyError, json.JSONDecodeError):
+                successor_pid = current_pid
+                if not process_alive(old_pid):
+                    if old_gone_at is None:
+                        old_gone_at = time.time()
+                    try:
+                        state = heartbeat(control, since=max(started_at, old_gone_at))
+                        return current_pid, state
+                    except (OSError, RuntimeError, ValueError, KeyError):
+                        pass
+                else:
+                    print("OLD_LOOP_PROCESS_STILL_ALIVE=BLOCKED", flush=True)
+                    raise RuntimeError("OLD_LOOP_PROCESS_STILL_ALIVE")
+        except (OSError, ValueError, KeyError):
             pass
+        except RuntimeError as exc:
+            if str(exc) == "OLD_LOOP_PROCESS_STILL_ALIVE":
+                raise
         time.sleep(1)
-    raise RuntimeError("RELEASE_NEW_LOOP_NOT_HEALTHY_" + last_problem)
+    if successor_pid is not None and not process_alive(old_pid):
+        raise RuntimeError("NEW_LOOP_ALIVE_HEARTBEAT_NOT_OBSERVED")
+    if successor_pid is not None and process_alive(old_pid):
+        raise RuntimeError("OLD_LOOP_PROCESS_STILL_ALIVE")
+    raise RuntimeError("NEW_LOOP_NOT_RUNNING")
 
 
 def prepare(args):
     ensure("RUNNERS_AND_POINTER", LOOP_RUNNER.is_file() and not LOOP_RUNNER.is_symlink()
            and DASH_RUNNER.is_file() and CONTROL_POINTER.is_file())
-    original = LOOP_RUNNER.read_text(encoding="utf-8")
+    original_bytes = LOOP_RUNNER.read_bytes()
+    ensure("RUNNER_LINE_ENDINGS_NORMAL", b"\r" not in original_bytes)
+    original = original_bytes.decode("utf-8")
     dashboard = DASH_RUNNER.read_text(encoding="utf-8")
     old_agent = source_var(original, "LOCAL_AGENT")
     new_agent = source_var(dashboard, "LOCAL_AGENT")
     require_git_release(new_agent)
     ensure("RELEASE_NOT_ALREADY_ACTIVE", old_agent != new_agent)
+    old_version = subprocess.run(
+        ["/usr/bin/git", "-C", str(old_agent), "rev-parse", "HEAD"],
+        capture_output=True, text=True, timeout=10)
+    ensure("OLD_LOOP_SOURCE_GIT_SHA_PRESENT",
+           old_version.returncode == 0 and
+           re.fullmatch(r"[0-9a-f]{40}", old_version.stdout.strip()) is not None)
+    old_sha = old_version.stdout.strip()
+    changed_signal_files = []
+    for rel in SIGNAL_FILES:
+        old_file = old_agent / rel
+        new_file = new_agent / rel
+        ensure("SIGNAL_CODE_FILES_PRESENT",
+               old_file.is_file() and new_file.is_file())
+        if file_sha256(old_file) != file_sha256(new_file):
+            changed_signal_files.append(rel)
+    print("OLD_LOOP_SOURCE_SHA=" + old_sha, flush=True)
+    print("SIGNAL_CODE_CHANGED_COUNT=" + str(len(changed_signal_files)), flush=True)
     needed = ("PROD", "VENV", "CONTROL_POINTER", "POLICY", "APPROVED_HASH_FILE", "RPC_FILE")
     old_fields = {key: source_var(original, key) for key in needed}
     ensure("CANONICAL_CONTROL_POINTER_UNCHANGED", old_fields["CONTROL_POINTER"] == CONTROL_POINTER)
@@ -238,7 +348,9 @@ def prepare(args):
                        capture_output=True, text=True, timeout=10)
     print("CANDIDATE_RUNNER_SYNTAX=PASS", flush=True)
     return {
-        "original": original, "candidate": change,
+        "original": original, "original_bytes": original_bytes,
+        "old_sha": old_sha, "changed_signal_files": changed_signal_files,
+        "candidate": change,
         "db": db, "prod": prod, "control": control,
         "old_agent": old_agent, "new_agent": new_agent,
         "loop_pid": loop_pid, "dashboard_pid": dash_pid,
@@ -254,6 +366,8 @@ def main():
                    help="Previously verified exact read-only Mission Loop preflight file")
     p.add_argument("--apply-loop", action="store_true",
                    help="Restart the live Mission Loop once, with automatic runner rollback if unhealthy")
+    p.add_argument("--approve-signal-code-change", action="store_true",
+                   help="Separately approve version-reviewed changes to frozen signal code")
     p.add_argument("--approve-fresh-alerts", action="store_true",
                    help="Acknowledge legitimate NEW decisions may produce Gmail/desktop alerts after restart")
     args = p.parse_args()
@@ -265,11 +379,15 @@ def main():
     with lock_path.open("a+b") as lock:
         fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         context = prepare(args)
+        if args.apply_loop:
+            ensure("SIGNAL_CODE_DELTA_EXPLICITLY_APPROVED",
+                   not context["changed_signal_files"] or
+                   args.approve_signal_code_change)
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         location = BACKUPS / ("mission-loop-" + stamp + "-" + str(os.getpid()))
         location.mkdir(mode=0o700)
         backup_script = location / "mission-loop.sh.before"
-        backup_script.write_text(context["original"], encoding="utf-8")
+        backup_script.write_bytes(context["original_bytes"])
         backup_script.chmod(0o600)
         sqlite_backup(context["db"], location / "mission-control.sqlite")
         sqlite_backup(context["prod"], location / "forward.sqlite")
@@ -289,12 +407,14 @@ def main():
         ensure("LIVE_RUNNER_UNCHANGED_BEFORE_SWITCH",
                file_sha256(LOOP_RUNNER) == context["runner_sha"])
         changed = False
+        previous_sigterm = signal.getsignal(signal.SIGTERM)
+        signal.signal(signal.SIGTERM, interrupted)
         try:
             # Does not change the SQLite file, policy, secrets, Dashboard runner,
             # LaunchAgent plist or the already approved delivery rules.
+            changed = True
             atomic_runner(LOOP_RUNNER, context["candidate"].encode(),
                           context["mode"])
-            changed = True
             started_at = time.time()
             loop_restart()
             new_pid, _ = wait_for_new_loop(context["loop_pid"], context["control"], started_at)
@@ -308,18 +428,41 @@ def main():
             print("EVIDENCE_EXPORT=FORCED_OFF", flush=True)
             print("HISTORICAL_DELIVERY_RECEIPTS=UNCHANGED", flush=True)
             print("LEGITIMATE_NEW_ALERTS=ALLOWED_BY_EXISTING_APPROVED_POLICY", flush=True)
-        except Exception:
+        except BaseException:
             if changed:
-                atomic_runner(LOOP_RUNNER, context["original"].encode(),
-                              context["mode"])
-                print("LOOP_RUNNER_ROLLED_BACK=YES", flush=True)
+                # Do not restart an older possibly unsafe agent over a live
+                # successor, overlapping old PID or stale/retryable mail.
+                current = None
                 try:
-                    loop_restart()
-                    wait_for_new_loop(context["loop_pid"], context["control"], time.time())
-                    print("LOOP_ROLLBACK_SERVICE=RECOVERED", flush=True)
-                except Exception:
-                    print("LOOP_ROLLBACK_SERVICE=MANUAL_ATTENTION_REQUIRED", flush=True)
+                    current = launch_pid(LOOP_LABEL)
+                except (OSError, RuntimeError):
+                    pass
+                if current is not None and current != context["loop_pid"] and process_alive(current):
+                    print("ROLLBACK=MANUAL_NEW_LOOP_STILL_RUNNING", flush=True)
+                elif process_alive(context["loop_pid"]):
+                    print("ROLLBACK=MANUAL_OLD_LOOP_STILL_RUNNING", flush=True)
+                else:
+                    try:
+                        confirm_rollback_safe(context["db"])
+                    except (OSError, RuntimeError, sqlite3.Error):
+                        print("ROLLBACK=MANUAL_STALE_OR_UNKNOWN_GMAIL", flush=True)
+                    else:
+                        try:
+                            atomic_runner(LOOP_RUNNER, context["original_bytes"], context["mode"])
+                            ensure("RUNNER_ROLLBACK_EXACT_BYTES",
+                                   file_sha256(LOOP_RUNNER) == context["runner_sha"])
+                            print("LOOP_RUNNER_ROLLED_BACK=YES", flush=True)
+                            rollback_started = time.time()
+                            loop_restart()
+                            wait_for_new_loop(
+                                current or context["loop_pid"],
+                                context["control"], rollback_started)
+                            print("LOOP_ROLLBACK_SERVICE=RECOVERED", flush=True)
+                        except BaseException:
+                            print("LOOP_ROLLBACK_SERVICE=MANUAL_ATTENTION_REQUIRED", flush=True)
             raise
+        finally:
+            signal.signal(signal.SIGTERM, previous_sigterm)
 
 
 if __name__ == "__main__":
