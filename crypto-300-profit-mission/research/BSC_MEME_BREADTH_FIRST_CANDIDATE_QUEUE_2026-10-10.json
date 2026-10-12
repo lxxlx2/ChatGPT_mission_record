@@ -131,11 +131,13 @@
     "latest_2026_10_11_erc20_sample_rows": 1224,
     "latest_2026_10_11_unread_directions": 23,
     "wallets_with_complete_19_ca_direction_history": 14,
-    "latest_2026_10_12_complete_wallet_ca_cells": 266,
-    "latest_2026_10_12_complete_zero_transfer_cells": 211,
-    "latest_2026_10_12_unknown_incomplete_cells": 141,
-    "latest_2026_10_12_observed_wallet_ca_pairs": 85,
-    "latest_2026_10_12_complete_quantity_closed_cells": 36
+    "latest_2026_10_12_complete_wallet_ca_cells": 367,
+    "latest_2026_10_12_complete_zero_transfer_cells": 289,
+    "latest_2026_10_12_unknown_incomplete_cells": 40,
+    "latest_2026_10_12_observed_wallet_ca_pairs": 108,
+    "latest_2026_10_12_complete_quantity_closed_cells": 44,
+    "latest_2026_10_12_complete_observed_wallet_ca_pairs": 78,
+    "latest_2026_10_12_partial_observed_wallet_ca_pairs": 30
   },
   "venue_coverage": [
     {
@@ -377,7 +379,29 @@
       "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
       "early_sample_tokens": [],
       "verified_direct_sample_signers": [],
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "address_model_4_2026_10_12_cold_ca_upgrade": {
+        "complete_ca_cells": 8,
+        "remaining_not_complete_ca": 11,
+        "observed_ca_count": 10,
+        "observed_token_labels": [
+          "TUT",
+          "BROCCOLIF3B",
+          "BOB",
+          "4",
+          "GIGGLE",
+          "币安人生",
+          "我踏马来了",
+          "龙虾",
+          "哈基米 / HAJIMI",
+          "BUBB"
+        ],
+        "quantity_closed_full_ca_cells": 0,
+        "all_19_cas_complete": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+        "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
@@ -565,6 +589,26 @@
         "source": "BSC_MEME_ADFF_IFML_0ABB_GIGGLE_FIRST_SIGNED_ENTRY_EXIT_2026-10-12.json",
         "PnL": "UNRESOLVED",
         "production": "NO_GO"
+      },
+      "address_model_4_2026_10_12_cold_ca_upgrade": {
+        "complete_ca_cells": 10,
+        "remaining_not_complete_ca": 9,
+        "observed_ca_count": 8,
+        "observed_token_labels": [
+          "TST",
+          "MUBARAK",
+          "BROCCOLIF3B",
+          "BOB",
+          "BULLA",
+          "币安人生",
+          "我踏马来了",
+          "龙虾"
+        ],
+        "quantity_closed_full_ca_cells": 2,
+        "all_19_cas_complete": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+        "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
+        "production": "NO_GO"
       }
     },
     {
@@ -583,6 +627,25 @@
         "PnL": "UNKNOWN",
         "source": "BSC_MEME_877AF_19_CA_FULL_CURSOR_2026-10-12.json",
         "census_status": "INCOMPLETE_DIRECTION_CURSORS",
+        "production": "NO_GO"
+      },
+      "address_model_4_2026_10_12_cold_ca_upgrade": {
+        "complete_ca_cells": 13,
+        "remaining_not_complete_ca": 6,
+        "observed_ca_count": 7,
+        "observed_token_labels": [
+          "TST",
+          "MUBARAK",
+          "BROCCOLIF3B",
+          "BULLA",
+          "4",
+          "GIGGLE",
+          "龙虾"
+        ],
+        "quantity_closed_full_ca_cells": 2,
+        "all_19_cas_complete": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+        "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
       }
     },
@@ -603,6 +666,22 @@
         "source": "BSC_MEME_498528_MARSCOIN_FIRST_TEN_BLOCK_EARLY_BUYS_AND_TAX_QA_2026-10-12.json",
         "census_status": "INCOMPLETE_DIRECTION_CURSORS",
         "production": "NO_GO"
+      },
+      "address_model_4_2026_10_12_cold_ca_upgrade": {
+        "complete_ca_cells": 15,
+        "remaining_not_complete_ca": 4,
+        "observed_ca_count": 4,
+        "observed_token_labels": [
+          "4",
+          "GIGGLE",
+          "MARSCOIN",
+          "哈基米 / HAJIMI"
+        ],
+        "quantity_closed_full_ca_cells": 2,
+        "all_19_cas_complete": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+        "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
+        "production": "NO_GO"
       }
     },
     {
@@ -611,7 +690,24 @@
       "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
       "early_sample_tokens": [],
       "verified_direct_sample_signers": [],
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "address_model_4_2026_10_12_cold_ca_upgrade": {
+        "complete_ca_cells": 14,
+        "remaining_not_complete_ca": 5,
+        "observed_ca_count": 5,
+        "observed_token_labels": [
+          "TST",
+          "CHEEMS",
+          "BROCCOLI714",
+          "BROCCOLIF3B",
+          "币安人生"
+        ],
+        "quantity_closed_full_ca_cells": 1,
+        "all_19_cas_complete": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+        "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
@@ -911,6 +1007,22 @@
         "source": "BSC_MEME_11A732_BOB_A83B_GIGGLE_FIRST_TWO_BLOCK_CASHFLOW_2026-10-12.json",
         "census_status": "INCOMPLETE_DIRECTION_CURSORS",
         "production": "NO_GO"
+      },
+      "address_model_4_2026_10_12_cold_ca_upgrade": {
+        "complete_ca_cells": 12,
+        "remaining_not_complete_ca": 7,
+        "observed_ca_count": 4,
+        "observed_token_labels": [
+          "TST",
+          "BROCCOLI714",
+          "BOB",
+          "4"
+        ],
+        "quantity_closed_full_ca_cells": 0,
+        "all_19_cas_complete": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+        "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
+        "production": "NO_GO"
       }
     },
     {
@@ -1112,6 +1224,22 @@
         "PnL": "UNKNOWN",
         "source": "BSC_MEME_11A732_BOB_A83B_GIGGLE_FIRST_TWO_BLOCK_CASHFLOW_2026-10-12.json",
         "census_status": "INCOMPLETE_DIRECTION_CURSORS",
+        "production": "NO_GO"
+      },
+      "address_model_4_2026_10_12_cold_ca_upgrade": {
+        "complete_ca_cells": 4,
+        "remaining_not_complete_ca": 15,
+        "observed_ca_count": 4,
+        "observed_token_labels": [
+          "MUBARAK",
+          "BULLA",
+          "4",
+          "GIGGLE"
+        ],
+        "quantity_closed_full_ca_cells": 0,
+        "all_19_cas_complete": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+        "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
       }
     },
@@ -1319,6 +1447,23 @@
         "source": "BSC_MEME_ADFF_IFML_0ABB_GIGGLE_FIRST_SIGNED_ENTRY_EXIT_2026-10-12.json",
         "PnL": "UNRESOLVED",
         "production": "NO_GO"
+      },
+      "address_model_4_2026_10_12_cold_ca_upgrade": {
+        "complete_ca_cells": 11,
+        "remaining_not_complete_ca": 8,
+        "observed_ca_count": 5,
+        "observed_token_labels": [
+          "CHEEMS",
+          "BROCCOLIF3B",
+          "GIGGLE",
+          "币安人生",
+          "我踏马来了"
+        ],
+        "quantity_closed_full_ca_cells": 1,
+        "all_19_cas_complete": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+        "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
+        "production": "NO_GO"
       }
     },
     {
@@ -1420,7 +1565,25 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "龙虾",
         "MARSCOIN"
-      ]
+      ],
+      "address_model_4_2026_10_12_cold_ca_upgrade": {
+        "complete_ca_cells": 14,
+        "remaining_not_complete_ca": 5,
+        "observed_ca_count": 6,
+        "observed_token_labels": [
+          "GIGGLE",
+          "币安人生",
+          "龙虾",
+          "牛来",
+          "MARSCOIN",
+          "哈基米 / HAJIMI"
+        ],
+        "quantity_closed_full_ca_cells": 0,
+        "all_19_cas_complete": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+        "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
@@ -2287,6 +2450,22 @@
     "triage_checkpoint": "BSC_MEME_23_EOA_REMAINING_WALLETS_TRIAGE_B02_2026-10-12.json",
     "incomplete_wallets_remaining": 9,
     "warning": "DO_NOT_UPGRADE_FULL_CENSUS_OR_MATERIAL_WIN_RATE_FROM_FIRST8_LOGS",
+    "production": "NO_GO"
+  },
+  "address_model_4_v4_cold_subsets_2026_10_12": {
+    "date": "2026-10-12",
+    "status": "367_OF_437_CELLS_COMPLETE_14_OF_23_FULL_WALLETS_NO_GO",
+    "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
+    "blob_sha": "83ff82ac903a0ef093ad3f10caf03f90cadb51f8",
+    "upgraded_scoped_CA_count": 101,
+    "fully_checked_new_active_token_pairs": 23,
+    "independent_latest_balanceOf_matches": 23,
+    "proved_no_nonzero_ERC20_token_pairs": 78,
+    "still_unknown_unobserved_pairs": 40,
+    "still_partial_observed_pairs": 30,
+    "candidate_wallets_affected": 9,
+    "priority_warning": "Wallet ranking not a buy or copy-trade recommendation. Completing cold CAs does not complete highly trafficked hot CAs.",
+    "remaining_high_volume_wallet_CA_direction_cursors": "UNEXHAUSTED",
     "production": "NO_GO"
   }
 }
