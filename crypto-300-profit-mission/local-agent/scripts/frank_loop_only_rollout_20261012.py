@@ -44,6 +44,7 @@ LOCAL_STATES_ACTIVE = {"PENDING", "RETRY_PENDING"}
 GMAIL_TERMINAL = {"SENT_VERIFIED", "MANUAL_REVIEW", "DRY_RUN_AUDIT", "PERMANENT_ERROR"}
 LOCAL_TERMINAL = {"COMMAND_ACCEPTED", "MANUAL_REVIEW", "DRY_RUN_AUDIT"}
 DECISION_SCOPE_ROOT = "mission_agent"
+DECISION_ENTRYPOINTS = ("scripts/mission_meme_v1.py",)
 
 
 def ensure(name, condition):
@@ -79,6 +80,11 @@ def decision_scope_diff(old_agent, new_agent):
         ensure("DECISION_SCOPE_PRESENT", root.is_dir())
         return {p.relative_to(base).as_posix(): file_sha256(p) for p in root.rglob("*.py")}
     old, new = digests(old_agent), digests(new_agent)
+    for relative in DECISION_ENTRYPOINTS:
+        for base, digest_map in ((old_agent, old), (new_agent, new)):
+            candidate = base / relative
+            if candidate.is_file():
+                digest_map[relative] = file_sha256(candidate)
     return sorted(k for k in set(old) | set(new) if old.get(k) != new.get(k))
 
 
@@ -343,6 +349,8 @@ def prepare(args):
     changed_signal_files = decision_scope_diff(old_agent, new_agent)
     print("OLD_LOOP_SOURCE_SHA=" + old_sha, flush=True)
     print("SIGNAL_CODE_CHANGED_COUNT=" + str(len(changed_signal_files)), flush=True)
+    for relative in changed_signal_files:
+        print("DECISION_MODULE_CHANGED=" + relative, flush=True)
     needed = ("PROD", "VENV", "CONTROL_POINTER", "POLICY", "APPROVED_HASH_FILE", "RPC_FILE")
     old_fields = {key: source_var(original, key) for key in needed}
     ensure("CANONICAL_CONTROL_POINTER_UNCHANGED", old_fields["CONTROL_POINTER"] == CONTROL_POINTER)
