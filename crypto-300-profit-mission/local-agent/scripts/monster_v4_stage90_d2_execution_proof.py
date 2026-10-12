@@ -179,6 +179,8 @@ def evaluate(candidate: dict, evidence: dict | None, *, notional_quote=None) -> 
         or not sha_ok(book.get("raw_response_sha256"))
         or not isinstance(book.get("lastUpdateId"), int)):
         return result("BOOK_INVALID", "book source, identity, sequence or raw provenance invalid")
+    if venue == "BINANCE_SPOT":
+        return result("BOOK_UNKNOWN", "Spot REST depth lacks E/T event timestamps; certified as-of stream proof not yet implemented")
     if not verified_raw_book(book, venue):
         return result("BOOK_INVALID", "raw Binance REST response/SHA/levels/event time cannot be cross-verified")
     cap, event = book.get("capture_ms"), book.get("event_ms")
@@ -238,6 +240,18 @@ def evaluate(candidate: dict, evidence: dict | None, *, notional_quote=None) -> 
     )
 
 
+def bind_fixture_raw(proof):
+    """Only for deterministic tests. Real data must retain original unedited API bytes."""
+    book=proof["book"]
+    raw=json.dumps({
+        "lastUpdateId":book["lastUpdateId"],
+        "E":book["event_ms"]+100,"T":book["event_ms"],
+        "bids":book["bids"],"asks":book["asks"],
+    },separators=(",",":"))
+    book["raw_json"]=raw
+    book["raw_response_sha256"]=hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
 def synthetic_fixture():
     t = 1792000000000
     sha = "a" * 64
@@ -257,13 +271,7 @@ def synthetic_fixture():
       "fees":{"source_sha256":sha,"effective_from_ms":t-100,
               "entry_taker_bps":"10","exit_taker_bps":"10"}
     }
-    raw = json.dumps({
-        "lastUpdateId": proof["book"]["lastUpdateId"],
-        "E": t + 1900, "T": proof["book"]["event_ms"],
-        "bids": proof["book"]["bids"], "asks": proof["book"]["asks"],
-    }, separators=(",", ":"))
-    proof["book"]["raw_json"] = raw
-    proof["book"]["raw_response_sha256"] = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+    bind_fixture_raw(proof)
     return c, proof
 
 
@@ -281,12 +289,15 @@ def selftest():
     stale=json.loads(json.dumps(p));stale["book"]["capture_ms"] += 20000
     assert evaluate(c,stale,notional_quote=100)["status"]=="BOOK_STALE"
     future=json.loads(json.dumps(p));future["book"]["event_ms"] = c["observed_ms"]-1
-    assert evaluate(c,future,notional_quote=100)["status"]=="BOOK_INVALID"
+    bind_fixture_raw(future)
+    assert evaluate(c,future,notional_quote=100)["status"]=="BOOK_STALE"
     crossed=json.loads(json.dumps(p));crossed["book"]["bids"][0][0]="102"
+    bind_fixture_raw(crossed)
     assert evaluate(c,crossed,notional_quote=100)["status"]=="BOOK_INVALID"
     mixed=json.loads(json.dumps(p));mixed["book"]["symbol"]="OTHERUSDT"
     assert evaluate(c,mixed,notional_quote=100)["status"]=="BOOK_INVALID"
     thin=json.loads(json.dumps(p));thin["book"]["bids"]=[["99","0.01"]]
+    bind_fixture_raw(thin)
     assert evaluate(c,thin,notional_quote=100)["status"]=="DEPTH_INSUFFICIENT"
     unmapped=json.loads(json.dumps(p));unmapped["mapping"]["verified"]=False
     assert evaluate(c,unmapped,notional_quote=100)["status"]=="MAPPING_UNKNOWN"
