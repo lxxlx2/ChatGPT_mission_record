@@ -1,0 +1,167 @@
+{
+  "schema": "BSC_MEME_V18_UNCLOSED_42_FIXED_BLOCK_BALANCE_BATCH_A_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "fixed_block_hex": "0x79549a0",
+  "scope": "First 14 of 42 historically observed ERC20 CA cells not independently quantity-reconciled in V18, sorted by wallet observed CA breadth then address/contract",
+  "matrix_source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V18_2026-10-12.json",
+  "matrix_blob": "1a24b8067100db2e23453527ea290a5ee10e4b73",
+  "method": "Independent archival ethCall balanceOf(wallet) at fixed BNB block 0x79549a0. A current balance snapshot does not reconstruct historical transfer sums nor establish actual realized PnL.",
+  "rows": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 17,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "149450289467938143498",
+      "is_zero_raw": false,
+      "returned_hex": "0x0000000000000000000000000000000000000000000000081a0a167313c17d0a"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 17,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "90743338900892537384",
+      "is_zero_raw": false,
+      "returned_hex": "0x000000000000000000000000000000000000000000000004eb5119f39895d228"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 14,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "16743278217930406214",
+      "is_zero_raw": false,
+      "returned_hex": "0x000000000000000000000000000000000000000000000000e85c12d45b46f946"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 14,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "4924907839683881206",
+      "is_zero_raw": false,
+      "returned_hex": "0x0000000000000000000000000000000000000000000000004458c9963fe4e8f6"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 14,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "10344728484569536266",
+      "is_zero_raw": false,
+      "returned_hex": "0x0000000000000000000000000000000000000000000000008f8fdbbf7ca1d70a"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 13,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "370296597800344225867",
+      "is_zero_raw": false,
+      "returned_hex": "0x00000000000000000000000000000000000000000000001412e5c9c8b136084b"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 13,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "6176475552388755",
+      "is_zero_raw": false,
+      "returned_hex": "0x0000000000000000000000000000000000000000000000000015f178c7439693"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 13,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "65856455282881733964",
+      "is_zero_raw": false,
+      "returned_hex": "0x00000000000000000000000000000000000000000000000391f121284690254c"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "TUT",
+      "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 13,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "28050472618166057283",
+      "is_zero_raw": false,
+      "returned_hex": "0x00000000000000000000000000000000000000000000000185474c3a7b9bf943"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 13,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "14730395959988410675",
+      "is_zero_raw": false,
+      "returned_hex": "0x000000000000000000000000000000000000000000000000cc6ce114a3f55933"
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 12,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "59259202743067220443",
+      "is_zero_raw": false,
+      "returned_hex": "0x0000000000000000000000000000000000000000000000033662faed156019db"
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "4",
+      "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 12,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "293894387253415607514",
+      "is_zero_raw": false,
+      "returned_hex": "0x00000000000000000000000000000000000000000000000fee9a9c1678ed7cda"
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 12,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "538193267724672920",
+      "is_zero_raw": false,
+      "returned_hex": "0x00000000000000000000000000000000000000000000000007780becef3c5f98"
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "prior_inventory_label": "OPEN_TOKEN_REMAINDER",
+      "observed_wallet_tokens": 12,
+      "query_state": "SUCCESS",
+      "balance_raw_decimal": "51289213105585260568",
+      "is_zero_raw": false,
+      "returned_hex": "0x000000000000000000000000000000000000000000000002c7c7e393dfb80818"
+    }
+  ],
+  "production": "NO_GO"
+}
