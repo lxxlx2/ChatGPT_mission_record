@@ -1,0 +1,51 @@
+name: Monster Stage43 Freeze Historical Exposure Dates Before Blind Validation
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage43_exposure_ledger.py'
+      - '.github/workflows/monster-v4-stage43-historical-exposure-ledger.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build_timestamp_only_historical_exposure_ledger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require frozen Stage42 source HEAD still in git ancestry
+        run: |
+          git merge-base --is-ancestor 2c6d9c1b3f4a9f99a236b015603f517c22afff69 HEAD
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage43_exposure_ledger.py
+      - name: Audit all historical ISO exposure and choose date-only hashed candidates without fetching prices
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage43_exposure_ledger.py \
+            --out /tmp/monster_stage43_frozen_date_exposure_ledger.json
+      - name: Retain source SHA and date-only blind selection
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage43-git-frozen-exposure-ledger-no-price-read
+          path: /tmp/monster_stage43_frozen_date_exposure_ledger.json
+          retention-days: 30
+      - name: Persist verified source-date exposure ledger in existing Monster Draft PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage43_frozen_exposure_ledger_and_blind_dates.json
+          cp /tmp/monster_stage43_frozen_date_exposure_ledger.json "$dest"
+          git add "$dest"
+          if git diff --cached --quiet; then
+            echo STAGE43_IDENTICAL_ALREADY_COMMITTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: save Stage43 original Stage42 pinned date exposure and blind holdout candidates'
+          git push origin "HEAD:$GITHUB_REF_NAME"
