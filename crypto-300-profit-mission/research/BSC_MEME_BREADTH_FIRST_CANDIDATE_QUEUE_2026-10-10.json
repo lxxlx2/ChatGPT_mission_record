@@ -716,6 +716,15 @@
         "source": "BSC_MEME_877AF_MARS_GENESIS_SAMPLE_OWNER_BUY_AND_SELL_NATIVE_QA_2026-10-12.json",
         "full_mars_transfer_cursor_exhausted": false,
         "production": "NO_GO"
+      },
+      "address_model_4_stage6_mars_7buy_cost_basis": {
+        "label": "877AF",
+        "original_7_signed_buy_msg_value_wei": "610000000000000000",
+        "buy_and_first_sale_native_scope_wei": "-103228071238567114",
+        "first_exit_native_received_vs_7_buy_msg_value_ratio_pct": 83.3112,
+        "complete_mars_pnl": false,
+        "no_follow_ready": true,
+        "source_file": "BSC_MEME_877AF_MARS_FIRST7_BUY_NATIVE_BLOCKS_AND_FIRST_EXIT_2026-10-12.json"
       }
     },
     {
@@ -760,7 +769,16 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
         "status": "RESEARCH_ONLY_NO_GO"
       },
-      "address_model_4_v5_comparison_note": "498528 first owner signed MARS buy at 112441470, ten blocks later than 877AF 112441460; 498528 still important independent early-batch wallet; neither wallet's entire MARS PnL verified."
+      "address_model_4_v5_comparison_note": "498528 first owner signed MARS buy at 112441470, ten blocks later than 877AF 112441460; 498528 still important independent early-batch wallet; neither wallet's entire MARS PnL verified.",
+      "address_model_4_stage6_mars_7buy_cost_basis": {
+        "label": "498528",
+        "original_7_signed_buy_msg_value_wei": "1400000000000000000",
+        "buy_and_first_sale_native_scope_wei": "-1001063455781477953",
+        "first_exit_native_received_vs_7_buy_msg_value_ratio_pct": 28.5227,
+        "complete_mars_pnl": false,
+        "no_follow_ready": true,
+        "source_file": "BSC_MEME_498528_MARS_FIRST7_BUY_NATIVE_BLOCKS_AND_FIRST_EXIT_2026-10-12.json"
+      }
     },
     {
       "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
@@ -2685,6 +2703,39 @@
       "source": "BSC_MEME_877AF_MARS_GENESIS_SAMPLE_OWNER_BUY_AND_SELL_NATIVE_QA_2026-10-12.json"
     },
     "risk": "Participation presence covered, full token amounts and original transaction economic PnL for 70 partial CAs still NOT confirmed; earliest sampled pool block not market genesis.",
+    "production": "NO_GO"
+  },
+  "address_model_4_stage6_mars_early7_native_2026_10_12": {
+    "status": "EARLY_OWNER_SIGNED_SEVEN_BUYS_EACH_NATIVE_SCOPES_VERIFIED_INDEPENDENTLY_NO_GO",
+    "date": "2026-10-12",
+    "candidate_wallets": [
+      "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a"
+    ],
+    "reference_pool_sample_block": 112441460,
+    "entry_gap_blocks": {
+      "AF_877": 0,
+      "AF_498": 10
+    },
+    "first_sale_token_quantity_sold_pct": {
+      "AF_877": 64.1093,
+      "AF_498": 9.9999
+    },
+    "total_buy_input_wei": {
+      "AF_877": "610000000000000000",
+      "AF_498": "1400000000000000000"
+    },
+    "first_sale_native_to_original_7buy_msg_value_percent": {
+      "AF_877": 83.3112,
+      "AF_498": 28.5227
+    },
+    "report_source": "BSC_MEME_ADDRESS_MODEL_4_STAGE6_V5_COMPLETE_PRESENCE_AND_877AF_MARS_EARLY_TRADING_2026-10-12.md",
+    "report_blob_sha": "fbde8bc424630cb16119bc7748bea09150352984",
+    "raw_sources": [
+      "BSC_MEME_877AF_MARS_FIRST7_BUY_NATIVE_BLOCKS_AND_FIRST_EXIT_2026-10-12.json",
+      "BSC_MEME_498528_MARS_FIRST7_BUY_NATIVE_BLOCKS_AND_FIRST_EXIT_2026-10-12.json"
+    ],
+    "warning": "Partial first exit, net native wallet cashflow not realized PnL, original first pool sample not token genesis; no trading inference.",
     "production": "NO_GO"
   }
 }
