@@ -1,0 +1,46 @@
+{
+  "schema": "BSC_MEME_877AF_MARSCOIN_FIRST_SIGNED_GENESIS_SAMPLE_ENTRY_EXIT_QA_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "source": {
+    "path": "BSC_MEME_877AF_MARSCOIN_EXACT_CA_FULL_HISTORY_FIRST_EXIT_2026-10-12.json",
+    "sha": "d311317fb10cc293bc33f76427bcb909276870ad"
+  },
+  "original_first_buy": {
+    "hash": "0x15141bf698d2c2c4e07efd6c0cb54babfa7421621b1f48e4ace1727cf6be2cfa",
+    "block": 112441460,
+    "owner_signer_verified": true,
+    "method": "0x4d819a2a",
+    "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "native_msg_value_wei": "550000000000000000",
+    "gas_price_wei": "440000000",
+    "mars_received_raw": "5944606246588515507263432",
+    "native_block_delta_wei": "-550285156080000000"
+  },
+  "original_first_sell": {
+    "hash": "0x1512bc06ea2aa91817cc0606c65fa3f31fbbd3712955cd8bb99eb4bad6c8f1df",
+    "block": 112441495,
+    "owner_signer_verified": true,
+    "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "native_msg_value_wei": "0",
+    "gas_price_wei": "600000000",
+    "native_block_delta_wei": "508198463321432886",
+    "all_token_out_logs_in_scanned_prefix": 2,
+    "token_transfer_to_contract_burn_raw": "125994803257572687738425",
+    "to_original_pool_raw": "4073831971994850236875754",
+    "gross_out_raw": "4199826775252422924614179",
+    "three_percent_fee_floor_exact": true
+  },
+  "block_gap_first_buy_to_first_sell": 35,
+  "reference_pool_first_sampled_block": 112441460,
+  "reference_sample_to_first_signed_buy_gap_blocks": 0,
+  "comparison": {
+    "wallet_498528_first_buy_block": 112441470,
+    "wallet_DDAC_first_buy_block": 112441920
+  },
+  "history_status": "PARTIAL_40_EVENT_PREFIX_PER_DIRECTION_ONLY",
+  "risk": "Some raw contract arithmetic mismatch of prefix net vs latest wallet balance is EXPECTED because cursors open; do not classify as PnL or closed.",
+  "production": "NO_GO"
+}
