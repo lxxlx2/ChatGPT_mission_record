@@ -1,0 +1,143 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "GMAIL": "OFF",
+  "GT_stats": {
+    "10x": {
+      "D0_5min_early": 2,
+      "P1_5min_early": 2,
+      "P2_budget_and_D0_5min_early": 2,
+      "P2_budget_and_P1_5min_early": 2,
+      "n": 2,
+      "old_budget_and_D0_5min_early": 2,
+      "old_budget_and_P1_5min_early": 2
+    },
+    "2x": {
+      "D0_5min_early": 28,
+      "P1_5min_early": 27,
+      "P2_budget_and_D0_5min_early": 21,
+      "P2_budget_and_P1_5min_early": 20,
+      "n": 29,
+      "old_budget_and_D0_5min_early": 22,
+      "old_budget_and_P1_5min_early": 21
+    },
+    "5x": {
+      "D0_5min_early": 3,
+      "P1_5min_early": 3,
+      "P2_budget_and_D0_5min_early": 2,
+      "P2_budget_and_P1_5min_early": 2,
+      "n": 3,
+      "old_budget_and_D0_5min_early": 3,
+      "old_budget_and_P1_5min_early": 3
+    }
+  },
+  "Monster_deploy": "NO_GO",
+  "Other_AI_review": "NOT_DONE",
+  "P1_v03": "REJECTED",
+  "P2_daily_max": 5,
+  "P2_halfday_max": 2,
+  "P2_urgent": 113,
+  "all_original_USDM_archive_attempts": 5400,
+  "gates": {
+    ">=20_source_valid_2x": true,
+    ">=80pct_of_original28_actual_P1_5min_early_gt2x_after_budget": false,
+    "all_original_gt10x_budget_P1early": true,
+    "all_original_gt5x_budget_P1early": false
+  },
+  "no_assumed_order_amount": true,
+  "no_future_in_alerts": true,
+  "original_P1_candidates": 166,
+  "original_P1_urgent_exact_reproduced": 127,
+  "per_date": [
+    {
+      "P1": 36,
+      "P2_budget": 16,
+      "P2_budget_D0_early": 0,
+      "P2_budget_P1_early": 0,
+      "WATCH": 161,
+      "date": "2025-01-30",
+      "gt2": 0,
+      "old_budget_D0_early": 0,
+      "old_budget_P1_early": 0,
+      "prior_budget": 17,
+      "source_valid": 390
+    },
+    {
+      "P1": 7,
+      "P2_budget": 7,
+      "P2_budget_D0_early": 0,
+      "P2_budget_P1_early": 0,
+      "WATCH": 34,
+      "date": "2025-06-02",
+      "gt2": 0,
+      "old_budget_D0_early": 0,
+      "old_budget_P1_early": 0,
+      "prior_budget": 7,
+      "source_valid": 465
+    },
+    {
+      "P1": 29,
+      "P2_budget": 20,
+      "P2_budget_D0_early": 4,
+      "P2_budget_P1_early": 4,
+      "WATCH": 54,
+      "date": "2025-08-01",
+      "gt2": 6,
+      "old_budget_D0_early": 4,
+      "old_budget_P1_early": 4,
+      "prior_budget": 21,
+      "source_valid": 502
+    },
+    {
+      "P1": 40,
+      "P2_budget": 27,
+      "P2_budget_D0_early": 9,
+      "P2_budget_P1_early": 9,
+      "WATCH": 75,
+      "date": "2025-10-02",
+      "gt2": 13,
+      "old_budget_D0_early": 10,
+      "old_budget_P1_early": 10,
+      "prior_budget": 32,
+      "source_valid": 535
+    },
+    {
+      "P1": 25,
+      "P2_budget": 21,
+      "P2_budget_D0_early": 2,
+      "P2_budget_P1_early": 2,
+      "WATCH": 100,
+      "date": "2026-06-21",
+      "gt2": 3,
+      "old_budget_D0_early": 1,
+      "old_budget_P1_early": 1,
+      "prior_budget": 23,
+      "source_valid": 713
+    },
+    {
+      "P1": 29,
+      "P2_budget": 22,
+      "P2_budget_D0_early": 6,
+      "P2_budget_P1_early": 5,
+      "WATCH": 95,
+      "date": "2026-07-28",
+      "gt2": 7,
+      "old_budget_D0_early": 7,
+      "old_budget_P1_early": 6,
+      "prior_budget": 27,
+      "source_valid": 772
+    }
+  ],
+  "raw_D0_WATCH": 519,
+  "real_spot_Alpha_DEX_execution": "UNKNOWN",
+  "schema": "MONSTER_STAGE69_ORIGINAL6_5400_FROZEN_P2_EXPOSED_ROBUSTNESS_V1",
+  "source_SHA_blobs": {
+    "MONSTER_STAGE69_P2_FROZEN_OLDER6_FULL5400_ROBUSTNESS_CONTRACT_20261012.md": "06f56e47543c50ae4c66b65fc0b7895e0a92f564",
+    "monster_stage52_all5400_originalV4_P1v03_true_minute_source_cases.jsonl": "ad7544f97e8a0d6c1f2635aa54052cca42d08cf1",
+    "monster_stage52_pinned_v03_all5400_36SHA_true_global_cap_metrics.json": "42d455a6cc9d0164a8dd94aa12a475bad5ed126e",
+    "monster_stage55_all166_candidate_asof_features_and_fate.csv": "dca780246adb28e045ed77f0f96eb4bd034fb2e7",
+    "monster_stage64_all519_D0_asof61m_official_1m_taker_trades_SHA.jsonl": "8ebe53acfdfe10413ac1e6f03457d6ace25d9d5a",
+    "monster_v4_stage68_exposed2700_dual_lane_watch_p1_halfday_reserve.py": "f933e8315e4fe94d632ab8118cf1a2a4ff66a892"
+  },
+  "source_valid_1h_1m": 3377,
+  "verdict": "EXPOSED_HISTORICAL_GATES_REJECTED"
+}
