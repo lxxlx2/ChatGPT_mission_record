@@ -1,0 +1,70 @@
+{
+  "schema": "BSC_MEME_TWO_EOA_COLD_CA_FIXED_BLOCK_QUANTITY_QA_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "to_block": "0x79549a0",
+  "rows": [
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "raw_balance": "16743278217930406214",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "tx": "0x32d3eb317be12a7eb1d80d2cfe09c8dbc678fa03952031be6b33c260b31486e9",
+            "block": "0x72eddb1",
+            "uid": "0x32d3eb317be12a7eb1d80d2cfe09c8dbc678fa03952031be6b33c260b31486e9:log:593",
+            "from": "0xff497ca7118bd4b09435168372d188dc2d670f9d",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "raw": "0xe85c12d45b46f946"
+          }
+        ],
+        "sum_raw": "16743278217930406214"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "sum_raw": "0"
+      },
+      "fully_paginated": true,
+      "reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "raw_balance": "90743338900892537384",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "tx": "0x88bbd1daefd55504a5d0e7bec4c2372f102f77c1d070ec8a3d537d2094ea7834",
+            "block": "0x7323f73",
+            "uid": "0x88bbd1daefd55504a5d0e7bec4c2372f102f77c1d070ec8a3d537d2094ea7834:log:140",
+            "from": "0xb26a86df4ef693cebd6e05f8199dc81df91c4e98",
+            "to": "0xa83b73f5644cde337b61da79589f10ea15548811",
+            "raw": "0x4eb5119f39895d228"
+          }
+        ],
+        "sum_raw": "90743338900892537384"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "sum_raw": "0"
+      },
+      "fully_paginated": true,
+      "reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    }
+  ],
+  "method": "Full positive ERC20 exact contract incoming/outgoing history to fixed block 0x79549a0; crosscheck integer in-out and balanceOf same block. No PnL inference.",
+  "production": "NO_GO"
+}
