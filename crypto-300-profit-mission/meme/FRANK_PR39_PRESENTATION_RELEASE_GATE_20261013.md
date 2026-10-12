@@ -92,6 +92,32 @@ Do not restart any service solely because this document exists.
 
 ## One-shot read-only Mac command
 
+The Mac terminal may start in the home directory, which is **not** a Git
+repository. Do **not** use `git rev-parse --show-toplevel` from `~`.
+Prepare a new, isolated sparse clone from any directory. Keep the production
+Dashboard and Mission Loop worktrees untouched. Pin the preparation commit
+and verify its exact SHA before running the read-only audit.
+
+```zsh
+(
+  set -e
+  AUDIT_ROOT="$HOME/.cache/frank-pr39-independent-audit"
+  mkdir -p "$HOME/.cache" "$HOME/Downloads"
+  git clone --depth 40 --filter=blob:none --sparse --single-branch --branch fix/frank-presentation-history-semantics-20261012 https://github.com/lxxlx2/ChatGPT_mission_record.git "$AUDIT_ROOT"
+  git -C "$AUDIT_ROOT" sparse-checkout set crypto-300-profit-mission/local-agent
+  git -C "$AUDIT_ROOT" checkout --detach 3e7b4da6e6bf52eaf29aaac82279238830b54464
+  python3 "$AUDIT_ROOT/crypto-300-profit-mission/local-agent/scripts/frank_pr39_predeploy_readonly.py" --source-root "$AUDIT_ROOT/crypto-300-profit-mission/local-agent" > "$HOME/Downloads/frank-pr39-preflight-20261013.json" || true
+  cat "$HOME/Downloads/frank-pr39-preflight-20261013.json"
+  open -R "$HOME/Downloads/frank-pr39-preflight-20261013.json"
+)
+```
+
+A `REVIEW_REQUIRED_LEGACY_BUY_PREDICATES` or
+`BLOCKED_ACTIVE_DELIVERY_QUEUE` result remains meaningful **NO_GO** evidence,
+not permission to proceed. Do not hide a failed gate or merge/restart based
+on the existence of this file.
+
+
 From the `crypto-300-profit-mission/local-agent` directory of a clean
 **PR #39 preparation worktree** containing the audited product SHA:
 
