@@ -25,6 +25,10 @@ jobs:
           python -m pip install pyflakes==3.4.0
           python -m pyflakes crypto-300-profit-mission/local-agent/scripts/rollout_frank_combined_dashboard_only_20261012.py
           python crypto-300-profit-mission/local-agent/scripts/rollout_frank_combined_dashboard_only_20261012.py --help
+      - name: Assert identified legacy Dashboard fallback without any real Mac I/O
+        run: |
+          python -m pip install pytest==8.4.2
+          python -B -m pytest -q -p no:cacheprovider crypto-300-profit-mission/local-agent/tests/research/test_frank_dashboard_rollout_legacy_preflight.py
       - name: Assert production rollout has opt-in and cannot restart Frank loop
         run: |
           python - <<'PY'
