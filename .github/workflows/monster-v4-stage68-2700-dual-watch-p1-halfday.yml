@@ -1,0 +1,54 @@
+name: Monster Stage68 Historical Exposed2700 Dual Lane Watch P1 Halfday Reserve
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage68_exposed2700_dual_lane_watch_p1_halfday_reserve.py'
+      - '.github/workflows/monster-v4-stage68-2700-dual-watch-p1-halfday.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage68-p2-halfday-source-lock
+  cancel-in-progress: false
+jobs:
+  source_pinned_original2700_P2_stateful_exposed_mechanism:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify causal state machine and exact replay on unsorted inputs
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage68_exposed2700_dual_lane_watch_p1_halfday_reserve.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage68_exposed2700_dual_lane_watch_p1_halfday_reserve.py --selftest
+      - name: Replay all real original2700 1m cases, source-locked D0 and P1 plus 2-then-5 only as-of events
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage68_exposed2700_dual_lane_watch_p1_halfday_reserve.py \
+            --out /tmp/monster_stage68
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage68-original2700-asof252-watch-p1-2then5-mechanism
+          path: /tmp/monster_stage68/*
+          retention-days: 30
+      - name: Save factual exposed pure replay in existing Draft Monster research PR only
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage68/monster_stage68_* "$dest/"
+          git add "$dest/monster_stage68_original2700_all252_D0_P1_watch_and_research_urgency_states.jsonl" "$dest/monster_stage68_original3x900_p2_halfday_reserve_vs_p1_summary.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: preserve Stage68 2700 old source causal dual-state event ledger and halfday budget comparison'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE68_GIT_WRITE_FAILED
+          exit 1
