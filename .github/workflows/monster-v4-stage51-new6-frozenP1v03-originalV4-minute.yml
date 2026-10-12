@@ -1,0 +1,45 @@
+name: Monster Stage51 Fresh Full900 x Six Date Original Futures V4 Plus Frozen P1v03
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage51_pinnedP1v03_full900_causal_minute_replay.py'
+      - '.github/workflows/monster-v4-stage51-new6-frozenP1v03-originalV4-minute.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual_full5400_frozen_originalV4_source_and_unbudgeted_v03:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: [2025-01-30, 2025-06-02, 2025-08-01, 2025-10-02, 2026-06-21, 2026-07-28]
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Original source hashes, future-bar isolation, and frozen first/second ignition selftest
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage51_pinnedP1v03_full900_causal_minute_replay.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage51_pinnedP1v03_full900_causal_minute_replay.py --selftest
+      - name: Replay all 150 original symbol-dates on actual 9 daily official 1m SHA original unchanged V4, compute frozen V03 first eligible asof
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage51_pinnedP1v03_full900_causal_minute_replay.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 2 \
+            --out "/tmp/monster_stage51_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - name: Preserve source and original UTC with every candidate and censored symbol
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage51-fresh-real1m-${{ matrix.date }}-shard${{ matrix.shard }}-V4-P1v03-SHA
+          path: /tmp/monster_stage51_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
