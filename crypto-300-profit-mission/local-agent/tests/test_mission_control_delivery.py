@@ -227,7 +227,7 @@ def test_composite_routed_and_legacy_amounts_never_claim_complete_payment(tmp_pa
     line=next(l for l in rendered.splitlines() if l.startswith("Frank 最近一次买入支付（历史）："))
     assert line.startswith("Frank 最近一次买入支付（历史）：未确认（已识别资金腿：")
     assert expected in line and "不代表完整支付" in line
-    assert quantity.replace("000","") != "__impossible__"
+    assert f"{int(quantity):,}.00 USDC" in line
     db.close()
 
 
@@ -261,7 +261,7 @@ def test_desktop_legacy_pending_recovers_only_verified_frozen_gmail_body(monkeyp
     local.enqueue(e,forbidden=False)
     GmailDelivery(db).enqueue(e,mode="LIVE",forbidden=False)
     old_title="[Meme提醒] 可跟 | 多次强加仓 | Mint"
-    old_body="结论：可跟  |  多次强加仓\\n原因：Frank 当前处于多次强加仓模式\\n旧文案其他内容"
+    old_body="结论：可跟  |  多次强加仓\n原因：Frank 当前处于多次强加仓模式\n旧文案其他内容"
     old_hash=digest({"subject":old_title,"body":old_body})
     db.db.execute("DELETE FROM local_delivery_presentation WHERE decision_id=?",(e["decision_id"],))
     db.db.execute("UPDATE local_delivery SET content_hash=? WHERE decision_id=?",(old_hash,e["decision_id"]))
