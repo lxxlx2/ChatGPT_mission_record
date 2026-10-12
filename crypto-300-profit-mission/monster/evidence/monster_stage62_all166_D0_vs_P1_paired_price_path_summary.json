@@ -1,0 +1,261 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "DEPLOYMENT": "NO_GO",
+  "GMAIL": "OFF",
+  "MISMATCHED_ENTRY_TIMES_NO_COMPARABLE_EXECUTABLE_PNL": true,
+  "NOT_ALL_D0_EVER": true,
+  "NOT_A_NEW_MODEL_OR_INDEPENDENT_HOLDOUT": true,
+  "NO_ASSUMED_ORDER_NOTIONAL": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1V03": "REJECTED",
+  "first_watch_original_P1_same_minute_source_parity_46": 46,
+  "full_exposed_P1_cohort": 166,
+  "group_results": {
+    "ALL_166": {
+      "D0_to_P1_first_completed_minute_price_change_median_pct_NOT_PNL": "17.08981463018419902055660335",
+      "complete": 166,
+      "horizons": {
+        "1440": {
+          "D0_close_median_pct_PROXY": "8.19984475029218343886824705",
+          "D0_close_positive_count": 109,
+          "D0_high_at_least_2x_count_NOT_FILL": 9,
+          "D0_low_median_pct_NOT_FILL": "-7.71832394697675343659982962",
+          "P1_close_median_pct_PROXY": "-5.580014270149856168106132745",
+          "P1_close_positive_count": 62,
+          "P1_high_at_least_2x_count_NOT_FILL": 5,
+          "P1_low_median_pct_NOT_FILL": "-13.89810320977233828046235728"
+        },
+        "15": {
+          "D0_close_median_pct_PROXY": "0.074335713338762523437056100",
+          "D0_close_positive_count": 84,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-2.357229157518496453587113665",
+          "P1_close_median_pct_PROXY": "0",
+          "P1_close_positive_count": 82,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-2.546754129289659313019218010"
+        },
+        "360": {
+          "D0_close_median_pct_PROXY": "2.389594416985705379908137400",
+          "D0_close_positive_count": 96,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-5.65596177643644392215515553",
+          "P1_close_median_pct_PROXY": "-2.946069471890434856894919890",
+          "P1_close_positive_count": 65,
+          "P1_high_at_least_2x_count_NOT_FILL": 1,
+          "P1_low_median_pct_NOT_FILL": "-8.891606877913256921415091565"
+        },
+        "60": {
+          "D0_close_median_pct_PROXY": "1.281837417283468624426114050",
+          "D0_close_positive_count": 95,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-3.706996931820311315467135040",
+          "P1_close_median_pct_PROXY": "-1.209691163069474964999167185",
+          "P1_close_positive_count": 70,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-4.677950104031117192902560820"
+        }
+      },
+      "missing_source": {},
+      "n": 166
+    },
+    "FIRST_D0_EQUALS_P1": {
+      "D0_to_P1_first_completed_minute_price_change_median_pct_NOT_PNL": "0",
+      "complete": 46,
+      "horizons": {
+        "1440": {
+          "D0_close_median_pct_PROXY": "-2.327235731814429147397675810",
+          "D0_close_positive_count": 19,
+          "D0_high_at_least_2x_count_NOT_FILL": 1,
+          "D0_low_median_pct_NOT_FILL": "-11.87353649507175053815755592",
+          "P1_close_median_pct_PROXY": "-2.327235731814429147397675810",
+          "P1_close_positive_count": 19,
+          "P1_high_at_least_2x_count_NOT_FILL": 1,
+          "P1_low_median_pct_NOT_FILL": "-11.87353649507175053815755592"
+        },
+        "15": {
+          "D0_close_median_pct_PROXY": "-1.905554464475616151321441805",
+          "D0_close_positive_count": 18,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-3.857512839545386496791933330",
+          "P1_close_median_pct_PROXY": "-1.905554464475616151321441805",
+          "P1_close_positive_count": 18,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-3.857512839545386496791933330"
+        },
+        "360": {
+          "D0_close_median_pct_PROXY": "-4.113905477743254824258805975",
+          "D0_close_positive_count": 14,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-9.041612195270778948496964225",
+          "P1_close_median_pct_PROXY": "-4.113905477743254824258805975",
+          "P1_close_positive_count": 14,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-9.041612195270778948496964225"
+        },
+        "60": {
+          "D0_close_median_pct_PROXY": "-0.998549902685346504625518280",
+          "D0_close_positive_count": 21,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-5.08132476286430506826262270",
+          "P1_close_median_pct_PROXY": "-0.998549902685346504625518280",
+          "P1_close_positive_count": 21,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-5.08132476286430506826262270"
+        }
+      },
+      "missing_source": {},
+      "n": 46
+    },
+    "P1_URGENT_DELIVERED": {
+      "D0_to_P1_first_completed_minute_price_change_median_pct_NOT_PNL": "15.10638297872340425531914890",
+      "complete": 127,
+      "horizons": {
+        "1440": {
+          "D0_close_median_pct_PROXY": "5.167856198784033835580227300",
+          "D0_close_positive_count": 81,
+          "D0_high_at_least_2x_count_NOT_FILL": 7,
+          "D0_low_median_pct_NOT_FILL": "-8.351648351648351648351648350",
+          "P1_close_median_pct_PROXY": "-5.242566510172143974960876370",
+          "P1_close_positive_count": 48,
+          "P1_high_at_least_2x_count_NOT_FILL": 5,
+          "P1_low_median_pct_NOT_FILL": "-14.01842864176689878314693677"
+        },
+        "15": {
+          "D0_close_median_pct_PROXY": "-0.2456770291977700085042048600",
+          "D0_close_positive_count": 59,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-2.408563782337198929527207850",
+          "P1_close_median_pct_PROXY": "0",
+          "P1_close_positive_count": 62,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-2.749784048373164411171897490"
+        },
+        "360": {
+          "D0_close_median_pct_PROXY": "1.547339717166592681844124500",
+          "D0_close_positive_count": 69,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-5.701110878222594843848249840",
+          "P1_close_median_pct_PROXY": "-3.058117470544106614889016370",
+          "P1_close_positive_count": 48,
+          "P1_high_at_least_2x_count_NOT_FILL": 1,
+          "P1_low_median_pct_NOT_FILL": "-9.227415839186243642528457250"
+        },
+        "60": {
+          "D0_close_median_pct_PROXY": "1.007387508394895903290799200",
+          "D0_close_positive_count": 70,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-3.760752150430086017203440690",
+          "P1_close_median_pct_PROXY": "-1.392454024403108407468617040",
+          "P1_close_positive_count": 57,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-5.089058524173027989821882950"
+        }
+      },
+      "missing_source": {},
+      "n": 127
+    },
+    "P1_URGENT_OVER_BUDGET": {
+      "D0_to_P1_first_completed_minute_price_change_median_pct_NOT_PNL": "22.54701172965928132563768390",
+      "complete": 39,
+      "horizons": {
+        "1440": {
+          "D0_close_median_pct_PROXY": "19.24333151878062057702776270",
+          "D0_close_positive_count": 28,
+          "D0_high_at_least_2x_count_NOT_FILL": 2,
+          "D0_low_median_pct_NOT_FILL": "-6.252179979072200906871294040",
+          "P1_close_median_pct_PROXY": "-6.688417618270799347471451880",
+          "P1_close_positive_count": 14,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-11.95376016260162601626016260"
+        },
+        "15": {
+          "D0_close_median_pct_PROXY": "0.849452461365264558387063800",
+          "D0_close_positive_count": 25,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-1.880469186371253025507354310",
+          "P1_close_median_pct_PROXY": "0.040477636106051406597854700",
+          "P1_close_positive_count": 20,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-1.900215295329027426752784800"
+        },
+        "360": {
+          "D0_close_median_pct_PROXY": "5.519897304236200256739409500",
+          "D0_close_positive_count": 27,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-3.976281827694454133240320890",
+          "P1_close_median_pct_PROXY": "-2.907064316915198071998795000",
+          "P1_close_positive_count": 17,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-7.446348840558836237937491000"
+        },
+        "60": {
+          "D0_close_median_pct_PROXY": "2.630232320130999897656330000",
+          "D0_close_positive_count": 25,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-2.965599051008303677342823250",
+          "P1_close_median_pct_PROXY": "-1.130041724617524339360222530",
+          "P1_close_positive_count": 13,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-3.386520249106386114898478090"
+        }
+      },
+      "missing_source": {},
+      "n": 39
+    },
+    "SECOND_IGNITION_WITH_DELAY": {
+      "D0_to_P1_first_completed_minute_price_change_median_pct_NOT_PNL": "20.29630893284670976039238855",
+      "complete": 120,
+      "horizons": {
+        "1440": {
+          "D0_close_median_pct_PROXY": "12.90268134449001228088400585",
+          "D0_close_positive_count": 90,
+          "D0_high_at_least_2x_count_NOT_FILL": 8,
+          "D0_low_median_pct_NOT_FILL": "-5.67074244341955948793445325",
+          "P1_close_median_pct_PROXY": "-6.687951166967563559437112345",
+          "P1_close_positive_count": 43,
+          "P1_high_at_least_2x_count_NOT_FILL": 4,
+          "P1_low_median_pct_NOT_FILL": "-14.85201511335012594458438287"
+        },
+        "15": {
+          "D0_close_median_pct_PROXY": "0.490963918329051858063873500",
+          "D0_close_positive_count": 66,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-1.992401323541527360791519220",
+          "P1_close_median_pct_PROXY": "0.182601737158861677475284650",
+          "P1_close_positive_count": 64,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-2.003502659086741243352283145"
+        },
+        "360": {
+          "D0_close_median_pct_PROXY": "4.303049022618993337951580000",
+          "D0_close_positive_count": 82,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-4.432114495673817707716012805",
+          "P1_close_median_pct_PROXY": "-2.779353981089904406925447830",
+          "P1_close_positive_count": 51,
+          "P1_high_at_least_2x_count_NOT_FILL": 1,
+          "P1_low_median_pct_NOT_FILL": "-8.798646096271900829354639725"
+        },
+        "60": {
+          "D0_close_median_pct_PROXY": "2.552113832732068502724149400",
+          "D0_close_positive_count": 74,
+          "D0_high_at_least_2x_count_NOT_FILL": 0,
+          "D0_low_median_pct_NOT_FILL": "-3.025812705853416038198562550",
+          "P1_close_median_pct_PROXY": "-1.255764929473175609916712420",
+          "P1_close_positive_count": 49,
+          "P1_high_at_least_2x_count_NOT_FILL": 0,
+          "P1_low_median_pct_NOT_FILL": "-4.346122764260222177574646520"
+        }
+      },
+      "missing_source": {},
+      "n": 120
+    }
+  },
+  "locked_original_source_blobs": {
+    "monster_stage60_all166_signal_to_24h_verified_futures_price_proxy.jsonl": "c76b9b73c11924cb3fdc36fb852074ff9b49b3b8",
+    "monster_stage61_original166_firstD0_to_P1_latency_and_24h_proxy.jsonl": "89634d4b8d049ad607be1f553515d11ff6e82573",
+    "monster_v4_stage60_exposed_all166_post_signal_futures_price_paths.py": "6a638e84cf837ffc84a301649612e8f2f5dc1deb"
+  },
+  "schema": "MONSTER_STAGE62_ORIGINAL166_PAIRED_FIRST_D0_AND_P1_REAL_OFFICIAL_USDM_1M_V1"
+}
