@@ -1,0 +1,32 @@
+name: Monster Stage73 M03 Early Prefix Official Source Pilot
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_m03_all2700_verified_prefix_discovery.py'
+      - '.github/workflows/monster-v4-stage73-m03-prefix-official-pilot.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  immutable_real_v4_prefix_before_future:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and synthetic no-future suffix/source-gap publisher-SHA fail-closed test
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_m03_all2700_verified_prefix_discovery.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_m03_all2700_verified_prefix_discovery.py --selftest
+      - name: Actual Binance official minute ZIP plus publisher checksum prefix replay for good and censored source examples
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_m03_all2700_verified_prefix_discovery.py \
+            --pilot --out /tmp/monster_stage73_real6_prefix_source_pilot.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage73-actual-official-SHA-six-example-prefix-study
+          path: /tmp/monster_stage73_real6_prefix_source_pilot.json
+          retention-days: 30
