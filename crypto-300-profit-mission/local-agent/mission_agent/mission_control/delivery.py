@@ -172,9 +172,25 @@ def render(event:dict)->dict:
     subject=f"[Meme提醒] {_zh(DECISION_ZH,decision,decision)} | {_zh(PATTERN_ZH,pattern,pattern)} | {_short(body['mint'])}"
     original_asset=inputs.get("latest_buy_original_quote_asset") or inputs.get("latest_buy_quote_asset")
     original_qty=inputs.get("latest_buy_original_quote_quantity") or inputs.get("latest_buy_quote_quantity")
-    payment=_payment_display(original_qty,original_asset)
-    if inputs.get("latest_buy_quote_was_normalized") and inputs.get("latest_buy_usdc_equivalent") not in (None,""):
-        payment += " ≈ "+_readable_number(inputs.get("latest_buy_usdc_equivalent"),decimal_places=2,grouping=True)+" USDC（事件时间换算）"
+    observed_payment=_payment_display(original_qty,original_asset)
+    predicate=inputs.get("latest_buy_amount_predicate")
+    verified=(predicate=="USDC_DIRECT_NUMERIC" and original_asset==USDC_MINT) or (
+        predicate=="SOL_EVENT_TIME_USDC_VERIFIED" and inputs.get("latest_buy_quote_was_normalized") is True
+    )
+    reason={
+        "COMPOSITE_QUOTE_LEGS":"复合报价可能含其他资金腿",
+        "ROUTED_RESIDUAL_ASSETS":"多资产路线的最终目标成本不可核实",
+        "ROUTE_EVIDENCE_UNVERIFIED":"交易路线证据不足",
+        "NON_USDC_QUOTE":"非 USDC 报价尚未确认完整成本",
+    }.get(inputs.get("latest_buy_amount_predicate_reason"),"完整支付成本缺少验证")
+    if observed_payment=="暂无":
+        payment="未确认（原始支付数据不足）"
+    elif not verified:
+        payment="未确认（已识别资金腿："+observed_payment+"；"+reason+"，不代表完整支付）"
+    else:
+        payment=observed_payment
+        if inputs.get("latest_buy_quote_was_normalized") and inputs.get("latest_buy_usdc_equivalent") not in (None,""):
+            payment += " ≈ "+_readable_number(inputs.get("latest_buy_usdc_equivalent"),decimal_places=2,grouping=True)+" USDC（事件时间换算）"
     frank_price=metrics.get("frank_latest_buy_price_usdc") or inputs.get("latest_buy_price_usdc")
     exec_price=metrics.get("execution_price_usdc") or quote.get("execution_price_usdc")
     impact=metrics.get("price_impact_pct") or quote.get("price_impact_pct")
