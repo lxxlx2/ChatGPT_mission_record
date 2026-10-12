@@ -90,9 +90,9 @@ def summary_from_database(root: Path):
               ON o.channel='gmail' AND g.decision_id=o.decision_id
             LEFT JOIN local_delivery l
               ON o.channel='local' AND l.decision_id=o.decision_id
-            WHERE o.status IN (
-              'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED','PERMANENT_ERROR',
-              'CREDENTIAL_BLOCKED','RETRYABLE_ERROR','RETRY_PENDING'
+            WHERE NOT (
+              (o.channel='gmail' AND o.status IN ('SENT_VERIFIED','DRY_RUN_AUDIT'))
+              OR (o.channel='local' AND o.status IN ('COMMAND_ACCEPTED','DRY_RUN_AUDIT'))
             )
         """).fetchall()]
         # Group *all* recorded outcomes, not just suspected failures.
@@ -115,16 +115,20 @@ def summary_from_database(root: Path):
             status_counts[key] = status_counts.get(key, 0) + row["number"]
         hidden = db.execute("""
             SELECT COUNT(*) FROM decision_outbox
-            WHERE status NOT IN (
-              'PENDING','SENT_VERIFIED','DELIVERED','DRY_RUN_AUDIT',
-              'COMMAND_ACCEPTED',
-              'MANUAL_REVIEW','SENDING','SENT_UNVERIFIED','PERMANENT_ERROR',
-              'CREDENTIAL_BLOCKED','RETRYABLE_ERROR','RETRY_PENDING'
+            WHERE NOT (
+              (channel='gmail' AND status IN ('SENT_VERIFIED','DRY_RUN_AUDIT'))
+              OR (channel='local' AND status IN ('COMMAND_ACCEPTED','DRY_RUN_AUDIT'))
+              OR status IN (
+                'PENDING','MANUAL_REVIEW','SENDING','SENT_UNVERIFIED',
+                'PERMANENT_ERROR','CREDENTIAL_BLOCKED','RETRYABLE_ERROR',
+                'RETRY_PENDING'
+              )
             )
         """).fetchone()[0]
     finally:
         db.close()
     pending = {"gmail": 0, "local": 0, "other": 0}
+    queued = {"gmail": 0, "local": 0, "other": 0}
     blocked = {"gmail": 0, "local": 0, "other": 0}
     manual_channels = {"gmail": 0, "local": 0, "other": 0}
     expired = {"gmail": 0, "local": 0}
@@ -137,11 +141,17 @@ def summary_from_database(root: Path):
         if state in ("SENDING", "SENT_UNVERIFIED"):
             pending[channel] += 1
             continue
+        if state == "PENDING":
+            queued[channel] += 1
+            continue
         if state in ("CREDENTIAL_BLOCKED", "RETRYABLE_ERROR", "RETRY_PENDING"):
             blocked[channel] += 1
             continue
         if state == "PERMANENT_ERROR":
             actionable[channel] += 1
+            continue
+        if state != "MANUAL_REVIEW":
+            blocked[channel] += 1
             continue
         manual_channels[channel] += 1
         if channel == "other":
@@ -186,6 +196,10 @@ def summary_from_database(root: Path):
         "manual_review_pending_gmail_count": pending["gmail"],
         "manual_review_pending_local_count": pending["local"],
         "manual_review_pending_other_count": pending["other"],
+        "manual_review_queued_count": sum(queued.values()),
+        "manual_review_queued_gmail_count": queued["gmail"],
+        "manual_review_queued_local_count": queued["local"],
+        "manual_review_queued_other_count": queued["other"],
         "manual_review_visible_total_count": len(records),
         "dashboard_hidden_nonsuccess_rows": hidden,
         "outbox_status_counts_by_channel": status_counts,
