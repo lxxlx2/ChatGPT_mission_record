@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-12",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "side": "in",
+  "source": {
+    "file": "BSC_MEME_877AF_LOBSTER_IN_CURSOR_B_2026-10-12.json",
+    "sha": "1c38d4023e8aa8b4aa82201f7b7b8c9c0f1fb365"
+  },
+  "anchor": "0x70a3b98",
+  "newLogs": [
+    {
+      "hash": "0x0cc6dd653ef62aaa037b5d7dcda368bac49685e69cc3453d5f85e5c0841ece31",
+      "block": "0x70a3d37",
+      "raw": "0xe07c2f862e30aeb873",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "id": "0x0cc6dd653ef62aaa037b5d7dcda368bac49685e69cc3453d5f85e5c0841ece31:log:3"
+    },
+    {
+      "hash": "0xd65031d2191ff261f2f57f34451d1b692a9ef83ac9e0f06ef5b76f72a46cb2d6",
+      "block": "0x70a3d42",
+      "raw": "0xe04cf03f05664823d4",
+      "from": "0x6313b2f05164c68cf176e56c15e8c083e790b2ba",
+      "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "id": "0xd65031d2191ff261f2f57f34451d1b692a9ef83ac9e0f06ef5b76f72a46cb2d6:log:196"
+    },
+    {
+      "hash": "0x06808667049676c22a46b60d3c4aa1216777b775bc9d395d8d2a6b983e5f3b7f",
+      "block": "0x70a3d42",
+      "raw": "0xe0648e04e3c9537b67",
+      "from": "0x052729faf6cfc31aeceab084f36328eba03e9bb0",
+      "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "id": "0x06808667049676c22a46b60d3c4aa1216777b775bc9d395d8d2a6b983e5f3b7f:log:197"
+    },
+    {
+      "hash": "0xd62d2f625148ff3c44d0c211609820570c3307eecba818ed683a69e59740129c",
+      "block": "0x70a7af0",
+      "raw": "0x44bbce32357fbb7abc1",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "id": "0xd62d2f625148ff3c44d0c211609820570c3307eecba818ed683a69e59740129c:log:655"
+    },
+    {
+      "hash": "0xbd823dca97f4d65582486a683e9ff3a85d534fd31a50ce8c2635242639d5f660",
+      "block": "0x70a7af0",
+      "raw": "0x4499b95912c12dc65f8",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "id": "0xbd823dca97f4d65582486a683e9ff3a85d534fd31a50ce8c2635242639d5f660:log:675"
+    },
+    {
+      "hash": "0xe81ba44aa1fe25603500872be92e30bf3ce5fd7a501e4a34e5770269b4d555ad",
+      "block": "0x711d60a",
+      "raw": "0x617da25a99384a4ed",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "id": "0xe81ba44aa1fe25603500872be92e30bf3ce5fd7a501e4a34e5770269b4d555ad:log:76"
+    }
+  ],
+  "overlap": 1,
+  "pages": 1,
+  "complete": true,
+  "lastBlock": "0x711d60a",
+  "error": null,
+  "production": "NO_GO"
+}
