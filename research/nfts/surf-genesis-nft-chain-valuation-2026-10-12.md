@@ -71,8 +71,8 @@ Surf 官方主站：https://asksurf.ai/
 - Surf 官方融资公告：https://asksurf.ai/blog/en/surf-raises-15m-to-scale-the-first-ai-model-purpose-built-for-digital-assets
 - Robinhood Chain 官方文档：https://docs.robinhood.com/chain/
 - 第三方 Surf NFT 链声明：https://x.com/LensMoso/status/2107001523733668208
-- Blockscout 4663 candidate A: https://explorer.robinhood.com/address/0x6A044021bb41f4B06193cA9B42946c20918aA4f3 （请以可用的 Robinhood Chain Blockscout 浏览器为准）
-- Blockscout 4663 candidate B: https://explorer.robinhood.com/address/0xf5a24bd9648f180E306B57bb5B2349bb7908C28 （请以可用的 Robinhood Chain Blockscout 浏览器为准）
+- Blockscout 4663 candidate A: https://robinhoodchain.blockscout.com/address/0x6A044021bb41f4B06193cA9B42946c20918aA4f3 （Blockscout 官方 Robinhood Chain 主网浏览器）
+- Blockscout 4663 candidate B: https://robinhoodchain.blockscout.com/address/0xf5a24bd9648f180E306B57bb5B2349bb7908C28 （Blockscout 官方 Robinhood Chain 主网浏览器）
 - Kaito collection：在 OpenSea 官方 collection 页面核价（流动性、真实成交与挂单须区分）。
 
 以上只包含公开资料，未包括用户钱包和私密信息。
