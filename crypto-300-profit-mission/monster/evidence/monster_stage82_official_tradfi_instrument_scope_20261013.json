@@ -1,0 +1,54 @@
+{
+  "schema": "MONSTER_STAGE82_BINANCE_OFFICIAL_TRADFI_CRYPTO_SCOPE_EXCLUSION_V1",
+  "created_bangkok": "2026-10-13",
+  "official_source": "https://www.binance.com/en/support/announcement/detail/88ea4a4f9f0b4ad4b7b308195c026fe4",
+  "official_announcement_published_at_utc": "2026-06-22T08:15:00Z",
+  "source_type": "BINANCE_OFFICIAL_TRADFI_ANNOUNCEMENT",
+  "classification": "CONFIRMED_TRADFI_NOT_CRYPTO",
+  "instruments": [
+    {
+      "symbol": "LRCXUSDT",
+      "launch_time_utc": "2026-06-22T13:30:00Z",
+      "underlying_equity_or_index": "Lam Research Corporation Common Stock (Nasdaq: LRCX)"
+    },
+    {
+      "symbol": "KLACUSDT",
+      "launch_time_utc": "2026-06-22T13:35:00Z",
+      "underlying_equity_or_index": "KLA Corporation Common Stock (Nasdaq: KLAC)"
+    },
+    {
+      "symbol": "ALABUSDT",
+      "launch_time_utc": "2026-06-22T13:40:00Z",
+      "underlying_equity_or_index": "Astera Labs Inc. Common Stock (Nasdaq: ALAB)"
+    },
+    {
+      "symbol": "SMCIUSDT",
+      "launch_time_utc": "2026-06-22T13:45:00Z",
+      "underlying_equity_or_index": "Super Micro Computer Inc. Common Stock (Nasdaq: SMCI)"
+    },
+    {
+      "symbol": "CIENUSDT",
+      "launch_time_utc": "2026-06-22T13:50:00Z",
+      "underlying_equity_or_index": "Ciena Corporation Common Stock (NYSE: CIEN)"
+    },
+    {
+      "symbol": "KORUUSDT",
+      "launch_time_utc": "2026-06-22T13:55:00Z",
+      "underlying_equity_or_index": "Direxion Daily South Korea Bull 3X ETF (NYSE Arca: KORU)"
+    },
+    {
+      "symbol": "SONYUSDT",
+      "launch_time_utc": "2026-06-22T14:00:00Z",
+      "underlying_equity_or_index": "Sony Group Corporation American Depositary Shares (NYSE: SONY)"
+    }
+  ],
+  "principle": "This is a positive OFFICIAL exclusion registry only. Any unlisted symbol is UNKNOWN unless another affirmative point-in-time source proves crypto identity; do not treat all other USD-M names as crypto. Crypto model D1 may only become eligible with independently verified crypto instrument class and trading status. D0 discovery evidence never silently dropped.",
+  "derivative_unit_prefix": "symbols beginning with 1000 or 1000000 and without verified underlying unit mapping remain MULTIPLIER_UNKNOWN not automatically one-to-one spot crypto",
+  "historical_pilot_stocks": [
+    "LRCXUSDT",
+    "KLACUSDT"
+  ],
+  "production_deployment": "NO_GO",
+  "auto_trade": "NO_GO",
+  "gmail": "OFF"
+}
