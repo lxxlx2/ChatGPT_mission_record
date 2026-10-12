@@ -209,6 +209,29 @@ def evaluate_h1(rows, window_starts=forward.WINDOWS, *,
         if auc is not None:
             eligible.append(Decimal(auc))
     independent_positive_dates=sum(v["right_tail_ge100"]>0 for v in bydate.values())
+    # Secondary robustness diagnosis only: DIRECT D1 starts at D0 so H1 progress
+    # is mechanically zero; pooled AUC can partly reflect entry-path mixture.
+    # This must NEVER replace the one preregistered overall H1 acceptance metric.
+    entry_path_robustness={}
+    for path in ("DIRECT_AT_FIRST_D0","REIGNITION_AFTER_D0"):
+        part=[x for x in valid if x.get("D1_entry_path")==path]
+        p=[x for x in part if x["tail_ge100_after_D1_72h"]]
+        n=[x for x in part if not x["tail_ge100_after_D1_72h"]]
+        per_date={}
+        for d in sorted(dates):
+            one=[x for x in p if x["date"]==d]
+            other=[x for x in n if x["date"]==d]
+            per_date[d]={"positive":len(one),"control":len(other),
+                         "auc":pairwise_auc(one,other)}
+        filled=[Decimal(x["auc"]) for x in per_date.values() if x["auc"] is not None]
+        entry_path_robustness[path]={
+          "n":len(part),"positive":len(p),"negative":len(n),
+          "global_auc":pairwise_auc(p,n),
+          "same_date_equal_date_auc":str(sum(filled)/len(filled)) if filled else None,
+          "positive_date_count":sum(v["positive"]>0 for v in per_date.values()),
+          "per_date":per_date,
+          "posthoc_secondary_diagnostic_not_primary_H1":True,
+        }
     threshold_sufficient=(len(pos)>=SAMPLE_MIN and independent_positive_dates>=DISTINCT_WINDOWS_MIN)
     if not full_market_certified and not exposed:
         outcome="BLOCKED_G0_FULL_CRYPTO_UNIVERSE_AND_LISTINGS_UNVERIFIED"
@@ -234,6 +257,7 @@ def evaluate_h1(rows, window_starts=forward.WINDOWS, *,
         "within_date_macro_auc":(
             str(sum(eligible)/len(eligible)) if eligible else None),
         "same_date_auc_by_window":bydate,
+        "entry_path_robustness_exposed_or_forward_descriptive_only":entry_path_robustness,
         "sufficient_statistical_support":threshold_sufficient,
         "G0_full_market_crypto_population_complete":full_market_certified,
         "H1_verdict":outcome,
@@ -254,6 +278,7 @@ def historical_regression():
         rows.append({
             "date":observed["date"],"symbol":observed["symbol"],
             "D1_first_UTC":observed["D1_FIRST_UTC"],
+            "D1_entry_path":observed["D1_PATH"],
             "H1_status":"COMPLETE_SHA_PRICE_ONLY_PROXY",
             "H1_asof_D0_to_D1_progress_pct":
                 observed["asof_D1_ret_from_first_D0_pct"],
@@ -268,6 +293,12 @@ def historical_regression():
         or abs(Decimal(out["within_date_macro_auc"])-
                Decimal("0.8724989450204967446346756692"))>Decimal("0.000000000000001")):
         raise ValueError("STAGE96_STAGE94_EXPOSED_FROZEN5_AND_AUC_CHANGED")
+    groups=out["entry_path_robustness_exposed_or_forward_descriptive_only"]
+    if (groups["DIRECT_AT_FIRST_D0"]["n"]!=164
+        or groups["DIRECT_AT_FIRST_D0"]["positive"]!=1
+        or groups["REIGNITION_AFTER_D0"]["n"]!=141
+        or groups["REIGNITION_AFTER_D0"]["positive"]!=4):
+        raise ValueError("STAGE96_STAGE94_PATH_STRATA_164_141_OR_TAILS_CHANGED")
     out["H1_verdict"]="EXPOSED_MATH_REGRESSION_NOT_PREDICTIVE"
     out["exposed_source_blobs"]=historic.PINS
     return out
