@@ -1,0 +1,104 @@
+name: Monster Stage48 Actual 936 Original D0 Source-SHA As-of Feature Aggregate
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage48_original36_shas_936_asof_features_aggregate.py'
+      - '.github/workflows/monster-v4-stage48-all36-original-sha-asof-feature-aggregate.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  verify36_original_GitHub_sha_and_recompute_all936_asof_observations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require actual source36 final success before original artifact manifest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38216755205 >/tmp/monster48_source_run.json
+          python - <<'PY'
+          import json
+          run=json.load(open('/tmp/monster48_source_run.json'))
+          if run['status']!='completed' or run['conclusion']!='success':
+              raise SystemExit('STAGE48_ORIGINAL36_SOURCE_NOT_COMPLETE_SUCCESS')
+          print('STAGE48_ALL36_SOURCE_SUCCESS')
+          PY
+      - name: Freeze original source Artifact IDs and SHA receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38216755205/artifacts?per_page=100' >/tmp/monster48_artifacts.json
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          art=json.load(open('/tmp/monster48_artifacts.json'))['artifacts']
+          if len(art)!=36:raise SystemExit('STAGE48_NOT36_ORIGINAL_ARTIFACTS')
+          seen=set();ids=[];records=[]
+          for a in art:
+            m=re.fullmatch(r'monster-stage48-true-asof-usdm-(\d{4}-\d\d-\d\d)-shard([0-5])-SHA',a['name'])
+            if not m or a.get('expired') or not a.get('digest','').startswith('sha256:'):
+              raise SystemExit('STAGE48_UNTRUSTED_ORIGINAL_ARTIFACT')
+            key=m.group(1),int(m.group(2))
+            if key in seen:raise SystemExit('STAGE48_ORIGINAL_DUPLICATE_SHARD')
+            seen.add(key);ids.append(str(a['id']))
+            records.append({'date':key[0],'shard':key[1],'artifact_id':a['id'],
+              'zip_sha256':a['digest'].split(':')[1]})
+          Path('/tmp/monster48_manifest.json').write_text(json.dumps({'source_run_id':38216755205,'artifacts':records}))
+          Path('/tmp/monster48_ids').write_text('\n'.join(ids)+'\n')
+          print('STAGE48_GITHUB_ARTIFACT36_SOURCE_SHA_LOCKED')
+          PY
+      - name: Re-download each original36 GitHub raw zip bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster48_original36
+          while read -r aid; do
+            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$aid/zip" > "/tmp/monster48_original36/$aid.zip"
+          done </tmp/monster48_ids
+      - name: Verify original publisher receipts, all 5400 market identities, 936 event asof features and P1 first-observation parity
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage48_original36_shas_936_asof_features_aggregate.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage48_original36_shas_936_asof_features_aggregate.py \
+            --manifest /tmp/monster48_manifest.json \
+            --zip-dir /tmp/monster48_original36 \
+            --out /tmp/monster48_output
+      - name: Retain all 936 original actual official minute-event feature facts
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage48-original36-real-official-936-first-repeated-watch-asof-features
+          path: /tmp/monster48_output/*
+          retention-days: 30
+      - name: Commit verified feature audit into original research PR with concurrency-safe fast forward
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster48_output/monster_stage48_* "$dest/"
+          git add "$dest/monster_stage48_original36_SHA_all936_true_asof_minute_features_summary.json" "$dest/monster_stage48_full936_real_closed1m_original_D0_event_features.jsonl" "$dest/monster_stage48_all5400_source_and_437_watch_case_inventory.jsonl"
+          if git diff --cached --quiet; then
+            echo STAGE48_ALREADY_COMMITTED_IDENTICAL
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage48 original36 SHA 936 true source asof D0 feature cohorts'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then
+              echo STAGE48_PERSISTED_FAST_FORWARD
+              exit 0
+            fi
+            echo "STAGE48_CONCURRENT_PUSH_RETRY_$attempt"
+          done
+          echo STAGE48_NOT_VERIFIED_COMMIT_NO_FORCE_PUSH
+          exit 1
