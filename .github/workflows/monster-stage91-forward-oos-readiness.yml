@@ -1,0 +1,34 @@
+name: Monster Stage91 Forward OOS Readiness
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage91-forward-oos-readiness.yml
+      - crypto-300-profit-mission/monster/MONSTER_STAGE91_FORWARD_OOS_CENSUS_AND_REPLAY_FROZEN_CONTRACT_20261013.md
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preregistered_future_validation_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile frozen Stage91 intake and replay bridge
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+      - name: Assert first future window NOT passed; fake/late/synthetic data rejected or labeled
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py --selftest
+      - name: Preserve original frozen D1 and D2 regression
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage90_d2_execution_proof.py --selftest
