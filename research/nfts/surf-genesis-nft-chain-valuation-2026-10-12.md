@@ -28,7 +28,7 @@ Surf 官方主站：https://asksurf.ai/
 
 两份合约的创建者不同，且搜索结果同时含同名 ERC-20；**仅名称相似不能排除冒牌合约或独立 collection**。任何 mint/买卖/授权都必须待 Surf 官方明确给出 CA 后验证。
 - 第一份部署者：`0x110b550faDBe13ceC30f75199e1aad7c3f056A2c`，implementation `0x3cB802dCeDd7A9d016c8b0CeB2a2FFa8a3a93171`，未验证。
-- 第二份部署者：`0x56F116c596C5D260cf1A43F61B504BE9CaC9Bf14`，implementation `0xeA9115A1105B9C60710fBF90028Fe1595E7CC025`，未验证。
+- 旧记录的第二份部署者和 implementation 因原候选地址本身不合法，均**不再视为已核实链上事实**。
 - Robinhood Chain 官方 https://docs.robinhood.com/chain/ 确认它是 Ethereum L2、gas 为 ETH。
 - 一个第三方公开 X 帖子称 Surf NFT 在 Robinhood Chain 发放：https://x.com/LensMoso/status/2107001523733668208 ，这是**第三方口径而不是 Surf 官方证据**。
 - 主网 Ethereum 和 Arbitrum 的名称搜索未发现可认证的 AskSurf 官方 NFT；**缺少搜到不能证明不存在**。
@@ -73,7 +73,7 @@ Surf 官网确认系列总量为 **6,666**，此前 1,000/1,500/3,000/5,000/10,0
 3. **可能的代币/分发催化剂：** 仅在 SURF 正式确认 TGE、快照、allocation 和 claim 后才模拟空投贴现价值；Kaito 2025-02 的 7.65 ETH 是强行情**峰值压力测试**。
 4. **权益兑现或失败后的回撤：** Kaito 2026-10 约 $240-$270 旧市场价属于这层的回撤尾部参照，应保留为极端下行情景，而非早期公平价锚。
 
-**不可解答的核心缺口：** SurfBoards 真实总量、团队/保留配额、每个 #691 的兑现条款、二级出价/成交、股票代币池的法律与实际资金来源、SURF 代币存在性及分配比例。融资 $15M 与公司用户数据能支持公司基础真实性，不能推算上述未知变量。
+**未解决的核心缺口：** SurfBoards 总量**已确认计划为 6,666**；尚缺实际铸造数量、团队/保留配额、每个 #691 的兑现条款、二级出价/成交、股票代币池的法律与实际资金来源、SURF 代币存在性及分配比例。融资 $15M 与公司用户数据能支持公司基础真实性，不能推算上述未知变量。
 
 ## 5. 来源和证据限制
 
@@ -97,7 +97,7 @@ Surf 官网确认系列总量为 **6,666**，此前 1,000/1,500/3,000/5,000/10,0
 
 - Git 原始资产提交 [14ed597c8afcd2758b2766ea00991313dd7042e2](https://github.com/lxxlx2/ChatGPT_mission_record/commit/14ed597c8afcd2758b2766ea00991313dd7042e2) 记录：**2025-08-31 13:38** 通过 **DaimoPay** 支付 **USD 228**，购买 **Surf Limited Edition NFT #691** 一枚，2026-10-05 在途/待 airdrop 到用户主钱包，预期 RB 链。**2026-10-12 用户明确确认该已购买权益就是官方新公布的 SurfBoards / The Genesis of Surf NFT**，故以 `USER_CONFIRMED` 认定为同一个项目发行权益，不再把二者作为互不相关资产假设。官方尚未核实的只是具体链上交付、CA、token ID、转让与兑付条件。另有 **Surf 28,600 Points** 独立记录，不可自动转换为 NFT 份额或已兑现现金收益。
 - 新的 **SurfBoards / The Genesis of Surf** 官网明确写有 `Trading and member claims open in ...`，Surf 主站也直接链接至这个入口。这仅确认项目页面与官方关联、领取/交易倒计时宣传存在，**用户已确认 #691 与 SurfBoards 属同一发行权益，但 #691 是否就是链上 ERC-721 token ID、是否已铸造、到账以及股票代币的具体分配权仍待官方/链上核验**。
-- 官方公开网页中仍缺少：SurfBoards 的 canonical chain/contract、总量、#691 的发行/交付映射、会员权益与股票代币分配的法定和合约条款、实际可执行卖出报价。前述 Robinhood Chain 两份同名合约只属于**未确认官方身份的链上候选**。在本次接手时使用 Blockscout 连接器重查遭遇 session authorization 错误，因而本条**未声称重新得到直接链上确认**。
+- **历史时点（2026-10-12）** 尚未核实的官方 contract、总量、#691 的映射及权益，在 **2026-10-13 第 7 节** 已取得部分突破：官方总量 6,666、Robinhood 4663 第一组 ERC721/ERC20 合约实际链上核查与 Surf 官方 metadata 子域链接；另一个旧候选地址无效。最终官方 CA 白名单、#691 交付和兑付条款仍未确认。
 - 2026-10-12 重新查阅 Surf 的 2025-12-11 融资公告，确认公告称募资 USD 15M、Pantera 领投、Coinbase Ventures 与 DCG 参与；2026-09-01 Bithumb 产品材料所列活跃用户和生产指标均为项目/合作方披露，**不能推导 Surf NFT 的利润分配、公司股权或保底回报**。
 - Kaito Yapybaras 的 1,500 总量及约 USD 240 至 270 地板参考为历史公开页面快照；历史页面还展示真实成交和 top offer，随时会变化。对 Surf 的比较必须按同时间点的**最高真实买单、实际成交、挂牌地板**三种不同口径，不把挂牌总估值当作可清算市值。
 - 研究状态：**Surf 公司产品/融资披露有据、用户的 #691 对应 SurfBoards 已获用户确认；官方链上 CA、交付和兑付条款仍未验证，故投机价值研究为 `WATCH / ONCHAIN_DELIVERY_UNRESOLVED`。用户 #691 仍是待交付历史成本权益，不能计入有可执行报价的 NFT 流动 NAV。** `ACTIVE` 仅可描述用户已有经济敞口，绝不授予任何交易或授权权限。
