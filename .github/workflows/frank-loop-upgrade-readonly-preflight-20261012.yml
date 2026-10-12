@@ -1,0 +1,61 @@
+name: Frank Loop upgrade read-only preflight safety gate
+
+on:
+  push:
+    branches:
+      - ops/frank-mission-loop-readonly-preflight-20261012
+
+permissions:
+  contents: read
+
+jobs:
+  preflight-without-provider-access:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify reviewer base commit is included in operations branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 6a5b7e8a533f99c871e31f9674329fcb4f929cc2 HEAD
+          echo "PR34_BASE_INCLUDED=PASS"
+      - name: Install offline-test tooling
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install pyflakes==3.4.0 numpy==2.3.3
+      - name: Static safety review of strictly read-only operator script
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/frank_loop_upgrade_readonly_preflight_20261012.py
+          python -m pyflakes scripts/frank_loop_upgrade_readonly_preflight_20261012.py
+          python - <<'PY'
+          from pathlib import Path
+          code = Path("scripts/frank_loop_upgrade_readonly_preflight_20261012.py").read_text()
+          assert '6a5b7e8a533f99c871e31f9674329fcb4f929cc2' in code
+          assert 'PRAGMA query_only=ON' in code and '?mode=ro' in code
+          assert 'TemporaryDirectory' in code
+          assert 'CLONED_NEW_SCHEMA_BOOTSTRAP' in code
+          assert 'NO_FRESH_SENDABLE_LEGACY_GMAIL' in code
+          assert 'MISSION_LOOP_RESTART=NO GMAIL_SEND=NO POLICY_CHANGE=NO GIT_PUSH=NO' in code
+          assert 'launchctl", "kickstart' not in code
+          assert 'existing_provider(' not in code
+          assert 'provider.send(' not in code
+          assert 'mission_meme_v1.py", "loop"' not in code
+          print("READ_ONLY_SCRIPT_STATIC=PASS")
+          PY
+      - name: No-network synthetic delivery replay and schema classifier gates
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -B -m pytest -q -p no:cacheprovider tests/research/test_frank_loop_upgrade_readonly_preflight.py
+      - name: Regress all merged PR34 local-agent tests against unchanged base
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: "1"
+        run: python -B -m pytest -q -p no:cacheprovider tests
