@@ -1,0 +1,43 @@
+{
+  "schema": "MONSTER_STAGE37_FROZEN_FULL900_USDM_6_DATE_FUTURE_7D_HOURLY_HIGH_GT_V1",
+  "purpose": "FACTUAL_CENSUS_PRE_MODEL_FUTURES_USDM_HISTORICAL_2X5X10X_CANDIDATES_AND_SOURCE_CENSORING",
+  "frozen_stage36_inventory": {
+    "path": "crypto-300-profit-mission/monster/evidence/monster_stage36_official_usdm_archive_vs_spot758.json",
+    "git_blob_sha1": "91b0f99ef85adb48494c5be5c7cc13a7cedcb686",
+    "original_900_plain_USDT_archived_symbols": 900,
+    "not_in_spot758": 428
+  },
+  "dates_utc_start_06": [
+    "2025-01-19",
+    "2025-04-19",
+    "2025-07-19",
+    "2025-10-19",
+    "2026-04-19",
+    "2026-07-19"
+  ],
+  "all_universe_at_every_date": true,
+  "shards_per_date": 6,
+  "attempts": 5400,
+  "source": "BINANCE_OFFICIAL_USDM_FUTURES_MONTHLY_1H_ARCHIVE_PLUS_PUBLISHER_SHA256_CHECKSUM",
+  "label_definition": "168 CONSECUTIVE 1h OPEN HIGH CLOSE from dateT06:00 UTC; price multiplicity max high / first 1h open; 2x/5x/10x GT; ignore future GT as any signal features",
+  "censor_rules": [
+    "404_MONTHLY_ARCHIVE_IS_UNOBSERVABLE_NOT_0X",
+    "GAPPED_168H_IS_CENSORED_NOT_NEGATIVE",
+    "NETWORK_AND_PUBLISHER_SHA_FAILURE_MUST_FAIL_CLOSED",
+    "ARCHIVE_DIR_NOT_PROOF_OF_TRADABLE_PERPETUAL",
+    "NO_L2_OR_HISTORICAL_FILLS_NO_REAL_PROFIT"
+  ],
+  "mixed_underlying": "FUTURES_ARCHIVE_USDT_SYMBOLS_MAY_INCLUDE_RWA_STOCK_BASED_OR_CONTRACT_MULTIPLIER_UNRESOLVED; NO_CLAIM_ALL_900_ARE_CRYPTO_OR_ALL_PERPETUAL",
+  "preexisting_spot_holdout_overlap": "same six dates as existing Stage30 Spot study; new Futures source uninspected; historical analysis not unseen strategy validation",
+  "only_next_stage": "After source complete, classify 2x events by verified contract identity and causal 1m V4 first WATCH for entire mixed venue; never merge futures-only into spot BUY",
+  "no_change": [
+    "Frank",
+    "Gmail",
+    "Monster Mac",
+    "V4 model",
+    "automated trading",
+    "conversation title"
+  ],
+  "deployment": "NO_GO",
+  "AI_review": "NOT_DONE"
+}
