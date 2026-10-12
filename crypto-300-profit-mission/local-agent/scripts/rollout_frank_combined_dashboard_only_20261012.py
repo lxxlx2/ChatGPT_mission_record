@@ -183,6 +183,42 @@ def verify_api(port, *, strict):
     return {"watchlist_count": len(watch["rows"])}
 
 
+def existing_dashboard_baseline(port: int, expected_pid: int) -> dict:
+    """Identify the actual loopback listener before replacement.
+
+    A legacy Dashboard may not yet expose /api/frank-observed-watchlist.
+    Missing new-version endpoints are not grounds to interrupt an otherwise
+    healthy, identified old UI. Never skip the PID/port binding check.
+    """
+    executable = shutil.which("lsof")
+    check("LSOF_AVAILABLE", executable is not None)
+    listener = run([executable, "-nP", f"-iTCP:{port}", "-sTCP:LISTEN", "-Fp"],
+                   timeout=12).stdout.splitlines()
+    pids = {int(line[1:]) for line in listener
+            if re.fullmatch(r"p[0-9]+", line)}
+    check("CONFIGURED_PORT_OWNED_BY_DASHBOARD", pids == {expected_pid})
+    html = get(port, "/", attempts=3)
+    check("EXISTING_DASHBOARD_HTML", b"<html" in html.lower()
+          and (b"Frank" in html or b"Meme" in html
+               or "研究控制台".encode() in html))
+    summary = {"identified_dashboard_pid": expected_pid,
+               "identified_port": port,
+               "existing_root_html": "VERIFIED"}
+    try:
+        payload = json.loads(get(port, "/api/frank-observed-watchlist", attempts=1))
+        check("EXISTING_WATCHLIST_JSON", isinstance(payload, dict)
+              and isinstance(payload.get("rows"), list))
+        summary["existing_watchlist_count"] = len(payload["rows"])
+        summary["existing_watchlist_api"] = "AVAILABLE"
+    except (OSError, ValueError, RuntimeError) as exc:
+        # The old application may return 404 or a different JSON schema.
+        # Old API presence is not a safety requirement; listener identity is.
+        summary["existing_watchlist_api"] = "LEGACY_UNAVAILABLE"
+        summary["existing_watchlist_error_type"] = type(exc).__name__
+        print("OLD_WATCHLIST_API=LEGACY_UNAVAILABLE (after verified PID and root HTML)")
+    return summary
+
+
 def isolated_accept(agent, python, backup):
     prod = backup / "production"
     ctrl = backup / "control"
@@ -288,7 +324,7 @@ def main():
     check("PRODUCTION_DASHBOARD_PORT_CONFIGURED", port_file.is_file())
     port = int(port_file.read_text().strip())
     check("PRODUCTION_DASHBOARD_PORT_VALID", 1024 <= port <= 65535)
-    baseline = verify_api(port, strict=False)
+    baseline = existing_dashboard_baseline(port, dash_pid_before)
     mode = DASH_RUNNER.stat().st_mode & 0o777
     switched = False
     try:
