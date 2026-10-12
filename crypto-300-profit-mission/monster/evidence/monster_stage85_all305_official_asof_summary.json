@@ -1,0 +1,109 @@
+{
+  "D1_calendar_2x_evaluation_only": 28,
+  "D1_direct": 164,
+  "D1_early5_2x_evaluation_only": 27,
+  "D1_reignition": 141,
+  "attempted_original_D1": 305,
+  "autotrade": "NO_GO",
+  "complete_original_42_daily_bucket_count": 42,
+  "crowded_day_anchor2x": 0,
+  "crowded_day_count": 52,
+  "day_count_top": [
+    {
+      "D1_events": 52,
+      "date": "2025-01-30",
+      "day_index": 4
+    },
+    {
+      "D1_events": 17,
+      "date": "2025-10-02",
+      "day_index": 0
+    },
+    {
+      "D1_events": 15,
+      "date": "2026-06-21",
+      "day_index": 0
+    },
+    {
+      "D1_events": 14,
+      "date": "2026-07-28",
+      "day_index": 2
+    },
+    {
+      "D1_events": 13,
+      "date": "2025-08-01",
+      "day_index": 6
+    },
+    {
+      "D1_events": 11,
+      "date": "2025-10-02",
+      "day_index": 1
+    },
+    {
+      "D1_events": 11,
+      "date": "2026-07-28",
+      "day_index": 0
+    },
+    {
+      "D1_events": 10,
+      "date": "2025-01-30",
+      "day_index": 3
+    },
+    {
+      "D1_events": 10,
+      "date": "2025-08-01",
+      "day_index": 3
+    },
+    {
+      "D1_events": 9,
+      "date": "2025-08-01",
+      "day_index": 5
+    }
+  ],
+  "deployment": "NO_GO",
+  "frank": "UNCHANGED",
+  "gmail": "OFF",
+  "historical_exposed": true,
+  "median_asof_features_anchor2x": {
+    "normalized_quote15_prev45": "4.701384625170283554680307867",
+    "quote15_USDT": "2802736.9044800",
+    "relative_first_d0_pct": "0",
+    "ret60_pct": "11.86144156752974107767669700",
+    "trade15": "34667"
+  },
+  "median_asof_features_full": {
+    "normalized_quote15_prev45": "3.954080507012549724077965236",
+    "quote15_USDT": "3363087.9223100",
+    "relative_first_d0_pct": "0",
+    "ret60_pct": "11.28558662070726413889952760",
+    "trade15": "28804"
+  },
+  "median_asof_features_most_crowded_day": {
+    "normalized_quote15_prev45": "1.578457789813054967714714427",
+    "quote15_USDT": "3614600.79464",
+    "relative_first_d0_pct": "13.97429151319251296699992480",
+    "ret60_pct": "6.439605434580308952168248700",
+    "trade15": "20027"
+  },
+  "median_asof_features_normal_non2x": {
+    "normalized_quote15_prev45": "3.886777572585683547729416106",
+    "quote15_USDT": "3380667.1059700",
+    "relative_first_d0_pct": "0",
+    "ret60_pct": "11.23798076923076923076923080",
+    "trade15": "27856"
+  },
+  "no_new_threshold": true,
+  "not_a_new_D1_policy": true,
+  "oos": "NOT_DONE",
+  "other_AI_review": "NOT_DONE",
+  "real_executable_net_pnl": "UNKNOWN",
+  "schema": "MONSTER_STAGE85_FULL305_REAL_PUBLISHER_SHA_ASOF_FEATURE_CENSUS_V1",
+  "source_censored": 0,
+  "source_firstD0_stage64_blob": "8ebe53acfdfe10413ac1e6f03457d6ace25d9d5a",
+  "source_full519_blob": "c76b3a137c8dbe56feed3a79a63adcc0752f5e2e",
+  "source_status_counts": {
+    "COMPLETE_OFFICIAL_BINANCE_SHA_ASOF_D1": 305
+  },
+  "source_valid_for_old_2x": 28,
+  "source_verified": 305
+}
