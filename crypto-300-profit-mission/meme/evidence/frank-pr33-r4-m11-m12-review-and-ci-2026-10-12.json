@@ -81,5 +81,27 @@
     "production_release_authorized": false
   },
   "confidentiality": "Only aggregate test results/source SHAs/status labels; no Gmail, wallet, private paths or decision-level data",
-  "release_decision": "BLOCK_UNTIL_NEW_FIX_INDEPENDENT_REVIEW_AND_MAC_RELEASE_APPROVAL"
+  "release_decision": "BLOCK_FOR_MAC; RESEARCH_CODE_CI_PASS; OLD_OFFICIAL_PR33_MERGED_EXTERNALLY",
+  "subsequent_github_pr_merges": {
+    "observed": "2026-10-12 11:47+07:00",
+    "all_merged_at_utc": "2026-10-12T04:47:28Z",
+    "official_pr31": {
+      "head": "c50e7e2259e85ce89e14641a4e1e98ca3e4a4bc7",
+      "merged": true,
+      "merge_commit_sha": "b16dcbcb7afb056b8afe0b80c82cf28e01e79abf"
+    },
+    "official_pr32": {
+      "head": "85f1a792dd7d0fbf354c09ac83872887ed301c10",
+      "merged": true,
+      "merge_commit_sha": "7df82057f3cab7dd85d4c076dd49b86db3e93fb8"
+    },
+    "official_pr33": {
+      "head": "48f53a71f692f5dc62f67198f4794e79c45402d2",
+      "merged": true,
+      "merge_commit_sha": "dafb126e33338523630bb48d4fe838ddd9c7fb95"
+    },
+    "current_main_last_observed": "472be406a66468b52e9b5b3319c867b0ad7485eb",
+    "caveat": "PRs were merged by an external actor, not by fourth-review remediation. Old official PR33 head lacks new research fixes. Main merge != Mac rollout.",
+    "remaining_next_step": "A new reviewed follow-up PR against latest main is needed to adopt M11/M12 and earlier research corrections; old merged PR33 cannot be updated as an open PR."
+  }
 }
