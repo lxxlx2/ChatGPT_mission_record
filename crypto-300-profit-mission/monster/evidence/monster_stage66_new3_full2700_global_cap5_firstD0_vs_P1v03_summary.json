@@ -1,0 +1,210 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "GMAIL": "OFF",
+  "HOLDOUT": "CALENDAR_NONOVERLAP_AUDITED_TEXT_ONLY",
+  "MONSTER_DEPLOY": "NO_GO",
+  "NO_ASSUMED_ORDER_SIZE": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "REAL_NET_PROFIT": "UNKNOWN",
+  "all_900_archive_contains_non_meme_symbol_names": true,
+  "frozen_source_blobs": {
+    "MONSTER_STAGE65_PREDECLARED_NEW3_FULL900_FIRSTD0_CAP5_HOLDOUT_PROTOCOL_20261012.md": "49669c734ec4add4f5134e5ea49559f353b44931",
+    "monster_stage65_new3_full2700_hourly_official_source_SHA.jsonl": "98ea5137d97307da9fb614b7707f435997d9bee9",
+    "monster_stage65_new3_full2700_hourly_source_GT_summary.json": "c379912183a1138be411190a35615d91573a0f01",
+    "monster_v4_stage51_pinnedP1v03_full900_causal_minute_replay.py": "fdd0d0820afbed4fa7b400dc6a28660057e27024"
+  },
+  "new_first5_candidate_count": 196,
+  "new_first5_early5_gt10x": 0,
+  "new_first5_early5_gt2x": 2,
+  "new_first5_early5_gt5x": 0,
+  "new_first5_urgent": 91,
+  "old_P1v03_candidate_count": 56,
+  "old_P1v03_early5_gt10x": 0,
+  "old_P1v03_early5_gt2x": 2,
+  "old_P1v03_early5_gt5x": 0,
+  "old_P1v03_urgent": 50,
+  "original18_source_artifact_sha_receipts": [
+    {
+      "date": "2025-03-30",
+      "official_1m_complete": 68,
+      "sha256_raw_source": "2ee56dc6435833f294642f1ccf930c6bf25a60358885a554d1bd4a4d2d0d02ec",
+      "shard": 0
+    },
+    {
+      "date": "2025-03-30",
+      "official_1m_complete": 74,
+      "sha256_raw_source": "f911647394a22356b8532944d7b7c96416ba3f763d1c202694a3660b99bef3c2",
+      "shard": 1
+    },
+    {
+      "date": "2025-03-30",
+      "official_1m_complete": 58,
+      "sha256_raw_source": "279a3195b087937aa45cee7e4f0578ee60f35548a351a76fa3b623c21d6b84f2",
+      "shard": 2
+    },
+    {
+      "date": "2025-03-30",
+      "official_1m_complete": 72,
+      "sha256_raw_source": "a0c07e2506b499f098d2a3eaed5d1afae3787bae75e51dae05ac638819efc1c0",
+      "shard": 3
+    },
+    {
+      "date": "2025-03-30",
+      "official_1m_complete": 74,
+      "sha256_raw_source": "c513c78f10c5305fe47046efb73b3f57d328f87030cb2f1be7971a7eca06f714",
+      "shard": 4
+    },
+    {
+      "date": "2025-03-30",
+      "official_1m_complete": 73,
+      "sha256_raw_source": "e66a0c2278546437d347a4f6211572a99a973f49f6d00c4e3f7fa11d11812d03",
+      "shard": 5
+    },
+    {
+      "date": "2025-06-30",
+      "official_1m_complete": 76,
+      "sha256_raw_source": "beedd5fd40698ea77d4f1399bad2b0fe080b4a73aeab45bc99cb05a5a776141a",
+      "shard": 0
+    },
+    {
+      "date": "2025-06-30",
+      "official_1m_complete": 84,
+      "sha256_raw_source": "d689c593c2e1ce6b0a1619ddb6255cef17d632fbf54f6a103e6cfba353ae0541",
+      "shard": 1
+    },
+    {
+      "date": "2025-06-30",
+      "official_1m_complete": 70,
+      "sha256_raw_source": "f75bd085b33ab23b1f1b1caf519c2c31abc677b5b9197777820ece2237f07e02",
+      "shard": 2
+    },
+    {
+      "date": "2025-06-30",
+      "official_1m_complete": 87,
+      "sha256_raw_source": "adbed0e6a371701393019ee8169d1f37189fd76a0b0524e702a3584408a3900a",
+      "shard": 3
+    },
+    {
+      "date": "2025-06-30",
+      "official_1m_complete": 84,
+      "sha256_raw_source": "94964c0ced7914e67c7768938876968cb2f02dc4de981b4948cad52ffc8335e4",
+      "shard": 4
+    },
+    {
+      "date": "2025-06-30",
+      "official_1m_complete": 83,
+      "sha256_raw_source": "e6e631b6ee5c9ca4c55193190c65baea793f05c35b8a29d99937eaa0945ba214",
+      "shard": 5
+    },
+    {
+      "date": "2025-11-27",
+      "official_1m_complete": 99,
+      "sha256_raw_source": "4381de285dfcb1b2c4ea80a0e05dc7593939f9cad884e8c978e3e4c75cc38215",
+      "shard": 0
+    },
+    {
+      "date": "2025-11-27",
+      "official_1m_complete": 101,
+      "sha256_raw_source": "aacbd097a052d60d72c4962c708d27fc7e5b76b2f2a0e9cc3c9dbb0d933144a9",
+      "shard": 1
+    },
+    {
+      "date": "2025-11-27",
+      "official_1m_complete": 89,
+      "sha256_raw_source": "9ede1c0a057db3687b0715fa5709969cbb01c66af8f49851acda89bfd182dfb5",
+      "shard": 2
+    },
+    {
+      "date": "2025-11-27",
+      "official_1m_complete": 101,
+      "sha256_raw_source": "3d84d45bce378c6acb443425f886da476c472a1ac1efac78fdd63d5d90d7df72",
+      "shard": 3
+    },
+    {
+      "date": "2025-11-27",
+      "official_1m_complete": 103,
+      "sha256_raw_source": "af64f43ece887efcdc906428364736838c8d22f3f2600e68f979a2e540d1dac0",
+      "shard": 4
+    },
+    {
+      "date": "2025-11-27",
+      "official_1m_complete": 101,
+      "sha256_raw_source": "fa87173a66011b1e39211fbd80582dab48e8560f5594bc1b596d62cc2960da49",
+      "shard": 5
+    }
+  ],
+  "original_1m_and_1h_source_valid": 1497,
+  "original_D0_at_least_5m_pre2x": 5,
+  "original_all_archive_attempted": 2700,
+  "original_verified_10x": 0,
+  "original_verified_2x": 5,
+  "original_verified_5x": 0,
+  "per_date": [
+    {
+      "attempted": 900,
+      "censored": {
+        "CENSORED_ORIGINAL_MONTHLY_1H_UNAVAILABLE": 481
+      },
+      "date": "2025-03-30",
+      "first5_early_2x_delivered": 0,
+      "first5_urgent": 24,
+      "gt2": 0,
+      "gt5": 0,
+      "minute_source_verified": 419,
+      "new_first5_raw": 44,
+      "old_P1v03_early_2x_delivered": 0,
+      "old_P1v03_raw": 12,
+      "old_P1v03_urgent": 12,
+      "original_D0_any_watch": 44
+    },
+    {
+      "attempted": 900,
+      "censored": {
+        "CENSORED_ORIGINAL_MONTHLY_1H_UNAVAILABLE": 416
+      },
+      "date": "2025-06-30",
+      "first5_early_2x_delivered": 1,
+      "first5_urgent": 32,
+      "gt2": 2,
+      "gt5": 0,
+      "minute_source_verified": 484,
+      "new_first5_raw": 49,
+      "old_P1v03_early_2x_delivered": 2,
+      "old_P1v03_raw": 15,
+      "old_P1v03_urgent": 15,
+      "original_D0_any_watch": 49
+    },
+    {
+      "attempted": 900,
+      "censored": {
+        "CENSORED_OFFICIAL_1M_SOURCE_GAP": 1,
+        "CENSORED_ORIGINAL_MONTHLY_1H_UNAVAILABLE": 304,
+        "CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT": 1
+      },
+      "date": "2025-11-27",
+      "first5_early_2x_delivered": 1,
+      "first5_urgent": 35,
+      "gt2": 3,
+      "gt5": 0,
+      "minute_source_verified": 594,
+      "new_first5_raw": 103,
+      "old_P1v03_early_2x_delivered": 0,
+      "old_P1v03_raw": 29,
+      "old_P1v03_urgent": 23,
+      "original_D0_any_watch": 103
+    }
+  ],
+  "quality_gates": {
+    "all_10x_historic_events_delivered_early": true,
+    "all_5x_historic_events_delivered_early": true,
+    "max5_urgent_per_UTC06_24h": true,
+    "minimum_20_source_valid_2x": false,
+    "new_first5_retains_80pct_original_D0_early5_2x": false,
+    "no_loss_of_old_P1v03_early_5x": true,
+    "no_real_trade_net_profit_estimate": true
+  },
+  "real_spot_or_alpha_executability": "UNVERIFIED",
+  "schema": "MONSTER_STAGE66_NEW3_FULL2700_ORIGINAL_D0_FIRST5_VS_P1V03_GLOBAL_UTC06_CAP_EVIDENCE_V1",
+  "underlying_futures_hourly_censor_included_not_negative": true,
+  "verdict": "INSUFFICIENT_NEW_DATE_GT2X_POWER"
+}
