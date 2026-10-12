@@ -21,7 +21,7 @@ LABELS = ("spot34", "spot35", "usd39", "usd52", "usd66", "sqlite70", "spot74", "
 
 
 def git_blob_sha(data: bytes) -> str:
-    return hashlib.sha1(b"blob " + str(len(data)).encode() + b"\\0" + data).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
 
 
 def require_equal(label: str, actual: object, expected: object) -> None:
@@ -173,7 +173,7 @@ def selftest() -> None:
     else:
         raise AssertionError("TAMPER_NOT_REJECTED")
     require_equal("git_blob", git_blob_sha(b"test"),
-                  hashlib.sha1(b"blob 4\\0test").hexdigest())
+                  hashlib.sha1(b"blob 4\0test").hexdigest())
 
 
 def main() -> int:
