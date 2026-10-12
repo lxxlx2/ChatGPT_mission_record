@@ -1,0 +1,121 @@
+{
+  "schema": "BSC_MEME_877AF_COLD13_SIX_ACTIVE_BALANCE_CHECK_V1",
+  "date": "2026-10-12",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "source": {
+    "path": "BSC_MEME_877AF_COLD_13_CA_SPLIT_2026-10-12.json",
+    "sha": "be1e69aa7bb401b840f18820de4236dfcf1456a2"
+  },
+  "complete_exact_13_CAs": true,
+  "active": [
+    {
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "events_in": 5,
+      "events_out": 1,
+      "sum_in_raw": "1976995180444701946590",
+      "sum_out_raw": "1976995180444701946590",
+      "net_raw": "0",
+      "onchain_balance_raw": "0",
+      "exact_balance_match": true,
+      "first_inbound_tx": "0xd1b2f2a04b4f6cbb19c4fffae6ea1e773016e61daf47994c9b2445679dd67579",
+      "first_outbound_tx": "0x38c2495cff34e029b83ddc87ac4bdf886d814809f063b0ecacb3749916a7e153"
+    },
+    {
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "events_in": 1,
+      "events_out": 0,
+      "sum_in_raw": "103028467745151609781",
+      "sum_out_raw": "0",
+      "net_raw": "103028467745151609781",
+      "onchain_balance_raw": "103028467745151609781",
+      "exact_balance_match": true,
+      "first_inbound_tx": "0xa3385ac17ce92e34a94bb400d7a2e7afe168979e806f4878a2db9fe3e8a2f11b"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "events_in": 7,
+      "events_out": 1,
+      "sum_in_raw": "5603830053102070391362",
+      "sum_out_raw": "5603830053102070391362",
+      "net_raw": "0",
+      "onchain_balance_raw": "0",
+      "exact_balance_match": true,
+      "first_inbound_tx": "0x95bc5ce54588da084225958211a182b3d15abfe3590ca859ce9623efa00ff336",
+      "first_outbound_tx": "0x1aaf2c4b34ffe45d100cf2cb821635b08e4b442f908a0c9b6c1a8fda40455a69"
+    },
+    {
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "events_in": 1,
+      "events_out": 0,
+      "sum_in_raw": "51289213105585260568",
+      "sum_out_raw": "0",
+      "net_raw": "51289213105585260568",
+      "onchain_balance_raw": "51289213105585260568",
+      "exact_balance_match": true,
+      "first_inbound_tx": "0x40a318f071fc8517d5af076dff63160be09246924f93b7b19d3be0c53b036b7a"
+    },
+    {
+      "token": "4",
+      "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "events_in": 8,
+      "events_out": 1,
+      "sum_in_raw": "2184974637664988923365",
+      "sum_out_raw": "1891080250411573315851",
+      "net_raw": "293894387253415607514",
+      "onchain_balance_raw": "293894387253415607514",
+      "exact_balance_match": true,
+      "first_inbound_tx": "0xe3a0c4647d36e6f0371d08764d29edc1a9ef38848263e2b75cf6a1f999d28d2f",
+      "first_outbound_tx": "0x6a25ab9f05e35b435a2e8d5cd39b98fe6ad68d720c52b70fe8adaaa442351d33"
+    },
+    {
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "events_in": 2,
+      "events_out": 0,
+      "sum_in_raw": "538193267724672920",
+      "sum_out_raw": "0",
+      "net_raw": "538193267724672920",
+      "onchain_balance_raw": "538193267724672920",
+      "exact_balance_match": true,
+      "first_inbound_tx": "0xb91fcc8bfa951eb473941128fa79759a9e7906bb9d3bd9d66f9ed8ec32d975b9"
+    }
+  ],
+  "matched": 6,
+  "all_balances_match": true,
+  "zero_ERC20_CAs": [
+    {
+      "token": "CHEEMS",
+      "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413"
+    },
+    {
+      "token": "BROCCOLI714",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714"
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1"
+    },
+    {
+      "token": "BANANAS31",
+      "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760"
+    },
+    {
+      "token": "BOB",
+      "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e"
+    },
+    {
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444"
+    },
+    {
+      "token": "BUBB",
+      "ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b"
+    }
+  ],
+  "interpretation": "The 13 scoped CAs exclude 6 previously found active CAs including Lobster. Full in/out cursor is exhausted for these 13. A match applies to current onchain contract balance and complete transfer sum, not independently realized profits. Other hot CAs still not fully paginated.",
+  "production": "NO_GO"
+}
