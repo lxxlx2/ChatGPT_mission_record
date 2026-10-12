@@ -169,7 +169,15 @@ def render(event:dict)->dict:
     body=json.loads(event["body"]) if isinstance(event.get("body"),str) else event["body"]
     metrics=body.get("metrics") or {};inputs=body["inputs"];quote=inputs.get("quote") or {}
     decision=body["decision"];pattern=inputs.get("pattern")
-    subject=f"[Meme提醒] {_zh(DECISION_ZH,decision,decision)} | {_zh(PATTERN_ZH,pattern,pattern)} | {_short(body['mint'])}"
+    latest_side=inputs.get("latest_side")
+    action=_zh(ACTION_ZH,latest_side,str(latest_side or "未知"))
+    position=_zh(STATE_ZH,inputs.get("position_state"),str(inputs.get("position_state") or "未知"))
+    # History describes the observed accumulation pattern, never an active buy.
+    # Prioritize the latest SELL and unknown inventory in NO_BUY mail subjects.
+    subject_context=(("Frank 最新"+action+" · "+position)
+                     if latest_side in {"SELL","EXIT","SELL_POSITION_UNRESOLVED"}
+                     else _zh(PATTERN_ZH,pattern,pattern))
+    subject=f"[Meme提醒] {_zh(DECISION_ZH,decision,decision)} | {subject_context} | {_short(body['mint'])}"
     original_asset=inputs.get("latest_buy_original_quote_asset") or inputs.get("latest_buy_quote_asset")
     original_qty=inputs.get("latest_buy_original_quote_quantity") or inputs.get("latest_buy_quote_quantity")
     payment=_payment_display(original_qty,original_asset)
@@ -182,10 +190,10 @@ def render(event:dict)->dict:
     reasons="；".join(REASON_ZH.get(x,x) for x in (body.get("reasons") or [])) or "无额外说明"
     missing="；".join(MISSING_ZH.get(x,x) for x in (body.get("missing") or [])) or "无"
     sig=inputs.get("latest_signature")
-    action=_zh(ACTION_ZH,inputs.get("latest_side"),str(inputs.get("latest_side") or "未知"))
-    position=_zh(STATE_ZH,inputs.get("position_state"),str(inputs.get("position_state") or "未知"))
     lines=[
-        "结论："+_zh(DECISION_ZH,decision,decision)+"  |  "+_zh(PATTERN_ZH,pattern,pattern),
+        "结论："+_zh(DECISION_ZH,decision,decision),
+        "Frank 最新动作："+action+"  |  当前仓位："+position,
+        "历史观察模式："+_zh(PATTERN_ZH,pattern,pattern),
         "原因："+reasons,
         "决策时间："+_utc_decision(body.get("created_at")),
         "Jupiter 报价观察时间："+_utc_observation(inputs.get("quote_observed_at")),
@@ -194,8 +202,7 @@ def render(event:dict)->dict:
         "CA（单独一行，便于长按复制）",
         body["mint"],
         "",
-        "Frank 动作："+action+"  |  仓位："+position,
-        "最近买入投入："+payment,
+        "历史最近一次买入投入："+payment,
     ]
     if frank_price not in (None,""):
         lines.append("Frank 参考买价："+_compact_price(frank_price)+" USDC")
@@ -207,8 +214,9 @@ def render(event:dict)->dict:
         lines.append("预计价格冲击："+_readable_number(impact,decimal_places=1)+"%")
     if missing!="无":
         lines.append("需要核实："+missing)
+    lines += ["", "技术审计信息（用于交易核查和邮件去重）"]
     if sig:
-        lines += ["","交易哈希："+sig]
+        lines.append("交易哈希："+sig)
     text="\n".join(lines)
     return {"subject":subject,"body":text,"content_hash":digest({"subject":subject,"body":text})}
 
