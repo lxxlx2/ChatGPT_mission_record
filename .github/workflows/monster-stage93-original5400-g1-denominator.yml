@@ -1,0 +1,62 @@
+name: Monster Stage93 Original5400 Full Source G1
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage93-original5400-g1-denominator.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage93_full5400_market_recall_audit.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE93_ALL5400_FULL_UNIVERSE_G1_DENOMINATOR_AUDIT_PROTOCOL_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_locked_full5400:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: First D0 vs real first HIGH timing regression
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage93_full5400_market_recall_audit.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage93_full5400_market_recall_audit.py --selftest
+      - name: Read every 5400 official archived original V4 attempt and retain all missed events
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage93_full5400_market_recall_audit.py --audit --out /tmp/monster-stage93-original5400.json
+          python -m json.tool /tmp/monster-stage93-original5400.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage93-original5400-whole-cohort-first-watch-recall
+          path: /tmp/monster-stage93-original5400.json
+          retention-days: 60
+      - name: Persist all51 source-valid gross2x cases and source census to PR30
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_stage93_original5400_first_watch_full_source_recall.json
+          cp /tmp/monster-stage93-original5400.json "$target"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$target"
+          if git diff --cached --quiet; then
+            echo "STAGE93_ALREADY_SAVED"
+            exit 0
+          fi
+          git commit -m "monster: persist Stage93 original5400 missed-first-watch full-source recall"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE93_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE93_GIT_PUSH_FAILED"
+          exit 1
