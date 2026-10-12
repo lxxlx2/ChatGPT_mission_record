@@ -1,0 +1,85 @@
+{
+  "schema": "BSC_MEME_DDAC_LOBSTER_V2_SECOND_FULL_CYCLE_SEPARATE_APPROVAL_GAS_QA_V1",
+  "date": "2026-10-13",
+  "chain": "bnb-mainnet",
+  "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "token": "龙虾",
+  "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "sources": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_IFML_LOBSTER_25_TX_TWO_VENUE_RECONCILIATION_QA_2026-10-11.json",
+      "git_blob_sha": "1cd0f2ba706f36d3456d15a8d52918ce8277db2b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_IFML_LOBSTER_CLOSED_EPISODES_NATIVE_CASHFLOW_2026-10-11.json",
+      "git_blob_sha": "9fde267e8f85dbe44705789f19f4884f25aafc51"
+    }
+  ],
+  "buy_sell": [
+    {
+      "kind": "buy",
+      "hash": "0xced27dd146159a8a34130a4e8e64bddd642c28773cc1514ad7ed5175c8529050",
+      "block": 83792918,
+      "owner_signed": true,
+      "receipt_success_header": true,
+      "receipt_fully_decoded": true,
+      "original_input_wei": "800000000000000000",
+      "onchain_manager_event_wei": "8000000000000000",
+      "wbnb_quote_asset_amount_wei": "792000000000000000",
+      "wbnb_pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "wbnb_withdrawal_for_sale": null,
+      "wallet_native_block_delta_wei": "-800019789800000000"
+    },
+    {
+      "kind": "sell",
+      "hash": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8",
+      "block": 84007473,
+      "owner_signed": true,
+      "receipt_success_header": true,
+      "receipt_fully_decoded": false,
+      "original_input_wei": "0",
+      "onchain_manager_event_wei": "7158295840669793",
+      "wbnb_quote_asset_amount_wei": "715829584066979337",
+      "wbnb_pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "wbnb_withdrawal_for_sale": "715829584066979337",
+      "wallet_native_block_delta_wei": "708646273386309544"
+    }
+  ],
+  "first_original_buy_quote_wei": "800000000000000000",
+  "buy_gas_receipt_exact_wei": "19789800000000",
+  "other_approval_same_sale_block": {
+    "hash": "0x256fd6c5938abe5dae799ff9a5c51a6dca7f2586b0efffc89d70e9e7d44b8822",
+    "success": true,
+    "gas_wei": "5559240000000",
+    "gas_used": "46327",
+    "owner_original_signed": true,
+    "native_msg_value_wei": "0"
+  },
+  "sale": {
+    "gross_WBNB_withdraw_wei": "715829584066979337",
+    "manager_event_1pct_like_wei": "7158295840669793",
+    "gas_combined_from_wallet_block_wei": "25014840000000",
+    "previous_old_calculated_gas_used_combined": "208457",
+    "corrected_main_sale_implied_gas_used": "162130",
+    "main_sale_implied_gas_wei": "19455600000000",
+    "main_sale_original_receipt": "TRUNCATED_HEADER_STATUS_SUCCESS",
+    "receipt_gas_main_directly_verified": false,
+    "wallet_block_net_wei": "708646273386309544",
+    "bnb_balance_exactly_conserved": true
+  },
+  "episode": {
+    "buy_block": 83792918,
+    "sell_block": 84007473,
+    "raw_ERC20_inventory_exactly_zero_after_sell": true,
+    "observed_native_block_net_wei": "-91373516413690456",
+    "conditional_return_percent": -11.421407017510564,
+    "classification": "OWNER_ORIGIN_QUOTE_FEE_MATCHED_NEGATIVE_BLOCK_SCOPE_NOT_FULL_INTERNAL_CAUSAL_PNL"
+  },
+  "limitations": [
+    "The previous gas 208457 for the sell block is combined gas across sale + EOA approval, not verified sale transaction gas.",
+    "162130 main sale gas is a conditional inference using WBNB withdrawal, fee-like event, 46327-gas authorization receipt, and native wallet historical block delta; missing full sale receipt and BSC internal trace prevent causal closure certification.",
+    "The first lobster episode is a different manager2 curve venue; this audit covers only second V2 episode. Do not extrapolate 1% event format to the curve.",
+    "Token count zero proves inventory closure, not automatically all possible unseen asset receivables; real follower execution not simulated."
+  ],
+  "production": "NO_GO"
+}
