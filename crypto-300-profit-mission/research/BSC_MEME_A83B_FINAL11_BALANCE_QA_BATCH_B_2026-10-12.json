@@ -1,0 +1,93 @@
+{
+  "schema": "BSC_MEME_A83B_LAST11_BALANCE_QA_BATCH_B_V1",
+  "date": "2026-10-12",
+  "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+  "network": "bnb-mainnet",
+  "method": "Read back archived full cursors (inclusive reanchor, disjoint uniqueIds), independently re-queried latest ERC20 balanceOf for each pair and verified raw inflow - raw outflow equality",
+  "rows": [
+    {
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "in_count": 45,
+      "out_count": 25,
+      "raw_in": "2719790429090088326950348",
+      "raw_out": "2719776338319475349027877",
+      "balance_raw": "14090770612977922471",
+      "fully_paginated": true,
+      "balance_verified": true
+    },
+    {
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "in_count": 99,
+      "out_count": 59,
+      "raw_in": "1970742989106031869107333",
+      "raw_out": "1970742989106031869107333",
+      "balance_raw": "0",
+      "fully_paginated": true,
+      "balance_verified": true
+    },
+    {
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "in_count": 63,
+      "out_count": 124,
+      "raw_in": "13864423234868443717879140",
+      "raw_out": "13864423234868443717879140",
+      "balance_raw": "0",
+      "fully_paginated": true,
+      "balance_verified": true
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "in_count": 50,
+      "out_count": 50,
+      "raw_in": "14169524932739408507634375",
+      "raw_out": "14169524932739408507634375",
+      "balance_raw": "0",
+      "fully_paginated": true,
+      "balance_verified": true
+    }
+  ],
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_INBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "d83519115f544242663a3873b416ee6084a6d8b2"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_OUTBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "47462dd4aa011869419da19b8177e7145bee0418"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "9c4d37ea37e4d9d06acfe756a4ab684d0605d8d3"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_OUTBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "e3153d031ecf2a6f23a35a2789c6a068b75c48eb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_MARSCOIN_INBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "8be4ee63a455bc268f3cb4698f494aadb7925516"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_MARSCOIN_OUTBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "cde409097842bb54451d03184e3edcadc7eef1eb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_MARSCOIN_OUTBOUND_CURSOR_B_2026-10-12.json",
+      "sha": "98dd8a813e1bc57a1b04b5f3188f295924816fe9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_HAJIMI_INBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "3cbed022e8f4369a70656c0a7161a0fc9fab6e91"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_HAJIMI_OUTBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "dd2b4d811a7f125f300c155960bb1a34795e69c0"
+    }
+  ],
+  "realized_PnL": "UNVERIFIED",
+  "production": "NO_GO"
+}
