@@ -1,0 +1,63 @@
+name: Monster Stage90 D2 Evidence Gate
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage90-d2-execution-evidence.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage90_d2_execution_proof.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE90_D2_EXECUTION_EVIDENCE_CONTRACT_AND_BOUNDARY_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  frozen_scope_and_immutable_305:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Syntax and 15 fail-closed synthetic D2 evidence cases
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage90_d2_execution_proof.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage90_d2_execution_proof.py --selftest
+      - name: Audit original 305 with no fabricated historical depth or fees
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage90_d2_execution_proof.py --audit-historical --out /tmp/monster-stage90-d2-original305.json
+          python -m json.tool /tmp/monster-stage90-d2-original305.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage90-original305-d2-source-gap
+          path: /tmp/monster-stage90-d2-original305.json
+          retention-days: 60
+      - name: Persist truth-based all305 D2 evidence gaps to original Monster PR
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_stage90_all305_D2_execution_evidence_gap_audit.json
+          cp /tmp/monster-stage90-d2-original305.json "$target"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$target"
+          if git diff --cached --quiet; then
+            echo "STAGE90_IDENTICAL_DATA_ALREADY_SAVED"
+            exit 0
+          fi
+          git commit -m "monster: preserve Stage90 all305 point-in-time book and identity evidence gaps"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE90_SOURCE_AUDIT_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE90_GIT_PUSH_FAILED"
+          exit 1
