@@ -47,13 +47,13 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
 
     def test_curated_positive_and_negative_cases_preserved(self):
         s = self.build()["summary"]
-        self.assertEqual(s["signed_closed_episodes_imported"], 35)
+        self.assertEqual(s["signed_closed_episodes_imported"], 37)
         self.assertEqual(s["selected_positive_episodes"], 23)
-        self.assertEqual(s["selected_negative_episodes"], 12)
-        self.assertEqual(s["wallets_with_curated_evidence"], 6)
-        self.assertEqual(s["wallets_not_yet_economically_curated"], 17)
+        self.assertEqual(s["selected_negative_episodes"], 14)
+        self.assertEqual(s["wallets_with_curated_evidence"], 7)
+        self.assertEqual(s["wallets_not_yet_economically_curated"], 16)
 
-    def test_17_uncurated_wallets_are_not_zero_profit(self):
+    def test_16_uncurated_wallets_are_not_zero_profit(self):
         for w in self.build()["wallets"]:
             if w["source_episodes_imported"] == 0:
                 self.assertIsNone(w["native_only_event_block_scope_sum_wei"])
@@ -63,8 +63,8 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
 
     def test_a83b_broccoli_negative_retained(self):
         w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0xa83b"))
-        self.assertEqual((w["source_episodes_imported"], w["selected_negative_episode_count"]), (1, 1))
-        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "-239887492433116024")
+        self.assertEqual((w["source_episodes_imported"], w["selected_negative_episode_count"]), (2, 2))
+        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "-453486449245781063")
         self.assertIsNone(w["native_only_largest_positive_episode_wei"])
 
     def test_ddac_with_ifml_losses_and_MARS_earnings(self):
@@ -227,12 +227,15 @@ class EconomicCrossWalletP2Tests(unittest.TestCase):
         self.assertEqual(len(block["items"]), 8)
         b, ledger = fixtures()
         known_wallets = {w["wallet"]: w for w in b["wallets"]}
-        economics = {(e["wallet"], e["exact_ca"]) for e in ledger["episodes"]}
+        economics = {(e["wallet"], e["exact_ca"], e["episode_index"]) for e in ledger["episodes"]}
         for item in block["items"]:
             self.assertIn(item["wallet"], known_wallets)
             self.assertTrue(any(c["ca"] == item["ca"] and c["ERC20_presence"] == "PRESENT"
                                 for c in known_wallets[item["wallet"]]["cells"]))
-            self.assertNotIn((item["wallet"], item["ca"]), economics)
+            proved = {i for wallet, ca, i in economics if (wallet, ca) == (item["wallet"], item["ca"])}
+            self.assertEqual(proved, set(item["audited_closed_episode_indices"]))
+            self.assertTrue(proved.isdisjoint(item["blocked_specific_episode_indices"]))
+            self.assertEqual(item["entire_CA_profit_pnl_state"], "UNRESOLVED")
             self.assertEqual(item["realized_final_PnL"], "UNRESOLVED")
             self.assertGreaterEqual(len(item["record_provenance"]), 1)
             for proof in item["record_provenance"]:
