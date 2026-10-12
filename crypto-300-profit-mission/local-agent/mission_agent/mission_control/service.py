@@ -14,6 +14,7 @@ from .db import ControlDB, utc
 from .debounce import TransitionDebounce
 from .delivery import GmailDelivery, LocalDelivery
 from .frank import FrankReader
+from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .transfer_archive import publish_evidence_batch
@@ -159,7 +160,7 @@ class MissionMemeService:
             "latest_buy_original_quote_asset","latest_buy_original_quote_quantity","latest_buy_quote_was_normalized",
             "latest_buy_usdc_equivalent","latest_buy_amount_predicate","latest_buy_amount_predicate_reason",
             "latest_buy_model_quote_asset","latest_buy_model_quote_quantity","candidate_source","token_decimals"
-        )} | {
+        )} | latest_buy_payment_evidence(candidate) | {
             "quote":cls._stable_quote_inputs(quote),
             # Preserve the actual Jupiter observation for the frozen Gmail body.
             # Do not add it to stable quote decision metrics or reinterpret as
