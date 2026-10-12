@@ -1,13 +1,13 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-12 20:27:06 Asia/Bangkok
+Updated: 2026-10-12 21:14:01 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-12 20:27:06 Asia/Bangkok
+- latest_actual_run: 2026-10-12 21:14:01 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-12/202706-final-retry.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-12/202618-attempt.md
-- latest_scheduled_shard: 0
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-12/211401-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-12/211248-attempt.md
+- latest_scheduled_shard: 1
 - latest_executed_shard: 1
 - stale_shard_recovery: true
 - latest_candidate_count: 5
@@ -53,3 +53,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-12 17:57:23: off-minute explicit invocation, attempt 175630-attempt.md and terminal 175723-final-retry.md committed (primary final write blocked). Urgent + only shard1; 13 distinct projects attempted, 8 official surfaces accessible, 5 unresolved source gaps, 4 candidate reviews, 1 Theo/Autheo identity rejection, 0 Tier A/B new ACTION. No Gmail/App output. This partial is not an authoritative full-success shard and not an HH:00 scheduler trigger. Existing task schedule remains HH:00, no task changes.
 
 - 2026-10-12 20:27:06: actual off-minute invocation 20:26, append-only attempt 202618-attempt.md committed; scheduled shard0 replaced by oldest stale shard1 (only one full shard). 13 unique projects attempted; 9 checked_no_update, 4 unresolved source gaps, 5 candidate reviews, 2 identity rejections, 0 verified new ACTION. Main final and first compact retry were blocked; terminal 202706-final-retry.md committed as partial. No Gmail/App notice. Earlier attempt-only gaps remain. Hourly HH:00 schedule unchanged; this invocation is not proof of an on-time trigger.
+
+- 2026-10-12 21:14:01: actual off-minute invocation at 21:12:48, attempt 211248-attempt.md and authoritative terminal 211401-final.md committed. Urgent + only shard1 (scheduled=1; stale selection also shard1), 13 unique projects attempted, 9 checked_no_update, 4 unresolved source/identity gaps, 5 candidates, 2 identity rejections, 0 verified new ACTION. Space Oct15 already delivered, Concrete extra USDC unverified, Neutrl redemption unverified for personal rights, Tydro Season2 old first-party info, unrelated Autheo/THEO rejected. Gmail/App silent. Historic attempt-only gaps persist. This off-minute invocation does not establish an on-time 21:00 scheduler trigger. Schedule remains hourly HH:00; no task modifications.
