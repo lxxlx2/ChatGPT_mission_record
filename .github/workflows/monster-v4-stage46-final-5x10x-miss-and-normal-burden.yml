@@ -1,0 +1,47 @@
+name: Monster Stage46 Stage45-Verified Original 5x10x and Normal WATCH Audit
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage45_blind_900x6_SHA_P1v02_metrics_and_gates.json'
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage45_blind_all5400_originalV4_P1v02_cases.jsonl'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  read_original_source_sha_and_write_all_5x_10x_cases:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve source time and full independent Stage45 original36 SHA audit
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage46_blind_winner_case_and_watch_burden_audit.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage46_blind_winner_case_and_watch_burden_audit.py \
+            --output-dir /tmp/monster_stage46_final_audit
+      - name: Attach exact Stage45 source-bound case evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage46-all-verified-real-5x10x-minute-D0-P1-normal-burden
+          path: /tmp/monster_stage46_final_audit/*
+          retention-days: 30
+      - name: Persist full source-bound audit to original Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage46_final_audit/monster_stage46_* "$dest/"
+          git add "$dest/monster_stage46_original45_SHA_winners_normalburden_audit.json" "$dest/monster_stage46_all_verified_gt5x_gt10x_true_first_cross_vs_D0_P1.csv"
+          if git diff --cached --quiet; then
+            echo STAGE46_IDENTICAL_SOURCE_RESULTS
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage46 real full-source 5x10x first minute D0 P1 and non2x burden'
+          git push origin "HEAD:$GITHUB_REF_NAME"
