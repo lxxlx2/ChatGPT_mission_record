@@ -27,18 +27,18 @@ from urllib.parse import quote
 
 # Immutable product revision: product source files were finalized before this
 # operations script. Squash merges must never silently change this pin.
-COMMIT = "4fe1145aa97b6cc4a3ed27b8e2e39d035fc80fb0"
+COMMIT = "fb4c7318febec899dc01afc08ad1ba29aaa3407c"
 ROOT = "crypto-300-profit-mission/local-agent/mission_agent/mission_control"
 PATCHES = {
     "server.py": {
         "baseline": "b5eb4af5c945cc1b62337d48393fe02243f9505f",
         "legacy": "f5e00781ea4af45b4d6b15a09b8cb000f5b744f4",
-        "target": "09a0b66b9fc8ea6f8bf0f8137a6b667ad57f24fd",
+        "target": "8f5124bf46a660fb618371eb113da208b28c775b",
     },
     "static/app.js": {
         "baseline": "8f0ac1beace94f01894c151576bc276f48f1b4a4",
         "legacy": "14985b35b019054d5ff9871e002c32421345ff17",
-        "target": "ade294d383c4b2acc172d257bf6e22051fc43075",
+        "target": "e3aec8f0e0866cc445406562c10bfb78bb5f28e7",
     },
     "delivery_review.py": {
         "baseline": None,
