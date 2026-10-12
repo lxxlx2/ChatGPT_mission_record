@@ -1,0 +1,60 @@
+name: Monster Stage56 All166 Official As-of Futures Taker Tradecount Diagnostic
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage56_usdm_asof_taker_and_tradecount_source_audit.py'
+      - '.github/workflows/monster-v4-stage56-official-asof-taker-trades.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-v4-stage56-source-audit
+  cancel-in-progress: false
+jobs:
+  real_official_source_166_closed_minute_taker_tradecount:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify diagnostic parser and future-bar blindness
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage56_usdm_asof_taker_and_tradecount_source_audit.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage56_usdm_asof_taker_and_tradecount_source_audit.py --selftest
+      - name: Fetch only 61 completed minutes per candidate from Binance official daily 1m archives and verify publisher SHA
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage56_usdm_asof_taker_and_tradecount_source_audit.py \
+            --out /tmp/monster_stage56 \
+            --workers 5
+      - name: Preserve full official archive source receipts and factual cohort results
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage56-sourceSHA-166-asof-taker-trades
+          path: /tmp/monster_stage56/*
+          retention-days: 30
+      - name: Commit Stage56 descriptive evidence to original Monster PR without changing strategy
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage56/monster_stage56_* "$dest/"
+          git add "$dest/monster_stage56_all166_61m_asof_taker_trades_official_SHA.jsonl" "$dest/monster_stage56_all166_taker_trades_descriptive_summary.json"
+          if git diff --cached --quiet; then
+            echo STAGE56_SOURCE_ALREADY_COMMITTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: retain Stage56 official publisher SHA all166 observed taker tradecount facts'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE56_SOURCE_PERSISTENCE_FAILED
+          exit 1
