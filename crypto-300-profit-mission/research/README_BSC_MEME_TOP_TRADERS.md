@@ -59,3 +59,12 @@ Continue the ADDRESS MODEL research from `BSC_MEME_ADDRESS_MODEL_5_STAGE17_CROSS
 - Next priorities: economic lifecycle/classification of more *major token opportunities* and all qualified non-entries/losses in the denominator, then real-time-to-signal availability and delay-capacity historical simulation only after complete independent QA and another AI review.
 
 All economic results remain native-wallet block-scope with BSC internal trace limitations unless explicitly transaction-causal verified. NO_GMGN_PAID_API / OBSERVE_ONLY / PRODUCTION NO_GO.
+
+## Latest handoff: Stage 18, 8E6B Lobster two closed native-positive episodes (2026-10-13)
+
+Stage 18 supersedes only Stage 17's unresolved **8E6B/Lobster** section, not its other findings. See `BSC_MEME_ADDRESS_MODEL_6_STAGE18_8E6B_LOBSTER_TWO_CLOSED_EPISODES_AND_DENOMINATOR_2026-10-13.md` and machine evidence `BSC_MEME_STAGE18_8E6B_LOBSTER_13_SIGNED_TWO_CLOSED_ROUNDS_2026-10-13.json`.
+
+- Independent Alchemy `ethGetTransactionReceipt` success headers now cover 13/13 owner-signed Lobster original trades; the formerly unknown two are successful `0x1`. Their **complete receipt bodies remain truncated**. Internal trace remains unavailable on free RPC.
+- Full 4 in / 9 out raw token integer chronology partitions into **two zero-to-zero inventory rounds**: 11 trades (3 buys/8 sells), **+4.540701425397987363 BNB**; then 2 trades (1 buy/1 sell), **+0.253300282319389315 BNB**; sum equals prior +4.794001707717376678 native-wallet block scope. Both are selected *conditional native-scope positives*, not fully traced realized trading PnL.
+- Cross-wallet two-token selected closed episodes become **11 (6 positive/5 negative native-block scopes)**. Do not convert selected 6/11 into win rate.
+- Next work MUST address qualified opportunity denominators, wallet funds/age at tradeable time, non-entry vs ineligible vs unknown, and causal quote settlement of more significant projects before follower execution backtests. 23×19 token-transfer 437/437 completeness is done; do not repeat rescanning as modelling work. Research-only, NO_GO.
