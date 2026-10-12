@@ -130,11 +130,12 @@
     "verified_direct_candidate_bnb_transfers": 7,
     "latest_2026_10_11_erc20_sample_rows": 1224,
     "latest_2026_10_11_unread_directions": 23,
-    "wallets_with_complete_19_ca_direction_history": 13,
-    "latest_2026_10_12_complete_wallet_ca_cells": 247,
-    "latest_2026_10_12_complete_zero_transfer_cells": 196,
-    "latest_2026_10_12_unknown_incomplete_cells": 156,
-    "latest_2026_10_12_observed_wallet_ca_pairs": 85
+    "wallets_with_complete_19_ca_direction_history": 14,
+    "latest_2026_10_12_complete_wallet_ca_cells": 266,
+    "latest_2026_10_12_complete_zero_transfer_cells": 211,
+    "latest_2026_10_12_unknown_incomplete_cells": 141,
+    "latest_2026_10_12_observed_wallet_ca_pairs": 85,
+    "latest_2026_10_12_complete_quantity_closed_cells": 36
   },
   "venue_coverage": [
     {
@@ -419,7 +420,20 @@
         "4",
         "币安人生",
         "哈基米 / HAJIMI"
-      ]
+      ],
+      "address_model_4_2026_10_12_full_census": {
+        "complete_19_ca": true,
+        "observed_tokens": [
+          "BUBB",
+          "4",
+          "币安人生",
+          "哈基米 / HAJIMI"
+        ],
+        "token_balance_proofs": 4,
+        "self_signed_first_in_out_samples": 8,
+        "live_follow_status": "NO_GO",
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V3_2026-10-12.json"
+      }
     },
     {
       "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
@@ -2205,5 +2219,35 @@
     ],
     "complete_wallets_remaining": 13,
     "production": "OBSERVE_ONLY / NO_GO"
+  },
+  "address_model_4_d70ce_14_of_23_full_census_2026_10_12": {
+    "date": "2026-10-12",
+    "status": "14_OF_23_FULL_19_CA; 266_OF_437_COMPLETE; 141_UNKNOWN; OBSERVE_ONLY_NO_GO",
+    "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+    "observed_tokens": [
+      "BUBB",
+      "4",
+      "币安人生",
+      "哈基米 / HAJIMI"
+    ],
+    "raw_transfer_counts": {
+      "in": 8,
+      "out": 74
+    },
+    "balance_verification": "4_OF_4_DIRECT_CURRENT_ERC20_BALANCE_OF_EQUALS_ALL_IN_MINUS_ALL_OUT",
+    "token_net_raw": {
+      "4": "160934",
+      "BUBB": "0",
+      "币安人生": "0",
+      "哈基米 / HAJIMI": "0"
+    },
+    "original_boundary_signers": "8_OF_8_FIRST_IN_OUT_ORIGIN_SAMPLES_SELF_SIGNED_BUT_NOT_82_TRANSACTIONS",
+    "evidence": [
+      "BSC_MEME_D70CE_19_CA_BIDIRECTIONAL_FULL_CURSOR_2026-10-12.json",
+      "BSC_MEME_D70CE_FULL_19_CA_BALANCE_AND_SIGNER_PROVENANCE_2026-10-12.json",
+      "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V3_2026-10-12.json"
+    ],
+    "remaining": "9 wallets 141 incomplete unknown CA directions; 30 partially observed cells; PnL and eligibility NOT validated",
+    "production": "NO_GO"
   }
 }
