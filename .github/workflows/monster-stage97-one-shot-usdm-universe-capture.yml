@@ -1,0 +1,88 @@
+name: Monster Stage97 OneShot PointInTime USD-M Market Archive
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage97-one-shot-usdm-universe-capture.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE97_USDM_ONE_SHOT_POINT_IN_TIME_UNIVERSE_CAPTURE_PROTOCOL_20261013.md
+      - crypto-300-profit-mission/monster/evidence/monster_stage97_one_shot_capture_request.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monster-stage97-one-shot-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  pure_offline_integrity_contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Freeze official independent time API and reject fake snapshot times
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py --selftest
+
+  explicitly_requested_single_future_capture:
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[MONSTER_USDM_CAPTURE]') }}
+    needs: pure_offline_integrity_contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve exactly the real official HTTPS bytes during the true window
+        run: |
+          set -eu
+          request=crypto-300-profit-mission/monster/evidence/monster_stage97_one_shot_capture_request.json
+          test -f "$request"
+          mkdir -p /tmp/stage97
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py --capture-request "$request" --out /tmp/stage97/snapshot.json
+          python -m json.tool /tmp/stage97/snapshot.json > /dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage97-frozen-future-point-in-time-exchangeInfo-official-HTTPS
+          path: /tmp/stage97/snapshot.json
+          retention-days: 90
+      - name: Persist original point-in-time exchangeInfo and official clock proofs
+        run: |
+          set -eu
+          window=$(python -c 'import json; print(json.load(open("/tmp/stage97/snapshot.json"))["window_start_utc"][:10])')
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage97_point_in_time_usdm_"$window"_raw_https.json
+          test ! -e "$dest"
+          cp /tmp/stage97/snapshot.json "$dest"
+          git config user.name "monster-source-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dest"
+          git commit -m "monster: archive authentic Stage97 frozen USD-M exchangeInfo raw bytes for $window"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE97_ACTUAL_RAW_SOURCE_ON_PR30_GIT_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE97_GIT_PUSH_FAILED_NO_AUTHENTIC_ARCHIVE"
+          exit 1
