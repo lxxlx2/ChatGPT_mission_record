@@ -22,6 +22,7 @@ except ImportError:
 EVIDENCE=Path(__file__).resolve().parents[2]/"monster"/"evidence"
 INPUT=EVIDENCE/"monster_stage44_all5400_blind_dates_source_status_and_GT.csv"
 STAGE44=EVIDENCE/"monster_stage44_original36_sha_six_blind_900x6_hourly_GT_summary.json"
+RAW_SOURCE=EVIDENCE/"monster_stage44_full5400_blind_source_publisher_hourly_SHA.jsonl"
 FREEZE=EVIDENCE/"monster_stage44_six_blinddate_900_usdm_and_P1_v02_prereg_20261012.json"
 DATES=("2025-01-09","2025-09-02","2026-01-26","2026-02-24","2026-03-28","2026-05-10")
 SCHEMA="MONSTER_STAGE45_6_BLIND_DATES_ORIGINAL_V4_AND_FROZEN_IMMEDIATE_P1V02_FULL_MARKET_V1"
@@ -49,6 +50,21 @@ def freeze():
         raise ValueError("STAGE45_NOT_ALL900_6_DATES")
     for day in DATES:
         if sum(r["date"]==day for r in rows)!=900:raise ValueError("STAGE45_NOT900_PER_DATE")
+    # Genuine per-symbol publisher SHA values were persisted from the original
+    # Stage44 36 artifacts. Never manufacture SHA strings to satisfy a schema.
+    raw=[json.loads(line) for line in RAW_SOURCE.read_text(encoding="utf-8").splitlines() if line]
+    if len(raw)!=5400:raise ValueError("STAGE45_ORIGINAL5400_HOURLY_PROVENANCE_MISSING")
+    indexed={(x["date"],x["symbol"]):x for x in raw}
+    if len(indexed)!=5400:raise ValueError("STAGE45_DUPLICATED_HOURLY_SOURCE")
+    for r in rows:
+        source=indexed[(r["date"],r["symbol"])]
+        if source["source_status"]!=r["source_status"]:
+            raise ValueError("STAGE45_COMPACT_CSV_VS_RAW_HOURLY_STATUS_DIFFERS")
+        if r["source_status"]=="COMPLETE_168H_OFFICIAL_PUBLISHER_SHA":
+            proofs=source["source_proofs"]
+            if not proofs or any(len(x["publisher_ZIP_sha256"])!=64 for x in proofs):
+                raise ValueError("STAGE45_PUBLISHER_HOURLY_SHA_NOT_PROVED")
+            r["source_proofs"]=proofs
     return rows
 
 def score_p1_first_watch(asof,bars):
@@ -82,9 +98,7 @@ def candidate(row,minute_get=original.minute_source,runner=original.production_s
        "original_GT2x_1h":row.get("gt2x",""),
        "original_GT5x_1h":row.get("gt5x",""),
        "original_GT10x_1h":row.get("gt10x",""),
-       "source_status":"UNKNOWN","frozen_p1_rule":"STAGE44_P1_V02"},
-    # remove accidental tuple: only dict must be passed downstream
-    d=d[0]
+       "source_status":"UNKNOWN","frozen_p1_rule":"STAGE44_P1_V02"}
     if row["source_status"]!="COMPLETE_168H_OFFICIAL_PUBLISHER_SHA":
         d["source_status"]="CENSORED_STAGE44_HOURLY_SOURCE";return d
     try:bars,proof=minute_get(row["symbol"],row["date"])
@@ -97,7 +111,7 @@ def candidate(row,minute_get=original.minute_source,runner=original.production_s
     original_row={"date":row["date"],"symbol":row["symbol"],"status":"COMPLETE_168H_PUBLISHER_SHA",
          "baseline_1h_open":row["baseline_1h_open"],"max_high_multiple":row["max_high_multiple"],
          "gt2x":row["gt2x"],"gt5x":row["gt5x"],"gt10x":row["gt10x"],
-         "publisher_1h_month_sha256":"x"*64}
+         "publisher_1h_month_sha256":row["source_proofs"][0]["publisher_ZIP_sha256"]}
     # Reuse EXACT Stage39 V4 true 2x/5x/10x timing and 1h-vs-1m parity.
     old_result=old.evaluate(original_row,minute_get=lambda s,t:(bars,proof),runner=runner)
     if old_result["source_status"]==old.CONFLICT:
@@ -106,10 +120,12 @@ def candidate(row,minute_get=original.minute_source,runner=original.production_s
            actual_1m_baseline_open=old_result["actual_1m_anchor_open"],
            original_1h_HIGH_multiple=row["max_high_multiple"],
            minute_high_vs_hour_multiple=old_result["reconstructed_1m_high_multiple_vs_hour_open"],
-           verified_9_daily_publisher_sha256=proof)
+           verified_9_daily_publisher_sha256=proof,
+           verified_original_hourly_publisher_SHA256=row["source_proofs"])
         return d
     if old_result["source_status"]!=GOOD:raise ValueError("STAGE45_ORIGINAL_V4_INVALID_STATE")
     d.update(old_result)
+    d["verified_original_hourly_publisher_SHA256"]=row["source_proofs"]
     d["source_status"]=GOOD
     d["verified_9_daily_publisher_sha256"]=proof
     if old_result["WATCH_UTC"]:
