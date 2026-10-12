@@ -1,0 +1,63 @@
+{
+  "schema": "MONSTER_STAGE44_SIX_DATE_STAGE43_AUDIT_LOCKED_900_USDM_BLIND_HOURLY_AND_P1V02_PROTOCOL_V1",
+  "date_frozen": "2026-10-12",
+  "stage43_ledger": {
+    "path": "crypto-300-profit-mission/monster/evidence/monster_stage43_frozen_exposure_ledger_and_blind_dates.json",
+    "git_blob_sha1": "5dffdb395b0e929b98796941f3bbbf382cc4f28e"
+  },
+  "historical_source_snapshot_commit": "2c6d9c1b3f4a9f99a236b015603f517c22afff69",
+  "dates": [
+    "2025-01-09",
+    "2025-09-02",
+    "2026-01-26",
+    "2026-02-24",
+    "2026-03-28",
+    "2026-05-10"
+  ],
+  "exposure_status": "NO_SEVEN_DAY_OVERLAP_WITH_ISO_DATES_IN_PINNED_RESEARCH_DOCUMENTS; NOT_CLAIM_OF_ABSOLUTE_HUMAN_OR_OTHER_DATASET_NOVELTY",
+  "source_universe": "Exact Stage36 full 900 USD-M archived plain-USDT symbol names; no outcome selection",
+  "source_inventory_sha": "91b0f99ef85adb48494c5be5c7cc13a7cedcb686",
+  "utc_start_hour": 6,
+  "horizon_hours": 168,
+  "shards_per_date": 6,
+  "attempts": 5400,
+  "source_hourly": "Binance USD-M monthly 1h ZIP plus publisher .CHECKSUM SHA256; 168 contiguous hours; missing CENSORED",
+  "source_minute": "After hourly GT frozen, official USD-M daily 1m ZIP publisher SHA256; original V4 D0+D1 for entire all 900/date including ordinary symbols",
+  "GT": "2x/5x/10x fixed first1h OPEN to max next168h HIGH, discovery only not executable return",
+  "strategy_hypothesis_v02": {
+    "name": "P1_V02_IMMEDIATE_NON_SUPPRESSING_TRIAGE_FROZEN_HYPOTHESIS",
+    "status": "UNTESTED_NOT_PRODUCTION",
+    "D0": "UNCHANGED_ORIGINAL_3MIN_V4_PERSIST_ALL_RAW_WATCH_NEVER_FILTER_OR_DELAY",
+    "P1": "FIRST_D0_UTC_ONLY_NO_SIX_MINUTE_CONTINUATION_CONFIRMATION",
+    "ret60_closed_1m_percent_gte": 8,
+    "alternative": "OR(quoteVolume_last15m_USDT>=1000000 AND normalized_quote15m_vs_prev45m>=1.5)",
+    "boolean_expression": "(RET60>=8) OR (QUOTE15>=1000000 AND QUOTE15/(QUOTE_PREVIOUS45/3)>=1.5)",
+    "source_gap": "RETAIN_D0_P1_UNSCORABLE",
+    "report_time": "UTC_CLOSED_FIRST_V4_D0_TIME",
+    "duplicates": "ONE_RESEARCH_P1_PER_FIRST_WATCH_COIN_DATE",
+    "P1_no_trade": true,
+    "P1_is_not_BUY": true,
+    "safety": "Never suppress D0; no global priority cap masking raw study"
+  },
+  "fixed_acceptance_gates": {
+    "D0_early_GT2x_min_percent": 90,
+    "D0_GT2x_early_at_least_5min_min_percent": 85,
+    "P1_early_at_least5min_fraction_of_D0_early_ge5_gt2x_min_percent": 80,
+    "P1_alert_mean_per_day_max": 5,
+    "P1_alert_daily_peak_max": 12,
+    "high5_10": "Never claim PASS if no events, separately disclose missed high5",
+    "cost": "No verifiable historical L2 => BUY/profit gate NEVER PASS",
+    "minimum_GT2x_event_count_for_validity": 20,
+    "no_future_label_or_threshold_selection": "STRICT_NO_FUTURE_PRICE_READS_BEFORE_FREEZE",
+    "review": "NOT_DONE",
+    "deployment": "NO_GO",
+    "Frank": "UNCHANGED",
+    "Gmail": "OFF"
+  },
+  "limitations": [
+    "Date-only pinned repository audit may miss implicit or external human exposures",
+    "900 USD-M archived symbols not proven historical tradeable crypto perpetuals",
+    "Hourly HIGH not an executable trade fill",
+    "Global shared D1 queue not yet replayed"
+  ]
+}
