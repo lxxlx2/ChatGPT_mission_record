@@ -189,3 +189,16 @@ assert(missing.includes('未确认（原始支付数据不足）') && !missing.i
 """
     subprocess.run(["node", "-e", script, str(STATIC / "app.js")],
                    check=True, capture_output=True, text=True, timeout=10)
+
+
+def test_watch_pool_stays_secondary_and_defaults_to_high_priority_rows():
+    markup, page = parsed()
+    js = (STATIC / "app.js").read_text(encoding="utf-8")
+    css = (STATIC / "styles.css").read_text(encoding="utf-8")
+    assert page.identifiers.index("trades") < page.identifiers.index("frank-watch-panel")
+    assert '<option value="WATCH_NOW" selected>' in markup
+    assert "['MODEL_OPEN', 'NEEDS_INVENTORY_REVIEW', 'WATCH_UNRESOLVED'].includes(x.watch_state)" in js
+    assert "const filter = $('watch-filter')?.value || 'WATCH_NOW'" in js
+    assert ".frank-watch-table{border-collapse:collapse;width:100%;min-width:840px;font-size:13px;line-height:1.5}" in css
+    assert ".frank-watch-table code{font-size:12px}" in css
+    assert '<option value="ALL">全部本地账户活动</option>' in markup
