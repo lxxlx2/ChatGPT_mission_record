@@ -64,6 +64,10 @@ main{padding:18px 24px 40px;max-width:1800px;margin:auto}
 .panel-title h2{font-size:14px;margin:0;font-weight:700}
 .panel-title p{font-size:11px;color:#6f7986;margin:4px 0 0}
 .panel-title>span{font-size:11px;color:#727b87;white-space:nowrap}
+.priority-panel{border-color:#354254}
+.priority-panel>.panel-title{background:#131a22}
+.priority-panel>.panel-title h2{font-size:16px;color:#e8edf5}
+.priority-panel>.panel-title p{color:#9eabbc;line-height:1.5}
 .candidate-list{padding:12px;display:grid;gap:10px}
 .candidate-card{
   border:1px solid #252a31;background:#11151a;border-radius:8px;padding:13px;
