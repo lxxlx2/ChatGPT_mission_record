@@ -1,0 +1,147 @@
+{
+  "date": "2026-10-12",
+  "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+  "network": "bnb-mainnet",
+  "source": [
+    {
+      "path": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V3_2026-10-12.json",
+      "sha": "93a4f7c29cfbeeaf6dce34533a2f71f3f72d81f0"
+    },
+    {
+      "path": "BSC_MEME_BREADTH_FIRST_UNIVERSE_2026-10-10.json",
+      "sha": "5e9e3e662ff955f809f050c6360b0d1d56587829"
+    }
+  ],
+  "subset_cas": [
+    "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+    "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+    "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+    "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+    "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+    "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+    "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+    "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+    "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+    "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+    "0x0a43fc31a73013089df59194872ecae4cae14444",
+    "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+    "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+    "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b"
+  ],
+  "directions": [
+    {
+      "side": "in",
+      "events": [
+        {
+          "hash": "0x0ac28e4ce56aad8ead6a613d991cc0b4e3e1eb0e5405f27100a8873f2478ea05",
+          "block": "0x71459d8",
+          "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "from": "0x0f6137a4dc1df0b2a9d8ef243fe75d28ce334f24",
+          "to": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+          "raw": "0x44d637426f5d8a",
+          "id": "0x0ac28e4ce56aad8ead6a613d991cc0b4e3e1eb0e5405f27100a8873f2478ea05:log:149"
+        }
+      ],
+      "pages": 1,
+      "complete": true,
+      "key": null,
+      "error": null
+    },
+    {
+      "side": "out",
+      "events": [],
+      "pages": 1,
+      "complete": true,
+      "key": null,
+      "error": null
+    }
+  ],
+  "counts": [
+    {
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "CHEEMS",
+      "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "TUT",
+      "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BROCCOLI714",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BANANAS31",
+      "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BOB",
+      "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "4",
+      "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "in": 1,
+      "out": 0
+    },
+    {
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BUBB",
+      "ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "in": 0,
+      "out": 0
+    }
+  ],
+  "complete": true,
+  "production": "NO_GO"
+}
