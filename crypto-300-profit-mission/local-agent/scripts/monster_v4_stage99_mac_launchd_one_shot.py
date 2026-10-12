@@ -149,6 +149,13 @@ def install(*,now=None,dry_run=False,windows=None):
     if sys.platform!="darwin" and not dry_run:
         raise RuntimeError("STAGE99_ONLY_MACOS_LAUNCHD_SUPPORTED")
     if not dry_run:
+        # Mandatory real second-model verdict on the exact source bytes.
+        # A CI selftest or GitHub reviewer REQUEST is not independent AI review.
+        try:
+            import monster_v4_stage99_external_ai_review as ai_review
+        except ImportError:
+            from scripts import monster_v4_stage99_external_ai_review as ai_review
+        ai_review.verify_approved()
         isolated_checkout_preflight()
         if not shutil.which("launchctl"):
             raise RuntimeError("STAGE99_NO_LAUNCHCTL")
@@ -190,6 +197,27 @@ def install(*,now=None,dry_run=False,windows=None):
                      launchd_label=plist["Label"])
     return scheduled
 
+
+
+def safe_git_commit_and_push_for_review():
+    """Push one actual other-AI review result to original PR before installation."""
+    review="crypto-300-profit-mission/monster/evidence/monster_stage99_actual_external_claude_ai_review.json"
+    staged=git("diff","--cached","--name-only",capture=True)
+    if staged.strip()!=review:
+        raise RuntimeError("STAGE99_CLAUDE_REVIEW_IS_ONLY_ALLOWED_STAGED_FILE")
+    git("-c","user.name=monster-independent-review",
+        "-c","user.email=41898282+github-actions[bot]@users.noreply.github.com",
+        "commit","-m","monster: archive real external Claude Stage99 security review before scheduling",
+        timeout=45)
+    for attempt in range(3):
+        try:
+            git("push","origin","HEAD:refs/heads/"+BRANCH,timeout=50)
+            return git("rev-parse","HEAD",capture=True)
+        except RuntimeError:
+            if attempt==2:raise
+            git("fetch","origin","refs/heads/"+BRANCH,timeout=40)
+            git("rebase","FETCH_HEAD",timeout=45)
+    raise AssertionError("STAGE99_REVIEW_GIT_PUSH_UNREACHABLE")
 
 
 def safe_git_commit_and_push(window):
