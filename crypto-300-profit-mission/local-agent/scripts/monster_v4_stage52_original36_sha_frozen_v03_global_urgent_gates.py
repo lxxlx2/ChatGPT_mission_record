@@ -25,6 +25,36 @@ D=Decimal
 
 def sha(b):return hashlib.sha256(b).hexdigest()
 def clock(x):return int(dt.datetime.fromisoformat(x.replace("Z","+00:00")).timestamp()*1000)
+
+def original_hourly_identity_matches(stage50_status, stage51_hourly_status, stage51_source_status):
+    """Only Stage51's confirmed reuse of Stage39 originalV4.evaluate changes this field.
+
+    Stage50 original monthly SHA status: COMPLETE_168H_OFFICIAL_PUBLISHER_SHA
+    Stage39 replay input requires:       COMPLETE_168H_PUBLISHER_SHA
+    Stage51 r.update(baseline) overwrites hourly_status with that replay-input
+    literal on GOOD cases; old publisher ZIP digests and 1m/1h GT stay checked
+    independently below. No other alias or censored status is accepted.
+    """
+    if stage50_status == stage51_hourly_status:
+        return True
+    return (
+        stage50_status == "COMPLETE_168H_OFFICIAL_PUBLISHER_SHA"
+        and stage51_hourly_status == "COMPLETE_168H_PUBLISHER_SHA"
+        and stage51_source_status == GOOD
+    )
+
+def test_hourly_status_source_contract():
+    a="COMPLETE_168H_OFFICIAL_PUBLISHER_SHA"
+    b="COMPLETE_168H_PUBLISHER_SHA"
+    assert original_hourly_identity_matches(a,b,GOOD)
+    assert original_hourly_identity_matches(a,a,GOOD)
+    assert original_hourly_identity_matches("CENSORED_PUBLISHER_MONTHLY_1H_404","CENSORED_PUBLISHER_MONTHLY_1H_404","CENSORED_STAGE50_HOURLY")
+    assert not original_hourly_identity_matches(a,b,"CENSORED_DAILY_1M_404")
+    assert not original_hourly_identity_matches("CENSORED_PUBLISHER_MONTHLY_1H_404",b,GOOD)
+    assert not original_hourly_identity_matches(a,"CENSORED_DAILY_1M_GAP",GOOD)
+    assert not original_hourly_identity_matches(a,"COMPLETE_168H_PUBLISHER_SHA_UNVERIFIED",GOOD)
+    print("STAGE52_STAGE50_STAGE51_HOURLY_STATUS_STRICT_ALIAS_SELFTEST_PASS")
+
 def locked():
     p=json.loads(RULE.read_text())
     if p["schema"]!="MONSTER_STAGE49_V03_SECOND_IGNITION_PRIOR_TO_NEW_USDM_MARKET_PRICE_PREREG_V1" or tuple(p["dates"])!=DAYS:
@@ -55,8 +85,12 @@ def read(manifest,zips):
             raise ValueError("STAGE52_STAGE51_ORIGINAL_SOURCE_SHARD_INCOMPLETE")
         for r in j["rows"]:
             old=expected.get((r["date"],r["symbol"]))
-            if old is None or old["source_status"]!=r["hourly_status"]:
-                raise ValueError("STAGE52_STAGE50_HOURLY_SOURCE_IDENTITY_DRIFT")
+            if old is None or not original_hourly_identity_matches(
+                    old["source_status"],r["hourly_status"],r["source_status"]):
+                raise ValueError("STAGE52_STAGE50_HOURLY_SOURCE_IDENTITY_DRIFT "
+                    +r["date"]+" "+r["symbol"]+" "
+                    +str(old["source_status"] if old else None)+" vs "
+                    +str(r["hourly_status"])+" / "+str(r["source_status"]))
             if old["source_status"]=="COMPLETE_168H_OFFICIAL_PUBLISHER_SHA":
                 if [r["hourly_gt2x"],r["hourly_gt5x"],r["hourly_gt10x"]]!=[old["gt2x"],old["gt5x"],old["gt10x"]]:
                     raise ValueError("STAGE52_FROZEN_GROSS_GT_WRONG")
@@ -204,9 +238,13 @@ def assess(cases,receipts):
       "Frank":"UNCHANGED","Gmail":"OFF","Monster_deploy":"NO_GO","auto_trade":"NO_GO"},events
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument("--manifest",type=Path,required=True)
+    p=argparse.ArgumentParser();p.add_argument("--selftest",action="store_true")
+    p.add_argument("--manifest",type=Path);
     p.add_argument("--zip-dir",type=Path,required=True);p.add_argument("--out",type=Path,required=True)
-    a=p.parse_args();cases,receipts=read(json.loads(a.manifest.read_text()),a.zip_dir)
+    a=p.parse_args()
+    if a.selftest:test_hourly_status_source_contract();return
+    if not a.manifest or not a.zip_dir or not a.out:p.error("--manifest --zip-dir --out required")
+    cases,receipts=read(json.loads(a.manifest.read_text()),a.zip_dir)
     report,events=assess(cases,receipts)
     a.out.mkdir(parents=True,exist_ok=True)
     (a.out/"monster_stage52_pinned_v03_all5400_36SHA_true_global_cap_metrics.json").write_text(
