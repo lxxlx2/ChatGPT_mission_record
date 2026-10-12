@@ -77,8 +77,12 @@ def audit(rows,proofs):
         raise ValueError("STAGE87_ORIGINAL_305_NOT_RECOGNIZED")
     complete=[x for x in rows if x["benchmark_status"]=="COMPLETE_SHA_VERIFIED_BTC_ETH_REFERENCE"]
     censored=[x for x in rows if x["benchmark_status"]!="COMPLETE_SHA_VERIFIED_BTC_ETH_REFERENCE"]
-    if any(x["symbol"] in m.REFERENCES for x in rows):
-        raise ValueError("STAGE87_REFERENCE_NOT_A_MONSTER")
+    # Historical mixed USD-M population may itself include BTC/ETH.
+    # Preserve its complete 305-denominator and explicitly disclose the overlap;
+    # reference assets are still excluded from any future Monster target population.
+    reference_overlap=[{"date":x["date"],"symbol":x["symbol"],
+                         "D1_UTC":x["D1_FIRST_UTC"]}
+                       for x in rows if x["symbol"] in m.REFERENCES]
     keyset=set()
     for p in proofs:
         k=(p["symbol"],p["date"])
@@ -92,7 +96,10 @@ def audit(rows,proofs):
         "all_original_D1_events":305,"benchmark_complete":len(complete),
         "benchmark_unknown":len(censored),"source_reference_official_SHA_receipts":proofs,
         "reference_asset_names_BENCHMARK_ONLY":list(m.REFERENCES),
-        "no_reference_in_monster_watch":True,
+        "raw_D1_overlapping_reference_asset_events":reference_overlap,
+        "raw_D1_overlapping_reference_asset_count":len(reference_overlap),
+        "historical_305_denominator_kept_unchanged":True,
+        "no_new_reference_monitor_or_new_alert":True,
         "original_2x_early5_of_305":sum(x["early5_gt2_evaluation_only"] for x in old.values()),
         "reference_results":{
             "status":"PARTIAL_SOURCE" if censored else "COMPLETE_SOURCE",
