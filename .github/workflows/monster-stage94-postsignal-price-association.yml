@@ -1,0 +1,62 @@
+name: Monster Stage94 D1 PostSignal Return Association
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage94-postsignal-price-association.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage94_d1_asof_vs_post_signal_return.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE94_ALL305_D1_ASOF_VS_POST_SIGNAL_RETURN_ASSOCIATION_PROTOCOL_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  actual305_source_pairing_and_asof_scoring:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify label orientation and exact 305 source joins
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage94_d1_asof_vs_post_signal_return.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage94_d1_asof_vs_post_signal_return.py --selftest
+      - name: Compute same date as-of feature association with real following price proxy
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage94_d1_asof_vs_post_signal_return.py --audit --out /tmp/monster-stage94-all305.json
+          python -m json.tool /tmp/monster-stage94-all305.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage94-all305-real-asof-to-postsignal-price-only-diagnostic
+          path: /tmp/monster-stage94-all305.json
+          retention-days: 60
+      - name: Persist source locked descriptive data to original Monster PR
+        run: |
+          set -eu
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage94_all305_asof_D1_vs_24h72h_gross_return_diagnostic.json
+          cp /tmp/monster-stage94-all305.json "$dest"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dest"
+          if git diff --cached --quiet; then
+            echo "STAGE94_IDENTICAL_RESULTS_ALREADY_COMMITTED"
+            exit 0
+          fi
+          git commit -m "monster: persist Stage94 305 official asof D1 to actual post-signal gross price metrics"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE94_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE94_GIT_PUSH_FAILED"
+          exit 1
