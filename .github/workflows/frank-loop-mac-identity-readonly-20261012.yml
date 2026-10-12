@@ -1,0 +1,46 @@
+name: Frank Mac Loop identity read-only audit CI
+
+on:
+  push:
+    branches:
+      - ops/frank-loop-mac-identity-readonly-20261012
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-readonly-and-full-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm exact code SHA and merged release lineage
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 77653116eb5c0da537041d934fdc5871a3d36709 HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "EXACT_AUDIT_HEAD=$GITHUB_SHA"
+      - name: Install local-agent dev testing dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install pyflakes==3.4.0 numpy==2.3.3
+      - name: Syntax, pyflakes, and focused no-side-effects fixtures
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/frank_loop_mac_identity_readonly_20261012.py
+          python -m pyflakes scripts/frank_loop_mac_identity_readonly_20261012.py
+          python -B -m pytest -q -p no:cacheprovider tests/research/test_frank_loop_mac_identity_readonly_20261012.py
+      - name: Frank full regression with historical Git replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
