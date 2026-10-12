@@ -169,17 +169,17 @@ def selftest():
     after[1]=(start+MIN,p("101"),p("110"),p("99"),p("99"),p("100000"),300)
     q=trailing_72h(after,entry)
     assert q["exit_reason"]=="PRIOR_MINUTE_TRAIL_LOW_TOUCH"
-    assert q["gross_price_return_pct"]=="0"
+    assert Decimal(q["gross_price_return_pct"])==0
     # Stop first even if HIGH would arm trail within same candle.
     after[0]=(start,entry,p("200"),p("84"),p("101"),p("100000"),300)
     first=trailing_72h(after,entry)
     assert first["exit_reason"]=="HARD15_LOW_TOUCH"
-    assert first["gross_price_return_pct"]=="-15.00"
+    assert Decimal(first["gross_price_return_pct"])==Decimal("-15")
     # Opening gap must not claim the better stop price.
     after[0]=(start,p("80"),p("100"),p("79"),p("80"),p("100000"),300)
     gap=trailing_72h(after,entry)
     assert gap["exit_reason"]=="BAR_OPEN_GAPPED_BELOW_STOP"
-    assert gap["gross_price_return_pct"]=="-20.0"
+    assert Decimal(gap["gross_price_return_pct"])==Decimal("-20")
     print("STAGE101_PRICE_ONLY_STOP_FIRST_PREVIOUS_MINUTE_TRAIL_GAP_AND_72H_SELFTEST_PASS")
 
 
