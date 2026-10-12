@@ -103,9 +103,14 @@ def parse_cli_response(raw_text: str):
                 "reviewed_files","tests_and_security_evidence"):
         if not isinstance(structured[key],list):
             raise ValueError("STAGE99_EXTERNAL_AI_REVIEW_NOT_AUDITABLE")
-    if structured["decision"]=="APPROVE" and (structured["blocking_findings"]
+    # A generic affirmative paragraph is not a review: the other model must
+    # explicitly attest to reading the scheduler, reviewer, fixtures and source.
+    required_for_review=set(REVIEW_TARGETS[:4])
+    declared={str(x) for x in structured["reviewed_files"]}
+    if structured["decision"]=="APPROVE" and (
+        structured["blocking_findings"]
         or len(structured["tests_and_security_evidence"])<3
-        or len(structured["reviewed_files"])<4):
+        or not required_for_review.issubset(declared)):
         raise ValueError("STAGE99_EXTERNAL_AI_APPROVAL_WITHOUT_REQUIRED_EVIDENCE")
     model_usage=wrapper.get("modelUsage") or wrapper.get("model_usage") or {}
     model_names=list(model_usage.keys()) if isinstance(model_usage,dict) else []
