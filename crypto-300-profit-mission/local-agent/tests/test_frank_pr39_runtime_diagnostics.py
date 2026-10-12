@@ -93,3 +93,91 @@ def test_runner_timestamp_probe_only_labels_ambiguity(tmp_path, monkeypatch, run
     assert result["pid"] == 4242
     assert str(tmp_path) not in json.dumps(result)
     assert result["timestamp_resolution"] == "ps_lstart_one_second"
+
+
+def test_documented_legacy_overlay_is_identified_without_waiving_source_integrity(tmp_path, monkeypatch):
+    repo, prod = fixture_repo(tmp_path)
+    for name in ("server.py", "static/app.js"):
+        target = prod / "mission_agent/mission_control" / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("original\n")
+    git(repo, "add", ".")
+    subprocess.run(["git", "-C", str(repo), "-c", "user.name=Tester",
+                    "-c", "user.email=test@example.invalid",
+                    "commit", "-qm", "old UI baseline"], check=True)
+    for name in ("server.py", "static/app.js", "delivery_review.py"):
+        target = prod / "mission_agent/mission_control" / name
+        target.write_text("documented legacy placeholder\n")
+    expected = release.HISTORICAL_UI_LEGACY_BLOBS
+    extra = release.HISTORICAL_UI_LEGACY_EXTRA
+    base_run = release.run
+
+    def verify_known_git_hashes(argv, **kw):
+        if "rev-parse" in argv and len(argv) and str(argv[-1]).startswith("HEAD:"):
+            for name, (baseline, _) in expected.items():
+                if str(argv[-1]).endswith(name):
+                    return baseline
+        if "hash-object" in argv and argv:
+            for name, (_, legacy) in expected.items():
+                if str(argv[-1]).endswith(name):
+                    return legacy
+            for name, legacy in extra.items():
+                if str(argv[-1]).endswith(name):
+                    return legacy
+        return base_run(argv, **kw)
+
+    monkeypatch.setattr(release, "run", verify_known_git_hashes)
+    report = release.source_drift_diagnostic(prod)
+    assert report["historical_overlay_classification"] == "DOCUMENTED_LEGACY_DISK_BYTES_RUNTIME_UNVERIFIED"
+    assert report["status"] == "UNVERIFIED_SOURCE_DRIFT"
+    assert report["different_or_missing_count"] == 2
+    assert report["untracked_executable_count"] == 1
+    assert report["unexpected_source_git_blobs"] == extra
+    assert "SCRIPT_OR_POLICY_APPROVED" not in json.dumps(report)
+
+    monkeypatch.setattr(release, "run", base_run)
+    with pytest.raises(RuntimeError, match="SOURCE_MIXED_BYTES"):
+        release.source_manifest(prod)
+
+
+def test_nonmatching_legacy_extra_stays_unverified(tmp_path):
+    _, prod = fixture_repo(tmp_path)
+    (prod / "mission_agent/mission_control/delivery_review.py").write_text("malicious=1\n")
+    report = release.source_drift_diagnostic(prod)
+    assert report["historical_overlay_classification"] == "NO_EXACT_LEGACY_MATCH"
+    assert report["status"] == "UNVERIFIED_SOURCE_DRIFT"
+    assert report["untracked_executable_count"] == 1
+
+
+@pytest.mark.parametrize("late,expected", [
+    (False, "ALL_OBSERVED_SOURCE_FILES_PREDATE_PROCESS_SECOND"),
+    (True, "SOURCE_FILES_MAY_HAVE_CHANGED_AFTER_START")
+])
+def test_legacy_source_mtimes_are_measured_without_altering_live_data(tmp_path, monkeypatch, late, expected):
+    _, prod = fixture_repo(tmp_path)
+    start = int(time.time()) - 1000
+    for name in ("mission_agent", "config"):
+        for path in (prod / name).rglob("*"):
+            if path.is_file():
+                os.utime(path, (start - 60, start - 60))
+    entry = prod / "scripts/mission_meme_v1.py"
+    os.utime(entry, (start - 60, start - 60))
+    changed = prod / "mission_agent/mission_control/frank.py"
+    if late:
+        os.utime(changed, (start + 8, start + 8))
+    runner = tmp_path / "loop.sh"
+    runner.write_text('LOCAL_AGENT="' + str(prod) + '"\n')
+    mac = SimpleNamespace(runners={"loop": runner},
+                          labels={"loop": "fake.loop"},
+                          launch=lambda _: (321, "loaded"))
+    stamp = time.strftime("%a %b %d %H:%M:%S %Y", time.localtime(start))
+    def fake_run(argv, **kwargs):
+        if argv[:2] == ["/bin/ps", "-p"]:
+            return stamp
+        raise AssertionError("unexpected subprocess " + repr(argv))
+    monkeypatch.setattr(release, "run", fake_run)
+    report = release.source_start_temporal_diagnostic(mac, "loop")
+    assert report["status"] == expected
+    assert report["files_not_proven_to_predate_process_count"] == int(late)
+    assert (report["late_source_files"] == []) is (not late)
+    assert str(tmp_path) not in json.dumps(report)
