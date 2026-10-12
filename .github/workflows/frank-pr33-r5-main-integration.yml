@@ -1,0 +1,80 @@
+name: Frank PR33 R5 latest-main isolated integration verification
+
+on:
+  push:
+    branches:
+      - review/frank-pr33-r5-main-integration-matrix-20261012
+    paths:
+      - '.github/workflows/frank-pr33-r5-main-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-main-and-r5:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [main-baseline, main-plus-r5]
+    env:
+      BASE_SHA: '8aca0b3ff558e17ca1cbce13ceba27aaf9fad8d4'
+      R5_SHA: 'a64d4c2010091574ec6280e140cfa6d06369e743'
+      FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Build exact ephemeral research merge tree
+        shell: bash
+        env:
+          MODE: ${{ matrix.mode }}
+        run: |
+          set -euo pipefail
+          git config user.name 'Frank CI readonly research'
+          git config user.email 'frank-ci@users.noreply.github.com'
+          git cat-file -e "$BASE_SHA^{commit}"
+          git cat-file -e "$R5_SHA^{commit}"
+          git fetch origin 'refs/heads/evidence/frank-ca-local:refs/remotes/origin/evidence/frank-ca-local'
+          git switch --detach "$BASE_SHA"
+          if [[ "$MODE" == "main-plus-r5" ]]; then
+            git merge --no-ff --no-edit -m "CI-only merge R5 M13 fix into exact main" "$R5_SHA"
+          fi
+          test -z "$(git ls-files --unmerged)"
+          if git diff --name-only "$BASE_SHA" HEAD | grep -E '^crypto-300-profit-mission/local-agent/(mission_agent/frank/|mission_agent/signals/)'; then
+            echo 'FROZEN_FRANK_V1_DIFF_DETECTED'; exit 8
+          fi
+          echo "CI_MODE=$MODE BASE=$BASE_SHA R5=$R5_SHA MERGED_HEAD=$(git rev-parse HEAD)" | tee merge-provenance.txt
+          root="crypto-300-profit-mission/local-agent/mission_agent/mission_control"
+          for file in server.py static/app.js delivery_review.py; do
+            printf 'MERGED_BLOB %s %s\n' "$file" "$(git hash-object "$root/$file")" | tee -a merge-provenance.txt
+          done
+          git diff --name-status "$BASE_SHA" HEAD | tee merge-diff.txt
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install complete independent dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]' 'numpy>=2,<3' 'pyflakes==3.4.0'
+      - name: Validate syntax, target scripts and JavaScript
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent scripts tests
+          python -m pyflakes mission_agent/mission_control/server.py mission_agent/mission_control/delivery_review.py scripts/deploy_frank_dashboard_review_badge.py scripts/frank_dashboard_readonly_acceptance.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: Full real-data replay test suite on actual merge tree
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pytest -q tests --junitxml="../../frank-r5-merge.xml"
+      - name: Archive ephemeral evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frank-r5-${{ matrix.mode }}-${{ github.sha }}
+          path: |
+            merge-provenance.txt
+            merge-diff.txt
+            frank-r5-merge.xml
+          retention-days: 14
