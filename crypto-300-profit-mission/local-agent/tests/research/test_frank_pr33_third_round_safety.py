@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+import threading
+import urllib.request
 
 import pytest
 
@@ -136,3 +138,33 @@ process.stdout.write('PR33_ACTUAL_RUNTIME_RENDERER=PASS\\n');
     result = subprocess.run(["node", "-e", js, str(src)], capture_output=True,
                             text=True, timeout=10, check=True)
     assert "PR33_ACTUAL_RUNTIME_RENDERER=PASS" in result.stdout
+
+
+def test_real_dashboard_handler_http_and_deploy_parity_exposes_stale_pending(
+        store, monkeypatch):
+    # Actual production GET handler behind an ephemeral live loopback HTTP server,
+    # not a mock provider response or a closed preselected port.
+    from mission_agent.mission_control.server import Handler, ThreadingHTTPServer
+
+    ctl, db, dashboard = store
+    seed(db, "PENDING", channel="gmail", attempts=0, error=None)
+    seed(db, "PENDING", channel="local", attempts=0, error=None)
+    monkeypatch.setattr(Handler, "state", dashboard)
+    app = import_script("deploy_frank_dashboard_review_badge.py",
+                        "deploy_real_http_pending_test")
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    uri = f"http://127.0.0.1:{server.server_port}/api/control-health"
+    monkeypatch.setattr(app, "control_root", lambda: ctl)
+    monkeypatch.setattr(app, "health_endpoint", lambda _: uri)
+    try:
+        with urllib.request.urlopen(uri, timeout=4) as response:
+            actual = json.load(response)
+        assert actual["manual_review_queued_count"] == 2
+        assert actual["manual_review_visible_total_count"] == 2
+        app.verify_dashboard()
+    finally:
+        server.shutdown()
+        thread.join(timeout=4)
+        server.server_close()
