@@ -1,0 +1,59 @@
+{
+  "schema": "BSC_MEME_498528_MARS_FIRST7_BUYS_NATIVE_BLOCKS_FIRST_EXIT_V1",
+  "date": "2026-10-12",
+  "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+  "source_blobs": [
+    {
+      "file": "BSC_MEME_498528_MARS_SEVEN_EARLY_BUYS_BEFORE_FIRST_EXIT_2026-10-12.json",
+      "sha": "2dde5a2f9de4500a0a128336235034d06e559c3b"
+    },
+    {
+      "file": "BSC_MEME_498528_MARSCOIN_FIRST_TEN_BLOCK_EARLY_BUYS_AND_TAX_QA_2026-10-12.json",
+      "sha": "182d442a74cfbe8fa2af13b2017f63524257120b"
+    }
+  ],
+  "audited_native_buy_blocks": [
+    {
+      "block": 112441470,
+      "net_wei": "-400107298960000000",
+      "buy_signed_value_wei": "400000000000000000",
+      "buys_in_block": 2,
+      "after_native_inputs_other_net_wei": "-107298960000000"
+    },
+    {
+      "block": 112441471,
+      "net_wei": "-200051672480000000",
+      "buy_signed_value_wei": "200000000000000000",
+      "buys_in_block": 1,
+      "after_native_inputs_other_net_wei": "-51672480000000"
+    },
+    {
+      "block": 112441555,
+      "net_wei": "-400117764880000000",
+      "buy_signed_value_wei": "400000000000000000",
+      "buys_in_block": 2,
+      "after_native_inputs_other_net_wei": "-117764880000000"
+    },
+    {
+      "block": 112441584,
+      "net_wei": "-200052376040000000",
+      "buy_signed_value_wei": "200000000000000000",
+      "buys_in_block": 1,
+      "after_native_inputs_other_net_wei": "-52376040000000"
+    },
+    {
+      "block": 112441585,
+      "net_wei": "-200053097000000000",
+      "buy_signed_value_wei": "200000000000000000",
+      "buys_in_block": 1,
+      "after_native_inputs_other_net_wei": "-53097000000000"
+    }
+  ],
+  "owner_original_7_buy_total_wei": "1400000000000000000",
+  "buy_block_net_total_wei": "-1400382209360000000",
+  "first_sale_native_block_delta_wei": "399318753578522047",
+  "buy_blocks_plus_first_sale_native_net_wei": "-1001063455781477953",
+  "early_inventory_remaining_share_after_first_sale_percent": "90.0001",
+  "critical_caveat": "Early first sale recovers only part of gross entry capital, while original token inventory is partly still held. Cannot infer final win/loss, routes, slippage, tax beyond first sale, and rest of positions after block 112442022.",
+  "production": "NO_GO"
+}
