@@ -103,3 +103,45 @@ def test_no_side_effect_flags_are_fail_closed(monkeypatch):
     with pytest.raises(RuntimeError, match="FAILED_NO_FRESH_SENDABLE_LEGACY_GMAIL"):
         ops.check("NO_FRESH_SENDABLE_LEGACY_GMAIL", False)
     assert check_log["NO_FRESH_SENDABLE_LEGACY_GMAIL"] == "FAIL"
+
+
+@pytest.mark.parametrize("missing", [
+    "POLICY", "APPROVED_HASH_FILE", "RPC_FILE",
+])
+def test_missing_authorization_file_identifies_exact_item_without_secret_leak(tmp_path, monkeypatch, capsys, missing):
+    paths = {
+        "POLICY": tmp_path / "approved-policy.json",
+        "APPROVED_HASH_FILE": tmp_path / "approved-sha256",
+        "RPC_FILE": tmp_path / "solana-rpc",
+    }
+    for key, path in paths.items():
+        if key != missing:
+            path.write_text("SECRET_SYNTHETIC_DO_NOT_PRINT")
+    monkeypatch.setattr(ops, "checks", {})
+    monkeypatch.setattr(ops, "details", {})
+    assert ops.inspect_authorization_artifacts(paths) is False
+    expected = {
+        "POLICY": "POLICY_JSON_PRESENT",
+        "APPROVED_HASH_FILE": "APPROVED_SHA256_FILE_PRESENT",
+        "RPC_FILE": "SOLANA_RPC_FILE_PRESENT",
+    }[missing]
+    assert ops.details["missing_authorization_artifacts"] == [expected]
+    assert ops.checks[expected] == "FAIL"
+    printed = capsys.readouterr().out
+    assert "SECRET_SYNTHETIC" not in printed
+    assert str(tmp_path) not in printed
+
+
+def test_all_authorization_artifacts_present(tmp_path, monkeypatch):
+    paths = {
+        "POLICY": tmp_path / "policy",
+        "APPROVED_HASH_FILE": tmp_path / "sha",
+        "RPC_FILE": tmp_path / "rpc",
+    }
+    for path in paths.values():
+        path.write_text("PRIVATE_FIXTURE")
+    monkeypatch.setattr(ops, "checks", {})
+    monkeypatch.setattr(ops, "details", {})
+    assert ops.inspect_authorization_artifacts(paths) is True
+    assert all(status == "PASS" for status in ops.checks.values())
+    assert ops.details["missing_authorization_artifacts"] == []
