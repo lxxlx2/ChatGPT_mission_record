@@ -1,0 +1,62 @@
+name: Monster Stage86 D1 Date Matched Diagnostic
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage86-asof-d1-date-matched-diagnostic.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage86_asof_d1_within_date_diagnostic.py
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  date_matched_asof_diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check exposure frozen file and tests
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage86_asof_d1_within_date_diagnostic.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage86_asof_d1_within_date_diagnostic.py --selftest
+      - name: Recompute all six feature AUC by individual date on exposed source
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage86_asof_d1_within_date_diagnostic.py --out /tmp/monster-stage86-d1-date-match.json
+          python -m json.tool /tmp/monster-stage86-d1-date-match.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage86-all305-exposed-date-matched-analysis
+          path: /tmp/monster-stage86-d1-date-match.json
+          retention-days: 60
+      - name: Persist descriptive facts to existing Monster PR only
+        run: |
+          set -eu
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage86_full305_asof_D1_date_matched_diagnostic.json
+          cp /tmp/monster-stage86-d1-date-match.json "$dest"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dest"
+          if git diff --cached --quiet; then
+            echo "STAGE86_RESULT_ALREADY_IDENTICAL"
+            exit 0
+          fi
+          git commit -m "monster: persist Stage86 full305 as-of same-date diagnostic"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE86_COMMIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE86_GIT_PUSH_FAILED"
+          exit 1
