@@ -24,7 +24,8 @@
           "git_blob_sha": "9c4d37ea37e4d9d06acfe756a4ab684d0605d8d3"
         }
       ],
-      "next": "Read existing full ERC20 cursor/owner original hash, prove signed buys and sell settlement; close token inventory without guessing from transfer count."
+      "next": "Read existing full ERC20 cursor/owner original hash, prove signed buys and sell settlement; close token inventory without guessing from transfer count.",
+      "realized_final_PnL": "UNRESOLVED"
     },
     {
       "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
