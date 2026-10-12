@@ -156,6 +156,32 @@ class TestBscMemeAddressModelV1(unittest.TestCase):
         model(src)
         self.assertEqual(src, before)
 
+    def test_present_with_null_count_kept_unknown_not_zero(self):
+        src = synthetic()
+        src["cells_by_wallet"][0]["cells"][0]["complete_in_events"] = None
+        src["cells_by_wallet"][0]["cells"][0]["complete_out_events"] = None
+        d = model(src)
+        self.assertEqual(d["cohort"]["observed_cells_with_null_complete_event_counts"], 1)
+        row = next(x for x in d["wallets"][0]["cells"] if x["token"] == "龙虾")
+        self.assertIsNone(row["complete_in_events"])
+        self.assertIsNone(row["complete_out_events"])
+        self.assertEqual(row["ERC20_presence"], "PRESENT")
+        self.assertEqual(row["complete_event_count_state"],
+                         "PRESENT_WITH_NULL_COMPLETE_COUNTS_IN_V21_OVERLAY")
+
+    def test_zero_transfer_with_null_count_rejected(self):
+        src = synthetic()
+        src["cells_by_wallet"][0]["cells"][1]["complete_in_events"] = None
+        src["cells_by_wallet"][0]["cells"][1]["complete_out_events"] = None
+        with self.assertRaisesRegex(SourceValidationError, "zero-ERC20 count is null"):
+            model(src)
+
+    def test_half_null_counts_rejected(self):
+        src = synthetic()
+        src["cells_by_wallet"][0]["cells"][0]["complete_in_events"] = None
+        with self.assertRaisesRegex(SourceValidationError, "incomplete"):
+            model(src)
+
 
 if __name__ == "__main__":
     unittest.main()
