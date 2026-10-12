@@ -16,8 +16,10 @@ from pathlib import Path
 
 try:
     import monster_v4_stage44_six_blind_hourly_truth as orig44
+    import monster_v4_stage72_imported_dependency_integrity as integrity
 except ImportError:
     from scripts import monster_v4_stage44_six_blind_hourly_truth as orig44
+    from scripts import monster_v4_stage72_imported_dependency_integrity as integrity
 
 ROOT=Path(__file__).resolve().parents[2]/"monster"/"evidence"
 PRE=ROOT.parent/"MONSTER_STAGE65_PREDECLARED_NEW3_FULL900_FIRSTD0_CAP5_HOLDOUT_PROTOCOL_20261012.md"
@@ -28,6 +30,7 @@ PINS={
     LEDGER.name:"a2d360e5326f9d9befc679b752e9e6df366f4998",
     INVENTORY.name:"91b0f99ef85adb48494c5be5c7cc13a7cedcb686",
     "monster_v4_stage44_six_blind_hourly_truth.py":"8d6936a99f91ac10fc3d913f5a95eff2c460a131",
+    "monster_v4_stage72_imported_dependency_integrity.py":"8ae3066afa9b01d419b735ae4045ef2fb8d10264",
 }
 DATES=("2025-03-30","2025-06-30","2025-11-27")
 OLD=("2025-01-30","2025-06-02","2025-08-01","2025-10-02","2026-06-21","2026-07-28")
@@ -39,9 +42,10 @@ def blob(path):
     return hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
 
 def frozen():
-    for p in (PRE,LEDGER,INVENTORY,Path(orig44.__file__)):
+    for p in (PRE,LEDGER,INVENTORY,Path(orig44.__file__),Path(integrity.__file__)):
         if blob(p)!=PINS[p.name]:
             raise ValueError("STAGE65_ORIGINAL_PREMARKET_TEXT_OR_SOURCE_BLOB_CHANGED "+p.name)
+    integrity.assert_integrity_stage65(orig44)
     text=PRE.read_text(encoding="utf-8")
     if any(d not in text for d in DATES) or "D0_FIRST5_BASELINE_V1" not in text:
         raise ValueError("STAGE65_PRE_PRICE_DATE_OR_MODEL_NOT_FROZEN")
