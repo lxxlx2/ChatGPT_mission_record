@@ -1,0 +1,316 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "FUTURES_HIGH_IS_NOT_EXECUTABLE_SELL": true,
+  "GMAIL": "OFF",
+  "MONSTER_DEPLOY": "NO_GO",
+  "NOT_REALIZED_TRADE_RETURN": true,
+  "NO_ASSUMED_ORDER_AMOUNT": true,
+  "NO_NEW_RANKING_RULE_OR_THRESHOLD_FIT": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1V03": "REJECTED",
+  "WHY_STAGE66_SUMMARY_ALONE_WAS_TOO_WEAK": "underpowered should not hide observed frozen 40%-vs-80% recall failure; Stage67 carries both facts without modifying source",
+  "all_original_USDM_archive_attempts": 2700,
+  "five_true_2x_event_fates": [
+    {
+      "calendar_peak_multiple_NOT_TRADE": "2.374804936870478081997446446",
+      "date": "2025-06-30",
+      "historical_7day_GT2x_HOURLY_AND_REAL1M_SOURCE_VERIFIED": true,
+      "per_strategy": {
+        "FIRST_D0_FIRST5": {
+          "asof_candidate_rank_within_UTC06_24h": 5,
+          "asof_qualified_UTC": "2025-06-30T17:00:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": true,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-06-30T21:55:00Z",
+          "five_preceding_urgent_coins": [
+            "LEVERUSDT",
+            "SKATEUSDT",
+            "JTOUSDT",
+            "SWARMSUSDT"
+          ],
+          "lead_minutes_at_signal": 295,
+          "miss_reason": null,
+          "original_same_UTC06_24h_slot": 0,
+          "under_cap_urgent": true
+        },
+        "OLD_P1V03": {
+          "asof_candidate_rank_within_UTC06_24h": 3,
+          "asof_qualified_UTC": "2025-06-30T20:54:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": true,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-06-30T21:55:00Z",
+          "five_preceding_urgent_coins": [
+            "LEVERUSDT",
+            "SWARMSUSDT"
+          ],
+          "lead_minutes_at_signal": 61,
+          "miss_reason": null,
+          "original_same_UTC06_24h_slot": 0,
+          "under_cap_urgent": true
+        }
+      },
+      "symbol": "HFTUSDT"
+    },
+    {
+      "calendar_peak_multiple_NOT_TRADE": "2.280314291781694627309407518",
+      "date": "2025-06-30",
+      "historical_7day_GT2x_HOURLY_AND_REAL1M_SOURCE_VERIFIED": true,
+      "per_strategy": {
+        "FIRST_D0_FIRST5": {
+          "asof_candidate_rank_within_UTC06_24h": 8,
+          "asof_qualified_UTC": "2025-07-01T14:36:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": false,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-07-02T04:42:00Z",
+          "five_preceding_urgent_coins": [
+            "CFXUSDT",
+            "FISUSDT",
+            "BELUSDT",
+            "JELLYJELLYUSDT",
+            "MYXUSDT"
+          ],
+          "lead_minutes_at_signal": 846,
+          "miss_reason": "CAP_FULL",
+          "original_same_UTC06_24h_slot": 1,
+          "under_cap_urgent": false
+        },
+        "OLD_P1V03": {
+          "asof_candidate_rank_within_UTC06_24h": 3,
+          "asof_qualified_UTC": "2025-07-01T19:27:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": true,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-07-02T04:42:00Z",
+          "five_preceding_urgent_coins": [
+            "MAVUSDT",
+            "MYXUSDT"
+          ],
+          "lead_minutes_at_signal": 555,
+          "miss_reason": null,
+          "original_same_UTC06_24h_slot": 1,
+          "under_cap_urgent": true
+        }
+      },
+      "symbol": "HUSDT"
+    },
+    {
+      "calendar_peak_multiple_NOT_TRADE": "4.045216251638269986893840105",
+      "date": "2025-11-27",
+      "historical_7day_GT2x_HOURLY_AND_REAL1M_SOURCE_VERIFIED": true,
+      "per_strategy": {
+        "FIRST_D0_FIRST5": {
+          "asof_candidate_rank_within_UTC06_24h": 4,
+          "asof_qualified_UTC": "2025-11-27T08:33:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": true,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-11-30T06:30:00Z",
+          "five_preceding_urgent_coins": [
+            "MUSDT",
+            "ORCAUSDT",
+            "TRUSTUSDT"
+          ],
+          "lead_minutes_at_signal": 4197,
+          "miss_reason": null,
+          "original_same_UTC06_24h_slot": 0,
+          "under_cap_urgent": true
+        },
+        "OLD_P1V03": {
+          "asof_candidate_rank_within_UTC06_24h": 11,
+          "asof_qualified_UTC": "2025-11-28T04:33:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": false,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-11-30T06:30:00Z",
+          "five_preceding_urgent_coins": [
+            "ORCAUSDT",
+            "TRUSTUSDT",
+            "ATUSDT",
+            "ACEUSDT",
+            "SUPERUSDT"
+          ],
+          "lead_minutes_at_signal": 2997,
+          "miss_reason": "CAP_FULL",
+          "original_same_UTC06_24h_slot": 0,
+          "under_cap_urgent": false
+        }
+      },
+      "symbol": "PIPPINUSDT"
+    },
+    {
+      "calendar_peak_multiple_NOT_TRADE": "2.048974943052391799544419134",
+      "date": "2025-11-27",
+      "historical_7day_GT2x_HOURLY_AND_REAL1M_SOURCE_VERIFIED": true,
+      "per_strategy": {
+        "FIRST_D0_FIRST5": {
+          "asof_candidate_rank_within_UTC06_24h": 22,
+          "asof_qualified_UTC": "2025-11-27T19:30:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": false,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-11-27T19:45:00Z",
+          "five_preceding_urgent_coins": [
+            "MUSDT",
+            "ORCAUSDT",
+            "TRUSTUSDT",
+            "PIPPINUSDT",
+            "ATUSDT"
+          ],
+          "lead_minutes_at_signal": 15,
+          "miss_reason": "CAP_FULL",
+          "original_same_UTC06_24h_slot": 0,
+          "under_cap_urgent": false
+        },
+        "OLD_P1V03": {
+          "asof_candidate_rank_within_UTC06_24h": 10,
+          "asof_qualified_UTC": "2025-11-27T19:36:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": false,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-11-27T19:45:00Z",
+          "five_preceding_urgent_coins": [
+            "ORCAUSDT",
+            "TRUSTUSDT",
+            "ATUSDT",
+            "ACEUSDT",
+            "SUPERUSDT"
+          ],
+          "lead_minutes_at_signal": 9,
+          "miss_reason": "CAP_FULL",
+          "original_same_UTC06_24h_slot": 0,
+          "under_cap_urgent": false
+        }
+      },
+      "symbol": "TANSSIUSDT"
+    },
+    {
+      "calendar_peak_multiple_NOT_TRADE": "4.924778761061946902654867257",
+      "date": "2025-11-27",
+      "historical_7day_GT2x_HOURLY_AND_REAL1M_SOURCE_VERIFIED": true,
+      "per_strategy": {
+        "FIRST_D0_FIRST5": {
+          "asof_candidate_rank_within_UTC06_24h": 16,
+          "asof_qualified_UTC": "2025-11-27T16:00:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": false,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-11-28T19:47:00Z",
+          "five_preceding_urgent_coins": [
+            "MUSDT",
+            "ORCAUSDT",
+            "TRUSTUSDT",
+            "PIPPINUSDT",
+            "ATUSDT"
+          ],
+          "lead_minutes_at_signal": 1667,
+          "miss_reason": "CAP_FULL",
+          "original_same_UTC06_24h_slot": 0,
+          "under_cap_urgent": false
+        },
+        "OLD_P1V03": {
+          "asof_candidate_rank_within_UTC06_24h": 7,
+          "asof_qualified_UTC": "2025-11-27T16:21:00Z",
+          "candidate": true,
+          "captured_early_by_research_urgent": false,
+          "eligible_at_least5m_before_high": true,
+          "first_actual_GT2x_HIGH_UTC_EVALUATION_ONLY": "2025-11-28T19:47:00Z",
+          "five_preceding_urgent_coins": [
+            "ORCAUSDT",
+            "TRUSTUSDT",
+            "ATUSDT",
+            "ACEUSDT",
+            "SUPERUSDT"
+          ],
+          "lead_minutes_at_signal": 1646,
+          "miss_reason": "CAP_FULL",
+          "original_same_UTC06_24h_slot": 0,
+          "under_cap_urgent": false
+        }
+      },
+      "symbol": "TRADOORUSDT"
+    }
+  ],
+  "frozen_GT2x_event_minimum": 20,
+  "frozen_recall_floor_pct": 80,
+  "immutable_input_blobs": {
+    "monster_stage65_new3_full2700_hourly_official_source_SHA.jsonl": "98ea5137d97307da9fb614b7707f435997d9bee9",
+    "monster_stage66_firstD0_first5_full2700_vs_oldP1_urgent_fates.jsonl": "9b4b64f133853f0effc7e47d8b1b8c35cb6d5d81",
+    "monster_stage66_new3_full2700_global_cap5_firstD0_vs_P1v03_summary.json": "5305f0cbe482691a01575a6bb368dbe8422035e8"
+  },
+  "new_captured_set": [
+    "HFTUSDT",
+    "PIPPINUSDT"
+  ],
+  "new_first5_delivered_early_GT2x": 2,
+  "new_first5_early_2x_retention_pct_of_original_D0": "40.0",
+  "old_P1_delivered_early_GT2x": 2,
+  "original_7day_GT2x_count": 5,
+  "original_D0_at_least5m_early_GT2x": 5,
+  "original_P1_captured_set": [
+    "HFTUSDT",
+    "HUSDT"
+  ],
+  "original_Stage66_summary_verdict": "INSUFFICIENT_NEW_DATE_GT2X_POWER",
+  "real_1h_and_1m_price_source_valid": 1497,
+  "rejection_gates": {
+    "D0_FIRST5_STRATEGY_RECALL_BELOW_PREDECLARED_80_PCT": true,
+    "FIRST5_LOSES_OLD_P1_CAPTURE_OF_HUSDT": true,
+    "INDEPENDENT_NEW_DATE_GT2X_COUNT_BELOW_PREDECLARED_20": true,
+    "NO_SOURCE_VERIFIED_GT5X_OR_GT10X_TO_TEST_BIG_WINNER_RECALL": true,
+    "NO_SPOT_ALPHA_DEX_HISTORICAL_EXECUTION_PROOF": true,
+    "OTHER_AI_INDEPENDENT_REVIEW_NOT_DONE": true
+  },
+  "schema": "MONSTER_STAGE67_SOURCE_LOCKED_NEW_DATE_FULL5_WINNERS_GLOBAL_CAP_FAILURE_V1",
+  "strategy_research_burden": {
+    "FIRST_D0_FIRST5": {
+      "all_source_verified_qualifying_candidates": 196,
+      "by_date": {
+        "2025-03-30": {
+          "all_candidates": 44,
+          "allocated_under_same_global_24h_cap": 24,
+          "ordinary_non2x_urgent": 24
+        },
+        "2025-06-30": {
+          "all_candidates": 49,
+          "allocated_under_same_global_24h_cap": 32,
+          "ordinary_non2x_urgent": 31
+        },
+        "2025-11-27": {
+          "all_candidates": 103,
+          "allocated_under_same_global_24h_cap": 35,
+          "ordinary_non2x_urgent": 34
+        }
+      },
+      "non2x_urgent_descriptive_only": 89,
+      "non2x_urgent_fraction": "89/91",
+      "urgent_under_cap": 91
+    },
+    "OLD_P1V03": {
+      "all_source_verified_qualifying_candidates": 56,
+      "by_date": {
+        "2025-03-30": {
+          "all_candidates": 12,
+          "allocated_under_same_global_24h_cap": 12,
+          "ordinary_non2x_urgent": 12
+        },
+        "2025-06-30": {
+          "all_candidates": 15,
+          "allocated_under_same_global_24h_cap": 15,
+          "ordinary_non2x_urgent": 13
+        },
+        "2025-11-27": {
+          "all_candidates": 29,
+          "allocated_under_same_global_24h_cap": 23,
+          "ordinary_non2x_urgent": 23
+        }
+      },
+      "non2x_urgent_descriptive_only": 48,
+      "non2x_urgent_fraction": "48/50",
+      "urgent_under_cap": 50
+    }
+  },
+  "truthful_combined_release_verdict": "REJECTED_AND_UNDERPOWERED_NOT_A_DEPLOYABLE_STRATEGY"
+}
