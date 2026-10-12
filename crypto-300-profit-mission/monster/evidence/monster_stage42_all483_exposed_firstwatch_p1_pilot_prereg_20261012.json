@@ -1,0 +1,36 @@
+{
+  "schema": "MONSTER_STAGE42_FROZEN_ALL483_ORIGINAL_V4_FUTURES_FIRST_WATCH_P1_EXPOSED_PILOT_V1",
+  "created": "2026-10-12",
+  "first_original_source_run": 38208358036,
+  "original_aggregate": 38208549727,
+  "stage39_full5400_git_blob_sha1": "a2f66aa2331d02d14c0276b446381dc6856cba0e",
+  "stage40_candidate_git_blob_sha1": "d5b2b2522e9baa9a89c468ca4c3abc2d922cd8a7",
+  "included": "ALL Stage39 source-valid Futures 1m coin-dates with at least 1 original V4 WATCH, 483 cases, first WATCH only",
+  "other": "All source valid non-watch coin-dates (2800) remain in Stage39 denominator but have no P1 eligibility",
+  "all_gt2x_from_source_complete": 51,
+  "pre_gt2x_anyWATCH": 50,
+  "strict_pre_GT2x_v4": 48,
+  "regular_watch_non_GT2x": 433,
+  "cohorts": {
+    "2025-01-19": 36,
+    "2025-04-19": 100,
+    "2025-07-19": 75,
+    "2025-10-19": 80,
+    "2026-04-19": 113,
+    "2026-07-19": 79
+  },
+  "shards_per_date": 2,
+  "original_artifacts": 12,
+  "official_minute_source": "Binance USD-M daily 1m zip + publisher CHECKSUM SHA256, only necessary days for WATCH-61m ... WATCH+5m",
+  "core": "monster_v4_stage42_p1_priority_v01.calculate pure exact deployed research test version",
+  "future_use": "GT2x attached only in aggregate after P1 score, not part of P1 asof input",
+  "honesty": "EXPOSED_HISTORICAL_DATA_DESCRIPTIVE_REGRESSION_NOT_INDEPENDENT_VALIDATION",
+  "risk": "No actual fill, no historical L2, no authenticated contract type, no live notification",
+  "guardrails": {
+    "Gmail": "OFF",
+    "Frank": "UNCHANGED",
+    "MonsterMac": "NO_GO",
+    "auto_trade": "NO_GO",
+    "other_AI_review": "NOT_DONE"
+  }
+}
