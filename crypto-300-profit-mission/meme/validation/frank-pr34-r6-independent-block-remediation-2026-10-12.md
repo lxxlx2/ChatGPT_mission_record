@@ -46,3 +46,11 @@ The earlier CI run `38162884440` is a valid record that a workflow from a separa
 - **B2: IMPLEMENTED / TARGETED AND FULL CI PASS**. This is a new code implementation of the requested fix, so an external reviewer may still verify the exact new SHA before changing review status to MERGE_APPROVED.
 - **PR #34 remains DRAFT / UNMERGED**. The originally supplied independent review was MERGE_BLOCKED for an older SHA and cannot be retroactively called MERGE_APPROVED.
 - **No production deployment or historical Gmail resend authorized or performed.**
+
+
+## Main compatibility confirmation (isolated CI)
+
+- [GitHub Actions 38189601714](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38189601714) **SUCCESS**, using a clean temporary worktree and exact main commit `981fecc5a0d248c049dd51a728bac8624a3cff3d` with exact R6 PR34 commit `b637361154863f492b31a636de8e77381bc8156b`. The workflow checked both merge-commit parent SHAs and confirmed a clean resulting worktree.
+- Temporary merged Git tree SHA `6c8e525a7fdf2fc94de88e48f5142f62e7c4f78a`.
+- Full combined local-agent suite with real Git archive replay: **1223 passed, zero skipped**, successful Python compile and frontend JS syntax checks.
+- This is a local-only CI merge, not a push/merge to main. The main SHA is a point-in-time source; new unrelated commits arriving later require a final fast comparison before a real merge.
