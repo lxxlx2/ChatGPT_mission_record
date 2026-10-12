@@ -72,10 +72,10 @@ def test_legacy_receipt_state_change_or_deletion_hard_blocks(channel):
     changed = {k: dict(v) for k, v in original.items()}
     key = next(iter(changed[channel]))
     changed[channel][key] = "PENDING"
-    with pytest.raises(RuntimeError, match="LEGACY_DELIVERY_STATUS_CHANGED"):
+    with pytest.raises(RuntimeError, match="LEGACY_TERMINAL_REGRESSED"):
         ops.assert_legacy_receipts_unchanged(original, changed)
     del changed[channel][key]
-    with pytest.raises(RuntimeError, match="LEGACY_DELIVERY_STATUS_CHANGED"):
+    with pytest.raises(RuntimeError, match="LEGACY_DELIVERY_ROW_MISSING"):
         ops.assert_legacy_receipts_unchanged(original, changed)
 
 
@@ -127,3 +127,127 @@ def test_invalid_preflight_blob_hard_blocks_before_any_execution(tmp_path, monke
         with pytest.raises(RuntimeError, match="PREFLIGHT_EXACT_GIT_BLOB"):
             ops.run_strict_preflight(p, Path("/usr/bin/python3"))
         run.assert_not_called()
+
+
+
+def test_forward_progress_accepted_in_real_delivery_states(capsys):
+    original = {
+        "gmail_delivery": {"g1": "PENDING", "g2": "SENDING", "g3": "MANUAL_REVIEW"},
+        "local_delivery": {"l1": "RETRY_PENDING", "l2": "COMMAND_ACCEPTED"},
+    }
+    after = {
+        "gmail_delivery": {"g1": "SENT_VERIFIED", "g2": "SENT_UNVERIFIED", "g3": "MANUAL_REVIEW"},
+        "local_delivery": {"l1": "COMMAND_ACCEPTED", "l2": "COMMAND_ACCEPTED"},
+    }
+    ops.assert_legacy_receipts_unchanged(original, after)
+    assert "LEGACY_DELIVERY_PROGRESS_OBSERVED=3" in capsys.readouterr().out
+
+
+def test_rollback_gate_blocks_old_expired_pending_but_not_fresh(tmp_path):
+    from datetime import datetime, timedelta, timezone
+    path = tmp_path / "delivery.sqlite"
+    with sqlite3.connect(path) as db:
+        db.executescript("""
+          CREATE TABLE decision_events(decision_id TEXT, created_at TEXT);
+          CREATE TABLE gmail_delivery(decision_id TEXT, status TEXT);
+          CREATE TABLE local_delivery(decision_id TEXT, status TEXT);
+        """)
+        now = datetime.now(timezone.utc)
+        old = (now - timedelta(seconds=800)).isoformat()
+        recent = (now - timedelta(seconds=40)).isoformat()
+        db.executemany("INSERT INTO decision_events VALUES(?,?)",
+                       (("old", old), ("fresh", recent), ("uncertain", old),
+                        ("l_old", old), ("l_fresh", recent)))
+        db.executemany("INSERT INTO gmail_delivery VALUES(?,?)",
+                       (("old", "PENDING"), ("fresh", "PENDING"),
+                        ("uncertain", "SENDING")))
+        db.executemany("INSERT INTO local_delivery VALUES(?,?)",
+                       (("l_old", "RETRY_PENDING"), ("l_fresh", "PENDING")))
+    assert ops.legacy_stale_sendable_count(path) == 2
+    with pytest.raises(RuntimeError, match="LEGACY_ROLLBACK_STALE_GATE"):
+        ops.confirm_rollback_safe(path)
+
+
+def test_rollback_gate_fails_closed_on_missing_or_unreadable_db(tmp_path, capsys):
+    absent = tmp_path / "absent.sqlite"
+    with pytest.raises(RuntimeError, match="ROLLBACK_LEGACY_STATE_UNREADABLE"):
+        ops.confirm_rollback_safe(absent)
+    assert "OLD_LOOP_ROLLBACK=BLOCKED_UNREADABLE_DELIVERY_STATE" in capsys.readouterr().out
+
+
+def test_rollback_gate_missing_invalid_or_future_time_is_unsafe(tmp_path):
+    path = tmp_path / "delivery.sqlite"
+    with sqlite3.connect(path) as db:
+        db.executescript("""
+          CREATE TABLE decision_events(decision_id TEXT, created_at TEXT);
+          CREATE TABLE gmail_delivery(decision_id TEXT, status TEXT);
+          CREATE TABLE local_delivery(decision_id TEXT, status TEXT);
+        """)
+        db.executemany("INSERT INTO decision_events VALUES(?,?)",
+                       (("unparsed","no-date"),("future","2099-01-01T00:00:00Z"),
+                        ("naive","2026-10-12T01:02:03")))
+        db.executemany("INSERT INTO gmail_delivery VALUES(?,?)",
+                       (("unparsed","RETRYABLE_ERROR"),("future","CREDENTIAL_BLOCKED")))
+        db.execute("INSERT INTO local_delivery VALUES('naive','RETRY_PENDING')")
+    assert ops.legacy_stale_sendable_count(path) == 3
+
+
+def test_live_old_loop_blocks_new_pid_success(monkeypatch):
+    monkeypatch.setattr(ops, "WAIT_SECONDS", 2)
+    monkeypatch.setattr(ops, "launch_pid", lambda label: 2222)
+    monkeypatch.setattr(ops, "process_alive", lambda pid: pid == 1111)
+    monkeypatch.setattr(ops.time, "sleep", lambda _: None)
+    with pytest.raises(RuntimeError, match="OLD_LOOP_PROCESS_STILL_ALIVE"):
+        ops.wait_for_new_loop(1111, Path("/fake-control"), 123.0)
+
+
+def test_stale_heartbeat_never_proves_new_pid_health(monkeypatch):
+    monkeypatch.setattr(ops, "WAIT_SECONDS", 3)
+    monkeypatch.setattr(ops, "launch_pid", lambda label: 2222)
+    monkeypatch.setattr(ops, "process_alive", lambda pid: False)
+    monkeypatch.setattr(ops.time, "sleep", lambda _: None)
+    seen = []
+    def stale_hb(control, *, since=None):
+        seen.append(since)
+        raise RuntimeError("HEARTBEAT_AFTER_NEW_LOOP_START=BLOCKED")
+    monkeypatch.setattr(ops, "heartbeat", stale_hb)
+    with pytest.raises(RuntimeError, match="NEW_LOOP_ALIVE_HEARTBEAT_NOT_OBSERVED"):
+        ops.wait_for_new_loop(1111, Path("/fake-control"), 123.0)
+    assert len(seen) == 3
+    assert len(set(seen)) == 1
+
+
+def test_new_heartbeat_after_old_exited_is_required(monkeypatch):
+    monkeypatch.setattr(ops, "WAIT_SECONDS", 4)
+    monkeypatch.setattr(ops, "launch_pid", lambda label: 2222)
+    monkeypatch.setattr(ops, "process_alive", lambda pid: False)
+    monkeypatch.setattr(ops.time, "sleep", lambda _: None)
+    seen = []
+    def fresh_hb(control, *, since=None):
+        seen.append(since)
+        if len(seen) < 2:
+            raise RuntimeError("HEARTBEAT_NOT_YET_NEW")
+        return {"status": "OK"}
+    monkeypatch.setattr(ops, "heartbeat", fresh_hb)
+    pid, state = ops.wait_for_new_loop(1111, Path("/fake-control"), 123.0)
+    assert pid == 2222 and state["status"] == "OK"
+    assert len(seen) == 2
+    assert seen[0] == seen[1]
+
+
+def test_sigterm_handler_raises_catchable_keyboard_interrupt():
+    with pytest.raises(KeyboardInterrupt):
+        ops.interrupted(15, None)
+
+
+def test_signal_code_files_captured_by_expected_scope():
+    assert "mission_agent/mission_control/policy.py" in ops.SIGNAL_FILES
+    assert "mission_agent/signals/classifier.py" in ops.SIGNAL_FILES
+    assert "mission_agent/signals/engine.py" in ops.SIGNAL_FILES
+    assert "mission_agent/signals/evaluator.py" in ops.SIGNAL_FILES
+    assert ops.WAIT_SECONDS >= 600
+    source = SCRIPT.read_text(encoding="utf-8")
+    assert '"--approve-signal-code-change"' in source
+    assert "SIGNAL_CODE_DELTA_EXPLICITLY_APPROVED" in source
+    assert "except BaseException:" in source
+    assert "signal.signal(signal.SIGTERM, previous_sigterm)" in source
