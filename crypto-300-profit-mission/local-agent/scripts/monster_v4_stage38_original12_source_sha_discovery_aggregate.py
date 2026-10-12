@@ -14,7 +14,7 @@ BASE="MONSTER_STAGE38_REAL_BINANCE_UM_1M_ORIGINAL_V4_FUTURES_CAUSAL_PILOT_V1"
 def sha(data):return hashlib.sha256(data).hexdigest()
 
 def decode(manifest,folder):
-    if manifest.get("run_id")!=38207595586 or len(manifest.get("artifacts",[]))!=12:
+    if manifest.get("run_id")!=38207816084 or len(manifest.get("artifacts",[]))!=12:
         raise ValueError("STAGE38_ORIGINAL12_RUN_ID_OR_COUNT_INVALID")
     out=[];receipts=[]
     for item in manifest["artifacts"]:
