@@ -35,13 +35,14 @@
       "block": 116087810,
       "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
       "is_owner_signer": true,
-      "receipt_status": "UNVERIFIED",
+      "receipt_status": "0x1",
       "receipt_full": false,
       "value_wei": "0",
       "to": "0x1de460f363af910f51726def188f9004276bf4bc",
       "selector": "0x4d819a2a",
       "gasUsed": null,
-      "gasPrice": null
+      "gasPrice": null,
+      "receipt_recheck_note": "Independent second onchain receipt original text begins with status 0x1. Body truncated after 8098 chars; original tx signer was previously parsed as owner."
     },
     {
       "hash": "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
