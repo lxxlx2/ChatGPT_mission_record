@@ -1,0 +1,62 @@
+name: Monster Stage96 Forward H1 72h Readiness
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage96-forward-h1-72h-power-readiness.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage96_h1_forward_right_tail.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE96_H1_FUTURE_RIGHT_TAIL_POWER_AND_CAUSAL_EXTENDED_72H_PROTOCOL_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  frozen_future_maturity_and_full305_h1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Syntax contract and original D0 D1 future-causal synthetic replay
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage96_h1_forward_right_tail.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage96_h1_forward_right_tail.py --selftest
+      - name: Math regression on real 305 asof features and real post-D1 72h price, only historic exposed
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage96_h1_forward_right_tail.py --historical-regression --out /tmp/monster-stage96-h1-exposed305.json
+          python -m json.tool /tmp/monster-stage96-h1-exposed305.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage96-frozen-h1-extended-72h-exposed305-math-regression
+          path: /tmp/monster-stage96-h1-exposed305.json
+          retention-days: 60
+      - name: Persist only historical-underpowered math checks to original Monster PR30
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_stage96_exposed305_h1_tail_math_regression.json
+          cp /tmp/monster-stage96-h1-exposed305.json "$target"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$target"
+          if git diff --cached --quiet; then
+            echo "STAGE96_ALREADY_COMMITTED"
+            exit 0
+          fi
+          git commit -m "monster: persist Stage96 exposed305 H1 five-tail maths only, no future data"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE96_SOURCE_LOCKED_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE96_GIT_PUSH_FAILED"
+          exit 1
