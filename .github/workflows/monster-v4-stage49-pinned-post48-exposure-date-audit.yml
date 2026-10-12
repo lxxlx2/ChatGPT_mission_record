@@ -1,0 +1,57 @@
+name: Monster Stage49 Freeze New Research Dates After Stage48 Exposure Audit
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage49_fresh_holdout_date_exposure_audit.py'
+      - '.github/workflows/monster-v4-stage49-pinned-post48-exposure-date-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_timestamp_only_frozen_after_stage48:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify pinned immutable Stage48 analysis snapshot ancestry
+        run: |
+          git merge-base --is-ancestor 3167e93f1c693a58f22fd6142ec6fc49e056d2d4 HEAD
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage49_fresh_holdout_date_exposure_audit.py
+      - name: Source-only ISO dates audit; forbid fetching new market prices
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage49_fresh_holdout_date_exposure_audit.py \
+            --out /tmp/monster_stage49_pinned_post48_exposure_and_six_fresh_dates.json
+      - name: Preserve pinned all-document source SHA receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage49-post48-git-only-blind-date-selection-no-price-fetch
+          path: /tmp/monster_stage49_pinned_post48_exposure_and_six_fresh_dates.json
+          retention-days: 30
+      - name: Commit original source-only date audit safely to same PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage49_frozen_after_stage48_exposure_and_new_dates.json
+          cp /tmp/monster_stage49_pinned_post48_exposure_and_six_fresh_dates.json "$dest"
+          git add "$dest"
+          if git diff --cached --quiet; then
+            echo STAGE49_ALREADY_IDENTICAL
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: Stage49 persist source-pinned post48 exposure and market-blind candidate dates'
+          for i in 1 2 3; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE49_CONCURRENT_PUSH_NO_FORCE
+          exit 1
