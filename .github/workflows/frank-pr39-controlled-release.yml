@@ -1,0 +1,40 @@
+name: Frank PR39 controlled release safety
+on:
+  push:
+    branches:
+      - ops/frank-pr39-controlled-release-20261013
+  pull_request:
+    paths:
+      - crypto-300-profit-mission/local-agent/scripts/frank_pr39_controlled_release.py
+      - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_controlled_release.py
+      - .github/workflows/frank-pr39-controlled-release.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-release-and-full-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned development dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Isolated deployment faults and presentation identity tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          node --check mission_agent/mission_control/static/app.js
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_pr39_controlled_release.py tests/test_frank_pr39_predeploy_readonly.py tests/research/test_frank_dashboard_priority_layout.py tests/test_mission_control_delivery.py
+      - name: Full regression with real Git replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
