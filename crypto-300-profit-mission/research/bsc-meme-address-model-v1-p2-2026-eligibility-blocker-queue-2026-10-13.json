@@ -3,10 +3,10 @@
   "date": "2026-10-13",
   "branch": "research/bsc-address-model-v1-20261013",
   "status": "READ_ONLY_NO_GO",
-  "purpose": "Explicitly refuse to promote selected partial, non-owner, mixed-quote or open-position evidence to an economically settled zero-inventory round; focus 2026 opportunity breadth.",
+  "purpose": "Explicitly refuse to promote selected partial, non-owner, mixed-quote or open-position evidence to an economically settled zero-inventory round; focus 2026 opportunity breadth. Stage3 resolves ADFF initial IFML partial and 2ADF first Niulai round; unresolved entire CA token remainders for ADFF MARS/Niulai retain eight audited economic exclusion cases.",
   "original_frozen_23_wallets": true,
   "all_entry_wallets_from_P1_baseline": true,
-  "base_P2_ledger_rounds": 32,
+  "base_P2_ledger_rounds": 35,
   "ranked_returns_enabled": false,
   "items": [
     {
@@ -26,26 +26,6 @@
       ],
       "next": "Read existing full ERC20 cursor/owner original hash, prove signed buys and sell settlement; close token inventory without guessing from transfer count.",
       "realized_final_PnL": "UNRESOLVED"
-    },
-    {
-      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
-      "token": "我踏马来了",
-      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
-      "stage": "P2_2026_FIRST",
-      "audit_state": "SIGNER_PROVEN_TWO_TRANSACTIONS_BUT_ONLY_PARTIAL_FIRST_EXIT",
-      "frozen_2026_transfer_covered": true,
-      "existing_first_stage_signed_trades": 2,
-      "first_entry_BNB_value_wei": "60000000000000000",
-      "first_exit_fraction_of_initial_inventory_approx": "0.5",
-      "two_block_native_delta_wei": "-23030128143168814",
-      "realized_final_PnL": "UNRESOLVED",
-      "record_provenance": [
-        {
-          "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_IFML_0ABB_GIGGLE_FIRST_SIGNED_ENTRY_EXIT_2026-10-12.json",
-          "git_blob_sha": "f2e0fb672069490230599292a8feabd764db1887"
-        }
-      ],
-      "next": "Rebuild all 2026 IFML owner-signed trades and inventory round; obtain quote/gas, do not treat initial partial exit as closed loss."
     },
     {
       "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
@@ -109,23 +89,6 @@
       "next": "Link all observed blocks to ORIGINAL EOA-signed transactions with success receipts and quote-leg provenance; cannot import 0.0113 BNB as realized profit."
     },
     {
-      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
-      "token": "牛来",
-      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
-      "stage": "P2_2026_FIRST",
-      "audit_state": "FULL_ERC20_CURSORS_AND_BALANCE_RECONCILED_BUT_PNL_UNVERIFIED",
-      "frozen_2026_transfer_covered": true,
-      "raw_token_inventory_zero": true,
-      "realized_final_PnL": "UNRESOLVED",
-      "record_provenance": [
-        {
-          "path": "crypto-300-profit-mission/research/BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
-          "git_blob_sha": "c6098dd06a723cdb609abd0b832b739f99e40c67"
-        }
-      ],
-      "next": "Classify original owner trade vs transfers and quote settlement on fully reconciled Niulai exact CA; do not treat 0 token balance as cash profit."
-    },
-    {
       "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
       "token": "牛来",
       "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
@@ -159,6 +122,44 @@
         }
       ],
       "next": "Large raw BNB account change is not final PnL: two outactions plain transfers, gas/internal trace missing. Do not spend entire stage trying paid traces when 2026-wide candidate breadth incomplete."
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "stage": "P2_2026_FIRST",
+      "audit_state": "FULL_ERC20_PAGINATION_QUANTITY_RECONCILED_BUT_TOKEN_REMAINDER_OPEN",
+      "frozen_2026_transfer_covered": true,
+      "full_erc20_in_logs": 43,
+      "full_erc20_out_logs": 37,
+      "source_latest_token_raw_inventory": "2624220920286569690",
+      "realized_final_PnL": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_MARSCOIN_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+          "git_blob_sha": "1b80a805625d01b4da4f06bc95654513997ffa97"
+        }
+      ],
+      "next": "Original owner-signed transactions must be classified into complete episodes; non-zero latest inventory prohibits treating whole position as closed, past closed subrounds still possible."
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "stage": "P2_2026_FIRST",
+      "audit_state": "FULL_ERC20_PAGINATION_QUANTITY_RECONCILED_BUT_TOKEN_REMAINDER_OPEN",
+      "frozen_2026_transfer_covered": true,
+      "full_erc20_in_logs": 41,
+      "full_erc20_out_logs": 35,
+      "source_latest_token_raw_inventory": "6382240235403159006",
+      "realized_final_PnL": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+          "git_blob_sha": "1bb9f20444cfee9a54a7ed8ff689fec448c19610"
+        }
+      ],
+      "next": "Original owner-signed transactions must be classified into complete episodes; non-zero latest inventory prohibits treating whole position as closed, past closed subrounds still possible."
     }
   ],
   "source_manifest": {
@@ -193,6 +194,14 @@
     "BSC_MEME_0ABB_NIULAI_INBOUND_CURSOR_A_2026-10-12.json": {
       "path": "crypto-300-profit-mission/research/BSC_MEME_0ABB_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
       "git_blob_sha": "62b24561ad6c35ef2810adbe1f4bf87b0e0f8265"
+    },
+    "BSC_MEME_ADFF_MARSCOIN_FULL_CURSOR_BALANCE_QA_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_MARSCOIN_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "git_blob_sha": "1b80a805625d01b4da4f06bc95654513997ffa97"
+    },
+    "BSC_MEME_ADFF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "git_blob_sha": "1bb9f20444cfee9a54a7ed8ff689fec448c19610"
     }
   },
   "disqualification_rules": [
@@ -204,5 +213,9 @@
     "Early first buyer capital scale/same-block trades must be considered before any follower-alpha claim"
   ],
   "next_batch_priority": "ADFF IFML, A83B 2026 major, 877AF MARS full owner signed cycles, 2ADF/DDAC Niulai evidence. DO NOT optimize 8E6B history.",
-  "no_cost_PNL_conversion": true
+  "no_cost_PNL_conversion": true,
+  "resolved_blockers": {
+    "former_ADFF_IFML_first_partial_first_two_tx": "First partial IFML exit was subsequently completed in the full original raw inventory R1 by two more owner-signed successful exits, economic native wallet round included in Stage3 with bounded attribution.",
+    "former_2ADF_NIULAI_first_unaudited": "First raw inventory closed Niulai R1 is now confirmed original EOA signed successful 2 tx and N-1/N native scope NEGATIVE; other nine raw cycles remain unaudited; no promotion of whole 2ADF Niulai position."
+  }
 }
