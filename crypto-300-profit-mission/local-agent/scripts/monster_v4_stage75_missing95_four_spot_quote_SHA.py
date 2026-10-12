@@ -245,11 +245,11 @@ def selftest():
     def mixed(pair,day):
         called.append((pair,day))
         if pair=="1000000BOBUSDC":
-            return {clock-60000:{"close":"5","quote":"1200","base":"12","trades":42}},
-                   {"publisher_zip_sha256":"f"*64,"archive_path":"source","number_of_actual_source_minutes":1}
+            return ({clock-60000:{"close":"5","quote":"1200","base":"12","trades":42}},
+                    {"publisher_zip_sha256":"f"*64,"archive_path":"source","number_of_actual_source_minutes":1})
         if pair=="1000000BOBBTC":
-            return {clock-60000:{"close":"0.0000001","quote":"0.01","base":"1","trades":3}},
-                   {"publisher_zip_sha256":"f"*64,"archive_path":"source","number_of_actual_source_minutes":1}
+            return ({clock-60000:{"close":"0.0000001","quote":"0.01","base":"1","trades":3}},
+                    {"publisher_zip_sha256":"f"*64,"archive_path":"source","number_of_actual_source_minutes":1})
         return None,{"status":"SPOT_DAILY_ARCHIVE_404_UNVERIFIED",
                      "archive_path":"missing","publisher_zip_sha256":None}
     x=review_one(original,lookup=mixed)
