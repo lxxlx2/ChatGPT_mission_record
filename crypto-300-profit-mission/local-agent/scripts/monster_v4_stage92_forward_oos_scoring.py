@@ -82,7 +82,9 @@ def early5(t,crossing) -> bool:
 
 
 def summarize(rows:list[dict], windows:tuple[str,...], *,
-              scope_proof_complete:bool=False, forward:bool=False) -> dict:
+              scope_proof_complete:bool=False,
+              full_window_listing_coverage:bool=False,
+              forward:bool=False) -> dict:
     if not windows or len(set(windows))!=len(windows):
         raise ValueError("STAGE92_MISSING_OR_DUPLICATE_ANCHOR_DATES")
     starts={day:utc_ms(day+"T06:00:00Z") for day in windows}
@@ -134,14 +136,20 @@ def summarize(rows:list[dict], windows:tuple[str,...], *,
     peak=max(x["D1_FIRST_UPGRADES"] for x in full_daily)
     gt2_windows=len({x["date"] for x in gt2})
     source_complete=len(censored)==0
+    observed_only_threshold=bool(
+        len(gt2)>=20 and gt2_windows>=3 and
+        len(d0_strict)*100>=90*len(gt2) and len(d0_5)*100>=85*len(gt2))
+    genuine_full_market=bool(forward and scope_proof_complete
+                             and full_window_listing_coverage and source_complete)
     g1={"n_2x":len(gt2),"n_2x_windows":gt2_windows,
         "d0_strict_early":len(d0_strict),"d0_strict_early_fraction":(
           str(Decimal(len(d0_strict))/len(gt2)) if gt2 else None),
         "d0_early5":len(d0_5),"d0_early5_fraction":(
           str(Decimal(len(d0_5))/len(gt2)) if gt2 else None),
-        "research_thresholds_numerically_met":bool(
-          len(gt2)>=20 and gt2_windows>=3 and
-          len(d0_strict)*100>=90*len(gt2) and len(d0_5)*100>=85*len(gt2))}
+        "conditional_on_present_D0_population":not genuine_full_market,
+        "observed_subcohort_thresholds_descriptive_only":observed_only_threshold,
+        "research_thresholds_numerically_met":(
+            observed_only_threshold if genuine_full_market else None)}
     g2={"eligible_d0_early5_2x":len(d0_5),"d1_early5_2x":len(d1_5),
         "d1_retained_fraction":str(Decimal(len(d1_5))/len(d0_5)) if d0_5 else None,
         "research_threshold_numerically_met":bool(
@@ -163,7 +171,7 @@ def summarize(rows:list[dict], windows:tuple[str,...], *,
     historical_exposed=not forward
     verdict="NOT_DONE_FUTURE_SOURCE_NOT_PRESENT" if forward else "EXPOSED_HISTORICAL_ONLY"
     if forward:
-        if not scope_proof_complete:
+        if not scope_proof_complete or not full_window_listing_coverage:
             verdict="BLOCKED_G0_POINT_IN_TIME_POPULATION_AND_LISTINGS"
         elif not source_complete:
             verdict="BLOCKED_G0_CENSORED_HISTORICAL_SOURCE"
@@ -176,6 +184,8 @@ def summarize(rows:list[dict], windows:tuple[str,...], *,
     return {"schema":SCHEMA,"population":len(rows),"full_minute_verified":len(complete),
         "censored_source":len(censored),"historically_exposed":historical_exposed,
         "G0_point_in_time_market_listing_and_crypto_population_proven":scope_proof_complete,
+        "G0_intrawindow_listings_and_status_changes_proven":full_window_listing_coverage,
+        "G3_scope_note":"lower bound when source cohort contains WATCH-only symbols",
         "G1":g1,"G2":g2,"G3":g3,"G5_G10":major,
         "OOS_verdict":verdict,"D2_real_executable_net_pnl":"UNKNOWN",
         "other_AI_review":"NOT_DONE","deployment":"NO_GO",
@@ -187,6 +197,9 @@ def selftest():
     output=summarize(old,HISTORIC_DATES,scope_proof_complete=False,forward=False)
     assert output["population"]==519
     assert output["full_minute_verified"]==519
+    assert output["G1"]["conditional_on_present_D0_population"]
+    assert output["G1"]["research_thresholds_numerically_met"] is None
+    assert output["G1"]["observed_subcohort_thresholds_descriptive_only"]
     assert output["G2"]["eligible_d0_early5_2x"]==28
     assert output["G2"]["d1_early5_2x"]==27
     assert output["G3"]["D1_first_upgrades"]==305
