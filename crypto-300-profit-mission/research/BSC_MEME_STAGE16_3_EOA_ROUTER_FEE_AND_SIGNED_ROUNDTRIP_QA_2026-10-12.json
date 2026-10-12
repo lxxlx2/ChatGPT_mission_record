@@ -136,10 +136,11 @@
       "entry_native_wallet_spend_wei": "500059367840000000",
       "receipt": "MAIN_SWAP_RECEIPT_TRUNCATED; GAS_IMPLIED_FROM_INDEPENDENT_FEE_EVENT_CONSERVATION",
       "other_same_sale_block_tx": true,
-      "net_BNB": "0.051496246460395599",
+      "net_BNB": "0.051496246460395600",
       "conditional_return_pct": 10.29802654889418,
       "causal_status": "BLOCK_SCOPED_STRONGLY_CONSISTENT_NO_NATIVE_INTERNAL_TRACE",
-      "full_wallet_PNL": "UNVERIFIED"
+      "full_wallet_PNL": "UNVERIFIED",
+      "conditional_return_pct_display_number_unverified_precision": true
     },
     {
       "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
@@ -149,10 +150,11 @@
       "entry_native_wallet_spend_wei": "501890330000000000",
       "receipt": "ORIGINAL_SWAP_RECEIPTS_SUCCESS_AND_GAS_CONFIRMED",
       "other_same_sale_block_tx": false,
-      "net_BNB": "0.009515610472872945",
+      "net_BNB": "0.009515610472872943",
       "conditional_return_pct": 1.8959541366084787,
       "causal_status": "BLOCK_SCOPED_STRONGLY_CONSISTENT_NO_NATIVE_INTERNAL_TRACE",
-      "full_wallet_PNL": "UNVERIFIED"
+      "full_wallet_PNL": "UNVERIFIED",
+      "conditional_return_pct_display_number_unverified_precision": true
     },
     {
       "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
@@ -162,10 +164,11 @@
       "entry_native_wallet_spend_wei": "5002100970000000000",
       "receipt": "ORIGINAL_SWAP_RECEIPTS_SUCCESS_AND_GAS_CONFIRMED",
       "other_same_sale_block_tx": false,
-      "net_BNB": "-0.239887492433116023",
+      "net_BNB": "-0.239887492433116024",
       "conditional_return_pct": -4.7957347097117085,
       "causal_status": "BLOCK_SCOPED_STRONGLY_CONSISTENT_NO_NATIVE_INTERNAL_TRACE",
-      "full_wallet_PNL": "UNVERIFIED"
+      "full_wallet_PNL": "UNVERIFIED",
+      "conditional_return_pct_display_number_unverified_precision": true
     }
   ],
   "followable_trader_confidence": "UNVERIFIED",
@@ -176,5 +179,6 @@
     "DDAC MARS sell block also has another successful EOA transaction with known gas. Deduct it separately in transaction attribution; sold-token full exit applies ONLY first of two documented sell cases.",
     "Native BNB internal traces unavailable on this provider, so the native block scoped cycles (even if 100% arithmetic conserved) are NOT fully confirmed internal-call causal realized PNL.",
     "Only 3 initial matched full token-cycle samples; sample selection was for audit tractability and two positive/one negative is NOT statistical win rate or proof of profitable repeaters."
-  ]
+  ],
+  "precision_policy": "Exact 18-decimal BNB amounts use raw BigInt wei decimal formatting; conditional ROI percent retained as approximate JavaScript Number only. Replaces three Number.toFixed artifacts from the initial Stage16 commit; no change to source wei."
 }
