@@ -6,9 +6,9 @@
 
 | Phase | What / deliverable | Reuse / evidence | Gate | Initial state |
 | --- | --- | --- | --- | --- |
-| **P0 Freeze** | 还原并固定用户真实目标、样本/收益/漏买/跟单门禁；建立独立 research branch & Draft PR | README + V21 + Stage17–26 + repo rules | G0 | **IN_PROGRESS（本次实施）** |
-| **P1 Baseline** | 确定性只读 `23×19` 对照 manifest；每个地址 19 CA 状态/2026 major/未知标记；证据来源版本；单元测试、防误判 | 423KB V21 真实冻结矩阵（437 complete）和原 Stage17–26 摘要 | G1 + G2 structure | **IN_PROGRESS（本次实施）** |
-| **P2 Cross-wallet economics** | 23 地址都进入同一张经济证据表；按“原始闭合且已结算 / 账户余额范围 / 混合报价 / 未确认”区分，保留亏损、前两大机会占比；对现有文件逐项映射 | Stage16/17/18/23–26, 239E/DDAC/5C0C etc | G2 evidence tiers + G3 | TODO |
+| **P0 Freeze** | 还原并固定用户真实目标、样本/收益/漏买/跟单门禁；建立独立 research branch & Draft PR | README + V21 + Stage17–26 + repo rules | G0 | **DONE（Git + CI）** |
+| **P1 Baseline** | 确定性只读 `23×19` 对照 manifest；每个地址 19 CA 状态/2026 major/未知标记；证据来源版本；单元测试、防误判 | 423KB V21 真实冻结矩阵（437 complete）和原 Stage17–26 摘要 | G1 + G2 structure | **DONE（确定性 P1 + CI）** |
+| **P2 Cross-wallet economics** | 23 地址都进入同一张经济证据表；按“原始闭合且已结算 / 账户余额范围 / 混合报价 / 未确认”区分，保留亏损、前两大机会占比；对现有文件逐项映射 | Stage16/17/18/23–26, 239E/DDAC/5C0C etc | G2 evidence tiers + G3 | **PARTIAL: 25 closed rounds/4 wallets/19 unknown; source pinned + CI PASS** |
 | **P3 2026 priority** | 冻结 2026 年重大行情币（牛来/MARSCOIN/龙虾/我踏马来了等）及候选真实本人买卖/最新 UTC，**最近 30 天** 真实 Swap 三态 | 全覆盖转账 + 原 tx/receipt，最多补查关键原始事件 | G4 | TODO |
 | **P4 Wallet clustering / eligibility** | 逐笔原始出入账追踪与账户关联，不用共同交易对/收币地址直接推断同控；可执行机会 vs UNKNOWN miss | 23 wallet funding + first-buy venue / true first tradable moment | G3/G4 | TODO |
 | **P5 Frozen real follower replay** | 观察者首次能看到签名/交易时刻，延迟 **1/5/15 分钟**，固定小额/合理费用/池容量与真实退出；加入全部亏损/缺席机会和不可成交情形，2026 untouched 期间独立验证 | Follow V0/V1 作为警告基线，不将 24 条 what-if 算实际成交 | G5 | TODO |
@@ -51,3 +51,12 @@
 ## 本分支交付状态更新规则
 
 本计划阶段状态仅由相应 Git 提交 + 可重复校验 + 明确未完成缺口推进；不得因为打印报告就宣称通过独立 AI Review 或实际部署。外部独立 Review 应另留 SHA、审查者、问题、修复和复查链接。
+
+## 2026-10-13 P2 first batch committed (reproducible)
+
+- P0 requirement freeze and Draft PR #40: **DONE**.
+- P1 23×19 source-pinned baseline: **DONE**, 437/437, 148 ERC20 present, 289 absent, eight V21 null-merge count caveats; no fake PnL.
+- P2 importer first pass: `bsc_meme_address_model_v1_p2.py` + `test_bsc_meme_address_model_v1_p2.py` + `bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json` + `bsc-meme-address-model-v1-p2-economic-comparison-2026-10-13.json` + `bsc-meme-address-model-v1-p2-cross-wallet-economics-review-2026-10-13.md`.
+- **Actual first import: 25 signed completed episodes in only 4 of frozen 23 wallets**. 16 positive, 9 negative within selected studies; 4 WBNB/gas direct proof, 19 native wallet event-block only, 2 mixed BNB/USDT historical spot valuations. Remaining 19 **UNRESOLVED**, not zero profit, no ranking.
+- CI check `BSC address model V1 (read-only research)`: P1+P2 offline unit regressions and source/blob/manifests/committed JSON exact deterministic comparison passed on code/evidence commit `9e5c000ffa62c4ebbfb97ac5653eaaf243715c9b`, GitHub Actions run `38314235399`. Independent other-AI review remains **NOT DONE**.
+- **NEXT REQUIRED**: expand comparable P2 settled evidence to A83B, ADFF, 2ADF, 0ABB, 877AF, 239E, and DDAC (2026 major opportunities, source signer/receipt); evaluate stale/active signed trades, then P4/G4 opportunity denominator and P5 follower replay. Do not optimize returns on these already handpicked positive episodes.
