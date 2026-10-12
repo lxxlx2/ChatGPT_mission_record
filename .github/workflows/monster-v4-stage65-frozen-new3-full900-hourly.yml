@@ -1,0 +1,89 @@
+name: Monster Stage65 Frozen New Three 900 Each USD-M Publisher SHA Truth
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage65_new3_full900_official_hourly_SHA.py'
+      - '.github/workflows/monster-v4-stage65-frozen-new3-full900-hourly.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage65-new3-2700-original-source
+  cancel-in-progress: false
+jobs:
+  original3x900_monthly_publisher_SHA:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: [2025-03-30, 2025-06-30, 2025-11-27]
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify frozen date exposure and original Stage44 publisher loader
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage65_new3_full900_official_hourly_SHA.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage65_new3_full900_official_hourly_SHA.py --selftest
+      - name: Verify 150 genuine archive names per shard with monthly publisher SHA
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage65_new3_full900_official_hourly_SHA.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 4 \
+            --out "/tmp/monster_stage65_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage65-original-${{ matrix.date }}-shard${{ matrix.shard }}
+          path: /tmp/monster_stage65_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
+  verify_original18_shards_and_persist_full2700:
+    needs: original3x900_monthly_publisher_SHA
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage65-original-*
+          merge-multiple: true
+          path: /tmp/monster_stage65_18_raw
+      - name: Verify all 18 source shards and all 2700 historical source files
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage65_new3_full900_official_hourly_SHA.py \
+            --aggregate-dir /tmp/monster_stage65_18_raw \
+            --out /tmp/monster_stage65_summary
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage65-full2700-immutable-official-hourly-ground-truth
+          path: /tmp/monster_stage65_summary/*
+          retention-days: 30
+      - name: Write full2700 research evidence to original Monster Draft PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage65_summary/monster_stage65_* "$dest/"
+          git add "$dest/monster_stage65_new3_full2700_hourly_official_source_SHA.jsonl" "$dest/monster_stage65_new3_full2700_hourly_source_GT_summary.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist original3x900 official publisher SHA hourly sources for new firstD0 test'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE65_ORIGINAL_SOURCE_PERSISTENCE_FAILED
+          exit 1
