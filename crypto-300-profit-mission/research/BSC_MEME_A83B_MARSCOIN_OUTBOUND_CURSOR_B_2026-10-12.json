@@ -1,0 +1,50 @@
+{
+  "schema": "BSC_MEME_A83B_MARSCOIN_OUT_B",
+  "date": "2026-10-12",
+  "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+  "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "direction": "out",
+  "previous": "BSC_MEME_A83B_MARSCOIN_OUTBOUND_CURSOR_A_2026-10-12.json",
+  "previous_blob": "cde409097842bb54451d03184e3edcadc7eef1eb",
+  "fromBlock": "0x71c9544",
+  "complete": true,
+  "pages": 1,
+  "events": [
+    {
+      "hash": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663",
+      "uniqueId": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663:log:19",
+      "blockNum": "0x754a566",
+      "raw": "0x13e3ea8834e5897db",
+      "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+    },
+    {
+      "hash": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663",
+      "uniqueId": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663:log:21",
+      "blockNum": "0x754a566",
+      "raw": "0x2831e9f3403a85d8c5",
+      "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+    },
+    {
+      "hash": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba",
+      "uniqueId": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba:log:79",
+      "blockNum": "0x755216a",
+      "raw": "0x3298a06c3fb425d0",
+      "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+    },
+    {
+      "hash": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba",
+      "uniqueId": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba:log:81",
+      "blockNum": "0x755216a",
+      "raw": "0x663f19856b66b7160",
+      "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+    }
+  ],
+  "raw_sum": "885926397322261825488",
+  "last_block": "0x755216a",
+  "method": "bnb-mainnet exact CA positive ERC20 ascending page10, reanchor previous final block inclusive, dedupe over saved prefix",
+  "production": "NO_GO"
+}
