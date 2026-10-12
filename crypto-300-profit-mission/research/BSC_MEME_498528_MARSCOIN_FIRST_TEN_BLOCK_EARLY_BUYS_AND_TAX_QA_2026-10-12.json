@@ -1,0 +1,86 @@
+{
+  "schema": "BSC_MEME_498528_MARSCOIN_FIRST_NEAR_LAUNCH_V1",
+  "date": "2026-10-12",
+  "scope": "MARSCOIN targeted first three owner signed buys and first owner signed exit; NOT exhaustive lifetime, user is not trading.",
+  "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+  "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "source_erc20": {
+    "path": "BSC_MEME_498528_19_CA_CURSOR_V1_2026-10-12.json",
+    "blob_sha": "6d29e760df30553e6518baf2fe67790924f5eda5",
+    "directions_exhausted": false,
+    "first_56_transfer_events_each_side_only": true
+  },
+  "entry_sample": {
+    "pre_v2_first_sampled_block": 112441460,
+    "first_owner_buy_block": 112441470,
+    "source_sample_to_first_owner_buy_gap_blocks": 10,
+    "DDAC_first_owner_buy_block": 112441920,
+    "DDAC_minus_498528_entry_blocks": 450,
+    "source_sample_is_first_true_tradable_time": false
+  },
+  "first_three_owner_buys": [
+    {
+      "tx": "0x852eaadad2099c485891d5bbdf4f12c890f6e491eaee2987b6c692595ebc804b",
+      "block": 112441470,
+      "signer_verified": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method": "0x4d819a2a",
+      "native_input_wei": "200000000000000000",
+      "raw_mars_to_wallet": "2031615391715767342775541"
+    },
+    {
+      "tx": "0xe8ad5d3d04ea4a474f4566fdb75bebc0e64aa98e8be4f346f0413b9fda932069",
+      "block": 112441470,
+      "signer_verified": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method": "0x4d819a2a",
+      "native_input_wei": "200000000000000000",
+      "raw_mars_to_wallet": "1987916229879336665660648"
+    },
+    {
+      "tx": "0xa722384f8e8edf7c9c0c454a6b616885429d857d6a716c308204d5e5431bdd83",
+      "block": 112441471,
+      "signer_verified": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method": "0x4d819a2a",
+      "native_input_wei": "200000000000000000",
+      "raw_mars_to_wallet": "1915215914830339980016684"
+    }
+  ],
+  "three_buy_native_value_total_wei": "600000000000000000",
+  "first_two_buy_blocks": [
+    {
+      "block": 112441470,
+      "owner_trade_count": 2,
+      "wallet_native_block_delta_wei": "-400107298960000000"
+    },
+    {
+      "block": 112441471,
+      "owner_trade_count": 1,
+      "wallet_native_block_delta_wei": "-200051672480000000"
+    }
+  ],
+  "three_buy_blocks_native_sum_wei": "-600158971440000000",
+  "first_owner_sell": {
+    "hash": "0xf95308060af7555e8a16004815c8ef1f9bdc9920ebc873e3b01b1999d7b6388c",
+    "block": 112442022,
+    "owner_signature_verified": true,
+    "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "tx_native_value_wei": "0",
+    "mars_gross_out_raw": "943944110510169455574725",
+    "mars_to_pool_raw": "915625787194864371907484",
+    "mars_to_token_contract_raw": "28318323315305083667241",
+    "tax_model": "floor(3% of gross ERC20 outgoing) == exact tax transfer",
+    "tax_floor_exact": true,
+    "owner_native_block_delta_wei": "399318753578522047"
+  },
+  "status": "EARLY_SIGNED_ENTRY_CONFIRMED; REPEATED_BUY AND FIRST_EXIT; COMPLETE_LEDGER_AND_NET_PNL_NOT_YET_VERIFIED",
+  "caveats": [
+    "Two owner transactions share the first bought block; wallet BNB balance change is not individual transaction expenditure.",
+    "From first 56 inbound and 56 outbound Transfer sample, all later events and other 18 CA participation are not yet fully paginated.",
+    "Comparing with first sampled Four.meme block shows early proximity but cannot prove first economically tradable block nor real-time follower visibility.",
+    "Gross sold token is affected by exact 3% token tax. Original fee data is evidence specific to first seller only.",
+    "PnL cannot be inferred from 0.399 BNB first sell block without later liquidation and all overlapping quote assets and fees."
+  ],
+  "production": "NO_GO"
+}
