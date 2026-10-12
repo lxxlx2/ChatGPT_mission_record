@@ -154,7 +154,7 @@ def test_runner_preserves_config_disables_export(tmp_path):
 class FakeMac:
     def __init__(self,tmp,context):
         self.runners={k:tmp/(k+'.sh') for k in ('loop','dashboard')}
-        self.labels={k:k for k in self.runners}; self.context=context; self.calls=[]
+        self.labels={k:k for k in self.runners}; self.context=context; self.calls=[]; self.held=set()
         self.state_path=tmp/'fake-launchd.json'
         if not self.state_path.exists(): self.write({'loop':1,'dashboard':2})
     def write(self,state): self.state_path.write_text(json.dumps(state))
@@ -163,11 +163,11 @@ class FakeMac:
         result=copy.deepcopy(self.context['runtime'][key]); result['pid']=self.state()[key]
         if text==self.context['new_texts'][key]: result['source']=self.context['new_source']
         return result
-    def hold(self,key): pass
+    def hold(self,key): self.held.add(key)
     def stop(self,key):
         self.calls.append(('stop',key)); state=self.state(); state.pop(key,None); self.write(state)
     def start(self,key,plist):
-        self.calls.append(('start',key)); state=self.state(); state[key]=11 if key=='loop' else 12; self.write(state)
+        self.held.discard(key); self.calls.append(('start',key)); state=self.state(); state[key]=11 if key=='loop' else 12; self.write(state)
     def launch(self,label):
         if label not in self.state(): raise subprocess.CalledProcessError(1,['fake'])
         return self.state()[label],''
@@ -227,7 +227,10 @@ def test_failure_rolls_back_code_preserves_data(release,monkeypatch,stage):
                 hits.append(1); raise RuntimeError('INJECTED')
             original(path,data,mode)
         monkeypatch.setattr(r,'atomic',atomic)
-    elif stage=='dashboard_http': monkeypatch.setattr(r,'http_check',fail)
+    elif stage=='dashboard_http':
+        def http(context,target=False):
+            if target: raise RuntimeError('INJECTED')
+        monkeypatch.setattr(r,'http_check',http)
     elif stage=='heartbeat':
         hits=[]
         def fresh(*a,**kw):
@@ -328,3 +331,58 @@ def test_apply_needs_both_explicit_authorizations(monkeypatch,flags):
     monkeypatch.setattr(r.sys,'platform','darwin')
     with pytest.raises(RuntimeError,match='EXPLICIT_AUTHORIZATION_REQUIRED'):
         r.main(['--expected-release-sha','a'*40,'--apply']+flags)
+
+
+def test_rollback_health_failure_keeps_both_agents_disabled_and_stopped(release,monkeypatch):
+    mac,c,j=release
+    def fail(*a,**kw): raise RuntimeError('INJECTED')
+    monkeypatch.setattr(r,'http_check',fail)
+    monkeypatch.setattr(r,'wait_ready',lambda fn,sec:fn())
+    with pytest.raises(RuntimeError): r.apply(mac,c,j)
+    assert json.loads(j.read_text())['phase']=='BLOCKED_RECOVERY_REQUIRED'
+    assert mac.state()=={} and mac.held=={'loop','dashboard'}
+    r.assert_preserved(c['before'],r.ledger(c['db']),exact=True)
+
+
+def test_main_merge_keeps_other_mission_modules():
+    repo=Path(r.run(['git','rev-parse','--show-toplevel']))
+    tree=r.run(['git','-C',str(repo),'merge-tree','--write-tree',r.MAIN,r.PR39]).splitlines()[0]
+    files=r.run(['git','-C',str(repo),'diff','--name-only',r.MAIN,tree]).splitlines()
+    assert files
+    assert all(p.startswith(r.PREFIX) or p.startswith('crypto-300-profit-mission/meme/FRANK_PR39_')
+               or p=='.github/workflows/frank-presentation-semantics-tests-20261012.yml' for p in files)
+
+
+def test_mac_framework_launcher_probe(monkeypatch,tmp_path):
+    venv=tmp_path/'venv'; (venv/'bin').mkdir(parents=True)
+    launcher=venv/'bin/python'; launcher.write_text('launcher')
+    actual=tmp_path/'Python'; actual.write_text('framework')
+    monkeypatch.setattr(r,'run',lambda *a,**kw:json.dumps({'command':str(actual)+' -c probe'}))
+    assert r.interpreter_matches(venv,str(actual)+' scripts/mission_meme_v1.py loop')
+    unrelated=tmp_path/'other-python'; unrelated.write_text('other')
+    assert not r.interpreter_matches(venv,str(unrelated)+' scripts/mission_meme_v1.py loop')
+
+
+def test_scanner_module_and_legacy_shadow_path_are_valid(tmp_path,monkeypatch):
+    import hashlib,time
+    root=tmp_path/'legacy-shadow-source'; prod=tmp_path/'production'; prod.mkdir()
+    paths=['mission_agent/signals/a.py','mission_agent/frank/parser.py',
+           'mission_agent/frank/rpc.py','mission_agent/hashing.py','scripts/frank_local_signal_service.py']
+    for p in paths:
+        file=root/p; file.parent.mkdir(parents=True,exist_ok=True); file.write_text(p)
+        os.utime(file,(time.time()-10,time.time()-10))
+    policy=tmp_path/'policy.json'; policy.write_text('{}')
+    registry=tmp_path/'registry.json'; registry.write_text('{}')
+    h=hashlib.sha256()
+    for p in [paths[0],paths[4],paths[1],paths[2]]:
+        file=root/p; h.update(file.name.encode()); h.update(file.read_bytes())
+    (prod/'health.json').write_text(json.dumps({'pid':77,'loaded_source_sha256':h.hexdigest(),
+        'started_at':r.datetime.fromtimestamp(time.time()-5,r.timezone.utc).isoformat(),'policy_hash':'frozen'}))
+    cmd=f'python -m scripts.frank_local_signal_service --root {prod} --registry {registry} --policy {policy}'
+    monkeypatch.setattr(r,'run',lambda args,**kw:cmd if args[0]=='/bin/ps' else 'pcwd\nn'+str(root))
+    label=f'gui/{os.getuid()}/scanner'
+    mac=SimpleNamespace(labels={'loop':'loop','dashboard':'dashboard'},launch=lambda label:(77,'loaded'))
+    state=r.scanner_inventory(mac,label,prod/'forward.sqlite')
+    assert state['pid']==77 and state['loaded_source_sha256']==h.hexdigest()
+    (root/'mission_agent/signals/a.py').write_text('drift')
+    with pytest.raises(RuntimeError): r.scanner_inventory(mac,label,prod/'forward.sqlite')

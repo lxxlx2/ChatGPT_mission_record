@@ -332,7 +332,9 @@ class Mac:
         manifest = source_manifest(agent)
         require(all((agent / p).stat().st_mtime < started for p in manifest),
                 'SOURCE_MODIFIED_SINCE_PROCESS_START')
-        require(runner.stat().st_mtime < started, 'RUNNER_MODIFIED_SINCE_PROCESS_START')
+        delta = runner.stat().st_mtime - started
+        require(not 0 <= delta < 1, 'RUNNER_START_SECOND_AMBIGUOUS')
+        require(delta < 0, 'RUNNER_MODIFIED_SINCE_PROCESS_START')
         return {'pid': pid, 'agent': str(agent), 'source': manifest, 'plist': str(plist),
                 'plist_hash': sha(plist), 'runner_hash': sha(runner), 'started': started}
 
@@ -387,18 +389,26 @@ def scanner_inventory(mac, label, prod):
             label not in mac.labels.values(), 'SCANNER_LABEL')
     pid, loaded = mac.launch(label)
     cmd = run(['/bin/ps', '-p', str(pid), '-o', 'command='])
-    require('frank_local_signal_service.py' in cmd and 'shadow' not in cmd, 'SCANNER_COMMAND')
+    tokens = shlex.split(cmd)
+    module = any(tokens[i:i+2] == ['-m', 'scripts.frank_local_signal_service']
+                 for i in range(len(tokens)))
+    script = any(Path(t).name == 'frank_local_signal_service.py' for t in tokens)
+    require(module or script, 'SCANNER_COMMAND')
     cwd = run(['/usr/sbin/lsof', '-a', '-p', str(pid), '-d', 'cwd', '-Fn'])
     roots = [Path(x[1:]) for x in cwd.splitlines() if x.startswith('n')]
     require(len(roots) == 1, 'SCANNER_CWD')
-    source = source_manifest(roots[0])
     entry = roots[0] / 'scripts/frank_local_signal_service.py'
     files = sorted((roots[0] / 'mission_agent/signals').glob('*.py')) + [entry,
         roots[0] / 'mission_agent/frank/parser.py', roots[0] / 'mission_agent/frank/rpc.py']
     digest = hashlib.sha256()
     for file in files:
         digest.update(file.name.encode()); digest.update(file.read_bytes())
+    relevant = sorted((roots[0] / 'mission_agent/signals').glob('*.py')) + sorted(
+        (roots[0] / 'mission_agent/frank').glob('*.py')) + [entry, roots[0] / 'mission_agent/hashing.py']
+    source = {p.relative_to(roots[0]).as_posix(): sha(p) for p in relevant}
     body = json.loads((Path(prod).parent / 'health.json').read_text())
+    start = datetime.fromisoformat(body['started_at'].replace('Z', '+00:00')).timestamp()
+    require(all(p.stat().st_mtime < start for p in relevant), 'SCANNER_SOURCE_AFTER_START')
     require(body.get('pid') == pid and body.get('loaded_source_sha256') == digest.hexdigest(),
             'SCANNER_ACTUAL_LOADED_VERSION')
     tokens = shlex.split(cmd)
@@ -422,8 +432,8 @@ def scanner_check(mac, context):
     require(pid == context['scanner']['pid'], 'SCANNER_PID_CHANGED')
     require(sha(Path(context['scanner']['root']) / 'scripts/frank_local_signal_service.py') ==
             context['scanner']['entry_hash'], 'SCANNER_ENTRY_CHANGED')
-    require(source_manifest(Path(context['scanner']['root'])) == context['scanner']['source'],
-            'SCANNER_SOURCE_CHANGED')
+    require(all(sha(Path(context['scanner']['root']) / p) == h
+                for p,h in context['scanner']['source'].items()), 'SCANNER_SOURCE_CHANGED')
     with closing(ro(context['prod_db'])) as db:
         rows = [dict(r) for r in db.execute('SELECT * FROM cursors')]
     prior = {r['wallet']: r for r in context['cursors']}
