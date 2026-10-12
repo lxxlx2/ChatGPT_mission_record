@@ -1,6 +1,6 @@
 # Surf / SurfBoards Genesis NFT 链上候选、发行进度与 Kaito 估值对比（2026-10-12）
 
-更新日期：2026-10-12。独立核查，优先官方与链上；未将历史聊天结论当作证据。区分官方确认、链上事实、推断及情景估值。
+更新日期：2026-10-13（第 7 节更新前述供给与链上结论）。独立核查，优先官方与链上；未将历史聊天结论当作证据。区分官方确认、链上事实、推断及情景估值。
 
 ## 1. SurfBoards 官方 NFT 站最新状态
 
@@ -10,21 +10,21 @@ Surf 官方主站：https://asksurf.ai/
 - 官方 NFT 站标题 `The Genesis of Surf`，称 `SurfBoards` 是 Surf 生态的 original assets。
 - 页面显示 `Trading and member claims open in ...` 的动态倒计时；2026-10-12 查看到约 2 天 13 小时。此数字会变化，不视为保证的铸造/认领时刻。
 - 页上写 `Earning` 并展示 SPY、NVDA、SPCX、META、GOOGL；这是项目展示的方向，尚未找到每枚 NFT 可分到多少股票代币、分配周期、来源、领取条件或智能合约保证。不得解读成已经实现收益、持有即自动分红。
-- 2026-10-12 尚未从官方公开 NFT 页面查得正式 collection contract、总供应量、真实二级成交价、最终 mint 数量和分配明细。
+- **2026-10-13 官方首页已明确给出计划总量 6,666 SurfBoards**；尚未找到正式 CA 白名单、实际可卖地板与每枚股票代币的分配明细。
 - Surf 官网将其链接为 `Surf’s Genesis NFT`。
 
 证据：https://nft.asksurf.ai/ ； https://asksurf.ai/
 
 ## 2. NFT 在什么链：核查层级
 
-**Robinhood Chain（主网 chain ID 4663）是最有证据的候选链，但没有找到能把合约唯一绑定到 Surf 官方发行的认证映射，严禁宣称已确定官方 NFT 合约。**
+**2026-10-13 已在 Robinhood Chain 4663 实际核查 NFT/ERC20 相关合约、Uniswap v4 交互及同一 NFT ID 的销毁再铸造；链上 tokenURI 指向 Surf 官方 metadata 子域。官方最终 CA 白名单仍未核实，第 7 节给出证据。**
 
 链上使用 Blockscout 查询 4663 链上的 `SurfBoard` 名称（2026-10-12）：
 
 | 地址 | 链上名称 / 标准 | 首次部署时间 UTC | 持有地址数（查询时） | 核实结论 |
 |---|---|---|---:|---|
 | `0x6A044021bb41f4B06193cA9B42946c20918aA4f3` | SurfBoard / SURFBOARD / ERC-721 | 2026-09-30 12:46:45 | 200 | 合约真实存在、未验证源码；**未确认由官方发行** |
-| `0xf5a24bd9648f180E306B57bb5B2349bb7908C28` | SurfBoard / SURFBOARD / ERC-721 | 2026-09-29 07:31:15 | 21 | 合约真实存在、未验证源码；**未确认由官方发行** |
+| `0xf5a24bd9648f180E306B57bb5B2349bb7908C28` | **无效地址** | 未验证 | 未验证 | **此字符串仅 41 个字符（含 0x），无法构成合法 EVM 地址，旧报告错误，作废** |
 
 两份合约的创建者不同，且搜索结果同时含同名 ERC-20；**仅名称相似不能排除冒牌合约或独立 collection**。任何 mint/买卖/授权都必须待 Surf 官方明确给出 CA 后验证。
 - 第一份部署者：`0x110b550faDBe13ceC30f75199e1aad7c3f056A2c`，implementation `0x3cB802dCeDd7A9d016c8b0CeB2a2FFa8a3a93171`，未验证。
@@ -63,21 +63,9 @@ Surf 官方主站：https://asksurf.ai/
 - https://www.theblock.co/news/ecosystems/2025-02-20-kaito-token-airdrop-claims-base-342379
 - https://www.coingecko.com/en/nft/kaito-genesis
 
-### Kaito 2025-02 高点对应的 NFT 集合估值压力测试
+### 2026-10-13 供应量纠偏与同阶段峰值敏感性
 
-参考 **7.65 ETH × 1,500 = 11,475 ETH** 的 Kaito 峰值名义地板总额。换美元时**假设当时每 ETH = $2,700**（仅供同口径情景计算，未确认这一假定汇率就是 7.65 ETH 高点当天的同步成交汇率），得到 **约 $30,982,500** 的 Kaito 高点名义地板总价值。该口径是“全部供应乘最便宜挂牌价”，不代表可同时出售所得资金。
-
-假设未来 SurfBoards 整体系列的**名义地板总额**仅达到该 Kaito 同阶段高点的 **10% / 25% / 50% / 100%**，按不同可能供给量折算。SurfBoards **正式总供应量仍未核实**，下表仅为假设：
-
-| SurfBoards 假设总量 | Kaito 高点总额的 10% | 25% | 50% | 100% 极强行情 |
-|---:|---:|---:|---:|---:|
-| 1,000 | $3,098 | $7,746 | $15,491 | $30,983 |
-| 1,500 | $2,065 | $5,164 | $10,328 | $20,655 |
-| 3,000 | $1,033 | $2,582 | $5,164 | $10,328 |
-| 5,000 | $620 | $1,549 | $3,098 | $6,197 |
-| 10,000 | $310 | $775 | $1,549 | $3,098 |
-
-从用户的 **$228 历史支付成本**计算：假设 **3,000 枚总量**，上述 10% / 25% / 50% / 100% 情景对应约 **4.5× / 11.3× / 22.6× / 45.3× 的毛价值/成本倍数**，**未扣 gas、交易费、版税、卖出滑点、税，也未考虑#691实际可交易前置条件**。这是反事实情景比率，不能解释成发生概率。若 Surf 根本无二级流动性或不能交付，实际可执行价值可远低于所有列值。
+Surf 官网确认系列总量为 **6,666**，此前 1,000/1,500/3,000/5,000/10,000 的假设供应行已过时。按 Kaito 历史地板峰值 7.65 ETH × 1,500 = 11,475 ETH，用 **情景假设 ETH=$2,700** 换算名义集合总价值约 $30,982,500。假设 Surf 达到这一集合峰值的 10%/25%/50%/100%，则按 6,666 平均分摊的单枚名义价格为 **$464.78 / $1,161.96 / $2,323.92 / $4,647.84**；相对 $228 成本约 **2.04× / 5.10× / 10.19× / 20.39×**。这些都是极强行情的条件压力测试，不是现货价格、发生概率或实际可成交收益。链上存在不同等级随机票据，**平均值无法替代 #691 实际等级估值**。
 
 **研究分层**：
 1. **筹备/初上市阶段：** 优先关注已确认交付、总量、官方成交和 bid 深度，市场价格尚未形成时只列成本和候选定价；Kaito 2024-12 的 0.1 ETH Mint 是历史起点。
@@ -116,3 +104,23 @@ Surf 官方主站：https://asksurf.ai/
 - 相关历史状态纠正：`research/nfts/jack-credits/jack-credits-nft-position.md` 是 2026-09-27 快照，其中写的“2 active”已经被 2026-10-10 直接链上核查的 **Credits 0 枚持有**覆盖；UNICRED #230 也已在 2026-10-10 标记 `CLOSED / NOT_OWNED`。此处不修改历史成交和当时报告。
 
 后续研究核验顺序：**官方 SurfBoards chainId 和 contract → #691 交付凭据及链上 token ID → 总供应和领取资格 → 股票代币的每枚金额、法律属性、领取与锁定条款 → 真实订单簿和成交 → 按用户的 USD 228 成本计算可执行净回款**。不据此开启 NFT 监控任务。
+
+
+## 7. SurfBoards 官方 6,666 总量和 Robinhood Chain 链上证据（2026-10-13）
+
+证据层级：**官方网页 / 直接链上 / 推断与未确认**。本节更新旧结论，不新增任何监控。
+
+**官方：** Surf [主站](https://asksurf.ai/) 出现原文 `6,666 Surfboards. The original assets of the Surf ecosystem.`，并链接 [官方 NFT 站](https://nft.asksurf.ai/)，展示 SPY、NVDA、SPCX、META、GOOGL 股票代币相关权益。官网显示 `Trading and member claims open in ...` 倒计时；具体 UTC 开放时间、每枚权益、股票代币支付频率、资金来源、兑付合同及 KYC 限制**未核实**。Surf 2025-12 官方声明 $15M 融资，2026-05 声明 Research 2.0 服务 500K+ 用户；这些不构成 NFT 已有现金流。官网另有订阅 Mystery Box 促销，不能与 NFT 分配条款直接混同。
+
+**Robinhood 4663 直接链上：**
+- NFT [ERC-721 `0x6A044021bb41f4B06193cA9B42946c20918aA4f3`](https://robinhoodchain.blockscout.com/address/0x6A044021bb41f4B06193cA9B42946c20918aA4f3)：2026-09-30 12:46:45Z 首次部署，创建者 `0x110b550faDBe13ceC30f75199e1aad7c3f056A2c`；索引显示 **200 个持有地址、940 条 NFT transfer（包括铸造和销毁，不是 940 笔销售）**。合约源代码未验证。
+- 配对 [ERC-20 `0xA1687eF94012FF5B37cd7dCffE512DFA8e16b5c5`](https://robinhoodchain.blockscout.com/address/0xA1687eF94012FF5B37cd7dCffE512DFA8e16b5c5)：同一部署者、2026-09-30 12:46:36Z 创建，18 位小数；直接读取索引供应 **6,653 SURFBOARD**，**46 holders**，**不能把 ERC20 supply 当成已铸造的 NFT 数量**。
+- ERC20 头两大持仓：第一大 `0xB13FdD73492e49B6A9fC8839C83B6E51F97b1315` **4,873 枚**，为同一创建者部署的合约；第二大 `0xe31Ef2594ffcB184530f4f58791e04222c0B2e5B` **1,477 枚**，合计 **95.45% 的 ERC20 供应**。未验证用途及控制关系，不能叫作已确定团队筹码或实际抛压。
+- NFT `tokenURI(738)` 真实返回 `https://metadata.asksurf.ai/nfts/stock-nft-shadow/20260930/opened/738.json`；Blockscout 读取 #738 metadata 为 `SurfBoard · Pro ticket`，字段 `State=Closed / Ticket=Pro`；文字描述为借助 **drand beacon** 从 normal bag 随机抽取等级。另有 #482 元数据为 `Max ticket`。官方子域增强对应关系，但 `stock-nft-shadow` 的 shadow 命名、metadata 状态差异及未验证源码意味着仍需核对正式发行部署。
+- **#738 同一 Token ID 的完整四步历史：** 2026-09-30 13:02Z [Mint](https://robinhoodchain.blockscout.com/tx/0x80d9a695363294a465eda2f68bc3ab7b76c171938baee81d3516fe74fd442a83) → 2026-09-30 20:06Z [Burn](https://robinhoodchain.blockscout.com/tx/0xf2fa8d2923e56c2be02684e291ec110bcace09231dd759eae0e52b0ddb34d102) → 2026-10-08 07:04Z [同 ID 再 Mint](https://robinhoodchain.blockscout.com/tx/0x80c2864f2103a63465a06b3517a7d229757d1699601a187e3bea18b98cc3729f) → 2026-10-08 07:15Z [转移](https://robinhoodchain.blockscout.com/tx/0x1605f4b2a4c61fdcb1e052efcfd9f322935b40be77fccb9b3ae4d6cb627ddebd)。**截图的重铸说法获得直接转移事件验证**。
+- **Uniswap v4：** Uniswap [官方部署表](https://developers.uniswap.org/deployments) 确认 Robinhood 4663 PoolManager `0x8366a39CC670B4001A1121B8F6A443A643e40951`。[2026-10-09 23:49Z 交易](https://robinhoodchain.blockscout.com/tx/0x176af9eb1d023d58cd6c5eea27db5942ce79f1bcd0d00418284b5b9f1e8b4bd9) 同笔出现 NFT #482 **burn**、**0.451 SURFBOARD ERC20 转入 v4 PoolManager**、WETH 转移。另有 `buyExactEth` Mint 交易。证明兑换/燃烧的真实交互，但**未核实特定池 ID、TVL、可执行卖出深度和 NFT 地板价**。
+- **原第二候选合约字符串有误：** `0xf5a24bd9648f180E306B57bb5B2349bb7908C28` 含前缀仅 41 字符，Blockscout 合约查询因格式错误而失败，旧报告“第二链上 ERC721”结论作废。
+
+**用户 #691 交付：** 原始 Git 购买证据为 2025-08-31 经 DaimoPay 支出 **$228**，用户明确确认对应 SurfBoards 发行权益。但在上述 ERC-721 执行 `ownerOf(691)` 返回 **`reverted: unminted`**；#691 的浏览器实例虽有预生成的 `Pro ticket` 元数据，owner 为零地址，**未 Mint 的元数据不是已拥有 Pro 级别的证据**。主 EVM 钱包在 Robinhood 4663 的 NFT 持仓读取为空。**已付的待交付权益照旧保留 $228 成本，不列为已持有可交易 NFT，也不记作零价值/损失**。
+
+**研究判断：** `ACTIVE` 仅代表用户已付款权益；NFT 可执行交易仍 `WATCH`。确认 6,666、链上 burn/remint、官方子域及 v4 交互使项目真实性判断上升；正式 CA、#691 交付、drand 奖池与等级概率、股票代币真实收益、链上流动性、安全权限和官方索赔条款仍 `UNRESOLVED`。禁止创建监控、进行任何签名或交易。
