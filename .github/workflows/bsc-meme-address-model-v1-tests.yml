@@ -76,6 +76,14 @@ jobs:
               )
               assert item["realized_final_PnL"] == "UNRESOLVED"
           print("PASS eight high-priority partial/open/signature-unknown P2 exclusions source-pinned")
+          stage3 = json.loads((p / "bsc-meme-address-model-v1-p2-stage3-adff-2adf-owner-closed-rounds-2026-10-13.json").read_text(encoding="utf-8"))
+          assert len(stage3["sample_rounds"]) == 3
+          assert stage3["summary"]["source_inventory_zero_cycles"] == 28
+          assert stage3["summary"]["source_quantity_segments_not_economic"] == 25
+          for src in stage3["source_git_refs"]:
+              actual = subprocess.check_output(["git", "hash-object", src["path"]], text=True).strip()
+              assert actual == src["blob_sha"], f"Stage3 raw source drift: {src['path']}"
+          print("PASS Stage3 exactly 3 signer-verified rounds, 25 other raw-only segments disallowed")
           print("PASS P2 source Git blobs pinned to exact evidence originals")
           PY
       - name: Recompute P2 23-wallet economic overlay
@@ -115,11 +123,11 @@ jobs:
           assert p2_actual == p2_expected, "P2 source-vs-Git artifact mismatch: STOP"
           s = p2_actual["summary"]
           assert (s["wallets_included"], s["signed_closed_episodes_imported"],
-                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 32, 5, 18)
-          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (21, 11)
+                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 35, 6, 17)
+          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (23, 12)
           assert all(w["realized_profit_rank"] is None for w in p2_actual["wallets"])
           assert all(w["recent_30d_signed_meme_swap"] == "UNRESOLVED" for w in p2_actual["wallets"])
           assert p2_actual["production"] == "NO_GO"
-          print("PASS P2 23 wallets / 32 curated rounds / 21 pos, 11 neg / 18 unknown; no fake rank")
+          print("PASS P2 23 wallets / 35 curated rounds / 23 pos, 12 neg / 17 unknown; no fake rank")
           print("PASS 437/437, 148/289, 8 source exceptions, no fake PnL/ranking/recent signers")
           PY
