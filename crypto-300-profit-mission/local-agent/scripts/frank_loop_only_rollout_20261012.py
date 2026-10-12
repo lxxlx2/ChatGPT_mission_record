@@ -43,11 +43,7 @@ GMAIL_STATES_ACTIVE = {"PENDING", "RETRYABLE_ERROR", "CREDENTIAL_BLOCKED"}
 LOCAL_STATES_ACTIVE = {"PENDING", "RETRY_PENDING"}
 GMAIL_TERMINAL = {"SENT_VERIFIED", "MANUAL_REVIEW", "DRY_RUN_AUDIT", "PERMANENT_ERROR"}
 LOCAL_TERMINAL = {"COMMAND_ACCEPTED", "MANUAL_REVIEW", "DRY_RUN_AUDIT"}
-SIGNAL_FILES = ("mission_agent/mission_control/policy.py",
-                "mission_agent/mission_control/service.py",
-                "mission_agent/signals/classifier.py",
-                "mission_agent/signals/engine.py",
-                "mission_agent/signals/evaluator.py")
+DECISION_SCOPE_ROOT = "mission_agent"
 
 
 def ensure(name, condition):
@@ -72,6 +68,18 @@ def source_var(text, key):
     if len(values) != 1:
         raise RuntimeError("RUNNER_FIELD_MISSING_OR_DUPLICATE_" + key)
     return Path(values[0]).expanduser().resolve()
+
+
+def decision_scope_diff(old_agent, new_agent):
+    """Fail closed: every Python module of the package is decision-relevant until it is
+    reviewed. Ledger/store, delivery, frank, wallet and outcome code all feed decisions,
+    so any byte difference must be explicitly approved and is listed by path."""
+    def digests(base):
+        root = base / DECISION_SCOPE_ROOT
+        ensure("DECISION_SCOPE_PRESENT", root.is_dir())
+        return {p.relative_to(base).as_posix(): file_sha256(p) for p in root.rglob("*.py")}
+    old, new = digests(old_agent), digests(new_agent)
+    return sorted(k for k in set(old) | set(new) if old.get(k) != new.get(k))
 
 
 def require_git_release(path):
@@ -294,8 +302,10 @@ def wait_for_new_loop(old_pid, control, started_at):
                     except (OSError, RuntimeError, ValueError, KeyError):
                         pass
                 else:
-                    print("OLD_LOOP_PROCESS_STILL_ALIVE=BLOCKED", flush=True)
-                    raise RuntimeError("OLD_LOOP_PROCESS_STILL_ALIVE")
+                    # A slow exit after kickstart -k is normal: keep polling until the
+                    # wait window ends. The post-loop check still fails closed if the
+                    # old PID never disappears; no rollback is attempted in that case.
+                    pass
         except (OSError, ValueError, KeyError):
             pass
         except RuntimeError as exc:
@@ -330,14 +340,7 @@ def prepare(args):
     legacy_delivery_verified = legacy_delivery_code_verified(old_agent, new_agent)
     print("OLD_DELIVERY_CODE_EQUIVALENT=" +
           ("YES" if legacy_delivery_verified else "NO"), flush=True)
-    changed_signal_files = []
-    for rel in SIGNAL_FILES:
-        old_file = old_agent / rel
-        new_file = new_agent / rel
-        ensure("SIGNAL_CODE_FILES_PRESENT",
-               old_file.is_file() and new_file.is_file())
-        if file_sha256(old_file) != file_sha256(new_file):
-            changed_signal_files.append(rel)
+    changed_signal_files = decision_scope_diff(old_agent, new_agent)
     print("OLD_LOOP_SOURCE_SHA=" + old_sha, flush=True)
     print("SIGNAL_CODE_CHANGED_COUNT=" + str(len(changed_signal_files)), flush=True)
     needed = ("PROD", "VENV", "CONTROL_POINTER", "POLICY", "APPROVED_HASH_FILE", "RPC_FILE")
