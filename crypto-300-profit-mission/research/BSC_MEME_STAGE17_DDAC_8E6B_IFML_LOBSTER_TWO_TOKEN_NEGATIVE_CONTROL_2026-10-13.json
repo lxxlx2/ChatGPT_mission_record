@@ -1,0 +1,232 @@
+{
+  "schema": "BSC_MEME_STAGE17_TWO_WALLET_TWO_TOKEN_CLOSED_CYCLE_NEGATIVE_CONTROL_V1",
+  "date": "2026-10-13",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "sample_policy": "Pre-existing frozen exact two token CAs and two separately identified EOA wallets; closed zero-to-zero ERC20 inventory episodes from prior source with individually native block cashflows. This is a selected evidence cohort, NOT all wallets or all eligible opportunities.",
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_IFML_LOBSTER_CLOSED_EPISODES_NATIVE_CASHFLOW_2026-10-11.json",
+      "sha": "9fde267e8f85dbe44705789f19f4884f25aafc51"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_IFML_LOBSTER_25_TX_TWO_VENUE_RECONCILIATION_QA_2026-10-11.json",
+      "sha": "1cd0f2ba706f36d3456d15a8d52918ce8277db2b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE17_IFML_DDAC_8E6B_SAME_TOKEN_TIME_COHORT_CASHFLOW_2026-10-13.json",
+      "sha": "4cba5016ea4e8539fa454ba152ead1c3a8488cb3"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE17_DDAC_LOBSTER_V2_SELL_ADDITIONAL_APPROVAL_GAS_2026-10-13.json",
+      "sha": "4c773bcd169bd199eb5a6b31a3b15ed4e16a6137"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json",
+      "sha": "23149a3d5973c2ae29fafd7ec09fc2ffa820fce9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_SIX_MAJOR_EVENT_DISJOINT_NATIVE_SCOPE_AND_NEGATIVE_CONTROL_2026-10-12.json",
+      "sha": "91daf8cd87297ac4f2d71be83e3ee03f761b6159"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json",
+      "sha": "3761b9140d0c64b1ffd8d8d243d63a2a1a4fc690"
+    }
+  ],
+  "source_frozen_CA_positive_ERC20_complete": "437/437 wallet×CA; 148/148 observed source inventory conserved in V21, not all economic PnL",
+  "groups": [
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "count": 5,
+      "positive": 4,
+      "negative": 1,
+      "raw_net_native_wei": "2329674116520169814",
+      "status": "FIVE_CLOSED_INVENTORY_CYCLES_25_TOTAL_DDAC_SELF_SIGNED_SOURCE",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444"
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "龙虾",
+      "count": 2,
+      "positive": 0,
+      "negative": 2,
+      "raw_net_native_wei": "-183543131928304728",
+      "status": "TWO_CLOSED_INVENTORY_CYCLES_V2_FEE_QUOTE_CORROBORATED_FIRST_CURVE_QUOTE_PARTLY_OPEN",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "我踏马来了",
+      "count": 2,
+      "positive": 0,
+      "negative": 2,
+      "raw_net_native_wei": "-599023816844905516",
+      "status": "TWO_CLOSED_INVENTORY_CYCLES_ALL_SIX_OWNER_RECEIPT_SUCCESS_QUOTE_AND_FEES_CROSSCHECKED",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "龙虾",
+      "count": null,
+      "positive": null,
+      "negative": null,
+      "raw_net_native_wei": "4794001707717376678",
+      "status": "UNSEGMENTED_13_ORIGINAL_TX_NATIVE_SCOPE_11_SUCCESS_AND_2_STATUS_UNKNOWN_NO_EPISODE_WIN_CLASSIFICATION",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444"
+    }
+  ],
+  "closed_episode_controls": {
+    "enumerated_full_zero_to_zero_inventory_episodes": 9,
+    "positive_native_scoped_episodes": 4,
+    "negative_native_scoped_episodes": 5,
+    "zero_native_scoped_episodes": 0,
+    "denominator_scope": "ONLY_THE_NINE_SELECTED_SOURCE_VERIFIED_CLOSED_INVENTORY_EPISODES; not a wallet win rate, opportunity detection denominator, signal eligibility or follower returns",
+    "rows": [
+      {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "token": "我踏马来了",
+        "ep": 1,
+        "first": 73336279,
+        "last": 73473922,
+        "wei": "859560536650076026",
+        "buyCount": 2,
+        "sellCount": 5,
+        "quantity_closed": true
+      },
+      {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "token": "我踏马来了",
+        "ep": 2,
+        "first": 73658894,
+        "last": 73689258,
+        "wei": "1866258476542856262",
+        "buyCount": 3,
+        "sellCount": 4,
+        "quantity_closed": true
+      },
+      {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "token": "我踏马来了",
+        "ep": 3,
+        "first": 74360480,
+        "last": 74377785,
+        "wei": "20075173076535722",
+        "buyCount": 1,
+        "sellCount": 1,
+        "quantity_closed": true
+      },
+      {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "token": "我踏马来了",
+        "ep": 4,
+        "first": 74460512,
+        "last": 74468389,
+        "wei": "30104517152956606",
+        "buyCount": 1,
+        "sellCount": 1,
+        "quantity_closed": true
+      },
+      {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "token": "我踏马来了",
+        "ep": 5,
+        "first": 74473636,
+        "last": 74473641,
+        "wei": "-446324586902254802",
+        "buyCount": 2,
+        "sellCount": 1,
+        "quantity_closed": true
+      },
+      {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "token": "龙虾",
+        "ep": 1,
+        "first": 83635776,
+        "last": 83635800,
+        "wei": "-92169615514614272",
+        "buyCount": 1,
+        "sellCount": 1,
+        "quantity_closed": true
+      },
+      {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "token": "龙虾",
+        "ep": 2,
+        "first": 83792918,
+        "last": 84007473,
+        "wei": "-91373516413690456",
+        "buyCount": 1,
+        "sellCount": 1,
+        "quantity_closed": true
+      },
+      {
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "我踏马来了",
+        "ep": 1,
+        "first": 74473655,
+        "last": 74473726,
+        "wei": "-231346571585353217",
+        "buyCount": 1,
+        "sellCount": 1,
+        "quantity_closed": true
+      },
+      {
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "我踏马来了",
+        "ep": 2,
+        "first": 76554500,
+        "last": 76582674,
+        "wei": "-367677245259552299",
+        "buyCount": 2,
+        "sellCount": 2,
+        "quantity_closed": true
+      }
+    ]
+  },
+  "same_token_crossover": {
+    "ifml": {
+      "DDAC_prior_4_cycles_positive_native_scope": true,
+      "DDAC_fifth_losing_cycle_wei": "-446324586902254802",
+      "DDAC_fifth_exit_UTC": "2026-01-08T07:32:10Z",
+      "eight_first_losing_cycle_wei": "-231346571585353217",
+      "eight_first_entry_UTC": "2026-01-08T07:32:21Z",
+      "post_DDAC_losing_exit_to_eight_entry_seconds": 11,
+      "copy_follower_evidence": "NONE"
+    },
+    "lobster": {
+      "DDAC_first_cycle_entry_UTC": "2026-02-27T08:48:02Z",
+      "DDAC_first_cycle_exit_UTC": "2026-02-27T08:48:12Z",
+      "eight_first_owner_entry_UTC": "2026-02-27T08:57:52Z",
+      "time_between_DDAC_first_exit_and_eight_first_entry_seconds": 580,
+      "DDAC_two_cycle_native_net_wei": "-183543131928304728",
+      "eight_unsegmented_13_event_native_net_wei": "4794001707717376678",
+      "eight_owner_signed_tx": 13,
+      "eight_receipt_success_explicit": 11,
+      "eight_receipt_status_header_unknown": 2,
+      "interpretation": "Opposite signs in selected event blocks, not proof of opposing causal realized trade PnL or profitable following."
+    }
+  },
+  "fee_audit_correction": {
+    "DDAC_lobster_V2_buy_original_input_wei": "800000000000000000",
+    "DDAC_lobster_V2_sell_gross_WBNB_withdraw_wei": "715829584066979337",
+    "DDAC_lobster_V2_sell_manager_fee_like_wei": "7158295840669793",
+    "DDAC_lobster_V2_extra_approval_gas_units": 46327,
+    "DDAC_lobster_V2_implied_main_sell_gas_units": 162130,
+    "previous_combined_gas_units_mislabelled_as_main_sale": 208457,
+    "scoped_second_cycle_native_loss_wei": "-91373516413690456"
+  },
+  "economic_labels": {
+    "DDAC": "MULTI_OPPORTUNITY_OWNER_SIGNED_CANDIDATE_NOT_VERIFIED_REPEAT_WINNER",
+    "eight": "MULTI_OPPORTUNITY_OWNER_SIGNED_CANDIDATE_WITH_MIXED_TOKEN_OUTCOME_NOT_VERIFIED_REPEAT_WINNER"
+  },
+  "guardrails": [
+    "Nine selected episodes are conditional closed token inventory samples and NOT a market-wide 4/9 trading win probability.",
+    "Even same-contract observed entry only 11 seconds after another wallet exit is not copying/funding correlation proof.",
+    "Comparison spans distinct periods and routes; not a contemporaneous randomized matched execution simulation.",
+    "8E6B lobster 13 tx has 2 receipt status unknown; do not count its positive 4.794 BNB block-scope as a verified winning episode.",
+    "All source results are native-wallet N-1 to N block deltas that might embed internal native transfers; complete internal trace unavailable.",
+    "No trading, no automated monitoring or production changes."
+  ]
+}
