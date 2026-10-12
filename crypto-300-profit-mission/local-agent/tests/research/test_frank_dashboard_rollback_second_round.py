@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sqlite3
 from pathlib import Path
 import signal
 
@@ -141,3 +142,37 @@ def test_second_deployer_cannot_acquire_existing_lock(tmp_path, monkeypatch):
 def test_original_product_source_pinned_as_real_git_commit():
     assert len(app.COMMIT) == 40
     assert all(len(item["target"]) == 40 for item in app.PATCHES.values())
+
+
+def test_transient_sqlite_wal_lock_is_retried_without_false_rollback(
+        prepared, monkeypatch):
+    folder, originals, target, restarts = prepared
+    monkeypatch.setattr(app, "control_root", lambda: folder)
+    monkeypatch.setattr(app, "health_endpoint", lambda control: "http://127.0.0.1/health")
+    expected = {
+        "manual_review_total_count": 1,
+        "manual_review_expired_unsent_count": 0,
+        "manual_review_actionable_count": 1,
+        "manual_review_pending_count": 0,
+        "manual_review_queued_count": 0,
+        "manual_review_visible_total_count": 1,
+    }
+    calls = []
+    def transient_busy(control):
+        calls.append(True)
+        if len(calls) == 1:
+            raise sqlite3.OperationalError("database is locked")
+        return expected
+    monkeypatch.setattr(app, "actual_delivery_counts", transient_busy)
+    monkeypatch.setattr(app.time, "sleep", lambda _: None)
+    class Response:
+        def __enter__(self): return self
+        def __exit__(self, *args): return None
+        def read(self, *args): return json.dumps({
+            "manual_review_breakdown_available": True,
+            "manual_review_breakdown_error": None, **expected
+        }).encode()
+    monkeypatch.setattr(app.urllib.request, "urlopen",
+                        lambda uri, timeout: Response())
+    app.verify_dashboard()
+    assert len(calls) == 2
