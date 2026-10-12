@@ -217,9 +217,18 @@ def main():
     dash_start_pid = launch_pid(dash_label)
     check("LOOP_AND_DASHBOARD_RUNNING", loop_start_pid > 0 and dash_start_pid > 0)
     phase = "AUTHORIZATION"
-    check("APPROVED_POLICY_FILES", current["POLICY"].is_file()
-          and current["APPROVED_HASH_FILE"].is_file()
-          and current["RPC_FILE"].is_file())
+    auth_files = {
+        "POLICY_JSON_PRESENT": current["POLICY"].is_file(),
+        "APPROVED_SHA256_FILE_PRESENT": current["APPROVED_HASH_FILE"].is_file(),
+        "SOLANA_RPC_FILE_PRESENT": current["RPC_FILE"].is_file(),
+    }
+    for label, present in auth_files.items():
+        checks[label] = "PASS" if present else "FAIL"
+        print(f"{label}={checks[label]}", flush=True)
+    details["missing_authorization_artifacts"] = [
+        label for label, present in auth_files.items() if not present
+    ]
+    check("APPROVED_POLICY_FILES", all(auth_files.values()))
     from_source = active_dashboard_agent
     check("MERGED_RELEASE_SOURCE", (from_source / "mission_agent/mission_control/service.py").is_file()
           and (from_source / "mission_agent/mission_control/policy.py").is_file())
