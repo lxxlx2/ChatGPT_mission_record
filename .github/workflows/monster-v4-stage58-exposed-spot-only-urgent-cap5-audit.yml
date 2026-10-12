@@ -1,0 +1,58 @@
+name: Monster Stage58 Exposed Spot-only Counterfactual No Deployment
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage58_exposed_spot_only_cap5_counterfactual.py'
+      - '.github/workflows/monster-v4-stage58-exposed-spot-only-urgent-cap5-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-v4-stage58-spot-cap-research
+  cancel-in-progress: false
+jobs:
+  historical_original_spot_subcohort_counterfactual_only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original deterministic cap and no future selection
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage58_exposed_spot_only_cap5_counterfactual.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage58_exposed_spot_only_cap5_counterfactual.py --selftest
+      - name: Score Spot-only already-exposed 166, preserve historical 5x losses without relabeling
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage58_exposed_spot_only_cap5_counterfactual.py --out /tmp/monster_stage58
+      - name: Save original 76 spot counterfactual case evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage58-historical-spot-only-counterfactual-no-go
+          path: /tmp/monster_stage58/*
+          retention-days: 30
+      - name: Persist Stage58 evidence into original Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage58/monster_stage58_* "$dest/"
+          git add "$dest/monster_stage58_exposed_spot_only_cap5_counterfactual_summary.json" "$dest/monster_stage58_exposed_spot_only_cap5_all76_fates.jsonl"
+          if git diff --cached --quiet; then
+            echo STAGE58_ALREADY_COMMITTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: Stage58 original 166 asof Spot-only cap5 rejected with high5x counterexample'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE58_GIT_EVIDENCE_WRITE_FAILED
+          exit 1
