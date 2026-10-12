@@ -1,0 +1,53 @@
+{
+  "schema": "MONSTER_STAGE48_ALL437_SOURCE_VERIFIED_WATCH_COIN_DATES_936_ACTUAL_EVENT_ASOF_1M_FEATURE_AUDIT_PREREG_V1",
+  "date": "2026-10-12",
+  "purpose": "FACTUAL_BEFORE_NEW_SECOND_IGNITION_STRATEGY_NOT_RETUNE_P1",
+  "prior_original_git_sha45": "fbc8eb844d3b34c0532f2da4d4bdfad30d84f214",
+  "prior_summary_git_sha45": "d50f651bcdacede5288ebb14e0ed0268bbcc53a4",
+  "prior_stage47_git_sha": "9d93dccef079582c3d515b532a31ddf0d0e2a94d",
+  "prior_source": "Stage45 every source-complete USD-M symbol-date all 5400, 3465 valid, 437 distinct WATCH symbol-dates, 936 original V4 WATCH events (499 repeated)",
+  "cohort": "ALL source-complete first-and-repeated D0 WATCH coin-dates, including ordinary non-2x normal and all 41 2x; no outcome-based inclusion or selection",
+  "dates": [
+    "2025-01-09",
+    "2025-09-02",
+    "2026-01-26",
+    "2026-02-24",
+    "2026-03-28",
+    "2026-05-10"
+  ],
+  "stage48_shards": 36,
+  "data_source": "Binance USD-M public official daily 1m ZIP+official .CHECKSUM, each re-fetch must reproduce identical original Stage45 daily publisher SHA and 1440 contiguous bars",
+  "observation_clock": "t = original D0 WATCH recorded observed UTC; use only 1m bars opening t-61m through t-1m closed before t; no 1m high or close at/after t as a feature",
+  "features": {
+    "ret60_pct": "(last_closed_1m_close / close_of_minute_t_minus61 -1)*100",
+    "q15_USDT": "sum quote volume of minutes t-15 through t-1",
+    "q45_prior_USDT": "sum quote volume of minutes t-60 through t-16",
+    "q15_rel_prior_per15": "3*quote15 / prior45 if prior45>0 else NULL",
+    "trade_count15": "sum actual minute recorded number-of-trades of t-15..t-1",
+    "ret_since_first_watch_pct": "current last closed 1m close / first WATCH last closed close -1, ONLY if current event index >=2",
+    "minutes_since_previous_watch": "gap between original D0 timestamps, first event NULL",
+    "category": "first vs repeated watch; 2x true high first crossing only used AFTER features extracted to group pre/post; non2x background full168h",
+    "raw_original_watch_count": "read original event WATCH_UTC full list, including any post-2x repeated events"
+  },
+  "validity": "full 5400 original ID parity; original sha for 437 source cases verified; official minute SHA equals original 9-day proof; no missing 1m or fabricated quote/trades; hard fail on mismatch",
+  "stop_conditions": [
+    "source any 1m official SHA mismatch",
+    "Stage45 Git blob drift",
+    "WATCH timestamp not minute boundary or outside frozen window",
+    "future source leak",
+    "wrong original event counts",
+    "instrument venue incorrectly treated as Spot"
+  ],
+  "outputs": [
+    "all 936 rows at exact original D0 WATCH time with per-event official publisher SHA",
+    "per 437 coin-date source receipts and full first/repeated time grouping",
+    "descriptive median/quantiles first vs second pre-cross vs normal",
+    "BULLA first/second verified asof observations"
+  ],
+  "assessment": "RESEARCH_DESCRIPTIVE_ONLY; no candidate filtering, thresholds, holdout success, BUY/return claims",
+  "upcoming": "Only after descriptive facts freeze a genuinely new state-machine priority hypothesis, with a NEW untouched date protocol and independent review; no production",
+  "deploy": "NO_GO",
+  "Frank": "UNCHANGED",
+  "Gmail": "OFF",
+  "trading": "NO_GO"
+}
