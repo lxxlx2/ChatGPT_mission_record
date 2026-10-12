@@ -1,0 +1,121 @@
+{
+  "schema": "BSC_MEME_PARTIAL_CANDIDATE_FIRST_ENTRY_BREADTH_COMPARATOR_V1",
+  "date": "2026-10-12",
+  "universe": "19 fixed BSC selected token CAs, 23 EOA, 2026-10-10 frozen roster",
+  "purpose": "Refine candidate priorities by verified first owner signed trade and block distance to earliest sampled source pool event, including negative or partial first exits, WITHOUT ascribing total realized PnL or copyability.",
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_19_CA_FULL_CURSOR_2026-10-12.json",
+      "sha": "8f6aeb15e863f189717f4ee25dfd5b045a50e8ce"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_498528_19_CA_CURSOR_V1_2026-10-12.json",
+      "sha": "6d29e760df30553e6518baf2fe67790924f5eda5"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_23_EOA_REMAINING_WALLETS_TRIAGE_B01_2026-10-12.json",
+      "sha": "1fb23b8c18baa0faa65dc82d949dd0c2ce1535fb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_11A732_BOB_A83B_GIGGLE_FIRST_TWO_BLOCK_CASHFLOW_2026-10-12.json",
+      "sha": "c703b44a4afca31d99057e3a0dc8262e1e5558b5"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_498528_MARSCOIN_FIRST_TEN_BLOCK_EARLY_BUYS_AND_TAX_QA_2026-10-12.json",
+      "sha": "182d442a74cfbe8fa2af13b2017f63524257120b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_BREADTH_FIRST_CANDIDATE_QUEUE_2026-10-10.json",
+      "sha": "85c4d3ee1dafa6bb80bf957757c5c0877393baa3"
+    }
+  ],
+  "rows": [
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "龙虾",
+      "referenceVenue": "PANCAKE_V2_WBNB",
+      "firstBuyBlock": 83636406,
+      "anchor": 83636129,
+      "firstBuyMsgValueWei": "140000000000000000",
+      "firstSellBlock": 83636583,
+      "firstBuyBlockNativeDeltaWei": "-140029684700000000",
+      "firstSellBlockNativeDeltaWei": "102756484749829304",
+      "signedFirstBuy": true,
+      "signedFirstSell": true,
+      "firstKnownSaleExitProportion": "UNVERIFIED_CLOSED_STATUS",
+      "sampledTransfersIn": 56,
+      "sampledTransfersOut": 56,
+      "fullHistory": false,
+      "from_first_venue_sample_blocks": 277,
+      "first_two_scoped_native_blocks_sum_wei": "-37273199950170696",
+      "economic_position_closed": false
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "token": "MARSCOIN",
+      "referenceVenue": "FOUR_MEME_PRE_V2",
+      "firstBuyBlock": 112441470,
+      "anchor": 112441460,
+      "firstBuyMsgValueWei": "200000000000000000",
+      "ownerSignedBuyCountFirstTwoBlocks": 3,
+      "ownerNativeInputsFirstTwoBlocksWei": "600000000000000000",
+      "firstSellBlock": 112442022,
+      "firstBuyBlockNativeDeltaWei": "-400107298960000000",
+      "firstSellBlockNativeDeltaWei": "399318753578522047",
+      "signedFirstBuy": true,
+      "signedFirstSell": true,
+      "sampledTransfersIn": 56,
+      "sampledTransfersOut": 56,
+      "fullHistory": false,
+      "from_first_venue_sample_blocks": 10,
+      "first_two_scoped_native_blocks_sum_wei": "-788545381477953",
+      "economic_position_closed": false
+    },
+    {
+      "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "token": "BOB",
+      "referenceVenue": "PANCAKE_V2_WBNB",
+      "firstBuyBlock": 44007594,
+      "anchor": 44007572,
+      "firstBuyMsgValueWei": "139320442060087755",
+      "firstSellBlock": 44007653,
+      "firstBuyBlockNativeDeltaWei": "-138932183563094048",
+      "firstSellBlockNativeDeltaWei": "342310228149764501",
+      "signedFirstBuy": true,
+      "signedFirstSell": true,
+      "firstKnownSaleExitProportion": "50.00% of first purchased raw tokens",
+      "fullHistory": false,
+      "from_first_venue_sample_blocks": 22,
+      "first_two_scoped_native_blocks_sum_wei": "203378044586670453",
+      "economic_position_closed": false
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "GIGGLE",
+      "referenceVenue": "PANCAKE_V2_WBNB",
+      "firstBuyBlock": 61964958,
+      "anchor": 61963755,
+      "firstBuyMsgValueWei": "500000000000000000",
+      "firstSellBlock": 61964965,
+      "firstBuyBlockNativeDeltaWei": "-501882170000000000",
+      "firstSellBlockNativeDeltaWei": "435598078338010780",
+      "signedFirstBuy": true,
+      "signedFirstSell": true,
+      "firstKnownSaleExitProportion": "5.00% of first purchased raw tokens",
+      "fullHistory": false,
+      "from_first_venue_sample_blocks": 1203,
+      "first_two_scoped_native_blocks_sum_wei": "-66284091661989220",
+      "economic_position_closed": false
+    }
+  ],
+  "method": "Earliest sampled venue event anchor is a restricted reference, not first ever swap or trader eligibility date. Four original owner signer buy/sell boundary samples verified directly from BSC eth_getTransactionByHash; native block changes from N-1/N historical eth_getBalance where available. Open ERC20 cursors have explicit unresolved status.",
+  "readiness": "CANDIDATE_DISCOVERY_ONLY_PRODUCTION_NO_GO",
+  "limitations": [
+    "Sampled first buy is not globally first economic acquisition or first tradable block unless all venue/CA history verified.",
+    "Native wallet balance changes on first buy/sell blocks cannot equal realized position PnL when partial exits, other same-block operations, residual holdings, router fee and stablecoin legs remain.",
+    "At least four wallet CA directions need continued pages; prefix sample rows are lower bounds.",
+    "No comparison of one wallet's early spot entry to a different token's market event as a direct opportunity score.",
+    "MARS source near genesis observed earlier than DDAC in block order, but whether late followers can fill at similar price remains untested."
+  ],
+  "production": "NO_GO"
+}
