@@ -5,7 +5,9 @@ on:
     paths:
       - ".github/workflows/bsc-meme-address-model-v1-tests.yml"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p2.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p2.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.json"
       - "crypto-300-profit-mission/research/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json"
   workflow_dispatch:
@@ -33,13 +35,39 @@ jobs:
           test "$actual" = "$FROZEN_BLOB_SHA"
       - name: Unit tests (stdlib only; no RPC/no secrets)
         run: |
-          python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1.py" -v
+          python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
       - name: Recompute 23x19 baseline deterministically
         run: |
           python3 -B "$MODEL_DIR/bsc_meme_address_model_v1.py" \
             --input "$MODEL_DIR/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json" \
             --output /tmp/bsc-model-v1-actual.json \
             --source-git-blob-sha "$FROZEN_BLOB_SHA"
+      - name: Verify P2 source manifest blob pins and P1 artifact authority
+        shell: bash
+        run: |
+          python3 -B - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          p = Path("crypto-300-profit-mission/research")
+          ledger = json.loads((p / "bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json").read_text(encoding="utf-8"))
+          p1 = p / "bsc-meme-address-model-v1-baseline-2026-10-13.json"
+          actual_p1_sha = subprocess.check_output(["git", "hash-object", str(p1)], text=True).strip()
+          assert ledger["baseline_artifact_git_blob_sha"] == actual_p1_sha
+          assert ledger["frozen_source_sha"] == "3761b9140d0c64b1ffd8d8d243d63a2a1a4fc690"
+          for source in ledger["source_manifest"]:
+              actual = subprocess.check_output(["git", "hash-object", source["path"]], text=True).strip()
+              assert actual == source["blob_sha"], f"source drift: {source['path']}"
+          print("PASS P2 six source Git blobs pinned to exact evidence originals")
+          PY
+      - name: Recompute P2 23-wallet economic overlay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p2.py" \
+            --baseline "$MODEL_DIR/bsc-meme-address-model-v1-baseline-2026-10-13.json" \
+            --ledger "$MODEL_DIR/bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json" \
+            --output /tmp/bsc-model-v1-p2-actual.json
       - name: Exact semantic Git artifact comparison and invariants
         shell: bash
         run: |
@@ -65,5 +93,16 @@ jobs:
               for wallet in actual["wallets"] for c in wallet["cells"]
           )
           assert actual["production"] == "NO_GO"
+          p2_expected = json.loads((d / "bsc-meme-address-model-v1-p2-economic-comparison-2026-10-13.json").read_text(encoding="utf-8"))
+          p2_actual = json.loads(Path("/tmp/bsc-model-v1-p2-actual.json").read_text(encoding="utf-8"))
+          assert p2_actual == p2_expected, "P2 source-vs-Git artifact mismatch: STOP"
+          s = p2_actual["summary"]
+          assert (s["wallets_included"], s["signed_closed_episodes_imported"],
+                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 25, 4, 19)
+          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (16, 9)
+          assert all(w["realized_profit_rank"] is None for w in p2_actual["wallets"])
+          assert all(w["recent_30d_signed_meme_swap"] == "UNRESOLVED" for w in p2_actual["wallets"])
+          assert p2_actual["production"] == "NO_GO"
+          print("PASS P2 23 wallets / 25 curated rounds / 16 pos, 9 neg / 19 unknown; no fake rank")
           print("PASS 437/437, 148/289, 8 source exceptions, no fake PnL/ranking/recent signers")
           PY
