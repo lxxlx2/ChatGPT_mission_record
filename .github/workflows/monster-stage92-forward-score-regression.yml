@@ -1,0 +1,67 @@
+name: Monster Stage92 Forward Scorer Historical Regression
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage92-forward-score-regression.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage92_forward_oos_scoring.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE92_G1_G2_G3_FORWARD_SCORING_AND_LISTING_COVERAGE_FREEZE_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  frozen_519_regression_and_no_false_oos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Syntax and strict input boundaries
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage92_forward_oos_scoring.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py --selftest
+      - name: Verify 519 real source rows and historical score FAIL without changing gates
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage92_forward_oos_scoring.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage92_forward_oos_scoring.py --audit-historical --out /tmp/monster-stage92-exposed519.json
+          python -m json.tool /tmp/monster-stage92-exposed519.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage92-exposed519-source-locked-metric-regression
+          path: /tmp/monster-stage92-exposed519.json
+          retention-days: 60
+      - name: Persist real negative Stage92 evidence to original PR30
+        run: |
+          set -eu
+          out=crypto-300-profit-mission/monster/evidence/monster_stage92_exposed519_G1_G2_G3_regression_20261013.json
+          cp /tmp/monster-stage92-exposed519.json "$out"
+          git config user.name "monster-research-ci"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$out"
+          if git diff --cached --quiet; then
+            echo "STAGE92_IDENTICAL_RESULT_ALREADY_IN_GIT"
+            exit 0
+          fi
+          git commit -m "monster: persist Stage92 frozen519 G1 G2 G3 true negative regression"
+          branch=research/monster-v4-local-discovery-20261010
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo "STAGE92_GIT_PUSH_CONFIRMED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "STAGE92_GIT_PUSH_FAILED"
+          exit 1
