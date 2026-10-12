@@ -1,0 +1,1024 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "GMAIL": "OFF",
+  "Monster": "NO_GO",
+  "P1": "REJECTED",
+  "P2": "REJECTED",
+  "all_exact_original_D0_coin_dates_and_times_parity": true,
+  "all_frozen_original_D0_signal_count": 196,
+  "not_a_full_market_or_all_Dex_Alpha_buyability_denominator": true,
+  "orderbook_spread_slippage_and_realizable_net_PNL": "UNKNOWN",
+  "original_2700_git_blob": "9eb19c22ae8d34d030ccabd7176c3cd4d2e2e3f8",
+  "other_AI_review_of_stage74": "NOT_DONE",
+  "preregistered_contract_git_blob": "0e904f41d5140a20d9bd8df4e6eb3ae83b2080e0",
+  "schema": "MONSTER_STAGE74_ORIGINAL196_D0_SPOT_CLOSED_1M_SHA_EXECUTION_EVIDENCE_V1",
+  "source_date_SHAs": [
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "6e6346d2a303ee753d3edba7dfc065d93a01be1a91cc1916185f386412be5573",
+      "symbol": "ACTUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "ALCHUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "e85cee2668f68ad9a67737ff3e4ad84d42b75fbbec254fcf03f134cb741a8ae8",
+      "symbol": "ALPACAUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "ARCUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "AVAAIUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "643125811dd49be432c3f4cc521353cbdd9c5a2aa9997ce5e9a00d1d339da7fd",
+      "symbol": "BANANAS31USDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "04996dcae65ab28499591ff22c2ce25a03a3a8773aeda12a7ad9f5e500ea9ef0",
+      "symbol": "BELUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "BIDUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "BIGTIMEUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "343e5148dc9af121b4ce2f7bd4362143ed1d9fa720e85973ecdb0baf9cca553e",
+      "symbol": "BROCCOLI714USDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "BROCCOLIF3BUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "dbdd044efe6268f977da7922c378c79e6b0d9a37c871896238eb321a3e4d2f23",
+      "symbol": "BSWUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "42a307cf63b924e28bee8c2dac93dd52c05c87d7139ca004dbd4044abba00737",
+      "symbol": "CATIUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "bf511c28933ca43c9f64392181a2b09b8137b4d7954ed41818bb539ecff7df5d",
+      "symbol": "COMPUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "a7478064cbe160b9698c24d11f392c8d92be0cb34fc882934bd5d95d572a825b",
+      "symbol": "DEXEUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "62ce58f9f561d02c1e24e6d79fafa422c065842be49ca23c3964da2806116b29",
+      "symbol": "EOSUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "c311c64e2f7cec62a48f6def260eed5d7b2db6b0707b7a523e06afce0ac0bbdc",
+      "symbol": "EPICUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "FARTCOINUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "162ec7ddca14989e3bc5162a0d5c788a2b234556e143ff7370a54e26623f0035",
+      "symbol": "FILUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "d354ad25af456cd4fc40afefc4999197c69a642908f0b37d4e169f0f2e1716cd",
+      "symbol": "FLMUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "6d13d73fe730bca838f576e32915ab9851a36d39be0e523e2c8eea8c9fab4eb2",
+      "symbol": "FORMUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "GRIFFAINUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "HIPPOUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "fdbd7bee6455b0e9174ecd3defe7efc471fe3c4607316c1fc7118d971a74ba8f",
+      "symbol": "HMSTRUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "8759c0df78872560860d1bfe1a25d3945be78baba9c237e57ee47b0c8f10cc75",
+      "symbol": "KAVAUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "09063ba147b5410495b146612289cf84c54e4f7512bb6f19ef520068a6bf09f8",
+      "symbol": "MASKUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "a23bd83044bca66ec154e3dd47a37d0a01d0c38f3f9301589b6b03d88c2b4481",
+      "symbol": "MUBARAKUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "NEIROETHUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "7f7c72885d24d400d5ce07a028daa0615d544be8160579e4b4e628f79dd5380d",
+      "symbol": "NEOUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "42d9ef7d9411f0a3ca0c5181f57acdee0c3bca6f921d94e329be8743b50ff4e1",
+      "symbol": "ORCAUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "1b463532082efe4aca96713b599152a5659ff0c6eb8cc735d59468c3b26c2649",
+      "symbol": "PARTIUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "cd85b0402cca6297da62ad3e291c08befc907ca72215e4d289976bb5c8f34de1",
+      "symbol": "QUICKUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "b0a5e73bc910765e7d6b82e2f93987726fee4da118a236de4c4e506f8301b265",
+      "symbol": "RAREUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "ca738ed692ab63bdc5c72c0991e4b466536b2c30e0e790ad2e83c123f02f8b5c",
+      "symbol": "REZUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "SAFEUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "SIRENUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "fefa04d3a1621e40c0d0d172e1eb93dacfbcd2c5701bee875d05411fb227a744",
+      "symbol": "TROYUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "3abbb188535a46c8fc284d7a77701229cfc15046401e57773438b2eb4e126040",
+      "symbol": "TSTUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "3823e64022e1ed67fb4953c2a3f161c61190f34ca47398eb5e6e2e2cd341fab0",
+      "symbol": "TUTUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "49f9634a97dd5375424ed94345b329b5c4c8786fad7d19e798d74591b2fcd374",
+      "symbol": "USUALUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "UXLINKUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "e9b0e2c3186511e954cf2f3965fd5585b83af42a760a213868e3aaf317e99b01",
+      "symbol": "VIDTUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": null,
+      "symbol": "VINEUSDT"
+    },
+    {
+      "date": "2025-03-30",
+      "spot_zip_sha256": "5ba529f151387fb3d6e71ef7f45f6a34905f20b7ee8e5296869d230e5b6621c8",
+      "symbol": "VOXELUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "1000000BOBUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "ALCHUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "ALPHAUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "ac381d8e83e66abef07c2474b8a32e68b58b404e4bbfa3e5519dea71ddb0d27e",
+      "symbol": "ARPAUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "45c5dffe32b0ef97d747eef27cf6a3b324e931af92fb64333287e44603269033",
+      "symbol": "AWEUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "b034d54048f13902fc77928595d0172944f1324f3715d1ea00e706141414e571",
+      "symbol": "BAKEUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "4536b2942203ece78dd404cb77fb28bc5f0f0e9c0a8a4af64976997064ce5792",
+      "symbol": "BANANAS31USDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "6a93202581964d575d6a9d36eb6d36a942f0ef047d8865a7ab192dc57d5f4d47",
+      "symbol": "BELUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "f2a0401c40e03f2fc81e06eaba667c09c26687fc24ba030af670923fb88b0515",
+      "symbol": "BMTUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "BRUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "226a748a09ae05e4f756be3005b324fa1aa41564b7e07c3903ece339f34a4353",
+      "symbol": "BSWUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "BUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "76ddfd0d80b3a3b372f2ed62ecdbf3a2495c5211f346d68df711ddeb2b68d355",
+      "symbol": "CFXUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "e73d95ddeb8ab9103302bdd4b68921068ce105362f2ba61742e02b4ab841a9ed",
+      "symbol": "COWUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "DMCUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "DOLOUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "2f0fca8f865d5c2fb5a97250e23ef6970e594c9cc8adbd9439c7ea105b42a542",
+      "symbol": "DUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "EPTUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "6b744f8ff5e21ac623e54831651602cfc2566ee920399de6faaf0ac2f968b0c8",
+      "symbol": "FIDAUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "3b32c65baffe2a7df2be6f28b7247a2ff6d2e621f75a06165ea89856ce865d04",
+      "symbol": "FISUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "e890df73bcbb2aeb79c9c61eaa9700eea57b9592851231563510cc3027ce1b8a",
+      "symbol": "FUNUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "GOATUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "801cc0901ca3211b8d8ff32ca8114bf1a20a8b436527fe8677d64c8be3ffec5a",
+      "symbol": "HFTUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "a9d534424f65031d2eb6d13411cc1b3c4dd644d91786d44f47c7311e1a54405e",
+      "symbol": "HIFIUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "2d667c5a3561f288326413696a3aaa8e58c9245e5f2eabcadd4af85e61bbe6ac",
+      "symbol": "HOOKUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "HUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "JELLYJELLYUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "cf9cc2fc80e1d93cb963d752828bc6333c7c8bffece476872198471c9afcffb4",
+      "symbol": "JTOUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "fd13aa026346814063e93d4dc728c3dd440282fee07ece942ae87e7beb5f7075",
+      "symbol": "LEVERUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "7c3a9a1d1d382440b52d4ddbde1f3dc10d1c2340fd159620d260e43504cf7155",
+      "symbol": "LRCUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "390abe192770a1809a28d1c261d8cbb7112518af653b08282387d6f681150a0a",
+      "symbol": "MANAUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "429fa77f18b92b3e32d04f200cd700240d0938d984230b8d574d368dc5717c46",
+      "symbol": "MAVUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "MERLUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "MOODENGUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "MYXUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "dc4eefcd5caf183f69051b4a25ba06a0c6e2da0d80e0baabcad6add68ba7d1d6",
+      "symbol": "NFPUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "OBOLUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "2b3fcb13f621fac97bfeee4a5058e6772ff748e3316cf642d02ef7b545e6f98f",
+      "symbol": "PORTALUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "PROMPTUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "e92e7df89f41f71e011c2234c119bbe37c495efae177d18043b2f1c970eae3d1",
+      "symbol": "QUICKUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "8db58eb48f28f3bd11703536629a6e3c5bbf3454d93ddf69e9c62f9390a0c157",
+      "symbol": "RONINUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "SAFEUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "SKATEUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "SKYAIUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "SOONUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "SWARMSUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "36faf4643d218f18b76c30e7324fd69de8e0f04166b485e0639fdb678a81566a",
+      "symbol": "TONUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": "ea928e26bbc468e8971a26c36f642f00989975e3fb652476912e04e99caf7c3a",
+      "symbol": "TUTUSDT"
+    },
+    {
+      "date": "2025-06-30",
+      "spot_zip_sha256": null,
+      "symbol": "VINEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "4USDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "35c401c9de17cb585f788603347d7d84f08e2a50b74979bb788ebb3371ee1324",
+      "symbol": "ACEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "24e6a6472f093340c9b5a161b49a585c18ee1a677fd217ecf4c92fbda085b4fb",
+      "symbol": "ACTUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "AGTUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "AINUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "ce07a9229f09284bd7e22abf4ba3752d40ac8192af29b7048c8869551c32419d",
+      "symbol": "AIXBTUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "AKEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "ALCHUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "c02b930a4de9129438e098b43f45d9938a2cf2508ba9a10fffd3f6cfd369bc5a",
+      "symbol": "ALTUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "e90b9905bcce5db87af3542d823e0e0a0a97c414a49504052a5c9e230032bac8",
+      "symbol": "ANIMEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "APRUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "ARCUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "d82e451fc9b72b81928d76552b556f02529126f7cb9d2733bfb4d803e5c7d5a6",
+      "symbol": "ATUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "30ed30e1857d2b087dff53847cbcb870c6f7fac844d14ab294015c59b6faf70e",
+      "symbol": "BANANAS31USDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "2acf1070f5a2f8699ff72a2fb064266323c69289c14b06326f7a2eccd7dda197",
+      "symbol": "BANANAUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "BDXNUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "BEATUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "BIDUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "BOBUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "BRETTUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "BTRUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "CARVUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "e813b6d0c8fd97c941eab38d4a37610c05062d0eecd7a4693ec4a81fd2cd14b3",
+      "symbol": "CHESSUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "6b4b95e677c878780784571fe23304d0b12ff56a892a98cd2a48479e917ad8b5",
+      "symbol": "CKBUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "CLANKERUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "CLOUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "4d808787076ac668ebb008da459573fbd0d1e00710b6e0170102b4658523961d",
+      "symbol": "COMPUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "CUDISUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "DAMUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "DMCUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "c11342757fa0aba53cf9ed4d60d060c6a87b5a3152988a50c8b6934f21eb389a",
+      "symbol": "DOGSUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "3f61de71af6f526ee2224827e1b45a7f08f81e08c1297be702cf91f3ea8d5c55",
+      "symbol": "EPICUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "EVAAUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "FARTCOINUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "ed6d7f016e8cb9ff7e14a1578c40efd38276bcc05c27dffb7f83b1ca54598645",
+      "symbol": "FIDAUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "54e5cbce3694456bc10c3020a34bc87c4491260a80dcdd075be23d2ce600ab40",
+      "symbol": "FISUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "FOLKSUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "GRIFFAINUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "f43b12407857f35de73c55bc412c08116803972a9a8371afd9784c3357aab7e7",
+      "symbol": "HEIUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "8e8dd9253437b07bfee805535e3d899503387c8d0642273998c6a1fdd7e34e31",
+      "symbol": "HIGHUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "HIPPOUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "47fe13553bfbc30bc02353bb09163549dcab7bfe8d983fed33147ff539ab6559",
+      "symbol": "HMSTRUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "4e1eff1d2300deba33a079ff2c98c8064d22cd19773ccc399f8a2e70eb8ab0a5",
+      "symbol": "INITUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "JELLYJELLYUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "b0a23ae67184060c156a88c45d246e578751ffe552496ebb0ea722c9d826526f",
+      "symbol": "KITEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "c2b561a999bb406024b06191e4d2e5d91758aef890fd026e824c1522d9f19cd9",
+      "symbol": "KSMUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "1ae0c786fbd3315c4564fa28c4384c24ed27e722fd19e9307bfc4f149ed1504b",
+      "symbol": "LAYERUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "LIGHTUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "ede91c730c410fbcb28b2244c6dc0c9db5c7de85f389ab5b0933b942e4e46e23",
+      "symbol": "LSKUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "MAVIAUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "f7af71c3698bf227081d67f0e4c1c1463492a5811fac8174efb5653515adbf51",
+      "symbol": "MAVUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "280573fe657dd8a0c716a551853d45d68c3d29168fe87f212b50b3c2d29d63a5",
+      "symbol": "MEMEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "MERLUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "d4c637d7704e26e5a003f96aacd668935a743f4d08a0dbc101f9d5e6b959d8e0",
+      "symbol": "METISUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "MILKUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "b5d4a4b516a897f5ee4edac6a9cfd4f5e915effce00677509232733f1d6abdf0",
+      "symbol": "MLNUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "MONUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "MUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "MYXUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "NAORISUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "f82ce954384ff4d2baf486b51c1ff157a94188685f94e9f54bb6c1d8a61c3342",
+      "symbol": "NTRNUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "OBOLUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "ONUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "4d40605e716da98a46299ceebbb3a66c59adb9dff1d72212c6d952d10d8166bd",
+      "symbol": "ORCAUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "dcc5f7c223fc662d273d8c7d7d04ebf4cdabc561853cbaa5dca318fafc00039f",
+      "symbol": "PARTIUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "PIEVERSEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "PIPPINUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "ac10a90342bbe6ebda4ef4cce8e176c05ecbdf1ef549993a0e58c81dafdebc94",
+      "symbol": "PORTALUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "PTBUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "RECALLUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "18d011f3eba269f6d27a1f8bc3d89a7e1d0aa8ebad5017acfcd103b9becebaf9",
+      "symbol": "REDUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "017f103575e70b95d284ad22b16c0ba723b6e52d01e0216ca42b55bbd6f2de96",
+      "symbol": "REIUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "RIVERUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "RVVUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "SAFEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "a69cda42cc3daec92c0633a9a32e09b2fdbafa2e20ca420ef1bb4020dfbf3f3f",
+      "symbol": "SAHARAUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "63383d3e2c5c162596f420cf5b4e1aef745e42cbb6df83e7c9b41245af01221b",
+      "symbol": "SAPIENUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "02c8f16ffc2aec34ff952ea71da881b8c08d292c454ba56f03a86770b4b688c8",
+      "symbol": "SCRUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "SKATEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "0229e68e3ab700b681519c5231c18ee1935202cb82842748e3926647b85bda69",
+      "symbol": "SKLUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "SKYAIUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "SQDUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "STABLEUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "fe087a3852a38a576d0f466f4588732297a491ba91096a0aaea1a223d4c1594d",
+      "symbol": "SUPERUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "a66acc939e531db400e2fc3cd0f4cb5b5fbd826d56394cd00c13426f019bd081",
+      "symbol": "SXPUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "TACUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "TANSSIUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "TAUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "52e7fa2f99bf0fac93b10ae0493074e0edce54b771dce6507e1c981ef7e228da",
+      "symbol": "TNSRUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "TOKENUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "TRADOORUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "TRUSTUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "TRUTHUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "1fca020ed31554105e54bdb542b9cfadaf7e5ce815abb3946cc2182feccf91f8",
+      "symbol": "TURBOUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "UAIUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "VFYUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "229415c7a8ed49e011fb5b5439e013dedb21982ccf1ac7744f8f3a94fef40d73",
+      "symbol": "VOXELUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "4551aef61d98b6d8c7c9d97289e75aedacb166d44919a8c56702da94b6f0d08e",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "YALAUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "8342e14d088b81e903deb1c322371901a1f459ebb79e64a9a2f57f7dcd16bf43",
+      "symbol": "ZECUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": null,
+      "symbol": "ZEREBROUSDT"
+    },
+    {
+      "date": "2025-11-27",
+      "spot_zip_sha256": "703e25f0e22ee0fe7a097bfd53bbc3e056adf7f6542be176da2aa4198f5006aa",
+      "symbol": "ZKCUSDT"
+    }
+  ],
+  "states_by_original_window": {
+    "2025-03-30": {
+      "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+      "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 14,
+      "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+      "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 30
+    },
+    "2025-06-30": {
+      "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 0,
+      "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 22,
+      "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+      "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 27
+    },
+    "2025-11-27": {
+      "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 1,
+      "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 58,
+      "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+      "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 44
+    }
+  },
+  "states_total": {
+    "SPOT_ARCHIVE_SAME_DAY_NO_PRIOR_1M_BAR": 1,
+    "SPOT_DAILY_ARCHIVE_404_UNVERIFIED": 94,
+    "SPOT_PRIOR_MINUTE_BAR_ZERO_TRADES": 0,
+    "SPOT_PRIOR_MINUTE_TRADES_VERIFIED": 101
+  },
+  "what_counts_as_positive": "ONLY_EXACT_MATCHED_SPOT_USDT_PAIR_T_MINUS_ONE_MINUTE_KLINE_WITH_REAL_TRADES_AND_QUOTE"
+}
