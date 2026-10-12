@@ -31,7 +31,7 @@ from urllib.parse import quote
 
 PRODUCT = 'bda7ef0dfd89e6c1b11f9020163bf754bed5ae74'
 PR39 = 'da5adc0ae63141e8e2b5fb6735224c6405412e6a'
-MAIN = '6207e49d3d2a393b70224cb54cfc169174e6acf3'
+MAIN = '71f223c12b239ffbca66932b8e1f5216ac2bc5a8'
 PREFIX = 'crypto-300-profit-mission/local-agent/'
 ALLOWED = {'mission_agent/mission_control/' + p for p in (
     'db.py', 'delivery.py', 'payment_evidence.py', 'server.py', 'service.py',
@@ -273,6 +273,21 @@ def fresh(path, *, since=0, policy=None):
     return body
 
 
+def interpreter_matches(venv, command):
+    # macOS framework Python uses a launcher: ps shows Python.app rather than
+    # the venv symlink. Probe that same configured interpreter without site code.
+    expected = venv / 'bin/python'
+    tokens = shlex.split(command)
+    require(tokens and Path(tokens[0]).is_absolute(), 'INTERPRETER_COMMAND')
+    if Path(tokens[0]).samefile(expected): return True
+    probe = run([str(expected), '-I', '-B', '-S', '-c',
+                 'import os,subprocess,json; print(json.dumps({'
+                 '"command":subprocess.check_output(["/bin/ps","-p",str(os.getpid()),'
+                 '"-o","command="],text=True)}))'])
+    actual = shlex.split(json.loads(probe)['command'])[0]
+    return Path(tokens[0]).samefile(actual)
+
+
 class Mac:
     def __init__(self, home=Path.home()):
         self.home = home
@@ -309,7 +324,7 @@ class Mac:
         cmd = run(['/bin/ps', '-p', str(pid), '-o', 'command='])
         require('scripts/mission_meme_v1.py ' + ('loop' if key == 'loop' else 'serve') in cmd,
                 'RUNTIME_COMMAND')
-        require(str(field(text, 'VENV') / 'bin/python') in cmd, 'RUNTIME_INTERPRETER')
+        require(interpreter_matches(field(text, 'VENV'), cmd), 'RUNTIME_INTERPRETER')
         cwd = run(['/usr/sbin/lsof', '-a', '-p', str(pid), '-d', 'cwd', '-Fn'])
         require('n' + str(agent) in cwd.splitlines(), 'RUNTIME_CWD')
         start = run(['/bin/ps', '-p', str(pid), '-o', 'lstart='], env={**os.environ, 'LC_ALL': 'C'})
@@ -321,11 +336,18 @@ class Mac:
         return {'pid': pid, 'agent': str(agent), 'source': manifest, 'plist': str(plist),
                 'plist_hash': sha(plist), 'runner_hash': sha(runner), 'started': started}
 
+    def hold(self, key):
+        run(['/bin/launchctl', 'disable', self.labels[key]])
+
+    def release_hold(self, key):
+        run(['/bin/launchctl', 'enable', self.labels[key]])
+
     def stop(self, key):
         # Verify absence independently after bootout; do not swallow bootout failure.
         run(['/bin/launchctl', 'bootout', self.labels[key]], timeout=30)
 
     def start(self, key, plist):
+        self.release_hold(key)
         run(['/bin/launchctl', 'bootstrap', f'gui/{os.getuid()}', plist], timeout=30)
 
     def absent(self, key):
@@ -504,6 +526,7 @@ def save_journal(path, context, phase):
 
 def rollback(mac, context, journal):
     """Stop writers FIRST. Restore code pointers; never copy any database backup."""
+    for key in ('loop', 'dashboard'): mac.hold(key)
     pids = set(v['pid'] for v in context['runtime'].values())
     pids.update(mac.worker_pids(context))
     for key in ('loop', 'dashboard'):
@@ -526,9 +549,28 @@ def rollback(mac, context, journal):
     save_journal(journal, context, 'CODE_ROLLED_BACK_SERVICES_STOPPED')
     # Any new decision/delivery after cutover or uncertain receipt prohibits old loop restart.
     assert_preserved(context['before'], ledger(context['db']), exact=True)
-    for key in ('dashboard', 'loop'):
-        mac.start(key, context['runtime'][key]['plist'])
-    save_journal(journal, context, 'ROLLED_BACK')
+    since = time.time()
+    try:
+        for key in ('dashboard', 'loop'):
+            mac.start(key, context['runtime'][key]['plist'])
+        wait_ready(lambda: fresh(Path(context['control']) / 'mission-control-health.json',
+                                 since=since, policy=context['policy']), 180)
+        http_check(context)
+        for key in ('loop', 'dashboard'):
+            actual = mac.runtime(key, context['old_texts'][key])
+            require(actual['source'] == context['runtime'][key]['source'], 'ROLLBACK_RUNTIME_SOURCE')
+        scanner_check(mac, context); protected_check(context)
+        assert_preserved(context['before'], ledger(context['db']), exact=True)
+        save_journal(journal, context, 'ROLLED_BACK')
+    except BaseException:
+        for key in ('loop', 'dashboard'): mac.hold(key)
+        for key in ('loop', 'dashboard'):
+            try:
+                pid, _ = mac.launch(mac.labels[key])
+            except subprocess.CalledProcessError:
+                continue
+            mac.stop(key); mac.wait_dead([pid])
+        raise
 
 
 def apply(mac, context, journal):
@@ -555,6 +597,7 @@ def apply(mac, context, journal):
         save_journal(journal, context, 'PRESTOP_BACKED_UP')
         save_journal(journal, context, 'QUIESCING')
         mutated = True
+        for key in ('loop', 'dashboard'): mac.hold(key)
         mac.stop('loop'); mac.stop('dashboard')
         mac.wait_dead([v['pid'] for v in context['runtime'].values()])
         for key in ('loop', 'dashboard'): mac.absent(key)
@@ -625,6 +668,18 @@ def collect_evidence(mac, root, expected, scanner_label):
             state = {'gmail_delivery': [dict(r) for r in conn.execute('SELECT * FROM gmail_delivery')]}
         return review_reasons(state)
     probe('manual_review_reasons', manual)
+    def db_facts():
+        text = mac.runners['loop'].read_text()
+        pointer = field(text, 'CONTROL_POINTER')
+        control = Path(pointer.read_text().strip())
+        prod = field(text, 'PROD') / 'forward.sqlite'
+        state = ledger(control / 'mission-control.sqlite')
+        from frank_pr39_predeploy_readonly import frank_payment_coverage
+        scan = scanner_inventory(mac, scanner_label, prod)
+        return {'queue_records': {k: len(v) for k,v in state.items()},
+                'frank_amount_coverage': frank_payment_coverage(prod),
+                'scanner_pid': scan['pid'], 'scanner_loaded_source_sha256': scan['loaded_source_sha256']}
+    probe('databases_and_scanner', db_facts)
     for key in mac.runners:
         def runtime_fact(key=key):
             state = mac.runtime(key, mac.runners[key].read_text())

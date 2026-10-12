@@ -163,6 +163,7 @@ class FakeMac:
         result=copy.deepcopy(self.context['runtime'][key]); result['pid']=self.state()[key]
         if text==self.context['new_texts'][key]: result['source']=self.context['new_source']
         return result
+    def hold(self,key): pass
     def stop(self,key):
         self.calls.append(('stop',key)); state=self.state(); state.pop(key,None); self.write(state)
     def start(self,key,plist):
@@ -227,7 +228,12 @@ def test_failure_rolls_back_code_preserves_data(release,monkeypatch,stage):
             original(path,data,mode)
         monkeypatch.setattr(r,'atomic',atomic)
     elif stage=='dashboard_http': monkeypatch.setattr(r,'http_check',fail)
-    elif stage=='heartbeat': monkeypatch.setattr(r,'fresh',fail)
+    elif stage=='heartbeat':
+        hits=[]
+        def fresh(*a,**kw):
+            if not hits: hits.append(1); raise RuntimeError('INJECTED')
+            return {}
+        monkeypatch.setattr(r,'fresh',fresh)
     else:
         def interrupt(*a): raise KeyboardInterrupt()
         monkeypatch.setattr(r,'migrate',interrupt)
