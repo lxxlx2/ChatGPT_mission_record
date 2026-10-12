@@ -1,0 +1,46 @@
+name: Frank PR33 fourth review medium blockers and mixed-version safety
+
+on:
+  push:
+    branches:
+      - review/frank-pr33-r4-medium-remediation-20261012
+    paths:
+      - '.github/workflows/frank-pr33-r4-medium-remediation-tests.yml'
+      - 'crypto-300-profit-mission/local-agent/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  complete-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Fetch immutable Frank local evidence for replay
+        run: git fetch origin refs/heads/evidence/frank-ca-local:refs/remotes/origin/evidence/frank-ca-local
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install requirements
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]' 'numpy>=2,<3' 'pyflakes==3.4.0'
+      - name: Syntax, static, and JS checks
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent scripts tests
+          python -m pyflakes mission_agent/mission_control/delivery_review.py mission_agent/mission_control/server.py scripts/frank_dashboard_readonly_acceptance.py scripts/deploy_frank_dashboard_review_badge.py tests/research/test_frank_dashboard_second_round.py tests/research/test_frank_dashboard_rollback_second_round.py tests/research/test_frank_pr33_third_round.py tests/research/test_frank_pr33_third_round_safety.py tests/research/test_frank_pr33_r4_mixed_compat.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: Review-focused regressions
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pytest -q tests/research/test_frank_pr33_third_round.py tests/research/test_frank_pr33_third_round_safety.py tests/research/test_frank_pr33_r4_mixed_compat.py tests/research/test_frank_dashboard_rollback_second_round.py tests/research/test_frank_dashboard_second_round.py tests/research/test_delivery_review_integration.py tests/research/test_delivery_review_breakdown.py tests/research/test_frank_dashboard_deploy.py tests/research/test_frank_dashboard_readonly_acceptance.py
+      - name: Complete local-agent suite
+        working-directory: crypto-300-profit-mission/local-agent
+        run: python -m pytest -q tests
