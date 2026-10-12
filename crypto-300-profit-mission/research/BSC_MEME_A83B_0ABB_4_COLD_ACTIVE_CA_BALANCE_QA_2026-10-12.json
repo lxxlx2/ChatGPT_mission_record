@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-12",
+  "schema": "BSC_MEME_A83B_0ABB_COLD_ACTIVE_BALANCE_QA_V1",
+  "sources": [
+    {
+      "file": "BSC_MEME_A83B_COLD4_SUBSET_2026-10-12.json",
+      "sha": "b404afcc4d971217c665bffba7077343699e4b77"
+    },
+    {
+      "file": "BSC_MEME_0ABB_COLD11_SUBSET_2026-10-12.json",
+      "sha": "cc5ae2c0a9982e5db70dce7e5ad9bbb72ae91c82"
+    }
+  ],
+  "wallets": 2,
+  "rows": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "in_events": 1,
+      "out_events": 0,
+      "raw_in": "90743338900892537384",
+      "raw_out": "0",
+      "net_raw": "90743338900892537384",
+      "balanceOf_latest": "90743338900892537384",
+      "exact_match": true,
+      "source_file": "BSC_MEME_A83B_COLD4_SUBSET_2026-10-12.json",
+      "source_blob_sha": "b404afcc4d971217c665bffba7077343699e4b77"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "in_events": 1,
+      "out_events": 0,
+      "raw_in": "149450289467938143498",
+      "raw_out": "0",
+      "net_raw": "149450289467938143498",
+      "balanceOf_latest": "149450289467938143498",
+      "exact_match": true,
+      "source_file": "BSC_MEME_A83B_COLD4_SUBSET_2026-10-12.json",
+      "source_blob_sha": "b404afcc4d971217c665bffba7077343699e4b77"
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "CHEEMS",
+      "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "in_events": 1,
+      "out_events": 0,
+      "raw_in": "195748631491447654119361",
+      "raw_out": "0",
+      "net_raw": "195748631491447654119361",
+      "balanceOf_latest": "195748631491447654119361",
+      "exact_match": true,
+      "source_file": "BSC_MEME_0ABB_COLD11_SUBSET_2026-10-12.json",
+      "source_blob_sha": "cc5ae2c0a9982e5db70dce7e5ad9bbb72ae91c82"
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "in_events": 2,
+      "out_events": 1,
+      "raw_in": "201655826183380321344816",
+      "raw_out": "201655826183380321344816",
+      "net_raw": "0",
+      "balanceOf_latest": "0",
+      "exact_match": true,
+      "source_file": "BSC_MEME_0ABB_COLD11_SUBSET_2026-10-12.json",
+      "source_blob_sha": "cc5ae2c0a9982e5db70dce7e5ad9bbb72ae91c82"
+    }
+  ],
+  "all_matches": true,
+  "notes": [
+    "Only the 4 fully paginated a83b CAs and 11 fully paginated 0abb CAs counted, other token CAs remain partially explored.",
+    "ERC20 inflow does not establish wallet signing, CEX or sale PnL.",
+    "No trading or operational changes; research no-go."
+  ],
+  "production": "NO_GO"
+}
