@@ -1,0 +1,129 @@
+{
+  "schema": "BSC_MEME_877AF_MARS_FIRST_PARTIAL_EXIT_INDEPENDENT_ALLOCATION_SENSITIVITY_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "token": "MARSCOIN",
+  "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_SEVEN_EARLY_BUYS_BEFORE_FIRST_EXIT_2026-10-12.json",
+      "sha": "6f1e9c378a15f0cdd27a6cdf1feac905b3c6a260"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FIRST7_BUY_NATIVE_BLOCKS_AND_FIRST_EXIT_2026-10-12.json",
+      "sha": "9d2441799d45e90920c51659d6cf36e0d40edfed"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_GENESIS_SAMPLE_OWNER_BUY_AND_SELL_NATIVE_QA_2026-10-12.json",
+      "sha": "fcca8760ea0649c535087b172aa870959176e546"
+    }
+  ],
+  "scope": "Seven source-confirmed early owner-signed buy transactions in four blocks and first 64.1093% token quantity exit; NOT whole position and not complete realized PnL",
+  "original_buy": {
+    "original_unique_signed_hashes": [
+      "0x15141bf698d2c2c4e07efd6c0cb54babfa7421621b1f48e4ace1727cf6be2cfa",
+      "0x005b811cc28fb7337749822a8af2b5cc7b8d610c96fe5f921395e1b3d09587be",
+      "0xa618ce7a94a8828099b7aba7c7f840652adb0d634a2fce4c0880694b45920244",
+      "0x9b24ee124bc6a91e63fb13c7f1e8007a8db5c2d05399d1e39f444a4ed42c9ca0",
+      "0xb7e736a91b986ff4054ad15f1f1ad0dfa73889f400b04971afc33a8a1eb3f1d7",
+      "0x735c7e5393b0006c22e120911d3da94afa472827e88fa5ddd01c3afcd6010220",
+      "0xff622f3f1719ba06a407d96f0bba9a0f5106ce27f4560cb5b1137096825f7814"
+    ],
+    "original_buy_count": 7,
+    "buy_blocks": [
+      {
+        "block": 112441460,
+        "owner_original_buy_count": 1,
+        "buy_native_msg_wei": "550000000000000000",
+        "wallet_BNB_net_wei": "-550285156080000000",
+        "gas_and_other_net_wei": "-285156080000000"
+      },
+      {
+        "block": 112441467,
+        "owner_original_buy_count": 1,
+        "buy_native_msg_wei": "10000000000000000",
+        "wallet_BNB_net_wei": "-10192720000000000",
+        "gas_and_other_net_wei": "-192720000000000"
+      },
+      {
+        "block": 112441468,
+        "owner_original_buy_count": 4,
+        "buy_native_msg_wei": "40000000000000000",
+        "wallet_BNB_net_wei": "-40760439680000000",
+        "gas_and_other_net_wei": "-760439680000000"
+      },
+      {
+        "block": 112441470,
+        "owner_original_buy_count": 1,
+        "buy_native_msg_wei": "10000000000000000",
+        "wallet_BNB_net_wei": "-10188218800000000",
+        "gas_and_other_net_wei": "-188218800000000"
+      }
+    ],
+    "raw_tokens_acquired": "6551037846634437811613557",
+    "original_msg_value_total_wei": "610000000000000000",
+    "total_historical_wallet_buy_block_native_spent_wei": "611426534560000000",
+    "gross_buy_block_gas_or_other_wei": "1426534560000000",
+    "original_external_owner_transaction_counts_per_buy_block": [
+      1,
+      1,
+      4,
+      1
+    ],
+    "direct_external_wallet_incoming_in_buy_blocks": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "source_buy_receipt_provider_status": "ALL_SEVEN_RESPONSE_TRUNCATED_8098_BYTES_IN_CURRENT_PASS; prior owner original signer and native msg.value source evidence retained"
+  },
+  "first_sale": {
+    "tx": "0x1512bc06ea2aa91817cc0606c65fa3f31fbbd3712955cd8bb99eb4bad6c8f1df",
+    "block": 112441495,
+    "owner_original_signature_status": "PREVIOUSLY_VERIFIED_AND_CURRENT_EXTERNAL_SOURCE_ORIGIN_MATCHES",
+    "receipt_status": "SUCCESS_STATUS_PRESENT_IN_TRUNCATED_RECEIPT_PREFIX",
+    "source_raw_tokens_consumed": "4199826775252422924614179",
+    "fraction_of_early_raw_tokens_num": "4199826775252422924614179",
+    "fraction_of_early_raw_tokens_den": "6551037846634437811613557",
+    "native_whole_block_BNB_net_wei": "508198463321432886",
+    "original_external_wallet_transactions_in_same_block": 3,
+    "original_owner_sale_tx_count": 1,
+    "other_outgoing_native_transfer_wei": "100000000000000",
+    "other_success_receipt_gas_wei": "41997600000000",
+    "direct_external_native_incoming_wallet_count": 0,
+    "independently_retrieved_same_sale_tx_WBNB_transfer_to_manager_wei": "513786330627709985",
+    "estimated_sale_tx_native_wallet_net_wei": "508340460921432886",
+    "internal_native_trace": "UNAVAILABLE_FREE_TIER",
+    "sale_receipt_gas_field": "UNREADABLE_8098_BYTE_TRUNCATED"
+  },
+  "fee_and_gas_hypothesis": {
+    "gross_wbnb_wei": "513786330627709985",
+    "fee_assumption": "1% of gross pool WBNB transferred to manager, not independently validated by decoded receipt event; test-only conditional scenario",
+    "implied_fee_wei": "5137863306277099",
+    "implied_sale_gas_wei": "308006400000000",
+    "implied_gas_units_if_price_0_6_gwei": "513344",
+    "implied_fee_plus_gas_matches_gross_minus_inferred_sale_net": true,
+    "fee_is_proven": false
+  },
+  "allocation_sensitivity": {
+    "methodology": "Conditional allocation of early 7 owner-original BNB block expense including aggregate gas/other effects; 64.1% sale has isolated BNB balance delta only conditionally after subtracting the two other owner transactions. Not full tax/transfer/internal causal trace.",
+    "weighted_average_allocated_cost_wei": "391981483096472565",
+    "first_in_first_out_allocated_cost_wei": "388772987925825305",
+    "provisional_sale_net_received_after_sale_gas_wei": "508340460921432886",
+    "provisional_weighted_average_net_wei": "116358977824960321",
+    "provisional_fifo_net_wei": "119567472995607581",
+    "remaining_early_token_raw": "2351211071382014886999378",
+    "all_returns_are_conditional": true
+  },
+  "risk": [
+    "Actual native wallet balance change of sale block includes THREE owner-origin original transactions, so previous first-exit block delta MUST NOT be used unadjusted as individual sale proceeds.",
+    "Buy original receipts and sale original receipt response truncated at about 8098 bytes; gas breakdown of sale trade not directly independently confirmed.",
+    "The 1% fee scenario is arithmetic sensitivity, not an audited fee setting.",
+    "First 7 buys before first sale and 64% first token exit form only a partial historical episode; additional tokens and subsequent trades remain outside this first-exit PnL sensitivity.",
+    "Other internal transfers can occur without corresponding external from/to wallet transfers, so exact causal profit classification withheld.",
+    "No delayed follower fill, liquidity impact, opportunity-eligible denominator or cross-token performance proof."
+  ]
+}
