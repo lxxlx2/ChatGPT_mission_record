@@ -1,0 +1,255 @@
+{
+  "schema": "BSC_MEME_STAGE18_8E6B_LOBSTER_TWO_ROUNDS_RAW_TOKEN_AND_NATIVE_SCOPE_V1",
+  "date": "2026-10-13",
+  "network": "bnb-mainnet",
+  "status": "RESEARCH_ONLY",
+  "production": "NO_GO",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "token": "龙虾",
+  "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_2026_SIX_CORE_POSITION_TRANSFER_HISTORY_2026-10-11.json",
+      "sha": "e09082133b6483db00470c15ff569e0d9489335f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json",
+      "sha": "23149a3d5973c2ae29fafd7ec09fc2ffa820fce9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json",
+      "sha": "3761b9140d0c64b1ffd8d8d243d63a2a1a4fc690"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE17_DDAC_8E6B_IFML_LOBSTER_TWO_TOKEN_NEGATIVE_CONTROL_2026-10-13.json",
+      "sha": "4151d146cc0016937e0c57c1586d5ce069fd8822"
+    }
+  ],
+  "method": "Complete exact-CA ERC20 four inbound + nine outbound events, ordered by original block, signed EOA provenance matched by original transaction hash; accumulate raw integer token net until zero; sum independently stored native N-1 to N wallet block deltas per partition.",
+  "checks": {
+    "owner_signed_original_txs": 13,
+    "previous_success_receipt_headers": 11,
+    "added_success_receipt_headers": 2,
+    "now_success_receipt_headers": 13,
+    "full_receipt_bodies_for_two": false,
+    "unique_tx_hashes": 13,
+    "token_inbound_events": 4,
+    "token_outbound_events": 9,
+    "episodes_at_zero": 2,
+    "ending_inventory_raw": "0",
+    "negative_intermediate_inventory": false,
+    "scope_wei_reconciles_to_stage17": true,
+    "trace_transaction": "RPC_MINUS_32600_FREE_TIER_UNAVAILABLE"
+  },
+  "targeted_receipt_evidence": [
+    {
+      "hash": "0x9337a2b919c2ac9749e1b311eb7a4db93c0ea62f1deba93cfa9e88bdd0b683e1",
+      "block": 83638341,
+      "ethGetTransactionReceipt_status": "0x1",
+      "rpc": "Alchemy bnb-mainnet",
+      "success_header_directly_read_2026_10_13": true,
+      "full_receipt_truncated": true
+    },
+    {
+      "hash": "0x8367b2fb591be4f52a7fa4c1dae41d60889e9542208f3cfbde15119d04f14871",
+      "block": 83654159,
+      "ethGetTransactionReceipt_status": "0x1",
+      "rpc": "Alchemy bnb-mainnet",
+      "success_header_directly_read_2026_10_13": true,
+      "full_receipt_truncated": true
+    }
+  ],
+  "episodes": [
+    {
+      "number": 1,
+      "first_block": 83637088,
+      "last_block": 84765341,
+      "buy_transactions": 3,
+      "sell_transactions": 8,
+      "raw_in": "4792811033396580419849435",
+      "raw_out": "4792811033396580419849435",
+      "native_block_net_wei": "4540701425397987363",
+      "transactions": [
+        {
+          "block": 83637088,
+          "hash": "0x22f2c3f6f029e7ab2f9f6af2760f5ad051330ca71fc09bb3b0be394223adcf71",
+          "direction": "in",
+          "raw": "0x33fb91e43fd84f9ba564c",
+          "event_id": "0x22f2c3f6f029e7ab2f9f6af2760f5ad051330ca71fc09bb3b0be394223adcf71:log:40",
+          "token_delta_raw": "3927701375783703584331340",
+          "inventory_after_raw": "3927701375783703584331340",
+          "native_delta_wei": "-1000019789800000000",
+          "previous_receipt_state": "SUCCESS"
+        },
+        {
+          "block": 83638341,
+          "hash": "0x9337a2b919c2ac9749e1b311eb7a4db93c0ea62f1deba93cfa9e88bdd0b683e1",
+          "direction": "out",
+          "raw": "0xcfee4790ff613e6e9593",
+          "event_id": "0x9337a2b919c2ac9749e1b311eb7a4db93c0ea62f1deba93cfa9e88bdd0b683e1:log:6",
+          "token_delta_raw": "-981925343945925896082835",
+          "inventory_after_raw": "2945776031837777688248505",
+          "native_delta_wei": "487644040026717399",
+          "previous_receipt_state": "UNVERIFIED_TRUNCATED"
+        },
+        {
+          "block": 83646759,
+          "hash": "0x9ab7721816002a2dfeb510c175f4f50bde586d246418e992ce0e1731cdd15232",
+          "direction": "out",
+          "raw": "0x19fdc8f21fec27cdd2b26",
+          "event_id": "0x9ab7721816002a2dfeb510c175f4f50bde586d246418e992ce0e1731cdd15232:log:2",
+          "token_delta_raw": "-1963850687891851792165670",
+          "inventory_after_raw": "981925343945925896082835",
+          "native_delta_wei": "1747311498788820917",
+          "previous_receipt_state": "SUCCESS"
+        },
+        {
+          "block": 83649490,
+          "hash": "0xa83e981f5f415a115c7f5e46f24ca88ae055601ead9a9cc452fb6830a8fb123a",
+          "direction": "in",
+          "raw": "0x7d67ba1046f79a470ffe",
+          "event_id": "0xa83e981f5f415a115c7f5e46f24ca88ae055601ead9a9cc452fb6830a8fb123a:log:113",
+          "token_delta_raw": "592209232292417676709886",
+          "inventory_after_raw": "1574134576238343572792721",
+          "native_delta_wei": "-500018995880000000",
+          "previous_receipt_state": "SUCCESS"
+        },
+        {
+          "block": 83654159,
+          "hash": "0x8367b2fb591be4f52a7fa4c1dae41d60889e9542208f3cfbde15119d04f14871",
+          "direction": "out",
+          "raw": "0x67f723c87fb09f374ac9",
+          "event_id": "0x8367b2fb591be4f52a7fa4c1dae41d60889e9542208f3cfbde15119d04f14871:log:2",
+          "token_delta_raw": "-490962671972962948041417",
+          "inventory_after_raw": "1083171904265380624751304",
+          "native_delta_wei": "665494456335307955",
+          "previous_receipt_state": "UNVERIFIED_TRUNCATED"
+        },
+        {
+          "block": 83654319,
+          "hash": "0x90021cbf6294d5d4ce03f01add45f7e13f1e71ecafa61064202af1cb191a2200",
+          "direction": "out",
+          "raw": "0x3957b7842b4d72020000",
+          "event_id": "0x90021cbf6294d5d4ce03f01add45f7e13f1e71ecafa61064202af1cb191a2200:log:952",
+          "token_delta_raw": "-270792980000000000000000",
+          "inventory_after_raw": "812378924265380624751304",
+          "native_delta_wei": "345402436887527196",
+          "previous_receipt_state": "SUCCESS"
+        },
+        {
+          "block": 83817093,
+          "hash": "0xfed23a8b71d5c883b2806bcf65dfee50d3793036afbeb7fa8d8f01b79799ccd6",
+          "direction": "in",
+          "raw": "0x39c9f631fc89496de691",
+          "event_id": "0xfed23a8b71d5c883b2806bcf65dfee50d3793036afbeb7fa8d8f01b79799ccd6:log:132",
+          "token_delta_raw": "272900425320459158808209",
+          "inventory_after_raw": "1085279349585839783559513",
+          "native_delta_wei": "-1000017737800000000",
+          "previous_receipt_state": "SUCCESS"
+        },
+        {
+          "block": 83820612,
+          "hash": "0x6b852120762ba68402722a4ba938854f2f1e141ad31506c2348911357262cafc",
+          "direction": "out",
+          "raw": "0x44f1eef52d91384646cd",
+          "event_id": "0x6b852120762ba68402722a4ba938854f2f1e141ad31506c2348911357262cafc:log:17",
+          "token_delta_raw": "-325583804875751935067853",
+          "inventory_after_raw": "759695544710087848491660",
+          "native_delta_wei": "1213054758937920917",
+          "previous_receipt_state": "SUCCESS"
+        },
+        {
+          "block": 84044848,
+          "hash": "0xc545fd90a9ce2e37e8b8e7c7e52f50a0ea106d033e8e9aeb1e6ca1c79206211e",
+          "direction": "out",
+          "raw": "0x3591ff8ee32656fd42ca",
+          "event_id": "0xc545fd90a9ce2e37e8b8e7c7e52f50a0ea106d033e8e9aeb1e6ca1c79206211e:log:1",
+          "token_delta_raw": "-252978616388459253547722",
+          "inventory_after_raw": "506716928321628594943938",
+          "native_delta_wei": "1006250807056946019",
+          "previous_receipt_state": "SUCCESS"
+        },
+        {
+          "block": 84578403,
+          "hash": "0xf377ac73ea6f320a0191f5f6ffb7c696aeed3b72744352f13322b927762b9fa3",
+          "direction": "out",
+          "raw": "0x35a69701439640d35be1",
+          "event_id": "0xf377ac73ea6f320a0191f5f6ffb7c696aeed3b72744352f13322b927762b9fa3:log:2",
+          "token_delta_raw": "-253358464160814297471969",
+          "inventory_after_raw": "253358464160814297471969",
+          "native_delta_wei": "805436466694286741",
+          "previous_receipt_state": "SUCCESS"
+        },
+        {
+          "block": 84765341,
+          "hash": "0xf6a8c779374e35110c4cd1586865e0f33107c1a60339b895d505198a5870d476",
+          "direction": "out",
+          "raw": "0x35a69701439640d35be1",
+          "event_id": "0xf6a8c779374e35110c4cd1586865e0f33107c1a60339b895d505198a5870d476:log:78",
+          "token_delta_raw": "-253358464160814297471969",
+          "inventory_after_raw": "0",
+          "native_delta_wei": "770163484150460219",
+          "previous_receipt_state": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "first_block": 93584281,
+      "last_block": 94208823,
+      "buy_transactions": 1,
+      "sell_transactions": 1,
+      "raw_in": "216289963627303641745350",
+      "raw_out": "216289963627303641745350",
+      "native_block_net_wei": "253300282319389315",
+      "transactions": [
+        {
+          "block": 93584281,
+          "hash": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+          "direction": "in",
+          "raw": "0x2dcd1a385db1285307c6",
+          "event_id": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34:log:3",
+          "token_delta_raw": "216289963627303641745350",
+          "inventory_after_raw": "216289963627303641745350",
+          "native_delta_wei": "-3000021096840000000",
+          "previous_receipt_state": "SUCCESS"
+        },
+        {
+          "block": 94208823,
+          "hash": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530",
+          "direction": "out",
+          "raw": "0x2dcd1a385db1285307c6",
+          "event_id": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530:log:1",
+          "token_delta_raw": "-216289963627303641745350",
+          "inventory_after_raw": "0",
+          "native_delta_wei": "3253321379159389315",
+          "previous_receipt_state": "SUCCESS"
+        }
+      ]
+    }
+  ],
+  "combined_native_block_scope_wei": "4794001707717376678",
+  "comparison": {
+    "stage17_selected_closed_episodes": 9,
+    "stage18_selected_closed_episodes": 11,
+    "positive_native_block_scopes": 6,
+    "negative_native_block_scopes": 5,
+    "selection_bias_warning": "NOT_HISTORICAL_OPPORTUNITY_DENOMINATOR"
+  },
+  "evidence_denominator": {
+    "frozen_wallet_CA_cells": 437,
+    "observed_token_transfer_cells": 148,
+    "zero_positive_transfer_cells": 289,
+    "these_are_not_purchase_or_qualified_miss_counts": true,
+    "eight_6b_wallet_observed_CA": 13,
+    "eight_6b_wallet_no_transfer_CA": 6,
+    "qualified_missed_opportunities": "UNVERIFIED"
+  },
+  "limitations": [
+    "Success status 13/13 is distinct from complete receipts; two complete bodies remain truncated",
+    "Wallet native block balance delta may include other same-block native flows and is not independently verified realized PnL",
+    "Trace not available on selected free Alchemy plan; no internal settlement reconstruction",
+    "11 selected closed episodes are intentionally selected evidence, not a representative win rate",
+    "No opportunity-time funding/eligibility proof, executable prices/slippage, follower latency or production approval"
+  ]
+}
