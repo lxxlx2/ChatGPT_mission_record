@@ -1,0 +1,60 @@
+name: Monster Stage62 Same Core Original166 D0 vs P1 Paired SHA 24h
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage62_all166_first_watch_vs_p1_paired_official_1m.py'
+      - '.github/workflows/monster-v4-stage62-full166-firstD0-vs-P1-source-SHA.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage62-exposed-first-watch-vs-p1
+  cancel-in-progress: false
+jobs:
+  real_all166_first_D0_vs_P1_USDM_original_source_SHA:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify same-model 46 immediate P1 original price parity guard
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage62_all166_first_watch_vs_p1_paired_official_1m.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage62_all166_first_watch_vs_p1_paired_official_1m.py --selftest
+      - name: Original all166 D0 real Binance publisher SHA 24h and same core original P1 comparison
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage62_all166_first_watch_vs_p1_paired_official_1m.py \
+            --out /tmp/monster_stage62 \
+            --workers 6
+      - name: Retain all166 exact original paired source SHA, 46 immediate duplicates and 120 delayed comparisons
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage62-all166-official-SHA-D0-vs-P1-paired-proxy
+          path: /tmp/monster_stage62/*
+          retention-days: 30
+      - name: Write all166 factual paired source evidence to existing Monster PR only
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage62/monster_stage62_* "$dest/"
+          git add "$dest/monster_stage62_all166_first_D0_vs_P1_official_24h_pair_source_SHA.jsonl" "$dest/monster_stage62_all166_D0_vs_P1_paired_price_path_summary.json"
+          if git diff --cached --quiet; then
+            echo STAGE62_ALREADY_COMMITTED
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage62 166 original same-core first D0 vs P1 future price path source'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE62_SOURCE_SHA_COMMIT_FAILED
+          exit 1
