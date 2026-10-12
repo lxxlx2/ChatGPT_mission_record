@@ -1,0 +1,51 @@
+name: Monster Stage73 Real SHA Future Source Gap Keeps Past WATCH
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_real_future_day_gap_does_not_erase_watch.py'
+      - '.github/workflows/monster-v4-stage73-real-publisher-future-gap-preserves-watch.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  real_official_SHA_3_exposed_watches_before_future_failure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and zero-future prefix semantics test
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_real_future_day_gap_does_not_erase_watch.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_m03_all2700_verified_prefix_discovery.py --selftest
+      - name: Original official Binance minute ZIP publisher SHA HFT H PIPPIN past WATCH persistence despite injected future day 404
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage73_real_future_day_gap_does_not_erase_watch.py \
+            --out /tmp/monster_stage73_verified_real_3_source_gaps.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage73-real-3-publisher-SHA-future-days-missing-past-watch-still-survives
+          path: /tmp/monster_stage73_verified_real_3_source_gaps.json
+          retention-days: 30
+      - name: Source-backed three real WATCH invariant and simulated source failure receipts to original Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage73_verified_real_3_source_gaps.json "$dest/"
+          git add "$dest/monster_stage73_verified_real_3_source_gaps.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: record true official 1m SHA proof three original early WATCH survive removed future day'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE73_FUTURE_SOURCE_GAP_TEST_GIT_ARCHIVE_FAILED
+          exit 1
