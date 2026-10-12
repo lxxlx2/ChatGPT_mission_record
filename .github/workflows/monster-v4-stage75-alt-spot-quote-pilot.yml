@@ -1,0 +1,33 @@
+name: Monster Stage75 Four Spot Quote Official SHA Pilot
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py'
+      - '.github/workflows/monster-v4-stage75-alt-spot-quote-pilot.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original95_frozen_universe_alternative_quote_source_proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile, source-pin and four native-quote t-minus-one no-future tests
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage74_original196_spot_asof_prior_minute_SHA.py --selftest
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py --selftest
+      - name: Actual Binance official Spot ZIP and publisher SHA on six fixed prereg D0 signals times four alt quotes
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py \
+            --pilot --workers 4 --out /tmp/monster_stage75_original6_alt_spot_pilot.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage75-original6-four-quote-real-publisher-SHA-pilot
+          path: /tmp/monster_stage75_original6_alt_spot_pilot.json
+          retention-days: 30
