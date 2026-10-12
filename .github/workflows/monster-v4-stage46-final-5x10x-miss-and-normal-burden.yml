@@ -6,6 +6,7 @@ on:
     paths:
       - 'crypto-300-profit-mission/monster/evidence/monster_stage45_blind_900x6_SHA_P1v02_metrics_and_gates.json'
       - 'crypto-300-profit-mission/monster/evidence/monster_stage45_blind_all5400_originalV4_P1v02_cases.jsonl'
+      - '.github/workflows/monster-v4-stage46-final-5x10x-miss-and-normal-burden.yml'
   workflow_dispatch:
 permissions:
   contents: write
