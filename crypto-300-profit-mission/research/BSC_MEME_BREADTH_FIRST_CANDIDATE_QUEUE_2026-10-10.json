@@ -133,11 +133,12 @@
     "wallets_with_complete_19_ca_direction_history": 14,
     "latest_2026_10_12_complete_wallet_ca_cells": 367,
     "latest_2026_10_12_complete_zero_transfer_cells": 289,
-    "latest_2026_10_12_unknown_incomplete_cells": 40,
-    "latest_2026_10_12_observed_wallet_ca_pairs": 108,
+    "latest_2026_10_12_unknown_incomplete_cells": 0,
+    "latest_2026_10_12_observed_wallet_ca_pairs": 148,
     "latest_2026_10_12_complete_quantity_closed_cells": 44,
     "latest_2026_10_12_complete_observed_wallet_ca_pairs": 78,
-    "latest_2026_10_12_partial_observed_wallet_ca_pairs": 30
+    "latest_2026_10_12_partial_observed_wallet_ca_pairs": 70,
+    "latest_2026_10_12_nonexhausted_transfer_wallet_ca_cells": 70
   },
   "venue_coverage": [
     {
@@ -401,6 +402,14 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
         "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 12,
+        "complete_transfer_history_CAs": 8,
+        "partial_transfer_CAs": 11,
+        "all_19_ca_paginated": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -457,6 +466,14 @@
         "self_signed_first_in_out_samples": 8,
         "live_follow_status": "NO_GO",
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V3_2026-10-12.json"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 4,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -501,7 +518,15 @@
       "current_research_priority": "TWO_SIGNED_HISTORIC_IFML_LOBSTER_COHORTS; NIULAI_ONE_PASSIVE_INBOUND_0_NATIVE_DELTA_NO_OWNER_BUY_OR_EXIT_PROOF__NO_GO",
       "latest_entry_timing_source": "BSC_MEME_8E6B_VS_239E_IFML_LOBSTER_ENTRY_TIMING_2026-10-11.json",
       "latest_v1": "BSC_MEME_ADDRESS_MULTIFILL_V1_CAUSAL_AND_CASHFLOW_REPORT_2026-10-11.md",
-      "latest_niulai_source_classification": "BSC_MEME_9D_BINANCE_LIFE_239E_NIULAI_PASSIVE_TRANSFER_CONTROL_2026-10-11.json"
+      "latest_niulai_source_classification": "BSC_MEME_9D_BINANCE_LIFE_239E_NIULAI_PASSIVE_TRANSFER_CONTROL_2026-10-11.json",
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 3,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
@@ -534,7 +559,15 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "币安人生",
         "哈基米 / HAJIMI"
-      ]
+      ],
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 2,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
@@ -567,7 +600,15 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "币安人生",
         "哈基米 / HAJIMI"
-      ]
+      ],
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 2,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
@@ -609,6 +650,14 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
         "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 14,
+        "complete_transfer_history_CAs": 10,
+        "partial_transfer_CAs": 9,
+        "all_19_ca_paginated": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -647,6 +696,26 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
         "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 12,
+        "complete_transfer_history_CAs": 13,
+        "partial_transfer_CAs": 6,
+        "all_19_ca_paginated": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      },
+      "address_model_4_877AF_mars_genesis_sample_owner_trade_2026_10_12": {
+        "self_signed_first_mars_purchase_block": 112441460,
+        "earliest_fixed_pool_sample_block": 112441460,
+        "original_native_input_wei": "550000000000000000",
+        "first_self_signed_sale_block": 112441495,
+        "first_buy_plus_sale_scope_net_wei": "-42086692758567114",
+        "tax_floor_three_percent_first_exit": true,
+        "priority": "NEW_HIGHEST_PRIORITY_EARLY_MARS_BUY_SELL_RESEARCH_NOT_FOLLOW_SIGNAL",
+        "source": "BSC_MEME_877AF_MARS_GENESIS_SAMPLE_OWNER_BUY_AND_SELL_NATIVE_QA_2026-10-12.json",
+        "full_mars_transfer_cursor_exhausted": false,
+        "production": "NO_GO"
       }
     },
     {
@@ -682,7 +751,16 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
         "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
-      }
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 7,
+        "complete_transfer_history_CAs": 15,
+        "partial_transfer_CAs": 4,
+        "all_19_ca_paginated": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      },
+      "address_model_4_v5_comparison_note": "498528 first owner signed MARS buy at 112441470, ten blocks later than 877AF 112441460; 498528 still important independent early-batch wallet; neither wallet's entire MARS PnL verified."
     },
     {
       "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
@@ -707,6 +785,14 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
         "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 7,
+        "complete_transfer_history_CAs": 14,
+        "partial_transfer_CAs": 5,
+        "all_19_ca_paginated": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -765,7 +851,15 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "SIREN",
         "BANANAS31"
-      ]
+      ],
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 5,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
@@ -811,7 +905,15 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "4",
         "币安人生"
-      ]
+      ],
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 2,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0x4789f192df5deb559af2bd9185781fda995856d5",
@@ -857,7 +959,15 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "4",
         "币安人生"
-      ]
+      ],
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 2,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
@@ -903,7 +1013,15 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "4",
         "币安人生"
-      ]
+      ],
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 2,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
@@ -949,7 +1067,15 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "4",
         "币安人生"
-      ]
+      ],
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 2,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
@@ -1023,6 +1149,14 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
         "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 8,
+        "complete_transfer_history_CAs": 12,
+        "partial_transfer_CAs": 7,
+        "all_19_ca_paginated": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -1165,6 +1299,14 @@
         "assessment": "MARS original self-signed buy+sell sample; 牛来 incoming contract distributions, owner buy not proven; 8 historical quantity-closed cohorts; net PnL/lag-follow not validated",
         "source": "BSC_MEME_ADDRESS_MODEL_4_23_WALLET_19_CA_COVERAGE_REPAIR_AND_EARLY_LATE_CONTROL_2026-10-12.md",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 13,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -1241,6 +1383,14 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
         "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 17,
+        "complete_transfer_history_CAs": 4,
+        "partial_transfer_CAs": 15,
+        "all_19_ca_paginated": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -1293,7 +1443,15 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "4",
         "哈基米 / HAJIMI"
-      ]
+      ],
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 5,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
@@ -1388,6 +1546,14 @@
         "assessment": "牛来 original owner-signed buy+sell sample and zero net token balance; MARS routes 16/16 assigned; GIGGLE contract receipts, not profitable buys",
         "source": "BSC_MEME_ADDRESS_MODEL_4_23_WALLET_19_CA_COVERAGE_REPAIR_AND_EARLY_LATE_CONTROL_2026-10-12.md",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 6,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -1464,6 +1630,14 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
         "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 10,
+        "complete_transfer_history_CAs": 11,
+        "partial_transfer_CAs": 8,
+        "all_19_ca_paginated": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -1513,7 +1687,15 @@
       ],
       "current_research_priority": "HIGH_REPEAT_EARLY_LAUNCH_PARTICIPATION_WITH_THIRD_TOKEN_NEGATIVE_CONTROL; QUOTE_ROUTES_PARTIAL; LIFETIME_AND_COPY_NO_GO",
       "latest_three_coin_report": "BSC_MEME_ADDRESS_MODEL_3_5C48_THREE_COIN_AND_FOUR_EOA_RESEARCH_REPORT_2026-10-11.md",
-      "pnl_scope_note": "3 selected token CA 39 signed success native event-block deltas, NOT lifetime or fully isolated realized PnL"
+      "pnl_scope_note": "3 selected token CA 39 signed success native event-block deltas, NOT lifetime or fully isolated realized PnL",
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 3,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     },
     {
       "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
@@ -1583,6 +1765,14 @@
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V4_2026-10-12.json",
         "status": "PARTIAL_FOR_HOT_CAS_NO_POSITION_PNL_OR_FOLLOWABILITY",
         "production": "NO_GO"
+      },
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 6,
+        "complete_transfer_history_CAs": 14,
+        "partial_transfer_CAs": 5,
+        "all_19_ca_paginated": false,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
       }
     },
     {
@@ -1631,7 +1821,15 @@
         "龙虾"
       ],
       "current_research_priority": "EARLY_CURVE_IFML_LOBSTER_SELF_SIGNED; BINANCE_LIFE_ENTERED_BY_OTHER_SIGNER_THEN_OWNER_EXITED__DO_NOT_COUNT_ACTIVE_BUY__NO_GO",
-      "additional_binance_life_source_classification": "BSC_MEME_9D_BINANCE_LIFE_239E_NIULAI_PASSIVE_TRANSFER_CONTROL_2026-10-11.json"
+      "additional_binance_life_source_classification": "BSC_MEME_9D_BINANCE_LIFE_239E_NIULAI_PASSIVE_TRANSFER_CONTROL_2026-10-11.json",
+      "address_model_4_v5_2026_10_12": {
+        "observed_transfer_tokens": 4,
+        "complete_transfer_history_CAs": 19,
+        "partial_transfer_CAs": 0,
+        "all_19_ca_paginated": true,
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+        "status": "RESEARCH_ONLY_NO_GO"
+      }
     }
   ],
   "overlapping_contract_recipients": [
@@ -2466,6 +2664,27 @@
     "candidate_wallets_affected": 9,
     "priority_warning": "Wallet ranking not a buy or copy-trade recommendation. Completing cold CAs does not complete highly trafficked hot CAs.",
     "remaining_high_volume_wallet_CA_direction_cursors": "UNEXHAUSTED",
+    "production": "NO_GO"
+  },
+  "address_model_4_v5_transfer_presence_2026_10_12": {
+    "date": "2026-10-12",
+    "source_matrix": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
+    "blob_sha": "8761851193d99cc26d0c8a3e95f1a800ae50f925",
+    "status": "437_OF_437_TRANSFER_PRESENCE_CLASSIFIED_367_COMPLETE_70_PARTIAL_14_FULL_WALLETS_NO_GO",
+    "transfer_observed": 148,
+    "full_zero_transfer": 289,
+    "full_transfer_histories": 367,
+    "partial_transfer_histories": 70,
+    "unobserved_presence_unknown": 0,
+    "no_profit_inference": true,
+    "first_sampled_MARS_pool_block": 112441460,
+    "earliest_owner_signed_MARS_original_trade_verified": {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "block": 112441460,
+      "original_native_input_wei": "550000000000000000",
+      "source": "BSC_MEME_877AF_MARS_GENESIS_SAMPLE_OWNER_BUY_AND_SELL_NATIVE_QA_2026-10-12.json"
+    },
+    "risk": "Participation presence covered, full token amounts and original transaction economic PnL for 70 partial CAs still NOT confirmed; earliest sampled pool block not market genesis.",
     "production": "NO_GO"
   }
 }
