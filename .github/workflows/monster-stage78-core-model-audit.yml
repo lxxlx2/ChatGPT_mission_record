@@ -1,0 +1,38 @@
+name: Monster Stage78 Core Model Audit
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage78-core-model-audit.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage78_core_baseline_audit.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE77_CORE_MODEL_ACCEPTANCE_AND_BOUNDARY_FREEZE_20261013.md
+      - crypto-300-profit-mission/monster/evidence/monster_stage34_18date_discovery_census_verified.json
+      - crypto-300-profit-mission/monster/evidence/monster_stage35_18date_SHA_verified_first_watch_feature_summary.json
+      - crypto-300-profit-mission/monster/evidence/monster_stage39_36original_SHA_all5400_futures_discovery_summary.json
+      - crypto-300-profit-mission/monster/evidence/monster_stage52_pinned_v03_all5400_36SHA_true_global_cap_metrics.json
+      - crypto-300-profit-mission/monster/evidence/monster_stage66_new3_full2700_global_cap5_firstD0_vs_P1v03_summary.json
+      - crypto-300-profit-mission/monster/evidence/monster_stage70_offline_sqlite_watch_projection_summary.json
+      - crypto-300-profit-mission/monster/evidence/monster_stage74_original196_spot_trading_source_summary.json
+      - crypto-300-profit-mission/monster/evidence/monster_stage75_original95_four_quote_spot_source_summary.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  read_only_baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Stage78 code self-test
+        run: python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage78_core_baseline_audit.py --selftest
+      - name: Verify all eight pinned evidence blobs and original denominators
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage78_core_baseline_audit.py > /tmp/monster-stage78-baseline.json
+          python -m json.tool /tmp/monster-stage78-baseline.json > /dev/null
+          cat /tmp/monster-stage78-baseline.json
