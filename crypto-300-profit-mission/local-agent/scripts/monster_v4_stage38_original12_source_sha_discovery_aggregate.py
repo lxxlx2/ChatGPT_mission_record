@@ -45,8 +45,12 @@ def decode(manifest,folder):
                 if any(p["verified_official_publisher_SHA256"]!=True or len(p["zip_sha256"])!=64 or p["bars"]!=1440
                        for p in r["official_9_daily_1m_publisher_SHA256"]):
                     raise ValueError("STAGE38_PUBLISHER_SHA_NOT_PROVEN")
-            elif status not in ("CENSORED_DAILY_1M_404","CENSORED_DAILY_1M_GAP"):
+            elif status not in ("CENSORED_DAILY_1M_404","CENSORED_DAILY_1M_GAP","CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT"):
                 raise ValueError("STAGE38_UNRESOLVED_SOURCE_STATE")
+            if status=="CENSORED_PUBLISHER_VERIFIED_1H_VS_1M_PRICE_CONFLICT":
+                if (len(r.get("official_9_daily_1m_publisher_SHA256",[]))!=9
+                    or "daily_1m_baseline_open" not in r or "original_1h_baseline_open" not in r):
+                    raise ValueError("STAGE38_MISSING_ORIGINAL_HOURLY_MINUTE_CONFLICT_FACTS")
         out.extend(obj["result"])
         receipts.append({"date":day,"shard":shard,"artifact_id":aid,
                          "source_original_zip_SHA256":sha(data),"source_original_inner_JSON_SHA256":sha(raw),
