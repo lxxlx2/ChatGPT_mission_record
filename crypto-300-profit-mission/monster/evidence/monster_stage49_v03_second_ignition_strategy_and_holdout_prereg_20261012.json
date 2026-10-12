@@ -1,0 +1,74 @@
+{
+  "schema": "MONSTER_STAGE49_V03_SECOND_IGNITION_PRIOR_TO_NEW_USDM_MARKET_PRICE_PREREG_V1",
+  "frozen_at": "2026-10-12",
+  "single_monster_PR": 30,
+  "exposure_source": "crypto-300-profit-mission/monster/evidence/monster_stage49_frozen_after_stage48_exposure_and_new_dates.json",
+  "exposure_source_git_blob_sha1": "a2d360e5326f9d9befc679b752e9e6df366f4998",
+  "exposure_pin_before_new_prices": "3167e93f1c693a58f22fd6142ec6fc49e056d2d4",
+  "dates": [
+    "2025-01-30",
+    "2025-06-02",
+    "2025-08-01",
+    "2025-10-02",
+    "2026-06-21",
+    "2026-07-28"
+  ],
+  "historical_independence": "STATIC_GIT_ISO_DATE_NONOVERLAP_ONLY; NO_GUARANTEE_NOT_SEEN_OTHERWISE",
+  "venue": "BINANCE_USDM_ORIGINAL_STAGE36_FULL900_HISTORICAL_ARCHIVED_PLAIN_USDT_NAMES",
+  "original_inventory_blob_sha1": "91b0f99ef85adb48494c5be5c7cc13a7cedcb686",
+  "window": "UTC06:00 168h each; exactly900 archived original-symbol attempts/date; 5400 attempts; mark prior-hourly and daily minute source censored",
+  "GT": "First hourly opening price to subsequent 168h maximum true 1m HIGH; 2x 5x 10x scored after replay, not buy/sell profit",
+  "production_model": "LOCK_ORIGINAL_MONSTER_V4_D0_D1_FUTURES_3MIN_NO_THRESHOLD_CHANGE",
+  "baseline_V4_git_blob": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+  "priority_hypothesis": {
+    "name": "P1_V03_REPEATABLE_ASOF_3M_SECOND_IGNITION_OBSERVATION_AND_GLOBAL_BUDGET",
+    "candidate_not_validated": true,
+    "d0": "NEVER_SUPPRESS_OR_DELAY_ANY_RAW_WATCH",
+    "activate": "After the first genuine original V4 D0 WATCH of each symbol-date, observe real published closed 1m every 3 minutes to end of same 168h frozen window; no tracking before first D0, never use later information",
+    "initial_urgent_gate": "At FIRST original D0 WATCH only: ret60_pct >=14 AND quote15_USDT >=3000000 AND quote15_normalized_prev45 >=1.5",
+    "reignition_gate": "At any later closed 3-minute polling clock following first D0: close_relative_first_watch_close_pct >=15 AND ret60_pct >=8 AND quote15_USDT >=2000000 AND quote15_normalized_prev45 >=1.5",
+    "asof_minute_contract": "Only official ZIP publisherSHA-verified 1m t-61 through t-1 bars; 61 contiguous. Calculate ret60 from close[t-1]/close[t-61]-1, quote15 from quote[t-15..t-1], previous45 quote[t-60..t-16]; ret_since_first from last-closed close of first original D0",
+    "first_qualified_per_coin_date": "One per symbol+UTC06 window; first true candidate recorded with original UTC and prior 1m source, no future 2x labels in event extraction",
+    "observation_expiry": "No later than end of window 168h from fixed UTC06; not after first D0 time+7days; NO carry-over between windows",
+    "same_tick_priority": "Earliest asof candidate UTC first; when same timestamp sort higher CURRENT quote15 first, then symbol ASC; no future price in ties",
+    "global_budget": "Exactly maximum FIVE urgent deliveries in each UTC06 anchored rolling research 24h block, 42 blocks total; full candidate log and raw D0 always persisted; over-cap is DEFERRED_RESEARCH_ONLY, NOT emailed next day or retroactively delivered",
+    "fate": "NO real email, trading, BUY signals, transfers, local Mac",
+    "distinct_levels": [
+      "RAW_D0_RESEARCH_WATCH",
+      "P1V03_ELIGIBLE_RESEARCH",
+      "P1V03_UNDER_CAP_RESEARCH",
+      "DEFERRED_SOURCE_VALID_NOT_URGENT"
+    ],
+    "normal_coin_policy": "All source-valid 1m ordinary non-2x continue under same rules; source missing/candle conflicts NEVER recorded as negative no-WATCH",
+    "historical_L2_contract": "Missing historical order book/fills => WATCH_ONLY even if all discovery gates pass"
+  },
+  "fixed_acceptance_gates": {
+    "minimum_source_valid_2x_events": 20,
+    "original_D0_strict_early2x_min_pct": 90,
+    "original_D0_at_least5minute_early2x_min_pct": 85,
+    "delivered_urgent_retains_D0_5minute_early2x_min_pct": 80,
+    "all_source_valid_GT5x_with_delivered_urgent_at_least_5min": true,
+    "all_source_valid_GT10x_with_delivered_urgent_at_least_5min": true,
+    "max_delivered_urgent_per_anchor_24h": 5,
+    "max_urgent_one_day_24h": 12,
+    "ordinary_not2x_and_delivered_alert_counts": "REPORT_ALL",
+    "max_new_source_censoring_claim": "NEVER FILL AS MODEL MISS; DISCLOSE ALL",
+    "historical_execute_profit": "UNVERIFIED_IF_NO_HISTORICAL_L2",
+    "independent_other_AI_review": "NOT_DONE",
+    "deployment": "NO_GO"
+  },
+  "reference_evidence": {
+    "stage48_true_asof_936_report": "crypto-300-profit-mission/monster/MONSTER_STAGE48_ALL936_ORIGINAL_D0_WATCH_REAL_MINUTE_SOURCE_SHA_FEATURE_FACTS_20261012.md",
+    "stage45_P1_v02": "REJECTED_HIGH_ALERT_BURDEN_AND_MISSED_BULLA",
+    "stage42_P1_v01": "REJECTED_EARLY2X_RECALL_LOW",
+    "no_same_frozen_dates_for_validation": true
+  },
+  "safety": {
+    "Frank": "UNCHANGED",
+    "Gmail": "OFF",
+    "Monster_deploy": "NO_GO",
+    "auto_trade": "NO_GO",
+    "no_new_automations": true,
+    "no_title_changes": true
+  }
+}
