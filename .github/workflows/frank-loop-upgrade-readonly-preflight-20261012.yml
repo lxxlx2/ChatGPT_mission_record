@@ -36,6 +36,8 @@ jobs:
         run: |
           python -B -m py_compile scripts/frank_loop_upgrade_readonly_preflight_20261012.py
           python -m pyflakes scripts/frank_loop_upgrade_readonly_preflight_20261012.py
+          python -B -m py_compile scripts/frank_rpc_file_readonly_diagnose_20261012.py
+          python -m pyflakes scripts/frank_rpc_file_readonly_diagnose_20261012.py
           python - <<'PY'
           from pathlib import Path
           code = Path("scripts/frank_loop_upgrade_readonly_preflight_20261012.py").read_text()
