@@ -1,0 +1,2464 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "D1_G3": "REJECTED_EXPOSED",
+  "D2_historical_profit": "NOT_SCORABLE",
+  "FRANK": "UNCHANGED",
+  "GMAIL": "OFF",
+  "MONSTER_DEPLOY": "NO_GO",
+  "OOS": "NOT_DONE",
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "all_historic_D1": 305,
+  "archived_book_at_actual_D1": "NONE_AVAILABLE_IN_RESEARCH_SOURCE",
+  "execution_net_pnl": "UNKNOWN",
+  "notional_quote": "UNSPECIFIED",
+  "point_in_time_crypto_identity_positive_proof": "UNAVAILABLE",
+  "rows": [
+    {
+      "D1_UTC": "2025-02-03T22:12:00Z",
+      "D2_evidence_status": "MAPPING_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "MULTIPLIER_MAPPING_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "1000000MOGUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:27:00Z",
+      "D2_evidence_status": "MAPPING_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "MULTIPLIER_MAPPING_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "1000BONKUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T21:39:00Z",
+      "D2_evidence_status": "MAPPING_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "MULTIPLIER_MAPPING_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "1000FLOKIUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T16:27:00Z",
+      "D2_evidence_status": "MAPPING_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "MULTIPLIER_MAPPING_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "1000WHYUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T22:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AAVEUSDT"
+    },
+    {
+      "D1_UTC": "2025-01-30T15:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ACHUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ADAUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T21:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AI16ZUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AIUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T21:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AIXBTUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ALCHUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ALGOUSDT"
+    },
+    {
+      "D1_UTC": "2025-01-31T06:30:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ANIMEUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-02T23:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ARCUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-01T20:45:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ARPAUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T22:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ARUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-02T23:42:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AVAAIUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-04T01:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BANUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BELUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T01:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BTCDOMUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T14:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "CETUSUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-02T23:42:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "COWUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T22:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "CRVUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T14:45:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DEGOUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T02:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DFUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-04T04:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DODOXUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:30:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DOGEUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "EIGENUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ENAUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ENSUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T07:45:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ETHFIUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T22:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ETHUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-02T23:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "FARTCOINUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T18:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "GRIFFAINUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T07:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "HBARUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T07:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "INJUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "IOTAUSDT"
+    },
+    {
+      "D1_UTC": "2025-01-30T15:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "JASMYUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "JTOUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T05:42:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "KASUSDT"
+    },
+    {
+      "D1_UTC": "2025-01-31T14:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "KAVAUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T16:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "KOMAUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-04T04:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "LDOUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "LISTAUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T16:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MASKUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T14:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MOVEUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T21:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "NEIROUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ONDOUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T21:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ORDIUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T09:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PENDLEUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-01T03:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PENGUUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T08:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PHAUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T14:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PIPPINUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "POLUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-02T17:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "POPCATUSDT"
+    },
+    {
+      "D1_UTC": "2025-01-31T14:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "QTUMUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:30:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "RAYSOLUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "RENDERUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-06T05:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SCRUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SPELLUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T03:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SUIUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T15:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SWARMSUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T05:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TAOUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T22:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TIAUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TURBOUSDT"
+    },
+    {
+      "D1_UTC": "2025-01-30T16:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "USUALUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T07:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VETUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-01T15:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VINEUSDT"
+    },
+    {
+      "D1_UTC": "2025-01-31T08:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VIRTUALUSDT"
+    },
+    {
+      "D1_UTC": "2025-01-31T08:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VTHOUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-04T19:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "WIFUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "XLMUSDT"
+    },
+    {
+      "D1_UTC": "2025-02-03T06:30:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-01-30",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "XRPUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-03T14:42:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ALCHUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-07T16:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ANIMEUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-02T20:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BIDUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-05T07:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BSWUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-04T10:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "COMPUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-06T13:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "IOSTUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-04T18:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "LPTUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-07T01:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MASKUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-03T18:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MELANIAUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-03T16:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MEUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-03T01:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "NEIROETHUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-05T13:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "OGNUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-03T00:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "RPLUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-05T07:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "RVNUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-02T08:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SOPHUSDT"
+    },
+    {
+      "D1_UTC": "2025-06-06T14:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-06-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "UMAUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-04T16:03:00Z",
+      "D2_evidence_status": "MAPPING_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "MULTIPLIER_MAPPING_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "1000CATUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-03T23:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "A2ZUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-01T20:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AGTUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-07T08:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AINUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-07T16:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ASRUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-07T16:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BANKUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-07T11:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BIOUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-07T07:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BROCCOLIF3BUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-07T08:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BULLAUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-03T03:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "CFXUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-06T07:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DMCUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-07T09:30:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DOLOUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-04T08:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DOODUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-03T19:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ESPORTSUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-04T16:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "FHEUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-04T12:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "FUNUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-06T15:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "IDOLUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-05T01:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ILVUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-08T02:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "IPUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-05T04:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "KERNELUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-06T22:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "LEVERUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-01T20:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MAGICUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-06T07:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MEMEFIUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-02T16:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-03T20:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MYXUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-04T14:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "NEIROETHUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-08T05:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "OGUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-06T16:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "OMNIUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-04T18:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "RAREUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-08T00:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SIRENUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-05T15:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SKATEUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-02T10:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SPELLUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-04T07:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SPKUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-03T18:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SQDUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-06T07:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SWELLUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-07T06:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TACUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-06T17:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TANSSIUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-07T08:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TAUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-08T05:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TREEUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-06T17:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TSTUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-03T01:45:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "USTCUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-05T19:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VANRYUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-06T16:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VELVETUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-02T17:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VINEUSDT"
+    },
+    {
+      "D1_UTC": "2025-08-04T16:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-08-01",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ZRCUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-08T13:21:00Z",
+      "D2_evidence_status": "MAPPING_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "MULTIPLIER_MAPPING_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "1000CHEEMSUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T12:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AIAUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T00:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AKEUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T16:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ALCHUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-06T07:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ALPINEUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-06T11:45:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "B2USDT"
+    },
+    {
+      "D1_UTC": "2025-10-08T07:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BANKUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T17:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-08T04:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BMTUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T03:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BROCCOLI714USDT"
+    },
+    {
+      "D1_UTC": "2025-10-07T09:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BROCCOLIF3BUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T06:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "C98USDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T16:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "CELOUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T07:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "COAIUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T21:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DAMUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T22:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DOODUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-05T06:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DUSKUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-06T13:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "EPTUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T19:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "FORMUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T11:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "FUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-09T02:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "GPSUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T04:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "HANAUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T04:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "HOOKUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-07T00:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "HYPERUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-04T04:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "INUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T16:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "JELLYJELLYUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-08T00:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "KOMAUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T11:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "LIGHTUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-07T11:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "LISTAUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-07T09:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MUBARAKUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T01:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MYXUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T13:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "NAORISUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-06T14:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "OGUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T00:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "OPENUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-05T07:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ORDERUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T16:30:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PARTIUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-05T18:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PHBUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-06T15:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PLUMEUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-04T10:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PORT3USDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T14:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SCRTUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-05T07:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SKATEUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-06T09:30:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SKYAIUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T16:42:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SLERFUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-04T08:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SOMIUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T19:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SQDUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-07T19:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "STBLUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-06T00:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "STOUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-05T15:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TAKEUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-08T14:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "THEUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-04T02:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TRADOORUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-02T09:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TSTUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-05T05:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TUTUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-07T20:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "USELESSUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T06:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VFYUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-07T16:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-07T12:42:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "WUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-04T23:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "XANUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-03T02:30:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "XPINUSDT"
+    },
+    {
+      "D1_UTC": "2025-10-04T18:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2025-10-02",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ZECUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T18:33:00Z",
+      "D2_evidence_status": "MAPPING_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "MULTIPLIER_MAPPING_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "1000000BOBUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T17:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "2ZUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-28T02:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ACTUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-26T08:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AGLDUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-24T05:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ALICEUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-23T12:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AVAAIUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T17:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BANANAS31USDT"
+    },
+    {
+      "D1_UTC": "2026-06-25T08:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BASUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-23T19:42:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BEATUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-22T12:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BELUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T10:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BICOUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T11:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T08:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BULLAUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-25T10:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "CARVUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T10:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "CLOUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-25T16:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "CTRUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-22T08:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DEXEUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-24T20:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DRAMUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T07:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DYMUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-23T13:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ESPORTSUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-25T21:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "FOGOUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-27T09:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "GLMUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-23T13:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "GUAUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-23T12:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "GUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-23T16:45:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "HEIUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-27T20:45:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "HOTUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-26T08:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ICNTUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-23T03:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "IDUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-22T10:36:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "LAYERUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-26T05:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MAGMAUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-24T17:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MAVIAUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-28T03:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MEMEUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T10:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MMTUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-25T01:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-24T20:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MUUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-27T01:54:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MYXUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T21:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "NAORISUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-27T09:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "NFPUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-24T22:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "POPCATUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-28T01:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "POWRUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-27T00:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PUNDIXUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-24T20:45:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "QCOMUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-27T16:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "RAVEUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T14:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "RESOLVUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-22T18:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "REUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-25T11:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SAFEUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T16:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SAGAUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-25T12:42:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SLXUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-24T20:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SNDKUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-24T20:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SOXLUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T17:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "STOUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T10:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SYNUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-21T06:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TNSRUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-23T14:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TSTUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-26T12:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VELVETUSDT"
+    },
+    {
+      "D1_UTC": "2026-06-24T20:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-06-21",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "WDCUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-31T14:00:00Z",
+      "D2_evidence_status": "MAPPING_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "MULTIPLIER_MAPPING_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "1000RATSUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-31T15:06:00Z",
+      "D2_evidence_status": "MAPPING_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "MULTIPLIER_MAPPING_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "1000SATSUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-01T16:18:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AEVOUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T20:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "AXTIUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T10:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BANKUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T19:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BEATUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T20:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BEUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-03T02:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BICOUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-31T11:09:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BIRBUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-02T02:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T16:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-29T14:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "BULLAUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T19:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "CAPUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-31T05:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "CFXUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T11:27:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "COTIUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-31T05:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DEXEUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-29T18:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "DIAUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T06:51:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "EPICUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T19:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ERAUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T19:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ESPORTSUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-29T05:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ESPUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T10:30:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "EULUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-03T13:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "GENIUSUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T10:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "GIGGLEUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-01T19:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "HEIUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-04T02:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "HFTUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-02T02:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "HOMEUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-02T19:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ICNTUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-01T03:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "IDOLUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T20:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "IRENUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T04:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "KOMAUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-29T18:03:00Z",
+      "D2_evidence_status": "OUT_OF_SCOPE",
+      "date": "2026-07-28",
+      "identity": "CONFIRMED_TRADFI_OUT_OF_CRYPTO_SCOPE",
+      "original_D1_preserved": true,
+      "symbol": "KORUUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T13:33:00Z",
+      "D2_evidence_status": "OUT_OF_SCOPE",
+      "date": "2026-07-28",
+      "identity": "CONFIRMED_TRADFI_OUT_OF_CRYPTO_SCOPE",
+      "original_D1_preserved": true,
+      "symbol": "LRCXUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-02T10:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MANTRAUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T14:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MMTUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T12:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "MUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T13:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "NBISUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T16:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ONUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-02T15:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PORTALUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-02T07:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PRLUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-03T12:21:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "PTBUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-29T18:06:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "REUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-29T12:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "RIFUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-31T04:00:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "RLCUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-04T01:45:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SKYAIUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T12:03:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "SOONUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-31T13:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TAGUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-02T17:39:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TAKEUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-31T21:48:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "TLMUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-30T00:24:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "UAIUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-02T14:57:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "UBUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-28T09:15:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VANRYUSDT"
+    },
+    {
+      "D1_UTC": "2026-08-03T09:12:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "VICUSDT"
+    },
+    {
+      "D1_UTC": "2026-07-31T01:33:00Z",
+      "D2_evidence_status": "IDENTITY_UNKNOWN",
+      "date": "2026-07-28",
+      "identity": "CRYPTO_IDENTITY_UNVERIFIED",
+      "original_D1_preserved": true,
+      "symbol": "ZHIPUUSDT"
+    }
+  ],
+  "schema": "MONSTER_STAGE90_EXPOSED_ALL305_D2_PROVENANCE_GAP_AUDIT_V1",
+  "source_stage88_git_blob": "86e96b726f677a15f5a7c8d740e3caca5c83e3fc",
+  "status_counts": {
+    "IDENTITY_UNKNOWN": 294,
+    "MAPPING_UNKNOWN": 9,
+    "OUT_OF_SCOPE": 2
+  }
+}
