@@ -175,10 +175,20 @@ def review_then_install():
     report=review_with_claude()
     dest=ROOT/REVIEW_PATH
     dest.parent.mkdir(parents=True,exist_ok=True)
+    extra=[]
     if dest.exists():
-        raise RuntimeError("STAGE99_PREVIOUS_REVIEW_EXISTS_NO_OVERWRITE")
+        # An earlier independent BLOCK is a required audit record, not a reason
+        # to prevent a fixed version from getting a fresh REAL review.
+        previous=dest.read_bytes()
+        old_sha=hashlib.sha256(previous).hexdigest()
+        archive=REVIEW_PATH.replace(".json","_archive_"+old_sha[:16]+".json")
+        archived=ROOT/archive
+        if archived.exists():
+            raise RuntimeError("STAGE99_REVIEW_ARCHIVE_ALREADY_PRESENT")
+        archived.write_bytes(previous)
+        extra.append(archive)
     dest.write_text(json.dumps(report,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
-    gate.git("add","--",REVIEW_PATH)
+    gate.git("add","--",REVIEW_PATH,*extra)
     gate.safe_git_commit_and_push_for_review()
     # Git might have rebased the private branch. The code hashes must remain.
     verify_approved()
