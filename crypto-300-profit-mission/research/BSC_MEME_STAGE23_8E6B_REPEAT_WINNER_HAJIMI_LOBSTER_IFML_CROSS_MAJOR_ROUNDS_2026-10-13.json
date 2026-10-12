@@ -1,0 +1,501 @@
+{
+  "schema": "BSC_MEME_STAGE23_FROZEN_8E6B_TWO_MAJOR_TOKEN_REPEAT_POSITIVE_ROUNDS_AND_NEGATIVE_DENOMINATOR_V1",
+  "date": "2026-10-13",
+  "chain": "bnb-mainnet",
+  "mode": "HISTORICAL_RESEARCH_ONLY",
+  "production": "NO_GO",
+  "source_git_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_2026_SIX_CORE_POSITION_TRANSFER_HISTORY_2026-10-11.json",
+      "git_blob_sha": "e09082133b6483db00470c15ff569e0d9489335f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json",
+      "git_blob_sha": "23149a3d5973c2ae29fafd7ec09fc2ffa820fce9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE18_8E6B_LOBSTER_13_SIGNED_TWO_CLOSED_ROUNDS_2026-10-13.json",
+      "git_blob_sha": "624a9f92ccd12ec3b5ea3e7a5321364b39ffe647"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE17_IFML_DDAC_8E6B_SAME_TOKEN_TIME_COHORT_CASHFLOW_2026-10-13.json",
+      "git_blob_sha": "4cba5016ea4e8539fa454ba152ead1c3a8488cb3"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json",
+      "git_blob_sha": "3761b9140d0c64b1ffd8d8d243d63a2a1a4fc690"
+    }
+  ],
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "existing_frozen_membership": "FROZEN_23_EOA_NOT_NEW_WALLET",
+  "frozen_19_ca_ERC20_transfer_presence": 13,
+  "major_ca_cohort_preselected": [
+    "哈基米 / HAJIMI",
+    "龙虾",
+    "我踏马来了"
+  ],
+  "method": "Repartition preexisting full exact-CA ERC20 raw-quantity 8E6B HAJIMI history by zero-inventory boundaries, reattach prior signed transaction and block BNB movement, supplement with independent historical archive balances and selected direct receipts/WBNB gas reconciliations; retain Stage18 original Lobster and Stage17 IFML episodes, no broad repeat-scan, no ranking on token transfers alone.",
+  "summary": {
+    "major_tokens_scoped": 3,
+    "closed_zero_inventory_rounds": 8,
+    "positive_closed_native_scope_rounds": 5,
+    "negative_closed_native_scope_rounds": 3,
+    "net_BNB_native_wallet_event_blocks_all3_wei": "5437877171670956270",
+    "two_distinct_major_tokens_positive": true,
+    "two_selected_rounds_independently_receipt_gas_WBNB_wallet_reconciled": true,
+    "proof_grade": "CROSS_TOKEN_REPEAT_POSITIVE_OWNER_BNB_SETTLEMENT_TWO_SELECTED_ROUNDS; NOT FULL_WALLET_LIFETIME_PNL_OR_FOLLOWABLE_STRATEGY",
+    "independent_replayed_hajimi_native_balance_events": 15,
+    "checked_hajimi_tx_receipt_success_headers": 13,
+    "fully_parsed_hajimi_receipts": 10,
+    "truncated_success_headers_hajimi": 3
+  },
+  "HAJIMI_independent_inventory_rounds": [
+    {
+      "round": 1,
+      "first_block": 74741352,
+      "last_block": 74741587,
+      "trade_count": 3,
+      "buy_count": 1,
+      "sell_count": 2,
+      "token_inventory_returned_zero": true,
+      "native_wallet_block_scope_wei": "268592992917629933",
+      "sign": "POSITIVE",
+      "transactions": [
+        {
+          "hash": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+          "block": 74741352,
+          "direction": "in",
+          "token_delta_raw": "129258096390654177201047",
+          "native_wallet_block_delta_wei": "-5005442723000000000",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "129258096390654177201047"
+        },
+        {
+          "hash": "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+          "block": 74741573,
+          "direction": "out",
+          "token_delta_raw": "-64629048195327088600523",
+          "native_wallet_block_delta_wei": "2626703650753062114",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "64629048195327088600524"
+        },
+        {
+          "hash": "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+          "block": 74741587,
+          "direction": "out",
+          "token_delta_raw": "-64629048195327088600524",
+          "native_wallet_block_delta_wei": "2647332065164567819",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "0"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "first_block": 79445611,
+      "last_block": 79445671,
+      "trade_count": 3,
+      "buy_count": 1,
+      "sell_count": 2,
+      "token_inventory_returned_zero": true,
+      "native_wallet_block_scope_wei": "-141716957486616687",
+      "sign": "NEGATIVE",
+      "transactions": [
+        {
+          "hash": "0x329c0d017c6aeb24df5f6bc68b51effb22adcb6ad8af643caa2f82715267b2d3",
+          "block": 79445611,
+          "direction": "in",
+          "token_delta_raw": "110979455867769286003954",
+          "native_wallet_block_delta_wei": "-3000021052680000000",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "110979455867769286003954"
+        },
+        {
+          "hash": "0x4688b93b58bc2e9bd2f0fa7ad9d98afe32dafe04a543cf8c52d268bb635e7bc2",
+          "block": 79445623,
+          "direction": "out",
+          "token_delta_raw": "-99881510280992357403558",
+          "native_wallet_block_delta_wei": "2570469721840252475",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "11097945586776928600396"
+        },
+        {
+          "hash": "0xa0d64e9c23fa3fe66bc8756dc912589292fa43828f317444ac76b3508daa6e48",
+          "block": 79445671,
+          "direction": "out",
+          "token_delta_raw": "-11097945586776928600396",
+          "native_wallet_block_delta_wei": "287834373353130838",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "0"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "first_block": 98200873,
+      "last_block": 98760352,
+      "trade_count": 5,
+      "buy_count": 3,
+      "sell_count": 2,
+      "token_inventory_returned_zero": true,
+      "native_wallet_block_scope_wei": "935157578391160618",
+      "sign": "POSITIVE",
+      "transactions": [
+        {
+          "hash": "0xb1dcc2ed86165ddb7b1dc175646c45f21cd7771ecf028111b67cc9042ac04c1c",
+          "block": 98200873,
+          "direction": "in",
+          "token_delta_raw": "49270117599753960649908",
+          "native_wallet_block_delta_wei": "-1000019843560000000",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "49270117599753960649908"
+        },
+        {
+          "hash": "0xc25f07fa0f90e79d5bdc3c28527187a74f44d8c784a977510259109bdc5b7816",
+          "block": 98200891,
+          "direction": "in",
+          "token_delta_raw": "46258936980082654047060",
+          "native_wallet_block_delta_wei": "-1000017791560000000",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "95529054579836614696968"
+        },
+        {
+          "hash": "0x9840d986fdec1487ef92b43c64a4c382788ed4854b133c555958125420178236",
+          "block": 98200905,
+          "direction": "in",
+          "token_delta_raw": "42271054681252083740335",
+          "native_wallet_block_delta_wei": "-1000017791560000000",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "137800109261088698437303"
+        },
+        {
+          "hash": "0xea1e9046efdabd87d3f5e2843f1f8e736ae40fd4f43918a67e344d31d4ef2619",
+          "block": 98203978,
+          "direction": "out",
+          "token_delta_raw": "-68900054630544349218651",
+          "native_wallet_block_delta_wei": "1916594834714353515",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "68900054630544349218652"
+        },
+        {
+          "hash": "0x3f2401c3c7d02c986552292d78601ec45e570865d3826e8d062526692e2d7d25",
+          "block": 98760352,
+          "direction": "out",
+          "token_delta_raw": "-68900054630544349218652",
+          "native_wallet_block_delta_wei": "2018618170356807103",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "0"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "first_block": 120359145,
+      "last_block": 120418655,
+      "trade_count": 2,
+      "buy_count": 1,
+      "sell_count": 1,
+      "token_inventory_returned_zero": true,
+      "native_wallet_block_scope_wei": "180865666976311244",
+      "sign": "POSITIVE",
+      "transactions": [
+        {
+          "hash": "0x2b6d64d501c59588698f3600b4eca393eb6cc78863e6ef9def8c8264e05847ae",
+          "block": 120359145,
+          "direction": "in",
+          "token_delta_raw": "19832747373972066747170",
+          "native_wallet_block_delta_wei": "-1500021110520000000",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "19832747373972066747170"
+        },
+        {
+          "hash": "0x8efa4437602e8ec8007c59fe67c888fc3d719cfda9ff8c85e0ebbaa3a7b79a60",
+          "block": 120418655,
+          "direction": "out",
+          "token_delta_raw": "-19832747373972066747170",
+          "native_wallet_block_delta_wei": "1680886777496311244",
+          "owner_signed_prior_verified": true,
+          "receipt_success_prior_verified": true,
+          "inventory_after_raw": "0"
+        }
+      ]
+    }
+  ],
+  "other_major_meme_rounds": [
+    {
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "rounds": [
+        {
+          "round": 1,
+          "first_block": 83637088,
+          "last_block": 84765341,
+          "buy_count": 3,
+          "sell_count": 8,
+          "native_wallet_block_scope_wei": "4540701425397987363",
+          "sign": "POSITIVE",
+          "token_inventory_returned_zero": true,
+          "trade_count": 11
+        },
+        {
+          "round": 2,
+          "first_block": 93584281,
+          "last_block": 94208823,
+          "buy_count": 1,
+          "sell_count": 1,
+          "native_wallet_block_scope_wei": "253300282319389315",
+          "sign": "POSITIVE",
+          "token_inventory_returned_zero": true,
+          "trade_count": 2
+        }
+      ],
+      "verified_closed_rounds": 2,
+      "positive_rounds": 2,
+      "negative_rounds": 0,
+      "native_wallet_block_scope_wei": "4794001707717376678"
+    },
+    {
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "rounds": [
+        {
+          "round": 1,
+          "first_block": 74473655,
+          "last_block": 74473726,
+          "native_wallet_block_scope_wei": "-231346571585353217",
+          "sign": "NEGATIVE",
+          "token_inventory_returned_zero": true
+        },
+        {
+          "round": 2,
+          "first_block": 76554500,
+          "last_block": 76582674,
+          "native_wallet_block_scope_wei": "-367677245259552299",
+          "sign": "NEGATIVE",
+          "token_inventory_returned_zero": true
+        }
+      ],
+      "verified_closed_rounds": 2,
+      "positive_rounds": 0,
+      "negative_rounds": 2,
+      "native_wallet_block_scope_wei": "-599023816844905516"
+    }
+  ],
+  "cross_coin_summary": [
+    {
+      "token": "哈基米 / HAJIMI",
+      "exact_ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "rounds": [
+        {
+          "round": 1,
+          "first_block": 74741352,
+          "last_block": 74741587,
+          "trade_count": 3,
+          "buy_count": 1,
+          "sell_count": 2,
+          "token_inventory_returned_zero": true,
+          "native_wallet_block_scope_wei": "268592992917629933",
+          "sign": "POSITIVE"
+        },
+        {
+          "round": 2,
+          "first_block": 79445611,
+          "last_block": 79445671,
+          "trade_count": 3,
+          "buy_count": 1,
+          "sell_count": 2,
+          "token_inventory_returned_zero": true,
+          "native_wallet_block_scope_wei": "-141716957486616687",
+          "sign": "NEGATIVE"
+        },
+        {
+          "round": 3,
+          "first_block": 98200873,
+          "last_block": 98760352,
+          "trade_count": 5,
+          "buy_count": 3,
+          "sell_count": 2,
+          "token_inventory_returned_zero": true,
+          "native_wallet_block_scope_wei": "935157578391160618",
+          "sign": "POSITIVE"
+        },
+        {
+          "round": 4,
+          "first_block": 120359145,
+          "last_block": 120418655,
+          "trade_count": 2,
+          "buy_count": 1,
+          "sell_count": 1,
+          "token_inventory_returned_zero": true,
+          "native_wallet_block_scope_wei": "180865666976311244",
+          "sign": "POSITIVE"
+        }
+      ],
+      "verified_closed_rounds": 4,
+      "positive_rounds": 3,
+      "negative_rounds": 1,
+      "native_wallet_block_scope_wei": "1242899280798485108"
+    },
+    {
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "rounds": [
+        {
+          "round": 1,
+          "first_block": 83637088,
+          "last_block": 84765341,
+          "buy_count": 3,
+          "sell_count": 8,
+          "native_wallet_block_scope_wei": "4540701425397987363",
+          "sign": "POSITIVE",
+          "token_inventory_returned_zero": true,
+          "trade_count": 11
+        },
+        {
+          "round": 2,
+          "first_block": 93584281,
+          "last_block": 94208823,
+          "buy_count": 1,
+          "sell_count": 1,
+          "native_wallet_block_scope_wei": "253300282319389315",
+          "sign": "POSITIVE",
+          "token_inventory_returned_zero": true,
+          "trade_count": 2
+        }
+      ],
+      "verified_closed_rounds": 2,
+      "positive_rounds": 2,
+      "negative_rounds": 0,
+      "native_wallet_block_scope_wei": "4794001707717376678"
+    },
+    {
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "rounds": [
+        {
+          "round": 1,
+          "first_block": 74473655,
+          "last_block": 74473726,
+          "native_wallet_block_scope_wei": "-231346571585353217",
+          "sign": "NEGATIVE",
+          "token_inventory_returned_zero": true
+        },
+        {
+          "round": 2,
+          "first_block": 76554500,
+          "last_block": 76582674,
+          "native_wallet_block_scope_wei": "-367677245259552299",
+          "sign": "NEGATIVE",
+          "token_inventory_returned_zero": true
+        }
+      ],
+      "verified_closed_rounds": 2,
+      "positive_rounds": 0,
+      "negative_rounds": 2,
+      "native_wallet_block_scope_wei": "-599023816844905516"
+    }
+  ],
+  "selected_two_major_positive_receipt_proofs": [
+    {
+      "token": "哈基米 / HAJIMI",
+      "round": 1,
+      "buy_hash": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+      "buy_block": 74741352,
+      "buy_utc": "2026-01-10T15:19:04Z",
+      "sell_hashes": [
+        "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+        "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e"
+      ],
+      "last_sell_block": 74741587,
+      "last_sell_utc": "2026-01-10T15:22:00Z",
+      "buy_sent_native_wei": "5000000000000000000",
+      "buy_wallet_block_delta_wei": "-5005442723000000000",
+      "sell_withdrawals_WBNB_wei": [
+        "2626966650753062114",
+        "2647606433164567819"
+      ],
+      "sell_gas_used": [
+        "131500",
+        "137184"
+      ],
+      "sell_gas_price_wei": [
+        "2000000000",
+        "2000000000"
+      ],
+      "sell_wallet_block_delta_wei": [
+        "2626703650753062114",
+        "2647332065164567819"
+      ],
+      "settlement_reconciled_all_sells": true,
+      "closed_raw_token_inventory": true,
+      "round_wallet_BNB_net_wei": "268592992917629933"
+    },
+    {
+      "token": "龙虾",
+      "round": 2,
+      "buy_hash": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+      "buy_block": 93584281,
+      "buy_utc": "2026-04-20T05:53:09Z",
+      "sell_hashes": [
+        "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530"
+      ],
+      "last_sell_block": 94208823,
+      "last_sell_utc": "2026-04-23T12:03:24Z",
+      "buy_sent_native_wei": "3000000000000000000",
+      "buy_wallet_block_delta_wei": "-3000021096840000000",
+      "sell_withdrawals_WBNB_wei": [
+        "3253458601159389315"
+      ],
+      "sell_gas_used": [
+        "137222"
+      ],
+      "sell_gas_price_wei": [
+        "1000000000"
+      ],
+      "sell_wallet_block_delta_wei": [
+        "3253321379159389315"
+      ],
+      "settlement_reconciled_all_sells": true,
+      "closed_raw_token_inventory": true,
+      "round_wallet_BNB_net_wei": "253300282319389315"
+    }
+  ],
+  "HAJIMI_third_round_two_sell_withdrawal_gas_reconciliations": [
+    {
+      "hash": "0xea1e9046efdabd87d3f5e2843f1f8e736ae40fd4f43918a67e344d31d4ef2619",
+      "block": 98203978,
+      "withdraw_WBNB_wei": "1918041334714353515",
+      "gasUsed": "131500",
+      "priceWei": "11000000000",
+      "walletNativeWei": "1916594834714353515"
+    },
+    {
+      "hash": "0x3f2401c3c7d02c986552292d78601ec45e570865d3826e8d062526692e2d7d25",
+      "block": 98760352,
+      "withdraw_WBNB_wei": "2019885170356807103",
+      "gasUsed": "126700",
+      "priceWei": "10000000000",
+      "walletNativeWei": "2018618170356807103"
+    }
+  ],
+  "limits": [
+    "Coin sample selection is opportunistic/previously researched, not a true eligible opportunity denominator. 13 other observed CA and historical CEX/wrapped routes not complete economic audit.",
+    "One token's 3 positive/1 negative and another token's 2 positive rounds are selected owner-wallet scope quote accounting; not a statistically meaningful success rate for all markets.",
+    "IFML two negative rounds retained. Never selectively omit negative coins or positive/negative trade rounds.",
+    "Historical owner signed and realized native outcomes are not proof a third party could copy transactions after alerts. Execution venue access, signals, gas bidding, liquidity impact and latency still need causal replay.",
+    "Coin-level PnL across all quote assets may diverge from native block movement if unrelated same-block native activity or ERC20 WBNB/non-BNB settlement is not excluded. Selected two positive rounds have directly matching sell WBNB withdrawals and gas.",
+    "No paid GMGN, no live monitoring/trading changes, no independent AI review yet."
+  ]
+}
