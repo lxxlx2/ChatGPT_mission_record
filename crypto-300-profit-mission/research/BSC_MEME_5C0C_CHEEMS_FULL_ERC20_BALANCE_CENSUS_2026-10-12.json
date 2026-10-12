@@ -1,0 +1,142 @@
+{
+  "schema": "BSC_MEME_5C0C_CHEEMS_FULL_ERC20_CENSUS_V1",
+  "date": "2026-10-12",
+  "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+  "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+  "network": "bnb-mainnet",
+  "token": "CHEEMS",
+  "sources": [
+    {
+      "file": "BSC_MEME_5C0C_CHEEMS_IN_CURSOR_A_2026-10-12.json",
+      "sha": "081b17d8d6e999a922307849bdecd1391b781549"
+    },
+    {
+      "file": "BSC_MEME_5C0C_CHEEMS_OUT_CURSOR_A_2026-10-12.json",
+      "sha": "ae6c387a1adcd44e1460304c4ce99428f916635e"
+    }
+  ],
+  "full_cursors": true,
+  "stats": {
+    "in": 11,
+    "out": 2,
+    "inUniqueTx": 6,
+    "outUniqueTx": 2,
+    "raw_in": "1090500738099493743587839522645",
+    "raw_out": "1090500738099493743587839522645",
+    "net_raw": "0",
+    "balance_raw": "0",
+    "match": true
+  },
+  "events": {
+    "in": [
+      {
+        "hash": "0xfbe0e256971a2e6a0e0379f734269a740c18d85c2fcd899099a4e0c532992045",
+        "block": "0x28a9e00",
+        "raw": "0x5f082b27529476419759abc1c",
+        "from": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0xfbe0e256971a2e6a0e0379f734269a740c18d85c2fcd899099a4e0c532992045:log:319"
+      },
+      {
+        "hash": "0xf70a52b408bf9f8f0a3df4e2ab0333177f5fca462266972bf7a52ac95da06dea",
+        "block": "0x28c53ea",
+        "raw": "0x131a013c4f61e0f055095e012",
+        "from": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0xf70a52b408bf9f8f0a3df4e2ab0333177f5fca462266972bf7a52ac95da06dea:log:8"
+      },
+      {
+        "hash": "0xf70a52b408bf9f8f0a3df4e2ab0333177f5fca462266972bf7a52ac95da06dea",
+        "block": "0x28c53ea",
+        "raw": "0x404e2de320074cfacd5ee889",
+        "from": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0xf70a52b408bf9f8f0a3df4e2ab0333177f5fca462266972bf7a52ac95da06dea:log:12"
+      },
+      {
+        "hash": "0x4cb240ef06347a540e7e84a2efec6cd235885f98eee3968f911f7c966650ecd4",
+        "block": "0x28c55fd",
+        "raw": "0x11b735f6eef14d5f4059c23ac",
+        "from": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0x4cb240ef06347a540e7e84a2efec6cd235885f98eee3968f911f7c966650ecd4:log:8"
+      },
+      {
+        "hash": "0x4cb240ef06347a540e7e84a2efec6cd235885f98eee3968f911f7c966650ecd4",
+        "block": "0x28c55fd",
+        "raw": "0x4fdcc0af228b974be0092db2",
+        "from": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0x4cb240ef06347a540e7e84a2efec6cd235885f98eee3968f911f7c966650ecd4:log:12"
+      },
+      {
+        "hash": "0xff4951a3ae497cbbebe709cd8bf6671bf9f584d383554821b28e0d9d8f2dfe46",
+        "block": "0x292b204",
+        "raw": "0x5ca6262540bd70f7ac00f90f",
+        "from": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0xff4951a3ae497cbbebe709cd8bf6671bf9f584d383554821b28e0d9d8f2dfe46:log:101"
+      },
+      {
+        "hash": "0xff4951a3ae497cbbebe709cd8bf6671bf9f584d383554821b28e0d9d8f2dfe46",
+        "block": "0x292b204",
+        "raw": "0x2f8bc9fe106388fe0b6c150e",
+        "from": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0xff4951a3ae497cbbebe709cd8bf6671bf9f584d383554821b28e0d9d8f2dfe46:log:105"
+      },
+      {
+        "hash": "0xb95e70dc177491fb02a154206dd775c8e69c562d8c29f3951d943d82521102c7",
+        "block": "0x292b231",
+        "raw": "0x1bc0c626ee00535c4a925075a",
+        "from": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0xb95e70dc177491fb02a154206dd775c8e69c562d8c29f3951d943d82521102c7:log:346"
+      },
+      {
+        "hash": "0xb95e70dc177491fb02a154206dd775c8e69c562d8c29f3951d943d82521102c7",
+        "block": "0x292b231",
+        "raw": "0x9b9e5c97f163d8aaeab4c58d",
+        "from": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0xb95e70dc177491fb02a154206dd775c8e69c562d8c29f3951d943d82521102c7:log:350"
+      },
+      {
+        "hash": "0x5d12227b68a068ffc9115f458f350db2235be4b5e25705d817549ca7b3724378",
+        "block": "0x292b284",
+        "raw": "0x188721339b9579724cf124b84",
+        "from": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0x5d12227b68a068ffc9115f458f350db2235be4b5e25705d817549ca7b3724378:log:174"
+      },
+      {
+        "hash": "0x5d12227b68a068ffc9115f458f350db2235be4b5e25705d817549ca7b3724378",
+        "block": "0x292b284",
+        "raw": "0x89893aec0ce333a190ab3ab8",
+        "from": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+        "to": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "id": "0x5d12227b68a068ffc9115f458f350db2235be4b5e25705d817549ca7b3724378:log:178"
+      }
+    ],
+    "out": [
+      {
+        "hash": "0x3e5ffefe1e920c5ae5557fd1b3219d7107027bef73a672019cd020ac9c2131f6",
+        "block": "0x29e24e9",
+        "raw": "0x1246bd86e7f35558804000000",
+        "from": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "to": "0x91355579743440529de8d7d8e298be93ebc64ec3",
+        "id": "0x3e5ffefe1e920c5ae5557fd1b3219d7107027bef73a672019cd020ac9c2131f6:log:132"
+      },
+      {
+        "hash": "0xa803a28cb8cbf6f92d5ea7e8a9ed8e3085b6d8a643038b5ab855b1ddaade0d77",
+        "block": "0x29e251c",
+        "raw": "0xc9f2d391cba9caafd20393755",
+        "from": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+        "to": "0x91355579743440529de8d7d8e298be93ebc64ec3",
+        "id": "0xa803a28cb8cbf6f92d5ea7e8a9ed8e3085b6d8a643038b5ab855b1ddaade0d77:log:205"
+      }
+    ]
+  },
+  "PnlStatus": "UNVERIFIED",
+  "production": "NO_GO"
+}
