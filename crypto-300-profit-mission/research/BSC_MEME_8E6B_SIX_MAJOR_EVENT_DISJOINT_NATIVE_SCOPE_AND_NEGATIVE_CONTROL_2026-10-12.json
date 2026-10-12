@@ -1,0 +1,227 @@
+{
+  "schema": "BSC_MEME_8E6B_SIX_MAJOR_EVENT_NATIVE_SCOPE_REPEAT_AND_NEGATIVE_CONTROL_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "production": "NO_GO",
+  "source_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
+      "sha": "69cc2ec8e27d3d8427645cdbfdfe5c8043376fe1"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_GIGGLE_MIXED_BNB_USDT_SETTLEMENT_2026-10-11.json",
+      "sha": "08375361eacdc5c7b0da109e283f1232ccb13b6f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_MUBARAK_16_OWNER_SIGNED_WBNB_NATIVE_EXTERNAL_QA_2026-10-12.json",
+      "sha": "220d6a849db54ce9853324033b2db67da3e46336"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json",
+      "sha": "23149a3d5973c2ae29fafd7ec09fc2ffa820fce9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_SIX_CORE_NATIVE_BALANCE_AUDIT_2026-10-11.json",
+      "sha": "989681c710e896206d50999787acc21b4ea888cb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_2026_SIX_CORE_POSITION_TRANSFER_HISTORY_2026-10-11.json",
+      "sha": "e09082133b6483db00470c15ff569e0d9489335f"
+    }
+  ],
+  "method": "Crosscheck frozen six major Meme token original tx hash sets and historical BNB block scopes. Compare raw integer wallet native balance differences by event; no cross-asset FX conversion or causal realized PnL assertion. Source transcript receipts/traces vary by token.",
+  "coverage": {
+    "major_tokens": 6,
+    "positive_native_block_net_token_groups": 5,
+    "negative_native_block_net_token_groups": 1,
+    "all_token_tx_hash_sets_unique": true,
+    "all_token_block_sets_unique": true,
+    "token_pairs_checked": 15,
+    "pairwise_duplicate_tx_or_block_count": 0,
+    "collisions": []
+  },
+  "events": [
+    {
+      "token": "4",
+      "original_scope_txs": 19,
+      "unique_blocks": 19,
+      "min_block": 63056884,
+      "max_block": 64458294,
+      "wallet_native_scope_delta_wei": "13164987453603066615",
+      "owner_signed_status": "19/19",
+      "receipt_status": "19 SUCCESS",
+      "other_quote_asset": null,
+      "source": "BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
+      "tx_hashes": [
+        "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b",
+        "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+        "0x11f18d2e8169495b7085787d88b7de644a3579bf3e2dfb6bc609e3e8eae48601",
+        "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+        "0xfa6c5f17ea5597ab90402f96d013fb8213b67ac5f4c5af02b450f0386433898a",
+        "0x9a5e7e333092f94c7c78656f221c7b08c319727e8693084bf1e117e3c229723b",
+        "0x0e89ad3e6f44b8a7de464b10862c61c9ec7060846539fab6ae0df24927e5af7b",
+        "0x69616d58ef513786ce7536d573027a0bb83f3dc5908d10b0d13a9a6d02070219",
+        "0xc3d6fd52ea632d2c48a7cd79db4eb16ae5deaf3de930c56ba861ec2d4af8d59d",
+        "0x206bb565b2114fc58381a7f0d493f0c9454ea254f671ffadfd08c866dbf0c064",
+        "0xbe5101138ca28c421f735b802226bfb0b2b9b57c5605cc9a4dd30413c746a774",
+        "0x5e8e7847322621870ed19686d0fafdc99de479877556fb704db58b1ac20f2109",
+        "0x313bfe296591597e08046140255d5b61f6d4cbce64731d70746fbe1626e06a8f",
+        "0xd39be2185edbed118db78ab7dbd4a3d414823af83e1c9097c821d88718e0a2f4",
+        "0xd571753fe2493bafff570702d8848f634e4b3bb8deeec7a1a0ecbc751e39ad94",
+        "0x4c30211d8372ee683b9b20eaa7b965b317be21e8285f98e0215598061a78c5b1",
+        "0x2f6a73dc8d4009595ffa1da7f5a2be1a0a2dac9a57ad7d7c759f8d74347eda0f",
+        "0x7a464040b2d448505a0fa8b7e61ebc35e7384903f2097f3fb32bfea5d1e7eb84",
+        "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462"
+      ]
+    },
+    {
+      "token": "GIGGLE",
+      "original_scope_txs": 16,
+      "unique_blocks": 16,
+      "min_block": 62016808,
+      "max_block": 63310510,
+      "wallet_native_scope_delta_wei": "5715925819273344974",
+      "owner_signed_status": "16/16",
+      "receipt_status": "16 SUCCESS prior",
+      "other_quote_asset": {
+        "currency": "USDT",
+        "net_raw": "4061629806775951927704",
+        "decimals": 18
+      },
+      "source": "BSC_MEME_8E6B_GIGGLE_MIXED_BNB_USDT_SETTLEMENT_2026-10-11.json",
+      "tx_hashes": [
+        "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356",
+        "0x781dc7a0ebe9f96ab6845d13d26509a4fdc4d56fee7b7b2c7bbff067e13ee5de",
+        "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674",
+        "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+        "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+        "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+        "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+        "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+        "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
+        "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b",
+        "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
+        "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb",
+        "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
+        "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
+        "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
+        "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f"
+      ]
+    },
+    {
+      "token": "MUBARAK",
+      "original_scope_txs": 16,
+      "unique_blocks": 16,
+      "min_block": 47425367,
+      "max_block": 47537150,
+      "wallet_native_scope_delta_wei": "5299103329471661818",
+      "owner_signed_status": "16/16",
+      "receipt_status": "16 SUCCESS independently rechecked",
+      "other_quote_asset": null,
+      "source": "BSC_MEME_8E6B_MUBARAK_16_OWNER_SIGNED_WBNB_NATIVE_EXTERNAL_QA_2026-10-12.json",
+      "tx_hashes": [
+        "0x8413f404b7ca72e36f389f0209f9d99432f21b43c535f0e0e227aa2718960215",
+        "0xe570d7b852311a7ab2973507d7d4daa89c7298ccc9d78ba6b8abcee4064460ac",
+        "0x09d1ff1912c785344958a9caf46ab5042ea3c9900ea231bb29d92304fb211cb4",
+        "0x9eb57b12ab6724cebd8ff1a1c6c6bb5fa46dfbe38a2d1ad67dbe350dc7023d28",
+        "0x8675bb8485782c0cdf84ac0604edc0b80b5e67bb61b5fec31b4e62a74e2e3ef7",
+        "0xd65ff11d812baeecf70198178b192512839dbc92b68ed873784f8bb6d47eef41",
+        "0x0ab8a4ce426dfbd43fd5585c59553cb215974f04043d6c9f1ac3a909373aaae1",
+        "0x2d6bc30c3605560aeed989dbfbdc645cd0e3d346080499dcac2a1123a00426b1",
+        "0x157badd198cd0db1ac8bb8e47b35bd01857e6d28d66882b0512c82802ef570e0",
+        "0xfc10978982c4316808efbca9bebdafc9142a05bd6517db45d34c7c32d89ebad9",
+        "0x46eab58da04dce83de6d6a090d2aeadc6cf2e737f899462ad70ffe34b408e86b",
+        "0x7bdcc80baa8983e5433ed7d06ebdd3599bfb30669cb1810b501a518bc051868c",
+        "0xeba08abea107e87eaed81e4f76fe7de999a7867a0d3382ad22d7e4701cadd487",
+        "0x3a7421e824c446a875114d4ab9f950d54e8a83515dd3a235222b31044610fc7f",
+        "0x13da50c585e8b67caad158bbfa1fa4a0605b3725c4122cf3b350e4ff41f40484",
+        "0xaad12c4338b60fb4fd79e805ee40f80cca224518575928bdcdc5d7c45d643dd2"
+      ]
+    },
+    {
+      "token": "HAJIMI",
+      "original_scope_txs": 13,
+      "unique_blocks": 13,
+      "min_block": 74741352,
+      "max_block": 120418655,
+      "wallet_native_scope_delta_wei": "1242899280798485108",
+      "owner_signed_status": "13/13",
+      "receipt_status": "13 SUCCESS / 0 UNKNOWN (headers truncated)",
+      "other_quote_asset": null,
+      "source": "BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json",
+      "tx_hashes": [
+        "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+        "0x329c0d017c6aeb24df5f6bc68b51effb22adcb6ad8af643caa2f82715267b2d3",
+        "0xb1dcc2ed86165ddb7b1dc175646c45f21cd7771ecf028111b67cc9042ac04c1c",
+        "0xc25f07fa0f90e79d5bdc3c28527187a74f44d8c784a977510259109bdc5b7816",
+        "0x9840d986fdec1487ef92b43c64a4c382788ed4854b133c555958125420178236",
+        "0x2b6d64d501c59588698f3600b4eca393eb6cc78863e6ef9def8c8264e05847ae",
+        "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+        "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+        "0x4688b93b58bc2e9bd2f0fa7ad9d98afe32dafe04a543cf8c52d268bb635e7bc2",
+        "0xa0d64e9c23fa3fe66bc8756dc912589292fa43828f317444ac76b3508daa6e48",
+        "0xea1e9046efdabd87d3f5e2843f1f8e736ae40fd4f43918a67e344d31d4ef2619",
+        "0x3f2401c3c7d02c986552292d78601ec45e570865d3826e8d062526692e2d7d25",
+        "0x8efa4437602e8ec8007c59fe67c888fc3d719cfda9ff8c85e0ebbaa3a7b79a60"
+      ]
+    },
+    {
+      "token": "龙虾",
+      "original_scope_txs": 13,
+      "unique_blocks": 13,
+      "min_block": 83637088,
+      "max_block": 94208823,
+      "wallet_native_scope_delta_wei": "4794001707717376678",
+      "owner_signed_status": "13/13",
+      "receipt_status": "11 SUCCESS / 2 UNKNOWN (headers truncated)",
+      "other_quote_asset": null,
+      "source": "BSC_MEME_8E6B_HAJIMI_LOBSTER_TX_PROVENANCE_2026-10-11.json",
+      "tx_hashes": [
+        "0x22f2c3f6f029e7ab2f9f6af2760f5ad051330ca71fc09bb3b0be394223adcf71",
+        "0xa83e981f5f415a115c7f5e46f24ca88ae055601ead9a9cc452fb6830a8fb123a",
+        "0xfed23a8b71d5c883b2806bcf65dfee50d3793036afbeb7fa8d8f01b79799ccd6",
+        "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+        "0x9337a2b919c2ac9749e1b311eb7a4db93c0ea62f1deba93cfa9e88bdd0b683e1",
+        "0x9ab7721816002a2dfeb510c175f4f50bde586d246418e992ce0e1731cdd15232",
+        "0x8367b2fb591be4f52a7fa4c1dae41d60889e9542208f3cfbde15119d04f14871",
+        "0x90021cbf6294d5d4ce03f01add45f7e13f1e71ecafa61064202af1cb191a2200",
+        "0x6b852120762ba68402722a4ba938854f2f1e141ad31506c2348911357262cafc",
+        "0xc545fd90a9ce2e37e8b8e7c7e52f50a0ea106d033e8e9aeb1e6ca1c79206211e",
+        "0xf377ac73ea6f320a0191f5f6ffb7c696aeed3b72744352f13322b927762b9fa3",
+        "0xf6a8c779374e35110c4cd1586865e0f33107c1a60339b895d505198a5870d476",
+        "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530"
+      ]
+    },
+    {
+      "token": "我踏马来了",
+      "original_scope_txs": 6,
+      "unique_blocks": 6,
+      "min_block": 74473655,
+      "max_block": 76582674,
+      "wallet_native_scope_delta_wei": "-599023816844905516",
+      "owner_signed_status": "6/6 prior",
+      "receipt_status": "6 SUCCESS prior",
+      "other_quote_asset": null,
+      "source": "BSC_MEME_8E6B_SIX_CORE_NATIVE_BALANCE_AUDIT_2026-10-11.json;BSC_MEME_8E6B_2026_SIX_CORE_POSITION_TRANSFER_HISTORY_2026-10-11.json",
+      "tx_hashes": [
+        "0x992dd56c53a11a8f8396db4e766c1174db779fe6843962667efaeed4e2c1fee2",
+        "0x63fac2b371a445d96fc58348c8fee7ddb8f3c753041f863b9de122f25381c1d7",
+        "0xa89856fd61e59b8c34c425ca7f36100f5ed2ddf9b300ff02b3bd93618b7a4fb7",
+        "0x820a196cfd5080b78e468fed18113a697327b7b51de789f8e11f7d9fcfd6a6ed",
+        "0x14cf70e39f00d8ed6da835d9cc9c71f901b2ff2948216e5adf74c8423c3fd467",
+        "0x863688f507d05b6fbd24f21036c90b80675c9a4702c971a7e5efd1f23412fd5f"
+      ]
+    }
+  ],
+  "native_block_scope_only_six_events_wei": "29617893774019029677",
+  "classification": "MULTI_MAJOR_NATIVE_BLOCK_POSITIVE_CANDIDATE_NOT_VERIFIED_PROFITABLE_REPEATER",
+  "limitations": [
+    "No event is fully internal-trace-attributed on this provider, and all wallet gas/routers/fee logic must remain separated from economic realized PnL.",
+    "MUBARAK 16 receipts and no extraneous external native txs have been rechecked, but some buy blocks show small positive residuals; one exit is non-WBNB venue.",
+    "GIGGLE has separate USDT net quote and cannot convert to/merge with BNB without price-at-time and prior inventory.",
+    "HAJIMI and Lobster have legacy evidence but 2 Lobster receipt status headers remain truncated.",
+    "Five positive scoped event groups plus one negative IFML group is insufficient to estimate true eligible-opportunity win rate or follower realized PnL.",
+    "Disjoint original transaction hashes and BNB blocks prevent duplicate counting across THESE six scoped historical entries, but cannot rule out unrelated native internal activity."
+  ]
+}
