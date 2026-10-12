@@ -1,0 +1,113 @@
+{
+  "schema": "BSC_MEME_877AF_MARS_SEVEN_ENTRIES_BEFORE_FIRST_EXIT_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "source": {
+    "path": "BSC_MEME_877AF_MARSCOIN_EXACT_CA_FULL_HISTORY_FIRST_EXIT_2026-10-12.json",
+    "sha": "d311317fb10cc293bc33f76427bcb909276870ad"
+  },
+  "owner_buy_entries": [
+    {
+      "hash": "0x15141bf698d2c2c4e07efd6c0cb54babfa7421621b1f48e4ace1727cf6be2cfa",
+      "block": 112441460,
+      "source_token_received_raw": "5944606246588515507263432",
+      "original_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "owner_self_signed": true,
+      "msg_value_wei": "550000000000000000",
+      "original_router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "full_tx_response": true
+    },
+    {
+      "hash": "0x005b811cc28fb7337749822a8af2b5cc7b8d610c96fe5f921395e1b3d09587be",
+      "block": 112441467,
+      "source_token_received_raw": "98408593694032979390295",
+      "original_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "owner_self_signed": true,
+      "msg_value_wei": "10000000000000000",
+      "original_router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "full_tx_response": true
+    },
+    {
+      "hash": "0xa618ce7a94a8828099b7aba7c7f840652adb0d634a2fce4c0880694b45920244",
+      "block": 112441468,
+      "source_token_received_raw": "101651460202037200440959",
+      "original_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "owner_self_signed": true,
+      "msg_value_wei": "10000000000000000",
+      "original_router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "full_tx_response": true
+    },
+    {
+      "hash": "0x9b24ee124bc6a91e63fb13c7f1e8007a8db5c2d05399d1e39f444a4ed42c9ca0",
+      "block": 112441468,
+      "source_token_received_raw": "101203772256133090879489",
+      "original_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "owner_self_signed": true,
+      "msg_value_wei": "10000000000000000",
+      "original_router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "full_tx_response": true
+    },
+    {
+      "hash": "0xb7e736a91b986ff4054ad15f1f1ad0dfa73889f400b04971afc33a8a1eb3f1d7",
+      "block": 112441468,
+      "source_token_received_raw": "101430778034600373573465",
+      "original_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "owner_self_signed": true,
+      "msg_value_wei": "10000000000000000",
+      "original_router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "full_tx_response": true
+    },
+    {
+      "hash": "0x735c7e5393b0006c22e120911d3da94afa472827e88fa5ddd01c3afcd6010220",
+      "block": 112441468,
+      "source_token_received_raw": "100984576000218884814767",
+      "original_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "owner_self_signed": true,
+      "msg_value_wei": "10000000000000000",
+      "original_router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "full_tx_response": true
+    },
+    {
+      "hash": "0xff622f3f1719ba06a407d96f0bba9a0f5106ce27f4560cb5b1137096825f7814",
+      "block": 112441470,
+      "source_token_received_raw": "102752419858899775251150",
+      "original_signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "owner_self_signed": true,
+      "msg_value_wei": "10000000000000000",
+      "original_router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "selector": "0x4d819a2a",
+      "full_tx_response": true
+    }
+  ],
+  "summary": {
+    "entry_count": 7,
+    "owner_signed_count": 7,
+    "other_signed_count": 0,
+    "original_msg_value_total_wei": "610000000000000000",
+    "raw_mars_in_before_first_sell": "6551037846634437811613557",
+    "first_sale_block": 112441495,
+    "raw_mars_out_on_first_sale": "4199826775252422924614179",
+    "first_sale_fraction_of_all_earlier_received_pct": "64.1093",
+    "entry_blocks": [
+      112441460,
+      112441467,
+      112441468,
+      112441470
+    ],
+    "first_sell_owner_signature_verified": true
+  },
+  "caveats": [
+    "Full-history ERC20 MARS pagination still incomplete after first 40 per direction; first-segment early-window completeness supported by last retrieved inbound block >first sale.",
+    "Original msg.value sum is buy-side native input, not average live deployable capital or final return.",
+    "Net native wallet delta and gas for all seven purchases not yet independently aggregated.",
+    "The first sale is 64.1% of tokens received up to that moment, not complete liquidation."
+  ],
+  "production": "NO_GO"
+}
