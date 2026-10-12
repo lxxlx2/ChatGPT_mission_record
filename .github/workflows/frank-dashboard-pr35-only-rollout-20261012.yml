@@ -1,0 +1,45 @@
+name: Frank PR35 Dashboard only rollout gate
+
+on:
+  push:
+    branches:
+      - ops/frank-dashboard-pr35-only-rollout-20261012
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-dashboard-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify merged PR35 and exact CI SHA
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 62697bf98606c19c5709c27006a6a40d9408db97 HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "EXACT_DASHBOARD_ROLLOUT_HEAD=$GITHUB_SHA"
+      - name: Install Frank test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3 pyflakes==3.4.0
+      - name: Static syntax and mocked production route tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m py_compile scripts/frank_dashboard_pr35_only_rollout_20261012.py
+          python -m pyflakes scripts/frank_dashboard_pr35_only_rollout_20261012.py
+          python -B -m pytest -q -p no:cacheprovider tests/research/test_frank_dashboard_pr35_only_rollout_20261012.py tests/research/test_frank_dashboard_priority_layout.py
+      - name: Full real Git archive regression
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
