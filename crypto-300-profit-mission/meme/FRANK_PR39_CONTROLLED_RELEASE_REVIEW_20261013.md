@@ -85,3 +85,47 @@ not** change the production gate or authorize a restart.
 A subsequent Mac run of this updated review branch must verify these
 diagnostic values, then any acceptance of explicitly reviewed legacy
 overlays needs its own exact hash allowlist and independent test.
+
+
+## Second Mac fingerprint audit (2026-10-13 Bangkok)
+
+New user-provided `frank-pr39-runtime-fingerprint-20261013.json`
+confirms **UNVERIFIED_RELEASE_BLOCKED** and narrows the root causes:
+
+1. **Dashboard Git bytes fully verified:** 147 checked source entries,
+   zero tracked mismatches, zero extra executable paths. The Dashboard
+   runner (SHA-256 `e0c38e6e4d0dd8177eb2f273a6292b0716f3e454f8c749af0de94d24954e4afc`)
+   was last modified **0.570427 s after the whole-second timestamp**
+   printed for PID 25851 by `ps lstart`. This is a coarse timestamp
+   ambiguity, *not* direct proof that the live shell read the later bytes.
+2. **Loop git mismatch has specific historical provenance:**
+   `mission_agent/mission_control/server.py` Git blob
+   `b5eb4af5c945cc1b62337d48393fe02243f9505f` vs live filesystem
+   `f5e00781ea4af45b4d6b15a09b8cb000f5b744f4`;
+   `static/app.js` `8f0ac1beace94f01894c151576bc276f48f1b4a4`
+   vs `14985b35b019054d5ff9871e002c32421345ff17`.
+   The additional `delivery_review.py` must have its **actual blob**
+   checked before classifying the whole overlay.
+   Both tracked pairs exactly match the committed legacy UI hashes in
+   `local-agent/scripts/deploy_frank_dashboard_review_badge.py`;
+   the same record lists legacy `delivery_review.py` SHA
+   `62f5fa85bf41cd95e4a31a373910f81970368ea6`.
+   A recognized legacy source bundle is **not evidence** of which
+   bytes the already-running Python process imported.
+3. **Loop runner is definitely newer than its process:** PID 79154,
+   runner hash `3e6ed819aab32f78d8d04462c24cdb02fcfd118dcc0986d4718f8be7e82750c7`,
+   mtime **162293.964788 seconds (~45.1 h) after** the process's
+   whole-second start. Current runner contents cannot be assumed to
+   describe the shell environment loaded at process start.
+4. **Other facts stable:** Frank scanner PID 52300; 26/26 latest BUY
+   predicates verified direct USDC; 35 decisions, 36 outbox entries,
+   18 Gmail, 18 local; all 15 MANUAL_REVIEW are zero-attempt
+   pre-send expirations. No production mutation was made.
+
+The review branch now provides **diagnostic-only** exact legacy bundle
+classification (including the extra module's real Git blob) and a separate
+source-mtime-versus-process-start inventory. These additions must **never**
+convert either old runtime guard to PASS automatically. Explicit source
+provenance and runner/pid identity evidence remain required before any
+release. Any uploaded output must be treated as a dated observation, not
+permission to send mail, restart the loop or modify SQLite.
