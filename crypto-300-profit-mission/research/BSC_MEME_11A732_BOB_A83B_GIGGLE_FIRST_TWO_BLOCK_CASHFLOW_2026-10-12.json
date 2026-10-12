@@ -1,0 +1,54 @@
+{
+  "schema": "BSC_MEME_NEW_WALLETS_FIRST_BUY_SELL_NATIVE_BLOCK_SCOPE_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "method": "Archived one-page early token transfers, original signer checked independently from ethGetTransactionByHash for both first inbound and outbound hashes, historical wallet native balances at N−1 and N for each of two blocks",
+  "src": {
+    "path": "BSC_MEME_23_EOA_REMAINING_WALLETS_TRIAGE_B01_2026-10-12.json",
+    "blob_sha": "1fb23b8c18baa0faa65dc82d949dd0c2ce1535fb"
+  },
+  "rows": [
+    {
+      "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "token": "BOB",
+      "blockFirstBuy": 44007594,
+      "blockFirstSell": 44007653,
+      "buyTx": "0x7d3832a3d26bdebe13b1dc86e075b3cbafe8fcc3829972564afcd43ededec194",
+      "sellTx": "0x3389cc1d7b890a2a1f1eaf46aca322d6d819706d16ef11b6afcc0b4851463739",
+      "firstBuyRawTokens": "6560300113895920120763869676828",
+      "firstSellRawTokens": "3280150056947960060381934838414",
+      "buyNativeBlockDeltaWei": "-138932183563094048",
+      "sellNativeBlockDeltaWei": "342310228149764501",
+      "twoBlockNetNativeWei": "203378044586670453",
+      "firstBuyOwnerSignedConfirmed": true,
+      "firstSellOwnerSignedConfirmed": true,
+      "firstBuyMsgValueWei": "139320442060087755",
+      "originalTarget": "0x013bb8a204499523ddf717e0abaa14e6dc849060",
+      "netFeeOrAssetPnLStatus": "NOT_VERIFIED_SEPARATE_EPISODE_NEEDS_ALL_TRADES_AND_QUOTE_FLOWS"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "GIGGLE",
+      "blockFirstBuy": 61964958,
+      "blockFirstSell": 61964965,
+      "buyTx": "0x6e2a6fc181c36ec250e6070a2f9f23ff4014a5e74ab93b224ec62818e0958663",
+      "sellTx": "0x816d2d19271ed65854328f4720cf33f9b54f66593126a09dce89250f749c2ed3",
+      "firstBuyRawTokens": "1599520616052600756849",
+      "firstSellRawTokens": "79976030802630037842",
+      "buyNativeBlockDeltaWei": "-501882170000000000",
+      "sellNativeBlockDeltaWei": "435598078338010780",
+      "twoBlockNetNativeWei": "-66284091661989220",
+      "firstBuyOwnerSignedConfirmed": true,
+      "firstSellOwnerSignedConfirmed": true,
+      "firstBuyMsgValueWei": "500000000000000000",
+      "originalTarget": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "netFeeOrAssetPnLStatus": "NOT_VERIFIED_SEPARATE_EPISODE_NEEDS_ALL_TRADES_AND_QUOTE_FLOWS"
+    }
+  ],
+  "conclusions": [
+    "BOB first two observed blocks have positive native block net, while GIGGLE first two have negative native block net, demonstrating early attractive token is not automatically a positive trade outcome.",
+    "These are first two isolated block balance changes, not complete position episode; no final wallet PnL or full quote asset attribution.",
+    "Both wallets have open pagination in broader 19 CA census. No trading signal endorsement."
+  ],
+  "production": "NO_GO"
+}
