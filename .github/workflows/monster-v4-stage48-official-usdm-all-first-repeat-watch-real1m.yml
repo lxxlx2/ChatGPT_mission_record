@@ -1,0 +1,45 @@
+name: Monster Stage48 Actual Publisher SHA All Original D0 First Repeat 1m Features
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage48_all437_asof_second_watch_features.py'
+      - '.github/workflows/monster-v4-stage48-official-usdm-all-first-repeat-watch-real1m.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual_5400_source_denominator_all437_watch_936_real_minute_events:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: [2025-01-09, 2025-09-02, 2026-01-26, 2026-02-24, 2026-03-28, 2026-05-10]
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Original source Git blob pins and no-future asof 61 minute feature selftest
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage48_all437_asof_second_watch_features.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage48_all437_asof_second_watch_features.py --selftest
+      - name: Stage48 all150 original coin-date identity; refetch actual WATCH official 1m only with original Stage45 9-day SHA receipts
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage48_all437_asof_second_watch_features.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 3 \
+            --output "/tmp/monster_stage48_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - name: Preserve full actual original D0 events, source proofs and missing status
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage48-true-asof-usdm-${{ matrix.date }}-shard${{ matrix.shard }}-SHA
+          path: /tmp/monster_stage48_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
