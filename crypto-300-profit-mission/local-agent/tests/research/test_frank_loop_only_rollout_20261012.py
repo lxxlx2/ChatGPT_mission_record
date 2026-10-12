@@ -284,3 +284,157 @@ def test_only_process_lookup_error_means_pid_is_absent(monkeypatch):
     assert ops.process_alive(1111) is False
     with pytest.raises(RuntimeError, match="PID_IDENTITY_UNVERIFIED"):
         ops.process_alive(-1)
+
+
+
+def _fake_mac_rollout(tmp_path, monkeypatch, *, mode="success",
+                      change_signal=False, legacy_safe=True, apply=True,
+                      approve_signal=False):
+    """Run real main/atomic-runner against fake HOME and fake launchd.
+
+    The only SQLite backup writes fake fixture bytes. It never invokes a
+    provider, network, real Mac LaunchAgent or live databases.
+    """
+    app = tmp_path / "Library" / "Application Support" / "FrankMeme"
+    app.mkdir(parents=True)
+    old_file = app / "mission-loop.sh"
+    dash_file = app / "dashboard.sh"
+    old_file.write_bytes(b"OLD_RUNNER_EXACT_BYTES\n")
+    dash_file.write_bytes(b"DASHBOARD_PRESERVED\n")
+    monkeypatch.setattr(ops, "SUPPORT", app)
+    monkeypatch.setattr(ops, "BACKUPS", app / "release-backups")
+    monkeypatch.setattr(ops, "LOOP_RUNNER", old_file)
+    monkeypatch.setattr(ops, "DASH_RUNNER", dash_file)
+    original_sha = ops.file_sha256(old_file)
+    dash_sha = ops.file_sha256(dash_file)
+    ctx = {
+        "original": "OLD_RUNNER_EXACT_BYTES\n",
+        "original_bytes": b"OLD_RUNNER_EXACT_BYTES\n",
+        "candidate": "CANDIDATE_RUNNER\n",
+        "old_sha": "1"*40,
+        "changed_signal_files": ["mission_agent/mission_control/policy.py"]
+            if change_signal else [],
+        "legacy_delivery_verified": legacy_safe,
+        "db": tmp_path / "private" / "control.sqlite",
+        "prod": tmp_path / "private" / "forward.sqlite",
+        "control": tmp_path / "private",
+        "loop_pid": 111,
+        "dashboard_pid": 444,
+        "dashboard_sha": dash_sha,
+        "runner_sha": original_sha,
+        "mode": 0o700,
+    }
+    monkeypatch.setattr(ops, "prepare", lambda args: ctx)
+    monkeypatch.setattr(ops, "sqlite_backup",
+                        lambda src, dest: dest.write_bytes(b"CONSISTENT_FIXTURE_BACKUP"))
+    monkeypatch.setattr(ops, "delivery_state", lambda path: {
+        "gmail_delivery": {"one": "MANUAL_REVIEW"},
+        "local_delivery": {"one": "COMMAND_ACCEPTED"},
+    })
+    monkeypatch.setattr(ops, "confirm_rollback_safe", lambda path: None)
+    runtime = {"pid": 111, "restarts": 0, "wait_calls": []}
+    def restart():
+        runtime["restarts"] += 1
+        runtime["pid"] = 222 if runtime["restarts"] == 1 else 333
+        if mode in ("crash", "interrupt") and runtime["restarts"] == 1:
+            runtime["pid"] = None
+    monkeypatch.setattr(ops, "loop_restart", restart)
+    def pid(label):
+        if label == ops.DASH_LABEL:
+            return 444
+        if runtime["pid"] is None:
+            raise RuntimeError("NO_RUNNING_LOOP")
+        return runtime["pid"]
+    monkeypatch.setattr(ops, "launch_pid", pid)
+    monkeypatch.setattr(ops, "process_alive", lambda pid: (
+        mode == "no-heartbeat" and pid == 222
+    ))
+    def wait(old_pid, control, started_at):
+        runtime["wait_calls"].append(old_pid)
+        if runtime["restarts"] == 1:
+            if mode == "interrupt":
+                raise KeyboardInterrupt("OPERATOR_CONTROL_C")
+            if mode == "crash":
+                raise RuntimeError("NEW_LOOP_NOT_RUNNING")
+            if mode == "no-heartbeat":
+                raise RuntimeError("NEW_LOOP_ALIVE_HEARTBEAT_NOT_OBSERVED")
+            return (222, {"status": "OK"})
+        return (333, {"status": "OK"})
+    monkeypatch.setattr(ops, "wait_for_new_loop", wait)
+    argv = [str(SCRIPT), "--preflight-script", str(tmp_path / "noop")]
+    if apply:
+        argv += ["--apply-loop", "--approve-fresh-alerts"]
+    if approve_signal:
+        argv += ["--approve-signal-code-change"]
+    monkeypatch.setattr("sys.argv", argv)
+    return old_file, dash_file, runtime
+
+
+def test_end_to_end_prepare_never_restarts_or_rewrites_runner(tmp_path, monkeypatch, capsys):
+    loop, dash, trace = _fake_mac_rollout(tmp_path, monkeypatch, apply=False)
+    ops.main()
+    assert trace["restarts"] == 0
+    assert loop.read_bytes() == b"OLD_RUNNER_EXACT_BYTES\n"
+    assert dash.read_bytes() == b"DASHBOARD_PRESERVED\n"
+    assert "LOOP_SWITCH=NOT_ATTEMPTED_DRY_RUN" in capsys.readouterr().out
+
+
+def test_end_to_end_success_switches_only_loop_runner(tmp_path, monkeypatch, capsys):
+    loop, dash, trace = _fake_mac_rollout(tmp_path, monkeypatch)
+    ops.main()
+    assert trace["restarts"] == 1
+    assert trace["wait_calls"] == [111]
+    assert loop.read_bytes() == b"CANDIDATE_RUNNER\n"
+    assert dash.read_bytes() == b"DASHBOARD_PRESERVED\n"
+    assert "LOOP_RELEASE=SUCCESS_NEW_PID_VERIFIED" in capsys.readouterr().out
+
+
+def test_end_to_end_existing_successor_without_heartbeat_never_rolls_back(tmp_path, monkeypatch, capsys):
+    loop, dash, trace = _fake_mac_rollout(tmp_path, monkeypatch, mode="no-heartbeat")
+    with pytest.raises(RuntimeError, match="NEW_LOOP_ALIVE_HEARTBEAT_NOT_OBSERVED"):
+        ops.main()
+    assert trace["restarts"] == 1
+    assert loop.read_bytes() == b"CANDIDATE_RUNNER\n"
+    assert dash.read_bytes() == b"DASHBOARD_PRESERVED\n"
+    assert "ROLLBACK=MANUAL_NEW_LOOP_STILL_RUNNING" in capsys.readouterr().out
+
+
+def test_end_to_end_crashed_new_loop_reverts_original_runner_exact_bytes(tmp_path, monkeypatch, capsys):
+    loop, dash, trace = _fake_mac_rollout(tmp_path, monkeypatch, mode="crash")
+    with pytest.raises(RuntimeError, match="NEW_LOOP_NOT_RUNNING"):
+        ops.main()
+    assert trace["restarts"] == 2
+    assert trace["wait_calls"] == [111, 111]
+    assert loop.read_bytes() == b"OLD_RUNNER_EXACT_BYTES\n"
+    assert dash.read_bytes() == b"DASHBOARD_PRESERVED\n"
+    assert "LOOP_ROLLBACK_SERVICE=RECOVERED" in capsys.readouterr().out
+
+
+def test_end_to_end_keyboard_interrupt_recovers_old_loop_if_safe(tmp_path, monkeypatch, capsys):
+    loop, dash, trace = _fake_mac_rollout(tmp_path, monkeypatch, mode="interrupt")
+    with pytest.raises(KeyboardInterrupt):
+        ops.main()
+    assert trace["restarts"] == 2
+    assert loop.read_bytes() == b"OLD_RUNNER_EXACT_BYTES\n"
+    assert dash.read_bytes() == b"DASHBOARD_PRESERVED\n"
+    assert "LOOP_ROLLBACK_SERVICE=RECOVERED" in capsys.readouterr().out
+
+
+def test_end_to_end_unverified_old_delivery_code_never_automatic_rollback(tmp_path, monkeypatch, capsys):
+    loop, dash, trace = _fake_mac_rollout(
+        tmp_path, monkeypatch, mode="crash", legacy_safe=False)
+    with pytest.raises(RuntimeError, match="NEW_LOOP_NOT_RUNNING"):
+        ops.main()
+    assert trace["restarts"] == 1
+    assert loop.read_bytes() == b"CANDIDATE_RUNNER\n"
+    assert dash.read_bytes() == b"DASHBOARD_PRESERVED\n"
+    assert "ROLLBACK=MANUAL_OLD_DELIVERY_CODE_UNVERIFIED" in capsys.readouterr().out
+
+
+def test_end_to_end_signal_delta_is_hard_apply_gate(tmp_path, monkeypatch):
+    loop, _, trace = _fake_mac_rollout(
+        tmp_path, monkeypatch, change_signal=True)
+    with pytest.raises(RuntimeError, match="SIGNAL_CODE_DELTA_EXPLICITLY_APPROVED"):
+        ops.main()
+    assert trace["restarts"] == 0
+    assert loop.read_bytes() == b"OLD_RUNNER_EXACT_BYTES\n"
