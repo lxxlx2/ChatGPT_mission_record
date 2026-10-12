@@ -138,7 +138,7 @@ const expected={status:'OK',manual_review_breakdown_available:true,
 const warning=display(expected);
 if(!warning.includes('运行阻塞或状态异常待核查 1'))throw new Error('UNKNOWN_STATE_LABEL_HIDDEN');
 if(!warning.includes('未知或跨渠道错配状态'))throw new Error('UNKNOWN_STATE_TOOLTIP_MISSING');
-if(warning.includes('正在自动重试'))throw new Error('UI_CLAIMS_AUTO_RETRY');
+if(!warning.includes('不代表正在自动重试'))throw new Error('RETRY_DISCLAIMER_MISSING');
 const stale=display({status:'OK',manual_review_total_count:15,
   manual_review_breakdown_available:false,
   manual_review_breakdown_error:'DELIVERY_REVIEW_CONTRACT_MISMATCH'});
