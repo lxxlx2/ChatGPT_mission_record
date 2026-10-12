@@ -1,0 +1,163 @@
+{
+  "schema": "BSC_MEME_8E6B_MUBARAK_ORIGINAL_RECEIPTS_CROSSCHECK_B_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "token": "MUBARAK",
+  "source": {
+    "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_MUBARAK_16_BLOCK_NATIVE_RECONCILIATION_2026-10-11.json",
+    "sha": "e739ced8c1ba956ba830ac0424e16d5dbac6af99"
+  },
+  "batch_index": "B",
+  "rows": [
+    {
+      "hash": "0x0ab8a4ce426dfbd43fd5585c59553cb215974f04043d6c9f1ac3a909373aaae1",
+      "block": 47425807,
+      "direction": "out",
+      "status": "RECEIPT_VERIFIED",
+      "receipt_success": true,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "gas_wei": "1469380000000000",
+      "native_msg_value_source_wei": "0",
+      "wallet_native_block_delta_wei": "710966755882555727",
+      "block_native_residual_excluding_msg_and_gas_wei": "712436135882555727",
+      "wbnb_receipt_transfer_logs": [
+        {
+          "from": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "raw": "718761234748341128"
+        }
+      ],
+      "wbnb_withdraw_logs": [
+        {
+          "raw": "718761234748341128"
+        }
+      ],
+      "receipt_log_addresses": [
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+        "0x90a54475d512b8f3852351611c38fad30a513491",
+        "0xca980f000771f70b15647069e9e541ef73f71f2f"
+      ],
+      "receipt_log_count": 6
+    },
+    {
+      "hash": "0x2d6bc30c3605560aeed989dbfbdc645cd0e3d346080499dcac2a1123a00426b1",
+      "block": 47425985,
+      "direction": "out",
+      "status": "RECEIPT_VERIFIED",
+      "receipt_success": true,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "gas_wei": "1445370000000000",
+      "native_msg_value_source_wei": "0",
+      "wallet_native_block_delta_wei": "518545751449933977",
+      "block_native_residual_excluding_msg_and_gas_wei": "519991121449933977",
+      "wbnb_receipt_transfer_logs": [
+        {
+          "from": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "raw": "524607668936575844"
+        }
+      ],
+      "wbnb_withdraw_logs": [
+        {
+          "raw": "524607668936575844"
+        }
+      ],
+      "receipt_log_addresses": [
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+        "0x90a54475d512b8f3852351611c38fad30a513491",
+        "0xca980f000771f70b15647069e9e541ef73f71f2f"
+      ],
+      "receipt_log_count": 6
+    },
+    {
+      "hash": "0x157badd198cd0db1ac8bb8e47b35bd01857e6d28d66882b0512c82802ef570e0",
+      "block": 47426067,
+      "direction": "in",
+      "status": "RECEIPT_VERIFIED",
+      "receipt_success": true,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "gas_wei": "923665000000000",
+      "native_msg_value_source_wei": "1010000000000000000",
+      "wallet_native_block_delta_wei": "-1009723665000000000",
+      "block_native_residual_excluding_msg_and_gas_wei": "1200000000000000",
+      "wbnb_receipt_transfer_logs": [
+        {
+          "from": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "to": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "raw": "1000000000000000000"
+        }
+      ],
+      "wbnb_withdraw_logs": [],
+      "receipt_log_addresses": [
+        "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x90a54475d512b8f3852351611c38fad30a513491",
+        "0xca980f000771f70b15647069e9e541ef73f71f2f"
+      ],
+      "receipt_log_count": 5
+    },
+    {
+      "hash": "0xfc10978982c4316808efbca9bebdafc9142a05bd6517db45d34c7c32d89ebad9",
+      "block": 47426073,
+      "direction": "out",
+      "status": "RECEIPT_VERIFIED",
+      "receipt_success": true,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "gas_wei": "1596910000000000",
+      "native_msg_value_source_wei": "0",
+      "wallet_native_block_delta_wei": "1016439647175564136",
+      "block_native_residual_excluding_msg_and_gas_wei": "1018036557175564136",
+      "wbnb_receipt_transfer_logs": [
+        {
+          "from": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "to": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "raw": "1027074815552425480"
+        }
+      ],
+      "wbnb_withdraw_logs": [
+        {
+          "raw": "1027074815552425480"
+        }
+      ],
+      "receipt_log_addresses": [
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+        "0x90a54475d512b8f3852351611c38fad30a513491",
+        "0xca980f000771f70b15647069e9e541ef73f71f2f"
+      ],
+      "receipt_log_count": 6
+    },
+    {
+      "hash": "0x46eab58da04dce83de6d6a090d2aeadc6cf2e737f899462ad70ffe34b408e86b",
+      "block": 47426394,
+      "direction": "in",
+      "status": "RECEIPT_VERIFIED",
+      "receipt_success": true,
+      "signer": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "gas_wei": "906740000000000",
+      "native_msg_value_source_wei": "505000000000000000",
+      "wallet_native_block_delta_wei": "-505306740000000000",
+      "block_native_residual_excluding_msg_and_gas_wei": "600000000000000",
+      "wbnb_receipt_transfer_logs": [
+        {
+          "from": "0xca980f000771f70b15647069e9e541ef73f71f2f",
+          "to": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "raw": "500000000000000000"
+        }
+      ],
+      "wbnb_withdraw_logs": [],
+      "receipt_log_addresses": [
+        "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "0x90a54475d512b8f3852351611c38fad30a513491",
+        "0xca980f000771f70b15647069e9e541ef73f71f2f"
+      ],
+      "receipt_log_count": 5
+    }
+  ],
+  "method": "Same fixed original 16 signer tx, decode original receipt status/gas and exact WBNB Transfer/Withdrawal logs; preserve block delta as independent scope rather than causally isolated sale proceeds",
+  "production": "NO_GO"
+}
