@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-12",
+  "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+  "chain": "bnb-mainnet",
+  "source": {
+    "path": "BSC_MEME_ADFF_COLD13_SUBSET_2026-10-12.json",
+    "sha": "fd7760b833cf6b00d17ca2756fd0c480b366de2b"
+  },
+  "dirs": [
+    {
+      "side": "in",
+      "pages": 1,
+      "events": [
+        {
+          "tx": "0x9efbbbbb6ee461ae77fa49e2bcb3a7327d76d84e6352b47213b43c7226d29f1e",
+          "block": "0x72eddaf",
+          "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+          "from": "0xb26a86df4ef693cebd6e05f8199dc81df91c4e98",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "raw": "0x4458c9963fe4e8f6",
+          "id": "0x9efbbbbb6ee461ae77fa49e2bcb3a7327d76d84e6352b47213b43c7226d29f1e:log:261"
+        },
+        {
+          "tx": "0x32d3eb317be12a7eb1d80d2cfe09c8dbc678fa03952031be6b33c260b31486e9",
+          "block": "0x72eddb1",
+          "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+          "from": "0xff497ca7118bd4b09435168372d188dc2d670f9d",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "raw": "0xe85c12d45b46f946",
+          "id": "0x32d3eb317be12a7eb1d80d2cfe09c8dbc678fa03952031be6b33c260b31486e9:log:593"
+        },
+        {
+          "tx": "0x4a18f58c5ba012e00d971cb0ef1fe1c8294adf407d40e71524c940a28d449028",
+          "block": "0x733f64e",
+          "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+          "from": "0x5400d579fb0ac43f513b61c42979829834f6b84b",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "raw": "0xfbf57620971cf092",
+          "id": "0x4a18f58c5ba012e00d971cb0ef1fe1c8294adf407d40e71524c940a28d449028:log:337"
+        },
+        {
+          "tx": "0x6b411510ce6ddb3d38b124c232fd059c431f1623c2528113f84fdb58bfbc80ae",
+          "block": "0x743414b",
+          "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+          "from": "0x27eca4b0cf0be597a37b7a1819740eb47ea79d1b",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "raw": "0x2d753f2c7e064bcaffb8af",
+          "id": "0x6b411510ce6ddb3d38b124c232fd059c431f1623c2528113f84fdb58bfbc80ae:log:580"
+        },
+        {
+          "tx": "0x6c7f28fe04982f805eca509287ce053260ed1133a89c7fe937608a7d4baed9f7",
+          "block": "0x748d39d",
+          "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+          "from": "0x31704f4b3ff245753d4a7b0239d6fa252aee9bb5",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "raw": "0x8f8fdbbf7ca1d70a",
+          "id": "0x6c7f28fe04982f805eca509287ce053260ed1133a89c7fe937608a7d4baed9f7:log:318"
+        }
+      ],
+      "complete": true,
+      "key": null,
+      "error": null
+    },
+    {
+      "side": "out",
+      "pages": 1,
+      "events": [
+        {
+          "tx": "0x491423b80f4985b58a5cf912aeb444718d778a566ebfcac4ceade4e65f9206ec",
+          "block": "0x733f682",
+          "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+          "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "to": "0x48bc32f212d539b23e1459e57dc27724aea6677a",
+          "raw": "0xfbf57620971cf092",
+          "id": "0x491423b80f4985b58a5cf912aeb444718d778a566ebfcac4ceade4e65f9206ec:log:12"
+        },
+        {
+          "tx": "0x87176f7f43cd9b1e48832683a706238b1beecf072bb590709d85bd2988fa2514",
+          "block": "0x745ce06",
+          "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+          "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "to": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+          "raw": "0x2d753f2c7e064bcaffb8af",
+          "id": "0x87176f7f43cd9b1e48832683a706238b1beecf072bb590709d85bd2988fa2514:log:1028"
+        }
+      ],
+      "complete": true,
+      "key": null,
+      "error": null
+    }
+  ],
+  "counts": [
+    {
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "in": 1,
+      "out": 0
+    },
+    {
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "in": 1,
+      "out": 0
+    },
+    {
+      "token": "TUT",
+      "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "in": 1,
+      "out": 0
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BANANAS31",
+      "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BOB",
+      "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "in": 1,
+      "out": 1
+    },
+    {
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "in": 1,
+      "out": 1
+    },
+    {
+      "token": "4",
+      "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "in": 0,
+      "out": 0
+    },
+    {
+      "token": "BUBB",
+      "ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "in": 0,
+      "out": 0
+    }
+  ],
+  "full": true,
+  "caveat": "Broccoli/MARS/HAJIMI/CHEEMS/GIGGLE/NIULAI and initial 3 remain separately incomplete; only this cold subset can be declared complete.",
+  "production": "NO_GO"
+}
