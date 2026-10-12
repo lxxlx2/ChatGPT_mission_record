@@ -1,0 +1,191 @@
+{
+  "schema": "BSC_MEME_11A732_MUBARAK_TUT_BOB_FULL_SOURCE_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+  "method": "Positive ERC20 exact-CA transfer pagination in/out ascending page8, uniqueId deduplication, latest ethCall balanceOf raw integer",
+  "rows": [
+    {
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "in": {
+        "events": [
+          {
+            "tx": "0xc75316ca824aa950843d8a81f115a88e7b346d6d781dbe55f5cf44731b1b3fae",
+            "uid": "0xc75316ca824aa950843d8a81f115a88e7b346d6d781dbe55f5cf44731b1b3fae:log:46",
+            "block": "0x2d5667b",
+            "raw": "0xf8158c362abbd4c1",
+            "from": "0xa7f7c0a5c1172f44769dff6282ca8c9885ee99d5",
+            "to": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8"
+          },
+          {
+            "tx": "0xab7fce3c1e64a96fd71f664d92e7e56c0055bf3254528624185f6d2b19cde9f8",
+            "uid": "0xab7fce3c1e64a96fd71f664d92e7e56c0055bf3254528624185f6d2b19cde9f8:log:688",
+            "block": "0x2d56b43",
+            "raw": "0xca08e07ce40e0db70",
+            "from": "0xa7f7c0a5c1172f44769dff6282ca8c9885ee99d5",
+            "to": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "250806470419899265073"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0x7c4d39b219a8cce68c0120b5aed71ba0a88171d158f4aa52904b434921667a6e",
+            "uid": "0x7c4d39b219a8cce68c0120b5aed71ba0a88171d158f4aa52904b434921667a6e:log:297",
+            "block": "0x38a25b2",
+            "raw": "0xd98a394046b9cb031",
+            "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+            "to": "0xde9e4fe32b049f821c7f3e9802381aa470ffca73"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "250806470419899265073"
+      },
+      "rawBalance": "0",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "token": "TUT",
+      "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "in": {
+        "events": [
+          {
+            "tx": "0x097e14a730ad0b2589864f9c6084547aa47a614a4ed75deb4323f8587db18991",
+            "uid": "0x097e14a730ad0b2589864f9c6084547aa47a614a4ed75deb4323f8587db18991:log:11",
+            "block": "0x2ca91a8",
+            "raw": "0xe01053131d864a30a15d",
+            "from": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+            "to": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "1058111226228772193739101"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0x9ad26f44c8a7d818d4992fd5f9262cfb624d797c815010b7c8c198b8e3f7f8ec",
+            "uid": "0x9ad26f44c8a7d818d4992fd5f9262cfb624d797c815010b7c8c198b8e3f7f8ec:log:8",
+            "block": "0x2ca9307",
+            "raw": "0xe01053131d864a30a15d",
+            "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+            "to": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "1058111226228772193739101"
+      },
+      "rawBalance": "0",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "token": "BOB",
+      "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "in": {
+        "events": [
+          {
+            "tx": "0x7d3832a3d26bdebe13b1dc86e075b3cbafe8fcc3829972564afcd43ededec194",
+            "uid": "0x7d3832a3d26bdebe13b1dc86e075b3cbafe8fcc3829972564afcd43ededec194:log:20",
+            "block": "0x29f80aa",
+            "raw": "0x52cd79111624979e94d825c51c",
+            "from": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+            "to": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8"
+          },
+          {
+            "tx": "0xd1e8d76df7997ebe694819318e47324451c5df9a08aef7dc56df3be6c7ff6f7b",
+            "uid": "0xd1e8d76df7997ebe694819318e47324451c5df9a08aef7dc56df3be6c7ff6f7b:log:860",
+            "block": "0x29fa5a9",
+            "raw": "0x832770f351f78a4e12e7e453",
+            "from": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+            "to": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "6600890331682992528120563476847"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0x3389cc1d7b890a2a1f1eaf46aca322d6d819706d16ef11b6afcc0b4851463739",
+            "uid": "0x3389cc1d7b890a2a1f1eaf46aca322d6d819706d16ef11b6afcc0b4851463739:log:252",
+            "block": "0x29f80e5",
+            "raw": "0x2966bc888b124bcf4a6c12e28e",
+            "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+            "to": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58"
+          },
+          {
+            "tx": "0x811c094fcd5cbe667d8c9cb854f7a1ce1ef2cb5cab18aa3b98488da1f3cdfc82",
+            "uid": "0x811c094fcd5cbe667d8c9cb854f7a1ce1ef2cb5cab18aa3b98488da1f3cdfc82:log:148",
+            "block": "0x29f814a",
+            "raw": "0x14b35e44458925e7a536097147",
+            "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+            "to": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58"
+          },
+          {
+            "tx": "0xf7dcbc7fea60a44ecd233e51f719be0c2be1ba2bcfff83843214bf02bd5b2404",
+            "uid": "0xf7dcbc7fea60a44ecd233e51f719be0c2be1ba2bcfff83843214bf02bd5b2404:log:38",
+            "block": "0x29f819a",
+            "raw": "0xa59af2222c492f3d29b04b8a3",
+            "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+            "to": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58"
+          },
+          {
+            "tx": "0xe543c818a307bb240035128df66fae501f34421b210626db1af87ed6c65be764",
+            "uid": "0xe543c818a307bb240035128df66fae501f34421b210626db1af87ed6c65be764:log:0",
+            "block": "0x29f81a5",
+            "raw": "0x52cd79111624979e94d825c52",
+            "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+            "to": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58"
+          },
+          {
+            "tx": "0x6ccfcd7b187fcb27336476623597f0a5a089c342bc94d52897a9fe937c7a0d3e",
+            "uid": "0x6ccfcd7b187fcb27336476623597f0a5a089c342bc94d52897a9fe937c7a0d3e:log:0",
+            "block": "0x29f81e6",
+            "raw": "0x2966bc888b124bcf4a6c12e29",
+            "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+            "to": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58"
+          },
+          {
+            "tx": "0xe781287c9265e88fa117f3ea182747dde45870ed59f3a36aec4f10818b66e0ed",
+            "uid": "0xe781287c9265e88fa117f3ea182747dde45870ed59f3a36aec4f10818b66e0ed:log:25",
+            "block": "0x29f857e",
+            "raw": "0x2966bc888b124b985fa84bfff",
+            "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+            "to": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58"
+          },
+          {
+            "tx": "0x20d1891312e4d63055fc3a4ce495fea0599575947df97c2782251998e9f4e04c",
+            "uid": "0x20d1891312e4d63055fc3a4ce495fea0599575947df97c2782251998e9f4e04c:log:8",
+            "block": "0x29fa9be",
+            "raw": "0x832770f351f78a4e12e7e453",
+            "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+            "to": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "6600890331682992524346692549445"
+      },
+      "rawBalance": "3773870927402",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    }
+  ],
+  "production": "NO_GO",
+  "limitations": [
+    "owner-signed trades and quote PnL unresolved"
+  ]
+}
