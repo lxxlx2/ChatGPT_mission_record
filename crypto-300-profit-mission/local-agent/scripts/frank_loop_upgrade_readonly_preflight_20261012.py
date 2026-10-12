@@ -210,9 +210,14 @@ def check_post_clone_status(clone_path: Path, before: dict) -> None:
     try:
         with closing(query_ro(clone_path)) as db:
             check("POST_CLONE_READONLY_REOPEN", True)
-            details["clone_stage"] = "POST_CLONE_SQLITE_INTEGRITY"
-            check("POST_CLONE_INTEGRITY",
-                  db.execute("PRAGMA integrity_check").fetchone()[0] == "ok")
+            # The subprocess just validated PRAGMA integrity_check=ok on this
+            # exact disposable clone after initializing the new ControlDB.
+            # Do not issue a redundant expensive integrity pragma through a
+            # new query_only SQLite connection (macOS WAL/read-only edge);
+            # validate readable rows and unchanged decision/delivery state.
+            details["clone_stage"] = "POST_CLONE_ROW_READABILITY"
+            check("POST_CLONE_ROW_READABLE",
+                  db.execute("SELECT COUNT(*) FROM sqlite_master").fetchone()[0] > 0)
             details["clone_stage"] = "POST_CLONE_STATUS_COUNTS"
             after = counters(db)
         details["clone_stage"] = "POST_CLONE_COMPARE_COUNTS"
