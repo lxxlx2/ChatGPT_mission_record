@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-12",
+  "schema": "BSC_MEME_11A732_MUBARAK_FULL_ERC20_CENSUS_V1",
+  "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+  "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+  "token": "MUBARAK",
+  "sources": [
+    {
+      "file": "BSC_MEME_11A732_MUBARAK_IN_CURSOR_A_2026-10-12.json",
+      "sha": "b95bba9f1e2efd2de80742a6183eb3f6b1943b28"
+    },
+    {
+      "file": "BSC_MEME_11A732_MUBARAK_OUT_CURSOR_A_2026-10-12.json",
+      "sha": "145ba7d4159253d7a5c86c69744ee84d974f789a"
+    }
+  ],
+  "complete": true,
+  "stats": {
+    "in": 2,
+    "out": 1,
+    "raw_net": "0",
+    "balance_raw": "0",
+    "matched": true
+  },
+  "events": {
+    "in": [
+      {
+        "hash": "0xc75316ca824aa950843d8a81f115a88e7b346d6d781dbe55f5cf44731b1b3fae",
+        "block": "0x2d5667b",
+        "raw": "0xf8158c362abbd4c1",
+        "from": "0xa7f7c0a5c1172f44769dff6282ca8c9885ee99d5",
+        "to": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+        "id": "0xc75316ca824aa950843d8a81f115a88e7b346d6d781dbe55f5cf44731b1b3fae:log:46"
+      },
+      {
+        "hash": "0xab7fce3c1e64a96fd71f664d92e7e56c0055bf3254528624185f6d2b19cde9f8",
+        "block": "0x2d56b43",
+        "raw": "0xca08e07ce40e0db70",
+        "from": "0xa7f7c0a5c1172f44769dff6282ca8c9885ee99d5",
+        "to": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+        "id": "0xab7fce3c1e64a96fd71f664d92e7e56c0055bf3254528624185f6d2b19cde9f8:log:688"
+      }
+    ],
+    "out": [
+      {
+        "hash": "0x7c4d39b219a8cce68c0120b5aed71ba0a88171d158f4aa52904b434921667a6e",
+        "block": "0x38a25b2",
+        "raw": "0xd98a394046b9cb031",
+        "from": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+        "to": "0xde9e4fe32b049f821c7f3e9802381aa470ffca73",
+        "id": "0x7c4d39b219a8cce68c0120b5aed71ba0a88171d158f4aa52904b434921667a6e:log:297"
+      }
+    ]
+  },
+  "PnL": "UNVERIFIED",
+  "production": "NO_GO"
+}
