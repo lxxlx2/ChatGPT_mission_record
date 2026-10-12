@@ -26,7 +26,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           for i in $(seq 1 70); do
-            gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38207595586 > /tmp/monster38_pilot_run.json
+            gh api repos/lxxlx2/ChatGPT_mission_record/actions/runs/38207816084 > /tmp/monster38_pilot_run.json
             status=$(python -c 'import json; print(json.load(open("/tmp/monster38_pilot_run.json"))["status"])')
             if test "$status" = completed; then
               python - <<'PY'
@@ -41,7 +41,7 @@ jobs:
             sleep 12
           done
           test "$status" = completed
-          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38207595586/artifacts?per_page=100' >/tmp/monster38_original_artifacts.json
+          gh api 'repos/lxxlx2/ChatGPT_mission_record/actions/runs/38207816084/artifacts?per_page=100' >/tmp/monster38_original_artifacts.json
           python - <<'PY'
           import json,re
           from pathlib import Path
@@ -56,7 +56,7 @@ jobs:
             if k in keys:raise SystemExit('STAGE38_DUPLICATE')
             keys.add(k)
             items.append({'date':k[0],'shard':k[1],'artifact_id':a['id'],'zip_sha256':a['digest'].split(':')[1]})
-          Path('/tmp/monster38_manifest.json').write_text(json.dumps({'run_id':38207595586,'artifacts':items}))
+          Path('/tmp/monster38_manifest.json').write_text(json.dumps({'run_id':38207816084,'artifacts':items}))
           Path('/tmp/monster38_ids').write_text('\n'.join(str(i['artifact_id']) for i in items)+'\n')
           print('STAGE38_SHA_ORIGINAL12_MANIFEST_READY')
           PY
