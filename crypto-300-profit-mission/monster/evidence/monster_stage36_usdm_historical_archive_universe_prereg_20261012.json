@@ -1,0 +1,37 @@
+{
+  "schema": "MONSTER_STAGE36_FUTURES_ARCHIVE_UNIVERSE_PREREG_V1",
+  "frozen_prior_to_source_fetch_utc_date": "2026-10-12",
+  "goal": "FACTUAL_BASELINE_OF_HISTORICALLY_ARCHIVED_BINANCE_USDM_USDT_SYMBOLS_AND_MISSING_FROM_SPOT_758; NO_STRATEGY_TUNING",
+  "source": "BINANCE_OFFICIAL_PUBLIC_S3_LISTOBJECTSV2",
+  "source_s3": "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision",
+  "archive_prefixes": [
+    "data/futures/um/monthly/klines/",
+    "data/futures/um/daily/klines/"
+  ],
+  "directory_listing": "S3 delimiter=/ and continuation-token, collect all CommonPrefixes, fail on pagination integrity issues",
+  "spot_comparison": "Stage34 full13,644 CSV has frozen758 unique symbols across18 dates, Git blob f94f881e3ef13f8ac33e92aa68542d45a8069384",
+  "symbol_classes": [
+    "EXACT_PLAIN_USDT_ARCHIVED",
+    "USDT_DATED_CONTRACT",
+    "OTHER_USDM_SYMBOL",
+    "UNKNOWN"
+  ],
+  "source_attestation": "S3 raw XML pagination digest and acquisition timestamp, directory path existence only; no fabricated historical exchangeInfo",
+  "not_proven": [
+    "historical actually tradable contracts",
+    "point-in-time listing",
+    "true perpetual contractType",
+    "future 2x/5x/10x price labels",
+    "Futures D0 D1 signal efficacy",
+    "Futures orderbook",
+    "real trading"
+  ],
+  "contract_no_other_change": [
+    "no Frank/Gmail/runtime/new task",
+    "no production trading",
+    "no model threshold modification"
+  ],
+  "next": "freeze and validate dated monthly 1h price GT for full historical USD-M sample plus normal controls; then replay original D0/D1 with 1m futures source",
+  "deployment": "NO_GO",
+  "review": "NOT_DONE"
+}
