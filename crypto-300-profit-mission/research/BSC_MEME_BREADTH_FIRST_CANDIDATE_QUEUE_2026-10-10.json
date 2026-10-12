@@ -551,7 +551,21 @@
       "research_status": "KEEP_FOR_CROSS_TOKEN_AUDIT; DO_NOT_EQUATE_SAMPLE_PROFIT_WITH_LIFETIME_PROFIT",
       "early_sample_tokens": [],
       "verified_direct_sample_signers": [],
-      "pnl_not_recomputed": true
+      "pnl_not_recomputed": true,
+      "address_model_4_new_2026_10_12_owner_boundary": {
+        "token": "我踏马来了",
+        "ownerBuyBlock": 73336282,
+        "ownerSellBlock": 73336293,
+        "firstInputWei": "60000000000000000",
+        "firstSalePercentOfFirstPurchase": 49.9999,
+        "relativeToDDACOwnerBuyBlocks": 3,
+        "firstTwoNativeBlockNetWei": "-23030128143168814",
+        "category": "HIGH_PRIORITY_NEAR_SIMULTANEOUS_MAJOR_LAUNCH_OWNER_PARTIAL_EXIT",
+        "full19History": false,
+        "source": "BSC_MEME_ADFF_IFML_0ABB_GIGGLE_FIRST_SIGNED_ENTRY_EXIT_2026-10-12.json",
+        "PnL": "UNRESOLVED",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
@@ -1292,7 +1306,20 @@
       "latest_genesis_plus_pool_overlap_tokens": [
         "龙虾",
         "币安人生"
-      ]
+      ],
+      "address_model_4_new_2026_10_12_owner_boundary": {
+        "token": "GIGGLE",
+        "ownerBuyBlock": 61967915,
+        "ownerSellBlock": 61970077,
+        "firstInputWei": "100000000000000000",
+        "firstSalePercentOfFirstPurchase": 7.6886,
+        "firstTwoNativeBlockNetWei": "148764209579754519",
+        "category": "OWNER_SIGNED_GIGGLE_PARTIAL_EXIT_NOT_COMPLETE_POSITION",
+        "full19History": false,
+        "source": "BSC_MEME_ADFF_IFML_0ABB_GIGGLE_FIRST_SIGNED_ENTRY_EXIT_2026-10-12.json",
+        "PnL": "UNRESOLVED",
+        "production": "NO_GO"
+      }
     },
     {
       "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
@@ -2248,6 +2275,18 @@
       "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V3_2026-10-12.json"
     ],
     "remaining": "9 wallets 141 incomplete unknown CA directions; 30 partially observed cells; PnL and eligibility NOT validated",
+    "production": "NO_GO"
+  },
+  "address_model_4_additional_owner_trade_2026_10_12": {
+    "status": "TWO_ADDITIONAL_SELF_SIGNED_OWNER_FIRST_TRADE_PAIRS_VALIDATED_NO_GO",
+    "wallets": [
+      "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8"
+    ],
+    "research_file": "BSC_MEME_ADFF_IFML_0ABB_GIGGLE_FIRST_SIGNED_ENTRY_EXIT_2026-10-12.json",
+    "triage_checkpoint": "BSC_MEME_23_EOA_REMAINING_WALLETS_TRIAGE_B02_2026-10-12.json",
+    "incomplete_wallets_remaining": 9,
+    "warning": "DO_NOT_UPGRADE_FULL_CENSUS_OR_MATERIAL_WIN_RATE_FROM_FIRST8_LOGS",
     "production": "NO_GO"
   }
 }
