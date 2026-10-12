@@ -44,6 +44,7 @@ LOCAL_STATES_ACTIVE = {"PENDING", "RETRY_PENDING"}
 GMAIL_TERMINAL = {"SENT_VERIFIED", "MANUAL_REVIEW", "DRY_RUN_AUDIT", "PERMANENT_ERROR"}
 LOCAL_TERMINAL = {"COMMAND_ACCEPTED", "MANUAL_REVIEW", "DRY_RUN_AUDIT"}
 SIGNAL_FILES = ("mission_agent/mission_control/policy.py",
+                "mission_agent/mission_control/service.py",
                 "mission_agent/signals/classifier.py",
                 "mission_agent/signals/engine.py",
                 "mission_agent/signals/evaluator.py")
