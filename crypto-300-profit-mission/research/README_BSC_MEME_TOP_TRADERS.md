@@ -33,3 +33,15 @@ We may read public Binance leaderboard or Dune data as non-authoritative lead ge
 **No further commands for the user; user explicitly wants the assistant to perform data collection and Git updates.**
 
 Research: OBSERVE_ONLY. Production: NO_GO. Do not create monitoring, automations or live-trading jobs.
+
+## Current research authority: V21 inventory + Stage 16 economic reconciliation (2026-10-12)
+
+The BSC address-model research itself has advanced beyond the 2026-10-10 collection notes above. Preserve earlier evidence and chronological scope:
+
+- Frozen 23 wallet × 19 exact CA matrix: `BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json`. All 437/437 exact CA ERC20 positive-transfer cursors exhausted; 148/148 observed-transfer CA token raw quantities independently reconciled; 289 zero-positive-transfer CA cells. This is **not** a closed economic PnL ledger or viable follow-trader proof.
+- Current economic research handoff: `BSC_MEME_ADDRESS_MODEL_5_STAGE16_CROSS_WALLET_MANAGER_FEE_CAUSAL_QA_2026-10-12.md`.
+- Exact EOA-indexed manager events and WBNB real quote asset flow: `BSC_MEME_STAGE16_3_EOA_ROUTER_FEE_AND_SIGNED_ROUNDTRIP_QA_2026-10-12.json`. Across 8 original signed buy/sell txs in 3 wallets and 3 meme tokens the manager event equals **floor(1% of appropriate gross amount)**. Event ABI semantics have not been independently decoded, and do not extrapolate fee policy to other routes.
+- Three initial raw-token fully paired original buy/sell cycle **BNB block scopes**, not fully internal-traced causal PnL: DDAC/MARSCOIN `+0.051496246460395600 BNB`, 2ADF/BOB `+0.009515610472872943 BNB`, and A83B/BROCCOLI714 `-0.239887492433116024 BNB`. An extra successful EOA transaction on each DDAC sell block is explicitly gas-accounted. Its following partial-token exit is **not** a completed loss.
+- Correction: a legacy unscoped BOB manager log `0x11c37937e080000` means 0.08 BNB and must **not** be labeled the 2ADF original buy fee. Exact manager topic + wallet-indexed log + original tx hash returns **0.005 BNB** in the updated fee proof.
+
+Next research stage: reconstruct true original-owner quote-denominated trade costs/proceeds for repeated major meme opportunities, include unsuccessful or missed eligible opportunities as denominator, distinguish open inventory and internal tracing limitations, and **only then** study delayed follower prices/liquidity. Do not rank wallet PnL merely from Transfer logs, account balance snapshots, or three convenient examples. No GMGN paid API. OBSERVE_ONLY / PRODUCTION_TRADING = NO_GO.
