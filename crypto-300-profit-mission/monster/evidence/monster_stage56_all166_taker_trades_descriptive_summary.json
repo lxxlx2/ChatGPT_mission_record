@@ -1,0 +1,49 @@
+{
+  "AUTOTRADE": "NO_GO",
+  "DEPLOYMENT": "NO_GO",
+  "FRANK": "UNCHANGED",
+  "GMAIL": "OFF",
+  "NO_HISTORICAL_SPOT_ORDERBOOK_OR_EXCHANGE_STATUS_CLAIM": true,
+  "NO_NEW_PRIORITY_RULE_OR_THRESHOLD": true,
+  "NO_TRADE_PROFIT_CLAIM": true,
+  "ORIGINAL_P1V03": "REJECTED",
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "all_original_candidates": 166,
+  "all_source_complete_61m_official_SHA": 166,
+  "by_POSTHOC_label_descriptive_only": {
+    "FUTURE_2X_AND_CANDIDATE_BEFORE_5MIN": {
+      "historical_usdm_trades60_observed": 27,
+      "n": 27,
+      "original_delivered": 21,
+      "quote60_USDT_median": "10732994.4084500",
+      "taker_buy_share15_median": "0.5411856401443496302120688108",
+      "taker_buy_share60_median": "0.5259006940819416262325213602",
+      "trades60_median": "118805"
+    },
+    "FUTURE_2X_BUT_CANDIDATE_LATE": {
+      "historical_usdm_trades60_observed": 2,
+      "n": 2,
+      "original_delivered": 2,
+      "quote60_USDT_median": "22777793.8867950",
+      "taker_buy_share15_median": "0.5238599425197372096895625895",
+      "taker_buy_share60_median": "0.523069774071021310572327762",
+      "trades60_median": "421721"
+    },
+    "ORDINARY_NOT_CALENDAR_2X": {
+      "historical_usdm_trades60_observed": 137,
+      "n": 137,
+      "original_delivered": 104,
+      "quote60_USDT_median": "10553489.8567300",
+      "taker_buy_share15_median": "0.5285099812105874913511525472",
+      "taker_buy_share60_median": "0.5226489258393847849042402519",
+      "trades60_median": "81185"
+    }
+  },
+  "locked_original_git_blobs": {
+    "monster_stage52_all5400_originalV4_P1v03_true_minute_source_cases.jsonl": "ad7544f97e8a0d6c1f2635aa54052cca42d08cf1",
+    "monster_stage52_all_real_v03_eligible_and_global_budget_fates.jsonl": "95ab2eda27880fc53dee7e5fe2d53007e9b9456f",
+    "monster_stage52_pinned_v03_all5400_36SHA_true_global_cap_metrics.json": "42d455a6cc9d0164a8dd94aa12a475bad5ed126e",
+    "monster_stage55_all166_candidate_asof_features_and_fate.csv": "dca780246adb28e045ed77f0f96eb4bd034fb2e7"
+  },
+  "schema": "MONSTER_STAGE56_SOURCE_LOCKED_ALL166_REAL_USDM_ASOF_TAKER_TRADES_FACTS_V1"
+}
