@@ -1,0 +1,644 @@
+{
+  "schema": "BSC_MEME_STAGE21_THREE_MISSED_CANDIDATES_V2_ONCHAIN_POOL_5_WAY_STATIC_STATE_QUOTE_V1",
+  "research_date": "2026-10-13",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "research_only": true,
+  "sources": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE20_40_ABSENCE_CHAIN_CAPITAL_AND_EXECUTION_EVIDENCE_2026-10-13.json",
+      "sha": "2f0992c5f3bb67aceb3cf6b5a8363b0e870e55ab"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_GLOBAL_GENESIS_V2_GAP_MATRIX_2026-10-10.json",
+      "sha": "0b22c776cae637d6db2624e65ff294ccdcc779e6"
+    }
+  ],
+  "method": {
+    "cohort": "Stage20 selected 3/40 funded early non-ERC20-transfer candidates, frozen BEFORE Stage21 path analysis",
+    "first_v2_sample": "Use previously sampled pool first token outgoing block; NOT proven first ever tradable swap. Only BULLA was separately checked as deployment at earlier genesis.",
+    "entry_definition": "One block AFTER frozen first sampled V2 pool outgoing block, using actual archive V2 getReserves at block end. No intrablock execution assumption.",
+    "exit_offsets_blocks": [
+      100,
+      300,
+      600,
+      1200
+    ],
+    "exit_definition": "BSC actual archive block timestamp and V2 end-block getReserves. Elapsed seconds computed against entry block header; note nonuniform interval for BULLA.",
+    "fee_assumption": "25 bps verified EXACTLY against independent original Swap logs and immediately preceding reserve states at first sampled V2 block for EACH of three pairs; integer floor formula (in*9975*outReserve)/(inReserve*10000+in*9975). Applied to buy AND sell.",
+    "static_quote_warning": "Two unrelated historical end-of-block reserve states combined as a HYPOTHETICAL buy and mark-to-exit, NOT replayed ledger trades, no counterfactual back-impact on intervening market, no MEV, token transfer taxes or third-party quote routing, no actual realized PnL."
+  },
+  "summary": {
+    "three_pairs": 3,
+    "first_sampled_swaps_25bps_exact_3_of_3": 3,
+    "sample_snapshots_total": 18,
+    "entry_scenarios_total": 9,
+    "exit_what_if_quotes_total": 36,
+    "verified_missed_profitable_trades": 0
+  },
+  "pairs": [
+    {
+      "token": "BROCCOLI714",
+      "wallet": "8E6B",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "pair": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "first_sampled_v2_block": 46627716,
+      "first_sampled_v2_swap_hash": "0xd8433397c7a14123c6ab7b4e44db7140cefb4e7f762d396d94db3a5c15115033",
+      "token_side": 0,
+      "token_decimals": 18,
+      "quote_decimals": 18,
+      "first_sampled_swap": {
+        "input": "1301052203249520770",
+        "output": "9603443401110575065114",
+        "rin": "89913129409354619",
+        "rout": "10268781614680419006594",
+        "model_amount_out_25bps": "9603443401110575065114",
+        "exact_fee_match": true
+      },
+      "entry_block": 46627717,
+      "entry_time_unix_s": 1739464582,
+      "entry_token_reserve_wei": "6122708828128580301188",
+      "entry_WBNB_reserve_wei": "151970701851567928",
+      "snapshots": [
+        {
+          "block": 46627716,
+          "timestamp_utc_s": 1739464579,
+          "elapsed_seconds_since_entry": -3,
+          "reserve_token_wei": "8380363078531760035486",
+          "reserve_WBNB_wei": "110886990566830698",
+          "spot_WBNB_per_token": 110886990566830700,
+          "actual_block_height": 46627716
+        },
+        {
+          "block": 46627717,
+          "timestamp_utc_s": 1739464582,
+          "elapsed_seconds_since_entry": 0,
+          "reserve_token_wei": "6122708828128580301188",
+          "reserve_WBNB_wei": "151970701851567928",
+          "spot_WBNB_per_token": 151970701851567940,
+          "actual_block_height": 46627717
+        },
+        {
+          "block": 46627816,
+          "timestamp_utc_s": 1739464879,
+          "elapsed_seconds_since_entry": 297,
+          "reserve_token_wei": "4932928375010554428769",
+          "reserve_WBNB_wei": "231952997960399546",
+          "spot_WBNB_per_token": 231952997960399550,
+          "actual_block_height": 46627816
+        },
+        {
+          "block": 46628016,
+          "timestamp_utc_s": 1739465479,
+          "elapsed_seconds_since_entry": 897,
+          "reserve_token_wei": "76119102389005858708128",
+          "reserve_WBNB_wei": "8357654265771130909",
+          "spot_WBNB_per_token": 8357654265771131000,
+          "actual_block_height": 46628016
+        },
+        {
+          "block": 46628316,
+          "timestamp_utc_s": 1739466379,
+          "elapsed_seconds_since_entry": 1797,
+          "reserve_token_wei": "1357663803118804034408564",
+          "reserve_WBNB_wei": "148582576076141244321",
+          "spot_WBNB_per_token": 148582576076141230000,
+          "actual_block_height": 46628316
+        },
+        {
+          "block": 46628916,
+          "timestamp_utc_s": 1739468179,
+          "elapsed_seconds_since_entry": 3597,
+          "reserve_token_wei": "2133773934120808616590094",
+          "reserve_WBNB_wei": "310892815284666928945",
+          "spot_WBNB_per_token": 310892815284666960000,
+          "actual_block_height": 46628916
+        }
+      ],
+      "scenarios": [
+        {
+          "input_WBNB_wei": "10000000000000000",
+          "pool_reserve_ratio_bps": "658",
+          "entry_token_wei": "377126529832574752330",
+          "outputs": [
+            {
+              "block": 46627816,
+              "elapsed_seconds": 297,
+              "exit_WBNB_wei": "16435316994108376",
+              "net_WBNB_wei": "6435316994108376",
+              "round_trip_multipler_bps": "16435",
+              "positive_gross_pool_quote": true
+            },
+            {
+              "block": 46628016,
+              "elapsed_seconds": 897,
+              "exit_WBNB_wei": "41100747223826438",
+              "net_WBNB_wei": "31100747223826438",
+              "round_trip_multipler_bps": "41100",
+              "positive_gross_pool_quote": true
+            },
+            {
+              "block": 46628316,
+              "elapsed_seconds": 1797,
+              "exit_WBNB_wei": "41158099741438951",
+              "net_WBNB_wei": "31158099741438951",
+              "round_trip_multipler_bps": "41158",
+              "positive_gross_pool_quote": true
+            },
+            {
+              "block": 46628916,
+              "elapsed_seconds": 3597,
+              "exit_WBNB_wei": "54800650047720863",
+              "net_WBNB_wei": "44800650047720863",
+              "round_trip_multipler_bps": "54800",
+              "positive_gross_pool_quote": true
+            }
+          ]
+        },
+        {
+          "input_WBNB_wei": "100000000000000000",
+          "pool_reserve_ratio_bps": "6580",
+          "entry_token_wei": "2426261332951315549354",
+          "outputs": [
+            {
+              "block": 46627816,
+              "elapsed_seconds": 297,
+              "exit_WBNB_wei": "76344644720767664",
+              "net_WBNB_wei": "-23655355279232336",
+              "round_trip_multipler_bps": "7634",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 46628016,
+              "elapsed_seconds": 897,
+              "exit_WBNB_wei": "257541883403316299",
+              "net_WBNB_wei": "157541883403316299",
+              "round_trip_multipler_bps": "25754",
+              "positive_gross_pool_quote": true
+            },
+            {
+              "block": 46628316,
+              "elapsed_seconds": 1797,
+              "exit_WBNB_wei": "264394632246110992",
+              "net_WBNB_wei": "164394632246110992",
+              "round_trip_multipler_bps": "26439",
+              "positive_gross_pool_quote": true
+            },
+            {
+              "block": 46628916,
+              "elapsed_seconds": 3597,
+              "exit_WBNB_wei": "352225220489119896",
+              "net_WBNB_wei": "252225220489119896",
+              "round_trip_multipler_bps": "35222",
+              "positive_gross_pool_quote": true
+            }
+          ]
+        },
+        {
+          "input_WBNB_wei": "1000000000000000000",
+          "pool_reserve_ratio_bps": "65802",
+          "entry_token_wei": "5313229859813262615491",
+          "outputs": [
+            {
+              "block": 46627816,
+              "elapsed_seconds": 297,
+              "exit_WBNB_wei": "120136181337755211",
+              "net_WBNB_wei": "-879863818662244789",
+              "round_trip_multipler_bps": "1201",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 46628016,
+              "elapsed_seconds": 897,
+              "exit_WBNB_wei": "544038812865876375",
+              "net_WBNB_wei": "-455961187134123625",
+              "round_trip_multipler_bps": "5440",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 46628316,
+              "elapsed_seconds": 1797,
+              "exit_WBNB_wei": "577770132523021691",
+              "net_WBNB_wei": "-422229867476978309",
+              "round_trip_multipler_bps": "5777",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 46628916,
+              "elapsed_seconds": 3597,
+              "exit_WBNB_wei": "770293813414526275",
+              "net_WBNB_wei": "-229706186585473725",
+              "round_trip_multipler_bps": "7702",
+              "positive_gross_pool_quote": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "token": "BUBB",
+      "wallet": "8E6B",
+      "ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "pair": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+      "first_sampled_v2_block": 47620848,
+      "first_sampled_v2_swap_hash": "0x68d5fee6213f8896da65e7e804305817d10a2bfd05add66e362ae05e4a29dfa6",
+      "token_side": 1,
+      "token_decimals": 18,
+      "quote_decimals": 18,
+      "first_sampled_swap": {
+        "input": "23207474481371230",
+        "output": "5076545502786567287223",
+        "rin": "569661000000000000",
+        "rout": "130000000000000000000000",
+        "model_amount_out_25bps": "5076545502786567287223",
+        "exact_fee_match": true
+      },
+      "entry_block": 47620849,
+      "entry_time_unix_s": 1742444226,
+      "entry_token_reserve_wei": "124923454497213432712777",
+      "entry_WBNB_reserve_wei": "592868474481371230",
+      "snapshots": [
+        {
+          "block": 47620848,
+          "timestamp_utc_s": 1742444223,
+          "elapsed_seconds_since_entry": -3,
+          "reserve_token_wei": "124923454497213432712777",
+          "reserve_WBNB_wei": "592868474481371230",
+          "spot_WBNB_per_token": 592868474481371300,
+          "actual_block_height": 47620848
+        },
+        {
+          "block": 47620849,
+          "timestamp_utc_s": 1742444226,
+          "elapsed_seconds_since_entry": 0,
+          "reserve_token_wei": "124923454497213432712777",
+          "reserve_WBNB_wei": "592868474481371230",
+          "spot_WBNB_per_token": 592868474481371300,
+          "actual_block_height": 47620849
+        },
+        {
+          "block": 47620948,
+          "timestamp_utc_s": 1742444523,
+          "elapsed_seconds_since_entry": 297,
+          "reserve_token_wei": "131051274562472823514542",
+          "reserve_WBNB_wei": "565660734123419953",
+          "spot_WBNB_per_token": 565660734123419970,
+          "actual_block_height": 47620948
+        },
+        {
+          "block": 47621148,
+          "timestamp_utc_s": 1742445123,
+          "elapsed_seconds_since_entry": 897,
+          "reserve_token_wei": "140211269514044183435158",
+          "reserve_WBNB_wei": "531138507084749370",
+          "spot_WBNB_per_token": 531138507084749400,
+          "actual_block_height": 47621148
+        },
+        {
+          "block": 47621448,
+          "timestamp_utc_s": 1742446023,
+          "elapsed_seconds_since_entry": 1797,
+          "reserve_token_wei": "151796733446678928403144",
+          "reserve_WBNB_wei": "491944367496572693",
+          "spot_WBNB_per_token": 491944367496572700,
+          "actual_block_height": 47621448
+        },
+        {
+          "block": 47622048,
+          "timestamp_utc_s": 1742447823,
+          "elapsed_seconds_since_entry": 3597,
+          "reserve_token_wei": "148814513687119149641294",
+          "reserve_WBNB_wei": "512564527291885517",
+          "spot_WBNB_per_token": 512564527291885500,
+          "actual_block_height": 47622048
+        }
+      ],
+      "scenarios": [
+        {
+          "input_WBNB_wei": "10000000000000000",
+          "pool_reserve_ratio_bps": "168",
+          "entry_token_wei": "2067056394168882571945",
+          "outputs": [
+            {
+              "block": 47620948,
+              "elapsed_seconds": 297,
+              "exit_WBNB_wei": "8761939666634004",
+              "net_WBNB_wei": "-1238060333365996",
+              "round_trip_multipler_bps": "8761",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 47621148,
+              "elapsed_seconds": 897,
+              "exit_WBNB_wei": "7697506173889188",
+              "net_WBNB_wei": "-2302493826110812",
+              "round_trip_multipler_bps": "7697",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 47621448,
+              "elapsed_seconds": 1797,
+              "exit_WBNB_wei": "6592640334550204",
+              "net_WBNB_wei": "-3407359665449796",
+              "round_trip_multipler_bps": "6592",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 47622048,
+              "elapsed_seconds": 3597,
+              "exit_WBNB_wei": "7004747044668570",
+              "net_WBNB_wei": "-2995252955331430",
+              "round_trip_multipler_bps": "7004",
+              "positive_gross_pool_quote": false
+            }
+          ]
+        },
+        {
+          "input_WBNB_wei": "100000000000000000",
+          "pool_reserve_ratio_bps": "1686",
+          "entry_token_wei": "17991311299381454650029",
+          "outputs": [
+            {
+              "block": 47620948,
+              "elapsed_seconds": 297,
+              "exit_WBNB_wei": "68132207464211914",
+              "net_WBNB_wei": "-31867792535788086",
+              "round_trip_multipler_bps": "6813",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 47621148,
+              "elapsed_seconds": 897,
+              "exit_WBNB_wei": "60268924008064872",
+              "net_WBNB_wei": "-39731075991935128",
+              "round_trip_multipler_bps": "6026",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 47621448,
+              "elapsed_seconds": 1797,
+              "exit_WBNB_wei": "52011535025722430",
+              "net_WBNB_wei": "-47988464974277570",
+              "round_trip_multipler_bps": "5201",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 47622048,
+              "elapsed_seconds": 3597,
+              "exit_WBNB_wei": "55160751958118940",
+              "net_WBNB_wei": "-44839248041881060",
+              "round_trip_multipler_bps": "5516",
+              "positive_gross_pool_quote": false
+            }
+          ]
+        },
+        {
+          "input_WBNB_wei": "1000000000000000000",
+          "pool_reserve_ratio_bps": "16867",
+          "entry_token_wei": "78353631790649551709463",
+          "outputs": [
+            {
+              "block": 47620948,
+              "elapsed_seconds": 297,
+              "exit_WBNB_wei": "211323433699275952",
+              "net_WBNB_wei": "-788676566300724048",
+              "round_trip_multipler_bps": "2113",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 47621148,
+              "elapsed_seconds": 897,
+              "exit_WBNB_wei": "190102927438668846",
+              "net_WBNB_wei": "-809897072561331154",
+              "round_trip_multipler_bps": "1901",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 47621448,
+              "elapsed_seconds": 1797,
+              "exit_WBNB_wei": "167203802983670656",
+              "net_WBNB_wei": "-832796197016329344",
+              "round_trip_multipler_bps": "1672",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 47622048,
+              "elapsed_seconds": 3597,
+              "exit_WBNB_wei": "176501255100405187",
+              "net_WBNB_wei": "-823498744899594813",
+              "round_trip_multipler_bps": "1765",
+              "positive_gross_pool_quote": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "token": "BULLA",
+      "wallet": "2ADF",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "pair": "0x3551191f78869c29388886330f31739a87866c38",
+      "first_sampled_v2_block": 50982375,
+      "first_sampled_v2_swap_hash": "0x99c90233f5556b370192968fd692bfe0b4d1712dc954932b83bb897830ede2b7",
+      "token_side": 0,
+      "token_decimals": 18,
+      "quote_decimals": 18,
+      "first_sampled_swap": {
+        "input": "800000000000000",
+        "output": "2848922240290154839",
+        "rin": "786221980956102340",
+        "rout": "2809722715913000095823",
+        "model_amount_out_25bps": "2848922240290154839",
+        "exact_fee_match": true
+      },
+      "entry_block": 50982376,
+      "entry_time_unix_s": 1749217569,
+      "entry_token_reserve_wei": "2806873793672709940984",
+      "entry_WBNB_reserve_wei": "787021980956102340",
+      "snapshots": [
+        {
+          "block": 50982375,
+          "timestamp_utc_s": 1749217568,
+          "elapsed_seconds_since_entry": -1,
+          "reserve_token_wei": "2806873793672709940984",
+          "reserve_WBNB_wei": "787021980956102340",
+          "spot_WBNB_per_token": 787021980956102400,
+          "actual_block_height": 50982375
+        },
+        {
+          "block": 50982376,
+          "timestamp_utc_s": 1749217569,
+          "elapsed_seconds_since_entry": 0,
+          "reserve_token_wei": "2806873793672709940984",
+          "reserve_WBNB_wei": "787021980956102340",
+          "spot_WBNB_per_token": 787021980956102400,
+          "actual_block_height": 50982376
+        },
+        {
+          "block": 50982475,
+          "timestamp_utc_s": 1749217718,
+          "elapsed_seconds_since_entry": 149,
+          "reserve_token_wei": "2833356092666032634151",
+          "reserve_WBNB_wei": "779901638231312758",
+          "spot_WBNB_per_token": 779901638231312800,
+          "actual_block_height": 50982475
+        },
+        {
+          "block": 50982675,
+          "timestamp_utc_s": 1749218018,
+          "elapsed_seconds_since_entry": 449,
+          "reserve_token_wei": "243690159815617078",
+          "reserve_WBNB_wei": "70117199269378",
+          "spot_WBNB_per_token": 70117199269378,
+          "actual_block_height": 50982675
+        },
+        {
+          "block": 50982975,
+          "timestamp_utc_s": 1749218468,
+          "elapsed_seconds_since_entry": 899,
+          "reserve_token_wei": "243690159815617078",
+          "reserve_WBNB_wei": "70117199269378",
+          "spot_WBNB_per_token": 70117199269378,
+          "actual_block_height": 50982975
+        },
+        {
+          "block": 50983575,
+          "timestamp_utc_s": 1749219368,
+          "elapsed_seconds_since_entry": 1799,
+          "reserve_token_wei": "243690159815617078",
+          "reserve_WBNB_wei": "70117199269378",
+          "spot_WBNB_per_token": 70117199269378,
+          "actual_block_height": 50983575
+        }
+      ],
+      "scenarios": [
+        {
+          "input_WBNB_wei": "10000000000000000",
+          "pool_reserve_ratio_bps": "127",
+          "entry_token_wei": "35130077981346092301",
+          "outputs": [
+            {
+              "block": 50982475,
+              "elapsed_seconds": 149,
+              "exit_WBNB_wei": "9527794631018327",
+              "net_WBNB_wei": "-472205368981673",
+              "round_trip_multipler_bps": "9527",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 50982675,
+              "elapsed_seconds": 449,
+              "exit_WBNB_wei": "69632959085636",
+              "net_WBNB_wei": "-9930367040914364",
+              "round_trip_multipler_bps": "69",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 50982975,
+              "elapsed_seconds": 899,
+              "exit_WBNB_wei": "69632959085636",
+              "net_WBNB_wei": "-9930367040914364",
+              "round_trip_multipler_bps": "69",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 50983575,
+              "elapsed_seconds": 1799,
+              "exit_WBNB_wei": "69632959085636",
+              "net_WBNB_wei": "-9930367040914364",
+              "round_trip_multipler_bps": "69",
+              "positive_gross_pool_quote": false
+            }
+          ]
+        },
+        {
+          "input_WBNB_wei": "100000000000000000",
+          "pool_reserve_ratio_bps": "1270",
+          "entry_token_wei": "315735800106107411411",
+          "outputs": [
+            {
+              "block": 50982475,
+              "elapsed_seconds": 149,
+              "exit_WBNB_wei": "78018950347189998",
+              "net_WBNB_wei": "-21981049652810002",
+              "round_trip_multipler_bps": "7801",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 50982675,
+              "elapsed_seconds": 449,
+              "exit_WBNB_wei": "70062987957716",
+              "net_WBNB_wei": "-99929937012042284",
+              "round_trip_multipler_bps": "7",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 50982975,
+              "elapsed_seconds": 899,
+              "exit_WBNB_wei": "70062987957716",
+              "net_WBNB_wei": "-99929937012042284",
+              "round_trip_multipler_bps": "7",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 50983575,
+              "elapsed_seconds": 1799,
+              "exit_WBNB_wei": "70062987957716",
+              "net_WBNB_wei": "-99929937012042284",
+              "round_trip_multipler_bps": "7",
+              "positive_gross_pool_quote": false
+            }
+          ]
+        },
+        {
+          "input_WBNB_wei": "1000000000000000000",
+          "pool_reserve_ratio_bps": "12706",
+          "entry_token_wei": "1568967285955443862140",
+          "outputs": [
+            {
+              "block": 50982475,
+              "elapsed_seconds": 149,
+              "exit_WBNB_wei": "277505636080876268",
+              "net_WBNB_wei": "-722494363919123732",
+              "round_trip_multipler_bps": "2775",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 50982675,
+              "elapsed_seconds": 449,
+              "exit_WBNB_wei": "70106283153362",
+              "net_WBNB_wei": "-999929893716846638",
+              "round_trip_multipler_bps": "0",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 50982975,
+              "elapsed_seconds": 899,
+              "exit_WBNB_wei": "70106283153362",
+              "net_WBNB_wei": "-999929893716846638",
+              "round_trip_multipler_bps": "0",
+              "positive_gross_pool_quote": false
+            },
+            {
+              "block": 50983575,
+              "elapsed_seconds": 1799,
+              "exit_WBNB_wei": "70106283153362",
+              "net_WBNB_wei": "-999929893716846638",
+              "round_trip_multipler_bps": "0",
+              "positive_gross_pool_quote": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "caveats": [
+    "Do NOT interpret every static quote output as realizable profit; hypothetical initial buy would alter pool state and other actors' trades.",
+    "First sampled V2 outgoing can happen after a launch manager bonding-curve period, and original missing CA ERC20 transfer does not itself imply wallet had an actionable signal.",
+    "Pool fee 25 bps is verified by exact arithmetic at the sampled first swap. Token transfer taxes, gas, routing, fee-on-transfer or pool address changes remain unverified.",
+    "Reserve movements can include LP additions/withdrawals; not solely market price discovery.",
+    "Counterfactual 1 BNB buying against <1 BNB reserves is economically unrealistic for a follower; reserve fraction is printed per scenario.",
+    "BULLA V2 pair at early +300 block holds extremely low WBNB reserves; model is a local pool quote not the asset's global best executable market.",
+    "No pass on multiple-profit major opportunity trader identification; further evidence needed."
+  ]
+}
