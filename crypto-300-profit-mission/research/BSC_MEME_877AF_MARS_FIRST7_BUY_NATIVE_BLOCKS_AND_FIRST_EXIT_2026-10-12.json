@@ -1,0 +1,52 @@
+{
+  "schema": "BSC_MEME_877AF_MARS_FIRST7_BUYS_ALL_NATIVE_BLOCKS_V1",
+  "date": "2026-10-12",
+  "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+  "source_blobs": [
+    {
+      "path": "BSC_MEME_877AF_MARS_SEVEN_EARLY_BUYS_BEFORE_FIRST_EXIT_2026-10-12.json",
+      "sha": "6f1e9c378a15f0cdd27a6cdf1feac905b3c6a260"
+    },
+    {
+      "path": "BSC_MEME_877AF_MARS_GENESIS_SAMPLE_OWNER_BUY_AND_SELL_NATIVE_QA_2026-10-12.json",
+      "sha": "fcca8760ea0649c535087b172aa870959176e546"
+    }
+  ],
+  "rows": [
+    {
+      "block": 112441460,
+      "net_wei": "-550285156080000000",
+      "signed_buy_input_wei": "550000000000000000",
+      "original_owner_buys_in_block": 1,
+      "gas_and_other_net_wei": "-285156080000000"
+    },
+    {
+      "block": 112441467,
+      "net_wei": "-10192720000000000",
+      "signed_buy_input_wei": "10000000000000000",
+      "original_owner_buys_in_block": 1,
+      "gas_and_other_net_wei": "-192720000000000"
+    },
+    {
+      "block": 112441468,
+      "net_wei": "-40760439680000000",
+      "signed_buy_input_wei": "40000000000000000",
+      "original_owner_buys_in_block": 4,
+      "gas_and_other_net_wei": "-760439680000000"
+    },
+    {
+      "block": 112441470,
+      "net_wei": "-10188218800000000",
+      "signed_buy_input_wei": "10000000000000000",
+      "original_owner_buys_in_block": 1,
+      "gas_and_other_net_wei": "-188218800000000"
+    }
+  ],
+  "original_seven_buys_value_wei": "610000000000000000",
+  "sum_buy_block_native_net_wei": "-611426534560000000",
+  "original_first_exit_native_net_wei": "508198463321432886",
+  "combined_seven_buy_blocks_plus_first_exit_native_net_wei": "-103228071238567114",
+  "remaining_original_early_token_share_after_first_exit_pct": "35.8907",
+  "warning": "The combined native BNB change includes all wallet transactions within 5 audited blocks; excludes further trades, quote balances and open residual MARS. No realized PnL or ROI attributed.",
+  "production": "NO_GO"
+}
