@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "date_bangkok": "2026-10-12",
+  "source": "Connected GitHub PR/commit raw readbacks, Actions job logs, plus independent report supplied by user; no local Mac access or production edits",
+  "official_pr33_head": "48f53a71f692f5dc62f67198f4794e79c45402d2",
+  "third_review_observed_head": "ae854ef8653cb94d6f804b04c83df66fb14cddef",
+  "third_review_unpushed_patch": "b1ca2824 (not imported; independently reimplemented)",
+  "fix_branch": "review/frank-pr33-third-blockers-fix-20261012",
+  "product_pin": "4fe1145aa97b6cc4a3ed27b8e2e39d035fc80fb0",
+  "verified_blobs": {
+    "mission_control/server.py": "09a0b66b9fc8ea6f8bf0f8137a6b667ad57f24fd",
+    "mission_control/static/app.js": "ade294d383c4b2acc172d257bf6e22051fc43075",
+    "mission_control/delivery_review.py": "643fa250e9cdb08cec1c851f769c787fa2279741"
+  },
+  "raw_git_content_readback": true,
+  "fixes": [
+    "PENDING queued visible including old unsent without any delivery mutation",
+    "known success channel/status pairs restricted to gmail/SENT_VERIFIED gmail/DRY_RUN_AUDIT local/COMMAND_ACCEPTED local/DRY_RUN_AUDIT",
+    "channel mismatch and unknown outcome still fail independent acceptance/deployment validation",
+    "legacy contract does not recategorize historical manual review count as actionable",
+    "SQLite OperationalError transient WAL state retried by deployment verification"
+  ],
+  "ci": {
+    "fix": {
+      "run_id": 38189089104,
+      "head": "884ed7cd5b4ba6b480e9ad8dfac908b8e1facf42",
+      "status": "success",
+      "focused_passed": 76,
+      "full_passed": 1123
+    },
+    "red": {
+      "run_id": 38189268014,
+      "head": "ae35cb367aede9e66302ef3ad1d4828e689943e2",
+      "status": "success_expected_red",
+      "under_test_code": "ae854ef8653cb94d6f804b04c83df66fb14cddef",
+      "expected_test_failures": 2,
+      "caveat": "JS test raised CalledProcessError; original stderr cause not separately isolated in CI output."
+    },
+    "matrix": {
+      "run_id": 38189178969,
+      "status": "success",
+      "baseline_main": "380a2d5aa2310c6f41915fdc1ed8ad68686bfc7a",
+      "pr31": "c50e7e2259e85ce89e14641a4e1e98ca3e4a4bc7",
+      "pr32": "85f1a792dd7d0fbf354c09ac83872887ed301c10",
+      "research_pr33": "884ed7cd5b4ba6b480e9ad8dfac908b8e1facf42",
+      "passed_by_combination": {
+        "main+PR32": 1055,
+        "main+researchPR33": 1123,
+        "main+PR32+researchPR33": 1131,
+        "main+PR31+PR32+researchPR33": 1262
+      },
+      "ephemeral_merges_only": true
+    }
+  },
+  "prior_user_mac_readonly_summary": {
+    "source_version": "LEGACY",
+    "rows_by_channel_status": {
+      "gmail/MANUAL_REVIEW": 15,
+      "gmail/SENT_VERIFIED": 1,
+      "gmail/DRY_RUN_AUDIT": 1,
+      "local/COMMAND_ACCEPTED": 16,
+      "local/DRY_RUN_AUDIT": 1
+    },
+    "pending_at_time": 0,
+    "unknown_at_time": 0,
+    "latest_mac_running_new_product": false
+  },
+  "release_gate": {
+    "research_automated_test_pass": true,
+    "independent_other_ai_review_of_new_head": false,
+    "formal_pr33_integrated": false,
+    "mac_deployed": false,
+    "gmail_sent_mailbox_checked": false,
+    "allow_production": false
+  },
+  "safety": "Only aggregate metadata, no tokens, wallet IDs, emails, private local paths or raw decision rows"
+}
