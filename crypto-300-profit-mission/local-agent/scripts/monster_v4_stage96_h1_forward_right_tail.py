@@ -301,7 +301,55 @@ def selftest():
     assert evaluate_h1(demo)["H1_verdict"]=="BLOCKED_G0_FULL_CRYPTO_UNIVERSE_AND_LISTINGS_UNVERIFIED"
     regression=historical_regression()
     assert regression["H1_verdict"]=="EXPOSED_MATH_REGRESSION_NOT_PREDICTIVE"
-    print("STAGE96_FROZEN_H1_12SHA_DAY_72H_MATURITY_POWER_AND_EXPOSED305_REGRESSION_PASS")
+
+    # Synthetic publisher days: verify the SAME Stage91 original V4/D1 core,
+    # as-of price progress, and genuinely later delayed-entry 72h exit path.
+    start_ms=forward.verify_window(ref)
+    begin=start_ms-24*3600000
+    d0_idx=v4.WARMUP+3
+    synthetic=[]
+    for i in range(FUTURE_BARS):
+        last15=d0_idx-15<=i<d0_idx
+        preclosed_price=Decimal("110") if last15 else Decimal("100")
+        q=Decimal("150000") if last15 else Decimal("50000")
+        n=1000 if last15 else 300
+        synthetic.append((begin+i*MIN,Decimal("100"),
+                 max(Decimal("100"),preclosed_price),Decimal("100"),
+                 preclosed_price,q,n))
+    receipts=[
+      {"date":d.isoformat(),"zip_sha256":"a"*64,
+       "verified_official_publisher_SHA256":True,"bars":1440}
+      for d in days_for(ref)
+    ]
+    first_at=v4.stamp(start_ms+3*MIN)
+    def scanner(_symbol,_date,_bars):
+        return {"polls":3360,"WATCH_UTC":[first_at],
+                "watch_count":1,"SETUP_UTC":[],"setup_count":0}
+    basecase=replay_extended("CATUSDT",ref,synthetic,receipts,runner=scanner)
+    assert basecase["D0_first_UTC"]==first_at
+    assert basecase["D1_first_UTC"]==first_at
+    assert basecase["D1_entry_path"]=="DIRECT_AT_FIRST_D0"
+    assert basecase["H1_status"]=="COMPLETE_SHA_PRICE_ONLY_PROXY"
+    assert basecase["H1_asof_D0_to_D1_progress_pct"]=="0"
+    assert basecase["tail_ge100_after_D1_72h"] is False
+    changed=list(synthetic)
+    exit_idx=d0_idx+4320
+    old=changed[exit_idx]
+    changed[exit_idx]=(old[0],old[1],Decimal("300"),old[3],
+                       Decimal("300"),old[5],old[6])
+    # This is a synthetic after-the-fact higher price, not an entry selector.
+    upgraded=replay_extended("CATUSDT",ref,changed,receipts,runner=scanner)
+    assert upgraded["D1_first_UTC"]==first_at
+    assert upgraded["H1_asof_D0_to_D1_progress_pct"]==basecase["H1_asof_D0_to_D1_progress_pct"]
+    assert upgraded["tail_ge100_after_D1_72h"] is True
+    assert Decimal(upgraded["fixed_72h_gross_return_pct"])>=RIGHT_TAIL
+    def none_scanner(_symbol,_date,_bars):
+        return {"polls":3360,"WATCH_UTC":[],"watch_count":0,
+                "SETUP_UTC":[],"setup_count":0}
+    no_d1=replay_extended("CATUSDT",ref,synthetic,receipts,runner=none_scanner)
+    assert no_d1["H1_status"]=="NOT_APPLICABLE_NO_D1"
+    assert no_d1["tail_ge100_after_D1_72h"] is None
+    print("STAGE96_FROZEN_H1_12SHA_DAY_SYNTHETIC_SAME_CORE_D1_72H_FUTURE_INVARIANCE_AND_OLD305_REGRESSION_PASS")
 
 
 def main():
