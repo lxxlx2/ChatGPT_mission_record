@@ -1,0 +1,209 @@
+{
+  "schema": "BSC_MEME_STAGE15_FOUR_MISC_FIXED_BLOCK_QUANTITY_CLOSURES_V1",
+  "date": "2026-10-12",
+  "chain": "bnb-mainnet",
+  "fixed_block": "0x79549a0",
+  "rows": [
+    {
+      "w": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x0ac28e4ce56aad8ead6a613d991cc0b4e3e1eb0e5405f27100a8873f2478ea05",
+            "uid": "0x0ac28e4ce56aad8ead6a613d991cc0b4e3e1eb0e5405f27100a8873f2478ea05:log:149",
+            "block": "0x71459d8",
+            "raw": "0x44d637426f5d8a",
+            "from": "0x0f6137a4dc1df0b2a9d8ef243fe75d28ce334f24",
+            "to": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25"
+          }
+        ],
+        "raw_sum": "19375831242464650"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "raw_sum": "0"
+      },
+      "balance_raw": "19375831242464650",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    },
+    {
+      "w": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x3eefe65f6f923cf154cea97ba0051843c6e8733223eb28574d30f699918b50d5",
+            "uid": "0x3eefe65f6f923cf154cea97ba0051843c6e8733223eb28574d30f699918b50d5:log:153",
+            "block": "0x3c83cc9",
+            "raw": "0x2bcbe1493bea3927e794",
+            "from": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "to": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4"
+          }
+        ],
+        "raw_sum": "206822681382566784133012"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x39440fb731b5e61000114c458d71e256a7cd4b4bbe01f0117ffa2abc22ab28cc",
+            "uid": "0x39440fb731b5e61000114c458d71e256a7cd4b4bbe01f0117ffa2abc22ab28cc:log:233",
+            "block": "0x3c85cf2",
+            "raw": "0x15e5f0a49df51c93f3ca",
+            "from": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b"
+          },
+          {
+            "hash": "0x78af6480d4ac5378ec05408913bf6cff134f79b52866344815d5abf0e7fd6084",
+            "uid": "0x78af6480d4ac5378ec05408913bf6cff134f79b52866344815d5abf0e7fd6084:log:969",
+            "block": "0x3c85faf",
+            "raw": "0x5797c29277d4724fcf2",
+            "from": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+            "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff"
+          },
+          {
+            "hash": "0xc179f4db674c9ac61ca405e06c10921a38b130e97b3eaee7fa14915f4966e361",
+            "uid": "0xc179f4db674c9ac61ca405e06c10921a38b130e97b3eaee7fa14915f4966e361:log:191",
+            "block": "0x3c8629c",
+            "raw": "0x8363a3dbb3beab77b6c",
+            "from": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b"
+          },
+          {
+            "hash": "0xf61b58ea1146d1e30bf374f514c0ccb5fb8383bc2f9f9507743fcc1ea06e034a",
+            "uid": "0xf61b58ea1146d1e30bf374f514c0ccb5fb8383bc2f9f9507743fcc1ea06e034a:log:281",
+            "block": "0x3c86dfd",
+            "raw": "0x41b1d1edd9df55bbdb6",
+            "from": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b"
+          },
+          {
+            "hash": "0x1c41db36338a9b20d91f15761f64be9b5616da9b6604c4dd6dc11c7954f25070",
+            "uid": "0x1c41db36338a9b20d91f15761f64be9b5616da9b6604c4dd6dc11c7954f25070:log:409",
+            "block": "0x3c94a15",
+            "raw": "0x41b1d1ed4df24ca2000",
+            "from": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+            "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff"
+          }
+        ],
+        "raw_sum": "206822681372951148120542"
+      },
+      "balance_raw": "9615636012470",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    },
+    {
+      "w": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "token": "TUT",
+      "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x8b916c2e69cca85743602e7c9fd5573f412f3f167c4c6d27ae042aae924cc0ba",
+            "uid": "0x8b916c2e69cca85743602e7c9fd5573f412f3f167c4c6d27ae042aae924cc0ba:log:863",
+            "block": "0x6d9464d",
+            "raw": "0xf66f22aa8e159c99",
+            "from": "0xfe3c316270b8fd7592b5c08957c127642185a62f",
+            "to": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a"
+          },
+          {
+            "hash": "0x194f467d361e85d5586f08d3da6eea877123ae5b056c5c34289a070d77a2e5a5",
+            "uid": "0x194f467d361e85d5586f08d3da6eea877123ae5b056c5c34289a070d77a2e5a5:log:293",
+            "block": "0x6dc07c3",
+            "raw": "0x52e937f54ba90009",
+            "from": "0xfe3c316270b8fd7592b5c08957c127642185a62f",
+            "to": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a"
+          },
+          {
+            "hash": "0x1d40f1441cd9aecb81fd806b6caadc2e1a1166d6439084f2f8be49a6e9b962d1",
+            "uid": "0x1d40f1441cd9aecb81fd806b6caadc2e1a1166d6439084f2f8be49a6e9b962d1:log:145",
+            "block": "0x6e041a4",
+            "raw": "0xc7d0964a4c8745ac",
+            "from": "0xfe3c316270b8fd7592b5c08957c127642185a62f",
+            "to": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a"
+          }
+        ],
+        "raw_sum": "38129991133587432014"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x99ea7031f226d2111825adf66a4fa8a052cb3f61c7d8692fae566a7c6a41da24",
+            "uid": "0x99ea7031f226d2111825adf66a4fa8a052cb3f61c7d8692fae566a7c6a41da24:log:64",
+            "block": "0x6d94985",
+            "raw": "0xf66f22aa8e159c99",
+            "from": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+            "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff"
+          }
+        ],
+        "raw_sum": "17757449971668720793"
+      },
+      "balance_raw": "20372541161918711221",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    },
+    {
+      "w": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x8b2d03b9db8931039d2f9fd212017da802798ec79333dd730e3f2ea60d4e24a7",
+            "uid": "0x8b2d03b9db8931039d2f9fd212017da802798ec79333dd730e3f2ea60d4e24a7:log:251",
+            "block": "0x3c83cca",
+            "raw": "0x2df67368910323e3fc46",
+            "from": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+            "to": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc"
+          }
+        ],
+        "raw_sum": "217052706827421197007942"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x5f113442ef27e54bdb2790d802b58d444c13c2843d2cd6ece1686d367937a603",
+            "uid": "0x5f113442ef27e54bdb2790d802b58d444c13c2843d2cd6ece1686d367937a603:log:111",
+            "block": "0x3c8ba20",
+            "raw": "0x295dce448282d380630b",
+            "from": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+            "to": "0x66f289de31eef70d52186729d2637ac978cfc56b"
+          },
+          {
+            "hash": "0x5f113442ef27e54bdb2790d802b58d444c13c2843d2cd6ece1686d367937a603",
+            "uid": "0x5f113442ef27e54bdb2790d802b58d444c13c2843d2cd6ece1686d367937a603:log:115",
+            "block": "0x3c8ba20",
+            "raw": "0x498a5240e805063993a",
+            "from": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+            "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff"
+          }
+        ],
+        "raw_sum": "217052706827421197007941"
+      },
+      "balance_raw": "1",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    }
+  ],
+  "method": "Complete exact CA positive ERC20 bidirectional cursor to fixed block 0x79549a0 with uniqueId dedupe, raw integer in minus out equals independently ethCall balanceOf same block",
+  "production": "NO_GO"
+}
