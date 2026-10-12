@@ -1,0 +1,134 @@
+{
+  "schema": "BSC_MEME_STAGE15_FOUR_MORE_FIXED_BLOCK_QUANTITY_CLOSURES_V1",
+  "date": "2026-10-12",
+  "chain": "bnb-mainnet",
+  "fixed_block": "0x79549a0",
+  "rows": [
+    {
+      "w": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0xae8676c690a2cdb6596d3e815b1ef49d0b3b5d60116455b186cd9da218588949",
+            "uid": "0xae8676c690a2cdb6596d3e815b1ef49d0b3b5d60116455b186cd9da218588949:log:181",
+            "block": "0x7361f87",
+            "raw": "0x3b62ec2e7f2659",
+            "from": "0x2f242a5a3da8baec8ff6f463a71c73b2cf934ef5",
+            "to": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a"
+          }
+        ],
+        "raw_sum": "16715790157817433"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "raw_sum": "0"
+      },
+      "balance_raw": "16715790157817433",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    },
+    {
+      "w": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "token": "币安人生",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x74fa9fd5b240952b9bb49bb1e43eb7d72f0a9f9a3d3176cf81ae6440ffeda94f",
+            "uid": "0x74fa9fd5b240952b9bb49bb1e43eb7d72f0a9f9a3d3176cf81ae6440ffeda94f:log:310",
+            "block": "0x6c9bec3",
+            "raw": "0x4de24e4077f53e3",
+            "from": "0xb0471fdfa0137f17be7454a37529bc5041a701b0",
+            "to": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a"
+          },
+          {
+            "hash": "0x0b8c00c707ea6814911b7509df0d673e8248c3c9a7cb4201ead4cf9890fdc372",
+            "uid": "0x0b8c00c707ea6814911b7509df0d673e8248c3c9a7cb4201ead4cf9890fdc372:log:275",
+            "block": "0x70b0a0a",
+            "raw": "0x41c15fcd9ead660",
+            "from": "0x64b602a909954edf4cc3163a03b908c96fa01c33",
+            "to": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a"
+          }
+        ],
+        "raw_sum": "646894234010004035"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "raw_sum": "0"
+      },
+      "balance_raw": "646894234010004035",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    },
+    {
+      "w": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x7c65aeaa9948a9e747b4c116f3585ea284c8e0fbc744517fea9d8a55b201ecee",
+            "uid": "0x7c65aeaa9948a9e747b4c116f3585ea284c8e0fbc744517fea9d8a55b201ecee:log:142",
+            "block": "0x2d3c6ac",
+            "raw": "0x4a8cc73a286de604",
+            "from": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+            "to": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b"
+          }
+        ],
+        "raw_sum": "5371887508146480644"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "raw_sum": "0"
+      },
+      "balance_raw": "5371887508146480644",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    },
+    {
+      "w": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "CHEEMS",
+      "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "in": {
+        "complete": true,
+        "pages": 1,
+        "events": [
+          {
+            "hash": "0x40dd73581cb30270e2609e7c6db71104769d9d306914f7987d59f28070177ce5",
+            "uid": "0x40dd73581cb30270e2609e7c6db71104769d9d306914f7987d59f28070177ce5:log:405",
+            "block": "0x779381d",
+            "raw": "0x29738df8b4c5e42ef7c1",
+            "from": "0xcfc0b770a9042d21e526192e1a7c50d9a8bf3de3",
+            "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8"
+          }
+        ],
+        "raw_sum": "195748631491447654119361"
+      },
+      "out": {
+        "complete": true,
+        "pages": 1,
+        "events": [],
+        "raw_sum": "0"
+      },
+      "balance_raw": "195748631491447654119361",
+      "quantity_reconciled": true,
+      "economic_pnl": "UNVERIFIED"
+    }
+  ],
+  "method": "Complete exact CA positive ERC20 bidirectional cursor to fixed block 0x79549a0 with uniqueId dedupe, raw integer in minus out equals independently ethCall balanceOf same block",
+  "production": "NO_GO"
+}
