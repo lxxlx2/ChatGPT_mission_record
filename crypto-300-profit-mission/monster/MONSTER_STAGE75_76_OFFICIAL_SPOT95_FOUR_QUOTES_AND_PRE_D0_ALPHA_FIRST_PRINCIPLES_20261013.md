@@ -6,7 +6,7 @@
 
 Stage74旧全部196首次D0由 Stage66固定源提取，101条同名Binance Spot USDT最近一分钟官方交易可核实；余**95条**无此证据（94条同名USDT日度归档404、1条日度归档存在但t-1分钟无K线）。源文件 [Stage74的196行原始证据](evidence/monster_stage74_original196_exact_asof_spot_prior_trades_source_SHA.jsonl)，Git blob `c9002d380d0b2db786e58461579b862e7afab054`。
 
-Stage75在价格查询前先行提交[原95×四报价冻结设计](MONSTER_STAGE75_PREREG_95_MISSING_ORIGINAL_D0_FOUR_SPOT_QUOTE_ARCHIVES_20261013.md)，blob `696e5d041556e18c331d33ef3f9a8fe95ffbf433`，明确所有95条都查**USDC、FDUSD、BTC、BNB**同基础代币名，**不推断1000/1000000单位映射**，只用首次D0前三十? **实际是前一根完整1m，即[t-60s,t)**，不使用未来标签，不推断源缺失等于未上市。代码 [Stage75实际查询实现](../local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py)复用Stage74官方Spot ZIP/.CHECKSUM读取和2025年微秒时间戳解析。
+Stage75在价格查询前先行提交[原95×四报价冻结设计](MONSTER_STAGE75_PREREG_95_MISSING_ORIGINAL_D0_FOUR_SPOT_QUOTE_ARCHIVES_20261013.md)，blob `696e5d041556e18c331d33ef3f9a8fe95ffbf433`，明确所有95条都查**USDC、FDUSD、BTC、BNB**同基础代币名，**不推断1000/1000000单位映射**，只用首次D0之前**唯一精确匹配的上一根已闭合1m，即[t-60s,t)**，不使用未来标签，不推断源缺失等于未上市。代码 [Stage75实际查询实现](../local-agent/scripts/monster_v4_stage75_missing95_four_spot_quote_SHA.py)复用Stage74官方Spot ZIP/.CHECKSUM读取和2025年微秒时间戳解析。
 
 CI真实证据：
 - [初版测试语法失败 #38295456696](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38295456696)：synthetic测试return换行导致Python IndentationError，修复在commit `f2edd4ffa1f0a9983f8f58b0adf0eb65bb57f083`，不更改研究合同、源列表或阈值，**不隐藏失败**。
