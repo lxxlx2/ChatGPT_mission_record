@@ -97,4 +97,14 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'monster: Stage45 preserve frozen all900x6 originalV4 and P1v02 true gate results source SHA'
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then
+              echo STAGE45_SOURCE_SHA_PERSISTED_WITH_FAST_FORWARD
+              exit 0
+            fi
+            echo "STAGE45_CONCURRENT_PUSH_RETRY_$attempt"
+          done
+          echo STAGE45_GIT_PERSISTENCE_FAILED_NO_FORCE_PUSH
+          exit 1
