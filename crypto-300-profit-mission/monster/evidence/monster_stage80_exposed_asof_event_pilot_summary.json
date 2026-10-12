@@ -1,0 +1,59 @@
+{
+  "schema": "MONSTER_STAGE80_EXPOSED_EVENT_TIMES_ONLY_TWO_SOURCE_COHORT_PILOT_V1",
+  "evidence_level": "CI_LOGS_ACTUAL_ARCHIVED_SOURCE_LOCKED_EXPOSED_EVENTS",
+  "github_actions_url": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38304785912",
+  "github_actions_conclusion": "success",
+  "staged_core_commit": "0376ebb2b146171bbed3faea8e17a2c4434d0e57",
+  "staged_pilot_commit": "14def5ab96161b298ffe915553abdadf0d15f876",
+  "input_git_blob_sha": {
+    "stage79_contract": "292e0cefe2089214dbde48ee50d6baf6cf590f8e",
+    "stage48_936_events": "642b7b1fb0603b122f97f458e7396b35969a9b6c",
+    "stage64_519_first_watch": "8ebe53acfdfe10413ac1e6f03457d6ace25d9d5a"
+  },
+  "stage48": {
+    "attempted_event_rows": 936,
+    "unique_watch_coin_dates": 437,
+    "distinct_upgraded": 190,
+    "direct": 165,
+    "reignition_observed_repeated_watch_only": 25,
+    "upgraded_future_calendar2x": 31,
+    "upgraded_before_calendar2x_first_cross_strict_only": 28,
+    "upgraded_calendar_non2x": 159,
+    "mean_candidates_per_UTC06_day": 4.5238,
+    "peak_candidates_per_UTC06_day": 13,
+    "per_date": {
+      "2025-01-09": 14,
+      "2025-09-02": 28,
+      "2026-01-26": 50,
+      "2026-02-24": 35,
+      "2026-03-28": 37,
+      "2026-05-10": 26
+    }
+  },
+  "stage64": {
+    "all_original_first_d0": 519,
+    "direct_d1": 164,
+    "source_original_2x_count": 29,
+    "direct_historic_calendar2x": 17,
+    "direct_historic_non2x": 147,
+    "mean_candidates_per_UTC06_day": 3.9048,
+    "peak_candidates_per_UTC06_day": 10,
+    "per_date": {
+      "2025-01-30": 16,
+      "2025-06-02": 10,
+      "2025-08-01": 37,
+      "2025-10-02": 42,
+      "2026-06-21": 31,
+      "2026-07-28": 28
+    }
+  },
+  "meaning": "Only already-existing archived WATCH instants (Stage48) and first WATCH (Stage64). Both full original exposed cohorts, not all intervening 3-minute observations, not new OOS. Stage48 peak 13 exceeds prior 12-per-day attention limit on this limited event sample; cannot mark model as passed. Source 2x label anchored to window-open versus future HIGH, not actual trade returns. Stage81 investigates all 3m ticks.",
+  "full_3m_continuous_replay": "NOT_DONE",
+  "forward_oos": "NOT_DONE",
+  "execution_net_pnl": "UNKNOWN",
+  "other_ai_review_of_stage80": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "gmail": "OFF",
+  "autotrade": "NO_GO",
+  "frank": "UNCHANGED"
+}
