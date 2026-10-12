@@ -130,15 +130,15 @@
     "verified_direct_candidate_bnb_transfers": 7,
     "latest_2026_10_11_erc20_sample_rows": 1224,
     "latest_2026_10_11_unread_directions": 23,
-    "wallets_with_complete_19_ca_direction_history": 14,
-    "latest_2026_10_12_complete_wallet_ca_cells": 367,
+    "wallets_with_complete_19_ca_direction_history": 16,
+    "latest_2026_10_12_complete_wallet_ca_cells": 377,
     "latest_2026_10_12_complete_zero_transfer_cells": 289,
     "latest_2026_10_12_unknown_incomplete_cells": 0,
     "latest_2026_10_12_observed_wallet_ca_pairs": 148,
-    "latest_2026_10_12_complete_quantity_closed_cells": 44,
-    "latest_2026_10_12_complete_observed_wallet_ca_pairs": 78,
-    "latest_2026_10_12_partial_observed_wallet_ca_pairs": 70,
-    "latest_2026_10_12_nonexhausted_transfer_wallet_ca_cells": 70
+    "latest_2026_10_12_complete_quantity_closed_cells": 48,
+    "latest_2026_10_12_complete_observed_wallet_ca_pairs": 88,
+    "latest_2026_10_12_partial_observed_wallet_ca_pairs": 60,
+    "latest_2026_10_12_nonexhausted_transfer_wallet_ca_cells": 60
   },
   "venue_coverage": [
     {
@@ -725,6 +725,16 @@
         "complete_mars_pnl": false,
         "no_follow_ready": true,
         "source_file": "BSC_MEME_877AF_MARS_FIRST7_BUY_NATIVE_BLOCKS_AND_FIRST_EXIT_2026-10-12.json"
+      },
+      "address_model_4_stage7_v8": {
+        "full_frozen_19_CA": true,
+        "observed_token_count": 12,
+        "closed_quantity_CA_count": 4,
+        "full_history_CA_cells": 19,
+        "MARS_token_net_raw": "68700271596483656647",
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V8_2026-10-12.json",
+        "financial_profit": "UNVERIFIED",
+        "trade_follow": "NO_GO"
       }
     },
     {
@@ -778,6 +788,16 @@
         "complete_mars_pnl": false,
         "no_follow_ready": true,
         "source_file": "BSC_MEME_498528_MARS_FIRST7_BUY_NATIVE_BLOCKS_AND_FIRST_EXIT_2026-10-12.json"
+      },
+      "address_model_4_stage7_v8": {
+        "full_frozen_19_CA": true,
+        "observed_token_count": 7,
+        "closed_quantity_CA_count": 4,
+        "full_history_CA_cells": 19,
+        "MARS_token_net_raw": "0",
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V8_2026-10-12.json",
+        "financial_profit": "UNVERIFIED",
+        "trade_follow": "NO_GO"
       }
     },
     {
@@ -2736,6 +2756,23 @@
       "BSC_MEME_498528_MARS_FIRST7_BUY_NATIVE_BLOCKS_AND_FIRST_EXIT_2026-10-12.json"
     ],
     "warning": "Partial first exit, net native wallet cashflow not realized PnL, original first pool sample not token genesis; no trading inference.",
+    "production": "NO_GO"
+  },
+  "address_model_4_stage7_v8_two_full_wallets_2026_10_12": {
+    "date": "2026-10-12",
+    "status": "16_OF_23_WALLETS_FULL_19_CA; 377_OF_437_CELLS_FULL; 60_ACTIVE_PREFIX_UNEXHAUSTED; FINANCIAL_PNL_NO_GO",
+    "previous_full_wallets": 14,
+    "now_full_wallets": 16,
+    "two_newly_completed_wallets": [
+      "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "0x877af245c61289b24f0c619a4346cdbc68f1aaac"
+    ],
+    "source_matrix": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V8_2026-10-12.json",
+    "source_matrix_sha": "629e081dd3ae05e248d7eade3adda7c18d1ee306",
+    "mars_signer_spot_samples": "BSC_MEME_498528_877AF_MARS_SOURCE_SIGNER_SPOT_CHECKS_2026-10-12.json",
+    "mars_signer_sample_sha": "82d178cf4cc488dad16a4bc2aa6f5d8af695886c",
+    "highlight": "498528 MARS token quantity zero and NIULAI zero; 877af MARS token residual nonzero, Lobster and HAJIMI exact zero; no net BNB PnL established",
+    "warning": "Expired persisted Alchemy pageKey can return historical first page; block-inclusive anchor with uniqueId overlap is verified. Never count complete token census as all original trader signed source actions.",
     "production": "NO_GO"
   }
 }
