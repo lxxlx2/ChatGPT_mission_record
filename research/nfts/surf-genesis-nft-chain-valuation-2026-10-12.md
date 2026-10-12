@@ -45,24 +45,47 @@ Surf 官方主站：https://asksurf.ai/
 证据：https://asksurf.ai/blog/en/surf-raises-15m-to-scale-the-first-ai-model-purpose-built-for-digital-assets
 官网：https://asksurf.ai/ ; 近期更新：https://asksurf.ai/blog
 
-## 4. Kaito 横向对比与 NFT 情景估值
+## 4. Kaito 同阶段历史演进与 SURF Genesis 峰值情景（2026-10-12 修订）
 
-- Kaito 披露累计融资约 **USD 10.8M**，早期投资人包括 Dragonfly、Sequoia China、Jane Street 等。融资规模和时间不同，**不能据此认定 Surf 的 NFT 必然更贵**。
-- Kaito Yapybaras Genesis NFT：总量 **1,500**，2026-10 公开市场地板参考约 **0.10 ETH（$240–270）**；不同时间点挂单与已成交价格应独立记录，历史数 ETH 甚至更高的峰值不应作为当前合理地板。
-- 用 $240 × 1,500 ≈ **$360,000 地板隐含总价值**作最简单可比锚，**这只是挂单市值估算，并非实际清算价值**。
-- Surf 的总量 **未确认**。因此不能给单一的公平价格。下表只模拟在三个 NFT 总市值情景下各 supply 对应的均价（USD/NFT），不是 Surf 报价：
+**估值框架纠错：研究 Surf pre-token / Genesis NFT 时，应将 Kaito 2024-12 发行至 2025-02 TGE 前后的价格形成过程、投机峰值与空投兑现后回撤作为主对照，不应以 2026-10 Kaito 接近 0.1 ETH 的成熟衰退阶段地板作为 Surf 的主要增长空间基准。下述数值是情景模拟，绝非 Surf 的实际报价、保底价值或预言。**
 
-| Surf NFT 总供应 | $180K 情景 | $360K（近似 Kaito 当前地板总价值） | $900K 强权益情景 |
-|---:|---:|---:|---:|
-| 1,000 | $180 | $360 | $900 |
-| 1,500 | $120 | $240 | $600 |
-| 3,000 | $60 | $120 | $300 |
-| 5,000 | $36 | $72 | $180 |
-| 10,000 | $18 | $36 | $90 |
+### 历史同阶段事实与强度
 
-**估值判断**：如无可核实、可持续的真实股票代币收益和用户权益，不能用未来收入定价，应倾向 NFT 社区/品牌权益折价；若未来披露可兑付 stock token 分配，可对单枚 NFT 计算：已承诺可领取价值 + 风险折现的未来预计分配 + 会员权益价值 + 投机溢价，避免把未发生的收益和企业估值混同。避免用早期 Kaito NFT 巅峰价格锚定 Surf。
+- **Kaito Genesis 铸造：** OpenSea 原始 Mint 页面记录 allowlist 2024-12-20、二阶段 12-22、公售 12-24 至 12-25；共 **1,500** 枚，2024-12 阶段 Mint 参考 **0.1 ETH/枚**（Mint UI 当前美元换算是随 ETH 变动的，不应将该页面 USD 值当作 2024-12 实收 USD）。
+- **KAITO TGE：** XT 交易所官方公告与 The Block 2025-02-20 报道确认 KAITO 已开始领取/交易。2024-12-20 首轮 Mint 到 2025-02-20 TGE **约 62 天**，这一时间间隔是历史案例，不是对 Surf 的日历预测。
+- **Kaito NFT TGE 热度峰值：** DappRadar 2025-03-06 发布的 2025-02 市场复盘记录 Genesis **7.65 ETH 地板历史高点**；此前叙述“一律不应用早期高点”不符合用户希望衡量峰值机会的投资研究目的。其他报道出现 **10.2 ETH、11.6 ETH、11.9399 ETH**，但采样、成交和时点互相冲突，尤其部分 CoinGecko/OpenSea 的 11.9399 ETH 报价源已经陈旧数月；**没有独立成交证据时不将更高报价当成可实现峰值**。
+- **权益机制差异：** Kaito 持有人被纳入 2025-02 的 KAITO 空投分配，Kaito NFT 的高价反映当时空投预期、流通性和生态影响力；SURF 的 SPY/NVDA 等股票代币展示属于官方宣传，尚未验证每枚收益承诺，也尚未确认 SURF 代币 TGE。Kaito 的投机价格不能线性视为 Surf 的基本面公允价值。
 
-需追踪但**不主动新增监控**：官方 chain ID + CA；最终 NFT supply；claims/交易开放时刻；Waves 与年度会员数量与分配规则；SPY/NVDA 等实际单枚额度、领取路径、可转让性；OpenSea 实际成交/最高有效 bid；Surf 公司真实用户与收入指标。
+历史证据：
+- https://opensea.io/collection/kaito-genesis/overview?search%5BsortAscending%5D=true&search%5BsortBy%5D=UNIT_PRICE&search%5Btoggles%5D%5B0%5D=BUY_NOW&tab=items
+- https://dappradar.com/blog/nft-winter-returns-market-shrinks-50-as-crypto-prices-fall
+- https://xtsupport.zendesk.com/hc/en-us/articles/43707220957081-XT-Announcement-on-the-Initial-Listing-of-KAITO-KAITO
+- https://www.theblock.co/news/ecosystems/2025-02-20-kaito-token-airdrop-claims-base-342379
+- https://www.coingecko.com/en/nft/kaito-genesis
+
+### Kaito 2025-02 高点对应的 NFT 集合估值压力测试
+
+参考 **7.65 ETH × 1,500 = 11,475 ETH** 的 Kaito 峰值名义地板总额。换美元时**假设当时每 ETH = $2,700**（仅供同口径情景计算，未确认这一假定汇率就是 7.65 ETH 高点当天的同步成交汇率），得到 **约 $30,982,500** 的 Kaito 高点名义地板总价值。该口径是“全部供应乘最便宜挂牌价”，不代表可同时出售所得资金。
+
+假设未来 SurfBoards 整体系列的**名义地板总额**仅达到该 Kaito 同阶段高点的 **10% / 25% / 50% / 100%**，按不同可能供给量折算。SurfBoards **正式总供应量仍未核实**，下表仅为假设：
+
+| SurfBoards 假设总量 | Kaito 高点总额的 10% | 25% | 50% | 100% 极强行情 |
+|---:|---:|---:|---:|---:|
+| 1,000 | $3,098 | $7,746 | $15,491 | $30,983 |
+| 1,500 | $2,065 | $5,164 | $10,328 | $20,655 |
+| 3,000 | $1,033 | $2,582 | $5,164 | $10,328 |
+| 5,000 | $620 | $1,549 | $3,098 | $6,197 |
+| 10,000 | $310 | $775 | $1,549 | $3,098 |
+
+从用户的 **$228 历史支付成本**计算：假设 **3,000 枚总量**，上述 10% / 25% / 50% / 100% 情景对应约 **4.5× / 11.3× / 22.6× / 45.3× 的毛价值/成本倍数**，**未扣 gas、交易费、版税、卖出滑点、税，也未考虑#691实际可交易前置条件**。这是反事实情景比率，不能解释成发生概率。若 Surf 根本无二级流动性或不能交付，实际可执行价值可远低于所有列值。
+
+**研究分层**：
+1. **筹备/初上市阶段：** 优先关注已确认交付、总量、官方成交和 bid 深度，市场价格尚未形成时只列成本和候选定价；Kaito 2024-12 的 0.1 ETH Mint 是历史起点。
+2. **权益披露/上市后的早期发现：** 比较官方 NFT utility 和真实买盘、稀缺性，以 Kaito 从 0.1 ETH 起步并随热度上行的历史路径描述潜在重新定价，而不预设 Surf 一定复制。
+3. **可能的代币/分发催化剂：** 仅在 SURF 正式确认 TGE、快照、allocation 和 claim 后才模拟空投贴现价值；Kaito 2025-02 的 7.65 ETH 是强行情**峰值压力测试**。
+4. **权益兑现或失败后的回撤：** Kaito 2026-10 约 $240-$270 旧市场价属于这层的回撤尾部参照，应保留为极端下行情景，而非早期公平价锚。
+
+**不可解答的核心缺口：** SurfBoards 真实总量、团队/保留配额、每个 #691 的兑现条款、二级出价/成交、股票代币池的法律与实际资金来源、SURF 代币存在性及分配比例。融资 $15M 与公司用户数据能支持公司基础真实性，不能推算上述未知变量。
 
 ## 5. 来源和证据限制
 
@@ -80,16 +103,16 @@ Surf 官方主站：https://asksurf.ai/
 
 以上只包含公开资料，未包括用户钱包和私密信息。
 
-## 6. 2026-10-12 NFT 研究接手复核：#691 资产身份与新 SurfBoards 权益不得混同
+## 6. 2026-10-12 #691 SurfBoards 已购买权益与链上交付状态（用户确认修正）
 
 资料口径：Git `crypto-300-profit-mission/portfolio/current.md` 的 2026-10-12 状态，官方 Surf 页面及上述公开证据；这是一项**研究口径纠偏**，未操作钱包、监控、交易或自动化。
 
-- 现有资产台账把 **Surf Limited Edition NFT #691** 记为 **1 枚待交付的 NFT 权利**，历史成本 **USD 228**，交付/空投尚未独立核实。另有 **Surf 28,600 Points** 记录。该点数是独立权益，不能自动折算为 NFT 分配或现金价值。
-- 新的 **SurfBoards / The Genesis of Surf** 官网明确写有 `Trading and member claims open in ...`，Surf 主站也直接链接至这个入口。这仅确认项目页面与官方关联、领取/交易倒计时宣传存在，**未证明用户的 #691 与 SurfBoards 是同一种 NFT、#691 是 ERC-721 token ID、已铸造、已到账或包含股票代币收益权**。
+- Git 原始资产提交 [14ed597c8afcd2758b2766ea00991313dd7042e2](https://github.com/lxxlx2/ChatGPT_mission_record/commit/14ed597c8afcd2758b2766ea00991313dd7042e2) 记录：**2025-08-31 13:38** 通过 **DaimoPay** 支付 **USD 228**，购买 **Surf Limited Edition NFT #691** 一枚，2026-10-05 在途/待 airdrop 到用户主钱包，预期 RB 链。**2026-10-12 用户明确确认该已购买权益就是官方新公布的 SurfBoards / The Genesis of Surf NFT**，故以 `USER_CONFIRMED` 认定为同一个项目发行权益，不再把二者作为互不相关资产假设。官方尚未核实的只是具体链上交付、CA、token ID、转让与兑付条件。另有 **Surf 28,600 Points** 独立记录，不可自动转换为 NFT 份额或已兑现现金收益。
+- 新的 **SurfBoards / The Genesis of Surf** 官网明确写有 `Trading and member claims open in ...`，Surf 主站也直接链接至这个入口。这仅确认项目页面与官方关联、领取/交易倒计时宣传存在，**用户已确认 #691 与 SurfBoards 属同一发行权益，但 #691 是否就是链上 ERC-721 token ID、是否已铸造、到账以及股票代币的具体分配权仍待官方/链上核验**。
 - 官方公开网页中仍缺少：SurfBoards 的 canonical chain/contract、总量、#691 的发行/交付映射、会员权益与股票代币分配的法定和合约条款、实际可执行卖出报价。前述 Robinhood Chain 两份同名合约只属于**未确认官方身份的链上候选**。在本次接手时使用 Blockscout 连接器重查遭遇 session authorization 错误，因而本条**未声称重新得到直接链上确认**。
 - 2026-10-12 重新查阅 Surf 的 2025-12-11 融资公告，确认公告称募资 USD 15M、Pantera 领投、Coinbase Ventures 与 DCG 参与；2026-09-01 Bithumb 产品材料所列活跃用户和生产指标均为项目/合作方披露，**不能推导 Surf NFT 的利润分配、公司股权或保底回报**。
 - Kaito Yapybaras 的 1,500 总量及约 USD 240 至 270 地板参考为历史公开页面快照；历史页面还展示真实成交和 top offer，随时会变化。对 Surf 的比较必须按同时间点的**最高真实买单、实际成交、挂牌地板**三种不同口径，不把挂牌总估值当作可清算市值。
-- 研究状态：**Surf 产品基本面有实际发布和融资公告，但 SurfBoards 的资产身份、兑付权益与交易市场仍属于 `WATCH / IDENTITY_UNRESOLVED`。用户 #691 是台账中的待交付历史成本权益，不能计入有可执行报价的 NFT 流动 NAV。** `ACTIVE` 仅可描述用户已有经济敞口，绝不授予任何交易或授权权限。
+- 研究状态：**Surf 公司产品/融资披露有据、用户的 #691 对应 SurfBoards 已获用户确认；官方链上 CA、交付和兑付条款仍未验证，故投机价值研究为 `WATCH / ONCHAIN_DELIVERY_UNRESOLVED`。用户 #691 仍是待交付历史成本权益，不能计入有可执行报价的 NFT 流动 NAV。** `ACTIVE` 仅可描述用户已有经济敞口，绝不授予任何交易或授权权限。
 - 相关历史状态纠正：`research/nfts/jack-credits/jack-credits-nft-position.md` 是 2026-09-27 快照，其中写的“2 active”已经被 2026-10-10 直接链上核查的 **Credits 0 枚持有**覆盖；UNICRED #230 也已在 2026-10-10 标记 `CLOSED / NOT_OWNED`。此处不修改历史成交和当时报告。
 
-后续研究核验顺序：**官方 #691 交付合同/凭据及 NFT 类型 → 官方 SurfBoards chainId 和 contract → 总供应和领取资格 → 股票代币的每枚金额、法律属性、领取与锁定条款 → 真实订单簿和成交 → 按用户的 USD 228 成本计算可执行净回款**。不据此开启 NFT 监控任务。
+后续研究核验顺序：**官方 SurfBoards chainId 和 contract → #691 交付凭据及链上 token ID → 总供应和领取资格 → 股票代币的每枚金额、法律属性、领取与锁定条款 → 真实订单簿和成交 → 按用户的 USD 228 成本计算可执行净回款**。不据此开启 NFT 监控任务。
