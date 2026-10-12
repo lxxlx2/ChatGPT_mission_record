@@ -44,10 +44,12 @@
     "two_distinct_major_tokens_positive": true,
     "two_selected_rounds_independently_receipt_gas_WBNB_wallet_reconciled": true,
     "proof_grade": "CROSS_TOKEN_REPEAT_POSITIVE_OWNER_BNB_SETTLEMENT_TWO_SELECTED_ROUNDS; NOT FULL_WALLET_LIFETIME_PNL_OR_FOLLOWABLE_STRATEGY",
-    "independent_replayed_hajimi_native_balance_events": 15,
+    "independent_replayed_hajimi_native_balance_events": 13,
     "checked_hajimi_tx_receipt_success_headers": 13,
     "fully_parsed_hajimi_receipts": 10,
-    "truncated_success_headers_hajimi": 3
+    "truncated_success_headers_hajimi": 3,
+    "independent_replayed_lobster_round2_native_balance_events": 2,
+    "independent_historical_native_balance_event_reads_total": 15
   },
   "HAJIMI_independent_inventory_rounds": [
     {
@@ -497,5 +499,6 @@
     "Historical owner signed and realized native outcomes are not proof a third party could copy transactions after alerts. Execution venue access, signals, gas bidding, liquidity impact and latency still need causal replay.",
     "Coin-level PnL across all quote assets may diverge from native block movement if unrelated same-block native activity or ERC20 WBNB/non-BNB settlement is not excluded. Selected two positive rounds have directly matching sell WBNB withdrawals and gas.",
     "No paid GMGN, no live monitoring/trading changes, no independent AI review yet."
-  ]
+  ],
+  "correction_note": "Original Stage23 JSON field counting direct HAJIMI native balance replays is 13 (not 15). Separately 2 LOBSTER round2 events independently rechecked. Combined HAJIMI+LOBSTER=15."
 }
