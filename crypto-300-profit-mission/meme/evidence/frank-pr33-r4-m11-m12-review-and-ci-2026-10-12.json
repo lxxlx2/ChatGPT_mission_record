@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "evidence_date_bangkok": "2026-10-12",
+  "source": "Connected GitHub file/commit/Actions readback plus user-provided fourth independent reviewer transcript; no direct user's Mac access",
+  "independent_review": {
+    "reviewed_head": "7d4c3972b3a2f86c794057f1b915e407763417ab",
+    "reviewer_declared": "CONDITIONAL_PASS_TECH_REVIEW_ONLY",
+    "reviewer_unpushed": true,
+    "new_findings": [
+      "M-11 mislabeled unknown channel/status outcome as retry blocker",
+      "M-12 mixed new server and legacy delivery_review breaks health HTTP",
+      "L-9 stale heartbeat warning references nonexistent numbers"
+    ],
+    "not_claimed": "Original reviewer's missing local files/JSON were not obtained or pushed"
+  },
+  "research_fix": {
+    "branch": "review/frank-pr33-r4-medium-remediation-20261012",
+    "original_base": "7d4c3972b3a2f86c794057f1b915e407763417ab",
+    "tested_commit": "35d627b35105cd3c26c52e14ad3991bc2bc0f989",
+    "immutable_product_commit": "fb4c7318febec899dc01afc08ad1ba29aaa3407c",
+    "original_legacy_module_git_blob": "62f5fa85bf41cd95e4a31a373910f81970368ea6",
+    "verified_product_blobs": {
+      "mission_control/server.py": "8f5124bf46a660fb618371eb113da208b28c775b",
+      "mission_control/static/app.js": "e3aec8f0e0866cc445406562c10bfb78bb5f28e7",
+      "mission_control/delivery_review.py": "643fa250e9cdb08cec1c851f769c787fa2279741"
+    },
+    "github_raw_vs_fetch_file_verified": true,
+    "product_guards": [
+      "legacy module contract checked before rendering values",
+      "live loopback HTTP returns explicit incompatible-version status without crashing",
+      "nonnegative integer per-channel sum and visible total parity validated",
+      "UI warning explicitly includes unknown and channel-mismatched states, does not imply auto-retry",
+      "stale heartbeat warning does not present fictitious numeric rows"
+    ],
+    "gmail_state_machine_changed": false,
+    "frank_v1_signal_changed": false,
+    "mac_deployed": false
+  },
+  "ci": {
+    "isolated": {
+      "run_id": 38205251411,
+      "head_sha": "35d627b35105cd3c26c52e14ad3991bc2bc0f989",
+      "status": "success",
+      "focused_passed": 82,
+      "all_tests_passed": 1129,
+      "static_checks": "pass"
+    },
+    "expected_red": {
+      "run_id": 38205179258,
+      "status": "success_expected_red",
+      "pre_fix_code": "7d4c3972b3a2f86c794057f1b915e407763417ab",
+      "expected_failures": 2,
+      "observed": [
+        "mixed-version HTTP RemoteDisconnected",
+        "JavaScript UI UNKNOWN_STATE_LABEL_HIDDEN"
+      ]
+    },
+    "pinned_matrix": {
+      "run_id": 38205314620,
+      "status": "success",
+      "exact_main_base": "c730b70965330a4ccf6eaecb0af22f31a28faa69",
+      "pr31": "c50e7e2259e85ce89e14641a4e1e98ca3e4a4bc7",
+      "pr32": "85f1a792dd7d0fbf354c09ac83872887ed301c10",
+      "independent_research_fix": "35d627b35105cd3c26c52e14ad3991bc2bc0f989",
+      "totals": {
+        "main+PR32": 1223,
+        "main+research_fix": 1270,
+        "main+PR32+research_fix": 1270,
+        "main+PR31+PR32+research_fix": 1270
+      },
+      "ephemeral_merge_only": true,
+      "important_interpretation": "At exact matrix base, PR31, PR32, and official PR33 heads were all ancestors of main (Git compare ahead_by=0); these are not independent first-time PR merges."
+    }
+  },
+  "incomplete": {
+    "newest_fix_fresh_independent_review": false,
+    "actual_mac_new_target_installed": false,
+    "mac_browser_render": false,
+    "mac_launchctl_failure_recovery": false,
+    "independent_gmail_sent_readback": false,
+    "production_release_authorized": false
+  },
+  "confidentiality": "Only aggregate test results/source SHAs/status labels; no Gmail, wallet, private paths or decision-level data",
+  "release_decision": "BLOCK_UNTIL_NEW_FIX_INDEPENDENT_REVIEW_AND_MAC_RELEASE_APPROVAL"
+}
