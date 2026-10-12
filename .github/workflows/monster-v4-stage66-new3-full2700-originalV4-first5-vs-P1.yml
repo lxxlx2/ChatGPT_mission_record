@@ -1,0 +1,89 @@
+name: Monster Stage66 Frozen New3x900 Original V4 D0 First5 vs P1 Minute Publisher SHA
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03.py'
+      - '.github/workflows/monster-v4-stage66-new3-full2700-originalV4-first5-vs-P1.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage66-original2700-true-minute-first5
+  cancel-in-progress: false
+jobs:
+  original3x900_real_minute_v4:
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: [2025-03-30, 2025-06-30, 2025-11-27]
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Strict frozen sources unchanged V4 as-of signal and cap5 unit tests
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03.py --selftest
+      - name: Replay original real V4 on 150 source-verified futures coin dates with nine publisher SHA daily ZIPs
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 2 \
+            --out "/tmp/monster_stage66_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage66-newdate-${{ matrix.date }}-shard${{ matrix.shard }}
+          path: /tmp/monster_stage66_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
+  global3x900_true_minute_budget_and_source_aggregation:
+    needs: original3x900_real_minute_v4
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage66-newdate-*
+          merge-multiple: true
+          path: /tmp/monster_stage66_18_raw
+      - name: Verify 2700 raw original sources and true GLOBAL UTC06 first D0 first5 and frozen P1 budgets
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage66_new3_original_1m_D0_first5_vs_P1v03.py \
+            --aggregate-dir /tmp/monster_stage66_18_raw \
+            --out /tmp/monster_stage66_summary
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage66-new3-full2700-originalV4-real-minute-global-cap5-source-SHA
+          path: /tmp/monster_stage66_summary/*
+          retention-days: 30
+      - name: Persist all 2700 original minute-replay cases and allocated fates in Monster Draft PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage66_summary/monster_stage66_* "$dest/"
+          git add "$dest/monster_stage66_full2700_originalV4_D0_and_P1v03_source_SHA.jsonl" "$dest/monster_stage66_firstD0_first5_full2700_vs_oldP1_urgent_fates.jsonl" "$dest/monster_stage66_new3_full2700_global_cap5_firstD0_vs_P1v03_summary.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: preserve Stage66 2700 official-minute V4 firstD0 first5 vs original P1 global source-backed fates'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE66_GIT_PERSIST_FAIL_NO_SUCCESS
+          exit 1
