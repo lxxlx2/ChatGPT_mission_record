@@ -1,0 +1,24 @@
+name: Monster Stage76 Original Alpha Pre-D0 Official Documentation Audit
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage76_official_alpha_firstD0_documentary_audit.py'
+      - 'crypto-300-profit-mission/monster/evidence/monster_stage76_four_futures_GT2x_2025_pre_D0_official_alpha_announcement_venue_mapping.json'
+      - '.github/workflows/monster-v4-stage76-historical-alpha-primary-source-4-d0.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  asof_official_alpha_announcement_vs_real_D0_time:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Freeze real original D0 and matching Binance Spot unavailable examples then verify official documentary dates and source address identities
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage76_official_alpha_firstD0_documentary_audit.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage76_official_alpha_firstD0_documentary_audit.py
