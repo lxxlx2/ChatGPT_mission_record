@@ -1,0 +1,113 @@
+{
+  "schema": "MONSTER_STAGE81_12_SOURCE_VERIFIED_3M_CONTINUOUS_48H_RESEARCH_PILOT_SUMMARY_V1",
+  "execution_date_bangkok": "2026-10-13",
+  "observed_ci": "https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38305188169",
+  "job_result": "SUCCESS_7_OF_7",
+  "source": "six per-date job logs and validated 30-day machine artifacts",
+  "predeclared": "MONSTER_STAGE81_EXPOSED_3M_CONTINUOUS_CAUSAL_PILOT_PROTOCOL_20261013.md",
+  "model_source": "monster_v4_stage80_dual_entry_core.py",
+  "tried": 12,
+  "source_complete": 12,
+  "source_censored": 0,
+  "upgrades": 9,
+  "direct": 5,
+  "reignition": 4,
+  "cases": [
+    {
+      "date": "2025-06-02",
+      "symbol": "LPTUSDT",
+      "d1_first_UTC": "2025-06-04T18:03:00Z",
+      "d1_path": "DIRECT_AT_FIRST_D0",
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2025-06-02",
+      "symbol": "ANIMEUSDT",
+      "d1_first_UTC": "2025-06-07T16:15:00Z",
+      "d1_path": "REIGNITION_AFTER_D0",
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2026-07-28",
+      "symbol": "LRCXUSDT",
+      "d1_first_UTC": "2026-07-30T13:33:00Z",
+      "d1_path": "REIGNITION_AFTER_D0",
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2026-07-28",
+      "symbol": "KLACUSDT",
+      "d1_first_UTC": null,
+      "d1_path": null,
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2025-10-02",
+      "symbol": "DUSKUSDT",
+      "d1_first_UTC": "2025-10-05T06:54:00Z",
+      "d1_path": "DIRECT_AT_FIRST_D0",
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2025-10-02",
+      "symbol": "HIFIUSDT",
+      "d1_first_UTC": null,
+      "d1_path": null,
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2026-06-21",
+      "symbol": "DYMUSDT",
+      "d1_first_UTC": "2026-06-21T07:09:00Z",
+      "d1_path": "DIRECT_AT_FIRST_D0",
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2026-06-21",
+      "symbol": "SAGAUSDT",
+      "d1_first_UTC": "2026-06-21T16:06:00Z",
+      "d1_path": "DIRECT_AT_FIRST_D0",
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2025-08-01",
+      "symbol": "VANRYUSDT",
+      "d1_first_UTC": "2025-08-05T19:39:00Z",
+      "d1_path": "DIRECT_AT_FIRST_D0",
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2025-08-01",
+      "symbol": "1000WHYUSDT",
+      "d1_first_UTC": null,
+      "d1_path": null,
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2025-01-30",
+      "symbol": "KASUSDT",
+      "d1_first_UTC": "2025-02-03T05:42:00Z",
+      "d1_path": "REIGNITION_AFTER_D0",
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    },
+    {
+      "date": "2025-01-30",
+      "symbol": "ORDIUSDT",
+      "d1_first_UTC": "2025-02-03T21:57:00Z",
+      "d1_path": "REIGNITION_AFTER_D0",
+      "source_status": "COMPLETE_OFFICIAL_9DAY_VERIFIED_CONTINUOUS_3M"
+    }
+  ],
+  "category_warning": "LRCXUSDT and KLACUSDT are confirmed non-crypto TradFi equity underlying contracts per Binance official 2026-06-22 launch announcement; 1000WHYUSDT multiplier mapping not independently audited. Full cohort is mixed USD-M source, not a 12-crypto performance metric.",
+  "first_watch_source_parity_passed": true,
+  "publisher_SHA_source_9_daily_each_case_passed": true,
+  "published_only_as_12_case_exposed_engineering_pilot": true,
+  "complete_crypto_population_verified": false,
+  "independent_oos": "NOT_DONE",
+  "real_net_profit": "UNKNOWN",
+  "other_ai_review": "NOT_DONE",
+  "deployment": "NO_GO",
+  "gmail": "OFF",
+  "autotrade": "NO_GO",
+  "frank": "UNCHANGED"
+}
