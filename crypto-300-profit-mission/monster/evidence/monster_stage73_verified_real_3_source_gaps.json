@@ -1,0 +1,113 @@
+{
+  "DEPLOYMENT": "NO_GO",
+  "LIVE_TRADABLE_MARKET_AND_NEW_NET_PNL_STILL_UNKNOWN": true,
+  "M03_SOURCE_GAP_NOW_DOES_NOT_ERASE_REAL_PAST_WATCH_EVENTS": true,
+  "STAGE73_M03_FULL2700_AND_INDEPENDENT_REVIEW": "SEPARATE_GATES",
+  "all_real_publisher_SHA_and_prefix_watch_identities_equal_to_stage66": true,
+  "exposed_real_winners_tested_not_new_historical_holdout": 3,
+  "schema": "MONSTER_STAGE73_REAL_OFFICIAL_SHA_FUTURE_DAY_WITHHELD_PREFIX_CAUSALITY_TEST_V1",
+  "three_real_prefix_future_source_gaps": [
+    {
+      "all_source_observable_watch_events_strict_parity": true,
+      "date": "2025-06-30",
+      "first_missing_day_INJECTED_TEST_ONLY": "2025-07-02",
+      "first_watch_survives_future_day_source_404": "2025-06-30T17:00:00Z",
+      "no_future_GT_score_because_test_future_day_removed": true,
+      "no_user_trading_or_live_alert": true,
+      "observable_prefix_v4_poll_count": 840,
+      "real_original_first_watch_UTC": "2025-06-30T17:00:00Z",
+      "symbol": "HFTUSDT",
+      "true_real_source_not_claimed_missing": true,
+      "verified_original_Binance_USDM_daily_1m_publisher_SHAs": [
+        {
+          "bars": 1440,
+          "date": "2025-06-29",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "b08bdba46f0eba4c1ae6eb4b521a7d292e2744a64496453866ea9de4828c5aee"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-06-30",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "ff2842121c394ff6197b545cd732c93e96a1424a4ddcf52ff826d5d6b26ced21"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-01",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "e3d699a92e5564d18575d2ab8b017478fa09d36128d5cbdcaa04d651f7286da3"
+        }
+      ]
+    },
+    {
+      "all_source_observable_watch_events_strict_parity": true,
+      "date": "2025-06-30",
+      "first_missing_day_INJECTED_TEST_ONLY": "2025-07-03",
+      "first_watch_survives_future_day_source_404": "2025-07-01T14:36:00Z",
+      "no_future_GT_score_because_test_future_day_removed": true,
+      "no_user_trading_or_live_alert": true,
+      "observable_prefix_v4_poll_count": 1320,
+      "real_original_first_watch_UTC": "2025-07-01T14:36:00Z",
+      "symbol": "HUSDT",
+      "true_real_source_not_claimed_missing": true,
+      "verified_original_Binance_USDM_daily_1m_publisher_SHAs": [
+        {
+          "bars": 1440,
+          "date": "2025-06-29",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "cb6a8ae18265a2c1befd636dfff3a7992c255f64ac18d683218b7d646f5f28ff"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-06-30",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "652e205500f36053acb5053de09be5e66cb64ed6eb3124d10845bd4769b2f1c9"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-01",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "6b2e5c43cce47fccd4a0bb949b05c9c9c131952fbd1ffb356bc8a537be572a28"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-07-02",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "14ebb0f1347fd7c3173cdf47025e02afa9426c91c257a869d69d37160795ab73"
+        }
+      ]
+    },
+    {
+      "all_source_observable_watch_events_strict_parity": true,
+      "date": "2025-11-27",
+      "first_missing_day_INJECTED_TEST_ONLY": "2025-11-29",
+      "first_watch_survives_future_day_source_404": "2025-11-27T08:33:00Z",
+      "no_future_GT_score_because_test_future_day_removed": true,
+      "no_user_trading_or_live_alert": true,
+      "observable_prefix_v4_poll_count": 840,
+      "real_original_first_watch_UTC": "2025-11-27T08:33:00Z",
+      "symbol": "PIPPINUSDT",
+      "true_real_source_not_claimed_missing": true,
+      "verified_original_Binance_USDM_daily_1m_publisher_SHAs": [
+        {
+          "bars": 1440,
+          "date": "2025-11-26",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "a5924411e38e0edb318a07c29123135d9c483e02d4ec8453a034a3231df5e9e1"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-27",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "7877efb4af4ba637f214ea99b24232a6cc0212f0f2b38abd3bd8d1a2dc45f613"
+        },
+        {
+          "bars": 1440,
+          "date": "2025-11-28",
+          "verified_official_publisher_SHA256": true,
+          "zip_sha256": "46d7bd82ea63668a766a05626f807381f2f1ec1f32c4916c227e65880e76b196"
+        }
+      ]
+    }
+  ]
+}
