@@ -1,0 +1,109 @@
+{
+  "schema": "BSC_MEME_8E6B_TUT_INDEPENDENT_SOURCE_INVENTORY_V1",
+  "date": "2026-10-12",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "token": "TUT",
+  "ca": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+  "chain": "bnb-mainnet",
+  "fixed_block": "0x79549a0",
+  "method": "Alchemy exact CA positive ERC20 in/out full ascending cursor to fixed historical block; independent balanceOf same block; exact integer raw sums",
+  "in": {
+    "events": [
+      {
+        "hash": "0x8a39b3f7178ef8b5c9e773bc1a7c9fea1c7225a998096335b8edad5a68e2db3b",
+        "uid": "0x8a39b3f7178ef8b5c9e773bc1a7c9fea1c7225a998096335b8edad5a68e2db3b:log:39",
+        "block": "0x2d49e22",
+        "raw": "0x5570271e75c6ed5ce150",
+        "from": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+        "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+      },
+      {
+        "hash": "0xa958a9cc12945d71b74d72511e7aad3a41a02c3db1ebdb7206d0c6a71afe6be9",
+        "uid": "0xa958a9cc12945d71b74d72511e7aad3a41a02c3db1ebdb7206d0c6a71afe6be9:log:193",
+        "block": "0x2d49e26",
+        "raw": "0x10f3b0a51d38c191b49f5",
+        "from": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+        "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+      },
+      {
+        "hash": "0x9855207918bb37530b41f6607a0edcfe0ae9056cbc3d3ff6c017188eb7d8b7bd",
+        "uid": "0x9855207918bb37530b41f6607a0edcfe0ae9056cbc3d3ff6c017188eb7d8b7bd:log:432",
+        "block": "0x2d5f0a7",
+        "raw": "0x5330c1036fcd797de39",
+        "from": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+        "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+      },
+      {
+        "hash": "0x1ad96bfd805da434e55922c34055aef9daf4ef6ac298038f70f534871a92d6b6",
+        "uid": "0x1ad96bfd805da434e55922c34055aef9daf4ef6ac298038f70f534871a92d6b6:log:30",
+        "block": "0x4be5a96",
+        "raw": "0x26339060936659ce3414",
+        "from": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+        "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+      },
+      {
+        "hash": "0x7a75247a0888fd5eb44bebb59a4418a735c8755f2c4d28119d16efa51d560438",
+        "uid": "0x7a75247a0888fd5eb44bebb59a4418a735c8755f2c4d28119d16efa51d560438:log:565",
+        "block": "0x6d946cd",
+        "raw": "0x11f79470801182244",
+        "from": "0xfe3c316270b8fd7592b5c08957c127642185a62f",
+        "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+      },
+      {
+        "hash": "0x18d2d25689548eabb55ff92ea428f46614d85932105e19ac071ec453b25e8b69",
+        "uid": "0x18d2d25689548eabb55ff92ea428f46614d85932105e19ac071ec453b25e8b69:log:201",
+        "block": "0x6e04848",
+        "raw": "0x65ce05327a83d6ff",
+        "from": "0xfe3c316270b8fd7592b5c08957c127642185a62f",
+        "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0"
+      }
+    ],
+    "pages": 1,
+    "exhausted": true,
+    "raw_total": "1889303073430050191324885"
+  },
+  "out": {
+    "events": [
+      {
+        "hash": "0x46cae9573f0e7ab4e842ef8f5b3a2e7c07c8d296691aa67d080331fd36e811c6",
+        "uid": "0x46cae9573f0e7ab4e842ef8f5b3a2e7c07c8d296691aa67d080331fd36e811c6:log:87",
+        "block": "0x2d49e2d",
+        "raw": "0x164ab3170495306782b45",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f"
+      },
+      {
+        "hash": "0x96ccb90850e7923fb2724f8c46f7f4a58872feadd021558d17b59f4f127bf97d",
+        "uid": "0x96ccb90850e7923fb2724f8c46f7f4a58872feadd021558d17b59f4f127bf97d:log:438",
+        "block": "0x2d5f0b0",
+        "raw": "0x5330c1036fcd797de39",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f"
+      },
+      {
+        "hash": "0xdc2c0e92a5f8e9a45464c6cad2fd1c5e0748d15dbd114709f0fd41d166e089ae",
+        "uid": "0xdc2c0e92a5f8e9a45464c6cad2fd1c5e0748d15dbd114709f0fd41d166e089ae:log:66",
+        "block": "0x4be5b8c",
+        "raw": "0x1319c83049b32ce71a0a",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f"
+      },
+      {
+        "hash": "0xe3940f939f64c0812e3e64115ab8b71cf75d595a64d5f1d4d88c4f698552e0dc",
+        "uid": "0xe3940f939f64c0812e3e64115ab8b71cf75d595a64d5f1d4d88c4f698552e0dc:log:300",
+        "block": "0x4be5b99",
+        "raw": "0x1319c83049b32ce71a0a",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f"
+      }
+    ],
+    "pages": 1,
+    "exhausted": true,
+    "raw_total": "1889275022957432025267602"
+  },
+  "balanceOf_raw": "28050472618166057283",
+  "netTransfer_raw": "28050472618166057283",
+  "quantity_reconciled": true,
+  "economic_pnl": "UNVERIFIED",
+  "production": "NO_GO"
+}
