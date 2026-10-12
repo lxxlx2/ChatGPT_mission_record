@@ -1,0 +1,46 @@
+name: Monster Stage45 Blind Six Weeks Original Futures V4 and Frozen P1v02
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage45_blind_originalV4_P1v02_full900.py'
+      - '.github/workflows/monster-v4-stage45-six-blind-900x6-originalV4-p1v02.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  all900x6_frozen_blind_original_prodV4_and_P1_immediate:
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: [2025-01-09, 2025-09-02, 2026-01-26, 2026-02-24, 2026-03-28, 2026-05-10]
+        shard: [0, 1, 2, 3, 4, 5]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert original frozen P1v02 asof code, real source and original V4 all unchanged
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage45_blind_originalV4_P1v02_full900.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage45_blind_originalV4_P1v02_full900.py --selftest
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage39_usdm_all900_sixday_original_1m.py --selftest
+      - name: Original V4 full900 with publisher verified nine-day real 1m and frozen first WATCH P1v02
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage45_blind_originalV4_P1v02_full900.py \
+            --date "${{ matrix.date }}" \
+            --shard "${{ matrix.shard }}" \
+            --workers 2 \
+            --output "/tmp/monster_stage45_${{ matrix.date }}_shard${{ matrix.shard }}.json"
+      - name: Preserve all raw D0 plus new P1 decisions, original publisher SHAs and misses
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage45-real1m-blind-${{ matrix.date }}-shard${{ matrix.shard }}-V4-P1v02-SHA
+          path: /tmp/monster_stage45_${{ matrix.date }}_shard${{ matrix.shard }}.json
+          retention-days: 30
