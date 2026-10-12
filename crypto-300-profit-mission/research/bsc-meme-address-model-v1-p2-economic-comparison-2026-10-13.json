@@ -50,20 +50,24 @@
       {
         "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage3-adff-2adf-owner-closed-rounds-2026-10-13.json",
         "blob_sha": "a1e3b6b50ae29cc91f1db5f0708c1f42ef771996"
+      },
+      {
+        "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+        "blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
       }
     ]
   },
   "summary": {
     "wallets_included": 23,
-    "signed_closed_episodes_imported": 35,
-    "wallets_with_curated_evidence": 6,
-    "wallets_not_yet_economically_curated": 17,
+    "signed_closed_episodes_imported": 37,
+    "wallets_with_curated_evidence": 7,
+    "wallets_not_yet_economically_curated": 16,
     "selected_positive_episodes": 23,
-    "selected_negative_episodes": 12,
+    "selected_negative_episodes": 14,
     "evidence_by_grade": {
       "MIXED_BNB_USDT_SPOT_REFERENCE": 2,
       "SETTLED_NATIVE_DIRECT_WBNB_GAS": 4,
-      "SIGNED_NATIVE_BLOCK_SCOPE": 29
+      "SIGNED_NATIVE_BLOCK_SCOPE": 31
     },
     "all_23_comparable_full_PnL_ready": false,
     "any_ranked_wallet": false
@@ -82,18 +86,19 @@
       "research_priority_in_P1": 1,
       "major_2026_transfer_present_count": 4,
       "all_19_transfer_present_count": 17,
-      "source_episodes_imported": 1,
-      "source_distinct_CAs_imported": 1,
+      "source_episodes_imported": 2,
+      "source_distinct_CAs_imported": 2,
       "selected_positive_episode_count": 0,
-      "selected_negative_episode_count": 1,
+      "selected_negative_episode_count": 2,
       "selected_positive_distinct_CAs": [],
       "selected_negative_distinct_CAs": [
-        "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714"
+        "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
       ],
       "selected_positive_distinct_major_CAs_count": 0,
-      "native_only_source_episodes": 1,
+      "native_only_source_episodes": 2,
       "mixed_source_episodes": 0,
-      "native_only_event_block_scope_sum_wei": "-239887492433116024",
+      "native_only_event_block_scope_sum_wei": "-453486449245781063",
       "native_only_positive_gross_wei": "0",
       "native_only_largest_positive_episode_wei": null,
       "native_only_scope_excluding_largest_positive_wei": null,
@@ -108,7 +113,8 @@
       "recent_30d_signed_meme_swap": "UNRESOLVED",
       "followable_alpha_approved": false,
       "source_refs": [
-        "crypto-300-profit-mission/research/BSC_MEME_STAGE16_3_EOA_ROUTER_FEE_AND_SIGNED_ROUNDTRIP_QA_2026-10-12.json"
+        "crypto-300-profit-mission/research/BSC_MEME_STAGE16_3_EOA_ROUTER_FEE_AND_SIGNED_ROUNDTRIP_QA_2026-10-12.json",
+        "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json"
       ],
       "source_rounds": [
         {
@@ -119,6 +125,15 @@
           "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
           "classification": "NEGATIVE_NATIVE_SCOPE",
           "source": "crypto-300-profit-mission/research/BSC_MEME_STAGE16_3_EOA_ROUTER_FEE_AND_SIGNED_ROUNDTRIP_QA_2026-10-12.json"
+        },
+        {
+          "token": "牛来",
+          "episode_index": 2,
+          "first_block": 116113193,
+          "last_block": 116113197,
+          "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+          "classification": "NEGATIVE_NATIVE_SCOPE",
+          "source": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json"
         }
       ]
     },
@@ -565,31 +580,45 @@
       "research_priority_in_P1": 7,
       "major_2026_transfer_present_count": 3,
       "all_19_transfer_present_count": 12,
-      "source_episodes_imported": 0,
-      "source_distinct_CAs_imported": 0,
+      "source_episodes_imported": 1,
+      "source_distinct_CAs_imported": 1,
       "selected_positive_episode_count": 0,
-      "selected_negative_episode_count": 0,
+      "selected_negative_episode_count": 1,
       "selected_positive_distinct_CAs": [],
-      "selected_negative_distinct_CAs": [],
+      "selected_negative_distinct_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
       "selected_positive_distinct_major_CAs_count": 0,
-      "native_only_source_episodes": 0,
+      "native_only_source_episodes": 1,
       "mixed_source_episodes": 0,
-      "native_only_event_block_scope_sum_wei": null,
-      "native_only_positive_gross_wei": null,
+      "native_only_event_block_scope_sum_wei": "-26064663781901692",
+      "native_only_positive_gross_wei": "0",
       "native_only_largest_positive_episode_wei": null,
       "native_only_scope_excluding_largest_positive_wei": null,
       "native_only_biggest_win_fraction_of_positive_gross": null,
       "mixed_quote_actual_USDT_delta_sum_raw": null,
       "mixed_quote_actual_BNB_delta_sum_wei": null,
       "mixed_quote_historical_spot_reference_sum_raw": null,
-      "economic_evidence_grade": "NO_CURATED_P2_EPISODES_NOT_ZERO_PROFIT",
+      "economic_evidence_grade": "SOME_CURATED_CLOSED_ROUNDS_NOT_FULL_WALLET",
       "completed_full_wallet_all_CA_PnL": "UNRESOLVED",
       "realized_profit_rank": null,
       "can_rank_by_profit": false,
       "recent_30d_signed_meme_swap": "UNRESOLVED",
       "followable_alpha_approved": false,
-      "source_refs": [],
-      "source_rounds": []
+      "source_refs": [
+        "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json"
+      ],
+      "source_rounds": [
+        {
+          "token": "MARSCOIN",
+          "episode_index": 4,
+          "first_block": 112475764,
+          "last_block": 112476616,
+          "evidence_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+          "classification": "NEGATIVE_NATIVE_SCOPE",
+          "source": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json"
+        }
+      ]
     },
     {
       "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
