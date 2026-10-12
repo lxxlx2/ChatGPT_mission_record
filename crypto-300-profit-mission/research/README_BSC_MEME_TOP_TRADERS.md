@@ -45,3 +45,17 @@ The BSC address-model research itself has advanced beyond the 2026-10-10 collect
 - Correction: a legacy unscoped BOB manager log `0x11c37937e080000` means 0.08 BNB and must **not** be labeled the 2ADF original buy fee. Exact manager topic + wallet-indexed log + original tx hash returns **0.005 BNB** in the updated fee proof.
 
 Next research stage: reconstruct true original-owner quote-denominated trade costs/proceeds for repeated major meme opportunities, include unsuccessful or missed eligible opportunities as denominator, distinguish open inventory and internal tracing limitations, and **only then** study delayed follower prices/liquidity. Do not rank wallet PnL merely from Transfer logs, account balance snapshots, or three convenient examples. No GMGN paid API. OBSERVE_ONLY / PRODUCTION_TRADING = NO_GO.
+
+## Latest handoff: Stage 17 cross-wallet and negative outcome controls (2026-10-13)
+
+Continue the ADDRESS MODEL research from `BSC_MEME_ADDRESS_MODEL_5_STAGE17_CROSS_WALLET_2_MEME_TIME_AND_ECONOMICS_2026-10-13.md`, not from the deprecated GMGN scripts or from more 23×19 token-balance rescans.
+
+- V21 23 wallets × 19 frozen exact CAs: 437/437 positive ERC20 cursors complete; 148/148 observed raw token quantities independently conserved. **Token inventory phase is complete.**
+- Stage 17 cohort raw onchain source: `BSC_MEME_STAGE17_DDAC_8E6B_IFML_LOBSTER_TWO_TOKEN_NEGATIVE_CONTROL_2026-10-13.json`. In 9 selected, fully token-inventory-closed native-BNB-block trading episodes across DDAC/IFML (5), DDAC/Lobster (2), 8E6B/IFML (2), 4 scopes are positive and **5 are negative**. This 4/9 is a selected audit-sample observation, **not** candidate win rate or all eligible major opportunities.
+- DDAC on IFML: first four native-block scopes positive, fifth `-0.446324586902254802 BNB`; 8E6B two separate fully inventory-closed IFML cycles `-0.231346571585353217` and `-0.367677245259552299 BNB`, 6/6 original EOA signatures and 6/6 receipt success statuses checked. DDAC late IFML loss exited 2026-01-08 07:32:10 UTC, 8E6B bought 11 seconds later: **timing ≠ proof of following**.
+- DDAC/Lobster both closed cycles negative (combined `-0.183543131928304728 BNB`); V2 negative sell cashflow and fee validated in `BSC_MEME_STAGE17_DDAC_LOBSTER_V2_SELL_ADDITIONAL_APPROVAL_GAS_2026-10-13.json`. Previous gas label of **208457** is **the sum** of the actual extra approve gas **46327** and inferred swap gas **162130**, NOT one sale GasUsed.
+- 8E6B/Lobster has an opposite `+4.794001707717376678 BNB` *native block scope*, but original receipt status is confirmed only 11/13, and no equivalent closed-cycles realized-PnL partition yet. Do not rank it as a verified winner.
+- 8E6B IFML first manager sell receipt truncated: targeted WBNB Withdrawal + indexed 1% fee-like manager event + separate same-block EOA approve receipt allow exact conditional sale-gas reconciliation. Its later IFML episode used both manager and direct router venues. Do not mix route fee structures.
+- Next priorities: economic lifecycle/classification of more *major token opportunities* and all qualified non-entries/losses in the denominator, then real-time-to-signal availability and delay-capacity historical simulation only after complete independent QA and another AI review.
+
+All economic results remain native-wallet block-scope with BSC internal trace limitations unless explicitly transaction-causal verified. NO_GMGN_PAID_API / OBSERVE_ONLY / PRODUCTION NO_GO.
