@@ -1,0 +1,199 @@
+{
+  "schema": "BSC_MEME_ADFF_CHEEMS_B714_GIGGLE_FULL_SOURCE_V1",
+  "date": "2026-10-12",
+  "network": "bnb-mainnet",
+  "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+  "method": "Positive ERC20 exact-CA positive transfer pagination in/out ascending page8, uniqueId deduplication, latest ethCall balanceOf raw integer",
+  "rows": [
+    {
+      "token": "CHEEMS",
+      "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "in": {
+        "events": [
+          {
+            "tx": "0x08f2c4867a3c8b4cc5058bffb1d9f91dad2e1022ad541b7a206a66fc251255e2",
+            "uid": "0x08f2c4867a3c8b4cc5058bffb1d9f91dad2e1022ad541b7a206a66fc251255e2:log:802",
+            "block": "0x6dfb7c2",
+            "raw": "0x1a5a882343ece50c23380",
+            "from": "0x52c456d80dba8e15b0e65f51187c3a5c87268b6e",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "1991224724485483398312832"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0x401b75b211e2f0e2ce0acec3054da7c03ba8fcdb64de8573f085fdaf2a5e25bd",
+            "uid": "0x401b75b211e2f0e2ce0acec3054da7c03ba8fcdb64de8573f085fdaf2a5e25bd:log:2",
+            "block": "0x6e14d16",
+            "raw": "0x1a5a882343ece50c23380",
+            "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "to": "0xaf0eb8f2f114917ef0026105c070cf08423f488e"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "1991224724485483398312832"
+      },
+      "rawBalance": "0",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "token": "BROCCOLI714",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "in": {
+        "events": [
+          {
+            "tx": "0xddec0b14184d64314f6aeaaf4340c297f8ebcc5a43f7230d5089b0884c3d047a",
+            "uid": "0xddec0b14184d64314f6aeaaf4340c297f8ebcc5a43f7230d5089b0884c3d047a:log:15",
+            "block": "0x5b1a7e9",
+            "raw": "0x3d6c3",
+            "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          },
+          {
+            "tx": "0xbf8600f7cbf1aee3944c4d62a1f08ef12f5cc5d39ec795cc82501868c7d61671",
+            "uid": "0xbf8600f7cbf1aee3944c4d62a1f08ef12f5cc5d39ec795cc82501868c7d61671:log:8",
+            "block": "0x5b1a802",
+            "raw": "0x11da145f26a229b12e",
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          },
+          {
+            "tx": "0xfeadb466794b9c958ff9c7410f3c0a072de714eca4e9165c827ff0705d67cad3",
+            "uid": "0xfeadb466794b9c958ff9c7410f3c0a072de714eca4e9165c827ff0705d67cad3:log:240",
+            "block": "0x5b1a81d",
+            "raw": "0xc75d",
+            "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          },
+          {
+            "tx": "0xf9dac93084a523baad06611a2c8ad5a72e6e515e8cb56459b5b1045075ba40e6",
+            "uid": "0xf9dac93084a523baad06611a2c8ad5a72e6e515e8cb56459b5b1045075ba40e6:log:4",
+            "block": "0x5b1aae0",
+            "raw": "0x1488d15a410a4e5acb",
+            "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          },
+          {
+            "tx": "0x097fc75a0070cdda84bca63f2ba7be5b20e2da5266a2a515e27b664ba49c42c3",
+            "uid": "0x097fc75a0070cdda84bca63f2ba7be5b20e2da5266a2a515e27b664ba49c42c3:log:301",
+            "block": "0x5b526ab",
+            "raw": "0x7aa276ff899f700",
+            "from": "0x2b6e6e4def77583229299cf386438a227e683b28",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "708654877907445260569"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0xbf8600f7cbf1aee3944c4d62a1f08ef12f5cc5d39ec795cc82501868c7d61671",
+            "uid": "0xbf8600f7cbf1aee3944c4d62a1f08ef12f5cc5d39ec795cc82501868c7d61671:log:13",
+            "block": "0x5b1a802",
+            "raw": "0x11da145f26a229b12e",
+            "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "to": "0x9eb0bc7a207f77811ee365729d00152622a745b7"
+          },
+          {
+            "tx": "0xf9dac93084a523baad06611a2c8ad5a72e6e515e8cb56459b5b1045075ba40e6",
+            "uid": "0xf9dac93084a523baad06611a2c8ad5a72e6e515e8cb56459b5b1045075ba40e6:log:9",
+            "block": "0x5b1aae0",
+            "raw": "0x1488d15a410a4e5acb",
+            "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "to": "0x9eb0bc7a207f77811ee365729d00152622a745b7"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "708102580641272957945"
+      },
+      "rawBalance": "552297266172302624",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    },
+    {
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "in": {
+        "events": [
+          {
+            "tx": "0x556322d52d00c7aa1bba706af7a37e6096af1a2798cf5898dd9ca92fd8bfc557",
+            "uid": "0x556322d52d00c7aa1bba706af7a37e6096af1a2798cf5898dd9ca92fd8bfc557:log:1012",
+            "block": "0x701bf1d",
+            "raw": "0x7652deceb213a2",
+            "from": "0xb36300a1605bc618a916ad8b86f28b532a81cbfa",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          },
+          {
+            "tx": "0x32d3eb317be12a7eb1d80d2cfe09c8dbc678fa03952031be6b33c260b31486e9",
+            "uid": "0x32d3eb317be12a7eb1d80d2cfe09c8dbc678fa03952031be6b33c260b31486e9:log:573",
+            "block": "0x72eddb1",
+            "raw": "0x130628e971169c9",
+            "from": "0x4e59cbdd67de40df5050a46773f6e7dc91c7692e",
+            "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "118981921635269995"
+      },
+      "out": {
+        "events": [
+          {
+            "tx": "0xc85dd22f39d153f121021f4ee86723848174641a2ad9f093bf1b8fce78fa9df4",
+            "uid": "0xc85dd22f39d153f121021f4ee86723848174641a2ad9f093bf1b8fce78fa9df4:log:45",
+            "block": "0x7133076",
+            "raw": "0x5ea8b23ef4dc8",
+            "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "to": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e"
+          },
+          {
+            "tx": "0xc85dd22f39d153f121021f4ee86723848174641a2ad9f093bf1b8fce78fa9df4",
+            "uid": "0xc85dd22f39d153f121021f4ee86723848174641a2ad9f093bf1b8fce78fa9df4:log:46",
+            "block": "0x7133076",
+            "raw": "0x706853aac2c5da",
+            "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "to": "0xd6b652aecb704b0aebec6317315afb90ba641d57"
+          },
+          {
+            "tx": "0xf04612484060c06e65b29a699ed2522f2b8a75b760fe64a201611dafb2290d8c",
+            "uid": "0xf04612484060c06e65b29a699ed2522f2b8a75b760fe64a201611dafb2290d8c:log:740",
+            "block": "0x72ee210",
+            "raw": "0xf3820bac0dee3",
+            "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "to": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e"
+          },
+          {
+            "tx": "0xf04612484060c06e65b29a699ed2522f2b8a75b760fe64a201611dafb2290d8c",
+            "uid": "0xf04612484060c06e65b29a699ed2522f2b8a75b760fe64a201611dafb2290d8c:log:741",
+            "block": "0x72ee210",
+            "raw": "0x1212a6ddc508ae6",
+            "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "to": "0xd6b652aecb704b0aebec6317315afb90ba641d57"
+          }
+        ],
+        "pages": 1,
+        "exhausted": true,
+        "raw": "118981921635269995"
+      },
+      "rawBalance": "0",
+      "fully_paginated": true,
+      "quantity_reconciled": true,
+      "realized_PnL": "UNVERIFIED"
+    }
+  ],
+  "production": "NO_GO",
+  "limitations": [
+    "owner-signed trades and quote PnL unresolved"
+  ]
+}
