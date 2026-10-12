@@ -1,0 +1,810 @@
+{
+  "schema": "BSC_MEME_STAGE25_8E6B_GIGGLE_TWO_CLOSED_ROUNDS_MIXED_NATIVE_STABLE_AND_HISTORICAL_POOL_REFERENCE_V1",
+  "as_of": "2026-10-13",
+  "chain": "bnb-mainnet",
+  "mode": "READ_ONLY_CHAIN_RESEARCH",
+  "production": "NO_GO",
+  "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "token": "GIGGLE",
+  "exact_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+  "sources": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_2026_SIX_CORE_POSITION_TRANSFER_HISTORY_2026-10-11.json",
+      "blob_sha": "e09082133b6483db00470c15ff569e0d9489335f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_GIGGLE_OUTBOUND_FULL_CURSOR_AUDIT_2026-10-11.json",
+      "blob_sha": "53fded1012d18b336d1f98ea3fd5d07a2012bfcb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_GIGGLE_MIXED_BNB_USDT_SETTLEMENT_2026-10-11.json",
+      "blob_sha": "08375361eacdc5c7b0da109e283f1232ccb13b6f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_GIGGLE_16_BLOCK_NATIVE_RECONCILIATION_2026-10-11.json",
+      "blob_sha": "6938c587f5890a31bec2e86a93e9d96fef6a2549"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE24_8E6B_TOKEN4_TWO_ROUNDS_THREE_MAJOR_POSITIVE_COHORT_2026-10-13.json",
+      "blob_sha": "d56c90eff2d062dbb186f5c89e0f59760d6a8d1c"
+    }
+  ],
+  "method": {
+    "scope": "4 inbound / 23 outbound GIGGLE ERC20 movements in 16 owner-signed success transactions, all from archived fully paginated source; unique tx grouping prevents double-count token tax double transfer logs",
+    "round_boundaries": "RAW exact token inventory starts zero, never negative, each round ends exactly at zero",
+    "native_economics": "Archived eth_getBalance at N-1/N for 16 original tx blocks; all 16 owner signed and success, 5 selected wallet deltas independently RPC-replayed now",
+    "USDT_economics": "Archive wallet USDT transfer net from exact tx hashes and BSC USDT CA, 6 USDT incoming and 1 outgoing all independently verified now with indexed historical eth_getLogs (from or to indexed wallet) due full receipt truncation",
+    "pool": "Pancake V2 factory 0xca143ce32fe78f1f7019d7d551a6402fc5350c73 original eth_call getPair(WBNB,USDT) returns 0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae; token0 verified USDT 0x55d398326f99059ff775485246999027b3197955; token1 verified WBNB 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c; use each transaction N-1 getReserves only. Do not infer official CEX price.",
+    "event_USDT_spot_reference_formula": "native_BNB_wei * reserve_USDT_raw / reserve_WBNB_wei (BigInt quotient toward zero) + actual ERC20 USDT delta raw",
+    "historical_spot_warning": "Estimated same-time USD-denominated cashflow using pool spot, NOT actual realized USDT, fails to include hypothetical BNB->USDT swap fees/slippage and future opportunities or market timing. Native and USDT original deltas are actual wallet transactions; spot conversions are not."
+  },
+  "ledger_token_events": [
+    {
+      "block": 62016808,
+      "hash": "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356",
+      "token_delta_raw": "180236716701282311724",
+      "event_id": "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356:log:106",
+      "balance_after_raw": "180236716701282311724"
+    },
+    {
+      "block": 62018718,
+      "hash": "0x781dc7a0ebe9f96ab6845d13d26509a4fdc4d56fee7b7b2c7bbff067e13ee5de",
+      "token_delta_raw": "45183774625432487581",
+      "event_id": "0x781dc7a0ebe9f96ab6845d13d26509a4fdc4d56fee7b7b2c7bbff067e13ee5de:log:399",
+      "balance_after_raw": "225420491326714799305"
+    },
+    {
+      "block": 62019177,
+      "hash": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674",
+      "token_delta_raw": "-2817756141583935078",
+      "event_id": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674:log:212",
+      "balance_after_raw": "222602735185130864227"
+    },
+    {
+      "block": 62019177,
+      "hash": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674",
+      "token_delta_raw": "-53537366690094766490",
+      "event_id": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674:log:213",
+      "balance_after_raw": "169065368495036097737"
+    },
+    {
+      "block": 62020864,
+      "hash": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+      "token_delta_raw": "-1690653684950360977",
+      "event_id": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6:log:166",
+      "balance_after_raw": "167374714810085736760"
+    },
+    {
+      "block": 62020864,
+      "hash": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+      "token_delta_raw": "-32122420014056858570",
+      "event_id": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6:log:167",
+      "balance_after_raw": "135252294796028878190"
+    },
+    {
+      "block": 62021192,
+      "hash": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+      "token_delta_raw": "-1352522947960288781",
+      "event_id": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b:log:142",
+      "balance_after_raw": "133899771848068589409"
+    },
+    {
+      "block": 62021192,
+      "hash": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+      "token_delta_raw": "-25697936011245486857",
+      "event_id": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b:log:143",
+      "balance_after_raw": "108201835836823102552"
+    },
+    {
+      "block": 62021220,
+      "hash": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+      "token_delta_raw": "-1082018358368231025",
+      "event_id": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047:log:18",
+      "balance_after_raw": "107119817478454871527"
+    },
+    {
+      "block": 62021220,
+      "hash": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+      "token_delta_raw": "-20558348808996389485",
+      "event_id": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047:log:19",
+      "balance_after_raw": "86561468669458482042"
+    },
+    {
+      "block": 62066886,
+      "hash": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+      "token_delta_raw": "-1298422030041877230",
+      "event_id": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d:log:168",
+      "balance_after_raw": "85263046639416604812"
+    },
+    {
+      "block": 62066886,
+      "hash": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+      "token_delta_raw": "-24670018570795667382",
+      "event_id": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d:log:169",
+      "balance_after_raw": "60593028068620937430"
+    },
+    {
+      "block": 62067451,
+      "hash": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+      "token_delta_raw": "-908895421029314061",
+      "event_id": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d:log:235",
+      "balance_after_raw": "59684132647591623369"
+    },
+    {
+      "block": 62067451,
+      "hash": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+      "token_delta_raw": "-17269012999556967168",
+      "event_id": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d:log:236",
+      "balance_after_raw": "42415119648034656201"
+    },
+    {
+      "block": 62154722,
+      "hash": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
+      "token_delta_raw": "-1060377991200866405",
+      "event_id": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a:log:266",
+      "balance_after_raw": "41354741656833789796"
+    },
+    {
+      "block": 62154722,
+      "hash": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
+      "token_delta_raw": "-20147181832816461695",
+      "event_id": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a:log:267",
+      "balance_after_raw": "21207559824017328101"
+    },
+    {
+      "block": 62299083,
+      "hash": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b",
+      "token_delta_raw": "-21207559824017328101",
+      "event_id": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b:log:94",
+      "balance_after_raw": "0"
+    },
+    {
+      "block": 62485438,
+      "hash": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
+      "token_delta_raw": "77746762768646066975",
+      "event_id": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450:log:122",
+      "balance_after_raw": "77746762768646066975"
+    },
+    {
+      "block": 63071724,
+      "hash": "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb",
+      "token_delta_raw": "56530590274041885999",
+      "event_id": "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb:log:154",
+      "balance_after_raw": "134277353042687952974"
+    },
+    {
+      "block": 63204096,
+      "hash": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
+      "token_delta_raw": "-3356933826067198824",
+      "event_id": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b:log:267",
+      "balance_after_raw": "130920419216620754150"
+    },
+    {
+      "block": 63204096,
+      "hash": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
+      "token_delta_raw": "-63781742695276777663",
+      "event_id": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b:log:268",
+      "balance_after_raw": "67138676521343976487"
+    },
+    {
+      "block": 63274247,
+      "hash": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
+      "token_delta_raw": "-1007080147820159647",
+      "event_id": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f:log:217",
+      "balance_after_raw": "66131596373523816840"
+    },
+    {
+      "block": 63274247,
+      "hash": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
+      "token_delta_raw": "-19134522808583033299",
+      "event_id": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f:log:218",
+      "balance_after_raw": "46997073564940783541"
+    },
+    {
+      "block": 63310363,
+      "hash": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
+      "token_delta_raw": "-1174926839123519588",
+      "event_id": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858:log:261",
+      "balance_after_raw": "45822146725817263953"
+    },
+    {
+      "block": 63310363,
+      "hash": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
+      "token_delta_raw": "-22323609943346872182",
+      "event_id": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858:log:262",
+      "balance_after_raw": "23498536782470391771"
+    },
+    {
+      "block": 63310510,
+      "hash": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f",
+      "token_delta_raw": "-1174926839123519588",
+      "event_id": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f:log:208",
+      "balance_after_raw": "22323609943346872183"
+    },
+    {
+      "block": 63310510,
+      "hash": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f",
+      "token_delta_raw": "-22323609943346872183",
+      "event_id": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f:log:209",
+      "balance_after_raw": "0"
+    }
+  ],
+  "receipts_and_USDT_16_owner_tx": [
+    {
+      "hash": "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356",
+      "block": 62016808,
+      "direction": "IN",
+      "delta_native_wei": "-1006544659000000000",
+      "native_residual_wei": "0",
+      "quote_token_movements": []
+    },
+    {
+      "hash": "0x781dc7a0ebe9f96ab6845d13d26509a4fdc4d56fee7b7b2c7bbff067e13ee5de",
+      "block": 62018718,
+      "direction": "IN",
+      "delta_native_wei": "-507370960000000000",
+      "native_residual_wei": "600000000000000",
+      "quote_token_movements": []
+    },
+    {
+      "hash": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674",
+      "block": 62019177,
+      "direction": "OUT",
+      "delta_native_wei": "1241125381857827603",
+      "native_residual_wei": "1244375717857827603",
+      "quote_token_movements": []
+    },
+    {
+      "hash": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+      "block": 62020864,
+      "direction": "OUT",
+      "delta_native_wei": "-7620723000000000",
+      "native_residual_wei": "0",
+      "quote_token_movements": [
+        {
+          "asset": "USDT",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "direction": "in",
+          "from": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "raw_value": "0x37add828ebe0531ab4",
+          "decimals": 18,
+          "event_id": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6:log:171"
+        }
+      ]
+    },
+    {
+      "hash": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+      "block": 62021192,
+      "direction": "OUT",
+      "delta_native_wei": "-2352141000000000",
+      "native_residual_wei": "0",
+      "quote_token_movements": [
+        {
+          "asset": "USDT",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "direction": "in",
+          "from": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "raw_value": "0x398dce17c65552d221",
+          "decimals": 18,
+          "event_id": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b:log:147"
+        }
+      ]
+    },
+    {
+      "hash": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+      "block": 62021220,
+      "direction": "OUT",
+      "delta_native_wei": "-7056423000000000",
+      "native_residual_wei": "0",
+      "quote_token_movements": [
+        {
+          "asset": "USDT",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "direction": "in",
+          "from": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "raw_value": "0x329979e0a3e906a965",
+          "decimals": 18,
+          "event_id": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047:log:23"
+        }
+      ]
+    },
+    {
+      "hash": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+      "block": 62066886,
+      "direction": "OUT",
+      "delta_native_wei": "-2352141000000000",
+      "native_residual_wei": "0",
+      "quote_token_movements": [
+        {
+          "asset": "USDT",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "direction": "in",
+          "from": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "raw_value": "0x2dd465ab982deeb971",
+          "decimals": 18,
+          "event_id": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d:log:173"
+        }
+      ]
+    },
+    {
+      "hash": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+      "block": 62067451,
+      "direction": "OUT",
+      "delta_native_wei": "-2467333000000000",
+      "native_residual_wei": "0",
+      "quote_token_movements": [
+        {
+          "asset": "USDT",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "direction": "in",
+          "from": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "raw_value": "0x22808d3fc16a0b1383",
+          "decimals": 18,
+          "event_id": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d:log:240"
+        }
+      ]
+    },
+    {
+      "hash": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
+      "block": 62154722,
+      "direction": "OUT",
+      "delta_native_wei": "749757455148637094",
+      "native_residual_wei": "750261401148637094",
+      "quote_token_movements": []
+    },
+    {
+      "hash": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b",
+      "block": 62299083,
+      "direction": "OUT",
+      "delta_native_wei": "-867942000000000",
+      "native_residual_wei": "0",
+      "quote_token_movements": [
+        {
+          "asset": "USDT",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "direction": "in",
+          "from": "0x172fcd41e0913e95784454622d1c3724f546f849",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "raw_value": "0x1e3a2666e98b0d466a",
+          "decimals": 18,
+          "event_id": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b:log:96"
+        }
+      ]
+    },
+    {
+      "hash": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
+      "block": 62485438,
+      "direction": "IN",
+      "delta_native_wei": "-731736000000000",
+      "native_residual_wei": "0",
+      "quote_token_movements": [
+        {
+          "asset": "USDT",
+          "ca": "0x55d398326f99059ff775485246999027b3197955",
+          "direction": "out",
+          "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "to": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+          "raw_value": "0x3635c9adc5dea00000",
+          "decimals": 18,
+          "event_id": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450:log:116"
+        }
+      ]
+    },
+    {
+      "hash": "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb",
+      "block": 63071724,
+      "direction": "IN",
+      "delta_native_wei": "-1001778370000000000",
+      "native_residual_wei": "0",
+      "quote_token_movements": []
+    },
+    {
+      "hash": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
+      "block": 63204096,
+      "direction": "OUT",
+      "delta_native_wei": "2089775229279261342",
+      "native_residual_wei": "2091741622279261342",
+      "quote_token_movements": []
+    },
+    {
+      "hash": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
+      "block": 63274247,
+      "direction": "OUT",
+      "delta_native_wei": "953986997487939334",
+      "native_residual_wei": "954522395487939334",
+      "quote_token_movements": []
+    },
+    {
+      "hash": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
+      "block": 63310363,
+      "direction": "OUT",
+      "delta_native_wei": "1741617291180632931",
+      "native_residual_wei": "1742121237180632931",
+      "quote_token_movements": []
+    },
+    {
+      "hash": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f",
+      "block": 63310510,
+      "direction": "OUT",
+      "delta_native_wei": "1478805892319046670",
+      "native_residual_wei": "1479326890319046670",
+      "quote_token_movements": []
+    }
+  ],
+  "USDT_event_rechecked_7": {
+    "all_link_to_same_giggle_hashes": true,
+    "all_6_in_1_out_match_original_exact_wei": true,
+    "USDT_token_contract": "0x55d398326f99059ff775485246999027b3197955",
+    "USDT_decimals": 18
+  },
+  "historical_pre_block_pair_reserves_per_owner_tx": [
+    {
+      "index": 0,
+      "hash": "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356",
+      "block": 62016808,
+      "pre_block": 62016807,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16595909790709348388320030",
+      "reserve_WBNB_wei": "16065399501753881001796",
+      "pre_block_usdt_per_BNB_x1e18": "1033021917002284996003",
+      "BNB_wallet_delta_wei": "-1006544659000000000",
+      "USDT_wallet_delta_raw": "0",
+      "BNB_usdt_spot_mark_raw": "-1039782693188591253523",
+      "total_spot_reference_raw": "-1039782693188591253523",
+      "category": "IN",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 1,
+      "hash": "0x781dc7a0ebe9f96ab6845d13d26509a4fdc4d56fee7b7b2c7bbff067e13ee5de",
+      "block": 62018718,
+      "pre_block": 62018717,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16569994978171344081307898",
+      "reserve_WBNB_wei": "16091171541969446922117",
+      "pre_block_usdt_per_BNB_x1e18": "1029756903340009543984",
+      "BNB_wallet_delta_wei": "-507370960000000000",
+      "USDT_wallet_delta_raw": "0",
+      "BNB_usdt_spot_mark_raw": "-522468748614247848740",
+      "total_spot_reference_raw": "-522468748614247848740",
+      "category": "IN",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 2,
+      "hash": "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674",
+      "block": 62019177,
+      "pre_block": 62019176,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16566315181090803024771014",
+      "reserve_WBNB_wei": "16095040203029255956390",
+      "pre_block_usdt_per_BNB_x1e18": "1029280758054450100574",
+      "BNB_wallet_delta_wei": "1241125381857827603",
+      "USDT_wallet_delta_raw": "0",
+      "BNB_usdt_spot_mark_raw": "1277466473879243645316",
+      "total_spot_reference_raw": "1277466473879243645316",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 3,
+      "hash": "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+      "block": 62020864,
+      "pre_block": 62020863,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16536314713726403219089269",
+      "reserve_WBNB_wei": "16125559039157648227399",
+      "pre_block_usdt_per_BNB_x1e18": "1025472337025421455400",
+      "BNB_wallet_delta_wei": "-7620723000000000",
+      "USDT_wallet_delta_raw": "1027097731411102341812",
+      "BNB_usdt_spot_mark_raw": "-7814840624633380869",
+      "total_spot_reference_raw": "1019282890786468960943",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 4,
+      "hash": "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+      "block": 62021192,
+      "pre_block": 62021191,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16606440662194345502344929",
+      "reserve_WBNB_wei": "16057820896272636322282",
+      "pre_block_usdt_per_BNB_x1e18": "1034165268716445552192",
+      "BNB_wallet_delta_wei": "-2352141000000000",
+      "USDT_wallet_delta_raw": "1061682542946597130785",
+      "BNB_usdt_spot_mark_raw": "-2432502529323968957",
+      "total_spot_reference_raw": "1059250040417273161828",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 5,
+      "hash": "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+      "block": 62021220,
+      "pre_block": 62021219,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16605038516950666482864895",
+      "reserve_WBNB_wei": "16059189157577252797709",
+      "pre_block_usdt_per_BNB_x1e18": "1033989845565513127588",
+      "BNB_wallet_delta_wei": "-7056423000000000",
+      "USDT_wallet_delta_raw": "933396321040056363365",
+      "BNB_usdt_spot_mark_raw": "-7296269728014934840",
+      "total_spot_reference_raw": "926100051312041428525",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 6,
+      "hash": "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+      "block": 62066886,
+      "pre_block": 62066885,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16480244813362375650600026",
+      "reserve_WBNB_wei": "16207480892312823677060",
+      "pre_block_usdt_per_BNB_x1e18": "1016829507488663667962",
+      "BNB_wallet_delta_wei": "-2352141000000000",
+      "USDT_wallet_delta_raw": "845408310895712319857",
+      "BNB_usdt_spot_mark_raw": "-2391726374573892848",
+      "total_spot_reference_raw": "843016584521138427009",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 7,
+      "hash": "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+      "block": 62067451,
+      "pre_block": 62067450,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16501653573345354474057882",
+      "reserve_WBNB_wei": "16186841200254755339682",
+      "pre_block_usdt_per_BNB_x1e18": "1019448660130529017876",
+      "BNB_wallet_delta_wei": "-2467333000000000",
+      "USDT_wallet_delta_raw": "636452428614636082051",
+      "BNB_usdt_spot_mark_raw": "-2515319320945838553",
+      "total_spot_reference_raw": "633937109293690243498",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 8,
+      "hash": "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
+      "block": 62154722,
+      "pre_block": 62154721,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16385172849072831962180716",
+      "reserve_WBNB_wei": "16328663229465942903965",
+      "pre_block_usdt_per_BNB_x1e18": "1003460762146463676120",
+      "BNB_wallet_delta_wei": "749757455148637094",
+      "USDT_wallet_delta_raw": "0",
+      "BNB_usdt_spot_mark_raw": "752352187368444434686",
+      "total_spot_reference_raw": "752352187368444434686",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 9,
+      "hash": "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b",
+      "block": 62299083,
+      "pre_block": 62299082,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "16492650372833965716444023",
+      "reserve_WBNB_wei": "16273899057789687582513",
+      "pre_block_usdt_per_BNB_x1e18": "1013441850306891901207",
+      "BNB_wallet_delta_wei": "-867942000000000",
+      "USDT_wallet_delta_raw": "557592471867847689834",
+      "BNB_usdt_spot_mark_raw": "-879608746439064370",
+      "total_spot_reference_raw": "556712863121408625464",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 10,
+      "hash": "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
+      "block": 62485438,
+      "pre_block": 62485437,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "15918643788605215206410530",
+      "reserve_WBNB_wei": "16963342784646201044850",
+      "pre_block_usdt_per_BNB_x1e18": "938414320260829723745",
+      "BNB_wallet_delta_wei": "-731736000000000",
+      "USDT_wallet_delta_raw": "-1000000000000000000000",
+      "BNB_usdt_spot_mark_raw": "-686671541050378498",
+      "total_spot_reference_raw": "-1000686671541050378498",
+      "category": "IN",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 11,
+      "hash": "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb",
+      "block": 63071724,
+      "pre_block": 63071723,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "13489189533605850673779546",
+      "reserve_WBNB_wei": "13328354579684627389848",
+      "pre_block_usdt_per_BNB_x1e18": "1012067127488217598531",
+      "BNB_wallet_delta_wei": "-1001778370000000000",
+      "USDT_wallet_delta_raw": "0",
+      "BNB_usdt_spot_mark_raw": "-1013866957305728820062",
+      "total_spot_reference_raw": "-1013866957305728820062",
+      "category": "IN",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 12,
+      "hash": "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
+      "block": 63204096,
+      "pre_block": 63204095,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "13748312385001659604695927",
+      "reserve_WBNB_wei": "13144920881662777872447",
+      "pre_block_usdt_per_BNB_x1e18": "1045903015223211842889",
+      "BNB_wallet_delta_wei": "2089775229279261342",
+      "USDT_wallet_delta_raw": "0",
+      "BNB_usdt_spot_mark_raw": "2185702213441958294722",
+      "total_spot_reference_raw": "2185702213441958294722",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 13,
+      "hash": "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
+      "block": 63274247,
+      "pre_block": 63274246,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "14077281151805886661684864",
+      "reserve_WBNB_wei": "12875964282735205477620",
+      "pre_block_usdt_per_BNB_x1e18": "1093299176876521186218",
+      "BNB_wallet_delta_wei": "953986997487939334",
+      "USDT_wallet_delta_raw": "0",
+      "BNB_usdt_spot_mark_raw": "1042993199104467958475",
+      "total_spot_reference_raw": "1042993199104467958475",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 14,
+      "hash": "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
+      "block": 63310363,
+      "pre_block": 63310362,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "14112386873286132598677758",
+      "reserve_WBNB_wei": "12862754182355377257240",
+      "pre_block_usdt_per_BNB_x1e18": "1097151253395245052306",
+      "BNB_wallet_delta_wei": "1741617291180632931",
+      "USDT_wallet_delta_raw": "0",
+      "BNB_usdt_spot_mark_raw": "1910817593953662886930",
+      "total_spot_reference_raw": "1910817593953662886930",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    },
+    {
+      "index": 15,
+      "hash": "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f",
+      "block": 63310510,
+      "pre_block": 63310509,
+      "pre_block_WBNB_USDT_pool": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+      "reserve_USDT_raw": "14124660938341799407747047",
+      "reserve_WBNB_wei": "12851753652366892115587",
+      "pre_block_usdt_per_BNB_x1e18": "1099045415933605098172",
+      "BNB_wallet_delta_wei": "1478805892319046670",
+      "USDT_wallet_delta_raw": "0",
+      "BNB_usdt_spot_mark_raw": "1625274837008852680111",
+      "total_spot_reference_raw": "1625274837008852680111",
+      "category": "OUT",
+      "fee_gas_already_in_native_BNB_delta": true
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "first_block": 62016808,
+      "last_block": 62299083,
+      "event_count": 17,
+      "unique_owner_tx": 10,
+      "raw_token_inventory_zero": true,
+      "BNB_native_delta_wei": "454250515006464697",
+      "USDT_erc20_delta_raw": "5061629806775951927704",
+      "sign_vector": {
+        "BNB": "POSITIVE",
+        "USDT": "POSITIVE"
+      },
+      "transaction_hashes": [
+        "0x60a7e5036b5ae2fe45a68be3fd9d9708016900420c449196366a86ef5413f356",
+        "0x781dc7a0ebe9f96ab6845d13d26509a4fdc4d56fee7b7b2c7bbff067e13ee5de",
+        "0x3026201ee7dfe238eb0a53e11686f8cac5386699f5fc58de3f9c6c992c9ab674",
+        "0x378fddcdf93cbb9fffc38b67a3f384af4c4adeb5b7ce7a21d99f4f851a57d1a6",
+        "0x6427969ff9774905d05739861358743174d0fa66a1b0da33bc0b245690ab8b4b",
+        "0x7be87bf2c62acff9e990b17c9f3c0c52eee863bab65e00f8bf0514e431bd3047",
+        "0xed09a002b73a041443ca4aadd033776d4dd55dc03f964ab39068f48e9d321e3d",
+        "0xd5889d6061f7968c130079f09e47f152c0ea0c0bfd0f1181173360bc87ef9d9d",
+        "0x78699b14b8590be7812f8da504a3e6ed4fdd5b4f728a49592eed7eb0285f8c1a",
+        "0xd186300c13946710467f4b4f3dde20d21ebef62b4cfe3fdf1dc78e5eb31ca47b"
+      ],
+      "reference_quote_valid_onchain_V2_pre_trade": true,
+      "BNB_spot_USDT_reference_raw": "444236952120917897302",
+      "net_USDT_reference_raw": "5505866758896869825006",
+      "minimum_observed_price_USDT_per_BNB_x1e18": "1003460762146463676120",
+      "maximum_observed_price_USDT_per_BNB_x1e18": "1034165268716445552192",
+      "valuation_approx_positive": true
+    },
+    {
+      "round": 2,
+      "first_block": 62485438,
+      "last_block": 63310510,
+      "event_count": 10,
+      "unique_owner_tx": 6,
+      "raw_token_inventory_zero": true,
+      "BNB_native_delta_wei": "5261675304266880277",
+      "USDT_erc20_delta_raw": "-1000000000000000000000",
+      "sign_vector": {
+        "BNB": "POSITIVE",
+        "USDT": "NEGATIVE"
+      },
+      "transaction_hashes": [
+        "0xf22f7e6e83ee1d812cb8409175526f2c68716cdb54c064a9496c34b3f203b450",
+        "0x8fe151b74612225d4efc8f62421baef2868c513aa37ae71d03fbf2e5cdd15bfb",
+        "0x8ff04124e99f4a8b2eafc1ea7c5c27dea6f628b6ee47cb16b2ee882ac9344e7b",
+        "0xc602e9bef84612eb3ef0f398140e2add9b8f1a37e02ef5c0e97f6c146040169f",
+        "0x31e4fe76340061e20869de8db9f5c279fd6578693683cf3bba4873a2a3d23858",
+        "0xa9c39ae66918f4b52a3815f2ec7c5991522aca5c9ed872f724bd9ed5e382a88f"
+      ],
+      "reference_quote_valid_onchain_V2_pre_trade": true,
+      "BNB_spot_USDT_reference_raw": "5750234214662162621678",
+      "net_USDT_reference_raw": "4750234214662162621678",
+      "minimum_observed_price_USDT_per_BNB_x1e18": "938414320260829723745",
+      "maximum_observed_price_USDT_per_BNB_x1e18": "1099045415933605098172",
+      "valuation_approx_positive": true
+    }
+  ],
+  "summary": {
+    "GIGGLE_ERC20_in_count": 4,
+    "GIGGLE_ERC20_out_count": 23,
+    "unique_owners_signed_success": 16,
+    "closed_rounds": 2,
+    "round_1_BNB_delta_wei": "454250515006464697",
+    "round_1_USDT_delta_raw": "5061629806775951927704",
+    "round_2_BNB_delta_wei": "5261675304266880277",
+    "round_2_USDT_delta_raw": "-1000000000000000000000",
+    "total_BNB_delta_wei": "5715925819273344974",
+    "total_USDT_delta_raw": "4061629806775951927704",
+    "second_round_BNB_USDT_breakeven_raw_x1e18": "190053536596806783786",
+    "two_rounds_positive_on_observed_historical_pool_spot": true,
+    "combined_nominal_USDT_pool_spot_reference_raw": "10256100973559032446684",
+    "exception_same_block_unrelated_native_wei": "600000000000000",
+    "independent_USDT_events_7_pass": true,
+    "independent_native_N_minus_1_balance_events_5_pass": true,
+    "verified_new_early_4th_major_CA_status": "STRONG_HISTORICAL_OWNER_SETTLEMENT_POSITIVE_GIGGLE; FINAL_CAUSAL_REALIZED_USD_AND_FOLLOWER_ALPHA_NOT_APPROVED"
+  },
+  "expanded_selected_cohort": {
+    "previous_frozen_CA_cohort": 4,
+    "additional_GIGGLE_CA": 1,
+    "verified_selected_major_CA": 5,
+    "closed_episode_total": 12,
+    "positive_settlement_or_onchain_quote_valued_rounds": 8,
+    "negative_settlement_rounds": 4,
+    "positive_major_CA_after_GIGGLE": [
+      "4",
+      "哈基米 / HAJIMI",
+      "龙虾",
+      "GIGGLE"
+    ],
+    "BNB_scope_total_including_GIGGLE_wei": "24318790444547367859",
+    "USDT_GIGGLE_net_wei": "4061629806775951927704",
+    "note": "BNB scoped and USDT are two separate nominal settlement dimensions; no real USD realized total inferred from their sum. Historical pool USD marks are synthetic reference valuations only, not executed conversions."
+  },
+  "limits": [
+    "USDT pool spot quote is NOT realized USDT converted for BNB, and is not a guarantee of price under market impact, MEV or gas.",
+    "At one early GIGGLE buy block, archived native residual 0.0006 BNB is known unexplained. Does not change sign of either closed round but disallows perfect transaction-only PnL attribution.",
+    "GIGGLE token split to contract and pool logs requires per-tx grouping; do not treat 23 ERC20 outs as 23 independent sells.",
+    "4th distinct major token win candidate in selected audited group, not a 5/19 independent random sample or statistically valid opportunity success rate.",
+    "Receipt bodies may truncate and USDT indexed logs are stronger evidence for seven ERC20 quote events; no paid traces or paid GMGN.",
+    "Prior 4-coin totals in BNB cannot simply add a GIGGLE synthetic USD mark; display separate native BNB and USDT ledgers.",
+    "No independent outside AI review, no deployment, trade or production monitoring changes."
+  ]
+}
