@@ -1,0 +1,82 @@
+{
+  "D1_source_complete_with72h": 305,
+  "G0_full_market_crypto_population_complete": false,
+  "H1_verdict": "EXPOSED_MATH_REGRESSION_NOT_PREDICTIVE",
+  "OOS": "NOT_DONE",
+  "autotrade": "NO_GO",
+  "deployment": "NO_GO",
+  "exposed_source_blobs": {
+    "monster_stage85_all305_official_D1_asof_features.jsonl": "622299fec16400e189cb8fa668ecbc8bc31ec630",
+    "monster_stage88_all305_D1_post_signal_24h72h_price_paths.jsonl": "86e96b726f677a15f5a7c8d740e3caca5c83e3fc"
+  },
+  "fixed_window_dates": [
+    "2025-01-30",
+    "2025-06-02",
+    "2025-08-01",
+    "2025-10-02",
+    "2026-06-21",
+    "2026-07-28"
+  ],
+  "frank": "UNCHANGED",
+  "future_prediction_claim": "NONE",
+  "global_auc_not_for_decision": "0.7796666666666666666666666667",
+  "gmail": "OFF",
+  "min_independent_window_dates_required": 3,
+  "min_positive_required": 20,
+  "non_tail_D1": 300,
+  "old_exposed_regression": true,
+  "other_ai_review": "NOT_DONE",
+  "raw_symbol_date_attempts_present": 305,
+  "real_executable_net_pnl": "UNKNOWN",
+  "retuned_old_D0_D1": "NO",
+  "right_tail_72h_ge100": 5,
+  "right_tail_positive_distinct_dates": 4,
+  "same_date_auc_by_window": {
+    "2025-01-30": {
+      "D1_scored": 75,
+      "other_D1": 75,
+      "right_tail_ge100": 0,
+      "same_date_auc": null,
+      "within_window_pair_count": 0
+    },
+    "2025-06-02": {
+      "D1_scored": 16,
+      "other_D1": 16,
+      "right_tail_ge100": 0,
+      "same_date_auc": null,
+      "within_window_pair_count": 0
+    },
+    "2025-08-01": {
+      "D1_scored": 45,
+      "other_D1": 44,
+      "right_tail_ge100": 1,
+      "same_date_auc": "1",
+      "within_window_pair_count": 44
+    },
+    "2025-10-02": {
+      "D1_scored": 59,
+      "other_D1": 58,
+      "right_tail_ge100": 1,
+      "same_date_auc": "0.8965517241379310344827586207",
+      "within_window_pair_count": 58
+    },
+    "2026-06-21": {
+      "D1_scored": 56,
+      "other_D1": 55,
+      "right_tail_ge100": 1,
+      "same_date_auc": "0.9636363636363636363636363636",
+      "within_window_pair_count": 55
+    },
+    "2026-07-28": {
+      "D1_scored": 54,
+      "other_D1": 52,
+      "right_tail_ge100": 2,
+      "same_date_auc": "0.6298076923076923076923076923",
+      "within_window_pair_count": 104
+    }
+  },
+  "schema": "MONSTER_STAGE96_H1_FROZEN_FORWARD_EVALUATOR_V1",
+  "source_censored": 0,
+  "sufficient_statistical_support": false,
+  "within_date_macro_auc": "0.8724989450204967446346756692"
+}
