@@ -130,15 +130,15 @@
     "verified_direct_candidate_bnb_transfers": 7,
     "latest_2026_10_11_erc20_sample_rows": 1224,
     "latest_2026_10_11_unread_directions": 23,
-    "wallets_with_complete_19_ca_direction_history": 17,
-    "latest_2026_10_12_complete_wallet_ca_cells": 382,
+    "wallets_with_complete_19_ca_direction_history": 18,
+    "latest_2026_10_12_complete_wallet_ca_cells": 387,
     "latest_2026_10_12_complete_zero_transfer_cells": 289,
     "latest_2026_10_12_unknown_incomplete_cells": 0,
     "latest_2026_10_12_observed_wallet_ca_pairs": 148,
-    "latest_2026_10_12_complete_quantity_closed_cells": 53,
-    "latest_2026_10_12_complete_observed_wallet_ca_pairs": 93,
-    "latest_2026_10_12_partial_observed_wallet_ca_pairs": 55,
-    "latest_2026_10_12_nonexhausted_transfer_wallet_ca_cells": 55
+    "latest_2026_10_12_complete_quantity_closed_cells": 56,
+    "latest_2026_10_12_complete_observed_wallet_ca_pairs": 98,
+    "latest_2026_10_12_partial_observed_wallet_ca_pairs": 50,
+    "latest_2026_10_12_nonexhausted_transfer_wallet_ca_cells": 50
   },
   "venue_coverage": [
     {
@@ -831,6 +831,15 @@
         "all_19_ca_paginated": false,
         "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V5_2026-10-12.json",
         "status": "RESEARCH_ONLY_NO_GO"
+      },
+      "address_model_4_stage8_2026_10_12": {
+        "completed_fixed_19_CAs": true,
+        "observed_transfer_token_CAs": 7,
+        "closed_quantity_token_CAs": 4,
+        "remaining_history_CAs": 0,
+        "remaining_native_quote_PnL": "UNVERIFIED",
+        "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V11_2026-10-12.json",
+        "production": "NO_GO"
       }
     },
     {
@@ -2834,6 +2843,30 @@
     "MARS_net_balance_raw": "0",
     "remaining_partial_active_CA_cells": 55,
     "original_signers_and_quote_pnl": "UNVERIFIED",
+    "production": "NO_GO"
+  },
+  "address_model_4_stage8_v11_5c0c_full_2026_10_12": {
+    "date": "2026-10-12",
+    "status": "18_OF_23_COMPLETE_387_OF_437_WALLET_CA_CELLS",
+    "source": "BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V11_2026-10-12.json",
+    "blob_sha": "3c700f19120306dd48ac9574baeca9b22b9b6afa",
+    "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+    "new_complete_token_CAs": [
+      "BROCCOLIF3B",
+      "TUT",
+      "CHEEMS",
+      "MUBARAK",
+      "BROCCOLI714"
+    ],
+    "token_balance_raw_residuals": {
+      "BROCCOLIF3B": "1",
+      "TUT": "0",
+      "CHEEMS": "0",
+      "MUBARAK": "0",
+      "BROCCOLI714": "1"
+    },
+    "remaining_partial_ERC20_cells": 50,
+    "profit_status": "UNVERIFIED",
     "production": "NO_GO"
   }
 }
