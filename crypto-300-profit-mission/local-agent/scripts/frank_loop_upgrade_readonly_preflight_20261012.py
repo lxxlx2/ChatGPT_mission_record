@@ -11,8 +11,9 @@ kickstart. Results contain only statuses and aggregate counts (no identities).
 from __future__ import annotations
 
 from collections import Counter
+from contextlib import closing
+import getpass
 from datetime import datetime, timezone
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -21,7 +22,6 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
-import time
 from urllib.parse import quote
 import zipfile
 
@@ -76,7 +76,7 @@ def query_ro(path: Path) -> sqlite3.Connection:
 
 
 def snapshot_sqlite(src: Path, dest: Path):
-    with query_ro(src) as read:
+    with closing(query_ro(src)) as read:
         with sqlite3.connect(dest) as write:
             read.backup(write)
             check("SNAPSHOT_SQLITE_INTEGRITY",
@@ -194,10 +194,13 @@ def main():
                          "APPROVED_HASH_FILE", "RPC_FILE")}
     active_dashboard_agent = Path(read_kv(dash_raw, "LOCAL_AGENT")).expanduser().resolve()
     check("CURRENT_DASHBOARD_IS_MERGED_RELEASE",
-          active_dashboard_agent.parts[-3:] == ("crypto-300-profit-mission", "local-agent", "") if False
-          else (active_dashboard_agent / "mission_agent/mission_control/static/app.js").is_file()
+          (active_dashboard_agent / "mission_agent/mission_control/static/app.js").is_file()
           and "数据库无发送尝试记录" in
           (active_dashboard_agent / "mission_agent/mission_control/static/app.js").read_text(encoding="utf-8"))
+    rev = subprocess.run(["/usr/bin/git", "-C", str(active_dashboard_agent),
+                          "rev-parse", "HEAD"], capture_output=True, text=True, timeout=8)
+    check("DASHBOARD_SOURCE_PINNED_PR34",
+          rev.returncode == 0 and rev.stdout.strip() == PIN)
     check("RUNNER_MODE_POLICY_UNCHANGED",
           "mission_meme_v1.py loop" in loop_raw and
           "--live-delivery" in loop_raw and
@@ -208,8 +211,8 @@ def main():
           (current["PROD"] / "forward.sqlite").is_file()
           and (control / "mission-control.sqlite").is_file()
           and (current["VENV"] / "bin/python").is_file())
-    label = f"gui/{os.getuid()}/com.{os.getlogin()}.frank-meme.loop"
-    dash_label = f"gui/{os.getuid()}/com.{os.getlogin()}.frank-meme.dashboard"
+    label = f"gui/{os.getuid()}/com.{getpass.getuser()}.frank-meme.loop"
+    dash_label = f"gui/{os.getuid()}/com.{getpass.getuser()}.frank-meme.dashboard"
     loop_start_pid = launch_pid(label)
     dash_start_pid = launch_pid(dash_label)
     check("LOOP_AND_DASHBOARD_RUNNING", loop_start_pid > 0 and dash_start_pid > 0)
@@ -258,7 +261,7 @@ print(json.dumps({"authorized":live_delivery_policy_authorized(p,h,expected),
         tmp = Path(td)
         snapshot_sqlite(current["PROD"] / "forward.sqlite", tmp / "forward.sqlite")
         snapshot_sqlite(control / "mission-control.sqlite", tmp / "mission-control.sqlite")
-        with query_ro(tmp / "mission-control.sqlite") as db:
+        with closing(query_ro(tmp / "mission-control.sqlite")) as db:
             before = counters(db)
             risk = classify_pending(db, max_age, datetime.now(timezone.utc))
         details["outbox_status_totals"] = before["decision_outbox_by_status"]
@@ -267,7 +270,7 @@ print(json.dumps({"authorized":live_delivery_policy_authorized(p,h,expected),
         details["delivery_risk_totals"] = risk
         phase = "UPGRADE_CLONE_COMPATIBILITY"
         isolated_schema_probe(current["VENV"] / "bin/python", from_source, tmp / "mission-control.sqlite")
-        with query_ro(tmp / "mission-control.sqlite") as db:
+        with closing(query_ro(tmp / "mission-control.sqlite")) as db:
             after = counters(db)
         check("EXISTING_EVENTS_AND_DELIVERY_UNCHANGED",
               all(before[k] == after[k] for k in before))
