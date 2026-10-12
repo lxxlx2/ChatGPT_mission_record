@@ -1,0 +1,123 @@
+{
+  "ALL_SAMPLES_KNOWN_HISTORIC_NOT_HOLDOUT": true,
+  "AUTOTRADE": "NO_GO",
+  "GMAIL": "OFF",
+  "MONSTER_DEPLOY": "NO_GO",
+  "NO_ASOF_THRESHOLD_FIT_OR_PRIORITY_RULE": true,
+  "NO_ASSUMED_ORDER_SIZE": true,
+  "OTHER_AI_REVIEW": "NOT_DONE",
+  "P1V03": "REJECTED",
+  "all_original_first_D0": 519,
+  "descriptive_only": {
+    "ALL_519": {
+      "asof_60m_historical_trade_evidence": 519,
+      "n": 519,
+      "normalized_15m_quote_vs_prior45_median": "3.514361069328548404828345415",
+      "quote15_median_USDT": "2587782.3125600",
+      "ret60_median_pct": "7.434944237918215613382899600",
+      "taker_buy_share15_median": "0.5279428207496773468424860845",
+      "trades60_median": "47602"
+    },
+    "NO_P1_353": {
+      "asof_60m_historical_trade_evidence": 353,
+      "n": 353,
+      "normalized_15m_quote_vs_prior45_median": "3.507247630150866024390869192",
+      "quote15_median_USDT": "2191897.113440",
+      "ret60_median_pct": "6.467661691542288557213930300",
+      "taker_buy_share15_median": "0.5249045969253937906840578682",
+      "trades60_median": "39655"
+    },
+    "ORIGINAL_7DAY_GT2X_29": {
+      "asof_60m_historical_trade_evidence": 29,
+      "n": 29,
+      "normalized_15m_quote_vs_prior45_median": "3.794662474876562213250925896",
+      "quote15_median_USDT": "3533250.1713000",
+      "ret60_median_pct": "10.31096563011456628477905070",
+      "taker_buy_share15_median": "0.5464555824683524249061624770",
+      "trades60_median": "65624"
+    },
+    "ORIGINAL_NO_2X_490": {
+      "asof_60m_historical_trade_evidence": 490,
+      "n": 490,
+      "normalized_15m_quote_vs_prior45_median": "3.510804349739707214609607304",
+      "quote15_median_USDT": "2555411.9925050",
+      "ret60_median_pct": "7.10524040124524386025596680",
+      "taker_buy_share15_median": "0.526765880214041486486658460",
+      "trades60_median": "47171"
+    },
+    "P1_REACHED_166": {
+      "asof_60m_historical_trade_evidence": 166,
+      "n": 166,
+      "normalized_15m_quote_vs_prior45_median": "3.599143423090266636515591290",
+      "quote15_median_USDT": "4032095.1094500",
+      "ret60_median_pct": "10.26295123076160446225168700",
+      "taker_buy_share15_median": "0.532883306711020447573032799",
+      "trades60_median": "64288"
+    },
+    "per_original_calendar_date": {
+      "2025-01-30": {
+        "asof_60m_historical_trade_evidence": 161,
+        "n": 161,
+        "normalized_15m_quote_vs_prior45_median": "2.275484093520590131563046300",
+        "quote15_median_USDT": "5329080.6967000",
+        "ret60_median_pct": "-11.75358437056877264849535213",
+        "taker_buy_share15_median": "0.4899755166228930994030710081",
+        "trades60_median": "75155"
+      },
+      "2025-06-02": {
+        "asof_60m_historical_trade_evidence": 34,
+        "n": 34,
+        "normalized_15m_quote_vs_prior45_median": "19.78494664136016701970019776",
+        "quote15_median_USDT": "5177758.3908365",
+        "ret60_median_pct": "7.65673170946631374401195735",
+        "taker_buy_share15_median": "0.552312250760886630892110199",
+        "trades60_median": "43613.5"
+      },
+      "2025-08-01": {
+        "asof_60m_historical_trade_evidence": 54,
+        "n": 54,
+        "normalized_15m_quote_vs_prior45_median": "8.61938492180264536420184774",
+        "quote15_median_USDT": "3303072.5105500",
+        "ret60_median_pct": "11.14848088959777829639974110",
+        "taker_buy_share15_median": "0.5674543547425528172926391725",
+        "trades60_median": "42582"
+      },
+      "2025-10-02": {
+        "asof_60m_historical_trade_evidence": 75,
+        "n": 75,
+        "normalized_15m_quote_vs_prior45_median": "5.312003420672716508654076970",
+        "quote15_median_USDT": "3159874.6694100",
+        "ret60_median_pct": "10.20775396695566824799607390",
+        "taker_buy_share15_median": "0.5437178416791212917854126862",
+        "trades60_median": "47099"
+      },
+      "2026-06-21": {
+        "asof_60m_historical_trade_evidence": 100,
+        "n": 100,
+        "normalized_15m_quote_vs_prior45_median": "6.179416546532864164323201205",
+        "quote15_median_USDT": "954649.9183300",
+        "ret60_median_pct": "9.14101356790719097714353660",
+        "taker_buy_share15_median": "0.532631655372398803316704307",
+        "trades60_median": "26084.5"
+      },
+      "2026-07-28": {
+        "asof_60m_historical_trade_evidence": 95,
+        "n": 95,
+        "normalized_15m_quote_vs_prior45_median": "5.822737947144695615822739140",
+        "quote15_median_USDT": "1419599.54192918",
+        "ret60_median_pct": "8.425787106446776611694152900",
+        "taker_buy_share15_median": "0.5357383653613560899566288254",
+        "trades60_median": "37277"
+      }
+    }
+  },
+  "full_source_complete": 519,
+  "independent_immediate_P1_46_full_ASOF_feature_parity": 46,
+  "original_locked_Git_blobs": {
+    "monster_stage52_all5400_originalV4_P1v03_true_minute_source_cases.jsonl": "ad7544f97e8a0d6c1f2635aa54052cca42d08cf1",
+    "monster_stage56_all166_61m_asof_taker_trades_official_SHA.jsonl": "982bddbf05f263423f9cab4f40c0992688cc3499",
+    "monster_stage63_all519_original_D0_full_market_official_SHA_paths.jsonl": "f4bd1de72ecb416fc9aa1593afdac5c67aa46d8b",
+    "monster_v4_stage56_usdm_asof_taker_and_tradecount_source_audit.py": "1a0beaf153d4e6913f1c62fb12b0960894491c80"
+  },
+  "schema": "MONSTER_STAGE64_FULL519_FIRST_D0_OFFICIAL_ASOF_61MIN_USDM_TAKER_TRADE_COUNT_V1"
+}
