@@ -1,0 +1,60 @@
+name: Monster Stage63 Original All519 D0 Full-Market SHA vs 166 P1 Survivors
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage63_all519_original_d0_watches_official_sha.py'
+      - '.github/workflows/monster-v4-stage63-original519-d0-nonP1-official-SHA.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: monster-stage63-original-full519-d0
+  cancel-in-progress: false
+jobs:
+  verify_all_original519_watch_paths_without_P1_selection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate full-market 519 selection, source SHA and unchanged Stage60 core
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage63_all519_original_d0_watches_official_sha.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage63_all519_original_d0_watches_official_sha.py --selftest
+      - name: Fetch Binance official all519 original first D0 after-signal paths and verify 166 independent old results
+        run: |
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage63_all519_original_d0_watches_official_sha.py \
+            --out /tmp/monster_stage63 \
+            --workers 7
+      - name: Preserve actual all 519 case receipts and cohort summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage63-real-519-original-D0-watch-353-noP1-sourceSHA
+          path: /tmp/monster_stage63/*
+          retention-days: 30
+      - name: Persist Stage63 full 519 original D0 research outcomes in existing Monster PR
+        run: |
+          test "$GITHUB_REF_NAME" = research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage63/monster_stage63_* "$dest/"
+          git add "$dest/monster_stage63_all519_original_D0_full_market_official_SHA_paths.jsonl" "$dest/monster_stage63_all519_D0_and_nonP1_353_summary.json"
+          if git diff --cached --quiet; then
+            echo STAGE63_SOURCE_EVIDENCE_ALREADY_ON_GIT
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'monster: persist Stage63 original 519 D0 SHA real price paths including 353 nonP1'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          echo STAGE63_REAL_SHA_RESEARCH_PERSISTENCE_FAILED
+          exit 1
