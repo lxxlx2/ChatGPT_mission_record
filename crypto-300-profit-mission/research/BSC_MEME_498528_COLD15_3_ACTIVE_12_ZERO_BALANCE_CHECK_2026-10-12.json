@@ -1,0 +1,104 @@
+{
+  "schema": "BSC_MEME_498528_COLD15_THREE_ACTIVE_BALANCE_CHECK_V1",
+  "date": "2026-10-12",
+  "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+  "source": {
+    "path": "BSC_MEME_498528_877AF_COLD_15_CA_INDEPENDENT_CURSORS_2026-10-12.json",
+    "sha": "a706bcf5c189c21afc18af078f6002185485f4a6"
+  },
+  "closed_exact_15_cas": true,
+  "all_15_cas_total": 15,
+  "source_complete_without_remaining_cursor": true,
+  "active_balances": [
+    {
+      "token": "4",
+      "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "events_in": 1,
+      "events_out": 1,
+      "sum_in_raw": "115121506179271772504",
+      "sum_out_raw": "115121506179271772504",
+      "net_raw": "0",
+      "onchain_balance_raw": "0",
+      "exact_balance_match": true,
+      "inbound_first_tx": "0xc2df1ad80a837d3b94446013ef33e6e196b4a55f0192fb33b33e12b183846771",
+      "outbound_first_tx": "0x8ecd40fddcdc93ee3c90328166f098ec412ad4d80f50c00ed98601b0e9bb4fa2"
+    },
+    {
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "events_in": 1,
+      "events_out": 0,
+      "sum_in_raw": "16715790157817433",
+      "sum_out_raw": "0",
+      "net_raw": "16715790157817433",
+      "onchain_balance_raw": "16715790157817433",
+      "exact_balance_match": true,
+      "inbound_first_tx": "0xae8676c690a2cdb6596d3e815b1ef49d0b3b5d60116455b186cd9da218588949"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "events_in": 4,
+      "events_out": 1,
+      "sum_in_raw": "23370382899658621785589",
+      "sum_out_raw": "23370382899658621785589",
+      "net_raw": "0",
+      "onchain_balance_raw": "0",
+      "exact_balance_match": true,
+      "inbound_first_tx": "0xb4395b47c7659298436536408593d64d2b538a057e9a15effb4787cde36f4545",
+      "outbound_first_tx": "0x428a2ceb516a5776e753f69e336241fbe5b21887328569124bb11f430244c32b"
+    }
+  ],
+  "confirmed_zero_ERC20_CAs": [
+    {
+      "token": "TST",
+      "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429"
+    },
+    {
+      "token": "CHEEMS",
+      "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413"
+    },
+    {
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6"
+    },
+    {
+      "token": "BROCCOLI714",
+      "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b"
+    },
+    {
+      "token": "SIREN",
+      "ca": "0x997a58129890bbda032231a52ed1ddc845fc18e1"
+    },
+    {
+      "token": "BANANAS31",
+      "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760"
+    },
+    {
+      "token": "BOB",
+      "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e"
+    },
+    {
+      "token": "BULLA",
+      "ca": "0x595e21b20e78674f8a64c1566a20b2b316bc3511"
+    },
+    {
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444"
+    },
+    {
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444"
+    },
+    {
+      "token": "BUBB",
+      "ca": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b"
+    }
+  ],
+  "interpretation": "Three active token contracts from independent 15-cold-CA scan have complete in/out history and direct matching current balanceOf, remaining twelve contracts have zero transfers with both cursors fully exhausted. Four hot CAs including MARS, TUT, Binance Life, NIULAI remain partial.",
+  "production": "NO_GO"
+}
