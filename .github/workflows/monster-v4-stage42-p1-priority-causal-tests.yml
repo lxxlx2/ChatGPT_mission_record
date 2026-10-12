@@ -1,0 +1,41 @@
+name: Monster Stage42 Causal P1 Pure Research Tests
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_priority_v01.py'
+      - '.github/workflows/monster-v4-stage42-p1-priority-causal-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  p1_frozen_code_invariant_and_source_causality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate P1 pure evaluator and strict no lookahead tests
+        run: |
+          python -B -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_priority_v01.py
+          python -B crypto-300-profit-mission/local-agent/scripts/monster_v4_stage42_p1_priority_v01.py --selftest
+      - name: Confirm frozen research protocol is not deployment authority
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('crypto-300-profit-mission/monster/evidence/monster_stage40_candidate_priority_v01_frozen_before_any_holdout_20261012.json')
+          d=json.loads(p.read_text())
+          assert d['candidate']['P1_decision_minutes_after_first_D0']==6
+          assert d['candidate']['P1_consecutive_3min_confirmations']==2
+          assert d['candidate']['ret60m_at_first_D0_min_percent']=='8.0'
+          assert d['candidate']['quote15m_at_P1_min_USDT']=='250000'
+          assert d['candidate']['quote15m_normalized_vs_previous45_min']=='1.5'
+          assert d['Monster_Deployment']=='NO_GO' and d['Gmail']=='OFF' and d['auto_trading']=='NO_GO'
+          print('STAGE42_FROZEN_THRESHOLDS_AND_DEPLOYMENT_NO_GO_PASS')
+          PY
