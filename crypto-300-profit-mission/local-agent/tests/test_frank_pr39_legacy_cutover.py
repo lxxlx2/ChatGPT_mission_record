@@ -866,3 +866,61 @@ def test_unverifiable_frozen_loop_is_unloaded_so_launchd_cannot_respawn_it(tmp_p
     assert world.mac.loaded.get(world.mac.labels['loop']) is None, 'the label must be unloaded'
     assert not any(e[0] == 'start' for e in world.mac.events)
     assert journal_of(release_dir)['phase'] == r.LEGACY_MANUAL
+
+
+def test_legacy_recovery_inventory_is_reachable_from_readonly_cli(tmp_path, monkeypatch, capsys):
+    world = build_world(tmp_path, monkeypatch)
+    journal = tmp_path / 'manual-legacy.json'
+    journal.write_text(json.dumps({'mode': 'LEGACY_CUTOVER',
+                                   'phase': r.LEGACY_MANUAL,
+                                   'legacy_loop_pid': world.loop_pid,
+                                   'dashboard_pid': world.dash_pid,
+                                   'history': []}), encoding='utf-8')
+    monkeypatch.setattr(r, 'Mac', lambda *a, **k: world.mac)
+    monkeypatch.setattr(sys, 'platform', 'darwin')
+    before = list(world.mac.events)
+    assert r.main(['--expected-release-sha', world.sha,
+                   '--recover', str(journal),
+                   '--legacy-recover-inventory']) == 0
+    output = json.loads(capsys.readouterr().out)
+    assert output['mode'] == 'LEGACY_RECOVERY_INVENTORY'
+    assert output['action_taken'] == 'NONE'
+    assert output['manual_action_required'] is True
+    assert world.mac.events == before
+    with pytest.raises(RuntimeError, match='RECOVERY_AUTHORIZATION_REQUIRED'):
+        r.main(['--expected-release-sha', world.sha, '--recover', str(journal)])
+    with pytest.raises(RuntimeError, match='LEGACY_APPLY_CANNOT_RECOVER_JOURNAL'):
+        r.main(['--expected-release-sha', world.sha,
+                '--legacy-cutover-apply', '--recover', str(journal), '--apply',
+                '--authorize-production-restart', '--authorize-future-real-notifications',
+                '--authorize-legacy-unverified-loop-cutover'])
+
+
+def test_failure_after_new_loop_starts_holds_keepalive_before_unloading(tmp_path, monkeypatch):
+    world = build_world(tmp_path, monkeypatch)
+    world.mac.loop_heartbeats = False
+    release_dir = tmp_path / 'release'
+    with pytest.raises(RuntimeError):
+        apply(world, release_dir)
+    assert journal_of(release_dir)['phase'] == r.LEGACY_MANUAL
+    assert world.mac.holds == {'loop', 'dashboard'}, 'both LaunchAgents must be disabled'
+    starts = [i for i, e in enumerate(world.mac.events) if e[0] == 'start' and e[1] == 'loop']
+    assert len(starts) == 1
+    last_start = starts[0]
+    assert any(e == ('hold', 'loop') for e in world.mac.events[last_start+1:])
+    assert any(e == ('hold', 'dashboard') for e in world.mac.events[last_start+1:])
+    assert all(world.mac.loaded.get(world.mac.labels[k]) is None for k in ('loop', 'dashboard'))
+
+
+def test_scanner_snapshot_uses_stable_code_policy_pid_not_dynamic_launchctl_print(monkeypatch):
+    counter = {'n': 0}
+    def inventory(_mac, _label, _prod):
+        counter['n'] += 1
+        return {'pid': 52300, 'protected': {'policy':'hash'}, 'source': {'code':'hash'},
+                'loaded_source_sha256':'sha256', 'policy_hash':'p', 'entry_hash':'h',
+                'loaded_hash': str(counter['n']), 'root': 'stable'}
+    monkeypatch.setattr(r, 'scanner_inventory', inventory)
+    first = r.legacy_scanner_snapshot(None, None, None)
+    second = r.legacy_scanner_snapshot(None, None, None)
+    assert first == second
+    assert 'loaded_hash' not in first
