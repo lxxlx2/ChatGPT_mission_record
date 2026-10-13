@@ -29,6 +29,28 @@ jobs:
           python -B -m compileall -q mission_agent/mission_control/server.py tests/test_frank_ca_c01_c08_no_default_quote.py
           python -m pyflakes mission_agent/mission_control/server.py tests/test_frank_ca_c01_c08_no_default_quote.py
           node --check mission_agent/mission_control/static/app.js
+      - name: Confirm old main violates the same C01 C08 assertions
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/ca-red-main" 4ac0b1612e8d238ab9189de066ea16a6f6e66455
+          cp tests/test_frank_ca_c01_c08_no_default_quote.py "$RUNNER_TEMP/ca-red-main/crypto-300-profit-mission/local-agent/tests/"
+          set +e
+          (
+            cd "$RUNNER_TEMP/ca-red-main/crypto-300-profit-mission/local-agent"
+            python -B -m pytest -q -p no:cacheprovider --tb=short tests/test_frank_ca_c01_c08_no_default_quote.py
+          ) > "$RUNNER_TEMP/ca-red.log" 2>&1
+          result=$?
+          set -e
+          if [ "$result" -eq 0 ]; then
+            echo "BASELINE_UNEXPECTED_PASS"
+            exit 1
+          fi
+          if ! grep -q "FAILED tests/test_frank_ca_c01_c08_no_default_quote.py" "$RUNNER_TEMP/ca-red.log"; then
+            echo "BASELINE_FAILED_WITHOUT_EXPECTED_ASSERTIONS"
+            tail -30 "$RUNNER_TEMP/ca-red.log"
+            exit 1
+          fi
+          echo "OLD_MAIN_EXPECTED_RED_PASS"
       - name: C01 C08 mandatory no-auto-quote red-green
         working-directory: crypto-300-profit-mission/local-agent
         run: |
