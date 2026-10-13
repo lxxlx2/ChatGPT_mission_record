@@ -6,6 +6,8 @@ on:
       - ".github/workflows/bsc-meme-address-model-v1-tests.yml"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p2.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p2.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_stage4.py"
@@ -41,6 +43,22 @@ jobs:
         run: |
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1_bulk16.py" -v
+      - name: P3 frozen 23-wallet original-signer semantic replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p3.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-model-v1-p3-actual.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          model = Path("crypto-300-profit-mission/research")
+          frozen = json.loads((model / "bsc-meme-address-model-v1-p3-signer-evidence-overlay-2026-10-13.json").read_text(encoding="utf-8"))
+          fresh = json.loads(Path("/tmp/bsc-model-v1-p3-actual.json").read_text(encoding="utf-8"))
+          assert frozen == fresh, "P3 provenance/source regression: STOP"
+          assert fresh["summary"]["original_hashes_pending"] == 55
+          assert fresh["summary"]["confirmed_owner_market_swaps"] == 0
+          assert all(x["recent_30d_true_owner_market_swap"] == "UNRESOLVED" for x in fresh["wallets"])
+          print("PASS P3 pinned 23-wallet 19-CA overlay / 71 original hashes / no false swap or PnL")
+          PY
       - name: Recompute 23x19 baseline deterministically
         run: |
           python3 -B "$MODEL_DIR/bsc_meme_address_model_v1.py" \
