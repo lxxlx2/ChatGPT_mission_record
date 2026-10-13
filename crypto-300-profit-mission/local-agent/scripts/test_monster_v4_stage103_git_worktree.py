@@ -36,7 +36,7 @@ class LocalGitUploaderIntegration(unittest.TestCase):
         (self.seed/"README.md").write_text("stage103 git test origin\n")
         self.review_target=(
             "crypto-300-profit-mission/local-agent/scripts/"
-            "monster_v4_stage91_forward_oos_replay_gate.py")
+            "monster_v4_stage105_capture_universe_core.py")
         original=self.seed/self.review_target
         original.parent.mkdir(parents=True,exist_ok=True)
         original.write_text("FROZEN_REVIEWED_SOURCE_FIXTURE=1\n")
