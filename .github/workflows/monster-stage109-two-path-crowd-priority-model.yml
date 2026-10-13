@@ -1,0 +1,81 @@
+name: Monster Stage109 Two Path Causal Crowd D1 Priority Model
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage109-two-path-crowd-priority-model.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage109_two_path_crowd_priority.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage100_historical_d1_priority_walkforward.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE109_TWO_PATH_CAUSAL_CROWD_PRIORITY_MODEL_PREREG_20261013.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  causal_305_dual_path_four_fold:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and verify causality, same-time exclusion and fixed train budgets
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage109_two_path_crowd_priority.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage109_two_path_crowd_priority.py --selftest
+      - name: Run both independent path models with strictly earlier-date training
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage109_two_path_crowd_priority.py --backtest --out /tmp/stage109-model-results.json
+          python -m json.tool /tmp/stage109-model-results.json > /dev/null
+          python -c 'import json; x=json.load(open("/tmp/stage109-model-results.json")); assert x["all_original_D1_preserved"]==305; assert len(x["complete_305_asof_crowd_cases"])==305; assert len(x["raw_holdout_case_scores"])==214; assert len(x["folds"])==4; assert x["no_monster_deployment"]=="NO_GO"; print("STAGE109_FULL305_CHRONOLOGICAL214_ALLCASES_PASS")'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage109-305-two-path-crowd-${{ matrix.os }}
+          path: /tmp/stage109-model-results.json
+          retention-days: 90
+
+  archive_staged_305_historical_model:
+    needs: causal_305_dual_path_four_fold
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Independent reproduce model source and all scored cases
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage109_two_path_crowd_priority.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage109_two_path_crowd_priority.py --backtest --out /tmp/stage109-model-results.json
+      - name: Preserve all historical attempts, missed opportunities, train-only model coefficients
+        run: |
+          set -eu
+          file=crypto-300-profit-mission/monster/evidence/monster_stage109_real305_two_path_causal_crowd_4fold.json
+          cp /tmp/stage109-model-results.json "$file"
+          git config user.name "monster-research-ci"
+          git config user.email "monster-research-ci@users.noreply.github.com"
+          git add "$file"
+          if git diff --cached --quiet; then
+            echo "STAGE109_IDENTICAL_REPLAY_ALREADY_ARCHIVED"
+            exit 0
+          fi
+          git commit -m "monster: preserve full Stage109 305 asof breadth, 4fold path-model scores and failures"
+          branch=research/monster-v4-local-discovery-20261010
+          git fetch origin "refs/heads/$branch"
+          git rebase FETCH_HEAD
+          git push origin "HEAD:refs/heads/$branch"
+          echo "STAGE109_FULL_COHORT_MODEL_EVIDENCE_GIT_PUSH_CONFIRMED"
