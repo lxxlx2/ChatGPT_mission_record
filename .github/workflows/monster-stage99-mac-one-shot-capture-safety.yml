@@ -6,11 +6,16 @@ on:
       - research/monster-v4-local-discovery-20261010
     paths:
       - .github/workflows/monster-stage99-mac-one-shot-capture-safety.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py
       - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage99_mac_launchd_one_shot.py
       - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage99_external_ai_review.py
       - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage102_claude_chat_review_gate.py
       - crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage99_mac_one_shot.py
       - crypto-300-profit-mission/monster/MONSTER_STAGE99_MAC_ONE_SHOT_GIT_CAPTURE_DESIGN_20261013.md
+      - crypto-300-profit-mission/monster/MONSTER_STAGE103_EXTERNAL_CLAUDE_CHAT_REVIEW_PROMPT_20261013.md
   workflow_dispatch:
 
 permissions:
@@ -30,6 +35,8 @@ jobs:
           python-version: '3.12'
       - name: Compile capture, mac scheduler and source-bound script
         run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage99_mac_launchd_one_shot.py
@@ -38,6 +45,7 @@ jobs:
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage99_mac_one_shot.py
       - name: Verify standalone Stage97 source integrity and Stage99 safe dry-run (NO NETWORK)
         run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py --selftest
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py --selftest
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage99_mac_launchd_one_shot.py selftest
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage99_external_ai_review.py selftest
