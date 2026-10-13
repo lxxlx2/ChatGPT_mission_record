@@ -24,3 +24,32 @@ Date: 2026-10-13 Asia/Bangkok
 6. If main changes after this recorded baseline, rebase/compare in a fresh CI and re-review actual integration SHA. Do not use frozen A02 CI as release authority.
 
 **Next engineering gate:** independent AI review at the exact draft PR head (including security and true time-range ownership). Then A03 read-only consumption and A04 economic event/data coverage, following design/TODO. Production trading remains NO_GO and release unauthorized.
+
+
+## 2026-10-13 Claude independent review and remediation continuation
+
+**Status: A02_REMEDIATION_IMPLEMENTED / EXACT_HEAD_CI_RECHECK_REQUIRED / SECOND_REVIEW_REQUIRED / NO_MERGE / NO_DEPLOY.** The earlier checkpoint above is historical evidence of the first implementation, not the latest acceptance result.
+
+### Reviewer scope and independently reproduced findings
+
+- Original A02 review target: PR #42 head `37db294926565069f506e7d61c2bcd0a2c879954`; review outcome `BLOCK`. Reviewer reported actual red tests and a separate **NOT_PUSHED** candidate patch; the reviewer patch commit IDs are not GitHub-verified and have not been represented as remote work.
+- Independent source inspection reconfirmed width-only base58 validation, silent v2 start-at-zero assignment, non-binding-scoped IDs, permissive schema version typing, and disabled zero-wallet divergence. These affect account identity and ledger attribution.
+- Source check corrected the review's CI-trigger claim: the **actual** PR workflow at `37db2949` triggers `push` on `dev/frank-ca-registry-a00-a02-20261013`; [run #38392055340](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38392055340) was itself a successful `push` event for that head. The asserted wrong branch trigger was not observed in the remote workflow.
+- The three readers have different purposes and semantics. `signals/registry.py` is production gating, `meme/registry.py` is existing approved history/runtime mapping, and the new `PersonRegistry` is strictly research-only. One overlapping Frank address in these sources is **not** proof of on-chain beneficial control.
+
+### Remediation made on the existing Draft PR branch
+
+- Product fix `c7c54690c01e8d1e81055ef47a0d4715342ddbb2`: require base58-decoded 32-byte Solana pubkey; reject invalid v2 missing `valid_from_slot`; use binding-specific `wallet_id` for v2 while retaining v1 key; strict integer-only schema; permit genuinely disabled wallet-empty placeholder persons; add source/approval/funding/controller **reference metadata only**, which cannot grant delivery, signal, trade or ownership verification.
+- Test fixture `38af418d9e913314ab957cd35466ae7f3a444fc1` explicitly supplies v2 `valid_from_slot`; old v1 data is still read unchanged.
+- New independent regression test file at `2c5c6ea29f30623a42b5bfa52dbedca4bb8a144d`: invalid pubkey widths, exact schema types, historical reassignments, disabled placeholders, reference metadata guard, and **cross-loader identity-only** consistency on the existing Frank registry. Comparison intentionally does not equate production `verified` with research `REGISTERED_UNVERIFIED`.
+- Workflow change `4d68fdb8c5cf8748c8d4ae16a580ef680d636250`: focused CI explicitly includes both the original A02 suite and review regressions on push. Exact final reviewed/CI SHA must be taken from GitHub after this documentation commit; earlier successes cannot be reused as final gate evidence.
+
+### Residual gates and next product-critical execution
+
+1. **A02 / E01 / E02:** Independent second review of the actual new SHA and exact-head CI. Still `NO_MERGE` until review closes all blocking identity-contract issues. Metadata references alone do not approve a wallet or validate balances.
+2. **A03 then A04/A05:** Keep the present Frank V1 registry/Reader/Loop unchanged while exposing `PersonRegistry + WalletFactsProvider` to isolated read-only research endpoints; maintain source-slot binding references and raw ATA/mint/owner/finality evidence in a sidecar. An optional binding source is never an inventory/PnL proof. R-1 canonical ownership-authority and R-2 real approval/evidence validation remain open for A03/A05; do not solve by replacing the live loader with the research loader.
+3. **F01/F02:** Once the research fact wiring is designed, deliver a truly filtered current follow-opportunity list and separately verified chain holdings with slot/source. The current main NO_BUY cards and unknown holdings remain unfixed by A02.
+4. **C01/C02/C07/C08 in parallel:** Single-mode CA query progress; verified mint identity; sourced project narrative; removal of **general CA-only** default $30 quote, without touching Frank V1 policy or delivery. Other holder-depth work follows the existing C03–C10 gates.
+5. **S01 separately:** Review historical PR33 residual delivery failure paths against the latest main and resolve only real defects in a separate safe PR.
+
+This remains an **engineering checkpoint**, not real Mac ownership verification, operational deployment or user approval. Production SQLite, personal wallet balances, Gmail, LaunchAgents and frozen Frank V1 strategy were not changed by this PR.
