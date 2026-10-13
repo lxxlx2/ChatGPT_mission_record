@@ -26,7 +26,8 @@ def _person(pid, *wallets, research=True, enabled=False):
         "research_enabled": research, "enabled": enabled,
         "wallets": [
             {"chain": "solana", "address": address,
-             "role": "PRIMARY" if i == 0 else "SECONDARY"}
+             "role": "PRIMARY" if i == 0 else "SECONDARY",
+             "valid_from_slot": 0}
             for i, address in enumerate(wallets)
         ],
     }
