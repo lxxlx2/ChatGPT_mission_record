@@ -1,6 +1,6 @@
 # $300-3000 Crypto Mission
 
-Updated: 2026-10-10
+Updated: 2026-10-13 (portfolio pointer/snapshot; module operational authority unchanged)
 Timezone: Asia/Bangkok
 
 Current mutable facts: [`MISSION_SPEC.md`](MISSION_SPEC.md), [`state/latest.md`](state/latest.md), [`portfolio/current.md`](portfolio/current.md), [`performance/current.md`](performance/current.md). Historical 2026-10-04 scope: [`STATUS_SCOPE_2026-10-04.md`](STATUS_SCOPE_2026-10-04.md).
@@ -36,18 +36,16 @@ Current capital / holdings:
 - [`portfolio/current.md`](portfolio/current.md)
 - [`state/latest.md`](state/latest.md)
 
-The latest **2026-10-10 read-only wallet refresh** directly confirmed:
-- Solana USDC **58.047629**, SOL **0.038163041**; approximate independently marked subtotal **~$62.31**.
-- Ethereum Credits owned **0**; Unichain UNICRED owned **0**.
-- Other checked EVM native assets individually < $1; full ERC-20/NFT completeness remains **UNRESOLVED** where provider responses were truncated or blocked.
-- Binance Earn **~$656.07** is the last **2026-10-09 user-screenshot value**, **not** a new private-account reading.
-- Bybit **~$353.42 UI** is separate personal rent/living cash and excluded from Mission capital.
-- GANG **500 USDC** committed escrow is distinct from liquid funds, final rights unresolved; JUMP refunded and closed.
-- Sui = 0 by user confirmation, not by a fresh Sui-native query.
+**Latest asset observation: 2026-10-13, 21:48–21:50 Asia/Bangkok** ([full canonical portfolio](portfolio/current.md), [current authority](state/latest.md)):
 
-**Permanent marked-asset display rule: value each separately identifiable asset; include only reliable USD values >= $1.00, exclude values < $1.00 without summing dust.** Unknown prices remain unresolved, not zero. See `MISSION_SPEC.md`.
+- **Binance investment reserve:** 745.85545285 USDC flexible Earn, screenshot estimated **~$746.73**. Cumulative screenshot interest is already contained in the balance.
+- **Canonical Solana direct finalized RPC:** 471.716759 USDC (approx **$472.22** using Alchemy USD reference), 0.012905142 SOL (approx **$1.39**), **0 GANG**. Token-2022 unpriced assets are preserved separately and excluded from marked NAV, not assumed to be zero.
+- **Observed Binance + direct Solana minimum marked reference:** **~$1,220.34**. Adding still-unverified Oct 12 OKX ETH 0.002403 and TRX 3.3847 quantities repriced with Oct 13 market data yields a **mixed-freshness, conditional ~$1,227.52 reference**, not complete NAV or investment profit. OKX Solana USDC/SOL are duplicates of canonical Solana, never double-counted.
+- **Bybit personal living/rent only:** 443.029905 USDC, screenshot **~$443.51**; entire Bybit account is **excluded** from investment subtotals.
+- **EVM native:** queried across multiple canonical-wallet networks, individually priced under $1, excluded by permanent threshold. Ethereum/Arbitrum/Optimism/Unichain ERC-20 Blockscout holdings returned no reliably priced >=$1 positions; Base/Polygon/BNB-chain and enhanced Solana/NFT/Sui inventory coverage remains incomplete/partly unavailable. Unknown prices/ownership do not become zero.
+- **GANG:** fully exited by user Oct 12, position realized loss **−96.210562 USDC before SOL gas** separately evidenced in [performance](performance/current.md). Original Mission start-set PnL and '$300 to $3,000' progress remain **UNRESOLVED**, and holdings reference movement is not income.
 
-The ~**$718.38** combination of fresh chain ~$62.31 plus historical Binance screenshot ~$656.07 is **mixed-freshness indicative invested assets**, not verified comprehensive NAV or Mission PnL. Mission performance attribution remains unresolved in `performance/current.md`.
+**Permanent display rule:** include each separately priced, identifiable asset only if >= $1; exclude individually marked dust < $1 without aggregation. No full-position deletion from transaction history, no inclusion of unpriced NFT asks or private token rights. Unchanged production trading `NO_GO`, no new Mission automation, no activation of deferred modules.
 
 ## Frank wallet evidence and dashboard redesign (2026-10-11)
 
