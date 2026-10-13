@@ -20,6 +20,9 @@ except ImportError:
     from scripts import monster_v4_stage91_forward_oos_replay_gate as freeze
 
 
+ORIGINAL_ASSERT_UNLOADED = module.assert_unloaded
+
+
 class OneShotIsolatedTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -193,18 +196,18 @@ class OneShotIsolatedTests(unittest.TestCase):
             return SimpleNamespace(returncode=rc,stdout=txt,stderr="")
         with patch.object(module.subprocess,"run",side_effect=[
                 response(0,absent),response(113)]):
-            self.assertTrue(module.assert_unloaded(self.window))
+            self.assertTrue(ORIGINAL_ASSERT_UNLOADED(self.window))
         with patch.object(module.subprocess,"run",side_effect=[
                 response(0,present),response(113)]):
             with self.assertRaisesRegex(RuntimeError,"STILL_LOADED"):
-                module.assert_unloaded(self.window)
+                ORIGINAL_ASSERT_UNLOADED(self.window)
         with patch.object(module.subprocess,"run",side_effect=[
                 response(0,absent),response(0,"still exists")]):
             with self.assertRaisesRegex(RuntimeError,"STILL_LOADED"):
-                module.assert_unloaded(self.window)
+                ORIGINAL_ASSERT_UNLOADED(self.window)
         with patch.object(module.subprocess,"run",side_effect=[response(1)]):
             with self.assertRaisesRegex(RuntimeError,"CANNOT_PROVE"):
-                module.assert_unloaded(self.window)
+                ORIGINAL_ASSERT_UNLOADED(self.window)
 
     def test_stage104_bootout_verification_failure_does_not_delete_plist(self):
         module.AGENTS.mkdir(parents=True,exist_ok=True)
