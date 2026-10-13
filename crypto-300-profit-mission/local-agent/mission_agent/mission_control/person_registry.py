@@ -15,6 +15,32 @@ import re
 _PERSON_ID = re.compile(r"[a-z][a-z0-9_-]{0,63}\Z")
 _SOL_ADDRESS = re.compile(r"[1-9A-HJ-NP-Za-km-z]{32,44}\Z")
 _ROLES = frozenset({"PRIMARY", "SECONDARY", "RESEARCH_ONLY"})
+_APPROVAL_STATUSES = frozenset({"UNREVIEWED", "RESEARCH_APPROVED"})
+_BASE58_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+
+
+def _solana_pubkey_32_bytes(address: str) -> bool:
+    """Validate the encoded public-key width, not just the base58 text length.
+
+    This is format validation only. Whether the address is a wallet owner,
+    mint, token account, or PDA must be established from chain evidence in A05.
+    """
+    if not _SOL_ADDRESS.fullmatch(address):
+        return False
+    value = 0
+    for character in address:
+        value = value * 58 + _BASE58_ALPHABET.index(character)
+    zeros = len(address) - len(address.lstrip("1"))
+    byte_count = (value.bit_length() + 7) // 8
+    return zeros + byte_count == 32
+
+
+def _optional_reference(value: object, field: str) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("INVALID_" + field)
+    return value.strip()
 
 
 @dataclass(frozen=True)
@@ -28,6 +54,10 @@ class WalletBinding:
     valid_to_slot: int | None
     ownership_evidence: str | None
     evidence_state: str
+    binding_source: str | None
+    approval_status: str
+    funding_source_evidence: str | None
+    controller_evidence: str | None
 
     @property
     def signal_allowed(self) -> bool:
@@ -90,7 +120,7 @@ class PersonRegistry:
 
     @classmethod
     def from_mapping(cls, data: object) -> "PersonRegistry":
-        if not isinstance(data, dict) or data.get("schema_version") not in (1, 2):
+        if not isinstance(data, dict) or type(data.get("schema_version")) is not int or data["schema_version"] not in (1, 2):
             raise ValueError("PERSON_REGISTRY_SCHEMA_UNSUPPORTED")
         version = data["schema_version"]
         source = data.get("persons")
@@ -126,7 +156,7 @@ class PersonRegistry:
             ):
                 raise ValueError("RESEARCH_REGISTRY_CANNOT_AUTHORIZE_LIVE_ACTIONS")
             wallets = raw.get("wallets")
-            if not isinstance(wallets, list) or not wallets:
+            if not isinstance(wallets, list) or (not wallets and enabled):
                 raise ValueError("PERSON_WALLETS_EMPTY")
             bindings: list[WalletBinding] = []
             for item in wallets:
@@ -134,7 +164,7 @@ class PersonRegistry:
                     raise ValueError("INVALID_WALLET")
                 chain = item.get("chain")
                 address = item.get("address")
-                if chain != "solana" or not isinstance(address, str) or not _SOL_ADDRESS.fullmatch(address):
+                if chain != "solana" or not isinstance(address, str) or not _solana_pubkey_32_bytes(address):
                     raise ValueError("UNSUPPORTED_OR_INVALID_WALLET")
                 role = item.get("role", "RESEARCH_ONLY")
                 if role not in _ROLES:
@@ -147,6 +177,8 @@ class PersonRegistry:
                     raise ValueError("WALLET_CANNOT_AUTHORIZE_LIVE_ACTIONS")
                 if version == 1 and any(k in item for k in ("valid_from_slot", "valid_to_slot")):
                     raise ValueError("TEMPORAL_BINDINGS_REQUIRE_V2")
+                if version == 2 and item.get("valid_from_slot") is None:
+                    raise ValueError("TEMPORAL_VALID_FROM_REQUIRED")
                 start = _slot(item.get("valid_from_slot"), "VALID_FROM_SLOT", default=0)
                 stop = _slot(item.get("valid_to_slot"), "VALID_TO_SLOT")
                 if stop is not None and stop <= start:
@@ -158,16 +190,27 @@ class PersonRegistry:
                     ):
                         raise ValueError("WALLET_BINDING_OVERLAP")
                 seen_ranges.setdefault(key, []).append((start, stop))
-                evidence = item.get("ownership_evidence")
-                if evidence is not None and (not isinstance(evidence, str) or not evidence.strip()):
-                    raise ValueError("INVALID_OWNERSHIP_EVIDENCE")
-                # A registry row is an identity assertion, never chain confirmation.
+                evidence = _optional_reference(item.get("ownership_evidence"), "OWNERSHIP_EVIDENCE")
+                binding_source = _optional_reference(item.get("source"), "BINDING_SOURCE")
+                funding_source = _optional_reference(item.get("funding_source_evidence"), "FUNDING_SOURCE_EVIDENCE")
+                controller = _optional_reference(item.get("controller_evidence"), "CONTROLLER_EVIDENCE")
+                approval_status = item.get("approval_status", "UNREVIEWED")
+                if type(approval_status) is not str or approval_status not in _APPROVAL_STATUSES:
+                    raise ValueError("INVALID_BINDING_APPROVAL_STATUS")
+                # A registered reference or research approval never proves beneficial
+                # control, on-chain inventory, cost basis, or live authorization.
                 evidence_state = "CLAIMED_WITH_REFERENCE" if evidence else "REGISTERED_UNVERIFIED"
+                binding_id = chain + ":" + address
+                if version == 2:
+                    binding_id += "@" + str(start)
                 bindings.append(WalletBinding(
-                    wallet_id=chain + ":" + address, person_id=pid, chain=chain,
+                    wallet_id=binding_id, person_id=pid, chain=chain,
                     address=address, role=role, valid_from_slot=start,
                     valid_to_slot=stop, ownership_evidence=evidence,
-                    evidence_state=evidence_state,
+                    evidence_state=evidence_state, binding_source=binding_source,
+                    approval_status=approval_status,
+                    funding_source_evidence=funding_source,
+                    controller_evidence=controller,
                 ))
             persons.append(PersonRecord(
                 person_id=pid, display_name=display.strip(),
