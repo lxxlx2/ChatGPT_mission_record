@@ -9,14 +9,14 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 import hashlib
 import json
 from pathlib import Path
 import statistics
 
-BASE = Path(__file__).resolve().parents[2]
+BASE = Path(__file__).resolve().parents[1]
 SOURCE = (BASE / "monster" / "evidence" /
           "monster_stage101_all305_real1m_historic_exit_paths.jsonl")
 PIN_BLOB = "19dfc89ab10aaf23f068bee924cddc85d5bcc3e1"
@@ -70,8 +70,7 @@ def read_rows(path: Path = SOURCE) -> list[dict]:
     for x in rows:
         d = datetime.fromisoformat(x["D1_FIRST_UTC"].replace("Z", "+00:00"))
         start = datetime.fromisoformat(x["date"] + "T06:00:00+00:00")
-        if d.tzinfo is None or not start <= d < start.replace(
-                year=start.year) + __import__("datetime").timedelta(days=7):
+        if d.tzinfo is None or not start <= d < start + timedelta(days=7):
             raise ValueError("STAGE108_OUTSIDE_FROZEN_SEVEN_DAYS")
         if x["original_fixed_24h"].get("elapsed_minutes") != 1440:
             raise ValueError("STAGE108_BASELINE_EXIT_NOT_24H")
