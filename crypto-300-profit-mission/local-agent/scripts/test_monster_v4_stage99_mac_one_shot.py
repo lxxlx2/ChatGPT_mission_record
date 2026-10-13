@@ -89,7 +89,7 @@ class OneShotIsolatedTests(unittest.TestCase):
         now=self.start-20*60000
         with patch.object(module.sys,"platform","darwin"), \
              patch.object(module,"read_frank_launchd_labels",return_value=["frank.daemon"]), \
-             patch.object(module,"isolated_checkout_preflight_local"), \
+             patch.object(module,"isolated_checkout_preflight"), \
              patch.object(module,"git"), \
              patch.object(module,"launchctl",return_value=0) as launch, \
              patch.object(module.shutil,"which",return_value="/bin/launchctl"):
@@ -229,7 +229,7 @@ class OneShotIsolatedTests(unittest.TestCase):
                      RuntimeError("STAGE103_USER_INSTALL_AUTHORIZATION_NOT_GIVEN")))) as blocked_gate, \
              patch.object(module,"isolated_checkout_preflight") as checkout, \
              patch.object(module,"launchctl") as launch:
-            with self.assertRaisesRegex(RuntimeError,"REVIEW_REQUIRED"):
+            with self.assertRaisesRegex(RuntimeError,"AUTHORIZATION_NOT_GIVEN"):
                 module.install(now=self.start-15*60000,dry_run=False)
             blocked_gate.return_value.validate_authorization.assert_called_once()
             checkout.assert_not_called()
