@@ -192,9 +192,16 @@ def test_sidecar_immutable_import_and_readback(tmp_path):
         assert store.record_transaction(normalized)
         assert store.record_transaction(normalized) is False
         assert store.count("TX") == 1
-        conflict = {**normalized, "fees_lamports": 7000}
+        tampered = {**normalized, "fees_lamports": 7000}
+        with pytest.raises(ValueError, match="TRANSACTION_HASH_MISMATCH"):
+            store.record_transaction(tampered)
+        changed_rpc = tx([], [balances(0, OWNER_A, MINT, "2")])
+        changed_rpc["meta"]["fee"] = 7000
+        valid_conflict = normalize_transaction(changed_rpc,
+                                              tracked_wallets={OWNER_A})
         with pytest.raises(ValueError, match="IMMUTABLE_EVIDENCE_CONFLICT"):
-            store.record_transaction(conflict)
+            store.record_transaction(valid_conflict)
+        assert store.count("TX") == 1
     finally:
         store.close()
 
