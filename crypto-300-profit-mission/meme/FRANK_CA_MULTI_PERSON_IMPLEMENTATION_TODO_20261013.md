@@ -7,6 +7,16 @@
 - 原始需求：`ca-analysis-unified-accuracy-acceptance.md`、`frank-wallet-monitor-dashboard-v2-design-2026-10-11.md`、`WALLET_CLUSTER_ANALYSIS_SPEC.md`、`MISSION_MEME_CURRENT_STATUS_2026-10-07.md`、`../MISSION_SPEC.md`。
 - **本清单不是任务已完成证明。** 每条 `[ ]` 只有证据齐全才能转 `[x]`，记录实际实现 SHA、测试运行、独立审查、Mac 证据，不能以“PR 合并/CI PASS”替代真实业务验收。
 
+## 2026-10-13 首次实际开发进度（不是发布验收）
+
+- 实施分支：`dev/frank-ca-registry-a00-a02-20261013`
+- [Draft PR #42](https://github.com/lxxlx2/ChatGPT_mission_record/pull/42)，固定提交 `37db294926565069f506e7d61c2bcd0a2c879954`；未合并、未部署。
+- A00：基线与关联 PR 差异已**记录**，见 `meme/FRANK_CA_A00_CURRENT_MAIN_BASELINE_20261013.md`（在 PR #42 分支）；真实 Mac 当前指纹未在本轮读取。
+- A01：12 项截图问题已转成回归输入清单，见 `meme/evidence/frank-ca-a01-screenshot-regression-fixtures-20261013.json`（在 PR #42 分支）；**F/C 的真正旧代码红灯、修复后绿灯测试仍未执行**，保持未完成。
+- A02：研究侧 Registry v1 兼容/v2 预留代码及 13 项测试已提交；[CI #38391776145](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38391776145) **13 targeted + 1,440 complete PASS**。代码尚未独立 AI Review，也未接入任何生产服务，因此 A02 仍为 `CODE_READY_REVIEW_PENDING`，不能标最终 [x]。
+- A03 及后续：`NOT_STARTED`。生产 Frank V1/Loop/Gmail/SQLite 和 Mac 均未改变。下一关独立 Review，之后继续 A03/A04 与 F01/C01，严格按本清单。
+- 本分支仅更新 TODO 进度链接；实际代码在 PR #42 分支。**旧 main SHA 的测试不能作为未来新 main 发布依据。**
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
