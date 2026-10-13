@@ -49,3 +49,6 @@ Oct13 TGE state/current.md last confirmed partial terminal at 08:02 BKK; later 1
 
 ## Production acceptance NOT YET PASSED
 Future real unattended Stock 07:40 and Crypto 09:20 runs must create actual Gmail Sent+readback and identical Git archive. Future at least 4 documented TGE hourly runs must show fair coverage of groups and honest SOURCE_GAP without repeated permanent shard1. No newly scheduled automation or modified RRULE. This audit confirms backfill completion, NOT unattended execution reliability.
+
+## TGE fairness dry-run, NOT a live scheduling result
+Eight hypothetical consecutive hours with all source reads partial: prior frozen-oldest-complete logic can repeatedly choose [1,1,1,1,1,1,1,1]; corrected evidence-unavailable fallback is local hour%4 [0,1,2,3,0,1,2,3]. Each shard attempted twice; basic fairness PASS, with actual verified complete coverage still 0. Live next-four-hour execution and Gmail automation stability remain NOT_YET_VERIFIED.
