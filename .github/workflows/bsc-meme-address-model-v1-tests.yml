@@ -8,6 +8,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p2.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3_swap.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3_batch.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3_batch.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3_swap.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1.py"
@@ -101,6 +103,28 @@ jobs:
                       "0xa83b73f5644cde337b61da79589f10ea15548811"]
           assert all(r["realized_PnL"] == "UNRESOLVED" for r in out["wallets"])
           print("PASS one 2026-10-12 A83B/TST real owner-signed V3 pool swap; 22 wallet states unknown; no profit/followability claim")
+          PY
+      - name: P3 37 frozen owner tx pool-route and receipt causal gates
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p3_batch.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p3-batch37.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path("/tmp/bsc-p3-batch37.json").read_text(encoding="utf-8"))
+          s = d["summary"]
+          assert (s["wallets"],s["candidate_owner_tx_excluding_prior"],
+                  s["new_confirmed_owner_swap_txs"],s["prior_confirmed_owner_swap_txs"],
+                  s["total_confirmed_owner_swap_txs"]) == (23,37,19,1,20)
+          assert (s["pool_swap_seen_but_receipt_status_unverified"],
+                  s["direct_pool_swap_not_found_routing_unknown"],
+                  s["historical_verified_pools"]) == (4,14,11)
+          assert (s["wallets_with_confirmed_frozen_CA_recent_swap"],
+                  s["wallets_without_confirmed_swap_still_unknown"]) == (7,16)
+          assert all(w["lifetime_pnl"] == "UNRESOLVED" and w["follower_alpha"] == "UNRESOLVED"
+                     for w in d["wallets"])
+          assert s["production"] == "NO_GO"
+          print("PASS P3 37-batch: 19 proven swap + 4 receipt-unknown + 14 route-unknown; total 20 with prior, 7 wallets, NO_GO")
           PY
       - name: Recompute 23x19 baseline deterministically
         run: |
