@@ -220,7 +220,8 @@ def test_dashboard_static_contains_signal_and_cluster_tabs():
     assert 'id="cluster-narrative"' in html
     assert 'id="review-activity-panel"' in html
     assert 'id="review-activity"' in html
-    assert '<option value="quick" selected>' in html
+    assert 'id="cluster-preset"' not in html
+    assert "统一研究入口" in html
 
 
 class NoRunExecutor:
