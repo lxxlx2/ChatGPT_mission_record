@@ -1,0 +1,78 @@
+name: Monster Stage111 Read-Only 519 Source Census
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage111-full519-source-census.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_source_census.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE111_FULL519_SOURCE_CENSUS_AND_CAUSAL_ENGINE_CONTRACT_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  full519_census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and verify SHA, UTC censor semantics and duplicate receipts
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_source_census.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_source_census.py --selftest
+      - name: Run immutable all-519 source census with fail-closed source locks
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_source_census.py --out /tmp/monster_stage111_all519_source_census.json
+          python - <<'PY'
+          import json
+          p=json.load(open("/tmp/monster_stage111_all519_source_census.json"))
+          assert p["D0_original_total"]==519
+          assert p["original_D1_total"]==305
+          assert p["D0_only_total"]==214
+          assert p["original_D0_early_2x_ge5min_EVAL_ONLY"]==28
+          assert p["original_D1_early_2x_ge5min_EVAL_ONLY"]==27
+          assert len(p["rows"])==519
+          assert p["monster_deployment"]=="NO_GO"
+          assert p["all_519_seven_day_continuous_minute_sources_replayed"] is False
+          print("STAGE111_IMMUTABLE_519_CENSUS_SOURCE_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage111-source-census-evidence
+          path: /tmp/monster_stage111_all519_source_census.json
+          retention-days: 60
+      - name: Archive machine evidence in existing PR branch, no live side effects
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage111_all519_source_census.json
+          cp /tmp/monster_stage111_all519_source_census.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE111_CENSUS_ARCHIVE_UP_TO_DATE; exit 0; fi
+          git commit -m "monster: archive Stage111 original519 source coverage and censorship inventory"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              echo STAGE111_FAIL_CLOSED_REBASE_CONFLICT
+              exit 1
+            fi
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo STAGE111_SOURCE_CENSUS_GIT_PUSH_CONFIRMED
+              exit 0
+            fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE111_SOURCE_RESULTS_NOT_PERSISTED
+          exit 1
