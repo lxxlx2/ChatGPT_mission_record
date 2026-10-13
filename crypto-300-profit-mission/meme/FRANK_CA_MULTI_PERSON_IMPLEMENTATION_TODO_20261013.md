@@ -23,7 +23,7 @@
 - 重新核对原 PR 源码确认关键数据契约缺陷：base58 地址缺少 32-byte 解码、v2 没有明确起始 Slot、历史重归属共用同一个 `wallet_id`、schema 类型模糊、disabled 空钱包占位兼容。
 - 2026-10-13 在**同一 Draft PR #42 开发分支**实际提交整改：`c7c54690`（产品），`38af418d`（旧夹具），`2c5c6ea2`（新增独立回归），`4d68fdb8`（CI 明确纳入新回归），`22f7b8f7`（原 checkpoint 审查与主线说明）。
 - [GitHub Actions #38413246796](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38413246796) 在精确 `2c5c6ea29f30623a42b5bfa52dbedca4bb8a144d` 上实际通过原专项 13 项、完整 1,455 项。**这是中间提交的成功，不能宣称最终 PR 头通过**；以最终 HEAD 的 CI 为准。
-- A02 仍是 `CODE_REMEDIATED / EXACT_HEAD_CI_PENDING / INDEPENDENT_REREVIEW_REQUIRED`，**保持 [ ]**，没有合并、Mac 部署、Gmail、生产数据修改。
+- A02 当前为 `CODE_REMEDIATED / EXACT_HEAD_CI_PASS / INDEPENDENT_REREVIEW_REQUIRED`，**保持 [ ]**，没有合并、Mac 部署、Gmail、生产数据修改。最终 PR 代码和 checkpoint HEAD `22f7b8f760fea62f1f713d5aaccb9391cae1a26a` 对应 [Actions #38413672331](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38413672331)：28 项专项 PASS，完整 1,455 项 PASS，pyflakes/compileall/Node 均 PASS。
 - R-1：现存 `signals/registry.py`、`meme/registry.py`、研究 `PersonRegistry` 的授权/验证语义仍必须隔离；新增测试只对齐当前注册表的钱包→人物标识，绝不能提升 ownership status。
 - R-2：v2 现在允许显式登记绑定来源、研究批准状态和 funder/controller **证据引用**，但还没有 A05 的实际链上账户归属/受益控制证明。研究批准也不等于可聚合已核实资产。
 - Claude 认为 CI `push` 触发错分支的结论与远端 `37db2949` 源文件不符，已按实际工作流更正。其他高优先级实质缺陷按原审查处理。
