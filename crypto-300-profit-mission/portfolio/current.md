@@ -181,9 +181,9 @@ These entries preserve unresolved economic rights/cost bases and are not added t
 | Figure | Echo private equity / SPV rights | **$1,000** | illiquid private-market right | cost basis only |
 | 1X | Echo private equity / SPV rights | **$2,000** | illiquid private-market right | cost basis only |
 | RepublicX / rTTOK / ByteDance economic exposure | 5,000 contingent payout notes, $1 principal each | **$5,000** | illiquid contractual note exposure | not direct ByteDance stock ownership; cost basis only |
-| Surf Limited Edition NFT #691 | 1 NFT, pending delivery / airdrop | **$228** | delivery not independently verified | historical acquisition cost only |
+| Surf PRO Annual #691 / Genesis SurfBoard claim | 1 free NFT entitlement (PRO annual member; delivery/claim pending) | **$228** | verified historical PRO annual subscription expense; NFT incremental purchase fee $0 under 2026-10-13 announced mechanics | not an already minted/marked NFT; do not double count service expense as separately purchased NFT |
 
-Known dollar-denominated historical acquisition cost above: **$16,628** (the historical $500 GANG commitment has become an actual wallet holding and refund recorded in the current section), plus **100 SOL** Block Stranding historical cost. JUMP is no longer included because the application was rejected and the 1,000 USDC deposit was refunded.
+Known dollar-denominated historical acquisition/outlay reference above: **$16,628** (including the **$228 Surf PRO annual subscription service expense**, which earned one **free** Genesis NFT claim entitlement under the October 13 rules, **not** a standalone $228 NFT purchase; if excluding that service expense from the same subtotal, the other historical outlays equal **$16,400**). The historical $500 GANG commitment has become an actual wallet holding and refund recorded in the current section; plus **100 SOL** Block Stranding historical cost. **No change to the liquid-NAV calculation or user's cash-transfer history.** JUMP is no longer included because the application was rejected and the 1,000 USDC deposit was refunded.
 
 ### Points / rewards / potential token rights
 
