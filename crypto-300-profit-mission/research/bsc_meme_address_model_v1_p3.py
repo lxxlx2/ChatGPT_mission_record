@@ -187,6 +187,11 @@ def build_overlay(docs: list[dict], refs: list[dict]) -> dict:
         "confirmed_owner_market_swaps": 0,
         "production": "NO_GO",
     }
+    if len(signers) == 10:
+        unreadable = sum(not (r["original_tx_read_state"] == "ORIGINAL_TX_PARSED"
+                              and r["full_response"] is True) for r in parsed.values())
+        summary["original_hashes_parsed"] = len(parsed) - unreadable
+        summary["original_hashes_unreadable"] = unreadable
     return {
         "schema": "BSC_MEME_ADDRESS_MODEL_V1_P3_23_WALLET_SIGNED_ACTIVITY_EVIDENCE_OVERLAY",
         "status": "P3_IN_PROGRESS_NOT_ACTIVE_TRADER_RANKING",
