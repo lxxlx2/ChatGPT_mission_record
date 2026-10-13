@@ -39,10 +39,22 @@
 
 P4 统一机读横向矩阵：`bsc-meme-address-model-v1-p4-p2p3-readiness-matrix-2026-10-13.json`。全部 23 钱包留行、P2 50 已选原样保存；仅 4 个有“最近已核实真实 Swap + ≥2 个重大 exact CA 历史样本正向”的**研究优先**：2ADF、8E6B、ADFF、DDAC。它们不满足最终真实归因已实现盈利、合格重大机会、复制策略或盈利排行门禁。
 
+## P4 报价资产身份直接链上核实（历史区块）
+
+在 11 个原始池子中，部分并非 WBNB 直接报价。复核最早相关块的两个池组成代币地址，再对实际 quote CA 在同一历史区块查询 `symbol()` 和 `decimals()`：
+
+| 原目标代币 | 交易池 | 已读取 quote CA / symbol | decimals |
+| --- | --- | --- | ---: |
+| 牛来 | `0x595d7097…9423` | `0x205812cdbed920aff76c6580abd681a46d11efc7`，QQQB | 18 |
+| MARSCOIN | `0x94f3ed36…d8f1` | `0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1`，SPCXB | 18 |
+| 牛来 | `0xe5ae3183…126` | `0x55d398326f99059ff775485246999027b3197955`，USDT | 18 |
+
+机读 `bsc-meme-address-model-v1-p4-nonnative-quote-token-identities-2026-10-13.json` 同时归档原始 ABI 返回值和链上区块。**QQQB/SPCXB 的名称和 symbol 不能换算成美元，更不能把原钱包的 BNB 区块变化等价于这个非原生报价交易的实现利润**。需要真正的历史报价和成交结算路径后才能做 P4/P5 资金经济比较。
+
 ## 已验收内容、尚欠门禁
 
 - 原研究 Draft PR #40、P0/P1、P2 历史来源仍保留。**独立其他 AI Review 尚未完成**。
-- 固定代码及 P2、P3、P4 横向矩阵测试：GitHub Actions `https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38391517290`：**91 + 9 = 100 项离线 unit regressions PASS**，P3 37 笔回放以及 P4 23 行 Git JSON 精确对照同时 PASS。未测试真实 Mac 上的只读部署，也未接入任何正式运行时。
+- 固定代码及 P2、P3、P4 横向矩阵测试：GitHub Actions `https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38392188833`：**93 + 9 = 102 项离线 unit regressions PASS**，P3 37 笔回放以及 P4 23 行 Git JSON 精确对照同时 PASS。未测试真实 Mac 上的只读部署，也未接入任何正式运行时。
 - P4 下一主线：对 4 候选先核查真实资金来源、关联/同控证据的等级、首次可交易时刻和历史池深度；必须先冻结重大市场机会 U 的可执行起点，才允许按资格计分参与/漏买。保留对应负面与不活跃样本，16 个 UNKNOWN 不得从统计分母中静默消失。
 - 对 4 个 receipt 状态不可读、14 个复杂路径可另列审计队列并按研究优先级处理。避免被少量边界限制卡住整个 P4。
 - P5 使用第三方首次可观测信号起点及严格历史 1/5/15 分钟下单和卖出路径，必须包含流动性、gas、手续费、税费、不能成交、错过起点、账户余额与多钱包关系。不使用未来价格和结果调参数。
