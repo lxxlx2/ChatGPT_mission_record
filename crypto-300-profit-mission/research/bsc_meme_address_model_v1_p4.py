@@ -34,7 +34,7 @@ def load_checked(root: Path) -> tuple[dict, dict]:
 
 
 def build_matrix(p2: dict, p3: dict) -> dict:
-    require(p2["schema"] == "BSC_MEME_ADDRESS_MODEL_V1_P2_CROSS_WALLET_ECONOMIC_EVIDENCE_COMPARISON",
+    require(p2["schema"] == "BSC_MEME_ADDRESS_MODEL_V1_P2_CROSS_WALLET_ECONOMIC_EVIDENCE_MATRIX",
             "unexpected P2 schema")
     require(p2["production"] == p3["production"] == "NO_GO",
             "prohibited production stage")
