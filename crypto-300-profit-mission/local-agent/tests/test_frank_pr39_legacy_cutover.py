@@ -192,6 +192,10 @@ class FakeLegacyMac:
         self.holds.add(key)
         self.events.append(('hold', key))
 
+    def release_hold(self, key):
+        self.holds.discard(key)
+        self.events.append(('release_hold', key))
+
     def stop(self, key):
         if self.before_stop is not None:
             self.before_stop(key)
@@ -531,6 +535,43 @@ def test_queue_becoming_active_while_frozen_resumes_the_untouched_loop(tmp_path,
     assert ('signal', world.loop_pid, int(signal.SIGCONT)) in world.mac.events
     assert not any(e[0] in ('stop', 'start') for e in world.mac.events)
     assert journal_of(release_dir)['phase'] == r.LEGACY_ABORTED
+
+
+def test_partial_hold_failure_releases_prior_holds_and_resumes_verified_loop(tmp_path, monkeypatch):
+    world = build_world(tmp_path, monkeypatch)
+    original_hold = world.mac.hold
+    def fail_second_hold(key):
+        if key == 'dashboard':
+            raise RuntimeError('DASHBOARD_HOLD_FAILED')
+        return original_hold(key)
+    monkeypatch.setattr(world.mac, 'hold', fail_second_hold)
+    release_dir = tmp_path / 'release'
+    result = apply(world, release_dir)
+    assert result['status'] == r.LEGACY_ABORTED
+    assert world.mac.holds == set(), 'partially disabled launch agents must be restored'
+    assert ('release_hold', 'loop') in world.mac.events
+    assert ('signal', world.loop_pid, int(signal.SIGCONT)) in world.mac.events
+    assert world.mac.procs[world.loop_pid]['state'] == 'running'
+    assert journal_of(release_dir)['phase'] == r.LEGACY_ABORTED
+    assert not any(evt[0] == 'start' for evt in world.mac.events)
+
+
+def test_partial_hold_restore_failure_is_manual_not_false_abort(tmp_path, monkeypatch):
+    world = build_world(tmp_path, monkeypatch)
+    original_hold = world.mac.hold
+    def fail_second_hold(key):
+        if key == 'dashboard':
+            raise RuntimeError('DASHBOARD_HOLD_FAILED')
+        return original_hold(key)
+    monkeypatch.setattr(world.mac, 'hold', fail_second_hold)
+    monkeypatch.setattr(world.mac, 'release_hold',
+                        lambda key: (_ for _ in ()).throw(RuntimeError('ENABLE_FAILED')))
+    release_dir = tmp_path / 'release'
+    with pytest.raises(RuntimeError, match='ENABLE_FAILED'):
+        apply(world, release_dir)
+    assert journal_of(release_dir)['phase'] == r.LEGACY_MANUAL
+    assert world.mac.loaded[world.mac.labels['loop']] is None
+    assert not any(evt[0] == 'start' for evt in world.mac.events)
 
 
 def test_failure_after_stop_never_restarts_the_legacy_loop(tmp_path, monkeypatch):
