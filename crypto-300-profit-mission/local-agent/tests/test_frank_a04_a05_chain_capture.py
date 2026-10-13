@@ -1,6 +1,5 @@
 """A04/A05 dual-token-program source, immutable sidecar and token-leg tests."""
 import copy
-import json
 
 import pytest
 
