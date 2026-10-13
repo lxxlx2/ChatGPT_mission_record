@@ -15,9 +15,9 @@ import time
 import urllib.request
 
 try:
-    import monster_v4_stage91_forward_oos_replay_gate as freeze
+    import monster_v4_stage105_capture_universe_core as freeze
 except ImportError:
-    from scripts import monster_v4_stage91_forward_oos_replay_gate as freeze
+    from scripts import monster_v4_stage105_capture_universe_core as freeze
 
 TIME_URL = "https://fapi.binance.com/fapi/v1/time"
 EXCHANGE_URL = freeze.EXCHANGE_INFO_URL
