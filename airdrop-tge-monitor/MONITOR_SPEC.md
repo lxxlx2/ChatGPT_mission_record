@@ -141,3 +141,6 @@ Old/expired/undated material is silent unless a current Tier A/B source proves a
 Generic company financing/valuation news is silent unless a mapped user-facing deal source proves that the user's own allocation, terms, fees, conversion, transfer/redemption, settlement or distribution changed.
 
 Every candidate audit must record the ACTION_GATE required fields and a rejection reason when suppressed.
+
+## 2026-10-13 fairness vs proof correction
+The default hourly executed shard is local hour % 4. A stale override is allowed at most once in four consecutive documented runs, based on the OLDEST genuinely ATTEMPTED shard, not the oldest FULLY VERIFIED shard; never retry one incomplete shard for three or more consecutive runs while another shard lacks a current attempt. Preserve separate `last_meaningful_attempt_at` and `last_verified_complete_at` and keep partial coverage marked PARTIAL. Failure to persist terminal final is not a successful attempt; use regular hour % 4 if state cannot be reconstructed. See the latest override in AUTOMATION_RUNTIME.md. Keep hourly urgent set, current monitor scope, official ACTION_GATE and HH:00 schedule unchanged.
