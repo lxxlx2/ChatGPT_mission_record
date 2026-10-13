@@ -1,0 +1,80 @@
+name: Monster Stage108 D1 Dual Path Historical Economic Model
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - .github/workflows/monster-stage108-d1-dual-path-economic-model.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage108_path_exit_replay.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE108_DUAL_PATH_EXIT_AND_G3_BASELINE_PREREG_20261013.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  exact305_full_source_replay:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Frozen path policy selftest and source code compilation
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage108_path_exit_replay.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage108_path_exit_replay.py --selftest
+      - name: Recompute ALL 305 SHA pinned original D1 price-only paths and full 42-day load
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage108_path_exit_replay.py --backtest --out /tmp/monster-stage108-results.json
+          python -m json.tool /tmp/monster-stage108-results.json >/dev/null
+          python -c 'import json; x=json.load(open("/tmp/monster-stage108-results.json")); assert x["source_original305"]==305; assert x["path_census"]["DIRECT_AT_FIRST_D0"]==164; assert x["path_census"]["REIGNITION_AFTER_D0"]==141; assert len(x["complete_305_case_results"])==305; assert len(x["unchanged_D1_attention_load"]["daily"])==42; assert x["model_deployment"]=="NO_GO"; print("STAGE108_FULL305_42DAY_ALLCASES_LOCKED_PASS")'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage108-305-dual-path-${{ matrix.os }}
+          path: /tmp/monster-stage108-results.json
+          retention-days: 90
+
+  archive_frozen_historical_result:
+    needs: exact305_full_source_replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recompute once independently with exact approved inputs
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage108_path_exit_replay.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage108_path_exit_replay.py --backtest --out /tmp/monster-stage108-results.json
+      - name: Persist all 305 case evidence, don't silently discard rejected result
+        run: |
+          set -eu
+          target=crypto-300-profit-mission/monster/evidence/monster_stage108_real305_dual_path_exit_comparison.json
+          cp /tmp/monster-stage108-results.json "$target"
+          git config user.name "monster-research-ci"
+          git config user.email "monster-research-ci@users.noreply.github.com"
+          git add "$target"
+          if git diff --cached --quiet; then
+            echo "STAGE108_ARCHIVED_RESULT_IDENTICAL"
+            exit 0
+          fi
+          git commit -m "monster: archive Stage108 all305 source-locked dual D1 path economic backtest and rejected controls"
+          branch=research/monster-v4-local-discovery-20261010
+          git fetch origin "refs/heads/$branch"
+          git rebase FETCH_HEAD
+          git push origin "HEAD:refs/heads/$branch"
+          echo "STAGE108_REAL305_GIT_ARCHIVE_CONFIRMED"
