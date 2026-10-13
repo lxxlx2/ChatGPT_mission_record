@@ -1,0 +1,45 @@
+name: Frank PR39 legacy cutover safety
+on:
+  push:
+    branches:
+      - review/frank-pr39-controlled-release-20261013
+  pull_request:
+    paths:
+      - crypto-300-profit-mission/local-agent/scripts/frank_pr39_controlled_release.py
+      - crypto-300-profit-mission/local-agent/scripts/frank_pr39_forward_recovery.py
+      - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_legacy_cutover.py
+      - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_forward_recovery.py
+      - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_controlled_release.py
+      - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_immutable_release.py
+      - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_runtime_diagnostics.py
+      - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_predeploy_readonly.py
+      - .github/workflows/frank-pr39-legacy-cutover.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  legacy-cutover-and-full-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned development dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+      - name: Legacy cutover, PR39 release, immutable and predeploy suites
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_pr39_legacy_cutover.py tests/test_frank_pr39_forward_recovery.py tests/test_frank_pr39_controlled_release.py tests/test_frank_pr39_immutable_release.py tests/test_frank_pr39_runtime_diagnostics.py tests/test_frank_pr39_predeploy_readonly.py
+      - name: Full regression with real Git replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests
