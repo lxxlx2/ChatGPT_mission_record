@@ -10,6 +10,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3_swap.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3_batch.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_funding.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_funding.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3_batch.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3_swap.py"
@@ -150,6 +152,26 @@ jobs:
           assert s["full_2026_economic_PnL_proven_wallets"] == s["qualified_major_misses_proven"] == 0
           assert not s["executable_follower_alpha_proven"] and s["production"] == "NO_GO"
           print("PASS P4 23 complete P2/P3 comparator rows: 4 research priority, 3 active economics incomplete, 16 unknown, no traded PnL or follower alpha")
+          PY
+      - name: P4 pinned 4-wallet capital and native funding probe replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_funding.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-model-v1-p4-funding.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path("/tmp/bsc-model-v1-p4-funding.json").read_text(encoding="utf-8"))
+          s = d["summary"]
+          assert (s["wallets"], s["funding_probed_wallets"], s["other_wallets_unprobed"]) == (23,4,19)
+          assert (s["native_external_inbound_windows_fully_paginated"],
+                  s["selected_quote_windows_fully_paginated"],s["selected_quote_windows_partial"]) == (4,3,1)
+          assert (s["native_external_inbound_records"], s["known_selected_ERC20_inbound_records"]) == (20,28)
+          assert s["control_attribution_proven"] == 0 and s["qualified_major_opportunity_misses"] == "UNRESOLVED"
+          assert s["production"] == "NO_GO"
+          assert len(d["source_manifest"]) == 9
+          assert all(x["common_controller"] == x["qualified_missed_opportunity"] == "UNRESOLVED"
+                     for x in d["wallets"])
+          print("PASS P4 funding: 4 BNB/quote historical snapshots + 4 complete native inbound windows, DDAC quote partial, 23 retained, NO_GO")
           PY
       - name: Recompute 23x19 baseline deterministically
         run: |
