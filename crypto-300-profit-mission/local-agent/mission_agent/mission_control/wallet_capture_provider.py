@@ -27,7 +27,7 @@ class CapturedWalletFactsProvider:
                     continue
                 return {
                     "chain": chain, "wallet": wallet, "mint": mint,
-                    "slot": max_slot, "slot_min": row["slot_min"],
+                    "slot": row["slot_max"], "slot_min": row["slot_min"],
                     "slot_max": row["slot_max"], "commitment": "finalized",
                     "raw_amount": row["raw_amount_observed_sum"],
                     "decimals": row["decimals"],
