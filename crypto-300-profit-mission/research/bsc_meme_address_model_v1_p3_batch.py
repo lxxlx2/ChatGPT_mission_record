@@ -161,8 +161,7 @@ def build_evidence(overlay: dict, evidence: dict, previous: dict, refs: list[dic
             require(len(match) == 1, "Swap event not directly linked to owner token movement")
             direction = "BUY" if match[0]["to"] == q["wallet"] else "SELL"
             require(int(match[0]["raw"]) > 0, "nonpositive token movement")
-            require(log["pool"] in pool_plan["pool_queries"][0]["pool"] or
-                    log["pool"] in {v["pool"] for v in pool_plan["pool_queries"]},
+            require(log["pool"] in {v["pool"] for v in pool_plan["pool_queries"]},
                     "pool absent from precommitted historic queries")
             confirmed.append({"pool": log["pool"], "token_CA": match[0]["ca"],
                               "direction": direction, "swap_topic0": log["topic0"],
