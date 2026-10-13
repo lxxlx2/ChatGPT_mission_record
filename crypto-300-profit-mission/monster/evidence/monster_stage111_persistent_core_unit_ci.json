@@ -1,0 +1,10 @@
+{
+  "deployment": "NO_GO",
+  "macos_causal_selftest": "NOT_VERIFIED_BY_THIS_JOB",
+  "model_review": "NOT_DONE",
+  "new_OOS": "NOT_DONE",
+  "official_historical_full519_replay": "NOT_DONE",
+  "schema": "STAGE111_V1_CAUSAL_UNIT_CI",
+  "source_commit": "3e1734700c9d8e928d4d0d7b54bd8d9900bd026f",
+  "ubuntu_causal_selftest": "PASS"
+}
