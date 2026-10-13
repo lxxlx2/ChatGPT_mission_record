@@ -79,9 +79,9 @@ class OneShotIsolatedTests(unittest.TestCase):
 
     def test_approved_review_installs_exact_three_isolated_launchd_jobs(self):
         try:
-            import monster_v4_stage99_external_ai_review as external_ai
+            import monster_v4_stage102_claude_chat_review_gate as external_ai
         except ImportError:
-            from scripts import monster_v4_stage99_external_ai_review as external_ai
+            from scripts import monster_v4_stage102_claude_chat_review_gate as external_ai
         now=self.start-20*60000
         with patch.object(module.sys,"platform","darwin"), \
              patch.object(external_ai,"verify_approved",return_value=True) as review, \
@@ -217,9 +217,9 @@ class OneShotIsolatedTests(unittest.TestCase):
     def test_real_install_is_hard_blocked_without_other_ai_review(self):
         from unittest.mock import patch
         try:
-            import monster_v4_stage99_external_ai_review as external_ai
+            import monster_v4_stage102_claude_chat_review_gate as external_ai
         except ImportError:
-            from scripts import monster_v4_stage99_external_ai_review as external_ai
+            from scripts import monster_v4_stage102_claude_chat_review_gate as external_ai
         with patch.object(module.sys,"platform","darwin"), \
              patch.object(external_ai,"verify_approved",
                  side_effect=RuntimeError("STAGE99_OTHER_AI_REVIEW_REQUIRED")) as review, \
@@ -233,22 +233,38 @@ class OneShotIsolatedTests(unittest.TestCase):
 
     def test_external_ai_mock_result_never_counts_as_approval(self):
         try:
-            import monster_v4_stage99_external_ai_review as external_ai
+            import monster_v4_stage102_claude_chat_review_gate as external_ai
         except ImportError:
-            from scripts import monster_v4_stage99_external_ai_review as external_ai
+            from scripts import monster_v4_stage102_claude_chat_review_gate as external_ai
         with self.assertRaises(RuntimeError):
             external_ai.verify_approved()
-        fake={"structured_output":{
-            "decision":"BLOCK","blocking_findings":["unsafe"],
-            "nonblocking_findings":[],"reviewed_files":[],
-            "tests_and_security_evidence":[],"review_summary":"synthetic"}}
-        outcome,_=external_ai.parse_cli_response(json.dumps(fake))
-        self.assertEqual(outcome["decision"],"BLOCK")
-        approve=dict(fake)
-        approve["structured_output"]={**fake["structured_output"],
-            "decision":"APPROVE","blocking_findings":[]}
-        with self.assertRaises(ValueError):
-            external_ai.parse_cli_response(json.dumps(approve))
+        external_ai.selftest()
+        self.assertFalse((module.CLONE / external_ai.RECEIPT).exists())
+
+    def test_execute_git_failure_preserves_retryable_original_bytes(self):
+        evidence=self.fake_official()
+        with patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"git"), \
+             patch.object(module,"bootout") as unload:
+            with patch.object(module.stage97,"now_ms",return_value=self.start-1000), \
+                 patch.object(module.stage97,"capture_one",return_value=evidence), \
+                 patch.object(module,"safe_git_commit_and_push",
+                              side_effect=RuntimeError("synthetic push failed")):
+                result=module.execute(self.window)
+        self.assertEqual(result,3)
+        persisted=module.status()[self.window]
+        self.assertEqual(persisted["status"],"GIT_UPLOAD_FAILED_RETRYABLE")
+        self.assertTrue(persisted["source_sha256"])
+        self.assertTrue((module.CLONE / module.expected_path(self.window)).exists())
+        unload.assert_called_once()
+        with patch.object(module,"isolated_checkout_preflight_for_saved"), \
+             patch.object(module,"git"), \
+             patch.object(module,"safe_git_commit_and_push",return_value="a"*40), \
+             patch.object(module.stage97,"capture_one") as no_second_capture:
+            self.assertEqual(module.run(self.window,clock=lambda:self.start+9000),
+                             "GIT_PUSH_CONFIRMED")
+            no_second_capture.assert_not_called()
+        self.assertEqual(module.status()[self.window]["status"],"GIT_PUSH_CONFIRMED")
 
     def test_uninstall_can_only_mention_our_exact_three_labels(self):
         for w in freeze.WINDOWS:
