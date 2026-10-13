@@ -205,8 +205,9 @@ def main():
     p.add_argument("action",choices=("review-install","verify","selftest"))
     a=p.parse_args()
     if a.action=="review-install":
-        print("STAGE99_OTHER_AI_APPROVED_AND_LAUNCHD_INSTALLED "+
-              json.dumps(review_then_install(),ensure_ascii=False,sort_keys=True))
+        p.error("STAGE99_CLAUDE_CLI_WORKFLOW_WITHDRAWN: Use actual Claude CHAT "
+                "review on GitHub code and Stage102 archived review gate. "
+                "No local Claude CLI and no automatic installation.")
     elif a.action=="verify":
         print("STAGE99_REAL_OTHER_AI_REVIEW_CURRENT_SOURCE "+str(verify_approved()))
     else:
