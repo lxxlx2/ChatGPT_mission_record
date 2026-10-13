@@ -107,5 +107,55 @@ class P3EvidenceTests(unittest.TestCase):
         self.assertTrue(all(w["not_proven_inactive"] for w in missing))
 
 
+
+class P3FullSignerCensusTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.docs, cls.refs = load_pinned(DIRECTORY, include_full=True)
+
+    def build(self, docs=None):
+        return build_overlay(self.docs if docs is None else docs, self.refs)
+
+    def test_every_frozen_hash_has_original_read_attempt_and_no_new_pnl(self):
+        x = self.build()
+        s = x["summary"]
+        self.assertEqual(len(x["source_manifest"]), 13)
+        self.assertEqual((s["wallets"], s["exact_CA"], s["distinct_original_hashes"],
+                          s["original_hashes_read"], s["original_hashes_pending"]), (23, 19, 71, 71, 0))
+        self.assertEqual((s["original_hashes_parsed"], s["original_hashes_unreadable"]), (70, 1))
+        self.assertEqual((s["confirmed_owner_original_wallet_tx_pairs"],
+                          s["confirmed_third_party_original_wallet_tx_pairs"],
+                          s["unread_wallet_tx_pairs"]), (38, 36, 1))
+        self.assertEqual(s["confirmed_owner_market_swaps"], 0)
+        self.assertEqual(s["production"], "NO_GO")
+        self.assertEqual(sum(w["frozen_original_candidates"] for w in x["wallets"]), 75)
+        self.assertTrue(all(w["realized_profit"] == "UNRESOLVED" and
+                            w["recent_30d_true_owner_market_swap"] == "UNRESOLVED"
+                            for w in x["wallets"]))
+
+    def test_full_signer_source_partitions_no_gaps(self):
+        parts = self.docs[3:]
+        self.assertEqual([p["part"] for p in parts], list(range(1, 11)))
+        self.assertEqual([p["range"] for p in parts],
+                         [[0, 7], [8, 15], [16, 22], [23, 29], [30, 36],
+                          [37, 43], [44, 50], [51, 57], [58, 64], [65, 70]])
+        self.assertTrue(all(p["precommit_sha"] == self.refs[2]["git_blob_sha"] for p in parts))
+
+    def test_reject_one_missing_original_hash_even_if_other_rows_unmodified(self):
+        docs = copy.deepcopy(self.docs)
+        docs[-1]["records"].pop()
+        with self.assertRaises(EvidenceError):
+            self.build(docs)
+
+    def test_cannot_turn_nonowner_transfer_into_wallet_buy(self):
+        x = self.build()
+        nonowner = [tx for w in x["wallets"] for tx in w["original_transactions"]
+                    if tx["owner_signed_original"] is False]
+        self.assertEqual(len(nonowner), 36)
+        self.assertTrue(all(tx["market_swap_confirmed"] is False for tx in nonowner))
+        self.assertTrue(all(tx["receipt_success"] == "UNRESOLVED" for tx in nonowner))
+
+
+
 if __name__ == "__main__":
     unittest.main()
