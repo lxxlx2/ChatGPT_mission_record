@@ -96,6 +96,29 @@ class P4ReadinessTests(unittest.TestCase):
         self.assertEqual(build_matrix(self.p2, self.p3)["summary"][
             "full_2026_economic_PnL_proven_wallets"], 0)
 
+    def test_11_observed_pool_factories_onchain_not_marketed_as_first_tradable(self):
+        name = "bsc-meme-address-model-v1-p4-factory11-validated-pool-origins-2026-10-13.json"
+        payload = (DIRECTORY / name).read_bytes()
+        self.assertEqual(git_blob_sha(payload), "9d598723ba5eebad66debeb170934327138e50be")
+        d = json.loads(payload)
+        self.assertEqual(d["source_precommit_git_blob_sha"],
+                         "039e19fe13f98fcdbde6abc0d004599de4f4df07")
+        self.assertEqual(len(d["observed_pools"]), 11)
+        self.assertEqual(len({x["pool"] for x in d["observed_pools"]}), 11)
+        self.assertEqual(d["factories"], {
+            "0xca143ce32fe78f1f7019d7d551a6402fc5350c73": 8,
+            "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865": 3,
+        })
+        self.assertEqual(d["first_tradable_event_for_any_CA"], "UNRESOLVED")
+        self.assertEqual(d["market_opportunity_denominator"], "UNRESOLVED")
+        self.assertEqual(d["eligible_missed_profitable_buy"], "UNRESOLVED")
+        self.assertEqual(d["production"], "NO_GO")
+        self.assertTrue(all(x["read_status"] == "DIRECT_HISTORICAL_CALL"
+                            for x in d["observed_pools"]))
+        for source in d["source_manifest"]:
+            actual = (DIRECTORY / source["path"].split("/")[-1]).read_bytes()
+            self.assertEqual(git_blob_sha(actual), source["git_blob_sha"])
+
     def test_wrong_window_must_fail(self):
         p3 = copy.deepcopy(self.p3)
         p3["window"]["start"] = "2026-09-14T00:00:00Z"
