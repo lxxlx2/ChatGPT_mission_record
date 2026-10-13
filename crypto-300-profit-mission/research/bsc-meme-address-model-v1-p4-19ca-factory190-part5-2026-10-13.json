@@ -1,0 +1,72 @@
+{
+  "schema": "BSC_P4_FACTORY190_QUERY_PART",
+  "part": 5,
+  "range": [
+    40,
+    49
+  ],
+  "precommit_sha": "c9b0be420a3e456e2927953288fdd17f6e78036d",
+  "records": [
+    {
+      "index": 40,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "raw": "0x0000000000000000000000009eb0bc7a207f77811ee365729d00152622a745b7"
+    },
+    {
+      "index": 41,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x0000000000000000000000000000000000000000",
+      "raw": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 42,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xa3f649235262cebcadb0dcbb6fbc54bd817392b9",
+      "raw": "0x000000000000000000000000a3f649235262cebcadb0dcbb6fbc54bd817392b9"
+    },
+    {
+      "index": 43,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x5e3f597249a5714eb3df94e08b4eb6da387548ed",
+      "raw": "0x0000000000000000000000005e3f597249a5714eb3df94e08b4eb6da387548ed"
+    },
+    {
+      "index": 44,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "raw": "0x000000000000000000000000a5067360b13fc7a2685dc82dcd1bf2b4b8d7868b"
+    },
+    {
+      "index": 45,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xb1b65c4ddff13eaca79fcfcd06aa047616c116e4",
+      "raw": "0x000000000000000000000000b1b65c4ddff13eaca79fcfcd06aa047616c116e4"
+    },
+    {
+      "index": 46,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x70975d5b31f41430dd35a91407d9e7135ce09435",
+      "raw": "0x00000000000000000000000070975d5b31f41430dd35a91407d9e7135ce09435"
+    },
+    {
+      "index": 47,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x0000000000000000000000000000000000000000",
+      "raw": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 48,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x3808cb04a4e132c523895d3b38cb5afa3cae08b1",
+      "raw": "0x0000000000000000000000003808cb04a4e132c523895d3b38cb5afa3cae08b1"
+    },
+    {
+      "index": 49,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x0c85adb38c86822e118785e680d85a00a077f56e",
+      "raw": "0x0000000000000000000000000c85adb38c86822e118785e680d85a00a077f56e"
+    }
+  ],
+  "production": "NO_GO"
+}
