@@ -75,6 +75,31 @@ def host_offline(mac):
             "both_launch_agents_disabled_and_unloaded": True}
 
 
+def immutable_incident_backup(path):
+    """Read stopped, completed SQLite backup without creating -shm/-wal sidecars.
+
+    The journal's prestop backup was made using sqlite3.backup and integrity
+    checked. Immutable opens are restricted to this sealed historical backup,
+    NEVER the running control/Frank databases.
+    """
+    rel.require(Path(path).is_file(), "INCIDENT_BACKUP_MISSING")
+    from urllib.parse import quote
+    uri = "file:" + quote(str(Path(path).resolve()), safe="/") + "?mode=ro&immutable=1"
+    with closing(sqlite3.connect(uri, uri=True, timeout=3)) as conn:
+        conn.row_factory = sqlite3.Row
+        rel.integrity(conn)
+        tables = {r[0] for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table'")}
+        result = {table: [dict(x) for x in
+                          conn.execute("SELECT * FROM " + table + " ORDER BY rowid")]
+                  for table in rel.TABLES}
+        result["local_delivery_presentation"] = (
+            [dict(x) for x in conn.execute(
+                "SELECT * FROM local_delivery_presentation ORDER BY rowid")]
+            if "local_delivery_presentation" in tables else [])
+        return result
+
+
 def read_only_plan(mac, root, tool_pin):
     """Live on-host inventory: no lock, staging, backup, journal or signal."""
     rel.require(sys.platform == "darwin", "ACTUAL_MAC_REQUIRED")
@@ -141,9 +166,12 @@ def read_only_plan(mac, root, tool_pin):
         rel.integrity(d)
     before = rel.ledger(db)
     incident_backup = incident / "control-prestop.sqlite"
-    with closing(rel.ro(incident / "frank-prestop.sqlite")) as d:
+    from urllib.parse import quote
+    saved_frank = (incident / "frank-prestop.sqlite").resolve()
+    with closing(sqlite3.connect("file:" + quote(str(saved_frank), safe="/") +
+                                 "?mode=ro&immutable=1", uri=True, timeout=3)) as d:
         rel.integrity(d)
-    rel.assert_preserved(rel.ledger(incident_backup), before, exact=True)
+    rel.assert_preserved(immutable_incident_backup(incident_backup), before, exact=True)
     rel.require(len(before["local_delivery_presentation"]) == 0, "UNEXPECTED_OLD_PRESENTATION_ROWS")
     reasons = rel.review_reasons(before)
     rel.require(reasons["requires_private_review"] == 0, "HISTORIC_SEND_UNRESOLVED")
