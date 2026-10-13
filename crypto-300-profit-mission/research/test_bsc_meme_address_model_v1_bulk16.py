@@ -225,6 +225,22 @@ class Bulk16SourceProofTests(unittest.TestCase):
             blocked["audited_closed_episode_indices"]))
         self.assertEqual(blocked["entire_CA_profit_pnl_state"], "UNRESOLVED")
 
+    def test_P3_one_recent_owner_meme_action_but_22_wallets_unverified(self):
+        p3 = data("bsc-meme-address-model-v1-p3-recent-signer-positive-witness-2026-10-13.json")
+        self.assertEqual(p3["frozen_wallet_count"], 23)
+        self.assertEqual(p3["confirmed_signed_Meme_token_action_wallets"], 1)
+        self.assertEqual(p3["unknown_wallets_not_full_window_scanned"], 22)
+        self.assertEqual(p3["status"], "PARTIAL_POSITIVE_WITNESS_ONLY_NOT_COMPLETE_P3")
+        v = p3["proven_2026_30d_owner_action"]
+        self.assertTrue(v["original_owner_signed_and_successful"])
+        self.assertTrue(v["original_EOA_token_in_and_out"])
+        self.assertTrue(v["first_utc"].startswith("2026-09-14T"))
+        self.assertEqual(v["quote_route_economics"], "UNRESOLVED")
+        self.assertTrue(all(not w["proved_inactive"] for w in p3["wallets"]))
+        self.assertEqual(sum(w["signed_Meme_token_action_verified"] ==
+                             "AT_LEAST_ONE_TRUE_EOA_INITIATED_MEME_TOKEN_MOVEMENT"
+                             for w in p3["wallets"]), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
