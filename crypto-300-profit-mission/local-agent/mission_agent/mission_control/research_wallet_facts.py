@@ -59,25 +59,67 @@ def _snapshot(fact: dict | None, *, binding: WalletBinding, mint: str,
     source = fact.get("source")
     if not isinstance(source, str) or not source.strip():
         raise ValueError("WALLET_FACT_SOURCE_MISSING")
-    account = fact.get("token_account")
-    # An aggregate wallet/mint balance is meaningless without token accounts
-    # and an owner/ATA coverage explanation. A04/A05 own proof validation.
-    if not isinstance(account, str) or not _solana_pubkey_32_bytes(account):
-        raise ValueError("WALLET_FACT_TOKEN_ACCOUNT_INVALID")
+    # Legacy A03 one-token-account fixture and new A05 multi-account RPC
+    # archival evidence have the same conservative source semantics.
+    accounts = fact.get("token_accounts")
+    if accounts is None:
+        account = fact.get("token_account")
+        if not isinstance(account, str) or not _solana_pubkey_32_bytes(account):
+            raise ValueError("WALLET_FACT_TOKEN_ACCOUNT_INVALID")
+        accounts = [{"token_account": account, "mint": mint,
+                     "owner": binding.address, "raw_amount": raw,
+                     "decimals": decimals, "slot": slot}]
+    if not isinstance(accounts, list) or not accounts:
+        raise ValueError("WALLET_FACT_TOKEN_ACCOUNTS_MISSING")
+    known = set()
+    total = 0
+    observed_slots = []
+    for entry in accounts:
+        if not isinstance(entry, dict):
+            raise ValueError("WALLET_FACT_ACCOUNT_INVALID")
+        address = entry.get("token_account")
+        if (not isinstance(address, str) or not _solana_pubkey_32_bytes(address)
+                or address in known or entry.get("owner") != binding.address
+                or entry.get("mint") != mint or entry.get("decimals") != decimals):
+            raise ValueError("WALLET_FACT_ACCOUNT_IDENTITY_MISMATCH")
+        item_slot = entry.get("slot")
+        if (type(item_slot) is not int
+                or not binding.valid_from_slot <= item_slot <= as_of_slot
+                or (binding.valid_to_slot is not None
+                    and item_slot >= binding.valid_to_slot)):
+            raise ValueError("WALLET_FACT_ACCOUNT_OUTSIDE_BINDING_SLOT")
+        amount = entry.get("raw_amount")
+        if not isinstance(amount, str) or not amount.isascii() or not amount.isdecimal():
+            raise ValueError("WALLET_FACT_ACCOUNT_UNITS_INVALID")
+        known.add(address)
+        observed_slots.append(item_slot)
+        total += int(amount)
+    if total != int(raw):
+        raise ValueError("WALLET_FACT_ACCOUNT_SUM_MISMATCH")
+    if slot != max(observed_slots):
+        raise ValueError("WALLET_FACT_SLOT_MISMATCH")
+    # A separately acquired SPL and Token-2022 response is explicitly non-
+    # atomic even when both RPC context slots happen to be identical.
+    coverage = fact.get("programs_observed")
+    missing = (["CHAIN_SNAPSHOT_NON_ATOMIC",
+                "BENEFICIAL_OWNERSHIP_UNVERIFIED",
+                "COST_BASIS_UNVERIFIED"])
+    if coverage is False or coverage is None:
+        missing.insert(0, "TOKEN_PROGRAM_COVERAGE_UNVERIFIED")
     return {
         "status": "DATED_SOURCE_ASSERTION_NOT_WALLET_COMPLETENESS",
         "balance": {
-            "raw_amount": raw,
-            "decimals": decimals,
+            "raw_amount": raw, "decimals": decimals,
             "quantity": str(Decimal(raw) / (Decimal(10) ** decimals)),
-            "slot": slot,
-            "token_account": account,
-            "source": source,
+            "slot": slot, "slot_min": min(observed_slots),
+            "slot_max": max(observed_slots),
+            "token_account": accounts[0]["token_account"] if len(accounts) == 1 else None,
+            "token_accounts": accounts,
+            "source": source, "source_capture_sha256": fact.get("source_capture_sha256"),
+            "both_token_programs_observed": coverage is True,
             "commitment": "finalized",
         },
-        "missing": ["ALL_OWNED_TOKEN_ACCOUNTS_UNVERIFIED",
-                    "BENEFICIAL_OWNERSHIP_UNVERIFIED",
-                    "COST_BASIS_UNVERIFIED"],
+        "missing": missing,
         "chain_complete": False,
         "current_balance_verified": False,
     }
