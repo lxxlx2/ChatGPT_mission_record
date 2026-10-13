@@ -37,6 +37,15 @@
 - 这两条 PR 没有合并、不改 main、没有重启 Mac、不动冻结 Frank V1 决策/已发邮件/outbox/生产 SQLite/LaunchAgent/自动交易。现有 PR #42 的 A02 新 SHA 仍需他 AI 复审才能合并。
 - 后续业务优先顺序：A03 现实数据读取器 → A04 原始链上事实侧账本 → A05 真实 ATA/余额核对 → F02 真实仓位 → A06 PnL；并行 C01/C02/C07/C08 通用 CA 实用修复。每一阶段围绕可用性、完整来源、真实 Mac 与链数据确认，禁止对单一边界反复扩展；各 PR 的测试通过只证明对应源码/fixture，不等于生产业务验收。
 
+## 2026-10-13 A04/A05：真实数据源与离线账本进度
+
+- [Draft PR #45](https://github.com/lxxlx2/ChatGPT_mission_record/pull/45)，基于尚未合并 A03 PR #43 堆叠继续开发。最终本轮测试 HEAD `92fbacbc411fb29a628c32d42bc5b6889603b7f6`。[GitHub Actions #38422305664](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38422305664) 在**该完整 SHA**：81 项专项、1,508 项完整 local-agent 回归及 compileall/pyflakes/Node PASS。属于代码门禁，**尚未经过另一 AI 独立 Review**。
+- A04 已实现部分：可核实交易 token-balance delta、outer/inner SPL/Token-2022 parsed transfer、不同钱包同签名去重、被动 receipt 与未知市场成交分离、独立 immutable SQLite sidecar。未完成：实际交易完整指令/路由/funder/费用归因、source cursor/429 resume、本人完整历史链上的成本闭合。**保留 [ ]。**
+- A05 已实现部分：正确官方 Token-2022 程序号 `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`，并列 finalized Token/Token-2022 owner-account 枚举和双 Slot/non-atomic/partial coverage、raw ATA/mint/owner 校验、多 ATA 与人物注册表研究只读连通，手动 plan-only 脚本与只读单 Mint sidecar 输出。未完成：本地 Mac 全量真实账户采集、32 Mint 与 Token2022 的同源覆盖/未决缺口、F02 页面验收。**保留 [ ]。**
+- 本轮实际读取 Frank 链上**两个 mint 过滤后的独立结果**：SPL `9N6ZV2DgCBeArFckZCBzyhwF2LdfMtEvYmLJ2EY9e4Rd` slot 456489219 raw 8140000/6，Token-2022 `HfAFNsnjmbWMMRkwNeUUoHJ8V6UnUGFzkpu3Seajpump` slot 456489222 raw 0/6。未达到全钱包 coverage，不可推定出售/PnL。此前 Token2022 RPC 错误确有错误程序号；这项已在代码修复、测试锁定。原始私有数据未提交 public Git。
+- 原 #42、#43、#45 均 Draft，main/Mac/Gmail/forward.sqlite/launchd/Frank V1 policy 没有发生本轮变动，release 保持 NO_GO；待他 AI 审查、真实 Mac 验收与另行明确授权。
+- 产品主线随后继续 F02 真仓位显示、A06 人物聚合和 C01/C08 通用 CA 清理；不能把 CI 通过当完整功能可用或将长期缺口记录为已完成。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
