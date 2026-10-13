@@ -1,6 +1,6 @@
 # Mission Current Operational and Asset State
 
-Updated: 2026-10-12 Asia/Bangkok (user GANG full exit, realized loss, screenshot and Solana portfolio refresh)
+Updated: 2026-10-13 Asia/Bangkok (exchange screenshots and direct read-only chain refresh; historical GANG loss unchanged)
 Timezone: Asia/Bangkok
 Policy: `../MISSION_SPEC.md` | Latest assets: `../portfolio/current.md` | Mission PnL: `../performance/current.md`
 
@@ -24,7 +24,17 @@ Policy: `../MISSION_SPEC.md` | Latest assets: `../portfolio/current.md` | Missio
 - Binance flexible USDC is earmarked investment capital. Entire Bybit account is reserved for personal expenses/rent and excluded.
 - The original $300 cash plus six historical Credits NFTs is the Mission starting set. Later deposits and wallet movements must not be counted as Mission PnL.
 
-## Current dated investment asset and GANG exit state — 2026-10-12 ~01:53 Bangkok
+## Current dated investment asset reference — 2026-10-13 ~21:48–21:50 Bangkok
+
+- **Authoritative newest snapshot details:** `../portfolio/current.md` section `Latest independently checked investment snapshot — 2026-10-13`. Binance/Bybit source = user screenshots (21:48 phone time); canonical Solana = independently queried finalized RPC slots **456480952/456481206**; prices from Alchemy sampled about 21:49–21:50 Bangkok. Chain account values and prices have separate timestamps. EVM ERC-20 coverage remains incomplete; no new current Sui RPC; NFT realizable value unresolved.
+- **Binance investment reserve:** **745.85545285 USDC** flexible Earn; screenshot estimated **~$746.73 USD/USDT-equivalent** (one underlying asset, not additive); interest **1.1934495 USDC** already included; banner variable APR up to 4.39%. `USER_CONFIRMED_SCREENSHOT_2026-10-13`.
+- **Solana canonical wallet:** finalized **471.716759 USDC** (~$472.22 at Alchemy USDC/USD 1.00107), **0.012905142 SOL** (~$1.39 at SOL/USD 107.94), **GANG 0**; four positive Token-2022 indivisible assets are unpriced, two nontransferable, excluded from USD NAV. No independently marked other >=$1 Solana asset in the classic SPL sweep. GANG remains **CLOSED** with previously documented realized loss **−96.210562 USDC before SOL gas**; do not re-add historical receipts/refund.
+- **Dated October 12 OKX screenshot components:** **0.002403 ETH** and **3.3847 TRX**, quantities **not newly verified** October 13; conditional reference at October 13 Alchemy quotes **~$6.07 ETH + ~$1.11 TRX**. This is **USER_CONFIRMED_HISTORICAL_QUANTITY** only. OKX screenshot USDC/SOL duplicate the canonical Solana wallet and must not be added again. Current EVM native positions separately checked are each **< $1**; ERC20/NFT coverage not exhaustive.
+- **Bybit living/rent EXCLUDED in full:** screenshot **443.029905 USDC** (Earn 413.602000, Funding 29.341449, Unified 0.086456), UI **~$443.51**. This entire account, including the < $1 internal sub-balance, is record-only and **never investment NAV**.
+- **Current identified reference:** **~$1,220.34** for newly observed Binance + on-chain Solana holdings. **~$1,227.52 mixed-freshness conditional** only if the October 12 ETH/TRX screenshot positions remain owned, repriced at October 13 indicative prices. This is **not complete audited NAV, original $300 Mission PnL or achieved return**. Previous October 12 ~$1,176.72 reference is superseded as the latest snapshot; a +~$50.80 reference-to-reference change is not realized profit. Individual separately priced **< $1 assets excluded**, unpriced unknowns preserved; no invented holdings.
+- **Action provenance:** Research read and Git documentation update only. No live Binance/Bybit API authentication, trading/transfer, Solana signing, Gmail sending, production monitor/task, local Mac service or notification setting changed. `PRODUCTION_TRADING=NO_GO` and `MISSION_PNL_UNRESOLVED` remain.
+
+## Historical investment asset and GANG exit state — 2026-10-12 ~01:53 Bangkok
 
 - **GANG FULLY CLOSED / NO GANG BALANCE** on canonical Solana wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`. User's actual successful swap https://solscan.io/tx/2cGKrncYix2AK2kAqtepgWJ1ipBsuH95TYwPHohRhAEkkbNRiwDbUUzLUyTG5RhA5D1xdi4Cbj9PUajsx8gGJNDk at slot 455756451, 2026-10-12 01:51:52 Bangkok. Before sale finalized slot 455756240: 8008.208 GANG and 87.434841 USDC. After slot 455757417: 0 GANG and **471.716759 USDC**. **USDC proceeds net 384.281918**.
 - Backable original escrow 500 USDC; approved GANG cost **480.492480**, already refunded **19.507520**; user recovered **403.789438 USDC** from the two GANG-specific exit/refund cashflows, **realized GANG loss −96.210562 USDC** before SOL gas, no remaining GANG or escrow. **Do not add the refund or gross proceeds a second time on top of 471.716759 current wallet USDC**. Position authority `../positions/gang.md`; realized sub-ledger `../performance/current.md`; original Mission $300+Credits total PnL still unresolved.
