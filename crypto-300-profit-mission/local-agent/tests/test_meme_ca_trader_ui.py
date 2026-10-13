@@ -139,7 +139,7 @@ const p1=js.slice(js.indexOf('const n = '), js.indexOf('const short ='));
 const p2=js.slice(js.indexOf('function usd('), js.indexOf('function authorityText('));
 if (!p1 || !p2) throw Error('MISSING_HELPERS');
 const result=vm.runInNewContext(
-  p1 + '\\n' + p2 + '\\n' +
+  p1 + '\n' + p2 + '\n' +
   '({missing:[n(null),money(null),smallPrice(null),usd(null),pctText(null)],' +
   'zero:[n(0),money(0),usd(0),pctText(0)]})'
 );
@@ -181,7 +181,7 @@ const ctx={
   pctText:x=>String(x)+'%',
   fact:(name,value)=>name+':'+value+';',
 };
-vm.runInNewContext(fn+'\\nrenderClusterPreview(job);',
+vm.runInNewContext(fn+'\nrenderClusterPreview(job);',
   {...ctx,job:{
     status:'ERROR',
     preview:{
