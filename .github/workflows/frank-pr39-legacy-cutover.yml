@@ -6,7 +6,9 @@ on:
   pull_request:
     paths:
       - crypto-300-profit-mission/local-agent/scripts/frank_pr39_controlled_release.py
+      - crypto-300-profit-mission/local-agent/scripts/frank_pr39_forward_recovery.py
       - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_legacy_cutover.py
+      - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_forward_recovery.py
       - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_controlled_release.py
       - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_immutable_release.py
       - crypto-300-profit-mission/local-agent/tests/test_frank_pr39_runtime_diagnostics.py
@@ -35,7 +37,7 @@ jobs:
       - name: Legacy cutover, PR39 release, immutable and predeploy suites
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m pytest -q -p no:cacheprovider tests/test_frank_pr39_legacy_cutover.py tests/test_frank_pr39_controlled_release.py tests/test_frank_pr39_immutable_release.py tests/test_frank_pr39_runtime_diagnostics.py tests/test_frank_pr39_predeploy_readonly.py
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_pr39_legacy_cutover.py tests/test_frank_pr39_forward_recovery.py tests/test_frank_pr39_controlled_release.py tests/test_frank_pr39_immutable_release.py tests/test_frank_pr39_runtime_diagnostics.py tests/test_frank_pr39_predeploy_readonly.py
       - name: Full regression with real Git replay
         working-directory: crypto-300-profit-mission/local-agent
         env:
