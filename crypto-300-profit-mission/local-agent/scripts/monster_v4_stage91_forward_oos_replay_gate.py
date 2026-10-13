@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from collections import Counter
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -87,25 +88,35 @@ def freeze_universe(packet: dict) -> dict:
         if not isinstance(item, dict):
             raise ValueError("STAGE91_NONOBJECT_MARKET_ROW")
         symbol = item.get("symbol")
-        if (not isinstance(symbol, str) or not symbol or not symbol.isupper()
-            or not symbol.isalnum() or symbol in seen):
+        # USD-M exchangeInfo can include dated delivery contracts with "_".
+        # Preserve *all* contracts in the population and choose PERPETUAL
+        # separately. Do not use Unicode isalnum() as a venue symbol validator.
+        if (not isinstance(symbol, str)
+            or not re.fullmatch(r"[A-Z0-9]+(?:_[A-Z0-9]+)*",symbol)
+            or symbol in seen):
             raise ValueError("STAGE91_MARKET_SYMBOL_DUPLICATE_OR_INVALID")
         seen.add(symbol)
         status = item.get("status")
         contract_type = item.get("contractType")
         quote_asset = item.get("quoteAsset")
+        base_asset = item.get("baseAsset")
+        if (not isinstance(status,str) or not status
+            or not isinstance(contract_type,str) or not contract_type
+            or not isinstance(quote_asset,str) or not quote_asset
+            or not isinstance(base_asset,str) or not base_asset):
+            raise ValueError("STAGE91_INCOMPLETE_OFFICIAL_MARKET_ROW")
         onboard = item.get("onboardDate")
         if onboard is not None:
             num(onboard)
         active_at_capture = (
             status == "TRADING" and contract_type == "PERPETUAL"
-            and quote_asset == "USDT" and bool(item.get("baseAsset"))
+            and quote_asset == "USDT" and bool(base_asset)
             and (onboard is None or onboard <= cap)
         )
         rows.append({
             "symbol": symbol, "status_asof_capture": status,
             "contract_type":contract_type, "quote_asset":quote_asset,
-            "base_asset":item.get("baseAsset"),
+            "base_asset":base_asset,
             "onboard_ms":onboard,
             "candidate_for_raw_USDM_attempt":active_at_capture,
             "crypto_identity":"UNKNOWN_NEEDS_INDEPENDENT_PROOF",
