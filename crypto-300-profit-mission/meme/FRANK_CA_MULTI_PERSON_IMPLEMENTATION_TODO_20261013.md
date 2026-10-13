@@ -46,6 +46,13 @@
 - 原 #42、#43、#45 均 Draft，main/Mac/Gmail/forward.sqlite/launchd/Frank V1 policy 没有发生本轮变动，release 保持 NO_GO；待他 AI 审查、真实 Mac 验收与另行明确授权。
 - 产品主线随后继续 F02 真仓位显示、A06 人物聚合和 C01/C08 通用 CA 清理；不能把 CI 通过当完整功能可用或将长期缺口记录为已完成。
 
+## 2026-10-13 C01/C08：统一查询与无默认 $30 报价（独立 Draft PR）
+
+- [Draft PR #46](https://github.com/lxxlx2/ChatGPT_mission_record/pull/46)，基于 main `4ac0b1612e8d238ab9189de066ea16a6f6e66455`，与 A02/A03/A04/A05 的堆叠 PR 独立。用户通用 CA 前端移除 quick/standard/deep 选择，只保留一个 CA 入口；后台仍通过已存在的 `standard` 预设兼容旧读取，当前数据深度**尚不能算 C01 完整验收**。
+- 通用 CA 后端已删除 BASE_READY 和最终报告中的两次自动 Jupiter `$30` 报价，前端已删除对应卡片和报价时效计时器。新报告保留 DexScreener 来源行情与时间，旧历史报价只作为 `ARCHIVED_NOT_LIVE` 保存，不会重新宣称为即时交易价。**Frank V1 冻结的 $30 跟单报价、`MissionMemeService._quote`、Gmail、outbox、生产 Mac 均保持不变。**
+- 原本 8 项关联测试假定用户必须选择扫描深度且无条件请求 $30；经真实 full-suite 红灯，已将**原测试**逐项迁移到当前需求，保留关键信息门禁、异常预览、历史报价不能复活、null 不当零、真实 Mac 验收脚本等保障。专项红绿 CI 与完整最新结果以 PR #46 的精确 SHA 为准。
+- C08 的“用户明确填买入金额后单独临时报价”尚未实现，C01 的 Top20/首买/funding 全链深扫需 C05 继续；因而 **C01 与 C08 都暂保持 [ ]**，不可宣称已经通过端到端完整业务验收。合并/部署仍需他 AI Review、真实 Mac 验收与明确发布授权。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
