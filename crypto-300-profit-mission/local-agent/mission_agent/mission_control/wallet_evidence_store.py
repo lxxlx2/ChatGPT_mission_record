@@ -79,6 +79,9 @@ class WalletEvidenceStore:
             or not document.get("wallet") or
             not document.get("capture_sha256")):
             raise ValueError("CAPTURE_INVALID")
+        payload = {k: v for k, v in document.items() if k != "capture_sha256"}
+        if _sha(_json(payload)) != document["capture_sha256"]:
+            raise ValueError("CAPTURE_HASH_MISMATCH")
         # Repeat a proven identical snapshot is idempotent; each capture hash
         # is an immutable historical source, never "current balance".
         return self._append("ACCOUNT_CAPTURE", document["wallet"] + ":" +
@@ -86,6 +89,9 @@ class WalletEvidenceStore:
 
     def record_transaction(self, document: dict) -> bool:
         chain, signature, slot = transaction_identity(document)
+        payload = {k: v for k, v in document.items() if k != "canonical_event_sha256"}
+        if _sha(_json(payload)) != document.get("canonical_event_sha256"):
+            raise ValueError("TRANSACTION_HASH_MISMATCH")
         return self._append("TX", chain + ":" + signature + ":" + str(slot), document)
 
     def read_wallet_captures(self, wallet: str, limit: int = 30) -> list[dict]:
