@@ -26,7 +26,7 @@ jobs:
       - name: F01 presentation contract regression
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m pytest -q -p no:cacheprovider tests/test_follow_opportunity_f01.py
+          python -B -m pytest -q -p no:cacheprovider tests/test_follow_opportunity_f01.py tests/test_follow_opportunity_f01_integration.py
       - name: All Mission local-agent tests
         working-directory: crypto-300-profit-mission/local-agent
         env:
