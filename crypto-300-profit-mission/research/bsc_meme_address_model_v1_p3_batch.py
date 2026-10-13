@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 from bsc_meme_address_model_v1_p3 import DIRECTORY, EvidenceError, build_overlay, git_blob_sha, load_pinned, require
@@ -233,6 +234,57 @@ def build_evidence(overlay: dict, evidence: dict, previous: dict, refs: list[dic
     }
 
 
+
+LATEST_NAME = "bsc-meme-address-model-v1-p3-7wallet-latest-verified-swap-utc-2026-10-13.json"
+LATEST_BLOB_SHA = "b4a58cd285941a9f99dacbcad4d5a9865f75bfdb"
+
+
+def attach_latest_verified_swap_utc(result: dict, source: dict) -> dict:
+    """Validate last-verified event block and UTC; never infer latest all-token swap."""
+    require(source["schema"] == "BSC_MEME_P3_SEVEN_WALLETS_LATEST_STRICT_SWAP_UTC"
+            and source["wallet_count"] == 7 and source["production"] == "NO_GO",
+            "wrong latest swap timestamp source")
+    require(source["window"] == {"start": result["window_start_UTC"],
+                                 "end": result["as_of_snapshot_UTC"]},
+            "latest timestamp window drift")
+    seen = set()
+    index = {w["wallet"]: w for w in result["wallets"]}
+    require(len(index) == 23, "latest UTC needs full wallet census")
+    for item in source["wallets"]:
+        wallet, block, h = item["wallet"], item["block"], item["hash"]
+        require(wallet in index and wallet not in seen, "unknown or duplicated latest wallet")
+        seen.add(wallet)
+        dst = index[wallet]
+        require(dst["recent_true_swap_state"] == "VERIFIED_ACTIVE_ON_FROZEN_19_CA"
+                and dst["verified_recent_swap_last_block"] == block
+                and item["original_signer_verified"] is True
+                and item["original_block_verified"] is True, "latest observed block/signer mismatch")
+        time = datetime.fromtimestamp(int(item["blockTimestampHex"], 16), tz=timezone.utc)
+        utc = time.isoformat(timespec="milliseconds").replace("+00:00", "Z")
+        require(utc == item["block_UTC"]
+                and datetime.fromisoformat(result["window_start_UTC"].replace("Z", "+00:00")) <= time <=
+                datetime.fromisoformat(result["as_of_snapshot_UTC"].replace("Z", "+00:00")),
+                "historical UTC/date mismatch")
+        valid = (wallet == OWNER and h == TX and block == 127174819) or any(
+            x["wallet"] == wallet and x["hash"] == h
+            and x["block"] == block and x["status"] == "VERIFIED_OWNER_SIGNED_POOL_SWAP"
+            for x in result["candidates"])
+        require(valid, "latest transaction has no full pool swap and success evidence")
+        dst["latest_verified_swap_hash"] = h
+        dst["latest_verified_swap_UTC"] = utc
+    require(len(seen) == 7 and
+            {w["wallet"] for w in result["wallets"] if w["verified_recent_swap_count"] > 0} == seen,
+            "missing last verified swap date for eligible wallet")
+    for row in result["wallets"]:
+        if row["wallet"] not in seen:
+            row["latest_verified_swap_hash"] = None
+            row["latest_verified_swap_UTC"] = None
+    result["source_manifest"].append({
+        "path": ROOT + LATEST_NAME, "git_blob_sha": LATEST_BLOB_SHA,
+    })
+    return result
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Rebuild strict P3 owner-signed Swap evidence")
     ap.add_argument("--source-dir", type=Path, default=DIRECTORY)
@@ -243,6 +295,8 @@ def main() -> None:
     prev = promote_verified_witness(overlay, load_witness(opts.source_dir))
     evidence, evidence_refs = load_evidence(opts.source_dir)
     result = build_evidence(overlay, evidence, prev, refs + evidence_refs)
+    last = load_source(opts.source_dir, LATEST_NAME, LATEST_BLOB_SHA)
+    result = attach_latest_verified_swap_utc(result, last)
     opts.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
