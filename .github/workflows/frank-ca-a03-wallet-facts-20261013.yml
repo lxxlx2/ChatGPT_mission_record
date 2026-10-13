@@ -1,0 +1,45 @@
+name: Frank CA A03 read-only wallet research validation
+
+on:
+  push:
+    branches:
+      - dev/frank-ca-a03-research-wallet-facts-20261013
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  wallet-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 23
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact development requirements
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip install numpy==2.3.3
+          python -m pip install pyflakes==3.4.0
+      - name: Static contract validation
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent/mission_control/person_registry.py mission_agent/mission_control/research_wallet_facts.py tests/test_person_registry_research_v2.py tests/test_person_registry_a02_review_regression.py tests/test_research_wallet_facts_a03.py
+          python -m pyflakes mission_agent/mission_control/person_registry.py mission_agent/mission_control/research_wallet_facts.py tests/test_person_registry_research_v2.py tests/test_person_registry_a02_review_regression.py tests/test_research_wallet_facts_a03.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: A02 A03 person and wallet facts boundary cases
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_person_registry_research_v2.py tests/test_person_registry_a02_review_regression.py tests/test_research_wallet_facts_a03.py
+      - name: Full local-agent regression with real Git replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests
