@@ -503,7 +503,8 @@ function frankPriceText(x, m) {
   return '暂无参考价';
 }
 
-function renderCandidates(rows, status='OK') {
+function renderCandidates(rows) {
+  const status = arguments.length > 1 ? arguments[1] : 'OK';
   $('candidates').innerHTML = rows.map(x => {
     const m = x.metrics || {};
     const q = x.decision_quote || {};
