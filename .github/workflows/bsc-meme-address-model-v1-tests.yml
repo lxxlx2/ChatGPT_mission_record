@@ -7,6 +7,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p2.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p3_swap.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3_swap.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p3.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p2.py"
@@ -79,6 +81,26 @@ jobs:
           assert all(w["recent_30d_true_owner_market_swap"] == w["realized_profit"] == "UNRESOLVED"
                      for w in a["wallets"])
           print("PASS P3 71 original tx / 70 parsed / 1 unreadable / 38 owner / 36 third-party wallet pairings; no executable market swap evidence asserted")
+          PY
+      - name: P3 witnessed real owner Meme swap and no PnL/alpha claims
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p3_swap.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p3-proven-owner-swap.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          out = json.loads(Path("/tmp/bsc-p3-proven-owner-swap.json").read_text(encoding="utf-8"))
+          s = out["summary"]
+          assert (s["wallets"], s["frozen_CAs"], s["original_hashes_read"],
+                  s["wallets_with_verified_recent_true_swap"],
+                  s["remaining_owner_original_pairs_without_full_swap_evidence"]) == (23,19,71,1,37)
+          assert len(out["source_manifest"]) == 14 and s["production"] == "NO_GO"
+          assert s["realized_PnL_rank_available"] is False and s["followable_alpha_proven"] is False
+          assert [r["wallet"] for r in out["wallets"]
+                  if r["recent_true_owner_meme_swap_state"] == "VERIFIED_ACTIVE_ON_FROZEN_19_CA"] == [
+                      "0xa83b73f5644cde337b61da79589f10ea15548811"]
+          assert all(r["realized_PnL"] == "UNRESOLVED" for r in out["wallets"])
+          print("PASS one 2026-10-12 A83B/TST real owner-signed V3 pool swap; 22 wallet states unknown; no profit/followability claim")
           PY
       - name: Recompute 23x19 baseline deterministically
         run: |
