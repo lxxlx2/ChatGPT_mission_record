@@ -107,7 +107,7 @@ class ModelStage4Tests(unittest.TestCase):
         self.assertEqual((a["audited_closed_episode_indices"],
                           len(a["blocked_specific_episode_indices"])), ([2], 11))
         self.assertEqual((b["audited_closed_episode_indices"],
-                          len(b["blocked_specific_episode_indices"])), ([4], 20))
+                          len(b["blocked_specific_episode_indices"])), ([4, 5, 6, 10], 17))
 
     def test_two_negative_rounds_in_23_wallet_comparison_no_profit_ranking(self):
         comparison = load("bsc-meme-address-model-v1-p2-economic-comparison-2026-10-13.json")
