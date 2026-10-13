@@ -220,6 +220,54 @@ class OneShotIsolatedTests(unittest.TestCase):
                 module.bootout(self.window)
         self.assertTrue(file.exists())
 
+    def test_stage105_enospc_status_write_does_not_interrupt_other_bootouts(self):
+        attempts=[]
+        def fail_disk(window,status,**kwargs):
+            attempts.append((window,status))
+            if window==freeze.WINDOWS[1] or status.startswith("INSTALL_ROLLED"):
+                raise OSError(28,"synthetic disk full")
+            return None
+        with patch.object(module.sys,"platform","darwin"), \
+             patch.object(module,"isolated_checkout_preflight_local"), \
+             patch.object(module,"git"), \
+             patch.object(module,"read_frank_launchd_labels",return_value=["frank"]), \
+             patch.object(module,"launchctl",return_value=0) as launch, \
+             patch.object(module,"store_status",side_effect=fail_disk), \
+             patch.object(module.shutil,"which",return_value="/bin/launchctl"):
+            with self.assertRaisesRegex(RuntimeError,"ROLLBACK_SAFETY_UNVERIFIED"):
+                module.install(now=self.start-20*60000,dry_run=False)
+        self.assertEqual(launch.call_count,4)
+        self.assertEqual(
+            [call.args[0] for call in launch.call_args_list],
+            ["bootstrap","bootstrap","bootout","bootout"])
+        self.assertFalse(module.plist_path(freeze.WINDOWS[0]).exists())
+        self.assertFalse(module.plist_path(freeze.WINDOWS[1]).exists())
+        self.assertTrue(any(x[0]==freeze.WINDOWS[0] and
+                            x[1]=="INSTALL_ROLLED_BACK_NO_SERVICE_ENABLED"
+                            for x in attempts))
+        self.assertTrue(any(x[0]==freeze.WINDOWS[1] and
+                            x[1]=="INSTALL_ROLLED_BACK_NO_SERVICE_ENABLED"
+                            for x in attempts))
+
+    def test_stage105_disk_full_and_one_failed_unload_still_attempts_every_service(self):
+        def fail_disk(window,status,**kwargs):
+            if status=="SCHEDULE_INSTALLED" and window==freeze.WINDOWS[1]:
+                raise OSError(28,"synthetic disk full")
+            if status.startswith("INSTALL_ROLLED") or status.startswith("ROLLBACK_FAILED"):
+                raise OSError(28,"synthetic rollback journal full")
+        with patch.object(module.sys,"platform","darwin"), \
+             patch.object(module,"isolated_checkout_preflight_local"), \
+             patch.object(module,"git"), \
+             patch.object(module,"read_frank_launchd_labels",return_value=["frank"]), \
+             patch.object(module,"launchctl",side_effect=[0,0,7,0]) as launch, \
+             patch.object(module,"store_status",side_effect=fail_disk), \
+             patch.object(module.shutil,"which",return_value="/bin/launchctl"):
+            with self.assertRaisesRegex(RuntimeError,"ROLLBACK_SAFETY_UNVERIFIED"):
+                module.install(now=self.start-20*60000,dry_run=False)
+        self.assertEqual(launch.call_count,4)
+        self.assertFalse(module.plist_path(freeze.WINDOWS[0]).exists())
+        self.assertTrue(module.plist_path(freeze.WINDOWS[1]).exists())
+
     def test_no_frozen_date_can_be_replaced(self):
         with self.assertRaises(ValueError):
             module.label_for("2026-10-15T06:00:00Z")
