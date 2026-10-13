@@ -31,6 +31,10 @@ class OneShotIsolatedTests(unittest.TestCase):
             patch.object(module,"STATES",root/"state"),
             patch.object(module,"LOGS",root/"logs"),
             patch.object(module,"AGENTS",root/"LaunchAgents"),
+            patch.object(module,"review_gate",return_value=Mock(
+                validate_authorization=Mock(return_value={
+                    "review_fingerprint":"a"*64}),
+                interactive_install_consent=Mock(return_value=True))),
         ]
         for item in self.patches:
             item.start()
@@ -84,13 +88,12 @@ class OneShotIsolatedTests(unittest.TestCase):
             from scripts import monster_v4_stage102_claude_chat_review_gate as external_ai
         now=self.start-20*60000
         with patch.object(module.sys,"platform","darwin"), \
-             patch.object(external_ai,"verify_approved",return_value=True) as review, \
-             patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"read_frank_launchd_labels",return_value=["frank.daemon"]), \
+             patch.object(module,"isolated_checkout_preflight_local"), \
              patch.object(module,"git"), \
              patch.object(module,"launchctl",return_value=0) as launch, \
              patch.object(module.shutil,"which",return_value="/bin/launchctl"):
             installed=module.install(now=now,dry_run=False)
-        review.assert_called_once()
         self.assertEqual(len(installed),3)
         self.assertEqual(launch.call_count,3)
         for w in freeze.WINDOWS:
@@ -125,7 +128,7 @@ class OneShotIsolatedTests(unittest.TestCase):
         proof=self.fake_official()
         f=Mock(return_value=proof)
         push=Mock(return_value="f"*40)
-        with patch.object(module,"isolated_checkout_preflight"), patch.object(module,"git"):
+        with patch.object(module,"isolated_checkout_preflight_local"), patch.object(module,"git"):
             result=module.run(self.window,clock=lambda:self.start-1000,
                               capture=f,git_push=push)
         self.assertEqual(result,"GIT_PUSH_CONFIRMED")
@@ -137,7 +140,7 @@ class OneShotIsolatedTests(unittest.TestCase):
         status=module.status()[self.window]
         self.assertEqual(status["status"],"GIT_PUSH_CONFIRMED")
         self.assertTrue(status["source_sha256"])
-        with patch.object(module,"isolated_checkout_preflight") as pre:
+        with patch.object(module,"isolated_checkout_preflight_local") as pre:
             ret=module.run(self.window,clock=lambda:self.start-900,
                            capture=f,git_push=push)
         self.assertEqual(ret,"ALREADY_PUSHED")
@@ -146,7 +149,7 @@ class OneShotIsolatedTests(unittest.TestCase):
 
     def test_stale_window_fails_before_network(self):
         get=Mock()
-        with patch.object(module,"isolated_checkout_preflight") as checkout:
+        with patch.object(module,"isolated_checkout_preflight_local") as checkout:
             status=module.run(self.window,clock=lambda:self.start+2,
                               capture=get,git_push=Mock())
         self.assertEqual(status,"MISSED_WINDOW")
@@ -157,7 +160,7 @@ class OneShotIsolatedTests(unittest.TestCase):
     def test_failed_source_does_not_commit_false_evidence(self):
         get=Mock(side_effect=ValueError("synthetic no network"))
         push=Mock()
-        with patch.object(module,"isolated_checkout_preflight"), \
+        with patch.object(module,"isolated_checkout_preflight_local"), \
              patch.object(module.time,"sleep"), \
              patch.object(module,"git"):
             status=module.run(self.window,clock=lambda:self.start-120000,
@@ -170,7 +173,7 @@ class OneShotIsolatedTests(unittest.TestCase):
     def test_git_failure_preserves_sha_and_retry_never_recaptures(self):
         evidence=self.fake_official()
         fail=Mock(side_effect=RuntimeError("fake git push denied"))
-        with patch.object(module,"isolated_checkout_preflight"), patch.object(module,"git"):
+        with patch.object(module,"isolated_checkout_preflight_local"), patch.object(module,"git"):
             with self.assertRaisesRegex(RuntimeError,"fake git push"):
                 module.run(self.window,clock=lambda:self.start-1000,
                            capture=lambda _:evidence,git_push=fail)
@@ -189,7 +192,7 @@ class OneShotIsolatedTests(unittest.TestCase):
 
     def test_tampered_saved_evidence_cannot_upload(self):
         proof=self.fake_official()
-        with patch.object(module,"isolated_checkout_preflight"), patch.object(module,"git"):
+        with patch.object(module,"isolated_checkout_preflight_local"), patch.object(module,"git"):
             with self.assertRaises(RuntimeError):
                 module.run(self.window,clock=lambda:self.start-1000,
                            capture=lambda _:proof,
@@ -207,7 +210,7 @@ class OneShotIsolatedTests(unittest.TestCase):
         proof=self.fake_official()
         self.assertEqual(proof["snapshot_symbol_summary"][
             "usd_m_usdt_perpetual_asof_candidates"],1)
-        with patch.object(module,"isolated_checkout_preflight"), \
+        with patch.object(module,"isolated_checkout_preflight_local"), \
              patch.object(module,"git"):
             status=module.run(self.window,clock=lambda:self.start-16*60000,
                               capture=Mock(return_value=proof),
@@ -221,13 +224,14 @@ class OneShotIsolatedTests(unittest.TestCase):
         except ImportError:
             from scripts import monster_v4_stage102_claude_chat_review_gate as external_ai
         with patch.object(module.sys,"platform","darwin"), \
-             patch.object(external_ai,"verify_approved",
-                 side_effect=RuntimeError("STAGE99_OTHER_AI_REVIEW_REQUIRED")) as review, \
+             patch.object(module,"review_gate",return_value=Mock(
+                 validate_authorization=Mock(side_effect=
+                     RuntimeError("STAGE103_USER_INSTALL_AUTHORIZATION_NOT_GIVEN")))) as blocked_gate, \
              patch.object(module,"isolated_checkout_preflight") as checkout, \
              patch.object(module,"launchctl") as launch:
             with self.assertRaisesRegex(RuntimeError,"REVIEW_REQUIRED"):
                 module.install(now=self.start-15*60000,dry_run=False)
-            review.assert_called_once()
+            blocked_gate.return_value.validate_authorization.assert_called_once()
             checkout.assert_not_called()
             launch.assert_not_called()
 
@@ -237,13 +241,14 @@ class OneShotIsolatedTests(unittest.TestCase):
         except ImportError:
             from scripts import monster_v4_stage102_claude_chat_review_gate as external_ai
         with self.assertRaises(RuntimeError):
-            external_ai.verify_approved()
+            external_ai.validate_authorization(root=module.CLONE,
+               read_blob=lambda _: "a"*40,is_ancestor=lambda _:True)
         external_ai.selftest()
         self.assertFalse((module.CLONE / external_ai.RECEIPT).exists())
 
     def test_execute_git_failure_preserves_retryable_original_bytes(self):
         evidence=self.fake_official()
-        with patch.object(module,"isolated_checkout_preflight"), \
+        with patch.object(module,"isolated_checkout_preflight_local"), \
              patch.object(module,"git"), \
              patch.object(module,"bootout") as unload:
             with patch.object(module.stage97,"now_ms",return_value=self.start-1000), \
