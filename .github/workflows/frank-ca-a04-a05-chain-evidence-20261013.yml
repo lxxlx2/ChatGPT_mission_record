@@ -26,13 +26,13 @@ jobs:
       - name: Offline source static and schema check
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m compileall -q mission_agent/mission_control/wallet_chain_capture.py mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_evidence_store.py mission_agent/mission_control/wallet_capture_provider.py mission_agent/mission_control/research_wallet_facts.py scripts/frank_capture_owner_readonly.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_a05_sidecar_integration.py
-          python -m pyflakes mission_agent/mission_control/wallet_chain_capture.py mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_evidence_store.py mission_agent/mission_control/wallet_capture_provider.py mission_agent/mission_control/research_wallet_facts.py scripts/frank_capture_owner_readonly.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_a05_sidecar_integration.py
+          python -B -m compileall -q mission_agent/mission_control/wallet_chain_capture.py mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_instruction_evidence.py mission_agent/mission_control/wallet_evidence_store.py mission_agent/mission_control/wallet_capture_provider.py mission_agent/mission_control/research_wallet_facts.py scripts/frank_capture_owner_readonly.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_a05_sidecar_integration.py tests/test_frank_a04_inner_transfer_evidence.py
+          python -m pyflakes mission_agent/mission_control/wallet_chain_capture.py mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_instruction_evidence.py mission_agent/mission_control/wallet_evidence_store.py mission_agent/mission_control/wallet_capture_provider.py mission_agent/mission_control/research_wallet_facts.py scripts/frank_capture_owner_readonly.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_a05_sidecar_integration.py tests/test_frank_a04_inner_transfer_evidence.py
           node --check mission_agent/mission_control/static/app.js
       - name: A02 A03 A04 A05 offline evidence gates
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m pytest -q -p no:cacheprovider tests/test_person_registry_research_v2.py tests/test_person_registry_a02_review_regression.py tests/test_research_wallet_facts_a03.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_a05_sidecar_integration.py
+          python -B -m pytest -q -p no:cacheprovider tests/test_person_registry_research_v2.py tests/test_person_registry_a02_review_regression.py tests/test_research_wallet_facts_a03.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_a05_sidecar_integration.py tests/test_frank_a04_inner_transfer_evidence.py
       - name: Whole local-agent actual Git replay suite
         working-directory: crypto-300-profit-mission/local-agent
         env:
