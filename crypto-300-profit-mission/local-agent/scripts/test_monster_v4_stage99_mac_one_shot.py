@@ -31,6 +31,9 @@ class OneShotIsolatedTests(unittest.TestCase):
             patch.object(module,"STATES",root/"state"),
             patch.object(module,"LOGS",root/"logs"),
             patch.object(module,"AGENTS",root/"LaunchAgents"),
+            patch.object(module,"assert_reviewed_runtime_source",
+                         return_value={"complete_execution_path_verified":8}),
+            patch.object(module,"assert_unloaded",return_value=True),
             patch.object(module,"review_gate",return_value=Mock(
                 validate_authorization=Mock(return_value={
                     "review_fingerprint":"a"*64}),
@@ -89,7 +92,7 @@ class OneShotIsolatedTests(unittest.TestCase):
         now=self.start-20*60000
         with patch.object(module.sys,"platform","darwin"), \
              patch.object(module,"read_frank_launchd_labels",return_value=["frank.daemon"]), \
-             patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"isolated_checkout_preflight_local"), \
              patch.object(module,"git"), \
              patch.object(module,"launchctl",return_value=0) as launch, \
              patch.object(module.shutil,"which",return_value="/bin/launchctl"):
@@ -117,7 +120,7 @@ class OneShotIsolatedTests(unittest.TestCase):
         second=module.plist_path(freeze.WINDOWS[1])
         second.write_text("other existing stage99 job must remain")
         with patch.object(module.sys,"platform","darwin"), \
-             patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"isolated_checkout_preflight_local"), \
              patch.object(module,"git"), \
              patch.object(module,"read_frank_launchd_labels",return_value=["frank"]), \
              patch.object(module,"launchctl",return_value=0) as launch, \
@@ -130,7 +133,7 @@ class OneShotIsolatedTests(unittest.TestCase):
 
     def test_stage103_bootstrap_midfailure_rolls_back_all_created_jobs(self):
         with patch.object(module.sys,"platform","darwin"), \
-             patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"isolated_checkout_preflight_local"), \
              patch.object(module,"git"), \
              patch.object(module,"read_frank_launchd_labels",return_value=["frank"]), \
              patch.object(module,"launchctl",side_effect=[0,1,0,0]) as launch, \
@@ -145,7 +148,7 @@ class OneShotIsolatedTests(unittest.TestCase):
 
     def test_stage103_frank_mutation_aborts_only_our_services(self):
         with patch.object(module.sys,"platform","darwin"), \
-             patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"isolated_checkout_preflight_local"), \
              patch.object(module,"git"), \
              patch.object(module,"read_frank_launchd_labels",
                           side_effect=[["frank.original"],["frank.original","frank.extra"]]), \
@@ -155,6 +158,64 @@ class OneShotIsolatedTests(unittest.TestCase):
                 module.install(now=self.start-20*60000,dry_run=False)
         self.assertEqual(launch.call_count,6)
         self.assertTrue(all(not module.plist_path(w).exists() for w in freeze.WINDOWS))
+
+    def test_stage104_bootout_failed_retains_plist_and_cannot_claim_success(self):
+        module.AGENTS.mkdir(parents=True,exist_ok=True)
+        file=module.plist_path(self.window)
+        file.write_text("keep for safety")
+        with patch.object(module,"launchctl",return_value=5):
+            with self.assertRaisesRegex(RuntimeError,"BOOTOUT_FAILED"):
+                module.bootout(self.window)
+        self.assertTrue(file.is_file())
+
+    def test_stage104_rollback_marks_still_loaded_on_failure(self):
+        with patch.object(module.sys,"platform","darwin"), \
+             patch.object(module,"isolated_checkout_preflight_local"), \
+             patch.object(module,"git"), \
+             patch.object(module,"read_frank_launchd_labels",return_value=["frank"]), \
+             patch.object(module,"launchctl",side_effect=[0,1,7,0]) as launch, \
+             patch.object(module.shutil,"which",return_value="/bin/launchctl"):
+            with self.assertRaisesRegex(RuntimeError,"ROLLBACK_UNVERIFIED_SERVICES"):
+                module.install(now=self.start-20*60000,dry_run=False)
+        self.assertEqual(launch.call_count,4)
+        self.assertEqual(module.status()[freeze.WINDOWS[1]]["status"],
+                         "ROLLBACK_FAILED_SERVICE_STILL_LOADED")
+        self.assertTrue(module.plist_path(freeze.WINDOWS[1]).exists())
+        self.assertEqual(module.status()[freeze.WINDOWS[0]]["status"],
+                         "INSTALL_ROLLED_BACK_NO_SERVICE_ENABLED")
+        self.assertFalse(module.plist_path(freeze.WINDOWS[0]).exists())
+
+    def test_stage104_assert_unloaded_checks_both_registry_and_detail(self):
+        from types import SimpleNamespace
+        absent="PID\tStatus\tLabel\n42\t0\tcom.someone.frank\n"
+        present=absent+"123\t0\t"+module.label_for(self.window)+"\n"
+        def response(rc,txt=""):
+            return SimpleNamespace(returncode=rc,stdout=txt,stderr="")
+        with patch.object(module.subprocess,"run",side_effect=[
+                response(0,absent),response(113)]):
+            self.assertTrue(module.assert_unloaded(self.window))
+        with patch.object(module.subprocess,"run",side_effect=[
+                response(0,present),response(113)]):
+            with self.assertRaisesRegex(RuntimeError,"STILL_LOADED"):
+                module.assert_unloaded(self.window)
+        with patch.object(module.subprocess,"run",side_effect=[
+                response(0,absent),response(0,"still exists")]):
+            with self.assertRaisesRegex(RuntimeError,"STILL_LOADED"):
+                module.assert_unloaded(self.window)
+        with patch.object(module.subprocess,"run",side_effect=[response(1)]):
+            with self.assertRaisesRegex(RuntimeError,"CANNOT_PROVE"):
+                module.assert_unloaded(self.window)
+
+    def test_stage104_bootout_verification_failure_does_not_delete_plist(self):
+        module.AGENTS.mkdir(parents=True,exist_ok=True)
+        file=module.plist_path(self.window)
+        file.write_text("do not erase the only recovery pointer")
+        with patch.object(module,"launchctl",return_value=0), \
+             patch.object(module,"assert_unloaded",side_effect=RuntimeError(
+                 "STAGE104_SERVICE_STILL_LOADED")):
+            with self.assertRaisesRegex(RuntimeError,"SERVICE_STILL_LOADED"):
+                module.bootout(self.window)
+        self.assertTrue(file.exists())
 
     def test_no_frozen_date_can_be_replaced(self):
         with self.assertRaises(ValueError):
