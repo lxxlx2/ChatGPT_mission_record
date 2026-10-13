@@ -29,6 +29,25 @@ SOURCES = (
      "cf3c4ae05d35a4a5b0cb32065ae81d0f83a46216"),
 )
 
+EXTENDED_SIGNER_SOURCES = (
+    ("bsc-meme-address-model-v1-p3-original-signer-part3-2026-10-13.json",
+     "f7173f3906983d96eb29bcfac1c6d9d1a874e816"),
+    ("bsc-meme-address-model-v1-p3-original-signer-part4-2026-10-13.json",
+     "445d26b880b82531e9ad4ae9c2b5765c85099a4a"),
+    ("bsc-meme-address-model-v1-p3-original-signer-part5-2026-10-13.json",
+     "4830fa1376db094c4c4fa1e7c56989d3ea4f79ca"),
+    ("bsc-meme-address-model-v1-p3-original-signer-part6-2026-10-13.json",
+     "35adca2d573f9abde5775c29b7803cfa0191885e"),
+    ("bsc-meme-address-model-v1-p3-original-signer-part7-2026-10-13.json",
+     "f60d249a1f54e9681a69d5dff93e200775062c79"),
+    ("bsc-meme-address-model-v1-p3-original-signer-part8-2026-10-13.json",
+     "610077af932b7d2242f6bc3dccbfccf39dd954e9"),
+    ("bsc-meme-address-model-v1-p3-original-signer-part9-2026-10-13.json",
+     "6702b1c212e35eca3bc05dbcc8d1486c79b8c5b4"),
+    ("bsc-meme-address-model-v1-p3-original-signer-part10-2026-10-13.json",
+     "0b02fda574e1a097d01fdc7e6ab83f4bf3085deb"),
+)
+
 
 class EvidenceError(ValueError):
     pass
@@ -43,9 +62,9 @@ def git_blob_sha(blob: bytes) -> str:
     return hashlib.sha1(b"blob " + str(len(blob)).encode("ascii") + b"\0" + blob).hexdigest()
 
 
-def load_pinned(root: Path) -> tuple[list[dict], list[dict]]:
+def load_pinned(root: Path, *, include_full: bool = False) -> tuple[list[dict], list[dict]]:
     docs, refs = [], []
-    for name, pin in SOURCES:
+    for name, pin in SOURCES + (EXTENDED_SIGNER_SOURCES if include_full else ()):
         blob = (root / name).read_bytes()
         sha = git_blob_sha(blob)
         require(sha == pin, f"pinned immutable P3 source changed: {name}")
@@ -55,17 +74,17 @@ def load_pinned(root: Path) -> tuple[list[dict], list[dict]]:
 
 
 def build_overlay(docs: list[dict], refs: list[dict]) -> dict:
-    require(len(docs) == len(refs) == 5, "missing source")
-    frozen, census, candidates, signer1, signer2 = docs
+    require(len(docs) == len(refs) and len(docs) in (5, 13), "missing or unexpected source")
+    frozen, census, candidates, *signers = docs
     require(len(frozen["wallets"]) == 23 and len(set(frozen["wallets"])) == 23,
             "frozen cohort wrong")
     require(len(frozen["exact_19_CA"]) == 19, "exact CA cohort wrong")
-    require(frozen["production"] == census["network"].replace("bnb-mainnet", "NO_GO")
-            == candidates["production"] == signer1["production"] == signer2["production"],
-            "production or chain mismatch")
+    require(census["network"] == "bnb-mainnet" and frozen["production"] == "NO_GO"
+            and candidates["production"] == "NO_GO"
+            and all(x["production"] == "NO_GO" for x in signers), "production or chain mismatch")
     require(census["source_frozen_precommit_sha"] == refs[0]["git_blob_sha"]
             and candidates["source_census_sha"] == refs[1]["git_blob_sha"]
-            and signer1["precommit_sha"] == signer2["precommit_sha"] == refs[2]["git_blob_sha"],
+            and all(x["precommit_sha"] == refs[2]["git_blob_sha"] for x in signers),
             "source links unpinned")
     require(census["exact_asof_UTC"] == frozen["as_of_snapshot_utc"]
             and census["exact_cutoff_block_UTC"] == frozen["exact_last30d_start_utc"],
@@ -92,9 +111,16 @@ def build_overlay(docs: list[dict], refs: list[dict]) -> dict:
     require(len(pairs) == 75 and len(hashes) == 71, "source candidate drift")
 
     parsed: dict[str, dict] = {}
-    require(signer1["range"] == [0, 7] and signer2["range"] == [8, 15],
-            "signed tx source partition drift")
-    for src in (signer1, signer2):
+    cursor = 0
+    for part_no, src in enumerate(signers, 1):
+        size = len(src["records"])
+        require(src["part"] == part_no and size > 0
+                and src["range"] == [cursor, cursor + size - 1],
+                "signed tx source partition drift")
+        cursor += size
+    require(cursor == (16 if len(signers) == 2 else 71),
+            "original source hash coverage drift")
+    for src in signers:
         for record in src["records"]:
             tx = record["hash"].lower()
             require(tx in hashes and tx not in parsed, "unknown/duplicate signed transaction")
@@ -103,7 +129,7 @@ def build_overlay(docs: list[dict], refs: list[dict]) -> dict:
                     {b for w in hashes[tx] for b in pairs[w, tx]["transfer_blocks"]},
                     "source original transaction block drift")
             parsed[tx] = record
-    require(len(parsed) == 16, "16-signer freeze changed")
+    require(len(parsed) == cursor, "signed original hash coverage drift")
     rows = []
     for wallet in frozen["wallets"]:
         scan = scans[wallet]
@@ -178,8 +204,9 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Build pinned P3 BSC owner-signer evidence overlay")
     ap.add_argument("--source-dir", type=Path, default=DIRECTORY)
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--full-source", action="store_true", help="Include all 71 original transaction reads")
     opts = ap.parse_args()
-    docs, refs = load_pinned(opts.source_dir)
+    docs, refs = load_pinned(opts.source_dir, include_full=opts.full_source)
     result = build_overlay(docs, refs)
     opts.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
