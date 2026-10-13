@@ -147,7 +147,7 @@ def replay(d0_open_ms, anchor_end_ms, rows, original_d1_ms=None):
             "original_D1_observation_ms": original_d1_ms,
             "anchor_end_ms": anchor_end_ms,
             "last_observed_minute_open_ms": last if last > d0_open_ms else None,
-            "source_status": status, "complete_168h_source": complete,
+            "source_status": status, "complete_fixed_anchor_window": complete,
             "complete_minute_blocks": len(blocks),
             "priority_count": priorities, "events": events,
             "real_executable_net_profit": "UNKNOWN",
@@ -184,7 +184,9 @@ def selftest():
     assert [e for e in y["events"] if e["state"] == "PRIORITY"] == priority
 
     # More future after the first priority may not alter that priority.
-    extended = base + rows([100], [1000])[-15:]
+    extended = base + [
+        (bar[0] + len(base) * MIN, *bar[1:]) for bar in rows([100], [1000])
+    ]
     z = replay(start, end + 15 * MIN, extended, start)
     assert [e for e in z["events"] if e["state"] == "PRIORITY"][:1] == priority
 
