@@ -17,6 +17,19 @@
 - A03 及后续：`NOT_STARTED`。生产 Frank V1/Loop/Gmail/SQLite 和 Mac 均未改变。下一关独立 Review，之后继续 A03/A04 与 F01/C01，严格按本清单。
 - 本分支仅更新 TODO 进度链接；实际代码在 PR #42 分支。**旧 main SHA 的测试不能作为未来新 main 发布依据。**
 
+## 2026-10-13 A02 独立审查整改续报（保留待验收勾选）
+
+- 原 PR #42 代码头 `37db2949`：Claude 审查结论 `BLOCK`，本地未推送的旧审查修复提交不能当作远端已提交。
+- 重新核对原 PR 源码确认关键数据契约缺陷：base58 地址缺少 32-byte 解码、v2 没有明确起始 Slot、历史重归属共用同一个 `wallet_id`、schema 类型模糊、disabled 空钱包占位兼容。
+- 2026-10-13 在**同一 Draft PR #42 开发分支**实际提交整改：`c7c54690`（产品），`38af418d`（旧夹具），`2c5c6ea2`（新增独立回归），`4d68fdb8`（CI 明确纳入新回归），`22f7b8f7`（原 checkpoint 审查与主线说明）。
+- [GitHub Actions #38413246796](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38413246796) 在精确 `2c5c6ea29f30623a42b5bfa52dbedca4bb8a144d` 上实际通过原专项 13 项、完整 1,455 项。**这是中间提交的成功，不能宣称最终 PR 头通过**；以最终 HEAD 的 CI 为准。
+- A02 仍是 `CODE_REMEDIATED / EXACT_HEAD_CI_PENDING / INDEPENDENT_REREVIEW_REQUIRED`，**保持 [ ]**，没有合并、Mac 部署、Gmail、生产数据修改。
+- R-1：现存 `signals/registry.py`、`meme/registry.py`、研究 `PersonRegistry` 的授权/验证语义仍必须隔离；新增测试只对齐当前注册表的钱包→人物标识，绝不能提升 ownership status。
+- R-2：v2 现在允许显式登记绑定来源、研究批准状态和 funder/controller **证据引用**，但还没有 A05 的实际链上账户归属/受益控制证明。研究批准也不等于可聚合已核实资产。
+- Claude 认为 CI `push` 触发错分支的结论与远端 `37db2949` 源文件不符，已按实际工作流更正。其他高优先级实质缺陷按原审查处理。
+
+**主线优先次序保持不变：** A02 经他 AI 最终 SHA 复审后，进入 A03 研究读取接口、A04/A05 可核实 ATA/交易事实，然后 F01/F02 首屏过滤与真实仓位；C01/C02/C07/C08 通用 CA 核实/叙事/报价可在独立分支并行；S01 检查最新 main 安全缺陷。不能以 A02 测试绿灯替代 12 项截图业务修复。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
