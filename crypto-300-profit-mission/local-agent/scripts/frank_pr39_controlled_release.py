@@ -664,6 +664,22 @@ class Mac:
             time.sleep(1)
         raise RuntimeError('OLD_PROCESSES_STILL_ALIVE')
 
+    def identity(self, pid):
+        command = run(['/bin/ps', '-p', str(pid), '-o', 'command='])
+        started_text = run(['/bin/ps', '-p', str(pid), '-o', 'lstart='], env={**os.environ, 'LC_ALL': 'C'})
+        started = time.mktime(time.strptime(started_text, '%a %b %d %H:%M:%S %Y'))
+        if sys.platform == 'darwin':
+            started = darwin_precise_process_start(pid, started)
+        cwd = [line[1:] for line in run(['/usr/sbin/lsof', '-a', '-p', str(pid), '-d', 'cwd', '-Fn']).splitlines()
+               if line.startswith('n')]
+        return {'pid': pid, 'command': command, 'started': started, 'cwd': cwd[0] if len(cwd) == 1 else None}
+
+    def signal_verified(self, pid, expected, signum):
+        # Re-read the full identity immediately before every signal: PID reuse must never
+        # redirect a signal to an unrelated process.
+        require(self.identity(pid) == expected, 'PROCESS_IDENTITY_CHANGED')
+        os.kill(pid, signum)
+
 
 def scanner_inventory(mac, label, prod):
     require(label.startswith('gui/' + str(os.getuid()) + '/') and
@@ -949,7 +965,7 @@ def collect_evidence(mac, root, expected, scanner_label):
             value = fn()
             report['checks'][name] = {'status': 'PASS', 'result': value}
         except Exception as exc:
-            code = str(exc) if isinstance(exc, RuntimeError) and re.fullmatch('[A-Z_]+', str(exc)) else type(exc).__name__
+            code = str(exc) if isinstance(exc, RuntimeError) and re.fullmatch('[A-Za-z_0-9]+', str(exc)) else type(exc).__name__
             report['checks'][name] = {'status': 'UNVERIFIED', 'reason': code}
     def manual():
         pointer = mac.home / '.frank_meme_control_root'
@@ -1009,6 +1025,327 @@ def interrupted(signum, frame):
     raise KeyboardInterrupt('RELEASE_INTERRUPTED')
 
 
+# ---------------------------------------------------------------------------
+# Exceptional legacy Loop cutover. Separately authorized, never reached by
+# normal prepare(), never reports a runtime PASS for the legacy Loop.
+# Design: FRANK_PR39_LEGACY_CONTROLLED_CUTOVER_DESIGN_20261013.md, revised by
+# FRANK_PR39_LEGACY_CONTROLLED_CUTOVER_DESIGN_REVISION_20261013.md.
+# ---------------------------------------------------------------------------
+LEGACY_OVERLAY_CLASS = 'DOCUMENTED_LEGACY_DISK_BYTES_RUNTIME_UNVERIFIED'
+
+
+def legacy_digest(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False, default=str).encode('utf-8')).hexdigest()
+
+LEGACY_PHASES = ('L00_RECHECKED', 'L10_STAGED', 'L20_PRESTOP_BACKED_UP', 'L25_FROZEN',
+                 'L30_HOLDS_SET', 'L40_LOOP_DASHBOARD_STOPPED', 'L50_POSTSTOP_BACKED_UP',
+                 'L60_DDL_APPLIED', 'L70_RUNNERS_SWITCHED', 'L80_DASHBOARD_VERIFIED',
+                 'L90_LOOP_VERIFIED', 'L100_SUCCESS')
+LEGACY_ABORTED = 'LEGACY_ABORTED_BEFORE_STOP'
+LEGACY_MANUAL = 'LEGACY_MANUAL_RECOVERY_REQUIRED'
+LEGACY_NORMAL_TERMINAL = {'L100_SUCCESS', LEGACY_ABORTED}
+LEGACY_PLAN_READY = 'LEGACY_PLAN_ELIGIBLE_FOR_AUTHORIZATION'
+LEGACY_AUTH_FIELDS = ('authorize_production_restart', 'authorize_future_real_notifications',
+                      'authorize_legacy_unverified_loop_cutover')
+LEGACY_SCANNER_KEYS = ('pid', 'protected', 'source', 'loaded_source_sha256', 'policy_hash',
+                       'entry_hash', 'loaded_hash')
+
+
+def legacy_loop_identity(mac, loop_text):
+    """Identity of the unverifiable legacy Loop. Never a runtime PASS."""
+    runner = mac.runners['loop']
+    require(runner.is_file() and not runner.is_symlink(), 'LEGACY_RUNNER_FILE')
+    pid, loaded = mac.launch(mac.labels['loop'])
+    require(str(runner) in loaded, 'LEGACY_LOADED_RUNNER_POINTER')
+    label = mac.labels['loop'].split('/')[-1]
+    plist = mac.home / 'Library/LaunchAgents' / (label + '.plist')
+    data = plistlib.loads(plist.read_bytes())
+    require(data.get('Label') == label and data.get('ProgramArguments') == [str(runner)] and
+            data.get('KeepAlive') is True and not data.get('EnvironmentVariables'), 'LEGACY_PLIST_LIFECYCLE')
+    agent = field(loop_text, 'LOCAL_AGENT')
+    identity = mac.identity(pid)
+    require('scripts/mission_meme_v1.py loop' in identity['command'], 'LEGACY_LOOP_COMMAND')
+    require(interpreter_matches(field(loop_text, 'VENV'), identity['command']), 'LEGACY_LOOP_INTERPRETER')
+    require(identity['cwd'] == str(agent), 'LEGACY_LOOP_CWD')
+    drift = source_drift_diagnostic(agent)
+    require(drift['historical_overlay_classification'] == LEGACY_OVERLAY_CLASS, 'LEGACY_FINGERPRINT_NOT_EXACT')
+    overlay = sorted(list(HISTORICAL_UI_LEGACY_BLOBS) + list(HISTORICAL_UI_LEGACY_EXTRA))
+    # The documented shape: overlay and runner changed AFTER this process started.
+    require(all((agent / rel).stat().st_mtime > identity['started'] for rel in overlay),
+            'LEGACY_OVERLAY_NOT_MODIFIED_AFTER_START')
+    require(runner.stat().st_mtime > identity['started'], 'LEGACY_RUNNER_NOT_MODIFIED_AFTER_START')
+    return {'pid': pid, 'identity': identity, 'agent': str(agent), 'plist': str(plist),
+            'runner_hash': sha(runner), 'plist_hash': sha(plist), 'overlay_files': overlay,
+            'classification': drift['historical_overlay_classification']}
+
+
+def legacy_scanner_snapshot(mac, scanner_label, prod):
+    snap = scanner_inventory(mac, scanner_label, prod)
+    return {key: snap[key] for key in LEGACY_SCANNER_KEYS}
+
+
+def legacy_queue_digest(state):
+    return legacy_digest({table: state[table] for table in TABLES} | {
+        'local_delivery_presentation': state.get('local_delivery_presentation', [])})
+
+
+def legacy_cutover_plan(mac, root, expected, scanner_label):
+    """Read-only. Eligible to REQUEST authorization; grants no permission to deploy."""
+    source = candidate(root, expected)
+    texts = {k: p.read_text() for k, p in mac.runners.items()}
+    dashboard = mac.runtime('dashboard', texts['dashboard'])
+    dashboard_identity = mac.identity(dashboard['pid'])   # enforces precise kernel birth on darwin
+    loop = legacy_loop_identity(mac, texts['loop'])
+    fields = {k: field(texts['loop'], k) for k in
+              ('PROD', 'CONTROL_POINTER', 'POLICY', 'APPROVED_HASH_FILE', 'RPC_FILE', 'VENV')}
+    for key in ('PROD', 'CONTROL_POINTER', 'VENV', 'RPC_FILE'):
+        require(field(texts['dashboard'], key) == fields[key], 'DASH_LOOP_CONFIG_DISAGREEMENT')
+    control = Path(fields['CONTROL_POINTER'].read_text().strip()).resolve()
+    db, prod = control / 'mission-control.sqlite', fields['PROD'] / 'forward.sqlite'
+    require(db.resolve() != prod.resolve(), 'DB_BOUNDARY')
+    policy = sha(fields['POLICY'])
+    require(fields['APPROVED_HASH_FILE'].read_text().strip() == policy, 'POLICY_EXTERNAL_PIN')
+    require(sha(root / 'config/follow_policy_v1.approved.json') == policy, 'APPROVED_POLICY_BYTES')
+    policy_body = json.loads(fields['POLICY'].read_text())
+    require(policy_body.get('status') == 'FROZEN_APPROVED' and policy_body.get('live_delivery_approved') is True,
+            'POLICY_AUTHORITY')
+    state = ledger(db)                       # strict: any non-terminal row raises
+    reasons = review_reasons(state)
+    require(reasons['requires_private_review'] == 0 and 'UNVERIFIED_OTHER_REASON' not in reasons['reason_counts'],
+            'MANUAL_REVIEW_REASONS_REQUIRE_ACCEPTANCE')
+    fresh(control / 'mission-control-health.json', policy=policy)
+    with closing(ro(prod)) as conn:
+        integrity(conn)
+    workers = mac.worker_pids({'new_agent': str(root), 'runtime': {
+        'loop': {'agent': loop['agent']}, 'dashboard': {'agent': dashboard['agent']}}})
+    require(sorted(workers) == sorted([loop['pid'], dashboard['pid']]), 'DUPLICATE_OR_UNKNOWN_WORKER_BEFORE_STOP')
+    scanner = legacy_scanner_snapshot(mac, scanner_label, prod)
+    from frank_pr39_predeploy_readonly import frank_payment_coverage
+    coverage = frank_payment_coverage(prod)
+    require(coverage['indexed_states'] > 0 and coverage['latest_buy_predicate_missing'] == 0, 'FRANK_BUY_COVERAGE')
+    disk_gate(mac.support, (db, prod))
+    port = int((control / 'dashboard.port').read_text())
+    require(1 <= port <= 65535, 'DASHBOARD_PORT')
+    http_check({'port': port, 'runtime': {'dashboard': dashboard}, 'new_agent': dashboard['agent']}, False)
+    fingerprint = legacy_digest({'expected': expected, 'source': source, 'loop_pid': loop['pid'],
+                          'loop_started': loop['identity']['started'], 'loop_runner': loop['runner_hash'],
+                          'dash_pid': dashboard['pid'], 'dash_runner': sha(mac.runners['dashboard']),
+                          'queue': legacy_queue_digest(state), 'scanner': scanner, 'policy': policy})
+    report = {'mode': 'LEGACY_CUTOVER_PLAN', 'gate': LEGACY_PLAN_READY, 'fingerprint': fingerprint,
+              'legacy_loop_runtime': 'UNVERIFIED_KNOWN_DISK_OVERLAY_ONLY', 'deployment_authorized': False,
+              'mutated_production': False, 'sent_gmail': False, 'restarted_services': False,
+              'legacy_overlay_classification': loop['classification'],
+              'legacy_overlay_files': len(loop['overlay_files']),
+              'dashboard_runtime': 'PASS_STRICT', 'queue_terminal': True,
+              'manual_review_historical': reasons['manual_review_live'],
+              'expired_before_any_send': reasons['expired_before_any_send'],
+              'scanner_pid_observed': scanner['pid'], 'frank_buy_predicate_missing': 0}
+    report['_internal'] = {'source': source, 'texts': texts, 'fields': fields, 'control': control, 'db': db,
+                           'prod': prod, 'port': port, 'policy': policy, 'loop': loop, 'dashboard': dashboard,
+                           'dashboard_identity': dashboard_identity,
+                           'scanner': scanner, 'queue_state': state}
+    return report
+
+
+def install_signal_handlers():
+    return {sig: signal.signal(sig, interrupted) for sig in (signal.SIGTERM, signal.SIGINT)}
+
+
+def restore_signal_handlers(previous):
+    for sig, handler in previous.items():
+        signal.signal(sig, handler)
+
+
+def write_runner(path, text):
+    atomic(path, text.encode('utf-8'), 0o700)
+    require(Path(path).read_bytes() == text.encode('utf-8'), 'RUNNER_WRITE_VERIFY_FAILED')
+
+
+class LegacyJournal:
+    """Phase log. Every irreversible action records an intent before it runs."""
+
+    def __init__(self, path, header):
+        self.path = Path(path)
+        self.data = dict(header, mode='LEGACY_CUTOVER', phase='NONE', history=[])
+        self.write()
+
+    def write(self):
+        atomic(self.path, json.dumps(self.data, sort_keys=True, ensure_ascii=False).encode('utf-8'), 0o600)
+
+    def phases(self):
+        return [h['phase'] for h in self.data['history']]
+
+    def enter(self, phase, **facts):
+        done = self.phases()
+        require(phase == LEGACY_PHASES[len(done)], 'LEGACY_PHASE_ORDER')
+        self.data['history'].append({'phase': phase, 'facts': facts})
+        self.data['phase'] = phase
+        self.data.pop('intent', None)
+        self.write()
+
+    def intent(self, action, **facts):
+        self.data['intent'] = {'action': action, 'facts': facts}
+        self.write()
+
+    def terminal(self, phase, **facts):
+        require(phase in (LEGACY_ABORTED, LEGACY_MANUAL), 'LEGACY_TERMINAL_PHASE')
+        self.data['history'].append({'phase': phase, 'facts': facts})
+        self.data['phase'] = phase
+        self.data.pop('intent', None)
+        self.write()
+
+
+def _legacy_public(report):
+    return {key: value for key, value in report.items() if not key.startswith('_')}
+
+
+def legacy_cutover_apply(mac, root, expected, scanner_label, release_dir, authorizations):
+    require(all(authorizations.get(field_name) is True for field_name in LEGACY_AUTH_FIELDS),
+            'LEGACY_AUTHORIZATION_INCOMPLETE')
+    plan = legacy_cutover_plan(mac, root, expected, scanner_label)      # L00 recheck
+    internal = plan['_internal']
+    location = Path(release_dir)
+    location.mkdir(mode=0o700, parents=True)
+    atomic(location / 'legacy-loop-runner.before.sh', mac.runners['loop'].read_bytes(), 0o600)
+    atomic(location / 'legacy-dashboard-runner.before.sh', mac.runners['dashboard'].read_bytes(), 0o600)
+    journal = LegacyJournal(location / 'journal.json', {
+        'expected': expected, 'plan_fingerprint': plan['fingerprint'],
+        'legacy_loop_pid': internal['loop']['pid'], 'legacy_loop_identity': internal['loop']['identity'],
+        'dashboard_pid': internal['dashboard']['pid'], 'dashboard_identity': internal['dashboard_identity'],
+        'scanner_pid': internal['scanner']['pid']})
+    loop_pid = internal['loop']['pid']
+    loop_identity = internal['loop']['identity']
+    dash_pid = internal['dashboard']['pid']
+    dash_identity = journal.data['dashboard_identity']
+    frozen = stop_intent = False
+    previous = install_signal_handlers()
+    try:
+        journal.enter('L00_RECHECKED', fingerprint=plan['fingerprint'])
+        staged = stage_immutable_release(mac, root, expected, internal['source'])
+        journal.enter('L10_STAGED', release_sha12=expected[:12])
+        new_texts = {k: replace_source(v, staged) for k, v in internal['texts'].items()}
+        backup(internal['db'], location / 'control-prestop.sqlite')
+        backup(internal['prod'], location / 'frank-prestop.sqlite')
+        journal.enter('L20_PRESTOP_BACKED_UP', control_backup='ok', frank_backup='ok')
+        journal.intent('FREEZE_LEGACY_LOOP', pid=loop_pid)
+        mac.signal_verified(loop_pid, loop_identity, signal.SIGSTOP)
+        frozen = True
+        frozen_state = ledger(internal['db'])                          # strict, while the Loop cannot act
+        journal.enter('L25_FROZEN', queue_digest=legacy_queue_digest(frozen_state))
+        journal.intent('HOLD_LOOP_AND_DASHBOARD')
+        mac.hold('loop')
+        mac.hold('dashboard')
+        journal.enter('L30_HOLDS_SET')
+        stop_intent = True
+        journal.intent('UNLOAD_LOOP_BEFORE_ANY_KILL', pid=loop_pid)
+        mac.stop('loop')                                               # bootout: KeepAlive cannot respawn
+        if mac.alive(loop_pid):
+            mac.signal_verified(loop_pid, loop_identity, signal.SIGKILL)
+        mac.wait_dead([loop_pid])
+        mac.absent('loop')
+        journal.intent('UNLOAD_DASHBOARD_BEFORE_ANY_KILL', pid=dash_pid)
+        mac.stop('dashboard')
+        if mac.alive(dash_pid):
+            mac.signal_verified(dash_pid, dash_identity, signal.SIGKILL)
+        mac.wait_dead([dash_pid])
+        mac.absent('dashboard')
+        workers = mac.worker_pids({'new_agent': str(staged), 'runtime': {
+            'loop': {'agent': internal['loop']['agent']}, 'dashboard': {'agent': internal['dashboard']['agent']}}})
+        require(not workers, 'LEGACY_WORKERS_REMAIN_AFTER_STOP')
+        require(legacy_scanner_snapshot(mac, scanner_label, internal['prod']) == internal['scanner'],
+                'SCANNER_CHANGED_DURING_CUTOVER')
+        journal.enter('L40_LOOP_DASHBOARD_STOPPED', workers=0)
+        post = ledger(internal['db'])                                  # strict terminal after the stop
+        backup(internal['db'], location / 'control-poststop.sqlite')
+        backup(internal['prod'], location / 'frank-poststop.sqlite')
+        journal.enter('L50_POSTSTOP_BACKED_UP', watermark=legacy_queue_digest(post))
+        journal.intent('MIGRATE_ADDITIVE_TABLE_ONLY')
+        migrate(internal['db'])
+        assert_preserved(post, ledger(internal['db']))
+        journal.enter('L60_DDL_APPLIED')
+        journal.intent('SWITCH_BOTH_RUNNERS_TO_IMMUTABLE_RELEASE')
+        write_runner(mac.runners['dashboard'], new_texts['dashboard'])
+        write_runner(mac.runners['loop'], new_texts['loop'])
+        journal.enter('L70_RUNNERS_SWITCHED', loop_runner=sha(mac.runners['loop']),
+                      dashboard_runner=sha(mac.runners['dashboard']))
+        journal.intent('START_DASHBOARD_NEW_RUNNER')
+        mac.start('dashboard', internal['dashboard']['plist'])
+        dash_new = wait_ready(lambda: mac.runtime('dashboard', new_texts['dashboard']), 180)
+        require(dash_new['pid'] != dash_pid, 'DASHBOARD_PID_NOT_REPLACED')
+        http_check({'port': internal['port'], 'new_agent': str(staged)}, True)
+        journal.enter('L80_DASHBOARD_VERIFIED', dashboard_pid=dash_new['pid'])
+        journal.intent('START_LOOP_NEW_RUNNER')
+        since = time.time()
+        mac.start('loop', internal['loop']['plist'])
+        wait_ready(lambda: fresh(internal['control'] / 'mission-control-health.json', since=since,
+                                 policy=internal['policy']), 180)
+        loop_new = mac.runtime('loop', new_texts['loop'])
+        require(loop_new['pid'] != loop_pid, 'LEGACY_LOOP_PID_NOT_REPLACED')
+        assert_preserved(post, ledger(internal['db']))
+        require(legacy_scanner_snapshot(mac, scanner_label, internal['prod']) == internal['scanner'],
+                'SCANNER_CHANGED_AFTER_CUTOVER')
+        journal.enter('L90_LOOP_VERIFIED', loop_pid=loop_new['pid'])
+        journal.enter('L100_SUCCESS')
+        return {'status': 'LEGACY_SUCCESS', 'journal_phase': 'L100_SUCCESS', 'mutated_production': True}
+    except BaseException as exc:
+        reason = str(exc) if isinstance(exc, RuntimeError) and re.fullmatch('[A-Za-z_0-9]+', str(exc)) \
+            else type(exc).__name__
+        if not stop_intent and frozen:
+            # Reversible: resume the untouched legacy Loop. No new process was started.
+            try:
+                mac.signal_verified(loop_pid, loop_identity, signal.SIGCONT)
+            except BaseException:
+                # Unverifiable identity: never signal it again. Unload the label so launchd
+                # cannot respawn the mutated legacy runner (best effort; failures are recorded).
+                for action in (lambda: mac.hold('loop'), lambda: mac.stop('loop')):
+                    try:
+                        action()
+                    except BaseException:
+                        pass
+                journal.terminal(LEGACY_MANUAL, reason=reason, resume_failed=True, label_unloaded=True)
+                raise
+            journal.terminal(LEGACY_ABORTED, reason=reason, resumed_legacy_loop=True)
+            return {'status': LEGACY_ABORTED, 'reason': reason, 'mutated_production': False}
+        if not stop_intent:
+            journal.terminal(LEGACY_ABORTED, reason=reason, resumed_legacy_loop=False)
+            return {'status': LEGACY_ABORTED, 'reason': reason, 'mutated_production': False}
+        # Past the stop: the legacy Loop is NEVER restarted. Only new processes are unloaded.
+        for key in ('loop', 'dashboard'):
+            try:
+                mac.stop(key)
+            except BaseException:
+                pass
+        journal.terminal(LEGACY_MANUAL, reason=reason)
+        raise
+    finally:
+        restore_signal_handlers(previous)
+
+
+def legacy_recover_inventory(mac, journal_path):
+    """Read-only. Reports state; performs no action and never restarts the legacy Loop."""
+    data = json.loads(Path(journal_path).read_text(encoding='utf-8'))
+    require(data.get('mode') == 'LEGACY_CUTOVER', 'NOT_A_LEGACY_JOURNAL')
+    report = {'mode': 'LEGACY_RECOVERY_INVENTORY', 'phase': data.get('phase'),
+              'intent': (data.get('intent') or {}).get('action'), 'action_taken': 'NONE',
+              'mutated_production': False, 'sent_gmail': False, 'restarted_services': False,
+              'manual_action_required': data.get('phase') not in LEGACY_NORMAL_TERMINAL}
+    legacy_pid = data.get('legacy_loop_pid')
+    report['legacy_loop_alive'] = bool(legacy_pid) and mac.alive(legacy_pid)
+    for key in ('loop', 'dashboard'):
+        try:
+            pid, _ = mac.launch(mac.labels[key])
+            report['launchd_' + key] = 'LOADED'
+            report['launchd_' + key + '_pid_is_new'] = (pid != legacy_pid and pid != data.get('dashboard_pid'))
+        except (RuntimeError, subprocess.CalledProcessError):
+            report['launchd_' + key] = 'NOT_LOADED'
+    switched = next((h['facts'].get('loop_runner') for h in data.get('history', [])
+                     if h['phase'] == 'L70_RUNNERS_SWITCHED'), None)
+    report['loop_runner'] = 'NEW' if switched and sha(mac.runners['loop']) == switched else 'OTHER_OR_OLD'
+    report['ledger_watermark_present'] = any(h['phase'] == 'L50_POSTSTOP_BACKED_UP' for h in data.get('history', []))
+    return report
+
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--expected-release-sha', required=True)
@@ -1018,6 +1355,13 @@ def main(argv=None):
     p.add_argument('--authorize-production-restart', action='store_true')
     p.add_argument('--authorize-future-real-notifications', action='store_true')
     p.add_argument('--recover', type=Path, help='Private journal from an interrupted release')
+    p.add_argument('--legacy-cutover-plan', action='store_true',
+                   help='Read-only: eligibility for the exceptional legacy Loop cutover')
+    p.add_argument('--legacy-cutover-apply', action='store_true',
+                   help='Exceptional legacy cutover; requires --apply and all three authorizations')
+    p.add_argument('--legacy-recover-inventory', action='store_true',
+                   help='Read-only inventory of a legacy journal; never acts')
+    p.add_argument('--authorize-legacy-unverified-loop-cutover', action='store_true')
     args = p.parse_args(argv)
     require(sys.platform == 'darwin', 'ACTUAL_MAC_REQUIRED')
     require(not args.apply or (args.authorize_production_restart and
@@ -1025,6 +1369,36 @@ def main(argv=None):
     require(not args.recover or args.apply, 'RECOVERY_AUTHORIZATION_REQUIRED')
     root = Path(__file__).resolve().parents[1]
     mac = Mac()
+    if args.legacy_cutover_plan:
+        require(not args.apply, 'LEGACY_PLAN_IS_READ_ONLY')
+        print(json.dumps(_legacy_public(legacy_cutover_plan(mac, root, args.expected_release_sha,
+                                                            args.scanner_label)), sort_keys=True))
+        return 0
+    if args.legacy_recover_inventory:
+        require(args.recover is not None and not args.apply, 'RECOVERY_INVENTORY_IS_READ_ONLY')
+        print(json.dumps(legacy_recover_inventory(mac, args.recover), sort_keys=True))
+        return 0
+    if args.legacy_cutover_apply:
+        require(args.apply and args.authorize_legacy_unverified_loop_cutover and
+                args.authorize_production_restart and args.authorize_future_real_notifications,
+                'LEGACY_EXPLICIT_AUTHORIZATION_REQUIRED')
+        release_dir = mac.support / 'pr39-releases'
+        release_dir.mkdir(mode=0o700, exist_ok=True)
+        with (release_dir / 'release.lock').open('a+b') as lock:
+            os.chmod(lock.name, 0o600)
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            unfinished = [f for f in release_dir.glob('*/journal.json')
+                          if json.loads(f.read_text())['phase'] not in
+                          ({'SUCCESS', 'ROLLED_BACK', 'ABORTED_NO_MUTATION'} | LEGACY_NORMAL_TERMINAL)]
+            require(not unfinished, 'UNFINISHED_RELEASE_RECOVERY_REQUIRED')
+            location = release_dir / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') +
+                                      '-legacy-' + str(os.getpid()))
+            result = legacy_cutover_apply(mac, root, args.expected_release_sha, args.scanner_label, location, {
+                'authorize_production_restart': args.authorize_production_restart,
+                'authorize_future_real_notifications': args.authorize_future_real_notifications,
+                'authorize_legacy_unverified_loop_cutover': args.authorize_legacy_unverified_loop_cutover})
+        print(json.dumps(result, sort_keys=True))
+        return 0 if result['status'] == 'LEGACY_SUCCESS' else 6
     require(not args.collect_evidence or not args.apply, 'COLLECTION_MUST_BE_READ_ONLY')
     if args.collect_evidence:
         print(json.dumps(collect_evidence(mac, root, args.expected_release_sha, args.scanner_label),
@@ -1045,10 +1419,11 @@ def main(argv=None):
         os.chmod(lock.name, 0o600)
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         unfinished = [f for f in release_dir.glob('*/journal.json')
-                      if json.loads(f.read_text())['phase'] not in {'SUCCESS', 'ROLLED_BACK', 'ABORTED_NO_MUTATION'}]
+                      if json.loads(f.read_text())['phase'] not in ({'SUCCESS', 'ROLLED_BACK', 'ABORTED_NO_MUTATION'} | LEGACY_NORMAL_TERMINAL)]
         if args.recover:
             require(args.recover.resolve() in [f.resolve() for f in unfinished], 'RECOVERY_JOURNAL')
             context = json.loads(args.recover.read_text())
+            require(context.get('mode') != 'LEGACY_CUTOVER', 'LEGACY_JOURNAL_REQUIRES_LEGACY_INVENTORY')
             require(context['expected'] == args.expected_release_sha and
                     context['scanner_label'] == args.scanner_label, 'RECOVERY_IDENTITY')
             rollback(mac, context, args.recover)
@@ -1074,6 +1449,6 @@ if __name__ == '__main__':
     try: sys.exit(main())
     except BaseException as exc:
         if isinstance(exc, SystemExit): raise
-        safe = str(exc) if isinstance(exc, RuntimeError) and re.fullmatch('[A-Z_]+', str(exc)) else type(exc).__name__
+        safe = str(exc) if isinstance(exc, RuntimeError) and re.fullmatch('[A-Za-z_0-9]+', str(exc)) else type(exc).__name__
         print(json.dumps({'gate': 'BLOCKED', 'reason': safe, 'production_trading': 'NO_GO'}))
         sys.exit(3)
