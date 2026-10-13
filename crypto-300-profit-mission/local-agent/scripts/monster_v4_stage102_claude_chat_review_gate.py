@@ -22,6 +22,12 @@ AUTHORIZATION = ("crypto-300-profit-mission/monster/evidence/"
 SCHEMA = "MONSTER_STAGE103_USER_SUPPLIED_CLAUDE_CHAT_REVIEW_RECEIPT_V2"
 AUTH_SCHEMA = "MONSTER_STAGE103_SEPARATE_USER_INSTALL_AUTHORIZATION_V1"
 REVIEW_ORIGIN = "CLAUDE_CHAT_USER_SUPPLIED_FULL_OUTPUT"
+OTHER_APPROVED_REVIEW_ORIGINS = (
+    REVIEW_ORIGIN,
+    "CODEX_CHAT_USER_SUPPLIED_FULL_OUTPUT",
+)
+# Only actual user-supplied independent review output is accepted. The name
+# Claude in this historical filename is NOT a requirement to use Claude CLI.
 REQUIRED_SOURCES = (
     "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage105_capture_universe_core.py",
     "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py",
@@ -66,7 +72,7 @@ def validate_review(*, root=None, read_blob=None, is_ancestor=None):
         review=json.loads(record.read_text(encoding="utf-8"))
     except (ValueError, UnicodeDecodeError):
         raise RuntimeError("STAGE103_INVALID_CHAT_REVIEW_RECEIPT") from None
-    if (review.get("schema")!=SCHEMA or review.get("source_origin")!=REVIEW_ORIGIN
+    if (review.get("schema")!=SCHEMA or review.get("source_origin") not in OTHER_APPROVED_REVIEW_ORIGINS
         or review.get("repository")!=stage99.REPO_NAME
         or review.get("branch")!=stage99.BRANCH):
         raise RuntimeError("STAGE103_REVIEW_WRONG_REPO_BRANCH_OR_SCHEMA")
