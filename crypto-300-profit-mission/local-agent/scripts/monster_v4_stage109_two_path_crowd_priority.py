@@ -82,8 +82,6 @@ def training_quotas(training: list[dict],n_training_dates:int) -> dict[str,int]:
         return dict(counts)
     quotas={p:(total*counts[p])//len(training) for p in PATHS}
     remaining=total-sum(quotas.values())
-    by_remainder=sorted(PATHS,key=lambda p:(
-        -(total*counts[p])%len(training),p))
     # Use explicit decreasing remainder; don't choose threshold by test outcome.
     by_remainder=sorted(PATHS,key=lambda p:(
         -((total*counts[p])%len(training)),p))
