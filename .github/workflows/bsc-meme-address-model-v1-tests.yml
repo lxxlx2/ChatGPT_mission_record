@@ -124,7 +124,11 @@ jobs:
           assert all(w["lifetime_pnl"] == "UNRESOLVED" and w["follower_alpha"] == "UNRESOLVED"
                      for w in d["wallets"])
           assert s["production"] == "NO_GO"
-          print("PASS P3 37-batch: 19 proven swap + 4 receipt-unknown + 14 route-unknown; total 20 with prior, 7 wallets, NO_GO")
+          ready = [w for w in d["wallets"] if w["latest_verified_swap_UTC"]]
+          assert len(ready) == 7
+          assert sum(w["latest_verified_swap_UTC"] is None for w in d["wallets"]) == 16
+          assert next(w for w in ready if w["wallet"].startswith("0xa83b"))["latest_verified_swap_UTC"] == "2026-10-12T07:57:23.000Z"
+          print("PASS P3 37-batch: 19 proven swap + 4 receipt-unknown + 14 route-unknown; total 20 with prior, 7 UTC verified wallets, NO_GO")
           PY
       - name: Recompute 23x19 baseline deterministically
         run: |
