@@ -1,0 +1,110 @@
+name: Monster Stage111 Original519 Persistent Real1m
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage111-full519-persistent-real1m.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_replay_official.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_aggregate.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE111_PERSISTENT_RECOVERY_CAUSAL_RESEARCH_V1_FROZEN_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  causal_guardrail:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pure causal model and immutable all519 source compile/tests
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_replay_official.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_aggregate.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_source_census.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_persistent_recovery_core.py --selftest
+  official_original519:
+    needs: causal_guardrail
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+        shard: [0,1,2,3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Official publisher SHA 1m full original D0 population
+        run: |
+          set -eu
+          mkdir -p /tmp/stage111
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_replay_official.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --workers 3 --out /tmp/stage111/monster-stage111-${{ matrix.date }}-s${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage111-${{ matrix.date }}-s${{ matrix.shard }}
+          path: /tmp/stage111/monster-stage111-${{ matrix.date }}-s${{ matrix.shard }}.json
+          retention-days: 45
+  aggregate_and_archive:
+    needs: official_original519
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage111-*
+          merge-multiple: true
+          path: /tmp/stage111-shards
+      - name: Strict 24 shard original519 evaluation and source-censored economic gate
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_full519_aggregate.py --artifact-dir /tmp/stage111-shards --out /tmp/monster_stage111_full519_v1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage111-full519-evidence
+          path: /tmp/monster_stage111_full519_v1.json
+          retention-days: 60
+      - name: Commit completed research result only to original PR30
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage111_real519_persistent_15m_v1_actual_results.json
+          cp /tmp/monster_stage111_full519_v1.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE111_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive Stage111 immutable519 official1m causal results"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              echo STAGE111_FAIL_CLOSED_REBASE_CONFLICT
+              exit 1
+            fi
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo STAGE111_REAL_HISTORIC_GIT_PUSH_CONFIRMED
+              exit 0
+            fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE111_EVIDENCE_NOT_PERSISTED
+          exit 1
