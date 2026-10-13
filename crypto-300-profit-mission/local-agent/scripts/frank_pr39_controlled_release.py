@@ -1047,8 +1047,11 @@ LEGACY_NORMAL_TERMINAL = {'L100_SUCCESS', LEGACY_ABORTED}
 LEGACY_PLAN_READY = 'LEGACY_PLAN_ELIGIBLE_FOR_AUTHORIZATION'
 LEGACY_AUTH_FIELDS = ('authorize_production_restart', 'authorize_future_real_notifications',
                       'authorize_legacy_unverified_loop_cutover')
+# The full launchctl print output can contain moving counters/state even when
+# scanner PID, policy and loaded code are unchanged. Compare only stable identity
+# and byte-pinned invariants, not a hash of its entire diagnostic printout.
 LEGACY_SCANNER_KEYS = ('pid', 'protected', 'source', 'loaded_source_sha256', 'policy_hash',
-                       'entry_hash', 'loaded_hash')
+                       'entry_hash')
 
 
 def legacy_loop_identity(mac, loop_text):
@@ -1320,13 +1323,24 @@ def legacy_cutover_apply(mac, root, expected, scanner_label, release_dir, author
         if not stop_intent:
             journal.terminal(LEGACY_ABORTED, reason=reason, resumed_legacy_loop=False)
             return {'status': LEGACY_ABORTED, 'reason': reason, 'mutated_production': False}
-        # Past the stop: the legacy Loop is NEVER restarted. Only new processes are unloaded.
+        # Past the stop: an earlier mac.start() may have enabled KeepAlive.
+        # Disable BOTH labels before bootout so a failed/slow bootout cannot
+        # automatically respawn the new or unverified old Loop. Fail stopped;
+        # do not restart old code or overwrite the database.
+        hold_errors = []
+        for key in ('loop', 'dashboard'):
+            try:
+                mac.hold(key)
+            except BaseException:
+                hold_errors.append(key)
+        stop_errors = []
         for key in ('loop', 'dashboard'):
             try:
                 mac.stop(key)
             except BaseException:
-                pass
-        journal.terminal(LEGACY_MANUAL, reason=reason)
+                stop_errors.append(key)
+        journal.terminal(LEGACY_MANUAL, reason=reason,
+                         cleanup_hold_errors=hold_errors, cleanup_stop_errors=stop_errors)
         raise
     finally:
         restore_signal_handlers(previous)
@@ -1377,7 +1391,12 @@ def main(argv=None):
     require(sys.platform == 'darwin', 'ACTUAL_MAC_REQUIRED')
     require(not args.apply or (args.authorize_production_restart and
             args.authorize_future_real_notifications), 'EXPLICIT_AUTHORIZATION_REQUIRED')
-    require(not args.recover or args.apply, 'RECOVERY_AUTHORIZATION_REQUIRED')
+    # Legacy inventory is explicitly read-only: requiring --apply here
+    # would make the documented recovery command impossible to invoke.
+    require(not args.recover or args.apply or args.legacy_recover_inventory,
+            'RECOVERY_AUTHORIZATION_REQUIRED')
+    require(not (args.legacy_cutover_apply and args.recover),
+            'LEGACY_APPLY_CANNOT_RECOVER_JOURNAL')
     root = Path(__file__).resolve().parents[1]
     mac = Mac()
     if args.legacy_cutover_plan:
