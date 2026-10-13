@@ -30,6 +30,13 @@
 
 **主线优先次序保持不变：** A02 经他 AI 最终 SHA 复审后，进入 A03 研究读取接口、A04/A05 可核实 ATA/交易事实，然后 F01/F02 首屏过滤与真实仓位；C01/C02/C07/C08 通用 CA 核实/叙事/报价可在独立分支并行；S01 检查最新 main 安全缺陷。不能以 A02 测试绿灯替代 12 项截图业务修复。
 
+## 2026-10-13 A03 + F01 实际开发续报（保持未完工审查门槛）
+
+- **A03**：[Draft PR #43](https://github.com/lxxlx2/ChatGPT_mission_record/pull/43)，基于未合并 #42 的 `22f7b8f7` 分支建立独立堆叠 PR，HEAD `0010a7b8114bc87728bec3bb8eb9efdff9c1cbe9`。已实现 `PersonResearchReader + WalletFactsProvider` 注入契约和隔离测试，允许两个人查询同一 Mint、一人两钱包、Slot 区间研究，源缺失返回 null，不输出虚构 PnL。 [CI #38416486957](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38416486957)：51 项重点测试与 1,478 项完整测试 PASS。**A03 是接口阶段的部分开发，尚未完成 Sidecar 原始事实、真实 ATA 归属与生产硬编码系统解耦，不应标 [x]。**
+- **F01**：[Draft PR #44](https://github.com/lxxlx2/ChatGPT_mission_record/pull/44)，基于当前已核查 main `449edcf1` 独立修复当前机会首屏；精确 HEAD `516e3335a134c608f477019b79027982f43af32a`。[原红灯 CI #38416881805](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38416881805) 真实报缺少 F01 实现；增加后端只读跟单筛选、`/api/follow-opportunities`、报价格时间戳、独立可折叠历史/不跟区域。旧 DOM 测试兼容问题保留真实失败记录并修复。[最终 HEAD CI #38418188923](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38418188923)：27 项重点测试和 1,454 项完整回归 PASS。**F01 仍待其他 AI Review、实际 Mac 只读页面验收及另行发布授权，因此 [ ] 不可改 DONE。**
+- 这两条 PR 没有合并、不改 main、没有重启 Mac、不动冻结 Frank V1 决策/已发邮件/outbox/生产 SQLite/LaunchAgent/自动交易。现有 PR #42 的 A02 新 SHA 仍需他 AI 复审才能合并。
+- 后续业务优先顺序：A03 现实数据读取器 → A04 原始链上事实侧账本 → A05 真实 ATA/余额核对 → F02 真实仓位 → A06 PnL；并行 C01/C02/C07/C08 通用 CA 实用修复。每一阶段围绕可用性、完整来源、真实 Mac 与链数据确认，禁止对单一边界反复扩展；各 PR 的测试通过只证明对应源码/fixture，不等于生产业务验收。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
