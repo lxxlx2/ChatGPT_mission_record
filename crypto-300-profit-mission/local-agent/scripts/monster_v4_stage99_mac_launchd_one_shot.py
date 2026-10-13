@@ -283,19 +283,34 @@ def install(*,now=None,dry_run=False,windows=None):
             raise RuntimeError("STAGE103_FRANK_LAUNCHD_COEXISTENCE_CHANGED_ABORT")
     except BaseException as install_error:
         rollback_failures=[]
+        journal_failures=[]
+        # Never let a disk-full/readonly state file abort rollback of the NEXT
+        # already-loaded launchd service. Treat journal and unload separately.
         for window in reversed(added):
+            unloaded=False
+            reason=""
             try:
                 bootout(window)
-            except (OSError,RuntimeError,subprocess.TimeoutExpired) as failure:
-                # We have NO PROOF it is unloaded; leave plist and mark danger.
-                store_status(window,"ROLLBACK_FAILED_SERVICE_STILL_LOADED",
-                             reason=type(failure).__name__+":"+str(failure)[:180])
+                unloaded=True
+            except BaseException as failure:
+                reason=type(failure).__name__+":"+str(failure)[:180]
                 rollback_failures.append(window)
-            else:
-                store_status(window,"INSTALL_ROLLED_BACK_NO_SERVICE_ENABLED")
-        if rollback_failures:
-            raise RuntimeError("STAGE104_INSTALL_ROLLBACK_UNVERIFIED_SERVICES_"+
-                               ",".join(rollback_failures)) from install_error
+            status=("INSTALL_ROLLED_BACK_NO_SERVICE_ENABLED" if unloaded
+                    else "ROLLBACK_FAILED_SERVICE_STILL_LOADED")
+            try:
+                store_status(window,status,reason=reason)
+            except BaseException as journal_error:
+                journal_failures.append(window)
+                # stderr is the fallback if state volume has no free space.
+                print("STAGE105_ROLLBACK_JOURNAL_FAILED window="+window+
+                      " status="+status+" error="+type(journal_error).__name__,
+                      file=sys.stderr)
+        if rollback_failures or journal_failures:
+            raise RuntimeError(
+                "STAGE105_INSTALL_ROLLBACK_SAFETY_UNVERIFIED"
+                " services="+",".join(rollback_failures)+
+                " journal="+",".join(journal_failures)
+            ) from install_error
         raise
     return scheduled
 
