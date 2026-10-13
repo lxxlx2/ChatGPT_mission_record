@@ -8,7 +8,7 @@ Stage83原519条D0、Stage79原305条D1（DIRECT164、REIGNITION141）全部保�
 
 ## 唯一固定的连续确认状态机 Stage110 V1（参数事先冻结）
 
-- 原D0、Stage79 D1双路径、原首次D1时刻 t 一律不变。t是已闭合的一分钟K线open时间，t+1m才已知其close。后续观察只用t+1到t+30根已经完成的一分钟K线。任一根新1m bar的close与D1最后close相比≤-8%，在该分钟任何确认检查之前即INVALIDATED_EARLY_8PCT，不查看分钟HIGH/LOW决定成交。
+- 原D0、Stage79 D1双路径、原首次D1评价时刻 t 一律不变。**Stage85源码 at(bars,t) 使用 bars[i-61:i]，所以评价t真正已知最后一根闭合1m bar的OPEN是 t-1m**，非t；Stage110实际从t+1m的bar开始最多30根新增闭合1m观察（刻意预留一整分钟，不偷窥t那根未闭合bar），新确认后再用下一根OPEN价格代理入场。首次官方CI #38415636244 因误用t的close对账而拒绝全部分片，此时间口径仅修正原已冻结数据对齐，不更改DIRECT/REIGNITION条件/阈值/24h退出。边界在UTC00:00时补读上一官方源日，并与Stage85 SHA精确核对，不直接跳过。任一根新1m bar的close与D1最后close相比≤-8%，在该分钟任何确认检查之前即INVALIDATED_EARLY_8PCT，不查看分钟HIGH/LOW决定成交。
 - 每3根新已闭合1m形成一个非重叠3m block；检查点为第3、6、9……30根完成。D1前15m已观察quote额平摊到3分钟（quote15/5）为统一且>0的基线，区块实际成交笔数必须>0，源缺口报SOURCE_UNKNOWN。
 - DIRECT首次入口：只能在第6、9……30根完成时确认，最近连续两个3m blocks各自quote额都≥该3m基线、实际交易笔数均>0、最新block的close≥前block的close且≥D1 close×1.02。
 - REIGNITION后续重新点火：在第3、6……30根完成时，当前3m block quote≥3m基线×1.20、实际交易笔数>0、该block末close≥D1 close×1.01即确认。
