@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 import runpy
 
+import pytest
+
 from mission_agent.mission_control.person_registry import PersonRegistry
 from mission_agent.mission_control.research_wallet_facts import PersonResearchReader
 from mission_agent.mission_control.wallet_capture_provider import CapturedWalletFactsProvider
@@ -100,3 +102,43 @@ def test_optional_manual_cli_defaults_to_plan_only_and_no_sidecar(tmp_path, caps
     assert status["network_invoked"] is False
     assert status["writes_production_sqlite"] is False
     assert not sidecar.exists()
+
+
+
+def test_read_only_sidecar_never_creates_missing_file_or_allows_append(tmp_path):
+    path = tmp_path / "missing.sqlite"
+    with pytest.raises(FileNotFoundError):
+        WalletEvidenceStore(path, read_only=True)
+    assert not path.exists()
+    store = WalletEvidenceStore(path)
+    capture = capture_owner(W1, fake_rpc(W1, "1", "2"))
+    store.capture_wallet(capture)
+    store.close()
+    existing = WalletEvidenceStore(path, read_only=True)
+    try:
+        assert existing.count("ACCOUNT_CAPTURE") == 1
+        with pytest.raises(PermissionError, match="READ_ONLY_SIDECAR"):
+            existing.capture_wallet(capture)
+        assert existing.count("ACCOUNT_CAPTURE") == 1
+    finally:
+        existing.close()
+
+
+def test_manual_report_reads_existing_sidecar_and_keeps_pnl_unknown(tmp_path, capsys):
+    root = Path(__file__).resolve().parents[1]
+    reg = tmp_path / "registry.json"
+    reg.write_text(json.dumps({"schema_version": 2, "persons": [person("frank", W1)]}))
+    path = tmp_path / "research-sidecar.sqlite"
+    store = WalletEvidenceStore(path)
+    store.capture_wallet(capture_owner(W1, fake_rpc(W1, "1000000", "2000000")))
+    store.close()
+    cli = runpy.run_path(str(root / "scripts/frank_research_mint_readonly.py"))
+    assert cli["main"]([
+        "--registry", str(reg), "--sidecar", str(path),
+        "--person-id", "frank", "--mint", MINT, "--as-of-slot", "201",
+    ]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["wallets"][0]["inventory"]["balance"]["quantity"] == "3"
+    assert report["person_balance"] is None
+    assert report["person_pnl_usd"] is None
+    assert report["portfolio_verified"] is False
