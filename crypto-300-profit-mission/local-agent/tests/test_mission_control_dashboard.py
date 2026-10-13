@@ -298,16 +298,17 @@ def test_atomic_cluster_report_write_replaces_complete_file(tmp_path):
     assert list(tmp_path.glob("latest.json.tmp-*"))==[]
 
 
-def test_cluster_dashboard_explains_presets_and_localizes_rate_limit():
+def test_cluster_dashboard_uses_single_mode_and_localizes_rate_limit():
     from mission_agent.mission_control.server import Handler
     html=(Handler.static_root/"index.html").read_text()
     js=(Handler.static_root/"app.js").read_text()
-    assert "快速" in html and "标准" in html and "深度" in html
-    assert "快速模式：" in html
-    assert "自动加深到 30 + 12" in js
-    assert "Top20 owner 全部深扫" in js
+    assert 'id="cluster-preset"' not in html
+    assert "统一研究入口" in html
+    assert "历史、LP 与交易数据" in html
+    assert "const preset = 'standard';" in js
     assert "免费 Solana RPC 触发限流（HTTP 429）" in js
-    assert "execution_quote_30_usdc" in js
+    assert "execution_quote_30_usdc" not in js
+    assert "$30 实际可成交价" not in js
     assert "token_profile" in js
     assert "first_acquisition" in js
 
