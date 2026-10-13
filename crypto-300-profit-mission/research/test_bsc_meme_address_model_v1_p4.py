@@ -6,7 +6,8 @@ import copy
 import json
 import unittest
 
-from bsc_meme_address_model_v1_p3 import DIRECTORY, EvidenceError
+from bsc_meme_address_model_v1_p3 import DIRECTORY, EvidenceError, git_blob_sha
+from bsc_meme_address_model_v1_p3_batch import load_evidence
 from bsc_meme_address_model_v1_p4 import build_matrix, load_checked
 
 
@@ -61,6 +62,39 @@ class P4ReadinessTests(unittest.TestCase):
         p3["wallets"].pop()
         with self.assertRaises(EvidenceError):
             build_matrix(self.p2, p3)
+
+    def test_non_native_pool_quote_metadata_is_real_historical_ABI(self):
+        name = "bsc-meme-address-model-v1-p4-nonnative-quote-token-identities-2026-10-13.json"
+        blob = (DIRECTORY / name).read_bytes()
+        self.assertEqual(git_blob_sha(blob), "9cced46fcf5dc805ffa6fd051d0a2555a15987ff")
+        q = json.loads(blob)
+        self.assertEqual(q["production"], "NO_GO")
+        self.assertEqual([x["symbol"] for x in q["quote_token_checks"]],
+                         ["QQQB", "SPCXB", "USDT"])
+        evidence, _ = load_evidence(DIRECTORY)
+        pools = {row["pool"]: row for part in evidence["rows"]["pool-historical"]
+                 for row in part["records"]}
+        for item in q["quote_token_checks"]:
+            raw = item["symbol_return"]
+            self.assertEqual(int(raw[66:130], 16), len(item["symbol"]))
+            self.assertEqual(bytes.fromhex(raw[130:130+len(item["symbol"])*2]).decode("ascii"),
+                             item["symbol"])
+            self.assertEqual(len(item["decimals_return"]), 66)
+            self.assertEqual(int(item["decimals_return"], 16), item["decimals"])
+            self.assertEqual(item["decimals"], 18)
+            proof = pools[item["pool"]]
+            self.assertEqual(proof["earliest_block"], item["block"])
+            self.assertIn(item["quote_ca"], [proof["call_values"]["token0"],
+                                              proof["call_values"]["token1"]])
+            self.assertNotEqual(item["quote_ca"], proof["target_CA"])
+
+    def test_quote_metadata_cannot_be_used_as_realized_pnl_mark(self):
+        data = json.loads((DIRECTORY /
+            "bsc-meme-address-model-v1-p4-nonnative-quote-token-identities-2026-10-13.json"
+        ).read_text(encoding="utf-8"))
+        self.assertTrue(all(data["guardrails"].values()))
+        self.assertEqual(build_matrix(self.p2, self.p3)["summary"][
+            "full_2026_economic_PnL_proven_wallets"], 0)
 
     def test_wrong_window_must_fail(self):
         p3 = copy.deepcopy(self.p3)
