@@ -170,12 +170,34 @@ def plist_path(window):
     return AGENTS/(label_for(window)+".plist")
 
 
+def assert_unloaded(window):
+    """Read-only BOTH registry and named-service state; uncertainty is FAILURE."""
+    service=label_for(window)
+    registry=subprocess.run(["launchctl","list"],env=env_no_prompts(),
+                            capture_output=True,text=True,timeout=15,check=False)
+    if registry.returncode!=0:
+        raise RuntimeError("STAGE104_LAUNCHD_LIST_UNAVAILABLE_CANNOT_PROVE_UNLOADED")
+    labels={line.split()[-1] for line in registry.stdout.splitlines()
+            if line.strip() and len(line.split())>=3}
+    detail=subprocess.run(["launchctl","print",gui_domain()+"/"+service],
+                          env=env_no_prompts(),capture_output=True,text=True,
+                          timeout=15,check=False)
+    if service in labels or detail.returncode==0:
+        raise RuntimeError("STAGE104_SERVICE_STILL_LOADED_"+service)
+    # A failing launchctl print plus an explicitly absent exact label from the
+    # successful launchctl list proves the service is no longer registered.
+    return True
+
+
 def bootout(window):
     service=label_for(window)
-    # Remove the file first so a failure cannot cause repeat annual calendar jobs.
-    p=plist_path(window)
-    p.unlink(missing_ok=True)
-    return launchctl("bootout",gui_domain()+"/"+service)
+    # Keep plist until the service is VERIFIED absent, for safe manual recovery.
+    code=launchctl("bootout",gui_domain()+"/"+service)
+    if code!=0:
+        raise RuntimeError("STAGE104_LAUNCHD_BOOTOUT_FAILED_RC_"+str(code))
+    assert_unloaded(window)
+    plist_path(window).unlink(missing_ok=True)
+    return 0
 
 
 def install(*,now=None,dry_run=False,windows=None):
@@ -230,12 +252,21 @@ def install(*,now=None,dry_run=False,windows=None):
                          launchd_label=planned[window]["Label"])
         if read_frank_launchd_labels()!=before_frank:
             raise RuntimeError("STAGE103_FRANK_LAUNCHD_COEXISTENCE_CHANGED_ABORT")
-    except BaseException:
+    except BaseException as install_error:
+        rollback_failures=[]
         for window in reversed(added):
-            try:bootout(window)
-            except (OSError,subprocess.TimeoutExpired):
-                plist_path(window).unlink(missing_ok=True)
-            store_status(window,"INSTALL_ROLLED_BACK_NO_SERVICE_ENABLED")
+            try:
+                bootout(window)
+            except (OSError,RuntimeError,subprocess.TimeoutExpired) as failure:
+                # We have NO PROOF it is unloaded; leave plist and mark danger.
+                store_status(window,"ROLLBACK_FAILED_SERVICE_STILL_LOADED",
+                             reason=type(failure).__name__+":"+str(failure)[:180])
+                rollback_failures.append(window)
+            else:
+                store_status(window,"INSTALL_ROLLED_BACK_NO_SERVICE_ENABLED")
+        if rollback_failures:
+            raise RuntimeError("STAGE104_INSTALL_ROLLBACK_UNVERIFIED_SERVICES_"+
+                               ",".join(rollback_failures)) from install_error
         raise
     return scheduled
 
@@ -442,9 +473,24 @@ def execute(window):
         print("STAGE99_FAILED "+type(exc).__name__+": "+str(exc)[:200],file=sys.stderr)
         return 3
     finally:
-        # One job only. A loaded launchd job cannot be a perpetual price monitor.
-        # The self-unload is the last operation; it may terminate this process.
-        bootout(window)
+        # A failed self-unload must never be represented as clean exit.
+        # Catch to preserve earlier trace, but force a nonzero process result.
+        try:
+            bootout(window)
+        except (RuntimeError,OSError,subprocess.TimeoutExpired) as unload_error:
+            prior=STATES/(window[:10]+".json")
+            saved={}
+            if prior.is_file():
+                try:saved=json.loads(prior.read_text())
+                except (ValueError,UnicodeDecodeError):saved={}
+            store_status(window,"AUTO_UNLOAD_FAILED_SERVICE_MAY_REMAIN",
+                         source_sha256=saved.get("source_sha256"),
+                         previous_state=saved.get("status"),
+                         reason=type(unload_error).__name__+":"+str(unload_error)[:180])
+            print("STAGE104_UNLOAD_FAILED_SERVICE_MAY_REMAIN",
+                  file=sys.stderr)
+            # SystemExit in finally signals FAILURE, never a clean task exit.
+            raise SystemExit(4) from unload_error
 
 
 def status():
