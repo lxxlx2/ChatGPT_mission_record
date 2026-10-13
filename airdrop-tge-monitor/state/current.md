@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-13 08:02:00 Asia/Bangkok
+Updated: 2026-10-13 19:02:31 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-13 08:02:00 Asia/Bangkok
+- latest_actual_run: 2026-10-13 19:02:31 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-13/080200-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-13/080100-attempt.md
-- latest_scheduled_shard: 0
-- latest_executed_shard: 1
-- stale_shard_recovery: true
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-13/190231-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-13/190121-attempt.md
+- latest_scheduled_shard: 3
+- latest_executed_shard: 3
+- stale_shard_recovery: false
 - latest_candidate_count: 5
 - latest_triggered_events: 0
-- latest_identity_failures: 1
-- latest_source_failures: 6
+- latest_identity_failures: 0
+- latest_source_failures: 3
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
@@ -70,3 +70,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - Over the preceding week, many partial shard 1 runs repeatedly replaced other shard schedules because last fully verified success remained Oct10. Latest AUTOMATION_RUNTIME, MONITOR_SPEC and REGISTRY on Oct13 now separate attempted-shard fairness from complete-source coverage; default local hour % 4 and cap stale substitution to once per four documented attempts, no more than two same-shard runs consecutively. Future runs must verify this, not assume already fixed in production.
 - Space SPC public Claim sunset 2026-10-15 was already delivered 2026-10-11 (Gmail 1a129b8b2ddd1607); DO NOT RESEND unchanged. Surf official NFT future member-claim countdown: prospective WATCH/VERIFYING, not yet eligible ACTION. Concrete extra USDC and Neutrl redemption still lack enough current verified user rights.
 - Source and delivery problems remain open; app/Gmail silent on NO_ACTION. Existing task, HH:00 schedule, registry/scope, known-events and ACTION_GATE unchanged. Full cross-task evidence audit is crypto-daily/incidents/2026-10-13-seven-day-three-monitor-audit.md.
+
+- 2026-10-13 19:02:31: existing HH:00 invocation; attempt 190121-attempt.md and terminal 190231-final.md persisted; urgent5 + scheduled shard3 (no override), 13 unique projects attempted, 10 checked_no_update, 3 SOURCE_GAP (Concrete extra allocation, Cambria current RSGP action, Republic rTTOK user-level payout), 5 candidates, 0 new Tier A/B ACTION. Stable Space Oct15 and MetaMask Oct15 delivered keys suppressed. No Gmail/App notification; partial does not update verified-complete timestamps. Last meaningful shard3 attempt 19:02:31; recent executed sequence [1,0,1,3]. Existing task unchanged.
