@@ -22,126 +22,26 @@ except ImportError:
     from scripts import monster_v4_stage38_usdm_original_v4_1m_pilot as v4
     from scripts import monster_v4_stage80_dual_entry_core as d1
 
-SCHEMA = "MONSTER_STAGE91_FROZEN_FORWARD_USDM_FULL_POPULATION_REPLAY_V1"
-WINDOWS = (
-    "2026-10-14T06:00:00Z",
-    "2026-10-28T06:00:00Z",
-    "2026-11-11T06:00:00Z",
-)
-EXCHANGE_INFO_URL = "https://fapi.binance.com/fapi/v1/exchangeInfo"
-WINDOW_MS = 7 * 24 * 3600_000
-MIN = 60_000
-FRESH_MAX_MS = 15 * MIN
+# Stage105 is the only authority for frozen time and Binance USD-M population.
+# Stage91 historical-replay dependencies remain here but are never imported by
+# the Stage97/99 capture process.
+try:
+    import monster_v4_stage105_capture_universe_core as capture_core
+except ImportError:
+    from scripts import monster_v4_stage105_capture_universe_core as capture_core
+
+SCHEMA=capture_core.SCHEMA
+WINDOWS=capture_core.WINDOWS
+EXCHANGE_INFO_URL=capture_core.EXCHANGE_INFO_URL
+WINDOW_MS=capture_core.WINDOW_MS
+MIN=capture_core.MIN
+FRESH_MAX_MS=capture_core.FRESH_MAX_MS
 MODEL_SOURCE_V4 = v4.ORIGINAL_V4_GIT_BLOB
 D1_SOURCE_CONTRACT = d1.CONTRACT_SHA
-
-
-def num(x):
-    if not isinstance(x, int) or isinstance(x, bool):
-        raise ValueError("STAGE91_INT_TIMESTAMP_REQUIRED")
-    return x
-
-
-def sha256_raw(raw: str) -> str:
-    if not isinstance(raw, str):
-        raise ValueError("STAGE91_EXCHANGE_INFO_RAW_REQUIRED")
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
-
-
-def verify_window(utc: str) -> int:
-    if utc not in WINDOWS:
-        raise ValueError("STAGE91_NOT_ONE_OF_THE_THREE_FROZEN_FORWARD_DATES")
-    return d1.utc_ms(utc)
-
-
-def freeze_universe(packet: dict) -> dict:
-    """Validate only the archived bytes/clock. No claim of live official origin."""
-    if not isinstance(packet, dict) or packet.get("schema") != SCHEMA:
-        raise ValueError("STAGE91_WRONG_MARKET_SNAPSHOT_SCHEMA")
-    start = verify_window(packet.get("window_start_utc"))
-    if packet.get("venue") != "BINANCE_USDM" or packet.get("source_url") != EXCHANGE_INFO_URL:
-        raise ValueError("STAGE91_WRONG_EXCHANGE_OR_SOURCE_URL")
-    cap = num(packet.get("capture_ms"))
-    if not start - FRESH_MAX_MS <= cap <= start:
-        raise ValueError("STAGE91_UNIVERSE_NOT_CAPTURED_BEFORE_FIXED_START")
-    raw = packet.get("raw_exchangeInfo_json")
-    if not isinstance(raw, str) or not raw.strip():
-        raise ValueError("STAGE91_EMPTY_OFFICIAL_POPULATION")
-    if sha256_raw(raw) != packet.get("raw_sha256"):
-        raise ValueError("STAGE91_UNIVERSE_RAW_BYTE_TAMPER")
-    try:
-        payload = json.loads(raw)
-    except (ValueError, json.JSONDecodeError):
-        raise ValueError("STAGE91_MALFORMED_EXCHANGE_INFO") from None
-    if not isinstance(payload, dict) or not isinstance(payload.get("symbols"), list):
-        raise ValueError("STAGE91_EXCHANGE_INFO_MISSING_SYMBOLS")
-    if not payload["symbols"]:
-        raise ValueError("STAGE91_EMPTY_MARKET_POPULATION")
-    # Binance's USD-M exchangeInfo official docs explicitly say to IGNORE its
-    # serverTime for clock verification; use a separately fetched /fapi/v1/time
-    # HTTP body in the Stage97 authenticated capture validator instead.
-    server_time = payload.get("serverTime")
-    if server_time is not None:
-        num(server_time)
-    seen, rows = set(), []
-    for item in payload["symbols"]:
-        if not isinstance(item, dict):
-            raise ValueError("STAGE91_NONOBJECT_MARKET_ROW")
-        symbol = item.get("symbol")
-        # USD-M exchangeInfo can include dated delivery contracts with "_".
-        # Preserve *all* contracts in the population and choose PERPETUAL
-        # separately. Do not use Unicode isalnum() as a venue symbol validator.
-        if (not isinstance(symbol, str)
-            or not re.fullmatch(r"[A-Z0-9]+(?:_[A-Z0-9]+)*",symbol)
-            or symbol in seen):
-            raise ValueError("STAGE91_MARKET_SYMBOL_DUPLICATE_OR_INVALID")
-        seen.add(symbol)
-        status = item.get("status")
-        contract_type = item.get("contractType")
-        quote_asset = item.get("quoteAsset")
-        base_asset = item.get("baseAsset")
-        if (not isinstance(status,str) or not status
-            or not isinstance(contract_type,str) or not contract_type
-            or not isinstance(quote_asset,str) or not quote_asset
-            or not isinstance(base_asset,str) or not base_asset):
-            raise ValueError("STAGE91_INCOMPLETE_OFFICIAL_MARKET_ROW")
-        onboard = item.get("onboardDate")
-        if onboard is not None:
-            num(onboard)
-        active_at_capture = (
-            status == "TRADING" and contract_type == "PERPETUAL"
-            and quote_asset == "USDT" and bool(base_asset)
-            and (onboard is None or onboard <= cap)
-        )
-        rows.append({
-            "symbol": symbol, "status_asof_capture": status,
-            "contract_type":contract_type, "quote_asset":quote_asset,
-            "base_asset":base_asset,
-            "onboard_ms":onboard,
-            "candidate_for_raw_USDM_attempt":active_at_capture,
-            "crypto_identity":"UNKNOWN_NEEDS_INDEPENDENT_PROOF",
-            "mapping":"UNKNOWN_UNTIL_INDEPENDENT_UNITS_VERIFIED",
-        })
-    candidates=[x for x in rows if x["candidate_for_raw_USDM_attempt"]]
-    if not candidates:
-        raise ValueError("STAGE91_NO_USDT_PERPETUAL_IN_UNIVERSE")
-    return {
-        "schema":SCHEMA,
-        "window_start_utc":packet["window_start_utc"],
-        "window_end_utc":v4.stamp(start+WINDOW_MS),
-        "raw_sha256":packet["raw_sha256"],
-        "capture_ms":cap,
-        "population_all_exchange_symbols":len(rows),
-        "usd_m_usdt_perpetual_asof_candidates":len(candidates),
-        "rows":rows,
-        "market_population_archive_consistency":"PASS_UNTRUSTED_ORIGIN",
-        "source_authenticity":"UNVERIFIED_EXTERNAL_CAPTURE",
-        "exchangeInfo_serverTime_clock_authority":"NONE_OFFICIAL_DOCS_SAY_IGNORE",
-        "historical_or_forward_replay":"NOT_RUN",
-        "G0_point_in_time_crypto_only":"NOT_DONE",
-        "OOS":"NOT_DONE",
-        "Gmail":"OFF","Monster_deployment":"NO_GO",
-    }
+num=capture_core.num
+sha256_raw=capture_core.sha256_raw
+verify_window=capture_core.verify_window
+freeze_universe=capture_core.freeze_universe
 
 
 def source_ready(symbol: str, start_utc: str, bars: list, receipts: list) -> bool:
