@@ -27,8 +27,8 @@ class P4FundingTests(unittest.TestCase):
         self.assertEqual(len(funded), 4)
         bnb = {w["wallet"][:6]: w["observed_native_bnb_pre_swap_BNB"] for w in funded}
         self.assertEqual(bnb, {"0xadff":"4.860355826768457125",
-                               "0x8e6":"5.771517369306080363",
-                               "0x2ad":"0.31522943205986517",
+                               "0x8e6b":"5.771517369306080363",
+                               "0x2adf":"0.31522943205986517",
                                "0xddac":"64.285482295034007645"})
         self.assertTrue(all(w["nonce_pre_swap"] > 0 for w in funded))
         ddac = next(w for w in funded if w["wallet"].startswith("0xddac"))
