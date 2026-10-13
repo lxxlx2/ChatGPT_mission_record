@@ -1218,6 +1218,7 @@ def legacy_cutover_apply(mac, root, expected, scanner_label, release_dir, author
     dash_pid = internal['dashboard']['pid']
     dash_identity = journal.data['dashboard_identity']
     frozen = stop_intent = False
+    held_keys = []
     previous = install_signal_handlers()
     try:
         journal.enter('L00_RECHECKED', fingerprint=plan['fingerprint'])
@@ -1233,8 +1234,9 @@ def legacy_cutover_apply(mac, root, expected, scanner_label, release_dir, author
         frozen_state = ledger(internal['db'])                          # strict, while the Loop cannot act
         journal.enter('L25_FROZEN', queue_digest=legacy_queue_digest(frozen_state))
         journal.intent('HOLD_LOOP_AND_DASHBOARD')
-        mac.hold('loop')
-        mac.hold('dashboard')
+        for key in ('loop', 'dashboard'):
+            mac.hold(key)
+            held_keys.append(key)
         journal.enter('L30_HOLDS_SET')
         stop_intent = True
         journal.intent('UNLOAD_LOOP_BEFORE_ANY_KILL', pid=loop_pid)
@@ -1291,21 +1293,30 @@ def legacy_cutover_apply(mac, root, expected, scanner_label, release_dir, author
         reason = str(exc) if isinstance(exc, RuntimeError) and re.fullmatch('[A-Za-z_0-9]+', str(exc)) \
             else type(exc).__name__
         if not stop_intent and frozen:
-            # Reversible: resume the untouched legacy Loop. No new process was started.
+            # Reversible ONLY when both LaunchAgent disable states are restored
+            # and the exact original PID is resumed. A partial L30 hold may
+            # have succeeded before the second hold raised.
             try:
+                for key in reversed(held_keys):
+                    mac.release_hold(key)
                 mac.signal_verified(loop_pid, loop_identity, signal.SIGCONT)
             except BaseException:
-                # Unverifiable identity: never signal it again. Unload the label so launchd
-                # cannot respawn the mutated legacy runner (best effort; failures are recorded).
-                for action in (lambda: mac.hold('loop'), lambda: mac.stop('loop')):
-                    try:
-                        action()
-                    except BaseException:
-                        pass
-                journal.terminal(LEGACY_MANUAL, reason=reason, resume_failed=True, label_unloaded=True)
+                # The original state could not be restored. Unload BOTH labels
+                # rather than reporting a harmless abort while launchd is
+                # disabled, partially held or able to respawn a mutated runner.
+                for key in ('loop', 'dashboard'):
+                    for action in (lambda key=key: mac.hold(key),
+                                   lambda key=key: mac.stop(key)):
+                        try:
+                            action()
+                        except BaseException:
+                            pass
+                journal.terminal(LEGACY_MANUAL, reason=reason,
+                                 resume_failed=True, labels_unload_attempted=True)
                 raise
-            journal.terminal(LEGACY_ABORTED, reason=reason, resumed_legacy_loop=True)
-            return {'status': LEGACY_ABORTED, 'reason': reason, 'mutated_production': False}
+            journal.terminal(LEGACY_ABORTED, reason=reason,
+                             resumed_legacy_loop=True, holds_released=True)
+            return {'status': LEGACY_ABORTED, 'reason': reason, 'mutated_production': True}
         if not stop_intent:
             journal.terminal(LEGACY_ABORTED, reason=reason, resumed_legacy_loop=False)
             return {'status': LEGACY_ABORTED, 'reason': reason, 'mutated_production': False}
