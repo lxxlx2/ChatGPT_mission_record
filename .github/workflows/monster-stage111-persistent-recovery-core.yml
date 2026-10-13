@@ -1,0 +1,29 @@
+name: Monster Stage111 Frozen Recovery Core Tests
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage111-persistent-recovery-core.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_persistent_recovery_core.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE111_PERSISTENT_RECOVERY_CAUSAL_RESEARCH_V1_FROZEN_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  causal_unit_regression:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run frozen 15m source-gap causal regression
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_persistent_recovery_core.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_persistent_recovery_core.py --selftest
