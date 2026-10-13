@@ -8,7 +8,7 @@ on:
       - crypto-300-profit-mission/monster/MONSTER_STAGE111_PERSISTENT_RECOVERY_CAUSAL_RESEARCH_V1_FROZEN_20261013.md
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   causal_unit_regression:
     strategy:
@@ -19,6 +19,9 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -27,3 +30,28 @@ jobs:
           set -eu
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_persistent_recovery_core.py
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_persistent_recovery_core.py --selftest
+      - name: Archive passing selftest evidence only on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          set -eu
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage111_persistent_core_unit_ci.json
+          python - <<'PY'
+          import json,os
+          p='crypto-300-profit-mission/monster/evidence/monster_stage111_persistent_core_unit_ci.json'
+          with open(p,'w') as f:
+            json.dump({'schema':'STAGE111_V1_CAUSAL_UNIT_CI','source_commit':os.environ['GITHUB_SHA'],'ubuntu_causal_selftest':'PASS','macos_causal_selftest':'NOT_VERIFIED_BY_THIS_JOB','official_historical_full519_replay':'NOT_DONE','new_OOS':'NOT_DONE','model_review':'NOT_DONE','deployment':'NO_GO'},f,indent=2,sort_keys=True)
+            f.write('\n')
+          PY
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "monster: archive Stage111 V1 Ubuntu causal core passing unit check"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin refs/heads/research/monster-v4-local-discovery-20261010
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin HEAD:refs/heads/research/monster-v4-local-discovery-20261010; then exit 0; fi
+            attempt=$((attempt+1))
+          done
+          exit 1
