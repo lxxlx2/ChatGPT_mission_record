@@ -564,7 +564,7 @@ function renderCandidates(rows) {
     </article>`;
   }).join('') || (status === 'API_UNAVAILABLE' || status === 'POLICY_OR_SOURCE_UNAVAILABLE'
     ? '<div class="empty">当前机会数据不可用，无法核实实时跟单资格。</div>'
-    : '<div class="empty">当前可跟机会：0。历史判断及不跟记录见下方折叠区域。</div>');
+    : '<div class="empty">当前没有需要跟踪的 Frank 候选。当前可跟机会：0。历史判断及不跟记录见下方折叠区域。</div>');
 }
 
 const followExclusionLabels = {
