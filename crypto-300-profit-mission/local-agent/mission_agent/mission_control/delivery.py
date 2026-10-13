@@ -69,9 +69,11 @@ def _utc_decision(value) -> str:
 
 
 DECISION_ZH={"BUY":"可跟","SMALL_BUY":"小仓跟","WAIT":"等待","NO_BUY":"不跟"}
-PATTERN_ZH={"MULTIPLE":"多次强加仓","ACCUMULATION":"持续建仓","REENTRY_WATCH":"重新建仓观察","NONE":"无模式"}
-STATE_ZH={"OPEN":"持仓中","CLOSED":"已退出","INVENTORY_UNDETERMINED":"仓位不明"}
+PATTERN_ZH={"MULTIPLE":"多次强加仓（历史模型记录）","ACCUMULATION":"持续建仓（历史模型记录）","REENTRY_WATCH":"重新建仓观察","NONE":"无模式"}
+STATE_ZH={"OPEN":"模型标记持有（未独立核实）","CLOSED":"模型标记已退出","INVENTORY_UNDETERMINED":"仓位不明"}
 ACTION_ZH={"BUY":"买入","ADD":"加仓","REENTRY":"重新建仓","SELL":"卖出","EXIT":"清仓","SELL_POSITION_UNRESOLVED":"卖出后仓位待确认"}
+ACTION_SUBJECT_ZH={"BUY":"Frank 最近买入","ADD":"Frank 最近加仓","REENTRY":"Frank 最近重新建仓","SELL":"Frank 最近卖出","EXIT":"Frank 最近退出","SELL_POSITION_UNRESOLVED":"Frank 最近卖出待确认"}
+STATE_SUBJECT_ZH={"OPEN":"模型持仓待核","CLOSED":"模型已退出","INVENTORY_UNDETERMINED":"仓位未确认"}
 REASON_ZH={
     "FRANK_RUNTIME_NOT_LIVE":"Frank 实时监控不在线",
     "POSITION_STATE_CLOSED":"Frank 已退出该仓位",
@@ -86,7 +88,7 @@ REASON_ZH={
     "NO_EXECUTABLE_JUPITER_ROUTE":"Jupiter 当前无可执行路径",
     "PRICE_TOO_FAR_FROM_FRANK":"当前价格离 Frank 买入价过远",
     "EXECUTION_IMPACT_TOO_HIGH":"当前 30 USDC 跟单价格冲击过高",
-    "FRANK_MULTIPLE_ACTIVE":"Frank 当前处于多次强加仓模式",
+    "FRANK_MULTIPLE_ACTIVE":"Frank 已观察到多次强加仓模型事件，是否可以跟随以本次结论为准",
     "PRICE_STILL_CLOSE_TO_FRANK":"当前成交价仍接近 Frank 参考买入价",
     "EXECUTION_IMPACT_ACCEPTABLE":"当前预计价格冲击可接受",
     "FRANK_PATTERN_ACTIVE":"Frank 当前仍处于可跟随建仓模式",
@@ -169,12 +171,31 @@ def render(event:dict)->dict:
     body=json.loads(event["body"]) if isinstance(event.get("body"),str) else event["body"]
     metrics=body.get("metrics") or {};inputs=body["inputs"];quote=inputs.get("quote") or {}
     decision=body["decision"];pattern=inputs.get("pattern")
-    subject=f"[Meme提醒] {_zh(DECISION_ZH,decision,decision)} | {_zh(PATTERN_ZH,pattern,pattern)} | {_short(body['mint'])}"
+    subject=(f"[Meme提醒] {_zh(DECISION_ZH,decision,decision)} | "
+             f"{_zh(ACTION_SUBJECT_ZH,inputs.get('latest_side'),'Frank 动作未核实')} | "
+             f"{_zh(STATE_SUBJECT_ZH,inputs.get('position_state'),'仓位未核实')} | "
+             f"{_short(body['mint'])}")
     original_asset=inputs.get("latest_buy_original_quote_asset") or inputs.get("latest_buy_quote_asset")
     original_qty=inputs.get("latest_buy_original_quote_quantity") or inputs.get("latest_buy_quote_quantity")
-    payment=_payment_display(original_qty,original_asset)
-    if inputs.get("latest_buy_quote_was_normalized") and inputs.get("latest_buy_usdc_equivalent") not in (None,""):
-        payment += " ≈ "+_readable_number(inputs.get("latest_buy_usdc_equivalent"),decimal_places=2,grouping=True)+" USDC（事件时间换算）"
+    observed_payment=_payment_display(original_qty,original_asset)
+    predicate=inputs.get("latest_buy_amount_predicate")
+    verified=(predicate=="USDC_DIRECT_NUMERIC" and original_asset==USDC_MINT) or (
+        predicate=="SOL_EVENT_TIME_USDC_VERIFIED" and inputs.get("latest_buy_quote_was_normalized") is True
+    )
+    reason={
+        "COMPOSITE_QUOTE_LEGS":"复合报价可能含其他资金腿",
+        "ROUTED_RESIDUAL_ASSETS":"多资产路线的最终目标成本不可核实",
+        "ROUTE_EVIDENCE_UNVERIFIED":"交易路线证据不足",
+        "NON_USDC_QUOTE":"非 USDC 报价尚未确认完整成本",
+    }.get(inputs.get("latest_buy_amount_predicate_reason"),"完整支付成本缺少验证")
+    if observed_payment=="暂无":
+        payment="未确认（原始支付数据不足）"
+    elif not verified:
+        payment="未确认（已识别资金腿："+observed_payment+"；"+reason+"，不代表完整支付）"
+    else:
+        payment=observed_payment
+        if inputs.get("latest_buy_quote_was_normalized") and inputs.get("latest_buy_usdc_equivalent") not in (None,""):
+            payment += " ≈ "+_readable_number(inputs.get("latest_buy_usdc_equivalent"),decimal_places=2,grouping=True)+" USDC（事件时间换算）"
     frank_price=metrics.get("frank_latest_buy_price_usdc") or inputs.get("latest_buy_price_usdc")
     exec_price=metrics.get("execution_price_usdc") or quote.get("execution_price_usdc")
     impact=metrics.get("price_impact_pct") or quote.get("price_impact_pct")
@@ -185,7 +206,7 @@ def render(event:dict)->dict:
     action=_zh(ACTION_ZH,inputs.get("latest_side"),str(inputs.get("latest_side") or "未知"))
     position=_zh(STATE_ZH,inputs.get("position_state"),str(inputs.get("position_state") or "未知"))
     lines=[
-        "结论："+_zh(DECISION_ZH,decision,decision)+"  |  "+_zh(PATTERN_ZH,pattern,pattern),
+        "结论："+_zh(DECISION_ZH,decision,decision)+"  |  最近已识别动作："+action+"  |  仓位："+position,
         "原因："+reasons,
         "决策时间："+_utc_decision(body.get("created_at")),
         "Jupiter 报价观察时间："+_utc_observation(inputs.get("quote_observed_at")),
@@ -194,9 +215,15 @@ def render(event:dict)->dict:
         "CA（单独一行，便于长按复制）",
         body["mint"],
         "",
-        "Frank 动作："+action+"  |  仓位："+position,
-        "最近买入投入："+payment,
+        "Frank 最近已识别动作："+action+"  |  Frank 模型仓位："+position,
+        "历史观察模式："+_zh(PATTERN_ZH,pattern,pattern)+"（仅作为历史模式证据，不代表当前仍在加仓）",
+        "Frank 最近一次买入支付（历史）："+payment,
+        "上述金额仅对应最近一笔已识别买入的历史资金腿，不代表当前持仓市值、持有金额或全部建仓成本。",
     ]
+    if inputs.get("latest_side") in {"SELL","EXIT","SELL_POSITION_UNRESOLVED"}:
+        lines.append("最新已识别动作是卖出或退出，不能凭历史模型信号推断仍在加仓。")
+    if decision in {"NO_BUY","WAIT"}:
+        lines.append("当前跟单结论不支持立即买入。")
     if frank_price not in (None,""):
         lines.append("Frank 参考买价："+_compact_price(frank_price)+" USDC")
     if exec_price not in (None,""):
@@ -208,9 +235,22 @@ def render(event:dict)->dict:
     if missing!="无":
         lines.append("需要核实："+missing)
     if sig:
-        lines += ["","交易哈希："+sig]
+        lines += ["", "技术审计信息（非实时跟单依据）", "最近已识别交易哈希：", sig]
     text="\n".join(lines)
     return {"subject":subject,"body":text,"content_hash":digest({"subject":subject,"body":text})}
+
+
+
+def _local_summary(title: str, body: str, event_body: dict) -> str:
+    """Render a short notification from a *frozen* decision presentation."""
+    lines=body.splitlines()
+    if len(lines)<2 or not lines[0].startswith("结论：") or not lines[1].startswith("原因："):
+        raise ValueError("LOCAL_FROZEN_PRESENTATION_MALFORMED")
+    return " | ".join((
+        lines[0],lines[1],
+        "CA："+event_body["mint"],
+        "决策时间："+_utc_decision(event_body.get("created_at")),
+    ))
 
 
 class LocalDelivery:
@@ -221,8 +261,67 @@ class LocalDelivery:
         self.max_decision_age_seconds=max_decision_age_seconds
     def enqueue(self,event:dict,*,forbidden:bool)->None:
         content=render(event);status="DRY_RUN_AUDIT" if forbidden else "PENDING"
-        self.control.enqueue(event["decision_id"],"local",content["content_hash"],status)
-        self.control.db.execute("INSERT OR IGNORE INTO local_delivery(decision_id,status,content_hash,created_at) VALUES(?,?,?,?)",(event["decision_id"],status,content["content_hash"],utc()))
+        decision_id=event["decision_id"]
+        event_body=json.loads(event["body"]) if isinstance(event["body"],str) else event["body"]
+        summary=_local_summary(content["subject"],content["body"],event_body)
+        self.control.enqueue(decision_id,"local",content["content_hash"],status)
+        self.control.db.execute("INSERT OR IGNORE INTO local_delivery(decision_id,status,content_hash,created_at) VALUES(?,?,?,?)",(decision_id,status,content["content_hash"],utc()))
+        self.control.db.execute(
+            "INSERT OR IGNORE INTO local_delivery_presentation(decision_id,title,summary,content_hash) VALUES(?,?,?,?)",
+            (decision_id,content["subject"],summary,content["content_hash"]),
+        )
+        saved=self.control.db.execute(
+            "SELECT d.content_hash AS original_hash,p.title,p.summary,p.content_hash AS presentation_hash "
+            "FROM local_delivery d JOIN local_delivery_presentation p USING(decision_id) WHERE d.decision_id=?",
+            (decision_id,),
+        ).fetchone()
+        if (saved["original_hash"]!=content["content_hash"]
+                or saved["presentation_hash"]!=content["content_hash"]
+                or saved["title"]!=content["subject"] or saved["summary"]!=summary):
+            raise ValueError("IMMUTABLE_LOCAL_PRESENTATION_IDENTITY_CONFLICT")
+
+    def _frozen_presentation(self,row:dict,event_body:dict)->tuple[str,str]:
+        """Use stored local text; recover legacy pending alerts only from verified content."""
+        stored=self.control.db.execute(
+            "SELECT title,summary,content_hash FROM local_delivery_presentation WHERE decision_id=?",
+            (row["decision_id"],),
+        ).fetchone()
+        if stored:
+            if stored["content_hash"]!=row["content_hash"]:
+                raise ValueError("LOCAL_PRESENTATION_HASH_MISMATCH")
+            return stored["title"],stored["summary"]
+        legacy=self.control.db.execute(
+            "SELECT subject,body,content_hash FROM gmail_delivery WHERE decision_id=?",
+            (row["decision_id"],),
+        ).fetchone()
+        if (legacy and legacy["content_hash"]==row["content_hash"]
+                and digest({"subject":legacy["subject"],"body":legacy["body"]})==row["content_hash"]):
+            title=legacy["subject"]
+            summary=_local_summary(title,legacy["body"],event_body)
+        else:
+            # Older local-only alerts may lack a matching Gmail snapshot.
+            # Permit them only when their original content hash still matches.
+            rerender=render({"body":event_body})
+            if rerender["content_hash"]!=row["content_hash"]:
+                raise ValueError("LOCAL_PENDING_LEGACY_PRESENTATION_UNVERIFIABLE")
+            title=rerender["subject"]
+            summary=_local_summary(title,rerender["body"],event_body)
+        self.control.db.execute(
+            "INSERT OR IGNORE INTO local_delivery_presentation(decision_id,title,summary,content_hash) VALUES(?,?,?,?)",
+            (row["decision_id"],title,summary,row["content_hash"]),
+        )
+        return title,summary
+
+    def _review_unverifiable(self,decision_id:str,error:str)->None:
+        self.control.db.execute(
+            "UPDATE local_delivery SET status='MANUAL_REVIEW',last_error=? WHERE decision_id=?",
+            (error,decision_id),
+        )
+        self.control.db.execute(
+            "UPDATE decision_outbox SET status='MANUAL_REVIEW',last_error=? WHERE decision_id=? AND channel='local'",
+            (error,decision_id),
+        )
+
     def _expire(self,decision_id:str)->None:
         reason="LOCAL_DECISION_STALE_OR_TIME_UNVERIFIED_BEFORE_SEND"
         self.control.db.execute(
@@ -246,21 +345,16 @@ class LocalDelivery:
             if age is None or age>self.max_decision_age_seconds:
                 self._expire(row["decision_id"])
                 continue
-            event={"decision_id":row["decision_id"],"body":json.loads(row["body"])}
-            content=render(event)
-            # Keep the actionable CA in short macOS alerts even when the full
-            # frozen Gmail template gains quote times and disclaimer lines.
-            title_lines=content["body"].splitlines()
-            summary=" | ".join((
-                title_lines[0],
-                title_lines[1],
-                "CA："+event["body"]["mint"],
-                "决策时间："+_utc_decision(event["body"].get("created_at")),
-            ))
+            event_body=json.loads(row["body"])
+            try:
+                title,summary=self._frozen_presentation(dict(row),event_body)
+            except (ValueError,TypeError,KeyError) as exc:
+                self._review_unverifiable(row["decision_id"],str(exc))
+                continue
             binary=shutil.which("terminal-notifier")
-            if binary:args=[binary,"-title",content["subject"],"-message",summary,"-group",row["decision_id"]];mechanism="terminal-notifier-group"
+            if binary:args=[binary,"-title",title,"-message",summary,"-group",row["decision_id"]];mechanism="terminal-notifier-group"
             else:
-                script="display notification "+json.dumps(summary,ensure_ascii=False)+" with title "+json.dumps(content["subject"],ensure_ascii=False);args=["/usr/bin/osascript","-e",script];mechanism="osascript-notification"
+                script="display notification "+json.dumps(summary,ensure_ascii=False)+" with title "+json.dumps(title,ensure_ascii=False);args=["/usr/bin/osascript","-e",script];mechanism="osascript-notification"
             try:
                 # Rendering/desktop utility lookup can take time; do not present
                 # a historical follow decision as live after its expiry.

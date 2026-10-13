@@ -144,8 +144,49 @@ def test_mission_control_notification_is_chinese_and_research_friendly(tmp_path)
     assert "决策时间：" in rendered["body"]
     assert "Jupiter 报价观察时间：未记录（不可当作实时报价）" in rendered["body"]
     assert "报价为决策时历史快照" in rendered["body"]
-    assert "原因：Frank 当前处于多次强加仓模式" in rendered["body"]
+    assert "原因：Frank 已观察到多次强加仓模型事件，是否可以跟随以本次结论为准" in rendered["body"]
     assert "Policy：" not in rendered["body"]
+
+
+def test_email_title_prioritizes_decision_action_inventory_and_archives_signature(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"])
+    body["decision"]="NO_BUY"
+    body["inputs"]["latest_side"]="SELL"
+    body["inputs"]["position_state"]="INVENTORY_UNDETERMINED"
+    body["inputs"]["latest_signature"]="signed-example-tx-123"
+    result=render({"body":body})
+    assert result["subject"].startswith("[Meme提醒] 不跟 | Frank 最近卖出 | 仓位未确认 | ")
+    assert "多次强加仓" not in result["subject"]
+    assert result["body"].splitlines()[0].startswith("结论：不跟  |  最近已识别动作：卖出")
+    assert "原因：" in result["body"].splitlines()[1]
+    assert "历史观察模式：多次强加仓（历史模型记录）" in result["body"]
+    assert "CA（单独一行，便于长按复制）\nMint111111111111111\n" in result["body"]
+    assert result["body"].endswith("技术审计信息（非实时跟单依据）\n最近已识别交易哈希：\nsigned-example-tx-123")
+    assert result["body"].index("Frank 最近一次买入支付（历史）") < result["body"].index("技术审计信息")
+    db.close()
+
+
+@pytest.mark.parametrize("side,state,expected_action,expected_state", [
+    ("BUY","OPEN","Frank 最近买入","模型持仓待核"),
+    ("SELL","CLOSED","Frank 最近卖出","模型已退出"),
+    ("EXIT","CLOSED","Frank 最近退出","模型已退出"),
+    ("SELL_POSITION_UNRESOLVED","INVENTORY_UNDETERMINED","Frank 最近卖出待确认","仓位未确认"),
+    (None,None,"Frank 动作未核实","仓位未核实"),
+])
+def test_email_title_never_uses_historical_pattern_as_current_action(tmp_path,side,state,expected_action,expected_state):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"])
+    body["inputs"]["latest_side"]=side
+    body["inputs"]["position_state"]=state
+    rendered=render({"body":body})
+    subject=rendered["subject"]
+    assert subject.startswith("[Meme提醒] 可跟 | "+expected_action+" | "+expected_state+" | ")
+    assert "多次强加仓" not in subject
+    assert "历史观察模式：多次强加仓（历史模型记录）" in rendered["body"]
+    db.close()
 
 
 def test_mission_control_email_mobile_readable_amounts_keep_full_ca(tmp_path):
@@ -156,11 +197,12 @@ def test_mission_control_email_mobile_readable_amounts_keep_full_ca(tmp_path):
     body["mint"]=mint
     body["inputs"]["latest_buy_original_quote_asset"]="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
     body["inputs"]["latest_buy_original_quote_quantity"]="40300.819981"
+    body["inputs"]["latest_buy_amount_predicate"]="USDC_DIRECT_NUMERIC"
     body["metrics"]["frank_latest_buy_price_usdc"]="0.06281989977852861423955923621"
     body["metrics"]["price_impact_pct"]="0.123456789"
     rendered=render({"body":body})
     assert f"\n{mint}\n" in rendered["body"]
-    assert "最近买入投入：40,300.82 USDC" in rendered["body"]
+    assert "Frank 最近一次买入支付（历史）：40,300.82 USDC" in rendered["body"]
     assert "Frank 参考买价：0.06282 USDC" in rendered["body"]
     assert "预计价格冲击：0.1%" in rendered["body"]
     assert "Decision ID：" not in rendered["body"]
@@ -174,6 +216,126 @@ def test_mission_control_email_tiny_prices_remain_nonzero(tmp_path):
     assert "Frank 参考买价：1.23e-9 USDC" in render({"body":body})["body"]
 
 
+
+
+def test_non_actionable_multiple_with_latest_sell_does_not_present_historical_payment_as_current(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"]) if isinstance(e["body"],str) else e["body"]
+    body["decision"]="NO_BUY"
+    body["inputs"]["position_state"]="INVENTORY_UNDETERMINED"
+    body["inputs"]["latest_side"]="SELL"
+    body["inputs"]["latest_buy_original_quote_asset"]="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    body["inputs"]["latest_buy_original_quote_quantity"]="15000"
+    body["inputs"]["latest_buy_amount_predicate"]="USDC_DIRECT_NUMERIC"
+    content=render({"body":body})
+    assert "[Meme提醒] 不跟 | Frank 最近卖出 | 仓位未确认 | " in content["subject"]
+    assert "多次强加仓" not in content["subject"]
+    assert "历史观察模式：多次强加仓（历史模型记录）" in content["body"]
+    assert "结论：不跟" in content["body"]
+    assert "Frank 最近已识别动作：卖出  |  Frank 模型仓位：仓位不明" in content["body"]
+    assert "Frank 最近一次买入支付（历史）：15,000.00 USDC" in content["body"]
+    assert "不代表当前持仓市值、持有金额或全部建仓成本" in content["body"]
+    assert "最新已识别动作是卖出或退出" in content["body"]
+    assert "当前跟单结论不支持立即买入" in content["body"]
+    assert content["content_hash"]
+
+
+def test_unknown_recent_buy_payment_is_not_backfilled_from_pattern(tmp_path):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"]) if isinstance(e["body"],str) else e["body"]
+    body["inputs"]["latest_buy_original_quote_quantity"]=None
+    body["inputs"]["latest_buy_quote_quantity"]=None
+    text=render({"body":body})["body"]
+    assert "Frank 最近一次买入支付（历史）：未确认（原始支付数据不足）" in text
+    assert "15,000" not in text
+
+
+@pytest.mark.parametrize("predicate,reason,quantity,expected", [
+    ("UNDETERMINED","COMPOSITE_QUOTE_LEGS","10000","复合报价可能含其他资金腿"),
+    ("UNDETERMINED","ROUTED_RESIDUAL_ASSETS","2500","多资产路线的最终目标成本不可核实"),
+    (None,None,"7000","完整支付成本缺少验证"),
+])
+def test_composite_routed_and_legacy_amounts_never_claim_complete_payment(tmp_path,predicate,reason,quantity,expected):
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    body=json.loads(e["body"])
+    data=body["inputs"]
+    data["latest_buy_original_quote_asset"]="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    data["latest_buy_original_quote_quantity"]=quantity
+    data["latest_buy_amount_predicate"]=predicate
+    data["latest_buy_amount_predicate_reason"]=reason
+    rendered=render({"body":body})["body"]
+    line=next(l for l in rendered.splitlines() if l.startswith("Frank 最近一次买入支付（历史）："))
+    assert line.startswith("Frank 最近一次买入支付（历史）：未确认（已识别资金腿：")
+    assert expected in line and "不代表完整支付" in line
+    assert f"{int(quantity):,}.00 USDC" in line
+    db.close()
+
+
+def test_desktop_new_queue_freezes_summary_across_renderer_change(monkeypatch,tmp_path):
+    import mission_agent.mission_control.delivery as delivery
+    from types import SimpleNamespace
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    dispatched=[]
+    local=LocalDelivery(db,run=lambda args,**kw: (dispatched.append(args),SimpleNamespace(returncode=0))[1])
+    monkeypatch.setattr(delivery.shutil,"which",lambda _: "/usr/local/bin/terminal-notifier")
+    local.enqueue(e,forbidden=False)
+    frozen=db.db.execute("SELECT * FROM local_delivery_presentation WHERE decision_id=?",(e["decision_id"],)).fetchone()
+    assert frozen and "可跟" in frozen["title"]
+    monkeypatch.setattr(delivery,"render",lambda _: pytest.fail("desktop notification rerendered"))
+    local.drain()
+    assert len(dispatched)==1
+    assert dispatched[0][dispatched[0].index("-title")+1]==frozen["title"]
+    assert dispatched[0][dispatched[0].index("-message")+1]==frozen["summary"]
+    assert db.db.execute("SELECT status FROM local_delivery").fetchone()[0]=="COMMAND_ACCEPTED"
+    db.close()
+
+
+def test_desktop_legacy_pending_recovers_only_verified_frozen_gmail_body(monkeypatch,tmp_path):
+    import mission_agent.mission_control.delivery as delivery
+    from mission_agent.hashing import digest
+    from types import SimpleNamespace
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    local=LocalDelivery(db)
+    local.enqueue(e,forbidden=False)
+    GmailDelivery(db).enqueue(e,mode="LIVE",forbidden=False)
+    old_title="[Meme提醒] 可跟 | 多次强加仓 | Mint"
+    old_body="结论：可跟  |  多次强加仓\n原因：Frank 当前处于多次强加仓模式\n旧文案其他内容"
+    old_hash=digest({"subject":old_title,"body":old_body})
+    db.db.execute("DELETE FROM local_delivery_presentation WHERE decision_id=?",(e["decision_id"],))
+    db.db.execute("UPDATE local_delivery SET content_hash=? WHERE decision_id=?",(old_hash,e["decision_id"]))
+    db.db.execute("UPDATE gmail_delivery SET subject=?,body=?,content_hash=? WHERE decision_id=?",
+                  (old_title,old_body,old_hash,e["decision_id"]))
+    seen=[]
+    local.run=lambda args,**kw:(seen.append(args),SimpleNamespace(returncode=0))[1]
+    monkeypatch.setattr(delivery.shutil,"which",lambda _: "/usr/local/bin/terminal-notifier")
+    local.drain()
+    assert len(seen)==1
+    assert seen[0][seen[0].index("-title")+1]==old_title
+    assert "多次强加仓模式" in seen[0][seen[0].index("-message")+1]
+    assert "（历史模型记录）" not in seen[0][seen[0].index("-message")+1]
+    row=db.db.execute("SELECT title,content_hash FROM local_delivery_presentation").fetchone()
+    assert row["title"]==old_title and row["content_hash"]==old_hash
+    db.close()
+
+
+def test_desktop_legacy_pending_unverifiable_is_not_sent(monkeypatch,tmp_path):
+    import mission_agent.mission_control.delivery as delivery
+    db=ControlDB(tmp_path/"mission-control.sqlite")
+    e=event(db)
+    local=LocalDelivery(db,run=lambda *a,**kw: pytest.fail("unverifiable notification sent"))
+    local.enqueue(e,forbidden=False)
+    db.db.execute("DELETE FROM local_delivery_presentation WHERE decision_id=?",(e["decision_id"],))
+    db.db.execute("UPDATE local_delivery SET content_hash='old-frozen-content' WHERE decision_id=?",(e["decision_id"],))
+    local.drain()
+    row=db.db.execute("SELECT status,last_error FROM local_delivery").fetchone()
+    assert row["status"]=="MANUAL_REVIEW" and "UNVERIFIABLE" in row["last_error"]
+    assert db.db.execute("SELECT status FROM decision_outbox WHERE channel='local'").fetchone()[0]=="MANUAL_REVIEW"
+    db.close()
 
 @pytest.mark.parametrize("delivery_status", ["PENDING", "CREDENTIAL_BLOCKED", "RETRYABLE_ERROR"])
 def test_old_decision_is_never_sent_when_gmail_credentials_recover(tmp_path, delivery_status):

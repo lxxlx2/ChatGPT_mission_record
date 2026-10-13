@@ -134,6 +134,13 @@ class ControlDB:
                 receipt TEXT,
                 FOREIGN KEY(decision_id) REFERENCES decision_events(decision_id)
             );
+            CREATE TABLE IF NOT EXISTS local_delivery_presentation(
+                decision_id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                summary TEXT NOT NULL,
+                content_hash TEXT NOT NULL,
+                FOREIGN KEY(decision_id) REFERENCES local_delivery(decision_id)
+            );
             CREATE TABLE IF NOT EXISTS market_cache(
                 cache_key TEXT PRIMARY KEY,
                 observed_at TEXT NOT NULL,

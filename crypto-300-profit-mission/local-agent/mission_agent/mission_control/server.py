@@ -23,6 +23,7 @@ from ..meme.market import DexScreenerMarketClient
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
+from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
@@ -716,6 +717,7 @@ class DashboardState:
         by_key = {(x["person_id"], x["mint"], x["episode_id"]): x for x in latest}
         seen = set()
         for item in candidates:
+            item.update(latest_buy_payment_evidence(item))
             key=(item["person_id"], item["mint"], item.get("episode_id"));seen.add(key)
             row = by_key.get(key)
             if row:
@@ -744,7 +746,9 @@ class DashboardState:
                 "person_id","mint","episode_id","pattern","source_signal_id","source_signal_type","source_signal_at",
                 "position_state","current_raw","buy_count","sell_count","latest_side","latest_signature","latest_at",
                 "latest_buy_at","latest_buy_price_usdc","latest_buy_price_status","latest_buy_quote_asset",
-                "latest_buy_quote_quantity","token_decimals"
+                "latest_buy_quote_quantity","latest_buy_original_quote_asset","latest_buy_original_quote_quantity",
+                "latest_buy_quote_was_normalized","latest_buy_usdc_equivalent","latest_buy_amount_predicate",
+                "latest_buy_amount_predicate_reason","token_decimals"
             )}
             item.update({
                 "decision":body["decision"],"decision_created_at":row["evaluated_at"],

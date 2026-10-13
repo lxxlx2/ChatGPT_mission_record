@@ -87,3 +87,118 @@ def test_ca_research_form_and_history_sections_not_removed():
     assert "Frank 持续观察池" in markup
     assert "当前跟单机会" in markup
     assert "cluster-form" in page.identifiers
+
+
+def test_nonactionable_sell_candidate_marks_model_and_historical_payment():
+    import subprocess
+    js = (STATIC / "app.js").read_text(encoding="utf-8")
+    assert "MULTIPLE:'多次强加仓（本轮历史模型记录）'" in js
+    assert "Frank 最近一次买入支付（历史）" in js
+    script = r"""
+const fs=require('fs'), vm=require('vm'), assert=require('assert');
+const js=fs.readFileSync(process.argv[1],'utf8');
+const extract=(a,b)=> {
+  const i=js.indexOf(a), j=js.indexOf(b,i+1);
+  assert(i>=0 && j>i,'source function missing');
+  return js.slice(i,j);
+};
+const elements={candidates:{innerHTML:''}};
+const ctx={
+  '$':id=>elements[id],
+  esc:x=>String(x??''),
+  translated:(dict,key,defaultValue)=>dict[key]||key||defaultValue,
+  decisionLabel:{NO_BUY:'不跟',BUY:'可跟'},
+  patternLabel:{MULTIPLE:'多次强加仓（本轮历史模型记录）'},
+  stateLabel:{INVENTORY_UNDETERMINED:'仓位不明'},
+  sideLabel:{SELL:'卖出'},
+  badge:x=>String(x),
+  age:()=> '5分钟前',
+  reasonFor:()=> 'Frank 最新动作是卖出',
+  tokenIdentity:()=> 'CA',
+  metric:(label,value)=>'<p>'+label+': '+value+'</p>',
+  n:x=>String(x),
+  money:x=>String(x),
+  quoteAsset:()=> 'USDC',
+  frankPriceText:()=> '参考价未确认',
+  quoteUnavailableText:()=> '未请求',
+};
+vm.createContext(ctx);
+vm.runInContext(extract('function frankQuote(x) {','function reasonFor(x) {'),ctx);
+vm.runInContext(extract('function renderCandidates(rows) {','function withinHours('),ctx);
+ctx.renderCandidates([{
+  mint:'mint-test',pattern:'MULTIPLE',decision:'NO_BUY',
+  position_state:'INVENTORY_UNDETERMINED',latest_side:'SELL',
+  latest_at:1700000000, latest_buy_at:1699999000,
+  latest_buy_original_quote_asset:'USDC',latest_buy_original_quote_quantity:'15000',
+  buy_count:3,sell_count:1,metrics:{},decision_quote:{}
+}]);
+const html=elements.candidates.innerHTML;
+assert(html.includes('当前跟单结论：“不跟”'));
+assert(html.includes('Frank模型仓位：仓位不明'));
+assert(html.includes('模式与买入金额是历史记录'));
+assert(html.includes('Frank 最近一次买入支付（历史）'));
+assert(html.includes('15000 USDC'));
+assert(html.includes('最近动作：卖出'));
+assert(!html.includes('当前跟单结论：“可跟”'));
+"""
+    subprocess.run(["node", "-e", script, str(STATIC / "app.js")],
+                   check=True, capture_output=True, text=True, timeout=10)
+
+
+
+def test_quote_certainty_with_real_js_formatting_and_timestamp():
+    import subprocess
+    script = r"""
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const js=fs.readFileSync(process.argv[1],'utf8');
+const cut=(a,b)=> {
+  const i=js.indexOf(a), j=js.indexOf(b,i+1);
+  assert(i>=0 && j>i,'source function missing');
+  return js.slice(i,j);
+};
+const constants=js.slice(0,js.indexOf('const esc ='));
+const ctx={Date,Intl};
+vm.createContext(ctx);
+vm.runInContext(constants+cut('const esc =','const decisionLabel'),ctx);
+vm.runInContext(cut('function quoteAsset','function reasonFor(x) {'),ctx);
+function rendered(fields) {
+  return vm.runInContext('frankQuote('+JSON.stringify({
+    latest_buy_original_quote_asset:'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    latest_buy_at:1699999000,
+    ...fields
+  })+')',ctx);
+}
+const direct=rendered({latest_buy_original_quote_quantity:'15000',
+  latest_buy_amount_predicate:'USDC_DIRECT_NUMERIC'});
+assert(direct.includes('15,000 USDC') && !direct.includes('未确认'));
+assert(direct.includes('已识别买入时间：'));
+const multi=rendered({latest_buy_original_quote_quantity:'10000',
+  latest_buy_amount_predicate:'UNDETERMINED',latest_buy_amount_predicate_reason:'COMPOSITE_QUOTE_LEGS'});
+assert(multi.includes('未确认（已识别资金腿：10,000 USDC'));
+assert(multi.includes('复合报价可能含其他资金腿'));
+const routed=rendered({latest_buy_original_quote_quantity:'2500',
+  latest_buy_amount_predicate:'UNDETERMINED',latest_buy_amount_predicate_reason:'ROUTED_RESIDUAL_ASSETS'});
+assert(routed.includes('未确认（已识别资金腿：2,500 USDC'));
+assert(routed.includes('最终目标成本不可核实'));
+const fallback=rendered({latest_buy_original_quote_quantity:'',
+  latest_buy_quote_quantity:'7000',latest_buy_amount_predicate:'USDC_DIRECT_NUMERIC'});
+assert(fallback.includes('7,000 USDC') && !fallback.includes('暂无'));
+const missing=rendered({latest_buy_original_quote_quantity:null,
+  latest_buy_quote_quantity:null,latest_buy_amount_predicate:'USDC_DIRECT_NUMERIC'});
+assert(missing.includes('未确认（原始支付数据不足）') && !missing.includes('0 USDC'));
+"""
+    subprocess.run(["node", "-e", script, str(STATIC / "app.js")],
+                   check=True, capture_output=True, text=True, timeout=10)
+
+
+def test_watch_pool_stays_secondary_and_defaults_to_high_priority_rows():
+    markup, page = parsed()
+    js = (STATIC / "app.js").read_text(encoding="utf-8")
+    css = (STATIC / "styles.css").read_text(encoding="utf-8")
+    assert page.identifiers.index("trades") < page.identifiers.index("frank-watch-panel")
+    assert '<option value="WATCH_NOW" selected>' in markup
+    assert "['MODEL_OPEN', 'NEEDS_INVENTORY_REVIEW', 'WATCH_UNRESOLVED'].includes(x.watch_state)" in js
+    assert "const filter = $('watch-filter')?.value || 'WATCH_NOW'" in js
+    assert ".frank-watch-table{border-collapse:collapse;width:100%;min-width:840px;font-size:13px;line-height:1.5}" in css
+    assert ".frank-watch-table code{font-size:12px}" in css
+    assert '<option value="ALL">全部本地账户活动</option>' in markup
