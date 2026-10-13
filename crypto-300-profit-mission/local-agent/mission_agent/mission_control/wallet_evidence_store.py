@@ -1,0 +1,106 @@
+"""A04/A05 optional, manually populated local sidecar for immutable evidence.
+
+Never opens Frank forward.sqlite or Mission Control audit SQLite for writing.
+Only explicit caller-supplied normalized captures can be imported. This store
+does not import secrets, initiate RPC, evaluate follow decisions or send alerts.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+from pathlib import Path
+import sqlite3
+
+from .wallet_economic_ledger import transaction_identity
+
+
+_PROTECTED_NAMES = frozenset({"forward.sqlite", "mission-control.sqlite",
+                             "sol-normalized-v1.sqlite"})
+
+
+def _json(value: dict) -> str:
+    return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+def _sha(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+class WalletEvidenceStore:
+    """Append-only snapshots/transactions, source conflicts fail closed."""
+
+    def __init__(self, path: Path):
+        path = Path(path).expanduser().resolve()
+        if path.name in _PROTECTED_NAMES or path.suffix != ".sqlite":
+            raise ValueError("SIDE_CAR_PATH_NOT_ALLOWED")
+        if path.exists() and path.is_symlink():
+            raise ValueError("SIDE_CAR_SYMLINK_FORBIDDEN")
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        self.db = sqlite3.connect(path)
+        self.db.row_factory = sqlite3.Row
+        self.db.execute("PRAGMA journal_mode=WAL")
+        self.db.executescript("""
+            CREATE TABLE IF NOT EXISTS evidence_documents (
+                kind TEXT NOT NULL,
+                identity TEXT NOT NULL,
+                source_sha256 TEXT NOT NULL,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY(kind,identity)
+            );
+            CREATE INDEX IF NOT EXISTS evidence_documents_kind_idx
+                ON evidence_documents(kind);
+        """)
+
+    def close(self):
+        self.db.close()
+
+    def _append(self, kind: str, identity: str, document: dict) -> bool:
+        raw = _json(document)
+        sha = _sha(raw)
+        with self.db:
+            old = self.db.execute(
+                "SELECT source_sha256 FROM evidence_documents WHERE kind=? AND identity=?",
+                (kind, identity),
+            ).fetchone()
+            if old:
+                if old["source_sha256"] != sha:
+                    raise ValueError("IMMUTABLE_EVIDENCE_CONFLICT")
+                return False
+            self.db.execute(
+                "INSERT INTO evidence_documents(kind,identity,source_sha256,payload_json) "
+                "VALUES(?,?,?,?)",
+                (kind, identity, sha, raw),
+            )
+        return True
+
+    def capture_wallet(self, document: dict) -> bool:
+        if (not isinstance(document, dict) or document.get("schema_version") != 1
+            or document.get("network") != "solana-mainnet"
+            or not document.get("wallet") or
+            not document.get("capture_sha256")):
+            raise ValueError("CAPTURE_INVALID")
+        # Repeat a proven identical snapshot is idempotent; each capture hash
+        # is an immutable historical source, never "current balance".
+        return self._append("ACCOUNT_CAPTURE", document["wallet"] + ":" +
+                            document["capture_sha256"], document)
+
+    def record_transaction(self, document: dict) -> bool:
+        chain, signature, slot = transaction_identity(document)
+        return self._append("TX", chain + ":" + signature + ":" + str(slot), document)
+
+    def read_wallet_captures(self, wallet: str, limit: int = 30) -> list[dict]:
+        if type(limit) is not int or not 1 <= limit <= 100:
+            raise ValueError("INVALID_READ_LIMIT")
+        rows = self.db.execute(
+            "SELECT payload_json FROM evidence_documents WHERE kind='ACCOUNT_CAPTURE' "
+            "AND identity LIKE ? ORDER BY rowid DESC LIMIT ?",
+            (wallet + ":%", limit),
+        ).fetchall()
+        return [json.loads(row["payload_json"]) for row in rows]
+
+    def count(self, kind: str) -> int:
+        if kind not in {"TX", "ACCOUNT_CAPTURE"}:
+            raise ValueError("INVALID_EVIDENCE_KIND")
+        return int(self.db.execute(
+            "SELECT COUNT(*) FROM evidence_documents WHERE kind=?", (kind,)
+        ).fetchone()[0])
