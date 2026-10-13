@@ -124,3 +124,42 @@ Surf 官网确认系列总量为 **6,666**，此前 1,000/1,500/3,000/5,000/10,0
 **用户 #691 交付：** 原始 Git 购买证据为 2025-08-31 经 DaimoPay 支出 **$228**，用户明确确认对应 SurfBoards 发行权益。但在上述 ERC-721 执行 `ownerOf(691)` 返回 **`reverted: unminted`**；#691 的浏览器实例虽有预生成的 `Pro ticket` 元数据，owner 为零地址，**未 Mint 的元数据不是已拥有 Pro 级别的证据**。主 EVM 钱包在 Robinhood 4663 的 NFT 持仓读取为空。**已付的待交付权益照旧保留 $228 成本，不列为已持有可交易 NFT，也不记作零价值/损失**。
 
 **研究判断：** `ACTIVE` 仅代表用户已付款权益；NFT 可执行交易仍 `WATCH`。确认 6,666、链上 burn/remint、官方子域及 v4 交互使项目真实性判断上升；正式 CA、#691 交付、drand 奖池与等级概率、股票代币真实收益、链上流动性、安全权限和官方索赔条款仍 `UNRESOLVED`。禁止创建监控、进行任何签名或交易。
+
+
+## 8. 2026-10-13 官方 Genesis 8/8 规则与 PRO 会员的领取及收益决策
+
+**研究范围仅为 NFT 投资分析。** 取证顺序：用户提供的 [SurfAIHQ 2026-10-13 官方 8/8 thread](https://x.com/SurfAIHQ/status/2109852363892879632) 整理原文（X 页面在本次浏览工具不可直接读取，以下细节以**官方声明的用户转述**列出）、[Surf 官方 NFT 站](https://nft.asksurf.ai/) 及主站（官方项目入口和倒计时可读取）、CoinNess 与 Binance News 英文新闻（独立报道与用户转述大体一致）、用户的 **2025-08-31 Surf 付款成功官方邮件**及 **2026-10-06 Surf 领取资格官方邮件**（经连接账户直接读取原文）。记录中**不包含邮箱、订单号、原文敏感凭据**。
+
+### 8.1 更正用户实际购买关系与会员等级（一级证据）
+
+- 2025-08-31 **Surf 官方付款成功邮件**直接写明：`Surf PRO Annual Subscription`，金额 **$228**，服务有效至 2026-08-31。**因此这个 $228 是 PRO 一年期会员购买款，不应被错误分类为单独购买了 $228 NFT**。SurfBoard 是会员随附的一枚免费领取权益（新机制下的额外发行/claim 费用是否有 gas，应在交互前读取）。
+- 2026-10-06 **Surf 官方定向邮件**明确写：`Every member holding an annual membership number, Pro or Max, active or lapsed, can claim one free NFT`，2026-09-16 之前购买年会员符合资格，**已过期会员仍可领取**；如果 9/16 前续费第二年则有两份。本次仅找到用户 **一笔 $228 PRO 年订阅**的直接付款证据；没有证明第二次续费，默认只计算 **1 份 Pro ticket 资格**。邮件还要求在 Surf 绑定钱包。
+- 先前 `Surf Limited Edition #691` 是用户的原会员购买/领取权益编号，**不能仅凭该编号认定生成的 ERC-721 tokenId 必然也是 #691**；2026-10-13 对早期候选 ERC721 的 `ownerOf(691)` 读到 `unminted`，并不否认会员 1 张免费票的资格。
+- 增量 NFT 获取成本：**0 美元的额外销售 Mint 费（按照官方免费票规则），gas 尚待交互显示**。追踪历史现金支出仍保留 **$228 订阅费用**；计算 NFT 纯新增回报时不得把已消费的全年 AI 服务费用直接全部计入 NFT 的专属投资成本，也不得重复创造一笔 $228 NFT 买入记录。
+- 邮件中的 `Bind your wallet` 链接正文呈现 `#WALLET-BINDING-LINK-TODO` 占位文本；操作应从 Surf **官方主站登录后**找账户钱包绑定，不要依赖邮件内占位链接。选择绑定的 EVM 地址是否为最终 Claim 收件地址，必须以账户 UI 为准。
+
+### 8.2 发行与权益（用户转述的 Surf 官方 2026-10-13 thread）
+
+- **主网**：Robinhood Chain `4663`，gas 为 ETH。**总量 6,666**。**公开 Claim / 交易开放**：2026-10-15 **03:00 UTC = Bangkok 10:00 = Beijing 11:00**，在上链操作前再次核实官方页面实时状态。
+- **等级与计划配额**：`Pro-1 3,500`、`Pro-2 1,800`、`Pro-3 860`、`Max 500`、`Ultra 6`，合计 `6,666`。按比例分别约 52.51%、27.00%、12.90%、7.50%、0.09% 的**全系列配额占比**，**不是持 Pro Ticket 抽到各级的已知概率**。用户 Pro Ticket 对应 Pro 发行路径；确切 Pro-1/2/3 等级概率/保底/剩余奖池算法未经合约审计，禁止借全系列占比推算。
+- 约 **130,000** artwork 组合；抽出 tier 后不同收益权重，具体流量/金额与 grade 的比值未公开核验。官网列出的股票代币方向：NVDA、SPY、META、GOOGL、SPCX。
+- 老会员可以用 Pro/Max **Ticket** 领取；第二渠道为买 **1 SURFBOARD ERC20 token** Reveal，按剩余奖池随机取等级。用户已有免费票，**不应在未验证资格或回报时重复花钱买 1 ERC20**。9/16 之后临时升级 Max 年会员不能视为 retroactive Max Ticket。
+- **未 Reveal**：股票代币累积为零；**Reveal 后**：开始累计，且不可逆。已揭开的 NFT 可在 OpenSea 转移，已累计股票代币权利随 NFT 走。**Unopened ERC20** 本身可流转。暂未独立核实 Ticket 本身是否可转让。
+- **Redeem**：NFT 被 Burn，持有人得到累积股票代币的 **95%**，其余 **5%** 分给所有已揭开的 SurfBoards。未见官方细则描述是否等权分发、收费/税及 token 交易限制，不能擅自补充。
+
+### 8.3 收益最大化的行动决策（研究意见）
+
+**初始默认优先级：**
+1. **2026-10-13/14：** 在官方 `https://asksurf.ai/` 用购买时账户登录，确认 **PRO 会员编号 #691 / 1 张 Ticket / 钱包绑定的收件地址**；无需新开会员，先确认原持有资格。必要时仅为真实 claim/reveal 准备少量 Robinhood 4663 ETH gas。Robinhood 官方手动加网 RPC `https://rpc.mainnet.chain.robinhood.com`，ChainID `4663`，币种 ETH。
+2. **2026-10-15 10:00 Bangkok：** 先确认 official claim 与钱包弹窗合约地址，走 **Pro Ticket 免费 Claim**；当确认揭晓不会丧失可实现的高额未揭晓出售溢价或重要权益后，**尽早 Reveal** 开始股票累积。Claim 和 Reveal 可能是不同操作，不能把领取看作已开始累积。不要因为编号 #691 而认定 ERC721 的 Token ID #691 必须出现。
+3. **Reveal 后：** 按真实生成的 Pro 子级、美元计价的 stock token 累计、日均到账速率、合约持有人转让机制及 OpenSea **已成交/最高实际 bid** 决策。留存 NFT 持续收益及未来 5% 再分配期权，不在奖励很少时过早 Redeem。
+4. **卖出 vs 赎回二选一（不能重复计价）**：`Sell_net = executable_bid - sale_fees - gas`；`Redeem_net = 0.95 * executable_value(accrued_stocks) - gas - stocks_liquidation_cost`；二者都失去 NFT 未来收益。持有继续积累的备选方案需计入未来配额、基金实际资金及变现风险。如果未来停发或者 NFT 交易长期严重折价，再考虑 Redeem。
+5. **额外买 SURFBOARD：`NO_BUY_PENDING_VERIFICATION`**。需要官方股票收益发放量/权重/资金来源、可持续分发机制、可执行 token 买价/深度、合约权限和合规限制后，才能形成真实净收益模型。团队 `raise $0 from NFT sale` 不证明持续奖励有足额外部资金。
+
+**数学估值：** 如果累计股份代币当前可变现美元价值为 `A`，赎回上限毛额为 `0.95 × A`（还要扣 gas/税与出售成本），并且必须交出 NFT。所谓 5% 再分配属于其他人赎回时支付的内部价值转移，不是协议额外增加 5% 收益或保证年化 5%。可写 `FutureValue(hold) = expected NFT net bid at H + future stock accrual + redemption-redistribution option`，不得将二级售出 NFT 时已经包含的 stock entitlement 再单独加一遍。
+
+**实质性估值缺口：** 目前尚无官方可复核的每 Tier 每日/每区块发放率、总库存 stock token 的数量、资金来源、持续期限、最后发放时点、合约可执行 redemption 细节、OpenSea 可成交 bid。因此**无法核实 Pro Ticket 的年化收益、达 $228 的时间或投资价值精确值**。Kaito 的 2025-02 炒作峰值仅用于尾部极端价格路径压力测试；当前 Surf 应按真实收益折现及同阶段订单簿重新定价。
+
+**经济和法律风险：** Robinhood 官方文件指出 Robinhood Chain 股权代币属于 **tokenized debt securities**，提供相应股票的经济敞口，**不赋予持有人对底层美股的法定或实益所有权**；最终可赎回/交易规则、地区与身份限制须看 Surf/RH 实际执行条款。不可把“持有 NFT 收集 stocks”描述成持有上市公司股权分红。
+
+**执行边界：** 只做主动请求的 NFT 研究，不启用定时/本地监控，不操作钱包，不自动下单，不直接签名。官网未到 Claim 时刻不伪称已领取，交易/分红数据未上线不伪称验证成功。
