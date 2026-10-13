@@ -151,10 +151,12 @@ def install(*,now=None,dry_run=False,windows=None):
     if not dry_run:
         # Mandatory real second-model verdict on the exact source bytes.
         # A CI selftest or GitHub reviewer REQUEST is not independent AI review.
+        # Review takes place in Claude CHAT, never via a local Claude CLI.
+        # The actual answer is first archived into Git by the project reviewer.
         try:
-            import monster_v4_stage99_external_ai_review as ai_review
+            import monster_v4_stage102_claude_chat_review_gate as ai_review
         except ImportError:
-            from scripts import monster_v4_stage99_external_ai_review as ai_review
+            from scripts import monster_v4_stage102_claude_chat_review_gate as ai_review
         ai_review.verify_approved()
         isolated_checkout_preflight()
         if not shutil.which("launchctl"):
@@ -260,6 +262,12 @@ def run(window, *,clock=None,capture=None,git_push=None):
         existing=json.loads(state.read_text())
         if existing["status"]=="GIT_PUSH_CONFIRMED":
             return "ALREADY_PUSHED"
+        # If HTTPS capture already happened, never re-fetch official data.
+        # Retry the exact saved SHA even after the original 15-min window.
+        if existing.get("source_sha256") and (
+            CLONE/expected_path(window)).is_file():
+            retry_saved_push(window)
+            return "GIT_PUSH_CONFIRMED"
     start=stage91.verify_window(window)
     now=clock()
     if not start-15*MINUTE_MS<=now<start:
@@ -368,8 +376,23 @@ def execute(window):
         print("STAGE99_SOURCE_JOB_STATUS "+json.dumps({"window":window,"status":status}))
         return 0 if status in ("GIT_PUSH_CONFIRMED","ALREADY_PUSHED") else 2
     except BaseException as exc:
-        store_status(window,"RUN_FAILED_NO_FALSE_SUCCESS",
-                     reason=type(exc).__name__+":"+str(exc)[:200])
+        previous=STATES/(window[:10]+".json")
+        persisted=None
+        if previous.is_file():
+            try:
+                persisted=json.loads(previous.read_text())
+            except (ValueError, UnicodeDecodeError):
+                persisted=None
+        if persisted and persisted.get("source_sha256") and (
+            CLONE/expected_path(window)).is_file():
+            # A failed Git push must NEVER erase the only recovery pointer.
+            store_status(window,"GIT_UPLOAD_FAILED_RETRYABLE",
+                         reason=type(exc).__name__+":"+str(exc)[:200],
+                         source_sha256=persisted["source_sha256"],
+                         archive_path=str(CLONE/expected_path(window)))
+        else:
+            store_status(window,"RUN_FAILED_NO_FALSE_SUCCESS",
+                         reason=type(exc).__name__+":"+str(exc)[:200])
         print("STAGE99_FAILED "+type(exc).__name__+": "+str(exc)[:200],file=sys.stderr)
         return 3
     finally:
