@@ -34,7 +34,13 @@ class LocalGitUploaderIntegration(unittest.TestCase):
         command("git","init",str(self.seed))
         command("git","-C",str(self.seed),"switch","-c",stage99.BRANCH)
         (self.seed/"README.md").write_text("stage103 git test origin\n")
-        command("git","-C",str(self.seed),"add","README.md")
+        self.review_target=(
+            "crypto-300-profit-mission/local-agent/scripts/"
+            "monster_v4_stage91_forward_oos_replay_gate.py")
+        original=self.seed/self.review_target
+        original.parent.mkdir(parents=True,exist_ok=True)
+        original.write_text("FROZEN_REVIEWED_SOURCE_FIXTURE=1\n")
+        command("git","-C",str(self.seed),"add","--all")
         command("git","-C",str(self.seed),"-c","user.name=fixture",
                 "-c","user.email=fixture@example.test","commit","-m","initial local")
         command("git","-C",str(self.seed),"remote","add","origin",str(self.remote))
@@ -86,6 +92,51 @@ class LocalGitUploaderIntegration(unittest.TestCase):
         self.assertEqual((fetched/"unrelated_remote_change.md").read_text(),"do not overwrite\n")
         second=stage99.safe_git_commit_and_push(self.window)
         self.assertEqual(second,pushed)
+
+    def test_reviewed_runtime_git_tree_rejects_dirty_and_recommitted_sources(self):
+        one=self.review_target
+        pinned=self.local_head
+        frozen=command("git","-C",str(self.clone),"rev-parse",pinned+":"+one)
+        gate=Mock(
+            REQUIRED_SOURCES=(one,),
+            validate_authorization=Mock(return_value={"review_fingerprint":"f"*64}),
+            validate_review=Mock(return_value={
+                "reviewed_commit":pinned,
+                "reviewed_file_git_blobs":{one:frozen}}))
+        with patch.object(stage99,"review_gate",return_value=gate):
+            clean=stage99.assert_reviewed_runtime_source()
+            self.assertEqual(clean["actual_head"],pinned)
+            self.assertEqual(clean["complete_execution_path_verified"],1)
+            local=self.clone/one
+            local.write_text("MALICIOUS_DIRTY_CHANGE=1\n")
+            with self.assertRaisesRegex(RuntimeError,"EXECUTABLE_FILES_DIRTY"):
+                stage99.assert_reviewed_runtime_source()
+            # Deliberately commit a different executable in the same branch.
+            command("git","-C",str(self.clone),"add","--",one)
+            command("git","-C",str(self.clone),"-c","user.name=fixture",
+                    "-c","user.email=fixture@example.test",
+                    "commit","-m","unreviewed tracked source")
+            with self.assertRaisesRegex(RuntimeError,"TREE_BLOB_NOT_REVIEWED"):
+                stage99.assert_reviewed_runtime_source()
+            gate.validate_authorization.assert_called()
+
+    def test_push_race_remote_moves_between_fetch_and_push_then_retries(self):
+        actual=stage99._git_in_worktree
+        raced=[False]
+        def advance_then_git(where,*args,**kwargs):
+            if args and args[0]=="push" and not raced[0]:
+                raced[0]=True
+                self.another_commit("just_before_push.md","race from second clone\n")
+            return actual(where,*args,**kwargs)
+        with patch.object(stage99,"_git_in_worktree",side_effect=advance_then_git):
+            newcommit=stage99.safe_git_commit_and_push(self.window)
+        self.assertTrue(raced[0])
+        self.assertEqual(len(newcommit),40)
+        self.assertEqual(command("git","-C",str(self.clone),"rev-parse","HEAD"),self.local_head)
+        check=Path(self.temp.name)/"race_checked"
+        command("git","clone","-b",stage99.BRANCH,str(self.remote),str(check))
+        self.assertEqual((check/self.path).read_bytes(),self.original.read_bytes())
+        self.assertEqual((check/"just_before_push.md").read_text(),"race from second clone\n")
 
     def test_remote_archive_conflict_never_overwrites_known_file(self):
         remote=self.second/self.path
