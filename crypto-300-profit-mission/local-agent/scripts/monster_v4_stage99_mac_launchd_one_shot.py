@@ -127,6 +127,34 @@ def isolated_checkout_preflight_local():
         raise RuntimeError("STAGE103_WRONG_REPO_REMOTE")
 
 
+def assert_reviewed_runtime_source():
+    """Cross-check real HEAD tree, reviewed commit tree and current tracked bytes.
+
+    HEAD cannot EQUAL the reviewed commit because the authentic Claude review
+    and later user consent are separately committed after code review; requiring
+    equality would make the approved Git process impossible. Instead require
+    reviewed commit ancestry, all file blobs identical in BOTH trees, and a
+    clean execution-path worktree. No future-archive files are checked.
+    """
+    gate=review_gate()
+    review=gate.validate_review()
+    gate.validate_authorization()
+    head=git("rev-parse","HEAD",capture=True)
+    reviewed=review["reviewed_commit"]
+    if not head or not reviewed:
+        raise RuntimeError("STAGE104_NO_ACTUAL_REVIEWED_HEAD")
+    if git("status","--porcelain","--",*gate.REQUIRED_SOURCES,capture=True):
+        raise RuntimeError("STAGE104_RUNTIME_EXECUTABLE_FILES_DIRTY")
+    for path,expected in review["reviewed_file_git_blobs"].items():
+        head_blob=git("rev-parse","HEAD:"+path,capture=True)
+        review_blob=git("rev-parse",reviewed+":"+path,capture=True)
+        local_blob=git("hash-object","--",path,capture=True)
+        if not (head_blob==review_blob==local_blob==expected):
+            raise RuntimeError("STAGE104_RUNTIME_TREE_BLOB_NOT_REVIEWED_"+path)
+    return {"reviewed_commit":reviewed,"actual_head":head,
+            "complete_execution_path_verified":len(gate.REQUIRED_SOURCES)}
+
+
 def isolated_checkout_preflight():
     if not CLONE.exists() or not (CLONE/".git").is_dir():
         raise RuntimeError("STAGE99_NO_ISOLATED_GIT_CLONE_AT_EXPECTED_PATH")
@@ -207,7 +235,8 @@ def install(*,now=None,dry_run=False,windows=None):
         # Real Claude CHAT approval is not installation authorization.
         approval=review_gate().validate_authorization()
         review_gate().interactive_install_consent(approval)
-        isolated_checkout_preflight()
+        isolated_checkout_preflight_local()
+        assert_reviewed_runtime_source()
         if not shutil.which("launchctl"):
             raise RuntimeError("STAGE99_NO_LAUNCHCTL")
         if not os.access(Path.home(),os.W_OK):
@@ -330,6 +359,9 @@ def safe_git_commit_and_push(window):
 
 def run(window, *,clock=None,capture=None,git_push=None):
     stage91.verify_window(window)
+    # Integrity/consent before even returning ALREADY_PUSHED, or retrying
+    # SHA from a prior capture. The executable cannot silently drift.
+    assert_reviewed_runtime_source()
     if clock is None: clock=stage97.now_ms
     if capture is None: capture=stage97.capture_one
     if git_push is None: git_push=safe_git_commit_and_push
@@ -349,7 +381,6 @@ def run(window, *,clock=None,capture=None,git_push=None):
     if not start-15*MINUTE_MS<=now<start:
         store_status(window,"MISSED_WINDOW_NO_BACKFILL",observed_time_ms=now)
         return "MISSED_WINDOW"
-    review_gate().validate_authorization()
     isolated_checkout_preflight_local()
     request={"schema":"MONSTER_STAGE97_USER_REQUEST_V1","window_start_utc":window,
              "authorized_one_shot":True}
@@ -391,7 +422,7 @@ def run(window, *,clock=None,capture=None,git_push=None):
 def retry_saved_push(window: str):
     """Never re-download historical data; only publish a previously captured SHA."""
     stage91.verify_window(window)
-    review_gate().validate_authorization()
+    assert_reviewed_runtime_source()
     isolated_checkout_preflight_for_saved()
     path=CLONE/expected_path(window)
     status_file=STATES/(window[:10]+".json")
