@@ -9,6 +9,7 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p2.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_stage4.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_bulk16.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-*.md"
       - "crypto-300-profit-mission/research/README_BSC_MEME_TOP_TRADERS.md"
@@ -39,6 +40,7 @@ jobs:
       - name: Unit tests (stdlib only; no RPC/no secrets)
         run: |
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
+          python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1_bulk16.py" -v
       - name: Recompute 23x19 baseline deterministically
         run: |
           python3 -B "$MODEL_DIR/bsc_meme_address_model_v1.py" \
@@ -104,6 +106,23 @@ jobs:
           assert stage4["summary"]["original_owner_successful_txs"] == 6
           assert stage4["summary"]["unique_native_account_blocks"] == 5
           print("PASS Stage4 source precommit, two negative signed rounds and unique native block de-dup")
+          bulk_plan = json.loads((p / "bsc-meme-address-model-v1-p2-bulk16-precommit-2026-10-13.json").read_text(encoding="utf-8"))
+          bulk_gate = json.loads((p / "bsc-meme-address-model-v1-p2-bulk16-gate-decisions-2026-10-13.json").read_text(encoding="utf-8"))
+          bulk_outcome = json.loads((p / "bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json").read_text(encoding="utf-8"))
+          for doc in [bulk_plan, bulk_outcome]:
+              for src in doc["source_manifest"]:
+                  actual = subprocess.check_output(["git", "hash-object", src["path"]], text=True).strip()
+                  expected = src.get("sha") or src.get("git_blob_sha")
+                  assert actual == expected, f"bulk manifest drift: {src['path']}"
+          plan_sha = subprocess.check_output(["git", "hash-object", str(p / "bsc-meme-address-model-v1-p2-bulk16-precommit-2026-10-13.json")], text=True).strip()
+          gate_sha = subprocess.check_output(["git", "hash-object", str(p / "bsc-meme-address-model-v1-p2-bulk16-gate-decisions-2026-10-13.json")], text=True).strip()
+          assert bulk_gate["frozen_selection_blob_sha"] == plan_sha
+          assert bulk_outcome["source_manifest"][1]["git_blob_sha"] == gate_sha
+          assert bulk_outcome["summary"]["origin_owner_gate_passed_cycles"] == 13
+          assert (bulk_outcome["summary"]["positive_native_scope_cycles"],
+                  bulk_outcome["summary"]["negative_native_scope_cycles"]) == (9, 4)
+          assert bulk_outcome["summary"]["unique_native_wallet_balance_blocks"] == 31
+          print("PASS 16 precommitted raw cycles, 39 tx, 13 signed economic cycles, 31 archived unique blocks, 9pos 4neg, three blocked")
           print("PASS P2 source Git blobs pinned to exact evidence originals")
           PY
       - name: Recompute P2 23-wallet economic overlay
@@ -143,11 +162,11 @@ jobs:
           assert p2_actual == p2_expected, "P2 source-vs-Git artifact mismatch: STOP"
           s = p2_actual["summary"]
           assert (s["wallets_included"], s["signed_closed_episodes_imported"],
-                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 37, 7, 16)
-          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (23, 14)
+                  s["wallets_with_curated_evidence"], s["wallets_not_yet_economically_curated"]) == (23, 50, 7, 16)
+          assert (s["selected_positive_episodes"], s["selected_negative_episodes"]) == (32, 18)
           assert all(w["realized_profit_rank"] is None for w in p2_actual["wallets"])
           assert all(w["recent_30d_signed_meme_swap"] == "UNRESOLVED" for w in p2_actual["wallets"])
           assert p2_actual["production"] == "NO_GO"
-          print("PASS P2 23 wallets / 37 curated rounds / 23 pos, 14 neg / 16 unknown; no fake rank")
+          print("PASS P2 23 wallets / 50 curated rounds / 32 pos, 18 neg / 16 unknown; no fake rank")
           print("PASS 437/437, 148/289, 8 source exceptions, no fake PnL/ranking/recent signers")
           PY
