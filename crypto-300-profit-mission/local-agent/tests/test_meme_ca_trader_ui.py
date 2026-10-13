@@ -155,7 +155,9 @@ def test_real_ca_acceptance_script_is_readonly_and_does_not_require_frank_presen
     assert script.exists()
     body=script.read_text()
     assert "require_frank" not in body
-    assert "first_quote_preview_seconds" in body
+    assert "first_quote_preview_seconds" not in body
+    assert "IMPLICIT_QUOTE_IN_PREVIEW" in body
+    assert "IMPLICIT_QUOTE_IN_REPORT" in body
     assert "full_report_seconds" in body
     assert "REAL_CA_SCHEMA_AND_SEMANTICS: PASS" in body
     assert "mission-control.sqlite" in body
