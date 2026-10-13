@@ -1,0 +1,110 @@
+name: Monster Stage110 Historical D1 Continuous 1m Confirmation
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage110-d1-post-setup-continuous-1m.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage110_d1_continuous_confirm.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage110_aggregate_confirmed_priority.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE110_D1_CONTINUOUS_CONFIRM_INVALIDATE_HISTORIC_PROTOCOL_20261013.md
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  causal_guardrail:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and verify causal D1 one-minute confirmation and source denominators
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage110_d1_continuous_confirm.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage110_aggregate_confirmed_priority.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage110_d1_continuous_confirm.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage110_aggregate_confirmed_priority.py --selftest
+
+  official_original305_shards:
+    needs: causal_guardrail
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+        shard: [0,1,2,3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Real Binance publisher SHA 1m source 305 original D1 post-setup replay
+        run: |
+          mkdir -p /tmp/stage110
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage110_d1_continuous_confirm.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --workers 3 --out /tmp/stage110/monster-stage110-${{ matrix.date }}-s${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage110-${{ matrix.date }}-s${{ matrix.shard }}
+          path: /tmp/stage110/monster-stage110-${{ matrix.date }}-s${{ matrix.shard }}.json
+          retention-days: 45
+
+  audit_and_archive_original_pr30:
+    needs: official_original305_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage110-*
+          merge-multiple: true
+          path: /tmp/stage110-shards
+      - name: Reconcile all 519 D0 and 305 D1, 42 day buckets and delayed-entry price proxy
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage110_aggregate_confirmed_priority.py --artifact-dir /tmp/stage110-shards --out /tmp/stage110-results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage110-519D0-305D1-evidence
+          path: /tmp/stage110-results/*
+          retention-days: 60
+      - name: Commit research evidence only to original Monster PR branch
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage110_real519D0_305D1_causal_confirm_states.json
+          cp /tmp/stage110-results/monster_stage110_real519D0_305D1_causal_confirm_states.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE110_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive Stage110 official historic D1 continuous confirmation and 519 D0"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              echo STAGE110_FAIL_CLOSED_REBASE_CONFLICT
+              exit 1
+            fi
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo STAGE110_REAL_GIT_EVIDENCE_PUSH_CONFIRMED
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo STAGE110_RESULTS_NOT_PERSISTED
+          exit 1
