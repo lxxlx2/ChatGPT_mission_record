@@ -23,13 +23,13 @@ SCHEMA = "MONSTER_STAGE103_USER_SUPPLIED_CLAUDE_CHAT_REVIEW_RECEIPT_V2"
 AUTH_SCHEMA = "MONSTER_STAGE103_SEPARATE_USER_INSTALL_AUTHORIZATION_V1"
 REVIEW_ORIGIN = "CLAUDE_CHAT_USER_SUPPLIED_FULL_OUTPUT"
 REQUIRED_SOURCES = (
-    "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py",
-    "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py",
-    "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py",
+    "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage105_capture_universe_core.py",
     "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py",
     "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage99_mac_launchd_one_shot.py",
     "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage102_claude_chat_review_gate.py",
     "crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage99_mac_one_shot.py",
+    "crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage103_git_worktree.py",
+    "crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage105_capture_import_isolation.py",
     ".github/workflows/monster-stage99-mac-one-shot-capture-safety.yml",
 )
 REVIEW_PROMPT_PATH = ("crypto-300-profit-mission/monster/"
