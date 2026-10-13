@@ -10,6 +10,7 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
+from urllib.parse import quote
 
 from .wallet_economic_ledger import transaction_identity
 
@@ -29,32 +30,43 @@ def _sha(value: str) -> str:
 class WalletEvidenceStore:
     """Append-only snapshots/transactions, source conflicts fail closed."""
 
-    def __init__(self, path: Path):
-        path = Path(path).expanduser().resolve()
+    def __init__(self, path: Path, *, read_only: bool = False):
+        original = Path(path).expanduser()
+        if original.is_symlink():
+            raise ValueError("SIDE_CAR_SYMLINK_FORBIDDEN")
+        path = original.resolve()
         if path.name in _PROTECTED_NAMES or path.suffix != ".sqlite":
             raise ValueError("SIDE_CAR_PATH_NOT_ALLOWED")
-        if path.exists() and path.is_symlink():
-            raise ValueError("SIDE_CAR_SYMLINK_FORBIDDEN")
-        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        self.db = sqlite3.connect(path)
+        self.read_only = bool(read_only)
+        if self.read_only:
+            if not path.is_file():
+                raise FileNotFoundError("SIDE_CAR_NOT_FOUND")
+            uri = "file:" + quote(str(path), safe="/") + "?mode=ro"
+            self.db = sqlite3.connect(uri, uri=True)
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            self.db = sqlite3.connect(path)
         self.db.row_factory = sqlite3.Row
-        self.db.execute("PRAGMA journal_mode=WAL")
-        self.db.executescript("""
-            CREATE TABLE IF NOT EXISTS evidence_documents (
-                kind TEXT NOT NULL,
-                identity TEXT NOT NULL,
-                source_sha256 TEXT NOT NULL,
-                payload_json TEXT NOT NULL,
-                PRIMARY KEY(kind,identity)
-            );
-            CREATE INDEX IF NOT EXISTS evidence_documents_kind_idx
-                ON evidence_documents(kind);
-        """)
+        if not self.read_only:
+            self.db.execute("PRAGMA journal_mode=WAL")
+            self.db.executescript("""
+                CREATE TABLE IF NOT EXISTS evidence_documents (
+                    kind TEXT NOT NULL,
+                    identity TEXT NOT NULL,
+                    source_sha256 TEXT NOT NULL,
+                    payload_json TEXT NOT NULL,
+                    PRIMARY KEY(kind,identity)
+                );
+                CREATE INDEX IF NOT EXISTS evidence_documents_kind_idx
+                    ON evidence_documents(kind);
+            """)
 
     def close(self):
         self.db.close()
 
     def _append(self, kind: str, identity: str, document: dict) -> bool:
+        if self.read_only:
+            raise PermissionError("READ_ONLY_SIDECAR")
         raw = _json(document)
         sha = _sha(raw)
         with self.db:
