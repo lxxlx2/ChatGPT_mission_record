@@ -6,8 +6,6 @@ Frank V1 follow-policy 30 USDC is a separate, unchanged signal authority.
 """
 from pathlib import Path
 
-import pytest
-
 from mission_agent.mission_control import server
 
 
