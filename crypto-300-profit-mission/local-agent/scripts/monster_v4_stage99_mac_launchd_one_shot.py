@@ -15,8 +15,8 @@ import plistlib
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
-import traceback
 
 try:
     import monster_v4_stage97_one_shot_usdm_capture as stage97
@@ -37,6 +37,14 @@ MINUTE_MS = 60_000
 REMOTE_PATH = "crypto-300-profit-mission/monster/evidence"
 SCRIPT_IN_CLONE = "crypto-300-profit-mission/local-agent/scripts/monster_v4_stage99_mac_launchd_one_shot.py"
 SCHEMA = "MONSTER_STAGE99_ISOLATED_LAUNCHD_ONE_SHOT_CAPTURE_V1"
+
+
+def review_gate():
+    try:
+        import monster_v4_stage102_claude_chat_review_gate as gate
+    except ImportError:
+        from scripts import monster_v4_stage102_claude_chat_review_gate as gate
+    return gate
 
 
 def env_no_prompts():
@@ -104,6 +112,21 @@ def store_status(window, status, **data):
     tmp.replace(target)
 
 
+def isolated_checkout_preflight_local():
+    """No GitHub request before valuable Binance snapshot capture."""
+    if not CLONE.exists() or not (CLONE/".git").is_dir():
+        raise RuntimeError("STAGE103_EXPECTED_PRIVATE_CLONE_MISSING")
+    if Path(__file__).resolve()!=(CLONE/SCRIPT_IN_CLONE).resolve():
+        raise RuntimeError("STAGE103_RUNTIME_NOT_IN_PRIVATE_CLONE")
+    if git("branch","--show-current",capture=True)!=BRANCH:
+        raise RuntimeError("STAGE103_WRONG_LOCAL_BRANCH")
+    origin=git("remote","get-url","origin",capture=True)
+    if origin not in ("https://github.com/"+REPO_NAME+".git",
+                      "https://github.com/"+REPO_NAME,
+                      "git@github.com:"+REPO_NAME+".git"):
+        raise RuntimeError("STAGE103_WRONG_REPO_REMOTE")
+
+
 def isolated_checkout_preflight():
     if not CLONE.exists() or not (CLONE/".git").is_dir():
         raise RuntimeError("STAGE99_NO_ISOLATED_GIT_CLONE_AT_EXPECTED_PATH")
@@ -149,15 +172,9 @@ def install(*,now=None,dry_run=False,windows=None):
     if sys.platform!="darwin" and not dry_run:
         raise RuntimeError("STAGE99_ONLY_MACOS_LAUNCHD_SUPPORTED")
     if not dry_run:
-        # Mandatory real second-model verdict on the exact source bytes.
-        # A CI selftest or GitHub reviewer REQUEST is not independent AI review.
-        # Review takes place in Claude CHAT, never via a local Claude CLI.
-        # The actual answer is first archived into Git by the project reviewer.
-        try:
-            import monster_v4_stage102_claude_chat_review_gate as ai_review
-        except ImportError:
-            from scripts import monster_v4_stage102_claude_chat_review_gate as ai_review
-        ai_review.verify_approved()
+        # Real Claude CHAT approval is not installation authorization.
+        approval=review_gate().validate_authorization()
+        review_gate().interactive_install_consent(approval)
         isolated_checkout_preflight()
         if not shutil.which("launchctl"):
             raise RuntimeError("STAGE99_NO_LAUNCHCTL")
@@ -201,55 +218,60 @@ def install(*,now=None,dry_run=False,windows=None):
 
 
 
-def safe_git_commit_and_push_for_review():
-    """Push one actual other-AI review result to original PR before installation."""
-    review="crypto-300-profit-mission/monster/evidence/monster_stage99_actual_external_claude_ai_review.json"
-    staged=git("diff","--cached","--name-only",capture=True)
-    names=staged.splitlines()
-    prefix=review.removesuffix(".json")+"_archive_"
-    if (review not in names or len(names)>2
-        or any(name!=review and not (
-            name.startswith(prefix) and name.endswith(".json")
-            ) for name in names)):
-        raise RuntimeError("STAGE99_CLAUDE_REVIEW_IS_ONLY_ALLOWED_STAGED_FILE")
-    git("-c","user.name=monster-independent-review",
-        "-c","user.email=41898282+github-actions[bot]@users.noreply.github.com",
-        "commit","-m","monster: archive real external Claude Stage99 security review before scheduling",
-        timeout=45)
-    for attempt in range(3):
-        try:
-            git("push","origin","HEAD:refs/heads/"+BRANCH,timeout=50)
-            return git("rev-parse","HEAD",capture=True)
-        except RuntimeError:
-            if attempt==2:raise
-            git("fetch","origin","refs/heads/"+BRANCH,timeout=40)
-            git("rebase","FETCH_HEAD",timeout=45)
-    raise AssertionError("STAGE99_REVIEW_GIT_PUSH_UNREACHABLE")
+def _git_in_worktree(where: Path, *args, capture=False, timeout=55):
+    proc=subprocess.run(["git","-C",str(where),*args],env=env_no_prompts(),
+             text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
+             timeout=timeout,check=False)
+    if proc.returncode:
+        raise RuntimeError("STAGE103_UPLOAD_GIT_FAILED_"+str(args[0])+
+                           "_RC_"+str(proc.returncode))
+    return proc.stdout.strip() if capture else None
 
 
 def safe_git_commit_and_push(window):
-    p=expected_path(window)
-    # Exactly one path is allowed to be staged in this isolated clone.
-    staged=git("diff","--cached","--name-only",capture=True)
-    names=staged.splitlines() if staged else []
-    if names and names!=[p]:
-        raise RuntimeError("STAGE99_UNEXPECTED_GIT_STAGED_FILES")
-    if names:
-        git("-c","user.name=monster-source-capture",
-            "-c","user.email=41898282+github-actions[bot]@users.noreply.github.com",
-            "commit","-m","monster: archive Stage97 one-shot actual USD-M HTTPS source "+window[:10],
-            timeout=35)
+    """Upload captured bytes using disposable Git worktrees, never rebase code.
+
+    GitHub is contacted only after bytes were saved locally. The active
+    reviewed executable clone is never rebased, force-pushed or checked out.
+    """
+    origin=CLONE/expected_path(window)
+    if not origin.is_file():
+        raise RuntimeError("STAGE103_REAL_CAPTURE_FILE_MISSING")
+    proof=origin.read_bytes()
+    packet=json.loads(proof)
+    if packet.get("window_start_utc")!=window:
+        raise RuntimeError("STAGE103_WRONG_CAPTURED_WINDOW")
+    local_sha=stage97.sha(proof)
+    ref="refs/heads/"+BRANCH
     for attempt in range(3):
-        try:
-            git("push","origin","HEAD:refs/heads/"+BRANCH,timeout=50)
-            return git("rev-parse","HEAD",capture=True)
-        except RuntimeError:
-            if attempt==2:
-                raise
-            git("fetch","origin","refs/heads/"+BRANCH,timeout=40)
-            # Rebase *only* the private isolated clone. Git forbids overwrite on conflicts.
-            git("rebase","FETCH_HEAD",timeout=45)
-    raise AssertionError("STAGE99_UNREACHABLE_PUSH_RETRY")
+        git("fetch","origin",ref,timeout=35)
+        with tempfile.TemporaryDirectory(prefix="monster-stage103-upload-") as directory:
+            worktree=Path(directory)/"checkout"
+            git("worktree","add","--detach",str(worktree),"FETCH_HEAD",timeout=35)
+            try:
+                remote=worktree/expected_path(window)
+                if remote.exists():
+                    if stage97.sha(remote.read_bytes())!=local_sha:
+                        raise RuntimeError("STAGE103_EXISTING_REMOTE_ARCHIVE_DIFFERS")
+                    return _git_in_worktree(worktree,"rev-parse","HEAD",capture=True)
+                remote.parent.mkdir(parents=True,exist_ok=True)
+                remote.write_bytes(proof)
+                _git_in_worktree(worktree,"add","--",expected_path(window))
+                _git_in_worktree(worktree,
+                    "-c","user.name=monster-local-capture",
+                    "-c","user.email=monster-local-capture@users.noreply.github.com",
+                    "commit","-m","monster: archive original USD-M source "+window[:10])
+                review_gate().validate_authorization()
+                if stage97.sha(origin.read_bytes())!=local_sha:
+                    raise RuntimeError("STAGE103_ARCHIVED_ORIGINAL_BYTES_CHANGED")
+                try:
+                    _git_in_worktree(worktree,"push","origin","HEAD:"+ref,timeout=45)
+                    return _git_in_worktree(worktree,"rev-parse","HEAD",capture=True)
+                except RuntimeError:
+                    if attempt==2:raise
+            finally:
+                git("worktree","remove","--force",str(worktree),timeout=30)
+    raise RuntimeError("STAGE103_UPLOAD_RETRIES_EXHAUSTED")
 
 
 def run(window, *,clock=None,capture=None,git_push=None):
@@ -273,7 +295,8 @@ def run(window, *,clock=None,capture=None,git_push=None):
     if not start-15*MINUTE_MS<=now<start:
         store_status(window,"MISSED_WINDOW_NO_BACKFILL",observed_time_ms=now)
         return "MISSED_WINDOW"
-    isolated_checkout_preflight()
+    review_gate().validate_authorization()
+    isolated_checkout_preflight_local()
     request={"schema":"MONSTER_STAGE97_USER_REQUEST_V1","window_start_utc":window,
              "authorized_one_shot":True}
     # Bounded retries only while within the frozen source window. No post-window API calls.
@@ -304,7 +327,6 @@ def run(window, *,clock=None,capture=None,git_push=None):
     archive.write_text(json.dumps(evidence,sort_keys=True,ensure_ascii=False,indent=2)+"\n")
     store_status(window,"CAPTURE_VALIDATED_GIT_PUSH_PENDING",
                  archive_path=str(archive),source_sha256=stage97.sha(archive.read_bytes()))
-    git("add","--",expected_path(window))
     commit=git_push(window)
     store_status(window,"GIT_PUSH_CONFIRMED",git_commit=commit,
                  branch=BRANCH,evidence_path=expected_path(window),
@@ -315,6 +337,7 @@ def run(window, *,clock=None,capture=None,git_push=None):
 def retry_saved_push(window: str):
     """Never re-download historical data; only publish a previously captured SHA."""
     stage91.verify_window(window)
+    review_gate().validate_authorization()
     isolated_checkout_preflight_for_saved()
     path=CLONE/expected_path(window)
     status_file=STATES/(window[:10]+".json")
@@ -345,7 +368,7 @@ def retry_saved_push(window: str):
         time_body("after_official_time"),market,window)
     if verified["raw_market_packet"]!=packet:
         raise RuntimeError("STAGE99_SAVED_CAPTURE_VERIFICATION_CONFLICT")
-    git("add","--",expected_path(window))
+    review_gate().validate_authorization()
     committed=safe_git_commit_and_push(window)
     store_status(window,"GIT_PUSH_CONFIRMED",git_commit=committed,
                  branch=BRANCH,evidence_path=expected_path(window),
