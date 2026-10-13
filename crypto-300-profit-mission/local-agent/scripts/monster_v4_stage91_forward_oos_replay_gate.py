@@ -310,11 +310,26 @@ def selftest():
     try:freeze_universe(tamper)
     except ValueError as e: assert "TAMPER" in str(e)
     else:raise AssertionError("STAGE91_MUST_REJECT_RAW_JSON_TAMPERING")
-    dup=json.dumps({"symbols":[{"symbol":"CAT","status":"TRADING"},
-                               {"symbol":"CAT","status":"TRADING"}]})
+    dup=json.dumps({"symbols":[json.loads(raw)["symbols"][0],
+                                json.loads(raw)["symbols"][0]]})
     try:freeze_universe(dict(template,raw_exchangeInfo_json=dup,raw_sha256=sha256_raw(dup)))
     except ValueError as e: assert "DUPLICATE" in str(e)
     else:raise AssertionError("STAGE91_MUST_REJECT_DUPLICATE_SYMBOL")
+    # A dated delivery contract is retained in the census, never a perp candidate.
+    dated_delivery=dict(json.loads(raw)["symbols"][0])
+    dated_delivery.update(symbol="BTCUSDT_261225",
+                          baseAsset="BTC",contractType="CURRENT_QUARTER")
+    mix=json.dumps({"symbols":json.loads(raw)["symbols"]+[dated_delivery]})
+    asof=freeze_universe(dict(template,raw_exchangeInfo_json=mix,raw_sha256=sha256_raw(mix)))
+    assert asof["population_all_exchange_symbols"]==4
+    assert asof["usd_m_usdt_perpetual_asof_candidates"]==2
+    assert asof["rows"][-1]["candidate_for_raw_USDM_attempt"] is False
+    incomplete=dict(json.loads(raw)["symbols"][0])
+    del incomplete["status"]
+    wrong=json.dumps({"symbols":[incomplete]})
+    try:freeze_universe(dict(template,raw_exchangeInfo_json=wrong,raw_sha256=sha256_raw(wrong)))
+    except ValueError as e:assert "INCOMPLETE_OFFICIAL" in str(e)
+    else:raise AssertionError("STAGE103_INCOMPLETE_MARKET_ROW_MUST_FAIL")
     assert gate_cohort({}, {})["OOS"]=="BLOCKED_MISSING_FIXED_WINDOW"
     assert gate_cohort({x:[] for x in WINDOWS},{})["OOS"]=="BLOCKED_POINT_IN_TIME_POPULATION_NOT_AUTHENTICATED"
     assert early5(t,t+5*MIN) and not early5(t,t+4*MIN)
