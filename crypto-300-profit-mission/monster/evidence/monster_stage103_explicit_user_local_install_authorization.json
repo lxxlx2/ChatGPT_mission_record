@@ -1,0 +1,23 @@
+{
+  "schema": "MONSTER_STAGE103_SEPARATE_USER_INSTALL_AUTHORIZATION_V1",
+  "repository": "lxxlx2/ChatGPT_mission_record",
+  "branch": "research/monster-v4-local-discovery-20261010",
+  "reviewed_commit": "2f25f2b921a97ab864ced7a0bc93aab1c9e85169",
+  "review_fingerprint": "05d0a59f71d049aef6f79cdcda3972211c196366ab4a5c49bf57563df82cacd9",
+  "exact_windows_utc": [
+    "2026-10-14T06:00:00Z",
+    "2026-10-28T06:00:00Z",
+    "2026-11-11T06:00:00Z"
+  ],
+  "permission_scope": "INSTALL_ONLY_LOCAL_MONSTER_USDM_RESEARCH_SNAPSHOTS",
+  "explicit_user_consent": true,
+  "user_original_message": "用户原文：批准\n针对上一条问题：你是否明确批准在自己的 Mac 上安装以上三个本地一次性研究数据采集任务？",
+  "user_exact_reply": "批准",
+  "assistant_question_exact": "你是否明确批准在自己的 Mac 上安装以上三个本地一次性研究数据采集任务？",
+  "context_format_note": "user_original_message contains separately labeled exact user reply and prior assistant question because legacy schema requires minimum 12 characters; no longer user message has been invented.",
+  "consented_at_utc": "2026-10-13T11:07:16Z",
+  "consented_at_time_note": "UTC time when authorization was being recorded, not claimed exact user message timestamp",
+  "unrelated_authorizations": "NONE; NO CHATGPT AUTOMATIONS, NO FRANK MODIFICATIONS, NO MONSTER TRADING",
+  "source_review_origin": "Codex user-forwarded independent review APPROVE",
+  "installation_requires_live_local_tty_confirmation": true
+}
