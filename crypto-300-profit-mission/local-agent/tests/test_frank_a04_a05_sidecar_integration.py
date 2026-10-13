@@ -7,7 +7,7 @@ from mission_agent.mission_control.person_registry import PersonRegistry
 from mission_agent.mission_control.research_wallet_facts import PersonResearchReader
 from mission_agent.mission_control.wallet_capture_provider import CapturedWalletFactsProvider
 from mission_agent.mission_control.wallet_chain_capture import (
-    SPL_TOKEN_PROGRAM, TOKEN_2022_PROGRAM, capture_owner,
+    SPL_TOKEN_PROGRAM, capture_owner,
 )
 from mission_agent.mission_control.wallet_evidence_store import WalletEvidenceStore
 
