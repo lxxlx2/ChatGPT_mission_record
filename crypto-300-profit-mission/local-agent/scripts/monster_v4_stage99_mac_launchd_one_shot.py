@@ -156,6 +156,16 @@ def gui_domain():
     return "gui/"+str(os.getuid())
 
 
+def read_frank_launchd_labels():
+    """Read-only coexistence fingerprint; no management of Frank processes."""
+    result=subprocess.run(["launchctl","list"],env=env_no_prompts(),
+                          capture_output=True,text=True,timeout=12,check=False)
+    if result.returncode!=0:
+        raise RuntimeError("STAGE103_CANNOT_VERIFY_FRANK_LAUNCHD_COEXISTENCE")
+    return sorted(line.split()[-1] for line in result.stdout.splitlines()
+                  if line.strip() and "frank" in line.lower())
+
+
 def plist_path(window):
     return AGENTS/(label_for(window)+".plist")
 
@@ -194,26 +204,39 @@ def install(*,now=None,dry_run=False,windows=None):
         future.append(window)
     if not future: raise ValueError("STAGE99_NO_FUTURE_WINDOW_LEFT_TO_INSTALL")
     script=Path(__file__).resolve()
-    scheduled={}
-    for window in future:
-        plist=job_plist(window,script,Path(sys.executable))
-        scheduled[window]={"scheduled_local":plist["StartCalendarInterval"],
-                           "service":plist["Label"]}
-        if dry_run: continue
-        LOGS.mkdir(parents=True,exist_ok=True)
-        AGENTS.mkdir(parents=True,exist_ok=True)
-        STATES.mkdir(parents=True,exist_ok=True)
-        name=plist_path(window)
-        if name.exists():
-            raise RuntimeError("STAGE99_SERVICE_ALREADY_INSTALLED_NO_OVERWRITE_"+window)
-        with open(name,"wb") as out:
-            plistlib.dump(plist,out)
-        if launchctl("bootstrap",gui_domain(),str(name))!=0:
-            name.unlink(missing_ok=True)
-            raise RuntimeError("STAGE99_LAUNCHCTL_BOOTSTRAP_FAILED_"+window)
-        store_status(window,"SCHEDULE_INSTALLED",
-                     scheduled_local=plist["StartCalendarInterval"],
-                     launchd_label=plist["Label"])
+    planned={w:job_plist(w,script,Path(sys.executable)) for w in future}
+    scheduled={w:{"scheduled_local":planned[w]["StartCalendarInterval"],
+                  "service":planned[w]["Label"]} for w in future}
+    if dry_run:
+        return scheduled
+    # Check all conflicts BEFORE creating even the first job.
+    AGENTS.mkdir(parents=True,exist_ok=True)
+    if any(plist_path(w).exists() for w in future):
+        raise RuntimeError("STAGE103_ONE_OF_THE_PLISTS_ALREADY_EXISTS_NO_PARTIAL_INSTALL")
+    before_frank=read_frank_launchd_labels()
+    LOGS.mkdir(parents=True,exist_ok=True)
+    STATES.mkdir(parents=True,exist_ok=True)
+    added=[]
+    try:
+        for window in future:
+            destination=plist_path(window)
+            with open(destination,"wb") as out:
+                plistlib.dump(planned[window],out)
+            added.append(window)
+            if launchctl("bootstrap",gui_domain(),str(destination))!=0:
+                raise RuntimeError("STAGE103_LAUNCHCTL_BOOTSTRAP_FAILED_"+window)
+            store_status(window,"SCHEDULE_INSTALLED",
+                         scheduled_local=planned[window]["StartCalendarInterval"],
+                         launchd_label=planned[window]["Label"])
+        if read_frank_launchd_labels()!=before_frank:
+            raise RuntimeError("STAGE103_FRANK_LAUNCHD_COEXISTENCE_CHANGED_ABORT")
+    except BaseException:
+        for window in reversed(added):
+            try:bootout(window)
+            except (OSError,subprocess.TimeoutExpired):
+                plist_path(window).unlink(missing_ok=True)
+            store_status(window,"INSTALL_ROLLED_BACK_NO_SERVICE_ENABLED")
+        raise
     return scheduled
 
 
