@@ -7,7 +7,7 @@ import unittest
 
 from bsc_meme_address_model_v1_p3 import DIRECTORY, EvidenceError, build_overlay, load_pinned
 from bsc_meme_address_model_v1_p3_swap import load_witness, promote_verified_witness
-from bsc_meme_address_model_v1_p3_batch import build_evidence, load_evidence
+from bsc_meme_address_model_v1_p3_batch import (LATEST_NAME, LATEST_BLOB_SHA, attach_latest_verified_swap_utc, build_evidence, load_evidence, load_source)
 
 
 class P3FrozenBatchTests(unittest.TestCase):
@@ -92,6 +92,24 @@ class P3FrozenBatchTests(unittest.TestCase):
         x["events"].clear()
         with self.assertRaises(EvidenceError):
             self.build(tampered)
+
+    def test_latest_verified_utc_for_seven_eligible_wallets_only(self):
+        source = load_source(DIRECTORY, LATEST_NAME, LATEST_BLOB_SHA)
+        x = attach_latest_verified_swap_utc(self.build(), source)
+        ready = [w for w in x["wallets"] if w["latest_verified_swap_UTC"] is not None]
+        self.assertEqual(len(ready), 7)
+        self.assertEqual(len(x["source_manifest"]), len(self.refs) + len(self.batch_refs) + 1)
+        a83b = next(w for w in ready if w["wallet"].startswith("0xa83b"))
+        self.assertEqual(a83b["latest_verified_swap_UTC"], "2026-10-12T07:57:23.000Z")
+        unknown = [w for w in x["wallets"] if w["latest_verified_swap_UTC"] is None]
+        self.assertEqual(len(unknown), 16)
+        self.assertTrue(all(w["latest_verified_swap_hash"] is None for w in unknown))
+
+    def test_latest_timestamp_spoof_is_rejected(self):
+        source = load_source(DIRECTORY, LATEST_NAME, LATEST_BLOB_SHA)
+        source["wallets"][0]["blockTimestampHex"] = "0x1234"
+        with self.assertRaises(EvidenceError):
+            attach_latest_verified_swap_utc(self.build(), source)
 
     def test_standard_v3_negative_control_is_not_inactivity(self):
         x = self.build()
