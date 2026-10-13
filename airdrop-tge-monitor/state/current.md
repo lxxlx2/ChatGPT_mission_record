@@ -1,18 +1,18 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-13 05:05:16 Asia/Bangkok
+Updated: 2026-10-13 07:01:57 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-13 05:05:16 Asia/Bangkok
+- latest_actual_run: 2026-10-13 07:01:57 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-13/050516-final.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-13/050424-attempt.md
-- latest_scheduled_shard: 1
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-13/070157-final-retry.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-13/070107-attempt.md
+- latest_scheduled_shard: 3
 - latest_executed_shard: 1
 - stale_shard_recovery: true
 - latest_candidate_count: 5
 - latest_triggered_events: 0
-- latest_identity_failures: 2
+- latest_identity_failures: 1
 - latest_source_failures: 4
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: SILENT
@@ -61,3 +61,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-13 00:58:43: partial urgent plus stale shard1; 13 attempted, 10 checked, 3 unresolved source gaps; 4 candidates, 0 ACTION. Attempt 005740-attempt.md and terminal 005843-final-retry.md persisted. No Gmail/App. Primary final blocked. Prior attempt-only gaps remain. HH:00 task unchanged.
 
 - 2026-10-13 03:03:34: scheduled shard3 replaced by oldest stale shard1, only one shard executed. Attempt 030217-attempt.md and terminal 030334-final-retry.md persisted (primary final blocked). 13 projects attempted; 9 checked_no_update, 4 source gaps (Concrete, ForecastFDN, Theo Network, Neutrl), 4 candidates, 2 identity rejections (Autheo/THEO and Neutrl handle), 0 verified new ACTION. Space Oct15 delivered/deduped; no Gmail/App. Prior attempt-only gaps persist. Existing HH:00 schedule unchanged; partial does not advance authoritative full-success shard coverage.
+
+- 2026-10-13 07:01:57: scheduled shard3 replaced by oldest stale shard1, urgent5 + shard1 nine (13 unique); 9 checked_no_update, 4 unresolved source gaps (Concrete, ForecastFDN, Theo, Neutrl), 5 candidate families, 1 Neutrl identity conflict, 0 verified ACTION. Surf Genesis NFT official countdown indicates prospective member claims, but current eligibility/time not verified; suppressed pending official confirmation. Space Oct15 and MetaMask Oct15 delivered/deduped; Concrete extra USDC unverified. Attempt 070107-attempt.md and terminal 070157-final-retry.md committed (primary final blocked). No Gmail/App, no extra daily email. Prior attempt-only gaps persist; HH:00 schedule unchanged; no task changes.
