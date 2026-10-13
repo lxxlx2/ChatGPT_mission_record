@@ -77,7 +77,7 @@ def build(src: dict) -> dict:
               and row["wallet"] == wallet
               and row["first_swap_block"] == expected["first_swap_block"]
               and row["pre_swap_block"] == row["first_swap_block"]-1
-              and row["tx"] == expected["first_confirmed_swap_tx"]
+              and row["first_confirmed_swap_tx"] == expected["first_confirmed_swap_tx"]
               and row["production"] == "NO_GO", "wrong first-swap funding probe")
         guard(by_ready[wallet]["p4_research_qualification"].startswith("PRIORITY_"),
               "snapshot wallet no longer priority under frozen P2/P3 basis")
@@ -117,7 +117,7 @@ def build(src: dict) -> dict:
                 set(event["from"] for event in quote["records"]))
         guard(raw["nonce_before"] > 0, "no observed past signer nonce")
         funding[wallet] = {
-            "wallet": wallet, "first_frozen_19CA_successful_swap_hash": row["tx"],
+            "wallet": wallet, "first_frozen_19CA_successful_swap_hash": row["first_confirmed_swap_tx"],
             "first_frozen_19CA_successful_swap_block": row["first_swap_block"],
             "observed_native_bnb_pre_swap_wei": str(raw["native_bnb_before"]),
             "observed_native_bnb_pre_swap_BNB": format(Decimal(raw["native_bnb_before"]) / Decimal(10**18), "f"),
