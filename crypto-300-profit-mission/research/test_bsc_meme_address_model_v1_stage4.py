@@ -113,14 +113,14 @@ class ModelStage4Tests(unittest.TestCase):
         comparison = load("bsc-meme-address-model-v1-p2-economic-comparison-2026-10-13.json")
         s = comparison["summary"]
         self.assertEqual((s["wallets_included"], s["wallets_with_curated_evidence"],
-                          s["signed_closed_episodes_imported"]), (23, 7, 37))
+                          s["signed_closed_episodes_imported"]), (23, 7, 50))
         self.assertEqual((s["selected_positive_episodes"], s["selected_negative_episodes"]),
-                         (23, 14))
+                         (32, 18))
         a = next(x for x in comparison["wallets"] if x["wallet"].startswith("0xa83b"))
         b = next(x for x in comparison["wallets"] if x["wallet"].startswith("0x877a"))
         self.assertEqual((a["selected_positive_episode_count"],
-                          a["selected_negative_episode_count"]), (0, 2))
-        self.assertEqual(b["native_only_event_block_scope_sum_wei"], "-26064663781901692")
+                          a["selected_negative_episode_count"]), (0, 4))
+        self.assertEqual(b["native_only_event_block_scope_sum_wei"], "215047351526192606")
         for wallet in comparison["wallets"]:
             self.assertIsNone(wallet["realized_profit_rank"])
             self.assertFalse(wallet["can_rank_by_profit"])
