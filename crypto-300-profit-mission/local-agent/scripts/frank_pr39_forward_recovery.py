@@ -32,6 +32,7 @@ ORIGINAL_RUNNERS = {
 OLD_PIDS = {"loop": 79154, "dashboard": 25851}
 SCANNER_PID = 52300
 SCANNER_SOURCE = "599f2f05f197725a25fd85a82501504a772f253866c0556183bbfd82da00a0ce"
+EXPECTED_SOURCE_FILE_COUNT = 148
 PHASES = ["R00_VERIFIED_OFFLINE", "R10_BACKED_UP", "R20_MIGRATED",
           "R30_RUNNERS_SWITCHED", "R40_DASHBOARD_VERIFIED",
           "R50_LOOP_VERIFIED", "R60_SUCCESS"]
@@ -115,7 +116,7 @@ def read_only_plan(mac, root, tool_pin):
                 and marker.is_file() and json.loads(marker.read_text()).get("expected") == TARGET,
                 "IMMUTABLE_TARGET_IDENTITY")
     source = rel.release_manifest(staged)
-    rel.require(len(source) == 148 and source == rel.source_manifest(root),
+    rel.require(len(source) == EXPECTED_SOURCE_FILE_COUNT and source == rel.source_manifest(root),
                 "TARGET_PRODUCT_SOURCE_DIFFERENCE")
     rel.require(all(not (f.stat().st_mode & 0o222) for f in [staged, *staged.rglob("*")]),
                 "IMMUTABLE_TARGET_WRITABLE")
