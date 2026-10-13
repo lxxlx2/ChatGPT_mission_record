@@ -75,7 +75,8 @@ def test_one_ca_query_is_presented_without_precision_selector():
     assert 'id="cluster-preset"' not in html
     assert "quick:'快速" not in js
     assert "const preset = $('cluster-preset').value" not in js
-    assert "preset:'standard'" in js or "preset: 'standard'" in js
+    assert "const preset = 'standard';" in js
+    assert "body:JSON.stringify({mint,preset})" in js
     assert "每 owner 历史上限" in js
     assert "未确认" in html
 
