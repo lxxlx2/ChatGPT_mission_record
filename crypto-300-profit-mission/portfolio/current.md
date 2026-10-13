@@ -1,6 +1,6 @@
 # Mission Portfolio / Current Assets and Capital Classification
 
-Updated: 2026-10-12 Asia/Bangkok (GANG fully exited, Binance/Bybit/OKX screenshots and finalized Solana holdings)
+Updated: 2026-10-13 Asia/Bangkok (new Binance/Bybit user screenshots, Solana finalized + partial EVM refresh; historical Oct 12 below)
 Timezone: Asia/Bangkok
 Portfolio authority: this file; operational status: `../state/latest.md`; performance attribution: `../performance/current.md`.
 
@@ -22,7 +22,53 @@ Portfolio authority: this file; operational status: `../state/latest.md`; perfor
 
 Only these already authorized canonical wallets are in the present sweep. Wallet discovery/other accounts have **not** been asserted complete.
 
-## Latest material assets: GANG fully exited, updated CEX and OKX — 2026-10-12
+## Latest independently checked investment snapshot — 2026-10-13 21:48–21:50 Bangkok
+
+**Freshness/source separation:** user Binance and Bybit screenshots show phone time 21:48 Bangkok on 2026-10-13; Alchemy Solana RPC finalized observations are slots **456480952** (native and classic SPL) and **456481206** (Token-2022); Alchemy USD price samples are 2026-10-13T14:48:59–14:50:31Z. EVM balances are newly queried latest-provider results, not a complete ERC-20/NFT inventory. The existing OKX ETH and TRX quantities were last user-confirmed by screenshot on **2026-10-12**, not rechecked as current chain balances. No exchanges were authenticated or mutated.
+
+### Exchange user screenshots (only Binance counts)
+
+- **Binance Earn:** **745.85545285 USDC** in one Flexible Earn position, screenshot total **~$746.73 USDT-equivalent**. Screenshot cumulative interest **1.1934495 USDC**, **already included** in the current USDC position; rate displays **up to 4.39% variable annualized**, not guaranteed income. Source class `USER_CONFIRMED_SCREENSHOT_2026-10-13_21:48_BKK`. Do not sum token quantity plus UI USD estimate.
+- **Bybit personal expenses/rent:** **443.029905 USDC**, screenshot estimated **~$443.51 USD**, consisting of Earn **413.602000 USDC**, Funding **29.341449 USDC**, Unified **0.086456 USDC**. Whole account is **EXCLUDED** from every investment subtotal, including its individual under-$1 component. The complete Bybit balance is recorded separately for household bookkeeping; no change to classification.
+- Relative to the last 2026-10-12 screenshot, Binance underlying USDC changed from **695.70724404** to **745.85545285**, difference **+50.14820881 USDC**, with **no inferred deposit/interest/PnL attribution**. Bybit changed from **445.724250** to **443.029905 USDC**, difference **−2.694345**, equally not Mission profit or loss.
+
+### Solana canonical wallet: finalized raw balances and value
+
+Wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`, source Alchemy Solana mainnet `getBalance` and `getTokenAccountsByOwner` classic/Token-2022 with finalized commitment:
+
+| Asset | Verified chain quantity | Source / price evidence | Inclusion |
+| --- | ---: | --- | ---: |
+| USDC, mint `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v` | **471.716759 USDC** | Classic SPL owner account `AaHmxVnUryLCrSr32zxrDGzfafXTvuHATURZbBy6XQ6A`, finalized slot **456480952**; Alchemy USDC/USD **1.00107** at 2026-10-13T14:48:59Z | **~$472.22** |
+| SOL | **0.012905142 SOL** (12,905,142 lamports) | `getBalance`, finalized slot **456480952**; Alchemy SOL/USD **107.94** at 2026-10-13T14:50:30Z | **~$1.39** |
+| GANG / old acquired mint held in `5XBM2iEibBNAVBMjPYb9Deh8ibm4CCqZrbqk8n7TpGJo` | **0** | Classic SPL `getTokenAccountsByOwner` finalized slot 456480952. Previous user-executed GANG sale and separately recorded realized loss remain historical | **$0, CLOSED, not a current holding** |
+| Other classic SPL accounts | **0 token units** | All 5 returned owner classic SPL accounts at same finalized slot: only USDC has positive units | Excluded |
+| Token-2022, 4 distinct mint accounts | **1 raw unit each, decimals 0** | Four positive accounts at finalized slot **456481206**, two with `nonTransferableAccount`; no independently supported realizable USD marks | **UNPRICED/EXCLUDED**, do not claim zero value |
+
+**Direct-chain, independently marked >=$1 Solana subtotal: ~$473.61** using the sampled prices. USDC and SOL quantities match October 12, and GANG remains fully exited; price-dependent USD value changes do not prove transfers or realized PnL. USDC contains any old GANG proceeds/refunds already received, with no second addition.
+
+### EVM / Sui / NFT coverage and dated OKX holdings
+
+- Alchemy `getTokenBalancesByAddress` returned current native balances on Ethereum **0.000190807320080339 ETH**, Base **0.000136480596689642 ETH**, Arbitrum **0.000003959328931033 ETH**, Optimism **0.000065278581034767 ETH**, Unichain **0.000020589846025254 ETH**, Ink **0.000003101575720485 ETH**, BNB Chain **0.00000385774262336 BNB**, Polygon **0.291295907607284273 POL**. Dedicated latest native reads: Linea **0.000078994423394387 ETH**, World Chain **0.000106736504323280 ETH**, Monad **0.3817997 MON**, HyperEVM **0.000234033730511199 HYPE**. Each separately priced native position is **< $1**, excluded individually using Alchemy USD references sampled 2026-10-13 around 14:50Z.
+- Blockscout owner-token holdings returned fully paged Ethereum (**70 rows**), Arbitrum (**15**), Optimism (**23**), Unichain (**2**), with **no independently priced >=$1 ERC-20 holding** in the returned rows. **Coverage remains incomplete**: Base/Polygon yielded PRO-credit HTTP 402, BNB Chain ID 56 unsupported by that endpoint, and Alchemy token-balance aggregation was truncated. Unpriced/spam balances are not counted as dollars or conclusively called dust. No paid fallback required.
+- Solana enhanced owner asset enumeration returned provider `RPC -32001`; classic and Token-2022 SPL RPC above succeeded. Do not infer exhaustive NFT/nonfungible absence.
+- Sui canonical wallet `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`: no new Sui-native balance obtained. Last user-confirmed zero remains **historical USER_CONFIRMED**, not fresh DIRECT_CHAIN. EVM NFTs/current executable bids not freshly rechecked; UNPRICED holdings/rights remain outside marked NAV.
+- The October 12 OKX Web3 screenshot listed **0.002403 ETH** and **3.3847 TRX** on account 01. These quantities were **not freshly reverified** nor mapped to the canonical EVM/Tron addresses on October 13. Alchemy 2026-10-13 USD quotes ETH **2527.16**, TRX **0.32716** imply **~$6.07 ETH** and **~$1.11 TRX** conditional on still owning exactly those older displayed amounts. Keep these separate as **DATED_SCREENSHOT_QUANTITY + CURRENT_MARK**, not DIRECT_CHAIN; do not double-count screenshot OKX Solana USDC/SOL.
+
+### Asset totals: strict source labels, no false Mission ROI
+
+| Basis | Included individually priced assets | Reference USD |
+| --- | --- | ---: |
+| **Freshly observed, separately priced minimum reference** | Binance screenshot $746.73 + Solana direct ~472.22 USDC + ~1.39 SOL | **~$1,220.34** |
+| **Mixed-freshness indicative investment reference** | Above plus Oct 12 OKX ETH ~6.07 and TRX ~1.11 quantities valued using Oct 13 prices | **~$1,227.52** |
+| Bybit personal/living assets, excluded | 443.029905 USDC, screenshot ~$443.51 USD | **$0 included** |
+
+The October 12 comparable filtered reference was **~$1,176.72**, so mixed-dated reference-to-reference change is **~+$50.80**, **NOT trading PnL**, not a same-time audited NAV and not progress on the original $300 + six Credits NFT cohort. GANG separately realized **−96.210562 USDC before SOL gas** as previously proved; no new GANG transaction or cost accounting change is asserted. Original Mission PnL still `MISSION_PNL_UNRESOLVED`.
+
+No wallet signing, order, claim, transfer, Gmail, LaunchAgent, scanner, monitoring or production runtime changes were made during this research-only asset update.
+
+---
+
+## Historical snapshot: GANG fully exited, CEX/OKX screenshots — 2026-10-12
 
 Snapshot chronology: user screenshots **2026-10-12 around 01:52–01:53 Bangkok**; direct Solana RPC finalized **slot 455757417/455757419**, shortly after the user's full sale. Preserve distinctions `DIRECT_CHAIN` / `USER_CONFIRMED_SCREENSHOT` / `UNRESOLVED`. Per-asset USD value **< $1 EXCLUDED**. No new signing, purchase, transfer or account access.
 
