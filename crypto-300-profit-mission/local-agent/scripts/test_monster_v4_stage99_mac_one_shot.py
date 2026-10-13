@@ -112,6 +112,50 @@ class OneShotIsolatedTests(unittest.TestCase):
         self.assertEqual(boot.call_count,3)
         self.assertTrue(all(not module.plist_path(w).exists() for w in freeze.WINDOWS))
 
+    def test_stage103_install_preflights_all_plists_before_creating_any(self):
+        module.AGENTS.mkdir(parents=True,exist_ok=True)
+        second=module.plist_path(freeze.WINDOWS[1])
+        second.write_text("other existing stage99 job must remain")
+        with patch.object(module.sys,"platform","darwin"), \
+             patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"git"), \
+             patch.object(module,"read_frank_launchd_labels",return_value=["frank"]), \
+             patch.object(module,"launchctl",return_value=0) as launch, \
+             patch.object(module.shutil,"which",return_value="/bin/launchctl"):
+            with self.assertRaisesRegex(RuntimeError,"PLISTS_ALREADY_EXISTS"):
+                module.install(now=self.start-20*60000,dry_run=False)
+        launch.assert_not_called()
+        self.assertFalse(module.plist_path(freeze.WINDOWS[0]).exists())
+        self.assertEqual(second.read_text(),"other existing stage99 job must remain")
+
+    def test_stage103_bootstrap_midfailure_rolls_back_all_created_jobs(self):
+        with patch.object(module.sys,"platform","darwin"), \
+             patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"git"), \
+             patch.object(module,"read_frank_launchd_labels",return_value=["frank"]), \
+             patch.object(module,"launchctl",side_effect=[0,1,0,0]) as launch, \
+             patch.object(module.shutil,"which",return_value="/bin/launchctl"):
+            with self.assertRaisesRegex(RuntimeError,"BOOTSTRAP_FAILED"):
+                module.install(now=self.start-20*60000,dry_run=False)
+        self.assertEqual(launch.call_count,4)
+        self.assertTrue(all(not module.plist_path(w).exists() for w in freeze.WINDOWS))
+        for w in freeze.WINDOWS[:2]:
+            self.assertEqual(module.status()[w]["status"],"INSTALL_ROLLED_BACK_NO_SERVICE_ENABLED")
+        self.assertEqual(module.status()[freeze.WINDOWS[2]]["status"],"NOT_INSTALLED")
+
+    def test_stage103_frank_mutation_aborts_only_our_services(self):
+        with patch.object(module.sys,"platform","darwin"), \
+             patch.object(module,"isolated_checkout_preflight"), \
+             patch.object(module,"git"), \
+             patch.object(module,"read_frank_launchd_labels",
+                          side_effect=[["frank.original"],["frank.original","frank.extra"]]), \
+             patch.object(module,"launchctl",return_value=0) as launch, \
+             patch.object(module.shutil,"which",return_value="/bin/launchctl"):
+            with self.assertRaisesRegex(RuntimeError,"FRANK_LAUNCHD_COEXISTENCE_CHANGED"):
+                module.install(now=self.start-20*60000,dry_run=False)
+        self.assertEqual(launch.call_count,6)
+        self.assertTrue(all(not module.plist_path(w).exists() for w in freeze.WINDOWS))
+
     def test_no_frozen_date_can_be_replaced(self):
         with self.assertRaises(ValueError):
             module.label_for("2026-10-15T06:00:00Z")
