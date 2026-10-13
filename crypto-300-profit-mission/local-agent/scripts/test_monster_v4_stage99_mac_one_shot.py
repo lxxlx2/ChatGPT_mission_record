@@ -178,7 +178,7 @@ class OneShotIsolatedTests(unittest.TestCase):
              patch.object(module,"read_frank_launchd_labels",return_value=["frank"]), \
              patch.object(module,"launchctl",side_effect=[0,1,7,0]) as launch, \
              patch.object(module.shutil,"which",return_value="/bin/launchctl"):
-            with self.assertRaisesRegex(RuntimeError,"ROLLBACK_UNVERIFIED_SERVICES"):
+            with self.assertRaisesRegex(RuntimeError,"ROLLBACK_SAFETY_UNVERIFIED"):
                 module.install(now=self.start-20*60000,dry_run=False)
         self.assertEqual(launch.call_count,4)
         self.assertEqual(module.status()[freeze.WINDOWS[1]]["status"],
