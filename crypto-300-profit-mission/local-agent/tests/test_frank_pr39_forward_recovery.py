@@ -13,12 +13,13 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import frank_pr39_forward_recovery as f
 import frank_pr39_controlled_release as rel
+import test_frank_pr39_legacy_cutover as legacy_fixture
 from test_frank_pr39_legacy_cutover import build_world
 
 
 def offline_world(tmp_path, monkeypatch):
     world = build_world(tmp_path, monkeypatch)
-    f.TARGET = world.sha
+    monkeypatch.setattr(f, "rel", legacy_fixture.r)
     monkeypatch.setattr(f, "TARGET", world.sha)
     monkeypatch.setattr(f, "EXPECTED_SOURCE_FILE_COUNT", len(rel.source_manifest(world.ops)))
     monkeypatch.setattr(f, "OLD_PIDS", {"loop": world.loop_pid, "dashboard": world.dash_pid})
