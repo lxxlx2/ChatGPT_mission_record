@@ -1,0 +1,62 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P3_FULL_RECEIPT_POOL_SWAP_OWNER_EVIDENCE",
+  "date": "2026-10-13",
+  "network": "bnb-mainnet",
+  "source": "Alchemy BNB mainnet read-only eth_getTransactionByHash, eth_getTransactionReceipt, eth_call historical token0/token1/fee",
+  "frozen_window_UTC": {
+    "start": "2026-09-13T08:37:36Z",
+    "end": "2026-10-13T08:37:36Z"
+  },
+  "tx": {
+    "hash": "0xcfcc99e6a8d6900fa805cf5b8da72761e9d175455914772ebf394778d9d8aed4",
+    "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+    "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "block_number": 127174819,
+    "block_hex": "0x79488a3",
+    "block_UTC": "2026-10-12T07:57:23.000Z",
+    "input_selector": "0x4d819a2a"
+  },
+  "receipt": {
+    "status": "0x1",
+    "complete_body": true,
+    "log_count": 7,
+    "gas_used_wei_units": "202657",
+    "effective_gas_price_wei": "200000000"
+  },
+  "pool": {
+    "address": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+    "token0": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+    "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+    "fee_bps_units": 10000,
+    "at_block": "0x79488a3",
+    "swap_topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
+  },
+  "token_transfer": {
+    "contract": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+    "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+    "to": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+    "raw_value_base10": "91870657978005810736",
+    "log_index": 60
+  },
+  "quote_transfer": {
+    "contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+    "from": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+    "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "raw_value_base10": "2108454181635343",
+    "log_index": 58
+  },
+  "swap_event": {
+    "contract": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+    "topic0": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+    "log_index": 61,
+    "raw_data": "0x000000000000000000000000000000000000000000000004faf624adec716e30fffffffffffffffffffffffffffffffffffffffffffffffffff8825f417a7af10000000000000000000000000000000000000000013b8a558fbdf41a9596ec0e0000000000000000000000000000000000000000000012b6727a86d4f9b20643fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe5f19000000000000000000000000000000000000000000000000041472ce2cfe50a20000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "gate": {
+    "owner_signed_success_and_token_sell_to_swap_pool": true,
+    "actual_30d_owner_meme_market_swap": true,
+    "quote_received_by_original_wallet": "UNVERIFIED",
+    "complete_realized_profit": "UNRESOLVED",
+    "follower_executability": "UNRESOLVED",
+    "production": "NO_GO"
+  }
+}
