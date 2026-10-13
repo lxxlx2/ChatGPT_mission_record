@@ -111,9 +111,30 @@ def replay(x,archive,previous,census,reader=old.publisher.verified_1m_day):
         for bar in candles:
             if bar[0] in lookup:raise ValueError("STAGE110_DUPLICATE_REAL_MINUTE")
             lookup[bar[0]]=bar
-    first=lookup.get(t)
+    # Stage85 at(data,t) uses bars[i-61:i], so its final *closed* bar
+    # has OPEN t-1m, NOT t. This is an existing timestamp contract, not
+    # a source mismatch or permission to ignore an inconsistent candle.
+    # When t is UTC midnight, that previous closed minute is on prior day:
+    # reload the publisher-signed day and match Stage85 receipt exactly.
+    if t-MIN not in lookup:
+        prevday=(__import__("datetime").datetime.fromtimestamp(
+            (t-MIN)/1000,__import__("datetime").timezone.utc).date())
+        allowed={q["date"]:q["zip_sha256"]
+                 for q in x["verified_source_publisher_SHA"]}
+        candles,proof=reader(x["symbol"],prevday)
+        if (len(candles)!=1440 or not proof["verified_official_publisher_SHA256"]
+            or proof["zip_sha256"]!=allowed.get(prevday.isoformat())
+            or proof["date"]!=prevday.isoformat()):
+            raise ValueError("STAGE110_PREVIOUS_DAY_D1_ASOF_SHA_MISSING")
+        if candles[-1][0]!=t-MIN:
+            raise ValueError("STAGE110_PREVIOUS_DAY_D1_LAST_BAR_BAD")
+        lookup[t-MIN]=candles[-1]
+        proofs.append(proof)
+    first=lookup.get(t-MIN)
     if first is None or first[4]!=Decimal(x["asof_D1_last_closed_price"]):
-        raise ValueError("STAGE110_D1_REAL_CLOSE_NOT_FROZEN_ASOF")
+        raise ValueError("STAGE110_STAGE85_LAST_CLOSED_T_MINUS_1_PRICE_DRIFT")
+    # Intentionally wait for t+1m onwards, i.e. never inspect bar t
+    # before its close, and place entry only after actual confirmation.
     future=[lookup.get(t+i*MIN) for i in range(1,1471)]
     if any(bar is None for bar in future):
         raise ValueError("STAGE110_CAUSAL_OR_24H_PRICE_SOURCE_GAP")
