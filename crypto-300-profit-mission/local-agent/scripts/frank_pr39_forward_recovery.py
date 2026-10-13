@@ -260,7 +260,7 @@ def forward_apply(mac, root, tool_pin):
         rel.backup(state["prod"], folder / "frank-recovery.sqlite")
         checkpoint("R10_BACKED_UP")
         rel.assert_preserved(state["queue"], rel.ledger(state["db"]), exact=True)
-        scanner_guard(mac, state["prod"], state["scanner_state"])
+        state["scanner_state"] = scanner_guard(mac, state["prod"], state["scanner_state"])
         host_offline(mac)
         intent("MIGRATE_ONLY_PRESENTATION_TABLE")
         touched = True
@@ -285,7 +285,7 @@ def forward_apply(mac, root, tool_pin):
         rel.wait_ready(lambda: rel.http_check({"port": state["port"],
                                                 "new_agent": str(state["staged"])}, True), 60)
         checkpoint("R40_DASHBOARD_VERIFIED")
-        scanner_guard(mac, state["prod"], state["scanner_state"])
+        state["scanner_state"] = scanner_guard(mac, state["prod"], state["scanner_state"])
         rel.require(rel.release_manifest(state["staged"]) == state["source"],
                     "TARGET_CHANGED_PRE_LOOP")
         rel.assert_preserved(state["queue"], rel.ledger(state["db"]), exact=True)
@@ -302,7 +302,7 @@ def forward_apply(mac, root, tool_pin):
         rel.require(loop["source"] == state["source"] and loop["pid"] != OLD_PIDS["loop"],
                     "NEW_LOOP_SOURCE_UNVERIFIED")
         rel.assert_preserved(state["queue"], rel.ledger(state["db"]))
-        scanner_guard(mac, state["prod"], state["scanner_state"])
+        state["scanner_state"] = scanner_guard(mac, state["prod"], state["scanner_state"])
         rel.require(set(mac.worker_pids(worker_context(state))) == {loop["pid"], dash["pid"]},
                     "RECOVERY_WORKER_SET_MISMATCH")
         rel.require(mac.runtime("dashboard", new_texts["dashboard"]) == dash and

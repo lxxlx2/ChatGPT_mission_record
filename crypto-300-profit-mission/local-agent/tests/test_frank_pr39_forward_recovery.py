@@ -293,3 +293,20 @@ def test_sigkill_after_every_durable_checkpoint_blocks_reexecution(tmp_path, mon
     with pytest.raises(RuntimeError, match='RECOVERY_ALREADY_ATTEMPTED'):
         f.read_only_plan(world.mac, world.ops, world.sha)
     assert journal.read_bytes() == saved
+
+
+def test_cursor_regression_after_observed_advance_is_blocked(tmp_path, monkeypatch):
+    world, _ = offline_world(tmp_path, monkeypatch)
+    guard = f.scanner_guard
+    calls = 0
+    def moving(mac, prod, baseline=None):
+        nonlocal calls
+        calls += 1
+        if calls in (2, 3):
+            with sqlite3.connect(prod) as db:
+                db.execute("UPDATE cursors SET slot=?", (110 if calls == 2 else 105,))
+        return guard(mac, prod, baseline)
+    monkeypatch.setattr(f, 'scanner_guard', moving)
+    result = f.forward_apply(world.mac, world.ops, world.sha)
+    assert result['reason'] == 'CURSOR_REGRESSION'
+    assert not any(e[0] == 'start' and e[1] == 'loop' for e in world.mac.events)
