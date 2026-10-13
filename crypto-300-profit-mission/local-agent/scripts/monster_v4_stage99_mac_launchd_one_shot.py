@@ -20,10 +20,10 @@ import time
 
 try:
     import monster_v4_stage97_one_shot_usdm_capture as stage97
-    import monster_v4_stage91_forward_oos_replay_gate as stage91
+    import monster_v4_stage105_capture_universe_core as stage91
 except ImportError:
     from scripts import monster_v4_stage97_one_shot_usdm_capture as stage97
-    from scripts import monster_v4_stage91_forward_oos_replay_gate as stage91
+    from scripts import monster_v4_stage105_capture_universe_core as stage91
 
 BRANCH = "research/monster-v4-local-discovery-20261010"
 REPO_NAME = "lxxlx2/ChatGPT_mission_record"
@@ -243,7 +243,7 @@ def install(*,now=None,dry_run=False,windows=None):
             raise RuntimeError("STAGE99_HOME_NOT_WRITABLE")
         # Push dry-run verifies the user's current credential can update PR30.
         git("push","--dry-run","origin","HEAD:refs/heads/"+BRANCH,timeout=35)
-    start_now=stage91.d1.utc_ms(datetime.now(timezone.utc).isoformat().replace("+00:00","Z")) if now is None else now
+    start_now=int(datetime.now(timezone.utc).timestamp()*1000) if now is None else now
     choices=tuple(stage91.WINDOWS if windows is None else windows)
     future=[]
     for window in choices:
