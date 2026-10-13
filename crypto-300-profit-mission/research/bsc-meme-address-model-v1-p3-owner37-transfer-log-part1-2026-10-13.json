@@ -1,0 +1,166 @@
+{
+  "schema": "BSC_MEME_P3_FROZEN_OWNER37_TOKEN_TRANSFER_LOG_PROOF",
+  "part": 1,
+  "range": [
+    0,
+    6
+  ],
+  "precommit_sha": "9d1a95b864a631b6c8559bf65817c30e871da19e",
+  "records": [
+    {
+      "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "block": 123355289,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 4,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0x9bc9620b66cdce07a7ad8bb9d707079504b8dc04",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "44567705351998387413",
+          "logIndex": 140
+        },
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x58f6213a0d5f6a32ea5dd5a727ff4a32abdf5f5b",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "1145336140930989974",
+          "logIndex": 149
+        },
+        {
+          "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "from": "0x9bab04f9731858ed7b4c9b9c2a2443fc18d0914c",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "11739233937310994",
+          "logIndex": 154
+        },
+        {
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "from": "0x918498ac17964a90678d6e811f26595764bb2fd7",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "3788153333298697820",
+          "logIndex": 182
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "block": 123398349,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 1,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "44567705351998387413",
+          "logIndex": 165
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xf9d57b0971395dc6f59a0317ba4bcbee3d4c0920e34474cf6f153300f76275d9",
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "block": 126605440,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 1,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "from": "0x0dc747269b1759a91314c55ce36c2d7bce07ff4d",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "12499645065771719",
+          "logIndex": 330
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122582898,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 2,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw": "675973280826088410",
+          "logIndex": 437
+        },
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "raw": "21856469413376858605",
+          "logIndex": 439
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xcab3ab44e62796268d5817e67b89823b0e14cd199b5b9100f4bfc38fe2689f7f",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122582910,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 5,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw": "8209491867267820198",
+          "logIndex": 62
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xafca658cebd8cb5a0e0afb73426451f8f3fc1fcd3796478dc6ac0269472353b8",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122987987,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 5,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "raw": "3702529027062765513",
+          "logIndex": 168
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "block": 122987993,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 2,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x1ff5f3d06fd05ab7a436de510c9e470c1961d16b",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "raw": "15812501098994538030",
+          "logIndex": 450
+        },
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x11a9144e881ac2af84b6d7609ef29e57b3f386aa",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "raw": "13243970527658018367",
+          "logIndex": 455
+        }
+      ],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}
