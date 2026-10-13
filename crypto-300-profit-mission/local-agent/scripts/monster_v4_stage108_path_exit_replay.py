@@ -16,7 +16,7 @@ import json
 from pathlib import Path
 import statistics
 
-BASE = Path(__file__).resolve().parents[1]
+BASE = Path(__file__).resolve().parents[2]
 SOURCE = (BASE / "monster" / "evidence" /
           "monster_stage101_all305_real1m_historic_exit_paths.jsonl")
 PIN_BLOB = "19dfc89ab10aaf23f068bee924cddc85d5bcc3e1"
