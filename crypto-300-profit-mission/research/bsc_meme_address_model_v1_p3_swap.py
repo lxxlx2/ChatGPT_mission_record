@@ -16,7 +16,7 @@ from bsc_meme_address_model_v1_p3 import (
 )
 
 WITNESS_FILENAME = "bsc-meme-address-model-v1-p3-a83b-tst-true-owner-swap-witness-2026-10-13.json"
-WITNESS_BLOB_SHA = "ab31329a617a454e0137231a1136d0a7427e0a65"
+WITNESS_BLOB_SHA = "3536fcfae67f387e4b01564f26c959a62c298f6c"
 TOKEN = "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429"
 WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
 SWAP_TOPIC = "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83"
@@ -54,11 +54,11 @@ def promote_verified_witness(overlay: dict, witness: dict) -> dict:
             "outside frozen time range")
     require(rc["status"] == "0x1" and rc["complete_body"] is True
             and type(rc["log_count"]) is int and rc["log_count"] >= 3
-            and int(rc["gas_used_wei_units"]) > 0
+            and int(rc["gas_used_units"]) > 0
             and int(rc["effective_gas_price_wei"]) > 0,
             "original receipt success/full-body/gas missing")
     require(pool["address"] == POOL and pool["token0"] == TOKEN
-            and pool["token1"] == WBNB and pool["fee_bps_units"] == 10000
+            and pool["token1"] == WBNB and pool["fee_pips"] == 10000 and pool["fee_fraction"] == "10000/1000000"
             and pool["swap_topic0"] == SWAP_TOPIC, "historical BNB pool identity changed")
     require(token["contract"] == TOKEN and token["from"] == OWNER and token["to"] == POOL
             and quote["contract"] == WBNB and quote["from"] == POOL
