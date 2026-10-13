@@ -1,0 +1,415 @@
+{
+  "cases_by_source_status": {
+    "EXPIRED": 519
+  },
+  "cases_not_seven_day_continuous": 0,
+  "cases_with_exact_anchor_window_1m_complete": 519,
+  "frank": "UNCHANGED",
+  "historical_28_2x_early_missed": [
+    {
+      "date": "2025-08-01",
+      "reason": "NO_PRIORITY_AT_LEAST_5M_BEFORE_GT2",
+      "symbol": "MYXUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "reason": "NO_PRIORITY_AT_LEAST_5M_BEFORE_GT2",
+      "symbol": "BANKUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "reason": "NO_PRIORITY_AT_LEAST_5M_BEFORE_GT2",
+      "symbol": "JELLYJELLYUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "reason": "NO_PRIORITY_AT_LEAST_5M_BEFORE_GT2",
+      "symbol": "AIAUSDT"
+    },
+    {
+      "date": "2026-07-28",
+      "reason": "NO_PRIORITY_AT_LEAST_5M_BEFORE_GT2",
+      "symbol": "1000RATSUSDT"
+    },
+    {
+      "date": "2026-07-28",
+      "reason": "NO_PRIORITY_AT_LEAST_5M_BEFORE_GT2",
+      "symbol": "SKYAIUSDT"
+    },
+    {
+      "date": "2026-07-28",
+      "reason": "NO_PRIORITY_AT_LEAST_5M_BEFORE_GT2",
+      "symbol": "MMTUSDT"
+    },
+    {
+      "date": "2026-07-28",
+      "reason": "NO_PRIORITY_AT_LEAST_5M_BEFORE_GT2",
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "date": "2026-07-28",
+      "reason": "NO_PRIORITY_AT_LEAST_5M_BEFORE_GT2",
+      "symbol": "KOMAUSDT"
+    }
+  ],
+  "historical_28_2x_early_preserved": [
+    {
+      "date": "2025-08-01",
+      "first_new_priority_ms": 1754126340000,
+      "symbol": "MAGICUSDT"
+    },
+    {
+      "date": "2025-08-01",
+      "first_new_priority_ms": 1754480040000,
+      "symbol": "MEMEFIUSDT"
+    },
+    {
+      "date": "2025-08-01",
+      "first_new_priority_ms": 1754587860000,
+      "symbol": "A2ZUSDT"
+    },
+    {
+      "date": "2025-08-01",
+      "first_new_priority_ms": 1754473200000,
+      "symbol": "DMCUSDT"
+    },
+    {
+      "date": "2025-08-01",
+      "first_new_priority_ms": 1754528460000,
+      "symbol": "VELVETUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759896780000,
+      "symbol": "BROCCOLIF3BUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759627860000,
+      "symbol": "HANAUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759464780000,
+      "symbol": "SOONUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759536960000,
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759565400000,
+      "symbol": "ALCHUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759540560000,
+      "symbol": "DOODUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759461000000,
+      "symbol": "BROCCOLI714USDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759431840000,
+      "symbol": "COAIUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759720920000,
+      "symbol": "STOUSDT"
+    },
+    {
+      "date": "2025-10-02",
+      "first_new_priority_ms": 1759588980000,
+      "symbol": "TRADOORUSDT"
+    },
+    {
+      "date": "2026-06-21",
+      "first_new_priority_ms": 1782068280000,
+      "symbol": "SYNUSDT"
+    },
+    {
+      "date": "2026-06-21",
+      "first_new_priority_ms": 1782476700000,
+      "symbol": "VELVETUSDT"
+    },
+    {
+      "date": "2026-07-28",
+      "first_new_priority_ms": 1785519600000,
+      "symbol": "GIGGLEUSDT"
+    },
+    {
+      "date": "2026-07-28",
+      "first_new_priority_ms": 1785268680000,
+      "symbol": "BEATUSDT"
+    }
+  ],
+  "historical_28_2x_source_unknown": [],
+  "monster_deployment": "NO_GO",
+  "new_automation": "NONE",
+  "new_other_AI_review": "NOT_DONE",
+  "not_independent_OOS": true,
+  "number_of_repeated_priorities_per_case": {
+    "0": 242,
+    "1": 110,
+    "10": 2,
+    "11": 1,
+    "13": 1,
+    "2": 66,
+    "3": 31,
+    "4": 21,
+    "5": 19,
+    "6": 11,
+    "7": 6,
+    "8": 7,
+    "9": 2
+  },
+  "original_D0_total": 519,
+  "original_D1_total": 305,
+  "preregistered_gates": {
+    "G2_28_historical_original_D0_early5_retain": {
+      "D0_early5_total": 28,
+      "censored_before_GT2": 0,
+      "lower_bound_retention": "0.6785714285714285714285714286",
+      "new_early5_observed": 19,
+      "no_early5_with_known_complete_pre_GT_source": 9,
+      "passed_80pct": false
+    },
+    "G3_all_42_attention_days": {
+      "average_observed_per_day": "17.61904761904761904761904762",
+      "counts": [
+        {
+          "date": "2025-01-30",
+          "day_index": 0,
+          "priority_count": 0
+        },
+        {
+          "date": "2025-01-30",
+          "day_index": 1,
+          "priority_count": 4
+        },
+        {
+          "date": "2025-01-30",
+          "day_index": 2,
+          "priority_count": 5
+        },
+        {
+          "date": "2025-01-30",
+          "day_index": 3,
+          "priority_count": 10
+        },
+        {
+          "date": "2025-01-30",
+          "day_index": 4,
+          "priority_count": 46
+        },
+        {
+          "date": "2025-01-30",
+          "day_index": 5,
+          "priority_count": 44
+        },
+        {
+          "date": "2025-01-30",
+          "day_index": 6,
+          "priority_count": 14
+        },
+        {
+          "date": "2025-06-02",
+          "day_index": 0,
+          "priority_count": 3
+        },
+        {
+          "date": "2025-06-02",
+          "day_index": 1,
+          "priority_count": 1
+        },
+        {
+          "date": "2025-06-02",
+          "day_index": 2,
+          "priority_count": 4
+        },
+        {
+          "date": "2025-06-02",
+          "day_index": 3,
+          "priority_count": 2
+        },
+        {
+          "date": "2025-06-02",
+          "day_index": 4,
+          "priority_count": 5
+        },
+        {
+          "date": "2025-06-02",
+          "day_index": 5,
+          "priority_count": 5
+        },
+        {
+          "date": "2025-06-02",
+          "day_index": 6,
+          "priority_count": 2
+        },
+        {
+          "date": "2025-08-01",
+          "day_index": 0,
+          "priority_count": 0
+        },
+        {
+          "date": "2025-08-01",
+          "day_index": 1,
+          "priority_count": 1
+        },
+        {
+          "date": "2025-08-01",
+          "day_index": 2,
+          "priority_count": 8
+        },
+        {
+          "date": "2025-08-01",
+          "day_index": 3,
+          "priority_count": 8
+        },
+        {
+          "date": "2025-08-01",
+          "day_index": 4,
+          "priority_count": 14
+        },
+        {
+          "date": "2025-08-01",
+          "day_index": 5,
+          "priority_count": 17
+        },
+        {
+          "date": "2025-08-01",
+          "day_index": 6,
+          "priority_count": 24
+        },
+        {
+          "date": "2025-10-02",
+          "day_index": 0,
+          "priority_count": 14
+        },
+        {
+          "date": "2025-10-02",
+          "day_index": 1,
+          "priority_count": 13
+        },
+        {
+          "date": "2025-10-02",
+          "day_index": 2,
+          "priority_count": 22
+        },
+        {
+          "date": "2025-10-02",
+          "day_index": 3,
+          "priority_count": 21
+        },
+        {
+          "date": "2025-10-02",
+          "day_index": 4,
+          "priority_count": 37
+        },
+        {
+          "date": "2025-10-02",
+          "day_index": 5,
+          "priority_count": 35
+        },
+        {
+          "date": "2025-10-02",
+          "day_index": 6,
+          "priority_count": 31
+        },
+        {
+          "date": "2026-06-21",
+          "day_index": 0,
+          "priority_count": 9
+        },
+        {
+          "date": "2026-06-21",
+          "day_index": 1,
+          "priority_count": 16
+        },
+        {
+          "date": "2026-06-21",
+          "day_index": 2,
+          "priority_count": 23
+        },
+        {
+          "date": "2026-06-21",
+          "day_index": 3,
+          "priority_count": 33
+        },
+        {
+          "date": "2026-06-21",
+          "day_index": 4,
+          "priority_count": 30
+        },
+        {
+          "date": "2026-06-21",
+          "day_index": 5,
+          "priority_count": 30
+        },
+        {
+          "date": "2026-06-21",
+          "day_index": 6,
+          "priority_count": 37
+        },
+        {
+          "date": "2026-07-28",
+          "day_index": 0,
+          "priority_count": 9
+        },
+        {
+          "date": "2026-07-28",
+          "day_index": 1,
+          "priority_count": 23
+        },
+        {
+          "date": "2026-07-28",
+          "day_index": 2,
+          "priority_count": 22
+        },
+        {
+          "date": "2026-07-28",
+          "day_index": 3,
+          "priority_count": 30
+        },
+        {
+          "date": "2026-07-28",
+          "day_index": 4,
+          "priority_count": 30
+        },
+        {
+          "date": "2026-07-28",
+          "day_index": 5,
+          "priority_count": 24
+        },
+        {
+          "date": "2026-07-28",
+          "day_index": 6,
+          "priority_count": 34
+        }
+      ],
+      "maximum_observed_per_day": 46,
+      "observed_average_and_peak_under_limits": false,
+      "source_complete_enough_for_firm_pass": true,
+      "total_priority_events": 740
+    },
+    "G4_price_only_only": {
+      "complete_24h_price_proxy_count": 598,
+      "loss_at_least_20pct": 57,
+      "no_orderbook_broker_fee_notional_or_real_net": true,
+      "positive": 231,
+      "price_only_median_gross_pct": "-3.504274750385354539869490800",
+      "real_executable_net": "UNKNOWN"
+    }
+  },
+  "real_executable_net": "UNKNOWN",
+  "research_decision": "HISTORICAL_EXPOSED_ONLY_NEEDS_OOS_AND_REVIEW",
+  "schema": "MONSTER_STAGE111_ALL519_SEVENDAY_CAUSAL_ECONOMIC_DECISION_V1",
+  "source_stages": "PINNED_STAGE83_STAGE110"
+}
