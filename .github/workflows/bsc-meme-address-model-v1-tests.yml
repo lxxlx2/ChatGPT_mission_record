@@ -59,6 +59,27 @@ jobs:
           assert all(x["recent_30d_true_owner_market_swap"] == "UNRESOLVED" for x in fresh["wallets"])
           print("PASS P3 pinned 23-wallet 19-CA overlay / 71 original hashes / no false swap or PnL")
           PY
+      - name: P3 full 71-hash original-signer replay (no false executed swaps)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p3.py" --full-source --source-dir "$MODEL_DIR" --output /tmp/bsc-model-v1-p3-full71.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a = json.loads(Path("/tmp/bsc-model-v1-p3-full71.json").read_text(encoding="utf-8"))
+          s = a["summary"]
+          assert len(a["source_manifest"]) == 13
+          assert (s["wallets"], s["exact_CA"], s["erc20_transfer_events"]) == (23, 19, 89)
+          assert (s["original_hashes_read"], s["original_hashes_parsed"], s["original_hashes_unreadable"]) == (71, 70, 1)
+          assert (s["confirmed_owner_original_wallet_tx_pairs"],
+                  s["confirmed_third_party_original_wallet_tx_pairs"],
+                  s["unread_wallet_tx_pairs"]) == (38, 36, 1)
+          assert s["original_hashes_pending"] == 0
+          assert s["confirmed_owner_market_swaps"] == 0 and s["production"] == "NO_GO"
+          assert all(w["recent_30d_true_owner_market_swap"] == w["realized_profit"] == "UNRESOLVED"
+                     for w in a["wallets"])
+          print("PASS P3 71 original tx / 70 parsed / 1 unreadable / 38 owner / 36 third-party wallet pairings; no executable market swap evidence asserted")
+          PY
       - name: Recompute 23x19 baseline deterministically
         run: |
           python3 -B "$MODEL_DIR/bsc_meme_address_model_v1.py" \
