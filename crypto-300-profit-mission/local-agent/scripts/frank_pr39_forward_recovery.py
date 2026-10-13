@@ -75,6 +75,41 @@ def host_offline(mac):
             "both_launch_agents_disabled_and_unloaded": True}
 
 
+def scanner_guard(mac, prod, baseline=None):
+    """Identity alone cannot prove an alive, polling scanner or monotonic cursors."""
+    snap = rel.legacy_scanner_snapshot(mac, SCANNER_LABEL(), prod)
+    rel.require(snap["pid"] == SCANNER_PID and
+                snap["loaded_source_sha256"] == SCANNER_SOURCE, "SCANNER_IDENTITY_DRIFT")
+    if baseline is not None:
+        rel.require(snap == baseline["identity"], "SCANNER_IDENTITY_CHANGED")
+    rel.require(all(rel.sha(path) == value for path, value in snap["protected"].items()),
+                "SCANNER_CONFIG_CHANGED")
+    body = json.loads((Path(prod).parent / "health.json").read_text())
+    stamp = datetime.fromisoformat(body["last_successful_poll"].replace("Z", "+00:00")).timestamp()
+    rel.require(0 <= time.time() - stamp < 120 and body.get("status") == "RUNNING"
+                and body.get("pid") == snap["pid"] and body.get("source_drift") is False
+                and body.get("production_trading") == "NO_GO"
+                and body.get("loaded_source_sha256") == snap["loaded_source_sha256"]
+                and body.get("policy_hash") == snap["policy_hash"], "SCANNER_HEARTBEAT")
+    with closing(rel.ro(prod)) as db:
+        cursors = {r["wallet"]: dict(r) for r in db.execute("SELECT * FROM cursors")}
+    rel.require(all(type(row["slot"]) is int for row in cursors.values()), "CURSOR_SLOT")
+    if baseline is not None:
+        old = baseline["cursors"]
+        rel.require(cursors.keys() == old.keys(), "CURSOR_WALLET_CHANGED")
+        for wallet, row in cursors.items():
+            rel.require(row["slot"] >= old[wallet]["slot"], "CURSOR_REGRESSION")
+            rel.require(row["slot"] != old[wallet]["slot"] or
+                        row["signature"] == old[wallet]["signature"], "CURSOR_IDENTITY_CHANGED")
+    return {"identity": snap, "cursors": cursors}
+
+
+def worker_context(state):
+    return {"new_agent": str(state["staged"]), "runtime": {
+        key: {"agent": str(rel.field(text, "LOCAL_AGENT"))}
+        for key, text in state["texts"].items()}}
+
+
 def immutable_incident_backup(path):
     """Read stopped, completed SQLite backup without creating -shm/-wal sidecars.
 
@@ -175,9 +210,8 @@ def read_only_plan(mac, root, tool_pin):
     rel.require(len(before["local_delivery_presentation"]) == 0, "UNEXPECTED_OLD_PRESENTATION_ROWS")
     reasons = rel.review_reasons(before)
     rel.require(reasons["requires_private_review"] == 0, "HISTORIC_SEND_UNRESOLVED")
-    scanner = rel.legacy_scanner_snapshot(mac, SCANNER_LABEL(), prod)
-    rel.require(scanner["pid"] == SCANNER_PID and
-                scanner["loaded_source_sha256"] == SCANNER_SOURCE, "SCANNER_IDENTITY_DRIFT")
+    scanner_state = scanner_guard(mac, prod)
+    scanner = scanner_state["identity"]
     rel.disk_gate(mac.support, (db, prod))
     port = int((control / "dashboard.port").read_text())
     rel.require(0 < port < 65536, "DASHBOARD_PORT")
@@ -192,7 +226,7 @@ def read_only_plan(mac, root, tool_pin):
               "deployment_authorized": False, "mutated_production": False}
     private = {"incident": incident, "recovery_dir": recovery_dir, "staged": staged,
                "source": source, "texts": texts, "control": control, "db": db, "prod": prod,
-               "policy_sha": policy_sha, "scanner": scanner, "queue": before, "port": port}
+               "policy_sha": policy_sha, "scanner": scanner, "scanner_state": scanner_state, "queue": before, "port": port}
     return report, private
 
 
@@ -226,8 +260,7 @@ def forward_apply(mac, root, tool_pin):
         rel.backup(state["prod"], folder / "frank-recovery.sqlite")
         checkpoint("R10_BACKED_UP")
         rel.assert_preserved(state["queue"], rel.ledger(state["db"]), exact=True)
-        rel.require(rel.legacy_scanner_snapshot(mac, SCANNER_LABEL(), state["prod"])
-                    == state["scanner"], "SCANNER_CHANGED_PRE_MIGRATION")
+        scanner_guard(mac, state["prod"], state["scanner_state"])
         host_offline(mac)
         intent("MIGRATE_ONLY_PRESENTATION_TABLE")
         touched = True
@@ -252,11 +285,13 @@ def forward_apply(mac, root, tool_pin):
         rel.wait_ready(lambda: rel.http_check({"port": state["port"],
                                                 "new_agent": str(state["staged"])}, True), 60)
         checkpoint("R40_DASHBOARD_VERIFIED")
-        rel.require(rel.legacy_scanner_snapshot(mac, SCANNER_LABEL(), state["prod"])
-                    == state["scanner"], "SCANNER_CHANGED_PRE_LOOP")
+        scanner_guard(mac, state["prod"], state["scanner_state"])
         rel.require(rel.release_manifest(state["staged"]) == state["source"],
                     "TARGET_CHANGED_PRE_LOOP")
         rel.assert_preserved(state["queue"], rel.ledger(state["db"]), exact=True)
+        mac.absent("loop")
+        rel.require(set(mac.worker_pids(worker_context(state))) == {dash["pid"]},
+                    "WORKER_PRESENT_BEFORE_LOOP_START")
         intent("START_AND_VERIFY_NEW_LOOP")
         start = time.time()
         mac.start("loop", str(mac.home / "Library/LaunchAgents" /
@@ -267,8 +302,11 @@ def forward_apply(mac, root, tool_pin):
         rel.require(loop["source"] == state["source"] and loop["pid"] != OLD_PIDS["loop"],
                     "NEW_LOOP_SOURCE_UNVERIFIED")
         rel.assert_preserved(state["queue"], rel.ledger(state["db"]))
-        rel.require(rel.legacy_scanner_snapshot(mac, SCANNER_LABEL(), state["prod"])
-                    == state["scanner"], "SCANNER_CHANGED_AFTER_RECOVERY")
+        scanner_guard(mac, state["prod"], state["scanner_state"])
+        rel.require(set(mac.worker_pids(worker_context(state))) == {loop["pid"], dash["pid"]},
+                    "RECOVERY_WORKER_SET_MISMATCH")
+        rel.require(mac.runtime("dashboard", new_texts["dashboard"]) == dash and
+                    mac.runtime("loop", new_texts["loop"]) == loop, "RECOVERY_RUNTIME_CHANGED")
         checkpoint("R50_LOOP_VERIFIED")
         checkpoint("R60_SUCCESS")
         return {"status": "FORWARD_RECOVERY_SUCCESS", "phase": doc["phase"],
@@ -282,24 +320,41 @@ def forward_apply(mac, root, tool_pin):
                 mac.hold(key)
             except BaseException:
                 errors.append("HOLD_" + key.upper())
+        # Loaded services can have no PID while KeepAlive is retrying. Always
+        # attempt bootout, then independently prove absence and inspect workers.
         for key in ("loop", "dashboard"):
-            try:
-                mac.launch(mac.labels[key])
-            except (subprocess.CalledProcessError, RuntimeError):
-                continue
             try:
                 mac.stop(key)
             except BaseException:
+                pass
+            try:
+                mac.absent(key)
+            except BaseException:
                 errors.append("UNLOAD_" + key.upper())
+        residual = None
+        try:
+            residual = mac.worker_pids(worker_context(state))
+            mac.wait_dead(residual)
+            residual = mac.worker_pids(worker_context(state))
+            if residual:
+                errors.append("RESIDUAL_WORKERS")
+        except BaseException:
+            errors.append("WORKER_EXIT_UNVERIFIED")
+            try:
+                residual = mac.worker_pids(worker_context(state))
+            except BaseException:
+                residual = None
         doc["phase"] = "RECOVERY_MANUAL_INTERVENTION_REQUIRED"
         doc["intent"] = None
         doc["error_kind"] = (str(exc) if isinstance(exc, RuntimeError) and
                              re.fullmatch("[A-Z_0-9]+", str(exc)) else type(exc).__name__)
         doc["cleanup_errors"] = errors
+        doc["residual_worker_pids"] = residual
         doc["mutations_began"] = touched
         write_record(journal, doc)
         return {"status": "RECOVERY_BLOCKED", "phase": doc["phase"],
                 "reason": doc["error_kind"], "cleanup_errors": errors,
+                "residual_worker_pids": residual,
                 "mutations_began": touched}
     finally:
         rel.restore_signal_handlers(previous)

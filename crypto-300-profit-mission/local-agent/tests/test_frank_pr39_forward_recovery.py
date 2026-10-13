@@ -29,6 +29,13 @@ def offline_world(tmp_path, monkeypatch):
     monkeypatch.setattr(sys, "platform", "darwin")
     monkeypatch.setattr(f, "host_offline", lambda mac: host_sim(mac))
     world.support = world.mac.support
+    with sqlite3.connect(world.frank_db) as db:
+        db.execute("CREATE TABLE cursors(wallet TEXT PRIMARY KEY, slot INTEGER, signature TEXT)")
+        db.execute("INSERT INTO cursors VALUES('wallet', 100, 'sig100')")
+    (world.prod / "health.json").write_text(json.dumps({
+        "last_successful_poll": f.datetime.now(f.timezone.utc).isoformat(),
+        "status": "RUNNING", "pid": 5555, "source_drift": False,
+        "production_trading": "NO_GO", "loaded_source_sha256": "L", "policy_hash": "P"}))
     rel.stage_immutable_release(world.mac, world.ops, world.sha, rel.source_manifest(world.ops))
     incident = world.support / "pr39-releases" / f.INCIDENT
     incident.mkdir(parents=True)
@@ -188,3 +195,101 @@ def test_host_offline_checks_disabled_registry_and_no_old_pid(tmp_path, monkeypa
         returncode=0, stdout="4242", stderr="") if argv[1] == "-p" else fake_command(argv))
     with pytest.raises(RuntimeError, match="OLD_PID_PRESENT"):
         f.host_offline(world.mac)
+
+@pytest.mark.parametrize('fault', ['stale', 'future', 'status', 'source_drift', 'policy'])
+def test_scanner_health_blocks_plan(tmp_path, monkeypatch, fault):
+    world, incident = offline_world(tmp_path, monkeypatch)
+    path = world.prod / 'health.json'
+    body = json.loads(path.read_text())
+    if fault in ('stale', 'future'):
+        body['last_successful_poll'] = f.datetime.fromtimestamp(
+            f.time.time() + (-121 if fault == 'stale' else 60), f.timezone.utc).isoformat()
+    elif fault == 'status': body['status'] = 'ERROR'
+    elif fault == 'source_drift': body['source_drift'] = True
+    else: body['policy_hash'] = 'changed'
+    path.write_text(json.dumps(body))
+    with pytest.raises(RuntimeError, match='SCANNER_HEARTBEAT'):
+        f.read_only_plan(world.mac, world.ops, world.sha)
+    assert not (incident / 'forward-recovery').exists()
+
+@pytest.mark.parametrize('sql,reason', [
+    ("UPDATE cursors SET slot=99", 'CURSOR_REGRESSION'),
+    ("UPDATE cursors SET signature='different'", 'CURSOR_IDENTITY_CHANGED'),
+    ("DELETE FROM cursors", 'CURSOR_WALLET_CHANGED')])
+def test_cursor_drift_after_backup_blocks_migration(tmp_path, monkeypatch, sql, reason):
+    world, _ = offline_world(tmp_path, monkeypatch)
+    original = f.rel.backup
+    def backup(src, dest):
+        original(src, dest)
+        if dest.name == 'frank-recovery.sqlite':
+            with sqlite3.connect(world.frank_db) as db: db.execute(sql)
+    monkeypatch.setattr(f.rel, 'backup', backup)
+    result = f.forward_apply(world.mac, world.ops, world.sha)
+    assert result['reason'] == reason
+    assert world.mac.holds == {'loop', 'dashboard'}
+
+
+def test_loaded_service_without_pid_is_still_booted_out(tmp_path, monkeypatch):
+    world, _ = offline_world(tmp_path, monkeypatch)
+    def broken_start(key, plist):
+        world.mac.holds.discard(key)
+        raise RuntimeError('BOOTSTRAP_FAILED_NO_PID')
+    monkeypatch.setattr(world.mac, 'start', broken_start)
+    outcome = f.forward_apply(world.mac, world.ops, world.sha)
+    assert outcome['status'] == 'RECOVERY_BLOCKED'
+    assert {e[1] for e in world.mac.events if e[0] == 'stop'} == {'loop', 'dashboard'}
+    assert outcome['residual_worker_pids'] == []
+
+
+def test_cleanup_reports_orphan_even_after_bootout(tmp_path, monkeypatch):
+    world, incident = offline_world(tmp_path, monkeypatch)
+    original = world.mac.start
+    def start(key, plist):
+        original(key, plist)
+        if key == 'dashboard':
+            world.mac.procs[world.mac.loaded[world.mac.labels[key]]]['state'] = 'stopped'
+            raise RuntimeError('DASHBOARD_FAILED')
+    monkeypatch.setattr(world.mac, 'start', start)
+    result = f.forward_apply(world.mac, world.ops, world.sha)
+    assert result['residual_worker_pids'] == [6000]
+    assert 'WORKER_EXIT_UNVERIFIED' in result['cleanup_errors']
+    assert json.loads((incident / 'forward-recovery/journal.json').read_text())['residual_worker_pids'] == [6000]
+
+
+def test_extra_loop_cannot_be_reported_as_success(tmp_path, monkeypatch):
+    world, _ = offline_world(tmp_path, monkeypatch)
+    original = world.mac.start
+    def start(key, plist):
+        original(key, plist)
+        if key == 'loop':
+            world.mac.add_proc(9999, 'python scripts/mission_meme_v1.py loop',
+                               f.rel.field(world.mac.runners[key].read_text(), 'LOCAL_AGENT'), f.time.time())
+    monkeypatch.setattr(world.mac, 'start', start)
+    result = f.forward_apply(world.mac, world.ops, world.sha)
+    assert result['reason'] == 'RECOVERY_WORKER_SET_MISMATCH'
+    assert result['residual_worker_pids'] == [9999]
+
+
+@pytest.mark.parametrize('phase', ['INIT', *f.PHASES,
+    'MIGRATE_ONLY_PRESENTATION_TABLE', 'SWITCH_RUNNERS_WHILE_SERVICES_DISABLED',
+    'START_AND_VERIFY_DASHBOARD', 'START_AND_VERIFY_NEW_LOOP'])
+def test_sigkill_after_every_durable_checkpoint_blocks_reexecution(tmp_path, monkeypatch, phase):
+    import signal
+    world, incident = offline_world(tmp_path, monkeypatch)
+    original = f.write_record
+    def kill_after_write(path, body):
+        original(path, body)
+        if (body['phase'] == phase and body['intent'] is None) or body['intent'] == phase:
+            os.kill(os.getpid(), signal.SIGKILL)
+    child = os.fork()
+    if child == 0:
+        f.write_record = kill_after_write
+        try: f.forward_apply(world.mac, world.ops, world.sha)
+        finally: os._exit(10)
+    _, status = os.waitpid(child, 0)
+    assert os.WIFSIGNALED(status) and os.WTERMSIG(status) == signal.SIGKILL
+    journal = incident / 'forward-recovery/journal.json'
+    saved = journal.read_bytes()
+    with pytest.raises(RuntimeError, match='RECOVERY_ALREADY_ATTEMPTED'):
+        f.read_only_plan(world.mac, world.ops, world.sha)
+    assert journal.read_bytes() == saved
