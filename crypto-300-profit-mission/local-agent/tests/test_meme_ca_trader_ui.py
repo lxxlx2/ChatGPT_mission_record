@@ -75,92 +75,62 @@ def test_ca_ui_has_independent_fast_view_and_disclosed_technical_evidence():
     assert 'data-view="signals"' in html and 'data-view="cluster"' in html
 
 
-def test_ca_early_jupiter_quote_precedes_holder_history_and_is_timestamped(tmp_path):
+def test_ca_early_preview_never_requests_implicit_trade_quote(tmp_path):
     manager = ClusterJobManager(tmp_path / "control")
-    mint = "So11111111111111111111111111111111111111112"
     manager.jobs["early"] = {
-        "job_id": "early", "mint": mint, "preset": "quick",
-        "status": "RUNNING", "progress": {},
+        "job_id": "early", "mint": "So11111111111111111111111111111111111111112",
+        "preset": "standard", "status": "RUNNING", "progress": {},
     }
-    calls = []
-    def mocked_quote(quoted_mint, decimals, **kwargs):
-        calls.append((quoted_mint, decimals, kwargs["usdc_amount"]))
-        return {
-            "status": "OK", "source": "JUPITER_OFFICIAL",
-            "route_exists": True, "observed_at": 1_800_000_000.0,
-            "execution_price_usdc": "0.00123",
-            "price_impact_pct": "0.40",
-            "route_plan": [{"internal": "not_for_preview"}],
-        }
-    manager.jupiter.quote_usdc_to_token = mocked_quote
+    class FailQuote:
+        def quote_usdc_to_token(self, *args, **kwargs):
+            raise AssertionError("NO_IMPLICIT_JUPITER_IN_CA")
+    manager.jupiter = FailQuote()
     manager._set_progress("early", "BASE_READY", {
-        "token_profile": {
-            "status": "OK", "decimals": 6, "mint_authority": None,
-            "freeze_authority": None,
-        },
-        "market": {
-            "status": "OK", "name": "Example", "symbol": "EX",
-            "main_pair": {"liquidity_usd": 50000},
-        },
+        "token_profile": {"status": "OK", "decimals": 6},
+        "market": {"status": "OK", "name": "Example", "symbol": "EX",
+                   "price_usd": "0.0012",
+                   "main_pair": {"liquidity_usd": 50000}},
     })
-    early = manager.get("early")
-    assert calls == [(mint, 6, 30)]
-    assert early["progress"]["stage"] == "BASE_READY"
-    initial_quote = early["preview"]["execution_quote_30_usdc"]
-    assert {k: initial_quote.get(k) for k in (
-        "status","source","reason","observed_at","route_exists",
-        "execution_price_usdc","price_impact_pct",
-    )} == {
-        "status": "OK", "source": "JUPITER_OFFICIAL",
-        "reason": None, "observed_at": 1_800_000_000.0,
-        "route_exists": True, "execution_price_usdc": "0.00123",
-        "price_impact_pct": "0.40",
-    }
-    assert initial_quote["valid_until"] == 1_800_000_030.0
-    assert initial_quote["quote_record_type"] == "HISTORICAL_SNAPSHOT"
-    assert initial_quote["freshness_status"] in {"EXPIRED", "UNAVAILABLE"}
-    assert initial_quote["is_current_at_response"] is False
+    first = manager.get("early")
+    assert first["progress"]["stage"] == "BASE_READY"
+    assert first["preview"]["price_usd"] == "0.0012"
+    assert "execution_quote_30_usdc" not in first["preview"]
     manager._set_progress("early", "HOLDERS_READY", {
         "top_accounts_resolved": 20, "raw_top10_resolved_pct": "42",
     })
-    later = manager.get("early")
-    assert later["preview"]["execution_quote_30_usdc"]["valid_until"] == initial_quote["valid_until"]
-    assert later["preview"]["execution_quote_30_usdc"]["execution_price_usdc"] == "0.00123"
-    assert later["preview"]["top_accounts_resolved"] == 20
+    assert manager.get("early")["preview"]["top_accounts_resolved"] == 20
     manager.executor.shutdown(wait=True)
 
 
-def test_ca_early_quote_fails_closed_when_mint_decimals_unverified(tmp_path):
+def test_ca_preview_missing_decimals_does_not_trigger_default_quote(tmp_path):
     manager = ClusterJobManager(tmp_path / "control")
     manager.jobs["unknown"] = {
-        "job_id": "unknown", "mint": "X" * 44, "preset": "quick",
+        "job_id": "unknown", "mint": "X" * 44, "preset": "standard",
         "status": "RUNNING", "progress": {},
     }
-    def must_not_quote(*args, **kwargs):
-        raise AssertionError("unverified decimals must never request a trade quote")
-    manager.jupiter.quote_usdc_to_token = must_not_quote
+    class FailQuote:
+        def quote_usdc_to_token(self, *args, **kwargs):
+            raise AssertionError("CA_QUOTE_NOT_REQUESTED")
+    manager.jupiter = FailQuote()
     manager._set_progress("unknown", "BASE_READY", {
         "token_profile": {"status": "UNAVAILABLE", "decimals": None},
         "market": {"status": "UNAVAILABLE"},
     })
-    result = manager.get("unknown")["preview"]["execution_quote_30_usdc"]
-    assert result["status"] == "UNAVAILABLE"
-    assert result["reason"] == "TOKEN_DECIMALS_UNKNOWN"
+    preview = manager.get("unknown")["preview"]
+    assert preview["token_status"] == "UNAVAILABLE"
+    assert "execution_quote_30_usdc" not in preview
     manager.executor.shutdown(wait=True)
 
 
-def test_ca_frontend_null_is_unknown_and_quote_is_time_limited():
+def test_ca_frontend_null_is_unknown_and_never_auto_quotes():
     import subprocess
     root = Handler.static_root
     js = (root / "app.js").read_text()
-    assert "function caQuoteCurrent(" in js
-    assert "q?.is_current_at_response !== true" in js
-    assert "q?.freshness_status !== 'CURRENT_AT_RESPONSE'" in js
-    assert "Number(q.valid_until)*1000-Date.now()" in js
-    assert "const quoteFresh=" not in js
+    assert "execution_quote_30_usdc" not in js
+    assert "caQuoteCurrent(" not in js
+    assert "cluster-final-quote" not in js
     assert "quoteAge<=30" not in js
-    assert "报价已过期" in js
-    assert "fact('$30 可成交报价'" in js
+    assert "fact('$30 可成交报价'" not in js
     script = r"""
 const fs=require('node:fs');
 const vm=require('node:vm');
@@ -169,7 +139,7 @@ const p1=js.slice(js.indexOf('const n = '), js.indexOf('const short ='));
 const p2=js.slice(js.indexOf('function usd('), js.indexOf('function authorityText('));
 if (!p1 || !p2) throw Error('MISSING_HELPERS');
 const result=vm.runInNewContext(
-  p1 + '\n' + p2 + '\n' +
+  p1 + '\\n' + p2 + '\\n' +
   '({missing:[n(null),money(null),smallPrice(null),usd(null),pctText(null)],' +
   'zero:[n(0),money(0),usd(0),pctText(0)]})'
 );
@@ -193,84 +163,53 @@ def test_real_ca_acceptance_script_is_readonly_and_does_not_require_frank_presen
     subprocess.run(["bash","-n",str(script)],check=True)
 
 
-def test_ca_partial_preview_survives_depth_failure_and_stale_quotes_are_hidden():
+def test_ca_partial_preview_survives_depth_failure_without_implicit_quote():
     import subprocess
     js=Handler.static_root / "app.js"
     script=r"""
 const fs=require('node:fs');
 const vm=require('node:vm');
 const js=fs.readFileSync(process.argv[1],'utf8');
-const fn=js.slice(js.indexOf('let caQuoteExpiryTimer = null;'),js.indexOf('function clusterErrorMessage('));
+const fn=js.slice(js.indexOf('function renderClusterPreview(job)'),js.indexOf('function clusterErrorMessage('));
 const panel={hidden:true,innerHTML:''};
-const now=Date.now()/1000;
 const ctx={
-  Date,Number,NaN,
   $:()=>panel,
   esc:x=>String(x ?? ''),
   usd:x=>x==null?'暂无':'$'+x,
-  smallPrice:x=>String(x),
   pctText:x=>String(x)+'%',
   fact:(name,value)=>name+':'+value+';',
-  clearTimeout:()=>{},
-  setTimeout:()=>1,
 };
-vm.runInNewContext(fn+'\nrenderClusterPreview(job);',
+vm.runInNewContext(fn+'\\nrenderClusterPreview(job);',
   {...ctx,job:{
     status:'ERROR',
     preview:{
       token_status:'OK',mint_authority:null,freeze_authority:null,
       market_status:'OK',name:'Sample',symbol:'S',
       price_usd:'0.01',market_cap_usd:null,liquidity_usd:null,
-      execution_quote_30_usdc:{
-        status:'OK',route_exists:true,observed_at:now-40,
-        execution_price_usdc:'0.012',price_impact_pct:'0.2',
-        is_current_at_response:false,freshness_status:'EXPIRED',
-        valid_until:now-10
-      }
     }
   }}
 );
 if(panel.hidden) throw Error('PREVIEW_DISCARDED_ON_FAILURE');
 if(!panel.innerHTML.includes('深度分析未完成')) throw Error('MISSING_INCOMPLETE_WARNING');
-if(!panel.innerHTML.includes('报价已过期')) throw Error('STALE_QUOTE_SHOWN');
+if(panel.innerHTML.includes('$30')) throw Error('IMPLICIT_QUOTE_REAPPEARED');
 if(!panel.innerHTML.includes('市值:暂无')) throw Error('MISSING_METRIC_ZEROED');
 """
     subprocess.run(["node","-e",script,str(js)],check=True)
 
 
-
-def test_ca_quote_archive_has_explicit_expiry_and_dynamic_api_freshness(tmp_path, monkeypatch):
+def test_ca_legacy_quote_archive_is_permanently_not_live(tmp_path, monkeypatch):
     import json
     import mission_agent.mission_control.server as server
     from mission_agent.meme.cluster import markdown
-
-    sample = {
-        "status": "OK", "route_exists": True,
-        "observed_at": 1800000000.0,
-        "execution_price_usdc": "0.001",
-        "price_impact_pct": "0.2",
-    }
+    sample = {"status": "OK", "route_exists": True,
+              "observed_at": 1800000000.0,
+              "execution_price_usdc": "0.001",
+              "price_impact_pct": "0.2"}
     archived = server._annotate_ca_quote(sample, archived=True)
     assert archived["quote_record_type"] == "HISTORICAL_SNAPSHOT"
     assert archived["valid_until"] == 1800000030.0
     assert archived["freshness_status"] == "ARCHIVED_NOT_LIVE"
     assert archived["is_current_at_response"] is False
-    assert "freshness_checked_at" not in archived
-    current = server._annotate_ca_quote(archived, now=1800000020.0)
-    assert current["is_current_at_response"] is True
-    assert current["freshness_status"] == "CURRENT_AT_RESPONSE"
-    at_expiry = server._annotate_ca_quote(archived, now=1800000030.0)
-    assert at_expiry["is_current_at_response"] is True
-    expired = server._annotate_ca_quote(archived, now=1800000030.001)
-    assert expired["is_current_at_response"] is False
-    assert expired["freshness_status"] == "EXPIRED"
-    assert server._annotate_ca_quote({
-        **sample, "observed_at": None,
-    }, now=1800000010.0)["is_current_at_response"] is False
-    assert server._annotate_ca_quote({
-        **sample, "observed_at": 1800000060,
-    }, now=1800000010.0)["is_current_at_response"] is False
-
     mint = "So11111111111111111111111111111111111111112"
     manager = ClusterJobManager(tmp_path / "control")
     dest = manager.report_root / mint
@@ -278,91 +217,56 @@ def test_ca_quote_archive_has_explicit_expiry_and_dynamic_api_freshness(tmp_path
     saved = {"mint":mint,"execution_quote_30_usdc":archived}
     (dest/"latest.json").write_text(json.dumps(saved))
     monkeypatch.setattr(server.time,"time",lambda:1800000020.0)
-    read_now = manager.latest(mint)
-    assert read_now["execution_quote_30_usdc"]["is_current_at_response"] is True
+    now = manager.latest(mint)
+    assert now["execution_quote_30_usdc"]["is_current_at_response"] is False
+    assert now["execution_quote_30_usdc"]["freshness_status"] == "ARCHIVED_NOT_LIVE"
     monkeypatch.setattr(server.time,"time",lambda:1800000031.0)
-    read_later = manager.latest(mint)
-    assert read_later["execution_quote_30_usdc"]["is_current_at_response"] is False
+    later = manager.latest(mint)
+    assert later["execution_quote_30_usdc"]["freshness_status"] == "ARCHIVED_NOT_LIVE"
     assert json.loads((dest/"latest.json").read_text()) == saved
     manager.executor.shutdown(wait=True)
-
     report = {"mint":mint,"observed_at":1800000005.0,
               "execution_quote_30_usdc":archived}
     rendered = markdown(report)
-    assert "HISTORICAL_SNAPSHOT" in rendered
-    assert 'Market snapshot (historical; not live)' in rendered
-    assert "observed_at:" in rendered and "valid_until:" in rendered
-    assert "30 seconds after quote" in rendered
+    assert "Legacy archived Jupiter $30 quote (not current)" in rendered
+    assert "Market snapshot (historical; not live)" in rendered
+    assert "observed_at=" in rendered
+    fresh = markdown({"mint":mint,"observed_at":1800000005.0})
+    assert "No automatic execution quote was requested" in fresh
 
 
-def test_ca_quote_api_does_not_turn_old_or_unexecutable_route_into_current(tmp_path,monkeypatch):
+def test_ca_legacy_preview_never_promotes_old_quote_to_live(tmp_path):
     import time
-    import mission_agent.mission_control.server as server
     manager = ClusterJobManager(tmp_path / "control")
     now = time.time()
     mint = "So11111111111111111111111111111111111111112"
     manager.jobs["stale"] = {
-        "job_id":"stale", "mint":mint, "preset":"quick",
+        "job_id":"stale", "mint":mint, "preset":"standard",
         "status":"RUNNING", "progress":{},
         "preview":{"execution_quote_30_usdc":{
-            "status":"OK","route_exists":True,"observed_at":now-40,
+            "status":"OK","route_exists":True,"observed_at":now,
             "execution_price_usdc":"0.01","price_impact_pct":"0.5",
         }},
     }
-    assert manager.get("stale")["preview"]["execution_quote_30_usdc"]["freshness_status"] == "EXPIRED"
-    manager.jobs["stale"]["preview"]["execution_quote_30_usdc"]["observed_at"] = now
+    entry = manager.get("stale")["preview"]["execution_quote_30_usdc"]
+    assert entry["freshness_status"] == "ARCHIVED_NOT_LIVE"
+    assert entry["is_current_at_response"] is False
     manager.jobs["stale"]["preview"]["execution_quote_30_usdc"]["route_exists"] = False
     assert manager.get("stale")["preview"]["execution_quote_30_usdc"]["is_current_at_response"] is False
     manager.executor.shutdown(wait=True)
 
 
-
-def test_ca_frontend_uses_server_authority_and_never_recomputes_30_second_ttl():
-    import subprocess
+def test_ca_frontend_never_exposes_legacy_execution_quote_as_current():
     from mission_agent.mission_control.server import Handler
-    js = Handler.static_root / "app.js"
-    script = r"""
-const fs=require('node:fs');
-const vm=require('node:vm');
-const source=fs.readFileSync(process.argv[1],'utf8');
-const helper=source.slice(source.indexOf('let caQuoteExpiryTimer = null;'),
-                          source.indexOf('function renderClusterPreview(job)'));
-if (!helper.includes('is_current_at_response') || helper.includes('quoteAge<=30'))
-  throw Error('NOT_USING_SERVER_AUTHORITY');
-let callback=null,delay=null;
-const span={textContent:'fresh',classList:{add(v){this.latest=v}}};
-const base={
-  Date,Number,NaN,
-  $:id=>id==='cluster-final-quote'?span:null,
-  clearTimeout:()=>{},
-  setTimeout:(fn,ms)=>{callback=fn;delay=ms;return 42}
-};
-const now=Date.now()/1000;
-const context=vm.createContext(base);
-vm.runInContext(helper,context);
-const evaluate=(body)=>vm.runInContext(body,context);
-const q={
-  status:'OK',route_exists:true,observed_at:now,
-  execution_price_usdc:'0.01',price_impact_pct:'0.2',
-  is_current_at_response:true,freshness_status:'CURRENT_AT_RESPONSE',
-  freshness_checked_at:now,valid_until:now+3
-};
-if(!evaluate('caQuoteCurrent('+JSON.stringify(q)+')')) throw Error('FRESH_REJECTED');
-if(evaluate('caQuoteCurrent('+JSON.stringify({...q,is_current_at_response:false})+')'))
-  throw Error('SERVER_REJECTION_IGNORED');
-if(evaluate('caQuoteCurrent('+JSON.stringify({...q,freshness_status:'ARCHIVED_NOT_LIVE'})+')'))
-  throw Error('ARCHIVED_NOT_LIVE_ACCEPTED');
-if(evaluate('caQuoteCurrent('+JSON.stringify({...q,valid_until:now-1})+')'))
-  throw Error('LOCAL_EXPIRY_NOT_ENFORCED');
-if(evaluate('caQuoteCurrent('+JSON.stringify({...q,valid_until:null})+')'))
-  throw Error('MISSING_SERVER_EXPIRY_ACCEPTED');
-evaluate('caScheduleQuoteExpiry('+JSON.stringify(q)+',"cluster-final-quote")');
-if(!callback || !(delay>0 && delay<3500)) throw Error('DISPLAY_DOES_NOT_EXPIRE');
-callback();
-if(!span.textContent.includes('已过期')) throw Error('VISIBLE_PRICE_REMAINS_FRESH');
-if(!source.includes('caScheduleQuoteExpiry(quote, \u0027cluster-final-quote\u0027)'))
-  throw Error('FINAL_REPORT_NOT_COVERED');
-if(!source.includes('caScheduleQuoteExpiry(q, \u0027cluster-preview-quote\u0027)'))
-  throw Error('PREVIEW_NOT_COVERED');
-"""
-    subprocess.run(["node", "-e", script, str(js)], check=True)
+    js = (Handler.static_root / "app.js").read_text()
+    html = (Handler.static_root / "index.html").read_text()
+    assert "execution_quote_30_usdc" not in js
+    assert "caScheduleQuoteExpiry" not in js
+    assert "caQuoteCurrent" not in js
+    assert "cluster-preview-quote" not in js
+    assert "cluster-final-quote" not in js
+    assert "$30 实际可成交价" not in js
+    assert "id=\\\"cluster-preset\\\"" not in html
+    assert "统一研究入口" in html
+
+
