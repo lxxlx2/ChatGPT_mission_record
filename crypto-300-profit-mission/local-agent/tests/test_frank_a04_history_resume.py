@@ -121,7 +121,7 @@ def test_1005_signatures_across_three_full_and_short_pages_and_terminal_empty(tm
         assert result["status"] == "PARTIAL_ECONOMIC_EVIDENCE"
         assert not result["history_complete"]
         assert store.count("RAW_TX") == 1005
-        assert store.count("WALLET_TX_VIEW_V2") == 1005
+        assert store.count("WALLET_TX_VIEW_V3") == 1005
         assert all(call[1][1]["commitment"] == "finalized"
                    for call in rpc.calls if call[0] == "getSignaturesForAddress")
         assert len({call[1][1].get("before") for call in rpc.calls
@@ -229,14 +229,14 @@ def test_global_signature_deduplicated_across_wallets_but_views_separate(tmp_pat
                                             page_size=1).collect(max_pages=2, tx_budget=4)
             assert result["captured"] == 1
         assert store.count("RAW_TX") == 1
-        assert store.count("WALLET_TX_VIEW_V2") == 2
+        assert store.count("WALLET_TX_VIEW_V3") == 2
         saved = json.loads(store.db.execute(
             "SELECT payload_json FROM evidence_documents WHERE kind='RAW_TX'",
         ).fetchone()[0])
         assert saved["transaction"]["signatures"][0] == sig
         assert saved["meta"]["preTokenBalances"] == []
         for row in store.db.execute(
-            "SELECT payload_json FROM evidence_documents WHERE kind='WALLET_TX_VIEW_V2'"
+            "SELECT payload_json FROM evidence_documents WHERE kind='WALLET_TX_VIEW_V3'"
         ).fetchall():
             view = json.loads(row[0])
             assert view["active_market_buys_confirmed"] == 0
@@ -272,7 +272,7 @@ def test_conflicting_same_signature_raw_source_rolls_back_view_and_cursor_state(
         assert output["captured"] == 0
         assert output["status"] == "SOURCE_LIMITED"
         assert store.count("RAW_TX") == 1
-        assert store.count("WALLET_TX_VIEW_V2") == 1
+        assert store.count("WALLET_TX_VIEW_V3") == 1
     finally:
         store.close()
 

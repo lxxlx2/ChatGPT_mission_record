@@ -227,7 +227,7 @@ def normalize_transaction(result: dict, *, tracked_wallets: set[str]) -> dict:
                 "classification": "POSSIBLE_PEER_FLOW_NEEDS_INSTRUCTION_PROOF",
             })
     normalized = {
-        "schema_version": 2, "normalizer_version": "SOL_TOKEN_VIEW_V2",
+        "schema_version": 3, "normalizer_version": "SOL_TOKEN_VIEW_V3",
         "chain": "solana",
         "signature": signature, "slot": slot,
         "source": "GET_TRANSACTION_JSON_PARSED_FINALIZED_REQUEST",
