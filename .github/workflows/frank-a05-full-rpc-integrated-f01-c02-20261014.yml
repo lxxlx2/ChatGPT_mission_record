@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev/frank-a05-complete-owner-rpc-evidence-20261014
+      - fix/frank-a05-rpc-transport-integrity-20261014
   workflow_dispatch:
 permissions:
   contents: read
