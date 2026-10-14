@@ -32,6 +32,14 @@ def summary(vals):
     }
 
 
+def scalar_summary(vals):
+    v=sorted(vals)
+    return {"n":len(v),"median":str(median(v)) if v else None,
+            "positive":sum(x>0 for x in v),
+            "negative":sum(x<0 for x in v),
+            "zero":sum(x==0 for x in v)}
+
+
 def audit(packets):
     source, archive, stage112, stage113=replay.frozen()
     keys={(x["date"],x["symbol"]) for x in source}
@@ -200,9 +208,9 @@ def audit(packets):
         "signal_case_count":dict(nsignal),
         "D1_relative_chronology":dict(sorted(original_d1_timing.items())),
         "identities":dict(sorted(identities.items())),
-        "signal_to_priority_waittime_minutes":{name:summary(vals)
+        "signal_to_priority_waittime_minutes":{name:scalar_summary(vals)
                   for name,vals in sorted(wait_minutes.items())},
-        "entry_price_relative_change_pct":{name:summary(vals)
+        "entry_price_relative_change_pct":{name:scalar_summary(vals)
                   for name,vals in sorted(entry_price_rel.items())},
         "missing_entry_price_comparisons":dict(entry_pct_missing),
         "independent_5m_and_24h_entry_horizon_gross":{
@@ -210,10 +218,10 @@ def audit(packets):
                             "censored":missing[mode+"_"+h]} for h in HORIZONS}
                   for mode in MODES},
         "same_terminal_priority_5m_24h_earlier_vs_delayed_gross_pct_point_difference":{
-                  key:{"complete":summary(vals),"censored":same_exit_censor[key]}
+                  key:{"complete":scalar_summary(vals),"censored":same_exit_censor[key]}
                   for key,vals in sorted(same_exit.items())},
         "separate_own_exit_horizon_matched_case_return_difference_pct_points":{
-                  key:summary(vals) for key,vals in sorted(separately_anchored_pairs.items())},
+                  key:scalar_summary(vals) for key,vals in sorted(separately_anchored_pairs.items())},
         "source_complete_price_by_has_original_D1":{
                   key:dict(value) for key,value in mode_by_original_D1.items()},
         "original_anchor_cases_by_date":dict(sorted(bydate.items())),
