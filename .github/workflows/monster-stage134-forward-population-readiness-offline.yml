@@ -1,0 +1,43 @@
+name: Monster Stage134 T0 dynamic population offline integration
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage134_t0_population_readiness_bridge.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage134_t0_population_readiness_bridge.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage131_dynamic_listing_g1_population_bridge.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage133_manual_actual_t0_forward_proof.py'
+      - '.github/workflows/monster-stage134-forward-population-readiness-offline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-g0-g1-readiness:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run Stage134 end-to-end synthetic source and provenance controls
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage131_dynamic_listing_g1_population_bridge.py monster_v4_stage133_manual_actual_t0_forward_proof.py monster_v4_stage134_t0_population_readiness_bridge.py
+          python -m unittest -v test_monster_v4_stage134_t0_population_readiness_bridge.py
+      - name: CLI cannot silently invent a T0 capture
+        shell: bash
+        run: |
+          if python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage134_t0_population_readiness_bridge.py --out /tmp/monster_stage134_unrequested.json; then
+            echo "STAGE134_UNAUTHORIZED_DEFAULT_INPUT=FAIL"
+            exit 1
+          fi
+          test ! -f /tmp/monster_stage134_unrequested.json
+          echo "STAGE134_OFFLINE_ONLY_NO_NETWORK_NO_SCHEDULE=PASS"
