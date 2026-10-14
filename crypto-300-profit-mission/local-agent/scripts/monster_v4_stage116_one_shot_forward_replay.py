@@ -16,9 +16,11 @@ from pathlib import Path
 try:
     import monster_v4_stage116_forward_population_score as scoring
     import monster_v4_stage117_first_d0_fast_attention_core as early_candidate
+    import monster_v4_stage118_asof_taker_proof_adapter as taker_candidate
 except ImportError:
     from scripts import monster_v4_stage116_forward_population_score as scoring
     from scripts import monster_v4_stage117_first_d0_fast_attention_core as early_candidate
+    from scripts import monster_v4_stage118_asof_taker_proof_adapter as taker_candidate
 
 old=scoring.old
 v4=old.v4
@@ -65,6 +67,19 @@ def replay_one(symbol,window,fetch=None):
             early_candidate.from_closed_minutes(
                 venue="USDM",symbol=symbol,first_d0_utc=first,
                 minute_bars=bars))
+    if first is None:
+        original["stage118_new_price_or_taker_buy_D0_candidate"]=None
+    else:
+        check=taker_candidate.proof(
+            venue="USDM",symbol=symbol,first_d0_utc=first,
+            original_bars=bars,
+            original_nine_day_SHA_receipts=receipts)
+        if check["source_status"].startswith("COMPLETE"):
+            stage117=original["stage117_new_first_D0_candidate"]
+            if bool(stage117["model_decision"]=="EARLY_ATTENTION_CANDIDATE")!=(
+                  check["frozen_decision"]["PRICE_unchanged_Stage117_lane"]):
+                raise ValueError("STAGE118_FORWARD_ORIGINAL_STAGE117_PRICE_GATE_PARITY_FAILED")
+        original["stage118_new_price_or_taker_buy_D0_candidate"]=check
     return original
 
 
