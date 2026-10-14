@@ -88,3 +88,14 @@ The external reviewer additionally tested exactly equal UTC capture stamps: sele
 - Mac proof still requires local test results. Until user separately authorizes import, \`F02-R1_CODE_EXTERNAL_APPROVE / F02_MAC_REAL_PROBE_PENDING / NO_MERGE / NO_DEPLOY\`.
 
 NO_PRODUCTION_SQLITE_WRITE / NO_TRADES / NO_GMAIL / NO_AUTO_RPC / NO_AUTOMATION / NO_MERGE / NO_DEPLOY.
+
+
+## 2026-10-15 Mac user read-only preflight actual stdout — PASSED
+
+This section updates the earlier prospective Stage 1 instructions: **the user has now run them** and pasted the following source-supported limited evidence (run clock time not provided):
+
+- Detached checkout HEAD `f4007f64dc92c87854e752562ea9e24bbfd78c23`, approved PR #63.
+- Offline dual-program original-wire replay `FULL_DUAL_PROGRAM_SOURCE_REPLAY_VERIFIED`; `capture_sha256=a91fed6fae63f51557ab88fb9ae892247cc32deccd26c631d765ff27aff03261`, non-atomic slots 456895319/456895320, 3,233 observed Token Accounts/Mints, `research_sidecar_imported=null`, `writes_production_sqlite=false`. Replay-stage `target_32_mints_verified=false` is not an error; target roster gate is R2.
+- Frozen R2 `FROZEN32_OFFLINE_ACCOUNT_RECONCILIATION_COMPLETED`, `roster_git_blob=c6f43e4a63ea9daa1c9b820b8faed8ccefcdb2d1`, 32 target Mint, 32 target Token Accounts, **9 nonzero, 23 zero, 0 missing**, no multi-account target, historical 10 nonzero/22 zero, `network_invoked=false`, `pnl_verified=false`, `report_path=null`, `history_complete=false`.
+- **Stage 1 = PASS. Stage 2 = NOT_AUTHORIZED / NOT_RUN. Stage 3 = PENDING.** No new Solana RPC, research SQLite Sidecar, manual research HTTP listener, real F02 API probe, production write, email or trade in this evidence.
+- After **explicit separate user authorization**, run Stage 2 only with the reviewed `f4007f64dc92c87854e752562ea9e24bbfd78c23` and **new outside-repo** research Sidecar `~/.local/share/frank-f02-research/owner-456895319-456895320.sqlite`. Because archived `observed_at_utc=2026-10-14T15:54:15.873036+00:00` is already old, a normal 300-second F02 `--probe-once` should **fail closed as `STALE_ARCHIVED_SOURCE`**, 32 source-unavailable/null quantities, despite R2's correct archived 9/23 historical observation. Do not increase max-age to pretend history is current. No merge or prod changes.
