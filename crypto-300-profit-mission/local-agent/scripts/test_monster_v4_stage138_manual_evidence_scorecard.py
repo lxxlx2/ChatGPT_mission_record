@@ -86,7 +86,10 @@ class Stage138Tests(unittest.TestCase):
         self.assertEqual(a["SOURCE_CENSORED_NO_REPLAY"], 1)
         self.assertEqual(a.get("MODEL_SYMBOL_UNSUPPORTED_NOT_A_NO_WATCH", 0), 0)
         self.assertEqual(a["ORIGINAL_V4_NUMERIC_CORE_WITH_UNICODE_IDENTITY_ADAPTER_CAUSAL_OFFLINE"], 1)
-        self.assertEqual(a["NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED"], 1)
+        self.assertEqual(a.get("NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED", 0), 0)
+        self.assertEqual(a["ORIGINAL_CORE_NEW_LISTING_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE"], 1)
+        self.assertEqual(a["cold_start_source_conditioned_issuer_unverified"], 1)
+        self.assertEqual(a.get("cold_start_first_D0", 0), 0)
         self.assertEqual(a["gross_2x"], 1)
         self.assertEqual(a["D0_early5_2x"], 1)
         self.assertEqual((r["G0"], r["G1"], r["G4"], r["G6"]),
