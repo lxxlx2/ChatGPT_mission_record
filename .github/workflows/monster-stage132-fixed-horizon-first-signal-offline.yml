@@ -1,0 +1,52 @@
+name: Monster Stage132 archived31 first-signal fixed-horizon source audit
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage132_delayed_entry_horizon_proxy.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage132_delayed_entry_horizon_proxy.py'
+      - '.github/workflows/monster-stage132-fixed-horizon-first-signal-offline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  archived-source-replay:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and causal/no-lookahead fixture tests
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage132_delayed_entry_horizon_proxy.py
+          python -m unittest -v test_monster_v4_stage132_delayed_entry_horizon_proxy.py
+      - name: Read only original source files from exact prior Stage130 CI run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 38566877450 --repo lxxlx2/ChatGPT_mission_record --name monster-stage130-frozen31-original-publisher-minute-data --dir stage130_original
+      - name: Real original source 147 ZIP/checksum pairs and 159675 minutes, never current market data
+        env:
+          MONSTER_STAGE130_SOURCE_ROOT: stage130_original
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m unittest -v test_monster_v4_stage132_delayed_entry_horizon_proxy.py
+          cd ../../../
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage132_delayed_entry_horizon_proxy.py --source-root stage130_original --out stage132_actual31.json
+          python -c 'import json; a=json.load(open("stage132_actual31.json")); assert a["full_original_attempts"]==31 and a["frozen_stage130_publisher_zip_pairs_verified"]==147 and a["full_minute_bars_verified"]==159675 and a["G4_actual_executable_net"]=="UNKNOWN"; assert [a["horizon_stats"][str(n)]["positive"] for n in (15,60,360,1440)]==[6,6,5,4] and [a["horizon_stats"][str(n)]["valid"] for n in (15,60,360,1440)]==[19,19,19,15]'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage132-real31-${{ matrix.os }}
+          path: stage132_actual31.json
+          retention-days: 30
