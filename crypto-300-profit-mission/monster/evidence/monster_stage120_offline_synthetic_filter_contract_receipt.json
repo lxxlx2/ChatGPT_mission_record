@@ -1,0 +1,26 @@
+{
+  "G0_true_crypto_classification": "NOT_ESTABLISHED",
+  "G4_actual_executable_profit": "UNKNOWN",
+  "MonSTER_PRODUCTION": "NO_GO",
+  "Monster_deployment": "NO_GO",
+  "actual_stage99_snapshot_validated_here": "NOT_DONE",
+  "capture_ms": 1791957480400,
+  "counters": {
+    "all_exchange_symbols": 7,
+    "contract_status:BREAK": 1,
+    "contract_status:TRADING": 6,
+    "contract_type:CURRENT_QUARTER": 1,
+    "contract_type:PERPETUAL": 6,
+    "quote_asset:BUSD": 1,
+    "quote_asset:USDT": 6,
+    "raw_futures_candidates": 4,
+    "raw_perpetual_filter_complete": 3
+  },
+  "model_rejected_Stage118": "REJECTED",
+  "raw_market_SHA": "3494e799886bc0fe8637e739d53e2dee27394ce59eeb644bbed2c30b3a522b30",
+  "schema": "MONSTER_STAGE120_BINANCE_USDM_ASOF_CONTRACT_TRADE_FILTER_V1",
+  "source_authenticity": "STAGE97_RECORDED_BINANCE_TIME_AND_HTTP_BODY_PARITY",
+  "source_replay_not_run": true,
+  "synthetic_fixture_only": true,
+  "window": "2026-10-14T06:00:00Z"
+}
