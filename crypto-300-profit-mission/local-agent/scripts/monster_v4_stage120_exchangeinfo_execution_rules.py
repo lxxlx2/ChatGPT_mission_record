@@ -128,6 +128,13 @@ def catalog(snapshot,window):
         name=meta["symbol"]
         if name in by:raise ValueError("STAGE120_DUPLICATE_SOURCE_SYMBOL")
         filt=parse_filters(meta)
+        # Exchange-declared semantic category is a useful *first-party*
+        # observation, but is NOT issuer-proven crypto, unit mapping or a
+        # future signal-time trading-state guarantee.
+        subtype=meta.get("underlyingSubType")
+        semantic=(subtype if isinstance(subtype,list)
+                  and all(isinstance(z,str) for z in subtype) else None)
+        exchange_crypto=(semantic is not None and "Crypto" in semantic)
         eligible=(meta["status"]=="TRADING"
                   and meta["contractType"]=="PERPETUAL"
                   and meta["quoteAsset"]=="USDT"
@@ -144,6 +151,9 @@ def catalog(snapshot,window):
         counters["raw_futures_candidates"]+=int(eligible)
         counters["raw_perpetual_filter_complete"]+=int(eligible and
                         filt["status"]=="COMPLETE_ASOF_FILTER_METADATA_NOT_EXECUTION")
+        counters["exchange_declares_crypto_subtype"]+=int(eligible and exchange_crypto)
+        counters["exchange_crypto_category_absent_or_unknown"]+=int(
+            eligible and not exchange_crypto)
         by[name]={
             "schema":SCHEMA,
             "venue":"BINANCE_USDM",
@@ -158,6 +168,9 @@ def catalog(snapshot,window):
             "quote_asset_text":meta["quoteAsset"],
             "underlying_type_text":meta.get("underlyingType"),
             "underlying_subtype_text":meta.get("underlyingSubType"),
+            "binance_exchange_declares_crypto_category":exchange_crypto,
+            "binance_category_evidence_grade":"EXCHANGE_CLAIM_NOT_ISSUER_AUTHENTICATION",
+            "external_crypto_issuer_assertion":"NOT_VERIFIED",
             "onboard_ms":meta.get("onboardDate"),
             "asof_original_raw_USDM_candidate":eligible,
             "filter_rules_at_snapshot":filt,
@@ -359,7 +372,8 @@ def synthetic_snapshot(window):
                 "underlyingType":"COIN","onboardDate":start-DAY,
                 "filters":filters if fil is None else fil}
     market={"serverTime":start-DAY,"symbols":[
-        coin("TESTUSDT"),coin("1000DOGEUSDT"),coin("AAPLBUSDT"),
+        dict(coin("TESTUSDT"),underlyingSubType=["AI","Crypto"]),
+        coin("1000DOGEUSDT"),coin("AAPLBUSDT"),
         coin("HALTUSDT",status="BREAK"),
         coin("QUARTERUSDT",contract="CURRENT_QUARTER"),
         coin("OTHERBUSD",quote="BUSD"),
@@ -378,10 +392,15 @@ def selftest():
     assert items["counters"]["all_exchange_symbols"]==7
     assert items["counters"]["raw_futures_candidates"]==4
     assert items["counters"]["raw_perpetual_filter_complete"]==3
+    assert items["counters"]["exchange_declares_crypto_subtype"]==1
+    assert items["per_symbol"]["TESTUSDT"]["binance_exchange_declares_crypto_category"] is True
+    assert items["per_symbol"]["TESTUSDT"]["crypto_underlying_issuer_positive_proof"]=="NOT_ESTABLISHED"
     tested=items["per_symbol"]["TESTUSDT"]
     mult=items["per_symbol"]["1000DOGEUSDT"]
     assert mult["multiplier_asset_mapping_proof"]=="NOT_ESTABLISHED"
     assert items["per_symbol"]["AAPLBUSDT"]["crypto_underlying_issuer_positive_proof"]=="NOT_ESTABLISHED"
+    assert items["per_symbol"]["AAPLBUSDT"]["binance_exchange_declares_crypto_category"] is False
+    assert items["per_symbol"]["TESTUSDT"]["external_crypto_issuer_assertion"]=="NOT_VERIFIED"
     assert items["per_symbol"]["MISSINGUSDT"]["filter_rules_at_snapshot"]["status"]=="TRADE_RULES_PARTIAL_OR_INVALID"
     assert items["per_symbol"]["HALTUSDT"]["asof_original_raw_USDM_candidate"] is False
     assert market_preflight(tested)["status"]=="NOTIONAL_UNKNOWN"
