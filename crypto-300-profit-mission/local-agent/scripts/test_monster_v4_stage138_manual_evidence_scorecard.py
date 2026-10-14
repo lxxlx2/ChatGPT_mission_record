@@ -82,9 +82,10 @@ class Stage138Tests(unittest.TestCase):
         self.assertEqual(len(r["population_rows"]), 4)
         a = r["population_summary"]
         self.assertEqual(a["full_market_attempts"], 4)
-        self.assertEqual(a["original_core_source_compatible"], 1)
+        self.assertEqual(a["original_core_source_compatible"], 2)
         self.assertEqual(a["SOURCE_CENSORED_NO_REPLAY"], 1)
-        self.assertEqual(a["MODEL_SYMBOL_UNSUPPORTED_NOT_A_NO_WATCH"], 1)
+        self.assertEqual(a.get("MODEL_SYMBOL_UNSUPPORTED_NOT_A_NO_WATCH", 0), 0)
+        self.assertEqual(a["ORIGINAL_V4_NUMERIC_CORE_WITH_UNICODE_IDENTITY_ADAPTER_CAUSAL_OFFLINE"], 1)
         self.assertEqual(a["NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED"], 1)
         self.assertEqual(a["gross_2x"], 1)
         self.assertEqual(a["D0_early5_2x"], 1)
