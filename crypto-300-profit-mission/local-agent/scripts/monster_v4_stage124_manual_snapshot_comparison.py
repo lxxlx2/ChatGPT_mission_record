@@ -90,7 +90,9 @@ def load(manifest_path:Path):
         if location.parent!=E.resolve() or not location.is_file():
             raise ValueError("STAGE124_SOURCE_FILE_MISSING")
         data=location.read_text()
-        if spec["length"]!=len(data)-1 or not data.endswith("\n"):
+        # Original Stage123 manifest stores JS source-string length INCLUDING
+        # the final newline. The UTF-8 Chinese names are preserved exactly.
+        if spec["length"]!=len(data) or not data.endswith("\n"):
             raise ValueError("STAGE124_ARCHIVED_SOURCE_LENGTH_CHANGED")
         payload=json.loads(data)
         if payload.get("batch_observation_utc")!=rawtime:
