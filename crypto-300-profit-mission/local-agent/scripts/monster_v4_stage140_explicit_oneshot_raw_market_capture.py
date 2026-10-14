@@ -35,6 +35,39 @@ def stamp(ms):
         "%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
+def strict_mirror_get(logical_url, *, max_bytes):
+    """Exact official website FAPI mirror; do not fake original fapi HTTP URL."""
+    mapping = {
+        stage133.TIME_URL: stage133.MIRROR_TIME_URL,
+        stage133.EXCHANGE_URL: stage133.MIRROR_EXCHANGE_URL,
+    }
+    if logical_url not in mapping:
+        raise ValueError("STAGE140_UNKNOWN_LOGICAL_BINANCE_SOURCE")
+    actual_url = mapping[logical_url]
+    req = urllib.request.Request(
+        actual_url, headers={"User-Agent": "Monster-Manual-Real-Binance-T0-20261015/1.0",
+                             "Accept": "application/json"})
+    before = int(time.time() * 1000)
+    with urllib.request.urlopen(req, timeout=17) as response:
+        if response.status != 200 or response.url != actual_url:
+            raise ValueError("STAGE140_MIRROR_REDIRECT_OR_STATUS_INVALID")
+        typ = response.headers.get("Content-Type", "")
+        data = response.read(max_bytes + 1)
+    after = int(time.time() * 1000)
+    if not data or len(data) > max_bytes or "json" not in typ.lower():
+        raise ValueError("STAGE140_MIRROR_NONJSON_OR_OVERSIZE")
+    raw = data.decode("utf-8", "strict")
+    decoded = json.loads(raw)
+    if not isinstance(decoded, dict):
+        raise ValueError("STAGE140_MIRROR_EXPECTED_SOURCE_OBJECT")
+    return {
+        "url": actual_url, "raw": raw,
+        "raw_sha256": hashlib.sha256(data).hexdigest(),
+        "json": decoded, "request_start_ms": before,
+        "response_end_ms": after, "content_type": typ,
+    }
+
+
 def raw_get(url, *, limit=MAX):
     if url not in EXTRAS.values():
         raise ValueError("STAGE140_NON_ALLOWLISTED_EXTRA_SOURCE")
@@ -81,7 +114,7 @@ def capture(request, output_root):
         raise ValueError("STAGE140_OUTPUT_DIRECTORY_ALREADY_EXISTS")
     packet = stage133.one_shot_capture({
         "schema": stage133.REQUEST_SCHEMA,
-        "explicit_manual_request": True})
+        "explicit_manual_request": True}, get=strict_mirror_get)
     roster = stage134.reconcile(packet)
     scope = stage139.inspect(packet)
     if roster["t0_active_usdt_perpetual_attempts"] != scope[
@@ -124,6 +157,9 @@ def capture(request, output_root):
         "new_real_Stage133_T0": packet["new_forward_start_utc"],
         "new_forward_end_exclusive": packet["new_forward_end_exclusive_utc"],
         "original_three_endpoint_receipt_SHA256": packet["ordered_source_sha256"],
+        "actual_HTTP_endpoint_urls": packet["required_three_official_endpoints"],
+        "mirror_host_source_equivalence_independently_attested": False,
+        "mirror_exchangeinfo_embedded_serverTime_age_ms": packet.get("fapi_mirror_embedded_exchangeinfo_serverTime_age_ms_at_capture"),
         "full_original_exchangeinfo_SHA256": packet[
             "original_raw_full_exchange_info_sha256"],
         "raw_original_all_exchange_symbols": packet["exchange_full_original_symbols"],
