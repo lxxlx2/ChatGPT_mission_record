@@ -1,0 +1,69 @@
+{
+  "G0": "PARTIAL",
+  "G4_real_net": "UNKNOWN",
+  "confirmed_listing_eligibility_at_historical_anchor": "UNKNOWN",
+  "current_onboard_not_historical_issuer_or_trading_status": true,
+  "frank": "UNCHANGED",
+  "gmail": "OFF",
+  "independent_true_crypto_universe_asof": "UNVERIFIED",
+  "later_metadata_comparison_counts": {
+    "HOURLY_COMPLETE_ABSENT_FROM_LATER_METADATA": 25,
+    "HOURLY_COMPLETE_LATER_METADATA_NOT_CONTRADICTED": 3293,
+    "HOURLY_COMPLETE_LATER_METADATA_ONBOARD_CONTRADICTION": 15,
+    "HOURLY_INCOMPLETE_ABSENT_FROM_LATER_METADATA": 167,
+    "HOURLY_INCOMPLETE_LATER_ONBOARD_AT_OR_AFTER_WINDOW_END": 1869,
+    "HOURLY_INCOMPLETE_LATER_ONBOARD_INSIDE_WINDOW": 31
+  },
+  "later_metadata_proves_historical_listing": false,
+  "later_metadata_source": "STAGE123_20261014T094824Z_CONNECTED_BINANCE_EXCHANGEINFO",
+  "monster_deployment": "NO_GO",
+  "new_forward_validation_G1": "NOT_SCORABLE",
+  "original_exposed_frozen_900_per_date": 900,
+  "original_exposed_symbol_date_attempts": 5400,
+  "original_source": "STAGE37_5400_ARCHIVED_PUBLISHER_SHA_HOURLY_CENSUS",
+  "original_source_complete_gross2x_not_early_cases": [
+    {
+      "date": "2025-04-19",
+      "first_cross_utc": "2025-04-25T01:10:00Z",
+      "first_watch_class": "LATE",
+      "first_watch_utc": "2025-04-25T06:30:00Z",
+      "symbol": "CETUSUSDT"
+    },
+    {
+      "date": "2025-04-19",
+      "first_cross_utc": "2025-04-25T13:09:00Z",
+      "first_watch_class": "NO_WATCH",
+      "first_watch_utc": null,
+      "symbol": "PENGUUSDT"
+    },
+    {
+      "date": "2025-10-19",
+      "first_cross_utc": "2025-10-21T05:12:00Z",
+      "first_watch_class": "SAME_MINUTE",
+      "first_watch_utc": "2025-10-21T05:12:00Z",
+      "symbol": "FUSDT"
+    }
+  ],
+  "original_stage37_git_blob": "4b02019195a7a48ef6d33606db9b57d6a3429f4b",
+  "other_AI_independent_review": "NOT_DONE",
+  "schema": "MONSTER_STAGE128_LATER_ONBOARD_VS_EXPOSED_5400_CENSOR_DIAGNOSTIC_V1",
+  "stage118_model": "REJECTED_UNCHANGED",
+  "stage127_model": "REJECTED_UNCHANGED",
+  "stage37_hourly_complete": 3333,
+  "stage37_hourly_missing": 2067,
+  "stage93_censored_1m_gap": 3,
+  "stage93_censored_1m_hourly_disagree": 47,
+  "stage93_exposed_D0_first_early5": 48,
+  "stage93_exposed_gross_2x": 51,
+  "stage93_exposed_gross_futures_2x_early5_rate": 0.9411764705882353,
+  "stage93_full_1m_verified": 3283,
+  "stage93_full_source_censored": 2117,
+  "stage93_hourly_missing_inherited": 2067,
+  "observed_code_head_sha": "df9468901ff863623c33aa621f062e9f745fb36b",
+  "CI_run_id": 38561158512,
+  "ubuntu_job_id": 115842276788,
+  "macos_job_id": 115842276999,
+  "os_source_5400_stdout_exact_same": true,
+  "detail_exception_file": "In CI uploaded stage128_real5400.json; original source Stage37 and Stage123 evidence still in Git",
+  "predeclared_protocol_sha": "3490151df6ffa4d228343246dc8bc180140743e2"
+}
