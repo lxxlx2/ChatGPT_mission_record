@@ -37,6 +37,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_closed_grid23x19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_closed_grid23x19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_dragon_closed.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_next239e877af.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_next239e877af.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_market19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_flap_major2.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py"
@@ -670,6 +672,23 @@ jobs:
             --baseline "$MODEL_DIR/bsc-meme-address-model-v1-baseline-2026-10-13.json" \
             --ledger "$MODEL_DIR/bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json" \
             --output /tmp/bsc-model-v1-p2-actual.json
+      - name: Recompute frozen 239E 877AF 11 actual owner transaction signers
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_next239e877af.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-next-crosswallet.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-next-crosswallet.json").read_text(encoding="utf-8"))
+          b=json.loads((d/"bsc-meme-address-model-v1-p4c-next239e877af-four-signers-reconciled-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"frozen 239E/877AF source replay differs"
+          s=a["summary"]
+          assert (s["wallets"],s["rounds"],s["owner_verified_bnb_chain56_txs"])==(2,4,11)
+          assert (s["original_native_block_scope_positive"],s["original_native_block_scope_negative"])==(2,2)
+          assert s["profit_rounds_newly_source_qualified"]==0 and s["production"]=="NO_GO"
+          print("PASS original 11 owner transactions 4 balanced 2026 rounds and no false alpha")
+          PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
         run: |
