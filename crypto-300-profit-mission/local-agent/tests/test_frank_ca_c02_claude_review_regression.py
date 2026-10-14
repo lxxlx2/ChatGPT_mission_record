@@ -2,7 +2,12 @@
 
 These are product risks R-a/R-b, not changes to frozen Frank V1.
 """
-from mission_agent.meme.identity import reconcile_identity
+import base64
+import struct
+
+from mission_agent.meme.identity import (
+    reconcile_identity, read_metadata, decode_key, TOKEN22, METAPLEX,
+)
 from mission_agent.mission_control.server import ClusterJobManager
 
 
@@ -73,3 +78,35 @@ def test_two_equal_name_mints_remain_separate_in_base_ready_progress(tmp_path):
         assert manager.get("case-0")["preview"]["mint"] != manager.get("case-1")["preview"]["mint"]
     finally:
         manager.executor.shutdown(wait=True)
+
+
+def test_metaplex_and_token2022_source_case_only_difference_is_not_conflict():
+    def field(txt):
+        raw = txt.encode("utf-8")
+        return struct.pack("<I", len(raw)) + raw
+    authority = decode_key(MINT_B)
+    binary = (bytes([4]) + authority + decode_key(MINT_A) +
+              field("agency") + field("Agency") + field(""))
+    metaplex = {"context": {"slot": 100},
+                "value": {"owner": METAPLEX,
+                          "data": [base64.b64encode(binary).decode("ascii"), "base64"]}}
+    class StubRPC:
+        def call(self, method, params, ttl=60):
+            assert method == "getAccountInfo"
+            assert params[1]["commitment"] == "finalized"
+            return metaplex
+    state = {"owner": TOKEN22, "data": {"parsed": {"type": "mint", "info": {
+        "extensions": [
+            {"extension": "metadataPointer", "state": {"metadataAddress": MINT_A}},
+            {"extension": "tokenMetadata", "state": {
+                "mint": MINT_A, "name": "Agency", "symbol": "AGENCY",
+                "updateAuthority": MINT_B,
+            }},
+        ],
+    }}}}
+    results = read_metadata(MINT_A, StubRPC(),
+                            {"context": {"slot": 99}, "value": state})
+    assert results["status"] == "VERIFIED"
+    assert len(results["records"]) == 2
+    assert {r["name"] for r in results["records"]} == {"Agency", "agency"}
+    assert {r["symbol"] for r in results["records"]} == {"Agency", "AGENCY"}
