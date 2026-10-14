@@ -1,0 +1,52 @@
+name: Frank A04 immutable V2 to V3 parent-SHA migration gate
+on:
+  push:
+    branches:
+      - fix/frank-ca-a04-v3-immutable-view-upgrade-20261014
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  explicit-cross-sha:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test-only runtime
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
+      - name: Static review gate
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_history_replay.py mission_agent/mission_control/wallet_evidence_store.py tests/test_frank_a04_v2_v3_upgrade.py tests/_a04_build_frozen_v2_sidecar.py tests/_a04_verify_frozen_v2_to_v3.py
+          python -m pyflakes mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_history_replay.py mission_agent/mission_control/wallet_evidence_store.py tests/test_frank_a04_v2_v3_upgrade.py tests/_a04_build_frozen_v2_sidecar.py tests/_a04_verify_frozen_v2_to_v3.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: Build actual PR52 V2 historical SQLite with parent exact source SHA
+        env:
+          FRANK_A04_TEST_OLD_V2_SIDECAR: ${{ runner.temp }}/frank-a04-old-v2.sqlite
+        run: |
+          git worktree add --detach "${RUNNER_TEMP}/frank-v2-parent-sha" e547203c6e4b00c80372c125785c9feb72fb8e87
+          PYTHONPATH="${RUNNER_TEMP}/frank-v2-parent-sha/crypto-300-profit-mission/local-agent:${RUNNER_TEMP}/frank-v2-parent-sha/crypto-300-profit-mission/local-agent/tests" python crypto-300-profit-mission/local-agent/tests/_a04_build_frozen_v2_sidecar.py
+      - name: Upgrade original V2 SQLite to current V3, idempotently and without mutation
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_A04_TEST_OLD_V2_SIDECAR: ${{ runner.temp }}/frank-a04-old-v2.sqlite
+        run: |
+          python -B tests/_a04_verify_frozen_v2_to_v3.py
+      - name: Run targeted A04 legacy, V3, N1 and real-chain fixture regressions
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_a04_v2_v3_upgrade.py tests/test_frank_a04_claude_fourth_review.py tests/test_frank_a04_claude_third_review.py tests/test_frank_a04_claude_owner_review.py tests/test_frank_a04_history_resume.py tests/test_frank_a04_history_cli.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_inner_transfer_evidence.py
+      - name: Full local-agent real Git source tests
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests
