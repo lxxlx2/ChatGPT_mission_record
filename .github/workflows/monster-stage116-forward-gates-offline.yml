@@ -1,0 +1,85 @@
+name: Monster Stage116 Frozen Forward Cohort Scorer (Offline)
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage116-forward-gates-offline.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_forward_population_score.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE116_FROZEN_FORWARD_G0_G1_G2_G3_SCORING_CONTRACT_20261014.md
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  causal_unit_cross_platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and test original Stage91 and Stage116 source-aware OOS contract
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_forward_population_score.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_forward_population_score.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py --selftest
+
+  archive_missing_forward_data_truthfully:
+    needs: causal_unit_cross_platform
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Record exact readiness, no future capture or fabricated performance
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_forward_population_score.py --out /tmp/monster_stage116_forward_readiness.json
+          python - <<'PY'
+          import json
+          p=json.load(open('/tmp/monster_stage116_forward_readiness.json'))
+          assert p['preregistered_windows_UTC']==[
+            '2026-10-14T06:00:00Z','2026-10-28T06:00:00Z',
+            '2026-11-11T06:00:00Z']
+          assert len(p['incomplete_reason_codes'])==3
+          assert p['gates']['G1'].startswith('NOT_SCORABLE')
+          assert p['gates']['G4'].startswith('EXECUTION_UNKNOWN')
+          assert p['trading']=='NO_GO'
+          print('STAGE116_REAL_OOS_NOT_ACQUIRED_TRUTHFUL_STATUS_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage116-source-aware-offline-readiness
+          path: /tmp/monster_stage116_forward_readiness.json
+          retention-days: 60
+      - name: Commit testable stage116 prerequisites to existing PR only
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage116_frozen_forward_scoring_readiness.json
+          cp /tmp/monster_stage116_forward_readiness.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE116_READY_RECEIPT_UP_TO_DATE; exit 0; fi
+          git commit -m "monster: archive Stage116 frozen forward scoring no-data gates truthfully"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE116_FORWARD_READINESS_GIT_ARCHIVED; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          exit 1
