@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev/frank-f02-r2-isolated-browser-20261015
+      - fix/frank-f02-r2-ttl-live-expiry-20261015
   workflow_dispatch:
 permissions:
   contents: read
