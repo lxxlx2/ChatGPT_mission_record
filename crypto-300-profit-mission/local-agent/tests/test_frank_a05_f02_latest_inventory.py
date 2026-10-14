@@ -227,3 +227,139 @@ def test_manual_cli_missing_archive_does_not_create_empty_sqlite(tmp_path):
             "--sidecar", str(absent),
         ])
     assert not absent.exists()
+
+
+def _two_rpc_failures(*, stamp):
+    def unavailable(method, params):
+        raise TimeoutError("provider unavailable")
+    failed = capture_owner(OWNER_A, unavailable)
+    assert failed["status"] == "PARTIAL_SOURCE"
+    assert failed["slot_max"] is None and failed["slot_min"] is None
+    assert failed["program_coverage"] == []
+    assert len(failed["missing"]) == 2
+    failed["observed_at_utc"] = stamp
+    failed["capture_sha256"] = _fingerprint(failed)
+    return failed
+
+
+def test_more_than_100_out_of_order_imports_never_resurrect_old_balance(tmp_path):
+    path = tmp_path / "old-history-import-after-latest.sqlite"
+    # Truly latest chain slot is archived FIRST, then >100 older slot
+    # snapshots are imported. A rowid DESC LIMIT 100 incorrectly returns
+    # one of the old positive quantities instead of the latest absence.
+    most_recent = _snapshot([], [], slots=(1000, 1001),
+                            stamp="2026-10-14T11:59:00+00:00")
+    db = WalletEvidenceStore(path)
+    try:
+        assert db.capture_wallet(most_recent)
+        for slot in range(180, 300):
+            old = _snapshot(
+                [entry(OWNER_A, MINT, ATA_A, SPL_TOKEN_PROGRAM,
+                       amount="2500000")], [],
+                slots=(slot, slot + 1),
+                stamp="2026-10-14T11:58:00+00:00",
+            )
+            assert db.capture_wallet(old)
+        # Preserve the legacy bounded history API unchanged; prove why it
+        # cannot be used to select the latest chain slot.
+        assert len(db.read_wallet_captures(OWNER_A, limit=100)) == 100
+        assert most_recent["capture_sha256"] not in {
+            r["capture_sha256"]
+            for r in db.read_wallet_captures(OWNER_A, limit=100)
+        }
+    finally:
+        db.close()
+    result = _read(path, [MINT])
+    assert result["capture_candidates_examined"] == 121
+    assert result["selected_capture_sha256"] == most_recent["capture_sha256"]
+    assert result["slot_max"] == 1001
+    assert result["mints"][0]["status"] == "ABSENT_IN_LATEST_DUAL_PROGRAM_SCAN"
+    assert result["mints"][0]["observed_raw_amount"] is None
+    assert result["mints"][0]["historical_sale_confirmed"] is False
+
+
+def test_old_double_rpc_timeout_does_not_poison_later_healthy_capture(tmp_path):
+    path = tmp_path / "failed-source-then-healthy.sqlite"
+    old_failure = _two_rpc_failures(stamp="2026-10-14T11:57:00+00:00")
+    healthy = _snapshot([], [], slots=(1000, 1001),
+                        stamp="2026-10-14T11:59:00+00:00")
+    db = WalletEvidenceStore(path)
+    try:
+        assert db.capture_wallet(old_failure)
+        assert db.capture_wallet(healthy)
+    finally:
+        db.close()
+    result = _read(path, [MINT])
+    assert result["capture_candidates_examined"] == 2
+    assert result["selected_capture_sha256"] == healthy["capture_sha256"]
+    assert result["source_attempt_failed_no_slot"] is False
+    assert result["slot_max"] == 1001
+    assert result["mints"][0]["status"] == "ABSENT_IN_LATEST_DUAL_PROGRAM_SCAN"
+    assert result["mints"][0]["observed_raw_amount"] is None
+
+
+def test_latest_double_rpc_timeout_masks_older_healthy_balance(tmp_path):
+    path = tmp_path / "healthy-then-failed-source.sqlite"
+    healthy = _snapshot(
+        [entry(OWNER_A, MINT, ATA_A, SPL_TOKEN_PROGRAM,
+               amount="2500000")], [],
+        slots=(1000, 1001), stamp="2026-10-14T11:57:00+00:00",
+    )
+    newest_failure = _two_rpc_failures(stamp="2026-10-14T11:59:00+00:00")
+    db = WalletEvidenceStore(path)
+    try:
+        assert db.capture_wallet(healthy)
+        assert db.capture_wallet(newest_failure)
+    finally:
+        db.close()
+    result = _read(path, [MINT])
+    assert result["selected_capture_sha256"] == newest_failure["capture_sha256"]
+    assert result["capture_observed_at_utc"] == newest_failure["observed_at_utc"]
+    assert result["source_attempt_failed_no_slot"] is True
+    assert result["source_observation_status"] == "PARTIAL_SOURCE"
+    assert result["slot_min"] is None and result["slot_max"] is None
+    assert result["both_programs_observed"] is False
+    assert result["mints"][0]["status"] == "SOURCE_ATTEMPT_FAILED_NO_SLOT"
+    assert result["mints"][0]["observed_raw_amount"] is None
+    assert result["wallet_nav_usd"] is None
+    assert not result["current_live_portfolio_verified"]
+
+
+def test_out_of_order_import_of_older_double_failure_cannot_override_new_health(tmp_path):
+    path = tmp_path / "healthy-then-archived-old-failure.sqlite"
+    healthy = _snapshot(
+        [entry(OWNER_A, MINT, ATA_A, SPL_TOKEN_PROGRAM, amount="500000")],
+        [], slots=(1200, 1201), stamp="2026-10-14T11:59:00+00:00",
+    )
+    old_failure = _two_rpc_failures(stamp="2026-10-14T11:56:00+00:00")
+    db = WalletEvidenceStore(path)
+    try:
+        db.capture_wallet(healthy)
+        db.capture_wallet(old_failure)
+    finally:
+        db.close()
+    result = _read(path, [MINT])
+    assert result["selected_capture_sha256"] == healthy["capture_sha256"]
+    assert result["slot_max"] == 1201
+    assert result["source_attempt_failed_no_slot"] is False
+    assert result["mints"][0]["observed_raw_amount"] == "500000"
+
+
+def test_stale_latest_unslotted_attempt_cannot_replay_old_positive(tmp_path):
+    path = tmp_path / "stale-failed-latest.sqlite"
+    healthy = _snapshot(
+        [entry(OWNER_A, MINT, ATA_A, SPL_TOKEN_PROGRAM, amount="100")],
+        [], slots=(1000, 1001), stamp="2026-10-14T11:10:00+00:00",
+    )
+    failed = _two_rpc_failures(stamp="2026-10-14T11:20:00+00:00")
+    db = WalletEvidenceStore(path)
+    try:
+        db.capture_wallet(healthy)
+        db.capture_wallet(failed)
+    finally:
+        db.close()
+    result = _read(path, [MINT])
+    assert result["source_attempt_failed_no_slot"]
+    assert not result["capture_fresh"]
+    assert result["mints"][0]["status"] == "SOURCE_ATTEMPT_FAILED_NO_SLOT"
+    assert result["mints"][0]["observed_raw_amount"] is None

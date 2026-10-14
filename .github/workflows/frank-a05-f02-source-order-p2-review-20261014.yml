@@ -1,0 +1,40 @@
+name: Frank A05 F02 Claude P2 whole-history and no-slot recovery
+on:
+  push:
+    branches:
+      - fix/frank-a05-f02-full-slot-source-order-review-20261014
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  module:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test-only dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
+      - name: Static and CLI checks
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent/mission_control/wallet_evidence_store.py mission_agent/mission_control/wallet_inventory_snapshot.py scripts/frank_research_latest_inventory.py tests/test_frank_a05_f02_latest_inventory.py
+          python -m pyflakes mission_agent/mission_control/wallet_evidence_store.py mission_agent/mission_control/wallet_inventory_snapshot.py scripts/frank_research_latest_inventory.py tests/test_frank_a05_f02_latest_inventory.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: Exact-source owner capture regression
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_a05_f02_latest_inventory.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_v2_v3_upgrade.py tests/test_frank_a04_generic_tx_versions.py
+      - name: Whole local-agent real Git regression
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests
