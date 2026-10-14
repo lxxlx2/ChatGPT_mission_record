@@ -131,7 +131,11 @@ def normalize_transaction(result: dict, *, tracked_wallets: set[str]) -> dict:
             # equal quantities can be ignored safely; nonzero delta
             # remains unresolved and blocks immutable source ingestion.
             coverage_gaps.append("TOKEN_OWNER_UNRESOLVED")
-            if intersects and delta != 0:
+            # Unknown ownership of a nonzero delta is an economic gap even
+            # when *neither* side names a tracked owner. We cannot infer the
+            # missing ATA belongs elsewhere; fail before persisting any
+            # "CAPTURED" economic view.
+            if delta != 0:
                 raise LedgerEvidenceError("TOKEN_OWNER_UNRESOLVED_DELTA")
             continue
         if not intersects:
