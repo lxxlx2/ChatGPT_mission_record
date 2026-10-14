@@ -13,6 +13,7 @@ from typing import Callable
 
 from .person_registry import _solana_pubkey_32_bytes
 from .wallet_economic_ledger import normalize_transaction, LedgerEvidenceError
+from .wallet_instruction_evidence import transfer_instructions
 
 
 _BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
@@ -96,6 +97,18 @@ def _rpc_result(body: object, method: str) -> object:
     if "result" not in body:
         raise SourceTemporarilyUnavailable(method + "_RPC_UNAVAILABLE")
     return body["result"]
+
+
+def _wallet_projection(raw: dict, wallet: str) -> dict:
+    """Reproducible v2 derived view from immutable original RPC transaction."""
+    view = normalize_transaction(raw, tracked_wallets={wallet})
+    view["research_wallet"] = wallet
+    view["instruction_evidence"] = transfer_instructions(raw, view)
+    view["canonical_event_sha256"] = _hash({
+        key: value for key, value in view.items()
+        if key != "canonical_event_sha256"
+    })
+    return view
 
 
 def _source_error_code(exc: Exception) -> str:
@@ -273,6 +286,8 @@ class HistoryJournal:
             raise SourceEvidenceError("TRANSACTION_SIGNATURE_MISMATCH")
         if wallet_view.get("signature") != signature:
             raise SourceEvidenceError("TRANSACTION_VIEW_IDENTITY_MISMATCH")
+        if wallet_view.get("research_wallet") != wallet:
+            raise SourceEvidenceError("WALLET_VIEW_OWNER_MISMATCH")
         view_hash = wallet_view.get("canonical_event_sha256")
         if view_hash != _hash({k: v for k, v in wallet_view.items()
                                if k != "canonical_event_sha256"}):
@@ -305,6 +320,67 @@ class HistoryJournal:
                 "UPDATE wallet_history_cursor SET last_error_code=NULL WHERE wallet=?",
                 (wallet,),
             )
+
+    def rebuild_versioned_views(self, wallet: str, *, limit: int = 100) -> dict:
+        """Manually materialize v2 projections from archived original RAW_TX.
+
+        Never modify old WALLET_TX_VIEW or RAW_TX. Safe for previously
+        captured pre-fix v1 evidence and crash/retry idempotency.
+        """
+        if not _solana_pubkey_32_bytes(wallet):
+            raise ValueError("INVALID_RESEARCH_WALLET")
+        if type(limit) is not int or not 1 <= limit <= 1000:
+            raise ValueError("INVALID_REBUILD_LIMIT")
+        rows = self.db.execute(
+            "SELECT signature,slot FROM wallet_history_signature "
+            "WHERE wallet=? AND state='CAPTURED' "
+            "ORDER BY slot DESC,signature LIMIT ?", (wallet,limit),
+        ).fetchall()
+        built, existing, blocked = 0, 0, 0
+        for row in rows:
+            signature, slot = row["signature"], row["slot"]
+            source = self.db.execute(
+                "SELECT payload_json FROM evidence_documents "
+                "WHERE kind='RAW_TX' AND identity=?",
+                (signature + ":" + str(slot),),
+            ).fetchone()
+            if source is None:
+                blocked += 1
+                continue
+            try:
+                raw = json.loads(source["payload_json"])
+                view = _wallet_projection(raw, wallet)
+                identity = wallet + ":" + signature + ":" + str(slot) + ":v2"
+                serialized = _json(view)
+                sha = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+                with self.db:
+                    previous = self.db.execute(
+                        "SELECT source_sha256 FROM evidence_documents "
+                        "WHERE kind='WALLET_TX_VIEW_V2' AND identity=?",
+                        (identity,),
+                    ).fetchone()
+                    if previous is not None:
+                        if previous["source_sha256"] != sha:
+                            raise SourceEvidenceError("DERIVED_V2_EVIDENCE_CONFLICT")
+                        existing += 1
+                    else:
+                        self.db.execute(
+                            "INSERT INTO evidence_documents(kind,identity,"
+                            "source_sha256,payload_json) VALUES(?,?,?,?)",
+                            ("WALLET_TX_VIEW_V2", identity, sha, serialized),
+                        )
+                        built += 1
+            except (LedgerEvidenceError, SourceEvidenceError, ValueError, KeyError,
+                    TypeError):
+                blocked += 1
+        return {
+            "wallet": wallet, "view_kind": "WALLET_TX_VIEW_V2",
+            "normalizer_version": "SOL_TOKEN_VIEW_V2",
+            "new": built, "already_present": existing,
+            "blocked": blocked, "source_count": len(rows),
+            "old_evidence_modified": False,
+            "pnl_usd": None,
+        }
 
     def pending_error(self, wallet: str, signature: str, code: str) -> None:
         if not isinstance(code, str) or not code.isascii() or not code.isupper():
@@ -360,7 +436,7 @@ class WalletHistoryCollector:
             raise SourceEvidenceError("TRANSACTION_FORMAT_INVALID")
         if raw.get("slot") != slot:
             raise SourceEvidenceError("TRANSACTION_SLOT_MISMATCH")
-        view = normalize_transaction(raw, tracked_wallets={self.wallet})
+        view = _wallet_projection(raw, self.wallet)
         if view.get("signature") != signature:
             raise SourceEvidenceError("TRANSACTION_SIGNATURE_MISMATCH")
         return raw, view
