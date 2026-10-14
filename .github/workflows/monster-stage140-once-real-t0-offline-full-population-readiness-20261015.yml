@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Regression and exact mirror receipt compatibility without network
+      - name: Regression exact mirror receipts with original failure-code contract (retry after failed CI)
         shell: bash
         run: |
           cd crypto-300-profit-mission/local-agent/scripts
