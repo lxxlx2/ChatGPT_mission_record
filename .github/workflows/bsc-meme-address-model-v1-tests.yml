@@ -16,6 +16,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_liquidity19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing22.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing22.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-*.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-implementation-plan-2026-10-13.md"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_liquidity19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_first_liquidity.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_factory190.py"
