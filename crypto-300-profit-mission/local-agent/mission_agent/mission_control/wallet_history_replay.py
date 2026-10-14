@@ -126,6 +126,16 @@ def _source_error_code(exc: Exception) -> str:
             return reason
         return "SOURCE_EVIDENCE_INVALID"
     if isinstance(exc, LedgerEvidenceError):
+        # Only known, non-secret normalization reason codes are exposed to
+        # the Sidecar/CLI. No raw RPC error string, mint or key is emitted.
+        reason = str(exc)
+        if reason in {
+            "TOKEN_OWNER_UNRESOLVED_DELTA",
+            "ACCOUNT_OWNER_CHANGED_WITH_TRACKED_BALANCE",
+            "FAILED_TRANSACTION_NONZERO_TOKEN_DELTA",
+            "MISSING_TOKEN_BALANCES",
+        }:
+            return reason
         return "TRANSACTION_NORMALIZATION_INCOMPLETE"
     if isinstance(exc, TimeoutError):
         return "RPC_TIMEOUT"
