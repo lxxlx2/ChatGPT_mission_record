@@ -1,0 +1,47 @@
+name: Monster Stage127 first-D0 chronological model source locked
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage127_first_d0_chronological_priority.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage127_first_d0_chronological_priority.py'
+      - '.github/workflows/monster-stage127-first-d0-priority-offline.yml'
+  workflow_dispatch:
+
+jobs:
+  source-locked-real519:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify old exposed publisher-checked original519 evidence blob identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          a="crypto-300-profit-mission/monster/evidence/monster_stage64_all519_D0_asof61m_official_1m_taker_trades_SHA.jsonl"
+          b="crypto-300-profit-mission/monster/evidence/monster_stage83_all519_source_and_D1_result.jsonl"
+          test "$(git hash-object "$a")" = "8ebe53acfdfe10413ac1e6f03457d6ace25d9d5a"
+          test "$(git hash-object "$b")" = "c76b3a137c8dbe56feed3a79a63adcc0752f5e2e"
+      - name: Run source and causality regression on both OS
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage127_first_d0_chronological_priority.py
+          python -m unittest -v test_monster_v4_stage127_first_d0_chronological_priority.py
+      - name: Rerun real 519 and preserve 100 percent decisions
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage127_first_d0_chronological_priority.py --stage64 crypto-300-profit-mission/monster/evidence/monster_stage64_all519_D0_asof61m_official_1m_taker_trades_SHA.jsonl --stage83 crypto-300-profit-mission/monster/evidence/monster_stage83_all519_source_and_D1_result.jsonl --out stage127_real519_summary.json --rows stage127_real519_rows.jsonl
+          python -c 'import json; d=json.load(open("stage127_real519_summary.json")); assert d["all_original_D0_n"]==519 and d["all_original_positive_early5"]==28 and d["genuine_new_OOS"]=="NOT_DONE" and d["monster_deployment"]=="NO_GO"; assert sum(1 for s in open("stage127_real519_rows.jsonl"))==519'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage127-original519-${{ matrix.os }}
+          path: |
+            stage127_real519_summary.json
+            stage127_real519_rows.jsonl
+          retention-days: 30
