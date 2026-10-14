@@ -1,0 +1,60 @@
+name: Monster Stage122 Unicode Binance Source Recovery Offline
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage122-unicode-binance-capture-recovery-ci.yml
+      - crypto-300-profit-mission/monster/MONSTER_STAGE122_STAGE99_UNICODE_MARKET_SYMBOL_ROOT_CAUSE_FIX_PROTOCOL_20261014.md
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage105_capture_universe_core.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
+      - crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage122_unicode_market_source.py
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unicode_real_world_fixture_regression:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Original exact 5 Binance Unicode symbols and original 3 source/market proof chain (NO NETWORK)
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage105_capture_universe_core.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage122_unicode_market_source.py
+          python crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage122_unicode_market_source.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage38_usdm_original_v4_1m_pilot.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage99_mac_launchd_one_shot.py selftest
+      - name: Existing Stage99 zero scheduling, exact reviewed source and cross-file import isolation tests
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage102_claude_chat_review_gate.py selftest
+          python crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage105_capture_import_isolation.py
+          python crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage99_mac_one_shot.py
+          python crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage103_git_worktree.py
+      - name: No new 2026-10-14 asof capture data, no source-date substitution, no silent install
+        run: |
+          set -eu
+          python - <<'PY'
+          from pathlib import Path
+          original=Path('crypto-300-profit-mission/monster/evidence/monster_stage97_point_in_time_usdm_2026-10-14_raw_https.json')
+          assert not original.exists(), 'Unexpected source present, inspect and verify before assuming source is missing'
+          launcher=Path('crypto-300-profit-mission/local-agent/scripts/monster_v4_stage99_mac_launchd_one_shot.py').read_text()
+          assert 'assert_reviewed_runtime_source()' in launcher
+          assert 'retry_saved_push' in launcher
+          assert 'MISSED_WINDOW_NO_BACKFILL' in launcher
+          assert 'SOURCE_FAILED_NO_BACKFILL' in launcher
+          print('STAGE122_SOURCE_WINDOW_CENSORED_NO_FAKE_RECAPTURE_AND_RUNTIME_REVIEW_GATE_PRESERVED')
+          PY
