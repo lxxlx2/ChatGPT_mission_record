@@ -164,7 +164,7 @@ def test_passive_receipt_is_not_market_buy():
     result = normalize_transaction(tx([], [balances(1, OWNER_B, MINT, "123")]),
                                    tracked_wallets={OWNER_B})
     assert result["token_legs"][0]["direction"] == "IN"
-    assert result["token_legs"][0]["economic_type"] == "UNKNOWN_TOKEN_DELTA_NOT_MARKET_TRADE"
+    assert result["token_legs"][0]["economic_type"] == "UNVERIFIED_TOKEN_DELTA"
     assert result["active_market_buys_confirmed"] == 0
     assert not result["possible_peer_flows"]
 
