@@ -86,17 +86,18 @@ def read_metadata(mint,rpc,mint_result):
         for pointer in pointers:
             if pointer.get('metadataAddress') not in (None,mint):
                 blocking=True;attempts.append({'source':'TOKEN2022_METADATA_POINTER','account':pointer.get('metadataAddress'),'status':'UNCONFIRMED','reason':'EXTERNAL_INTERFACE_NOT_SUPPORTED'})
+    address=None
     try:
         address=metadata_address(mint)
         result=rpc.call('getAccountInfo',[address,{'encoding':'base64','commitment':'finalized'}],ttl=60)
         account=(result or {}).get('value');meta_slot=((result or {}).get('context') or {}).get('slot')
-        attempt={'source':'METAPLEX_METADATA','account':address,'slot':meta_slot}
+        attempt={'source':'METAPLEX_METADATA','account':address,'slot':meta_slot,'response_sha256':hashlib.sha256(json.dumps(result,sort_keys=True,separators=(',',':')).encode()).hexdigest()}
         if account is None:attempt.update(status='MISSING',reason='ACCOUNT_NOT_FOUND')
         else:
             records.append(_metaplex(account,mint,address,meta_slot));attempt['status']='VERIFIED'
         attempts.append(attempt)
     except Exception as exc:
-        blocking=True;attempts.append({'source':'METAPLEX_METADATA','status':'UNCONFIRMED','reason':str(exc) if isinstance(exc,ValueError) else type(exc).__name__})
+        blocking=True;attempts.append({'source':'METAPLEX_METADATA','account':address,'status':'UNCONFIRMED','reason':str(exc) if isinstance(exc,ValueError) else type(exc).__name__})
     signatures={(r['name'],r['symbol'],r['update_authority']) for r in records}
     status='TOKEN_IDENTITY_CONFLICT' if len(signatures)>1 else ('VERIFIED' if records and not blocking else 'UNCONFIRMED')
     observed_at=time.time()
@@ -126,4 +127,5 @@ def reconcile_identity(mint,profile,market):
             'conflict_status':'TOKEN_IDENTITY_CONFLICT' if conflict else ('NO_CONFLICT_OBSERVED' if verified and markets else 'UNCONFIRMED'),
             'name_display_status':'TOKEN_IDENTITY_CONFLICT' if conflict else ('CHAIN_METADATA' if selected else 'UNCONFIRMED'),
             'display_name':name,'display_symbol':symbol,'display_label':display or ('身份来源冲突' if conflict else '链上名称未确认'),
-            'sources':records,'metadata_attempts':metadata.get('attempts') or [],'official_affiliation_status':'UNCONFIRMED','mint_account_reason':profile.get('reason')}
+            'sources':records,'metadata_attempts':metadata.get('attempts') or [],
+            'market_attempt':{k:market.get(k) for k in ('mint','source','request_url','status','reason','observed_at','market_match_status','rejected_pairs')},'official_affiliation_status':'UNCONFIRMED','mint_account_reason':profile.get('reason')}

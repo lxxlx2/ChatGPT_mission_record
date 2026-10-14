@@ -1,0 +1,50 @@
+........................................................................ [  4%]
+........................................................................ [  9%]
+........................................................................ [ 14%]
+........................................................................ [ 19%]
+........................................................................ [ 24%]
+........................................................................ [ 29%]
+........................................................................ [ 34%]
+........................................................................ [ 39%]
+........................................................................ [ 44%]
+........................................................................ [ 49%]
+........................................................................ [ 54%]
+........................................................................ [ 59%]
+........................................................................ [ 64%]
+........................................................................ [ 69%]
+........................................................................ [ 74%]
+........................................................................ [ 79%]
+........................................................................ [ 84%]
+........................................................................ [ 89%]
+........................................................................ [ 94%]
+.................................F...................................... [ 99%]
+...                                                                      [100%]
+=================================== FAILURES ===================================
+________________ test_validation_cli_accepts_exactly_one_winner ________________
+
+    def test_validation_cli_accepts_exactly_one_winner():
+        import subprocess,sys,os
+        result=subprocess.run([sys.executable,'scripts/price_v2_validate.py','--root','x','--winner','a','b'],capture_output=True,text=True,env={**os.environ,'PYTHONPATH':str(Path.cwd())})
+>       assert result.returncode==2 and 'unrecognized arguments' in result.stderr
+E       assert (2 == 2 and 'unrecognized arguments' in "/tmp/mission-ca-c02-venv/bin/python: can't open file '/Users/jerson/Documents/ChatGPT/mission-ca-c02-20261014/scripts/price_v2_validate.py': [Errno 2] No such file or directory\n")
+E        +  where 2 = CompletedProcess(args=['/tmp/mission-ca-c02-venv/bin/python', 'scripts/price_v2_validate.py', '--root', 'x', '--winner...jerson/Documents/ChatGPT/mission-ca-c02-20261014/scripts/price_v2_validate.py': [Errno 2] No such file or directory\n").returncode
+E        +  and   "/tmp/mission-ca-c02-venv/bin/python: can't open file '/Users/jerson/Documents/ChatGPT/mission-ca-c02-20261014/scripts/price_v2_validate.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/tmp/mission-ca-c02-venv/bin/python', 'scripts/price_v2_validate.py', '--root', 'x', '--winner...jerson/Documents/ChatGPT/mission-ca-c02-20261014/scripts/price_v2_validate.py': [Errno 2] No such file or directory\n").stderr
+
+crypto-300-profit-mission/local-agent/tests/test_price_v2.py:159: AssertionError
+=============================== warnings summary ===============================
+tests/test_frank_pr39_controlled_release.py::test_sigkill_journal_and_recovery
+  /Users/jerson/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=15416) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+tests/test_frank_pr39_forward_recovery.py: 12 warnings
+  /Users/jerson/Documents/ChatGPT/mission-ca-c02-20261014/crypto-300-profit-mission/local-agent/tests/test_frank_pr39_forward_recovery.py:284: DeprecationWarning: This process (pid=15416) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    child = os.fork()
+
+tests/test_frank_pr39_legacy_cutover.py::test_hard_kill_after_intent_leaves_recoverable_journal_and_no_second_loop
+  /Users/jerson/Documents/ChatGPT/mission-ca-c02-20261014/crypto-300-profit-mission/local-agent/tests/test_frank_pr39_legacy_cutover.py:636: DeprecationWarning: This process (pid=15416) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED crypto-300-profit-mission/local-agent/tests/test_price_v2.py::test_validation_cli_accepts_exactly_one_winner
+1 failed, 1442 passed, 14 warnings in 77.53s (0:01:17)

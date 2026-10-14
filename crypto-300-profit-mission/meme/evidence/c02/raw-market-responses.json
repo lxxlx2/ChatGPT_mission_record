@@ -1,8 +1,8 @@
 [
   {
     "url": "https://api.dexscreener.com/token-pairs/v1/solana/7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
-    "observed_at": 1791943286.653758,
-    "sha256": "dce95e9eede65094483756b63e69932064c966f28308dcfe11b0489522d7eab4",
+    "observed_at": 1791943470.0174878,
+    "sha256": "e8216dc0e329b306740d4514dbab5e7e7acb380fa1918b0f40ee7b8fb4d5b8da",
     "response": [
       {
         "chainId": "solana",
@@ -24,40 +24,40 @@
         "txns": {
           "m5": {
             "buys": 2,
-            "sells": 1
+            "sells": 0
           },
           "h1": {
-            "buys": 44,
-            "sells": 21
+            "buys": 42,
+            "sells": 20
           },
           "h6": {
             "buys": 317,
             "sells": 159
           },
           "h24": {
-            "buys": 833,
-            "sells": 707
+            "buys": 832,
+            "sells": 702
           }
         },
         "volume": {
-          "h24": 140826.38,
-          "h6": 44387.15,
-          "h1": 4432.8,
-          "m5": 58.86
+          "h24": 140385.26,
+          "h6": 44383.94,
+          "h1": 4311.37,
+          "m5": 2.13
         },
         "priceChange": {
-          "m5": -0.24,
-          "h1": 2.84,
-          "h6": -2.7,
-          "h24": -7.41
+          "m5": 1.09,
+          "h1": 2.18,
+          "h6": -1.8,
+          "h24": -7.54
         },
         "liquidity": {
-          "usd": 194762.3,
-          "base": 58370987,
-          "quote": 897.4232
+          "usd": 194837.01,
+          "base": 58370354,
+          "quote": 897.4331
         },
-        "fdv": 1612785,
-        "marketCap": 1612785,
+        "fdv": 1613421,
+        "marketCap": 1613421,
         "pairCreatedAt": 1790894555000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/VkbggL6HtrRGK-Ue?width=800&height=800&quality=95&format=auto",
@@ -95,45 +95,45 @@
           "name": "Wrapped SOL",
           "symbol": "SOL"
         },
-        "priceNative": "0.00001577",
-        "priceUsd": "0.001692",
+        "priceNative": "0.00001553",
+        "priceUsd": "0.001668",
         "txns": {
           "m5": {
-            "buys": 5,
-            "sells": 1
+            "buys": 4,
+            "sells": 3
           },
           "h1": {
-            "buys": 41,
-            "sells": 32
+            "buys": 40,
+            "sells": 30
           },
           "h6": {
-            "buys": 334,
-            "sells": 307
+            "buys": 331,
+            "sells": 309
           },
           "h24": {
-            "buys": 1203,
-            "sells": 1172
+            "buys": 1198,
+            "sells": 1166
           }
         },
         "volume": {
-          "h24": 336595.39,
-          "h6": 86477.18,
-          "h1": 9695.39,
-          "m5": 619.48
+          "h24": 334065.71,
+          "h6": 85968.07,
+          "h1": 9487.76,
+          "m5": 642.21
         },
         "priceChange": {
-          "m5": 0.88,
-          "h1": 2.05,
-          "h6": -1.16,
-          "h24": -7.49
+          "m5": -0.08,
+          "h1": 0.51,
+          "h6": -3.39,
+          "h24": -9.42
         },
         "liquidity": {
-          "usd": 88376.96,
-          "base": 24186124,
-          "quote": 441.8309
+          "usd": 87797.66,
+          "base": 24354955,
+          "quote": 439.2001
         },
-        "fdv": 1635737,
-        "marketCap": 1635737,
+        "fdv": 1611924,
+        "marketCap": 1611924,
         "pairCreatedAt": 1791049696000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/VkbggL6HtrRGK-Ue?width=800&height=800&quality=95&format=auto",
@@ -175,7 +175,7 @@
         "priceUsd": "0.001702",
         "txns": {
           "m5": {
-            "buys": 1,
+            "buys": 0,
             "sells": 0
           },
           "h1": {
@@ -187,21 +187,20 @@
             "sells": 36
           },
           "h24": {
-            "buys": 147,
+            "buys": 143,
             "sells": 129
           }
         },
         "volume": {
-          "h24": 54370.76,
+          "h24": 53938.95,
           "h6": 14294.66,
           "h1": 1096.4,
-          "m5": 680.76
+          "m5": 0
         },
         "priceChange": {
-          "m5": 1.72,
           "h1": 3.57,
           "h6": -2.52,
-          "h24": -7.26
+          "h24": -7.34
         },
         "liquidity": {
           "usd": 56087.47,
@@ -247,45 +246,45 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "0.001679",
-        "priceUsd": "0.001679",
+        "priceNative": "0.001671",
+        "priceUsd": "0.001671",
         "txns": {
           "m5": {
             "buys": 1,
-            "sells": 1
+            "sells": 2
           },
           "h1": {
             "buys": 8,
-            "sells": 10
+            "sells": 9
           },
           "h6": {
             "buys": 89,
             "sells": 112
           },
           "h24": {
-            "buys": 331,
-            "sells": 443
+            "buys": 330,
+            "sells": 442
           }
         },
         "volume": {
-          "h24": 15731.65,
-          "h6": 2266.18,
-          "h1": 86.13,
-          "m5": 0.25
+          "h24": 15623.96,
+          "h6": 2265.35,
+          "h1": 82.9,
+          "m5": 5.91
         },
         "priceChange": {
-          "m5": -0.59,
-          "h1": 1.5,
-          "h6": -1.48,
-          "h24": -8.47
+          "m5": -1.07,
+          "h1": 1.32,
+          "h6": -1.98,
+          "h24": -8.72
         },
         "liquidity": {
-          "usd": 9556.23,
-          "base": 3243666,
-          "quote": 4109.02315
+          "usd": 9530.07,
+          "base": 3247049,
+          "quote": 4103.3702
         },
-        "fdv": 1622565,
-        "marketCap": 1622565,
+        "fdv": 1614772,
+        "marketCap": 1614772,
         "pairCreatedAt": 1791023135000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/VkbggL6HtrRGK-Ue?width=800&height=800&quality=95&format=auto",
@@ -339,19 +338,19 @@
             "sells": 2
           },
           "h24": {
-            "buys": 17,
+            "buys": 16,
             "sells": 17
           }
         },
         "volume": {
-          "h24": 39.1,
+          "h24": 38.81,
           "h6": 7.04,
           "h1": 0,
           "m5": 0
         },
         "priceChange": {
           "h6": -1.45,
-          "h24": -2.65
+          "h24": -4.04
         },
         "liquidity": {
           "usd": 187.57,
@@ -692,7 +691,7 @@
           },
           "h24": {
             "buys": 15,
-            "sells": 13
+            "sells": 12
           }
         },
         "volume": {
@@ -704,7 +703,7 @@
         "priceChange": {
           "h1": 3.09,
           "h6": 4.61,
-          "h24": 9.05
+          "h24": 11.39
         },
         "pairCreatedAt": 1791683672000
       },
@@ -804,6 +803,49 @@
       {
         "chainId": "solana",
         "dexId": "pumpfun",
+        "url": "https://dexscreener.com/solana/8jqmezya8bundccq8nirwzmpa6seg9hpycinmqbad63",
+        "pairAddress": "8JqmEzyA8bUndCCQ8NirWZmPA6seg9hpYciNMQBad63",
+        "baseToken": {
+          "address": "AQ9MVQNtuvA4z37nDqKQNXzEidst1wqR3C1An3TWpump",
+          "name": "Qubit Labs",
+          "symbol": "Qubit"
+        },
+        "quoteToken": {
+          "address": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+          "name": "Agency",
+          "symbol": "Agency"
+        },
+        "priceNative": "0.0000",
+        "txns": {
+          "m5": {
+            "buys": 0,
+            "sells": 0
+          },
+          "h1": {
+            "buys": 0,
+            "sells": 0
+          },
+          "h6": {
+            "buys": 0,
+            "sells": 0
+          },
+          "h24": {
+            "buys": 0,
+            "sells": 0
+          }
+        },
+        "volume": {
+          "h24": 0,
+          "h6": 0,
+          "h1": 0,
+          "m5": 0
+        },
+        "priceChange": {},
+        "pairCreatedAt": 1791857840000
+      },
+      {
+        "chainId": "solana",
+        "dexId": "pumpfun",
         "url": "https://dexscreener.com/solana/ctpxtskjzstfictwovg7vtpk7j5qfgt8xvjsffuvtwdd",
         "pairAddress": "CtPxtSkJZsTFiCTwoVg7VtPk7J5QfgT8XVjsFFuVTWDd",
         "baseToken": {
@@ -886,62 +928,19 @@
         },
         "priceChange": {},
         "pairCreatedAt": 1791857227000
-      },
-      {
-        "chainId": "solana",
-        "dexId": "pumpfun",
-        "url": "https://dexscreener.com/solana/8jqmezya8bundccq8nirwzmpa6seg9hpycinmqbad63",
-        "pairAddress": "8JqmEzyA8bUndCCQ8NirWZmPA6seg9hpYciNMQBad63",
-        "baseToken": {
-          "address": "AQ9MVQNtuvA4z37nDqKQNXzEidst1wqR3C1An3TWpump",
-          "name": "Qubit Labs",
-          "symbol": "Qubit"
-        },
-        "quoteToken": {
-          "address": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
-          "name": "Agency",
-          "symbol": "Agency"
-        },
-        "priceNative": "0.0000",
-        "txns": {
-          "m5": {
-            "buys": 0,
-            "sells": 0
-          },
-          "h1": {
-            "buys": 0,
-            "sells": 0
-          },
-          "h6": {
-            "buys": 0,
-            "sells": 0
-          },
-          "h24": {
-            "buys": 0,
-            "sells": 0
-          }
-        },
-        "volume": {
-          "h24": 0,
-          "h6": 0,
-          "h1": 0,
-          "m5": 0
-        },
-        "priceChange": {},
-        "pairCreatedAt": 1791857840000
       }
     ]
   },
   {
     "url": "https://api.dexscreener.com/token-pairs/v1/solana/7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXPpump",
-    "observed_at": 1791943286.973475,
+    "observed_at": 1791943470.385885,
     "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "response": []
   },
   {
     "url": "https://api.dexscreener.com/token-pairs/v1/solana/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-    "observed_at": 1791943287.047405,
-    "sha256": "a5683a83366a851dfb9f4e2683a51fce94bb59ac277f53e657b4573d22b54de6",
+    "observed_at": 1791943470.462995,
+    "sha256": "77e5bf7f0cd2a5b6b969f51aa36edb3dc8741eddd7c07b2827dfca79703bf533",
     "response": [
       {
         "chainId": "solana",
@@ -958,45 +957,45 @@
           "name": "Wrapped SOL",
           "symbol": "SOL"
         },
-        "priceNative": "0.009307",
-        "priceUsd": "0.9989",
+        "priceNative": "0.009300",
+        "priceUsd": "1.00069",
         "txns": {
           "m5": {
-            "buys": 154,
-            "sells": 152
+            "buys": 197,
+            "sells": 185
           },
           "h1": {
-            "buys": 2554,
-            "sells": 2160
+            "buys": 2591,
+            "sells": 2137
           },
           "h6": {
-            "buys": 8308,
-            "sells": 8196
+            "buys": 8469,
+            "sells": 8305
           },
           "h24": {
-            "buys": 47928,
-            "sells": 47293
+            "buys": 48089,
+            "sells": 47402
           }
         },
         "volume": {
-          "h24": 9810858.16,
-          "h6": 1405513.9,
-          "h1": 472484.6,
-          "m5": 30715.67
+          "h24": 9835717.62,
+          "h6": 1430373.37,
+          "h1": 470173.05,
+          "m5": 36346.47
         },
         "priceChange": {
-          "m5": -0.02,
-          "h1": -0.14,
-          "h6": -0.12,
-          "h24": -0.13
+          "m5": 0.12,
+          "h1": 0.02,
+          "h6": 0.15,
+          "h24": 0.11
         },
         "liquidity": {
-          "usd": 1293518.95,
-          "base": 495069,
-          "quote": 7443.9178
+          "usd": 1296380.16,
+          "base": 497157,
+          "quote": 7424.5215
         },
-        "fdv": 7782218978,
-        "marketCap": 72618171552,
+        "fdv": 7795589330,
+        "marketCap": 60943428068,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
           "header": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=1500&height=500&quality=95&format=auto",
@@ -1020,45 +1019,45 @@
           "name": "Wrapped SOL",
           "symbol": "SOL"
         },
-        "priceNative": "0.009309",
-        "priceUsd": "0.9991",
+        "priceNative": "0.009298",
+        "priceUsd": "1.00054",
         "txns": {
           "m5": {
-            "buys": 46,
-            "sells": 34
+            "buys": 27,
+            "sells": 64
           },
           "h1": {
-            "buys": 606,
-            "sells": 642
+            "buys": 588,
+            "sells": 667
           },
           "h6": {
-            "buys": 1887,
-            "sells": 2182
+            "buys": 1913,
+            "sells": 2222
           },
           "h24": {
-            "buys": 12580,
-            "sells": 12965
+            "buys": 12606,
+            "sells": 13005
           }
         },
         "volume": {
-          "h24": 3824121.3,
-          "h6": 479524.67,
-          "h1": 154898.95,
-          "m5": 9028.85
+          "h24": 3832641.75,
+          "h6": 488045.12,
+          "h1": 153876.67,
+          "m5": 11983.19
         },
         "priceChange": {
           "m5": -0.01,
-          "h1": -0.11,
-          "h6": -0.09,
-          "h24": -0.09
+          "h1": -0.01,
+          "h6": 0.14,
+          "h24": 0.13
         },
         "liquidity": {
-          "usd": 1267039.81,
-          "base": 552063,
-          "quote": 6665.6174
+          "usd": 1269583.89,
+          "base": 554977,
+          "quote": 6638.5274
         },
-        "fdv": 7783924502,
-        "marketCap": 72634086298,
+        "fdv": 7794418692,
+        "marketCap": 60934276394,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
           "header": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=1500&height=500&quality=95&format=auto",
@@ -1085,43 +1084,43 @@
           "name": "USDT",
           "symbol": "USDT"
         },
-        "priceNative": "1.0008429",
+        "priceNative": "1.0008430",
         "priceUsd": "1.00084",
         "txns": {
           "m5": {
-            "buys": 2,
-            "sells": 2
+            "buys": 4,
+            "sells": 4
           },
           "h1": {
-            "buys": 20,
+            "buys": 23,
             "sells": 40
           },
           "h6": {
-            "buys": 159,
-            "sells": 407
+            "buys": 161,
+            "sells": 405
           },
           "h24": {
-            "buys": 1030,
+            "buys": 1032,
             "sells": 1093
           }
         },
         "volume": {
-          "h24": 1790278.87,
-          "h6": 564630.33,
-          "h1": 1437.61,
-          "m5": 84.43
+          "h24": 1789611.54,
+          "h6": 564473.91,
+          "h1": 1383.4,
+          "m5": 169.6
         },
         "priceChange": {
           "h6": -0.02,
           "h24": -0.03
         },
         "liquidity": {
-          "usd": 1722020.32,
-          "base": 777450,
-          "quote": 943914
+          "usd": 1722020.39,
+          "base": 777321,
+          "quote": 944044
         },
-        "fdv": 9350773687,
-        "marketCap": 72753828074,
+        "fdv": 9350774421,
+        "marketCap": 60952559626,
         "pairCreatedAt": 1723699296000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -1153,31 +1152,31 @@
         "priceUsd": "1.00091",
         "txns": {
           "m5": {
-            "buys": 2,
+            "buys": 1,
             "sells": 0
           },
           "h1": {
-            "buys": 39,
+            "buys": 38,
             "sells": 0
           },
           "h6": {
-            "buys": 248,
+            "buys": 244,
             "sells": 192
           },
           "h24": {
-            "buys": 1118,
-            "sells": 712
+            "buys": 1114,
+            "sells": 708
           }
         },
         "volume": {
-          "h24": 537220.23,
-          "h6": 179203.31,
-          "h1": 4702.76,
-          "m5": 3879.06
+          "h24": 537132.9,
+          "h6": 179159.44,
+          "h1": 4702.37,
+          "m5": 3878.12
         },
         "priceChange": {
           "h6": -0.02,
-          "h24": -0.01
+          "h24": -0.03
         },
         "liquidity": {
           "usd": 336036.5,
@@ -1185,7 +1184,7 @@
           "quote": 293378
         },
         "fdv": 9351423553,
-        "marketCap": 72758884365,
+        "marketCap": 60956790958,
         "pairCreatedAt": 1669603219000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -1230,11 +1229,11 @@
           },
           "h24": {
             "buys": 206,
-            "sells": 378
+            "sells": 377
           }
         },
         "volume": {
-          "h24": 43806.12,
+          "h24": 43804.92,
           "h6": 17020.93,
           "h1": 757.47,
           "m5": 0
@@ -1295,18 +1294,18 @@
           },
           "h24": {
             "buys": 119,
-            "sells": 205
+            "sells": 204
           }
         },
         "volume": {
-          "h24": 23311.02,
+          "h24": 23310.9,
           "h6": 9050.6,
           "h1": 1.62,
           "m5": 0
         },
         "priceChange": {
           "h1": 0.02,
-          "h24": -0.01
+          "h24": -0.03
         },
         "liquidity": {
           "usd": 249830.79,
@@ -1314,7 +1313,7 @@
           "quote": 168960
         },
         "fdv": 9351316237,
-        "marketCap": 72758049396,
+        "marketCap": 60956091428,
         "pairCreatedAt": 1706214035000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -1377,7 +1376,7 @@
           "quote": 23182
         },
         "fdv": 9449067619,
-        "marketCap": 73518605416,
+        "marketCap": 61593278964,
         "pairCreatedAt": 1669604057000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -1421,19 +1420,19 @@
             "sells": 58
           },
           "h24": {
-            "buys": 87,
-            "sells": 140
+            "buys": 67,
+            "sells": 139
           }
         },
         "volume": {
-          "h24": 678.59,
+          "h24": 622.19,
           "h6": 199.36,
           "h1": 1.11,
           "m5": 0
         },
         "priceChange": {
           "h6": -0.02,
-          "h24": -0.02
+          "h24": -0.03
         },
         "liquidity": {
           "usd": 36729.88,
@@ -1441,7 +1440,7 @@
           "quote": 18973
         },
         "fdv": 9350749490,
-        "marketCap": 72753639808,
+        "marketCap": 60952397111,
         "pairCreatedAt": 1723699419000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -1466,45 +1465,45 @@
           "name": "Wrapped SOL",
           "symbol": "SOL"
         },
-        "priceNative": "0.009310",
-        "priceUsd": "0.9988",
+        "priceNative": "0.009301",
+        "priceUsd": "1.00026",
         "txns": {
           "m5": {
-            "buys": 20,
-            "sells": 39
+            "buys": 15,
+            "sells": 26
           },
           "h1": {
-            "buys": 266,
-            "sells": 328
+            "buys": 262,
+            "sells": 317
           },
           "h6": {
-            "buys": 1028,
-            "sells": 1150
+            "buys": 1043,
+            "sells": 1166
           },
           "h24": {
-            "buys": 5865,
-            "sells": 6397
+            "buys": 5880,
+            "sells": 6413
           }
         },
         "volume": {
-          "h24": 6983.39,
-          "h6": 1005.25,
-          "h1": 305.84,
-          "m5": 24.78
+          "h24": 7001.43,
+          "h6": 1023.29,
+          "h1": 306.67,
+          "m5": 21.21
         },
         "priceChange": {
-          "m5": -0.05,
-          "h1": -0.11,
-          "h6": -0.13,
-          "h24": -0.15
+          "m5": -0.04,
+          "h1": -0.04,
+          "h6": 0.11,
+          "h24": 0.09
         },
         "liquidity": {
-          "usd": 452.2,
-          "base": 176.1862,
-          "quote": 2.5745
+          "usd": 453.09,
+          "base": 178.9161,
+          "quote": 2.5491
         },
-        "fdv": 7781446111,
-        "marketCap": 72610959708,
+        "fdv": 7792275641,
+        "marketCap": 60917522709,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
           "header": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=1500&height=500&quality=95&format=auto",
@@ -1528,45 +1527,45 @@
           "name": "Wrapped SOL",
           "symbol": "SOL"
         },
-        "priceNative": "0.009307",
-        "priceUsd": "0.9985",
+        "priceNative": "0.009296",
+        "priceUsd": "0.9983",
         "txns": {
           "m5": {
-            "buys": 4,
-            "sells": 2
+            "buys": 0,
+            "sells": 4
           },
           "h1": {
-            "buys": 32,
-            "sells": 23
+            "buys": 31,
+            "sells": 25
           },
           "h6": {
             "buys": 86,
-            "sells": 81
+            "sells": 83
           },
           "h24": {
             "buys": 662,
-            "sells": 721
+            "sells": 723
           }
         },
         "volume": {
-          "h24": 499.21,
-          "h6": 50.88,
-          "h1": 19.46,
-          "m5": 2.63
+          "h24": 500.25,
+          "h6": 51.93,
+          "h1": 20.28,
+          "m5": 2.58
         },
         "priceChange": {
-          "m5": -0.23,
-          "h1": -0.33,
-          "h6": -0.14,
-          "h24": -0.13
+          "m5": -0.24,
+          "h1": -0.23,
+          "h6": -0.17,
+          "h24": -0.15
         },
         "liquidity": {
-          "usd": 556.78,
-          "base": 232.5273,
-          "quote": 3.02542
+          "usd": 557.05,
+          "base": 233.5735,
+          "quote": 3.0157
         },
-        "fdv": 7778947488,
-        "marketCap": 72587644314,
+        "fdv": 7777520710,
+        "marketCap": 60802173370,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
           "header": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=1500&height=500&quality=95&format=auto",
@@ -1590,44 +1589,45 @@
           "name": "Wrapped SOL",
           "symbol": "SOL"
         },
-        "priceNative": "0.009321",
-        "priceUsd": "1.000012",
+        "priceNative": "0.009311",
+        "priceUsd": "1.0013",
         "txns": {
           "m5": {
             "buys": 0,
-            "sells": 0
+            "sells": 2
           },
           "h1": {
-            "buys": 18,
-            "sells": 6
+            "buys": 17,
+            "sells": 8
           },
           "h6": {
             "buys": 32,
-            "sells": 16
+            "sells": 18
           },
           "h24": {
             "buys": 184,
-            "sells": 158
+            "sells": 160
           }
         },
         "volume": {
-          "h24": 35.17,
-          "h6": 3.03,
-          "h1": 0.44,
-          "m5": 0
+          "h24": 35.34,
+          "h6": 3.2,
+          "h1": 0.61,
+          "m5": 0.17
         },
         "priceChange": {
-          "h1": 0.16,
-          "h6": -0.1,
-          "h24": -0.18
+          "m5": 0.13,
+          "h1": 0.1,
+          "h6": 0.03,
+          "h24": 0.07
         },
         "liquidity": {
-          "usd": 622.13,
-          "base": 311.1014,
-          "quote": 2.8991
+          "usd": 623.28,
+          "base": 311.275,
+          "quote": 2.8975
         },
-        "fdv": 7790286993,
-        "marketCap": 72693456569,
+        "fdv": 7800440784,
+        "marketCap": 60981355189,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
           "header": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=1500&height=500&quality=95&format=auto",
@@ -1663,7 +1663,7 @@
           },
           "h1": {
             "buys": 1,
-            "sells": 1
+            "sells": 0
           },
           "h6": {
             "buys": 14,
@@ -1677,10 +1677,11 @@
         "volume": {
           "h24": 145.61,
           "h6": 32.35,
-          "h1": 0.11,
+          "h1": 0.1,
           "m5": 0
         },
         "priceChange": {
+          "h1": 0.04,
           "h6": -0.06,
           "h24": -0.08
         },
@@ -1690,7 +1691,7 @@
           "quote": 862.4637
         },
         "fdv": 9351335956,
-        "marketCap": 72758202814,
+        "marketCap": 60956219960,
         "pairCreatedAt": 1712616388000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -1718,45 +1719,45 @@
           "name": "USDT",
           "symbol": "USDT"
         },
-        "priceNative": "1.0006686",
-        "priceUsd": "1.00066",
+        "priceNative": "1.001216",
+        "priceUsd": "1.0012",
         "txns": {
           "m5": {
-            "buys": 3,
-            "sells": 0
+            "buys": 7,
+            "sells": 3
           },
           "h1": {
-            "buys": 135,
-            "sells": 39
+            "buys": 141,
+            "sells": 38
           },
           "h6": {
-            "buys": 250,
-            "sells": 66
+            "buys": 257,
+            "sells": 69
           },
           "h24": {
-            "buys": 256,
-            "sells": 75
+            "buys": 263,
+            "sells": 78
           }
         },
         "volume": {
           "h24": 897.94,
-          "h6": 897.93,
+          "h6": 897.94,
           "h1": 0.07,
           "m5": 0
         },
         "priceChange": {
-          "m5": -1.79,
-          "h1": 1.08,
-          "h6": -14.23,
-          "h24": -0.09
+          "m5": 0.05,
+          "h1": 0.03,
+          "h6": -14.18,
+          "h24": -0.04
         },
         "liquidity": {
-          "usd": 3693.13,
-          "base": 1852.4756,
-          "quote": 1839.4196
+          "usd": 3694.14,
+          "base": 1852.4732,
+          "quote": 1839.422
         },
-        "fdv": 9349145661,
-        "marketCap": 72741161194,
+        "fdv": 9354264376,
+        "marketCap": 60975308725,
         "pairCreatedAt": 1669609619000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -1781,44 +1782,45 @@
           "name": "Wrapped SOL",
           "symbol": "SOL"
         },
-        "priceNative": "0.009319",
-        "priceUsd": "0.9998",
+        "priceNative": "0.009311",
+        "priceUsd": "0.9999",
         "txns": {
           "m5": {
             "buys": 0,
-            "sells": 0
+            "sells": 1
           },
           "h1": {
-            "buys": 17,
-            "sells": 3
+            "buys": 14,
+            "sells": 4
           },
           "h6": {
             "buys": 39,
-            "sells": 18
+            "sells": 19
           },
           "h24": {
             "buys": 183,
-            "sells": 125
+            "sells": 126
           }
         },
         "volume": {
-          "h24": 107.13,
-          "h6": 11.55,
-          "h1": 2.82,
-          "m5": 0
+          "h24": 107.65,
+          "h6": 12.08,
+          "h1": 2.94,
+          "m5": 0.52
         },
         "priceChange": {
-          "h1": -0.2,
-          "h6": 0.21,
-          "h24": -0.17
+          "m5": 0.02,
+          "h1": 0.14,
+          "h6": 0.22,
+          "h24": -0.15
         },
         "liquidity": {
-          "usd": 564,
-          "base": 232.7982,
-          "quote": 3.08771
+          "usd": 564.38,
+          "base": 233.3261,
+          "quote": 3.0828
         },
-        "fdv": 7788853631,
-        "marketCap": 72680081444,
+        "fdv": 7790151731,
+        "marketCap": 60900918655,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
           "header": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=1500&height=500&quality=95&format=auto",
@@ -1845,31 +1847,31 @@
           "name": "USDT",
           "symbol": "USDT"
         },
-        "priceNative": "1.0008933",
+        "priceNative": "1.0008982",
         "priceUsd": "1.00089",
         "txns": {
           "m5": {
-            "buys": 1,
+            "buys": 2,
             "sells": 0
           },
           "h1": {
-            "buys": 10,
+            "buys": 12,
             "sells": 0
           },
           "h6": {
-            "buys": 60,
+            "buys": 62,
             "sells": 47
           },
           "h24": {
-            "buys": 180,
+            "buys": 182,
             "sells": 133
           }
         },
         "volume": {
-          "h24": 2793.09,
-          "h6": 1205.39,
-          "h1": 18.88,
-          "m5": 1.92
+          "h24": 2798.67,
+          "h6": 1210.96,
+          "h1": 24.46,
+          "m5": 5.57
         },
         "priceChange": {
           "h6": -0.02,
@@ -1877,11 +1879,11 @@
         },
         "liquidity": {
           "usd": 3025.56,
-          "base": 1147.07509,
-          "quote": 1877.4637
+          "base": 1141.5062,
+          "quote": 1883.03757
         },
-        "fdv": 9351244958,
-        "marketCap": 72757494808,
+        "fdv": 9351290923,
+        "marketCap": 60955926418,
         "pairCreatedAt": 1751559450000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -1946,7 +1948,7 @@
           "quote": 1597.1487
         },
         "fdv": 9309169445,
-        "marketCap": 72430125678,
+        "marketCap": 60681359651,
         "pairCreatedAt": 1712432719000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2010,7 +2012,7 @@
           "quote": 1919.1892
         },
         "fdv": 9348785465,
-        "marketCap": 72738358681,
+        "marketCap": 60939594710,
         "pairCreatedAt": 1703788397000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2043,7 +2045,7 @@
         "txns": {
           "m5": {
             "buys": 0,
-            "sells": 1
+            "sells": 0
           },
           "h1": {
             "buys": 5,
@@ -2075,7 +2077,7 @@
           "quote": 437.8084
         },
         "fdv": 9350823866,
-        "marketCap": 72754218496,
+        "marketCap": 60952881932,
         "pairCreatedAt": 1717802485000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2140,7 +2142,7 @@
           "quote": 1202.2261
         },
         "fdv": 9356512744,
-        "marketCap": 72798480888,
+        "marketCap": 60989964597,
         "pairCreatedAt": 1674184768000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2204,7 +2206,7 @@
           "quote": 302.8862
         },
         "fdv": 9342898320,
-        "marketCap": 72692553669,
+        "marketCap": 60901219650,
         "pairCreatedAt": 1715973763000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2269,7 +2271,7 @@
           "quote": 836.9698
         },
         "fdv": 9349491756,
-        "marketCap": 72743853990,
+        "marketCap": 60944198634,
         "pairCreatedAt": 1709683865000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2329,7 +2331,7 @@
           "quote": 75646
         },
         "fdv": 7815658477,
-        "marketCap": 72930205346,
+        "marketCap": 61100322257,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
           "header": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=1500&height=500&quality=95&format=auto",
@@ -2392,7 +2394,7 @@
           "quote": 60.447
         },
         "fdv": 9350276565,
-        "marketCap": 72749960206,
+        "marketCap": 60949314371,
         "pairCreatedAt": 1712653306000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2456,7 +2458,7 @@
           "quote": 22.512
         },
         "fdv": 9360479618,
-        "marketCap": 72829345207,
+        "marketCap": 61015822468,
         "pairCreatedAt": 1713589112000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2517,7 +2519,7 @@
           "quote": 6.6748
         },
         "fdv": 9349253332,
-        "marketCap": 72741998928,
+        "marketCap": 60942644479,
         "pairCreatedAt": 1723712262000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2578,7 +2580,7 @@
           "quote": 23.3984
         },
         "fdv": 9348457834,
-        "marketCap": 72735809550,
+        "marketCap": 60937459069,
         "pairCreatedAt": 1712984304000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2639,7 +2641,7 @@
           "quote": 0.889
         },
         "fdv": 9437303202,
-        "marketCap": 73427072199,
+        "marketCap": 61516593194,
         "pairCreatedAt": 1736181904000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/913e72ef4901644569197a61dd198656ab488e9cd648a326fc2fca21b0d2521d?width=800&height=800&quality=95&format=auto",
@@ -2667,45 +2669,45 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "0.005144",
-        "priceUsd": "0.005144",
+        "priceNative": "0.005103",
+        "priceUsd": "0.005103",
         "txns": {
           "m5": {
-            "buys": 9,
-            "sells": 10
+            "buys": 12,
+            "sells": 7
           },
           "h1": {
-            "buys": 138,
-            "sells": 62
+            "buys": 142,
+            "sells": 63
           },
           "h6": {
-            "buys": 2039,
-            "sells": 1305
+            "buys": 2048,
+            "sells": 1308
           },
           "h24": {
-            "buys": 2039,
-            "sells": 1305
+            "buys": 2048,
+            "sells": 1308
           }
         },
         "volume": {
-          "h24": 1084614.34,
-          "h6": 1084614.34,
-          "h1": 21630.33,
-          "m5": 2313.92
+          "h24": 1085104.59,
+          "h6": 1085104.59,
+          "h1": 21188.71,
+          "m5": 1914.59
         },
         "priceChange": {
-          "m5": -2.94,
-          "h1": -0.56,
-          "h6": 7069,
-          "h24": 7069
+          "m5": -3.28,
+          "h1": 0.15,
+          "h6": 7011,
+          "h24": 7011
         },
         "liquidity": {
-          "usd": 173427.9,
-          "base": 16897999,
-          "quote": 86495
+          "usd": 172726.88,
+          "base": 16923108,
+          "quote": 86367
         },
-        "fdv": 5144540,
-        "marketCap": 5144540,
+        "fdv": 5103067,
+        "marketCap": 5103067,
         "pairCreatedAt": 1791928902000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/ds4PcejJyyKnWbul?width=800&height=800&quality=95&format=auto",
@@ -2746,44 +2748,45 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "0.2696",
-        "priceUsd": "0.2696",
+        "priceNative": "0.2684",
+        "priceUsd": "0.2684",
         "txns": {
           "m5": {
-            "buys": 1,
-            "sells": 0
+            "buys": 11,
+            "sells": 6
           },
           "h1": {
-            "buys": 49,
-            "sells": 29
+            "buys": 48,
+            "sells": 31
           },
           "h6": {
-            "buys": 3878,
-            "sells": 2244
+            "buys": 3842,
+            "sells": 2236
           },
           "h24": {
-            "buys": 9819,
-            "sells": 6247
+            "buys": 9826,
+            "sells": 6249
           }
         },
         "volume": {
-          "h24": 2661985,
-          "h6": 682191.88,
-          "h1": 59131.11,
-          "m5": 10.55
+          "h24": 2670970.85,
+          "h6": 693503.96,
+          "h1": 49112.66,
+          "m5": 15616.15
         },
         "priceChange": {
-          "h1": -0.28,
-          "h6": -3.36,
-          "h24": -1.81
+          "m5": -0.43,
+          "h1": -0.03,
+          "h6": -3.9,
+          "h24": -2.41
         },
         "liquidity": {
-          "usd": 4036973.33,
-          "base": 6800426,
-          "quote": 2203129
+          "usd": 4029071.48,
+          "base": 6846460,
+          "quote": 2190805
         },
-        "fdv": 539332008,
-        "marketCap": 106017977,
+        "fdv": 536997587,
+        "marketCap": 105559094,
         "pairCreatedAt": 1756493686000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/3277f5f414a940e7d009f9cbc9147c6ab25eae6a6cda10e682319f7b6394e328?width=800&height=800&quality=95&format=auto",
@@ -2822,45 +2825,45 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "0.005108",
-        "priceUsd": "0.005108",
+        "priceNative": "0.005092",
+        "priceUsd": "0.005092",
         "txns": {
           "m5": {
-            "buys": 3,
-            "sells": 4
+            "buys": 30,
+            "sells": 7
           },
           "h1": {
-            "buys": 202,
-            "sells": 127
+            "buys": 229,
+            "sells": 133
           },
           "h6": {
-            "buys": 965,
-            "sells": 816
+            "buys": 964,
+            "sells": 823
           },
           "h24": {
-            "buys": 5179,
-            "sells": 3723
+            "buys": 5202,
+            "sells": 3730
           }
         },
         "volume": {
-          "h24": 3749784.55,
-          "h6": 598283.03,
-          "h1": 143093.24,
-          "m5": 2731.22
+          "h24": 3764110.1,
+          "h6": 599996.17,
+          "h1": 157628.49,
+          "m5": 14972.25
         },
         "priceChange": {
-          "m5": 0.52,
-          "h1": 1.47,
-          "h6": 1.3,
-          "h24": 3.31
+          "m5": 0.23,
+          "h1": 1.14,
+          "h6": 0.77,
+          "h24": 2.97
         },
         "liquidity": {
-          "usd": 25092003.68,
-          "base": 2458756213,
-          "quote": 12530506
+          "usd": 25051436.25,
+          "base": 2456038134,
+          "quote": 12544410
         },
-        "fdv": 4231106315,
-        "marketCap": 4231106315,
+        "fdv": 4217420927,
+        "marketCap": 4217420927,
         "pairCreatedAt": 1752512149000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/a0d07b12d0c34be414b8ac98a827ff862cfd684554c8da4c63fa647eef0af501?width=800&height=800&quality=95&format=auto",
@@ -2884,7 +2887,7 @@
   },
   {
     "url": "https://api.dexscreener.com/token-pairs/v1/solana/H4UH4ypR3nTqDHJPJurYL2GsDWzotKzzU1Kmj3XiqFkj",
-    "observed_at": 1791943287.376661,
+    "observed_at": 1791943470.797054,
     "sha256": "bff3924a17add7a1cc3e2afc84df67b85967ce8ea5082613c9fde6466e644196",
     "response": [
       {
@@ -2939,7 +2942,7 @@
   },
   {
     "url": "https://api.dexscreener.com/token-pairs/v1/solana/4cdbUv2X2TUymvdBYSo4DrKXChMVwSnHHZjMyWhBpump",
-    "observed_at": 1791943287.716172,
+    "observed_at": 1791943471.1154099,
     "sha256": "de3e5cfccf656813e99cc8eb550eb08066dc3d29f5902f7c01a8b3cd844037d3",
     "response": [
       {
@@ -2995,8 +2998,8 @@
   },
   {
     "url": "https://api.dexscreener.com/token-pairs/v1/solana/So11111111111111111111111111111111111111112",
-    "observed_at": 1791943287.759739,
-    "sha256": "b1ebeeffee8ea6312c42c41fb023bff20f44af14052beead7fbf8764cf0f2bad",
+    "observed_at": 1791943471.2583811,
+    "sha256": "dceae5a2abdedbb5a14e01281f120bcb0295a3a0ef03fccac4dfea8401f94f3f",
     "response": [
       {
         "chainId": "solana",
@@ -3016,40 +3019,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.4132",
-        "priceUsd": "107.41",
+        "priceNative": "107.5235",
+        "priceUsd": "107.52",
         "txns": {
           "m5": {
-            "buys": 247,
-            "sells": 174
+            "buys": 420,
+            "sells": 111
           },
           "h1": {
-            "buys": 3150,
-            "sells": 2626
+            "buys": 3264,
+            "sells": 2514
           },
           "h6": {
-            "buys": 10494,
-            "sells": 9144
+            "buys": 10487,
+            "sells": 9146
           },
           "h24": {
-            "buys": 50426,
-            "sells": 50993
+            "buys": 50516,
+            "sells": 51002
           }
         },
         "volume": {
-          "h24": 127059665.52,
-          "h6": 17450235.79,
-          "h1": 5700078.13,
-          "m5": 328726.61
+          "h24": 127221217.29,
+          "h6": 17558877.12,
+          "h1": 5588261.62,
+          "m5": 451041.13
         },
         "priceChange": {
-          "h1": 0.05,
-          "h24": 2.07
+          "m5": 0.2,
+          "h1": 0.34,
+          "h6": 0.07,
+          "h24": 2.11
         },
         "liquidity": {
-          "usd": 28657480.42,
-          "base": 192502,
-          "quote": 7980212
+          "usd": 28677950.14,
+          "base": 190242,
+          "quote": 8222352
         },
         "pairCreatedAt": 1688106058000,
         "info": {
@@ -3088,42 +3093,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.3882",
-        "priceUsd": "107.38",
+        "priceNative": "107.5611",
+        "priceUsd": "107.56",
         "txns": {
           "m5": {
-            "buys": 181,
+            "buys": 184,
             "sells": 174
           },
           "h1": {
-            "buys": 1733,
-            "sells": 1614
+            "buys": 1777,
+            "sells": 1673
           },
           "h6": {
-            "buys": 8915,
-            "sells": 8693
+            "buys": 8955,
+            "sells": 8745
           },
           "h24": {
-            "buys": 35805,
-            "sells": 36448
+            "buys": 35869,
+            "sells": 36494
           }
         },
         "volume": {
-          "h24": 419962.37,
-          "h6": 104989.63,
-          "h1": 21148.15,
-          "m5": 1997.68
+          "h24": 421100.1,
+          "h6": 105795.62,
+          "h1": 22044.42,
+          "m5": 2407.08
         },
         "priceChange": {
-          "m5": 0.04,
-          "h1": 0.02,
-          "h6": -0.07,
-          "h24": 1.99
+          "m5": 0.24,
+          "h1": 0.35,
+          "h6": 0.07,
+          "h24": 2.14
         },
         "liquidity": {
-          "usd": 536602.74,
-          "base": 4612.655,
-          "quote": 41257
+          "usd": 537400.6,
+          "base": 4611.4998,
+          "quote": 41382
         },
         "pairCreatedAt": 1723699294000,
         "info": {
@@ -3159,42 +3164,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.5703",
-        "priceUsd": "107.57",
+        "priceNative": "107.6611",
+        "priceUsd": "107.66",
         "txns": {
           "m5": {
-            "buys": 63,
-            "sells": 60
+            "buys": 164,
+            "sells": 23
           },
           "h1": {
-            "buys": 1134,
-            "sells": 1033
+            "buys": 1222,
+            "sells": 959
           },
           "h6": {
-            "buys": 8156,
-            "sells": 7092
+            "buys": 8217,
+            "sells": 7060
           },
           "h24": {
-            "buys": 32870,
-            "sells": 29324
+            "buys": 32941,
+            "sells": 29298
           }
         },
         "volume": {
-          "h24": 3646066.51,
-          "h6": 750529.74,
-          "h1": 87394.62,
-          "m5": 3154.97
+          "h24": 3643876.96,
+          "h6": 748784.67,
+          "h1": 83510.77,
+          "m5": 7471.53
         },
         "priceChange": {
-          "m5": 0.5,
-          "h1": -0.23,
-          "h6": -0.01,
-          "h24": 2.65
+          "m5": 0.09,
+          "h1": 0.45,
+          "h6": 0.13,
+          "h24": 2.13
         },
         "liquidity": {
-          "usd": 25063158.18,
-          "base": 116642,
-          "quote": 12515935
+          "usd": 25073748.16,
+          "base": 116593,
+          "quote": 12521208
         },
         "pairCreatedAt": 1669602450000,
         "info": {
@@ -3233,42 +3238,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.3685",
-        "priceUsd": "107.36",
+        "priceNative": "107.5653",
+        "priceUsd": "107.56",
         "txns": {
           "m5": {
-            "buys": 96,
-            "sells": 93
+            "buys": 169,
+            "sells": 57
           },
           "h1": {
-            "buys": 1419,
-            "sells": 1257
+            "buys": 1463,
+            "sells": 1196
           },
           "h6": {
-            "buys": 7109,
-            "sells": 4821
+            "buys": 6999,
+            "sells": 4824
           },
           "h24": {
-            "buys": 30541,
-            "sells": 26985
+            "buys": 30594,
+            "sells": 26992
           }
         },
         "volume": {
-          "h24": 35509452.61,
-          "h6": 5182477.04,
-          "h1": 1488465.82,
-          "m5": 80079.04
+          "h24": 35553174.69,
+          "h6": 5184600.92,
+          "h1": 1451899.85,
+          "m5": 116643.01
         },
         "priceChange": {
-          "m5": -0.01,
-          "h1": -0.03,
-          "h6": -0.08,
-          "h24": 1.99
+          "m5": 0.28,
+          "h1": 0.33,
+          "h6": 0.07,
+          "h24": 2.12
         },
         "liquidity": {
-          "usd": 7677788.12,
-          "base": 48350,
-          "quote": 2486448
+          "usd": 7687271.24,
+          "base": 47828,
+          "quote": 2542599
         },
         "pairCreatedAt": 1723699295000,
         "info": {
@@ -3307,45 +3312,44 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.3773",
-        "priceUsd": "107.37",
+        "priceNative": "107.5194",
+        "priceUsd": "107.51",
         "txns": {
           "m5": {
-            "buys": 46,
-            "sells": 37
+            "buys": 50,
+            "sells": 17
           },
           "h1": {
-            "buys": 504,
-            "sells": 503
+            "buys": 527,
+            "sells": 464
           },
           "h6": {
-            "buys": 2216,
-            "sells": 2579
+            "buys": 2212,
+            "sells": 2580
           },
           "h24": {
-            "buys": 10528,
-            "sells": 11632
+            "buys": 10535,
+            "sells": 11624
           }
         },
         "volume": {
-          "h24": 1416483.06,
-          "h6": 269200.85,
-          "h1": 54956.7,
-          "m5": 3806.61
+          "h24": 1416878.99,
+          "h6": 269575.05,
+          "h1": 53393.34,
+          "m5": 4038.32
         },
         "priceChange": {
-          "m5": 0.03,
-          "h1": -0.03,
-          "h6": -0.06,
-          "h24": 2
+          "m5": 0.19,
+          "h1": 0.33,
+          "h24": 2.08
         },
         "liquidity": {
-          "usd": 1579030.82,
-          "base": 10650,
-          "quote": 435363
+          "usd": 1580544.36,
+          "base": 10637,
+          "quote": 436778
         },
-        "fdv": 68261993175,
-        "marketCap": 68261993175,
+        "fdv": 68352387086,
+        "marketCap": 68352387086,
         "pairCreatedAt": 1754985927000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/fcfb87378d3198fe753ca08ba51a5552a84f34cf48cd09d83971aa195bdf00d2?width=800&height=800&quality=95&format=auto",
@@ -3383,42 +3387,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.4061",
-        "priceUsd": "107.40",
+        "priceNative": "107.5515",
+        "priceUsd": "107.55",
         "txns": {
           "m5": {
-            "buys": 134,
-            "sells": 94
+            "buys": 124,
+            "sells": 105
           },
           "h1": {
-            "buys": 1849,
-            "sells": 1747
+            "buys": 1827,
+            "sells": 1744
           },
           "h6": {
-            "buys": 8949,
-            "sells": 8495
+            "buys": 8894,
+            "sells": 8477
           },
           "h24": {
-            "buys": 40718,
-            "sells": 39795
+            "buys": 40715,
+            "sells": 39763
           }
         },
         "volume": {
-          "h24": 1610737.06,
-          "h6": 257828.81,
-          "h1": 61941.38,
-          "m5": 4467.18
+          "h24": 1611100.82,
+          "h6": 256420.69,
+          "h1": 61264.7,
+          "m5": 4213.64
         },
         "priceChange": {
-          "m5": 0.06,
-          "h1": 0.05,
-          "h6": -0.09,
-          "h24": 2.02
+          "m5": 0.22,
+          "h1": 0.32,
+          "h6": 0.06,
+          "h24": 2.13
         },
         "liquidity": {
-          "usd": 65976.77,
-          "base": 455.2955,
-          "quote": 17075
+          "usd": 66042.83,
+          "base": 450.8105,
+          "quote": 17557
         },
         "pairCreatedAt": 1669662780000,
         "info": {
@@ -3457,42 +3461,41 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.3342",
-        "priceUsd": "107.33",
+        "priceNative": "107.5069",
+        "priceUsd": "107.50",
         "txns": {
           "m5": {
-            "buys": 118,
-            "sells": 126
+            "buys": 70,
+            "sells": 88
           },
           "h1": {
-            "buys": 713,
-            "sells": 720
+            "buys": 731,
+            "sells": 746
           },
           "h6": {
-            "buys": 3183,
-            "sells": 3059
+            "buys": 3147,
+            "sells": 3042
           },
           "h24": {
-            "buys": 13990,
-            "sells": 13533
+            "buys": 14014,
+            "sells": 13568
           }
         },
         "volume": {
-          "h24": 1595510.76,
-          "h6": 425120.17,
-          "h1": 119639.88,
-          "m5": 10323.99
+          "h24": 1600723.67,
+          "h6": 421149.21,
+          "h1": 120438.53,
+          "m5": 9713.32
         },
         "priceChange": {
-          "m5": -0.03,
-          "h1": -0.08,
-          "h6": -0.12,
-          "h24": 1.96
+          "m5": 0.18,
+          "h1": 0.26,
+          "h24": 2.12
         },
         "liquidity": {
-          "usd": 64717.26,
-          "base": 332.8349,
-          "quote": 28992
+          "usd": 64774.58,
+          "base": 317.8932,
+          "quote": 30598
         },
         "pairCreatedAt": 1709010475000,
         "info": {
@@ -3531,42 +3534,42 @@
           "name": "USDT",
           "symbol": "USDT"
         },
-        "priceNative": "107.4839",
-        "priceUsd": "107.48",
+        "priceNative": "107.6507",
+        "priceUsd": "107.65",
         "txns": {
           "m5": {
-            "buys": 101,
-            "sells": 117
+            "buys": 126,
+            "sells": 97
           },
           "h1": {
-            "buys": 1755,
-            "sells": 1573
+            "buys": 1762,
+            "sells": 1530
           },
           "h6": {
-            "buys": 7007,
-            "sells": 6169
+            "buys": 6985,
+            "sells": 6154
           },
           "h24": {
-            "buys": 37913,
-            "sells": 39146
+            "buys": 37939,
+            "sells": 39102
           }
         },
         "volume": {
-          "h24": 2391244.12,
-          "h6": 354495.8,
-          "h1": 86967.24,
-          "m5": 6226.9
+          "h24": 2390335.18,
+          "h6": 352979.83,
+          "h1": 86005.09,
+          "m5": 5548.52
         },
         "priceChange": {
-          "m5": 0.05,
-          "h1": 0.02,
-          "h6": -0.09,
-          "h24": 2
+          "m5": 0.25,
+          "h1": 0.34,
+          "h6": 0.05,
+          "h24": 2.11
         },
         "liquidity": {
-          "usd": 812366.41,
-          "base": 4651.8789,
-          "quote": 312364
+          "usd": 813142.03,
+          "base": 4643.5808,
+          "quote": 313256
         },
         "pairCreatedAt": 1723699294000,
         "info": {
@@ -3605,42 +3608,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.4068",
-        "priceUsd": "107.40",
+        "priceNative": "107.5712",
+        "priceUsd": "107.57",
         "txns": {
           "m5": {
-            "buys": 100,
-            "sells": 80
+            "buys": 91,
+            "sells": 43
           },
           "h1": {
-            "buys": 1176,
-            "sells": 1093
+            "buys": 1169,
+            "sells": 1046
           },
           "h6": {
-            "buys": 5950,
-            "sells": 5298
+            "buys": 5902,
+            "sells": 5275
           },
           "h24": {
-            "buys": 22885,
-            "sells": 21503
+            "buys": 22832,
+            "sells": 21472
           }
         },
         "volume": {
-          "h24": 4393182.82,
-          "h6": 1332375.09,
-          "h1": 455192.78,
-          "m5": 35436.13
+          "h24": 4397092.91,
+          "h6": 1318173.34,
+          "h1": 445698.37,
+          "m5": 30031.01
         },
         "priceChange": {
-          "m5": 0.07,
-          "h1": 0.03,
-          "h6": -0.05,
-          "h24": 2.04
+          "m5": 0.26,
+          "h1": 0.35,
+          "h6": 0.07,
+          "h24": 2.16
         },
         "liquidity": {
-          "usd": 277563.01,
-          "base": 1813.1249,
-          "quote": 82820
+          "usd": 277857.18,
+          "base": 1751.9214,
+          "quote": 89400
         },
         "pairCreatedAt": 1708122440000,
         "info": {
@@ -3679,41 +3682,41 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.4046",
-        "priceUsd": "107.40",
+        "priceNative": "107.5320",
+        "priceUsd": "107.53",
         "txns": {
           "m5": {
-            "buys": 19,
-            "sells": 15
+            "buys": 38,
+            "sells": 10
           },
           "h1": {
-            "buys": 441,
-            "sells": 310
+            "buys": 453,
+            "sells": 303
           },
           "h6": {
-            "buys": 1798,
-            "sells": 1401
+            "buys": 1725,
+            "sells": 1380
           },
           "h24": {
-            "buys": 7536,
-            "sells": 7018
+            "buys": 7556,
+            "sells": 7023
           }
         },
         "volume": {
-          "h24": 18960903.78,
-          "h6": 2751611.68,
-          "h1": 943225.2,
-          "m5": 70433.21
+          "h24": 19004019.86,
+          "h6": 2759375.9,
+          "h1": 926475.32,
+          "m5": 79813.3
         },
         "priceChange": {
-          "h1": 0.04,
-          "h6": -0.08,
-          "h24": 2.06
+          "m5": 0.2,
+          "h1": 0.32,
+          "h24": 2.14
         },
         "liquidity": {
-          "usd": 5044430.3,
-          "base": 35620,
-          "quote": 1218610
+          "usd": 5048968.77,
+          "base": 35292,
+          "quote": 1253927
         },
         "pairCreatedAt": 1711827392000,
         "info": {
@@ -3752,42 +3755,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.4056",
-        "priceUsd": "107.40",
+        "priceNative": "107.5766",
+        "priceUsd": "107.57",
         "txns": {
           "m5": {
-            "buys": 42,
-            "sells": 37
+            "buys": 71,
+            "sells": 57
           },
           "h1": {
-            "buys": 682,
-            "sells": 674
+            "buys": 704,
+            "sells": 669
           },
           "h6": {
-            "buys": 2685,
-            "sells": 2472
+            "buys": 2693,
+            "sells": 2493
           },
           "h24": {
-            "buys": 14675,
-            "sells": 14307
+            "buys": 14695,
+            "sells": 14315
           }
         },
         "volume": {
-          "h24": 494086.15,
-          "h6": 76336,
-          "h1": 21796.64,
-          "m5": 1234.67
+          "h24": 494802.16,
+          "h6": 76525.92,
+          "h1": 21981.68,
+          "m5": 1813.77
         },
         "priceChange": {
-          "m5": 0.06,
-          "h1": 0.03,
-          "h6": -0.07,
-          "h24": 2.03
+          "m5": 0.24,
+          "h1": 0.36,
+          "h6": 0.09,
+          "h24": 2.16
         },
         "liquidity": {
-          "usd": 152425.86,
-          "base": 727.3973,
-          "quote": 74299
+          "usd": 152550.16,
+          "base": 723.9069,
+          "quote": 74674
         },
         "pairCreatedAt": 1688106028000,
         "info": {
@@ -3826,42 +3829,42 @@
           "name": "USDT",
           "symbol": "USDT"
         },
-        "priceNative": "107.4863",
-        "priceUsd": "107.48",
+        "priceNative": "107.6546",
+        "priceUsd": "107.65",
         "txns": {
           "m5": {
-            "buys": 53,
-            "sells": 52
+            "buys": 52,
+            "sells": 24
           },
           "h1": {
-            "buys": 705,
-            "sells": 686
+            "buys": 721,
+            "sells": 658
           },
           "h6": {
-            "buys": 2521,
-            "sells": 2457
+            "buys": 2513,
+            "sells": 2451
           },
           "h24": {
-            "buys": 14071,
-            "sells": 13786
+            "buys": 14080,
+            "sells": 13772
           }
         },
         "volume": {
-          "h24": 622287.44,
-          "h6": 132107.73,
-          "h1": 38461.14,
-          "m5": 2580.69
+          "h24": 623414.38,
+          "h6": 131777.32,
+          "h1": 38160.21,
+          "m5": 2442.28
         },
         "priceChange": {
-          "m5": 0.07,
-          "h1": 0.03,
-          "h6": -0.1,
-          "h24": 2
+          "m5": 0.23,
+          "h1": 0.36,
+          "h6": 0.06,
+          "h24": 2.11
         },
         "liquidity": {
-          "usd": 537288.3,
-          "base": 4430.712,
-          "quote": 61047
+          "usd": 538033.66,
+          "base": 4423.9069,
+          "quote": 61779
         },
         "pairCreatedAt": 1704391570000,
         "info": {
@@ -3900,41 +3903,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.3889",
-        "priceUsd": "107.38",
+        "priceNative": "107.5531",
+        "priceUsd": "107.55",
         "txns": {
           "m5": {
-            "buys": 44,
-            "sells": 67
+            "buys": 47,
+            "sells": 40
           },
           "h1": {
-            "buys": 658,
-            "sells": 695
+            "buys": 672,
+            "sells": 684
           },
           "h6": {
-            "buys": 2706,
-            "sells": 2496
+            "buys": 2705,
+            "sells": 2517
           },
           "h24": {
-            "buys": 14654,
-            "sells": 14666
+            "buys": 14656,
+            "sells": 14680
           }
         },
         "volume": {
-          "h24": 1023772.98,
-          "h6": 139270.84,
-          "h1": 38268.29,
-          "m5": 2785.46
+          "h24": 1024035.05,
+          "h6": 139280.3,
+          "h1": 38215.72,
+          "m5": 2425.38
         },
         "priceChange": {
-          "m5": 0.03,
-          "h6": -0.08,
-          "h24": 2.02
+          "m5": 0.25,
+          "h1": 0.32,
+          "h6": 0.06,
+          "h24": 2.13
         },
         "liquidity": {
-          "usd": 361253.45,
-          "base": 1475.2983,
-          "quote": 202822
+          "usd": 361495.49,
+          "base": 1469.4037,
+          "quote": 203456
         },
         "pairCreatedAt": 1723699294000,
         "info": {
@@ -3973,44 +3977,45 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.4966",
-        "priceUsd": "107.49",
+        "priceNative": "107.7364",
+        "priceUsd": "107.73",
         "txns": {
           "m5": {
-            "buys": 0,
+            "buys": 9,
             "sells": 0
           },
           "h1": {
-            "buys": 13,
-            "sells": 23
+            "buys": 22,
+            "sells": 10
           },
           "h6": {
-            "buys": 56,
+            "buys": 65,
             "sells": 56
           },
           "h24": {
-            "buys": 390,
+            "buys": 394,
             "sells": 423
           }
         },
         "volume": {
-          "h24": 3779.6,
-          "h6": 367.97,
-          "h1": 119.77,
-          "m5": 0
+          "h24": 3807.02,
+          "h6": 408.43,
+          "h1": 122.82,
+          "m5": 40.45
         },
         "priceChange": {
-          "h1": 0.11,
-          "h6": 0.3,
-          "h24": 2.12
+          "m5": 0.22,
+          "h1": 0.53,
+          "h6": 0.52,
+          "h24": 2.25
         },
         "liquidity": {
-          "usd": 73162.76,
-          "base": 340.6161,
-          "quote": 36547
+          "usd": 73244.42,
+          "base": 340.2402,
+          "quote": 36588
         },
-        "fdv": 68337837320,
-        "marketCap": 68337837320,
+        "fdv": 68490279882,
+        "marketCap": 68490279882,
         "pairCreatedAt": 1703167204000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/fcfb87378d3198fe753ca08ba51a5552a84f34cf48cd09d83971aa195bdf00d2?width=800&height=800&quality=95&format=auto",
@@ -4048,42 +4053,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.3920",
-        "priceUsd": "107.39",
+        "priceNative": "107.5099",
+        "priceUsd": "107.50",
         "txns": {
           "m5": {
-            "buys": 14,
-            "sells": 13
+            "buys": 32,
+            "sells": 3
           },
           "h1": {
-            "buys": 198,
-            "sells": 207
+            "buys": 215,
+            "sells": 187
           },
           "h6": {
-            "buys": 705,
-            "sells": 654
+            "buys": 717,
+            "sells": 651
           },
           "h24": {
-            "buys": 4202,
-            "sells": 4205
+            "buys": 4209,
+            "sells": 4195
           }
         },
         "volume": {
-          "h24": 82075.57,
-          "h6": 10348.32,
-          "h1": 3532.8,
-          "m5": 192.9
+          "h24": 82130.64,
+          "h6": 10512.59,
+          "h1": 3523.75,
+          "m5": 313.54
         },
         "priceChange": {
-          "m5": 0.09,
-          "h1": -0.05,
+          "m5": 0.26,
+          "h1": 0.29,
           "h6": -0.01,
-          "h24": 2.07
+          "h24": 2.11
         },
         "liquidity": {
-          "usd": 224543.14,
-          "base": 1082.6242,
-          "quote": 108277
+          "usd": 224670.79,
+          "base": 1080.9057,
+          "quote": 108462
         },
         "pairCreatedAt": 1669602308000,
         "info": {
@@ -4122,42 +4127,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.3564",
-        "priceUsd": "107.35",
+        "priceNative": "107.5794",
+        "priceUsd": "107.57",
         "txns": {
           "m5": {
-            "buys": 18,
-            "sells": 14
+            "buys": 41,
+            "sells": 3
           },
           "h1": {
-            "buys": 272,
-            "sells": 259
+            "buys": 290,
+            "sells": 227
           },
           "h6": {
-            "buys": 849,
-            "sells": 807
+            "buys": 866,
+            "sells": 805
           },
           "h24": {
-            "buys": 4972,
-            "sells": 4899
+            "buys": 4989,
+            "sells": 4890
           }
         },
         "volume": {
-          "h24": 228496.39,
-          "h6": 28023.92,
-          "h1": 10229.48,
-          "m5": 533.51
+          "h24": 228621.11,
+          "h6": 28275.67,
+          "h1": 10021.32,
+          "m5": 727.04
         },
         "priceChange": {
-          "m5": 0.01,
-          "h1": -0.06,
-          "h6": -0.1,
-          "h24": 2
+          "m5": 0.28,
+          "h1": 0.32,
+          "h6": 0.09,
+          "h24": 2.14
         },
         "liquidity": {
-          "usd": 450098.33,
-          "base": 2043.9385,
-          "quote": 230668
+          "usd": 450553.91,
+          "base": 2039.2542,
+          "quote": 231172
         },
         "pairCreatedAt": 1723699294000,
         "info": {
@@ -4193,42 +4198,42 @@
           "name": "USDT",
           "symbol": "USDT"
         },
-        "priceNative": "107.4987",
-        "priceUsd": "107.49",
+        "priceNative": "107.1917",
+        "priceUsd": "107.19",
         "txns": {
           "m5": {
-            "buys": 14,
-            "sells": 10
+            "buys": 46,
+            "sells": 6
           },
           "h1": {
-            "buys": 170,
-            "sells": 178
+            "buys": 205,
+            "sells": 152
           },
           "h6": {
-            "buys": 753,
+            "buys": 785,
             "sells": 850
           },
           "h24": {
-            "buys": 3892,
-            "sells": 3801
+            "buys": 3913,
+            "sells": 3798
           }
         },
         "volume": {
-          "h24": 454111.06,
-          "h6": 74838.28,
-          "h1": 15103.06,
-          "m5": 2155.66
+          "h24": 454828.67,
+          "h6": 76136.8,
+          "h1": 15492.77,
+          "m5": 2190.4
         },
         "priceChange": {
-          "m5": 0.44,
-          "h1": 0.09,
-          "h6": -0.11,
-          "h24": 2.48
+          "m5": -0.37,
+          "h1": -0.07,
+          "h6": -0.41,
+          "h24": 1.58
         },
         "liquidity": {
-          "usd": 1873542.79,
-          "base": 8725.1568,
-          "quote": 935599
+          "usd": 1870869.92,
+          "base": 8716.1998,
+          "quote": 936564
         },
         "pairCreatedAt": 1669602460000,
         "info": {
@@ -4267,42 +4272,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.4029",
-        "priceUsd": "107.40",
+        "priceNative": "107.5283",
+        "priceUsd": "107.52",
         "txns": {
           "m5": {
-            "buys": 18,
-            "sells": 22
+            "buys": 38,
+            "sells": 34
           },
           "h1": {
-            "buys": 543,
-            "sells": 557
+            "buys": 561,
+            "sells": 560
           },
           "h6": {
-            "buys": 2072,
-            "sells": 2132
+            "buys": 2058,
+            "sells": 2143
           },
           "h24": {
-            "buys": 9385,
-            "sells": 9674
+            "buys": 9392,
+            "sells": 9679
           }
         },
         "volume": {
-          "h24": 423653.48,
-          "h6": 63100.76,
-          "h1": 17243.77,
-          "m5": 939.45
+          "h24": 424507.01,
+          "h6": 63116.15,
+          "h1": 17587.17,
+          "m5": 1383.01
         },
         "priceChange": {
-          "m5": 0.03,
-          "h1": 0.04,
-          "h6": -0.08,
-          "h24": 2.04
+          "m5": 0.23,
+          "h1": 0.31,
+          "h6": 0.03,
+          "h24": 2.1
         },
         "liquidity": {
-          "usd": 45596.03,
-          "base": 396.8735,
-          "quote": 2970.6461
+          "usd": 45645.84,
+          "base": 393.7058,
+          "quote": 3311.3048
         },
         "pairCreatedAt": 1717709957000,
         "info": {
@@ -4341,40 +4346,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.3259",
-        "priceUsd": "107.32",
+        "priceNative": "107.6488",
+        "priceUsd": "107.64",
         "txns": {
           "m5": {
-            "buys": 0,
+            "buys": 2,
             "sells": 0
           },
           "h1": {
-            "buys": 39,
-            "sells": 64
+            "buys": 41,
+            "sells": 58
           },
           "h6": {
-            "buys": 512,
-            "sells": 460
+            "buys": 450,
+            "sells": 437
           },
           "h24": {
-            "buys": 2151,
-            "sells": 2031
+            "buys": 2153,
+            "sells": 2027
           }
         },
         "volume": {
-          "h24": 7616209.85,
-          "h6": 809018.97,
-          "h1": 249063.64,
-          "m5": 0
+          "h24": 7654187.86,
+          "h6": 835937.82,
+          "h1": 268412.62,
+          "m5": 38424.71
         },
         "priceChange": {
-          "h6": -0.2,
-          "h24": 2.02
+          "m5": 0.3,
+          "h1": 0.49,
+          "h6": 0.1,
+          "h24": 2.43
         },
         "liquidity": {
-          "usd": 3624026.77,
-          "base": 23850,
-          "quote": 1064223
+          "usd": 3631715.6,
+          "base": 23494,
+          "quote": 1102572
         },
         "pairCreatedAt": 1715468924000,
         "info": {
@@ -4413,42 +4420,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.4094",
-        "priceUsd": "107.40",
+        "priceNative": "107.5043",
+        "priceUsd": "107.50",
         "txns": {
           "m5": {
-            "buys": 28,
-            "sells": 32
+            "buys": 35,
+            "sells": 30
           },
           "h1": {
-            "buys": 421,
-            "sells": 456
+            "buys": 429,
+            "sells": 452
           },
           "h6": {
-            "buys": 1671,
-            "sells": 1707
+            "buys": 1659,
+            "sells": 1692
           },
           "h24": {
-            "buys": 7612,
-            "sells": 7503
+            "buys": 7609,
+            "sells": 7507
           }
         },
         "volume": {
-          "h24": 39477.85,
-          "h6": 8164.74,
-          "h1": 2404.35,
-          "m5": 105.48
+          "h24": 39524.08,
+          "h6": 8073.44,
+          "h1": 2417.93,
+          "m5": 151.18
         },
         "priceChange": {
-          "m5": 0.03,
-          "h1": 0.05,
-          "h6": -0.06,
-          "h24": 2.06
+          "m5": 0.19,
+          "h1": 0.3,
+          "h6": -0.01,
+          "h24": 2.07
         },
         "liquidity": {
-          "usd": 23855.01,
-          "base": 154.1601,
-          "quote": 7296.7459
+          "usd": 23869.64,
+          "base": 153.828,
+          "quote": 7332.4663
         },
         "pairCreatedAt": 1749283128000,
         "info": {
@@ -4484,42 +4491,42 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.6020",
-        "priceUsd": "107.60",
+        "priceNative": "107.6558",
+        "priceUsd": "107.65",
         "txns": {
           "m5": {
-            "buys": 7,
-            "sells": 4
+            "buys": 14,
+            "sells": 1
           },
           "h1": {
-            "buys": 119,
-            "sells": 182
+            "buys": 127,
+            "sells": 179
           },
           "h6": {
-            "buys": 1312,
-            "sells": 1309
+            "buys": 1319,
+            "sells": 1301
           },
           "h24": {
-            "buys": 2310,
+            "buys": 2313,
             "sells": 2447
           }
         },
         "volume": {
-          "h24": 411266.42,
-          "h6": 220500.55,
-          "h1": 17645.25,
-          "m5": 432.12
+          "h24": 411567.38,
+          "h6": 219696.41,
+          "h1": 17528.45,
+          "m5": 1009.8
         },
         "priceChange": {
-          "m5": 0.6,
-          "h1": 0.28,
-          "h6": -0.44,
-          "h24": 2.18
+          "m5": 0.65,
+          "h1": 0.42,
+          "h6": 0.63,
+          "h24": 2.14
         },
         "liquidity": {
-          "usd": 4400160.02,
-          "base": 20477,
-          "quote": 2196784
+          "usd": 4401261.73,
+          "base": 20470,
+          "quote": 2197474
         },
         "pairCreatedAt": 1740359128000,
         "info": {
@@ -4558,42 +4565,42 @@
           "name": "USDT",
           "symbol": "USDT"
         },
-        "priceNative": "107.4585",
-        "priceUsd": "107.45",
+        "priceNative": "107.6415",
+        "priceUsd": "107.64",
         "txns": {
           "m5": {
-            "buys": 41,
-            "sells": 35
+            "buys": 31,
+            "sells": 10
           },
           "h1": {
-            "buys": 465,
-            "sells": 461
+            "buys": 473,
+            "sells": 437
           },
           "h6": {
-            "buys": 1555,
-            "sells": 1508
+            "buys": 1546,
+            "sells": 1507
           },
           "h24": {
-            "buys": 8737,
-            "sells": 9070
+            "buys": 8735,
+            "sells": 9050
           }
         },
         "volume": {
-          "h24": 35432.24,
-          "h6": 5668.57,
-          "h1": 1755.26,
-          "m5": 153.07
+          "h24": 35414.92,
+          "h6": 5671.47,
+          "h1": 1742.71,
+          "m5": 90.26
         },
         "priceChange": {
-          "m5": 0.02,
-          "h1": -0.02,
-          "h6": -0.1,
-          "h24": 1.96
+          "m5": 0.25,
+          "h1": 0.33,
+          "h6": 0.03,
+          "h24": 2.1
         },
         "liquidity": {
-          "usd": 41754.85,
-          "base": 232.4601,
-          "quote": 16775
+          "usd": 41797.38,
+          "base": 232.1371,
+          "quote": 16809
         },
         "pairCreatedAt": 1723699296000,
         "info": {
@@ -4632,40 +4639,41 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.1110",
-        "priceUsd": "107.11",
+        "priceNative": "107.6464",
+        "priceUsd": "107.64",
         "txns": {
           "m5": {
-            "buys": 0,
+            "buys": 1,
             "sells": 0
           },
           "h1": {
-            "buys": 101,
-            "sells": 136
+            "buys": 102,
+            "sells": 135
           },
           "h6": {
-            "buys": 146,
-            "sells": 179
+            "buys": 147,
+            "sells": 178
           },
           "h24": {
-            "buys": 1903,
+            "buys": 1904,
             "sells": 1888
           }
         },
         "volume": {
-          "h24": 31562.56,
-          "h6": 2191.62,
-          "h1": 316.86,
-          "m5": 0
+          "h24": 31562.96,
+          "h6": 2192.02,
+          "h1": 317.26,
+          "m5": 0.4
         },
         "priceChange": {
-          "h1": -0.38,
-          "h6": -0.27,
-          "h24": 1.51
+          "m5": 0.5,
+          "h1": 0.42,
+          "h6": 0.13,
+          "h24": 2.02
         },
         "liquidity": {
-          "usd": 87829.52,
-          "base": 597.7377,
+          "usd": 88149.55,
+          "base": 597.734,
           "quote": 23805
         },
         "pairCreatedAt": 1708568204000,
@@ -4705,19 +4713,19 @@
           "name": "World Liberty Financial USD",
           "symbol": "USD1"
         },
-        "priceNative": "107.3794",
-        "priceUsd": "107.37",
+        "priceNative": "107.4424",
+        "priceUsd": "107.44",
         "txns": {
           "m5": {
-            "buys": 0,
+            "buys": 9,
             "sells": 0
           },
           "h1": {
-            "buys": 32,
-            "sells": 100
+            "buys": 41,
+            "sells": 69
           },
           "h6": {
-            "buys": 241,
+            "buys": 250,
             "sells": 251
           },
           "h24": {
@@ -4726,20 +4734,21 @@
           }
         },
         "volume": {
-          "h24": 1140721.73,
-          "h6": 124518.75,
-          "h1": 35260.01,
-          "m5": 0
+          "h24": 1140790.8,
+          "h6": 128107.32,
+          "h1": 30658.45,
+          "m5": 3588.57
         },
         "priceChange": {
-          "h1": -0.25,
-          "h6": -0.13,
-          "h24": 2.13
+          "m5": 0.06,
+          "h1": -0.06,
+          "h6": -0.07,
+          "h24": 2.11
         },
         "liquidity": {
-          "usd": 4732161.65,
-          "base": 16691,
-          "quote": 2939808
+          "usd": 4733204.52,
+          "base": 16658,
+          "quote": 2943391
         },
         "pairCreatedAt": 1758180063000,
         "info": {
@@ -4778,40 +4787,41 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.3685",
-        "priceUsd": "107.36",
+        "priceNative": "107.4546",
+        "priceUsd": "107.45",
         "txns": {
           "m5": {
-            "buys": 0,
+            "buys": 7,
             "sells": 0
           },
           "h1": {
-            "buys": 31,
+            "buys": 38,
             "sells": 37
           },
           "h6": {
-            "buys": 77,
-            "sells": 73
+            "buys": 76,
+            "sells": 71
           },
           "h24": {
-            "buys": 825,
+            "buys": 831,
             "sells": 796
           }
         },
         "volume": {
-          "h24": 181827.89,
-          "h6": 25626.28,
-          "h1": 12833.37,
-          "m5": 0
+          "h24": 183210.66,
+          "h6": 24245.61,
+          "h1": 14216.14,
+          "m5": 1382.76
         },
         "priceChange": {
-          "h6": -0.09,
-          "h24": 1.91
+          "m5": 0.08,
+          "h1": 0.08,
+          "h24": 1.6
         },
         "liquidity": {
-          "usd": 112147.49,
-          "base": 821.457,
-          "quote": 23948
+          "usd": 112218.21,
+          "base": 808.5886,
+          "quote": 25331
         },
         "pairCreatedAt": 1712170754000,
         "info": {
@@ -4859,7 +4869,7 @@
           },
           "h1": {
             "buys": 8,
-            "sells": 18
+            "sells": 9
           },
           "h6": {
             "buys": 41,
@@ -4873,11 +4883,11 @@
         "volume": {
           "h24": 718.62,
           "h6": 80.95,
-          "h1": 27.57,
+          "h1": 19.54,
           "m5": 0
         },
         "priceChange": {
-          "h1": 0.25,
+          "h1": 0.45,
           "h6": 0.39,
           "h24": 2.24
         },
@@ -4998,44 +5008,45 @@
           "name": "USDT",
           "symbol": "USDT"
         },
-        "priceNative": "107.6191",
-        "priceUsd": "107.61",
+        "priceNative": "107.6356",
+        "priceUsd": "107.63",
         "txns": {
           "m5": {
-            "buys": 0,
+            "buys": 1,
             "sells": 0
           },
           "h1": {
-            "buys": 7,
-            "sells": 14
+            "buys": 8,
+            "sells": 8
           },
           "h6": {
-            "buys": 36,
+            "buys": 37,
             "sells": 60
           },
           "h24": {
-            "buys": 272,
+            "buys": 267,
             "sells": 324
           }
         },
         "volume": {
-          "h24": 698.34,
-          "h6": 75.11,
-          "h1": 18.94,
-          "m5": 0
+          "h24": 695.32,
+          "h6": 75.74,
+          "h1": 15.29,
+          "m5": 0.62
         },
         "priceChange": {
-          "h1": 0.16,
-          "h6": 0.23,
-          "h24": 2.17
+          "m5": 0.02,
+          "h1": 0.3,
+          "h6": 0.25,
+          "h24": 2.06
         },
         "liquidity": {
-          "usd": 13367.01,
-          "base": 62.1636,
-          "quote": 6677.0174
+          "usd": 13368.04,
+          "base": 62.1578,
+          "quote": 6677.6461
         },
-        "fdv": 68415718423,
-        "marketCap": 68415718423,
+        "fdv": 68426238940,
+        "marketCap": 68426238940,
         "pairCreatedAt": 1703167204000,
         "info": {
           "imageUrl": "https://cdn.dexscreener.com/cms/images/fcfb87378d3198fe753ca08ba51a5552a84f34cf48cd09d83971aa195bdf00d2?width=800&height=800&quality=95&format=auto",
@@ -5073,40 +5084,41 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.4402",
-        "priceUsd": "107.44",
+        "priceNative": "107.6975",
+        "priceUsd": "107.69",
         "txns": {
           "m5": {
-            "buys": 0,
+            "buys": 1,
             "sells": 0
           },
           "h1": {
-            "buys": 39,
-            "sells": 30
+            "buys": 40,
+            "sells": 29
           },
           "h6": {
-            "buys": 55,
+            "buys": 56,
             "sells": 43
           },
           "h24": {
-            "buys": 407,
-            "sells": 360
+            "buys": 406,
+            "sells": 359
           }
         },
         "volume": {
-          "h24": 1089.55,
-          "h6": 109.85,
-          "h1": 30.24,
-          "m5": 0
+          "h24": 1090,
+          "h6": 110.3,
+          "h1": 30.68,
+          "m5": 0.44
         },
         "priceChange": {
-          "h1": -0.04,
-          "h6": 0.25,
-          "h24": 1.56
+          "m5": 0.24,
+          "h1": 1.28,
+          "h6": 0.49,
+          "h24": 2.01
         },
         "liquidity": {
-          "usd": 182563.4,
-          "base": 1505.8314,
+          "usd": 182950.89,
+          "base": 1505.8272,
           "quote": 20776
         },
         "pairCreatedAt": 1715381400000,
@@ -5146,19 +5158,19 @@
           "name": "USD Coin",
           "symbol": "USDC"
         },
-        "priceNative": "107.5841",
-        "priceUsd": "107.58",
+        "priceNative": "107.6433",
+        "priceUsd": "107.64",
         "txns": {
           "m5": {
-            "buys": 0,
+            "buys": 7,
             "sells": 0
           },
           "h1": {
-            "buys": 9,
-            "sells": 46
+            "buys": 16,
+            "sells": 33
           },
           "h6": {
-            "buys": 121,
+            "buys": 128,
             "sells": 121
           },
           "h24": {
@@ -5167,20 +5179,21 @@
           }
         },
         "volume": {
-          "h24": 118641.85,
-          "h6": 12402.91,
-          "h1": 3171.08,
-          "m5": 0
+          "h24": 118561.51,
+          "h6": 12841.16,
+          "h1": 2917.92,
+          "m5": 438.25
         },
         "priceChange": {
-          "h1": -0.33,
-          "h6": 0.39,
-          "h24": 2.15
+          "m5": 0.06,
+          "h1": 0.42,
+          "h6": 0.45,
+          "h24": 2.13
         },
         "liquidity": {
-          "usd": 2882913.48,
-          "base": 13418,
-          "quote": 1439291
+          "usd": 2883708.07,
+          "base": 13414,
+          "quote": 1439729
         },
         "pairCreatedAt": 1669602460000,
         "info": {

@@ -40,11 +40,11 @@ class DexScreenerMarketClient:
                 payload=json.load(response)
             observed_at=time.time()
         except urllib.error.HTTPError as exc:
-            return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","observed_at":observed_at,"reason":"HTTP_"+str(exc.code)}
+            return {"status":"UNAVAILABLE","mint":mint,"request_url":url,"market_match_status":"UNCONFIRMED","source":"DEXSCREENER_API","observed_at":observed_at,"reason":"HTTP_"+str(exc.code)}
         except (urllib.error.URLError,TimeoutError,OSError,ValueError,TypeError):
-            return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","observed_at":observed_at,"reason":"NETWORK_OR_RESPONSE_INVALID"}
+            return {"status":"UNAVAILABLE","mint":mint,"request_url":url,"market_match_status":"UNCONFIRMED","source":"DEXSCREENER_API","observed_at":observed_at,"reason":"NETWORK_OR_RESPONSE_INVALID"}
         if not isinstance(payload,list):
-            return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","observed_at":observed_at,"reason":"RESPONSE_INVALID"}
+            return {"status":"UNAVAILABLE","mint":mint,"request_url":url,"market_match_status":"UNCONFIRMED","source":"DEXSCREENER_API","observed_at":observed_at,"reason":"RESPONSE_INVALID"}
 
         pairs=[];rejected=[]
         for pair in payload:
@@ -80,7 +80,7 @@ class DexScreenerMarketClient:
             "status":"OK",
             "source":"DEXSCREENER_API",
             "observed_at":observed_at,
-            "pair_count":len(pairs),
+            "request_url":url,"pair_count":len(pairs),
             "mint":mint,"market_match_status":"EXACT_BASE_MINT_MATCH",
             "rejected_pairs":rejected,
             "identity_records":[{"mint":mint,"name":x["baseToken"].get("name"),"symbol":x["baseToken"].get("symbol"),

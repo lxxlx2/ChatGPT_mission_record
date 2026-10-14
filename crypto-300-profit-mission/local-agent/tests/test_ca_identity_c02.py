@@ -104,3 +104,40 @@ def test_real_null_mint_never_becomes_token_identity():
     profile=WalletClusterAnalyzer(rows[2]['mint'],rpc=RPC()).token_profile()
     assert profile['status']=='UNCONFIRMED'
     assert profile['reason']=='MINT_ACCOUNT_NOT_VERIFIED'
+
+
+def test_same_name_real_mints_rpc_sqlite_cache_stays_exact(tmp_path):
+    import json
+    from pathlib import Path
+    from mission_agent.meme.cluster import SolanaReadOnlyRPC,RpcCache,WalletClusterAnalyzer
+    from test_meme_market_and_rpc import Response
+    rows=json.loads((Path(__file__).resolve().parents[2]/'meme/evidence/c02/official-rpc-attempts.json').read_text())
+    calls=[]
+    def open_url(request,**kwargs):
+        payload=json.loads(request.data);calls.append(payload['params'][0])
+        return Response(next(r['response'] for r in rows if r['request']['params']==payload['params']))
+    cache=RpcCache(tmp_path/'research-only.sqlite')
+    rpc=SolanaReadOnlyRPC('https://api.mainnet-beta.solana.com',fallback_endpoints=[],min_interval=0,cache=cache,open_url=open_url)
+    mint_a=rows[0]['mint'];mint_b='4cdbUv2X2TUymvdBYSo4DrKXChMVwSnHHZjMyWhBpump'
+    first=WalletClusterAnalyzer(mint_a,rpc=rpc).token_profile()
+    second=WalletClusterAnalyzer(mint_b,rpc=rpc).token_profile()
+    again=WalletClusterAnalyzer(mint_a,rpc=rpc).token_profile()
+    assert first['metadata']['records'][0]['mint']==again['metadata']['records'][0]['mint']==mint_a
+    assert second['metadata']['records'][0]['mint']==mint_b
+    assert mint_a in calls and mint_b in calls
+    assert rpc.cache_hits>0
+    cache.close()
+
+
+def test_metadata_absent_does_not_promote_real_market_identity():
+    import json,copy
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[2]/'meme/evidence/c02'
+    case=json.loads((root/'real-case-results.json').read_text())[0]
+    # Explicit counterfactual outage on a real market response; not real issuer state.
+    profile=copy.deepcopy(case['token_profile']);profile['metadata']={'status':'UNCONFIRMED','records':[], 'attempts':[{'source':'TOKEN2022_METADATA','reason':'INJECTED_METADATA_MISSING'}]}
+    result=reconcile_identity(case['mint'],profile,case['market'])
+    assert result['identity_status']=='UNCONFIRMED'
+    assert result['display_name'] is None
+    assert any(r['source']=='DEXSCREENER_API' for r in result['sources'])
+    assert result['metadata_attempts'][0]['reason']=='INJECTED_METADATA_MISSING'
