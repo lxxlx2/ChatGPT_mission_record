@@ -88,9 +88,16 @@ def audit_one(row, forward_start_ms, forward_end_ms, archive_root, load=locally_
     """Evaluate every candidate, including no-signal and missing-source cases."""
     symbol = row["symbol_exact"]
     lane = row["population_lane"]
+    recent = lane == "PREEXISTING_AT_WINDOW_START" and (
+        row.get("pre_T0_recent_onboarding_minute_utc") is not None)
     if lane == "PREEXISTING_AT_WINDOW_START":
-        required_start = forward_start_ms - WARMUP
-        origin = "REQUIRES_24H_HISTORICAL_WARMUP"
+        required_start = (stage131.stamp(
+            row["pre_T0_recent_onboarding_minute_utc"])
+            if recent else forward_start_ms-WARMUP)
+        if recent and not forward_start_ms-WARMUP < required_start < forward_start_ms:
+            raise ValueError("STAGE143_RECENT_ONBOARD_CLAIM_OUTSIDE_PRET0_WARMUP")
+        origin = ("T0_EXCHANGEINFO_RECENT_ONBOARD_CLAIM_PIT_UNVERIFIED"
+                  if recent else "REQUIRES_24H_HISTORICAL_WARMUP")
     elif lane == "IN_WINDOW_FIRST_TRADABLE_MINUTE_CANDIDATE":
         required_start = stage131.stamp(row["first_observed_minute_utc"])
         if not forward_start_ms <= required_start < forward_end_ms:
@@ -103,18 +110,26 @@ def audit_one(row, forward_start_ms, forward_end_ms, archive_root, load=locally_
     receipts = []
     present = []
     missing = []
+    claimed_origin_first_archive_bar_matches = not recent
     for utc_day in required:
         bars, receipt = load(archive_root, symbol, utc_day)
         receipts.append(receipt)
         if bars is None:
             missing.append(utc_day)
             continue
+        # The first source day must really BEGIN on the original T0
+        # onboarding claim minute. A missing or older first archive bar
+        # cannot be treated as evidence of an invented listing history.
+        if recent and utc_day == required[0]:
+            claimed_origin_first_archive_bar_matches = (
+                bool(bars) and bars[0][0] == required_start)
         # Stage130 validated each original publisher ZIP / minute and ordering.
         present.extend(b[0] for b in bars
                        if required_start <= b[0] < forward_end_ms)
 
     count_expected = (forward_end_ms - required_start) // ONE_MINUTE
-    complete = (not missing and len(present) == count_expected
+    complete = (not missing and claimed_origin_first_archive_bar_matches
+                and len(present) == count_expected
                 and all(t == required_start + i * ONE_MINUTE
                         for i, t in enumerate(present)))
     # No extra/overlapping timestamps may be mislabeled as full coverage.
@@ -128,6 +143,16 @@ def audit_one(row, forward_start_ms, forward_end_ms, archive_root, load=locally_
         "symbol_exact": symbol,
         "population_lane": lane,
         "first_observation_source_boundary": origin,
+        "recent_pre_T0_onboarded_cold_start_claim": recent,
+        "recent_pre_T0_onboard_claim_original_ms": (
+            row.get("pre_T0_recent_onboarding_claim_ms") if recent else None),
+        "first_archive_bar_matches_T0_onboard_minute": (
+            claimed_origin_first_archive_bar_matches if recent else None),
+        "history_subcohort": (
+            "PRE_T0_RECENT_ONBOARDING_COLD_START_UNVERIFIED_PIT" if recent
+            else ("IN_WINDOW_NEW_LISTING_UNVERIFIED_PIT"
+                  if lane != "PREEXISTING_AT_WINDOW_START"
+                  else "PREEXISTING_FULL_24H_WARMUP")),
         "required_source_from_utc": stage133.iso(required_start),
         "required_source_to_exclusive_utc": stage133.iso(forward_end_ms),
         "expected_minute_count": count_expected,
