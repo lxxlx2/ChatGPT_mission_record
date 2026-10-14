@@ -53,6 +53,15 @@
 - 原本 8 项关联测试假定用户必须选择扫描深度且无条件请求 $30；经真实 full-suite 红灯，已将**原测试**逐项迁移到当前需求，保留关键信息门禁、异常预览、历史报价不能复活、null 不当零、真实 Mac 验收脚本等保障。最终 [CI #38424959476](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38424959476) 在精确 PR #46 HEAD `e2fdb48e1e7d98a3f39d3153997b3b76f4d413ae` 成功：旧 main 用同一新测试得到预期断言红灯 `OLD_MAIN_EXPECTED_RED_PASS`；新 HEAD 5 项专项、1,432 项全量回归、语法及 lint 均 PASS。仅为代码验收，仍须另 AI 独立 Review，当前不得合并或部署。
 - C08 的“用户明确填买入金额后单独临时报价”尚未实现，C01 的 Top20/首买/funding 全链深扫需 C05 继续；因而 **C01 与 C08 都暂保持 [ ]**，不可宣称已经通过端到端完整业务验收。合并/部署仍需他 AI Review、真实 Mac 验收与明确发布授权。
 
+## 2026-10-14 A04 历史分页 / 断点恢复：实际执行进度
+
+- 本任务由 ChatGPT 接手；Codex 并行负责 C02，不修改 C02/PR #46 代码与工作区。本轮新 [Draft PR #48](https://github.com/lxxlx2/ChatGPT_mission_record/pull/48) 堆叠于未合并 PR #45（后者依赖 #43 和 #42）；PR #48 精确 HEAD `26c40912c146dca3e85eb15d69570999dcc7e24f`。
+- 新 `wallet_history_replay.py` 已实现 finalized `getSignaturesForAddress` 真实 `before` 分页、最多 1000 条/页、一页全部待处理签名和 cursor 同一 SQLite 事务落盘、`getTransaction(jsonParsed)` 原始事实+按钱包视角同一事务落盘、来源中断后先恢复 pending 再继续下一页、多钱包同签名全局原始交易只保存一份、来源变更证据不覆盖旧事实。
+- 新手动研究 CLI `scripts/frank_research_history_readonly.py` 默认 `PLAN_ONLY`，不访问 RPC、不创建 Sidecar；只有显式 `--execute` 才经研究 allowlist + 批次上限请求 finalized RPC 并写独立研究 Sidecar。429/403/超时/null transaction 均形成可重试来源缺口，不将失败当零。
+- [精确 HEAD CI #38499432278](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38499432278) **SUCCESS**，43 项重点及 1,525 项完整 local-agent（含真实 Git 回放）PASS；Python/Node 静态与语法检查 PASS。真实合约端只验证了 Frank 研究钱包两页各四笔 finalized signature、无重叠和其中一笔 `getTransaction` 的匹配 Slot/Signature，**不是**本地 Mac 全历史已入账。
+- 证据和限制：`meme/FRANK_CA_A04_HISTORY_PAGINATION_RESUME_CHECKPOINT_20261014.md`，随 PR #48 保存。只确认来自 RPC 的可用历史分页尾部，不认定创世/全链完整；owner 主地址以外的 ATA 历史、首次 market BUY / funding 路由、完整成本/PnL、重新扫描新 HEAD 均未完成。继续保留 **A04 [ ]**，不标记 DONE。另 AI 审查、Mac 本地真实 Sidecar/32 Mint 验收和发布授权均未完成。
+- 无主 main 合并、Mac 部署、LaunchAgent 重启、冻结 Frank V1 策略/投递/Gmail/生产 SQLite 的任何改动。产品主线下一步是 A04 verified ATA 地址范围历史、A05/ F02 精准仓位和独立 Review，不为边界处理长期停滞。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
