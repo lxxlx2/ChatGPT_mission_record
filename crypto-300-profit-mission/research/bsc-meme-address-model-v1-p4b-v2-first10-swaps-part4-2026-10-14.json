@@ -1,0 +1,85 @@
+{
+  "schema": "BSC_P4B_V2_FIRST10_ORIGINAL_POOL_SWAP_LOGS",
+  "part": 4,
+  "index_range": [
+    15,
+    18
+  ],
+  "precommit_git_blob_sha": "09e23ee13f2eaaa3fd0c72790b4072b970fec3c8",
+  "rows": [
+    {
+      "index": 15,
+      "token": "牛来",
+      "pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "from_block": 116314917,
+      "to_block": 116314926,
+      "query_status": "COMPLETE",
+      "event_count": 1,
+      "logs": [
+        {
+          "address": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e",
+            "0x000000000000000000000000deff2f7ad053d6c73dafb7d66ed47fc129bc3d69"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000048c273950000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001470dc249dac3d47",
+          "blockNumber": "0x6eed32b",
+          "transactionHash": "0xb5151c0a3963e1725d96081c99752c4cf384553aa45e25898dad995117049c95",
+          "transactionIndex": "0x3e",
+          "blockHash": "0x02d8678634e21a6882fa8f7a1288544a739be669346ef63c8eef717647762ce4",
+          "blockTimestamp": "0x6a81f7a7",
+          "logIndex": "0x1be",
+          "removed": false
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "token": "MARSCOIN",
+      "pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "from_block": 112668701,
+      "to_block": 112668710,
+      "query_status": "COMPLETE",
+      "event_count": 1,
+      "logs": [
+        {
+          "address": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x000000000000000000000000c5610d040644b0d92b911fd382e2531938193c32",
+            "0x000000000000000000000000c5610d040644b0d92b911fd382e2531938193c32"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000084191793b59e17b0000000000000000000000000000000000000000000000000000351f2cc7716970000000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0xc646cffa9be596eadbae9b47717dd771c95829e0ee2d856180e06526114f534e",
+          "blockNumber": "0x6b7301d",
+          "blockTimestamp": "0x6a68eb64",
+          "transactionHash": "0x511f04ae99dffd3aeecd4ef996229c16175ab73c389d8e68b1717876eed5fd13",
+          "transactionIndex": "0x2",
+          "logIndex": "0x19",
+          "removed": false
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "token": "哈基米 / HAJIMI",
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "from_block": 63838943,
+      "to_block": 63838952,
+      "query_status": "FAILED_OR_TRUNCATED",
+      "details": "[\n  {\n    \"address\": \"0xc33bacff9141da689875e6381c1932348ab4c5cb\",\n    \"topics\": [\n      \"0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822\",\n      \"0x000000000000000000000000799da7d46a88f4366717d0dcc9244cae7543a144\",\n      \"0x000000000000000000000000c88e46cba3dfdec345e422d56e81320ce810c823\"\n    ],\n    \"data\": \"0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000233517adb960000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 18,
+      "token": "BUBB",
+      "pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+      "from_block": 47620838,
+      "to_block": 47620847,
+      "query_status": "COMPLETE",
+      "event_count": 0,
+      "logs": []
+    }
+  ],
+  "production": "NO_GO"
+}
