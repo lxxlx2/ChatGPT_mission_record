@@ -9,6 +9,7 @@
 完整结构规则：
 - `docs/REPOSITORY_STRUCTURE.md`
 - `docs/X_TECHNICAL_POST_WRITING_GUIDE.md`
+- **开发与独立 Review 强制规范**：`docs/DEVELOPMENT_REVIEW_POLICY.md`（单模块完成审查、跨模块整合审查、全功能完成后整体审查）。
 
 ## 内容导航
 
