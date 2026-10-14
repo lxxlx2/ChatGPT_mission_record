@@ -10,7 +10,7 @@
   - Stage64 `monster_stage64_all519_D0_asof61m_official_1m_taker_trades_SHA.jsonl` = `8ebe53acfdfe10413ac1e6f03457d6ace25d9d5a`；
   - Stage83 `monster_stage83_all519_source_and_D1_result.jsonl` = `c76b3a137c8dbe56feed3a79a63adcc0752f5e2e`。
 - 本轮只采用历史 519 条 **已经 WATCH** 的 D0，对其子群体评价「首次 D0 早于锚点后 2× HIGH≥5分钟」的 28 个历史正例，包含全部不涨的负样本及所有六个原七日锚点；**缺少没进入 D0 的全市场正例分母，因此绝不能叫全市场 G1 验证**。
-- 源回放/测试 [CI #38556832716](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38556832716) 在代码 SHA `8c021fc0b8285939c6722caa0c70fe8639d5d760` 实际跑通 Ubuntu job `115827963724` 及 macOS job `115827964100`；两 OS stdout 全部字段独立比对 **字节级 JSON 结果一致**。CI 把全部 519 条真实模型决定、对应锚点的纯 JSONL 与摘要作为两 OS 各一份 artifact；永久摘要已回写 [Stage127 机器结果](evidence/monster_stage127_original519_first_D0_walkforward_historical_summary.json)。CI PASS = 代码复现成功，**不代表模型过关**。
+- 源回放/测试 [CI #38556832716](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38556832716) 在代码 SHA `8c021fc0b8285939c6722caa0c70fe8639d5d760` 实际跑通 Ubuntu job `115827963724` 及 macOS job `115827964100`；两 OS stdout 输出解析后全部研究字段逐项对比 **数值与结构一致**。CI 把全部 519 条真实模型决定、对应锚点的纯 JSONL 与摘要作为两 OS 各一份 artifact；永久摘要已回写 [Stage127 机器结果](evidence/monster_stage127_original519_first_D0_walkforward_historical_summary.json)。CI PASS = 代码复现成功，**不代表模型过关**。
 
 ## B. 真实结果和冻结门槛
 
