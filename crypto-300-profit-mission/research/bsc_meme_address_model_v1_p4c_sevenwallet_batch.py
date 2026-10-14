@@ -41,7 +41,7 @@ def build(d):
             and len(pre["activity_only_controls"])==2
             and len(winners)==2 and len(owner)==len(receipt)==14
             and len(native)==11
-            and all(x["production"]=="NO_GO" for x in d),
+            and all(x.get("production",x.get("summary",{}).get("production",x.get("summary",{}).get("live_production")))=="NO_GO" for x in d),
             "all original selected 7 active wallet sample evidence incomplete")
     require(d[1]["precommit_git_blob_sha"]==d[2]["precommit_git_blob_sha"]==PINS[0][1]
             and d[3]["precommit_sha"]==d[4]["precommit_sha"]
