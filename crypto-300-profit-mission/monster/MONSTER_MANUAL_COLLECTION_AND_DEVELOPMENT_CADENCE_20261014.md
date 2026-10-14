@@ -85,3 +85,14 @@ done
 - 实际 Git 文件 readback 已成功，代码目前具备对 Stage133 原始三份数据包重新校验、生成 T0 所有活跃 USDT 永续合约 Stage131 双人口账本、保留停牌或在 T0 不活跃后出现的候选、拒绝重复和自称认证、输出冻结 Stage77 门槛及缺失证据清单的入口。它**不能**证明 Stage133 已实际采集新 T0，也不能证明七日全市场、Issuer PIT、未来新增合约完整覆盖、G0/G1 PASS 或模型净收益。
 - GitHub 连接器此时未返回 Stage134 Actions execution/job readback，故当前只能标 `STAGE134_CODE_COMMITTED_READBACK=YES`、`STAGE134_TWO_OS_CI=UNVERIFIED`、`STAGE134_INDEPENDENT_REVIEW=NOT_DONE`；不虚报 CI 或测试结果。CI 尚需用实际 Actions/job logs 完成验证，如失败只修复真实代码错误并在同 PR 复验。
 - **下一唯一主线**：先拿到双 OS Stage134 CI 实际回执；继续将独立真实 T0、窗口内新上市/退市分钟 Publisher SHA 数据和 issuer/PIT 源逐项填入同一不丢样本人口账本，再使用明确新日期的未曝光前瞻对原 Stage77 G0-G4 评分。没有未来七日真实来源时仍 G1 NOT_SCORABLE；Stage116 首窗失败、Stage118/127 REJECTED、Stage132 BUY 负代理原样保留。首次真实新 Stage133 T0 只能用户未来明确在聊天发起手动市场采集；本轮“继续开发”没有触发该采集。继续遵守 Frank 不变、Monster Mac/Gmail/交易 NO_GO。
+
+
+## Stage134 原失败修复与实际双系统验收（2026-10-14）
+
+原 Stage134 offline adapter 首版 CI [#38590196330](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38590196330) / [#38590445939](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38590445939) 实际 FAILURE，根因是 `"VERIFIED" in "RAW_UNVERIFIED_CANDIDATE"` 导致正常新入场候选被误拒，触发一项 ERROR 和两项 FAIL。原结果均原样保留；**未修改历史策略、样本、阈值或冻结日历**。由提交 `a353dee382ea835ab076d63577df37a55e18e3f4` 将输入来源状态改为明确未验证/待定状态白名单，依然拒绝任何自称正式认证/完整的数据。
+
+修复后 [Stage134 真实 GitHub CI #38593075825](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38593075825) 两系统实际 `SUCCESS`：macOS job `115952719882` 和 Ubuntu job `115952720772`，各执行 Python compile、9/9 离线测试与无明确 T0 默认调用拒绝测试，均 PASS。完整技术交付、根因和后续主线见 [Stage134 正式结果](MONSTER_STAGE134_STAGE133_T0_STAGE131_POPULATION_BRIDGE_FIXED_AND_TWO_OS_CI_RESULTS_20261014.md)。
+
+**下一主线为完整新前瞻窗口数据的真实来源与人口覆盖**：Stage133 手动触发的真正 T0、独立源验证的以后七日全市场1m Publisher SHA、窗口中上新/退市/停牌/无WATCH、真实 issuer/交易状态与单位证明，然后原 Stage77 G0-G4 同核心规则样本外验证。离线模块 CI 成功无法证明这些真正未来行情数据已采到，也无法证明实时发送延迟。不得继续把旧31/519币事后调参当新盈利模型。后续可在真正有价值的集成代码或事实来源产生时更新原 PR #30，不创建新监控或定时任务。
+
+`STAGE134_OFFLINE_ADAPTER=DONE`; `STAGE134_MACOS_UBUNTU_CI=PASS`; `STAGE134_ORIGINAL_FAILURES=PRESERVED`; `STAGE133_REAL_T0=NOT_DONE`; `STAGE116_ORIGINAL_FIRST=SOURCE_FAILED_NO_BACKFILL`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `INDEPENDENT_OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `GMAIL=OFF`; `FRANK=UNCHANGED`; `NO_NEW_SCHEDULE`.
