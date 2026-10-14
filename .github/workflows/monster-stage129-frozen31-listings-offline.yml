@@ -1,0 +1,47 @@
+name: Monster Stage129 frozen31 listings source history offline
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage129_new_listings_hourly_recovery.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage129_new_listings_hourly_recovery.py'
+      - '.github/workflows/monster-stage129-frozen31-listings-offline.yml'
+  workflow_dispatch:
+
+jobs:
+  frozen-31-historical:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Historical six source shards are exactly archived bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage129_20250119_fixed_listing_candidate_usdm_1h_source.json)" = "628f1ca0acc89b4badd15333feda98622eb50858"
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage129_20250419_fixed_listing_candidate_usdm_1h_source.json)" = "b0c2820f1b85b422cd9041d986c1d99bd25d6985"
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage129_20250719_fixed_listing_candidate_usdm_1h_source.json)" = "7166e42b712cf9c6608c2e1d4c99bebcce05ec27"
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage129_20251019_fixed_listing_candidate_usdm_1h_source.json)" = "5f5ac9c97e34965c3793fc047da8e31279d852d5"
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage129_20260419_fixed_listing_candidate_usdm_1h_source.json)" = "57e5d3ed2b4d85b5fc4d45093408a4aad4ebfe1a"
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage129_20260719_fixed_listing_candidate_usdm_1h_source.json)" = "b24786058add14a348dd6879fc957cfd5824af71"
+      - name: Test frozen original31 and complete hour provenance, no network
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage129_new_listings_hourly_recovery.py
+          python -m unittest -v test_monster_v4_stage129_new_listings_hourly_recovery.py
+      - name: Real archived 31 source paths, retain 31 positive and negative rows
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage129_new_listings_hourly_recovery.py --out stage129_real31.json --expect-source-count 31
+          python -c 'import json; x=json.load(open("stage129_real31.json")); assert len(x["all_source_cohort_rows"])==31 and x["gross_first_observed_hour_to_later_high_at_least_2x_cases"]==2 and x["real_new_G1_crypto_full_market"]=="NOT_SCORABLE" and x["monster_deployment"]=="NO_GO"'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage129-31-historical-${{ matrix.os }}
+          path: stage129_real31.json
+          retention-days: 30
