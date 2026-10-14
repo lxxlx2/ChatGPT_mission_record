@@ -19,17 +19,23 @@ def original_t0():
     return s133.validate_three_http_records(*fixture())
 
 
+def epoch_ms(text):
+    from datetime import datetime
+    return int(datetime.fromisoformat(
+        text.replace("Z", "+00:00")).timestamp() * 1000)
+
+
 def raw_event(symbol, state="TRADING", at="2026-10-28T06:20:12Z",
               recv="2026-10-28T06:20:25Z", st=1, ct="PERPETUAL"):
     payload = {
-        "e": "contractInfo", "E": s131.stamp(at), "s": symbol,
-        "ot": s131.stamp("2026-10-28T06:20:00Z"), "cs": state,
+        "e": "contractInfo", "E": epoch_ms(at), "s": symbol,
+        "ot": epoch_ms("2026-10-28T06:20:00Z"), "cs": state,
         "st": st, "ct": ct,
     }
     raw = json.dumps(payload, ensure_ascii=False, sort_keys=True)
     return {
         "raw": raw, "raw_sha256": hashlib.sha256(raw.encode()).hexdigest(),
-        "received_ms": s131.stamp(recv), "source_stream": "!contractInfo"}
+        "received_ms": epoch_ms(recv), "source_stream": "!contractInfo"}
 
 
 def saved(*rows):
@@ -107,11 +113,11 @@ class Stage139Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "SHA256_DRIFT"):
             s139.inspect(original_t0(), saved(bad))
         before_event = copy.deepcopy(good)
-        before_event["received_ms"] = s131.stamp("2026-10-28T06:20:00Z")
+        before_event["received_ms"] = epoch_ms("2026-10-28T06:20:00Z")
         with self.assertRaisesRegex(ValueError, "RECEIPT_CLOCK_UNTRUSTWORTHY"):
             s139.inspect(original_t0(), saved(before_event))
         too_late = copy.deepcopy(good)
-        too_late["received_ms"] = s131.stamp("2026-10-28T06:40:00Z")
+        too_late["received_ms"] = epoch_ms("2026-10-28T06:40:00Z")
         with self.assertRaisesRegex(ValueError, "RECEIPT_CLOCK_UNTRUSTWORTHY"):
             s139.inspect(original_t0(), saved(too_late))
 
