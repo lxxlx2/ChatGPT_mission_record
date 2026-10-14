@@ -1,0 +1,52 @@
+name: Monster Stage114 Compact Source Locked Audit
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage114-source-locked-compact-summary.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_source_locked_summary.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_locked_compact_audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exact Stage114 1.56MB Git evidence SHA and original519 denominator
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_source_locked_summary.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_source_locked_summary.py --out /tmp/stage114_compact_summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage114-source-locked-compact-original519
+          path: /tmp/stage114_compact_summary.json
+          retention-days: 60
+      - name: Archive hash-locked compact report to original PR30 only
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage114_source_locked_compact_summary.json
+          cp /tmp/stage114_compact_summary.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE114_COMPACT_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive Stage114 source-locked compact all519 entry parity"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE114_COMPACT_HASH_VERIFIED_ARCHIVE; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE114_COMPACT_GIT_ARCHIVE_FAILED
+          exit 1
