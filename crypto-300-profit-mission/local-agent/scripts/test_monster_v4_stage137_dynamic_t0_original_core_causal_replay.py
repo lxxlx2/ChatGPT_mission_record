@@ -211,6 +211,29 @@ class Stage137Tests(unittest.TestCase):
         # Check no original 24h values were imagined at first observation.
         self.assertFalse(baseline["new_listing_initial_24h_quote_history_available"])
 
+    def test_claude_p1_real_frozen_D1_reignition_from_new_listing_closed_minute_source(self):
+        from decimal import Decimal
+        first=s131.stamp("2026-10-28T06:21:00Z")
+        bars=[]
+        for n in range(150):
+            price=(Decimal("1") if n<30
+                   else Decimal("1.12") if n<60
+                   else Decimal("1.30"))
+            quote=Decimal("400000") if n>=60 else Decimal("100000")
+            high=Decimal("2.25") if n==125 else price*Decimal("1.01")
+            bars.append((first+n*60_000,price,high,price*Decimal("0.99"),
+                         price,quote,1200))
+        scored=s137.replay_new_arrival_cold_start(
+            "NEWUSDT",first,first+150*60_000,bars,s137.original_core_contract())
+        self.assertIsNotNone(scored["D0_first_UTC"])
+        self.assertIsNotNone(scored["D1_first_UTC"])
+        self.assertEqual(scored["D1_entry_path"],"REIGNITION_AFTER_D0")
+        self.assertGreaterEqual(s131.stamp(scored["D1_first_UTC"]),first+61*60_000)
+        self.assertTrue(scored["gross_future_labels_not_real_profit"][
+            "D1_first_pre_GT2x_5m"])
+        self.assertFalse(scored["first_listing_time_independently_attested"])
+        self.assertFalse(scored["source_conditioned_not_independent_G1"] is False)
+
     def test_claude_p2_cold_first_tick_at_O_plus_two_must_wait_one_more_3m_slot(self):
         from decimal import Decimal
         first=s131.stamp("2026-10-28T06:22:00Z")
