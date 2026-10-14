@@ -17,6 +17,9 @@ from .wallet_instruction_evidence import transfer_instructions
 
 
 _BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+_CURRENT_VIEW_KIND = "WALLET_TX_VIEW_V3"
+_CURRENT_VIEW_VERSION = "SOL_TOKEN_VIEW_V3"
+_CURRENT_VIEW_SUFFIX = ":v3"
 _HISTORY_SCHEMA = """
 CREATE TABLE IF NOT EXISTS wallet_history_cursor (
     wallet TEXT PRIMARY KEY,
@@ -165,6 +168,11 @@ class HistoryJournal:
                 self.db.execute(
                     "ALTER TABLE wallet_history_signature ADD COLUMN v2_error_code TEXT"
                 )
+        if "v3_error_code" not in columns:
+            with self.db:
+                self.db.execute(
+                    "ALTER TABLE wallet_history_signature ADD COLUMN v3_error_code TEXT"
+                )
 
     def state(self, wallet: str) -> dict:
         if not _solana_pubkey_32_bytes(wallet):
@@ -188,12 +196,12 @@ class HistoryJournal:
             (wallet,),
         ).fetchall()
         # The signature may have been marked CAPTURED by an old normalizer.
-        # That is not proof of an accurate V2 economic view. Rebuilding V2
-        # does not rewrite the old raw, signature or v1 projection.
+        # That is not proof of an accurate V3 economic view. V1 and V2
+        # projections are preserved verbatim, never silently upgraded.
         projection = self.db.execute(
             "SELECT COUNT(*) AS total,"
             "SUM(CASE WHEN v.payload_json IS NULL THEN 1 ELSE 0 END) AS absent,"
-            "SUM(CASE WHEN h.v2_error_code IS NOT NULL THEN 1 ELSE 0 END) AS blocked,"
+            "SUM(CASE WHEN h.v3_error_code IS NOT NULL THEN 1 ELSE 0 END) AS blocked,"
             "SUM(CASE WHEN json_extract(v.payload_json,"
             " '$.token_owner_coverage_complete') = 0 THEN 1 ELSE 0 END) AS owner_gaps,"
             "SUM(CASE WHEN json_extract(v.payload_json,"
@@ -203,13 +211,27 @@ class HistoryJournal:
             " '$.native_sol_coverage_status') = 'NATIVE_SOL_BALANCE_EVIDENCE_MISSING'"
             " THEN 1 ELSE 0 END) AS native_missing "
             "FROM wallet_history_signature h "
-            "LEFT JOIN evidence_documents v ON v.kind='WALLET_TX_VIEW_V2' "
-            "AND v.identity=(h.wallet||':'||h.signature||':'||h.slot||':v2') "
+            "LEFT JOIN evidence_documents v ON v.kind='WALLET_TX_VIEW_V3' "
+            "AND v.identity=(h.wallet||':'||h.signature||':'||h.slot||':v3') "
             "WHERE h.wallet=? AND h.state='CAPTURED'",
             (wallet,),
         ).fetchone()
-        v2_missing = int(projection["absent"] or 0)
-        v2_blocked = int(projection["blocked"] or 0)
+        v3_missing = int(projection["absent"] or 0)
+        v3_blocked = int(projection["blocked"] or 0)
+        # Past V2 documents and errors remain available for audit, not
+        # eligible to satisfy the currently-required V3 economic coverage.
+        legacy_v2 = self.db.execute(
+            "SELECT COUNT(*) AS n FROM wallet_history_signature h "
+            "JOIN evidence_documents d ON d.kind='WALLET_TX_VIEW_V2' "
+            "AND d.identity=(h.wallet||':'||h.signature||':'||h.slot||':v2') "
+            "WHERE h.wallet=? AND h.state='CAPTURED'",
+            (wallet,),
+        ).fetchone()["n"]
+        old_v2_errors = self.db.execute(
+            "SELECT COUNT(*) AS n FROM wallet_history_signature "
+            "WHERE wallet=? AND v2_error_code IS NOT NULL",
+            (wallet,),
+        ).fetchone()["n"]
         owner_gaps = int(projection["owner_gaps"] or 0)
         native_gaps = int(projection["native_gaps"] or 0)
         native_missing = int(projection["native_missing"] or 0)
@@ -217,16 +239,16 @@ class HistoryJournal:
             row["reason"]: row["n"] for row in missing_rows
         }
         blocked_rows = self.db.execute(
-            "SELECT v2_error_code AS reason, COUNT(*) AS n "
+            "SELECT v3_error_code AS reason, COUNT(*) AS n "
             "FROM wallet_history_signature WHERE wallet=? AND state='CAPTURED' "
-            "AND v2_error_code IS NOT NULL GROUP BY v2_error_code",
+            "AND v3_error_code IS NOT NULL GROUP BY v3_error_code",
             (wallet,),
         ).fetchall()
         for row in blocked_rows:
             gap_counts[row["reason"]] = gap_counts.get(row["reason"], 0) + row["n"]
         source_end = bool(current and current["pagination_end_observed"])
         economic_gaps = bool(
-            v2_missing or v2_blocked or owner_gaps or native_gaps or native_missing)
+            v3_missing or v3_blocked or owner_gaps or native_gaps or native_missing)
         coverage = ("PARTIAL" if not source_end or c.get("PENDING")
                     else "PARTIAL_ECONOMIC_EVIDENCE" if economic_gaps
                     else "AVAILABLE_SOURCE_END_NOT_GENESIS_PROVEN")
@@ -242,8 +264,12 @@ class HistoryJournal:
             "oldest_slot_observed": range_row["oldest"],
             "newest_slot_observed": range_row["newest"],
             "missing_detail_counts": gap_counts,
-            "v2_missing_count": v2_missing,
-            "v2_blocked_count": v2_blocked,
+            "required_economic_view_kind": _CURRENT_VIEW_KIND,
+            "normalizer_version": _CURRENT_VIEW_VERSION,
+            "v3_missing_count": v3_missing,
+            "v3_blocked_count": v3_blocked,
+            "legacy_v2_document_count": legacy_v2,
+            "legacy_v2_error_count": old_v2_errors,
             "token_owner_incomplete_count": owner_gaps,
             "native_sol_unclassified_count": native_gaps,
             "native_sol_balance_evidence_missing_count": native_missing,
@@ -355,14 +381,18 @@ class HistoryJournal:
             raise SourceEvidenceError("TRANSACTION_VIEW_IDENTITY_MISMATCH")
         if wallet_view.get("research_wallet") != wallet:
             raise SourceEvidenceError("WALLET_VIEW_OWNER_MISMATCH")
+        if (wallet_view.get("normalizer_version") != _CURRENT_VIEW_VERSION
+                or wallet_view.get("schema_version") != 3):
+            raise SourceEvidenceError("WALLET_VIEW_NORMALIZER_VERSION_MISMATCH")
         view_hash = wallet_view.get("canonical_event_sha256")
         if view_hash != _hash({k: v for k, v in wallet_view.items()
                                if k != "canonical_event_sha256"}):
             raise SourceEvidenceError("WALLET_VIEW_HASH_MISMATCH")
         documents = (
             ("RAW_TX", signature + ":" + str(slot), raw),
-            ("WALLET_TX_VIEW_V2",
-             wallet + ":" + signature + ":" + str(slot) + ":v2", wallet_view),
+            (_CURRENT_VIEW_KIND,
+             wallet + ":" + signature + ":" + str(slot)
+             + _CURRENT_VIEW_SUFFIX, wallet_view),
         )
         with self.db:
             for kind, identity, doc in documents:
@@ -382,7 +412,7 @@ class HistoryJournal:
                     )
             self.db.execute(
                 "UPDATE wallet_history_signature SET state='CAPTURED',error_code=NULL,"
-                "v2_error_code=NULL WHERE wallet=? AND signature=?", (wallet, signature),
+                "v3_error_code=NULL WHERE wallet=? AND signature=?", (wallet, signature),
             )
             self.db.execute(
                 "UPDATE wallet_history_cursor SET last_error_code=NULL WHERE wallet=?",
@@ -391,11 +421,11 @@ class HistoryJournal:
 
     def quarantine_unresolved_owner(self, wallet: str, signature: str,
                                    raw: dict) -> None:
-        """Opt-in recovery: preserve RAW_TX and economic gap, not a fake V2.
+        """Opt-in recovery: preserve RAW_TX and economic gap, not a fake V3.
 
         Only a known unresolved token owner delta is eligible. A CAPTURED
         signature here means that raw chain history is saved, while its
-        V2 economic view remains blocked and wallet coverage stays PARTIAL.
+        V3 economic view remains blocked and wallet coverage stays PARTIAL.
         """
         row = self.db.execute(
             "SELECT slot,state FROM wallet_history_signature "
@@ -425,7 +455,7 @@ class HistoryJournal:
                 )
             self.db.execute(
                 "UPDATE wallet_history_signature SET state='CAPTURED',"
-                "error_code=NULL,v2_error_code='TOKEN_OWNER_UNRESOLVED_DELTA' "
+                "error_code=NULL,v3_error_code='TOKEN_OWNER_UNRESOLVED_DELTA' "
                 "WHERE wallet=? AND signature=?", (wallet, signature),
             )
             self.db.execute(
@@ -434,10 +464,10 @@ class HistoryJournal:
             )
 
     def rebuild_versioned_views(self, wallet: str, *, limit: int = 100) -> dict:
-        """Manually materialize v2 projections from archived original RAW_TX.
+        """Manually materialize V3 projections from immutable original RAW_TX.
 
-        Never modify old WALLET_TX_VIEW or RAW_TX. Safe for previously
-        captured pre-fix v1 evidence and crash/retry idempotency.
+        Never modify RAW_TX or legacy WALLET_TX_VIEW and WALLET_TX_VIEW_V2.
+        Previous algorithm's V2 identity is immutable and not a V3 target.
         """
         if not _solana_pubkey_32_bytes(wallet):
             raise ValueError("INVALID_RESEARCH_WALLET")
@@ -460,7 +490,7 @@ class HistoryJournal:
                 with self.db:
                     self.db.execute(
                         "UPDATE wallet_history_signature SET "
-                        "v2_error_code='V2_RAW_TX_MISSING' "
+                        "v3_error_code='V3_RAW_TX_MISSING' "
                         "WHERE wallet=? AND signature=? AND state='CAPTURED'",
                         (wallet, signature),
                     )
@@ -469,28 +499,29 @@ class HistoryJournal:
             try:
                 raw = json.loads(source["payload_json"])
                 view = _wallet_projection(raw, wallet)
-                identity = wallet + ":" + signature + ":" + str(slot) + ":v2"
+                identity = (wallet + ":" + signature + ":" + str(slot)
+                            + _CURRENT_VIEW_SUFFIX)
                 serialized = _json(view)
                 sha = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
                 with self.db:
                     previous = self.db.execute(
                         "SELECT source_sha256 FROM evidence_documents "
-                        "WHERE kind='WALLET_TX_VIEW_V2' AND identity=?",
-                        (identity,),
+                        "WHERE kind=? AND identity=?",
+                        (_CURRENT_VIEW_KIND, identity),
                     ).fetchone()
                     if previous is not None:
                         if previous["source_sha256"] != sha:
-                            raise SourceEvidenceError("DERIVED_V2_EVIDENCE_CONFLICT")
+                            raise SourceEvidenceError("DERIVED_V3_EVIDENCE_CONFLICT")
                         existing += 1
                     else:
                         self.db.execute(
                             "INSERT INTO evidence_documents(kind,identity,"
                             "source_sha256,payload_json) VALUES(?,?,?,?)",
-                            ("WALLET_TX_VIEW_V2", identity, sha, serialized),
+                            (_CURRENT_VIEW_KIND, identity, sha, serialized),
                         )
                         built += 1
                     self.db.execute(
-                        "UPDATE wallet_history_signature SET v2_error_code=NULL "
+                        "UPDATE wallet_history_signature SET v3_error_code=NULL "
                         "WHERE wallet=? AND signature=? AND state='CAPTURED'",
                         (wallet, signature),
                     )
@@ -498,18 +529,18 @@ class HistoryJournal:
                     TypeError):
                 # Persistent repair failure is part of the research coverage
                 # contract. The original signature stays CAPTURED because
-                # RAW_TX itself was stored, but the V2 economic view is NOT.
+                # RAW_TX itself was stored, but the V3 economic view is NOT.
                 with self.db:
                     self.db.execute(
                         "UPDATE wallet_history_signature SET "
-                        "v2_error_code='V2_REBUILD_BLOCKED' "
+                        "v3_error_code='V3_REBUILD_BLOCKED' "
                         "WHERE wallet=? AND signature=? AND state='CAPTURED'",
                         (wallet, signature),
                     )
                 blocked += 1
         return {
-            "wallet": wallet, "view_kind": "WALLET_TX_VIEW_V2",
-            "normalizer_version": "SOL_TOKEN_VIEW_V2",
+            "wallet": wallet, "view_kind": _CURRENT_VIEW_KIND,
+            "normalizer_version": _CURRENT_VIEW_VERSION,
             "new": built, "already_present": existing,
             "blocked": blocked, "source_count": len(rows),
             "old_evidence_modified": False,
