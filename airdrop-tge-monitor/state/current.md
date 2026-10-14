@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-14 16:58:33 Asia/Bangkok
+Updated: 2026-10-14 20:05:45 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-14 16:58:33 Asia/Bangkok
+- latest_actual_run: 2026-10-14 20:05:45 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-14/165833-final-retry.md
-- latest_attempt_path: unavailable (2026-10-14 16:57:55 GitHub safety blocked)
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-14/200545-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-14/200440-attempt.md
 - latest_scheduled_shard: 0
 - latest_executed_shard: 0
 - stale_shard_recovery: false
 - latest_candidate_count: 5
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 4
+- latest_source_failures: 3
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
@@ -78,3 +78,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-14 11:00:39: actual HH:00 invocation, attempt 110003-attempt.md and terminal 110039-final-retry.md persisted (primary final BLOCKED_WITH_REASON by tool safety check). Urgent five + scheduled shard3 nine, 14 unique active projects including Surf prospective dynamic urgent; 10 checked_no_update, 4 SOURCE_GAP (Concrete extra USDC, Cambria RSGP current, Republic individual rTTOK settlement, Surf NFT eligibility), 6 candidate families, 0 Tier A/B new ACTION. Space Oct15 and MetaMask Oct15 stable keys previously delivered, no repeat. No Gmail/App notification. Partial updates shard3 last_meaningful_attempt_at only; last_verified_complete_at unchanged. Last four executed shards [1,1,2,3], no stale override. Schedule, ID, scope and recipient unchanged; no daily TGE email.
 
 - 2026-10-14 16:58:33: off-minute existing monitor invocation; urgent + scheduled shard0, 15 unique projects attempted, 5 candidate families, 0 new Tier A/B ACTION, 4 SOURCE_GAP (Concrete extra USDC, Surf NFT eligibility, Space original Telegram direct, Block Stranding identity/current action). Attempt and primary final writes BLOCKED_WITH_REASON by safety checks; 165833-final-retry.md committed. No Gmail/App notification. Last meaningful shard0 attempt 16:58:33; last fully verified success unchanged. Last four executed shards [1,2,3,0]. Existing HH:00 schedule and scope unchanged; off-minute invocation does not prove on-time trigger.
+
+- 2026-10-14 20:05:45: existing HH:00 run, append-only attempt 200440-attempt.md and terminal 200545-final.md committed; urgent set + scheduled shard0 only, no recovery override. 15 unique projects attempted, 5 candidates, 0 Tier A/B new ACTION, 3 unresolved first-party/eligibility gaps (Concrete extra USDC, Block Stranding, Surf NFT eligibility). Space Oct15 and MetaMask Oct15 delivered stable keys suppressed; Surf NFT first-party countdown shows future member claims, no claim-open or personal eligibility proof. No Gmail/App notification. Last meaningful shard0 attempt advanced to 20:05:45; verified-complete timestamp remains unchanged. Recent executed shards from cached receipts [2,3,0,0]; fairness cap respected. No schedule, scope, title or recipient change.
