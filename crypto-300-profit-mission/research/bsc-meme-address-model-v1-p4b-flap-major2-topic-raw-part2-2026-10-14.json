@@ -1,0 +1,87 @@
+{
+  "schema": "BSC_P4B_FLAP_MAJOR2_FROZEN_TOPIC_LOGS",
+  "part": 2,
+  "token": "MARSCOIN",
+  "topic_precommit_git_blob_sha": "83c7f4eb0b081974fd1b2d2e9de0526d282ab22a",
+  "rows": [
+    {
+      "token": "MARSCOIN",
+      "role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "block": 112441387,
+      "event": "TokenCreated",
+      "event_topic0": "0x504e7f360b2e5fe33cbaaae4c593bc55305328341bf79009e43e0e3b7f699603",
+      "rpc_complete": true,
+      "total_topic_logs_in_block": 1,
+      "source_target_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0x504e7f360b2e5fe33cbaaae4c593bc55305328341bf79009e43e0e3b7f699603"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000006a675b9e00000000000000000000000085de3316eeca740ba049a8d9c9d68ab21cb282e5000000000000000000000000000000000000000000000000000000000016a502000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c777700000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000016000000000000000000000000000000000000000000000000000000000000000084d617273436f696e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000084d617273436f696e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003b6261666b7265696262327261766965756d636c7a61783576656f68706e686367617374776163666f6870343666716161333335356a6e6a697773790000000000",
+          "blockHash": "0xffa358c76c4c011b255d7584c6d9cedf8e6e3bb7ddf85574ede692faa773a841",
+          "blockNumber": "0x6b3b82b",
+          "blockTimestamp": "0x6a675b9e",
+          "transactionHash": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+          "transactionIndex": "0x6",
+          "logIndex": "0x50",
+          "removed": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "token": "MARSCOIN",
+      "role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "block": 112441387,
+      "event": "TokenBought",
+      "event_topic0": "0xa800a2038683844fac66747f771bfdfae862eb28b16bcfa387afa9fbacce8ff7",
+      "rpc_complete": true,
+      "total_topic_logs_in_block": 3,
+      "source_target_events": [],
+      "error": null
+    },
+    {
+      "token": "MARSCOIN",
+      "role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "block": 112441394,
+      "event": "TokenBought",
+      "event_topic0": "0xa800a2038683844fac66747f771bfdfae862eb28b16bcfa387afa9fbacce8ff7",
+      "rpc_complete": true,
+      "total_topic_logs_in_block": 2,
+      "source_target_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0xa800a2038683844fac66747f771bfdfae862eb28b16bcfa387afa9fbacce8ff7"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000006a675ba1000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c77770000000000000000000000001de460f363af910f51726def188f9004276bf4bc0000000000000000000000000000000000000000003fd407616fb745ea0560a1000000000000000000000000000000000000000000000000251dac65281e870e000000000000000000000000000000000000000000000000005f0448b10a8b970000000000000000000000000000000000000000000000000000000853da14a5",
+          "blockHash": "0x5775e5d43bf25c590bd882eb383139a5575304de330b495ac6b231a846bfc54d",
+          "blockNumber": "0x6b3b832",
+          "blockTimestamp": "0x6a675ba1",
+          "transactionHash": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+          "transactionIndex": "0x9",
+          "logIndex": "0xab",
+          "removed": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "token": "MARSCOIN",
+      "role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "block": 112441394,
+      "event": "TokenSold",
+      "event_topic0": "0x03a4693e592f5e75dc7c136acb39b146d2b4966c0e509c34f362dee02b3b861a",
+      "rpc_complete": true,
+      "total_topic_logs_in_block": 8,
+      "source_target_events": [],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}
