@@ -12,13 +12,14 @@ from decimal import Decimal
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import sqlite3
 import sys
 from urllib.parse import parse_qs, urlsplit
 
 from mission_agent.mission_control.person_registry import PersonRegistry
 from mission_agent.mission_control.wallet_evidence_store import WalletEvidenceStore
 from mission_agent.mission_control.wallet_full_rpc_evidence import replay_owner_full_receipts
-from mission_agent.mission_control.wallet_inventory_snapshot import latest_inventory
+from mission_agent.mission_control.wallet_inventory_snapshot import latest_inventory, _parse_time
 from scripts.frank_reconcile_frozen32_offline import (
     ROSTER, REGISTRY, ROSTER_GIT_BLOB, load_frozen_roster,
 )
@@ -29,6 +30,30 @@ def _quantity(raw: str, decimals: int) -> str:
             type(decimals) is not int or not 0 <= decimals <= 255):
         raise ValueError("F02_INVALID_RAW_QUANTITY")
     return format(Decimal(raw).scaleb(-decimals), "f")
+
+
+
+def _latest_actual_attempt(store, *, wallet: str, as_of_utc: datetime) -> dict | None:
+    """Latest research capture attempt by UTC time, independently of chain slot.
+
+    The shared historical selector chooses the highest chain slot; a later
+    failed attempt may have a lower residual slot. This F02-only availability
+    check follows the actual attempt chronology without changing backfills.
+    latest_inventory verifies every archive hash and source wallet first.
+    """
+    as_of = as_of_utc.astimezone(timezone.utc)
+    latest = None
+    latest_at = None
+    for capture in store.iter_wallet_captures(wallet):
+        observed_at = _parse_time(capture.get("observed_at_utc"))
+        if observed_at > as_of:
+            continue
+        if (latest_at is None or observed_at > latest_at or
+                (observed_at == latest_at and
+                 capture.get("status") == "PARTIAL_SOURCE" and
+                 latest.get("status") != "PARTIAL_SOURCE")):
+            latest_at, latest = observed_at, capture
+    return latest
 
 
 class ResearchPositions:
@@ -67,10 +92,26 @@ class ResearchPositions:
             result = latest_inventory(
                 store, wallet=self.binding.address, mints=self.mints,
                 as_of_utc=instant, max_age_seconds=self.max_age_seconds)
+            actual_attempt = _latest_actual_attempt(
+                store, wallet=self.binding.address, as_of_utc=instant)
         finally:
             store.close()
-        if result["source_attempt_failed_no_slot"]:
+        attempt_status = (actual_attempt.get("status") if actual_attempt is not None
+                          else result["source_observation_status"])
+        selected_sha = result["selected_capture_sha256"]
+        selected_at = (_parse_time(result["capture_observed_at_utc"])
+                       if result["capture_observed_at_utc"] else None)
+        newer_attempt = (actual_attempt is not None and
+                         (selected_at is None or
+                          _parse_time(actual_attempt["observed_at_utc"]) > selected_at))
+        selected_attempt = (actual_attempt is not None and
+                            actual_attempt["capture_sha256"] == selected_sha)
+        if result["source_attempt_failed_no_slot"] or (
+                attempt_status == "PARTIAL_SOURCE" and
+                (newer_attempt or selected_attempt)):
             readiness = "LATEST_CAPTURE_ATTEMPT_FAILED"
+        elif newer_attempt:
+            readiness = "LATEST_SOURCE_NOT_WIRE_VERIFIED"
         elif not result["both_programs_observed"]:
             readiness = "INCOMPLETE_OR_NO_LATEST_CAPTURE"
         elif not result["capture_fresh"]:
@@ -127,6 +168,16 @@ class ResearchPositions:
             "verified_full_wire_capture_sha256": self.verified_capture_sha256,
             "source_observation_status": result["source_observation_status"],
             "source_attempt_failed_no_slot": result["source_attempt_failed_no_slot"],
+            "latest_attempt_source_status": attempt_status,
+            "latest_attempt_capture_sha256": (actual_attempt["capture_sha256"]
+                if actual_attempt is not None else result["selected_capture_sha256"]),
+            "latest_attempt_observed_at_utc": (actual_attempt["observed_at_utc"]
+                if actual_attempt is not None else result["capture_observed_at_utc"]),
+            "latest_attempt_slot_max": (actual_attempt["slot_max"]
+                if actual_attempt is not None else result["slot_max"]),
+            "latest_attempt_missing_program_ids": ([
+                row["program_id"] for row in actual_attempt.get("missing", [])
+            ] if actual_attempt is not None else []),
             "slot_min": result["slot_min"], "slot_max": result["slot_max"],
             "same_slot_atomic": False,
             "historical_roster_git_blob": ROSTER_GIT_BLOB,
@@ -170,7 +221,7 @@ def make_handler(service: ResearchPositions):
                 return
             try:
                 self._json(200, service.positions())
-            except (ValueError, OSError, KeyError, TypeError, json.JSONDecodeError):
+            except (ValueError, OSError, KeyError, TypeError, json.JSONDecodeError, sqlite3.Error):
                 self._json(503, {"status": "RESEARCH_SOURCE_UNAVAILABLE"})
 
     return Handler
@@ -216,6 +267,6 @@ def main(argv=None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (ValueError, OSError, KeyError, TypeError, json.JSONDecodeError):
+    except (ValueError, OSError, KeyError, TypeError, json.JSONDecodeError, sqlite3.Error):
         print("F02_RESEARCH_SOURCE_UNAVAILABLE", file=sys.stderr)
         raise SystemExit(1)
