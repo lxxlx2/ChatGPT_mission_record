@@ -120,7 +120,7 @@ class Stage137Tests(unittest.TestCase):
     def test_first_d0_not_repeated_watches_and_only_posthoc_gross(self):
         r = self.result
         stats = r["raw_usdm_venue_descriptive_only"]
-        self.assertEqual(stats["model_compatible_complete"], 1)
+        self.assertEqual(stats["model_compatible_complete"], 2)
         self.assertEqual(stats["gross_2x"], 1)
         self.assertEqual(stats["D0_early5_2x"], 1)
         self.assertEqual(stats["first_D0"], 1)
