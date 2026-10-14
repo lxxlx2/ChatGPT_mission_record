@@ -38,7 +38,7 @@ jobs:
           gh run download 38566877450 --repo lxxlx2/ChatGPT_mission_record --name monster-stage130-frozen31-original-publisher-minute-data --dir stage130_original
       - name: Real original source 147 ZIP/checksum pairs and 159675 minutes, never current market data
         env:
-          MONSTER_STAGE130_SOURCE_ROOT: stage130_original
+          MONSTER_STAGE130_SOURCE_ROOT: ${{ github.workspace }}/stage130_original
         run: |
           cd crypto-300-profit-mission/local-agent/scripts
           python -m unittest -v test_monster_v4_stage132_delayed_entry_horizon_proxy.py
