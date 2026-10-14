@@ -1,0 +1,18 @@
+# Monster Stage143 — user-supplied external Claude independent audit intake
+
+Received 2026-10-15 Asia/Bangkok. Actual other-AI reviewer identified as Claude (Anthropic) by user-supplied review; model exact version cannot independently be verified. The reviewer stated it checked original fixed SHA ff711ebef8367635871004f27a98838f7aa8c4f3 vs baseline 50de0d8316c11ac4dcf7d736f397b9fdb16e0ce2, original D0 core blob bc958b3d90a8a52afa51515cb53f7e5fafaffaaa, unchanged D1 contract and local Linux Stage137 13/13 plus Stage138 20/20 tests. Reviewer conclusion REQUEST_CHANGES. It could not verify CI due to rate limiting; we independently queried original runs #38615294004 and #38615294086 on GitHub and confirmed BOTH succeeded and pinned to ff711ebef8367635871004f27a98838f7aa8c4f3. The user's actual external review supersedes self-assessment; this document is an intake not an approved re-review.
+
+## Findings, reproduction and priority preserved from reviewer
+
+- P0: pre-T0 recent (<24h) onboarding with first 1m source at 2026-10-28 00:20 UTC, initial T0 at 06:20 UTC: Stage135 falsely requires previous day 06:20 source; Stage137 entirely CENSORED rather than model cold start. Reviewer reproduced this; highest-value fresh listings lost. Repair must not fabricate prelisting 24h history or assert issuer/tradability.
+- P1: new in-window NEWUSDT D0 06:57, D1 07:24 via REIGNITION_AFTER_D0, but raw daily D1 count [0,0,0,0,0,0,0]; this understates G3. Include every cohort, show separate breakdown and total; never declare G3 verified without true observed delivery.
+- P1: source observed first publisher bar is NOT when a real system discovered or could trade. User-declared in-window arrival means full new-listing census UNKNOWN. Hypothetical 1/3/5-min after-receipt delays may be diagnostic only, not false early notification proof.
+- P1: gross 2x headline denominator excludes unverified in-window/new cohort and source-censored cases. Need separate preexisting complete-case venue descriptive rate, explicit censored possible-missed-2x pessimistic scenario, cold-cohort descriptive outcomes, issuer/INDEX unknown; never call it actual independent crypto G1 recall.
+- P1: original frozen quote24 >=100000 USDT delays earliest WATCH for new listing; do not tune exposed parameters, report when gross 2x already occurred before first truly observed quote threshold.
+- P2: first tick used firstObs+2m in some alignments rather than firstObs+3m; stronger consistent 3m baseline test. P2 source-unknown D1 label name, first_price injected via state replace, D1 runtime blob check, OHLC-derived quote vs true rolling24h ticker, issuer types, publisher zero-volume days and fail-closed availability tradeoffs; no model threshold changes merely to satisfy style suggestions.
+
+## Formal acceptance constraints
+
+Original Stage116 failed 2026-10-14 06:00 UTC source remains SOURCE_FAILED_NO_BACKFILL, Stage118/127 REJECTED, Stage132 early BUY economics negative, Stage140 mirror REST exchangeInfo embedded time stale ~8h44m and source equivalence not independently attested. Frozen Stage77 gates unchanged. G0 PARTIAL, G1 NOT_SCORABLE, G2/G3 NOT_PASSED, G4 UNKNOWN, G5 actual external review returned REQUEST_CHANGES but is NOT approved, G6 NO_GO. Draft PR #30, NO_MERGE, NO_DEPLOY, NO_GMAIL, NO_TRADE, Frank unchanged, no new scheduler.
+
+Repair contract preregistered before code: MONSTER_STAGE143_FROZEN_CLAUDE_REQUEST_CHANGES_REMEDIATION_20261015.md. After code/tests CI finish, re-review must be requested explicitly with a NEW fixed SHA and precise previously reproduced failures. A generated prompt is not a review result.
