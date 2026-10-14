@@ -1,0 +1,40 @@
+name: Frank A04 Claude P2 P4 P5 P6 P7 evidence review
+on:
+  push:
+    branches:
+      - fix/frank-ca-a04-claude-p2-p6-p4-coverage-20261014
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install audited test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
+      - name: Source syntax and Python lint
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_history_replay.py mission_agent/mission_control/wallet_instruction_evidence.py tests/test_frank_a04_claude_third_review.py
+          python -m pyflakes mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_history_replay.py mission_agent/mission_control/wallet_instruction_evidence.py tests/test_frank_a04_claude_third_review.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: Claude P2 P4 P5 P6 P7 and existing A04 focused tests
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_a04_claude_third_review.py tests/test_frank_a04_claude_owner_review.py tests/test_frank_a04_history_resume.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_inner_transfer_evidence.py tests/test_frank_a04_history_cli.py
+      - name: Full local-agent real Git regression
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests

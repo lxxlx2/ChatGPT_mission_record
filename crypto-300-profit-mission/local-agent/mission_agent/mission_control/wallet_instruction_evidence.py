@@ -34,6 +34,9 @@ def transfer_instructions(tx: dict, normalized: dict) -> dict:
         inner = []
     if not isinstance(inner, list):
         raise LedgerEvidenceError("TRANSFER_INNER_INSTRUCTIONS_INVALID")
+    failed = meta.get("err") is not None
+    if failed != (normalized.get("status") == "FAILED"):
+        raise LedgerEvidenceError("TRANSFER_EXECUTION_STATUS_MISMATCH")
     by_account = {}
     for leg in normalized.get("token_legs", []):
         key = leg["token_account"]
@@ -108,8 +111,11 @@ def transfer_instructions(tx: dict, normalized: dict) -> dict:
             "destination_token_account": destination,
             "source_wallet_owner": sender, "destination_wallet_owner": receiver,
             "raw_amount": amount, "mint_hint": info.get("mint"),
-            "classification": relation,
-            "source_status": "PARSED_TOKEN_INSTRUCTION_CONFIRMED",
+            "classification": ("FAILED_TRANSACTION_INSTRUCTION_NOT_EXECUTED"
+                               if failed else relation),
+            "source_status": ("FAILED_TRANSACTION_INSTRUCTION_NOT_EXECUTED"
+                              if failed else "PARSED_TOKEN_INSTRUCTION_CONFIRMED"),
+            "executed": not failed,
             "market_buy_confirmed": False, "market_sell_confirmed": False,
             "realized_pnl_usd": None,
         })
@@ -118,6 +124,8 @@ def transfer_instructions(tx: dict, normalized: dict) -> dict:
         "chain": "solana",
         "signature": normalized["signature"], "slot": normalized["slot"],
         "transfer_count": len(events),
+        "executed_transfer_count": 0 if failed else len(events),
+        "transaction_executed": not failed,
         "unparsed_token_instruction_count": len(gaps),
         "transfers": events, "evidence_gaps": gaps,
         "active_market_trades_verified": False,
