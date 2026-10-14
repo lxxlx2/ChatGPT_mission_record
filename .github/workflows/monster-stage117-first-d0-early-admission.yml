@@ -59,6 +59,10 @@ jobs:
           assert x['monster_deployment']=='NO_GO'
           assert x['cohort_exposed_not_new_OOS']
           assert x['no_backward_threshold_fitting']
+          assert x['research_decision']=='REJECTED_HISTORICAL_G2_28_EARLY_RECALL'
+          assert x['Stage117_fast_early5_2x']==17
+          assert x['Stage117_firstD0_fast_attention']==164
+          assert x['historical_early_2x_failed_unchanged_first_gate_counts']['ret60_pct']==7
           print('STAGE117_ORIGINAL519_EXPOSED_COMPLETE_NO_RETROACTIVE_TUNING_PASS')
           PY
       - uses: actions/upload-artifact@v4
