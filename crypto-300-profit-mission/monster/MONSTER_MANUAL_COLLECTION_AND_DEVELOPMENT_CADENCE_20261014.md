@@ -77,3 +77,11 @@ done
 主线不依赖日期：继续研究信号在首次 D0 时的真实早报能力、独立底层 crypto/合约单位核验、信号时点盘口/标记价/手续费/滑点、源真实性、历史失败归因及模型样本外验证。用现有 Stage123 数据开发**可复现的全市场新旧手动快照对比**和 cohort coverage 诊断；不要在早已暴露的519个历史 D0 上不停重调参数。
 
 **当前门禁**：`STAGE123_CURRENT_BASELINE=DONE`; `STAGE99_AUTOMATIC_FUTURE_CAPTURE=STOPPED_THREE_LABELS_USER_TERMINAL_READBACK_20261014`; `NEXT_MANUAL_CHECKPOINT=2026-10-28_13:00_ASIA_BANGKOK`; `STAGE118_STRATEGY=REJECTED`; `G0=PARTIAL`; `G4=UNKNOWN`; `NEW_VALID_OOS=NOT_DONE`; `OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `FRANK_UNCHANGED`.
+
+
+## Stage134 本轮衔接代码实际状态（2026-10-14）
+
+- 本轮按照 [Stage134 前置冻结协议](MONSTER_STAGE134_FROZEN_STAGE133_T0_STAGE131_POPULATION_READINESS_BRIDGE_PROTOCOL_20261014.md)，在原 PR #30 分支先提交协议 `f3a696ee2a4f7d7444dff5204043c776d4115a9c`，再提交 [Stage134 离线 Stage133→Stage131 衔接代码](../local-agent/scripts/monster_v4_stage134_t0_population_readiness_bridge.py) `655efb15e7833e6a378b69219dc5deb1df69d7b8`、[9项集成测试](../local-agent/scripts/test_monster_v4_stage134_t0_population_readiness_bridge.py) `250d5f33911838281ac7e305180fe9cc133820a6`、[双OS CI 工作流](../../.github/workflows/monster-stage134-forward-population-readiness-offline.yml) `4a874f7a3c6525f31577371b678e61c285c86a75`。后续补充 pull_request 触发的纯离线 CI 工作流变更 `be1dab23010c9f48b0b039be9f96a1beba098827`，没有 schedule、live data fetch、Mac launchd、Gmail 或交易。
+- 实际 Git 文件 readback 已成功，代码目前具备对 Stage133 原始三份数据包重新校验、生成 T0 所有活跃 USDT 永续合约 Stage131 双人口账本、保留停牌或在 T0 不活跃后出现的候选、拒绝重复和自称认证、输出冻结 Stage77 门槛及缺失证据清单的入口。它**不能**证明 Stage133 已实际采集新 T0，也不能证明七日全市场、Issuer PIT、未来新增合约完整覆盖、G0/G1 PASS 或模型净收益。
+- GitHub 连接器此时未返回 Stage134 Actions execution/job readback，故当前只能标 `STAGE134_CODE_COMMITTED_READBACK=YES`、`STAGE134_TWO_OS_CI=UNVERIFIED`、`STAGE134_INDEPENDENT_REVIEW=NOT_DONE`；不虚报 CI 或测试结果。CI 尚需用实际 Actions/job logs 完成验证，如失败只修复真实代码错误并在同 PR 复验。
+- **下一唯一主线**：先拿到双 OS Stage134 CI 实际回执；继续将独立真实 T0、窗口内新上市/退市分钟 Publisher SHA 数据和 issuer/PIT 源逐项填入同一不丢样本人口账本，再使用明确新日期的未曝光前瞻对原 Stage77 G0-G4 评分。没有未来七日真实来源时仍 G1 NOT_SCORABLE；Stage116 首窗失败、Stage118/127 REJECTED、Stage132 BUY 负代理原样保留。首次真实新 Stage133 T0 只能用户未来明确在聊天发起手动市场采集；本轮“继续开发”没有触发该采集。继续遵守 Frank 不变、Monster Mac/Gmail/交易 NO_GO。
