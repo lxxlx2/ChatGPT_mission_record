@@ -1,0 +1,44 @@
+name: Monster Stage140 single diagnostic official futures host eligibility 2026-10-15
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - '.github/workflows/monster-stage140-official-binance-readonly-host-eligibility-probe-20261015.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  one-time-raw-url-readonly-host-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check Binance documented public source time and raw exchangeInfo endpoints once without saving misleading T0
+        shell: bash
+        run: |
+          python - <<'PY'
+          import time, urllib.error, urllib.request, json
+          targets=[
+           "https://fapi.binance.com/fapi/v1/time",
+           "https://fapi1.binance.com/fapi/v1/time",
+           "https://fapi2.binance.com/fapi/v1/time",
+           "https://fapi3.binance.com/fapi/v1/time",
+           "https://www.binance.com/fapi/v1/time",
+           "https://www.binance.com/fapi/v1/exchangeInfo",
+           "https://api.binance.com/api/v3/time",
+           "https://api-gcp.binance.com/api/v3/time",
+          ]
+          for url in targets:
+           start=int(time.time()*1000)
+           try:
+            req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
+            with urllib.request.urlopen(req,timeout=6) as r:
+             sample=r.read(2048)
+             record={"url":url,"status":r.status,"final_url":r.url,"ct":r.headers.get("Content-Type"),"first_bytes":sample[:95].decode("utf-8","replace"),"elapsed_ms":int(time.time()*1000)-start}
+           except Exception as exc:
+            record={"url":url,"error_type":type(exc).__name__,"http_code":getattr(exc,"code",None),"elapsed_ms":int(time.time()*1000)-start}
+           print("STAGE140_OFFICIAL_HOST_PROBE "+json.dumps(record,sort_keys=True))
+          print("STAGE140_HOST_PROBE_NO_REAL_T0_NO_AUTOMATION_NO_GMAIL_NO_TRADES")
+          PY
