@@ -108,7 +108,10 @@ def provenance_check(supplied, now):
             return "RAW_SHA_MISSING_OR_BAD_"+k.upper()
         if not isinstance(item.get("capture_ms"),int) or isinstance(item["capture_ms"],bool):
             return "CAPTURE_TIME_MISSING_"+k.upper()
-        if item["capture_ms"]>now and k!="fees":
+        # Identity, multiplier mapping, listing and fee schedules must
+        # already exist as of the decision. The contemporaneous D2 BOOK is
+        # separately allowed by Stage90 only within its explicit 5s window.
+        if item["capture_ms"]>now:
             return "FUTURE_SOURCE_"+k.upper()
         if not isinstance(item.get("source_url"),str) or not item["source_url"].startswith("https://"):
             return "ORIGINAL_SOURCE_URL_MISSING_"+k.upper()
@@ -274,6 +277,17 @@ def selftest():
     assert reject["D2_status"]=="SOURCE_PROVENANCE_UNVERIFIED"
     assert reject["net_executable_profit"]=="UNKNOWN"
     assert reject["market_entry_or_exit_actual_fill"]=="NOT_OBSERVED"
+    tampered=json.loads(json.dumps(fixture))
+    tampered["fees"]["raw_json"]='{"entry_taker_bps":"10"}'
+    tampered["fees"]["raw_response_sha256"]=sha256(
+        tampered["fees"]["raw_json"].encode()).hexdigest()
+    tampered["fees"]["source_url"]="https://example.invalid/testfee"
+    tampered["fees"]["capture_ms"]=x["observed_ms"]+10000
+    tampered["fees"]["external_authenticity_evidence"]="SELF_ASSERTED_DOES_NOT_PROVE_ORIGIN"
+    # Synthetic identity still lacks raw evidence. The same fixture cannot
+    # buy its way into "profit" from future fee timestamps.
+    assert evaluate(x,supplied_evidence=tampered,
+                    user_notional="100")["D2_status"]=="SOURCE_PROVENANCE_UNVERIFIED"
     assert reject["Monster_deploy"]=="NO_GO"
     assert git_blob(b"test")=="30d74d258442c7c65512eafab474568dd706c430"
     print("STAGE119_D0_D1_UNIQUE_ID_NO_DEFAULT_NOTIONAL_RAW_PROVENANCE_AND_D2_DENY_SELFTEST_PASS")
