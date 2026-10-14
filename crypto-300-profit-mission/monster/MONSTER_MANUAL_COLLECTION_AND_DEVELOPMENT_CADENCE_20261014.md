@@ -58,6 +58,8 @@ done
 
 
 
+2026-10-14 接续完成 [Stage126 原始525全市场真实 BBO 双边可见容量](MONSTER_STAGE126_REAL525_BBO_CAPACITY_MAINLINE_RESULTS_20261014.md)：使用 Stage123 原始八源，525/525 均有正挂单和合格源时钟，双边可见容量代理中位 **67.01877 USDT**，p25 **22.29402**，p75 **197.25257**；已由 macOS/Ubuntu [CI #38554960854](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38554960854) 实际 source-read 并核对全部输出相同，永久汇总保存 [Stage126 JSON](evidence/monster_stage126_20261014T094824Z_actual_full525_bbo_capacity_summary.json)。这仅说明本批 L1 挂单有多薄，不代表实际能成交、交易金额、后续卖出或正收益。最先要解决的仍是 D0 时点的 G0 身份/单位及 D2 多档深度和真实可交易净价，旧 Stage118 REJECTED 不变；不能用这批ย้อนหลัง 24h 涨幅挑参数。
+
 主线不依赖日期：继续研究信号在首次 D0 时的真实早报能力、独立底层 crypto/合约单位核验、信号时点盘口/标记价/手续费/滑点、源真实性、历史失败归因及模型样本外验证。用现有 Stage123 数据开发**可复现的全市场新旧手动快照对比**和 cohort coverage 诊断；不要在早已暴露的519个历史 D0 上不停重调参数。
 
 **当前门禁**：`STAGE123_CURRENT_BASELINE=DONE`; `STAGE99_AUTOMATIC_FUTURE_CAPTURE=STOPPED_THREE_LABELS_USER_TERMINAL_READBACK_20261014`; `NEXT_MANUAL_CHECKPOINT=2026-10-28_13:00_ASIA_BANGKOK`; `STAGE118_STRATEGY=REJECTED`; `G0=PARTIAL`; `G4=UNKNOWN`; `NEW_VALID_OOS=NOT_DONE`; `OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `FRANK_UNCHANGED`.
