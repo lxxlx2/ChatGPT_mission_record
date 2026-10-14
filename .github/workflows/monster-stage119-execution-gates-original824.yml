@@ -6,6 +6,7 @@ on:
       - .github/workflows/monster-stage119-execution-gates-original824.yml
       - crypto-300-profit-mission/monster/MONSTER_STAGE119_COHORT_G0_G4_EXECUTION_EVIDENCE_BRIDGE_PROTOCOL_20261014.md
       - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_cohort_execution_bridge.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_one_shot_forward_d2_audit.py
       - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
   workflow_dispatch:
 permissions:
@@ -27,6 +28,8 @@ jobs:
         run: |
           set -eu
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_cohort_execution_bridge.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_one_shot_forward_d2_audit.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_one_shot_forward_d2_audit.py --selftest
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage90_d2_execution_proof.py --selftest
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_cohort_execution_bridge.py --selftest
