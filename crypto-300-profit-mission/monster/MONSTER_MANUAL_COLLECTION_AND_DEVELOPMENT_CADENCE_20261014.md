@@ -54,6 +54,10 @@ done
 
 ## 研发在两次手动采集之间不能停
 
+2026-10-14 本轮接手新增 [Stage125：Spot 与 USD-M 标的映射、时钟及可执行性缺口](MONSTER_STAGE125_CROSS_VENUE_EXACT_SYMBOL_AND_SOURCE_FRESHNESS_TRIAGE_20261014.md)，离线全量 cohort 映射代码和两个操作系统 CI 通过；本轮数据连接器源字段的时钟不同步，**没有升级为同一时点 Spot 买入证据**。继续用真实独立 source/issuer/单位和手续费深度数据解决 G0/G4，不能在已曝光的 519 个历史 D0 中继续选阈值。
+
+
+
 主线不依赖日期：继续研究信号在首次 D0 时的真实早报能力、独立底层 crypto/合约单位核验、信号时点盘口/标记价/手续费/滑点、源真实性、历史失败归因及模型样本外验证。用现有 Stage123 数据开发**可复现的全市场新旧手动快照对比**和 cohort coverage 诊断；不要在早已暴露的519个历史 D0 上不停重调参数。
 
 **当前门禁**：`STAGE123_CURRENT_BASELINE=DONE`; `STAGE99_AUTOMATIC_FUTURE_CAPTURE=STOPPED_THREE_LABELS_USER_TERMINAL_READBACK_20261014`; `NEXT_MANUAL_CHECKPOINT=2026-10-28_13:00_ASIA_BANGKOK`; `STAGE118_STRATEGY=REJECTED`; `G0=PARTIAL`; `G4=UNKNOWN`; `NEW_VALID_OOS=NOT_DONE`; `OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `FRANK_UNCHANGED`.
