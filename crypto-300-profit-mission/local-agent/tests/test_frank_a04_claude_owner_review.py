@@ -3,7 +3,6 @@
 These tests use synthetic owner-missing records as fault injection. They are
 not assertions that real Frank transactions have these exact gaps.
 """
-import copy
 import json
 
 import pytest
