@@ -9,6 +9,7 @@ both full official program receipts pass independent replay checks.
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import os
 from pathlib import Path
@@ -31,12 +32,21 @@ DEFAULT_EVIDENCE = (Path.home() / ".local" / "share" /
                     "frank-owner-full-rpc-evidence")
 
 
+class _RejectRPCRedirect(urllib.request.HTTPRedirectHandler):
+    """An RPC source must not change protocol, destination or POST semantics."""
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 def _wire_rpc(url: str):
     parsed = urllib.parse.urlparse(url)
     if (parsed.scheme != "https" or not parsed.hostname
             or parsed.username is not None or parsed.password is not None
             or parsed.fragment):
         raise ValueError("HTTPS_RPC_URL_REQUIRED")
+    # The default urllib opener follows HTTPS 302 -> HTTP GET. Never follow any
+    # redirect for a provenance-bearing RPC request, including HTTPS redirects.
+    opener = urllib.request.build_opener(_RejectRPCRedirect)
     calls = 0
 
     def read_raw(method, params, expected_id):
@@ -54,11 +64,30 @@ def _wire_rpc(url: str):
             method="POST",
         )
         try:
-            with urllib.request.urlopen(req, timeout=25) as response:
+            with opener.open(req, timeout=25) as response:
+                if response.status != 200:
+                    raise ValueError("OWNER_RPC_HTTP_STATUS_INVALID")
+                lengths = response.headers.get_all("Content-Length", [])
+                if len(lengths) > 1 or (lengths and
+                                        response.headers.get("Transfer-Encoding")):
+                    raise ValueError("OWNER_RPC_HTTP_FRAMING_AMBIGUOUS")
+                declared = None
+                if lengths:
+                    length_string = lengths[0].strip()
+                    if (not length_string.isascii()
+                            or not length_string.isdecimal()):
+                        raise ValueError("OWNER_RPC_CONTENT_LENGTH_INVALID")
+                    declared = int(length_string)
+                    if declared > MAX_RAW_RPC_BYTES:
+                        raise ValueError("OWNER_RPC_WIRE_SIZE_LIMIT")
                 result = response.read(MAX_RAW_RPC_BYTES + 1)
-        except (OSError, TimeoutError) as exc:
-            # Never include an exception message; it may include RPC URL/key.
-            raise RuntimeError("OWNER_RPC_TRANSPORT_UNAVAILABLE") from exc
+                # read(amt) can return a parseable JSON prefix when the server
+                # closes early. Valid JSON is not proof of a complete HTTP body.
+                if declared is not None and len(result) != declared:
+                    raise ValueError("OWNER_RPC_INCOMPLETE_HTTP_BODY")
+        except (OSError, TimeoutError, http.client.HTTPException):
+            # Transport exceptions and HTTPError may embed private RPC URLs.
+            raise RuntimeError("OWNER_RPC_TRANSPORT_UNAVAILABLE") from None
         if len(result) > MAX_RAW_RPC_BYTES:
             raise ValueError("OWNER_RPC_WIRE_SIZE_LIMIT")
         return result
