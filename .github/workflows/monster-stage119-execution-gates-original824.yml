@@ -1,0 +1,97 @@
+name: Monster Stage119 Original519 D0 Plus305 D1 Execution Readiness
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage119-execution-gates-original824.yml
+      - crypto-300-profit-mission/monster/MONSTER_STAGE119_COHORT_G0_G4_EXECUTION_EVIDENCE_BRIDGE_PROTOCOL_20261014.md
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_cohort_execution_bridge.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  compile_and_d2_unit_tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original D2 book engine, immutable D0 D1 identities and Stage116 forward bridge
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_cohort_execution_bridge.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage90_d2_execution_proof.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_cohort_execution_bridge.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py --selftest
+
+  original824_source_aware_audit:
+    needs: compile_and_d2_unit_tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit all original 519 D0 and 305 D1 against Stage90 and real missing evidence
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_cohort_execution_bridge.py --out /tmp/monster_stage119_actual_original824_summary.json --cases /tmp/monster_stage119_actual_original824_cases.jsonl
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/monster_stage119_actual_original824_summary.json'))
+          assert x['original_D0_519']==519 and x['original_D1_305']==305
+          assert x['D2_event_count']==824
+          assert x['original_Stage118_18_28_G2']=='REJECTED'
+          assert x['explicit_no_default_quote_notional'] is True
+          assert x['real_crypto_G0_certification']=='NOT_DONE'
+          assert x['historical_real_executable_profit']=='UNKNOWN'
+          assert x['user_mac_Monster_install']=='NO_GO'
+          with open('/tmp/monster_stage119_actual_original824_cases.jsonl') as f:
+              cases=[json.loads(s) for s in f if s.strip()]
+          assert len(cases)==824
+          assert all(c['stage90_D2_readiness']['notional_from_user'] is None
+                     and c['stage90_D2_readiness']['net_executable_profit']=='UNKNOWN'
+                     and c['stage90_D2_readiness']['research_only_no_trade']
+                     for c in cases)
+          print('STAGE119_ORIGINAL824_SOURCE_LOCKED_NO_FALSE_EXECUTION_D2_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage119-source-locked-original824-execution-G0-G4-audit
+          path: |
+            /tmp/monster_stage119_actual_original824_summary.json
+            /tmp/monster_stage119_actual_original824_cases.jsonl
+          retention-days: 60
+      - name: Preserve actual original824 D2 evidence gaps on original Monster PR30 branch
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage119_actual_original824_summary.json "$dest/monster_stage119_original824_asof_D2_actual_summary.json"
+          cp /tmp/monster_stage119_actual_original824_cases.jsonl "$dest/monster_stage119_original824_asof_D2_actual_rows.jsonl"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest/monster_stage119_original824_asof_D2_actual_summary.json" "$dest/monster_stage119_original824_asof_D2_actual_rows.jsonl"
+          if git diff --cached --quiet; then echo STAGE119_SOURCE_AUDIT_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive Stage119 real original824 D0 D1 identity and executable orderbook blockers"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE119_SOURCE_AUDIT_GIT_ARCHIVED; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE119_ORIGINAL824_ARCHIVE_FAILED
+          exit 1
