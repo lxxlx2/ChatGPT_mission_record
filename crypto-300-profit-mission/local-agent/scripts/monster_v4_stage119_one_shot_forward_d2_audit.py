@@ -204,6 +204,23 @@ def selftest():
     assert s["G4_actual_executable_net"]=="UNKNOWN"
     assert all(r["Stage120_frozen_market_filter_and_book_preflight"]["status"]
         =="SOURCE_METADATA_MISSING" for r in rr)
+    fake=rules.catalog(rules.synthetic_snapshot(window),window)
+    source_sha=fake["raw_market_SHA"]
+    latest,run=audit_rows(window,[row],source_sha,
+                          verified_market_metadata=fake)
+    assert latest["signal_evidence_counts"]["asof_full_original_market_metadata_covered"]==1
+    assert latest["signal_evidence_counts"]["STAGE120_NOTIONAL_UNKNOWN"]==2
+    assert all(v["Stage120_frozen_market_filter_and_book_preflight"]["status"]
+               =="NOTIONAL_UNKNOWN" for v in run)
+    assert all(v["Stage120_frozen_market_filter_and_book_preflight"]
+               ["venue_status_at_signal"]==
+               "UNKNOWN_FROZEN_PREWINDOW_SNAPSHOT_NOT_LATER_TRADING_PROOF"
+               for v in run)
+    forged=dict(row,stage120_original_asof_contract_metadata={"fake":"identity"})
+    try:audit_rows(window,[forged],source_sha,verified_market_metadata=fake)
+    except ValueError as e:assert "METADATA_NOT_SAME" in str(e)
+    else:raise AssertionError("STAGE120_ALLOWS_REPLAY_METADATA_TO_CHANGE")
+    print("STAGE119_STAGE120_SIGNED_SOURCE_RULES_NOTIONAL_UNKNOWN_NO_G0_PROMOTION_INTEGRATION_TEST_PASS")
     print("STAGE119_STAGE116_AUTHENTICATED_POPULATION_INTERFACE_SOURCE_CENSORED_AND_D2_CAUSAL_SELFTEST_PASS")
 
 
