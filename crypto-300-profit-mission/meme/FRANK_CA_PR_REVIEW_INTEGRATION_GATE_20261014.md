@@ -1,7 +1,7 @@
 # Frank / CA cross-PR independent review and integration gate
 
 Checked: 2026-10-14 Asia/Bangkok
-Status: `REVIEW_QUEUE_ACTIVE / CODE_CI_EVIDENCE / COMBINED_CI_NOT_RUN / MAC_NOT_DEPLOYED`.
+Current status (2026-10-14): `C02_AND_A04_VERSIONING_EXTERNAL_CODE_REVIEW_APPROVE / EXACT_SHA_COMBINED_CI_PASS / A05_F02_DATA_GAPS_OPEN / MAC_NOT_DEPLOYED / NO_MERGE`. Earlier status and review rows are retained as historical checkpoints.
 
 ## Review status, do not infer acceptance from a green workflow
 
