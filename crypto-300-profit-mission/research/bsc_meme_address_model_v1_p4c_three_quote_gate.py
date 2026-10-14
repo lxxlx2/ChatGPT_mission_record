@@ -33,7 +33,7 @@ def build(d):
     check(pre["schema"]=="BSC_P4C_THREE_UNCLOSED_ORIGINAL_TX_LOG_PROBE"
           and pre["original_batch_source_blob_sha"]==batch["source_manifest"][0]["git_blob_sha"]
           and pre["production"]=="NO_GO" and len(pre["selected"])==3
-          and all(x["production"]=="NO_GO" for x in d)
+          and all(x.get("production",x.get("summary",{}).get("production"))=="NO_GO" for x in d)
           and batch["summary"]["frozen_recent_active_wallets"]==7
           and len(batch["rounds"])==5,
           "frozen three-round source cohort changed")
