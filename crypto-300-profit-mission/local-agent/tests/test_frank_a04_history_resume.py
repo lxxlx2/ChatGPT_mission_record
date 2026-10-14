@@ -18,7 +18,7 @@ def b58(raw):
     while n:
         n, v = divmod(n, 58)
         res = ALPHABET[v] + res
-    return "1" * (len(raw) - len(raw.lstrip(b"\\x00"))) + res
+    return "1" * (len(raw) - len(raw.lstrip(bytes([0])))) + res
 
 
 W1, W2, MINT, ATA1, ATA2 = [
