@@ -1,0 +1,48 @@
+name: Monster Stage136 manually authorized official publisher archive client offline tests
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage136_manual_publisher_archive_acquisition.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage136_manual_publisher_archive_acquisition.py'
+      - '.github/workflows/monster-stage136-manual-publisher-acquisition-offline.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage136_manual_publisher_archive_acquisition.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage136_manual_publisher_archive_acquisition.py'
+      - '.github/workflows/monster-stage136-manual-publisher-acquisition-offline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-manual-archive-source:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+      fail-fast: false
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and exercise exact Stage130 publisher bytes, Stage134 universe and Stage135 saved archive receipt
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage130_first_listed_minute_sha_replay.py monster_v4_stage134_t0_population_readiness_bridge.py monster_v4_stage135_full_market_publisher_minute_coverage.py monster_v4_stage136_manual_publisher_archive_acquisition.py
+          python -m unittest -v test_monster_v4_stage136_manual_publisher_archive_acquisition.py
+      - name: Require explicit T0 and human manual request for live fetch
+        run: |
+          if python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage136_manual_publisher_archive_acquisition.py --archive-root /tmp/stage136-none --out /tmp/stage136-blocked.json --fetch-manual; then
+            echo 'STAGE136_LIVE_WITHOUT_SOURCE_OR_AUTHORIZATION=FAIL'
+            exit 1
+          fi
+          test ! -f /tmp/stage136-blocked.json
+          echo 'STAGE136_CI_SYNTHETIC_ONLY_NO_REAL_BINANCE_FETCH_OR_SCHEDULE=PASS'
