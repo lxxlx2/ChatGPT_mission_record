@@ -98,7 +98,7 @@ class Stage139Tests(unittest.TestCase):
             raw_event("FOOUSDT", state="BREAK"),
             raw_event("BARUSDT", st=2),
             raw_event("OTHERUSDC"),
-            raw_event("FOOUSDT", state="TRADING", ct="CURRENT_QUARTER")))
+            raw_event("QUARTERUSDT", state="TRADING", ct="CURRENT_QUARTER")))
         self.assertEqual(r["in_window_UNVERIFIED_event_candidates"], 0)
         self.assertEqual(r["event_classification_counts"][
             "NONTRADING_CONTRACT_EVENT_NOT_LISTING"], 1)
