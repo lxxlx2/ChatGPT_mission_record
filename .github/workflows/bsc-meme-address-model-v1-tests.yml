@@ -29,6 +29,8 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_early_origin19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_dragon_ddac.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_major2.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_flap_major2.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_dragon_ddac.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_router_quotes19.py"
@@ -85,6 +87,28 @@ jobs:
         run: |
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1_bulk16.py" -v
+      - name: P4-B original Flap 2026 launchpad signer buys with real quotes and taxes
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_flap_major2.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-flap-major2.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-flap-major2.json").read_text(encoding="utf-8"))
+          expected=json.loads((root/"bsc-meme-address-model-v1-p4b-flap-major2-original-buys-and-quotes-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==expected,"Flap original contract event/tx owner receipt/tax economic source drift"
+          assert actual["summary"]["source_original_signed_purchases"]==2
+          assert actual["summary"]["signer_recipient_inventory_matches"]==2
+          assert actual["summary"]["closed_PnL"]==0
+          assert actual["summary"]["production"]=="NO_GO"
+          assert all(x["original_EOA_signer"]==x["final_ERC20_recipient"]
+                     and x["original_EOA_signer"]!=x["portal_TokenBought_intermediate_buyer"]
+                     and x["buyer_in_frozen_23"]=="NO"
+                     and x["causal_profit"]=="UNRESOLVED"
+                     for x in actual["rows"])
+          print("PASS two source-pinned 2026 Flap early owner signed buys with distinct quotes 1%/3% tax; no exit PnL")
+          PY
       - name: P4-B 23-wallet 19-CA early original trade evidence
         shell: bash
         run: |
