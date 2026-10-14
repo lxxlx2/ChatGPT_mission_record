@@ -35,7 +35,7 @@ def _hash(value):
                                      ensure_ascii=False).encode()).hexdigest()
 
 
-def _balance_map(rows, tracked, keys):
+def _balance_map(rows, keys):
     if not isinstance(rows, list):
         raise LedgerEvidenceError("MISSING_TOKEN_BALANCES")
     result = {}
@@ -51,8 +51,6 @@ def _balance_map(rows, tracked, keys):
             # Do not silently reassign an ATA to its fee payer. Missing owner
             # is unresolved, and is forbidden for tracked owner attribution.
             owner = None
-        if owner not in tracked:
-            continue
         amount = raw.get("uiTokenAmount")
         if not isinstance(amount, dict):
             raise LedgerEvidenceError("AMOUNT_MISSING")
@@ -102,29 +100,49 @@ def normalize_transaction(result: dict, *, tracked_wallets: set[str]) -> dict:
         key = entry if isinstance(entry, str) else entry.get("pubkey") if isinstance(entry, dict) else None
         keys.append(_required_key(key, "TRANSACTION_ACCOUNT_KEY"))
     failed = meta.get("err") is not None
-    before = _balance_map(meta.get("preTokenBalances"), tracked, keys)
-    after = _balance_map(meta.get("postTokenBalances"), tracked, keys)
+    before = _balance_map(meta.get("preTokenBalances"), keys)
+    after = _balance_map(meta.get("postTokenBalances"), keys)
     legs = []
+    coverage_gaps = []
     for k in sorted(set(before) | set(after)):
         first = before.get(k)
         last = after.get(k)
-        if first is not None and last is not None and (
-            first["owner"] != last["owner"] or first["decimals"] != last["decimals"]
-        ):
-            raise LedgerEvidenceError("ACCOUNT_OWNER_OR_DECIMALS_CONFLICT")
         entry = last or first
         pre = first["raw"] if first else 0
         post = last["raw"] if last else 0
         delta = post - pre
+        if first is not None and last is not None and (
+            first["decimals"] != last["decimals"]
+        ):
+            raise LedgerEvidenceError("ACCOUNT_DECIMALS_CONFLICT")
+        owners = {r["owner"] for r in (first, last) if r is not None}
+        known = {owner for owner in owners if owner is not None}
+        intersects = bool(known & tracked)
         if failed and delta != 0:
             raise LedgerEvidenceError("FAILED_TRANSACTION_NONZERO_TOKEN_DELTA")
+        if len(known) > 1:
+            if intersects:
+                raise LedgerEvidenceError("ACCOUNT_OWNER_CHANGED_WITH_TRACKED_BALANCE")
+            coverage_gaps.append("UNTRACKED_ACCOUNT_OWNER_CHANGED")
+            continue
+        if None in owners:
+            # A missing owner in either pre or post must NEVER fabricate
+            # -pre/+post. When a tracked owner appears in one side, only
+            # equal quantities can be ignored safely; nonzero delta
+            # remains unresolved and blocks immutable source ingestion.
+            coverage_gaps.append("TOKEN_OWNER_UNRESOLVED")
+            if intersects and delta != 0:
+                raise LedgerEvidenceError("TOKEN_OWNER_UNRESOLVED_DELTA")
+            continue
+        if not intersects:
+            continue
         legs.append({
             "owner": entry["owner"], "token_account": entry["token_account"],
             "account_index": entry["account_index"], "mint": entry["mint"],
             "decimals": entry["decimals"], "pre_raw": str(pre),
             "post_raw": str(post), "delta_raw": str(delta),
             "direction": "IN" if delta > 0 else "OUT" if delta < 0 else "ZERO",
-            "economic_type": "UNKNOWN_TOKEN_DELTA_NOT_MARKET_TRADE" if delta
+            "economic_type": "UNVERIFIED_TOKEN_DELTA" if delta
                              else "NO_BALANCE_CHANGE",
             "market_execution_verified": False, "usd_value": None,
             "cost_basis_usd": None, "realized_pnl_usd": None,
@@ -146,7 +164,8 @@ def normalize_transaction(result: dict, *, tracked_wallets: set[str]) -> dict:
                 "classification": "POSSIBLE_PEER_FLOW_NEEDS_INSTRUCTION_PROOF",
             })
     normalized = {
-        "schema_version": 1, "chain": "solana",
+        "schema_version": 2, "normalizer_version": "SOL_TOKEN_VIEW_V2",
+        "chain": "solana",
         "signature": signature, "slot": slot,
         "source": "GET_TRANSACTION_JSON_PARSED_FINALIZED_REQUEST",
         "finality_proven_by_response": False,
@@ -154,6 +173,10 @@ def normalize_transaction(result: dict, *, tracked_wallets: set[str]) -> dict:
         "token_legs": legs, "tracked_wallet_count": len(
             {leg["owner"] for leg in legs}),
         "possible_peer_flows": possible_internal,
+        "coverage_gaps": sorted(set(coverage_gaps)),
+        "token_owner_coverage_complete": not coverage_gaps,
+        "native_sol_coverage_status": "NATIVE_SOL_FLOW_UNCLASSIFIED",
+        "native_sol_flow_lamports": None,
         "active_market_buys_confirmed": 0,
         "active_market_sells_confirmed": 0,
         "person_pnl_usd": None,

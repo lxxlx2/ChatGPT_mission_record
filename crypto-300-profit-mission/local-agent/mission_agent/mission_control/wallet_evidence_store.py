@@ -117,7 +117,7 @@ class WalletEvidenceStore:
         return [json.loads(row["payload_json"]) for row in rows]
 
     def count(self, kind: str) -> int:
-        if kind not in {"TX", "ACCOUNT_CAPTURE", "RAW_TX", "WALLET_TX_VIEW"}:
+        if kind not in {"TX", "ACCOUNT_CAPTURE", "RAW_TX", "WALLET_TX_VIEW", "WALLET_TX_VIEW_V2"}:
             raise ValueError("INVALID_EVIDENCE_KIND")
         return int(self.db.execute(
             "SELECT COUNT(*) FROM evidence_documents WHERE kind=?", (kind,)
