@@ -1,0 +1,24 @@
+# Monster Stage 134: frozen offline Stage133 T0 -> Stage131 dynamic population readiness bridge
+
+Date: 2026-10-14 Asia/Bangkok. Scope: existing Draft PR #30, research-only, prior to Stage134 code, test or any new future source. Stage77 G0-G6 frozen thresholds, Stage116 old three dates, Stage118/127 REJECTED, Stage132 NEGATIVE and Stage133 manual-only authority remain unchanged.
+
+## Primary engineering objective
+
+Connect the actual Stage133 raw three-endpoint *receipt format* to the Stage131 two-lane population ledger without pretending a one-shot T0 is a complete seven-day forward experiment. Do not modify the old Stage116 scorer to accept a different date: its original first 2026-10-14T06:00:00Z capture failed, cannot be backfilled. This is a bounded offline integration of an already specified mainline, not an attempt to find new trading thresholds or add automated monitoring.
+
+## Frozen input and contract
+
+1. Take one Stage133 JSON packet from a file, not the network; revalidate its three original raw HTTP records through Stage133 validate_three_http_records rather than trusting fields like source_status, G0 or authenticated. Require matching immutable schema, precomputed source hashes, new forward start/end, complete market symbol count and exact active TRADING/PERPETUAL/USDT venue symbol roster. Refuse changed or missing material fields; preserve the difference between locally stored HTTP evidence and independently signed source attestation.
+2. Build Stage131 PREEXISTING_AT_WINDOW_START attempts for **all** active USDT perpetual symbols at T0, including non-crypto or ambiguous issuers; keep the full original Stage133 ExchangeInfo raw record with non-trading rows in input rather than dropping rows from source. One symbol = one raw attempt; no later winner selection, no inferred Spot buyability.
+3. Optional in-window arrivals are only unverified source candidates in this stage. Accept an explicit offline candidate list with exact symbol, first_observed_minute_utc, and source_status. Require one per venue symbol, minute in the frozen seven-day window and no collisions with start population. The list cannot certify point-in-time first listing, crypto issuer, contract unit or complete arrival census. Even an empty list does not certify zero new listings. An inactive T0 symbol that later appears is a status-transition candidate, not an authenticated newly issued crypto.
+4. Stage131 reconcile_population owns duplicate and time fail-closed gates. Stage134 may add checks but may not bypass Stage131 or promote any caller-supplied ATTESTED string to verified. Preserve raw row count/identities and stable evidence SHA256 for downstream review; leave all missing future publisher-minute receipts and issuer evidence visibly incomplete.
+5. Stage116 scoring remains locked to its three original failed/unchanged dates. Stage134 emits a separate **new forward readiness adapter**, with exact 7-day anchor and population counts, source-quality gaps and next required evidence, and frozen Stage77 threshold references (G1 >=20 2x over 3 independent windows, strict>=90%, early5>=85%; G2>=80%; G3 mean<=5/day and peak<=12; G4 >=30 supported buy/sell observations). No historical/high-profit labels and no 2x performance statistics in this readiness-only stage.
+
+## Frozen acceptance and rejection criteria
+
+- Pure offline CLI `--t0`, optional `--arrival-candidates` and required `--out`; imports and test execution do not call network, start background work, create scheduled workflows, mail, trade or affect Frank.
+- End-to-end synthetic packet constructed from actual Stage133 validation schema must reconcile through Stage131 and produce exactly all T0 venue candidates plus all distinct new-arrival candidates. Test tampering SHA/time/roster, duplicate start or arrival, out-of-window future timestamp, self-asserted attestation, empty arrivals and non-active T0 rows. No synthetic fixture ever upgrades real G0 or G1.
+- New CI runs on push / manual dispatch only with offline deterministic fixtures, Python compile and tests on macOS and Ubuntu. CI code correctness PASS is separate from genuine real-market forward G0-G4 evidence.
+- Mark stages: Stage134 integration DONE only when actual code and two-OS CI complete; new real Stage133 T0 remains NOT_DONE until separately explicit user chat request. Remaining G0 PARTIAL, G1 NOT_SCORABLE, G2/G3 NOT_PASSED, G4 UNKNOWN, G5 NOT_DONE, G6 NO_GO. NO NEW SCHEDULER, NO MAC DEPLOY, NO GMAIL, NO ORDER.
+
+Next high-value mainline after integration: collect the first **user-triggered** actual new Stage133 T0 (when explicitly requested) and accumulate truly complete full-market as-of/in-window official source, independent issuer/venue proof and 1m arrival coverage for the future 168 hours. Preserve original failure and prior negative strategy.
