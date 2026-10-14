@@ -1,0 +1,48 @@
+name: Monster Stage135 frozen full-market publisher minute source coverage
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage135_full_market_publisher_minute_coverage.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage135_full_market_publisher_minute_coverage.py'
+      - '.github/workflows/monster-stage135-full-market-minute-source-offline.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage135_full_market_publisher_minute_coverage.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage135_full_market_publisher_minute_coverage.py'
+      - '.github/workflows/monster-stage135-full-market-minute-source-offline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verified-publisher-source-census:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline original publisher ZIP bytes and complete denominator tests
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage130_first_listed_minute_sha_replay.py monster_v4_stage134_t0_population_readiness_bridge.py monster_v4_stage135_full_market_publisher_minute_coverage.py
+          python -m unittest -v test_monster_v4_stage135_full_market_publisher_minute_coverage.py
+      - name: Reject running without explicit archived local T0 and data root
+        shell: bash
+        run: |
+          if python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage135_full_market_publisher_minute_coverage.py --out /tmp/stage135_unrequested.json; then
+            echo "STAGE135_FAIL_OPEN_NO_T0"
+            exit 1
+          fi
+          test ! -f /tmp/stage135_unrequested.json
+          echo "STAGE135_OFFLINE_ONLY_NO_CAPTURE_NO_SCHEDULE=PASS"
