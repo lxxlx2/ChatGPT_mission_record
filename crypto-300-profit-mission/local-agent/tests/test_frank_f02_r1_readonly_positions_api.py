@@ -4,6 +4,7 @@ import copy
 import http.client
 from http.server import ThreadingHTTPServer
 import json
+import sqlite3
 from pathlib import Path
 import threading
 
@@ -19,7 +20,7 @@ from scripts.frank_f02_readonly_positions_api import (
     REGISTRY, ROSTER, ResearchPositions, make_handler, main,
 )
 from scripts.frank_reconcile_frozen32_offline import load_frozen_roster
-from test_frank_a04_a05_chain_capture import entry, pk
+from test_frank_a04_a05_chain_capture import entry, pk, request_factory, response
 
 
 WALLET = "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
@@ -213,3 +214,126 @@ def test_f02_readonly_sidecar_bytes_unchanged(source, service):
     view = service.positions(as_of_utc=STAMP + timedelta(seconds=60))
     assert view["readiness"] == "FRESH_VERIFIED_ARCHIVED_OBSERVATION"
     assert source["sidecar"].read_bytes() == before
+
+
+
+def _archive_partial(sidecar, *, slot, stamp):
+    request, calls = request_factory(
+        response(slot, []), response(slot, []), fail=SPL_TOKEN_PROGRAM)
+    partial = capture_owner(WALLET, request)
+    assert {x["program_id"] for x in partial["missing"]} == {SPL_TOKEN_PROGRAM}
+    assert partial["status"] == "PARTIAL_SOURCE"
+    assert partial["slot_max"] == slot
+    assert len(calls) == 2
+    partial["observed_at_utc"] = stamp.isoformat()
+    partial["capture_sha256"] = _fingerprint(partial)
+    store = WalletEvidenceStore(sidecar)
+    try:
+        assert store.capture_wallet(partial)
+    finally:
+        store.close()
+    return partial
+
+
+def _actual_http(service, *, as_of, monkeypatch):
+    selected = service.positions
+    monkeypatch.setattr(service, "positions", lambda: selected(as_of_utc=as_of))
+    server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(service))
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        conn = http.client.HTTPConnection("127.0.0.1", server.server_port, timeout=5)
+        conn.request("GET", "/api/research/positions?person_id=frank")
+        res = conn.getresponse()
+        status = res.status
+        doc = json.loads(res.read())
+        conn.close()
+        return status, doc
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
+
+
+@pytest.mark.parametrize("lower_or_higher_slot", [456895318, 456895321])
+def test_later_partial_attempt_fails_closed_even_if_its_slot_is_lower(
+        service, source, monkeypatch, lower_or_higher_slot):
+    later = _archive_partial(
+        source["sidecar"], slot=lower_or_higher_slot,
+        stamp=STAMP + timedelta(seconds=10))
+    status, body = _actual_http(
+        service, as_of=STAMP + timedelta(seconds=20), monkeypatch=monkeypatch)
+    assert status == 200
+    assert body["readiness"] == "LATEST_CAPTURE_ATTEMPT_FAILED"
+    assert body["archive_observation_usable"] is False
+    assert body["latest_attempt_source_status"] == "PARTIAL_SOURCE"
+    assert body["latest_attempt_capture_sha256"] == later["capture_sha256"]
+    assert body["latest_attempt_slot_max"] == lower_or_higher_slot
+    assert body["latest_attempt_missing_program_ids"] == [SPL_TOKEN_PROGRAM]
+    assert body["latest_capture_sha256"] == source["capture"]["capture_sha256"]
+    assert body["target_mint_count"] == 32
+    assert body["state_counts"] == {"SOURCE_UNAVAILABLE": 32}
+    assert all(item["observed_raw_amount"] is None
+               and item["observed_quantity"] is None
+               and item["token_accounts"] == []
+               for item in body["mints"])
+
+
+def test_earlier_partial_backfill_does_not_mask_newer_verified_observation(
+        service, source):
+    partial = _archive_partial(
+        source["sidecar"], slot=456895318,
+        stamp=STAMP - timedelta(seconds=10))
+    result = service.positions(as_of_utc=STAMP + timedelta(seconds=20))
+    assert result["readiness"] == "FRESH_VERIFIED_ARCHIVED_OBSERVATION"
+    assert result["latest_attempt_capture_sha256"] == source["capture"]["capture_sha256"]
+    assert result["latest_attempt_capture_sha256"] != partial["capture_sha256"]
+    assert result["mints"][0]["observed_raw_amount"] == "9007199254741000"
+
+
+def test_history_import_of_older_slots_preserves_latest_source(service, source):
+    older = copy.deepcopy(source["capture"])
+    older["slot_min"] -= 50
+    older["slot_max"] -= 50
+    older["observed_at_utc"] = (STAMP - timedelta(seconds=30)).isoformat()
+    older["capture_sha256"] = _fingerprint(older)
+    store = WalletEvidenceStore(source["sidecar"])
+    try:
+        assert store.capture_wallet(older)
+    finally:
+        store.close()
+    result = service.positions(as_of_utc=STAMP + timedelta(seconds=20))
+    assert result["readiness"] == "FRESH_VERIFIED_ARCHIVED_OBSERVATION"
+    assert result["latest_attempt_capture_sha256"] == source["capture"]["capture_sha256"]
+    assert result["mints"][0]["observed_raw_amount"] == "9007199254741000"
+
+
+def test_later_unverified_full_attempt_with_lower_slot_masked(service, source):
+    low = copy.deepcopy(source["capture"])
+    low["slot_min"] -= 10
+    low["slot_max"] -= 10
+    low["observed_at_utc"] = (STAMP + timedelta(seconds=10)).isoformat()
+    low["capture_sha256"] = _fingerprint(low)
+    st = WalletEvidenceStore(source["sidecar"])
+    try:
+        assert st.capture_wallet(low)
+    finally:
+        st.close()
+    result = service.positions(as_of_utc=STAMP + timedelta(seconds=20))
+    assert result["readiness"] == "LATEST_SOURCE_NOT_WIRE_VERIFIED"
+    assert result["latest_attempt_capture_sha256"] == low["capture_sha256"]
+    assert result["mints"][0]["observed_raw_amount"] is None
+
+
+def test_broken_readonly_sqlite_schema_returns_fixed_http_503(
+        service, source, monkeypatch):
+    db = sqlite3.connect(source["sidecar"])
+    try:
+        db.execute("DROP TABLE evidence_documents")
+        db.commit()
+    finally:
+        db.close()
+    status, result = _actual_http(
+        service, as_of=STAMP + timedelta(seconds=20), monkeypatch=monkeypatch)
+    assert status == 503
+    assert result == {"status": "RESEARCH_SOURCE_UNAVAILABLE"}
