@@ -185,7 +185,6 @@ def test_invalid_target_input_does_not_query_or_guess(tmp_path, mints):
 
 def test_manual_cli_reuses_source_readonly_and_does_not_write_sidecar(tmp_path, capsys):
     from scripts.frank_research_latest_inventory import main
-    from pathlib import Path
     from datetime import datetime, timezone
     import hashlib
 
