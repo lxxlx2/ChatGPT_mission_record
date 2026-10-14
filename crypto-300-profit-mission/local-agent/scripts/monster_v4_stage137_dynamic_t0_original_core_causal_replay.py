@@ -32,6 +32,37 @@ ACTIVE = 10_080
 BARS = WARMUP + ACTIVE
 
 
+def original_d0_internal_symbol(exact_symbol):
+    """Research-only exact UTF8 -> isolated D0 SQLite ASCII symbol mapping."""
+    if not stage105.valid_exact_venue_symbol(exact_symbol):
+        raise ValueError("STAGE141_INVALID_ORIGINAL_VENUE_SYMBOL")
+    if exact_symbol.isascii():
+        return exact_symbol
+    digest = hashlib.sha256(exact_symbol.encode("utf-8")).hexdigest()[:32].upper()
+    return "MONSTER" + digest + "USDT"
+
+
+def assert_original_population_aliases(rows):
+    """Fail closed on proxy collisions with other proxies or true venue names."""
+    original = set()
+    for row in rows:
+        exact = row["symbol_exact"]
+        if exact in original:
+            raise ValueError("STAGE141_DUPLICATE_ORIGINAL_MARKET_ID")
+        original.add(exact)
+    aliases = {}
+    for exact in original:
+        internal = original_d0_internal_symbol(exact)
+        if internal in aliases and aliases[internal] != exact:
+            raise ValueError("STAGE141_ASCII_PROXY_COLLISION")
+        if internal in original and internal != exact:
+            raise ValueError("STAGE141_ALIAS_SHADOWS_REAL_MARKET_SYMBOL")
+        aliases[internal] = exact
+    if len(aliases) != len(original):
+        raise ValueError("STAGE141_LOST_FULL_MARKET_ALIAS_IDENTITY")
+    return aliases
+
+
 def original_core_contract():
     # Model pins are unchanged: reject unreviewed drift before claiming SAME core.
     if v4.blob(v4.production.__file__) != v4.ORIGINAL_V4_GIT_BLOB:
@@ -156,7 +187,13 @@ def replay_original_d0_d1(symbol, start, end, bars, contract):
         labels[f"D1_first_pre_GT{m}x_5m"] = bool(
             first_d1 is not None and peak is not None and first_d1 + 5 * MIN <= peak)
     return {
-        "replay_status": "ORIGINAL_ASCII_V4_D0_AND_FROZEN_D1_CAUSAL_OFFLINE",
+        "replay_status": (
+            "ORIGINAL_ASCII_V4_D0_AND_FROZEN_D1_CAUSAL_OFFLINE"
+            if internal_d0_symbol == symbol else
+            "ORIGINAL_V4_NUMERIC_CORE_WITH_UNICODE_IDENTITY_ADAPTER_CAUSAL_OFFLINE"),
+        "source_core_unicode_adapter_used": internal_d0_symbol != symbol,
+        "original_exact_venue_symbol": symbol,
+        "isolated_original_D0_SQLite_symbol": internal_d0_symbol,
         "original_core_three_minute_ticks": tick_count,
         "first_tick_utc": stage133.iso(ticks[0]),
         "last_tick_utc": stage133.iso(ticks[-1]),
