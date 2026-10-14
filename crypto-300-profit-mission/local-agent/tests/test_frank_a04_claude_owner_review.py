@@ -43,6 +43,7 @@ def test_E1b_pre_missing_owner_does_not_create_false_inflow():
 def test_E1c_both_owners_unknown_are_not_silently_filled():
     raw = tx([balances(0, OWNER_A, MINT, "100")],
              [balances(0, OWNER_A, MINT, "200")])
+    raw["meta"]["postTokenBalances"][0]["uiTokenAmount"]["amount"] = "100"
     del raw["meta"]["preTokenBalances"][0]["owner"]
     del raw["meta"]["postTokenBalances"][0]["owner"]
     result = normalize_transaction(raw, tracked_wallets={OWNER_A})
@@ -108,6 +109,15 @@ def test_versioned_rebuild_keeps_original_immutable_evidence_and_is_repeatable(t
         result = WalletHistoryCollector(journal, FakeRPC(), wallet=OWNER_A).collect(
             max_pages=0, tx_budget=1)
         assert result["captured"] == 1
+        # Existing newly captured V2 is already verified. Insert a separate
+        # historical V1 artifact; an explicit V2 rebuild must not mutate it.
+        legacy = '{"schema_version":1,"old_economic_attribution":"UNVERIFIED"}'
+        with store.db:
+            store.db.execute(
+                "INSERT INTO evidence_documents(kind,identity,source_sha256,payload_json)"
+                "VALUES('WALLET_TX_VIEW',?,?,?)",
+                (OWNER_A + ":" + sig + ":901", "legacy-archive", legacy),
+            )
         original = store.db.execute(
             "SELECT payload_json FROM evidence_documents WHERE kind='WALLET_TX_VIEW'"
         ).fetchone()[0]
@@ -115,7 +125,8 @@ def test_versioned_rebuild_keeps_original_immutable_evidence_and_is_repeatable(t
             "SELECT payload_json FROM evidence_documents WHERE kind='RAW_TX'"
         ).fetchone()[0]
         rebuilt = journal.rebuild_versioned_views(OWNER_A)
-        assert rebuilt["new"] == 1 and rebuilt["blocked"] == 0
+        assert rebuilt["new"] == 0 and rebuilt["already_present"] == 1
+        assert rebuilt["blocked"] == 0
         repeated = journal.rebuild_versioned_views(OWNER_A)
         assert repeated["new"] == 0 and repeated["already_present"] == 1
         assert store.count("WALLET_TX_VIEW_V2") == 1
