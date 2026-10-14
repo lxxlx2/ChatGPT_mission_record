@@ -223,7 +223,7 @@ def full_arrival_minutes(archive_root, symbol, observed_ms, end):
     return bars, receipts
 
 
-def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract):
+def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract, *, scan_start_ms=None):
     """Use frozen original D0 queue/D1 with NO invented 24h or 61m warmup.
 
     This is source-conditioned retrospective replay, not a live listing proof.
@@ -233,6 +233,10 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
     if any(b[0] != first_observed_ms + n*MIN for n, b in enumerate(bars)):
         raise ValueError("STAGE142_NEW_LISTING_1M_NONCONTIGUOUS")
     internal = original_d0_internal_symbol(symbol)
+    if scan_start_ms is None:
+        scan_start_ms = first_observed_ms
+    if scan_start_ms < first_observed_ms or scan_start_ms >= end:
+        raise ValueError("STAGE143_INVALID_ASOF_SCAN_START")
     prefix = [Decimal(0)]
     for b in bars:
         prefix.append(prefix[-1] + b[5])
@@ -242,12 +246,13 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
     candles = (replay.make_closed_five_minute_bars(
         bars[aligned:aligned + full_groups * 5]) if full_groups > 0 else [])
     candle_ends = [int(c[6]) for c in candles]
-    first_tick = ((first_observed_ms + 2*MIN + TICK - 1)//TICK)*TICK
+    first_tick = ((max(first_observed_ms,scan_start_ms)+3*MIN+TICK-1)//TICK)*TICK
     ticks = range(first_tick, end, TICK)
     first_d0 = None
     first_d1 = None
     d1_path = None
     state = None
+    first_quote100k_gate_ms = None
     with tempfile.TemporaryDirectory(prefix="monster142_cold_start_") as directory:
         db = v4.production.open_store(Path(directory) / "isolated_original_d0.sqlite")
         try:
@@ -262,6 +267,8 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
                     raise ValueError("STAGE142_FIRST_WATCH_LOOKAHEAD")
                 # A newly observed symbol has NO guessed prelisting quote value.
                 quote = prefix[idx+1]-prefix[max(0, idx+1-WARMUP)]
+                if first_quote100k_gate_ms is None and quote >= Decimal("100000"):
+                    first_quote100k_gate_ms = t
                 v4.production.observe_snapshot(db,"futures",t,[{
                     "symbol":internal, "lastPrice":str(bars[idx][4]),
                     "quoteVolume":str(quote)}])
@@ -298,7 +305,10 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
     labels = {}
     for m in (2,5,10):
         threshold = bars[0][1]*Decimal(m)
-        cross = next((b[0] for b in bars if b[2] >= threshold),None)
+        # For recent pre-T0 cases, a historic 2x before the new window
+        # cannot be falsely credited as a new forward-window opportunity.
+        historic_cross = next((b[0] for b in bars if b[2] >= threshold),None)
+        cross = historic_cross if historic_cross is not None and historic_cross >= scan_start_ms else None
         crossing[m] = cross
         labels[f"first_GT{m}x_HIGH_UTC_EVALUATION_ONLY"] = (
             stage133.iso(cross) if cross is not None else None)
@@ -318,6 +328,17 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
         "isolated_original_D0_SQLite_symbol":internal,
         "source_core_unicode_adapter_used":internal!=symbol,
         "new_listing_source_claim_first_1m_utc":stage133.iso(first_observed_ms),
+        "effective_replay_scan_start_utc":stage133.iso(scan_start_ms),
+        "first_quote100k_gate_utc_diagnostic_only":(
+            stage133.iso(first_quote100k_gate_ms) if first_quote100k_gate_ms is not None else None),
+        "first_retrospective_2x_before_observed_quote100k_gate":(
+            None if crossing[2] is None else (
+                first_quote100k_gate_ms is None or crossing[2] < first_quote100k_gate_ms)),
+        "hypothetical_first_D0_after_detection_delay_NOT_LIVE_RERUN":{
+            str(mins)+"m": (
+                stage133.iso(max(first_d0,first_observed_ms+mins*MIN))
+                if first_d0 is not None else None)
+            for mins in (1,3,5)},
         "first_listing_time_independently_attested":False,
         "new_listing_initial_24h_quote_history_available":False,
         "full_61m_D1_history_at_first_observation":False,
@@ -343,6 +364,9 @@ def run(t0_packet, archive_root, arrivals=None):
     out = []
     totals = Counter()
     d1_daily = Counter()
+    existing_d1_daily = Counter()
+    inwindow_d1_daily = Counter()
+    recent_pre_t0_d1_daily = Counter()
     for source in census["per_symbol_source_audit"]:
         symbol = source["symbol_exact"]
         lane = source["population_lane"]
@@ -360,6 +384,22 @@ def run(t0_packet, archive_root, arrivals=None):
         if not source["source_minute_continuity"]:
             row["replay_status"] = "SOURCE_CENSORED_NO_REPLAY"
             totals["source_censored"] += 1
+        elif source.get("recent_pre_T0_onboarded_cold_start_claim"):
+            first_ms = stage131.stamp(source["required_source_from_utc"])
+            bars, receipts = full_arrival_minutes(archive_root,symbol,first_ms,end)
+            row.update(replay_new_arrival_cold_start(
+                symbol,first_ms,end,bars,contract,scan_start_ms=start))
+            row["replay_status"] = "ORIGINAL_CORE_RECENT_PRE_T0_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE"
+            row["original_archive_receipts_count"] = len(receipts)
+            row["recent_pre_T0_source_verified_since_onboard_claim"] = True
+            totals["recent_preT0_cold_start_source_conditioned"] += 1
+            if row["D0_first_UTC"] is not None:
+                totals["recent_preT0_cold_start_first_D0"] += 1
+            if row["D1_first_UTC"] is not None:
+                totals["recent_preT0_cold_start_first_D1"] += 1
+                day_bucket=(stage131.stamp(row["D1_first_UTC"])-start)//(24*3_600_000)
+                recent_pre_t0_d1_daily[day_bucket] += 1
+                d1_daily[day_bucket] += 1
         elif lane != "PREEXISTING_AT_WINDOW_START":
             first_ms = stage131.stamp(source["required_source_from_utc"])
             bars, receipts = full_arrival_minutes(
@@ -372,8 +412,11 @@ def run(t0_packet, archive_root, arrivals=None):
                 totals["new_listing_cold_start_first_D0"] += 1
             if row["D1_first_UTC"] is not None:
                 totals["new_listing_cold_start_first_D1"] += 1
-            # Keep these PIT-unverified cases out of original G1/G2/G3
-            # preexisting cohort descriptive denominators.
+                day_bucket=(stage131.stamp(row["D1_first_UTC"])-start)//(24*3_600_000)
+                inwindow_d1_daily[day_bucket] += 1
+                d1_daily[day_bucket] += 1
+            # PIT-unverified arrivals stay outside independently scored
+            # G1 recall, but DO count toward possible G3 notification load.
         else:
             bars, receipts = full_window_minutes(archive_root, symbol, start, end)
             row.update(replay_original_d0_d1(symbol, start, end, bars, contract))
@@ -387,6 +430,7 @@ def run(t0_packet, archive_root, arrivals=None):
                 if not 0 <= day_bucket < 7:
                     raise ValueError("STAGE137_D1_OUTSIDE_FORWARD_WINDOW")
                 d1_daily[day_bucket] += 1
+                existing_d1_daily[day_bucket] += 1
             labels = row["gross_future_labels_not_real_profit"]
             for m in (2, 5, 10):
                 if labels[f"first_GT{m}x_HIGH_UTC_EVALUATION_ONLY"] is not None:
@@ -416,6 +460,9 @@ def run(t0_packet, archive_root, arrivals=None):
         "model_attempts_scored_or_classified": len(out),
         "raw_usdm_venue_descriptive_only": dict(totals),
         "raw_D1_daily_by_UTC_forward_day": [d1_daily[i] for i in range(7)],
+        "raw_existing_D1_daily_by_UTC_forward_day": [existing_d1_daily[i] for i in range(7)],
+        "raw_inwindow_cold_start_D1_daily_by_UTC_forward_day": [inwindow_d1_daily[i] for i in range(7)],
+        "raw_recent_preT0_cold_start_D1_daily_by_UTC_forward_day": [recent_pre_t0_d1_daily[i] for i in range(7)],
         "all_source_population_rows": out,
         "not_live_one_minute_capture_proof": True,
         "complete_asof_issuer_scope_verified": False,
