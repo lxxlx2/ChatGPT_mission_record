@@ -25,6 +25,8 @@ FUTURE_MIN = 5 * 60_000
 MAX_BYTES = stage97.MAX_BYTES
 TIME_URL = stage97.TIME_URL
 EXCHANGE_URL = stage97.EXCHANGE_URL
+MIRROR_TIME_URL = "https://www.binance.com/fapi/v1/time"
+MIRROR_EXCHANGE_URL = "https://www.binance.com/fapi/v1/exchangeInfo"
 
 
 def exact_uint(v):
@@ -62,9 +64,19 @@ def read_response(packet, url):
 
 
 def validate_three_http_records(first, exchange, last):
-    before, b0,b1, sha_b = read_response(first,TIME_URL)
-    market, x0,x1, sha_x = read_response(exchange,EXCHANGE_URL)
-    after, a0,a1, sha_a = read_response(last,TIME_URL)
+    # Stage140 explicit one-time source extension: preserve actual HTTPS URL.
+    # Strictly same-host three receipts; no fapi/www mixed requests or redirects.
+    # Original frozen fapi packet content remains byte-for-byte compatible.
+    source_time = first.get("url") if isinstance(first, dict) else None
+    if source_time == TIME_URL:
+        source_exchange = EXCHANGE_URL
+    elif source_time == MIRROR_TIME_URL:
+        source_exchange = MIRROR_EXCHANGE_URL
+    else:
+        raise ValueError("STAGE133_UNKNOWN_EXACT_TIME_ENDPOINT")
+    before, b0,b1, sha_b = read_response(first,source_time)
+    market, x0,x1, sha_x = read_response(exchange,source_exchange)
+    after, a0,a1, sha_a = read_response(last,source_time)
     if not(b0<=b1<=x0<=x1<=a0<=a1):
         raise ValueError("STAGE133_UNORDERED_OFFICIAL_REQUESTS")
     start_server=exact_uint(before.get("serverTime"))
@@ -104,7 +116,7 @@ def validate_three_http_records(first, exchange, last):
     record={"schema":SCHEMA,
         "source_mode":"OPERATOR_MANUALLY_REQUESTED_STDLIB_HTTPS_ONE_SHOT_ONLY",
         "provenance_limit":"RECORDED_HTTPS_BINANCE_UNSIGNABLE_TLS_AFTER_FACT_NOT_EXTERNAL_ATTESTATION",
-        "required_three_official_endpoints":[TIME_URL,EXCHANGE_URL,TIME_URL],
+        "required_three_official_endpoints":[source_time,source_exchange,source_time],
         "raw_http_records":{"official_before_time":first,"official_exchange_info":exchange,"official_after_time":last},
         "ordered_source_sha256":[sha_b,sha_x,sha_a],
         "last_http_response_end_ms":a1,
@@ -134,6 +146,19 @@ def validate_three_http_records(first, exchange, last):
         "G4":"UNKNOWN","independent_other_AI_review":"NOT_DONE",
         "monster_deployment":"NO_GO","Frank":"UNCHANGED","Gmail":"OFF",
         "automatic_followup_scheduled":False}
+    if source_time == MIRROR_TIME_URL:
+        # Explicitly disclose the Binance website mirror hostname and the
+        # potentially stale embedded exchangeInfo serverTime field. Never
+        # claim the latter is the actual moment this symbol set last changed.
+        embedded = market.get("serverTime")
+        record["alternate_source_host"] = (
+            "www.binance.com HTTPS website FAPI mirror, NOT documented fapi.binance.com API base")
+        record["fapi_mirror_exchangeinfo_embedded_serverTime"] = (
+            embedded if type(embedded) is int else None)
+        record["fapi_mirror_embedded_exchangeinfo_serverTime_age_ms_at_capture"] = (
+            x1 - embedded if type(embedded) is int else None)
+        record["mirror_contents_are_guaranteed_current_at_T0"] = False
+        record["mirror_host_source_equivalence_independently_attested"] = False
     return record
 
 
