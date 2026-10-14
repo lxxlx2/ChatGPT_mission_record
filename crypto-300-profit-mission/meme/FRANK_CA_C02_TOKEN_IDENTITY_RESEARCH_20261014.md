@@ -44,3 +44,17 @@ Full regression command: `FRANK_EXPECT_REAL_GIT_REPLAY=1 PYTHONPATH=. /tmp/missi
 Not deployed. Native production Dashboard, real operator input/readback, final current-main integration and user business acceptance remain NOT_PERFORMED. External metadataPointer interface parsing remains UNCONFIRMED. Chain labels do not verify official social/project affiliation. Actual malicious issuer conflict and unplanned public RPC outage were not found; fault injection is labeled. Holder/LP completeness, narrative, C03-C10 and full C01 completion semantics are outside C02. Draft PR and tests alone cannot mark overall CA acceptance complete.
 
 References: Solana metadata extension https://solana.com/docs/tokens/extensions/metadata and Metaplex metadata https://solana.com/docs/tokens/metaplex .
+
+## Final local verification and independent review
+
+Product/test commit: `3ed4755e99a92983810e9ba27b844c80f795d1be`.
+
+- Focused C02 `test_ca_identity_c02.py` + `test_ca_market_c02_red.py`: **13 passed**. Includes saved official same-name mints, actual temporary SQLite RPC-cache separation, ordinary SPL binary metadata, Token-2022 metadata, wrong owner/mint/truncation, missing/fault/conflict, direction mismatch.
+- Complete regression in required **local-agent cwd**: **1445 passed, 0 skipped, 14 warnings**, 73.29 sec. Actual command stated above and log `evidence/c02/full-final.txt`. The 14 existing multiprocessing/fork deprecation warnings are preserved.
+- One rerun was mistakenly launched from repository root. Existing `test_price_v2.py` uses relative `scripts/price_v2_validate.py`, so that wrong-cwd run failed: **1 failed, 1442 passed**. Saved `wrong-cwd-regression.txt`; no test deleted or altered to bypass it. Correct working directory yielded the full PASS above.
+- `node tests/ca_identity_render.cjs`: six official saved cases sequentially rendered, exact mint retained, preview/report naming, injected conflict warning, HTML escaping PASS.
+- pyflakes for changed Python product files, compileall and `node --check .../static/app.js`: PASS.
+- Real native browser QA PNGs and scope note under `evidence/c02/browser/`. Source details were initially oversized in the summary, then placed in an expandable source panel and rechecked. These are isolated saved-evidence renders, not production full-query acceptance.
+- First independent Gemini request returned UNAVAILABLE / GeminiModelUnavailableError; preserved in `review-initial-unavailable.json`. Retried on fixed product SHA `3ed4755e99a92983810e9ba27b844c80f795d1be`: model **gemini-3.5-flash**, **PASS**, no findings, latency 46.834 sec, egress material SHA256 `ad68da0ee8365643351b70bf8d8dffda3a0b1c7d71850ee107d5b8fd8b7ac352`. Actual tool response `review-gemini-pass.json`. Review is code/data-contract review, not independent live re-query or owner acceptance.
+
+Subsequent evidence-only commit changes no product or test blobs; review SHA and immutable product blobs remain traceable. Current-head GitHub CI must be read from the Draft PR; no claim of remote PASS until it completes. Main integration and native production Mac acceptance remain open. C02 is CODE_IMPLEMENTED / LOCAL_TEST_PASS / INDEPENDENT_CODE_REVIEW_PASS, not RELEASED or overall business ACCEPTED.
