@@ -211,6 +211,36 @@ class Stage137Tests(unittest.TestCase):
         # Check no original 24h values were imagined at first observation.
         self.assertFalse(baseline["new_listing_initial_24h_quote_history_available"])
 
+    def test_claude_p2_cold_first_tick_at_O_plus_two_must_wait_one_more_3m_slot(self):
+        from decimal import Decimal
+        first=s131.stamp("2026-10-28T06:22:00Z")
+        bars=[]
+        for n in range(40):
+            p=Decimal("1.12") if n >= 18 else Decimal("1")
+            bars.append((first+n*60_000,p,p*Decimal("1.01"),
+                         p*Decimal("0.99"),p,Decimal("30000"),1200))
+        out=s137.replay_new_arrival_cold_start(
+            "NEXTUSDT",first,first+40*60_000,bars,s137.original_core_contract())
+        self.assertEqual(out["first_tick_utc"],"2026-10-28T06:27:00Z")
+        self.assertGreaterEqual(s131.stamp(out["D0_first_UTC"]),first+3*60_000)
+        self.assertEqual(out["new_listing_source_claim_first_1m_utc"],"2026-10-28T06:22:00Z")
+
+    def test_claude_p1_quote_gate_2x_before_100k_reports_structure_not_buy(self):
+        from decimal import Decimal
+        first=s131.stamp("2026-10-28T06:21:00Z")
+        bars=[]
+        for n in range(60):
+            p=Decimal("2.1") if n>=12 else Decimal("1")
+            bars.append((first+n*60_000,p,p*Decimal("1.01"),
+                         p*Decimal("0.99"),p,Decimal("1000"),40))
+        out=s137.replay_new_arrival_cold_start(
+            "ILLQUSDT",first,first+60*60_000,bars,s137.original_core_contract())
+        self.assertIsNone(out["first_quote100k_gate_utc_diagnostic_only"])
+        self.assertTrue(out["first_retrospective_2x_before_observed_quote100k_gate"])
+        self.assertIsNone(out["D0_first_UTC"])
+        self.assertFalse(out["first_listing_time_independently_attested"])
+        self.assertIn("3m",out["hypothetical_first_D0_after_detection_delay_NOT_LIVE_RERUN"])
+
     def test_new_listing_insufficient_61_minutes_never_fakes_D1(self):
         from decimal import Decimal
         first=s131.stamp("2026-10-28T06:21:00Z")
