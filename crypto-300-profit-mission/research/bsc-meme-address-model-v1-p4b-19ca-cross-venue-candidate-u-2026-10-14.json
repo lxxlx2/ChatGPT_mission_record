@@ -17,6 +17,14 @@
     {
       "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-v2-19ca-first10-swap-observations-2026-10-14.json",
       "git_blob_sha": "646732ca70fa06dff798b30b2a91236135f4ecbb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-bulla-v3-usdt-10000-delayed-active-proof-2026-10-14.json",
+      "git_blob_sha": "41366fc5959d4bd227826aec8101229eb02e1bd1"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-niulai-v3-10000-delayed-active-proof-2026-10-14.json",
+      "git_blob_sha": "7a5e74b5fa653b7e2a51f1f86e2200510c8a5c88"
     }
   ],
   "summary": {
