@@ -5,6 +5,7 @@ receipts, when obtained, are separately preserved with explicit source proof.
 """
 import hashlib
 import json
+from pathlib import Path
 
 from mission_agent.mission_control.wallet_economic_ledger import normalize_transaction
 from mission_agent.mission_control.wallet_evidence_store import WalletEvidenceStore
@@ -212,3 +213,40 @@ def test_old_sidecar_is_migrated_without_rewriting_raw_v1_or_cursor(tmp_path):
         assert journal.state(OWNER_A) == state
     finally:
         upgraded.close()
+
+
+def test_real_finalized_solana_ata_creation_proves_rent_payer_is_not_wallet_sol():
+    """Full official jsonParsed receipt captured at finalized slot 456789461.
+
+    This is a real observed ATA creation for Frank's Token-2022 account.
+    Raw event is a fixture; it is *not* a claim of market BUY or owner gap.
+    """
+    path = (Path(__file__).parent / "fixtures" /
+            "solana_finalized_ata_creation_slot456789461.json")
+    tx = json.loads(path.read_text(encoding="utf-8"))
+    frank = "498g1rVnFcnjBjpfw1xyqA1WvgQXUU8RWuELjxkjAayQ"
+    fee_payer = tx["transaction"]["message"]["accountKeys"][0]["pubkey"]
+    assert tx["slot"] == 456789461
+    assert tx["transaction"]["signatures"][0] == (
+        "5mR2gU7XF7rSVTv4tvF17KTrBBCJoMSuVW5MreEGk3V2xwmNvXaChSJEtgWELMoTQASQgSHRybaai19DVoj1U8vL"
+    )
+    assert tx["meta"]["err"] is None
+    assert not tx["meta"]["preTokenBalances"]
+    assert len(tx["meta"]["postTokenBalances"]) == 1
+    assert tx["meta"]["postTokenBalances"][0]["owner"] == frank
+    assert fee_payer != frank
+    assert tx["transaction"]["message"]["instructions"][1]["parsed"]["type"] == "createIdempotent"
+    assert any(
+        item.get("parsed", {}).get("type") == "createAccount"
+        for group in tx["meta"]["innerInstructions"]
+        for item in group["instructions"]
+    )
+    frank_view = normalize_transaction(tx, tracked_wallets={frank})
+    assert frank_view["native_sol_coverage_status"] == "NO_NATIVE_SOL_FLOW_OBSERVED"
+    assert frank_view["native_sol_observation_reason"] == "TRACKED_BALANCES_FEE_ONLY"
+    assert frank_view["active_market_buys_confirmed"] == 0
+    assert frank_view["person_pnl_usd"] is None
+    funder_view = normalize_transaction(tx, tracked_wallets={fee_payer})
+    assert funder_view["native_sol_coverage_status"] == "NATIVE_SOL_FLOW_UNCLASSIFIED"
+    assert funder_view["native_sol_observation_reason"] == "NON_FEE_NATIVE_BALANCE_CHANGE"
+    assert funder_view["person_pnl_usd"] is None
