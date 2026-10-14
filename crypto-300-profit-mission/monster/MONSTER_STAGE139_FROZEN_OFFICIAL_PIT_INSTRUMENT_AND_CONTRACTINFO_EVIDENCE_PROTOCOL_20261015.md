@@ -1,0 +1,23 @@
+# Monster Stage139 — pre-registered PIT instrument scope from original exchangeInfo and saved contractInfo events
+
+2026-10-15 Asia/Bangkok. Same Draft PR #30. Frozen before implementation. No actual new Stage133 Binance T0, live websocket, launchd, cron, GitHub schedule, Gmail, Frank changes or trades authorized merely by user asking to continue. No strategy tuning.
+
+## Official source facts, independently checked
+
+Binance official USD-M REST exchangeInfo specifies status, contractType, quoteAsset, onboardDate, baseAsset, marginAsset, underlyingType, underlyingSubType, contract filters. Original raw response is current **when observed**, never a retrospective time-travel as-of snapshot. Official USD-M !contractInfo WebSocket pushes contract listing, settlement and information updates, includes event E, onboard timestamp ot, contract status cs, st=1 for USDM after combined UM+CM migration. Its event timestamp differs from client reception and first executable trade. Binance public 1m daily ZIP data is released later and proves price bars, not contemporaneous contract-status delivery.
+
+Official docs:
+- https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data
+- https://developers.binance.info/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market
+- https://github.com/binance/binance-public-data
+
+## Fixed scope / acceptance
+
+1. Offline read-only validator consumes exact Stage133 three-record packet through Stage134 original raw validator, retains all Stage134 starting USD-M venue attempt symbols and their original raw fields: symbol, status, contractType, quoteAsset, baseAsset, marginAsset, underlyingType/subType, onboardDate and raw source SHA. Optional fields missing => UNKNOWN, no silent COIN. Explicit other-underlying classification => OFFICIAL_NOT_COIN_TYPED_AT_T0; COIN => OFFICIAL_COIN_TYPED_ISSUER_UNVERIFIED; missing => UNKNOWN_TYPE. COIN does not independently verify crypto issuer or buy. Symbols resembling equities by name alone never determine category. Full venue denominator unchanged. OnboardDate isn't proven first executable trade.
+2. Optional **previously saved** exact !contractInfo frames in one offline JSON collection with original raw JSON string, sha256, original receive timestamp in epoch milliseconds. Strictly validate raw SHA / JSON, event type contractInfo, st=1 USDM, ct=PERPETUAL, cs status, E event time <= local receipt epoch <= bounded lag, ot onboard date, exact symbol identity, within new T0+168h. Generate in-window candidate rows ONLY for symbols absent or not active at original T0 and having cs=TRADING. Do not mark a nontrading notification as a new listing. For T0 active symbols these are updates, not new listings; same event raw repeated may be deduped. CM events marked NOT_USDM and not transformed into stage134 arrivals.
+3. First observed trading candidate timestamp is the **ceiling of locally recorded receipt time to the next minute**, not event timestamp E, onboard ot, or later first archive bar. If this time is outside the frozen window, mark unscorable; no backdating. Keep original source receipt SHA and observation time in audit report. Generate separate optional exact Stage134-compatible {schema,rows} payload, where every candidate is explicitly RAW_UNVERIFIED_CANDIDATE, never a verified issuer/tradeability claim.
+4. One-shot saved frames cannot prove complete 168h continuous event capture. Therefore in-window listing census remains UNKNOWN, G0 PARTIAL and G1 NOT_SCORABLE regardless of simulated source count or original ZIP checksum. No live websocket, network fetch, background capture or new task may start here.
+5. Tests use **synthetic offline** original-format T0 and contractInfo receipts: explicit equity classification and COIN-unverified/unknown, event time not before received, CM ignored, duplicate / T0 existing update not candidate, out-of-window rejection/censor, candidate handoff into Stage134 while total original denominator conserved, receipt tamper fail-closed, no network in CI. Ubuntu+macOS GitHub Actions only push/PR/manual triggers, no schedule.
+6. Independent other AI review is separately NOT_DONE; test PASS is only engineering, no deployment authorization. Preserve original Stage116 failed Oct14 window, Stage118/127 REJECTED and Stage132 negative first entry economics.
+
+Status at freeze: STAGE139_CODE=NOT_DONE; NEW_REAL_STAGE133_T0=NOT_DONE; ACTUAL_CONTRACTINFO_RECEIPTS=NOT_PROVIDED; G0=PARTIAL; G1=NOT_SCORABLE; G2_G3=NOT_PASSED; G4=UNKNOWN; G5=NOT_DONE; G6=NO_GO; GMAIL=OFF; FRANK=UNCHANGED; NO_NEW_SCHEDULE.
