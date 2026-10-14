@@ -110,6 +110,19 @@ def reconcile(packet, arrival_candidates=None):
         raise ValueError("STAGE134_LOSSY_POPULATION_BRIDGE")
 
     for row in result["raw_population_rows"]:
+        if row["population_lane"] == "PREEXISTING_AT_WINDOW_START":
+            # Original T0 HTTP exchangeInfo claim only, NOT independently
+            # certified onset / first executable Binance contract minute.
+            original_entry = originally_seen[row["symbol_exact"]]
+            onboard = original_entry.get("onboardDate")
+            start_ms = stage131.stamp(t0["new_forward_start_utc"])
+            if (type(onboard) is int and
+                    0 < start_ms - onboard < 24 * 3_600_000):
+                row["pre_T0_recent_onboarding_claim_ms"] = onboard
+                row["pre_T0_recent_onboarding_minute_utc"] = stage133.iso(
+                    (onboard // 60_000) * 60_000)
+                row["pre_T0_recent_onboarding_provenance"] = (
+                    "SAVED_T0_EXCHANGEINFO_ONBOARDDATE_UNVERIFIED_PIT")
         if row["population_lane"] == "IN_WINDOW_FIRST_TRADABLE_MINUTE_CANDIDATE":
             row["arrival_source_classification"] = classifications[row["symbol_exact"]]
             row["in_window_listing_status"] = "UNVERIFIED_PIT_NEW_LISTING_OR_TRANSITION"
