@@ -86,6 +86,8 @@ def audit():
     by_day=Counter()
     by_anchor=Counter()
     result=[]
+    missed_early2x=[]
+    failed_metrics=Counter()
     count=Counter()
     for r in sorted(rows,key=lambda x:(x["date"],x["symbol"])):
         k=r["date"],r["symbol"]
@@ -107,6 +109,36 @@ def audit():
         early2=bool(old["D0_at_least_5m_before_2x"])
         if early2 and old["true_first_2x_HIGH_UTC_EVALUATION_ONLY"] is None:
             raise ValueError("STAGE117_GT2_EARLY_EVALUATION_TIME_MISSING")
+        if early2 and not is_fast:
+            v=r["features_ASOF_ONLY"]
+            cfg=existing.load_contract()["entry_first"]
+            failed=[]
+            for label,numeric,value in (
+                ("ret60_pct",v["ret60_pct"],cfg["ret60_pct_gte"]),
+                ("quote15_usdt",v["quote15_USDT"],cfg["quote15_usdt_gte"]),
+                ("trades15",v["trade_count15"],cfg["trades15_gte"]),
+                ("quote15_normalized_prev45",
+                 v["quote15_normalized_prev45"],
+                 cfg["quote15_normalized_prev45_gte"])):
+                if numeric is None or existing.decimal(numeric)<existing.decimal(value):
+                    failed.append(label)
+                    failed_metrics[label]+=1
+            if not failed:
+                raise ValueError("STAGE117_REJECTED_EARLY2X_WITHOUT_FAILED_ASOF_GATE")
+            missed_early2x.append({
+                "date":r["date"],"symbol":r["symbol"],
+                "D0_UTC":r["first_D0_UTC"],
+                "future_2x_UTC_EVALUATION_ONLY":
+                    old["true_first_2x_HIGH_UTC_EVALUATION_ONLY"],
+                "failed_unchanged_Stage79_first_gate_metrics":failed,
+                "source_asof_values":{
+                    "ret60_pct":v["ret60_pct"],
+                    "quote15_usdt":v["quote15_USDT"],
+                    "trades15":v["trade_count15"],
+                    "quote15_normalized_prev45":
+                        v["quote15_normalized_prev45"],
+                },
+            })
         count["total_first_D0"]+=1
         count["fast"]+=int(is_fast)
         count["original_early5_2x"]+=int(early2)
@@ -126,7 +158,8 @@ def audit():
             "exposed_historical_not_OOS":True,
         })
     if (count["total_first_D0"]!=519 or count["original_first_D1"]!=305
-        or count["original_early5_2x"]!=28 or len(seen_ids)!=519):
+        or count["original_early5_2x"]!=28 or len(seen_ids)!=519
+        or len(missed_early2x)+count["new_fast_early5_2x"]!=28):
         raise ValueError("STAGE117_ORIGINAL519_305D1_28EARLY_DRIFT")
     all42=[by_day[date+"|"+str(i)] for date in DATES for i in range(7)]
     if len(all42)!=42 or sum(all42)!=count["fast"]:
@@ -152,6 +185,9 @@ def audit():
                 Decimal(count["original_early5_2x"]))),
         "historical_G2_80_percent_achieved":(
             count["new_fast_early5_2x"]*100>=28*80),
+        "historical_early_2x_missed_cases_label_only":missed_early2x,
+        "historical_early_2x_failed_unchanged_first_gate_counts":
+            dict(sorted(failed_metrics.items())),
         "historical_attention_42d":{
             "mean_per_day":str(Decimal(count["fast"])/42),
             "peak_per_day":max(all42),
