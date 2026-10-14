@@ -15,9 +15,11 @@ from pathlib import Path
 try:
     import monster_v4_stage119_cohort_execution_bridge as bridge
     import monster_v4_stage116_forward_population_score as source
+    import monster_v4_stage120_exchangeinfo_execution_rules as rules
 except ImportError:
     from scripts import monster_v4_stage119_cohort_execution_bridge as bridge
     from scripts import monster_v4_stage116_forward_population_score as source
+    from scripts import monster_v4_stage120_exchangeinfo_execution_rules as rules
 
 SCHEMA="MONSTER_STAGE119_FROZEN_FORWARD_WINDOW_EXECUTION_EVIDENCE_V1"
 
@@ -42,7 +44,7 @@ def validate_bundle(path, event):
     return payload
 
 
-def audit_rows(window,validated,source_sha,*,evidence_dir=None,user_notional=None):
+def audit_rows(window,validated,source_sha,*,evidence_dir=None,user_notional=None,verified_market_metadata=None):
     """Consumes ONLY already-validated frozen full venue source rows."""
     if window not in source.WINDOWS:
         raise ValueError("STAGE119_FORBIDDEN_BACKDATED_WINDOW")
@@ -57,6 +59,18 @@ def audit_rows(window,validated,source_sha,*,evidence_dir=None,user_notional=Non
         if row["date"]!=window[:10] or row["venue"]!="BINANCE_USDM":
             raise ValueError("STAGE119_FORWARD_INVALID_SOURCE_DATE_OR_VENUE")
         status=row["source_status"]
+        metadata=None
+        if verified_market_metadata is not None:
+            metadata=verified_market_metadata["per_symbol"].get(row["symbol"])
+            if (metadata is None or metadata["exchangeInfo_original_raw_sha256"]!=source_sha):
+                raise ValueError("STAGE120_INDEPENDENT_SNAPSHOT_MARKET_CONTEXT_MISSING")
+            attached=row.get("stage120_original_asof_contract_metadata")
+            if attached is not None and attached!=metadata:
+                raise ValueError("STAGE120_FORWARD_MANIFEST_METADATA_NOT_SAME_VERIFIED_BYTES")
+            counter["asof_full_original_market_metadata_covered"]+=1
+            counter["asof_trade_filters_complete"]+=int(
+                metadata["filter_rules_at_snapshot"]["status"]==
+                "COMPLETE_ASOF_FILTER_METADATA_NOT_EXECUTION")
         counter["original_full_market_symbols_attempted"]+=1
         if status!="COMPLETE_REAL_1M_PUBLISHER_SHA_MODEL_REPLAY":
             counter["source_censored_or_incomplete"]+=1
@@ -96,6 +110,24 @@ def audit_rows(window,validated,source_sha,*,evidence_dir=None,user_notional=Non
             proof=validate_bundle(evidence_dir,event)
             read=bridge.evaluate(event,supplied_evidence=proof,
                                  user_notional=user_notional)
+            # The Stage120 official exchangeInfo and quantity-rule preflight
+            # is separate and never upgrades Stage90's identity/book source.
+            if metadata is None:
+                eligibility={"status":"SOURCE_METADATA_MISSING",
+                    "actual_fill":"NOT_OBSERVED",
+                    "net_executable_profit":"UNKNOWN"}
+            else:
+                eligibility=rules.market_preflight(
+                    metadata,book=(proof.get("book") if proof else None),
+                    notional_quote=user_notional,observed_ms=event["observed_ms"])
+                at_time=rules.at_signal(metadata,event["observed_ms"])
+                if at_time["venue_status_at_signal"]==(
+                    "SNAPSHOT_TIME_ONLY_NO_INDEPENDENT_CRYPTO_ID"):
+                    raise ValueError("STAGE120_SOURCE_SNAPSHOT_NOT_PROOF_OF_CRYPTO")
+                eligibility["venue_status_at_signal"]=at_time["venue_status_at_signal"]
+            if eligibility.get("net_executable_profit")!="UNKNOWN":
+                raise ValueError("STAGE120_FALSE_EXECUTABLE_NET_AT_D0")
+            counter["STAGE120_"+eligibility["status"]]+=1
             counter[mode]+=1
             counter[mode+"_"+read["D2_status"]]+=1
             all_evidence.append({
@@ -104,6 +136,7 @@ def audit_rows(window,validated,source_sha,*,evidence_dir=None,user_notional=Non
                     row.get("stage118_new_price_or_taker_buy_D0_candidate")
                     if mode=="ORIGINAL_D0" else None),
                 "D2_evidence_gap":read,
+                "Stage120_frozen_market_filter_and_book_preflight":eligibility,
                 "original_forward_2x_high_LABEL_NOT_DECISION_FEATURE":None,
                 "real_order_execution_or_fill":"NOT_OBSERVED",
             })
@@ -139,8 +172,12 @@ def audit(snapshot,replay,*,evidence_dir=None,user_notional=None):
     window=replay.get("window_start_utc")
     universe=source.audited_capture(snapshot,window)
     rows=source.validate_replay(window,replay,universe)
+    original=rules.catalog(snapshot,window)
+    if original["raw_market_SHA"]!=universe["raw_sha256"]:
+        raise ValueError("STAGE120_CROSS_MODULE_ORIGINAL_EXCHANGE_INFO_BYTES_DIFFER")
     return audit_rows(window,rows,universe["raw_sha256"],
-                      evidence_dir=evidence_dir,user_notional=user_notional)
+                      evidence_dir=evidence_dir,user_notional=user_notional,
+                      verified_market_metadata=original)
 
 
 def selftest():
@@ -165,6 +202,8 @@ def selftest():
     assert all(r["D2_evidence_gap"]["D2_status"]=="IDENTITY_UNKNOWN" for r in rr)
     assert s["notional_from_user_only"] is None
     assert s["G4_actual_executable_net"]=="UNKNOWN"
+    assert all(r["Stage120_frozen_market_filter_and_book_preflight"]["status"]
+        =="SOURCE_METADATA_MISSING" for r in rr)
     print("STAGE119_STAGE116_AUTHENTICATED_POPULATION_INTERFACE_SOURCE_CENSORED_AND_D2_CAUSAL_SELFTEST_PASS")
 
 
