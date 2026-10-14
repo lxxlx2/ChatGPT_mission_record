@@ -144,6 +144,16 @@ class HistoryJournal:
             "WHERE wallet=? GROUP BY state", (wallet,),
         ).fetchall()
         c = {row["state"]: row["n"] for row in counts}
+        range_row = self.db.execute(
+            "SELECT MIN(slot) AS oldest,MAX(slot) AS newest FROM "
+            "wallet_history_signature WHERE wallet=?", (wallet,),
+        ).fetchone()
+        missing_rows = self.db.execute(
+            "SELECT COALESCE(error_code,'TRANSACTION_PENDING') AS reason,"
+            "COUNT(*) AS n FROM wallet_history_signature WHERE wallet=? "
+            "AND state='PENDING' GROUP BY COALESCE(error_code,'TRANSACTION_PENDING')",
+            (wallet,),
+        ).fetchall()
         return {
             "wallet": wallet,
             "next_before": current["next_before"] if current else None,
@@ -152,6 +162,14 @@ class HistoryJournal:
             "last_error_code": current["last_error_code"] if current else None,
             "captured": c.get("CAPTURED", 0),
             "pending": c.get("PENDING", 0),
+            "observed_signature_count": c.get("CAPTURED", 0) + c.get("PENDING", 0),
+            "oldest_slot_observed": range_row["oldest"],
+            "newest_slot_observed": range_row["newest"],
+            "missing_detail_counts": {
+                row["reason"]: row["n"] for row in missing_rows
+            },
+            "historical_backfill_only": True,
+            "new_head_refresh_implemented": False,
             "history_complete": False,
             "coverage": ("AVAILABLE_SOURCE_END_NOT_GENESIS_PROVEN"
                          if current and current["pagination_end_observed"] and not c.get("PENDING")
