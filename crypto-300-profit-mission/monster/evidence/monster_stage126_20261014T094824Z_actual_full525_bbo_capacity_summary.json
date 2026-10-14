@@ -1,0 +1,155 @@
+{
+  "G0": "PARTIAL",
+  "G4": "UNKNOWN",
+  "all_exchangeinfo_symbols": 927,
+  "batch_utc_actual_archived": "2026-10-14T09:48:24.840Z",
+  "bbo_and_ticker_are_not_atomic": true,
+  "bbo_freshness_engineering_cutoff_ms": 60000,
+  "bbo_status_counts": {
+    "VALID_FRESH_DISPLAYED_BBO": 525
+  },
+  "entry_and_future_exit_actual_net": "UNKNOWN",
+  "first_D0_causal_alert_recall": "NOT_SCORABLE_FROM_SNAPSHOT",
+  "frank": "UNCHANGED",
+  "full_active_usdt_perpetual_denominator": 525,
+  "full_cohort_coverage": {
+    "active_24h_ticker_observed": 525,
+    "active_BBO_observed": 525,
+    "active_mark_observed": 525,
+    "active_usdt_perpetual_symbols": 525,
+    "all_24h_ticker_symbols": 793,
+    "all_BBO_symbols": 795,
+    "all_mark_price_symbols": 930,
+    "full_original_exchange_symbols": 927,
+    "missing_24h_active": [],
+    "missing_BBO_active": [],
+    "missing_mark_active": [],
+    "nonascii_active_symbols": [
+      "哈基米USDT",
+      "币安人生USDT",
+      "我踏马来了USDT",
+      "牛来USDT",
+      "龙虾USDT"
+    ]
+  },
+  "gmail": "OFF",
+  "independent_other_AI_review": "NOT_DONE",
+  "liquidity_capacity_is_displayed_L1_upper_bound_not_actual_fill": true,
+  "monster_deployment": "NO_GO",
+  "notional_quote": "UNSPECIFIED",
+  "ret24h_is_backward_looking_not_model_forecast": true,
+  "schema": "MONSTER_STAGE126_ALL_MARKET_BBO_DISPLAYED_CAPACITY_V1",
+  "source_is_connected_binance_structured_not_raw_https": true,
+  "source_manifest": "monster_stage123_20261014T094824Z_manifest.json",
+  "spot_futures_multiplier": "UNVERIFIED",
+  "stage118_historical_model": "REJECTED_UNCHANGED",
+  "underlying_crypto_identity": "UNVERIFIED",
+  "valid_capacity_distribution_by_retro_24h_cohort": {
+    "ALL_VALID": {
+      "ask_display_quote_USDT_proxy": {
+        "max": "1100367.96480",
+        "median": "197.7544800",
+        "min": "5.2522400",
+        "n": 525,
+        "p25": "70.9830000",
+        "p75": "514.6112000",
+        "p90": "2097.2929740"
+      },
+      "bid_display_quote_USDT_proxy": {
+        "max": "595834.26330",
+        "median": "103.6689300",
+        "min": "0.3794000",
+        "n": 525,
+        "p25": "31.9159800",
+        "p75": "298.7169000",
+        "p90": "1049.59780000"
+      },
+      "spread_bps": {
+        "max": "19.24927815206929740134744947",
+        "median": "3.864734299516908212560386473",
+        "min": "0.009996446263353377874165734082",
+        "n": 525,
+        "p25": "2.001641345903640985608198723",
+        "p75": "5.947071067499256616116562593",
+        "p90": "8.080808080808080808080808081"
+      },
+      "visible_roundtrip_buy_quote_USDT_ceiling_proxy": {
+        "max": "595834.97920",
+        "median": "67.0187700",
+        "min": "0.3794500",
+        "n": 525,
+        "p25": "22.2940200",
+        "p75": "197.2525700",
+        "p90": "668.3234820"
+      }
+    },
+    "ROLLING_24H_DOWN_LE10": {
+      "spread_bps": {
+        "max": "12.73885350318471337579617834",
+        "median": "3.054834275240568199175194746",
+        "min": "0.9175574620360600082580171583",
+        "n": 13,
+        "p25": "1.275428862955168675467125821",
+        "p75": "5.092946269416857652151769799",
+        "p90": "8.254230293025175402393726785"
+      },
+      "visible_roundtrip_buy_quote_USDT_ceiling_proxy": {
+        "max": "1414.4130000",
+        "median": "57.63350400",
+        "min": "5.5039950",
+        "n": 13,
+        "p25": "11.5624800",
+        "p75": "70.9830000",
+        "p90": "192.0855800"
+      }
+    },
+    "ROLLING_24H_OTHER": {
+      "spread_bps": {
+        "max": "19.24927815206929740134744947",
+        "median": "3.870718018192374685504161022",
+        "min": "0.009996446263353377874165734082",
+        "n": 503,
+        "p25": "2.003004506760140210315473210",
+        "p75": "5.936479667557138616800237459",
+        "p90": "7.955901574131954310393817128"
+      },
+      "visible_roundtrip_buy_quote_USDT_ceiling_proxy": {
+        "max": "595834.97920",
+        "median": "67.0187700",
+        "min": "0.3794500",
+        "n": 503,
+        "p25": "22.5200000",
+        "p75": "195.7266000",
+        "p90": "668.3234820"
+      }
+    },
+    "ROLLING_24H_UP_GE10": {
+      "spread_bps": {
+        "max": "8.378718056137410976120653540",
+        "median": "3.940110323089046493301812451",
+        "min": "0.4406742315743086922992178032",
+        "n": 9,
+        "p25": "2.982848620432513049962714392",
+        "p75": "6.487608667445179706760088231",
+        "p90": "7.207207207207207207207207207"
+      },
+      "visible_roundtrip_buy_quote_USDT_ceiling_proxy": {
+        "max": "1067.9305000",
+        "median": "89.7385800",
+        "min": "5.4990000",
+        "n": 9,
+        "p25": "42.4319700",
+        "p75": "200.0338000",
+        "p90": "457.17944000"
+      }
+    }
+  },
+  "stage126_public_source_provenance": "Stage123 eight-file manifest and all eight original archived market source payloads in Mission Monster evidence; no new realtime retrieval",
+  "workflow_run_id": 38554960854,
+  "workflow_tested_head": "3b840dd2137848bc9a30396a215d28e0aab19324",
+  "ubuntu_job_id": 115821703000,
+  "macos_job_id": 115821702452,
+  "os_audit_summary_exact_match": true,
+  "full_original525_per_symbol_rows": "Available in CI uploaded stage126_real525.json for each OS; regenerate from archived Git eight-file source with script",
+  "initial_failed_ci_retained": 38554847452
+}
