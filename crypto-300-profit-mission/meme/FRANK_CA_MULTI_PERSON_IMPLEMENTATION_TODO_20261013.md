@@ -136,6 +136,13 @@
 - **PR #56 精确代码 HEAD `55b430608d9048360f922a453f77cced479ac810`**：[模块 CI #38565541835](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38565541835) **41 项重点 + 1,569 项全量 PASS**；[临时联合 CI #38565541852](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38565541852) **66 项联合重点 + 1,621 项全量 PASS**，合并本轮 main + A04/A05 代码 + C02 #49 + F01 #44 无冲突。已在 #56 PR 留独立 Review 清单。**仍须另一 AI 对这个最终 SHA 给出 APPROVE/REQUEST_CHANGES**，目前 `A05_RESEARCH_INVENTORY_REVIEW_PENDING`，A05/F02 原始业务 TODO 不勾完成。F01 #44、上游 A02/#42 A03/#43、A05/#45/C01/#46 不得因为 A04 #54 或 C02 #49 的审查通过而概括成全部已审查。
 - 真实验收下一步仍需用户 Mac 上实际可核实的 **32 Mint 名单与同时段（非原子）SPL + Token-2022 finalized 全量账户查询**，随后才可接 F02 Dashboard 显示并重新审核。失败交易完整 receipt、真实 owner missing/ATA-close 和成本/PnL 仍未完成。
 
+## 2026-10-14 独立 Claude 审查 #56：两个 P2 实证成立；#57 修复并待重新 Review
+
+- **外部 Claude 对 PR #56 精确 SHA `55b430608d9048360f922a453f77cced479ac810` = `REQUEST_CHANGES`（两项 P2）**。第一项 `latest_inventory` 错将 Sidecar `read_wallet_captures(limit=100)` 以 SQLite rowid 导入顺序先截断再选最高 Slot；实际 1 份真正最新 Slot 1001 缺席 Mint 的快照在早期导入、随后 100 份旧正持仓入库，会错误返回旧余额 2500000。第二项 `capture_owner` 合法双 RPC 均失败时 `PARTIAL_SOURCE/slot_max=null`，旧读取逻辑把它当损坏而抛错，较旧失败会永久阻断随后健康快照。
+- 保留旧 #56 审核 SHA，新增子 [Draft PR #57](https://github.com/lxxlx2/ChatGPT_mission_record/pull/57)，代码精确 HEAD `b70245f189a4940eab62288e2da23551f9e31129`。专用 `iter_wallet_captures` 使用 SQLite `fetchmany(256)` **遍历整个 wallet source 历史**，按真实 Chain Slot 选最高有效快照，不再受 rowid 100 条截断；旧有限历史展示接口保持不变。合法双失败无 Slot 采集与有 Slot 快照按观测时间判断，新健康晚于旧失败→正常显示新健康；最新双失败晚于旧健康→`SOURCE_ATTEMPT_FAILED_NO_SLOT`、数量 `null`，绝不复用老正余额或推断卖出。
+- [精确 #57 CI #38568196200](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38568196200) **SUCCESS: 46 focused / 1,574 full tests**。实测 121 份乱序有效源，最多 Slot 1001 先导入、120 份低 Slot 的 2500000 正余额后导入，准确选择最高 Slot 且缺席金额为 `null`；另验证双失败→健康、健康→最新双失败、乱序导入旧失败以及 stale 失败。 [联合 CI #38568196197](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38568196197) **SUCCESS: 71 focused / 1,626 full**, 当前 main + A05 #57 栈 + C02 #49 + F01 #44 仅隔离 runner 合并回归。
+- **仍须另一 AI 对 #57 这一精确 SHA 重新模块代码 Review 才能标记 `CODE_REVIEW_APPROVED`**；两次 CI PASS 不等于 Review。真实 32 Mint/ATA 来源、Mac 实机和 F02 页面、成本 PnL 仍为业务验收缺口。保留 Draft / NO_MERGE / NO_DEPLOY，并按开发规范做后续跨模块 Review、全功能完成后整体 Review。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
