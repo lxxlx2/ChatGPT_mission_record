@@ -1,0 +1,106 @@
+name: Monster Stage113 Original519 Four Fixed Entry Horizons
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage113-fixed-horizon-original519-1m.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage113_fixed_horizons_official.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage113_horizon_aggregate.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE113_FIXED_5_60_360_1440M_SOURCE_COHORT_PRICE_PATH_PROTOCOL_20261014.md
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  compile_and_causal_check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Frozen Stage113 official source replay and four interval causal tests
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage113_fixed_horizons_official.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage113_horizon_aggregate.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage113_fixed_horizons_official.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage111_persistent_recovery_core.py --selftest
+
+  original519_frozen_official_minute:
+    needs: compile_and_causal_check
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+        shard: [0,1,2,3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify publisher SHA daily 1m, reproduce Stage111 24h and calculate fixed 5/60/360/1440h-in-minutes
+        run: |
+          set -eu
+          mkdir -p /tmp/stage113-horizons
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage113_fixed_horizons_official.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --workers 3 --out /tmp/stage113-horizons/monster-stage113-${{ matrix.date }}-s${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage113-${{ matrix.date }}-s${{ matrix.shard }}
+          path: /tmp/stage113-horizons/monster-stage113-${{ matrix.date }}-s${{ matrix.shard }}.json
+          retention-days: 45
+
+  aggregate_and_archive_exposed_research:
+    needs: original519_frozen_official_minute
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage113-*-s*
+          merge-multiple: true
+          path: /tmp/stage113-original519
+      - name: Reconcile all original519 and 740 priorities, do not optimize horizon
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage113_horizon_aggregate.py --artifact-dir /tmp/stage113-original519 --out /tmp/monster_stage113_all519_fixed_horizons.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage113-real519-4horizon-source-proof
+          path: /tmp/monster_stage113_all519_fixed_horizons.json
+          retention-days: 60
+      - name: Commit source-locked descriptive evidence to original Draft PR30
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage113_real519_5_60_360_1440m_actual.json
+          cp /tmp/monster_stage113_all519_fixed_horizons.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE113_EVIDENCE_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive Stage113 real519 source-verified four fixed entry horizon economics"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE113_FOUR_HORIZONS_VERIFIED_GIT_ARCHIVE; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE113_FOUR_HORIZONS_ARCHIVE_FAILED
+          exit 1
