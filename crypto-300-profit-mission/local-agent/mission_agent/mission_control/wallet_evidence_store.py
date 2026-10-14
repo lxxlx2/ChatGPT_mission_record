@@ -135,6 +135,29 @@ class WalletEvidenceStore:
         ).fetchall()
         return [json.loads(row["payload_json"]) for row in rows]
 
+    def iter_wallet_captures(self, wallet: str):
+        """Stream the *entire* archived owner-capture set without rowid limits.
+
+        The older read_wallet_captures() method intentionally returns only
+        recent imports for bounded historical views. It is not safe for
+        latest-slot inventory selection: imported backfill may have older
+        Solana slots. This read-only iterator has no implicit 100-row cap.
+        """
+        if not isinstance(wallet, str) or not wallet:
+            raise ValueError("RESEARCH_WALLET_INVALID")
+        cursor = self.db.execute(
+            "SELECT payload_json FROM evidence_documents "
+            "WHERE kind='ACCOUNT_CAPTURE' AND identity LIKE ? "
+            "ORDER BY rowid DESC",
+            (wallet + ":%",),
+        )
+        while True:
+            rows = cursor.fetchmany(256)
+            if not rows:
+                break
+            for row in rows:
+                yield json.loads(row["payload_json"])
+
     def count(self, kind: str) -> int:
         if kind not in {"TX", "ACCOUNT_CAPTURE", "RAW_TX", "WALLET_TX_VIEW", "WALLET_TX_VIEW_V2", "WALLET_TX_VIEW_V3"}:
             raise ValueError("INVALID_EVIDENCE_KIND")
