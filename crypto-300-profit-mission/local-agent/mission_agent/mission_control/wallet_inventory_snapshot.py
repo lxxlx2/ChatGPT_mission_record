@@ -55,22 +55,54 @@ def latest_inventory(store, *, wallet: str, mints: list[str],
     if type(max_age_seconds) is not int or not 1 <= max_age_seconds <= 86400:
         raise ValueError("MAX_AGE_INVALID")
     as_of = as_of_utc.astimezone(timezone.utc)
-    snapshots = store.read_wallet_captures(wallet, limit=100)
-    valid = []
-    for doc in snapshots:
+    newest_slotted = None
+    newest_slotless_failure = None
+    candidate_count = 0
+    # Read the entire archive in bounded SQLite batches. rowid is import
+    # order, NOT chain order, and cannot be used as a 100-row prefilter.
+    for doc in store.iter_wallet_captures(wallet):
         if doc.get("wallet") != wallet or doc.get("network") != "solana-mainnet":
-            continue
+            raise ValueError("CAPTURE_SOURCE_WALLET_MISMATCH")
         if _fingerprint(doc) != doc.get("capture_sha256"):
             raise ValueError("CAPTURE_SOURCE_HASH_MISMATCH")
+        stamp = _parse_time(doc.get("observed_at_utc"))
+        if stamp > as_of:
+            continue
+        candidate_count += 1
         slot = doc.get("slot_max")
+        if slot is None:
+            # capture_owner() legitimately archives two failed RPC calls
+            # with no observed slot. It is an attempt, NOT corrupt chain
+            # evidence. Never use a previously positive wallet snapshot
+            # if the latest attempt failed completely.
+            if (doc.get("status") != "PARTIAL_SOURCE"
+                    or doc.get("both_programs_observed") is not False
+                    or doc.get("program_coverage") != []
+                    or not isinstance(doc.get("missing"), list)
+                    or len(doc["missing"]) != 2
+                    or doc.get("slot_min") is not None):
+                raise ValueError("OWNER_CAPTURE_SLOT_INVALID")
+            if (newest_slotless_failure is None
+                    or stamp > newest_slotless_failure[0]):
+                newest_slotless_failure = (stamp, doc)
+            continue
         if type(slot) is not int or slot <= 0:
             raise ValueError("OWNER_CAPTURE_SLOT_INVALID")
-        stamp = _parse_time(doc.get("observed_at_utc"))
-        if stamp <= as_of:
-            valid.append((slot, stamp, doc))
-    # Source slots are the chain-state order. Never prefer an older complete
-    # capture over a newer partial capture merely because it has more rows.
-    latest = max(valid, key=lambda x: (x[0], x[1]))[2] if valid else None
+        if (newest_slotted is None
+                or (slot, stamp) > (newest_slotted[0], newest_slotted[1])):
+            newest_slotted = (slot, stamp, doc)
+
+    # A newer no-slot failure is evidence that the latest observation is
+    # UNKNOWN, not permission to resurrect an older successfully captured
+    # position. An older failure cannot poison a later healthy capture.
+    failure_is_latest = (newest_slotless_failure is not None and
+        (newest_slotted is None or
+         newest_slotless_failure[0] >= newest_slotted[1]))
+    if failure_is_latest:
+        latest = newest_slotless_failure[1]
+    else:
+        latest = newest_slotted[2] if newest_slotted else None
+    latest_has_no_slot = failure_is_latest
     age = None
     fresh = False
     observed = {}
@@ -78,8 +110,9 @@ def latest_inventory(store, *, wallet: str, mints: list[str],
     if latest is not None:
         age = max(0, int((as_of - _parse_time(latest["observed_at_utc"])).total_seconds()))
         fresh = age <= max_age_seconds
-        coverage = latest.get("both_programs_observed") is True and (
-            latest.get("status") == "BOTH_PROGRAMS_OBSERVED_NON_ATOMIC")
+        coverage = (not latest_has_no_slot and
+                    latest.get("both_programs_observed") is True and
+                    latest.get("status") == "BOTH_PROGRAMS_OBSERVED_NON_ATOMIC")
         for row in latest.get("mints", []):
             mint = row.get("mint")
             if mint in observed:
@@ -92,6 +125,8 @@ def latest_inventory(store, *, wallet: str, mints: list[str],
         item = observed.get(mint)
         if latest is None:
             status, raw, dec, accounts = "NO_CAPTURE", None, None, []
+        elif latest_has_no_slot:
+            status, raw, dec, accounts = "SOURCE_ATTEMPT_FAILED_NO_SLOT", None, None, []
         elif not fresh:
             status, raw, dec, accounts = "STALE_SNAPSHOT", None, None, []
         elif item is not None:
@@ -134,6 +169,9 @@ def latest_inventory(store, *, wallet: str, mints: list[str],
         "capture_fresh": fresh,
         "slot_min": latest.get("slot_min") if latest else None,
         "slot_max": latest.get("slot_max") if latest else None,
+        "capture_candidates_examined": candidate_count,
+        "source_attempt_failed_no_slot": latest_has_no_slot,
+        "source_observation_status": latest.get("status") if latest else "NO_CAPTURE",
         "both_programs_observed": coverage,
         "same_slot_atomic": False,
         # This reports two successful RPC queries, not a whole-wallet
