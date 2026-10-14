@@ -1,0 +1,60 @@
+name: Monster Stage140 one-time USER AUTHORIZED real Binance official T0 capture 2026-10-15
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - '.github/workflows/monster-stage140-once-user-authorized-real-binance-t0-20261015.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monster-stage140-explicit-single-human-request-20261015
+  cancel-in-progress: false
+
+jobs:
+  one-user-request-one-official-source-capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout original Mission research branch
+        uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - name: Python stdlib 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Create one-time authorization from explicit current conversation instruction
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          data={"schema":"MONSTER_STAGE140_EXPLICIT_ONE_TIME_USER_BINANCE_CAPTURE_20261015_V1","explicit_single_user_instruction":True,"source":"OFFICIAL_BINANCE_PUBLIC_MARKET_ONLY","no_background_schedule":True}
+          pathlib.Path("/tmp/monster_stage140_one_shot_authorization.json").write_text(json.dumps(data))
+          PY
+      - name: Capture original live official /time -> /exchangeInfo -> /time and actual market data receipts
+        shell: bash
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage140_explicit_oneshot_raw_market_capture.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage140_explicit_oneshot_raw_market_capture.py --capture-request /tmp/monster_stage140_one_shot_authorization.json --output-root crypto-300-profit-mission/monster/evidence/monster_stage140_explicit_user_oneshot_real_20261015
+      - name: Preserve original raw and SHA in same Mission PR research branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crypto-300-profit-mission/monster/evidence/monster_stage140_explicit_user_oneshot_real_20261015
+          git diff --cached --quiet && exit 1
+          git commit -m "monster: save explicitly requested real Binance one-shot source T0 and SHA receipts"
+          git push origin HEAD:research/monster-v4-local-discovery-20261010
+      - name: Keep source evidence artifact if Git push is blocked
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage140-explicit-user-original-binance-receipts-20261015
+          path: crypto-300-profit-mission/monster/evidence/monster_stage140_explicit_user_oneshot_real_20261015/
+          if-no-files-found: warn
+          retention-days: 30
