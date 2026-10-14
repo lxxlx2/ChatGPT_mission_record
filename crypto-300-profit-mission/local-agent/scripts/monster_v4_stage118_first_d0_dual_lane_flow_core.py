@@ -81,7 +81,8 @@ def check(raw):
     sh15,sh60=values["taker_buy_share15"],values["taker_buy_share60"]
     if q15 is None or q60 is None or b15 is None or b60 is None:
         raise ValueError("STAGE118_MISSING_TAKER_TURNOVER")
-    if not (Decimal(0)<=b15<=q15<=q60 and b15<=b60<=q60):
+    if not (Decimal(0)<=b15<=q15<=q60
+            and b15<=b60<=q60 and b60-b15<=q60-q15):
         raise ValueError("STAGE118_TAKER_QUOTES_IMPOSSIBLE")
     for name,sh,q,b in (("15",sh15,q15,b15),("60",sh60,q60,b60)):
         if q>0:
@@ -214,7 +215,7 @@ def selftest():
     weak["taker_buy_share15"]="0.50"
     weak["taker_buy_quote60_USDT"]=str(
         Decimal(weak["taker_buy_quote15_USDT"])+
-        Decimal(f["quote60_USDT"])-Decimal(f["quote15_USDT"])*Decimal("0.5"))
+        (Decimal(f["quote60_USDT"])-Decimal(f["quote15_USDT"]))*Decimal("0.5"))
     weak["taker_buy_share60"]=str(Decimal(weak["taker_buy_quote60_USDT"])/Decimal(f["quote60_USDT"]))
     b=evaluate_first_d0(venue="USDM",symbol="FAKEUSDT",first_d0_utc=t,asof=weak)
     assert b["decision"]=="D0_RAW_WATCH_ONLY"
