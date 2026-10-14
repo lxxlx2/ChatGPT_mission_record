@@ -23,6 +23,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing17.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_v2_swaps19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_cross_venue19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_nine_txs.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_nine_txs.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_cross_venue19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_v2_swaps19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing17.py"
@@ -75,6 +77,23 @@ jobs:
         run: |
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1_bulk16.py" -v
+      - name: P4-B nine firstswap signed transaction and exact receipt source replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_nine_txs.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-nine-tx.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-nine-tx.json").read_text(encoding="utf-8"))
+          frozen=json.loads((root/"bsc-meme-address-model-v1-p4b-nine-firstswap-tx-provenance-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==frozen,"nine source-pinned transaction readback mismatch"
+          s=actual["summary"]
+          assert (s["original_tx_senders_verified"],s["readback_receipt_success"],s["receipt_unresolved"])==(9,6,3)
+          assert s["qualified_major_U_proven"]==0 and s["owner_realized_pnl_proven"]==0
+          assert all(x["beneficial_owner_identity"]=="UNRESOLVED" and x["owner_realized_pnl"]=="UNRESOLVED" for x in actual["rows"])
+          print("PASS 9 fixed source original txs / 6 SUCCESS receipts / 3 unrecoverable receipts; no alpha")
+          PY
       - name: P4-B 19 CA earliest scoped cross-venue candidate U and unknown controls
         shell: bash
         run: |
