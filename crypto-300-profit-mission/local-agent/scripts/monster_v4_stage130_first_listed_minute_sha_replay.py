@@ -23,6 +23,7 @@ from urllib.request import Request, urlopen
 import zipfile
 
 import monster_v4_stage129_new_listings_hourly_recovery as prev
+from monster_v4_stage105_capture_universe_core import valid_exact_venue_symbol
 
 MINUTE=60000
 HOUR=60*MINUTE
@@ -58,7 +59,7 @@ def numeric(v):
 
 def exact_symbol(symbol):
     # Reuse established source Unicode/no-normalization contract.
-    return prev.stage123_load.__module__ is not None and isinstance(symbol,str) and symbol.endswith("USDT") and len(symbol)<=160 and all((c.isalnum() or c=="_") for c in symbol)
+    return valid_exact_venue_symbol(symbol) and symbol.endswith("USDT")
 
 
 def source_url(symbol, day):
@@ -170,8 +171,8 @@ def score_case(case, hourly, fetch=http_get,save_dir=None):
     anchor=case["date"]
     start,end=prev.window(anchor)
     stage129_first=ms(hourly["first_1h_open_utc"])
-    first_day=date.fromtimestamp(stage129_first/1000)
-    last_day=date.fromtimestamp((end-1)/1000)
+    first_day=datetime.fromtimestamp(stage129_first/1000,timezone.utc).date()
+    last_day=datetime.fromtimestamp((end-1)/1000,timezone.utc).date()
     today=first_day
     days=[]
     bars=[]
