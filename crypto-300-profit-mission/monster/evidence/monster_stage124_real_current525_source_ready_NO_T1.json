@@ -1,0 +1,16 @@
+{
+  "G1_G2_G3": "NOT_SCORABLE_FROM_A_SINGLE_CURRENT_SNAPSHOT",
+  "G4_real_net": "UNKNOWN",
+  "Monster": "NO_GO",
+  "actual_Stage99_stop_command_user_confirmation": "NOT_YET_RECEIVED",
+  "automatic_monitor": "OFF",
+  "batch_utc": "2026-10-14T09:48:24.840Z",
+  "complete_active_ticker_bbo_mark": 525,
+  "first_observation_manifest": "crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_manifest.json",
+  "full_source_exchange_entries": 927,
+  "original_active_population": 525,
+  "real_T1": "NOT_REQUESTED_OR_ARCHIVED",
+  "schema": "MONSTER_STAGE124_MANUAL_T0_REAL_SOURCE_READINESS_V1",
+  "source_gaps": {},
+  "true_forward_price_proxy": "NOT_YET_OBSERVABLE"
+}
