@@ -7327,11 +7327,18 @@
   },
   "historical_original28_any_priority_early5_2x": 19,
   "historical_original28_first_priority_early5_2x": 19,
+  "historical_original28_first_priority_timing_class": {
+    "EARLY_AT_LEAST_5MIN": 19,
+    "LATE_AFTER_2X": 8,
+    "NO_PRIORITY": 1
+  },
   "historical_original28_major_early5_all": [
     {
       "any_early_2x": true,
       "date": "2025-08-01",
       "first_early_2x": true,
+      "first_priority_lead_min": 334,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "A2ZUSDT",
       "total_priorities": 1
     },
@@ -7339,6 +7346,8 @@
       "any_early_2x": true,
       "date": "2025-08-01",
       "first_early_2x": true,
+      "first_priority_lead_min": 455,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "DMCUSDT",
       "total_priorities": 3
     },
@@ -7346,6 +7355,8 @@
       "any_early_2x": true,
       "date": "2025-08-01",
       "first_early_2x": true,
+      "first_priority_lead_min": 3409,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "MAGICUSDT",
       "total_priorities": 4
     },
@@ -7353,6 +7364,8 @@
       "any_early_2x": true,
       "date": "2025-08-01",
       "first_early_2x": true,
+      "first_priority_lead_min": 35,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "MEMEFIUSDT",
       "total_priorities": 4
     },
@@ -7360,6 +7373,8 @@
       "any_early_2x": false,
       "date": "2025-08-01",
       "first_early_2x": false,
+      "first_priority_lead_min": -8,
+      "first_priority_vs_2x_timing": "LATE_AFTER_2X",
       "symbol": "MYXUSDT",
       "total_priorities": 8
     },
@@ -7367,6 +7382,8 @@
       "any_early_2x": true,
       "date": "2025-08-01",
       "first_early_2x": true,
+      "first_priority_lead_min": 11,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "VELVETUSDT",
       "total_priorities": 2
     },
@@ -7374,6 +7391,8 @@
       "any_early_2x": false,
       "date": "2025-10-02",
       "first_early_2x": false,
+      "first_priority_lead_min": -385,
+      "first_priority_vs_2x_timing": "LATE_AFTER_2X",
       "symbol": "AIAUSDT",
       "total_priorities": 9
     },
@@ -7381,6 +7400,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 104,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "ALCHUSDT",
       "total_priorities": 2
     },
@@ -7388,6 +7409,8 @@
       "any_early_2x": false,
       "date": "2025-10-02",
       "first_early_2x": false,
+      "first_priority_lead_min": -394,
+      "first_priority_vs_2x_timing": "LATE_AFTER_2X",
       "symbol": "BANKUSDT",
       "total_priorities": 2
     },
@@ -7395,6 +7418,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 3391,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "BLESSUSDT",
       "total_priorities": 8
     },
@@ -7402,6 +7427,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 6128,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "BROCCOLI714USDT",
       "total_priorities": 5
     },
@@ -7409,6 +7436,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 347,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "BROCCOLIF3BUSDT",
       "total_priorities": 2
     },
@@ -7416,6 +7445,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 5007,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "COAIUSDT",
       "total_priorities": 13
     },
@@ -7423,6 +7454,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 4519,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "DOODUSDT",
       "total_priorities": 6
     },
@@ -7430,6 +7463,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 429,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "HANAUSDT",
       "total_priorities": 6
     },
@@ -7437,6 +7472,8 @@
       "any_early_2x": false,
       "date": "2025-10-02",
       "first_early_2x": false,
+      "first_priority_lead_min": -859,
+      "first_priority_vs_2x_timing": "LATE_AFTER_2X",
       "symbol": "JELLYJELLYUSDT",
       "total_priorities": 4
     },
@@ -7444,6 +7481,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 6467,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "SOONUSDT",
       "total_priorities": 4
     },
@@ -7451,6 +7490,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 424,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "STOUSDT",
       "total_priorities": 4
     },
@@ -7458,6 +7499,8 @@
       "any_early_2x": true,
       "date": "2025-10-02",
       "first_early_2x": true,
+      "first_priority_lead_min": 5402,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "TRADOORUSDT",
       "total_priorities": 5
     },
@@ -7465,6 +7508,8 @@
       "any_early_2x": true,
       "date": "2026-06-21",
       "first_early_2x": true,
+      "first_priority_lead_min": 796,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "SYNUSDT",
       "total_priorities": 10
     },
@@ -7472,6 +7517,8 @@
       "any_early_2x": true,
       "date": "2026-06-21",
       "first_early_2x": true,
+      "first_priority_lead_min": 1246,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "VELVETUSDT",
       "total_priorities": 3
     },
@@ -7479,6 +7526,8 @@
       "any_early_2x": false,
       "date": "2026-07-28",
       "first_early_2x": false,
+      "first_priority_lead_min": -1004,
+      "first_priority_vs_2x_timing": "LATE_AFTER_2X",
       "symbol": "1000RATSUSDT",
       "total_priorities": 4
     },
@@ -7486,6 +7535,8 @@
       "any_early_2x": true,
       "date": "2026-07-28",
       "first_early_2x": true,
+      "first_priority_lead_min": 5603,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "BEATUSDT",
       "total_priorities": 6
     },
@@ -7493,6 +7544,8 @@
       "any_early_2x": false,
       "date": "2026-07-28",
       "first_early_2x": false,
+      "first_priority_lead_min": -1154,
+      "first_priority_vs_2x_timing": "LATE_AFTER_2X",
       "symbol": "BLESSUSDT",
       "total_priorities": 1
     },
@@ -7500,6 +7553,8 @@
       "any_early_2x": true,
       "date": "2026-07-28",
       "first_early_2x": true,
+      "first_priority_lead_min": 703,
+      "first_priority_vs_2x_timing": "EARLY_AT_LEAST_5MIN",
       "symbol": "GIGGLEUSDT",
       "total_priorities": 4
     },
@@ -7507,6 +7562,8 @@
       "any_early_2x": false,
       "date": "2026-07-28",
       "first_early_2x": false,
+      "first_priority_lead_min": -2,
+      "first_priority_vs_2x_timing": "LATE_AFTER_2X",
       "symbol": "KOMAUSDT",
       "total_priorities": 8
     },
@@ -7514,6 +7571,8 @@
       "any_early_2x": false,
       "date": "2026-07-28",
       "first_early_2x": false,
+      "first_priority_lead_min": -1093,
+      "first_priority_vs_2x_timing": "LATE_AFTER_2X",
       "symbol": "MMTUSDT",
       "total_priorities": 2
     },
@@ -7521,6 +7580,8 @@
       "any_early_2x": false,
       "date": "2026-07-28",
       "first_early_2x": false,
+      "first_priority_lead_min": null,
+      "first_priority_vs_2x_timing": "NO_PRIORITY",
       "symbol": "SKYAIUSDT",
       "total_priorities": 0
     }
@@ -7600,6 +7661,15 @@
   "original_cases_with_repeats": 167,
   "original_priorities_740": 740,
   "other_AI_review": "NOT_DONE",
+  "paired_same_case_first_vs_repeat_complete_prices": {
+    "exposed_descriptive_paired_not_causal": true,
+    "first_24h_gross_median_pct": "-2.073365231259968102073365230",
+    "median_of_within_case_repeat_minus_first_pct_points": "-1.239269396016938114825427900",
+    "paired_cases": 137,
+    "repeat_case_median_24h_gross_median_pct": "-4.103343465045592705167173250",
+    "repeat_case_median_better_than_first": 62,
+    "repeat_case_median_worse_than_first": 75
+  },
   "priority_event_count_by_original_case": {
     "0": 242,
     "1": 110,
