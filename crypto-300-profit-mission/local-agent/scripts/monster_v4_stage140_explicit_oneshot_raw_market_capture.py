@@ -23,9 +23,9 @@ import monster_v4_stage139_official_t0_and_saved_contractinfo_evidence as stage1
 
 AUTHORIZE_SCHEMA = "MONSTER_STAGE140_EXPLICIT_ONE_TIME_USER_BINANCE_CAPTURE_20261015_V1"
 EXTRAS = {
-    "usdm_all_24h_ticker": "https://fapi.binance.com/fapi/v1/ticker/24hr",
-    "usdm_all_best_bid_ask": "https://fapi.binance.com/fapi/v1/ticker/bookTicker",
-    "usdm_all_mark_price": "https://fapi.binance.com/fapi/v1/premiumIndex",
+    "usdm_all_24h_ticker": "https://www.binance.com/fapi/v1/ticker/24hr",
+    "usdm_all_best_bid_ask": "https://www.binance.com/fapi/v1/ticker/bookTicker",
+    "usdm_all_mark_price": "https://www.binance.com/fapi/v1/premiumIndex",
 }
 MAX = 8_000_000
 
