@@ -1,0 +1,9 @@
+{
+  "schema": "BSC_P4B_MARSCOIN_ONEBLOCK_SELL_FALLBACK_RAW",
+  "precommit_blob_sha": "0957a95d345fa1fa16c452de23f85ea4de85f70a",
+  "query_status": "COMPLETE",
+  "total_topic_event_count": 8,
+  "exact_CA_events": [],
+  "raw_error": null,
+  "production": "NO_GO"
+}
