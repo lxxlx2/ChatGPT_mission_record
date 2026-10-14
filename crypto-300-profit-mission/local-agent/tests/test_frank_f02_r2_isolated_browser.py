@@ -6,7 +6,18 @@ from pathlib import Path
 import threading
 
 from scripts.frank_f02_readonly_positions_api import make_handler
-from test_frank_f02_r1_readonly_positions_api import service, source
+import pytest
+import test_frank_f02_r1_readonly_positions_api as upstream_fixtures
+
+
+@pytest.fixture
+def source(tmp_path):
+    return upstream_fixtures.source.__wrapped__(tmp_path)
+
+
+@pytest.fixture
+def service(source):
+    return upstream_fixtures.service.__wrapped__(source)
 
 
 def get(port, path, host=None):
