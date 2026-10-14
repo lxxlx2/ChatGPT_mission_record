@@ -108,7 +108,10 @@ class Stage137Tests(unittest.TestCase):
         self.assertTrue(a["币安人生USDT"]["source_core_unicode_adapter_used"])
         self.assertEqual(a["币安人生USDT"]["original_exact_venue_symbol"], "币安人生USDT")
         self.assertEqual(a["NEWUSDT"]["replay_status"],
-                         "NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED")
+                         "ORIGINAL_CORE_NEW_LISTING_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE")
+        self.assertFalse(a["NEWUSDT"]["first_listing_time_independently_attested"])
+        self.assertEqual(a["NEWUSDT"]["new_listing_source_claim_first_1m_utc"],
+                         "2026-10-28T06:21:00Z")
         self.assertEqual(r["raw_usdm_venue_descriptive_only"]["source_censored"], 1)
         self.assertEqual(r["raw_usdm_venue_descriptive_only"].get("model_symbol_unsupported", 0), 0)
         self.assertEqual(r["raw_usdm_venue_descriptive_only"]["model_compatible_complete"], 2)
@@ -175,6 +178,52 @@ class Stage137Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "ALIAS_SHADOWS_REAL_MARKET_SYMBOL"):
             s137.assert_original_population_aliases([
                 {"symbol_exact": proxy}, {"symbol_exact": "币安人生USDT"}])
+
+    def test_new_listing_cold_start_actual_unmodified_D0_from_only_post_observation_1m(self):
+        from decimal import Decimal
+        first = s131.stamp("2026-10-28T06:21:00Z")
+        bars = []
+        for n in range(150):
+            price = Decimal("1.12") if n >= 30 else Decimal("1")
+            high = Decimal("2.25") if n == 120 else price * Decimal("1.01")
+            bars.append((first+n*60_000,price,high,price*Decimal("0.99"),
+                         price,Decimal("25000"),1000))
+        end = first+len(bars)*60_000
+        contract = s137.original_core_contract()
+        baseline = s137.replay_new_arrival_cold_start(
+            "NEWUSDT",first,end,bars,contract)
+        unicode = s137.replay_new_arrival_cold_start(
+            "新上市USDT",first,end,bars,contract)
+        self.assertEqual(baseline["first_tick_utc"],"2026-10-28T06:24:00Z")
+        self.assertIsNotNone(baseline["D0_first_UTC"])
+        self.assertGreaterEqual(s131.stamp(baseline["D0_first_UTC"]),first+3*60_000)
+        self.assertEqual(baseline["D0_first_UTC"],unicode["D0_first_UTC"])
+        self.assertEqual(baseline["D1_first_UTC"],unicode["D1_first_UTC"])
+        self.assertTrue(unicode["source_core_unicode_adapter_used"])
+        self.assertFalse(baseline["first_listing_time_independently_attested"])
+        labels=baseline["gross_future_labels_not_real_profit"]
+        self.assertEqual(labels["first_GT2x_HIGH_UTC_EVALUATION_ONLY"],
+                         "2026-10-28T08:21:00Z")
+        self.assertTrue(labels["D0_first_pre_GT2x_5m"])
+        if baseline["D1_first_UTC"] is not None:
+            self.assertGreaterEqual(s131.stamp(baseline["D1_first_UTC"]),first+61*60_000)
+        # Check no original 24h values were imagined at first observation.
+        self.assertFalse(baseline["new_listing_initial_24h_quote_history_available"])
+
+    def test_new_listing_insufficient_61_minutes_never_fakes_D1(self):
+        from decimal import Decimal
+        first=s131.stamp("2026-10-28T06:21:00Z")
+        bars=[]
+        for n in range(40):
+            price=Decimal("1.12") if n>=18 else Decimal("1")
+            bars.append((first+n*60_000,price,price*Decimal("1.01"),
+                         price*Decimal("0.99"),price,Decimal("25000"),1000))
+        r=s137.replay_new_arrival_cold_start(
+            "NEWUSDT",first,first+40*60_000,bars,s137.original_core_contract())
+        self.assertIsNotNone(r["D0_first_UTC"])
+        self.assertIsNone(r["D1_first_UTC"])
+        self.assertEqual(r["replay_status"],
+                         "ORIGINAL_CORE_NEW_LISTING_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE")
 
     def test_off_grid_relative_t0_never_unaligned_at_utc(self):
         start = s131.stamp("2026-10-28T06:20:00Z")
