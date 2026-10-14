@@ -1,0 +1,58 @@
+name: Frank CA disposable F01 C02 A04 integration collision check
+on:
+  push:
+    branches:
+      - design/frank-ca-multiperson-completion-plan-20261013
+    paths:
+      - .github/workflows/frank-ca-preintegration-smoke-20261014.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ephemeral-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Create disposable combined checkout (never push or deploy)
+        run: |
+          set -eu
+          git config user.name "CI temporary merge"
+          git config user.email "ci-local@example.invalid"
+          git fetch --no-tags origin "+refs/heads/*:refs/remotes/origin/*"
+          git switch --force-create ci-frank-combined origin/main
+          for ref in             origin/fix/frank-ca-a04-owner-gaps-source-replay-20261014             origin/fix/frank-ca-c02-identity-preview-casefold-review-20261014             origin/dev/frank-ca-f01-actionable-view-20261013
+          do
+            echo "STACK_MERGE_START: $ref"
+            if ! git merge --no-edit --no-ff "$ref"; then
+              echo "STACK_INTEGRATION_CONFLICT: $ref"
+              git diff --name-only --diff-filter=U
+              git status --short
+              exit 2
+            fi
+            echo "STACK_MERGE_PASS: $ref"
+          done
+          echo "ALL_STACKS_MERGED_IN_DISPOSABLE_CHECKOUT"
+          git log -1 --format="%H"
+      - name: Install CI dependencies in combined checkout
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
+      - name: Combined F01 + C02 + A04 focused regression
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          node --check mission_agent/mission_control/static/app.js
+          node tests/ca_identity_render.cjs
+          python -B -m pytest -q -p no:cacheprovider tests/test_follow_opportunity_f01.py tests/test_follow_opportunity_f01_integration.py tests/test_frank_ca_c02_claude_review_regression.py tests/test_frank_a04_claude_owner_review.py tests/test_frank_ca_c01_c08_no_default_quote.py
+      - name: Whole local-agent real Git regression on same combined sources
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests
