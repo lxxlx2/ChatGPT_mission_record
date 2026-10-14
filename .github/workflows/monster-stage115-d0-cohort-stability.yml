@@ -1,0 +1,54 @@
+name: Monster Stage115 Frozen D0 Cohort Stability
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage115-d0-cohort-stability.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage115_d0_segment_stability.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE115_ORIGINAL519_D0_PRICE_PROXY_SEGMENT_STABILITY_PROTOCOL_20261014.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_locked_stratification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original 519 Git blobs, run full cohort and six anchor date / identity / D1 strata
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage115_d0_segment_stability.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage115_d0_segment_stability.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage115_d0_segment_stability.py --out /tmp/monster_stage115_cohort_stability.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage115-source-locked-d0-cohort-stability
+          path: /tmp/monster_stage115_cohort_stability.json
+          retention-days: 60
+      - name: Archive actual original519 cohort stability only to existing PR30
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage115_all519_d0_cohort_stability_actual.json
+          cp /tmp/monster_stage115_cohort_stability.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE115_COHORT_EVIDENCE_CURRENT; exit 0; fi
+          git commit -m "monster: archive Stage115 original519 D0 date and identity cohort gross price"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE115_ACTUAL_EVIDENCE_GIT_ARCHIVED; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE115_ACTUAL_GIT_EVIDENCE_FAILED
+          exit 1
