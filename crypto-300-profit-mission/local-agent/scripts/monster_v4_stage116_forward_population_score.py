@@ -330,7 +330,11 @@ def main():
     for w in WINDOWS:
         day=w[:10]
         if args.capture_dir is not None:
-            f=args.capture_dir/("monster-stage97-"+day+"-snapshot.json")
+            # Stage99 is already user-approved/installed for these THREE
+            # fixed one-shot capture windows. Read its exact Git archive path;
+            # never create or enable another scheduler as a substitute.
+            f=args.capture_dir/("monster_stage97_point_in_time_usdm_"+
+                                day+"_raw_https.json")
             if f.is_file():captures[w]=json.loads(f.read_text())
         if args.replay_dir is not None:
             f=args.replay_dir/("monster-stage116-"+day+"-replay.json")
