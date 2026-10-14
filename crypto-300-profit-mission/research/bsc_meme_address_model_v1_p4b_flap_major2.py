@@ -45,7 +45,7 @@ def addr(i):
     return "0x"+format(i,"040x")
 
 def time(ts):
-    return datetime.fromtimestamp(ts,tz=timezone.utc).isoformat().replace("+00:00","Z")
+    return datetime.fromtimestamp(ts,tz=timezone.utc).isoformat(timespec="milliseconds").replace("+00:00","Z")
 
 def one_event(part,name):
     rows=[x for x in part["rows"] if x["event"]==name and len(x["source_target_events"])==1]
