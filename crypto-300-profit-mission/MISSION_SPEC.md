@@ -27,6 +27,16 @@ Never use stale chat values or older Git snapshots to overwrite newer verified s
 
 For current balances, CEX holdings, refunds and capital classifications, use the **latest dated** `portfolio/current.md` and `state/latest.md` over historical dated STATUS_SCOPE snapshots. This does not relax Mission policy/authority boundaries.
 
+## Mandatory development & independent Review gates (effective 2026-10-14)
+
+Canonical development procedure: [`../docs/DEVELOPMENT_REVIEW_POLICY.md`](../docs/DEVELOPMENT_REVIEW_POLICY.md).
+
+For each independent module: real-source investigation → scoped technical design/TODO → code on a Draft PR → focused and complete exact-SHA CI → **independent another-AI code review after that module's usable completion**. Record exact parent/head SHA, reviewer, result, severity, evidence and outstanding acceptance. Any material fixes require another independent review; a previous `APPROVE` cannot cover new code.
+
+When integrating modules, create a disposable merged source tree on then-current main, run full and focused regression and perform **independent integration Review** of shared data identities, migrations, API/UI, wallet coverage and protected Frank V1. **After all planned modules are completed, perform an additional entire-system independent Review** with real source, browser/Mac workflow, rollback and full business checklist. Approval for individual code patches never substitutes for the final end-to-end review.
+
+Research/business acceptance and production deployment are distinct: neither a code APPROVE nor a green workflow authorizes merging, trading, Gmail, protected SQLite/LaunchAgent changes or deployment. Those require genuine Mac/source preflight and separate explicit user authorization. Mark unreviewed or unverified items as such, never silently check them complete.
+
 ## Objective
 
 Core objective remains to grow the Mission starting asset set toward **3,000 USD-equivalent net liquidation value** while preserving auditable provenance.
