@@ -30,6 +30,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_dragon_ddac.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_major2.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_market19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_market19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_flap_major2.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_dragon_ddac.py"
@@ -87,6 +89,25 @@ jobs:
         run: |
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1_bulk16.py" -v
+      - name: P4-B frozen 19-CA whole market entrance real buy witness ledger
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_market19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-market19.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-market19.json").read_text(encoding="utf-8"))
+          expected=json.loads((r/"bsc-meme-address-model-v1-p4b-19ca-unified-early-market-buy-evidence-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==expected,"P4B 19 CA source-pinned whole-market replay mismatch"
+          s=actual["summary"]
+          assert (s["frozen_major_exact_CAs"],s["original_23_EOA_candidates"],s["full_wallet_CA_denominator"])==(19,23,437)
+          assert (s["source_original_signed_early_buy_market_witnesses"],s["earlier_signed_buy_witnesses_within_frozen_23"],s["earlier_signed_buy_witnesses_outside_frozen_23"],s["remaining_major_CAs_not_yet_signed_early_buy_audited"])==(3,1,2,16)
+          assert s["global_actual_U_and_sell_capacity_fully_qualified"]==0 and s["actual_profit_ranks"]==0
+          assert s["production"]=="NO_GO"
+          assert all(x["historical_signed_roundtrip_PnL"]=="UNRESOLVED" and x["following_at_1_5_15min"]=="UNRESOLVED" for x in actual["rows"])
+          print("PASS 19/19 original market CA; 3 signed early buys incl one original 23-wallet; no false U or PnL")
+          PY
       - name: P4-B original Flap 2026 launchpad signer buys with real quotes and taxes
         shell: bash
         run: |
