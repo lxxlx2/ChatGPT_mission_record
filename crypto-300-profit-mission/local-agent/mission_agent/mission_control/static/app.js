@@ -358,6 +358,9 @@ function renderFrankWatchlist(payload) {
     : (x.watch_state === 'MODEL_OPEN' ? 2 : 3);
   rows.sort((a,b) => sortWeight(a)-sortWeight(b) ||
     (Number(b.last_event_time || 0)-Number(a.last_event_time || 0)));
+  const focusCount = all.filter(x =>
+    ['MODEL_OPEN', 'NEEDS_INVENTORY_REVIEW', 'WATCH_UNRESOLVED'].includes(x.watch_state)).length;
+  $('watch-focus-count').textContent = String(focusCount);
   $('watch-total-count').textContent = String(summary.total_observed ?? all.length);
   const datedSnapshot = walletWatchData.snapshot_status === 'DATED_POINT_IN_TIME_NOT_LIVE';
   const sourceDate = datedSnapshot
@@ -369,8 +372,7 @@ function renderFrankWatchlist(payload) {
       ? '历史链上余额核验：' + sourceDate + '，非实时'
       : '仅本地索引，链上余额未核实';
   $('watch-summary').textContent = '已观察 ' + String(summary.total_observed ?? all.length) +
-    ' · 重点待观察 ' + String(all.filter(x =>
-      ['MODEL_OPEN', 'NEEDS_INVENTORY_REVIEW', 'WATCH_UNRESOLVED'].includes(x.watch_state)).length) +
+    ' · 重点待观察 ' + String(focusCount) +
     ' · 模型持有 ' + String(summary.model_open ?? '—') +
     ' · 待核 ' + String(summary.inventory_needs_review ?? '—') +
     ' · 历史退出 ' + String(summary.historical_exit ?? '—') +
