@@ -63,7 +63,7 @@ def test_P2_unknown_owner_nonzero_never_closes_gap_or_marks_capture(tmp_path):
         assert observed["status"] == "SOURCE_LIMITED"
         assert observed["missing_detail_counts"]["TOKEN_OWNER_UNRESOLVED_DELTA"] == 1
         assert store.count("RAW_TX") == 0
-        assert store.count("WALLET_TX_VIEW_V2") == 0
+        assert store.count("WALLET_TX_VIEW_V3") == 0
         assert observed["history_complete"] is False
     finally:
         store.close()
@@ -102,17 +102,17 @@ def test_P6_old_v1_repair_block_persists_and_state_is_not_available(tmp_path):
         before = store.db.execute(
             "SELECT payload_json FROM evidence_documents WHERE kind='WALLET_TX_VIEW'"
         ).fetchone()[0]
-        assert journal.state(OWNER_A)["v2_missing_count"] == 1
+        assert journal.state(OWNER_A)["v3_missing_count"] == 1
         repair = journal.rebuild_versioned_views(OWNER_A)
         assert repair["blocked"] == 1
         state = journal.state(OWNER_A)
         assert state["captured"] == 1 and state["pending"] == 0
-        assert state["v2_blocked_count"] == 1
-        assert state["v2_missing_count"] == 1
+        assert state["v3_blocked_count"] == 1
+        assert state["v3_missing_count"] == 1
         assert state["coverage"] == "PARTIAL_ECONOMIC_EVIDENCE"
-        assert state["missing_detail_counts"]["V2_REBUILD_BLOCKED"] == 1
+        assert state["missing_detail_counts"]["V3_REBUILD_BLOCKED"] == 1
         assert journal.rebuild_versioned_views(OWNER_A)["blocked"] == 1
-        assert store.count("WALLET_TX_VIEW_V2") == 0
+        assert store.count("WALLET_TX_VIEW_V3") == 0
         assert store.db.execute(
             "SELECT payload_json FROM evidence_documents WHERE kind='WALLET_TX_VIEW'"
         ).fetchone()[0] == before
@@ -169,7 +169,7 @@ def test_P5_native_sol_unclassified_is_visible_in_wallet_state_and_status(tmp_pa
         assert result["native_sol_unclassified_count"] == 1
         assert result["coverage"] == "PARTIAL_ECONOMIC_EVIDENCE"
         assert result["status"] == "PARTIAL_ECONOMIC_EVIDENCE"
-        assert store.count("WALLET_TX_VIEW_V2") == 1
+        assert store.count("WALLET_TX_VIEW_V3") == 1
     finally:
         store.close()
 
@@ -188,10 +188,10 @@ def test_P7_old_and_new_wallet_views_are_isolated_by_evidence_kind(tmp_path):
             max_pages=0, tx_budget=1)
         assert current["captured"] == 1
         assert store.count("WALLET_TX_VIEW") == 0
-        assert store.count("WALLET_TX_VIEW_V2") == 1
+        assert store.count("WALLET_TX_VIEW_V3") == 1
         first = store.db.execute(
             "SELECT payload_json FROM evidence_documents "
-            "WHERE kind='WALLET_TX_VIEW_V2'"
+            "WHERE kind='WALLET_TX_VIEW_V3'"
         ).fetchone()[0]
         with store.db:
             store.db.execute(
@@ -200,10 +200,10 @@ def test_P7_old_and_new_wallet_views_are_isolated_by_evidence_kind(tmp_path):
                 ("WALLET_TX_VIEW", "old-record", "legacy", '{"schema_version":1}'),
             )
         assert store.count("WALLET_TX_VIEW") == 1
-        assert store.count("WALLET_TX_VIEW_V2") == 1
+        assert store.count("WALLET_TX_VIEW_V3") == 1
         assert store.db.execute(
             "SELECT payload_json FROM evidence_documents "
-            "WHERE kind='WALLET_TX_VIEW_V2'"
+            "WHERE kind='WALLET_TX_VIEW_V3'"
         ).fetchone()[0] == first
         assert journal.rebuild_versioned_views(OWNER_A)["already_present"] == 1
     finally:
