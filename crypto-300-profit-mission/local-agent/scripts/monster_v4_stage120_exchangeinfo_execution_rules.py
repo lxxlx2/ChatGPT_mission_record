@@ -219,7 +219,7 @@ def at_signal(symbol_meta,observed_ms):
     return out
 
 
-def market_preflight(symbol_meta,*,book=None,notional_quote=None,observed_ms=None):
+def market_preflight(symbol_meta,*,book=None,notional_quote=None,observed_ms=None,mark_price=None):
     """Optional quote test; cannot be an executable trade without real auth.
 
     A Stage90-compatible USD-M raw L2 snapshot is a *price-only* display,
@@ -305,8 +305,22 @@ def market_preflight(symbol_meta,*,book=None,notional_quote=None,observed_ms=Non
     if need>0:
         result["status"]="ASK_DEPTH_INSUFFICIENT"
         return result
-    if actual_quote<mn:
-        result["status"]="ROUNDED_QUOTE_BELOW_MIN_NOTIONAL"
+    # USD-M MARKET MIN_NOTIONAL uses contemporaneous mark price rather
+    # than the best-ask VWAP. This MUST NOT be inferred from the depth book.
+    if mark_price is None:
+        result.update(status="MARK_PRICE_UNKNOWN_FOR_MARKET_NOTIONAL",
+                      rounded_base_quantity=str(qty),
+                      simulated_buy_quote_excluding_fees=str(actual_quote),
+                      mark_price_source="NOT_PRESENT")
+        return result
+    mark=number(mark_price,"market_mark_price")
+    if mark<=0:raise ValueError("STAGE120_BAD_MARK_PRICE")
+    market_notional=qty*mark
+    if market_notional<mn:
+        result.update(status="MARK_NOTIONAL_BELOW_MIN_NOTIONAL",
+                      rounded_base_quantity=str(qty),
+                      mark_price_quote=str(mark),
+                      rounded_market_notional_at_mark=str(market_notional))
         return result
     gross_bid=d2.sell_base(bids,qty)
     if gross_bid is None:
@@ -322,6 +336,8 @@ def market_preflight(symbol_meta,*,book=None,notional_quote=None,observed_ms=Non
         "simulated_immediate_roundtrip_friction_quote_excluding_fees":
             str(actual_quote-received),
         "market_lot_step":str(step),
+        "rounded_market_notional_at_mark":str(market_notional),
+        "mark_price_provided_but_external_source_not_verified":True,
         "snapshot_is_not_separately_authenticated_or_a_fill":True,
         "fee_and_future_exit":"UNKNOWN",
     })
@@ -380,8 +396,15 @@ def selftest():
     b["event_ms"]=ev+500
     b["capture_ms"]=ev+1000
     d2.bind_fixture_raw({"book":b})
+    unknown_mark=market_preflight(tested,notional_quote="100",
+                                   book=b,observed_ms=ev)
+    assert unknown_mark["status"]=="MARK_PRICE_UNKNOWN_FOR_MARKET_NOTIONAL"
+    assert unknown_mark["net_executable_profit"]=="UNKNOWN"
+    too_low=market_preflight(tested,notional_quote="100",
+                             book=b,observed_ms=ev,mark_price="1")
+    assert too_low["status"]=="MARK_NOTIONAL_BELOW_MIN_NOTIONAL"
     outcome=market_preflight(tested,notional_quote="100",
-                             book=b,observed_ms=ev)
+                             book=b,observed_ms=ev,mark_price="100")
     assert outcome["status"]=="SNAPSHOT_GROSS_SPREAD_DEPTH_ONLY_NOT_EXECUTABLE"
     assert outcome["net_executable_profit"]=="UNKNOWN"
     assert outcome["market_base_qty_rounded_step"]=="0.99"
