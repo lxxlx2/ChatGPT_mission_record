@@ -1,0 +1,72 @@
+name: Monster Stage130 frozen31 publisherSHA minute source study
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage130_first_listed_minute_sha_replay.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage130_first_listed_minute_sha_replay.py'
+      - '.github/workflows/monster-stage130-verified-first-listed-minute.yml'
+  workflow_dispatch:
+
+jobs:
+  offline-regression:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: No network unit tests, original31 census parity
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage130_first_listed_minute_sha_replay.py
+          python -m unittest -v test_monster_v4_stage130_first_listed_minute_sha_replay.py
+
+  historical-publisher-source-research:
+    needs: offline-regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source-lock prereg and original historical Stage128/129 cohort
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage128_31_later_listings_and_15_historical_clock_conflicts.json)" = "dcc6fca3b7ad4d02e04ba5e4d28bcd01335adbc9"
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage129_fixed31_historical_hourly_exposed_source_machine_summary.json)" = "b2b93fa786cfa670bdbc4b6f21ad72edd8d585b2"
+          test -f crypto-300-profit-mission/monster/MONSTER_STAGE130_FROZEN_NEW_LISTING_31_OFFICIAL_1M_CAUSAL_RESEARCH_PROTOCOL_20261014.md
+      - name: One-shot Binance Data Vision original daily1m publisher checksum fetch for all31
+        id: fetch
+        continue-on-error: true
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage130_first_listed_minute_sha_replay.py --out stage130_real31.json --save-source stage130_original_daily_zip_source --workers 4
+      - name: Fail-closed source readiness, no claim of G1 or net profits
+        if: steps.fetch.outcome == 'success'
+        run: |
+          python -c 'import json; x=json.load(open("stage130_real31.json")); print("STAGE130_MACHINE_AUDIT="+json.dumps({k:v for k,v in x.items() if k!="full31_source_results"},sort_keys=True)); assert x["frozen31"]==31 and x["source_complete"]==31 and x["source_censored"]==0 and x["G1_true_new_OOS"]=="NOT_SCORABLE" and x["monster_deployment"]=="NO_GO"'
+      - name: Retain actual publisher checksum receipts and all original daily zip sources
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage130-frozen31-original-publisher-minute-data
+          path: |
+            stage130_real31.json
+            stage130_original_daily_zip_source/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Explicitly fail when original publisher source is unavailable
+        if: steps.fetch.outcome != 'success'
+        run: |
+          echo "STAGE130_SOURCE_NOT_FULLY_AVAILABLE_FROZEN31"
+          exit 1
