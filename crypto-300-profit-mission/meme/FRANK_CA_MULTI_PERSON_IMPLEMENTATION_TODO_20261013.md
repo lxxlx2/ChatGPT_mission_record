@@ -111,6 +111,14 @@
 - **实际联合 CI** [#38555423226](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38555423226) **SUCCESS：47 项跨模块重点、1,599 项完整测试**，一次性工作区将当时 main + A04 #53 链 + Claude 已批准的 C02 #49 链 + F01 #44 合并测试，无冲突，不改变 main/真实 Mac 环境。
 - **下一闸门必须是另一 AI 对 #53 最终 HEAD 的独立代码审查**；不要复用已经拒绝 #52 的结论或把 CI 绿灯视为代码批准。之后继续真实 Frank 钱包 32 Mint/ATA/历史资金和本地 Dashboard 业务验收。失败交易完整 parsed receipt、真实 owner 缺失和 ATA-close 原始证据仍未核实；**NO_MERGE / NO_DEPLOY**。
 
+## 2026-10-14 Claude 第六轮 REQUEST_CHANGES：通用 TX 身份冲突，PR #54 修复
+
+- **PR #53 `166bdaa133d7ed799870ca963d2dfa55f2736b17` 第六轮独立 Claude 结论是 `REQUEST_CHANGES`（1 P2）**。HistoryJournal 的 V2/V3 原始数据保留、真实 PR51/PR52 跨 SHA 升级、重复重建、V3 覆盖已复核通过，但通用 `WalletEvidenceStore.record_transaction()` 仍把 V2/V3 都写入未分版本的 kind `TX`、identity=`solana:<signature>:<slot>`。旧 PR52 V2 文档与新 V3 在同一身份上发生 `IMMUTABLE_EVIDENCE_CONFLICT`；**禁止将 #53 标记 APPROVE 或直接合并**。
+- 子 [Draft **PR #54**](https://github.com/lxxlx2/ChatGPT_mission_record/pull/54)，基于 **未更改**的 #53 HEAD，最终 SHA **`6e1f8cec197bab30703fb4524c9710191dc25522`**。旧 `SOL_TOKEN_VIEW_V2` schema 2 的 `TX` 仍保持 unversioned `solana:<signature>:<slot>`；新 `SOL_TOKEN_VIEW_V3` schema 3 的 `TX` 独立保存 `solana:<signature>:<slot>:v3`，同版本相同内容幂等、同版本不同 SHA 直接拒绝，未知/不匹配版本拒绝，不覆写历史证据。
+- **跨版本真实源码复现**：精确 [CI #38560775862](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38560775862) 通过（65 专项、**1,555 全量**），其中 CI 从真实旧 PR52 `e547203c` 的工作树调用**其原始** normalizer 和 `WalletEvidenceStore.record_transaction()` 写入 SQLite 的旧未分版本 `TX`，再用新代码插入同签名同 Slot V3，新旧证据哈希与 payload 均保持原样，V3 重复导入不增加记录，篡改同版本被拦截。
+- [临时联合 CI #38560775878](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38560775878) **SUCCESS：55 项重点 + 1,607 项完整**，从 CI 运行时最新 main 合入 A04 #54 完整子分支、Claude 已通过 C02 #49 代码和 F01 #44 代码，三个 Git 合并步骤无冲突。具体业务功能/真实 Mac 未在该 runner 部署。
+- 当前**仍需独立 Claude 对 #54 最终 SHA 复审**，然后再推进 A05/F02 的 32 Mint/ATA 真实历史数据及 Dashboard 本地验收。没有新增已确认真实 owner 缺失、失败指令完整 getTransaction 和 ATA-close 档案；继续明确缺口，研究未完成不算生产资产/PnL。所有 PR Draft，**NO_MERGE / NO_DEPLOY**，未改 Frank V1 / Gmail / Mac 生产 SQLite / launchd。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
