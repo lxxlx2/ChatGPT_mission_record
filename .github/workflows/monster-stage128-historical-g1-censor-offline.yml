@@ -1,0 +1,42 @@
+name: Monster Stage128 original5400 listing censor proof offline
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage128_historical_listing_censor_audit.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage128_historical_listing_censor_audit.py'
+      - '.github/workflows/monster-stage128-historical-g1-censor-offline.yml'
+  workflow_dispatch:
+
+jobs:
+  source-locked-5400:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Immutable 5400 publisher-SHA historical source Git blob
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage37_sixdate_all5400_usdm_source_and_GT.csv)" = "4b02019195a7a48ef6d33606db9b57d6a3429f4b"
+      - name: Source integrity and pure metadata tests
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage128_historical_listing_censor_audit.py
+          python -m unittest -v test_monster_v4_stage128_historical_listing_censor_audit.py
+      - name: Real full 5400 metadata reconciliation, no network
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage128_historical_listing_censor_audit.py --out stage128_real5400.json --expect-in-window 31
+          python -c 'import json; r=json.load(open("stage128_real5400.json")); c=r["later_metadata_comparison_counts"]; assert c["HOURLY_INCOMPLETE_LATER_ONBOARD_AT_OR_AFTER_WINDOW_END"]==1869 and c["HOURLY_INCOMPLETE_LATER_ONBOARD_INSIDE_WINDOW"]==31 and c["HOURLY_INCOMPLETE_ABSENT_FROM_LATER_METADATA"]==167; assert c["HOURLY_COMPLETE_LATER_METADATA_ONBOARD_CONTRADICTION"]==15; assert r["G0"]=="PARTIAL" and r["monster_deployment"]=="NO_GO"'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage128-source5400-${{ matrix.os }}
+          path: stage128_real5400.json
+          retention-days: 30
