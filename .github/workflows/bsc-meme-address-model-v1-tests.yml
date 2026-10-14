@@ -15,6 +15,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_first_liquidity.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_liquidity19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing22.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing_first4.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing_first4.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_priority4_competitors.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_priority4_competitors.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing4_creation.py"
@@ -299,6 +301,23 @@ jobs:
           assert s["full_market_earliest_tradability"]==0 and s["qualified_misses"]==0 and s["production"]=="NO_GO"
           assert a["rows"][2]["v3_liquidity_at_creation_wei"]=="0"
           print("PASS four original competing pool creation witnesses, 3 active and 1 out-of-range. NO_GO")
+          PY
+      - name: P4 first active cross-pool priority 4 historical source replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_competing_first4.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-priority4-first-active.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("/tmp/bsc-p4-priority4-first-active.json").read_text(encoding="utf-8"))
+          expected=json.loads(Path("crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-priority4-competing-first-active-2026-10-14.json").read_text(encoding="utf-8"))
+          assert d == expected
+          s=d["summary"]
+          assert (s["frozen_competitor_pools"],s["positive_at_creation"],
+                  s["delayed_in_range_active"],s["qualified_misses"]) == (4,3,1,0)
+          assert s["production"]=="NO_GO"
+          assert all(x["first_globally_tradable"]=="UNRESOLVED" for x in d["rows"])
+          print("PASS priority 4 competitor pool initial-liquidity: one delayed in-range Mint +17 blocks; no follower alpha inferred")
           PY
       - name: Recompute 23x19 baseline deterministically
         run: |
