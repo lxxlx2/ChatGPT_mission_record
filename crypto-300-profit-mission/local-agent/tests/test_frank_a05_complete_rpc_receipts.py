@@ -199,3 +199,136 @@ def test_owner_wire_archive_rejects_public_repository_checkout_path():
     repo = Path(__file__).resolve().parents[3]
     with pytest.raises(ValueError, match="OWNER_EVIDENCE_INSIDE_GIT_CHECKOUT_FORBIDDEN"):
         _assert_directory(repo / "accidentally-commit-wallet-source")
+
+
+@pytest.fixture
+def local_rpc_https_pair(tmp_path, monkeypatch):
+    """Real TLS and HTTP sockets. No urllib/urlopen mocks or live RPC calls."""
+    import ssl
+    import subprocess
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+    from pathlib import Path
+
+    cert, key = Path(tmp_path / "cert.pem"), Path(tmp_path / "key.pem")
+    subprocess.run([
+        "openssl", "req", "-x509", "-newkey", "rsa:2048", "-nodes",
+        "-keyout", str(key), "-out", str(cert), "-days", "1",
+        "-subj", "/CN=localhost",
+        "-addext", "subjectAltName=DNS:localhost,IP:127.0.0.1",
+    ], check=True, capture_output=True)
+    monkeypatch.setenv("SSL_CERT_FILE", str(cert))
+    monkeypatch.setenv("NO_PROXY", "localhost,127.0.0.1")
+
+    state = {"mode": "normal", "https_requests": [], "http_requests": []}
+
+    class PlainHTTP(BaseHTTPRequestHandler):
+        def log_message(self, *args):
+            pass
+
+        def do_GET(self):
+            state["http_requests"].append(self.path)
+            rpc_id = int(self.path.rsplit("=", 1)[-1])
+            wire = _wire(rpc_id, 5100 + rpc_id, [])
+            self.send_response(200)
+            self.send_header("Content-Length", str(len(wire)))
+            self.end_headers()
+            self.wfile.write(wire)
+
+    plain = ThreadingHTTPServer(("127.0.0.1", 0), PlainHTTP)
+    state["http_port"] = plain.server_port
+
+    class SecureHTTPS(BaseHTTPRequestHandler):
+        def log_message(self, *args):
+            pass
+
+        def do_POST(self):
+            request_size = int(self.headers["Content-Length"])
+            rpc = json.loads(self.rfile.read(request_size))
+            rpc_id = rpc["id"]
+            state["https_requests"].append((self.command, rpc_id))
+            if state["mode"] == "redirect":
+                self.send_response(302)
+                self.send_header(
+                    "Location",
+                    f'http://127.0.0.1:{state["http_port"]}/reply?id={rpc_id}')
+                self.end_headers()
+                return
+            wire = _wire(rpc_id, 5100 + rpc_id, [])
+            if state["mode"] == "chunked_short":
+                self.send_response(200)
+                self.send_header("Transfer-Encoding", "chunked")
+                self.end_headers()
+                self.wfile.write(f"{len(wire):X}\r\n".encode() +
+                                 wire + b"\r\n")
+                self.wfile.flush()
+                self.close_connection = True
+                return
+            declared = len(wire)
+            if state["mode"] == "short":
+                declared += 100
+            elif state["mode"] == "oversize":
+                declared = MAX_RAW_RPC_BYTES + 1
+            self.send_response(200)
+            self.send_header("Content-Length", str(declared))
+            self.end_headers()
+            self.wfile.write(wire)
+            self.wfile.flush()
+            self.close_connection = True
+
+    secure = ThreadingHTTPServer(("127.0.0.1", 0), SecureHTTPS)
+    server_ssl = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    server_ssl.load_cert_chain(cert, key)
+    secure.socket = server_ssl.wrap_socket(secure.socket, server_side=True)
+    threads = [
+        threading.Thread(target=server.serve_forever, daemon=True)
+        for server in (plain, secure)
+    ]
+    for thread in threads:
+        thread.start()
+    try:
+        yield state, f"https://localhost:{secure.server_port}/rpc"
+    finally:
+        for server in (plain, secure):
+            server.shutdown()
+            server.server_close()
+        for thread in threads:
+            thread.join(timeout=5)
+
+
+def test_real_https_http_body_fully_received_can_be_replayed(
+        tmp_path, local_rpc_https_pair):
+    from scripts.frank_capture_owner_full_receipts import _wire_rpc
+    state, url = local_rpc_https_pair
+    receipt = collect_owner_full_receipts(
+        wallet=OWNER_A, evidence_root=tmp_path / "tls-full",
+        read_raw=_wire_rpc(url))
+    assert receipt["manifest"]["complete"] is True
+    assert state["https_requests"] == [("POST", 1), ("POST", 2)]
+    assert state["http_requests"] == []
+    assert [item["slot"] for item in receipt["manifest"]["receipts"]] == [
+        5101, 5102]
+    assert replay_owner_full_receipts(
+        receipt["bundle"], expected_wallet=OWNER_A
+    )["capture_sha256"] == receipt["manifest"]["capture_sha256"]
+
+
+@pytest.mark.parametrize("mode", [
+    "redirect", "short", "chunked_short", "oversize",
+])
+def test_real_https_transport_incomplete_or_downgraded_must_be_partial(
+        mode, tmp_path, local_rpc_https_pair):
+    from scripts.frank_capture_owner_full_receipts import _wire_rpc
+    state, url = local_rpc_https_pair
+    state["mode"] = mode
+    receipt = collect_owner_full_receipts(
+        wallet=OWNER_A, evidence_root=tmp_path / mode,
+        read_raw=_wire_rpc(url))
+    assert state["https_requests"] == [("POST", 1), ("POST", 2)]
+    assert state["http_requests"] == []
+    assert receipt["manifest"]["complete"] is False
+    assert receipt["manifest"]["capture_sha256"] is None
+    assert receipt["snapshot"] is None
+    assert len(receipt["manifest"]["missing"]) == 2
+    with pytest.raises(ValueError, match="OWNER_SOURCE_NOT_FULLY_VERIFIED"):
+        replay_owner_full_receipts(receipt["bundle"], expected_wallet=OWNER_A)
