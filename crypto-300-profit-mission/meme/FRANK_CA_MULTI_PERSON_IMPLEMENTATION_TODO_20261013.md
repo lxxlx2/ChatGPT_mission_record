@@ -290,3 +290,11 @@ Remaining verified gaps / dependencies:
 `
 
 **下一执行入口**：A00 + A01 + A02 数据合同调研；建立红灯/链上取证基准后再做任何源代码修改。本轮仅写入设计与 TODO，不应创建生产定时任务、加多人物 alerts 或启动真实 Mac 部署。
+
+## 2026-10-14 A05-R1 reviewer-confirmed transport defects and child CI checkpoint
+
+- External review of frozen Draft [PR #59](https://github.com/lxxlx2/ChatGPT_mission_record/pull/59) code SHA `9b6f7a90fe92ae6eea497d364ebc7f9bf109f042`: GPT-6.1 Sol **REQUEST_CHANGES**, reporting real TLS/HTTP reproductions of two blocking P2s (HTTPS 302 downgraded to plaintext HTTP GET; valid JSON received with shorter bytes than HTTP declared Content-Length). Gemini 3.8 **APPROVE** covers existing synthetic/regression behavior but did not reproduce those transport failures. Decision: keep original #59 `NOT_APPROVED`. Do not claim A05-R1 business completion.
+- Scoped [Draft child PR #60](https://github.com/lxxlx2/ChatGPT_mission_record/pull/60) on fixed initial HEAD `e4529ba7069e5499d12323a7160ceac08c481fae` changes only RPC transport and regression tests, and CI triggers/checkpoint documentation. Redirect refusal, entity length equality, chunk-abort handling and oversize refusal; five real localhost HTTPS/HTTP socket tests. Parent #58/#59 source preserved.
+- Exact-child GitHub [module CI #38589789392](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38589789392) **SUCCESS**: 78 scoped, 1,607 full. [Combined F01/C02 CI #38589789906](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38589789906) **SUCCESS**: 104 scoped, 1,659 full; CI main at run `eb245396014ae840f00c7132975dbe0d40764637`, source `e4529ba7069e5499d12323a7160ceac08c481fae`, approved C02 `8898134a8a302e1187138f7fb3da87a554567e6d`, F01 `516e3335a134c608f477019b79027982f43af32a`; disposable combined SHA `87fe8805e2421e8f59321ffeebc3c28724d6a4b4`. No code conflicts. Exact code/CI PASS is not independent Review.
+- **Still unchecked:** another-AI independent exact-head code review of #60, then user-approved manual full actual Frank SPL/Token-2022 wire capture and accurate historical 32 Mint/current Token Account reconciliation. Only after actual evidence proceed to F02 read-only API, browser Dashboard, Mac isolated acceptance, independent integration review and final all-system review. **NO_MERGE / NO_DEPLOY / NO_TRADES / NO_GMAIL / NO_PROD_SQLITE**.
+
