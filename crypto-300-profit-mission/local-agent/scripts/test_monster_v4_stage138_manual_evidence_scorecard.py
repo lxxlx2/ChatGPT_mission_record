@@ -129,6 +129,52 @@ class Stage138Tests(unittest.TestCase):
         self.assertEqual(
             all_windows["declared_disjoint_window_count_not_verified_as_external_market_source"], 3)
 
+    def test_claude_p1_all_cohort_G3_includes_recent_and_new_listing_D1(self):
+        start = s138.s131.stamp("2026-10-28T06:20:00Z")
+        end=start+7*86_400_000
+        no_cross = {}
+        for m in (2,5,10):
+            no_cross[f"first_GT{m}x_HIGH_UTC_EVALUATION_ONLY"] = None
+            for k in (f"D0_first_strict_pre_GT{m}x",
+                      f"D0_first_pre_GT{m}x_5m",
+                      f"D1_first_pre_GT{m}x_5m"):
+                no_cross[k]=False
+        rows=[
+            {"symbol_exact":"NEWUSDT",
+             "population_lane":"IN_WINDOW_FIRST_TRADABLE_MINUTE_CANDIDATE",
+             "replay_status":s138.STATES[5],
+             "D0_first_UTC":"2026-10-28T06:57:00Z",
+             "D1_first_UTC":"2026-10-28T07:24:00Z",
+             "gross_future_labels_not_real_profit":copy.deepcopy(no_cross)},
+            {"symbol_exact":"RECENTUSDT",
+             "population_lane":"PREEXISTING_AT_WINDOW_START",
+             "replay_status":s138.STATES[6],
+             "D0_first_UTC":"2026-10-28T07:00:00Z",
+             "D1_first_UTC":"2026-10-28T07:30:00Z",
+             "gross_future_labels_not_real_profit":copy.deepcopy(no_cross)},
+            {"symbol_exact":"ESTABLISHEDUSDT",
+             "population_lane":"PREEXISTING_AT_WINDOW_START",
+             "replay_status":s138.STATES[3],
+             "D0_first_UTC":"2026-10-28T07:03:00Z",
+             "D1_first_UTC":"2026-10-28T07:33:00Z",
+             "gross_future_labels_not_real_profit":copy.deepcopy(no_cross)},
+            {"symbol_exact":"CENSOREDUSDT",
+             "population_lane":"PREEXISTING_AT_WINDOW_START",
+             "replay_status":s138.STATES[0],
+             "D0_first_UTC":None,"D1_first_UTC":None},
+        ]
+        summary,daily=s138.summarize_rows(rows,start,end)
+        self.assertEqual(daily,[3,0,0,0,0,0,0])
+        self.assertEqual(summary["all_cohort_first_D1"],3)
+        self.assertEqual(summary["cold_start_first_D1"],1)
+        self.assertEqual(summary["recent_preT0_first_D1"],1)
+        self.assertEqual(summary["unique_first_D1"],1)
+        self.assertEqual(summary["SOURCE_CENSORED_NO_REPLAY"],1)
+        analysis=s138.population_coverage_sensitivity(summary)
+        self.assertEqual(analysis["source_censored_or_unsupported_attempts_unknown_outcome"],1)
+        self.assertIsNone(analysis["venue_complete_case_preexisting_early5_pct"])
+        self.assertFalse(analysis["G1_claimable"])
+
     def test_duplicate_source_and_overlapping_windows_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "DUPLICATE_OR_OVERLAPPING"):
             s138.aggregate([self.report, copy.deepcopy(self.report)])
