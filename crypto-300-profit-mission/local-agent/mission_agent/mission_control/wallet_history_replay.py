@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import sqlite3
 from typing import Callable
 
 from .person_registry import _solana_pubkey_32_bytes
