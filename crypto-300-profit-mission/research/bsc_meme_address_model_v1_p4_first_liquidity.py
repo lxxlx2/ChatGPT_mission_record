@@ -46,7 +46,7 @@ def load(root: Path) -> dict:
 
 def build(source: dict) -> dict:
     require(source["schema"] == "BSC_MEME_P4_PRIORITY4_V2_FIRST_MINT_RESERVE_WITNESS"
-            and source["production"] == "NO_GO"
+            and source["summary"]["production"] == "NO_GO"
             and source["source_precommit_sha"] == PRECOMMIT_BLOB
             and source["binary_proof_git_blob_sha"] == BINARY_BLOB
             and source["summary"]["pools"] == 4
