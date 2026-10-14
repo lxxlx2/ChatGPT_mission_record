@@ -129,3 +129,16 @@ done
 - **下一业务主线**：需要未来用户在对话里明确发起一次真实 Stage133 手动 T0 后，收集整个其后7日完整原始1m及正式SHA；Stage136真实归档手动取数必须窗口结束+48h、单独明确授权，接着Stage135全人口源核验→Stage137因果D0/D1→冻结Stage77 G0-G3多独立窗口原门禁。不追已曝光31/519历史边界调参；优先保障真实未知的新增币PIT、非ASCII全市场覆盖、3个独立窗口和真实D0早报可用性。没有明确手动采集指令不会执行实时GET，也不会启动Stage99或替代定时器。30个独立可执行完整进出场的G4净收益（用户名义本金另行指定）与独立其他AI Review仍是NO_GO原因。
 
 `STAGE137_NEW_DYNAMIC_T0_CORE_INTEGRATION_CI=PASS_MACOS_UBUNTU`; `STAGE133_ACTUAL_NEW_T0_NOT_CAPTURED`; `STAGE136_REAL_1M_NOT_DOWNLOADED`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_OTHER_AI_REVIEW=NOT_DONE`; `G6_MAC_DEPLOY=NO_GO`; `FRANK=UNCHANGED`; `GMAIL=OFF`; `STAGE99_MANUAL_ONLY`; `NO_NEW_SCHEDULE`.
+
+
+## Stage138 单窗口全源到模型及跨前瞻窗口研究验收账本（2026-10-14）
+
+完成上一轮 Stage137 提出的真实工程交接断点，先以 commit `141397e778961da969e41f9c4f63f97b6bea95ba` 冻结 [Stage138 联合研究合同](MONSTER_STAGE138_FROZEN_MANUAL_SOURCE_TO_G0_G3_READINESS_AND_MULTIWINDOW_SCORECARD_PROTOCOL_20261014.md)，再实现 [Stage138 一次性离线研究/跨窗口账本](../local-agent/scripts/monster_v4_stage138_manual_evidence_scorecard.py) commit `73963bf03d8c7ec256a9cc000bca3defae0b6ff4`，回归测试 commit `9d4f964e5bd4ab2ef81ca1f2b8d78551179be852`，无调度CI commit `5e219ae6e3a5051f2a56327fbaab9a7ee44037f9`。
+
+**实际机器测试**：[GitHub Actions Stage138 #38603405470](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38603405470) `completed/success`，macOS job `115988073081` 和 Ubuntu job `115988073679` 均实测**15/15 PASS**（Stage138新7项 + 引入原 Stage137 8项核心回放回归），完整旧V4队列与Stage80 D1已实际执行在人工合成的官方同格式ZIP+CHECKSUM数据上；默认不联网、不后台、不发信校验也均PASS。未执行真实Binance GET、未实际创建新7日T0、未记录任何真实盈利。固定代码SHA、完整使用说明、阈值、缺口和可复现实验证据见 [Stage138 正式报告](MONSTER_STAGE138_SOURCE_TO_MODEL_FORWARD_SCORECARD_AND_MULTIWINDOW_CI_20261014.md)。
+
+**操作逻辑和边界**：用户下次在对话中明确要求手动采集时，按原 Stage133 只读实时T0收原始三HTTP回执；独立前瞻窗口结束+48h并单独授权后，Stage136离线规划/可授权一次性下载保存全人口所有Symbol-day 1m ZIP+CHECKSUM；Stage138 `--phase plan` 检视源文件及缺档，`--phase evaluate` 用Stage135核验完整源、Stage137原D0/D1回放，`--aggregate` 汇总至少3个真正不重叠且独立可追溯未来窗口。**即使系统输出完整混合USD-M原始gross HIGH×2描述结果，仍须独立PIT crypto issuer、全部窗口内上新/退市、官方源证明及真实告警时效，才允许G0/G1转为可评估。** 无任何真实source或G1 PASS，不能因该批全流程**工程测试成功**直接上线Monster，更不能把源缺档当作NO_WATCH。已有旧Stage116首个窗口失败、Stage118/127 REJECTED和Stage132事后收益为负原样保留。用户不必此时运行本机命令；不会自行开启自动任务。
+
+**下一主线：停止继续仅增加离线模块，优先实质获取用户明确授权的新真实全市场来源，确认PIT发行主体与首交易/合约乘数，以及窗口内上新和Unicode模型不可覆盖问题，按冻结G0-G3从真实源评估；如果G1证据失败，回到真实信号研究，不能伪称盈利。** 外部其他AI独立审查为NOT_DONE，待具备可审真实模型/源码和回测证据时交付独立审查，在此之前不得部署生产Mac或通知。
+
+`STAGE138_OFFLINE_INTEGRATION_CI_PASS_MACOS_UBUNTU`; `STAGE138_ACTUAL_FORWARD_SOURCE_NOT_DONE`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_OTHER_AI_REVIEW=NOT_DONE`; `G6_MONSTER_DEPLOYMENT=NO_GO`; `FRANK=UNCHANGED`; `GMAIL=OFF`; `STAGE99_MANUAL_ONLY`; `NO_NEW_SCHEDULE`.
