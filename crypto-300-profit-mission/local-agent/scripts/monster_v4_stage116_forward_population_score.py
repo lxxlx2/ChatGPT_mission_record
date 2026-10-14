@@ -370,7 +370,51 @@ def selftest():
     assert gate["raw_G2_threshold_met_not_crypto_gate"] is None
     assert sum(m["original_D1_burden"]["per_day"][w])==1
     assert asof(stamp(start+MIN))==start+MIN
-    print("STAGE116_NO_FUTURE_OOS_FABRICATION_RAW_ALL_MARKET_CAUSAL_SELFTEST_PASS")
+
+    # Integration fixture: exact Stage97 HTTPS timestamp proof + actual
+    # exchangeInfo byte SHA + Stage91 nine official day-receipt schema,
+    # without claiming this synthetic body was received from Binance.
+    before_at=start-2*MIN
+    fake_market={"serverTime":start-86_400_000,"symbols":[{
+        "symbol":"CATUSDT","status":"TRADING","contractType":"PERPETUAL",
+        "quoteAsset":"USDT","baseAsset":"CAT","onboardDate":start-DAY}]}
+    first=capture.fixture(capture.TIME_URL,
+                          {"serverTime":before_at+100},before_at,before_at+200)
+    exchange=capture.fixture(capture.EXCHANGE_URL,fake_market,
+                             before_at+200,before_at+400)
+    last=capture.fixture(capture.TIME_URL,
+                         {"serverTime":before_at+500},before_at+400,before_at+600)
+    mock_proof=capture.verify_time_proof(first,last,exchange,w)
+    checked=audited_capture(mock_proof,w)
+    assert checked["usd_m_usdt_perpetual_asof_candidates"]==1
+    fake["source_9_days_SHA256"]=[
+        {"date":(date.fromisoformat(w[:10])+timedelta(days=i)).isoformat(),
+         "zip_sha256":"a"*64,
+         "verified_official_publisher_SHA256":True,"bars":1440}
+        for i in range(-1,8)]
+    fake["Crypto_identity"]="UNKNOWN_NEEDS_INDEPENDENT_ASOF_PROOF"
+    packet={"schema":REPLAY_SCHEMA,"window_start_utc":w,
+       "window_exchange_info_sha256":checked["raw_sha256"],
+       "venue":"BINANCE_USDM",
+       "original_model_source_sha":old.MODEL_SOURCE_V4,
+       "original_d1_contract_sha":old.D1_SOURCE_CONTRACT,
+       "rows":[fake]}
+    assert validate_replay(w,packet,checked)[0]["symbol"]=="CATUSDT"
+    output=score({w:mock_proof},{w:packet})
+    assert output["raw_venue_descriptive_only"]["gross_2x_5x_10x_posthoc"]["gross_2x"]==1
+    assert output["raw_venue_threshold_computation_not_a_crypto_model_PASS"]["raw_G1_has_minimum_independent_sample"] is False
+    assert len(output["incomplete_reason_codes"])==3
+    corrupt=json.loads(json.dumps(packet))
+    corrupt["rows"][0]["gross_future_labels_not_real_profit"]["D0_first_pre_GT2x_5m"]=False
+    try:validate_replay(w,corrupt,checked)
+    except ValueError as ex:assert "EARLY_D0" in str(ex)
+    else:raise AssertionError("STAGE116_ALLOW_FALSE_G1_EARLY_LABEL")
+    wrongproof=json.loads(json.dumps(mock_proof))
+    wrongproof["raw_market_packet"]["raw_sha256"]="b"*64
+    try:audited_capture(wrongproof,w)
+    except ValueError:pass
+    else:raise AssertionError("STAGE116_ALLOW_FORGED_EXCHANGE_INFO_SHA")
+    print("STAGE116_ALL_MARKET_STAGE97_AND_STAGE91_SOURCE_CAUSAL_INTEGRATION_SELFTEST_PASS")
 
 
 if __name__=="__main__":
