@@ -98,7 +98,12 @@ def read_metadata(mint,rpc,mint_result):
         attempts.append(attempt)
     except Exception as exc:
         blocking=True;attempts.append({'source':'METAPLEX_METADATA','account':address,'status':'UNCONFIRMED','reason':str(exc) if isinstance(exc,ValueError) else type(exc).__name__})
-    signatures={(r['name'],r['symbol'],r['update_authority']) for r in records}
+    # Compare capitalization consistently for both on-chain record sources
+    # and for later on-chain vs market reconciliation. Authority differences
+    # remain significant; raw records retain their original exact labels.
+    signatures={((_label(r['name']) or '').casefold(),
+                 (_label(r['symbol']) or '').casefold(),
+                 r['update_authority']) for r in records}
     status='TOKEN_IDENTITY_CONFLICT' if len(signatures)>1 else ('VERIFIED' if records and not blocking else 'UNCONFIRMED')
     observed_at=time.time()
     for attempt in attempts:
