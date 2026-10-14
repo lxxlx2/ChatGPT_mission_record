@@ -97,16 +97,27 @@ def _native_sol_coverage(meta, message, keys, tracked):
         if not isinstance(group, dict) or not isinstance(group.get("instructions"), list):
             return ("NATIVE_SOL_BALANCE_EVIDENCE_MISSING", "INNER_INSTRUCTIONS_INVALID")
         all_instructions.extend(group["instructions"])
-    if not failed and any(
-        isinstance(item, dict) and item.get("programId") == system_program
-        and isinstance(item.get("parsed"), dict)
-        and item["parsed"].get("type") in (
-            "transfer", "transferWithSeed", "createAccount",
-            "createAccountWithSeed", "withdrawNonceAccount",
-        )
-        for item in all_instructions
-    ):
-        return ("NATIVE_SOL_FLOW_UNCLASSIFIED", "SYSTEM_VALUE_INSTRUCTION")
+    if not failed:
+        for item in all_instructions:
+            if not isinstance(item, dict) or item.get("programId") != system_program:
+                continue
+            parsed = item.get("parsed")
+            if not isinstance(parsed, dict) or parsed.get("type") not in (
+                "transfer", "transferWithSeed", "createAccount",
+                "createAccountWithSeed", "withdrawNonceAccount",
+            ):
+                continue
+            info = parsed.get("info")
+            if not isinstance(info, dict):
+                return ("NATIVE_SOL_FLOW_UNCLASSIFIED",
+                        "SYSTEM_VALUE_INSTRUCTION_UNPARSED")
+            # An unrelated fee payer may fund a tracked wallet's ATA; this
+            # is not a native lamport movement of the wallet owner itself.
+            if any(info.get(field) in tracked
+                   for field in ("source", "destination", "newAccount",
+                                 "base", "nonceAccount", "authority")):
+                return ("NATIVE_SOL_FLOW_UNCLASSIFIED",
+                        "SYSTEM_VALUE_INSTRUCTION")
     for index, address in enumerate(keys):
         if address not in tracked:
             continue
