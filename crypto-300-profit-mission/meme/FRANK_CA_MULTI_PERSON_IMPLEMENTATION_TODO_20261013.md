@@ -210,6 +210,19 @@
 - [ ] **S03 — PR39/41 恢复发布 + PR37/38/28 冲突账（P0，依赖 A00/S02）**：审查已合并 PR39/41 的发布授权与运行态来源；核对未合并旧 PR37/38/28，按现有 main 逐项选择“已覆盖/择取/作废重做”，不是强制合并；实际 Mac 如仍为 legacy/mixed runtime，保持专用受审的 fail-stopped controlled cutover 原则。**验收**：安全排程不会引用 mutable checkout，scanner 不被重启/重置，受保护 DB 备份及身份追踪可验证，旧 Loop 不可信时不自动重启。
 - [ ] **S04 — 真实 Gmail 与运行恢复残留项（P1，依赖 S03）**：已记录待验证真实 SOL/WSOL 归一化、NO_ROUTE、sustained 429、重启/login/launchctl、Gmail Sent 最终回读/未发送不重试等项，独立于 UI/研究代码。**验收**：Mac 上只读实测、与当前精确版本绑定；需要 live Gmail 时再次另行明确批准，不能仅用数据表 SENT_VERIFIED 字段代替真正 Sent readback。
 
+## A05→F02 主线强制验收顺序（2026-10-14 新增，不能跳步）
+
+**依赖顺序固定：`A05-R1 完整 RPC 来源证据 → A05-R2 精确 32 Mint/ATA 对账 → F02-R1 真仓位只读查询 → F02-R2 Dashboard 浏览器实测 → F02-R3 Mac 隔离验收 → INTEGRATION_REVIEW → FINAL_OVERALL_REVIEW`。** 本节为正式开发进度要求，不是可选备注；重启新对话必须先检查下列未完成项。任何步骤未达标不得勾选后续业务完成。
+
+- [ ] **A05-R1 保存完整原始 RPC**：只读、手动触发，按官方 Solana `getTokenAccountsByOwner` 分别查询 SPL Token 与 Token-2022，`finalized`、`jsonParsed`；显式保存每个**完整** JSON-RPC `result/context.slot/value` 的不可变原始文件/哈希、钱包、Program ID、UTC 采集时间、字节数及完整性状态，再以现有 `capture_owner` 生成规范化 Sidecar。传输被截断、JSON 不完整、响应 ID 不匹配、RPC error 或只成功一个 Program 时只允许记录 `PARTIAL_SOURCE`，不能将缺席的 Mint 置 0。限制文件大小并拒绝写生产 SQLite、任意密钥、私有 URL 到 Git/日志。因现有 Alchemy 连接器输出约 8KB 截断，**必须换用可保存整份响应的采集通道**，不可凭连接器可见片段声称 RPC 完成。
+- [ ] **A05-R2 核对 32 Mint 与全部 ATA**：从明确版本的真实 Frank 业务 registry/历史已冻结目标名录读取**准确 32 个不同 Mint**，记录原文证据、实际来源 SHA、检查时间及新旧增删差异，不能随意凑满 32 个，更不能只用当前持仓 Mint 代替历史目标。对每个 Mint 对齐两程序全部 Token Account（包括非标准 ATA），记 token account/pubkey/mint/owner/program/raw amount/decimals、两个 finalized Slot、账户数和缺失/冲突；针对已关闭 ATA / 过往 Token Accounts 的历史缺失另列 `UNVERIFIED`，不能用现时 `0` 推断卖出。只有两份完整可验 RPC 和准确名录才可标 `A05_SOURCE_ACCEPTED`。
+- [ ] **F02-R1 接真实研究仓位查询**：仅消费 A05 完整原始证据经规范化后最新一次 Sidecar 状态，用已审过的 PR #58 快照来源校验；返回独立人物钱包、Mint、raw/quantity、来源 Slot/时间/哈希、最新尝试失败或来源过期状态，未知保持 `null`，未证实价格/成本/收益不计算、不显示虚构 `$0` 或“仓位不明”可交易结论。不直接混用普通 `TX` 归档或读未审核的生产状态。
+- [ ] **F02-R2 Dashboard 页面业务联调**：真实 UI 中仅展示已核实/最新且可执行的对象，研究“观察/不跟/历史”单独区域；用户可点开准确 Mint/CA、钱包归属、仓位、资产来源、更新时间、未知原因，必要时有明确重新采集入口；错误/空状态不可冒充清仓，不更改冻结 Frank V1 跟单决策、邮件与订单。
+- [ ] **F02-R3 Mac 隔离验收**：新代码固定 SHA、独立只读研究 Sidecar / 临时端口，对照 Mac 实际 RPC 完整响应与页面数据；覆盖查询缺失、超时、旧余额复活防护、多 ATA、非原子 Slot 与 32 Mint，审查截图/浏览器交互和源文件哈希。不得读取/修改生产私有库进行试验，生产切换须另行显式授权。
+- [ ] **独立模块审核与整体审核**：A05-R1/R2、F02-R1/R2 达到实用模块检查点，各自先执行精确 SHA 专项+全量 CI 和另一 AI `APPROVE`；代码改变要重新审核受影响模块。F01/C02/A05/F02 合成真实固定 SHA 集成树后另做**一次独立跨模块 Review**；所有 41 项业务内容真实完成，再做**额外一次全系统独立 Review**；真实 Mac 验收、回滚及用户明确部署授权是独立发布门禁。仅 PR #58 局部 `APPROVE` 不等于 A05/F02 完成。
+
+**已确认阻塞（不许静默跳过）**：官方 owner RPC 在此前连接器输出被截断；目前还未取得完整原始 SPL/Token-2022 同次文件、真实完整 32 Mint 名录与 Token Account 明细，故 `A05-R1/R2 = NOT_ACCEPTED`，`F02-R1/R2/R3 = NOT_STARTED_OR_UNVERIFIED`。来源检查另见 `FRANK_A05_F02_CHAIN_OWNER_SOURCE_PREFLIGHT_20261014.md`。本路线不包含生产合并/部署许可。
+
 ## 5. 里程碑 E：交付、独立 Review、真实机部署（逐关卡）
 
 - [ ] **E01 — 数据合同及技术方案审查**（P0，依赖 A01–A03）：另一 AI 独立审多人物身份、链数据、历史兼容、资金归因和冻结 Frank 策略影响；审查报告需 exact SHA、相反样本及真实可行性。需要修复则先修再复审。**验收**：没有 Critical/High，或明确 BLOCK。
