@@ -66,7 +66,7 @@
 
 - 原始审查矩阵、业务文件重叠、各自 SHA 与下一步顺序：[`FRANK_CA_PR_REVIEW_INTEGRATION_GATE_20261014.md`](./FRANK_CA_PR_REVIEW_INTEGRATION_GATE_20261014.md)，该文件是**新增开发与集成的入口**，直到整套 PR 完成联合 CI/另一 AI Review/Mac 只读验收。代码 CI、源数据验证和 Mac 生产上线三个状态必须分开。
 - [PR #47 C02](https://github.com/lxxlx2/ChatGPT_mission_record/pull/47) 在 `c4073f69` code CI 1,445 PASS；Gemini 报告 model **`gemini-3.5-flash`**、审查产品 SHA **`3ed4755e`**，到 HEAD 只更新了文档与证据（GitHub 已 compare）。Claude 独立复查发现 R-a 预览无 exact Mint、R-b capitalization 假冲突，需要处理，而不是直接标无条件 APPROVE。
-- R-a/R-b 在 **[Draft PR #49](https://github.com/lxxlx2/ChatGPT_mission_record/pull/49)** 作为 #47 的子分支修复，绝不修改已审查的 #47 HEAD。精确 Mint 同时在扫描进度和预览显示；链上来源及市场来源的大小写冲突比较规则和展示规则一致；实质性冲突仍阻断。**需重新独立 Review #49 当前最终代码 SHA。**
+- R-a/R-b 在 **[Draft PR #49](https://github.com/lxxlx2/ChatGPT_mission_record/pull/49)** 作为 #47 的子分支修复，绝不修改已审查的 #47 HEAD。精确 Mint 同时在扫描进度和预览显示；链上来源及市场来源的大小写冲突比较规则和展示规则一致；实质性冲突仍阻断。精确 HEAD `9c16829e3d699741af23a9c02aee0816b3a64f2d` 的 [CI #38501128406](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38501128406) **SUCCESS：17 项重点、1,449 项完整 real-Git PASS**，6 真实保存案例的 Node 实际 `app.js` 渲染、编译/pyflakes/JS 语法 PASS。**需重新独立 Review #49 最终代码 SHA，不能以 CI 代替 Review。**
 - [PR #48 A04](https://github.com/lxxlx2/ChatGPT_mission_record/pull/48) 43 项专项、1,525 项完整测试 PASS；独立 Review 仍未完成，应重点验证断点、429、raw tx/按钱包视图去重与交易入库事务。PR #42/#43/#45 整条上游数据分支也需覆盖；[#44 F01](https://github.com/lxxlx2/ChatGPT_mission_record/pull/44) 需要与 C01/C02 的同一 `server.py`/`static/app.js` 整合回归。
 - 实际 GitHub REST 在 2026-10-14 复查 `#42/#44 mergeable=true,mergeable_state=clean`，此前连接器摘要的 `false` 不能当实际冲突。**合并可行性≠整合后的产品和数据正确性。**
 - 合并前顺序：先收敛每条分支已有 Claude 问题 → 本分支精准审查门禁 → 创建一次性整合集成分支（#42→#43→#45→#48 + #46→#47→#49 + #44）→ 联合完整测试和浏览器/链证据 → 用户明确授权的 Mac 受控发布。未经过该门禁，保持 `DRAFT / NO_MERGE / NO_DEPLOY`。
