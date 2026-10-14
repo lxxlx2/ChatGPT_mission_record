@@ -33,16 +33,21 @@ def quantile_nearest_rank(values,percent):
 def grouped(rows):
     out={}
     for x in rows:
-        signal=x["entry_price_proxy_gross_by_horizon"]["D0"]
+        # Stage114 full archive stores an intentionally compact per-case
+        # diagnostic projection, not its earlier replay's nested records.
+        # Null is an observed 5m/24h missing/censored outcome, NEVER a loss.
         results=x["entry_price_proxy_gross_by_horizon"]["D0"]
-        keys=x["frozen_5m_24h_entry_horizon_price_proxies"]["D0"]
-        if set(results)!={"5","1440"} or set(keys)!={"5","1440"}:
+        if set(results)!={"5","1440"}:
             raise ValueError("STAGE115_D0_SIGNAL_HORIZON_DRIFT")
-        if x["source_status"]!="EXPIRED":
-            raise ValueError("STAGE115_SOURCE_STATUS_INCOMPLETE")
-        # D1_chronology=NONE means original D1 missing, whether P existed
-        d1="D1_PRESENT" if x["original_D1_FIRST_UTC"] is not None else "D0_ONLY"
-        p="LATER_PRIORITY_EXISTS" if x["first_priority_observable_ms"] is not None else "NO_LATER_PRIORITY"
+        if x["D1_chronology"] not in (
+                "NONE","NO_PRIORITY","D1_BEFORE_PRIORITY",
+                "D1_AFTER_PRIORITY","D1_EQUALS_PRIORITY"):
+            raise ValueError("STAGE115_UNKNOWN_ORIGINAL_D1_CLASS")
+        if not x["source_1m_publisher_SHA_receipts"]:
+            raise ValueError("STAGE115_MISSING_OFFICIAL_SOURCE_EVIDENCE")
+        # D1_chronology=NONE means D1 missing, even when a priority exists.
+        d1="D1_PRESENT" if x["D1_chronology"]!="NONE" else "D0_ONLY"
+        p="LATER_PRIORITY_EXISTS" if x["first_priority_ms"] is not None else "NO_LATER_PRIORITY"
         groups={
           "ALL":"ALL_ORIGINAL_D0",
           "DATE":x["date"],
@@ -57,15 +62,13 @@ def grouped(rows):
                                                              "censored5":0,"censored24":0})
             bucket["cases"]+=1
             for horizon,slot in (("5","values5"),("1440","values24")):
-                state=keys[horizon]
-                if state["status"]=="COMPLETE_PRICE_ONLY":
-                    val=Decimal(results[horizon])
-                    if not val.is_finite() or Decimal(state["gross_pct"])!=val:
-                        raise ValueError("STAGE115_REAL_GROSS_OR_PRICE_DRIFT")
+                value=results[horizon]
+                if value is not None:
+                    val=Decimal(value)
+                    if not val.is_finite():
+                        raise ValueError("STAGE115_NONFINITE_ORIGINAL_GROSS")
                     bucket[slot].append(val)
                 else:
-                    if results[horizon] is not None or state["gross_pct"] is not None:
-                        raise ValueError("STAGE115_CENSORED_WITH_SYNTHETIC_RETURN")
                     bucket["censored5" if horizon=="5" else "censored24"]+=1
     result={}
     for family,v in out.items():
