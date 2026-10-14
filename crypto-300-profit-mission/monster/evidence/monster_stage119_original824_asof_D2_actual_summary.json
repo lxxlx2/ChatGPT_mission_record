@@ -1,0 +1,63 @@
+{
+  "D2_event_count": 824,
+  "D2_status_by_mode": {
+    "ORIGINAL_D0": 519,
+    "ORIGINAL_D0_IDENTITY_UNKNOWN": 501,
+    "ORIGINAL_D0_MAPPING_UNKNOWN": 15,
+    "ORIGINAL_D0_OUT_OF_SCOPE": 3,
+    "ORIGINAL_D1": 305,
+    "ORIGINAL_D1_IDENTITY_UNKNOWN": 294,
+    "ORIGINAL_D1_MAPPING_UNKNOWN": 9,
+    "ORIGINAL_D1_OUT_OF_SCOPE": 2
+  },
+  "Frank": "UNCHANGED",
+  "Gmail": "OFF",
+  "Stage99_existing_authorized_one_shot": "UNCHANGED",
+  "actual_historical_user_notional": "UNSPECIFIED",
+  "actual_signal_time_book_price_level_order_fills": "NOT_ARCHIVED",
+  "autotrading": "NO_GO",
+  "explicit_no_default_quote_notional": true,
+  "forward_OOS": "NOT_DONE",
+  "historical_real_executable_profit": "UNKNOWN",
+  "original_519_case_identity_class": {
+    "CONFIRMED_TRADFI_OUT_OF_CRYPTO_SCOPE": 3,
+    "CRYPTO_IDENTITY_UNVERIFIED": 501,
+    "MULTIPLIER_MAPPING_UNVERIFIED": 15
+  },
+  "original_D0_519": 519,
+  "original_D1_305": 305,
+  "original_Stage118_18_28_G2": "REJECTED",
+  "real_crypto_G0_certification": "NOT_DONE",
+  "review": "INDEPENDENT_OTHER_AI_NOT_DONE",
+  "schema": "MONSTER_STAGE119_ORIGINAL519_D0_D1_READONLY_EXECUTABILITY_V1",
+  "source_Stage118_actual_rows_git_blob": "c1a84d8da79ca202567332f56042f359c73b4297",
+  "source_Stage118_actual_summary_git_blob": "f469a4b2b50a6746cd3da295060754990cb6affe",
+  "source_Stage90_D2_pure_engine_git_blob": "d71f46370e40748b7db90d8f18a0599df2522510",
+  "source_date_D0_D1_counts": {
+    "2025-01-30": {
+      "ORIGINAL_D0": 161,
+      "ORIGINAL_D1": 75
+    },
+    "2025-06-02": {
+      "ORIGINAL_D0": 34,
+      "ORIGINAL_D1": 16
+    },
+    "2025-08-01": {
+      "ORIGINAL_D0": 54,
+      "ORIGINAL_D1": 45
+    },
+    "2025-10-02": {
+      "ORIGINAL_D0": 75,
+      "ORIGINAL_D1": 59
+    },
+    "2026-06-21": {
+      "ORIGINAL_D0": 100,
+      "ORIGINAL_D1": 56
+    },
+    "2026-07-28": {
+      "ORIGINAL_D0": 95,
+      "ORIGINAL_D1": 54
+    }
+  },
+  "user_mac_Monster_install": "NO_GO"
+}
