@@ -33,29 +33,28 @@ def _quantity(raw: str, decimals: int) -> str:
 
 
 
-def _attempt_after_selected(store, *, wallet: str, selected: dict) -> dict | None:
-    """Find latest attempted observation by capture time, not greatest chain slot.
+def _latest_actual_attempt(store, *, wallet: str, as_of_utc: datetime) -> dict | None:
+    """Latest research capture attempt by UTC time, independently of chain slot.
 
-    A later partial attempt can have a lower residual slot than the previously
-    complete scan. The shared inventory selector intentionally prefers chain
-    slot for historical backfill, so F02 alone applies this availability gate.
-    latest_inventory has already checked wallet identity, source fingerprints
-    and timestamps for every stored candidate before this second read.
+    The shared historical selector chooses the highest chain slot; a later
+    failed attempt may have a lower residual slot. This F02-only availability
+    check follows the actual attempt chronology without changing backfills.
+    latest_inventory verifies every archive hash and source wallet first.
     """
-    selected_time = selected.get("capture_observed_at_utc")
-    if selected_time is None:
-        return None
-    selected_at = _parse_time(selected_time)
-    as_of = _parse_time(selected["as_of_utc"])
-    newest = None
-    newest_at = None
+    as_of = as_of_utc.astimezone(timezone.utc)
+    latest = None
+    latest_at = None
     for capture in store.iter_wallet_captures(wallet):
         observed_at = _parse_time(capture.get("observed_at_utc"))
-        if observed_at <= selected_at or observed_at > as_of:
+        if observed_at > as_of:
             continue
-        if newest_at is None or observed_at > newest_at:
-            newest_at, newest = observed_at, capture
-    return newest
+        if (latest_at is None or observed_at > latest_at or
+                (observed_at == latest_at and
+                 capture.get("status") == "PARTIAL_SOURCE" and
+                 latest.get("status") != "PARTIAL_SOURCE")):
+            latest_at, latest = observed_at, capture
+    return latest
+
 
 class ResearchPositions:
     """One explicitly bound person/wallet, pinned origin and frozen target list."""
@@ -93,17 +92,25 @@ class ResearchPositions:
             result = latest_inventory(
                 store, wallet=self.binding.address, mints=self.mints,
                 as_of_utc=instant, max_age_seconds=self.max_age_seconds)
-            later_attempt = _attempt_after_selected(
-                store, wallet=self.binding.address, selected=result)
+            actual_attempt = _latest_actual_attempt(
+                store, wallet=self.binding.address, as_of_utc=instant)
         finally:
             store.close()
-        actual_attempt = later_attempt
         attempt_status = (actual_attempt.get("status") if actual_attempt is not None
                           else result["source_observation_status"])
+        selected_sha = result["selected_capture_sha256"]
+        selected_at = (_parse_time(result["capture_observed_at_utc"])
+                       if result["capture_observed_at_utc"] else None)
+        newer_attempt = (actual_attempt is not None and
+                         (selected_at is None or
+                          _parse_time(actual_attempt["observed_at_utc"]) > selected_at))
+        selected_attempt = (actual_attempt is not None and
+                            actual_attempt["capture_sha256"] == selected_sha)
         if result["source_attempt_failed_no_slot"] or (
-                later_attempt is not None and attempt_status == "PARTIAL_SOURCE"):
+                attempt_status == "PARTIAL_SOURCE" and
+                (newer_attempt or selected_attempt)):
             readiness = "LATEST_CAPTURE_ATTEMPT_FAILED"
-        elif later_attempt is not None:
+        elif newer_attempt:
             readiness = "LATEST_SOURCE_NOT_WIRE_VERIFIED"
         elif not result["both_programs_observed"]:
             readiness = "INCOMPLETE_OR_NO_LATEST_CAPTURE"
