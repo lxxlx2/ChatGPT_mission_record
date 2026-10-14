@@ -1,6 +1,7 @@
 # BSC Meme 地址分析模型 V1 — 分阶段实施计划与真实进度（2026-10-13）
 
 **Authority:** `bsc-meme-address-model-v1-requirements-2026-10-13.md` (G0 frozen); `MISSION_SPEC.md`; `docs/REPOSITORY_STRUCTURE.md`; `README_BSC_MEME_TOP_TRADERS.md`.  
+**Mandatory BSC developer/reviewer handoff:** [`bsc-meme-address-model-v1-development-rules-2026-10-15.md`](bsc-meme-address-model-v1-development-rules-2026-10-15.md). **When independent other-AI review becomes necessary, the same user-visible response MUST include a complete copy-ready review prompt with actual fixed 40-character SHA, Draft PR #40 URL, source/code/CI evidence links, read-only scope, and APPROVE / REQUEST_CHANGES / BLOCKED_INSUFFICIENT_EVIDENCE instruction. Do not merely say review needed or hand over a template.** This is a mandatory BSC delivery rule; neither CI success nor giving the prompt counts as an independent review result. Until that reviewer returns, status PENDING_OTHER_AI_REVIEW; NO_GO/NO_MERGE/NO_DEPLOY remain.
 **Change safety:** 研究只读；不重扫历史 437 个转账组合；不更改 Frank/Monster、Mission runtime、state/current、交易/通知；`NO_GO`。  
 **Development process:** 数据调查 → 模型/技术方案 → 研究分支开发 → 其他 AI 独立 Review → 单元/集成/链上验证 → 只读本地部署验收（仅获授权才进行） → 修复 → 复核。每个阶段 Git 留可复算证据和 blockers。
 
