@@ -63,6 +63,185 @@
     "passes_existing_G3_load_target": true,
     "peak_per_day": 10
   },
+  "historical_early_2x_failed_unchanged_first_gate_counts": {
+    "quote15_normalized_prev45": 1,
+    "quote15_usdt": 5,
+    "ret60_pct": 7,
+    "trades15": 4
+  },
+  "historical_early_2x_missed_cases_label_only": [
+    {
+      "D0_UTC": "2025-08-03T18:12:00Z",
+      "date": "2025-08-01",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "ret60_pct"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2025-08-04T03:20:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "2.602950658222944781283404042",
+        "quote15_usdt": "13376177.7916200",
+        "ret60_pct": "6.696395935375392938080269000",
+        "trades15": 89850
+      },
+      "symbol": "MYXUSDT"
+    },
+    {
+      "D0_UTC": "2025-10-02T11:27:00Z",
+      "date": "2025-10-02",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "ret60_pct"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2025-10-02T16:18:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "1.320170360342603766969282664",
+        "quote15_usdt": "7841275.4369700",
+        "ret60_pct": "0.837735720025303038074233600",
+        "trades15": 101768
+      },
+      "symbol": "AIAUSDT"
+    },
+    {
+      "D0_UTC": "2025-10-03T14:24:00Z",
+      "date": "2025-10-02",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "ret60_pct",
+        "quote15_usdt",
+        "trades15"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2025-10-04T09:54:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "17.38297225660128685089710608",
+        "quote15_usdt": "824483.9912600",
+        "ret60_pct": "7.510729613733905579399141600",
+        "trades15": 7951
+      },
+      "symbol": "ALCHUSDT"
+    },
+    {
+      "D0_UTC": "2025-10-02T16:39:00Z",
+      "date": "2025-10-02",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "trades15"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2025-10-07T09:18:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "10.96737022348434257934281053",
+        "quote15_usdt": "1118080.2418500",
+        "ret60_pct": "10.26929982046678635547576300",
+        "trades15": 7688
+      },
+      "symbol": "BROCCOLI714USDT"
+    },
+    {
+      "D0_UTC": "2025-10-03T21:15:00Z",
+      "date": "2025-10-02",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "quote15_usdt"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2025-10-07T04:35:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "5.572381307188747406946149886",
+        "quote15_usdt": "932263.0356377",
+        "ret60_pct": "10.78944649192298419040402300",
+        "trades15": 13419
+      },
+      "symbol": "DOODUSDT"
+    },
+    {
+      "D0_UTC": "2025-10-02T18:12:00Z",
+      "date": "2025-10-02",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "ret60_pct"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2025-10-07T16:00:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "2.177044791271640938818799971",
+        "quote15_usdt": "7798533.6187100",
+        "ret60_pct": "7.672619393868884881624105600",
+        "trades15": 81751
+      },
+      "symbol": "SOONUSDT"
+    },
+    {
+      "D0_UTC": "2026-06-24T17:24:00Z",
+      "date": "2026-06-21",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "ret60_pct"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2026-06-27T09:11:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "1.331123972282182215499858521",
+        "quote15_usdt": "1456267.4072700",
+        "ret60_pct": "-0.4384042086804033318719859700",
+        "trades15": 31851
+      },
+      "symbol": "VELVETUSDT"
+    },
+    {
+      "D0_UTC": "2026-07-31T13:57:00Z",
+      "date": "2026-07-28",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "quote15_usdt"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2026-07-31T14:59:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "38.07703454273232442668728685",
+        "quote15_usdt": "905343.9046400",
+        "ret60_pct": "16.86572566051393412956930870",
+        "trades15": 13088
+      },
+      "symbol": "1000RATSUSDT"
+    },
+    {
+      "D0_UTC": "2026-07-28T06:27:00Z",
+      "date": "2026-07-28",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "ret60_pct",
+        "quote15_normalized_prev45"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2026-08-01T17:21:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "0.9042352710148214515234554911",
+        "quote15_usdt": "3533250.1713000",
+        "ret60_pct": "-0.4686976899899564780716437900",
+        "trades15": 70487
+      },
+      "symbol": "BEATUSDT"
+    },
+    {
+      "D0_UTC": "2026-07-30T02:33:00Z",
+      "date": "2026-07-28",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "quote15_usdt",
+        "trades15"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2026-07-31T02:17:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "45.16817222837172588680473337",
+        "quote15_usdt": "349904.0156430",
+        "ret60_pct": "10.02774974772956609485368310",
+        "trades15": 4833
+      },
+      "symbol": "KOMAUSDT"
+    },
+    {
+      "D0_UTC": "2026-07-30T03:39:00Z",
+      "date": "2026-07-28",
+      "failed_unchanged_Stage79_first_gate_metrics": [
+        "ret60_pct",
+        "quote15_usdt",
+        "trades15"
+      ],
+      "future_2x_UTC_EVALUATION_ONLY": "2026-07-31T10:27:00Z",
+      "source_asof_values": {
+        "quote15_normalized_prev45": "9.560348828672744150942094063",
+        "quote15_usdt": "967467.7162000",
+        "ret60_pct": "4.731861198738170347003154600",
+        "trades15": 8817
+      },
+      "symbol": "MMTUSDT"
+    }
+  ],
   "independent_other_AI_review": "NOT_DONE",
   "monster_deployment": "NO_GO",
   "no_backward_threshold_fitting": true,
