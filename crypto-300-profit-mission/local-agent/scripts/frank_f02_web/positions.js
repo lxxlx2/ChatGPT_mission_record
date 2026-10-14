@@ -16,6 +16,45 @@
     INCOMPLETE_OR_NO_LATEST_CAPTURE: ["没有完整双程序来源", "来源缺失或部分失败；无法核实当前余额。"]
   });
   let latest = null;
+  let sourceClock = null;
+  let expiryTimer = null;
+  const monotonicNow = () => (typeof performance !== "undefined" &&
+    typeof performance.now === "function" ? performance.now() : Date.now());
+  function cancelExpiry() {
+    if (expiryTimer !== null) clearTimeout(expiryTimer);
+    expiryTimer = null;
+  }
+  function elapsedSinceLoadMs(doc) {
+    if (doc !== latest || sourceClock === null) return 0;
+    // Wall clock also covers suspended/background tabs on platforms whose
+    // monotonic clock does not advance during system sleep. A clock reversal
+    // cannot extend a source's availability.
+    return Math.max(0, Date.now() - sourceClock.wall,
+      monotonicNow() - sourceClock.mono);
+  }
+  function localSourceExpired(doc) {
+    return doc === latest && sourceClock !== null &&
+      elapsedSinceLoadMs(doc) >= sourceClock.remainingMs;
+  }
+  function setSourceDeadline(doc) {
+    cancelExpiry();
+    sourceClock = null;
+    if (doc.readiness !== "FRESH_VERIFIED_ARCHIVED_OBSERVATION") return;
+    if (!Number.isFinite(doc.capture_age_seconds) ||
+        !Number.isFinite(doc.max_age_seconds) ||
+        doc.capture_age_seconds < 0 || doc.max_age_seconds <= 0) return;
+    // API age is integer/floor seconds: expire up to one second early,
+    // never keep positive balance visible beyond the real server TTL.
+    const remainingMs = Math.max(0,
+      (doc.max_age_seconds - doc.capture_age_seconds - 1) * 1000);
+    sourceClock = {wall: Date.now(), mono: monotonicNow(), remainingMs};
+    if (remainingMs > 0) {
+      expiryTimer = setTimeout(() => {
+        expiryTimer = null;
+        if (latest === doc) render(doc, false);
+      }, remainingMs);
+    }
+  }
   const $ = (id) => document.getElementById(id);
   const text = (id, value) => { $(id).textContent = String(value ?? "—"); };
   const validAddress = (value) => typeof value === "string" && ADDRESS.test(value);
@@ -48,6 +87,7 @@
       doc.readiness === "FRESH_VERIFIED_ARCHIVED_OBSERVATION" &&
       doc.archive_observation_usable === true &&
       doc.capture_fresh === true &&
+      !localSourceExpired(doc) &&
       typeof doc.latest_capture_sha256 === "string" &&
       doc.latest_capture_sha256 === doc.verified_full_wire_capture_sha256 &&
       doc.latest_attempt_source_status === "BOTH_PROGRAMS_OBSERVED_NON_ATOMIC" &&
@@ -129,12 +169,17 @@
     }
     text("row-total", "显示 " + selected.length + " / 32 个冻结研究目标；该列表不构成跟单建议。");
   }
-  function render(doc) {
+  function render(doc, newSource = true) {
     if (!validated(doc)) throw new Error("研究数据结构不完整");
-    latest = doc;
+    if (newSource || latest !== doc) {
+      latest = doc;
+      setSourceDeadline(doc);
+    }
+    const expired = localSourceExpired(doc);
     const safe = safeObservation(doc);
-    const mismatch = doc.readiness === "FRESH_VERIFIED_ARCHIVED_OBSERVATION" && !safe;
-    const readiness = mismatch
+    const mismatch = doc.readiness === "FRESH_VERIFIED_ARCHIVED_OBSERVATION" &&
+      !safe && !expired;
+    const readiness = expired ? READINESS.STALE_ARCHIVED_SOURCE : mismatch
       ? ["来源信息不一致", "最新采集状态与完整来源信息不一致，页面已隐藏数量。"]
       : (READINESS[doc.readiness] || ["来源不可用", "无法核实当前状态。"]);
     text("source-state", readiness[0]);
@@ -147,7 +192,8 @@
     text("wallet", doc.wallet);
     bindCopy("copy-wallet", doc.wallet);
     text("observed-time", formatTime(doc.capture_observed_at_utc));
-    text("age", "采集于 " + formatAge(doc.capture_age_seconds) + " · TTL " + doc.max_age_seconds + " 秒");
+    text("age", "采集于 " + formatAge(doc.capture_age_seconds +
+      Math.floor(elapsedSinceLoadMs(doc) / 1000)) + " · TTL " + doc.max_age_seconds + " 秒");
     text("slots", doc.slot_min !== null && doc.slot_max !== null
       ? doc.slot_min + " – " + doc.slot_max : "未核实");
     text("source-hash", shorten(doc.verified_full_wire_capture_sha256, 14, 10));
@@ -162,7 +208,9 @@
     renderRows(doc, safe);
   }
   function renderError(status) {
+    cancelExpiry();
     latest = null;
+    sourceClock = null;
     text("source-state", "无法读取隔离研究来源");
     text("source-explainer", "本机只读 API 返回 " + status + "；未连接生产数据库，也没有自动重试 RPC。");
     $("source-state").parentElement.className = "status-panel error";
@@ -192,10 +240,23 @@
       $("reload").disabled = false;
     }
   }
+  function refreshLocalView() {
+    if (!latest) return;
+    // Timers can be throttled in background tabs. User interaction and
+    // returning to the tab must check actual elapsed time before any rows.
+    if (localSourceExpired(latest)) render(latest, false);
+    else renderRows(latest, safeObservation(latest));
+  }
   function init() {
     $("reload").addEventListener("click", load);
-    $("mint-search").addEventListener("input", () => { if (latest) renderRows(latest, safeObservation(latest)); });
-    $("state-filter").addEventListener("change", () => { if (latest) renderRows(latest, safeObservation(latest)); });
+    $("mint-search").addEventListener("input", refreshLocalView);
+    $("state-filter").addEventListener("change", refreshLocalView);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState !== "hidden") refreshLocalView();
+    });
+    if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+      window.addEventListener("focus", refreshLocalView);
+    }
     load();
   }
   // Small, pure contract functions for standalone Node regression; no
