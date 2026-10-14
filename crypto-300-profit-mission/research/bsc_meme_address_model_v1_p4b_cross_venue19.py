@@ -17,7 +17,7 @@ PINS=(
  ("bsc-meme-address-model-v1-p4-19ca-v2-wbnb-first-positive-liquidity-2026-10-14.json","9fbc8bdaeb9df342a4d200fefb0ebd48b746b903"),
  ("bsc-meme-address-model-v1-p4-competing17-first-active-unified-2026-10-14.json","fcc71a4ad6f35731224ed3de11c4e902fe3f5d3e"),
  ("bsc-meme-address-model-v1-p4-19ca-competing22-liquidity-snapshot-2026-10-14.json","a40e9c8ca741b08130e556c3fbed3908d6c05c0e"),
- ("bsc-meme-address-model-v1-p4b-v2-19ca-first10-swap-observations-2026-10-14.json","0000000000000000000000000000000000000000"),
+ ("bsc-meme-address-model-v1-p4b-v2-19ca-first10-swap-observations-2026-10-14.json","646732ca70fa06dff798b30b2a91236135f4ecbb"),
  ("bsc-meme-address-model-v1-p4-bulla-v3-usdt-10000-delayed-active-proof-2026-10-14.json","41366fc5959d4bd227826aec8101229eb02e1bd1"),
  ("bsc-meme-address-model-v1-p4-niulai-v3-10000-delayed-active-proof-2026-10-14.json","7a5e74b5fa653b7e2a51f1f86e2200510c8a5c88"),
 )
