@@ -70,7 +70,7 @@ Monster 妖币研究当前没有用户授权的单笔交易金额。历史资料
 
 ## 手动公开行情采集节奏（2026-10-14 用户最新授权优先）
 
-- **Stage99 自动采集全部取消**：用户明确要求停用 2026-10-14 / 10-28 / 11-11 三个已安装 Monster Stage99 launchd，随后自主在聊天发起手动采集。停用命令已提供，但在收到用户终端成功输出前只能记 `CANCEL_PENDING_USER_VERIFICATION`，不可冒称 Mac 任务已停。不得重新启用原任务、创建替代的 ChatGPT 自动化或 GitHub schedule。
+- **Stage99 自动采集全部取消**：用户明确要求停用 2026-10-14 / 10-28 / 11-11 三个已安装 Monster Stage99 launchd，随后自主在聊天发起手动采集。停用命令已提供；2026-10-14 用户随后提供三条 `STOPPED_AND_PLIST_REMOVED` 的 Mac 终端实际成功输出，现记 `STOPPED_THREE_LABELS_USER_TERMINAL_READBACK`。这是截图证明的命令时点状态，并非助手远程持续监控 Mac；不得因此重新启用。不得重新启用原任务、创建替代的 ChatGPT 自动化或 GitHub schedule。
 - 每次接手先读长期节奏文件 **[MONSTER_MANUAL_COLLECTION_AND_DEVELOPMENT_CADENCE_20261014.md](MONSTER_MANUAL_COLLECTION_AND_DEVELOPMENT_CADENCE_20261014.md)**。下两个手动采集参考点是 **2026-10-28 13:00、2026-11-11 13:00 Asia/Bangkok**（UTC 06:00），并非自动任务；用户也可随时要求即时采集。无需为公开市场只读连接器反复请示或要求用户自行提供采集文件。
 - 用户下次在新对话说“采集妖币/Monster 数据”“到时间了继续采集”等，**立即**自主调用当前 Binance 官方/已连接公开数据接口、分析全市场、按实际数据时间 UTC 命名批次、同步原 PR #30 和回读验证。禁止因旧 Stage99 窗口错过而搁置新一轮市场数据。原 10-14 06:00 UTC 快照 `SOURCE_FAILED_NO_BACKFILL` 必须保留；当天 09:48:24.840 UTC 的 Stage123 是新的探索性基线，不能替代原窗口或冒充样本外独立验证。
 - 完整保留原始结构化 exchangeInfo（含非活跃）及 all-market 24h ticker/BBO/mark；如连接器不提供原始 HTTP 字节及成对 `/fapi/v1/time` 回执，明确来源证明 `PARTIAL`，不能伪造 Stage97 HTTPS SHA。跨手动快照的时间间隔、上市/退市与源新鲜度独立披露。**快照间距不是 1m D0 报警时效回测**。
