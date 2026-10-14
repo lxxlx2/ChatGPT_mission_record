@@ -198,7 +198,10 @@ class HistoryJournal:
             " '$.token_owner_coverage_complete') = 0 THEN 1 ELSE 0 END) AS owner_gaps,"
             "SUM(CASE WHEN json_extract(v.payload_json,"
             " '$.native_sol_coverage_status') = 'NATIVE_SOL_FLOW_UNCLASSIFIED'"
-            " THEN 1 ELSE 0 END) AS native_gaps "
+            " THEN 1 ELSE 0 END) AS native_gaps,"
+            "SUM(CASE WHEN json_extract(v.payload_json,"
+            " '$.native_sol_coverage_status') = 'NATIVE_SOL_BALANCE_EVIDENCE_MISSING'"
+            " THEN 1 ELSE 0 END) AS native_missing "
             "FROM wallet_history_signature h "
             "LEFT JOIN evidence_documents v ON v.kind='WALLET_TX_VIEW_V2' "
             "AND v.identity=(h.wallet||':'||h.signature||':'||h.slot||':v2') "
@@ -209,6 +212,7 @@ class HistoryJournal:
         v2_blocked = int(projection["blocked"] or 0)
         owner_gaps = int(projection["owner_gaps"] or 0)
         native_gaps = int(projection["native_gaps"] or 0)
+        native_missing = int(projection["native_missing"] or 0)
         gap_counts = {
             row["reason"]: row["n"] for row in missing_rows
         }
@@ -221,7 +225,8 @@ class HistoryJournal:
         for row in blocked_rows:
             gap_counts[row["reason"]] = gap_counts.get(row["reason"], 0) + row["n"]
         source_end = bool(current and current["pagination_end_observed"])
-        economic_gaps = bool(v2_missing or v2_blocked or owner_gaps or native_gaps)
+        economic_gaps = bool(
+            v2_missing or v2_blocked or owner_gaps or native_gaps or native_missing)
         coverage = ("PARTIAL" if not source_end or c.get("PENDING")
                     else "PARTIAL_ECONOMIC_EVIDENCE" if economic_gaps
                     else "AVAILABLE_SOURCE_END_NOT_GENESIS_PROVEN")
@@ -241,6 +246,7 @@ class HistoryJournal:
             "v2_blocked_count": v2_blocked,
             "token_owner_incomplete_count": owner_gaps,
             "native_sol_unclassified_count": native_gaps,
+            "native_sol_balance_evidence_missing_count": native_missing,
             "source_pagination_coverage": (
                 "AVAILABLE_SOURCE_END_NOT_GENESIS_PROVEN" if source_end
                 else "PARTIAL"),
@@ -383,6 +389,50 @@ class HistoryJournal:
                 (wallet,),
             )
 
+    def quarantine_unresolved_owner(self, wallet: str, signature: str,
+                                   raw: dict) -> None:
+        """Opt-in recovery: preserve RAW_TX and economic gap, not a fake V2.
+
+        Only a known unresolved token owner delta is eligible. A CAPTURED
+        signature here means that raw chain history is saved, while its
+        V2 economic view remains blocked and wallet coverage stays PARTIAL.
+        """
+        row = self.db.execute(
+            "SELECT slot,state FROM wallet_history_signature "
+            "WHERE wallet=? AND signature=?", (wallet, signature),
+        ).fetchone()
+        if row is None or row["state"] != "PENDING":
+            raise SourceEvidenceError("RAW_QUARANTINE_SIGNATURE_NOT_PENDING")
+        slot = row["slot"]
+        if (raw.get("slot") != slot or
+                (raw.get("transaction") or {}).get("signatures", [None])[0] != signature):
+            raise SourceEvidenceError("RAW_QUARANTINE_SOURCE_IDENTITY_MISMATCH")
+        kind, identity = "RAW_TX", signature + ":" + str(slot)
+        content = _json(raw)
+        fingerprint = hashlib.sha256(content.encode("utf-8")).hexdigest()
+        with self.db:
+            previous = self.db.execute(
+                "SELECT source_sha256 FROM evidence_documents "
+                "WHERE kind=? AND identity=?", (kind, identity),
+            ).fetchone()
+            if previous is not None and previous["source_sha256"] != fingerprint:
+                raise SourceEvidenceError("RAW_QUARANTINE_SOURCE_CONFLICT")
+            if previous is None:
+                self.db.execute(
+                    "INSERT INTO evidence_documents(kind,identity,source_sha256,"
+                    "payload_json) VALUES(?,?,?,?)",
+                    (kind, identity, fingerprint, content),
+                )
+            self.db.execute(
+                "UPDATE wallet_history_signature SET state='CAPTURED',"
+                "error_code=NULL,v2_error_code='TOKEN_OWNER_UNRESOLVED_DELTA' "
+                "WHERE wallet=? AND signature=?", (wallet, signature),
+            )
+            self.db.execute(
+                "UPDATE wallet_history_cursor SET last_error_code=NULL "
+                "WHERE wallet=?", (wallet,),
+            )
+
     def rebuild_versioned_views(self, wallet: str, *, limit: int = 100) -> dict:
         """Manually materialize v2 projections from archived original RAW_TX.
 
@@ -485,13 +535,17 @@ class WalletHistoryCollector:
     """Bounded manual historical backfill, resuming persisted exact cursors."""
 
     def __init__(self, journal: HistoryJournal, rpc: Callable, *,
-                 wallet: str, page_size: int = 100):
+                 wallet: str, page_size: int = 100,
+                 continue_on_owner_gaps: bool = False):
         if not _solana_pubkey_32_bytes(wallet):
             raise ValueError("INVALID_RESEARCH_WALLET")
         if type(page_size) is not int or not 1 <= page_size <= 1000:
             raise ValueError("INVALID_PAGE_SIZE")
         self.journal, self.rpc = journal, rpc
+        if type(continue_on_owner_gaps) is not bool:
+            raise ValueError("INVALID_OWNER_GAP_POLICY")
         self.wallet, self.page_size = wallet, page_size
+        self.continue_on_owner_gaps = continue_on_owner_gaps
 
     def _signatures(self, cursor: str | None) -> list:
         config = {"limit": self.page_size, "commitment": "finalized"}
@@ -505,7 +559,7 @@ class WalletHistoryCollector:
             raise SourceEvidenceError("SIGNATURE_PAGE_FORMAT_INVALID")
         return rows
 
-    def _transaction(self, signature: str, slot: int) -> tuple[dict, dict]:
+    def _transaction(self, signature: str, slot: int) -> tuple[dict, dict | None]:
         raw = _rpc_result(
             self.rpc("getTransaction", [signature, {
                 "encoding": "jsonParsed",
@@ -520,7 +574,13 @@ class WalletHistoryCollector:
             raise SourceEvidenceError("TRANSACTION_FORMAT_INVALID")
         if raw.get("slot") != slot:
             raise SourceEvidenceError("TRANSACTION_SLOT_MISMATCH")
-        view = _wallet_projection(raw, self.wallet)
+        try:
+            view = _wallet_projection(raw, self.wallet)
+        except LedgerEvidenceError as exc:
+            if (self.continue_on_owner_gaps and
+                    str(exc) == "TOKEN_OWNER_UNRESOLVED_DELTA"):
+                return raw, None
+            raise
         if view.get("signature") != signature:
             raise SourceEvidenceError("TRANSACTION_SIGNATURE_MISMATCH")
         return raw, view
@@ -540,7 +600,12 @@ class WalletHistoryCollector:
                 sig, slot = pending["signature"], pending["slot"]
                 try:
                     raw, view = self._transaction(sig, slot)
-                    self.journal.record_transaction(self.wallet, sig, raw, view)
+                    if view is None:
+                        self.journal.quarantine_unresolved_owner(
+                            self.wallet, sig, raw)
+                    else:
+                        self.journal.record_transaction(
+                            self.wallet, sig, raw, view)
                 except (SourceTemporarilyUnavailable, SourceEvidenceError,
                         LedgerEvidenceError, OSError, RuntimeError, ValueError) as exc:
                     self.journal.pending_error(
@@ -565,6 +630,8 @@ class WalletHistoryCollector:
         result.update({
             "pages_fetched_this_run": new_pages,
             "transactions_imported_this_run": imported,
+            "unresolved_owner_continuation_opt_in":
+                self.continue_on_owner_gaps,
             "status": ("SOURCE_LIMITED" if result["last_error_code"]
                        else result["coverage"]),
             "production_written": False,

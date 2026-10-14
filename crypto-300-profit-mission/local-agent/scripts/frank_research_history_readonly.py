@@ -77,6 +77,11 @@ def main(argv=None):
     parser.add_argument("--max-pages", type=int, default=2)
     parser.add_argument("--tx-budget", type=int, default=100)
     parser.add_argument("--execute", action="store_true")
+    parser.add_argument(
+        "--continue-on-owner-gaps", action="store_true",
+        help="Opt-in: archive immutable RAW_TX of unresolved-owner events, "
+             "record blocked economic V2, and continue older historical pages",
+    )
     args = parser.parse_args(argv)
     registry = PersonRegistry.from_file(args.registry)
     choices = [binding for binding in registry.wallets_for(args.person_id)
@@ -93,15 +98,20 @@ def main(argv=None):
             "status": "PLAN_ONLY", "person_id": args.person_id,
             "wallet": wallet, "page_size": args.page_size,
             "max_pages": args.max_pages, "tx_budget": args.tx_budget,
-            "sidecar": str(args.sidecar), "network_invoked": False,
+            "sidecar": str(args.sidecar),
+            "continue_on_owner_gaps": args.continue_on_owner_gaps,
+            "network_invoked": False,
             "production_written": False, "notifications_enabled": False,
         }, sort_keys=True))
         return 0
     rpc = rpc_reader(args.rpc_url)
     store = WalletEvidenceStore(args.sidecar)
     try:
-        reader = WalletHistoryCollector(HistoryJournal(store), rpc,
-                                        wallet=wallet, page_size=args.page_size)
+        reader = WalletHistoryCollector(
+            HistoryJournal(store), rpc, wallet=wallet,
+            page_size=args.page_size,
+            continue_on_owner_gaps=args.continue_on_owner_gaps,
+        )
         result = reader.collect(max_pages=args.max_pages, tx_budget=args.tx_budget)
     finally:
         store.close()
