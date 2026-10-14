@@ -106,6 +106,12 @@ def test_1005_signatures_across_three_full_and_short_pages_and_terminal_empty(tm
         assert result["transactions_imported_this_run"] == 1005
         assert result["captured"] == 1005
         assert result["pending"] == 0
+        assert result["observed_signature_count"] == 1005
+        assert result["oldest_slot_observed"] == 8996
+        assert result["newest_slot_observed"] == 10000
+        assert result["missing_detail_counts"] == {}
+        assert result["historical_backfill_only"]
+        assert result["new_head_refresh_implemented"] is False
         assert result["page_count"] == 4
         assert result["pagination_end_observed"]
         assert result["coverage"] == "AVAILABLE_SOURCE_END_NOT_GENESIS_PROVEN"
@@ -152,6 +158,8 @@ def test_page_429_fails_closed_and_retry_uses_identical_before(tmp_path):
         assert bad["status"] == "SOURCE_LIMITED"
         assert bad["captured"] == bad["pending"] == bad["page_count"] == 0
         assert bad["next_before"] is None
+        assert bad["last_error_code"] == "RPC_RATE_LIMIT_429"
+        assert bad["observed_signature_count"] == 0
         fixed = reader.collect(max_pages=3, tx_budget=10)
         assert fixed["captured"] == 3
         assert fixed["pagination_end_observed"]
@@ -176,6 +184,12 @@ def test_tx_failure_keeps_pending_durable_and_resume_before_next_page(tmp_path, 
         partial = worker.collect(max_pages=2, tx_budget=10)
         assert partial["pending"] == 3
         assert partial["page_count"] == 1
+        assert partial["observed_signature_count"] == 3
+        assert partial["missing_detail_counts"] == {
+            ("RPC_TIMEOUT" if failure == "timeout"
+             else "TRANSACTION_NOT_AVAILABLE"): 1,
+            "TRANSACTION_PENDING": 2,
+        }
         assert partial["next_before"] == rpc.rows[2]["signature"]
         assert store.count("RAW_TX") == 0
         resumed = worker.collect(max_pages=2, tx_budget=10)
