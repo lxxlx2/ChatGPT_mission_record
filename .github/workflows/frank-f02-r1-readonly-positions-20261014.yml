@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev/frank-f02-r1-isolated-readonly-position-api-20261014
+      - fix/frank-f02-later-partial-lower-slot-20261014
   workflow_dispatch:
 permissions:
   contents: read
