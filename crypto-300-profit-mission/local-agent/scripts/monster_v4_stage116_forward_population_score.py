@@ -196,6 +196,47 @@ def metrics(rows_by_window: dict):
     }
 
 
+
+def descriptive_raw_gate(stats: dict, complete_windows: bool) -> dict:
+    """Compute all frozen fractions exactly, but raw USD-M ≠ confirmed Crypto."""
+    labels=stats["gross_2x_5x_10x_posthoc"]
+    g1=labels.get("gross_2x",0)
+    early=labels.get("D0_early5_2x",0)
+    strict=labels.get("D0_strict_early_2x",0)
+    g2denom=early
+    g2num=labels.get("D1_early5_given_D0_2x",0)
+    days=stats["original_D1_burden"]["days_included"]
+    alerts=stats["original_D1_burden"]["total"] if days else 0
+    peak=stats["original_D1_burden"]["peak_per_day"] if days else None
+    window_positives=sum(v.get("gross_2x",0)>0 for v
+                         in stats["per_original_window"].values())
+    enough=(complete_windows and days==21 and window_positives>=3
+            and g1>=20)
+    return {
+        "scope":"RAW_USDM_FUTURES_MIXED_IDENTITY_DESCRIPTIVE_ONLY_NOT_G0_CRYPTO",
+        "original_2x_case_count":g1,
+        "window_count_with_2x":window_positives,
+        "D0_first_strict_pre2x_count":strict,
+        "D0_first_early5_2x_count":early,
+        "D1_first_early5_among_D0_early5_count":g2num,
+        "G1_strict_percentage":str(strict*100/g1) if g1 else None,
+        "G1_early5_percentage":str(early*100/g1) if g1 else None,
+        "G2_early5_retention_percentage":str(g2num*100/g2denom) if g2denom else None,
+        "G3_mean_raw_D1_per_day":str(alerts/days) if days else None,
+        "G3_peak_raw_D1_per_day":peak,
+        "raw_G1_has_minimum_independent_sample":enough,
+        "raw_G1_thresholds_met_not_crypto_gate":
+            bool(enough and strict*100>=90*g1 and early*100>=85*g1),
+        "raw_G2_threshold_met_not_crypto_gate":
+            (bool(g2denom and g2num*100>=80*g2denom)
+             if complete_windows and enough else None),
+        "raw_G3_threshold_met_not_crypto_gate":
+            bool(complete_windows and days==21 and alerts<=5*days
+                 and peak is not None and peak<=12),
+        "no_trading_or_actual_execution_info":True,
+    }
+
+
 def score(captures: dict, replays: dict):
     details={}
     validated={}
@@ -236,6 +277,8 @@ def score(captures: dict, replays: dict):
         if unknown:
             failures.append("ASOF_CRYPTO_IDENTITY_UNCONFIRMED:"+w)
     rawstats=metrics(validated)
+    rawgate=descriptive_raw_gate(rawstats,len(validated)==3 and
+                                 not any("SOURCE_INCOMPLETE" in x for x in failures))
     return {
         "schema":SCHEMA,
         "preregistered_windows_UTC":list(WINDOWS),
@@ -250,6 +293,7 @@ def score(captures: dict, replays: dict):
             "G6":"NO_GO",
         },
         "raw_venue_descriptive_only":rawstats,
+        "raw_venue_threshold_computation_not_a_crypto_model_PASS":rawgate,
         "incomplete_reason_codes":failures,
         "original_frozen_discovery_thresholds":{
             "G1_min_independent_2x":20,
@@ -321,6 +365,9 @@ def selftest():
     assert m["gross_2x_5x_10x_posthoc"]["D0_early5_2x"]==1
     assert m["gross_2x_5x_10x_posthoc"]["D1_early5_given_D0_2x"]==1
     assert m["original_D1_burden"]["per_day"][w][0]==1
+    gate=descriptive_raw_gate(m,False)
+    assert gate["raw_G1_has_minimum_independent_sample"] is False
+    assert gate["raw_G2_threshold_met_not_crypto_gate"] is None
     assert sum(m["original_D1_burden"]["per_day"][w])==1
     assert asof(stamp(start+MIN))==start+MIN
     print("STAGE116_NO_FUTURE_OOS_FABRICATION_RAW_ALL_MARKET_CAUSAL_SELFTEST_PASS")
