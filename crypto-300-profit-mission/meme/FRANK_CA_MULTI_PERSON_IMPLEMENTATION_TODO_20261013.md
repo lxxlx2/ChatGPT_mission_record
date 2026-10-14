@@ -94,6 +94,15 @@
 - 真链调查：Alchemy finalized RPC 实际采到 Frank 研究钱包连续 25 条签名，含 slot `456780885` 的失败交易状态，实际完整 `getTransaction` 被插件返回截断；另两笔成功交易 slot `456789461` / `456789273` 的 RPC 完整读取，均未出现 owner 字段缺失。**真实 owner 缺失及失败指令完整原始交易 fixture 仍是未确认缺口，不得以合成测试替代。**
 - PR #51 在未合并 #50 上单独推进，**要求 Claude 对最终新 SHA 重新独立 Review**，同时独立检查与 F01 #44、C01/C02 #46/#49 的最新合并树，不得重写已通过审查的 #49。各 PR 保持 Draft、Mac/生产/Gmail/SQLite/launchd 均未变，业务任务 A04/F02 不标 [x]。
 
+## 2026-10-14 Claude 第四轮 REQUEST_CHANGES：PR #52 N1 / 原生 SOL / 真实 ATA 采样
+
+- Claude 在精确旧 HEAD `c2cf581196d19e61306148cdfb85ce4857d8f02f` **再次对 PR #51 给出 `REQUEST_CHANGES`**，同时通过对比确认 P2/P4/P6 High 修复成立，P7 V1/V2 分离与旧表迁移手工试验成立。新增 Medium：纯 Token 手续费交易一律标原生 SOL 不明、无关 owner 缺失使历史永久阻断；旧 SQLite `ALTER TABLE` 缺自动回归，真实失败交易/owner 缺失链上样本不足。**保留 #51 已审查 SHA，不覆写。**
+- 新子 [Draft PR #52](https://github.com/lxxlx2/ChatGPT_mission_record/pull/52) 从 #51 创建：真实 `preBalances/postBalances` + 手续费 + 仅与 tracked 钱包有关的 System 指令来区分 `NO_NATIVE_SOL_FLOW_OBSERVED` / `NATIVE_SOL_FLOW_UNCLASSIFIED` / `NATIVE_SOL_BALANCE_EVIDENCE_MISSING`；`state()` 分别计数，纯 Token 只付手续费不会错误标不可用。
+- **N1 采用研究侧显式运维方案**：默认仍然严控归属未知的非零 token delta 并保持 `PENDING`；只有用户明确调用 `--execute --continue-on-owner-gaps`，才允许将真实 `RAW_TX` 不可变入库，`WALLET_TX_VIEW_V2` 继续缺失，`v2_error_code` 持久表明 `TOKEN_OWNER_UNRESOLVED_DELTA`，覆盖必为 `PARTIAL_ECONOMIC_EVIDENCE`，同时可继续查更旧签名。绝不把该笔记作市场买卖、可用仓位、成本或 PnL。
+- **真实链上数据进展**：已从 Alchemy finalized `getTransaction(jsonParsed)` **完整提取** Slot `456789461` 的 Frank Token-2022 ATA 创建响应，保存在 #52 的 `local-agent/tests/fixtures/solana_finalized_ata_creation_slot456789461.json` 并加入回归。实际付款人是另一 signer，Frank Wallet 的 lamports 未动；内层 System createAccount 并不意味着 Frank 的 SOL 流出。该证据不是失败交易，也不是缺失 owner 的真实样例。Slot `456780885` 真实失败签名已观察，完整响应受接口截断，owner 缺失发生频率未核实，维持 **UNVERIFIED** / Mac 验收未完成。
+- 已新增正常手续费纯 Token 反例、真正非手续费 SOL 流动、显式 N1 历史分页恢复、真实旧 Sidecar `ALTER TABLE` 升级及旧 RAW/v1 保留、真实 ATA fixture 解析的自动化回归。代码证据与报告见 PR #52 `FRANK_CA_A04_CLAUDE_N1_SOL_AND_REAL_ATA_20261014.md`。
+- PR #49 的 `8898134a` 已获独立 Claude `APPROVE` 且**没有改动**。PR #52 精确最终 HEAD CI、与 F01/C02 临时整合测试及新独立 Claude Review 仍是必须门禁。Mac / 生产 DB / Gmail / launchd / 冻结策略未动，所有 PR 保持 Draft / NO_MERGE / NO_DEPLOY；F02/A04 业务验收不标 [x]。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
