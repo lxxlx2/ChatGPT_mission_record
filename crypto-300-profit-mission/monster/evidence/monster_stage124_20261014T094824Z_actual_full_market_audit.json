@@ -1,0 +1,91 @@
+{
+  "Frank": "UNCHANGED",
+  "G0_crypto": "PARTIAL",
+  "G4_real_net": "UNKNOWN",
+  "Monster_deployment": "NO_GO",
+  "Stage118_strategy": "REJECTED",
+  "manual_collection_no_automatic_schedule": true,
+  "new_OOS_early_detection_performance": "NOT_SCORED",
+  "original_fixed_2026_10_14_0600_stage99": "SOURCE_FAILED_NO_BACKFILL",
+  "report": {
+    "24h_change_pct_distribution": {
+      "complete_n": 525,
+      "max": "45.503",
+      "median": "-0.823",
+      "min": "-21.414",
+      "p25": "-2.112",
+      "p75": "0.395",
+      "p90": "2.367"
+    },
+    "24h_market_breadth": {
+      "down": 363,
+      "down10": 13,
+      "flat": 1,
+      "up": 161,
+      "up10": 9,
+      "up20": 5
+    },
+    "24h_quote_USDT_distribution": {
+      "complete_n": 525,
+      "max": "9038361490.62",
+      "median": "2993236.74529570",
+      "min": "401426.225070",
+      "p25": "1312326.084760",
+      "p75": "12114324.0056370",
+      "p90": "48693621.2671100"
+    },
+    "active_source_timestamp_lag_ms": {
+      "max": 34903,
+      "median": "-160",
+      "min": -1197,
+      "negative_lag_count_non_atomic_feeds": 951,
+      "older_than_60_minutes": 0
+    },
+    "batch_observed_utc": "2026-10-14T09:48:24.840Z",
+    "coverage": {
+      "active_24h_ticker_observed": 525,
+      "active_BBO_observed": 525,
+      "active_mark_observed": 525,
+      "active_usdt_perpetual_symbols": 525,
+      "all_24h_ticker_symbols": 793,
+      "all_BBO_symbols": 795,
+      "all_mark_price_symbols": 930,
+      "full_original_exchange_symbols": 927,
+      "missing_24h_active": [],
+      "missing_BBO_active": [],
+      "missing_mark_active": [],
+      "nonascii_active_symbols": [
+        "哈基米USDT",
+        "币安人生USDT",
+        "我踏马来了USDT",
+        "牛来USDT",
+        "龙虾USDT"
+      ]
+    },
+    "crypto_issuer_certification": "NOT_VERIFIED",
+    "displayed_BBO_spread_bps_distribution": {
+      "complete_n": 525,
+      "max": "19.24927815206929740134744947",
+      "median": "3.864734299516908212560386473",
+      "min": "0.009996446263353377874165734082",
+      "p25": "2.001641345903640985608198723",
+      "p75": "5.947071067499256616116562593",
+      "p90": "8.080808080808080808080808081"
+    },
+    "no_future_signal_early_alert_from_24h_rolling_metrics": true,
+    "original_manifest": "monster_stage123_20261014T094824Z_manifest.json",
+    "price_only_not_actual_fill": true,
+    "real_executable_net": "UNKNOWN",
+    "reported_last_funding_rate_distribution": {
+      "complete_n": 525,
+      "max": "0.00031566",
+      "median": "0.00005000",
+      "min": "-0.00594074",
+      "p25": "0.00000586",
+      "p75": "0.00005000",
+      "p90": "0.00005113"
+    }
+  },
+  "schema": "MONSTER_STAGE124_CURRENT_MANUAL_MARKET_SNAPSHOT_COMPARISON_V1",
+  "source_authentication": "BINANCE_CONNECTOR_STRUCTURED_NOT_RAW_STAGE97_TLS_BODY"
+}
