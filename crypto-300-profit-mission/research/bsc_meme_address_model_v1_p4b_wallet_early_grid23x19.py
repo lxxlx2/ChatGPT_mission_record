@@ -49,6 +49,11 @@ def build(d):
     purchase=dragon["fact"]
     buyer=purchase["buyer_EOA"].lower()
     bought=purchase["exact_CA"].lower()
+    check(buyer==purchase["TokenPurchase_account"].lower()==purchase["original_erc20_transfer_recipient"].lower()
+          and purchase["TokenPurchase_amount_token_raw"]==purchase["original_erc20_transfer_raw_amount"]
+          and int(purchase["TokenPurchase_cost_quote_wei"])>0
+          and purchase["realized_net_PnL"]=="UNRESOLVED",
+          "linked owner signer/recipient or economic state did not close")
     markets=[{
         "i":e["index"],"token":e["token"],"ca":e["exact_CA"],
         "first_transfer_block":e["first_observed_erc20_transfer_block"],
