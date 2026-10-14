@@ -26,6 +26,7 @@ STATES = (
     "MODEL_SYMBOL_UNSUPPORTED_NOT_A_NO_WATCH",
     "NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED",
     "ORIGINAL_ASCII_V4_D0_AND_FROZEN_D1_CAUSAL_OFFLINE",
+    "ORIGINAL_V4_NUMERIC_CORE_WITH_UNICODE_IDENTITY_ADAPTER_CAUSAL_OFFLINE",
 )
 FROZEN_THRESHOLDS = {
     "G1_min_nonoverlapping_new_forward_windows": 3,
@@ -78,7 +79,7 @@ def summarize_rows(rows, start, end):
         seen.add(symbol)
         c["full_market_attempts"] += 1
         c[status] += 1
-        if status != STATES[3]:
+        if status not in (STATES[3], STATES[4]):
             if row.get("D0_first_UTC") is not None or row.get("D1_first_UTC") is not None:
                 raise ValueError("STAGE138_CENSORED_OR_UNSUPPORTED_HAS_SIGNAL")
             continue
