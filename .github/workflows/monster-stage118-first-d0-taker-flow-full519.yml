@@ -1,0 +1,91 @@
+name: Monster Stage118 Original519 First D0 Price Or Taker Flow
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage118-first-d0-taker-flow-full519.yml
+      - crypto-300-profit-mission/monster/MONSTER_STAGE118_FROZEN_D0_FLOW_IMBALANCE_TWO_LANE_CANDIDATE_20261014.md
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_first_d0_dual_lane_flow_core.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_full519_taker_flow_backtest.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  immutable_core_cross_platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run pure frozen Stage118 source/price/taker closed-minute tests
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_first_d0_dual_lane_flow_core.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_full519_taker_flow_backtest.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_first_d0_dual_lane_flow_core.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_full519_taker_flow_backtest.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64_all519_first_d0_asof61m_official_taker.py --selftest
+  real_exposed_519_source_lock_economics:
+    needs: immutable_core_cross_platform
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Historical all519 42day and 28 2x outcomes, no prices derived from future admission
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_full519_taker_flow_backtest.py --out /tmp/monster_stage118_original519_actual.json --cases /tmp/monster_stage118_original519_actual.jsonl
+          python - <<'PY'
+          import json
+          s=json.load(open('/tmp/monster_stage118_original519_actual.json'))
+          assert s['complete_original_D0']==519
+          assert s['original_D0_early2x5m']==28
+          assert s['previous_stage117_first_price_path']==164
+          assert s['previous_stage117_first_price_early2x5m']==17
+          assert len(s['full_42_UTC06_day_attention_bins'])==42
+          assert s['new_OOS']=='NOT_DONE'
+          assert s['Monster_deployment']=='NO_GO'
+          assert s['real_venue_BID_ASK_depth_cost_net']=='UNKNOWN'
+          assert s['research_decision'].startswith(('REJECTED','HISTORICALLY_PASSES'))
+          print('STAGE118_FROZEN_CONTRACT_ALL519_RESULT_NOT_CONFUSED_WITH_OOS_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage118-official-original519-frozen-taker-buy-historic-economics
+          path: |
+            /tmp/monster_stage118_original519_actual.json
+            /tmp/monster_stage118_original519_actual.jsonl
+          retention-days: 60
+      - name: Preserve all real Stage118 first-D0 model decisions and negative evidence in existing PR30
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage118_original519_actual.json "$dest/monster_stage118_first_D0_flow_full519_actual_summary.json"
+          cp /tmp/monster_stage118_original519_actual.jsonl "$dest/monster_stage118_first_D0_flow_full519_actual_rows.jsonl"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest/monster_stage118_first_D0_flow_full519_actual_summary.json" "$dest/monster_stage118_first_D0_flow_full519_actual_rows.jsonl"
+          if git diff --cached --quiet; then echo STAGE118_REAL_HISTORIC_RESULTS_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive Stage118 original519 actual taker flow, volume, 2x misses and gross price"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE118_REAL519_EVIDENCE_ARCHIVED_IN_PR30; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE118_REAL519_EVIDENCE_NOT_ARCHIVED
+          exit 1
