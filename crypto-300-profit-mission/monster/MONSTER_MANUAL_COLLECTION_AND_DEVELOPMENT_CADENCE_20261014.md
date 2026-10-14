@@ -168,3 +168,16 @@ STAGE139_CI_MACOS_UBUNTU=PASS; REAL_STAGE133_NEW_T0=NOT_DONE; SAVED_GENUINE_CONT
 6. **后续主线**：等用户明确发起下次采集再手动采新T0/实时市场；新T0后不能倒流补建实时上新WebSocket记录，缺陷独立记为UNVERIFIED；如需要连续7天真正的上新/停牌事件证据，必须另行用户批准**明确具体采集持续时间及本地执行机制**，且与Stage99停用约束一致，绝不擅自恢复旧任务。数据成熟且再次被授权的Stage136一次性官方文件取数后，Stage135/137/138完整原模型回放和G0-G3；发行主体PIT、真实净成交与可盈利能力仍需要另证。继续禁止把已涨WAL等当作提前发现的成功模型；旧Stage132初动量追涨收益负例仍有效。
 
 `STAGE140_REAL_WWW_BINANCE_SOURCE_CAPTURED_AND_GIT_PUSHED`; `ORIGINAL_FAPI_HOST_HTTP451_PRESERVED`; `STAGE140_FULL_MARKET_REAL_T0=525`; `STAGE138_REAL_T0_PLAN_4725_SOURCE_DAYS_PENDING`; `REAL_1M_7D_SOURCE=0`; `COMPLETE_LISTING_EVENT_STREAM=NOT_DONE`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_OTHER_AI_REVIEW=NOT_DONE`; `G6_MONSTER_DEPLOY=NO_GO`; `FRANK=UNCHANGED`; `GMAIL=OFF`; `NO_NEW_SCHEDULE`.
+
+
+## Stage141 真实525合约中的5个Unicode名称：原D0/D1覆盖修复（2026-10-15）
+
+**不是整个模型研发受限于7日数据。** 七日新窗口G1/G4正式验收不得提前编造；可以先按研发主线真实消除已经看到的模块功能缺口。本轮直接核对 Stage140 真实一轮官方 Binance WWW 来源：525个USDT永续合约中有5个原始Unicode中文币名（哈基米、币安人生、我踏马来了、牛来、龙虾，均加USDT）。旧原 V4 D0 observe_snapshot 原始硬性拒绝Unicode，Stage137/138把他们算作原D0模型暂不支持，但其真实venue 24h行情和买卖一盘口已独立获得。这是**真实原始人口中的 5/525 模型扫描覆盖缺口**，而非假设边界。
+
+在同一旧Monster PR #30中：
+- 先以 [Stage141 冻结技术/验收合同](MONSTER_STAGE141_FROZEN_UNICODE_USDM_ORIGINAL_CORE_IDENTITY_ADAPTER_20261015.md) commit 675710fe8c5a17eacf5d914cb95d146c5c74313a 注册不改原信号规则；用 exact UTF8 名称的 SHA256 前128位确定性生成仅用于**隔离离线原D0 SQLite**的ASCII代理，并对**真实全525人口**检查代理/真实ASCII名碰撞，禁止静默覆盖。币安真实源、数据文件、Stage80 D1 和模型对外展示全部原Unicode不变。原 frozen shadow blob bc958b3d90a8a52afa51515cb53f7e5fafaffaaa 与原 Stage80 D1 均不改。现在来源完整的中文名会真实执行相同原V4 D0和D1，而不再错误标为MODEL_SYMBOL_UNSUPPORTED；缺档和未确认新上市仍明确保持不参与业务回测。
+- 具体源码：[Stage137 回放](../local-agent/scripts/monster_v4_stage137_dynamic_t0_original_core_causal_replay.py)、[Stage138 全源账本](../local-agent/scripts/monster_v4_stage138_manual_evidence_scorecard.py)、[原D0/D1因果回归](../local-agent/scripts/test_monster_v4_stage137_dynamic_t0_original_core_causal_replay.py) 和 [Stage138跨窗口回归](../local-agent/scripts/test_monster_v4_stage138_manual_evidence_scorecard.py) 已提交。
+- **实际正式双系统验收通过**：[Stage137 GitHub CI #38613161884](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38613161884)，macOS/Ubuntu均 **11/11 PASS**；[Stage138 GitHub CI #38613197145](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38613197145)，macOS/Ubuntu均 **18/18 PASS**，同时断言默认不联网、不重启后台、不发Gmail、不影响Frank。程序使用同一组合成11520分钟序列分别按原ASCII和UTF8中文实跑原V4 D0队列和冻结D1，WATCH首次时钟、D1首次时钟/路径、2x标签保持一致。正式审查准备材料与失败回合解释见 [Stage141 实际修复报告](MONSTER_STAGE141_REAL_525_SYMBOLS_UNICODE_D0_COVERAGE_FIX_TWO_OS_RESULTS_20261015.md)。中途失败CI均原样保留日志，已经针对根因修改测试期望和碰撞错误判断顺序。
+- **后续P1主线（不能由于缺少7日未来行情而停工）**：优先处理实时上市币冷启动、原始来源新鲜度/真实盘口是否具备可成交性；从已有 Stage140 真实 24h/BBO/mark 交叉对账处理而非堆新Stage空报告。继续验证出错高风险的原始D0/D1时序，不许在旧曝光31/519样本上反向调参。按原用户已约定手动请求，最早曼谷10/24 01:00之后可另行授权新前瞻窗口已成熟的Stage136完整历史归档；不能为了自己方便恢复Stage99或制造实时7日合约事件，未经独立审核与实测不得生产部署。
+
+Stage141原V4数字核心Unicode工程覆盖已经完成，但 G0=PARTIAL、G1=NOT_SCORABLE、G2_G3=NOT_PASSED、G4=UNKNOWN、G5_OTHER_AI_REVIEW=NOT_DONE、G6_MONSTER_DEPLOY=NO_GO、FRANK=UNCHANGED、GMAIL=OFF、NO_NEW_SCHEDULE，原Stage116首窗失败、Stage118/127拒绝、Stage132负代理不变。
