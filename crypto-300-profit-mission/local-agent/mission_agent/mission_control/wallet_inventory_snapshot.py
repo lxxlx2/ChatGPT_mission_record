@@ -11,6 +11,7 @@ import hashlib
 import json
 
 from .person_registry import _solana_pubkey_32_bytes
+from .wallet_chain_capture import PROGRAMS
 
 
 def _is_address(value: object) -> bool:
@@ -34,6 +35,49 @@ def _fingerprint(document: dict) -> str:
     serialized = json.dumps(obj, sort_keys=True, separators=(",", ":"),
                             ensure_ascii=False)
     return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
+def _valid_unavailable_dual_program_capture(document: dict) -> bool:
+    """Accept only the exact slotless shape capture_owner emits on two failures.
+
+    A source SHA guarantees archived bytes, *not* that two missing rows
+    actually identify the two different token programs. These checks prevent
+    duplicate/unknown program error entries from becoming a false observation.
+    """
+    missing = document.get("missing")
+    if (document.get("status") != "PARTIAL_SOURCE"
+            or document.get("both_programs_observed") is not False
+            or document.get("slot_min") is not None
+            or document.get("slot_max") is not None
+            or document.get("program_coverage") != []
+            or document.get("mints") != []
+            or type(document.get("account_count")) is not int
+            or document["account_count"] != 0
+            or type(document.get("mint_count_observed")) is not int
+            or document["mint_count_observed"] != 0
+            or document.get("same_slot_atomic") is not False
+            or document.get("all_history_complete") is not False
+            or document.get("wallet_total_balance_verified") is not False
+            or document.get("person_beneficial_ownership_verified") is not False
+            or document.get("wallet_nav_usd") is not None
+            or document.get("realized_pnl_usd") is not None
+            or not isinstance(missing, list)
+            or len(missing) != len(PROGRAMS)):
+        return False
+    programs = []
+    for failure in missing:
+        if not isinstance(failure, dict) or set(failure) != {
+                "program_id", "reason", "error_type"}:
+            return False
+        err_type = failure["error_type"]
+        if (not isinstance(failure["program_id"], str)
+                or failure["program_id"] not in PROGRAMS
+                or failure["reason"] != "TOKEN_ACCOUNT_QUERY_UNAVAILABLE"
+                or not isinstance(err_type, str) or not err_type.isidentifier()
+                or len(err_type) > 128):
+            return False
+        programs.append(failure["program_id"])
+    return set(programs) == set(PROGRAMS) and len(set(programs)) == len(PROGRAMS)
 
 
 def latest_inventory(store, *, wallet: str, mints: list[str],
@@ -75,13 +119,8 @@ def latest_inventory(store, *, wallet: str, mints: list[str],
             # with no observed slot. It is an attempt, NOT corrupt chain
             # evidence. Never use a previously positive wallet snapshot
             # if the latest attempt failed completely.
-            if (doc.get("status") != "PARTIAL_SOURCE"
-                    or doc.get("both_programs_observed") is not False
-                    or doc.get("program_coverage") != []
-                    or not isinstance(doc.get("missing"), list)
-                    or len(doc["missing"]) != 2
-                    or doc.get("slot_min") is not None):
-                raise ValueError("OWNER_CAPTURE_SLOT_INVALID")
+            if not _valid_unavailable_dual_program_capture(doc):
+                raise ValueError("OWNER_CAPTURE_SLOTLESS_PROGRAM_EVIDENCE_INVALID")
             if (newest_slotless_failure is None
                     or stamp > newest_slotless_failure[0]):
                 newest_slotless_failure = (stamp, doc)

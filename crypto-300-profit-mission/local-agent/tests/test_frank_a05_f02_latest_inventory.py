@@ -363,3 +363,124 @@ def test_stale_latest_unslotted_attempt_cannot_replay_old_positive(tmp_path):
     assert not result["capture_fresh"]
     assert result["mints"][0]["status"] == "SOURCE_ATTEMPT_FAILED_NO_SLOT"
     assert result["mints"][0]["observed_raw_amount"] is None
+
+
+@pytest.mark.parametrize("corruption", [
+    "duplicate_spl",
+    "duplicate_token_2022",
+    "unsupported_program",
+    "unhashable_program_id",
+    "missing_entry_not_dict",
+    "missing_reason_field",
+    "unexpected_reason",
+    "missing_error_type_field",
+    "invalid_error_type",
+    "unexpected_error_metadata",
+    "nonempty_account_coverage",
+    "nonempty_mints",
+    "account_count_nonzero",
+    "mint_count_nonzero",
+    "same_slot_atomic",
+    "unverified_wallet_total_contradiction",
+    "extra_missing_program",
+])
+def test_malformed_slotless_failures_are_rejected_not_classified_as_dual_failure(
+        tmp_path, corruption):
+    import copy
+
+    path = tmp_path / ("slotless-" + corruption + ".sqlite")
+    healthy = _snapshot(
+        [entry(OWNER_A, MINT, ATA_A, SPL_TOKEN_PROGRAM,
+               amount="2500000")], [],
+        slots=(1000, 1001), stamp="2026-10-14T11:57:00+00:00")
+    bad = copy.deepcopy(_two_rpc_failures(
+        stamp="2026-10-14T11:59:00+00:00"))
+    if corruption == "duplicate_spl":
+        bad["missing"][1] = copy.deepcopy(bad["missing"][0])
+    elif corruption == "duplicate_token_2022":
+        bad["missing"][0] = copy.deepcopy(bad["missing"][1])
+    elif corruption == "unsupported_program":
+        bad["missing"][1]["program_id"] = OWNER_A
+    elif corruption == "unhashable_program_id":
+        bad["missing"][0]["program_id"] = [SPL_TOKEN_PROGRAM]
+    elif corruption == "missing_entry_not_dict":
+        bad["missing"][1] = "TOKEN_ACCOUNT_QUERY_UNAVAILABLE"
+    elif corruption == "missing_reason_field":
+        del bad["missing"][0]["reason"]
+    elif corruption == "unexpected_reason":
+        bad["missing"][0]["reason"] = "TOKEN_ACCOUNT_NO_BALANCE"
+    elif corruption == "missing_error_type_field":
+        del bad["missing"][1]["error_type"]
+    elif corruption == "invalid_error_type":
+        bad["missing"][0]["error_type"] = "Timeout Error"
+    elif corruption == "unexpected_error_metadata":
+        bad["missing"][0]["endpoint"] = "untrusted"
+    elif corruption == "nonempty_account_coverage":
+        bad["program_coverage"] = [{"program_id": SPL_TOKEN_PROGRAM}]
+    elif corruption == "nonempty_mints":
+        bad["mints"] = [{"mint": MINT}]
+    elif corruption == "account_count_nonzero":
+        bad["account_count"] = 1
+    elif corruption == "mint_count_nonzero":
+        bad["mint_count_observed"] = 1
+    elif corruption == "same_slot_atomic":
+        bad["same_slot_atomic"] = True
+    elif corruption == "unverified_wallet_total_contradiction":
+        bad["wallet_total_balance_verified"] = True
+    elif corruption == "extra_missing_program":
+        bad["missing"].append(copy.deepcopy(bad["missing"][0]))
+    bad["capture_sha256"] = _fingerprint(bad)
+    db = WalletEvidenceStore(path)
+    try:
+        assert db.capture_wallet(healthy)
+        # The archive's write method checks cryptographic integrity, not
+        # meaning. The read projection must reject the altered semantics.
+        assert db.capture_wallet(bad)
+    finally:
+        db.close()
+    with pytest.raises(ValueError, match="OWNER_CAPTURE_SLOTLESS_PROGRAM_EVIDENCE_INVALID"):
+        _read(path, [MINT])
+
+
+def test_true_spl_and_token2022_double_failure_preserves_source_and_null_amount(tmp_path):
+    path = tmp_path / "actual-shaped-double-timeout.sqlite"
+    healthy = _snapshot(
+        [entry(OWNER_A, MINT, ATA_A, SPL_TOKEN_PROGRAM, amount="900000")],
+        [], slots=(1000, 1001), stamp="2026-10-14T11:57:00+00:00")
+    failure = _two_rpc_failures(stamp="2026-10-14T11:59:00+00:00")
+    assert {item["program_id"] for item in failure["missing"]} == {
+        SPL_TOKEN_PROGRAM, TOKEN_2022_PROGRAM}
+    assert all(item["reason"] == "TOKEN_ACCOUNT_QUERY_UNAVAILABLE"
+               and item["error_type"] == "TimeoutError"
+               for item in failure["missing"])
+    db = WalletEvidenceStore(path)
+    try:
+        db.capture_wallet(healthy)
+        db.capture_wallet(failure)
+    finally:
+        db.close()
+    result = _read(path, [MINT])
+    assert result["selected_capture_sha256"] == failure["capture_sha256"]
+    assert result["source_attempt_failed_no_slot"] is True
+    assert result["status_counts"] == {"SOURCE_ATTEMPT_FAILED_NO_SLOT": 1}
+    assert result["mints"][0]["observed_raw_amount"] is None
+    assert result["mints"][0]["historical_sale_confirmed"] is False
+    assert result["slot_max"] is None
+
+
+def test_real_slotless_timeout_failure_before_health_is_not_permanent_poison(tmp_path):
+    path = tmp_path / "error-before-health.sqlite"
+    old = _two_rpc_failures(stamp="2026-10-14T11:57:00+00:00")
+    healthy = _snapshot([], [], slots=(1100, 1101),
+                        stamp="2026-10-14T11:59:00+00:00")
+    db = WalletEvidenceStore(path)
+    try:
+        db.capture_wallet(old)
+        db.capture_wallet(healthy)
+    finally:
+        db.close()
+    result = _read(path, [MINT])
+    assert result["selected_capture_sha256"] == healthy["capture_sha256"]
+    assert result["source_attempt_failed_no_slot"] is False
+    assert result["mints"][0]["status"] == "ABSENT_IN_LATEST_DUAL_PROGRAM_SCAN"
+    assert result["mints"][0]["observed_raw_amount"] is None
