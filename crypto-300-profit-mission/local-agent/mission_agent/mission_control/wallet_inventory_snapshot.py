@@ -136,7 +136,11 @@ def latest_inventory(store, *, wallet: str, mints: list[str],
         "slot_max": latest.get("slot_max") if latest else None,
         "both_programs_observed": coverage,
         "same_slot_atomic": False,
-        "source_complete_for_all_target_mints": latest is not None and fresh and coverage,
+        # This reports two successful RPC queries, not a whole-wallet
+        # atomic balance, a validated 32-mint registry or complete history.
+        "dual_program_queries_observed_non_atomic": bool(
+            latest is not None and fresh and coverage),
+        "target_roster_independently_verified": False,
         "status_counts": counts,
         "mints": rows,
         "wallet_nav_usd": None,
