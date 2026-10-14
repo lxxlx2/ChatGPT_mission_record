@@ -43,8 +43,13 @@ def planned_files(t0, arrivals=None):
     for row in rows:
         symbol = row["symbol_exact"]
         lane = row["population_lane"]
-        from_ms = (start - stage135.WARMUP if lane == "PREEXISTING_AT_WINDOW_START"
-                   else stage131.stamp(row["first_observed_minute_utc"]))
+        from_ms = (
+            stage131.stamp(row["pre_T0_recent_onboarding_minute_utc"])
+            if lane == "PREEXISTING_AT_WINDOW_START"
+               and row.get("pre_T0_recent_onboarding_minute_utc") is not None
+            else start - stage135.WARMUP
+            if lane == "PREEXISTING_AT_WINDOW_START"
+            else stage131.stamp(row["first_observed_minute_utc"]))
         for d in stage135.required_days(from_ms, end):
             records.append({
                 "symbol": symbol,
