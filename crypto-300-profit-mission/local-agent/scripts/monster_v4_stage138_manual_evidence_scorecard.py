@@ -185,6 +185,28 @@ def population_coverage_sensitivity(summary):
     }
 
 
+def independent_cohort_D1_daily(rows, start):
+    """Recalculate, never trust Stage137 summary's daily cohort splits."""
+    grouped = {
+        "preexisting_full_history": [0]*7,
+        "in_window_cold_start": [0]*7,
+        "recent_pre_T0_cold_start": [0]*7,
+    }
+    for row in rows:
+        d1 = row.get("D1_first_UTC")
+        if d1 is None:
+            continue
+        n = (s131.stamp(d1) - start)//86_400_000
+        if not 0 <= n < 7:
+            raise ValueError("STAGE143_D1_OUTSIDE_FORWARD_DAY")
+        status = row["replay_status"]
+        group = ("in_window_cold_start" if status == STATES[5]
+                 else "recent_pre_T0_cold_start" if status == STATES[6]
+                 else "preexisting_full_history")
+        grouped[group][n] += 1
+    return grouped
+
+
 def plan_or_evaluate(packet, archive_root, arrivals=None, *, phase="plan"):
     if phase not in ("plan", "evaluate"):
         raise ValueError("STAGE138_UNKNOWN_PHASE")
@@ -228,6 +250,16 @@ def plan_or_evaluate(packet, archive_root, arrivals=None, *, phase="plan"):
             raise ValueError("STAGE138_SOURCE_T0_BRIDGE_DRIFT")
         rows = replay["all_source_population_rows"]
         summary, daily = summarize_rows(rows, start, end)
+        cohort_daily = independent_cohort_D1_daily(rows, start)
+        if (cohort_daily["preexisting_full_history"] !=
+                replay["raw_existing_D1_daily_by_UTC_forward_day"] or
+                cohort_daily["in_window_cold_start"] !=
+                replay["raw_inwindow_cold_start_D1_daily_by_UTC_forward_day"] or
+                cohort_daily["recent_pre_T0_cold_start"] !=
+                replay["raw_recent_preT0_cold_start_D1_daily_by_UTC_forward_day"] or
+                any(sum(cohort_daily[k][i] for k in cohort_daily) != daily[i]
+                    for i in range(7))):
+            raise ValueError("STAGE143_ALL_COHORT_D1_SOURCE_LEDGER_DRIFT")
         if (len(rows) != source["full_market_attempts"] or
                 len(rows) != replay["model_attempts_scored_or_classified"] or
                 len(rows) != planned["full_initial_venue_symbol_attempts"] +
@@ -252,6 +284,7 @@ def plan_or_evaluate(packet, archive_root, arrivals=None, *, phase="plan"):
             "population_rows": rows,
             "population_summary": summary,
             "raw_D1_daily": daily,
+            "raw_D1_daily_all_original_market_cohorts": cohort_daily,
             "population_G1_selection_and_missing_source_sensitivity": population_coverage_sensitivity(summary),
             "original_unmodified_V4_git_blob": replay["original_unmodified_V4_git_blob"],
             "original_stage80_contract_sha": replay["original_unmodified_stage80_contract_sha"],
@@ -291,6 +324,7 @@ def verify_evaluate_manifest(report):
         raise ValueError("STAGE138_MISSING_SOURCE_PROVENANCE_CHAIN")
     if (summary != report.get("population_summary") or
             daily != report.get("raw_D1_daily") or
+            report.get("raw_D1_daily_all_original_market_cohorts") != independent_cohort_D1_daily(rows,start) or
             report.get("population_G1_selection_and_missing_source_sensitivity") != population_coverage_sensitivity(summary) or
             daily != replay.get("raw_D1_daily_by_UTC_forward_day") or
             len(rows) != replay.get("model_attempts_scored_or_classified") or
@@ -341,6 +375,7 @@ def aggregate(reports):
             "raw_venue": summary,
             "censored_count": summary.get("SOURCE_CENSORED_NO_REPLAY", 0),
             "D1_by_forward_UTC_day": days,
+            "D1_by_original_cohort_UTC_day": report["raw_D1_daily_all_original_market_cohorts"],
             "NOT_INDEPENDENTLY_VERIFIABLE_FROM_MANIFEST": True,
         })
     aggregate_count = sum(all_counts[k] for k in STATES)
