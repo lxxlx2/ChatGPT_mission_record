@@ -83,9 +83,40 @@ def _slot(value: object) -> int:
 
 
 def _rpc_result(body: object, method: str) -> object:
-    if not isinstance(body, dict) or "error" in body or "result" not in body:
+    if not isinstance(body, dict):
+        raise SourceTemporarilyUnavailable(method + "_RPC_UNAVAILABLE")
+    if "error" in body:
+        rpc_error = body.get("error")
+        code = rpc_error.get("code") if isinstance(rpc_error, dict) else None
+        if code == 429:
+            raise SourceTemporarilyUnavailable("RPC_RATE_LIMIT_429")
+        if code == 403:
+            raise SourceTemporarilyUnavailable("RPC_DENIED_403")
+        raise SourceTemporarilyUnavailable(method + "_RPC_UNAVAILABLE")
+    if "result" not in body:
         raise SourceTemporarilyUnavailable(method + "_RPC_UNAVAILABLE")
     return body["result"]
+
+
+def _source_error_code(exc: Exception) -> str:
+    """Persist code-controlled reasons only, never provider exception text."""
+    if isinstance(exc, SourceTemporarilyUnavailable):
+        reason = str(exc)
+        if reason in {"RPC_RATE_LIMIT_429", "RPC_DENIED_403",
+                      "SIGNATURE_PAGE_RPC_UNAVAILABLE",
+                      "TRANSACTION_RPC_UNAVAILABLE", "TRANSACTION_NOT_AVAILABLE"}:
+            return reason
+        return "RPC_UNAVAILABLE"
+    if isinstance(exc, SourceEvidenceError):
+        reason = str(exc)
+        if reason.isascii() and reason.isupper() and len(reason) <= 80:
+            return reason
+        return "SOURCE_EVIDENCE_INVALID"
+    if isinstance(exc, LedgerEvidenceError):
+        return "TRANSACTION_NORMALIZATION_INCOMPLETE"
+    if isinstance(exc, TimeoutError):
+        return "RPC_TIMEOUT"
+    return "RPC_UNAVAILABLE"
 
 
 class HistoryJournal:
@@ -334,9 +365,8 @@ class WalletHistoryCollector:
                     self.journal.record_transaction(self.wallet, sig, raw, view)
                 except (SourceTemporarilyUnavailable, SourceEvidenceError,
                         LedgerEvidenceError, OSError, RuntimeError, ValueError) as exc:
-                    code = ("RPC_UNAVAILABLE" if isinstance(exc, (OSError, RuntimeError))
-                            else type(exc).__name__.upper())
-                    self.journal.pending_error(self.wallet, sig, code)
+                    self.journal.pending_error(
+                        self.wallet, sig, _source_error_code(exc))
                     break
                 imported += 1
                 continue
@@ -347,9 +377,8 @@ class WalletHistoryCollector:
                 self.journal.record_page(self.wallet, state["next_before"], rows)
             except (SourceTemporarilyUnavailable, SourceEvidenceError,
                     OSError, RuntimeError, ValueError) as exc:
-                code = ("RPC_UNAVAILABLE" if isinstance(exc, (OSError, RuntimeError))
-                        else type(exc).__name__.upper())
-                self.journal.record_error(self.wallet, code)
+                self.journal.record_error(
+                    self.wallet, _source_error_code(exc))
                 break
             new_pages += 1
             if not rows:
