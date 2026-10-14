@@ -79,8 +79,14 @@ def reconcile(packet, arrival_candidates=None):
             raise ValueError("STAGE134_ARRIVAL_EXACT_FIELDS_REQUIRED")
         if not isinstance(item["source_status"], str) or not item["source_status"]:
             raise ValueError("STAGE134_ARRIVAL_SOURCE_STATUS_REQUIRED")
-        if any(x in item["source_status"].upper() for x in
-               ("ATTESTED", "VERIFIED", "COMPLETE", "AUTHENTIC")):
+        # Allow only explicitly incomplete source candidates.  A substring
+        # scan for "VERIFIED" would also reject "UNVERIFIED", silently
+        # losing the very in-window population Stage131 must preserve.
+        # A caller cannot assert completed, authenticated or live source.
+        if item["source_status"] not in {
+                "RAW_UNVERIFIED_CANDIDATE", "UNVERIFIED_CANDIDATE",
+                "UNVERIFIED", "PENDING", "PENDING_SOURCE",
+                "MISSING_SOURCE", "CENSORED_SOURCE"}:
             raise ValueError("STAGE134_CANNOT_SELF_ATTEST_ARRIVAL")
         symbol = item["symbol"]
         if not isinstance(symbol, str):
