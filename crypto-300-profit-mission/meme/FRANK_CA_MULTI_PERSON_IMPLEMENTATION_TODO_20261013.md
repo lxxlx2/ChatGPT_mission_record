@@ -103,6 +103,14 @@
 - 已新增正常手续费纯 Token 反例、真正非手续费 SOL 流动、显式 N1 历史分页恢复、真实旧 Sidecar `ALTER TABLE` 升级及旧 RAW/v1 保留、真实 ATA fixture 解析的自动化回归。代码证据与报告见 PR #52 `FRANK_CA_A04_CLAUDE_N1_SOL_AND_REAL_ATA_20261014.md`。
 - PR #49 的 `8898134a` 已获独立 Claude `APPROVE` 且**没有改动**。PR #52 最终代码 HEAD `e547203c6e4b00c80372c125785c9feb72fb8e87` 的 [独立 CI #38549340254](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38549340254) **64 重点 + 1,546 完整 PASS**；[F01/C02/A04 临时联合 CI #38549339806](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38549339806) **三分支合并无冲突、51 重点 + 1,598 完整 PASS**。**此为代码验收，仍需另一 AI 对 #52 精确 SHA 重新 Review / 实际 Mac 验收**。Mac / 生产 DB / Gmail / launchd / 冻结策略未动，所有 PR 保持 Draft / NO_MERGE / NO_DEPLOY；F02/A04 业务验收不标 [x]。
 
+## 2026-10-14 Claude 第五轮审查：旧 V2 身份碰撞及 #53 可复现升级
+
+- 独立 Claude 审查 [Draft #52](https://github.com/lxxlx2/ChatGPT_mission_record/pull/52) 的固定 SHA `e547203c6e4b00c80372c125785c9feb72fb8e87` 返回 **REQUEST_CHANGES（P2）**：原生 SOL 经济归因算法已改变字段与分类，却复用了历史 V2 `SOL_TOKEN_VIEW_V2 / WALLET_TX_VIEW_V2 / :v2` 不可变身份。旧 V2 Sidecar 重建因此出现 `DERIVED_V2_EVIDENCE_CONFLICT`，原视图无法升级。SOL fee-only、N1 手动缺口归档、真 ATA 出资人和 Frank 归属逻辑复审 PASS，但**#52 仍不得合并/部署**。
+- 新独立子 [Draft **PR #53**](https://github.com/lxxlx2/ChatGPT_mission_record/pull/53) 从 #52 SHA 建立，精确最终代码 HEAD **`166bdaa133d7ed799870ca963d2dfa55f2736b17`**：当前派生视图采用 `SOL_TOKEN_VIEW_V3`、schema 3、`WALLET_TX_VIEW_V3`、`:v3` 及 `v3_error_code`。覆盖逻辑只以 V3 为准，并另报旧 V2 计数及历史 V2 错误；RAW_TX / 旧 V1 / 旧 V2 的 payload、hash 和 cursor 不修改。显式重建 V3：首次新增、二次 `already_present`，不向历史身份写入新内容。
+- **跨 SHA 实测**：新 CI 分别检出旧 PR #51 `c2cf5811` 和旧 PR #52 `e547203c` 的**原始代码**（对运行时导入的 Python 文件路径作核验），分别生成真实旧版 Sidecar V2 SQLite 文件，再用 #53 新版本打开、迁移、重建两次，原始 RAW/V2 哈希和逐字节 payload / 游标完全保留，V3 覆盖与 SOL fee-only 得到正确结果。不是仅在新代码内伪造 V2。验收可复现的工作流 [#38555422999](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38555422999) **SUCCESS：65 项重点、1,547 项完整 real-Git**。所有链上原始样本仍以真实/合成分别标记。
+- **实际联合 CI** [#38555423226](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38555423226) **SUCCESS：47 项跨模块重点、1,599 项完整测试**，一次性工作区将当时 main + A04 #53 链 + Claude 已批准的 C02 #49 链 + F01 #44 合并测试，无冲突，不改变 main/真实 Mac 环境。
+- **下一闸门必须是另一 AI 对 #53 最终 HEAD 的独立代码审查**；不要复用已经拒绝 #52 的结论或把 CI 绿灯视为代码批准。之后继续真实 Frank 钱包 32 Mint/ATA/历史资金和本地 Dashboard 业务验收。失败交易完整 parsed receipt、真实 owner 缺失和 ATA-close 原始证据仍未核实；**NO_MERGE / NO_DEPLOY**。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
