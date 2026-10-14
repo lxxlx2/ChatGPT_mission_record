@@ -63,8 +63,10 @@ def test_changed_quantity_with_one_missing_owner_blocks_immutable_capture(pre_mi
 
 def test_unobserved_native_sol_flow_is_explicit_never_zero():
     raw = tx([], [])
-    raw["meta"]["preBalances"] = [1000000, 0]
-    raw["meta"]["postBalances"] = [700000, 300000]
+    raw["transaction"]["message"]["accountKeys"].append({"pubkey": OWNER_A})
+    raw["transaction"]["message"]["instructions"] = []
+    raw["meta"]["preBalances"] = [1000000, 0, 900000]
+    raw["meta"]["postBalances"] = [1000000, 0, 500000]
     result = normalize_transaction(raw, tracked_wallets={OWNER_A})
     assert result["token_legs"] == []
     assert result["native_sol_coverage_status"] == "NATIVE_SOL_FLOW_UNCLASSIFIED"
