@@ -10,9 +10,10 @@ import threading
 import pytest
 
 from mission_agent.mission_control.wallet_chain_capture import (
-    SPL_TOKEN_PROGRAM, TOKEN_2022_PROGRAM, capture_owner, _fingerprint,
+    SPL_TOKEN_PROGRAM, TOKEN_2022_PROGRAM, capture_owner,
 )
 from mission_agent.mission_control.wallet_evidence_store import WalletEvidenceStore
+from mission_agent.mission_control.wallet_inventory_snapshot import _fingerprint
 from mission_agent.mission_control.wallet_full_rpc_evidence import collect_owner_full_receipts
 from scripts.frank_f02_readonly_positions_api import (
     REGISTRY, ROSTER, ResearchPositions, make_handler, main,
