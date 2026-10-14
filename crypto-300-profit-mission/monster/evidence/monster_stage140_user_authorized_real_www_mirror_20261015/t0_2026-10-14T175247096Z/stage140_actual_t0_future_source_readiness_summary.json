@@ -1,0 +1,23 @@
+{
+  "Frank": "UNCHANGED",
+  "G0": "PARTIAL",
+  "G1": "NOT_SCORABLE",
+  "G2_G3": "NOT_PASSED",
+  "G4": "UNKNOWN",
+  "G5": "NOT_DONE",
+  "G6": "NO_GO",
+  "Gmail": "OFF",
+  "actual_Binance_venue_USDT_perpetual_attempts": 525,
+  "actual_original_HTTP_start_UTC": "2026-10-14T18:00:00Z",
+  "actual_source_window_end_exclusive": "2026-10-21T18:00:00Z",
+  "alternate_mirror_independently_same_source_certified": false,
+  "complete_in_window_lifecycle_stream": "NOT_CAPTURED",
+  "genuinely_publisher_SHA_verified_days": 0,
+  "no_automatic_future_task": true,
+  "official_documented_fapi_source_blocked_HTTP451": true,
+  "original_T0_evidence_url": "https://www.binance.com/fapi/v1/exchangeInfo",
+  "pending_unavailable_not_negative": 4725,
+  "planned_original_1m_symbol_days_for_24h_warmup_and_168h_forward": 4725,
+  "publisher_7d_window_plus_48h_earliest_manual_UTC": "2026-10-23T18:00:00Z",
+  "schema": "MONSTER_STAGE140_ACTUAL_MIRROR_T0_OFFLINE_FUTURE_SOURCE_READINESS_V1"
+}
