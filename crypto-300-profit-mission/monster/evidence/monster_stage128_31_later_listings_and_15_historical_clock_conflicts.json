@@ -1,0 +1,380 @@
+{
+  "schema": "MONSTER_STAGE128_COHORT_EXCEPTIONS_FROM_LOCKED_STAGE37_AND_LATER_STAGE123_V1",
+  "original_stage37_blob": "4b02019195a7a48ef6d33606db9b57d6a3429f4b",
+  "later_stage123_batch_utc": "2026-10-14T09:48:24.840Z",
+  "current_metadata_is_not_historical_eligibility": true,
+  "full_original_5400_denominator_unmodified": true,
+  "case_count": 46,
+  "within_window_later_onboard": 31,
+  "contradictory_later_onboard_with_historical_hourly_source": 15,
+  "cases": [
+    {
+      "anchor": "2025-01-19",
+      "symbol": "CTKUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-04-30T10:15:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "CVCUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-05-16T08:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "CVXUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-07-23T11:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "LITUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-12-23T17:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "MAVIAUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-03-26T17:00:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "SLPUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-07-23T11:45:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "ANIMEUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-01-23T17:00:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "MELANIAUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-01-20T09:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "PIPPINUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-01-24T10:15:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "VINEUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-01-24T10:00:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "VTHOUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-01-22T09:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "CTKUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-04-30T10:15:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "CVCUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-05-16T08:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "CVXUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-07-23T11:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "LITUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-12-23T17:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "PUMPUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-07-10T07:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "SLPUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-07-23T11:45:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "DEEPUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-04-22T08:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "EPTUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-04-21T13:00:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "FISUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-04-25T07:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "HYPERUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-04-22T13:00:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "MEMEFIUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-04-25T07:15:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "LITUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-12-23T17:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "CVXUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-07-23T11:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "SLPUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-07-23T11:45:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "TAGUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-07-25T11:15:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "TAUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-07-21T07:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "ZORAUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-07-25T11:00:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "AIAUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2026-01-20T11:15:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "LITUSDT",
+      "category": "HISTORICAL_HOUR_SOURCE_EXISTS_LATER_ONBOARD_CONFLICT",
+      "original_hourly_status": "COMPLETE_168H_PUBLISHER_SHA",
+      "later_onboard_utc": "2025-12-23T17:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "APRUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-10-23T10:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "BLUAIUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-10-21T11:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "ONUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-10-24T08:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "TURTLEUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2025-10-22T15:00:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2026-04-19",
+      "symbol": "AVGOUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-04-20T13:40:00.000Z",
+      "current_underlyingType_label": "EQUITY"
+    },
+    {
+      "anchor": "2026-04-19",
+      "symbol": "BABAUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-04-20T13:50:00.000Z",
+      "current_underlyingType_label": "EQUITY"
+    },
+    {
+      "anchor": "2026-04-19",
+      "symbol": "MSFTUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-04-20T13:30:00.000Z",
+      "current_underlyingType_label": "EQUITY"
+    },
+    {
+      "anchor": "2026-04-19",
+      "symbol": "OPGUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-04-22T15:30:00.000Z",
+      "current_underlyingType_label": "COIN"
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "HK0700USDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-07-22T03:00:00.000Z",
+      "current_underlyingType_label": "HK_EQUITY"
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "HK1810USDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-07-22T03:05:00.000Z",
+      "current_underlyingType_label": "HK_EQUITY"
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "PANWUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-07-21T09:10:00.000Z",
+      "current_underlyingType_label": "EQUITY"
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "PENGUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-07-21T09:15:00.000Z",
+      "current_underlyingType_label": "EQUITY"
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "POPMARTUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-07-23T02:30:00.000Z",
+      "current_underlyingType_label": "HK_EQUITY"
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "SHAZUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-07-21T09:00:00.000Z",
+      "current_underlyingType_label": "EQUITY"
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "SOFIUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-07-21T09:05:00.000Z",
+      "current_underlyingType_label": "EQUITY"
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "TENCENTUSDT",
+      "category": "IN_WINDOW_LATER_ONBOARD_NOT_HISTORICALLY_PROVEN",
+      "original_hourly_status": "CENSORED_NOT_168_CONTIGUOUS_HOURS",
+      "later_onboard_utc": "2026-07-22T03:10:00.000Z",
+      "current_underlyingType_label": "HK_EQUITY"
+    }
+  ]
+}
