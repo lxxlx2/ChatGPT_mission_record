@@ -15,6 +15,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_first_liquidity.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_liquidity19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing22.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_priority4_competitors.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_priority4_competitors.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing4_creation.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing4_creation.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing22.py"
@@ -280,6 +282,23 @@ jobs:
               "20","538.70512342330123571","0","13.18055194816814023"]
           assert s["production"] == "NO_GO" and len(a["source_manifest"]) == 10
           print("PASS four original V2/V3 pool creations: 3 in-range positives, one out-of-range; 13 pending, five inactive preserved; no alpha")
+          PY
+      - name: P4 priority competing-pool raw creation and active liquidity source audit
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_priority4_competitors.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-competitors.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4-competitors.json").read_text(encoding="utf-8"))
+          b=json.loads((path/"bsc-meme-address-model-v1-p4-priority4-competitor-creation-verified-2026-10-14.json").read_text(encoding="utf-8"))
+          assert a==b, "competing source-pinned model differs from Git artifact"
+          s=a["summary"]
+          assert (s["competing_pools"],s["active_at_creation"],s["inactive_at_creation"])==(4,3,1)
+          assert s["full_market_earliest_tradability"]==0 and s["qualified_misses"]==0 and s["production"]=="NO_GO"
+          assert a["rows"][2]["v3_liquidity_at_creation_wei"]=="0"
+          print("PASS four original competing pool creation witnesses, 3 active and 1 out-of-range. NO_GO")
           PY
       - name: Recompute 23x19 baseline deterministically
         run: |
