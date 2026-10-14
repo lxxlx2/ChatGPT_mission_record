@@ -28,6 +28,7 @@ STATES = (
     "ORIGINAL_ASCII_V4_D0_AND_FROZEN_D1_CAUSAL_OFFLINE",
     "ORIGINAL_V4_NUMERIC_CORE_WITH_UNICODE_IDENTITY_ADAPTER_CAUSAL_OFFLINE",
     "ORIGINAL_CORE_NEW_LISTING_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE",
+    "ORIGINAL_CORE_RECENT_PRE_T0_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE",
 )
 FROZEN_THRESHOLDS = {
     "G1_min_nonoverlapping_new_forward_windows": 3,
@@ -81,33 +82,45 @@ def summarize_rows(rows, start, end):
         c["full_market_attempts"] += 1
         c[status] += 1
         cold = status == STATES[5]
-        if (cold and row["population_lane"] != "IN_WINDOW_FIRST_TRADABLE_MINUTE_CANDIDATE") or (not cold and status in (STATES[3], STATES[4]) and row["population_lane"] != "PREEXISTING_AT_WINDOW_START"):
-            raise ValueError("STAGE142_SOURCE_COHORT_STATUS_NOT_MATCHED")
-        if status not in (STATES[3], STATES[4], STATES[5]):
+        recent = status == STATES[6]
+        if ((cold and row["population_lane"] != "IN_WINDOW_FIRST_TRADABLE_MINUTE_CANDIDATE")
+                or (recent and row["population_lane"] != "PREEXISTING_AT_WINDOW_START")
+                or (status in (STATES[3], STATES[4])
+                    and row["population_lane"] != "PREEXISTING_AT_WINDOW_START")):
+            raise ValueError("STAGE143_SOURCE_COHORT_STATUS_NOT_MATCHED")
+        if status not in (STATES[3], STATES[4], STATES[5], STATES[6]):
             if row.get("D0_first_UTC") is not None or row.get("D1_first_UTC") is not None:
                 raise ValueError("STAGE138_CENSORED_OR_UNSUPPORTED_HAS_SIGNAL")
             continue
         labels = row.get("gross_future_labels_not_real_profit")
         if not isinstance(labels, dict):
             raise ValueError("STAGE138_COMPLETE_ROW_MISSING_GROSS_LABELS")
-        c["cold_start_source_conditioned_issuer_unverified" if cold else "original_core_source_compatible"] += 1
+        cohort = ("cold_start_" if cold else
+                  "recent_preT0_" if recent else "")
+        c[("cold_start_source_conditioned_issuer_unverified" if cold else
+           "recent_preT0_cold_source_conditioned_issuer_unverified" if recent
+           else "original_core_source_compatible")] += 1
         first_d0 = row.get("D0_first_UTC")
         first_d1 = row.get("D1_first_UTC")
         if first_d0 is not None:
             d0_ms = s131.stamp(first_d0)
             if d0_ms < start or d0_ms >= end or d0_ms % 180_000:
                 raise ValueError("STAGE138_INVALID_ORIGINAL_D0_CLOCK")
-            c["cold_start_first_D0" if cold else "unique_first_D0"] += 1
+            c[("cold_start_first_D0" if cold else
+               "recent_preT0_first_D0" if recent else "unique_first_D0")] += 1
         if first_d1 is not None:
             d1_ms = s131.stamp(first_d1)
             if (first_d0 is None or d1_ms < d0_ms
                     or not start <= d1_ms < end or d1_ms % 180_000):
                 raise ValueError("STAGE138_ORPHAN_OR_INVALID_D1_CLOCK")
+            c["all_cohort_first_D1"] += 1
+            daily[(d1_ms - start) // 86_400_000] += 1
             if cold:
                 c["cold_start_first_D1"] += 1
+            elif recent:
+                c["recent_preT0_first_D1"] += 1
             else:
                 c["unique_first_D1"] += 1
-                daily[(d1_ms - start) // 86_400_000] += 1
         for m in (2, 5, 10):
             name = f"first_GT{m}x_HIGH_UTC_EVALUATION_ONLY"
             strict = f"D0_first_strict_pre_GT{m}x"
@@ -129,7 +142,7 @@ def summarize_rows(rows, start, end):
             actual = tuple(labels.get(x) for x in (strict, early, upgraded))
             if actual != expected:
                 raise ValueError("STAGE138_GROSS_LABEL_ARITHMETIC_DRIFT")
-            tag = "cold_start_" if cold else ""
+            tag = cohort
             c[f"{tag}gross_{m}x"] += 1
             c[f"{tag}D0_strict_{m}x"] += expected[0]
             c[f"{tag}D0_early5_{m}x"] += expected[1]
@@ -137,9 +150,39 @@ def summarize_rows(rows, start, end):
             c[f"{tag}D1_early5_given_D0_{m}x"] += expected[1] and expected[2]
     if sum(c[status] for status in STATES) != c["full_market_attempts"]:
         raise ValueError("STAGE138_LOSSY_POPULATION_STATUS")
-    if sum(daily) != c["unique_first_D1"]:
-        raise ValueError("STAGE138_D1_DAILY_TOTAL_DRIFT")
+    if sum(daily) != c["all_cohort_first_D1"]:
+        raise ValueError("STAGE143_ALL_COHORT_D1_DAILY_TOTAL_DRIFT")
     return dict(c), daily
+
+
+def population_coverage_sensitivity(summary):
+    """Venue-only pessimistic counterfactual; NOT a verified G1 bound.
+
+    Treat each source-censored/unsupported attempted symbol as a potential
+    missed 2x winner. Unknown crypto issuer and selection bias remain.
+    """
+    missing = sum(summary.get(name, 0) for name in (
+        "SOURCE_CENSORED_NO_REPLAY",
+        "MODEL_SYMBOL_UNSUPPORTED_NOT_A_NO_WATCH",
+        "NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED"))
+    gross = summary.get("gross_2x", 0)
+    early = summary.get("D0_early5_2x", 0)
+    disjoint = (summary.get("cold_start_gross_2x", 0) +
+                summary.get("recent_preT0_gross_2x", 0))
+    def pct(n, d):
+        return round(n * 100 / d, 3) if d else None
+    return {
+        "venue_complete_case_preexisting_2x": gross,
+        "venue_complete_case_preexisting_D0_early5_2x": early,
+        "venue_complete_case_preexisting_early5_pct": pct(early, gross),
+        "source_censored_or_unsupported_attempts_unknown_outcome": missing,
+        "unverified_new_and_recent_cold_start_posthoc_2x_excluded_from_headline": disjoint,
+        "pessimistic_venue_preexisting_if_each_censored_were_missed_2x_pct":
+            pct(early, gross + missing),
+        "pessimistic_scenario_not_verified_crypto_G1_recall_bound": True,
+        "full_listing_census_and_real_time_alert_delay_unverified": True,
+        "G1_claimable": False,
+    }
 
 
 def plan_or_evaluate(packet, archive_root, arrivals=None, *, phase="plan"):
@@ -209,6 +252,7 @@ def plan_or_evaluate(packet, archive_root, arrivals=None, *, phase="plan"):
             "population_rows": rows,
             "population_summary": summary,
             "raw_D1_daily": daily,
+            "population_G1_selection_and_missing_source_sensitivity": population_coverage_sensitivity(summary),
             "original_unmodified_V4_git_blob": replay["original_unmodified_V4_git_blob"],
             "original_stage80_contract_sha": replay["original_unmodified_stage80_contract_sha"],
             "raw_venue_research_only_2x": {
@@ -247,6 +291,7 @@ def verify_evaluate_manifest(report):
         raise ValueError("STAGE138_MISSING_SOURCE_PROVENANCE_CHAIN")
     if (summary != report.get("population_summary") or
             daily != report.get("raw_D1_daily") or
+            report.get("population_G1_selection_and_missing_source_sensitivity") != population_coverage_sensitivity(summary) or
             daily != replay.get("raw_D1_daily_by_UTC_forward_day") or
             len(rows) != replay.get("model_attempts_scored_or_classified") or
             len(rows) != source.get("full_market_attempts") or
@@ -311,6 +356,7 @@ def aggregate(reports):
         "stage77_frozen_acceptance": FROZEN_THRESHOLDS,
         "per_window_source_retained": windows,
         "all_original_venue_population_descriptive_only": dict(all_counts),
+        "population_G1_selection_and_missing_source_sensitivity": population_coverage_sensitivity(all_counts),
         "raw_venue_replay_rate_diagnostics_NOT_crypto_accuracy": {
             "mixed_venue_2x_HIGH_with_source": raw_2x,
             "D0_strict_2x_pct_mixed_venue": pct(all_counts.get("D0_strict_2x", 0), raw_2x),
@@ -320,6 +366,7 @@ def aggregate(reports):
                 all_counts.get("D0_early5_2x", 0)),
             "D1_per_day_mean_mixed_venue": round(sum(daily_all)/n_days, 4),
             "D1_per_day_peak_mixed_venue": max(daily_all),
+            "D1_per_day_all_cold_and_existing_cohorts_included": True,
             "cannot_measure_issuer_confirmed_crypto_true_positives": True,
             "cannot_measure_real_time_alert_delivery": True,
             "cannot_measure_executable_net_profit": True,
