@@ -1,0 +1,95 @@
+name: Monster Stage112 First Repeat Historical Attribution
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage112-first-repeat-price-attribution.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage112_repeated_ignition_diagnostic.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE112_REPEATED_IGNITION_PRICE_ECONOMICS_DESCRIPTIVE_PROTOCOL_20261014.md
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  causal_contract:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Stage112 original evidence lock and deterministic diagnostic unit checks
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage112_repeated_ignition_diagnostic.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage112_repeated_ignition_diagnostic.py --selftest
+  original519_shard_diagnostic:
+    needs: causal_contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Resolve exact historical original Stage111 success by pinned workflow head SHA
+        run: |
+          set -eu
+          gh run list --repo "$GITHUB_REPOSITORY" --workflow monster-stage111-full519-persistent-real1m.yml --branch research/monster-v4-local-discovery-20261010 --limit 100 --json databaseId,headSha,conclusion,status,event > /tmp/stage112_run_inventory.json
+          python - <<'PY'
+          import json
+          runs=json.load(open('/tmp/stage112_run_inventory.json'))
+          pin='760b3605a2d1673a9765d7daeee8ffea62558507'
+          choices=[r for r in runs if r.get('headSha')==pin and r.get('event')=='push' and r.get('conclusion')=='success' and r.get('status')=='completed']
+          if not choices:
+              raise SystemExit('STAGE112_ORIGINAL_519_SUCCESSFUL_WORKFLOW_NOT_FOUND_AT_PINNED_SHA')
+          with open('/tmp/stage112_original_run_id','w') as f:
+              f.write(str(choices[0]['databaseId']))
+          print('STAGE112_PINNED_ORIGINAL_CI_RUN',choices[0]['databaseId'],'SOURCE_COMMIT',pin)
+          PY
+      - name: Download only original 24 shard artifacts; never run a new live scanner
+        run: |
+          set -eu
+          run_id="$(cat /tmp/stage112_original_run_id)"
+          mkdir -p /tmp/stage112_original_artifacts
+          gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --pattern 'monster-stage111-*-s*' --dir /tmp/stage112_original_artifacts
+          find /tmp/stage112_original_artifacts -name 'monster-stage111-*.json' | sort
+      - name: Independently recompute frozen full519 Stage111 gates and first vs repeat economics
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage112_repeated_ignition_diagnostic.py --artifact-dir /tmp/stage112_original_artifacts --out /tmp/monster_stage112_original519_repeats.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage112-real519-first-repeat-diagnostic
+          path: /tmp/monster_stage112_original519_repeats.json
+          retention-days: 60
+      - name: Persist verified diagnostic to original PR30 research branch
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage112_real519_first_repeat_diagnostic.json
+          cp /tmp/monster_stage112_original519_repeats.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE112_EVIDENCE_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive Stage112 real519 first repeat priority price diagnostics"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE112_DIAGNOSTIC_ARCHIVED_IN_GIT; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE112_ARCHIVE_FAILED
+          exit 1
