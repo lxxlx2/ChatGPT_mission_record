@@ -1,0 +1,103 @@
+name: Monster Stage114 Original519 D0 D1 Priority Matched Entry
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage114-d0-d1-priority-matched-entry.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_matched_entry_official.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_matched_entry_aggregate.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE114_ALL519_D0_D1_PRIORITY_ENTRY_PARITY_PREREG_20261014.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  causal_unit_safety:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile source-locked D0 D1 first PRIORITY price replay and as-of selftests
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_matched_entry_official.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_matched_entry_aggregate.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_matched_entry_official.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage113_fixed_horizons_official.py --selftest
+  official_all519_paired_sources:
+    needs: causal_unit_safety
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+        shard: [0,1,2,3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download first-party SHA checked real 1m and compare all original519 matched signals
+        run: |
+          set -eu
+          mkdir -p /tmp/stage114
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_matched_entry_official.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --workers 3 --out /tmp/stage114/monster-stage114-${{ matrix.date }}-s${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage114-${{ matrix.date }}-s${{ matrix.shard }}
+          path: /tmp/stage114/monster-stage114-${{ matrix.date }}-s${{ matrix.shard }}.json
+          retention-days: 45
+  original519_strict_reconcile_and_archive:
+    needs: official_all519_paired_sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage114-*-s*
+          merge-multiple: true
+          path: /tmp/stage114-shards
+      - name: Reconcile source-locked all519, 305 D1 and 277 original first priorities
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage114_matched_entry_aggregate.py --artifact-dir /tmp/stage114-shards --out /tmp/monster_stage114_full519_actual.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage114-original519-paired-evidence
+          path: /tmp/monster_stage114_full519_actual.json
+          retention-days: 60
+      - name: Persist actual research proof to original Monster Draft PR only
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage114_real519_d0_d1_priority_paired_entry_actual.json
+          cp /tmp/monster_stage114_full519_actual.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE114_ARCHIVED_ALREADY; exit 0; fi
+          git commit -m "monster: archive Stage114 all519 D0 D1 priority matched official 1m entry economics"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE114_REAL519_GIT_ARCHIVE_VERIFIED; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE114_EVIDENCE_NOT_ARCHIVED
+          exit 1
