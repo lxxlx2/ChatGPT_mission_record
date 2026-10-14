@@ -12,7 +12,8 @@ from mission_agent.mission_control.wallet_history_replay import (
     HistoryJournal, _HISTORY_SCHEMA,
 )
 from test_frank_a04_claude_fourth_review import fee_only_receipt
-from test_frank_a04_history_resume import W1, signature
+from test_frank_a04_history_resume import signature
+from test_frank_a04_a05_chain_capture import OWNER_A
 
 
 def _serial(value):
@@ -55,10 +56,8 @@ def test_legacy_v2_with_old_sol_status_migrates_to_new_v3_without_rewrite(tmp_pa
     db_path = tmp_path / "prior-immutable-v2.sqlite"
     sig, slot = signature(3201), 2000
     raw = fee_only_receipt(sig, slot)
-    old_v2 = _prior_v2_view(raw, W1)
-    # In the event the helper fee_only_receipt uses another tracked wallet,
-    # run all assertions against the wallet actually used by the transaction.
-    wallet = W1
+    old_v2 = _prior_v2_view(raw, OWNER_A)
+    wallet = OWNER_A
     identity = wallet + ":" + sig + ":" + str(slot)
     previous = WalletEvidenceStore(db_path)
     try:
