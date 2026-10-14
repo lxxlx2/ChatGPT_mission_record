@@ -107,3 +107,14 @@ done
 **继续研发主线**：真正用户手动采集才创建新 Stage133 T0；以后取得完整168h真实全市场1m分钟归档及新增/停牌人口，同时单独核实 PIT issuer/现货合约/成交时点，应用Stage77原规则评估G0/G1和D1 G2/G3；完整G4净收益交易证据最少30独立完整入出场，用户单笔名义金额另行指定。重要模型失败不能通过复用已曝光31/519样本调阈值解决。下一次用户手动快照参考点仍 10月28日、11月11日 13:00 BKK，绝不启动新的自动任务。独立其他AI Review、Mac Shadow与真实通知尚未获放行。
 
 `STAGE135_OFFLINE_SOURCE_ENGINE=DONE`; `STAGE135_MACOS_UBUNTU_CI=PASS`; `STAGE133_LIVE_NEW_T0=NOT_DONE`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `FRANK=UNCHANGED`; `GMAIL=OFF`; `NO_NEW_AUTOMATION`.
+
+
+## Stage136 手动官方分钟归档取数入口及真实 CI（2026-10-14）
+
+- 为解决 Stage135 已实现源核验但缺少可操作全市场原始1m归档获取流程这一实际主线断点，在同一 PR #30 中先冻结 [Stage136 研究/获取合同](MONSTER_STAGE136_FROZEN_MANUAL_PUBLISHER_ARCHIVE_ACQUISITION_PROTOCOL_20261014.md)，commit `1c5143b5dd2afe142fda4bad7d057266cc8bbb1f`，再实现 [Stage136 一次性手动官方Publisher归档取数及断点续取](../local-agent/scripts/monster_v4_stage136_manual_publisher_archive_acquisition.py)，commit `cf64fb23860ef5080e62bbaa243ed075ad049486`。原版 Stage130 ZIP/Publisher CHECKSUM 检查器、Stage133 T0 raw时间源、Stage134全市场人口、Stage135逐币分钟源完整性核验均不改变。源缺失保留，已有有效文件重复利用，错误校验绝不保存，禁止事后挑赢家。
+- 实际 [Stage136 GitHub Actions #38596558021](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38596558021) `SUCCESS`：macOS job `115964677414` 与 Ubuntu job `115964679209` 均独立 **8/8** 合成ZIP源回归通过、无授权live fetch拒绝。工作流无 schedule；**尚未执行任何 Stage136 真实 Binance 下载**，测试数据全部合成，不构成2026市场验证。正式证据与接下来功能缺口在 [Stage136 报告](MONSTER_STAGE136_USER_MANUAL_PUBLISHER_1M_ACQUISITION_CI_AND_NEXT_CAUSAL_BRIDGE_20261014.md)。
+- Stage136 的真实下载只能在**用户以后明确发起一次新手动源获取**、独立窗口已结束且时间条件满足时执行。原 Stage99 三个自动计划继续停用、没有 ChatGPT 自动化/备用任务、没有新 Mac 服务/邮件/交易/Frank 修改。新的7日源需要真正未知期积累，过去 10/14 06:00 Stage116 失败不可补造。
+
+**下一唯一研发主线 P1 → G1：消除新动态T0与旧固定日 06:00 回放程序的兼容性缺口。** 原 Stage91/38 有固定冻结日期/06:00锚点，不能拿 Stage133任意5分钟UTC边界替换旧Stage116窗口。原生产 `monster_v4_shadow.observe_snapshot` 只支持 ASCII 符号，当前 Stage133/131接纳官方完整 Unicode 标的；未覆盖样本必须保留为源/模型不支持，禁止偷偷扔掉。先以冻结的一个新动态窗口因果 replay 合同和同核心代码实现完整目标分母、原始分钟/队列D0与D1，后用真实未曝光数据统一评分 G0-G3；只有真实成本/金额/双边退出、足够样本和独立他 AI review 过线才讨论 G4 与 Mac。继续杜绝在已曝光31/519上为求通过调整阈值。
+
+`STAGE136_OFFLINE_TESTS=PASS_BOTH_OS`; `STAGE136_REAL_DATA_DOWNLOAD=NOT_DONE`; `NEXT_MAINLINE=DYNAMIC_T0_CAUSAL_FULL_MARKET_D0_D1_REPLAY`; `STAGE116_ORIGINAL_FAILURE=PRESERVED`; `STAGE132_FIRST_MOMENTUM_BUY=NEGATIVE`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `FRANK=UNCHANGED`; `GMAIL=OFF`; `NO_NEW_AUTOMATION`.
