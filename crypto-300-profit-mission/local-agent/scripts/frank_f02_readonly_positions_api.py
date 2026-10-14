@@ -188,6 +188,17 @@ class ResearchPositions:
         }
 
 
+WEB_ROOT = Path(__file__).resolve().parent / "frank_f02_web"
+WEB_ROUTES = {
+    "/research/positions": ("positions.html", "text/html; charset=utf-8"),
+    "/research/positions.js": ("positions.js", "text/javascript; charset=utf-8"),
+    "/research/positions.css": ("positions.css", "text/css; charset=utf-8"),
+}
+WEB_CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; "
+           "connect-src 'self'; img-src 'none'; object-src 'none'; "
+           "base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+
+
 def make_handler(service: ResearchPositions):
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
@@ -203,12 +214,34 @@ def make_handler(service: ResearchPositions):
             self.end_headers()
             self.wfile.write(raw)
 
+        def _static(self, path: str):
+            filename, mime = WEB_ROUTES[path]
+            # Every path is a fixed literal mapping, never a user-provided
+            # filesystem path. No CORS or private original RPC bytes exposed.
+            raw = (WEB_ROOT / filename).read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", mime)
+            self.send_header("Content-Length", str(len(raw)))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Content-Security-Policy", WEB_CSP)
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("X-Frame-Options", "DENY")
+            self.send_header("Referrer-Policy", "no-referrer")
+            self.end_headers()
+            self.wfile.write(raw)
+
         def do_GET(self):
             host = self.headers.get("Host", "").lower().split(":", 1)[0]
             if host not in {"127.0.0.1", "localhost"}:
                 self._json(403, {"status": "LOCALHOST_ONLY"})
                 return
             parsed = urlsplit(self.path)
+            if parsed.path in WEB_ROUTES:
+                try:
+                    self._static(parsed.path)
+                except OSError:
+                    self._json(503, {"status": "RESEARCH_VIEW_UNAVAILABLE"})
+                return
             if parsed.path != "/api/research/positions":
                 self._json(404, {"status": "NOT_FOUND"})
                 return
@@ -259,6 +292,7 @@ def main(argv=None) -> int:
         print(json.dumps({"status": "LOCAL_RESEARCH_HTTP_READY",
                           "host": "127.0.0.1", "port": server.server_port,
                           "route": "/api/research/positions",
+                          "view": "/research/positions",
                           "writes_production_sqlite": False}, sort_keys=True), flush=True)
         server.serve_forever()
     return 0

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Frank · 链上研究仓位</title>
+  <link rel="stylesheet" href="/research/positions.css">
+  <script src="/research/positions.js" defer></script>
+</head>
+<body>
+  <main class="layout">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">F</span>
+        <div><div class="brand-title">FRANK <span>RESEARCH</span></div><div class="brand-sub">Solana · 独立只读研究面板</div></div>
+      </div>
+      <span class="top-label">RESEARCH ONLY · NO TRADING</span>
+    </header>
+    <section class="hero" aria-labelledby="heading">
+      <div class="hero-copy">
+        <p class="eyebrow">钱包账户 · 来源验证 · 历史观察</p>
+        <h1 id="heading">链上研究仓位</h1>
+        <p class="lead">精确查看冻结的 32 个 Mint；只有完整且未过期的双程序来源才展示余额。此页面不生成跟单或交易建议。</p>
+      </div>
+      <div class="status-panel">
+        <span class="status-caption">数据状态</span>
+        <div id="source-state" class="source-state" aria-live="polite">正在读取…</div>
+        <p id="source-explainer" class="source-explainer">只读取本机隔离研究档案，不会采集新的链上数据。</p>
+        <button id="reload" type="button" class="secondary">重新读取本地档案</button>
+      </div>
+    </section>
+    <section id="warning" class="warning" role="status" aria-live="polite">
+      此页面仅展示可验证的账户观察；不提供自动买入、成本、价格或盈亏推测。
+    </section>
+    <section class="stats" aria-label="仓位概况">
+      <article class="stat"><span>研究目标</span><strong id="count-total">—</strong><small>冻结 Mint，不代表当前持仓</small></article>
+      <article class="stat"><span>已核实非零</span><strong id="count-positive">—</strong><small>仅限来源有效时</small></article>
+      <article class="stat"><span>已观察零余额</span><strong id="count-zero">—</strong><small>不等于卖出</small></article>
+      <article class="stat"><span>来源不可用</span><strong id="count-unknown">—</strong><small>未知不应显示为零</small></article>
+    </section>
+    <section class="meta-section" aria-labelledby="source-heading">
+      <div class="section-title"><div><p class="eyebrow">PROVENANCE</p><h2 id="source-heading">身份与证据</h2></div><span class="section-hint">完整双程序、非原子 Slot</span></div>
+      <div class="meta-grid">
+        <div class="meta-item"><span>研究人物 / 钱包</span><strong id="person">—</strong><div class="mono-line"><code id="wallet">—</code><button id="copy-wallet" type="button" class="text-button" disabled>复制</button></div></div>
+        <div class="meta-item"><span>档案采集时间</span><strong id="observed-time">—</strong><small id="age">—</small></div>
+        <div class="meta-item"><span>来源 Slot 区间</span><strong id="slots">—</strong><small>两次 RPC 并非原子快照</small></div>
+        <div class="meta-item"><span>来源 SHA-256</span><div class="mono-line"><code id="source-hash">—</code><button id="copy-hash" type="button" class="text-button" disabled>复制</button></div><small id="latest-attempt">—</small></div>
+      </div>
+    </section>
+    <section class="positions-section" aria-labelledby="position-heading">
+      <div class="section-title">
+        <div><p class="eyebrow">FROZEN 32 MINTS</p><h2 id="position-heading">研究对象</h2></div>
+        <span class="section-hint">不代表可执行机会 · 无未经核实的 USD / PnL</span>
+      </div>
+      <div class="controls">
+        <label class="search"><span>搜索 Mint / CA</span><input id="mint-search" type="search" autocomplete="off" spellcheck="false" placeholder="输入 Mint 地址"></label>
+        <label class="filter"><span>余额状态</span><select id="state-filter"><option value="all">全部目标</option><option value="OPEN_ACCOUNT_NONZERO">已核实非零</option><option value="OPEN_ACCOUNT_ZERO">已观察为零</option><option value="NO_OPEN_ACCOUNT_OBSERVED">未观察到开放账户</option><option value="SOURCE_UNAVAILABLE">来源不可用</option></select></label>
+      </div>
+      <div class="table-scroll"><table class="positions"><thead><tr><th>目标 Mint / CA</th><th>观察状态</th><th>余额数量</th><th>账户数</th><th>查看</th></tr></thead><tbody id="position-rows"><tr><td colspan="5" class="empty">等待本机只读 API 响应…</td></tr></tbody></table></div>
+      <p id="row-total" class="table-note">—</p>
+    </section>
+    <footer>数据以原始 RPC 证据为准 · 旧来源不会自动刷新 · 历史余额变化不证明卖出 · 无交易权限</footer>
+  </main>
+</body>
+</html>
