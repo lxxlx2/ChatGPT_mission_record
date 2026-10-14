@@ -1,0 +1,1209 @@
+{
+  "Frank": "UNCHANGED",
+  "Stage99": "UNCHANGED",
+  "all_predefined_groups": {
+    "ALL": {
+      "ALL_ORIGINAL_D0": {
+        "D0_24h": {
+          "censored_n": 39,
+          "complete_n": 480,
+          "gain100pct_or_more_n": 4,
+          "gain50pct_or_more_n": 16,
+          "gross_mean_pct": "7.163341446372531997010098763",
+          "gross_median_pct": "2.752013313057699480675981950",
+          "gross_p10_pct": "-15.12820512820512820512820513",
+          "gross_p90_pct": "28.55673366038930210476341190",
+          "loss_20pct_or_worse_n": 23,
+          "nonpositive_n": 214,
+          "positive_n": 266,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 519,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.01009122795362063415485881832",
+          "gross_median_pct": "0.016900456312320432651681600",
+          "gross_p10_pct": "-3.614190687361419068736141910",
+          "gross_p90_pct": "3.180291153415453527435610300",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 258,
+          "positive_n": 261,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 519
+      }
+    },
+    "DATE": {
+      "2025-01-30": {
+        "D0_24h": {
+          "censored_n": 1,
+          "complete_n": 160,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 4,
+          "gross_mean_pct": "18.57496953517354208613760176",
+          "gross_median_pct": "20.63124602518734260962548565",
+          "gross_p10_pct": "-2.782779505647405467343264040",
+          "gross_p90_pct": "32.03695745595186935969058870",
+          "loss_20pct_or_worse_n": 3,
+          "nonpositive_n": 18,
+          "positive_n": 142,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 161,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.7614056105876976394015604216",
+          "gross_median_pct": "1.275645795684065057935579900",
+          "gross_p10_pct": "-1.417004048582995951417004050",
+          "gross_p90_pct": "2.904701903309238013130844200",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 57,
+          "positive_n": 104,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 161
+      },
+      "2025-06-02": {
+        "D0_24h": {
+          "censored_n": 1,
+          "complete_n": 33,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.1334037394511540235491146173",
+          "gross_median_pct": "-2.163193892158422140925719740",
+          "gross_p10_pct": "-13.02521008403361344537815126",
+          "gross_p90_pct": "11.60482155518789884188135190",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 21,
+          "positive_n": 12,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 34,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.2831781242887091588521057421",
+          "gross_median_pct": "-0.2143350889663780413404006450",
+          "gross_p10_pct": "-4.338335607094133697135061390",
+          "gross_p90_pct": "3.564963097061690572343684700",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 18,
+          "positive_n": 16,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 34
+      },
+      "2025-08-01": {
+        "D0_24h": {
+          "censored_n": 13,
+          "complete_n": 41,
+          "gain100pct_or_more_n": 2,
+          "gain50pct_or_more_n": 3,
+          "gross_mean_pct": "6.295549885156167805191162768",
+          "gross_median_pct": "-2.551489518205222508275101140",
+          "gross_p10_pct": "-17.51644736842105263157894737",
+          "gross_p90_pct": "17.02771583306785600509716470",
+          "loss_20pct_or_worse_n": 4,
+          "nonpositive_n": 26,
+          "positive_n": 15,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 54,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.1181859746654226394185523867",
+          "gross_median_pct": "-0.2673796791443850267379679150",
+          "gross_p10_pct": "-4.852405984634047715325515570",
+          "gross_p90_pct": "3.258238689257121578849376300",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 28,
+          "positive_n": 26,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 54
+      },
+      "2025-10-02": {
+        "D0_24h": {
+          "censored_n": 7,
+          "complete_n": 68,
+          "gain100pct_or_more_n": 1,
+          "gain50pct_or_more_n": 1,
+          "gross_mean_pct": "1.242427525938677774176764648",
+          "gross_median_pct": "-3.142642498650827413115193095",
+          "gross_p10_pct": "-16.32986751635083011906758343",
+          "gross_p90_pct": "17.30977280923187883159033540",
+          "loss_20pct_or_worse_n": 2,
+          "nonpositive_n": 42,
+          "positive_n": 26,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 75,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.8167958718850723120889773031",
+          "gross_median_pct": "-0.3942181340341655716162943500",
+          "gross_p10_pct": "-5.432887855897733875653689720",
+          "gross_p90_pct": "2.587220697765582124656997300",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 42,
+          "positive_n": 33,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 75
+      },
+      "2026-06-21": {
+        "D0_24h": {
+          "censored_n": 9,
+          "complete_n": 91,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 4,
+          "gross_mean_pct": "-0.7337862923053106914931598167",
+          "gross_median_pct": "-4.702702702702702702702702700",
+          "gross_p10_pct": "-18.74241811564900930044480388",
+          "gross_p90_pct": "14.86718310891718188705065860",
+          "loss_20pct_or_worse_n": 8,
+          "nonpositive_n": 58,
+          "positive_n": 33,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 100,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.0874700209065078438447959299",
+          "gross_median_pct": "-0.2451215803038307000272134950",
+          "gross_p10_pct": "-3.925767309064953604568165600",
+          "gross_p90_pct": "3.965053763440860215053763400",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 54,
+          "positive_n": 46,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 100
+      },
+      "2026-07-28": {
+        "D0_24h": {
+          "censored_n": 8,
+          "complete_n": 87,
+          "gain100pct_or_more_n": 1,
+          "gain50pct_or_more_n": 4,
+          "gross_mean_pct": "2.241184225028586342861744612",
+          "gross_median_pct": "-2.495028023865485445669860780",
+          "gross_p10_pct": "-18.10938065918145599420499819",
+          "gross_p90_pct": "26.04079933388842631140716070",
+          "loss_20pct_or_worse_n": 6,
+          "nonpositive_n": 49,
+          "positive_n": 38,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 95,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.4641710517976390963553352011",
+          "gross_median_pct": "-0.4622077215878194671016857000",
+          "gross_p10_pct": "-4.149797570850202429149797570",
+          "gross_p90_pct": "4.022082018927444794952681400",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 59,
+          "positive_n": 36,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 95
+      }
+    },
+    "DATE_X_FUTURE_PRIORITY_POSTHOC_ONLY": {
+      "2025-01-30|LATER_PRIORITY_EXISTS": {
+        "D0_24h": {
+          "censored_n": 0,
+          "complete_n": 52,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 4,
+          "gross_mean_pct": "11.77963043592021692374800726",
+          "gross_median_pct": "8.81118056924068225499903540",
+          "gross_p10_pct": "-12.28429865026482145908081326",
+          "gross_p90_pct": "40.99327979019832814292738900",
+          "loss_20pct_or_worse_n": 3,
+          "nonpositive_n": 16,
+          "positive_n": 36,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 52,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.2078693817226525675550027133",
+          "gross_median_pct": "-0.1256281407035175879396984900",
+          "gross_p10_pct": "-2.028373783561965060382225350",
+          "gross_p90_pct": "2.569423252975282270369240200",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 27,
+          "positive_n": 25,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 52
+      },
+      "2025-01-30|NO_LATER_PRIORITY": {
+        "D0_24h": {
+          "censored_n": 1,
+          "complete_n": 108,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "21.84679947185106901617703614",
+          "gross_median_pct": "22.47731398402081512754357180",
+          "gross_p10_pct": "14.46708286954137024310764810",
+          "gross_p90_pct": "31.51741293532338308457711440",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 2,
+          "positive_n": 106,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 109,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "1.025477939954508132392578778",
+          "gross_median_pct": "1.457321304649548924358084700",
+          "gross_p10_pct": "-1.015965166908563134978229320",
+          "gross_p90_pct": "2.962112514351320321469575200",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 30,
+          "positive_n": 79,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 109
+      },
+      "2025-06-02|LATER_PRIORITY_EXISTS": {
+        "D0_24h": {
+          "censored_n": 0,
+          "complete_n": 14,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "4.257862094268763548381314513",
+          "gross_median_pct": "-0.692991432493167904371094480",
+          "gross_p10_pct": "-13.02521008403361344537815126",
+          "gross_p90_pct": "31.77506519028003476814935190",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 7,
+          "positive_n": 7,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 14,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "2.444071638244091441468860495",
+          "gross_median_pct": "1.541852398505739453769151100",
+          "gross_p10_pct": "-3.340225862891681247017655480",
+          "gross_p90_pct": "7.040559746364928391822455400",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 5,
+          "positive_n": 9,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 14
+      },
+      "2025-06-02|NO_LATER_PRIORITY": {
+        "D0_24h": {
+          "censored_n": 1,
+          "complete_n": 19,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-3.369073301139514339708378187",
+          "gross_median_pct": "-3.956801042733451261521273620",
+          "gross_p10_pct": "-13.86173184357541899441340782",
+          "gross_p90_pct": "8.865888013167473807489000700",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 14,
+          "positive_n": 5,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 20,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-2.192252958061669579076782108",
+          "gross_median_pct": "-0.682234224591516757452783995",
+          "gross_p10_pct": "-8.345624715063423529727265410",
+          "gross_p90_pct": "0.953281336169542267391475600",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 13,
+          "positive_n": 7,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 20
+      },
+      "2025-08-01|LATER_PRIORITY_EXISTS": {
+        "D0_24h": {
+          "censored_n": 4,
+          "complete_n": 33,
+          "gain100pct_or_more_n": 2,
+          "gain50pct_or_more_n": 3,
+          "gross_mean_pct": "9.769700303327267610496608045",
+          "gross_median_pct": "-2.135083492564592506438481350",
+          "gross_p10_pct": "-20.98510882016036655211912944",
+          "gross_p90_pct": "19.22125726117214010467590730",
+          "loss_20pct_or_worse_n": 4,
+          "nonpositive_n": 19,
+          "positive_n": 14,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 37,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.5154875084750152816758400124",
+          "gross_median_pct": "0",
+          "gross_p10_pct": "-5.025677671891081875243311270",
+          "gross_p90_pct": "4.502541757443718228031953500",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 19,
+          "positive_n": 18,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 37
+      },
+      "2025-08-01|NO_LATER_PRIORITY": {
+        "D0_24h": {
+          "censored_n": 9,
+          "complete_n": 8,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-8.035320589799618891693799002",
+          "gross_median_pct": "-9.06386004455694457129409795",
+          "gross_p10_pct": "-16.37540859944681921046014584",
+          "gross_p90_pct": "1.255358236374770361298224100",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 7,
+          "positive_n": 1,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 17,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.7465291283319260525531912694",
+          "gross_median_pct": "-0.9691934925579785392869505000",
+          "gross_p10_pct": "-4.129764801297648012976480130",
+          "gross_p90_pct": "1.071647274954072259644825500",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 9,
+          "positive_n": 8,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 17
+      },
+      "2025-10-02|LATER_PRIORITY_EXISTS": {
+        "D0_24h": {
+          "censored_n": 1,
+          "complete_n": 53,
+          "gain100pct_or_more_n": 1,
+          "gain50pct_or_more_n": 1,
+          "gross_mean_pct": "4.336029945919883207689306769",
+          "gross_median_pct": "-1.423590935502614758861127250",
+          "gross_p10_pct": "-15.12820512820512820512820513",
+          "gross_p90_pct": "18.62028545818106598634765220",
+          "loss_20pct_or_worse_n": 2,
+          "nonpositive_n": 28,
+          "positive_n": 25,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 54,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.3293309116064778195995269657",
+          "gross_median_pct": "-0.2076392411230738863083830750",
+          "gross_p10_pct": "-4.992934526613283089967027790",
+          "gross_p90_pct": "2.623226131497187001427491800",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 29,
+          "positive_n": 25,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 54
+      },
+      "2025-10-02|NO_LATER_PRIORITY": {
+        "D0_24h": {
+          "censored_n": 6,
+          "complete_n": 15,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-9.688301024661581424234217515",
+          "gross_median_pct": "-9.460359760159893404397068620",
+          "gross_p10_pct": "-18.25024963514862892695291497",
+          "gross_p90_pct": "-1.334039174166225516146109050",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 14,
+          "positive_n": 1,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 21,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-2.070277198315743864204706742",
+          "gross_median_pct": "-1.609317098994176813128639490",
+          "gross_p10_pct": "-8.564405868346263153852062370",
+          "gross_p90_pct": "1.100425666088601608071890300",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 13,
+          "positive_n": 8,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 21
+      },
+      "2026-06-21|LATER_PRIORITY_EXISTS": {
+        "D0_24h": {
+          "censored_n": 0,
+          "complete_n": 63,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 4,
+          "gross_mean_pct": "1.179744874215648250819911535",
+          "gross_median_pct": "-4.393494465778179353964309920",
+          "gross_p10_pct": "-22.78790155927108773248168326",
+          "gross_p90_pct": "20.26612077789150460593654040",
+          "loss_20pct_or_worse_n": 7,
+          "nonpositive_n": 37,
+          "positive_n": 26,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 63,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.3645114295828534321684080549",
+          "gross_median_pct": "0.237341772151898734177215200",
+          "gross_p10_pct": "-3.481012658227848101265822780",
+          "gross_p90_pct": "4.798426745329400196656833800",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 29,
+          "positive_n": 34,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 63
+      },
+      "2026-06-21|NO_LATER_PRIORITY": {
+        "D0_24h": {
+          "censored_n": 9,
+          "complete_n": 28,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-5.039231416977468311697570357",
+          "gross_median_pct": "-5.58178204501376459260180690",
+          "gross_p10_pct": "-17.52058554437328453796889296",
+          "gross_p90_pct": "5.366594182086735321872563900",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 21,
+          "positive_n": 7,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 37,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.8570600582262310975970081203",
+          "gross_median_pct": "-0.6651884700665188470066518800",
+          "gross_p10_pct": "-4.898895142797581821972065870",
+          "gross_p90_pct": "1.721938775510204081632653100",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 25,
+          "positive_n": 12,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 37
+      },
+      "2026-07-28|LATER_PRIORITY_EXISTS": {
+        "D0_24h": {
+          "censored_n": 0,
+          "complete_n": 57,
+          "gain100pct_or_more_n": 1,
+          "gain50pct_or_more_n": 4,
+          "gross_mean_pct": "4.948175769537790835526080687",
+          "gross_median_pct": "0.380517503805175038051750400",
+          "gross_p10_pct": "-18.10938065918145599420499819",
+          "gross_p90_pct": "40.51226551226551226551226550",
+          "loss_20pct_or_worse_n": 5,
+          "nonpositive_n": 28,
+          "positive_n": 29,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 57,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.6411602378921099091613899637",
+          "gross_median_pct": "-0.7213114754098360655737704900",
+          "gross_p10_pct": "-5.366922234392113910186199340",
+          "gross_p90_pct": "4.022082018927444794952681400",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 38,
+          "positive_n": 19,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 57
+      },
+      "2026-07-28|NO_LATER_PRIORITY": {
+        "D0_24h": {
+          "censored_n": 8,
+          "complete_n": 30,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-2.902099709538902193200493931",
+          "gross_median_pct": "-4.152686793161198543039917135",
+          "gross_p10_pct": "-18.17026683608640406607369759",
+          "gross_p90_pct": "8.598242811501597444089456900",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 21,
+          "positive_n": 9,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 38,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.1986872726559328771462530571",
+          "gross_median_pct": "-0.2076870517908708270975632000",
+          "gross_p10_pct": "-3.614190687361419068736141910",
+          "gross_p90_pct": "4.034090909090909090909090900",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 21,
+          "positive_n": 17,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 38
+      }
+    },
+    "DATE_X_ORIGINAL_D1": {
+      "2025-01-30|D0_ONLY": {
+        "D0_24h": {
+          "censored_n": 0,
+          "complete_n": 86,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "18.01043857468965964718494253",
+          "gross_median_pct": "20.12070620435542278867641185",
+          "gross_p10_pct": "3.508053508053508053508053500",
+          "gross_p90_pct": "27.87789628539904376609047440",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 7,
+          "positive_n": 79,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 86,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "1.148744894624843242451984598",
+          "gross_median_pct": "1.520963224494073700753200300",
+          "gross_p10_pct": "-0.9920634920634920634920634900",
+          "gross_p90_pct": "2.885245901639344262295082000",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 22,
+          "positive_n": 64,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 86
+      },
+      "2025-01-30|D1_PRESENT": {
+        "D0_24h": {
+          "censored_n": 1,
+          "complete_n": 74,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 4,
+          "gross_mean_pct": "19.23104605681697302870420572",
+          "gross_median_pct": "22.49790416773182502546731130",
+          "gross_p10_pct": "-4.578904333605887162714636140",
+          "gross_p90_pct": "38.98449072057157793848566700",
+          "loss_20pct_or_worse_n": 2,
+          "nonpositive_n": 11,
+          "positive_n": 63,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 75,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.3172565648917706812370740323",
+          "gross_median_pct": "0.494804552201880257298367100",
+          "gross_p10_pct": "-2.503382949932341001353179970",
+          "gross_p90_pct": "3.002309468822170900692840600",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 35,
+          "positive_n": 40,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 75
+      },
+      "2025-06-02|D0_ONLY": {
+        "D0_24h": {
+          "censored_n": 1,
+          "complete_n": 17,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-3.1323661768675611553820705",
+          "gross_median_pct": "-3.915904349221633766650617880",
+          "gross_p10_pct": "-11.80440097799511002444987775",
+          "gross_p90_pct": "4.866828087167070217917675500",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 12,
+          "positive_n": 5,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 18,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-2.015273583739999386867557686",
+          "gross_median_pct": "-0.4043803887773085630982263200",
+          "gross_p10_pct": "-8.345624715063423529727265410",
+          "gross_p90_pct": "2.354119709491610318056599000",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 11,
+          "positive_n": 7,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 18
+      },
+      "2025-06-02|D1_PRESENT": {
+        "D0_24h": {
+          "censored_n": 0,
+          "complete_n": 16,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "3.052993850303778554023401008",
+          "gross_median_pct": "-1.804652880594900019985370100",
+          "gross_p10_pct": "-13.86173184357541899441340782",
+          "gross_p90_pct": "31.77506519028003476814935190",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 9,
+          "positive_n": 7,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 16,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "1.665429267593992347665277695",
+          "gross_median_pct": "0.325573436764157766125784650",
+          "gross_p10_pct": "-3.340225862891681247017655480",
+          "gross_p90_pct": "7.040559746364928391822455400",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 7,
+          "positive_n": 9,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 16
+      },
+      "2025-08-01|D0_ONLY": {
+        "D0_24h": {
+          "censored_n": 1,
+          "complete_n": 8,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-5.63141383719982917405741976",
+          "gross_median_pct": "-7.057548995169870947551571135",
+          "gross_p10_pct": "-11.15730186402038353225157570",
+          "gross_p90_pct": "1.255358236374770361298224100",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 7,
+          "positive_n": 1,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 9,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.03579335818692244545614808333",
+          "gross_median_pct": "0.246305418719211822660098500",
+          "gross_p10_pct": "-1.428085685141108466507990480",
+          "gross_p90_pct": "3.237410071942446043165467600",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 4,
+          "positive_n": 5,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 9
+      },
+      "2025-08-01|D1_PRESENT": {
+        "D0_24h": {
+          "censored_n": 12,
+          "complete_n": 33,
+          "gain100pct_or_more_n": 2,
+          "gain50pct_or_more_n": 3,
+          "gross_mean_pct": "9.186935029969742830463546411",
+          "gross_median_pct": "-2.135083492564592506438481350",
+          "gross_p10_pct": "-20.98510882016036655211912944",
+          "gross_p90_pct": "19.22125726117214010467590730",
+          "loss_20pct_or_worse_n": 4,
+          "nonpositive_n": 19,
+          "positive_n": 14,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 45,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.1346644979611226782110332473",
+          "gross_median_pct": "-0.5347593582887700534759358300",
+          "gross_p10_pct": "-5.025677671891081875243311270",
+          "gross_p90_pct": "4.283360790774299835255354200",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 24,
+          "positive_n": 21,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 45
+      },
+      "2025-10-02|D0_ONLY": {
+        "D0_24h": {
+          "censored_n": 3,
+          "complete_n": 13,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-5.487208611417720534691338204",
+          "gross_median_pct": "-4.312043157255169112367204900",
+          "gross_p10_pct": "-10.68396681458614701910090681",
+          "gross_p90_pct": "0.370782350760103819058212800",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 11,
+          "positive_n": 2,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 16,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.9652881614677328202491961138",
+          "gross_median_pct": "-0.797280544582101362544357520",
+          "gross_p10_pct": "-2.766074372595713500641143070",
+          "gross_p90_pct": "2.587220697765582124656997300",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 11,
+          "positive_n": 5,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 16
+      },
+      "2025-10-02|D1_PRESENT": {
+        "D0_24h": {
+          "censored_n": 4,
+          "complete_n": 55,
+          "gain100pct_or_more_n": 1,
+          "gain50pct_or_more_n": 1,
+          "gross_mean_pct": "2.833068794768371919909225322",
+          "gross_median_pct": "-2.005580746424834321590512730",
+          "gross_p10_pct": "-16.98232323232323232323232323",
+          "gross_p90_pct": "18.62028545818106598634765220",
+          "loss_20pct_or_worse_n": 2,
+          "nonpositive_n": 31,
+          "positive_n": 24,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 59,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.7765267764050287844523077951",
+          "gross_median_pct": "-0.2413654387678869030515487600",
+          "gross_p10_pct": "-5.798800248224505274770737090",
+          "gross_p90_pct": "2.623226131497187001427491800",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 31,
+          "positive_n": 28,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 59
+      },
+      "2026-06-21|D0_ONLY": {
+        "D0_24h": {
+          "censored_n": 3,
+          "complete_n": 41,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-8.295597096214224514689579763",
+          "gross_median_pct": "-8.12500",
+          "gross_p10_pct": "-25.31645569620253164556962025",
+          "gross_p90_pct": "4.092325120362503540073633500",
+          "loss_20pct_or_worse_n": 5,
+          "nonpositive_n": 34,
+          "positive_n": 7,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 44,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-1.089401140101177919969275847",
+          "gross_median_pct": "-0.680384742398234873585159000",
+          "gross_p10_pct": "-4.586369481354479211315902270",
+          "gross_p90_pct": "1.294122897050292293275023400",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 30,
+          "positive_n": 14,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 44
+      },
+      "2026-06-21|D1_PRESENT": {
+        "D0_24h": {
+          "censored_n": 6,
+          "complete_n": 50,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 4,
+          "gross_mean_pct": "5.466898566899998643527904539",
+          "gross_median_pct": "1.510042127067148333758289450",
+          "gross_p10_pct": "-14.00105801445953094692294128",
+          "gross_p90_pct": "39.29001203369434416365824310",
+          "loss_20pct_or_worse_n": 3,
+          "nonpositive_n": 24,
+          "positive_n": 26,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 56,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.6997615727464472159672954332",
+          "gross_median_pct": "0.456222514691085391470853200",
+          "gross_p10_pct": "-3.475483749765170016907758780",
+          "gross_p90_pct": "4.937400811144418973725974300",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 24,
+          "positive_n": 32,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 56
+      },
+      "2026-07-28|D0_ONLY": {
+        "D0_24h": {
+          "censored_n": 6,
+          "complete_n": 35,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-6.43446087515906144884838713",
+          "gross_median_pct": "-4.469865480351657663383116200",
+          "gross_p10_pct": "-22.39747634069400630914826498",
+          "gross_p90_pct": "8.598242811501597444089456900",
+          "loss_20pct_or_worse_n": 4,
+          "nonpositive_n": 26,
+          "positive_n": 9,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 41,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.2948344298689534298532413668",
+          "gross_median_pct": "-0.3341129301703975943869027700",
+          "gross_p10_pct": "-3.352719808416010947656517280",
+          "gross_p90_pct": "2.605863192182410423452768700",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 23,
+          "positive_n": 18,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 41
+      },
+      "2026-07-28|D1_PRESENT": {
+        "D0_24h": {
+          "censored_n": 2,
+          "complete_n": 52,
+          "gain100pct_or_more_n": 1,
+          "gain50pct_or_more_n": 4,
+          "gross_mean_pct": "8.080560734770272356512794823",
+          "gross_median_pct": "3.602900956056724673330298250",
+          "gross_p10_pct": "-16.78223185265438786565547129",
+          "gross_p90_pct": "40.51226551226551226551226550",
+          "loss_20pct_or_worse_n": 2,
+          "nonpositive_n": 23,
+          "positive_n": 29,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 54,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.5927414499286782135143323715",
+          "gross_median_pct": "-0.764704519495743224070492380",
+          "gross_p10_pct": "-4.149797570850202429149797570",
+          "gross_p90_pct": "4.034090909090909090909090900",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 36,
+          "positive_n": 18,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 54
+      }
+    },
+    "FUTURE_PRIORITY_DESCRIPTIVE_ONLY": {
+      "LATER_PRIORITY_EXISTS": {
+        "D0_24h": {
+          "censored_n": 5,
+          "complete_n": 272,
+          "gain100pct_or_more_n": 4,
+          "gain50pct_or_more_n": 16,
+          "gross_mean_pct": "5.811509173052968854017636511",
+          "gross_median_pct": "0.215455677402572954680522150",
+          "gross_p10_pct": "-17.65397618697633397030721740",
+          "gross_p90_pct": "32.56351039260969976905311780",
+          "loss_20pct_or_worse_n": 21,
+          "nonpositive_n": 135,
+          "positive_n": 137,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 277,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.1181713569519511850594450970",
+          "gross_median_pct": "-0.1741553465691396725879484500",
+          "gross_p10_pct": "-4.010566762728146013448607110",
+          "gross_p90_pct": "4.022082018927444794952681400",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 147,
+          "positive_n": 130,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 277
+      },
+      "NO_LATER_PRIORITY": {
+        "D0_24h": {
+          "censored_n": 34,
+          "complete_n": 208,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "8.931122111482729953231010939",
+          "gross_median_pct": "11.25917894829855044339010915",
+          "gross_p10_pct": "-11.27142052616052991498833436",
+          "gross_p90_pct": "28.22580645161290322580645160",
+          "loss_20pct_or_worse_n": 2,
+          "nonpositive_n": 79,
+          "positive_n": 129,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 242,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.1136203246601709468392337403",
+          "gross_median_pct": "0.157205710499512801523415050",
+          "gross_p10_pct": "-3.159041394335511982570806100",
+          "gross_p90_pct": "2.813748450199752031960325100",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 111,
+          "positive_n": 131,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 242
+      }
+    },
+    "IDENTITY": {
+      "CONFIRMED_TRADFI_OUT_OF_CRYPTO_SCOPE": {
+        "D0_24h": {
+          "censored_n": 0,
+          "complete_n": 3,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "6.940761192606850053954190333",
+          "gross_median_pct": "10.91353634140920204489886640",
+          "gross_p10_pct": "-4.469865480351657663383116200",
+          "gross_p90_pct": "14.37861271676300578034682080",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 1,
+          "positive_n": 2,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 3,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-1.125956562778471804695944613",
+          "gross_median_pct": "-0.5031246689969282914945450700",
+          "gross_p10_pct": "-2.730236348818255908720456400",
+          "gross_p90_pct": "-0.1445086705202312138728323700",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 3,
+          "positive_n": 0,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 3
+      },
+      "CRYPTO_IDENTITY_UNVERIFIED": {
+        "D0_24h": {
+          "censored_n": 38,
+          "complete_n": 463,
+          "gain100pct_or_more_n": 4,
+          "gain50pct_or_more_n": 15,
+          "gross_mean_pct": "7.138019700277851767995753193",
+          "gross_median_pct": "2.818461538461538461538461500",
+          "gross_p10_pct": "-15.55521798572079598967036306",
+          "gross_p90_pct": "28.55673366038930210476341190",
+          "loss_20pct_or_worse_n": 23,
+          "nonpositive_n": 208,
+          "positive_n": 255,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 501,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.01571710288285890623743061665",
+          "gross_median_pct": "0.016900456312320432651681600",
+          "gross_p10_pct": "-3.481012658227848101265822780",
+          "gross_p90_pct": "3.046683046683046683046683000",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 249,
+          "positive_n": 252,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 501
+      },
+      "MULTIPLIER_MAPPING_UNVERIFIED": {
+        "D0_24h": {
+          "censored_n": 1,
+          "complete_n": 14,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 1,
+          "gross_mean_pct": "8.048463532310674272925079067",
+          "gross_median_pct": "1.378818316278304357511404050",
+          "gross_p10_pct": "-11.15730186402038353225157570",
+          "gross_p90_pct": "32.56351039260969976905311780",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 5,
+          "positive_n": 9,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 15,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "1.099299036038455771027486633",
+          "gross_median_pct": "1.539133282392751882982207200",
+          "gross_p10_pct": "-3.925767309064953604568165600",
+          "gross_p90_pct": "3.237410071942446043165467600",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 6,
+          "positive_n": 9,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 15
+      }
+    },
+    "ORIGINAL_D1": {
+      "D0_ONLY": {
+        "D0_24h": {
+          "censored_n": 14,
+          "complete_n": 200,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "4.069684290975914169304983923",
+          "gross_median_pct": "0.610428351931123516944044400",
+          "gross_p10_pct": "-14.92138831207356867398398101",
+          "gross_p90_pct": "23.96946564885496183206106870",
+          "loss_20pct_or_worse_n": 10,
+          "nonpositive_n": 97,
+          "positive_n": 103,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 214,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "-0.05900558746945706696382337033",
+          "gross_median_pct": "0.091908992577843629363339650",
+          "gross_p10_pct": "-2.688630932058723113690679410",
+          "gross_p90_pct": "2.569423252975282270369240200",
+          "loss_20pct_or_worse_n": 1,
+          "nonpositive_n": 101,
+          "positive_n": 113,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 214
+      },
+      "D1_PRESENT": {
+        "D0_24h": {
+          "censored_n": 25,
+          "complete_n": 280,
+          "gain100pct_or_more_n": 4,
+          "gain50pct_or_more_n": 16,
+          "gross_mean_pct": "9.373096557370116159656609363",
+          "gross_median_pct": "3.986999683681651328904876450",
+          "gross_p10_pct": "-16.32986751635083011906758343",
+          "gross_p90_pct": "35.37250151423379769836462750",
+          "loss_20pct_or_worse_n": 13,
+          "nonpositive_n": 117,
+          "positive_n": 163,
+          "real_executable_net": "UNKNOWN"
+        },
+        "D0_5m": {
+          "censored_n": 0,
+          "complete_n": 305,
+          "gain100pct_or_more_n": 0,
+          "gain50pct_or_more_n": 0,
+          "gross_mean_pct": "0.05857227221768170969386861626",
+          "gross_median_pct": "-0.0812611734113440598082236300",
+          "gross_p10_pct": "-3.929840142095914742451154530",
+          "gross_p90_pct": "3.904326415758002110446711200",
+          "loss_20pct_or_worse_n": 0,
+          "nonpositive_n": 157,
+          "positive_n": 148,
+          "real_executable_net": "UNKNOWN"
+        },
+        "original_cases": 305
+      }
+    }
+  },
+  "exposed_research_only_no_new_OOS": true,
+  "monster_deployment": "NO_GO",
+  "new_model_independent_AI_review": "NOT_DONE",
+  "no_strategy_parameters_fitted": true,
+  "original_D0_24h_completed": 480,
+  "original_D0_cases": 519,
+  "posthoc_future_priority_segment_never_a_live_input": true,
+  "real_executable_net": "UNKNOWN",
+  "schema": "MONSTER_STAGE115_FROZEN_ORIGINAL519_D0_COHORT_STABILITY_V1",
+  "source_original519_stage114_blob": "de64a09ff4f8b35009fd1ff71a284542fd5de5ac",
+  "source_verified_compact_stage114_blob": "33e38198a8ad2c0d99ebf4161c77264978ffbcc4"
+}
