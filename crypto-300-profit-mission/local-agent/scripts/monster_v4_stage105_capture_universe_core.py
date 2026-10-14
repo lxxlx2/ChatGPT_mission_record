@@ -10,7 +10,7 @@ from __future__ import annotations
 from datetime import datetime,timezone
 import hashlib
 import json
-import re
+import unicodedata
 
 SCHEMA = "MONSTER_STAGE91_FROZEN_FORWARD_USDM_FULL_POPULATION_REPLAY_V1"
 WINDOWS = (
@@ -47,6 +47,28 @@ def verify_window(utc: str) -> int:
     return int(d.timestamp()*1000)
 
 
+def valid_exact_venue_symbol(symbol: object) -> bool:
+    """Accept exchange-provided Unicode letters/numbers but NO normalization.
+
+    Explicitly reject punctuation, invisible/control and path separators;
+    underscores may only separate nonempty identifier components. ASCII
+    lowercase is deliberately excluded to retain old USD-M invariants.
+    """
+    if not isinstance(symbol,str) or not symbol or len(symbol)>160:
+        return False
+    parts=symbol.split("_")
+    if any(not part for part in parts):
+        return False
+    for part in parts:
+        for char in part:
+            if ("A"<=char<="Z" or "0"<=char<="9"):
+                continue
+            if ord(char)>127 and unicodedata.category(char)[0] in ("L","N"):
+                continue
+            return False
+    return True
+
+
 def freeze_universe(packet: dict) -> dict:
     """Validate only the archived bytes/clock. No claim of live official origin."""
     if not isinstance(packet, dict) or packet.get("schema") != SCHEMA:
@@ -81,13 +103,13 @@ def freeze_universe(packet: dict) -> dict:
         if not isinstance(item, dict):
             raise ValueError("STAGE91_NONOBJECT_MARKET_ROW")
         symbol = item.get("symbol")
-        # USD-M exchangeInfo can include dated delivery contracts with "_".
-        # Preserve *all* contracts in the population and choose PERPETUAL
-        # separately. Do not use Unicode isalnum() as a venue symbol validator.
-        if (not isinstance(symbol, str)
-            or not re.fullmatch(r"[A-Z0-9]+(?:_[A-Z0-9]+)*",symbol)
-            or symbol in seen):
-            raise ValueError("STAGE91_MARKET_SYMBOL_DUPLICATE_OR_INVALID")
+        # USD-M includes official Unicode crypto symbol names as well as
+        # dated delivery identifiers. Validate exact exchange raw text without
+        # dropping/rewriting anything and split duplicate vs malformed errors.
+        if not valid_exact_venue_symbol(symbol):
+            raise ValueError("STAGE91_MARKET_SYMBOL_INVALID")
+        if symbol in seen:
+            raise ValueError("STAGE91_MARKET_SYMBOL_DUPLICATE")
         seen.add(symbol)
         status = item.get("status")
         contract_type = item.get("contractType")
