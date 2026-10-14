@@ -1,6 +1,5 @@
 """A05-R2 tests: the historical frozen 32 and complete original-wire evidence."""
 import json
-from pathlib import Path
 
 import pytest
 
