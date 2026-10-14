@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"status\": \"OK\",\n  \"verdict\": \"PASS\",\n  \"summary\": \"Reviewed 3ed4755e against e2fdb48e. Verified ground-truth chain metadata parsing, Token2022 self-metadata pointer restrictions, Metaplex PDA generation, market base/quote direction validation, and Node/UI rendering tests. All tests pass cleanly without breaking existing frozen policy.\",\n  \"findings\": [],\n  \"model\": \"gemini-3.5-flash\",\n  \"latency_seconds\": 46.834,\n  \"privacy\": \"PUBLIC\",\n  \"redactions\": [],\n  \"egress_material_sha256\": \"ad68da0ee8365643351b70bf8d8dffda3a0b1c7d71850ee107d5b8fd8b7ac352\"\n}"
+    }
+  ],
+  "isError": false
+}

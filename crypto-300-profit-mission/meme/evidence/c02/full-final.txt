@@ -1,0 +1,36 @@
+........................................................................ [  4%]
+........................................................................ [  9%]
+........................................................................ [ 14%]
+........................................................................ [ 19%]
+........................................................................ [ 24%]
+........................................................................ [ 29%]
+........................................................................ [ 34%]
+........................................................................ [ 39%]
+........................................................................ [ 44%]
+........................................................................ [ 49%]
+........................................................................ [ 54%]
+........................................................................ [ 59%]
+........................................................................ [ 64%]
+........................................................................ [ 69%]
+........................................................................ [ 74%]
+........................................................................ [ 79%]
+........................................................................ [ 84%]
+........................................................................ [ 89%]
+........................................................................ [ 94%]
+........................................................................ [ 99%]
+.....                                                                    [100%]
+=============================== warnings summary ===============================
+tests/test_frank_pr39_controlled_release.py::test_sigkill_journal_and_recovery
+  /Users/jerson/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=21332) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+tests/test_frank_pr39_forward_recovery.py: 12 warnings
+  /Users/jerson/Documents/ChatGPT/mission-ca-c02-20261014/crypto-300-profit-mission/local-agent/tests/test_frank_pr39_forward_recovery.py:284: DeprecationWarning: This process (pid=21332) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    child = os.fork()
+
+tests/test_frank_pr39_legacy_cutover.py::test_hard_kill_after_intent_leaves_recoverable_journal_and_no_second_loop
+  /Users/jerson/Documents/ChatGPT/mission-ca-c02-20261014/crypto-300-profit-mission/local-agent/tests/test_frank_pr39_legacy_cutover.py:636: DeprecationWarning: This process (pid=21332) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1445 passed, 14 warnings in 73.29s (0:01:13)

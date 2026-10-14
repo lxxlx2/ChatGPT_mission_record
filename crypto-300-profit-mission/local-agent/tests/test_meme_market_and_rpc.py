@@ -96,8 +96,10 @@ def test_token_profile_reads_chain_authorities_without_market_guessing():
     assert out["token_program"]=="SPL Token-2022"
     assert out["mint_authority"] is None
     assert out["freeze_authority"] is None
-    assert out["metadata_update_authority"] is None
-    assert out["metadata_update_authority_status"]=="CHAIN_PARSED"
+    # Incomplete extension lacks exact mint/name/symbol/pointer: null is not proved revocation.
+    assert out["metadata_update_authority"] == "UNAVAILABLE"
+    assert out["metadata_update_authority_status"]=="UNAVAILABLE"
+    assert out["metadata"]["status"]=="UNCONFIRMED"
     assert out["sensitive_extensions"]==[]
     assert out["risk_flags"]==[]
 

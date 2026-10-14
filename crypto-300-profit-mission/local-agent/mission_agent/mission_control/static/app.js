@@ -934,7 +934,7 @@ function clusterProgressDetail(job) {
   const p=job.progress || {};
   const stage=p.stage || job.status || 'RUNNING';
   if (stage==='BASE_READY') {
-    const name=[p.name,p.symbol].filter(Boolean).join(' · ') || 'Token 信息已读取';
+    const name=(p.token_identity || {}).display_label || '链上名称未确认';
     return name + (p.market_cap_usd != null ? ' · MC ' + usd(p.market_cap_usd) : '') +
       (p.liquidity_usd != null ? ' · LP ' + usd(p.liquidity_usd) : '') +
       ' · 正在解析 Top20 owner';
@@ -967,7 +967,9 @@ function renderClusterPreview(job) {
   node.innerHTML=
     '<div class="cluster-preview-head"><strong>' + (incomplete ? '深度分析未完成，已保留基础行情' : '已取得基础行情，持仓与资金关系仍在扫描') + '</strong><span>临时结果，待链上报告核实</span></div>' +
     '<div class="cluster-preview-items">' +
-    fact('代币',esc([p.name,p.symbol].filter(Boolean).join(' / ') || '名称未确认')) +
+    fact('代币',esc((p.token_identity || {}).display_label || '链上名称未确认')) +
+    fact('身份核实',esc((p.token_identity || {}).identity_status || 'UNCONFIRMED')) +
+    fact('身份冲突',esc((p.token_identity || {}).conflict_status || 'UNCONFIRMED')) +
     fact('参考价',ready ? esc(usd(p.price_usd,8)) : '暂不可用') +
     fact('市值',ready ? esc(usd(p.market_cap_usd)) : '暂不可用') +
     fact('主池流动性',ready ? esc(usd(p.liquidity_usd)) : '暂不可用') +
@@ -1040,11 +1042,14 @@ function renderClusterReport(report) {
     ? new Date(observedAt * 1000).toLocaleString('zh-CN')
     : '时间未知';
   const observedAge = Number.isFinite(observedAt) ? age(observedAt) : '时间未知';
-  const tokenName = market.name || '名称未取到';
-  const tokenSymbol = market.symbol || '—';
+  const identity = report.token_identity || {};
+  const tokenName = identity.display_label || '链上名称未确认';
+  const tokenSymbol = '';
 
   $('cluster-summary').innerHTML = [
     ['代币', '<span>' + esc(tokenName) + '</span><span class="subvalue">' + esc(tokenSymbol) + '</span>'],
+    ['身份核实', esc(identity.identity_status || 'UNCONFIRMED') + ' / ' + esc(identity.market_match_status || 'UNCONFIRMED') + '<span class="subvalue">' + esc(identity.conflict_status || 'UNCONFIRMED') + '</span>'],
+    ['身份来源', '<details><summary>核实来源与失败记录</summary><pre style="max-height:320px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;text-align:left">' + esc(JSON.stringify({sources:identity.sources || [],attempts:identity.metadata_attempts || [],mint_account_reason:identity.mint_account_reason || null,market_attempt:identity.market_attempt || {}},null,2)) + '</pre></details>'],
     ['CA', '<code class="summary-ca">' + esc(mint) + '</code>' + copyButton(mint,'复制 CA')],
     ['参考价', market.status==='OK' && market.price_usd != null ? esc('$'+smallPrice(market.price_usd)) : '<span class="unresolved">不可用</span>'],
     ['市值', esc(usd(market.market_cap_usd))],
@@ -1213,7 +1218,11 @@ function renderClusterReport(report) {
     '<p>目前仅展示市场资料附带的链接；不抓取实时官方帖子，也不提供官方认领或叙事打分。</p></div>' +
     '<div class="narrative-links">' + (websites || socials ? websites + socials : '<span class="muted">当前市场资料没有可展示的官网/社交链接</span>') + '</div>';
 
-  clusterStatus('done','分析已更新', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
+  if (identity.conflict_status==='TOKEN_IDENTITY_CONFLICT' || identity.identity_status!=='VERIFIED') {
+    clusterStatus('error',identity.conflict_status==='TOKEN_IDENTITY_CONFLICT' ? 'TOKEN_IDENTITY_CONFLICT：身份来源冲突' : '身份未核实：UNCONFIRMED','查看身份来源及查询失败记录；数据时间 ' + observedAge);
+  } else {
+    clusterStatus('done','分析已更新', '数据时间 ' + observedAge + (rpcFailures ? ' · 有部分链上请求失败，详情见证据' : ''));
+  }
 }
 
 
