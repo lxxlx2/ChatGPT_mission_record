@@ -102,7 +102,8 @@ def selftest():
     t="2026-10-14T06:03:00Z"
     base=earlier.utc_ms(t)
     minute=[(base+(i-61)*MIN,D(100),D(101),D(99),D(100),
-             D(150_000),1000) for i in range(61)]
+             D(150_000) if i>=46 else D(100_000),1000)
+            for i in range(61)]
     # >=1M quote15, >=10k trades15, ratio 1.3.
     # 60m ret must be 8%; set the t-60 close accordingly.
     changed=list(minute)
