@@ -120,8 +120,6 @@ def audit(packets:list[dict]):
             "priority_count":len(episodes),
             "by_horizon_first_and_repeat_median_price_only_pct":{
                 key:str(median(vals)) for key,vals in sorted(bycase.items())},
-            "source_missing_or_horizon_censored":{
-                key:censored[key] for key in []},
         })
 
     if bysource["EXPIRED"]!=519 or original_priorities!=740:
