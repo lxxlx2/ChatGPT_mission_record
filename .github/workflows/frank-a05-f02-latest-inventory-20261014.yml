@@ -1,0 +1,40 @@
+name: Frank A05 F02 latest offline capture inventory research
+on:
+  push:
+    branches:
+      - dev/frank-a05-f02-latest-inventory-evidence-20261014
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-sha-code:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
+      - name: Syntax lint and no protected runtime writing
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m compileall -q mission_agent/mission_control/wallet_inventory_snapshot.py scripts/frank_research_latest_inventory.py tests/test_frank_a05_f02_latest_inventory.py
+          python -m pyflakes mission_agent/mission_control/wallet_inventory_snapshot.py scripts/frank_research_latest_inventory.py tests/test_frank_a05_f02_latest_inventory.py
+          node --check mission_agent/mission_control/static/app.js
+      - name: Focused A05 F02 latest snapshot plus existing wallet attribution
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_a05_f02_latest_inventory.py tests/test_frank_a04_a05_chain_capture.py tests/test_frank_a04_v2_v3_upgrade.py tests/test_frank_a04_generic_tx_versions.py
+      - name: Full real Git Mission local agent
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests
