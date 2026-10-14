@@ -1,0 +1,49 @@
+name: Monster Stage138 source-to-model source retention and disjoint window G0-G3 ledger
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage138_manual_evidence_scorecard.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage138_manual_evidence_scorecard.py'
+      - '.github/workflows/monster-stage138-source-to-forward-gates-offline.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage138_manual_evidence_scorecard.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage138_manual_evidence_scorecard.py'
+      - '.github/workflows/monster-stage138-source-to-forward-gates-offline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-core-source-to-full-market-scorecard:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile offline source pipeline and run original V4 D0 queue and original Stage80 D1 through Stage138
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage136_manual_publisher_archive_acquisition.py monster_v4_stage135_full_market_publisher_minute_coverage.py monster_v4_stage137_dynamic_t0_original_core_causal_replay.py monster_v4_stage138_manual_evidence_scorecard.py
+          python -m unittest -v test_monster_v4_stage138_manual_evidence_scorecard.py
+      - name: Refuse all implicit T0 source collection and model trading
+        shell: bash
+        run: |
+          if python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage138_manual_evidence_scorecard.py --out /tmp/monster-stage138-unrequested.json; then
+            echo 'STAGE138_MISSING_REAL_T0_FAIL_OPEN'
+            exit 1
+          fi
+          test ! -f /tmp/monster-stage138-unrequested.json
+          echo 'STAGE138_OFFLINE_PLAN_NO_AUTO_SOURCE_NO_SCHEDULE_NO_GMAIL_NO_FRANK=PASS'
