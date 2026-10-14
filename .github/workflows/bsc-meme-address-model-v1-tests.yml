@@ -21,6 +21,8 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_priority4_competitors.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing4_creation.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing17.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_v2_swaps19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_v2_swaps19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing17.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing4_creation.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing22.py"
@@ -71,6 +73,25 @@ jobs:
         run: |
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1_bulk16.py" -v
+      - name: P4-B frozen 19 CA V2 Swap directional evidence and scoped fallbacks
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_v2_swaps19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-19-v2-swaps.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4b-19-v2-swaps.json").read_text(encoding="utf-8"))
+          expected=json.loads((r/"bsc-meme-address-model-v1-p4b-v2-19ca-first10-swap-observations-2026-10-14.json").read_text(encoding="utf-8"))
+          assert actual==expected,"P4B frozen Swap source replay output drift"
+          s=actual["summary"]
+          assert (s["exact_CAs"],s["complete_ten_block_windows"],s["first_block_only_fallbacks"],
+                  s["observed_v2_swap_events_in_verified_windows"])==(19,11,8,24)
+          assert all(x["qualified_major_opportunity"]=="UNRESOLVED" and x["follower_pnl"]=="UNRESOLVED"
+                     for x in actual["rows"])
+          assert s["production"]=="NO_GO"
+          print("PASS P4B full 19 pool truth table: 11 full 10-block; eight strict one-block only; 24 Swap events; no false alpha")
+          PY
       - name: P4 full 17 competing first active source and event semantic replay
         shell: bash
         run: |
