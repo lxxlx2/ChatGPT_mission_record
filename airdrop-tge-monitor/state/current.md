@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-14 22:59:39 Asia/Bangkok
+Updated: 2026-10-15 04:00:28 Asia/Bangkok
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-14 22:59:39 Asia/Bangkok
+- latest_actual_run: 2026-10-15 04:00:28 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-14/225939-final-retry.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-14/225839-attempt.md
-- latest_scheduled_shard: 2
-- latest_executed_shard: 2
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-15/040028-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-15/035946-attempt.md
+- latest_scheduled_shard: 0
+- latest_executed_shard: 0
 - stale_shard_recovery: false
-- latest_candidate_count: 5
+- latest_candidate_count: 6
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 3
+- latest_source_failures: 2
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
@@ -82,3 +82,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-14 20:05:45: existing HH:00 run, append-only attempt 200440-attempt.md and terminal 200545-final.md committed; urgent set + scheduled shard0 only, no recovery override. 15 unique projects attempted, 5 candidates, 0 Tier A/B new ACTION, 3 unresolved first-party/eligibility gaps (Concrete extra USDC, Block Stranding, Surf NFT eligibility). Space Oct15 and MetaMask Oct15 delivered stable keys suppressed; Surf NFT first-party countdown shows future member claims, no claim-open or personal eligibility proof. No Gmail/App notification. Last meaningful shard0 attempt advanced to 20:05:45; verified-complete timestamp remains unchanged. Recent executed shards from cached receipts [2,3,0,0]; fairness cap respected. No schedule, scope, title or recipient change.
 
 - 2026-10-14 22:59:39: off-minute existing monitor invocation, attempt 225839-attempt.md and terminal 225939-final-retry.md committed (primary final BLOCKED_WITH_REASON GitHub safety check). Urgent five + dynamic Surf + scheduled shard2, 14 unique active projects attempted; 5 candidate families, 0 verified new Tier A/B ACTION, 3 SOURCE_GAP (Concrete additional USDC, Surf NFT eligibility, Clay Shares equity current action). Space and MetaMask Oct15 known delivered keys suppressed. Gmail/App silent. last_meaningful_attempt_at shard2 advanced to 22:59:39; last_verified_complete_at unchanged. Recent executed shards [3,0,0,2], no override. HH:00 task schedule unchanged; this off-minute invocation is not HH:00 trigger proof.
+
+- 2026-10-15 04:00:28: actual scheduled-hour run with 03:59:46 attempt and 040028-final.md committed; urgent5 + dynamic Surf and scheduled shard0, 15 distinct projects attempted, 13 checked_no_update, 2 SOURCE_GAP (Concrete additional USDC and Surf NFT eligibility), 6 candidate families, 0 new Tier A/B ACTION, 0 identity failures. Space Oct15 and MetaMask Oct15 delivered stable keys suppressed; no Gmail/App. Last meaningful shard0 attempt advanced to 04:00:28; verified-complete timestamps unchanged (PARTIAL). Recent final-backed executed shards [2,1,2,0]; no stale override. Prior 02:56 attempt-only gap remains unverified. Task unchanged.
