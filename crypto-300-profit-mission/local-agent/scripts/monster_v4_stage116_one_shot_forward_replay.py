@@ -34,7 +34,9 @@ PACKET_SCHEMA="MONSTER_STAGE116_REAL_OFFICIAL_FUTURE_WINDOW_SHARD_V1"
 
 
 def shard_no(symbol):
-    return int(hashlib.sha256(symbol.encode("ascii")).hexdigest()[:8],16)%SHARDS
+    if not scoring.scope.valid_exact_venue_symbol(symbol):
+        raise ValueError("STAGE116_INVALID_EXACT_USDM_SYMBOL_FOR_SHARD")
+    return int(hashlib.sha256(symbol.encode("utf-8")).hexdigest()[:8],16)%SHARDS
 
 
 def absent(symbol,window,exc):
@@ -201,6 +203,9 @@ def aggregate_shards(snapshot,window,shards:list[dict]):
 
 def selftest():
     assert shard_no("CATUSDT")==shard_no("CATUSDT")
+    assert shard_no("龙虾USDT")==shard_no("龙虾USDT")
+    assert shard_no("哈基米USDT") in range(SHARDS)
+    assert len({shard_no(name) for name in ("币安人生USDT","龙虾USDT","哈基米USDT")})>=1
     assert shard_no("CATUSDT") in range(SHARDS)
     assert len({str(i) for i in range(SHARDS)})==24
     missing=absent("CATUSDT",scoring.WINDOWS[0],FileNotFoundError("404"))
