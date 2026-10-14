@@ -100,11 +100,30 @@ class WalletEvidenceStore:
                             document["capture_sha256"], document)
 
     def record_transaction(self, document: dict) -> bool:
+        """Append a versioned derived TX, never rewrite historical V2 entries.
+
+        Previously imported SOL_TOKEN_VIEW_V2 TX documents have the legacy
+        identity solana:<signature>:<slot>. That exact key is permanent.
+        SOL_TOKEN_VIEW_V3 uses its own :v3 suffix within the same TX kind,
+        so re-normalizing an unchanged RAW_TX cannot collide with prior V2.
+        An algorithm changing normalized content must get a new version/key.
+        """
         chain, signature, slot = transaction_identity(document)
         payload = {k: v for k, v in document.items() if k != "canonical_event_sha256"}
         if _sha(_json(payload)) != document.get("canonical_event_sha256"):
             raise ValueError("TRANSACTION_HASH_MISMATCH")
-        return self._append("TX", chain + ":" + signature + ":" + str(slot), document)
+        schema_version = document.get("schema_version")
+        normalizer_version = document.get("normalizer_version")
+        if (type(schema_version) is int and schema_version == 2
+                and normalizer_version == "SOL_TOKEN_VIEW_V2"):
+            suffix = ""  # Immutable historical TX key; never auto-migrate.
+        elif (type(schema_version) is int and schema_version == 3
+              and normalizer_version == "SOL_TOKEN_VIEW_V3"):
+            suffix = ":v3"
+        else:
+            raise ValueError("UNSUPPORTED_TRANSACTION_NORMALIZER_VERSION")
+        identity = chain + ":" + signature + ":" + str(slot) + suffix
+        return self._append("TX", identity, document)
 
     def read_wallet_captures(self, wallet: str, limit: int = 30) -> list[dict]:
         if type(limit) is not int or not 1 <= limit <= 100:
