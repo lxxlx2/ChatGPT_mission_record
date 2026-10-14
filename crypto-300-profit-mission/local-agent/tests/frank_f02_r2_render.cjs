@@ -68,10 +68,37 @@ const base = () => ({
 });
 let response = base();
 let calls = 0;
-const window = {};
+// Deterministic virtual time: a loaded source must expire without an API
+// response, including when background timers are suspended.
+let elapsedMs = 0;
+let nextTimerId = 1;
+const pendingTimers = new Map();
+const NativeDate = Date;
+class ClockDate extends NativeDate {
+  static now() { return 1800000000000 + elapsedMs; }
+}
+const performance = {now: () => elapsedMs};
+function setTimeoutFake(callback, delay) {
+  const id = nextTimerId++;
+  pendingTimers.set(id, {callback, due: elapsedMs + delay});
+  return id;
+}
+function clearTimeoutFake(id) { pendingTimers.delete(id); }
+function advance(ms, fireTimers = true) {
+  elapsedMs += ms;
+  if (!fireTimers) return;
+  for (const [id, entry] of [...pendingTimers.entries()]) {
+    if (elapsedMs >= entry.due) {
+      pendingTimers.delete(id);
+      entry.callback();
+    }
+  }
+}
+const window = {handlers:{}, addEventListener(name, callback) { this.handlers[name] = callback; }};
 const writes = [];
 const navigator = {clipboard:{writeText:async value => writes.push(value)}};
-const context = {window, document, navigator,
+const context = {window, document, navigator, Date: ClockDate,
+  performance, setTimeout: setTimeoutFake, clearTimeout: clearTimeoutFake,
   fetch:async (route, opts) => {
     assert.equal(route, "/api/research/positions");
     assert.equal(opts.cache, "no-store");
@@ -129,6 +156,44 @@ async function run() {
   assert.equal(nodes["position-rows"].children.length, 1);
   assert.equal(nodes["position-rows"].children[0].children[2].textContent, "1.2");
   assert.ok(calls >= 4);
-  process.stdout.write("F02_R2_NODE_RENDER=PASS: fresh, stale, equal-UTC inconsistency, filters, copy\n");
+  response = {...base(),capture_age_seconds:1,max_age_seconds:5};
+  await nodes.reload.handlers.click();
+  await wait();
+  const callsBeforeTTL = calls;
+  nodes["state-filter"].value = "all";
+  nodes["state-filter"].handlers.change();
+  assert.equal(nodes["position-rows"].children[0].children[2].textContent, "1.2");
+  assert.equal(nodes["source-state"].textContent, "来源有效的归档观察");
+  // API would become stale after five seconds. At three seconds the
+  // conservative one-shot deadline must already hide balances.
+  advance(3500);
+  assert.equal(calls, callsBeforeTTL);
+  assert.equal(nodes["source-state"].textContent, "来源已过期");
+  assert.equal(nodes["count-positive"].textContent, "0");
+  assert.equal(nodes["count-zero"].textContent, "0");
+  assert.equal(nodes["count-unknown"].textContent, "32");
+  assert.equal(nodes["position-rows"].children[0].children[2].textContent, "—");
+  assert.equal(nodes["position-rows"].children[0].children[3].textContent, "—");
+  assert.ok(nodes["age"].textContent.includes("4 秒前"));
+  nodes["state-filter"].value = "OPEN_ACCOUNT_NONZERO";
+  nodes["state-filter"].handlers.change();
+  assert.equal(nodes["position-rows"].children.length, 1);
+  assert.equal(nodes["position-rows"].children[0].children[0].textContent, "没有符合条件的研究目标");
+
+  // Background throttle: even with the timeout unscheduled, returning to
+  // a visible tab and interacting must fail closed immediately.
+  response = {...base(),capture_age_seconds:1,max_age_seconds:5};
+  nodes["state-filter"].value = "all";
+  await nodes.reload.handlers.click();
+  await wait();
+  assert.equal(nodes["count-positive"].textContent, "1");
+  advance(8000, false);
+  document.visibilityState = "visible";
+  listeners.visibilitychange();
+  assert.equal(nodes["source-state"].textContent, "来源已过期");
+  assert.equal(nodes["count-unknown"].textContent, "32");
+  assert.equal(nodes["position-rows"].children[0].children[2].textContent, "—");
+  assert.equal(calls, callsBeforeTTL + 1);
+  process.stdout.write("F02_R2_NODE_RENDER=PASS: real loaded-source TTL expiry, background visibility, fresh, stale, metadata conflict, filters, copy\n");
 }
 run().catch(error => {console.error(error);process.exitCode=1});
