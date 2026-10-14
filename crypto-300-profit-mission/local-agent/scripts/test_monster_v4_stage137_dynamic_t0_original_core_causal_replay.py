@@ -104,11 +104,14 @@ class Stage137Tests(unittest.TestCase):
         a = {x["symbol_exact"]: x for x in r["all_source_population_rows"]}
         self.assertEqual(a["MSFTUSDT"]["replay_status"], "SOURCE_CENSORED_NO_REPLAY")
         self.assertEqual(a["币安人生USDT"]["replay_status"],
-                         "MODEL_SYMBOL_UNSUPPORTED_NOT_A_NO_WATCH")
+                         "ORIGINAL_V4_NUMERIC_CORE_WITH_UNICODE_IDENTITY_ADAPTER_CAUSAL_OFFLINE")
+        self.assertTrue(a["币安人生USDT"]["source_core_unicode_adapter_used"])
+        self.assertEqual(a["币安人生USDT"]["original_exact_venue_symbol"], "币安人生USDT")
         self.assertEqual(a["NEWUSDT"]["replay_status"],
                          "NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED")
         self.assertEqual(r["raw_usdm_venue_descriptive_only"]["source_censored"], 1)
-        self.assertEqual(r["raw_usdm_venue_descriptive_only"]["model_symbol_unsupported"], 1)
+        self.assertEqual(r["raw_usdm_venue_descriptive_only"].get("model_symbol_unsupported", 0), 0)
+        self.assertEqual(r["raw_usdm_venue_descriptive_only"]["model_compatible_complete"], 2)
         self.assertEqual(r["raw_usdm_venue_descriptive_only"]["new_listing_unscored"], 1)
         self.assertFalse(any(x["G1_crypto_eligible"] for x in a.values()))
         self.assertEqual((r["G0"], r["G1"], r["G4"], r["G6"]),
@@ -128,6 +131,50 @@ class Stage137Tests(unittest.TestCase):
                          "SOURCE_FAILED_NO_BACKFILL")
         self.assertEqual(r["stage132_buy_proxy"], "NEGATIVE_UNCHANGED")
         self.assertFalse(r["scheduled_capture"])
+
+    def test_unicode_causes_identical_original_v4_d0_and_stage80_d1_numeric_signals(self):
+        start = s131.stamp("2026-10-28T06:20:00Z")
+        end = start + 168 * 3600_000
+        bars, _ = s137.full_window_minutes(self.root, "ABCUSDT", start, end)
+        contract = s137.original_core_contract()
+        ascii_result = s137.replay_original_d0_d1("ABCUSDT", start, end, bars, contract)
+        unicode_result = s137.replay_original_d0_d1("币安人生USDT", start, end, bars, contract)
+        self.assertIsNotNone(ascii_result["D0_first_UTC"])
+        for name in ("D0_first_UTC", "D1_first_UTC", "D1_entry_path",
+                     "gross_future_labels_not_real_profit",
+                     "original_WATCH_EARLY_event_count_not_independent_2x"):
+            self.assertEqual(ascii_result[name], unicode_result[name])
+        self.assertTrue(unicode_result["source_core_unicode_adapter_used"])
+        self.assertFalse(ascii_result["source_core_unicode_adapter_used"])
+        self.assertEqual(unicode_result["original_exact_venue_symbol"], "币安人生USDT")
+        self.assertNotEqual(unicode_result["isolated_original_D0_SQLite_symbol"], "币安人生USDT")
+        self.assertTrue(unicode_result["isolated_original_D0_SQLite_symbol"].isascii())
+        self.assertTrue(unicode_result["isolated_original_D0_SQLite_symbol"].endswith("USDT"))
+        self.assertEqual(unicode_result["replay_status"],
+                         "ORIGINAL_V4_NUMERIC_CORE_WITH_UNICODE_IDENTITY_ADAPTER_CAUSAL_OFFLINE")
+
+    def test_actual_stage140_525_original_symbol_aliases_collision_free(self):
+        file = Path(__file__).resolve().parents[2] / (
+            "monster/evidence/monster_stage140_user_authorized_real_www_mirror_20261015/"
+            "t0_2026-10-14T175247096Z/stage139_original_T0_asof_contract_metadata.json")
+        record = json.loads(file.read_text(encoding="utf-8"))
+        original = [x["symbol_exact"] for x in record["initial_original_instrument_rows"]]
+        self.assertEqual(len(original), 525)
+        unicode = [name for name in original if not name.isascii()]
+        self.assertEqual(set(unicode), {
+            "哈基米USDT", "币安人生USDT", "我踏马来了USDT", "牛来USDT", "龙虾USDT"})
+        aliases = s137.assert_original_population_aliases(
+            [{"symbol_exact": name} for name in original])
+        self.assertEqual(len(aliases), 525)
+        self.assertEqual(sum(k != v for k, v in aliases.items()), 5)
+        for name in unicode:
+            self.assertEqual(aliases[s137.original_d0_internal_symbol(name)], name)
+
+    def test_original_ascii_name_collision_with_unicode_proxy_is_rejected(self):
+        proxy = s137.original_d0_internal_symbol("币安人生USDT")
+        with self.assertRaisesRegex(ValueError, "ALIAS_SHADOWS_REAL_MARKET_SYMBOL"):
+            s137.assert_original_population_aliases([
+                {"symbol_exact": proxy}, {"symbol_exact": "币安人生USDT"}])
 
     def test_off_grid_relative_t0_never_unaligned_at_utc(self):
         start = s131.stamp("2026-10-28T06:20:00Z")
