@@ -1,0 +1,90 @@
+name: Monster Stage140 once validate REAL captured T0 and prepare full market offline publisher plan
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - '.github/workflows/monster-stage140-once-real-t0-offline-full-population-readiness-20261015.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-original-real-T0-no-live-recapture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regression and exact mirror receipt compatibility without network
+        shell: bash
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage133_manual_actual_t0_forward_proof.py monster_v4_stage134_t0_population_readiness_bridge.py monster_v4_stage138_manual_evidence_scorecard.py
+          python -m unittest -v test_monster_v4_stage133_manual_actual_t0_forward_proof.py test_monster_v4_stage139_official_t0_and_saved_contractinfo_evidence.py
+          python - <<'PY'
+          import copy
+          import monster_v4_stage133_manual_actual_t0_forward_proof as s
+          import monster_v4_stage134_t0_population_readiness_bridge as b
+          from test_monster_v4_stage133_manual_actual_t0_forward_proof import fixture
+          f,x,l=map(copy.deepcopy,fixture())
+          f["url"]=s.MIRROR_TIME_URL
+          x["url"]=s.MIRROR_EXCHANGE_URL
+          l["url"]=s.MIRROR_TIME_URL
+          packet=s.validate_three_http_records(f,x,l)
+          result=b.reconcile(packet)
+          assert result["t0_active_usdt_perpetual_attempts"]==3
+          assert packet["required_three_official_endpoints"]==[s.MIRROR_TIME_URL,s.MIRROR_EXCHANGE_URL,s.MIRROR_TIME_URL]
+          try:s.validate_three_http_records(f,x,{**l,"url":s.TIME_URL})
+          except ValueError:pass
+          else:raise AssertionError("STAGE140_MIXED_HOST_MUST_FAIL_CLOSED")
+          print("STAGE140_MIRROR_EXACT_URL_INTEGRITY_AND_ALL_ORIGINAL_STAGE133_TESTS_PASS")
+          PY
+      - name: Generate actual Stage138 offline original symbol-date population source plan
+        shell: bash
+        run: |
+          root=crypto-300-profit-mission/monster/evidence/monster_stage140_user_authorized_real_www_mirror_20261015/t0_2026-10-14T175247096Z
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage138_manual_evidence_scorecard.py --t0 "$root/stage133_original_three_HTTP_T0.json" --archive-root "$root/future_publisher_zip_archive_NOT_YET_COLLECTED" --phase plan --out "$root/stage138_actual_t0_no_source_offline_plan.json"
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path("crypto-300-profit-mission/monster/evidence/monster_stage140_user_authorized_real_www_mirror_20261015/t0_2026-10-14T175247096Z")
+          p=json.loads((root/"stage138_actual_t0_no_source_offline_plan.json").read_text())
+          s=p["stage136_offline_source_plan"]
+          assert p["new_forward_start_utc"]=="2026-10-14T18:00:00Z"
+          assert p["new_forward_end_exclusive_utc"]=="2026-10-21T18:00:00Z"
+          assert s["full_initial_venue_symbol_attempts"]==525
+          assert s["in_window_arrival_candidates_unverified"]==0
+          assert s["all_symbol_day_attempts"]==4725
+          assert s["pending_manual_run"]==4725
+          assert s["newly_fetched_checksum_verified"]==0
+          assert p["G1"]=="NOT_SCORABLE"
+          summary={"schema":"MONSTER_STAGE140_ACTUAL_MIRROR_T0_OFFLINE_FUTURE_SOURCE_READINESS_V1",
+           "actual_original_HTTP_start_UTC":p["new_forward_start_utc"],
+           "actual_source_window_end_exclusive":p["new_forward_end_exclusive_utc"],
+           "publisher_7d_window_plus_48h_earliest_manual_UTC":"2026-10-23T18:00:00Z",
+           "actual_Binance_venue_USDT_perpetual_attempts":525,
+           "planned_original_1m_symbol_days_for_24h_warmup_and_168h_forward":4725,
+           "genuinely_publisher_SHA_verified_days":0,
+           "pending_unavailable_not_negative":4725,
+           "complete_in_window_lifecycle_stream":"NOT_CAPTURED",
+           "original_T0_evidence_url":"https://www.binance.com/fapi/v1/exchangeInfo",
+           "official_documented_fapi_source_blocked_HTTP451":True,
+           "alternate_mirror_independently_same_source_certified":False,
+           "G0":"PARTIAL","G1":"NOT_SCORABLE","G2_G3":"NOT_PASSED","G4":"UNKNOWN","G5":"NOT_DONE","G6":"NO_GO",
+           "no_automatic_future_task":True,"Gmail":"OFF","Frank":"UNCHANGED"}
+          (root/"stage140_actual_t0_future_source_readiness_summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2,sort_keys=True)+"\n")
+          print("STAGE140_REAL_T0_STAGE138_OFFLINE_FULL_POPULATION_525_SYMBOLS_4725_DAYS_NO_G1_PASSED="+str(summary))
+          PY
+      - name: Persist only genuine model source readiness in original PR branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crypto-300-profit-mission/monster/evidence/monster_stage140_user_authorized_real_www_mirror_20261015/t0_2026-10-14T175247096Z/stage138_actual_t0_no_source_offline_plan.json crypto-300-profit-mission/monster/evidence/monster_stage140_user_authorized_real_www_mirror_20261015/t0_2026-10-14T175247096Z/stage140_actual_t0_future_source_readiness_summary.json
+          git commit -m "monster: confirm first real mirror T0 all525 original source plan and NO_GO"
+          git push origin HEAD:research/monster-v4-local-discovery-20261010
