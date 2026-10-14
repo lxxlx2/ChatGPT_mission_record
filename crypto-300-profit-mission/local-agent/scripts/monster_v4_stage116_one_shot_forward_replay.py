@@ -17,10 +17,12 @@ try:
     import monster_v4_stage116_forward_population_score as scoring
     import monster_v4_stage117_first_d0_fast_attention_core as early_candidate
     import monster_v4_stage118_asof_taker_proof_adapter as taker_candidate
+    import monster_v4_stage119_cohort_execution_bridge as execution_gate
 except ImportError:
     from scripts import monster_v4_stage116_forward_population_score as scoring
     from scripts import monster_v4_stage117_first_d0_fast_attention_core as early_candidate
     from scripts import monster_v4_stage118_asof_taker_proof_adapter as taker_candidate
+    from scripts import monster_v4_stage119_cohort_execution_bridge as execution_gate
 
 old=scoring.old
 v4=old.v4
@@ -80,6 +82,21 @@ def replay_one(symbol,window,fetch=None):
                   check["frozen_decision"]["PRICE_unchanged_Stage117_lane"]):
                 raise ValueError("STAGE118_FORWARD_ORIGINAL_STAGE117_PRICE_GATE_PARITY_FAILED")
         original["stage118_new_price_or_taker_buy_D0_candidate"]=check
+    # A separate G0/G4 research readiness record for every actually
+    # observed first D0 / original first D1, regardless of failed attention.
+    # Stage97 start-window status is never retrospectively promoted to
+    # verified trading at a subsequent first-D0 event timestamp.
+    audits=[]
+    for kind,clock in (("ORIGINAL_D0",original["D0_first_UTC"]),
+                       ("ORIGINAL_D1",original["D1_first_UTC"])):
+        if clock is None:
+            continue
+        event=execution_gate.scoped_event(
+            anchor=window[:10],symbol=symbol,venue="BINANCE_USDM",
+            signal_type=kind,observed_utc=clock)
+        audits.append(execution_gate.evaluate(
+            event,identity_classification="CRYPTO_IDENTITY_UNVERIFIED"))
+    original["stage119_D0_D1_asof_execution_source_readiness"]=audits
     return original
 
 
@@ -175,6 +192,13 @@ def selftest():
     assert missing["D0_first_UTC"] is None
     assert missing["source_status"].startswith("CENSORED")
     assert "stage117_new_first_D0_candidate" not in missing
+    assert "stage119_D0_D1_asof_execution_source_readiness" not in missing
+    ev=execution_gate.scoped_event(anchor=scoring.WINDOWS[0][:10],
+          symbol="CATUSDT",venue="BINANCE_USDM",signal_type="ORIGINAL_D0",
+          observed_utc="2026-10-14T06:03:00Z")
+    q=execution_gate.evaluate(ev)
+    assert q["D2_status"]=="IDENTITY_UNKNOWN"
+    assert q["G4_live_executable_profit"]=="NOT_SCORABLE"
     try:aggregate_shards({},scoring.WINDOWS[0],[])
     except ValueError as ex:assert "EXACT_ALL24" in str(ex)
     else:raise AssertionError("STAGE116_ALLOW_MISSING_UNIVERSE_SHARDS")
