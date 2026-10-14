@@ -22,6 +22,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing4_creation.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing4_creation.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing22.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing4_origin.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing4_origin.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-*.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-implementation-plan-2026-10-13.md"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_liquidity19.py"
@@ -318,6 +320,22 @@ jobs:
           assert s["production"]=="NO_GO"
           assert all(x["first_globally_tradable"]=="UNRESOLVED" for x in d["rows"])
           print("PASS priority 4 competitor pool initial-liquidity: one delayed in-range Mint +17 blocks; no follower alpha inferred")
+          PY
+      - name: P4 immutable 4 competitor creation liquidity and false-alpha guards
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_competing4_origin.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-competing4-origins.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("/tmp/bsc-p4-competing4-origins.json").read_text(encoding="utf-8"))
+          s=d["summary"]
+          assert (s["preexisting_competitors_total"],s["fully_creation_checked"],s["remaining_untested_competitors"]) == (17,4,13)
+          assert (s["creation_positive_liquidity"],s["creation_zero_active_liquidity"],s["creation_block_with_swap"]) == (3,1,2)
+          assert s["confirmed_global_first_tradable"] == 0 and s["confirmed_followable_profitable_misses"] == 0
+          assert d["rows"][2]["creation_liquidity_or_reserves_raw"] == "0"
+          assert s["production"]=="NO_GO"
+          print("PASS P4 4/17 competitor origins, 3 positive one zero-at-creation, 2 same-block swaps, no follower alpha")
           PY
       - name: Recompute 23x19 baseline deterministically
         run: |
