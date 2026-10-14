@@ -5,6 +5,7 @@ on:
     paths:
       - .github/workflows/monster-stage116-forward-gates-offline.yml
       - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_forward_population_score.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
       - crypto-300-profit-mission/monster/MONSTER_STAGE116_FROZEN_FORWARD_G0_G1_G2_G3_SCORING_CONTRACT_20261014.md
   workflow_dispatch:
 permissions:
@@ -27,6 +28,8 @@ jobs:
         run: |
           set -eu
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_forward_population_score.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py --selftest
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_forward_population_score.py --selftest
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage91_forward_oos_replay_gate.py --selftest
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage97_one_shot_usdm_capture.py --selftest
