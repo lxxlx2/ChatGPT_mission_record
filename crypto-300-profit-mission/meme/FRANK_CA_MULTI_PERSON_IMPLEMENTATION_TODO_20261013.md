@@ -62,6 +62,16 @@
 - 证据和限制：`meme/FRANK_CA_A04_HISTORY_PAGINATION_RESUME_CHECKPOINT_20261014.md`，随 PR #48 保存。只确认来自 RPC 的可用历史分页尾部，不认定创世/全链完整；owner 主地址以外的 ATA 历史、首次 market BUY / funding 路由、完整成本/PnL、重新扫描新 HEAD 均未完成。继续保留 **A04 [ ]**，不标记 DONE。另 AI 审查、Mac 本地真实 Sidecar/32 Mint 验收和发布授权均未完成。
 - 无主 main 合并、Mac 部署、LaunchAgent 重启、冻结 Frank V1 策略/投递/Gmail/生产 SQLite 的任何改动。产品主线下一步是 A04 verified ATA 地址范围历史、A05/ F02 精准仓位和独立 Review，不为边界处理长期停滞。
 
+## 2026-10-14 阶段性 Review 与跨 PR 集成闸门（不可跳过）
+
+- 原始审查矩阵、业务文件重叠、各自 SHA 与下一步顺序：[`FRANK_CA_PR_REVIEW_INTEGRATION_GATE_20261014.md`](./FRANK_CA_PR_REVIEW_INTEGRATION_GATE_20261014.md)，该文件是**新增开发与集成的入口**，直到整套 PR 完成联合 CI/另一 AI Review/Mac 只读验收。代码 CI、源数据验证和 Mac 生产上线三个状态必须分开。
+- [PR #47 C02](https://github.com/lxxlx2/ChatGPT_mission_record/pull/47) 在 `c4073f69` code CI 1,445 PASS；Gemini 报告 model **`gemini-3.5-flash`**、审查产品 SHA **`3ed4755e`**，到 HEAD 只更新了文档与证据（GitHub 已 compare）。Claude 独立复查发现 R-a 预览无 exact Mint、R-b capitalization 假冲突，需要处理，而不是直接标无条件 APPROVE。
+- R-a/R-b 在 **[Draft PR #49](https://github.com/lxxlx2/ChatGPT_mission_record/pull/49)** 作为 #47 的子分支修复，绝不修改已审查的 #47 HEAD。精确 Mint 同时在扫描进度和预览显示；链上来源及市场来源的大小写冲突比较规则和展示规则一致；实质性冲突仍阻断。**需重新独立 Review #49 当前最终代码 SHA。**
+- [PR #48 A04](https://github.com/lxxlx2/ChatGPT_mission_record/pull/48) 43 项专项、1,525 项完整测试 PASS；独立 Review 仍未完成，应重点验证断点、429、raw tx/按钱包视图去重与交易入库事务。PR #42/#43/#45 整条上游数据分支也需覆盖；[#44 F01](https://github.com/lxxlx2/ChatGPT_mission_record/pull/44) 需要与 C01/C02 的同一 `server.py`/`static/app.js` 整合回归。
+- 实际 GitHub REST 在 2026-10-14 复查 `#42/#44 mergeable=true,mergeable_state=clean`，此前连接器摘要的 `false` 不能当实际冲突。**合并可行性≠整合后的产品和数据正确性。**
+- 合并前顺序：先收敛每条分支已有 Claude 问题 → 本分支精准审查门禁 → 创建一次性整合集成分支（#42→#43→#45→#48 + #46→#47→#49 + #44）→ 联合完整测试和浏览器/链证据 → 用户明确授权的 Mac 受控发布。未经过该门禁，保持 `DRAFT / NO_MERGE / NO_DEPLOY`。
+- C02 文档中的“20 个分片”仅在归档投影中保存 provenance/计数，分片原文**未随 C02 PR 一并提供**；第三个 Agency 同名 Mint `H4UH4ypR3nTqDHJPJurYL2GsDWzotKzzU1Kmj3XiqFkj` 已归档；两种截图相似 Mint 都是可解码公钥，不得猜名字自动纠正；Codex 浏览器数据回放≠生产 Mac 用户查询。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
