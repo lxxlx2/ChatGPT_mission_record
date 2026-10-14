@@ -1,0 +1,42 @@
+name: Monster Stage131 dynamic listing G1 population ledger offline
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage131_dynamic_listing_g1_population_bridge.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage131_dynamic_listing_g1_population_bridge.py'
+      - '.github/workflows/monster-stage131-dynamic-listing-g1-ledger.yml'
+  workflow_dispatch:
+
+jobs:
+  source-locked-ledger:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original archived Stage130 31 historical data no winner-only resampling
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object crypto-300-profit-mission/monster/evidence/monster_stage130_original31_publisher_sha1m_momentum_archived_summary_20261014.json)" = "5777616368f781e3a9db30550f75c39845d11e54"
+      - name: All seven offline tests and source authenticity, no network
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage131_dynamic_listing_g1_population_bridge.py
+          python -m unittest -v test_monster_v4_stage131_dynamic_listing_g1_population_bridge.py
+      - name: Full original31 in-window synthetic cohort ledger and real source digest
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage131_dynamic_listing_g1_population_bridge.py --out stage131_all31_audit.json
+          python -c 'import json; v=json.load(open("stage131_all31_audit.json")); assert len(v["all_retrospective_31_new_listing_population_rows"])==31 and v["stage130_distinct_first_momentum_research_triggers"]==19 and v["G1_new_independent_OOS"]=="NOT_SCORABLE" and v["Monster_deployment"]=="NO_GO"'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage131-source31-${{ matrix.os }}
+          path: stage131_all31_audit.json
+          retention-days: 30
