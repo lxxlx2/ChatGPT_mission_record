@@ -34,10 +34,17 @@ Monster 真实可执行性 G0/G4 要求区分「合约异动」与「现货可�
 
 ## 下一阶段最有价值的实际开发步骤
 
-1. 在原 Monster 分支实现研究用只读 source-cohort join，将 USD-M symbol、baseAsset、pair、底层指数或合约单位/乘数，与 Spot baseAsset 和各 quote 市场分离存档，不再拿 symbol 字面同名充当资产级市场覆盖；所有不明量纲明确 `MULTIPLIER_UNVERIFIED`。
+1. **已实现只读元数据对账基础层**：`../local-agent/scripts/monster_v4_stage125_cross_venue_metadata_join.py` 保留所有 USD-M 活跃样本的完整 symbol、baseAsset、pair、交易所底层分类，并独立标注完全匹配 Spot、无完全匹配 Spot、相同 baseAsset 的其他 Spot 交易对。不会擅自把 `1000` 前缀进行代币单位映射，所有币种身份、乘数和 Spot 真实执行继续保持 `UNVERIFIED`。下一步增加实际身份及正确单位的独立证据。
 2. 在**同一真实观察批次**获取可核验的 Spot+USD-M 元数据和 BBO/深度，验证当时交易状态、时间来源及可能的有效交易路径；若只有内嵌 exchangeInfo.serverTime，则 `ASOF_PROOF_PARTIAL`，绝不能推断 D0 时现货可买。
 3. 原 D0 519 及 D1 305 继续保留原身份缺失和 Stage118 `REJECTED`；不能用今天 Spot 是否开放倒填它们的历史交易状态。将真正可确认的身份/单位样本分级记录，再研究首次早报实际成交成本/退出价格。
 4. 用户下一次手动正式采集仍遵守 Stage124 冻结 T0/T1 比较器的四源全市场批次，不把本次元数据诊断算成完整 T1。新 OOS G1/G2/G3、真实 G4 净收益和另一 AI Review 仍未完成。
+
+## Stage125 实际工程与测试
+
+- 新增研究代码：`../local-agent/scripts/monster_v4_stage125_cross_venue_metadata_join.py`，以用户提供的两个 exchangeInfo JSON 文件做离线全量 join；既可读取原始顶层结构，也可读取连接器的 `structuredContent` 包装，拒绝重复/非法 symbol、缺失必要字段或空样本。只输出研究诊断，保证 `eligible_buy_recommendations=0`。
+- 新增 5 个确定性合成单元测试：`../local-agent/scripts/test_monster_v4_stage125_cross_venue_metadata_join.py`，验证 3 种精确映射分类、Unicode symbol、前缀绝不自动归一、重复源拒绝、缺失时钟及无活跃分母拒绝。**这些合成测试不代表 525 个 live 双源已归档复算。**
+- 已核实 [GitHub Actions #38550160250](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38550160250) 在原分支 SHA `b19dc090eff0cf5e9b14a5eb707f6a75e1f66308` 的 **macOS/Ubuntu** 两个实际任务均 `success`。CI 仅证明离线源处理程序通过测试，不代表真实交易、盈利或其他 AI 独立审查。
+- 当前仍未获得可独立认证的同一时点真实 Spot+USD-M 原始快照；相关跨场所数字只属于连接器结构化接口诊断，复算原始整表证据仍为 `PARTIAL`。
 
 ## 事实与门禁
 
