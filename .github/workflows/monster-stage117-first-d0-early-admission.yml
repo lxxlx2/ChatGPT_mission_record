@@ -1,0 +1,91 @@
+name: Monster Stage117 Frozen First D0 Fast Admission Historical And Core Tests
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage117-first-d0-early-admission.yml
+      - crypto-300-profit-mission/monster/MONSTER_STAGE117_FROZEN_FIRST_D0_FAST_ADMISSION_V1_20261014.md
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage117_first_d0_fast_attention_core.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage117_original519_first_d0_audit.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  frozen_core_cross_platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile candidate then validate same causal closed-bar core on both OS
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage117_first_d0_fast_attention_core.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage117_original519_first_d0_audit.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage117_first_d0_fast_attention_core.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage117_original519_first_d0_audit.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage80_dual_entry_core.py
+  exposed_original519_locked_source:
+    needs: frozen_core_cross_platform
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source lock original Stage64 519 and Stage83 305 D1/28 historical early 2x; no future fetch
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage117_original519_first_d0_audit.py --out /tmp/monster_stage117_original519_summary.json --cases /tmp/monster_stage117_original519_rows.jsonl
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/monster_stage117_original519_summary.json'))
+          assert x['D0_original']==519
+          assert x['original_first_D1']==305
+          assert x['original_D0_early5_2x']==28
+          assert x['monster_deployment']=='NO_GO'
+          assert x['cohort_exposed_not_new_OOS']
+          assert x['no_backward_threshold_fitting']
+          print('STAGE117_ORIGINAL519_EXPOSED_COMPLETE_NO_RETROACTIVE_TUNING_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage117-all519-frozen-first-D0-descriptive-proof
+          path: |
+            /tmp/monster_stage117_original519_summary.json
+            /tmp/monster_stage117_original519_rows.jsonl
+          retention-days: 60
+      - name: Archive real 519 decision evidence in existing Monster research branch
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          folder=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_stage117_original519_summary.json "$folder/monster_stage117_frozen_first_D0_original519_actual_summary.json"
+          cp /tmp/monster_stage117_original519_rows.jsonl "$folder/monster_stage117_frozen_first_D0_original519_actual_rows.jsonl"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$folder/monster_stage117_frozen_first_D0_original519_actual_summary.json" "$folder/monster_stage117_frozen_first_D0_original519_actual_rows.jsonl"
+          if git diff --cached --quiet; then echo STAGE117_RESULTS_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive real Stage117 original519 first-D0 no-wait candidate evidence"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE117_SOURCE_LOCKED_HISTORIC_RESULTS_IN_GIT; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          echo STAGE117_REAL_SOURCE_ARCHIVE_FAILED
+          exit 1
