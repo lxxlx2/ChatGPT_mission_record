@@ -73,7 +73,7 @@ def validate_three_http_records(first, exchange, last):
     elif source_time == MIRROR_TIME_URL:
         source_exchange = MIRROR_EXCHANGE_URL
     else:
-        raise ValueError("STAGE133_UNKNOWN_EXACT_TIME_ENDPOINT")
+        raise ValueError("STAGE133_WRONG_OFFICIAL_ENDPOINT_OR_RESPONSE")
     before, b0,b1, sha_b = read_response(first,source_time)
     market, x0,x1, sha_x = read_response(exchange,source_exchange)
     after, a0,a1, sha_a = read_response(last,source_time)
