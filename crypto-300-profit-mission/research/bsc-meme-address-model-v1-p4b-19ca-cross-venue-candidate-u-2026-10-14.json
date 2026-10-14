@@ -486,7 +486,7 @@
           "fee_pips": 10000,
           "first_active_block": 50972710,
           "origin": "HISTORIC_COMPETITOR",
-          "first_active_UTC": "2025-06-06T09:44:02.000Z",
+          "first_active_UTC": "2025-06-06T09:44:17.000Z",
           "delay_blocks": 10
         },
         {
@@ -716,7 +716,7 @@
           "fee_pips": 10000,
           "first_active_block": 115919205,
           "origin": "HISTORIC_COMPETITOR",
-          "first_active_UTC": "2026-08-14T16:18:36.000Z",
+          "first_active_UTC": "2026-08-14T16:18:43.000Z",
           "delay_blocks": 17
         },
         {
