@@ -1,5 +1,4 @@
 """CI script: write V2 generic TX via actual frozen PR #52 Python modules."""
-import hashlib
 import json
 import os
 from pathlib import Path
