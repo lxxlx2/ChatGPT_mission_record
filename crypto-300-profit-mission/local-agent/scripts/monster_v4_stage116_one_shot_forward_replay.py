@@ -15,8 +15,10 @@ from pathlib import Path
 
 try:
     import monster_v4_stage116_forward_population_score as scoring
+    import monster_v4_stage117_first_d0_fast_attention_core as early_candidate
 except ImportError:
     from scripts import monster_v4_stage116_forward_population_score as scoring
+    from scripts import monster_v4_stage117_first_d0_fast_attention_core as early_candidate
 
 old=scoring.old
 v4=old.v4
@@ -52,7 +54,18 @@ def replay_one(symbol,window,fetch=None):
         return absent(symbol,window,exc)
     # Propagate checksum, bad provenance and non-404 transient network errors:
     # these are operational failures, not an ordinary delisting or no winner.
-    return old.replay_raw_symbol(symbol,window,bars,receipts)
+    original=old.replay_raw_symbol(symbol,window,bars,receipts)
+    # The rejected old D1 stays unchanged; Stage117 fast first-D0 is a
+    # separately frozen candidate from closed minutes strictly before t.
+    first=original["D0_first_UTC"]
+    if first is None:
+        original["stage117_new_first_D0_candidate"]=None
+    else:
+        original["stage117_new_first_D0_candidate"]=(
+            early_candidate.from_closed_minutes(
+                venue="USDM",symbol=symbol,first_d0_utc=first,
+                minute_bars=bars))
+    return original
 
 
 def source_shard(snapshot,window,shard,workers=3,fetch=None):
@@ -146,6 +159,7 @@ def selftest():
     missing=absent("CATUSDT",scoring.WINDOWS[0],FileNotFoundError("404"))
     assert missing["D0_first_UTC"] is None
     assert missing["source_status"].startswith("CENSORED")
+    assert "stage117_new_first_D0_candidate" not in missing
     try:aggregate_shards({},scoring.WINDOWS[0],[])
     except ValueError as ex:assert "EXACT_ALL24" in str(ex)
     else:raise AssertionError("STAGE116_ALLOW_MISSING_UNIVERSE_SHARDS")
