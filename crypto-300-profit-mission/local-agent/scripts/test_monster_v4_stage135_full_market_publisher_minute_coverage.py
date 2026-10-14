@@ -144,6 +144,12 @@ class Stage135Tests(unittest.TestCase):
             for i in range(8):
                 day=(start+timedelta(days=i)).isoformat()
                 make_one_day(root,"ABCUSDT",day,begin=20 if i==0 else 0)
+            import monster_v4_stage136_manual_publisher_archive_acquisition as stage136
+            _, planned = stage136.planned_files(packet)
+            abc_days = [r["day"] for r in planned if r["symbol"]=="ABCUSDT"]
+            self.assertEqual(len(abc_days),8)
+            self.assertNotIn("2026-10-27",abc_days)
+            self.assertEqual(len(planned),26)
             audit = stage135.audit(packet,root)
             recent = next(x for x in audit["per_symbol_source_audit"]
                           if x["symbol_exact"]=="ABCUSDT")
