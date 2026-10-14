@@ -109,7 +109,7 @@ def test_live_execution_does_not_touch_prod_sqlite_and_uses_research_sidecar(tmp
             assert params[1]["commitment"] == "finalized"
             return {"result": []}
         return call
-    cli["rpc_reader"] = stub_url
+    cli["main"].__globals__["rpc_reader"] = stub_url
     assert cli["main"]([
         "--registry", str(_registry(tmp_path)), "--sidecar", str(sidecar),
         "--execute", "--max-pages", "1",
