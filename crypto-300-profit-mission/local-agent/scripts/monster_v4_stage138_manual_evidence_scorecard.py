@@ -27,6 +27,7 @@ STATES = (
     "NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED",
     "ORIGINAL_ASCII_V4_D0_AND_FROZEN_D1_CAUSAL_OFFLINE",
     "ORIGINAL_V4_NUMERIC_CORE_WITH_UNICODE_IDENTITY_ADAPTER_CAUSAL_OFFLINE",
+    "ORIGINAL_CORE_NEW_LISTING_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE",
 )
 FROZEN_THRESHOLDS = {
     "G1_min_nonoverlapping_new_forward_windows": 3,
@@ -79,28 +80,34 @@ def summarize_rows(rows, start, end):
         seen.add(symbol)
         c["full_market_attempts"] += 1
         c[status] += 1
-        if status not in (STATES[3], STATES[4]):
+        cold = status == STATES[5]
+        if (cold and row["population_lane"] != "IN_WINDOW_FIRST_TRADABLE_MINUTE_CANDIDATE") or (not cold and status in (STATES[3], STATES[4]) and row["population_lane"] != "PREEXISTING_AT_WINDOW_START"):
+            raise ValueError("STAGE142_SOURCE_COHORT_STATUS_NOT_MATCHED")
+        if status not in (STATES[3], STATES[4], STATES[5]):
             if row.get("D0_first_UTC") is not None or row.get("D1_first_UTC") is not None:
                 raise ValueError("STAGE138_CENSORED_OR_UNSUPPORTED_HAS_SIGNAL")
             continue
         labels = row.get("gross_future_labels_not_real_profit")
         if not isinstance(labels, dict):
             raise ValueError("STAGE138_COMPLETE_ROW_MISSING_GROSS_LABELS")
-        c["original_core_source_compatible"] += 1
+        c["cold_start_source_conditioned_issuer_unverified" if cold else "original_core_source_compatible"] += 1
         first_d0 = row.get("D0_first_UTC")
         first_d1 = row.get("D1_first_UTC")
         if first_d0 is not None:
             d0_ms = s131.stamp(first_d0)
             if d0_ms < start or d0_ms >= end or d0_ms % 180_000:
                 raise ValueError("STAGE138_INVALID_ORIGINAL_D0_CLOCK")
-            c["unique_first_D0"] += 1
+            c["cold_start_first_D0" if cold else "unique_first_D0"] += 1
         if first_d1 is not None:
             d1_ms = s131.stamp(first_d1)
             if (first_d0 is None or d1_ms < d0_ms
                     or not start <= d1_ms < end or d1_ms % 180_000):
                 raise ValueError("STAGE138_ORPHAN_OR_INVALID_D1_CLOCK")
-            c["unique_first_D1"] += 1
-            daily[(d1_ms - start) // 86_400_000] += 1
+            if cold:
+                c["cold_start_first_D1"] += 1
+            else:
+                c["unique_first_D1"] += 1
+                daily[(d1_ms - start) // 86_400_000] += 1
         for m in (2, 5, 10):
             name = f"first_GT{m}x_HIGH_UTC_EVALUATION_ONLY"
             strict = f"D0_first_strict_pre_GT{m}x"
@@ -122,11 +129,12 @@ def summarize_rows(rows, start, end):
             actual = tuple(labels.get(x) for x in (strict, early, upgraded))
             if actual != expected:
                 raise ValueError("STAGE138_GROSS_LABEL_ARITHMETIC_DRIFT")
-            c[f"gross_{m}x"] += 1
-            c[f"D0_strict_{m}x"] += expected[0]
-            c[f"D0_early5_{m}x"] += expected[1]
-            c[f"D1_early5_{m}x"] += expected[2]
-            c[f"D1_early5_given_D0_{m}x"] += expected[1] and expected[2]
+            tag = "cold_start_" if cold else ""
+            c[f"{tag}gross_{m}x"] += 1
+            c[f"{tag}D0_strict_{m}x"] += expected[0]
+            c[f"{tag}D0_early5_{m}x"] += expected[1]
+            c[f"{tag}D1_early5_{m}x"] += expected[2]
+            c[f"{tag}D1_early5_given_D0_{m}x"] += expected[1] and expected[2]
     if sum(c[status] for status in STATES) != c["full_market_attempts"]:
         raise ValueError("STAGE138_LOSSY_POPULATION_STATUS")
     if sum(daily) != c["unique_first_D1"]:
