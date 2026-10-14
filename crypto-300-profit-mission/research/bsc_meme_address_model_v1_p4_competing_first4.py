@@ -114,7 +114,7 @@ def verify_delayed(witness: dict, expected_creation: int, pool: str) -> None:
 def build(docs: list[dict]) -> dict:
     require(len(docs)==3,"expected frozen sources")
     source,delayed,baseline=docs
-    require(source["schema"]=="BSC_P4_PRIORITY4_COMPETING_INITIAL_POOL_STATES"
+    require(source["schema"]=="BSC_P4_PRIORITY4_POOL_CREATION_BLOCK_STATE"
             and source["production"]=="NO_GO"
             and len(source["records"])==4,
             "source scope changed")
@@ -135,11 +135,11 @@ def build(docs: list[dict]) -> dict:
                 and rec["quote"]=="USDT"
                 and rec["pool"].startswith("0x")
                 and len(rec["pool"])==42
-                and rec["read_status"]=="COMPLETE",
+                and rec["first_positive_liquidity"]=="UNRESOLVED_UNTIL_EVENT_CHECK",
                 "wrong frozen competitor")
         event=rec["event"]
         require(int(event["blockNumber"],16)==creation
-                and event["data"][-40:].lower()==rec["pool"][2:]
+                and (event["data"][26:66] if protocol=="V2" else event["data"][-40:]).lower()==rec["pool"][2:]
                 and len(event["topics"])==(3 if protocol=="V2" else 4)
                 and event["topics"][0]==(TOPIC_V2 if protocol=="V2" else TOPIC_V3)
                 and {t[-40:].lower() for t in event["topics"][1:3]}=={rec["CA"][2:],USDT[2:]},
