@@ -150,6 +150,14 @@
 - 研究侧 SQLite 自动化对抗测试包含重复 SPL、重复 Token-2022、缺少或无效错误字段、未知/不可哈希程序、非字典失败项、非空账户/Mint、计数和资产验证矛盾、第三条失败项，另保留早期 121 份乱序采集及 601 份人工独立审查证据。**测试数据是合成异常来源，明确非真实 RPC 完整失败样本**。
 - 维护既定流程：#58 **精确最终 SHA** 模块专项/全量 CI → 联合 F01/C02 CI → 新独立 Claude 审查 → 真实 A05 32 Mint/ATA 与 F02 页面 → 跨模块单独审查 → 所有模块完成后最终总体独立审查。未获新的独立 Review 前**不能标记 A05/F02 REVIEW_APPROVED**；所有 PR Draft / NO_MERGE / NO_DEPLOY，生产 Mac 数据与 Frank V1/Gmail/launchd 不修改。**PR #58 最终 SHA `063e8bada37534c13e801ea6f63e97d8f5586f4b`** 的 [模块 CI #38571793733](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38571793733) **65 focused / 1,593 full PASS**，[临时联合 CI #38571793773](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38571793773) **90 focused / 1,645 full PASS**，合并当前 main + A05/F02 #58 + C02 #49 + F01 #44 无 Git 冲突。**另一 AI 尚未对 #58 最终 SHA Review，仍不可标记代码审核通过。**
 
+## 2026-10-14 PR #58 两份独立代码 Review 均 APPROVE；转入真实 A05/F02 来源主线
+
+- **PR #58 固定 HEAD `063e8bada37534c13e801ea6f63e97d8f5586f4b`、父审查基线 PR #57 `b70245f189a4940eab62288e2da23551f9e31129`**。用户提交 GPT-6.1 Sol 的独立审查 `APPROVE`，本轮另读取 Gemini 3.8（用户标识）的完整独立审查附件，结论亦为 `APPROVE`。两份审查均针对 PR #58 **源代码补丁**，分别独立复现哈希合法但重复 SPL 失败记录在旧版的误判，以及新版对双程序 Program ID、failure structure、Slot/null、空账户/数量/经济证据的严格检查；没有发现新的 `REQUEST_CHANGES`。
+- 独立验证区分：6.1 Sol 审查补做 25 个有效哈希异常来源、601 条 SQLite 多批次、107 个定向回归、全量 1,593 PASS；Gemini 审查附录记录临时 SQLite 重放、真实格式 TimeoutError、pyflakes/Node、全量 1,593 PASS、组合源树干净合并。**模型标签与本地证据属于用户提供的外部报告，不伪装 GitHub 原生 Review 或可远端访问的审查日志**。原始附件中 Mac 私有路径不复制到仓库。代码整改在 #58 闭合，不再对固定已批准 SHA 追加产品补丁。
+- 此轮再次核实 GitHub：#58 为 `open/draft/unmerged`，HEAD 不变；[精确模块 CI #38571793733](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38571793733) `SUCCESS`，65 scoped / 1,593 full；[精确联合 CI #38571793773](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38571793773) `SUCCESS`，90 focused / 1,645 full。联合 CI 运行时实际合成 SHA 为 `2dd51f5a633cfcedaf5d7edef6b87defe9a75690`（来自独立报告），分支仍可变，后续总体集成必须重新固定全部 SHAs。
+- **现阶段状态**：`A05_F02_LATEST_SNAPSHOT_RESEARCH_CODE_REVIEW_APPROVED`，绝非 `A05_32_MINT_BUSINESS_ACCEPTED` 或 `F02_DASHBOARD_FINISHED`。按主线继续真实 32 Mint 目标名录、SPL + Token-2022 finalized owner 全账户、非 ATA、最新 Slot/时间、实际 F02 可核实仓位与 Mac 只读浏览器验证；单模块独立审核→跨模块独立整合审核→所有模块完成后总体独立审核不变。
+- Review 凭据写入 [PR #58 评论](https://github.com/lxxlx2/ChatGPT_mission_record/pull/58#issuecomment-6170047772)。**NO_MERGE / NO_DEPLOY / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE**。F01/#44、A02/#42、A03/#43、A05 链上真实数据、C01/#46 等仍需自己对应模块的验收，不因 #58 局部通过而称全仓库审核完毕。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
