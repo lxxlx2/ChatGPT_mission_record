@@ -72,6 +72,15 @@
 - 合并前顺序：先收敛每条分支已有 Claude 问题 → 本分支精准审查门禁 → 创建一次性整合集成分支（#42→#43→#45→#48 + #46→#47→#49 + #44）→ 联合完整测试和浏览器/链证据 → 用户明确授权的 Mac 受控发布。未经过该门禁，保持 `DRAFT / NO_MERGE / NO_DEPLOY`。
 - C02 文档中的“20 个分片”仅在归档投影中保存 provenance/计数，分片原文**未随 C02 PR 一并提供**；第三个 Agency 同名 Mint `H4UH4ypR3nTqDHJPJurYL2GsDWzotKzzU1Kmj3XiqFkj` 已归档；两种截图相似 Mint 都是可解码公钥，不得猜名字自动纠正；Codex 浏览器数据回放≠生产 Mac 用户查询。
 
+## 2026-10-14 Claude 第二轮 REQUEST_CHANGES 实际整改与新审查门禁
+
+- 用户提供的完整 Claude 对抗性报告，在旧 HEAD 上给出 **PR #49 `9c16829e` REQUEST_CHANGES（Medium Unicode 误判）**、**PR #48 `26c40912` 及 #45 `92fbacbc` REQUEST_CHANGES（High 单侧 owner 缺失制造假流出/流入）**。原先各自 CI 绿色不代表无 bug。保留报告与风险顺序。
+- **C02 原 #47 不动；原整改 PR #49** 继续修复 casefold 的 `Straße / STRASSE` 静默合并，换成非 Unicode 扩张 `lower()`，既允许 `Agency / AGENCY`，也阻断真实名称差异；新增 metadata authority 不同仍冲突用例；`ClusterJobManager.validate_mint` 改为校验 base58 解码精确 32 字节，不再只凭字符长度。最新 PR #49 HEAD `8898134a8a302e1187138f7fb3da87a554567e6d`，对应 [CI #38503360215](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38503360215) **20 专项、1,452 全量 PASS**；须 Claude **重新**独立审查该 SHA，不能沿用旧请求更改结论。
+- **A04 另建子 Draft [PR #50](https://github.com/lxxlx2/ChatGPT_mission_record/pull/50)** 继承 #48，**不覆写** #45/#48 原始已检验 HEAD。先保留 pre/post 所有 token 账户 owner/raw 记录再配对；单侧缺失且数量未变记录缺口而非假收支，单侧缺失且数量变化时阻断归因并将签名留待补采；双侧 owner 缺失显式 gap；原生 SOL 转入转出在当前模型中标为 `NATIVE_SOL_FLOW_UNCLASSIFIED` 而非 0；误导的 `NOT_MARKET_TRADE` 标签改为 `UNVERIFIED_TOKEN_DELTA`；Solana SPL/Token-2022 解析指令证据现接入 A04 采集视图，但不自动推断 BUY/SELL。给派生视图加 `SOL_TOKEN_VIEW_V2`/research_wallet，单独归档 `WALLET_TX_VIEW_V2`、支持从不可变 RAW_TX 显式重建，旧视图不覆盖。
+- PR #50 HEAD `4cef47ac63d1a0a2beb9ec7924214a127c97e32f` 对应 [CI #38503749827](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38503749827) **52 专项、1,534 全量 PASS**。Claude E1a/E1b/E1c 与版本化回放覆盖，但**仍需另一 AI 复审 #50 最终 SHA**，后续真实 Mac owner 缺失频率、ALTs、ATA 历史、人物 PnL、完整 SOL 资金流尚未验证。不要将 A04、A05、F02 状态直接标完成。
+- 两条整改线均保持 **DRAFT / NO_MERGE / NO_DEPLOY**。下一次任何共用代码更改后，先对 #49、#50 独立审核，随后合并到**临时整合工作区**做 F01 #44 + C01/C02 #46/#47/#49 + A04 #42/#43/#45/#48/#50 的完整回归，不得丢 F01 屏显或 Frank V1 原跟单约束。
+- 本轮 GitHub 评论与长期审查闸门：`FRANK_CA_PR_REVIEW_INTEGRATION_GATE_20261014.md`，所有 PR/CI 明确关联精确 SHA。Mac/生产未部署，用户不需要重复跑本可在 CI 自验的命令。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
