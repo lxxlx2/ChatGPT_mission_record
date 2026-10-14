@@ -270,7 +270,11 @@ def test_later_partial_attempt_fails_closed_even_if_its_slot_is_lower(
     assert body["latest_attempt_capture_sha256"] == later["capture_sha256"]
     assert body["latest_attempt_slot_max"] == lower_or_higher_slot
     assert body["latest_attempt_missing_program_ids"] == [SPL_TOKEN_PROGRAM]
-    assert body["latest_capture_sha256"] == source["capture"]["capture_sha256"]
+    expected_slot_selected = (
+        source["capture"]["capture_sha256"]
+        if lower_or_higher_slot < source["capture"]["slot_max"]
+        else later["capture_sha256"])
+    assert body["latest_capture_sha256"] == expected_slot_selected
     assert body["target_mint_count"] == 32
     assert body["state_counts"] == {"SOURCE_UNAVAILABLE": 32}
     assert all(item["observed_raw_amount"] is None
