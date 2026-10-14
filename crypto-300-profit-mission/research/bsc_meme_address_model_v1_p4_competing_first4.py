@@ -162,12 +162,18 @@ def build(docs: list[dict]) -> dict:
             require(int(sync["logIndex"],16)<int(mint["logIndex"],16)
                     and r0==rawword(mint["data"],0)
                     and r1==rawword(mint["data"],1)
-                    and min(r0,r1)>0
-                    and rec["creation_block_state"]=={"reserve0_raw":str(r0),"reserve1_raw":str(r1)},
+                    and min(r0,r1)>0,
                     "V2 positive first deposit not proven")
             check=rec["raw_read_hex"]["getReserves"]
-            require(rawword(check,0)>0 and rawword(check,1)>0,
-                    "V2 creation-block reserves zero")
+            later=[x for x in logs if x["topics"][0]==TOPIC_SYNC]
+            require(bool(later)
+                    and rec["creation_block_state"]=={
+                        "reserve0_raw":str(rawword(later[-1]["data"],0)),
+                        "reserve1_raw":str(rawword(later[-1]["data"],1))}
+                    and rawword(check,0)==rawword(later[-1]["data"],0)
+                    and rawword(check,1)==rawword(later[-1]["data"],1)
+                    and rawword(check,0)>0 and rawword(check,1)>0,
+                    "V2 creation-block later swaps/last Sync snapshot mismatch")
             active=True
         else:
             require({TOPIC_INIT_V3,TOPIC_MINT_V3}.issubset(topics),
