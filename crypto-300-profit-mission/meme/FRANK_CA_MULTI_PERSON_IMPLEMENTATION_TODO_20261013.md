@@ -86,6 +86,14 @@
 - 本轮新增只在 Actions 容器进行的**临时合并演练**：[Workflow #38504090624](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38504090624)，完整 `success`，分别融合继承 #42→#43→#45→#48→#50 的 A04 分支、继承 #46→#47→#49 的 CA/C02 分支和 F01 #44；全部 Git merge PASS、联合专项 **48 PASS**、全量 real-Git local-agent **1,586 PASS**，无远端 PR/main 合并或部署。与过去的单独 PR 绿灯不同，现已验证这些版本可在同一份源码里运行既有测试。
 - 该证据只覆盖暂存 Git 工作区和 Node/pytest，不是本机 Mac 页面实际点击或完整链上历史。仍需 Claude 对修改后的 PR #49 `8898134a`、PR #50 `4cef47ac` **再次独立 Review**，最后才是完整真实 Mac 只读预检与单独生产授权。F01/CA/A04 开发 TODO 不直接标 [x]，no-go 保持。
 
+## 2026-10-14 Claude 第三轮精确 SHA 独立审查 / A04 P2 P4 P6 修复
+
+- 用户提供的完整 Claude 精确 SHA 审查：**PR #49 `8898134a8a302e1187138f7fb3da87a554567e6d` 得到 `APPROVE`**，重跑 1,452 全量/27 项包含 F01 布局专项，实际 `app.js` 同 VM 联合渲染无串号。Low：土耳其语 `İstanbul` 保守冲突、F01 使用缩写 Mint；不阻断但仍不是生产 Mac 验收。**PR #49 代码保持不变。**
+- **PR #50 `4cef47ac63d1a0a2beb9ec7924214a127c97e32f` 的新审查为 `REQUEST_CHANGES`**（旧修复不能自动视为通过）。High P2 非零 owner 缺失且两边都不属于已知跟踪钱包时漏记、P6 历史 V2 重建阻断未持久化且旧 v1 仍可能污染、P4 失败交易解析转账被写成已确认；Medium P5 原生 SOL 未观测没进入 `state()`、P7 新 v2 同旧 kind 混放。
+- 新子 **[Draft PR #51](https://github.com/lxxlx2/ChatGPT_mission_record/pull/51)** 在 #50 之上修复 P2/P4/P5/P6/P7：未知归属非零 token delta 一律不允许完成采集、留 `PENDING` 并记录 `TOKEN_OWNER_UNRESOLVED_DELTA`；旧 `CAPTURED` 的 v2 重建出错持久写入 `v2_error_code`，`state()` 必须显示 `v2_missing_count` / `v2_blocked_count` / `PARTIAL_ECONOMIC_EVIDENCE`；`meta.err != null` 解析指令标 `FAILED_TRANSACTION_INSTRUCTION_NOT_EXECUTED`，不再确认为转账；原生 SOL 未解析增加独立覆盖计数；新 view **只保存为 `WALLET_TX_VIEW_V2`**、原 v1 不覆盖。对抗性 P2/P4/P5/P6/P7 真 SQLite 测试和完整回归已补，具体 CI SHA/结论以 PR #51 最终远端与工作流为准。
+- 真链调查：Alchemy finalized RPC 实际采到 Frank 研究钱包连续 25 条签名，含 slot `456780885` 的失败交易状态，实际完整 `getTransaction` 被插件返回截断；另两笔成功交易 slot `456789461` / `456789273` 的 RPC 完整读取，均未出现 owner 字段缺失。**真实 owner 缺失及失败指令完整原始交易 fixture 仍是未确认缺口，不得以合成测试替代。**
+- PR #51 在未合并 #50 上单独推进，**要求 Claude 对最终新 SHA 重新独立 Review**，同时独立检查与 F01 #44、C01/C02 #46/#49 的最新合并树，不得重写已通过审查的 #49。各 PR 保持 Draft、Mac/生产/Gmail/SQLite/launchd 均未变，业务任务 A04/F02 不标 [x]。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
