@@ -41,7 +41,7 @@ def make_exchange_info():
         "contractType":"PERPETUAL",
         "baseAsset":sym[:-4],
         "quoteAsset":"USDT",
-        "onboardDate":START-10*60_000,
+        "onboardDate":START-86_400_000,
     } for sym in VALID_UNICODE]
     symbols.append({
         "symbol":"BTCUSDT","status":"TRADING","contractType":"PERPETUAL",
@@ -121,8 +121,11 @@ class RealRootCauseCompatibility(unittest.TestCase):
                 capture.verify_time_proof(first,last,exchange,WINDOW)
         proof=actual_type_level_fixture()
         tampered=copy.deepcopy(proof["raw_market_packet"])
+        # The Stage97 synthetic JSON fixture uses escaped Unicode in its
+        # raw body; corrupt a guaranteed present ASCII part of that byte body
+        # without updating its original publisher-response SHA256.
         tampered["raw_exchangeInfo_json"]=tampered["raw_exchangeInfo_json"].replace(
-            "龙虾USDT","龙XUSDT")
+            "BTCUSDT","BTCXSDT")
         with self.assertRaisesRegex(ValueError,"STAGE91_UNIVERSE_RAW_BYTE_TAMPER"):
             freeze.freeze_universe(tampered)
 
