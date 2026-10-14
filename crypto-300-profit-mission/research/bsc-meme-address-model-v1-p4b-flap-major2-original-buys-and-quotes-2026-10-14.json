@@ -49,6 +49,10 @@
     {
       "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-marscoin-oneblock-sell-fallback-raw-2026-10-14.json",
       "git_blob_sha": "42fffee80171b4fa5d3c256167b022d2b34d6297"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-p2p3-readiness-matrix-2026-10-13.json",
+      "git_blob_sha": "3252e05c3ef1a4de14a5e10aed3e5ba80566154f"
     }
   ],
   "summary": {
