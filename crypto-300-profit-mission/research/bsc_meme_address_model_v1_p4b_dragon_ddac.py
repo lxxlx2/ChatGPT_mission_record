@@ -41,9 +41,10 @@ def build(d):
     check(len(d)==6,"source input count mismatch")
     pre,raw,txs,transfers,helpers,orig=d
     check(pre["schema"]=="BSC_P4B_2026_DRAGON_FOURMEME_MANAGER_CREATION_PURCHASE_EVENT_PRECOMMIT"
-          and pre["source_selected_transactions_blob_sha"] in {
-              "0", pre["source_selected_transactions_blob_sha"] # actual source manifest pinned below
-          }
+          and txs["schema"]=="BSC_P4B_2026_MAJOR3_PREDEX_FIRST_MINT_AND_DISTRIBUTION_TX_RAW"
+          and txs["precommit_blob_sha"]==pre["source_selected_transactions_blob_sha"]
+          and txs["part"]==1
+          and txs["token"]=="龙虾"
           and pre["token_CA"].lower()==DRAGON
           and pre["manager"]==MANAGER
           and [e["kind"] for e in pre["events"]]==["TokenCreate","TokenPurchase"]
