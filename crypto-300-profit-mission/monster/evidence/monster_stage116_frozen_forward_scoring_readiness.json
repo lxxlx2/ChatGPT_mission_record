@@ -1,0 +1,66 @@
+{
+  "Frank": "UNCHANGED",
+  "Stage99": "UNCHANGED",
+  "gates": {
+    "G0": "PARTIAL_SOURCE_OR_SCOPE",
+    "G1": "NOT_SCORABLE_NO_VERIFIED_FULL_CRYPTO_MARKET",
+    "G2": "NOT_SCORABLE_NO_VERIFIED_FULL_CRYPTO_MARKET",
+    "G3": "RAW_ATTENTION_DESCRIPTIVE_NOT_CRYPTO_G3_PASS",
+    "G4": "EXECUTION_UNKNOWN_NO_REAL_NET",
+    "G5": "NOT_DONE_OTHER_AI_REVIEW",
+    "G6": "NO_GO"
+  },
+  "gmail": "OFF",
+  "incomplete_reason_codes": [
+    "MISSING_CAPTURE:2026-10-14T06:00:00Z",
+    "MISSING_CAPTURE:2026-10-28T06:00:00Z",
+    "MISSING_CAPTURE:2026-11-11T06:00:00Z"
+  ],
+  "model_rule_changed": "NO",
+  "monster_deployment": "NO_GO",
+  "original_frozen_discovery_thresholds": {
+    "G1_first_D0_early5_pct_at_least": 85,
+    "G1_first_D0_strict_early_pct_at_least": 90,
+    "G1_min_distinct_windows": 3,
+    "G1_min_independent_2x": 20,
+    "G2_first_D1_of_first_D0_early5_2x_pct_at_least": 80,
+    "G3_mean_high_attention_per_day_at_most": 5,
+    "G3_peak_high_attention_per_day_at_most": 12,
+    "G4_independent_trades_minimum": 30
+  },
+  "per_window_evidence": {
+    "2026-10-14T06:00:00Z": {
+      "source_status": "PENDING_AUTHENTICATED_FROZEN_WINDOW_CAPTURE"
+    },
+    "2026-10-28T06:00:00Z": {
+      "source_status": "PENDING_AUTHENTICATED_FROZEN_WINDOW_CAPTURE"
+    },
+    "2026-11-11T06:00:00Z": {
+      "source_status": "PENDING_AUTHENTICATED_FROZEN_WINDOW_CAPTURE"
+    }
+  },
+  "preregistered_windows_UTC": [
+    "2026-10-14T06:00:00Z",
+    "2026-10-28T06:00:00Z",
+    "2026-11-11T06:00:00Z"
+  ],
+  "raw_venue_descriptive_only": {
+    "comparison_scope": "RAW_USDM_MIXED_UNCERTIFIED_CRYPTO_NOT_A_MODEL_PASS",
+    "full_market_source_status": {},
+    "gross_2x_5x_10x_posthoc": {},
+    "original_D1_burden": {
+      "average_per_day": null,
+      "days_included": 0,
+      "peak_per_day": null,
+      "per_day": {},
+      "total": 0
+    },
+    "original_market_venue": "BINANCE_USDM_USDT_PERPETUAL",
+    "per_original_window": {}
+  },
+  "real_executable_net": "UNKNOWN",
+  "schema": "MONSTER_STAGE116_FROZEN_THREE_WINDOW_FORWARD_G0_G1_G2_G3_V1",
+  "source_vs_execution_distinct": true,
+  "synthetic_unit_test_not_external_source_evidence": true,
+  "trading": "NO_GO"
+}
