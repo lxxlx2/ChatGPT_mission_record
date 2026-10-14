@@ -1,0 +1,538 @@
+{
+  "schema": "MONSTER_STAGE123_NEW_LIVE_BINANCE_STRUCTURED_MARKET_OBSERVATION_V1",
+  "batch_utc": {
+    "mid": "2026-10-14T09:48:24.840Z",
+    "min": "2026-09-25T08:01:38.753Z",
+    "max": "2026-10-14T09:48:26.037Z",
+    "exchangeServerTimeNotUsed": 1791968914199
+  },
+  "coverage": {
+    "raw_exchange_info_count": 927,
+    "active_usdt_perpetual_count": 525,
+    "rolling_24h_tickers": 793,
+    "bbo_count": 795,
+    "mark_count": 930,
+    "active_covered_24h": 525,
+    "active_covered_bbo": 525,
+    "active_covered_mark": 525,
+    "unicode_exact_symbols": [
+      "币安人生USDT",
+      "我踏马来了USDT",
+      "龙虾USDT",
+      "牛来USDT",
+      "哈基米USDT"
+    ],
+    "origin": "Binance connected current public endpoints"
+  },
+  "price_change_window": "rolling_24h_not_forward_7day",
+  "disclosure": {
+    "historical_original_stage99_window": "2026-10-14T06:00:00Z",
+    "historical_stage99_status": "SOURCE_FAILED_NO_BACKFILL",
+    "this_is_new_exploratory_baseline_not_original_OOS": true,
+    "full_raw_https_bytes_are_not_provided_by_plugin": true,
+    "exchangeInfo_serverTime_not_authoritative_for_now": true,
+    "individual_data_feeds_are_not_same_millisecond": true,
+    "official_crypto_issuer_or_execution_not_verified": true,
+    "no_buy_or_deployment": true
+  },
+  "top_24h_quote_volume": [
+    {
+      "symbol": "BTCUSDT",
+      "quoteVolume24h": 9038361490.62,
+      "change24hPct": -0.287,
+      "rollingLastPrice": "83244.00",
+      "bid": "83228.70",
+      "ask": "83228.80",
+      "spreadBps": 0.012015078924749052,
+      "mark": "83245.75594203",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "PoW",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "ETHUSDT",
+      "quoteVolume24h": 6095899996.56,
+      "change24hPct": -0.455,
+      "rollingLastPrice": "2495.73",
+      "bid": "2495.04",
+      "ask": "2495.05",
+      "spreadBps": 0.04007943744589087,
+      "mark": "2495.92198450",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Layer-1",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "ZECUSDT",
+      "quoteVolume24h": 1545598917.85,
+      "change24hPct": 1.871,
+      "rollingLastPrice": "1232.37",
+      "bid": "1232.58",
+      "ask": "1232.59",
+      "spreadBps": 0.08113030744322626,
+      "mark": "1232.58000000",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "PoW",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "SOLUSDT",
+      "quoteVolume24h": 1538452912.8023,
+      "change24hPct": -0.15,
+      "rollingLastPrice": "106.6200",
+      "bid": "106.5900",
+      "ask": "106.6000",
+      "spreadBps": 0.9381303062986918,
+      "mark": "106.63036316",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Layer-1",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "NEARUSDT",
+      "quoteVolume24h": 732541871.18,
+      "change24hPct": -1.568,
+      "rollingLastPrice": "5.0220",
+      "bid": "5.0160",
+      "ask": "5.0170",
+      "spreadBps": 1.9934217083630694,
+      "mark": "5.02293802",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Layer-1",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "XRPUSDT",
+      "quoteVolume24h": 601073991.8266,
+      "change24hPct": 0.213,
+      "rollingLastPrice": "1.3635",
+      "bid": "1.3630",
+      "ask": "1.3631",
+      "spreadBps": 0.7336488023182495,
+      "mark": "1.36350000",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Payment",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "BTWUSDT",
+      "quoteVolume24h": 537211166.52106,
+      "change24hPct": 36.685,
+      "rollingLastPrice": "2.4904000",
+      "bid": "2.4977000",
+      "ask": "2.4982000",
+      "spreadBps": 2.001641345904309,
+      "mark": "2.49460000",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "HYPEUSDT",
+      "quoteVolume24h": 414099322.42374,
+      "change24hPct": -1.514,
+      "rollingLastPrice": "81.12800",
+      "bid": "81.10400",
+      "ask": "81.10500",
+      "spreadBps": 0.12329772084221897,
+      "mark": "81.13289306",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "DeFi",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "BATUSDT",
+      "quoteVolume24h": 300842913.163546,
+      "change24hPct": 9.243,
+      "rollingLastPrice": "0.191470",
+      "bid": "0.191480",
+      "ask": "0.191500",
+      "spreadBps": 1.044440962974163,
+      "mark": "0.19175848",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Infrastructure",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "QUSDT",
+      "quoteVolume24h": 287896789.546076,
+      "change24hPct": 20.966,
+      "rollingLastPrice": "0.0469650",
+      "bid": "0.0469710",
+      "ask": "0.0469900",
+      "spreadBps": 4.044231117165246,
+      "mark": "0.04699800",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Alpha",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "STRKUSDT",
+      "quoteVolume24h": 278913084.290515,
+      "change24hPct": -10.62,
+      "rollingLastPrice": "0.0791100",
+      "bid": "0.0790700",
+      "ask": "0.0790800",
+      "spreadBps": 1.2646221941190163,
+      "mark": "0.07908304",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Layer-1",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "SUSDT",
+      "quoteVolume24h": 275881458.1879,
+      "change24hPct": -2.676,
+      "rollingLastPrice": "0.0560000",
+      "bid": "0.0560000",
+      "ask": "0.0560100",
+      "spreadBps": 1.7855548611724172,
+      "mark": "0.05600000",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Layer-1",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "DOGEUSDT",
+      "quoteVolume24h": 254022158.69798,
+      "change24hPct": 0.442,
+      "rollingLastPrice": "0.084070",
+      "bid": "0.084030",
+      "ask": "0.084040",
+      "spreadBps": 1.1899803653251622,
+      "mark": "0.08407048",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Meme",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "UNIUSDT",
+      "quoteVolume24h": 246557660.061,
+      "change24hPct": -1.145,
+      "rollingLastPrice": "7.3370",
+      "bid": "7.3330",
+      "ask": "7.3340",
+      "spreadBps": 1.3636053726044124,
+      "mark": "7.33700000",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "DeFi",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "QNTUSDT",
+      "quoteVolume24h": 217156998.28,
+      "change24hPct": -5.534,
+      "rollingLastPrice": "209.780000",
+      "bid": "209.600000",
+      "ask": "209.610000",
+      "spreadBps": 0.4770878557295544,
+      "mark": "209.84085919",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Infrastructure",
+        "Crypto"
+      ]
+    }
+  ],
+  "top_24h_gains_min_one_million_dollars_volume": [
+    {
+      "symbol": "TRUTHUSDT",
+      "quoteVolume24h": 213469025.303721,
+      "change24hPct": 45.503,
+      "rollingLastPrice": "0.0226970",
+      "bid": "0.0226920",
+      "ask": "0.0226930",
+      "spreadBps": 0.4406742315747494,
+      "mark": "0.02269600",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Alpha",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "BTWUSDT",
+      "quoteVolume24h": 537211166.52106,
+      "change24hPct": 36.685,
+      "rollingLastPrice": "2.4904000",
+      "bid": "2.4977000",
+      "ask": "2.4982000",
+      "spreadBps": 2.001641345904309,
+      "mark": "2.49460000",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "WALUSDT",
+      "quoteVolume24h": 115809374.526,
+      "change24hPct": 34.732,
+      "rollingLastPrice": "0.0507400",
+      "bid": "0.0507500",
+      "ask": "0.0507700",
+      "spreadBps": 3.940110323088886,
+      "mark": "0.05072000",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Storage",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "AVAUSDT",
+      "quoteVolume24h": 72873887.1893,
+      "change24hPct": 22.591,
+      "rollingLastPrice": "0.2773000",
+      "bid": "0.2774000",
+      "ask": "0.2776000",
+      "spreadBps": 7.207207207208414,
+      "mark": "0.27767285",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "QUSDT",
+      "quoteVolume24h": 287896789.546076,
+      "change24hPct": 20.966,
+      "rollingLastPrice": "0.0469650",
+      "bid": "0.0469710",
+      "ask": "0.0469900",
+      "spreadBps": 4.044231117165246,
+      "mark": "0.04699800",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Alpha",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "ARCUSDT",
+      "quoteVolume24h": 82799404.14332,
+      "change24hPct": 18.017,
+      "rollingLastPrice": "0.0292800",
+      "bid": "0.0292400",
+      "ask": "0.0292500",
+      "spreadBps": 3.4193879295616556,
+      "mark": "0.02926075",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "AI",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "PONSUSDT",
+      "quoteVolume24h": 88344619.2734,
+      "change24hPct": 17.678,
+      "rollingLastPrice": "0.3355000",
+      "bid": "0.3352000",
+      "ask": "0.3353000",
+      "spreadBps": 2.9828486204321845,
+      "mark": "0.33526262",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "ZEREBROUSDT",
+      "quoteVolume24h": 3808516.575796,
+      "change24hPct": 13.089,
+      "rollingLastPrice": "0.0308190",
+      "bid": "0.0308180",
+      "ask": "0.0308380",
+      "spreadBps": 6.487608667444915,
+      "mark": "0.03081800",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "AI",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "DEEPUSDT",
+      "quoteVolume24h": 9456238.8159,
+      "change24hPct": 12.013,
+      "rollingLastPrice": "0.0238700",
+      "bid": "0.0238600",
+      "ask": "0.0238800",
+      "spreadBps": 8.37871805613707,
+      "mark": "0.02390625",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "DeFi",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "BATUSDT",
+      "quoteVolume24h": 300842913.163546,
+      "change24hPct": 9.243,
+      "rollingLastPrice": "0.191470",
+      "bid": "0.191480",
+      "ask": "0.191500",
+      "spreadBps": 1.044440962974163,
+      "mark": "0.19175848",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Infrastructure",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "OPUSDT",
+      "quoteVolume24h": 200778712.936659,
+      "change24hPct": 9.222,
+      "rollingLastPrice": "0.1498200",
+      "bid": "0.1497300",
+      "ask": "0.1497400",
+      "spreadBps": 0.6678465288683341,
+      "mark": "0.14985031",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Layer-2",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "KMNOUSDT",
+      "quoteVolume24h": 13015846.66504,
+      "change24hPct": 8.721,
+      "rollingLastPrice": "0.0390200",
+      "bid": "0.0390000",
+      "ask": "0.0390100",
+      "spreadBps": 2.563773875144997,
+      "mark": "0.03901503",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "DeFi",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "我踏马来了USDT",
+      "quoteVolume24h": 8653241.790952,
+      "change24hPct": 8.226,
+      "rollingLastPrice": "0.0120910",
+      "bid": "0.0120900",
+      "ask": "0.0121010",
+      "spreadBps": 9.094291265347106,
+      "mark": "0.01209723",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Chinese",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "DUSKUSDT",
+      "quoteVolume24h": 24073924.68768,
+      "change24hPct": 7.719,
+      "rollingLastPrice": "0.10090",
+      "bid": "0.10102",
+      "ask": "0.10103",
+      "spreadBps": 0.9898539965351272,
+      "mark": "0.10103000",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Layer-1",
+        "Crypto"
+      ]
+    },
+    {
+      "symbol": "JCTUSDT",
+      "quoteVolume24h": 7435180.849388,
+      "change24hPct": 7.701,
+      "rollingLastPrice": "0.0020140",
+      "bid": "0.0020130",
+      "ask": "0.0020140",
+      "spreadBps": 4.966476285076397,
+      "mark": "0.00201012",
+      "underlyingType": "COIN",
+      "underlyingSubType": [
+        "Alpha",
+        "Crypto"
+      ]
+    }
+  ],
+  "source_paths": [
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_exchangeinfo_01.json",
+      "commit": "ae67573e8c8211c279d0b8ddb85a0448874a9a7d",
+      "length": 248921
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_exchangeinfo_02.json",
+      "commit": "ec0d700819cdd16bba6dfccae8c81863339786e4",
+      "length": 248179
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_exchangeinfo_03.json",
+      "commit": "99d20f7c669a1c479947fae36f6eee57577f9e0f",
+      "length": 248021
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_exchangeinfo_04.json",
+      "commit": "ca3163af806fac85fba0c2946ce5007ea9e670c0",
+      "length": 249815
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_exchangeinfo_05.json",
+      "commit": "32f90238005a2030705f8b5ecadcc2810a1f882d",
+      "length": 157788
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_rolling24h_all.json",
+      "commit": "d2fe4d3798d5889f22f433f20772e7e4bd5d1cb1",
+      "length": 294938
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_bbo_all.json",
+      "commit": "331d3d2396da608d7401b195e446878b0cd4bd64",
+      "length": 120124
+    },
+    {
+      "path": "crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_mark_all.json",
+      "commit": "f8d357acbbe94e407e52ea3ba13dd844b98a92b5",
+      "length": 206646
+    }
+  ],
+  "gates": {
+    "G0": "PARTIAL",
+    "G1_G2_G3": "NOT_SCORED",
+    "G4_net": "UNKNOWN",
+    "Monster": "NO_GO",
+    "Frank": "UNCHANGED",
+    "Stage99": "UNCHANGED"
+  }
+}
