@@ -1,0 +1,38 @@
+name: Monster Stage126 original525 BBO capacity offline
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage126_full_market_bbo_capacity.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage126_full_market_bbo_capacity.py'
+      - '.github/workflows/monster-stage126-original525-bbo-capacity.yml'
+  workflow_dispatch:
+
+jobs:
+  all-source-audit:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and unit test actual publisher-archived Stage123
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage126_full_market_bbo_capacity.py
+          python -m unittest -v test_monster_v4_stage126_full_market_bbo_capacity.py
+      - name: Source-read actual 927 full / 525 active, reject denominator drift
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage126_full_market_bbo_capacity.py --manifest crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_manifest.json --out stage126_real525.json --expect-active 525
+          python -c 'import json; d=json.load(open("stage126_real525.json")); assert d["all_exchangeinfo_symbols"]==927 and len(d["all_venue_symbol_rows"])==525 and sum(d["bbo_status_counts"].values())==525 and d["G4"]=="UNKNOWN" and d["monster_deployment"]=="NO_GO"'
+      - name: Retain actual machine audit for verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage126-real525-${{ matrix.os }}
+          path: stage126_real525.json
+          retention-days: 30
