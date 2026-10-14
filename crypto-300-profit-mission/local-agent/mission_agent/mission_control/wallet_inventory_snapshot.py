@@ -70,7 +70,9 @@ def _valid_unavailable_dual_program_capture(document: dict) -> bool:
                 "program_id", "reason", "error_type"}:
             return False
         err_type = failure["error_type"]
-        if (failure["reason"] != "TOKEN_ACCOUNT_QUERY_UNAVAILABLE"
+        if (not isinstance(failure["program_id"], str)
+                or failure["program_id"] not in PROGRAMS
+                or failure["reason"] != "TOKEN_ACCOUNT_QUERY_UNAVAILABLE"
                 or not isinstance(err_type, str) or not err_type.isidentifier()
                 or len(err_type) > 128):
             return False
