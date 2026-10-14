@@ -138,6 +138,10 @@ def audit():
         "source_original_stage79_first_gate_Git_blob":existing.CONTRACT_SHA,
         "cohort_exposed_not_new_OOS":True,
         "source_market_scope":"BINANCE_USDM_RESEARCH_UNCERTIFIED_CRYPTO",
+        "research_decision":(
+            "REJECTED_HISTORICAL_G2_28_EARLY_RECALL"
+            if count["new_fast_early5_2x"]*100<28*80
+            else "HISTORICAL_DIAGNOSTIC_ONLY_OOS_NOT_PASSED"),
         "D0_original":count["total_first_D0"],
         "original_first_D1":count["original_first_D1"],
         "Stage117_firstD0_fast_attention":count["fast"],
