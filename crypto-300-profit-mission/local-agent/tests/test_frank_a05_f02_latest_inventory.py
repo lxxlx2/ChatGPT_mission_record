@@ -181,3 +181,50 @@ def test_invalid_target_input_does_not_query_or_guess(tmp_path, mints):
     db.close()
     with pytest.raises(ValueError, match="TARGET_MINTS_INVALID"):
         _read(path, mints)
+
+
+def test_manual_cli_reuses_source_readonly_and_does_not_write_sidecar(tmp_path, capsys):
+    from scripts.frank_research_latest_inventory import main
+    from pathlib import Path
+    from datetime import datetime, timezone
+    import hashlib
+
+    path = tmp_path / "research.sqlite"
+    src = _snapshot(
+        [entry(OWNER_A, MINT, ATA_A, SPL_TOKEN_PROGRAM)], [],
+        slots=(100, 101),
+        stamp=datetime.now(timezone.utc).isoformat(),
+    )
+    db = WalletEvidenceStore(path)
+    try:
+        db.capture_wallet(src)
+    finally:
+        db.close()
+    file = tmp_path / "mints.json"
+    file.write_text(json.dumps([MINT]), encoding="utf-8")
+    before = hashlib.sha256(path.read_bytes()).hexdigest()
+    assert main([
+        "--wallet", OWNER_A,
+        "--mint-file", str(file),
+        "--sidecar", str(path),
+    ]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["kind"] == "RESEARCH_OWNER_LATEST_CAPTURE_INVENTORY_NOT_LIVE"
+    assert result["selected_capture_sha256"] == src["capture_sha256"]
+    assert result["mints"][0]["status"] == "OBSERVED_IN_DUAL_PROGRAM_SCAN_NON_ATOMIC"
+    assert result["mints"][0]["usd_value"] is None
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == before
+
+
+def test_manual_cli_missing_archive_does_not_create_empty_sqlite(tmp_path):
+    from scripts.frank_research_latest_inventory import main
+
+    absent = tmp_path / "missing-research.sqlite"
+    file = tmp_path / "mints.json"
+    file.write_text(json.dumps([MINT]), encoding="utf-8")
+    with pytest.raises(FileNotFoundError, match="SIDE_CAR_NOT_FOUND"):
+        main([
+            "--wallet", OWNER_A, "--mint-file", str(file),
+            "--sidecar", str(absent),
+        ])
+    assert not absent.exists()
