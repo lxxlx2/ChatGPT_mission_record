@@ -116,7 +116,12 @@ def reconcile_identity(mint,profile,market):
     markets=(market.get('identity_records') or []) if market_bound else []
     markets=[r for r in markets if r.get('mint')==mint]
     records=chain+markets
-    labels={(_label(r.get('name')),_label(r.get('symbol'))) for r in records}
+    # Chain identity stays anchored to the exact mint. Compare source labels
+    # using the same case-insensitive rule as the visible name/symbol dedupe:
+    # capitalization alone is not evidence of a different token identity.
+    # Preserve the raw source labels unchanged in "sources" for audit.
+    labels={((_label(r.get('name')) or '').casefold(),
+             (_label(r.get('symbol')) or '').casefold()) for r in records}
     conflict=metadata.get('status')=='TOKEN_IDENTITY_CONFLICT' or len(labels)>1
     verified=bool(chain) and anchored and metadata.get('status')=='VERIFIED'
     selected=chain[0] if verified and not conflict else None
