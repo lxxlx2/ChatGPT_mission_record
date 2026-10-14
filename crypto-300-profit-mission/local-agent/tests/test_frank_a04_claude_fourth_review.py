@@ -140,12 +140,12 @@ def test_N1_owner_gap_opt_in_archives_raw_and_continues_older_pages(tmp_path):
         assert allowed["pagination_end_observed"]
         assert allowed["source_pagination_coverage"] == "AVAILABLE_SOURCE_END_NOT_GENESIS_PROVEN"
         assert allowed["coverage"] == "PARTIAL_ECONOMIC_EVIDENCE"
-        assert allowed["v2_blocked_count"] == 1
-        assert allowed["v2_missing_count"] == 1
+        assert allowed["v3_blocked_count"] == 1
+        assert allowed["v3_missing_count"] == 1
         assert allowed["missing_detail_counts"]["TOKEN_OWNER_UNRESOLVED_DELTA"] == 1
         assert allowed["unresolved_owner_continuation_opt_in"] is True
         assert sidecar.count("RAW_TX") == 3
-        assert sidecar.count("WALLET_TX_VIEW_V2") == 2
+        assert sidecar.count("WALLET_TX_VIEW_V3") == 2
         assert sidecar.count("WALLET_TX_VIEW") == 0
         # A retry/rebuild preserves the untrusted economic gap explicitly.
         repair = journal.rebuild_versioned_views(OWNER_A)
@@ -197,6 +197,10 @@ def test_old_sidecar_is_migrated_without_rewriting_raw_v1_or_cursor(tmp_path):
             row["name"] for row in upgraded.db.execute(
                 "PRAGMA table_info(wallet_history_signature)")
         }
+        assert "v3_error_code" in {
+            row["name"] for row in upgraded.db.execute(
+                "PRAGMA table_info(wallet_history_signature)")
+        }
         saved = upgraded.db.execute(
             "SELECT payload_json FROM evidence_documents WHERE kind='RAW_TX'"
         ).fetchone()[0]
@@ -208,7 +212,7 @@ def test_old_sidecar_is_migrated_without_rewriting_raw_v1_or_cursor(tmp_path):
         state = journal.state(OWNER_A)
         assert state["page_count"] == 2
         assert state["captured"] == 1
-        assert state["v2_missing_count"] == 1
+        assert state["v3_missing_count"] == 1
         assert state["coverage"] == "PARTIAL_ECONOMIC_EVIDENCE"
         assert journal.state(OWNER_A) == state
     finally:
