@@ -118,7 +118,7 @@ def fit(train):
     x = [r["asof_features"] for r in train]
     width = len(SOURCE_KEYS)
     means = [sum(v[j] for v in x)/n for j in range(width)]
-    scales = [max(1, (sum((v[j]-means[j])**2 for v in x)/n)**0.5) for j in range(width)]
+    scales = [z if z >= 1e-9 else 1.0 for z in ((sum((v[j]-means[j])**2 for v in x)/n)**0.5 for j in range(width))]
     def convert(vals):
         return [max(-6., min(6., (vals[j]-means[j])/scales[j])) for j in range(width)]
     xx = [convert(v) for v in x]
