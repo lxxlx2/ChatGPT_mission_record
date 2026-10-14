@@ -11,13 +11,25 @@ from mission_agent.mission_control.wallet_evidence_store import WalletEvidenceSt
 from mission_agent.mission_control.wallet_history_replay import (
     HistoryJournal, _wallet_projection,
 )
-from test_frank_a04_claude_fourth_review import fee_only_receipt
-from test_frank_a04_history_resume import signature
-from test_frank_a04_a05_chain_capture import OWNER_A
+from test_frank_a04_history_resume import receipt, signature
+from test_frank_a04_a05_chain_capture import OWNER_A, ATA_A, MINT, balances
+import mission_agent.mission_control.wallet_economic_ledger as economic_ledger
 
 path = Path(os.environ["FRANK_A04_TEST_OLD_V2_SIDECAR"])
 sig = signature(6501)
-raw = fee_only_receipt(sig, 6500)
+raw = receipt(sig, 6500, OWNER_A)
+raw["transaction"]["message"]["accountKeys"] = [
+    {"pubkey": OWNER_A}, {"pubkey": ATA_A},
+]
+raw["transaction"]["message"]["instructions"] = []
+raw["meta"]["fee"] = 5000
+raw["meta"]["preBalances"] = [10000000, 2039280]
+raw["meta"]["postBalances"] = [9995000, 2039280]
+raw["meta"]["preTokenBalances"] = [balances(1, OWNER_A, MINT, "100")]
+raw["meta"]["postTokenBalances"] = [balances(1, OWNER_A, MINT, "80")]
+assert "frank-v2-parent-" in str(economic_ledger.__file__), (
+    "TEST_IS_NOT_USING_PARENT_SHA_MODULE:" + str(economic_ledger.__file__))
+print("PARENT_NORMALIZER_MODULE=" + str(economic_ledger.__file__))
 sidecar = WalletEvidenceStore(path)
 try:
     journal = HistoryJournal(sidecar)
@@ -34,7 +46,8 @@ try:
     ).fetchone()
     original_doc = json.loads(original["payload_json"])
     assert original_doc["normalizer_version"] == "SOL_TOKEN_VIEW_V2"
-    assert original_doc["native_sol_coverage_status"] == "NATIVE_SOL_FLOW_UNCLASSIFIED"
+    assert original_doc["native_sol_coverage_status"] == (
+        os.environ["FRANK_A04_TEST_EXPECTED_OLD_NATIVE_STATUS"])
     manifest = {
         "wallet": OWNER_A, "signature": sig, "slot": 6500,
         "v2_hash": original["source_sha256"],
@@ -47,6 +60,7 @@ try:
             (OWNER_A,),
         ).fetchone()),
         "origin_normalizer_version": original_doc["normalizer_version"],
+        "origin_native_sol_status": original_doc["native_sol_coverage_status"],
     }
     path.with_suffix(".manifest.json").write_text(
         json.dumps(manifest, sort_keys=True), encoding="utf-8")
