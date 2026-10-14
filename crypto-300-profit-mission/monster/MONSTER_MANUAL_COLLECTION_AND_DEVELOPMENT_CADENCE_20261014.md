@@ -10,6 +10,27 @@
 - 原本 Stage99 一次性固定的三个时间仍为**历史实验设计记录**：2026-10-14、2026-10-28、2026-11-11 各 06:00 UTC（曼谷时间 13:00），原自动启动 05:48 UTC（曼谷 12:48）。在手动模式里，它们**只作为用户选择发起聊天采集的目标日期/参考时刻**，不再是实际运行中的 scheduler。
 - 首个 2026-10-14 06:00 UTC Stage99 观察点保留 `SOURCE_FAILED_NO_BACKFILL`。本日已另外自主完成真实 Binance 新市场观察 `2026-10-14T09:48:24.840Z`（曼谷 16:48:24），归档 [Stage123 manifest](evidence/monster_stage123_20261014T094824Z_manifest.json)。**该新观察是新的起点，不是 06:00 旧快照补抓。**
 
+## Mac 停用命令（用户执行；精准限定三个 Stage99 labels）
+
+```zsh
+for d in 20261014 20261028 20261111; do
+  label="com.lxxlx2.monster.stage99.usdm.$d"
+  service="gui/$(id -u)/$label"
+  plist="$HOME/Library/LaunchAgents/$label.plist"
+  if launchctl print "$service" >/dev/null 2>&1 || launchctl list "$label" >/dev/null 2>&1; then
+    launchctl bootout "$service" || { echo "$d BOOTOUT_FAILED"; break; }
+  fi
+  if launchctl print "$service" >/dev/null 2>&1 || launchctl list "$label" >/dev/null 2>&1; then
+    echo "$d STILL_REGISTERED"
+    break
+  fi
+  rm -f -- "$plist"
+  echo "$d STOPPED_AND_PLIST_REMOVED"
+done
+```
+
+命令仅对明确列出的 Monster Stage99 标识工作；必须在用户 Mac 本地执行，所有远端 Git 研发提交都不会取消本地服务。完整成功输出应为三条 `STOPPED_AND_PLIST_REMOVED`；如显示失败，实际停止状态必须标 `PARTIAL_OR_UNVERIFIED`。不要删除 `$HOME/.local/share/monster-stage99-source-capture/` 的审计原始数据、状态和日志。
+
 ## 后续需执行的手动采集检查点（Asia/Bangkok）
 
 | 目标日期 | 用户发起聊天的建议时间 | 相应 UTC 参考 | 采集模式 | 状态 |
@@ -28,7 +49,7 @@
 3. 取 Binance 源提供的当前时间字段，保存每一源观测的时间范围，四源并非原子同一毫秒；检查记录数量/去重、市场全量分母、`TRADING + PERPETUAL + USDT` 活跃全集、完整 ticker/BBO/mark 覆盖、Unicode 名称、合约单位/分类未确认、旧数据时间与缺失项。全量原始结构化记录**分片存档**，不能仅保存榜单或删掉失败/非活跃币。
 4. 分析实际业务价值：当前市场广度、过去24小时成交额分布、上涨/下跌比例、爆发币和正常币对照、BBO价差及其分布、过去观察点变化、真实币种身份/倍数和交易资格阻断，**WATCH != BUY**。没有日间逐分钟信号记录，不声称几天前就发现了 2x；只有价格/BBO 不能声称有真实可成交利润。
 5. 为每次采集创建新的 UTC 批次文件名 `monster_stageNNN_YYYYMMDDTHHMMSSZ_...`，标注 `MANUAL_USER_REQUESTED`、UTC+曼谷时间、原始结构化 API 来源、采集覆盖、缺失/censor、Git SHA。在原分支 `research/monster-v4-local-discovery-20261010`（PR #30）提交**完整资料与简洁指标报告**，随后远端重新读取文件/CI 核对后汇报。不能只在聊天里给市场排行榜不更新 Git。
-6. 对比上一个手动观测，必须以同一 symbol+venue+contract 单位并明确观察间隔及下架/新币关系；首次出现的币没有可比前值不得算 0% 或后验负收益。若要验证 D0 提前能力，需另行使用当时冻结的因果一分钟历史/前瞻证据与完整市场分母，**两张相距两周的快照不能验证 1m 早报率**。
+6. 运行 `../local-agent/scripts/monster_v4_stage124_manual_snapshot_comparison.py` 进行**每个真实批次独立全市场数据质量、分母和24h分布**核验；如存在两份完整实际批次，则用**预先冻结的唯一前瞻配对比较器** `../local-agent/scripts/monster_v4_stage124_manual_snapshot_forward_compare.py`（对应 [Stage124 原始 T0/T1 冻结方案](MONSTER_STAGE124_FROZEN_MANUAL_MARKET_TWO_SNAPSHOT_FORWARD_COMPARISON_PROTOCOL_20261014.md)）做 T0/T1 同合约严格因果比对。优先采用冻结比较器作为对外配对收益口径，严禁对两套输出挑有利数据。首次出现的币没有可比前值不得算 0% 或后验负收益。若要验证 D0 提前能力，需另行使用当时冻结的因果一分钟历史/前瞻证据与完整市场分母，**两张相距两周的快照不能验证 1m 早报率**。
 7. 不自动开任务、发 Gmail、下交易单、安装 Mac 服务或修改 Frank。每次新的研究候选仍应按数据→方案冻结→实现→历史实验→独立其他 AI review→测试→独立前瞻验证→授权部署的原有顺序；失败策略如 Stage118 的 18/28 召回率保留为 `REJECTED`。
 
 ## 研发在两次手动采集之间不能停
