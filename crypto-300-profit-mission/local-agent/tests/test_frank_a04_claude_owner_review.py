@@ -72,7 +72,7 @@ def test_unobserved_native_sol_flow_is_explicit_never_zero():
     assert result["native_sol_coverage_status"] == "NATIVE_SOL_FLOW_UNCLASSIFIED"
     assert result["native_sol_flow_lamports"] is None
     assert result["person_pnl_usd"] is None
-    assert result["normalizer_version"] == "SOL_TOKEN_VIEW_V2"
+    assert result["normalizer_version"] == "SOL_TOKEN_VIEW_V3"
 
 
 def test_wallet_view_cannot_claim_wrong_research_owner_and_old_raw_remains(tmp_path):
@@ -131,11 +131,11 @@ def test_versioned_rebuild_keeps_original_immutable_evidence_and_is_repeatable(t
         assert rebuilt["blocked"] == 0
         repeated = journal.rebuild_versioned_views(OWNER_A)
         assert repeated["new"] == 0 and repeated["already_present"] == 1
-        assert store.count("WALLET_TX_VIEW_V2") == 1
+        assert store.count("WALLET_TX_VIEW_V3") == 1
         modern = json.loads(store.db.execute(
-            "SELECT payload_json FROM evidence_documents WHERE kind='WALLET_TX_VIEW_V2'"
+            "SELECT payload_json FROM evidence_documents WHERE kind='WALLET_TX_VIEW_V3'"
         ).fetchone()[0])
-        assert modern["normalizer_version"] == "SOL_TOKEN_VIEW_V2"
+        assert modern["normalizer_version"] == "SOL_TOKEN_VIEW_V3"
         assert modern["instruction_evidence"]["transfer_count"] == 0
         assert store.db.execute(
             "SELECT payload_json FROM evidence_documents WHERE kind='WALLET_TX_VIEW'"
