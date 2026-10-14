@@ -1,0 +1,93 @@
+name: Monster Stage120 Frozen USD-M Tradability Rules Offline Tests
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage120-asof-exchangeinfo-trade-rules.yml
+      - crypto-300-profit-mission/monster/MONSTER_STAGE120_FROZEN_EXCHANGEINFO_RULES_AND_POINT_IN_TIME_EXECUTION_CONTRACT_20261014.md
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage120_exchangeinfo_execution_rules.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_integrity_and_cost_cross_platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exchangeInfo source Binance clock, filter parsing and Stage90 spread simulation without orders
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage120_exchangeinfo_execution_rules.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage120_exchangeinfo_execution_rules.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage90_d2_execution_proof.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage119_one_shot_forward_d2_audit.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py --selftest
+  no_real_snapshot_yet_no_fake_forward_g0:
+    needs: source_integrity_and_cost_cross_platform
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Record no unapproved current API fetch and reproducible synthetic filter coverage only
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage120_exchangeinfo_execution_rules.py --selftest
+          python - <<'PY'
+          import importlib.util,sys,json
+          from pathlib import Path
+          mod=Path('crypto-300-profit-mission/local-agent/scripts')
+          sys.path.insert(0,str(mod.resolve()))
+          import monster_v4_stage120_exchangeinfo_execution_rules as m
+          w=m.source.WINDOWS[0]
+          actual=m.catalog(m.synthetic_snapshot(w),w)
+          assert actual['counters']['all_exchange_symbols']==7
+          assert actual['counters']['raw_futures_candidates']==4
+          assert actual['counters']['raw_perpetual_filter_complete']==3
+          assert actual['G0_true_crypto_classification']=='NOT_ESTABLISHED'
+          assert actual['G4_actual_executable_profit']=='UNKNOWN'
+          assert all(r['actual_order_execution']=='NOT_OBSERVED' for r in actual['per_symbol'].values())
+          report={k:v for k,v in actual.items() if k!='per_symbol'}
+          report['synthetic_fixture_only']=True
+          report['actual_stage99_snapshot_validated_here']='NOT_DONE'
+          report['source_replay_not_run']=True
+          report['MonSTER_PRODUCTION']='NO_GO'
+          target=Path('crypto-300-profit-mission/monster/evidence/monster_stage120_offline_synthetic_filter_contract_receipt.json')
+          target.write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
+          print('STAGE120_EXCHANGEINFO_NO_FUTURE_OR_FAKE_CRYPTO_G0_FIXTURE_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage120-synthetic-filter-contract-unit-only
+          path: crypto-300-profit-mission/monster/evidence/monster_stage120_offline_synthetic_filter_contract_receipt.json
+          retention-days: 45
+      - name: Save explicitly synthetic receipt in existing research PR30
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage120_offline_synthetic_filter_contract_receipt.json
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE120_SYNTHETIC_RECEIPT_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive Stage120 synthetic only Binance exchangeInfo trade-filter and no-G0 receipt"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE120_SYNTHETIC_ONLY_RECORDED; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          exit 1
