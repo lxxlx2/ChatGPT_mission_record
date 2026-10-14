@@ -1,7 +1,7 @@
 # Frank / CA / 多人物钱包可扩展性 — 实施 TODO 与验收清单
 
 - 日期：2026-10-13 Asia/Bangkok
-- 状态：`DESIGN_ONLY / ALL_TASKS_NOT_STARTED_IN_THIS_PLAN / CURRENT_MAIN_UNCHANGED / RELEASE_NO_GO`
+- 当前状态（2026-10-14）：`ACTIVE_RESEARCH_DEVELOPMENT / A04_VERSIONING_CODE_REVIEW_APPROVED / A05_AND_F02_BUSINESS_ACCEPTANCE_PENDING / NO_MERGE / NO_DEPLOY`。原始 2026-10-13 设计基线与各阶段历史记录仍保留；CI PASS 不代表勾选 41 项需求。
 - 核查基线 main：`17a71c863b44c67f7a1a47639fd482958e56ee4b`（仅审计时，开工时重检）。
 - 技术方案：`FRANK_CA_MULTI_PERSON_TECHNICAL_DESIGN_20261013.md`。
 - 原始需求：`ca-analysis-unified-accuracy-acceptance.md`、`frank-wallet-monitor-dashboard-v2-design-2026-10-11.md`、`WALLET_CLUSTER_ANALYSIS_SPEC.md`、`MISSION_MEME_CURRENT_STATUS_2026-10-07.md`、`../MISSION_SPEC.md`。
