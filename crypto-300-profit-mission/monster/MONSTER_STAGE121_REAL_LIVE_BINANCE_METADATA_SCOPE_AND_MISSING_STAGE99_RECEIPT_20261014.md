@@ -28,8 +28,12 @@ Actual read-only structural counts for that time:
 | Active USDT perpetual symbols with `PRICE_FILTER`, `LOT_SIZE`, `MARKET_LOT_SIZE`, `MIN_NOTIONAL` | 525 / 525 |
 | Active USDT perpetual symbols with `NOTIONAL` additionally | 0 / 525 (alternative expected contract) |
 | Active symbols beginning literal `1000` or `1000000` | 11 |
+| Active contracts with Binance `underlyingSubType` containing `Crypto` | 524 / 525 |
+| Active contract without any exchange `underlyingSubType` values | 1: `CTUSDT` |
 
 The 11 prefixed symbols include `1000SHIBUSDT`, `1000XECUSDT`, `1000LUNCUSDT`, `1000PEPEUSDT`, `1000FLOKIUSDT`, `1000BONKUSDT`, `1000SATSUSDT`, `1000RATSUSDT`, `1000CATUSDT`, `1000000MOGUSDT`, `1000CHEEMSUSDT`. Prefix is not independent contract unit proof. The two `INDEX` symbols both declare `underlyingSubType=["Index","Crypto"]`; `INDEX` does not imply TradFi by itself. The active `COIN` group is not independently issuer-verified merely due to Binance field.
+
+Stage120 was extended at commit `b850a801ecf3fdda47826750d334454423b6d188` to retain the **exchange's own Crypto subtype assertion** as a distinct evidence grade from independent issuer confirmation. This avoids throwing away available exchange information without incorrectly upgrading a Binance category label to `G0_CRYPTO_CONFIRMED`.
 
 Schema cross-check: Stage120 predeclared rules `LOT_SIZE`, `MARKET_LOT_SIZE`, `PRICE_FILTER`, and `MIN_NOTIONAL` match all 525 currently active USD-M USDT PERPETUAL instruments; no disabled/missing essential filters were detected in this particular **live** response. Do not extrapolate live current filters to old 2025–2026 original 519 cases or 2026-10-14 06:00 UTC frozen population.
 
