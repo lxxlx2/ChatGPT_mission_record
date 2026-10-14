@@ -119,6 +119,15 @@
 - [临时联合 CI #38560775878](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38560775878) **SUCCESS：55 项重点 + 1,607 项完整**，从 CI 运行时最新 main 合入 A04 #54 完整子分支、Claude 已通过 C02 #49 代码和 F01 #44 代码，三个 Git 合并步骤无冲突。具体业务功能/真实 Mac 未在该 runner 部署。
 - 当前**仍需独立 Claude 对 #54 最终 SHA 复审**，然后再推进 A05/F02 的 32 Mint/ATA 真实历史数据及 Dashboard 本地验收。没有新增已确认真实 owner 缺失、失败指令完整 getTransaction 和 ATA-close 档案；继续明确缺口，研究未完成不算生产资产/PnL。所有 PR Draft，**NO_MERGE / NO_DEPLOY**，未改 Frank V1 / Gmail / Mac 生产 SQLite / launchd。
 
+## 2026-10-14 Claude 精确代码审查 PR #54：APPROVE，解除 A04 版本冲突代码门禁
+
+- 用户提交独立 Claude 对 [Draft PR #54](https://github.com/lxxlx2/ChatGPT_mission_record/pull/54) **精确 HEAD `6e1f8cec197bab30703fb4524c9710191dc25522` 的 `APPROVE`**，严格限于相对父 SHA `166bdaa133d7ed799870ca963d2dfa55f2736b17` 的代码变更，无新增 P2/High。与独立审查报告的完整测试、旧 PR #52 真 SQLite 迁移、新旧 TX 文档逐字节保持、反向插入、只读连接和冲突守卫全部一致。**这是用户转交的外部 Claude 报告，不是假冒 GitHub 原生 APPROVE**（实际 GitHub Review 列表为空）。
+- 最终通用 `WalletEvidenceStore.record_transaction()` 身份门禁：历史 `SOL_TOKEN_VIEW_V2`/schema2 仍用 `TX/solana:<signature>:<slot>`，V3/schema3 用 `TX/solana:<signature>:<slot>:v3`；严格 `type(schema_version) is int` 配对；同版本重复幂等、有效冲突不得覆盖。HistoryJournal `WALLET_TX_VIEW_V3` 与泛用 `TX` 的版本路径独立。PR #53 曾获 `REQUEST_CHANGES` 的通用 TX P2 在 #54 的精确代码审查中**正式关闭**，不再对该补丁继续循环修补。
+- 复核真实 GitHub：PR #54 仍 `open/draft/unmerged`，HEAD 未变；[Actions #38560775862](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38560775862) **SUCCESS 65 专项 + 1,555 全量**， [Actions #38560775878](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38560775878) **SUCCESS 55 联合专项 + 1,607 全量**，两次触发 SHA 完全一致；main 当前查询时为 `1071d232278ceecbe28c28e1a809989bf5e87726`，该 main SHA 仅作为此轮快照，集成和发布前必须再查。
+- **状态严格分离**：`A04_VERSIONING_CODE_REVIEW_APPROVED / CROSS_SHA_CI_PASS / COMBINED_CI_PASS`；`A04_CHAIN_SOURCE_COVERAGE_PARTIAL / A05_FULL_ATA_NOT_DONE / F02_ACTUAL_POSITION_NOT_DONE / MAC_ACCEPTANCE_PENDING / NO_MERGE / NO_DEPLOY`。原 41 项产品 TODO **不能仅凭代码审查通过而全部打勾**。
+- **后续主线恢复**：A05 真实 SPL+Token-2022 owner token-account 全量枚举，核对多 ATA/32 Mint/slot 新鲜度及尚未取得的历史账户证据；连接 F02 展示有证据的最新实际仓位，缺失 `null`，不将余额 0 当清仓或成本已知；后续 A06 和 CA C03–C07 再推进真实成本、资金流和叙事。第一阶段应采用独立手动采集及隔离证据与另一 AI Review，**不请求合并或部署生产 Mac**。
+- 未满足的外部证据不隐瞒：失败交易完整 `getTransaction` parsed receipt、真实 owner missing nonzero、ATA-close fixture、32 Mint 和真实浏览器闭环。代码批准没有关闭这些数据和业务门禁。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
