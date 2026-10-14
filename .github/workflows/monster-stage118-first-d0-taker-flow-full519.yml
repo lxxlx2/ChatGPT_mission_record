@@ -7,6 +7,8 @@ on:
       - crypto-300-profit-mission/monster/MONSTER_STAGE118_FROZEN_D0_FLOW_IMBALANCE_TWO_LANE_CANDIDATE_20261014.md
       - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_first_d0_dual_lane_flow_core.py
       - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_full519_taker_flow_backtest.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_asof_taker_proof_adapter.py
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
   workflow_dispatch:
 permissions:
   contents: write
@@ -28,6 +30,10 @@ jobs:
           set -eu
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_first_d0_dual_lane_flow_core.py
           python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_full519_taker_flow_backtest.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_asof_taker_proof_adapter.py
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_asof_taker_proof_adapter.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage116_one_shot_forward_replay.py --selftest
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_first_d0_dual_lane_flow_core.py
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage118_full519_taker_flow_backtest.py --selftest
           python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage64_all519_first_d0_asof61m_official_taker.py --selftest
