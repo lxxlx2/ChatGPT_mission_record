@@ -97,6 +97,7 @@ def diagnostic(packets: list[dict], reference: dict) -> dict:
     all_raw_ids = defaultdict(set)
     local_unique_events = set()
     case_medians = []
+    paired_first_repeated = []
     case_summary = []
     right_tail = []
     by_date = defaultdict(lambda: {"cases": 0, "priority": 0, "repeat": 0})
@@ -186,11 +187,25 @@ def diagnostic(packets: list[dict], reference: dict) -> dict:
                 bucket["censored"] += 1
         if case_repeats:
             case_medians.append(median(case_repeats))
+            if first_price is not None:
+                paired_first_repeated.append((first_price,median(case_repeats)))
         crossed = z["original_first_2x_HIGH_EVAL_ONLY"]
         if z["original_D0_early5_2x_EVAL_ONLY"]:
             if crossed is None:
                 raise ValueError("STAGE112_HISTORIC_MAJOR_GROUND_TRUTH_MISSING")
             cross = prior.old.utc_ms(crossed)
+            lead_minutes = ((cross - ordered[0]["observable_ms"]) // MS_MIN
+                            if ordered else None)
+            if lead_minutes is None:
+                timing_class="NO_PRIORITY"
+            elif lead_minutes >= 5:
+                timing_class="EARLY_AT_LEAST_5MIN"
+            elif lead_minutes > 0:
+                timing_class="BEFORE_2X_UNDER_5MIN"
+            elif lead_minutes == 0:
+                timing_class="SAME_2X_MINUTE"
+            else:
+                timing_class="LATE_AFTER_2X"
             first_fired = bool(ordered and ordered[0]["observable_ms"] <= cross - 5*MS_MIN)
             any_fired = any(e["observable_ms"] <= cross - 5*MS_MIN for e in ordered)
             first_early5 += int(first_fired)
@@ -201,6 +216,8 @@ def diagnostic(packets: list[dict], reference: dict) -> dict:
             right_tail.append({"date":date, "symbol":symbol,
                                "first_early_2x":first_fired,
                                "any_early_2x":any_fired,
+                               "first_priority_vs_2x_timing":timing_class,
+                               "first_priority_lead_min":lead_minutes,
                                "total_priorities":len(ordered)})
         case_summary.append({
             "date":date, "symbol":symbol, "identity":identity,
@@ -227,6 +244,10 @@ def diagnostic(packets: list[dict], reference: dict) -> dict:
     if len(first) + censored_first != 277 or len(repeats) + censored_repeats != 463:
         raise ValueError("STAGE112_ORIGINAL_FIRST_REPEAT_EVENT_COUNT_DRIFT")
 
+    paired_diff=sorted([repeat-first for first,repeat in paired_first_repeated])
+    paired_first=sorted([first for first,repeat in paired_first_repeated])
+    paired_repeat=sorted([repeat for first,repeat in paired_first_repeated])
+    right_tail_timing=Counter(z["first_priority_vs_2x_timing"] for z in right_tail)
     collisions = {raw:sorted(scoped) for raw,scoped in all_raw_ids.items()
                   if len(scoped) > 1}
     return {
@@ -248,10 +269,20 @@ def diagnostic(packets: list[dict], reference: dict) -> dict:
         "first_priority_price_economics":dist(first),
         "repeat_priority_price_economics_event_weighted":dist(repeats),
         "case_weighted_repeat_median_of_complete_prices":dist(case_medians),
+        "paired_same_case_first_vs_repeat_complete_prices":{
+            "paired_cases":len(paired_diff),
+            "first_24h_gross_median_pct":str(median(paired_first)) if paired_first else None,
+            "repeat_case_median_24h_gross_median_pct":str(median(paired_repeat)) if paired_repeat else None,
+            "median_of_within_case_repeat_minus_first_pct_points":str(median(paired_diff)) if paired_diff else None,
+            "repeat_case_median_better_than_first":sum(v>0 for v in paired_diff),
+            "repeat_case_median_worse_than_first":sum(v<0 for v in paired_diff),
+            "exposed_descriptive_paired_not_causal":True,
+        },
         "first_event_censored_n":censored_first,
         "repeat_event_censored_n":censored_repeats,
         "source_complete_price_proxies_total":len(first)+len(repeats),
         "by_original_anchor_date":dict(sorted(by_date.items())),
+        "historical_original28_first_priority_timing_class":dict(sorted(right_tail_timing.items())),
         "historical_original28_first_priority_early5_2x":first_early5,
         "historical_original28_any_priority_early5_2x":any_early5,
         "historical_original28_major_early5_all":sorted(right_tail, key=lambda x:(x["date"],x["symbol"])),
