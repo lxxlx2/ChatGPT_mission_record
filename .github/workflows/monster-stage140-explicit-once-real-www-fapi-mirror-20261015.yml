@@ -1,0 +1,54 @@
+name: Monster Stage140 one authorized real Binance WWW mirror source capture 2026-10-15
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - '.github/workflows/monster-stage140-explicit-once-real-www-fapi-mirror-20261015.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  actual-user-authorized-one-time-futures-raw-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Single explicit user request only, no jobs, timers or background monitoring
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          req={"schema":"MONSTER_STAGE140_EXPLICIT_ONE_TIME_USER_BINANCE_CAPTURE_20261015_V1","explicit_single_user_instruction":True,"source":"OFFICIAL_BINANCE_PUBLIC_MARKET_ONLY","no_background_schedule":True}
+          pathlib.Path("/tmp/monster-stage140-real-www-fapi-one-time-request.json").write_text(json.dumps(req))
+          PY
+      - name: Capture exact WWW source-host time exchangeInfo time raw and full market BBO tickers
+        shell: bash
+        run: |
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage133_manual_actual_t0_forward_proof.py crypto-300-profit-mission/local-agent/scripts/monster_v4_stage140_explicit_oneshot_raw_market_capture.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage140_explicit_oneshot_raw_market_capture.py --capture-request /tmp/monster-stage140-real-www-fapi-one-time-request.json --output-root crypto-300-profit-mission/monster/evidence/monster_stage140_user_authorized_real_www_mirror_20261015
+      - name: Commit this actual one-time raw source to the existing Mission research branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crypto-300-profit-mission/monster/evidence/monster_stage140_user_authorized_real_www_mirror_20261015
+          git diff --cached --quiet && exit 1
+          git commit -m "monster: original explicitly requested one-shot real Binance WWW mirror source and SHA"
+          git push origin HEAD:research/monster-v4-local-discovery-20261010
+      - name: Retain original source artifact if GitHub branch write is forbidden
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage140-real-www-binance-one-shot-evidence-20261015
+          path: crypto-300-profit-mission/monster/evidence/monster_stage140_user_authorized_real_www_mirror_20261015/
+          if-no-files-found: warn
+          retention-days: 30
