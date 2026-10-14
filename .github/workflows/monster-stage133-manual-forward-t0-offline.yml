@@ -1,0 +1,41 @@
+name: Monster Stage133 manual actual T0 official-source proof offline
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage133_manual_actual_t0_forward_proof.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage133_manual_actual_t0_forward_proof.py'
+      - '.github/workflows/monster-stage133-manual-forward-t0-offline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-source-gate:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Real module import has zero source calls; pure synthetic offline clock and evidence tests
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage133_manual_actual_t0_forward_proof.py
+          python -m unittest -v test_monster_v4_stage133_manual_actual_t0_forward_proof.py
+      - name: Refuse CLI no manual user request and ensure never fetch in CI
+        shell: bash
+        run: |
+          if python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage133_manual_actual_t0_forward_proof.py --out stage133_unauthorized.json; then
+            echo "STAGE133_FAIL_OPEN_NO_USER_REQUEST"
+            exit 1
+          fi
+          test ! -f stage133_unauthorized.json
+          echo "STAGE133_MANUAL_ONLY_NO_BACKGROUND_DATA_CAPTURE=PASS"
