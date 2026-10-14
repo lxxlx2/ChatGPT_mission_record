@@ -32,6 +32,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_flap_major2.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_market19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_ddac_dragon_closed.py"
+      - "crypto-300-profit-mission/research/bsc_meme_top_traders_readonly.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_top_traders_readonly.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_closed_grid23x19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_closed_grid23x19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_dragon_closed.py"
@@ -668,6 +670,11 @@ jobs:
             --baseline "$MODEL_DIR/bsc-meme-address-model-v1-baseline-2026-10-13.json" \
             --ledger "$MODEL_DIR/bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json" \
             --output /tmp/bsc-model-v1-p2-actual.json
+      - name: Full BSC research unittest discovery including legacy exact CA
+        shell: bash
+        run: |
+          cd crypto-300-profit-mission/research
+          python3 -B -m unittest discover -v -p 'test_bsc*.py'
       - name: Exact semantic Git artifact comparison and invariants
         shell: bash
         run: |
