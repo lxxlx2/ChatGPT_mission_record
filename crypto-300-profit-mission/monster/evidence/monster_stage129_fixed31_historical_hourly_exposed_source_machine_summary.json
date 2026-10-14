@@ -1,0 +1,29 @@
+{
+  "G0": "PARTIAL",
+  "G4_real_net": "UNKNOWN",
+  "frank": "UNCHANGED",
+  "frozen_case_count": 31,
+  "gross_first_observed_hour_to_later_high_at_least_10x_cases": 0,
+  "gross_first_observed_hour_to_later_high_at_least_2x_cases": 2,
+  "gross_first_observed_hour_to_later_high_at_least_5x_cases": 0,
+  "hourly_1h_peak_not_one_minute_first_cross_or_execution": true,
+  "independent_other_AI_review": "NOT_DONE",
+  "monster_deployment": "NO_GO",
+  "old_Stage93_51_gt2x_denominator_not_changed": true,
+  "old_stage118": "REJECTED",
+  "old_stage127": "REJECTED",
+  "real_new_G1_crypto_full_market": "NOT_SCORABLE",
+  "response_count": 31,
+  "schema": "MONSTER_STAGE129_COMPLETE_FROZEN31_HISTORICAL_PARTIAL_WINDOW_HOURLY_DIAGNOSTIC_V1",
+  "source": "BINANCE_USDM_HISTORICAL_1H_CONNECTED_STRUCTURED_NOT_PUBLISHER_SHA",
+  "source_status_counts": {
+    "COMPLETE_FROM_FIRST_OBSERVED_1H_TO_END_PRICE_PROXY_ONLY": 31
+  },
+  "workflow_run_id": 38562865049,
+  "workflow_head_sha": "bdc21fe2cee8f8cd16a7a329b05395ea32913d7e",
+  "macos_job_id": 115848061417,
+  "ubuntu_job_id": 115848061954,
+  "two_os_machine_summary_identical": true,
+  "individual_31_rows_in_actions_artifacts_and_source_regenerable_from_git": true,
+  "predeclared_protocol_commit": "044a5f63f2da3621b600d8e5131ddb393105e328"
+}
