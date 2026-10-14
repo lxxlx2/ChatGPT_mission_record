@@ -164,3 +164,38 @@ def test_no_calls_when_cli_is_plan_only(tmp_path, capsys):
     data = json.loads(capsys.readouterr().out)
     assert data["network_invoked"] is False
     assert not out.exists()
+
+
+def test_min_context_slot_must_be_respected_by_complete_wire_responses(tmp_path):
+    source = collect_owner_full_receipts(
+        wallet=OWNER_A, evidence_root=tmp_path / "stale-provider",
+        read_raw=_network(_wire(1, 900, []), _wire(2, 1200, []))[0],
+        min_context_slot=1000,
+        observed_at_utc="2026-10-14T12:00:00+00:00",
+    )
+    assert not source["manifest"]["complete"]
+    assert source["snapshot"] is None
+    assert source["manifest"]["missing"][0]["program_id"] == SPL_TOKEN_PROGRAM
+
+
+def test_replay_refuses_higher_manifest_context_floor_than_actual_slot(tmp_path):
+    from pathlib import Path
+    captured = collect_owner_full_receipts(
+        wallet=OWNER_A, evidence_root=tmp_path / "source",
+        read_raw=_network(_wire(1, 1050, []), _wire(2, 1051, []))[0],
+        observed_at_utc="2026-10-14T12:00:00+00:00",
+    )
+    manifest_file = Path(captured["bundle"]) / "manifest.json"
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest["min_context_slot"] = 1051
+    manifest_file.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="OWNER_RECEIPT_SOURCE_METADATA_MISMATCH"):
+        replay_owner_full_receipts(captured["bundle"], expected_wallet=OWNER_A)
+
+
+def test_owner_wire_archive_rejects_public_repository_checkout_path():
+    from pathlib import Path
+    from mission_agent.mission_control.wallet_full_rpc_evidence import _assert_directory
+    repo = Path(__file__).resolve().parents[3]
+    with pytest.raises(ValueError, match="OWNER_EVIDENCE_INSIDE_GIT_CHECKOUT_FORBIDDEN"):
+        _assert_directory(repo / "accidentally-commit-wallet-source")
