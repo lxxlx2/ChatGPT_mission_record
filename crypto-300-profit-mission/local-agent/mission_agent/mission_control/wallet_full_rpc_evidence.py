@@ -62,8 +62,13 @@ def _assert_directory(path: Path) -> Path:
     original = Path(path).expanduser()
     if original.is_symlink() or any(x.is_symlink() for x in (original, *original.parents)):
         raise ValueError("OWNER_EVIDENCE_SYMLINK_FORBIDDEN")
-    # This is a distinct *research source* directory, never a production DB.
-    return original.resolve()
+    # Full original wallet RPC bytes are local research data, never a file
+    # inside the public Mission checkout where they could be git committed.
+    result = original.resolve()
+    repository_root = Path(__file__).resolve().parents[4]
+    if result == repository_root or repository_root in result.parents:
+        raise ValueError("OWNER_EVIDENCE_INSIDE_GIT_CHECKOUT_FORBIDDEN")
+    return result
 
 
 def collect_owner_full_receipts(*, wallet: str, evidence_root: Path,
@@ -103,6 +108,8 @@ def collect_owner_full_receipts(*, wallet: str, evidence_root: Path,
         try:
             wire = read_raw("getTokenAccountsByOwner", params, index)
             reply, normalized = _load_verified_reply(wire, index, wallet, program)
+            if lower_bound is not None and normalized["slot"] < lower_bound:
+                raise ValueError("OWNER_RPC_CONTEXT_BELOW_REQUIRED_MIN")
         except (OSError, RuntimeError, TimeoutError, ValueError, TypeError,
                 KeyError, ChainCaptureError) as exc:
             missing.append({
@@ -197,6 +204,10 @@ def replay_owner_full_receipts(bundle_dir: Path, *, expected_wallet: str) -> dic
     except ValueError as exc:
         raise ValueError("OWNER_EVIDENCE_TIME_INVALID") from exc
     replies = {}
+    lower_bound = manifest.get("min_context_slot")
+    if lower_bound is not None and (type(lower_bound) is not int
+                                    or lower_bound < 0):
+        raise ValueError("OWNER_RECEIPT_SOURCE_METADATA_MISMATCH")
     for index, (program, filename) in enumerate(zip(PROGRAMS, FILES), 1):
         item = manifest["receipts"][index - 1]
         if (not isinstance(item, dict) or item.get("program_id") != program
@@ -211,9 +222,12 @@ def replay_owner_full_receipts(bundle_dir: Path, *, expected_wallet: str) -> dic
         reply, normalized = _load_verified_reply(
             wire, index, expected_wallet, program)
         if (normalized["slot"] != item["slot"]
-                or normalized["account_count"] != item["account_count"]):
+                or normalized["account_count"] != item["account_count"]
+                or (lower_bound is not None
+                    and normalized["slot"] < lower_bound)):
             raise ValueError("OWNER_RECEIPT_SOURCE_METADATA_MISMATCH")
         replies[program] = reply
+        lower_bound = max(lower_bound or 0, normalized["slot"])
     def request(method, params):
         return replies[params[1]["programId"]]
     result = capture_owner(expected_wallet, request,
