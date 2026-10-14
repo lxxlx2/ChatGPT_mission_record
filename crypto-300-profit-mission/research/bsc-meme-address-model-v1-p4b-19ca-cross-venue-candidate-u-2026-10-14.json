@@ -1,0 +1,919 @@
+{
+  "schema": "BSC_P4B_19CA_CROSS_VENUE_FIRST_ACTIVE_CANDIDATE_U",
+  "scope": "Only archived PancakeSwap V2 WBNB and 17 active competitor proofs. Excludes possible launchpad/other routes; five inactive-at-reference pools unresolved for earlier history; never counts tradable wallet opportunities.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-v2-wbnb-first-positive-liquidity-2026-10-14.json",
+      "git_blob_sha": "9fbc8bdaeb9df342a4d200fefb0ebd48b746b903"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing17-first-active-unified-2026-10-14.json",
+      "git_blob_sha": "fcc71a4ad6f35731224ed3de11c4e902fe3f5d3e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-competing22-liquidity-snapshot-2026-10-14.json",
+      "git_blob_sha": "a40e9c8ca741b08130e556c3fbed3908d6c05c0e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-v2-19ca-first10-swap-observations-2026-10-14.json",
+      "git_blob_sha": "646732ca70fa06dff798b30b2a91236135f4ecbb"
+    }
+  ],
+  "summary": {
+    "exact_CAs": 19,
+    "scoped_active_pools": 36,
+    "earlier_competitor_pools": 17,
+    "CA_with_scoped_alt_earlier": 12,
+    "CAs_where_V2_is_earliest_proven_scoped": 7,
+    "other_inactive_at_reference_unknown": 5,
+    "observed_first_window_v2_swaps": 24,
+    "actual_market_U_qualified": 0,
+    "production": "NO_GO"
+  },
+  "rows": [
+    {
+      "index": 0,
+      "token": "TST",
+      "exact_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "v2_reference_block": 46421401,
+      "scoped_first_active_pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+      "scoped_first_active_block": 46411402,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 1,
+      "validated_liquidity_pool_count": 2,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "first_active_block": 46411402,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-02-06T04:19:24.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 46421401,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-02-06T12:39:25.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "exact_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "v2_reference_block": 42638444,
+      "scoped_first_active_pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+      "scoped_first_active_block": 42638390,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 1,
+      "validated_liquidity_pool_count": 2,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "first_active_block": 42638390,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2024-09-28T03:42:48.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 42638444,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2024-09-28T03:45:30.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "exact_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "v2_reference_block": 47442143,
+      "scoped_first_active_pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+      "scoped_first_active_block": 47425645,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 2,
+      "validated_liquidity_pool_count": 3,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "first_active_block": 47425645,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-03-13T09:36:13.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "first_active_block": 47431639,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-03-13T14:35:55.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 47442143,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-03-13T23:21:07.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 3,
+      "observed_direct_V2_token_buy_swaps_in_scope": 1,
+      "observed_direct_V2_token_sell_swaps_in_scope": 2,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 3,
+      "token": "TUT",
+      "exact_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "v2_reference_block": 46521964,
+      "scoped_first_active_pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+      "scoped_first_active_block": 46484226,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 1,
+      "validated_liquidity_pool_count": 2,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "first_active_block": 46484226,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-02-08T17:01:15.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 46521964,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-02-10T00:28:09.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 3,
+      "observed_direct_V2_token_buy_swaps_in_scope": 1,
+      "observed_direct_V2_token_sell_swaps_in_scope": 2,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 4,
+      "token": "BROCCOLI714",
+      "exact_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "v2_reference_block": 46627714,
+      "scoped_first_active_pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "scoped_first_active_block": 46627251,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 1,
+      "validated_liquidity_pool_count": 2,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "first_active_block": 46627251,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-02-13T16:13:04.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 46627714,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-02-13T16:36:13.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLIF3B",
+      "exact_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "v2_reference_block": 46628416,
+      "scoped_first_active_pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+      "scoped_first_active_block": 46627261,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 1,
+      "validated_liquidity_pool_count": 2,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "first_active_block": 46627261,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-02-13T16:13:34.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 46628416,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-02-13T17:11:19.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 6,
+      "token": "SIREN",
+      "exact_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "v2_reference_block": 46828822,
+      "scoped_first_active_pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+      "scoped_first_active_block": 46488279,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 1,
+      "validated_liquidity_pool_count": 2,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "first_active_block": 46488279,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-02-08T20:23:54.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xa9b4493042830109b44e18ec3586ecd22bd032ed",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 46828822,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-02-20T16:13:01.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 7,
+      "token": "BANANAS31",
+      "exact_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "v2_reference_block": 46871948,
+      "scoped_first_active_pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "scoped_first_active_block": 44113219,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 2,
+      "validated_liquidity_pool_count": 3,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "first_active_block": 44113219,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2024-11-18T09:00:01.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "first_active_block": 44750892,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2024-12-10T12:26:37.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xe518025b12f424f825f3b53c8d4a747ccbfc6127",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 46871948,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-02-22T04:09:29.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 1,
+      "inactive_at_reference_historical_unknown_pools": [
+        {
+          "pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "reference_block": 46871948,
+          "at_reference_state": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "prior_trading": "UNRESOLVED"
+        }
+      ],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 5,
+      "observed_direct_V2_token_buy_swaps_in_scope": 2,
+      "observed_direct_V2_token_sell_swaps_in_scope": 3,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 8,
+      "token": "BOB",
+      "exact_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "v2_reference_block": 44007572,
+      "scoped_first_active_pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "scoped_first_active_block": 44007572,
+      "scoped_first_active_protocol": "V2",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "V2_WBNB_REFERENCE",
+      "earlier_competitors_proven": 0,
+      "validated_liquidity_pool_count": 1,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 44007572,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2024-11-14T16:57:32.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 7,
+      "observed_direct_V2_token_buy_swaps_in_scope": 7,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 9,
+      "token": "BULLA",
+      "exact_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "v2_reference_block": 50982326,
+      "scoped_first_active_pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+      "scoped_first_active_block": 50972313,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 2,
+      "validated_liquidity_pool_count": 3,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "first_active_block": 50972313,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-06-06T09:34:22.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "first_active_block": 50972710,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-06-06T09:44:02.000Z",
+          "delay_blocks": 10
+        },
+        {
+          "pool": "0x3551191f78869c29388886330f31739a87866c38",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 50982326,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-06-06T13:44:54.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 1,
+      "inactive_at_reference_historical_unknown_pools": [
+        {
+          "pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "reference_block": 50982326,
+          "at_reference_state": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "prior_trading": "UNRESOLVED"
+        }
+      ],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 1,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 1,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 10,
+      "token": "4",
+      "exact_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "v2_reference_block": 63056879,
+      "scoped_first_active_pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "scoped_first_active_block": 63056879,
+      "scoped_first_active_protocol": "V2",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "V2_WBNB_REFERENCE",
+      "earlier_competitors_proven": 0,
+      "validated_liquidity_pool_count": 1,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 63056879,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-10-01T04:08:41.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED",
+      "observed_direct_V2_swaps_in_scope": 2,
+      "observed_direct_V2_token_buy_swaps_in_scope": 2,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 11,
+      "token": "GIGGLE",
+      "exact_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "v2_reference_block": 61963725,
+      "scoped_first_active_pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "scoped_first_active_block": 61963725,
+      "scoped_first_active_protocol": "V2",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "V2_WBNB_REFERENCE",
+      "earlier_competitors_proven": 0,
+      "validated_liquidity_pool_count": 1,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 61963725,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-09-21T16:21:04.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 12,
+      "token": "币安人生",
+      "exact_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "v2_reference_block": 63454407,
+      "scoped_first_active_pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "scoped_first_active_block": 63454407,
+      "scoped_first_active_protocol": "V2",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "V2_WBNB_REFERENCE",
+      "earlier_competitors_proven": 0,
+      "validated_liquidity_pool_count": 1,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 63454407,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-10-04T15:01:32.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED",
+      "observed_direct_V2_swaps_in_scope": 1,
+      "observed_direct_V2_token_buy_swaps_in_scope": 1,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 13,
+      "token": "我踏马来了",
+      "exact_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "v2_reference_block": 73658906,
+      "scoped_first_active_pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "scoped_first_active_block": 73658906,
+      "scoped_first_active_protocol": "V2",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "V2_WBNB_REFERENCE",
+      "earlier_competitors_proven": 0,
+      "validated_liquidity_pool_count": 1,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 73658906,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2026-01-01T05:46:50.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 14,
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "v2_reference_block": 83636128,
+      "scoped_first_active_pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "scoped_first_active_block": 83636128,
+      "scoped_first_active_protocol": "V2",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "V2_WBNB_REFERENCE",
+      "earlier_competitors_proven": 0,
+      "validated_liquidity_pool_count": 1,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 83636128,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2026-02-27T08:50:40.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 15,
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "v2_reference_block": 116314917,
+      "scoped_first_active_pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+      "scoped_first_active_block": 115919205,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "USDT",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 3,
+      "validated_liquidity_pool_count": 4,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "first_active_block": 115919205,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2026-08-14T16:18:36.000Z",
+          "delay_blocks": 17
+        },
+        {
+          "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "first_active_block": 116156658,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2026-08-15T22:00:03.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "first_active_block": 116207845,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2026-08-16T04:24:03.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 116314917,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2026-08-16T17:47:17.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 2,
+      "inactive_at_reference_historical_unknown_pools": [
+        {
+          "pool": "0xc461d52be79a3ad77bca0f2e8a7d38c3ad7a6f82",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "reference_block": 116314917,
+          "at_reference_state": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "prior_trading": "UNRESOLVED"
+        },
+        {
+          "pool": "0xab388f885f0bd58d8f98ea8134c67507d67188aa",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "reference_block": 116314917,
+          "at_reference_state": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "prior_trading": "UNRESOLVED"
+        }
+      ],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 1,
+      "observed_direct_V2_token_buy_swaps_in_scope": 1,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 16,
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "v2_reference_block": 112668701,
+      "scoped_first_active_pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+      "scoped_first_active_block": 112642885,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "USDT",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 1,
+      "validated_liquidity_pool_count": 2,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "first_active_block": 112642885,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2026-07-28T14:34:42.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 112668701,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2026-07-28T17:48:20.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 1,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 1,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 17,
+      "token": "哈基米 / HAJIMI",
+      "exact_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "v2_reference_block": 63838943,
+      "scoped_first_active_pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "scoped_first_active_block": 63838943,
+      "scoped_first_active_protocol": "V2",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "V2_WBNB_REFERENCE",
+      "earlier_competitors_proven": 0,
+      "validated_liquidity_pool_count": 1,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 63838943,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-10-07T23:09:02.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 0,
+      "inactive_at_reference_historical_unknown_pools": [],
+      "v2_first10_scan_coverage": "FIRST_BLOCK_ONLY_TEN_BLOCK_SOURCE_TRUNCATED",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    },
+    {
+      "index": 18,
+      "token": "BUBB",
+      "exact_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "v2_reference_block": 47620838,
+      "scoped_first_active_pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+      "scoped_first_active_block": 47612405,
+      "scoped_first_active_protocol": "V3",
+      "scoped_first_active_quote": "WBNB",
+      "scoped_first_active_origin": "HISTORIC_COMPETITOR",
+      "earlier_competitors_proven": 1,
+      "validated_liquidity_pool_count": 2,
+      "pools_scoped_first_active": [
+        {
+          "pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "first_active_block": 47612405,
+          "origin": "HISTORIC_COMPETITOR",
+          "first_active_UTC": "2025-03-19T21:14:54.000Z",
+          "delay_blocks": 0
+        },
+        {
+          "pool": "0xaa80df50c2f6ecb6963636cd2b1a3bf0413b7e3c",
+          "protocol": "V2",
+          "quote": "WBNB",
+          "fee_pips": null,
+          "first_active_block": 47620838,
+          "origin": "V2_WBNB_REFERENCE",
+          "first_active_UTC": "2025-03-20T04:16:33.000Z"
+        }
+      ],
+      "inactive_at_reference_historical_unknown_count": 1,
+      "inactive_at_reference_historical_unknown_pools": [
+        {
+          "pool": "0x6a1d472628d9279c53e9d9002c2dae5fff224035",
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "reference_block": 47620838,
+          "at_reference_state": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "prior_trading": "UNRESOLVED"
+        }
+      ],
+      "v2_first10_scan_coverage": "FULL_FIRST_TEN_BLOCKS",
+      "observed_direct_V2_swaps_in_scope": 0,
+      "observed_direct_V2_token_buy_swaps_in_scope": 0,
+      "observed_direct_V2_token_sell_swaps_in_scope": 0,
+      "globally_first_executable_venue": "UNRESOLVED",
+      "pre_v2_launchpad_market": "UNRESOLVED",
+      "fixed_size_buy_sell_tax_slippage": "UNRESOLVED",
+      "wallet_eligible_opportunity": "UNRESOLVED",
+      "follower_executable_pnl": "UNRESOLVED"
+    }
+  ]
+}
