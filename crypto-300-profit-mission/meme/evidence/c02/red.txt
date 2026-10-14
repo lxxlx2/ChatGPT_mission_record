@@ -1,0 +1,29 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______________________ test_self_quote_must_be_rejected _______________________
+
+    def test_self_quote_must_be_rejected():
+        mint='So11111111111111111111111111111111111111112'
+        pair={'chainId':'solana','pairAddress':'bad','baseToken':{'address':mint,'name':'Agency','symbol':'Agency'},'quoteToken':{'address':mint},'priceUsd':'100'}
+        out=DexScreenerMarketClient(open_url=lambda *a,**k:Response([pair])).token_snapshot(mint)
+>       assert out['status']=='UNAVAILABLE'
+E       AssertionError: assert 'OK' == 'UNAVAILABLE'
+E         
+E         - UNAVAILABLE
+E         + OK
+
+crypto-300-profit-mission/local-agent/tests/test_ca_market_c02_red.py:8: AssertionError
+________________ test_quote_side_price_is_not_input_mint_price _________________
+
+    def test_quote_side_price_is_not_input_mint_price():
+        mint='So11111111111111111111111111111111111111112'
+        pair={'chainId':'solana','pairAddress':'reverse','baseToken':{'address':'other'},'quoteToken':{'address':mint},'priceUsd':'100'}
+        out=DexScreenerMarketClient(open_url=lambda *a,**k:Response([pair])).token_snapshot(mint)
+>       assert out['market_match_status']=='PAIR_MISMATCH'
+E       KeyError: 'market_match_status'
+
+crypto-300-profit-mission/local-agent/tests/test_ca_market_c02_red.py:14: KeyError
+=========================== short test summary info ============================
+FAILED crypto-300-profit-mission/local-agent/tests/test_ca_market_c02_red.py::test_self_quote_must_be_rejected
+FAILED crypto-300-profit-mission/local-agent/tests/test_ca_market_c02_red.py::test_quote_side_price_is_not_input_mint_price
+2 failed in 0.05s

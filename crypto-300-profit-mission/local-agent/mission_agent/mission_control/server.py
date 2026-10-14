@@ -269,12 +269,13 @@ class ClusterJobManager:
             market=details.get("market") or {}
             pair=market.get("main_pair") or {}
             progress.update({
+                "token_identity":details.get("token_identity") or {},
                 "token_program":profile.get("token_program"),
                 "mint_authority":profile.get("mint_authority"),
                 "freeze_authority":profile.get("freeze_authority"),
                 "market_status":market.get("status"),
-                "name":market.get("name"),
-                "symbol":market.get("symbol"),
+                "name":(details.get("token_identity") or {}).get("display_name"),
+                "symbol":(details.get("token_identity") or {}).get("display_symbol"),
                 "market_cap_usd":market.get("market_cap_usd"),
                 "liquidity_usd":pair.get("liquidity_usd"),
             })
@@ -292,7 +293,8 @@ class ClusterJobManager:
                     pair=market.get("main_pair") or {}
                     job["preview"]={
                         "stage":"BASE_READY", "observed_at":time.time(),
-                        "name":market.get("name"), "symbol":market.get("symbol"),
+                        "token_identity":details.get("token_identity") or {},
+                        "name":(details.get("token_identity") or {}).get("display_name"), "symbol":(details.get("token_identity") or {}).get("display_symbol"),
                         "market_status":market.get("status"),
                         "price_usd":market.get("price_usd"),
                         "market_cap_usd":market.get("market_cap_usd"),

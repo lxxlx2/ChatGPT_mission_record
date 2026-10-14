@@ -46,14 +46,27 @@ class DexScreenerMarketClient:
         if not isinstance(payload,list):
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","observed_at":observed_at,"reason":"RESPONSE_INVALID"}
 
-        pairs=[
-            x for x in payload
-            if isinstance(x,dict)
-            and x.get("chainId")=="solana"
-            and (x.get("baseToken") or {}).get("address")==mint
-        ]
+        pairs=[];rejected=[]
+        for pair in payload:
+            if not isinstance(pair,dict):
+                rejected.append({"reason":"PAIR_INVALID"});continue
+            base=pair.get("baseToken");quote=pair.get("quoteToken")
+            reason=None
+            if pair.get("chainId")!="solana":reason="CHAIN_MISMATCH"
+            elif not isinstance(base,dict) or not isinstance(quote,dict):reason="TOKEN_FIELDS_INVALID"
+            elif base.get("address")!=mint:
+                reason="INPUT_MINT_IS_QUOTE_PRICE_IS_BASE" if quote.get("address")==mint else "INPUT_MINT_ABSENT"
+            elif not quote.get("address") or quote.get("address")==mint:reason="QUOTE_MINT_INVALID"
+            elif not pair.get("pairAddress"):reason="PAIR_ADDRESS_MISSING"
+            if reason:
+                rejected.append({"pair_address":pair.get("pairAddress"),"chain":pair.get("chainId"),
+                                 "base_mint":base.get("address") if isinstance(base,dict) else None,
+                                 "quote_mint":quote.get("address") if isinstance(quote,dict) else None,"reason":reason})
+            else:pairs.append(pair)
         if not pairs:
-            return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","observed_at":observed_at,"reason":"NO_BASE_TOKEN_PAIR"}
+            return {"status":"UNAVAILABLE","mint":mint,"source":"DEXSCREENER_API","observed_at":observed_at,
+                    "reason":"NO_BASE_TOKEN_PAIR","market_match_status":"PAIR_MISMATCH" if rejected else "NO_PAIRS",
+                    "rejected_pairs":rejected}
 
         def liquidity(pair):
             try:return Decimal(str((pair.get("liquidity") or {}).get("usd") or 0))
@@ -68,12 +81,17 @@ class DexScreenerMarketClient:
             "source":"DEXSCREENER_API",
             "observed_at":observed_at,
             "pair_count":len(pairs),
+            "mint":mint,"market_match_status":"EXACT_BASE_MINT_MATCH",
+            "rejected_pairs":rejected,
+            "identity_records":[{"mint":mint,"name":x["baseToken"].get("name"),"symbol":x["baseToken"].get("symbol"),
+                                 "source":"DEXSCREENER_API","pair_address":x.get("pairAddress"),"observed_at":observed_at} for x in pairs],
             "name":base.get("name"),
             "symbol":base.get("symbol"),
             "price_usd":_num(main.get("priceUsd")),
             "market_cap_usd":_num(main.get("marketCap")),
             "fdv_usd":_num(main.get("fdv")),
             "main_pair":{
+                "chain":main.get("chainId"),"base_address":base.get("address"),"input_mint":mint,"price_direction":"USD_PER_BASE_TOKEN",
                 "dex_id":main.get("dexId"),
                 "pair_address":main.get("pairAddress"),
                 "url":main.get("url"),

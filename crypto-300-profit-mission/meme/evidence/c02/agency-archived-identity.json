@@ -1,0 +1,91 @@
+{
+  "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+  "observed_at": 1791668432.561088,
+  "token_profile": {
+    "active_extension_risks": [],
+    "decimals": 6,
+    "extensions": [
+      "metadataPointer",
+      "tokenMetadata"
+    ],
+    "freeze_authority": null,
+    "inactive_sensitive_extensions": [],
+    "is_initialized": true,
+    "metadata_update_authority": null,
+    "metadata_update_authority_status": "CHAIN_PARSED",
+    "mint_authority": null,
+    "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "risk_flags": [],
+    "sensitive_extension_details": [],
+    "sensitive_extensions": [],
+    "source": "SOLANA_FINALIZED_JSON_RPC",
+    "status": "OK",
+    "supply_raw": "956897984033381",
+    "token_program": "SPL Token-2022",
+    "unresolved_sensitive_extensions": []
+  },
+  "market": {
+    "aggregate_liquidity_usd": "936741.83",
+    "fdv_usd": "4502463",
+    "main_pair": {
+      "dex_id": "meteora",
+      "liquidity_base": "19241835",
+      "liquidity_quote": "2343.6986",
+      "liquidity_usd": "348083.22",
+      "pair_address": "GDoenRAGQCdaa1o9rV5wjSNqM41HmmcKL5LkEKfvBiuW",
+      "pair_created_at_ms": 1790931592000,
+      "price_change": {
+        "h1": "0.87",
+        "h24": "-14.04",
+        "h6": "-13.91"
+      },
+      "price_native": "0.00004226",
+      "quote_address": "So11111111111111111111111111111111111111112",
+      "quote_symbol": "SOL",
+      "txns": {
+        "h1": {
+          "buys": 8,
+          "sells": 4
+        },
+        "h24": {
+          "buys": 332,
+          "sells": 261
+        },
+        "h6": {
+          "buys": 46,
+          "sells": 75
+        },
+        "m5": {
+          "buys": 0,
+          "sells": 0
+        }
+      },
+      "url": "https://dexscreener.com/solana/gdoenragqcdaa1o9rv5wjsnqm41hmmckl5lkekfvbiuw",
+      "volume": {
+        "h1": "2102.53",
+        "h24": "307149.57",
+        "h6": "59979.67",
+        "m5": "0"
+      }
+    },
+    "market_cap_usd": "4502463",
+    "name": "Agency",
+    "observed_at": 1791668288.1299992,
+    "pair_count": 12,
+    "price_usd": "0.004660",
+    "socials": [],
+    "source": "DEXSCREENER_API",
+    "status": "OK",
+    "symbol": "Agency",
+    "websites": [
+      "https://www.agencypad.fun/"
+    ]
+  },
+  "provenance": {
+    "ref": "origin/evidence/frank-ca-local",
+    "sha": "b9fb6e6df9032a0e6f49c1274bb4ba61c9e4c2da",
+    "path": "crypto-300-profit-mission/meme/local-evidence/ca/7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump/3672664537eb882dfed230884861199b41dd72f6b0e54c3505199f89b813361a.json",
+    "chunks_verified": 20,
+    "kind": "ARCHIVED_NORMALIZED_REPORT_NOT_RAW_RPC"
+  }
+}

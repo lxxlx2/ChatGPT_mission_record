@@ -22,6 +22,7 @@ from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
 from ..signals.classifier import classify
 from ..market.sol_usd import USDC, WSOL
 from .market import DexScreenerMarketClient
+from .identity import read_metadata, reconcile_identity
 
 DEFAULT_RPC = "https://api.mainnet.solana.com"
 DEFAULT_RPC_FALLBACKS = (
@@ -543,7 +544,7 @@ class WalletClusterAnalyzer:
         try:
             result=self.rpc.call("getAccountInfo",[self.mint,{"encoding":"jsonParsed","commitment":"finalized"}],ttl=60)
         except Exception as exc:
-            return {"status":"UNAVAILABLE","source":"SOLANA_FINALIZED_JSON_RPC","reason":type(exc).__name__}
+            return {"mint":self.mint,"status":"UNAVAILABLE","source":"SOLANA_FINALIZED_JSON_RPC","reason":type(exc).__name__,"metadata":{"status":"UNCONFIRMED","records":[],"attempts":[{"source":"MINT_ACCOUNT","account":self.mint,"reason":type(exc).__name__,"status":"UNCONFIRMED"}]}}
         value=(result or {}).get("value") or {}
         parsed=((value.get("data") or {}).get("parsed") or {}) if isinstance(value.get("data"),dict) else {}
         info=parsed.get("info") or {}
@@ -551,7 +552,13 @@ class WalletClusterAnalyzer:
         if program=="TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb":token_program="SPL Token-2022"
         elif program=="TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA":token_program="SPL Token"
         else:token_program=program or "UNRESOLVED"
-        found_update,update_authority=self._find_key(parsed,"updateAuthority")
+        if not value or program not in TOKEN_PROGRAMS or parsed.get("type") not in (None,"mint") or not info:
+            return {"mint":self.mint,"status":"UNCONFIRMED","program_id":program,"reason":"MINT_ACCOUNT_NOT_VERIFIED",
+                    "metadata":{"status":"UNCONFIRMED","records":[],"attempts":[{"source":"MINT_ACCOUNT","account":self.mint,"status":"UNCONFIRMED","reason":"MINT_ACCOUNT_NOT_VERIFIED"}]}}
+        metadata=read_metadata(self.mint,self.rpc,result)
+        verified_metadata=metadata.get("status")=="VERIFIED"
+        found_update=verified_metadata and bool(metadata.get("records"))
+        update_authority=metadata["records"][0]["update_authority"] if found_update else None
         extension_names=[];extension_details=[]
         for extension in info.get("extensions") or []:
             if isinstance(extension,dict):
@@ -576,6 +583,9 @@ class WalletClusterAnalyzer:
         return {
             "status":"OK",
             "source":"SOLANA_FINALIZED_JSON_RPC",
+            "mint":self.mint,"metadata":metadata,
+            "mint_account_status":"VERIFIED" if parsed.get("type")=="mint" and info.get("isInitialized") is True else "UNCONFIRMED",
+            "mint_slot":((result or {}).get("context") or {}).get("slot"),
             "token_program":token_program,
             "program_id":program,
             "mint_authority":info.get("mintAuthority"),
@@ -802,7 +812,8 @@ class WalletClusterAnalyzer:
     def analyze(self):
         token_profile=self.token_profile()
         market=self.market_snapshot()
-        self._progress("BASE_READY",token_profile=token_profile,market=market)
+        token_identity=reconcile_identity(self.mint,token_profile,market)
+        self._progress("BASE_READY",token_profile=token_profile,market=market,token_identity=token_identity)
 
         supply,decimals,holders=self.holders()
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
@@ -1057,7 +1068,7 @@ class WalletClusterAnalyzer:
             "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
             "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
             "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
-            "token_profile":token_profile,"market":market,"assessment":assessment,"holders":holder_rows,
+            "token_profile":token_profile,"token_identity":token_identity,"market":market,"assessment":assessment,"holders":holder_rows,
             "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
             "probable_execution_clusters":execution_groups,
             "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
@@ -1140,7 +1151,8 @@ def markdown(report:dict)->str:
         "",
         "## Token / contract",
         "",
-        f"- Name / Symbol: {market.get('name') or 'UNAVAILABLE'} / {market.get('symbol') or 'UNAVAILABLE'}",
+        f"- Identity: {(report.get('token_identity') or {}).get('display_label','UNCONFIRMED')}",
+        f"- Identity provenance: {json.dumps(report.get('token_identity') or {},ensure_ascii=False)}",
         f"- Token program: {profile.get('token_program','UNAVAILABLE')}",
         f"- Supply raw: {report.get('supply_raw')}",
         f"- Decimals: {report.get('decimals')}",

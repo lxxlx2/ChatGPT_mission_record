@@ -1,0 +1,65 @@
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 20%]
+........................................................................ [ 25%]
+........................................................................ [ 30%]
+........................................................................ [ 35%]
+........................................................................ [ 40%]
+........................................................................ [ 45%]
+........................................................................ [ 50%]
+........................................................................ [ 56%]
+.........................................................F.............. [ 61%]
+........................................................................ [ 66%]
+........................................................................ [ 71%]
+........................................................................ [ 76%]
+........................................................................ [ 81%]
+........................................................................ [ 86%]
+........................................................................ [ 91%]
+........................................................................ [ 96%]
+.............................................                            [100%]
+=================================== FAILURES ===================================
+______ test_token_profile_reads_chain_authorities_without_market_guessing ______
+
+    def test_token_profile_reads_chain_authorities_without_market_guessing():
+        class RPC:
+            endpoint="test";calls=0;cache_hits=0
+            def call(self,method,params,ttl=0):
+                assert method=="getAccountInfo"
+                return {"value":{
+                    "owner":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                    "data":{"parsed":{"info":{
+                        "mintAuthority":None,"freezeAuthority":None,"decimals":6,"supply":"946242000000000",
+                        "extensions":[{"extension":"tokenMetadata","state":{"updateAuthority":None}}],
+                    }}}
+                }}
+        a=WalletClusterAnalyzer("Mint",rpc=RPC())
+        out=a.token_profile()
+        assert out["status"]=="OK"
+        assert out["token_program"]=="SPL Token-2022"
+        assert out["mint_authority"] is None
+        assert out["freeze_authority"] is None
+>       assert out["metadata_update_authority"] is None
+E       AssertionError: assert 'UNAVAILABLE' is None
+
+tests/test_meme_market_and_rpc.py:99: AssertionError
+=============================== warnings summary ===============================
+tests/test_frank_pr39_controlled_release.py::test_sigkill_journal_and_recovery
+  /Users/jerson/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=1534) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+tests/test_frank_pr39_forward_recovery.py: 12 warnings
+  /Users/jerson/Documents/ChatGPT/mission-ca-c02-20261014/crypto-300-profit-mission/local-agent/tests/test_frank_pr39_forward_recovery.py:284: DeprecationWarning: This process (pid=1534) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    child = os.fork()
+
+tests/test_frank_pr39_legacy_cutover.py::test_hard_kill_after_intent_leaves_recoverable_journal_and_no_second_loop
+  /Users/jerson/Documents/ChatGPT/mission-ca-c02-20261014/crypto-300-profit-mission/local-agent/tests/test_frank_pr39_legacy_cutover.py:636: DeprecationWarning: This process (pid=1534) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_monster_v2.py:3: could not import 'numpy': No module named 'numpy'
+SKIPPED [1] tests/test_monster_v3.py:4: could not import 'numpy': No module named 'numpy'
+SKIPPED [1] tests/test_monster_v3_replay.py:4: could not import 'numpy': No module named 'numpy'
+FAILED tests/test_meme_market_and_rpc.py::test_token_profile_reads_chain_authorities_without_market_guessing
+1 failed, 1412 passed, 3 skipped, 14 warnings in 84.04s (0:01:24)
