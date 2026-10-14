@@ -61,7 +61,7 @@ def test_P2_unknown_owner_nonzero_never_closes_gap_or_marks_capture(tmp_path):
         assert observed["pending"] == 1
         assert observed["captured"] == 0
         assert observed["status"] == "SOURCE_LIMITED"
-        assert observed["missing_detail_counts"]["TRANSACTION_NORMALIZATION_INCOMPLETE"] == 1
+        assert observed["missing_detail_counts"]["TOKEN_OWNER_UNRESOLVED_DELTA"] == 1
         assert store.count("RAW_TX") == 0
         assert store.count("WALLET_TX_VIEW_V2") == 0
         assert observed["history_complete"] is False
