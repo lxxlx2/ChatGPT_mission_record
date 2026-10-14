@@ -25,6 +25,21 @@ Current status (2026-10-14): `C02_AND_A04_VERSIONING_EXTERNAL_CODE_REVIEW_APPROV
 - #42/#43/#45/#48 alter research registries, wallet-source/Sidecar/ledger/CLI; these must not be imported into Frank V1's frozen decisions without separately approved live authority.
 - All PRs listed above remain Draft/unmerged at this checkpoint. No GitHub formal reviews were recorded for #47/#48 when read; external reports are not GitHub approvals.
 
+## Mandatory independent Review cadence — module → integration → final whole system
+
+**User-approved governing rule effective 2026-10-14**, mirrored in global repository development policy [Draft #55](https://github.com/lxxlx2/ChatGPT_mission_record/pull/55), `docs/DEVELOPMENT_REVIEW_POLICY.md` and `MISSION_SPEC.md`: **every completed module gets its own independent other-AI Review before marking CODE_REVIEW_APPROVED**. Any findings are fixed on a child PR with exact new SHA and independently re-reviewed; never carry over approval after code changes. Review covers actual source/data evidence, public interfaces, tests, backward compatibility, shared upstream/downstream effects and severity/closure proof. CI pass alone is not a review.
+
+**After modules are combined**, run a disposable exact-SHA integration against current main, verify all user-visible data contracts and regression tests, then obtain a **separate independent cross-module integration Review**. Any interface/algorithm/identity/snapshot/schema/permission change must identify which earlier approved modules need impact re-review, to stop downstream changes silently breaking earlier work.
+
+**When all planned modules are finished**, require **one additional overall independent AI Review** of the entire Mission Frank/CA product before business acceptance and separately authorized release, including real Solana ATA/32-mint history, wallet inventory source freshness, current positions, CA browser functionality, data migrations and frozen live Frank V1 behavior. Independent module APPROVE and combined green tests do not exempt this final Review.
+
+Maintain three separate states: `CODE_REVIEW_APPROVED`, `REAL_SOURCE_AND_BUSINESS_ACCEPTED`, `PRODUCTION_RELEASE_APPROVED`. A module whose code is not yet independently reviewed is `REVIEW_PENDING`, even if it passed tests. User-provided external Claude approval is recorded distinctly from GitHub formal Review. **NO_MERGE / NO_DEPLOY** until the whole acceptance gate and explicit user release authorization are satisfied.
+
+Current verified review scope as of Oct 14:
+- C02 #49 `8898134a...`: external Claude code APPROVE.
+- A04 generic TX/version patch #54 `6e1f8cec...`: external Claude code APPROVE, exact SHA CI/combined CI PASS; this closes its code-versioning P2, **not all historical A04/A05 business work**.
+- A02/A03/A05 and F01/F02 and remaining CA: independent module acceptance remains distinct/pending; do not claim every implemented file has been reviewed or user-visible features are complete.
+
 ## Non-negotiable staged integration gate before PR is marked ready
 
 1. **Resolve current review findings on the owning child branch**; never rewrite already reviewed parent SHA. Independent reviewer returns `APPROVE / REQUEST_CHANGES` on **exact code SHA** and material findings, with a code-to-document-only SHA comparison for evidence-only commits. If code changes after review, review impacted code again.
