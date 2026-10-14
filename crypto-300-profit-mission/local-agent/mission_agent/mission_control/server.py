@@ -286,6 +286,9 @@ class ClusterJobManager:
         with self.lock:
             job=self.jobs.get(job_id)
             if job is not None and job.get("status") in {"QUEUED","RUNNING"}:
+                # Always display the job's exact submitted mint, not a
+                # third-party name/symbol or metadata-derived replacement.
+                progress["mint"]=job["mint"]
                 job["progress"]=progress
                 if stage=="BASE_READY":
                     profile=details.get("token_profile") or {}
@@ -293,6 +296,7 @@ class ClusterJobManager:
                     pair=market.get("main_pair") or {}
                     job["preview"]={
                         "stage":"BASE_READY", "observed_at":time.time(),
+                        "mint":job["mint"],
                         "token_identity":details.get("token_identity") or {},
                         "name":(details.get("token_identity") or {}).get("display_name"), "symbol":(details.get("token_identity") or {}).get("display_symbol"),
                         "market_status":market.get("status"),
