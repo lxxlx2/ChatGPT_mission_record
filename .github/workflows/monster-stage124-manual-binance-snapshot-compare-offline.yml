@@ -1,0 +1,90 @@
+name: Monster Stage124 Manual Market Compare Offline
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage124-manual-binance-snapshot-compare-offline.yml
+      - crypto-300-profit-mission/monster/MONSTER_STAGE124_FROZEN_MANUAL_MARKET_TWO_SNAPSHOT_FORWARD_COMPARISON_PROTOCOL_20261014.md
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_forward_compare.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  real_current_t0_and_synthetic_only_t1:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and replay real Stage123 original full 927/525 source; synthetic pair without pretending to have new T1
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_forward_compare.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_forward_compare.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_forward_compare.py --before crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_manifest.json --out /tmp/stage124_real_t0_readiness.json
+          python - <<'PY'
+          import json
+          s=json.load(open('/tmp/stage124_real_t0_readiness.json'))
+          assert s['full_source_exchange_entries']==927
+          assert s['original_active_population']==525
+          assert s['complete_active_ticker_bbo_mark']==525
+          assert s['real_T1']=='NOT_REQUESTED_OR_ARCHIVED'
+          assert s['G4_real_net']=='UNKNOWN'
+          assert s['Monster']=='NO_GO'
+          assert s['automatic_monitor']=='OFF'
+          print('STAGE124_REAL_SOURCE_BASELINE_525_NOT_FABRICATED_T1_PASS')
+          PY
+  archive_readiness_only:
+    needs: real_current_t0_and_synthetic_only_t1
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Save truth-only user-controlled no-T1 source readiness
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_forward_compare.py --before crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_manifest.json --out /tmp/stage124_real_t0_readiness.json
+          python - <<'PY'
+          import json
+          j=json.load(open('/tmp/stage124_real_t0_readiness.json'))
+          assert j['original_active_population']==525 and j['complete_active_ticker_bbo_mark']==525
+          assert j['real_T1']=='NOT_REQUESTED_OR_ARCHIVED'
+          assert j['actual_Stage99_stop_command_user_confirmation']=='NOT_YET_RECEIVED'
+          print('STAGE124_REAL_T0_BASELINE_ONLY_NOBACKGROUND_NO_OOS_FABRICATION_PASS')
+          PY
+          cp /tmp/stage124_real_t0_readiness.json crypto-300-profit-mission/monster/evidence/monster_stage124_real_current525_source_ready_NO_T1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage124-user-requested-future-manual-T1-source-readiness-only
+          path: /tmp/stage124_real_t0_readiness.json
+          retention-days: 30
+      - name: Commit real baseline readiness to existing Monster PR
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage124_real_current525_source_ready_NO_T1.json
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE124_READINESS_UP_TO_DATE; exit 0; fi
+          git commit -m "monster: verify Stage124 source locked 927/525 live Binance T0, T1 intentionally absent until manual user request"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE124_SOURCE_READINESS_ARCHIVED; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          exit 1
