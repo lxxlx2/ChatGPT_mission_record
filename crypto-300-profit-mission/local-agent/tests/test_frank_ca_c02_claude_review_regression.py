@@ -110,3 +110,57 @@ def test_metaplex_and_token2022_source_case_only_difference_is_not_conflict():
     assert len(results["records"]) == 2
     assert {r["name"] for r in results["records"]} == {"Agency", "agency"}
     assert {r["symbol"] for r in results["records"]} == {"Agency", "AGENCY"}
+
+
+def test_unicode_casefold_expansion_is_real_identity_conflict():
+    profile = _profile(MINT_A)
+    profile["metadata"]["records"][0]["name"] = "Straße"
+    profile["metadata"]["records"][0]["symbol"] = "STR"
+    market = _market(MINT_A, name="STRASSE", symbol="STR")
+    observed = reconcile_identity(MINT_A, profile, market)
+    assert observed["identity_status"] == "VERIFIED"
+    assert observed["conflict_status"] == "TOKEN_IDENTITY_CONFLICT"
+    assert observed["display_name"] is None
+
+
+def test_different_update_authority_still_conflicts_when_names_differ_only_in_case():
+    def field(value):
+        raw = value.encode()
+        return struct.pack("<I", len(raw)) + raw
+    first_authority = decode_key(MINT_B)
+    second_authority = decode_key(MINT_A)
+    binary = (bytes([4]) + first_authority + decode_key(MINT_A) +
+              field("agency") + field("Agency") + field(""))
+    metaplex = {"context": {"slot": 100}, "value": {
+        "owner": METAPLEX,
+        "data": [base64.b64encode(binary).decode("ascii"), "base64"],
+    }}
+    class RPC:
+        def call(self, method, params, ttl=60):
+            return metaplex
+    mint_account = {"context": {"slot": 99}, "value": {
+        "owner": TOKEN22,
+        "data": {"parsed": {"type": "mint", "info": {"extensions": [
+            {"extension": "metadataPointer", "state": {"metadataAddress": MINT_A}},
+            {"extension": "tokenMetadata", "state": {
+                "mint": MINT_A, "name": "Agency", "symbol": "AGENCY",
+                "updateAuthority": MINT_A,
+            }},
+        ]}}},
+    }}
+    assert first_authority != second_authority
+    outcome = read_metadata(MINT_A, RPC(), mint_account)
+    assert outcome["status"] == "TOKEN_IDENTITY_CONFLICT"
+    assert len(outcome["records"]) == 2
+
+
+def test_invalid_width_mint_rejected_before_job_is_created(tmp_path):
+    from mission_agent.mission_control.server import ClusterJobManager
+    import pytest
+    manager = ClusterJobManager(tmp_path / "research-only")
+    try:
+        with pytest.raises(ValueError, match="INVALID_SOLANA_CA"):
+            manager.submit("1" * 33, "standard")
+        assert not manager.jobs
+    finally:
+        manager.executor.shutdown(wait=True)
