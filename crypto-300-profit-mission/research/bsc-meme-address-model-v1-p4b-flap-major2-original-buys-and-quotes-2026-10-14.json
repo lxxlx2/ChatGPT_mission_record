@@ -1,0 +1,179 @@
+{
+  "schema": "BSC_P4B_FLAP_2026_TWO_REAL_EARLY_PURCHASE_QUOTE_AND_TAX_ECONOMICS",
+  "scope": "Source-pinned Niulai and Marscoin original Portal TokenCreated and TokenBought, original externally signed tx, exact original ERC20 routed receipt closure to signer, tax/quote config and actual historical 18-decimal quote contract. Quote math isn't a settled round trip. Both signers outside precommitted 23 candidate wallets; only positive 2026 market opportunity existence evidence, not 23-wallet alpha.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-major3-first-txs-part2-2026-10-14.json",
+      "git_blob_sha": "7e2e4f3cb779cd9511c2d5670e3a90f403616684"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-major3-first-txs-part3-2026-10-14.json",
+      "git_blob_sha": "5208fe6dbffdef6ed642697bcab1ff29e2bf1b9b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-first10-erc20-pre-dex-part4-2026-10-14.json",
+      "git_blob_sha": "ed68cd1ae0245132ec1eafa8d7803d12c802d685"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-first10-erc20-pre-dex-part5-2026-10-14.json",
+      "git_blob_sha": "7607887812df4ef0219bac8aa069776451b9249a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-topic-raw-part1-2026-10-14.json",
+      "git_blob_sha": "b7bd1f907e94e2103b2c4e35c763ea18cf15b28e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-topic-raw-part2-2026-10-14.json",
+      "git_blob_sha": "1cd57c862cc373183dcd1df05853863268ce4586"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-quote-tax-part1-2026-10-14.json",
+      "git_blob_sha": "302b4983f750c50957d84869d15dcc40ac2af8bd"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-quote-tax-part2-2026-10-14.json",
+      "git_blob_sha": "70f93b2e8ac2be4e1cdb803b3510ae360cb54e77"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-quote-decimals-raw-2026-10-14.json",
+      "git_blob_sha": "1dd5c89162a9a510d6bcf0f585293ee1efe0d40f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-bidirectional-quotes-raw-2026-10-14.json",
+      "git_blob_sha": "43fe6d36fbeeda43e07a2b65874c4292e5d91606"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-postbuy-sell-raw-2026-10-14.json",
+      "git_blob_sha": "69e2147e4f689c21335a7bb84695269d84caca4e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-marscoin-oneblock-sell-fallback-raw-2026-10-14.json",
+      "git_blob_sha": "42fffee80171b4fa5d3c256167b022d2b34d6297"
+    }
+  ],
+  "summary": {
+    "tokens": 2,
+    "source_original_signed_purchases": 2,
+    "signer_recipient_inventory_matches": 2,
+    "actual_non_native_erc20_quote_CAs": 2,
+    "creation_asymmetric_tax_events": 2,
+    "postbuy_reverse_math_quote_returns": 2,
+    "proven_historic_successful_sells": 0,
+    "closed_PnL": 0,
+    "qualified_first_market_U": 0,
+    "production": "NO_GO"
+  },
+  "rows": [
+    {
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "platform": "FLAP_PORTAL_BNB_MAINNET",
+      "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "creation_block": 115628768,
+      "creation_UTC": "2026-08-13T03:59:30.000Z",
+      "first_sampled_buy_block": 115628774,
+      "first_sampled_buy_UTC": "2026-08-13T03:59:33.000Z",
+      "blocks_since_creation": 6,
+      "original_EOA_signer": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "signed_tx_hash": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "signed_tx_to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+      "signed_tx_native_value_wei": "0",
+      "portal_TokenBought_intermediate_buyer": "0x9e698d361bb2375bd335dad156accbbad45bf364",
+      "final_ERC20_recipient": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "intermediate_hops": [
+        {
+          "from": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "to": "0x9e698d361bb2375bd335dad156accbbad45bf364",
+          "raw_amount": "37956445907182539413593521"
+        },
+        {
+          "from": "0x9e698d361bb2375bd335dad156accbbad45bf364",
+          "to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+          "raw_amount": "37956445907182539413593521"
+        },
+        {
+          "from": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+          "to": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+          "raw_amount": "37956445907182539413593521"
+        }
+      ],
+      "received_target_raw": "37956445907182539413593521",
+      "portal_event_quote_spent_raw": "205991990065603310",
+      "portal_event_fee_raw": "2059919900656033",
+      "actual_quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "historical_quote_decimals": 18,
+      "quote_symbol_current_metadata": "Q3B",
+      "quote_symbol_is_not_assumed_USD": true,
+      "buy_tax_bps": 100,
+      "sell_tax_bps": 100,
+      "original_first_purchase_event_match": "CONFIRMED",
+      "net_fee_plus_quote_from_wallet": "UNRESOLVED",
+      "causal_profit": "UNRESOLVED",
+      "full_transaction_receipt": "UNRESOLVED_TRUNCATED",
+      "pre_buy_fixed_001_quote_input_raw": "10000000000000000",
+      "pre_buy_quoted_target_raw": "0x000000000000000000000000000000000000000000019358f4269e5a8d43c2c8",
+      "pre_buy_quoted_status": "COMPLETE_QUOTE_ONLY",
+      "post_buy_full_original_inventory_reverse_quote_raw": "0x00000000000000000000000000000000000000000000000002bed99e3a6a99ec",
+      "post_buy_reverse_quote_status": "COMPLETE_QUOTE_ONLY",
+      "observed_postbuy_sells_in_scope": 0,
+      "observed_postbuy_sell_scope": "COMPLETE_FIRST10_BLOCKS",
+      "buyer_in_frozen_23": "NO",
+      "first_global_U": "UNRESOLVED",
+      "follower_entry_1_5_15min": "UNRESOLVED",
+      "production": "NO_GO"
+    },
+    {
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "platform": "FLAP_PORTAL_BNB_MAINNET",
+      "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "creation_block": 112441387,
+      "creation_UTC": "2026-07-27T13:22:38.000Z",
+      "first_sampled_buy_block": 112441394,
+      "first_sampled_buy_UTC": "2026-07-27T13:22:41.000Z",
+      "blocks_since_creation": 7,
+      "original_EOA_signer": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "signed_tx_hash": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "signed_tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "signed_tx_native_value_wei": "536188664994919080",
+      "portal_TokenBought_intermediate_buyer": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "final_ERC20_recipient": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "intermediate_hops": [
+        {
+          "from": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "raw_amount": "77163604478330373759393953"
+        },
+        {
+          "from": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "to": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+          "raw_amount": "77163604478330373759393953"
+        }
+      ],
+      "received_target_raw": "77163604478330373759393953",
+      "portal_event_quote_spent_raw": "2674483304192706318",
+      "portal_event_fee_raw": "26744833041927063",
+      "actual_quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "historical_quote_decimals": 18,
+      "quote_symbol_current_metadata": "S5B",
+      "quote_symbol_is_not_assumed_USD": true,
+      "buy_tax_bps": 300,
+      "sell_tax_bps": 300,
+      "original_first_purchase_event_match": "CONFIRMED",
+      "net_fee_plus_quote_from_wallet": "UNRESOLVED",
+      "causal_profit": "UNRESOLVED",
+      "full_transaction_receipt": "UNRESOLVED_TRUNCATED",
+      "pre_buy_fixed_001_quote_input_raw": "10000000000000000",
+      "pre_buy_quoted_target_raw": "0x0000000000000000000000000000000000000000000041a7bfad152d6d52d144",
+      "pre_buy_quoted_status": "COMPLETE_QUOTE_ONLY",
+      "post_buy_full_original_inventory_reverse_quote_raw": "0x000000000000000000000000000000000000000000000000264ae9de48a1a2db",
+      "post_buy_reverse_quote_status": "COMPLETE_QUOTE_ONLY",
+      "observed_postbuy_sells_in_scope": 0,
+      "observed_postbuy_sell_scope": "COMPLETE_FIRST_BLOCK_ONLY_TEN_BLOCK_QUERY_TRUNCATED",
+      "buyer_in_frozen_23": "NO",
+      "first_global_U": "UNRESOLVED",
+      "follower_entry_1_5_15min": "UNRESOLVED",
+      "production": "NO_GO"
+    }
+  ]
+}
