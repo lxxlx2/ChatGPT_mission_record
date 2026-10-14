@@ -53,7 +53,7 @@ def test_latest_complete_absent_does_not_resurrect_old_positive(tmp_path):
     result = _read(path, [MINT])
     assert result["selected_capture_sha256"] == newer["capture_sha256"]
     assert result["slot_max"] == 221
-    assert result["source_complete_for_all_target_mints"]
+    assert result["dual_program_queries_observed_non_atomic"]
     assert result["status_counts"] == {"ABSENT_IN_LATEST_DUAL_PROGRAM_SCAN": 1}
     row = result["mints"][0]
     assert row["observed_raw_amount"] is None
@@ -78,7 +78,7 @@ def test_newest_partial_must_not_fall_back_to_older_complete(tmp_path):
     assert result["selected_capture_sha256"] == newest["capture_sha256"]
     assert result["mints"][0]["status"] == "UNKNOWN_MISSING_PROGRAM"
     assert result["mints"][0]["observed_raw_amount"] is None
-    assert not result["source_complete_for_all_target_mints"]
+    assert not result["dual_program_queries_observed_non_atomic"]
 
 
 def test_multiple_accounts_observed_but_nonatomic_and_no_pnl(tmp_path):
@@ -116,7 +116,7 @@ def test_new_partial_with_mint_is_not_mislabeled_whole_wallet_balance(tmp_path):
     result = _read(path, [MINT])
     assert result["mints"][0]["status"] == "PARTIAL_PROGRAM_OBSERVED_NOT_WHOLE_BALANCE"
     assert result["mints"][0]["observed_raw_amount"] == "1000000"
-    assert not result["source_complete_for_all_target_mints"]
+    assert not result["dual_program_queries_observed_non_atomic"]
 
 
 def test_stale_capture_does_not_qualify_as_current(tmp_path):
