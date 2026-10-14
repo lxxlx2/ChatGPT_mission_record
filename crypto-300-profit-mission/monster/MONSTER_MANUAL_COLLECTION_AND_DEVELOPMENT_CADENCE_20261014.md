@@ -96,3 +96,14 @@ done
 **下一主线为完整新前瞻窗口数据的真实来源与人口覆盖**：Stage133 手动触发的真正 T0、独立源验证的以后七日全市场1m Publisher SHA、窗口中上新/退市/停牌/无WATCH、真实 issuer/交易状态与单位证明，然后原 Stage77 G0-G4 同核心规则样本外验证。离线模块 CI 成功无法证明这些真正未来行情数据已采到，也无法证明实时发送延迟。不得继续把旧31/519币事后调参当新盈利模型。后续可在真正有价值的集成代码或事实来源产生时更新原 PR #30，不创建新监控或定时任务。
 
 `STAGE134_OFFLINE_ADAPTER=DONE`; `STAGE134_MACOS_UBUNTU_CI=PASS`; `STAGE134_ORIGINAL_FAILURES=PRESERVED`; `STAGE133_REAL_T0=NOT_DONE`; `STAGE116_ORIGINAL_FIRST=SOURCE_FAILED_NO_BACKFILL`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `INDEPENDENT_OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `GMAIL=OFF`; `FRANK=UNCHANGED`; `NO_NEW_SCHEDULE`.
+
+
+## Stage135 完整市场1m官方发布方归档源覆盖引擎（2026-10-14）
+
+按照 [Stage135 事先冻结协议](MONSTER_STAGE135_FROZEN_FULL_MARKET_1M_PUBLISHER_SOURCE_COVERAGE_PROTOCOL_20261014.md)，新增 [完整人口1m归档源检查器](../local-agent/scripts/monster_v4_stage135_full_market_publisher_minute_coverage.py)：接受Stage133原始T0、可选窗口内候选、离线原始ZIP+CHECKSUM目录，先重新调用Stage134确定全部初始和新增候选，再用Stage130原始发布方SHA/1m CSV解析器逐币逐日核验。原始 source缺档、候选出生前数据和窗口内上市身份单独处理，绝不将无源视为无信号或亏损。代码没有主动联网、定时器、发信或交易能力；本地ZIP和CHECKSUM自洽不代表独立证实外部来源。
+
+**实际测试**：[Stage135 macOS/Ubuntu CI #38594578684](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38594578684) 已完成 **SUCCESS**。Ubuntu job `115957869998`、macOS job `115957870351` 均 7/7 官方同格式**合成测试数据**通过，`STAGE135_OFFLINE_ONLY_NO_CAPTURE_NO_SCHEDULE=PASS`。完整源代码/来源边界/后续主线见 [Stage135 正式报告](MONSTER_STAGE135_FULL_MARKET_MINUTE_PUBLISHER_SOURCE_COVERAGE_ENGINE_AND_TWO_OS_CI_20261014.md)。此CI仅证明本地离线源码工作，没取得任何新真实7日行情；旧 Stage116 首窗失败和旧 Stage118/127 拒绝、Stage132 买入负代理不变。
+
+**继续研发主线**：真正用户手动采集才创建新 Stage133 T0；以后取得完整168h真实全市场1m分钟归档及新增/停牌人口，同时单独核实 PIT issuer/现货合约/成交时点，应用Stage77原规则评估G0/G1和D1 G2/G3；完整G4净收益交易证据最少30独立完整入出场，用户单笔名义金额另行指定。重要模型失败不能通过复用已曝光31/519样本调阈值解决。下一次用户手动快照参考点仍 10月28日、11月11日 13:00 BKK，绝不启动新的自动任务。独立其他AI Review、Mac Shadow与真实通知尚未获放行。
+
+`STAGE135_OFFLINE_SOURCE_ENGINE=DONE`; `STAGE135_MACOS_UBUNTU_CI=PASS`; `STAGE133_LIVE_NEW_T0=NOT_DONE`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `FRANK=UNCHANGED`; `GMAIL=OFF`; `NO_NEW_AUTOMATION`.
