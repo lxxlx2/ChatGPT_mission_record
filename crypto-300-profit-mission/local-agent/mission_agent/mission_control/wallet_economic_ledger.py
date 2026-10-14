@@ -71,6 +71,52 @@ def _balance_map(rows, keys):
     return result
 
 
+def _native_sol_coverage(meta, message, keys, tracked):
+    """Differentiate ordinary fee-only token transactions from native SOL flow.
+
+    This is a wallet-scoped *observation*, not a proven SOL cost or an
+    economic transfer classification. Missing balance arrays remain unknown.
+    """
+    before, after = meta.get("preBalances"), meta.get("postBalances")
+    if (not isinstance(before, list) or not isinstance(after, list)
+            or len(before) != len(keys) or len(after) != len(keys)):
+        return ("NATIVE_SOL_BALANCE_EVIDENCE_MISSING", "BALANCE_DATA_MISSING")
+    if any(type(x) is not int or x < 0 for x in before + after):
+        return ("NATIVE_SOL_BALANCE_EVIDENCE_MISSING", "BALANCE_DATA_INVALID")
+    fee = _uint(meta.get("fee"), "FEE_LAMPORTS")
+    failed = meta.get("err") is not None
+    system_program = "11111111111111111111111111111111"
+    instructions = message.get("instructions")
+    if not isinstance(instructions, list):
+        return ("NATIVE_SOL_BALANCE_EVIDENCE_MISSING", "INSTRUCTIONS_MISSING")
+    inner = meta.get("innerInstructions") or []
+    if not isinstance(inner, list):
+        return ("NATIVE_SOL_BALANCE_EVIDENCE_MISSING", "INNER_INSTRUCTIONS_INVALID")
+    all_instructions = list(instructions)
+    for group in inner:
+        if not isinstance(group, dict) or not isinstance(group.get("instructions"), list):
+            return ("NATIVE_SOL_BALANCE_EVIDENCE_MISSING", "INNER_INSTRUCTIONS_INVALID")
+        all_instructions.extend(group["instructions"])
+    if not failed and any(
+        isinstance(item, dict) and item.get("programId") == system_program
+        and isinstance(item.get("parsed"), dict)
+        and item["parsed"].get("type") in (
+            "transfer", "transferWithSeed", "createAccount",
+            "createAccountWithSeed", "withdrawNonceAccount",
+        )
+        for item in all_instructions
+    ):
+        return ("NATIVE_SOL_FLOW_UNCLASSIFIED", "SYSTEM_VALUE_INSTRUCTION")
+    for index, address in enumerate(keys):
+        if address not in tracked:
+            continue
+        observed = after[index] - before[index]
+        fee_only = -fee if index == 0 else 0
+        if observed != fee_only:
+            return ("NATIVE_SOL_FLOW_UNCLASSIFIED", "NON_FEE_NATIVE_BALANCE_CHANGE")
+    return ("NO_NATIVE_SOL_FLOW_OBSERVED", "TRACKED_BALANCES_FEE_ONLY")
+
+
 def normalize_transaction(result: dict, *, tracked_wallets: set[str]) -> dict:
     """Accept one finalized getTransaction jsonParsed result, never call RPC.
 
@@ -100,6 +146,8 @@ def normalize_transaction(result: dict, *, tracked_wallets: set[str]) -> dict:
         key = entry if isinstance(entry, str) else entry.get("pubkey") if isinstance(entry, dict) else None
         keys.append(_required_key(key, "TRANSACTION_ACCOUNT_KEY"))
     failed = meta.get("err") is not None
+    native_status, native_reason = _native_sol_coverage(
+        meta, message, keys, tracked)
     before = _balance_map(meta.get("preTokenBalances"), keys)
     after = _balance_map(meta.get("postTokenBalances"), keys)
     legs = []
@@ -179,7 +227,8 @@ def normalize_transaction(result: dict, *, tracked_wallets: set[str]) -> dict:
         "possible_peer_flows": possible_internal,
         "coverage_gaps": sorted(set(coverage_gaps)),
         "token_owner_coverage_complete": not coverage_gaps,
-        "native_sol_coverage_status": "NATIVE_SOL_FLOW_UNCLASSIFIED",
+        "native_sol_coverage_status": native_status,
+        "native_sol_observation_reason": native_reason,
         "native_sol_flow_lamports": None,
         "active_market_buys_confirmed": 0,
         "active_market_sells_confirmed": 0,
