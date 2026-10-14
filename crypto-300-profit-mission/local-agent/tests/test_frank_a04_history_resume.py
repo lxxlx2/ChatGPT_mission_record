@@ -116,7 +116,8 @@ def test_1005_signatures_across_three_full_and_short_pages_and_terminal_empty(tm
         assert result["pagination_end_observed"]
         assert result["source_pagination_coverage"] == "AVAILABLE_SOURCE_END_NOT_GENESIS_PROVEN"
         assert result["coverage"] == "PARTIAL_ECONOMIC_EVIDENCE"
-        assert result["native_sol_unclassified_count"] == 1005
+        assert result["native_sol_unclassified_count"] == 0
+        assert result["native_sol_balance_evidence_missing_count"] == 1005
         assert result["status"] == "PARTIAL_ECONOMIC_EVIDENCE"
         assert not result["history_complete"]
         assert store.count("RAW_TX") == 1005
