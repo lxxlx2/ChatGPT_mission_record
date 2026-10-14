@@ -143,6 +143,13 @@
 - [精确 #57 CI #38568196200](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38568196200) **SUCCESS: 46 focused / 1,574 full tests**。实测 121 份乱序有效源，最多 Slot 1001 先导入、120 份低 Slot 的 2500000 正余额后导入，准确选择最高 Slot 且缺席金额为 `null`；另验证双失败→健康、健康→最新双失败、乱序导入旧失败以及 stale 失败。 [联合 CI #38568196197](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38568196197) **SUCCESS: 71 focused / 1,626 full**, 当前 main + A05 #57 栈 + C02 #49 + F01 #44 仅隔离 runner 合并回归。
 - **仍须另一 AI 对 #57 这一精确 SHA 重新模块代码 Review 才能标记 `CODE_REVIEW_APPROVED`**；两次 CI PASS 不等于 Review。真实 32 Mint/ATA 来源、Mac 实机和 F02 页面、成本 PnL 仍为业务验收缺口。保留 Draft / NO_MERGE / NO_DEPLOY，并按开发规范做后续跨模块 Review、全功能完成后整体 Review。
 
+## 2026-10-14 PR #57 外部 Claude 第三次 A05/F02 模块审核：1 P2；PR #58 单独修复
+
+- **外部 Claude 对 [Draft PR #57](https://github.com/lxxlx2/ChatGPT_mission_record/pull/57) 精确 SHA `b70245f189a4940eab62288e2da23551f9e31129` = `REQUEST_CHANGES`（1 P2）**。先前两项旧余额复用与旧双失败阻断 P2 已由 Claude 独立用 601 份来源重放确认关闭，但无 Slot 失败记录的 `missing` 只核对长度 2，没证明分别属于 SPL Token 和 Token-2022。合法哈希、两条相同 SPL 错误的合成异常来源被错误当作两个不同程序都失败；不是实际链上余额，也不应当作真实完整失败证据。
+- 新 [Draft PR #58](https://github.com/lxxlx2/ChatGPT_mission_record/pull/58)，保留 #57 已审查 SHA 不覆写；实现 `_valid_unavailable_dual_program_capture`：两个官方 Program ID 各一次，`reason=TOKEN_ACCOUNT_QUERY_UNAVAILABLE`、`error_type` 合法类名且失败字段结构精确；`program_coverage=[]`、`mints=[]`、账户和 Mint 计数为严格整数 0、Slot 双 null，及无原子/历史/受益人/总余额证明和无 USD/PnL 的必要一致性条件。异常重复程序/未知程序/损坏类型/内容矛盾直接拒绝，不能被归类为双程序失败；真正的双 TimeoutError 仍隐藏更早正余额，而更早失败不覆盖更新健康来源。
+- 研究侧 SQLite 自动化对抗测试包含重复 SPL、重复 Token-2022、缺少或无效错误字段、未知/不可哈希程序、非字典失败项、非空账户/Mint、计数和资产验证矛盾、第三条失败项，另保留早期 121 份乱序采集及 601 份人工独立审查证据。**测试数据是合成异常来源，明确非真实 RPC 完整失败样本**。
+- 维护既定流程：#58 **精确最终 SHA** 模块专项/全量 CI → 联合 F01/C02 CI → 新独立 Claude 审查 → 真实 A05 32 Mint/ATA 与 F02 页面 → 跨模块单独审查 → 所有模块完成后最终总体独立审查。未获新的独立 Review 前**不能标记 A05/F02 REVIEW_APPROVED**；所有 PR Draft / NO_MERGE / NO_DEPLOY，生产 Mac 数据与 Frank V1/Gmail/launchd 不修改。精确 CI SHA 和测试计数另以 GitHub 最终成功运行记录为准。
+
 ## 0. 启动前原则与依赖
 
 四条并行但有依赖的工作线：
