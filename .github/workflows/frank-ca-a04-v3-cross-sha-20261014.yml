@@ -28,16 +28,30 @@ jobs:
           python -B -m compileall -q mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_history_replay.py mission_agent/mission_control/wallet_evidence_store.py tests/test_frank_a04_v2_v3_upgrade.py tests/_a04_build_frozen_v2_sidecar.py tests/_a04_verify_frozen_v2_to_v3.py
           python -m pyflakes mission_agent/mission_control/wallet_economic_ledger.py mission_agent/mission_control/wallet_history_replay.py mission_agent/mission_control/wallet_evidence_store.py tests/test_frank_a04_v2_v3_upgrade.py tests/_a04_build_frozen_v2_sidecar.py tests/_a04_verify_frozen_v2_to_v3.py
           node --check mission_agent/mission_control/static/app.js
-      - name: Build actual PR52 V2 historical SQLite with parent exact source SHA
+      - name: Build genuinely old PR51 V2 Sidecar (pre native-fee classification)
         env:
-          FRANK_A04_TEST_OLD_V2_SIDECAR: ${{ runner.temp }}/frank-a04-old-v2.sqlite
+          FRANK_A04_TEST_OLD_V2_SIDECAR: ${{ runner.temp }}/frank-a04-old-pr51.sqlite
+          FRANK_A04_TEST_EXPECTED_OLD_NATIVE_STATUS: NATIVE_SOL_FLOW_UNCLASSIFIED
         run: |
-          git worktree add --detach "${RUNNER_TEMP}/frank-v2-parent-sha" e547203c6e4b00c80372c125785c9feb72fb8e87
-          PYTHONPATH="${RUNNER_TEMP}/frank-v2-parent-sha/crypto-300-profit-mission/local-agent:${RUNNER_TEMP}/frank-v2-parent-sha/crypto-300-profit-mission/local-agent/tests" python crypto-300-profit-mission/local-agent/tests/_a04_build_frozen_v2_sidecar.py
-      - name: Upgrade original V2 SQLite to current V3, idempotently and without mutation
+          git worktree add --detach "${RUNNER_TEMP}/frank-v2-parent-pr51" c2cf581196d19e61306148cdfb85ce4857d8f02f
+          PYTHONPATH="${RUNNER_TEMP}/frank-v2-parent-pr51/crypto-300-profit-mission/local-agent:${RUNNER_TEMP}/frank-v2-parent-pr51/crypto-300-profit-mission/local-agent/tests" python crypto-300-profit-mission/local-agent/tests/_a04_build_frozen_v2_sidecar.py
+      - name: Build broken-identity PR52 V2 Sidecar (native-fee algorithm changed)
+        env:
+          FRANK_A04_TEST_OLD_V2_SIDECAR: ${{ runner.temp }}/frank-a04-old-pr52.sqlite
+          FRANK_A04_TEST_EXPECTED_OLD_NATIVE_STATUS: NO_NATIVE_SOL_FLOW_OBSERVED
+        run: |
+          git worktree add --detach "${RUNNER_TEMP}/frank-v2-parent-pr52" e547203c6e4b00c80372c125785c9feb72fb8e87
+          PYTHONPATH="${RUNNER_TEMP}/frank-v2-parent-pr52/crypto-300-profit-mission/local-agent:${RUNNER_TEMP}/frank-v2-parent-pr52/crypto-300-profit-mission/local-agent/tests" python crypto-300-profit-mission/local-agent/tests/_a04_build_frozen_v2_sidecar.py
+      - name: Migrate PR51 original V2 to V3, preserve all immutable source
         working-directory: crypto-300-profit-mission/local-agent
         env:
-          FRANK_A04_TEST_OLD_V2_SIDECAR: ${{ runner.temp }}/frank-a04-old-v2.sqlite
+          FRANK_A04_TEST_OLD_V2_SIDECAR: ${{ runner.temp }}/frank-a04-old-pr51.sqlite
+        run: |
+          python -B tests/_a04_verify_frozen_v2_to_v3.py
+      - name: Migrate PR52 incompatible V2 to V3, preserve source and no hash conflict
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_A04_TEST_OLD_V2_SIDECAR: ${{ runner.temp }}/frank-a04-old-pr52.sqlite
         run: |
           python -B tests/_a04_verify_frozen_v2_to_v3.py
       - name: Run targeted A04 legacy, V3, N1 and real-chain fixture regressions
