@@ -10,6 +10,15 @@ on:
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage131_dynamic_listing_g1_population_bridge.py'
       - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage133_manual_actual_t0_forward_proof.py'
       - '.github/workflows/monster-stage134-forward-population-readiness-offline.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage134_t0_population_readiness_bridge.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage134_t0_population_readiness_bridge.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage131_dynamic_listing_g1_population_bridge.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage133_manual_actual_t0_forward_proof.py'
+      - '.github/workflows/monster-stage134-forward-population-readiness-offline.yml'
   workflow_dispatch:
 
 permissions:
