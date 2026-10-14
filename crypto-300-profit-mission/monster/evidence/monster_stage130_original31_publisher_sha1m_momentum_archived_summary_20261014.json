@@ -1,0 +1,335 @@
+{
+  "schema": "MONSTER_STAGE130_SOURCE_LOCKED_EXPOSED31_CONCISE_ALL_CASES_V1",
+  "original_workflow_run_id": 38566877450,
+  "research_code_head_sha": "ac4623af220d610a9c705cf9334d7b93e13bd35b",
+  "publisher_source": "Binance Data Vision futures/um/daily/klines/{symbol}/1m original ZIP & .CHECKSUM",
+  "source_method": "CI fetched and verified all 147 publisher SHA ZIP files, full original source and per-day receipts remain in GitHub Actions artifact id 11896196549 (30-day retention); publisher is public and sources refetchable, no current Spot identity claim",
+  "raw_full31_json_SHA256": "a97037bff9d834f0f59fb3a0ae45942a9c28453dbfc0d01331fd78afa49b8f50",
+  "raw_31_github_artifact_zip_SHA256": "e1a5931b64497214faa726831cbe1c64e2c93c3cbfd1c2e101af402da816372b",
+  "all31_complete": 31,
+  "all_minute_bars": 159675,
+  "original_verified_daily_zip_receipts": 147,
+  "research_first_momentum_fired": 19,
+  "gross2x_first1m_open_cases": 2,
+  "early5_research_momentum_before2x": 2,
+  "daily_peak_within_this_selected_31_historical_cohort": 2,
+  "original_stage93_51_2x_cases_UNCHANGED": true,
+  "review": "NOT_DONE",
+  "G0": "PARTIAL",
+  "G1_new_OOS": "NOT_SCORABLE",
+  "G4": "UNKNOWN",
+  "deployment": "NO_GO",
+  "Frank": "UNCHANGED",
+  "rows": [
+    {
+      "anchor": "2025-01-19",
+      "symbol": "ANIMEUSDT",
+      "minute_bars": 3660,
+      "first_1m_utc": "2025-01-23T17:00:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0896551724",
+      "publisher_daily_zip_sha_receipts": 4
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "MELANIAUSDT",
+      "minute_bars": 8430,
+      "first_1m_utc": "2025-01-20T09:30:00Z",
+      "first_momentum_utc": "2025-01-20T09:39:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0630909091",
+      "publisher_daily_zip_sha_receipts": 7
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "PIPPINUSDT",
+      "minute_bars": 2625,
+      "first_1m_utc": "2025-01-24T10:15:00Z",
+      "first_momentum_utc": "2025-01-25T03:33:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.1913043478",
+      "publisher_daily_zip_sha_receipts": 3
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "VINEUSDT",
+      "minute_bars": 2640,
+      "first_1m_utc": "2025-01-24T10:00:00Z",
+      "first_momentum_utc": "2025-01-24T10:12:00Z",
+      "first_gross2x_high_1m_utc": "2025-01-25T04:53:00Z",
+      "max_high_multiple_FirstOpen_rounded": "2.1570763593",
+      "publisher_daily_zip_sha_receipts": 3
+    },
+    {
+      "anchor": "2025-01-19",
+      "symbol": "VTHOUSDT",
+      "minute_bars": 5550,
+      "first_1m_utc": "2025-01-22T09:30:00Z",
+      "first_momentum_utc": "2025-01-22T16:39:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0537712895",
+      "publisher_daily_zip_sha_receipts": 5
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "DEEPUSDT",
+      "minute_bars": 5610,
+      "first_1m_utc": "2025-04-22T08:30:00Z",
+      "first_momentum_utc": "2025-04-22T21:51:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.7818900751",
+      "publisher_daily_zip_sha_receipts": 5
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "EPTUSDT",
+      "minute_bars": 6780,
+      "first_1m_utc": "2025-04-21T13:00:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0401685393",
+      "publisher_daily_zip_sha_receipts": 6
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "FISUSDT",
+      "minute_bars": 1350,
+      "first_1m_utc": "2025-04-25T07:30:00Z",
+      "first_momentum_utc": "2025-04-25T10:09:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.2046315789",
+      "publisher_daily_zip_sha_receipts": 2
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "HYPERUSDT",
+      "minute_bars": 5340,
+      "first_1m_utc": "2025-04-22T13:00:00Z",
+      "first_momentum_utc": "2025-04-22T13:06:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.43203125",
+      "publisher_daily_zip_sha_receipts": 5
+    },
+    {
+      "anchor": "2025-04-19",
+      "symbol": "MEMEFIUSDT",
+      "minute_bars": 1365,
+      "first_1m_utc": "2025-04-25T07:15:00Z",
+      "first_momentum_utc": "2025-04-25T07:24:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.7741751991",
+      "publisher_daily_zip_sha_receipts": 2
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "CVXUSDT",
+      "minute_bars": 3990,
+      "first_1m_utc": "2025-07-23T11:30:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.1330329154",
+      "publisher_daily_zip_sha_receipts": 4
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "SLPUSDT",
+      "minute_bars": 3975,
+      "first_1m_utc": "2025-07-23T11:45:00Z",
+      "first_momentum_utc": "2025-07-23T16:09:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1",
+      "publisher_daily_zip_sha_receipts": 4
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "TAGUSDT",
+      "minute_bars": 1125,
+      "first_1m_utc": "2025-07-25T11:15:00Z",
+      "first_momentum_utc": "2025-07-25T11:21:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.1445594230",
+      "publisher_daily_zip_sha_receipts": 2
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "TAUSDT",
+      "minute_bars": 7110,
+      "first_1m_utc": "2025-07-21T07:30:00Z",
+      "first_momentum_utc": "2025-07-21T07:42:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.3944742901",
+      "publisher_daily_zip_sha_receipts": 6
+    },
+    {
+      "anchor": "2025-07-19",
+      "symbol": "ZORAUSDT",
+      "minute_bars": 1140,
+      "first_1m_utc": "2025-07-25T11:00:00Z",
+      "first_momentum_utc": "2025-07-25T12:54:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.2910532276",
+      "publisher_daily_zip_sha_receipts": 2
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "APRUSDT",
+      "minute_bars": 4050,
+      "first_1m_utc": "2025-10-23T10:30:00Z",
+      "first_momentum_utc": "2025-10-23T10:42:00Z",
+      "first_gross2x_high_1m_utc": "2025-10-23T23:59:00Z",
+      "max_high_multiple_FirstOpen_rounded": "2.3961661342",
+      "publisher_daily_zip_sha_receipts": 4
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "BLUAIUSDT",
+      "minute_bars": 6870,
+      "first_1m_utc": "2025-10-21T11:30:00Z",
+      "first_momentum_utc": "2025-10-21T11:51:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.2451505017",
+      "publisher_daily_zip_sha_receipts": 6
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "ONUSDT",
+      "minute_bars": 2730,
+      "first_1m_utc": "2025-10-24T08:30:00Z",
+      "first_momentum_utc": "2025-10-24T10:48:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.3474",
+      "publisher_daily_zip_sha_receipts": 3
+    },
+    {
+      "anchor": "2025-10-19",
+      "symbol": "TURTLEUSDT",
+      "minute_bars": 5220,
+      "first_1m_utc": "2025-10-22T15:00:00Z",
+      "first_momentum_utc": "2025-10-22T16:18:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1",
+      "publisher_daily_zip_sha_receipts": 5
+    },
+    {
+      "anchor": "2026-04-19",
+      "symbol": "AVGOUSDT",
+      "minute_bars": 8180,
+      "first_1m_utc": "2026-04-20T13:40:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0738324942",
+      "publisher_daily_zip_sha_receipts": 7
+    },
+    {
+      "anchor": "2026-04-19",
+      "symbol": "BABAUSDT",
+      "minute_bars": 8170,
+      "first_1m_utc": "2026-04-20T13:50:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0136438317",
+      "publisher_daily_zip_sha_receipts": 7
+    },
+    {
+      "anchor": "2026-04-19",
+      "symbol": "MSFTUSDT",
+      "minute_bars": 8190,
+      "first_1m_utc": "2026-04-20T13:30:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0319166529",
+      "publisher_daily_zip_sha_receipts": 7
+    },
+    {
+      "anchor": "2026-04-19",
+      "symbol": "OPGUSDT",
+      "minute_bars": 5190,
+      "first_1m_utc": "2026-04-22T15:30:00Z",
+      "first_momentum_utc": "2026-04-22T19:54:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1",
+      "publisher_daily_zip_sha_receipts": 5
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "HK0700USDT",
+      "minute_bars": 5940,
+      "first_1m_utc": "2026-07-22T03:00:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0273626374",
+      "publisher_daily_zip_sha_receipts": 5
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "HK1810USDT",
+      "minute_bars": 5935,
+      "first_1m_utc": "2026-07-22T03:05:00Z",
+      "first_momentum_utc": "2026-07-22T03:12:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0127504554",
+      "publisher_daily_zip_sha_receipts": 5
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "PANWUSDT",
+      "minute_bars": 7010,
+      "first_1m_utc": "2026-07-21T09:10:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0200906772",
+      "publisher_daily_zip_sha_receipts": 6
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "PENGUSDT",
+      "minute_bars": 7005,
+      "first_1m_utc": "2026-07-21T09:15:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0987610619",
+      "publisher_daily_zip_sha_receipts": 6
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "POPMARTUSDT",
+      "minute_bars": 4530,
+      "first_1m_utc": "2026-07-23T02:30:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0143678161",
+      "publisher_daily_zip_sha_receipts": 4
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "SHAZUSDT",
+      "minute_bars": 7020,
+      "first_1m_utc": "2026-07-21T09:00:00Z",
+      "first_momentum_utc": "2026-07-22T13:33:00Z",
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.2179289026",
+      "publisher_daily_zip_sha_receipts": 6
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "SOFIUSDT",
+      "minute_bars": 7015,
+      "first_1m_utc": "2026-07-21T09:05:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1.0537883169",
+      "publisher_daily_zip_sha_receipts": 6
+    },
+    {
+      "anchor": "2026-07-19",
+      "symbol": "TENCENTUSDT",
+      "minute_bars": 5930,
+      "first_1m_utc": "2026-07-22T03:10:00Z",
+      "first_momentum_utc": null,
+      "first_gross2x_high_1m_utc": null,
+      "max_high_multiple_FirstOpen_rounded": "1",
+      "publisher_daily_zip_sha_receipts": 5
+    }
+  ]
+}
