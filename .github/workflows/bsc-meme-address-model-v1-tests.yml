@@ -12,6 +12,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_funding.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_factory190.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_first_liquidity.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_first_liquidity.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_factory190.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_funding.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4.py"
@@ -193,6 +195,26 @@ jobs:
           assert s["code_verified_for_nonzero_pools"] == 0
           assert s["first_executable_timestamp_confirmed"] == s["qualified_profitable_misses"] == 0
           print("PASS 190/190 pinned historical factories, 19 major CAs, 161 addresses; NO tradability or PnL inferred")
+          PY
+      - name: P4 original PairCreated Mint Sync 4-wallet liquidity evidence
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_first_liquidity.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-initial-reserves.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path("/tmp/bsc-p4-initial-reserves.json").read_text(encoding="utf-8"))
+          s = d["summary"]
+          assert (s["priority_wallets"], s["source_confirmed_V2_WBNB_pair_creations"],
+                  s["initial_Mint_and_Sync_same_creation_tx"], s["positive_initial_WBNB_reserves"],
+                  s["same_block_swap_confirmed_pools"]) == (4,4,4,4,2)
+          assert {x["token"]:x["first_positive_WBNB_reserve_BNB"] for x in d["rows"]} == {
+              "龙虾": "17.639999998157599996", "币安人生": "17.639999998157599996",
+              "MARSCOIN": "0.00103", "牛来": "0.1"
+          }
+          assert s["qualified_follower_entry_proven"] == s["profit_proven"] == 0
+          assert s["production"] == "NO_GO"
+          print("PASS 4 historical V2 PairCreated+Mint+Sync first liquidity; no full-universe first tradable or alpha")
           PY
       - name: Recompute 23x19 baseline deterministically
         run: |
