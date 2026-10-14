@@ -18,11 +18,13 @@ try:
     import monster_v4_stage117_first_d0_fast_attention_core as early_candidate
     import monster_v4_stage118_asof_taker_proof_adapter as taker_candidate
     import monster_v4_stage119_cohort_execution_bridge as execution_gate
+    import monster_v4_stage120_exchangeinfo_execution_rules as trade_rules
 except ImportError:
     from scripts import monster_v4_stage116_forward_population_score as scoring
     from scripts import monster_v4_stage117_first_d0_fast_attention_core as early_candidate
     from scripts import monster_v4_stage118_asof_taker_proof_adapter as taker_candidate
     from scripts import monster_v4_stage119_cohort_execution_bridge as execution_gate
+    from scripts import monster_v4_stage120_exchangeinfo_execution_rules as trade_rules
 
 old=scoring.old
 v4=old.v4
@@ -104,6 +106,11 @@ def source_shard(snapshot,window,shard,workers=3,fetch=None):
     if shard not in range(SHARDS) or workers not in range(1,5):
         raise ValueError("STAGE116_SHARD_OR_WORKER_POLICY")
     universe=scoring.audited_capture(snapshot,window)
+    # Contract rules from the SAME verified Stage97 snapshot; never today's
+    # exchangeInfo or a guessed crypto identity/multiplier.
+    original_rules=trade_rules.catalog(snapshot,window)
+    if original_rules["raw_market_SHA"]!=universe["raw_sha256"]:
+        raise ValueError("STAGE120_ORIGINAL_STAGE116_POPULATION_SHA_DRIFT")
     symbols=sorted(x["symbol"] for x in universe["rows"]
                    if x["candidate_for_raw_USDM_attempt"] and shard_no(x["symbol"])==shard)
     if not symbols:
@@ -129,6 +136,14 @@ def source_shard(snapshot,window,shard,workers=3,fetch=None):
                     symbol+" "+str(exc)) from exc
             if result["symbol"]!=symbol or result["date"]!=window[:10]:
                 raise ValueError("STAGE116_SHARD_SYMBOL_RESULT_MISMATCH")
+            rule=original_rules["per_symbol"][symbol]
+            if not rule["asof_original_raw_USDM_candidate"]:
+                raise ValueError("STAGE120_SOURCE_IS_NOT_A_FROZEN_USDM_CANDIDATE")
+            result["stage120_original_asof_contract_metadata"]=rule
+            result["stage120_D0_D1_status_at_actual_signal_time"]={
+                kind:trade_rules.at_signal(rule,scoring.asof(t))
+                for kind,t in (("D0",result.get("D0_first_UTC")),
+                               ("D1",result.get("D1_first_UTC"))) if t is not None}
             rows.append(result)
             print("STAGE116_FORWARD_OFFICIAL_SOURCE "+window+" "+symbol+" "+
                   result["source_status"],flush=True)
