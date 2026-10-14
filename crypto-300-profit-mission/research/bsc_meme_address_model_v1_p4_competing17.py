@@ -170,8 +170,12 @@ def build(data, root=ROOT):
         check(bool(logs)
               and all(int(e["blockNumber"],16) == item["creation_block"]
                       and e["address"].lower() == item["pool"].lower()
-                      and e["transactionHash"] == item["factory_creation_tx"]
-                      for e in logs), "creation log origin or transaction mismatch")
+                      for e in logs), "creation log wrong block or pool")
+        # End-of-block records may also contain later distinct same-block swaps/Sync.
+        # The creation liquidity proof must only consume events from the factory tx.
+        logs = [e for e in logs
+                if e["transactionHash"] == item["factory_creation_tx"]]
+        check(bool(logs), "creation transaction contains no original pool event")
         if "code_absent_before_creation" in item:
             check(item["code_absent_before_creation"] is True
                   and item["code_previous_block"] == "0x" and item["rpc_complete"] is True,
