@@ -50,7 +50,7 @@ def build(source: dict) -> dict:
             and source["source_precommit_sha"] == PRECOMMIT_BLOB
             and source["binary_proof_git_blob_sha"] == BINARY_BLOB
             and source["summary"]["pools"] == 4
-            and source["summary"]["initial_reserves_positive_WBNB"] == 4
+            and source["summary"]["positive_initial_reserves_WBNB"] == 4
             and len(source["records"]) == 4,
             "source freeze or coverage invalid")
     expected = [("龙虾", 83636128), ("币安人生", 63454407),
