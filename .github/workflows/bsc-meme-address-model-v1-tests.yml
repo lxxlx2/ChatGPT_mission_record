@@ -15,6 +15,8 @@ on:
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_first_liquidity.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_liquidity19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing22.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4_competing4_creation.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing4_creation.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4_competing22.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-*.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-implementation-plan-2026-10-13.md"
@@ -260,6 +262,24 @@ jobs:
           assert (s["earlier_first_positive_proven"],s["qualified_misses_proven"]) == (0,0)
           assert s["production"]=="NO_GO"
           print("PASS 171 historical factory reads; 22 competing pool liquidity snapshots: 17 active/5 inactive, no inferred first global entry")
+          PY
+      - name: P4 four source-pinned competing creation and early-liquidity proofs
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4_competing4_creation.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4-competitor4.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-p4-competitor4.json").read_text(encoding="utf-8"))
+          s=a["summary"]
+          assert (s["precommitted_competing_pools"],s["creation_event_audited"],
+                  s["unexamined_other_active_competitors"],s["inactive_at_reference_retained"]) == (17,4,13,5)
+          assert (s["positive_active_at_creation"],s["initial_mint_but_zero_active"],
+                  s["earliest_global_executable_trades"],s["qualified_wallet_misses"]) == (3,1,0,0)
+          assert [r["creation_initial_USDT"] for r in a["rows"]] == [
+              "20","538.70512342330123571","0","13.18055194816814023"]
+          assert s["production"] == "NO_GO" and len(a["source_manifest"]) == 10
+          print("PASS four original V2/V3 pool creations: 3 in-range positives, one out-of-range; 13 pending, five inactive preserved; no alpha")
           PY
       - name: Recompute 23x19 baseline deterministically
         run: |
