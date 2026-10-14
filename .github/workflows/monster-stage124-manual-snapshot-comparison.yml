@@ -1,0 +1,85 @@
+name: Monster Stage124 Manual Complete Binance Snapshot QA No Scheduler
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - .github/workflows/monster-stage124-manual-snapshot-comparison.yml
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_comparison.py
+      - crypto-300-profit-mission/monster/MONSTER_STAGE124_MANUAL_FULL_MARKET_SNAPSHOT_COMPARISON_PROTOCOL_20261014.md
+      - crypto-300-profit-mission/monster/MONSTER_MANUAL_COLLECTION_AND_DEVELOPMENT_CADENCE_20261014.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  unit_cross_platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline Stage124 retained Unicode symbols and pairing; never fetch live exchange/monitor
+        run: |
+          set -eu
+          python -m py_compile crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_comparison.py
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_comparison.py --selftest
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_comparison.py --manifest crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_manifest.json --out /tmp/monster_stage124_stage123_real_snapshot_local.json
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/monster_stage124_stage123_real_snapshot_local.json'))
+          assert x['report']['coverage']['full_original_exchange_symbols']==927
+          assert x['report']['coverage']['active_usdt_perpetual_symbols']==525
+          assert x['report']['coverage']['active_24h_ticker_observed']==525
+          assert x['report']['coverage']['active_BBO_observed']==525
+          assert x['report']['coverage']['active_mark_observed']==525
+          assert x['report']['24h_market_breadth']['up']==161
+          assert x['new_OOS_early_detection_performance']=='NOT_SCORED'
+          assert x['G4_real_net']=='UNKNOWN'
+          assert x['Monster_deployment']=='NO_GO'
+          print('STAGE124_GENUINE_927_FULL_MARKET_525_ACTIVE_READBACK_CAUSAL_NO_TRADE_PASS')
+          PY
+  archive_real_original_baseline_analysis:
+    needs: unit_cross_platform
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recompute original actual 927-symbol market from all eight archive sources
+        run: |
+          set -eu
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage124_manual_snapshot_comparison.py --manifest crypto-300-profit-mission/monster/evidence/monster_stage123_20261014T094824Z_manifest.json --out /tmp/monster_stage124_real_recomputed.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage124-genuine-stage123-manual-current-market-complete-recomputation
+          path: /tmp/monster_stage124_real_recomputed.json
+          retention-days: 60
+      - name: Archive complete actual source-derived baseline QA to original PR30 only
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_stage124_20261014T094824Z_actual_full_market_audit.json
+          cp /tmp/monster_stage124_real_recomputed.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest"
+          if git diff --cached --quiet; then echo STAGE124_ACTUAL_BASELINE_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive Stage124 actual complete 927-symbol Stage123 market recount and full quote QA"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then git rebase --abort || true; exit 1; fi
+            if git push origin "HEAD:refs/heads/$branch"; then echo STAGE124_ACTUAL_FULL_MARKET_AUDIT_IN_GIT; exit 0; fi
+            attempt=$((attempt+1))
+          done
+          exit 1
