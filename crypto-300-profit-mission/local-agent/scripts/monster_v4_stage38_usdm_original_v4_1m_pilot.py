@@ -11,13 +11,16 @@ from collections import Counter
 from datetime import date,datetime,timedelta,timezone
 from decimal import Decimal
 from pathlib import Path
+from urllib.parse import quote
 
 try:
     import monster_v4_shadow as production
     import monster_v4_historical_replay as replay
+    import monster_v4_stage105_capture_universe_core as venue_symbols
 except ImportError:
     from scripts import monster_v4_shadow as production
     from scripts import monster_v4_historical_replay as replay
+    from scripts import monster_v4_stage105_capture_universe_core as venue_symbols
 
 EVIDENCE=Path(__file__).resolve().parents[2]/"monster"/"evidence"
 PREREG=EVIDENCE/"monster_stage38_futures_original_v4_causal_pilot_prereg_20261012.json"
@@ -67,8 +70,13 @@ def select(day,all_rows):
             sorted(winners+normal,key=lambda r:r["symbol"])],len(winners)
 
 def url(symbol,day):
-    if not re.fullmatch(r"[A-Z0-9]+USDT",symbol):raise ValueError("STAGE38_BAD_USDM_SYMBOL")
-    return BASE+symbol+"/1m/"+symbol+"-1m-"+day.isoformat()+".zip"
+    # Historical Data Vision path may include actual Chinese USD-M symbols.
+    # Percent-encode original venue text in HTTP URL ONLY. Never normalize
+    # the symbol or change the publisher ZIP/CSV member + official SHA proof.
+    if not venue_symbols.valid_exact_venue_symbol(symbol) or not symbol.endswith("USDT"):
+        raise ValueError("STAGE38_BAD_USDM_SYMBOL")
+    encoded=quote(symbol,safe="")
+    return BASE+encoded+"/1m/"+encoded+"-1m-"+day.isoformat()+".zip"
 def get(uri,limit):
     request=urllib.request.Request(uri,headers={"User-Agent":"Monster-V4-Stage38-Publisher-SHA/1.0"})
     with urllib.request.urlopen(request,timeout=32) as r:
@@ -261,6 +269,12 @@ def run(day,shard,workers=2):
             "other_AI_review":"NOT_DONE","deployment":"NO_GO","Frank":"UNCHANGED","Gmail":"OFF","trading":"NO_GO"}
 
 def selftest():
+    assert url("CATUSDT",date(2026,10,14)).endswith("/CATUSDT/1m/CATUSDT-1m-2026-10-14.zip")
+    assert "%E9%BE%99%E8%99%BEUSDT" in url("龙虾USDT",date(2026,10,14))
+    for invalid in ("CATUSDT/../../etc","badusdt","龙虾 USDT","龙虾/USDT"):
+        try:url(invalid,date(2026,10,14))
+        except ValueError as ex:assert "BAD_USDM_SYMBOL" in str(ex)
+        else:raise AssertionError("STAGE122_UNSAFE_USDM_SOURCE_SYMBOL")
     at=msutc("2025-01-19T06:00:00Z")
     row={"date":"2025-01-19","symbol":"ABCUSDT","gt2x":"True",
          "baseline_1h_open":"1","max_high_multiple":"2"}
