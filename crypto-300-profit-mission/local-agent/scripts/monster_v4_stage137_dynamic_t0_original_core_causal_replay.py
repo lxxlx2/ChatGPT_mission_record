@@ -53,10 +53,10 @@ def assert_original_population_aliases(rows):
     aliases = {}
     for exact in original:
         internal = original_d0_internal_symbol(exact)
-        if internal in aliases and aliases[internal] != exact:
-            raise ValueError("STAGE141_ASCII_PROXY_COLLISION")
         if internal in original and internal != exact:
             raise ValueError("STAGE141_ALIAS_SHADOWS_REAL_MARKET_SYMBOL")
+        if internal in aliases and aliases[internal] != exact:
+            raise ValueError("STAGE141_ASCII_PROXY_COLLISION")
         aliases[internal] = exact
     if len(aliases) != len(original):
         raise ValueError("STAGE141_LOST_FULL_MARKET_ALIAS_IDENTITY")
