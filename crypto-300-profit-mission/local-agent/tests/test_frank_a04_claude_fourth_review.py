@@ -248,5 +248,5 @@ def test_real_finalized_solana_ata_creation_proves_rent_payer_is_not_wallet_sol(
     assert frank_view["person_pnl_usd"] is None
     funder_view = normalize_transaction(tx, tracked_wallets={fee_payer})
     assert funder_view["native_sol_coverage_status"] == "NATIVE_SOL_FLOW_UNCLASSIFIED"
-    assert funder_view["native_sol_observation_reason"] == "NON_FEE_NATIVE_BALANCE_CHANGE"
+    assert funder_view["native_sol_observation_reason"] == "SYSTEM_VALUE_INSTRUCTION"
     assert funder_view["person_pnl_usd"] is None
