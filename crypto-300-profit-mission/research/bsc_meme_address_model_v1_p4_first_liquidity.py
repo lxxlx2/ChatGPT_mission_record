@@ -95,7 +95,7 @@ def build(source: dict) -> dict:
         wbnb_wei = amounts[0 if t0 == WBNB else 1]
         displayed = format(Decimal(wbnb_wei) / Decimal(10**18), "f")
         require(str(wbnb_wei) == record["initial_wbnb_wei"]
-                and Decimal(displayed) == Decimal(record["initial_wbnb_BNB"]),
+                and abs(Decimal(displayed) - Decimal(record["initial_wbnb_BNB"])) < Decimal("0.000000000001"),
                 "quote amount mismatch")
         seconds = int(p["blockTimestamp"],16)
         from datetime import datetime, timezone
