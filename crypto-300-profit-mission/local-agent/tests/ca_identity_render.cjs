@@ -15,10 +15,16 @@ for(const report of results){
   ctx.job={preview:{token_status:report.token_profile.status,token_identity:report.token_identity,market_status:report.market.status},status:'RUNNING'};
   vm.runInContext('renderClusterPreview(job)',ctx);
   assert(nodes['cluster-preview'].innerHTML.includes(report.token_identity.display_label));
+  assert(nodes['cluster-preview'].innerHTML.includes(report.mint));
+  // Scan progress must differentiate same-name mints before final report.
+  ctx.job={mint:report.mint,progress:{stage:'BASE_READY',token_identity:report.token_identity},status:'RUNNING'};
+  const progress=vm.runInContext('clusterProgressDetail(job)',ctx);
+  assert(progress.includes(report.mint.slice(0,6)));
+  assert(progress.includes(report.mint.slice(-6)));
 }
 const report=structuredClone(results[0]);report.token_identity.display_label='身份来源冲突';report.token_identity.display_name=null;report.token_identity.conflict_status='TOKEN_IDENTITY_CONFLICT';report.token_identity.sources.push({name:'<script>wrong</script>',mint:report.mint});ctx.report=report;
 vm.runInContext('renderClusterReport(report)',ctx);
 assert(nodes['cluster-status'].innerHTML.includes('TOKEN_IDENTITY_CONFLICT'));
 assert(nodes['cluster-summary'].innerHTML.includes('&lt;script&gt;wrong&lt;/script&gt;'));
 assert(!nodes['cluster-summary'].innerHTML.includes('<script>wrong</script>'));
-console.log('C02 actual app.js: 6 official cases, sequential mint isolation, preview, conflict and escaping PASS');
+console.log('C02 actual app.js: 6 official cases, exact CA preview/progress, conflict and escaping PASS');
