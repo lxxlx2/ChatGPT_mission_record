@@ -1,0 +1,223 @@
+{
+  "G0": "PARTIAL",
+  "G4_real_executable_net": "UNKNOWN",
+  "all_original_D0_n": 519,
+  "all_original_positive_early5": 28,
+  "folds": [
+    {
+      "anchor": "2025-01-30",
+      "attention": {
+        "attention_n": 0,
+        "daily_buckets": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "days": 7,
+        "peak_day": 0,
+        "per_day_mean": 0
+      },
+      "early5_keep_fraction": null,
+      "historical_false_negative_symbols": [],
+      "original_D0_n": 161,
+      "original_early5_2x": 0,
+      "original_early5_kept": 0,
+      "original_early5_missed": 0,
+      "research_priority_n": 0,
+      "scored": false,
+      "train_n": 0,
+      "train_positive": 0
+    },
+    {
+      "anchor": "2025-06-02",
+      "attention": {
+        "attention_n": 0,
+        "daily_buckets": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "days": 7,
+        "peak_day": 0,
+        "per_day_mean": 0
+      },
+      "early5_keep_fraction": null,
+      "historical_false_negative_symbols": [],
+      "original_D0_n": 34,
+      "original_early5_2x": 0,
+      "original_early5_kept": 0,
+      "original_early5_missed": 0,
+      "research_priority_n": 0,
+      "scored": false,
+      "train_n": 161,
+      "train_positive": 0
+    },
+    {
+      "anchor": "2025-08-01",
+      "attention": {
+        "attention_n": 0,
+        "daily_buckets": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "days": 7,
+        "peak_day": 0,
+        "per_day_mean": 0
+      },
+      "early5_keep_fraction": null,
+      "historical_false_negative_symbols": [
+        "A2ZUSDT",
+        "DMCUSDT",
+        "MAGICUSDT",
+        "MEMEFIUSDT",
+        "MYXUSDT",
+        "VELVETUSDT"
+      ],
+      "original_D0_n": 54,
+      "original_early5_2x": 6,
+      "original_early5_kept": 0,
+      "original_early5_missed": 6,
+      "research_priority_n": 0,
+      "scored": false,
+      "train_n": 195,
+      "train_positive": 0
+    },
+    {
+      "anchor": "2025-10-02",
+      "attention": {
+        "attention_n": 69,
+        "daily_buckets": [
+          18,
+          13,
+          6,
+          6,
+          9,
+          12,
+          5
+        ],
+        "days": 7,
+        "peak_day": 18,
+        "per_day_mean": 9.857142857142858
+      },
+      "early5_keep_fraction": 0.9230769230769231,
+      "historical_false_negative_symbols": [
+        "AIAUSDT"
+      ],
+      "original_D0_n": 75,
+      "original_early5_2x": 13,
+      "original_early5_kept": 12,
+      "original_early5_missed": 1,
+      "research_priority_n": 69,
+      "scored": true,
+      "train_n": 249,
+      "train_positive": 6
+    },
+    {
+      "anchor": "2026-06-21",
+      "attention": {
+        "attention_n": 39,
+        "daily_buckets": [
+          13,
+          7,
+          2,
+          7,
+          6,
+          2,
+          2
+        ],
+        "days": 7,
+        "peak_day": 13,
+        "per_day_mean": 5.571428571428571
+      },
+      "early5_keep_fraction": 0.5,
+      "historical_false_negative_symbols": [
+        "VELVETUSDT"
+      ],
+      "original_D0_n": 100,
+      "original_early5_2x": 2,
+      "original_early5_kept": 1,
+      "original_early5_missed": 1,
+      "research_priority_n": 39,
+      "scored": true,
+      "train_n": 324,
+      "train_positive": 19
+    },
+    {
+      "anchor": "2026-07-28",
+      "attention": {
+        "attention_n": 36,
+        "daily_buckets": [
+          10,
+          4,
+          8,
+          5,
+          2,
+          4,
+          3
+        ],
+        "days": 7,
+        "peak_day": 10,
+        "per_day_mean": 5.142857142857143
+      },
+      "early5_keep_fraction": 0.42857142857142855,
+      "historical_false_negative_symbols": [
+        "BEATUSDT",
+        "GIGGLEUSDT",
+        "KOMAUSDT",
+        "MMTUSDT"
+      ],
+      "original_D0_n": 95,
+      "original_early5_2x": 7,
+      "original_early5_kept": 3,
+      "original_early5_missed": 4,
+      "research_priority_n": 36,
+      "scored": true,
+      "train_n": 424,
+      "train_positive": 21
+    }
+  ],
+  "frank": "UNCHANGED",
+  "frozen_attention_daily_peak_gate": 12,
+  "frozen_attention_mean_gate": 5,
+  "frozen_recall_gate": 0.8,
+  "frozen_strategy": "SIX_ASOF_FEATURE_LOGISTIC_FIXED_BATCH_GD",
+  "full_venue_no_watch_denominator": "UNAVAILABLE_NOT_FULL_MARKET_G1",
+  "genuine_new_OOS": "NOT_DONE",
+  "historical_research_verdict": "REJECTED_EXPOSED_HISTORICAL",
+  "monster_deployment": "NO_GO",
+  "old_exposed_only_not_independent_OOS": true,
+  "other_AI_independent_review": "NOT_DONE",
+  "prior_failed_stage118": "REJECTED_UNCHANGED",
+  "schema": "MONSTER_STAGE127_FROZEN_EXPOSED_FIRST_D0_WALKFORWARD_V1",
+  "scored_attention_daily_mean": 6.857142857142857,
+  "scored_attention_daily_peak": 18,
+  "scored_early5_keep_fraction": 0.7272727272727273,
+  "scored_folds": 3,
+  "scored_historical_early5_positive": 22,
+  "scored_historical_early5_retained": 16,
+  "source_git_blobs": {
+    "stage64": "8ebe53acfdfe10413ac1e6f03457d6ace25d9d5a",
+    "stage83": "c76b3a137c8dbe56feed3a79a63adcc0752f5e2e"
+  },
+  "warmup_positive_early5_not_scored": 6,
+  "rows_result": "GitHub CI artifacts hold all 519 immutable decisions; each run regenerates from original two Git blobs",
+  "ci_run_id": 38556832716,
+  "ci_head": "8c021fc0b8285939c6722caa0c70fe8639d5d760",
+  "ubuntu_job_id": 115827963724,
+  "macos_job_id": 115827964100,
+  "two_OS_full_stdout_identical": true,
+  "source_protocol_frozen_commit": "d62030573574b162d9bf5d1f21022a9b6647a030"
+}
