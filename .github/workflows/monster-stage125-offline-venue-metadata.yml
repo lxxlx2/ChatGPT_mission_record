@@ -1,0 +1,28 @@
+name: Monster Stage125 cross-venue metadata offline tests
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage125_cross_venue_metadata_join.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage125_cross_venue_metadata_join.py'
+      - '.github/workflows/monster-stage125-offline-venue-metadata.yml'
+  workflow_dispatch:
+
+jobs:
+  metadata-universe:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pure offline tests
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m unittest -v test_monster_v4_stage125_cross_venue_metadata_join.py
+          python -m py_compile monster_v4_stage125_cross_venue_metadata_join.py
