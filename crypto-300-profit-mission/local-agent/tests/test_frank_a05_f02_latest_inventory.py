@@ -369,6 +369,7 @@ def test_stale_latest_unslotted_attempt_cannot_replay_old_positive(tmp_path):
     "duplicate_spl",
     "duplicate_token_2022",
     "unsupported_program",
+    "unhashable_program_id",
     "missing_entry_not_dict",
     "missing_reason_field",
     "unexpected_reason",
@@ -400,6 +401,8 @@ def test_malformed_slotless_failures_are_rejected_not_classified_as_dual_failure
         bad["missing"][0] = copy.deepcopy(bad["missing"][1])
     elif corruption == "unsupported_program":
         bad["missing"][1]["program_id"] = OWNER_A
+    elif corruption == "unhashable_program_id":
+        bad["missing"][0]["program_id"] = [SPL_TOKEN_PROGRAM]
     elif corruption == "missing_entry_not_dict":
         bad["missing"][1] = "TOKEN_ACCOUNT_QUERY_UNAVAILABLE"
     elif corruption == "missing_reason_field":
