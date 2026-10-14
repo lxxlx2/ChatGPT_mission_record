@@ -191,3 +191,17 @@ Stage141原V4数字核心Unicode工程覆盖已经完成，但 G0=PARTIAL、G1=N
 正式代码审查pin：ff711ebef8367635871004f27a98838f7aa8c4f3。真实GitHub Actions [Stage137 #38615294004](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38615294004) macOS/Ubuntu均13/13 PASS；[Stage138 #38615294086](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38615294086) macOS/Ubuntu均20/20 PASS，均为合成K线的原始D0/D1隔离工程验收，不能认定真实G1过线。外部AI的[完整可复制审核提示词](MONSTER_STAGE142_INDEPENDENT_OTHER_AI_REVIEW_PROMPT_PINNED_FF711_20261015.md)已直接按新硬规生成并存Git，[正式Stage142报告](MONSTER_STAGE142_COLD_START_D0_D1_MODEL_TWO_OS_CI_AND_REVIEW_HANDOFF_20261015.md)记录了失败测试、修复、真实市场边界和下阶段。外部审查方还没有返回审查意见，G5 NOT_DONE，严禁擅自认定APPROVE。
 
 后续P1聚焦已有 Stage140 真实全市场 BBO/24h ticker/mark 的报价新鲜度、流动性和可成交净收益限制，以及收到其他AI审核后真实缺陷修复。无后台定时任务、不修改Frank、不发Gmail、不下单、PR仍Draft。G0 PARTIAL; G1 NOT_SCORABLE; G2_G3 NOT_PASSED; G4 UNKNOWN; G5 NOT_DONE; G6 NO_GO。
+
+## Stage143 Claude 独立审核 REQUEST_CHANGES 的核心修复与再次复审（2026-10-15）
+
+Claude 独立审查用户原文已由用户带入当前对话：审查旧 fixed SHA ff711ebef8367635871004f27a98838f7aa8c4f3，返回 REQUEST_CHANGES，P0 新币于T0前6h上市但原程序仍强制24h完整归档导致漏回放，P1 新币 D1 06:57→07:24 漏计 G3、G1完整案例统计偏乐观、新币发现时效为自报首根K线、100k USDT quote门槛结构性漏报，另有 O+2m 扫描边界等 P2。已保存 [正式外审输入](MONSTER_STAGE143_CLAUDE_EXTERNAL_REQUEST_CHANGES_REVIEW_INTAKE_20261015.md)，先提交[冻结修复合同](MONSTER_STAGE143_FROZEN_CLAUDE_REQUEST_CHANGES_REMEDIATION_20261015.md) commit b97ef471a01e67f8200bb658d489338c92c8b9bf，再修改原模块源码，不改变原D0/D1参数。
+
+修改：Stage134 原T0快照保留 preT0最近24h onboardDate 的未核实声明，Stage135 只在原 publisher ZIP+CHECKSUM首根1m与原声明分钟对齐且后续完整时标记同一 PREEXISTING lane 下的新 subcohort；不符与真实缺档继续 CENSORED（从不当NO_WATCH）。Stage136 的离线手动源规划跳过无法存在的上市前完整日ZIP。Stage137 保留原 SQLite D0和 Stage80 D1，在 T0+3m之后才 replay preT0新近上市币，窗口内新币 O+3min 以后才进入global UTC3m tick。两种冷启动从未观察到的旧历史中不制造 quote/61m；出具原 quote>=100k之前出现 gross2x的结构性漏报标记与 1/3/5分钟假设晚发现的乐观敏感性（并非真实告警延迟和二次完整回放）。Stage137现将原旧币+最近preT0+窗口内新币所有D1计入单个7日原始可能通知总量，并另外保留每组数组。Stage138从每一个独立row独立计算分组G3数量，与原Stage137逐组逐日强制一致，同时保留完整市场源缺档和新币2x单列，输出完整源子集回顾指标与‘假设所有缺档都是漏报2x’悲观假设，不写真正的crypto G1 PASS。
+
+**真实测试机器结果**：[Stage143 单一联合工作流 #38646498839](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38646498839) at immutable commit 5fd3138702a3caef69ce2d48696059bceeefd6f9，Ubuntu job 116134533414 **66/66 PASS**；macOS job 116134533647 **66/66 PASS**。全部按原模型源解析、T0人口、原Stage130 CSV/ZIP/CHECKSUM、源计划、原Stage137 D0/D1、Stage138跨窗口统计运行了真实GitHub Actions isolated synthetic数据，另验证不启动数据源、不恢复任务、不发Gmail、不影响Frank和不下单。附[正式修复+CI证据](MONSTER_STAGE143_CLAUDE_REVIEW_REMEDIATION_66_TESTS_TWO_OS_RESULTS_20261015.md)。
+
+**不冒充真正币圈实测**：已保存的 Stage140 实际 525 个USD-M合约中，`onboardDate` 声明落于本T0前24h的实际标的=0；P0回归数据是在官方同格式压缩包上的独立合成复现，不是从该真实snapshot验证了新近上市收益。原标准 fapi 主host HTTP451 和WWW备用 mirror 内嵌serverTime旧8h44m依然影响 G0。真实完整7日及期间事件源尚未获取，不可给G1真实提前命中、G3真实投递或G4真正净利润结论。
+
+按 Monster 新硬规则，Claude 修复后的[完整可复制独立复审提示词](MONSTER_STAGE143_CLAUDE_INDEPENDENT_RE_REVIEW_PROMPT_PINNED_5FD313_20261015.md) 已提供并提交，严格 pin 5fd3138702a3caef69ce2d48696059bceeefd6f9、旧被拒SHA、所有旧P0/P1和真实CI与可复现命令。**外部复审结果尚未返回。旧意见 REQUEST_CHANGES 是有效审查输入，但新代码没有因此获得 APPROVE。** 用户将其他AI反馈发回来后按具体缺陷修复，必要时重新CI并更新 pin。
+
+Stage143工程=PASS_MACOS_UBUNTU_66_OF_66; MODEL_G0=PARTIAL; G1=NOT_SCORABLE; G2_G3=NOT_PASSED; G4=UNKNOWN; G5_EXTERNAL_REVIEW_REQUEST_CHANGES_PENDING_REREVIEW; G6=NO_GO; PR_30=DRAFT; NO_MERGE; NO_DEPLOY; NO_GMAIL; NO_TRADE; FRANK_UNCHANGED; NO_NEW_SCHEDULE.
