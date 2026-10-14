@@ -13,14 +13,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 PREFIX = "crypto-300-profit-mission/research/"
 PINS = (
-    ("bsc-meme-address-model-v1-p4b-v2-first10-swap-precommit-2026-10-14.json", "7a18d9ecf7c9f6d7f7e3c586f9de5155c7aba718"),
+    ("bsc-meme-address-model-v1-p4b-v2-first10-swap-precommit-2026-10-14.json", "09e23ee13f2eaaa3fd0c72790b4072b970fec3c8"),
     ("bsc-meme-address-model-v1-p4b-v2-first10-swaps-part1-2026-10-14.json", "65c15652731e36d8ff7786643ef21cdc7e449ed6"),
     ("bsc-meme-address-model-v1-p4b-v2-first10-swaps-part2-2026-10-14.json", "692d0b5eb8ae4e5944c1cf313f37bc34b00593cc"),
     ("bsc-meme-address-model-v1-p4b-v2-first10-swaps-part3-2026-10-14.json", "84ae3dbad84cbe379a4b564590432f301ba771df"),
     ("bsc-meme-address-model-v1-p4b-v2-first10-swaps-part4-2026-10-14.json", "3de1f0069609a71c3c9dffefc920f611a70d55ca"),
-    ("bsc-meme-address-model-v1-p4b-v2-truncation-oneblock-fallback-precommit-2026-10-14.json", "7a18d9ecf7c9f6d7f7e3c586f9de5155c7aba718"),
-    ("bsc-meme-address-model-v1-p4b-v2-oneblock-fallback-part1-2026-10-14.json", "c1e4f73b2bac842f9eb9bf7885ff18e0db3c23f0"),
-    ("bsc-meme-address-model-v1-p4b-v2-oneblock-fallback-part2-2026-10-14.json", "c1e4f73b2bac842f9eb9bf7885ff18e0db3c23f0"),
+    ("bsc-meme-address-model-v1-p4b-v2-truncation-oneblock-fallback-precommit-2026-10-14.json", "a9a9ac94e367c02161f9843f8ff429ac841b41f6"),
+    ("bsc-meme-address-model-v1-p4b-v2-oneblock-fallback-part1-2026-10-14.json", "a7fe0bc0186320fadb934c942cfc03b747ab21c5"),
+    ("bsc-meme-address-model-v1-p4b-v2-oneblock-fallback-part2-2026-10-14.json", "73aa435871dc7a7f38d935cb6cabebdf4a9ecada"),
 )
 WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
 SWAP = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
