@@ -5,7 +5,7 @@
 ## 自动采集终止与当前事实
 
 - 原已安装服务只涉及三个 `com.lxxlx2.monster.stage99.usdm.{20261014,20261028,20261111}` macOS LaunchAgent。2026-10-14 UTC 05:48:29 首次服务真实状态为 `SOURCE_FAILED_NO_BACKFILL`，报 `STAGE91_MARKET_SYMBOL_DUPLICATE_OR_INVALID`，后续已修复 Unicode 代码但**用户 Mac 上已安装旧版本未更新**。
-- 用户在 2026-10-14 明确要求**停止全部三个 Stage99 自动任务**，未来无须为了实验再安装 launchd、cron、GitHub schedule、ChatGPT automation 或周期性 Gmail。助手提供准确 **限定标签的 zsh 停用命令**；Mac 执行结果尚未回传，故当前本地状态为 `CANCELLATION_AUTHORIZED_COMMAND_PROVIDED_VERIFICATION_PENDING`，绝不写“已经停止”。
+- 用户在 2026-10-14 明确要求**停止全部三个 Stage99 自动任务**，未来无须为了实验再安装 launchd、cron、GitHub schedule、ChatGPT automation 或周期性 Gmail。助手提供准确 **限定标签的 zsh 停用命令**；随后用户于 2026-10-14 在当前对话提供真实 Mac zsh 终端截图，三行分别为 `20261014 STOPPED_AND_PLIST_REMOVED`、`20261028 STOPPED_AND_PLIST_REMOVED`、`20261111 STOPPED_AND_PLIST_REMOVED`，命令退出返回了 shell 提示符。因此按 **用户提供的实际终端输出** 记录 `STOPPED_THREE_LABELS_USER_TERMINAL_READBACK`。这是执行后本地检查的间接证据，不宣称助手远程登录 Mac，亦不能证明今后无其他程序重新注册。
 - 停止时仅 bootout 精确三个 Stage99 labels、验证 `launchctl print/list` 该服务均不存在，再移除同名 LaunchAgents plist。不可使用 `launchctl remove` 通配、全量 `unload -w`、`killall`、删除孤立 repo/日志/证据、修改或停止 Frank/其他 LaunchAgents。原 Stage99 JSON 状态如仍为 `SCHEDULE_INSTALLED` 是历史记录，不能替代真实 launchctl readback。
 - 原本 Stage99 一次性固定的三个时间仍为**历史实验设计记录**：2026-10-14、2026-10-28、2026-11-11 各 06:00 UTC（曼谷时间 13:00），原自动启动 05:48 UTC（曼谷 12:48）。在手动模式里，它们**只作为用户选择发起聊天采集的目标日期/参考时刻**，不再是实际运行中的 scheduler。
 - 首个 2026-10-14 06:00 UTC Stage99 观察点保留 `SOURCE_FAILED_NO_BACKFILL`。本日已另外自主完成真实 Binance 新市场观察 `2026-10-14T09:48:24.840Z`（曼谷 16:48:24），归档 [Stage123 manifest](evidence/monster_stage123_20261014T094824Z_manifest.json)。**该新观察是新的起点，不是 06:00 旧快照补抓。**
@@ -56,4 +56,4 @@ done
 
 主线不依赖日期：继续研究信号在首次 D0 时的真实早报能力、独立底层 crypto/合约单位核验、信号时点盘口/标记价/手续费/滑点、源真实性、历史失败归因及模型样本外验证。用现有 Stage123 数据开发**可复现的全市场新旧手动快照对比**和 cohort coverage 诊断；不要在早已暴露的519个历史 D0 上不停重调参数。
 
-**当前门禁**：`STAGE123_CURRENT_BASELINE=DONE`; `STAGE99_AUTOMATIC_FUTURE_CAPTURE=USER_REQUESTED_CANCEL_PENDING_VERIFICATION`; `NEXT_MANUAL_CHECKPOINT=2026-10-28_13:00_ASIA_BANGKOK`; `STAGE118_STRATEGY=REJECTED`; `G0=PARTIAL`; `G4=UNKNOWN`; `NEW_VALID_OOS=NOT_DONE`; `OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `FRANK_UNCHANGED`.
+**当前门禁**：`STAGE123_CURRENT_BASELINE=DONE`; `STAGE99_AUTOMATIC_FUTURE_CAPTURE=STOPPED_THREE_LABELS_USER_TERMINAL_READBACK_20261014`; `NEXT_MANUAL_CHECKPOINT=2026-10-28_13:00_ASIA_BANGKOK`; `STAGE118_STRATEGY=REJECTED`; `G0=PARTIAL`; `G4=UNKNOWN`; `NEW_VALID_OOS=NOT_DONE`; `OTHER_AI_REVIEW=NOT_DONE`; `MONSTER_DEPLOY=NO_GO`; `FRANK_UNCHANGED`.
