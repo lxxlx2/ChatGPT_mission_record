@@ -50,7 +50,7 @@ class Stage126Test(unittest.TestCase):
     def test_stamp_invalid_and_time_gap(self):
         self.assertEqual(self.evaluate(time="9500")["source_status"], "INVALID_BBO_TIME")
         self.assertEqual(self.evaluate(time=10000+60001)["source_status"], "SOURCE_TIME_GAP_GT_60S")
-        self.assertEqual(self.evaluate(time=10000-60001)["source_status"], "SOURCE_TIME_GAP_GT_60S")
+        self.assertEqual(evaluate(self.symbol, self.meta, book(time=1), self.tick, 60002)["source_status"], "SOURCE_TIME_GAP_GT_60S")
 
     def test_missing_bbo_and_cohort_denominator(self):
         snapshot = {
