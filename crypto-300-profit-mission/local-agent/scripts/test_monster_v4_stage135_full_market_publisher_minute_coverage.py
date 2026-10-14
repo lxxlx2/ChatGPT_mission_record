@@ -19,10 +19,10 @@ def timestamp(day, minute):
     return start + 60000*minute
 
 
-def make_one_day(root, symbol, day, *, omit=None):
+def make_one_day(root, symbol, day, *, omit=None, begin=0):
     # Offline synthetic, original Stage130 CSV parser and ZIP/CHECKSUM format.
     lines = []
-    for m in range(1440):
+    for m in range(begin, 1440):
         if m == omit:
             continue
         lines.append(",".join((str(timestamp(day, m)), "1", "1.1", "0.9",
@@ -129,6 +129,58 @@ class Stage135Tests(unittest.TestCase):
         self.assertEqual(item["required_source_from_utc"],
                          "2026-10-28T06:21:00Z")
         self.assertLess(item["expected_minute_count"], 8*1440)
+
+    def test_claude_p0_recent_6h_preT0_listing_valid_first_publisher_minute_replays_not_censored(self):
+        import monster_v4_stage137_dynamic_t0_original_core_causal_replay as stage137
+        from test_monster_v4_stage133_manual_actual_t0_forward_proof import fixture
+        first,exchange,last = fixture()
+        exchange["json"]["symbols"][0]["onboardDate"] = timestamp("2026-10-28",20)
+        exchange["raw"] = json.dumps(exchange["json"],ensure_ascii=False)
+        exchange["raw_sha256"] = hashlib.sha256(exchange["raw"].encode()).hexdigest()
+        packet = stage133.validate_three_http_records(first,exchange,last)
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            start = datetime(2026,10,28,tzinfo=timezone.utc).date()
+            for i in range(8):
+                day=(start+timedelta(days=i)).isoformat()
+                make_one_day(root,"ABCUSDT",day,begin=20 if i==0 else 0)
+            audit = stage135.audit(packet,root)
+            recent = next(x for x in audit["per_symbol_source_audit"]
+                          if x["symbol_exact"]=="ABCUSDT")
+            self.assertTrue(recent["source_minute_continuity"])
+            self.assertTrue(recent["recent_pre_T0_onboarded_cold_start_claim"])
+            self.assertTrue(recent["first_archive_bar_matches_T0_onboard_minute"])
+            self.assertEqual(recent["required_source_from_utc"],"2026-10-28T00:20:00Z")
+            self.assertEqual(audit["source_contiguous_since_required_origin"],1)
+            scored=stage137.run(packet,root)
+            replay=next(x for x in scored["all_source_population_rows"]
+                        if x["symbol_exact"]=="ABCUSDT")
+            self.assertEqual(replay["replay_status"],
+                             "ORIGINAL_CORE_RECENT_PRE_T0_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE")
+            self.assertEqual(replay["effective_replay_scan_start_utc"],"2026-10-28T06:20:00Z")
+            self.assertEqual(replay["first_tick_utc"],"2026-10-28T06:24:00Z")
+            self.assertFalse(replay["first_listing_time_independently_attested"])
+            self.assertEqual((scored["G0"],scored["G1"]),("PARTIAL","NOT_SCORABLE"))
+
+    def test_claude_p0_recent_onboard_mismatch_is_censored_not_made_up_history(self):
+        from test_monster_v4_stage133_manual_actual_t0_forward_proof import fixture
+        first,exchange,last = fixture()
+        exchange["json"]["symbols"][0]["onboardDate"] = timestamp("2026-10-28",20)
+        exchange["raw"] = json.dumps(exchange["json"],ensure_ascii=False)
+        exchange["raw_sha256"] = hashlib.sha256(exchange["raw"].encode()).hexdigest()
+        packet = stage133.validate_three_http_records(first,exchange,last)
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            start=datetime(2026,10,28,tzinfo=timezone.utc).date()
+            for i in range(8):
+                day=(start+timedelta(days=i)).isoformat()
+                make_one_day(root,"ABCUSDT",day,begin=25 if i==0 else 0)
+            result=stage135.audit(packet,root)
+        recent=next(x for x in result["per_symbol_source_audit"]
+                    if x["symbol_exact"]=="ABCUSDT")
+        self.assertFalse(recent["first_archive_bar_matches_T0_onboard_minute"])
+        self.assertFalse(recent["source_minute_continuity"])
+        self.assertEqual(recent["source_status"],"CENSORED_SOURCE_GAP_OR_MISSING")
 
     def test_wrong_source_ledger_rejected_before_archive_read(self):
         p = t0()
