@@ -7,7 +7,6 @@ The historical target roster is pinned by its actual Git blob identity.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
