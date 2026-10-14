@@ -324,3 +324,12 @@ All **5/5 original successful receipts**, original token ERC20 to/from the exact
 - 源证据和确定性复算：`bsc-meme-address-model-v1-p4c-three-unclosed-owner-token-quote-gate-2026-10-15.json`、`bsc_meme_address_model_v1_p4c_three_quote_gate.py`、`test_bsc_meme_address_model_v1_p4c_three_quote_gate.py`；本轮完整报告 `bsc-meme-address-model-v1-p4c-three-original-rounds-quote-route-and-review-rule-2026-10-15.md`。所有原始历史来源 exact Git blob SHA 均保留，失败、同区块非预选交易与 Q3B/WBNB 混合报价原样记录。
 - 保留旧 23×19=437 分母：**已独立验真的 8E6B 两种重大 CA 正收益回合 2、DDAC 龙虾负收益回合 1，434 个 wallet×CA 格子尚未同等级审计**。最新仍无全球市场首次真实可见可执行 U 或 P5 跟单利润。**P4-C PARTIAL / P5 BLOCKED / review PENDING_OTHER_AI_REVIEW / PR #40 Draft / NO_GO / NO_MERGE / NO_DEPLOY**。
 - **下批主线和停止条件**：既然 3 个候选 token close 而回款缺少免费可信完整链路，保留 blocker 后停止对此 3 个样本无限追逐；从已有 P2 50 个 graded 回合中预冻结不同钱包不同重大 CA 的高质量实际买卖，混合正负 control，优先拥有 `SETTLED_NATIVE_DIRECT_WBNB_GAS` 或有足够原始成功回执的候选，批量复核原始 quote/gas 完整盈亏，再审计信号 U、真实可跟 1/5/15 分钟成交。禁止重新扫描原有全部 ERC20、扩大冻结赢家口径或绕过其他 AI Review。
+
+## 2026-10-15 其他 AI 审核结论与旧 CI 修复
+
+已收到用户转交的独立其他 AI 审核报告：**`APPROVE` 仅对固定 SHA `ea6684a3478d301534ff9d26b5984367eb7530f3` 的 P4-C 证据分级/代码成立**，对比基线 `4b15b446fc3b6f680ee0854078b1c3c3f2bfb598`。独立 AI 报告复核了 7 笔原始交易、完整日志及 106 个 Git source blob；审核亦强调本人获利 ≠ 跟单获利。**此审核批准不延伸到后续整改 SHA、PR 合并、生产部署、Mac 测试、交易信号或 P5**。Git 归档见 `bsc-meme-address-model-v1-p4c-independent-review-verdict-and-fixes-2026-10-15.md`。
+
+- P3 nonblocking：原始日志重复、`removed=true` 和区块不匹配变异可绕开先前只比较原始买卖总量的 `build()`。新模型明确按 `(blockHash,transactionHash,logIndex)` 去重，拒绝已移除、区块/原始错误日志，并新增对抗用例。只读 source SHA 与原始 P4-C 经济输出不变。
+- P3 nonblocking：旧 ADFF source 内 `precommit_sha:"dummyprecommit"` 保留为不可篡改历史原件，添加 `bsc-meme-address-model-v1-p4c-ADFF-precommit-immutable-correction-2026-10-15.json`，用实际预冻结 Git blob SHA 与旧原始文件双向关联。模型 `load()` 验证追加的固定更正来源。
+- P2 baseline-old：旧 `bsc_meme_top_traders_readonly.py` 的 MARSCOIN CA 不足 40 hex；已修正为冻结 19 CA 的 `0xfe189e97832da1573e4e4ff034f4ffc3a15c7777`，提高原测试断言，并在 BSC 全量 CI 增加 `python3 -B -m unittest discover -v -p 'test_bsc*.py'`，避免今后主模型通过而旧全目录 BSC 测试漏报。
+- 最新范围内，`292/292` 扩展 BSC 目录测试通过（对应 GitHub Actions 详见审核归档后的固定 SHA 运行）；原全部研究样本 `23×19=437`、真实已结算正向 2/负向 1、未按同级经济审计 434、P4-B 首次观察者可执行 U 未闭合。**继续 P4-C across-wallet batch → P4-B U → P5 1/5/15min，`NO_GO / NO_MERGE / NO_DEPLOY`**。
