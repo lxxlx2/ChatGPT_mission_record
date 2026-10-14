@@ -223,6 +223,14 @@
 
 **已确认阻塞（不许静默跳过）**：官方 owner RPC 在此前连接器输出被截断；目前还未取得完整原始 SPL/Token-2022 同次文件、真实完整 32 Mint 名录与 Token Account 明细，故 `A05-R1/R2 = NOT_ACCEPTED`，`F02-R1/R2/R3 = NOT_STARTED_OR_UNVERIFIED`。来源检查另见 `FRANK_A05_F02_CHAIN_OWNER_SOURCE_PREFLIGHT_20261014.md`。本路线不包含生产合并/部署许可。
 
+## 2026-10-14 A05-R1 完整原始 RPC 保存模块：代码检查点与实证限制
+
+- 从双独立外部代码审查通过的 #58 固定 SHA `063e8bada37534c13e801ea6f63e97d8f5586f4b` 建立**独立新子 [Draft PR #59](https://github.com/lxxlx2/ChatGPT_mission_record/pull/59)**；精确测试代码 HEAD **`9b6f7a90fe92ae6eea497d364ebc7f9bf109f042`**，未修改 PR #58。新增 `wallet_full_rpc_evidence.py` + 手动 CLI `frank_capture_owner_full_receipts.py`：在独立研究目录完整写入两次 RPC 原始响应字节及各自 SHA-256/长度/Program/Slot/UTC，然后可全离线、无网络、无副作用验证重放，仅双程序完整时才允许显式研究 Sidecar 导入。工具默认计划模式无网络/文件写；响应截断、空/错 JSON、错误 ID、一个 Program 无效时标 `PARTIAL_SOURCE` 而非空仓/全钱包。
+- RPC wire source 大小上限每条 12,000,000 bytes，Program ID 与 owner、`finalized`、request/response ID、`minContextSlot`、非原子 Slot 均受检查；原始数据写入 Git 仓库路径被禁止，RPC URL/密钥不落盘。人工完整源目前仍未成功采集；**本代码只解决“如何保存完整证据”的开发问题，未达到 A05-R1 实际业务验收**。
+- [精确 #59 模块 CI #38580093962](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38580093962) **SUCCESS: 73 focused, 1,602 full**，测试包含 >8KB 原始响应、不截断原文/校验原始 SHA、离线重放、partial/截断和非法来源拒绝、隔离 sidecar 幂等性；[固定输入联合 CI #38580093851](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38580093851) **SUCCESS: 99 focused, 1,654 full**，CI 真正合入当时 main `8afe6049` + #59 `9b6f7a90` + C02 `8898134a` + F01 `516e3335`，集成树确切 SHA **`fdc25bccfbd6319320a570fbda1f7d997fa7f02c`**，全部回归通过。早期 lint 失败的真实日志保留。
+- **新模块独立 Review 等待中**：在 [PR #59 评论](https://github.com/lxxlx2/ChatGPT_mission_record/pull/59#issuecomment-6170681886) 冻结 final HEAD 和专项审查清单；另一 AI 给出 `APPROVE` 才能将 A05-R1 **代码**门禁标通过。不要拿上一模块 #58 的 APPROVE 或 CI 绿灯复用成 #59 审查批准。
+- 后续仍按本文件“ A05→F02 主线强制验收顺序”执行：在可保存完整响应的通道做一次真实手动采集（目前连接器仍限制输出）→ 核对真实历史 32 Mint 名录 / 全 Token Account/非 ATA/关闭账户风险 → F02 只读接口和 Dashboard → Mac 实机只读验收 → 各模块独立/集成/最终全系统审核。**NO_MERGE / NO_DEPLOY，未触发用户 Mac 或生产来源采集**。
+
 ## 5. 里程碑 E：交付、独立 Review、真实机部署（逐关卡）
 
 - [ ] **E01 — 数据合同及技术方案审查**（P0，依赖 A01–A03）：另一 AI 独立审多人物身份、链数据、历史兼容、资金归因和冻结 Frank 策略影响；审查报告需 exact SHA、相反样本及真实可行性。需要修复则先修再复审。**验收**：没有 Critical/High，或明确 BLOCK。
