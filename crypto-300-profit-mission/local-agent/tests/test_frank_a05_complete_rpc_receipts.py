@@ -158,7 +158,6 @@ def test_replay_wrong_wallet_and_manifest_program_identity_fail_closed(tmp_path)
 
 def test_no_calls_when_cli_is_plan_only(tmp_path, capsys):
     from scripts.frank_capture_owner_full_receipts import main
-    from pathlib import Path
     out = tmp_path / "not-created"
     result = main(["--evidence-dir", str(out)])
     assert result == 0
