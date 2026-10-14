@@ -190,8 +190,9 @@ def build(d: list[dict]) -> dict:
                     "V3 liquidity or slot0 evidence missing")
             activeL=int(w["state_at_creation"][0]["data"],16)
             sqrt=read_word(w["state_at_creation"][1]["data"],0)
-            require(sqrt>0 and read_word(inits[0]["data"],0)==sqrt,
+            require(sqrt>0 and read_word(inits[0]["data"],0)>0,
                     "V3 not initialized at original creation")
+            # V3 slot0 at end of the block may differ after a same-block Swap.
             liquidity_minted=read_word(mint["data"],1)
             init_quote=read_word(mint["data"],2 if token0==USDT else 3)
             require(liquidity_minted>0, "V3 Mint not real")
