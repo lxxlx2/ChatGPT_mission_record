@@ -115,7 +115,8 @@ class Stage137Tests(unittest.TestCase):
         self.assertEqual(r["raw_usdm_venue_descriptive_only"]["source_censored"], 1)
         self.assertEqual(r["raw_usdm_venue_descriptive_only"].get("model_symbol_unsupported", 0), 0)
         self.assertEqual(r["raw_usdm_venue_descriptive_only"]["model_compatible_complete"], 2)
-        self.assertEqual(r["raw_usdm_venue_descriptive_only"]["new_listing_unscored"], 1)
+        self.assertEqual(r["raw_usdm_venue_descriptive_only"].get("new_listing_unscored", 0), 0)
+        self.assertEqual(r["raw_usdm_venue_descriptive_only"]["new_listing_cold_start_source_conditioned"], 1)
         self.assertFalse(any(x["G1_crypto_eligible"] for x in a.values()))
         self.assertEqual((r["G0"], r["G1"], r["G4"], r["G6"]),
                          ("PARTIAL", "NOT_SCORABLE", "UNKNOWN", "NO_GO"))
