@@ -142,3 +142,15 @@ done
 **下一主线：停止继续仅增加离线模块，优先实质获取用户明确授权的新真实全市场来源，确认PIT发行主体与首交易/合约乘数，以及窗口内上新和Unicode模型不可覆盖问题，按冻结G0-G3从真实源评估；如果G1证据失败，回到真实信号研究，不能伪称盈利。** 外部其他AI独立审查为NOT_DONE，待具备可审真实模型/源码和回测证据时交付独立审查，在此之前不得部署生产Mac或通知。
 
 `STAGE138_OFFLINE_INTEGRATION_CI_PASS_MACOS_UBUNTU`; `STAGE138_ACTUAL_FORWARD_SOURCE_NOT_DONE`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_OTHER_AI_REVIEW=NOT_DONE`; `G6_MONSTER_DEPLOYMENT=NO_GO`; `FRANK=UNCHANGED`; `GMAIL=OFF`; `STAGE99_MANUAL_ONLY`; `NO_NEW_SCHEDULE`.
+
+
+## Stage139 官方 PIT 合约范围与合约变更事件证据核验（2026-10-15）
+
+在 Stage138 完成全链路离线工程后，优先处理实际业务资格而不是继续优化旧31/519的行情阈值。核查 Binance 官方 USD-M 规范发现：exchangeInfo 的 underlyingType、onboardDate、TRADING、quoteAsset 等是观测时点**合约元数据**，不是可独立证明的发行主体或真实可成交首分钟；官方 !contractInfo 事件会在上市/结算/信息变更时发送，且 UM/CM 混合需按 st=1 (UM) 区分。Binance Vision daily publisher ZIP 次日可下载，不能事后冒充当时收到的交易所状态事件。官方网址和原始证据限制见 [Stage139 正式调查/工程证据](MONSTER_STAGE139_OFFICIAL_INSTRUMENT_AND_SAVED_CONTRACTINFO_PIT_SOURCE_CI_20261015.md)。
+
+- 先冻结 [Stage139 PIT 合约数据/时点协议](MONSTER_STAGE139_FROZEN_OFFICIAL_PIT_INSTRUMENT_AND_CONTRACTINFO_EVIDENCE_PROTOCOL_20261015.md)，commit 92a8444506c6ab48c909b2e775b51ae8cc14bce9，再提交 [Stage139 源码](../local-agent/scripts/monster_v4_stage139_official_t0_and_saved_contractinfo_evidence.py)，commit a41b9481f8d5d301b79c572a14ab9e941576cb52，及7项离线测试、Ubuntu/macOS CI。
+- 从Stage133真实原始 exchangeInfo SHA 还原全部T0 USDT永续尝试人口。COIN仅视为官方该分类但发行主体未独立核实，EQUITY等非COIN分类另记，缺字段UNKNOWN，不从symbol名字推断或删掉。可读入**已经保存**的真实WebSocket原始事件+接收时间及SHA，按实际接收时点**向未来取整至下一分钟**产生Stage134仍然未验证的新候选；T0既有活跃合约的变更、不同交易系统、非交易中事件都不得冒充新上市。未提供完整连续录制，不得凭单次事件声称全部七日上市人口闭合。Stage137/138尚不能完整评价新增币的原D0，继续保留UNSUPPORTED而非计入失败。
+- **真实测试证据**：首次 [Stage139 CI #38605468465](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38605468465) FAIL：合成测试同一合约同一事件时间人工写了互相矛盾的两种状态，程序正确拒绝。修复测试样本而非放宽校验，commit 1c50db381e0a3de716ee756d5919151fde9ecad8。修复后的 [Stage139 CI #38605546607](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38605546607) completed/success：Ubuntu job 115995347716、macOS job 115995347971均7/7 PASS，且默认无T0、不触发实际行情GET/WS/任务校验PASS；均为**人工生成的官方同格式来源测试**，不是当日真实行情采集或未来盈利回测。
+- **业务重大约束**：手动快照不能凭空重建中间七日实时的contractInfo状态变化，也不能证明真实提前发送邮件。未来真正G0/G1必须分别保存可核实的合约与发行主体资格、上市/停牌时点、完整官方分钟行情及真实时效；任何未来实时持续采集模式需与用户明示的“取消Stage99、禁止新定时任务”相容并独立授权，不可在研发期间擅自启动。继续推进真正公开源和可交易性证据，不再为凑Stage编号重复写离线包装。原Stage116首窗失败、Stage118/127拒绝、Stage132入场负收益完全不变。
+
+STAGE139_CI_MACOS_UBUNTU=PASS; REAL_STAGE133_NEW_T0=NOT_DONE; SAVED_GENUINE_CONTRACTINFO_EVENTS=NOT_DONE; G0=PARTIAL; G1=NOT_SCORABLE; G2_G3=NOT_PASSED; G4=UNKNOWN; G5_OTHER_AI_REVIEW=NOT_DONE; G6_MAC=NO_GO; GMAIL=OFF; FRANK=UNCHANGED; NO_NEW_SCHEDULE.
