@@ -17,13 +17,62 @@ def check(v,msg):
     if not v:raise ValueError(msg)
 def sha(raw):
     return hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
+PROVENANCE_FILE="bsc-meme-address-model-v1-p4c-ADFF-precommit-immutable-correction-2026-10-15.json"
+PROVENANCE_BLOB="a9af58c47b4ea32e662f695962b9f9957bc134b8"
+def verify_legacy_provenance(proof):
+    check(proof.get("schema")=="BSC_P4C_ADFF_IMMUTABLE_PROVENANCE_CORRECTION_V1"
+          and proof.get("historical_source_git_blob_sha")==PINS[1][1]
+          and proof.get("historical_placeholder")=="dummyprecommit"
+          and proof.get("actual_precommit_git_blob_sha")==PINS[0][1]
+          and proof.get("earlier_seven_wallet_precommit_git_blob_sha")==
+              "85a39f4c5c9723e98180a1c018b9dd94588fe3b6"
+          and proof.get("historical_data_rewritten") is False
+          and proof.get("economic_evidence_upgraded") is False
+          and proof.get("production")=="NO_GO",
+          "ADFF original source provenance append-only correction invalid")
 def load(root=ROOT):
     data=[]
     for name,blob in PINS:
         b=(root/name).read_bytes()
         check(sha(b)==blob,"source Git blob drift "+name)
         data.append(json.loads(b))
+    proof_raw=(root/PROVENANCE_FILE).read_bytes()
+    check(sha(proof_raw)==PROVENANCE_BLOB,"ADFF correction Git blob drift")
+    verify_legacy_provenance(json.loads(proof_raw))
+    check(data[1]["precommit_sha"]=="dummyprecommit",
+          "historical source was rewritten rather than corrected append-only")
     return data
+def validate_source_events(sources):
+    """Reject duplicated/reorg-removed/source-block-mismatched Ethereum log rows."""
+    seen=set()
+    for source in sources:
+        for row in source:
+            check(row.get("status")=="COMPLETE" and row.get("error") is None,
+                  "original bounded RPC row incomplete or has provider error")
+            block=row.get("block",row.get("b"))
+            check(isinstance(block,int) and block>0,"raw row lacks exact source block")
+            for event in row.get("logs",[]):
+                check(event.get("removed") is False,"removed/reorged log rejected")
+                block_hash=event.get("blockHash")
+                transaction_hash=event.get("transactionHash")
+                index=event.get("logIndex")
+                check(isinstance(block_hash,str) and len(block_hash)==66 and
+                      block_hash.startswith("0x") and
+                      isinstance(transaction_hash,str) and len(transaction_hash)==66 and
+                      transaction_hash.startswith("0x") and
+                      isinstance(index,str) and index.startswith("0x"),
+                      "source log missing identity")
+                try:
+                    correct_block=int(event["blockNumber"],16)==block
+                    idx=int(index,16)
+                except (ValueError,TypeError,KeyError):
+                    raise ValueError("source log malformed block or index")
+                check(correct_block and idx>=0,"source log block mismatch")
+                key=(block_hash.lower(),transaction_hash.lower(),idx)
+                check(key not in seen,"duplicate original event receipt log")
+                seen.add(key)
+    return len(seen)
+
 def decoded(log,kind):
     check(len(log["topics"])==3 and log["topics"][0]=="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef","incorrect ERC20 Transfer topic")
     return {"tx":log["transactionHash"],"raw":str(int(log["data"],16)),"from":"0x"+log["topics"][1][-40:],"to":"0x"+log["topics"][2][-40:]}
@@ -42,8 +91,8 @@ def build(d):
     allselected={tx[0] for r in pre["selected"] for tx in r["txs"]}
     check(len(allselected)==7 and len({(r["wallet"],r["round"]) for r in pre["selected"]})==3,
           "source original tx subset not exactly 7")
-    check(all(x["status"]=="COMPLETE" for raw in (dragon.get("res"),niulai2["rows"],niulaiA["rows"],dragon_wbnb["rows"],niulai_wbnb["rows"],niulai_q3b["rows"]) for x in raw),
-          "bounded source ethGetLogs incomplete")
+    validate_source_events((dragon["res"],niulai2["rows"],niulaiA["rows"],
+                            dragon_wbnb["rows"],niulai_wbnb["rows"],niulai_q3b["rows"]))
     check(all(len(r["logs"])==0 for r in niulai_wbnb["rows"]),
           "unexpected direct WBNB source in Niulai pool invalidates classification")
     rounds=[]
