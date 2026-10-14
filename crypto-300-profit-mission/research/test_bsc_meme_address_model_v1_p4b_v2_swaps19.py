@@ -44,7 +44,7 @@ class Swap19WitnessTests(unittest.TestCase):
 
     def test_removed_log_rejected(self):
         d=copy.deepcopy(self.docs)
-        row=next(x for x in d[2]["rows"] if x["logs"])
+        row=next(x for x in d[2]["rows"] if x.get("logs"))
         row["logs"][0]["removed"]=True
         with self.assertRaises(ValueError):build(d)
 
