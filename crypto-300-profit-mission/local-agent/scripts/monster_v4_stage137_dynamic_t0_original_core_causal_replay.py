@@ -207,6 +207,132 @@ def replay_original_d0_d1(symbol, start, end, bars, contract):
     }
 
 
+def full_arrival_minutes(archive_root, symbol, observed_ms, end):
+    """Strict source-since-first-observation, never synthesize prelisting bars."""
+    bars = []
+    receipts = []
+    for day in stage135.required_days(observed_ms, end):
+        source, receipt = stage135.locally_verified_day(archive_root, symbol, day)
+        if source is None:
+            raise ValueError("STAGE142_SOURCE_CHANGED_TO_MISSING")
+        bars.extend(x for x in source if observed_ms <= x[0] < end)
+        receipts.append(receipt)
+    if (len(bars) != (end - observed_ms) // MIN or
+            any(b[0] != observed_ms + n * MIN for n, b in enumerate(bars))):
+        raise ValueError("STAGE142_CONTIGUOUS_COLD_START_SOURCE_REQUIRED")
+    return bars, receipts
+
+
+def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract):
+    """Use frozen original D0 queue/D1 with NO invented 24h or 61m warmup.
+
+    This is source-conditioned retrospective replay, not a live listing proof.
+    """
+    if len(bars) != (end - first_observed_ms) // MIN or not bars:
+        raise ValueError("STAGE142_INCOMPLETE_NEW_LISTING_1M")
+    if any(b[0] != first_observed_ms + n*MIN for n, b in enumerate(bars)):
+        raise ValueError("STAGE142_NEW_LISTING_1M_NONCONTIGUOUS")
+    internal = original_d0_internal_symbol(symbol)
+    prefix = [Decimal(0)]
+    for b in bars:
+        prefix.append(prefix[-1] + b[5])
+    # The first unaligned listing minute never creates a synthetic 5m bar.
+    aligned = (5*MIN - first_observed_ms % (5*MIN)) % (5*MIN)
+    full_groups = (len(bars) - aligned) // 5
+    candles = (replay.make_closed_five_minute_bars(
+        bars[aligned:aligned + full_groups * 5]) if full_groups > 0 else [])
+    candle_ends = [int(c[6]) for c in candles]
+    first_tick = ((first_observed_ms + 2*MIN + TICK - 1)//TICK)*TICK
+    ticks = range(first_tick, end, TICK)
+    first_d0 = None
+    first_d1 = None
+    d1_path = None
+    state = None
+    with tempfile.TemporaryDirectory(prefix="monster142_cold_start_") as directory:
+        db = v4.production.open_store(Path(directory) / "isolated_original_d0.sqlite")
+        try:
+            def closed_candles(venue, queued_symbol, at_ms):
+                if venue != "futures" or queued_symbol != internal:
+                    raise ValueError("STAGE142_ORIGINAL_D0_ALIAS_CALLBACK_MISMATCH")
+                i = bisect.bisect_left(candle_ends, at_ms)
+                return candles[max(0, i-8):i]
+            for t in ticks:
+                idx = (t-first_observed_ms)//MIN-1
+                if idx < 0 or idx >= len(bars) or bars[idx][0]+MIN > t:
+                    raise ValueError("STAGE142_FIRST_WATCH_LOOKAHEAD")
+                # A newly observed symbol has NO guessed prelisting quote value.
+                quote = prefix[idx+1]-prefix[max(0, idx+1-WARMUP)]
+                v4.production.observe_snapshot(db,"futures",t,[{
+                    "symbol":internal, "lastPrice":str(bars[idx][4]),
+                    "quoteVolume":str(quote)}])
+                v4.production.process_queue(db,t,closed_candles)
+                if first_d0 is None:
+                    observed = db.execute(
+                        "SELECT MIN(observed_ms) FROM events "
+                        "WHERE event_type='WATCH_EARLY'").fetchone()[0]
+                    if observed is not None:
+                        if observed != t:
+                            raise ValueError("STAGE142_NONCAUSAL_FIRST_WATCH")
+                        first_d0 = observed
+                if first_d0 is not None and first_d1 is None and (
+                        t - first_d0 <= contract["from_first_d0_expiration_hours"]*3_600_000):
+                    n = (t-first_observed_ms)//MIN
+                    features = (d1.from_archived_closed_bars(bars[n-61:n],t)
+                                if n >= 61 else None)
+                    state, response = d1.evaluate(
+                        state,venue="BINANCE_USDM",symbol=symbol,
+                        at_utc=stage133.iso(t),features=features,
+                        is_first_d0=t==first_d0,contract=contract)
+                    if t == first_d0 and features is None:
+                        # The original D0 WATCH closed price was observable now.
+                        # Record it without inventing missing 61m D1 features.
+                        from dataclasses import replace
+                        state = replace(state,first_price=bars[idx][4])
+                    if response in ("DIRECT_AT_FIRST_D0","REIGNITION_AFTER_D0"):
+                        first_d1,d1_path=t,response
+            watches = db.execute(
+                "SELECT COUNT(*) FROM events WHERE event_type='WATCH_EARLY'").fetchone()[0]
+        finally:
+            db.close()
+    crossing = {}
+    labels = {}
+    for m in (2,5,10):
+        threshold = bars[0][1]*Decimal(m)
+        cross = next((b[0] for b in bars if b[2] >= threshold),None)
+        crossing[m] = cross
+        labels[f"first_GT{m}x_HIGH_UTC_EVALUATION_ONLY"] = (
+            stage133.iso(cross) if cross is not None else None)
+        labels[f"D0_first_strict_pre_GT{m}x"] = bool(
+            cross is not None and first_d0 is not None and first_d0 < cross)
+        labels[f"D0_first_pre_GT{m}x_5m"] = bool(
+            cross is not None and first_d0 is not None and first_d0+5*MIN <= cross)
+        labels[f"D1_first_pre_GT{m}x_5m"] = bool(
+            cross is not None and first_d1 is not None and first_d1+5*MIN <= cross)
+    if first_d0 is not None and first_d0 < first_tick:
+        raise ValueError("STAGE142_SIGNAL_BEFORE_FIRST_CLOSED_OBSERVATION")
+    if first_d1 is not None and first_d1 < first_observed_ms+61*MIN:
+        raise ValueError("STAGE142_D1_USED_MISSING_61M_HISTORY")
+    return {
+        "replay_status":"ORIGINAL_CORE_NEW_LISTING_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE",
+        "original_exact_venue_symbol":symbol,
+        "isolated_original_D0_SQLite_symbol":internal,
+        "source_core_unicode_adapter_used":internal!=symbol,
+        "new_listing_source_claim_first_1m_utc":stage133.iso(first_observed_ms),
+        "first_listing_time_independently_attested":False,
+        "new_listing_initial_24h_quote_history_available":False,
+        "full_61m_D1_history_at_first_observation":False,
+        "original_core_three_minute_ticks":len(ticks),
+        "first_tick_utc":stage133.iso(first_tick) if len(ticks) else None,
+        "original_WATCH_EARLY_event_count_not_independent_2x":watches,
+        "D0_first_UTC":stage133.iso(first_d0) if first_d0 else None,
+        "D1_first_UTC":stage133.iso(first_d1) if first_d1 else None,
+        "D1_entry_path":d1_path,
+        "gross_future_labels_not_real_profit":labels,
+        "raw_venue_source_complete_but_issuer_unverified":True,
+        "source_conditioned_not_independent_G1":True,
+    }
+
+
 def run(t0_packet, archive_root, arrivals=None):
     # Stage135 recomputes Stage133/134 identities and all original source days.
     census = stage135.audit(t0_packet, archive_root, arrivals)
@@ -235,8 +361,19 @@ def run(t0_packet, archive_root, arrivals=None):
             row["replay_status"] = "SOURCE_CENSORED_NO_REPLAY"
             totals["source_censored"] += 1
         elif lane != "PREEXISTING_AT_WINDOW_START":
-            row["replay_status"] = "NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED"
-            totals["new_listing_unscored"] += 1
+            first_ms = stage131.stamp(source["required_source_from_utc"])
+            bars, receipts = full_arrival_minutes(
+                archive_root,symbol,first_ms,end)
+            row.update(replay_new_arrival_cold_start(
+                symbol,first_ms,end,bars,contract))
+            row["original_archive_receipts_count"] = len(receipts)
+            totals["new_listing_cold_start_source_conditioned"] += 1
+            if row["D0_first_UTC"] is not None:
+                totals["new_listing_cold_start_first_D0"] += 1
+            if row["D1_first_UTC"] is not None:
+                totals["new_listing_cold_start_first_D1"] += 1
+            # Keep these PIT-unverified cases out of original G1/G2/G3
+            # preexisting cohort descriptive denominators.
         else:
             bars, receipts = full_window_minutes(archive_root, symbol, start, end)
             row.update(replay_original_d0_d1(symbol, start, end, bars, contract))
