@@ -181,3 +181,13 @@ STAGE139_CI_MACOS_UBUNTU=PASS; REAL_STAGE133_NEW_T0=NOT_DONE; SAVED_GENUINE_CONT
 - **后续P1主线（不能由于缺少7日未来行情而停工）**：优先处理实时上市币冷启动、原始来源新鲜度/真实盘口是否具备可成交性；从已有 Stage140 真实 24h/BBO/mark 交叉对账处理而非堆新Stage空报告。继续验证出错高风险的原始D0/D1时序，不许在旧曝光31/519样本上反向调参。按原用户已约定手动请求，最早曼谷10/24 01:00之后可另行授权新前瞻窗口已成熟的Stage136完整历史归档；不能为了自己方便恢复Stage99或制造实时7日合约事件，未经独立审核与实测不得生产部署。
 
 Stage141原V4数字核心Unicode工程覆盖已经完成，但 G0=PARTIAL、G1=NOT_SCORABLE、G2_G3=NOT_PASSED、G4=UNKNOWN、G5_OTHER_AI_REVIEW=NOT_DONE、G6_MONSTER_DEPLOY=NO_GO、FRANK=UNCHANGED、GMAIL=OFF、NO_NEW_SCHEDULE，原Stage116首窗失败、Stage118/127拒绝、Stage132负代理不变。
+
+## Stage142 新上市币冷启动D0/D1回放及独立AI提示词交付（2026-10-15）
+
+用户明确要求其他AI Review必须在需要时直接给出可复制的提示词；已先写入 [Monster长期开发规则](MONSTER_MODULE_DEVELOPMENT_RULES.md)，commit 7fbb274cd95c65860f87e28c23c7e16ccd28a7cb。这是硬性流程：审核版本SHA、比较基线、真实source/CI、独立审核P0/P1/P2和审核结论格式必须写完整；仅发审核请求不等于 G5 审核完成。
+
+真正的模型主线 Stage142 已提交：[事先冻结的冷启动目标](MONSTER_STAGE142_FROZEN_LISTING_COLD_START_20261015.md)、[原Stage137新上市1m冷启动回放](../local-agent/scripts/monster_v4_stage137_dynamic_t0_original_core_causal_replay.py)和[Stage138原完整市场统计](../local-agent/scripts/monster_v4_stage138_manual_evidence_scorecard.py)。新币从声称首次观察分钟开始，使用冻结原 V4 D0 3m绝对UTC、真实闭合1m、累加自实际观察起的24h quote、连续六根自然UTC闭合5m，D1必须有真实连续61根才正常估算。禁止伪造上市前24h成交历史、误用未来1m或者把首次历史K线当真实首次可交易时点。原冻结D0/D1数值策略、Stage116首窗失败、Stage118/127拒绝、Stage132负收益均不改变。Stage138将新上市的事后Gross×2、D0/D1计数单列cold_start分类，不混入已经存在合约的原G1样本。
+
+正式代码审查pin：ff711ebef8367635871004f27a98838f7aa8c4f3。真实GitHub Actions [Stage137 #38615294004](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38615294004) macOS/Ubuntu均13/13 PASS；[Stage138 #38615294086](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38615294086) macOS/Ubuntu均20/20 PASS，均为合成K线的原始D0/D1隔离工程验收，不能认定真实G1过线。外部AI的[完整可复制审核提示词](MONSTER_STAGE142_INDEPENDENT_OTHER_AI_REVIEW_PROMPT_PINNED_FF711_20261015.md)已直接按新硬规生成并存Git，[正式Stage142报告](MONSTER_STAGE142_COLD_START_D0_D1_MODEL_TWO_OS_CI_AND_REVIEW_HANDOFF_20261015.md)记录了失败测试、修复、真实市场边界和下阶段。外部审查方还没有返回审查意见，G5 NOT_DONE，严禁擅自认定APPROVE。
+
+后续P1聚焦已有 Stage140 真实全市场 BBO/24h ticker/mark 的报价新鲜度、流动性和可成交净收益限制，以及收到其他AI审核后真实缺陷修复。无后台定时任务、不修改Frank、不发Gmail、不下单、PR仍Draft。G0 PARTIAL; G1 NOT_SCORABLE; G2_G3 NOT_PASSED; G4 UNKNOWN; G5 NOT_DONE; G6 NO_GO。
