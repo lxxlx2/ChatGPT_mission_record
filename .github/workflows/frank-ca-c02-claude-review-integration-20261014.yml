@@ -1,0 +1,41 @@
+name: Frank CA C02 Claude-review R-a R-b safe integration
+on:
+  push:
+    branches:
+      - fix/frank-ca-c02-identity-preview-casefold-review-20261014
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  identity-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
+      - name: Exact C02 review fixes and saved-official render
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_ca_c02_claude_review_regression.py tests/test_ca_identity_c02.py tests/test_ca_market_c02_red.py
+          node tests/ca_identity_render.cjs
+          node --check mission_agent/mission_control/static/app.js
+          python -m pyflakes mission_agent/meme/identity.py mission_agent/meme/market.py mission_agent/meme/cluster.py mission_agent/mission_control/server.py tests/test_frank_ca_c02_claude_review_regression.py
+          python -m compileall -q mission_agent
+      - name: Whole local-agent real Git replay
+        working-directory: crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests

@@ -98,7 +98,12 @@ def read_metadata(mint,rpc,mint_result):
         attempts.append(attempt)
     except Exception as exc:
         blocking=True;attempts.append({'source':'METAPLEX_METADATA','account':address,'status':'UNCONFIRMED','reason':str(exc) if isinstance(exc,ValueError) else type(exc).__name__})
-    signatures={(r['name'],r['symbol'],r['update_authority']) for r in records}
+    # Compare capitalization consistently for both on-chain record sources
+    # and for later on-chain vs market reconciliation. Authority differences
+    # remain significant; raw records retain their original exact labels.
+    signatures={((_label(r['name']) or '').lower(),
+                 (_label(r['symbol']) or '').lower(),
+                 r['update_authority']) for r in records}
     status='TOKEN_IDENTITY_CONFLICT' if len(signatures)>1 else ('VERIFIED' if records and not blocking else 'UNCONFIRMED')
     observed_at=time.time()
     for attempt in attempts:
@@ -116,12 +121,17 @@ def reconcile_identity(mint,profile,market):
     markets=(market.get('identity_records') or []) if market_bound else []
     markets=[r for r in markets if r.get('mint')==mint]
     records=chain+markets
-    labels={(_label(r.get('name')),_label(r.get('symbol'))) for r in records}
+    # Chain identity stays anchored to the exact mint. Compare source labels
+    # using the same case-insensitive non-expanding lower() rule as the visible name/symbol dedupe:
+    # capitalization alone is not evidence of a different token identity.
+    # Preserve the raw source labels unchanged in "sources" for audit.
+    labels={((_label(r.get('name')) or '').lower(),
+             (_label(r.get('symbol')) or '').lower()) for r in records}
     conflict=metadata.get('status')=='TOKEN_IDENTITY_CONFLICT' or len(labels)>1
     verified=bool(chain) and anchored and metadata.get('status')=='VERIFIED'
     selected=chain[0] if verified and not conflict else None
     name=selected.get('name') if selected else None;symbol=selected.get('symbol') if selected else None
-    display=' / '.join(x for i,x in enumerate((name,symbol)) if x and (i==0 or not name or x.casefold()!=name.casefold()))
+    display=' / '.join(x for i,x in enumerate((name,symbol)) if x and (i==0 or not name or x.lower()!=name.lower()))
     return {'mint':mint,'identity_status':'VERIFIED' if verified else 'UNCONFIRMED',
             'market_match_status':market.get('market_match_status','UNCONFIRMED') if market.get('mint')==mint else 'UNCONFIRMED',
             'conflict_status':'TOKEN_IDENTITY_CONFLICT' if conflict else ('NO_CONFLICT_OBSERVED' if verified and markets else 'UNCONFIRMED'),

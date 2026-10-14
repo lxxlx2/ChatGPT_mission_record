@@ -19,6 +19,7 @@ from urllib.parse import parse_qs, urlparse
 
 from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
 from ..meme.market import DexScreenerMarketClient
+from ..meme.identity import decode_key
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
@@ -199,6 +200,10 @@ class ClusterJobManager:
         value = (mint or "").strip()
         if not SOLANA_PUBKEY_RE.fullmatch(value):
             raise ValueError("INVALID_SOLANA_CA")
+        try:
+            decode_key(value)
+        except (ValueError, OverflowError) as exc:
+            raise ValueError("INVALID_SOLANA_CA") from exc
         return value
 
     def _public_job(self, job: dict) -> dict:
@@ -286,6 +291,9 @@ class ClusterJobManager:
         with self.lock:
             job=self.jobs.get(job_id)
             if job is not None and job.get("status") in {"QUEUED","RUNNING"}:
+                # Always display the job's exact submitted mint, not a
+                # third-party name/symbol or metadata-derived replacement.
+                progress["mint"]=job["mint"]
                 job["progress"]=progress
                 if stage=="BASE_READY":
                     profile=details.get("token_profile") or {}
@@ -293,6 +301,7 @@ class ClusterJobManager:
                     pair=market.get("main_pair") or {}
                     job["preview"]={
                         "stage":"BASE_READY", "observed_at":time.time(),
+                        "mint":job["mint"],
                         "token_identity":details.get("token_identity") or {},
                         "name":(details.get("token_identity") or {}).get("display_name"), "symbol":(details.get("token_identity") or {}).get("display_symbol"),
                         "market_status":market.get("status"),
