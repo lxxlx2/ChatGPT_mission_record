@@ -234,3 +234,10 @@ Source examples: PR #47 review+code and external Claude transcript provided in t
 - 原 [F02-R2 PR #64](https://github.com/lxxlx2/ChatGPT_mission_record/pull/64) 精确 `13a2594e222f8425239f39b71170d35aadb4d47c` **外部独立 `REQUEST_CHANGES`**，用户转述两次实际浏览器 TTL 跨越 P2：网页初始化观察年龄 1s / TTL 5s，API 后续已经 `STALE_ARCHIVED_SOURCE`、32 null，但页面仍显示旧正余额和已过时效的状态/年龄，至手工 reload 才遮罩；原 1633/1685 全量旧 SHA 成功不足以关闭此 P2。[外部复现归档](https://github.com/lxxlx2/ChatGPT_mission_record/pull/64#issuecomment-6179344723)。原审核另有逐账户明细 P3、旧完全相同 UTC P3：均不阻塞最小 TTL 修复。
 - 仅限 F02-R2 浏览器页面子分支 `fix/frank-f02-r2-ttl-live-expiry-20261015` 修复：用 API 加载时年龄/TTL 加本地经过时间建立一次性失效门禁，到期无 RPC 自动采集而遮罩数量/账户数/非零零余额统计并改状态文案/年龄；后台标签页恢复和搜索筛选须重新验证。新 fixed-SHA CI 全量与外部独立 **真实浏览器**复审是硬门槛；仅 Node 虚拟时钟不等于真实浏览器验证。
 - Release status `NO_MERGE / NO_DEPLOY / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION`。原 F02-R1 Mac 已在隔离 SQLite 导入完成且 7397 秒过期遮罩验收通过，无须再导入。
+
+
+## 2026-10-15 F02-R2 P2 子 PR #65 代码回归绿灯、真实浏览器独立复审待完成
+
+- [原 #64](https://github.com/lxxlx2/ChatGPT_mission_record/pull/64) SHA `13a2594e222f8425239f39b71170d35aadb4d47c` 外部独立审查 `REQUEST_CHANGES`，两次浏览器实际跨 TTL 仍显示旧正余额、旧 "fresh" 和旧 1 秒年龄；不否认前次主线测试 1633/1685 通过，但其不覆盖页面时间推移。
+- [新 Draft #65](https://github.com/lxxlx2/ChatGPT_mission_record/pull/65) exact SHA `a59e423304cb2081aef359c0649245c7e1d05b48`，只补页面单次 TTL 失效计时、壁钟+单调钟保守遮罩、focus/visibility 与交互重新检查；不触及 API、生产或 RPC 定时器。测试包括虚拟 5 秒计时且不调用额外 API、后台标签恢复后不复活，**不等同真实浏览器**。 [固定 CI #38643786913](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38643786913) module 78/1633，联合 112/1685，SUCCESS；联合暂存树 `1a749b9c51acc38949a52ed4c13ee1cb2b384de8`。
+- 其他 AI 必须实际再运行原低 TTL **真实浏览器**步骤、核对缓存本页与同源 API 在过期后均不显示旧余额，给出固定 SHA 的 `APPROVE` 或 `REQUEST_CHANGES`；[完整可复制审查提示词](https://github.com/lxxlx2/ChatGPT_mission_record/pull/65#issuecomment-6179385376)。**按新的 Frank 规则：开发回报必须直接附提示词而不是只提供本链接**。子 PR 目前 `CI_PASS / EXTERNAL_REVIEW_PENDING / MAC_BROWSER_PENDING / PROD_NO_GO`。
