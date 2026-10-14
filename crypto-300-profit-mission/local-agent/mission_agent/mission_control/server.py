@@ -19,6 +19,7 @@ from urllib.parse import parse_qs, urlparse
 
 from ..meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown
 from ..meme.market import DexScreenerMarketClient
+from ..meme.identity import decode_key
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
 from .frank import FrankReader
@@ -199,6 +200,10 @@ class ClusterJobManager:
         value = (mint or "").strip()
         if not SOLANA_PUBKEY_RE.fullmatch(value):
             raise ValueError("INVALID_SOLANA_CA")
+        try:
+            decode_key(value)
+        except (ValueError, OverflowError) as exc:
+            raise ValueError("INVALID_SOLANA_CA") from exc
         return value
 
     def _public_job(self, job: dict) -> dict:
