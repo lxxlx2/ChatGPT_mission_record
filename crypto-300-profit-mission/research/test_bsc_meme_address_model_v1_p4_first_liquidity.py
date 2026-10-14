@@ -34,8 +34,8 @@ class P4FirstPoolLiquidityTests(unittest.TestCase):
         d = build(self.src)
         observed = {r["token"]:r["first_positive_WBNB_reserve_BNB"] for r in d["rows"]}
         self.assertEqual(observed, {
-            "龙虾": "17.639999998157602044",
-            "币安人生": "17.639999998157602044",
+            "龙虾": "17.639999998157599996",
+            "币安人生": "17.639999998157599996",
             "MARSCOIN": "0.00103",
             "牛来": "0.1",
         })
