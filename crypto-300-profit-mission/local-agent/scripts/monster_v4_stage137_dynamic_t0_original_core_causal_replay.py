@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import bisect
+import hashlib
 from collections import Counter
 from decimal import Decimal
 import json
@@ -18,6 +19,7 @@ import tempfile
 import monster_v4_historical_replay as replay
 import monster_v4_stage38_usdm_original_v4_1m_pilot as v4
 import monster_v4_stage80_dual_entry_core as d1
+import monster_v4_stage105_capture_universe_core as stage105
 import monster_v4_stage131_dynamic_listing_g1_population_bridge as stage131
 import monster_v4_stage133_manual_actual_t0_forward_proof as stage133
 import monster_v4_stage135_full_market_publisher_minute_coverage as stage135
@@ -78,8 +80,7 @@ def replay_original_d0_d1(symbol, start, end, bars, contract):
 
     Isolated temporary SQLite per instrument. Never use production SQLite.
     """
-    if not symbol.isascii():
-        raise ValueError("STAGE137_ORIGINAL_D0_CORE_ASCII_ONLY")
+    internal_d0_symbol = original_d0_internal_symbol(symbol)
     if len(bars) != BARS:
         raise ValueError("STAGE137_FULL_SOURCE_REQUIRED_FOR_D0")
     prefix = [Decimal(0)]
@@ -98,6 +99,8 @@ def replay_original_d0_d1(symbol, start, end, bars, contract):
         db = v4.production.open_store(Path(folder) / "isolated_d0_only.sqlite")
         try:
             def last_closed_five(_venue, _symbol, at_ms):
+                if _venue != "futures" or _symbol != internal_d0_symbol:
+                    raise ValueError("STAGE141_UNMAPPED_D0_QUEUE_IDENTITY")
                 k = bisect.bisect_left(candle_ends, at_ms)
                 return candles[max(0, k - 8):k]
             for t in ticks:
@@ -108,7 +111,7 @@ def replay_original_d0_d1(symbol, start, end, bars, contract):
                 # minute; user-supplied 1m publisher rows are not a 24h ticker.
                 quote = prefix[idx + 1] - prefix[idx + 1 - WARMUP]
                 v4.production.observe_snapshot(db, "futures", t, [{
-                    "symbol": symbol,
+                    "symbol": internal_d0_symbol,
                     "lastPrice": str(bars[idx][4]),
                     "quoteVolume": str(quote)}])
                 v4.production.process_queue(db, t, last_closed_five)
@@ -173,6 +176,7 @@ def run(t0_packet, archive_root, arrivals=None):
     start = stage131.stamp(census["new_forward_start_utc"])
     end = stage131.stamp(census["new_forward_end_exclusive_utc"])
     contract = original_core_contract()
+    assert_original_population_aliases(census["per_symbol_source_audit"])
     out = []
     totals = Counter()
     d1_daily = Counter()
@@ -196,9 +200,6 @@ def run(t0_packet, archive_root, arrivals=None):
         elif lane != "PREEXISTING_AT_WINDOW_START":
             row["replay_status"] = "NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED"
             totals["new_listing_unscored"] += 1
-        elif not symbol.isascii():
-            row["replay_status"] = "MODEL_SYMBOL_UNSUPPORTED_NOT_A_NO_WATCH"
-            totals["model_symbol_unsupported"] += 1
         else:
             bars, receipts = full_window_minutes(archive_root, symbol, start, end)
             row.update(replay_original_d0_d1(symbol, start, end, bars, contract))
