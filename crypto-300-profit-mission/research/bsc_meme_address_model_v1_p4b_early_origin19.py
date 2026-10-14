@@ -54,7 +54,7 @@ def build(docs):
             and tpre["source_crossvenue_git_blob_sha"]==PINS[0][1]
             and tpre["order"]=="asc" and tpre["maxCount_hex"]=="0xa"
             and tpre["excludeZeroValue"] is False
-            and all(z["production"]=="NO_GO" for z in docs),
+            and all(z.get("production",z.get("summary",{}).get("production"))=="NO_GO" for z in docs),
             "original 19-token market and source controls not frozen")
     hs,ts=[],[]
     for j,(h,t) in enumerate(zip(hparts,tparts)):
