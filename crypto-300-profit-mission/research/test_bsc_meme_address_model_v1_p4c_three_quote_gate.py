@@ -56,5 +56,51 @@ class ThreeFixedSourceQuoteClosureTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build(d)
 
+    def test_duplicate_original_events_rejected_even_if_inventory_balances(self):
+        d=copy.deepcopy(self.source)
+        for row in d[1]["res"]:
+            row["logs"] *= 2
+        with self.assertRaisesRegex(ValueError,"duplicate"):
+            build(d)
+
+    def test_removed_reorged_event_rejected(self):
+        d=copy.deepcopy(self.source)
+        d[1]["res"][0]["logs"][0]["removed"]=True
+        with self.assertRaisesRegex(ValueError,"removed"):
+            build(d)
+
+    def test_mismatched_eth_log_block_rejected(self):
+        d=copy.deepcopy(self.source)
+        d[1]["res"][0]["logs"][0]["blockNumber"]="0x1"
+        with self.assertRaisesRegex(ValueError,"block mismatch"):
+            build(d)
+
+    def test_rpc_row_error_not_masked_by_status(self):
+        d=copy.deepcopy(self.source)
+        d[1]["res"][0]["error"]={"code":-32000,"message":"provider failure"}
+        with self.assertRaisesRegex(ValueError,"provider error"):
+            build(d)
+
+    def test_duplicate_quote_event_rejected(self):
+        d=copy.deepcopy(self.source)
+        d[6]["rows"][1]["logs"] *= 2
+        with self.assertRaisesRegex(ValueError,"duplicate"):
+            build(d)
+
+    def test_provenance_correction_is_append_only_pinned(self):
+        from bsc_meme_address_model_v1_p4c_three_quote_gate import (
+            PROVENANCE_BLOB, PROVENANCE_FILE, PINS, sha, verify_legacy_provenance
+        )
+        b=(ROOT/PROVENANCE_FILE).read_bytes()
+        self.assertEqual(sha(b),PROVENANCE_BLOB)
+        proof=json.loads(b)
+        verify_legacy_provenance(proof)
+        self.assertEqual(proof["historical_source_git_blob_sha"],PINS[1][1])
+        self.assertEqual(proof["actual_precommit_git_blob_sha"],PINS[0][1])
+        mutated=copy.deepcopy(proof)
+        mutated["actual_precommit_git_blob_sha"]="0"*40
+        with self.assertRaisesRegex(ValueError,"provenance"):
+            verify_legacy_provenance(mutated)
+
 if __name__=="__main__":
     unittest.main()
