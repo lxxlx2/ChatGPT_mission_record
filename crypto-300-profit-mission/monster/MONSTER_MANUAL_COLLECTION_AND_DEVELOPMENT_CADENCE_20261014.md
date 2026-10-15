@@ -339,3 +339,14 @@ Stage143工程=PASS_MACOS_UBUNTU_66_OF_66; MODEL_G0=PARTIAL; G1=NOT_SCORABLE; G2
 详见 [Stage152真实结果与P1修复报告](MONSTER_STAGE152_CLAUDE_P1_FIX_REAL305_SOURCE_PIN_CI_RESULTS_20261015.md)、[完整源绑定机器摘要](evidence/monster_stage152_original305_integrity_and_economics_summary.json)、[独立Claude/Codex最新SHA复审提示词](MONSTER_STAGE152_INDEPENDENT_OTHER_AI_REREVIEW_PROMPT_PINNED_F12D663_20261015.md)。**新SHA的独立AI真实复审回复=待办；原旧SHA Claude REQUEST_CHANGES保留，不擅自称新SHA APPROVE**。目前只修复用户指出的真实P1与直接关联P2，不会以单月收益正均值、历史最优流动性桶或分钟OPEN代理宣称交易可行或全模型成功。
 
 长期主线继续：全市场D0早发现、原D1和所有遗漏及无WATCH候选的完整分母，已经曝光旧305不得用于后验调参；继续能自主实施的研发，不等2026-10-24。前瞻publisher窗口成熟后仅用户明确聊天手动触发，不自动采集。G0 PARTIAL / G1 NOT_SCORABLE / G2_G3 NOT_PASSED / G4 UNKNOWN / G5_FULL_RELEASE NOT_PASSED / G6 NO_GO；NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE，Frank原样，Stage99保持停止，无新schedule。
+
+
+## Stage152 Codex P2：6h/24h汇总结果覆盖的精确修复
+
+2026-10-15，用户提供独立Codex对 `f12d6635c6f8a5e2ba8fbb2feeca29688583245b` 固定源码的实际复审：原3个P1在历史模型范围内关闭，Codex独立下载Binance官方1,220份日ZIP+CHECKSUM、SHA验证1220/1220、全305逐币计算0差异；新唯一P2是 `groups()` 内循环使**6h quote成交额分层与额外延迟敏感性被24h同名字段覆盖**。此发现没有推翻305原始输入、D0/D1或24h结果，仍禁止称可执行净利润VERIFIED。
+
+先Git冻结 [P2唯一修复协议](MONSTER_STAGE152_P2_HORIZON_SENSITIVITY_OUTPUT_FIX_PROTOCOL_20261015.md)，冻结commit `2af4b2fa6e8c11b3eba54a95d7ebdea47b832db8`，才进行**两处最小源码/测试变更**：仅 `monster_v4_stage151_aggregate_post_d1_research.py` 的两个统计对象在原 `h=360/1440` 循环内改以`["360"]`、`["1440"]`分别存放；且 `test_monster_v4_stage152_external_review_regressions.py` 新增2个能区分不同时间持有期限、成交额和收益、无成交的单元测试；不改变核心、手续费、阈值、正式D0/D1、工作流或Frank。
+
+**已确认新固定代码SHA `71a041405352c9e2210d93dff9c2685149809e52`**，[GitHub真实CI #38734029751](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38734029751) `27/27 Jobs SUCCESS`，Ubuntu/macOS各`20/20 unittest PASS`、真实官方历史publisher锁定`24/24 shard`及305汇总Git回写PASS。原305分类184/113/8不变，历史24h分层0/10k/100k门槛184/124/39不变，**真实6h独立分层184/133/54现已恢复**，6h延迟1m/3m历史中位-1.684256%/-1.720261%、24h中位-1.870766%/-2.010169%。新摘要Git blob `518e7aa0d8db83fd1b818513ae7e72b165252806`。与旧摘要做overall+6日期+2路径共**9分组**精确交叉比对，旧24h分层、延迟与其他全部字段不变，仅新增6h分层；用户那轮review中关于最大赢家占92.18%的说法，严谨分母是**所有184事件正负抵消后的收益率求和**而非所有正收益的求和，后者占比约36.13%，两种比例都不是实际账户PNL。
+
+完整 [P2修复CI报告与其他AI复审提示词](MONSTER_STAGE152_CODEX_P2_SIX_HOUR_OUTPUT_FIX_REAL305_CI_AND_REREVIEW_20261015.md)。新SHA Codex/Claude实际代码复审**未收到**；必须等其他AI review证据才可写本次P2真正获批，CI PASS不是模型盈利验收。后续回归仍按完整功能开发节奏进行，不准因为单一报表P2回到无止境边界修补。保持 `NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`、`G0=PARTIAL`、`G1=NOT_SCORABLE`、`G2_G3=NOT_PASSED`、`G4=UNKNOWN`、`G5_RELEASE=NOT_PASSED`、`G6=NO_GO`，Frank不变，Stage99停止，无新调度。
