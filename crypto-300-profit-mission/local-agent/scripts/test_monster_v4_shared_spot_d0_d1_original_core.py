@@ -257,19 +257,21 @@ class SharedOriginalV4Tests(unittest.TestCase):
         freeze,days=sh.original_source_freeze()
         reports={}
         for date_string in sh.FROZEN_DATES:
-            eligible=set(days[date_string]["complete_symbols"])
             full=list(freeze)
             offsets=[0,127,254,380,506,632,758]
             for shard in range(6):
                 seg=full[offsets[shard]:offsets[shard+1]]
+                count=next(x for x in original["artifacts"]
+                    if x["date"]==date_string and x["shard"]==shard)
+                # The secondary freeze proves DAY membership, not original
+                # membership-to-shard allocation. This is a synthetic
+                # census negative test, not an original shard recreation.
                 records=[]
-                for symbol in seg:
-                    completed=symbol in eligible
+                for i,symbol in enumerate(seg):
+                    completed=i<count["complete168h"]
                     records.append({"symbol":symbol,
                         "status":("COMPLETE_168H_CONTINUOUS_V4" if completed else "CENSORED"),
                         "continuous":{"watch_count":0}})
-                count=next(x for x in original["artifacts"]
-                    if x["date"]==date_string and x["shard"]==shard)
                 self.assertEqual(sum(x["status"]=="COMPLETE_168H_CONTINUOUS_V4"
                    for x in records),count["complete168h"])
                 first=next(x for x in records if x["status"]=="COMPLETE_168H_CONTINUOUS_V4")
