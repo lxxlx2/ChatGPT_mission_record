@@ -167,8 +167,18 @@ def population_coverage_sensitivity(summary):
         "NEW_LISTING_REPLAY_NOT_YET_SUPPORTED_PIT_UNVERIFIED"))
     gross = summary.get("gross_2x", 0)
     early = summary.get("D0_early5_2x", 0)
-    disjoint = (summary.get("cold_start_gross_2x", 0) +
-                summary.get("recent_preT0_gross_2x", 0))
+    new_gross = summary.get("cold_start_gross_2x", 0)
+    recent_gross = summary.get("recent_preT0_gross_2x", 0)
+    new_early = summary.get("cold_start_D0_early5_2x", 0)
+    recent_early = summary.get("recent_preT0_D0_early5_2x", 0)
+    disjoint = new_gross + recent_gross
+    combined_gross = gross + disjoint
+    combined_early = early + new_early + recent_early
+    if (any(x < 0 for x in (gross,early,new_gross,recent_gross,
+                            new_early,recent_early,missing))
+            or early > gross or new_early > new_gross or
+            recent_early > recent_gross):
+        raise ValueError("STAGE145_IMPOSSIBLE_2X_COHORT_HIT_COUNTS")
     def pct(n, d):
         return round(n * 100 / d, 3) if d else None
     return {
@@ -177,6 +187,18 @@ def population_coverage_sensitivity(summary):
         "venue_complete_case_preexisting_early5_pct": pct(early, gross),
         "source_censored_or_unsupported_attempts_unknown_outcome": missing,
         "unverified_new_and_recent_cold_start_posthoc_2x_excluded_from_headline": disjoint,
+        "venue_complete_case_all_three_cohorts_posthoc_2x":combined_gross,
+        "venue_complete_case_all_three_cohorts_D0_early5_2x":combined_early,
+        "venue_complete_case_all_three_cohorts_early5_pct_not_G1":pct(combined_early,combined_gross),
+        "by_cohort_complete_case_early5_pct_NOT_G1":{
+            "preexisting":pct(early,gross),
+            "in_window_new":pct(new_early,new_gross),
+            "recent_pre_T0":pct(recent_early,recent_gross),
+        },
+        "all_three_cohort_2x_plus_assumed_missing_as_missed_2x":combined_gross+missing,
+        "pessimistic_all_three_cohorts_if_each_censored_were_missed_2x_pct_NOT_G1":
+            pct(combined_early,combined_gross+missing),
+        "pessimistic_all_cohort_scenario_not_statistically_validated_lower_bound":True,
         "pessimistic_venue_preexisting_if_each_censored_were_missed_2x_pct":
             pct(early, gross + missing),
         "pessimistic_scenario_not_verified_crypto_G1_recall_bound": True,
