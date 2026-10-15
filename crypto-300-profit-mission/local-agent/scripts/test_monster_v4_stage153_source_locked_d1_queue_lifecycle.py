@@ -368,5 +368,42 @@ class Stage153Tests(unittest.TestCase):
 
 
 
+    def test_overlapping_valid_setup_windows_expose_missing_source_identity(self):
+        day=tiny_day()
+        second=dict(day["queue_final"][0])
+        second["id"]=3
+        second["first_seen_ms"]+=3*m.MIN
+        second["deadline_ms"]+=3*m.MIN
+        day["queue_final"].append(second)
+        day["queue_candidates"]=3
+        day["watch_arrivals"]=3
+        day["candidate_status_counts"]["EVALUATED"]=2
+        day["event_counts"]["WATCH_EARLY"]=3
+        rec={"date":day["date"],"original_watch_arrivals":3,
+             "original_individual_setups":1,"real_shared_setups":1,
+             "late":1,"official_5m_publisher_sha_source_count":0}
+        result,rows=m.audit_day(day,rec)
+        self.assertEqual(result[
+            "D1_SETUPS_with_multiple_plausible_EVALUATED_candidates"],1)
+        self.assertEqual(result["setup_source_id_provenance"],
+            "NOT_IN_ORIGINAL_STAGE28_REGISTER_MATCHING_EXISTS_ONLY")
+        self.assertEqual(len(rows),3)
+
+    def test_duplicate_or_noninjective_setup_event_cannot_reuse_one_episode(self):
+        with tempfile.TemporaryDirectory() as folder:
+            day=tiny_day()
+            day["setups"].append(dict(day["setups"][0]))
+            day["event_counts"]["SETUP_ACTIVE"]=2
+            _,rec=mini_zip(folder,day)
+            rec["real_shared_setups"]=2
+            with self.assertRaisesRegex(ValueError,"SETUP_UNMATCHED"):
+                m.audit_day(day,rec)
+            day["setups"][-1]["utc"]=datetime.fromtimestamp(
+                (day["queue_final"][0]["first_seen_ms"]+9*m.MIN)/1000,
+                timezone.utc).isoformat().replace("+00:00","Z")
+            with self.assertRaisesRegex(ValueError,"SETUP_NONINJECTIVE"):
+                m.audit_day(day,rec)
+
+
 if __name__=="__main__":
     unittest.main()
