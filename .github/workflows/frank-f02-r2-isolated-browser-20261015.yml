@@ -30,7 +30,7 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           python -B -m compileall -q scripts/frank_f02_manual_refresh.py scripts/frank_f02_r3_offline_attestation.py scripts/frank_f02_readonly_positions_api.py scripts/frank_joint_readonly_http.py mission_agent/mission_control/frank_ca_f02_alignment.py tests/test_frank_f01_c02_f02_alignment.py tests/test_frank_joint_readonly_http.py tests/test_frank_f02_manual_refresh.py tests/test_frank_f02_r3_offline_attestation.py tests/test_frank_f02_r2_isolated_browser.py
-          python -m pyflakes scripts/frank_f02_manual_refresh.py scripts/frank_f02_r3_offline_attestation.py scripts/frank_f02_readonly_positions_api.py mission_agent/mission_control/frank_ca_f02_alignment.py tests/test_frank_f01_c02_f02_alignment.py tests/test_frank_joint_readonly_http.py tests/test_frank_f02_manual_refresh.py tests/test_frank_f02_r2_isolated_browser.py
+          python -m pyflakes scripts/frank_f02_manual_refresh.py scripts/frank_f02_r3_offline_attestation.py scripts/frank_f02_readonly_positions_api.py scripts/frank_joint_readonly_http.py mission_agent/mission_control/frank_ca_f02_alignment.py tests/test_frank_f01_c02_f02_alignment.py tests/test_frank_joint_readonly_http.py tests/test_frank_f02_manual_refresh.py tests/test_frank_f02_r2_isolated_browser.py
           node --check scripts/frank_f02_web/positions.js
           node --check tests/frank_f02_r2_render.cjs
           node tests/frank_f02_r2_render.cjs
