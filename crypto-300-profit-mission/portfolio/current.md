@@ -1,6 +1,6 @@
 # Mission Portfolio / Current Assets and Capital Classification
 
-Updated: 2026-10-13 Asia/Bangkok (new Binance/Bybit user screenshots, Solana finalized + partial EVM refresh; historical Oct 12 below)
+Updated: 2026-10-15 Asia/Bangkok (read-only Surf NFT position added; Binance/Bybit user screenshots and other asset marks remain historical 2026-10-13 or prior)
 Timezone: Asia/Bangkok
 Portfolio authority: this file; operational status: `../state/latest.md`; performance attribution: `../performance/current.md`.
 
@@ -21,6 +21,17 @@ Portfolio authority: this file; operational status: `../state/latest.md`; perfor
 - Sui: `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`
 
 Only these already authorized canonical wallets are in the present sweep. Wallet discovery/other accounts have **not** been asserted complete.
+
+## Verified SurfBoard NFT #5396 position — 2026-10-15 11:43:55 Asia/Bangkok
+
+Source `DIRECT_CHAIN`: Robinhood Chain `4663`, Alchemy NFT ownership, original chain transaction receipts and pinned `eth_call` block **88947414** (2026-10-15 04:43:55 UTC); detailed evidence and series counts in [SurfBoard live research](../../research/nfts/surf-genesis-nft-chain-valuation-2026-10-12.md#9-surfboard-5396-开包后主钱包分配资金池及系列活动链上实证2026-10-15).
+
+- Canonical EVM wallet `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c` owns **one SurfBoard NFT #5396** from ERC721 `0x18c9719AB6AE4E1a6f95F281eF288e3AF5d58602`. Initial on-chain Airdropped + ERC721 Mint receipt **`0xfaffd46a5a7da9854b2a28262e54ef275cf4251a7686324f61b3bd17cfb6c104`** at **04:20:28 UTC**.
+- `0xc84f1bfb8594d5dd1c2804066f74d766d39b5560ab875e53ef91bf9653ea9fd3` **open(5396)** and burn 1 SurfBoard ERC20 at 04:22:11Z; `0x85c98979c86fd217cd2fbf3fe6709ef42d63f6d80b77f46761426298fd77a0bc` **Revealed tier=1** at 04:22:18Z. Direct on-chain Core states `isOpened=true`, `isRedeemed=false`, `tierOf=1`; Mirror `tokenURI` points to `metadata.asksurf.ai/nfts/surfboard/opened/5396.json`. User screenshot matches **Common / NVDA / weight x1**.
+- `SurfReflections` `0xF1ddD8eE0ABab932d9394E138beF2D4ca945C64e` `pending(5396)` = **0.000745771759040394 NVDA** (token `0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC`, 18 decimals) at block **88947414**. **The canonical wallet owns 0 directly transferable units of all five checked stock tokens**; accrued NVDA remains a contract-bound NFT right until redeem. At the screenshot's **$219.3/NVDA reference**, this is **~$0.164**, **below $1 and excluded from displayed USD marked totals**, not a true live executable market quote. NFT market bid/executable price **UNRESOLVED**, NFT remains **UNPRICED / excluded from liquid NAV**; do not count future accrual as realized PnL.
+- Financial provenance: $228 was paid for **Surf PRO annual membership** in 2025, verified by official receipt; an eligible annual membership provided one **free NFT claim**. The older `Surf Limited Edition #691` number identified the historical subscription/entitlement, **not the ultimate minted ERC721 token ID**; #5396 is the actual NFT. Preserve the $228 historical service expense exactly once. Do not add $228 as a separate cost-basis liquid asset, nor remove the recorded historical expense.
+- **All other portfolio rows and earlier 2026-10-13 Binance/Bybit/Solana/OKX snapshots below are unchanged in amount** and must not be relabeled fresh 2026-10-15. No user's transaction was initiated or signed by this research, no monitoring/task created and no NFT liquidation or redeems executed by ChatGPT.
+
 
 ## Latest independently checked investment snapshot — 2026-10-13 21:48–21:50 Bangkok
 
@@ -227,7 +238,7 @@ These entries preserve unresolved economic rights/cost bases and are not added t
 | Figure | Echo private equity / SPV rights | **$1,000** | illiquid private-market right | cost basis only |
 | 1X | Echo private equity / SPV rights | **$2,000** | illiquid private-market right | cost basis only |
 | RepublicX / rTTOK / ByteDance economic exposure | 5,000 contingent payout notes, $1 principal each | **$5,000** | illiquid contractual note exposure | not direct ByteDance stock ownership; cost basis only |
-| Surf PRO Annual #691 / Genesis SurfBoard claim | 1 free NFT entitlement (PRO annual member; delivery/claim pending) | **$228** | verified historical PRO annual subscription expense; NFT incremental purchase fee $0 under 2026-10-13 announced mechanics | not an already minted/marked NFT; do not double count service expense as separately purchased NFT |
+| Surf PRO Annual #691 → SurfBoard #5396 (Robinhood 4663) | **1 directly verified ERC-721 NFT, opened Common/NVDA; owned by canonical EVM wallet as of 2026-10-15** | **$228** | historical PRO annual subscription service expense (2025-08-31), generated free NFT claim; not a separate $228 NFT mint | **NFT unpriced/no verified executable bid**; pending 0.000745771759040394 NVDA is accrued in protocol (<$1 at screenshot reference), not standalone wallet token or liquid marked NAV |
 
 Known dollar-denominated historical acquisition/outlay reference above: **$16,628** (including the **$228 Surf PRO annual subscription service expense**, which earned one **free** Genesis NFT claim entitlement under the October 13 rules, **not** a standalone $228 NFT purchase; if excluding that service expense from the same subtotal, the other historical outlays equal **$16,400**). The historical $500 GANG commitment has become an actual wallet holding and refund recorded in the current section; plus **100 SOL** Block Stranding historical cost. **No change to the liquid-NAV calculation or user's cash-transfer history.** JUMP is no longer included because the application was rejected and the 1,000 USDC deposit was refunded.
 
