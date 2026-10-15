@@ -264,9 +264,9 @@ def main():
     report=aggregate(reports,source)
     a.out.mkdir(parents=True,exist_ok=True)
     summary={k:v for k,v in report.items() if k!="rows"}
-    (a.out/"monster_stage151_original305_preregistered_summary.json").write_text(
+    (a.out/"monster_stage152_original305_integrity_and_economics_summary.json").write_text(
         json.dumps(summary,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
-    (a.out/"monster_stage151_original305_preregistered_rows.jsonl").write_text(
+    (a.out/"monster_stage152_original305_integrity_and_economics_rows.jsonl").write_text(
         "".join(json.dumps(x,ensure_ascii=False,sort_keys=True)+"\n"
                 for x in report["rows"]))
     print("STAGE151_REAL305_FROZEN_OUTCOME "+json.dumps({
