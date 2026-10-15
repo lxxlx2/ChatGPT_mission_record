@@ -442,3 +442,11 @@ Remaining verified gaps / dependencies:
 - 开发方浏览器preflight临时路径起初命中既有 symlink 禁止（macOS /var 别名），没有访问实际RPC；测试改用真实resolved临时路径后通过，源码未改、规则未削弱。
 - 状态：CODE_CI_PASS / INDEPENDENT_SUBAGENT_CODE_APPROVE / SYNTHETIC_BROWSER_INTERACTION_PASS；REAL_NEW_RPC_CAPTURE=NOT_RUN / USER_AUTHORIZATION_REQUIRED；F02-R3与最终集成业务审查仍PENDING。完整[可复制复审提示词](FRANK_F02_MANUAL_REFRESH_REVIEW_PROMPT_20261015.md)在此Git进度分支归档，与PR评论和用户交付保持同文；代码SHA不因证据归档移动。
 - 下一主线：取得明确两次只读RPC/新私有研究会话授权→真实新来源Mac页面新鲜/到期状态及32目标核对→F02-R3与F01/C02整体产品交互验收。全钱包非32目标展示及任意CA入口仍是后续功能，不宣称当前页面已实现。NO_MERGE/NO_DEPLOY/NO_TRADES/NO_GMAIL/NO_PROD_SQLITE/NO_NEW_AUTOMATION。
+
+## 2026-10-15 PR #66 Claude 外部复审 APPROVE：不扩大 P3，进入真实来源验收门禁
+
+- 用户提交 Claude 完整只读审核报告，结论 **APPROVE，未发现 P0/P1/P2**。本轮重新读取 GitHub 确认 [Draft PR #66](https://github.com/lxxlx2/ChatGPT_mission_record/pull/66) 仍为 `a20a9f972589e34d2eae435c2ee4696eb53bb1d7`，base `a59e423304cb2081aef359c0649245c7e1d05b48`；没有代码变动。[用户提供的完整原文](evidence/f02-manual-refresh/claude-external-review-user-supplied.txt)单独保存，不覆盖先前子代理报告，不冒充 native GitHub Review 或开发方直接取得审核环境文件。
+- Claude 实测专项85、Node/lint PASS；首次全量1613 PASS且3模块缺numpy跳过，安装依赖后这3模块27项PASS（合计1640，**不是声称重跑单次1640全绿**）；独立临时联合树1692 PASS。报告仅提供联合短SHA `b904974d`，未提供完整SHA/tree hash；不将其和开发方/CI联合树断言为同一Git对象。先前89专项属于额外含chain capture的子代理集合，规定6模块是85，二者不冲突。
+- 外部实际loopback HTTP、Host/参数/私有路径拒绝、精确数量/null、原文篡改拒绝、旧R1复用路径通过；真实时钟286秒仍新鲜、305秒全32目标遮罩。**外审真实浏览器未执行**（环境无法获得Chromium），未运行真实RPC/用户Mac新来源，也没有独立读取CI日志。保留这些实际范围；开发方先前合成来源浏览器证据单列，不能移作Claude执行证明。
+- 非阻塞P3仅登记后续：失败会话保留策略/手动清理说明；partial摘要可补程序和错误类型；可补流程层篡改及对账失败测试。失败manifest保留本身是现行证据设计，当前无实际P2，因此不再开启外围修复循环，不删除现有证据、不新增自动清理。
+- 当前状态：`EXTERNAL_CLAUDE_FIXED_SHA_CODE_APPROVE / EXACT_HEAD_CI_PASS / REAL_NEW_SOURCE_MAC_ACCEPTANCE_PENDING / F02_R3_PENDING / PRODUCTION_NO_GO`。本次用户只转发审核结果，**没有新增两次真实RPC及新私有Sidecar创建授权**。下一主线仍为明确授权后单次双程序只读采集、原文核验、全32目标新鲜/过期与实际Mac页面操作验收，再推进整体F01/C02/F02功能验收；保持NO_MERGE/NO_DEPLOY及生产隔离。
