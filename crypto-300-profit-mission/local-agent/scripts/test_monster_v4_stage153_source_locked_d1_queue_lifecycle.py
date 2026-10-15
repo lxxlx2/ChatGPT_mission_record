@@ -264,7 +264,7 @@ class Stage153Tests(unittest.TestCase):
                     m.main()
             saved=out.read_bytes()
             self.assertEqual(json.loads(saved)["PENDING"],0)
-            self.assertTrue(saved.endswith(b"\\n"))
+            self.assertTrue(saved.endswith(b"\n"))
             with patch.object(sys,"argv",[
                 "program","--sqlite-readonly",str(db_path),
                 "--asof-ms","1800000000000","--out",str(out)]):
