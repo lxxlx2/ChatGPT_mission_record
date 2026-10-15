@@ -155,11 +155,23 @@ def verify(staging_root: Path, name: str) -> dict:
             "production_deployment": False}
 
 
+def cleanup(staging_root: Path, name: str) -> dict:
+    """Explicitly remove ONLY a clean, manifest-verified disposable checkout."""
+    result = verify(staging_root, name)
+    directory = Path(result["directory"])
+    if directory.is_symlink() or directory.name != name:
+        raise ValueError("FRANK_ISOLATED_CLEANUP_UNSAFE")
+    shutil.rmtree(directory)
+    return {"status": "FRANK_ISOLATED_REMOVED", "name": name,
+            "source_modified": False, "production_deployment": False}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--assemble", action="store_true")
     mode.add_argument("--verify", action="store_true")
+    mode.add_argument("--cleanup", action="store_true")
     parser.add_argument("--source-repo", type=Path,
                         default=Path(__file__).resolve().parents[3])
     parser.add_argument("--staging-root", type=Path,
@@ -168,7 +180,7 @@ def main(argv=None):
     parser.add_argument("--name", default="frank-joint-manual-qa")
     parser.add_argument("--integration-sha")
     args = parser.parse_args(argv)
-    if not args.assemble and not args.verify:
+    if not args.assemble and not args.verify and not args.cleanup:
         print(json.dumps({
             "status": "PLAN_ONLY",
             "required_inputs": ["main", "C02", "F01", "integration SHA"],
@@ -181,6 +193,8 @@ def main(argv=None):
     try:
         if args.verify:
             result = verify(args.staging_root, args.name)
+        elif args.cleanup:
+            result = cleanup(args.staging_root, args.name)
         else:
             result = assemble(args.source_repo, args.staging_root,
                               args.name, args.integration_sha)
