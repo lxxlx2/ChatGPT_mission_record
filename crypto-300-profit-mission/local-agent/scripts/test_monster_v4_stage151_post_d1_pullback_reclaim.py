@@ -94,7 +94,7 @@ class Stage151(unittest.TestCase):
     def test_price_path_gaps_rejected(self):
         lookup={x[0]:x for x in bars([100]*361)}
         del lookup[T0+100*m.MIN]
-        with self.assertRaisesRegex(ValueError,"GAPPED"):
+        with self.assertRaisesRegex(ValueError,"MISSING_HOLD_MINUTE"):
             m.price_path(lookup,T0,D("100"),360)
 
     def test_reject_invalid_p0(self):
