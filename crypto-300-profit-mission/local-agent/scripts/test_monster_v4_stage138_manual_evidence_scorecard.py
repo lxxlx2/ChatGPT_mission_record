@@ -49,6 +49,12 @@ def simulated_disjoint_copy(base, offset_days, serial):
                 for key in ("visible_from_UTC", "first_tick_utc",
                             "D0_first_UTC", "D1_first_UTC"):
                     alt[key] = move_utc(alt[key], offset_days)
+                strict=alt.get("strict_since_discovery")
+                if strict is not None:
+                    for key in ("first_tick_utc", "D0_first_UTC", "D1_first_UTC",
+                                "earliest_possible_D1_61min_history_UTC",
+                                "first_UTC_aligned_completed_5m_source_open"):
+                        strict[key] = move_utc(strict[key], offset_days)
         row["D0_first_UTC"] = move_utc(row["D0_first_UTC"], offset_days)
         row["D1_first_UTC"] = move_utc(row["D1_first_UTC"], offset_days)
         if "gross_future_labels_not_real_profit" in row:
@@ -138,6 +144,52 @@ class Stage138Tests(unittest.TestCase):
             "cannot_measure_issuer_confirmed_crypto_true_positives"])
         self.assertEqual(
             all_windows["declared_disjoint_window_count_not_verified_as_external_market_source"], 3)
+
+    def test_stage145_claude_P1_all_cohort_2x_and_source_missing_venue_counterfactual(self):
+        cases=[
+            {"gross_2x":1,"D0_early5_2x":1,
+             "cold_start_gross_2x":1,"cold_start_D0_early5_2x":0,
+             "recent_preT0_gross_2x":1,"recent_preT0_D0_early5_2x":0,
+             "SOURCE_CENSORED_NO_REPLAY":1},
+            {"gross_2x":0,"D0_early5_2x":0,
+             "cold_start_gross_2x":1,"cold_start_D0_early5_2x":1,
+             "SOURCE_CENSORED_NO_REPLAY":1}
+        ]
+        first=s138.population_coverage_sensitivity(cases[0])
+        self.assertEqual(first["venue_complete_case_preexisting_early5_pct"],100)
+        self.assertEqual(first["venue_complete_case_all_three_cohorts_posthoc_2x"],3)
+        self.assertEqual(first["venue_complete_case_all_three_cohorts_D0_early5_2x"],1)
+        self.assertEqual(first["venue_complete_case_all_three_cohorts_early5_pct_not_G1"],33.333)
+        self.assertEqual(first["all_three_cohort_2x_plus_assumed_missing_as_missed_2x"],4)
+        self.assertEqual(
+            first["pessimistic_all_three_cohorts_if_each_censored_were_missed_2x_pct_NOT_G1"],25)
+        self.assertEqual(first["by_cohort_complete_case_early5_pct_NOT_G1"]["in_window_new"],0)
+        self.assertEqual(first["by_cohort_complete_case_early5_pct_NOT_G1"]["recent_pre_T0"],0)
+        self.assertTrue(first["pessimistic_all_cohort_scenario_not_statistically_validated_lower_bound"])
+        self.assertFalse(first["G1_claimable"])
+        second=s138.population_coverage_sensitivity(cases[1])
+        self.assertEqual(second["venue_complete_case_all_three_cohorts_early5_pct_not_G1"],100)
+        self.assertEqual(
+            second["pessimistic_all_three_cohorts_if_each_censored_were_missed_2x_pct_NOT_G1"],50)
+        with self.assertRaisesRegex(ValueError,"IMPOSSIBLE_2X_COHORT"):
+            s138.population_coverage_sensitivity({"gross_2x":0,"D0_early5_2x":1})
+
+    def test_stage145_full_integrated_delay_dual_info_sets_reconcile(self):
+        rows=self.report["population_rows"]
+        new=next(x for x in rows if x["population_lane"]=="IN_WINDOW_FIRST_TRADABLE_MINUTE_CANDIDATE")
+        source=new["counterfactual_discovery_delay_original_D0_D1_offline"]
+        self.assertTrue(source["two_information_sets_per_delay_readback_A_vs_strict_post_discovery_B"])
+        scored=self.report["inwindow_discovery_latency_original_core_replay_research_only"]
+        self.assertEqual(scored["counts"]["source_conditioned_latencies_rerun_all_four"],1)
+        self.assertEqual(scored["counts"]["delay_0m_strict_post_discovery_model_replay"],1)
+        self.assertEqual(scored["counts"]["delay_5m_strict_post_discovery_model_replay"],1)
+        self.assertTrue(scored["A_B_not_guaranteed_mathematically_ordered_recall_bounds"])
+        self.assertEqual(s138.verify_evaluate_manifest(self.report)[2]["full_market_attempts"],4)
+        forged=copy.deepcopy(rows)
+        evil=next(x for x in forged if x["population_lane"]=="IN_WINDOW_FIRST_TRADABLE_MINUTE_CANDIDATE")
+        evil["counterfactual_discovery_delay_original_D0_D1_offline"]["delays"]["5m"]["strict_since_discovery"]["earliest_possible_D1_61min_history_UTC"]="2026-10-28T06:21:00Z"
+        with self.assertRaisesRegex(ValueError,"STRICT_61M_CLOCK_DRIFT"):
+            s138.original_core_discovery_delay_scorecard(forged)
 
     def test_stage144_real_original_core_latency_scorecard_detects_five_minute_missed_D0(self):
         from decimal import Decimal
