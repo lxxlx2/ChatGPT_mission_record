@@ -29,6 +29,18 @@ from scripts.frank_reconcile_frozen32_offline import (
 SHA_256 = re.compile(r"[0-9a-f]{64}\Z")
 
 
+def _existing_wire_bundle(session: Path) -> Path:
+    """Collector nests one owner-UUID bundle under session/wire/."""
+    parent = _assert_directory(session / "wire")
+    candidates = [x for x in parent.iterdir()
+                  if x.name.startswith("owner-") and x.is_dir()
+                  and not x.is_symlink() and (x / "manifest.json").is_file()
+                  and not (x / "manifest.json").is_symlink()]
+    if len(candidates) != 1:
+        raise ValueError("F02_R3_ONE_ORIGINAL_WIRE_BUNDLE_REQUIRED")
+    return _assert_directory(candidates[0])
+
+
 def find_session(session_root: Path, expected_sha: str) -> Path:
     """Resolve unique *already existing* private manual session by source SHA."""
     if not SHA_256.fullmatch(expected_sha):
@@ -41,12 +53,16 @@ def find_session(session_root: Path, expected_sha: str) -> Path:
         if (not session.name.startswith("session-") or session.is_symlink()
                 or not session.is_dir()):
             continue
-        manifest = session / "wire" / "manifest.json"
-        if manifest.is_symlink() or not manifest.is_file():
+        wire_root = session / "wire"
+        if not wire_root.is_dir() or wire_root.is_symlink():
             continue
-        doc = json.loads(manifest.read_text(encoding="utf-8"))
-        if doc.get("capture_sha256") == expected_sha:
-            matches.append(session)
+        for manifest in wire_root.glob("owner-*/manifest.json"):
+            if (manifest.is_symlink() or
+                    manifest.parent.is_symlink() or not manifest.is_file()):
+                continue
+            doc = json.loads(manifest.read_text(encoding="utf-8"))
+            if doc.get("capture_sha256") == expected_sha:
+                matches.append(session)
     if len(matches) != 1:
         raise ValueError("F02_R3_EXPECTED_UNIQUE_SESSION_NOT_FOUND")
     return _assert_directory(matches[0])
@@ -71,7 +87,8 @@ def attest(session: Path, expected_sha: str, *,
         raise ValueError("F02_R3_SINGLE_RESEARCH_WALLET_REQUIRED")
     wallet = binding[0].address
     frozen = load_frozen_roster(roster, wallet)
-    verified = replay_owner_full_receipts(session / "wire", expected_wallet=wallet)
+    wire_bundle = _existing_wire_bundle(session)
+    verified = replay_owner_full_receipts(wire_bundle, expected_wallet=wallet)
     if verified["capture_sha256"] != expected_sha:
         raise ValueError("F02_R3_WIRE_SHA_MISMATCH")
     exact = reconcile(verified, frozen)
@@ -79,7 +96,7 @@ def attest(session: Path, expected_sha: str, *,
         "Z", "+00:00")) + timedelta(seconds=1)
     service = ResearchPositions(
         registry=registry, person_id="frank", wallet=wallet, roster=roster,
-        bundle=session / "wire", sidecar=sidecar, max_age_seconds=300,
+        bundle=wire_bundle, sidecar=sidecar, max_age_seconds=300,
     )
     archival = service.positions(as_of_utc=checkpoint)
     if (archival["readiness"] != "FRESH_VERIFIED_ARCHIVED_OBSERVATION"
