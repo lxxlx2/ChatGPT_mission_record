@@ -110,6 +110,7 @@ class Stage137Tests(unittest.TestCase):
         self.assertEqual(a["NEWUSDT"]["replay_status"],
                          "ORIGINAL_CORE_NEW_LISTING_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE")
         self.assertFalse(a["NEWUSDT"]["first_listing_time_independently_attested"])
+        self.assertIn("5m",a["NEWUSDT"]["counterfactual_discovery_delay_original_D0_D1_offline"]["delays"])
         self.assertEqual(a["NEWUSDT"]["new_listing_source_claim_first_1m_utc"],
                          "2026-10-28T06:21:00Z")
         self.assertEqual(r["raw_usdm_venue_descriptive_only"]["source_censored"], 1)
@@ -210,6 +211,78 @@ class Stage137Tests(unittest.TestCase):
             self.assertGreaterEqual(s131.stamp(baseline["D1_first_UTC"]),first+61*60_000)
         # Check no original 24h values were imagined at first observation.
         self.assertFalse(baseline["new_listing_initial_24h_quote_history_available"])
+
+    def test_stage144_real_core_discovery_delay_misses_early_pump_not_timestamp_max(self):
+        from decimal import Decimal
+        first = s131.stamp("2026-10-28T06:21:00Z")
+        bars = []
+        for n in range(100):
+            price = Decimal("1.08") if n >= 8 else Decimal("1")
+            hi = Decimal("2.25") if n == 75 else price * Decimal("1.01")
+            bars.append((first + n * 60_000,price,hi,price * Decimal("0.99"),
+                         price,Decimal("150000"),1000))
+        result = s137.replay_new_arrival_cold_start(
+            "FASTUSDT",first,first+100*60_000,bars,
+            s137.original_core_contract(),include_discovery_delay_replays=True)
+        cases = result["counterfactual_discovery_delay_original_D0_D1_offline"]
+        zero,one,three,five = (cases["delays"][x] for x in ("0m","1m","3m","5m"))
+        self.assertEqual(zero["D0_first_UTC"],"2026-10-28T06:30:00Z")
+        self.assertEqual(one["D0_first_UTC"],zero["D0_first_UTC"])
+        self.assertEqual(three["D0_first_UTC"],zero["D0_first_UTC"])
+        self.assertIsNone(five["D0_first_UTC"])
+        self.assertEqual(five["first_tick_utc"],"2026-10-28T06:30:00Z")
+        self.assertEqual(cases["first_source_original_2x_high_fixed_denominator_utc"],
+                         "2026-10-28T07:36:00Z")
+        self.assertTrue(zero["D0_early5_vs_fixed_first_2x"])
+        self.assertFalse(five["D0_early5_vs_fixed_first_2x"])
+        self.assertEqual(result["D0_first_UTC"],zero["D0_first_UTC"])
+        self.assertTrue(cases["same_frozen_numeric_core_each_run"])
+        self.assertTrue(cases["not_live_delivery_or_buy_or_net_profit"])
+        legacy=result["hypothetical_first_D0_after_detection_delay_NOT_LIVE_RERUN"]["5m"]
+        self.assertEqual(legacy,zero["D0_first_UTC"])
+        self.assertNotEqual(legacy,five["D0_first_UTC"])
+
+    def test_stage144_discovery_delayed_beyond_available_polls_is_not_scorable(self):
+        from decimal import Decimal
+        first=s131.stamp("2026-10-28T06:21:00Z")
+        bars=[(first+i*60_000,Decimal("1"),Decimal("1.01"),
+               Decimal("0.99"),Decimal("1"),Decimal("200000"),1000)
+              for i in range(7)]
+        result=s137.replay_new_arrival_cold_start(
+            "SHORTUSDT",first,first+7*60_000,bars,
+            s137.original_core_contract(),include_discovery_delay_replays=True)
+        five=result["counterfactual_discovery_delay_original_D0_D1_offline"]["delays"]["5m"]
+        self.assertEqual(five["counterfactual_status"],
+                         "NOT_SCORABLE_NO_POLL_BEFORE_SOURCE_END")
+        self.assertIsNone(five["D0_first_UTC"])
+        self.assertIsNone(five["first_tick_utc"])
+
+    def test_stage144_delayed_unicode_preserves_exact_original_identity_and_D1(self):
+        from decimal import Decimal
+        first=s131.stamp("2026-10-28T06:21:00Z")
+        bars=[]
+        for n in range(150):
+            price=(Decimal("1") if n < 30 else
+                   Decimal("1.12") if n < 60 else Decimal("1.30"))
+            quote=Decimal("400000") if n>=60 else Decimal("100000")
+            high=Decimal("2.25") if n==125 else price*Decimal("1.01")
+            bars.append((first+n*60_000,price,high,price*Decimal("0.99"),
+                         price,quote,1200))
+        kw={"contract":s137.original_core_contract(),
+            "include_discovery_delay_replays":True}
+        ascii=s137.replay_new_arrival_cold_start(
+            "NEWUSDT",first,first+150*60_000,bars,**kw)
+        uni=s137.replay_new_arrival_cold_start(
+            "新上市USDT",first,first+150*60_000,bars,**kw)
+        self.assertEqual(ascii["D0_first_UTC"],uni["D0_first_UTC"])
+        self.assertIsNotNone(ascii["D1_first_UTC"])
+        for delay in ("0m","1m","3m","5m"):
+            a=ascii["counterfactual_discovery_delay_original_D0_D1_offline"]["delays"][delay]
+            b=uni["counterfactual_discovery_delay_original_D0_D1_offline"]["delays"][delay]
+            self.assertEqual((a["D0_first_UTC"],a["D1_first_UTC"],a["D1_entry_path"]),
+                             (b["D0_first_UTC"],b["D1_first_UTC"],b["D1_entry_path"]))
+        self.assertEqual(uni["original_exact_venue_symbol"],"新上市USDT")
+        self.assertTrue(uni["source_core_unicode_adapter_used"])
 
     def test_claude_p1_real_frozen_D1_reignition_from_new_listing_closed_minute_source(self):
         from decimal import Decimal
