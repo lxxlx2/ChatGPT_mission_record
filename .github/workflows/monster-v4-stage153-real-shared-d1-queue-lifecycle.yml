@@ -1,0 +1,111 @@
+name: Monster Stage153 original Stage28 shared D1 queue lifecycle and pressure
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage153_source_locked_d1_queue_lifecycle.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage153_source_locked_d1_queue_lifecycle.py'
+      - '.github/workflows/monster-v4-stage153-real-shared-d1-queue-lifecycle.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  full_queue_pressure_unit_regression:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test complete queue health and original artifact SHA guarding, no network or daemon
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -m py_compile monster_v4_stage153_source_locked_d1_queue_lifecycle.py test_monster_v4_stage153_source_locked_d1_queue_lifecycle.py
+          python -m unittest -v test_monster_v4_stage153_source_locked_d1_queue_lifecycle.py
+          echo MONSTER_STAGE153_NO_NEW_SCHEDULE_GMAIL_TRADE_DEPLOY_OR_FRANK_TOUCH=PASS
+
+  source_locked_actual_stage28_all_six:
+    needs: full_queue_pressure_unit_regression
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download six exact 2026-10-11 Stage28 original production D1 results, not new future OHLC
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster-stage153-original
+          python - <<'PY' > /tmp/monster-stage153-sources.tsv
+          import json
+          from pathlib import Path
+          p=Path("crypto-300-profit-mission/monster/evidence/monster_stage28_original_six_real_shared_sqlite_artifact_proof_20261011.json")
+          x=json.loads(p.read_text())
+          assert x["source_commit"]=="973891aae686b05e6bba35bdf506ddca578b1bda"
+          assert len(x["artifacts"])==6
+          for r in sorted(x["artifacts"],key=lambda r:r["date"]):
+              print(r["date"],r["artifact_id"])
+          PY
+          while read -r day artifact_id; do
+            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$artifact_id/zip" > "/tmp/monster-stage153-original/monster_stage28_${day}_real_shared_sqlite.zip"
+          done < /tmp/monster-stage153-sources.tsv
+      - name: Strict original artifact ZIP and JSON SHA, all 1128 queue rows and Feb98 incident
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage153_source_locked_d1_queue_lifecycle.py --stage28-original-artifact-dir /tmp/monster-stage153-original --out /tmp/monster-stage153-results
+          python -m json.tool /tmp/monster-stage153-results/monster_stage153_stage28_1128_queue_lifecycle_summary.json > /dev/null
+          test "$(wc -l < /tmp/monster-stage153-results/monster_stage153_stage28_1128_queue_lifecycle_rows.jsonl)" -eq 1128
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage153-source-locked-six-real-stage28-queue-incidents
+          path: /tmp/monster-stage153-results/*
+          retention-days: 60
+      - name: Archive complete actual original1128 incident report in original PR (no runtime change)
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster-stage153-results/monster_stage153_stage28_1128_queue_lifecycle_summary.json "$dest/"
+          cp /tmp/monster-stage153-results/monster_stage153_stage28_1128_queue_lifecycle_rows.jsonl "$dest/"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest/monster_stage153_stage28_1128_queue_lifecycle_summary.json" "$dest/monster_stage153_stage28_1128_queue_lifecycle_rows.jsonl"
+          if git diff --cached --quiet; then
+            echo MONSTER_STAGE153_ALREADY_ARCHIVED
+            exit 0
+          fi
+          git commit -m "monster: source-locked 1128 real Stage28 global D1 queue lifecycle and Feb98 evidence"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              echo MONSTER_STAGE153_REBASE_CONFLICT
+              exit 1
+            fi
+            for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_stage153_source_locked_d1_queue_lifecycle.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage153_source_locked_d1_queue_lifecycle.py .github/workflows/monster-v4-stage153-real-shared-d1-queue-lifecycle.yml; do
+              test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_STAGE153_CODE_DRIFT=$f"; exit 1; }
+            done
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo MONSTER_STAGE153_REAL_STAGE28_SOURCE_SHA_AND_GIT_PUSH_CONFIRMED
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          exit 1
