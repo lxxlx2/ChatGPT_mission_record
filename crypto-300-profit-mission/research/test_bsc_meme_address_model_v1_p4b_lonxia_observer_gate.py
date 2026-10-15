@@ -16,11 +16,17 @@ class OriginalOwnerObserverGate(unittest.TestCase):
         self.assertEqual(row["token"], TOKEN)
         self.assertEqual(row["post_owner_test_block"], 83635777)
         self.assertEqual(row["historical_buy_simulations_success"], 2)
-        self.assertEqual(row["actual_subsequent_distinct_signed_market_sells"], 3)
+        self.assertEqual(row["sampled_block_83636000_distinct_signed_dragon_sells"], 3)
         self.assertEqual(row["observer_first_public_execution_U"], "UNRESOLVED")
         self.assertEqual(row["follower_lag_1_5_15min_PnL"], "UNRESOLVED")
         self.assertEqual((row["P5"],row["production"]), ("BLOCKED","NO_GO"))
-        self.assertEqual(len(PINS),2)
+        self.assertEqual(len(PINS),3)
+        self.assertEqual(row["sale_signers_in_frozen_23"],2)
+        self.assertEqual(row["sale_signers_outside_frozen_23"],1)
+        self.assertEqual(row["sampled_block_total_manager_sales_all_CAs"],4)
+        self.assertEqual(row["sampled_block_dragon_manager_outgoing_transfers"],2)
+        self.assertEqual(row["observed_buy_to_sale_block_timestamp_diff_milliseconds"],"100800")
+        self.assertEqual(row["DDAC_initial_buy_unattributed_value_residual_wei"],"8000000000000004")
 
     def test_same_block_lookahead_rejected(self):
         changed = copy.deepcopy(self.source)
@@ -72,6 +78,72 @@ class OriginalOwnerObserverGate(unittest.TestCase):
     def test_funding_assumption_requires_real_snapshot(self):
         changed = copy.deepcopy(self.source)
         changed[0]["hypothetical_external_caller"]["BNB_balance_wei_at_83635777"]="0"
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_one_frozen_seller_must_not_be_labeled_external(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["seller_frozen_sample_membership"][0]["member_of_frozen_23"]=False
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_earliest_observed_owner_cannot_be_same_as_market_seller(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["seller_frozen_sample_membership"][0]["wallet"]=OWNER
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_timestamp_milliseconds_are_source_verified(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["block_headers_selected_RPC_fields"][0]["milliTimestamp"]="0x1"
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_fabricated_100p8_second_elapsed_rejected(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["block_time_math"]["interval_in_milliseconds"]="100000"
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_sampled_block_other_ca_sale_not_deleted(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["sampled_block_exact_83636000"]["manager_all_TokenSale_logs"].pop()
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_sampled_block_buy_side_token_transfer_not_deleted(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["sampled_block_exact_83636000"]["dragon_all_ERC20_Transfer_logs"].pop(0)
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_receipt_status_downgrade_rejected(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["sampled_block_exact_83636000"]["three_sale_receipt_excerpt"][0]["status"]="0x0"
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_ddac_native_residual_cannot_be_relabelled_as_closed(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["DDAC_initial_0p8_BNB_payment"]["attribution"]="ROUTER_FEE_CONFIRMED"
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_disabled_buy_requires_revert_payload(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["migration_disabled_probe"]["revert_payload"]="0x"
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_hidden_sample_membership_claim_rejected(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["seller_frozen_sample_membership"][1]["source_wallet_index"]=None
+        with self.assertRaises(ValueError):
+            classify(changed)
+
+    def test_premature_follow_profit_claim_rejected_by_correction(self):
+        changed=copy.deepcopy(self.source)
+        changed[2]["gate"]["follower_1_5_15_min_profit"]="PROFIT"
         with self.assertRaises(ValueError):
             classify(changed)
 
