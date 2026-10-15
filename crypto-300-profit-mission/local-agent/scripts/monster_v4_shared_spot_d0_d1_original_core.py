@@ -86,7 +86,7 @@ def original_source_freeze():
     return cohort, day_map
 
 
-def original_758_coverage(day, replayed_roster):
+def original_758_coverage(day, replayed_roster, *, source_attested=False):
     cohort, day_map = original_source_freeze()
     if day.isoformat() not in day_map:
         raise ValueError("SHARED_SPOT_DATE_NOT_ORIGINAL_FROZEN")
@@ -96,7 +96,8 @@ def original_758_coverage(day, replayed_roster):
         raise ValueError("SHARED_SPOT_REPLAY_REQUEST_NOT_ORIGINAL_SOURCE_COMPLETE")
     states = [
         {"symbol": sym, "source_disposition":
-         ("OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET" if sym in selected else
+         (("OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET" if source_attested
+           else "PRELOADED_CACHE_REPLAYED_ORIGIN_UNATTESTED") if sym in selected else
           "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26" if sym not in recorded_complete else
           "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED")}
         for sym in cohort
@@ -367,6 +368,7 @@ def run_official_subset(day, symbols):
             result = run_shared(db,day,roster,
                                 market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
     result["source_origin_verified"] = True
+    result["original_758_coverage"] = original_758_coverage(day,roster,source_attested=True)
     result["source"] = "OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY"
     result["market_coverage"] = "OFFICIAL_VERIFIED_SUBSET_ONLY"
     result["source_attestation"] = "STAGE26_PUBLISHER_ZIP_SHA256_CHECKSUM_VERIFIED_AT_RUN_TIME"
