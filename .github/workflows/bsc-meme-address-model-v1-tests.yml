@@ -49,6 +49,9 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_seven_rounds23x19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_seven_rounds23x19.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-23x19-seven-native-mixed4-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-two-settled-source-audit-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-ddac-adff-a83b-five-inventory-closed-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-23x19-five-native-rounds-mixed239e-2026-10-15.json"
@@ -790,6 +793,24 @@ jobs:
           assert (s["original_native_positive_rounds"],s["original_native_negative_rounds"])==(1,1)
           assert s["new_followable_signals"]==0 and s["production"]=="NO_GO"
           print("PASS token4 original 19 receipt-verified trades, 2 opposite native owner outcomes, 0 P5")
+          PY
+      - name: P4-C 23 x 19 seven original native rounds five cells with 2025 mixed token4
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_seven_rounds23x19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-seven-real-rounds.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-seven-real-rounds.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-23x19-seven-native-mixed4-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"original 23x19 seven-source native history vs fixed expected JSON mismatch"
+          s=a["summary"]
+          assert (s["total_wallet_CA_cells"],s["source_verified_original_native_rounds"],s["reviewed_distinct_wallet_CA_cells"],s["not_economically_audited_cells"])==(437,7,5,432)
+          assert (s["verified_native_positive_original_rounds"],s["verified_native_negative_original_rounds"])==(4,3)
+          assert s["source_2025_token4_original_mixed_rounds"]==2 and s["public_observer_follower_qualified_signals"]==0
+          assert s["production"]=="NO_GO"
+          print("PASS 23x19 seven real native owner rounds five distinct CA cells, 432 still unreviewed")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
