@@ -5,7 +5,7 @@
 ## 预检脚本
 `crypto-300-profit-mission/local-agent/scripts/frank_mac_readonly_preflight.py`。脚本只使用 macOS 系统 Python3 标准库、Git、可选的 lsof。运行时 `python3 -B -`，避免写入 Python `__pycache__`。
 
-用户已有本地 review 仓库口径：`~/.local/share/frank-f02-r3-review`。预检不读取其他 Git 仓库，也不自动克隆、`fetch`、切分支、`reset`、`stash`、`checkout`。它只检查这一目录是否存在、是否独立 Git root、Git HEAD 是否匹配已审 PR73 或较早 PR68、五个 Git commit 对象在本地是否存在、历史证据 ref 是否为固定 SHA，并以 `GIT_OPTIONAL_LOCKS=0` + 每条 Git 读取命令的 `git -c core.fsmonitor=false` 只检测源树一般未提交改动是否存在（不列出文件名），禁用仓库配置的外部 fsmonitor helper，避免被动扫描触发外部写入。本地仓库缺最新 Git 对象是 `NOT_LOCAL`，不能自动拉取或判断远端不存在。
+用户已有本地 review 仓库口径：`~/.local/share/frank-f02-r3-review`。预检不读取其他 Git 仓库，也不自动克隆、`fetch`、切分支、`reset`、`stash`、`checkout`。它只检查这一目录是否存在、是否独立 Git root、Git HEAD 是否匹配已审 PR73 或较早 PR68、五个 Git commit 对象在本地是否存在、历史证据 ref 是否为固定 SHA，并以 `GIT_OPTIONAL_LOCKS=0` + 每条 Git 读取命令的 `git -c core.fsmonitor=false` 查询固定 Git 对象及引用，禁用外部 fsmonitor helper。**严禁在此被动预检执行 `git status` / `git diff` 工作区内容比较**，因为仓库 `.gitattributes` 的 Git clean filter 也可被执行。`source_changes=UNKNOWN_NOT_CHECKED_PASSIVE_ONLY` 明确表示**未检查工作区是否干净，不能把它当作可组装、可部署或可清理的信号**。本地仓库缺最新 Git 对象是 `NOT_LOCAL`，不能自动拉取或判断远端不存在。
 
 已知真实既有研究根目录：`~/.local/share/frank-f02-research/manual-sessions`。只对最多200个直接子目录（`session-*`）执行文件**存在性**与符号链接检查：`positions.sqlite`、`wire/owner-*/manifest.json`。不打开 SQLite、不打开 JSON 原文、不读取 Token Account/CA/私钥、没有哈希归档，也不会修改其权限/mtime内容。报告明确 `contents_or_sha_verified=false`、`session_freshness_verified=false`。目录数超限制时报告 `session_scan_truncated=true`，不能推断全覆盖。
 
@@ -19,7 +19,7 @@
 
 ## 完成标准
 
-- PASSIVE_PREFLIGHT 本机 JSON 输出完整，包括原 git clone、固定Git证据、研究会话是否存在、三端口占用以及全部 false 的 `side_effects`。
+- PASSIVE_PREFLIGHT 本机 JSON 输出完整，包括本地 Git 根与 HEAD / 固定对象引用、研究会话是否存在、三端口占用以及全部 false 的 `side_effects`；Git **工作区干净程度保持 UNKNOWN，不得据此放行后续隔离组装或发布**。
 - 仅根据 JSON 决定是否具备**进一步 Mac 隔离实测的前置条件**，不能因为 preflight 脚本完成而自动启动服务、使用现有生产端口、打开旧 Sidecar、批量读取历史原文或申请新的链上采集。
 - 来源已超过 300s TTL 的旧研究归档仍应 `STALE/SOURCE_UNAVAILABLE`，不能展示历史持币数量或推断交易。
 - 若不满足条件，在 Git 记入 **事实+未确认项**，并先修改单独测试方案，等待新用户授权。
@@ -34,3 +34,11 @@
 - 按正式开发规则在 **独立子分支/子 PR** 修复，不改写已审 PR #73、拒绝的 PR #74 SHA 或生产仓库。最小代码范围：所有 `safe_exec` Git 命令都附加命令级 `-c core.fsmonitor=false`，保留旧 `GIT_OPTIONAL_LOCKS=0`；新增真实合成 Git fsmonitor helper 哨兵测试，确认无外部命令执行、无标记文件且原 index/tracked/untracked 字节不变；修改 CLI 测试将 home 限制为合成目录。
 - 验收顺序：本子 PR **最终固定 SHA** 的 module scoped/full + disposable combined scoped/full CI 成功，再由其他 AI 进行限定差异独立复审；之后由用户在 Mac 手动运行当时已审固定 SHA 预检，最后才考虑单独授权的本地隔离 F01/C02/F02 真 HTTP 联调。本修复 **不增加任何真实钱包/任意 CA 用户功能**；产品业务缺口继续依据正式 TODO 的 F01 当前可跟、C02 CA 单模式、F02 完整现时钱包和最后整体 Review 推进。
 - 未取得 Mac 真实输出前，不声称本地服务已无端口冲突，也不把历史私有研究文件存在理解为实时仓位已核实。
+
+
+## 2026-10-16 PR #75 clean filter 外审拒绝与最小后继修复
+
+- 原固定 SHA `673486ce92c7e12f2eab03e0ab15216ed46916b4` 获独立 Codex `REQUEST_CHANGES`：旧 fsmonitor P2、CLI home P3 已关闭，但 `git status` 在有同长度改动的 tracked 文件及 `.gitattributes filter=synthetic` 配置下实际触发 `filter.synthetic.clean`，在合成临时目录产生可观察哨兵写入，新增 P2，不能在用户 Mac 执行被拒绝 SHA。
+- 后继 Draft 子修复以该拒绝 SHA 为完整基线，删除 `inspect_repo` 中唯一的工作区 `git status` 路径，所有有效仓库的 `source_changes` 都明确返回 `UNKNOWN_NOT_CHECKED_PASSIVE_ONLY`。已有 HEAD、固定对象、证据 ref、研究会话 stat 与端口被动 lsof 保留。任何后续涉及完整源仓库干净程度、真实服务组装或清理的操作都需新的单独授权和验收，不能用该字段自动放行。
+- 新增真实 Git clean-filter 合成回归，确保不执行 helper、不产生哨兵，Git index、HEAD、tracked/untracked 原文件内容保持不变，且 preflight 的所有 Git 调用无 `status/diff`。继续保留原 fsmonitor 与 home 两项通过的永久回归。
+- 此阶段只处理已证实 P2；不新建自动任务/额外安全框架/真实 RPC/服务，也不扩张非阻塞问题。完成固定 SHA 代码 CI 和独立复审后，恢复**面向用户的 F01 可跟机会、C02 任意 CA 单模式研究及 F02 当前钱包事实**联合业务验收节奏。
