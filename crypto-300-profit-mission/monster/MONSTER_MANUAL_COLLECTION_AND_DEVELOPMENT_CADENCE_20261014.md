@@ -400,3 +400,20 @@ Stage152新最后P2固定SHA `71a041405352c9e2210d93dff9c2685149809e52` 已获�
 **必须保留的新SQLite只读语义**：Codex用活动WAL模式SQLite及**无`--out`只读对照**验证只读查询本身可能更新`-shm`共享内存索引字节；其`--out`危险路径13例均拒绝并不能据此说“所有关联sidecar字节完全不变”。**真实主SQLite数据库与WAL数据未被覆盖/损坏，PRAGMA integrity_check=ok；SHM可变是被隔离对照观测的SQLite共享内存活动，不构成本次原CLI输出覆盖P1重现。**正式需要维护live Mac SQLite时尤其不能承诺整个活跃WAL文件组无任何字节变化，也不得在用户Mac上未经授权运行此探针。
 
 完整 [Codex固定SHA最终APPROVE审核归档与SHM限制](MONSTER_STAGE153_CODEX_FINAL_APPROVE_FIXED_4553CB6_WITH_SQLITE_WAL_SHM_LIMIT_20261016.md)。此次只增加Git文档、未修改获批代码/test/workflow，不对旧SHA回溯批准；PR继续Open/Draft，`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。Stage153代码审核固定范围可记DONE，但**业务模型G4/G6仍 UNKNOWN/NO_GO**。结束本项安全循环后优先继续真正同一市场共享D0真实原`observe_snapshot` → 持久化WATCH → 共用原`process_queue` 的因果全链路，不因原历史91 LATE就断言91个盈利漏单或盲目放宽8/3min、15min容量，不虚称现时Mac成功部署。
+
+
+## 共享Spot原生产D0+全局D1真实源码里程碑与来源缺口（2026-10-16）
+
+**Stage153已独立其他Codex批准**：`APPROVE@4553cb6b18c5aaf723072d17a39f9ad92f0629c9`，1 P1/2 P2关闭、原固定CI、旧source字节一致；真实活动SQLite WAL只读可能会改变SHM索引，不能写所有sidecar绝对不可变。此前已将最终审查与SHM实证写入[Stage153 Codex最终归档](MONSTER_STAGE153_CODEX_FINAL_APPROVE_FIXED_4553CB6_WITH_SQLITE_WAL_SHM_LIMIT_20261016.md)。前次原结论不适用于后续不同引擎SHA。
+
+按用户终极目标，本轮没有再修统计边界，已遵照**事前冻结的[同一个全市场Spot D0→D1因果回放合同](MONSTER_NEXT_SHARED_D0_TO_D1_FULL_SPOT_MARKET_CAUSAL_REPLAY_FROZEN_20261016.md)**投入代码、真实官方数据源、独立CI验收。固定**本轮待外部审核代码 SHA `0ffe44ece8644443757b5f6ac0cd19e0f5d1999e`**。新增同源影子实现 [一份真实共享SQLite、所有币同一poll一次D0+一次原D1](../local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py)，原生产`monster_v4_shadow.py` Git blob锁定不改，原来源官方daily分钟ZIP/.CHECKSUM须完整检验10天、UTC逐分钟连续、原过去24h成交额proxy、原闭合5m，缺币/坏SHA/未来数据fail closed；未调3分钟/8上限/15分钟有效期。新增 [36份老Artifact原SHA+真实758名人口核验](../local-agent/scripts/monster_v4_shared_spot_stage26_original_source_census.py) + 13项合成对照/负向测试。
+
+**真实CI [#38809121359](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38809121359)：`5/5 Jobs completed/success`，Ubuntu24.04/macOS各13/13、36份原Stage26历史Artifact**封装ZIP SHA及解压JSON SHA**全通过；原实名单758币×6日4548尝试，真实完整官方分钟来源仅 **2719**、缺失/不完整 **1829**。按日期真实合格`433/440/445/438/478/485`，不完整`325/318/313/320/280/273`。新 [原758六日官方真实来源资格机器清单](evidence/monster_shared_spot_stage26_36_source_census.json) Git blob `a558766de7514a87a4d2bca7555d4ac37efbb086`，原758 roster SHA256 `cea49caae4245dad910cc096bdaea953387bdfea64667a49916756d12297074a`。
+
+另一个真正官方数据Job获取 **BTCUSDT/ETHUSDT各10份历史原Spot 1m ZIP+CHECKSUM**（2026-02-03至02-12日），并保存20个各日Binance发行者SHA，使用**一个SQLite里每3分钟同一次全ticker D0、同一次限8 D1原核心**真实扫描了3360个tick、共6720 symbol×tick，结果该两大币在该日期均未触发 WATCH，不能冒充正向爆发/98币已验证、也不能称758全市场完成。真实[官方双币原核心共享状态机器报告](evidence/monster_shared_spot_real_BTC_ETH_20260204.json) Git blob `8b58e95bb2758c27e8ab08a875f7a50970fb5c2f`，共享回放源码SHA256`9d09626f7425524bd374d3295c36e4e5a81f66347e4e7db89246387532314404`，原机器固定trigger为本轮SHA。CI真实Git回写码`MONSTER_SHARED_SPOT_REAL_ORIGINAL_SOURCE_PROOFS_PINNED_GIT_PASS`已查。
+
+**本轮闭环事实**：共同SQLite D0+全局D1核心开发、合成两币相同分钟WATCH与旧逐币核心核对、两OS测试、原36源全人口及20真实日官方数据两币验证、机器Git归档 = DONE；外部另一AI代码审核=NOT_DONE、源齐全445个2026-02真实高压历史共享回放=NOT_DONE、完整原758现有旧来源源不全必须CENSORED、原98突发是否共享D0真的产生新事件=UNKNOWN、完整Spot/Futures共享、PIT完整上市、新日期OOS、真实L2成交/净收益、邮件、Mac=NOT_DONE。**不要由于实际新源码和5/5 CI绿灯升级G0/G4/G6**。
+
+完整 [本轮真实数据与成本/分母技术报告](MONSTER_SHARED_SPOT_D0_D1_758_SOURCE_CENSUS_AND_REAL_TWO_COIN_PROBE_20261016.md) 与[可直接交给Claude/Codex固定SHA独立复审提示词](MONSTER_SHARED_SPOT_D0_GLOBAL_D1_INDEPENDENT_REVIEW_PINNED_0FFE44E_20261016.md)均已保存Git。优先下一高价值一步：在原2026-02高压窗口只对**445个原已验证完整来源**成员（而非旧91个迟到交易筛币）再下载官方小时/日1m、对照每日期SHA，执行真正全445共享D0同tick与原D1全程；仍严格报告原758分母中的313缺源、后验留存选择偏差，和Stage26旧同445及Stage28共享D1结果做同源同成员并行对照。普通日2025-11完整433币随后重算。**研究不能以生产Mac安装或自动定时采集作为前提，用户无需本阶段在Mac操作。**
+
+门禁继续`G0 PARTIAL / G1 NOT_SCORABLE / G2/G3 NOT_PASSED / G4 UNKNOWN / G5_FULL_RELEASE NOT_PASSED / G6 NO_GO`；`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE/FRANK_UNCHANGED/STAGE99_STOPPED/NO_NEW_SCHEDULE`。真正其他AI固定SHA审查意见未收到时，不能记本次新共享代码APPROVE，也不可部署。
