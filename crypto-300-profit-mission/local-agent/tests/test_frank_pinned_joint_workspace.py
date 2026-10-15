@@ -102,6 +102,29 @@ def test_cli_assemble_and_verify_only_when_explicit(repo_and_pins, capsys):
     assert (target / "new-user-research.txt").read_text() == "not tracked"
 
 
+def test_cleanup_requires_trusted_clean_staging_and_explicit_flag(
+        repo_and_pins, capsys):
+    repo, staging, candidate = repo_and_pins
+    name = "frank-joint-cleanup-proof"
+    workspace.assemble(repo, staging, name, candidate)
+    target = staging / name
+    protected = repo / "untracked-production-local.txt"
+    (target / "unsaved-research.txt").write_text("preserve")
+    assert workspace.main(["--cleanup", "--staging-root", str(staging),
+                           "--name", name]) == 1
+    assert target.is_dir()
+    assert (target / "unsaved-research.txt").is_file()
+    (target / "unsaved-research.txt").unlink()
+    assert workspace.main(["--cleanup", "--staging-root", str(staging),
+                           "--name", name]) == 0
+    outcome = json.loads(capsys.readouterr().out)
+    assert outcome["status"] == "FRANK_ISOLATED_REMOVED"
+    assert not target.exists()
+    assert protected.read_text() == "do not touch"
+    assert workspace.main(["--cleanup", "--staging-root", str(staging),
+                           "--name", name]) == 1
+
+
 def test_reject_wrong_pin_and_overlapping_paths(repo_and_pins):
     repo, staging, candidate = repo_and_pins
     with pytest.raises(ValueError, match="PIN_INVALID"):
