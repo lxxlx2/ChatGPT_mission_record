@@ -1,6 +1,5 @@
 """Approved Mac passive source preflight; test-only temporary repositories."""
 import json
-from pathlib import Path
 import subprocess
 
 from scripts import frank_mac_readonly_preflight as preflight
@@ -29,7 +28,10 @@ def test_repo_passive_reader_does_not_modify_source(tmp_path, monkeypatch):
     repo = _test_git(tmp_path)
     sha = _git(repo, "rev-parse", "HEAD")
     _git(repo, "update-ref", preflight.EVIDENCE_REF, sha)
-    monkeypatch.setattr(preflight, "EXPECTED_PINS", {"test": sha})
+    monkeypatch.setattr(preflight, "EXPECTED_PINS", {
+        "test": sha,
+        "pr73_reviewed": "5755b8b96080f21635eaa5354588cbb8f6561ab0",
+    })
     monkeypatch.setattr(preflight, "EXPECTED_EVIDENCE_SHA", sha)
     (repo / "new-unsaved.txt").write_text("research-data", encoding="utf-8")
     before = {
