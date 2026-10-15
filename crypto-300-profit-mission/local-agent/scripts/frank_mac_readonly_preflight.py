@@ -30,7 +30,12 @@ SESSION_SCAN_LIMIT = 200
 
 
 def safe_exec(argv: list[str], *, cwd: Path | None = None) -> tuple[int, str]:
-    """Only named read commands; avoid Git optional index file locks."""
+    """Read-only preflight: suppress configured Git fsmonitor executables."""
+    if argv and argv[0] == "git":
+        # GIT_OPTIONAL_LOCKS=0 does not prevent git status from executing
+        # core.fsmonitor. Git's command-scope -c overrides repository/global
+        # helpers for every Git read in this preflight.
+        argv = ["git", "-c", "core.fsmonitor=false", *argv[1:]]
     try:
         result = subprocess.run(
             argv, cwd=cwd, stdin=subprocess.DEVNULL,
