@@ -22,6 +22,7 @@ C02 = "8898134a8a302e1187138f7fb3da87a554567e6d"
 F01 = "516e3335a134c608f477019b79027982f43af32a"
 REVIEWED_PARENT = "d998fb5966fac2eee5dbeedca5f78126d1b51b6d"
 MARKER = "frank-isolated-source-pins.json"
+EVIDENCE_REF = "refs/remotes/origin/evidence/frank-ca-local"
 COMMIT = re.compile(r"[0-9a-f]{40}\Z")
 
 
@@ -88,6 +89,15 @@ def assemble(repo: Path, staging_root: Path, name: str,
              str(source), sha)
         if _run("git", "-C", str(dest), "rev-parse", "FETCH_HEAD") != sha:
             raise ValueError("FRANK_ISOLATED_FETCH_PIN_MISMATCH")
+    # Existing evidence-backed regression requires this explicitly archived
+    # branch. Carry the exact *local* object/ref, not a live Git/network fetch.
+    evidence_head = _run("git", "-C", str(source), "rev-parse", EVIDENCE_REF)
+    if not COMMIT.fullmatch(evidence_head):
+        raise ValueError("FRANK_ISOLATED_EVIDENCE_REF_INVALID")
+    _run("git", "-C", str(dest), "fetch", "--no-tags", "--quiet",
+         str(source), f"{EVIDENCE_REF}:{EVIDENCE_REF}")
+    if _run("git", "-C", str(dest), "rev-parse", EVIDENCE_REF) != evidence_head:
+        raise ValueError("FRANK_ISOLATED_EVIDENCE_REF_MISMATCH")
     _run("git", "-C", str(dest), "merge-base", "--is-ancestor",
          REVIEWED_PARENT, integration_sha)
     _run("git", "-C", str(dest), "checkout", "--detach", "--quiet", MAIN)
@@ -107,6 +117,8 @@ def assemble(repo: Path, staging_root: Path, name: str,
         "schema_version": 1,
         "pins": pins,
         "integrated_head": head,
+        "historical_evidence_ref": EVIDENCE_REF,
+        "historical_evidence_sha": evidence_head,
         "isolated_source_only": True,
         "network_invoked": False,
         "source_modified": False,
@@ -140,6 +152,13 @@ def verify(staging_root: Path, name: str) -> dict:
             or saved.get("pins") != _pins(
                 saved.get("pins", {}).get("integrated_review_candidate"))):
         raise ValueError("FRANK_ISOLATED_MANIFEST_INVALID")
+    if (saved.get("historical_evidence_ref") != EVIDENCE_REF
+            or not COMMIT.fullmatch(
+                saved.get("historical_evidence_sha", ""))):
+        raise ValueError("FRANK_ISOLATED_EVIDENCE_MANIFEST_INVALID")
+    if (_run("git", "-C", str(target), "rev-parse", EVIDENCE_REF)
+            != saved["historical_evidence_sha"]):
+        raise ValueError("FRANK_ISOLATED_EVIDENCE_REF_DRIFT")
     head = _run("git", "-C", str(target), "rev-parse", "HEAD")
     if head != saved["integrated_head"]:
         raise ValueError("FRANK_ISOLATED_HEAD_DRIFT")
