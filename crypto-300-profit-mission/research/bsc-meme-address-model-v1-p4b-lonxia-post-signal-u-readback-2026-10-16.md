@@ -1,3 +1,5 @@
+**审核后追加更正（覆盖本文相冲突的旧叙述）**：固定 SHA `e2895bc8fc0a5c73754201504439d738ab1aa992` 的独立部分审核为 `REQUEST_CHANGES`。本页原先的“三名独立卖家”只能理解为“三个不同签名地址”；其中 **5C48/9D12 都属于冻结 23 钱包**，仅 BB99 不属于。已补录 N+1 与卖出块原始 `milliTimestamp`（历史头部时间差 100.8 秒）、83636000 **全部 4 条 manager TokenSale（龙虾 3、其他 CA 1）与龙虾 5 条 Transfer（卖出方向 3、买入方向 2）**。DDAC 原 `0.8 BNB` 价值与来源 cost+baseFee 之间 **`8000000000000004 wei`** 未归属。既有“真实卖出”数字只针对**抽样单块**，不代表整段迁移前市场的完整卖出数量；此前 P5 也绝无样本外独立跟单盈利结论。**请优先阅读 [独立审查修复报告](./bsc-meme-address-model-v1-p4b-lonxia-review-correction-2026-10-16.md) 与 [追加只读链上证据](./bsc-meme-address-model-v1-p4b-lonxia-independent-review-errata-2026-10-16.json)**；此前有冲突的语句以新增来源核实内容为准。旧 JSON 原文不可回溯篡改。
+
 # BSC Meme P4-B / 龙虾：从 DDAC 买入后观察者开始的历史买、卖链上证据
 
 日期：2026-10-16 Asia/Bangkok。Mission [Draft PR #40](https://github.com/lxxlx2/ChatGPT_mission_record/pull/40)，**仅只读研究**。本批依据前一轮固定已批准代码 SHA `47945ca77806d23d942fa2abb681c70244e273a7` 所冻结的 DDAC／龙虾 2026 CA 调查。**本批新增的归档、脚本和工作流不继承此前的独立 APPROVE，新 SHA 仍待独立审查。**
