@@ -1,0 +1,166 @@
+name: Monster V4 shared Spot D0 global D1 real archived source proof
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_stage26_original_source_census.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_spot_d0_d1_original_core.py'
+      - '.github/workflows/monster-v4-shared-spot-d0-global-d1-official.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  original_global_core_tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Shared full-tick causal D0 D1, original V4 core, no fake 758 full replay
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -m py_compile monster_v4_shared_spot_d0_d1_original_core.py monster_v4_shared_spot_stage26_original_source_census.py test_monster_v4_shared_spot_d0_d1_original_core.py
+          python -m unittest -v test_monster_v4_shared_spot_d0_d1_original_core.py
+          echo MONSTER_SHARED_SPOT_ZERO_RUNTIME_SCHEDULE_MAIL_TRADE=PASS
+
+  true_36_source_census:
+    needs: original_global_core_tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download all 36 real Stage26 prior original artifact archives, not WATCH-only proxies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_shared_original_stage26
+          python - <<'PY' > /tmp/monster_shared_36_ids.tsv
+          import json
+          from pathlib import Path
+          p=Path('crypto-300-profit-mission/monster/evidence/monster_stage26_verified_sharded_168h_artifact_proof_20261011.json')
+          j=json.loads(p.read_text())
+          assert len(j["artifacts"])==36
+          for r in sorted(j["artifacts"],key=lambda r:(r["date"],r["shard"])):
+              print(r["date"],r["shard"],r["artifact_id"])
+          PY
+          while read -r date shard artifact; do
+            gh api -H 'Accept: application/vnd.github+json' "repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/$artifact/zip" > "/tmp/monster_shared_original_stage26/monster_stage26_${date}_shard${shard}.zip"
+          done < /tmp/monster_shared_36_ids.tsv
+      - name: Independently reverify all 36 original ZIP SHA and JSON SHA, exact 758 times six denominator
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python monster_v4_shared_spot_stage26_original_source_census.py --source-artifact-dir /tmp/monster_shared_original_stage26 --out /tmp/monster_shared_spot_stage26_36_source_census.json
+          python -m json.tool /tmp/monster_shared_spot_stage26_36_source_census.json > /dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-shared-spot-758-sixdate-36-source-locked-census
+          path: /tmp/monster_shared_spot_stage26_36_source_census.json
+          retention-days: 60
+
+  real_two_symbol_same_sqlite_probe:
+    needs: original_global_core_tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Real publisher verified BTC and ETH 10 daily Spot 1m ZIP/checksums each, one shared original D0 and global D1
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python monster_v4_shared_spot_d0_d1_original_core.py --date 2026-02-04 --official-symbol BTCUSDT --official-symbol ETHUSDT --out /tmp/monster_shared_spot_real_BTC_ETH_20260204.json
+          python -m json.tool /tmp/monster_shared_spot_real_BTC_ETH_20260204.json > /dev/null
+          python - <<'PY'
+          import json
+          with open('/tmp/monster_shared_spot_real_BTC_ETH_20260204.json') as f:
+              r=json.load(f)
+          assert r['actually_complete_symbols']==2
+          assert r['source_origin_verified'] is True
+          assert r['true_full_758_replay'] is False
+          assert r['one_shared_sqlite_for_all_symbols'] is True
+          assert r['source_coverage']['poll_ticks']==3360
+          assert len(r['prepared_verified_minute_sources'])==2
+          assert all(s['publisher_days']==10 for s in r['prepared_verified_minute_sources'])
+          print('MONSTER_SHARED_ORIGINAL_D0_REAL_2_SYMBOL_20_OFFICIAL_ARCHIVE_VERIFIED=PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-shared-spot-real-BTC-ETH-original-core-2026-02-04
+          path: /tmp/monster_shared_spot_real_BTC_ETH_20260204.json
+          retention-days: 60
+
+  archive_source_pin_and_probes:
+    needs: [true_36_source_census, real_two_symbol_same_sqlite_probe]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - name: Retrieve only this exact triggering run's verified outputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster_shared_results
+          gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_shared_results --name monster-shared-spot-758-sixdate-36-source-locked-census
+          gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_shared_results --name monster-shared-spot-real-BTC-ETH-original-core-2026-02-04
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('/tmp/monster_shared_results/monster_shared_spot_stage26_36_source_census.json').read_text())
+          b=json.loads(Path('/tmp/monster_shared_results/monster_shared_spot_real_BTC_ETH_20260204.json').read_text())
+          assert a['trigger_commit_sha']==b['trigger_commit_sha']
+          assert a['all_six_dates_source_complete']==2719
+          assert b['true_full_758_replay'] is False
+          assert len(a['original_758_symbols'])==758
+          print('MONSTER_SHARED_PINNED_PROOF_758_ROSTER_AND_TWO_SYMBOL_PIT_SOURCE_CORRECT')
+          PY
+      - name: Source-tagged Git archive after rejecting concurrent source/test drift
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_shared_results/monster_shared_spot_stage26_36_source_census.json "$dest/"
+          cp /tmp/monster_shared_results/monster_shared_spot_real_BTC_ETH_20260204.json "$dest/"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest/monster_shared_spot_stage26_36_source_census.json" "$dest/monster_shared_spot_real_BTC_ETH_20260204.json"
+          git commit -m "monster: record original 758 six-date source census and real official BTC ETH one-global-SQLite D0 D1 probe"
+          for attempt in 1 2 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              exit 1
+            fi
+            for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_stage26_original_source_census.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_spot_d0_d1_original_core.py .github/workflows/monster-v4-shared-spot-d0-global-d1-official.yml; do
+              test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_SHARED_SOURCE_DRIFT=$f"; exit 1; }
+            done
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo MONSTER_SHARED_SPOT_REAL_ORIGINAL_SOURCE_PROOFS_PINNED_GIT_PASS
+              exit 0
+            fi
+          done
+          exit 1
