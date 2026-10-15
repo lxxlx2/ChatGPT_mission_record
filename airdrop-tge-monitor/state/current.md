@@ -1,19 +1,19 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-15 manual reconciliation after 09:13 final-retry Asia/Bangkok
+Updated: 2026-10-16 02:05 Asia/Bangkok, latest partial final-retry
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-15 09:13:25 Asia/Bangkok
+- latest_actual_run: 2026-10-16 02:05:10 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-15/091325-final-retry.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-15/090718-attempt.md
-- latest_scheduled_shard: 1
-- latest_executed_shard: 1
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-16/020510-final-retry.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-16/020340-attempt.md
+- latest_scheduled_shard: 2
+- latest_executed_shard: 2
 - stale_shard_recovery: false
-- latest_candidate_count: 6
+- latest_candidate_count: 4
 - latest_triggered_events: 0
 - latest_identity_failures: 0
-- latest_source_failures: 3
+- latest_source_failures: 8
 - latest_notification_decision: NO_ACTION
 - latest_notification_status: SILENT
 - latest_gmail_attempted: false
@@ -86,3 +86,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-15 04:00:28: actual scheduled-hour run with 03:59:46 attempt and 040028-final.md committed; urgent5 + dynamic Surf and scheduled shard0, 15 distinct projects attempted, 13 checked_no_update, 2 SOURCE_GAP (Concrete additional USDC and Surf NFT eligibility), 6 candidate families, 0 new Tier A/B ACTION, 0 identity failures. Space Oct15 and MetaMask Oct15 delivered stable keys suppressed; no Gmail/App. Last meaningful shard0 attempt advanced to 04:00:28; verified-complete timestamps unchanged (PARTIAL). Recent final-backed executed shards [2,1,2,0]; no stale override. Prior 02:56 attempt-only gap remains unverified. Task unchanged.
 
 - 2026-10-15 manual reconciliation: 09:13 actual shard1 terminal `091325-final-retry.md` was PARTIAL, 3 source gaps and 0 ACTION; its `Surf eligibility` SOURCE_GAP was later disproven as a completeness claim by accessible issuer `https://asksurf.ai/blog/en/surfboard-nft-launch`, officially establishing 10:00 BKK claim opening, annual membership eligibility and Nov13 close. Manual first late email delivered Gmail `1a13e676f3e4e04d`, canonical event `reports/events/2026/2026-10/2026-10-15/1409-surf-surfboard-member-claim.md`. Distinguish this new SurfBoard event from Season1 referral. StandX existing Shard0 was examined at 04:00 before Oct15 shutdown announcement; later cross-shard material discovery missing. New StandX wind-down/DUSD airdrop risk was manually notified by Gmail `1a13e6930e07d0ae`, event `reports/events/2026/2026-10/2026-10-15/1410-standx-winddown-dusd-airdrop.md`; official X post LINKS confirmed while full source content remained unreadable, so exact dates are pending independent Tier A text readback. Both received actual Sent/readback and Git identical body. These are user-requested MANUAL DELIVERIES and not successes of the preceding hourly scheduled jobs. Known-events includes stable keys and suppresses unchanged duplicates. Surf claim-open and StandX end-of-service deadlines are now dynamic urgent existing Registry candidates; no new projects or automation. User reports an App push about Surf, but actual origin/timestamp and platform delivery audit are not accessible from GitHub; prior hourly finals recorded no Gmail and 0 ACTION, and task notification flag is disabled. Use Gmail delivery as authority, App not substitute. Scheduled health remains DEGRADED_PARTIAL: no fully complete recorded run since 2026-10-10 07:52, stale source access and tool write blocks persist.
+
+- 2026-10-16 02:05:10: existing HH:00 monitor invocation; 020340-attempt.md committed, primary final BLOCKED_WITH_REASON, 020510-final-retry.md committed. Urgent5 + dynamic Surf/StandX + scheduled shard2, 15 unique projects attempted, bounded cross-shard lifecycle search completed, 4 candidates, 0 new Tier A/B ACTION, 8 current-source gaps, 0 identity conflicts. Gmail Sent confirmed Oct15 SurfBoard and StandX stable events already delivered; no duplicate. No Gmail/App notification. Shard2 last_meaningful_attempt_at advanced; verified-complete remains unchanged (PARTIAL). Recent final-backed shards [1,3,0,2], no override. Schedule/task/scope unchanged.
