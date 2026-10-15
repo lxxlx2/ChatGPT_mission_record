@@ -4,6 +4,7 @@ on:
     branches:
       - dev/frank-f02-r2-isolated-browser-20261015
       - fix/frank-f02-r2-ttl-live-expiry-20261015
+      - codex/frank-f02-manual-source-refresh-20261015
   workflow_dispatch:
 permissions:
   contents: read
@@ -25,15 +26,15 @@ jobs:
       - name: Python/Node syntax and real JS DOM render
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m compileall -q scripts/frank_f02_readonly_positions_api.py tests/test_frank_f02_r2_isolated_browser.py
-          python -m pyflakes scripts/frank_f02_readonly_positions_api.py tests/test_frank_f02_r2_isolated_browser.py
+          python -B -m compileall -q scripts/frank_f02_manual_refresh.py scripts/frank_f02_readonly_positions_api.py tests/test_frank_f02_manual_refresh.py tests/test_frank_f02_r2_isolated_browser.py
+          python -m pyflakes scripts/frank_f02_manual_refresh.py scripts/frank_f02_readonly_positions_api.py tests/test_frank_f02_manual_refresh.py tests/test_frank_f02_r2_isolated_browser.py
           node --check scripts/frank_f02_web/positions.js
           node --check tests/frank_f02_r2_render.cjs
           node tests/frank_f02_r2_render.cjs
       - name: F02-R2 real localhost HTTP and upstream A05/F02
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -B -m pytest -q -p no:cacheprovider tests/test_frank_f02_r2_isolated_browser.py tests/test_frank_f02_r1_readonly_positions_api.py tests/test_frank_a05_r2_frozen32_offline.py tests/test_frank_a05_complete_rpc_receipts.py tests/test_frank_a05_f02_latest_inventory.py
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_f02_manual_refresh.py tests/test_frank_f02_r2_isolated_browser.py tests/test_frank_f02_r1_readonly_positions_api.py tests/test_frank_a05_r2_frozen32_offline.py tests/test_frank_a05_complete_rpc_receipts.py tests/test_frank_a05_f02_latest_inventory.py
       - name: Full regression
         working-directory: crypto-300-profit-mission/local-agent
         env:
@@ -73,7 +74,7 @@ jobs:
           node --check mission_agent/mission_control/static/app.js
           node tests/ca_identity_render.cjs
           node tests/frank_f02_r2_render.cjs
-          python -B -m pytest -q -p no:cacheprovider tests/test_frank_f02_r2_isolated_browser.py tests/test_frank_f02_r1_readonly_positions_api.py tests/test_frank_a05_r2_frozen32_offline.py tests/test_frank_a05_complete_rpc_receipts.py tests/test_frank_a05_f02_latest_inventory.py tests/test_follow_opportunity_f01.py tests/test_follow_opportunity_f01_integration.py tests/test_frank_ca_c02_claude_review_regression.py
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_f02_manual_refresh.py tests/test_frank_f02_r2_isolated_browser.py tests/test_frank_f02_r1_readonly_positions_api.py tests/test_frank_a05_r2_frozen32_offline.py tests/test_frank_a05_complete_rpc_receipts.py tests/test_frank_a05_f02_latest_inventory.py tests/test_follow_opportunity_f01.py tests/test_follow_opportunity_f01_integration.py tests/test_frank_ca_c02_claude_review_regression.py
       - name: Full combined regression
         working-directory: crypto-300-profit-mission/local-agent
         env:
