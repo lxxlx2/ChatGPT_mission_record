@@ -77,7 +77,7 @@ def classify(docs):
                 q["simulation_to"] == MANAGER and
                 q["simulation_signature"] == "buyTokenAMAP(address,uint256,uint256)" and
                 q["simulation_minAmount"] == "0" and
-                q["historical_ethCall_buy_simulation_output"] == "0x" and
+                q["read_only_call_return"] == "0x" and
                 q["eth_call_reverted"] is False and
                 q["real_fill"] is False, "simulated buy misreported as real fill")
         require(q["suggested_payable_msg_value_wei"] == q["budget_native_BNB_wei"] and
