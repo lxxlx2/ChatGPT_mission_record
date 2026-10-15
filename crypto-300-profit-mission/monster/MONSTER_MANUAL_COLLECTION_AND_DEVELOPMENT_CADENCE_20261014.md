@@ -316,3 +316,16 @@ Stage143工程=PASS_MACOS_UBUNTU_66_OF_66; MODEL_G0=PARTIAL; G1=NOT_SCORABLE; G2
 **操作性止损线**：暂停任何尝试从已停更官方bookTicker/旧L2回填2025-26成交深度的研发，避免伪造收益。下一项真实能推进G0/G1/G2/G3的实务工作仍是原Stage140 525 / 4725 symbol-day **已存在的** Stage136 publisher归档、Stage137/138同核心全分母回放：2026-10-23T18:00Z（曼谷10-24 01:00）后仅在用户明确聊天手动指令时采集；维护原10/28和11/11的用户主动采集参考点，不恢复任何Stage99或补造早期失败窗口。真实publisher仅有回顾K线、不自证实时消息送达。G4保持`UNKNOWN / BLOCKED_BY_MISSING_PIT_PAIRED_FULL_L2_AND_VALID_NOTIONAL`，不得因单一BBO/区间bookDepth/无用户金额模拟成真实净利润。将来如有确实能覆盖交易时点的第三方历史L2，先做独立可用性审查，不在无源时加代码。**不得违反本模块既定先历史模型和其他AI审核、再经另行授权才启用Mac Shadow与通知的顺序**。
 
 本轮仅修正数据源研究与优先级，原冻结代码、失败回测和所有G0–G6门禁不变：`G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_FULL_RELEASE=NOT_PASSED`; `G6=NO_GO`; `NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`; `Frank=UNCHANGED`; `NO_NEW_SCHEDULE`.
+
+
+## Stage151 立即进行旧305真实1m策略开发、CI回测及正式负收益判定（2026-10-15）
+
+**用户指出无需等2026-10-24数据成熟才继续研发，此判断正确。** 本轮立即回到历史模型主线，按长期先冻结后代码规则实现 Stage151 唯一新经济逻辑：原D1触发后先等待在已闭合1m CLOSE出现相对已知D1收盘的3%回撤，再等最低已闭合CLOSE反弹1%，120分钟内可确认时只使用下分钟OPEN作研究入场，固定6h/24h未来OPEN为研究退出价；未确认保留NO_TRADE，不得以未来HIGH假设成交。冻结协议commit `8a7c2bf22ba563b20058e626453f1db1d7bb7be3` 在模型代码和真实回放之前提交。固定源码+测试+workflow审核SHA `b309bf75a46a48cde1aa6b14c17d3e6b7c1b53c2`，**原D0/D1、Stage90/120/137/138/150、Frank没有改动**。
+
+实际历史取数复跑已经完成，[Stage151 GitHub Actions #38724428671](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38724428671) 27/27 jobs `SUCCESS`，Ubuntu/macOS合成因果单元测试各11/11 PASS；24个original305真实官方Publisher 1m历史ZIP/CHECKSUM SHA shard和最终全305对账/Git证据写入PASS。机器全305源已随CI保存 [摘要](evidence/monster_stage151_original305_preregistered_summary.json)、[逐币历史路径](evidence/monster_stage151_original305_preregistered_rows.jsonl)，Git blob依次为 `f96354da4052c911a726954efdcc5baf3cc5bbd6` / `fcc8053f5bb1d672e8eaf907ee3d9ec64e911505`。详见 [Stage151完整实际结果和否决](MONSTER_STAGE151_REAL305_POST_D1_RECLAIM_ECONOMICS_ACTUAL_RESULTS_AND_CI_20261015.md) 以及 [同SHA真实CI补充的独立审核全文提示词](MONSTER_STAGE151_INDEPENDENT_OTHER_AI_REVIEW_PROMPT_PINNED_B309BF_20261015.md)。
+
+**业务定量结论必须保留失败**：原D1 305个完整，184回撤且恢复、113无回撤、8回撤但不恢复；其中184个固定6h开盘到开盘毛价中位 **-1.765975%**，24h **-2.446284%**，20bps每侧假设成本后24h中位 **-2.835720%**，80/184个24h毛价为正；原D1全305直接追价24h毛中位 **-2.799213%**。六历史日期只有一窗新24h中位正、四负、一零，且新旧入场样本/出场时钟不同，不能称两中位差为策略alpha。原D0只做早报WATCH，不随经济入场条件减少；原214 D0-only继续被保留。已曝光六日期不构成OOS；真实盘口/明确交易金额/fee/fill仍缺，**Stage151盈利候选拒绝，不允许换阈值选择幸存样本或改早期WATCH**。
+
+**新的研发主线**：不用等待10月24日可以继续独立研发D0全市场早期发现、上市冷启动、全人口漏报诊断、强度过时淘汰与可用性；任何新经济策略须有不同且可证伪的经济机制，不能在同一旧305里循环微调Stage151的3%/1%或只看成功子集；下一实际前瞻源成熟由用户主动聊天触发并保持按现有Stage136/137/138回放，不能为等待时间搁置工程。新Stage151独立其他AI真实审核目前尚未收到，完整提示词已交付Git；即使最终代码审核APPROVE也不改变负收益/模型NO_GO。
+
+`STAGE151_REAL_HISTORY=305_OF_305`; `STAGE151_CI=27_OF_27_SUCCESS`; `STAGE151_HISTORICAL_ECONOMIC_MODEL=REJECTED`; `STAGE151_EXTERNAL_CODE_REVIEW=PENDING`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_RELEASE=NOT_PASSED`; `G6=NO_GO`; `NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`; `Frank=UNCHANGED`; `Stage99=STOPPED`; `NO_NEW_SCHEDULE`.
