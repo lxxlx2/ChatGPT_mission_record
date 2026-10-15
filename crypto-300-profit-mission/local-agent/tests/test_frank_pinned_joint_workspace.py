@@ -156,7 +156,7 @@ def test_manifest_tamper_or_head_drift_fails_closed(repo_and_pins):
     doc = json.loads(original)
     doc["pins"]["main"] = "f" * 40
     marker.write_text(json.dumps(doc))
-    with pytest.raises(ValueError, match="MANIFEST_INVALID"):
+    with pytest.raises(ValueError, match="MANIFEST_SHA256_MISMATCH"):
         workspace.verify(staging, name, candidate, proof["manifest_sha256"])
     marker.write_text(original)
     git(target, "checkout", "--detach", workspace.MAIN)
