@@ -63,11 +63,11 @@ class Stage151(unittest.TestCase):
             m.decision(x[:119],D("100"),T0)
         y=list(x)
         y[119]=(y[119][0]+m.MIN,*y[119][1:])
-        with self.assertRaisesRegex(ValueError,"INVALID_OFFICIAL"):
+        with self.assertRaisesRegex(ValueError,"MISSING_OR_INVALID_OBSERVABLE"):
             m.decision(y,D("100"),T0)
         y=list(x)
         y[3]=(y[3][0],D("100"),D("99"),D("101"),D("100"),D("1000"),10)
-        with self.assertRaisesRegex(ValueError,"INVALID_OFFICIAL"):
+        with self.assertRaisesRegex(ValueError,"MISSING_OR_INVALID_OBSERVABLE"):
             m.decision(y,D("100"),T0)
 
     def test_no_implicit_notional_and_no_real_fill(self):
