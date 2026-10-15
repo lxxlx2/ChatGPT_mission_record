@@ -154,27 +154,54 @@ def audit_day(data, rec):
 
     # A Stage28 SETUP row has only symbol and UTC; correlate uniquely with a
     # completed episode whose original 15-minute D1 window covers that UTC.
-    consumed_setups = set()
+    # The original Stage28 SETUP register keeps symbol and UTC, but NOT the
+    # producing candidate id. Overlapping EVALUATED episodes can both cover
+    # one SETUP. Reject impossible/duplicated events, prove a one-to-one
+    # assignment EXISTS, and explicitly report ambiguous source ownership.
+    setup_options = {}
+    seen_event_keys = set()
+    ambiguous_setups = 0
     for event in data["setups"]:
         try:
             stamp = event["utc"]
-            if not isinstance(stamp, str) or not stamp.endswith("Z"):
-                raise ValueError("BAD_UTC")
+            symbol = event["symbol"]
+            if (not isinstance(symbol, str) or not isinstance(stamp, str)
+                    or not stamp.endswith("Z")):
+                raise ValueError("BAD_SETUP_FIELDS")
             instant = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
             if instant.tzinfo != timezone.utc:
                 raise ValueError("BAD_UTC_OFFSET")
             setup_ms = int(instant.timestamp() * 1000)
+            key = (symbol, setup_ms)
             candidates = [
-                q for q in by_symbol.get(event["symbol"], ())
+                q["id"] for q in by_symbol.get(symbol, ())
                 if q["status"] == "EVALUATED"
                 and q["first_seen_ms"] <= setup_ms <= q["deadline_ms"]
             ]
         except (KeyError, TypeError, ValueError, OverflowError) as exc:
             raise ValueError("STAGE153_SETUP_EVENT_INVALID_TIME_OR_SYMBOL") from exc
-        if len(candidates) != 1 or candidates[0]["id"] in consumed_setups:
-            examples = [(q["id"], q["status"], q["first_seen_ms"], q["deadline_ms"]) for q in by_symbol.get(event.get("symbol"), [])[:4]]
-            raise ValueError("STAGE153_SETUP_UNMATCHED_OR_DUPLICATED_CANDIDATE " + repr((event, examples)))
-        consumed_setups.add(candidates[0]["id"])
+        if key in seen_event_keys or not candidates:
+            raise ValueError("STAGE153_SETUP_UNMATCHED_OR_DUPLICATED_CANDIDATE")
+        seen_event_keys.add(key)
+        setup_options.setdefault(symbol, []).append(tuple(candidates))
+        ambiguous_setups += len(candidates) > 1
+
+    def matching_exists(options):
+        claimed = {}
+        def assign(event_index, visited):
+            for candidate_id in options[event_index]:
+                if candidate_id in visited:
+                    continue
+                visited.add(candidate_id)
+                if (candidate_id not in claimed
+                        or assign(claimed[candidate_id], visited)):
+                    claimed[candidate_id] = event_index
+                    return True
+            return False
+        return all(assign(i, set()) for i in range(len(options)))
+
+    if not all(matching_exists(options) for options in setup_options.values()):
+        raise ValueError("STAGE153_SETUP_NONINJECTIVE_CANDIDATE_OWNERSHIP")
     burst = [v for v in details if v["first_seen_ms"] == BURST]
     summary = {
         "date": day,
@@ -182,6 +209,8 @@ def audit_day(data, rec):
         "candidate_queue_rows": len(queue),
         "queue_status": dict(status),
         "D1_setups": len(data["setups"]),
+        "D1_SETUPS_with_multiple_plausible_EVALUATED_candidates": ambiguous_setups,
+        "setup_source_id_provenance": "NOT_IN_ORIGINAL_STAGE28_REGISTER_MATCHING_EXISTS_ONLY",
         "D1_LATE_REVIEW": len(data["late_events"]),
         "total_processor_selections_NOT_distinct": data["production_processor_selected_total"],
         "processor_deferred_NOT_distinct": data["production_processor_deferred_total"],
