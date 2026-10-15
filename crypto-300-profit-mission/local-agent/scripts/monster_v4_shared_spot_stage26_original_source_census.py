@@ -4,6 +4,7 @@ import argparse
 from collections import Counter
 import hashlib
 import json
+import os
 from pathlib import Path
 
 import monster_v4_stage26_aggregate as stage26
@@ -14,7 +15,7 @@ EXPOSED_DATES=("2025-11-04","2025-12-04","2026-02-04",
 
 
 def roster_sha(symbols):
-    return hashlib.sha256(("\\n".join(symbols)+"\\n").encode()).hexdigest()
+    return hashlib.sha256(("\\n".join(symbols)+"\n").encode()).hexdigest()
 
 
 def evaluate(all_reports, manifest):
@@ -66,6 +67,8 @@ def evaluate(all_reports, manifest):
         raise ValueError("SHARED_SPOT_SOURCE_MANIFEST_TOTAL_DISAGREES")
     return {
         "schema":SCHEMA,
+        "trigger_commit_sha":os.environ.get("GITHUB_SHA","LOCAL_UNVERIFIED"),
+        "source_census_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "frozen_source_commit_sha":manifest["source_git_sha"],
         "original_manifest_schema":manifest["schema"],
         "old_stage26_shard_count":36,
