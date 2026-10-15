@@ -58,6 +58,15 @@ class Frozen2026FiveWalletGate(unittest.TestCase):
         self.assertEqual(rows["A83B"]["token"],"牛来")
         self.assertNotIn("recent_swap_this_token_verified",rows["A83B"])
 
+    def test_recent_wallet_scope_exact_CAs_matches_frozen_universe(self):
+        result=build(self.sources)
+        cas=result["recent_swap_frozen_19_exact_CAs"]
+        self.assertEqual(len(cas),len(set(cas)))
+        self.assertEqual(len(cas),19)
+        self.assertEqual(set(cas),{m["ca"] for m in self.sources[1]["markets"]})
+        self.assertEqual(set(cas),{m["exact_CA"] for m in self.sources[2]["rows"]})
+        self.assertIn(next(r for r in result["cases"] if r["wallet_label"]=="A83B")["exact_CA"],cas)
+
     def test_ambiguous_false_witness_missing_qualification_is_rejected(self):
         altered=copy.deepcopy(self.sources)
         row=next(w for w in altered[0]["wallets"] if w["wallet"].startswith("0x239e"))
