@@ -12,7 +12,7 @@ import hashlib
 import json
 import os
 from collections import Counter
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from pathlib import Path
 import sqlite3
@@ -85,9 +85,14 @@ def prepare_symbol(db, symbol, day, bars, source_receipts):
                    or len(r) != 7 for i, r in enumerate(bars))
             or any(r[4] <= 0 or r[5] < 0 or r[6] < 0 for r in bars)):
         raise ValueError("SHARED_SPOT_SOURCE_12960_CONTIGUOUS_1M_REQUIRED")
+    expected_days = [(day+timedelta(days=i)).isoformat()
+                     for i in range(-1,9)]
     if (not isinstance(source_receipts, list) or len(source_receipts) != 10
+            or [p.get("date") for p in source_receipts] != expected_days
             or any(p.get("verified_published_sha256") is not True
-                   or len(p.get("sha256","")) != 64 for p in source_receipts)):
+                   or len(p.get("sha256","")) != 64
+                   or any(c not in "0123456789abcdef" for c in p["sha256"])
+                   for p in source_receipts)):
         raise ValueError("SHARED_SPOT_10_OFFICIAL_PUBLISHER_SHAS_REQUIRED")
     prefix = [Decimal(0)]
     for r in bars:
@@ -106,7 +111,10 @@ def prepare_symbol(db, symbol, day, bars, source_receipts):
         db.execute("INSERT INTO source_receipts VALUES(?,?)",
                    (symbol, json.dumps(source_receipts, sort_keys=True)))
     return {"symbol":symbol,"poll_rows":len(rows),"closed_5m":len(candles),
-            "publisher_days":len(source_receipts)}
+            "publisher_days":len(source_receipts),
+            "original_publisher_sha256_by_day":[
+                {"day":p["date"],"sha256":p["sha256"]}
+                for p in source_receipts]}
 
 
 def assert_complete_cache(db, roster, day):
