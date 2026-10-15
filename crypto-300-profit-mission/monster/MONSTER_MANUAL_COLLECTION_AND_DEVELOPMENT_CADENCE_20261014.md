@@ -205,3 +205,15 @@ Claude 独立审查用户原文已由用户带入当前对话：审查旧 fixed 
 按 Monster 新硬规则，Claude 修复后的[完整可复制独立复审提示词](MONSTER_STAGE143_CLAUDE_INDEPENDENT_RE_REVIEW_PROMPT_PINNED_5FD313_20261015.md) 已提供并提交，严格 pin 5fd3138702a3caef69ce2d48696059bceeefd6f9、旧被拒SHA、所有旧P0/P1和真实CI与可复现命令。**外部复审结果尚未返回。旧意见 REQUEST_CHANGES 是有效审查输入，但新代码没有因此获得 APPROVE。** 用户将其他AI反馈发回来后按具体缺陷修复，必要时重新CI并更新 pin。
 
 Stage143工程=PASS_MACOS_UBUNTU_66_OF_66; MODEL_G0=PARTIAL; G1=NOT_SCORABLE; G2_G3=NOT_PASSED; G4=UNKNOWN; G5_EXTERNAL_REVIEW_REQUEST_CHANGES_PENDING_REREVIEW; G6=NO_GO; PR_30=DRAFT; NO_MERGE; NO_DEPLOY; NO_GMAIL; NO_TRADE; FRANK_UNCHANGED; NO_NEW_SCHEDULE.
+
+## Stage144 离线真实 D0/D1 发现延迟重放：不再以旧时间戳上界冒充实际信号（2026-10-15）
+
+用户明确放弃本地 Crypto 信息流网站视觉设计，**立即回归 Monster 本体模型研发**；旧设计讨论不是 Git 开发许可，本轮并未修改统一网站、Frank、CA 或 BSC。原 Monster PR #30 保持 Draft。先阅读本规则及 Stage137–143 和 5fd Claude 复审等待，按独立先冻结再开发流程实施[Stage144 预冻结原模型延迟对照](MONSTER_STAGE144_FROZEN_ACTUAL_ORIGINAL_CORE_DISCOVERY_DELAY_REPLAY_20261015.md)，冻结提交 `e39de572685633ede85846213521ff3ab99f72b2`。
+
+**模型主线实质突破**：Stage143 的旧 `hypothetical_first_D0_after_detection_delay_NOT_LIVE_RERUN` 仅计算 `max(原始第一次D0, 事后首根行情开盘+假设延迟)`，并没有重建快照基线和原D0 WATCH。这会错误声称晚5分钟发现仍能观察一次已经完成的早期拉升。Stage144 在 [Stage137 原D0/D1回放](../local-agent/scripts/monster_v4_stage137_dynamic_t0_original_core_causal_replay.py)里对完整来源、**窗口内新上市币**从同一原始1m归档分别假设首次可见时间延迟0/1/3/5min，四次分别打开全新独立SQLite，真正执行冻结原V4 `observe_snapshot/process_queue`、原绝对UTC 3min poll、首poll只建立基线、原5m闭合、61分钟D1、100k quote门槛。延迟场景不可假设真实WebSocket发现事件时间，且曾经已存在/T0前已经上市的币不凭空算新币延迟。相同首次历史HIGH2x的比较锚点保留，不能改为延迟后更容易的目标。旧乐观字段仅作废弃兼容，不再参加任何准确度研究。
+
+**已通过真实代码的确定性反例**：合成原始币 `FASTUSDT` 于2026-10-28T06:21Z首次来源，8根已观察1m后上涨8%，原V4于06:30Z产生D0 WATCH；迟1或3分钟首发现时仍为06:30Z原D0，**迟5分钟时06:30Z才是首基线，原D0根本不触发**，故真实重放的结果是未捕获，而不是旧式“max”保证还能捕获。事后合成首次2x HIGH在07:36Z，固定目标相同，非真实赚钱案例。另有相同合成行情Unicode别名、原Stage80 D1 REIGNITION、不到源结束无法有完整poll时明确NOT_SCORABLE。Stage138按真实每币0/1/3/5个版本重算 [Stage138 一致性计数](../local-agent/scripts/monster_v4_stage138_manual_evidence_scorecard.py)，首次D0、D1、错过原D0与提前5分钟2x标签分列，绝不能包装成已验证G1率。
+
+**固定代码SHA** `baf48e2022910ab9212f27ccb9e6a09b1f6586da`，全套跨模块/全人口原D0+Stage80 D1 联合 GitHub Actions [#38692218885](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38692218885) Ubuntu/macOS 各 **74/74 PASS**；Stage138 集成与独立三个synthetic不重叠窗口 [#38692218936](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38692218936) Ubuntu/macOS 各 **29/29 PASS**，日志均实际读回核实OK、无未经授权联网/安排定时服务/交易/Gmail/修改Frank。详见[正式 Stage144 模型结果/真伪限制](MONSTER_STAGE144_TRUE_ORIGINAL_D0_D1_DISCOVERY_LATENCY_REPLAY_TWO_OS_CI_20261015.md)。
+
+**后续主线**：新代码必须经其他 AI 对固定SHA独立复审（Stage143 Claude原REQUEST_CHANGES的旧修复新SHA亦尚未获得独立复审批准）；审核提示词必须同轮用户可直接复制、存Git，审查方没真实回复前G5 NOT_DONE。下个实质机会是 Stage140 已保存真实525 USD-M T0的盘口/BBO/24h ticker 价格新鲜度、报价规模与手续费/滑点成交可行性，待用户按既定手动时间明确提出才运行未来成熟的publisher回放，绝不为了这轮“继续开发”恢复Stage99定时任务。冻结门禁 G0 PARTIAL，G1 NOT_SCORABLE，G2/G3 NOT_PASSED，G4 UNKNOWN，G5 NOT_DONE，G6 NO_GO，NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE，FRANK UNCHANGED。
