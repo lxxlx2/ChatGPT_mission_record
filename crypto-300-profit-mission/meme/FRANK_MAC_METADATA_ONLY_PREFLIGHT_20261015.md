@@ -5,7 +5,7 @@
 ## 预检脚本
 `crypto-300-profit-mission/local-agent/scripts/frank_mac_readonly_preflight.py`。脚本只使用 macOS 系统 Python3 标准库、Git、可选的 lsof。运行时 `python3 -B -`，避免写入 Python `__pycache__`。
 
-用户已有本地 review 仓库口径：`~/.local/share/frank-f02-r3-review`。预检不读取其他 Git 仓库，也不自动克隆、`fetch`、切分支、`reset`、`stash`、`checkout`。它只检查这一目录是否存在、是否独立 Git root、Git HEAD 是否匹配已审 PR73 或较早 PR68、五个 Git commit 对象在本地是否存在、历史证据 ref 是否为固定 SHA，并以 `GIT_OPTIONAL_LOCKS=0` 只检测源树一般未提交改动是否存在（不列出文件名）。本地仓库缺最新 Git 对象是 `NOT_LOCAL`，不能自动拉取或判断远端不存在。
+用户已有本地 review 仓库口径：`~/.local/share/frank-f02-r3-review`。预检不读取其他 Git 仓库，也不自动克隆、`fetch`、切分支、`reset`、`stash`、`checkout`。它只检查这一目录是否存在、是否独立 Git root、Git HEAD 是否匹配已审 PR73 或较早 PR68、五个 Git commit 对象在本地是否存在、历史证据 ref 是否为固定 SHA，并以 `GIT_OPTIONAL_LOCKS=0` + 每条 Git 读取命令的 `git -c core.fsmonitor=false` 只检测源树一般未提交改动是否存在（不列出文件名），禁用仓库配置的外部 fsmonitor helper，避免被动扫描触发外部写入。本地仓库缺最新 Git 对象是 `NOT_LOCAL`，不能自动拉取或判断远端不存在。
 
 已知真实既有研究根目录：`~/.local/share/frank-f02-research/manual-sessions`。只对最多200个直接子目录（`session-*`）执行文件**存在性**与符号链接检查：`positions.sqlite`、`wire/owner-*/manifest.json`。不打开 SQLite、不打开 JSON 原文、不读取 Token Account/CA/私钥、没有哈希归档，也不会修改其权限/mtime内容。报告明确 `contents_or_sha_verified=false`、`session_freshness_verified=false`。目录数超限制时报告 `session_scan_truncated=true`，不能推断全覆盖。
 
@@ -25,3 +25,12 @@
 - 若不满足条件，在 Git 记入 **事实+未确认项**，并先修改单独测试方案，等待新用户授权。
 
 绝不进行：`NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_FILE_CLEANUP / NO_MAC_SERVICE_START`。
+
+
+## 2026-10-16 独立审核阻塞与最小子修复（不代表 Mac 已运行）
+
+- 原始 Draft PR #74 固定 SHA `cdf7bc2605ebee7f78ebbf093910c1356f559826` 经独立 Codex `REQUEST_CHANGES`：P2 为 `git status` 可以执行仓库预置 `core.fsmonitor` shell helper，真实临时 Git 仓库哨兵写入已复现；`GIT_OPTIONAL_LOCKS=0` 不会阻止 helper。原 SHA 保留为拒绝基线，**禁止直接使用旧命令进行 Mac 预检**。
+- P3：原 CLI 测试用 `main(["--repo", ...])` 时未隔离 `Path.home()`；测试本身可能枚举真实 Mac 研究目录。代码功能边界没变，新增测试环境 home 定向合成 `tmp_path`，不提供运行时任意 home 扫描新接口。
+- 按正式开发规则在 **独立子分支/子 PR** 修复，不改写已审 PR #73、拒绝的 PR #74 SHA 或生产仓库。最小代码范围：所有 `safe_exec` Git 命令都附加命令级 `-c core.fsmonitor=false`，保留旧 `GIT_OPTIONAL_LOCKS=0`；新增真实合成 Git fsmonitor helper 哨兵测试，确认无外部命令执行、无标记文件且原 index/tracked/untracked 字节不变；修改 CLI 测试将 home 限制为合成目录。
+- 验收顺序：本子 PR **最终固定 SHA** 的 module scoped/full + disposable combined scoped/full CI 成功，再由其他 AI 进行限定差异独立复审；之后由用户在 Mac 手动运行当时已审固定 SHA 预检，最后才考虑单独授权的本地隔离 F01/C02/F02 真 HTTP 联调。本修复 **不增加任何真实钱包/任意 CA 用户功能**；产品业务缺口继续依据正式 TODO 的 F01 当前可跟、C02 CA 单模式、F02 完整现时钱包和最后整体 Review 推进。
+- 未取得 Mac 真实输出前，不声称本地服务已无端口冲突，也不把历史私有研究文件存在理解为实时仓位已核实。
