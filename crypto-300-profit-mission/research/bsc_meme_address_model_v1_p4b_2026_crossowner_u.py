@@ -63,6 +63,12 @@ def build(docs, cases=CASES):
     check((activity["summary"]["strict19CA_30day_owner_swap_verified_wallets"],
            activity["summary"]["recent_swap_unknown_wallets"])==(7,16),
           "frozen P3 recent owner evidence denominator changed")
+    # The 19-CA scope is material evidence, so make the actual exact-CA
+    # universe available in the output rather than only stating its size.
+    frozen_exact_CAs=[m["ca"] for m in early["markets"]]
+    check(len(frozen_exact_CAs)==len(set(frozen_exact_CAs))==19 and
+          set(frozen_exact_CAs)=={m["exact_CA"] for m in market["rows"]},
+          "source P3/P4B 19 exact CA universe mismatch")
     check(len({w for _,w,_ in cases})==5, "duplicate wallet in cross-owner cohort")
     rows=[]
     for label,wallet,token in cases:
@@ -137,6 +143,7 @@ def build(docs, cases=CASES):
         "schema":"BSC_P4B_2026_FIVE_CROSSOWNER_U_READINESS",
         "selection":"SOURCE_REUSE_PRE_NEXT_RPC_NOT_RANDOM_OR_UNTOUCHED_HOLDOUT",
         "source_manifest":[{"path":"crypto-300-profit-mission/research/"+n,"git_blob_sha":sha} for n,sha in SOURCES],
+        "recent_swap_frozen_19_exact_CAs": frozen_exact_CAs,
         "summary":{"full_wallet_CA_denominator":437,"selected_wallets":5,"selected_major_CAs":3,
                    "qualified_observer_executable_U":0,"qualified_follow_PnL":0,
                    "P4_B":"PARTIAL","P5":"BLOCKED","production":"NO_GO"},
