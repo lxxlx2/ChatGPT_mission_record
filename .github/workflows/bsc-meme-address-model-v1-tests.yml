@@ -908,7 +908,11 @@ jobs:
           obj=json.loads(p.read_text(encoding="utf-8"))
           assert obj["post_owner_test_block"]==83635777
           assert obj["historical_buy_simulations_success"]==2
-          assert obj["actual_subsequent_distinct_signed_market_sells"]==3
+          assert obj["sampled_block_83636000_distinct_signed_dragon_sells"]==3
+          assert obj["sampled_block_total_manager_sales_all_CAs"]==4
+          assert obj["sampled_block_dragon_manager_outgoing_transfers"]==2
+          assert obj["sale_signers_in_frozen_23"]==2
+          assert obj["DDAC_initial_buy_unattributed_value_residual_wei"]=="8000000000000004"
           assert obj["observer_first_public_execution_U"]=="UNRESOLVED"
           assert obj["follower_lag_1_5_15min_PnL"]=="UNRESOLVED"
           assert obj["production"]=="NO_GO"
