@@ -24,6 +24,7 @@
   "per_date": [
     {
       "D1_LATE_REVIEW": 2,
+      "D1_SETUPS_with_multiple_plausible_EVALUATED_candidates": 1,
       "D1_setups": 220,
       "LATE_with_http_or_retry_attempts": 2,
       "LATE_without_completed_D1_5m_bar": 2,
@@ -42,12 +43,14 @@
         "EVALUATED": 258,
         "LATE": 2
       },
+      "setup_source_id_provenance": "NOT_IN_ORIGINAL_STAGE28_REGISTER_MATCHING_EXISTS_ONLY",
       "source_json_sha256": "e52f97197f5e512d9af53ec0d5b3b857bf9057a5ad6089429b1b1533bdf98e21",
       "source_zip_sha256": "2010e5f14f4ddef9b6201c020874a171c847ed44e774a77fa3177ede05b33038",
       "total_processor_selections_NOT_distinct": 819
     },
     {
       "D1_LATE_REVIEW": 2,
+      "D1_SETUPS_with_multiple_plausible_EVALUATED_candidates": 0,
       "D1_setups": 113,
       "LATE_with_http_or_retry_attempts": 2,
       "LATE_without_completed_D1_5m_bar": 2,
@@ -66,12 +69,14 @@
         "EVALUATED": 131,
         "LATE": 2
       },
+      "setup_source_id_provenance": "NOT_IN_ORIGINAL_STAGE28_REGISTER_MATCHING_EXISTS_ONLY",
       "source_json_sha256": "fc99c6a384299ee133a0e619bc6a9d8f073d76059e28b207cea3c84541483b10",
       "source_zip_sha256": "b1631b9f9be3b6129444e811788b8b9ff2edbd0fa6619d5ec88e5919906f009a",
       "total_processor_selections_NOT_distinct": 431
     },
     {
       "D1_LATE_REVIEW": 96,
+      "D1_SETUPS_with_multiple_plausible_EVALUATED_candidates": 1,
       "D1_setups": 121,
       "LATE_with_http_or_retry_attempts": 3,
       "LATE_without_completed_D1_5m_bar": 96,
@@ -90,12 +95,14 @@
         "EVALUATED": 171,
         "LATE": 96
       },
+      "setup_source_id_provenance": "NOT_IN_ORIGINAL_STAGE28_REGISTER_MATCHING_EXISTS_ONLY",
       "source_json_sha256": "cf50420a683b200a037f1612b305e5feb7fb2dfbfc81556e912fd750bf653b6d",
       "source_zip_sha256": "28caeed99fd23d8f4b1079a4498ae3ddf171e18ed3e9b84126a4a86a37763e8c",
       "total_processor_selections_NOT_distinct": 744
     },
     {
       "D1_LATE_REVIEW": 9,
+      "D1_SETUPS_with_multiple_plausible_EVALUATED_candidates": 0,
       "D1_setups": 150,
       "LATE_with_http_or_retry_attempts": 9,
       "LATE_without_completed_D1_5m_bar": 9,
@@ -114,12 +121,14 @@
         "EVALUATED": 172,
         "LATE": 9
       },
+      "setup_source_id_provenance": "NOT_IN_ORIGINAL_STAGE28_REGISTER_MATCHING_EXISTS_ONLY",
       "source_json_sha256": "ad0449d4dfb0f48d5b67a14fb1776989cbd5939f7b8a2818808eeb54e59b2da5",
       "source_zip_sha256": "896e5805a0288de1a516d0399b6c241fa1d45e0244106f8559ad228291912f98",
       "total_processor_selections_NOT_distinct": 567
     },
     {
       "D1_LATE_REVIEW": 3,
+      "D1_SETUPS_with_multiple_plausible_EVALUATED_candidates": 0,
       "D1_setups": 147,
       "LATE_with_http_or_retry_attempts": 3,
       "LATE_without_completed_D1_5m_bar": 3,
@@ -138,12 +147,14 @@
         "EVALUATED": 177,
         "LATE": 3
       },
+      "setup_source_id_provenance": "NOT_IN_ORIGINAL_STAGE28_REGISTER_MATCHING_EXISTS_ONLY",
       "source_json_sha256": "f512bcb5b602c6962f9b7bfdc32d78abb10ed746cb1511386952a53ef3f23a54",
       "source_zip_sha256": "9b56d03b0674d81bb7f7586445ad9258d6d8c899089a2c6e8b4888f17eb56da3",
       "total_processor_selections_NOT_distinct": 624
     },
     {
       "D1_LATE_REVIEW": 11,
+      "D1_SETUPS_with_multiple_plausible_EVALUATED_candidates": 0,
       "D1_setups": 77,
       "LATE_with_http_or_retry_attempts": 8,
       "LATE_without_completed_D1_5m_bar": 11,
@@ -162,6 +173,7 @@
         "EVALUATED": 96,
         "LATE": 11
       },
+      "setup_source_id_provenance": "NOT_IN_ORIGINAL_STAGE28_REGISTER_MATCHING_EXISTS_ONLY",
       "source_json_sha256": "d3e03f47e79d460cd96c3781e08d975f249e4bbd03697e5139ef235bb9468b42",
       "source_zip_sha256": "9d1b8ee7d79234d5aa096d634c814ba53e48ad880d1d62d900cf6a4861cff638",
       "total_processor_selections_NOT_distinct": 357
@@ -174,7 +186,7 @@
   "source": "ORIGINAL_STAGE28_GITHUB_ARTIFACT_ZIP_AND_RAW_JSON_BOTH_SHA256_LOCKED",
   "source_CI_run": 38146403662,
   "source_commit": "973891aae686b05e6bba35bdf506ddca578b1bda",
-  "stage153_auditor_sha256": "8a73308acd9e2098334cbe03fed9209af2da500929ffcabbe3442f5568994e7f",
+  "stage153_auditor_sha256": "d33c24160fde670ecde064ca29dc3a4a32860111dc2899037bdc0f889cd89636",
   "total": {
     "EVALUATED": 1005,
     "LATE": 123,
@@ -185,5 +197,5 @@
     "queue": 1128,
     "selected": 3542
   },
-  "trigger_commit_sha": "80ebab9a6f3533103858de9e321f037384e86fde"
+  "trigger_commit_sha": "4553cb6b18c5aaf723072d17a39f9ad92f0629c9"
 }
