@@ -1,6 +1,6 @@
 # Mission Portfolio / Current Assets and Capital Classification
 
-Updated: 2026-10-15 Asia/Bangkok (read-only Surf NFT position added; Binance/Bybit user screenshots and other asset marks remain historical 2026-10-13 or prior)
+Updated: 2026-10-15 Asia/Bangkok (17:46–17:50 CEX screenshot/direct-chain balance refresh; earlier Surf chain evidence retained)
 Timezone: Asia/Bangkok
 Portfolio authority: this file; operational status: `../state/latest.md`; performance attribution: `../performance/current.md`.
 
@@ -22,6 +22,57 @@ Portfolio authority: this file; operational status: `../state/latest.md`; perfor
 
 Only these already authorized canonical wallets are in the present sweep. Wallet discovery/other accounts have **not** been asserted complete.
 
+## Newest user screenshot and live wallet balance snapshot — 2026-10-15 17:46–17:50 Bangkok
+
+**Evidence/freshness:** Binance USDC flexible Earn user screenshot clock **17:46 Bangkok**, Bybit USDC user screenshot clock **17:48**, both provided by user on **2026-10-15**. The screenshots document quantities and app labels; no CEX API account login was performed. Direct read-only Alchemy Solana finalized native and classic SPL observations at **slot 457210185**, Token-2022 at **457210186**; Alchemy price quotes timestamp **2026-10-15 10:49:40–10:50:02 UTC** (Bangkok **17:49:40–17:50:02**). EVM native reads are latest-block per network, not atomic with Solana or the screenshots. Bybit remains lifestyle/rent only. No inferred transfers or PnL.
+
+### Screenshots: Binance counted, Bybit never counted
+
+| Account and scope | Verified screen quantity | Price/annotation | Investment inclusion |
+| --- | ---: | --- | --- |
+| Binance Flexible Earn USDC, 1 position | **776.01087688 USDC** | Real-time annual rate **2.09%**, tier annualized yield **2%**, yesterday's reward **0.07794003 USDC**, cumulative **1.34887353 USDC** already included in displayed principal-plus-interest balance | **Included** |
+| Bybit Earn USDC | **438.953400 USDC** | User screenshot | Excluded |
+| Bybit Funding USDC | **35.385365 USDC** | User screenshot | Excluded |
+| Bybit Unified Trading USDC | **0.086456 USDC** | Individually <$1 but kept in exact household-account reconciliation | Excluded |
+| **Bybit combined** | **474.425221 USDC** | App screenshot USD indicative NAV **~$474.94**, including all three subaccounts; only record this household expense reserve | **$0 included** |
+
+Compared to prior user screenshots (2026-10-13 21:48), Binance USDC **+30.15542403**, Bybit total USDC **+31.395316**. These are quantity movements, not proven rewards, proceeds, trading gains or attributable transfers. At common Alchemy USDC/USD **1.00106**, Binance marked quantity is **~$776.83**; Binance screenshot displays **USDC amount only**, not the $776.83 independent USD quote.
+
+### Solana direct finalized current ownership
+
+Canonical wallet `BP7hHLZAGqZF1gRMEFh3kzZkrbGbTfKQo6Q5c6Lu4dSp`.
+
+| Asset | Chain quantity | Independent price mark and USD value | Evidence | Included? |
+| --- | ---: | --- | --- | --- |
+| Classic SPL USDC `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v` | **501.630372 USDC** | USDC/USD **1.00106** → **~$502.16** | Finalized `getTokenAccountsByOwner`, slot **457210185**, token account `AaHmxVnUryLCrSr32zxrDGzfafXTvuHATURZbBy6XQ6A` | Yes |
+| Native SOL | **0.012905142 SOL** = 12905142 lamports | SOL/USD **102.15** → **~$1.32** | Finalized `getBalance`, slot **457210185** | Yes |
+| GANG | **0** | No current inventory | Finalized classic SPL `5XBM2iEibBNAVBMjPYb9Deh8ibm4CCqZrbqk8n7TpGJo` | CLOSED, no asset |
+| Other classic SPL | 0 | None included | Five classic accounts total, only USDC positive | Excluded |
+| Four Token-2022 mint accounts | **1 raw unit each, decimals 0** | No independently supported executable USD value; two accounts have `nonTransferableAccount` extensions | Finalized token-2022 slot **457210186** | UNPRICED / excluded, not represented as $0 |
+
+Compared to prior 2026-10-13 Solana finalized observation, USDC **+29.913613** and SOL unchanged. Solana marked direct-chain subtotal **~$503.48**, valued only with quoted Alchemy time. Do not double-count OKX screenshot Solana USDC/SOL, old GANG refund or historical realized GANG sale proceeds.
+
+### EVM/NFT/Sui follow-up coverage
+
+- **EVM native latest-block read-only observed:** canonical `0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c` holds Ethereum **0.000190807320080339 ETH**, Base **0.000067914430044193 ETH**, Arbitrum **0.000003959328931033 ETH**, Optimism **0.000065278581034767 ETH**, BNB Chain **0.000188510040720439 BNB**, Polygon **0.291295907607284273 POL**, Unichain **0.000020589846025254 ETH**, Ink **0.000003101575720485 ETH**, Linea **0.000078994423394387 ETH**, World Chain **0.000106736504323280 ETH**, Monad **0.3817997 MON**, HyperEVM **0.000234033730511199 HYPE**, and Robinhood Chain **0.000252742161494798 ETH**. Using Alchemy 2026-10-15 10:50 UTC ETH **2361.36**, BNB **718.95**, POL **0.09324**, MON **0.02246**, HYPE **78.89**, every one of these **separately priced native positions is <$1** and excluded; Binance/OKX balances are not inferred from these on-chain native holdings.
+- **EVM ERC-20:** Arbitrum (26 result entries), Unichain (3), Ink (4), Robinhood Chain (16) token owner-balance calls returned positive and spam/unpriced tokens; important token price lookups showed no independently priced >=$1 owned ERC-20. For example Unichain USDC **0.021286** (~$0.02), Robinhood PONS **0.000953441979624353** at independent ~$0.30825/PONS (~$0.00029), both <$1. Ethereum, Base, Optimism, BNB, Polygon results exceeded tool response truncation (not complete) and therefore remain **ERC20_INVENTORY_PARTIAL_UNRESOLVED**. No unpriced token is asserted zero or negligible without price evidence.
+- **SurfBoard NFT #5396:** `getOwnersForNFT` on Robinhood Chain for ERC721 `0x18c9719AB6AE4E1a6f95F281eF288e3AF5d58602`, tokenId **5396**, returned only the canonical wallet. Ownership **DIRECT_CHAIN confirmed again**, with **UNPRICED** executable NFT value. Earlier 2026-10-15 chain opened tier 1, NVDA pending 0.000745771759040394, and absence of directly transferable series tokens remain *historical measurements*, not revalidated today at 17:50. See separate Surf research entry below. NFT and prior < $1 accrued rights excluded from cashlike marked subtotal.
+- **Sui** `0xb07d535f1e8607d283c98cd4428f6c76a6101704aedec38da93486fb91a1c101`: no direct fresh Sui mainnet balances could be returned by available actions (official Sui owner balance lookup requires an unsupported RPC request). Prior user-confirmed zero is dated historical only. Do **not** claim Sui asset inventory complete.
+- **OKX Web3 dated history (2026-10-12 screenshot):** **0.002403 ETH** and **3.3847 TRX** quantities *not rechecked on 2026-10-15*. Using 2026-10-15 prices ETH **2361.36** and TRX **0.3333** implies **~$5.67 and ~$1.13**, conditional on still owning those historical quantities. Keep separate from direct-chain identified wallet balances and do not double-add OKX screenshot Solana.
+
+### Filtered USD reference, accounting rules unchanged
+
+| Basis | Priced separate asset breakdown | USD |
+| --- | --- | ---: |
+| **Newly verified holdings reference** | Binance 776.01087688 USDC at 1.00106 (~776.83) + direct Solana 501.630372 USDC at 1.00106 (~502.16) + 0.012905142 SOL at 102.15 (~1.32) | **~$1,280.31** |
+| **Mixed-freshness conditional reference** | Verified reference + *unreverified 2026-10-12* OKX 0.002403 ETH (~5.67) + 3.3847 TRX (~1.13) | **~$1,287.12** |
+| **Bybit household/reserved** | Screenshot 474.425221 USDC; application appraised at ~$474.94 | **$0 included** |
+| **Unpriced/uncertain inventory** | SurfBoard NFT #5396 + Token-2022/non-priced EVM assets, possible unsurveyed Sui/EVM assets | **UNRESOLVED** |
+
+Never label either reference as complete contemporaneous NAV, actual Mission portfolio profit or return on the original $300 and Credits NFT starting set. Prior October 13 newly marked reference **~$1,220.34** differs by **~+$59.97**, substantially explained by the aggregate stablecoin quantity increases and valuation differences, but causes/cashflows **UNVERIFIED**. Original GANG realized loss **−96.210562 USDC before SOL gas** remains historical, not recomputed; `MISSION_PNL_UNRESOLVED` and `PRODUCTION_TRADING=NO_GO` remain unchanged. Research actions were read-only, no wallet authorization, claim, trade, service restart, Gmail/notification/automation or spending transaction.
+
+---
+
 ## Verified SurfBoard NFT #5396 position — 2026-10-15 11:43:55 Asia/Bangkok
 
 Source `DIRECT_CHAIN`: Robinhood Chain `4663`, Alchemy NFT ownership, original chain transaction receipts and pinned `eth_call` block **88947414** (2026-10-15 04:43:55 UTC); detailed evidence and series counts in [SurfBoard live research](../../research/nfts/surf-genesis-nft-chain-valuation-2026-10-12.md#9-surfboard-5396-开包后主钱包分配资金池及系列活动链上实证2026-10-15).
@@ -33,7 +84,7 @@ Source `DIRECT_CHAIN`: Robinhood Chain `4663`, Alchemy NFT ownership, original c
 - **All other portfolio rows and earlier 2026-10-13 Binance/Bybit/Solana/OKX snapshots below are unchanged in amount** and must not be relabeled fresh 2026-10-15. No user's transaction was initiated or signed by this research, no monitoring/task created and no NFT liquidation or redeems executed by ChatGPT.
 
 
-## Latest independently checked investment snapshot — 2026-10-13 21:48–21:50 Bangkok
+## Historical independently checked investment snapshot — 2026-10-13 21:48–21:50 Bangkok
 
 **Freshness/source separation:** user Binance and Bybit screenshots show phone time 21:48 Bangkok on 2026-10-13; Alchemy Solana RPC finalized observations are slots **456480952** (native and classic SPL) and **456481206** (Token-2022); Alchemy USD price samples are 2026-10-13T14:48:59–14:50:31Z. EVM balances are newly queried latest-provider results, not a complete ERC-20/NFT inventory. The existing OKX ETH and TRX quantities were last user-confirmed by screenshot on **2026-10-12**, not rechecked as current chain balances. No exchanges were authenticated or mutated.
 
