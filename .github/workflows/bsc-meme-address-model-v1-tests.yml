@@ -51,6 +51,11 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_c0_review_gate.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_2026_crossowner_u.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_2026_crossowner_u.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-observer-nplus1-buy-sim-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-3-real-market-sells-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-u-live-readback-batch-2026-10-16.md"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-two-rounds19-precommit-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-independent-five-part1-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-independent-five-part2-2026-10-15.json"
@@ -880,6 +885,23 @@ jobs:
           assert s["original_total_native_wei"]=="13164987453603066615"
           assert s["lagged_1_5_15_min_follower_signal_count"]==0 and s["production"]=="NO_GO"
           print("PASS 8E6B token4 two original native loss/win across 19 source originals, five new signer/receipt/BNB/wbnb readbacks, no P5")
+          PY
+      - name: P4-B DDAC 龙虾 post-owner buy simulation and actual later sales (pinned offline evidence)
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py" > /tmp/bsc-p4b-dragon-observer-gate.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("/tmp/bsc-p4b-dragon-observer-gate.json")
+          obj=json.loads(p.read_text(encoding="utf-8"))
+          assert obj["post_owner_test_block"]==83635777
+          assert obj["historical_buy_simulations_success"]==2
+          assert obj["actual_subsequent_distinct_signed_market_sells"]==3
+          assert obj["observer_first_public_execution_U"]=="UNRESOLVED"
+          assert obj["follower_lag_1_5_15min_PnL"]=="UNRESOLVED"
+          assert obj["production"]=="NO_GO"
+          print("PASS Dragon N+1 only historical eth_call; three later signed sellers; zero U/P5 promotion")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
