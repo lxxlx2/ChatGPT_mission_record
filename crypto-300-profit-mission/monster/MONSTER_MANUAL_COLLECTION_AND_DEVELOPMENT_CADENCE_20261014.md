@@ -361,3 +361,18 @@ Stage143工程=PASS_MACOS_UBUNTU_66_OF_66; MODEL_G0=PARTIAL; G1=NOT_SCORABLE; G2
 下一工程主线要求遵守既定架构和用户终极目标：从 `monster_v4_shadow.py` 真正D0 full-universe to SQLite `candidate_queue` to D1 `process_queue` to early-only WATCH/失效/必要发信的历史全体计时审计入手，具体待查：每轮至多8例深查、15m截止和98币同一轮 WATCH 的峰值如何形成PENDING待评、队列实际完成/延迟丢失；不得把队列不丢记录冒充实际来得及评价，也不能凭后验盈利候选选择阈值或为了“修bug”一律抬大API限额。优先对已有 Stage27/28 用户可复算真实证据进行时间线对账，然后**一次研究→冻结可证伪吞吐/到时阈值→实现→独立其他AI代码审查→CI复算**；前瞻真实窗口成熟必须用户聊天手动触发且不能替换历史缺失。参考项目AGENTS/MONSTER_MODULE_DEVELOPMENT_RULES和Monster V4架构，始终优先完整功能与时效而非新Stage数量。
 
 放行继续 `G0 PARTIAL / G1 NOT_SCORABLE / G2_G3 NOT_PASSED / G4 UNKNOWN / G5_FULL_RELEASE NOT_PASSED / G6 NO_GO`；`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE / FRANK_UNCHANGED / NO_NEW_SCHEDULE`，Stage99保持停止。
+
+
+## Stage153：全市场共享D1 1128条真实队列生命周期已验收（2026-10-15）
+
+Stage152新最后P2固定SHA `71a041405352c9e2210d93dff9c2685149809e52` 已获用户提供Codex的独立 `APPROVE`，并已作为固定源码批准单独归档；这里后续开启独立**新Stage153只读队列研究**，不是对旧盈利模型重调阈值。按用户要求再次阅读Monster AGENTS、长期开发规则和本节历史节奏，然后核对原Stage27+28**真实已曝露**6日期Spot WATCH队列源。先提交[冻结单一审计协议](MONSTER_STAGE153_FROZEN_FULL_QUEUE_LIFECYCLE_AND_PRESSURE_AUDIT_20261015.md) commit `833182273558a53acd5050b4ba3d8beb44e651ce`，才新增源码/测试/CI；**原 `monster_v4_shadow.py`、Stage28冻结生产D1核心和Stage152模型完全没改**。
+
+新Stage153代码固定SHA `80ebab9a6f3533103858de9e321f037384e86fde`，真实GitHub Actions [#38737110644](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38737110644) `3/3 Jobs SUCCESS`，Ubuntu24.04/macOS各9/9 unittest + py_compile成功，真实source-job从**Stage28旧GitHub官方CI run #38146403662**下载6份先前真实共享SQLite研究结果，**逐份比对保留的原Git proof所载Artifact ZIP SHA256和内层JSON SHA256**，全部通过，运行真实 `queue_final` 完整1128条逐候选核对，成功Git归档日志 `MONSTER_STAGE153_REAL_STAGE28_SOURCE_SHA_AND_GIT_PUSH_CONFIRMED`。本次没有伪称重下载原1,421个Binance发布方5m ZIP，只证明拿到原Stage28确切锁定字节和由原生产历史结果导出的queue时间线。
+
+关键真实全部六日期口径：`1132 WATCH事件 / 1128 shared candidate_queue记录 / 1005最终EVALUATED / 123 LATE / 828 SETUP`，记录`3542`次队列选取、`2414`次deferred；**123/123 LATE最终 `last_evaluated_bar_ms=None`**，只有27个LATE `attempts>0` 错误重试记录，`attempts=0`不等于从未请求过旧K线。2026-02-06 00:36 UTC 98同轮WATCH中91最终LATE，仅7 EVALUATED；乐观8候选/3分钟×最多6轮=48个不同候选一次服务、至少50不可首轮获评，和原Stage28结果一致。但这既非当前2026-10真实延迟，也不是错过91笔盈利交易：**D0仍来自Stage26独立每币导出的WATCH时刻，真正单一全市场共享D0 `observe_snapshot`、Spot/Futures原型同场争用与实际通知送达仍未重放/验证**。
+
+本轮 [Stage153数据报告与各日期真值](MONSTER_STAGE153_ORIGINAL1128_GLOBAL_D1_QUEUE_CAPACITY_ACTUAL_SOURCE_AUDIT_20261015.md)、[6原Artifact双SHA机器报告](evidence/monster_stage153_stage28_1128_queue_lifecycle_summary.json) blob `0f24fb56b6cd9a3166f43ac7eed6ce9b3cc77e9a`、[1128逐队列只读记录](evidence/monster_stage153_stage28_1128_queue_lifecycle_rows.jsonl) blob `beb066d13ed1bf9656a1d9153f003c4363aa849c`已经随原PR Git保存。新增`queue_pressure(db,asof_ms)`和`--sqlite-readonly`，可以面向未来用户状态页只读查看98等大并发实际pending、未完成bar、过期/3m/6m到期及最乐观容量缺口；但**尚未接到实际Mac服务/GUI**，未调正式队列处理顺序和请求额度。新增9项测试专门覆盖98次完整可见性、历史源SHA篡改拒绝、过期重试时钟、真sqlite文件只读。
+
+**阶段交付状态：Stage153真实源/代码/双OS-CI=DONE；新固定SHA其他AI独立复审=NOT_DONE。** 已按模块硬性规则同时提交 [可直接复制的Claude/Codex完整独立审核提示词](MONSTER_STAGE153_INDEPENDENT_OTHER_AI_REVIEW_PROMPT_PINNED_80EBAB9_20261015.md)，不能用Stage152的旧Codex APPROVE覆盖新Stage153。高价值下一研发需要验证**全市场真实同一共享D0→SQLite→已完成D1 5m评价的完整时钟**，如果决定改善后续服务次序/有效期限，要先找可复证的真实瓶颈和无效HTTP复评浪费，再设计安全且可用的算法；不得默认提并发、扩大API限额、按照曝光收益选币或让真实邮件启用。
+
+状态固定：`G0=PARTIAL / G1=NOT_SCORABLE / G2/G3=NOT_PASSED / G4=UNKNOWN / G5_FULL_RELEASE=NOT_PASSED / G6=NO_GO`，`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE / FRANK_UNCHANGED / NO_NEW_SCHEDULE`，Stage99保持停用，今后公开行情只在用户聊天明确要求时手动采集。
