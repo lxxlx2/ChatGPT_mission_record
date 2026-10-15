@@ -1,4 +1,5 @@
 """Integration sandbox builds from local Git objects; no source mutation/network."""
+import hashlib
 import json
 import subprocess
 
@@ -28,6 +29,9 @@ def repo_and_pins(tmp_path, monkeypatch):
     git(repo, "init", "-q", "-b", "main")
     git(repo, "config", "user.name", "Synthetic Tester")
     git(repo, "config", "user.email", "local-test@example.invalid")
+    (repo / ".gitignore").write_text(
+        "runtime-local/\n*.sqlite*\n*.db\n.env\n", encoding="utf-8")
+    git(repo, "add", ".gitignore")
     base = commit(repo, "main.txt", "main fixture\n", "main")
     git(repo, "switch", "-c", "integration")
     candidate = commit(repo, "integration.txt", "integration fixture\n", "integration")
@@ -78,7 +82,7 @@ def test_assemble_verified_pins_and_preserve_source_tree(repo_and_pins):
     assert (target / "f01.txt").is_file()
     assert (repo / "untracked-production-local.txt").read_text() == "do not touch"
     assert git(repo, "status", "--porcelain") == before
-    verified = workspace.verify(staging, name)
+    verified = workspace.verify(staging, name, candidate, proof["manifest_sha256"])
     assert verified["status"] == "FRANK_ISOLATED_VERIFIED"
     assert verified["integrated_head"] == proof["integrated_head"]
     with pytest.raises(ValueError, match="DESTINATION_ALREADY_EXISTS"):
@@ -94,12 +98,14 @@ def test_cli_assemble_and_verify_only_when_explicit(repo_and_pins, capsys):
                            "--integration-sha", candidate, *args]) == 0
     doc = json.loads(capsys.readouterr().out)
     assert doc["status"] == "FRANK_ISOLATED_ASSEMBLED"
-    assert workspace.main(["--verify", *args]) == 0
+    receipt = ["--integration-sha", candidate,
+               "--manifest-sha256", doc["manifest_sha256"]]
+    assert workspace.main(["--verify", *args, *receipt]) == 0
     check = json.loads(capsys.readouterr().out)
     assert check["status"] == "FRANK_ISOLATED_VERIFIED"
     target = staging / "frank-joint-cli-proof"
     (target / "new-user-research.txt").write_text("not tracked")
-    assert workspace.main(["--verify", *args]) == 1
+    assert workspace.main(["--verify", *args, *receipt]) == 1
     assert capsys.readouterr().err.strip() == "FRANK_ISOLATED_WORKSPACE_REJECTED"
     assert (target / "new-user-research.txt").read_text() == "not tracked"
 
@@ -108,23 +114,25 @@ def test_cleanup_requires_trusted_clean_staging_and_explicit_flag(
         repo_and_pins, capsys):
     repo, staging, candidate = repo_and_pins
     name = "frank-joint-cleanup-proof"
-    workspace.assemble(repo, staging, name, candidate)
+    proof = workspace.assemble(repo, staging, name, candidate)
     target = staging / name
+    receipt = ["--integration-sha", candidate,
+               "--manifest-sha256", proof["manifest_sha256"]]
     protected = repo / "untracked-production-local.txt"
     (target / "unsaved-research.txt").write_text("preserve")
     assert workspace.main(["--cleanup", "--staging-root", str(staging),
-                           "--name", name]) == 1
+                           "--name", name, *receipt]) == 1
     assert target.is_dir()
     assert (target / "unsaved-research.txt").is_file()
     (target / "unsaved-research.txt").unlink()
     assert workspace.main(["--cleanup", "--staging-root", str(staging),
-                           "--name", name]) == 0
+                           "--name", name, *receipt]) == 0
     outcome = json.loads(capsys.readouterr().out)
     assert outcome["status"] == "FRANK_ISOLATED_REMOVED"
     assert not target.exists()
     assert protected.read_text() == "do not touch"
     assert workspace.main(["--cleanup", "--staging-root", str(staging),
-                           "--name", name]) == 1
+                           "--name", name, *receipt]) == 1
 
 
 def test_reject_wrong_pin_and_overlapping_paths(repo_and_pins):
@@ -141,7 +149,7 @@ def test_reject_wrong_pin_and_overlapping_paths(repo_and_pins):
 def test_manifest_tamper_or_head_drift_fails_closed(repo_and_pins):
     repo, staging, candidate = repo_and_pins
     name = "frank-joint-provenance"
-    workspace.assemble(repo, staging, name, candidate)
+    proof = workspace.assemble(repo, staging, name, candidate)
     target = staging / name
     marker = target / ".git" / workspace.MARKER
     original = marker.read_text()
@@ -149,11 +157,98 @@ def test_manifest_tamper_or_head_drift_fails_closed(repo_and_pins):
     doc["pins"]["main"] = "f" * 40
     marker.write_text(json.dumps(doc))
     with pytest.raises(ValueError, match="MANIFEST_INVALID"):
-        workspace.verify(staging, name)
+        workspace.verify(staging, name, candidate, proof["manifest_sha256"])
     marker.write_text(original)
     git(target, "checkout", "--detach", workspace.MAIN)
     with pytest.raises(ValueError, match="HEAD_DRIFT"):
-        workspace.verify(staging, name)
+        workspace.verify(staging, name, candidate, proof["manifest_sha256"])
+
+
+
+def test_ignored_runtime_sqlite_db_and_env_never_deleted(repo_and_pins):
+    repo, staging, candidate = repo_and_pins
+    name = "frank-joint-ignored-proof"
+    proof = workspace.assemble(repo, staging, name, candidate)
+    target = staging / name
+    receipt = (candidate, proof["manifest_sha256"])
+    sentinels = [
+        target / "runtime-local" / "unsaved-proof.txt",
+        target / "research.sqlite",
+        target / "research.db",
+        target / ".env",
+    ]
+    for path in sentinels:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("never-delete-me", encoding="utf-8")
+        assert git(target, "check-ignore", str(path))
+    assert git(target, "status", "--porcelain") == ""
+    with pytest.raises(ValueError, match="DIRTY"):
+        workspace.verify(staging, name, *receipt)
+    with pytest.raises(ValueError, match="DIRTY"):
+        workspace.cleanup(staging, name, *receipt)
+    for path in sentinels:
+        assert path.read_text(encoding="utf-8") == "never-delete-me"
+    for path in sentinels:
+        path.unlink()
+    (target / "runtime-local").rmdir()
+    assert workspace.verify(staging, name, *receipt)["status"] == (
+        "FRANK_ISOLATED_VERIFIED")
+    assert workspace.cleanup(staging, name, *receipt)["status"] == (
+        "FRANK_ISOLATED_REMOVED")
+    assert not target.exists()
+    assert (repo / "untracked-production-local.txt").read_text() == (
+        "do not touch")
+
+
+def test_candidate_legitimate_ancestor_tamper_requires_external_receipt(
+        repo_and_pins, capsys):
+    repo, staging, candidate = repo_and_pins
+    name = "frank-joint-candidate-proof"
+    proof = workspace.assemble(repo, staging, name, candidate)
+    target = staging / name
+    marker = target / ".git" / workspace.MARKER
+    original = marker.read_bytes()
+    altered = json.loads(original)
+    altered["pins"]["integrated_review_candidate"] = workspace.REVIEWED_PARENT
+    marker.write_text(json.dumps(altered, sort_keys=True) + "\n",
+                      encoding="utf-8")
+    forged_hash = hashlib.sha256(marker.read_bytes()).hexdigest()
+    with pytest.raises(ValueError, match="MANIFEST_SHA256_MISMATCH"):
+        workspace.verify(staging, name, candidate, proof["manifest_sha256"])
+    with pytest.raises(ValueError, match="MANIFEST_INVALID"):
+        workspace.verify(staging, name, candidate, forged_hash)
+    assert workspace.main([
+        "--verify", "--staging-root", str(staging), "--name", name,
+        "--integration-sha", candidate, "--manifest-sha256",
+        proof["manifest_sha256"],
+    ]) == 1
+    assert capsys.readouterr().err.strip() == (
+        "FRANK_ISOLATED_WORKSPACE_REJECTED")
+    with pytest.raises(ValueError, match="MANIFEST_SHA256_MISMATCH"):
+        workspace.cleanup(staging, name, candidate, proof["manifest_sha256"])
+    assert target.is_dir()
+    marker.write_bytes(original)
+    assert workspace.verify(staging, name, candidate,
+                            proof["manifest_sha256"])["status"] == (
+                                "FRANK_ISOLATED_VERIFIED")
+
+
+def test_missing_external_sha_receipt_cannot_verify_or_cleanup(repo_and_pins):
+    repo, staging, candidate = repo_and_pins
+    name = "frank-joint-receipt-proof"
+    proof = workspace.assemble(repo, staging, name, candidate)
+    target = staging / name
+    assert workspace.main(["--verify", "--staging-root", str(staging),
+                           "--name", name]) == 1
+    assert workspace.main(["--cleanup", "--staging-root", str(staging),
+                           "--name", name]) == 1
+    assert workspace.main(["--verify", "--staging-root", str(staging),
+                           "--name", name, "--integration-sha", candidate,
+                           "--manifest-sha256", "0" * 64]) == 1
+    assert target.is_dir()
+    assert workspace.verify(staging, name, candidate,
+                            proof["manifest_sha256"])["status"] == (
+                                "FRANK_ISOLATED_VERIFIED")
 
 
 def test_missing_archived_evidence_ref_blocks_completion(repo_and_pins):
