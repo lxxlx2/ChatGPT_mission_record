@@ -341,6 +341,8 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
         "new_listing_source_claim_first_1m_utc":stage133.iso(first_observed_ms),
         "effective_replay_scan_start_utc":stage133.iso(scan_start_ms),
         "strict_post_discovery_history":strict_post_discovery_history,
+        "first_UTC_aligned_completed_5m_source_open":(
+            stage133.iso(int(candles[0][0])) if candles else None),
         "earliest_possible_D1_61min_history_UTC":stage133.iso(required_history_start+61*MIN),
         "first_quote100k_gate_utc_diagnostic_only":(
             stage133.iso(first_quote100k_gate_ms) if first_quote100k_gate_ms is not None else None),
@@ -395,6 +397,7 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
                         "first_tick_utc":None,"D0_first_UTC":None,
                         "D1_first_UTC":None,"D1_entry_path":None,
                         "earliest_possible_D1_61min_history_UTC":stage133.iso(first_visible+61*MIN),
+                        "first_UTC_aligned_completed_5m_source_open":None,
                         "D0_early5_vs_fixed_first_2x":False,
                         "D1_early5_vs_fixed_first_2x":False,
                         "counterfactual_status":"NOT_SCORABLE_DISCOVERY_OUTSIDE_SOURCE",
@@ -442,6 +445,8 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
                     "D1_entry_path":strict["D1_entry_path"],
                     "earliest_possible_D1_61min_history_UTC":
                         strict["earliest_possible_D1_61min_history_UTC"],
+                    "first_UTC_aligned_completed_5m_source_open":
+                        strict["first_UTC_aligned_completed_5m_source_open"],
                     "D0_early5_vs_fixed_first_2x":bool(
                         fixed_cross_ms is not None
                         and strict["D0_first_UTC"] is not None
