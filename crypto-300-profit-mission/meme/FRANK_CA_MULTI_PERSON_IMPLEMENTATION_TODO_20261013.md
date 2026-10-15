@@ -598,3 +598,11 @@ Remaining verified gaps / dependencies:
 - `loopback_port_listener_presence`: f02_research:18765、f01_c02_control:18766、readonly_bridge:18777 都为 `NO_LISTENER_SEEN`；只说明**观测瞬间**未看到 TCP LISTEN，非后续无限期可用或对其它生产端口的鉴定。
 - **门禁现状：`PASSIVE_PREFLIGHT_EXECUTED_WITH_EVIDENCE_REF_GAP` / `SOURCE_ASSEMBLY_BLOCKED_UNTIL_SEPARATE_AUTHORIZATION` / `NO_CURRENT_WALLET_PROOF` / `NO_MAC_HTTP_BROWSER_QA`。** 不运行/启动本地服务、获取新真实 RPC、读取私有 sidecar 内容、远端或本地 fetch、创建/清理 staging、修改生产数据。下一阶段保留最小两项独立授权：(1) 在安全隔离工作树准备所缺历史 ref 并做 source/receipt/checksum 组装确认；(2) 另行授权启动隔离 F01/C02/F02 HTTP 与浏览器真实验收，前者不能自动视为批准后者。可继续已有 CI 合成 fixture 的离线开发，勿重复低价值安全框架建设。
 - 产品最终目标维持：F01 有效真实可跟、C02 单模式 exact CA 来源、F02 当前人物多钱包余额/逐 ATA 核对，以及整体联调与独立 review；`NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_MAC_SERVICE_START / NO_FILE_CLEANUP` 继续有效。
+
+
+## 2026-10-16 用户批准：仅隔离 Git 证据准备、固定 SHA 组装与 manifest 回执验证
+
+- 用户在上一轮 `PASSIVE_PREFLIGHT_EXECUTED_WITH_EVIDENCE_REF_GAP` 报告后明确回复「批准」。按紧邻审批对象限定：**只批准**在新的 Mac 独立临时目录从已有 `~/.local/share/frank-f02-r3-review` 的**已提交 Git 对象**生成来源副本，在这个副本中从官方 GitHub `refs/heads/evidence/frank-ca-local` 取得历史证据 ref 并核对固定 SHA `b9fb6e6df9032a0e6f49c1274bb4ba61c9e4c2da`，调用已独立审查批准的 PR73 组装脚本 `5755b8b96080f21635eaa5354588cbb8f6561ab0`，以固定 main `662ba4aceb9d53cb7a541ad3f251f9e12b8c09ea`、C02 `8898134a8a302e1187138f7fb3da87a554567e6d`、F01 `516e3335a134c608f477019b79027982f43af32a`、PR71 基线 `d998fb5966fac2eee5dbeedca5f78126d1b51b6d` + PR73 候选执行**隔离 Git 组装**，把 assemble stdout 中独立得到的 `manifest_sha256` 保存在 staging 目录之外，并执行 `--verify`。
+- **禁止修改原用户 review Git 仓库中的 .git refs、工作区、HEAD 或 stash；也不允许覆盖/删除任何已存在 staging**；允许唯一新建独立临时源克隆、仓库外 staging 和 staging 外审核 receipt 文件。缺失本地 Git 对象或远端 evidence SHA 漂移必须**立即 fail closed**，不要用移动的 main / PR head 或猜测 SHA 代替。
+- 组装阶段可能读取/写入**新隔离 Git 仓库**（clone/fetch/merge/index/manifest），不是只读元数据预检，不得与上一轮 preflight 七项无写合同混淆；工作区比较限**新临时仓库**，不对原目录执行 `status/diff`。在用户尚未运行并回传实际命令输出前，仅记录授权和固定方案，**不得写成 Mac 组装已通过**。
+- 此次批准**不包括**读取用户旧 F02 SQLite/私有 raw RPC 归档、真实 Solana RPC、启动或停止任何端口/HTTP 服务器、实际浏览器联调、Gmail、交易、生产目录文件写入、合并/部署、删除/清理隔离目录、安装服务或新建自动任务。真实业务验收和隔离服务启动后续另行批准。保留 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_MAC_SERVICE_START / NO_FILE_CLEANUP`。
