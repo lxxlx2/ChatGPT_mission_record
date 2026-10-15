@@ -241,7 +241,14 @@ def run_official_subset(day, symbols):
             prep = []
             for sym in roster:
                 bars, receipt = old.read_complete_216h(sym,day)
-                prep.append(prepare_symbol(db,sym,day,bars,receipt))
+                # Stage26 read_complete_216h() verified all ten
+                # publisher CHECKSUM objects before returning compact
+                # {date,sha256} provenance; preserve that trust boundary.
+                attested = [dict(item,
+                                 verified_published_sha256=True,
+                                 verified_by="STAGE26_OFFICIAL_CHECKSUM_READER")
+                            for item in receipt]
+                prep.append(prepare_symbol(db,sym,day,bars,attested))
             result = run_shared(db,day,roster,
                                 market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
     result["prepared_verified_minute_sources"] = prep
