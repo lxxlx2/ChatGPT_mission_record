@@ -31,6 +31,17 @@ class Token4Original19TwoOpposingNativeOutcomes(unittest.TestCase):
                          ["5000000000000000","3000000000000000"])
         self.assertTrue(all(r["original_chain56_signer_confirmed"] and r["full_success_receipt_confirmed"] for r in x["spot_checks"]))
 
+    def test_actual_token4_historic_window_2025_not_2026(self):
+        from bsc_meme_address_model_v1_p4c_8e6b_token4_19tx import git_blob
+        raw=(ROOT/"bsc-meme-address-model-v1-p4c-8e6b-token4-2025-blocktime-header-2026-10-15.json").read_bytes()
+        self.assertEqual(git_blob(raw),"85bca313b5579fa4971478d81c9d2c5320299927")
+        evidence=json.loads(raw)
+        self.assertEqual([r["block"] for r in evidence["rows"]],[63056884,64458294])
+        self.assertEqual([r["UTC"] for r in evidence["rows"]],
+                         ["2025-10-01T04:08:45.000Z","2025-10-13T08:13:21.000Z"])
+        self.assertTrue(all(r["RPC_FULL_BLOCK_BODY"]=="TRUNCATED_TOOL_OUTPUT_HEADER_FIELDS_ONLY"
+                            for r in evidence["rows"]))
+
     def test_missing_negative_case_fails(self):
         d=copy.deepcopy(self.source)
         d[3]["first_major_4"]["rounds"].pop(0)
