@@ -27,7 +27,7 @@ def build(data):
             and len(owner["original_transactions"])==19
             and [x["part"] for x in sources]==[1,2,3,4]
             and all(x["precommit_sha"]==PINS[0][1] for x in sources)
-            and all(x["production"]=="NO_GO" for x in data),
+            and all(x.get("production",x.get("summary",{}).get("production"))=="NO_GO" for x in data),
             "original 19 token4 selected external native scope or source pins changed")
     raw=[row for s in sources for row in s["rows"]]
     require(len(raw)==19 and len({r["block"] for r in raw})==19,"missing or duplicated original owner block")
