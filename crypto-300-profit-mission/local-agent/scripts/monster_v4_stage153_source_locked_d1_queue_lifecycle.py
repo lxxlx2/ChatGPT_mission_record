@@ -338,7 +338,7 @@ def safe_new_json_output(target, sqlite_input, result):
     out.parent.mkdir(parents=True, exist_ok=True)
     # 'x' uses O_CREAT | O_EXCL; refuses even racing symlink targets.
     with out.open("x", encoding="utf-8") as handle:
-        handle.write(json.dumps(result, sort_keys=True, indent=2) + "\\n")
+        handle.write(json.dumps(result, sort_keys=True, indent=2) + "\n")
 
 
 def main():
