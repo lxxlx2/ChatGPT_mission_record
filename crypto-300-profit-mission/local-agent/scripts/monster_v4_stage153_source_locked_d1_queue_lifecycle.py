@@ -228,11 +228,12 @@ def queue_pressure(db, asof_ms):
     """Read-only, as-of status. Do not infer unseen true first HTTP start."""
     if type(asof_ms) is not int or asof_ms <= 0:
         raise ValueError("STAGE153_INVALID_ASOF_MS")
-    pending = db.execute(
+    names = ("first_seen_ms", "deadline_ms", "retry_after_ms",
+             "last_evaluated_bar_ms", "attempts", "venue", "symbol")
+    pending = [dict(zip(names, r)) for r in db.execute(
         """SELECT first_seen_ms,deadline_ms,retry_after_ms,
                   last_evaluated_bar_ms,attempts,venue,symbol
-           FROM candidate_queue WHERE status='PENDING'"""
-    ).fetchall()
+           FROM candidate_queue WHERE status='PENDING'""").fetchall()]
     not_evaluated = [r for r in pending if r["last_evaluated_bar_ms"] is None]
     near_3 = [r for r in pending if r["deadline_ms"] <= asof_ms+POLL_MIN*MIN]
     near_6 = [r for r in pending if r["deadline_ms"] <= asof_ms+2*POLL_MIN*MIN]
