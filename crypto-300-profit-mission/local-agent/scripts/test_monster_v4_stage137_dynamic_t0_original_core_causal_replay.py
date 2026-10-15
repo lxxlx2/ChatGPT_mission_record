@@ -242,6 +242,61 @@ class Stage137Tests(unittest.TestCase):
         self.assertEqual(legacy,zero["D0_first_UTC"])
         self.assertNotEqual(legacy,five["D0_first_UTC"])
 
+    def test_stage145_claude_P1_delayed_D1_strict_visible_61m_vs_optimistic_readback(self):
+        from decimal import Decimal
+        first=s131.stamp("2026-10-28T06:21:00Z")
+        bars=[]
+        for n in range(150):
+            price=(Decimal("1") if n<30 else
+                   Decimal("1.12") if n<60 else Decimal("1.30"))
+            quote=Decimal("400000") if n>=60 else Decimal("100000")
+            high=Decimal("2.25") if n==125 else price*Decimal("1.01")
+            bars.append((first+n*60_000,price,high,price*Decimal("0.99"),
+                         price,quote,1200))
+        result=s137.replay_new_arrival_cold_start(
+            "NEWUSDT",first,first+150*60_000,bars,
+            s137.original_core_contract(),include_discovery_delay_replays=True)
+        cases=result["counterfactual_discovery_delay_original_D0_D1_offline"]
+        readback=cases["delays"]["5m"]
+        strict=readback["strict_since_discovery"]
+        visible=s131.stamp(readback["visible_from_UTC"])
+        self.assertEqual(readback["visible_from_UTC"],"2026-10-28T06:26:00Z")
+        self.assertEqual(readback["first_tick_utc"],strict["first_tick_utc"])
+        self.assertEqual(readback["D1_first_UTC"],"2026-10-28T07:24:00Z")
+        self.assertLess(s131.stamp(readback["D1_first_UTC"]),visible+61*60_000)
+        self.assertEqual(strict["earliest_possible_D1_61min_history_UTC"],
+                         "2026-10-28T07:27:00Z")
+        self.assertEqual(strict["first_UTC_aligned_completed_5m_source_open"],
+                         "2026-10-28T06:30:00Z")
+        self.assertEqual(result["first_UTC_aligned_completed_5m_source_open"],
+                         "2026-10-28T06:25:00Z")
+        if strict["D1_first_UTC"] is not None:
+            self.assertGreaterEqual(s131.stamp(strict["D1_first_UTC"]),visible+61*60_000)
+        self.assertTrue(cases["two_information_sets_per_delay_readback_A_vs_strict_post_discovery_B"])
+        self.assertTrue(cases["A_B_not_guaranteed_ordered_or_real_time_confidence_interval"])
+
+    def test_stage145_strict_delayed_unicode_original_D0_D1_matches_ascii(self):
+        from decimal import Decimal
+        first=s131.stamp("2026-10-28T06:21:00Z")
+        bars=[]
+        for n in range(150):
+            price=Decimal("1.12") if n>=30 else Decimal("1")
+            high=Decimal("2.25") if n==120 else price*Decimal("1.01")
+            bars.append((first+n*60_000,price,high,price*Decimal("0.99"),
+                         price,Decimal("25000"),1000))
+        contract=s137.original_core_contract()
+        a=s137.replay_new_arrival_cold_start(
+            "NEWUSDT",first,first+150*60_000,bars,contract,
+            scan_start_ms=first+5*60_000,strict_post_discovery_history=True)
+        b=s137.replay_new_arrival_cold_start(
+            "币安人生USDT",first,first+150*60_000,bars,contract,
+            scan_start_ms=first+5*60_000,strict_post_discovery_history=True)
+        self.assertEqual((a["D0_first_UTC"],a["D1_first_UTC"]),
+                         (b["D0_first_UTC"],b["D1_first_UTC"]))
+        self.assertTrue(b["source_core_unicode_adapter_used"])
+        self.assertEqual(a["first_UTC_aligned_completed_5m_source_open"],
+                         "2026-10-28T06:30:00Z")
+
     def test_stage144_discovery_delayed_beyond_available_polls_is_not_scorable(self):
         from decimal import Decimal
         first=s131.stamp("2026-10-28T06:21:00Z")
