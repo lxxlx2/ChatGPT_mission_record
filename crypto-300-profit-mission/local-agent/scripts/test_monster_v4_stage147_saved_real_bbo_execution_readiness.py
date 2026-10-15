@@ -3,6 +3,7 @@
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import tempfile
 import unittest
 
@@ -124,6 +125,73 @@ class Stage147OfflineTests(unittest.TestCase):
             path.write_text(json.dumps(obj))
             with self.assertRaisesRegex(ValueError,"DUPLICATE_ORIGINAL_MARKET_SOURCE"):
                 s147.read_verified_source(Path(td),name,m)
+
+    def test_stage148_P1_swapped_allusdt_member_same_525_must_reject(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/"archive"
+            shutil.copytree(s147.SOURCE_DIR,root)
+            derived=root/"stage139_original_T0_asof_contract_metadata.json"
+            obj=json.loads(derived.read_text())
+            changed=[x for x in obj["initial_original_instrument_rows"]
+                     if x["symbol_exact"]=="ALLUSDT"]
+            self.assertEqual(len(changed),1)
+            changed[0]["symbol_exact"]="AAPLUSDT"
+            derived.write_text(json.dumps(obj))
+            with self.assertRaisesRegex(
+                    ValueError,"STAGE148_RAW_STAGE133_EXCHANGEINFO_OR_DERIVED_525_ROSTER_DRIFT"):
+                s147.audit(root)
+
+    def test_stage148_P1_derived_issuer_scope_and_raw_exchange_bytes_must_reject(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/"archive"
+            shutil.copytree(s147.SOURCE_DIR,root)
+            derived=root/"stage139_original_T0_asof_contract_metadata.json"
+            obj=json.loads(derived.read_text())
+            obj["initial_original_instrument_rows"][0][
+                "asof_instrument_scope"]="OFFICIAL_NOT_COIN_TYPED_AT_T0"
+            derived.write_text(json.dumps(obj))
+            with self.assertRaisesRegex(ValueError,"STAGE148_RAW_STAGE133"):
+                s147.audit(root)
+            shutil.copyfile(s147.SOURCE_DIR/derived.name,derived)
+            original=root/"stage133_original_three_HTTP_T0.json"
+            t0=json.loads(original.read_text())
+            t0["raw_http_records"]["official_exchange_info"]["raw"]="{}"
+            original.write_text(json.dumps(t0))
+            with self.assertRaises(ValueError):
+                s147.audit(root)
+            original.unlink()
+            with self.assertRaises(FileNotFoundError):
+                s147.audit(root)
+
+    def test_stage148_P2_only_modify_wrapper_time_plus_one_day_reject(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/"archive"
+            shutil.copytree(s147.SOURCE_DIR,root)
+            wrapper=root/"usdm_all_best_bid_ask_raw_http.json"
+            obj=json.loads(wrapper.read_text())
+            self.assertEqual(obj["response_end_ms"],1792000368089)
+            obj["response_end_ms"]+=86_400_000
+            wrapper.write_text(json.dumps(obj))
+            with self.assertRaisesRegex(ValueError,"STAGE147_ORIGINAL_HTTP_RECEIPT_SHA_OR_META_MISMATCH"):
+                s147.audit(root)
+
+    def test_stage148_P2_wrong_same_host_endpoint_rejected_per_source(self):
+        endpoints={
+            "bbo":"https://www.binance.com/fapi/v1/premiumIndex",
+            "ticker24":"https://www.binance.com/fapi/v1/ticker/bookTicker",
+            "mark":"https://www.binance.com/fapi/v1/ticker/24hr",
+        }
+        for key,url in endpoints.items():
+            with self.subTest(source=key):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root=Path(tmp)/"archive"
+                    shutil.copytree(s147.SOURCE_DIR,root)
+                    wrapper=root/(s147.SOURCES[key]+"_raw_http.json")
+                    obj=json.loads(wrapper.read_text())
+                    obj["url"]=url
+                    wrapper.write_text(json.dumps(obj))
+                    with self.assertRaisesRegex(ValueError,"STAGE147_ORIGINAL_HTTP_RECEIPT_SHA_OR_META_MISMATCH"):
+                        s147.audit(root)
 
     def test_status_unknown_when_book_zero_qty_or_future_event(self):
         base={"symbol_exact":"ABCUSDT",
