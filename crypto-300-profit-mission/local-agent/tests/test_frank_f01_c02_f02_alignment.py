@@ -144,6 +144,25 @@ def test_duplicate_f02_rows_or_f01_eligible_rows_fail_closed_without_duplicate_b
     assert out["f02"]["state"] == "SOURCE_UNAVAILABLE"
 
 
+def test_f02_canonical_fixed_point_zero_is_observed_not_unknown():
+    f01, c02, f02 = sources()
+    f02["mints"][0].update({
+        "state": "OPEN_ACCOUNT_ZERO",
+        "observed_quantity": "0.000000",
+        "token_account_count": 1,
+    })
+    result = aligned(f01, c02, f02)
+    assert result["f02"]["state"] == "OPEN_ACCOUNT_ZERO"
+    assert result["f02"]["observed_quantity"] == "0.000000"
+    assert result["f02"]["token_account_count"] == 1
+    assert result["cross_source_review_reason"] == (
+        "F01_SIGNAL_VS_ARCHIVED_WALLET_REQUIRES_REVIEW")
+    f02["mints"][0]["observed_quantity"] = "not-a-number"
+    result = aligned(f01, c02, f02)
+    assert result["f02"]["state"] == "SOURCE_UNAVAILABLE"
+    assert result["f02"]["observed_quantity"] is None
+
+
 def test_projection_never_mutates_upstream_sources():
     f01, c02, f02 = sources()
     before = deepcopy((f01, c02, f02))
