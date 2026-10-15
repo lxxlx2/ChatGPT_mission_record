@@ -54,3 +54,13 @@ python -m unittest -v test_monster_v4_stage151_post_d1_pullback_reclaim.py
 必须返回：审核身份及准确版本（未知`UNVERIFIED`）、固定审核SHA、原始真实输入及结果证据、负向样本、P0/P1/P2实际缺陷的文件行号/复现/最小修复、`APPROVE | REQUEST_CHANGES | BLOCKED`结论。须明确是否影响WATCH或BUY以及 `NO_MERGE / NO_DEPLOY` 是否仍维持。
 
 无论本轮代码审核是否通过，业务门禁仍：G0 PARTIAL, G1 NOT_SCORABLE, G2/G3 NOT_PASSED, G4 UNKNOWN, G5 FULL RELEASE NOT PASSED, G6 NO_GO；旧Stage116 2026-10-14 06:00Z SOURCE_FAILED_NO_BACKFILL，Stage118/127 REJECTED、Stage132 first buy price-only NEGATIVE；禁止恢复自动采集、Monster本机安装、自动交易或邮箱发信，Frank保持运行不变。
+
+
+## 实际CI完成后的新增真实证据（不改变上述固定审核代码SHA）
+
+先前提示词写入时CI未知，现已实际核实固定源码SHA `b309bf75a46a48cde1aa6b14c17d3e6b7c1b53c2` 对应 [Stage151 Actions #38724428671](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38724428671)：2026-10-15T11:01:50Z开始，11:03:21Z结束，27/27 jobs `SUCCESS`，其中 Ubuntu/macOS 各 `Ran 11 tests / OK`，24个 original305 官方历史publisher归档shards SUCCESS，最后全305校对/Git写入日志 `STAGE151_ACTUAL_GIT_EVIDENCE_PUSH_CONFIRMED`。远端真实已持久保存：
+
+- `crypto-300-profit-mission/monster/evidence/monster_stage151_original305_preregistered_summary.json`（Git blob `f96354da4052c911a726954efdcc5bbd6`）
+- `crypto-300-profit-mission/monster/evidence/monster_stage151_original305_preregistered_rows.jsonl`（Git blob `fcc8053f5bb1d672e8eaf907ee3d9ec64e911505`）
+
+真实305事件：184先跌3%且恢复1%，113未回撤，8回撤未恢复；184完整24h毛收益中位 `-2.446284%`，示意双边20bps后中位 `-2.835720%`；6日期仅一个中位为正、四负、一个零，`STAGE151_EXPOSED_PRICE_MODEL=REJECTED`。请独立复算源和逐币统计，不要因为Actions成功就给业务G4通过。本报告是业务负结论，并不代替你的独立代码审核。审核代码SHA仍严格为 `b309bf75a46a48cde1aa6b14c17d3e6b7c1b53c2`，后续新增文档和机器结果并未修改待审源码。
