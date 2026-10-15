@@ -8,8 +8,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from mission_agent.mission_control.person_registry import PersonRegistry  # noqa: F401
-
 FRESH = "FRESH_VERIFIED_ARCHIVED_OBSERVATION"
 COMPLETE = "BOTH_PROGRAMS_OBSERVED_NON_ATOMIC"
 F02_KIND = "F02_RESEARCH_ARCHIVED_OWNER_POSITIONS"
@@ -35,7 +33,10 @@ def _f02_usable(doc: dict) -> bool:
             and doc.get("source_observation_status") == COMPLETE
             and doc.get("latest_attempt_source_status") == COMPLETE
             and isinstance(doc.get("mints"), list)
-            and doc.get("target_mint_count") == len(doc["mints"]))
+            and doc.get("target_mint_count") == 32
+            and len(doc["mints"]) == 32
+            and len({x.get("mint") for x in doc["mints"]
+                     if isinstance(x, dict)}) == 32)
 
 
 def align_frank_ca_f02(*, mint: str, follow: dict | None,
@@ -62,6 +63,7 @@ def align_frank_ca_f02(*, mint: str, follow: dict | None,
     # A duplicate in any source is ambiguity, not multiple independent BUY votes.
     follow_state = ("F01_ELIGIBLE" if len(eligible) == 1
                     and eligible[0].get("decision") in ("BUY", "SMALL_BUY")
+                    and eligible[0].get("source_signal_id")
                     else "F01_AMBIGUOUS" if len(eligible) > 1
                     else "F01_NOT_ELIGIBLE")
     selected = eligible[0] if follow_state == "F01_ELIGIBLE" else None
@@ -100,6 +102,8 @@ def align_frank_ca_f02(*, mint: str, follow: dict | None,
     if ca_report:
         if ca_report.get("mint") != mint:
             ca_state = "CA_MINT_MISMATCH"
+        elif ca_report.get("chain") not in (None, "solana"):
+            ca_state = "CA_CHAIN_MISMATCH"
         else:
             identity = ca_report.get("token_identity") or {}
             if (isinstance(identity, dict) and
