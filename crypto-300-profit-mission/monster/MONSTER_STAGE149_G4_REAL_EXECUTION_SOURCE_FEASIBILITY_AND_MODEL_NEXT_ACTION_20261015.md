@@ -39,3 +39,24 @@ Use current Stage90 D2 L2 price-level calculator and Stage120 rules for the futu
 ## Gate and permissions (unchanged)
 
 Stage148 new code independent peer review **APPROVE@41f58cd3a1bde8d9b01cffc74f04ae36f26685aa**, previous Stage147 `REQUEST_CHANGES@e6ec...` permanently retained; prior Stage145 `APPROVE@51f2...` separate. **G0 PARTIAL, G1 NOT_SCORABLE, G2/G3 NOT_PASSED, G4 UNKNOWN, G5 production/release gate NOT_PASSED despite individual code approvals, G6 NO_GO**. Stage116 first source failed, Stage118/127 rejected and Stage132 first-entry negative proxy remain. Draft PR #30 remains open, `NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE` and `FRANK_UNCHANGED`. Manual source capture cadence unchanged, nothing scheduled or triggered.
+
+
+## 2026-10-15 再核实：官方公开历史 L2 与 bookTicker 现状，避免无效采购/开发
+
+### 官方仓库直接证据（核对于2026-10-15）
+
+在 `binance/binance-public-data` 的[Issue #371](https://github.com/binance/binance-public-data/issues/371#issuecomment-6020306974)，2026-10-06 项目协作者 `btechops` 的英文原文（已通过 GitHub connector 实际读取 comment id `6020306974`）明确：原提供的历史 order book L2 数据及下载脚本已不再公开，`bookTicker` 历史档案 USD-M 止于 **2024-03-30**，COIN-M 止于 **2024-10-14**，2023-05 之前没有其所指的公开订单簿数据。该证据比之前只依据过期2019/2021文档讨论来源可用性更直接；这是**Binance官方开源仓库协作者所述历史公开数据供应状态**，不等于经过全网穷举证明所有服务商不存在历史L2，也不等于独立认证某私有API数据质量。此前的原USD-M 2025/2026 305个D1信号不能通过这个已中止的官方 `bookTicker` 历史路径补出同刻BBO/L2。不能再编写“从官方public-data自动回填2025-26信号L2”的无实际来源采集脚本。
+
+补充对照：公开币安[当前 USD-M Order Book API](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Order-Book)查询实时买卖盘，**没有通过指定历史时间重取2025/2026既往订单簿的能力证明**；现在执行实时GET不能回填旧信号，更不能弥补 Stage140 2026-10-14 的既往未来退出盘口。
+
+### 有限的第三方候选及不可跨越的验证范围
+
+2026-10-15 检索到[CandleFeed L2档案说明](https://candlefeed.ai/data/order-book/)：该提供方**自行声明**2026-06开始录入10个Binance USD-M合约的100ms深度增量及周期性REST快照，2026-09-26再加入15个，仅25种币；其自述免费样本为**每月1日**，完整历史L2需收费（网页当日标价Pro USD149/月）。这些均属供应商自述，**本轮没有实际下载并独立校验Parquet、连续updateId、1000档、截图/历史时钟，也未核验能否与原305 D1精确同币同刻匹配**。不能拿该25币子集或任何免费固定1日样本直接升级全市场G4、或将第三方来源称为交易所官方原始数据。本模块不批准为获取L2而付费或替用户安装/订阅服务。
+
+### 研究路线修正：防止“没有能买的模型却先部署才能找回测来源”的循环
+
+1. 当前可开展且具有严格真源依据的主线是已冻结Stage140 525全人口 / 4725 symbol-day历史1m publisher源，在 **2026-10-23T18:00Z（曼谷10-24 01:00）之后经用户明确单次聊天触发** 用现成Stage136/137/138按原合同取源、做不漏普通币的D0/D1回放。原已保存[Stage140真实前瞻source计划](evidence/monster_stage140_user_authorized_real_www_mirror_20261015/t0_2026-10-14T175247096Z/stage140_actual_t0_future_source_readiness_summary.json)早已预计算525及4725，**勿重复写另一份规划器**。回看官方K线可评价价格轨迹、首次早报代理、来源缺档，但不能扮演当时真实已经到达的通知时钟。
+2. G4 当前明确记录 `BLOCKED_BY_MISSING_PIT_PAIRED_FULL_L2_AND_VALID_NOTIONAL`，而不是伪造收益为0或任何正回报。维持未指定用户交易名义金额；不能以旧30/100/300替换。若有**允许、可核验且可逐笔覆盖原样本的真实历史深度源**，先核实具体symbol/UTC覆盖、许可和连续性，重用冻结Stage90与Stage120，并在独立Reviewer、真实净收益门禁之前只输出research UNKNOWN。不要为无证据来源写第四个parser。
+3. 按现有严格顺序，**当前禁止为了搜集未来L2而提前启用Mac Shadow或新launchd**：模型/净收益门禁未通过，擅自采实时源会绕过显式授权。若未来评估确需研究专用L2观察源，其方案、范围、数量、账户成本和明确用户授权须另行单独审批，不得默默建立服务/定时器/提醒。离线研究可继续、G1与历史负收益保持原结论；不把 G4 的历史来源缺陷改写成模型成功。
+
+本补充是来源可得性研究与**研发优先级裁决**，没有对Stage90/120/137/138/150、D0/D1、仓库冻结门禁或生产服务做任何修改，无新HTTP抓取、GitHub scheduled workflow、ChatGPT automation或通知。Stage150独立Codex源码 `APPROVE@e569dddccddf12736051534f2bf0b56b0329ad62` 仍是此前已核对的唯一新代码批准范围；`G0=PARTIAL / G1=NOT_SCORABLE / G2_G3=NOT_PASSED / G4=UNKNOWN / G5_FULL_RELEASE=NOT_PASSED / G6=NO_GO`。
