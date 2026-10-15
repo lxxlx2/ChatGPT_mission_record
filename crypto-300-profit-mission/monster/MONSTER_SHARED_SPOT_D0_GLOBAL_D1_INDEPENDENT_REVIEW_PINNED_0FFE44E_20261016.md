@@ -25,7 +25,7 @@
 
 ## 必须验证的真实数据和CI
 
-[GitHub Actions #38809121359](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38809121359) 已经`completed/success`，触发SHA **`0ffe44ece8644443757b5f6ac0cd19e0f5d1999e`**，`5/5 Jobs PASS`，Ubuntu/macOS Python3.12各 `13/13 unittest PASS` + py_compile。第一源Job从原 Stage26 固定manifest列举的**全部36份**历史GitHub artifacts真实按ID下载，各自核对原 ZIP SHA和内层 JSON SHA，用真正4548原始Symbol-Day而非历史报告截断统计6日期的全部758名单、2719完整分钟、1829不完整；期间保存每日期所有718? **必须核查是758，不得任何718误写**。全部758实际字符串组成的Roster SHA256 `cea49caae4245dad910cc096bdaea953387bdfea64667a49916756d12297074a`。源Census Git blob `a558766de7514a87a4d2bca7555d4ac37efbb086`。
+[GitHub Actions #38809121359](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38809121359) 已经`completed/success`，触发SHA **`0ffe44ece8644443757b5f6ac0cd19e0f5d1999e`**，`5/5 Jobs PASS`，Ubuntu/macOS Python3.12各 `13/13 unittest PASS` + py_compile。第一源Job从原 Stage26 固定manifest列举的**全部36份**历史GitHub artifacts真实按ID下载，各自核对原 ZIP SHA和内层 JSON SHA，用真正4548原始Symbol-Day而非历史报告截断统计6日期的全部758名单、2719完整分钟、1829不完整；期间保存每个日期完整758币的真实身份及来源状态，不允许减少分母。全部758实际字符串组成的Roster SHA256 `cea49caae4245dad910cc096bdaea953387bdfea64667a49916756d12297074a`。源Census Git blob `a558766de7514a87a4d2bca7555d4ac37efbb086`。
 
 第二真实源Job从 **data.binance.vision官方Spot1m ZIP+CHECKSUM** 经原Stage26已审reader取得 BTCUSDT/ETHUSDT 2026-02-03 至 2026-02-12的各**10份**完整日数据，所有日SHA256和原始验证日期已逐币放入[机器证据](evidence/monster_shared_spot_real_BTC_ETH_20260204.json) blob `8b58e95bb2758c27e8ab08a875f7a50970fb5c2f`。两币各12960分钟、每币3360个3m tick缓存、共6720 source symbol-tick，原共享SQLite一次全市场观测+一次原global D1评价每tick，真实该日期两币无WATCH和SETUP（**零信号控制，非原98爆发正例**）。源机器`shared_replayer_sha256=9d09626f7425524bd374d3295c36e4e5a81f66347e4e7db89246387532314404`、`trigger_commit_sha=0ffe44e...`、`true_full_758_replay=false`。CI归档Job实际打印 `MONSTER_SHARED_SPOT_REAL_ORIGINAL_SOURCE_PROOFS_PINNED_GIT_PASS`，Git写入前分别对4个源/test/workflow Git blob重新校验与固定SHA相同。请独立核对这些全部真实运行日志、下载回执及源 SHA，不要直接信我的声明。
 
@@ -35,7 +35,7 @@
 2. **来源严格因果**：原官方1m历史必须恰好12960连续bar、24h预热、报价额来自过去1440个已闭合分钟，1m信号price为最后已闭合CLOSE，原5m同一原函数严格仅在end_ms小于观察时钟返回，**禁止未闭合bar、未来成交额/价格泄漏**。官方十日ZIP/CHECKSUM的每币每天原SHA应保存且每个真实源日顺序与冻结日期一致；缺1min、伪造一天SHA、错日期、缺一个币任何tick时模型全部fail closed，不输出本该是758的截断结果。
 3. **原758分母**：从原36份源ZIP+内部JSON独立复算 **4548=758×6**、日期完整分钟合格`433,440,445,438,478,485`（合计2719）；缺失`325,318,313,320,280,273`（合计1829），必须保持CENSORED并说明source现况与旧Git研究范围。新`full`标记不能只看`len==758`，还要与源锁定的真实758 roster一致；评估接口能否被任意人工`frozen_verified_roster`绕过，若能影响实际输出可信等级，请记录缺陷与最小修复建议。不要只推荐增加API限额或改阈值来掩盖源缺失。
 4. **两币真实试运行与合成正例区分**：BTC/ETH真实20日源回放零WATCH，是正常控制组而不是D0前瞻盈利证明。合成AA/BB能独立核对原Stage26逐币`WATCH_EARLY`发生时钟与新共享原D0一致，且原D1才共享；请用新增13个单测与自拟负例核查过期、重复符号、来源篡改、未来5m，确认新真正98币源实验尚未做，不把旧91 LATE的数当作新D0发现。
-5. **实际可用性界限**：768? 正确冻结为758个历史Spot USDT币；仍不含完整真实PIT listing、真实HTTP ticker原响应和Spot+Futures共同竞争、真正真实下单成交深度、净收益、用户Mac测试、邮件实际送达。来源缓存是本地研究中间文件，不能改生产SQLite/Frank或默启任务。真实数据库WAL只读可能更改SHM索引（上轮Codex对Stage153已实测），本轮新的输出不会覆盖输入生产DB。
+5. **实际可用性界限**：冻结为758个历史Spot USDT币；仍不含完整真实PIT listing、真实HTTP ticker原响应和Spot+Futures共同竞争、真正真实下单成交深度、净收益、用户Mac测试、邮件实际送达。来源缓存是本地研究中间文件，不能改生产SQLite/Frank或默启任务。真实数据库WAL只读可能更改SHM索引（上轮Codex对Stage153已实测），本轮新的输出不会覆盖输入生产DB。
 6. **下一高价值实现评价**：判断能否用完整源已核验的2026-02历史445个币重建同SQLite共享D0/D1，与同**445名单**旧Stage26/28结果对照；这只能叫`SOURCE_COMPLETE_SUBSET`，不能称758全市场完成。无实测官方源不得以旧WATCH注入替代。
 
 ## 审核交付
