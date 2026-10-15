@@ -12,6 +12,7 @@ on:
       - dev/frank-f01-c02-f02-pinned-isolated-workspace-20261015
       - dev/frank-mac-readonly-environment-preflight-20261015
       - fix/frank-pr72-ignored-files-external-manifest-pin-20261015
+      - fix/frank-pr74-fsmonitor-home-isolation-20261016
   workflow_dispatch:
 permissions:
   contents: read

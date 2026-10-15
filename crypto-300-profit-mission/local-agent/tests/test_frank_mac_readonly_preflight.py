@@ -1,5 +1,6 @@
 """Approved Mac passive source preflight; test-only temporary repositories."""
 import json
+import shlex
 import subprocess
 
 from scripts import frank_mac_readonly_preflight as preflight
@@ -107,8 +108,11 @@ def test_output_sanitized_and_reports_only_port_presence(tmp_path, monkeypatch,
     assert "localhost" not in raw
     assert result["loopback_port_listener_presence"]["f01_c02_control"] == (
         "LISTENER_PRESENT")
+    # The CLI must never enumerate the test runner's actual user home.
+    monkeypatch.setattr(preflight.Path, "home", lambda: tmp_path)
     assert preflight.main(["--repo", str(repo)]) == 0
     doc = json.loads(capsys.readouterr().out)
+    assert doc["private_f02_session_inventory"]["state"] == "NOT_FOUND"
     assert "files_written_or_deleted" in doc["side_effects"]
     assert doc["side_effects"]["service_or_socket_started"] is False
 
@@ -119,3 +123,34 @@ def test_git_failure_and_no_lsof_report_unknown(tmp_path, monkeypatch):
     empty = tmp_path / "not-git"
     empty.mkdir()
     assert preflight.inspect_repo(empty)["state"] == "NOT_A_STANDALONE_REPO"
+
+
+
+def test_real_git_fsmonitor_helper_is_never_invoked(tmp_path):
+    """Regression for independently reproduced PR74 P2, using real Git."""
+    repo = _test_git(tmp_path)
+    sentinel = tmp_path / "fsmonitor-executed.txt"
+    helper = tmp_path / "fsmonitor-helper.sh"
+    helper.write_text(
+        "#!/bin/sh\n"
+        + "printf unexpected > " + shlex.quote(str(sentinel)) + "\n",
+        encoding="utf-8",
+    )
+    helper.chmod(0o755)
+    _git(repo, "config", "core.fsmonitor", str(helper))
+    unsaved = repo / "unsaved.txt"
+    unsaved.write_bytes(b"valuable-user-research")
+    index_before = (repo / ".git" / "index").read_bytes()
+    tracked_before = (repo / "file.txt").read_bytes()
+    unsaved_before = unsaved.read_bytes()
+    head_before = _git(repo, "rev-parse", "HEAD")
+
+    doc = preflight.inspect_repo(repo)
+
+    assert doc["state"] == "READ_ONLY_INSPECTED"
+    assert doc["source_changes"] == "HAS_USER_CHANGES"
+    assert not sentinel.exists(), "git status invoked configured core.fsmonitor"
+    assert (repo / ".git" / "index").read_bytes() == index_before
+    assert (repo / "file.txt").read_bytes() == tracked_before
+    assert unsaved.read_bytes() == unsaved_before
+    assert _git(repo, "rev-parse", "HEAD") == head_before
