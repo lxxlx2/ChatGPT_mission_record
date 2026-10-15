@@ -15,7 +15,7 @@ EXPOSED_DATES=("2025-11-04","2025-12-04","2026-02-04",
 
 
 def roster_sha(symbols):
-    return hashlib.sha256(("\\n".join(symbols)+"\n").encode()).hexdigest()
+    return hashlib.sha256(("\n".join(symbols)+"\n").encode()).hexdigest()
 
 
 def evaluate(all_reports, manifest):
@@ -105,7 +105,7 @@ def main():
     result=run(args.source_artifact_dir)
     args.out.parent.mkdir(parents=True,exist_ok=True)
     with args.out.open("x",encoding="utf-8") as h:
-        h.write(json.dumps(result,sort_keys=True,ensure_ascii=False,indent=2)+"\\n")
+        h.write(json.dumps(result,sort_keys=True,ensure_ascii=False,indent=2)+"\n")
     print("SHARED_SPOT_ORIGINAL_SOURCE_ELIGIBILITY "+
           json.dumps({k:result[k] for k in
                       ("all_six_dates_population_attempts",
