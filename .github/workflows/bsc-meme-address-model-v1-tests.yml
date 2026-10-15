@@ -47,6 +47,9 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-two-settled-source-audit-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-ddac-adff-a83b-five-inventory-closed-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-23x19-five-native-rounds-mixed239e-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-877af-marscoin-inventory-closed-quote-unresolved-2026-10-15.json"
@@ -770,6 +773,23 @@ jobs:
           assert (s["source_proven_new_realized_BNB_profit_rounds"],s["source_proven_new_realized_BNB_loss_rounds"])==(0,0)
           assert s["first_global_observer_U_qualified"]==0 and s["production"]=="NO_GO"
           print("PASS three wallets five source closed token inventories 11 native blocks zero false PnL upgrade")
+          PY
+      - name: P4-C 8E6B token4 two actual native signed outcomes 19 original tx five independent live receipts
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-8e6b-token4.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-8e6b-token4.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-8e6b-token4-two-settled-source-audit-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"8E6B token4 19 tx two original mixed real owner rounds audit source drift"
+          s=a["summary"]
+          assert (s["original_owner_signed_successful_txs"],s["independently_rechecked_full_transactions"])==(19,5)
+          assert (s["original_native_positive_rounds"],s["original_native_negative_rounds"])==(1,1)
+          assert s["new_followable_signals"]==0 and s["production"]=="NO_GO"
+          print("PASS token4 original 19 receipt-verified trades, 2 opposite native owner outcomes, 0 P5")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
