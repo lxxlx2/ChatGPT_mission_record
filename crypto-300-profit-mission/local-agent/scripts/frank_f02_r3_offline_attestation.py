@@ -106,10 +106,16 @@ def attest(session: Path, expected_sha: str, *,
             or len(archival["mints"]) != 32):
         raise ValueError("F02_R3_ARCHIVAL_SOURCE_INCONSISTENT")
     for expected, actual in zip(exact["mints"], archival["mints"]):
+        # Absent-in-complete-scan has 0 *observed accounts* in archived
+        # reconciliation but the F02 contract deliberately represents
+        # token_account_count as NULL, never as a proven live zero.
+        expected_count = (None if expected["current_status"] ==
+                          "NO_OPEN_ACCOUNT_OBSERVED" else
+                          expected["observed_token_account_count"])
         if (actual["mint"] != expected["mint"]
                 or actual["state"] != expected["current_status"]
                 or actual["observed_raw_amount"] != expected["observed_raw_amount"]
-                or actual["token_account_count"] != expected["observed_token_account_count"]
+                or actual["token_account_count"] != expected_count
                 or len(actual["token_accounts"]) != expected["observed_token_account_count"]):
             raise ValueError("F02_R3_TOKEN_ACCOUNT_OR_QUANTITY_MISMATCH")
         expected_qty = expected["observed_quantity"]
