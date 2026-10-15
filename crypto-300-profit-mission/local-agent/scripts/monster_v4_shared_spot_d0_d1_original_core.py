@@ -36,6 +36,27 @@ SECONDARY_FREEZE = (Path(__file__).resolve().parents[2] / "monster/evidence"
                     / "monster_shared_spot_stage26_original758_secondary_freeze_20261016.json")
 SECONDARY_FREEZE_BLOB = "8467bfc0db7cb888f805f30eaae301a812fbb20d"
 SECONDARY_ROSTER_SHA256 = "cea49caae4245dad910cc096bdaea953387bdfea64667a49916756d12297074a"
+BTC_ETH_SECONDARY_PIN = (SECONDARY_FREEZE.parent /
+    "monster_shared_spot_BTC_ETH_20_publisher_daily_sha_secondary_pin_20261016.json")
+BTC_ETH_SECONDARY_PIN_BLOB = "08fdc8cf8054ad93089a93bcd1e3e6d26877367f"
+
+
+def check_secondary_daily_sha_pins(symbol, original_receipts):
+    raw = BTC_ETH_SECONDARY_PIN.read_bytes()
+    blob = hashlib.sha1(
+        b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
+    if blob != BTC_ETH_SECONDARY_PIN_BLOB:
+        raise ValueError("SHARED_SPOT_SECONDARY_DAILY_SOURCE_PIN_DRIFT")
+    manifest = json.loads(raw)
+    members = {s["symbol"]: s["days"] for s in manifest["symbols"]}
+    if set(members) != {"BTCUSDT","ETHUSDT"}:
+        raise ValueError("SHARED_SPOT_SECONDARY_DAILY_SOURCE_SYMBOLS_DRIFT")
+    if symbol not in members:
+        return "NO_PRIOR_PER_DAY_SHA_PIN_UNVERIFIED_HISTORICAL_SOURCE"
+    got = [{"day": r["date"],"sha256": r["sha256"]} for r in original_receipts]
+    if got != members[symbol]:
+        raise ValueError("SHARED_SPOT_HISTORICAL_PUBLISHER_DAILY_SHA_PIN_CHANGED")
+    return "MATCHED_PREVIOUSLY_GIT_ARCHIVED_20_DAILY_PUBLISHER_SHA"
 
 
 def original_source_freeze():
@@ -332,6 +353,7 @@ def run_official_subset(day, symbols):
             prep = []
             for sym in roster:
                 bars, receipt = old.read_complete_216h(sym,day)
+                pin_status = check_secondary_daily_sha_pins(sym,receipt)
                 # Stage26 read_complete_216h() verified all ten
                 # publisher CHECKSUM objects before returning compact
                 # {date,sha256} provenance; preserve that trust boundary.
@@ -339,7 +361,9 @@ def run_official_subset(day, symbols):
                                  verified_published_sha256=True,
                                  verified_by="STAGE26_OFFICIAL_CHECKSUM_READER")
                             for item in receipt]
-                prep.append(prepare_symbol(db,sym,day,bars,attested))
+                result = prepare_symbol(db,sym,day,bars,attested)
+                result["previously_archived_daily_sha_check"] = pin_status
+                prep.append(result)
             result = run_shared(db,day,roster,
                                 market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
     result["source_origin_verified"] = True
@@ -347,6 +371,10 @@ def run_official_subset(day, symbols):
     result["market_coverage"] = "OFFICIAL_VERIFIED_SUBSET_ONLY"
     result["source_attestation"] = "STAGE26_PUBLISHER_ZIP_SHA256_CHECKSUM_VERIFIED_AT_RUN_TIME"
     result["historically_precommitted_publisher_SHA_for_all_symbols"] = False
+    result["prior_daily_SHA_secondary_pin_matches"] = sum(
+        p["previously_archived_daily_sha_check"] ==
+        "MATCHED_PREVIOUSLY_GIT_ARCHIVED_20_DAILY_PUBLISHER_SHA"
+        for p in prep)
     result["prepared_verified_minute_sources"] = prep
     return result
 
