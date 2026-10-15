@@ -329,3 +329,13 @@ Stage143工程=PASS_MACOS_UBUNTU_66_OF_66; MODEL_G0=PARTIAL; G1=NOT_SCORABLE; G2
 **新的研发主线**：不用等待10月24日可以继续独立研发D0全市场早期发现、上市冷启动、全人口漏报诊断、强度过时淘汰与可用性；任何新经济策略须有不同且可证伪的经济机制，不能在同一旧305里循环微调Stage151的3%/1%或只看成功子集；下一实际前瞻源成熟由用户主动聊天触发并保持按现有Stage136/137/138回放，不能为等待时间搁置工程。新Stage151独立其他AI真实审核目前尚未收到，完整提示词已交付Git；即使最终代码审核APPROVE也不改变负收益/模型NO_GO。
 
 `STAGE151_REAL_HISTORY=305_OF_305`; `STAGE151_CI=27_OF_27_SUCCESS`; `STAGE151_HISTORICAL_ECONOMIC_MODEL=REJECTED`; `STAGE151_EXTERNAL_CODE_REVIEW=PENDING`; `G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_RELEASE=NOT_PASSED`; `G6=NO_GO`; `NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`; `Frank=UNCHANGED`; `Stage99=STOPPED`; `NO_NEW_SCHEDULE`.
+
+## Stage152：Stage151 Claude REQUEST_CHANGES 修复与同SHA真实原305重跑（2026-10-15）
+
+用户本轮提供独立Claude（具体底层模型`UNVERIFIED`）对Stage151固定源码`b309bf75a46a48cde1aa6b14c17d3e6b7c1b53c2`的真实审核 `REQUEST_CHANGES`：无P0、3 P1（缺收益尾部分布/同184事件对照；缺分钟quote/trades、时延和事先声明的成交活跃度敏感性；CI shard/reconcile没有固定触发SHA及源码blob关联），另有P2来源缺档标签/未来bar验证/单元测试。完整修复决策已先冻结 [Stage152修复协议](MONSTER_STAGE152_FROZEN_STAGE151_CODEX_CLAUDE_P1_REMEDIATION_20261015.md)，commit `58c5cd0a98869143d35ee8238a1c92f69d966e2c`，再改同一Stage151实现；**原3%/1%/120m/6h和24h参数保持不动，旧Stage151历史证据不覆盖。**
+
+**实际修复源码SHA固定`f12d6635c6f8a5e2ba8fbb2feeca29688583245b`**，[GitHub Stage152全量历史CI #38731042245](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38731042245) 27/27成功；Ubuntu24.04/macOS各18/18独立单测通过，24个原Stage101/88归档官方Binance1m来源分片成功；原305历史样本重新对账后由pin触发源码归档到本PR。前期几轮CI test断言schema/错误标签失败有真实历史，已修复重跑而非修改经济规则。审查修复实现确认184个入场代理、未确认113/8；新184样本24h毛收益均值+3.7277%、中位−2.4463%，同184旧D1条件样本24h中位−5.9135%，历史配对差中位+3.1292百分点但退出非同一时钟；最大5个赢家占184总收益率求和约92.18%，去前5均值+0.2996%。真正的分钟成交额分桶 0/≥10k/≥100k USDT 对应184/124/39个历史案例（较高桶中位为正，但非成交证明），额外入场延迟1/3m的历史代理已保存。原27件D1早五分钟2×研究标记仅16件仍进入确认184，**不能把Stage151确认规则升级为正式D1或发布BUY**。
+
+详见 [Stage152真实结果与P1修复报告](MONSTER_STAGE152_CLAUDE_P1_FIX_REAL305_SOURCE_PIN_CI_RESULTS_20261015.md)、[完整源绑定机器摘要](evidence/monster_stage152_original305_integrity_and_economics_summary.json)、[独立Claude/Codex最新SHA复审提示词](MONSTER_STAGE152_INDEPENDENT_OTHER_AI_REREVIEW_PROMPT_PINNED_F12D663_20261015.md)。**新SHA的独立AI真实复审回复=待办；原旧SHA Claude REQUEST_CHANGES保留，不擅自称新SHA APPROVE**。目前只修复用户指出的真实P1与直接关联P2，不会以单月收益正均值、历史最优流动性桶或分钟OPEN代理宣称交易可行或全模型成功。
+
+长期主线继续：全市场D0早发现、原D1和所有遗漏及无WATCH候选的完整分母，已经曝光旧305不得用于后验调参；继续能自主实施的研发，不等2026-10-24。前瞻publisher窗口成熟后仅用户明确聊天手动触发，不自动采集。G0 PARTIAL / G1 NOT_SCORABLE / G2_G3 NOT_PASSED / G4 UNKNOWN / G5_FULL_RELEASE NOT_PASSED / G6 NO_GO；NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE，Frank原样，Stage99保持停止，无新schedule。
