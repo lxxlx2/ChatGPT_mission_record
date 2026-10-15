@@ -1,0 +1,126 @@
+{
+  "schema": "BSC_P4C_8E6B_TOKEN4_ALL19_ORIGINAL_OWNER_EXTERNAL_BLOCK_EXCLUSIVITY_PRECOMMIT",
+  "date_bangkok": "2026-10-15",
+  "first_original_precommit_blob_sha": "738da1a4a3dfc9304ee188b326b7d307da50145c",
+  "network": "bnb-mainnet",
+  "owner": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+  "production": "NO_GO",
+  "scope": "All 19 frozen selected EOA owner block heights; both owner address fromAddress and toAddress exact one block native external transfer categories. Any unexpected independent external deposit/outbound or noncomplete page must prevent promoting source purely native wallet delta to fully trade-attributable profit. This validates no unintended externally initiated BNB pollution, does NOT prove trace of internal native transfers or first executable market U.",
+  "rows": [
+    {
+      "hash": "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b",
+      "block": 63056884,
+      "p2_index": 16,
+      "dir": "in"
+    },
+    {
+      "hash": "0x11f18d2e8169495b7085787d88b7de644a3579bf3e2dfb6bc609e3e8eae48601",
+      "block": 63056949,
+      "p2_index": 16,
+      "dir": "out"
+    },
+    {
+      "hash": "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+      "block": 63057889,
+      "p2_index": 17,
+      "dir": "in"
+    },
+    {
+      "hash": "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+      "block": 63058886,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0xfa6c5f17ea5597ab90402f96d013fb8213b67ac5f4c5af02b450f0386433898a",
+      "block": 63059233,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x9a5e7e333092f94c7c78656f221c7b08c319727e8693084bf1e117e3c229723b",
+      "block": 63059782,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x0e89ad3e6f44b8a7de464b10862c61c9ec7060846539fab6ae0df24927e5af7b",
+      "block": 63069490,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x69616d58ef513786ce7536d573027a0bb83f3dc5908d10b0d13a9a6d02070219",
+      "block": 63073432,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0xc3d6fd52ea632d2c48a7cd79db4eb16ae5deaf3de930c56ba861ec2d4af8d59d",
+      "block": 63082567,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x206bb565b2114fc58381a7f0d493f0c9454ea254f671ffadfd08c866dbf0c064",
+      "block": 63082969,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0xbe5101138ca28c421f735b802226bfb0b2b9b57c5605cc9a4dd30413c746a774",
+      "block": 63083603,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x5e8e7847322621870ed19686d0fafdc99de479877556fb704db58b1ac20f2109",
+      "block": 63084131,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x313bfe296591597e08046140255d5b61f6d4cbce64731d70746fbe1626e06a8f",
+      "block": 63085510,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0xd39be2185edbed118db78ab7dbd4a3d414823af83e1c9097c821d88718e0a2f4",
+      "block": 63200942,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0xd571753fe2493bafff570702d8848f634e4b3bb8deeec7a1a0ecbc751e39ad94",
+      "block": 63262672,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x4c30211d8372ee683b9b20eaa7b965b317be21e8285f98e0215598061a78c5b1",
+      "block": 63328710,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x2f6a73dc8d4009595ffa1da7f5a2be1a0a2dac9a57ad7d7c759f8d74347eda0f",
+      "block": 63335246,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x7a464040b2d448505a0fa8b7e61ebc35e7384903f2097f3fb32bfea5d1e7eb84",
+      "block": 63901440,
+      "p2_index": 17,
+      "dir": "out"
+    },
+    {
+      "hash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+      "block": 64458294,
+      "p2_index": 17,
+      "dir": "out"
+    }
+  ]
+}
