@@ -223,7 +223,7 @@ def full_arrival_minutes(archive_root, symbol, observed_ms, end):
     return bars, receipts
 
 
-def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract, *, scan_start_ms=None):
+def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract, *, scan_start_ms=None, include_discovery_delay_replays=False):
     """Use frozen original D0 queue/D1 with NO invented 24h or 61m warmup.
 
     This is source-conditioned retrospective replay, not a live listing proof.
@@ -322,7 +322,7 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
         raise ValueError("STAGE142_SIGNAL_BEFORE_FIRST_CLOSED_OBSERVATION")
     if first_d1 is not None and first_d1 < first_observed_ms+61*MIN:
         raise ValueError("STAGE142_D1_USED_MISSING_61M_HISTORY")
-    return {
+    result = {
         "replay_status":"ORIGINAL_CORE_NEW_LISTING_COLD_START_UNVERIFIED_PIT_CAUSAL_OFFLINE",
         "original_exact_venue_symbol":symbol,
         "isolated_original_D0_SQLite_symbol":internal,
@@ -352,6 +352,77 @@ def replay_new_arrival_cold_start(symbol, first_observed_ms, end, bars, contract
         "raw_venue_source_complete_but_issuer_unverified":True,
         "source_conditioned_not_independent_G1":True,
     }
+    if include_discovery_delay_replays:
+        # This is actual separate unchanged-D0 and Stage80-D1 replay,
+        # NOT max(original WATCH, first source bar + artificial delay).
+        # The same original published minute bars are retrievable as of
+        # each later poll. We model contract DISCOVERY latency, not
+        # delayed market transport, live receipt timestamps or fills.
+        fixed_first_2x = result["gross_future_labels_not_real_profit"][
+            "first_GT2x_HIGH_UTC_EVALUATION_ONLY"]
+        fixed_cross_ms = stage131.stamp(fixed_first_2x) if fixed_first_2x else None
+        alternatives = {}
+        for minutes in (0, 1, 3, 5):
+            first_visible = max(scan_start_ms, first_observed_ms + minutes * MIN)
+            key = str(minutes) + "m"
+            if minutes == 0:
+                alternative = result
+            elif first_visible >= end:
+                alternatives[key] = {
+                    "delay_minutes": minutes,
+                    "visible_from_UTC": stage133.iso(first_visible),
+                    "first_tick_utc": None,
+                    "D0_first_UTC": None,
+                    "D1_first_UTC": None,
+                    "D1_entry_path": None,
+                    "D0_early5_vs_fixed_first_2x": False,
+                    "D1_early5_vs_fixed_first_2x": False,
+                    "counterfactual_status": "NOT_SCORABLE_DISCOVERY_OUTSIDE_SOURCE",
+                }
+                continue
+            else:
+                alternative = replay_new_arrival_cold_start(
+                    symbol, first_observed_ms, end, bars, contract,
+                    scan_start_ms=first_visible,
+                    include_discovery_delay_replays=False)
+            first_tick = alternative["first_tick_utc"]
+            first_alt_d0 = alternative["D0_first_UTC"]
+            first_alt_d1 = alternative["D1_first_UTC"]
+            alt_d0_ms = stage131.stamp(first_alt_d0) if first_alt_d0 else None
+            alt_d1_ms = stage131.stamp(first_alt_d1) if first_alt_d1 else None
+            alternatives[key] = {
+                "delay_minutes": minutes,
+                "visible_from_UTC": stage133.iso(first_visible),
+                "first_tick_utc": first_tick,
+                "D0_first_UTC": first_alt_d0,
+                "D1_first_UTC": first_alt_d1,
+                "D1_entry_path": alternative["D1_entry_path"],
+                "D0_early5_vs_fixed_first_2x": bool(
+                    fixed_cross_ms is not None and alt_d0_ms is not None
+                    and alt_d0_ms + 5 * MIN <= fixed_cross_ms),
+                "D1_early5_vs_fixed_first_2x": bool(
+                    fixed_cross_ms is not None and alt_d1_ms is not None
+                    and alt_d1_ms + 5 * MIN <= fixed_cross_ms),
+                "counterfactual_status": (
+                    "REPLAYED_UNCHANGED_ORIGINAL_D0_D1_OFFLINE"
+                    if first_tick is not None else "NOT_SCORABLE_NO_POLL_BEFORE_SOURCE_END"),
+            }
+            if first_tick is not None and stage131.stamp(first_tick) < first_visible + 3*MIN:
+                raise ValueError("STAGE144_DELAY_FIRST_TICK_PRECEDES_BASELINE")
+            if first_alt_d0 is not None and (first_tick is None
+                                             or alt_d0_ms < stage131.stamp(first_tick)):
+                raise ValueError("STAGE144_DELAY_NONCAUSAL_WATCH")
+        result["counterfactual_discovery_delay_original_D0_D1_offline"] = {
+            "same_original_publisher_source": True,
+            "same_frozen_numeric_core_each_run": True,
+            "first_source_bar_not_verified_actual_discovery_utc": stage133.iso(first_observed_ms),
+            "first_source_original_2x_high_fixed_denominator_utc": fixed_first_2x,
+            "quote_pre_discovery_assumes_archived_1m_retrievable_at_later_poll": True,
+            "first_listing_event_census_and_receipt_latency_unverified": True,
+            "not_live_delivery_or_buy_or_net_profit": True,
+            "delays": alternatives,
+        }
+    return result
 
 
 def run(t0_packet, archive_root, arrivals=None):
@@ -405,7 +476,8 @@ def run(t0_packet, archive_root, arrivals=None):
             bars, receipts = full_arrival_minutes(
                 archive_root,symbol,first_ms,end)
             row.update(replay_new_arrival_cold_start(
-                symbol,first_ms,end,bars,contract))
+                symbol,first_ms,end,bars,contract,
+                include_discovery_delay_replays=True))
             row["original_archive_receipts_count"] = len(receipts)
             totals["new_listing_cold_start_source_conditioned"] += 1
             if row["D0_first_UTC"] is not None:
