@@ -1,0 +1,119 @@
+name: Monster Stage151 frozen post-D1 original305 historical economic replay
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage151_post_d1_pullback_reclaim.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage151_post_d1_pullback_reclaim.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_stage151_aggregate_post_d1_research.py'
+      - '.github/workflows/monster-stage151-original305-frozen-post-d1-economics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  frozen_causal_guardrail:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Causal price-only no fake trade, no future signal, full state tests
+        shell: bash
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage151_post_d1_pullback_reclaim.py monster_v4_stage151_aggregate_post_d1_research.py test_monster_v4_stage151_post_d1_pullback_reclaim.py
+          python -m unittest -v test_monster_v4_stage151_post_d1_pullback_reclaim.py
+          echo STAGE151_NO_SCHEDULE_NO_GMAIL_NO_FRANK_NO_DEPLOY_NO_TRADE=PASS
+
+  original305_source_locked_shards:
+    needs: frozen_causal_guardrail
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        date: ['2025-01-30','2025-06-02','2025-08-01','2025-10-02','2026-06-21','2026-07-28']
+        shard: [0,1,2,3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reuse source-locked Stage101 real Binance published one-minute archive all305
+        shell: bash
+        run: |
+          mkdir -p /tmp/stage151
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage151_post_d1_pullback_reclaim.py --date ${{ matrix.date }} --shard ${{ matrix.shard }} --workers 3 --out /tmp/stage151/monster-stage151-${{ matrix.date }}-s${{ matrix.shard }}.json
+          python -m json.tool /tmp/stage151/monster-stage151-${{ matrix.date }}-s${{ matrix.shard }}.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage151-${{ matrix.date }}-s${{ matrix.shard }}
+          path: /tmp/stage151/monster-stage151-${{ matrix.date }}-s${{ matrix.shard }}.json
+          retention-days: 45
+
+  reconcile_real305_and_archive:
+    needs: original305_source_locked_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/monster-v4-local-discovery-20261010
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: monster-stage151-*
+          merge-multiple: true
+          path: /tmp/stage151-shards
+      - name: Reconcile all305 unchanged original D1 plus all6 dates unselected outcomes
+        shell: bash
+        run: |
+          python crypto-300-profit-mission/local-agent/scripts/monster_v4_stage151_aggregate_post_d1_research.py --artifact-dir /tmp/stage151-shards --out /tmp/stage151-results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-stage151-preregistered-original305-real-market-full-summary
+          path: /tmp/stage151-results/*
+          retention-days: 60
+      - name: Preserve valuable historical evidence in the original Monster PR branch
+        shell: bash
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence
+          cp /tmp/stage151-results/monster_stage151_original305_preregistered_summary.json "$dest/"
+          cp /tmp/stage151-results/monster_stage151_original305_preregistered_rows.jsonl "$dest/"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add -- "$dest/monster_stage151_original305_preregistered_summary.json" "$dest/monster_stage151_original305_preregistered_rows.jsonl"
+          if git diff --cached --quiet; then echo STAGE151_ALREADY_ARCHIVED; exit 0; fi
+          git commit -m "monster: archive full original305 frozen Stage151 real1m economic results"
+          attempt=1
+          while test "$attempt" -le 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              echo STAGE151_REBASE_CONFLICT
+              exit 1
+            fi
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo STAGE151_ACTUAL_GIT_EVIDENCE_PUSH_CONFIRMED
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo STAGE151_EVIDENCE_NOT_IN_GIT
+          exit 1
