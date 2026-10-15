@@ -45,6 +45,9 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_877af_inventory.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-ddac-adff-a83b-five-inventory-closed-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-23x19-five-native-rounds-mixed239e-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-877af-marscoin-inventory-closed-quote-unresolved-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json"
@@ -749,6 +752,24 @@ jobs:
           assert (s["verified_native_positive_original_rounds"],s["verified_native_negative_original_rounds"],s["original_MARSCOIN_inventory_closed_but_profit_unknown_rounds"])==(3,2,2)
           assert s["public_observer_follower_qualified_signals"]==0 and s["production"]=="NO_GO"
           print("PASS 437 cells 5 native owner rounds only 4 cells and 433 unreviewed no P5")
+          PY
+      - name: P4-C three EOA five exact original inventories without fake BNB profit
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-three-owner-five-rounds.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-three-owner-five-rounds.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-ddac-adff-a83b-five-inventory-closed-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"DDAC ADFF A83B five selected original source-token rounds replay mismatch"
+          s=a["summary"]
+          assert (s["frozen_wallets"],s["source_preselected_rounds"],s["verified_owner_signed_chain56_txs"],s["owner_native_historical_blocks_complete"])==(3,5,11,11)
+          assert (s["complete_full_success_receipts"],s["receipt_body_truncated"])==(5,6)
+          assert (s["source_proven_new_realized_BNB_profit_rounds"],s["source_proven_new_realized_BNB_loss_rounds"])==(0,0)
+          assert s["first_global_observer_U_qualified"]==0 and s["production"]=="NO_GO"
+          print("PASS three wallets five source closed token inventories 11 native blocks zero false PnL upgrade")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
