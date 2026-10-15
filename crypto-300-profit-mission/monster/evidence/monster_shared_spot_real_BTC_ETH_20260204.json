@@ -23,12 +23,96 @@
   "prepared_verified_minute_sources": [
     {
       "closed_5m": 2592,
+      "original_publisher_sha256_by_day": [
+        {
+          "day": "2026-02-03",
+          "sha256": "b497661bb53668a2abd5a38be987fc9bb81a1df2faffb4737517c8c17714ea89"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "159cd47b491fc5f384f567821ad246260c5d8a062e1395760f0687bce933816b"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "bd559d392bbadc4538395b92c710573c8296e6c09f3d29dea7bf04c96be7ceae"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "e3be00d956b756be9d2475724fe1a65fc7dc3c5e212455b4cf05ae1d512417eb"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "fa0758b67fe9c759536aebbffe10c710e3e508b2c1643ac29649baf32f42b45d"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "8b12df5a75c55b4ffae3cfad0bca2841d79584ba76ae93986b3fa170e02c8783"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "5e901a2d43bae9ea1db596cbf120382a9ea0e797339b8f5d4210c8692bd53392"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "b454790a1f3fe45b39cab9f154b22277fb9be7fd434ad58ffdd605fe127249ed"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "460de9b0139d54fca4e8fd22a737cff8b835d19b7187779e9de1ee994cb0274e"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "a50b7fa30a6b5746fd2cd0cb834310533ec3a2df54b019c48a1e85747924bd4d"
+        }
+      ],
       "poll_rows": 3360,
       "publisher_days": 10,
       "symbol": "BTCUSDT"
     },
     {
       "closed_5m": 2592,
+      "original_publisher_sha256_by_day": [
+        {
+          "day": "2026-02-03",
+          "sha256": "176fd685ab0d474f7d64e8334f8d05c6b060ab78e0bafb184ec626de4df03d3b"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "5dc3dcb8d13a3baf240dfb58e8a1274bc01774396b198d80f9efe5c9c99f3604"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "80de3500874584b9a4734b4b223e6f28762d06fb5d33283dbb04223a4ad9bc96"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "fca5683f105379b80543462220b2967f6bbb6c6c0cb64f25ff0a4287a8e8d3d2"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "5b530f8f7cb58a8f9e0eb80c9fd8db4c468e6e9dbf038ba824b2b6eccb02637b"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "67bb0648cff23846059a791138264b2c6be0dc2c7df050529419f1efd4755bfd"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "056eeddfb3f840b3373e0c21f17586d1e62919951c480e741201eb92607c623b"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "3e66b455b90902355ac64a3e85b0cf03653f3185e12f277a46ccf56d87513a9b"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "323fe273686629d745eae01c4030050f1e7e58fd9837cd6a925bdaefabfe7119"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "cd7042f341dcc70a24495b495170956b51332250ad0b98854eb0a7bd936b30ce"
+        }
+      ],
       "poll_rows": 3360,
       "publisher_days": 10,
       "symbol": "ETHUSDT"
@@ -38,7 +122,7 @@
   "queue_status_counts": {},
   "real_market_order_or_mail": "OFF",
   "schema": "MONSTER_SHARED_SPOT_ONE_SQLITE_ORIGINAL_D0_D1_CAUSAL_V1",
-  "shared_replayer_sha256": "1173eea0ba89ceb45db49a7662920604c325c356e12786bd88e98ab90893e540",
+  "shared_replayer_sha256": "9d09626f7425524bd374d3295c36e4e5a81f66347e4e7db89246387532314404",
   "source": "OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY",
   "source_coverage": {
     "expected_source_rows": 6720,
@@ -47,6 +131,6 @@
   },
   "source_level": "ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
   "source_origin_verified": true,
-  "trigger_commit_sha": "975bb298b0a61edd1202667d1915cf6da35c8429",
+  "trigger_commit_sha": "0ffe44ece8644443757b5f6ac0cd19e0f5d1999e",
   "true_full_758_replay": false
 }
