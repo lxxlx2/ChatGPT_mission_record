@@ -39,6 +39,16 @@ def simulated_disjoint_copy(base, offset_days, serial):
     item["stage137_unmodified_core_replay"]["new_forward_start_utc"] = item["new_forward_start_utc"]
     item["stage137_unmodified_core_replay"]["new_forward_end_exclusive_utc"] = item["new_forward_end_exclusive_utc"]
     for row in item["population_rows"]:
+        replay = row.get("counterfactual_discovery_delay_original_D0_D1_offline")
+        if replay is not None:
+            replay["first_source_bar_not_verified_actual_discovery_utc"] = move_utc(
+                replay["first_source_bar_not_verified_actual_discovery_utc"], offset_days)
+            replay["first_source_original_2x_high_fixed_denominator_utc"] = move_utc(
+                replay["first_source_original_2x_high_fixed_denominator_utc"], offset_days)
+            for alt in replay["delays"].values():
+                for key in ("visible_from_UTC", "first_tick_utc",
+                            "D0_first_UTC", "D1_first_UTC"):
+                    alt[key] = move_utc(alt[key], offset_days)
         row["D0_first_UTC"] = move_utc(row["D0_first_UTC"], offset_days)
         row["D1_first_UTC"] = move_utc(row["D1_first_UTC"], offset_days)
         if "gross_future_labels_not_real_profit" in row:
@@ -128,6 +138,49 @@ class Stage138Tests(unittest.TestCase):
             "cannot_measure_issuer_confirmed_crypto_true_positives"])
         self.assertEqual(
             all_windows["declared_disjoint_window_count_not_verified_as_external_market_source"], 3)
+
+    def test_stage144_real_original_core_latency_scorecard_detects_five_minute_missed_D0(self):
+        from decimal import Decimal
+        from monster_v4_stage137_dynamic_t0_original_core_causal_replay import (
+            replay_new_arrival_cold_start, original_core_contract)
+        first = s138.s131.stamp("2026-10-28T06:21:00Z")
+        bars = []
+        for i in range(100):
+            price = Decimal("1.08") if i >= 8 else Decimal("1")
+            high = Decimal("2.25") if i == 75 else price*Decimal("1.01")
+            bars.append((first+i*60_000,price,high,price*Decimal("0.99"),
+                         price,Decimal("150000"),1000))
+        scored = replay_new_arrival_cold_start(
+            "FASTUSDT",first,first+100*60_000,bars,original_core_contract(),
+            include_discovery_delay_replays=True)
+        scored["symbol_exact"]="FASTUSDT"
+        scored["population_lane"]="IN_WINDOW_FIRST_TRADABLE_MINUTE_CANDIDATE"
+        counters=s138.original_core_discovery_delay_scorecard([scored])
+        c=counters["counts"]
+        self.assertEqual(c["source_conditioned_latencies_rerun_all_four"],1)
+        self.assertEqual(c["delay_0m_first_D0"],1)
+        self.assertEqual(c.get("delay_5m_first_D0",0),0)
+        self.assertEqual(c["delay_5m_missed_baseline_D0"],1)
+        self.assertEqual(c["delay_0m_D0_early5_before_same_fixed_2x"],1)
+        self.assertEqual(c.get("delay_5m_D0_early5_before_same_fixed_2x",0),0)
+        self.assertFalse(counters.get("G1_claimable",False))
+        self.assertTrue(counters["NOT_G1_G2_G3_G4_PASS"])
+        corrupted=copy.deepcopy(scored)
+        corrupted["counterfactual_discovery_delay_original_D0_D1_offline"][
+            "delays"]["0m"]["D0_first_UTC"]=None
+        with self.assertRaisesRegex(ValueError,"ZERO_LATENCY_NOT_ORIGINAL_CORE_BASELINE"):
+            s138.original_core_discovery_delay_scorecard([corrupted])
+
+    def test_stage144_full_staged_archives_preserve_source_census_and_delay_evidence(self):
+        evidence=self.report["inwindow_discovery_latency_original_core_replay_research_only"]
+        c=evidence["counts"]
+        self.assertEqual(c["source_complete_inwindow_cold_start_rows"],1)
+        self.assertEqual(c["source_conditioned_latencies_rerun_all_four"],1)
+        self.assertEqual(c["delay_0m_source_conditioned_model_replay"],1)
+        self.assertEqual(c["delay_5m_source_conditioned_model_replay"],1)
+        self.assertEqual(c.get("legacy_cold_start_rows_without_delay_reruns",0),0)
+        self.assertEqual(s138.verify_evaluate_manifest(self.report)[2]["full_market_attempts"],4)
+        self.assertTrue(evidence["original_venue_issuer_PIT_and_new_listing_census_unverified"])
 
     def test_claude_p1_all_cohort_G3_includes_recent_and_new_listing_D1(self):
         start = s138.s131.stamp("2026-10-28T06:20:00Z")
