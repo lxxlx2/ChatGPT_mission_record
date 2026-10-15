@@ -204,9 +204,9 @@ def test_stale_native_f02_service_cannot_resurrect_old_quantity(tmp_path):
 
 
 def test_refused_local_port_and_no_default_network(tmp_path, capsys):
-    mint, _, data = sources()
+    mint, _, _ = sources()
     _, service = make_f02(tmp_path)
-    with serving(control_handler(data)) as ctrl, serving(f02_handler(service)) as f02:
+    with serving(f02_handler(service)) as f02:
         out = joint.JointReadOnly(control_port=9,
                                   f02_port=f02.server_port).query(mint)
         assert out["status"] == "PARTIAL_SOURCES"
