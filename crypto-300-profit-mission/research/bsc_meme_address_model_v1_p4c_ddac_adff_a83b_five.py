@@ -75,10 +75,17 @@ def build(d):
                  and snap["delta_wei"]==str(int(snap["after"]["wei"])-int(snap["before"]["wei"])),
                  "unconfirmed owner EOA signed identity or original N-1/N BNB balance")
             if rpc_tx["status"]=="FULL_SUCCESS_RECEIPT":
-                must(rpc_tx["receipt"]["status"]=="0x1" and
-                     int(rpc_tx["receipt"]["gasUsed"],16)>0 and
-                     int(rpc_tx["receipt"]["effectiveGasPrice"],16)>0,
+                proof=rpc_tx.get("receipt") or {}
+                try:
+                    gas=int(proof.get("gasUsed") or "",16)
+                    gas_price=int(proof.get("effectiveGasPrice") or "",16)
+                except (TypeError,ValueError):
+                    raise ValueError("invalid full receipt gas: missing or truncated body")
+                must(proof.get("status")=="0x1" and gas>0 and gas_price>0,
                      "full original receipt must be successful with paid gas")
+            else:
+                must("receipt" not in rpc_tx or rpc_tx["receipt"] is None,
+                     "truncated original receipt must not contain claimed full receipt body")
             raw=[]
             identity=set()
             for e in txlogs:
