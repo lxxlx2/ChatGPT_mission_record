@@ -132,8 +132,8 @@ def test_real_git_fsmonitor_helper_is_never_invoked(tmp_path):
     sentinel = tmp_path / "fsmonitor-executed.txt"
     helper = tmp_path / "fsmonitor-helper.sh"
     helper.write_text(
-        "#!/bin/sh\\n"
-        + "printf unexpected > " + shlex.quote(str(sentinel)) + "\\n",
+        "#!/bin/sh\n"
+        + "printf unexpected > " + shlex.quote(str(sentinel)) + "\n",
         encoding="utf-8",
     )
     helper.chmod(0o755)
