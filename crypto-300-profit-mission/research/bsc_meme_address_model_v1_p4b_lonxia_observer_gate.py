@@ -124,8 +124,12 @@ def verify_source_correction(buyer, sells, correction):
     require(len(receipt) == 3 and
             {x["txhash"].lower() for x in receipt} ==
             {x["decoded_sale_event"]["tx_hash"].lower() for x in archived} and
-            all(x["status"]=="0x1" and x["truncated_result"] is True for x in receipt),
-            "truncated receipt must preserve success evidence grade")
+            all(x["status"]=="0x1" and
+                type(x["truncated_result"]) is bool and
+                x["blockHash"] ==
+                correction["block_headers_selected_RPC_fields"][1]["hash"]
+                for x in receipt),
+            "sampled block original receipt status/hash/response coverage mismatch")
     membership = correction["seller_frozen_sample_membership"]
     require(len(membership) == 3, "missing exposed seller identity control")
     by_wallet = {x["wallet"].lower():x for x in membership}
