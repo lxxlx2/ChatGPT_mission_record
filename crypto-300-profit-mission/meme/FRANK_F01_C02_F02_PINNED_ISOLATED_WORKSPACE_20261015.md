@@ -1,6 +1,8 @@
 # Frank F01 / C02 / F02 fixed-SHA isolated integration — 2026-10-15
 
-Status: DEVELOPMENT / CI_AND_OTHER_AI_REVIEW_PENDING / REAL_MAC_NOT_RUN / NO_MERGE / NO_DEPLOY.
+Status: PR72_OLD_SHA_REQUEST_CHANGES / P1_IGNORED_DATA_AND_P2_PIN_RECEIPT_CHILD_FIX_DEVELOPMENT / CI_AND_OTHER_AI_REVIEW_PENDING / REAL_MAC_NOT_RUN / NO_MERGE / NO_DEPLOY.
+
+Independent original PR #72 review at f9b0082aca2944ec6430bee173018924a6578721 found a real P1: ignored unsaved research files were deleted by cleanup because default git status suppressed them; a P2: changing the candidate in the marker to its approved ancestor was wrongly accepted. This separate child repair keeps the original rejected SHA unchanged, requires external assembly receipt and full clean/ignored status, and adds both exact reproduction cases.
 
 ## Objective
 
@@ -29,8 +31,9 @@ Default performs NO Git operations, does not read or modify private SQLite, star
 After separate code review and user authorization, in an existing repository checkout and with exact approved child SHA:
 
 - Assemble: python3 -B -m scripts.frank_pinned_joint_workspace --assemble --source-repo EXISTING_LOCAL_REPO_ROOT --staging-root EXISTING_TEMP_ROOT --name frank-joint-manual-qa --integration-sha REVIEWED_40_CHAR_SHA
-- Verify: python3 -B -m scripts.frank_pinned_joint_workspace --verify --staging-root EXISTING_TEMP_ROOT --name frank-joint-manual-qa
-- Cleanup only after explicit approval: python3 -B -m scripts.frank_pinned_joint_workspace --cleanup --staging-root EXISTING_TEMP_ROOT --name frank-joint-manual-qa
+- Capture the returned manifest_sha256 **outside the staged tree**, along with the exact reviewed 40-character candidate SHA; keep that assembly receipt immutable, not copied from the later potentially modified marker.
+- Verify: python3 -B -m scripts.frank_pinned_joint_workspace --verify --staging-root EXISTING_TEMP_ROOT --name frank-joint-manual-qa --integration-sha REVIEWED_40_CHAR_SHA --manifest-sha256 ASSEMBLY_RECEIPT_64_CHAR_SHA256
+- Cleanup only after separate explicit approval: python3 -B -m scripts.frank_pinned_joint_workspace --cleanup --staging-root EXISTING_TEMP_ROOT --name frank-joint-manual-qa --integration-sha REVIEWED_40_CHAR_SHA --manifest-sha256 ASSEMBLY_RECEIPT_64_CHAR_SHA256
 
 Commands are intended for later separately authorized Mac testing. They are not a request to run now.
 
@@ -38,7 +41,9 @@ The staging name must be an immediate frank-joint-* child of an existing staging
 
 The historical replay branch refs/remotes/origin/evidence/frank-ca-local is copied directly from the existing local Git source, its exact commit SHA is stored in the manifest, and verification requires that ref to remain unchanged in the isolated checkout. If that ref has not been fetched into the source checkout, assembly fails closed. **Do not skip the 1,720-signature historical Git replay tests or silently fetch their input from a mutable remote**. GitHub CI explicitly fetches current remote branch objects into its own local source checkout before assembly, then independently freezes the local evidence ref SHA for that run.
 
-Verify fails on manifest mutation, historical evidence ref drift, HEAD drift and dirty/untracked staging. Cleanup is impossible unless exact safe staged manifest, HEAD and clean state all pass, and never deletes the user's source workspace or unsaved temp evidence. Neither assemble nor verify/cleanup launches services, so no processes require stop. Later source service startup and shutdown require their own audited manual-only protocol.
+The independent assembly stdout receipt (exact integration SHA plus SHA-256 digest of the whole original manifest bytes) is **required** for both verify and cleanup. The CLI rejects missing receipt values and does not trust the candidate SHA copied from its own marker; changing that candidate to a valid approved ancestor still fails. Neither candidate nor manifest digest is re-derived from the later staged marker for an acceptance decision.
+
+Verify fails on manifest digest mutation, candidate mismatch, historical evidence ref drift, HEAD drift, tracked changes, ordinary untracked files **and ignored** temporary research files. Cleanup repeats the checks and refuses anything in ignored paths such as runtime-local/, *.sqlite*, *.db or .env. Ignored entries are **never** an authorization to delete. Only a strictly clean, verified staged checkout can be removed. This forbids automatic deletion of user-created evidence even if Git's default status would hide it. A staged tree used for live research or tests may accumulate ignored caches; manual cleanup remains blocked until those files are separately preserved and removed by their owner, outside this tool. Neither assemble nor verify/cleanup launches services, so no processes require stop. Later source service startup and shutdown require their own audited manual-only protocol.
 
 ## Real integration evidence in CI
 
