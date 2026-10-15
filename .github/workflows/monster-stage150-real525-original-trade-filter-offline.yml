@@ -1,0 +1,43 @@
+name: Monster Stage150 real 525 original asof filter rule offline
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage150_real525_exchangeinfo_trade_filter_readiness.py
+      - crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage150_real525_exchangeinfo_trade_filter_readiness.py
+      - .github/workflows/monster-stage150-real525-original-trade-filter-offline.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage150_real525_exchangeinfo_trade_filter_readiness.py
+      - crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage150_real525_exchangeinfo_trade_filter_readiness.py
+      - .github/workflows/monster-stage150-real525-original-trade-filter-offline.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-source-stage120-compatibility:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reuse frozen Stage120 and full original Stage140 source without HTTP
+        shell: bash
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage150_real525_exchangeinfo_trade_filter_readiness.py test_monster_v4_stage150_real525_exchangeinfo_trade_filter_readiness.py
+          python -m unittest -v test_monster_v4_stage150_real525_exchangeinfo_trade_filter_readiness.py test_monster_v4_stage147_saved_real_bbo_execution_readiness.py
+          python monster_v4_stage150_real525_exchangeinfo_trade_filter_readiness.py --out /tmp/monster-stage150-real525.json
+          python -c 'import json; x=json.load(open("/tmp/monster-stage150-real525.json")); c=x["original_source_venue_counts"]; assert len(x["full_original_market_population"])==525 and c["COIN_ISSUER_NOT_PROVEN"]==523 and c["INDEX_OR_OTHER_NOT_ELIGIBLE_FOR_CRYPTO_G1"]==2; assert x["G4"]=="UNKNOWN" and x["no_default_or_implicit_quote_order_size"] and all(not r["G4_verified_executable_case"] and r["net_executable_profit"]=="UNKNOWN" for r in x["full_original_market_population"]); print("STAGE150_REAL_RAW525_STAGE120_FILTERS_NO_FAKE_G4=PASS")'
+          echo 'STAGE150_NO_LIVE_GET_NO_SCHEDULE_NO_GMAIL_NO_TRADE_NO_FRANK_NO_DEPLOY=PASS'
