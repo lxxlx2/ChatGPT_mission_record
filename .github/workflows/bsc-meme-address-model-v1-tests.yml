@@ -39,6 +39,9 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_dragon_closed.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_next239e877af.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_next239e877af.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_239e_dragon_two_native.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_239e_dragon_two_native.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_market19.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_flap_major2.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_wallet_early_grid23x19.py"
@@ -688,6 +691,23 @@ jobs:
           assert (s["original_native_block_scope_positive"],s["original_native_block_scope_negative"])==(2,2)
           assert s["profit_rounds_newly_source_qualified"]==0 and s["production"]=="NO_GO"
           print("PASS original 11 owner transactions 4 balanced 2026 rounds and no false alpha")
+          PY
+      - name: P4-C 239E same-token full buy-sell owner native negative and positive source replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_239e_dragon_two_native.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-239e-two-native.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4c-239e-two-native.json").read_text(encoding="utf-8"))
+          orig=json.loads((root/"bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json").read_text(encoding="utf-8"))
+          assert actual==orig,"239E original round fixed source replay mismatch"
+          s=actual["summary"]
+          assert (s["original_closed_owner_rounds"],s["owner_native_original_profit_rounds"],s["owner_native_original_loss_rounds"])==(2,1,1)
+          assert [x["original_native_wallet_net_wei"] for x in actual["rounds"]]==["-15332805033002259","22647938898252522"]
+          assert s["followable_signals"]==0 and s["production"]=="NO_GO"
+          print("PASS P4-C 239E same major two true native owner negative and positive, still no follow signals")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
