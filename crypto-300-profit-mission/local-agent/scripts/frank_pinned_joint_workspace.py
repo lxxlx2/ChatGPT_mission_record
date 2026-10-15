@@ -24,6 +24,7 @@ REVIEWED_PARENT = "d998fb5966fac2eee5dbeedca5f78126d1b51b6d"
 MARKER = "frank-isolated-source-pins.json"
 EVIDENCE_REF = "refs/remotes/origin/evidence/frank-ca-local"
 COMMIT = re.compile(r"[0-9a-f]{40}\Z")
+MANIFEST_DIGEST = re.compile(r"[0-9a-f]{64}\Z")
 
 
 def _run(*parts: str, cwd: Path | None = None) -> str:
@@ -110,7 +111,7 @@ def assemble(repo: Path, staging_root: Path, name: str,
         raise ValueError("FRANK_ISOLATED_BAD_MERGE_SHA")
     for sha in pins.values():
         _run("git", "-C", str(dest), "merge-base", "--is-ancestor", sha, head)
-    if _run("git", "-C", str(dest), "status", "--porcelain"):
+    if _uncommitted_or_ignored(dest):
         raise ValueError("FRANK_ISOLATED_CHECKOUT_DIRTY")
     manifest = {
         "kind": "FRANK_F01_C02_F02_DISPOSABLE_GIT_WORKSPACE",
@@ -135,7 +136,25 @@ def assemble(repo: Path, staging_root: Path, name: str,
             "production_deployment": False}
 
 
-def verify(staging_root: Path, name: str) -> dict:
+def _uncommitted_or_ignored(directory: Path) -> bool:
+    """Git's default status omits ignored research files. Never delete those."""
+    return bool(_run(
+        "git", "-C", str(directory), "status", "--porcelain=v1",
+        "--untracked-files=all", "--ignored=matching"))
+
+
+def _external_expectations(candidate_sha: str,
+                           manifest_sha256: str) -> None:
+    if not isinstance(candidate_sha, str) or not COMMIT.fullmatch(candidate_sha):
+        raise ValueError("FRANK_ISOLATED_EXPECTED_CANDIDATE_REQUIRED")
+    if (not isinstance(manifest_sha256, str)
+            or not MANIFEST_DIGEST.fullmatch(manifest_sha256)):
+        raise ValueError("FRANK_ISOLATED_EXPECTED_MANIFEST_SHA256_REQUIRED")
+
+
+def verify(staging_root: Path, name: str, expected_integration_sha: str,
+           expected_manifest_sha256: str) -> dict:
+    _external_expectations(expected_integration_sha, expected_manifest_sha256)
     root = staging_root.resolve(strict=True)
     if not name.startswith("frank-joint-") or not re.fullmatch(
             r"[a-zA-Z0-9_-]{12,64}", name):
@@ -146,11 +165,14 @@ def verify(staging_root: Path, name: str) -> dict:
     marker = _git_marker(target)
     if not marker.is_file():
         raise ValueError("FRANK_ISOLATED_MARKER_MISSING")
-    saved = json.loads(marker.read_text(encoding="utf-8"))
+    raw = marker.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != expected_manifest_sha256:
+        raise ValueError("FRANK_ISOLATED_MANIFEST_SHA256_MISMATCH")
+    saved = json.loads(raw.decode("utf-8"))
     if (saved.get("kind") != "FRANK_F01_C02_F02_DISPOSABLE_GIT_WORKSPACE"
-            or saved.get("schema_version") != 1
-            or saved.get("pins") != _pins(
-                saved.get("pins", {}).get("integrated_review_candidate"))):
+            or type(saved.get("schema_version")) is not int
+            or saved["schema_version"] != 1
+            or saved.get("pins") != _pins(expected_integration_sha)):
         raise ValueError("FRANK_ISOLATED_MANIFEST_INVALID")
     if (saved.get("historical_evidence_ref") != EVIDENCE_REF
             or not COMMIT.fullmatch(
@@ -162,24 +184,32 @@ def verify(staging_root: Path, name: str) -> dict:
     head = _run("git", "-C", str(target), "rev-parse", "HEAD")
     if head != saved["integrated_head"]:
         raise ValueError("FRANK_ISOLATED_HEAD_DRIFT")
-    if _run("git", "-C", str(target), "status", "--porcelain"):
+    if _uncommitted_or_ignored(target):
         raise ValueError("FRANK_ISOLATED_DIRTY")
     for sha in saved["pins"].values():
         _run("git", "-C", str(target), "merge-base", "--is-ancestor", sha, head)
     return {"status": "FRANK_ISOLATED_VERIFIED",
             "integrated_head": head,
             "pins": saved["pins"],
+            "manifest_sha256": expected_manifest_sha256,
             "directory": str(target),
             "source_modified": False,
             "production_deployment": False}
 
 
-def cleanup(staging_root: Path, name: str) -> dict:
-    """Explicitly remove ONLY a clean, manifest-verified disposable checkout."""
-    result = verify(staging_root, name)
+def cleanup(staging_root: Path, name: str, expected_integration_sha: str,
+            expected_manifest_sha256: str) -> dict:
+    """Remove only staged tracked files with an external provenance receipt."""
+    result = verify(staging_root, name, expected_integration_sha,
+                    expected_manifest_sha256)
     directory = Path(result["directory"])
     if directory.is_symlink() or directory.name != name:
         raise ValueError("FRANK_ISOLATED_CLEANUP_UNSAFE")
+    # Recheck immediately before any deletion: ignored .env, research SQLite,
+    # runtime-local files, ordinary untracked data, and dirty tracked files
+    # all block cleanup. The ignored list is never a deletion allowlist.
+    if _uncommitted_or_ignored(directory):
+        raise ValueError("FRANK_ISOLATED_UNSAVED_DATA_PRESENT")
     shutil.rmtree(directory)
     return {"status": "FRANK_ISOLATED_REMOVED", "name": name,
             "source_modified": False, "production_deployment": False}
@@ -198,6 +228,7 @@ def main(argv=None):
                                              tempfile.gettempdir())))
     parser.add_argument("--name", default="frank-joint-manual-qa")
     parser.add_argument("--integration-sha")
+    parser.add_argument("--manifest-sha256")
     args = parser.parse_args(argv)
     if not args.assemble and not args.verify and not args.cleanup:
         print(json.dumps({
@@ -211,9 +242,11 @@ def main(argv=None):
         return 0
     try:
         if args.verify:
-            result = verify(args.staging_root, args.name)
+            result = verify(args.staging_root, args.name,
+                            args.integration_sha, args.manifest_sha256)
         elif args.cleanup:
-            result = cleanup(args.staging_root, args.name)
+            result = cleanup(args.staging_root, args.name,
+                             args.integration_sha, args.manifest_sha256)
         else:
             result = assemble(args.source_repo, args.staging_root,
                               args.name, args.integration_sha)
