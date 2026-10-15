@@ -4,11 +4,16 @@ from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
 import sqlite3
+import json
+import copy
+from unittest.mock import patch
 import tempfile
 import unittest
 
 import monster_v4_shared_spot_d0_d1_original_core as sh
 import monster_v4_stage26_continuous168h as old
+import monster_v4_shared_spot_stage26_original_source_census as source_census
+import monster_v4_stage26_aggregate as original_aggregate
 
 DAY = date(2026,2,4)
 START = sh.utc_ms(DAY)-1440*sh.MIN
@@ -90,7 +95,7 @@ class SharedOriginalV4Tests(unittest.TestCase):
                 self.assertEqual(x["event_type_counts"].get("WATCH_EARLY"),1)
 
     def test_05_no_false_full_758_claim_on_two_symbols(self):
-        with self.assertRaisesRegex(ValueError,"CANNOT_CLAIM_758"):
+        with self.assertRaisesRegex(ValueError,"FULL_758_NOT_VERIFIED"):
             sh.run_shared(self.db,DAY,("AAUSDT","BBUSDT"),
                           market_coverage_label="FULL_758_OFFICIAL_VERIFIED")
 
@@ -171,9 +176,125 @@ class SharedOriginalV4Tests(unittest.TestCase):
             "tick_source","closed5m_source","source_receipts"})
 
     def test_12_source_roster_mismatch_before_official_market_claim(self):
-        with self.assertRaisesRegex(ValueError,"CANNOT_CLAIM_758"):
+        with self.assertRaisesRegex(ValueError,"FULL_758_NOT_VERIFIED"):
             sh.run_shared(self.db,DAY,("AAUSDT",),
                           market_coverage_label="FULL_758_OFFICIAL_VERIFIED")
+
+
+    def test_13_frozen_secondary_roster_and_each_day_758_coverage(self):
+        cohort,daymap=sh.original_source_freeze()
+        self.assertEqual(len(cohort),758)
+        self.assertEqual(sh.SECONDARY_ROSTER_SHA256,
+            "cea49caae4245dad910cc096bdaea953387bdfea64667a49916756d12297074a")
+        for y in (433,440,445,438,478,485):
+            self.assertIn(y,[v["eligible"] for v in daymap.values()])
+        names=("BTCUSDT","ETHUSDT")
+        self.assertTrue(set(names).issubset(daymap[DAY.isoformat()]["complete_symbols"]))
+        scope=sh.original_758_coverage(DAY,names)
+        self.assertEqual(len(scope["per_symbol"]),758)
+        self.assertEqual(scope["replayed_verifiable_subset"],2)
+        self.assertEqual(scope["source_complete_original_stage26"],445)
+        self.assertEqual(scope["source_missing_or_incomplete_original_stage26"],313)
+        self.assertEqual(scope["source_complete_but_not_replayed"],443)
+        self.assertFalse(scope["original_roster_pre_registered_in_20261011_manifest"])
+        with self.assertRaisesRegex(ValueError,"REPLAY_REQUEST_NOT_ORIGINAL_SOURCE_COMPLETE"):
+            sh.original_758_coverage(DAY,("AAUSDT",))
+
+    def test_14_full_self_attestation_refused_with_original_758_and_fake_flags(self):
+        frozen,_=sh.original_source_freeze()
+        with self.assertRaisesRegex(ValueError,"FULL_758_NOT_VERIFIED"):
+            sh.run_shared(self.db,DAY,frozen,
+                market_coverage_label="FULL_758_OFFICIAL_VERIFIED",
+                frozen_verified_roster=frozen)
+        self.assertEqual(len(frozen),758)
+
+    def test_15_fabricated_cached_receipts_cannot_certify_official_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with sh.setup_cache(Path(tmp)/"forged.sqlite") as db:
+                sh.prepare_symbol(db,"BTCUSDT",DAY,
+                                  fixture("BTCUSDT"),fake_receipts("AAUSDT"))
+                result=sh.run_shared(db,DAY,("BTCUSDT",),
+                          market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
+                self.assertFalse(result["source_origin_verified"])
+                self.assertFalse(result["true_full_758_replay"])
+                self.assertEqual(result["market_coverage"],"UNATTESTED_SUBSET_CACHE")
+                self.assertEqual(result["original_758_coverage"]["original_758_denominator"],758)
+
+    def test_16_ohlc_malformed_is_rejected(self):
+        original=list(self.A)
+        bar=list(original[1510])
+        bar[2]=bar[1]-Decimal("1")
+        original[1510]=tuple(bar)
+        with tempfile.TemporaryDirectory() as tmp:
+            with sh.setup_cache(Path(tmp)/"ohlc.sqlite") as db:
+                with self.assertRaisesRegex(ValueError,"CONTIGUOUS_1M_REQUIRED"):
+                    sh.prepare_symbol(db,"AAUSDT",DAY,original,
+                                      fake_receipts("AAUSDT"))
+
+    def test_17_live_d1_missing_closed_candle_fails_not_deferred(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with sh.setup_cache(Path(tmp)/"source.sqlite") as db:
+                sh.prepare_symbol(db,"BTCUSDT",DAY,
+                                  fixture("BTCUSDT"),fake_receipts("AAUSDT"))
+                # One corrupted cached candle with same SQL source key and
+                # row count: fail when production D1 requests its 8 bars.
+                tick=sh.utc_ms(DAY)+3*sh.MIN
+                end=(tick//(5*sh.MIN))*(5*sh.MIN)-1
+                db.execute("""UPDATE closed5m_source SET candle_json=?
+                   WHERE symbol='BTCUSDT' AND end_ms=?""",
+                    (json.dumps([0,"1","1","1","1","0",end+sh.MIN,"1"]),end))
+                db.commit()
+                def call_d1(_store,now,fetch_candles,limit=8):
+                    fetch_candles("spot","BTCUSDT",now)
+                    return dict(selected=0,completed=0,deferred=0,late=0)
+                with patch.object(sh.production,"process_queue",side_effect=call_d1):
+                    with self.assertRaisesRegex(RuntimeError,"D1_SOURCE_MISSING_OR_UNCLOSED"):
+                        sh.run_shared(db,DAY,("BTCUSDT",),
+                               market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
+
+    def test_18_original_stage26_source_census_negative_identity_and_totals(self):
+        original=json.loads(original_aggregate.PROOF.read_text())
+        freeze,days=sh.original_source_freeze()
+        reports={}
+        for date_string in sh.FROZEN_DATES:
+            eligible=set(days[date_string]["complete_symbols"])
+            full=list(freeze)
+            offsets=[0,127,254,380,506,632,758]
+            for shard in range(6):
+                seg=full[offsets[shard]:offsets[shard+1]]
+                records=[]
+                for symbol in seg:
+                    completed=symbol in eligible
+                    records.append({"symbol":symbol,
+                        "status":("COMPLETE_168H_CONTINUOUS_V4" if completed else "CENSORED"),
+                        "continuous":{"watch_count":0}})
+                count=next(x for x in original["artifacts"]
+                    if x["date"]==date_string and x["shard"]==shard)
+                self.assertEqual(sum(x["status"]=="COMPLETE_168H_CONTINUOUS_V4"
+                   for x in records),count["complete168h"])
+                first=next(x for x in records if x["status"]=="COMPLETE_168H_CONTINUOUS_V4")
+                first["continuous"]["watch_count"]=count["watch_episodes"]
+                reports[date_string,shard]={"cases":records}
+        baseline=source_census.evaluate(reports,original)
+        self.assertEqual(baseline["all_six_dates_source_complete"],2719)
+        self.assertEqual(baseline["all_six_dates_source_missing_or_incomplete"],1829)
+        modified=dict(reports)
+        modified.pop((sh.FROZEN_DATES[0],0))
+        with self.assertRaisesRegex(ValueError,"36_ORIGINAL_SHARDS"):
+            source_census.evaluate(modified,original)
+        tampered=copy.deepcopy(reports)
+        tampered[sh.FROZEN_DATES[1],0]["cases"][0]["symbol"]="TAMPERUSDT"
+        with self.assertRaisesRegex(ValueError,"UNIVERSE_CHANGED"):
+            source_census.evaluate(tampered,original)
+        manifest=copy.deepcopy(original)
+        manifest["artifacts"][0]["complete168h"]+=1
+        with self.assertRaisesRegex(ValueError,"COMPLETE_COUNT"):
+            source_census.evaluate(reports,manifest)
+        with tempfile.TemporaryDirectory() as tmp:
+            bogus=Path(tmp)/"fake_original.zip"
+            bogus.write_bytes(b"corrupted-source-not-real-zip")
+            with self.assertRaisesRegex(ValueError,"ZIP_SHA_CHANGED"):
+                original_aggregate.load_zip(bogus,original["artifacts"][0])
 
 
 if __name__=="__main__":
