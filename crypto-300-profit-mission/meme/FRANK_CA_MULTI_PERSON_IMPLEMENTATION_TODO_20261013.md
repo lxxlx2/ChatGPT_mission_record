@@ -559,3 +559,13 @@ Remaining verified gaps / dependencies:
 - `tests/test_frank_mac_readonly_preflight.py` 使用完全临时合成Git目录验证源文件/index/untracked字节保持一致；用故意非法的假 manifest 与假SQLite证明仅 stat 其存在，不解析其内容；符号链接目录拒绝；无Git来源时不运行任何Git命令；结果只返回聚合字段。既有Frank CI未创建新调度/LaunchAgent，模块和四源临时联合都纳入新回归。首次失败CI为新测试未使用Path及测试夹具缺少pr73_reviewed的KeyError，第二次还有脚本未使用sys的静态诊断；均修正、保留历史失败，不删除断言。
 - **最终绑定 SHA [Actions #38735386947](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38735386947) 完整SUCCESS：模块专项132/全量1691，临时联合专项168/全量1743，F02 Node TTL PASS。** 实际Mac预检**尚未执行，不能冒称用户本地结果**。下一步只等待用户按本阶段固定 GitHub raw脚本的zsh命令执行并返回脱敏JSON。结果再决定是否单独申请Mac真实服务及原始数据验收授权。原F02历史32Mint会话TTL已过期，应保持SOURCE_UNAVAILABLE，不声称实时余额。
 - 保持 `NO_MERGE/NO_DEPLOY/NO_NEW_REAL_RPC/NO_TRADES/NO_GMAIL/NO_PRODUCTION_SQLITE_WRITE/NO_NEW_AUTOMATION/NO_MAC_SERVICE_START/NO_FILE_CLEANUP`。
+
+
+## 2026-10-16 PR #74 独立拒绝与 PR #75 最小修复：回到产品可用性主线
+
+- 原 [Draft PR #74](https://github.com/lxxlx2/ChatGPT_mission_record/pull/74) 不变的拒绝 SHA `cdf7bc2605ebee7f78ebbf093910c1356f559826`：用户提供的独立 Codex 报告 `REQUEST_CHANGES`，P2=本地 `git status` 可能执行配置的 `core.fsmonitor` 外部 helper，已在合成真实 Git 仓库观察到哨兵写入；P3=原 CLI 测试未覆盖 `Path.home()` 合成隔离。此 SHA 不可作为 Mac 被动预检执行对象。原已批准 [#73](https://github.com/lxxlx2/ChatGPT_mission_record/pull/73) `5755b8b96080f21635eaa5354588cbb8f6561ab0` 保持原结论。
+- 新 [Draft PR #75](https://github.com/lxxlx2/ChatGPT_mission_record/pull/75) 是独立最小子修复，基线精确为 #74 拒绝 SHA；固定 HEAD `673486ce92c7e12f2eab03e0ab15216ed46916b4`。所有预检 Git 读取强制命令级 `-c core.fsmonitor=false`；真实合成 Git fsmonitor 哨兵无执行与 index、tracked、untracked、HEAD 未改回归已加入；CLI 测试的 home 固定为 `tmp_path`；原有 GitHub workflow 仅添加此分支触发器，未创建新定时任务/监控。
+- [GitHub Actions #38788060871](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38788060871) 在固定 #75 HEAD 实际 `SUCCESS`：module 133 scoped / 1692 full，disposable combined 169 scoped / 1744 full；这是开发方代码和联合测试门禁，**仍然 `INDEPENDENT_AI_REVIEW_PENDING`**，并且 Mac 被动预检尚未实际执行。独立审核提示词已归档于 [PR #75 评论](https://github.com/lxxlx2/ChatGPT_mission_record/pull/75#issuecomment-6199726613)；用户对话同轮亦必须直接提供。
+- 此处**不新增重复边界工作**：独立审核若无真实 P0/P1/P2，下一步手动 Mac 被动元数据 JSON（只用届时获批新固定 SHA），然后再申请独立授权的本机隔离 F01/C02/F02 native GET / 浏览器端到端测试；禁止主动启动/停止/清理、打开生产库或私有原文、重新做真实 RPC 采集。
+- 最终产品要求保持明确：F01 首屏仅真正当前 `BUY/SMALL_BUY` 可跟，`NO_BUY/WAIT` 进入独立观察/历史且显示证据时间；C02 对任意 exact Solana CA 使用单一模式，有 token 身份、价格与时效、持有人/LP/Dev/funder/首购/叙事来源和不足项，未输入金额不自动请求报价；F02 展示经核实人物及其多个授权钱包的**当前**逐 Mint/ATA 来源、数量、Slot、时间、完整度与模型状态分离，过期/partial 绝不能复活历史余额。冻结32 Mint 9/23和归档 3276 个 account/unique Mint 是**历史样本**，不能当全钱包现时完成。
+- 当以上业务达到可用、完成真正 Mac GET / 用户页面操作、原数据与接口对账后，进行**跨模块独立审核和最后一次整体产品独立审核**，单独获得合并/发布授权；此前 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_MAC_SERVICE_START / NO_FILE_CLEANUP` 均继续生效。
