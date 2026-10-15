@@ -98,7 +98,8 @@ class Stage147OfflineTests(unittest.TestCase):
             s147.MANIFEST_NAMES[name]:{
                 "file":s147.SOURCES[name]+"_raw_http.json",
                 "raw_sha256":hashlib.sha256(raw.encode()).hexdigest(),
-                "decoded_row_count":1}}}
+                "decoded_row_count":1,
+                "response_end_utc":"1970-01-01T00:00:02.000Z"}}}
         obj={"raw":raw,"raw_sha256":m["optional_all_market_marketdata_receipts"][
              s147.MANIFEST_NAMES[name]]["raw_sha256"],
              "decoded_row_count":1,"decoded_top_level_type":"list",
