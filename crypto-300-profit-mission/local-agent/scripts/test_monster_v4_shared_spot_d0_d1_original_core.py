@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Shared D0 original production regressions; SYNTHETIC only, no source claims."""
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
 import sqlite3
@@ -25,9 +25,10 @@ def fixture(symbol, impulse=False):
 
 
 def fake_receipts(symbol):
-    return [{"date":f"testday-{i:02d}", "sha256":("a" if symbol=="AAUSDT"
-             else "b")*64, "verified_published_sha256":True}
-            for i in range(10)]
+    return [{"date":(DAY+timedelta(days=i)).isoformat(),
+             "sha256":("a" if symbol=="AAUSDT" else "b")*64,
+             "verified_published_sha256":True}
+            for i in range(-1,9)]
 
 
 class SharedOriginalV4Tests(unittest.TestCase):
@@ -125,6 +126,18 @@ class SharedOriginalV4Tests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,"12960_CONTIGUOUS"):
                     sh.prepare_symbol(db,"AAUSDT",DAY,modified,
                                       fake_receipts("AAUSDT"))
+
+    def test_09_wrong_source_date_or_sha_rejected(self):
+        with tempfile.TemporaryDirectory() as td:
+            with sh.setup_cache(Path(td)/"wrongdate.sqlite") as db:
+                receipts=fake_receipts("AAUSDT")
+                receipts[3]["date"]="2025-01-01"
+                with self.assertRaisesRegex(ValueError,"10_OFFICIAL_PUBLISHER"):
+                    sh.prepare_symbol(db,"AAUSDT",DAY,self.A,receipts)
+                receipts=fake_receipts("AAUSDT")
+                receipts[2]["sha256"]="z"*64
+                with self.assertRaisesRegex(ValueError,"10_OFFICIAL_PUBLISHER"):
+                    sh.prepare_symbol(db,"AAUSDT",DAY,self.A,receipts)
 
     def test_09_closed_five_minute_source_has_no_future(self):
         tick=sh.utc_ms(DAY)+3*sh.MIN
