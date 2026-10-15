@@ -36,7 +36,9 @@ Commands are intended for later separately authorized Mac testing. They are not 
 
 The staging name must be an immediate frank-joint-* child of an existing staging root; collisions, symlinks, overlap with source, invalid SHA and wrong reviewed parent are rejected. The implementation copies COMMITTED local Git objects only into a new detached temporary checkout, merges pinned source inputs in order, validates ancestry and clean status, and writes a manifest under the **staged .git directory**, not in main or production. The local source checkout, even if dirty, is not reset, stashed, modified or cleaned.
 
-Verify fails on manifest mutation, HEAD drift and dirty/untracked staging. Cleanup is impossible unless exact safe staged manifest, HEAD and clean state all pass, and never deletes the user's source workspace or unsaved temp evidence. Neither assemble nor verify/cleanup launches services, so no processes require stop. Later source service startup and shutdown require their own audited manual-only protocol.
+The historical replay branch refs/remotes/origin/evidence/frank-ca-local is copied directly from the existing local Git source, its exact commit SHA is stored in the manifest, and verification requires that ref to remain unchanged in the isolated checkout. If that ref has not been fetched into the source checkout, assembly fails closed. **Do not skip the 1,720-signature historical Git replay tests or silently fetch their input from a mutable remote**. GitHub CI explicitly fetches current remote branch objects into its own local source checkout before assembly, then independently freezes the local evidence ref SHA for that run.
+
+Verify fails on manifest mutation, historical evidence ref drift, HEAD drift and dirty/untracked staging. Cleanup is impossible unless exact safe staged manifest, HEAD and clean state all pass, and never deletes the user's source workspace or unsaved temp evidence. Neither assemble nor verify/cleanup launches services, so no processes require stop. Later source service startup and shutdown require their own audited manual-only protocol.
 
 ## Real integration evidence in CI
 
