@@ -569,3 +569,12 @@ Remaining verified gaps / dependencies:
 - 此处**不新增重复边界工作**：独立审核若无真实 P0/P1/P2，下一步手动 Mac 被动元数据 JSON（只用届时获批新固定 SHA），然后再申请独立授权的本机隔离 F01/C02/F02 native GET / 浏览器端到端测试；禁止主动启动/停止/清理、打开生产库或私有原文、重新做真实 RPC 采集。
 - 最终产品要求保持明确：F01 首屏仅真正当前 `BUY/SMALL_BUY` 可跟，`NO_BUY/WAIT` 进入独立观察/历史且显示证据时间；C02 对任意 exact Solana CA 使用单一模式，有 token 身份、价格与时效、持有人/LP/Dev/funder/首购/叙事来源和不足项，未输入金额不自动请求报价；F02 展示经核实人物及其多个授权钱包的**当前**逐 Mint/ATA 来源、数量、Slot、时间、完整度与模型状态分离，过期/partial 绝不能复活历史余额。冻结32 Mint 9/23和归档 3276 个 account/unique Mint 是**历史样本**，不能当全钱包现时完成。
 - 当以上业务达到可用、完成真正 Mac GET / 用户页面操作、原数据与接口对账后，进行**跨模块独立审核和最后一次整体产品独立审核**，单独获得合并/发布授权；此前 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_MAC_SERVICE_START / NO_FILE_CLEANUP` 均继续生效。
+
+
+## 2026-10-16 PR #75 独立复审 clean-filter P2 及后继 #76
+
+- 用户提供独立 Codex 审核：在已拒绝固定 PR #75 `673486ce92c7e12f2eab03e0ab15216ed46916b4` 上，原 PR74 fsmonitor P2 和测试 home P3 均已经实测关闭；新 `P2-75-01` 为 `git status` 读取带 `.gitattributes filter=synthetic` 的同长度 tracked 修改时，实际执行 `filter.synthetic.clean` 外部程序并产生合成临时哨兵，`files_written_or_deleted=false` 因而不准确。该外审 `REQUEST_CHANGES`，原 SHA 及失败复现永久保留。未进行实际 Mac 预检、真实链上 RPC、生产写入。
+- 已创建独立 [Draft PR #76](https://github.com/lxxlx2/ChatGPT_mission_record/pull/76)，以 PR75 的固定拒绝 SHA 为比较基线。**业务驱动的最小取舍：被动元数据预检不再运行 `git status` / `git diff` 等可能触发外部 clean filter 的工作区内容比较，直接输出 `source_changes=UNKNOWN_NOT_CHECKED_PASSIVE_ONLY`**；保留 Git HEAD/固定对象/ref、私有 F02 会话文件 stat、端口 lsof。任何随后涉及真实隔离组装/清理/发布的工作区清洁证明仍是独立高授权门禁，绝不能把 UNKNOWN 当 CLEAN。
+- #76 新增真实合成 Git clean filter 的永久回归，覆盖提交 `.gitattributes`、同长度 tracked 内容修改、真实配置的外部 helper、调用完整 `run()`、哨兵未执行及原 tracked/untracked/index/HEAD 不变，限制 Git 调用仅 `rev-parse`；保留已关闭的 fsmonitor / home 测试。原有 F02-R2 CI workflow 只加触发分支，没有新增监控或定时任务；审核方提供的旧 P2 失败细节已归档在 [#76 评论](https://github.com/lxxlx2/ChatGPT_mission_record/pull/76#issuecomment-6202222472)。
+- #76 初始固定 HEAD `10bd106f76e599b299793d53af1d343c966ad56b`，现有 [GitHub Actions #38806742898](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38806742898) 已触发；**直到 GitHub 实际完整成功和其他 AI 独立精确 SHA 复审，否则不得运行 Mac 用户预检或视作已批准。** 本文此处是开发跟踪，不代表将待测视为通过。
+- 产品主线没有改变：F01 真正可跟机会，C02 单模式任意 exact CA，F02 来源可验证的**现时**钱包余额与模型状态隔离，最终跨模块 Mac HTTP/浏览器/真实来源及全产品独立 Review；不能无限循环围绕理论 P3 补边界。继续 `NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_MAC_SERVICE_START / NO_FILE_CLEANUP`。
