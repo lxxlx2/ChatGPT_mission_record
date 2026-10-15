@@ -148,6 +148,37 @@
     "receipt_excerpt": {
       "status": "0x1",
       "full_receipt_response_truncated_at_tool": true
+    },
+    "quote_erc20_historical_state": {
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "quote_balanceOf_block_prior": 112441393,
+      "quote_balanceOf_raw_prior": "0",
+      "quote_balanceOf_raw_current": "0",
+      "decimals_at_prior_block": 18,
+      "buyer_incoming_transfer_log_query": {
+        "address": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          null,
+          "0x000000000000000000000000504ba7b11be98c66a379a3e5de91dc5ab2dde3ea"
+        ],
+        "fromBlock": "0x6b3b832",
+        "toBlock": "0x6b3b832"
+      },
+      "buyer_incoming_transfer_logs": [],
+      "buyer_outgoing_transfer_log_query": {
+        "address": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x000000000000000000000000504ba7b11be98c66a379a3e5de91dc5ab2dde3ea"
+        ],
+        "fromBlock": "0x6b3b832",
+        "toBlock": "0x6b3b832"
+      },
+      "buyer_outgoing_transfer_logs": [],
+      "quote_balance_prior_less_than_source_event_cost": true,
+      "source_event_cost_raw": "2674483304192706318",
+      "explanation": "Historical direct ERC20 quote balance is zero in N-1 and N and no sampled-block buyer direct transfer. Archived launch event quote cost may represent internal or intermediary settlement; do not infer that sampled transaction failed or that this is direct wallet-ERC20 debit."
     }
   },
   "observed_limits": {
