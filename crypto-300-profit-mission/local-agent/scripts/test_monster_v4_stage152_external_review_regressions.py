@@ -124,10 +124,10 @@ class Stage152ExternalReview(unittest.TestCase):
         self.assertEqual(D(top["remaining_distribution"]["mean_pct"]),D(-15))
         self.assertEqual(result["original_D1_early5_2x_EVALUATION_ONLY"][
             "retained_among_model_confirmations"],3)
-        tiers=p["market_1m_turnover_sensitivity_NOT_execution"]
+        tiers=result["market_1m_turnover_sensitivity_NOT_execution"]
         self.assertEqual(tiers["10000"]["distribution_on_observed_market_activity_only"]["n"],3)
         self.assertEqual(tiers["100000"]["distribution_on_observed_market_activity_only"]["n"],0)
-        self.assertEqual(p["entry_delay_price_only_sensitivity_NOT_execution"]["3"][
+        self.assertEqual(result["entry_delay_price_only_sensitivity_NOT_execution"]["3"][
             "price_only_distribution"]["n"],3)
 
     def test_all305_exact_shards_and_checksum_provenance(self):
