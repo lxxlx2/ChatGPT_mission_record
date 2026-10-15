@@ -391,3 +391,12 @@ Stage152新最后P2固定SHA `71a041405352c9e2210d93dff9c2685149809e52` 已获�
 本次作者验收报告 [Stage153 P1/P2修复真实源报告](MONSTER_STAGE153_CODEX_P1_P2_FIX_18TESTS_REAL6_ARTIFACTS_20261016.md)，完整[其他AI固定SHA独立复审提示词](MONSTER_STAGE153_INDEPENDENT_CODEX_P1_P2_REREVIEW_PINNED_4553CB6_20261016.md)均已进入原PR。**新代码其他AI独立APPROVE仍待取得；作者CI成功不可取代外部review，也不代表业务策略G4成功。** 不因局部审计修复重新修改原D0/D1策略或回到无止境边界循环：审核后主线依然是同一真实全市场共享D0→D1评价时效与信息可用性，而不是提高API限额或补历史净盈利。
 
 继续 `NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE / FRANK_UNCHANGED / STAGE99_STOPPED / NO_NEW_SCHEDULE`，`G0 PARTIAL / G1 NOT_SCORABLE / G2/G3 NOT_PASSED / G4 UNKNOWN / G5_FULL_RELEASE NOT_PASSED / G6 NO_GO`。
+
+
+## Stage153 Codex 独立最终 APPROVE，WAL-SHM 限制与下一D0主线（2026-10-16）
+
+本轮用户提供**真正独立 Codex**对固定源码 `4553cb6b18c5aaf723072d17a39f9ad92f0629c9` 的最终 `APPROVE` 报告；底层模型精确字符串 `UNVERIFIED`，不是作者自行审核或GitHub正式review。上一 `REQUEST_CHANGES@80ebab9a6f3533103858de9e321f037384e86fde` 的1 P1 SQLite `--out`源文件覆写、2 P2 ASOF未来候选及SETUP/LATE候选身份核验均已**独立确认关闭**，新增P0/P1/P2=0。Stage152原 `APPROVE@71a041405352c9e2210d93dff9c2685149809e52` 原范围保持。相同SHA真实[CI #38789077966](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38789077966) `3/3 success`，Ubuntu/macOS各18/18单测PASS，原Stage28六份GitHub artifact ZIP与内层JSON独立双SHA均匹配；真实全部1128行原raw派生记录字节不变，1132 WATCH/1005 EVALUATED/123 LATE/828 SETUP/3542选取/2414延期原值不变，98同轮91 LATE/7 EVALUATED。原SETUP来源未知候选ID仍有2/828歧义；不可猜测真实归属。
+
+**必须保留的新SQLite只读语义**：Codex用活动WAL模式SQLite及**无`--out`只读对照**验证只读查询本身可能更新`-shm`共享内存索引字节；其`--out`危险路径13例均拒绝并不能据此说“所有关联sidecar字节完全不变”。**真实主SQLite数据库与WAL数据未被覆盖/损坏，PRAGMA integrity_check=ok；SHM可变是被隔离对照观测的SQLite共享内存活动，不构成本次原CLI输出覆盖P1重现。**正式需要维护live Mac SQLite时尤其不能承诺整个活跃WAL文件组无任何字节变化，也不得在用户Mac上未经授权运行此探针。
+
+完整 [Codex固定SHA最终APPROVE审核归档与SHM限制](MONSTER_STAGE153_CODEX_FINAL_APPROVE_FIXED_4553CB6_WITH_SQLITE_WAL_SHM_LIMIT_20261016.md)。此次只增加Git文档、未修改获批代码/test/workflow，不对旧SHA回溯批准；PR继续Open/Draft，`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`。Stage153代码审核固定范围可记DONE，但**业务模型G4/G6仍 UNKNOWN/NO_GO**。结束本项安全循环后优先继续真正同一市场共享D0真实原`observe_snapshot` → 持久化WATCH → 共用原`process_queue` 的因果全链路，不因原历史91 LATE就断言91个盈利漏单或盲目放宽8/3min、15min容量，不虚称现时Mac成功部署。
