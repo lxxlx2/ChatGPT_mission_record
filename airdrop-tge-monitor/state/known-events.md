@@ -1,6 +1,6 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-10-11 Asia/Bangkok
+Updated: 2026-10-15 Asia/Bangkok
 
 Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
@@ -110,3 +110,29 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - rights_effect_confirmed: false
 - current_policy_reclassification: background_only_unless_mapped_spv_terms_change
 - repeat_policy: suppress generic valuation/funding repeats
+
+## 2026-10-15 late-discovery repairs: Surf and StandX
+
+### SurfBoard member NFT claim opened (separate from prior referral Season 1)
+- event_key: surf:surfboard_member_claim_open:2026-10-15
+- project_id: surf
+- verified_official_source: https://asksurf.ai/blog/en/surfboard-nft-launch
+- official_open: 2026-10-15 03:00 UTC / 10:00 Asia/Bangkok
+- official_claim_deadline: 2026-11-13, precise hour recheck issuer
+- eligibility: annual Surf Pro/Max purchased before 2026-09-16, including lapsed; individual Surf subscription NFT number and claim status NOT independently confirmed
+- delivery_status: DELIVERED_MANUAL_LATE_2026-10-15
+- gmail_message_id: 1a13e676f3e4e04d
+- event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-15/1409-surf-surfboard-member-claim.md
+- repeat_policy: suppress unchanged claim-open; only official reopened/deadline/eligibility change is fresh ACTION. Never conflate with previously delivered surf:season1_referral_claim_open:2026-09-12.
+
+### StandX staged shutdown / one-time DUSD airdrop / user redemption
+- event_key: standx:winddown_dusd_airdrop:2026-10-15
+- project_id: standx (existing Registry Shard 0)
+- official_account_posts: https://x.com/StandX_Official/status/2110613283967230232 ; https://x.com/StandX_Official/status/2110613379270185114
+- official_full_text_direct_readback: SOURCE_GAP; third-party English translation exists, milestone times are PENDING_DIRECT_FIRST_PARTY_TEXT_VERIFY
+- candidate_milestones_utc: 2026-10-15 new yield/deposits closure; 2026-10-20 perps reduce-only; 2026-10-26 00:00 eligibility check; 2026-11-01 00:00 through 2026-12-31 08:00 DUSD claim; 2027-01-15 position/vault settlement; 2027-01-31 redemption/withdrawal cutoff; recheck primary official announcements for exact timezone and content
+- user_personal_rights: holdings/points/claimable DUSD, allocations and open positions NOT CONFIRMED
+- delivery_status: DELIVERED_URGENT_RISK_2026-10-15
+- gmail_message_id: 1a13e6930e07d0ae
+- event_archive: airdrop-tge-monitor/reports/events/2026/2026-10/2026-10-15/1410-standx-winddown-dusd-airdrop.md
+- handling: keep StandX eligible for CURRENT existing dynamic urgent deadline/redemption checks until materially resolved, not as an additional project/watch task; suppress unchanged event recap emails; allow new verified material official deadline, open eligibility checker or claim window transition under a NEW stable material-delta event key only. Never suggest depositing to farm points.
