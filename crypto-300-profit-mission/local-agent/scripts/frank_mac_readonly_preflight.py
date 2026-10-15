@@ -61,11 +61,11 @@ def inspect_repo(path: Path) -> dict:
     code, head = safe_exec(["git", "-C", str(path), "rev-parse", "HEAD"])
     if code != 0 or len(head) != 40:
         return {"state": "GIT_HEAD_UNAVAILABLE"}
-    code, dirty = safe_exec([
-        "git", "-C", str(path), "status", "--porcelain=v1",
-        "--untracked-files=normal"])
-    status = ("UNKNOWN" if code != 0 else
-              "HAS_USER_CHANGES" if dirty else "NO_ORDINARY_CHANGES_OBSERVED")
+    # Deliberately do not inspect working-tree content here. git status and
+    # git diff can invoke filter.<driver>.clean from tracked .gitattributes,
+    # even when fsmonitor is disabled. A passive metadata check cannot prove
+    # that the checkout is clean without crossing that execution boundary.
+    status = "UNKNOWN_NOT_CHECKED_PASSIVE_ONLY"
     pins = {}
     for label, sha in EXPECTED_PINS.items():
         code, resolved = safe_exec(
