@@ -29,7 +29,7 @@ def load(root=ROOT):
     for filename, blob in PINS:
         raw = (root / filename).read_bytes()
         digest = hashlib.sha1(
-            b"blob " + str(len(raw)).encode() + b"\\0" + raw
+            b"blob " + str(len(raw)).encode() + bytes((0,)) + raw
         ).hexdigest()
         require(digest == blob, "pinned evidence drift: " + filename)
         docs.append(json.loads(raw))
@@ -97,8 +97,7 @@ def classify(docs):
             sells["token_transfer_getLogs_query"]["address"] == TOKEN,
             "wrong original event query scope")
     sales = sells["actual_token_market_sell_events"]
-    require(len(sales) == 3 == sells["gate"].get("sale_from_real_independent_EOAs", "") .count("NOT_EXPECTED")
-            if False else len(sales) == 3, "three sale witnesses missing")
+    require(len(sales) == 3, "three sale witnesses missing")
     unique = set()
     for row in sales:
         event, log, transfer, tx = (
