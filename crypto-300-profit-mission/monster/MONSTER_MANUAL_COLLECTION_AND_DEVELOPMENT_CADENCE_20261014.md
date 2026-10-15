@@ -376,3 +376,18 @@ Stage152新最后P2固定SHA `71a041405352c9e2210d93dff9c2685149809e52` 已获�
 **阶段交付状态：Stage153真实源/代码/双OS-CI=DONE；新固定SHA其他AI独立复审=NOT_DONE。** 已按模块硬性规则同时提交 [可直接复制的Claude/Codex完整独立审核提示词](MONSTER_STAGE153_INDEPENDENT_OTHER_AI_REVIEW_PROMPT_PINNED_80EBAB9_20261015.md)，不能用Stage152的旧Codex APPROVE覆盖新Stage153。高价值下一研发需要验证**全市场真实同一共享D0→SQLite→已完成D1 5m评价的完整时钟**，如果决定改善后续服务次序/有效期限，要先找可复证的真实瓶颈和无效HTTP复评浪费，再设计安全且可用的算法；不得默认提并发、扩大API限额、按照曝光收益选币或让真实邮件启用。
 
 状态固定：`G0=PARTIAL / G1=NOT_SCORABLE / G2/G3=NOT_PASSED / G4=UNKNOWN / G5_FULL_RELEASE=NOT_PASSED / G6=NO_GO`，`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE / FRANK_UNCHANGED / NO_NEW_SCHEDULE`，Stage99保持停用，今后公开行情只在用户聊天明确要求时手动采集。
+
+
+## Stage153 Codex 安全P1/两P2精确修复与代码新SHA（2026-10-16）
+
+用户提供Codex对前固定Stage153 SHA `80ebab9a6f3533103858de9e321f037384e86fde` 的真实独立复审：原六份Stage28 ZIP和内层JSON SHA均与源锁定清单一致，1132 WATCH/1128队列/1005 EVALUATED/123 LATE/828 SETUP和98并发中91 LATE/7 EVALUATED均正确；新增 **1 P1（`--out`同路径会将SQLite写成JSON，已隔离真实复现）、2 P2（asof读未来PENDING、SETUP/LATE主键/事件没有一对一校验）**，结论 `REQUEST_CHANGES`。这是对Stage153，不影响Stage152 `APPROVE@71a04140`。
+
+修复前先Git冻结 [Stage153 Codex安全P1/P2协议](MONSTER_STAGE153_CODEX_P1_P2_FROZEN_REMEDIATION_20261016.md)，commit `3304370785da2774e0ca6ac009fd35bd6a1da07f`。新**唯一代码/测试/workflow固定SHA `4553cb6b18c5aaf723072d17a39f9ad92f0629c9`**：仅修改Stage153只读审计器和原单测。SQLite CLI输出必须先排查主库、WAL/SHM/journal、相对路径、symlink/hardlink同文件别名并独占创建全新输出，不覆盖任意已有文件；asof仍是当前已保存PENDING快照，拒绝first_seen未来或不可见的未收盘5m；LATE按原payload的symbol+first_seen+deadline/观测时间唯一核对，候选id单独唯一。
+
+原真实Stage28的SETUP只存symbol+utc，**没有候选source id**；发现2/828 SETUP真实落入重叠的多个有效15m已评价队列窗口（2025-11与2026-02各一条），不能凭猜测强制唯一身份。采用有效时间窗下的**事件到候选单射可行匹配**，拒绝不存在/重复/无法分配SETUP，对这两条保留归属歧义而不假造producer。独立合成测试证明旧漏洞能被抓到。原阶段审计所有1128个JSONL行Git blob **完全相同**，原summary除source SHA和新增歧义字段以外所有数值完全相同。
+
+[真实新固定CI #38789077966](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38789077966)：source pin精确`4553cb6...`，**3/3 SUCCESS**；Ubuntu24.04/macOS各`18/18 unittest PASS`，原六份Stage28 GitHub历史artifact双SHA验证及完整1128个queue逐事件验证、带SHA Git归档已通过。机器summary Git blob `e4ce8ad5d00b76d56b06616208a6b7dc11541cb0`，行证据原blob `beb066d13ed1bf9656a1d9153f003c4363aa849c`，新审计器SHA256 `d33c24160fde670ecde064ca29dc3a4a32860111dc2899037bdc0f889cd89636`。
+
+本次作者验收报告 [Stage153 P1/P2修复真实源报告](MONSTER_STAGE153_CODEX_P1_P2_FIX_18TESTS_REAL6_ARTIFACTS_20261016.md)，完整[其他AI固定SHA独立复审提示词](MONSTER_STAGE153_INDEPENDENT_CODEX_P1_P2_REREVIEW_PINNED_4553CB6_20261016.md)均已进入原PR。**新代码其他AI独立APPROVE仍待取得；作者CI成功不可取代外部review，也不代表业务策略G4成功。** 不因局部审计修复重新修改原D0/D1策略或回到无止境边界循环：审核后主线依然是同一真实全市场共享D0→D1评价时效与信息可用性，而不是提高API限额或补历史净盈利。
+
+继续 `NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE / FRANK_UNCHANGED / STAGE99_STOPPED / NO_NEW_SCHEDULE`，`G0 PARTIAL / G1 NOT_SCORABLE / G2/G3 NOT_PASSED / G4 UNKNOWN / G5_FULL_RELEASE NOT_PASSED / G6 NO_GO`。
