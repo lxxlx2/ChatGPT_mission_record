@@ -36,7 +36,7 @@ ORIGINAL_SHADOW_BLOB = "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa"
 def production_blob():
     p = Path(production.__file__)
     raw = p.read_bytes()
-    return hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\\0"+raw).hexdigest()
+    return hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
 
 
 def assert_original_core():
@@ -250,7 +250,7 @@ def main():
                                args.official_symbol)
     args.out.parent.mkdir(parents=True,exist_ok=True)
     with args.out.open("x",encoding="utf-8") as h:
-        h.write(json.dumps(result,sort_keys=True,ensure_ascii=False,indent=2)+"\\n")
+        h.write(json.dumps(result,sort_keys=True,ensure_ascii=False,indent=2)+"\n")
     print("SHARED_SPOT_CAUSAL_VERIFIED_SUBSET "+
           json.dumps({k:result[k] for k in
              ("date","actually_complete_symbols","event_type_counts",
