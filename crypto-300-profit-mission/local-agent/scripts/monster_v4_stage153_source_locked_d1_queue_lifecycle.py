@@ -172,7 +172,7 @@ def audit_day(data, rec):
         except (KeyError, TypeError, ValueError, OverflowError) as exc:
             raise ValueError("STAGE153_SETUP_EVENT_INVALID_TIME_OR_SYMBOL") from exc
         if len(candidates) != 1 or candidates[0]["id"] in consumed_setups:
-            raise ValueError("STAGE153_SETUP_UNMATCHED_OR_DUPLICATED_CANDIDATE")
+            raise ValueError("STAGE153_SETUP_UNMATCHED_OR_DUPLICATED_CANDIDATE " + str((event, [(q["id"], q["status"], q["first_seen_ms"], q["deadline_ms"]) for q in by_symbol.get(event.get("symbol"), [])][:5)))
         consumed_setups.add(candidates[0]["id"])
     burst = [v for v in details if v["first_seen_ms"] == BURST]
     summary = {
