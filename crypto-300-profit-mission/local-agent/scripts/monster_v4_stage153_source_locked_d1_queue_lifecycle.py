@@ -12,6 +12,7 @@ from collections import Counter
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import sqlite3
 import zipfile
@@ -195,6 +196,8 @@ def audit_six(original_archive_dir, proof=PROOF):
     return {
         "schema": SCHEMA,
         "source": "ORIGINAL_STAGE28_GITHUB_ARTIFACT_ZIP_AND_RAW_JSON_BOTH_SHA256_LOCKED",
+        "trigger_commit_sha": os.environ.get("GITHUB_SHA", "LOCAL_UNVERIFIED"),
+        "stage153_auditor_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "source_CI_run": 38146403662,
         "source_commit": manifest["source_commit"],
         "six_exposed_historical_dates_NOT_OOS": True,
