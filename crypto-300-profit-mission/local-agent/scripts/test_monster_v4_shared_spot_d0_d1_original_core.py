@@ -219,6 +219,10 @@ class SharedOriginalV4Tests(unittest.TestCase):
                 self.assertFalse(result["true_full_758_replay"])
                 self.assertEqual(result["market_coverage"],"UNATTESTED_SUBSET_CACHE")
                 self.assertEqual(result["original_758_coverage"]["original_758_denominator"],758)
+                provenance={r["symbol"]:r["source_disposition"] for r in
+                            result["original_758_coverage"]["per_symbol"]}
+                self.assertEqual(provenance["BTCUSDT"],
+                                 "PRELOADED_CACHE_REPLAYED_ORIGIN_UNATTESTED")
 
     def test_16_ohlc_malformed_is_rejected(self):
         original=list(self.A)
