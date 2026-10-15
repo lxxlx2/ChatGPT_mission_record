@@ -3,7 +3,7 @@
 This test runs ONLY in disposable combined checkout (F01/C02 independent PRs).
 No production inputs, no network, no new jobs or server deployment.
 """
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import json
 from pathlib import Path
 import time
