@@ -138,17 +138,22 @@ def assert_complete_cache(db, roster, day):
             "expected_source_rows":expected}
 
 
-def run_shared(db, day, symbols, *, market_coverage_label):
+def run_shared(db, day, symbols, *, market_coverage_label, frozen_verified_roster=None):
     """One production DB, full-list D0 ONCE/tick, global FIFO D1 ONCE/tick."""
     assert_original_core()
     roster = clean_roster(symbols)
     if day.isoformat() not in FROZEN_DATES:
         raise ValueError("SHARED_SPOT_DATE_NOT_FROZEN_RETROSPECTIVE")
-    if market_coverage_label not in ("OFFICIAL_VERIFIED_SUBSET_ONLY",
+    if market_coverage_label not in ("SYNTHETIC_TEST_ONLY",
+                                     "OFFICIAL_VERIFIED_SUBSET_ONLY",
                                      "FULL_758_OFFICIAL_VERIFIED"):
         raise ValueError("SHARED_SPOT_COVERAGE_LABEL_UNKNOWN")
-    if market_coverage_label == "FULL_758_OFFICIAL_VERIFIED" and len(roster) != FROZEN_ORIGINAL_POPULATION:
-        raise ValueError("SHARED_SPOT_CANNOT_CLAIM_758_ON_SUBSET")
+    if market_coverage_label == "FULL_758_OFFICIAL_VERIFIED":
+        if len(roster) != FROZEN_ORIGINAL_POPULATION:
+            raise ValueError("SHARED_SPOT_CANNOT_CLAIM_758_ON_SUBSET")
+        if (frozen_verified_roster is None
+                or roster != clean_roster(frozen_verified_roster)):
+            raise ValueError("SHARED_SPOT_758_ROSTER_MUST_MATCH_ORIGINAL_SOURCE_VERIFIED")
     coverage = assert_complete_cache(db, roster, day)
     counts = Counter()
     with tempfile.TemporaryDirectory(prefix="monster_shared_spot_original_D0_D1_") as td:
@@ -202,7 +207,9 @@ def run_shared(db, day, symbols, *, market_coverage_label):
         "schema":SCHEMA,
         "date":day.isoformat(),
         "origin_core_blob":ORIGINAL_SHADOW_BLOB,
-        "source":"OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY",
+        "source": ("SYNTHETIC_FIXTURE_ONLY" if market_coverage_label=="SYNTHETIC_TEST_ONLY"
+                   else "OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY"),
+        "source_origin_verified": market_coverage_label!="SYNTHETIC_TEST_ONLY",
         "source_level":"ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
         "market_coverage":market_coverage_label,
         "frozen_original_universe_attempted":FROZEN_ORIGINAL_POPULATION,
