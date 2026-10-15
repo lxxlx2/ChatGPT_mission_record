@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -22,6 +23,16 @@ CASES = (
 def check(ok, message):
     if not ok:
         raise ValueError(message)
+
+def parse_utc(value):
+    check(isinstance(value,str), "timestamp required in UTC")
+    try:
+        dt=datetime.fromisoformat(value.replace("Z","+00:00"))
+    except ValueError as exc:
+        raise ValueError("invalid recent-swap UTC timestamp") from exc
+    check(dt.tzinfo is not None and dt.utcoffset().total_seconds()==0,
+          "recent-swap timestamps must be UTC")
+    return dt.astimezone(timezone.utc)
 
 def load(root=ROOT):
     out=[]
@@ -43,6 +54,15 @@ def build(docs, cases=CASES):
            market["summary"]["global_actual_U_and_sell_capacity_fully_qualified"],
            economic["summary"]["public_observer_follower_qualified_signals"]) == (0,0,0),
           "unverified public U was promoted")
+    frozen_window=activity["frozen_19CA_snapshot_window"]
+    check(isinstance(frozen_window,dict) and
+          set(frozen_window)=={"start","end"}, "missing original frozen 19-CA window")
+    window_start=parse_utc(frozen_window["start"])
+    window_end=parse_utc(frozen_window["end"])
+    check(window_start<window_end, "invalid source time window")
+    check((activity["summary"]["strict19CA_30day_owner_swap_verified_wallets"],
+           activity["summary"]["recent_swap_unknown_wallets"])==(7,16),
+          "frozen P3 recent owner evidence denominator changed")
     check(len({w for _,w,_ in cases})==5, "duplicate wallet in cross-owner cohort")
     rows=[]
     for label,wallet,token in cases:
@@ -65,11 +85,38 @@ def build(docs, cases=CASES):
                   "mixed original win/loss must remain together")
         if label=="DDAC":
             check(m["selected_early_buy_signer"]==wallet, "owner early buy witness missing")
+        # P3 is a 30-day / 19-CA *wallet-level* evidence search, not this row's CA.
+        # A false "verified" flag means NO VERIFIED WITNESS in the frozen
+        # investigation, never CONFIRMED_INACTIVE or a token-specific negative.
+        found=owner["p3_verified_recent_19CA_swap"]
+        evidence_grade=owner["p4_research_qualification"]
+        time=owner["p3_latest_verified_swap_UTC"]
+        tx_hash=owner["p3_latest_verified_swap_hash"]
+        check(type(found) is bool, "recent 19-CA evidence flag must be boolean")
+        if found:
+            check(evidence_grade!="RECENT_SIGNED_SWAP_UNRESOLVED"
+                  and isinstance(tx_hash,str) and len(tx_hash)==66
+                  and tx_hash.startswith("0x") and time is not None,
+                  "confirmed P3 witness requires an actual signed tx hash and UTC")
+            check(window_start<=parse_utc(time)<=window_end,
+                  "confirmed P3 witness lies outside frozen 30-day window")
+            state="CONFIRMED_ACTIVE"
+        else:
+            check(evidence_grade=="RECENT_SIGNED_SWAP_UNRESOLVED"
+                  and time is None and tx_hash is None,
+                  "no witness is UNKNOWN, not proof of inactivity")
+            state="UNRESOLVED"
         rows.append({
             "wallet": wallet, "wallet_label": label, "token": token,
             "exact_CA": m["exact_CA"],
-            "recent_signed_swap": owner["p3_verified_recent_19CA_swap"],
-            "recent_swap_utc": owner["p3_latest_verified_swap_UTC"],
+            "recent_signed_swap_state": state,
+            "verified_recent_19CA_swap_found": found,
+            "recent_swap_scope": "WALLET_LEVEL_FROZEN_19_EXACT_CAS_NOT_DISPLAYED_ROW_CA",
+            "recent_swap_frozen_window_UTC": dict(frozen_window),
+            "recent_swap_source_qualification": evidence_grade,
+            "recent_swap_tx_hash": tx_hash,
+            "recent_swap_utc": time,
+            "recent_swap_row_CA_attribution": "NOT_CLAIMED_WALLET_UNIVERSE_ONLY",
             "P2_selected_positive_not_settled_PnL": owner["p2_selected_positive_episodes"],
             "P2_selected_negative_not_settled_PnL": owner["p2_selected_negative_episodes"],
             "early_owner_action": entry["early_owner_trade_statuses"][idx],
