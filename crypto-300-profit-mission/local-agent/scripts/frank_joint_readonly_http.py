@@ -67,14 +67,19 @@ def _existing_json(port: int, path: str, *, missing_allowed=False) -> dict | Non
             raise _SourceUnavailable()
         if res.getheader("Content-Type", "").split(";", 1)[0].strip() != "application/json":
             raise _SourceUnavailable()
-        if res.getheader("Content-Length"):
-            try:
-                if int(res.getheader("Content-Length")) > _SOURCE_LIMIT:
-                    raise _SourceUnavailable()
-            except ValueError as exc:
-                raise _SourceUnavailable() from exc
-        raw = res.read(_SOURCE_LIMIT + 1)
-        if len(raw) > _SOURCE_LIMIT:
+        # Native F01/C02/F02 JSON APIs all send Content-Length. Accepting
+        # close-delimited or truncated bytes can promote partial wire as an
+        # authoritative BUY or CA report despite an early TCP EOF.
+        declared = res.getheader("Content-Length")
+        if (not isinstance(declared, str) or not declared
+                or len(declared) > 12 or not declared.isascii()
+                or not declared.isdecimal()):
+            raise _SourceUnavailable()
+        expected = int(declared)
+        if expected <= 0 or expected > _SOURCE_LIMIT:
+            raise _SourceUnavailable()
+        raw = res.read(expected)
+        if len(raw) != expected:
             raise _SourceUnavailable()
         result = json.loads(raw)
         if not isinstance(result, dict):
@@ -88,7 +93,22 @@ def _existing_json(port: int, path: str, *, missing_allowed=False) -> dict | Non
 
 
 def _recent_f01(doc: dict) -> bool:
-    if doc.get("status") != "OK":
+    # Native F01 contract is a partition, not merely {status, time}. A
+    # missing or corrupted eligible list cannot mean a confirmed NO_BUY.
+    eligible = doc.get("eligible")
+    excluded = doc.get("not_followed")
+    if (doc.get("status") != "OK"
+            or type(doc.get("schema_version")) is not int
+            or doc["schema_version"] != 1
+            or doc.get("scope") != "FRANK_FROZEN_DECISIONS_PRESENTATION_ONLY"
+            or not isinstance(eligible, list)
+            or not isinstance(excluded, list)
+            or type(doc.get("eligible_count")) is not int
+            or type(doc.get("excluded_count")) is not int
+            or doc["eligible_count"] != len(eligible)
+            or doc["excluded_count"] != len(excluded)
+            or any(not isinstance(row, dict) for row in eligible)
+            or any(not isinstance(row, dict) for row in excluded)):
         return False
     stamp = doc.get("as_of_epoch")
     if isinstance(stamp, bool) or not isinstance(stamp, (int, float)):
