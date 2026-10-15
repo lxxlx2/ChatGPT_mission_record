@@ -74,11 +74,11 @@ jobs:
       - name: Combined JS and focused tests
         working-directory: crypto-300-profit-mission/local-agent
         run: |
-          python -m pyflakes integration_tests/test_frank_f01_c02_f02_exact_contract.py
+          python -m pyflakes integration_tests/test_frank_f01_c02_f02_exact_contract.py integration_tests/test_frank_joint_native_control_http.py
           node --check mission_agent/mission_control/static/app.js
           node tests/ca_identity_render.cjs
           node tests/frank_f02_r2_render.cjs
-          python -B -m pytest -q -p no:cacheprovider tests/test_frank_f01_c02_f02_alignment.py tests/test_frank_f02_manual_refresh.py tests/test_frank_f02_r2_isolated_browser.py tests/test_frank_f02_r1_readonly_positions_api.py tests/test_frank_a05_r2_frozen32_offline.py tests/test_frank_a05_complete_rpc_receipts.py tests/test_frank_a05_f02_latest_inventory.py tests/test_follow_opportunity_f01.py tests/test_follow_opportunity_f01_integration.py tests/test_frank_ca_c02_claude_review_regression.py integration_tests/test_frank_f01_c02_f02_exact_contract.py
+          python -B -m pytest -q -p no:cacheprovider tests/test_frank_f01_c02_f02_alignment.py tests/test_frank_f02_manual_refresh.py tests/test_frank_f02_r2_isolated_browser.py tests/test_frank_f02_r1_readonly_positions_api.py tests/test_frank_a05_r2_frozen32_offline.py tests/test_frank_a05_complete_rpc_receipts.py tests/test_frank_a05_f02_latest_inventory.py tests/test_follow_opportunity_f01.py tests/test_follow_opportunity_f01_integration.py tests/test_frank_ca_c02_claude_review_regression.py  integration_tests/test_frank_f01_c02_f02_exact_contract.py integration_tests/test_frank_joint_native_control_http.py
       - name: Full combined regression
         working-directory: crypto-300-profit-mission/local-agent
         env:
