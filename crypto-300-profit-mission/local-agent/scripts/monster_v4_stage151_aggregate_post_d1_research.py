@@ -223,6 +223,8 @@ def aggregate(shards, original):
         "source":"FROZEN_STAGE101_STAGE88_STAGE85_OFFICIAL_1M_PUBLISHER_SHA",
         "trigger_commit_sha":trigger_expected,
         "stage151_core_sha256":actual_source_sha,
+        "stage152_aggregator_sha256":hashlib.sha256(
+            Path(__file__).read_bytes()).hexdigest(),
         "original_519_D0_untouched":519,
         "original_305_D1_all_scored":len(all_rows),
         "original_214_D0_only_untouched":214,
