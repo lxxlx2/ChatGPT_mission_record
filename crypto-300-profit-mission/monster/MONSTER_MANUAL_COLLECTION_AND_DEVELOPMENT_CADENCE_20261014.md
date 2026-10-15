@@ -350,3 +350,14 @@ Stage143工程=PASS_MACOS_UBUNTU_66_OF_66; MODEL_G0=PARTIAL; G1=NOT_SCORABLE; G2
 **已确认新固定代码SHA `71a041405352c9e2210d93dff9c2685149809e52`**，[GitHub真实CI #38734029751](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38734029751) `27/27 Jobs SUCCESS`，Ubuntu/macOS各`20/20 unittest PASS`、真实官方历史publisher锁定`24/24 shard`及305汇总Git回写PASS。原305分类184/113/8不变，历史24h分层0/10k/100k门槛184/124/39不变，**真实6h独立分层184/133/54现已恢复**，6h延迟1m/3m历史中位-1.684256%/-1.720261%、24h中位-1.870766%/-2.010169%。新摘要Git blob `518e7aa0d8db83fd1b818513ae7e72b165252806`。与旧摘要做overall+6日期+2路径共**9分组**精确交叉比对，旧24h分层、延迟与其他全部字段不变，仅新增6h分层；用户那轮review中关于最大赢家占92.18%的说法，严谨分母是**所有184事件正负抵消后的收益率求和**而非所有正收益的求和，后者占比约36.13%，两种比例都不是实际账户PNL。
 
 完整 [P2修复CI报告与其他AI复审提示词](MONSTER_STAGE152_CODEX_P2_SIX_HOUR_OUTPUT_FIX_REAL305_CI_AND_REREVIEW_20261015.md)。新SHA Codex/Claude实际代码复审**未收到**；必须等其他AI review证据才可写本次P2真正获批，CI PASS不是模型盈利验收。后续回归仍按完整功能开发节奏进行，不准因为单一报表P2回到无止境边界修补。保持 `NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`、`G0=PARTIAL`、`G1=NOT_SCORABLE`、`G2_G3=NOT_PASSED`、`G4=UNKNOWN`、`G5_RELEASE=NOT_PASSED`、`G6=NO_GO`，Frank不变，Stage99停止，无新调度。
+
+
+## Stage152 独立 Codex 最终审核 APPROVE，回归全市场早期发现主线（2026-10-15）
+
+**真正独立审核输出已收到**（用户于2026-10-15粘贴的Codex实际审查结论；底层精确模型版本 `UNVERIFIED`，不是GitHub原生review）：唯一固定源码/测试 `71a041405352c9e2210d93dff9c2685149809e52`，上一拒绝 `REQUEST_CHANGES@f12d6635c6f8a5e2ba8fbb2feeca29688583245b` 对应的唯一6h/24h敏感性覆盖P2已复现修复并在本次正式被 **`APPROVE@71a04140`**，新增 P0/P1/P2=0，前次3项P1继续关闭。Codex本地Darwin Python3.14.7共20/20 unittest通过；另将新增两项测试回移旧聚合器确认旧版1 failure/1 error，新版通过。24个本轮CI shard在相同固定源码SHA下重新聚合summary/rows完全一致，9分组逐项核对修复后的6h/24h分离聚合。原真实GitHub [CI #38734029751](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38734029751) 27/27绿色，Ubuntu/macOS分别20/20、24个官方历史1m shard成功，归档Git SHA与触发SHA绑定。**此前用户提供Codex独立取得官方Binance 1220份日ZIP及CHECKSUM、305/305逐行原价重放全部一致，本轮没有重复下载而以core SHA和rows字节相同保留既有证明范围。**
+
+完整来源限定 [Stage152 Codex最终APPROVE固定71a041源码审核归档](MONSTER_STAGE152_CODEX_FINAL_APPROVE_FIXED_71A041_DUAL_HORIZON_REVIEW_INTAKE_20261015.md)；当前动作只改开发文档，无源码改变，因此旧71a041本身仍可作为局部代码审查固定版本；PR继续Open/Draft、未合并。**停止Stage151/152统计修复循环，不因局部APPROVE声称妖币盈利模型成功。**
+
+下一工程主线要求遵守既定架构和用户终极目标：从 `monster_v4_shadow.py` 真正D0 full-universe to SQLite `candidate_queue` to D1 `process_queue` to early-only WATCH/失效/必要发信的历史全体计时审计入手，具体待查：每轮至多8例深查、15m截止和98币同一轮 WATCH 的峰值如何形成PENDING待评、队列实际完成/延迟丢失；不得把队列不丢记录冒充实际来得及评价，也不能凭后验盈利候选选择阈值或为了“修bug”一律抬大API限额。优先对已有 Stage27/28 用户可复算真实证据进行时间线对账，然后**一次研究→冻结可证伪吞吐/到时阈值→实现→独立其他AI代码审查→CI复算**；前瞻真实窗口成熟必须用户聊天手动触发且不能替换历史缺失。参考项目AGENTS/MONSTER_MODULE_DEVELOPMENT_RULES和Monster V4架构，始终优先完整功能与时效而非新Stage数量。
+
+放行继续 `G0 PARTIAL / G1 NOT_SCORABLE / G2_G3 NOT_PASSED / G4 UNKNOWN / G5_FULL_RELEASE NOT_PASSED / G6 NO_GO`；`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE / FRANK_UNCHANGED / NO_NEW_SCHEDULE`，Stage99保持停止。
