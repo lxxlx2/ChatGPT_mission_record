@@ -56,7 +56,7 @@ def tiny_day(date="2026-02-04"):
                 {"id":2,"venue":"spot","symbol":"BUSDT",
                  "first_seen_ms":epoch,"deadline_ms":epoch+15*m.MIN,
                  "status":"LATE","attempts":1,"last_error":"bad_data",
-                 "last_evaluated_bar_ms":None,"retry_after_ms":epoch+MIN}]}
+                 "last_evaluated_bar_ms":None,"retry_after_ms":epoch+m.MIN}]}
 
 
 def mini_zip(tmp, data, date="2026-02-04"):
