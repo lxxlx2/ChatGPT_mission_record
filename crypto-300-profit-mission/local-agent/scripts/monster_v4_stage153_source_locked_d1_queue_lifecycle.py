@@ -93,17 +93,25 @@ def audit_day(data, rec):
             or data["event_counts"].get("SETUP_ACTIVE") != len(data["setups"])
             or data["event_counts"].get("LATE_REVIEW") != len(data["late_events"])):
         raise ValueError("STAGE153_SHARED_SQLITE_EVENT_COUNT_DRIFT")
-    seen = set()
+    seen_ids = set()
+    episode_keys = set()
+    by_episode = {}
+    by_symbol = {}
     details = []
     for row in queue:
-        key = (row["id"], row["symbol"], row["first_seen_ms"])
-        if (key in seen or row["venue"] != "spot"
+        candidate_id = row["id"]
+        episode_key = (row["symbol"], row["first_seen_ms"], row["deadline_ms"])
+        if (type(candidate_id) is not int or candidate_id in seen_ids
+                or episode_key in episode_keys or row["venue"] != "spot"
                 or type(row["first_seen_ms"]) is not int
                 or type(row["deadline_ms"]) is not int
                 or row["deadline_ms"] - row["first_seen_ms"] != TTL_MIN*MIN
                 or type(row["attempts"]) is not int or row["attempts"] < 0):
             raise ValueError("STAGE153_ILLEGAL_OR_DUPLICATED_ORIGINAL_QUEUE_EVENT")
-        seen.add(key)
+        seen_ids.add(candidate_id)
+        episode_keys.add(episode_key)
+        by_episode[episode_key] = row
+        by_symbol.setdefault(row["symbol"], []).append(row)
         completed_bar = row["last_evaluated_bar_ms"] is not None
         if (row["status"] == "LATE" and completed_bar):
             raise ValueError("STAGE153_LATE_WITH_RECORDED_COMPLETED_D1_BAR")
@@ -122,16 +130,50 @@ def audit_day(data, rec):
             "actual_gmail_delivery": "NOT_OBSERVED",
             "actual_trade_execution": "NOT_OBSERVED",
         })
-    by_late = Counter((v["symbol"],v["observed_ms"])
-                      for v in data["late_events"])
+    # Stage28 retains complete LATE payload/clock but only SETUP symbol/UTC.
+    # Match exactly what the original artifact actually preserves, no D0 claims.
+    remaining_late = {
+        (q["symbol"], q["first_seen_ms"], q["deadline_ms"])
+        for q in queue if q["status"] == "LATE"
+    }
     for v in data["late_events"]:
-        if v.get("payload", {}).get("classification") != "STALE_NOT_ACTIONABLE":
+        payload = v.get("payload", {})
+        if payload.get("classification") != "STALE_NOT_ACTIONABLE":
             raise ValueError("STAGE153_LATE_EVENT_UNEXPECTED_CLASSIFICATION")
-        if not any(q["status"] == "LATE"
-                   and q["symbol"] == v["symbol"] for q in queue):
-            raise ValueError("STAGE153_LATE_UNMATCHED_QUEUE_CANDIDATE")
-    if sum(by_late.values()) != status["LATE"]:
+        key = (v.get("symbol"), payload.get("first_seen_ms"),
+               payload.get("deadline_ms"))
+        q = by_episode.get(key)
+        if (q is None or q["status"] != "LATE"
+                or type(v.get("observed_ms")) is not int
+                or v["observed_ms"] <= q["deadline_ms"]
+                or key not in remaining_late):
+            raise ValueError("STAGE153_LATE_UNMATCHED_QUEUE_CANDIDATE_OR_TIME")
+        remaining_late.remove(key)
+    if remaining_late or len(data["late_events"]) != status["LATE"]:
         raise ValueError("STAGE153_MISSING_LATE_RECORD")
+
+    # A Stage28 SETUP row has only symbol and UTC; correlate uniquely with a
+    # completed episode whose original 15-minute D1 window covers that UTC.
+    consumed_setups = set()
+    for event in data["setups"]:
+        try:
+            stamp = event["utc"]
+            if not isinstance(stamp, str) or not stamp.endswith("Z"):
+                raise ValueError("BAD_UTC")
+            instant = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+            if instant.tzinfo != timezone.utc:
+                raise ValueError("BAD_UTC_OFFSET")
+            setup_ms = int(instant.timestamp() * 1000)
+            candidates = [
+                q for q in by_symbol.get(event["symbol"], ())
+                if q["status"] == "EVALUATED"
+                and q["first_seen_ms"] <= setup_ms <= q["deadline_ms"]
+            ]
+        except (KeyError, TypeError, ValueError, OverflowError) as exc:
+            raise ValueError("STAGE153_SETUP_EVENT_INVALID_TIME_OR_SYMBOL") from exc
+        if len(candidates) != 1 or candidates[0]["id"] in consumed_setups:
+            raise ValueError("STAGE153_SETUP_UNMATCHED_OR_DUPLICATED_CANDIDATE")
+        consumed_setups.add(candidates[0]["id"])
     burst = [v for v in details if v["first_seen_ms"] == BURST]
     summary = {
         "date": day,
@@ -234,6 +276,15 @@ def queue_pressure(db, asof_ms):
         """SELECT first_seen_ms,deadline_ms,retry_after_ms,
                   last_evaluated_bar_ms,attempts,venue,symbol
            FROM candidate_queue WHERE status='PENDING'""").fetchall()]
+    # Current stored PENDING snapshot cannot reconstruct an earlier queue.
+    # Reject future candidates/bars instead of leaking them into as-of counts.
+    for row in pending:
+        if (type(row["first_seen_ms"]) is not int
+                or row["first_seen_ms"] > asof_ms
+                or (row["last_evaluated_bar_ms"] is not None
+                    and (type(row["last_evaluated_bar_ms"]) is not int
+                         or row["last_evaluated_bar_ms"] + 5*MIN > asof_ms))):
+            raise ValueError("STAGE153_ASOF_FUTURE_PENDING_OR_COMPLETED_BAR")
     not_evaluated = [r for r in pending if r["last_evaluated_bar_ms"] is None]
     near_3 = [r for r in pending if r["deadline_ms"] <= asof_ms+POLL_MIN*MIN]
     near_6 = [r for r in pending if r["deadline_ms"] <= asof_ms+2*POLL_MIN*MIN]
@@ -244,6 +295,7 @@ def queue_pressure(db, asof_ms):
     return {
         "schema": "MONSTER_STAGE153_D1_QUEUE_PRESSURE_READ_ONLY_ASOF_V1",
         "asof_ms": asof_ms,
+        "snapshot_scope": "CURRENT_STORED_PENDING_ONLY_NOT_HISTORICAL_RECONSTRUCTION",
         "PENDING": len(pending),
         "PENDING_never_recorded_completed_D1_5m": len(not_evaluated),
         "PENDING_with_completed_D1_5m": len(pending)-len(not_evaluated),
@@ -262,6 +314,31 @@ def queue_pressure(db, asof_ms):
         "capacity_estimate_assumes_at_most_six_polls_one_eval_each": True,
         "not_real_API_capacity_or_Gmail_or_trade": True,
     }
+
+
+def safe_new_json_output(target, sqlite_input, result):
+    """Never replace a SQLite database, its journal sidecars, or any existing file.
+
+    The exclusive 'x' open prevents symlink/hardlink overwrite and avoids a
+    check-then-truncate race. Outfile creation is intentional; SQLite is read-only.
+    """
+    source = Path(sqlite_input).resolve(strict=True)
+    out = Path(target)
+    protected = (source, Path(str(source) + "-wal"),
+                 Path(str(source) + "-shm"), Path(str(source) + "-journal"))
+    canonical = out.resolve(strict=False)
+    for p in protected:
+        if canonical == p:
+            raise ValueError("STAGE153_OUTPUT_ALIASES_SQLITE_OR_SIDECAR")
+        if out.exists() or out.is_symlink():
+            if p.exists() and os.path.samefile(out, p):
+                raise ValueError("STAGE153_OUTPUT_ALIASES_SQLITE_OR_SIDECAR")
+    if out.exists() or out.is_symlink():
+        raise ValueError("STAGE153_OUTPUT_EXISTS_REFUSE_OVERWRITE")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    # 'x' uses O_CREAT | O_EXCL; refuses even racing symlink targets.
+    with out.open("x", encoding="utf-8") as handle:
+        handle.write(json.dumps(result, sort_keys=True, indent=2) + "\\n")
 
 
 def main():
@@ -294,8 +371,7 @@ def main():
             db.execute("PRAGMA query_only=ON")
             result=queue_pressure(db,a.asof_ms)
         if a.out:
-            a.out.parent.mkdir(parents=True,exist_ok=True)
-            a.out.write_text(json.dumps(result,sort_keys=True,indent=2)+"\n")
+            safe_new_json_output(a.out, a.sqlite_readonly, result)
         print(json.dumps(result,sort_keys=True))
 
 
