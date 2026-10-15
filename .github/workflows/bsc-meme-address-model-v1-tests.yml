@@ -43,6 +43,9 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_239e_dragon_two_native.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_877af_inventory.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_877af_inventory.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-23x19-five-native-rounds-mixed239e-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-877af-marscoin-inventory-closed-quote-unresolved-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-239e-dragon-two-owner-native-settlements-2026-10-15.json"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_market19.py"
@@ -729,6 +732,23 @@ jobs:
           assert s["original_real_BNB_loser_rounds_newly_qualified"]==0
           assert s["production"]=="NO_GO"
           print("PASS MARSCOIN original 877AF both inventory round trips, incomplete gas/quote, no alpha claim")
+          PY
+      - name: P4-C 23 by 19 five actual rounds one mixed CA and 433 not economically audited
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-five-original-real-rounds.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          a=json.loads(Path("/tmp/bsc-p4c-five-original-real-rounds.json").read_text(encoding="utf-8"))
+          b=json.loads((root/"bsc-meme-address-model-v1-p4c-23x19-five-native-rounds-mixed239e-2026-10-15.json").read_text(encoding="utf-8"))
+          assert a==b,"P4C 23x19 original five native economic rounds replay changed"
+          s=a["summary"]
+          assert (s["total_wallet_CA_cells"],s["source_verified_original_native_rounds"],s["reviewed_distinct_wallet_CA_cells"],s["not_economically_audited_cells"])==(437,5,4,433)
+          assert (s["verified_native_positive_original_rounds"],s["verified_native_negative_original_rounds"],s["original_MARSCOIN_inventory_closed_but_profit_unknown_rounds"])==(3,2,2)
+          assert s["public_observer_follower_qualified_signals"]==0 and s["production"]=="NO_GO"
+          print("PASS 437 cells 5 native owner rounds only 4 cells and 433 unreviewed no P5")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
