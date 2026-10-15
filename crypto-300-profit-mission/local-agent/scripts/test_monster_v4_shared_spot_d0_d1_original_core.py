@@ -299,5 +299,24 @@ class SharedOriginalV4Tests(unittest.TestCase):
                 original_aggregate.load_zip(bogus,original["artifacts"][0])
 
 
+    def test_19_immutable_existing_BTC_ETH_secondary_day_sha_pin(self):
+        import json
+        pins=json.loads(sh.BTC_ETH_SECONDARY_PIN.read_text())
+        btc=next(x["days"] for x in pins["symbols"] if x["symbol"]=="BTCUSDT")
+        eth=next(x["days"] for x in pins["symbols"] if x["symbol"]=="ETHUSDT")
+        self.assertEqual(len(btc),10)
+        self.assertEqual(len(eth),10)
+        self.assertEqual(sh.check_secondary_daily_sha_pins("BTCUSDT",
+               [{"date":x["day"],"sha256":x["sha256"]} for x in btc]),
+               "MATCHED_PREVIOUSLY_GIT_ARCHIVED_20_DAILY_PUBLISHER_SHA")
+        with self.assertRaisesRegex(ValueError,"HISTORICAL_PUBLISHER_DAILY_SHA_PIN_CHANGED"):
+            sh.check_secondary_daily_sha_pins("BTCUSDT",[
+               {"date":x["day"],"sha256":("f"*64 if i==4 else x["sha256"])}
+               for i,x in enumerate(btc)])
+        self.assertIn("NO_PRIOR_PER_DAY_SHA_PIN",
+             sh.check_secondary_daily_sha_pins("SOMENEWUSDT",
+                [{"date":x["day"],"sha256":x["sha256"]} for x in btc]))
+
+
 if __name__=="__main__":
     unittest.main()
