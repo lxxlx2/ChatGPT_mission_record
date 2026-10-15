@@ -33,6 +33,12 @@
     <section id="warning" class="warning" role="status" aria-live="polite">
       此页面仅展示可验证的账户观察；不提供自动买入、成本、价格或盈亏推测。
     </section>
+    <section class="warning" aria-label="获取新来源">
+      <strong>需要新的钱包观察？</strong>
+      <p>“重新读取本地档案”与下方筛选不会查询链上。手动获取新来源后，在新会话页面查看完整双程序扫描中的 32 个冻结目标；其他 Mint 不在本页范围。</p>
+      <p>经授权后，在隔离开发目录运行 <code>python -m scripts.frank_f02_manual_refresh --execute --serve</code>，打开终端给出的新会话地址。每次只读取两次 RPC，不会自动重复；失败不会回退旧余额。</p>
+      <p>任意 CA 的尽调查询属于独立的通用 CA 功能，此页面不提供该查询。</p>
+    </section>
     <section class="stats" aria-label="仓位概况">
       <article class="stat"><span>研究目标</span><strong id="count-total">—</strong><small>冻结 Mint，不代表当前持仓</small></article>
       <article class="stat"><span>已核实非零</span><strong id="count-positive">—</strong><small>仅限来源有效时</small></article>
@@ -54,7 +60,7 @@
         <span class="section-hint">不代表可执行机会 · 无未经核实的 USD / PnL</span>
       </div>
       <div class="controls">
-        <label class="search"><span>搜索 Mint / CA</span><input id="mint-search" type="search" autocomplete="off" spellcheck="false" placeholder="输入 Mint 地址"></label>
+        <label class="search"><span>筛选已载入的 32 个 Mint</span><input id="mint-search" type="search" autocomplete="off" spellcheck="false" placeholder="仅筛选本页目标，不发起链上查询"></label>
         <label class="filter"><span>余额状态</span><select id="state-filter"><option value="all">全部目标</option><option value="OPEN_ACCOUNT_NONZERO">已核实非零</option><option value="OPEN_ACCOUNT_ZERO">已观察为零</option><option value="NO_OPEN_ACCOUNT_OBSERVED">未观察到开放账户</option><option value="SOURCE_UNAVAILABLE">来源不可用</option></select></label>
       </div>
       <div class="table-scroll"><table class="positions"><thead><tr><th>目标 Mint / CA</th><th>观察状态</th><th>余额数量</th><th>账户数</th><th>查看</th></tr></thead><tbody id="position-rows"><tr><td colspan="5" class="empty">等待本机只读 API 响应…</td></tr></tbody></table></div>
