@@ -1,6 +1,6 @@
 # Surf / SurfBoards Genesis NFT 链上候选、发行进度与 Kaito 估值对比（2026-10-12）
 
-更新日期：2026-10-13（第 7 节更新前述供给与链上结论）。独立核查，优先官方与链上；未将历史聊天结论当作证据。区分官方确认、链上事实、推断及情景估值。
+更新日期：2026-10-15（第 9 节为当前 SurfBoard 链上事实，覆盖前面待交付状态；早期章节属于历史快照）。独立核查，优先官方与链上；未将历史聊天结论当作证据。区分官方确认、链上事实、推断及情景估值。
 
 ## 1. SurfBoards 官方 NFT 站最新状态
 
@@ -163,3 +163,71 @@ Surf 官网确认系列总量为 **6,666**，此前 1,000/1,500/3,000/5,000/10,0
 **经济和法律风险：** Robinhood 官方文件指出 Robinhood Chain 股权代币属于 **tokenized debt securities**，提供相应股票的经济敞口，**不赋予持有人对底层美股的法定或实益所有权**；最终可赎回/交易规则、地区与身份限制须看 Surf/RH 实际执行条款。不可把“持有 NFT 收集 stocks”描述成持有上市公司股权分红。
 
 **执行边界：** 只做主动请求的 NFT 研究，不启用定时/本地监控，不操作钱包，不自动下单，不直接签名。官网未到 Claim 时刻不伪称已领取，交易/分红数据未上线不伪称验证成功。
+
+
+## 9. SurfBoard #5396 开包后主钱包、分配资金池及系列活动链上实证（2026-10-15）
+
+> **当前优先事实：** 2026-10-15 04:43:55 UTC（曼谷 11:43:55），Robinhood Chain **block 88,947,414** / `0x54d3ad6` 为**统一冻结只读统计区块**。交易证据来自 Alchemy Robinhood Mainnet JSON-RPC receipts、`eth_call`、ERC-20/ERC-721 owner/transfer 查询，并与 Blockscout 原始索引、Surf 官方账户截图交叉核对。对同区块的所有核心计数使用 `eth_call(blockTag=0x54d3ad6)`，避免不断变化的现场数字互相矛盾。
+
+### 9.1 用户主钱包已领取、铸造、开包并揭晓（直接链上确认）
+
+主 EVM：`0x3df4ebe3e5bd012f459cd3392c90a2d8b576ea7c`，Chain ID 4663。
+
+正式发行的全新 V04（区别于 2026-09-30 的 shadow/早期候选）部署：
+- **ERC-721 SurfBoardMirror** `0x18c9719AB6AE4E1a6f95F281eF288e3AF5d58602`，implementation `0x8A0F0aBc2E992299146535B3d0b070A60bC01C5D`，Blockscout 标示合约已验证、实现代码 `SurfBoardMirror`。
+- **ERC-20 SurfBoard404 Core** `0x5aBCaa98e19c0BAB678C458F229191Bd16b87a32`，implementation `0x60BCB639bC7Cc7Bfede0dcb2f340De7EEF93F7a7`，已验证实现 `SurfBoard404`。
+- **股票权益/赎回 SurfReflections** `0xF1ddD8eE0ABab932d9394E138beF2D4ca945C64e`，implementation `0xD6E3338c4306C479DAD0B620B388FdF5A0da5434`，已验证实现 `SurfReflections`。
+- 三份合约都记录同一创建者 `0x0fE67Ce3E36cCC9f4355a23BCa6EDCce28b13994`。此前 2026-09-30 的合约 `0x6A0440...` 属于另一代部署，**不可再用旧合约 ownerOf(691) 的 `unminted` 推断用户 2026-10-15 的持仓**。
+
+用户三笔真实交易：
+1. [`0xfaffd46a5a7da9854b2a28262e54ef275cf4251a7686324f61b3bd17cfb6c104`](https://robinhoodchain.blockscout.com/tx/0xfaffd46a5a7da9854b2a28262e54ef275cf4251a7686324f61b3bd17cfb6c104)，**2026-10-15 04:20:28Z**：通过领取操作，从零地址**铸造 ERC-721 Token ID #5396 到主钱包**；同笔有 1 SURFBOARD ERC-20 转入钱包及 `Airdropped`、`Materialized` 相关事件，代表会员票的实际领取。#691 是历史 Surf PRO 订阅/权益编号，最终 NFT 链上 ID 为 **5396**。
+2. [`0xc84f1bfb8594d5dd1c2804066f74d766d39b5560ab875e53ef91bf9653ea9fd3`](https://robinhoodchain.blockscout.com/tx/0xc84f1bfb8594d5dd1c2804066f74d766d39b5560ab875e53ef91bf9653ea9fd3)，**04:22:11Z**：钱包调用 Core `open(5396)` 成功，销毁 1 SURFBOARD ERC-20；Core 发出 `Opened`，Mirror 发出 `MetadataUpdate(5396)`。
+3. [`0x85c98979c86fd217cd2fbf3fe6709ef42d63f6d80b77f46761426298fd77a0bc`](https://robinhoodchain.blockscout.com/tx/0x85c98979c86fd217cd2fbf3fe6709ef42d63f6d80b77f46761426298fd77a0bc)，**04:22:18Z**：Core 真实 `Revealed` 事件含 `id=5396`、owner=主钱包、`tier=1`；SurfReflections 同笔发出 `Opened`，分配权重 `100`。两笔成功交易共同证明打开和随机分层已完成。
+
+`ownerOf` 经 Alchemy `getOwnersForNFT` 返回主钱包；`isOpened(5396)=true`、`tierOf(5396)=1`、`isRedeemed(5396)=false`、`SurfReflections.weightOf(5396)=100`、`floorOf(5396)=1`。**主钱包当前拥有一枚真实 ERC721 SurfBoard #5396，已开包等级 Common、分成权重 ×1、分配池 NVDA；没有卖出或赎回记录**。
+
+**动态 metadata 修复辨析：** Alchemy/Blockscout 的缓存 NFT 描述仍出现 `Closed / Pro ticket`，但是对当前正式合约 ERC721 Mirror 和 Core 直接读取 `tokenURI(5396)` 都返回 **`https://metadata.asksurf.ai/nfts/surfboard/opened/5396.json`**。加上不可撤销的开包和揭晓事件，链上真实状态为 **OPENED**，缓存 Closed 属于索引延迟，不能误报未开。
+
+### 9.2 统一区块全系列真实进度及五等级
+
+在 **block 88947414 / 2026-10-15 04:43:55Z**：
+- `economicUnits() = 6,666`，初始经济单位总量。
+- `totalSupply() = 5,367 × 10^18`，尚未消耗/转换的 SURFBOARD ERC-20 经济单位。**这不是 5,367 枚尚未 Mint 的 ERC721，也不是 5,367 张个人会员 Ticket。**
+- `totalOpened() = 1,295`，当前已开启未 Redeem 的数量，其中 `openQueueLength() = 2` 仍待随机揭晓；故 **已揭晓且仍有效 = 1,293**。
+- `totalRedeemed() = 4`，已经赎回并 burn 的累计 NFT 数量。
+- `tierRevealedCount(tier=1..5)` = **[833, 207, 90, 165, 2]**，**历史已揭晓合计 1,297**，含其后被 Redeem 的部分。Tier 0 = 0。
+- 守恒复核：**5,367 ERC-20 未转换 + 1,293 活跃已揭晓 + 2 已 Open 等揭晓 + 4 已 Redeem = 6,666**；历史揭晓 1,297 = 活跃已揭晓 1,293 + 已 Redeem 4。
+- `poolSize() = 4,393`，是 Core 余下的 ID 池数据，**不能直接叫作 4,393 个未领取会员 NFT**。准确的“所有当前未开包、且已经铸造成 ERC721 的 NFT 张数”未由这些聚合器单独确认，不能编造。
+- `SurfReflections.tierWeights(1..5) = [100,200,300,1000,2000]`，相对权重 **×1、×2、×3、×10、×20**；这是分配权重而非收益保证。上一轮用户提供等级名 Pro-1/2/3、Max、Ultra 与网站开启后的 Common 等 UI 名字应区别记录，链上以 tier numeric 1..5 为准。
+
+### 9.3 股票代币是真实入金合约记账，未直接到用户钱包
+
+`SurfReflections` 代码已验证，主要实际读取接口：
+- `floorStocks(0..4)` 对应 **SPY、NVDA、SPCX、META、GOOGL**。
+- `onOpen(id)` 记录某 id 的股票池 `floorOf` 和 tier 权重 `weightOf`；`notifyFees(floorIdx,amount)` 接受相应入金通知，`pending(id)` / `pendingAll(id)` 直接从合约计算可提取的股票代币数量。
+- 主钱包对这五种已核查 ERC-20 的**可转账余额全部为零**，因此之前 UI 的“资产明细 NVDA”是 **NFT 绑定的待兑现合约权益**，不能把它当作已单独发到钱包的 NVDA 股票代币。
+- 查询时收益合约真实托管余额，18 decimals（跨若干时点，非 9.2 统一区块）：SPY **3.346712703363217717**、NVDA **11.770682045438922719**、SPXC/合约 symbol `SPCX` **17.161529585982972870**、META **3.507999432267819506**、GOOGL **7.506433805489896813**。这些**是资金池全体余额，不能归属用户单枚，也不能当美元相加**。
+- 真实 [交易 `0x2a72f7050d6d3eb012ab37fb5f5d8da10dfdbd8746b165ed95605be116b3807c`](https://robinhoodchain.blockscout.com/tx/0x2a72f7050d6d3eb012ab37fb5f5d8da10dfdbd8746b165ed95605be116b3807c) 中，地址 `0x570b9f1abf9982692eac97f131d97f1bc4f13dc0` 确有五种股票代币转入收益合约，其中 NVDA **0.04329973048669609** 枚。确证真实资金入金；**尚未逐笔核清收入是否全部源自 DEX 手续费，不能宣称稳定持续收益率**。
+- `pending(5396)` 在 9.2 冻结区块返回 **745771759040394 raw**，根据 NVDA Robinhood Token **18 decimals** 得 **0.000745771759040394 NVDA**；按用户截图显示 NVDA **$219.3** 仅作同日参考，约 **$0.164**，**不是可实时成交保证价格**。不满 **$1**，遵守 Mission 单项 $1 过滤，不计入流动 NAV，成本仍保存。
+- `redeemPaused()=false`、`inflowsPaused()=false` 在快照时读取成立，不代表无管理权限或永久无法暂停。
+
+### 9.4 Redeem 已真实发生，并且 95%/5% 比例直接闭合
+
+- `REDEEM_SHARE_BPS() = 500`（5% 分给他人）。
+- [tx `0x8253fe5c76fc67714463e3360782951db56c2dfbb3766d286f4c436456aa7dd5`](https://robinhoodchain.blockscout.com/tx/0x8253fe5c76fc67714463e3360782951db56c2dfbb3766d286f4c436456aa7dd5)：SurfBoard NFT **#6281** 直接从拥有者转零地址销毁，Core 发出 `Redeemed(6281,owner)`；收益合约发出 `Redeemed`，同交易将 **0.002306228430480203 NVDA** 转给该 NFT 持有人，日志的 shared 为 **0.000121380443709484 NVDA**；合计 **0.002427608874189687 NVDA**，严格 **95% / 5%**。
+- 另有收益合约真实向持有人转出 SPY、GOOGL 等 ERC20 的其他样例；用户自己的 **#5396 没有 Redeem，不可把其他人收入算为用户收入**。
+
+### 9.5 ERC20 买卖、领取和 NFT 二级成交的证据边界
+
+- **Claim/领取真实示例：** 用户自己的 `0xfaffd46...` 在 V04 正式系列将 1 个 SURFBOARD 经济单位和 ERC721 #5396 实际交付钱包，此钱包没有支付新的额外 228 美元 NFT mint 金额，历史 $228 是 2025 PRO 一年会员订阅成本。
+- **ERC20 进出 Uniswap v4 PoolManager 的样例：** [`0xabeebd2f1c1bb8a30f1ceabab411983220e36d8d6903229268618c164ee07a16`](https://robinhoodchain.blockscout.com/tx/0xabeebd2f1c1bb8a30f1ceabab411983220e36d8d6903229268618c164ee07a16) 出现 **1 SURFBOARD** 从 Uniswap v4 `0x8366a39CC670B4001A1121B8F6A443A643e40951` 到协议路由器；[`0xb077d11cc4cd7d579e5ccf465b14bf16626d0d9358583ba1b8206a966a922a3e`](https://robinhoodchain.blockscout.com/tx/0xb077d11cc4cd7d579e5ccf465b14bf16626d0d9358583ba1b8206a966a922a3e) 有 **1 SURFBOARD** 从用户地址进入 PoolManager。它们证明真实双向资金池转移，**仅凭转账还不能把最终成交价格、净得 WETH、最终买家与 NFT 二级交易额推断出来**。
+- **NFT OpenSea 市场买/卖：** 经尝试 OpenSea Collection `surfboard-557503128` 和 #5396 商品页，当前网页渠道无法读取真实订单；Alchemy NFT Sales 接口返回 `404 This API endpoint has been deprecated`。因此**真实成交量、可卖最佳 bid、系列地板与本人 NFT 可能卖出的成交价 = UNVERIFIED**，禁止冒用 ERC20 买卖量或 NFT 普通转账数量冒充 OpenSea 成交。
+- EIP2981 `royaltyInfo(5396, salePrice=1_000_000)` 返回 royalty **50_000（5%）**，这是合约返回的版权费报价，真实平台是否强制代扣需订单验证，**区别于 Redeem 的 5% 再分配**。
+- NFT 合约 ABI 包含暂停、黑名单、转移限制、管理员紧急恢复及重新配置的管理方法；尚需单独审计权限治理及变更风险，代码已验证不等于已经过独立安全审计。
+
+### 9.6 当前投资结论与边界
+
+- `ACTIVE`：用户已经由 **2025-08-31 $228 Surf Pro Annual** 会员权益，真正 Claim 并持有 **SurfBoard #5396，Common / tier1 / 100 权重 / NVDA，OPENED / NOT_REDEEMED**。#691 是会员原始编号，**不能继续标为“2026-10-15 尚未交付 NFT”**。
+- `WATCH`：对是否卖出或继续累积收益的价值判断仍缺 **真实 NFT executable bid**、未来资金流持续性、手续费与持有人分配总权重变化。无法从约 21 分钟收益 extrapolate 年化。
+- 用户持有一枚 NFT，但它的**当前可靠二级清算报价未核验**，因而不在当前标价投资 NAV；`pending` NVDA 约 **$0.164（仅截图价格参考）**，也低于 $1 排除阈值。严禁把 $228 历史服务费重复记为 NFT 的当前市场价值。
+- 本轮只读检索 Git、链上及用户提供截图；**未操作任何交易、签名、申领、赎回、钱包发送或监控/automation**。以上用户成功交易均系用户本人在此之前独立执行，未由 ChatGPT 发起。
