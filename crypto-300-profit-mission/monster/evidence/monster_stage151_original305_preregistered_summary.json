@@ -1,0 +1,332 @@
+{
+  "D0_D1_original_core": "UNCHANGED",
+  "DIRECT_and_REIGNITION": {
+    "DIRECT_AT_FIRST_D0": {
+      "baseline_Stage88_original_D1_direct_all_24h": {
+        "gross_pct_median": "-4.685124500651475266055927035",
+        "loss_20pct_or_worse": 13,
+        "n": 164,
+        "positive": 59
+      },
+      "confirmed_1440m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-9.692968526142506678441037205",
+        "gross_loss_20pct_or_worse": 9,
+        "gross_pct_median": "-3.586957094163892116005362690",
+        "gross_positive": 44,
+        "illustrative_20bps_each_side_pct_median": "-3.971839500973617097578195570",
+        "n": 114,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "confirmed_360m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-6.328563063864477905658754085",
+        "gross_loss_20pct_or_worse": 1,
+        "gross_pct_median": "-1.709549768882229430192212130",
+        "gross_positive": 45,
+        "illustrative_20bps_each_side_pct_median": "-2.101926815713038893544738230",
+        "n": 114,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "n": 164,
+      "not_entered_is_NOT_zero_pnl": true,
+      "states": {
+        "NO_PULLBACK_WITHIN_120M": 45,
+        "PULLBACK_NO_RECLAIM": 5,
+        "PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY": 114
+      }
+    },
+    "REIGNITION_AFTER_D0": {
+      "baseline_Stage88_original_D1_direct_all_24h": {
+        "gross_pct_median": "0.616078136739293764087152500",
+        "loss_20pct_or_worse": 9,
+        "n": 141,
+        "positive": 74
+      },
+      "confirmed_1440m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-10.35676115527009741787308730",
+        "gross_loss_20pct_or_worse": 3,
+        "gross_pct_median": "0.138272006822896010501082750",
+        "gross_positive": 36,
+        "illustrative_20bps_each_side_pct_median": "-0.2614815740426644526146900350",
+        "n": 70,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "confirmed_360m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-7.44030214424951267056530214",
+        "gross_loss_20pct_or_worse": 1,
+        "gross_pct_median": "-1.901091831942566171962307965",
+        "gross_positive": 33,
+        "illustrative_20bps_each_side_pct_median": "-2.292704239799082873870642065",
+        "n": 70,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "n": 141,
+      "not_entered_is_NOT_zero_pnl": true,
+      "states": {
+        "NO_PULLBACK_WITHIN_120M": 68,
+        "PULLBACK_NO_RECLAIM": 3,
+        "PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY": 70
+      }
+    }
+  },
+  "Frank": "UNCHANGED",
+  "G0": "PARTIAL",
+  "G1": "NOT_SCORABLE",
+  "G2_G3": "NOT_PASSED",
+  "G4": "UNKNOWN",
+  "G5": "NOT_DONE",
+  "G6": "NO_GO",
+  "Gmail": "OFF",
+  "all_original_date_shards": 24,
+  "date_window_stability": {
+    "2025-01-30": {
+      "baseline_Stage88_original_D1_direct_all_24h": {
+        "gross_pct_median": "2.142544818539571491036292100",
+        "loss_20pct_or_worse": 4,
+        "n": 75,
+        "positive": 44
+      },
+      "confirmed_1440m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-11.24903341337348907248382239",
+        "gross_loss_20pct_or_worse": 1,
+        "gross_pct_median": "5.540020971688220901782593500",
+        "gross_positive": 15,
+        "illustrative_20bps_each_side_pct_median": "5.118703522699445568841345600",
+        "n": 25,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "confirmed_360m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-6.470378177880683323541947450",
+        "gross_loss_20pct_or_worse": 0,
+        "gross_pct_median": "1.201923076923076923076923100",
+        "gross_positive": 15,
+        "illustrative_20bps_each_side_pct_median": "0.797923384001228312605558100",
+        "n": 25,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "n": 75,
+      "not_entered_is_NOT_zero_pnl": true,
+      "states": {
+        "NO_PULLBACK_WITHIN_120M": 44,
+        "PULLBACK_NO_RECLAIM": 6,
+        "PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY": 25
+      }
+    },
+    "2025-06-02": {
+      "baseline_Stage88_original_D1_direct_all_24h": {
+        "gross_pct_median": "-5.71901994821891362816849859",
+        "loss_20pct_or_worse": 0,
+        "n": 16,
+        "positive": 5
+      },
+      "confirmed_1440m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-9.890256816497116672616037065",
+        "gross_loss_20pct_or_worse": 0,
+        "gross_pct_median": "-6.212485471493982602637405335",
+        "gross_positive": 3,
+        "illustrative_20bps_each_side_pct_median": "-6.58688672709680103536140771",
+        "n": 12,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "confirmed_360m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-6.371815383747243892582139675",
+        "gross_loss_20pct_or_worse": 0,
+        "gross_pct_median": "-3.667888281438420531756526370",
+        "gross_positive": 3,
+        "illustrative_20bps_each_side_pct_median": "-4.052447609656231228236540235",
+        "n": 12,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "n": 16,
+      "not_entered_is_NOT_zero_pnl": true,
+      "states": {
+        "NO_PULLBACK_WITHIN_120M": 4,
+        "PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY": 12
+      }
+    },
+    "2025-08-01": {
+      "baseline_Stage88_original_D1_direct_all_24h": {
+        "gross_pct_median": "-7.679180887372013651877133110",
+        "loss_20pct_or_worse": 5,
+        "n": 45,
+        "positive": 14
+      },
+      "confirmed_1440m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-8.77251938794954565753227449",
+        "gross_loss_20pct_or_worse": 4,
+        "gross_pct_median": "-3.320429588026814985761868020",
+        "gross_positive": 14,
+        "illustrative_20bps_each_side_pct_median": "-3.706375976896967420948447390",
+        "n": 36,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "confirmed_360m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-6.57066372413201621588462497",
+        "gross_loss_20pct_or_worse": 1,
+        "gross_pct_median": "-2.440788014730742244729542550",
+        "gross_positive": 16,
+        "illustrative_20bps_each_side_pct_median": "-2.830245946807665429381320830",
+        "n": 36,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "n": 45,
+      "not_entered_is_NOT_zero_pnl": true,
+      "states": {
+        "NO_PULLBACK_WITHIN_120M": 9,
+        "PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY": 36
+      }
+    },
+    "2025-10-02": {
+      "baseline_Stage88_original_D1_direct_all_24h": {
+        "gross_pct_median": "-3.164774681802545579635362920",
+        "loss_20pct_or_worse": 4,
+        "n": 59,
+        "positive": 24
+      },
+      "confirmed_1440m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-8.466413181242078580481622310",
+        "gross_loss_20pct_or_worse": 2,
+        "gross_pct_median": "0",
+        "gross_positive": 21,
+        "illustrative_20bps_each_side_pct_median": "-0.3992015968063872255489022000",
+        "n": 43,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "confirmed_360m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-5.691758747697974217311233890",
+        "gross_loss_20pct_or_worse": 0,
+        "gross_pct_median": "-1.616161616161616161616161620",
+        "gross_positive": 19,
+        "illustrative_20bps_each_side_pct_median": "-2.008911469989314300691546200",
+        "n": 43,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "n": 59,
+      "not_entered_is_NOT_zero_pnl": true,
+      "states": {
+        "NO_PULLBACK_WITHIN_120M": 16,
+        "PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY": 43
+      }
+    },
+    "2026-06-21": {
+      "baseline_Stage88_original_D1_direct_all_24h": {
+        "gross_pct_median": "-4.989268827557550487595010955",
+        "loss_20pct_or_worse": 4,
+        "n": 56,
+        "positive": 22
+      },
+      "confirmed_1440m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-13.52879581151832460732984293",
+        "gross_loss_20pct_or_worse": 4,
+        "gross_pct_median": "-5.698992443324937027707808560",
+        "gross_positive": 12,
+        "illustrative_20bps_each_side_pct_median": "-6.075443571295695762128136670",
+        "n": 35,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "confirmed_360m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-8.648291797326291467238818290",
+        "gross_loss_20pct_or_worse": 1,
+        "gross_pct_median": "-5.116514690982776089159067880",
+        "gross_positive": 10,
+        "illustrative_20bps_each_side_pct_median": "-5.495291079441926683613522700",
+        "n": 35,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "n": 56,
+      "not_entered_is_NOT_zero_pnl": true,
+      "states": {
+        "NO_PULLBACK_WITHIN_120M": 21,
+        "PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY": 35
+      }
+    },
+    "2026-07-28": {
+      "baseline_Stage88_original_D1_direct_all_24h": {
+        "gross_pct_median": "-4.853565176881237256050605540",
+        "loss_20pct_or_worse": 5,
+        "n": 54,
+        "positive": 24
+      },
+      "confirmed_1440m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-11.54967481498093742991702175",
+        "gross_loss_20pct_or_worse": 1,
+        "gross_pct_median": "-0.8856682769726247987117552300",
+        "gross_positive": 15,
+        "illustrative_20bps_each_side_pct_median": "-1.281334271874929689734862000",
+        "n": 33,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "confirmed_360m_complete_unfilled_price_proxy": {
+        "adverse_LOW_proxy_pct_median": "-6.107176266203394360550581320",
+        "gross_loss_20pct_or_worse": 0,
+        "gross_pct_median": "-1.199400299850074962518740630",
+        "gross_positive": 15,
+        "illustrative_20bps_each_side_pct_median": "-1.593813871507360092408885380",
+        "n": 33,
+        "notional_and_true_executable_net": "UNKNOWN"
+      },
+      "n": 54,
+      "not_entered_is_NOT_zero_pnl": true,
+      "states": {
+        "NO_PULLBACK_WITHIN_120M": 19,
+        "PULLBACK_NO_RECLAIM": 2,
+        "PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY": 33
+      }
+    }
+  },
+  "frozen_parameters": {
+    "FIXED_HORIZONS_M": [
+      360,
+      1440
+    ],
+    "MAX_POST_D1_COMPLETED_1M": 120,
+    "P0_DROP_FACTOR": "0.97",
+    "TROUGH_RECLAIM_FACTOR": "1.01"
+  },
+  "full305": {
+    "baseline_Stage88_original_D1_direct_all_24h": {
+      "gross_pct_median": "-2.799212871366329452796279800",
+      "loss_20pct_or_worse": 22,
+      "n": 305,
+      "positive": 133
+    },
+    "confirmed_1440m_complete_unfilled_price_proxy": {
+      "adverse_LOW_proxy_pct_median": "-10.26741663067428532956547954",
+      "gross_loss_20pct_or_worse": 12,
+      "gross_pct_median": "-2.446283650544324541183030405",
+      "gross_positive": 80,
+      "illustrative_20bps_each_side_pct_median": "-2.835719643955325241617429480",
+      "n": 184,
+      "notional_and_true_executable_net": "UNKNOWN"
+    },
+    "confirmed_360m_complete_unfilled_price_proxy": {
+      "adverse_LOW_proxy_pct_median": "-6.58735508396089380758496381",
+      "gross_loss_20pct_or_worse": 2,
+      "gross_pct_median": "-1.765975275789695827583421130",
+      "gross_positive": 78,
+      "illustrative_20bps_each_side_pct_median": "-2.158127071095924586754744800",
+      "n": 184,
+      "notional_and_true_executable_net": "UNKNOWN"
+    },
+    "n": 305,
+    "not_entered_is_NOT_zero_pnl": true,
+    "states": {
+      "NO_PULLBACK_WITHIN_120M": 113,
+      "PULLBACK_NO_RECLAIM": 8,
+      "PULLBACK_RECLAIM_CONFIRMED_PRICE_ONLY": 184
+    }
+  },
+  "historical_stage110_118_127": "REJECTED_UNCHANGED",
+  "historical_stage132_first_momentum_buy": "NEGATIVE_UNCHANGED",
+  "new_schedule": false,
+  "no_picking_only_profitable_outcomes": true,
+  "original_214_D0_only_untouched": 214,
+  "original_305_D1_all_scored": 305,
+  "original_519_D0_untouched": 519,
+  "production_trading": "NO_GO",
+  "real_bid_ask_depth_fees_fill_and_net": "UNKNOWN",
+  "schema": "MONSTER_STAGE151_ALL305_PREREG_HISTORICAL_EXPOSED_ECONOMICS_V1",
+  "six_dates_research_exposed_not_independent_OOS": true,
+  "source": "FROZEN_STAGE101_STAGE88_STAGE85_OFFICIAL_1M_PUBLISHER_SHA",
+  "source_universe_crypto_issuer": "PARTIAL",
+  "verdict": "EXPOSED_HISTORICAL_DESCRIPTION_ONLY_NOT_VALIDATED_STRATEGY"
+}
