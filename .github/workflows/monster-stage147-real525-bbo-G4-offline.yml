@@ -1,0 +1,47 @@
+name: Monster Stage147 real archived 525 BBO G4 source-gate offline
+
+on:
+  push:
+    branches:
+      - research/monster-v4-local-discovery-20261010
+    paths:
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage147_saved_real_bbo_execution_readiness.py
+      - crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage147_saved_real_bbo_execution_readiness.py
+      - .github/workflows/monster-stage147-real525-bbo-G4-offline.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - crypto-300-profit-mission/local-agent/scripts/monster_v4_stage147_saved_real_bbo_execution_readiness.py
+      - crypto-300-profit-mission/local-agent/scripts/test_monster_v4_stage147_saved_real_bbo_execution_readiness.py
+      - .github/workflows/monster-stage147-real525-bbo-G4-offline.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  saved-real-source-full525-no-fake-trade:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run real saved 525 source reparse, 0 default notional and tampered source tests
+        shell: bash
+        run: |
+          cd crypto-300-profit-mission/local-agent/scripts
+          python -m py_compile monster_v4_stage147_saved_real_bbo_execution_readiness.py test_monster_v4_stage147_saved_real_bbo_execution_readiness.py
+          python -m unittest -v test_monster_v4_stage147_saved_real_bbo_execution_readiness.py
+          python monster_v4_stage147_saved_real_bbo_execution_readiness.py --out /tmp/monster-stage147-no-notional.json
+          python -c 'import json; d=json.load(open("/tmp/monster-stage147-no-notional.json")); assert d["counts"]["original_venue_attempts"]==525 and d["G4"]=="UNKNOWN" and d["no_default_transaction_size"] and all(x["net_executable_profit"]=="UNKNOWN" and not x["G4_verified_executable_case"] for x in d["all_market_population_rows"]); print("STAGE147_REAL_SAVED525_NO_DEFAULT_NOTIONAL_NO_FAKE_G4=PASS")'
+          python monster_v4_stage147_saved_real_bbo_execution_readiness.py --scenario-quote 100 --out /tmp/monster-stage147-explicit-scenario-only.json
+          python -c 'import json; d=json.load(open("/tmp/monster-stage147-explicit-scenario-only.json")); assert d["counts"]["scenario_ask_top_proxy_below"]==191 and d["counts"]["scenario_bid_top_proxy_below"]==236 and d["G4"]=="UNKNOWN"; print("STAGE147_EXPLICIT_SCENARIO_ONLY_NEVER_EXECUTION=PASS")'
+          test ! -f /tmp/monster-stage147-deployed.json
+          echo 'STAGE147_NO_LIVE_GET_NO_SCHEDULE_NO_GMAIL_NO_TRADE_NO_FRANK_NO_DEPLOY=PASS'
