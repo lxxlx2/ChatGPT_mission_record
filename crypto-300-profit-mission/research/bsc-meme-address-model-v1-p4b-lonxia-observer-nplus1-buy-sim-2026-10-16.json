@@ -173,13 +173,14 @@
     "notes": "The separately archived raw manager TokenSale data and exact ERC20 buyer/seller Transfer logs will be stored in linked sale evidence. These are market sellers, not a verified follower roundtrip for the hypothetical 2ADF buyer."
   },
   "terminal_observation": {
-    "block": 83636128,
     "utc": "2026-02-27T08:50:40.100Z",
     "offers": "0",
     "liquidityAdded": false,
     "native_001_buy_simulation": "REVERTED_DISABLED",
     "utc_after": "2026-02-27T08:50:40.550Z",
-    "liquidityAdded_after": true
+    "liquidityAdded_after": true,
+    "pre_dex_disabled_buy_block": 83636127,
+    "dex_liquidity_added_block": 83636128
   },
   "gate": {
     "observer_origin_owner_signal_is_post_block_only": true,
