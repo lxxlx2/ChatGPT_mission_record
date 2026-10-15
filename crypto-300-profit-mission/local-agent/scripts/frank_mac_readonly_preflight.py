@@ -14,7 +14,6 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
-import sys
 
 EXPECTED_PINS = {
     "main_snapshot": "662ba4aceb9d53cb7a541ad3f251f9e12b8c09ea",
