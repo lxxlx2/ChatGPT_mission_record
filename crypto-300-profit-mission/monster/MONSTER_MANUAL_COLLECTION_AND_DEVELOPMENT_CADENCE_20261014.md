@@ -280,3 +280,28 @@ Stage143工程=PASS_MACOS_UBUNTU_66_OF_66; MODEL_G0=PARTIAL; G1=NOT_SCORABLE; G2
 用户规则要求一旦需要其他AI Review就**直接提供提示词**；本轮已写入并提供 [Stage150固定e569源码独立审查完整提示词](MONSTER_STAGE150_INDEPENDENT_OTHER_AI_REVIEW_PROMPT_PINNED_E569DDD_20261015.md)，实际外审结论尚未返回，不能写APPROVE；旧Stage148 Codex `APPROVE@41f58cd3a1bde8d9b01cffc74f04ae36f26685aa` 依然只覆盖之前代码。后续应优先用实来源寻求信号事件后与离场时的两套逐档L2、发行主体/精确期货资产数量映射、真实费用和前瞻完整样本，别把基本合约规则完整率当可买卖率。Stage140独立七日前瞻窗口仍未成熟，用户原2026-10-28和11-11曼谷手动采集安排不变，不提前采新历史、不开调度。
 
 门禁：G0 PARTIAL，G1 NOT_SCORABLE，G2/G3 NOT_PASSED，G4 UNKNOWN，Stage150新源码G5独立review待办，Stage148旧源码固定SHA REVIEW APPROVE、整体生产发布G5未通过，G6 NO_GO；NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE，Frank unchanged，PR #30继续Draft，Stage99继续停用。
+
+
+## Stage150 独立 Codex 审核通过后：Monster 真实可用主线与下一阶段验收（2026-10-15）
+
+### 核实的工程状态和独立审核边界
+
+用户于2026-10-15提供一份OpenAI Codex独立审查完整回复，审查者自报身份为OpenAI Codex，底层精确模型版本 `UNVERIFIED`，固定代码SHA `e569dddccddf12736051534f2bf0b56b0329ad62`，相对上一获准SHA `41f58cd3a1bde8d9b01cffc74f04ae36f26685aa`，结论 `APPROVE`，声称在其隔离Darwin环境独立重算真实525个合约、跟踪525次原Stage120解析器调用，并以四种明确标为合成的缺失/破损过滤器负例验证G4保持UNKNOWN；自报新增需修改P0/P1/P2均为0。外审机临时路径和输出未保存本仓库，**不等于本仓库有这些本机复现附件，也不等于GitHub原生review**。此处以用户提供的审核报告记录第三方意见，审核者自报测试行为与本仓库可重现的CI证据分开。
+
+本轮重新通过GitHub仓库接口核对：PR #30为OPEN+DRAFT，核对时HEAD `2390b22adc7bcc6bf06ecd46467897298646858c`；固定代码SHA到HEAD仅3个文档提交，未改变源码、测试或workflow。GitHub Actions [Stage150 #38706943546](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38706943546)真实状态 `completed/success`，绑定代码SHA，macOS job `116328578333` 与Ubuntu job `116328578669` 都成功。原Stage150报告保存的每OS 14/14和525/525为原CI输出；本次复核其workflow与job均SUCCESS。**固定源码代码审查为 `APPROVE@e569ddd...`，全模型/发布G5仍未通过**。旧Stage147被驳回的SHA仍保留失败历史，旧Stage148审批不能回溯或代审未来新代码。
+
+### 最终用户目标与功能完成定义
+
+最终交付目标：在用户Mac与Frank隔离并行的Monster，全量追踪官方支持的目标Spot+USD-M活跃/新上市币，在最早有可用、可解释的时间点保留高召回`WATCH_EARLY`，原队列中不漏掉潜在重要机会；依据同一因果D0/D1规则升级/失效而不滥发；对已经过时、缺少可验证交易资格与盘口证据的事件明确标注`NOT_ACTIONABLE`。用户可直接看到币种、发现UTC时间、Spot/Futures性质、信号证据、当前可否跟、重要缺口、真实成本和退出风险。**本模块的业务成功需以历史统一规则的全市场重放、真正未知前瞻窗口、真实成本与足量净回报验证证明；报告数量、过滤规则完整、CI通过或孤立BBO不能当收益模型完成。** 自动下单不在当前授权范围。
+
+验收顺序固定：
+1. **G0/G1（P0主线）**：只在用户主动请求且原Stage140前瞻2026-10-14T18:00Z至10-21T18:00Z已成熟并满足48h publisher buffer后，按Stage136/137/138原冻结代码获取并核对该完整七日全市场1m publisher包（本地参考最早2026-10-24 01:00 Bangkok，不会自动采集）。保留初始525、窗口内上新/退市、Unicode、无WATCH、无资料缺档及来源失败的完整分母，区别事后K线模拟首次发现与真实投递接收时钟。该窗口单独不能宣布G1通过：原冻结门槛是三段真实独立完整窗口、至少20个独立首次Crypto 2x事件、首次D0严格早于2x≥90%且提前≥5m比例≥85%。原2026-10-14 06:00Z失败窗口`SOURCE_FAILED_NO_BACKFILL`永不改写。
+2. **G2/G3（P0主线）**：同一实际D0/D1核心规则复盘所有有/无WATCH事件、真正early D1覆盖、原21天的每日高优先级通知负荷，不随实验变动门槛或在已曝光31/519上反向调参；原G2的提前D1覆盖≥80%、原G3每日平均≤5且峰值≤12均需按冻结口径通过。原Stage118/127 REJECTED和Stage132首次动量追买4个持有期毛收益中位负数均保留，不得在G1完成前自称新盈利模型。
+3. **G4（并行证据调查，不能凭空编码绕过）**：已确认525/525历史过滤元数据齐全，此项调查可停止重复拓展。转到独立Crypto发行主体与合约单位证明，信号发生后真实收到时刻的entry L2与固定退出时刻的exit L2配对、原Stage90 D2多档VWAP、Stage120 tick/lot/MIN_NOTIONAL，费用/资金费率/时效及明确研究notional（目前`UNSPECIFIED`）。已保存2025年305 D1信号的对应真实完整L2为0，Stage140的一次性525 BBO无法补成旧历史L2。若没有配对真实源，明确`BLOCKED_BY_MISSING_L2`，**不再为包装相同来源写重复脚本**；具备后从事先定义全量合格样本中的至少30个独立完整案例评估净收益、退出与回撤。模拟L2不称实际交易所成交。未指定金额绝不填30/100/300。
+4. **产品可用性与G5/G6**：只有研究门禁通过、独立另一AI审核新SHA、真实回归和集成测试完成，才进入用户另行批准后的独立Mac Shadow至少14天真实时效/漏报/积压/重启测试；再评估通知准确性、幂等outbox、陈旧消息、Gmail Sent/readback。正式本地安装、定时采集、邮件和实际交易均需各自的明确授权；保持`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`和Frank不变。
+
+**开发止损线**：新工作必须在提交前回答“本项能改善全市场早报召回、真实可执行净收益证据或用户可靠收到重要变化的哪一个门禁？”。只增加来源包装、重复定义规则、修饰少数边界或增加报告数量而无实质门禁增量时不立新Stage；除真实P0/P1业务缺陷外，优先完成该主链路。每批可验证成果按原分支提交、运行实际CI、固定SHA获得独立复审，反例与失败保持原样。
+
+### 交接时最新真实状态
+
+`STAGE150_CODE_PEER_REVIEW=APPROVE@e569dddccddf12736051534f2bf0b56b0329ad62`（用户提供的独立报告）；`G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_FULL_RELEASE=NOT_PASSED`; `G6=NO_GO`; `PR30=OPEN_DRAFT`; `NO_MERGE`; `NO_DEPLOY`; `NO_GMAIL`; `NO_TRADE`; `FRANK=UNCHANGED`; `STAGE99=USER_TERMINAL_STOPPED_THREE_LABELS`; `NO_NEW_AUTOMATION`. 2026-10-28与11-11 13:00 Bangkok仍只是用户自行聊天触发的手动全市场快照参考点。
