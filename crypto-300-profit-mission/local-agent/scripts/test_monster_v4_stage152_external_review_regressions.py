@@ -119,7 +119,7 @@ class Stage152ExternalReview(unittest.TestCase):
                          D(70)/3)
         paired=result["paired_24h_pct_point_difference_DIFFERENT_exit_clocks"]
         self.assertEqual(D(paired["mean_pct"]),D(80)/3)
-        top=p["top_winner_concentration_and_leave_top_k_out"]["1"]
+        top=result["top_winner_concentration_and_leave_top_k_out"]["1"]
         self.assertEqual(top["removed_winners"][0]["symbol"],"ONEUSDT")
         self.assertEqual(D(top["remaining_distribution"]["mean_pct"]),D(-15))
         self.assertEqual(result["original_D1_early5_2x_EVALUATION_ONLY"][
