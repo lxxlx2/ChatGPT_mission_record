@@ -68,7 +68,11 @@ def sources():
     data = {
         "requests": [],
         "f01": {
+            "schema_version": 1,
+            "scope": "FRANK_FROZEN_DECISIONS_PRESENTATION_ONLY",
             "status": "OK", "as_of_epoch": "CURRENT_TEST_TIME",
+            "eligible_count": 1, "excluded_count": 0,
+            "not_followed": [],
             "eligible": [{"mint": mint, "person_id": "frank",
                           "decision": "BUY", "source_signal_id": "approved-1"}],
         },
