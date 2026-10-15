@@ -10,9 +10,15 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 from decimal import Decimal, InvalidOperation
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+
+try:
+    import monster_v4_stage139_official_t0_and_saved_contractinfo_evidence as s139
+except ImportError:
+    from scripts import monster_v4_stage139_official_t0_and_saved_contractinfo_evidence as s139
 
 SCHEMA = "MONSTER_STAGE147_REAL525_STAGE140_BBO_ONLY_EXECUTION_READINESS_V1"
 SOURCE_DIR = (Path(__file__).resolve().parents[2] / "monster" / "evidence" /
@@ -27,6 +33,11 @@ MANIFEST_NAMES = {
     "ticker24": "usdm_all_24h_ticker",
     "bbo": "usdm_all_best_bid_ask",
     "mark": "usdm_all_mark_price",
+}
+ORIGINAL_EXACT_ENDPOINTS = {
+    "ticker24": "https://www.binance.com/fapi/v1/ticker/24hr",
+    "bbo": "https://www.binance.com/fapi/v1/ticker/bookTicker",
+    "mark": "https://www.binance.com/fapi/v1/premiumIndex",
 }
 
 
@@ -51,13 +62,17 @@ def read_verified_source(root, name, manifest):
         raise ValueError("STAGE147_RAW_HTTP_BODY_NOT_PRESERVED")
     raw = obj["raw"].encode("utf-8")
     digest = hashlib.sha256(raw).hexdigest()
+    begin, finish = obj.get("request_start_ms"), obj.get("response_end_ms")
+    end_utc = (datetime.fromtimestamp(finish / 1000, timezone.utc)
+               .isoformat(timespec="milliseconds").replace("+00:00", "Z")
+               if type(finish) is int and finish > 0 else None)
     if (digest != obj.get("raw_sha256") or digest != receipt["raw_sha256"]
             or obj.get("decoded_row_count") != receipt["decoded_row_count"]
             or obj.get("decoded_top_level_type") != "list"
-            or obj.get("url", "").split("/fapi/v1/")[0] != "https://www.binance.com"
-            or not isinstance(obj.get("request_start_ms"), int)
-            or not isinstance(obj.get("response_end_ms"), int)
-            or obj["request_start_ms"] > obj["response_end_ms"]):
+            or obj.get("url") != ORIGINAL_EXACT_ENDPOINTS[name]
+            or type(begin) is not int or begin <= 0
+            or end_utc is None or begin > finish
+            or end_utc != receipt.get("response_end_utc")):
         raise ValueError("STAGE147_ORIGINAL_HTTP_RECEIPT_SHA_OR_META_MISMATCH")
     rows = json.loads(obj["raw"])
     if not isinstance(rows, list) or len(rows) != receipt["decoded_row_count"]:
@@ -208,7 +223,31 @@ def audit(source_root=SOURCE_DIR, *, quote_scenario=None):
     root = Path(source_root)
     manifest = json.loads((root/"stage140_evidence_manifest.json").read_text())
     snapshot = json.loads((root/"stage139_original_T0_asof_contract_metadata.json").read_text())
+    # Reconstruct ALL 525 source symbols and their per-symbol attributes
+    # independently from the saved 3 original HTTP raw receipts (Stage133),
+    # using Stage139's existing Stage134/Stage133 validators, never the
+    # self-asserted digest copied onto Stage139's derived 525 records.
+    # No network involved; this file is an ordinary saved JSON input.
+    t0_packet = json.loads((root/"stage133_original_three_HTTP_T0.json").read_text())
+    rebuilt = s139.inspect(t0_packet)
     universe = snapshot["initial_original_instrument_rows"]
+    if (snapshot.get("schema") != s139.SCHEMA
+            or snapshot.get("initial_original_instrument_rows") !=
+               rebuilt["initial_original_instrument_rows"]
+            or snapshot.get("stage133_original_packet_sha256") !=
+               rebuilt["stage133_original_packet_sha256"]
+            or snapshot.get("t0_exchange_info_original_SHA256") !=
+               rebuilt["t0_exchange_info_original_SHA256"]
+            or rebuilt["t0_exchange_info_original_SHA256"] !=
+               manifest.get("full_original_exchangeinfo_SHA256")
+            or snapshot.get("new_forward_start_utc") !=
+               rebuilt["new_forward_start_utc"]
+            or snapshot.get("new_forward_end_exclusive_utc") !=
+               rebuilt["new_forward_end_exclusive_utc"]
+            or rebuilt["new_forward_start_utc"] != manifest.get("new_real_Stage133_T0")
+            or rebuilt["new_forward_end_exclusive_utc"] !=
+               manifest.get("new_forward_end_exclusive")):
+        raise ValueError("STAGE148_RAW_STAGE133_EXCHANGEINFO_OR_DERIVED_525_ROSTER_DRIFT")
     if (manifest.get("schema") != "MONSTER_STAGE140_EXPLICIT_REAL_ONESHOT_20261015_SUMMARY_V1"
             or len(universe) != 525
             or manifest.get("active_perpetual_USDT_venue_attempts") != 525
