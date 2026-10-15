@@ -305,3 +305,14 @@ Stage143工程=PASS_MACOS_UBUNTU_66_OF_66; MODEL_G0=PARTIAL; G1=NOT_SCORABLE; G2
 ### 交接时最新真实状态
 
 `STAGE150_CODE_PEER_REVIEW=APPROVE@e569dddccddf12736051534f2bf0b56b0329ad62`（用户提供的独立报告）；`G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_FULL_RELEASE=NOT_PASSED`; `G6=NO_GO`; `PR30=OPEN_DRAFT`; `NO_MERGE`; `NO_DEPLOY`; `NO_GMAIL`; `NO_TRADE`; `FRANK=UNCHANGED`; `STAGE99=USER_TERMINAL_STOPPED_THREE_LABELS`; `NO_NEW_AUTOMATION`. 2026-10-28与11-11 13:00 Bangkok仍只是用户自行聊天触发的手动全市场快照参考点。
+
+
+## Stage150后 G4 来源可得性核实与下一主线决定（2026-10-15）
+
+2026-10-15 使用 GitHub connector 独立查阅币安官方开源仓库 [binance/binance-public-data #371 的项目协作者评论](https://github.com/binance/binance-public-data/issues/371#issuecomment-6020306974)（comment id 6020306974；项目协作者2026-10-06发布）：原官方历史L2与下载脚本不再公开；USD-M历史`bookTicker`止于2024-03-30，COIN-M止于2024-10-14。因此 **2025-26原305 D1不能通过该已停更的官方public-data目录补回旧盘口**。当前官方REST `/fapi/v1/depth`仅即时订单簿，不能指定历史信号时刻。本轮并未下载任何新盘口或历史分钟价格。
+
+另外核查了独立第三方CandleFeed的[自身公开说明](https://candlefeed.ai/data/order-book/)：自述2026年6月起10币、9月26日扩至25币的USD-M L2档案，仅每月1日的样本免费（其余属收费产品）。**该数据尚未由本模块下载/复算/完成SHA及updateId连续性验证；第三方自述不等于官方可执行证明，更不能覆盖全市场旧305信号**。没有订阅、支付或新增服务。详情及事实等级记录在已存在的[Stage149执行证据可得性报告](MONSTER_STAGE149_G4_REAL_EXECUTION_SOURCE_FEASIBILITY_AND_MODEL_NEXT_ACTION_20261015.md)。
+
+**操作性止损线**：暂停任何尝试从已停更官方bookTicker/旧L2回填2025-26成交深度的研发，避免伪造收益。下一项真实能推进G0/G1/G2/G3的实务工作仍是原Stage140 525 / 4725 symbol-day **已存在的** Stage136 publisher归档、Stage137/138同核心全分母回放：2026-10-23T18:00Z（曼谷10-24 01:00）后仅在用户明确聊天手动指令时采集；维护原10/28和11/11的用户主动采集参考点，不恢复任何Stage99或补造早期失败窗口。真实publisher仅有回顾K线、不自证实时消息送达。G4保持`UNKNOWN / BLOCKED_BY_MISSING_PIT_PAIRED_FULL_L2_AND_VALID_NOTIONAL`，不得因单一BBO/区间bookDepth/无用户金额模拟成真实净利润。将来如有确实能覆盖交易时点的第三方历史L2，先做独立可用性审查，不在无源时加代码。**不得违反本模块既定先历史模型和其他AI审核、再经另行授权才启用Mac Shadow与通知的顺序**。
+
+本轮仅修正数据源研究与优先级，原冻结代码、失败回测和所有G0–G6门禁不变：`G0=PARTIAL`; `G1=NOT_SCORABLE`; `G2_G3=NOT_PASSED`; `G4=UNKNOWN`; `G5_FULL_RELEASE=NOT_PASSED`; `G6=NO_GO`; `NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`; `Frank=UNCHANGED`; `NO_NEW_SCHEDULE`.
