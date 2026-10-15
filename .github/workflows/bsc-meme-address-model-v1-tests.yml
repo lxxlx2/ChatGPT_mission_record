@@ -47,6 +47,9 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_8e6b_token4_19tx.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_8e6b_token4_19tx.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-19tx-five-independent-source-reconciliation-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_seven_rounds23x19.py"
@@ -831,6 +834,24 @@ jobs:
           assert s["internal_native_trace_status"]=="UNRESOLVED" and s["followable_signals"]==0
           assert s["production"]=="NO_GO"
           print("PASS all 19 original token4 owner-only external BNB blocks zero external contamination but internal trace open")
+          PY
+      - name: P4-C token 4 19 original source owner native rounds and 5 independent RPC spot checks
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_8e6b_token4_19tx.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-8e6b-token4-proof.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("crypto-300-profit-mission/research")
+          actual=json.loads(Path("/tmp/bsc-p4c-8e6b-token4-proof.json").read_text(encoding="utf-8"))
+          expected=json.loads((root/"bsc-meme-address-model-v1-p4c-8e6b-token4-19tx-five-independent-source-reconciliation-2026-10-15.json").read_text(encoding="utf-8"))
+          assert actual==expected, "immutable original 19 token4 EOA receipt and five actual new spot checks drift"
+          s=actual["summary"]
+          assert (s["original_signer_success_source_records"],s["independent_live_spot_tx_count"])==(19,5)
+          assert (s["original_negative_native_rounds"],s["original_positive_native_rounds"])==(1,1)
+          assert s["original_total_native_wei"]=="13164987453603066615"
+          assert s["lagged_1_5_15_min_follower_signal_count"]==0 and s["production"]=="NO_GO"
+          print("PASS 8E6B token4 two original native loss/win across 19 source originals, five new signer/receipt/BNB/wbnb readbacks, no P5")
           PY
       - name: Full BSC research unittest discovery including legacy exact CA
         shell: bash
