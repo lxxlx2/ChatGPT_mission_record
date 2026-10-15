@@ -7,6 +7,7 @@ Input is existing API/report data, never an untrusted same-symbol join.
 from __future__ import annotations
 
 from typing import Any
+from decimal import Decimal, InvalidOperation
 
 FRESH = "FRESH_VERIFIED_ARCHIVED_OBSERVATION"
 COMPLETE = "BOTH_PROGRAMS_OBSERVED_NON_ATOMIC"
@@ -93,8 +94,16 @@ def align_frank_ca_f02(*, mint: str, follow: dict | None,
                         and len(f02_rows) == 0 else "SOURCE_UNAVAILABLE")
     if wallet_state == "OPEN_ACCOUNT_NONZERO" and quantity is None:
         wallet_state, visible, count = "SOURCE_UNAVAILABLE", False, None
-    if wallet_state == "OPEN_ACCOUNT_ZERO" and quantity != "0":
-        wallet_state, visible, quantity, count = "SOURCE_UNAVAILABLE", False, None, None
+    if wallet_state == "OPEN_ACCOUNT_ZERO":
+        try:
+            is_zero = (isinstance(quantity, str)
+                       and Decimal(quantity).is_finite()
+                       and Decimal(quantity) == 0)
+        except (InvalidOperation, ValueError):
+            is_zero = False
+        if not is_zero:
+            wallet_state, visible, quantity, count = (
+                "SOURCE_UNAVAILABLE", False, None, None)
 
     ca_state = "CA_NOT_QUERIED"
     ca_label = None
