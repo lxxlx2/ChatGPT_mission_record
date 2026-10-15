@@ -1,6 +1,6 @@
 # $300-3000 Crypto Mission
 
-Updated: 2026-10-13 (portfolio pointer/snapshot; module operational authority unchanged)
+Updated: 2026-10-15 (Oct 15 portfolio pointer/screenshot and finalized source; module operational authority unchanged)
 Timezone: Asia/Bangkok
 
 Current mutable facts: [`MISSION_SPEC.md`](MISSION_SPEC.md), [`state/latest.md`](state/latest.md), [`portfolio/current.md`](portfolio/current.md), [`performance/current.md`](performance/current.md). Historical 2026-10-04 scope: [`STATUS_SCOPE_2026-10-04.md`](STATUS_SCOPE_2026-10-04.md).
@@ -36,16 +36,17 @@ Current capital / holdings:
 - [`portfolio/current.md`](portfolio/current.md)
 - [`state/latest.md`](state/latest.md)
 
-**Latest asset observation: 2026-10-13, 21:48–21:50 Asia/Bangkok** ([full canonical portfolio](portfolio/current.md), [current authority](state/latest.md)):
+**Latest user-reported and direct-chain asset observation: 2026-10-15, 17:46–17:50 Asia/Bangkok** ([portfolio source](portfolio/current.md), [current state](state/latest.md)):
 
-- **Binance investment reserve:** 745.85545285 USDC flexible Earn, screenshot estimated **~$746.73**. Cumulative screenshot interest is already contained in the balance.
-- **Canonical Solana direct finalized RPC:** 471.716759 USDC (approx **$472.22** using Alchemy USD reference), 0.012905142 SOL (approx **$1.39**), **0 GANG**. Token-2022 unpriced assets are preserved separately and excluded from marked NAV, not assumed to be zero.
-- **Observed Binance + direct Solana minimum marked reference:** **~$1,220.34**. Adding still-unverified Oct 12 OKX ETH 0.002403 and TRX 3.3847 quantities repriced with Oct 13 market data yields a **mixed-freshness, conditional ~$1,227.52 reference**, not complete NAV or investment profit. OKX Solana USDC/SOL are duplicates of canonical Solana, never double-counted.
-- **Bybit personal living/rent only:** 443.029905 USDC, screenshot **~$443.51**; entire Bybit account is **excluded** from investment subtotals.
-- **EVM native:** queried across multiple canonical-wallet networks, individually priced under $1, excluded by permanent threshold. Ethereum/Arbitrum/Optimism/Unichain ERC-20 Blockscout holdings returned no reliably priced >=$1 positions; Base/Polygon/BNB-chain and enhanced Solana/NFT/Sui inventory coverage remains incomplete/partly unavailable. Unknown prices/ownership do not become zero.
-- **GANG:** fully exited by user Oct 12, position realized loss **−96.210562 USDC before SOL gas** separately evidenced in [performance](performance/current.md). Original Mission start-set PnL and '$300 to $3,000' progress remain **UNRESOLVED**, and holdings reference movement is not income.
+- **Binance investment reserve:** Flexible Earn **776.01087688 USDC**, current Alchemy USDC/USD 1.00106 reference **~$776.83**, from user screenshot (not live Binance account API). Screenshot real-time APR 2.09%, yesterday reward 0.07794003 USDC and cumulative 1.34887353 USDC already included. Do not double-add interest.
+- **Canonical Solana direct finalized chain:** **501.630372 USDC** (USDC price 1.00106 → ~$502.16), **0.012905142 SOL** (SOL price $102.15 → ~$1.32), **0 GANG**. Finalized slots 457210185/457210186. USDC quantity rose **29.913613** vs Oct 13; do not treat the amount as verified trading profit. Four Token-2022 mints with no reliable price are unpriced/excluded rather than assumed $0.
+- **Identified newly observed investment USD reference:** **~$1,280.31** (Binance + direct Solana only, with ~17:50 USD pricing; asynchronous observation times). If **old Oct 12** OKX screenshot ETH 0.002403 and TRX 3.3847 were still held, today's quotes would yield a **mixed-freshness conditional ~$1,287.12**. Neither is a full audited cross-account NAV; screenshot OKX Solana assets are duplicate holdings. Exact user-controlled cashflows, CEX balances beyond provided screenshots, Sui owner balance, and some EVM ERC-20 are unresolved.
+- **Bybit life/rent only, wholly excluded:** screenshot total **474.425221 USDC** (Earn 438.953400, Funding 35.385365, Unified 0.086456); app USD estimate **~$474.94**. Record for household funds only, **do not add to investment portfolio** even though account-wide value >$1.
+- **Canonical EVM:** separate native balances each <$1 across rechecked networks, excluded by the permanent per-position threshold. Robinhood SurfBoard **NFT #5396** ownership reconfirmed direct-chain; NFT liquid USD value unpriced, not inserted into NAV. ERC20 availability partial; Sui current data unavailable. 2026-10-15 Surf entitlement/reveal/pending-right history retained in [portfolio](portfolio/current.md).
+- **GANG:** Oct 12 fully exited, realized loss **−96.210562 USDC before SOL gas** separately reported in [performance](performance/current.md). Overall original $300 Mission PnL **UNRESOLVED**. Current asset balance increases are not necessarily realized trading profits.
 
-**Permanent display rule:** include each separately priced, identifiable asset only if >= $1; exclude individually marked dust < $1 without aggregation. No full-position deletion from transaction history, no inclusion of unpriced NFT asks or private token rights. Unchanged production trading `NO_GO`, no new Mission automation, no activation of deferred modules.
+**Permanent accounting contract:** Only add each independently priced identifiable asset >= $1; omit dust individually. Unknown/illiquid/contract-restricted NFTs and claim rights are documented separately without guessed executable marks. `PRODUCTION_TRADING=NO_GO`. No new tasks, trade actions, monitoring or activation of paused lanes.
+
 
 ## Frank wallet evidence and dashboard redesign (2026-10-11)
 
