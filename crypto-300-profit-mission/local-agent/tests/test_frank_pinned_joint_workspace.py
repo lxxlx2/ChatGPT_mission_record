@@ -1,6 +1,5 @@
 """Integration sandbox builds from local Git objects; no source mutation/network."""
 import json
-from pathlib import Path
 import subprocess
 
 import pytest
@@ -39,6 +38,7 @@ def repo_and_pins(tmp_path, monkeypatch):
     git(repo, "switch", "-c", "f01")
     f01 = commit(repo, "f01.txt", "f01 fixture\n", "f01")
     git(repo, "switch", "main")
+    git(repo, "update-ref", workspace.EVIDENCE_REF, base)
     monkeypatch.setattr(workspace, "MAIN", base)
     monkeypatch.setattr(workspace, "C02", c02)
     monkeypatch.setattr(workspace, "F01", f01)
@@ -70,6 +70,8 @@ def test_assemble_verified_pins_and_preserve_source_tree(repo_and_pins):
     assert target.is_dir()
     assert git(target, "rev-parse", "HEAD") == proof["integrated_head"]
     assert git(target, "status", "--porcelain") == ""
+    assert git(target, "rev-parse", workspace.EVIDENCE_REF) == (
+        git(repo, "rev-parse", workspace.EVIDENCE_REF))
     assert (target / "main.txt").is_file()
     assert (target / "integration.txt").is_file()
     assert (target / "c02.txt").is_file()
@@ -152,3 +154,13 @@ def test_manifest_tamper_or_head_drift_fails_closed(repo_and_pins):
     git(target, "checkout", "--detach", workspace.MAIN)
     with pytest.raises(ValueError, match="HEAD_DRIFT"):
         workspace.verify(staging, name)
+
+
+def test_missing_archived_evidence_ref_blocks_completion(repo_and_pins):
+    repo, staging, candidate = repo_and_pins
+    git(repo, "update-ref", "-d", workspace.EVIDENCE_REF)
+    with pytest.raises(subprocess.CalledProcessError):
+        workspace.assemble(repo, staging, "frank-joint-no-evidence", candidate)
+    assert git(repo, "status", "--porcelain") == (
+        "?? untracked-production-local.txt")
+
