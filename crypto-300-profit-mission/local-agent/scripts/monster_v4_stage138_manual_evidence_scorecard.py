@@ -248,10 +248,26 @@ def original_core_discovery_delay_scorecard(rows):
             d0 = item.get("D0_first_UTC")
             d1 = item.get("D1_first_UTC")
             status = item.get("counterfactual_status")
+            strict = item.get("strict_since_discovery")
+            if not isinstance(strict,dict):
+                raise ValueError("STAGE145_MISSING_STRICT_POST_DISCOVERY_CORE_VARIANT")
+            if strict.get("first_tick_utc") != poll:
+                raise ValueError("STAGE145_STRICT_AND_READBACK_FIRST_POLL_DRIFT")
+            strict_d0 = strict.get("D0_first_UTC")
+            strict_d1 = strict.get("D1_first_UTC")
+            strict_earliest_d1 = s131.stamp(
+                strict["earliest_possible_D1_61min_history_UTC"])
+            if strict_earliest_d1 < visible+61*60_000:
+                raise ValueError("STAGE145_STRICT_61M_CLOCK_DRIFT")
             if poll is None:
                 if status not in ("NOT_SCORABLE_NO_POLL_BEFORE_SOURCE_END",
                                   "NOT_SCORABLE_DISCOVERY_OUTSIDE_SOURCE") or d0 is not None or d1 is not None:
                     raise ValueError("STAGE144_NO_POLL_MUST_BE_UNSCORABLE")
+                if (strict.get("counterfactual_status") not in (
+                        "NOT_SCORABLE_NO_POLL_BEFORE_SOURCE_END",
+                        "NOT_SCORABLE_DISCOVERY_OUTSIDE_SOURCE")
+                        or strict_d0 is not None or strict_d1 is not None):
+                    raise ValueError("STAGE145_STRICT_NOSOURCE_MUST_BE_UNSCORABLE")
                 counts[f"delay_{label}_not_scorable_source_horizon"] += 1
                 continue
             tick_ms = s131.stamp(poll)
@@ -263,6 +279,24 @@ def original_core_discovery_delay_scorecard(rows):
             if ((d0_ms is not None and d0_ms < tick_ms) or
                     (d1_ms is not None and (d0_ms is None or d1_ms < d0_ms))):
                 raise ValueError("STAGE144_DELAY_D0_D1_CLOCK_ORDER")
+            strict_d0_ms = s131.stamp(strict_d0) if strict_d0 else None
+            strict_d1_ms = s131.stamp(strict_d1) if strict_d1 else None
+            if (strict.get("counterfactual_status") !=
+                    "REPLAYED_UNCHANGED_ORIGINAL_D0_D1_STRICT_VISIBLE_SOURCE_OFFLINE"
+                    or strict_d1_ms is not None and (
+                        strict_d0_ms is None or strict_d1_ms < strict_earliest_d1
+                        or strict_d1_ms < strict_d0_ms)
+                    or strict_d0_ms is not None and strict_d0_ms < tick_ms):
+                raise ValueError("STAGE145_STRICT_VISIBILITY_D0_D1_CAUSAL_DRIFT")
+            if label == "0m" and (strict_d0 != d0 or strict_d1 != d1):
+                raise ValueError("STAGE145_ZERO_DELAY_STRICT_VS_READBACK_DRIFT")
+            counts[f"delay_{label}_strict_post_discovery_model_replay"] += 1
+            if strict_d0 is not None:
+                counts[f"delay_{label}_strict_first_D0"] += 1
+            if strict_d1 is not None:
+                counts[f"delay_{label}_strict_first_D1"] += 1
+            if d1_ms is not None and d1_ms < strict_earliest_d1:
+                counts[f"delay_{label}_readback_D1_before_strict_61m_available"] += 1
             counts[f"delay_{label}_source_conditioned_model_replay"] += 1
             if d0:
                 counts[f"delay_{label}_first_D0"] += 1
@@ -272,6 +306,15 @@ def original_core_discovery_delay_scorecard(rows):
                 counts[f"delay_{label}_source_retrospective_2x_high"] += 1
                 target_ms = s131.stamp(target)
                 early = bool(d0_ms is not None and d0_ms+5*60_000 <= target_ms)
+                strict_early = bool(
+                    strict_d0_ms is not None and strict_d0_ms+5*60_000 <= target_ms)
+                strict_d1_early = bool(
+                    strict_d1_ms is not None and strict_d1_ms+5*60_000 <= target_ms)
+                if (strict.get("D0_early5_vs_fixed_first_2x") is not strict_early
+                        or strict.get("D1_early5_vs_fixed_first_2x") is not strict_d1_early):
+                    raise ValueError("STAGE145_STRICT_FIXED_2X_EARLY5_DRIFT")
+                counts[f"delay_{label}_strict_D0_early5_before_same_fixed_2x"] += strict_early
+                counts[f"delay_{label}_strict_D1_early5_before_same_fixed_2x"] += strict_d1_early
                 if item.get("D0_early5_vs_fixed_first_2x") is not early:
                     raise ValueError("STAGE144_DELAY_EARLY5_LABEL_DRIFT")
                 counts[f"delay_{label}_D0_early5_before_same_fixed_2x"] += early
@@ -281,6 +324,8 @@ def original_core_discovery_delay_scorecard(rows):
     return {
         "counts": dict(counts),
         "same_source_0_1_3_5_actual_original_D0_D1_reruns": True,
+        "dual_information_sets_readback_A_and_strict_visible_B":True,
+        "A_B_not_guaranteed_mathematically_ordered_recall_bounds":True,
         "preexisting_and_preT0_cohorts_not_latency_scenarios": True,
         "local_discovery_assumption_not_recorded_live_receipt": True,
         "same_fixed_initial_2x_high_historical_not_profit": True,
