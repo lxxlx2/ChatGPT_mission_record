@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from collections import Counter
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -205,6 +206,8 @@ def run_shared(db, day, symbols, *, market_coverage_label, frozen_verified_roste
         raise ValueError("SHARED_SPOT_CLOCK_COUNT_DRIFT")
     return {
         "schema":SCHEMA,
+        "trigger_commit_sha":os.environ.get("GITHUB_SHA","LOCAL_UNVERIFIED"),
+        "shared_replayer_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "date":day.isoformat(),
         "origin_core_blob":ORIGINAL_SHADOW_BLOB,
         "source": ("SYNTHETIC_FIXTURE_ONLY" if market_coverage_label=="SYNTHETIC_TEST_ONLY"
