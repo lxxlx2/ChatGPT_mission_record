@@ -3113,6 +3113,7 @@
         }
       ],
       "poll_rows": 3360,
+      "previously_archived_daily_sha_check": "MATCHED_PREVIOUSLY_GIT_ARCHIVED_20_DAILY_PUBLISHER_SHA",
       "publisher_days": 10,
       "symbol": "BTCUSDT"
     },
@@ -3161,15 +3162,17 @@
         }
       ],
       "poll_rows": 3360,
+      "previously_archived_daily_sha_check": "MATCHED_PREVIOUSLY_GIT_ARCHIVED_20_DAILY_PUBLISHER_SHA",
       "publisher_days": 10,
       "symbol": "ETHUSDT"
     }
   ],
+  "prior_daily_SHA_secondary_pin_matches": 2,
   "queue_rows": [],
   "queue_status_counts": {},
   "real_market_order_or_mail": "OFF",
   "schema": "MONSTER_SHARED_SPOT_ONE_SQLITE_ORIGINAL_D0_D1_CAUSAL_V1",
-  "shared_replayer_sha256": "f6b7a7c6b05f6174a88b657fa483286ac98cd872a4b6990070bf4cc6073693ee",
+  "shared_replayer_sha256": "d1fff2ee97b7375528e9de3e0d02ab3f4432838e3dc9f188c233e5b6063b50f3",
   "source": "OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY",
   "source_attestation": "STAGE26_PUBLISHER_ZIP_SHA256_CHECKSUM_VERIFIED_AT_RUN_TIME",
   "source_coverage": {
@@ -3179,6 +3182,6 @@
   },
   "source_level": "ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
   "source_origin_verified": true,
-  "trigger_commit_sha": "97bb08c6a3f170077228cbc34a6d47d833db2db3",
+  "trigger_commit_sha": "6e2897c4602ce554b57634fe05d25e7244068316",
   "true_full_758_replay": false
 }

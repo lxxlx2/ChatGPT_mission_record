@@ -3581,5 +3581,5 @@
   "schema": "MONSTER_SHARED_SPOT_STAGE26_36_ORIGINAL_SOURCE_ELIGIBILITY_V1",
   "source_census_sha256": "b8077c2dc8573005edb7809c912349cb7d3f1466c3d31926cb6a4df443c2f7b7",
   "total_original_individual_spot_watch_events": 1132,
-  "trigger_commit_sha": "97bb08c6a3f170077228cbc34a6d47d833db2db3"
+  "trigger_commit_sha": "6e2897c4602ce554b57634fe05d25e7244068316"
 }
