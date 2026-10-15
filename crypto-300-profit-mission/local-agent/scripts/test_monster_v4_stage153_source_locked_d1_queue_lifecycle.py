@@ -381,7 +381,8 @@ class Stage153Tests(unittest.TestCase):
         day["event_counts"]["WATCH_EARLY"]=3
         rec={"date":day["date"],"original_watch_arrivals":3,
              "original_individual_setups":1,"real_shared_setups":1,
-             "late":1,"official_5m_publisher_sha_source_count":0}
+             "late":1,"official_5m_publisher_sha_source_count":0,
+             "zip_sha256":"synthetic-only", "raw_json_sha256":"synthetic-only"}
         result,rows=m.audit_day(day,rec)
         self.assertEqual(result[
             "D1_SETUPS_with_multiple_plausible_EVALUATED_candidates"],1)
