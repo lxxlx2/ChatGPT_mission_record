@@ -1,0 +1,128 @@
+{
+  "schema": "BSC_P4C_877AF_MARSCOIN_BOTH_OWNER_INVENTORY_CLOSED_QUOTE_OPEN",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-economic-original-probe-precommit-2026-10-15.json",
+      "git_blob_sha": "5c9608d13e92f4e36a9fa0950fb065abb9869a0b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-original-ca-events-part2-2026-10-15.json",
+      "git_blob_sha": "54ce5476e47e7cac51df1dccfefd43d324ff883f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-receipts-part2-2026-10-15.json",
+      "git_blob_sha": "e21ea9acf50cae583ba2a4b1414f4ffd4a5df279"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-native-block-part2-2026-10-15.json",
+      "git_blob_sha": "9e4c2974cf949ba5e3f5e6d01ad70a676035fa03"
+    }
+  ],
+  "summary": {
+    "wallets": 1,
+    "major_CA": 1,
+    "original_rounds": 2,
+    "original_signed_txs": 6,
+    "raw_owner_full_token_quantity_closed": 2,
+    "complete_success_receipts": 0,
+    "receipt_truncated": 6,
+    "original_real_BNB_winner_rounds_newly_qualified": 0,
+    "original_real_BNB_loser_rounds_newly_qualified": 0,
+    "qualified_observer_trades": 0,
+    "production": "NO_GO"
+  },
+  "rounds": [
+    {
+      "p2_ledger_index": 37,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "txs": [
+        {
+          "hash": "0xb24f907d3d49d22cab32c024fb56481a5897891ebfa4dda0abe59432696e9695",
+          "block": 112633681,
+          "action": "BUY",
+          "owner_tokens_received_raw": "532576857462790105547438",
+          "owner_tokens_sent_raw": "0",
+          "native_BNB_block_delta_wei": "-550217741480000000",
+          "full_receipt_status": "TRUNCATED",
+          "true_WBNB_or_Q3B_wallet_cashflow": "UNRESOLVED"
+        },
+        {
+          "hash": "0x6034212914ca925ebb875121f1e7a5c8a4a15a2c63a6bc870ce28634db15423e",
+          "block": 112633772,
+          "action": "SELL",
+          "owner_tokens_received_raw": "0",
+          "owner_tokens_sent_raw": "266288428731395052773719",
+          "native_BNB_block_delta_wei": "399931065088444332",
+          "full_receipt_status": "TRUNCATED",
+          "true_WBNB_or_Q3B_wallet_cashflow": "UNRESOLVED"
+        },
+        {
+          "hash": "0x971a9ab0217b0bef829991cf12d9eb848e83cfd2fa3e9e11cb82bbc2e752a125",
+          "block": 112633805,
+          "action": "SELL",
+          "owner_tokens_received_raw": "0",
+          "owner_tokens_sent_raw": "266288428731395052773719",
+          "native_BNB_block_delta_wei": "404900758548044511",
+          "full_receipt_status": "TRUNCATED",
+          "true_WBNB_or_Q3B_wallet_cashflow": "UNRESOLVED"
+        }
+      ],
+      "raw_tokens_received": "532576857462790105547438",
+      "raw_tokens_sent": "532576857462790105547438",
+      "remaining_token_inventory_raw": "0",
+      "raw_tokens_sent_to_token_contract": "15977305723883703166422",
+      "raw_tokens_sent_to_pool": "516599551738906402381016",
+      "native_eoa_selected_block_deltas_wei": "254614082156488843",
+      "economic_status": "OWNER_TOKEN_CLOSE_BUT_NONNATIVE_QUOTE_GAS_UNRESOLVED",
+      "qualified_realized_net_profit": false
+    },
+    {
+      "p2_ledger_index": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "txs": [
+        {
+          "hash": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+          "block": 112634149,
+          "action": "BUY",
+          "owner_tokens_received_raw": "788170742854694688936715",
+          "owner_tokens_sent_raw": "0",
+          "native_BNB_block_delta_wei": "-1750236641240000000",
+          "full_receipt_status": "TRUNCATED",
+          "true_WBNB_or_Q3B_wallet_cashflow": "UNRESOLVED"
+        },
+        {
+          "hash": "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+          "block": 112634161,
+          "action": "SELL",
+          "owner_tokens_received_raw": "0",
+          "owner_tokens_sent_raw": "394085371427347344468357",
+          "native_BNB_block_delta_wei": "828754115438877386",
+          "full_receipt_status": "TRUNCATED",
+          "true_WBNB_or_Q3B_wallet_cashflow": "UNRESOLVED"
+        },
+        {
+          "hash": "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31",
+          "block": 112634184,
+          "action": "SELL",
+          "owner_tokens_received_raw": "0",
+          "owner_tokens_sent_raw": "394085371427347344468358",
+          "native_BNB_block_delta_wei": "848355498100282646",
+          "full_receipt_status": "TRUNCATED",
+          "true_WBNB_or_Q3B_wallet_cashflow": "UNRESOLVED"
+        }
+      ],
+      "raw_tokens_received": "788170742854694688936715",
+      "raw_tokens_sent": "788170742854694688936715",
+      "remaining_token_inventory_raw": "0",
+      "raw_tokens_sent_to_token_contract": "23645122285640840668100",
+      "raw_tokens_sent_to_pool": "764525620569053848268615",
+      "native_eoa_selected_block_deltas_wei": "-73127027700839968",
+      "economic_status": "OWNER_TOKEN_CLOSE_BUT_NONNATIVE_QUOTE_GAS_UNRESOLVED",
+      "qualified_realized_net_profit": false
+    }
+  ]
+}
