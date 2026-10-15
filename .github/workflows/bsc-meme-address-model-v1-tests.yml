@@ -55,6 +55,8 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_lonxia_observer_gate.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-observer-nplus1-buy-sim-2026-10-16.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-3-real-market-sells-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-independent-review-errata-2026-10-16.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-lonxia-post-signal-u-readback-2026-10-16.md"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-u-live-readback-batch-2026-10-16.md"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-two-rounds19-precommit-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-independent-five-part1-2026-10-15.json"
@@ -124,7 +126,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
+      - name: Assert checked-out PR HEAD equals exact event head SHA
+        shell: bash
+        env:
+          REVIEWED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          test -n "$REVIEWED_HEAD_SHA"
+          test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA"
+          echo "PASS direct PR HEAD checkout at $REVIEWED_HEAD_SHA, not generated merge commit"
       - name: Confirm frozen Git input blob
         shell: bash
         run: |
