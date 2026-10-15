@@ -62,6 +62,9 @@ def groups(rows):
         k:distribution(Decimal(x["baseline_Stage88_D1_direct_24h_gross_price_only_pct"])
                        for x in r if x["preregistered_decision"]["state"]==k)
         for k in STATES}
+    # Two different holding horizons must not overwrite each other.
+    result["market_1m_turnover_sensitivity_NOT_execution"]={}
+    result["entry_delay_price_only_sensitivity_NOT_execution"]={}
     for h in ("360","1440"):
         rows_ok=[]; unsupported=Counter()
         for x in r:
@@ -139,7 +142,7 @@ def groups(rows):
                 "filtered_out_of_complete":len(rows_ok)-len(kept),
                 "distribution_on_observed_market_activity_only":distribution(kept),
             }
-        result["market_1m_turnover_sensitivity_NOT_execution"]=tiers
+        result["market_1m_turnover_sensitivity_NOT_execution"][h]=tiers
         delays={}
         for delay in stage151.LATENCY_MINUTES[1:]:
             delayed=[]; unusable=Counter()
@@ -159,7 +162,7 @@ def groups(rows):
                 "unsupported":dict(unusable),
                 "price_only_distribution":distribution(delayed),
             }
-        result["entry_delay_price_only_sensitivity_NOT_execution"]=delays
+        result["entry_delay_price_only_sensitivity_NOT_execution"][h]=delays
     result["not_entered_is_NOT_zero_pnl"]=True
     return result
 
