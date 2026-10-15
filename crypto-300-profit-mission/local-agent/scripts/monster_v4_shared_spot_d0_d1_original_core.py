@@ -240,7 +240,18 @@ def run_shared(db, day, symbols, *, market_coverage_label, frozen_verified_roste
                     WHERE symbol=? AND end_ms<?
                     ORDER BY end_ms DESC LIMIT 8
                 """, (sym, at_ms)).fetchall()
-                return [json.loads(x[0]) for x in reversed(arr)]
+                candles = [json.loads(x[0]) for x in reversed(arr)]
+                last_closed_end = (at_ms // (5 * MIN)) * (5 * MIN) - 1
+                expected = [last_closed_end - (7 - i) * 5 * MIN
+                            for i in range(8)]
+                # RuntimeError is intentionally NOT swallowed by the
+                # original production retry catcher; a bad historical
+                # source must stop the whole research run, not become a
+                # spurious D1_deferred event.
+                if (len(candles) != 8 or
+                        [int(c[6]) for c in candles] != expected):
+                    raise RuntimeError("SHARED_SPOT_ORIGINAL_D1_SOURCE_MISSING_OR_UNCLOSED")
+                return candles
 
             start, end = utc_ms(day), utc_ms(day)+ACTIVE*MIN
             for tick in range(start+3*MIN,end+1,TICK):
@@ -283,11 +294,13 @@ def run_shared(db, day, symbols, *, market_coverage_label, frozen_verified_roste
         "date":day.isoformat(),
         "origin_core_blob":ORIGINAL_SHADOW_BLOB,
         "source": ("SYNTHETIC_FIXTURE_ONLY" if market_coverage_label=="SYNTHETIC_TEST_ONLY"
-                   else "OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY"),
+                   else "PRELOADED_MINUTE_CACHE_PROVENANCE_UNATTESTED"),
         "source_origin_verified": False,
         "source_attestation": "PRELOADED_CACHE_UNATTESTED_USE_CONTROLLED_OFFICIAL_READER",
         "source_level":"ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
-        "market_coverage":market_coverage_label,
+        "market_coverage":("SYNTHETIC_TEST_ONLY"
+                           if market_coverage_label=="SYNTHETIC_TEST_ONLY"
+                           else "UNATTESTED_SUBSET_CACHE"),
         "frozen_original_universe_attempted":FROZEN_ORIGINAL_POPULATION,
         "actually_complete_symbols":len(roster),
         "true_full_758_replay": False,
@@ -330,6 +343,8 @@ def run_official_subset(day, symbols):
             result = run_shared(db,day,roster,
                                 market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
     result["source_origin_verified"] = True
+    result["source"] = "OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY"
+    result["market_coverage"] = "OFFICIAL_VERIFIED_SUBSET_ONLY"
     result["source_attestation"] = "STAGE26_PUBLISHER_ZIP_SHA256_CHECKSUM_VERIFIED_AT_RUN_TIME"
     result["historically_precommitted_publisher_SHA_for_all_symbols"] = False
     result["prepared_verified_minute_sources"] = prep
