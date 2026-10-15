@@ -185,6 +185,88 @@ def population_coverage_sensitivity(summary):
     }
 
 
+def original_core_discovery_delay_scorecard(rows):
+    """Auditable venue-only real isolated D0/D1 rerun comparison, not G1.
+
+    Frozen original HIGH 2x target is identical for all 0/1/3/5
+    minutes. Source-missing and issuer-unverified cases stay distinct.
+    """
+    counts = Counter()
+    delays = ("0m", "1m", "3m", "5m")
+    for row in rows:
+        if row.get("replay_status") != STATES[5]:
+            continue
+        counts["source_complete_inwindow_cold_start_rows"] += 1
+        evidence = row.get("counterfactual_discovery_delay_original_D0_D1_offline")
+        if evidence is None:
+            # Older independent test fixtures / Stage142 saved source must
+            # not acquire hypothetical model scores through a format change.
+            counts["legacy_cold_start_rows_without_delay_reruns"] += 1
+            continue
+        if not isinstance(evidence,dict) or not evidence.get("same_frozen_numeric_core_each_run"):
+            raise ValueError("STAGE144_DELAY_ORIGINAL_CORE_NOT_REPLAYED")
+        cases = evidence.get("delays")
+        if not isinstance(cases,dict) or set(cases) != set(delays):
+            raise ValueError("STAGE144_DELAY_VARIANTS_MISSING_OR_ADDED")
+        target = row["gross_future_labels_not_real_profit"].get(
+            "first_GT2x_HIGH_UTC_EVALUATION_ONLY")
+        if evidence.get("first_source_original_2x_high_fixed_denominator_utc") != target:
+            raise ValueError("STAGE144_DELAY_FIXED_GROSS_TARGET_DRIFT")
+        if (cases["0m"].get("D0_first_UTC") != row.get("D0_first_UTC")
+                or cases["0m"].get("D1_first_UTC") != row.get("D1_first_UTC")):
+            raise ValueError("STAGE144_ZERO_LATENCY_NOT_ORIGINAL_CORE_BASELINE")
+        counts["source_conditioned_latencies_rerun_all_four"] += 1
+        for label in delays:
+            item = cases[label]
+            n = int(label[:-1])
+            if item.get("delay_minutes") != n:
+                raise ValueError("STAGE144_DELAY_MINUTES_DRIFT")
+            visible = s131.stamp(item["visible_from_UTC"])
+            poll = item.get("first_tick_utc")
+            d0 = item.get("D0_first_UTC")
+            d1 = item.get("D1_first_UTC")
+            status = item.get("counterfactual_status")
+            if poll is None:
+                if status not in ("NOT_SCORABLE_NO_POLL_BEFORE_SOURCE_END",
+                                  "NOT_SCORABLE_DISCOVERY_OUTSIDE_SOURCE") or d0 is not None or d1 is not None:
+                    raise ValueError("STAGE144_NO_POLL_MUST_BE_UNSCORABLE")
+                counts[f"delay_{label}_not_scorable_source_horizon"] += 1
+                continue
+            tick_ms = s131.stamp(poll)
+            if (status != "REPLAYED_UNCHANGED_ORIGINAL_D0_D1_OFFLINE"
+                    or tick_ms < visible + 3*60_000 or tick_ms % 180_000):
+                raise ValueError("STAGE144_DELAY_FIRST_POLL_NOT_CAUSAL")
+            d0_ms = s131.stamp(d0) if d0 else None
+            d1_ms = s131.stamp(d1) if d1 else None
+            if ((d0_ms is not None and d0_ms < tick_ms) or
+                    (d1_ms is not None and (d0_ms is None or d1_ms < d0_ms))):
+                raise ValueError("STAGE144_DELAY_D0_D1_CLOCK_ORDER")
+            counts[f"delay_{label}_source_conditioned_model_replay"] += 1
+            if d0:
+                counts[f"delay_{label}_first_D0"] += 1
+            if d1:
+                counts[f"delay_{label}_first_D1"] += 1
+            if target is not None:
+                counts[f"delay_{label}_source_retrospective_2x_high"] += 1
+                target_ms = s131.stamp(target)
+                early = bool(d0_ms is not None and d0_ms+5*60_000 <= target_ms)
+                if item.get("D0_early5_vs_fixed_first_2x") is not early:
+                    raise ValueError("STAGE144_DELAY_EARLY5_LABEL_DRIFT")
+                counts[f"delay_{label}_D0_early5_before_same_fixed_2x"] += early
+                if (label != "0m" and cases["0m"]["D0_first_UTC"] is not None
+                        and d0 is None):
+                    counts[f"delay_{label}_missed_baseline_D0"] += 1
+    return {
+        "counts": dict(counts),
+        "same_source_0_1_3_5_actual_original_D0_D1_reruns": True,
+        "preexisting_and_preT0_cohorts_not_latency_scenarios": True,
+        "local_discovery_assumption_not_recorded_live_receipt": True,
+        "same_fixed_initial_2x_high_historical_not_profit": True,
+        "original_venue_issuer_PIT_and_new_listing_census_unverified": True,
+        "NOT_G1_G2_G3_G4_PASS": True,
+    }
+
+
 def independent_cohort_D1_daily(rows, start):
     """Recalculate, never trust Stage137 summary's daily cohort splits."""
     grouped = {
@@ -286,6 +368,7 @@ def plan_or_evaluate(packet, archive_root, arrivals=None, *, phase="plan"):
             "raw_D1_daily": daily,
             "raw_D1_daily_all_original_market_cohorts": cohort_daily,
             "population_G1_selection_and_missing_source_sensitivity": population_coverage_sensitivity(summary),
+            "inwindow_discovery_latency_original_core_replay_research_only": original_core_discovery_delay_scorecard(rows),
             "original_unmodified_V4_git_blob": replay["original_unmodified_V4_git_blob"],
             "original_stage80_contract_sha": replay["original_unmodified_stage80_contract_sha"],
             "raw_venue_research_only_2x": {
@@ -326,6 +409,7 @@ def verify_evaluate_manifest(report):
             daily != report.get("raw_D1_daily") or
             report.get("raw_D1_daily_all_original_market_cohorts") != independent_cohort_D1_daily(rows,start) or
             report.get("population_G1_selection_and_missing_source_sensitivity") != population_coverage_sensitivity(summary) or
+            report.get("inwindow_discovery_latency_original_core_replay_research_only") != original_core_discovery_delay_scorecard(rows) or
             daily != replay.get("raw_D1_daily_by_UTC_forward_day") or
             len(rows) != replay.get("model_attempts_scored_or_classified") or
             len(rows) != source.get("full_market_attempts") or
@@ -359,6 +443,7 @@ def aggregate(reports):
     windows = []
     all_counts = Counter()
     daily_all = []
+    delay_counts_all = Counter()
     prior_end = None
     for (start, end, summary, days), report in checked:
         t0_digest = report["stage133_original_raw_packet_canonical_sha256"]
@@ -367,6 +452,7 @@ def aggregate(reports):
         seen_t0.add(t0_digest)
         prior_end = end
         all_counts.update(summary)
+        delay_counts_all.update(report["inwindow_discovery_latency_original_core_replay_research_only"]["counts"])
         daily_all.extend(days)
         windows.append({
             "start_utc": report["new_forward_start_utc"],
@@ -376,6 +462,7 @@ def aggregate(reports):
             "censored_count": summary.get("SOURCE_CENSORED_NO_REPLAY", 0),
             "D1_by_forward_UTC_day": days,
             "D1_by_original_cohort_UTC_day": report["raw_D1_daily_all_original_market_cohorts"],
+            "inwindow_latency_original_core_model_replay": report["inwindow_discovery_latency_original_core_replay_research_only"],
             "NOT_INDEPENDENTLY_VERIFIABLE_FROM_MANIFEST": True,
         })
     aggregate_count = sum(all_counts[k] for k in STATES)
@@ -392,6 +479,10 @@ def aggregate(reports):
         "per_window_source_retained": windows,
         "all_original_venue_population_descriptive_only": dict(all_counts),
         "population_G1_selection_and_missing_source_sensitivity": population_coverage_sensitivity(all_counts),
+        "inwindow_discovery_latency_original_core_summary_NOT_G1": {
+            "counts":dict(delay_counts_all),
+            "source_retrospective_only_not_observed_live_delivery":True,
+            "NOT_G1_G2_G3_G4_PASS":True},
         "raw_venue_replay_rate_diagnostics_NOT_crypto_accuracy": {
             "mixed_venue_2x_HIGH_with_source": raw_2x,
             "D0_strict_2x_pct_mixed_venue": pct(all_counts.get("D0_strict_2x", 0), raw_2x),
