@@ -1,0 +1,52 @@
+{
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "actually_complete_symbols": 2,
+  "date": "2026-02-04",
+  "event_type_counts": {},
+  "events": [],
+  "execution_counts": {
+    "D0_watch_new": 0,
+    "D1_completed": 0,
+    "D1_deferred": 0,
+    "D1_late": 0,
+    "D1_selected": 0,
+    "polls": 3360
+  },
+  "frozen_original_universe_attempted": 758,
+  "historical_exposed_not_OOS": true,
+  "market_coverage": "OFFICIAL_VERIFIED_SUBSET_ONLY",
+  "not_real_historical_24h_ticker_or_PIT_listing": true,
+  "one_shared_sqlite_for_all_symbols": true,
+  "only_original_production_D0_and_D1_called": true,
+  "origin_core_blob": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+  "prepared_verified_minute_sources": [
+    {
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_days": 10,
+      "symbol": "BTCUSDT"
+    },
+    {
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_days": 10,
+      "symbol": "ETHUSDT"
+    }
+  ],
+  "queue_rows": [],
+  "queue_status_counts": {},
+  "real_market_order_or_mail": "OFF",
+  "schema": "MONSTER_SHARED_SPOT_ONE_SQLITE_ORIGINAL_D0_D1_CAUSAL_V1",
+  "shared_replayer_sha256": "1173eea0ba89ceb45db49a7662920604c325c356e12786bd88e98ab90893e540",
+  "source": "OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY",
+  "source_coverage": {
+    "expected_source_rows": 6720,
+    "poll_ticks": 3360,
+    "symbol_date_count": 2
+  },
+  "source_level": "ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
+  "source_origin_verified": true,
+  "trigger_commit_sha": "975bb298b0a61edd1202667d1915cf6da35c8429",
+  "true_full_758_replay": false
+}
