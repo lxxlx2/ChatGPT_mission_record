@@ -11,7 +11,7 @@
 
 ## 只能选一个高价值真实交付
 
-在**同一历史分钟因果时钟**、**同一个真实SQLite**、**同一份冻结原Shadow生产D0/D1核心**上执行 `observe_snapshot(db,"spot",tick,full_758_rows)` → `process_queue(db,tick,read_only_official_closed_5m)`；每一时点输入含`758`原冻结Universe所有同时间可见符号，不允许按未来盈利机会只选那些WATCH币、也不能逐币重置排队状态。每个tick闭合1m price + 24h quote-context由已验证分钟源当时可见的prefix构造，所有761? / 758的实际有效范围由原Stage26/source冻住并严格对账；**禁止把由分钟源推算的24h成交额说成真实历史24h HTTP ticker响应**。合约USD-M和交易所listing真PIT身份另列，第一迭代只宣称原758 Spot主流固定宇宙；不宣称交易所最新全部上市币或跨场所统一竞争。
+在**同一历史分钟因果时钟**、**同一个真实SQLite**、**同一份冻结原Shadow生产D0/D1核心**上执行 `observe_snapshot(db,"spot",tick,full_758_rows)` → `process_queue(db,tick,read_only_official_closed_5m)`；每一时点输入含`758`原冻结Universe所有同时间可见符号，不允许按未来盈利机会只选那些WATCH币、也不能逐币重置排队状态。每个tick闭合1m price + 24h quote-context由已验证分钟源当时可见的prefix构造，全部758个原冻结宇宙成员及其实际可观测范围由原Stage26/source冻住并严格对账；**禁止把由分钟源推算的24h成交额说成真实历史24h HTTP ticker响应**。合约USD-M和交易所listing真PIT身份另列，第一迭代只宣称原758 Spot主流固定宇宙；不宣称交易所最新全部上市币或跨场所统一竞争。
 
 ### 不可倒改的执行与源合规
 
