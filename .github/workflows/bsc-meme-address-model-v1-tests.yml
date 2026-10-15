@@ -47,6 +47,14 @@ on:
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_five_native_rounds23x19.py"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_ddac_adff_a83b_five.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_c0_review_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_c0_review_gate.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4b_2026_crossowner_u.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4b_2026_crossowner_u.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-two-rounds19-precommit-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-independent-five-part1-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-independent-five-part2-2026-10-15.json"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-2025-blocktime-header-2026-10-15.json"
       - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_8e6b_token4_19tx.py"
       - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_8e6b_token4_19tx.py"
       - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-19tx-five-independent-source-reconciliation-2026-10-15.json"
@@ -121,6 +129,26 @@ jobs:
         run: |
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1_bulk16.py" -v
+      - name: C0 historical source grades and P4-B 2026 five-owner U static replay
+        shell: bash
+        run: |
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_c0_review_gate.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-c0-review.json
+          python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4b_2026_crossowner_u.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4b-u-five.json
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("/tmp/bsc-c0-review.json").read_text(encoding="utf-8"))
+          b=json.loads(Path("/tmp/bsc-p4b-u-five.json").read_text(encoding="utf-8"))
+          assert a["five_baseline"]["selected_owner_rounds"]==5
+          assert a["seven_expanded_review_pending"]["selected_owner_rounds"]==7
+          assert a["2025_token4"]["cashflow_grade"]=="SELECTED_TRADES_ONLY_NOT_FINAL_WALLET_PNL"
+          assert a["CI_source_verification"]=="OFFLINE_STATIC_REPLAY_NOT_LIVE_RPC"
+          assert (b["summary"]["selected_wallets"],b["summary"]["selected_major_CAs"])==(5,3)
+          assert b["summary"]["qualified_observer_executable_U"]==0
+          assert b["summary"]["qualified_follow_PnL"]==0
+          assert a["production"]==b["summary"]["production"]=="NO_GO"
+          print("PASS C0 scope corrections and 2026 five-wallet cross-owner U unqualified")
+          PY
       - name: P4-C all 23 original wallet x 19 exact CA actual negative source scope
         shell: bash
         run: |
@@ -783,7 +811,7 @@ jobs:
           assert s["first_global_observer_U_qualified"]==0 and s["production"]=="NO_GO"
           print("PASS three wallets five source closed token inventories 11 native blocks zero false PnL upgrade")
           PY
-      - name: P4-C 8E6B token4 two actual native signed outcomes 19 original tx five independent live receipts
+      - name: P4-C 8E6B token4 two original source rounds with 5 stored prior RPC reads (static replay)
         shell: bash
         run: |
           python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_8e6b_token4_two_native.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-8e6b-token4.json
@@ -835,7 +863,7 @@ jobs:
           assert s["production"]=="NO_GO"
           print("PASS all 19 original token4 owner-only external BNB blocks zero external contamination but internal trace open")
           PY
-      - name: P4-C token 4 19 original source owner native rounds and 5 independent RPC spot checks
+      - name: P4-C token 4 19 stored source trades and 5 historical RPC spot checks (static replay)
         shell: bash
         run: |
           python3 -B "$MODEL_DIR/bsc_meme_address_model_v1_p4c_8e6b_token4_19tx.py" --source-dir "$MODEL_DIR" --output /tmp/bsc-p4c-8e6b-token4-proof.json
