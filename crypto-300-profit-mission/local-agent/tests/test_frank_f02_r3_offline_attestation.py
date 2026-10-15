@@ -79,7 +79,7 @@ def test_tampered_original_wire_and_unmatched_sha_fail_closed(tmp_path):
         audit.find_session(tmp_path / "manual-sessions", "f" * 64)
     with pytest.raises(ValueError, match="SHA_MISMATCH"):
         audit.attest(session, "f" * 64)
-    wire_files = sorted((session / "wire").glob("*.json"))
+    wire_files = sorted((session / "wire").glob("owner-*/*.json"))
     wire = next(p for p in wire_files if p.name != "manifest.json")
     wire.write_bytes(wire.read_bytes() + b" ")
     with pytest.raises(ValueError, match="SHA_MISMATCH"):
