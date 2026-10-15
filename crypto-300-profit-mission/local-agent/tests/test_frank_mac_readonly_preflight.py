@@ -43,7 +43,7 @@ def test_repo_passive_reader_does_not_modify_source(tmp_path, monkeypatch):
     }
     out = preflight.inspect_repo(repo)
     assert out["state"] == "READ_ONLY_INSPECTED"
-    assert out["source_changes"] == "HAS_USER_CHANGES"
+    assert out["source_changes"] == "UNKNOWN_NOT_CHECKED_PASSIVE_ONLY"
     assert out["fixed_git_objects"]["test"] == "PRESENT"
     assert out["historical_evidence_ref"] == "EXPECTED_LOCAL_SHA"
     assert out["head_matches_reviewed_pr73"] is False
@@ -148,9 +148,65 @@ def test_real_git_fsmonitor_helper_is_never_invoked(tmp_path):
     doc = preflight.inspect_repo(repo)
 
     assert doc["state"] == "READ_ONLY_INSPECTED"
-    assert doc["source_changes"] == "HAS_USER_CHANGES"
+    assert doc["source_changes"] == "UNKNOWN_NOT_CHECKED_PASSIVE_ONLY"
     assert not sentinel.exists(), "git status invoked configured core.fsmonitor"
     assert (repo / ".git" / "index").read_bytes() == index_before
     assert (repo / "file.txt").read_bytes() == tracked_before
     assert unsaved.read_bytes() == unsaved_before
     assert _git(repo, "rev-parse", "HEAD") == head_before
+
+
+
+def test_real_git_clean_filter_is_never_invoked(tmp_path, monkeypatch):
+    """PR75 P2: even same-size tracked modifications must not run clean filter."""
+    repo = _test_git(tmp_path)
+    sentinel = tmp_path / "clean-filter-executed.txt"
+    helper = tmp_path / "synthetic-clean.sh"
+    helper.write_text(
+        "#!/bin/sh\n"
+        + "printf unexpected > " + shlex.quote(str(sentinel)) + "\n"
+        + "cat\n",
+        encoding="utf-8",
+    )
+    helper.chmod(0o755)
+    attributes = repo / ".gitattributes"
+    attributes.write_text("file.txt filter=synthetic\n", encoding="utf-8")
+    _git(repo, "add", ".gitattributes")
+    _git(repo, "commit", "-qm", "track synthetic attributes")
+    _git(repo, "config", "filter.synthetic.clean", str(helper))
+    # The content is changed to exactly the same byte length as the original.
+    tracked = repo / "file.txt"
+    tracked.write_text("modified", encoding="utf-8")
+    untracked = repo / "research-unsaved.txt"
+    untracked.write_bytes(b"original-private-research")
+    before_index = (repo / ".git" / "index").read_bytes()
+    before_tracked = tracked.read_bytes()
+    before_untracked = untracked.read_bytes()
+    before_head = _git(repo, "rev-parse", "HEAD")
+    before_attrs = attributes.read_bytes()
+
+    git_calls = []
+    original_exec = preflight.safe_exec
+
+    def capture_git_calls(argv, **kwargs):
+        if argv and argv[0] == "git":
+            git_calls.append(tuple(argv))
+        return original_exec(argv, **kwargs)
+
+    monkeypatch.setattr(preflight, "safe_exec", capture_git_calls)
+    document = preflight.run(home=tmp_path, repo=repo)
+
+    assert document["known_review_clone"]["state"] == "READ_ONLY_INSPECTED"
+    assert document["known_review_clone"]["source_changes"] == (
+        "UNKNOWN_NOT_CHECKED_PASSIVE_ONLY")
+    assert document["side_effects"]["files_written_or_deleted"] is False
+    assert git_calls
+    assert all("status" not in call and "diff" not in call
+               for call in git_calls)
+    assert all("rev-parse" in call for call in git_calls)
+    assert not sentinel.exists(), "passive preflight executed a Git clean filter"
+    assert (repo / ".git" / "index").read_bytes() == before_index
+    assert tracked.read_bytes() == before_tracked
+    assert untracked.read_bytes() == before_untracked
+    assert attributes.read_bytes() == before_attrs
+    assert _git(repo, "rev-parse", "HEAD") == before_head
