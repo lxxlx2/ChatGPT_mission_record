@@ -32,6 +32,67 @@ FROZEN_ORIGINAL_POPULATION = 758
 FROZEN_DATES = ("2025-11-04", "2025-12-04", "2026-02-04",
                 "2026-04-04", "2026-08-04", "2026-09-04")
 ORIGINAL_SHADOW_BLOB = "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa"
+SECONDARY_FREEZE = (Path(__file__).resolve().parents[2] / "monster/evidence"
+                    / "monster_shared_spot_stage26_original758_secondary_freeze_20261016.json")
+SECONDARY_FREEZE_BLOB = "8467bfc0db7cb888f805f30eaae301a812fbb20d"
+SECONDARY_ROSTER_SHA256 = "cea49caae4245dad910cc096bdaea953387bdfea64667a49916756d12297074a"
+
+
+def original_source_freeze():
+    raw = SECONDARY_FREEZE.read_bytes()
+    git_blob = hashlib.sha1(
+        b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
+    if git_blob != SECONDARY_FREEZE_BLOB:
+        raise ValueError("SHARED_SPOT_FROZEN_ORIGINAL_ROSTER_SOURCE_BLOB_DRIFT")
+    census = json.loads(raw)
+    cohort = tuple(census["roster"])
+    digest = hashlib.sha256(("\n".join(cohort)+"\n").encode()).hexdigest()
+    if (digest != SECONDARY_ROSTER_SHA256 or
+            census.get("original_roster_sha256") != SECONDARY_ROSTER_SHA256 or
+            len(cohort) != FROZEN_ORIGINAL_POPULATION or
+            tuple(sorted(cohort)) != cohort or len(set(cohort)) != len(cohort)):
+        raise ValueError("SHARED_SPOT_SECONDARY_FROZEN_758_ROSTER_INVALID")
+    day_map = {d["date"]:d for d in census["frozen_dates"]}
+    if set(day_map) != set(FROZEN_DATES):
+        raise ValueError("SHARED_SPOT_SECONDARY_FROZEN_DATES_CHANGED")
+    for d in day_map.values():
+        complete = d["complete_symbols"]
+        if (len(complete) != d["eligible"] or
+                len(complete) + d["censored"] != FROZEN_ORIGINAL_POPULATION or
+                not set(complete).issubset(cohort) or
+                len(set(complete)) != len(complete)):
+            raise ValueError("SHARED_SPOT_SECONDARY_FROZEN_SOURCE_STATUS_CHANGED")
+    return cohort, day_map
+
+
+def original_758_coverage(day, replayed_roster):
+    cohort, day_map = original_source_freeze()
+    if day.isoformat() not in day_map:
+        raise ValueError("SHARED_SPOT_DATE_NOT_ORIGINAL_FROZEN")
+    recorded_complete = set(day_map[day.isoformat()]["complete_symbols"])
+    selected = set(replayed_roster)
+    if not selected.issubset(recorded_complete):
+        raise ValueError("SHARED_SPOT_REPLAY_REQUEST_NOT_ORIGINAL_SOURCE_COMPLETE")
+    states = [
+        {"symbol": sym, "source_disposition":
+         ("OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET" if sym in selected else
+          "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26" if sym not in recorded_complete else
+          "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED")}
+        for sym in cohort
+    ]
+    return {
+        "original_758_denominator": len(cohort),
+        "original_frozen_roster_sha256": SECONDARY_ROSTER_SHA256,
+        "original_roster_pre_registered_in_20261011_manifest": False,
+        "two_unsupported_unicode_not_added_to_758": True,
+        "point_in_time_listing": "UNVERIFIED",
+        "source_complete_original_stage26":len(recorded_complete),
+        "source_missing_or_incomplete_original_stage26":len(cohort)-len(recorded_complete),
+        "source_complete_but_not_replayed":len(recorded_complete)-len(selected),
+        "replayed_verifiable_subset":len(selected),
+        "coverage_status":"SOURCE_COMPLETE_SUBSET_NOT_FULL_758",
+        "per_symbol":states
+    }
 
 
 def production_blob():
@@ -83,7 +144,10 @@ def prepare_symbol(db, symbol, day, bars, source_receipts):
     if (len(bars) != TOTAL or bars[0][0] != start
             or any(type(r[0]) is not int or r[0] != start + i*MIN
                    or len(r) != 7 for i, r in enumerate(bars))
-            or any(r[4] <= 0 or r[5] < 0 or r[6] < 0 for r in bars)):
+            or any(r[1] <= 0 or r[2] <= 0 or r[3] <= 0 or
+                   r[4] <= 0 or r[5] < 0 or r[6] < 0 or
+                   r[3] > min(r[1],r[4]) or r[2] < max(r[1],r[4])
+                   for r in bars)):
         raise ValueError("SHARED_SPOT_SOURCE_12960_CONTIGUOUS_1M_REQUIRED")
     expected_days = [(day+timedelta(days=i)).isoformat()
                      for i in range(-1,9)]
@@ -158,11 +222,11 @@ def run_shared(db, day, symbols, *, market_coverage_label, frozen_verified_roste
                                      "FULL_758_OFFICIAL_VERIFIED"):
         raise ValueError("SHARED_SPOT_COVERAGE_LABEL_UNKNOWN")
     if market_coverage_label == "FULL_758_OFFICIAL_VERIFIED":
-        if len(roster) != FROZEN_ORIGINAL_POPULATION:
-            raise ValueError("SHARED_SPOT_CANNOT_CLAIM_758_ON_SUBSET")
-        if (frozen_verified_roster is None
-                or roster != clean_roster(frozen_verified_roster)):
-            raise ValueError("SHARED_SPOT_758_ROSTER_MUST_MATCH_ORIGINAL_SOURCE_VERIFIED")
+        # Historic source census has 1,829/4,548 missing symbol-dates.
+        # Even a caller-supplied second roster cannot enable FULL.
+        raise ValueError("SHARED_SPOT_FULL_758_NOT_VERIFIED_SOURCE_CENSORED")
+    if market_coverage_label != "SYNTHETIC_TEST_ONLY":
+        original_758_coverage(day, roster)
     coverage = assert_complete_cache(db, roster, day)
     counts = Counter()
     with tempfile.TemporaryDirectory(prefix="monster_shared_spot_original_D0_D1_") as td:
@@ -220,13 +284,18 @@ def run_shared(db, day, symbols, *, market_coverage_label, frozen_verified_roste
         "origin_core_blob":ORIGINAL_SHADOW_BLOB,
         "source": ("SYNTHETIC_FIXTURE_ONLY" if market_coverage_label=="SYNTHETIC_TEST_ONLY"
                    else "OFFICIAL_SPOT_1M_PUBLISHER_SHA_WITH_STORED_PAST_24H_PROXY"),
-        "source_origin_verified": market_coverage_label!="SYNTHETIC_TEST_ONLY",
+        "source_origin_verified": False,
+        "source_attestation": "PRELOADED_CACHE_UNATTESTED_USE_CONTROLLED_OFFICIAL_READER",
         "source_level":"ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
         "market_coverage":market_coverage_label,
         "frozen_original_universe_attempted":FROZEN_ORIGINAL_POPULATION,
         "actually_complete_symbols":len(roster),
-        "true_full_758_replay": len(roster)==758 and
-                                market_coverage_label=="FULL_758_OFFICIAL_VERIFIED",
+        "true_full_758_replay": False,
+        "original_758_coverage": (
+            original_758_coverage(day,roster)
+            if market_coverage_label!="SYNTHETIC_TEST_ONLY"
+            else {"original_758_denominator":758,
+                  "coverage_status":"SYNTHETIC_NO_HISTORICAL_SOURCE_CLAIM"}),
         "not_real_historical_24h_ticker_or_PIT_listing":True,
         "only_original_production_D0_and_D1_called":True,
         "one_shared_sqlite_for_all_symbols":True,
@@ -244,6 +313,7 @@ def run_shared(db, day, symbols, *, market_coverage_label, frozen_verified_roste
 
 def run_official_subset(day, symbols):
     roster = clean_roster(symbols)
+    original_758_coverage(day,roster)
     with tempfile.TemporaryDirectory(prefix="monster_verified_minutes_") as td:
         with setup_cache(Path(td)/"verified_1m_closed5m_cache.sqlite") as db:
             prep = []
@@ -259,6 +329,9 @@ def run_official_subset(day, symbols):
                 prep.append(prepare_symbol(db,sym,day,bars,attested))
             result = run_shared(db,day,roster,
                                 market_coverage_label="OFFICIAL_VERIFIED_SUBSET_ONLY")
+    result["source_origin_verified"] = True
+    result["source_attestation"] = "STAGE26_PUBLISHER_ZIP_SHA256_CHECKSUM_VERIFIED_AT_RUN_TIME"
+    result["historically_precommitted_publisher_SHA_for_all_symbols"] = False
     result["prepared_verified_minute_sources"] = prep
     return result
 
