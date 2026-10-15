@@ -450,3 +450,10 @@ Remaining verified gaps / dependencies:
 - 外部实际loopback HTTP、Host/参数/私有路径拒绝、精确数量/null、原文篡改拒绝、旧R1复用路径通过；真实时钟286秒仍新鲜、305秒全32目标遮罩。**外审真实浏览器未执行**（环境无法获得Chromium），未运行真实RPC/用户Mac新来源，也没有独立读取CI日志。保留这些实际范围；开发方先前合成来源浏览器证据单列，不能移作Claude执行证明。
 - 非阻塞P3仅登记后续：失败会话保留策略/手动清理说明；partial摘要可补程序和错误类型；可补流程层篡改及对账失败测试。失败manifest保留本身是现行证据设计，当前无实际P2，因此不再开启外围修复循环，不删除现有证据、不新增自动清理。
 - 当前状态：`EXTERNAL_CLAUDE_FIXED_SHA_CODE_APPROVE / EXACT_HEAD_CI_PASS / REAL_NEW_SOURCE_MAC_ACCEPTANCE_PENDING / F02_R3_PENDING / PRODUCTION_NO_GO`。本次用户只转发审核结果，**没有新增两次真实RPC及新私有Sidecar创建授权**。下一主线仍为明确授权后单次双程序只读采集、原文核验、全32目标新鲜/过期与实际Mac页面操作验收，再推进整体F01/C02/F02功能验收；保持NO_MERGE/NO_DEPLOY及生产隔离。
+
+## 2026-10-15 用户明确授权后：F02 真实新来源 Mac 完整路径 PASS
+
+- 用户明确回复“授权”后，固定已批准PR #66 `a20a9f972589e34d2eae435c2ee4696eb53bb1d7` 实际执行一次两次finalized只读owner RPC，新UUID私有研究会话创建成功。完整来源UTC `2026-10-15T06:10:01.348696+00:00`（Bangkok13:10:01），SHA `a5964a093a1d6bffe7b2334480825c90af478d3c38d7336fc71cec767b81a25e`，Slot457132317–457132319，非原子双程序，9非零/23零（仅冻结32目标），全钱包观察3276Mint。
+- 实际本机HTTP+Codex浏览器：全部32行数量/账户数对照原文replay PASS，非零9行/零23行筛选PASS，精确CA搜索和剪贴板读回PASS，Explorer精确href PASS（未访问远端）。279秒API仍fresh；未reload的页面自然跨300秒后32行全部遮罩；340秒API也全部SOURCE_UNAVAILABLE/null；过期后的搜索和本地重读不复活旧余额。无控制台错误、582px宽无整页横向溢出；不是Safari/全移动端认证。
+- 原文、新SQLite、逐Mint数据和真实截图私有保存不入public Git。Ctrl-C退出0，socket证实18766 listener关闭。受限[验收摘要](evidence/f02-manual-refresh/real-mac-source-acceptance.json)与[详细记录](FRANK_F02_REAL_SOURCE_MAC_ACCEPTANCE_20261015.md)归档；代码未变，不冒充重跑CI或Claude执行Mac验证。
+- 状态：`F02_MANUAL_REAL_SOURCE_MAC_32_TARGET_FLOW=PASS / INDEPENDENT_FINAL_BUSINESS_REVIEW_PENDING / F02_R3_OVERALL_PENDING / PRODUCTION_NO_GO`。后续推进统一F01/C02/仓位整体交互与全钱包范围，不能继续把32目标筛选当任意CA或全钱包页面。[完整证据复审提示词](FRANK_F02_REAL_MAC_EVIDENCE_REVIEW_PROMPT_20261015.md)用于独立业务证据复核；单次RPC授权已执行，不自动再次采集。NO_MERGE/NO_DEPLOY等生产边界保持。
