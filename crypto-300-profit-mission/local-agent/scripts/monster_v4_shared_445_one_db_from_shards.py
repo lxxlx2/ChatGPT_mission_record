@@ -47,10 +47,18 @@ def verified_shard_paths(folder):
     return archives
 
 
-def run_all(folder, *, actual_replayer=None, read_inputs=None):
-    # Fake test input cannot be elevated to official research attestation.
+def run_all(folder, *, actual_replayer=None, read_inputs=None,
+            research_zeroquote_v2=False):
+    # Explicit research variant is only a selection between frozen
+    # implementation functions; custom callback test hooks remain untrusted.
+    if research_zeroquote_v2 and actual_replayer is not None:
+        raise ValueError("SHARED_445_CANNOT_COMBINE_RESEARCH_V2_WITH_CUSTOM_ENGINE")
     trusted=read_inputs is None and actual_replayer is None
-    engine=shared.run_shared if actual_replayer is None else actual_replayer
+    if research_zeroquote_v2:
+        from monster_v4_shared_d1_zeroquote_research_v2 import run_v2
+        engine=run_v2
+    else:
+        engine=shared.run_shared if actual_replayer is None else actual_replayer
     frozen=shards.roster()
     if read_inputs is None:
         archives=verified_shard_paths(folder)
@@ -124,6 +132,11 @@ def run_all(folder, *, actual_replayer=None, read_inputs=None):
       "true_full_445_shared_source_complete_subset_replayed":trusted,
       "not_independent_OOS":True,
       "not_real_PIT_listing":True,
+      "D1_model_semantics":("RESEARCH_V2_SOURCE_UNSUPPORTED_ZEROQUOTE"
+                             if research_zeroquote_v2 else
+                             "FROZEN_ORIGINAL_PRODUCTION_D1"),
+      "all445_original_production_D1_completed":not research_zeroquote_v2,
+      "experimental_source_semantics_approved_for_trading":False,
       "G4":"UNKNOWN","G6":"NO_GO",
       "trigger_commit_sha":os.environ.get("GITHUB_SHA","LOCAL_UNVERIFIED"),
       "assembler_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
@@ -135,10 +148,11 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument("--source-dir",required=True,type=Path)
     p.add_argument("--out",required=True,type=Path)
+    p.add_argument("--research-zeroquote-v2",action="store_true")
     a=p.parse_args()
     if a.out.exists() or a.out.is_symlink():
         raise ValueError("SHARED_445_ASSEMBLER_OUTPUT_EXISTS")
-    result=run_all(a.source_dir)
+    result=run_all(a.source_dir,research_zeroquote_v2=a.research_zeroquote_v2)
     a.out.parent.mkdir(parents=True,exist_ok=True)
     with a.out.open("x",encoding="utf-8") as out:
         out.write(json.dumps(result,sort_keys=True,ensure_ascii=False,indent=2)+"\n")
@@ -148,6 +162,7 @@ def main():
             "global_polls":result["execution_counts"]["polls"],
             "D0_WATCH":result["execution_counts"]["D0_watch_new"],
             "D1":result["queue_status_counts"],
+            "D1_model_semantics":result["D1_model_semantics"],
             "true_full_758_replayed":False},sort_keys=True))
 
 
