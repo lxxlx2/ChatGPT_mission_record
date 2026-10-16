@@ -34,7 +34,7 @@ def workflow_script():
                 if lines[i].startswith("      - name: ")), len(lines))
     script = "\n".join(line[10:] if line.startswith("          ") else line
                        for line in lines[run+1:end])
-    assert "test \"$(git rev-parse HEAD)\" = \"$REVIEWED_HEAD_SHA\"" in script
+    assert "test \"$(git rev-parse HEAD)\" = \"$REVIEWED_HEAD_SHA\" || exit 1" in script
     return script
 
 
@@ -61,7 +61,7 @@ def run_identity(event, pr_head, event_sha, checked_out_sha, expected):
             "MOCK_CHECKOUT_SHA": checked_out_sha,
         })
         result = subprocess.run(
-            ["bash", "-e", "-c", workflow_script()],
+            ["bash", "-c", workflow_script()],
             capture_output=True, text=True, env=env, check=False,
         )
     assert (result.returncode == 0) == expected, (
@@ -94,6 +94,26 @@ class WorkflowEventIdentityTests(unittest.TestCase):
 
     def test_manual_event_cannot_carry_pr_head(self):
         run_identity("workflow_dispatch", A, C, A, False)
+
+    def test_sha_guards_explicit_exit_on_failure_on_any_bash(self):
+        script = workflow_script()
+        required = (
+            '[[ "$REVIEWED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1',
+            '[[ "$EVENT_PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1',
+            '[[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1',
+            'test "$REVIEWED_HEAD_SHA" = "$EVENT_PR_HEAD_SHA" || exit 1',
+            'test "$REVIEWED_HEAD_SHA" = "$EVENT_SHA" || exit 1',
+            'test -z "$EVENT_PR_HEAD_SHA" || exit 1',
+            'test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA" || exit 1',
+        )
+        for check in required:
+            with self.subTest(check=check):
+                self.assertIn(check, script)
+
+    def test_invalid_manual_sha_shape_rejected(self):
+        for invalid in ("not-a-sha", "f" * 39, "F" * 40, "f" * 41):
+            with self.subTest(invalid=invalid):
+                run_identity("workflow_dispatch", "", invalid, invalid, False)
 
 
 if __name__ == "__main__":
