@@ -4098,7 +4098,7 @@
   },
   "source_level": "ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
   "source_origin_verified": false,
-  "trigger_commit_sha": "f0e45dc08f24575ca59ef1bb2cacd20cd853e46f",
+  "trigger_commit_sha": "dfceade891909bf374ce3e790f3aef33746f2938",
   "true_full_445_replayed": false,
   "true_full_758_replay": false,
   "two_original_source_artifact_shas": [
