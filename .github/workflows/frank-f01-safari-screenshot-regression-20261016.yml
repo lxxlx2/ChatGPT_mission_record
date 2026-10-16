@@ -5,6 +5,7 @@ on:
     branches:
       - fix/frank-f01-sold-excluded-badge-safari-20261016
       - fix/frank-pr77-price-projection-slot-review-20261016
+      - fix/frank-f01-pr79-card-qa-20261016
   workflow_dispatch:
 
 permissions:
