@@ -150,3 +150,17 @@ The 2026-10-16 02:05 shard-2 terminal audit reported source gaps for Relay, Tita
 - **01 Exchange / @01Exchange**: keep the existing mapped intermediary user-rights channel and identity separation until direct first-party terms are verified. Third-party indexed material suggests acquisition by N1 and points carried over, but this remains unverified for current user-specific rights and triggers NO_ACTION without direct Tier A/B evidence.
 
 At the next *existing* shard-2 rotation, attempt these bounded, canonical fallback anchors before declaring each domain inaccessible; record individual actual retrieval status, dated source content and source gaps. Never retroactively change the 2026-10-16 02:05 `PARTIAL` into success, invent a verified source observation, expand shard membership, or send a no-change email. All other source gaps, including Concrete additional USDC, Space extension and StandX original X full-text, remain open until equivalent valid first-party evidence is actually obtained.
+
+## Existing StandX beneficiary relationship (not a new independent project watch) — 2026-10-16
+
+- existing_project_id: standx (Shard 0)
+- external_issuer_candidate: NeoSoul / DNA, official X https://x.com/NeoSoulAI , project https://neosoul.ai/
+- canonical_relation: `NeoSoul issuer -> StandX community beneficiary`, NOT `StandX platform native token`
+- candidate_event: `neosoul:dna_standx_community_allocation:2026-10-15`
+- official_BINANCE_WALLET_Alpha_announcement: https://www.binance.com/en-IA/square/profile/binancewallet
+- secondary_issuer_attributed_announcement: https://www.binance.com/en/square/post/10-15-2026-neosoul-plans-dedicated-dna-airdrop-for-standx-community-377570746498100
+- current_issuer_primary_commitment_direct_readback: SOURCE_GAP
+- beneficiary_entitlement, snapshot, claim_url, claim_time, user_allocation: UNVERIFIED
+- status: HIGH_MATERIALITY_VERIFYING_PARTNER_RIGHTS, no separate project/full scan and no ACTION without authoritative proof
+- reject_identity_collision: legacy NEO cryptocurrency/Neo blockchain is not NeoSoul DNA; Binance Alpha Points claim is separate from proposed StandX compensation.
+- required_existing_lane: StandX hourly urgent relationship headline plus normal scheduled Shard 0; on discovery of official first-party source apply ACTION_GATE before any Gmail.
