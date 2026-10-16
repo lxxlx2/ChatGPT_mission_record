@@ -592,9 +592,9 @@ function renderNotFollowed(rows, status) {
   $('not-followed').innerHTML = limited.map(x => `
     <div class="ended-row">
       <div class="ended-main">
-        ${badge(x.decision || 'UNASSESSED')}
+        <span class="badge no-buy" title="当前跟单资格：不跟；原模型判断保留在旁边">不跟</span>
         <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
-        <span>${esc(followExclusionLabels[x.exclusion_reason] || x.exclusion_reason || '证据尚未核实')}</span>
+        <span>原模型判断：${esc(translated(decisionLabel,x.decision,x.decision || 'UNASSESSED'))} · ${esc(followExclusionLabels[x.exclusion_reason] || x.exclusion_reason || '证据尚未核实')}</span>
       </div>
       <div class="ended-ca"><code>${esc(x.mint)}</code>
         ${copyButton(x.mint,'复制 CA')} ${researchLinks(x.mint)}

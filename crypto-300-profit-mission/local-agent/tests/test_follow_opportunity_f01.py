@@ -94,3 +94,33 @@ def test_latest_sell_contradiction_excludes_despite_old_buy_and_quote():
     out = partition([candidate(latest_side="SELL", latest_at=NOW - 1)])
     assert out["eligible_count"] == 0
     assert out["not_followed"][0]["exclusion_reason"] == "LATEST_ACTION_NOT_BUY"
+
+
+def test_safari_synthetic_buy_with_no_actual_price_or_impact_is_not_followable():
+    row = candidate(metrics={}, decision_quote={"status": "OK", "route_exists": True})
+    out = partition([row])
+    assert out["eligible_count"] == 0
+    assert out["not_followed"][0]["exclusion_reason"] == "QUOTE_NOT_EXECUTABLE"
+    assert out["not_followed"][0]["decision"] == "BUY"
+
+
+@pytest.mark.parametrize("price,impact", [
+    (None, "0.1"), ("0", "0.1"), ("not-a-number", "0.1"),
+    ("0.01", None), ("0.01", "-0.01"), ("0.01", "NaN"),
+])
+def test_missing_or_invalid_executable_quote_evidence_is_fail_closed(price, impact):
+    row = candidate(metrics={}, decision_quote={
+        "status": "OK", "route_exists": True,
+        "execution_price_usdc": price, "price_impact_pct": impact,
+    })
+    out = partition([row])
+    assert out["eligible_count"] == 0
+    assert out["not_followed"][0]["exclusion_reason"] == "QUOTE_NOT_EXECUTABLE"
+
+
+def test_complete_quotation_can_live_in_frozen_quote_not_only_metrics():
+    row = candidate(metrics={}, decision_quote={
+        "status": "OK", "route_exists": True,
+        "execution_price_usdc": "0.012", "price_impact_pct": "0.0",
+    })
+    assert partition([row])["eligible_count"] == 1

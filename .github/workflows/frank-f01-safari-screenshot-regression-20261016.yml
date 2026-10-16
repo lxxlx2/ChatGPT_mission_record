@@ -1,0 +1,40 @@
+name: Frank F01 Safari screenshot regression
+
+on:
+  push:
+    branches:
+      - fix/frank-f01-sold-excluded-badge-safari-20261016
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scoped-and-complete:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install isolated test dependencies
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
+      - name: Browser renderer JavaScript syntax and exact evidence DOM
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          node --check mission_agent/mission_control/static/app.js
+          node tests/frank_f01_excluded_badge_render.cjs
+      - name: Targeted source regressions
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_follow_opportunity_f01.py tests/test_follow_opportunity_f01_integration.py
+      - name: Complete local-agent Python regression
+        working-directory: crypto-300-profit-mission/local-agent
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests
