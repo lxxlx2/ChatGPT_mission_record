@@ -83,3 +83,12 @@ printf 'SERVICES_STARTED=false\nREAL_RPC=false\nPRODUCTION_DEPLOYMENT=false\nPRI
 `APPROVE` #83/#84/#85 只覆盖本轮固定修复和 QA 组装。**未运行**本版 Mac Safari、真实现时 32 Mint/ATA/Sidecar/RPC、完整 arbitrary CA 的 Narrative/Dev/LP/Funder、市价交互、持续可用性、部署与交易。后续按目标业务功能验收，禁止把 synthetic PASS 转换成现时币仓保证。
 
 始终保持：`NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_TRADES / NO_GMAIL / NO_PRODUCTION_SQLITE_WRITE / NO_MAC_SERVICE_START / NO_NEW_AUTOMATION / NO_FILE_CLEANUP`，只有单独用户批准对应具体阶段才能改变该阶段门禁。
+
+
+## 2026-10-16 Mac 新联合源码实际预检结果（用户提供原始终端输出）
+
+- 用户发来此次 Mac 终端实际执行记录，`QA_ROOT=/Users/jerson/.local/share/frank-pr85-mac-qa-R1c6kmCU`，`LOCAL_EPHEMERAL_HEAD=c019f365d834dbd4f1d1ca39a8b2d95c63d753d6`，`MAC_PR85_SOURCE_PREFLIGHT=PASS`。
+- 四次真实 `git merge --no-ff` 输出显示 F02 #73、C02 #84、F01 #83、QA harness #85 均 `Merge made by the 'ort' strategy`，没有冲突报告。最后内容树 `ACTUAL_TREE_SHA=eea30efa09cb1509d7eee3fde3043ee7155257cf`，完全等于 `EXPECTED_TREE_SHA`，也完全等于独立 reviewer 与 CI 已通过的精确联合树。**临时 merge commit 不要求与 CI 相同**，不可据此推断部署或发布成功。
+- Mac 输出还明确：`SERVICES_STARTED=false`，`REAL_RPC=false`，`PRODUCTION_DEPLOYMENT=false`，`PRIVATE_SIDECAR_READ=false`。这些为此次预检脚本对**自身行动**的声明，不能推出别的 Mac 服务状态。旧 Mac 组装根目录及生产部署均未被本轮命令主动修改或清理。
+- 因此下一关口从 `MAC_SOURCE_PREFLIGHT_PENDING` 更新为 `MAC_SOURCE_PREFLIGHT_PASS`；**`MAC_SYNTHETIC_HTTP_NOT_RUN / MAC_SAFARI_NOT_RUN / F02_REAL_CURRENT_POSITION_NOT_VERIFIED / RELEASE_NO_GO`** 仍然成立。不可把 GitHub CI 132 /1773 PASS 当作当前 Mac 真实 Safari QA。
+- 下一步仅在**用户针对本版本另行明确批准**后，从上述已核验的新 `QA_ROOT/repo` 使用 `127.0.0.1:0` 与临时合成数据进行短时 native HTTP 服务及 Mac Safari 手工操作；执行前再次核对 `HEAD^{tree}`，不能启动生产 Frank V1 服务、不能真实 Solana RPC、不能读用户私有 Sidecar、不能写生产 SQLite/Gmail/发起交易。保存新浏览器截图、操作回执、实际退出结果及失败证据，保留旧数据与旧临时目录。
