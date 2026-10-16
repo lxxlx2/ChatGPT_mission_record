@@ -506,6 +506,7 @@ function renderCandidates(rows) {
     const m = x.metrics || {};
     const q = x.decision_quote || {};
     const decision = x.decision || 'UNASSESSED';
+    const isActionDecision = decision === 'BUY' || decision === 'SMALL_BUY';
     const reason = reasonFor(x);
 
     const frankPriceRaw = m.frank_latest_buy_price_usdc ?? x.latest_buy_price_usdc;
@@ -541,7 +542,7 @@ function renderCandidates(rows) {
     return `<article class="candidate-card decision-${esc(decision.toLowerCase().replaceAll('_','-'))}">
       <div class="candidate-head">
         <div class="candidate-title">
-          ${quoteVerified ? badge(decision) : '<span class="badge no-buy">不跟 · 报价未核实</span>'}
+          ${isActionDecision && !quoteVerified ? '<span class="badge no-buy">不跟 · 报价未核实</span>' : badge(decision)}
           <strong>${esc(translated(patternLabel,x.pattern,'未形成模式'))}</strong>
           <span class="state-text">Frank模型仓位：${esc(translated(stateLabel,x.position_state,'未知'))}</span>
         </div>
@@ -551,7 +552,7 @@ function renderCandidates(rows) {
       ${tokenIdentity(x.mint)}
 
       <div class="decision-reason">
-        <span>当前跟单结论：“${quoteVerified ? esc(translated(decisionLabel,decision,decision)) : '不跟（报价未核实）'}”</span>
+        <span>当前跟单结论：“${isActionDecision && !quoteVerified ? '不跟（报价未核实）' : esc(translated(decisionLabel,decision,decision))}”</span>
         <strong>${esc(reason)} ${esc(historyNote)}</strong>
       </div>
 
