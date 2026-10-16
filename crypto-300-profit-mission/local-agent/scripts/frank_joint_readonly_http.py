@@ -277,11 +277,15 @@ class JointReadOnly:
                 "historical_sale_confirmed": False,
                 "may_trade_based_on_combination": False,
             })
+        a05_gap = (upstream["f02"] != "SOURCE_READ" or any(
+            row["wallet_observation_state"] in (
+                "SOURCE_UNAVAILABLE", "OUTSIDE_FROZEN_TARGET_ROSTER")
+            for row in candidates))
         return {
             "schema_version": 1, "kind": "FRANK_CURRENT_F01_WITH_A05_RESEARCH_CONTEXT",
             "as_of_utc": timestamp,
             "status": ("NO_CURRENT_ELIGIBLE_CANDIDATES" if not candidates else
-                       "CANDIDATES_WITH_A05_SOURCE_GAP" if upstream["f02"] != "SOURCE_READ" else
+                       "CANDIDATES_WITH_A05_SOURCE_GAP" if a05_gap else
                        "CURRENT_F01_CANDIDATES_ARCHIVED_A05_ONLY"),
             "candidate_count": len(candidates),
             "candidates": candidates,
