@@ -518,3 +518,13 @@ Stage152新最后P2固定SHA `71a041405352c9e2210d93dff9c2685149809e52` 已获�
 下一步必须先提供并独立审核明确的无schedule、无生产权限的人工触发方案，保留旧Monster PR #30 Draft/Open，不擅自向main写入新workflow或合并整份Monster研发代码。任何必须触及main的最小人工入口另行确定权限及批准范围；备选只读手动采集执行路径同样必须保留真实官方原1m ZIP、逐日CHECKSUM、全部分片成员、源码固定SHA、Artifact/manifest完整性及真实CI回执。触发成功后按现有冻结字典序依次04/05、06/07……26/27，不自动建立下一批任务；当前真实源4/28、64/445，剩余24片381币，另313删失，且02/03 Artifact预计2026-12-15过期，所有28件真正原source未同时可得则阻断445合并。
 
 坚持完整用户目标：从全市场因果WATCH及时发现到同一持久化队列D1真实首次评价、source-unsupported与过期归因、G1全体漏报、D2/G4同一实际时点可交易价及费用/滑点、未来独立OOS净收益、独立另AI审查、Mac与Frank隔离、另行授权后Gmail Sent readback。历史445单库压力只是一道中间门禁；旧98币WATCH注入/91 LATE不能当作真445共享D0结果；32币max7未触及limit8；旧策略负收益结论保持。开发任务优先排真正业务阻塞（来源可得、可运行人工入口、全市场共享压力、样本外召回和净收益），不因继续探索低价值边界重开已通过的V2 P1/P2，不改原冻结阈值。全部`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`，不影响Frank/Stage99。
+
+## Stage154 研究分支单文件显式采集请求协议（修改工作流前冻结，2026-10-16）
+
+为修复既有两片workflow只在研究分支而`workflow_dispatch`要求默认分支存在相应workflow的问题，按GitHub官方push路径过滤规范一次性改造**原工作流** `.github/workflows/monster-v4-445-manual-two-original-source-shards.yml`，不引入新的计划任务/第二个workfow，也不合并main。此前02/03旧workflow版本和实际Artifact/CI不更写、不补评独立review。此协议在后续可执行workflow代码变更之前提交。
+
+新入口设计：仅在`research/monster-v4-local-discovery-20261010`有且只有一次明确的`crypto-300-profit-mission/monster/source-batches/monster_feb445_manual_request.json`文件改动的单次Git提交时，以`on.push.paths`启动既有workflow；工作流自身被修复提交时不能自动重跑02/03。禁止`on.schedule`、`pull_request_target`、`workflow_run`等额外触发；旧不可用`workflow_dispatch`移除，避免虚构手动按钮可用。请求JSON须严格字段（schema、start_shard、request_id、research_only、approved_scope）和start_shard整数偶数4..26，禁止任意代码路径注入及0/1已存在覆写；Git单个提交必须**仅修改该请求文件**；请求更新与数据下载分成两个Git提交，实际触发由人主动写入请求。即使后来仅文档或证据Git push也不会触发采集。
+
+下游全部复用原受限Source-only jobs：Ubuntu/macOS源schema 7 tests、官方每片最多2 workers、片间max-parallel1、双方都成功后同一RUN_ID解包重校验及永久Git轻量proof；原始Zip与每日Publisher .CHECKSUM及SHA、12960行/币、10原天、Artifact60天；已存在proof必须拒绝覆写；git rebase后core/workflow/请求file SHA漂移即fail-closed。采样445历史来源完整与313删失维持原样，当前最多64/445已经真实归档；这一步**仅源采集**，禁止冒称445同SQLite完成、OOS/执行收益达标。
+
+计划当前用户明确继续研发后提交`start_shard=4`请求，触发04/05来源实采。只有实际GitHub Actions run和内部原数据与proof真实readback才能把64/445改成96/445；否则明确记失败/部分，禁止虚构。其它全部剩余06/07到26/27要求未来逐次主动发起，不得自动串行补齐。新workflow固定SHA另AI独立审查在实际收到报告前始终`NOT_DONE`；所有生产门禁`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`、Frank/Stage99不变。
