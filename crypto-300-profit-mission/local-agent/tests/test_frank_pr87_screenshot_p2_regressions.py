@@ -185,6 +185,7 @@ class TestPartialConsolePreservation(unittest.TestCase):
                 return bundle.TREE if args==("rev-parse","HEAD^{tree}") else ""
             mock_process=mock.Mock(returncode=0)
             browser=mock.Mock()
+            browser.version="SYNTHETIC_MOCK_BROWSER"
             webkit=types.SimpleNamespace(launch=lambda **kw:browser)
             class Manager:
                 def __enter__(self): return types.SimpleNamespace(webkit=webkit)
