@@ -556,3 +556,15 @@ Stage152新最后P2固定SHA `71a041405352c9e2210d93dff9c2685149809e52` 已获�
 累积 **8/28片、128/445历史source-complete币、1280份已留SHA日回执**；尚缺**20片、317个源完整币的可供28份合并器读取的原ZIP**；额外原历史313源不完整或缺失继续保持CENSORED，不填0。当前新数目只代表来源文件归档，真共享D0+D1历史回放仍只有原32币成功，最大同刻7小于队列每轮limit8，98 WATCH/91 LATE只能按旧注入证据陈述。全445同SQLite、OOS、PIT名单、历史可成交L2和费用、净盈利均未验收。
 
 新增[固定源码`fb81d60c...`另AI独立review包](MONSTER_445_BRANCH_PUSH_BATCH_SOURCE_INDEPENDENT_REVIEW_PINNED_FB81D60_20261016.md)，对比原`8c544629...`，说明本次GitHub默认分支dispatch不可用而转换为显式研究分支唯一请求文件push触发、先前depth1真实失败及修复、需审完整源校验。**OTHER_AI_SOURCE_WORKFLOW_REVIEW=NOT_DONE**，没有真正的审查者审核结果不能冒称APPROVE；旧研究V2 `APPROVE@ef30be7...`不覆盖新工作流。下一批冻结字典序08/09**只有收到新的主动继续/采集要求时**才提交一次新人工请求，并保留真实CI事实。即便28/28最终齐备，之后仍必须做原一次共享SQLite容量压力、漏报/时效、全范围G1和真实净收益G4/OOS，才可能考虑进入Mac与Frank隔离部署验收。当前 `G0 PARTIAL/G1 NOT_SCORABLE/G2-G3 NOT_PASSED/G4 UNKNOWN/G5 RELEASE NOT_PASSED/G6 NO_GO` 和 `NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE` 不变。
+
+## Stage156 用户一次性授权完成08–27剩余20片并在最后集中审查（2026-10-16）
+
+用户本轮明确“你先继续采集吧，都完成一起审核”，授权**本轮一次性完成剩余08–27共20片来源采集**，不再逐对征求授权；独立另一AI代码/流程review集中在全部来源采集之后进行，但仍不得因此自动合并/部署/交易/Gmail/恢复Stage99。此用户新指令取代Stage155逐对等待“继续”的交互要求，仅适用于这些历史原source来源采集，不能授权未来任意定时或生产变更。开发前在Git冻结以下技术方案；保持既有成功的两片source workflow文件**零修改**。
+
+目标是用**额外一次性显式Git请求触发**的独立 `.github/workflows/monster-v4-445-remaining-original-source-shards.yml`，只监听研究分支 `crypto-300-profit-mission/monster/source-batches/monster_feb445_remaining_manual_request.json`文件本身push，绝无workflow_dispatch默认分支依赖、schedule、workflow_run、push其它路径、交易、Gmail和Mac生产副作用。请求提交必须只有该一个文件修改、checkout深度2实证检验、严格JSON唯一字段 `schema=MONSTER_445_REMAINING_SOURCE_REQUEST_V1`,`start_shard=8`,`end_shard=27`,`request_id=20261016_shards08_27`,`research_only=true`,`approved_scope=SOURCE_ONLY`；若局部失败只允许人为显式再次请求以首个未完成偶数分片重试，不能自动覆盖已有proof。请求不在工作流定义变更提交中一起写入，确保工作流定义push不会触发采集。
+
+freeze job核对已封存prefix 00..07的proof确实存在（只验证是否存在，不把SHA来源身份或原历史313缺失当成PIT认证）、所有欲采08..27 proof原先不存在，输出预注册偶数对 `[8,10,12,14,16,18,20,22,24,26]`，严禁01/00及任意自定义symbol。offline_source_schema_tests在Ubuntu和macOS使用现有同一Source445测试。单一matrix pair job `max-parallel=1` 且 `fail-fast=true`，每pair内部依次调现有 `monster_v4_shared_445_official_source_shards.py --shard N --workers 2`，完整验证每币10个源ZIP+same-host CHECKSUM、12960原bar、原758/445/313冻结分母、原ZIP/成员manifest/逐币raw SHA；同RUN_ID上传**每对2份ZIP与2份proof**的独立artifact并再从该artifact回读二次严格sha身份核查后才commit两个独立原proof到研究分支；无任意winner挑选、不改变D0/D1核心，不单片误计为二片，不凭空填充缺少的317币。
+
+matrix pair任务源码均checkout **相同冻结请求SHA**；前一对成功push proof时后一对必须对原branch执行真实rebase，再比较原产线core、采集源码、两套workflow、两个请求的Git blob SHA与本次GITHUB_SHA逐一一致后才push；任何已存在目标proof、tree漂移或rebase冲突 fail-closed，不强推、不修改他人改变，不启动别的run。禁用跨工作流并发碰撞：复用原source workflow concurrency group；不会因为CI自身GITHUB_TOKEN证据提交的push二次触发任何收集。每对的成功原ZIP通过60天GHA Artifact而非Git保存，proof仅轻量digest，必须在到期前取得28份真source且真实复核；前0–7另有历史Artifact到期需单独核对。
+
+此版本进入实际CI前至少完成静态合同检验，真实运行时以每对GitHub Job / Artifact / SHA / 证明commit独立记录，只有28/28真实SHA证据与有效Artifact齐备才记 source 全445归档完成；任何缺档必须记未完成并修复后续完整性。完成后再把所有新增批处理workflow固定SHA + 全28份证据交由**其他AI**做统一独立review；**不得自审代替**。后续全445共享SQLite真实3360次D0/D1、8容量验证及G1/G4/OOS仍要另验，今日不触碰Frank、Mac生产、Gmail、下单，`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE; G6 NO_GO`持续。
