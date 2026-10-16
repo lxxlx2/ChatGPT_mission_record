@@ -75,10 +75,10 @@ jobs:
           echo "FRANK_DISPOSABLE_NO_PRODUCTION=true"
           echo "dest=$dest" >> "$GITHUB_OUTPUT"
       - name: Dependencies for combined sources
-        working-directory: \${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
+        working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
         run: python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
       - name: Real combined F01 C02 F02 JavaScript render and current context HTTP
-        working-directory: \${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
+        working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
         run: |
           node --check mission_agent/mission_control/static/app.js
           node tests/frank_f01_excluded_badge_render.cjs
@@ -87,7 +87,7 @@ jobs:
           node tests/frank_f02_r2_render.cjs
           python -B -m pytest -q -p no:cacheprovider tests/test_frank_joint_current_follow_context.py tests/test_frank_joint_readonly_http.py tests/test_frank_f01_c02_f02_alignment.py integration_tests/test_frank_joint_native_control_http.py
       - name: Full combined source local-agent test suite
-        working-directory: \${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
+        working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
         env:
           FRANK_EXPECT_REAL_GIT_REPLAY: '1'
         run: python -B -m pytest -q -p no:cacheprovider tests
