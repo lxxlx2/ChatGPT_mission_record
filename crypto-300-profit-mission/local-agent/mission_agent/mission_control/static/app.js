@@ -539,7 +539,7 @@ function renderCandidates(rows) {
       ? '模式来自已观察到的建仓序列；实际操作前仍需重新确认价格和 Frank 状态。'
       : '模型模式与买入金额是历史记录；当前没有可执行的买入结论。';
 
-    return `<article class="candidate-card decision-${esc(decision.toLowerCase().replaceAll('_','-'))}">
+    return `<article class="candidate-card decision-${esc((isActionDecision && !quoteVerified ? "NO_BUY" : decision).toLowerCase().replaceAll('_','-'))}">
       <div class="candidate-head">
         <div class="candidate-title">
           ${isActionDecision && !quoteVerified ? '<span class="badge no-buy">不跟 · 报价未核实</span>' : badge(decision)}

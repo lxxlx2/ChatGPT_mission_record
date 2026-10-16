@@ -169,3 +169,21 @@ def test_validated_quote_projection_used_by_ui_preserves_original_data():
     assert projected == {"execution_price_usdc": "0.0120", "price_impact_pct": "0.10"}
     assert row["decision_quote"] == before["decision_quote"]
     assert row["metrics"] == before["metrics"]
+
+
+@pytest.mark.parametrize("bad", [
+    "1_000", " 0.012", "0.012 ", "\\t0.012", "+0.012",
+    "01.0", ".012", "0x10", "1,000",
+])
+def test_noncanonical_numeric_quote_from_single_source_is_not_eligible(bad):
+    row = candidate(
+        metrics={},
+        decision_quote={
+            "status": "OK", "route_exists": True,
+            "execution_price_usdc": bad,
+            "price_impact_pct": "0.1",
+        },
+    )
+    out = partition([row])
+    assert out["eligible_count"] == 0
+    assert out["not_followed"][0]["exclusion_reason"] == "QUOTE_NOT_EXECUTABLE"

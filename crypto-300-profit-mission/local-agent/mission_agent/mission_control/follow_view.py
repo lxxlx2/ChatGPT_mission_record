@@ -9,6 +9,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 import math
+import re
 
 
 _ACTION = frozenset({"BUY", "SMALL_BUY"})
@@ -70,8 +71,13 @@ def _quote_field(item: dict, key: str, *, positive: bool) -> Decimal | None:
             continue
         if isinstance(raw, bool):
             return None
+        # No underscores, padded spaces or other Python-only Decimal syntax
+        # in a source field that will be rendered as a numeric quote.
+        text = str(raw)
+        if not re.fullmatch(r"(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?", text):
+            return None
         try:
-            value = Decimal(str(raw))
+            value = Decimal(text)
         except (InvalidOperation, TypeError, ValueError):
             return None
         if not value.is_finite() or (value <= 0 if positive else value < 0):
