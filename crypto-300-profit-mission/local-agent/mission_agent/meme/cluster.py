@@ -1028,7 +1028,8 @@ class WalletClusterAnalyzer:
         if token_profile.get("status")=="OK":
             active_authorities=[
                 name for name in ("mint_authority","freeze_authority")
-                if token_profile.get(name) not in {None,""}
+                if (token_profile.get(name) is not None and
+                    _valid_raw_mint_authority(token_profile.get(name)))
             ]
             sensitive_extensions=list(token_profile.get("sensitive_extensions") or [])
             active_extension_risks=list(token_profile.get("active_extension_risks") or [])
