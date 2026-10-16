@@ -72,6 +72,25 @@ def _positive_number(value):
     number=_decimal_value(value)
     return number is not None and number>0
 
+_SOLANA_BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+
+
+def _valid_raw_mint_authority(value):
+    """A raw RPC authority is either explicit null or a 32-byte Solana key."""
+    if value is None:
+        return True
+    if not isinstance(value,str) or not 32 <= len(value) <= 44:
+        return False
+    number=0
+    for ch in value:
+        digit=_SOLANA_BASE58.find(ch)
+        if digit<0:
+            return False
+        number=number*58+digit
+    leading=len(value)-len(value.lstrip("1"))
+    return leading+(number.bit_length()+7)//8==32
+
+
 def _authority_state(value):
     if value in (None,"","11111111111111111111111111111111"):
         return "REVOKED"
@@ -555,6 +574,12 @@ class WalletClusterAnalyzer:
         if not value or program not in TOKEN_PROGRAMS or parsed.get("type") not in (None,"mint") or not info:
             return {"mint":self.mint,"status":"UNCONFIRMED","program_id":program,"reason":"MINT_ACCOUNT_NOT_VERIFIED",
                     "metadata":{"status":"UNCONFIRMED","records":[],"attempts":[{"source":"MINT_ACCOUNT","account":self.mint,"status":"UNCONFIRMED","reason":"MINT_ACCOUNT_NOT_VERIFIED"}]}}
+        # A missing RPC field is NOT a revoked authority. Preserve the
+        # distinction before .get(...) normalizes missing keys to None.
+        authority_evidence=all(
+            key in info and _valid_raw_mint_authority(info[key])
+            for key in ("mintAuthority","freezeAuthority")
+        )
         metadata=read_metadata(self.mint,self.rpc,result)
         verified_metadata=metadata.get("status")=="VERIFIED"
         found_update=verified_metadata and bool(metadata.get("records"))
@@ -584,7 +609,8 @@ class WalletClusterAnalyzer:
             "status":"OK",
             "source":"SOLANA_FINALIZED_JSON_RPC",
             "mint":self.mint,"metadata":metadata,
-            "mint_account_status":"VERIFIED" if parsed.get("type")=="mint" and info.get("isInitialized") is True else "UNCONFIRMED",
+            "mint_account_status":"VERIFIED" if parsed.get("type")=="mint" and info.get("isInitialized") is True and authority_evidence else "UNCONFIRMED",
+            "authority_evidence_status":"VERIFIED" if authority_evidence else "UNCONFIRMED",
             "mint_slot":((result or {}).get("context") or {}).get("slot"),
             "token_program":token_program,
             "program_id":program,
@@ -1019,8 +1045,8 @@ class WalletClusterAnalyzer:
                 "mint_authority" in token_profile and
                 "freeze_authority" in token_profile
             )
-            if not mint_verified:chain_status="UNRESOLVED"
-            elif active_authorities or active_extension_risks:chain_status="RISK"
+            if active_authorities or active_extension_risks:chain_status="RISK"
+            elif not mint_verified:chain_status="UNRESOLVED"
             elif unresolved_extension_risks:chain_status="UNRESOLVED"
             else:chain_status="PASS"
         else:
