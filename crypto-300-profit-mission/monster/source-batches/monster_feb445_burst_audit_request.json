@@ -1,5 +1,5 @@
 {
-  "schema": "MONSTER445_SOURCE_PINNED_BURST_AUDIT_REQUEST_V1",
+  "schema": "MONSTER445_SOURCE_PINNED_BURST_AUDIT_REQUEST_V2",
   "artifact_id": 12044872933,
   "source_sha256": "370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf",
   "research_only": true,
