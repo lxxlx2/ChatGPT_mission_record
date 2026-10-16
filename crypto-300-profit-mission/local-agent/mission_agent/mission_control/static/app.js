@@ -518,7 +518,7 @@ function renderCandidates(rows) {
       Number.isFinite(Number(impactRaw)) && Number(impactRaw) >= 0;
 
     let deltaRaw = null;
-    if (deltaRaw == null && frankPriceRaw != null && execRaw != null) {
+    if (quoteVerified && deltaRaw == null && frankPriceRaw != null && execRaw != null) {
       const f = Number(frankPriceRaw);
       const e = Number(execRaw);
       if (Number.isFinite(f) && f > 0 && Number.isFinite(e)) {
@@ -526,10 +526,12 @@ function renderCandidates(rows) {
       }
     }
 
-    const delta = deltaRaw != null ? `${n(deltaRaw,2)}%` : quoteUnavailableText(x,q);
-    const impact = impactRaw != null ? `${n(impactRaw,2)}%` : quoteUnavailableText(x,q);
+    const delta = quoteVerified && deltaRaw != null ? `${n(deltaRaw,2)}%` : quoteUnavailableText(x,q);
+    const impact = quoteVerified ? `${n(impactRaw,2)}%` : quoteUnavailableText(x,q);
     const frankPrice = frankPriceText(x,m);
-    const execPrice = execRaw != null ? `${money(execRaw,8)}` : quoteUnavailableText(x,q);
+    // Unlike money(...,8), smallPrice keeps a tiny positive executable
+    // price nonzero instead of rounding it to 0.000000.
+    const execPrice = quoteVerified ? smallPrice(execRaw) : quoteUnavailableText(x,q);
     const buys = x.buy_count ?? 0;
     const sells = x.sell_count ?? 0;
     const followable = quoteVerified &&
