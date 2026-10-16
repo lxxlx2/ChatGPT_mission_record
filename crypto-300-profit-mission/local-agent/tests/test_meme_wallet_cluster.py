@@ -179,6 +179,9 @@ def test_full_report_exposes_bounded_holder_acquisition_and_conservative_conclus
     a=analyzer()
     a.token_profile=lambda:{
         "status":"OK","mint_authority":None,"freeze_authority":None,
+        "source":"SOLANA_FINALIZED_JSON_RPC","mint_account_status":"VERIFIED",
+        "is_initialized":True,"mint_slot":500,
+        "program_id":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
         "metadata_update_authority":"UNAVAILABLE","metadata_update_authority_status":"UNAVAILABLE",
         "token_program":"SPL Token",
     }
