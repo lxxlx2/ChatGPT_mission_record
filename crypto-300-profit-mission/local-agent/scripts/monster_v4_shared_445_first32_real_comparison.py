@@ -53,8 +53,8 @@ def analyze_two(source_dir, *, legacy_scan=None, shared_run=None):
                 this=[]
                 for symbol,bars,receipts,metadata in shards.read_archive(
                         path,proof=proof,expected_shard=i):
-                    if symbol in found:
-                        raise ValueError("SHARED_445_FIRST32_DUPLICATED_SOURCE_MEMBER")
+                    if symbol not in shards.members(i) or symbol in found:
+                        raise ValueError("SHARED_445_FIRST32_INVALID_OR_DUPLICATED_SOURCE_MEMBER")
                     attested=[{"date":r["day"],"sha256":r["sha256"],
                                "verified_published_sha256":True,
                                "verified_by":"PREVIOUS_CI_SOURCE_ARCHIVE_CHECKSUM_READER"}
