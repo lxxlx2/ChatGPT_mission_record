@@ -1,16 +1,16 @@
 # Airdrop / TGE Monitor State
-Updated: 2026-10-16 16:00:57 Asia/Bangkok, latest partial final-retry
+Updated: 2026-10-16 17:03:44 Asia/Bangkok, latest partial final
 Timezone: Asia/Bangkok
 - expected_schedule: hourly :00 Asia/Bangkok (user-approved 2026-10-10)
-- latest_actual_run: 2026-10-16 16:00:57 Asia/Bangkok
+- latest_actual_run: 2026-10-16 17:03:44 Asia/Bangkok
 - latest_actual_run_status: partial
 - latest_authoritative_success: 2026-10-10 07:52:16 Asia/Bangkok
-- latest_run_path: airdrop-tge-monitor/runs/2026-10-16/160057-final-retry.md
-- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-16/155950-attempt.md (BLOCKED_WITH_REASON; not persisted)
-- latest_scheduled_shard: 0
-- latest_executed_shard: 0
+- latest_run_path: airdrop-tge-monitor/runs/2026-10-16/170344-final.md
+- latest_attempt_path: airdrop-tge-monitor/runs/2026-10-16/170225-attempt.md (persisted)
+- latest_scheduled_shard: 1
+- latest_executed_shard: 1
 - stale_shard_recovery: false
-- latest_candidate_count: 5
+- latest_candidate_count: 4
 - latest_triggered_events: 0
 - latest_identity_failures: 0
 - latest_source_failures: 4
@@ -90,3 +90,5 @@ Read state/known-events.md before discovery. Delivered Concrete CT claim, HEEBOO
 - 2026-10-16 02:05:10: existing HH:00 monitor invocation; 020340-attempt.md committed, primary final BLOCKED_WITH_REASON, 020510-final-retry.md committed. Urgent5 + dynamic Surf/StandX + scheduled shard2, 15 unique projects attempted, bounded cross-shard lifecycle search completed, 4 candidates, 0 new Tier A/B ACTION, 8 current-source gaps, 0 identity conflicts. Gmail Sent confirmed Oct15 SurfBoard and StandX stable events already delivered; no duplicate. No Gmail/App notification. Shard2 last_meaningful_attempt_at advanced; verified-complete remains unchanged (PARTIAL). Recent final-backed shards [1,3,0,2], no override. Schedule/task/scope unchanged.
 
 - 2026-10-16 16:00:57: bounded urgent + scheduled shard0 and cross-shard lifecycle/StandX beneficiary relationship search; terminal 160057-final-retry.md committed. Attempt and primary final blocked by safety checks. 5 candidate families, 0 new Tier A/B ACTION, 4 SOURCE_GAP (NeoSoul issuer full text, StandX original X, Concrete extra USDC, Block Stranding canonical current source). Binance Wallet DNA Alpha Points official announcement is separate from unverified NeoSoul->StandX community allocation. Prior Surf and StandX Gmail Sent deduped, no new email/App notification. Partial only advances shard0 meaningful attempt, not verified-complete. Recent final-backed shards [3,0,2,0]; no stale override; task unchanged.
+
+- 2026-10-16 17:03:44: existing hourly invocation; append-only 170225-attempt.md and terminal 170344-final.md committed; urgent set + scheduled shard1 and bounded cross-shard/StandX-beneficiary search, 15 active registry projects attempted; 4 candidate families, 0 new Tier A/B ACTION, 4 SOURCE_GAP (NeoSoul issuer original, StandX original X, Concrete extra USDC, Neutrl current rights); Binance Wallet DNA Alpha Points official event separate from unverified StandX-specific allocation; prior SurfBoard/StandX Gmail Sent verified and suppressed. Gmail/App silent. shard1 last_meaningful_attempt_at advanced to 17:03:44; last_verified_complete_at unchanged (PARTIAL); recent executed shards [0,2,0,1], no override. No task or schedule change.
