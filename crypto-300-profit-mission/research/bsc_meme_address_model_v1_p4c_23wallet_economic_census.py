@@ -136,7 +136,7 @@ def census(d):
         for c in w["cells"]:
             ca = c["ca"].lower()
             require(c["wallet"].lower() == owner and ca in majors
-                    and c["ERC20_presence"] in ("PRESENT", "ABSENT")
+                    and c["ERC20_presence"] in ("PRESENT", "ABSENT_IN_FROZEN_CA")
                     and c["realized_cashflow_and_profit"] == "UNRESOLVED",
                     "P1_TRANSFER_NOT_REALIZED_PNL")
             rounds = selected.get((owner, ca), [])
@@ -182,7 +182,7 @@ def census(d):
             "cells":cells,
         })
     require(len(rows) == 23 and sum(len(w["cells"]) for w in rows) == 437
-            and counted["PRESENT"] == 148 and counted["ABSENT"] == 289
+            and counted["PRESENT"] == 148 and counted["ABSENT_IN_FROZEN_CA"] == 289
             and sum(r["curated_original_signed_closed_episodes"] for r in rows) == 50
             and sum(r["curated_native_block_positive"] for r in rows) == 31
             and sum(r["curated_native_block_negative"] for r in rows) == 17
