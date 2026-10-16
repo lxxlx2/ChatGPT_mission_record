@@ -1,0 +1,185 @@
+name: Monster V4 first 32 official 445-cohort shared D0 D1 causal high-pressure
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_first32_real_comparison.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_first32_real_comparison.py'
+      - '.github/workflows/monster-v4-445-real-first32-shared-D0-D1.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  frozen_first32_synthetic_gates:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Two-shard original source identity, negative provenance, 32 not 445
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -m py_compile monster_v4_shared_445_first32_real_comparison.py test_monster_v4_shared_445_first32_real_comparison.py
+          python -m unittest -v test_monster_v4_shared_445_first32_real_comparison.py
+          echo MONSTER_FIRST32_SHARED_REAL_MODEL_NO_FAKE_445=PASS
+
+  official_shard00_16_times_10_daily:
+    needs: frozen_first32_synthetic_gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Freeze original first 16 of 445, download 160 official Spot1m publisher ZIP+CHECKSUM, SHA all 12960 bars
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python monster_v4_shared_445_official_source_shards.py --shard 0 --workers 2 --out-archive /tmp/monster_feb445_shard00.zip --out-proof /tmp/monster_feb445_shard00.proof.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          import monster_v4_shared_445_official_source_shards as sh
+          proof=json.loads(Path('/tmp/monster_feb445_shard00.proof.json').read_text())
+          assert proof['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert proof['source_origin_verified_at_collection'] is True
+          assert proof['source_symbol_count']==16
+          assert sum(len(x['publisher_days']) for x in proof['source_sha256_by_symbol'])==160
+          got=list(sh.read_archive('/tmp/monster_feb445_shard00.zip',
+                                      proof=proof,expected_shard=0))
+          assert [z[0] for z in got]==list(sh.members(0))
+          print('MONSTER_FIRST32_SHARD00_VERIFIED_REAL_160_PUBLISHER_DAYS_AND_16x12960_1M')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first32-shard00-real-publisher-source
+          path: |
+            /tmp/monster_feb445_shard00.zip
+            /tmp/monster_feb445_shard00.proof.json
+          if-no-files-found: error
+          retention-days: 60
+
+  genuine_first32_one_db_compare_original_D0:
+    needs: official_shard00_16_times_10_daily
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Re-fetch exact earlier SHA-bound official shard01 artifact and this run's shard00
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_first32_sources
+          gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_first32_sources --name monster-first32-shard00-real-publisher-source
+          gh api -H 'Accept: application/vnd.github+json' 'repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/12021445690/zip' > /tmp/monster_old_shard01_artifact.zip
+          unzip -q -j /tmp/monster_old_shard01_artifact.zip -d /tmp/monster_first32_sources
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('crypto-300-profit-mission/monster/evidence/monster_feb445_shard01.proof.json')
+          q=Path('/tmp/monster_first32_sources/monster_feb445_shard01.proof.json')
+          assert json.loads(p.read_text()) == json.loads(q.read_text())
+          print('MONSTER_FIRST32_OLD_SOURCE_SHARD01_GIT_AND_ORIGINAL_ARTIFACT_PROOFS_MATCH')
+          PY
+      - name: Original real 32 coin V4 individual D0 vs all 32 global D0 and true global D1, NOT old WATCH injection
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python monster_v4_shared_445_first32_real_comparison.py --source-dir /tmp/monster_first32_sources --out /tmp/monster_first32_global_original_production_result.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          r=json.loads(Path('/tmp/monster_first32_global_original_production_result.json').read_text())
+          assert r['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert r['same_source_all_32_D0_watch_utc_exact'] is True
+          assert r['execution_counts']['polls']==3360
+          assert r['source_complete_cohort_total']==445
+          assert r['source_complete_not_replayed']==413
+          assert r['old_source_missing_not_zero']==313
+          assert r['true_full_445_replayed'] is False
+          assert r['source_origin_verified'] is False
+          assert r['original_758_coverage']['original_758_denominator']==758
+          assert len(r['two_original_source_artifact_shas'])==2
+          print('MONSTER_FIRST32_REAL_ONE_SQLITE_SOURCE_COMPLETE_CAUSAL_REPLAY_SOURCE_TAGGED')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-445-first32-real-one-shared-SQLite-original-v4-replay
+          path: /tmp/monster_first32_global_original_production_result.json
+          if-no-files-found: error
+          retention-days: 60
+
+  pinned_real_first32_research_git_archive:
+    needs: genuine_first32_one_db_compare_original_D0
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - name: Fetch only this run's original 16 source sha and exact 32 global outcome
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster_first32_results
+          gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_first32_results --name monster-first32-shard00-real-publisher-source
+          gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_first32_results --name monster-445-first32-real-one-shared-SQLite-original-v4-replay
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path('/tmp/monster_first32_results')
+          a=json.loads((p/'monster_feb445_shard00.proof.json').read_text())
+          b=json.loads((p/'monster_first32_global_original_production_result.json').read_text())
+          assert a['trigger_commit_sha']==b['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert a['source_origin_verified_at_collection'] is True
+          assert b['same_source_all_32_D0_watch_utc_exact'] is True
+          assert b['execution_counts']['polls']==3360
+          assert b['true_full_445_replayed'] is False
+          print('MONSTER_445_REAL_FIRST32_SOURCE_PROVENANCE_AND_GLOBAL_V4_GIT_READBACK_PASS')
+          PY
+      - name: Archive only proof SHA and true 32 global D0 D1 evidence, do not commit raw archive
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          d=crypto-300-profit-mission/monster/evidence
+          cp /tmp/monster_first32_results/monster_feb445_shard00.proof.json "$d/monster_feb445_shard00.proof.json"
+          cp /tmp/monster_first32_results/monster_first32_global_original_production_result.json "$d/monster_feb445_first32_real_global_original_v4.json"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add "$d/monster_feb445_shard00.proof.json" "$d/monster_feb445_first32_real_global_original_v4.json"
+          git commit -m "monster: archive original 160 publisher SHA for shard00 and true first32 one-global-SQLite D0 D1 high-pressure outcome"
+          for attempt in 1 2 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              exit 1
+            fi
+            for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_first32_real_comparison.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_first32_real_comparison.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-real-first32-shared-D0-D1.yml; do
+              test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_FIRST32_GIT_EXECUTABLE_SOURCE_DRIFT=$f"; exit 1; }
+            done
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo MONSTER_445_REAL_FIRST32_ONE_SQLITE_OFFICIAL_SOURCE_PINNED_GIT_PASS
+              exit 0
+            fi
+          done
+          exit 1
