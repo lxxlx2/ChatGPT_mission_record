@@ -42,10 +42,10 @@ jobs:
           root="$(mktemp -d "$RUNNER_TEMP/frank-joint-XXXXXXXX")"
           dest="$root/frank-joint-pinned-qa"
           git clone --no-local --no-checkout --quiet "$GITHUB_WORKSPACE" "$dest"
-          git -C "$dest" fetch --no-tags --quiet "$GITHUB_WORKSPACE" "$MAIN_SNAPSHOT" "$F02" "$C02" "$F01"
+          git -C "$dest" fetch --no-tags --quiet "$GITHUB_WORKSPACE" "$MAIN_SNAPSHOT" "$F02" "$C02" "$F01" "$GITHUB_SHA"
           git -C "$dest" fetch --no-tags --quiet "$GITHUB_WORKSPACE" "refs/remotes/origin/evidence/frank-ca-local:refs/remotes/origin/evidence/frank-ca-local"
           git -C "$dest" checkout --quiet --detach "$MAIN_SNAPSHOT"
-          for pair in "F02:$F02" "C02:$C02" "F01:$F01"; do
+          for pair in "F02:$F02" "C02:$C02" "F01:$F01" "QA_HARNESS:$GITHUB_SHA"; do
             label="${pair%%:*}"
             sha="${pair#*:}"
             echo "PINNED_MERGE_START $label $sha"
@@ -58,12 +58,15 @@ jobs:
             git -C "$dest" merge-base --is-ancestor "$sha" HEAD
             echo "PINNED_MERGE_PASS $label $(git -C "$dest" rev-parse HEAD)"
           done
-          for sha in "$MAIN_SNAPSHOT" "$F02" "$C02" "$F01"; do
+          for sha in "$MAIN_SNAPSHOT" "$F02" "$C02" "$F01" "$GITHUB_SHA"; do
             git -C "$dest" merge-base --is-ancestor "$sha" HEAD
           done
           test "$(git -C "$dest" rev-parse refs/remotes/origin/evidence/frank-ca-local)" = "$EVIDENCE"
           test -z "$(git -C "$dest" status --porcelain=v1 --untracked-files=all --ignored=matching)"
           echo "PINNED_TRIPLE_COMBINED_HEAD=$(git -C "$dest" rev-parse HEAD)"
+          echo "PINNED_TRIPLE_COMBINED_TREE=$(git -C "$dest" rev-parse HEAD^{tree})"
+          echo "PINNED_TRIPLE_HARNESS_SHA=$GITHUB_SHA"
+          git -C "$dest" log -1 --format="PINNED_TRIPLE_COMMIT_PARENTS=%P"
           echo "PINNED_TRIPLE_SOURCE_ONLY=true"
           echo "NO_MAC_OR_REAL_RPC=true"
           echo "dest=$dest" >> "$GITHUB_OUTPUT"
