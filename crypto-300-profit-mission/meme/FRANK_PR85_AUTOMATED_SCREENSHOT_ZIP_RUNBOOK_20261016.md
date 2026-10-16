@@ -100,3 +100,11 @@ UPLOAD_THIS_ZIP=/Users/jerson/.local/share/frank-pr85-mac-qa-R1c6kmCU/qa-evidenc
 单一 ZIP 包含 10 张 PNG 和完整 `manifest.json`/`index.md`/`browser-console.json`/`launcher.log`/`errors.txt`/`SHA256SUMS.txt`。用户只需要上传 ZIP，不必逐张图片发消息；如果失败也会保留 PARTIAL/FAILED 的包，并明确真实错误。自动浏览器完成不代表 F01 已可真金白银跟单、C02 获得真实发行权限证明或 F02 现在仍有记录的历史余额。
 
 已批准的 #83/#84/#85 产品/集成 PR 均仍 Draft；生产 `NO_MERGE/NO_DEPLOY/NO_NEW_REAL_RPC/NO_GMAIL/NO_TRADES/NO_PRODUCTION_SQLITE_WRITE/NO_FILE_CLEANUP` 门禁不变。
+
+## 2026-10-17 用户 Mac WebKit ZIP 实际回传核验（取代“尚未运行”的旧状态）
+
+本回合已实际收到 `frank-safari-20261016T181726Z-eea30efa09cb.zip`，SHA256 `2a2ed9345684c406be8c293db40c08cfffd088be34805a631c3bd729ec552b60`，**仅在用户本对话上传**，未自动上传公共仓库。对归档重算 CRC/15 个 SHA256/manifest 10 PNG HASH 全通过；10 张完整 WebKit 画面、F01 当前/排除、C02 A/B 同名不同 CA 摘要及展开、F02 32 Mint 新鲜/筛选/TTL 到期遮罩均已人工核看；manifest 记录 `WEBKIT_SCREENSHOTS_CAPTURED_NOT_SAFARI_PASS`，产品树指纹与原获批树一致，`launcher_exit_code=0`，launcher 自报 3 localhost 服务已关闭及 repo clean。日志无法单独独立核查用户 Mac 的 PID/端口或终端打印的 ZIP 路径。
+
+**当前等级**：`MAC_WEBKIT_SYNTHETIC_ZIP_RECEIVED_AND_INTEGRITY_PASS / VISUAL_SPOT_CHECK_PASS_WITH_QA_P3 / NOT_SAFARI_APP / NOT_REAL_SOURCE / NO_DEPLOY`。浏览器 Console 中 F02 URL 有 4 条 CSP 样式拒绝错误，无法确认根因；过期 F02 两张整页截图的固定 QA 横幅落在中段，疑与滚动/截图固定层有关，暂留 QA P3 后续处理，不作为新产品 P2、不得拖延 A05/F01/C02 真实来源主线。C02 synthetic A 无真实 RPC 权限证据（截图 Token Program 未确认、RPC=0）；不得把注入 fixture 的“权限已撤销”标为链上已核实。
+
+以前 2026-10-16 文档中的“用户 Mac 新 SHA 尚未运行”只表示**该时点**状态；本段为更新记录。本轮 WebKit ZIP 与此前真实 Safari.app 14 图为两份不同证据，尚无真实链上 32 Mint/ATA 及整套正式产品业务验收。冻结 PR #85 产品 tree、获批 PR #88 SHA 以及 PR #87 REQUEST_CHANGES 原结论全部保持不变，`NO_MERGE / NO_DEPLOY / NO_NEW_REAL_RPC / NO_GMAIL / NO_TRADES / NO_PRODUCTION_SQLITE_WRITE / NO_NEW_AUTOMATION / NO_FILE_CLEANUP` 仍生效。更详细进度写在 `FRANK_CA_MULTI_PERSON_IMPLEMENTATION_TODO_20261013.md` 的 2026-10-17 节。
