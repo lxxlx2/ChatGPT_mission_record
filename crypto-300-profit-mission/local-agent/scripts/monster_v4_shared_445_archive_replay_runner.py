@@ -69,6 +69,22 @@ def gh_download(run_id, name, dest):
                     "--dir", str(dest)], check=True)
 
 
+def attest_source_job_on_failed_early_run(api, run_id, pair):
+    # Only the original publisher-source jobs for the first two single
+    # shards are exceptional. Their later *model* runs really failed.
+    if len(pair) != 1 or pair[0] not in (0, 1):
+        raise RuntimeError("MONSTER445_REPLAY_NONFIRST_PRODUCER_RUN_FAILED")
+    jobs = api(f"repos/{REPO}/actions/runs/{run_id}/jobs?per_page=100")
+    expected = f"official_shard{pair[0]:02d}_16_times_10_daily"
+    if (not isinstance(jobs.get("jobs"), list)
+            or not any(j.get("name") == expected
+                       and j.get("status") == "completed"
+                       and j.get("conclusion") == "success"
+                       for j in jobs["jobs"])):
+        raise RuntimeError("MONSTER445_REPLAY_FIRST_SOURCE_JOB_NOT_VERIFIED")
+    return "PUBLISHER_SOURCE_JOB_SUCCESS_OVERALL_RUN_FAILED"
+
+
 def collect(source_dir: Path, audit_file: Path, *, api=gh_json, downloader=gh_download):
     validate_ledger()
     if source_dir.exists() or source_dir.is_symlink():
@@ -100,20 +116,8 @@ def collect(source_dir: Path, audit_file: Path, *, api=gh_json, downloader=gh_do
             raise RuntimeError("MONSTER445_REPLAY_PRODUCER_RUN_IDENTITY_OR_STATE_DRIFT")
         source_job_attested = "COMPLETE_PRODUCER_RUN_SUCCESS"
         if run.get("conclusion") != "success":
-            # Two first source shards came from early 32-cohort workflows where
-            # a *later model replay* failed despite the publisher source job
-            # succeeding. Do not relabel those entire runs as successful.
-            if len(pair)!=1 or pair[0] not in (0,1):
-                raise RuntimeError("MONSTER445_REPLAY_NONFIRST_PRODUCER_RUN_FAILED")
-            old_jobs=api(f"repos/{REPO}/actions/runs/{run_id}/jobs?per_page=100")
-            target=f"official_shard{pair[0]:02d}_16_times_10_daily"
-            if (not isinstance(old_jobs.get("jobs"),list)
-                    or not any(j.get("name")==target
-                               and j.get("status")=="completed"
-                               and j.get("conclusion")=="success"
-                               for j in old_jobs["jobs"])):
-                raise RuntimeError("MONSTER445_REPLAY_FIRST_SOURCE_JOB_NOT_VERIFIED")
-            source_job_attested="PUBLISHER_SOURCE_JOB_SUCCESS_OVERALL_RUN_FAILED"
+            source_job_attested = attest_source_job_on_failed_early_run(
+                api, run_id, pair)
         subdir = source_dir / f"artifact_{artifact_id}"
         subdir.mkdir()
         downloader(run_id, artifact["name"], subdir)
