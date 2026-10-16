@@ -33,7 +33,7 @@ jobs:
           changed=subprocess.check_output(
               ['git','diff-tree','--no-commit-id','--name-only','-r','HEAD'],
               text=True).splitlines()
-          expected={'schema':'MONSTER445_SOURCE_PINNED_BURST_AUDIT_REQUEST_V3',
+          expected={'schema':'MONSTER445_SOURCE_PINNED_BURST_AUDIT_REQUEST_V4',
                     'artifact_id':12044872933,
                     'source_sha256':'370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d67cf',
                     'research_only':True,'approved_scope':'POSTMORTEM_ONLY'}
@@ -133,13 +133,15 @@ jobs:
               'research_only':True,'G4':'UNKNOWN','G6':'NO_GO'
           }
           dest=Path('/tmp/monster445_real_burst/monster445_original_source_proof_manifest_crosscheck.json')
-          dest.write_text(json.dumps(payload,indent=2,sort_keys=True)+'\\n')
+          dest.write_text(json.dumps(payload,indent=2,sort_keys=True)+chr(10))
+          if json.loads(dest.read_text()) != payload:
+              raise RuntimeError('MONSTER445_SOURCE_AUDIT_JSON_ROUNDTRIP_FAILED')
           print('MONSTER445_REAL_28_ARCHIVES_4450_ISSUER_SHA_CROSSCHECKED_AGAINST_SOURCE_MANIFEST')
           PY
           )
       - uses: actions/upload-artifact@v4
         with:
-          name: monster445-real-burst-plus-issuer-28-shards-review-sha-pinned
+          name: monster445-real-burst-plus-issuer28-verified-json-review
           path: |
             /tmp/monster445_real_burst/monster445_true_burst_exact_anchor_audit.json
             /tmp/monster445_real_burst/monster445_original_source_proof_manifest_crosscheck.json
@@ -149,13 +151,13 @@ jobs:
         run: |
           set -eu
           branch=research/monster-v4-local-discovery-20261010
-          report=crypto-300-profit-mission/monster/evidence/monster_feb445_true_burst_causal_audit_review_final_actual.json
+          report=crypto-300-profit-mission/monster/evidence/monster_feb445_true_burst_causal_audit_review_verified_actual.json
           if test -e "$report"; then
             echo MONSTER445_BURST_REPORT_MUST_NOT_REPLACE_EXISTING
             exit 1
           fi
           cp /tmp/monster445_real_burst/monster445_true_burst_exact_anchor_audit.json "$report"
-          extra=crypto-300-profit-mission/monster/evidence/monster_feb445_original28_publisher_sha_proof_manifest_review_actual.json
+          extra=crypto-300-profit-mission/monster/evidence/monster_feb445_original28_publisher_sha_proof_manifest_verified_actual.json
           if test -e "$extra"; then
             echo MONSTER445_REVIEW_SOURCE_MANIFEST_ALREADY_ARCHIVED
             exit 1
