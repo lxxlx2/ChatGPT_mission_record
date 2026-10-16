@@ -225,6 +225,26 @@ def get_json(port, path):
         return json.loads(reply.read())
 
 
+QA_BANNER = (
+    '<div id="synthetic-qa-banner" role="alert">'
+    'SYNTHETIC QA · 模拟数据 · 禁止交易 · 不代表真实 Frank 状态或钱包余额'
+    '</div>'
+).encode("utf-8")
+QA_BANNER_CSS = (
+    "#synthetic-qa-banner{position:sticky;top:0;z-index:1000000;"
+    "background:#991b3b;color:#fff;text-align:center;"
+    "padding:12px;font-size:15px;font-weight:700;"
+    "box-shadow:0 2px 8px #0009;}\\n"
+)
+
+
+def read_html(port, path):
+    with urllib.request.urlopen("http://127.0.0.1:" + str(port) + path, timeout=5) as reply:
+        if reply.status != 200:
+            raise ValueError("SYNTHETIC_HTML_STATUS_NOT_200")
+        return reply.read()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--qa-root", required=True)
@@ -243,14 +263,52 @@ def main():
     try:
         a, b, f02 = sources(runtime)
         class Control(Handler):
-            pass
+            def _file(self, path):
+                if path == self.static_root / "index.html":
+                    raw = path.read_bytes().replace(b"<body>", b"<body>" + QA_BANNER, 1)
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self.send_header("Cache-Control", "no-store")
+                    self.send_header("Content-Length", str(len(raw)))
+                    self.end_headers()
+                    self.wfile.write(raw)
+                    return
+                return super()._file(path)
+
+        from scripts.frank_f02_readonly_positions_api import WEB_CSP, WEB_ROUTES, WEB_ROOT
+        NativeResearch = positions_handler(f02)
+        class SyntheticResearch(NativeResearch):
+            def _static(self, path):
+                if path not in ("/research/positions", "/research/positions.css"):
+                    return super()._static(path)
+                filename, mime = WEB_ROUTES[path]
+                raw = (WEB_ROOT / filename).read_bytes()
+                if path == "/research/positions":
+                    raw = raw.replace(b"<body>", b"<body>" + QA_BANNER, 1)
+                else:
+                    raw = raw + QA_BANNER_CSS.encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", mime)
+                self.send_header("Content-Length", str(len(raw)))
+                self.send_header("Cache-Control", "no-store")
+                self.send_header("Content-Security-Policy", WEB_CSP)
+                self.send_header("X-Content-Type-Options", "nosniff")
+                self.send_header("X-Frame-Options", "DENY")
+                self.send_header("Referrer-Policy", "no-referrer")
+                self.end_headers()
+                self.wfile.write(raw)
+
         Control.state = state_for(a, b)
         listeners.append(Listener(Control))
-        listeners.append(Listener(positions_handler(f02)))
+        listeners.append(Listener(SyntheticResearch))
         joint = JointReadOnly(control_port=listeners[0].port,
                              f02_port=listeners[1].port)
         listeners.append(Listener(joint_handler(joint)))
         control, research, combined = (x.port for x in listeners)
+        if b'id="synthetic-qa-banner"' not in read_html(control, "/"):
+            raise ValueError("SYNTHETIC_CONTROL_BANNER_MISSING")
+        if b'id="synthetic-qa-banner"' not in read_html(research, "/research/positions"):
+            raise ValueError("SYNTHETIC_F02_BANNER_MISSING")
         f01 = get_json(control, "/api/follow-opportunities")
         ca = get_json(control, "/api/cluster-latest?mint=" + a)
         cb = get_json(control, "/api/cluster-latest?mint=" + b)
