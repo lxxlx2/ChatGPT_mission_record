@@ -1,0 +1,94 @@
+name: Frank PR83 PR84 F02 immutable disposable combined regression
+
+on:
+  push:
+    branches:
+      - qa/frank-f01-pr83-c02-pr84-f02-p73-isolated-20261016
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fixed-source-disposable:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Create isolated checkout and merge only verified reviewed pins
+        id: assembly
+        env:
+          F01: d2eeebc1b49d2bae38e05d7d01f6839e3ba237f4
+          C02: 8d425e4d0e9db9f27abd8ad662e4d59e64b57e53
+          F02: 5755b8b96080f21635eaa5354588cbb8f6561ab0
+          MAIN_SNAPSHOT: 662ba4aceb9d53cb7a541ad3f251f9e12b8c09ea
+          EVIDENCE: b9fb6e6df9032a0e6f49c1274bb4ba61c9e4c2da
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "refs/heads/fix/frank-f01-pr81-js-range-20261016:refs/remotes/origin/fix/frank-f01-pr81-js-range-20261016"
+          git fetch --no-tags origin "refs/heads/fix/frank-c02-pr82-authority-presence-20261016:refs/remotes/origin/fix/frank-c02-pr82-authority-presence-20261016"
+          git fetch --no-tags origin "refs/heads/fix/frank-pr72-ignored-files-external-manifest-pin-20261015:refs/remotes/origin/fix/frank-pr72-ignored-files-external-manifest-pin-20261015"
+          git fetch --no-tags origin "refs/heads/evidence/frank-ca-local:refs/remotes/origin/evidence/frank-ca-local"
+          test "$(git rev-parse refs/remotes/origin/fix/frank-f01-pr81-js-range-20261016)" = "$F01"
+          test "$(git rev-parse refs/remotes/origin/fix/frank-c02-pr82-authority-presence-20261016)" = "$C02"
+          test "$(git rev-parse refs/remotes/origin/fix/frank-pr72-ignored-files-external-manifest-pin-20261015)" = "$F02"
+          test "$(git rev-parse refs/remotes/origin/evidence/frank-ca-local)" = "$EVIDENCE"
+          root="$(mktemp -d "$RUNNER_TEMP/frank-joint-XXXXXXXX")"
+          dest="$root/frank-joint-pinned-qa"
+          git clone --no-local --no-checkout --quiet "$GITHUB_WORKSPACE" "$dest"
+          git -C "$dest" fetch --no-tags --quiet "$GITHUB_WORKSPACE" "$MAIN_SNAPSHOT" "$F02" "$C02" "$F01" "$GITHUB_SHA"
+          git -C "$dest" fetch --no-tags --quiet "$GITHUB_WORKSPACE" "refs/remotes/origin/evidence/frank-ca-local:refs/remotes/origin/evidence/frank-ca-local"
+          git -C "$dest" checkout --quiet --detach "$MAIN_SNAPSHOT"
+          for pair in "F02:$F02" "C02:$C02" "F01:$F01" "QA_HARNESS:$GITHUB_SHA"; do
+            label="${pair%%:*}"
+            sha="${pair#*:}"
+            echo "PINNED_MERGE_START $label $sha"
+            if ! git -C "$dest" -c user.name="Frank Isolated CI" -c user.email="frank-qa@example.invalid" merge --no-ff --no-edit --no-gpg-sign "$sha"; then
+              echo "::error::PINNED_MERGE_CONFLICT $label $sha"
+              git -C "$dest" diff --name-only --diff-filter=U
+              git -C "$dest" status --short
+              exit 2
+            fi
+            git -C "$dest" merge-base --is-ancestor "$sha" HEAD
+            echo "PINNED_MERGE_PASS $label $(git -C "$dest" rev-parse HEAD)"
+          done
+          for sha in "$MAIN_SNAPSHOT" "$F02" "$C02" "$F01" "$GITHUB_SHA"; do
+            git -C "$dest" merge-base --is-ancestor "$sha" HEAD
+          done
+          test "$(git -C "$dest" rev-parse refs/remotes/origin/evidence/frank-ca-local)" = "$EVIDENCE"
+          test -z "$(git -C "$dest" status --porcelain=v1 --untracked-files=all --ignored=matching)"
+          echo "PINNED_TRIPLE_COMBINED_HEAD=$(git -C "$dest" rev-parse HEAD)"
+          echo "PINNED_TRIPLE_COMBINED_TREE=$(git -C "$dest" rev-parse HEAD^{tree})"
+          echo "PINNED_TRIPLE_HARNESS_SHA=$GITHUB_SHA"
+          git -C "$dest" log -1 --format="PINNED_TRIPLE_COMMIT_PARENTS=%P"
+          echo "PINNED_TRIPLE_SOURCE_ONLY=true"
+          echo "NO_MAC_OR_REAL_RPC=true"
+          echo "dest=$dest" >> "$GITHUB_OUTPUT"
+      - name: Install isolated Python test dependencies
+        working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
+        run: python -m pip install -e '.[dev]' numpy==2.3.3 pyflakes==3.4.0
+      - name: Actual merged UI JavaScript Node contracts
+        working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
+        run: |
+          node --check mission_agent/mission_control/static/app.js
+          node tests/frank_f01_excluded_badge_render.cjs
+          node tests/frank_f01_quote_projection_render.cjs
+          node tests/ca_identity_render.cjs
+          node tests/frank_f02_r2_render.cjs
+      - name: F01 C02 F02 and native synthetic HTTP joint contracts
+        working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: |
+          python -B -m pytest -q -p no:cacheprovider tests/test_follow_opportunity_f01.py tests/test_follow_opportunity_f01_integration.py tests/test_frank_ca_c02_claude_review_regression.py tests/test_meme_wallet_cluster.py tests/test_frank_f01_c02_f02_alignment.py tests/test_frank_joint_readonly_http.py tests/test_frank_joint_http_p2_regression.py tests/test_frank_f02_r2_isolated_browser.py integration_tests/test_frank_f01_c02_f02_exact_contract.py integration_tests/test_frank_joint_native_control_http.py
+      - name: Complete native local-agent regression in disposable combined checkout
+        working-directory: ${{ steps.assembly.outputs.dest }}/crypto-300-profit-mission/local-agent
+        env:
+          FRANK_EXPECT_REAL_GIT_REPLAY: '1'
+        run: python -B -m pytest -q -p no:cacheprovider tests

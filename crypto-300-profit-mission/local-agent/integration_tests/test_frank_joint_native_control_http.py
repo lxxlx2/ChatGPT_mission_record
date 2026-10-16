@@ -75,7 +75,11 @@ def test_real_native_F01_C02_and_F02_handler_get_join_no_hidden_posts(tmp_path):
         "latest_side": "BUY", "latest_at": now - 10,
         "latest_buy_at": now - 10, "decision_created_at": now - 2,
         "quote_observed_at": now - 2,
-        "decision_quote": {"status": "OK", "route_exists": True},
+        "decision_quote": {"status": "OK", "route_exists": True,
+                           "execution_price_usdc": "0.1",
+                           "price_impact_pct": "0.1"},
+        "metrics": {"execution_price_usdc": "0.1",
+                    "price_impact_pct": "0.1"},
     }
     follow = partition_candidates(
         [candidate], now=now, runtime_status="LIVE",
