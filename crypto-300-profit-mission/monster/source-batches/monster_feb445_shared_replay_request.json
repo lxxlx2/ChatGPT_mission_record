@@ -1,9 +1,9 @@
 {
-  "schema": "MONSTER_FEB445_ONE_SQLITE_MANUAL_REQUEST_V1",
-  "source_shards": 28,
-  "expected_symbols": 445,
-  "source_artifact_ids_sha_locked": true,
-  "request_id": "20261016_full445_first_original_replay",
-  "research_only": true,
-  "approved_scope": "RESEARCH_REPLAY_ONLY"
+    "schema": "MONSTER_FEB445_ONE_SQLITE_MANUAL_REQUEST_V1",
+    "source_shards": 28,
+    "expected_symbols": 445,
+    "source_artifact_ids_sha_locked": true,
+    "request_id": "20261016_full445_first_original_replay",
+    "research_only": true,
+    "approved_scope": "RESEARCH_REPLAY_ONLY"
 }
