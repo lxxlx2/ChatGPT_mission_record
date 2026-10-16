@@ -432,3 +432,18 @@ Stage152新最后P2固定SHA `71a041405352c9e2210d93dff9c2685149809e52` 已获�
 完整[本轮P1/P2实测报告](MONSTER_SHARED_SPOT_CLAUDE_P1_P2_REMEDIATION_REAL_CI_20261016.md)及[已固定完整Claude/Codex独立复核提示词](MONSTER_SHARED_SPOT_CLAUDE_P1_P2_INDEPENDENT_REREVIEW_PINNED_6E2897C_20261016.md)已同步Git。下一高价值节点仍是**真实2026-02高压445完整来源币种相同SQLite D0到D1回放（另313原样CENSORED）**、2025-11普通433对照和实际原98 WATCH同一输入时钟是否还发生，而不是盲目扩大请求并发/阈值/发邮件；未实际跑之前绝不暗示445或758完整。旧Stage152 `APPROVE@71a041405352c9e2210d93dff9c2685149809e52` 维持独立范围。本阶段没有Mac运行、真实邮件、交易、新调度、Frank或Stage99变更。
 
 维持`G0 PARTIAL / G1 NOT_SCORABLE / G2_G3 NOT_PASSED / G4 UNKNOWN / G5_RELEASE NOT_PASSED / G6 NO_GO`；`NO_MERGE / NO_DEPLOY / NO_GMAIL / NO_TRADE`。PR继续Open/Draft。
+
+
+## 新Codex D1内容正确时钟仍误计LATE：固定源码P2修复（2026-10-16）
+
+用户提供新Codex独立固定SHA `6e2897c4602ce554b57634fe05d25e7244068316` 的`REQUEST_CHANGES`报告：原Claude提出的3个P1和本轮独立36个Stage26原GitHub历史Artifact逐份ZIP+内层JSON双SHA、20个BTC/ETH真实Binance官方Spot1m ZIP+CHECKSUM/二次固定SHA均实测通过；唯一尚未关闭的P2是**研究用closed5m_source原8根K线只有timestamp对齐但HIGH为字符串零**，`process_queue`按冻结原生产重试把`ValueError:INVALID_HIGH`吞掉并使同个合成WATCH的D1从completed=1错误变为LATE=1，坏来源并不是模型真迟到。用户贴的Codex reviewer准确底层型号`UNVERIFIED`。
+
+先于更改源码，在Git commit `f7275a66e66422c7ea2f59a1b37296fb76363df6` 保存[最后P2修复事前冻结协议](MONSTER_SHARED_SPOT_D1_CANDLE_CONTENT_FAIL_CLOSED_P2_FIX_PROTOCOL_20261016.md)。修复仅改新共享研究回放器及tests，不碰生产`monster_v4_shadow.py`。新增历史`verified_closed_5m_for_original_d1`在将K线交给原生产队列前验证完整8根json结构/UTC5m起止/连续已闭合/OHLC finite和high low包络/quote positive/volume非负，并提前使用同一冻结`production.evaluate_closed_5m`作评价一致性检验；异常转为原生产catch不能吞掉的`RuntimeError SHARED_SPOT_ORIGINAL_D1_SOURCE_INVALID_CANDLE`，严禁从坏来源默默派生D1_deferred/LATE（真实零quote导致冻结D1不能评价时也fail-closed，不能冒充正常迟到）。真实生产执行与参数不改。
+
+**本轮唯一待独立other-AI-review代码+测试+workflow SHA `1154e97a25648dbf58c181be62076e4c1d406dde`**。[真实CI #38835269851](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38835269851)固定触发SHA精确一致，5/5 jobs全部`completed/success`；Ubuntu24.04与macOS各`Ran 22 tests`且OK、py_compile通过。关键新增`test_20`使用未mock**真正原production process_queue**作完整3360tick合成baseline：D0 WATCH=1、D1 completed=1、late=0；保持开/闭时间、SQL记录行数原样只破坏一条闭合K线HIGH=`"0"`，整个真实原生产D1回放必须抛指定研究RuntimeError，不能误把结果写成late；`test_21`另10种JSON/时间/finite/内容错误单独拒绝且恢复后合法成功。原20项回归不移除。旧Stage151/152/153 code无改动。
+
+本SHA的真实CI同时按原冻结源重新核对36份原Stage26下载Artifact+双SHA和原758×6=4548，其中2719来源完整/1829删失；另官方BTC/ETH各10个日Spot1m ZIP+CHECKSUM、已二次Git固定的20个SHA再次逐日核对，真实同SQLite3360次扫描（两个币都WATCH=0）；machine JSON回写触发SHA准确一致，归档前4个新源码/test/workflow blob无漂移，Git打印`MONSTER_SHARED_SPOT_REAL_ORIGINAL_SOURCE_PROOFS_PINNED_GIT_PASS`。**这不是高压445币真实共享回放，更不是已实现758全源或盈利模型**。
+
+本轮[正式源完整性修复/实测报告](MONSTER_SHARED_SPOT_D1_CORRUPT_5M_CODEX_P2_REAL_PROD_QUEUE_FIX_AND_CI_20261016.md)及[固定`1154e97...`另一AI独立复核提示](MONSTER_SHARED_SPOT_D1_CORRUPT_5M_CODEX_P2_INDEPENDENT_REREVIEW_PINNED_1154E97_20261016.md)均已提交Git。**本阶段状态：上轮Codex P2作者已修复+22x2+官方全来源CI真实通过，其他AI独立最终`APPROVE`尚未收到；PR继续open/draft。** 旧Stage152/153限定SHA批准不变。只有独立再审通过才可关本P2，随后主线要对原2026-02 SOURCE_COMPLETE 445币（另313 CENSORED）实际获取真正官方分钟源及共同SQLite因果高压回放、Stage26/28同源对比；仍不自动部署/启采集/发邮件/交易。
+
+继续`G0 PARTIAL, G1 NOT_SCORABLE, G2/G3 NOT_PASSED, G4 UNKNOWN, G5_RELEASE NOT_PASSED, G6 NO_GO`、`NO_MERGE/NO_DEPLOY/NO_GMAIL/NO_TRADE`，Frank/Stage99不动。
