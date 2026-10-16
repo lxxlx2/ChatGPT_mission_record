@@ -210,6 +210,22 @@ def summarize(audit_file: Path, replay_file: Path, output: Path):
         (r["shard"],r["zip_sha256"])
         for r in replay["all_28_source_archive_shas"]]:
         raise RuntimeError("MONSTER445_REPLAY_SOURCE_AUDIT_NOT_EQUAL_REPLAY")
+    # Independently pin executable source bytes before claiming the
+    # original production D0 was unchanged. Source JSON flags alone
+    # cannot attest the real executable code.
+    model_code_pins={
+        "monster_v4_shadow.py":"bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+        "monster_v4_shared_spot_d0_d1_original_core.py":
+            "3a9e4bbd75ff4f5ef6cd0bfe87895d932c95892c",
+        "monster_v4_shared_d1_zeroquote_research_v2.py":
+            "b16e89f2a20c1dfaaebce1497da8d991d3907ed7",
+    }
+    for filename,expected in model_code_pins.items():
+        data=(Path(__file__).resolve().parent/filename).read_bytes()
+        actual=hashlib.sha1(
+            b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
+        if actual!=expected:
+            raise RuntimeError("MONSTER445_REPLAY_REAL_CODE_GIT_BLOB_MISMATCH")
     watches = [x for x in replay["events"] if x["event_type"]=="WATCH_EARLY"]
     per_tick=collections.Counter(x["observed_ms"] for x in watches)
     max_same_tick=max(per_tick.values(),default=0)
@@ -223,6 +239,12 @@ def summarize(audit_file: Path, replay_file: Path, output: Path):
                                  for e in audit["source_artifacts"]],
         "one_shared_sqlite":True,"global_polls":3360,
         "D0_original_production_unchanged":True,
+        "verified_frozen_model_code_git_blobs":model_code_pins,
+        "D1_zero_quote_origin":"REAL_MARKET_NO_TRADE_NOT_MISSING_SOURCE",
+        "D1_zero_quote_historical_status_name_is_legacy":True,
+        "D1_original_prevalidates_positive_quote_for_8_supplied_candles":True,
+        "D1_uses_last6_only_after_all8_are_valid":True,
+        "D1_completion_conditioned_on_positive_market_turnover":True,
         "D1_replay_variant":"ZEROQUOTE_V2_RESEARCH_ONLY",
         "original_445_production_D1_replay_status":"FAILED_CLOSED_ZERO_QUOTE_SOURCE",
         "D1_research_zeroquote_candidate_count":replay["D1_zero_quote_terminal_candidates"],
