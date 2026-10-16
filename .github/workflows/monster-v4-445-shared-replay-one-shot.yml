@@ -105,6 +105,10 @@ jobs:
           git config user.email monster-research-ci@users.noreply.github.com
           git commit -m "monster: archive real 445 source-complete ONE SQLite shared D0+D1 replay summary"
           git fetch origin "refs/heads/$branch"
+          if git cat-file -e "FETCH_HEAD:$summary" 2>/dev/null; then
+            echo MONSTER445_REPLAY_REMOTE_SUMMARY_ALREADY_EXISTS
+            exit 1
+          fi
           git rebase FETCH_HEAD
           for path in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_archive_replay_runner.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_445_archive_replay_runner.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_one_db_from_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_445_official_source_shards.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-shared-replay-one-shot.yml crypto-300-profit-mission/monster/source-batches/monster_feb445_shared_replay_request.json; do
             test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo "MONSTER445_REPLAY_EXECUTABLE_OR_REQUEST_DRIFT=$path"; exit 1; }
@@ -113,8 +117,5 @@ jobs:
             path="crypto-300-profit-mission/monster/evidence/monster_feb445_shard$i.proof.json"
             test "$(git rev-parse "$GITHUB_SHA:$path")" = "$(git rev-parse "HEAD:$path")" || { echo "MONSTER445_REPLAY_SOURCE_PROOF_DRIFT=$path"; exit 1; }
           done
-          if git cat-file -e "HEAD:$summary" 2>/dev/null; then
-            test "$(git rev-parse "HEAD:$summary")" = "$(git rev-parse "$GITHUB_SHA:$summary" 2>/dev/null)" || { echo MONSTER445_REPLAY_REPORT_ALREADY_EXISTS; exit 1; }
-          fi
           git push origin "HEAD:refs/heads/$branch"
           echo MONSTER445_REAL_FULL_SOURCE_COMPLETE_SHARED_D0_D1_SUMMARY_ARCHIVED_RESEARCH_ONLY
