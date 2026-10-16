@@ -77,7 +77,8 @@ def experimental_queue_handler(store, now_ms, original_fetch, source_db, *, limi
     Without ANY zero-quote source all eight run via original unmodified D1 once.
     With zero-quote, freeze original eight identities and temporarily exclude
     overflow during that tick. Original D1 handles the remaining supported
-    subset ONCE; each source-unsupported item consumes its original slot.
+    subset ONCE; masks are committed, then restored in a separate transaction
+    with readback even after original production SQL/source exceptions.
     This avoids calling limit=1 repeatedly on the same still-PENDING candidate.
     """
     if limit != 8:
@@ -122,26 +123,66 @@ def experimental_queue_handler(store, now_ms, original_fetch, source_db, *, limi
     suppressed=[(r["id"],r["retry_after_ms"]) for r in suppressed
                 if r["id"] not in valid_ids]
     normal={"selected":0,"completed":0,"deferred":0,"late":0}
-    with store:
-        for ident,_ in suppressed:
-            store.execute("UPDATE candidate_queue SET retry_after_ms=? WHERE id=?",
-                          (now_ms+1,ident))
+    if store.in_transaction:
+        # Never commit or roll back a caller-owned, uncommitted transaction.
+        raise RuntimeError("ZEROQUOTE_RESEARCH_PENDING_TRANSACTION_BEFORE_MASK")
+
+    # A SQLite connection's nested "with db" is NOT a nested transaction.
+    # The frozen production process_queue() commits internally, so writing
+    # masks in an outer with db/finally would allow a later ABORT to roll back
+    # only the unmask phase and strand the temporary values permanently.
+    # An independent committed restoration, with readback, is mandatory.
+    try:
+        with store:
+            for ident,_ in suppressed:
+                store.execute("UPDATE candidate_queue SET retry_after_ms=? WHERE id=?",
+                              (now_ms+1,ident))
+        if valid_ids:
+            normal=original_queue(store,now_ms,original_fetch,limit=len(valid_ids))
+            if normal["selected"] != len(valid_ids):
+                raise RuntimeError("ZEROQUOTE_RESEARCH_VALID_FIFO_SELECTION_DRIFT")
+    finally:
         try:
-            if valid_ids:
-                normal=original_queue(store,now_ms,original_fetch,limit=len(valid_ids))
-                if normal["selected"] != len(valid_ids):
-                    raise RuntimeError("ZEROQUOTE_RESEARCH_VALID_FIFO_SELECTION_DRIFT")
-        finally:
-            for ident,original_retry in suppressed:
-                store.execute("""UPDATE candidate_queue SET retry_after_ms=?
-                    WHERE id=?""",(original_retry,ident))
+            # Discard an abandoned partial transaction from an exception in
+            # original producer before starting a new durable restore.
+            if store.in_transaction:
+                store.rollback()
+            with store:
+                for ident,original_retry in suppressed:
+                    store.execute("""UPDATE candidate_queue SET retry_after_ms=?
+                        WHERE id=?""",(original_retry,ident))
+            if suppressed:
+                verify=store.execute("""SELECT id,retry_after_ms
+                    FROM candidate_queue WHERE id IN ("""
+                    + ",".join("?" for _ in suppressed)+")",
+                    tuple(ident for ident,_ in suppressed)).fetchall()
+                verified={r["id"]:r["retry_after_ms"] for r in verify}
+                if verified!=dict(suppressed):
+                    raise RuntimeError("ZEROQUOTE_RESEARCH_MASK_RESTORE_READBACK_DRIFT")
+        except Exception as exc:
+            # If the SQLite restore fails, do not represent a source/model
+            # failure as a completed historical result with a clean queue.
+            raise RuntimeError("ZEROQUOTE_RESEARCH_MASK_RESTORE_FAILED") from exc
+
+    # Only classify after original_queue finished and every mask is durably
+    # restored, so a SQL failure cannot leave terminal states half-written.
+    with store:
         for item,kind in unsupported:
             if kind=="terminal" or now_ms>=item["deadline_ms"]:
-                store.execute("""UPDATE candidate_queue
-                    SET status=?,last_error=? WHERE id=?""",
-                    (TERMINAL,WAIT_ERROR,item["id"]))
-                stats["terminal_unsupported"]+=1
-                stats["by_symbol"][item["symbol"]]+=1
+                if item["last_evaluated_bar_ms"] is not None:
+                    # The frozen original producer's expiry classification:
+                    # a previously successfully evaluated D1 episode with
+                    # no SETUP is EVALUATED even at exact deadline.
+                    store.execute("""UPDATE candidate_queue
+                        SET status='EVALUATED',last_error='NO_SETUP_WITHIN_WINDOW'
+                        WHERE id=?""",(item["id"],))
+                    normal["completed"]+=1
+                else:
+                    store.execute("""UPDATE candidate_queue
+                        SET status=?,last_error=? WHERE id=?""",
+                        (TERMINAL,WAIT_ERROR,item["id"]))
+                    stats["terminal_unsupported"]+=1
+                    stats["by_symbol"][item["symbol"]]+=1
             else:
                 store.execute("""UPDATE candidate_queue
                     SET last_error=?,retry_after_ms=? WHERE id=?""",
