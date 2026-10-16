@@ -51,6 +51,30 @@ assert(html.includes('class="candidate-card decision-buy"'));
 assert(html.includes("0.012"));
 assert(html.includes("0.1%"));
 
+// A malformed hand-assembled eligible payload must not leak a $0 execution
+// price or a valid-looking impact/deviation next to the no-follow card.
+for (const browserInvalidPrice of ["1E-999", "1E999"]) {
+  ctx.rows=[{...conflicting,validated_follow_quote:{
+    execution_price_usdc:browserInvalidPrice,price_impact_pct:"0.1"
+  }}];
+  vm.runInContext("renderCandidates(rows)",ctx);
+  html=nodes.candidates.innerHTML;
+  assert(html.includes('class="candidate-card decision-no-buy"'));
+  assert(/<span>当前 \\$30 成交价<\\/span>\\s*<strong>暂无可用报价<\\/strong>/.test(html));
+  assert(/<span>预计价格冲击<\\/span>\\s*<strong>暂无可用报价<\\/strong>/.test(html));
+  assert(!html.includes("0.1%"),"impact cannot leak when quote fails");
+}
+
+ctx.rows=[{...conflicting,validated_follow_quote:{
+  execution_price_usdc:"1E-9",price_impact_pct:"0.1"
+}}];
+vm.runInContext("renderCandidates(rows)",ctx);
+html=nodes.candidates.innerHTML;
+assert(html.includes('class="candidate-card decision-buy"'));
+assert(html.includes("1.00e-9"),"tiny positive price must not round to zero");
+assert(!html.includes("0.00000000"),"small positive prices need scientific notation");
+assert(/<span>当前 \\$30 成交价<\\/span>\\s*<strong>1\\.00e-9<\\/strong>/.test(html));
+
 ctx.payload={status:"OK",summary:{total_observed:1},rows:[{
  mint:conflicting.mint,watch_state:"MODEL_OPEN",last_event_time:1800000000,
  snapshot_inventory_state:"NONZERO_AT_SLOT",snapshot_token_quantity:"12",
