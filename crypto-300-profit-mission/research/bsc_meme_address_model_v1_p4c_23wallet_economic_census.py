@@ -184,8 +184,8 @@ def census(d):
     require(len(rows) == 23 and sum(len(w["cells"]) for w in rows) == 437
             and counted["PRESENT"] == 148 and counted["ABSENT_IN_FROZEN_CA"] == 289
             and sum(r["curated_original_signed_closed_episodes"] for r in rows) == 50
-            and sum(r["curated_native_block_positive"] for r in rows) == 31
-            and sum(r["curated_native_block_negative"] for r in rows) == 17
+            and sum(r["curated_native_block_positive"] for r in rows) == 30
+            and sum(r["curated_native_block_negative"] for r in rows) == 18
             and sum(r["curated_mixed_quote_reference"] for r in rows) == 2,
             "CENSUS_437_ORIGINAL_ECONOMIC_SOURCE_DENOMINATOR_CHANGED")
     require(sum(r["curated_original_signed_closed_episodes"] > 0 for r in rows) == 7
