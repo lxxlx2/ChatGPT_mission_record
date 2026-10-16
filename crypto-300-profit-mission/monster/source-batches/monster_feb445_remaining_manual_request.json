@@ -1,0 +1,8 @@
+{
+  "schema": "MONSTER_445_REMAINING_SOURCE_REQUEST_V1",
+  "start_shard": 8,
+  "end_shard": 27,
+  "request_id": "20261016_shards08_27",
+  "research_only": true,
+  "approved_scope": "SOURCE_ONLY"
+}
