@@ -1,0 +1,3644 @@
+{
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "actually_complete_symbols": 8,
+  "date": "2026-02-04",
+  "event_type_counts": {
+    "INVALIDATED": 1,
+    "SETUP_ACTIVE": 1,
+    "WATCH_EARLY": 4
+  },
+  "events": [
+    {
+      "event_id": "7ccfcc8b0a326293166b090a1eb821b2274f77833dcd3adecb18b1bdc5ab79bb",
+      "event_type": "WATCH_EARLY",
+      "observed_ms": 1770338160000,
+      "payload": "{\"classification\": \"RESEARCH_WATCH_NOT_BUY\", \"execution_verified\": false, \"observed_ms\": 1770338160000, \"quote24_usdt\": \"1339208.36227000\", \"research_window_ms\": 900000, \"return_snapshot_pct\": 8.3746, \"snapshot_lag_ms\": 900000, \"snapshot_move_window_not_fixed_3m\": true, \"trigger_15m_8pct\": true, \"trigger_3m_5pct\": false, \"trigger_60m_15pct\": false, \"venue\": \"spot\"}",
+      "symbol": "2ZUSDT",
+      "venue": "spot"
+    },
+    {
+      "event_id": "83901d0c6a0119aa49f01cec553d731fbd19a8b7258e1887bc183a660d59b11d",
+      "event_type": "WATCH_EARLY",
+      "observed_ms": 1770338160000,
+      "payload": "{\"classification\": \"RESEARCH_WATCH_NOT_BUY\", \"execution_verified\": false, \"observed_ms\": 1770338160000, \"quote24_usdt\": \"2772554.98455899\", \"research_window_ms\": 900000, \"return_snapshot_pct\": 9.7587, \"snapshot_lag_ms\": 900000, \"snapshot_move_window_not_fixed_3m\": true, \"trigger_15m_8pct\": true, \"trigger_3m_5pct\": false, \"trigger_60m_15pct\": false, \"venue\": \"spot\"}",
+      "symbol": "1000SATSUSDT",
+      "venue": "spot"
+    },
+    {
+      "event_id": "8af02226dec5b7eadc3e23f1d3f14b4f197a842ea043af265ec7ed24fa98d291",
+      "event_type": "WATCH_EARLY",
+      "observed_ms": 1770338160000,
+      "payload": "{\"classification\": \"RESEARCH_WATCH_NOT_BUY\", \"execution_verified\": false, \"observed_ms\": 1770338160000, \"quote24_usdt\": \"4335197.93486000\", \"research_window_ms\": 900000, \"return_snapshot_pct\": 8.8999, \"snapshot_lag_ms\": 900000, \"snapshot_move_window_not_fixed_3m\": true, \"trigger_15m_8pct\": true, \"trigger_3m_5pct\": false, \"trigger_60m_15pct\": false, \"venue\": \"spot\"}",
+      "symbol": "1INCHUSDT",
+      "venue": "spot"
+    },
+    {
+      "event_id": "c5c3b3c23e63ca219f5077d76de88fe132f1d48ef8df38bec1f05a00317c08a2",
+      "event_type": "WATCH_EARLY",
+      "observed_ms": 1770431220000,
+      "payload": "{\"classification\": \"RESEARCH_WATCH_NOT_BUY\", \"execution_verified\": false, \"observed_ms\": 1770431220000, \"quote24_usdt\": \"3489765.50069000\", \"research_window_ms\": 900000, \"return_snapshot_pct\": 8.0524, \"snapshot_lag_ms\": 900000, \"snapshot_move_window_not_fixed_3m\": true, \"trigger_15m_8pct\": true, \"trigger_3m_5pct\": true, \"trigger_60m_15pct\": false, \"venue\": \"spot\"}",
+      "symbol": "0GUSDT",
+      "venue": "spot"
+    },
+    {
+      "event_id": "827c1132bbc70d3d4d4eac6b63879a63ff35a48428b0b724eba8c41ccbd7629e",
+      "event_type": "SETUP_ACTIVE",
+      "observed_ms": 1770431400000,
+      "payload": "{\"bar_last_open_ms\": 1770431100000, \"classification\": \"RESEARCH_ONLY_UNVALIDATED\", \"closed_5m\": 6, \"positive_steps_last3\": 3, \"recent_vs_earlier_15m_quote_ratio\": 8.5678, \"setup_candidate\": true}",
+      "symbol": "0GUSDT",
+      "venue": "spot"
+    },
+    {
+      "event_id": "60c69ef05221fd3dd0d76328ab61f6481e570bbd0ab8d2c6ec43e1c2027f548e",
+      "event_type": "INVALIDATED",
+      "observed_ms": 1770746580000,
+      "payload": "{\"classification\": \"WATCH_NO_LONGER_ACTIVE\", \"last_watch_ms\": 1770338160000, \"observed_ms\": 1770746580000, \"reason\": \"PRICE_REVERSED_15PCT_FROM_FIRST_WATCH\"}",
+      "symbol": "2ZUSDT",
+      "venue": "spot"
+    }
+  ],
+  "execution_counts": {
+    "D0_watch_new": 4,
+    "D1_completed": 4,
+    "D1_deferred": 16,
+    "D1_late": 0,
+    "D1_selected": 20,
+    "polls": 3360
+  },
+  "frozen_original_universe_attempted": 758,
+  "historical_exposed_not_OOS": true,
+  "market_coverage": "OFFICIAL_VERIFIED_445_SOURCE_COMPLETE_PILOT_ONLY",
+  "matched_D0_watch_exact_for_all_pilot_symbols": true,
+  "not_full_445_shared_replay": true,
+  "not_full_758_shared_replay": true,
+  "not_independent_out_of_sample": true,
+  "not_market_listing_point_in_time": true,
+  "not_real_historical_24h_ticker_or_PIT_listing": true,
+  "old_individual_D0_same_source": [
+    {
+      "per_symbol_original_setups": 1,
+      "per_symbol_original_watch_utcs": [
+        "2026-02-07T02:27:00Z"
+      ],
+      "symbol": "0GUSDT"
+    },
+    {
+      "per_symbol_original_setups": 0,
+      "per_symbol_original_watch_utcs": [],
+      "symbol": "1000CATUSDT"
+    },
+    {
+      "per_symbol_original_setups": 0,
+      "per_symbol_original_watch_utcs": [],
+      "symbol": "1000CHEEMSUSDT"
+    },
+    {
+      "per_symbol_original_setups": 0,
+      "per_symbol_original_watch_utcs": [
+        "2026-02-06T00:36:00Z"
+      ],
+      "symbol": "1000SATSUSDT"
+    },
+    {
+      "per_symbol_original_setups": 0,
+      "per_symbol_original_watch_utcs": [
+        "2026-02-06T00:36:00Z"
+      ],
+      "symbol": "1INCHUSDT"
+    },
+    {
+      "per_symbol_original_setups": 0,
+      "per_symbol_original_watch_utcs": [],
+      "symbol": "1MBABYDOGEUSDT"
+    },
+    {
+      "per_symbol_original_setups": 0,
+      "per_symbol_original_watch_utcs": [
+        "2026-02-06T00:36:00Z"
+      ],
+      "symbol": "2ZUSDT"
+    },
+    {
+      "per_symbol_original_setups": 0,
+      "per_symbol_original_watch_utcs": [],
+      "symbol": "A2ZUSDT"
+    }
+  ],
+  "one_shared_sqlite_for_all_symbols": true,
+  "only_original_production_D0_and_D1_called": true,
+  "origin_core_blob": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+  "original_758_coverage": {
+    "coverage_status": "SOURCE_COMPLETE_SUBSET_NOT_FULL_758",
+    "original_758_denominator": 758,
+    "original_frozen_roster_sha256": "cea49caae4245dad910cc096bdaea953387bdfea64667a49916756d12297074a",
+    "original_roster_pre_registered_in_20261011_manifest": false,
+    "per_symbol": [
+      {
+        "source_disposition": "OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET",
+        "symbol": "0GUSDT"
+      },
+      {
+        "source_disposition": "OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET",
+        "symbol": "1000CATUSDT"
+      },
+      {
+        "source_disposition": "OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET",
+        "symbol": "1000CHEEMSUSDT"
+      },
+      {
+        "source_disposition": "OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET",
+        "symbol": "1000SATSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "1INCHDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "1INCHUPUSDT"
+      },
+      {
+        "source_disposition": "OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET",
+        "symbol": "1INCHUSDT"
+      },
+      {
+        "source_disposition": "OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET",
+        "symbol": "1MBABYDOGEUSDT"
+      },
+      {
+        "source_disposition": "OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET",
+        "symbol": "2ZUSDT"
+      },
+      {
+        "source_disposition": "OFFICIAL_VERIFIED_AND_REPLAYED_SUBSET",
+        "symbol": "A2ZUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AAOIBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AAPLBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AAVEDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AAVEUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AAVEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ACAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ACEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ACHUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ACMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ACTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ACXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ADADOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ADAUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ADBEBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ADXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AERGOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AEROUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AEURUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AEVOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AGIXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AGLDUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AGPUBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AIGENSYNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AIONUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AIXBTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AKROUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ALABBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ALCXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ALGOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ALICEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ALLOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ALPACAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ALPHAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ALPINEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ALTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AMATBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AMBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AMCBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AMDBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AMPUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AMZNBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ANCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ANIMEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ANKRUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ANTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ANYUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "APEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "API3USDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "APTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ARBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ARDRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ARKMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ARKUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ARMBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ARPAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ARUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ASMLBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ASRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ASTERUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ASTRUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ASTSBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ASTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ATAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ATMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ATOMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ATUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AUCTIONUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AUDIOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AUDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AUTOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AVAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AVGOBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AVNTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AWEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AXLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "AXSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "AXTIBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BABABUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BABYUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BADGERUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BAKEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BALUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BANANAS31USDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BANANAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BANDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BANKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BARDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BARUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BATUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BCCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BCHABCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BCHDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BCHSVUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BCHUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BCHUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BEAMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BEAMXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BEARUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BEBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BELUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BERAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BETAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BETHUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BFUSDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BICOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BIFIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BIGTIMEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BIOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BKRWUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BLURUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BLZUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BMNRBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BMTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BNBBEARUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BNBBULLUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BNBDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BNBUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BNBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BNCBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BNSOLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BNTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BNXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BOMEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BONDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BONKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BREVUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BROCCOLI714USDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BSWUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BTCDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BTCSTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BTCUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BTCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BTGUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BTSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "BTTCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BTTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BULLUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BURGERUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BUSDUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "BZRXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "C98USDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CAKEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CATIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CBRSBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CELOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CELRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CETUSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CFGUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CFXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CGPTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CHESSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CHIPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CHRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CHZUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CITYUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CKBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CLVUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "COCOSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "COHRBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "COINBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "COMBOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "COMPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "COOKIEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "COSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "COTIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "COWUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CRCLBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CRDOBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CREAMUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CRMBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CRVUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CRWDBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CRWVBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CTKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CTSIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CTXCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CVCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CVPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CVXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "CYBERUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "CYPHBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DAIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DARUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DASHUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DATAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DCRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DEGOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DELLBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DENTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DEXEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DFUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DGBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DIAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DJTBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DNTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DOCKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DODOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DOGSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DOLOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DOTDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DOTUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DOTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DRAMBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "DREPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DUSKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DYDXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "DYMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "EDENUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "EDUUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "EGLDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "EIGENUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ELFUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ENAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ENJUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ENSOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ENSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "EOSBEARUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "EOSBULLUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "EOSDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "EOSUPUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "EOSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "EPICUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "EPSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "EPXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ERAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ERDUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ERNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ESPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ETCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ETHBEARUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ETHBULLUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ETHDOWNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ETHFIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ETHUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "EULUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "EURIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "EURUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "EWYBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FARMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FDUSDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FETUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FFUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FIDAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FILDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FILUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FILUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FIOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FIROUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FISUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FLMUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FLNCBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FLOKIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FLOWUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FLUXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FOGOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FORMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FORTHUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FORUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FRAXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FRONTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FTMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FTTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FUNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "FUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FWDIBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "FXSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GALAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GALUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GASUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GBPUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GENIUSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GFTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GHSTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GIGGLEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GLMRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GLMUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GLWBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GMEBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GMTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GMXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GNOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GNSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GOOGLBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GPROBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GPSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GRAMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GRTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GSBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GTCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GTOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GUNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "GUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "GXSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HAEDALUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "HARDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HBARUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "HCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HEIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HEMIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HFTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "HIFIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HIGHUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "HIMSBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HIVEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HMSTRUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "HNTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HOLOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HOMEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "HOODBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HOOKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HOTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "HPEBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HUMAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "HYPERUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "HYPEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "IBMBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ICPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ICXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "IDEXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "IDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ILVUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "IMXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "INITUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "INJUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "INTCBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "INTWBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "IOSTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "IOTAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "IOTXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "IOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "IQUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "IRENBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "IRISUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "JASMYUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "JOEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "JPMBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "JSTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "JTOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "JUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "JUVUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "KAIAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "KAITOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "KATUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "KAVAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "KDAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "KEEPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "KERNELUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "KEYUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "KGSTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "KITEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "KLAYUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "KMDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "KMNOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "KNCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "KORUBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "KP3RUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "KSMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LAYERUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LAZIOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LDOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LENDUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LEVERUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LINAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LINEAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LINKDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LINKUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LINKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LISTAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LITEBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LITUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LLYBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LOKAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LOOMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LPTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LQTYUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LRCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LSKUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LTCDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LTCUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LTCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "LTOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LUMIAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LUNAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "LUNCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MAGICUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MANAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MANTAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MANTRAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MARSCOINUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MASKUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MATICUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MAVUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MBLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MBOXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MCOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MDTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MDXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MEGAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MEMEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "METABUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "METISUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "METUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MFTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MINAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MIRAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MIRUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MITHUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MITOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MKRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MLNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MMTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MOBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MORPHOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MOVEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MOVRUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MRNABUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MRVLBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MSFTBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MSTRBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MTLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "MUBARAKUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MUBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MULTIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MUUBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "MVLLBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NANOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NBISBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NBSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NBTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NEARUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NEBLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NEIROUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NEOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NEWTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NEXOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NFLXBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NFPUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NIGHTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NILUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NKNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NMRUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NOKBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NOMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NOTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NPXSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NTRNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NULSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NUUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "NVDABUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "NXPCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "OAXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "OCEANUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "OGNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "OGUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "OMGUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "OMNIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "OMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ONEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ONGUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ONTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "OOKIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "OPENUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "OPGUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "OPNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "OPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ORCAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ORCLBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ORDIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ORNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "OSMOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "OXTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PARTIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PAXGUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PAXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PDAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PDDBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PENDLEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PENGUUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PEOPLEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PEPEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PERLUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PERPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PHAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PHBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PIVXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PIXELUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PLAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PLTRBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PLUMEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PNTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PNUTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "POLSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "POLUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "POLYUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "POLYXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PONDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PORTALUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PORTOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "POWRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PROMUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PROSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PROVEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PSGUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PUMPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PUNDIXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "PYPLBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PYRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "PYTHUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "QCOMBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "QIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "QKCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "QNTBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "QNTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "QQQBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "QTUMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "QUICKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RADUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "RAMPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RAREUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RAYUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "RDDTBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RDNTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "REDUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "REEFUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "REIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RENDERUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "RENUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "REPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "REQUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RESOLVUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "REUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "REZUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "RGTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RIFUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "RKLBBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RLCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RLUSDUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "RNDRUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ROBOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RONINUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ROSEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RPLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RSRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RUNEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "RVNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SAGAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SAHARAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SANDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SANTOSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SAPIENUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SCRTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SCRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SECZBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SEIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SENTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SFPUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SHAZBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SHELLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SHIBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SIGNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SKHYBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SKLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SKYUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SLFUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SLPUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SMCIBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SMHBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SNDKBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SNTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SNXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SNXXBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SOLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SOLVUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SOMIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SOPHUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SOXLBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SOXSBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SPCXBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SPELLUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SPKUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SPYBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SQQQBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SRMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SSVUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "STEEMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "STGUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "STMXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "STORJUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "STORMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "STOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "STPTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "STRATUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "STRAXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "STRKUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "STXBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "STXUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SUNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SUPERUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SUSDUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SUSHIDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SUSHIUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SUSHIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SXPDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "SXPUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SXPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SXTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SYNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SYRUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "SYSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TCTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TFUELUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "THETAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "THEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TIAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TKOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TLMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TNSRUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TOMOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TONUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TORNUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TOWNSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TQQQBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TRBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TREEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TRIBEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TROYUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TRUMPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TRUUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TRXDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TRXUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TRXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TSLABUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TSMBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TSTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TURBOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TURTLEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TUSDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TUTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "TVKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "TWTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "UFTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "UMAUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "UNFIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "UNIDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "UNIUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "UNIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "USARBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "USD1USDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "USDCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "USDEBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "USDEUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "USDPUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "USDSBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "USDSUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "USTCUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "USTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "USUALUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "UTKUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "UUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "VANAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "VANRYUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "VELODROMEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "VENUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "VETUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "VGXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "VIBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "VICUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "VIDTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "VIRTUALUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "VITEUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "VOXELUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "VTHOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WALUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WANUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "WAVESUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WAXPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WBETHUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WBTCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WCTUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "WDCBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "WENBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WIFUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "WINGUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WINUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WLDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WLFIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "WNXMUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WOOUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "WRXUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "WTCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "WUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XAIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XAUTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XECUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XEMUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XLMDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XLMUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XLMUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XMRUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XNOUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XPLUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XRPBEARUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XRPBULLUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XRPDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XRPUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XTZDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XTZUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XTZUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XUSDUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XVGUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "XVSUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "XZCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "YBUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "YFIDOWNUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "YFIIUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "YFIUPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "YFIUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "YGGUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZAMAUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZBTUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZECUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZENUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZILUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZKCUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZKPUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZKUSDT"
+      },
+      {
+        "source_disposition": "CENSORED_SOURCE_MISSING_OR_INCOMPLETE_AT_STAGE26",
+        "symbol": "ZMBUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZROUSDT"
+      },
+      {
+        "source_disposition": "SOURCE_COMPLETE_AT_STAGE26_NOT_REPLAYED",
+        "symbol": "ZRXUSDT"
+      }
+    ],
+    "point_in_time_listing": "UNVERIFIED",
+    "replayed_verifiable_subset": 8,
+    "source_complete_but_not_replayed": 437,
+    "source_complete_original_stage26": 445,
+    "source_missing_or_incomplete_original_stage26": 313,
+    "two_unsupported_unicode_not_added_to_758": true
+  },
+  "original_per_symbol_watch_total": 4,
+  "original_source_complete_445_pilot_not_complete": true,
+  "original_source_complete_445_subset_total": 445,
+  "pilot_selected": [
+    "0GUSDT",
+    "1000CATUSDT",
+    "1000CHEEMSUSDT",
+    "1000SATSUSDT",
+    "1INCHUSDT",
+    "1MBABYDOGEUSDT",
+    "2ZUSDT",
+    "A2ZUSDT"
+  ],
+  "preregistered_selection": "FIRST_N_ALPHA_OF_ORIGINAL_445_COMPLETE_NO_KNOWN_WINNER_SELECTION",
+  "publisher_proof": [
+    {
+      "archived_prior_sha_match": "NO_PRIOR_PER_DAY_SHA_PIN_UNVERIFIED_HISTORICAL_SOURCE",
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_daily_sha": [
+        {
+          "day": "2026-02-03",
+          "sha256": "b3824ecd14e0f09d15d93e1bfc92e10009e822c7e588d1410547c4b615dc7d83"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "495ed84f26e0e1f6a686c79b8b98ce97f1e49582d607a62d4d8c2ce2c3a3fd1f"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "1d3823d48c057be961d4214667eb218c4e80c7e36113f52a0b40c786a9cd4374"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "6953ddd30b541e75ad2a7161f884a0ff719dcec23be8b11d495ec720e7569fe3"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "5abd2107ca16239b5d30ed3895f048e47049c29d339ca1c41cf89926b1a7d1cf"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "9778da4dd628c0c1758318e73425a2a64d9502ce1c6baec419391496ca81f620"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "7b0b042c75c48fe43d100a8613720448f218b0d5c04afcce55b7284797f76854"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "503d1c03c63a60570b3c761af29de55e229e643782111c79c46595a9e3c192a9"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "4eda2e846abd5c32f59f9dc3531f3426788e01a9f3752380086e14bee7dc2bd6"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "155fdce2f37874f4946e61d9bd82ecf4443b84770d11789aab9ead27c682a286"
+        }
+      ],
+      "symbol": "0GUSDT"
+    },
+    {
+      "archived_prior_sha_match": "NO_PRIOR_PER_DAY_SHA_PIN_UNVERIFIED_HISTORICAL_SOURCE",
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_daily_sha": [
+        {
+          "day": "2026-02-03",
+          "sha256": "a6968e4e0f5ed170a70189e6566fba95eebacbe0239ac60f2f3c7a0f8e482df3"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "694242e14bfe043f50faea9526b02cf6f686296b8cf768ae0497fe81cd9f2a16"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "409bc55e64919fc6cb0dfd83330bf18bb4318effb5f27716d0780832081376e8"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "f1ea585502451f465895a6b6d3c5f3f16d01a4c80472dd68ae5bfcf0d53ff97b"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "3c79c4a7dc22d69b3d152b9f81de579ce00cd1dd9704f998e59cd89345601d59"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "8c19bec00a7460db1dbb593dc2f5aa8a54ffa597d3abe8f95ea5b26243cd5d00"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "223a015ece95ace3f007d9cde603e0773d4a9189f3cbd09d883fb9cfbd81e4fd"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "723269e8ba60b1a2bdb8b5a8ce6c76329453384cd499eef88f2ae833ec633d61"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "8cf77cc4db194b87e0d5d7a2f68207c9e3602e50113d4d1428a904e408769452"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "3d282604a88599aaba4c218f1669cbe6ffcb16a9e4537f995d8cbabdd1cddc44"
+        }
+      ],
+      "symbol": "1000CATUSDT"
+    },
+    {
+      "archived_prior_sha_match": "NO_PRIOR_PER_DAY_SHA_PIN_UNVERIFIED_HISTORICAL_SOURCE",
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_daily_sha": [
+        {
+          "day": "2026-02-03",
+          "sha256": "ec0232f8186a8ad53b17a35a410be7949825caf7ab291e9927f8af04a066336e"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "14668d934181db48245b8cad83f702fcb7d2dbb78fb13606642422ede784d1e2"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "190793bbd852f804b1b7f6daea6ef3eeabc62f476b14a6e22dfba5e5f0947460"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "a20a44a311fc917abd8d64166169b4fdf5c262483cac5f137f4556a3002c6124"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "04d65b8a85f07a14de7664638544910a1f752d103aa70470520c46f55ac9dd0b"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "675b6bf30ce738d6d0fe1579d367c1687d1954f124e945c499083d987b35ff1b"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "c83be18b82c62ea52f2fbffe966ee13495f8246a936aaa93ef0cf7eff3d71f1e"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "a7d729f75ed5c1d4edc98786bd28edb939fa58c9c384141dc0fe1fb227fcb6c4"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "c6e4ae2504c480c6e099333a89d37719b0becfde38045fd142fad74e86a63fb9"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "f948ca376fc81e8a5299fa273f1594ee287a21630ec79d30a9d407cafcbb9fc7"
+        }
+      ],
+      "symbol": "1000CHEEMSUSDT"
+    },
+    {
+      "archived_prior_sha_match": "NO_PRIOR_PER_DAY_SHA_PIN_UNVERIFIED_HISTORICAL_SOURCE",
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_daily_sha": [
+        {
+          "day": "2026-02-03",
+          "sha256": "fd517dff07ffabadeb6b53de206b26cbbab6c9dad33992a5dd537a0a7ac4da50"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "d8a44ec01fd34b00de669fd5693119f86b709c3dff15f3ed2c628e15ce0338fd"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "bc3758b4c4c58a93e57702df89d255563f192c2a20523d25cf0c288abcf920cf"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "e80f8a7fe82b8e0368f6357b9b1e7bb9909153d640694370626b182a8fb6511d"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "6d9a94d48e5d956275e4d36f4a5361e4c008066b562ebbcf2bbce4eab28163d1"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "9e16c83e0a0a087a79c35917502c82a748195102bf1af222bc8726704ab5e10a"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "ad7e449fd520ad75c2c01251b634bfade5c8d65e47dd43af2c64092f2775f5cb"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "b1d8e8c066310d2185bf77e53675df8210c921d79a2ff2ab673fd3269451365e"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "f32abcbad9cbbd31dec36123bcd9bc6bf74615939bea0b4a405fbf8c77fc26d2"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "f814d32e619688ac0226785254b68ba578ea7216db18372594c26d4ec50f6c89"
+        }
+      ],
+      "symbol": "1000SATSUSDT"
+    },
+    {
+      "archived_prior_sha_match": "NO_PRIOR_PER_DAY_SHA_PIN_UNVERIFIED_HISTORICAL_SOURCE",
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_daily_sha": [
+        {
+          "day": "2026-02-03",
+          "sha256": "0c3520f100675c56a5cb11ebc4a7a83db3378e2a958a3136eafab75aab3c8ea0"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "92910e358f4db5b42f86ac5a44a396bfb44032048854fe42cccc73cbeaa636b2"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "ba71b84c97e69a2e473b671b3b5d57f26b56f76fe95b025136f947dfb56e7271"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "0e218ad1e8edaf01dc73b107fc53fa6b9f6eba337b347fae6f27c8066aefa0d6"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "50f327bb7741291aa5e311bf125cc147d56a06a4c25f019bfd45928ce98b3807"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "5cd1c71b8e2aab677b12e2d55b102fffd2d8daa875bb43ea84cfca6f49bb1d43"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "dabd83c8c9af80a4c51cb452c3227a6c28905f9b8f3ffe1ec45423340888bb4b"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "db077337b72f4ee89fd20a61d88a02f7f4a1174a0d97bdcc71a6d8b2b3ebe6e8"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "57c8fd8769234fe6eaf9ad0d4ec301618ed601eb3373647d68e44c61d39eda96"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "ec0fa3e0ab17729113e22ee9bc07f4f4163fc704b82a03467740c54833738d11"
+        }
+      ],
+      "symbol": "1INCHUSDT"
+    },
+    {
+      "archived_prior_sha_match": "NO_PRIOR_PER_DAY_SHA_PIN_UNVERIFIED_HISTORICAL_SOURCE",
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_daily_sha": [
+        {
+          "day": "2026-02-03",
+          "sha256": "2dcf2f1d227189af79e9e9946d12b52624aa7e94f2ca302db9f76b9eb8ad8fcd"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "803fbe19c1db8f4e02a22c407ec451fa02ab8d70ce1c08ef66cc6f5a661a65b2"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "ae3cfacdddc51f1531ebd54e5834880d5880a71f1e4c6fefd6a575505103c70e"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "7d7fac95338dc8ac9a31281f2330336c6babbb8a2a9b90fc4c365aa8e54abd0c"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "fa8cc86c072bbecf523a0125d7c93a626863ab804d23ce96863264705416a88e"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "e3495fb4bb5a1c3a99ecef32fa61987fa73126e1284bc14e0b59fd58b5d679ea"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "423c335fba95c471344e5cdc4d40e3e931c11d03f79b15513c7666703975183f"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "bba86d27fec5a0c73fea9db9f3311519b1e1000a67411e3fa5e140a8ebdf94f9"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "745560c04e90cf5a6f41e0b571a4c8994a999b7a246c486ca1875307d7003c01"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "66dce9d7df1bc606b966c1f9a682e2b59518834f0417bf7dcd109e6275b764d3"
+        }
+      ],
+      "symbol": "1MBABYDOGEUSDT"
+    },
+    {
+      "archived_prior_sha_match": "NO_PRIOR_PER_DAY_SHA_PIN_UNVERIFIED_HISTORICAL_SOURCE",
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_daily_sha": [
+        {
+          "day": "2026-02-03",
+          "sha256": "3db60faa9455f51393123863aa92ac0a0715f1caa09d83603b7632d8a27f068b"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "39225ecf2e10ed887f9a817c3e90863ecb13893ec59771f10a22ac3c2add3fbd"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "d4c5536f893858d0784ed9490c3a591f135dfc5762bb6432600935f50dd2488b"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "3c25bc88d66aeb8bd3ea554229fcde326cd74d7b01c894fa93af7c0db3b31b2a"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "f0edb8d20143db01a3efddd799015d8f862934caa0f3adbefb3e0a579c619cc8"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "ea4390c13126df7d8b525b5c0e1b072eadb3c7423ceb7340bde4d8fbebaa492f"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "b33062a9986850c84800183a32d1c921afb53fdac43a4e30e6213ef233b3a17c"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "6cbdd387101dac86101bfe4665246d3f862e98523c33634b1a7f398f45081a0d"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "24eb8806886416eec00cc8c96eae49dc191783f5b7a8017ec057518975671472"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "f0f72e58b8656be6140354509dfa218828bb8ffc99c05f7cd0e998b32bd39bbc"
+        }
+      ],
+      "symbol": "2ZUSDT"
+    },
+    {
+      "archived_prior_sha_match": "NO_PRIOR_PER_DAY_SHA_PIN_UNVERIFIED_HISTORICAL_SOURCE",
+      "closed_5m": 2592,
+      "poll_rows": 3360,
+      "publisher_daily_sha": [
+        {
+          "day": "2026-02-03",
+          "sha256": "d52bde067aead251a8ef56d2866dc5eb490f770917a9c254049b7ffedb54f673"
+        },
+        {
+          "day": "2026-02-04",
+          "sha256": "51acef790dafa4f6173add51c28f4a28d52a4c9c704c4d56e64a3329b090f9b0"
+        },
+        {
+          "day": "2026-02-05",
+          "sha256": "5457f4f1b8fd046b93250b403f731a90d3c10f8fbdb64f0d64faf50111bcf2a4"
+        },
+        {
+          "day": "2026-02-06",
+          "sha256": "d7eb03bf06c97b205be01eba0bc7c113f1c356c7144a67dd85934d1fb748a575"
+        },
+        {
+          "day": "2026-02-07",
+          "sha256": "52ec2ac0fcc09a2575187fb21dc878d9cacf152f679bee22cb217c48800c2f53"
+        },
+        {
+          "day": "2026-02-08",
+          "sha256": "e974572ad349f11afccc47e6279944055c5dd288be3b117cdf9d5305dd75d659"
+        },
+        {
+          "day": "2026-02-09",
+          "sha256": "65e475a58d9612ef6811b7b76021f8d0182b5715e0571a92c013dbedde9a49e4"
+        },
+        {
+          "day": "2026-02-10",
+          "sha256": "701e1d9cee63d33c5856786e6f28c53b3a6624d80057a33c98ee14a00d66a884"
+        },
+        {
+          "day": "2026-02-11",
+          "sha256": "75bfddb3c2e0a5f2f83b8d3cf497e0446314a184a067e233fb6b4f4baf907383"
+        },
+        {
+          "day": "2026-02-12",
+          "sha256": "d6dd506aa0376c98355a1e33d63e568d445808cfb668eac61c5a025407e46eee"
+        }
+      ],
+      "symbol": "A2ZUSDT"
+    }
+  ],
+  "queue_rows": [
+    {
+      "attempts": 0,
+      "deadline_ms": 1770339060000,
+      "first_seen_ms": 1770338160000,
+      "id": 1,
+      "last_error": "NO_SETUP_WITHIN_WINDOW",
+      "last_evaluated_bar_ms": 1770338700000,
+      "last_seen_ms": 1770338160000,
+      "status": "EVALUATED",
+      "symbol": "1000SATSUSDT",
+      "venue": "spot"
+    },
+    {
+      "attempts": 0,
+      "deadline_ms": 1770339060000,
+      "first_seen_ms": 1770338160000,
+      "id": 2,
+      "last_error": "NO_SETUP_WITHIN_WINDOW",
+      "last_evaluated_bar_ms": 1770338700000,
+      "last_seen_ms": 1770338160000,
+      "status": "EVALUATED",
+      "symbol": "1INCHUSDT",
+      "venue": "spot"
+    },
+    {
+      "attempts": 0,
+      "deadline_ms": 1770339060000,
+      "first_seen_ms": 1770338160000,
+      "id": 3,
+      "last_error": "NO_SETUP_WITHIN_WINDOW",
+      "last_evaluated_bar_ms": 1770338700000,
+      "last_seen_ms": 1770338160000,
+      "status": "EVALUATED",
+      "symbol": "2ZUSDT",
+      "venue": "spot"
+    },
+    {
+      "attempts": 0,
+      "deadline_ms": 1770432120000,
+      "first_seen_ms": 1770431220000,
+      "id": 4,
+      "last_error": null,
+      "last_evaluated_bar_ms": 1770431100000,
+      "last_seen_ms": 1770431220000,
+      "status": "EVALUATED",
+      "symbol": "0GUSDT",
+      "venue": "spot"
+    }
+  ],
+  "queue_status_counts": {
+    "EVALUATED": 4
+  },
+  "real_market_order_or_mail": "OFF",
+  "schema": "MONSTER_SHARED_SPOT_445_SOURCE_COMPLETE_ORIGINAL_D0_D1_PILOT_V1",
+  "shared_replayer_sha256": "23793c2ddd031cb3e31a88eb34c20bd62b52b3b3125d8f8deaffa49e8755c363",
+  "source": "OFFICIAL_SPOT_1M_HISTORICAL_216H_PREFIX_CONTEXT_PILOT_ONLY",
+  "source_attestation": "STAGE26_ACTUAL_OFFICIAL_PUBLISHER_ZIP_CHECKSUM_PER_SYMBOL_AT_RUN_TIME",
+  "source_coverage": {
+    "expected_source_rows": 26880,
+    "poll_ticks": 3360,
+    "symbol_date_count": 8
+  },
+  "source_level": "ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
+  "source_origin_verified": true,
+  "trigger_commit_sha": "84a8d35e8f52c5c554886eeb926b2e66ec7a442d",
+  "true_full_758_replay": false
+}
