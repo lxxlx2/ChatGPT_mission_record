@@ -1,0 +1,146 @@
+name: Monster original 445 first32 zero-quote D1 unsupported research V2
+on:
+  push:
+    branches: [research/monster-v4-local-discovery-20261010]
+    paths:
+      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_d1_zeroquote_research_v2.py'
+      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_d1_zeroquote_research_v2.py'
+      - '.github/workflows/monster-v4-445-first32-zeroquote-research-v2.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  original_and_experimental_D1_parity_tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Genuine production unchanged on no-zero, real zero quote unsupported is not LATE, HIGH corruption still fatal
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python -m py_compile monster_v4_shared_d1_zeroquote_research_v2.py test_monster_v4_shared_d1_zeroquote_research_v2.py
+          python -m unittest -v test_monster_v4_shared_d1_zeroquote_research_v2.py
+          echo MONSTER_ZEROQUOTE_V2_ORIGINAL_PRODUCTION_FROZEN_AND_RESEARCH_GATES=PASS
+
+  actual_32_official_source_shared_global_queue_v2:
+    needs: original_and_experimental_D1_parity_tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Re-download 2 exact publisher-checksummed historical GHA raw source ZIP artifacts, not new snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p /tmp/monster_feb445_v2_sources
+          gh api -H 'Accept: application/vnd.github+json' 'repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/12021352471/zip' > /tmp/original_feb_shard00_artifact.zip
+          gh api -H 'Accept: application/vnd.github+json' 'repos/lxxlx2/ChatGPT_mission_record/actions/artifacts/12021445690/zip' > /tmp/original_feb_shard01_artifact.zip
+          unzip -q -j /tmp/original_feb_shard00_artifact.zip -d /tmp/monster_feb445_v2_sources
+          unzip -q -j /tmp/original_feb_shard01_artifact.zip -d /tmp/monster_feb445_v2_sources
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          folder=Path('/tmp/monster_feb445_v2_sources')
+          evid=Path('crypto-300-profit-mission/monster/evidence')
+          for i in (0,1):
+              x=json.loads((folder/f'monster_feb445_shard{i:02d}.proof.json').read_text())
+              y=json.loads((evid/f'monster_feb445_shard{i:02d}.proof.json').read_text())
+              assert x==y
+              assert x['source_origin_verified_at_collection']
+          print('MONSTER_ZEROQUOTE_V2_TWO_ORIGINAL_SHA_LOCKED_SOURCE_PROOFS_MATCH')
+          PY
+      - name: Actual first32 original global D0, research-only zeroquote-aware D1, old per-symbol D0 compare on same minute
+        working-directory: crypto-300-profit-mission/local-agent/scripts
+        run: |
+          python monster_v4_shared_d1_zeroquote_research_v2.py --source-dir /tmp/monster_feb445_v2_sources --out /tmp/monster_feb445_first32_zeroquote_research_v2_actual.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          r=json.loads(Path('/tmp/monster_feb445_first32_zeroquote_research_v2_actual.json').read_text())
+          assert r['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert r['schema']=='MONSTER_FEB2026_REAL_ZERO_QUOTE_UNSUPPORTED_D1_RESEARCH_VARIANT_V2'
+          assert r['same_source_all_32_D0_watch_utc_exact']
+          assert r['new_shared_D0_simultaneous_20260206_0036_UTC']>=3
+          assert r['execution_counts']['polls']==3360
+          assert r['D1_zero_quote_unsupported_attempt_slots']>0
+          assert r['D1_zero_quote_terminal_candidates']>0
+          assert r['only_original_production_D0_and_D1_called'] is False
+          assert r['original_758_coverage']['source_missing_or_incomplete_original_stage26']==313
+          assert not r['true_full_445_replayed']
+          print('MONSTER_FEB445_REAL_FIRST32_CAUSAL_ZEROQUOTE_V2_RESEARCH_NOT_ORIGINAL_D1_OR_PROFIT_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monster-first32-original-D0-zeroquote-research-only-v2
+          path: /tmp/monster_feb445_first32_zeroquote_research_v2_actual.json
+          if-no-files-found: error
+          retention-days: 60
+
+  archive_bounded_research_evidence:
+    needs: actual_32_official_source_shared_global_queue_v2
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - name: Fetch exact this-run source-tagged experimental 32 result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/monster_first32_v2
+          gh run download "$GITHUB_RUN_ID" --dir /tmp/monster_first32_v2 --name monster-first32-original-D0-zeroquote-research-only-v2
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          r=json.loads(Path('/tmp/monster_first32_v2/monster_feb445_first32_zeroquote_research_v2_actual.json').read_text())
+          assert r['trigger_commit_sha']==os.environ['GITHUB_SHA']
+          assert r['D1_zero_quote_terminal_candidates']>0
+          assert r['experimental_source_semantics_approved_for_trading'] is False
+          assert r['G4']=='UNKNOWN' and r['G6']=='NO_GO'
+          print('MONSTER_FIRST32_EXPERIMENTAL_ZEROQUOTE_SOURCE_UNSUPPORTED_NEVER_PRODUCTION')
+          PY
+      - name: Preserve only research experiment result with pinned executable source identity
+        run: |
+          set -eu
+          branch=research/monster-v4-local-discovery-20261010
+          dest=crypto-300-profit-mission/monster/evidence/monster_feb445_first32_zeroquote_D1_research_v2_actual.json
+          cp /tmp/monster_first32_v2/monster_feb445_first32_zeroquote_research_v2_actual.json "$dest"
+          git config user.name monster-research-ci
+          git config user.email monster-research-ci@users.noreply.github.com
+          git add "$dest"
+          git commit -m "monster: archive original source 32 shared D0 with clearly experimental zeroquote-unsupported D1 semantics, no profitable claims"
+          for attempt in 1 2 3; do
+            git fetch origin "refs/heads/$branch"
+            if ! git rebase FETCH_HEAD; then
+              git rebase --abort || true
+              exit 1
+            fi
+            for f in crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_d1_zeroquote_research_v2.py crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_d1_zeroquote_research_v2.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_d0_d1_original_core.py crypto-300-profit-mission/local-agent/scripts/monster_v4_shadow.py .github/workflows/monster-v4-445-first32-zeroquote-research-v2.yml; do
+              test "$(git rev-parse "$GITHUB_SHA:$f")" = "$(git rev-parse "HEAD:$f")" || { echo "MONSTER_ZEROQUOTE_V2_SOURCE_DRIFT=$f"; exit 1; }
+            done
+            if git push origin "HEAD:refs/heads/$branch"; then
+              echo MONSTER_REAL_FIRST32_ZEROQUOTE_RESEARCH_V2_GIT_ARCHIVED_NOT_ORIGINAL_D1
+              exit 0
+            fi
+          done
+          exit 1
