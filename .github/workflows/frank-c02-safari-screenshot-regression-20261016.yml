@@ -30,6 +30,7 @@ jobs:
         working-directory: crypto-300-profit-mission/local-agent
         run: |
           node --check mission_agent/mission_control/static/app.js
+          node --check tests/ca_identity_render.cjs
           node tests/ca_identity_render.cjs
       - name: Targeted source regressions
         working-directory: crypto-300-profit-mission/local-agent
