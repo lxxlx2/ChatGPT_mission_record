@@ -1,0 +1,210 @@
+{
+  "G4": "UNKNOWN",
+  "G6": "NO_GO",
+  "all_28_raw_shards_directly_rechecked": true,
+  "historical_source_censored_original758": 313,
+  "original_full_replay_artifact_id": 12044872933,
+  "per_shard": [
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 0,
+      "symbols": 16,
+      "zip_sha256": "0a224464a317b22bd51630d9dcb86900135644ca8c72ee3390f8bf0e3d5ca2fa"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 1,
+      "symbols": 16,
+      "zip_sha256": "9128f46b15361f72d88efb46c03bdd209f2ebdfdff419b1e0c08160eeac3df77"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 2,
+      "symbols": 16,
+      "zip_sha256": "857e45040b83fd55b230e33bcc8060de77d9f6132cfeb1b057d18405668c2fd8"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 3,
+      "symbols": 16,
+      "zip_sha256": "7dbc5a607f27f79dffc03f9e2a3f3f9db4c62ef4ad65dc2029a5095c3e8403b1"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 4,
+      "symbols": 16,
+      "zip_sha256": "362afe7cde37f571b34810b0f79e2c8c2ae08906a8a59da49dbb7167d6965a58"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 5,
+      "symbols": 16,
+      "zip_sha256": "926073e7c8a1bbeeb8621414cd9a80597990875dcb056b71ba4ebcd60d9fe4ea"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 6,
+      "symbols": 16,
+      "zip_sha256": "6040ed2c6fcf926f9dddc1f6660c82b1b44fea8bb497445e22f4517068af4e20"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 7,
+      "symbols": 16,
+      "zip_sha256": "656e0e7e16bd6db9afbcdd1a33ca01e4e0601f585a1fd2f96bfc46ba10e5cf05"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 8,
+      "symbols": 16,
+      "zip_sha256": "5851ea489bc09bb4a2f316b019d3c07645686c610e0bdd0e74ecaf7f86b4a6b2"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 9,
+      "symbols": 16,
+      "zip_sha256": "d0280e158165e70e4bca85611d4575338227e9263f81c580cba6c14eacb77100"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 10,
+      "symbols": 16,
+      "zip_sha256": "1b1c1664cbea3811d3a519b6d4499775e31539a41090e07b4638a263b93f268c"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 11,
+      "symbols": 16,
+      "zip_sha256": "0e95dfabb2e01ac61e1c37122828eebd487f5779754d566a2ae41812cf3955a1"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 12,
+      "symbols": 16,
+      "zip_sha256": "1235044bc9b009b5f0fb472e89517995f2a0db092038ba22c5a4edc8ab6a64a9"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 13,
+      "symbols": 16,
+      "zip_sha256": "355cb436e794307dab22a0414804aba894b156ba5e9490233ed4844d1c6f06ef"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 14,
+      "symbols": 16,
+      "zip_sha256": "b474932cb48d672bbd1b3aaf44d35b33e5c385132c5d8771de5e246c70d1990d"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 15,
+      "symbols": 16,
+      "zip_sha256": "c56ed1679d888834b20a5dfdf489f5f266d9572ea5064e98bdda2c574174ce9a"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 16,
+      "symbols": 16,
+      "zip_sha256": "6fcd0fc1bb3644408584fe539b08774918c60060fb77734d512c25700f100225"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 17,
+      "symbols": 16,
+      "zip_sha256": "6afbdb4eb1591ee07193426be3af84244359ccfa37b5d7f470601d692b7584aa"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 18,
+      "symbols": 16,
+      "zip_sha256": "a0758e0eb6a2ef3d26b9a36ef314a64e47606b3fc068ea131302885732cbf78a"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 19,
+      "symbols": 16,
+      "zip_sha256": "1ae215b809fe51bc520aac53fb053760030bb5f6a8f4ee8dbdd5890ca93c4e05"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 20,
+      "symbols": 16,
+      "zip_sha256": "aab42bb620ffdcd8815bd508f3fcd1e89324da3951d8f53a1dba8f2e34f688e8"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 21,
+      "symbols": 16,
+      "zip_sha256": "32e3ec9781685f86be8419de6c8394a6a4c2d57473d2b3e39f4c907aa0aaabe5"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 22,
+      "symbols": 16,
+      "zip_sha256": "4257fc1f145e93673a5d2f04d5def098faf4dcc3e487254287dd41f957953f89"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 23,
+      "symbols": 16,
+      "zip_sha256": "1fa3d46800a3383443ed6aef40c1601aab1a9e951704023cc4d662cda08c0b2f"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 24,
+      "symbols": 16,
+      "zip_sha256": "a5dce95c0b8d3b744e8f9677745f790c7c6cec897cbd4f8d80be79c5bc79babb"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 25,
+      "symbols": 16,
+      "zip_sha256": "773fc5dfe4f3c35f3968612d452c8f76cd1820dc90114b3543ec5dc1a1e2b933"
+    },
+    {
+      "publisher_days": 160,
+      "publisher_proof_equals_manifest": true,
+      "shard": 26,
+      "symbols": 16,
+      "zip_sha256": "9c97914da602608bba81df24127cbb46a77d3bc8bd8984d888b538dd5a6e1678"
+    },
+    {
+      "publisher_days": 130,
+      "publisher_proof_equals_manifest": true,
+      "shard": 27,
+      "symbols": 13,
+      "zip_sha256": "00894286534a3c40683196f0e1a7bbf0d0093ef23607cd92695ec191cf9790d3"
+    }
+  ],
+  "publisher_days_sha_receipts": 4450,
+  "research_only": true,
+  "schema": "MONSTER445_REVIEW_ALL_28_ORIGINAL_SOURCE_PROOF_MANIFEST_CROSSCHECK_V1",
+  "source_complete_symbols": 445,
+  "source_provenance_issuer_sha_equals_manifest": true
+}\n
