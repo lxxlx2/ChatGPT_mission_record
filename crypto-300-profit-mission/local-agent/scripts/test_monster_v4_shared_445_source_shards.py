@@ -46,6 +46,16 @@ class SourceShardsAndMergeTests(unittest.TestCase):
             self.assertEqual(proof["historical_original_censored"],313)
             self.assertEqual(shards.sha(z.read_bytes()),proof["sha256_zip"])
             entries=list(shards.read_archive(z,proof=proof,expected_shard=1))
+            altered=copy.deepcopy(proof)
+            altered["source_sha256_by_symbol"][0]["publisher_days"][0]["sha256"]="0"*64
+            with self.assertRaisesRegex(ValueError,
+                       "SOURCE_PROOF_PUBLISHER_MANIFEST_MISMATCH"):
+                list(shards.read_archive(z,proof=altered,expected_shard=1))
+            altered=copy.deepcopy(proof)
+            altered["source_sha256_by_symbol"][0]["raw_sha256"]="0"*64
+            with self.assertRaisesRegex(ValueError,
+                       "SOURCE_PROOF_PUBLISHER_MANIFEST_MISMATCH"):
+                list(shards.read_archive(z,proof=altered,expected_shard=1))
             self.assertEqual(tuple(x[0] for x in entries),selected)
             for name,bars,receipts,meta in entries:
                 self.assertEqual(len(bars),12960)
