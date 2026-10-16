@@ -194,6 +194,12 @@ def summarize(audit_file: Path, replay_file: Path, output: Path):
             or replay.get("not_independent_OOS") is not True
             or replay.get("not_real_PIT_listing") is not True
             or counts.get("polls")!=3360
+            or replay.get("D1_model_semantics")!="RESEARCH_V2_SOURCE_UNSUPPORTED_ZEROQUOTE"
+            or replay.get("all445_original_production_D1_completed") is not False
+            or replay.get("only_original_production_D0_and_D1_called") is not False
+            or replay.get("production_D0_unchanged") is not True
+            or replay.get("D1_max_selected_slots_one_tick",9)>8
+            or replay.get("experimental_source_semantics_approved_for_trading") is not False
             or replay.get("G6")!="NO_GO"):
         raise RuntimeError("MONSTER445_REPLAY_ACTUAL_SHARED_ENGINE_INCOMPLETE")
     if [(r["shard"],r["zip_sha256"]) for r in audit["source_artifacts"]] != [
@@ -212,6 +218,13 @@ def summarize(audit_file: Path, replay_file: Path, output: Path):
         "all_source_zip_sha256":[{"shard":e["shard"],"sha256":e["zip_sha256"]}
                                  for e in audit["source_artifacts"]],
         "one_shared_sqlite":True,"global_polls":3360,
+        "D0_original_production_unchanged":True,
+        "D1_replay_variant":"ZEROQUOTE_V2_RESEARCH_ONLY",
+        "original_445_production_D1_replay_status":"FAILED_CLOSED_ZERO_QUOTE_SOURCE",
+        "D1_research_zeroquote_candidate_count":replay["D1_zero_quote_terminal_candidates"],
+        "D1_research_zeroquote_source_slots":replay["D1_zero_quote_unsupported_attempt_slots"],
+        "D1_research_max_selected_slots_tick":replay["D1_max_selected_slots_one_tick"],
+        "D1_research_unsupported_by_symbol":replay["D1_zero_quote_terminal_by_symbol"],
         "original_production_core_blob":replay["origin_core_blob"],
         "core_sha256":replay["shared_replayer_sha256"],
         "assembler_sha256":replay["assembler_sha256"],
@@ -238,6 +251,7 @@ def summarize(audit_file: Path, replay_file: Path, output: Path):
     print("MONSTER445_REAL_ALL_SOURCE_COMPLETE_ONE_SQLITE_D0_D1_REPLAY",
           json.dumps({k:report[k] for k in ("source_symbols","global_polls",
                 "D0_watch_total","max_watch_same_tick","D1_queue_status_counts",
+                "D1_research_zeroquote_candidate_count","D1_research_max_selected_slots_tick",
                 "G4","G6")},sort_keys=True),flush=True)
     return report
 
