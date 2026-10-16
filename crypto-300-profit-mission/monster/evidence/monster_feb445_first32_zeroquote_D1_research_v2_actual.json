@@ -9,7 +9,7 @@
   "G6": "NO_GO",
   "actually_complete_symbols": 32,
   "archive_original_download_verified_in_source_ci": false,
-  "d1_zeroquote_research_sha256": "42f644efe1842bf0d41858ffebe6a72d9477bfa6e961e31b48237a411ea9c2cf",
+  "d1_zeroquote_research_sha256": "6f677007230e3545e3fde2bf92b3dbce8daa5290a79406a7d388ee0c12d44005",
   "date": "2026-02-04",
   "event_type_counts": {
     "INVALIDATED": 7,
@@ -4098,7 +4098,7 @@
   },
   "source_level": "ARCHIVED_1M_ZIP_CHECKSUM_AND_DERIVED_CLOSED_5M",
   "source_origin_verified": false,
-  "trigger_commit_sha": "dfceade891909bf374ce3e790f3aef33746f2938",
+  "trigger_commit_sha": "f5039d9724d08edb2295a66031854491489f0f30",
   "true_full_445_replayed": false,
   "true_full_758_replay": false,
   "two_original_source_artifact_shas": [
