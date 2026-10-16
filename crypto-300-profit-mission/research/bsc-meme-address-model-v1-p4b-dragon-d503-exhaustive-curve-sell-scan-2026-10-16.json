@@ -1,0 +1,205 @@
+{
+  "schema": "BSC_P4B_DRAGON_ONE_FROZEN_BUYER_EXHAUSTIVE_MANAGER_OUTBOUND_TRANSFER_V1",
+  "captured_date": "2026-10-16",
+  "parent_precommit": "bsc-meme-address-model-v1-p4b-dragon-postowner-signed-roundtrip-precommit-2026-10-16.json",
+  "chain": "bnb-mainnet",
+  "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+  "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+  "topic": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+  "query_filter_indexed_topics": [
+    "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+    "0x000000000000000000000000d503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+    "0x0000000000000000000000005c952063c7fc8610ffdb798152d69f0b9550762b"
+  ],
+  "from_block_inclusive": 83636001,
+  "to_block_inclusive": 83636127,
+  "free_tier_max_span": 10,
+  "all_ranges": [
+    {
+      "from": 83636001,
+      "to": 83636010
+    },
+    {
+      "from": 83636011,
+      "to": 83636020
+    },
+    {
+      "from": 83636021,
+      "to": 83636030
+    },
+    {
+      "from": 83636031,
+      "to": 83636040
+    },
+    {
+      "from": 83636041,
+      "to": 83636050
+    },
+    {
+      "from": 83636051,
+      "to": 83636060
+    },
+    {
+      "from": 83636061,
+      "to": 83636070
+    },
+    {
+      "from": 83636071,
+      "to": 83636080
+    },
+    {
+      "from": 83636081,
+      "to": 83636090
+    },
+    {
+      "from": 83636091,
+      "to": 83636100
+    },
+    {
+      "from": 83636101,
+      "to": 83636110
+    },
+    {
+      "from": 83636111,
+      "to": 83636120
+    },
+    {
+      "from": 83636121,
+      "to": 83636127
+    }
+  ],
+  "scans": [
+    {
+      "from": 83636001,
+      "to": 83636010,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636011,
+      "to": 83636020,
+      "status": "COMPLETE",
+      "n": 1,
+      "logs": [
+        {
+          "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000d503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+            "0x0000000000000000000000005c952063c7fc8610ffdb798152d69f0b9550762b"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000429ea6a539154e0372200",
+          "blockHash": "0x411938c189ad4b1667e369cdc2cb1f4037b3f59cd73f03aa47631312508a0e17",
+          "blockNumber": "0x4fc2f32",
+          "blockTimestamp": "0x69a15aaf",
+          "transactionHash": "0x854ce4c5edc725bf9d763c043e29e0d8ef8a9ab89a3c39bdf7fba31dda98416d",
+          "transactionIndex": "0x2",
+          "logIndex": "0x2",
+          "removed": false
+        }
+      ]
+    },
+    {
+      "from": 83636021,
+      "to": 83636030,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636031,
+      "to": 83636040,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636041,
+      "to": 83636050,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636051,
+      "to": 83636060,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636061,
+      "to": 83636070,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636071,
+      "to": 83636080,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636081,
+      "to": 83636090,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636091,
+      "to": 83636100,
+      "status": "COMPLETE",
+      "n": 1,
+      "logs": [
+        {
+          "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000d503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+            "0x0000000000000000000000005c952063c7fc8610ffdb798152d69f0b9550762b"
+          ],
+          "data": "0x00000000000000000000000000000000000000000002949334564ac448356400",
+          "blockHash": "0x00deb0a4c1643e3b3dcac30ff7809c6df43f1f9cd6c0e9cef7bd10a56c9bd8b2",
+          "blockNumber": "0x4fc2f7e",
+          "blockTimestamp": "0x69a15ad1",
+          "transactionHash": "0x25122e07f529fc935856f99cc948f442587ac09d1e339a859eb86537e93eca0a",
+          "transactionIndex": "0xd",
+          "logIndex": "0x39",
+          "removed": false
+        }
+      ]
+    },
+    {
+      "from": 83636101,
+      "to": 83636110,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636111,
+      "to": 83636120,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    },
+    {
+      "from": 83636121,
+      "to": 83636127,
+      "status": "COMPLETE",
+      "n": 0,
+      "logs": []
+    }
+  ],
+  "observed_transfer_to_manager_tx_hashes": [
+    "0x854ce4c5edc725bf9d763c043e29e0d8ef8a9ab89a3c39bdf7fba31dda98416d",
+    "0x25122e07f529fc935856f99cc948f442587ac09d1e339a859eb86537e93eca0a"
+  ],
+  "scope_limitation": "Bounded pre-migration direct wallet to manager ERC20 Transfer only; transfers to other destinations, DEX migration and full wallet history not covered.",
+  "no_trade_authorization": true
+}
