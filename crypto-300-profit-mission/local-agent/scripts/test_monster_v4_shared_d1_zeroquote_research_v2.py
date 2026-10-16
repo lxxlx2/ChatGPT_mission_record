@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from collections import Counter
+from unittest.mock import patch
 
 import monster_v4_shared_d1_zeroquote_research_v2 as variant
 import monster_v4_shared_spot_d0_d1_original_core as shared
@@ -98,6 +100,82 @@ class ZeroQuoteResearchVariantTests(unittest.TestCase):
             variant.experimental_queue_handler(None,1,None,None,
                 limit=9,original_queue=None,stats={})
         self.assertEqual(variant.TERMINAL,"SOURCE_UNSUPPORTED_D1_ZERO_QUOTE")
+
+
+    def test_06_nine_queue_candidates_zero_first_cannot_promote_ninth_into_slot(self):
+        tick=shared.utc_ms(DAY)+30*shared.MIN
+        candle_close=tick-1
+        candles=[]
+        for i in range(8):
+            end=candle_close-(7-i)*5*shared.MIN
+            candles.append([end-5*shared.MIN+1,"1","1.1","0.9","1.05",
+                           "5",end,"1000"])
+        with tempfile.TemporaryDirectory() as td:
+            store=variant.production.open_store(Path(td)/"queue.sqlite")
+            try:
+                with store:
+                    for letter in "ABCDEFGHI":
+                        store.execute("""INSERT INTO candidate_queue
+                            (venue,symbol,first_seen_ms,last_seen_ms,priority,
+                             reason,status,attempts,retry_after_ms,deadline_ms)
+                            VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                            ("spot","A"+letter+"USDT",tick-2*shared.MIN,
+                             tick,1,"SYNTHETIC_TEST","PENDING",0,0,
+                             tick+15*shared.MIN))
+                stats={"zero_quote_source_slots_consumed":0,
+                    "terminal_unsupported":0,"by_symbol":Counter(),
+                    "max_slots_in_single_tick":0}
+                with patch.object(variant,"source_zero_closed5m",
+                                  side_effect=lambda _db,sym,_t:
+                                      sym=="AAUSDT"):
+                    result=variant.experimental_queue_handler(
+                        store,tick,lambda *_:candles,None,
+                        limit=8,original_queue=variant.production.process_queue,
+                        stats=stats)
+                self.assertEqual(result["selected"],8)
+                self.assertEqual(stats["max_slots_in_single_tick"],8)
+                self.assertEqual(stats["zero_quote_source_slots_consumed"],1)
+                q={r["symbol"]:dict(r) for r in store.execute(
+                    "SELECT symbol,retry_after_ms,last_error,status FROM candidate_queue")}
+                self.assertEqual(q["AAUSDT"]["last_error"],variant.WAIT_ERROR)
+                self.assertEqual(q["AIUSDT"]["retry_after_ms"],0)
+                self.assertIsNone(q["AIUSDT"]["last_error"])
+                self.assertEqual(q["AIUSDT"]["status"],"PENDING")
+                for letter in "BCDEFGH":
+                    self.assertGreater(q["A"+letter+"USDT"]["retry_after_ms"],tick)
+            finally:
+                store.close()
+
+    def test_07_previously_zeroquote_waited_expiry_is_not_fake_late(self):
+        tick=shared.utc_ms(DAY)+30*shared.MIN
+        with tempfile.TemporaryDirectory() as td:
+            store=variant.production.open_store(Path(td)/"queue.sqlite")
+            try:
+                with store:
+                    store.execute("""INSERT INTO candidate_queue
+                        (venue,symbol,first_seen_ms,last_seen_ms,priority,
+                         reason,status,attempts,retry_after_ms,deadline_ms,
+                         last_error)
+                        VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+                        ("spot","AAUSDT",tick-20*shared.MIN,tick,1,"TEST",
+                         "PENDING",0,0,tick-shared.MIN,variant.WAIT_ERROR))
+                stats={"zero_quote_source_slots_consumed":0,
+                    "terminal_unsupported":0,"by_symbol":Counter(),
+                    "max_slots_in_single_tick":0}
+                def never_fetch(*_):
+                    self.fail("zeroquote expiry must not issue an out-of-time read")
+                result=variant.experimental_queue_handler(
+                    store,tick,never_fetch,None,limit=8,
+                    original_queue=variant.production.process_queue,stats=stats)
+                self.assertEqual(result["late"],0)
+                self.assertEqual(result["selected"],1)
+                self.assertEqual(stats["terminal_unsupported"],1)
+                q=store.execute(
+                    "SELECT status,last_error FROM candidate_queue").fetchone()
+                self.assertEqual(q["status"],variant.TERMINAL)
+                self.assertEqual(q["last_error"],variant.WAIT_ERROR)
+            finally:
+                store.close()
 
 
 if __name__=="__main__":
