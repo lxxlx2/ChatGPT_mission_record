@@ -264,10 +264,15 @@ def main():
         a, b, f02 = sources(runtime)
         class Control(Handler):
             def _file(self, path):
-                if path == self.static_root / "index.html":
-                    raw = path.read_bytes().replace(b"<body>", b"<body>" + QA_BANNER, 1)
+                if path in (self.static_root / "index.html", self.static_root / "styles.css"):
+                    if path.name == "index.html":
+                        raw = path.read_bytes().replace(b"<body>", b"<body>" + QA_BANNER, 1)
+                        mime = "text/html; charset=utf-8"
+                    else:
+                        raw = path.read_bytes() + QA_BANNER_CSS.encode("utf-8")
+                        mime = "text/css; charset=utf-8"
                     self.send_response(200)
-                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self.send_header("Content-Type", mime)
                     self.send_header("Cache-Control", "no-store")
                     self.send_header("Content-Length", str(len(raw)))
                     self.end_headers()
