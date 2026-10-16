@@ -82,6 +82,14 @@ def _quote_field(item: dict, key: str, *, positive: bool) -> Decimal | None:
             return None
         if not value.is_finite() or (value <= 0 if positive else value < 0):
             return None
+        # The browser uses Number(...), not Python Decimal. Disallow any
+        # quote whose magnitude overflows or underflows that representation.
+        try:
+            browser_value = float(value)
+        except (OverflowError, ValueError):
+            return None
+        if not math.isfinite(browser_value) or (browser_value <= 0 if positive else browser_value < 0):
+            return None
         values.append(value)
     if not values or any(value != values[0] for value in values[1:]):
         return None
