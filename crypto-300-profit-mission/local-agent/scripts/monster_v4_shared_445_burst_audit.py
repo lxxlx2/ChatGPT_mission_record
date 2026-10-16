@@ -19,6 +19,25 @@ FULL_JSON_SHA256 = "370c34fbe8c2e914de54d87068b329405fc94c9d2624f7e3d8701155b10d
 TICK_MS = 3 * 60_000
 DEADLINE_MS = 15 * 60_000
 D1_SLOTS = 8
+IMMUTABLE_CODE_BLOBS = {
+    "monster_v4_shadow.py": "bc958b3d90a8a52afa51515cb53f7e5fafaffaaa",
+    "monster_v4_shared_spot_d0_d1_original_core.py":
+        "3a9e4bbd75ff4f5ef6cd0bfe87895d932c95892c",
+    "monster_v4_shared_d1_zeroquote_research_v2.py":
+        "b16e89f2a20c1dfaaebce1497da8d991d3907ed7",
+}
+
+
+def verify_immutable_model_code():
+    source_dir = Path(__file__).resolve().parent
+    for filename, expected_git_blob in IMMUTABLE_CODE_BLOBS.items():
+        raw = (source_dir / filename).read_bytes()
+        git_blob_sha = hashlib.sha1(
+            b"blob " + str(len(raw)).encode() + b"\0" + raw
+        ).hexdigest()
+        if git_blob_sha != expected_git_blob:
+            raise ValueError("MONSTER445_BURST_FROZEN_PRODUCTION_CODE_BLOB_DRIFT")
+    return IMMUTABLE_CODE_BLOBS
 
 
 def iso_utc(milliseconds: int) -> str:
@@ -27,6 +46,7 @@ def iso_utc(milliseconds: int) -> str:
 
 
 def assess(full_bytes: bytes, summary: dict) -> dict:
+    verified_model_code_blobs = verify_immutable_model_code()
     digest = hashlib.sha256(full_bytes).hexdigest()
     if digest != FULL_JSON_SHA256 or summary.get("full_replay_json_sha256") != digest:
         raise ValueError("MONSTER445_BURST_IMMUTABLE_FULL_REPLAY_SHA_MISMATCH")
@@ -134,6 +154,7 @@ def assess(full_bytes: bytes, summary: dict) -> dict:
         "schema": SCHEMA,
         "immutable_full_json_sha256": digest,
         "one_sqlite_original_D0_experimental_D1": True,
+        "verified_model_code_git_blobs": verified_model_code_blobs,
         "setup_event_matching": "PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID",
         "late_event_matching": "PRODUCTION_EVENT_KEY_SHA256_EXACT_QUEUE_ID",
         "D1_market_zero_quote_is_real_no_trade_not_missing_data": True,
