@@ -87,6 +87,9 @@ def stop_process(process, reader):
         process.wait(timeout=5)
     if reader is not None and reader.is_alive():
         reader.join(timeout=4)
+    for stream in (process.stdin, process.stdout):
+        if stream is not None:
+            stream.close()
 
 
 def start(root, repo, launcher, folder, handshake_timeout=50):
