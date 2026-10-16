@@ -53,7 +53,7 @@ class First32TwoShardRegressions(unittest.TestCase):
                       "trigger_commit_sha":"SYNTHETIC_UNVERIFIED",
                       "symbols":list(shards.members(i))}))
             def fake_shard(_path,proof,expected_shard):
-                return iter([(shards.members(0)[0],[],[],{})])
+                return iter([(shards.members(1)[0],[],[],{})])
             with patch.object(first.shards,"read_archive",side_effect=fake_shard):
                 with self.assertRaisesRegex(ValueError,
                              "INVALID_OR_DUPLICATED_SOURCE_MEMBER"):
