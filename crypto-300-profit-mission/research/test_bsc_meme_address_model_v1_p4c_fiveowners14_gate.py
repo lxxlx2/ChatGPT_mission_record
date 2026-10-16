@@ -23,6 +23,8 @@ class FiveOwnersFourMajorsPinnedSourceTests(unittest.TestCase):
         self.assertEqual(out["frozen_original_signed_transactions"], 14)
         self.assertEqual(out["original_signer_and_block_recheck_passed"], 14)
         self.assertEqual(out["full_receipts_parsed"], 5)
+        self.assertEqual(out["truncated_receipts_NOT_FULL_SUCCESS_VERIFIED"], 9)
+        self.assertEqual(out["truncated_receipt_status_field_observed_unverified"], 6)
         self.assertEqual(out["original_receipt_status_unreadable"], 3)
         self.assertEqual(out["realized_fully_attributable_cross_major_profits"], "UNRESOLVED")
         self.assertEqual(out["public_observer_executable_U"], "UNRESOLVED")
