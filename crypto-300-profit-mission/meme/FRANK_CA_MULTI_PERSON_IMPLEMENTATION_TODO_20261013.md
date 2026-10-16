@@ -771,3 +771,14 @@ Remaining verified gaps / dependencies:
 - 完整 CI [`38873977753`](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38873977753) **SUCCESS**：真实重建 approved tree、启动 3 个随机端口 localhost Handler、F01 1 合成 eligible + 2 excluded、C02 两条同名不同 exact Mint、F02 32 Mint 一非零一零、桥接权限 False，断言退出后文件树未变、全部监听器关闭。此前两次 CI 因 clone 缺冻结 Git 对象及 mock Mint 身份证据缺失 FAILED，后续仅修 QA 测试设施，没有修改 frozen modules。
 - [专门的本次 Mac Safari 授权与交互验收记录](https://github.com/lxxlx2/ChatGPT_mission_record/blob/8168e0296f6d42ee56b4720a75b064eadcd2a241/crypto-300-profit-mission/meme/FRANK_PR85_APPROVED_SYNTHETIC_MAC_SAFARI_EXECUTION_20261016.md)。
 - [ ] 等待用户在实际 Mac 上执行 Git SHA-pinned QA 脚本、Safari 截图、两条 exact CA 查询、F02 前台/切后台与 120 秒 TTL、结束进程的 `MAC_PR85_SYNTHETIC_SESSION_ENDED` 原始回执。本轮**还没有 Mac Safari PASS**，下一步按真实输出修正或判定，绝不能直接发布或称已确认真实余额。
+
+
+## 2026-10-16 Mac Safari 14 图合成页面实测与 ZIP 截图规范
+
+- 用户提供真实 Mac Safari 的约 14 张可见截图以及完整终端回执，精确 frozen QA Git tree `eea30efa09cb1509d7eee3fde3043ee7155257cf`，于 `2026-10-16T08:39:03Z` 开始原生合成 localhost 会话，Control/F02/Bridge 端口 `55478/55479/55480`，先 `MAC_PR85_SYNTHETIC_HTTP_SMOKE_PASS`，结束 `MAC_PR85_SYNTHETIC_SESSION_ENDED`，`services_stopped=true`、`repo_clean=true`、`real_rpc=false`。真实 Safari 页面展示 F01 一条可跟与两条不跟、同名不同 CA 的 C02 verified/unconfirmed、F02 32 目标的 1 非零/1 零/30 不见开放 ATA、120s TTL 之后均变来源不可用。此为已看过的**合成页面视觉证据**，不能算真实交易/仓位或完整自动化浏览器业务验收。
+- 截图发现**QA P2**：临时 synthetic 页面真实 Safari 没有显眼统一的「SYNTHETIC QA · 模拟数据 · 禁止交易」横幅，却显示 Frank「正常」和绿色「可跟」，需要只在 QA 临时服务的 HTML/CSS 注入固定横幅，不能修改已批准的 PR #85 产品源码。截屏工具也应在产物内外明确标识 WebKit 自动截图与 Safari.app 是不同证据。
+- 需要单独核实的 C02 演示真实性：synthetic A 夹具直接注入 `mint_account_status=VERIFIED` 及 `chain_permission_status=PASS`，但详情页 Token Program「未确认」、RPC calls=0；不可用该截图声称已对真实 Rpc 权限做过检查或据此重新改写通过代码。保持真正 analyzer 回归门禁，优先将此类字段归类为 QA synthetic origin。
+- F01 演示 24h 分类买卖 1/1，但近端「Frank 最近买卖」列表为空，研究来源口径有区别或测试夹具不一致，按 P3 待说明，不阻断 F01/C02/F02 用户功能主线。
+- 已增订 [Frank 正式研发规则第 5 节](https://github.com/lxxlx2/ChatGPT_mission_record/blob/5dda011a2db65ab1fec1a07a1f7b97dcfa286936/crypto-300-profit-mission/meme/FRANK_CA_DEVELOPMENT_AND_INDEPENDENT_REVIEW_RULES_20261015.md)：以后本地网页验收必须一条 zsh 命令自动展开折叠项、全页截图和过期状态前后对照，ZIP 打包为单个文件（`manifest.json`、`index.md`、Console 日志及 SHA256），禁止让用户连续上传几十张截图；真实 Safari 与 Playwright WebKit 证据分开声明、不得以截图数量替代测试通过率。
+- [逐图实际视觉核查与分级报告](https://github.com/lxxlx2/ChatGPT_mission_record/blob/e32a1c718f09a962b1cadd4725d3ece715887c6b/crypto-300-profit-mission/meme/FRANK_PR85_MAC_SAFARI_VISUAL_REVIEW_20261016.md)。截图目前在用户对话中，并未上传到 Git 仓库或由自动 ZIP 封存。
+- [ ] 在独立 QA 分支 `qa/frank-pr85-approved-mac-safari-localhost-20261016` 完成自动 WebKit 长图/ZIP 脚本的完整真实 GitHub CI，通过后提供固定 SHA 的 Mac 命令可重启短时 synthetic 服务并导出一个 ZIP，随后用户只需上传该 ZIP。当前 PR #85/生产树保持冻结、不授权主网 RPC/交易/Gmail/部署。
