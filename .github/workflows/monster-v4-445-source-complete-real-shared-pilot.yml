@@ -1,11 +1,5 @@
 name: Monster V4 445 source-complete February shared D0 D1 prereg pilot
 on:
-  push:
-    branches: [research/monster-v4-local-discovery-20261010]
-    paths:
-      - 'crypto-300-profit-mission/local-agent/scripts/monster_v4_shared_spot_445_source_pilot.py'
-      - 'crypto-300-profit-mission/local-agent/scripts/test_monster_v4_shared_spot_445_source_pilot.py'
-      - '.github/workflows/monster-v4-445-source-complete-real-shared-pilot.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -104,6 +98,7 @@ jobs:
           set -eu
           branch=research/monster-v4-local-discovery-20261010
           target=crypto-300-profit-mission/monster/evidence/monster_shared_spot_445_feb2026_first8_real_pilot.json
+          test ! -e "$target" || { echo MONSTER445_LEGACY_PILOT_ALREADY_ARCHIVED; exit 1; }
           cp /tmp/monster_445_first8/monster_shared_feb2026_445_prereg_first8_actual.json "$target"
           git config user.name monster-research-ci
           git config user.email monster-research-ci@users.noreply.github.com
