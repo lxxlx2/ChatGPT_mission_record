@@ -79,6 +79,24 @@ class FrozenFourOwnerWrappedBNBRoutes(unittest.TestCase):
         self.assert_reject(lambda d:d["b"]["cases"][2]["events"][1].update(
             full_block_filter_reply=True))
 
+    def test_adff_original_two_in_one_out_inventory_equal_but_cost_not_proven(self):
+        result=classify(self.d)
+        self.assertEqual(result["ADFF_original_Dragon_transfer_in_raw"],"32546033429758403566")
+        self.assertEqual(result["ADFF_original_Dragon_transfer_out_raw"],"32546033429758403566")
+        self.assertEqual(result["ADFF_original_first_tx_WBNB_ERC20_received_wei"],"176310176278987")
+        self.assertTrue(result["ADFF_all_assets_input_cost"].startswith("UNRESOLVED"))
+
+    def test_adff_inbound_token_amount_tampering_is_rejected(self):
+        self.assert_reject(lambda d:d["adff"]["queries"][0]["exact_original_tx_events"][0].update(
+            raw_amount="999"))
+
+    def test_adff_other_sender_withdrawal_cannot_be_called_token_owner(self):
+        self.assert_reject(lambda d:d["adff"]["queries"][5]["exact_original_tx_events"][0][
+            "topics"].__setitem__(1,"0x"+"0"*64))
+
+    def test_adff_missing_external_cost_query_cannot_be_silently_ignored(self):
+        self.assert_reject(lambda d:d["adff"]["queries"][3].update(filter_complete=False))
+
     def test_cannot_swap_positive_negative_case_order(self):
         self.assert_reject(lambda d:d["a"]["cases"].reverse())
 
