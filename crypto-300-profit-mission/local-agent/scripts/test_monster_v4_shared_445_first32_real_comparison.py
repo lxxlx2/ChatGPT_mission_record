@@ -49,6 +49,8 @@ class First32TwoShardRegressions(unittest.TestCase):
                 (root/f"monster_feb445_shard{i:02d}.proof.json").write_text(
                     json.dumps({"shard":i,
                       "source_origin_verified_at_collection":True,
+                      "sha256_zip":"0"*64,
+                      "trigger_commit_sha":"SYNTHETIC_UNVERIFIED",
                       "symbols":list(shards.members(i))}))
             def fake_shard(_path,proof,expected_shard):
                 return iter([(shards.members(0)[0],[],[],{})])
