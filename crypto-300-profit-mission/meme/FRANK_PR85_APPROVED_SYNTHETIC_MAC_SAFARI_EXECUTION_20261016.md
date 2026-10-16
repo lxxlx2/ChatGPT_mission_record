@@ -26,3 +26,28 @@ Check on the actual Safari UI:
 4. Take screenshots, preserve timestamps and Console/errors. Press **Enter** in the original terminal to stop only the three started synthetic services, leaving old data and product source untouched. The terminal must print `MAC_PR85_SYNTHETIC_SESSION_ENDED` and confirm all listeners stopped and source tree unchanged. Send output and screenshots back for genuine Safari business acceptance assessment.
 
 Current status: **USER_AUTHORIZED / QA_LAUNCHER_CI_SMOKE_PASS / MAC_SAFARI_PENDING**. GitHub/CI synthetic smoke does not prove Mac UI nor any real current wallet balances. NO_MERGE/NO_DEPLOY/NO_NEW_REAL_RPC/NO_TRADES/NO_GMAIL/NO_PRODUCTION_SQLITE_WRITE/NO_AUTOMATION/NO_FILE_CLEANUP continue.
+
+
+## Mac zsh 问题修复：变量后面紧跟 refspec 冒号
+
+Mac 首次执行独立 QA 启动前的 Git fetch 时遇到：
+
+```
+fatal: couldn't find remote ref refs/heads/qa/frank-pr85-approved-mac-safari-localhost-20261016efs/remotes/origin/qa/frank-pr85-approved-mac-safari-localhost-20261016
+```
+
+原因是 zsh 对 `$RUNNER_BRANCH:refs` 的 `:r` **变量修饰符**解释，冒号后的 `r` 被消费，错误地拼出 `...20261016efs/...`。这是此前助手提供的 Mac CLI 字符串 bug，**不是分支不存在、不是 PR85 源码变化，也不是 Safari 失败**。GitHub 已独立读回远端 QA 分支 SHA `68f1267e8b35db4d8fecc84eafd27ca55aa2ee3a`。
+
+**固定写法**：
+
+```zsh
+git -C "$REPO" fetch --no-tags origin "refs/heads/${RUNNER_BRANCH}:refs/remotes/origin/${RUNNER_BRANCH}"
+```
+
+```zsh
+[[ "$(git -C "$REPO" rev-parse "refs/remotes/origin/${RUNNER_BRANCH}")" == "$RUNNER_SHA" ]] || { print -u2 "QA_SCRIPT_SHA_MISMATCH"; exit 1; }
+```
+
+`git show` 的 `SHA:path` 必须同样避免裸变量相邻冒号：`"$RUNNER_SHA:$SCRIPT_PATH"` 在 zsh 中应使用 `"${RUNNER_SHA}:${SCRIPT_PATH}"`。推荐在终端统一使用 **`"${RUNNER_SHA}:${SCRIPT_PATH}"`**，避免随后在 script show 命令中再次出现同类错误。
+
+请运行完整更正后的命令，不要改变/删除已经核验的产品 Git checkout；该失败在启动服务之前，Mac Safari 仍 NOT_RUN。生产禁令及批准边界不变。
