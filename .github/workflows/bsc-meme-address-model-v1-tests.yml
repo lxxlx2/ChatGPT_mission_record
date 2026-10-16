@@ -138,25 +138,25 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
-          [[ "$REVIEWED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          [[ "$REVIEWED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid REVIEWED_HEAD_SHA (need 40 lowercase hex)" >&2; exit 1; }
           if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            [[ "$EVENT_PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
-            test "$REVIEWED_HEAD_SHA" = "$EVENT_PR_HEAD_SHA" || exit 1
+            [[ "$EVENT_PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid EVENT_PR_HEAD_SHA for pull_request" >&2; exit 1; }
+            test "$REVIEWED_HEAD_SHA" = "$EVENT_PR_HEAD_SHA" || { echo "PR expected SHA differs from PR head" >&2; exit 1; }
           elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
-            test -z "$EVENT_PR_HEAD_SHA" || exit 1
-            [[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
-            test "$REVIEWED_HEAD_SHA" = "$EVENT_SHA" || exit 1
+            test -z "$EVENT_PR_HEAD_SHA" || { echo "workflow_dispatch must not contain PR head" >&2; exit 1; }
+            [[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid EVENT_SHA for workflow_dispatch" >&2; exit 1; }
+            test "$REVIEWED_HEAD_SHA" = "$EVENT_SHA" || { echo "manual expected SHA differs from github.sha" >&2; exit 1; }
           else
             echo "Unsupported event for BSC read-only QA: $EVENT_NAME" >&2
             exit 1
           fi
-          test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA" || exit 1
+          test "$(git rev-parse HEAD)" = "$REVIEWED_HEAD_SHA" || { echo "checked-out HEAD differs from expected source SHA" >&2; exit 1; }
           echo "PASS $EVENT_NAME direct source SHA checkout $REVIEWED_HEAD_SHA"
       - name: Confirm frozen Git input blob
         shell: bash
         run: |
           actual="$(git hash-object "$MODEL_DIR/BSC_MEME_23_EOA_19_CA_EVIDENCE_COMPLETENESS_OVERLAY_V21_2026-10-12.json")"
-          test "$actual" = "$FROZEN_BLOB_SHA"
+          test "$actual" = "$FROZEN_BLOB_SHA" || { echo "frozen Git input blob mismatch" >&2; exit 1; }
       - name: Unit tests (stdlib only; no RPC/no secrets)
         run: |
           python3 -B -m unittest discover -s "$MODEL_DIR" -p "test_bsc_meme_address_model_v1*.py" -v
@@ -977,3 +977,33 @@ jobs:
           print("PASS P2 23 wallets / 50 curated rounds / 32 pos, 18 neg / 16 unknown; no fake rank")
           print("PASS 437/437, 148/289, 8 source exceptions, no fake PnL/ranking/recent signers")
           PY
+
+  macos_bash32_qa:
+    name: macOS /bin/bash 3.2 offline BSC regressions
+    runs-on: macos-15
+    timeout-minutes: 12
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify real macOS /bin/bash 3.2 and exact source checkout
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(uname -s)" = "Darwin"
+          /bin/bash -c 'printf "SYSTEM_BASH_VERSION=%s\\n" "$BASH_VERSION"; test "${BASH_VERSINFO[0]}" -eq 3; test "${BASH_VERSINFO[1]}" -eq 2'
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "invalid macOS source SHA" >&2; exit 1; }
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA" || { echo "macOS source SHA checkout mismatch" >&2; exit 1; }
+          echo "PASS macOS native Bash 3.2 source checkout at $SOURCE_SHA"
+      - name: Reproduce missing manual SHA and run all BSC source-only tests on macOS
+        shell: bash
+        run: |
+          set -euo pipefail
+          /bin/bash --version
+          python3 -B -m unittest discover -s crypto-300-profit-mission/research -p 'test_bsc_meme_address_model_v1_workflow_event_identity.py' -v
+          python3 -B -m unittest discover -s crypto-300-profit-mission/research -p 'test_bsc*.py'
